@@ -1,0 +1,23 @@
+{
+  "id": "architecture/microservices",
+  "title": "microservices",
+  "description": "---",
+  "source": "@site/docs/architecture/microservices.md",
+  "sourceDirName": "architecture",
+  "slug": "/architecture/microservices",
+  "permalink": "/docusaurus-knowledge-base-template/architecture/microservices",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {},
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Welcome",
+    "permalink": "/docusaurus-knowledge-base-template/"
+  },
+  "next": {
+    "title": "spring-boot",
+    "permalink": "/docusaurus-knowledge-base-template/backend/spring-boot"
+  }
+}

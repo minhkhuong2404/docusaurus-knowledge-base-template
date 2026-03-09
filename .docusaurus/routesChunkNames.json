@@ -1,0 +1,74 @@
+{
+  "/docusaurus-knowledge-base-template/__docusaurus/debug-37d": {
+    "__comp": "__comp---theme-debug-config-23-a-2ff",
+    "__context": {
+      "plugin": "plugin---docusaurus-knowledge-base-template-docusaurus-debugb-38-ed1"
+    }
+  },
+  "/docusaurus-knowledge-base-template/__docusaurus/debug/config-08b": {
+    "__comp": "__comp---theme-debug-config-23-a-2ff",
+    "__context": {
+      "plugin": "plugin---docusaurus-knowledge-base-template-docusaurus-debugb-38-ed1"
+    }
+  },
+  "/docusaurus-knowledge-base-template/__docusaurus/debug/content-dc8": {
+    "__comp": "__comp---theme-debug-contentba-8-ce7",
+    "__context": {
+      "plugin": "plugin---docusaurus-knowledge-base-template-docusaurus-debugb-38-ed1"
+    },
+    "__props": "__props---docusaurus-knowledge-base-template-docusaurus-debug-contentde-5-d16"
+  },
+  "/docusaurus-knowledge-base-template/__docusaurus/debug/globalData-cf7": {
+    "__comp": "__comp---theme-debug-global-dataede-0fa",
+    "__context": {
+      "plugin": "plugin---docusaurus-knowledge-base-template-docusaurus-debugb-38-ed1"
+    }
+  },
+  "/docusaurus-knowledge-base-template/__docusaurus/debug/metadata-f50": {
+    "__comp": "__comp---theme-debug-site-metadata-68-e-3d4",
+    "__context": {
+      "plugin": "plugin---docusaurus-knowledge-base-template-docusaurus-debugb-38-ed1"
+    }
+  },
+  "/docusaurus-knowledge-base-template/__docusaurus/debug/registry-052": {
+    "__comp": "__comp---theme-debug-registry-679-501",
+    "__context": {
+      "plugin": "plugin---docusaurus-knowledge-base-template-docusaurus-debugb-38-ed1"
+    }
+  },
+  "/docusaurus-knowledge-base-template/__docusaurus/debug/routes-ed8": {
+    "__comp": "__comp---theme-debug-routes-946-699",
+    "__context": {
+      "plugin": "plugin---docusaurus-knowledge-base-template-docusaurus-debugb-38-ed1"
+    }
+  },
+  "/docusaurus-knowledge-base-template/-4af": {
+    "__comp": "__comp---theme-docs-root-5-e-9-0b6",
+    "__context": {
+      "plugin": "plugin---docusaurus-knowledge-base-template-aba-95e"
+    }
+  },
+  "/docusaurus-knowledge-base-template/-80c": {
+    "__comp": "__comp---theme-doc-version-roota-7-b-5de",
+    "__props": "__props---docusaurus-knowledge-base-template-441-cd4"
+  },
+  "/docusaurus-knowledge-base-template/-664": {
+    "__comp": "__comp---theme-doc-roota-94-67a"
+  },
+  "/docusaurus-knowledge-base-template/architecture/microservices-175": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docusaurus-knowledge-base-template-architecture-microservicesdcc-320"
+  },
+  "/docusaurus-knowledge-base-template/backend/spring-boot-7c2": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docusaurus-knowledge-base-template-backend-spring-bootd-77-97a"
+  },
+  "/docusaurus-knowledge-base-template/kafka/saga-pattern-250": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docusaurus-knowledge-base-template-kafka-saga-patterndb-2-e2c"
+  },
+  "/docusaurus-knowledge-base-template/-531": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---docusaurus-knowledge-base-template-0-e-3-253"
+  }
+}

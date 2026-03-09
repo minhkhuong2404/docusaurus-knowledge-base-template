@@ -1,0 +1,187 @@
+{
+  "entrypoints": [
+    "main"
+  ],
+  "origins": {
+    "237": [
+      237
+    ],
+    "17896441": [
+      869,
+      401
+    ],
+    "main": [
+      354,
+      869,
+      792
+    ],
+    "runtime~main": [
+      792,
+      869,
+      354
+    ],
+    "0e384e19": [
+      976
+    ],
+    "441389e0": [
+      477
+    ],
+    "5e95c892": [
+      647
+    ],
+    "a7bd4aaa": [
+      98
+    ],
+    "a94703ab": [
+      869,
+      48
+    ],
+    "aba21aa0": [
+      742
+    ],
+    "d77fa74a": [
+      142
+    ],
+    "db2337bd": [
+      948
+    ],
+    "dcc7f694": [
+      801
+    ],
+    "styles": [
+      48,
+      354,
+      401,
+      792,
+      869
+    ]
+  },
+  "assets": {
+    "48": {
+      "js": [
+        {
+          "file": "assets/js/a94703ab.4d0a0cd5.js",
+          "hash": "32f9f454235df4fe",
+          "publicPath": "/docusaurus-knowledge-base-template/assets/js/a94703ab.4d0a0cd5.js"
+        }
+      ]
+    },
+    "98": {
+      "js": [
+        {
+          "file": "assets/js/a7bd4aaa.ffe3cf92.js",
+          "hash": "955892976ef77a68",
+          "publicPath": "/docusaurus-knowledge-base-template/assets/js/a7bd4aaa.ffe3cf92.js"
+        }
+      ]
+    },
+    "142": {
+      "js": [
+        {
+          "file": "assets/js/d77fa74a.9629cf84.js",
+          "hash": "b2845eb6cfe3967d",
+          "publicPath": "/docusaurus-knowledge-base-template/assets/js/d77fa74a.9629cf84.js"
+        }
+      ]
+    },
+    "237": {
+      "js": [
+        {
+          "file": "assets/js/237.9f9dd343.js",
+          "hash": "e0ca370edd0233d3",
+          "publicPath": "/docusaurus-knowledge-base-template/assets/js/237.9f9dd343.js"
+        }
+      ]
+    },
+    "354": {
+      "js": [
+        {
+          "file": "assets/js/runtime~main.12944223.js",
+          "hash": "c58b53200f51e759",
+          "publicPath": "/docusaurus-knowledge-base-template/assets/js/runtime~main.12944223.js"
+        }
+      ]
+    },
+    "401": {
+      "js": [
+        {
+          "file": "assets/js/17896441.fc877a01.js",
+          "hash": "ff7927e069bf3534",
+          "publicPath": "/docusaurus-knowledge-base-template/assets/js/17896441.fc877a01.js"
+        }
+      ]
+    },
+    "477": {
+      "js": [
+        {
+          "file": "assets/js/441389e0.54ebef9e.js",
+          "hash": "4e162b9758416945",
+          "publicPath": "/docusaurus-knowledge-base-template/assets/js/441389e0.54ebef9e.js"
+        }
+      ]
+    },
+    "647": {
+      "js": [
+        {
+          "file": "assets/js/5e95c892.e6d73a47.js",
+          "hash": "e598c6c588c5678b",
+          "publicPath": "/docusaurus-knowledge-base-template/assets/js/5e95c892.e6d73a47.js"
+        }
+      ]
+    },
+    "742": {
+      "js": [
+        {
+          "file": "assets/js/aba21aa0.26947a2a.js",
+          "hash": "60ea7a3fd9d12fba",
+          "publicPath": "/docusaurus-knowledge-base-template/assets/js/aba21aa0.26947a2a.js"
+        }
+      ]
+    },
+    "792": {
+      "js": [
+        {
+          "file": "assets/js/main.bef07de9.js",
+          "hash": "50e951fca2a02df9",
+          "publicPath": "/docusaurus-knowledge-base-template/assets/js/main.bef07de9.js"
+        }
+      ]
+    },
+    "801": {
+      "js": [
+        {
+          "file": "assets/js/dcc7f694.aef53aa1.js",
+          "hash": "2f5ae425745c2eee",
+          "publicPath": "/docusaurus-knowledge-base-template/assets/js/dcc7f694.aef53aa1.js"
+        }
+      ]
+    },
+    "869": {
+      "css": [
+        {
+          "file": "assets/css/styles.fa45ee99.css",
+          "hash": "7d6c00d2ad23a9c2",
+          "publicPath": "/docusaurus-knowledge-base-template/assets/css/styles.fa45ee99.css"
+        }
+      ]
+    },
+    "948": {
+      "js": [
+        {
+          "file": "assets/js/db2337bd.07b124d0.js",
+          "hash": "1632abe2a33021ad",
+          "publicPath": "/docusaurus-knowledge-base-template/assets/js/db2337bd.07b124d0.js"
+        }
+      ]
+    },
+    "976": {
+      "js": [
+        {
+          "file": "assets/js/0e384e19.d1029c83.js",
+          "hash": "907a4541b1d07cea",
+          "publicPath": "/docusaurus-knowledge-base-template/assets/js/0e384e19.d1029c83.js"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "docusaurus-plugin-content-docs": {
+    "default": {
+      "path": "/docusaurus-knowledge-base-template/",
+      "versions": [
+        {
+          "name": "current",
+          "label": "Next",
+          "isLast": true,
+          "path": "/docusaurus-knowledge-base-template/",
+          "mainDocId": "intro",
+          "docs": [
+            {
+              "id": "architecture/microservices",
+              "path": "/docusaurus-knowledge-base-template/architecture/microservices",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "backend/spring-boot",
+              "path": "/docusaurus-knowledge-base-template/backend/spring-boot",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "intro",
+              "path": "/docusaurus-knowledge-base-template/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "kafka/saga-pattern",
+              "path": "/docusaurus-knowledge-base-template/kafka/saga-pattern",
+              "sidebar": "tutorialSidebar"
+            }
+          ],
+          "draftIds": [],
+          "sidebars": {
+            "tutorialSidebar": {
+              "link": {
+                "path": "/docusaurus-knowledge-base-template/",
+                "label": "intro"
+              }
+            }
+          }
+        }
+      ],
+      "breadcrumbs": true
+    }
+  }
+}
