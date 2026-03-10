@@ -11,23 +11,73 @@
           "mainDocId": "intro",
           "docs": [
             {
-              "id": "architecture/microservices",
-              "path": "/docusaurus-knowledge-base-template/architecture/microservices",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "backend/spring-boot",
-              "path": "/docusaurus-knowledge-base-template/backend/spring-boot",
-              "sidebar": "tutorialSidebar"
-            },
-            {
               "id": "intro",
               "path": "/docusaurus-knowledge-base-template/",
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "kafka/saga-pattern",
-              "path": "/docusaurus-knowledge-base-template/kafka/saga-pattern",
+              "id": "technical-knowledge/architecture/microservices",
+              "path": "/docusaurus-knowledge-base-template/technical-knowledge/architecture/microservices",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/backend/spring-boot",
+              "path": "/docusaurus-knowledge-base-template/technical-knowledge/backend/spring-boot",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/java/java-collections",
+              "path": "/docusaurus-knowledge-base-template/technical-knowledge/java/java-collections",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/java/java-concurrency",
+              "path": "/docusaurus-knowledge-base-template/technical-knowledge/java/java-concurrency",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/java/java-fundamentals",
+              "path": "/docusaurus-knowledge-base-template/technical-knowledge/java/java-fundamentals",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/java/java-io",
+              "path": "/docusaurus-knowledge-base-template/technical-knowledge/java/java-io",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/java/java-jvm",
+              "path": "/docusaurus-knowledge-base-template/technical-knowledge/java/java-jvm",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/java/java-new-features",
+              "path": "/docusaurus-knowledge-base-template/technical-knowledge/java/java-new-features",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/kafka-complete-guide",
+              "path": "/docusaurus-knowledge-base-template/technical-knowledge/kafka/kafka-complete-guide",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/kafka-connect",
+              "path": "/docusaurus-knowledge-base-template/technical-knowledge/kafka/kafka-connect",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/kafka-exactly-once",
+              "path": "/docusaurus-knowledge-base-template/technical-knowledge/kafka/kafka-exactly-once",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/kafka-parallel-consumer",
+              "path": "/docusaurus-knowledge-base-template/technical-knowledge/kafka/kafka-parallel-consumer",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/kafka-streams",
+              "path": "/docusaurus-knowledge-base-template/technical-knowledge/kafka/kafka-streams",
               "sidebar": "tutorialSidebar"
             }
           ],

@@ -1,0 +1,27 @@
+{
+  "id": "technical-knowledge/java/java-fundamentals",
+  "title": "Java Fundamentals: Core Language Concepts",
+  "description": "A comprehensive guide to Java's foundational concepts — from the platform architecture to core syntax, OOP principles, and essential language features every developer should know.",
+  "source": "@site/docs/technical-knowledge/java/java-fundamentals.md",
+  "sourceDirName": "technical-knowledge/java",
+  "slug": "/technical-knowledge/java/java-fundamentals",
+  "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/java/java-fundamentals",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "java-fundamentals",
+    "title": "Java Fundamentals: Core Language Concepts",
+    "slug": "java-fundamentals"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "spring-boot",
+    "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/backend/spring-boot"
+  },
+  "next": {
+    "title": "Java Collections Framework: Deep Dive",
+    "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/java/java-collections"
+  }
+}

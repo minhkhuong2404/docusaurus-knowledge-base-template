@@ -1,0 +1,125 @@
+/* ============================================
+   Code Block Styling — Catppuccin Mocha Theme
+   ============================================ */
+
+:root {
+  --code-bg: #1e1e2e;
+  --code-surface: #313244;
+  --code-border: #45475a;
+  --code-text: #cdd6f4;
+  --code-line-number: #585b70;
+  --code-highlight-bg: rgba(137, 180, 250, 0.1);
+  --code-highlight-border: #89b4fa;
+  --code-scrollbar-thumb: #45475a;
+  --code-scrollbar-track: #1e1e2e;
+  --code-title-bg: #181825;
+  --code-copy-btn: #6c7086;
+  --code-copy-btn-hover: #cdd6f4;
+}
+
+/* Pre block container */
+pre[class*="language-"],
+div[class*="codeBlockContainer"] pre {
+  background-color: var(--code-bg) !important;
+  border: 1px solid var(--code-border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  overflow-x: auto;
+}
+
+/* Inline code */
+:not(pre) > code {
+  background-color: var(--code-surface);
+  color: var(--code-text);
+  border: 1px solid var(--code-border);
+  border-radius: 4px;
+  padding: 0.15em 0.4em;
+  font-size: 0.875em;
+}
+
+/* Code block title bar (e.g., ```java title="MyClass.java") */
+div[class*="codeBlockTitle"] {
+  background-color: var(--code-title-bg) !important;
+  border: 1px solid var(--code-border);
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  color: var(--code-text);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 0.5rem 1.25rem;
+}
+
+div[class*="codeBlockTitle"] + div pre {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+/* Line numbers */
+span[class*="codeLineNumber"] {
+  color: var(--code-line-number);
+  min-width: 2rem;
+  padding-right: 1rem;
+  user-select: none;
+}
+
+/* Highlighted lines */
+.theme-code-block-highlighted-line,
+span[class*="docusaurus-highlight-code-line"] {
+  background-color: var(--code-highlight-bg);
+  border-left: 3px solid var(--code-highlight-border);
+  display: block;
+  margin: 0 -1.25rem;
+  padding: 0 1.25rem;
+  padding-left: calc(1.25rem - 3px);
+}
+
+/* Copy button */
+button[class*="copyButton"] {
+  color: var(--code-copy-btn);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+button[class*="copyButton"]:hover {
+  color: var(--code-copy-btn-hover);
+  background-color: var(--code-surface);
+  border-color: var(--code-border);
+}
+
+/* Custom scrollbar for code blocks */
+pre[class*="language-"]::-webkit-scrollbar {
+  height: 6px;
+}
+
+pre[class*="language-"]::-webkit-scrollbar-track {
+  background: var(--code-scrollbar-track);
+  border-radius: 3px;
+}
+
+pre[class*="language-"]::-webkit-scrollbar-thumb {
+  background: var(--code-scrollbar-thumb);
+  border-radius: 3px;
+}
+
+pre[class*="language-"]::-webkit-scrollbar-thumb:hover {
+  background: var(--code-line-number);
+}
+
+/* Language label badge (shown via Docusaurus) */
+div[class*="codeBlockContainer"] div[class*="buttonGroup"] {
+  gap: 0.25rem;
+}
+
+/* Smooth transitions for theme switching */
+pre[class*="language-"],
+:not(pre) > code,
+div[class*="codeBlockTitle"] {
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease;
+}

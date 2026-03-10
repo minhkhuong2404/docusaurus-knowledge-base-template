@@ -19,16 +19,33 @@ const config: Config = {
 					sidebarPath: './sidebars.ts',
 					routeBasePath: '/'
 				},
-				blog: false
+				blog: false,
+				theme: {
+					customCss: './src/css/custom.css',
+				},
 			}
 		]
 	],
 
 	themeConfig: {
 		prism: {
-			theme: prismTheme
-		}
-	}
+			theme: prismTheme,
+			additionalLanguages: [
+				'java',
+				'bash',
+				'json',
+				'yaml',
+				'properties',
+				'docker',
+				'groovy',
+				'sql',
+			],
+		},
+		colorMode: {
+			defaultMode: 'dark',
+			respectPrefersColorScheme: true,
+		},
+	},
 }
 
 export default config

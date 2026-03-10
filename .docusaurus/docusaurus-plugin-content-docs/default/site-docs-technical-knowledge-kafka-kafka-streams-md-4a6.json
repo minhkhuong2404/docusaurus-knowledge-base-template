@@ -1,0 +1,27 @@
+{
+  "id": "technical-knowledge/kafka/kafka-streams",
+  "title": "Kafka Streams: Topology & Branching",
+  "description": "Kafka Streams is a lightweight client library for building real-time stream-processing applications on top of Apache Kafka. This guide covers its programming model, the topology concept, and branching patterns.",
+  "source": "@site/docs/technical-knowledge/kafka/kafka-streams.md",
+  "sourceDirName": "technical-knowledge/kafka",
+  "slug": "/technical-knowledge/kafka/kafka-streams",
+  "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/kafka/kafka-streams",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "kafka-streams",
+    "title": "Kafka Streams: Topology & Branching",
+    "slug": "kafka-streams"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Kafka Connect",
+    "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/kafka/kafka-connect"
+  },
+  "next": {
+    "title": "Configuring Exactly-Once Semantics in Kafka",
+    "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/kafka/kafka-exactly-once"
+  }
+}

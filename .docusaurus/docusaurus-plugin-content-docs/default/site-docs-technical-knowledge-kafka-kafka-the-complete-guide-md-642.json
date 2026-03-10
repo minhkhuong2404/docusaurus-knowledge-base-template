@@ -1,0 +1,27 @@
+{
+  "id": "technical-knowledge/kafka/kafka-complete-guide",
+  "title": "Kafka: The Complete Guide",
+  "description": "Apache Kafka is a distributed event-streaming platform designed for high-throughput, fault-tolerant, real-time data pipelines and streaming applications. This guide covers the core concepts every new learner needs to understand.",
+  "source": "@site/docs/technical-knowledge/kafka/Kafka: The Complete Guide.md",
+  "sourceDirName": "technical-knowledge/kafka",
+  "slug": "/technical-knowledge/kafka/kafka-complete-guide",
+  "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/kafka/kafka-complete-guide",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "kafka-complete-guide",
+    "title": "Kafka: The Complete Guide",
+    "slug": "kafka-complete-guide"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Java New Features: Java 8 through Java 21+",
+    "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/java/java-new-features"
+  },
+  "next": {
+    "title": "Kafka Connect",
+    "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/kafka/kafka-connect"
+  }
+}

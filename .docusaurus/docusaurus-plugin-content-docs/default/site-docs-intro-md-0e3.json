@@ -17,6 +17,6 @@
   "sidebar": "tutorialSidebar",
   "next": {
     "title": "microservices",
-    "permalink": "/docusaurus-knowledge-base-template/architecture/microservices"
+    "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/architecture/microservices"
   }
 }

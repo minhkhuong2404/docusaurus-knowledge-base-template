@@ -18,7 +18,10 @@ export default {
           "sidebarPath": "./sidebars.ts",
           "routeBasePath": "/"
         },
-        "blog": false
+        "blog": false,
+        "theme": {
+          "customCss": "./src/css/custom.css"
+        }
       }
     ]
   ],
@@ -26,46 +29,174 @@ export default {
     "prism": {
       "theme": {
         "plain": {
-          "backgroundColor": "#282c34",
-          "color": "#abb2bf"
+          "backgroundColor": "#1e1e2e",
+          "color": "#cdd6f4"
         },
         "styles": [
           {
             "types": [
-              "comment"
+              "comment",
+              "prolog",
+              "doctype",
+              "cdata"
             ],
             "style": {
-              "color": "#5c6370",
+              "color": "#6c7086",
               "fontStyle": "italic"
             }
           },
           {
             "types": [
-              "string"
+              "punctuation"
             ],
             "style": {
-              "color": "#98c379"
+              "color": "#bac2de"
             }
           },
           {
             "types": [
-              "keyword"
+              "namespace"
             ],
             "style": {
-              "color": "#c678dd"
+              "opacity": 0.7
             }
           },
           {
             "types": [
-              "function"
+              "string",
+              "char",
+              "template-string",
+              "attr-value"
             ],
             "style": {
-              "color": "#61afef"
+              "color": "#a6e3a1"
+            }
+          },
+          {
+            "types": [
+              "number",
+              "boolean"
+            ],
+            "style": {
+              "color": "#fab387"
+            }
+          },
+          {
+            "types": [
+              "keyword",
+              "important",
+              "atrule"
+            ],
+            "style": {
+              "color": "#cba6f7"
+            }
+          },
+          {
+            "types": [
+              "function",
+              "class-name"
+            ],
+            "style": {
+              "color": "#89b4fa"
+            }
+          },
+          {
+            "types": [
+              "builtin"
+            ],
+            "style": {
+              "color": "#f38ba8"
+            }
+          },
+          {
+            "types": [
+              "tag",
+              "selector"
+            ],
+            "style": {
+              "color": "#f38ba8"
+            }
+          },
+          {
+            "types": [
+              "attr-name"
+            ],
+            "style": {
+              "color": "#f9e2af"
+            }
+          },
+          {
+            "types": [
+              "variable",
+              "constant",
+              "symbol"
+            ],
+            "style": {
+              "color": "#f5c2e7"
+            }
+          },
+          {
+            "types": [
+              "operator",
+              "entity",
+              "url"
+            ],
+            "style": {
+              "color": "#89dceb"
+            }
+          },
+          {
+            "types": [
+              "regex"
+            ],
+            "style": {
+              "color": "#a6e3a1"
+            }
+          },
+          {
+            "types": [
+              "property"
+            ],
+            "style": {
+              "color": "#89dceb"
+            }
+          },
+          {
+            "types": [
+              "deleted"
+            ],
+            "style": {
+              "color": "#f38ba8"
+            }
+          },
+          {
+            "types": [
+              "inserted"
+            ],
+            "style": {
+              "color": "#a6e3a1"
+            }
+          },
+          {
+            "types": [
+              "changed"
+            ],
+            "style": {
+              "color": "#f9e2af"
             }
           }
         ]
       },
-      "additionalLanguages": [],
+      "additionalLanguages": [
+        "java",
+        "bash",
+        "json",
+        "yaml",
+        "properties",
+        "docker",
+        "groovy",
+        "sql"
+      ],
       "magicComments": [
         {
           "className": "theme-code-block-highlighted-line",
@@ -78,9 +209,9 @@ export default {
       ]
     },
     "colorMode": {
-      "defaultMode": "light",
-      "disableSwitch": false,
-      "respectPrefersColorScheme": false
+      "defaultMode": "dark",
+      "respectPrefersColorScheme": true,
+      "disableSwitch": false
     },
     "docs": {
       "versionPersistence": "localStorage",
@@ -114,13 +245,19 @@ export default {
     "localeConfigs": {}
   },
   "future": {
+    "v4": {
+      "removeLegacyPostBuildHeadAttribute": false,
+      "useCssCascadeLayers": false
+    },
     "experimental_faster": {
       "swcJsLoader": false,
       "swcJsMinimizer": false,
       "swcHtmlMinimizer": false,
       "lightningCssMinimizer": false,
       "mdxCrossCompilerCache": false,
-      "rspackBundler": false
+      "rspackBundler": false,
+      "rspackPersistentCache": false,
+      "ssgWorkerThreads": false
     },
     "experimental_storage": {
       "type": "localStorage",
@@ -130,7 +267,6 @@ export default {
   },
   "onBrokenLinks": "throw",
   "onBrokenAnchors": "warn",
-  "onBrokenMarkdownLinks": "warn",
   "onDuplicateRoutes": "warn",
   "staticDirectories": [
     "static"
@@ -147,6 +283,7 @@ export default {
   "markdown": {
     "format": "mdx",
     "mermaid": false,
+    "emoji": true,
     "mdx1Compat": {
       "comments": true,
       "admonitions": true,
@@ -154,6 +291,10 @@ export default {
     },
     "anchors": {
       "maintainCase": false
+    },
+    "hooks": {
+      "onBrokenMarkdownLinks": "warn",
+      "onBrokenMarkdownImages": "throw"
     }
   }
 };

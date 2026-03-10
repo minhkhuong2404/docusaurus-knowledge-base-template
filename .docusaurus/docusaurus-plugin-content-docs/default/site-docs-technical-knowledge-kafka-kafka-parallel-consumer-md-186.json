@@ -1,0 +1,23 @@
+{
+  "id": "technical-knowledge/kafka/kafka-parallel-consumer",
+  "title": "Parallel Consumer in Kafka",
+  "description": "Standard Kafka consumers process messages sequentially per partition — one message at a time per assigned partition. This becomes a bottleneck when downstream processing is slow (e.g., HTTP calls, database writes). Parallel consumers break this limit by processing multiple messages concurrently within a single partition.",
+  "source": "@site/docs/technical-knowledge/kafka/kafka-parallel-consumer.md",
+  "sourceDirName": "technical-knowledge/kafka",
+  "slug": "/technical-knowledge/kafka/kafka-parallel-consumer",
+  "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/kafka/kafka-parallel-consumer",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "kafka-parallel-consumer",
+    "title": "Parallel Consumer in Kafka",
+    "slug": "kafka-parallel-consumer"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Configuring Exactly-Once Semantics in Kafka",
+    "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/kafka/kafka-exactly-once"
+  }
+}

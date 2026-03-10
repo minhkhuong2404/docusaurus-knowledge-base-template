@@ -1,74 +1,71 @@
 {
-  "/docusaurus-knowledge-base-template/__docusaurus/debug-37d": {
-    "__comp": "__comp---theme-debug-config-23-a-2ff",
+  "/docusaurus-knowledge-base-template/-e05": {
+    "__comp": "5e95c892",
     "__context": {
-      "plugin": "plugin---docusaurus-knowledge-base-template-docusaurus-debugb-38-ed1"
+      "plugin": "aba21aa0"
     }
   },
-  "/docusaurus-knowledge-base-template/__docusaurus/debug/config-08b": {
-    "__comp": "__comp---theme-debug-config-23-a-2ff",
-    "__context": {
-      "plugin": "plugin---docusaurus-knowledge-base-template-docusaurus-debugb-38-ed1"
-    }
+  "/docusaurus-knowledge-base-template/-42d": {
+    "__comp": "a7bd4aaa",
+    "__props": "441389e0"
   },
-  "/docusaurus-knowledge-base-template/__docusaurus/debug/content-dc8": {
-    "__comp": "__comp---theme-debug-contentba-8-ce7",
-    "__context": {
-      "plugin": "plugin---docusaurus-knowledge-base-template-docusaurus-debugb-38-ed1"
-    },
-    "__props": "__props---docusaurus-knowledge-base-template-docusaurus-debug-contentde-5-d16"
+  "/docusaurus-knowledge-base-template/-d6b": {
+    "__comp": "a94703ab"
   },
-  "/docusaurus-knowledge-base-template/__docusaurus/debug/globalData-cf7": {
-    "__comp": "__comp---theme-debug-global-dataede-0fa",
-    "__context": {
-      "plugin": "plugin---docusaurus-knowledge-base-template-docusaurus-debugb-38-ed1"
-    }
+  "/docusaurus-knowledge-base-template/technical-knowledge/architecture/microservices-7c8": {
+    "__comp": "17896441",
+    "content": "12f034a4"
   },
-  "/docusaurus-knowledge-base-template/__docusaurus/debug/metadata-f50": {
-    "__comp": "__comp---theme-debug-site-metadata-68-e-3d4",
-    "__context": {
-      "plugin": "plugin---docusaurus-knowledge-base-template-docusaurus-debugb-38-ed1"
-    }
+  "/docusaurus-knowledge-base-template/technical-knowledge/backend/spring-boot-00d": {
+    "__comp": "17896441",
+    "content": "4f151f88"
   },
-  "/docusaurus-knowledge-base-template/__docusaurus/debug/registry-052": {
-    "__comp": "__comp---theme-debug-registry-679-501",
-    "__context": {
-      "plugin": "plugin---docusaurus-knowledge-base-template-docusaurus-debugb-38-ed1"
-    }
+  "/docusaurus-knowledge-base-template/technical-knowledge/java/java-collections-7ba": {
+    "__comp": "17896441",
+    "content": "a8d4740a"
   },
-  "/docusaurus-knowledge-base-template/__docusaurus/debug/routes-ed8": {
-    "__comp": "__comp---theme-debug-routes-946-699",
-    "__context": {
-      "plugin": "plugin---docusaurus-knowledge-base-template-docusaurus-debugb-38-ed1"
-    }
+  "/docusaurus-knowledge-base-template/technical-knowledge/java/java-concurrency-50d": {
+    "__comp": "17896441",
+    "content": "f13bfd67"
   },
-  "/docusaurus-knowledge-base-template/-4af": {
-    "__comp": "__comp---theme-docs-root-5-e-9-0b6",
-    "__context": {
-      "plugin": "plugin---docusaurus-knowledge-base-template-aba-95e"
-    }
+  "/docusaurus-knowledge-base-template/technical-knowledge/java/java-fundamentals-354": {
+    "__comp": "17896441",
+    "content": "fb6d755b"
   },
-  "/docusaurus-knowledge-base-template/-80c": {
-    "__comp": "__comp---theme-doc-version-roota-7-b-5de",
-    "__props": "__props---docusaurus-knowledge-base-template-441-cd4"
+  "/docusaurus-knowledge-base-template/technical-knowledge/java/java-io-61d": {
+    "__comp": "17896441",
+    "content": "3744858f"
   },
-  "/docusaurus-knowledge-base-template/-664": {
-    "__comp": "__comp---theme-doc-roota-94-67a"
+  "/docusaurus-knowledge-base-template/technical-knowledge/java/java-jvm-762": {
+    "__comp": "17896441",
+    "content": "2fb67458"
   },
-  "/docusaurus-knowledge-base-template/architecture/microservices-175": {
-    "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---docusaurus-knowledge-base-template-architecture-microservicesdcc-320"
+  "/docusaurus-knowledge-base-template/technical-knowledge/java/java-new-features-113": {
+    "__comp": "17896441",
+    "content": "0366963e"
   },
-  "/docusaurus-knowledge-base-template/backend/spring-boot-7c2": {
-    "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---docusaurus-knowledge-base-template-backend-spring-bootd-77-97a"
+  "/docusaurus-knowledge-base-template/technical-knowledge/kafka/kafka-complete-guide-e2f": {
+    "__comp": "17896441",
+    "content": "64240187"
   },
-  "/docusaurus-knowledge-base-template/kafka/saga-pattern-250": {
-    "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---docusaurus-knowledge-base-template-kafka-saga-patterndb-2-e2c"
+  "/docusaurus-knowledge-base-template/technical-knowledge/kafka/kafka-connect-6a9": {
+    "__comp": "17896441",
+    "content": "fabc3ea1"
+  },
+  "/docusaurus-knowledge-base-template/technical-knowledge/kafka/kafka-exactly-once-1f2": {
+    "__comp": "17896441",
+    "content": "2b06adde"
+  },
+  "/docusaurus-knowledge-base-template/technical-knowledge/kafka/kafka-parallel-consumer-a10": {
+    "__comp": "17896441",
+    "content": "186258f5"
+  },
+  "/docusaurus-knowledge-base-template/technical-knowledge/kafka/kafka-streams-4a5": {
+    "__comp": "17896441",
+    "content": "4a65d68f"
   },
   "/docusaurus-knowledge-base-template/-531": {
-    "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---docusaurus-knowledge-base-template-0-e-3-253"
+    "__comp": "17896441",
+    "content": "0e384e19"
   }
 }
