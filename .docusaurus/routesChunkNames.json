@@ -1,15 +1,15 @@
 {
-  "/docusaurus-knowledge-base-template/-e05": {
+  "/docusaurus-knowledge-base-template/-389": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/docusaurus-knowledge-base-template/-42d": {
+  "/docusaurus-knowledge-base-template/-fcf": {
     "__comp": "a7bd4aaa",
     "__props": "441389e0"
   },
-  "/docusaurus-knowledge-base-template/-d6b": {
+  "/docusaurus-knowledge-base-template/-7d2": {
     "__comp": "a94703ab"
   },
   "/docusaurus-knowledge-base-template/technical-knowledge/architecture/microservices-7c8": {
@@ -31,6 +31,10 @@
   "/docusaurus-knowledge-base-template/technical-knowledge/java/java-fundamentals-354": {
     "__comp": "17896441",
     "content": "fb6d755b"
+  },
+  "/docusaurus-knowledge-base-template/technical-knowledge/java/java-interview-questions-67a": {
+    "__comp": "17896441",
+    "content": "f99a0434"
   },
   "/docusaurus-knowledge-base-template/technical-knowledge/java/java-io-61d": {
     "__comp": "17896441",

@@ -368,3 +368,96 @@ if (bucket is empty) {
 | Thread-safe list (read-heavy) | `CopyOnWriteArrayList` |
 | Producer-consumer queue | `ArrayBlockingQueue` / `LinkedBlockingQueue` |
 | Priority processing | `PriorityQueue` |
+
+---
+
+## 8. Sorting & Comparison
+
+### Comparable vs Comparator
+
+| Aspect | `Comparable<T>` | `Comparator<T>` |
+|--------|-----------------|------------------|
+| Package | `java.lang` | `java.util` |
+| Method | `compareTo(T o)` | `compare(T o1, T o2)` |
+| Modifies class | Yes (implements interface) | No (external) |
+| Natural ordering | Defines it | Provides alternative orderings |
+
+```java
+// Comparable: natural ordering
+public class Employee implements Comparable<Employee> {
+    private String name;
+    private int salary;
+
+    @Override
+    public int compareTo(Employee other) {
+        return Integer.compare(this.salary, other.salary);
+    }
+}
+
+// Comparator: custom ordering
+Comparator<Employee> byName = Comparator.comparing(Employee::getName);
+Comparator<Employee> bySalaryDesc = Comparator.comparingInt(Employee::getSalary).reversed();
+```
+
+### Collections.sort() vs Stream.sorted()
+
+| Aspect | `Collections.sort()` | `Stream.sorted()` |
+|--------|---------------------|-------------------|
+| Mutability | **Mutates** the original list | Returns a **new** sorted stream |
+| Style | Imperative | Functional/declarative |
+| Null handling | Throws `NullPointerException` on null elements | Same behavior |
+| Algorithm | TimSort (stable, O(n log n)) | TimSort internally |
+
+### Sorting Null-safe
+
+To sort lists that may contain nulls, use `Comparator.nullsFirst()` or `nullsLast()`:
+
+```java
+List<String> names = Arrays.asList("Alice", null, "Bob", null, "Charlie");
+names.sort(Comparator.nullsLast(Comparator.naturalOrder()));
+// [Alice, Bob, Charlie, null, null]
+```
+
+---
+
+## 9. Common Pitfalls in Interviews
+
+### Mutable Keys in HashMap
+
+If a key object's state changes after insertion, the entry becomes **unreachable**:
+
+```java
+List<String> key = new ArrayList<>(List.of("a"));
+Map<List<String>, String> map = new HashMap<>();
+map.put(key, "value");
+
+key.add("b"); // Mutates the key → hashCode changes
+map.get(key); // null! Entry is lost
+```
+
+**Rule:** Always use immutable objects as map keys.
+
+### equals() without hashCode()
+
+Overriding only `equals()` breaks the hash-based collection contract:
+
+```java
+// BAD: equals overridden but not hashCode
+Set<User> users = new HashSet<>();
+users.add(new User(1, "Alice"));
+users.contains(new User(1, "Alice")); // May return false!
+```
+
+### ConcurrentModificationException
+
+```java
+// ❌ Throws ConcurrentModificationException
+for (String item : list) {
+    if (item.isEmpty()) list.remove(item);
+}
+
+// ✅ Safe alternatives
+list.removeIf(String::isEmpty);
+// or use Iterator.remove()
+// or use CopyOnWriteArrayList for concurrent access
+```

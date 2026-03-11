@@ -451,3 +451,38 @@ Use `javap -verbose MyClass.class` to inspect the structure.
 1. `jstat -gcutil <pid> 1000` → monitor GC frequency and duration
 2. Check if old gen is filling up (memory leak?) or if young gen is too small (premature promotion)
 3. Consider switching to G1 or ZGC for better pause behavior
+
+---
+
+## 10. Reference Types & GC
+
+Java provides four reference types that influence garbage collection behavior:
+
+| Reference Type | Class | GC Behavior | Use Case |
+|---------------|-------|-------------|----------|
+| **Strong** | (default) | Never collected while reachable | Normal references |
+| **Soft** | `SoftReference<T>` | Collected when JVM is low on memory | Memory-sensitive caches |
+| **Weak** | `WeakReference<T>` | Collected at next GC | `WeakHashMap`, canonicalizing maps |
+| **Phantom** | `PhantomReference<T>` | Enqueued after finalization | Resource cleanup tracking |
+
+```java
+// Soft reference: cache that yields to memory pressure
+SoftReference<byte[]> cache = new SoftReference<>(new byte[1024 * 1024]);
+byte[] data = cache.get(); // may be null if GC reclaimed it
+
+// Weak reference: doesn't prevent GC
+WeakReference<ExpensiveObject> ref = new WeakReference<>(new ExpensiveObject());
+ExpensiveObject obj = ref.get(); // null after GC
+```
+
+---
+
+## 11. Common OOM Scenarios & Solutions
+
+| Error | Cause | Solution |
+|-------|-------|----------|
+| `OutOfMemoryError: Java heap space` | Heap exhausted | Increase `-Xmx`, fix memory leaks |
+| `OutOfMemoryError: Metaspace` | Too many classes loaded | Increase `-XX:MaxMetaspaceSize`, fix classloader leaks |
+| `OutOfMemoryError: GC overhead limit` | GC consuming over 98% CPU for under 2% heap recovery | Fix memory leaks, increase heap |
+| `StackOverflowError` | Deep/infinite recursion | Fix recursion, increase `-Xss` |
+| `OutOfMemoryError: unable to create new native thread` | Too many threads | Use thread pools, reduce stack size |

@@ -41,6 +41,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/java/java-interview-questions",
+              "path": "/docusaurus-knowledge-base-template/technical-knowledge/java/java-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/java/java-io",
               "path": "/docusaurus-knowledge-base-template/technical-knowledge/java/java-io",
               "sidebar": "tutorialSidebar"

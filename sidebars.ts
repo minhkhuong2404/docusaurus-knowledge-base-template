@@ -23,7 +23,8 @@ const sidebars: SidebarsConfig = {
 				'technical-knowledge/java/java-concurrency',
 				'technical-knowledge/java/java-io',
 				'technical-knowledge/java/java-jvm',
-				'technical-knowledge/java/java-new-features'
+				'technical-knowledge/java/java-new-features',
+				'technical-knowledge/java/java-interview-questions'
 			]
 		},
 		{

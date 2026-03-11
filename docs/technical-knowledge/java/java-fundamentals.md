@@ -499,3 +499,135 @@ SPI is a service discovery mechanism that allows third parties to provide implem
    ```
 
 **Real-world examples:** JDBC driver loading, SLF4J logging backends, Spring Boot auto-configuration.
+
+---
+
+## 11. Immutability
+
+Immutable objects cannot be modified after creation. They are inherently thread-safe, cache-friendly, and safe to use as `HashMap` keys.
+
+### Creating Immutable Classes
+
+1. Declare the class `final` (prevent subclassing)
+2. Make all fields `private final`
+3. No setter methods
+4. Deep-copy mutable fields in the constructor and accessors
+5. Consider using Java 14+ `record` for simple data carriers
+
+```java
+public final class Money {
+    private final BigDecimal amount;
+    private final Currency currency;
+
+    public Money(BigDecimal amount, Currency currency) {
+        this.amount = amount;
+        this.currency = Currency.getInstance(currency.getCurrencyCode());
+    }
+
+    public BigDecimal getAmount() { return amount; }
+    public Currency getCurrency() { return Currency.getInstance(currency.getCurrencyCode()); }
+}
+
+// Java 14+: records are immutable by design
+record Money(BigDecimal amount, Currency currency) {}
+```
+
+### Benefits in Multi-threaded Applications
+
+- **No synchronization needed** — immutable objects can be shared freely across threads
+- **No defensive copying** when passing between methods
+- **Predictable behavior** — no risk of state corruption
+- **Safe as Map keys** — hash code never changes
+
+---
+
+## 12. The `equals()` and `hashCode()` Contract
+
+When overriding `equals()`, you **must** also override `hashCode()` to maintain the contract required by hash-based collections.
+
+### The Contract
+
+- **Reflexive:** `x.equals(x)` → `true`
+- **Symmetric:** `x.equals(y)` ↔ `y.equals(x)`
+- **Transitive:** `x.equals(y)` && `y.equals(z)` → `x.equals(z)`
+- **Consistent:** Multiple calls return the same result if objects are unchanged
+- **Null-safe:** `x.equals(null)` → `false`
+- **Equal objects must have equal hash codes** (but unequal objects may share hash codes)
+
+### Correct Implementation
+
+```java
+public class User {
+    private final Long id;
+    private final String email;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+}
+```
+
+> **Pitfall:** Using mutable fields in `equals()`/`hashCode()` can cause objects to "disappear" from `HashMap` or `HashSet` if their state changes after insertion.
+
+---
+
+## 13. Enums
+
+Enums define a fixed set of constants with type safety, replacing magic numbers and strings.
+
+### Key Properties
+
+- All enums implicitly extend `java.lang.Enum` (no other class inheritance)
+- Can implement interfaces
+- Can have fields, methods, and constructors
+- Ideal for Singleton and Strategy pattern implementations
+
+```java
+public enum OrderStatus {
+    PENDING("Pending", true),
+    SHIPPED("Shipped", true),
+    DELIVERED("Delivered", false),
+    CANCELLED("Cancelled", false);
+
+    private final String displayName;
+    private final boolean modifiable;
+
+    OrderStatus(String displayName, boolean modifiable) {
+        this.displayName = displayName;
+        this.modifiable = modifiable;
+    }
+
+    public String getDisplayName() { return displayName; }
+    public boolean isModifiable() { return modifiable; }
+}
+
+// Iterating
+for (OrderStatus status : OrderStatus.values()) {
+    System.out.println(status.getDisplayName());
+}
+```
+
+### Enum-based Singleton
+
+The simplest thread-safe Singleton with built-in serialization protection:
+
+```java
+public enum AppConfig {
+    INSTANCE;
+
+    private final Properties properties = new Properties();
+
+    public String get(String key) {
+        return properties.getProperty(key);
+    }
+}
+```

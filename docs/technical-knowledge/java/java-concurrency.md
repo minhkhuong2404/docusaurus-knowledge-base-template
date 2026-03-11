@@ -519,3 +519,67 @@ try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
 - **Avoid `synchronized`** in virtual thread code — it pins the virtual thread to the carrier thread. Use `ReentrantLock` instead.
 - **Best for I/O-bound tasks** — virtual threads yield when blocked on I/O, freeing carrier threads for other virtual threads.
 - **Not faster for CPU-bound work** — they still need carrier (platform) threads for execution.
+
+---
+
+## 11. Producer-Consumer Pattern
+
+A fundamental concurrency pattern where producer threads generate data and consumer threads process it, communicating via a shared buffer.
+
+### Using wait/notify
+
+```java
+class BoundedBuffer<T> {
+    private final Queue<T> queue = new LinkedList<>();
+    private final int capacity;
+
+    public BoundedBuffer(int capacity) { this.capacity = capacity; }
+
+    public synchronized void produce(T item) throws InterruptedException {
+        while (queue.size() == capacity) {
+            wait(); // Buffer full — release lock and wait
+        }
+        queue.add(item);
+        notifyAll(); // Wake up consumers
+    }
+
+    public synchronized T consume() throws InterruptedException {
+        while (queue.isEmpty()) {
+            wait(); // Buffer empty — release lock and wait
+        }
+        T item = queue.poll();
+        notifyAll(); // Wake up producers
+        return item;
+    }
+}
+```
+
+### Using BlockingQueue (Preferred)
+
+```java
+BlockingQueue<String> queue = new ArrayBlockingQueue<>(10);
+
+// Producer
+executor.submit(() -> {
+    queue.put("item"); // Blocks if full
+});
+
+// Consumer
+executor.submit(() -> {
+    String item = queue.take(); // Blocks if empty
+});
+```
+
+> **Always use `while` (not `if`) for wait conditions** to guard against spurious wakeups.
+
+---
+
+## 12. Synchronization Strategies Summary
+
+| Mechanism | Visibility | Atomicity | Mutual Exclusion | Use Case |
+|-----------|-----------|-----------|-----------------|----------|
+| `volatile` | ✅ | ❌ (single read/write only) | ❌ | Flags, status variables |
+| `synchronized` | ✅ | ✅ | ✅ | General-purpose locking |
+| `ReentrantLock` | ✅ | ✅ | ✅ | Advanced locking (timeouts, fairness) |
+| `Atomic*` classes | ✅ | ✅ (CAS-based) | ❌ | Counters, accumulators |
+| `StampedLock` | ✅ | ✅ | ✅ | Optimistic read-heavy scenarios |

@@ -4,15 +4,15 @@ import ComponentCreator from '@docusaurus/ComponentCreator';
 export default [
   {
     path: '/docusaurus-knowledge-base-template/',
-    component: ComponentCreator('/docusaurus-knowledge-base-template/', 'e05'),
+    component: ComponentCreator('/docusaurus-knowledge-base-template/', '389'),
     routes: [
       {
         path: '/docusaurus-knowledge-base-template/',
-        component: ComponentCreator('/docusaurus-knowledge-base-template/', '42d'),
+        component: ComponentCreator('/docusaurus-knowledge-base-template/', 'fcf'),
         routes: [
           {
             path: '/docusaurus-knowledge-base-template/',
-            component: ComponentCreator('/docusaurus-knowledge-base-template/', 'd6b'),
+            component: ComponentCreator('/docusaurus-knowledge-base-template/', '7d2'),
             routes: [
               {
                 path: '/docusaurus-knowledge-base-template/technical-knowledge/architecture/microservices',
@@ -41,6 +41,12 @@ export default [
               {
                 path: '/docusaurus-knowledge-base-template/technical-knowledge/java/java-fundamentals',
                 component: ComponentCreator('/docusaurus-knowledge-base-template/technical-knowledge/java/java-fundamentals', '354'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/docusaurus-knowledge-base-template/technical-knowledge/java/java-interview-questions',
+                component: ComponentCreator('/docusaurus-knowledge-base-template/technical-knowledge/java/java-interview-questions', '67a'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

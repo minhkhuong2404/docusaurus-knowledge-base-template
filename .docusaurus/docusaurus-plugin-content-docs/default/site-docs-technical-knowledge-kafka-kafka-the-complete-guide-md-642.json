@@ -17,8 +17,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Java New Features: Java 8 through Java 21+",
-    "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/java/java-new-features"
+    "title": "Java Interview Questions & Answers",
+    "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/java/java-interview-questions"
   },
   "next": {
     "title": "Kafka Connect",
