@@ -5,7 +5,7 @@
   "source": "@site/docs/technical-knowledge/architecture/microservices.md",
   "sourceDirName": "technical-knowledge/architecture",
   "slug": "/technical-knowledge/architecture/microservices",
-  "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/architecture/microservices",
+  "permalink": "/technical-knowledge/architecture/microservices",
   "draft": false,
   "unlisted": false,
   "tags": [],
@@ -14,10 +14,10 @@
   "sidebar": "tutorialSidebar",
   "previous": {
     "title": "Welcome",
-    "permalink": "/docusaurus-knowledge-base-template/"
+    "permalink": "/"
   },
   "next": {
     "title": "spring-boot",
-    "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/backend/spring-boot"
+    "permalink": "/technical-knowledge/backend/spring-boot"
   }
 }

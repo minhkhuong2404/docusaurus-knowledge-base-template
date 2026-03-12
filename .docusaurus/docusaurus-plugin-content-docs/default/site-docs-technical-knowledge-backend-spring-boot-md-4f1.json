@@ -5,7 +5,7 @@
   "source": "@site/docs/technical-knowledge/backend/spring-boot.md",
   "sourceDirName": "technical-knowledge/backend",
   "slug": "/technical-knowledge/backend/spring-boot",
-  "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/backend/spring-boot",
+  "permalink": "/technical-knowledge/backend/spring-boot",
   "draft": false,
   "unlisted": false,
   "tags": [],
@@ -14,10 +14,10 @@
   "sidebar": "tutorialSidebar",
   "previous": {
     "title": "microservices",
-    "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/architecture/microservices"
+    "permalink": "/technical-knowledge/architecture/microservices"
   },
   "next": {
     "title": "Java Fundamentals: Core Language Concepts",
-    "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/java/java-fundamentals"
+    "permalink": "/technical-knowledge/java/java-fundamentals"
   }
 }

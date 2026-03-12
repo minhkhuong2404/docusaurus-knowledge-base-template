@@ -5,7 +5,7 @@
   "source": "@site/docs/technical-knowledge/kafka/kafka-exactly-once.md",
   "sourceDirName": "technical-knowledge/kafka",
   "slug": "/technical-knowledge/kafka/kafka-exactly-once",
-  "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/kafka/kafka-exactly-once",
+  "permalink": "/technical-knowledge/kafka/kafka-exactly-once",
   "draft": false,
   "unlisted": false,
   "tags": [],
@@ -18,10 +18,10 @@
   "sidebar": "tutorialSidebar",
   "previous": {
     "title": "Kafka Streams: Topology & Branching",
-    "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/kafka/kafka-streams"
+    "permalink": "/technical-knowledge/kafka/kafka-streams"
   },
   "next": {
     "title": "Parallel Consumer in Kafka",
-    "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/kafka/kafka-parallel-consumer"
+    "permalink": "/technical-knowledge/kafka/kafka-parallel-consumer"
   }
 }

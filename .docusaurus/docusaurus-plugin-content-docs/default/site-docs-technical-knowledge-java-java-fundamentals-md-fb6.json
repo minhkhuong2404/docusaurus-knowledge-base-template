@@ -5,7 +5,7 @@
   "source": "@site/docs/technical-knowledge/java/java-fundamentals.md",
   "sourceDirName": "technical-knowledge/java",
   "slug": "/technical-knowledge/java/java-fundamentals",
-  "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/java/java-fundamentals",
+  "permalink": "/technical-knowledge/java/java-fundamentals",
   "draft": false,
   "unlisted": false,
   "tags": [],
@@ -18,10 +18,10 @@
   "sidebar": "tutorialSidebar",
   "previous": {
     "title": "spring-boot",
-    "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/backend/spring-boot"
+    "permalink": "/technical-knowledge/backend/spring-boot"
   },
   "next": {
     "title": "Java Collections Framework: Deep Dive",
-    "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/java/java-collections"
+    "permalink": "/technical-knowledge/java/java-collections"
   }
 }

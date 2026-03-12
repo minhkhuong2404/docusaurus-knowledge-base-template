@@ -5,7 +5,7 @@
   "source": "@site/docs/technical-knowledge/java/java-collections.md",
   "sourceDirName": "technical-knowledge/java",
   "slug": "/technical-knowledge/java/java-collections",
-  "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/java/java-collections",
+  "permalink": "/technical-knowledge/java/java-collections",
   "draft": false,
   "unlisted": false,
   "tags": [],
@@ -18,10 +18,10 @@
   "sidebar": "tutorialSidebar",
   "previous": {
     "title": "Java Fundamentals: Core Language Concepts",
-    "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/java/java-fundamentals"
+    "permalink": "/technical-knowledge/java/java-fundamentals"
   },
   "next": {
     "title": "Java Concurrency: Threads, Locks & Concurrent Utilities",
-    "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/java/java-concurrency"
+    "permalink": "/technical-knowledge/java/java-concurrency"
   }
 }

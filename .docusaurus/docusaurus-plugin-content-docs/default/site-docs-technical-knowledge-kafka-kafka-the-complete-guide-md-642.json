@@ -5,7 +5,7 @@
   "source": "@site/docs/technical-knowledge/kafka/Kafka: The Complete Guide.md",
   "sourceDirName": "technical-knowledge/kafka",
   "slug": "/technical-knowledge/kafka/kafka-complete-guide",
-  "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/kafka/kafka-complete-guide",
+  "permalink": "/technical-knowledge/kafka/kafka-complete-guide",
   "draft": false,
   "unlisted": false,
   "tags": [],
@@ -18,10 +18,10 @@
   "sidebar": "tutorialSidebar",
   "previous": {
     "title": "Java Interview Questions & Answers",
-    "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/java/java-interview-questions"
+    "permalink": "/technical-knowledge/java/java-interview-questions"
   },
   "next": {
     "title": "Kafka Connect",
-    "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/kafka/kafka-connect"
+    "permalink": "/technical-knowledge/kafka/kafka-connect"
   }
 }

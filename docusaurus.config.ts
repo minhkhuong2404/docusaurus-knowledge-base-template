@@ -5,8 +5,8 @@ import prismTheme from './src/theme/prismTheme'
 const config: Config = {
 	title: 'Engineering Knowledge Base',
 	tagline: 'Internal technical documentation',
-	url: 'https://minhkhuong2404.github.io',
-	baseUrl: '/docusaurus-knowledge-base-template/',
+	url: 'https://luminhkhuong.dev',
+	baseUrl: '/',
 
 	organizationName: 'minhkhuong2404',
 	projectName: 'docusaurus-knowledge-base-template',

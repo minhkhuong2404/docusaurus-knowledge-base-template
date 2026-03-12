@@ -1,88 +1,88 @@
 {
   "docusaurus-plugin-content-docs": {
     "default": {
-      "path": "/docusaurus-knowledge-base-template/",
+      "path": "/",
       "versions": [
         {
           "name": "current",
           "label": "Next",
           "isLast": true,
-          "path": "/docusaurus-knowledge-base-template/",
+          "path": "/",
           "mainDocId": "intro",
           "docs": [
             {
               "id": "intro",
-              "path": "/docusaurus-knowledge-base-template/",
+              "path": "/",
               "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/architecture/microservices",
-              "path": "/docusaurus-knowledge-base-template/technical-knowledge/architecture/microservices",
+              "path": "/technical-knowledge/architecture/microservices",
               "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/backend/spring-boot",
-              "path": "/docusaurus-knowledge-base-template/technical-knowledge/backend/spring-boot",
+              "path": "/technical-knowledge/backend/spring-boot",
               "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/java/java-collections",
-              "path": "/docusaurus-knowledge-base-template/technical-knowledge/java/java-collections",
+              "path": "/technical-knowledge/java/java-collections",
               "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/java/java-concurrency",
-              "path": "/docusaurus-knowledge-base-template/technical-knowledge/java/java-concurrency",
+              "path": "/technical-knowledge/java/java-concurrency",
               "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/java/java-fundamentals",
-              "path": "/docusaurus-knowledge-base-template/technical-knowledge/java/java-fundamentals",
+              "path": "/technical-knowledge/java/java-fundamentals",
               "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/java/java-interview-questions",
-              "path": "/docusaurus-knowledge-base-template/technical-knowledge/java/java-interview-questions",
+              "path": "/technical-knowledge/java/java-interview-questions",
               "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/java/java-io",
-              "path": "/docusaurus-knowledge-base-template/technical-knowledge/java/java-io",
+              "path": "/technical-knowledge/java/java-io",
               "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/java/java-jvm",
-              "path": "/docusaurus-knowledge-base-template/technical-knowledge/java/java-jvm",
+              "path": "/technical-knowledge/java/java-jvm",
               "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/java/java-new-features",
-              "path": "/docusaurus-knowledge-base-template/technical-knowledge/java/java-new-features",
+              "path": "/technical-knowledge/java/java-new-features",
               "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/kafka/kafka-complete-guide",
-              "path": "/docusaurus-knowledge-base-template/technical-knowledge/kafka/kafka-complete-guide",
+              "path": "/technical-knowledge/kafka/kafka-complete-guide",
               "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/kafka/kafka-connect",
-              "path": "/docusaurus-knowledge-base-template/technical-knowledge/kafka/kafka-connect",
+              "path": "/technical-knowledge/kafka/kafka-connect",
               "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/kafka/kafka-exactly-once",
-              "path": "/docusaurus-knowledge-base-template/technical-knowledge/kafka/kafka-exactly-once",
+              "path": "/technical-knowledge/kafka/kafka-exactly-once",
               "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/kafka/kafka-parallel-consumer",
-              "path": "/docusaurus-knowledge-base-template/technical-knowledge/kafka/kafka-parallel-consumer",
+              "path": "/technical-knowledge/kafka/kafka-parallel-consumer",
               "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/kafka/kafka-streams",
-              "path": "/docusaurus-knowledge-base-template/technical-knowledge/kafka/kafka-streams",
+              "path": "/technical-knowledge/kafka/kafka-streams",
               "sidebar": "tutorialSidebar"
             }
           ],
@@ -90,7 +90,7 @@
           "sidebars": {
             "tutorialSidebar": {
               "link": {
-                "path": "/docusaurus-knowledge-base-template/",
+                "path": "/",
                 "label": "intro"
               }
             }

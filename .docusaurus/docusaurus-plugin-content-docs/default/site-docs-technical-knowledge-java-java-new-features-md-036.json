@@ -5,7 +5,7 @@
   "source": "@site/docs/technical-knowledge/java/java-new-features.md",
   "sourceDirName": "technical-knowledge/java",
   "slug": "/technical-knowledge/java/java-new-features",
-  "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/java/java-new-features",
+  "permalink": "/technical-knowledge/java/java-new-features",
   "draft": false,
   "unlisted": false,
   "tags": [],
@@ -18,10 +18,10 @@
   "sidebar": "tutorialSidebar",
   "previous": {
     "title": "JVM Internals: Memory, GC & Class Loading",
-    "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/java/java-jvm"
+    "permalink": "/technical-knowledge/java/java-jvm"
   },
   "next": {
     "title": "Java Interview Questions & Answers",
-    "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/java/java-interview-questions"
+    "permalink": "/technical-knowledge/java/java-interview-questions"
   }
 }

@@ -5,7 +5,7 @@
   "source": "@site/docs/technical-knowledge/kafka/kafka-streams.md",
   "sourceDirName": "technical-knowledge/kafka",
   "slug": "/technical-knowledge/kafka/kafka-streams",
-  "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/kafka/kafka-streams",
+  "permalink": "/technical-knowledge/kafka/kafka-streams",
   "draft": false,
   "unlisted": false,
   "tags": [],
@@ -18,10 +18,10 @@
   "sidebar": "tutorialSidebar",
   "previous": {
     "title": "Kafka Connect",
-    "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/kafka/kafka-connect"
+    "permalink": "/technical-knowledge/kafka/kafka-connect"
   },
   "next": {
     "title": "Configuring Exactly-Once Semantics in Kafka",
-    "permalink": "/docusaurus-knowledge-base-template/technical-knowledge/kafka/kafka-exactly-once"
+    "permalink": "/technical-knowledge/kafka/kafka-exactly-once"
   }
 }
