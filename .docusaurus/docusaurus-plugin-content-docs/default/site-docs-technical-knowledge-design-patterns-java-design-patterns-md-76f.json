@@ -1,0 +1,18 @@
+{
+  "id": "technical-knowledge/design-patterns/java-design-patterns",
+  "title": "Java Design Patterns: Creational, Structural & Behavioral",
+  "description": "A comprehensive guide to the most commonly used design patterns in Java — covering their intent, how they work, when and why to use them, with code examples and interview questions.",
+  "source": "@site/docs/technical-knowledge/design-patterns/java-design-patterns.md",
+  "sourceDirName": "technical-knowledge/design-patterns",
+  "slug": "/technical-knowledge/design-patterns/java-design-patterns",
+  "permalink": "/technical-knowledge/design-patterns/java-design-patterns",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "java-design-patterns",
+    "title": "Java Design Patterns: Creational, Structural & Behavioral",
+    "slug": "java-design-patterns"
+  }
+}

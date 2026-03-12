@@ -1,0 +1,27 @@
+{
+  "id": "technical-knowledge/design-patterns/chain-of-responsibility",
+  "title": "Chain of Responsibility Pattern",
+  "description": "Category: Behavioral",
+  "source": "@site/docs/technical-knowledge/design-patterns/chain-of-responsibility.md",
+  "sourceDirName": "technical-knowledge/design-patterns",
+  "slug": "/technical-knowledge/design-patterns/chain-of-responsibility",
+  "permalink": "/technical-knowledge/design-patterns/chain-of-responsibility",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "chain-of-responsibility",
+    "title": "Chain of Responsibility Pattern",
+    "slug": "chain-of-responsibility"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Proxy Pattern",
+    "permalink": "/technical-knowledge/design-patterns/proxy"
+  },
+  "next": {
+    "title": "Observer Pattern",
+    "permalink": "/technical-knowledge/design-patterns/observer"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "id": "technical-knowledge/design-patterns/adapter",
+  "title": "Adapter Pattern",
+  "description": "Category: Structural",
+  "source": "@site/docs/technical-knowledge/design-patterns/adapter.md",
+  "sourceDirName": "technical-knowledge/design-patterns",
+  "slug": "/technical-knowledge/design-patterns/adapter",
+  "permalink": "/technical-knowledge/design-patterns/adapter",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "adapter",
+    "title": "Adapter Pattern",
+    "slug": "adapter"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Prototype Pattern",
+    "permalink": "/technical-knowledge/design-patterns/prototype"
+  },
+  "next": {
+    "title": "Bridge Pattern",
+    "permalink": "/technical-knowledge/design-patterns/bridge"
+  }
+}

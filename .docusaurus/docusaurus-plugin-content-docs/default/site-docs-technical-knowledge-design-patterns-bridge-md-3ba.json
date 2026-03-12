@@ -1,0 +1,27 @@
+{
+  "id": "technical-knowledge/design-patterns/bridge",
+  "title": "Bridge Pattern",
+  "description": "Category: Structural",
+  "source": "@site/docs/technical-knowledge/design-patterns/bridge.md",
+  "sourceDirName": "technical-knowledge/design-patterns",
+  "slug": "/technical-knowledge/design-patterns/bridge",
+  "permalink": "/technical-knowledge/design-patterns/bridge",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "bridge",
+    "title": "Bridge Pattern",
+    "slug": "bridge"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Adapter Pattern",
+    "permalink": "/technical-knowledge/design-patterns/adapter"
+  },
+  "next": {
+    "title": "Composite Pattern",
+    "permalink": "/technical-knowledge/design-patterns/composite"
+  }
+}

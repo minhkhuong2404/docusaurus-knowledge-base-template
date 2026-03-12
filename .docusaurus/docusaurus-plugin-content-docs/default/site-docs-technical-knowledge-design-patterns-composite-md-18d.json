@@ -1,0 +1,27 @@
+{
+  "id": "technical-knowledge/design-patterns/composite",
+  "title": "Composite Pattern",
+  "description": "Category: Structural",
+  "source": "@site/docs/technical-knowledge/design-patterns/composite.md",
+  "sourceDirName": "technical-knowledge/design-patterns",
+  "slug": "/technical-knowledge/design-patterns/composite",
+  "permalink": "/technical-knowledge/design-patterns/composite",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "composite",
+    "title": "Composite Pattern",
+    "slug": "composite"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Bridge Pattern",
+    "permalink": "/technical-knowledge/design-patterns/bridge"
+  },
+  "next": {
+    "title": "Decorator Pattern",
+    "permalink": "/technical-knowledge/design-patterns/decorator"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "id": "technical-knowledge/design-patterns/design-patterns-overview",
+  "title": "Java Design Patterns: Overview",
+  "description": "Design patterns are reusable solutions to common software design problems. They provide proven approaches that improve code maintainability, readability, and scalability, while establishing a shared vocabulary for developers to communicate design decisions.",
+  "source": "@site/docs/technical-knowledge/design-patterns/design-patterns-overview.md",
+  "sourceDirName": "technical-knowledge/design-patterns",
+  "slug": "/technical-knowledge/design-patterns/design-patterns-overview",
+  "permalink": "/technical-knowledge/design-patterns/design-patterns-overview",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "design-patterns-overview",
+    "title": "Java Design Patterns: Overview",
+    "slug": "design-patterns-overview"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "spring-boot",
+    "permalink": "/technical-knowledge/backend/spring-boot"
+  },
+  "next": {
+    "title": "Singleton Pattern",
+    "permalink": "/technical-knowledge/design-patterns/singleton"
+  }
+}

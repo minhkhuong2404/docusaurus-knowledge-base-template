@@ -1,0 +1,27 @@
+{
+  "id": "technical-knowledge/design-patterns/strategy",
+  "title": "Strategy Pattern",
+  "description": "Category: Behavioral",
+  "source": "@site/docs/technical-knowledge/design-patterns/strategy.md",
+  "sourceDirName": "technical-knowledge/design-patterns",
+  "slug": "/technical-knowledge/design-patterns/strategy",
+  "permalink": "/technical-knowledge/design-patterns/strategy",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "strategy",
+    "title": "Strategy Pattern",
+    "slug": "strategy"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Observer Pattern",
+    "permalink": "/technical-knowledge/design-patterns/observer"
+  },
+  "next": {
+    "title": "Command Pattern",
+    "permalink": "/technical-knowledge/design-patterns/command"
+  }
+}

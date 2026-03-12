@@ -26,6 +26,91 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/design-patterns/abstract-factory",
+              "path": "/technical-knowledge/design-patterns/abstract-factory",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/design-patterns/adapter",
+              "path": "/technical-knowledge/design-patterns/adapter",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/design-patterns/bridge",
+              "path": "/technical-knowledge/design-patterns/bridge",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/design-patterns/builder",
+              "path": "/technical-knowledge/design-patterns/builder",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/design-patterns/chain-of-responsibility",
+              "path": "/technical-knowledge/design-patterns/chain-of-responsibility",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/design-patterns/command",
+              "path": "/technical-knowledge/design-patterns/command",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/design-patterns/composite",
+              "path": "/technical-knowledge/design-patterns/composite",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/design-patterns/decorator",
+              "path": "/technical-knowledge/design-patterns/decorator",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/design-patterns/design-patterns-overview",
+              "path": "/technical-knowledge/design-patterns/design-patterns-overview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/design-patterns/facade",
+              "path": "/technical-knowledge/design-patterns/facade",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/design-patterns/factory-method",
+              "path": "/technical-knowledge/design-patterns/factory-method",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/design-patterns/observer",
+              "path": "/technical-knowledge/design-patterns/observer",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/design-patterns/prototype",
+              "path": "/technical-knowledge/design-patterns/prototype",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/design-patterns/proxy",
+              "path": "/technical-knowledge/design-patterns/proxy",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/design-patterns/singleton",
+              "path": "/technical-knowledge/design-patterns/singleton",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/design-patterns/strategy",
+              "path": "/technical-knowledge/design-patterns/strategy",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/design-patterns/template-method",
+              "path": "/technical-knowledge/design-patterns/template-method",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/java/java-collections",
               "path": "/technical-knowledge/java/java-collections",
               "sidebar": "tutorialSidebar"

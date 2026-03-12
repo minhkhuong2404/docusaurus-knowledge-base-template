@@ -1,0 +1,27 @@
+{
+  "id": "technical-knowledge/design-patterns/factory-method",
+  "title": "Factory Method Pattern",
+  "description": "Category: Creational",
+  "source": "@site/docs/technical-knowledge/design-patterns/factory-method.md",
+  "sourceDirName": "technical-knowledge/design-patterns",
+  "slug": "/technical-knowledge/design-patterns/factory-method",
+  "permalink": "/technical-knowledge/design-patterns/factory-method",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "factory-method",
+    "title": "Factory Method Pattern",
+    "slug": "factory-method"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Singleton Pattern",
+    "permalink": "/technical-knowledge/design-patterns/singleton"
+  },
+  "next": {
+    "title": "Abstract Factory Pattern",
+    "permalink": "/technical-knowledge/design-patterns/abstract-factory"
+  }
+}

@@ -3,51 +3,16 @@ import ComponentCreator from '@docusaurus/ComponentCreator';
 
 export default [
   {
-    path: '/__docusaurus/debug',
-    component: ComponentCreator('/__docusaurus/debug', '5ff'),
-    exact: true
-  },
-  {
-    path: '/__docusaurus/debug/config',
-    component: ComponentCreator('/__docusaurus/debug/config', '5ba'),
-    exact: true
-  },
-  {
-    path: '/__docusaurus/debug/content',
-    component: ComponentCreator('/__docusaurus/debug/content', 'a2b'),
-    exact: true
-  },
-  {
-    path: '/__docusaurus/debug/globalData',
-    component: ComponentCreator('/__docusaurus/debug/globalData', 'c3c'),
-    exact: true
-  },
-  {
-    path: '/__docusaurus/debug/metadata',
-    component: ComponentCreator('/__docusaurus/debug/metadata', '156'),
-    exact: true
-  },
-  {
-    path: '/__docusaurus/debug/registry',
-    component: ComponentCreator('/__docusaurus/debug/registry', '88c'),
-    exact: true
-  },
-  {
-    path: '/__docusaurus/debug/routes',
-    component: ComponentCreator('/__docusaurus/debug/routes', '000'),
-    exact: true
-  },
-  {
     path: '/',
-    component: ComponentCreator('/', 'caa'),
+    component: ComponentCreator('/', 'd78'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '1a2'),
+        component: ComponentCreator('/', '870'),
         routes: [
           {
             path: '/',
-            component: ComponentCreator('/', 'eba'),
+            component: ComponentCreator('/', '3eb'),
             routes: [
               {
                 path: '/technical-knowledge/architecture/microservices',
@@ -58,6 +23,108 @@ export default [
               {
                 path: '/technical-knowledge/backend/spring-boot',
                 component: ComponentCreator('/technical-knowledge/backend/spring-boot', '8b6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/design-patterns/abstract-factory',
+                component: ComponentCreator('/technical-knowledge/design-patterns/abstract-factory', '287'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/design-patterns/adapter',
+                component: ComponentCreator('/technical-knowledge/design-patterns/adapter', 'f59'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/design-patterns/bridge',
+                component: ComponentCreator('/technical-knowledge/design-patterns/bridge', '517'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/design-patterns/builder',
+                component: ComponentCreator('/technical-knowledge/design-patterns/builder', '8f2'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/design-patterns/chain-of-responsibility',
+                component: ComponentCreator('/technical-knowledge/design-patterns/chain-of-responsibility', '557'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/design-patterns/command',
+                component: ComponentCreator('/technical-knowledge/design-patterns/command', 'cbe'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/design-patterns/composite',
+                component: ComponentCreator('/technical-knowledge/design-patterns/composite', 'bed'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/design-patterns/decorator',
+                component: ComponentCreator('/technical-knowledge/design-patterns/decorator', 'f76'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/design-patterns/design-patterns-overview',
+                component: ComponentCreator('/technical-knowledge/design-patterns/design-patterns-overview', '5f5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/design-patterns/facade',
+                component: ComponentCreator('/technical-knowledge/design-patterns/facade', '80c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/design-patterns/factory-method',
+                component: ComponentCreator('/technical-knowledge/design-patterns/factory-method', 'f63'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/design-patterns/observer',
+                component: ComponentCreator('/technical-knowledge/design-patterns/observer', 'a3d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/design-patterns/prototype',
+                component: ComponentCreator('/technical-knowledge/design-patterns/prototype', 'f4f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/design-patterns/proxy',
+                component: ComponentCreator('/technical-knowledge/design-patterns/proxy', 'c17'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/design-patterns/singleton',
+                component: ComponentCreator('/technical-knowledge/design-patterns/singleton', '5cf'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/design-patterns/strategy',
+                component: ComponentCreator('/technical-knowledge/design-patterns/strategy', '090'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/design-patterns/template-method',
+                component: ComponentCreator('/technical-knowledge/design-patterns/template-method', '5f8'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

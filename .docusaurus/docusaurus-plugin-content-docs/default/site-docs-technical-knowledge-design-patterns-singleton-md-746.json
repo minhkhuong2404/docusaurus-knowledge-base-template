@@ -1,0 +1,27 @@
+{
+  "id": "technical-knowledge/design-patterns/singleton",
+  "title": "Singleton Pattern",
+  "description": "Category: Creational",
+  "source": "@site/docs/technical-knowledge/design-patterns/singleton.md",
+  "sourceDirName": "technical-knowledge/design-patterns",
+  "slug": "/technical-knowledge/design-patterns/singleton",
+  "permalink": "/technical-knowledge/design-patterns/singleton",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "singleton",
+    "title": "Singleton Pattern",
+    "slug": "singleton"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Java Design Patterns: Overview",
+    "permalink": "/technical-knowledge/design-patterns/design-patterns-overview"
+  },
+  "next": {
+    "title": "Factory Method Pattern",
+    "permalink": "/technical-knowledge/design-patterns/factory-method"
+  }
+}

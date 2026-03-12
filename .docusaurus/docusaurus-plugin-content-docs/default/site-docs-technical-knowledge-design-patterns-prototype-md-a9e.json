@@ -1,0 +1,27 @@
+{
+  "id": "technical-knowledge/design-patterns/prototype",
+  "title": "Prototype Pattern",
+  "description": "Category: Creational",
+  "source": "@site/docs/technical-knowledge/design-patterns/prototype.md",
+  "sourceDirName": "technical-knowledge/design-patterns",
+  "slug": "/technical-knowledge/design-patterns/prototype",
+  "permalink": "/technical-knowledge/design-patterns/prototype",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "prototype",
+    "title": "Prototype Pattern",
+    "slug": "prototype"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Builder Pattern",
+    "permalink": "/technical-knowledge/design-patterns/builder"
+  },
+  "next": {
+    "title": "Adapter Pattern",
+    "permalink": "/technical-knowledge/design-patterns/adapter"
+  }
+}

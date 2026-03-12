@@ -1,118 +1,143 @@
 {
-  "/__docusaurus/debug-5ff": {
-    "__comp": "__comp---theme-debug-config-23-a-2ff",
+  "/-d78": {
+    "__comp": "5e95c892",
     "__context": {
-      "plugin": "plugin---docusaurus-knowledge-base-template-docusaurus-debugb-38-ed1"
+      "plugin": "aba21aa0"
     }
   },
-  "/__docusaurus/debug/config-5ba": {
-    "__comp": "__comp---theme-debug-config-23-a-2ff",
-    "__context": {
-      "plugin": "plugin---docusaurus-knowledge-base-template-docusaurus-debugb-38-ed1"
-    }
+  "/-870": {
+    "__comp": "a7bd4aaa",
+    "__props": "22dd74f7"
   },
-  "/__docusaurus/debug/content-a2b": {
-    "__comp": "__comp---theme-debug-contentba-8-ce7",
-    "__context": {
-      "plugin": "plugin---docusaurus-knowledge-base-template-docusaurus-debugb-38-ed1"
-    },
-    "__props": "__props---docusaurus-debug-content-3-c-0-be2"
-  },
-  "/__docusaurus/debug/globalData-c3c": {
-    "__comp": "__comp---theme-debug-global-dataede-0fa",
-    "__context": {
-      "plugin": "plugin---docusaurus-knowledge-base-template-docusaurus-debugb-38-ed1"
-    }
-  },
-  "/__docusaurus/debug/metadata-156": {
-    "__comp": "__comp---theme-debug-site-metadata-68-e-3d4",
-    "__context": {
-      "plugin": "plugin---docusaurus-knowledge-base-template-docusaurus-debugb-38-ed1"
-    }
-  },
-  "/__docusaurus/debug/registry-88c": {
-    "__comp": "__comp---theme-debug-registry-679-501",
-    "__context": {
-      "plugin": "plugin---docusaurus-knowledge-base-template-docusaurus-debugb-38-ed1"
-    }
-  },
-  "/__docusaurus/debug/routes-000": {
-    "__comp": "__comp---theme-debug-routes-946-699",
-    "__context": {
-      "plugin": "plugin---docusaurus-knowledge-base-template-docusaurus-debugb-38-ed1"
-    }
-  },
-  "/-caa": {
-    "__comp": "__comp---theme-docs-root-5-e-9-0b6",
-    "__context": {
-      "plugin": "plugin---docusaurus-knowledge-base-template-aba-95e"
-    }
-  },
-  "/-1a2": {
-    "__comp": "__comp---theme-doc-version-roota-7-b-5de",
-    "__props": "__props---22-d-307"
-  },
-  "/-eba": {
-    "__comp": "__comp---theme-doc-roota-94-67a"
+  "/-3eb": {
+    "__comp": "a94703ab"
   },
   "/technical-knowledge/architecture/microservices-46b": {
-    "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---docusaurus-knowledge-base-template-technical-knowledge-architecture-microservices-12-f-270"
+    "__comp": "17896441",
+    "content": "12f034a4"
   },
   "/technical-knowledge/backend/spring-boot-8b6": {
-    "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---docusaurus-knowledge-base-template-technical-knowledge-backend-spring-boot-4-f-1-240"
+    "__comp": "17896441",
+    "content": "4f151f88"
+  },
+  "/technical-knowledge/design-patterns/abstract-factory-287": {
+    "__comp": "17896441",
+    "content": "75a575e6"
+  },
+  "/technical-knowledge/design-patterns/adapter-f59": {
+    "__comp": "17896441",
+    "content": "94a3a592"
+  },
+  "/technical-knowledge/design-patterns/bridge-517": {
+    "__comp": "17896441",
+    "content": "3ba91556"
+  },
+  "/technical-knowledge/design-patterns/builder-8f2": {
+    "__comp": "17896441",
+    "content": "88e18de2"
+  },
+  "/technical-knowledge/design-patterns/chain-of-responsibility-557": {
+    "__comp": "17896441",
+    "content": "a616e90a"
+  },
+  "/technical-knowledge/design-patterns/command-cbe": {
+    "__comp": "17896441",
+    "content": "03ec1583"
+  },
+  "/technical-knowledge/design-patterns/composite-bed": {
+    "__comp": "17896441",
+    "content": "18d50321"
+  },
+  "/technical-knowledge/design-patterns/decorator-f76": {
+    "__comp": "17896441",
+    "content": "4387012b"
+  },
+  "/technical-knowledge/design-patterns/design-patterns-overview-5f5": {
+    "__comp": "17896441",
+    "content": "17fe6fad"
+  },
+  "/technical-knowledge/design-patterns/facade-80c": {
+    "__comp": "17896441",
+    "content": "18477c31"
+  },
+  "/technical-knowledge/design-patterns/factory-method-f63": {
+    "__comp": "17896441",
+    "content": "2004579e"
+  },
+  "/technical-knowledge/design-patterns/observer-a3d": {
+    "__comp": "17896441",
+    "content": "192b16bf"
+  },
+  "/technical-knowledge/design-patterns/prototype-f4f": {
+    "__comp": "17896441",
+    "content": "a9e79f73"
+  },
+  "/technical-knowledge/design-patterns/proxy-c17": {
+    "__comp": "17896441",
+    "content": "c76a0310"
+  },
+  "/technical-knowledge/design-patterns/singleton-5cf": {
+    "__comp": "17896441",
+    "content": "746a5032"
+  },
+  "/technical-knowledge/design-patterns/strategy-090": {
+    "__comp": "17896441",
+    "content": "443a2305"
+  },
+  "/technical-knowledge/design-patterns/template-method-5f8": {
+    "__comp": "17896441",
+    "content": "7d61f896"
   },
   "/technical-knowledge/java/java-collections-5a4": {
-    "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---docusaurus-knowledge-base-template-technical-knowledge-java-java-collectionsa-8-d-ce2"
+    "__comp": "17896441",
+    "content": "a8d4740a"
   },
   "/technical-knowledge/java/java-concurrency-b3c": {
-    "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---docusaurus-knowledge-base-template-technical-knowledge-java-java-concurrencyf-13-7d5"
+    "__comp": "17896441",
+    "content": "f13bfd67"
   },
   "/technical-knowledge/java/java-fundamentals-3b1": {
-    "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---docusaurus-knowledge-base-template-technical-knowledge-java-java-fundamentalsfb-6-909"
+    "__comp": "17896441",
+    "content": "fb6d755b"
   },
   "/technical-knowledge/java/java-interview-questions-6a3": {
-    "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---docusaurus-knowledge-base-template-technical-knowledge-java-java-interview-questionsf-99-239"
+    "__comp": "17896441",
+    "content": "f99a0434"
   },
   "/technical-knowledge/java/java-io-5ec": {
-    "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---docusaurus-knowledge-base-template-technical-knowledge-java-java-io-374-1cc"
+    "__comp": "17896441",
+    "content": "3744858f"
   },
   "/technical-knowledge/java/java-jvm-d96": {
-    "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---docusaurus-knowledge-base-template-technical-knowledge-java-java-jvm-2-fb-4b2"
+    "__comp": "17896441",
+    "content": "2fb67458"
   },
   "/technical-knowledge/java/java-new-features-0f9": {
-    "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---docusaurus-knowledge-base-template-technical-knowledge-java-java-new-features-036-edf"
+    "__comp": "17896441",
+    "content": "0366963e"
   },
   "/technical-knowledge/kafka/kafka-complete-guide-8ec": {
-    "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---docusaurus-knowledge-base-template-technical-knowledge-kafka-kafka-complete-guide-642-5f5"
+    "__comp": "17896441",
+    "content": "64240187"
   },
   "/technical-knowledge/kafka/kafka-connect-503": {
-    "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---docusaurus-knowledge-base-template-technical-knowledge-kafka-kafka-connectfab-7b8"
+    "__comp": "17896441",
+    "content": "fabc3ea1"
   },
   "/technical-knowledge/kafka/kafka-exactly-once-d9b": {
-    "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---docusaurus-knowledge-base-template-technical-knowledge-kafka-kafka-exactly-once-2-b-0-bfe"
+    "__comp": "17896441",
+    "content": "2b06adde"
   },
   "/technical-knowledge/kafka/kafka-parallel-consumer-75a": {
-    "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---docusaurus-knowledge-base-template-technical-knowledge-kafka-kafka-parallel-consumer-186-3da"
+    "__comp": "17896441",
+    "content": "186258f5"
   },
   "/technical-knowledge/kafka/kafka-streams-5c9": {
-    "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---docusaurus-knowledge-base-template-technical-knowledge-kafka-kafka-streams-4-a-6-c76"
+    "__comp": "17896441",
+    "content": "4a65d68f"
   },
   "/-fc9": {
-    "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---docusaurus-knowledge-base-template-0-e-3-253"
+    "__comp": "17896441",
+    "content": "0e384e19"
   }
 }

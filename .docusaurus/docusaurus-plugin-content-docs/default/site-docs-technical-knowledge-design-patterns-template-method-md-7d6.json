@@ -1,0 +1,27 @@
+{
+  "id": "technical-knowledge/design-patterns/template-method",
+  "title": "Template Method Pattern",
+  "description": "Category: Behavioral",
+  "source": "@site/docs/technical-knowledge/design-patterns/template-method.md",
+  "sourceDirName": "technical-knowledge/design-patterns",
+  "slug": "/technical-knowledge/design-patterns/template-method",
+  "permalink": "/technical-knowledge/design-patterns/template-method",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "template-method",
+    "title": "Template Method Pattern",
+    "slug": "template-method"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Command Pattern",
+    "permalink": "/technical-knowledge/design-patterns/command"
+  },
+  "next": {
+    "title": "Java Fundamentals: Core Language Concepts",
+    "permalink": "/technical-knowledge/java/java-fundamentals"
+  }
+}

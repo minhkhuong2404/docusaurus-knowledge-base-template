@@ -17,8 +17,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "spring-boot",
-    "permalink": "/technical-knowledge/backend/spring-boot"
+    "title": "Template Method Pattern",
+    "permalink": "/technical-knowledge/design-patterns/template-method"
   },
   "next": {
     "title": "Java Collections Framework: Deep Dive",
