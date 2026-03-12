@@ -26,6 +26,51 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/backend/spring-boot-advanced",
+              "path": "/technical-knowledge/backend/spring-boot-advanced",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/backend/spring-boot-internals",
+              "path": "/technical-knowledge/backend/spring-boot-internals",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/backend/spring-boot-interview-questions",
+              "path": "/technical-knowledge/backend/spring-boot-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/backend/spring-data-jpa",
+              "path": "/technical-knowledge/backend/spring-data-jpa",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/backend/spring-framework",
+              "path": "/technical-knowledge/backend/spring-framework",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/backend/spring-framework-deep-dive",
+              "path": "/technical-knowledge/backend/spring-framework-deep-dive",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/backend/spring-interview-questions",
+              "path": "/technical-knowledge/backend/spring-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/backend/spring-mvc",
+              "path": "/technical-knowledge/backend/spring-mvc",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/backend/spring-security",
+              "path": "/technical-knowledge/backend/spring-security",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/design-patterns/abstract-factory",
               "path": "/technical-knowledge/design-patterns/abstract-factory",
               "sidebar": "tutorialSidebar"

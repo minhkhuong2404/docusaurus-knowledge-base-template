@@ -1,0 +1,25 @@
+{
+  "id": "technical-knowledge/backend/spring-mvc",
+  "title": "Spring MVC — Complete Guide",
+  "description": "Spring MVC is the web framework within Spring that implements the Model-View-Controller design pattern, providing a structured way to build web applications and RESTful services.",
+  "source": "@site/docs/technical-knowledge/backend/spring-mvc.md",
+  "sourceDirName": "technical-knowledge/backend",
+  "slug": "/technical-knowledge/backend/spring-mvc",
+  "permalink": "/technical-knowledge/backend/spring-mvc",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "title": "Spring MVC — Complete Guide"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Spring Security — Complete Guide",
+    "permalink": "/technical-knowledge/backend/spring-security"
+  },
+  "next": {
+    "title": "Spring Data JPA — Complete Guide",
+    "permalink": "/technical-knowledge/backend/spring-data-jpa"
+  }
+}

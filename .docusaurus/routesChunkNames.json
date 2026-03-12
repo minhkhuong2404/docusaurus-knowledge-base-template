@@ -1,15 +1,15 @@
 {
-  "/-d78": {
+  "/-dd2": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-870": {
+  "/-3b9": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
-  "/-3eb": {
+  "/-225": {
     "__comp": "a94703ab"
   },
   "/technical-knowledge/architecture/microservices-46b": {
@@ -19,6 +19,42 @@
   "/technical-knowledge/backend/spring-boot-8b6": {
     "__comp": "17896441",
     "content": "4f151f88"
+  },
+  "/technical-knowledge/backend/spring-boot-advanced-06f": {
+    "__comp": "17896441",
+    "content": "e35dac42"
+  },
+  "/technical-knowledge/backend/spring-boot-internals-8c8": {
+    "__comp": "17896441",
+    "content": "705c4617"
+  },
+  "/technical-knowledge/backend/spring-boot-interview-questions-5b5": {
+    "__comp": "17896441",
+    "content": "bf0a3d6b"
+  },
+  "/technical-knowledge/backend/spring-data-jpa-2c0": {
+    "__comp": "17896441",
+    "content": "a9b67497"
+  },
+  "/technical-knowledge/backend/spring-framework-c82": {
+    "__comp": "17896441",
+    "content": "6bf0d838"
+  },
+  "/technical-knowledge/backend/spring-framework-deep-dive-f64": {
+    "__comp": "17896441",
+    "content": "9165d79e"
+  },
+  "/technical-knowledge/backend/spring-interview-questions-15c": {
+    "__comp": "17896441",
+    "content": "e95cd62e"
+  },
+  "/technical-knowledge/backend/spring-mvc-3a4": {
+    "__comp": "17896441",
+    "content": "2180cc84"
+  },
+  "/technical-knowledge/backend/spring-security-2dd": {
+    "__comp": "17896441",
+    "content": "56a281be"
   },
   "/technical-knowledge/design-patterns/abstract-factory-287": {
     "__comp": "17896441",

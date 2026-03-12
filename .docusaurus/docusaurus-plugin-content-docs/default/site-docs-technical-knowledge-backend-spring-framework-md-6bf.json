@@ -1,0 +1,25 @@
+{
+  "id": "technical-knowledge/backend/spring-framework",
+  "title": "Spring Framework: Overview",
+  "description": "Spring is a comprehensive Java framework for building enterprise applications. It provides a powerful toolkit that simplifies complex development tasks — from connecting to databases, to managing application components, to handling web requests. Spring takes care of much of the technical plumbing, allowing developers to focus on business logic.",
+  "source": "@site/docs/technical-knowledge/backend/spring-framework.md",
+  "sourceDirName": "technical-knowledge/backend",
+  "slug": "/technical-knowledge/backend/spring-framework",
+  "permalink": "/technical-knowledge/backend/spring-framework",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "title": "Spring Framework: Overview"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Spring Boot: Interview Questions",
+    "permalink": "/technical-knowledge/backend/spring-boot-interview-questions"
+  },
+  "next": {
+    "title": "Spring Framework: Deep Dive",
+    "permalink": "/technical-knowledge/backend/spring-framework-deep-dive"
+  }
+}

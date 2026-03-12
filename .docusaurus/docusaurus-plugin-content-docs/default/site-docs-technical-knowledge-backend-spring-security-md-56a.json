@@ -1,0 +1,25 @@
+{
+  "id": "technical-knowledge/backend/spring-security",
+  "title": "Spring Security — Complete Guide",
+  "description": "Spring Security is the de-facto standard for securing Spring-based applications. It provides comprehensive authentication, authorization, and protection against common exploits out of the box.",
+  "source": "@site/docs/technical-knowledge/backend/spring-security.md",
+  "sourceDirName": "technical-knowledge/backend",
+  "slug": "/technical-knowledge/backend/spring-security",
+  "permalink": "/technical-knowledge/backend/spring-security",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "title": "Spring Security — Complete Guide"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Spring Framework: Interview Questions",
+    "permalink": "/technical-knowledge/backend/spring-interview-questions"
+  },
+  "next": {
+    "title": "Spring MVC — Complete Guide",
+    "permalink": "/technical-knowledge/backend/spring-mvc"
+  }
+}

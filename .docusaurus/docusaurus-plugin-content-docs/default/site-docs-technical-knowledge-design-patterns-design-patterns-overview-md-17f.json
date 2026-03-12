@@ -17,8 +17,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "spring-boot",
-    "permalink": "/technical-knowledge/backend/spring-boot"
+    "title": "Spring Data JPA — Complete Guide",
+    "permalink": "/technical-knowledge/backend/spring-data-jpa"
   },
   "next": {
     "title": "Singleton Pattern",

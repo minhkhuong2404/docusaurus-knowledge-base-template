@@ -1,7 +1,7 @@
 {
   "id": "technical-knowledge/backend/spring-boot",
-  "title": "spring-boot",
-  "description": "",
+  "title": "Spring Boot — Overview & Why It Matters",
+  "description": "Spring Boot makes it easy to create stand-alone, production-grade Spring-based applications with minimal configuration. It is the de-facto standard for building Java microservices and web applications.",
   "source": "@site/docs/technical-knowledge/backend/spring-boot.md",
   "sourceDirName": "technical-knowledge/backend",
   "slug": "/technical-knowledge/backend/spring-boot",
@@ -10,14 +10,16 @@
   "unlisted": false,
   "tags": [],
   "version": "current",
-  "frontMatter": {},
+  "frontMatter": {
+    "title": "Spring Boot — Overview & Why It Matters"
+  },
   "sidebar": "tutorialSidebar",
   "previous": {
     "title": "microservices",
     "permalink": "/technical-knowledge/architecture/microservices"
   },
   "next": {
-    "title": "Java Design Patterns: Overview",
-    "permalink": "/technical-knowledge/design-patterns/design-patterns-overview"
+    "title": "Spring Boot — Internals & Architecture",
+    "permalink": "/technical-knowledge/backend/spring-boot-internals"
   }
 }

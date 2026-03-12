@@ -1,0 +1,25 @@
+{
+  "id": "technical-knowledge/backend/spring-interview-questions",
+  "title": "Spring Framework: Interview Questions",
+  "description": "A comprehensive collection of commonly asked Spring Framework interview questions, organized by topic and difficulty level.",
+  "source": "@site/docs/technical-knowledge/backend/spring-interview-questions.md",
+  "sourceDirName": "technical-knowledge/backend",
+  "slug": "/technical-knowledge/backend/spring-interview-questions",
+  "permalink": "/technical-knowledge/backend/spring-interview-questions",
+  "draft": false,
+  "unlisted": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "title": "Spring Framework: Interview Questions"
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Spring Framework: Deep Dive",
+    "permalink": "/technical-knowledge/backend/spring-framework-deep-dive"
+  },
+  "next": {
+    "title": "Spring Security — Complete Guide",
+    "permalink": "/technical-knowledge/backend/spring-security"
+  }
+}

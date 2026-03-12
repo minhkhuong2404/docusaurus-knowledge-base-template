@@ -12,7 +12,18 @@ const sidebars: SidebarsConfig = {
 		{
 			type: 'category',
 			label: 'Backend',
-			items: ['technical-knowledge/backend/spring-boot']
+			items: [
+				'technical-knowledge/backend/spring-boot',
+				'technical-knowledge/backend/spring-boot-internals',
+				'technical-knowledge/backend/spring-boot-advanced',
+				'technical-knowledge/backend/spring-boot-interview-questions',
+				'technical-knowledge/backend/spring-framework',
+				'technical-knowledge/backend/spring-framework-deep-dive',
+				'technical-knowledge/backend/spring-interview-questions',
+				'technical-knowledge/backend/spring-security',
+				'technical-knowledge/backend/spring-mvc',
+				'technical-knowledge/backend/spring-data-jpa'
+			]
 		},
 		{
 			type: 'category',
