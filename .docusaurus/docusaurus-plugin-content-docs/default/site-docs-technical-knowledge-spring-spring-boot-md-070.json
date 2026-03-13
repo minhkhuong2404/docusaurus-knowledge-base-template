@@ -1,11 +1,11 @@
 {
-  "id": "technical-knowledge/backend/spring-boot",
+  "id": "technical-knowledge/spring/spring-boot",
   "title": "Spring Boot — Overview & Why It Matters",
   "description": "Overview of Spring Boot, its core benefits, and why it is widely used for modern Java backend and microservice development.",
-  "source": "@site/docs/technical-knowledge/backend/spring-boot.md",
-  "sourceDirName": "technical-knowledge/backend",
-  "slug": "/technical-knowledge/backend/spring-boot",
-  "permalink": "/technical-knowledge/backend/spring-boot",
+  "source": "@site/docs/technical-knowledge/spring/spring-boot.md",
+  "sourceDirName": "technical-knowledge/spring",
+  "slug": "/technical-knowledge/spring/spring-boot",
+  "permalink": "/technical-knowledge/spring/spring-boot",
   "draft": false,
   "unlisted": false,
   "tags": [
@@ -43,11 +43,11 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Backend Knowledge Base Overview",
-    "permalink": "/technical-knowledge/backend/backend-overview"
+    "title": "Spring Knowledge Base Overview",
+    "permalink": "/technical-knowledge/spring/spring-overview"
   },
   "next": {
     "title": "Spring Boot — Internals & Architecture",
-    "permalink": "/technical-knowledge/backend/spring-boot-internals"
+    "permalink": "/technical-knowledge/spring/spring-boot-internals"
   }
 }

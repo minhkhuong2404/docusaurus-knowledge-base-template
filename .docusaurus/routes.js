@@ -3,12 +3,47 @@ import ComponentCreator from '@docusaurus/ComponentCreator';
 
 export default [
   {
+    path: '/__docusaurus/debug',
+    component: ComponentCreator('/__docusaurus/debug', '5ff'),
+    exact: true
+  },
+  {
+    path: '/__docusaurus/debug/config',
+    component: ComponentCreator('/__docusaurus/debug/config', '5ba'),
+    exact: true
+  },
+  {
+    path: '/__docusaurus/debug/content',
+    component: ComponentCreator('/__docusaurus/debug/content', 'a2b'),
+    exact: true
+  },
+  {
+    path: '/__docusaurus/debug/globalData',
+    component: ComponentCreator('/__docusaurus/debug/globalData', 'c3c'),
+    exact: true
+  },
+  {
+    path: '/__docusaurus/debug/metadata',
+    component: ComponentCreator('/__docusaurus/debug/metadata', '156'),
+    exact: true
+  },
+  {
+    path: '/__docusaurus/debug/registry',
+    component: ComponentCreator('/__docusaurus/debug/registry', '88c'),
+    exact: true
+  },
+  {
+    path: '/__docusaurus/debug/routes',
+    component: ComponentCreator('/__docusaurus/debug/routes', '000'),
+    exact: true
+  },
+  {
     path: '/',
-    component: ComponentCreator('/', '47e'),
+    component: ComponentCreator('/', 'ec5'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '302'),
+        component: ComponentCreator('/', '00f'),
         routes: [
           {
             path: '/tags',
@@ -1077,71 +1112,11 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '790'),
+            component: ComponentCreator('/', '8de'),
             routes: [
               {
                 path: '/technical-knowledge/architecture/microservices',
                 component: ComponentCreator('/technical-knowledge/architecture/microservices', '46b'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/backend/spring-boot',
-                component: ComponentCreator('/technical-knowledge/backend/spring-boot', '8b6'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/backend/spring-boot-advanced',
-                component: ComponentCreator('/technical-knowledge/backend/spring-boot-advanced', '06f'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/backend/spring-boot-internals',
-                component: ComponentCreator('/technical-knowledge/backend/spring-boot-internals', '8c8'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/backend/spring-boot-interview-questions',
-                component: ComponentCreator('/technical-knowledge/backend/spring-boot-interview-questions', '5b5'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/backend/spring-data-jpa',
-                component: ComponentCreator('/technical-knowledge/backend/spring-data-jpa', '2c0'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/backend/spring-framework',
-                component: ComponentCreator('/technical-knowledge/backend/spring-framework', 'c82'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/backend/spring-framework-deep-dive',
-                component: ComponentCreator('/technical-knowledge/backend/spring-framework-deep-dive', 'f64'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/backend/spring-interview-questions',
-                component: ComponentCreator('/technical-knowledge/backend/spring-interview-questions', '15c'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/backend/spring-mvc',
-                component: ComponentCreator('/technical-knowledge/backend/spring-mvc', '3a4'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/backend/spring-security',
-                component: ComponentCreator('/technical-knowledge/backend/spring-security', '2dd'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -1410,6 +1385,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/java/java-overview',
+                component: ComponentCreator('/technical-knowledge/java/java-overview', 'ee9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/kafka/kafka-complete-guide',
                 component: ComponentCreator('/technical-knowledge/kafka/kafka-complete-guide', '8ec'),
                 exact: true,
@@ -1496,6 +1477,72 @@ export default [
               {
                 path: '/technical-knowledge/operating-systems/virtual-memory-deep-dive',
                 component: ComponentCreator('/technical-knowledge/operating-systems/virtual-memory-deep-dive', '168'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/spring/spring-boot',
+                component: ComponentCreator('/technical-knowledge/spring/spring-boot', '2a7'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/spring/spring-boot-advanced',
+                component: ComponentCreator('/technical-knowledge/spring/spring-boot-advanced', '0e9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/spring/spring-boot-internals',
+                component: ComponentCreator('/technical-knowledge/spring/spring-boot-internals', '739'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/spring/spring-boot-interview-questions',
+                component: ComponentCreator('/technical-knowledge/spring/spring-boot-interview-questions', '74e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/spring/spring-data-jpa',
+                component: ComponentCreator('/technical-knowledge/spring/spring-data-jpa', 'b44'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/spring/spring-framework',
+                component: ComponentCreator('/technical-knowledge/spring/spring-framework', 'cf6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/spring/spring-framework-deep-dive',
+                component: ComponentCreator('/technical-knowledge/spring/spring-framework-deep-dive', 'ca9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/spring/spring-interview-questions',
+                component: ComponentCreator('/technical-knowledge/spring/spring-interview-questions', '3ea'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/spring/spring-mvc',
+                component: ComponentCreator('/technical-knowledge/spring/spring-mvc', '74b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/spring/spring-overview',
+                component: ComponentCreator('/technical-knowledge/spring/spring-overview', '1d9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/spring/spring-security',
+                component: ComponentCreator('/technical-knowledge/spring/spring-security', 'be9'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

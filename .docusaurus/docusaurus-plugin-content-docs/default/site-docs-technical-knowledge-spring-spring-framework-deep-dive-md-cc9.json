@@ -1,0 +1,53 @@
+{
+  "id": "technical-knowledge/spring/spring-framework-deep-dive",
+  "title": "Spring Framework: Deep Dive",
+  "description": "Advanced Spring Framework guide covering bean lifecycle, AOP, data access, reactive programming, and batch processing.",
+  "source": "@site/docs/technical-knowledge/spring/spring-framework-deep-dive.md",
+  "sourceDirName": "technical-knowledge/spring",
+  "slug": "/technical-knowledge/spring/spring-framework-deep-dive",
+  "permalink": "/technical-knowledge/spring/spring-framework-deep-dive",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "spring-framework",
+      "permalink": "/tags/spring-framework"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "backend",
+      "permalink": "/tags/backend"
+    },
+    {
+      "inline": true,
+      "label": "advanced",
+      "permalink": "/tags/advanced"
+    }
+  ],
+  "version": "current",
+  "frontMatter": {
+    "title": "Spring Framework: Deep Dive",
+    "description": "Advanced Spring Framework guide covering bean lifecycle, AOP, data access, reactive programming, and batch processing.",
+    "tags": [
+      "spring-framework",
+      "java",
+      "backend",
+      "advanced"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Spring Framework: Overview",
+    "permalink": "/technical-knowledge/spring/spring-framework"
+  },
+  "next": {
+    "title": "Spring Framework: Interview Questions",
+    "permalink": "/technical-knowledge/spring/spring-interview-questions"
+  }
+}

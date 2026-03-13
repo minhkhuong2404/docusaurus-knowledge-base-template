@@ -45,8 +45,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "JVM Internals: Memory, GC & Class Loading",
-    "permalink": "/technical-knowledge/java/java-jvm"
+    "title": "Java I/O: Streams, NIO & I/O Models",
+    "permalink": "/technical-knowledge/java/java-io"
   },
   "next": {
     "title": "Java Interview Questions & Answers",

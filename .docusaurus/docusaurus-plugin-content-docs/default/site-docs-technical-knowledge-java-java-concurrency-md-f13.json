@@ -49,7 +49,7 @@
     "permalink": "/technical-knowledge/java/java-collections"
   },
   "next": {
-    "title": "Java I/O: Streams, NIO & I/O Models",
-    "permalink": "/technical-knowledge/java/java-io"
+    "title": "JVM Internals: Memory, GC & Class Loading",
+    "permalink": "/technical-knowledge/java/java-jvm"
   }
 }

@@ -45,11 +45,11 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Java Concurrency: Threads, Locks & Concurrent Utilities",
-    "permalink": "/technical-knowledge/java/java-concurrency"
-  },
-  "next": {
     "title": "JVM Internals: Memory, GC & Class Loading",
     "permalink": "/technical-knowledge/java/java-jvm"
+  },
+  "next": {
+    "title": "Java New Features: Java 8 through Java 21+",
+    "permalink": "/technical-knowledge/java/java-new-features"
   }
 }

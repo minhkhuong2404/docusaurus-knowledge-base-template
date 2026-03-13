@@ -1,11 +1,11 @@
 {
-  "id": "technical-knowledge/backend/spring-security",
+  "id": "technical-knowledge/spring/spring-security",
   "title": "Spring Security — Complete Guide",
   "description": "Comprehensive guide to Spring Security, including authentication, authorization, filter chains, and common application security patterns.",
-  "source": "@site/docs/technical-knowledge/backend/spring-security.md",
-  "sourceDirName": "technical-knowledge/backend",
-  "slug": "/technical-knowledge/backend/spring-security",
-  "permalink": "/technical-knowledge/backend/spring-security",
+  "source": "@site/docs/technical-knowledge/spring/spring-security.md",
+  "sourceDirName": "technical-knowledge/spring",
+  "slug": "/technical-knowledge/spring/spring-security",
+  "permalink": "/technical-knowledge/spring/spring-security",
   "draft": false,
   "unlisted": false,
   "tags": [
@@ -44,10 +44,10 @@
   "sidebar": "tutorialSidebar",
   "previous": {
     "title": "Spring Framework: Interview Questions",
-    "permalink": "/technical-knowledge/backend/spring-interview-questions"
+    "permalink": "/technical-knowledge/spring/spring-interview-questions"
   },
   "next": {
     "title": "Spring Data JPA — Complete Guide",
-    "permalink": "/technical-knowledge/backend/spring-data-jpa"
+    "permalink": "/technical-knowledge/spring/spring-data-jpa"
   }
 }

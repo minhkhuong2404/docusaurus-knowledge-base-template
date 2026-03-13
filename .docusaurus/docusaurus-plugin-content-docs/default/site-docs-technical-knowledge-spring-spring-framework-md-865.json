@@ -1,0 +1,53 @@
+{
+  "id": "technical-knowledge/spring/spring-framework",
+  "title": "Spring Framework: Overview",
+  "description": "Foundational overview of the Spring Framework, including IoC, dependency injection, modules, and enterprise application development.",
+  "source": "@site/docs/technical-knowledge/spring/spring-framework.md",
+  "sourceDirName": "technical-knowledge/spring",
+  "slug": "/technical-knowledge/spring/spring-framework",
+  "permalink": "/technical-knowledge/spring/spring-framework",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "spring-framework",
+      "permalink": "/tags/spring-framework"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "backend",
+      "permalink": "/tags/backend"
+    },
+    {
+      "inline": true,
+      "label": "dependency-injection",
+      "permalink": "/tags/dependency-injection"
+    }
+  ],
+  "version": "current",
+  "frontMatter": {
+    "title": "Spring Framework: Overview",
+    "description": "Foundational overview of the Spring Framework, including IoC, dependency injection, modules, and enterprise application development.",
+    "tags": [
+      "spring-framework",
+      "java",
+      "backend",
+      "dependency-injection"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Spring Boot: Interview Questions",
+    "permalink": "/technical-knowledge/spring/spring-boot-interview-questions"
+  },
+  "next": {
+    "title": "Spring Framework: Deep Dive",
+    "permalink": "/technical-knowledge/spring/spring-framework-deep-dive"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "id": "technical-knowledge/spring/spring-boot-advanced",
+  "title": "Spring Boot — Advanced Topics",
+  "description": "Advanced Spring Boot topics covering security, performance tuning, reactive systems, deployment, and production-ready design.",
+  "source": "@site/docs/technical-knowledge/spring/spring-boot-advanced.md",
+  "sourceDirName": "technical-knowledge/spring",
+  "slug": "/technical-knowledge/spring/spring-boot-advanced",
+  "permalink": "/technical-knowledge/spring/spring-boot-advanced",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "spring-boot",
+      "permalink": "/tags/spring-boot"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "backend",
+      "permalink": "/tags/backend"
+    },
+    {
+      "inline": true,
+      "label": "advanced",
+      "permalink": "/tags/advanced"
+    }
+  ],
+  "version": "current",
+  "frontMatter": {
+    "title": "Spring Boot — Advanced Topics",
+    "description": "Advanced Spring Boot topics covering security, performance tuning, reactive systems, deployment, and production-ready design.",
+    "tags": [
+      "spring-boot",
+      "java",
+      "backend",
+      "advanced"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Spring Boot — Internals & Architecture",
+    "permalink": "/technical-knowledge/spring/spring-boot-internals"
+  },
+  "next": {
+    "title": "Spring Boot: Interview Questions",
+    "permalink": "/technical-knowledge/spring/spring-boot-interview-questions"
+  }
+}

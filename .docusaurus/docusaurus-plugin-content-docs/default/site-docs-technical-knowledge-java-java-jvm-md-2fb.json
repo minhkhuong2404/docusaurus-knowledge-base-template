@@ -45,11 +45,11 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Java I/O: Streams, NIO & I/O Models",
-    "permalink": "/technical-knowledge/java/java-io"
+    "title": "Java Concurrency: Threads, Locks & Concurrent Utilities",
+    "permalink": "/technical-knowledge/java/java-concurrency"
   },
   "next": {
-    "title": "Java New Features: Java 8 through Java 21+",
-    "permalink": "/technical-knowledge/java/java-new-features"
+    "title": "Java I/O: Streams, NIO & I/O Models",
+    "permalink": "/technical-knowledge/java/java-io"
   }
 }

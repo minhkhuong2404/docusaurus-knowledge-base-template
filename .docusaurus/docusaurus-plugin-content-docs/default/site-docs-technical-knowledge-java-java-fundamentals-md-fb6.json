@@ -45,8 +45,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Template Method Pattern",
-    "permalink": "/technical-knowledge/design-patterns/template-method"
+    "title": "Java Knowledge Base Overview",
+    "permalink": "/technical-knowledge/java/java-overview"
   },
   "next": {
     "title": "Object-Oriented Programming in Java",

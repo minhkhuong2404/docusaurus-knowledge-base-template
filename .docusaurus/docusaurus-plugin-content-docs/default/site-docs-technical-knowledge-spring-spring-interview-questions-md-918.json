@@ -1,0 +1,53 @@
+{
+  "id": "technical-knowledge/spring/spring-interview-questions",
+  "title": "Spring Framework: Interview Questions",
+  "description": "Collection of Spring Framework interview questions and answers covering core concepts, containers, web, data, and architecture topics.",
+  "source": "@site/docs/technical-knowledge/spring/spring-interview-questions.md",
+  "sourceDirName": "technical-knowledge/spring",
+  "slug": "/technical-knowledge/spring/spring-interview-questions",
+  "permalink": "/technical-knowledge/spring/spring-interview-questions",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "spring-framework",
+      "permalink": "/tags/spring-framework"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "interview-questions",
+      "permalink": "/tags/interview-questions"
+    },
+    {
+      "inline": true,
+      "label": "backend",
+      "permalink": "/tags/backend"
+    }
+  ],
+  "version": "current",
+  "frontMatter": {
+    "title": "Spring Framework: Interview Questions",
+    "description": "Collection of Spring Framework interview questions and answers covering core concepts, containers, web, data, and architecture topics.",
+    "tags": [
+      "spring-framework",
+      "java",
+      "interview-questions",
+      "backend"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Spring Framework: Deep Dive",
+    "permalink": "/technical-knowledge/spring/spring-framework-deep-dive"
+  },
+  "next": {
+    "title": "Spring Security — Complete Guide",
+    "permalink": "/technical-knowledge/spring/spring-security"
+  }
+}

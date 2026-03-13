@@ -45,8 +45,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Spring Data JPA — Complete Guide",
-    "permalink": "/technical-knowledge/backend/spring-data-jpa"
+    "title": "Spring MVC — Complete Guide",
+    "permalink": "/technical-knowledge/spring/spring-mvc"
   },
   "next": {
     "title": "Singleton Pattern",

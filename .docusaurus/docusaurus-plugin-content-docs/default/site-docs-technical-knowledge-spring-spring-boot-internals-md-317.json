@@ -1,0 +1,53 @@
+{
+  "id": "technical-knowledge/spring/spring-boot-internals",
+  "title": "Spring Boot — Internals & Architecture",
+  "description": "Deep dive into Spring Boot internals, including auto-configuration, embedded servers, conditional beans, starters, and events.",
+  "source": "@site/docs/technical-knowledge/spring/spring-boot-internals.md",
+  "sourceDirName": "technical-knowledge/spring",
+  "slug": "/technical-knowledge/spring/spring-boot-internals",
+  "permalink": "/technical-knowledge/spring/spring-boot-internals",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "spring-boot",
+      "permalink": "/tags/spring-boot"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "internals",
+      "permalink": "/tags/internals"
+    },
+    {
+      "inline": true,
+      "label": "auto-configuration",
+      "permalink": "/tags/auto-configuration"
+    }
+  ],
+  "version": "current",
+  "frontMatter": {
+    "title": "Spring Boot — Internals & Architecture",
+    "description": "Deep dive into Spring Boot internals, including auto-configuration, embedded servers, conditional beans, starters, and events.",
+    "tags": [
+      "spring-boot",
+      "java",
+      "internals",
+      "auto-configuration"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Spring Boot — Overview & Why It Matters",
+    "permalink": "/technical-knowledge/spring/spring-boot"
+  },
+  "next": {
+    "title": "Spring Boot — Advanced Topics",
+    "permalink": "/technical-knowledge/spring/spring-boot-advanced"
+  }
+}

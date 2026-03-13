@@ -21,56 +21,6 @@
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/backend/spring-boot",
-              "path": "/technical-knowledge/backend/spring-boot",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/backend/spring-boot-advanced",
-              "path": "/technical-knowledge/backend/spring-boot-advanced",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/backend/spring-boot-internals",
-              "path": "/technical-knowledge/backend/spring-boot-internals",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/backend/spring-boot-interview-questions",
-              "path": "/technical-knowledge/backend/spring-boot-interview-questions",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/backend/spring-data-jpa",
-              "path": "/technical-knowledge/backend/spring-data-jpa",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/backend/spring-framework",
-              "path": "/technical-knowledge/backend/spring-framework",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/backend/spring-framework-deep-dive",
-              "path": "/technical-knowledge/backend/spring-framework-deep-dive",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/backend/spring-interview-questions",
-              "path": "/technical-knowledge/backend/spring-interview-questions",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/backend/spring-mvc",
-              "path": "/technical-knowledge/backend/spring-mvc",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/backend/spring-security",
-              "path": "/technical-knowledge/backend/spring-security",
-              "sidebar": "tutorialSidebar"
-            },
-            {
               "id": "technical-knowledge/database/advanced-sql",
               "path": "/technical-knowledge/database/advanced-sql",
               "sidebar": "tutorialSidebar"
@@ -291,6 +241,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/java/java-overview",
+              "path": "/technical-knowledge/java/java-overview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/kafka/kafka-complete-guide",
               "path": "/technical-knowledge/kafka/kafka-complete-guide",
               "sidebar": "tutorialSidebar"
@@ -363,6 +318,61 @@
             {
               "id": "technical-knowledge/operating-systems/virtual-memory-deep-dive",
               "path": "/technical-knowledge/operating-systems/virtual-memory-deep-dive",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/spring/spring-boot",
+              "path": "/technical-knowledge/spring/spring-boot",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/spring/spring-boot-advanced",
+              "path": "/technical-knowledge/spring/spring-boot-advanced",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/spring/spring-boot-internals",
+              "path": "/technical-knowledge/spring/spring-boot-internals",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/spring/spring-boot-interview-questions",
+              "path": "/technical-knowledge/spring/spring-boot-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/spring/spring-data-jpa",
+              "path": "/technical-knowledge/spring/spring-data-jpa",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/spring/spring-framework",
+              "path": "/technical-knowledge/spring/spring-framework",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/spring/spring-framework-deep-dive",
+              "path": "/technical-knowledge/spring/spring-framework-deep-dive",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/spring/spring-interview-questions",
+              "path": "/technical-knowledge/spring/spring-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/spring/spring-mvc",
+              "path": "/technical-knowledge/spring/spring-mvc",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/spring/spring-overview",
+              "path": "/technical-knowledge/spring/spring-overview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/spring/spring-security",
+              "path": "/technical-knowledge/spring/spring-security",
               "sidebar": "tutorialSidebar"
             }
           ],
