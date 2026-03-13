@@ -252,3 +252,27 @@ It prevents class explosion by composing instead of inheriting. Both abstraction
 **Q5: How would you implement the Bridge pattern in Java?**
 
 Create an interface for the implementation dimension with its concrete classes. Create an abstract class for the abstraction dimension that holds a reference to the implementation interface. Extend the abstraction with refined abstractions. The abstract class delegates work to the implementation through the bridge reference. Both hierarchies can grow independently.
+
+---
+
+## Advanced Editorial Pass: Bridge for Orthogonal Variability
+
+### Where Bridge Pays Off
+- Two independent change axes evolve at different rates (for example, abstraction behavior and platform implementation).
+- You need combinatorial flexibility without exploding class hierarchies.
+- Runtime composition of implementation families is a requirement, not an academic preference.
+
+### Warning Signs
+- Only one axis actually varies in practice.
+- The abstraction layer adds no policy and simply forwards calls.
+- Teams cannot explain why Bridge is better than Strategy plus interfaces in this context.
+
+### Engineering Checklist
+1. Define explicit ownership boundaries: who owns abstraction policy and who owns implementation details?
+2. Ensure both hierarchies can be tested independently with stable contracts.
+3. Document expected extension strategy for each axis to prevent accidental inheritance coupling.
+
+### Compare Next
+- [Strategy Pattern](./strategy.md)
+- [Adapter Pattern](./adapter.md)
+- [Template Method Pattern](./template-method.md)

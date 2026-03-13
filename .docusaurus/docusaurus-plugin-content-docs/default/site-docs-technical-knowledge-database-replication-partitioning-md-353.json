@@ -1,0 +1,74 @@
+{
+  "id": "technical-knowledge/database/replication-partitioning",
+  "title": "Replication & Partitioning",
+  "description": "Database replication strategies, sharding patterns, the CAP theorem, and horizontal scaling techniques.",
+  "source": "@site/docs/technical-knowledge/database/replication-partitioning.md",
+  "sourceDirName": "technical-knowledge/database",
+  "slug": "/technical-knowledge/database/replication-partitioning",
+  "permalink": "/technical-knowledge/database/replication-partitioning",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "database",
+      "permalink": "/tags/database"
+    },
+    {
+      "inline": true,
+      "label": "replication",
+      "permalink": "/tags/replication"
+    },
+    {
+      "inline": true,
+      "label": "sharding",
+      "permalink": "/tags/sharding"
+    },
+    {
+      "inline": true,
+      "label": "partitioning",
+      "permalink": "/tags/partitioning"
+    },
+    {
+      "inline": true,
+      "label": "cap-theorem",
+      "permalink": "/tags/cap-theorem"
+    },
+    {
+      "inline": true,
+      "label": "scaling",
+      "permalink": "/tags/scaling"
+    },
+    {
+      "inline": true,
+      "label": "leader-follower",
+      "permalink": "/tags/leader-follower"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 6,
+  "frontMatter": {
+    "id": "replication-partitioning",
+    "title": "Replication & Partitioning",
+    "description": "Database replication strategies, sharding patterns, the CAP theorem, and horizontal scaling techniques.",
+    "tags": [
+      "database",
+      "replication",
+      "sharding",
+      "partitioning",
+      "cap-theorem",
+      "scaling",
+      "leader-follower"
+    ],
+    "sidebar_position": 6
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Storage Engines & Data Structures",
+    "permalink": "/technical-knowledge/database/storage-engines-data-structures"
+  },
+  "next": {
+    "title": "NoSQL & Distributed Databases",
+    "permalink": "/technical-knowledge/database/nosql-distributed"
+  }
+}

@@ -262,3 +262,27 @@ Avoid Singletons when your application requires scalable or flexible architectur
 **Q6: What is the difference between a Singleton and a static class?**
 
 A Singleton is a class with a private constructor and a static method to get the single instance — it can implement interfaces, be passed as a parameter, and support lazy initialization. A static class (utility class) has only static methods and cannot be instantiated at all — it cannot implement interfaces or be injected as a dependency. Singleton supports polymorphism; static classes do not.
+
+---
+
+## Advanced Editorial Pass: Singleton and Global State Governance
+
+### Legitimate Use Cases
+- Process-wide coordination where exactly one instance is semantically required.
+- Expensive shared infrastructure objects with controlled lifecycle.
+- Registry-like components where duplication causes correctness defects.
+
+### Senior Concerns
+- Hidden global state creates implicit coupling and test fragility.
+- Lifecycle ordering and shutdown behavior become hard in complex runtimes.
+- In distributed systems, process singleton is not a system singleton.
+
+### Governance Rules
+1. Prefer dependency injection-managed singletons over static accessors.
+2. Make initialization and teardown explicit for observability and testing.
+3. Re-evaluate singleton necessity when scaling from monolith to distributed services.
+
+### Compare Next
+- [Factory Method Pattern](./factory-method.md)
+- [Prototype Pattern](./prototype.md)
+- [Abstract Factory Pattern](./abstract-factory.md)

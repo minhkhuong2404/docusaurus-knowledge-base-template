@@ -488,3 +488,27 @@ ExpensiveObject obj = ref.get(); // null after GC
 | `OutOfMemoryError: GC overhead limit` | GC consuming over 98% CPU for under 2% heap recovery | Fix memory leaks, increase heap |
 | `StackOverflowError` | Deep/infinite recursion | Fix recursion, increase `-Xss` |
 | `OutOfMemoryError: unable to create new native thread` | Too many threads | Use thread pools, reduce stack size |
+
+---
+
+## Advanced Editorial Pass: JVM Internals for Operational Excellence
+
+### Senior-Level Focus
+- GC tuning is workload-specific and must be tied to SLO outcomes.
+- Heap, metaspace, and thread configuration are architecture choices, not defaults.
+- Classloading and JIT behavior can materially impact startup and latency profiles.
+
+### Failure Modes in Production
+- Over-tuned JVM flags copied between services with different traffic patterns.
+- Memory leaks masked by oversized heaps until incident windows.
+- Misinterpreting GC logs without correlating application-level latency.
+
+### Practical Heuristics
+1. Treat JVM tuning as iterative experimentation with measurable hypotheses.
+2. Baseline key metrics before any flag change.
+3. Keep service-specific runbooks for memory, GC, and thread incidents.
+
+### Compare Next
+- [Java Concurrency: Threads, Locks & Concurrent Utilities](./java-concurrency.md)
+- [Java Fundamentals: Core Language Concepts](./java-fundamentals.md)
+- [Java Interview Questions & Answers](./java-interview-questions.md)

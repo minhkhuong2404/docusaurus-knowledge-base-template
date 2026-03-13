@@ -317,3 +317,27 @@ Use `@Qualifier("beanName")` at the injection point to specify exactly which bea
 | Flush persistence context | No | Yes |
 | **Use CrudRepository when** | Simple database interactions without advanced JPA features |
 | **Use JpaRepository when** | Full JPA capabilities are needed |
+
+---
+
+## Advanced Editorial Pass: Spring Interview Answers That Stand Out
+
+### Upgrade Path for Responses
+- Translate conceptual answers into architecture and production implications.
+- Highlight boundaries: container concern, application concern, platform concern.
+- Show explicit trade-offs and failure containment strategy.
+
+### Red Flags to Avoid
+- Memorized definitions without decision criteria.
+- Ignoring observability, rollout, and rollback implications.
+- Assuming default framework behavior is always safe at scale.
+
+### Deliberate Practice
+1. Pair each answer with one performance and one reliability consideration.
+2. Add one anti-pattern and how you would detect it in production.
+3. Practice concise, layered explanations: concept, trade-off, implementation.
+
+### Compare Next
+- [Spring Boot: Interview Questions](./spring-boot-interview-questions.md)
+- [Spring Framework: Deep Dive](./spring-framework-deep-dive.md)
+- [Spring MVC - Complete Guide](./spring-mvc.md)

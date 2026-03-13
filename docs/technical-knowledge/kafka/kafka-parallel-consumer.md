@@ -309,3 +309,27 @@ Is processing per-message slow (>10ms)?
 
 - [Confluent Parallel Consumer — GitHub](https://github.com/confluentinc/parallel-consumer)
 - [Confluent Blog — Introducing the Parallel Consumer](https://www.confluent.io/blog/introducing-confluent-parallel-message-processing-client/)
+
+---
+
+## Advanced Editorial Pass: Parallelism Without Ordering Debt
+
+### Key Architectural Trade-offs
+- Throughput gains must be balanced against ordering guarantees and offset safety.
+- Parallel execution model should align with key semantics and downstream idempotency.
+- Concurrency strategy must remain operable during rebalances and failures.
+
+### Reliability Risks
+- Out-of-order side effects when business key constraints are unclear.
+- Back-pressure collapse from unbounded in-flight work.
+- Partial-batch failures that stall commits and inflate lag.
+
+### Practical Heuristics
+1. Define ordering contract explicitly: by partition, key, or none.
+2. Enforce bounded concurrency and queue depth with clear saturation policy.
+3. Track in-flight age and retry distribution to detect hidden starvation.
+
+### Compare Next
+- [Configuring Exactly-Once Semantics in Kafka](./kafka-exactly-once.md)
+- [Kafka Streams: Topology & Branching](./kafka-streams.md)
+- [Kafka: The Complete Guide](./Kafka:%20The%20Complete%20Guide.md)

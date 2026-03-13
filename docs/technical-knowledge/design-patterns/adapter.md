@@ -204,3 +204,27 @@ The Adapter converts an interface to make incompatible classes work together —
 **Q5: Why is the Adapter pattern useful when integrating third-party libraries?**
 
 It lets you connect the library's interface to your application's interface without modifying either codebase. Your existing code continues to work with its expected interface, and the library remains untouched. The adapter acts as a translation layer, making integration clean, maintainable, and reversible.
+
+---
+
+## Advanced Editorial Pass: Adapter in Integration Boundaries
+
+### Design Tensions to Evaluate
+- API purity vs delivery speed: adapters protect your domain model from vendor-specific contracts.
+- Translation depth vs performance: normalize only what your domain actually needs.
+- Reusability vs leakage: avoid adapters that expose foreign error models and transport details.
+
+### Production Failure Modes
+- Silent semantic drift when upstream API behavior changes but adapter mapping stays outdated.
+- Overloaded adapters that become mini orchestration layers.
+- Incomplete exception translation that hides retryability and idempotency semantics.
+
+### Implementation Heuristics
+1. Keep adapters at boundary packages; do not let them spread into core domain modules.
+2. Add contract tests that pin expected translation behavior for request, response, and error paths.
+3. Version adapters explicitly when third-party APIs are unstable.
+
+### Compare Next
+- [Facade Pattern](./facade.md)
+- [Proxy Pattern](./proxy.md)
+- [Bridge Pattern](./bridge.md)

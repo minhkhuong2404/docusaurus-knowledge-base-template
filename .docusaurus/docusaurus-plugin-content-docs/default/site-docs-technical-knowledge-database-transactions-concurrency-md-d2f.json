@@ -1,0 +1,80 @@
+{
+  "id": "technical-knowledge/database/transactions-concurrency",
+  "title": "Transactions & Concurrency Control",
+  "description": "ACID properties, isolation levels, locking mechanisms, MVCC, deadlocks, and optimistic vs pessimistic concurrency.",
+  "source": "@site/docs/technical-knowledge/database/transactions-concurrency.md",
+  "sourceDirName": "technical-knowledge/database",
+  "slug": "/technical-knowledge/database/transactions-concurrency",
+  "permalink": "/technical-knowledge/database/transactions-concurrency",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "database",
+      "permalink": "/tags/database"
+    },
+    {
+      "inline": true,
+      "label": "transactions",
+      "permalink": "/tags/transactions"
+    },
+    {
+      "inline": true,
+      "label": "acid",
+      "permalink": "/tags/acid"
+    },
+    {
+      "inline": true,
+      "label": "isolation",
+      "permalink": "/tags/isolation"
+    },
+    {
+      "inline": true,
+      "label": "locking",
+      "permalink": "/tags/locking"
+    },
+    {
+      "inline": true,
+      "label": "mvcc",
+      "permalink": "/tags/mvcc"
+    },
+    {
+      "inline": true,
+      "label": "concurrency",
+      "permalink": "/tags/concurrency"
+    },
+    {
+      "inline": true,
+      "label": "deadlock",
+      "permalink": "/tags/deadlock"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "id": "transactions-concurrency",
+    "title": "Transactions & Concurrency Control",
+    "description": "ACID properties, isolation levels, locking mechanisms, MVCC, deadlocks, and optimistic vs pessimistic concurrency.",
+    "tags": [
+      "database",
+      "transactions",
+      "acid",
+      "isolation",
+      "locking",
+      "mvcc",
+      "concurrency",
+      "deadlock"
+    ],
+    "sidebar_position": 4
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Caching Strategies",
+    "permalink": "/technical-knowledge/database/caching-strategies"
+  },
+  "next": {
+    "title": "Storage Engines & Data Structures",
+    "permalink": "/technical-knowledge/database/storage-engines-data-structures"
+  }
+}

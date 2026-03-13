@@ -1,0 +1,80 @@
+{
+  "id": "technical-knowledge/database/storage-engines-data-structures",
+  "title": "Storage Engines & Data Structures",
+  "description": "How databases store and retrieve data — B+ trees, LSM trees, heap files, InnoDB vs MyISAM, WAL, and buffer pools.",
+  "source": "@site/docs/technical-knowledge/database/storage-engines-data-structures.md",
+  "sourceDirName": "technical-knowledge/database",
+  "slug": "/technical-knowledge/database/storage-engines-data-structures",
+  "permalink": "/technical-knowledge/database/storage-engines-data-structures",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "database",
+      "permalink": "/tags/database"
+    },
+    {
+      "inline": true,
+      "label": "storage-engines",
+      "permalink": "/tags/storage-engines"
+    },
+    {
+      "inline": true,
+      "label": "b-tree",
+      "permalink": "/tags/b-tree"
+    },
+    {
+      "inline": true,
+      "label": "lsm-tree",
+      "permalink": "/tags/lsm-tree"
+    },
+    {
+      "inline": true,
+      "label": "innodb",
+      "permalink": "/tags/innodb"
+    },
+    {
+      "inline": true,
+      "label": "wal",
+      "permalink": "/tags/wal"
+    },
+    {
+      "inline": true,
+      "label": "buffer-pool",
+      "permalink": "/tags/buffer-pool"
+    },
+    {
+      "inline": true,
+      "label": "data-structures",
+      "permalink": "/tags/data-structures"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "id": "storage-engines-data-structures",
+    "title": "Storage Engines & Data Structures",
+    "description": "How databases store and retrieve data — B+ trees, LSM trees, heap files, InnoDB vs MyISAM, WAL, and buffer pools.",
+    "tags": [
+      "database",
+      "storage-engines",
+      "b-tree",
+      "lsm-tree",
+      "innodb",
+      "wal",
+      "buffer-pool",
+      "data-structures"
+    ],
+    "sidebar_position": 5
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Transactions & Concurrency Control",
+    "permalink": "/technical-knowledge/database/transactions-concurrency"
+  },
+  "next": {
+    "title": "Replication & Partitioning",
+    "permalink": "/technical-knowledge/database/replication-partitioning"
+  }
+}

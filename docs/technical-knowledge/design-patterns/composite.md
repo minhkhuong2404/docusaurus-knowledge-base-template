@@ -238,3 +238,27 @@ It lets clients apply operations uniformly to any node in the tree without check
 **Q5: How would you implement the Composite pattern in Java?**
 
 Create a `Component` interface with common methods (`display()`, `getSize()`). Create `Leaf` classes that implement the interface with actual logic. Create a `Composite` class that also implements the interface but holds a list of `Component` children and delegates operations to them. The composite's methods typically iterate over children and aggregate results.
+
+---
+
+## Advanced Editorial Pass: Composite in Recursive Domain Models
+
+### When Composite Is the Right Shape
+- Domain entities are naturally hierarchical and clients need uniform traversal.
+- Operations must apply consistently to leaf and aggregate nodes.
+- Tree transformations are frequent and should avoid type-switch logic.
+
+### Pitfalls in Large Systems
+- Excessive generic component APIs force meaningless methods on leaf types.
+- Mutation rules for parent-child relationships become inconsistent.
+- Recursive operations lack cycle guards or depth protections.
+
+### Engineering Guidance
+1. Define clear invariants for add/remove operations and ownership.
+2. Keep traversal strategies explicit (depth-first, breadth-first, short-circuit).
+3. Add safeguards for recursion depth and invalid graph states.
+
+### Compare Next
+- [Decorator Pattern](./decorator.md)
+- [Facade Pattern](./facade.md)
+- [Proxy Pattern](./proxy.md)

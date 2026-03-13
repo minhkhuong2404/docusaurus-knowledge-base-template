@@ -420,3 +420,27 @@ unclean.leader.election.enable=false
 - [KIP-98: Exactly Once Delivery and Transactional Messaging](https://cwiki.apache.org/confluence/display/KAFKA/KIP-98)
 - [KIP-447: Producer Scalability for Exactly Once Semantics](https://cwiki.apache.org/confluence/display/KAFKA/KIP-447)
 - [Confluent — Exactly-Once Semantics](https://www.confluent.io/blog/exactly-once-semantics-are-possible-heres-how-apache-kafka-does-it/)
+
+---
+
+## Advanced Editorial Pass: Exactly-Once as End-to-End Discipline
+
+### What Senior Teams Get Right
+- Exactly-once is a pipeline property, not a single producer flag.
+- Idempotency, transaction boundaries, and offset coordination must be co-designed.
+- Failure injection testing is required to validate guarantee claims.
+
+### Subtle Failure Modes
+- EOS assumptions broken by side effects outside transaction scope.
+- Zombie producer fencing misunderstood during failover events.
+- Commit strategy drift between application and framework defaults.
+
+### Engineering Heuristics
+1. Document guarantee scope clearly: topic-only, pipeline, or business operation level.
+2. Validate semantics under rebalance, retry storm, and partial outage scenarios.
+3. Keep transactional boundaries narrow and observable.
+
+### Compare Next
+- [Kafka Streams: Topology & Branching](./kafka-streams.md)
+- [Parallel Consumer in Kafka](./kafka-parallel-consumer.md)
+- [Kafka Connect](./kafka-connect.md)

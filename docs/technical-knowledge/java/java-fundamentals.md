@@ -633,3 +633,27 @@ public enum AppConfig {
     }
 }
 ```
+
+---
+
+## Advanced Editorial Pass: Fundamentals as Performance and Correctness Tools
+
+### What Matters at Senior Level
+- Language features are design constraints, not just syntax options.
+- Correctness under concurrency and memory pressure starts with fundamentals.
+- Clarity of type and object lifecycle decisions drives long-term maintainability.
+
+### Misuse Patterns
+- Choosing features for novelty instead of readability and failure behavior.
+- Ignoring boxing, allocation, and escape patterns in hot paths.
+- Treating exceptions as control flow without cost awareness.
+
+### Engineering Heuristics
+1. Optimize for predictable behavior before micro-optimizing throughput.
+2. Make mutability and ownership explicit in API design.
+3. Validate assumptions with small benchmarks and profiling snapshots.
+
+### Compare Next
+- [Java Collections Framework: Deep Dive](./java-collections.md)
+- [Java Concurrency: Threads, Locks & Concurrent Utilities](./java-concurrency.md)
+- [JVM Internals: Memory, GC & Class Loading](./java-jvm.md)

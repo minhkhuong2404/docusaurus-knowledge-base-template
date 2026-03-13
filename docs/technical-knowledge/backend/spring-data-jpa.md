@@ -633,3 +633,27 @@ Configure `spring.jpa.properties.hibernate.jdbc.batch_size` in application prope
 ### Q20: How do you implement caching with Spring Data JPA?
 
 Use the Spring Cache abstraction with a provider like Redis or Caffeine. Annotate repository or service methods with `@Cacheable` to cache query results. Use `@CacheEvict` to invalidate cache entries when data changes. This reduces database queries for frequently accessed data.
+
+---
+
+## Advanced Editorial Pass: Persistence Design Under Load
+
+### What Experienced Teams Optimize
+- Query shape and access patterns before introducing ORM abstractions everywhere.
+- Transaction boundary design aligned with business consistency requirements.
+- Predictable performance via indexing, batching, and fetch-plan discipline.
+
+### Typical Failure Modes
+- N+1 query behavior hidden by convenience repository methods.
+- Over-fetching entity graphs that inflate p95 latency and memory pressure.
+- Leaky transactional scope that couples API and persistence layers.
+
+### Engineering Heuristics
+1. Review generated SQL for critical paths during code review.
+2. Treat entity modeling and indexing as one design activity.
+3. Use explicit projections and fetch strategies for high-throughput endpoints.
+
+### Compare Next
+- [Spring MVC - Complete Guide](./spring-mvc.md)
+- [Spring Boot - Advanced Topics](./spring-boot-advanced.md)
+- [Spring Framework: Deep Dive](./spring-framework-deep-dive.md)

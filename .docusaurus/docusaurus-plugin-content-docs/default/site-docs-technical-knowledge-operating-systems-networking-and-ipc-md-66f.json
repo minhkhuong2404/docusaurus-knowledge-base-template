@@ -1,0 +1,74 @@
+{
+  "id": "technical-knowledge/operating-systems/networking-and-ipc",
+  "title": "Networking & IPC",
+  "description": "Network stack internals, socket programming, TCP deep dive, IPC mechanisms, and high-performance networking with Java NIO and Netty patterns.",
+  "source": "@site/docs/technical-knowledge/operating-systems/networking-and-ipc.md",
+  "sourceDirName": "technical-knowledge/operating-systems",
+  "slug": "/technical-knowledge/operating-systems/networking-and-ipc",
+  "permalink": "/technical-knowledge/operating-systems/networking-and-ipc",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "operating-systems",
+      "permalink": "/tags/operating-systems"
+    },
+    {
+      "inline": true,
+      "label": "networking",
+      "permalink": "/tags/networking"
+    },
+    {
+      "inline": true,
+      "label": "sockets",
+      "permalink": "/tags/sockets"
+    },
+    {
+      "inline": true,
+      "label": "tcp",
+      "permalink": "/tags/tcp"
+    },
+    {
+      "inline": true,
+      "label": "ipc",
+      "permalink": "/tags/ipc"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "netty",
+      "permalink": "/tags/netty"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 8,
+  "frontMatter": {
+    "id": "networking-and-ipc",
+    "title": "Networking & IPC",
+    "description": "Network stack internals, socket programming, TCP deep dive, IPC mechanisms, and high-performance networking with Java NIO and Netty patterns.",
+    "tags": [
+      "operating-systems",
+      "networking",
+      "sockets",
+      "tcp",
+      "ipc",
+      "java",
+      "netty"
+    ],
+    "sidebar_position": 8
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Linux Internals & System Calls",
+    "permalink": "/technical-knowledge/operating-systems/linux-internals-and-syscalls"
+  },
+  "next": {
+    "title": "🎯 Interview Questions",
+    "permalink": "/technical-knowledge/operating-systems/interview-questions"
+  }
+}

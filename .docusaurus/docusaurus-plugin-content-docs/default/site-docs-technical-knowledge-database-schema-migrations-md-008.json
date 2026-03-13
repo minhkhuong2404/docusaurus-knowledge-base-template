@@ -1,0 +1,80 @@
+{
+  "id": "technical-knowledge/database/schema-migrations",
+  "title": "Schema Migrations",
+  "description": "Managing database schema changes safely in production — Flyway, Liquibase, zero-downtime migration patterns, and rollback strategies.",
+  "source": "@site/docs/technical-knowledge/database/schema-migrations.md",
+  "sourceDirName": "technical-knowledge/database",
+  "slug": "/technical-knowledge/database/schema-migrations",
+  "permalink": "/technical-knowledge/database/schema-migrations",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "database",
+      "permalink": "/tags/database"
+    },
+    {
+      "inline": true,
+      "label": "migrations",
+      "permalink": "/tags/migrations"
+    },
+    {
+      "inline": true,
+      "label": "flyway",
+      "permalink": "/tags/flyway"
+    },
+    {
+      "inline": true,
+      "label": "liquibase",
+      "permalink": "/tags/liquibase"
+    },
+    {
+      "inline": true,
+      "label": "schema",
+      "permalink": "/tags/schema"
+    },
+    {
+      "inline": true,
+      "label": "zero-downtime",
+      "permalink": "/tags/zero-downtime"
+    },
+    {
+      "inline": true,
+      "label": "versioning",
+      "permalink": "/tags/versioning"
+    },
+    {
+      "inline": true,
+      "label": "spring",
+      "permalink": "/tags/spring"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 15,
+  "frontMatter": {
+    "id": "schema-migrations",
+    "title": "Schema Migrations",
+    "description": "Managing database schema changes safely in production — Flyway, Liquibase, zero-downtime migration patterns, and rollback strategies.",
+    "tags": [
+      "database",
+      "migrations",
+      "flyway",
+      "liquibase",
+      "schema",
+      "zero-downtime",
+      "versioning",
+      "spring"
+    ],
+    "sidebar_position": 15
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Advanced SQL",
+    "permalink": "/technical-knowledge/database/advanced-sql"
+  },
+  "next": {
+    "title": "Indexing & Query Optimization",
+    "permalink": "/technical-knowledge/database/indexing-query-optimization"
+  }
+}

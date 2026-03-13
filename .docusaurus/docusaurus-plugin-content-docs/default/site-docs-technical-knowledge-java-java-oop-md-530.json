@@ -40,5 +40,14 @@
       "object-oriented-programming",
       "solid"
     ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Java Fundamentals: Core Language Concepts",
+    "permalink": "/technical-knowledge/java/java-fundamentals"
+  },
+  "next": {
+    "title": "Java Collections Framework: Deep Dive",
+    "permalink": "/technical-knowledge/java/java-collections"
   }
 }

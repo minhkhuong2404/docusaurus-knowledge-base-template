@@ -585,3 +585,27 @@ executor.submit(() -> {
 | `ReentrantLock` | ✅ | ✅ | ✅ | Advanced locking (timeouts, fairness) |
 | `Atomic*` classes | ✅ | ✅ (CAS-based) | ❌ | Counters, accumulators |
 | `StampedLock` | ✅ | ✅ | ✅ | Optimistic read-heavy scenarios |
+
+---
+
+## Advanced Editorial Pass: Concurrency for Reliability, Not Just Speed
+
+### Senior Engineering Priorities
+- Optimize for determinism and recovery behavior before raw parallelism.
+- Make shared-state boundaries explicit and auditable.
+- Treat back-pressure and cancellation as first-class design concerns.
+
+### Production Failure Modes
+- Thread pool saturation causing cascading latency failures.
+- Subtle visibility bugs from partially synchronized state models.
+- Blocking operations hidden inside async pipelines.
+
+### Implementation Heuristics
+1. Define concurrency model per component: actor-like, lock-based, or lock-free.
+2. Attach metrics to executors, queues, and contention hotspots.
+3. Include failure injection tests for timeout, interruption, and partial progress.
+
+### Compare Next
+- [JVM Internals: Memory, GC & Class Loading](./java-jvm.md)
+- [Java I/O: Streams, NIO & I/O Models](./java-io.md)
+- [Java Interview Questions & Answers](./java-interview-questions.md)

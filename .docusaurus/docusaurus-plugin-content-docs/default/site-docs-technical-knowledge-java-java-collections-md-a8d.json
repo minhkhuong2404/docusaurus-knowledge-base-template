@@ -45,8 +45,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Java Fundamentals: Core Language Concepts",
-    "permalink": "/technical-knowledge/java/java-fundamentals"
+    "title": "Object-Oriented Programming in Java",
+    "permalink": "/technical-knowledge/java/java-oop"
   },
   "next": {
     "title": "Java Concurrency: Threads, Locks & Concurrent Utilities",

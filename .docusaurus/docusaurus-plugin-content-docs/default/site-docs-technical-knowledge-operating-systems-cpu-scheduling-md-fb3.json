@@ -1,0 +1,62 @@
+{
+  "id": "technical-knowledge/operating-systems/cpu-scheduling",
+  "title": "CPU Scheduling",
+  "description": "CPU scheduling algorithms, metrics, multilevel queues, real-time scheduling, and how the Linux CFS scheduler works.",
+  "source": "@site/docs/technical-knowledge/operating-systems/cpu-scheduling.md",
+  "sourceDirName": "technical-knowledge/operating-systems",
+  "slug": "/technical-knowledge/operating-systems/cpu-scheduling",
+  "permalink": "/technical-knowledge/operating-systems/cpu-scheduling",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "operating-systems",
+      "permalink": "/tags/operating-systems"
+    },
+    {
+      "inline": true,
+      "label": "cpu-scheduling",
+      "permalink": "/tags/cpu-scheduling"
+    },
+    {
+      "inline": true,
+      "label": "algorithms",
+      "permalink": "/tags/algorithms"
+    },
+    {
+      "inline": true,
+      "label": "linux",
+      "permalink": "/tags/linux"
+    },
+    {
+      "inline": true,
+      "label": "performance",
+      "permalink": "/tags/performance"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "cpu-scheduling",
+    "title": "CPU Scheduling",
+    "description": "CPU scheduling algorithms, metrics, multilevel queues, real-time scheduling, and how the Linux CFS scheduler works.",
+    "tags": [
+      "operating-systems",
+      "cpu-scheduling",
+      "algorithms",
+      "linux",
+      "performance"
+    ],
+    "sidebar_position": 2
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Processes & Threads",
+    "permalink": "/technical-knowledge/operating-systems/processes-and-threads"
+  },
+  "next": {
+    "title": "Memory Management",
+    "permalink": "/technical-knowledge/operating-systems/memory-management"
+  }
+}

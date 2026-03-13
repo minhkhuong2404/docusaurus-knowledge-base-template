@@ -1,0 +1,68 @@
+{
+  "id": "technical-knowledge/operating-systems/file-systems-and-io",
+  "title": "File Systems & I/O",
+  "description": "File system structures, disk scheduling, VFS, inodes, journaling, RAID, and Java NIO for high-performance I/O.",
+  "source": "@site/docs/technical-knowledge/operating-systems/file-systems-and-io.md",
+  "sourceDirName": "technical-knowledge/operating-systems",
+  "slug": "/technical-knowledge/operating-systems/file-systems-and-io",
+  "permalink": "/technical-knowledge/operating-systems/file-systems-and-io",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "operating-systems",
+      "permalink": "/tags/operating-systems"
+    },
+    {
+      "inline": true,
+      "label": "file-systems",
+      "permalink": "/tags/file-systems"
+    },
+    {
+      "inline": true,
+      "label": "io",
+      "permalink": "/tags/io"
+    },
+    {
+      "inline": true,
+      "label": "disk-scheduling",
+      "permalink": "/tags/disk-scheduling"
+    },
+    {
+      "inline": true,
+      "label": "linux",
+      "permalink": "/tags/linux"
+    },
+    {
+      "inline": true,
+      "label": "java-nio",
+      "permalink": "/tags/java-nio"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "id": "file-systems-and-io",
+    "title": "File Systems & I/O",
+    "description": "File system structures, disk scheduling, VFS, inodes, journaling, RAID, and Java NIO for high-performance I/O.",
+    "tags": [
+      "operating-systems",
+      "file-systems",
+      "io",
+      "disk-scheduling",
+      "linux",
+      "java-nio"
+    ],
+    "sidebar_position": 5
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Synchronization & Deadlocks",
+    "permalink": "/technical-knowledge/operating-systems/synchronization-and-deadlocks"
+  },
+  "next": {
+    "title": "Virtual Memory Deep Dive",
+    "permalink": "/technical-knowledge/operating-systems/virtual-memory-deep-dive"
+  }
+}

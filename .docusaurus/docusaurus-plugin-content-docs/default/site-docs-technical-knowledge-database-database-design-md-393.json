@@ -1,0 +1,86 @@
+{
+  "id": "technical-knowledge/database/database-design",
+  "title": "Database Design & Normalization",
+  "description": "Entity-Relationship modeling, normal forms (1NF through BCNF), denormalization trade-offs, and schema design patterns.",
+  "source": "@site/docs/technical-knowledge/database/database-design.md",
+  "sourceDirName": "technical-knowledge/database",
+  "slug": "/technical-knowledge/database/database-design",
+  "permalink": "/technical-knowledge/database/database-design",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "database",
+      "permalink": "/tags/database"
+    },
+    {
+      "inline": true,
+      "label": "design",
+      "permalink": "/tags/design"
+    },
+    {
+      "inline": true,
+      "label": "normalization",
+      "permalink": "/tags/normalization"
+    },
+    {
+      "inline": true,
+      "label": "erd",
+      "permalink": "/tags/erd"
+    },
+    {
+      "inline": true,
+      "label": "1nf",
+      "permalink": "/tags/1-nf"
+    },
+    {
+      "inline": true,
+      "label": "2nf",
+      "permalink": "/tags/2-nf"
+    },
+    {
+      "inline": true,
+      "label": "3nf",
+      "permalink": "/tags/3-nf"
+    },
+    {
+      "inline": true,
+      "label": "bcnf",
+      "permalink": "/tags/bcnf"
+    },
+    {
+      "inline": true,
+      "label": "schema",
+      "permalink": "/tags/schema"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 9,
+  "frontMatter": {
+    "id": "database-design",
+    "title": "Database Design & Normalization",
+    "description": "Entity-Relationship modeling, normal forms (1NF through BCNF), denormalization trade-offs, and schema design patterns.",
+    "tags": [
+      "database",
+      "design",
+      "normalization",
+      "erd",
+      "1nf",
+      "2nf",
+      "3nf",
+      "bcnf",
+      "schema"
+    ],
+    "sidebar_position": 9
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Relational Fundamentals",
+    "permalink": "/technical-knowledge/database/relational-fundamentals"
+  },
+  "next": {
+    "title": "Advanced SQL",
+    "permalink": "/technical-knowledge/database/advanced-sql"
+  }
+}

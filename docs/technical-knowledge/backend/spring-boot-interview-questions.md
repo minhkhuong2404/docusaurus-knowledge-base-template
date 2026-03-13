@@ -921,3 +921,27 @@ public class DatabaseHealthIndicator implements HealthIndicator {
 ```
 
 Spring Boot includes built-in health indicators for common dependencies (DB, Redis, Elasticsearch, etc.) that activate automatically when those dependencies are on the classpath.
+
+---
+
+## Advanced Editorial Pass: Interview Readiness with Production Depth
+
+### How to Level Up Answers
+- Move from definitions to operational consequences and failure recovery paths.
+- Explain not only what a feature does, but what can break under scale.
+- Use concrete stories: incident, diagnosis, mitigation, and long-term fix.
+
+### Signals of a Strong Answer
+- Clear trade-offs (latency, consistency, complexity, cost).
+- Explicit boundaries between framework behavior and team-owned logic.
+- Measurable outcomes and observability strategy.
+
+### Practice Drills
+1. Re-answer each question with one real failure mode and one mitigation.
+2. Add metrics you would monitor before and after the design choice.
+3. Time-box explanations to 90 seconds while preserving technical depth.
+
+### Compare Next
+- [Spring Interview Questions](./spring-interview-questions.md)
+- [Spring Boot - Internals & Architecture](./spring-boot-internals.md)
+- [Spring Boot - Advanced Topics](./spring-boot-advanced.md)

@@ -587,3 +587,27 @@ http.sessionManagement(session -> session
 ### Q15: What is the role of `DelegatingFilterProxy` in Spring Security?
 
 `DelegatingFilterProxy` is a servlet filter registered in the servlet container that delegates to a Spring-managed bean (`FilterChainProxy`). It acts as a bridge between the servlet container's filter mechanism and Spring's application context, allowing Spring Security filters to be managed as Spring beans with full dependency injection support.
+
+---
+
+## Advanced Editorial Pass: Security Architecture Beyond Defaults
+
+### Senior Design Focus
+- Build least-privilege authorization around domain capabilities, not URL patterns only.
+- Treat authentication, authorization, and auditability as separate concerns.
+- Design token/session strategy around threat model and operational realities.
+
+### Failure Modes Under Real Traffic
+- Over-permissive fallback rules introduced during urgent hotfixes.
+- Unbounded security filter complexity impacting latency and debuggability.
+- Missing audit trails for sensitive privilege transitions.
+
+### Practical Security Heuristics
+1. Make deny-by-default explicit and test it continuously.
+2. Keep policy decisions observable with structured authorization logs.
+3. Regularly review role model drift against actual business ownership.
+
+### Compare Next
+- [Spring MVC - Complete Guide](./spring-mvc.md)
+- [Spring Framework: Deep Dive](./spring-framework-deep-dive.md)
+- [Spring Boot - Advanced Topics](./spring-boot-advanced.md)

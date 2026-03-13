@@ -286,3 +286,27 @@ CQRS (Command Query Responsibility Segregation) separates read operations (queri
 **Q5: How is `Runnable` an example of the Command pattern?**
 
 `Runnable` is a command interface with a single method (`run()`). When you create a `Runnable` and pass it to a `Thread` or `ExecutorService`, you're encapsulating an action as an object and giving it to an invoker. The invoker (thread pool) doesn't know what the action does — it just calls `run()`. This is the Command pattern in its simplest form.
+
+---
+
+## Advanced Editorial Pass: Command as a Reliability Primitive
+
+### Strategic Value
+- Commands decouple intention capture from execution timing and location.
+- They support retries, auditability, deduplication, and deferred processing workflows.
+- They create a natural seam for queueing, scheduling, and transactional outbox patterns.
+
+### Advanced Trade-offs
+- Serializing commands can freeze unstable domain models into long-lived contracts.
+- Undo semantics are often domain-specific compensations, not simple inverse operations.
+- Overuse can fragment simple synchronous flows into unnecessary orchestration.
+
+### Implementation Heuristics
+1. Treat command payloads as explicit contracts with versioning.
+2. Attach idempotency keys where execution can be retried.
+3. Keep handlers side-effect explicit and telemetry-rich.
+
+### Compare Next
+- [Strategy Pattern](./strategy.md)
+- [Chain of Responsibility Pattern](./chain-of-responsibility.md)
+- [Observer Pattern](./observer.md)

@@ -397,3 +397,27 @@ void shouldUppercaseValues() {
 - [Kafka Streams Documentation](https://kafka.apache.org/documentation/streams/)
 - [Kafka Streams Developer Guide](https://docs.confluent.io/platform/current/streams/developer-guide/index.html)
 - [Topology Visualizer](https://zz85.github.io/kafka-streams-viz/)
+
+---
+
+## Advanced Editorial Pass: Stream Processing as Stateful System Design
+
+### What Matters Beyond API Usage
+- Topology design is a resilience and operability decision, not only functional flow.
+- State store strategy influences recovery time and resource footprint.
+- Windowing and join semantics must reflect business time and late-arrival behavior.
+
+### Production Failure Modes
+- Repartition topics and state stores growing without lifecycle controls.
+- Event-time assumptions breaking under clock skew and delayed producers.
+- Exactly-once expectations invalidated by external side effects.
+
+### Engineering Heuristics
+1. Make topology naming and processor intent explicit for debugging.
+2. Size state and retention with recovery objectives in mind.
+3. Test with out-of-order and late events, not only ordered happy paths.
+
+### Compare Next
+- [Configuring Exactly-Once Semantics in Kafka](./kafka-exactly-once.md)
+- [Kafka Connect](./kafka-connect.md)
+- [Parallel Consumer in Kafka](./kafka-parallel-consumer.md)

@@ -233,3 +233,27 @@ Template Method uses inheritance — the algorithm structure is in the base clas
 **Q5: Can you give a real-world example of Template Method in Java?**
 
 `java.util.AbstractList` — You implement `get(int index)` and `size()`, and the class provides `indexOf()`, `contains()`, `iterator()`, etc. as template methods that use your implementations. `java.io.InputStream` — You implement `read()`, and `read(byte[])`, `skip()`, `transferTo()` are built on top of it. Spring's `JdbcTemplate` handles connection management and exception translation while you provide the SQL and result mapping.
+
+---
+
+## Advanced Editorial Pass: Template Method for Invariant Workflow Control
+
+### Where It Excels
+- You must enforce algorithm sequence while allowing limited extension points.
+- Compliance or safety constraints require non-overridable orchestration flow.
+- Shared pre/post behavior must remain centralized and auditable.
+
+### Risks in Practice
+- Inheritance hierarchies become brittle when variation points are misidentified.
+- Hook methods encourage subclass side effects that violate invariants.
+- Evolution pressure can force repeated base-class changes.
+
+### Engineering Checklist
+1. Keep template skeleton small, explicit, and non-negotiable.
+2. Define hook contracts clearly (allowed effects, error behavior, timing).
+3. Move high-variance logic to Strategy when inheritance starts to strain.
+
+### Compare Next
+- [Strategy Pattern](./strategy.md)
+- [Chain of Responsibility Pattern](./chain-of-responsibility.md)
+- [Factory Method Pattern](./factory-method.md)

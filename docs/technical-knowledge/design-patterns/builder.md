@@ -229,3 +229,27 @@ Building an HTTP request with options for URL (required), method, headers, body,
 **Q5: What are the benefits of using the Builder pattern for constructing complex objects?**
 
 Precise control over step-by-step construction. Cleaner code by separating construction from representation. Enforced immutability — the built object has no setters. Self-documenting API where each method clearly describes what it configures. Ability to validate the complete object state at build time. Support for different configurations using the same construction process.
+
+---
+
+## Advanced Editorial Pass: Builder Beyond Constructor Ergonomics
+
+### High-Value Use Cases
+- Construction requires validation across multiple fields and order-independent inputs.
+- Immutable aggregates must be assembled from optional or derived parameters.
+- You need to separate configuration-time concerns from runtime object behavior.
+
+### Failure Modes
+- Builder duplicates domain invariants that should live in the target type.
+- Fluent APIs allow impossible combinations that are only discovered at runtime.
+- Builders become mutable dumping grounds reused across requests.
+
+### Practical Heuristics
+1. Validate invariants at build() and fail loudly with domain-specific errors.
+2. Prefer staged builders when mandatory fields are frequently omitted.
+3. Keep builder lifecycle short-lived; never cache builder instances in shared scopes.
+
+### Compare Next
+- [Factory Method Pattern](./factory-method.md)
+- [Abstract Factory Pattern](./abstract-factory.md)
+- [Prototype Pattern](./prototype.md)

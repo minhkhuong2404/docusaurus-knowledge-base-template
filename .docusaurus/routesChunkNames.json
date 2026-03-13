@@ -1,11 +1,11 @@
 {
-  "/-add": {
+  "/-47e": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-fef": {
+  "/-302": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -13,9 +13,25 @@
     "__comp": "3720c009",
     "__props": "59af61a6"
   },
+  "/tags/1-nf-c9e": {
+    "__comp": "df203c0f",
+    "__props": "fefda7d2"
+  },
+  "/tags/2-nf-a38": {
+    "__comp": "df203c0f",
+    "__props": "0cf57cad"
+  },
+  "/tags/3-nf-ad9": {
+    "__comp": "df203c0f",
+    "__props": "70438f52"
+  },
   "/tags/abstract-factory-e00": {
     "__comp": "df203c0f",
     "__props": "ab8354fa"
+  },
+  "/tags/acid-db5": {
+    "__comp": "df203c0f",
+    "__props": "c737f819"
   },
   "/tags/adapter-153": {
     "__comp": "df203c0f",
@@ -25,21 +41,49 @@
     "__comp": "df203c0f",
     "__props": "ae5d0af1"
   },
+  "/tags/algorithms-069": {
+    "__comp": "df203c0f",
+    "__props": "4f83f949"
+  },
+  "/tags/analytics-894": {
+    "__comp": "df203c0f",
+    "__props": "77a56c8a"
+  },
   "/tags/async-db2": {
     "__comp": "df203c0f",
     "__props": "02105171"
+  },
+  "/tags/auditing-755": {
+    "__comp": "df203c0f",
+    "__props": "82d35c41"
   },
   "/tags/authentication-ae2": {
     "__comp": "df203c0f",
     "__props": "ab795768"
   },
+  "/tags/authorization-6cc": {
+    "__comp": "df203c0f",
+    "__props": "d36aea42"
+  },
   "/tags/auto-configuration-2b4": {
     "__comp": "df203c0f",
     "__props": "567932a8"
   },
+  "/tags/b-tree-3a1": {
+    "__comp": "df203c0f",
+    "__props": "26d1bea7"
+  },
   "/tags/backend-4ee": {
     "__comp": "df203c0f",
     "__props": "05f2d632"
+  },
+  "/tags/backup-4b0": {
+    "__comp": "df203c0f",
+    "__props": "01cc66d1"
+  },
+  "/tags/bcnf-044": {
+    "__comp": "df203c0f",
+    "__props": "b1ce8c9f"
   },
   "/tags/beginner-823": {
     "__comp": "df203c0f",
@@ -53,9 +97,41 @@
     "__comp": "df203c0f",
     "__props": "6bc84981"
   },
+  "/tags/buffer-pool-975": {
+    "__comp": "df203c0f",
+    "__props": "55251362"
+  },
   "/tags/builder-b96": {
     "__comp": "df203c0f",
     "__props": "d7a3e221"
+  },
+  "/tags/cache-aside-cb4": {
+    "__comp": "df203c0f",
+    "__props": "07d2b096"
+  },
+  "/tags/caching-f0a": {
+    "__comp": "df203c0f",
+    "__props": "21146221"
+  },
+  "/tags/cap-theorem-8ce": {
+    "__comp": "df203c0f",
+    "__props": "6980531d"
+  },
+  "/tags/cardinality-dd4": {
+    "__comp": "df203c0f",
+    "__props": "26260cdf"
+  },
+  "/tags/career-241": {
+    "__comp": "df203c0f",
+    "__props": "8fc830b7"
+  },
+  "/tags/cassandra-2ad": {
+    "__comp": "df203c0f",
+    "__props": "9d9a673a"
+  },
+  "/tags/cgroups-e1f": {
+    "__comp": "df203c0f",
+    "__props": "77fb06d6"
   },
   "/tags/chain-of-responsibility-ba3": {
     "__comp": "df203c0f",
@@ -77,6 +153,14 @@
     "__comp": "df203c0f",
     "__props": "037d5664"
   },
+  "/tags/connection-pooling-8d4": {
+    "__comp": "df203c0f",
+    "__props": "4d3befbe"
+  },
+  "/tags/consistency-5a7": {
+    "__comp": "df203c0f",
+    "__props": "301c2584"
+  },
   "/tags/consumers-15c": {
     "__comp": "df203c0f",
     "__props": "f03a4bb8"
@@ -85,9 +169,25 @@
     "__comp": "df203c0f",
     "__props": "4f5e3efe"
   },
+  "/tags/cost-based-677": {
+    "__comp": "df203c0f",
+    "__props": "4475d819"
+  },
+  "/tags/cpu-scheduling-50d": {
+    "__comp": "df203c0f",
+    "__props": "43f1e773"
+  },
+  "/tags/cqrs-c4e": {
+    "__comp": "df203c0f",
+    "__props": "f4d6ff7e"
+  },
   "/tags/creational-081": {
     "__comp": "df203c0f",
     "__props": "4223edf9"
+  },
+  "/tags/cte-8e3": {
+    "__comp": "df203c0f",
+    "__props": "c11a0359"
   },
   "/tags/data-integration-e30": {
     "__comp": "df203c0f",
@@ -97,6 +197,22 @@
     "__comp": "df203c0f",
     "__props": "99ba9618"
   },
+  "/tags/data-warehouse-b4d": {
+    "__comp": "df203c0f",
+    "__props": "4df473cd"
+  },
+  "/tags/database-1be": {
+    "__comp": "df203c0f",
+    "__props": "fa5017f4"
+  },
+  "/tags/deadlock-1c7": {
+    "__comp": "df203c0f",
+    "__props": "72cb411a"
+  },
+  "/tags/deadlocks-946": {
+    "__comp": "df203c0f",
+    "__props": "94c6767f"
+  },
   "/tags/decorator-cea": {
     "__comp": "df203c0f",
     "__props": "80f9bfa3"
@@ -105,9 +221,29 @@
     "__comp": "df203c0f",
     "__props": "90c0aa62"
   },
+  "/tags/design-8ab": {
+    "__comp": "df203c0f",
+    "__props": "21db06dc"
+  },
   "/tags/design-patterns-52a": {
     "__comp": "df203c0f",
     "__props": "01dac2d7"
+  },
+  "/tags/dimensional-modeling-1c0": {
+    "__comp": "df203c0f",
+    "__props": "93d3a241"
+  },
+  "/tags/disaster-recovery-e0c": {
+    "__comp": "df203c0f",
+    "__props": "0f2c72a9"
+  },
+  "/tags/disk-scheduling-09d": {
+    "__comp": "df203c0f",
+    "__props": "cd86aae5"
+  },
+  "/tags/distributed-0a4": {
+    "__comp": "df203c0f",
+    "__props": "45c52ee6"
   },
   "/tags/distributed-systems-808": {
     "__comp": "df203c0f",
@@ -117,17 +253,61 @@
     "__comp": "df203c0f",
     "__props": "bf87ce40"
   },
+  "/tags/dynamodb-f96": {
+    "__comp": "df203c0f",
+    "__props": "bab19283"
+  },
+  "/tags/elasticsearch-392": {
+    "__comp": "df203c0f",
+    "__props": "d6c03ee6"
+  },
+  "/tags/elt-245": {
+    "__comp": "df203c0f",
+    "__props": "b0d61f7f"
+  },
+  "/tags/encryption-db3": {
+    "__comp": "df203c0f",
+    "__props": "417f9a90"
+  },
   "/tags/engineering-869": {
     "__comp": "df203c0f",
     "__props": "b0759614"
+  },
+  "/tags/erd-97c": {
+    "__comp": "df203c0f",
+    "__props": "a958c90a"
+  },
+  "/tags/etl-27c": {
+    "__comp": "df203c0f",
+    "__props": "5e9cc89a"
+  },
+  "/tags/event-sourcing-285": {
+    "__comp": "df203c0f",
+    "__props": "a6005a6c"
   },
   "/tags/event-streaming-91a": {
     "__comp": "df203c0f",
     "__props": "b0c91c06"
   },
+  "/tags/eventual-consistency-9c4": {
+    "__comp": "df203c0f",
+    "__props": "f9637d15"
+  },
+  "/tags/eviction-d17": {
+    "__comp": "df203c0f",
+    "__props": "426bf595"
+  },
   "/tags/exactly-once-semantics-4a2": {
     "__comp": "df203c0f",
     "__props": "1a3b8eea"
+  },
+  "/tags/execution-plan-d97": {
+    "__comp": "df203c0f",
+    "__props": "835d6ab9"
+  },
+  "/tags/explain-422": {
+    "__comp": "df203c0f",
+    "__props": "ddefcde0"
   },
   "/tags/facade-8ac": {
     "__comp": "df203c0f",
@@ -137,9 +317,21 @@
     "__comp": "df203c0f",
     "__props": "0d413130"
   },
+  "/tags/file-systems-d53": {
+    "__comp": "df203c0f",
+    "__props": "ab9dbd11"
+  },
   "/tags/files-407": {
     "__comp": "df203c0f",
     "__props": "7b44fdc6"
+  },
+  "/tags/flyway-504": {
+    "__comp": "df203c0f",
+    "__props": "1eff3b4a"
+  },
+  "/tags/full-text-search-c3e": {
+    "__comp": "df203c0f",
+    "__props": "526f52bf"
   },
   "/tags/fundamentals-b95": {
     "__comp": "df203c0f",
@@ -153,17 +345,57 @@
     "__comp": "df203c0f",
     "__props": "0aab00a6"
   },
+  "/tags/graph-a4f": {
+    "__comp": "df203c0f",
+    "__props": "c76b4852"
+  },
+  "/tags/huge-pages-d21": {
+    "__comp": "df203c0f",
+    "__props": "785b5c1c"
+  },
+  "/tags/indexing-e44": {
+    "__comp": "df203c0f",
+    "__props": "abb89bd2"
+  },
+  "/tags/influxdb-bae": {
+    "__comp": "df203c0f",
+    "__props": "bba1aa88"
+  },
+  "/tags/innodb-99e": {
+    "__comp": "df203c0f",
+    "__props": "b2e0094c"
+  },
   "/tags/internals-874": {
     "__comp": "df203c0f",
     "__props": "698fe1c0"
+  },
+  "/tags/interview-4d3": {
+    "__comp": "df203c0f",
+    "__props": "d7a7568a"
   },
   "/tags/interview-questions-387": {
     "__comp": "df203c0f",
     "__props": "b8e7618f"
   },
+  "/tags/inverted-index-cf7": {
+    "__comp": "df203c0f",
+    "__props": "7b8f3e71"
+  },
   "/tags/io-a3e": {
     "__comp": "df203c0f",
     "__props": "00682744"
+  },
+  "/tags/iot-ee8": {
+    "__comp": "df203c0f",
+    "__props": "db162cbd"
+  },
+  "/tags/ipc-14d": {
+    "__comp": "df203c0f",
+    "__props": "981be986"
+  },
+  "/tags/isolation-8a2": {
+    "__comp": "df203c0f",
+    "__props": "1307cdba"
   },
   "/tags/java-7e9": {
     "__comp": "df203c0f",
@@ -172,6 +404,14 @@
   "/tags/java-21-b99": {
     "__comp": "df203c0f",
     "__props": "7e50314d"
+  },
+  "/tags/java-nio-fb1": {
+    "__comp": "df203c0f",
+    "__props": "9c57d5e6"
+  },
+  "/tags/joins-b29": {
+    "__comp": "df203c0f",
+    "__props": "70c88d8f"
   },
   "/tags/jvm-c85": {
     "__comp": "df203c0f",
@@ -189,6 +429,14 @@
     "__comp": "df203c0f",
     "__props": "a26e5d46"
   },
+  "/tags/kernel-a68": {
+    "__comp": "df203c0f",
+    "__props": "c85e2c37"
+  },
+  "/tags/keys-38a": {
+    "__comp": "df203c0f",
+    "__props": "0310c624"
+  },
   "/tags/knowledge-base-6af": {
     "__comp": "df203c0f",
     "__props": "629f607d"
@@ -197,21 +445,93 @@
     "__comp": "df203c0f",
     "__props": "d7d8705e"
   },
+  "/tags/leader-follower-acf": {
+    "__comp": "df203c0f",
+    "__props": "ff32ef8b"
+  },
+  "/tags/linux-371": {
+    "__comp": "df203c0f",
+    "__props": "d0a33d37"
+  },
+  "/tags/liquibase-032": {
+    "__comp": "df203c0f",
+    "__props": "8122d7fa"
+  },
+  "/tags/locking-a98": {
+    "__comp": "df203c0f",
+    "__props": "b500003f"
+  },
+  "/tags/lsm-tree-b94": {
+    "__comp": "df203c0f",
+    "__props": "47048e29"
+  },
+  "/tags/memory-management-051": {
+    "__comp": "df203c0f",
+    "__props": "d1481106"
+  },
+  "/tags/metrics-71f": {
+    "__comp": "df203c0f",
+    "__props": "86cac9da"
+  },
   "/tags/microservices-565": {
     "__comp": "df203c0f",
     "__props": "203f322b"
+  },
+  "/tags/migrations-ebe": {
+    "__comp": "df203c0f",
+    "__props": "ebc50825"
   },
   "/tags/modern-java-f10": {
     "__comp": "df203c0f",
     "__props": "b1d0021c"
   },
+  "/tags/mongodb-f18": {
+    "__comp": "df203c0f",
+    "__props": "8d0d6737"
+  },
+  "/tags/monitoring-999": {
+    "__comp": "df203c0f",
+    "__props": "ecaaa484"
+  },
   "/tags/multithreading-7b2": {
     "__comp": "df203c0f",
     "__props": "1d0141ec"
   },
+  "/tags/mvcc-7db": {
+    "__comp": "df203c0f",
+    "__props": "1ccd6fba"
+  },
+  "/tags/mysql-3f5": {
+    "__comp": "df203c0f",
+    "__props": "6fbe1ab3"
+  },
+  "/tags/namespaces-545": {
+    "__comp": "df203c0f",
+    "__props": "0b5ee620"
+  },
+  "/tags/netty-d64": {
+    "__comp": "df203c0f",
+    "__props": "81e5622e"
+  },
+  "/tags/networking-cc6": {
+    "__comp": "df203c0f",
+    "__props": "af74578a"
+  },
   "/tags/nio-835": {
     "__comp": "df203c0f",
     "__props": "1cc4b04a"
+  },
+  "/tags/normalization-886": {
+    "__comp": "df203c0f",
+    "__props": "1f703912"
+  },
+  "/tags/nosql-073": {
+    "__comp": "df203c0f",
+    "__props": "47335036"
+  },
+  "/tags/numa-ada": {
+    "__comp": "df203c0f",
+    "__props": "df514add"
   },
   "/tags/object-oriented-programming-696": {
     "__comp": "df203c0f",
@@ -221,6 +541,14 @@
     "__comp": "df203c0f",
     "__props": "5573c806"
   },
+  "/tags/olap-3b2": {
+    "__comp": "df203c0f",
+    "__props": "1397dd46"
+  },
+  "/tags/oltp-148": {
+    "__comp": "df203c0f",
+    "__props": "5235d933"
+  },
   "/tags/onboarding-b8e": {
     "__comp": "df203c0f",
     "__props": "f371591c"
@@ -229,9 +557,33 @@
     "__comp": "df203c0f",
     "__props": "35e88882"
   },
+  "/tags/operating-systems-8ee": {
+    "__comp": "df203c0f",
+    "__props": "7dcc51ff"
+  },
+  "/tags/optimizer-e11": {
+    "__comp": "df203c0f",
+    "__props": "abb790b6"
+  },
+  "/tags/outbox-2e4": {
+    "__comp": "df203c0f",
+    "__props": "05294ccf"
+  },
+  "/tags/overview-55f": {
+    "__comp": "df203c0f",
+    "__props": "b85a6672"
+  },
+  "/tags/paging-947": {
+    "__comp": "df203c0f",
+    "__props": "47337ff7"
+  },
   "/tags/parallelism-118": {
     "__comp": "df203c0f",
     "__props": "91f9fed1"
+  },
+  "/tags/partitioning-333": {
+    "__comp": "df203c0f",
+    "__props": "67f8925b"
   },
   "/tags/performance-69d": {
     "__comp": "df203c0f",
@@ -241,6 +593,30 @@
     "__comp": "df203c0f",
     "__props": "f3210cf2"
   },
+  "/tags/pitr-28c": {
+    "__comp": "df203c0f",
+    "__props": "3791bff4"
+  },
+  "/tags/posix-b03": {
+    "__comp": "df203c0f",
+    "__props": "a11544ca"
+  },
+  "/tags/postgresql-ad1": {
+    "__comp": "df203c0f",
+    "__props": "0f630b8b"
+  },
+  "/tags/processes-262": {
+    "__comp": "df203c0f",
+    "__props": "0e6372b0"
+  },
+  "/tags/profiling-cf5": {
+    "__comp": "df203c0f",
+    "__props": "5f279dbf"
+  },
+  "/tags/prometheus-c28": {
+    "__comp": "df203c0f",
+    "__props": "f38ddaca"
+  },
   "/tags/prototype-cdc": {
     "__comp": "df203c0f",
     "__props": "4f97ffc4"
@@ -249,13 +625,89 @@
     "__comp": "df203c0f",
     "__props": "4dfd97f1"
   },
+  "/tags/query-optimization-eae": {
+    "__comp": "df203c0f",
+    "__props": "e2f72ce1"
+  },
+  "/tags/query-planner-cb7": {
+    "__comp": "df203c0f",
+    "__props": "d1ba9b5d"
+  },
+  "/tags/rbac-203": {
+    "__comp": "df203c0f",
+    "__props": "c01ad80f"
+  },
+  "/tags/recovery-ae8": {
+    "__comp": "df203c0f",
+    "__props": "78053235"
+  },
+  "/tags/recursive-888": {
+    "__comp": "df203c0f",
+    "__props": "e33b0b40"
+  },
+  "/tags/redis-a03": {
+    "__comp": "df203c0f",
+    "__props": "6b1a2d50"
+  },
+  "/tags/relational-cf7": {
+    "__comp": "df203c0f",
+    "__props": "49205bd3"
+  },
+  "/tags/relevance-b3a": {
+    "__comp": "df203c0f",
+    "__props": "0565c281"
+  },
   "/tags/reliability-48a": {
     "__comp": "df203c0f",
     "__props": "2cd28f63"
   },
+  "/tags/replication-e99": {
+    "__comp": "df203c0f",
+    "__props": "68d3743e"
+  },
+  "/tags/rpo-2fb": {
+    "__comp": "df203c0f",
+    "__props": "856f9aad"
+  },
+  "/tags/rto-459": {
+    "__comp": "df203c0f",
+    "__props": "5006d98f"
+  },
+  "/tags/saga-363": {
+    "__comp": "df203c0f",
+    "__props": "6a2129ea"
+  },
+  "/tags/scaling-37a": {
+    "__comp": "df203c0f",
+    "__props": "c27624a0"
+  },
+  "/tags/schema-fbe": {
+    "__comp": "df203c0f",
+    "__props": "3b5bfb5f"
+  },
+  "/tags/security-84b": {
+    "__comp": "df203c0f",
+    "__props": "165b7680"
+  },
+  "/tags/sharding-5aa": {
+    "__comp": "df203c0f",
+    "__props": "5daf08d3"
+  },
+  "/tags/signals-b13": {
+    "__comp": "df203c0f",
+    "__props": "d679e450"
+  },
   "/tags/singleton-93b": {
     "__comp": "df203c0f",
     "__props": "9d086a83"
+  },
+  "/tags/slow-query-cdc": {
+    "__comp": "df203c0f",
+    "__props": "e269b7a8"
+  },
+  "/tags/sockets-052": {
+    "__comp": "df203c0f",
+    "__props": "2acb3a72"
   },
   "/tags/software-design-5b9": {
     "__comp": "df203c0f",
@@ -264,6 +716,10 @@
   "/tags/solid-f87": {
     "__comp": "df203c0f",
     "__props": "0a53752f"
+  },
+  "/tags/spring-7a5": {
+    "__comp": "df203c0f",
+    "__props": "262c5923"
   },
   "/tags/spring-boot-9e5": {
     "__comp": "df203c0f",
@@ -285,6 +741,26 @@
     "__comp": "df203c0f",
     "__props": "a0ec3c55"
   },
+  "/tags/sql-b91": {
+    "__comp": "df203c0f",
+    "__props": "f8c45340"
+  },
+  "/tags/sql-injection-a8c": {
+    "__comp": "df203c0f",
+    "__props": "e7c0c16c"
+  },
+  "/tags/star-schema-b6c": {
+    "__comp": "df203c0f",
+    "__props": "af82fe38"
+  },
+  "/tags/statistics-461": {
+    "__comp": "df203c0f",
+    "__props": "6668fc20"
+  },
+  "/tags/storage-engines-dfe": {
+    "__comp": "df203c0f",
+    "__props": "cc171eed"
+  },
   "/tags/strategy-c95": {
     "__comp": "df203c0f",
     "__props": "09ac419e"
@@ -301,19 +777,91 @@
     "__comp": "df203c0f",
     "__props": "a4568ce4"
   },
+  "/tags/subquery-c43": {
+    "__comp": "df203c0f",
+    "__props": "6eaa3e12"
+  },
+  "/tags/swap-aaf": {
+    "__comp": "df203c0f",
+    "__props": "87ec7de5"
+  },
+  "/tags/synchronization-94f": {
+    "__comp": "df203c0f",
+    "__props": "de0509d9"
+  },
+  "/tags/system-calls-9ae": {
+    "__comp": "df203c0f",
+    "__props": "8df9af36"
+  },
+  "/tags/system-design-4b2": {
+    "__comp": "df203c0f",
+    "__props": "cfa888d2"
+  },
+  "/tags/tcp-bb4": {
+    "__comp": "df203c0f",
+    "__props": "a7ec8345"
+  },
   "/tags/template-method-4e8": {
     "__comp": "df203c0f",
     "__props": "46da2414"
+  },
+  "/tags/tfidf-128": {
+    "__comp": "df203c0f",
+    "__props": "92a0e3e7"
+  },
+  "/tags/threads-f0b": {
+    "__comp": "df203c0f",
+    "__props": "22656c0d"
+  },
+  "/tags/time-series-8b1": {
+    "__comp": "df203c0f",
+    "__props": "2cc7c3d9"
+  },
+  "/tags/timescaledb-9a7": {
+    "__comp": "df203c0f",
+    "__props": "9a724055"
   },
   "/tags/topology-c1c": {
     "__comp": "df203c0f",
     "__props": "b92b542f"
   },
+  "/tags/transactions-286": {
+    "__comp": "df203c0f",
+    "__props": "f62a9cd8"
+  },
+  "/tags/tsvector-ba0": {
+    "__comp": "df203c0f",
+    "__props": "defa66d8"
+  },
+  "/tags/versioning-cef": {
+    "__comp": "df203c0f",
+    "__props": "a602230a"
+  },
+  "/tags/virtual-memory-b33": {
+    "__comp": "df203c0f",
+    "__props": "8660da84"
+  },
+  "/tags/wal-8a2": {
+    "__comp": "df203c0f",
+    "__props": "f6b42dd8"
+  },
   "/tags/web-4aa": {
     "__comp": "df203c0f",
     "__props": "e2c9efd5"
   },
-  "/-6a4": {
+  "/tags/window-functions-8f9": {
+    "__comp": "df203c0f",
+    "__props": "91f70e26"
+  },
+  "/tags/write-through-b90": {
+    "__comp": "df203c0f",
+    "__props": "0497c312"
+  },
+  "/tags/zero-downtime-1c3": {
+    "__comp": "df203c0f",
+    "__props": "b0d573e5"
+  },
+  "/-790": {
     "__comp": "a94703ab"
   },
   "/technical-knowledge/architecture/microservices-46b": {
@@ -359,6 +907,82 @@
   "/technical-knowledge/backend/spring-security-2dd": {
     "__comp": "17896441",
     "content": "56a281be"
+  },
+  "/technical-knowledge/database/-103": {
+    "__comp": "17896441",
+    "content": "d4d0b9b0"
+  },
+  "/technical-knowledge/database/advanced-sql-07e": {
+    "__comp": "17896441",
+    "content": "8a4ffef6"
+  },
+  "/technical-knowledge/database/backup-recovery-618": {
+    "__comp": "17896441",
+    "content": "1d655bfd"
+  },
+  "/technical-knowledge/database/caching-strategies-3f2": {
+    "__comp": "17896441",
+    "content": "7aa6b45d"
+  },
+  "/technical-knowledge/database/data-warehousing-olap-903": {
+    "__comp": "17896441",
+    "content": "a404a845"
+  },
+  "/technical-knowledge/database/database-design-b34": {
+    "__comp": "17896441",
+    "content": "39348cd3"
+  },
+  "/technical-knowledge/database/database-patterns-microservices-211": {
+    "__comp": "17896441",
+    "content": "52d464a4"
+  },
+  "/technical-knowledge/database/database-security-afc": {
+    "__comp": "17896441",
+    "content": "c8f8291e"
+  },
+  "/technical-knowledge/database/full-text-search-c2e": {
+    "__comp": "17896441",
+    "content": "f33f2ff7"
+  },
+  "/technical-knowledge/database/indexing-query-optimization-df3": {
+    "__comp": "17896441",
+    "content": "3579e0cb"
+  },
+  "/technical-knowledge/database/nosql-distributed-cbc": {
+    "__comp": "17896441",
+    "content": "025815b7"
+  },
+  "/technical-knowledge/database/performance-monitoring-34b": {
+    "__comp": "17896441",
+    "content": "66dfb623"
+  },
+  "/technical-knowledge/database/query-planner-optimizer-2e5": {
+    "__comp": "17896441",
+    "content": "44e5f61d"
+  },
+  "/technical-knowledge/database/relational-fundamentals-bc5": {
+    "__comp": "17896441",
+    "content": "30a60d4b"
+  },
+  "/technical-knowledge/database/replication-partitioning-beb": {
+    "__comp": "17896441",
+    "content": "353f2454"
+  },
+  "/technical-knowledge/database/schema-migrations-eeb": {
+    "__comp": "17896441",
+    "content": "008ae538"
+  },
+  "/technical-knowledge/database/storage-engines-data-structures-156": {
+    "__comp": "17896441",
+    "content": "c28018e1"
+  },
+  "/technical-knowledge/database/time-series-databases-2da": {
+    "__comp": "17896441",
+    "content": "04625431"
+  },
+  "/technical-knowledge/database/transactions-concurrency-bb8": {
+    "__comp": "17896441",
+    "content": "d2fa8756"
   },
   "/technical-knowledge/design-patterns/abstract-factory-287": {
     "__comp": "17896441",
@@ -456,7 +1080,7 @@
     "__comp": "17896441",
     "content": "0366963e"
   },
-  "/technical-knowledge/java/java-oop-49b": {
+  "/technical-knowledge/java/java-oop-7b0": {
     "__comp": "17896441",
     "content": "5304fd8a"
   },
@@ -479,6 +1103,46 @@
   "/technical-knowledge/kafka/kafka-streams-5c9": {
     "__comp": "17896441",
     "content": "4a65d68f"
+  },
+  "/technical-knowledge/operating-systems/cpu-scheduling-856": {
+    "__comp": "17896441",
+    "content": "fb30c349"
+  },
+  "/technical-knowledge/operating-systems/file-systems-and-io-5a2": {
+    "__comp": "17896441",
+    "content": "5c7d43fe"
+  },
+  "/technical-knowledge/operating-systems/interview-questions-d1d": {
+    "__comp": "17896441",
+    "content": "d51fb45c"
+  },
+  "/technical-knowledge/operating-systems/intro-27a": {
+    "__comp": "17896441",
+    "content": "f6b4f9e1"
+  },
+  "/technical-knowledge/operating-systems/linux-internals-and-syscalls-801": {
+    "__comp": "17896441",
+    "content": "c14f6876"
+  },
+  "/technical-knowledge/operating-systems/memory-management-843": {
+    "__comp": "17896441",
+    "content": "868fe66e"
+  },
+  "/technical-knowledge/operating-systems/networking-and-ipc-208": {
+    "__comp": "17896441",
+    "content": "66ff3ddc"
+  },
+  "/technical-knowledge/operating-systems/processes-and-threads-bce": {
+    "__comp": "17896441",
+    "content": "9dd074f3"
+  },
+  "/technical-knowledge/operating-systems/synchronization-and-deadlocks-252": {
+    "__comp": "17896441",
+    "content": "53d70aa9"
+  },
+  "/technical-knowledge/operating-systems/virtual-memory-deep-dive-168": {
+    "__comp": "17896441",
+    "content": "2d19a7f5"
   },
   "/-fc9": {
     "__comp": "17896441",

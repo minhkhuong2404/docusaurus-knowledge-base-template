@@ -1,0 +1,68 @@
+{
+  "id": "technical-knowledge/operating-systems/synchronization-and-deadlocks",
+  "title": "Synchronization & Deadlocks",
+  "description": "Race conditions, critical sections, mutexes, semaphores, monitors, classic synchronization problems, deadlock detection/prevention, and Java concurrency utilities.",
+  "source": "@site/docs/technical-knowledge/operating-systems/synchronization-and-deadlocks.md",
+  "sourceDirName": "technical-knowledge/operating-systems",
+  "slug": "/technical-knowledge/operating-systems/synchronization-and-deadlocks",
+  "permalink": "/technical-knowledge/operating-systems/synchronization-and-deadlocks",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "operating-systems",
+      "permalink": "/tags/operating-systems"
+    },
+    {
+      "inline": true,
+      "label": "synchronization",
+      "permalink": "/tags/synchronization"
+    },
+    {
+      "inline": true,
+      "label": "deadlocks",
+      "permalink": "/tags/deadlocks"
+    },
+    {
+      "inline": true,
+      "label": "concurrency",
+      "permalink": "/tags/concurrency"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "multithreading",
+      "permalink": "/tags/multithreading"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "id": "synchronization-and-deadlocks",
+    "title": "Synchronization & Deadlocks",
+    "description": "Race conditions, critical sections, mutexes, semaphores, monitors, classic synchronization problems, deadlock detection/prevention, and Java concurrency utilities.",
+    "tags": [
+      "operating-systems",
+      "synchronization",
+      "deadlocks",
+      "concurrency",
+      "java",
+      "multithreading"
+    ],
+    "sidebar_position": 4
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Memory Management",
+    "permalink": "/technical-knowledge/operating-systems/memory-management"
+  },
+  "next": {
+    "title": "File Systems & I/O",
+    "permalink": "/technical-knowledge/operating-systems/file-systems-and-io"
+  }
+}

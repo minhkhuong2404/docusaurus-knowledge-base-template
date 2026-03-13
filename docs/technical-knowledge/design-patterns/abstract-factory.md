@@ -208,3 +208,27 @@ It promotes scalability by allowing new product families to be added without mod
 **Q5: How can the Abstract Factory pattern support scalability in large systems?**
 
 New product families can be added by creating new concrete factory classes without modifying existing code or factories. The client code remains unchanged because it depends only on the abstract interface. This separation allows different teams to develop different product families independently, and the system can be extended as requirements grow.
+
+---
+
+## Advanced Editorial Pass: Abstract Factory for Coherent Product Families
+
+### Architectural Value
+- Guarantees compatibility across related objects that must evolve together.
+- Prevents clients from assembling invalid cross-family combinations.
+- Supports environment-specific families without conditional creation logic in callers.
+
+### Trade-offs to Watch
+- Family count growth increases factory surface and maintenance cost.
+- Over-abstraction hides concrete capabilities needed by power users.
+- Infrequent variant expansion may not justify factory hierarchy complexity.
+
+### Practical Guidance
+1. Use Abstract Factory when family-level invariants are critical.
+2. Keep family interfaces capability-oriented, not implementation-shaped.
+3. Track family evolution metrics; simplify if variation stabilizes.
+
+### Compare Next
+- [Factory Method Pattern](./factory-method.md)
+- [Builder Pattern](./builder.md)
+- [Facade Pattern](./facade.md)

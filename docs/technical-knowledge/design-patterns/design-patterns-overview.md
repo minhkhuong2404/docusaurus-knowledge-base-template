@@ -74,3 +74,27 @@ Patterns often implement one or more principles — for example, the Strategy pa
 - **DON'T** over-engineer with patterns when a straightforward solution works
 
 > _"Design patterns should be used to simplify code, not to complicate it."_
+
+---
+
+## Advanced Editorial Pass: Pattern Selection Under Real Constraints
+
+### Architectural Decision Heuristics
+- Start with volatility analysis: which part of the design is likely to change first (creation, composition, or behavior)?
+- Select the lightest pattern that isolates that volatility; avoid introducing extension points with no credible change pressure.
+- Evaluate operational impact early: observability, failure isolation, and debugging complexity matter as much as class design elegance.
+
+### Common Misuse Signals
+- A pattern is chosen before a concrete pain point exists.
+- Teams use pattern names as status signals instead of problem-solution language.
+- The implementation increases indirection but does not reduce coupling or change risk.
+
+### Senior-Level Review Questions
+1. Which design axis are we trying to stabilize: construction, structure, or runtime behavior?
+2. What is the expected cost of removing this pattern in 6 months if requirements simplify?
+3. Does this pattern improve deploy-time and run-time operability, or only source-level aesthetics?
+
+### Compare Next
+- [Strategy Pattern](./strategy.md)
+- [Factory Method Pattern](./factory-method.md)
+- [Decorator Pattern](./decorator.md)

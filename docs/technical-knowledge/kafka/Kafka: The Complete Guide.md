@@ -385,3 +385,27 @@ kafka-consumer-groups.sh --bootstrap-server localhost:9092 \
 - [Apache Kafka Official Documentation](https://kafka.apache.org/documentation/)
 - [Confluent Developer Tutorials](https://developer.confluent.io/)
 - *Kafka: The Definitive Guide* — Neha Narkhede, Gwen Shapira, Todd Palino (O'Reilly)
+
+---
+
+## Advanced Editorial Pass: Kafka Platform Thinking
+
+### Strategic Architecture Focus
+- Topic design, partition strategy, and key semantics are long-term contracts.
+- Delivery guarantees must align with business consistency requirements.
+- Operability (lag, rebalancing, retries, DLQ) determines real reliability.
+
+### Production Failure Modes
+- Partition-key mistakes that create hotspots and unstable throughput.
+- Retry policies that amplify duplicates without idempotent consumers.
+- Under-observed consumer groups causing silent backlog growth.
+
+### Engineering Heuristics
+1. Treat event schema and key design as governance decisions.
+2. Define replay and backfill strategy before first production launch.
+3. Instrument lag and end-to-end processing latency as primary SLO inputs.
+
+### Compare Next
+- [Kafka Streams: Topology & Branching](./kafka-streams.md)
+- [Configuring Exactly-Once Semantics in Kafka](./kafka-exactly-once.md)
+- [Kafka Connect](./kafka-connect.md)

@@ -289,3 +289,27 @@ Lazy loading of expensive resources (images, large datasets). Access control in 
 **Q5: What are the potential downsides of using the Proxy pattern?**
 
 Added complexity from the extra indirection layer. Possible performance overhead from proxy processing. Can make debugging harder since the proxy intercepts all calls. If overused, proxies create design clutter and complicate the object graph. The response from a proxy might differ from the real object in edge cases.
+
+---
+
+## Advanced Editorial Pass: Proxy as Control Point for Access and Cost
+
+### Core Advantages
+- Centralizes policy enforcement (auth, rate limiting, lazy loading, circuit behavior).
+- Preserves client contract while introducing control and observability.
+- Supports remote, virtual, and protection scenarios with minimal caller change.
+
+### Operational Pitfalls
+- Added hop obscures source of latency and error translation.
+- Inconsistent caching semantics can return stale or contradictory results.
+- Proxy logic drifts into business workflow orchestration.
+
+### Implementation Heuristics
+1. Keep policy concerns explicit and separately testable.
+2. Emit proxy-level metrics to distinguish upstream vs proxy-induced issues.
+3. Define strict boundaries: policy layer only, not domain decision engine.
+
+### Compare Next
+- [Decorator Pattern](./decorator.md)
+- [Facade Pattern](./facade.md)
+- [Adapter Pattern](./adapter.md)

@@ -53,6 +53,7 @@ const sidebars: SidebarsConfig = {
 			label: 'Java',
 			items: [
 				'technical-knowledge/java/java-fundamentals',
+				'technical-knowledge/java/java-oop',
 				'technical-knowledge/java/java-collections',
 				'technical-knowledge/java/java-concurrency',
 				'technical-knowledge/java/java-io',
@@ -71,7 +72,111 @@ const sidebars: SidebarsConfig = {
 				'technical-knowledge/kafka/kafka-exactly-once',
 				'technical-knowledge/kafka/kafka-parallel-consumer'
 			]
-		}
+		},
+		{
+			type: 'doc',
+			id: 'technical-knowledge/database/database-overview',
+			label: '🗄️ Overview',
+		},
+		{
+			type: 'category',
+			label: 'Relational Databases',
+			collapsed: false,
+			items: [
+				'technical-knowledge/database/relational-fundamentals',
+				'technical-knowledge/database/database-design',
+				'technical-knowledge/database/advanced-sql',
+				'technical-knowledge/database/schema-migrations',
+			],
+		},
+		{
+			type: 'category',
+			label: 'Performance',
+			collapsed: false,
+			items: [
+				'technical-knowledge/database/indexing-query-optimization',
+				'technical-knowledge/database/query-planner-optimizer',
+				'technical-knowledge/database/performance-monitoring',
+				'technical-knowledge/database/caching-strategies',
+			],
+		},
+		{
+			type: 'category',
+			label: 'Internals',
+			collapsed: false,
+			items: [
+				'technical-knowledge/database/transactions-concurrency',
+				'technical-knowledge/database/storage-engines-data-structures',
+			],
+		},
+		{
+			type: 'category',
+			label: 'Scale & Distribution',
+			collapsed: false,
+			items: [
+				'technical-knowledge/database/replication-partitioning',
+				'technical-knowledge/database/nosql-distributed',
+				'technical-knowledge/database/database-patterns-microservices',
+			],
+		},
+		{
+			type: 'category',
+			label: '🔎 Specialized',
+			collapsed: false,
+			items: [
+				'technical-knowledge/database/full-text-search',
+				'technical-knowledge/database/data-warehousing-olap',
+				'technical-knowledge/database/time-series-databases',
+			],
+		},
+		{
+			type: 'category',
+			label: 'Operations',
+			collapsed: false,
+			items: [
+				'technical-knowledge/database/backup-recovery',
+				'technical-knowledge/database/database-security',
+			],
+		},
+		{
+			type: 'doc',
+			id: 'technical-knowledge/operating-systems/intro',
+			label: '📖 Introduction',
+		},
+		{
+			type: 'category',
+			label: '⚙️ Core Concepts',
+			collapsed: false,
+			items: [
+				'technical-knowledge/operating-systems/processes-and-threads',
+				'technical-knowledge/operating-systems/cpu-scheduling',
+				'technical-knowledge/operating-systems/memory-management',
+				'technical-knowledge/operating-systems/synchronization-and-deadlocks',
+			],
+		},
+		{
+			type: 'category',
+			label: '🖥️ Storage & I/O',
+			collapsed: false,
+			items: [
+				'technical-knowledge/operating-systems/file-systems-and-io',
+				'technical-knowledge/operating-systems/virtual-memory-deep-dive',
+			],
+		},
+		{
+			type: 'category',
+			label: '🐧 Linux Internals',
+			collapsed: false,
+			items: [
+				'technical-knowledge/operating-systems/linux-internals-and-syscalls',
+				'technical-knowledge/operating-systems/networking-and-ipc',
+			],
+		},
+		{
+			type: 'doc',
+			id: 'technical-knowledge/operating-systems/interview-questions',
+			label: '🎯 Interview Questions',
+		},
 	]
 }
 

@@ -575,3 +575,27 @@ Use `MockMvc` to simulate HTTP requests without starting a server. `@WebMvcTest`
 ### Q17: How does Spring Security integrate with Spring MVC?
 
 Spring Security plugs into Spring MVC through servlet filters that run before the `DispatcherServlet`. It is enabled with `@EnableWebSecurity` and configured via `SecurityFilterChain` beans. Security filters handle authentication and authorization before requests reach controllers. Method-level security (`@PreAuthorize`, `@Secured`) can be applied directly on controller or service methods.
+
+---
+
+## Advanced Editorial Pass: HTTP Layer Design and Failure Semantics
+
+### Architectural Priorities
+- Keep controllers thin and explicit about protocol-level responsibilities.
+- Define error contracts, idempotency, and validation strategy up front.
+- Ensure request lifecycle observability from ingress to persistence boundary.
+
+### Common Production Gaps
+- Inconsistent exception mapping creates unstable API behavior.
+- Hidden blocking calls in request threads degrade tail latency.
+- Overloaded controller methods blending transport and domain logic.
+
+### Engineering Heuristics
+1. Standardize response envelopes and error taxonomies for client stability.
+2. Enforce timeout budgets and downstream call guards at the edge.
+3. Track p95/p99 by endpoint and correlate with dependency latency.
+
+### Compare Next
+- [Spring Security - Complete Guide](./spring-security.md)
+- [Spring Data JPA - Complete Guide](./spring-data-jpa.md)
+- [Spring Boot - Advanced Topics](./spring-boot-advanced.md)

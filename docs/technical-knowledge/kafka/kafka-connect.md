@@ -265,3 +265,27 @@ By default, a single bad record can fail an entire task. Use **error tolerance**
 - [Kafka Connect Documentation](https://kafka.apache.org/documentation/#connect)
 - [Confluent Hub — Connector Catalog](https://www.confluent.io/hub/)
 - [Debezium — CDC Connectors](https://debezium.io/documentation/)
+
+---
+
+## Advanced Editorial Pass: Data Integration with Operational Guarantees
+
+### Senior Design Priorities
+- Connector topology should reflect ownership, schema evolution, and replay needs.
+- Error handling policy must separate transient, poison, and contract errors.
+- Throughput tuning should preserve data correctness and back-pressure safety.
+
+### Failure Patterns
+- Connector-level retries masking persistent schema incompatibility.
+- Dead-letter topics without triage ownership.
+- Source and sink task scaling that ignores downstream saturation limits.
+
+### Implementation Heuristics
+1. Version connector configs and transforms as audited artifacts.
+2. Define DLQ triage workflow with SLA and ownership.
+3. Monitor connector task health together with end-system latency.
+
+### Compare Next
+- [Kafka: The Complete Guide](./Kafka:%20The%20Complete%20Guide.md)
+- [Kafka Streams: Topology & Branching](./kafka-streams.md)
+- [Configuring Exactly-Once Semantics in Kafka](./kafka-exactly-once.md)

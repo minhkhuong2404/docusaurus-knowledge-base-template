@@ -29,8 +29,8 @@ export default {
     "prism": {
       "theme": {
         "plain": {
-          "backgroundColor": "#1e1e2e",
-          "color": "#cdd6f4"
+          "backgroundColor": "#161923",
+          "color": "#e8eaf3"
         },
         "styles": [
           {
@@ -41,7 +41,7 @@ export default {
               "cdata"
             ],
             "style": {
-              "color": "#6c7086",
+              "color": "#8d93ab",
               "fontStyle": "italic"
             }
           },
@@ -50,7 +50,7 @@ export default {
               "punctuation"
             ],
             "style": {
-              "color": "#bac2de"
+              "color": "#cfd4e8"
             }
           },
           {
@@ -69,7 +69,7 @@ export default {
               "attr-value"
             ],
             "style": {
-              "color": "#a6e3a1"
+              "color": "#8ef7b2"
             }
           },
           {
@@ -78,7 +78,8 @@ export default {
               "boolean"
             ],
             "style": {
-              "color": "#fab387"
+              "color": "#ffb86c",
+              "fontWeight": "500"
             }
           },
           {
@@ -88,7 +89,8 @@ export default {
               "atrule"
             ],
             "style": {
-              "color": "#cba6f7"
+              "color": "#ff7ac6",
+              "fontWeight": "600"
             }
           },
           {
@@ -97,7 +99,8 @@ export default {
               "class-name"
             ],
             "style": {
-              "color": "#89b4fa"
+              "color": "#7dd3fc",
+              "fontWeight": "600"
             }
           },
           {
@@ -105,7 +108,7 @@ export default {
               "builtin"
             ],
             "style": {
-              "color": "#f38ba8"
+              "color": "#ff8fab"
             }
           },
           {
@@ -114,7 +117,7 @@ export default {
               "selector"
             ],
             "style": {
-              "color": "#f38ba8"
+              "color": "#ff8fab"
             }
           },
           {
@@ -122,7 +125,7 @@ export default {
               "attr-name"
             ],
             "style": {
-              "color": "#f9e2af"
+              "color": "#ffe08a"
             }
           },
           {
@@ -132,7 +135,7 @@ export default {
               "symbol"
             ],
             "style": {
-              "color": "#f5c2e7"
+              "color": "#f7a8ff"
             }
           },
           {
@@ -142,7 +145,7 @@ export default {
               "url"
             ],
             "style": {
-              "color": "#89dceb"
+              "color": "#8be9fd"
             }
           },
           {
@@ -150,7 +153,7 @@ export default {
               "regex"
             ],
             "style": {
-              "color": "#a6e3a1"
+              "color": "#6df6b2"
             }
           },
           {
@@ -158,7 +161,7 @@ export default {
               "property"
             ],
             "style": {
-              "color": "#89dceb"
+              "color": "#8be9fd"
             }
           },
           {
@@ -166,7 +169,8 @@ export default {
               "deleted"
             ],
             "style": {
-              "color": "#f38ba8"
+              "color": "#ff8fab",
+              "textDecoration": "line-through"
             }
           },
           {
@@ -174,7 +178,8 @@ export default {
               "inserted"
             ],
             "style": {
-              "color": "#a6e3a1"
+              "color": "#8ef7b2",
+              "textDecoration": "underline"
             }
           },
           {
@@ -182,7 +187,8 @@ export default {
               "changed"
             ],
             "style": {
-              "color": "#f9e2af"
+              "color": "#ffe08a",
+              "fontWeight": "600"
             }
           }
         ]

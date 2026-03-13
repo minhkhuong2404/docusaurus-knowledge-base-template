@@ -302,3 +302,27 @@ OOP in Java
 - [Java OOP Documentation (Oracle)](https://docs.oracle.com/javase/tutorial/java/concepts/)
 - [Effective Java – Joshua Bloch](https://www.oreilly.com/library/view/effective-java/9780134686097/)
 - [Spring Framework & OOP Patterns](https://spring.io/guides)
+
+---
+
+## Advanced Editorial Pass: OOP as Boundary Design, Not Boilerplate
+
+### Architectural Lens
+- OOP value comes from explicit boundaries, invariants, and change isolation.
+- Encapsulation should protect business rules, not merely hide fields.
+- Composition strategy should reflect domain volatility and extension pressure.
+
+### Common Misuse Patterns
+- Inheritance used for code reuse instead of semantic substitutability.
+- Anemic models that move all behavior into service layers.
+- Over-abstracted class hierarchies without real variation.
+
+### Senior Heuristics
+1. Keep domain invariants close to the data they constrain.
+2. Prefer composition when behavior variation is runtime-driven.
+3. Audit object responsibilities regularly to prevent god objects.
+
+### Compare Next
+- [Java Fundamentals: Core Language Concepts](./java-fundamentals.md)
+- [Java Collections Framework: Deep Dive](./java-collections.md)
+- [Java Interview Questions & Answers](./java-interview-questions.md)

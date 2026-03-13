@@ -47,5 +47,9 @@
   "previous": {
     "title": "Configuring Exactly-Once Semantics in Kafka",
     "permalink": "/technical-knowledge/kafka/kafka-exactly-once"
+  },
+  "next": {
+    "title": "🗄️ Overview",
+    "permalink": "/technical-knowledge/database/"
   }
 }

@@ -211,7 +211,7 @@ public class ShoppingCart {
     private PaymentStrategy paymentStrategy;
 
     public void setPaymentStrategy(PaymentStrategy strategy) {
-        this.paymentStrategy = paymentStrategy;
+        this.paymentStrategy = strategy;
     }
 
     public boolean checkout() {
@@ -312,3 +312,27 @@ Both encapsulate behavior behind an interface. Strategy lets the client choose w
 **Q5: When should you prefer Strategy over Template Method?**
 
 Use Strategy when you need runtime flexibility, when the algorithms are fundamentally different (not just steps within a shared template), or when you want loose coupling through composition. Use Template Method when there's a clear algorithmic skeleton with only certain steps varying. Strategy favors composition; Template Method favors inheritance.
+
+---
+
+## Advanced Editorial Pass: Strategy for Runtime Policy Evolution
+
+### Strategic Payoff
+- Encapsulates policy variation behind stable contracts.
+- Enables safe runtime switching based on context, telemetry, or tenant profile.
+- Reduces condition-heavy logic that is hard to test and reason about.
+
+### Non-Obvious Risks
+- Strategy count can grow faster than governance and naming discipline.
+- Context leaks too much state into strategy APIs, creating covert coupling.
+- Runtime selection logic becomes a hidden second decision system.
+
+### Implementation Heuristics
+1. Keep strategy interfaces minimal and context-agnostic.
+2. Externalize strategy selection policy and make it observable.
+3. Benchmark critical strategies; abstraction should not hide major performance cliffs.
+
+### Compare Next
+- [Template Method Pattern](./template-method.md)
+- [Command Pattern](./command.md)
+- [Bridge Pattern](./bridge.md)

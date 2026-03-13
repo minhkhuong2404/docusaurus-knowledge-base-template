@@ -1,0 +1,74 @@
+{
+  "id": "technical-knowledge/operating-systems/virtual-memory-deep-dive",
+  "title": "Virtual Memory Deep Dive",
+  "description": "Address spaces, swap, OOM killer, huge pages, NUMA, and practical Linux memory tuning.",
+  "source": "@site/docs/technical-knowledge/operating-systems/virtual-memory-deep-dive.md",
+  "sourceDirName": "technical-knowledge/operating-systems",
+  "slug": "/technical-knowledge/operating-systems/virtual-memory-deep-dive",
+  "permalink": "/technical-knowledge/operating-systems/virtual-memory-deep-dive",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "operating-systems",
+      "permalink": "/tags/operating-systems"
+    },
+    {
+      "inline": true,
+      "label": "virtual-memory",
+      "permalink": "/tags/virtual-memory"
+    },
+    {
+      "inline": true,
+      "label": "swap",
+      "permalink": "/tags/swap"
+    },
+    {
+      "inline": true,
+      "label": "numa",
+      "permalink": "/tags/numa"
+    },
+    {
+      "inline": true,
+      "label": "huge-pages",
+      "permalink": "/tags/huge-pages"
+    },
+    {
+      "inline": true,
+      "label": "linux",
+      "permalink": "/tags/linux"
+    },
+    {
+      "inline": true,
+      "label": "performance",
+      "permalink": "/tags/performance"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 7,
+  "frontMatter": {
+    "id": "virtual-memory-deep-dive",
+    "title": "Virtual Memory Deep Dive",
+    "description": "Address spaces, swap, OOM killer, huge pages, NUMA, and practical Linux memory tuning.",
+    "tags": [
+      "operating-systems",
+      "virtual-memory",
+      "swap",
+      "numa",
+      "huge-pages",
+      "linux",
+      "performance"
+    ],
+    "sidebar_position": 7
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "File Systems & I/O",
+    "permalink": "/technical-knowledge/operating-systems/file-systems-and-io"
+  },
+  "next": {
+    "title": "Linux Internals & System Calls",
+    "permalink": "/technical-knowledge/operating-systems/linux-internals-and-syscalls"
+  }
+}

@@ -868,3 +868,27 @@ Common optimization strategies:
 - **JVM tuning** — GC selection, heap sizing
 - **Lazy loading** — defer expensive initialization
 - **Async processing** — `CompletableFuture` for non-blocking operations
+
+---
+
+## Advanced Editorial Pass: Interview Mastery with System Thinking
+
+### What Differentiates Senior Answers
+- Links language knowledge to system reliability, scalability, and maintainability.
+- Uses trade-offs and measurable outcomes, not only definitions.
+- Shows clear reasoning under uncertainty and failure scenarios.
+
+### Preparation Pitfalls
+- Relying on memorized one-liners without implementation context.
+- Ignoring performance diagnostics and observability dimensions.
+- Weak examples that do not show decision quality.
+
+### Practice Strategy
+1. Reframe each answer around context, decision, trade-off, and result.
+2. Add one failure case and one prevention strategy per question.
+3. Practice whiteboard explanations that include data flow and bottlenecks.
+
+### Compare Next
+- [Java Concurrency: Threads, Locks & Concurrent Utilities](./java-concurrency.md)
+- [JVM Internals: Memory, GC & Class Loading](./java-jvm.md)
+- [Java New Features: Java 8 through Java 21+](./java-new-features.md)

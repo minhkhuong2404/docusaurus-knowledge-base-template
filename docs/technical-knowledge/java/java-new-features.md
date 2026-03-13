@@ -509,3 +509,27 @@ Java 8  →  Java 17 (LTS)  →  Java 21 (LTS)
 
 - **Java 8 → 17:** Biggest jump. Gain modules, records, sealed classes, text blocks, new GCs.
 - **Java 17 → 21:** Gain virtual threads, pattern matching for switch, record patterns.
+
+---
+
+## Advanced Editorial Pass: Feature Adoption with Migration Discipline
+
+### Decision Framework
+- Adopt features when they reduce defect rate or cognitive load, not for novelty.
+- Sequence upgrades by platform compatibility, library ecosystem readiness, and team fluency.
+- Protect rollout with compatibility tests across runtime and build toolchain.
+
+### Adoption Risks
+- Mixed-language style across modules increases maintenance friction.
+- Incomplete migration strategies create hidden behavioral inconsistencies.
+- Feature use outpaces debugging and observability competence.
+
+### Migration Heuristics
+1. Define approved feature subsets per Java version and team maturity.
+2. Enforce consistent style through reviews and static analysis.
+3. Pair language upgrades with targeted knowledge-sharing and incident drills.
+
+### Compare Next
+- [Java Fundamentals: Core Language Concepts](./java-fundamentals.md)
+- [JVM Internals: Memory, GC & Class Loading](./java-jvm.md)
+- [Java OOP](./java-oop.md)

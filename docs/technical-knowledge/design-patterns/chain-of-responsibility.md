@@ -234,3 +234,27 @@ The sender doesn't need to know which handler will process the request — it ju
 **Q5: What are the drawbacks of using the Chain of Responsibility pattern?**
 
 Requests might pass through many handlers before finding the right one, causing performance overhead. Debugging is harder because the processing path isn't immediately visible. There's a risk of requests going unhandled if the chain is incomplete. The order of handlers can subtly affect behavior, and misconfigured chains can cause bugs.
+
+---
+
+## Advanced Editorial Pass: Chain of Responsibility in Request Pipelines
+
+### Architectural Benefits
+- Enables policy layering (auth, validation, enrichment, routing) without monolithic handlers.
+- Supports incremental insertion/removal of steps in regulated or evolving workflows.
+- Improves local reasoning for each policy stage when observability is strong.
+
+### Operational Risks
+- Unclear termination behavior causes dropped or double-processed requests.
+- Handler ordering becomes implicit tribal knowledge.
+- Retry and idempotency strategy is inconsistent across chain links.
+
+### Review Checklist
+1. Define deterministic ordering and ownership for handler registration.
+2. Emit structured stage-level telemetry (start, success, failure, duration).
+3. Specify default handling semantics when no handler accepts a request.
+
+### Compare Next
+- [Command Pattern](./command.md)
+- [Template Method Pattern](./template-method.md)
+- [Observer Pattern](./observer.md)

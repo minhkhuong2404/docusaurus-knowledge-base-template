@@ -360,3 +360,27 @@ Spring Boot's power comes from:
 - **Fat JAR packaging** for single-artifact deployment
 
 Understanding these internals enables you to debug startup issues, write custom starters, and optimize application behavior.
+
+---
+
+## Advanced Editorial Pass: Spring Boot Internals for Debuggability
+
+### Why Internals Matter in Real Systems
+- Understanding condition evaluation prevents accidental behavior changes during upgrades.
+- Context lifecycle clarity improves startup sequencing and shutdown safety.
+- Bean wiring visibility reduces time-to-diagnosis for production misconfiguration.
+
+### Failure Modes
+- Relying on implicit ordering for critical initialization logic.
+- Hidden bean replacement through permissive component scanning.
+- Configuration binding mismatches that fail late under specific profiles.
+
+### Practical Heuristics
+1. Keep package boundaries explicit for component scanning and auto-configuration imports.
+2. Surface condition and binding diagnostics in non-production environments.
+3. Add smoke tests for key context invariants after dependency upgrades.
+
+### Compare Next
+- [Spring Boot - Overview & Why It Matters](./spring-boot.md)
+- [Spring Boot - Advanced Topics](./spring-boot-advanced.md)
+- [Spring Framework: Deep Dive](./spring-framework-deep-dive.md)

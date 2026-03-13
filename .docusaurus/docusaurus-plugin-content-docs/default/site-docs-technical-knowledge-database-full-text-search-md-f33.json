@@ -1,0 +1,74 @@
+{
+  "id": "technical-knowledge/database/full-text-search",
+  "title": "Full-Text Search",
+  "description": "Full-text search concepts, inverted indexes, relevance scoring, MySQL FULLTEXT, PostgreSQL tsvector, and Elasticsearch for advanced search.",
+  "source": "@site/docs/technical-knowledge/database/full-text-search.md",
+  "sourceDirName": "technical-knowledge/database",
+  "slug": "/technical-knowledge/database/full-text-search",
+  "permalink": "/technical-knowledge/database/full-text-search",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "database",
+      "permalink": "/tags/database"
+    },
+    {
+      "inline": true,
+      "label": "full-text-search",
+      "permalink": "/tags/full-text-search"
+    },
+    {
+      "inline": true,
+      "label": "elasticsearch",
+      "permalink": "/tags/elasticsearch"
+    },
+    {
+      "inline": true,
+      "label": "inverted-index",
+      "permalink": "/tags/inverted-index"
+    },
+    {
+      "inline": true,
+      "label": "tsvector",
+      "permalink": "/tags/tsvector"
+    },
+    {
+      "inline": true,
+      "label": "relevance",
+      "permalink": "/tags/relevance"
+    },
+    {
+      "inline": true,
+      "label": "tfidf",
+      "permalink": "/tags/tfidf"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 16,
+  "frontMatter": {
+    "id": "full-text-search",
+    "title": "Full-Text Search",
+    "description": "Full-text search concepts, inverted indexes, relevance scoring, MySQL FULLTEXT, PostgreSQL tsvector, and Elasticsearch for advanced search.",
+    "tags": [
+      "database",
+      "full-text-search",
+      "elasticsearch",
+      "inverted-index",
+      "tsvector",
+      "relevance",
+      "tfidf"
+    ],
+    "sidebar_position": 16
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Database Patterns for Microservices",
+    "permalink": "/technical-knowledge/database/database-patterns-microservices"
+  },
+  "next": {
+    "title": "Data Warehousing & OLAP",
+    "permalink": "/technical-knowledge/database/data-warehousing-olap"
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "id": "technical-knowledge/database/time-series-databases",
+  "title": "Time-Series Databases",
+  "description": "Time-series data characteristics, storage optimizations, InfluxDB, TimescaleDB, Prometheus, and common time-series patterns.",
+  "source": "@site/docs/technical-knowledge/database/time-series-databases.md",
+  "sourceDirName": "technical-knowledge/database",
+  "slug": "/technical-knowledge/database/time-series-databases",
+  "permalink": "/technical-knowledge/database/time-series-databases",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "database",
+      "permalink": "/tags/database"
+    },
+    {
+      "inline": true,
+      "label": "time-series",
+      "permalink": "/tags/time-series"
+    },
+    {
+      "inline": true,
+      "label": "influxdb",
+      "permalink": "/tags/influxdb"
+    },
+    {
+      "inline": true,
+      "label": "timescaledb",
+      "permalink": "/tags/timescaledb"
+    },
+    {
+      "inline": true,
+      "label": "prometheus",
+      "permalink": "/tags/prometheus"
+    },
+    {
+      "inline": true,
+      "label": "iot",
+      "permalink": "/tags/iot"
+    },
+    {
+      "inline": true,
+      "label": "metrics",
+      "permalink": "/tags/metrics"
+    },
+    {
+      "inline": true,
+      "label": "monitoring",
+      "permalink": "/tags/monitoring"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 19,
+  "frontMatter": {
+    "id": "time-series-databases",
+    "title": "Time-Series Databases",
+    "description": "Time-series data characteristics, storage optimizations, InfluxDB, TimescaleDB, Prometheus, and common time-series patterns.",
+    "tags": [
+      "database",
+      "time-series",
+      "influxdb",
+      "timescaledb",
+      "prometheus",
+      "iot",
+      "metrics",
+      "monitoring"
+    ],
+    "sidebar_position": 19
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Data Warehousing & OLAP",
+    "permalink": "/technical-knowledge/database/data-warehousing-olap"
+  },
+  "next": {
+    "title": "Backup & Recovery",
+    "permalink": "/technical-knowledge/database/backup-recovery"
+  }
+}

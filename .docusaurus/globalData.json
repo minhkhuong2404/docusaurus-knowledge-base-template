@@ -71,6 +71,101 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/database/advanced-sql",
+              "path": "/technical-knowledge/database/advanced-sql",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/backup-recovery",
+              "path": "/technical-knowledge/database/backup-recovery",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/caching-strategies",
+              "path": "/technical-knowledge/database/caching-strategies",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/data-warehousing-olap",
+              "path": "/technical-knowledge/database/data-warehousing-olap",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/database-design",
+              "path": "/technical-knowledge/database/database-design",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/database-overview",
+              "path": "/technical-knowledge/database/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/database-patterns-microservices",
+              "path": "/technical-knowledge/database/database-patterns-microservices",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/database-security",
+              "path": "/technical-knowledge/database/database-security",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/full-text-search",
+              "path": "/technical-knowledge/database/full-text-search",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/indexing-query-optimization",
+              "path": "/technical-knowledge/database/indexing-query-optimization",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/nosql-distributed",
+              "path": "/technical-knowledge/database/nosql-distributed",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/performance-monitoring",
+              "path": "/technical-knowledge/database/performance-monitoring",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/query-planner-optimizer",
+              "path": "/technical-knowledge/database/query-planner-optimizer",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/relational-fundamentals",
+              "path": "/technical-knowledge/database/relational-fundamentals",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/replication-partitioning",
+              "path": "/technical-knowledge/database/replication-partitioning",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/schema-migrations",
+              "path": "/technical-knowledge/database/schema-migrations",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/storage-engines-data-structures",
+              "path": "/technical-knowledge/database/storage-engines-data-structures",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/time-series-databases",
+              "path": "/technical-knowledge/database/time-series-databases",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/transactions-concurrency",
+              "path": "/technical-knowledge/database/transactions-concurrency",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/design-patterns/abstract-factory",
               "path": "/technical-knowledge/design-patterns/abstract-factory",
               "sidebar": "tutorialSidebar"
@@ -192,7 +287,8 @@
             },
             {
               "id": "technical-knowledge/java/java-oop",
-              "path": "/technical-knowledge/java/java-oop"
+              "path": "/technical-knowledge/java/java-oop",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/kafka/kafka-complete-guide",
@@ -217,6 +313,56 @@
             {
               "id": "technical-knowledge/kafka/kafka-streams",
               "path": "/technical-knowledge/kafka/kafka-streams",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/operating-systems/cpu-scheduling",
+              "path": "/technical-knowledge/operating-systems/cpu-scheduling",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/operating-systems/file-systems-and-io",
+              "path": "/technical-knowledge/operating-systems/file-systems-and-io",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/operating-systems/interview-questions",
+              "path": "/technical-knowledge/operating-systems/interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/operating-systems/intro",
+              "path": "/technical-knowledge/operating-systems/intro",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/operating-systems/linux-internals-and-syscalls",
+              "path": "/technical-knowledge/operating-systems/linux-internals-and-syscalls",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/operating-systems/memory-management",
+              "path": "/technical-knowledge/operating-systems/memory-management",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/operating-systems/networking-and-ipc",
+              "path": "/technical-knowledge/operating-systems/networking-and-ipc",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/operating-systems/processes-and-threads",
+              "path": "/technical-knowledge/operating-systems/processes-and-threads",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/operating-systems/synchronization-and-deadlocks",
+              "path": "/technical-knowledge/operating-systems/synchronization-and-deadlocks",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/operating-systems/virtual-memory-deep-dive",
+              "path": "/technical-knowledge/operating-systems/virtual-memory-deep-dive",
               "sidebar": "tutorialSidebar"
             }
           ],

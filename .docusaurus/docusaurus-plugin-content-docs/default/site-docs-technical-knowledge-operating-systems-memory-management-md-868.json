@@ -1,0 +1,74 @@
+{
+  "id": "technical-knowledge/operating-systems/memory-management",
+  "title": "Memory Management",
+  "description": "Virtual memory, paging, segmentation, TLB, page replacement algorithms, and Java heap management with GC fundamentals.",
+  "source": "@site/docs/technical-knowledge/operating-systems/memory-management.md",
+  "sourceDirName": "technical-knowledge/operating-systems",
+  "slug": "/technical-knowledge/operating-systems/memory-management",
+  "permalink": "/technical-knowledge/operating-systems/memory-management",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "operating-systems",
+      "permalink": "/tags/operating-systems"
+    },
+    {
+      "inline": true,
+      "label": "memory-management",
+      "permalink": "/tags/memory-management"
+    },
+    {
+      "inline": true,
+      "label": "virtual-memory",
+      "permalink": "/tags/virtual-memory"
+    },
+    {
+      "inline": true,
+      "label": "paging",
+      "permalink": "/tags/paging"
+    },
+    {
+      "inline": true,
+      "label": "garbage-collection",
+      "permalink": "/tags/garbage-collection"
+    },
+    {
+      "inline": true,
+      "label": "jvm",
+      "permalink": "/tags/jvm"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "id": "memory-management",
+    "title": "Memory Management",
+    "description": "Virtual memory, paging, segmentation, TLB, page replacement algorithms, and Java heap management with GC fundamentals.",
+    "tags": [
+      "operating-systems",
+      "memory-management",
+      "virtual-memory",
+      "paging",
+      "garbage-collection",
+      "jvm",
+      "java"
+    ],
+    "sidebar_position": 3
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "CPU Scheduling",
+    "permalink": "/technical-knowledge/operating-systems/cpu-scheduling"
+  },
+  "next": {
+    "title": "Synchronization & Deadlocks",
+    "permalink": "/technical-knowledge/operating-systems/synchronization-and-deadlocks"
+  }
+}

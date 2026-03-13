@@ -331,3 +331,27 @@ byte b = buffer.get(0);
 | OS support | Universal | Universal (epoll/kqueue) | Limited (best on Windows) |
 | Framework | Raw `java.io` | Netty, Vert.x | Rarely used directly |
 | Best for | Simple clients, low concurrency | High-concurrency servers | File I/O operations |
+
+---
+
+## Advanced Editorial Pass: I/O Strategy Under Throughput and Latency Constraints
+
+### High-Impact Decisions
+- Match I/O model (blocking, non-blocking, async) to workload and error profile.
+- Tune buffer sizing and batching around realistic message and payload distributions.
+- Design for partial failure and slow dependency behavior.
+
+### Common Pitfalls
+- Assuming non-blocking always improves performance.
+- Excessive copying between byte and object representations.
+- Weak timeout policies creating stuck resources and queue buildup.
+
+### Engineering Heuristics
+1. Benchmark with production-like traffic mix, not synthetic happy paths.
+2. Standardize timeout budgets across network and persistence layers.
+3. Track socket, file descriptor, and direct-memory pressure explicitly.
+
+### Compare Next
+- [Java Concurrency: Threads, Locks & Concurrent Utilities](./java-concurrency.md)
+- [JVM Internals: Memory, GC & Class Loading](./java-jvm.md)
+- [Java New Features: Java 8 through Java 21+](./java-new-features.md)

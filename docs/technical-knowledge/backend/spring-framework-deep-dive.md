@@ -383,3 +383,27 @@ public class CustomDataSourceConfig {
     }
 }
 ```
+
+---
+
+## Advanced Editorial Pass: Deep Dive with Operability Focus
+
+### Advanced Lens
+- Internal extension points should be used sparingly and with clear ownership.
+- Container behavior must remain explainable to on-call engineers under stress.
+- Framework customization is justified only when it reduces net complexity.
+
+### Failure Scenarios
+- Custom post-processors that alter bean semantics unexpectedly.
+- Complex proxy stacks that blur transaction and security boundaries.
+- Hard-to-reproduce context initialization issues across environments.
+
+### Implementation Guidance
+1. Document every non-default extension with intent and rollback approach.
+2. Keep AOP and proxy layering transparent in diagnostics.
+3. Add minimal reproducible tests for every lifecycle customization.
+
+### Compare Next
+- [Spring Framework: Overview](./spring-framework.md)
+- [Spring Boot - Internals & Architecture](./spring-boot-internals.md)
+- [Spring Security - Complete Guide](./spring-security.md)

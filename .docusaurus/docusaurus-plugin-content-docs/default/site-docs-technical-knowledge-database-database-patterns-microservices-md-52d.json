@@ -1,0 +1,86 @@
+{
+  "id": "technical-knowledge/database/database-patterns-microservices",
+  "title": "Database Patterns for Microservices",
+  "description": "Transactional Outbox, Saga, CQRS, Event Sourcing, database-per-service, and data consistency patterns in distributed architectures.",
+  "source": "@site/docs/technical-knowledge/database/database-patterns-microservices.md",
+  "sourceDirName": "technical-knowledge/database",
+  "slug": "/technical-knowledge/database/database-patterns-microservices",
+  "permalink": "/technical-knowledge/database/database-patterns-microservices",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "database",
+      "permalink": "/tags/database"
+    },
+    {
+      "inline": true,
+      "label": "microservices",
+      "permalink": "/tags/microservices"
+    },
+    {
+      "inline": true,
+      "label": "outbox",
+      "permalink": "/tags/outbox"
+    },
+    {
+      "inline": true,
+      "label": "saga",
+      "permalink": "/tags/saga"
+    },
+    {
+      "inline": true,
+      "label": "cqrs",
+      "permalink": "/tags/cqrs"
+    },
+    {
+      "inline": true,
+      "label": "event-sourcing",
+      "permalink": "/tags/event-sourcing"
+    },
+    {
+      "inline": true,
+      "label": "distributed",
+      "permalink": "/tags/distributed"
+    },
+    {
+      "inline": true,
+      "label": "consistency",
+      "permalink": "/tags/consistency"
+    },
+    {
+      "inline": true,
+      "label": "spring",
+      "permalink": "/tags/spring"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 18,
+  "frontMatter": {
+    "id": "database-patterns-microservices",
+    "title": "Database Patterns for Microservices",
+    "description": "Transactional Outbox, Saga, CQRS, Event Sourcing, database-per-service, and data consistency patterns in distributed architectures.",
+    "tags": [
+      "database",
+      "microservices",
+      "outbox",
+      "saga",
+      "cqrs",
+      "event-sourcing",
+      "distributed",
+      "consistency",
+      "spring"
+    ],
+    "sidebar_position": 18
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "NoSQL & Distributed Databases",
+    "permalink": "/technical-knowledge/database/nosql-distributed"
+  },
+  "next": {
+    "title": "Full-Text Search",
+    "permalink": "/technical-knowledge/database/full-text-search"
+  }
+}

@@ -183,3 +183,27 @@ spring.datasource.url=jdbc:postgresql://prod-host:5432/proddb
 - **DO** use Spring Cloud for building microservice architectures
 - **DON'T** use Spring when a simple, lightweight solution suffices — avoid over-engineering
 - **DON'T** fight the framework — embrace convention over configuration
+
+---
+
+## Advanced Editorial Pass: Framework Foundations and Architectural Cost
+
+### Strategic Perspective
+- Spring is an inversion-of-control platform, not only a library bundle.
+- Design quality depends on how clearly you define bean ownership and boundaries.
+- Framework flexibility can amplify both good architecture and bad coupling.
+
+### High-Risk Patterns
+- Treating DI as global mutable state with weak module boundaries.
+- Overusing annotations without explicit lifecycle and contract reasoning.
+- Pushing domain decisions into framework glue layers.
+
+### Senior Review Questions
+1. Can each module be reasoned about without loading the full application context?
+2. Are lifecycle assumptions explicit and testable?
+3. Which framework feature introduces the largest long-term lock-in risk?
+
+### Compare Next
+- [Spring Framework: Deep Dive](./spring-framework-deep-dive.md)
+- [Spring Boot - Overview & Why It Matters](./spring-boot.md)
+- [Spring Security - Complete Guide](./spring-security.md)

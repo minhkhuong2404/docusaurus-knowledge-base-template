@@ -463,3 +463,27 @@ list.removeIf(String::isEmpty);
 // or use Iterator.remove()
 // or use CopyOnWriteArrayList for concurrent access
 ```
+
+---
+
+## Advanced Editorial Pass: Collections as Data-Path Architecture
+
+### Advanced Focus
+- Select data structures by access pattern, mutation frequency, and memory profile.
+- Understand iterator semantics and concurrent behavior under real workloads.
+- Balance API ergonomics with allocation and locality costs.
+
+### Failure Modes
+- Defaulting to hash-based structures without cardinality and ordering analysis.
+- Hidden quadratic behavior from repeated linear scans.
+- Unsafely mixing mutable collections with concurrent access.
+
+### Review Checklist
+1. Define complexity expectations for critical operations in code comments or docs.
+2. Measure allocation churn and GC impact for collection-heavy paths.
+3. Prefer immutable views where ownership boundaries are unclear.
+
+### Compare Next
+- [Java Concurrency: Threads, Locks & Concurrent Utilities](./java-concurrency.md)
+- [Java I/O: Streams, NIO & I/O Models](./java-io.md)
+- [Java Fundamentals: Core Language Concepts](./java-fundamentals.md)

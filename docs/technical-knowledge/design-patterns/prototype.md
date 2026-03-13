@@ -267,3 +267,27 @@ The main pitfall is mismanaging shallow vs deep cloning. Shallow cloning can cau
 **Q5: When would you choose Prototype over Factory?**
 
 Choose Prototype when object initialization is expensive and you already have a configured instance to copy from. Choose Factory when you need to create objects of different types based on runtime conditions. Prototype is also useful when you want to defer the decision of what to clone until runtime, and when a prototype registry can serve as a flexible alternative to a complex factory hierarchy.
+
+---
+
+## Advanced Editorial Pass: Prototype for Expensive Object Genesis
+
+### When Prototype Is Effective
+- Object creation cost is dominated by initialization, hydration, or graph assembly.
+- You need many similar instances with small controlled differences.
+- Runtime composition of baseline configurations is preferable to large factory trees.
+
+### Hidden Complexity
+- Deep copy correctness is hard when graphs contain shared references.
+- Clone semantics become ambiguous with lazy fields and external resources.
+- Mutation after cloning can break assumptions about shared vs isolated state.
+
+### Senior-Level Guidance
+1. Make clone depth explicit in API and documentation.
+2. Prefer copy constructors/factory copy methods when clone() semantics are unclear.
+3. Add regression tests for aliasing bugs in nested object graphs.
+
+### Compare Next
+- [Builder Pattern](./builder.md)
+- [Factory Method Pattern](./factory-method.md)
+- [Singleton Pattern](./singleton.md)

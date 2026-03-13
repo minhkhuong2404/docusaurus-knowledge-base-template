@@ -216,3 +216,27 @@ A database connection factory: an application supports MySQL, PostgreSQL, and Or
 **Q5: What is the difference between a Simple Factory and a Factory Method?**
 
 A Simple Factory is a single class with a static method that creates objects based on input parameters — it's not a formal GoF pattern but is widely used. A Factory Method is the GoF pattern where an abstract creator class declares a creation method and concrete subclasses override it to produce specific products. The Factory Method uses inheritance and polymorphism; the Simple Factory uses conditional logic.
+
+---
+
+## Advanced Editorial Pass: Factory Method for Controlled Instantiation
+
+### Where It Adds Real Value
+- Product variants must evolve independently behind a stable creation contract.
+- Construction requires environment-specific wiring unknown to callers.
+- You need test seams to substitute product implementations safely.
+
+### Trade-offs
+- Overuse introduces subtype sprawl with minimal behavioral difference.
+- Creation logic can become fragmented across many classes.
+- Discoverability suffers if naming conventions are weak.
+
+### Implementation Guidance
+1. Keep product contracts narrow and behavior-focused.
+2. Enforce naming and packaging conventions for creators and products.
+3. Measure extension frequency; collapse hierarchy if variation is not real.
+
+### Compare Next
+- [Abstract Factory Pattern](./abstract-factory.md)
+- [Builder Pattern](./builder.md)
+- [Prototype Pattern](./prototype.md)

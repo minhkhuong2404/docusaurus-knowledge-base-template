@@ -236,3 +236,27 @@ Always unsubscribe observers when they're no longer needed. Use weak references 
 **Q5: How is the Observer pattern used in Spring Framework?**
 
 Spring provides `ApplicationEvent` and `@EventListener`. You publish events with `ApplicationEventPublisher.publishEvent()` and handle them with `@EventListener` annotated methods or by implementing `ApplicationListener<T>`. Spring manages observer registration through its IoC container, and supports async event processing with `@Async`.
+
+---
+
+## Advanced Editorial Pass: Observer in Event-Driven Local Architectures
+
+### Design Strengths
+- Decouples state changes from side-effect reactions.
+- Enables additive features (notifications, analytics, cache sync) without modifying publishers.
+- Works well for domain events inside bounded contexts.
+
+### Reliability Risks
+- Unbounded fan-out creates latency spikes and failure amplification.
+- Event ordering assumptions break when async execution is introduced.
+- Hidden dependency graphs complicate reasoning and incident response.
+
+### Engineering Checklist
+1. Define delivery semantics (sync/async, at-most-once/at-least-once) explicitly.
+2. Separate critical path observers from best-effort listeners.
+3. Add idempotency guards for listeners that can reprocess events.
+
+### Compare Next
+- [Command Pattern](./command.md)
+- [Strategy Pattern](./strategy.md)
+- [Chain of Responsibility Pattern](./chain-of-responsibility.md)

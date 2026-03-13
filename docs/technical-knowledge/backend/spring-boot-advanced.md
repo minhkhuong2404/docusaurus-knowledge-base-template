@@ -469,3 +469,27 @@ Advanced Spring Boot development requires understanding:
 - **Performance** — Connection pools, JPA tuning, avoiding anti-patterns
 - **Observability** — Metrics, tracing, and health indicators
 - **Deployment** — Graceful shutdown, layered Docker images, buildpacks
+
+---
+
+## Advanced Editorial Pass: Advanced Spring Boot Trade-offs
+
+### Core Engineering Tensions
+- Throughput vs consistency when combining caching, async execution, and transactional boundaries.
+- Fast startup vs comprehensive observability instrumentation.
+- Convention speed vs explicit control for long-lived, critical services.
+
+### Common High-Maturity Pitfalls
+- Annotation-heavy architecture that hides transactional and retry semantics.
+- Performance tuning done without representative traffic models.
+- Over-centralized base configuration that blocks service-level autonomy.
+
+### Review Checklist
+1. Validate tuning with load profiles that match real latency distributions.
+2. Make cross-cutting behavior explicit (retries, timeouts, cache invalidation).
+3. Keep advanced defaults documented with rationale and rollback plans.
+
+### Compare Next
+- [Spring Boot - Internals & Architecture](./spring-boot-internals.md)
+- [Spring Data JPA - Complete Guide](./spring-data-jpa.md)
+- [Spring Security - Complete Guide](./spring-security.md)

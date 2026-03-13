@@ -1,0 +1,86 @@
+{
+  "id": "technical-knowledge/database/data-warehousing-olap",
+  "title": "Data Warehousing & OLAP",
+  "description": "OLTP vs OLAP, dimensional modeling, star and snowflake schemas, ETL/ELT, materialized views, and modern data warehouse tools.",
+  "source": "@site/docs/technical-knowledge/database/data-warehousing-olap.md",
+  "sourceDirName": "technical-knowledge/database",
+  "slug": "/technical-knowledge/database/data-warehousing-olap",
+  "permalink": "/technical-knowledge/database/data-warehousing-olap",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "database",
+      "permalink": "/tags/database"
+    },
+    {
+      "inline": true,
+      "label": "data-warehouse",
+      "permalink": "/tags/data-warehouse"
+    },
+    {
+      "inline": true,
+      "label": "olap",
+      "permalink": "/tags/olap"
+    },
+    {
+      "inline": true,
+      "label": "oltp",
+      "permalink": "/tags/oltp"
+    },
+    {
+      "inline": true,
+      "label": "star-schema",
+      "permalink": "/tags/star-schema"
+    },
+    {
+      "inline": true,
+      "label": "dimensional-modeling",
+      "permalink": "/tags/dimensional-modeling"
+    },
+    {
+      "inline": true,
+      "label": "etl",
+      "permalink": "/tags/etl"
+    },
+    {
+      "inline": true,
+      "label": "elt",
+      "permalink": "/tags/elt"
+    },
+    {
+      "inline": true,
+      "label": "analytics",
+      "permalink": "/tags/analytics"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 17,
+  "frontMatter": {
+    "id": "data-warehousing-olap",
+    "title": "Data Warehousing & OLAP",
+    "description": "OLTP vs OLAP, dimensional modeling, star and snowflake schemas, ETL/ELT, materialized views, and modern data warehouse tools.",
+    "tags": [
+      "database",
+      "data-warehouse",
+      "olap",
+      "oltp",
+      "star-schema",
+      "dimensional-modeling",
+      "etl",
+      "elt",
+      "analytics"
+    ],
+    "sidebar_position": 17
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Full-Text Search",
+    "permalink": "/technical-knowledge/database/full-text-search"
+  },
+  "next": {
+    "title": "Time-Series Databases",
+    "permalink": "/technical-knowledge/database/time-series-databases"
+  }
+}

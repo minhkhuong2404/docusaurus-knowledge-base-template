@@ -216,3 +216,27 @@ Reduced complexity â€” clear, high-level interface for clients. Loose coupling â
 **Q5: In what situations would using the Facade pattern be a bad idea?**
 
 When clients need direct, fine-grained access to subsystem features that the facade doesn't expose. When the facade becomes a "god class" that does too much. When hiding the subsystem masks important performance characteristics. When the overhead of maintaining the facade (keeping it in sync with subsystem changes) outweighs the simplification benefit.
+
+---
+
+## Advanced Editorial Pass: Facade as an Anti-Coupling Layer
+
+### Strategic Benefits
+- Reduces client coupling to subsystem churn and sequencing complexity.
+- Creates a stable capability-oriented API for product teams.
+- Improves migration safety by centralizing integration orchestration.
+
+### Failure Modes
+- Facade evolves into a god object with broad hidden logic.
+- Teams bypass facade for convenience, fragmenting integration contracts.
+- Facade error model becomes too generic to support good recovery decisions.
+
+### Senior Engineering Heuristics
+1. Keep facade methods aligned to business capabilities, not subsystem endpoints.
+2. Preserve meaningful domain errors; do not over-flatten failure information.
+3. Track bypass rates and enforce architecture boundaries where needed.
+
+### Compare Next
+- [Adapter Pattern](./adapter.md)
+- [Proxy Pattern](./proxy.md)
+- [Abstract Factory Pattern](./abstract-factory.md)

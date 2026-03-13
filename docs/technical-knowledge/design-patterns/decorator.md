@@ -282,3 +282,27 @@ Java I/O streams: `new BufferedReader(new InputStreamReader(new FileInputStream(
 **Q5: How does the Decorator pattern promote flexibility in extending object behavior?**
 
 It allows behavior to be added or removed at runtime without modifying the original object or creating subclasses. By layering decorators, you create a wide range of behavior combinations from a small set of classes. This avoids the rigidity of inheritance hierarchies and enables per-object customization.
+
+---
+
+## Advanced Editorial Pass: Decorator for Cross-Cutting Behavior
+
+### High-Leverage Scenarios
+- You need feature stacking (caching, metrics, tracing, retries) around stable interfaces.
+- Behavior combinations must be configured per use case without subclass explosion.
+- Runtime composition is required by deployment profile or tenant policy.
+
+### Risks to Manage
+- Deep decorator chains obscure execution order and failure origin.
+- Hidden latency costs accumulate across wrappers.
+- Side-effect decorators can violate expectations of idempotent base operations.
+
+### Practical Checklist
+1. Document ordering constraints for behavior wrappers.
+2. Expose composition in diagnostics so runtime stacks are inspectable.
+3. Keep each decorator single-purpose and measurable.
+
+### Compare Next
+- [Proxy Pattern](./proxy.md)
+- [Adapter Pattern](./adapter.md)
+- [Composite Pattern](./composite.md)

@@ -216,3 +216,27 @@ Spring Boot transforms the Spring development experience by providing:
 - **Environment flexibility** through externalized configuration
 
 It is the foundation for modern Java application development, from monoliths to cloud-native microservices.
+
+---
+
+## Advanced Editorial Pass: Spring Boot in Production Architecture
+
+### What Senior Engineers Optimize
+- Startup behavior and bean graph predictability, not only feature delivery speed.
+- Environment parity across local, CI, staging, and production with strict config hygiene.
+- Operational defaults: health signals, graceful shutdown, and dependency failure handling.
+
+### Failure Patterns to Watch
+- Auto-configuration surprises caused by hidden classpath changes.
+- Profile drift where production behavior diverges from tested assumptions.
+- Undocumented bootstrap dependencies that delay readiness and increase incident MTTR.
+
+### Implementation Heuristics
+1. Keep auto-configuration visible through condition reports and startup diagnostics.
+2. Define explicit readiness criteria tied to real downstream dependencies.
+3. Treat configuration as code: reviewed, versioned, and test-validated.
+
+### Compare Next
+- [Spring Boot - Internals & Architecture](./spring-boot-internals.md)
+- [Spring Boot - Advanced Topics](./spring-boot-advanced.md)
+- [Spring Framework: Overview](./spring-framework.md)

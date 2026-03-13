@@ -1,0 +1,74 @@
+{
+  "id": "technical-knowledge/database/caching-strategies",
+  "title": "Caching Strategies",
+  "description": "Cache patterns, eviction policies, Redis deep dive, cache invalidation strategies, and common pitfalls like cache stampede and cache penetration.",
+  "source": "@site/docs/technical-knowledge/database/caching-strategies.md",
+  "sourceDirName": "technical-knowledge/database",
+  "slug": "/technical-knowledge/database/caching-strategies",
+  "permalink": "/technical-knowledge/database/caching-strategies",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "database",
+      "permalink": "/tags/database"
+    },
+    {
+      "inline": true,
+      "label": "caching",
+      "permalink": "/tags/caching"
+    },
+    {
+      "inline": true,
+      "label": "redis",
+      "permalink": "/tags/redis"
+    },
+    {
+      "inline": true,
+      "label": "cache-aside",
+      "permalink": "/tags/cache-aside"
+    },
+    {
+      "inline": true,
+      "label": "write-through",
+      "permalink": "/tags/write-through"
+    },
+    {
+      "inline": true,
+      "label": "eviction",
+      "permalink": "/tags/eviction"
+    },
+    {
+      "inline": true,
+      "label": "performance",
+      "permalink": "/tags/performance"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 8,
+  "frontMatter": {
+    "id": "caching-strategies",
+    "title": "Caching Strategies",
+    "description": "Cache patterns, eviction policies, Redis deep dive, cache invalidation strategies, and common pitfalls like cache stampede and cache penetration.",
+    "tags": [
+      "database",
+      "caching",
+      "redis",
+      "cache-aside",
+      "write-through",
+      "eviction",
+      "performance"
+    ],
+    "sidebar_position": 8
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Performance & Monitoring",
+    "permalink": "/technical-knowledge/database/performance-monitoring"
+  },
+  "next": {
+    "title": "Transactions & Concurrency Control",
+    "permalink": "/technical-knowledge/database/transactions-concurrency"
+  }
+}

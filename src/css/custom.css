@@ -3,15 +3,15 @@
    ============================================ */
 
 :root {
-  --code-bg: #1e1e2e;
+  --code-bg: #161923;
   --code-surface: #313244;
   --code-border: #45475a;
-  --code-text: #cdd6f4;
+  --code-text: #e8eaf3;
   --code-line-number: #585b70;
-  --code-highlight-bg: rgba(137, 180, 250, 0.1);
-  --code-highlight-border: #89b4fa;
+  --code-highlight-bg: rgba(125, 211, 252, 0.2);
+  --code-highlight-border: #7dd3fc;
   --code-scrollbar-thumb: #45475a;
-  --code-scrollbar-track: #1e1e2e;
+  --code-scrollbar-track: #161923;
   --code-title-bg: #181825;
   --code-copy-btn: #6c7086;
   --code-copy-btn-hover: #cdd6f4;
@@ -23,6 +23,7 @@ div[class*="codeBlockContainer"] pre {
   background-color: var(--code-bg) !important;
   border: 1px solid var(--code-border);
   border-radius: 8px;
+  box-shadow: inset 0 0 0 1px rgba(125, 211, 252, 0.08);
   padding: 1rem 1.25rem;
   font-size: 0.875rem;
   line-height: 1.7;
@@ -70,6 +71,7 @@ span[class*="codeLineNumber"] {
 span[class*="docusaurus-highlight-code-line"] {
   background-color: var(--code-highlight-bg);
   border-left: 3px solid var(--code-highlight-border);
+  box-shadow: inset 0 0 0 1px rgba(125, 211, 252, 0.2);
   display: block;
   margin: 0 -1.25rem;
   padding: 0 1.25rem;

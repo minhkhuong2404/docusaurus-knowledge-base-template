@@ -3,17 +3,17 @@ import type { PrismTheme } from 'prism-react-renderer'
 
 const theme: PrismTheme = {
 	plain: {
-		backgroundColor: '#1e1e2e',
-		color: '#cdd6f4',
+		backgroundColor: '#161923',
+		color: '#e8eaf3',
 	},
 	styles: [
 		{
 			types: ['comment', 'prolog', 'doctype', 'cdata'],
-			style: { color: '#6c7086', fontStyle: 'italic' },
+			style: { color: '#8d93ab', fontStyle: 'italic' },
 		},
 		{
 			types: ['punctuation'],
-			style: { color: '#bac2de' },
+			style: { color: '#cfd4e8' },
 		},
 		{
 			types: ['namespace'],
@@ -21,59 +21,59 @@ const theme: PrismTheme = {
 		},
 		{
 			types: ['string', 'char', 'template-string', 'attr-value'],
-			style: { color: '#a6e3a1' },
+			style: { color: '#8ef7b2' },
 		},
 		{
 			types: ['number', 'boolean'],
-			style: { color: '#fab387' },
+			style: { color: '#ffb86c', fontWeight: '500' },
 		},
 		{
 			types: ['keyword', 'important', 'atrule'],
-			style: { color: '#cba6f7' },
+			style: { color: '#ff7ac6', fontWeight: '600' },
 		},
 		{
 			types: ['function', 'class-name'],
-			style: { color: '#89b4fa' },
+			style: { color: '#7dd3fc', fontWeight: '600' },
 		},
 		{
 			types: ['builtin'],
-			style: { color: '#f38ba8' },
+			style: { color: '#ff8fab' },
 		},
 		{
 			types: ['tag', 'selector'],
-			style: { color: '#f38ba8' },
+			style: { color: '#ff8fab' },
 		},
 		{
 			types: ['attr-name'],
-			style: { color: '#f9e2af' },
+			style: { color: '#ffe08a' },
 		},
 		{
 			types: ['variable', 'constant', 'symbol'],
-			style: { color: '#f5c2e7' },
+			style: { color: '#f7a8ff' },
 		},
 		{
 			types: ['operator', 'entity', 'url'],
-			style: { color: '#89dceb' },
+			style: { color: '#8be9fd' },
 		},
 		{
 			types: ['regex'],
-			style: { color: '#a6e3a1' },
+			style: { color: '#6df6b2' },
 		},
 		{
 			types: ['property'],
-			style: { color: '#89dceb' },
+			style: { color: '#8be9fd' },
 		},
 		{
 			types: ['deleted'],
-			style: { color: '#f38ba8' },
+			style: { color: '#ff8fab', textDecoration: 'line-through' },
 		},
 		{
 			types: ['inserted'],
-			style: { color: '#a6e3a1' },
+			style: { color: '#8ef7b2', textDecoration: 'underline' },
 		},
 		{
 			types: ['changed'],
-			style: { color: '#f9e2af' },
+			style: { color: '#ffe08a', fontWeight: '600' },
 		},
 	],
 }
