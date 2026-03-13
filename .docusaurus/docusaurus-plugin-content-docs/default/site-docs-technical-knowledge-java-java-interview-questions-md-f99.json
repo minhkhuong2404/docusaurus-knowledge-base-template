@@ -1,19 +1,47 @@
 {
   "id": "technical-knowledge/java/java-interview-questions",
   "title": "Java Interview Questions & Answers",
-  "description": "A curated collection of Java interview questions and answers organized by topic and difficulty level. Questions are drawn from real interview scenarios and cover core Java through expert-level topics.",
+  "description": "Curated Java interview questions and answers spanning core language topics, JVM internals, collections, concurrency, and OOP.",
   "source": "@site/docs/technical-knowledge/java/java-interview-questions.md",
   "sourceDirName": "technical-knowledge/java",
   "slug": "/technical-knowledge/java/java-interview-questions",
   "permalink": "/technical-knowledge/java/java-interview-questions",
   "draft": false,
   "unlisted": false,
-  "tags": [],
+  "tags": [
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "interview-questions",
+      "permalink": "/tags/interview-questions"
+    },
+    {
+      "inline": true,
+      "label": "core-java",
+      "permalink": "/tags/core-java"
+    },
+    {
+      "inline": true,
+      "label": "backend",
+      "permalink": "/tags/backend"
+    }
+  ],
   "version": "current",
   "frontMatter": {
     "id": "java-interview-questions",
     "title": "Java Interview Questions & Answers",
-    "slug": "java-interview-questions"
+    "slug": "java-interview-questions",
+    "description": "Curated Java interview questions and answers spanning core language topics, JVM internals, collections, concurrency, and OOP.",
+    "tags": [
+      "java",
+      "interview-questions",
+      "core-java",
+      "backend"
+    ]
   },
   "sidebar": "tutorialSidebar",
   "previous": {

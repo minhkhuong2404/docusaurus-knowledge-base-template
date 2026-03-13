@@ -2,6 +2,8 @@
 id: kafka-parallel-consumer
 title: Parallel Consumer in Kafka
 slug: kafka-parallel-consumer
+description: Explains parallel consumer patterns in Kafka for increasing throughput when processing is slower than message consumption.
+tags: [kafka, consumers, parallelism, performance]
 ---
 
 # Parallel Consumer in Kafka

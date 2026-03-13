@@ -1,17 +1,45 @@
 {
   "id": "technical-knowledge/backend/spring-data-jpa",
   "title": "Spring Data JPA — Complete Guide",
-  "description": "Spring Data JPA simplifies database access in Spring applications by providing a powerful abstraction layer on top of JPA (Java Persistence API), drastically reducing boilerplate code for common data operations.",
+  "description": "Complete guide to Spring Data JPA, including repositories, entities, query methods, and persistence best practices.",
   "source": "@site/docs/technical-knowledge/backend/spring-data-jpa.md",
   "sourceDirName": "technical-knowledge/backend",
   "slug": "/technical-knowledge/backend/spring-data-jpa",
   "permalink": "/technical-knowledge/backend/spring-data-jpa",
   "draft": false,
   "unlisted": false,
-  "tags": [],
+  "tags": [
+    {
+      "inline": true,
+      "label": "spring-data-jpa",
+      "permalink": "/tags/spring-data-jpa"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "backend",
+      "permalink": "/tags/backend"
+    },
+    {
+      "inline": true,
+      "label": "persistence",
+      "permalink": "/tags/persistence"
+    }
+  ],
   "version": "current",
   "frontMatter": {
-    "title": "Spring Data JPA — Complete Guide"
+    "title": "Spring Data JPA — Complete Guide",
+    "description": "Complete guide to Spring Data JPA, including repositories, entities, query methods, and persistence best practices.",
+    "tags": [
+      "spring-data-jpa",
+      "java",
+      "backend",
+      "persistence"
+    ]
   },
   "sidebar": "tutorialSidebar",
   "previous": {

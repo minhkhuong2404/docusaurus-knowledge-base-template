@@ -1,19 +1,47 @@
 {
   "id": "technical-knowledge/design-patterns/chain-of-responsibility",
   "title": "Chain of Responsibility Pattern",
-  "description": "Category: Behavioral",
+  "description": "Explains the Chain of Responsibility pattern for passing requests through a handler pipeline until one handles them.",
   "source": "@site/docs/technical-knowledge/design-patterns/chain-of-responsibility.md",
   "sourceDirName": "technical-knowledge/design-patterns",
   "slug": "/technical-knowledge/design-patterns/chain-of-responsibility",
   "permalink": "/technical-knowledge/design-patterns/chain-of-responsibility",
   "draft": false,
   "unlisted": false,
-  "tags": [],
+  "tags": [
+    {
+      "inline": true,
+      "label": "design-patterns",
+      "permalink": "/tags/design-patterns"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "behavioral",
+      "permalink": "/tags/behavioral"
+    },
+    {
+      "inline": true,
+      "label": "chain-of-responsibility",
+      "permalink": "/tags/chain-of-responsibility"
+    }
+  ],
   "version": "current",
   "frontMatter": {
     "id": "chain-of-responsibility",
     "title": "Chain of Responsibility Pattern",
-    "slug": "chain-of-responsibility"
+    "slug": "chain-of-responsibility",
+    "description": "Explains the Chain of Responsibility pattern for passing requests through a handler pipeline until one handles them.",
+    "tags": [
+      "design-patterns",
+      "java",
+      "behavioral",
+      "chain-of-responsibility"
+    ]
   },
   "sidebar": "tutorialSidebar",
   "previous": {

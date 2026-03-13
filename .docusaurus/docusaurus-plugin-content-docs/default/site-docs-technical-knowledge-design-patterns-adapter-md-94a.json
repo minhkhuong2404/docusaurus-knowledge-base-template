@@ -1,19 +1,47 @@
 {
   "id": "technical-knowledge/design-patterns/adapter",
   "title": "Adapter Pattern",
-  "description": "Category: Structural",
+  "description": "Explains the Adapter pattern for bridging incompatible interfaces so existing classes can work together cleanly.",
   "source": "@site/docs/technical-knowledge/design-patterns/adapter.md",
   "sourceDirName": "technical-knowledge/design-patterns",
   "slug": "/technical-knowledge/design-patterns/adapter",
   "permalink": "/technical-knowledge/design-patterns/adapter",
   "draft": false,
   "unlisted": false,
-  "tags": [],
+  "tags": [
+    {
+      "inline": true,
+      "label": "design-patterns",
+      "permalink": "/tags/design-patterns"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "structural",
+      "permalink": "/tags/structural"
+    },
+    {
+      "inline": true,
+      "label": "adapter",
+      "permalink": "/tags/adapter"
+    }
+  ],
   "version": "current",
   "frontMatter": {
     "id": "adapter",
     "title": "Adapter Pattern",
-    "slug": "adapter"
+    "slug": "adapter",
+    "description": "Explains the Adapter pattern for bridging incompatible interfaces so existing classes can work together cleanly.",
+    "tags": [
+      "design-patterns",
+      "java",
+      "structural",
+      "adapter"
+    ]
   },
   "sidebar": "tutorialSidebar",
   "previous": {

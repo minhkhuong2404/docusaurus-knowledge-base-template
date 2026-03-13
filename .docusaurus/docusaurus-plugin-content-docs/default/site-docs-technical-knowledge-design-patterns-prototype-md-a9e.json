@@ -1,19 +1,47 @@
 {
   "id": "technical-knowledge/design-patterns/prototype",
   "title": "Prototype Pattern",
-  "description": "Category: Creational",
+  "description": "Explains the Prototype pattern for creating new objects by cloning existing instances instead of rebuilding them from scratch.",
   "source": "@site/docs/technical-knowledge/design-patterns/prototype.md",
   "sourceDirName": "technical-knowledge/design-patterns",
   "slug": "/technical-knowledge/design-patterns/prototype",
   "permalink": "/technical-knowledge/design-patterns/prototype",
   "draft": false,
   "unlisted": false,
-  "tags": [],
+  "tags": [
+    {
+      "inline": true,
+      "label": "design-patterns",
+      "permalink": "/tags/design-patterns"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "creational",
+      "permalink": "/tags/creational"
+    },
+    {
+      "inline": true,
+      "label": "prototype",
+      "permalink": "/tags/prototype"
+    }
+  ],
   "version": "current",
   "frontMatter": {
     "id": "prototype",
     "title": "Prototype Pattern",
-    "slug": "prototype"
+    "slug": "prototype",
+    "description": "Explains the Prototype pattern for creating new objects by cloning existing instances instead of rebuilding them from scratch.",
+    "tags": [
+      "design-patterns",
+      "java",
+      "creational",
+      "prototype"
+    ]
   },
   "sidebar": "tutorialSidebar",
   "previous": {

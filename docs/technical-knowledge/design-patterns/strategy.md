@@ -2,6 +2,8 @@
 id: strategy
 title: "Strategy Pattern"
 slug: strategy
+description: Explains the Strategy pattern for swapping algorithms at runtime through a shared interface and composition.
+tags: [design-patterns, java, behavioral, strategy]
 ---
 
 # Strategy Pattern

@@ -1,5 +1,7 @@
 ---
 title: "Spring Framework: Overview"
+description: Foundational overview of the Spring Framework, including IoC, dependency injection, modules, and enterprise application development.
+tags: [spring-framework, java, backend, dependency-injection]
 ---
 
 # Spring Framework: Overview

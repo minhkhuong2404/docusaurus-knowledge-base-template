@@ -2,6 +2,8 @@
 id: design-patterns-overview
 title: "Java Design Patterns: Overview"
 slug: design-patterns-overview
+description: Overview of Java design patterns, their categories, and how they improve maintainability, readability, and software design decisions.
+tags: [design-patterns, java, software-design, oop]
 ---
 
 # Java Design Patterns: Overview

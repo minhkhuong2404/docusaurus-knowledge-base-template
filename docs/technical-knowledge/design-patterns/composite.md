@@ -2,6 +2,8 @@
 id: composite
 title: "Composite Pattern"
 slug: composite
+description: Explains the Composite pattern for modeling part-whole hierarchies and treating single objects and object groups uniformly.
+tags: [design-patterns, java, structural, composite]
 ---
 
 # Composite Pattern

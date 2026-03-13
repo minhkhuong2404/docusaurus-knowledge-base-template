@@ -2,6 +2,8 @@
 id: command
 title: "Command Pattern"
 slug: command
+description: Explains the Command pattern for encapsulating requests as objects to support queuing, logging, and undo operations.
+tags: [design-patterns, java, behavioral, command]
 ---
 
 # Command Pattern

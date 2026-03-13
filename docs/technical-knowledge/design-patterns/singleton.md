@@ -2,6 +2,8 @@
 id: singleton
 title: "Singleton Pattern"
 slug: singleton
+description: Explains the Singleton pattern for ensuring a single shared instance and a controlled global access point.
+tags: [design-patterns, java, creational, singleton]
 ---
 
 # Singleton Pattern

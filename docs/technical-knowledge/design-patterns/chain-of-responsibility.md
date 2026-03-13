@@ -2,6 +2,8 @@
 id: chain-of-responsibility
 title: "Chain of Responsibility Pattern"
 slug: chain-of-responsibility
+description: Explains the Chain of Responsibility pattern for passing requests through a handler pipeline until one handles them.
+tags: [design-patterns, java, behavioral, chain-of-responsibility]
 ---
 
 # Chain of Responsibility Pattern

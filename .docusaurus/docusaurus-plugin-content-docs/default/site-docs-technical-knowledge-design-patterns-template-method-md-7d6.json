@@ -1,19 +1,47 @@
 {
   "id": "technical-knowledge/design-patterns/template-method",
   "title": "Template Method Pattern",
-  "description": "Category: Behavioral",
+  "description": "Explains the Template Method pattern for defining an algorithm skeleton while allowing subclasses to customize specific steps.",
   "source": "@site/docs/technical-knowledge/design-patterns/template-method.md",
   "sourceDirName": "technical-knowledge/design-patterns",
   "slug": "/technical-knowledge/design-patterns/template-method",
   "permalink": "/technical-knowledge/design-patterns/template-method",
   "draft": false,
   "unlisted": false,
-  "tags": [],
+  "tags": [
+    {
+      "inline": true,
+      "label": "design-patterns",
+      "permalink": "/tags/design-patterns"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "behavioral",
+      "permalink": "/tags/behavioral"
+    },
+    {
+      "inline": true,
+      "label": "template-method",
+      "permalink": "/tags/template-method"
+    }
+  ],
   "version": "current",
   "frontMatter": {
     "id": "template-method",
     "title": "Template Method Pattern",
-    "slug": "template-method"
+    "slug": "template-method",
+    "description": "Explains the Template Method pattern for defining an algorithm skeleton while allowing subclasses to customize specific steps.",
+    "tags": [
+      "design-patterns",
+      "java",
+      "behavioral",
+      "template-method"
+    ]
   },
   "sidebar": "tutorialSidebar",
   "previous": {

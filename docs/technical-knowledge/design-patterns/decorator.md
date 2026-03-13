@@ -2,6 +2,8 @@
 id: decorator
 title: "Decorator Pattern"
 slug: decorator
+description: Explains the Decorator pattern for adding responsibilities to objects dynamically without relying on subclassing.
+tags: [design-patterns, java, structural, decorator]
 ---
 
 # Decorator Pattern

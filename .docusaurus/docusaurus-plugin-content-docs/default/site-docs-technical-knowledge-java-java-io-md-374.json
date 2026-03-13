@@ -1,19 +1,47 @@
 {
   "id": "technical-knowledge/java/java-io",
   "title": "Java I/O: Streams, NIO & I/O Models",
-  "description": "A guide to Java's I/O system — from classic stream-based I/O and design patterns to NIO channels/buffers and the five I/O models.",
+  "description": "Guide to Java I/O, including stream APIs, NIO channels and buffers, file handling, and I/O model fundamentals.",
   "source": "@site/docs/technical-knowledge/java/java-io.md",
   "sourceDirName": "technical-knowledge/java",
   "slug": "/technical-knowledge/java/java-io",
   "permalink": "/technical-knowledge/java/java-io",
   "draft": false,
   "unlisted": false,
-  "tags": [],
+  "tags": [
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "io",
+      "permalink": "/tags/io"
+    },
+    {
+      "inline": true,
+      "label": "nio",
+      "permalink": "/tags/nio"
+    },
+    {
+      "inline": true,
+      "label": "files",
+      "permalink": "/tags/files"
+    }
+  ],
   "version": "current",
   "frontMatter": {
     "id": "java-io",
     "title": "Java I/O: Streams, NIO & I/O Models",
-    "slug": "java-io"
+    "slug": "java-io",
+    "description": "Guide to Java I/O, including stream APIs, NIO channels and buffers, file handling, and I/O model fundamentals.",
+    "tags": [
+      "java",
+      "io",
+      "nio",
+      "files"
+    ]
   },
   "sidebar": "tutorialSidebar",
   "previous": {

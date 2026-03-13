@@ -1,19 +1,47 @@
 {
   "id": "technical-knowledge/design-patterns/abstract-factory",
   "title": "Abstract Factory Pattern",
-  "description": "Category: Creational",
+  "description": "Explains the Abstract Factory pattern for creating related object families without coupling code to concrete classes.",
   "source": "@site/docs/technical-knowledge/design-patterns/abstract-factory.md",
   "sourceDirName": "technical-knowledge/design-patterns",
   "slug": "/technical-knowledge/design-patterns/abstract-factory",
   "permalink": "/technical-knowledge/design-patterns/abstract-factory",
   "draft": false,
   "unlisted": false,
-  "tags": [],
+  "tags": [
+    {
+      "inline": true,
+      "label": "design-patterns",
+      "permalink": "/tags/design-patterns"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "creational",
+      "permalink": "/tags/creational"
+    },
+    {
+      "inline": true,
+      "label": "abstract-factory",
+      "permalink": "/tags/abstract-factory"
+    }
+  ],
   "version": "current",
   "frontMatter": {
     "id": "abstract-factory",
     "title": "Abstract Factory Pattern",
-    "slug": "abstract-factory"
+    "slug": "abstract-factory",
+    "description": "Explains the Abstract Factory pattern for creating related object families without coupling code to concrete classes.",
+    "tags": [
+      "design-patterns",
+      "java",
+      "creational",
+      "abstract-factory"
+    ]
   },
   "sidebar": "tutorialSidebar",
   "previous": {

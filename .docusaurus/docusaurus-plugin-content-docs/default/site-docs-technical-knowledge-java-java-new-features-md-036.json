@@ -1,19 +1,47 @@
 {
   "id": "technical-knowledge/java/java-new-features",
   "title": "Java New Features: Java 8 through Java 21+",
-  "description": "A practical guide to the most impactful features introduced in modern Java versions — from lambdas and streams (Java 8) to virtual threads and pattern matching (Java 21).",
+  "description": "Practical guide to modern Java features introduced from Java 8 through Java 21, with emphasis on high-impact language updates.",
   "source": "@site/docs/technical-knowledge/java/java-new-features.md",
   "sourceDirName": "technical-knowledge/java",
   "slug": "/technical-knowledge/java/java-new-features",
   "permalink": "/technical-knowledge/java/java-new-features",
   "draft": false,
   "unlisted": false,
-  "tags": [],
+  "tags": [
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "language-features",
+      "permalink": "/tags/language-features"
+    },
+    {
+      "inline": true,
+      "label": "modern-java",
+      "permalink": "/tags/modern-java"
+    },
+    {
+      "inline": true,
+      "label": "java-21",
+      "permalink": "/tags/java-21"
+    }
+  ],
   "version": "current",
   "frontMatter": {
     "id": "java-new-features",
     "title": "Java New Features: Java 8 through Java 21+",
-    "slug": "java-new-features"
+    "slug": "java-new-features",
+    "description": "Practical guide to modern Java features introduced from Java 8 through Java 21, with emphasis on high-impact language updates.",
+    "tags": [
+      "java",
+      "language-features",
+      "modern-java",
+      "java-21"
+    ]
   },
   "sidebar": "tutorialSidebar",
   "previous": {

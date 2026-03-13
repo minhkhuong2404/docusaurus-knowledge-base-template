@@ -1,19 +1,47 @@
 {
   "id": "technical-knowledge/java/java-fundamentals",
   "title": "Java Fundamentals: Core Language Concepts",
-  "description": "A comprehensive guide to Java's foundational concepts — from the platform architecture to core syntax, OOP principles, and essential language features every developer should know.",
+  "description": "Covers Java fundamentals, including the platform model, syntax, types, control flow, and essential language concepts.",
   "source": "@site/docs/technical-knowledge/java/java-fundamentals.md",
   "sourceDirName": "technical-knowledge/java",
   "slug": "/technical-knowledge/java/java-fundamentals",
   "permalink": "/technical-knowledge/java/java-fundamentals",
   "draft": false,
   "unlisted": false,
-  "tags": [],
+  "tags": [
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "fundamentals",
+      "permalink": "/tags/fundamentals"
+    },
+    {
+      "inline": true,
+      "label": "core-java",
+      "permalink": "/tags/core-java"
+    },
+    {
+      "inline": true,
+      "label": "beginner",
+      "permalink": "/tags/beginner"
+    }
+  ],
   "version": "current",
   "frontMatter": {
     "id": "java-fundamentals",
     "title": "Java Fundamentals: Core Language Concepts",
-    "slug": "java-fundamentals"
+    "slug": "java-fundamentals",
+    "description": "Covers Java fundamentals, including the platform model, syntax, types, control flow, and essential language concepts.",
+    "tags": [
+      "java",
+      "fundamentals",
+      "core-java",
+      "beginner"
+    ]
   },
   "sidebar": "tutorialSidebar",
   "previous": {

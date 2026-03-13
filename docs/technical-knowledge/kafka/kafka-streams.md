@@ -2,6 +2,8 @@
 id: kafka-streams
 title: "Kafka Streams: Topology & Branching"
 slug: kafka-streams
+description: Guide to Kafka Streams covering processing topologies, branching patterns, and real-time stream processing design.
+tags: [kafka, kafka-streams, stream-processing, topology]
 ---
 
 # Kafka Streams: Topology & Branching

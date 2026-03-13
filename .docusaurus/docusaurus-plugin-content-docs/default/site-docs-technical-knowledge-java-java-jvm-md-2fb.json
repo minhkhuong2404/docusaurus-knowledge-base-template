@@ -1,19 +1,47 @@
 {
   "id": "technical-knowledge/java/java-jvm",
   "title": "JVM Internals: Memory, GC & Class Loading",
-  "description": "A guide to the Java Virtual Machine — runtime memory areas, garbage collection algorithms and collectors, class loading, and monitoring tools.",
+  "description": "Guide to JVM internals covering memory layout, garbage collection, class loading, and runtime performance basics.",
   "source": "@site/docs/technical-knowledge/java/java-jvm.md",
   "sourceDirName": "technical-knowledge/java",
   "slug": "/technical-knowledge/java/java-jvm",
   "permalink": "/technical-knowledge/java/java-jvm",
   "draft": false,
   "unlisted": false,
-  "tags": [],
+  "tags": [
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "jvm",
+      "permalink": "/tags/jvm"
+    },
+    {
+      "inline": true,
+      "label": "garbage-collection",
+      "permalink": "/tags/garbage-collection"
+    },
+    {
+      "inline": true,
+      "label": "performance",
+      "permalink": "/tags/performance"
+    }
+  ],
   "version": "current",
   "frontMatter": {
     "id": "java-jvm",
     "title": "JVM Internals: Memory, GC & Class Loading",
-    "slug": "java-jvm"
+    "slug": "java-jvm",
+    "description": "Guide to JVM internals covering memory layout, garbage collection, class loading, and runtime performance basics.",
+    "tags": [
+      "java",
+      "jvm",
+      "garbage-collection",
+      "performance"
+    ]
   },
   "sidebar": "tutorialSidebar",
   "previous": {

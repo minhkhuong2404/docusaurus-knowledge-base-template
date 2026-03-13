@@ -2,6 +2,8 @@
 id: kafka-complete-guide
 title: "Kafka: The Complete Guide"
 slug: kafka-complete-guide
+description: Introductory Kafka guide covering core concepts, brokers, topics, partitions, producers, consumers, and event streaming basics.
+tags: [kafka, event-streaming, distributed-systems, beginner]
 ---
 
 # Kafka: The Complete Guide

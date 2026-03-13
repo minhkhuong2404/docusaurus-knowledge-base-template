@@ -1,5 +1,7 @@
 ---
 title: Spring Data JPA — Complete Guide
+description: Complete guide to Spring Data JPA, including repositories, entities, query methods, and persistence best practices.
+tags: [spring-data-jpa, java, backend, persistence]
 ---
 
 # Spring Data JPA — Complete Guide

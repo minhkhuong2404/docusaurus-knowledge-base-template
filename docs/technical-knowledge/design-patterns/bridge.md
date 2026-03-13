@@ -2,6 +2,8 @@
 id: bridge
 title: "Bridge Pattern"
 slug: bridge
+description: Explains the Bridge pattern for separating abstractions from implementations so both can evolve independently.
+tags: [design-patterns, java, structural, bridge]
 ---
 
 # Bridge Pattern

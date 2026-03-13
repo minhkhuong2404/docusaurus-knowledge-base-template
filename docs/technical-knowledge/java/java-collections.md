@@ -2,6 +2,8 @@
 id: java-collections
 title: "Java Collections Framework: Deep Dive"
 slug: java-collections
+description: Deep dive into the Java Collections Framework, including core interfaces, implementations, performance traits, and best practices.
+tags: [java, collections, data-structures, generics]
 ---
 
 # Java Collections Framework: Deep Dive

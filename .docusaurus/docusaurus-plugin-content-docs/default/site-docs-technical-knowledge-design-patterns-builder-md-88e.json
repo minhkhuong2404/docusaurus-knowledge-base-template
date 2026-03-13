@@ -1,19 +1,47 @@
 {
   "id": "technical-knowledge/design-patterns/builder",
   "title": "Builder Pattern",
-  "description": "Category: Creational",
+  "description": "Explains the Builder pattern for constructing complex objects step by step with clearer, more maintainable APIs.",
   "source": "@site/docs/technical-knowledge/design-patterns/builder.md",
   "sourceDirName": "technical-knowledge/design-patterns",
   "slug": "/technical-knowledge/design-patterns/builder",
   "permalink": "/technical-knowledge/design-patterns/builder",
   "draft": false,
   "unlisted": false,
-  "tags": [],
+  "tags": [
+    {
+      "inline": true,
+      "label": "design-patterns",
+      "permalink": "/tags/design-patterns"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "creational",
+      "permalink": "/tags/creational"
+    },
+    {
+      "inline": true,
+      "label": "builder",
+      "permalink": "/tags/builder"
+    }
+  ],
   "version": "current",
   "frontMatter": {
     "id": "builder",
     "title": "Builder Pattern",
-    "slug": "builder"
+    "slug": "builder",
+    "description": "Explains the Builder pattern for constructing complex objects step by step with clearer, more maintainable APIs.",
+    "tags": [
+      "design-patterns",
+      "java",
+      "creational",
+      "builder"
+    ]
   },
   "sidebar": "tutorialSidebar",
   "previous": {

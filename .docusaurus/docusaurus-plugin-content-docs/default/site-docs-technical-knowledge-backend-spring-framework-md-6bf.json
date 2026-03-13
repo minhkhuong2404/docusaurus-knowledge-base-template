@@ -1,17 +1,45 @@
 {
   "id": "technical-knowledge/backend/spring-framework",
   "title": "Spring Framework: Overview",
-  "description": "Spring is a comprehensive Java framework for building enterprise applications. It provides a powerful toolkit that simplifies complex development tasks — from connecting to databases, to managing application components, to handling web requests. Spring takes care of much of the technical plumbing, allowing developers to focus on business logic.",
+  "description": "Foundational overview of the Spring Framework, including IoC, dependency injection, modules, and enterprise application development.",
   "source": "@site/docs/technical-knowledge/backend/spring-framework.md",
   "sourceDirName": "technical-knowledge/backend",
   "slug": "/technical-knowledge/backend/spring-framework",
   "permalink": "/technical-knowledge/backend/spring-framework",
   "draft": false,
   "unlisted": false,
-  "tags": [],
+  "tags": [
+    {
+      "inline": true,
+      "label": "spring-framework",
+      "permalink": "/tags/spring-framework"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "backend",
+      "permalink": "/tags/backend"
+    },
+    {
+      "inline": true,
+      "label": "dependency-injection",
+      "permalink": "/tags/dependency-injection"
+    }
+  ],
   "version": "current",
   "frontMatter": {
-    "title": "Spring Framework: Overview"
+    "title": "Spring Framework: Overview",
+    "description": "Foundational overview of the Spring Framework, including IoC, dependency injection, modules, and enterprise application development.",
+    "tags": [
+      "spring-framework",
+      "java",
+      "backend",
+      "dependency-injection"
+    ]
   },
   "sidebar": "tutorialSidebar",
   "previous": {

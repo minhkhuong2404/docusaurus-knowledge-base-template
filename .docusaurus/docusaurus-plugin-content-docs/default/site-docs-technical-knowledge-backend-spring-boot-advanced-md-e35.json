@@ -1,17 +1,45 @@
 {
   "id": "technical-knowledge/backend/spring-boot-advanced",
   "title": "Spring Boot — Advanced Topics",
-  "description": "Advanced Spring Boot concepts including performance tuning, security practices, reactive programming, distributed systems patterns, and production deployment strategies.",
+  "description": "Advanced Spring Boot topics covering security, performance tuning, reactive systems, deployment, and production-ready design.",
   "source": "@site/docs/technical-knowledge/backend/spring-boot-advanced.md",
   "sourceDirName": "technical-knowledge/backend",
   "slug": "/technical-knowledge/backend/spring-boot-advanced",
   "permalink": "/technical-knowledge/backend/spring-boot-advanced",
   "draft": false,
   "unlisted": false,
-  "tags": [],
+  "tags": [
+    {
+      "inline": true,
+      "label": "spring-boot",
+      "permalink": "/tags/spring-boot"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "backend",
+      "permalink": "/tags/backend"
+    },
+    {
+      "inline": true,
+      "label": "advanced",
+      "permalink": "/tags/advanced"
+    }
+  ],
   "version": "current",
   "frontMatter": {
-    "title": "Spring Boot — Advanced Topics"
+    "title": "Spring Boot — Advanced Topics",
+    "description": "Advanced Spring Boot topics covering security, performance tuning, reactive systems, deployment, and production-ready design.",
+    "tags": [
+      "spring-boot",
+      "java",
+      "backend",
+      "advanced"
+    ]
   },
   "sidebar": "tutorialSidebar",
   "previous": {

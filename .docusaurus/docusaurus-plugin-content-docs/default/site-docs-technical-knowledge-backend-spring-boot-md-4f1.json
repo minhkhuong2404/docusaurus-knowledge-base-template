@@ -1,17 +1,45 @@
 {
   "id": "technical-knowledge/backend/spring-boot",
   "title": "Spring Boot — Overview & Why It Matters",
-  "description": "Spring Boot makes it easy to create stand-alone, production-grade Spring-based applications with minimal configuration. It is the de-facto standard for building Java microservices and web applications.",
+  "description": "Overview of Spring Boot, its core benefits, and why it is widely used for modern Java backend and microservice development.",
   "source": "@site/docs/technical-knowledge/backend/spring-boot.md",
   "sourceDirName": "technical-knowledge/backend",
   "slug": "/technical-knowledge/backend/spring-boot",
   "permalink": "/technical-knowledge/backend/spring-boot",
   "draft": false,
   "unlisted": false,
-  "tags": [],
+  "tags": [
+    {
+      "inline": true,
+      "label": "spring-boot",
+      "permalink": "/tags/spring-boot"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "backend",
+      "permalink": "/tags/backend"
+    },
+    {
+      "inline": true,
+      "label": "microservices",
+      "permalink": "/tags/microservices"
+    }
+  ],
   "version": "current",
   "frontMatter": {
-    "title": "Spring Boot — Overview & Why It Matters"
+    "title": "Spring Boot — Overview & Why It Matters",
+    "description": "Overview of Spring Boot, its core benefits, and why it is widely used for modern Java backend and microservice development.",
+    "tags": [
+      "spring-boot",
+      "java",
+      "backend",
+      "microservices"
+    ]
   },
   "sidebar": "tutorialSidebar",
   "previous": {

@@ -2,6 +2,8 @@
 id: java-new-features
 title: "Java New Features: Java 8 through Java 21+"
 slug: java-new-features
+description: Practical guide to modern Java features introduced from Java 8 through Java 21, with emphasis on high-impact language updates.
+tags: [java, language-features, modern-java, java-21]
 ---
 
 # Java New Features: Java 8 through Java 21+

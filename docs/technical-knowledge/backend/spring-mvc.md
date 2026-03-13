@@ -1,5 +1,7 @@
 ---
 title: Spring MVC — Complete Guide
+description: Complete guide to Spring MVC covering controllers, request handling, model binding, validation, and REST application structure.
+tags: [spring-mvc, spring-framework, java, web]
 ---
 
 # Spring MVC — Complete Guide

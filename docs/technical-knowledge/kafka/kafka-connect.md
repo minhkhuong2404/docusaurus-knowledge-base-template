@@ -2,6 +2,8 @@
 id: kafka-connect
 title: Kafka Connect
 slug: kafka-connect
+description: Explains Kafka Connect for integrating Kafka with external systems through reusable source and sink connectors.
+tags: [kafka, kafka-connect, data-integration, streaming]
 ---
 
 # Kafka Connect

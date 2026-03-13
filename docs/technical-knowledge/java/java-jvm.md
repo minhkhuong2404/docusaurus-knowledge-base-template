@@ -2,6 +2,8 @@
 id: java-jvm
 title: "JVM Internals: Memory, GC & Class Loading"
 slug: java-jvm
+description: Guide to JVM internals covering memory layout, garbage collection, class loading, and runtime performance basics.
+tags: [java, jvm, garbage-collection, performance]
 ---
 
 # JVM Internals: Memory, GC & Class Loading

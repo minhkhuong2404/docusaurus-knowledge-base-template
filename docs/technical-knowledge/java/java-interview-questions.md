@@ -2,6 +2,8 @@
 id: java-interview-questions
 title: "Java Interview Questions & Answers"
 slug: java-interview-questions
+description: Curated Java interview questions and answers spanning core language topics, JVM internals, collections, concurrency, and OOP.
+tags: [java, interview-questions, core-java, backend]
 ---
 
 # Java Interview Questions & Answers

@@ -1,5 +1,7 @@
 ---
 title: Spring Boot — Internals & Architecture
+description: Deep dive into Spring Boot internals, including auto-configuration, embedded servers, conditional beans, starters, and events.
+tags: [spring-boot, java, internals, auto-configuration]
 ---
 
 # Spring Boot — Internals & Architecture

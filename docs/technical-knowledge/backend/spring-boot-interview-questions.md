@@ -1,5 +1,7 @@
 ---
 title: "Spring Boot: Interview Questions"
+description: Curated Spring Boot interview questions and answers spanning fundamentals, advanced topics, and real-world production scenarios.
+tags: [spring-boot, java, interview-questions, backend]
 ---
 
 # Spring Boot: Interview Questions

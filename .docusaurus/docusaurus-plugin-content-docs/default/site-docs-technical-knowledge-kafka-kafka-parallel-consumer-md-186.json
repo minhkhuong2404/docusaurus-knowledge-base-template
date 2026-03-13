@@ -1,19 +1,47 @@
 {
   "id": "technical-knowledge/kafka/kafka-parallel-consumer",
   "title": "Parallel Consumer in Kafka",
-  "description": "Standard Kafka consumers process messages sequentially per partition — one message at a time per assigned partition. This becomes a bottleneck when downstream processing is slow (e.g., HTTP calls, database writes). Parallel consumers break this limit by processing multiple messages concurrently within a single partition.",
+  "description": "Explains parallel consumer patterns in Kafka for increasing throughput when processing is slower than message consumption.",
   "source": "@site/docs/technical-knowledge/kafka/kafka-parallel-consumer.md",
   "sourceDirName": "technical-knowledge/kafka",
   "slug": "/technical-knowledge/kafka/kafka-parallel-consumer",
   "permalink": "/technical-knowledge/kafka/kafka-parallel-consumer",
   "draft": false,
   "unlisted": false,
-  "tags": [],
+  "tags": [
+    {
+      "inline": true,
+      "label": "kafka",
+      "permalink": "/tags/kafka"
+    },
+    {
+      "inline": true,
+      "label": "consumers",
+      "permalink": "/tags/consumers"
+    },
+    {
+      "inline": true,
+      "label": "parallelism",
+      "permalink": "/tags/parallelism"
+    },
+    {
+      "inline": true,
+      "label": "performance",
+      "permalink": "/tags/performance"
+    }
+  ],
   "version": "current",
   "frontMatter": {
     "id": "kafka-parallel-consumer",
     "title": "Parallel Consumer in Kafka",
-    "slug": "kafka-parallel-consumer"
+    "slug": "kafka-parallel-consumer",
+    "description": "Explains parallel consumer patterns in Kafka for increasing throughput when processing is slower than message consumption.",
+    "tags": [
+      "kafka",
+      "consumers",
+      "parallelism",
+      "performance"
+    ]
   },
   "sidebar": "tutorialSidebar",
   "previous": {

@@ -1,19 +1,47 @@
 {
   "id": "technical-knowledge/design-patterns/strategy",
   "title": "Strategy Pattern",
-  "description": "Category: Behavioral",
+  "description": "Explains the Strategy pattern for swapping algorithms at runtime through a shared interface and composition.",
   "source": "@site/docs/technical-knowledge/design-patterns/strategy.md",
   "sourceDirName": "technical-knowledge/design-patterns",
   "slug": "/technical-knowledge/design-patterns/strategy",
   "permalink": "/technical-knowledge/design-patterns/strategy",
   "draft": false,
   "unlisted": false,
-  "tags": [],
+  "tags": [
+    {
+      "inline": true,
+      "label": "design-patterns",
+      "permalink": "/tags/design-patterns"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "behavioral",
+      "permalink": "/tags/behavioral"
+    },
+    {
+      "inline": true,
+      "label": "strategy",
+      "permalink": "/tags/strategy"
+    }
+  ],
   "version": "current",
   "frontMatter": {
     "id": "strategy",
     "title": "Strategy Pattern",
-    "slug": "strategy"
+    "slug": "strategy",
+    "description": "Explains the Strategy pattern for swapping algorithms at runtime through a shared interface and composition.",
+    "tags": [
+      "design-patterns",
+      "java",
+      "behavioral",
+      "strategy"
+    ]
   },
   "sidebar": "tutorialSidebar",
   "previous": {

@@ -2,6 +2,8 @@
 id: abstract-factory
 title: "Abstract Factory Pattern"
 slug: abstract-factory
+description: Explains the Abstract Factory pattern for creating related object families without coupling code to concrete classes.
+tags: [design-patterns, java, creational, abstract-factory]
 ---
 
 # Abstract Factory Pattern

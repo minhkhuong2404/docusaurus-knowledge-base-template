@@ -2,6 +2,8 @@
 id: prototype
 title: "Prototype Pattern"
 slug: prototype
+description: Explains the Prototype pattern for creating new objects by cloning existing instances instead of rebuilding them from scratch.
+tags: [design-patterns, java, creational, prototype]
 ---
 
 # Prototype Pattern

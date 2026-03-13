@@ -2,6 +2,8 @@
 id: java-concurrency
 title: "Java Concurrency: Threads, Locks & Concurrent Utilities"
 slug: java-concurrency
+description: Comprehensive guide to Java concurrency, covering threads, synchronization, locks, concurrent utilities, and async programming.
+tags: [java, concurrency, multithreading, async]
 ---
 
 # Java Concurrency: Threads, Locks & Concurrent Utilities

@@ -2,6 +2,8 @@
 id: facade
 title: "Facade Pattern"
 slug: facade
+description: Explains the Facade pattern for exposing a simple interface over complex subsystems to reduce coupling.
+tags: [design-patterns, java, structural, facade]
 ---
 
 # Facade Pattern

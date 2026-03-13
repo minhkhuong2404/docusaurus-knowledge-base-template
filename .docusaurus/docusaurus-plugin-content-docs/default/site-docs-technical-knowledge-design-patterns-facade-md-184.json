@@ -1,19 +1,47 @@
 {
   "id": "technical-knowledge/design-patterns/facade",
   "title": "Facade Pattern",
-  "description": "Category: Structural",
+  "description": "Explains the Facade pattern for exposing a simple interface over complex subsystems to reduce coupling.",
   "source": "@site/docs/technical-knowledge/design-patterns/facade.md",
   "sourceDirName": "technical-knowledge/design-patterns",
   "slug": "/technical-knowledge/design-patterns/facade",
   "permalink": "/technical-knowledge/design-patterns/facade",
   "draft": false,
   "unlisted": false,
-  "tags": [],
+  "tags": [
+    {
+      "inline": true,
+      "label": "design-patterns",
+      "permalink": "/tags/design-patterns"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "structural",
+      "permalink": "/tags/structural"
+    },
+    {
+      "inline": true,
+      "label": "facade",
+      "permalink": "/tags/facade"
+    }
+  ],
   "version": "current",
   "frontMatter": {
     "id": "facade",
     "title": "Facade Pattern",
-    "slug": "facade"
+    "slug": "facade",
+    "description": "Explains the Facade pattern for exposing a simple interface over complex subsystems to reduce coupling.",
+    "tags": [
+      "design-patterns",
+      "java",
+      "structural",
+      "facade"
+    ]
   },
   "sidebar": "tutorialSidebar",
   "previous": {

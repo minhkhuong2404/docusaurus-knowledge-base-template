@@ -1,5 +1,7 @@
 ---
 title: Spring Boot — Overview & Why It Matters
+description: Overview of Spring Boot, its core benefits, and why it is widely used for modern Java backend and microservice development.
+tags: [spring-boot, java, backend, microservices]
 ---
 
 # Spring Boot — Overview & Why It Matters

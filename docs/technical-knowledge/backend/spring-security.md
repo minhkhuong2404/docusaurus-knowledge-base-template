@@ -1,5 +1,7 @@
 ---
 title: Spring Security — Complete Guide
+description: Comprehensive guide to Spring Security, including authentication, authorization, filter chains, and common application security patterns.
+tags: [spring-security, spring-boot, java, authentication]
 ---
 
 # Spring Security — Complete Guide

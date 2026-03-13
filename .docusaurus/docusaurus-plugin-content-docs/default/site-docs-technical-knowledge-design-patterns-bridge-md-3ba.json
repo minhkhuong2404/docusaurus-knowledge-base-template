@@ -1,19 +1,47 @@
 {
   "id": "technical-knowledge/design-patterns/bridge",
   "title": "Bridge Pattern",
-  "description": "Category: Structural",
+  "description": "Explains the Bridge pattern for separating abstractions from implementations so both can evolve independently.",
   "source": "@site/docs/technical-knowledge/design-patterns/bridge.md",
   "sourceDirName": "technical-knowledge/design-patterns",
   "slug": "/technical-knowledge/design-patterns/bridge",
   "permalink": "/technical-knowledge/design-patterns/bridge",
   "draft": false,
   "unlisted": false,
-  "tags": [],
+  "tags": [
+    {
+      "inline": true,
+      "label": "design-patterns",
+      "permalink": "/tags/design-patterns"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "structural",
+      "permalink": "/tags/structural"
+    },
+    {
+      "inline": true,
+      "label": "bridge",
+      "permalink": "/tags/bridge"
+    }
+  ],
   "version": "current",
   "frontMatter": {
     "id": "bridge",
     "title": "Bridge Pattern",
-    "slug": "bridge"
+    "slug": "bridge",
+    "description": "Explains the Bridge pattern for separating abstractions from implementations so both can evolve independently.",
+    "tags": [
+      "design-patterns",
+      "java",
+      "structural",
+      "bridge"
+    ]
   },
   "sidebar": "tutorialSidebar",
   "previous": {

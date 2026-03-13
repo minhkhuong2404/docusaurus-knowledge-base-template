@@ -1,19 +1,47 @@
 {
   "id": "technical-knowledge/design-patterns/command",
   "title": "Command Pattern",
-  "description": "Category: Behavioral",
+  "description": "Explains the Command pattern for encapsulating requests as objects to support queuing, logging, and undo operations.",
   "source": "@site/docs/technical-knowledge/design-patterns/command.md",
   "sourceDirName": "technical-knowledge/design-patterns",
   "slug": "/technical-knowledge/design-patterns/command",
   "permalink": "/technical-knowledge/design-patterns/command",
   "draft": false,
   "unlisted": false,
-  "tags": [],
+  "tags": [
+    {
+      "inline": true,
+      "label": "design-patterns",
+      "permalink": "/tags/design-patterns"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "behavioral",
+      "permalink": "/tags/behavioral"
+    },
+    {
+      "inline": true,
+      "label": "command",
+      "permalink": "/tags/command"
+    }
+  ],
   "version": "current",
   "frontMatter": {
     "id": "command",
     "title": "Command Pattern",
-    "slug": "command"
+    "slug": "command",
+    "description": "Explains the Command pattern for encapsulating requests as objects to support queuing, logging, and undo operations.",
+    "tags": [
+      "design-patterns",
+      "java",
+      "behavioral",
+      "command"
+    ]
   },
   "sidebar": "tutorialSidebar",
   "previous": {

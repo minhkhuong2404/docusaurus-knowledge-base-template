@@ -2,6 +2,8 @@
 id: kafka-exactly-once
 title: "Configuring Exactly-Once Semantics in Kafka"
 slug: kafka-exactly-once
+description: Guide to Kafka exactly-once semantics, including producers, consumers, transactions, Kafka Streams, and Kafka Connect.
+tags: [kafka, exactly-once-semantics, stream-processing, reliability]
 ---
 
 # Configuring Exactly-Once Semantics in Kafka

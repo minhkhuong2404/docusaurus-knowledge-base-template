@@ -1,19 +1,47 @@
 {
   "id": "technical-knowledge/design-patterns/decorator",
   "title": "Decorator Pattern",
-  "description": "Category: Structural",
+  "description": "Explains the Decorator pattern for adding responsibilities to objects dynamically without relying on subclassing.",
   "source": "@site/docs/technical-knowledge/design-patterns/decorator.md",
   "sourceDirName": "technical-knowledge/design-patterns",
   "slug": "/technical-knowledge/design-patterns/decorator",
   "permalink": "/technical-knowledge/design-patterns/decorator",
   "draft": false,
   "unlisted": false,
-  "tags": [],
+  "tags": [
+    {
+      "inline": true,
+      "label": "design-patterns",
+      "permalink": "/tags/design-patterns"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "structural",
+      "permalink": "/tags/structural"
+    },
+    {
+      "inline": true,
+      "label": "decorator",
+      "permalink": "/tags/decorator"
+    }
+  ],
   "version": "current",
   "frontMatter": {
     "id": "decorator",
     "title": "Decorator Pattern",
-    "slug": "decorator"
+    "slug": "decorator",
+    "description": "Explains the Decorator pattern for adding responsibilities to objects dynamically without relying on subclassing.",
+    "tags": [
+      "design-patterns",
+      "java",
+      "structural",
+      "decorator"
+    ]
   },
   "sidebar": "tutorialSidebar",
   "previous": {

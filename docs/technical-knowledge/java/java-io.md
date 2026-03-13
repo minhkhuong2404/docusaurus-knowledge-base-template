@@ -2,6 +2,8 @@
 id: java-io
 title: "Java I/O: Streams, NIO & I/O Models"
 slug: java-io
+description: Guide to Java I/O, including stream APIs, NIO channels and buffers, file handling, and I/O model fundamentals.
+tags: [java, io, nio, files]
 ---
 
 # Java I/O: Streams, NIO & I/O Models

@@ -1,5 +1,7 @@
 ---
 title: Spring Boot — Advanced Topics
+description: Advanced Spring Boot topics covering security, performance tuning, reactive systems, deployment, and production-ready design.
+tags: [spring-boot, java, backend, advanced]
 ---
 
 # Spring Boot — Advanced Topics

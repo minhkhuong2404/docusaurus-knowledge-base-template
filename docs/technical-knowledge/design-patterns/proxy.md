@@ -2,6 +2,8 @@
 id: proxy
 title: "Proxy Pattern"
 slug: proxy
+description: Explains the Proxy pattern for controlling access to another object through an intermediary with the same interface.
+tags: [design-patterns, java, structural, proxy]
 ---
 
 # Proxy Pattern

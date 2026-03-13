@@ -2,6 +2,8 @@
 id: builder
 title: "Builder Pattern"
 slug: builder
+description: Explains the Builder pattern for constructing complex objects step by step with clearer, more maintainable APIs.
+tags: [design-patterns, java, creational, builder]
 ---
 
 # Builder Pattern

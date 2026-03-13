@@ -1,17 +1,45 @@
 {
   "id": "technical-knowledge/backend/spring-boot-internals",
   "title": "Spring Boot — Internals & Architecture",
-  "description": "A deep dive into how Spring Boot works under the hood: auto-configuration mechanics, the embedded server model, conditional bean loading, custom starters, and the event-driven architecture.",
+  "description": "Deep dive into Spring Boot internals, including auto-configuration, embedded servers, conditional beans, starters, and events.",
   "source": "@site/docs/technical-knowledge/backend/spring-boot-internals.md",
   "sourceDirName": "technical-knowledge/backend",
   "slug": "/technical-knowledge/backend/spring-boot-internals",
   "permalink": "/technical-knowledge/backend/spring-boot-internals",
   "draft": false,
   "unlisted": false,
-  "tags": [],
+  "tags": [
+    {
+      "inline": true,
+      "label": "spring-boot",
+      "permalink": "/tags/spring-boot"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "internals",
+      "permalink": "/tags/internals"
+    },
+    {
+      "inline": true,
+      "label": "auto-configuration",
+      "permalink": "/tags/auto-configuration"
+    }
+  ],
   "version": "current",
   "frontMatter": {
-    "title": "Spring Boot — Internals & Architecture"
+    "title": "Spring Boot — Internals & Architecture",
+    "description": "Deep dive into Spring Boot internals, including auto-configuration, embedded servers, conditional beans, starters, and events.",
+    "tags": [
+      "spring-boot",
+      "java",
+      "internals",
+      "auto-configuration"
+    ]
   },
   "sidebar": "tutorialSidebar",
   "previous": {

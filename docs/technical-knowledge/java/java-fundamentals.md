@@ -2,6 +2,8 @@
 id: java-fundamentals
 title: "Java Fundamentals: Core Language Concepts"
 slug: java-fundamentals
+description: Covers Java fundamentals, including the platform model, syntax, types, control flow, and essential language concepts.
+tags: [java, fundamentals, core-java, beginner]
 ---
 
 # Java Fundamentals: Core Language Concepts

@@ -2,6 +2,8 @@
 id: observer
 title: "Observer Pattern"
 slug: observer
+description: Explains the Observer pattern for propagating state changes to dependent objects through event-style notifications.
+tags: [design-patterns, java, behavioral, observer]
 ---
 
 # Observer Pattern

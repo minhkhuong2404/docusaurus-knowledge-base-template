@@ -2,6 +2,8 @@
 id: template-method
 title: "Template Method Pattern"
 slug: template-method
+description: Explains the Template Method pattern for defining an algorithm skeleton while allowing subclasses to customize specific steps.
+tags: [design-patterns, java, behavioral, template-method]
 ---
 
 # Template Method Pattern

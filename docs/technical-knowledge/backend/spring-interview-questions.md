@@ -1,5 +1,7 @@
 ---
 title: "Spring Framework: Interview Questions"
+description: Collection of Spring Framework interview questions and answers covering core concepts, containers, web, data, and architecture topics.
+tags: [spring-framework, java, interview-questions, backend]
 ---
 
 # Spring Framework: Interview Questions

@@ -1,19 +1,47 @@
 {
   "id": "technical-knowledge/kafka/kafka-connect",
   "title": "Kafka Connect",
-  "description": "Kafka Connect is a framework for streaming data between Apache Kafka and external systems (databases, key-value stores, search indexes, file systems, etc.) using reusable connectors.",
+  "description": "Explains Kafka Connect for integrating Kafka with external systems through reusable source and sink connectors.",
   "source": "@site/docs/technical-knowledge/kafka/kafka-connect.md",
   "sourceDirName": "technical-knowledge/kafka",
   "slug": "/technical-knowledge/kafka/kafka-connect",
   "permalink": "/technical-knowledge/kafka/kafka-connect",
   "draft": false,
   "unlisted": false,
-  "tags": [],
+  "tags": [
+    {
+      "inline": true,
+      "label": "kafka",
+      "permalink": "/tags/kafka"
+    },
+    {
+      "inline": true,
+      "label": "kafka-connect",
+      "permalink": "/tags/kafka-connect"
+    },
+    {
+      "inline": true,
+      "label": "data-integration",
+      "permalink": "/tags/data-integration"
+    },
+    {
+      "inline": true,
+      "label": "streaming",
+      "permalink": "/tags/streaming"
+    }
+  ],
   "version": "current",
   "frontMatter": {
     "id": "kafka-connect",
     "title": "Kafka Connect",
-    "slug": "kafka-connect"
+    "slug": "kafka-connect",
+    "description": "Explains Kafka Connect for integrating Kafka with external systems through reusable source and sink connectors.",
+    "tags": [
+      "kafka",
+      "kafka-connect",
+      "data-integration",
+      "streaming"
+    ]
   },
   "sidebar": "tutorialSidebar",
   "previous": {

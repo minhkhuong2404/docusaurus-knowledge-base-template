@@ -1,19 +1,47 @@
 {
   "id": "technical-knowledge/design-patterns/factory-method",
   "title": "Factory Method Pattern",
-  "description": "Category: Creational",
+  "description": "Explains the Factory Method pattern for deferring object creation to subclasses while preserving a common creation contract.",
   "source": "@site/docs/technical-knowledge/design-patterns/factory-method.md",
   "sourceDirName": "technical-knowledge/design-patterns",
   "slug": "/technical-knowledge/design-patterns/factory-method",
   "permalink": "/technical-knowledge/design-patterns/factory-method",
   "draft": false,
   "unlisted": false,
-  "tags": [],
+  "tags": [
+    {
+      "inline": true,
+      "label": "design-patterns",
+      "permalink": "/tags/design-patterns"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "creational",
+      "permalink": "/tags/creational"
+    },
+    {
+      "inline": true,
+      "label": "factory-method",
+      "permalink": "/tags/factory-method"
+    }
+  ],
   "version": "current",
   "frontMatter": {
     "id": "factory-method",
     "title": "Factory Method Pattern",
-    "slug": "factory-method"
+    "slug": "factory-method",
+    "description": "Explains the Factory Method pattern for deferring object creation to subclasses while preserving a common creation contract.",
+    "tags": [
+      "design-patterns",
+      "java",
+      "creational",
+      "factory-method"
+    ]
   },
   "sidebar": "tutorialSidebar",
   "previous": {

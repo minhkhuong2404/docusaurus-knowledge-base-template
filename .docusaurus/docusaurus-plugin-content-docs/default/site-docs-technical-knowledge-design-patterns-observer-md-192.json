@@ -1,19 +1,47 @@
 {
   "id": "technical-knowledge/design-patterns/observer",
   "title": "Observer Pattern",
-  "description": "Category: Behavioral",
+  "description": "Explains the Observer pattern for propagating state changes to dependent objects through event-style notifications.",
   "source": "@site/docs/technical-knowledge/design-patterns/observer.md",
   "sourceDirName": "technical-knowledge/design-patterns",
   "slug": "/technical-knowledge/design-patterns/observer",
   "permalink": "/technical-knowledge/design-patterns/observer",
   "draft": false,
   "unlisted": false,
-  "tags": [],
+  "tags": [
+    {
+      "inline": true,
+      "label": "design-patterns",
+      "permalink": "/tags/design-patterns"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "behavioral",
+      "permalink": "/tags/behavioral"
+    },
+    {
+      "inline": true,
+      "label": "observer",
+      "permalink": "/tags/observer"
+    }
+  ],
   "version": "current",
   "frontMatter": {
     "id": "observer",
     "title": "Observer Pattern",
-    "slug": "observer"
+    "slug": "observer",
+    "description": "Explains the Observer pattern for propagating state changes to dependent objects through event-style notifications.",
+    "tags": [
+      "design-patterns",
+      "java",
+      "behavioral",
+      "observer"
+    ]
   },
   "sidebar": "tutorialSidebar",
   "previous": {

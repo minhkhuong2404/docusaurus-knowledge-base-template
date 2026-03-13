@@ -1,19 +1,47 @@
 {
   "id": "technical-knowledge/kafka/kafka-exactly-once",
   "title": "Configuring Exactly-Once Semantics in Kafka",
-  "description": "Exactly-once semantics (EOS) ensures that every message is delivered and processed exactly once — no duplicates, no data loss. This guide covers how to configure EOS across producers, consumers, Kafka Streams, and Kafka Connect.",
+  "description": "Guide to Kafka exactly-once semantics, including producers, consumers, transactions, Kafka Streams, and Kafka Connect.",
   "source": "@site/docs/technical-knowledge/kafka/kafka-exactly-once.md",
   "sourceDirName": "technical-knowledge/kafka",
   "slug": "/technical-knowledge/kafka/kafka-exactly-once",
   "permalink": "/technical-knowledge/kafka/kafka-exactly-once",
   "draft": false,
   "unlisted": false,
-  "tags": [],
+  "tags": [
+    {
+      "inline": true,
+      "label": "kafka",
+      "permalink": "/tags/kafka"
+    },
+    {
+      "inline": true,
+      "label": "exactly-once-semantics",
+      "permalink": "/tags/exactly-once-semantics"
+    },
+    {
+      "inline": true,
+      "label": "stream-processing",
+      "permalink": "/tags/stream-processing"
+    },
+    {
+      "inline": true,
+      "label": "reliability",
+      "permalink": "/tags/reliability"
+    }
+  ],
   "version": "current",
   "frontMatter": {
     "id": "kafka-exactly-once",
     "title": "Configuring Exactly-Once Semantics in Kafka",
-    "slug": "kafka-exactly-once"
+    "slug": "kafka-exactly-once",
+    "description": "Guide to Kafka exactly-once semantics, including producers, consumers, transactions, Kafka Streams, and Kafka Connect.",
+    "tags": [
+      "kafka",
+      "exactly-once-semantics",
+      "stream-processing",
+      "reliability"
+    ]
   },
   "sidebar": "tutorialSidebar",
   "previous": {

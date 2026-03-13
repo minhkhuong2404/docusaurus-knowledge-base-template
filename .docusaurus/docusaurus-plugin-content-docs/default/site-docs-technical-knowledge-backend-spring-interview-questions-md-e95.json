@@ -1,17 +1,45 @@
 {
   "id": "technical-knowledge/backend/spring-interview-questions",
   "title": "Spring Framework: Interview Questions",
-  "description": "A comprehensive collection of commonly asked Spring Framework interview questions, organized by topic and difficulty level.",
+  "description": "Collection of Spring Framework interview questions and answers covering core concepts, containers, web, data, and architecture topics.",
   "source": "@site/docs/technical-knowledge/backend/spring-interview-questions.md",
   "sourceDirName": "technical-knowledge/backend",
   "slug": "/technical-knowledge/backend/spring-interview-questions",
   "permalink": "/technical-knowledge/backend/spring-interview-questions",
   "draft": false,
   "unlisted": false,
-  "tags": [],
+  "tags": [
+    {
+      "inline": true,
+      "label": "spring-framework",
+      "permalink": "/tags/spring-framework"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "interview-questions",
+      "permalink": "/tags/interview-questions"
+    },
+    {
+      "inline": true,
+      "label": "backend",
+      "permalink": "/tags/backend"
+    }
+  ],
   "version": "current",
   "frontMatter": {
-    "title": "Spring Framework: Interview Questions"
+    "title": "Spring Framework: Interview Questions",
+    "description": "Collection of Spring Framework interview questions and answers covering core concepts, containers, web, data, and architecture topics.",
+    "tags": [
+      "spring-framework",
+      "java",
+      "interview-questions",
+      "backend"
+    ]
   },
   "sidebar": "tutorialSidebar",
   "previous": {

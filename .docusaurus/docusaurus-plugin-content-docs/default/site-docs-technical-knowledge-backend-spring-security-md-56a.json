@@ -1,17 +1,45 @@
 {
   "id": "technical-knowledge/backend/spring-security",
   "title": "Spring Security — Complete Guide",
-  "description": "Spring Security is the de-facto standard for securing Spring-based applications. It provides comprehensive authentication, authorization, and protection against common exploits out of the box.",
+  "description": "Comprehensive guide to Spring Security, including authentication, authorization, filter chains, and common application security patterns.",
   "source": "@site/docs/technical-knowledge/backend/spring-security.md",
   "sourceDirName": "technical-knowledge/backend",
   "slug": "/technical-knowledge/backend/spring-security",
   "permalink": "/technical-knowledge/backend/spring-security",
   "draft": false,
   "unlisted": false,
-  "tags": [],
+  "tags": [
+    {
+      "inline": true,
+      "label": "spring-security",
+      "permalink": "/tags/spring-security"
+    },
+    {
+      "inline": true,
+      "label": "spring-boot",
+      "permalink": "/tags/spring-boot"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "authentication",
+      "permalink": "/tags/authentication"
+    }
+  ],
   "version": "current",
   "frontMatter": {
-    "title": "Spring Security — Complete Guide"
+    "title": "Spring Security — Complete Guide",
+    "description": "Comprehensive guide to Spring Security, including authentication, authorization, filter chains, and common application security patterns.",
+    "tags": [
+      "spring-security",
+      "spring-boot",
+      "java",
+      "authentication"
+    ]
   },
   "sidebar": "tutorialSidebar",
   "previous": {

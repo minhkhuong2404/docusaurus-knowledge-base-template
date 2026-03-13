@@ -2,6 +2,8 @@
 id: adapter
 title: "Adapter Pattern"
 slug: adapter
+description: Explains the Adapter pattern for bridging incompatible interfaces so existing classes can work together cleanly.
+tags: [design-patterns, java, structural, adapter]
 ---
 
 # Adapter Pattern

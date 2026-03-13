@@ -1,19 +1,47 @@
 {
   "id": "technical-knowledge/design-patterns/composite",
   "title": "Composite Pattern",
-  "description": "Category: Structural",
+  "description": "Explains the Composite pattern for modeling part-whole hierarchies and treating single objects and object groups uniformly.",
   "source": "@site/docs/technical-knowledge/design-patterns/composite.md",
   "sourceDirName": "technical-knowledge/design-patterns",
   "slug": "/technical-knowledge/design-patterns/composite",
   "permalink": "/technical-knowledge/design-patterns/composite",
   "draft": false,
   "unlisted": false,
-  "tags": [],
+  "tags": [
+    {
+      "inline": true,
+      "label": "design-patterns",
+      "permalink": "/tags/design-patterns"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "structural",
+      "permalink": "/tags/structural"
+    },
+    {
+      "inline": true,
+      "label": "composite",
+      "permalink": "/tags/composite"
+    }
+  ],
   "version": "current",
   "frontMatter": {
     "id": "composite",
     "title": "Composite Pattern",
-    "slug": "composite"
+    "slug": "composite",
+    "description": "Explains the Composite pattern for modeling part-whole hierarchies and treating single objects and object groups uniformly.",
+    "tags": [
+      "design-patterns",
+      "java",
+      "structural",
+      "composite"
+    ]
   },
   "sidebar": "tutorialSidebar",
   "previous": {

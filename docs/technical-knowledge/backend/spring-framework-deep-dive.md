@@ -1,5 +1,7 @@
 ---
 title: "Spring Framework: Deep Dive"
+description: Advanced Spring Framework guide covering bean lifecycle, AOP, data access, reactive programming, and batch processing.
+tags: [spring-framework, java, backend, advanced]
 ---
 
 # Spring Framework: Deep Dive

@@ -1,19 +1,47 @@
 {
   "id": "technical-knowledge/kafka/kafka-streams",
   "title": "Kafka Streams: Topology & Branching",
-  "description": "Kafka Streams is a lightweight client library for building real-time stream-processing applications on top of Apache Kafka. This guide covers its programming model, the topology concept, and branching patterns.",
+  "description": "Guide to Kafka Streams covering processing topologies, branching patterns, and real-time stream processing design.",
   "source": "@site/docs/technical-knowledge/kafka/kafka-streams.md",
   "sourceDirName": "technical-knowledge/kafka",
   "slug": "/technical-knowledge/kafka/kafka-streams",
   "permalink": "/technical-knowledge/kafka/kafka-streams",
   "draft": false,
   "unlisted": false,
-  "tags": [],
+  "tags": [
+    {
+      "inline": true,
+      "label": "kafka",
+      "permalink": "/tags/kafka"
+    },
+    {
+      "inline": true,
+      "label": "kafka-streams",
+      "permalink": "/tags/kafka-streams"
+    },
+    {
+      "inline": true,
+      "label": "stream-processing",
+      "permalink": "/tags/stream-processing"
+    },
+    {
+      "inline": true,
+      "label": "topology",
+      "permalink": "/tags/topology"
+    }
+  ],
   "version": "current",
   "frontMatter": {
     "id": "kafka-streams",
     "title": "Kafka Streams: Topology & Branching",
-    "slug": "kafka-streams"
+    "slug": "kafka-streams",
+    "description": "Guide to Kafka Streams covering processing topologies, branching patterns, and real-time stream processing design.",
+    "tags": [
+      "kafka",
+      "kafka-streams",
+      "stream-processing",
+      "topology"
+    ]
   },
   "sidebar": "tutorialSidebar",
   "previous": {

@@ -2,6 +2,8 @@
 id: factory-method
 title: "Factory Method Pattern"
 slug: factory-method
+description: Explains the Factory Method pattern for deferring object creation to subclasses while preserving a common creation contract.
+tags: [design-patterns, java, creational, factory-method]
 ---
 
 # Factory Method Pattern

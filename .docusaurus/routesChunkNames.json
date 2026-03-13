@@ -1,15 +1,319 @@
 {
-  "/-dd2": {
+  "/-add": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-3b9": {
+  "/-fef": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
-  "/-225": {
+  "/tags-ce1": {
+    "__comp": "3720c009",
+    "__props": "59af61a6"
+  },
+  "/tags/abstract-factory-e00": {
+    "__comp": "df203c0f",
+    "__props": "ab8354fa"
+  },
+  "/tags/adapter-153": {
+    "__comp": "df203c0f",
+    "__props": "9244dba4"
+  },
+  "/tags/advanced-c89": {
+    "__comp": "df203c0f",
+    "__props": "ae5d0af1"
+  },
+  "/tags/async-db2": {
+    "__comp": "df203c0f",
+    "__props": "02105171"
+  },
+  "/tags/authentication-ae2": {
+    "__comp": "df203c0f",
+    "__props": "ab795768"
+  },
+  "/tags/auto-configuration-2b4": {
+    "__comp": "df203c0f",
+    "__props": "567932a8"
+  },
+  "/tags/backend-4ee": {
+    "__comp": "df203c0f",
+    "__props": "05f2d632"
+  },
+  "/tags/beginner-823": {
+    "__comp": "df203c0f",
+    "__props": "a10bc3d7"
+  },
+  "/tags/behavioral-d8c": {
+    "__comp": "df203c0f",
+    "__props": "2ee67156"
+  },
+  "/tags/bridge-60f": {
+    "__comp": "df203c0f",
+    "__props": "6bc84981"
+  },
+  "/tags/builder-b96": {
+    "__comp": "df203c0f",
+    "__props": "d7a3e221"
+  },
+  "/tags/chain-of-responsibility-ba3": {
+    "__comp": "df203c0f",
+    "__props": "20787609"
+  },
+  "/tags/collections-f92": {
+    "__comp": "df203c0f",
+    "__props": "7b4803b5"
+  },
+  "/tags/command-cc0": {
+    "__comp": "df203c0f",
+    "__props": "c9ea46ef"
+  },
+  "/tags/composite-fb3": {
+    "__comp": "df203c0f",
+    "__props": "b7c21d55"
+  },
+  "/tags/concurrency-800": {
+    "__comp": "df203c0f",
+    "__props": "037d5664"
+  },
+  "/tags/consumers-15c": {
+    "__comp": "df203c0f",
+    "__props": "f03a4bb8"
+  },
+  "/tags/core-java-d50": {
+    "__comp": "df203c0f",
+    "__props": "4f5e3efe"
+  },
+  "/tags/creational-081": {
+    "__comp": "df203c0f",
+    "__props": "4223edf9"
+  },
+  "/tags/data-integration-e30": {
+    "__comp": "df203c0f",
+    "__props": "fa34ec33"
+  },
+  "/tags/data-structures-b54": {
+    "__comp": "df203c0f",
+    "__props": "99ba9618"
+  },
+  "/tags/decorator-cea": {
+    "__comp": "df203c0f",
+    "__props": "80f9bfa3"
+  },
+  "/tags/dependency-injection-206": {
+    "__comp": "df203c0f",
+    "__props": "90c0aa62"
+  },
+  "/tags/design-patterns-52a": {
+    "__comp": "df203c0f",
+    "__props": "01dac2d7"
+  },
+  "/tags/distributed-systems-808": {
+    "__comp": "df203c0f",
+    "__props": "7ca5bc58"
+  },
+  "/tags/documentation-9e6": {
+    "__comp": "df203c0f",
+    "__props": "bf87ce40"
+  },
+  "/tags/engineering-869": {
+    "__comp": "df203c0f",
+    "__props": "b0759614"
+  },
+  "/tags/event-streaming-91a": {
+    "__comp": "df203c0f",
+    "__props": "b0c91c06"
+  },
+  "/tags/exactly-once-semantics-4a2": {
+    "__comp": "df203c0f",
+    "__props": "1a3b8eea"
+  },
+  "/tags/facade-8ac": {
+    "__comp": "df203c0f",
+    "__props": "019dbeeb"
+  },
+  "/tags/factory-method-45a": {
+    "__comp": "df203c0f",
+    "__props": "0d413130"
+  },
+  "/tags/files-407": {
+    "__comp": "df203c0f",
+    "__props": "7b44fdc6"
+  },
+  "/tags/fundamentals-b95": {
+    "__comp": "df203c0f",
+    "__props": "514fb05a"
+  },
+  "/tags/garbage-collection-218": {
+    "__comp": "df203c0f",
+    "__props": "37e090a4"
+  },
+  "/tags/generics-cb5": {
+    "__comp": "df203c0f",
+    "__props": "0aab00a6"
+  },
+  "/tags/internals-874": {
+    "__comp": "df203c0f",
+    "__props": "698fe1c0"
+  },
+  "/tags/interview-questions-387": {
+    "__comp": "df203c0f",
+    "__props": "b8e7618f"
+  },
+  "/tags/io-a3e": {
+    "__comp": "df203c0f",
+    "__props": "00682744"
+  },
+  "/tags/java-7e9": {
+    "__comp": "df203c0f",
+    "__props": "29249e58"
+  },
+  "/tags/java-21-b99": {
+    "__comp": "df203c0f",
+    "__props": "7e50314d"
+  },
+  "/tags/jvm-c85": {
+    "__comp": "df203c0f",
+    "__props": "2048d955"
+  },
+  "/tags/kafka-472": {
+    "__comp": "df203c0f",
+    "__props": "97b0e84b"
+  },
+  "/tags/kafka-connect-3eb": {
+    "__comp": "df203c0f",
+    "__props": "2a413710"
+  },
+  "/tags/kafka-streams-48b": {
+    "__comp": "df203c0f",
+    "__props": "a26e5d46"
+  },
+  "/tags/knowledge-base-6af": {
+    "__comp": "df203c0f",
+    "__props": "629f607d"
+  },
+  "/tags/language-features-35c": {
+    "__comp": "df203c0f",
+    "__props": "d7d8705e"
+  },
+  "/tags/microservices-565": {
+    "__comp": "df203c0f",
+    "__props": "203f322b"
+  },
+  "/tags/modern-java-f10": {
+    "__comp": "df203c0f",
+    "__props": "b1d0021c"
+  },
+  "/tags/multithreading-7b2": {
+    "__comp": "df203c0f",
+    "__props": "1d0141ec"
+  },
+  "/tags/nio-835": {
+    "__comp": "df203c0f",
+    "__props": "1cc4b04a"
+  },
+  "/tags/object-oriented-programming-696": {
+    "__comp": "df203c0f",
+    "__props": "5c1a7326"
+  },
+  "/tags/observer-8ee": {
+    "__comp": "df203c0f",
+    "__props": "5573c806"
+  },
+  "/tags/onboarding-b8e": {
+    "__comp": "df203c0f",
+    "__props": "f371591c"
+  },
+  "/tags/oop-1ef": {
+    "__comp": "df203c0f",
+    "__props": "35e88882"
+  },
+  "/tags/parallelism-118": {
+    "__comp": "df203c0f",
+    "__props": "91f9fed1"
+  },
+  "/tags/performance-69d": {
+    "__comp": "df203c0f",
+    "__props": "79199b91"
+  },
+  "/tags/persistence-af7": {
+    "__comp": "df203c0f",
+    "__props": "f3210cf2"
+  },
+  "/tags/prototype-cdc": {
+    "__comp": "df203c0f",
+    "__props": "4f97ffc4"
+  },
+  "/tags/proxy-d73": {
+    "__comp": "df203c0f",
+    "__props": "4dfd97f1"
+  },
+  "/tags/reliability-48a": {
+    "__comp": "df203c0f",
+    "__props": "2cd28f63"
+  },
+  "/tags/singleton-93b": {
+    "__comp": "df203c0f",
+    "__props": "9d086a83"
+  },
+  "/tags/software-design-5b9": {
+    "__comp": "df203c0f",
+    "__props": "40131997"
+  },
+  "/tags/solid-f87": {
+    "__comp": "df203c0f",
+    "__props": "0a53752f"
+  },
+  "/tags/spring-boot-9e5": {
+    "__comp": "df203c0f",
+    "__props": "246d31b1"
+  },
+  "/tags/spring-data-jpa-630": {
+    "__comp": "df203c0f",
+    "__props": "bbf1c778"
+  },
+  "/tags/spring-framework-706": {
+    "__comp": "df203c0f",
+    "__props": "5a3f5a4a"
+  },
+  "/tags/spring-mvc-15d": {
+    "__comp": "df203c0f",
+    "__props": "2e80ba56"
+  },
+  "/tags/spring-security-6d7": {
+    "__comp": "df203c0f",
+    "__props": "a0ec3c55"
+  },
+  "/tags/strategy-c95": {
+    "__comp": "df203c0f",
+    "__props": "09ac419e"
+  },
+  "/tags/stream-processing-3f6": {
+    "__comp": "df203c0f",
+    "__props": "2c0f1489"
+  },
+  "/tags/streaming-957": {
+    "__comp": "df203c0f",
+    "__props": "c8c73a53"
+  },
+  "/tags/structural-4a2": {
+    "__comp": "df203c0f",
+    "__props": "a4568ce4"
+  },
+  "/tags/template-method-4e8": {
+    "__comp": "df203c0f",
+    "__props": "46da2414"
+  },
+  "/tags/topology-c1c": {
+    "__comp": "df203c0f",
+    "__props": "b92b542f"
+  },
+  "/tags/web-4aa": {
+    "__comp": "df203c0f",
+    "__props": "e2c9efd5"
+  },
+  "/-6a4": {
     "__comp": "a94703ab"
   },
   "/technical-knowledge/architecture/microservices-46b": {
@@ -151,6 +455,10 @@
   "/technical-knowledge/java/java-new-features-0f9": {
     "__comp": "17896441",
     "content": "0366963e"
+  },
+  "/technical-knowledge/java/java-oop-49b": {
+    "__comp": "17896441",
+    "content": "5304fd8a"
   },
   "/technical-knowledge/kafka/kafka-complete-guide-8ec": {
     "__comp": "17896441",

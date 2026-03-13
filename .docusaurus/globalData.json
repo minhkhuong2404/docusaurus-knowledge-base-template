@@ -191,6 +191,10 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/java/java-oop",
+              "path": "/technical-knowledge/java/java-oop"
+            },
+            {
               "id": "technical-knowledge/kafka/kafka-complete-guide",
               "path": "/technical-knowledge/kafka/kafka-complete-guide",
               "sidebar": "tutorialSidebar"
