@@ -6,8 +6,39 @@ const sidebars: SidebarsConfig = {
 		'intro',
 		{
 			type: 'category',
-			label: 'Architecture',
-			items: ['technical-knowledge/architecture/microservices']
+			label: '☕ Java',
+			items: [
+				'technical-knowledge/java/java-overview',
+				{
+					type: 'category',
+					label: '📘 Core Language',
+					collapsed: false,
+					items: [
+						'technical-knowledge/java/java-fundamentals',
+						'technical-knowledge/java/java-oop',
+						'technical-knowledge/java/java-collections'
+					]
+				},
+				{
+					type: 'category',
+					label: '🧵 Concurrency & JVM',
+					collapsed: false,
+					items: [
+						'technical-knowledge/java/java-concurrency',
+						'technical-knowledge/java/java-jvm'
+					]
+				},
+				{
+					type: 'category',
+					label: '⚡ I/O & Modern Java',
+					collapsed: false,
+					items: [
+						'technical-knowledge/java/java-io',
+						'technical-knowledge/java/java-new-features'
+					]
+				},
+				'technical-knowledge/java/java-interview-questions'
+			]
 		},
 		{
 			type: 'category',
@@ -94,42 +125,6 @@ const sidebars: SidebarsConfig = {
 						'technical-knowledge/design-patterns/template-method'
 					]
 				}
-			]
-		},
-		{
-			type: 'category',
-			label: '☕ Java',
-			items: [
-				'technical-knowledge/java/java-overview',
-				{
-					type: 'category',
-					label: '📘 Core Language',
-					collapsed: false,
-					items: [
-						'technical-knowledge/java/java-fundamentals',
-						'technical-knowledge/java/java-oop',
-						'technical-knowledge/java/java-collections'
-					]
-				},
-				{
-					type: 'category',
-					label: '🧵 Concurrency & JVM',
-					collapsed: false,
-					items: [
-						'technical-knowledge/java/java-concurrency',
-						'technical-knowledge/java/java-jvm'
-					]
-				},
-				{
-					type: 'category',
-					label: '⚡ I/O & Modern Java',
-					collapsed: false,
-					items: [
-						'technical-knowledge/java/java-io',
-						'technical-knowledge/java/java-new-features'
-					]
-				},
-				'technical-knowledge/java/java-interview-questions'
 			]
 		},
 		{

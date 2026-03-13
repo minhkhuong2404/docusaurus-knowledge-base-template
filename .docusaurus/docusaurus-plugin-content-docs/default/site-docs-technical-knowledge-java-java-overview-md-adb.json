@@ -34,8 +34,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Template Method Pattern",
-    "permalink": "/technical-knowledge/design-patterns/template-method"
+    "title": "Welcome",
+    "permalink": "/"
   },
   "next": {
     "title": "Java Fundamentals: Core Language Concepts",

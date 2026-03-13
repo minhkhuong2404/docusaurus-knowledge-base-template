@@ -45,8 +45,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Java Interview Questions & Answers",
-    "permalink": "/technical-knowledge/java/java-interview-questions"
+    "title": "Template Method Pattern",
+    "permalink": "/technical-knowledge/design-patterns/template-method"
   },
   "next": {
     "title": "Kafka Connect",

@@ -10,14 +10,5 @@
   "unlisted": false,
   "tags": [],
   "version": "current",
-  "frontMatter": {},
-  "sidebar": "tutorialSidebar",
-  "previous": {
-    "title": "Welcome",
-    "permalink": "/"
-  },
-  "next": {
-    "title": "Spring Knowledge Base Overview",
-    "permalink": "/technical-knowledge/spring/spring-overview"
-  }
+  "frontMatter": {}
 }

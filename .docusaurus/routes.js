@@ -39,11 +39,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'ec5'),
+    component: ComponentCreator('/', '3ee'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '00f'),
+        component: ComponentCreator('/', '1f8'),
         routes: [
           {
             path: '/tags',
@@ -1112,13 +1112,12 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '8de'),
+            component: ComponentCreator('/', '4f3'),
             routes: [
               {
                 path: '/technical-knowledge/architecture/microservices',
-                component: ComponentCreator('/technical-knowledge/architecture/microservices', '46b'),
-                exact: true,
-                sidebar: "tutorialSidebar"
+                component: ComponentCreator('/technical-knowledge/architecture/microservices', '21e'),
+                exact: true
               },
               {
                 path: '/technical-knowledge/database/',

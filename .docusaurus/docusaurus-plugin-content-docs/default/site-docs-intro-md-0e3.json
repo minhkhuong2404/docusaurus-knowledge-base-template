@@ -44,7 +44,7 @@
   },
   "sidebar": "tutorialSidebar",
   "next": {
-    "title": "microservices",
-    "permalink": "/technical-knowledge/architecture/microservices"
+    "title": "Java Knowledge Base Overview",
+    "permalink": "/technical-knowledge/java/java-overview"
   }
 }

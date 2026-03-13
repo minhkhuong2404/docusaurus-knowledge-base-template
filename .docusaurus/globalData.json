@@ -17,8 +17,7 @@
             },
             {
               "id": "technical-knowledge/architecture/microservices",
-              "path": "/technical-knowledge/architecture/microservices",
-              "sidebar": "tutorialSidebar"
+              "path": "/technical-knowledge/architecture/microservices"
             },
             {
               "id": "technical-knowledge/database/advanced-sql",
