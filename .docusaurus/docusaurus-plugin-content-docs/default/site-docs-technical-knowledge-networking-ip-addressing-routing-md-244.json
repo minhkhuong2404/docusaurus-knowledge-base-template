@@ -1,0 +1,86 @@
+{
+  "id": "technical-knowledge/networking/ip-addressing-routing",
+  "title": "IP Addressing & Routing",
+  "description": "IPv4 and IPv6 addressing, subnetting, CIDR notation, NAT, routing protocols, and how packets find their way across the internet.",
+  "source": "@site/docs/technical-knowledge/networking/ip-addressing-routing.md",
+  "sourceDirName": "technical-knowledge/networking",
+  "slug": "/technical-knowledge/networking/ip-addressing-routing",
+  "permalink": "/technical-knowledge/networking/ip-addressing-routing",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "networking",
+      "permalink": "/tags/networking"
+    },
+    {
+      "inline": true,
+      "label": "ip",
+      "permalink": "/tags/ip"
+    },
+    {
+      "inline": true,
+      "label": "ipv4",
+      "permalink": "/tags/ipv-4"
+    },
+    {
+      "inline": true,
+      "label": "ipv6",
+      "permalink": "/tags/ipv-6"
+    },
+    {
+      "inline": true,
+      "label": "subnet",
+      "permalink": "/tags/subnet"
+    },
+    {
+      "inline": true,
+      "label": "cidr",
+      "permalink": "/tags/cidr"
+    },
+    {
+      "inline": true,
+      "label": "routing",
+      "permalink": "/tags/routing"
+    },
+    {
+      "inline": true,
+      "label": "bgp",
+      "permalink": "/tags/bgp"
+    },
+    {
+      "inline": true,
+      "label": "ospf",
+      "permalink": "/tags/ospf"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "id": "ip-addressing-routing",
+    "title": "IP Addressing & Routing",
+    "description": "IPv4 and IPv6 addressing, subnetting, CIDR notation, NAT, routing protocols, and how packets find their way across the internet.",
+    "tags": [
+      "networking",
+      "ip",
+      "ipv4",
+      "ipv6",
+      "subnet",
+      "cidr",
+      "routing",
+      "bgp",
+      "ospf"
+    ],
+    "sidebar_position": 3
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "OSI & TCP/IP Models",
+    "permalink": "/technical-knowledge/networking/osi-tcpip-models"
+  },
+  "next": {
+    "title": "TCP, UDP & Transport Layer",
+    "permalink": "/technical-knowledge/networking/tcp-udp-transport-layer"
+  }
+}

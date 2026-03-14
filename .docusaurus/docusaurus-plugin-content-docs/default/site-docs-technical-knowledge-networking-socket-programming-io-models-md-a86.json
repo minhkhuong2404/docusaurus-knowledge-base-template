@@ -1,0 +1,92 @@
+{
+  "id": "technical-knowledge/networking/socket-programming-io-models",
+  "title": "Socket Programming & I/O Models",
+  "description": "Blocking vs non-blocking I/O, Java NIO, epoll, the C10K problem, Netty, and how event-driven servers handle massive concurrency.",
+  "source": "@site/docs/technical-knowledge/networking/socket-programming-io-models.md",
+  "sourceDirName": "technical-knowledge/networking",
+  "slug": "/technical-knowledge/networking/socket-programming-io-models",
+  "permalink": "/technical-knowledge/networking/socket-programming-io-models",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "networking",
+      "permalink": "/tags/networking"
+    },
+    {
+      "inline": true,
+      "label": "sockets",
+      "permalink": "/tags/sockets"
+    },
+    {
+      "inline": true,
+      "label": "nio",
+      "permalink": "/tags/nio"
+    },
+    {
+      "inline": true,
+      "label": "epoll",
+      "permalink": "/tags/epoll"
+    },
+    {
+      "inline": true,
+      "label": "netty",
+      "permalink": "/tags/netty"
+    },
+    {
+      "inline": true,
+      "label": "async",
+      "permalink": "/tags/async"
+    },
+    {
+      "inline": true,
+      "label": "blocking",
+      "permalink": "/tags/blocking"
+    },
+    {
+      "inline": true,
+      "label": "non-blocking",
+      "permalink": "/tags/non-blocking"
+    },
+    {
+      "inline": true,
+      "label": "reactor",
+      "permalink": "/tags/reactor"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 10,
+  "frontMatter": {
+    "id": "socket-programming-io-models",
+    "title": "Socket Programming & I/O Models",
+    "description": "Blocking vs non-blocking I/O, Java NIO, epoll, the C10K problem, Netty, and how event-driven servers handle massive concurrency.",
+    "tags": [
+      "networking",
+      "sockets",
+      "nio",
+      "epoll",
+      "netty",
+      "async",
+      "blocking",
+      "non-blocking",
+      "reactor",
+      "java"
+    ],
+    "sidebar_position": 10
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Proxies, NAT & Firewalls",
+    "permalink": "/technical-knowledge/networking/proxies-nat-firewalls"
+  },
+  "next": {
+    "title": "REST, gRPC & API Design",
+    "permalink": "/technical-knowledge/networking/rest-grpc-api-design"
+  }
+}

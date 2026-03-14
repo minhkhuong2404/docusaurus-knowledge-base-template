@@ -1,0 +1,92 @@
+{
+  "id": "technical-knowledge/networking/network-security",
+  "title": "Network Security",
+  "description": "TLS deep dive, common network attacks, DDoS mitigation, zero trust networking, certificate management, and security best practices.",
+  "source": "@site/docs/technical-knowledge/networking/network-security.md",
+  "sourceDirName": "technical-knowledge/networking",
+  "slug": "/technical-knowledge/networking/network-security",
+  "permalink": "/technical-knowledge/networking/network-security",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "networking",
+      "permalink": "/tags/networking"
+    },
+    {
+      "inline": true,
+      "label": "security",
+      "permalink": "/tags/security"
+    },
+    {
+      "inline": true,
+      "label": "tls",
+      "permalink": "/tags/tls"
+    },
+    {
+      "inline": true,
+      "label": "ddos",
+      "permalink": "/tags/ddos"
+    },
+    {
+      "inline": true,
+      "label": "zero-trust",
+      "permalink": "/tags/zero-trust"
+    },
+    {
+      "inline": true,
+      "label": "attack",
+      "permalink": "/tags/attack"
+    },
+    {
+      "inline": true,
+      "label": "firewall",
+      "permalink": "/tags/firewall"
+    },
+    {
+      "inline": true,
+      "label": "mitm",
+      "permalink": "/tags/mitm"
+    },
+    {
+      "inline": true,
+      "label": "csrf",
+      "permalink": "/tags/csrf"
+    },
+    {
+      "inline": true,
+      "label": "xss",
+      "permalink": "/tags/xss"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 8,
+  "frontMatter": {
+    "id": "network-security",
+    "title": "Network Security",
+    "description": "TLS deep dive, common network attacks, DDoS mitigation, zero trust networking, certificate management, and security best practices.",
+    "tags": [
+      "networking",
+      "security",
+      "tls",
+      "ddos",
+      "zero-trust",
+      "attack",
+      "firewall",
+      "mitm",
+      "csrf",
+      "xss"
+    ],
+    "sidebar_position": 8
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Network Performance & Optimization",
+    "permalink": "/technical-knowledge/networking/network-performance-optimization"
+  },
+  "next": {
+    "title": "Network Troubleshooting & Diagnostic Tools",
+    "permalink": "/technical-knowledge/networking/network-troubleshooting-tools"
+  }
+}

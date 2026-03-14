@@ -1,0 +1,80 @@
+{
+  "id": "technical-knowledge/networking/service-mesh-microservices",
+  "title": "Service Mesh & Microservices Networking",
+  "description": "Service discovery, circuit breakers, service meshes (Istio, Envoy), sidecar pattern, observability, and microservices communication patterns.",
+  "source": "@site/docs/technical-knowledge/networking/service-mesh-microservices.md",
+  "sourceDirName": "technical-knowledge/networking",
+  "slug": "/technical-knowledge/networking/service-mesh-microservices",
+  "permalink": "/technical-knowledge/networking/service-mesh-microservices",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "networking",
+      "permalink": "/tags/networking"
+    },
+    {
+      "inline": true,
+      "label": "service-mesh",
+      "permalink": "/tags/service-mesh"
+    },
+    {
+      "inline": true,
+      "label": "istio",
+      "permalink": "/tags/istio"
+    },
+    {
+      "inline": true,
+      "label": "envoy",
+      "permalink": "/tags/envoy"
+    },
+    {
+      "inline": true,
+      "label": "circuit-breaker",
+      "permalink": "/tags/circuit-breaker"
+    },
+    {
+      "inline": true,
+      "label": "service-discovery",
+      "permalink": "/tags/service-discovery"
+    },
+    {
+      "inline": true,
+      "label": "kubernetes",
+      "permalink": "/tags/kubernetes"
+    },
+    {
+      "inline": true,
+      "label": "microservices",
+      "permalink": "/tags/microservices"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 14,
+  "frontMatter": {
+    "id": "service-mesh-microservices",
+    "title": "Service Mesh & Microservices Networking",
+    "description": "Service discovery, circuit breakers, service meshes (Istio, Envoy), sidecar pattern, observability, and microservices communication patterns.",
+    "tags": [
+      "networking",
+      "service-mesh",
+      "istio",
+      "envoy",
+      "circuit-breaker",
+      "service-discovery",
+      "kubernetes",
+      "microservices"
+    ],
+    "sidebar_position": 14
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "API Authentication & Authorization",
+    "permalink": "/technical-knowledge/networking/api-authentication-security"
+  },
+  "next": {
+    "title": "Network Performance & Optimization",
+    "permalink": "/technical-knowledge/networking/network-performance-optimization"
+  }
+}

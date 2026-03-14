@@ -1,0 +1,86 @@
+{
+  "id": "technical-knowledge/networking/application-protocols-reference",
+  "title": "Application Protocols Reference",
+  "description": "SSH, SMTP, FTP, MQTT, AMQP, LDAP, NTP and other essential application-layer protocols — how they work and when to use them.",
+  "source": "@site/docs/technical-knowledge/networking/application-protocols-reference.md",
+  "sourceDirName": "technical-knowledge/networking",
+  "slug": "/technical-knowledge/networking/application-protocols-reference",
+  "permalink": "/technical-knowledge/networking/application-protocols-reference",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "networking",
+      "permalink": "/tags/networking"
+    },
+    {
+      "inline": true,
+      "label": "ssh",
+      "permalink": "/tags/ssh"
+    },
+    {
+      "inline": true,
+      "label": "smtp",
+      "permalink": "/tags/smtp"
+    },
+    {
+      "inline": true,
+      "label": "ftp",
+      "permalink": "/tags/ftp"
+    },
+    {
+      "inline": true,
+      "label": "mqtt",
+      "permalink": "/tags/mqtt"
+    },
+    {
+      "inline": true,
+      "label": "amqp",
+      "permalink": "/tags/amqp"
+    },
+    {
+      "inline": true,
+      "label": "protocols",
+      "permalink": "/tags/protocols"
+    },
+    {
+      "inline": true,
+      "label": "reference",
+      "permalink": "/tags/reference"
+    },
+    {
+      "inline": true,
+      "label": "application-layer",
+      "permalink": "/tags/application-layer"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 15,
+  "frontMatter": {
+    "id": "application-protocols-reference",
+    "title": "Application Protocols Reference",
+    "description": "SSH, SMTP, FTP, MQTT, AMQP, LDAP, NTP and other essential application-layer protocols — how they work and when to use them.",
+    "tags": [
+      "networking",
+      "ssh",
+      "smtp",
+      "ftp",
+      "mqtt",
+      "amqp",
+      "protocols",
+      "reference",
+      "application-layer"
+    ],
+    "sidebar_position": 15
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "WebSockets & Real-Time Communication",
+    "permalink": "/technical-knowledge/networking/websockets-realtime"
+  },
+  "next": {
+    "title": "CDN & Load Balancing",
+    "permalink": "/technical-knowledge/networking/cdn-load-balancing"
+  }
+}

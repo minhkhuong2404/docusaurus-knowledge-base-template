@@ -1,0 +1,80 @@
+{
+  "id": "technical-knowledge/networking/quic-modern-transport",
+  "title": "QUIC & Modern Transport Protocols",
+  "description": "QUIC protocol internals, HTTP/3, connection migration, 0-RTT, multiplexing without HOL blocking, and comparison with TCP+TLS.",
+  "source": "@site/docs/technical-knowledge/networking/quic-modern-transport.md",
+  "sourceDirName": "technical-knowledge/networking",
+  "slug": "/technical-knowledge/networking/quic-modern-transport",
+  "permalink": "/technical-knowledge/networking/quic-modern-transport",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "networking",
+      "permalink": "/tags/networking"
+    },
+    {
+      "inline": true,
+      "label": "quic",
+      "permalink": "/tags/quic"
+    },
+    {
+      "inline": true,
+      "label": "http3",
+      "permalink": "/tags/http-3"
+    },
+    {
+      "inline": true,
+      "label": "transport",
+      "permalink": "/tags/transport"
+    },
+    {
+      "inline": true,
+      "label": "multiplexing",
+      "permalink": "/tags/multiplexing"
+    },
+    {
+      "inline": true,
+      "label": "0-rtt",
+      "permalink": "/tags/0-rtt"
+    },
+    {
+      "inline": true,
+      "label": "connection-migration",
+      "permalink": "/tags/connection-migration"
+    },
+    {
+      "inline": true,
+      "label": "tls",
+      "permalink": "/tags/tls"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 18,
+  "frontMatter": {
+    "id": "quic-modern-transport",
+    "title": "QUIC & Modern Transport Protocols",
+    "description": "QUIC protocol internals, HTTP/3, connection migration, 0-RTT, multiplexing without HOL blocking, and comparison with TCP+TLS.",
+    "tags": [
+      "networking",
+      "quic",
+      "http3",
+      "transport",
+      "multiplexing",
+      "0-rtt",
+      "connection-migration",
+      "tls"
+    ],
+    "sidebar_position": 18
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "TCP, UDP & Transport Layer",
+    "permalink": "/technical-knowledge/networking/tcp-udp-transport-layer"
+  },
+  "next": {
+    "title": "HTTP, HTTPS & Application Layer",
+    "permalink": "/technical-knowledge/networking/http-https-application-layer"
+  }
+}

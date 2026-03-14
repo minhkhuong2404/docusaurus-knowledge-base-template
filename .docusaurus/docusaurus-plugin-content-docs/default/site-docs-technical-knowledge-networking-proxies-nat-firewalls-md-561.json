@@ -1,0 +1,80 @@
+{
+  "id": "technical-knowledge/networking/proxies-nat-firewalls",
+  "title": "Proxies, NAT & Firewalls",
+  "description": "Forward and reverse proxies, NAT traversal, stateful firewalls, iptables, VPNs, and how traffic flows through network boundaries.",
+  "source": "@site/docs/technical-knowledge/networking/proxies-nat-firewalls.md",
+  "sourceDirName": "technical-knowledge/networking",
+  "slug": "/technical-knowledge/networking/proxies-nat-firewalls",
+  "permalink": "/technical-knowledge/networking/proxies-nat-firewalls",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "networking",
+      "permalink": "/tags/networking"
+    },
+    {
+      "inline": true,
+      "label": "proxy",
+      "permalink": "/tags/proxy"
+    },
+    {
+      "inline": true,
+      "label": "reverse-proxy",
+      "permalink": "/tags/reverse-proxy"
+    },
+    {
+      "inline": true,
+      "label": "nat",
+      "permalink": "/tags/nat"
+    },
+    {
+      "inline": true,
+      "label": "firewall",
+      "permalink": "/tags/firewall"
+    },
+    {
+      "inline": true,
+      "label": "iptables",
+      "permalink": "/tags/iptables"
+    },
+    {
+      "inline": true,
+      "label": "vpn",
+      "permalink": "/tags/vpn"
+    },
+    {
+      "inline": true,
+      "label": "nginx",
+      "permalink": "/tags/nginx"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 9,
+  "frontMatter": {
+    "id": "proxies-nat-firewalls",
+    "title": "Proxies, NAT & Firewalls",
+    "description": "Forward and reverse proxies, NAT traversal, stateful firewalls, iptables, VPNs, and how traffic flows through network boundaries.",
+    "tags": [
+      "networking",
+      "proxy",
+      "reverse-proxy",
+      "nat",
+      "firewall",
+      "iptables",
+      "vpn",
+      "nginx"
+    ],
+    "sidebar_position": 9
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "CDN & Load Balancing",
+    "permalink": "/technical-knowledge/networking/cdn-load-balancing"
+  },
+  "next": {
+    "title": "Socket Programming & I/O Models",
+    "permalink": "/technical-knowledge/networking/socket-programming-io-models"
+  }
+}

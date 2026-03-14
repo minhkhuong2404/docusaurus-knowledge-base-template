@@ -1,0 +1,68 @@
+{
+  "id": "technical-knowledge/networking/osi-tcpip-models",
+  "title": "OSI & TCP/IP Models",
+  "description": "The OSI 7-layer model and TCP/IP 4-layer model — each layer's role, protocols, and how data encapsulation works end-to-end.",
+  "source": "@site/docs/technical-knowledge/networking/osi-tcpip-models.md",
+  "sourceDirName": "technical-knowledge/networking",
+  "slug": "/technical-knowledge/networking/osi-tcpip-models",
+  "permalink": "/technical-knowledge/networking/osi-tcpip-models",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "networking",
+      "permalink": "/tags/networking"
+    },
+    {
+      "inline": true,
+      "label": "osi",
+      "permalink": "/tags/osi"
+    },
+    {
+      "inline": true,
+      "label": "tcpip",
+      "permalink": "/tags/tcpip"
+    },
+    {
+      "inline": true,
+      "label": "layers",
+      "permalink": "/tags/layers"
+    },
+    {
+      "inline": true,
+      "label": "encapsulation",
+      "permalink": "/tags/encapsulation"
+    },
+    {
+      "inline": true,
+      "label": "protocols",
+      "permalink": "/tags/protocols"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "osi-tcpip-models",
+    "title": "OSI & TCP/IP Models",
+    "description": "The OSI 7-layer model and TCP/IP 4-layer model — each layer's role, protocols, and how data encapsulation works end-to-end.",
+    "tags": [
+      "networking",
+      "osi",
+      "tcpip",
+      "layers",
+      "encapsulation",
+      "protocols"
+    ],
+    "sidebar_position": 2
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Networking Knowledge Base",
+    "permalink": "/technical-knowledge/networking/"
+  },
+  "next": {
+    "title": "IP Addressing & Routing",
+    "permalink": "/technical-knowledge/networking/ip-addressing-routing"
+  }
+}

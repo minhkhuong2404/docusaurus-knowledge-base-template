@@ -1,0 +1,86 @@
+{
+  "id": "technical-knowledge/networking/api-authentication-security",
+  "title": "API Authentication & Authorization",
+  "description": "OAuth 2.0 flows, JWT structure and validation, API keys, mTLS, OIDC, token introspection, and Spring Security integration.",
+  "source": "@site/docs/technical-knowledge/networking/api-authentication-security.md",
+  "sourceDirName": "technical-knowledge/networking",
+  "slug": "/technical-knowledge/networking/api-authentication-security",
+  "permalink": "/technical-knowledge/networking/api-authentication-security",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "networking",
+      "permalink": "/tags/networking"
+    },
+    {
+      "inline": true,
+      "label": "authentication",
+      "permalink": "/tags/authentication"
+    },
+    {
+      "inline": true,
+      "label": "oauth2",
+      "permalink": "/tags/oauth-2"
+    },
+    {
+      "inline": true,
+      "label": "jwt",
+      "permalink": "/tags/jwt"
+    },
+    {
+      "inline": true,
+      "label": "oidc",
+      "permalink": "/tags/oidc"
+    },
+    {
+      "inline": true,
+      "label": "api-security",
+      "permalink": "/tags/api-security"
+    },
+    {
+      "inline": true,
+      "label": "spring-security",
+      "permalink": "/tags/spring-security"
+    },
+    {
+      "inline": true,
+      "label": "bearer-token",
+      "permalink": "/tags/bearer-token"
+    },
+    {
+      "inline": true,
+      "label": "mtls",
+      "permalink": "/tags/mtls"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 17,
+  "frontMatter": {
+    "id": "api-authentication-security",
+    "title": "API Authentication & Authorization",
+    "description": "OAuth 2.0 flows, JWT structure and validation, API keys, mTLS, OIDC, token introspection, and Spring Security integration.",
+    "tags": [
+      "networking",
+      "authentication",
+      "oauth2",
+      "jwt",
+      "oidc",
+      "api-security",
+      "spring-security",
+      "bearer-token",
+      "mtls"
+    ],
+    "sidebar_position": 17
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "REST, gRPC & API Design",
+    "permalink": "/technical-knowledge/networking/rest-grpc-api-design"
+  },
+  "next": {
+    "title": "Service Mesh & Microservices Networking",
+    "permalink": "/technical-knowledge/networking/service-mesh-microservices"
+  }
+}

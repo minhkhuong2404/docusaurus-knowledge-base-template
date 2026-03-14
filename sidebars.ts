@@ -128,80 +128,156 @@ const sidebars: SidebarsConfig = {
 			]
 		},
 		{
-			type: 'doc',
-			id: 'technical-knowledge/system-design/intro',
-			label: '📖 Overview',
+			type: 'category',
+			label: '📖 System Design',
+			items: [
+				'technical-knowledge/system-design/intro',
+				{
+					type: 'category',
+					label: '🏗️ Fundamentals',
+					collapsed: false,
+					items: [
+						'technical-knowledge/system-design/architecture-fundamentals',
+						'technical-knowledge/system-design/capacity-planning',
+						'technical-knowledge/system-design/interview-framework',
+					],
+				},
+				{
+					type: 'category',
+					label: '⚡ Scaling Patterns',
+					collapsed: false,
+					items: [
+						'technical-knowledge/system-design/scaling-reads',
+						'technical-knowledge/system-design/scaling-writes',
+						'technical-knowledge/system-design/caching-strategies',
+					],
+				},
+				{
+					type: 'category',
+					label: '🔄 Distributed Patterns',
+					collapsed: false,
+					items: [
+						'technical-knowledge/system-design/real-time-updates',
+						'technical-knowledge/system-design/handling-contention',
+						'technical-knowledge/system-design/multi-step-process',
+						'technical-knowledge/system-design/long-running-tasks',
+						'technical-knowledge/system-design/data-consistency',
+					],
+				},
+				{
+					type: 'category',
+					label: '🧩 Architecture',
+					collapsed: false,
+					items: [
+						'technical-knowledge/system-design/microservices-patterns',
+						'technical-knowledge/system-design/api-design',
+						'technical-knowledge/system-design/database-design',
+						'technical-knowledge/system-design/message-queues',
+						'technical-knowledge/system-design/search-systems',
+					],
+				},
+				{
+					type: 'category',
+					label: '🗄️ Storage',
+					collapsed: false,
+					items: [
+						'technical-knowledge/system-design/large-blobs',
+					],
+				},
+				{
+					type: 'category',
+					label: '🔒 Security & Reliability',
+					collapsed: false,
+					items: [
+						'technical-knowledge/system-design/security-patterns',
+						'technical-knowledge/system-design/load-balancing-reliability',
+						'technical-knowledge/system-design/observability',
+						'technical-knowledge/system-design/distributed-systems',
+					],
+				},
+				{
+					type: 'category',
+					label: '🎯 Interview Prep',
+					collapsed: false,
+					items: [
+						'technical-knowledge/system-design/common-interview-questions',
+					],
+				},
+			]
 		},
 		{
 			type: 'category',
-			label: '🏗️ Fundamentals',
-			collapsed: false,
+			label: '🌐 Network Overview',
 			items: [
-				'technical-knowledge/system-design/architecture-fundamentals',
-				'technical-knowledge/system-design/capacity-planning',
-				'technical-knowledge/system-design/interview-framework',
-			],
-		},
-		{
-			type: 'category',
-			label: '⚡ Scaling Patterns',
-			collapsed: false,
-			items: [
-				'technical-knowledge/system-design/scaling-reads',
-				'technical-knowledge/system-design/scaling-writes',
-				'technical-knowledge/system-design/caching-strategies',
-			],
-		},
-		{
-			type: 'category',
-			label: '🔄 Distributed Patterns',
-			collapsed: false,
-			items: [
-				'technical-knowledge/system-design/real-time-updates',
-				'technical-knowledge/system-design/handling-contention',
-				'technical-knowledge/system-design/multi-step-process',
-				'technical-knowledge/system-design/long-running-tasks',
-				'technical-knowledge/system-design/data-consistency',
-			],
-		},
-		{
-			type: 'category',
-			label: '🧩 Architecture',
-			collapsed: false,
-			items: [
-				'technical-knowledge/system-design/microservices-patterns',
-				'technical-knowledge/system-design/api-design',
-				'technical-knowledge/system-design/database-design',
-				'technical-knowledge/system-design/message-queues',
-				'technical-knowledge/system-design/search-systems',
-			],
-		},
-		{
-			type: 'category',
-			label: '🗄️ Storage',
-			collapsed: false,
-			items: [
-				'technical-knowledge/system-design/large-blobs',
-			],
-		},
-		{
-			type: 'category',
-			label: '🔒 Security & Reliability',
-			collapsed: false,
-			items: [
-				'technical-knowledge/system-design/security-patterns',
-				'technical-knowledge/system-design/load-balancing-reliability',
-				'technical-knowledge/system-design/observability',
-				'technical-knowledge/system-design/distributed-systems',
-			],
-		},
-		{
-			type: 'category',
-			label: '🎯 Interview Prep',
-			collapsed: false,
-			items: [
-				'technical-knowledge/system-design/common-interview-questions',
-			],
+				'technical-knowledge/networking/networking-overview',
+				{
+					type: 'category',
+					label: '🔩 Foundations',
+					collapsed: false,
+					items: [
+						'technical-knowledge/networking/osi-tcpip-models',
+						'technical-knowledge/networking/ip-addressing-routing',
+						'technical-knowledge/networking/tcp-udp-transport-layer',
+						'technical-knowledge/networking/quic-modern-transport',
+					],
+				},
+				{
+					type: 'category',
+					label: '🌍 Application Layer',
+					collapsed: false,
+					items: [
+						'technical-knowledge/networking/http-https-application-layer',
+						'technical-knowledge/networking/dns-resolution',
+						'technical-knowledge/networking/websockets-realtime',
+						'technical-knowledge/networking/application-protocols-reference',
+					],
+				},
+				{
+					type: 'category',
+					label: '🏗️ Infrastructure',
+					collapsed: false,
+					items: [
+						'technical-knowledge/networking/cdn-load-balancing',
+						'technical-knowledge/networking/proxies-nat-firewalls',
+						'technical-knowledge/networking/socket-programming-io-models',
+					],
+				},
+				{
+					type: 'category',
+					label: '🔌 API Design',
+					collapsed: false,
+					items: [
+						'technical-knowledge/networking/rest-grpc-api-design',
+						'technical-knowledge/networking/api-authentication-security',
+					],
+				},
+				{
+					type: 'category',
+					label: '☁️ Distributed & Cloud',
+					collapsed: false,
+					items: [
+						'technical-knowledge/networking/service-mesh-microservices',
+						'technical-knowledge/networking/network-performance-optimization',
+					],
+				},
+				{
+					type: 'category',
+					label: '🛡️ Security',
+					collapsed: false,
+					items: [
+						'technical-knowledge/networking/network-security',
+					],
+				},
+				{
+					type: 'category',
+					label: '🔧 Tools & Interview Prep',
+					collapsed: false,
+					items: [
+						'technical-knowledge/networking/network-troubleshooting-tools',
+						'technical-knowledge/networking/networking-interview-questions',
+					],
+				},
+			]
 		},
 		{
 			type: 'category',

@@ -1,0 +1,86 @@
+{
+  "id": "technical-knowledge/networking/rest-grpc-api-design",
+  "title": "REST, gRPC & API Design",
+  "description": "REST principles and constraints, gRPC and Protocol Buffers, GraphQL, API versioning, pagination, idempotency, and API design best practices.",
+  "source": "@site/docs/technical-knowledge/networking/rest-grpc-api-design.md",
+  "sourceDirName": "technical-knowledge/networking",
+  "slug": "/technical-knowledge/networking/rest-grpc-api-design",
+  "permalink": "/technical-knowledge/networking/rest-grpc-api-design",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "networking",
+      "permalink": "/tags/networking"
+    },
+    {
+      "inline": true,
+      "label": "rest",
+      "permalink": "/tags/rest"
+    },
+    {
+      "inline": true,
+      "label": "grpc",
+      "permalink": "/tags/grpc"
+    },
+    {
+      "inline": true,
+      "label": "graphql",
+      "permalink": "/tags/graphql"
+    },
+    {
+      "inline": true,
+      "label": "api",
+      "permalink": "/tags/api"
+    },
+    {
+      "inline": true,
+      "label": "protobuf",
+      "permalink": "/tags/protobuf"
+    },
+    {
+      "inline": true,
+      "label": "versioning",
+      "permalink": "/tags/versioning"
+    },
+    {
+      "inline": true,
+      "label": "http",
+      "permalink": "/tags/http"
+    },
+    {
+      "inline": true,
+      "label": "design",
+      "permalink": "/tags/design"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 11,
+  "frontMatter": {
+    "id": "rest-grpc-api-design",
+    "title": "REST, gRPC & API Design",
+    "description": "REST principles and constraints, gRPC and Protocol Buffers, GraphQL, API versioning, pagination, idempotency, and API design best practices.",
+    "tags": [
+      "networking",
+      "rest",
+      "grpc",
+      "graphql",
+      "api",
+      "protobuf",
+      "versioning",
+      "http",
+      "design"
+    ],
+    "sidebar_position": 11
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Socket Programming & I/O Models",
+    "permalink": "/technical-knowledge/networking/socket-programming-io-models"
+  },
+  "next": {
+    "title": "API Authentication & Authorization",
+    "permalink": "/technical-knowledge/networking/api-authentication-security"
+  }
+}

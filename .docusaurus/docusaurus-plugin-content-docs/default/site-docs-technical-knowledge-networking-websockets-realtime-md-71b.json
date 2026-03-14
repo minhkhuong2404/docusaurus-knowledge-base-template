@@ -1,0 +1,80 @@
+{
+  "id": "technical-knowledge/networking/websockets-realtime",
+  "title": "WebSockets & Real-Time Communication",
+  "description": "WebSocket protocol, Server-Sent Events, long polling, STOMP over WebSocket, and real-time system design patterns.",
+  "source": "@site/docs/technical-knowledge/networking/websockets-realtime.md",
+  "sourceDirName": "technical-knowledge/networking",
+  "slug": "/technical-knowledge/networking/websockets-realtime",
+  "permalink": "/technical-knowledge/networking/websockets-realtime",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "networking",
+      "permalink": "/tags/networking"
+    },
+    {
+      "inline": true,
+      "label": "websocket",
+      "permalink": "/tags/websocket"
+    },
+    {
+      "inline": true,
+      "label": "sse",
+      "permalink": "/tags/sse"
+    },
+    {
+      "inline": true,
+      "label": "real-time",
+      "permalink": "/tags/real-time"
+    },
+    {
+      "inline": true,
+      "label": "stomp",
+      "permalink": "/tags/stomp"
+    },
+    {
+      "inline": true,
+      "label": "long-polling",
+      "permalink": "/tags/long-polling"
+    },
+    {
+      "inline": true,
+      "label": "spring-websocket",
+      "permalink": "/tags/spring-websocket"
+    },
+    {
+      "inline": true,
+      "label": "push",
+      "permalink": "/tags/push"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 12,
+  "frontMatter": {
+    "id": "websockets-realtime",
+    "title": "WebSockets & Real-Time Communication",
+    "description": "WebSocket protocol, Server-Sent Events, long polling, STOMP over WebSocket, and real-time system design patterns.",
+    "tags": [
+      "networking",
+      "websocket",
+      "sse",
+      "real-time",
+      "stomp",
+      "long-polling",
+      "spring-websocket",
+      "push"
+    ],
+    "sidebar_position": 12
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "DNS Resolution",
+    "permalink": "/technical-knowledge/networking/dns-resolution"
+  },
+  "next": {
+    "title": "Application Protocols Reference",
+    "permalink": "/technical-knowledge/networking/application-protocols-reference"
+  }
+}

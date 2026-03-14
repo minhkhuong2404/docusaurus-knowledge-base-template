@@ -1,0 +1,92 @@
+{
+  "id": "technical-knowledge/networking/network-troubleshooting-tools",
+  "title": "Network Troubleshooting & Diagnostic Tools",
+  "description": "Practical guide to tcpdump, Wireshark, netstat, ss, nmap, curl, openssl, dig, traceroute and how to diagnose every layer of the network stack.",
+  "source": "@site/docs/technical-knowledge/networking/network-troubleshooting-tools.md",
+  "sourceDirName": "technical-knowledge/networking",
+  "slug": "/technical-knowledge/networking/network-troubleshooting-tools",
+  "permalink": "/technical-knowledge/networking/network-troubleshooting-tools",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "networking",
+      "permalink": "/tags/networking"
+    },
+    {
+      "inline": true,
+      "label": "troubleshooting",
+      "permalink": "/tags/troubleshooting"
+    },
+    {
+      "inline": true,
+      "label": "tcpdump",
+      "permalink": "/tags/tcpdump"
+    },
+    {
+      "inline": true,
+      "label": "wireshark",
+      "permalink": "/tags/wireshark"
+    },
+    {
+      "inline": true,
+      "label": "netstat",
+      "permalink": "/tags/netstat"
+    },
+    {
+      "inline": true,
+      "label": "nmap",
+      "permalink": "/tags/nmap"
+    },
+    {
+      "inline": true,
+      "label": "curl",
+      "permalink": "/tags/curl"
+    },
+    {
+      "inline": true,
+      "label": "openssl",
+      "permalink": "/tags/openssl"
+    },
+    {
+      "inline": true,
+      "label": "dig",
+      "permalink": "/tags/dig"
+    },
+    {
+      "inline": true,
+      "label": "diagnostics",
+      "permalink": "/tags/diagnostics"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 16,
+  "frontMatter": {
+    "id": "network-troubleshooting-tools",
+    "title": "Network Troubleshooting & Diagnostic Tools",
+    "description": "Practical guide to tcpdump, Wireshark, netstat, ss, nmap, curl, openssl, dig, traceroute and how to diagnose every layer of the network stack.",
+    "tags": [
+      "networking",
+      "troubleshooting",
+      "tcpdump",
+      "wireshark",
+      "netstat",
+      "nmap",
+      "curl",
+      "openssl",
+      "dig",
+      "diagnostics"
+    ],
+    "sidebar_position": 16
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Network Security",
+    "permalink": "/technical-knowledge/networking/network-security"
+  },
+  "next": {
+    "title": "Networking Interview Questions — Master List",
+    "permalink": "/technical-knowledge/networking/networking-interview-questions"
+  }
+}

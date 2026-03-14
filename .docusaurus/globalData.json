@@ -270,6 +270,101 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/networking/api-authentication-security",
+              "path": "/technical-knowledge/networking/api-authentication-security",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/networking/application-protocols-reference",
+              "path": "/technical-knowledge/networking/application-protocols-reference",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/networking/cdn-load-balancing",
+              "path": "/technical-knowledge/networking/cdn-load-balancing",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/networking/dns-resolution",
+              "path": "/technical-knowledge/networking/dns-resolution",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/networking/http-https-application-layer",
+              "path": "/technical-knowledge/networking/http-https-application-layer",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/networking/ip-addressing-routing",
+              "path": "/technical-knowledge/networking/ip-addressing-routing",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/networking/network-performance-optimization",
+              "path": "/technical-knowledge/networking/network-performance-optimization",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/networking/network-security",
+              "path": "/technical-knowledge/networking/network-security",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/networking/network-troubleshooting-tools",
+              "path": "/technical-knowledge/networking/network-troubleshooting-tools",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/networking/networking-interview-questions",
+              "path": "/technical-knowledge/networking/networking-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/networking/networking-overview",
+              "path": "/technical-knowledge/networking/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/networking/osi-tcpip-models",
+              "path": "/technical-knowledge/networking/osi-tcpip-models",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/networking/proxies-nat-firewalls",
+              "path": "/technical-knowledge/networking/proxies-nat-firewalls",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/networking/quic-modern-transport",
+              "path": "/technical-knowledge/networking/quic-modern-transport",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/networking/rest-grpc-api-design",
+              "path": "/technical-knowledge/networking/rest-grpc-api-design",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/networking/service-mesh-microservices",
+              "path": "/technical-knowledge/networking/service-mesh-microservices",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/networking/socket-programming-io-models",
+              "path": "/technical-knowledge/networking/socket-programming-io-models",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/networking/tcp-udp-transport-layer",
+              "path": "/technical-knowledge/networking/tcp-udp-transport-layer",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/networking/websockets-realtime",
+              "path": "/technical-knowledge/networking/websockets-realtime",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/operating-systems/cpu-scheduling",
               "path": "/technical-knowledge/operating-systems/cpu-scheduling",
               "sidebar": "tutorialSidebar"

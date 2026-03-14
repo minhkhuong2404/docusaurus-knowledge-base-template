@@ -1,0 +1,74 @@
+{
+  "id": "technical-knowledge/networking/dns-resolution",
+  "title": "DNS Resolution",
+  "description": "How DNS works end-to-end — resolution chain, record types, caching, TTL, DNSSEC, and common DNS patterns.",
+  "source": "@site/docs/technical-knowledge/networking/dns-resolution.md",
+  "sourceDirName": "technical-knowledge/networking",
+  "slug": "/technical-knowledge/networking/dns-resolution",
+  "permalink": "/technical-knowledge/networking/dns-resolution",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "networking",
+      "permalink": "/tags/networking"
+    },
+    {
+      "inline": true,
+      "label": "dns",
+      "permalink": "/tags/dns"
+    },
+    {
+      "inline": true,
+      "label": "resolution",
+      "permalink": "/tags/resolution"
+    },
+    {
+      "inline": true,
+      "label": "records",
+      "permalink": "/tags/records"
+    },
+    {
+      "inline": true,
+      "label": "caching",
+      "permalink": "/tags/caching"
+    },
+    {
+      "inline": true,
+      "label": "dnssec",
+      "permalink": "/tags/dnssec"
+    },
+    {
+      "inline": true,
+      "label": "nameserver",
+      "permalink": "/tags/nameserver"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 6,
+  "frontMatter": {
+    "id": "dns-resolution",
+    "title": "DNS Resolution",
+    "description": "How DNS works end-to-end — resolution chain, record types, caching, TTL, DNSSEC, and common DNS patterns.",
+    "tags": [
+      "networking",
+      "dns",
+      "resolution",
+      "records",
+      "caching",
+      "dnssec",
+      "nameserver"
+    ],
+    "sidebar_position": 6
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "HTTP, HTTPS & Application Layer",
+    "permalink": "/technical-knowledge/networking/http-https-application-layer"
+  },
+  "next": {
+    "title": "WebSockets & Real-Time Communication",
+    "permalink": "/technical-knowledge/networking/websockets-realtime"
+  }
+}

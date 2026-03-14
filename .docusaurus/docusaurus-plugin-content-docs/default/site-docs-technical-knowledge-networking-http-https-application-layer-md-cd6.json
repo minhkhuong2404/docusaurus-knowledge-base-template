@@ -1,0 +1,92 @@
+{
+  "id": "technical-knowledge/networking/http-https-application-layer",
+  "title": "HTTP, HTTPS & Application Layer",
+  "description": "HTTP/1.1, HTTP/2, HTTP/3 evolution, request/response structure, headers, caching, TLS handshake, and HTTPS best practices.",
+  "source": "@site/docs/technical-knowledge/networking/http-https-application-layer.md",
+  "sourceDirName": "technical-knowledge/networking",
+  "slug": "/technical-knowledge/networking/http-https-application-layer",
+  "permalink": "/technical-knowledge/networking/http-https-application-layer",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "networking",
+      "permalink": "/tags/networking"
+    },
+    {
+      "inline": true,
+      "label": "http",
+      "permalink": "/tags/http"
+    },
+    {
+      "inline": true,
+      "label": "https",
+      "permalink": "/tags/https"
+    },
+    {
+      "inline": true,
+      "label": "http2",
+      "permalink": "/tags/http-2"
+    },
+    {
+      "inline": true,
+      "label": "http3",
+      "permalink": "/tags/http-3"
+    },
+    {
+      "inline": true,
+      "label": "tls",
+      "permalink": "/tags/tls"
+    },
+    {
+      "inline": true,
+      "label": "ssl",
+      "permalink": "/tags/ssl"
+    },
+    {
+      "inline": true,
+      "label": "headers",
+      "permalink": "/tags/headers"
+    },
+    {
+      "inline": true,
+      "label": "caching",
+      "permalink": "/tags/caching"
+    },
+    {
+      "inline": true,
+      "label": "quic",
+      "permalink": "/tags/quic"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "id": "http-https-application-layer",
+    "title": "HTTP, HTTPS & Application Layer",
+    "description": "HTTP/1.1, HTTP/2, HTTP/3 evolution, request/response structure, headers, caching, TLS handshake, and HTTPS best practices.",
+    "tags": [
+      "networking",
+      "http",
+      "https",
+      "http2",
+      "http3",
+      "tls",
+      "ssl",
+      "headers",
+      "caching",
+      "quic"
+    ],
+    "sidebar_position": 5
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "QUIC & Modern Transport Protocols",
+    "permalink": "/technical-knowledge/networking/quic-modern-transport"
+  },
+  "next": {
+    "title": "DNS Resolution",
+    "permalink": "/technical-knowledge/networking/dns-resolution"
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "id": "technical-knowledge/networking/network-performance-optimization",
+  "title": "Network Performance & Optimization",
+  "description": "Latency, bandwidth, throughput, connection pooling, keep-alive, HTTP/2 multiplexing, QUIC, compression, and practical tuning techniques.",
+  "source": "@site/docs/technical-knowledge/networking/network-performance-optimization.md",
+  "sourceDirName": "technical-knowledge/networking",
+  "slug": "/technical-knowledge/networking/network-performance-optimization",
+  "permalink": "/technical-knowledge/networking/network-performance-optimization",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "networking",
+      "permalink": "/tags/networking"
+    },
+    {
+      "inline": true,
+      "label": "performance",
+      "permalink": "/tags/performance"
+    },
+    {
+      "inline": true,
+      "label": "latency",
+      "permalink": "/tags/latency"
+    },
+    {
+      "inline": true,
+      "label": "bandwidth",
+      "permalink": "/tags/bandwidth"
+    },
+    {
+      "inline": true,
+      "label": "quic",
+      "permalink": "/tags/quic"
+    },
+    {
+      "inline": true,
+      "label": "http2",
+      "permalink": "/tags/http-2"
+    },
+    {
+      "inline": true,
+      "label": "compression",
+      "permalink": "/tags/compression"
+    },
+    {
+      "inline": true,
+      "label": "keep-alive",
+      "permalink": "/tags/keep-alive"
+    },
+    {
+      "inline": true,
+      "label": "optimization",
+      "permalink": "/tags/optimization"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 13,
+  "frontMatter": {
+    "id": "network-performance-optimization",
+    "title": "Network Performance & Optimization",
+    "description": "Latency, bandwidth, throughput, connection pooling, keep-alive, HTTP/2 multiplexing, QUIC, compression, and practical tuning techniques.",
+    "tags": [
+      "networking",
+      "performance",
+      "latency",
+      "bandwidth",
+      "quic",
+      "http2",
+      "compression",
+      "keep-alive",
+      "optimization"
+    ],
+    "sidebar_position": 13
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Service Mesh & Microservices Networking",
+    "permalink": "/technical-knowledge/networking/service-mesh-microservices"
+  },
+  "next": {
+    "title": "Network Security",
+    "permalink": "/technical-knowledge/networking/network-security"
+  }
+}

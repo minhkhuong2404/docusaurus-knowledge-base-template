@@ -1,0 +1,80 @@
+{
+  "id": "technical-knowledge/networking/cdn-load-balancing",
+  "title": "CDN & Load Balancing",
+  "description": "Content Delivery Networks, edge caching, load balancing algorithms, health checks, session persistence, and global traffic management.",
+  "source": "@site/docs/technical-knowledge/networking/cdn-load-balancing.md",
+  "sourceDirName": "technical-knowledge/networking",
+  "slug": "/technical-knowledge/networking/cdn-load-balancing",
+  "permalink": "/technical-knowledge/networking/cdn-load-balancing",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "networking",
+      "permalink": "/tags/networking"
+    },
+    {
+      "inline": true,
+      "label": "cdn",
+      "permalink": "/tags/cdn"
+    },
+    {
+      "inline": true,
+      "label": "load-balancing",
+      "permalink": "/tags/load-balancing"
+    },
+    {
+      "inline": true,
+      "label": "reverse-proxy",
+      "permalink": "/tags/reverse-proxy"
+    },
+    {
+      "inline": true,
+      "label": "anycast",
+      "permalink": "/tags/anycast"
+    },
+    {
+      "inline": true,
+      "label": "health-check",
+      "permalink": "/tags/health-check"
+    },
+    {
+      "inline": true,
+      "label": "nginx",
+      "permalink": "/tags/nginx"
+    },
+    {
+      "inline": true,
+      "label": "algorithms",
+      "permalink": "/tags/algorithms"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 7,
+  "frontMatter": {
+    "id": "cdn-load-balancing",
+    "title": "CDN & Load Balancing",
+    "description": "Content Delivery Networks, edge caching, load balancing algorithms, health checks, session persistence, and global traffic management.",
+    "tags": [
+      "networking",
+      "cdn",
+      "load-balancing",
+      "reverse-proxy",
+      "anycast",
+      "health-check",
+      "nginx",
+      "algorithms"
+    ],
+    "sidebar_position": 7
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Application Protocols Reference",
+    "permalink": "/technical-knowledge/networking/application-protocols-reference"
+  },
+  "next": {
+    "title": "Proxies, NAT & Firewalls",
+    "permalink": "/technical-knowledge/networking/proxies-nat-firewalls"
+  }
+}
