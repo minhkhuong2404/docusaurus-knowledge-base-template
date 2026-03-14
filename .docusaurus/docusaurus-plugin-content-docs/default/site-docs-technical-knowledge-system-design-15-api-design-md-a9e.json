@@ -1,0 +1,86 @@
+{
+  "id": "technical-knowledge/system-design/api-design",
+  "title": "API Design",
+  "description": "Best practices for designing REST, gRPC, and GraphQL APIs including versioning, pagination, error handling, rate limiting, idempotency, and API gateway patterns.",
+  "source": "@site/docs/technical-knowledge/system-design/15-api-design.md",
+  "sourceDirName": "technical-knowledge/system-design",
+  "slug": "/technical-knowledge/system-design/api-design",
+  "permalink": "/technical-knowledge/system-design/api-design",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "api",
+      "permalink": "/tags/api"
+    },
+    {
+      "inline": true,
+      "label": "rest",
+      "permalink": "/tags/rest"
+    },
+    {
+      "inline": true,
+      "label": "grpc",
+      "permalink": "/tags/grpc"
+    },
+    {
+      "inline": true,
+      "label": "graphql",
+      "permalink": "/tags/graphql"
+    },
+    {
+      "inline": true,
+      "label": "versioning",
+      "permalink": "/tags/versioning"
+    },
+    {
+      "inline": true,
+      "label": "pagination",
+      "permalink": "/tags/pagination"
+    },
+    {
+      "inline": true,
+      "label": "rate-limiting",
+      "permalink": "/tags/rate-limiting"
+    },
+    {
+      "inline": true,
+      "label": "idempotency",
+      "permalink": "/tags/idempotency"
+    },
+    {
+      "inline": true,
+      "label": "openapi",
+      "permalink": "/tags/openapi"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 15,
+  "frontMatter": {
+    "id": "api-design",
+    "title": "API Design",
+    "sidebar_label": "API Design",
+    "description": "Best practices for designing REST, gRPC, and GraphQL APIs including versioning, pagination, error handling, rate limiting, idempotency, and API gateway patterns.",
+    "tags": [
+      "api",
+      "rest",
+      "grpc",
+      "graphql",
+      "versioning",
+      "pagination",
+      "rate-limiting",
+      "idempotency",
+      "openapi"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Microservices Patterns",
+    "permalink": "/technical-knowledge/system-design/microservices-patterns"
+  },
+  "next": {
+    "title": "Database Design",
+    "permalink": "/technical-knowledge/system-design/database-design"
+  }
+}

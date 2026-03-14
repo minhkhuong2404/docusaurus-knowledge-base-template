@@ -1,0 +1,80 @@
+{
+  "id": "technical-knowledge/system-design/scaling-writes",
+  "title": "Scaling Writes",
+  "description": "Techniques for handling high write throughput including sharding, partitioning, write-ahead logging, append-only patterns, batching, and async write pipelines.",
+  "source": "@site/docs/technical-knowledge/system-design/05-scaling-writes.md",
+  "sourceDirName": "technical-knowledge/system-design",
+  "slug": "/technical-knowledge/system-design/scaling-writes",
+  "permalink": "/technical-knowledge/system-design/scaling-writes",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "scaling",
+      "permalink": "/tags/scaling"
+    },
+    {
+      "inline": true,
+      "label": "writes",
+      "permalink": "/tags/writes"
+    },
+    {
+      "inline": true,
+      "label": "sharding",
+      "permalink": "/tags/sharding"
+    },
+    {
+      "inline": true,
+      "label": "partitioning",
+      "permalink": "/tags/partitioning"
+    },
+    {
+      "inline": true,
+      "label": "kafka",
+      "permalink": "/tags/kafka"
+    },
+    {
+      "inline": true,
+      "label": "wal",
+      "permalink": "/tags/wal"
+    },
+    {
+      "inline": true,
+      "label": "async",
+      "permalink": "/tags/async"
+    },
+    {
+      "inline": true,
+      "label": "performance",
+      "permalink": "/tags/performance"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "id": "scaling-writes",
+    "title": "Scaling Writes",
+    "sidebar_label": "Scaling Writes",
+    "description": "Techniques for handling high write throughput including sharding, partitioning, write-ahead logging, append-only patterns, batching, and async write pipelines.",
+    "tags": [
+      "scaling",
+      "writes",
+      "sharding",
+      "partitioning",
+      "kafka",
+      "wal",
+      "async",
+      "performance"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Scaling Reads",
+    "permalink": "/technical-knowledge/system-design/scaling-reads"
+  },
+  "next": {
+    "title": "Caching Strategies",
+    "permalink": "/technical-knowledge/system-design/caching-strategies"
+  }
+}

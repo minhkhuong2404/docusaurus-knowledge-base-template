@@ -1,0 +1,68 @@
+{
+  "id": "technical-knowledge/system-design/capacity-planning",
+  "title": "Capacity Planning & Estimation",
+  "description": "Back-of-envelope estimation techniques for traffic, storage, bandwidth, and memory. Essential for system design interviews and production capacity planning.",
+  "source": "@site/docs/technical-knowledge/system-design/02-capacity-planning.md",
+  "sourceDirName": "technical-knowledge/system-design",
+  "slug": "/technical-knowledge/system-design/capacity-planning",
+  "permalink": "/technical-knowledge/system-design/capacity-planning",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "capacity-planning",
+      "permalink": "/tags/capacity-planning"
+    },
+    {
+      "inline": true,
+      "label": "estimation",
+      "permalink": "/tags/estimation"
+    },
+    {
+      "inline": true,
+      "label": "back-of-envelope",
+      "permalink": "/tags/back-of-envelope"
+    },
+    {
+      "inline": true,
+      "label": "qps",
+      "permalink": "/tags/qps"
+    },
+    {
+      "inline": true,
+      "label": "storage",
+      "permalink": "/tags/storage"
+    },
+    {
+      "inline": true,
+      "label": "interview-prep",
+      "permalink": "/tags/interview-prep"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "capacity-planning",
+    "title": "Capacity Planning & Estimation",
+    "sidebar_label": "Capacity Planning",
+    "description": "Back-of-envelope estimation techniques for traffic, storage, bandwidth, and memory. Essential for system design interviews and production capacity planning.",
+    "tags": [
+      "capacity-planning",
+      "estimation",
+      "back-of-envelope",
+      "qps",
+      "storage",
+      "interview-prep"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Architecture Fundamentals",
+    "permalink": "/technical-knowledge/system-design/architecture-fundamentals"
+  },
+  "next": {
+    "title": "Interview Framework",
+    "permalink": "/technical-knowledge/system-design/interview-framework"
+  }
+}

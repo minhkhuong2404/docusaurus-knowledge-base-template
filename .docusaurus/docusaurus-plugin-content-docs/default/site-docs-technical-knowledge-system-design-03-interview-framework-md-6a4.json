@@ -1,0 +1,62 @@
+{
+  "id": "technical-knowledge/system-design/interview-framework",
+  "title": "System Design Interview Framework",
+  "description": "A structured, step-by-step framework for approaching any system design interview question. Covers requirements gathering, estimation, high-level design, deep dives, and common pitfalls.",
+  "source": "@site/docs/technical-knowledge/system-design/03-interview-framework.md",
+  "sourceDirName": "technical-knowledge/system-design",
+  "slug": "/technical-knowledge/system-design/interview-framework",
+  "permalink": "/technical-knowledge/system-design/interview-framework",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "interview-prep",
+      "permalink": "/tags/interview-prep"
+    },
+    {
+      "inline": true,
+      "label": "framework",
+      "permalink": "/tags/framework"
+    },
+    {
+      "inline": true,
+      "label": "system-design",
+      "permalink": "/tags/system-design"
+    },
+    {
+      "inline": true,
+      "label": "process",
+      "permalink": "/tags/process"
+    },
+    {
+      "inline": true,
+      "label": "communication",
+      "permalink": "/tags/communication"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "id": "interview-framework",
+    "title": "System Design Interview Framework",
+    "sidebar_label": "Interview Framework",
+    "description": "A structured, step-by-step framework for approaching any system design interview question. Covers requirements gathering, estimation, high-level design, deep dives, and common pitfalls.",
+    "tags": [
+      "interview-prep",
+      "framework",
+      "system-design",
+      "process",
+      "communication"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Capacity Planning",
+    "permalink": "/technical-knowledge/system-design/capacity-planning"
+  },
+  "next": {
+    "title": "Scaling Reads",
+    "permalink": "/technical-knowledge/system-design/scaling-reads"
+  }
+}

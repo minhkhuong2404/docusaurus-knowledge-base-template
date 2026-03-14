@@ -1,0 +1,80 @@
+{
+  "id": "technical-knowledge/system-design/database-design",
+  "title": "Database Design",
+  "description": "Comprehensive database design patterns including normalization, indexing strategies, partitioning, replication, query optimization, and choosing between SQL and NoSQL solutions.",
+  "source": "@site/docs/technical-knowledge/system-design/12-database-design.md",
+  "sourceDirName": "technical-knowledge/system-design",
+  "slug": "/technical-knowledge/system-design/database-design",
+  "permalink": "/technical-knowledge/system-design/database-design",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "database",
+      "permalink": "/tags/database"
+    },
+    {
+      "inline": true,
+      "label": "sql",
+      "permalink": "/tags/sql"
+    },
+    {
+      "inline": true,
+      "label": "nosql",
+      "permalink": "/tags/nosql"
+    },
+    {
+      "inline": true,
+      "label": "indexing",
+      "permalink": "/tags/indexing"
+    },
+    {
+      "inline": true,
+      "label": "partitioning",
+      "permalink": "/tags/partitioning"
+    },
+    {
+      "inline": true,
+      "label": "replication",
+      "permalink": "/tags/replication"
+    },
+    {
+      "inline": true,
+      "label": "schema-design",
+      "permalink": "/tags/schema-design"
+    },
+    {
+      "inline": true,
+      "label": "query-optimization",
+      "permalink": "/tags/query-optimization"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 12,
+  "frontMatter": {
+    "id": "database-design",
+    "title": "Database Design",
+    "sidebar_label": "Database Design",
+    "description": "Comprehensive database design patterns including normalization, indexing strategies, partitioning, replication, query optimization, and choosing between SQL and NoSQL solutions.",
+    "tags": [
+      "database",
+      "sql",
+      "nosql",
+      "indexing",
+      "partitioning",
+      "replication",
+      "schema-design",
+      "query-optimization"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "API Design",
+    "permalink": "/technical-knowledge/system-design/api-design"
+  },
+  "next": {
+    "title": "Message Queues & Streaming",
+    "permalink": "/technical-knowledge/system-design/message-queues"
+  }
+}

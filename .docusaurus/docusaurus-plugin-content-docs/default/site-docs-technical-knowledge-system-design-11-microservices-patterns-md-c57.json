@@ -1,0 +1,74 @@
+{
+  "id": "technical-knowledge/system-design/microservices-patterns",
+  "title": "Microservices Design Patterns",
+  "description": "Comprehensive guide to microservices design patterns including API Gateway, Circuit Breaker, Service Mesh, Sidecar, Strangler Fig, Bulkhead, and service discovery in Spring Cloud.",
+  "source": "@site/docs/technical-knowledge/system-design/11-microservices-patterns.md",
+  "sourceDirName": "technical-knowledge/system-design",
+  "slug": "/technical-knowledge/system-design/microservices-patterns",
+  "permalink": "/technical-knowledge/system-design/microservices-patterns",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "microservices",
+      "permalink": "/tags/microservices"
+    },
+    {
+      "inline": true,
+      "label": "api-gateway",
+      "permalink": "/tags/api-gateway"
+    },
+    {
+      "inline": true,
+      "label": "circuit-breaker",
+      "permalink": "/tags/circuit-breaker"
+    },
+    {
+      "inline": true,
+      "label": "service-mesh",
+      "permalink": "/tags/service-mesh"
+    },
+    {
+      "inline": true,
+      "label": "spring-cloud",
+      "permalink": "/tags/spring-cloud"
+    },
+    {
+      "inline": true,
+      "label": "kubernetes",
+      "permalink": "/tags/kubernetes"
+    },
+    {
+      "inline": true,
+      "label": "resilience",
+      "permalink": "/tags/resilience"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 11,
+  "frontMatter": {
+    "id": "microservices-patterns",
+    "title": "Microservices Design Patterns",
+    "sidebar_label": "Microservices Patterns",
+    "description": "Comprehensive guide to microservices design patterns including API Gateway, Circuit Breaker, Service Mesh, Sidecar, Strangler Fig, Bulkhead, and service discovery in Spring Cloud.",
+    "tags": [
+      "microservices",
+      "api-gateway",
+      "circuit-breaker",
+      "service-mesh",
+      "spring-cloud",
+      "kubernetes",
+      "resilience"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Data Consistency",
+    "permalink": "/technical-knowledge/system-design/data-consistency"
+  },
+  "next": {
+    "title": "API Design",
+    "permalink": "/technical-knowledge/system-design/api-design"
+  }
+}

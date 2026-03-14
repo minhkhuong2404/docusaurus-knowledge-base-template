@@ -128,6 +128,82 @@ const sidebars: SidebarsConfig = {
 			]
 		},
 		{
+			type: 'doc',
+			id: 'technical-knowledge/system-design/intro',
+			label: '📖 Overview',
+		},
+		{
+			type: 'category',
+			label: '🏗️ Fundamentals',
+			collapsed: false,
+			items: [
+				'technical-knowledge/system-design/architecture-fundamentals',
+				'technical-knowledge/system-design/capacity-planning',
+				'technical-knowledge/system-design/interview-framework',
+			],
+		},
+		{
+			type: 'category',
+			label: '⚡ Scaling Patterns',
+			collapsed: false,
+			items: [
+				'technical-knowledge/system-design/scaling-reads',
+				'technical-knowledge/system-design/scaling-writes',
+				'technical-knowledge/system-design/caching-strategies',
+			],
+		},
+		{
+			type: 'category',
+			label: '🔄 Distributed Patterns',
+			collapsed: false,
+			items: [
+				'technical-knowledge/system-design/real-time-updates',
+				'technical-knowledge/system-design/handling-contention',
+				'technical-knowledge/system-design/multi-step-process',
+				'technical-knowledge/system-design/long-running-tasks',
+				'technical-knowledge/system-design/data-consistency',
+			],
+		},
+		{
+			type: 'category',
+			label: '🧩 Architecture',
+			collapsed: false,
+			items: [
+				'technical-knowledge/system-design/microservices-patterns',
+				'technical-knowledge/system-design/api-design',
+				'technical-knowledge/system-design/database-design',
+				'technical-knowledge/system-design/message-queues',
+				'technical-knowledge/system-design/search-systems',
+			],
+		},
+		{
+			type: 'category',
+			label: '🗄️ Storage',
+			collapsed: false,
+			items: [
+				'technical-knowledge/system-design/large-blobs',
+			],
+		},
+		{
+			type: 'category',
+			label: '🔒 Security & Reliability',
+			collapsed: false,
+			items: [
+				'technical-knowledge/system-design/security-patterns',
+				'technical-knowledge/system-design/load-balancing-reliability',
+				'technical-knowledge/system-design/observability',
+				'technical-knowledge/system-design/distributed-systems',
+			],
+		},
+		{
+			type: 'category',
+			label: '🎯 Interview Prep',
+			collapsed: false,
+			items: [
+				'technical-knowledge/system-design/common-interview-questions',
+			],
+		},
+		{
 			type: 'category',
 			label: '📨 Kafka',
 			items: [

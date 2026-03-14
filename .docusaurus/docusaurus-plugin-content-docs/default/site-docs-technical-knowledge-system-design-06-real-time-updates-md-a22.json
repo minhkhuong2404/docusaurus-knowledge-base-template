@@ -1,0 +1,74 @@
+{
+  "id": "technical-knowledge/system-design/real-time-updates",
+  "title": "Real-Time Updates",
+  "description": "Patterns for delivering real-time data to clients including WebSockets, Server-Sent Events, long polling, short polling, and push notification architectures.",
+  "source": "@site/docs/technical-knowledge/system-design/06-real-time-updates.md",
+  "sourceDirName": "technical-knowledge/system-design",
+  "slug": "/technical-knowledge/system-design/real-time-updates",
+  "permalink": "/technical-knowledge/system-design/real-time-updates",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "real-time",
+      "permalink": "/tags/real-time"
+    },
+    {
+      "inline": true,
+      "label": "websocket",
+      "permalink": "/tags/websocket"
+    },
+    {
+      "inline": true,
+      "label": "sse",
+      "permalink": "/tags/sse"
+    },
+    {
+      "inline": true,
+      "label": "long-polling",
+      "permalink": "/tags/long-polling"
+    },
+    {
+      "inline": true,
+      "label": "push-notifications",
+      "permalink": "/tags/push-notifications"
+    },
+    {
+      "inline": true,
+      "label": "kafka",
+      "permalink": "/tags/kafka"
+    },
+    {
+      "inline": true,
+      "label": "streaming",
+      "permalink": "/tags/streaming"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 6,
+  "frontMatter": {
+    "id": "real-time-updates",
+    "title": "Real-Time Updates",
+    "sidebar_label": "Real-Time Updates",
+    "description": "Patterns for delivering real-time data to clients including WebSockets, Server-Sent Events, long polling, short polling, and push notification architectures.",
+    "tags": [
+      "real-time",
+      "websocket",
+      "sse",
+      "long-polling",
+      "push-notifications",
+      "kafka",
+      "streaming"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Caching Strategies",
+    "permalink": "/technical-knowledge/system-design/caching-strategies"
+  },
+  "next": {
+    "title": "Handling Contention",
+    "permalink": "/technical-knowledge/system-design/handling-contention"
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "id": "technical-knowledge/system-design/security-patterns",
+  "title": "Security Patterns",
+  "description": "Security design patterns for distributed systems including authentication, authorization, JWT, OAuth 2.0, rate limiting, zero trust, secrets management, and OWASP top threats.",
+  "source": "@site/docs/technical-knowledge/system-design/17-security-patterns.md",
+  "sourceDirName": "technical-knowledge/system-design",
+  "slug": "/technical-knowledge/system-design/security-patterns",
+  "permalink": "/technical-knowledge/system-design/security-patterns",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "security",
+      "permalink": "/tags/security"
+    },
+    {
+      "inline": true,
+      "label": "authentication",
+      "permalink": "/tags/authentication"
+    },
+    {
+      "inline": true,
+      "label": "authorization",
+      "permalink": "/tags/authorization"
+    },
+    {
+      "inline": true,
+      "label": "jwt",
+      "permalink": "/tags/jwt"
+    },
+    {
+      "inline": true,
+      "label": "oauth2",
+      "permalink": "/tags/oauth-2"
+    },
+    {
+      "inline": true,
+      "label": "rate-limiting",
+      "permalink": "/tags/rate-limiting"
+    },
+    {
+      "inline": true,
+      "label": "zero-trust",
+      "permalink": "/tags/zero-trust"
+    },
+    {
+      "inline": true,
+      "label": "secrets",
+      "permalink": "/tags/secrets"
+    },
+    {
+      "inline": true,
+      "label": "owasp",
+      "permalink": "/tags/owasp"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 17,
+  "frontMatter": {
+    "id": "security-patterns",
+    "title": "Security Patterns",
+    "sidebar_label": "Security Patterns",
+    "description": "Security design patterns for distributed systems including authentication, authorization, JWT, OAuth 2.0, rate limiting, zero trust, secrets management, and OWASP top threats.",
+    "tags": [
+      "security",
+      "authentication",
+      "authorization",
+      "jwt",
+      "oauth2",
+      "rate-limiting",
+      "zero-trust",
+      "secrets",
+      "owasp"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Large Blob Storage",
+    "permalink": "/technical-knowledge/system-design/large-blobs"
+  },
+  "next": {
+    "title": "Load Balancing & Reliability",
+    "permalink": "/technical-knowledge/system-design/load-balancing-reliability"
+  }
+}

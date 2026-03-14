@@ -45,8 +45,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Template Method Pattern",
-    "permalink": "/technical-knowledge/design-patterns/template-method"
+    "title": "Interview Questions",
+    "permalink": "/technical-knowledge/system-design/common-interview-questions"
   },
   "next": {
     "title": "Kafka Connect",

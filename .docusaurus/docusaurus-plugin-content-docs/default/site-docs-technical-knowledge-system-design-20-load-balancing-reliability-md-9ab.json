@@ -1,0 +1,74 @@
+{
+  "id": "technical-knowledge/system-design/load-balancing-reliability",
+  "title": "Load Balancing & Service Reliability",
+  "description": "Load balancing algorithms, health checks, failover strategies, chaos engineering, disaster recovery, and SRE practices for building reliable distributed services.",
+  "source": "@site/docs/technical-knowledge/system-design/20-load-balancing-reliability.md",
+  "sourceDirName": "technical-knowledge/system-design",
+  "slug": "/technical-knowledge/system-design/load-balancing-reliability",
+  "permalink": "/technical-knowledge/system-design/load-balancing-reliability",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "load-balancing",
+      "permalink": "/tags/load-balancing"
+    },
+    {
+      "inline": true,
+      "label": "reliability",
+      "permalink": "/tags/reliability"
+    },
+    {
+      "inline": true,
+      "label": "failover",
+      "permalink": "/tags/failover"
+    },
+    {
+      "inline": true,
+      "label": "chaos-engineering",
+      "permalink": "/tags/chaos-engineering"
+    },
+    {
+      "inline": true,
+      "label": "disaster-recovery",
+      "permalink": "/tags/disaster-recovery"
+    },
+    {
+      "inline": true,
+      "label": "sre",
+      "permalink": "/tags/sre"
+    },
+    {
+      "inline": true,
+      "label": "high-availability",
+      "permalink": "/tags/high-availability"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 20,
+  "frontMatter": {
+    "id": "load-balancing-reliability",
+    "title": "Load Balancing & Service Reliability",
+    "sidebar_label": "Load Balancing & Reliability",
+    "description": "Load balancing algorithms, health checks, failover strategies, chaos engineering, disaster recovery, and SRE practices for building reliable distributed services.",
+    "tags": [
+      "load-balancing",
+      "reliability",
+      "failover",
+      "chaos-engineering",
+      "disaster-recovery",
+      "sre",
+      "high-availability"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Security Patterns",
+    "permalink": "/technical-knowledge/system-design/security-patterns"
+  },
+  "next": {
+    "title": "Observability & Monitoring",
+    "permalink": "/technical-knowledge/system-design/observability"
+  }
+}

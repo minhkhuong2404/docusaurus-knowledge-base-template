@@ -1,0 +1,62 @@
+{
+  "id": "technical-knowledge/system-design/common-interview-questions",
+  "title": "Common System Design Interview Questions",
+  "description": "A comprehensive question bank for system design interviews covering classic system design problems, behavioral questions, and discussion frameworks for FAANG-level interviews.",
+  "source": "@site/docs/technical-knowledge/system-design/18-common-interview-questions.md",
+  "sourceDirName": "technical-knowledge/system-design",
+  "slug": "/technical-knowledge/system-design/common-interview-questions",
+  "permalink": "/technical-knowledge/system-design/common-interview-questions",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "interview-prep",
+      "permalink": "/tags/interview-prep"
+    },
+    {
+      "inline": true,
+      "label": "questions",
+      "permalink": "/tags/questions"
+    },
+    {
+      "inline": true,
+      "label": "system-design",
+      "permalink": "/tags/system-design"
+    },
+    {
+      "inline": true,
+      "label": "faang",
+      "permalink": "/tags/faang"
+    },
+    {
+      "inline": true,
+      "label": "practice",
+      "permalink": "/tags/practice"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 18,
+  "frontMatter": {
+    "id": "common-interview-questions",
+    "title": "Common System Design Interview Questions",
+    "sidebar_label": "Interview Questions",
+    "description": "A comprehensive question bank for system design interviews covering classic system design problems, behavioral questions, and discussion frameworks for FAANG-level interviews.",
+    "tags": [
+      "interview-prep",
+      "questions",
+      "system-design",
+      "faang",
+      "practice"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Distributed Systems",
+    "permalink": "/technical-knowledge/system-design/distributed-systems"
+  },
+  "next": {
+    "title": "Kafka: The Complete Guide",
+    "permalink": "/technical-knowledge/kafka/kafka-complete-guide"
+  }
+}

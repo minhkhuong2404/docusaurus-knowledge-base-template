@@ -49,7 +49,7 @@
     "permalink": "/technical-knowledge/design-patterns/command"
   },
   "next": {
-    "title": "Kafka: The Complete Guide",
-    "permalink": "/technical-knowledge/kafka/kafka-complete-guide"
+    "title": "Overview",
+    "permalink": "/system-design"
   }
 }

@@ -1,0 +1,74 @@
+{
+  "id": "technical-knowledge/system-design/handling-contention",
+  "title": "Handling Contention",
+  "description": "Strategies for dealing with race conditions, concurrent writes, hot spots, and lock contention in distributed systems including optimistic locking, MVCC, distributed locks, and queue-based serialization.",
+  "source": "@site/docs/technical-knowledge/system-design/07-handling-contention.md",
+  "sourceDirName": "technical-knowledge/system-design",
+  "slug": "/technical-knowledge/system-design/handling-contention",
+  "permalink": "/technical-knowledge/system-design/handling-contention",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "contention",
+      "permalink": "/tags/contention"
+    },
+    {
+      "inline": true,
+      "label": "locking",
+      "permalink": "/tags/locking"
+    },
+    {
+      "inline": true,
+      "label": "mvcc",
+      "permalink": "/tags/mvcc"
+    },
+    {
+      "inline": true,
+      "label": "optimistic-locking",
+      "permalink": "/tags/optimistic-locking"
+    },
+    {
+      "inline": true,
+      "label": "distributed-lock",
+      "permalink": "/tags/distributed-lock"
+    },
+    {
+      "inline": true,
+      "label": "race-condition",
+      "permalink": "/tags/race-condition"
+    },
+    {
+      "inline": true,
+      "label": "concurrency",
+      "permalink": "/tags/concurrency"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 7,
+  "frontMatter": {
+    "id": "handling-contention",
+    "title": "Handling Contention",
+    "sidebar_label": "Handling Contention",
+    "description": "Strategies for dealing with race conditions, concurrent writes, hot spots, and lock contention in distributed systems including optimistic locking, MVCC, distributed locks, and queue-based serialization.",
+    "tags": [
+      "contention",
+      "locking",
+      "mvcc",
+      "optimistic-locking",
+      "distributed-lock",
+      "race-condition",
+      "concurrency"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Real-Time Updates",
+    "permalink": "/technical-knowledge/system-design/real-time-updates"
+  },
+  "next": {
+    "title": "Multi-Step Processes",
+    "permalink": "/technical-knowledge/system-design/multi-step-process"
+  }
+}

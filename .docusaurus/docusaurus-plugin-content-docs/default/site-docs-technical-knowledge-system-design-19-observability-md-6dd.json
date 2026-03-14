@@ -1,0 +1,92 @@
+{
+  "id": "technical-knowledge/system-design/observability",
+  "title": "Observability & Monitoring",
+  "description": "Comprehensive guide to observability in distributed systems covering the three pillars (metrics, logs, traces), SLOs, alerting strategies, and Spring Boot Actuator + Micrometer setup.",
+  "source": "@site/docs/technical-knowledge/system-design/19-observability.md",
+  "sourceDirName": "technical-knowledge/system-design",
+  "slug": "/technical-knowledge/system-design/observability",
+  "permalink": "/technical-knowledge/system-design/observability",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "observability",
+      "permalink": "/tags/observability"
+    },
+    {
+      "inline": true,
+      "label": "monitoring",
+      "permalink": "/tags/monitoring"
+    },
+    {
+      "inline": true,
+      "label": "metrics",
+      "permalink": "/tags/metrics"
+    },
+    {
+      "inline": true,
+      "label": "logging",
+      "permalink": "/tags/logging"
+    },
+    {
+      "inline": true,
+      "label": "tracing",
+      "permalink": "/tags/tracing"
+    },
+    {
+      "inline": true,
+      "label": "slo",
+      "permalink": "/tags/slo"
+    },
+    {
+      "inline": true,
+      "label": "sla",
+      "permalink": "/tags/sla"
+    },
+    {
+      "inline": true,
+      "label": "prometheus",
+      "permalink": "/tags/prometheus"
+    },
+    {
+      "inline": true,
+      "label": "grafana",
+      "permalink": "/tags/grafana"
+    },
+    {
+      "inline": true,
+      "label": "jaeger",
+      "permalink": "/tags/jaeger"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 19,
+  "frontMatter": {
+    "id": "observability",
+    "title": "Observability & Monitoring",
+    "sidebar_label": "Observability & Monitoring",
+    "description": "Comprehensive guide to observability in distributed systems covering the three pillars (metrics, logs, traces), SLOs, alerting strategies, and Spring Boot Actuator + Micrometer setup.",
+    "tags": [
+      "observability",
+      "monitoring",
+      "metrics",
+      "logging",
+      "tracing",
+      "slo",
+      "sla",
+      "prometheus",
+      "grafana",
+      "jaeger"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Load Balancing & Reliability",
+    "permalink": "/technical-knowledge/system-design/load-balancing-reliability"
+  },
+  "next": {
+    "title": "Distributed Systems",
+    "permalink": "/technical-knowledge/system-design/distributed-systems"
+  }
+}

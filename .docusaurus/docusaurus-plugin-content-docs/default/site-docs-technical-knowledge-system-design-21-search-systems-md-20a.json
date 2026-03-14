@@ -1,0 +1,74 @@
+{
+  "id": "technical-knowledge/system-design/search-systems",
+  "title": "Search Systems",
+  "description": "Design patterns for full-text search, autocomplete, faceted search, and search-as-you-type using Elasticsearch, inverted indexes, and Spring Data Elasticsearch.",
+  "source": "@site/docs/technical-knowledge/system-design/21-search-systems.md",
+  "sourceDirName": "technical-knowledge/system-design",
+  "slug": "/technical-knowledge/system-design/search-systems",
+  "permalink": "/technical-knowledge/system-design/search-systems",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "search",
+      "permalink": "/tags/search"
+    },
+    {
+      "inline": true,
+      "label": "elasticsearch",
+      "permalink": "/tags/elasticsearch"
+    },
+    {
+      "inline": true,
+      "label": "full-text-search",
+      "permalink": "/tags/full-text-search"
+    },
+    {
+      "inline": true,
+      "label": "autocomplete",
+      "permalink": "/tags/autocomplete"
+    },
+    {
+      "inline": true,
+      "label": "inverted-index",
+      "permalink": "/tags/inverted-index"
+    },
+    {
+      "inline": true,
+      "label": "relevance",
+      "permalink": "/tags/relevance"
+    },
+    {
+      "inline": true,
+      "label": "faceted-search",
+      "permalink": "/tags/faceted-search"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 21,
+  "frontMatter": {
+    "id": "search-systems",
+    "title": "Search Systems",
+    "sidebar_label": "Search Systems",
+    "description": "Design patterns for full-text search, autocomplete, faceted search, and search-as-you-type using Elasticsearch, inverted indexes, and Spring Data Elasticsearch.",
+    "tags": [
+      "search",
+      "elasticsearch",
+      "full-text-search",
+      "autocomplete",
+      "inverted-index",
+      "relevance",
+      "faceted-search"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Message Queues & Streaming",
+    "permalink": "/technical-knowledge/system-design/message-queues"
+  },
+  "next": {
+    "title": "Large Blob Storage",
+    "permalink": "/technical-knowledge/system-design/large-blobs"
+  }
+}

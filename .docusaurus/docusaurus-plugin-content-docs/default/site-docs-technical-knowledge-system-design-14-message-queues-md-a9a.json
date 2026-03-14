@@ -1,0 +1,80 @@
+{
+  "id": "technical-knowledge/system-design/message-queues",
+  "title": "Message Queues & Streaming",
+  "description": "Guide to asynchronous messaging systems including Kafka, RabbitMQ, SQS, event sourcing, pub/sub patterns, consumer groups, ordering guarantees, and exactly-once semantics.",
+  "source": "@site/docs/technical-knowledge/system-design/14-message-queues.md",
+  "sourceDirName": "technical-knowledge/system-design",
+  "slug": "/technical-knowledge/system-design/message-queues",
+  "permalink": "/technical-knowledge/system-design/message-queues",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "kafka",
+      "permalink": "/tags/kafka"
+    },
+    {
+      "inline": true,
+      "label": "rabbitmq",
+      "permalink": "/tags/rabbitmq"
+    },
+    {
+      "inline": true,
+      "label": "sqs",
+      "permalink": "/tags/sqs"
+    },
+    {
+      "inline": true,
+      "label": "messaging",
+      "permalink": "/tags/messaging"
+    },
+    {
+      "inline": true,
+      "label": "event-driven",
+      "permalink": "/tags/event-driven"
+    },
+    {
+      "inline": true,
+      "label": "pub-sub",
+      "permalink": "/tags/pub-sub"
+    },
+    {
+      "inline": true,
+      "label": "streaming",
+      "permalink": "/tags/streaming"
+    },
+    {
+      "inline": true,
+      "label": "event-sourcing",
+      "permalink": "/tags/event-sourcing"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 14,
+  "frontMatter": {
+    "id": "message-queues",
+    "title": "Message Queues & Streaming",
+    "sidebar_label": "Message Queues & Streaming",
+    "description": "Guide to asynchronous messaging systems including Kafka, RabbitMQ, SQS, event sourcing, pub/sub patterns, consumer groups, ordering guarantees, and exactly-once semantics.",
+    "tags": [
+      "kafka",
+      "rabbitmq",
+      "sqs",
+      "messaging",
+      "event-driven",
+      "pub-sub",
+      "streaming",
+      "event-sourcing"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Database Design",
+    "permalink": "/technical-knowledge/system-design/database-design"
+  },
+  "next": {
+    "title": "Search Systems",
+    "permalink": "/technical-knowledge/system-design/search-systems"
+  }
+}

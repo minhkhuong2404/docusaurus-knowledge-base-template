@@ -1,0 +1,74 @@
+{
+  "id": "technical-knowledge/system-design/long-running-tasks",
+  "title": "Managing Long-Running Tasks",
+  "description": "Patterns for handling asynchronous long-running operations including job queues, progress tracking, async callbacks, webhooks, polling APIs, and task scheduling.",
+  "source": "@site/docs/technical-knowledge/system-design/10-long-running-tasks.md",
+  "sourceDirName": "technical-knowledge/system-design",
+  "slug": "/technical-knowledge/system-design/long-running-tasks",
+  "permalink": "/technical-knowledge/system-design/long-running-tasks",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "async",
+      "permalink": "/tags/async"
+    },
+    {
+      "inline": true,
+      "label": "job-queue",
+      "permalink": "/tags/job-queue"
+    },
+    {
+      "inline": true,
+      "label": "background-tasks",
+      "permalink": "/tags/background-tasks"
+    },
+    {
+      "inline": true,
+      "label": "polling",
+      "permalink": "/tags/polling"
+    },
+    {
+      "inline": true,
+      "label": "webhooks",
+      "permalink": "/tags/webhooks"
+    },
+    {
+      "inline": true,
+      "label": "progress-tracking",
+      "permalink": "/tags/progress-tracking"
+    },
+    {
+      "inline": true,
+      "label": "scheduling",
+      "permalink": "/tags/scheduling"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 10,
+  "frontMatter": {
+    "id": "long-running-tasks",
+    "title": "Managing Long-Running Tasks",
+    "sidebar_label": "Long-Running Tasks",
+    "description": "Patterns for handling asynchronous long-running operations including job queues, progress tracking, async callbacks, webhooks, polling APIs, and task scheduling.",
+    "tags": [
+      "async",
+      "job-queue",
+      "background-tasks",
+      "polling",
+      "webhooks",
+      "progress-tracking",
+      "scheduling"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Multi-Step Processes",
+    "permalink": "/technical-knowledge/system-design/multi-step-process"
+  },
+  "next": {
+    "title": "Data Consistency",
+    "permalink": "/technical-knowledge/system-design/data-consistency"
+  }
+}

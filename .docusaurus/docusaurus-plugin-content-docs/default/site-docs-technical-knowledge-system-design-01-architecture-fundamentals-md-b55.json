@@ -1,0 +1,68 @@
+{
+  "id": "technical-knowledge/system-design/architecture-fundamentals",
+  "title": "Architecture Fundamentals",
+  "description": "Core principles of distributed systems architecture including CAP theorem, consistency models, availability, partition tolerance, and key trade-offs every engineer must understand.",
+  "source": "@site/docs/technical-knowledge/system-design/01-architecture-fundamentals.md",
+  "sourceDirName": "technical-knowledge/system-design",
+  "slug": "/technical-knowledge/system-design/architecture-fundamentals",
+  "permalink": "/technical-knowledge/system-design/architecture-fundamentals",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "architecture",
+      "permalink": "/tags/architecture"
+    },
+    {
+      "inline": true,
+      "label": "cap-theorem",
+      "permalink": "/tags/cap-theorem"
+    },
+    {
+      "inline": true,
+      "label": "consistency",
+      "permalink": "/tags/consistency"
+    },
+    {
+      "inline": true,
+      "label": "availability",
+      "permalink": "/tags/availability"
+    },
+    {
+      "inline": true,
+      "label": "distributed-systems",
+      "permalink": "/tags/distributed-systems"
+    },
+    {
+      "inline": true,
+      "label": "fundamentals",
+      "permalink": "/tags/fundamentals"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "architecture-fundamentals",
+    "title": "Architecture Fundamentals",
+    "sidebar_label": "Architecture Fundamentals",
+    "description": "Core principles of distributed systems architecture including CAP theorem, consistency models, availability, partition tolerance, and key trade-offs every engineer must understand.",
+    "tags": [
+      "architecture",
+      "cap-theorem",
+      "consistency",
+      "availability",
+      "distributed-systems",
+      "fundamentals"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Overview",
+    "permalink": "/system-design"
+  },
+  "next": {
+    "title": "Capacity Planning",
+    "permalink": "/technical-knowledge/system-design/capacity-planning"
+  }
+}

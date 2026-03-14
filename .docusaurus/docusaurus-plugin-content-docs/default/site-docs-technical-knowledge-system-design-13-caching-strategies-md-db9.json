@@ -1,0 +1,74 @@
+{
+  "id": "technical-knowledge/system-design/caching-strategies",
+  "title": "Caching Strategies",
+  "description": "In-depth guide to caching strategies including cache-aside, write-through, write-behind, eviction policies, cache stampede prevention, Redis data structures, and multi-level caching.",
+  "source": "@site/docs/technical-knowledge/system-design/13-caching-strategies.md",
+  "sourceDirName": "technical-knowledge/system-design",
+  "slug": "/technical-knowledge/system-design/caching-strategies",
+  "permalink": "/technical-knowledge/system-design/caching-strategies",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "caching",
+      "permalink": "/tags/caching"
+    },
+    {
+      "inline": true,
+      "label": "redis",
+      "permalink": "/tags/redis"
+    },
+    {
+      "inline": true,
+      "label": "caffeine",
+      "permalink": "/tags/caffeine"
+    },
+    {
+      "inline": true,
+      "label": "eviction",
+      "permalink": "/tags/eviction"
+    },
+    {
+      "inline": true,
+      "label": "ttl",
+      "permalink": "/tags/ttl"
+    },
+    {
+      "inline": true,
+      "label": "cache-invalidation",
+      "permalink": "/tags/cache-invalidation"
+    },
+    {
+      "inline": true,
+      "label": "performance",
+      "permalink": "/tags/performance"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 13,
+  "frontMatter": {
+    "id": "caching-strategies",
+    "title": "Caching Strategies",
+    "sidebar_label": "Caching Strategies",
+    "description": "In-depth guide to caching strategies including cache-aside, write-through, write-behind, eviction policies, cache stampede prevention, Redis data structures, and multi-level caching.",
+    "tags": [
+      "caching",
+      "redis",
+      "caffeine",
+      "eviction",
+      "ttl",
+      "cache-invalidation",
+      "performance"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Scaling Writes",
+    "permalink": "/technical-knowledge/system-design/scaling-writes"
+  },
+  "next": {
+    "title": "Real-Time Updates",
+    "permalink": "/technical-knowledge/system-design/real-time-updates"
+  }
+}

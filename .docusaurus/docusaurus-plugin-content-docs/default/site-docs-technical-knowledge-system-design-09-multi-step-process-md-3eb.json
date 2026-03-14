@@ -1,0 +1,74 @@
+{
+  "id": "technical-knowledge/system-design/multi-step-process",
+  "title": "Multi-Step Processes",
+  "description": "Patterns for managing distributed multi-step workflows including Sagas (orchestration vs choreography), process managers, compensating transactions, and idempotency in long transaction chains.",
+  "source": "@site/docs/technical-knowledge/system-design/09-multi-step-process.md",
+  "sourceDirName": "technical-knowledge/system-design",
+  "slug": "/technical-knowledge/system-design/multi-step-process",
+  "permalink": "/technical-knowledge/system-design/multi-step-process",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "saga",
+      "permalink": "/tags/saga"
+    },
+    {
+      "inline": true,
+      "label": "orchestration",
+      "permalink": "/tags/orchestration"
+    },
+    {
+      "inline": true,
+      "label": "choreography",
+      "permalink": "/tags/choreography"
+    },
+    {
+      "inline": true,
+      "label": "distributed-transactions",
+      "permalink": "/tags/distributed-transactions"
+    },
+    {
+      "inline": true,
+      "label": "process-manager",
+      "permalink": "/tags/process-manager"
+    },
+    {
+      "inline": true,
+      "label": "compensating-transaction",
+      "permalink": "/tags/compensating-transaction"
+    },
+    {
+      "inline": true,
+      "label": "workflow",
+      "permalink": "/tags/workflow"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 9,
+  "frontMatter": {
+    "id": "multi-step-process",
+    "title": "Multi-Step Processes",
+    "sidebar_label": "Multi-Step Processes",
+    "description": "Patterns for managing distributed multi-step workflows including Sagas (orchestration vs choreography), process managers, compensating transactions, and idempotency in long transaction chains.",
+    "tags": [
+      "saga",
+      "orchestration",
+      "choreography",
+      "distributed-transactions",
+      "process-manager",
+      "compensating-transaction",
+      "workflow"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Handling Contention",
+    "permalink": "/technical-knowledge/system-design/handling-contention"
+  },
+  "next": {
+    "title": "Long-Running Tasks",
+    "permalink": "/technical-knowledge/system-design/long-running-tasks"
+  }
+}

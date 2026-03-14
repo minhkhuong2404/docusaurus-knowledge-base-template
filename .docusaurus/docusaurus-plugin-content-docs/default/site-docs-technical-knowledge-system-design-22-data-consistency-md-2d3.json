@@ -1,0 +1,74 @@
+{
+  "id": "technical-knowledge/system-design/data-consistency",
+  "title": "Data Consistency & Transactions",
+  "description": "Patterns for maintaining data consistency in distributed systems including database transactions, eventual consistency, the outbox pattern, idempotency, and conflict resolution.",
+  "source": "@site/docs/technical-knowledge/system-design/22-data-consistency.md",
+  "sourceDirName": "technical-knowledge/system-design",
+  "slug": "/technical-knowledge/system-design/data-consistency",
+  "permalink": "/technical-knowledge/system-design/data-consistency",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "consistency",
+      "permalink": "/tags/consistency"
+    },
+    {
+      "inline": true,
+      "label": "transactions",
+      "permalink": "/tags/transactions"
+    },
+    {
+      "inline": true,
+      "label": "acid",
+      "permalink": "/tags/acid"
+    },
+    {
+      "inline": true,
+      "label": "eventual-consistency",
+      "permalink": "/tags/eventual-consistency"
+    },
+    {
+      "inline": true,
+      "label": "outbox-pattern",
+      "permalink": "/tags/outbox-pattern"
+    },
+    {
+      "inline": true,
+      "label": "idempotency",
+      "permalink": "/tags/idempotency"
+    },
+    {
+      "inline": true,
+      "label": "conflict-resolution",
+      "permalink": "/tags/conflict-resolution"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 22,
+  "frontMatter": {
+    "id": "data-consistency",
+    "title": "Data Consistency & Transactions",
+    "sidebar_label": "Data Consistency",
+    "description": "Patterns for maintaining data consistency in distributed systems including database transactions, eventual consistency, the outbox pattern, idempotency, and conflict resolution.",
+    "tags": [
+      "consistency",
+      "transactions",
+      "acid",
+      "eventual-consistency",
+      "outbox-pattern",
+      "idempotency",
+      "conflict-resolution"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Long-Running Tasks",
+    "permalink": "/technical-knowledge/system-design/long-running-tasks"
+  },
+  "next": {
+    "title": "Microservices Patterns",
+    "permalink": "/technical-knowledge/system-design/microservices-patterns"
+  }
+}

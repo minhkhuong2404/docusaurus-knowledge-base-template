@@ -373,6 +373,121 @@
               "id": "technical-knowledge/spring/spring-security",
               "path": "/technical-knowledge/spring/spring-security",
               "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/api-design",
+              "path": "/technical-knowledge/system-design/api-design",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/architecture-fundamentals",
+              "path": "/technical-knowledge/system-design/architecture-fundamentals",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/caching-strategies",
+              "path": "/technical-knowledge/system-design/caching-strategies",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/capacity-planning",
+              "path": "/technical-knowledge/system-design/capacity-planning",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/common-interview-questions",
+              "path": "/technical-knowledge/system-design/common-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/data-consistency",
+              "path": "/technical-knowledge/system-design/data-consistency",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/database-design",
+              "path": "/technical-knowledge/system-design/database-design",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/distributed-systems",
+              "path": "/technical-knowledge/system-design/distributed-systems",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/handling-contention",
+              "path": "/technical-knowledge/system-design/handling-contention",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/interview-framework",
+              "path": "/technical-knowledge/system-design/interview-framework",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/intro",
+              "path": "/system-design",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/large-blobs",
+              "path": "/technical-knowledge/system-design/large-blobs",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/load-balancing-reliability",
+              "path": "/technical-knowledge/system-design/load-balancing-reliability",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/long-running-tasks",
+              "path": "/technical-knowledge/system-design/long-running-tasks",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/message-queues",
+              "path": "/technical-knowledge/system-design/message-queues",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/microservices-patterns",
+              "path": "/technical-knowledge/system-design/microservices-patterns",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/multi-step-process",
+              "path": "/technical-knowledge/system-design/multi-step-process",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/observability",
+              "path": "/technical-knowledge/system-design/observability",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/real-time-updates",
+              "path": "/technical-knowledge/system-design/real-time-updates",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/scaling-reads",
+              "path": "/technical-knowledge/system-design/scaling-reads",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/scaling-writes",
+              "path": "/technical-knowledge/system-design/scaling-writes",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/search-systems",
+              "path": "/technical-knowledge/system-design/search-systems",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/security-patterns",
+              "path": "/technical-knowledge/system-design/security-patterns",
+              "sidebar": "tutorialSidebar"
             }
           ],
           "draftIds": [],

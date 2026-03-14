@@ -1,0 +1,80 @@
+{
+  "id": "technical-knowledge/system-design/distributed-systems",
+  "title": "Distributed Systems",
+  "description": "Core distributed systems concepts including consensus algorithms, leader election, vector clocks, distributed transactions, fault tolerance, and the fallacies of distributed computing.",
+  "source": "@site/docs/technical-knowledge/system-design/16-distributed-systems.md",
+  "sourceDirName": "technical-knowledge/system-design",
+  "slug": "/technical-knowledge/system-design/distributed-systems",
+  "permalink": "/technical-knowledge/system-design/distributed-systems",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "distributed-systems",
+      "permalink": "/tags/distributed-systems"
+    },
+    {
+      "inline": true,
+      "label": "consensus",
+      "permalink": "/tags/consensus"
+    },
+    {
+      "inline": true,
+      "label": "raft",
+      "permalink": "/tags/raft"
+    },
+    {
+      "inline": true,
+      "label": "paxos",
+      "permalink": "/tags/paxos"
+    },
+    {
+      "inline": true,
+      "label": "leader-election",
+      "permalink": "/tags/leader-election"
+    },
+    {
+      "inline": true,
+      "label": "vector-clocks",
+      "permalink": "/tags/vector-clocks"
+    },
+    {
+      "inline": true,
+      "label": "fault-tolerance",
+      "permalink": "/tags/fault-tolerance"
+    },
+    {
+      "inline": true,
+      "label": "two-phase-commit",
+      "permalink": "/tags/two-phase-commit"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 16,
+  "frontMatter": {
+    "id": "distributed-systems",
+    "title": "Distributed Systems",
+    "sidebar_label": "Distributed Systems",
+    "description": "Core distributed systems concepts including consensus algorithms, leader election, vector clocks, distributed transactions, fault tolerance, and the fallacies of distributed computing.",
+    "tags": [
+      "distributed-systems",
+      "consensus",
+      "raft",
+      "paxos",
+      "leader-election",
+      "vector-clocks",
+      "fault-tolerance",
+      "two-phase-commit"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Observability & Monitoring",
+    "permalink": "/technical-knowledge/system-design/observability"
+  },
+  "next": {
+    "title": "Interview Questions",
+    "permalink": "/technical-knowledge/system-design/common-interview-questions"
+  }
+}

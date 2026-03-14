@@ -1,0 +1,57 @@
+{
+  "id": "technical-knowledge/system-design/intro",
+  "title": "System Design Knowledge Base",
+  "description": "A comprehensive knowledge base for system design patterns, architectural principles, scalability strategies, and interview preparation for software engineers.",
+  "source": "@site/docs/technical-knowledge/system-design/00-intro.md",
+  "sourceDirName": "technical-knowledge/system-design",
+  "slug": "/system-design",
+  "permalink": "/system-design",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "system-design",
+      "permalink": "/tags/system-design"
+    },
+    {
+      "inline": true,
+      "label": "overview",
+      "permalink": "/tags/overview"
+    },
+    {
+      "inline": true,
+      "label": "architecture",
+      "permalink": "/tags/architecture"
+    },
+    {
+      "inline": true,
+      "label": "interview-prep",
+      "permalink": "/tags/interview-prep"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 0,
+  "frontMatter": {
+    "id": "intro",
+    "title": "System Design Knowledge Base",
+    "sidebar_label": "Overview",
+    "slug": "/system-design",
+    "description": "A comprehensive knowledge base for system design patterns, architectural principles, scalability strategies, and interview preparation for software engineers.",
+    "tags": [
+      "system-design",
+      "overview",
+      "architecture",
+      "interview-prep"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Template Method Pattern",
+    "permalink": "/technical-knowledge/design-patterns/template-method"
+  },
+  "next": {
+    "title": "Architecture Fundamentals",
+    "permalink": "/technical-knowledge/system-design/architecture-fundamentals"
+  }
+}

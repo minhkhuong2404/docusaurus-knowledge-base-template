@@ -1,0 +1,80 @@
+{
+  "id": "technical-knowledge/system-design/scaling-reads",
+  "title": "Scaling Reads",
+  "description": "Strategies for handling high read QPS including caching layers, read replicas, CDN, CQRS, and database indexing. Covers Redis patterns, cache invalidation, and fan-out strategies.",
+  "source": "@site/docs/technical-knowledge/system-design/04-scaling-reads.md",
+  "sourceDirName": "technical-knowledge/system-design",
+  "slug": "/technical-knowledge/system-design/scaling-reads",
+  "permalink": "/technical-knowledge/system-design/scaling-reads",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "scaling",
+      "permalink": "/tags/scaling"
+    },
+    {
+      "inline": true,
+      "label": "reads",
+      "permalink": "/tags/reads"
+    },
+    {
+      "inline": true,
+      "label": "caching",
+      "permalink": "/tags/caching"
+    },
+    {
+      "inline": true,
+      "label": "redis",
+      "permalink": "/tags/redis"
+    },
+    {
+      "inline": true,
+      "label": "cdn",
+      "permalink": "/tags/cdn"
+    },
+    {
+      "inline": true,
+      "label": "cqrs",
+      "permalink": "/tags/cqrs"
+    },
+    {
+      "inline": true,
+      "label": "read-replicas",
+      "permalink": "/tags/read-replicas"
+    },
+    {
+      "inline": true,
+      "label": "performance",
+      "permalink": "/tags/performance"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "id": "scaling-reads",
+    "title": "Scaling Reads",
+    "sidebar_label": "Scaling Reads",
+    "description": "Strategies for handling high read QPS including caching layers, read replicas, CDN, CQRS, and database indexing. Covers Redis patterns, cache invalidation, and fan-out strategies.",
+    "tags": [
+      "scaling",
+      "reads",
+      "caching",
+      "redis",
+      "cdn",
+      "cqrs",
+      "read-replicas",
+      "performance"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Interview Framework",
+    "permalink": "/technical-knowledge/system-design/interview-framework"
+  },
+  "next": {
+    "title": "Scaling Writes",
+    "permalink": "/technical-knowledge/system-design/scaling-writes"
+  }
+}
