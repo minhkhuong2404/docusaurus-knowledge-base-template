@@ -1,7 +1,7 @@
 {
   "id": "intro",
   "title": "Welcome",
-  "description": "Overview of the engineering knowledge base and its main learning paths across architecture, backend, Java, and Kafka.",
+  "description": "Internal engineering learning hub with practical guides across Java, Spring, system design, Kafka, databases, and operating systems.",
   "source": "@site/docs/intro.md",
   "sourceDirName": ".",
   "slug": "/",
@@ -34,7 +34,7 @@
   "frontMatter": {
     "title": "Welcome",
     "slug": "/",
-    "description": "Overview of the engineering knowledge base and its main learning paths across architecture, backend, Java, and Kafka.",
+    "description": "Internal engineering learning hub with practical guides across Java, Spring, system design, Kafka, databases, and operating systems.",
     "tags": [
       "engineering",
       "documentation",

@@ -1,28 +1,41 @@
 ---
 title: Welcome
 slug: /
-description: Overview of the engineering knowledge base and its main learning paths across architecture, backend, Java, and Kafka.
+description: Internal engineering learning hub with practical guides across Java, Spring, system design, Kafka, databases, and operating systems.
 tags: [engineering, documentation, knowledge-base, onboarding]
 ---
 
 # Engineering Knowledge Base
 
-Welcome to the internal engineering knowledge base. Browse the sidebar to explore topics on architecture, backend development, and event-driven patterns.
+This site is the central documentation space for backend and platform engineering topics used in daily development and interview preparation.
 
----
+## What You Will Find Here
 
-## Study Guide
+- Concise concept guides with practical context
+- Trade-offs and decision frameworks for real systems
+- Common interview questions and production-oriented examples
+- Structured learning paths by domain
 
-### What to Focus On
-- Summarize the core concept in your own words before diving into implementation details.
-- List trade-offs, constraints, and the context where this approach provides the most value.
-- Validate understanding with one concrete example from your current or past project.
+## Main Learning Paths
 
-### Self-Check Questions
-1. What problem does Welcome solve, and what are the main trade-offs?
-1. How would you explain Welcome to a teammate using one real production scenario?
-1. Which failure mode or misuse of Welcome is most likely, and how would you prevent it?
+- Java
+- Spring Ecosystem
+- Design Patterns
+- System Design
+- Kafka
+- Database
+- Operating Systems
 
-### Suggested Next Reading
-- Revisit this page after implementing one practical example and note what changed in your understanding.
+Use the sidebar to move from fundamentals to deeper topics in each path.
+
+## How to Use This Knowledge Base
+
+1. Start with an overview page in your target domain.
+2. Continue with the grouped subtopics from top to bottom.
+3. Capture key trade-offs and apply them to one real scenario.
+4. Revisit interview sections to validate your understanding.
+
+## Intended Audience
+
+This knowledge base is for engineers who want a practical, reusable reference for design discussions, implementation decisions, onboarding, and technical interviews.
 

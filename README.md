@@ -1,73 +1,117 @@
 # Engineering Knowledge Base
 
-An internal engineering knowledge base built with [Docusaurus 3.6](https://docusaurus.io/). It provides structured technical documentation covering architecture, backend development, and Kafka patterns.
+Internal engineering documentation site built with [Docusaurus](https://docusaurus.io/) and TypeScript.
 
-## Getting Started
+The site is documentation-first (`docs` route is mounted at `/`) and currently focuses on technical learning paths for backend and platform engineering.
+
+## Tech Stack
+
+- Docusaurus `3.9.2`
+- React `18`
+- TypeScript config files (`docusaurus.config.ts`, `sidebars.ts`)
+- Custom Prism theme in `src/theme/prismTheme.ts`
+
+## Current Content Map
+
+The main navigation is defined in `sidebars.ts` and currently includes:
+
+- Welcome / Intro
+- Java
+- Spring Ecosystem
+- Design Patterns
+- System Design
+- Kafka
+- Database
+- Operating Systems
+
+All topic pages are stored under `docs/technical-knowledge/`.
+
+## Development
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) v18 or later
+- Node.js 18+
+- npm
 
-### Installation
+### Install
 
 ```sh
 npm install
 ```
 
-### Local Development
+### Start Local Server
 
 ```sh
 npm start
 ```
 
-This starts a local dev server at `http://localhost:3000` with hot reload — most changes are reflected live without restarting.
+Runs the site locally (default: `http://localhost:3000`) with hot reload.
 
-### Production Build
+### Build for Production
 
 ```sh
 npm run build
 ```
 
-Generates static files into the `build/` directory.
+Outputs static files to `build/`.
 
-### Serve Production Build
+### Serve Production Build Locally
 
 ```sh
 npm run serve
 ```
 
-Serves the production build locally for testing before deployment.
+### Deploy
+
+```sh
+npm run deploy
+```
 
 ## Project Structure
 
-```
-docs/               # Markdown documentation organized by topic
-  architecture/     # Architecture patterns (e.g., microservices)
-  backend/          # Backend frameworks (e.g., Spring Boot)
-  kafka/            # Kafka and event-driven patterns (e.g., saga pattern)
+```text
+docs/
+  intro.md
+  technical-knowledge/
+    java/
+    spring/
+    design-patterns/
+    system-design/
+    kafka/
+    database/
+    operating-systems/
+
 src/
-  components/       # Custom React components (e.g., CodeBlock)
-  theme/            # Custom Prism syntax-highlighting theme
-docusaurus.config.ts  # Site-wide Docusaurus configuration
-sidebars.ts           # Sidebar navigation structure
+  components/
+  css/
+  theme/
+
+docusaurus.config.ts
+sidebars.ts
 ```
 
-## Adding Documentation
+## Writing and Registering Docs
 
-1. Create a `.md` file in the appropriate `docs/<category>/` folder with YAML frontmatter:
+1. Create a markdown file in the right folder under `docs/technical-knowledge/`.
+2. Add frontmatter:
 
-   ```markdown
-   ---
-   title: Your Page Title
-   ---
-   ```
+```md
+---
+title: Your Page Title
+description: Short summary of the page
+tags: [topic, category]
+---
+```
 
-2. Register the doc in `sidebars.ts` under the matching category:
+3. Add the document ID to the correct section in `sidebars.ts`.
 
-   ```ts
-   { type: 'category', label: 'Category Name', items: ['category/doc-id'] }
-   ```
+Example ID format:
 
-## License
+- `technical-knowledge/java/java-overview`
+- `technical-knowledge/kafka/kafka-connect`
 
-This project is for internal use.
+## Notes
+
+- Blog is disabled.
+- Docs are served from the root route (`/`).
+- This repository is intended for internal knowledge sharing.
