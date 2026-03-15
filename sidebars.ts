@@ -502,6 +502,70 @@ const sidebars: SidebarsConfig = {
 					],
 				},
 			]
+		},
+		{
+			type: 'category',
+			label: '🏛️ Banking & Finance',
+			items: [
+				'technical-knowledge/banking/overview',
+				{
+					type: 'category',
+					label: '📨 ISO 20022 Messages',
+					collapsed: false,
+					items: [
+						'technical-knowledge/banking/pain001',
+						'technical-knowledge/banking/pacs008'
+					]
+				},
+				{
+					type: 'category',
+					label: '🔄 ISO 20022 Migration',
+					collapsed: false,
+					items: ['technical-knowledge/banking/iso20022_migration']
+				},
+				{
+					type: 'category',
+					label: '🛤️ Payment Rails & Networks',
+					collapsed: false,
+					items: [
+						'technical-knowledge/banking/npp',
+						'technical-knowledge/banking/bpay'
+					]
+				},
+				{
+					type: 'category',
+					label: '🏛️ Parties & Institutions',
+					collapsed: false,
+					items: ['technical-knowledge/banking/account_types']
+				},
+				{
+					type: 'category',
+					label: '📒 Accounting & Posting',
+					collapsed: false,
+					items: ['technical-knowledge/banking/fx']
+				},
+				{
+					type: 'category',
+					label: '🛡️ Risk & Compliance',
+					collapsed: false,
+					items: ['technical-knowledge/banking/fraud']
+				},
+				{
+					type: 'category',
+					label: '⚙️ Operations',
+					collapsed: false,
+					items: [
+						'technical-knowledge/banking/reconciliation',
+						'technical-knowledge/banking/payment_exceptions'
+					]
+				},
+				{
+					type: 'category',
+					label: '🚀 Modern Banking',
+					collapsed: false,
+					items: ['technical-knowledge/banking/open_banking']
+				}
+			]
 		}
 	]
 }

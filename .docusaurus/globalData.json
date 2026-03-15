@@ -20,6 +20,66 @@
               "path": "/technical-knowledge/architecture/microservices"
             },
             {
+              "id": "technical-knowledge/banking/account_types",
+              "path": "/technical-knowledge/banking/account_types",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/bpay",
+              "path": "/technical-knowledge/banking/bpay",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/fraud",
+              "path": "/technical-knowledge/banking/fraud",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/fx",
+              "path": "/technical-knowledge/banking/fx",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/iso20022_migration",
+              "path": "/technical-knowledge/banking/iso20022_migration",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/npp",
+              "path": "/technical-knowledge/banking/npp",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/open_banking",
+              "path": "/technical-knowledge/banking/open_banking",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/overview",
+              "path": "/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/pacs008",
+              "path": "/technical-knowledge/banking/pacs008",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/pain001",
+              "path": "/technical-knowledge/banking/pain001",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/payment_exceptions",
+              "path": "/technical-knowledge/banking/payment_exceptions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/reconciliation",
+              "path": "/technical-knowledge/banking/reconciliation",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/database/advanced-sql",
               "path": "/technical-knowledge/database/advanced-sql",
               "sidebar": "tutorialSidebar"
