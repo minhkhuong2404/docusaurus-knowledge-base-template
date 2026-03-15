@@ -1,0 +1,86 @@
+{
+  "id": "technical-knowledge/security/network-security",
+  "title": "Network Security",
+  "description": "Network security fundamentals for software engineers — firewalls, VPNs, network segmentation, DDoS mitigation, DNS security, zero trust networking, and cloud network controls.",
+  "source": "@site/docs/technical-knowledge/security/05-network-security.md",
+  "sourceDirName": "technical-knowledge/security",
+  "slug": "/technical-knowledge/security/network-security",
+  "permalink": "/technical-knowledge/security/network-security",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "network-security",
+      "permalink": "/tags/network-security"
+    },
+    {
+      "inline": true,
+      "label": "firewall",
+      "permalink": "/tags/firewall"
+    },
+    {
+      "inline": true,
+      "label": "vpn",
+      "permalink": "/tags/vpn"
+    },
+    {
+      "inline": true,
+      "label": "ddos",
+      "permalink": "/tags/ddos"
+    },
+    {
+      "inline": true,
+      "label": "dns",
+      "permalink": "/tags/dns"
+    },
+    {
+      "inline": true,
+      "label": "zero-trust",
+      "permalink": "/tags/zero-trust"
+    },
+    {
+      "inline": true,
+      "label": "network-segmentation",
+      "permalink": "/tags/network-segmentation"
+    },
+    {
+      "inline": true,
+      "label": "waf",
+      "permalink": "/tags/waf"
+    },
+    {
+      "inline": true,
+      "label": "cloud-security",
+      "permalink": "/tags/cloud-security"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 5,
+  "frontMatter": {
+    "id": "network-security",
+    "title": "Network Security",
+    "sidebar_label": "Network Security",
+    "description": "Network security fundamentals for software engineers — firewalls, VPNs, network segmentation, DDoS mitigation, DNS security, zero trust networking, and cloud network controls.",
+    "tags": [
+      "network-security",
+      "firewall",
+      "vpn",
+      "ddos",
+      "dns",
+      "zero-trust",
+      "network-segmentation",
+      "waf",
+      "cloud-security"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "IAM",
+    "permalink": "/technical-knowledge/security/identity-access-management"
+  },
+  "next": {
+    "title": "Secure SDLC",
+    "permalink": "/technical-knowledge/security/secure-sdlc"
+  }
+}

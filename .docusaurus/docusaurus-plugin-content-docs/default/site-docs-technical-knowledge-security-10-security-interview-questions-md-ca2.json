@@ -1,0 +1,74 @@
+{
+  "id": "technical-knowledge/security/security-interview-questions",
+  "title": "Common Security Interview Questions",
+  "description": "Comprehensive security interview question bank for software engineers, covering authentication, web vulnerabilities, cryptography, network security, cloud security, and secure design scenarios.",
+  "source": "@site/docs/technical-knowledge/security/10-security-interview-questions.md",
+  "sourceDirName": "technical-knowledge/security",
+  "slug": "/technical-knowledge/security/security-interview-questions",
+  "permalink": "/technical-knowledge/security/security-interview-questions",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "security",
+      "permalink": "/tags/security"
+    },
+    {
+      "inline": true,
+      "label": "interview-prep",
+      "permalink": "/tags/interview-prep"
+    },
+    {
+      "inline": true,
+      "label": "questions",
+      "permalink": "/tags/questions"
+    },
+    {
+      "inline": true,
+      "label": "authentication",
+      "permalink": "/tags/authentication"
+    },
+    {
+      "inline": true,
+      "label": "owasp",
+      "permalink": "/tags/owasp"
+    },
+    {
+      "inline": true,
+      "label": "cryptography",
+      "permalink": "/tags/cryptography"
+    },
+    {
+      "inline": true,
+      "label": "devsecops",
+      "permalink": "/tags/devsecops"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 10,
+  "frontMatter": {
+    "id": "security-interview-questions",
+    "title": "Common Security Interview Questions",
+    "sidebar_label": "Interview Questions",
+    "description": "Comprehensive security interview question bank for software engineers, covering authentication, web vulnerabilities, cryptography, network security, cloud security, and secure design scenarios.",
+    "tags": [
+      "security",
+      "interview-prep",
+      "questions",
+      "authentication",
+      "owasp",
+      "cryptography",
+      "devsecops"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Incident Response",
+    "permalink": "/technical-knowledge/security/incident-response"
+  },
+  "next": {
+    "title": "Networking Knowledge Base",
+    "permalink": "/technical-knowledge/networking/"
+  }
+}

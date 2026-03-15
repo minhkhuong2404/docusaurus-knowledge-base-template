@@ -1,0 +1,75 @@
+{
+  "id": "technical-knowledge/security/security-intro",
+  "title": "Security Knowledge Base",
+  "description": "A comprehensive security reference for software engineers covering authentication, authorization, cryptography, web vulnerabilities, privacy, compliance, secure SDLC, and incident response.",
+  "source": "@site/docs/technical-knowledge/security/00-security-intro.md",
+  "sourceDirName": "technical-knowledge/security",
+  "slug": "/security",
+  "permalink": "/security",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "security",
+      "permalink": "/tags/security"
+    },
+    {
+      "inline": true,
+      "label": "overview",
+      "permalink": "/tags/overview"
+    },
+    {
+      "inline": true,
+      "label": "authentication",
+      "permalink": "/tags/authentication"
+    },
+    {
+      "inline": true,
+      "label": "cryptography",
+      "permalink": "/tags/cryptography"
+    },
+    {
+      "inline": true,
+      "label": "owasp",
+      "permalink": "/tags/owasp"
+    },
+    {
+      "inline": true,
+      "label": "privacy",
+      "permalink": "/tags/privacy"
+    },
+    {
+      "inline": true,
+      "label": "devsecops",
+      "permalink": "/tags/devsecops"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 0,
+  "frontMatter": {
+    "id": "security-intro",
+    "title": "Security Knowledge Base",
+    "sidebar_label": "Overview",
+    "slug": "/security",
+    "description": "A comprehensive security reference for software engineers covering authentication, authorization, cryptography, web vulnerabilities, privacy, compliance, secure SDLC, and incident response.",
+    "tags": [
+      "security",
+      "overview",
+      "authentication",
+      "cryptography",
+      "owasp",
+      "privacy",
+      "devsecops"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Interview Questions",
+    "permalink": "/technical-knowledge/system-design/common-interview-questions"
+  },
+  "next": {
+    "title": "AuthN & AuthZ",
+    "permalink": "/technical-knowledge/security/authentication-authorization"
+  }
+}

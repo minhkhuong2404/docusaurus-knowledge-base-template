@@ -1,0 +1,86 @@
+{
+  "id": "technical-knowledge/security/secure-sdlc",
+  "title": "Secure SDLC & DevSecOps",
+  "description": "Embedding security into the software development lifecycle — threat modeling, SAST, DAST, SCA, secrets scanning, container security, IaC scanning, and shift-left security practices.",
+  "source": "@site/docs/technical-knowledge/security/06-secure-sdlc.md",
+  "sourceDirName": "technical-knowledge/security",
+  "slug": "/technical-knowledge/security/secure-sdlc",
+  "permalink": "/technical-knowledge/security/secure-sdlc",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "devsecops",
+      "permalink": "/tags/devsecops"
+    },
+    {
+      "inline": true,
+      "label": "sdlc",
+      "permalink": "/tags/sdlc"
+    },
+    {
+      "inline": true,
+      "label": "threat-modeling",
+      "permalink": "/tags/threat-modeling"
+    },
+    {
+      "inline": true,
+      "label": "sast",
+      "permalink": "/tags/sast"
+    },
+    {
+      "inline": true,
+      "label": "dast",
+      "permalink": "/tags/dast"
+    },
+    {
+      "inline": true,
+      "label": "sca",
+      "permalink": "/tags/sca"
+    },
+    {
+      "inline": true,
+      "label": "secrets-scanning",
+      "permalink": "/tags/secrets-scanning"
+    },
+    {
+      "inline": true,
+      "label": "container-security",
+      "permalink": "/tags/container-security"
+    },
+    {
+      "inline": true,
+      "label": "shift-left",
+      "permalink": "/tags/shift-left"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 6,
+  "frontMatter": {
+    "id": "secure-sdlc",
+    "title": "Secure SDLC & DevSecOps",
+    "sidebar_label": "Secure SDLC",
+    "description": "Embedding security into the software development lifecycle — threat modeling, SAST, DAST, SCA, secrets scanning, container security, IaC scanning, and shift-left security practices.",
+    "tags": [
+      "devsecops",
+      "sdlc",
+      "threat-modeling",
+      "sast",
+      "dast",
+      "sca",
+      "secrets-scanning",
+      "container-security",
+      "shift-left"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Network Security",
+    "permalink": "/technical-knowledge/security/network-security"
+  },
+  "next": {
+    "title": "Incident Response",
+    "permalink": "/technical-knowledge/security/incident-response"
+  }
+}

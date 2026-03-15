@@ -1,0 +1,98 @@
+{
+  "id": "technical-knowledge/security/authentication-authorization",
+  "title": "Authentication & Authorization",
+  "description": "Deep dive into authentication and authorization patterns including sessions, JWT, OAuth 2.0, OIDC, RBAC, ABAC, PBAC, MFA, passwordless, and Spring Security implementation.",
+  "source": "@site/docs/technical-knowledge/security/01-authentication-authorization.md",
+  "sourceDirName": "technical-knowledge/security",
+  "slug": "/technical-knowledge/security/authentication-authorization",
+  "permalink": "/technical-knowledge/security/authentication-authorization",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "security",
+      "permalink": "/tags/security"
+    },
+    {
+      "inline": true,
+      "label": "authentication",
+      "permalink": "/tags/authentication"
+    },
+    {
+      "inline": true,
+      "label": "authorization",
+      "permalink": "/tags/authorization"
+    },
+    {
+      "inline": true,
+      "label": "jwt",
+      "permalink": "/tags/jwt"
+    },
+    {
+      "inline": true,
+      "label": "oauth2",
+      "permalink": "/tags/oauth-2"
+    },
+    {
+      "inline": true,
+      "label": "oidc",
+      "permalink": "/tags/oidc"
+    },
+    {
+      "inline": true,
+      "label": "rbac",
+      "permalink": "/tags/rbac"
+    },
+    {
+      "inline": true,
+      "label": "abac",
+      "permalink": "/tags/abac"
+    },
+    {
+      "inline": true,
+      "label": "mfa",
+      "permalink": "/tags/mfa"
+    },
+    {
+      "inline": true,
+      "label": "spring-security",
+      "permalink": "/tags/spring-security"
+    },
+    {
+      "inline": true,
+      "label": "session",
+      "permalink": "/tags/session"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 1,
+  "frontMatter": {
+    "id": "authentication-authorization",
+    "title": "Authentication & Authorization",
+    "sidebar_label": "AuthN & AuthZ",
+    "description": "Deep dive into authentication and authorization patterns including sessions, JWT, OAuth 2.0, OIDC, RBAC, ABAC, PBAC, MFA, passwordless, and Spring Security implementation.",
+    "tags": [
+      "security",
+      "authentication",
+      "authorization",
+      "jwt",
+      "oauth2",
+      "oidc",
+      "rbac",
+      "abac",
+      "mfa",
+      "spring-security",
+      "session"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Overview",
+    "permalink": "/security"
+  },
+  "next": {
+    "title": "Web Vulnerabilities",
+    "permalink": "/technical-knowledge/security/web-vulnerabilities"
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "id": "technical-knowledge/security/api-security",
+  "title": "API Security",
+  "description": "Security patterns specific to REST and GraphQL APIs — API keys, rate limiting, input validation, schema validation, mass assignment, sensitive data exposure, API versioning security, and API gateway hardening.",
+  "source": "@site/docs/technical-knowledge/security/08-api-security.md",
+  "sourceDirName": "technical-knowledge/security",
+  "slug": "/technical-knowledge/security/api-security",
+  "permalink": "/technical-knowledge/security/api-security",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "api-security",
+      "permalink": "/tags/api-security"
+    },
+    {
+      "inline": true,
+      "label": "api-keys",
+      "permalink": "/tags/api-keys"
+    },
+    {
+      "inline": true,
+      "label": "rate-limiting",
+      "permalink": "/tags/rate-limiting"
+    },
+    {
+      "inline": true,
+      "label": "input-validation",
+      "permalink": "/tags/input-validation"
+    },
+    {
+      "inline": true,
+      "label": "mass-assignment",
+      "permalink": "/tags/mass-assignment"
+    },
+    {
+      "inline": true,
+      "label": "graphql-security",
+      "permalink": "/tags/graphql-security"
+    },
+    {
+      "inline": true,
+      "label": "owasp-api",
+      "permalink": "/tags/owasp-api"
+    },
+    {
+      "inline": true,
+      "label": "spring-validation",
+      "permalink": "/tags/spring-validation"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 8,
+  "frontMatter": {
+    "id": "api-security",
+    "title": "API Security",
+    "sidebar_label": "API Security",
+    "description": "Security patterns specific to REST and GraphQL APIs — API keys, rate limiting, input validation, schema validation, mass assignment, sensitive data exposure, API versioning security, and API gateway hardening.",
+    "tags": [
+      "api-security",
+      "api-keys",
+      "rate-limiting",
+      "input-validation",
+      "mass-assignment",
+      "graphql-security",
+      "owasp-api",
+      "spring-validation"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Cryptography",
+    "permalink": "/technical-knowledge/security/cryptography-secure-design"
+  },
+  "next": {
+    "title": "Privacy & Compliance",
+    "permalink": "/technical-knowledge/security/privacy-compliance"
+  }
+}

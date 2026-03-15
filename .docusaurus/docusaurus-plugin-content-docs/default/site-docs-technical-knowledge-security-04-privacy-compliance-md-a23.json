@@ -1,0 +1,98 @@
+{
+  "id": "technical-knowledge/security/privacy-compliance",
+  "title": "Privacy & Compliance",
+  "description": "Engineering guide to GDPR, CCPA, PCI-DSS, HIPAA, and SOC 2 compliance — covering data classification, right to erasure, data minimization, consent management, audit logging, and privacy-by-design.",
+  "source": "@site/docs/technical-knowledge/security/04-privacy-compliance.md",
+  "sourceDirName": "technical-knowledge/security",
+  "slug": "/technical-knowledge/security/privacy-compliance",
+  "permalink": "/technical-knowledge/security/privacy-compliance",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "privacy",
+      "permalink": "/tags/privacy"
+    },
+    {
+      "inline": true,
+      "label": "gdpr",
+      "permalink": "/tags/gdpr"
+    },
+    {
+      "inline": true,
+      "label": "ccpa",
+      "permalink": "/tags/ccpa"
+    },
+    {
+      "inline": true,
+      "label": "pci-dss",
+      "permalink": "/tags/pci-dss"
+    },
+    {
+      "inline": true,
+      "label": "hipaa",
+      "permalink": "/tags/hipaa"
+    },
+    {
+      "inline": true,
+      "label": "soc2",
+      "permalink": "/tags/soc-2"
+    },
+    {
+      "inline": true,
+      "label": "compliance",
+      "permalink": "/tags/compliance"
+    },
+    {
+      "inline": true,
+      "label": "data-classification",
+      "permalink": "/tags/data-classification"
+    },
+    {
+      "inline": true,
+      "label": "consent",
+      "permalink": "/tags/consent"
+    },
+    {
+      "inline": true,
+      "label": "audit-log",
+      "permalink": "/tags/audit-log"
+    },
+    {
+      "inline": true,
+      "label": "privacy-by-design",
+      "permalink": "/tags/privacy-by-design"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 4,
+  "frontMatter": {
+    "id": "privacy-compliance",
+    "title": "Privacy & Compliance",
+    "sidebar_label": "Privacy & Compliance",
+    "description": "Engineering guide to GDPR, CCPA, PCI-DSS, HIPAA, and SOC 2 compliance — covering data classification, right to erasure, data minimization, consent management, audit logging, and privacy-by-design.",
+    "tags": [
+      "privacy",
+      "gdpr",
+      "ccpa",
+      "pci-dss",
+      "hipaa",
+      "soc2",
+      "compliance",
+      "data-classification",
+      "consent",
+      "audit-log",
+      "privacy-by-design"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "API Security",
+    "permalink": "/technical-knowledge/security/api-security"
+  },
+  "next": {
+    "title": "IAM",
+    "permalink": "/technical-knowledge/security/identity-access-management"
+  }
+}

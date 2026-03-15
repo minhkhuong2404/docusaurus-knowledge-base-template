@@ -207,6 +207,51 @@ const sidebars: SidebarsConfig = {
 		},
 		{
 			type: 'category',
+			label: '🔐 Security',
+			items: [
+				'technical-knowledge/security/security-intro',
+				{
+					type: 'category',
+					label: '🔐 Core Security',
+					collapsed: false,
+					items: [
+						'technical-knowledge/security/authentication-authorization',
+						'technical-knowledge/security/web-vulnerabilities',
+						'technical-knowledge/security/cryptography-secure-design',
+						'technical-knowledge/security/api-security',
+					],
+				},
+				{
+					type: 'category',
+					label: '🏛️ Governance & Compliance',
+					collapsed: false,
+					items: [
+						'technical-knowledge/security/privacy-compliance',
+						'technical-knowledge/security/identity-access-management',
+					],
+				},
+				{
+					type: 'category',
+					label: '🛡️ Operations & Infrastructure',
+					collapsed: false,
+					items: [
+						'technical-knowledge/security/network-security',
+						'technical-knowledge/security/secure-sdlc',
+						'technical-knowledge/security/incident-response',
+					],
+				},
+				{
+					type: 'category',
+					label: '🎯 Interview Prep',
+					collapsed: false,
+					items: [
+						'technical-knowledge/security/security-interview-questions',
+					],
+				},
+			]
+		},
+		{
+			type: 'category',
 			label: '🌐 Network Overview',
 			items: [
 				'technical-knowledge/networking/networking-overview',

@@ -1,0 +1,80 @@
+{
+  "id": "technical-knowledge/security/incident-response",
+  "title": "Incident Response & Security Operations",
+  "description": "Security incident response lifecycle, SIEM, forensics, detection engineering, vulnerability management, penetration testing, and building a security operations program.",
+  "source": "@site/docs/technical-knowledge/security/09-incident-response.md",
+  "sourceDirName": "technical-knowledge/security",
+  "slug": "/technical-knowledge/security/incident-response",
+  "permalink": "/technical-knowledge/security/incident-response",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "incident-response",
+      "permalink": "/tags/incident-response"
+    },
+    {
+      "inline": true,
+      "label": "siem",
+      "permalink": "/tags/siem"
+    },
+    {
+      "inline": true,
+      "label": "forensics",
+      "permalink": "/tags/forensics"
+    },
+    {
+      "inline": true,
+      "label": "detection",
+      "permalink": "/tags/detection"
+    },
+    {
+      "inline": true,
+      "label": "vulnerability-management",
+      "permalink": "/tags/vulnerability-management"
+    },
+    {
+      "inline": true,
+      "label": "pentesting",
+      "permalink": "/tags/pentesting"
+    },
+    {
+      "inline": true,
+      "label": "security-operations",
+      "permalink": "/tags/security-operations"
+    },
+    {
+      "inline": true,
+      "label": "soc",
+      "permalink": "/tags/soc"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 9,
+  "frontMatter": {
+    "id": "incident-response",
+    "title": "Incident Response & Security Operations",
+    "sidebar_label": "Incident Response",
+    "description": "Security incident response lifecycle, SIEM, forensics, detection engineering, vulnerability management, penetration testing, and building a security operations program.",
+    "tags": [
+      "incident-response",
+      "siem",
+      "forensics",
+      "detection",
+      "vulnerability-management",
+      "pentesting",
+      "security-operations",
+      "soc"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Secure SDLC",
+    "permalink": "/technical-knowledge/security/secure-sdlc"
+  },
+  "next": {
+    "title": "Interview Questions",
+    "permalink": "/technical-knowledge/security/security-interview-questions"
+  }
+}

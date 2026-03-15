@@ -1,11 +1,11 @@
 {
-  "/-422": {
+  "/-2e3": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-35d": {
+  "/-2a5": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -29,6 +29,10 @@
     "__comp": "df203c0f",
     "__props": "70438f52"
   },
+  "/tags/abac-205": {
+    "__comp": "df203c0f",
+    "__props": "b470f10f"
+  },
   "/tags/abstract-factory-e00": {
     "__comp": "df203c0f",
     "__props": "ab8354fa"
@@ -44,6 +48,10 @@
   "/tags/advanced-c89": {
     "__comp": "df203c0f",
     "__props": "ae5d0af1"
+  },
+  "/tags/aes-d1b": {
+    "__comp": "df203c0f",
+    "__props": "92c85ba6"
   },
   "/tags/algorithms-069": {
     "__comp": "df203c0f",
@@ -69,6 +77,10 @@
     "__comp": "df203c0f",
     "__props": "2208d0af"
   },
+  "/tags/api-keys-f12": {
+    "__comp": "df203c0f",
+    "__props": "f68b56e1"
+  },
   "/tags/api-security-441": {
     "__comp": "df203c0f",
     "__props": "12daff82"
@@ -88,6 +100,10 @@
   "/tags/attack-bf5": {
     "__comp": "df203c0f",
     "__props": "cc86ab95"
+  },
+  "/tags/audit-log-de2": {
+    "__comp": "df203c0f",
+    "__props": "94828824"
   },
   "/tags/auditing-755": {
     "__comp": "df203c0f",
@@ -112,6 +128,10 @@
   "/tags/availability-21c": {
     "__comp": "df203c0f",
     "__props": "55e3cafc"
+  },
+  "/tags/aws-iam-a75": {
+    "__comp": "df203c0f",
+    "__props": "8119fd11"
   },
   "/tags/b-tree-3a1": {
     "__comp": "df203c0f",
@@ -213,6 +233,10 @@
     "__comp": "df203c0f",
     "__props": "9d9a673a"
   },
+  "/tags/ccpa-313": {
+    "__comp": "df203c0f",
+    "__props": "ce6825bc"
+  },
   "/tags/cdn-d12": {
     "__comp": "df203c0f",
     "__props": "1425671b"
@@ -245,6 +269,14 @@
     "__comp": "df203c0f",
     "__props": "d942bea5"
   },
+  "/tags/cloud-iam-820": {
+    "__comp": "df203c0f",
+    "__props": "d0961d7b"
+  },
+  "/tags/cloud-security-e6c": {
+    "__comp": "df203c0f",
+    "__props": "c3be40bd"
+  },
   "/tags/collections-f92": {
     "__comp": "df203c0f",
     "__props": "7b4803b5"
@@ -260,6 +292,10 @@
   "/tags/compensating-transaction-fe1": {
     "__comp": "df203c0f",
     "__props": "1c9fce8f"
+  },
+  "/tags/compliance-1bf": {
+    "__comp": "df203c0f",
+    "__props": "26ed4e63"
   },
   "/tags/composite-fb3": {
     "__comp": "df203c0f",
@@ -293,6 +329,10 @@
     "__comp": "df203c0f",
     "__props": "2e6b536c"
   },
+  "/tags/consent-08d": {
+    "__comp": "df203c0f",
+    "__props": "94484636"
+  },
   "/tags/consistency-5a7": {
     "__comp": "df203c0f",
     "__props": "301c2584"
@@ -300,6 +340,10 @@
   "/tags/consumers-15c": {
     "__comp": "df203c0f",
     "__props": "f03a4bb8"
+  },
+  "/tags/container-security-73e": {
+    "__comp": "df203c0f",
+    "__props": "f8722bf6"
   },
   "/tags/contention-69d": {
     "__comp": "df203c0f",
@@ -325,6 +369,10 @@
     "__comp": "df203c0f",
     "__props": "4223edf9"
   },
+  "/tags/cryptography-cda": {
+    "__comp": "df203c0f",
+    "__props": "b4b5f7a7"
+  },
   "/tags/csrf-4c3": {
     "__comp": "df203c0f",
     "__props": "c982ac54"
@@ -336,6 +384,14 @@
   "/tags/curl-8da": {
     "__comp": "df203c0f",
     "__props": "1f312f14"
+  },
+  "/tags/dast-361": {
+    "__comp": "df203c0f",
+    "__props": "d7bfaad1"
+  },
+  "/tags/data-classification-2ac": {
+    "__comp": "df203c0f",
+    "__props": "ee36b8bc"
   },
   "/tags/data-integration-e30": {
     "__comp": "df203c0f",
@@ -381,6 +437,14 @@
     "__comp": "df203c0f",
     "__props": "01dac2d7"
   },
+  "/tags/detection-b71": {
+    "__comp": "df203c0f",
+    "__props": "0c6e8666"
+  },
+  "/tags/devsecops-c95": {
+    "__comp": "df203c0f",
+    "__props": "62b2e384"
+  },
   "/tags/diagnostics-cf7": {
     "__comp": "df203c0f",
     "__props": "96621438"
@@ -388,6 +452,10 @@
   "/tags/dig-3a2": {
     "__comp": "df203c0f",
     "__props": "e33520d2"
+  },
+  "/tags/digital-signature-08a": {
+    "__comp": "df203c0f",
+    "__props": "4c4f8563"
   },
   "/tags/dimensional-modeling-1c0": {
     "__comp": "df203c0f",
@@ -436,6 +504,10 @@
   "/tags/elasticsearch-392": {
     "__comp": "df203c0f",
     "__props": "d6c03ee6"
+  },
+  "/tags/elliptic-curve-66a": {
+    "__comp": "df203c0f",
+    "__props": "f341a71a"
   },
   "/tags/elt-245": {
     "__comp": "df203c0f",
@@ -553,6 +625,10 @@
     "__comp": "df203c0f",
     "__props": "1eff3b4a"
   },
+  "/tags/forensics-8dc": {
+    "__comp": "df203c0f",
+    "__props": "7a512596"
+  },
   "/tags/framework-c26": {
     "__comp": "df203c0f",
     "__props": "9bf7169a"
@@ -573,6 +649,10 @@
     "__comp": "df203c0f",
     "__props": "37e090a4"
   },
+  "/tags/gdpr-59f": {
+    "__comp": "df203c0f",
+    "__props": "184794eb"
+  },
   "/tags/generics-cb5": {
     "__comp": "df203c0f",
     "__props": "0aab00a6"
@@ -589,6 +669,10 @@
     "__comp": "df203c0f",
     "__props": "6996cede"
   },
+  "/tags/graphql-security-05d": {
+    "__comp": "df203c0f",
+    "__props": "c50bccb4"
+  },
   "/tags/grpc-2d8": {
     "__comp": "df203c0f",
     "__props": "a4befbf4"
@@ -596,6 +680,10 @@
   "/tags/handshake-b4f": {
     "__comp": "df203c0f",
     "__props": "dfdba20e"
+  },
+  "/tags/hashing-935": {
+    "__comp": "df203c0f",
+    "__props": "a975ecea"
   },
   "/tags/headers-213": {
     "__comp": "df203c0f",
@@ -608,6 +696,10 @@
   "/tags/high-availability-c36": {
     "__comp": "df203c0f",
     "__props": "626d5414"
+  },
+  "/tags/hipaa-a32": {
+    "__comp": "df203c0f",
+    "__props": "3597b5ef"
   },
   "/tags/http-43a": {
     "__comp": "df203c0f",
@@ -629,9 +721,17 @@
     "__comp": "df203c0f",
     "__props": "785b5c1c"
   },
+  "/tags/iam-bd1": {
+    "__comp": "df203c0f",
+    "__props": "349f60b5"
+  },
   "/tags/idempotency-cc3": {
     "__comp": "df203c0f",
     "__props": "72ba4736"
+  },
+  "/tags/incident-response-c87": {
+    "__comp": "df203c0f",
+    "__props": "c838a251"
   },
   "/tags/indexing-e44": {
     "__comp": "df203c0f",
@@ -644,6 +744,10 @@
   "/tags/innodb-99e": {
     "__comp": "df203c0f",
     "__props": "b2e0094c"
+  },
+  "/tags/input-validation-191": {
+    "__comp": "df203c0f",
+    "__props": "dea09572"
   },
   "/tags/internals-874": {
     "__comp": "df203c0f",
@@ -725,6 +829,10 @@
     "__comp": "df203c0f",
     "__props": "70c88d8f"
   },
+  "/tags/just-in-time-access-60a": {
+    "__comp": "df203c0f",
+    "__props": "2992bc85"
+  },
   "/tags/jvm-c85": {
     "__comp": "df203c0f",
     "__props": "2048d955"
@@ -753,6 +861,10 @@
     "__comp": "df203c0f",
     "__props": "c85e2c37"
   },
+  "/tags/key-management-aaf": {
+    "__comp": "df203c0f",
+    "__props": "0c7c36f4"
+  },
   "/tags/keys-38a": {
     "__comp": "df203c0f",
     "__props": "0310c624"
@@ -765,6 +877,10 @@
     "__comp": "df203c0f",
     "__props": "6dd941e3"
   },
+  "/tags/kubernetes-rbac-fc6": {
+    "__comp": "df203c0f",
+    "__props": "faacc8d1"
+  },
   "/tags/language-features-35c": {
     "__comp": "df203c0f",
     "__props": "d7d8705e"
@@ -776,6 +892,10 @@
   "/tags/layers-bb4": {
     "__comp": "df203c0f",
     "__props": "3b4cfc96"
+  },
+  "/tags/ldap-592": {
+    "__comp": "df203c0f",
+    "__props": "12bfc273"
   },
   "/tags/leader-election-33c": {
     "__comp": "df203c0f",
@@ -813,6 +933,10 @@
     "__comp": "df203c0f",
     "__props": "47048e29"
   },
+  "/tags/mass-assignment-9c2": {
+    "__comp": "df203c0f",
+    "__props": "8aab17d4"
+  },
   "/tags/memory-management-051": {
     "__comp": "df203c0f",
     "__props": "d1481106"
@@ -824,6 +948,10 @@
   "/tags/metrics-71f": {
     "__comp": "df203c0f",
     "__props": "86cac9da"
+  },
+  "/tags/mfa-88e": {
+    "__comp": "df203c0f",
+    "__props": "4528fb20"
   },
   "/tags/microservices-565": {
     "__comp": "df203c0f",
@@ -896,6 +1024,14 @@
   "/tags/netty-d64": {
     "__comp": "df203c0f",
     "__props": "81e5622e"
+  },
+  "/tags/network-security-af4": {
+    "__comp": "df203c0f",
+    "__props": "dcaf10fb"
+  },
+  "/tags/network-segmentation-d26": {
+    "__comp": "df203c0f",
+    "__props": "2466c7e7"
   },
   "/tags/networking-cc6": {
     "__comp": "df203c0f",
@@ -1021,6 +1157,10 @@
     "__comp": "df203c0f",
     "__props": "9afd3654"
   },
+  "/tags/owasp-api-4e5": {
+    "__comp": "df203c0f",
+    "__props": "2fd253bd"
+  },
   "/tags/pagination-0fa": {
     "__comp": "df203c0f",
     "__props": "852de2da"
@@ -1028,6 +1168,10 @@
   "/tags/paging-947": {
     "__comp": "df203c0f",
     "__props": "47337ff7"
+  },
+  "/tags/pam-0a5": {
+    "__comp": "df203c0f",
+    "__props": "7ef4b618"
   },
   "/tags/parallelism-118": {
     "__comp": "df203c0f",
@@ -1040,6 +1184,14 @@
   "/tags/paxos-9d8": {
     "__comp": "df203c0f",
     "__props": "17bca331"
+  },
+  "/tags/pci-dss-ca2": {
+    "__comp": "df203c0f",
+    "__props": "8f89b639"
+  },
+  "/tags/pentesting-13c": {
+    "__comp": "df203c0f",
+    "__props": "5ed236c2"
   },
   "/tags/performance-69d": {
     "__comp": "df203c0f",
@@ -1072,6 +1224,14 @@
   "/tags/preparation-0dc": {
     "__comp": "df203c0f",
     "__props": "df453be4"
+  },
+  "/tags/privacy-856": {
+    "__comp": "df203c0f",
+    "__props": "77181fba"
+  },
+  "/tags/privacy-by-design-f56": {
+    "__comp": "df203c0f",
+    "__props": "b2af7d5c"
   },
   "/tags/process-601": {
     "__comp": "df203c0f",
@@ -1241,6 +1401,10 @@
     "__comp": "df203c0f",
     "__props": "856f9aad"
   },
+  "/tags/rsa-5e8": {
+    "__comp": "df203c0f",
+    "__props": "a38b4d33"
+  },
   "/tags/rto-459": {
     "__comp": "df203c0f",
     "__props": "5006d98f"
@@ -1252,6 +1416,18 @@
   "/tags/saga-363": {
     "__comp": "df203c0f",
     "__props": "6a2129ea"
+  },
+  "/tags/saml-839": {
+    "__comp": "df203c0f",
+    "__props": "11c49d3b"
+  },
+  "/tags/sast-9ec": {
+    "__comp": "df203c0f",
+    "__props": "02f31446"
+  },
+  "/tags/sca-520": {
+    "__comp": "df203c0f",
+    "__props": "213a548d"
   },
   "/tags/scaling-37a": {
     "__comp": "df203c0f",
@@ -1269,6 +1445,10 @@
     "__comp": "df203c0f",
     "__props": "583a407d"
   },
+  "/tags/sdlc-5bf": {
+    "__comp": "df203c0f",
+    "__props": "8a6d9d6c"
+  },
   "/tags/search-8a3": {
     "__comp": "df203c0f",
     "__props": "dae1405e"
@@ -1277,9 +1457,25 @@
     "__comp": "df203c0f",
     "__props": "f1da5bd0"
   },
+  "/tags/secrets-scanning-f6d": {
+    "__comp": "df203c0f",
+    "__props": "205c9774"
+  },
+  "/tags/secure-design-02c": {
+    "__comp": "df203c0f",
+    "__props": "9a46cacb"
+  },
   "/tags/security-84b": {
     "__comp": "df203c0f",
     "__props": "165b7680"
+  },
+  "/tags/security-operations-110": {
+    "__comp": "df203c0f",
+    "__props": "bee33de3"
+  },
+  "/tags/service-accounts-429": {
+    "__comp": "df203c0f",
+    "__props": "ed8453a2"
   },
   "/tags/service-discovery-d7b": {
     "__comp": "df203c0f",
@@ -1289,9 +1485,21 @@
     "__comp": "df203c0f",
     "__props": "799dbe18"
   },
+  "/tags/session-3c3": {
+    "__comp": "df203c0f",
+    "__props": "8ded4feb"
+  },
   "/tags/sharding-5aa": {
     "__comp": "df203c0f",
     "__props": "5daf08d3"
+  },
+  "/tags/shift-left-4ca": {
+    "__comp": "df203c0f",
+    "__props": "fae0a144"
+  },
+  "/tags/siem-131": {
+    "__comp": "df203c0f",
+    "__props": "29f7bcf3"
   },
   "/tags/signals-b13": {
     "__comp": "df203c0f",
@@ -1316,6 +1524,14 @@
   "/tags/smtp-ea0": {
     "__comp": "df203c0f",
     "__props": "187558a9"
+  },
+  "/tags/soc-502": {
+    "__comp": "df203c0f",
+    "__props": "9c8cf66d"
+  },
+  "/tags/soc-2-984": {
+    "__comp": "df203c0f",
+    "__props": "104a5063"
   },
   "/tags/socket-291": {
     "__comp": "df203c0f",
@@ -1361,6 +1577,10 @@
     "__comp": "df203c0f",
     "__props": "a0ec3c55"
   },
+  "/tags/spring-validation-1f7": {
+    "__comp": "df203c0f",
+    "__props": "d2ae44c2"
+  },
   "/tags/spring-websocket-e2f": {
     "__comp": "df203c0f",
     "__props": "85069138"
@@ -1392,6 +1612,14 @@
   "/tags/ssl-f4f": {
     "__comp": "df203c0f",
     "__props": "fc938c70"
+  },
+  "/tags/sso-504": {
+    "__comp": "df203c0f",
+    "__props": "6dcf6edf"
+  },
+  "/tags/ssrf-7c6": {
+    "__comp": "df203c0f",
+    "__props": "94a88606"
   },
   "/tags/star-schema-b6c": {
     "__comp": "df203c0f",
@@ -1477,6 +1705,10 @@
     "__comp": "df203c0f",
     "__props": "22656c0d"
   },
+  "/tags/threat-modeling-682": {
+    "__comp": "df203c0f",
+    "__props": "70b50439"
+  },
   "/tags/time-series-8b1": {
     "__comp": "df203c0f",
     "__props": "2cc7c3d9"
@@ -1541,6 +1773,18 @@
     "__comp": "df203c0f",
     "__props": "232e4249"
   },
+  "/tags/vulnerability-804": {
+    "__comp": "df203c0f",
+    "__props": "0fc94c02"
+  },
+  "/tags/vulnerability-management-41e": {
+    "__comp": "df203c0f",
+    "__props": "8ee62ca1"
+  },
+  "/tags/waf-78c": {
+    "__comp": "df203c0f",
+    "__props": "26ae1a97"
+  },
   "/tags/wal-8a2": {
     "__comp": "df203c0f",
     "__props": "f6b42dd8"
@@ -1548,6 +1792,10 @@
   "/tags/web-4aa": {
     "__comp": "df203c0f",
     "__props": "e2c9efd5"
+  },
+  "/tags/web-security-d42": {
+    "__comp": "df203c0f",
+    "__props": "65532763"
   },
   "/tags/webhooks-424": {
     "__comp": "df203c0f",
@@ -1581,6 +1829,10 @@
     "__comp": "df203c0f",
     "__props": "f417c6c0"
   },
+  "/tags/xxe-7c8": {
+    "__comp": "df203c0f",
+    "__props": "b4cfc7bc"
+  },
   "/tags/zero-downtime-1c3": {
     "__comp": "df203c0f",
     "__props": "b0d573e5"
@@ -1589,8 +1841,12 @@
     "__comp": "df203c0f",
     "__props": "cdd99891"
   },
-  "/-c75": {
+  "/-4cd": {
     "__comp": "a94703ab"
+  },
+  "/security-0f0": {
+    "__comp": "17896441",
+    "content": "47ce4938"
   },
   "/system-design-6ff": {
     "__comp": "17896441",
@@ -1915,6 +2171,46 @@
   "/technical-knowledge/operating-systems/virtual-memory-deep-dive-168": {
     "__comp": "17896441",
     "content": "2d19a7f5"
+  },
+  "/technical-knowledge/security/api-security-a53": {
+    "__comp": "17896441",
+    "content": "0f1c16b4"
+  },
+  "/technical-knowledge/security/authentication-authorization-c0c": {
+    "__comp": "17896441",
+    "content": "aebb600c"
+  },
+  "/technical-knowledge/security/cryptography-secure-design-f51": {
+    "__comp": "17896441",
+    "content": "06e11990"
+  },
+  "/technical-knowledge/security/identity-access-management-ed5": {
+    "__comp": "17896441",
+    "content": "90df2fd4"
+  },
+  "/technical-knowledge/security/incident-response-128": {
+    "__comp": "17896441",
+    "content": "930c44aa"
+  },
+  "/technical-knowledge/security/network-security-75d": {
+    "__comp": "17896441",
+    "content": "139f78ad"
+  },
+  "/technical-knowledge/security/privacy-compliance-ed9": {
+    "__comp": "17896441",
+    "content": "a232c503"
+  },
+  "/technical-knowledge/security/secure-sdlc-b00": {
+    "__comp": "17896441",
+    "content": "3488c5df"
+  },
+  "/technical-knowledge/security/security-interview-questions-062": {
+    "__comp": "17896441",
+    "content": "ca2eda39"
+  },
+  "/technical-knowledge/security/web-vulnerabilities-6f7": {
+    "__comp": "17896441",
+    "content": "49b42f03"
   },
   "/technical-knowledge/spring/spring-boot-2a7": {
     "__comp": "17896441",

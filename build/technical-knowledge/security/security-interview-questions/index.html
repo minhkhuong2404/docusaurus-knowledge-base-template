@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="docs-wrapper plugin-docs plugin-id-default docs-version-current docs-doc-page docs-doc-id-technical-knowledge/security/security-interview-questions" data-has-hydrated="false">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v3.9.2">
+<title data-rh="true">Common Security Interview Questions | Engineering Knowledge Base</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://luminhkhuong.dev/technical-knowledge/security/security-interview-questions"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Common Security Interview Questions | Engineering Knowledge Base"><meta data-rh="true" name="description" content="Comprehensive security interview question bank for software engineers, covering authentication, web vulnerabilities, cryptography, network security, cloud security, and secure design scenarios."><meta data-rh="true" property="og:description" content="Comprehensive security interview question bank for software engineers, covering authentication, web vulnerabilities, cryptography, network security, cloud security, and secure design scenarios."><link data-rh="true" rel="canonical" href="https://luminhkhuong.dev/technical-knowledge/security/security-interview-questions"><link data-rh="true" rel="alternate" href="https://luminhkhuong.dev/technical-knowledge/security/security-interview-questions" hreflang="en"><link data-rh="true" rel="alternate" href="https://luminhkhuong.dev/technical-knowledge/security/security-interview-questions" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Interview Questions","item":"https://luminhkhuong.dev/technical-knowledge/security/security-interview-questions"}]}</script><link rel="stylesheet" href="/assets/css/styles.de6aed86.css">
+<script src="/assets/js/runtime~main.b3da0bbd.js" defer="defer"></script>
+<script src="/assets/js/main.4501f44b.js" defer="defer"></script>
+</head>
+<body class="navigation-with-keyboard">
+<svg style="display: none;"><defs>
+<symbol id="theme-svg-external-link" viewBox="0 0 24 24"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
+</defs></svg>
+<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")),document.documentElement.setAttribute("data-theme-choice",t||"system")}(),function(){try{const c=new URLSearchParams(window.location.search).entries();for(var[t,e]of c)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><div id="__docusaurus"><div role="region" aria-label="Skip to main content"><a class="skipToContent_fXgn" href="#__docusaurus_skipToContent_fallback">Skip to main content</a></div><nav aria-label="Main" class="theme-layout-navbar navbar navbar--fixed-top"><div class="navbar__inner"><div class="theme-layout-navbar-left navbar__items"><a class="navbar__brand" href="/"></a></div><div class="theme-layout-navbar-right navbar__items navbar__items--right"><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP systemToggleIcon_QzmC"><path fill="currentColor" d="m12 21c4.971 0 9-4.029 9-9s-4.029-9-9-9-9 4.029-9 9 4.029 9 9 9zm4.95-13.95c1.313 1.313 2.05 3.093 2.05 4.95s-0.738 3.637-2.05 4.95c-1.313 1.313-3.093 2.05-4.95 2.05v-14c1.857 0 3.637 0.737 4.95 2.05z"></path></svg></button></div><div class="navbarSearchContainer_Bca1"></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="theme-layout-main main-wrapper mainWrapper_z2l0"><div class="docsWrapper_hBAB"><button aria-label="Scroll back to top" class="clean-btn theme-back-to-top-button backToTopButton_sjWU" type="button"></button><div class="docRoot_UBD9"><aside class="theme-doc-sidebar-container docSidebarContainer_YfHR"><div class="sidebarViewport_aRkj"><div class="sidebar_njMd"><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_SIkG"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/"><span title="Welcome" class="linkLabel_WmDU">Welcome</span></a></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/technical-knowledge/java/java-overview"><span title="☕ Java" class="categoryLinkLabel_W154">☕ Java</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/technical-knowledge/spring/spring-overview"><span title="⚙️ Spring Ecosystem" class="categoryLinkLabel_W154">⚙️ Spring Ecosystem</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/technical-knowledge/design-patterns/design-patterns-overview"><span title="🧩 Design Patterns" class="categoryLinkLabel_W154">🧩 Design Patterns</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/system-design"><span title="📖 System Design" class="categoryLinkLabel_W154">📖 System Design</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret menu__link--active" role="button" aria-expanded="true" href="/security"><span title="🔐 Security" class="categoryLinkLabel_W154">🔐 Security</span></a></div><ul class="menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/security"><span title="Overview" class="linkLabel_WmDU">Overview</span></a></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="true" tabindex="0" href="/technical-knowledge/security/authentication-authorization"><span title="🔐 Core Security" class="categoryLinkLabel_W154">🔐 Core Security</span></a></div><ul class="menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link" tabindex="0" href="/technical-knowledge/security/authentication-authorization"><span title="AuthN &amp; AuthZ" class="linkLabel_WmDU">AuthN &amp; AuthZ</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link" tabindex="0" href="/technical-knowledge/security/web-vulnerabilities"><span title="Web Vulnerabilities" class="linkLabel_WmDU">Web Vulnerabilities</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link" tabindex="0" href="/technical-knowledge/security/cryptography-secure-design"><span title="Cryptography" class="linkLabel_WmDU">Cryptography</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link" tabindex="0" href="/technical-knowledge/security/api-security"><span title="API Security" class="linkLabel_WmDU">API Security</span></a></li></ul></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="true" tabindex="0" href="/technical-knowledge/security/privacy-compliance"><span title="🏛️ Governance &amp; Compliance" class="categoryLinkLabel_W154">🏛️ Governance &amp; Compliance</span></a></div><ul class="menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link" tabindex="0" href="/technical-knowledge/security/privacy-compliance"><span title="Privacy &amp; Compliance" class="linkLabel_WmDU">Privacy &amp; Compliance</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link" tabindex="0" href="/technical-knowledge/security/identity-access-management"><span title="IAM" class="linkLabel_WmDU">IAM</span></a></li></ul></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="true" tabindex="0" href="/technical-knowledge/security/network-security"><span title="🛡️ Operations &amp; Infrastructure" class="categoryLinkLabel_W154">🛡️ Operations &amp; Infrastructure</span></a></div><ul class="menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link" tabindex="0" href="/technical-knowledge/security/network-security"><span title="Network Security" class="linkLabel_WmDU">Network Security</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link" tabindex="0" href="/technical-knowledge/security/secure-sdlc"><span title="Secure SDLC" class="linkLabel_WmDU">Secure SDLC</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link" tabindex="0" href="/technical-knowledge/security/incident-response"><span title="Incident Response" class="linkLabel_WmDU">Incident Response</span></a></li></ul></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-2 menu__list-item"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret menu__link--active" role="button" aria-expanded="true" tabindex="0" href="/technical-knowledge/security/security-interview-questions"><span title="🎯 Interview Prep" class="categoryLinkLabel_W154">🎯 Interview Prep</span></a></div><ul class="menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-3 menu__list-item"><a class="menu__link menu__link--active" aria-current="page" tabindex="0" href="/technical-knowledge/security/security-interview-questions"><span title="Interview Questions" class="linkLabel_WmDU">Interview Questions</span></a></li></ul></li></ul></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/technical-knowledge/networking/"><span title="🌐 Network Overview" class="categoryLinkLabel_W154">🌐 Network Overview</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/technical-knowledge/kafka/kafka-complete-guide"><span title="📨 Kafka" class="categoryLinkLabel_W154">📨 Kafka</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/technical-knowledge/database/"><span title="🗄️ Database" class="categoryLinkLabel_W154">🗄️ Database</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/technical-knowledge/operating-systems/intro"><span title="🖥️ Operating Systems" class="categoryLinkLabel_W154">🖥️ Operating Systems</span></a></div></li></ul></nav></div></div></aside><main class="docMainContainer_TBSr"><div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><nav class="theme-doc-breadcrumbs breadcrumbsContainer_Z_bl" aria-label="Breadcrumbs"><ul class="breadcrumbs"><li class="breadcrumbs__item"><a aria-label="Home page" class="breadcrumbs__link" href="/"><svg viewBox="0 0 24 24" class="breadcrumbHomeIcon_YNFT"><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z" fill="currentColor"></path></svg></a></li><li class="breadcrumbs__item"><span class="breadcrumbs__link">🔐 Security</span></li><li class="breadcrumbs__item"><span class="breadcrumbs__link">🎯 Interview Prep</span></li><li class="breadcrumbs__item breadcrumbs__item--active"><span class="breadcrumbs__link">Interview Questions</span></li></ul></nav><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_ITEo"><button type="button" class="clean-btn tocCollapsibleButton_TO0P">On this page</button></div><div class="theme-doc-markdown markdown"><header><h1>Common Security Interview Questions</h1></header>
+<blockquote>
+<p>Questions are grouped by topic and include the key points interviewers expect in your answer.</p>
+</blockquote>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="authentication--authorization">Authentication &amp; Authorization<a href="#authentication--authorization" class="hash-link" aria-label="Direct link to Authentication &amp; Authorization" title="Direct link to Authentication &amp; Authorization" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="q1-what-is-the-difference-between-authentication-and-authorization-give-an-example-where-they-are-independent">Q1: What is the difference between authentication and authorization? Give an example where they are independent.<a href="#q1-what-is-the-difference-between-authentication-and-authorization-give-an-example-where-they-are-independent" class="hash-link" aria-label="Direct link to Q1: What is the difference between authentication and authorization? Give an example where they are independent." title="Direct link to Q1: What is the difference between authentication and authorization? Give an example where they are independent." translate="no">​</a></h3>
+<p><strong>Key points:</strong></p>
+<ul>
+<li class="">AuthN = verifying identity (&quot;Who are you?&quot;). AuthZ = verifying permissions (&quot;What can you do?&quot;).</li>
+<li class="">Example: A valid JWT (authenticated) can access <code>/api/orders</code> but get a 403 (not authorized) on <code>/api/admin</code> — identity verified, permission denied.</li>
+<li class="">HTTP status codes: 401 = unauthenticated, 403 = unauthorized.</li>
+</ul>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="q2-explain-how-jwt-works-what-are-the-security-concerns">Q2: Explain how JWT works. What are the security concerns?<a href="#q2-explain-how-jwt-works-what-are-the-security-concerns" class="hash-link" aria-label="Direct link to Q2: Explain how JWT works. What are the security concerns?" title="Direct link to Q2: Explain how JWT works. What are the security concerns?" translate="no">​</a></h3>
+<p><strong>Key points:</strong></p>
+<ul>
+<li class="">Three parts: header (algorithm), payload (claims), signature.</li>
+<li class="">Server validates signature only — no DB lookup needed (stateless).</li>
+<li class=""><strong>Concerns:</strong>
+<ul>
+<li class="">Cannot be revoked before expiry (use blocklist or short TTL)</li>
+<li class="">Payload is Base64 encoded, not encrypted (don&#x27;t put sensitive data in payload unless using JWE)</li>
+<li class="">Algorithm confusion attacks: if server accepts <code>alg: none</code>, attacker can forge token</li>
+<li class="">Use RS256 (asymmetric) over HS256 in multi-service environments</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="q3-how-does-oauth-20-differ-from-oidc">Q3: How does OAuth 2.0 differ from OIDC?<a href="#q3-how-does-oauth-20-differ-from-oidc" class="hash-link" aria-label="Direct link to Q3: How does OAuth 2.0 differ from OIDC?" title="Direct link to Q3: How does OAuth 2.0 differ from OIDC?" translate="no">​</a></h3>
+<p><strong>Key points:</strong></p>
+<ul>
+<li class="">OAuth 2.0 = authorization framework (delegated access to resources). Does NOT define identity.</li>
+<li class="">OIDC = identity layer on top of OAuth 2.0. Adds <code>id_token</code> (JWT with user claims like email, name).</li>
+<li class="">OAuth 2.0: &quot;Can this app access your Google Drive?&quot; → returns <code>access_token</code></li>
+<li class="">OIDC: &quot;Who are you? Login with Google&quot; → returns <code>id_token</code> + <code>access_token</code></li>
+</ul>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="q4-how-do-you-implement-the-refresh-token-rotation-pattern-and-why">Q4: How do you implement the refresh token rotation pattern and why?<a href="#q4-how-do-you-implement-the-refresh-token-rotation-pattern-and-why" class="hash-link" aria-label="Direct link to Q4: How do you implement the refresh token rotation pattern and why?" title="Direct link to Q4: How do you implement the refresh token rotation pattern and why?" translate="no">​</a></h3>
+<p><strong>Key points:</strong></p>
+<ul>
+<li class="">Access token: short TTL (15 min). Refresh token: long TTL (30 days), stored server-side.</li>
+<li class="">On each use of refresh token: issue NEW refresh token + invalidate old one.</li>
+<li class=""><strong>Why rotation?</strong> If refresh token is stolen, the legitimate user&#x27;s next use triggers invalidation of the stolen token, and the attacker&#x27;s next use is detected (token already used = theft indicator).</li>
+</ul>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="q5-what-is-the-difference-between-rbac-abac-and-rebac">Q5: What is the difference between RBAC, ABAC, and ReBAC?<a href="#q5-what-is-the-difference-between-rbac-abac-and-rebac" class="hash-link" aria-label="Direct link to Q5: What is the difference between RBAC, ABAC, and ReBAC?" title="Direct link to Q5: What is the difference between RBAC, ABAC, and ReBAC?" translate="no">​</a></h3>
+<p><strong>Key points:</strong></p>
+<ul>
+<li class="">RBAC: Access based on assigned role (Admin, User). Simple, widely supported.</li>
+<li class="">ABAC: Access based on attributes of user, resource, environment (department match, time of day). More flexible, more complex.</li>
+<li class="">ReBAC: Access based on relationships between entities (used in Google Zanzibar, OPA). &quot;Alice is an editor of Document X because she is a member of Team Y which owns Folder Z.&quot;</li>
+<li class="">Trade-off: RBAC is simple but coarse-grained; ABAC is fine-grained but complex to manage.</li>
+</ul>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="web-vulnerabilities">Web Vulnerabilities<a href="#web-vulnerabilities" class="hash-link" aria-label="Direct link to Web Vulnerabilities" title="Direct link to Web Vulnerabilities" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="q6-explain-sql-injection-with-an-example-and-how-to-prevent-it-in-spring-boot">Q6: Explain SQL injection with an example and how to prevent it in Spring Boot.<a href="#q6-explain-sql-injection-with-an-example-and-how-to-prevent-it-in-spring-boot" class="hash-link" aria-label="Direct link to Q6: Explain SQL injection with an example and how to prevent it in Spring Boot." title="Direct link to Q6: Explain SQL injection with an example and how to prevent it in Spring Boot." translate="no">​</a></h3>
+<p><strong>Key points:</strong></p>
+<ul>
+<li class="">Attack: Injecting SQL into user input that gets concatenated into a query.</li>
+<li class="">Example: <code>email = &quot;&#x27; OR &#x27;1&#x27;=&#x27;1&quot;</code> returns all users.</li>
+<li class=""><strong>Fixes in Spring Boot:</strong>
+<ul>
+<li class="">JPA/Spring Data: parameterized automatically</li>
+<li class=""><code>@Query</code> with <code>:param</code> named parameters</li>
+<li class="">JdbcTemplate: <code>?</code> placeholder, not string concatenation</li>
+<li class="">For dynamic ORDER BY: whitelist column names</li>
+</ul>
+</li>
+<li class="">Defense in depth: DB user should not have DROP permission.</li>
+</ul>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="q7-what-is-csrf-when-does-it-not-apply-and-why">Q7: What is CSRF? When does it NOT apply and why?<a href="#q7-what-is-csrf-when-does-it-not-apply-and-why" class="hash-link" aria-label="Direct link to Q7: What is CSRF? When does it NOT apply and why?" title="Direct link to Q7: What is CSRF? When does it NOT apply and why?" translate="no">​</a></h3>
+<p><strong>Key points:</strong></p>
+<ul>
+<li class="">Attack: Attacker tricks authenticated user&#x27;s browser into making state-changing request using their existing session cookie.</li>
+<li class="">Defenses: CSRF tokens (synchronizer token), <code>SameSite=Strict</code> or <code>SameSite=Lax</code> cookie attribute.</li>
+<li class=""><strong>Does NOT apply when:</strong>
+<ul>
+<li class="">Using JWT in <code>Authorization: Bearer</code> header (not a cookie) — browser won&#x27;t auto-send it cross-site</li>
+<li class="">API consumed only by mobile apps (no browser context)</li>
+<li class=""><code>SameSite=Strict</code> cookies are used</li>
+</ul>
+</li>
+<li class="">Spring Security&#x27;s default CSRF protection is designed for cookie-based sessions.</li>
+</ul>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="q8-what-is-ssrf-give-an-attack-scenario-involving-cloud-metadata">Q8: What is SSRF? Give an attack scenario involving cloud metadata.<a href="#q8-what-is-ssrf-give-an-attack-scenario-involving-cloud-metadata" class="hash-link" aria-label="Direct link to Q8: What is SSRF? Give an attack scenario involving cloud metadata." title="Direct link to Q8: What is SSRF? Give an attack scenario involving cloud metadata." translate="no">​</a></h3>
+<p><strong>Key points:</strong></p>
+<ul>
+<li class="">Server-Side Request Forgery: server makes HTTP request to attacker-controlled URL.</li>
+<li class=""><strong>Cloud metadata attack:</strong> App accepts image URL → attacker provides <code>http://169.254.169.254/latest/meta-data/iam/security-credentials/ec2-role</code> → server fetches and returns AWS IAM credentials.</li>
+<li class=""><strong>Defenses:</strong>
+<ul>
+<li class="">Block private IP ranges (127.x.x.x, 10.x.x.x, 169.254.x.x, etc.)</li>
+<li class="">Allowlist domains for external requests</li>
+<li class="">Resolve DNS and re-check IP after resolution (DNS rebinding)</li>
+<li class="">Use HTTPS only</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="q9-what-is-the-difference-between-stored-reflected-and-dom-based-xss">Q9: What is the difference between Stored, Reflected, and DOM-based XSS?<a href="#q9-what-is-the-difference-between-stored-reflected-and-dom-based-xss" class="hash-link" aria-label="Direct link to Q9: What is the difference between Stored, Reflected, and DOM-based XSS?" title="Direct link to Q9: What is the difference between Stored, Reflected, and DOM-based XSS?" translate="no">​</a></h3>
+<p><strong>Key points:</strong></p>
+<ul>
+<li class=""><strong>Stored XSS:</strong> Malicious script stored in DB (e.g., comment), executed when other users view it. Highest impact.</li>
+<li class=""><strong>Reflected XSS:</strong> Script in URL parameter, reflected in response. User must click crafted link.</li>
+<li class=""><strong>DOM-based XSS:</strong> Client-side JavaScript reads from URL/location, writes to DOM without escaping. Never touches the server.</li>
+<li class=""><strong>Defenses:</strong> Output encoding (Thymeleaf&#x27;s <code>th:text</code>), CSP (Content Security Policy), HttpOnly cookies (protect from script access to cookies).</li>
+</ul>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="cryptography">Cryptography<a href="#cryptography" class="hash-link" aria-label="Direct link to Cryptography" title="Direct link to Cryptography" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="q10-why-is-aes-gcm-preferred-over-aes-cbc">Q10: Why is AES-GCM preferred over AES-CBC?<a href="#q10-why-is-aes-gcm-preferred-over-aes-cbc" class="hash-link" aria-label="Direct link to Q10: Why is AES-GCM preferred over AES-CBC?" title="Direct link to Q10: Why is AES-GCM preferred over AES-CBC?" translate="no">​</a></h3>
+<p><strong>Key points:</strong></p>
+<ul>
+<li class="">CBC provides only confidentiality. Vulnerable to padding oracle attacks without separate MAC.</li>
+<li class=""><strong>GCM = AES + GHASH (authenticated encryption).</strong> Provides confidentiality AND integrity in one operation.</li>
+<li class="">AES-GCM detects tampering — if ciphertext is modified, decryption throws <code>AEADBadTagException</code>.</li>
+<li class="">Both require unique IV per encryption. GCM IVs are 96-bit; reusing IV with the same key in GCM completely breaks security (never reuse).</li>
+</ul>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="q11-what-is-the-difference-between-hashing-and-encryption">Q11: What is the difference between hashing and encryption?<a href="#q11-what-is-the-difference-between-hashing-and-encryption" class="hash-link" aria-label="Direct link to Q11: What is the difference between hashing and encryption?" title="Direct link to Q11: What is the difference between hashing and encryption?" translate="no">​</a></h3>
+<p><strong>Key points:</strong></p>
+<ul>
+<li class=""><strong>Hashing:</strong> One-way, no key, same input = same output. Cannot reverse. Use for integrity, password storage (with salt+slow function).</li>
+<li class=""><strong>Encryption:</strong> Two-way, requires key. Can decrypt with right key. Use for confidentiality.</li>
+<li class="">Password storage: use <strong>slow hash</strong> (BCrypt, Argon2id) — fast hashes (SHA-256) are too easy to brute force with GPUs.</li>
+</ul>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="q12-what-is-a-timing-attack-and-how-do-you-prevent-it-in-string-comparison">Q12: What is a timing attack and how do you prevent it in string comparison?<a href="#q12-what-is-a-timing-attack-and-how-do-you-prevent-it-in-string-comparison" class="hash-link" aria-label="Direct link to Q12: What is a timing attack and how do you prevent it in string comparison?" title="Direct link to Q12: What is a timing attack and how do you prevent it in string comparison?" translate="no">​</a></h3>
+<p><strong>Key points:</strong></p>
+<ul>
+<li class="">Normal <code>String.equals()</code> returns false on first mismatching character — takes less time for shorter matching prefix → leaks information about the secret.</li>
+<li class="">Attacker measures response time to infer characters of a secret (e.g., API key, HMAC).</li>
+<li class=""><strong>Fix:</strong> <code>MessageDigest.isEqual()</code> or <code>Arrays.equals(mac1, mac2)</code> — always takes constant time regardless of where mismatch occurs.</li>
+</ul>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="q13-explain-perfect-forward-secrecy-why-does-it-matter">Q13: Explain Perfect Forward Secrecy. Why does it matter?<a href="#q13-explain-perfect-forward-secrecy-why-does-it-matter" class="hash-link" aria-label="Direct link to Q13: Explain Perfect Forward Secrecy. Why does it matter?" title="Direct link to Q13: Explain Perfect Forward Secrecy. Why does it matter?" translate="no">​</a></h3>
+<p><strong>Key points:</strong></p>
+<ul>
+<li class="">PFS ensures that <strong>past sessions cannot be decrypted</strong> even if the server&#x27;s private key is later compromised.</li>
+<li class="">Achieved with ephemeral Diffie-Hellman key exchange (ECDHE): session key derived from ephemeral keys, which are discarded after the session.</li>
+<li class="">Without PFS: if attacker recorded encrypted traffic and later gets the private key, they can decrypt all past sessions retroactively.</li>
+<li class="">TLS 1.3 mandates PFS. TLS 1.2 with ECDHE cipher suites also provides it.</li>
+</ul>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="secure-design">Secure Design<a href="#secure-design" class="hash-link" aria-label="Direct link to Secure Design" title="Direct link to Secure Design" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="q14-what-is-defense-in-depth-give-3-concrete-layers-for-a-web-api">Q14: What is Defense in Depth? Give 3 concrete layers for a web API.<a href="#q14-what-is-defense-in-depth-give-3-concrete-layers-for-a-web-api" class="hash-link" aria-label="Direct link to Q14: What is Defense in Depth? Give 3 concrete layers for a web API." title="Direct link to Q14: What is Defense in Depth? Give 3 concrete layers for a web API." translate="no">​</a></h3>
+<p><strong>Key points:</strong></p>
+<ul>
+<li class="">Multiple independent security controls at different layers so that failure of one doesn&#x27;t compromise the system.</li>
+<li class=""><strong>Three layers for a web API:</strong>
+<ol>
+<li class=""><strong>Network layer:</strong> WAF, firewall, TLS, DDoS protection</li>
+<li class=""><strong>Application layer:</strong> Authentication, authorization, input validation, rate limiting</li>
+<li class=""><strong>Data layer:</strong> Encryption at rest, field-level access control, audit logging</li>
+</ol>
+</li>
+</ul>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="q15-how-would-you-design-a-secure-password-reset-flow">Q15: How would you design a secure password reset flow?<a href="#q15-how-would-you-design-a-secure-password-reset-flow" class="hash-link" aria-label="Direct link to Q15: How would you design a secure password reset flow?" title="Direct link to Q15: How would you design a secure password reset flow?" translate="no">​</a></h3>
+<p><strong>Key points:</strong></p>
+<ul>
+<li class="">Generate a cryptographically random token (not sequential, not guessable).</li>
+<li class="">Store <strong>hashed</strong> token in DB with expiry (15–60 minutes).</li>
+<li class="">Send link to verified email only.</li>
+<li class="">Token is single-use — invalidate on use.</li>
+<li class="">Rate-limit reset requests per email per hour.</li>
+<li class="">Show same success message whether email exists or not (prevent user enumeration).</li>
+<li class="">On successful reset: invalidate all existing sessions.</li>
+</ul>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="privacy--compliance">Privacy &amp; Compliance<a href="#privacy--compliance" class="hash-link" aria-label="Direct link to Privacy &amp; Compliance" title="Direct link to Privacy &amp; Compliance" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="q16-how-do-you-implement-gdprs-right-to-erasure-in-a-microservices-system">Q16: How do you implement GDPR&#x27;s Right to Erasure in a microservices system?<a href="#q16-how-do-you-implement-gdprs-right-to-erasure-in-a-microservices-system" class="hash-link" aria-label="Direct link to Q16: How do you implement GDPR&#x27;s Right to Erasure in a microservices system?" title="Direct link to Q16: How do you implement GDPR&#x27;s Right to Erasure in a microservices system?" translate="no">​</a></h3>
+<p><strong>Key points:</strong></p>
+<ul>
+<li class="">Publish <code>UserErasureRequested</code> event to a Kafka topic.</li>
+<li class="">Each service subscribes and erases/anonymizes their own data.</li>
+<li class="">Challenge: what data is &quot;legally required&quot; to keep (billing records, fraud evidence) — retain but dissociate from user identity.</li>
+<li class="">Challenge: backup data — document that backups will be overwritten within your backup retention window.</li>
+<li class="">Track erasure completion across services with a saga/process manager.</li>
+<li class="">Acknowledge to user within 30 days (GDPR requirement).</li>
+</ul>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="q17-what-data-must-never-be-stored-under-pci-dss">Q17: What data must never be stored under PCI-DSS?<a href="#q17-what-data-must-never-be-stored-under-pci-dss" class="hash-link" aria-label="Direct link to Q17: What data must never be stored under PCI-DSS?" title="Direct link to Q17: What data must never be stored under PCI-DSS?" translate="no">​</a></h3>
+<p><strong>Key points:</strong></p>
+<ul>
+<li class="">CVV/CVC codes (3–4 digit security code)</li>
+<li class="">Full magnetic stripe data</li>
+<li class="">PIN or encrypted PIN block</li>
+<li class="">Even with encryption, these are prohibited after authorization.</li>
+<li class=""><strong>What can be stored (with protection):</strong> PAN (masked, e.g., last 4 digits), cardholder name, expiry date, service code.</li>
+<li class="">Best practice: use payment tokenization (Stripe, Braintree) — card never hits your servers, only tokens.</li>
+</ul>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="cloud--infrastructure-security">Cloud &amp; Infrastructure Security<a href="#cloud--infrastructure-security" class="hash-link" aria-label="Direct link to Cloud &amp; Infrastructure Security" title="Direct link to Cloud &amp; Infrastructure Security" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="q18-what-is-the-principle-of-least-privilege-in-aws-iam-and-how-do-you-apply-it">Q18: What is the principle of least privilege in AWS IAM and how do you apply it?<a href="#q18-what-is-the-principle-of-least-privilege-in-aws-iam-and-how-do-you-apply-it" class="hash-link" aria-label="Direct link to Q18: What is the principle of least privilege in AWS IAM and how do you apply it?" title="Direct link to Q18: What is the principle of least privilege in AWS IAM and how do you apply it?" translate="no">​</a></h3>
+<p><strong>Key points:</strong></p>
+<ul>
+<li class="">Grant only the minimum permissions needed to perform a function.</li>
+<li class="">Avoid wildcard <code>*</code> resource ARNs in policies.</li>
+<li class="">Use IAM roles for services (not long-lived access keys).</li>
+<li class="">Use Service Control Policies (SCPs) in AWS Organizations to enforce guardrails.</li>
+<li class="">Regularly audit IAM with AWS IAM Access Analyzer.</li>
+<li class="">Apply to humans: break-glass for emergency access, JIT provisioning otherwise.</li>
+</ul>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="q19-how-do-you-secure-sensitive-configuration-db-passwords-api-keys-in-a-spring-boot-microservice">Q19: How do you secure sensitive configuration (DB passwords, API keys) in a Spring Boot microservice?<a href="#q19-how-do-you-secure-sensitive-configuration-db-passwords-api-keys-in-a-spring-boot-microservice" class="hash-link" aria-label="Direct link to Q19: How do you secure sensitive configuration (DB passwords, API keys) in a Spring Boot microservice?" title="Direct link to Q19: How do you secure sensitive configuration (DB passwords, API keys) in a Spring Boot microservice?" translate="no">​</a></h3>
+<p><strong>Key points:</strong></p>
+<ul>
+<li class="">Never hardcode in source code or <code>application.properties</code> committed to git.</li>
+<li class="">Options (ranked best to worst for production):<!-- -->
+<ol>
+<li class=""><strong>HashiCorp Vault / AWS Secrets Manager</strong> — dynamic, rotatable secrets (best)</li>
+<li class=""><strong>Kubernetes Secrets</strong> — base64 encoded, protect with RBAC + etcd encryption at rest</li>
+<li class=""><strong>Environment variables</strong> via CI/CD secrets (acceptable)</li>
+<li class=""><strong>application-prod.properties</strong> excluded from git (acceptable but manual rotation)</li>
+</ol>
+</li>
+<li class="">Rotate secrets regularly. Vault can rotate dynamically (generate temporary DB credentials).</li>
+<li class="">Audit all secret accesses.</li>
+</ul>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="scenario-questions">Scenario Questions<a href="#scenario-questions" class="hash-link" aria-label="Direct link to Scenario Questions" title="Direct link to Scenario Questions" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="q20-you-discover-a-critical-sql-injection-vulnerability-in-production-walk-me-through-your-response">Q20: You discover a critical SQL injection vulnerability in production. Walk me through your response.<a href="#q20-you-discover-a-critical-sql-injection-vulnerability-in-production-walk-me-through-your-response" class="hash-link" aria-label="Direct link to Q20: You discover a critical SQL injection vulnerability in production. Walk me through your response." title="Direct link to Q20: You discover a critical SQL injection vulnerability in production. Walk me through your response." translate="no">​</a></h3>
+<p><strong>Expected approach:</strong></p>
+<ol>
+<li class=""><strong>Assess impact</strong> — is it being exploited? Check logs for <code>OR 1=1</code>, <code>UNION SELECT</code>, unusual query patterns.</li>
+<li class=""><strong>Immediate containment</strong> — if active exploitation: block attacker IP at WAF, consider WAF virtual patch (block requests with SQL patterns to that endpoint).</li>
+<li class=""><strong>Fix</strong> — deploy parameterized query fix as hotfix (bypass normal sprint cycle for P1).</li>
+<li class=""><strong>Verify</strong> — confirm fix works, run DAST scan against staging.</li>
+<li class=""><strong>Assess data exposure</strong> — what data was accessible? Notify legal/DPO if PII exposed.</li>
+<li class=""><strong>Post-incident</strong> — add SAST rule for SQL injection, add pentest to pre-release checklist.</li>
+</ol>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="q21-a-user-reports-their-account-was-hacked-and-they-didnt-do-it-how-do-you-investigate">Q21: A user reports their account was &quot;hacked&quot; and they didn&#x27;t do it. How do you investigate?<a href="#q21-a-user-reports-their-account-was-hacked-and-they-didnt-do-it-how-do-you-investigate" class="hash-link" aria-label="Direct link to Q21: A user reports their account was &quot;hacked&quot; and they didn&#x27;t do it. How do you investigate?" title="Direct link to Q21: A user reports their account was &quot;hacked&quot; and they didn&#x27;t do it. How do you investigate?" translate="no">​</a></h3>
+<p><strong>Expected approach:</strong></p>
+<ol>
+<li class=""><strong>Verify the claim</strong> — check login logs for the account: suspicious IPs, unusual times, unknown devices.</li>
+<li class=""><strong>Check for credential compromise</strong> — was the email/password in a known breach (HaveIBeenPwned)?</li>
+<li class=""><strong>Check for session hijacking</strong> — look for concurrent sessions from different locations.</li>
+<li class=""><strong>Immediate action</strong> — if confirmed: lock account, invalidate all sessions, help user regain access.</li>
+<li class=""><strong>Determine how</strong> — phishing? Password reuse? Malware on device? SIM swap?</li>
+<li class=""><strong>Advise user</strong> — change password on all sites (password reuse), enable MFA, check for unauthorized changes.</li>
+<li class=""><strong>System improvements</strong> — consider anomaly detection (impossible travel alerts), enforce MFA.</li>
+</ol>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="quick-fire-questions">Quick-Fire Questions<a href="#quick-fire-questions" class="hash-link" aria-label="Direct link to Quick-Fire Questions" title="Direct link to Quick-Fire Questions" translate="no">​</a></h2>
+<table><thead><tr><th>Question</th><th>Key Answer</th></tr></thead><tbody><tr><td>What HTTP status code means &quot;not authenticated&quot;?</td><td>401</td></tr><tr><td>What HTTP status code means &quot;authenticated but not authorized&quot;?</td><td>403</td></tr><tr><td>Which cookie flag prevents JavaScript from reading the cookie?</td><td>HttpOnly</td></tr><tr><td>What is a rainbow table?</td><td>Pre-computed hash lookup table; defeated by salting</td></tr><tr><td>What does <code>SameSite=Lax</code> prevent?</td><td>CSRF on cross-site POST requests</td></tr><tr><td>What is a salt in password hashing?</td><td>Random value added to password before hashing; ensures same password → different hash</td></tr><tr><td>What cipher mode provides authenticated encryption?</td><td>GCM (Galois/Counter Mode)</td></tr><tr><td>What is the purpose of a nonce in CSP?</td><td>Allow specific inline scripts; prevents XSS by blocking inline scripts without the nonce</td></tr><tr><td>What does mTLS stand for?</td><td>Mutual TLS — both sides verify each other&#x27;s certificate</td></tr><tr><td>What is a CVE?</td><td>Common Vulnerabilities and Exposures — public database of known security flaws</td></tr><tr><td>What is STRIDE?</td><td>Threat modeling framework: Spoofing, Tampering, Repudiation, Information Disclosure, DoS, Elevation</td></tr><tr><td>What is the difference between symmetric and asymmetric encryption?</td><td>Symmetric: same key both ways (fast, for data). Asymmetric: public/private pair (slow, for key exchange and signatures)</td></tr></tbody></table></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-tags-row"><div class="col"><b>Tags:</b><ul class="tags_jXut padding--none margin-left--sm"><li class="tag_QGVx"><a rel="tag" class="tag_zVej tagRegular_sFm0" href="/tags/security">security</a></li><li class="tag_QGVx"><a rel="tag" class="tag_zVej tagRegular_sFm0" href="/tags/interview-prep">interview-prep</a></li><li class="tag_QGVx"><a rel="tag" class="tag_zVej tagRegular_sFm0" href="/tags/questions">questions</a></li><li class="tag_QGVx"><a rel="tag" class="tag_zVej tagRegular_sFm0" href="/tags/authentication">authentication</a></li><li class="tag_QGVx"><a rel="tag" class="tag_zVej tagRegular_sFm0" href="/tags/owasp">owasp</a></li><li class="tag_QGVx"><a rel="tag" class="tag_zVej tagRegular_sFm0" href="/tags/cryptography">cryptography</a></li><li class="tag_QGVx"><a rel="tag" class="tag_zVej tagRegular_sFm0" href="/tags/devsecops">devsecops</a></li></ul></div></div></footer></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/technical-knowledge/security/incident-response"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Incident Response</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/technical-knowledge/networking/"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Networking Knowledge Base</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#authentication--authorization" class="table-of-contents__link toc-highlight">Authentication &amp; Authorization</a><ul><li><a href="#q1-what-is-the-difference-between-authentication-and-authorization-give-an-example-where-they-are-independent" class="table-of-contents__link toc-highlight">Q1: What is the difference between authentication and authorization? Give an example where they are independent.</a></li><li><a href="#q2-explain-how-jwt-works-what-are-the-security-concerns" class="table-of-contents__link toc-highlight">Q2: Explain how JWT works. What are the security concerns?</a></li><li><a href="#q3-how-does-oauth-20-differ-from-oidc" class="table-of-contents__link toc-highlight">Q3: How does OAuth 2.0 differ from OIDC?</a></li><li><a href="#q4-how-do-you-implement-the-refresh-token-rotation-pattern-and-why" class="table-of-contents__link toc-highlight">Q4: How do you implement the refresh token rotation pattern and why?</a></li><li><a href="#q5-what-is-the-difference-between-rbac-abac-and-rebac" class="table-of-contents__link toc-highlight">Q5: What is the difference between RBAC, ABAC, and ReBAC?</a></li></ul></li><li><a href="#web-vulnerabilities" class="table-of-contents__link toc-highlight">Web Vulnerabilities</a><ul><li><a href="#q6-explain-sql-injection-with-an-example-and-how-to-prevent-it-in-spring-boot" class="table-of-contents__link toc-highlight">Q6: Explain SQL injection with an example and how to prevent it in Spring Boot.</a></li><li><a href="#q7-what-is-csrf-when-does-it-not-apply-and-why" class="table-of-contents__link toc-highlight">Q7: What is CSRF? When does it NOT apply and why?</a></li><li><a href="#q8-what-is-ssrf-give-an-attack-scenario-involving-cloud-metadata" class="table-of-contents__link toc-highlight">Q8: What is SSRF? Give an attack scenario involving cloud metadata.</a></li><li><a href="#q9-what-is-the-difference-between-stored-reflected-and-dom-based-xss" class="table-of-contents__link toc-highlight">Q9: What is the difference between Stored, Reflected, and DOM-based XSS?</a></li></ul></li><li><a href="#cryptography" class="table-of-contents__link toc-highlight">Cryptography</a><ul><li><a href="#q10-why-is-aes-gcm-preferred-over-aes-cbc" class="table-of-contents__link toc-highlight">Q10: Why is AES-GCM preferred over AES-CBC?</a></li><li><a href="#q11-what-is-the-difference-between-hashing-and-encryption" class="table-of-contents__link toc-highlight">Q11: What is the difference between hashing and encryption?</a></li><li><a href="#q12-what-is-a-timing-attack-and-how-do-you-prevent-it-in-string-comparison" class="table-of-contents__link toc-highlight">Q12: What is a timing attack and how do you prevent it in string comparison?</a></li><li><a href="#q13-explain-perfect-forward-secrecy-why-does-it-matter" class="table-of-contents__link toc-highlight">Q13: Explain Perfect Forward Secrecy. Why does it matter?</a></li></ul></li><li><a href="#secure-design" class="table-of-contents__link toc-highlight">Secure Design</a><ul><li><a href="#q14-what-is-defense-in-depth-give-3-concrete-layers-for-a-web-api" class="table-of-contents__link toc-highlight">Q14: What is Defense in Depth? Give 3 concrete layers for a web API.</a></li><li><a href="#q15-how-would-you-design-a-secure-password-reset-flow" class="table-of-contents__link toc-highlight">Q15: How would you design a secure password reset flow?</a></li></ul></li><li><a href="#privacy--compliance" class="table-of-contents__link toc-highlight">Privacy &amp; Compliance</a><ul><li><a href="#q16-how-do-you-implement-gdprs-right-to-erasure-in-a-microservices-system" class="table-of-contents__link toc-highlight">Q16: How do you implement GDPR&#39;s Right to Erasure in a microservices system?</a></li><li><a href="#q17-what-data-must-never-be-stored-under-pci-dss" class="table-of-contents__link toc-highlight">Q17: What data must never be stored under PCI-DSS?</a></li></ul></li><li><a href="#cloud--infrastructure-security" class="table-of-contents__link toc-highlight">Cloud &amp; Infrastructure Security</a><ul><li><a href="#q18-what-is-the-principle-of-least-privilege-in-aws-iam-and-how-do-you-apply-it" class="table-of-contents__link toc-highlight">Q18: What is the principle of least privilege in AWS IAM and how do you apply it?</a></li><li><a href="#q19-how-do-you-secure-sensitive-configuration-db-passwords-api-keys-in-a-spring-boot-microservice" class="table-of-contents__link toc-highlight">Q19: How do you secure sensitive configuration (DB passwords, API keys) in a Spring Boot microservice?</a></li></ul></li><li><a href="#scenario-questions" class="table-of-contents__link toc-highlight">Scenario Questions</a><ul><li><a href="#q20-you-discover-a-critical-sql-injection-vulnerability-in-production-walk-me-through-your-response" class="table-of-contents__link toc-highlight">Q20: You discover a critical SQL injection vulnerability in production. Walk me through your response.</a></li><li><a href="#q21-a-user-reports-their-account-was-hacked-and-they-didnt-do-it-how-do-you-investigate" class="table-of-contents__link toc-highlight">Q21: A user reports their account was &quot;hacked&quot; and they didn&#39;t do it. How do you investigate?</a></li></ul></li><li><a href="#quick-fire-questions" class="table-of-contents__link toc-highlight">Quick-Fire Questions</a></li></ul></div></div></div></div></main></div></div></div></div>
+</body>
+</html>

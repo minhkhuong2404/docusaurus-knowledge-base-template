@@ -415,6 +415,61 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/security/api-security",
+              "path": "/technical-knowledge/security/api-security",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/security/authentication-authorization",
+              "path": "/technical-knowledge/security/authentication-authorization",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/security/cryptography-secure-design",
+              "path": "/technical-knowledge/security/cryptography-secure-design",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/security/identity-access-management",
+              "path": "/technical-knowledge/security/identity-access-management",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/security/incident-response",
+              "path": "/technical-knowledge/security/incident-response",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/security/network-security",
+              "path": "/technical-knowledge/security/network-security",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/security/privacy-compliance",
+              "path": "/technical-knowledge/security/privacy-compliance",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/security/secure-sdlc",
+              "path": "/technical-knowledge/security/secure-sdlc",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/security/security-interview-questions",
+              "path": "/technical-knowledge/security/security-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/security/security-intro",
+              "path": "/security",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/security/web-vulnerabilities",
+              "path": "/technical-knowledge/security/web-vulnerabilities",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/spring/spring-boot",
               "path": "/technical-knowledge/spring/spring-boot",
               "sidebar": "tutorialSidebar"

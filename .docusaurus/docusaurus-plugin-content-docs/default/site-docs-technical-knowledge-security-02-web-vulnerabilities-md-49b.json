@@ -1,0 +1,92 @@
+{
+  "id": "technical-knowledge/security/web-vulnerabilities",
+  "title": "Web Vulnerabilities & Defenses",
+  "description": "Comprehensive guide to OWASP Top 10 and beyond — SQL injection, XSS, CSRF, SSRF, XXE, broken access control, insecure deserialization, and their mitigations in Spring Boot applications.",
+  "source": "@site/docs/technical-knowledge/security/02-web-vulnerabilities.md",
+  "sourceDirName": "technical-knowledge/security",
+  "slug": "/technical-knowledge/security/web-vulnerabilities",
+  "permalink": "/technical-knowledge/security/web-vulnerabilities",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "security",
+      "permalink": "/tags/security"
+    },
+    {
+      "inline": true,
+      "label": "owasp",
+      "permalink": "/tags/owasp"
+    },
+    {
+      "inline": true,
+      "label": "sql-injection",
+      "permalink": "/tags/sql-injection"
+    },
+    {
+      "inline": true,
+      "label": "xss",
+      "permalink": "/tags/xss"
+    },
+    {
+      "inline": true,
+      "label": "csrf",
+      "permalink": "/tags/csrf"
+    },
+    {
+      "inline": true,
+      "label": "ssrf",
+      "permalink": "/tags/ssrf"
+    },
+    {
+      "inline": true,
+      "label": "xxe",
+      "permalink": "/tags/xxe"
+    },
+    {
+      "inline": true,
+      "label": "vulnerability",
+      "permalink": "/tags/vulnerability"
+    },
+    {
+      "inline": true,
+      "label": "spring-security",
+      "permalink": "/tags/spring-security"
+    },
+    {
+      "inline": true,
+      "label": "web-security",
+      "permalink": "/tags/web-security"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 2,
+  "frontMatter": {
+    "id": "web-vulnerabilities",
+    "title": "Web Vulnerabilities & Defenses",
+    "sidebar_label": "Web Vulnerabilities",
+    "description": "Comprehensive guide to OWASP Top 10 and beyond — SQL injection, XSS, CSRF, SSRF, XXE, broken access control, insecure deserialization, and their mitigations in Spring Boot applications.",
+    "tags": [
+      "security",
+      "owasp",
+      "sql-injection",
+      "xss",
+      "csrf",
+      "ssrf",
+      "xxe",
+      "vulnerability",
+      "spring-security",
+      "web-security"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "AuthN & AuthZ",
+    "permalink": "/technical-knowledge/security/authentication-authorization"
+  },
+  "next": {
+    "title": "Cryptography",
+    "permalink": "/technical-knowledge/security/cryptography-secure-design"
+  }
+}

@@ -4,11 +4,11 @@ import ComponentCreator from '@docusaurus/ComponentCreator';
 export default [
   {
     path: '/',
-    component: ComponentCreator('/', '422'),
+    component: ComponentCreator('/', '2e3'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '35d'),
+        component: ComponentCreator('/', '2a5'),
         routes: [
           {
             path: '/tags',
@@ -36,6 +36,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/abac',
+            component: ComponentCreator('/tags/abac', '205'),
+            exact: true
+          },
+          {
             path: '/tags/abstract-factory',
             component: ComponentCreator('/tags/abstract-factory', 'e00'),
             exact: true
@@ -53,6 +58,11 @@ export default [
           {
             path: '/tags/advanced',
             component: ComponentCreator('/tags/advanced', 'c89'),
+            exact: true
+          },
+          {
+            path: '/tags/aes',
+            component: ComponentCreator('/tags/aes', 'd1b'),
             exact: true
           },
           {
@@ -86,6 +96,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/api-keys',
+            component: ComponentCreator('/tags/api-keys', 'f12'),
+            exact: true
+          },
+          {
             path: '/tags/api-security',
             component: ComponentCreator('/tags/api-security', '441'),
             exact: true
@@ -108,6 +123,11 @@ export default [
           {
             path: '/tags/attack',
             component: ComponentCreator('/tags/attack', 'bf5'),
+            exact: true
+          },
+          {
+            path: '/tags/audit-log',
+            component: ComponentCreator('/tags/audit-log', 'de2'),
             exact: true
           },
           {
@@ -138,6 +158,11 @@ export default [
           {
             path: '/tags/availability',
             component: ComponentCreator('/tags/availability', '21c'),
+            exact: true
+          },
+          {
+            path: '/tags/aws-iam',
+            component: ComponentCreator('/tags/aws-iam', 'a75'),
             exact: true
           },
           {
@@ -266,6 +291,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/ccpa',
+            component: ComponentCreator('/tags/ccpa', '313'),
+            exact: true
+          },
+          {
             path: '/tags/cdn',
             component: ComponentCreator('/tags/cdn', 'd12'),
             exact: true
@@ -306,6 +336,16 @@ export default [
             exact: true
           },
           {
+            path: '/tags/cloud-iam',
+            component: ComponentCreator('/tags/cloud-iam', '820'),
+            exact: true
+          },
+          {
+            path: '/tags/cloud-security',
+            component: ComponentCreator('/tags/cloud-security', 'e6c'),
+            exact: true
+          },
+          {
             path: '/tags/collections',
             component: ComponentCreator('/tags/collections', 'f92'),
             exact: true
@@ -323,6 +363,11 @@ export default [
           {
             path: '/tags/compensating-transaction',
             component: ComponentCreator('/tags/compensating-transaction', 'fe1'),
+            exact: true
+          },
+          {
+            path: '/tags/compliance',
+            component: ComponentCreator('/tags/compliance', '1bf'),
             exact: true
           },
           {
@@ -366,6 +411,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/consent',
+            component: ComponentCreator('/tags/consent', '08d'),
+            exact: true
+          },
+          {
             path: '/tags/consistency',
             component: ComponentCreator('/tags/consistency', '5a7'),
             exact: true
@@ -373,6 +423,11 @@ export default [
           {
             path: '/tags/consumers',
             component: ComponentCreator('/tags/consumers', '15c'),
+            exact: true
+          },
+          {
+            path: '/tags/container-security',
+            component: ComponentCreator('/tags/container-security', '73e'),
             exact: true
           },
           {
@@ -406,6 +461,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/cryptography',
+            component: ComponentCreator('/tags/cryptography', 'cda'),
+            exact: true
+          },
+          {
             path: '/tags/csrf',
             component: ComponentCreator('/tags/csrf', '4c3'),
             exact: true
@@ -418,6 +478,16 @@ export default [
           {
             path: '/tags/curl',
             component: ComponentCreator('/tags/curl', '8da'),
+            exact: true
+          },
+          {
+            path: '/tags/dast',
+            component: ComponentCreator('/tags/dast', '361'),
+            exact: true
+          },
+          {
+            path: '/tags/data-classification',
+            component: ComponentCreator('/tags/data-classification', '2ac'),
             exact: true
           },
           {
@@ -476,6 +546,16 @@ export default [
             exact: true
           },
           {
+            path: '/tags/detection',
+            component: ComponentCreator('/tags/detection', 'b71'),
+            exact: true
+          },
+          {
+            path: '/tags/devsecops',
+            component: ComponentCreator('/tags/devsecops', 'c95'),
+            exact: true
+          },
+          {
             path: '/tags/diagnostics',
             component: ComponentCreator('/tags/diagnostics', 'cf7'),
             exact: true
@@ -483,6 +563,11 @@ export default [
           {
             path: '/tags/dig',
             component: ComponentCreator('/tags/dig', '3a2'),
+            exact: true
+          },
+          {
+            path: '/tags/digital-signature',
+            component: ComponentCreator('/tags/digital-signature', '08a'),
             exact: true
           },
           {
@@ -543,6 +628,11 @@ export default [
           {
             path: '/tags/elasticsearch',
             component: ComponentCreator('/tags/elasticsearch', '392'),
+            exact: true
+          },
+          {
+            path: '/tags/elliptic-curve',
+            component: ComponentCreator('/tags/elliptic-curve', '66a'),
             exact: true
           },
           {
@@ -691,6 +781,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/forensics',
+            component: ComponentCreator('/tags/forensics', '8dc'),
+            exact: true
+          },
+          {
             path: '/tags/framework',
             component: ComponentCreator('/tags/framework', 'c26'),
             exact: true
@@ -716,6 +811,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/gdpr',
+            component: ComponentCreator('/tags/gdpr', '59f'),
+            exact: true
+          },
+          {
             path: '/tags/generics',
             component: ComponentCreator('/tags/generics', 'cb5'),
             exact: true
@@ -736,6 +836,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/graphql-security',
+            component: ComponentCreator('/tags/graphql-security', '05d'),
+            exact: true
+          },
+          {
             path: '/tags/grpc',
             component: ComponentCreator('/tags/grpc', '2d8'),
             exact: true
@@ -743,6 +848,11 @@ export default [
           {
             path: '/tags/handshake',
             component: ComponentCreator('/tags/handshake', 'b4f'),
+            exact: true
+          },
+          {
+            path: '/tags/hashing',
+            component: ComponentCreator('/tags/hashing', '935'),
             exact: true
           },
           {
@@ -758,6 +868,11 @@ export default [
           {
             path: '/tags/high-availability',
             component: ComponentCreator('/tags/high-availability', 'c36'),
+            exact: true
+          },
+          {
+            path: '/tags/hipaa',
+            component: ComponentCreator('/tags/hipaa', 'a32'),
             exact: true
           },
           {
@@ -786,8 +901,18 @@ export default [
             exact: true
           },
           {
+            path: '/tags/iam',
+            component: ComponentCreator('/tags/iam', 'bd1'),
+            exact: true
+          },
+          {
             path: '/tags/idempotency',
             component: ComponentCreator('/tags/idempotency', 'cc3'),
+            exact: true
+          },
+          {
+            path: '/tags/incident-response',
+            component: ComponentCreator('/tags/incident-response', 'c87'),
             exact: true
           },
           {
@@ -803,6 +928,11 @@ export default [
           {
             path: '/tags/innodb',
             component: ComponentCreator('/tags/innodb', '99e'),
+            exact: true
+          },
+          {
+            path: '/tags/input-validation',
+            component: ComponentCreator('/tags/input-validation', '191'),
             exact: true
           },
           {
@@ -906,6 +1036,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/just-in-time-access',
+            component: ComponentCreator('/tags/just-in-time-access', '60a'),
+            exact: true
+          },
+          {
             path: '/tags/jvm',
             component: ComponentCreator('/tags/jvm', 'c85'),
             exact: true
@@ -941,6 +1076,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/key-management',
+            component: ComponentCreator('/tags/key-management', 'aaf'),
+            exact: true
+          },
+          {
             path: '/tags/keys',
             component: ComponentCreator('/tags/keys', '38a'),
             exact: true
@@ -956,6 +1096,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/kubernetes-rbac',
+            component: ComponentCreator('/tags/kubernetes-rbac', 'fc6'),
+            exact: true
+          },
+          {
             path: '/tags/language-features',
             component: ComponentCreator('/tags/language-features', '35c'),
             exact: true
@@ -968,6 +1113,11 @@ export default [
           {
             path: '/tags/layers',
             component: ComponentCreator('/tags/layers', 'bb4'),
+            exact: true
+          },
+          {
+            path: '/tags/ldap',
+            component: ComponentCreator('/tags/ldap', '592'),
             exact: true
           },
           {
@@ -1016,6 +1166,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/mass-assignment',
+            component: ComponentCreator('/tags/mass-assignment', '9c2'),
+            exact: true
+          },
+          {
             path: '/tags/memory-management',
             component: ComponentCreator('/tags/memory-management', '051'),
             exact: true
@@ -1028,6 +1183,11 @@ export default [
           {
             path: '/tags/metrics',
             component: ComponentCreator('/tags/metrics', '71f'),
+            exact: true
+          },
+          {
+            path: '/tags/mfa',
+            component: ComponentCreator('/tags/mfa', '88e'),
             exact: true
           },
           {
@@ -1118,6 +1278,16 @@ export default [
           {
             path: '/tags/netty',
             component: ComponentCreator('/tags/netty', 'd64'),
+            exact: true
+          },
+          {
+            path: '/tags/network-security',
+            component: ComponentCreator('/tags/network-security', 'af4'),
+            exact: true
+          },
+          {
+            path: '/tags/network-segmentation',
+            component: ComponentCreator('/tags/network-segmentation', 'd26'),
             exact: true
           },
           {
@@ -1276,6 +1446,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/owasp-api',
+            component: ComponentCreator('/tags/owasp-api', '4e5'),
+            exact: true
+          },
+          {
             path: '/tags/pagination',
             component: ComponentCreator('/tags/pagination', '0fa'),
             exact: true
@@ -1283,6 +1458,11 @@ export default [
           {
             path: '/tags/paging',
             component: ComponentCreator('/tags/paging', '947'),
+            exact: true
+          },
+          {
+            path: '/tags/pam',
+            component: ComponentCreator('/tags/pam', '0a5'),
             exact: true
           },
           {
@@ -1298,6 +1478,16 @@ export default [
           {
             path: '/tags/paxos',
             component: ComponentCreator('/tags/paxos', '9d8'),
+            exact: true
+          },
+          {
+            path: '/tags/pci-dss',
+            component: ComponentCreator('/tags/pci-dss', 'ca2'),
+            exact: true
+          },
+          {
+            path: '/tags/pentesting',
+            component: ComponentCreator('/tags/pentesting', '13c'),
             exact: true
           },
           {
@@ -1338,6 +1528,16 @@ export default [
           {
             path: '/tags/preparation',
             component: ComponentCreator('/tags/preparation', '0dc'),
+            exact: true
+          },
+          {
+            path: '/tags/privacy',
+            component: ComponentCreator('/tags/privacy', '856'),
+            exact: true
+          },
+          {
+            path: '/tags/privacy-by-design',
+            component: ComponentCreator('/tags/privacy-by-design', 'f56'),
             exact: true
           },
           {
@@ -1551,6 +1751,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/rsa',
+            component: ComponentCreator('/tags/rsa', '5e8'),
+            exact: true
+          },
+          {
             path: '/tags/rto',
             component: ComponentCreator('/tags/rto', '459'),
             exact: true
@@ -1563,6 +1768,21 @@ export default [
           {
             path: '/tags/saga',
             component: ComponentCreator('/tags/saga', '363'),
+            exact: true
+          },
+          {
+            path: '/tags/saml',
+            component: ComponentCreator('/tags/saml', '839'),
+            exact: true
+          },
+          {
+            path: '/tags/sast',
+            component: ComponentCreator('/tags/sast', '9ec'),
+            exact: true
+          },
+          {
+            path: '/tags/sca',
+            component: ComponentCreator('/tags/sca', '520'),
             exact: true
           },
           {
@@ -1586,6 +1806,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/sdlc',
+            component: ComponentCreator('/tags/sdlc', '5bf'),
+            exact: true
+          },
+          {
             path: '/tags/search',
             component: ComponentCreator('/tags/search', '8a3'),
             exact: true
@@ -1596,8 +1821,28 @@ export default [
             exact: true
           },
           {
+            path: '/tags/secrets-scanning',
+            component: ComponentCreator('/tags/secrets-scanning', 'f6d'),
+            exact: true
+          },
+          {
+            path: '/tags/secure-design',
+            component: ComponentCreator('/tags/secure-design', '02c'),
+            exact: true
+          },
+          {
             path: '/tags/security',
             component: ComponentCreator('/tags/security', '84b'),
+            exact: true
+          },
+          {
+            path: '/tags/security-operations',
+            component: ComponentCreator('/tags/security-operations', '110'),
+            exact: true
+          },
+          {
+            path: '/tags/service-accounts',
+            component: ComponentCreator('/tags/service-accounts', '429'),
             exact: true
           },
           {
@@ -1611,8 +1856,23 @@ export default [
             exact: true
           },
           {
+            path: '/tags/session',
+            component: ComponentCreator('/tags/session', '3c3'),
+            exact: true
+          },
+          {
             path: '/tags/sharding',
             component: ComponentCreator('/tags/sharding', '5aa'),
+            exact: true
+          },
+          {
+            path: '/tags/shift-left',
+            component: ComponentCreator('/tags/shift-left', '4ca'),
+            exact: true
+          },
+          {
+            path: '/tags/siem',
+            component: ComponentCreator('/tags/siem', '131'),
             exact: true
           },
           {
@@ -1643,6 +1903,16 @@ export default [
           {
             path: '/tags/smtp',
             component: ComponentCreator('/tags/smtp', 'ea0'),
+            exact: true
+          },
+          {
+            path: '/tags/soc',
+            component: ComponentCreator('/tags/soc', '502'),
+            exact: true
+          },
+          {
+            path: '/tags/soc-2',
+            component: ComponentCreator('/tags/soc-2', '984'),
             exact: true
           },
           {
@@ -1701,6 +1971,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/spring-validation',
+            component: ComponentCreator('/tags/spring-validation', '1f7'),
+            exact: true
+          },
+          {
             path: '/tags/spring-websocket',
             component: ComponentCreator('/tags/spring-websocket', 'e2f'),
             exact: true
@@ -1738,6 +2013,16 @@ export default [
           {
             path: '/tags/ssl',
             component: ComponentCreator('/tags/ssl', 'f4f'),
+            exact: true
+          },
+          {
+            path: '/tags/sso',
+            component: ComponentCreator('/tags/sso', '504'),
+            exact: true
+          },
+          {
+            path: '/tags/ssrf',
+            component: ComponentCreator('/tags/ssrf', '7c6'),
             exact: true
           },
           {
@@ -1846,6 +2131,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/threat-modeling',
+            component: ComponentCreator('/tags/threat-modeling', '682'),
+            exact: true
+          },
+          {
             path: '/tags/time-series',
             component: ComponentCreator('/tags/time-series', '8b1'),
             exact: true
@@ -1926,6 +2216,21 @@ export default [
             exact: true
           },
           {
+            path: '/tags/vulnerability',
+            component: ComponentCreator('/tags/vulnerability', '804'),
+            exact: true
+          },
+          {
+            path: '/tags/vulnerability-management',
+            component: ComponentCreator('/tags/vulnerability-management', '41e'),
+            exact: true
+          },
+          {
+            path: '/tags/waf',
+            component: ComponentCreator('/tags/waf', '78c'),
+            exact: true
+          },
+          {
             path: '/tags/wal',
             component: ComponentCreator('/tags/wal', '8a2'),
             exact: true
@@ -1933,6 +2238,11 @@ export default [
           {
             path: '/tags/web',
             component: ComponentCreator('/tags/web', '4aa'),
+            exact: true
+          },
+          {
+            path: '/tags/web-security',
+            component: ComponentCreator('/tags/web-security', 'd42'),
             exact: true
           },
           {
@@ -1976,6 +2286,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/xxe',
+            component: ComponentCreator('/tags/xxe', '7c8'),
+            exact: true
+          },
+          {
             path: '/tags/zero-downtime',
             component: ComponentCreator('/tags/zero-downtime', '1c3'),
             exact: true
@@ -1987,8 +2302,14 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'c75'),
+            component: ComponentCreator('/', '4cd'),
             routes: [
+              {
+                path: '/security',
+                component: ComponentCreator('/security', '0f0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
               {
                 path: '/system-design',
                 component: ComponentCreator('/system-design', '6ff'),
@@ -2471,6 +2792,66 @@ export default [
               {
                 path: '/technical-knowledge/operating-systems/virtual-memory-deep-dive',
                 component: ComponentCreator('/technical-knowledge/operating-systems/virtual-memory-deep-dive', '168'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/security/api-security',
+                component: ComponentCreator('/technical-knowledge/security/api-security', 'a53'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/security/authentication-authorization',
+                component: ComponentCreator('/technical-knowledge/security/authentication-authorization', 'c0c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/security/cryptography-secure-design',
+                component: ComponentCreator('/technical-knowledge/security/cryptography-secure-design', 'f51'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/security/identity-access-management',
+                component: ComponentCreator('/technical-knowledge/security/identity-access-management', 'ed5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/security/incident-response',
+                component: ComponentCreator('/technical-knowledge/security/incident-response', '128'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/security/network-security',
+                component: ComponentCreator('/technical-knowledge/security/network-security', '75d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/security/privacy-compliance',
+                component: ComponentCreator('/technical-knowledge/security/privacy-compliance', 'ed9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/security/secure-sdlc',
+                component: ComponentCreator('/technical-knowledge/security/secure-sdlc', 'b00'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/security/security-interview-questions',
+                component: ComponentCreator('/technical-knowledge/security/security-interview-questions', '062'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/security/web-vulnerabilities',
+                component: ComponentCreator('/technical-knowledge/security/web-vulnerabilities', '6f7'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

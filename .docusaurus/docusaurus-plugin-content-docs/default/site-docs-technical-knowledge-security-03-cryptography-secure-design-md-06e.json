@@ -1,0 +1,92 @@
+{
+  "id": "technical-knowledge/security/cryptography-secure-design",
+  "title": "Cryptography & Secure Design",
+  "description": "Practical cryptography for software engineers — symmetric and asymmetric encryption, hashing, MACs, digital signatures, TLS internals, key management, and secure coding patterns.",
+  "source": "@site/docs/technical-knowledge/security/03-cryptography-secure-design.md",
+  "sourceDirName": "technical-knowledge/security",
+  "slug": "/technical-knowledge/security/cryptography-secure-design",
+  "permalink": "/technical-knowledge/security/cryptography-secure-design",
+  "draft": false,
+  "unlisted": false,
+  "tags": [
+    {
+      "inline": true,
+      "label": "cryptography",
+      "permalink": "/tags/cryptography"
+    },
+    {
+      "inline": true,
+      "label": "encryption",
+      "permalink": "/tags/encryption"
+    },
+    {
+      "inline": true,
+      "label": "hashing",
+      "permalink": "/tags/hashing"
+    },
+    {
+      "inline": true,
+      "label": "tls",
+      "permalink": "/tags/tls"
+    },
+    {
+      "inline": true,
+      "label": "digital-signature",
+      "permalink": "/tags/digital-signature"
+    },
+    {
+      "inline": true,
+      "label": "key-management",
+      "permalink": "/tags/key-management"
+    },
+    {
+      "inline": true,
+      "label": "aes",
+      "permalink": "/tags/aes"
+    },
+    {
+      "inline": true,
+      "label": "rsa",
+      "permalink": "/tags/rsa"
+    },
+    {
+      "inline": true,
+      "label": "elliptic-curve",
+      "permalink": "/tags/elliptic-curve"
+    },
+    {
+      "inline": true,
+      "label": "secure-design",
+      "permalink": "/tags/secure-design"
+    }
+  ],
+  "version": "current",
+  "sidebarPosition": 3,
+  "frontMatter": {
+    "id": "cryptography-secure-design",
+    "title": "Cryptography & Secure Design",
+    "sidebar_label": "Cryptography",
+    "description": "Practical cryptography for software engineers — symmetric and asymmetric encryption, hashing, MACs, digital signatures, TLS internals, key management, and secure coding patterns.",
+    "tags": [
+      "cryptography",
+      "encryption",
+      "hashing",
+      "tls",
+      "digital-signature",
+      "key-management",
+      "aes",
+      "rsa",
+      "elliptic-curve",
+      "secure-design"
+    ]
+  },
+  "sidebar": "tutorialSidebar",
+  "previous": {
+    "title": "Web Vulnerabilities",
+    "permalink": "/technical-knowledge/security/web-vulnerabilities"
+  },
+  "next": {
+    "title": "API Security",
+    "permalink": "/technical-knowledge/security/api-security"
+  }
+}
