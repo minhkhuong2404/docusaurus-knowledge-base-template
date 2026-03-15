@@ -233,7 +233,7 @@ Implementation:
 | **Excessive Data Exposure** | Return full user object including password hash | Use DTOs, project only needed fields |
 | **Rate Limiting Missing** | Brute force login | Rate limit auth endpoints |
 | **Broken Function Level Auth** | Regular user calls /admin endpoint | @PreAuthorize on every endpoint |
-| **Mass Assignment** | PATCH /users/{id} with `{"role":"ADMIN"}` | Whitelist updatable fields |
+| **Mass Assignment** | `PATCH /users/{id}` with `{"role":"ADMIN"}` | Whitelist updatable fields |
 | **Security Misconfiguration** | Default creds, verbose error messages | Audit configs, generic error messages |
 | **Injection** | SQL injection via string concatenation | Parameterized queries, JPA |
 | **Improper Assets Management** | Old v1 API with no auth still running | API versioning, retire old versions |
