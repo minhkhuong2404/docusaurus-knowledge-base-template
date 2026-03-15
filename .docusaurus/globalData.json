@@ -200,6 +200,86 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/devops/devops-interview-questions",
+              "path": "/technical-knowledge/devops/devops-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/devops/devops-intro",
+              "path": "/devops",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/devops/docker-commands",
+              "path": "/technical-knowledge/devops/docker-commands",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/devops/docker-compose",
+              "path": "/technical-knowledge/devops/docker-compose",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/devops/docker-fundamentals",
+              "path": "/technical-knowledge/devops/docker-fundamentals",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/devops/docker-networking",
+              "path": "/technical-knowledge/devops/docker-networking",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/devops/docker-volumes",
+              "path": "/technical-knowledge/devops/docker-volumes",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/devops/dockerfile",
+              "path": "/technical-knowledge/devops/dockerfile",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/devops/helm",
+              "path": "/technical-knowledge/devops/helm",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/devops/kubectl-commands",
+              "path": "/technical-knowledge/devops/kubectl-commands",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/devops/kubernetes-configuration",
+              "path": "/technical-knowledge/devops/kubernetes-configuration",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/devops/kubernetes-fundamentals",
+              "path": "/technical-knowledge/devops/kubernetes-fundamentals",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/devops/kubernetes-networking",
+              "path": "/technical-knowledge/devops/kubernetes-networking",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/devops/kubernetes-pods",
+              "path": "/technical-knowledge/devops/kubernetes-pods",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/devops/kubernetes-storage",
+              "path": "/technical-knowledge/devops/kubernetes-storage",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/devops/kubernetes-workloads",
+              "path": "/technical-knowledge/devops/kubernetes-workloads",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/java/java-collections",
               "path": "/technical-knowledge/java/java-collections",
               "sidebar": "tutorialSidebar"

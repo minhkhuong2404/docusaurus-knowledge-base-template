@@ -453,6 +453,56 @@ const sidebars: SidebarsConfig = {
 				'technical-knowledge/operating-systems/interview-questions',
 			]
 		},
+		{
+			type: 'category',
+			label: '🐳 DevOps & Containerization',
+			items: [
+				'technical-knowledge/devops/devops-intro',
+				{
+					type: 'category',
+					label: '🐳 Docker',
+					collapsed: false,
+					items: [
+						'technical-knowledge/devops/docker-fundamentals',
+						'technical-knowledge/devops/dockerfile',
+						'technical-knowledge/devops/docker-commands',
+						'technical-knowledge/devops/docker-networking',
+						'technical-knowledge/devops/docker-volumes',
+						'technical-knowledge/devops/docker-compose',
+					],
+				},
+				{
+					type: 'category',
+					label: '☸️ Kubernetes',
+					collapsed: false,
+					items: [
+						'technical-knowledge/devops/kubernetes-fundamentals',
+						'technical-knowledge/devops/kubernetes-pods',
+						'technical-knowledge/devops/kubernetes-workloads',
+						'technical-knowledge/devops/kubernetes-networking',
+						'technical-knowledge/devops/kubernetes-storage',
+						'technical-knowledge/devops/kubernetes-configuration',
+					],
+				},
+				{
+					type: 'category',
+					label: '🛠️ Tooling',
+					collapsed: false,
+					items: [
+						'technical-knowledge/devops/kubectl-commands',
+						'technical-knowledge/devops/helm',
+					],
+				},
+				{
+					type: 'category',
+					label: '🎯 Interview Prep',
+					collapsed: false,
+					items: [
+						'technical-knowledge/devops/devops-interview-questions',
+					],
+				},
+			]
+		}
 	]
 }
 

@@ -1,6 +1,5 @@
 node_modules
 build
-/build
-/.docusaurus
-/.vscode
+.docusaurus
+.vscode
 .DS_Store
