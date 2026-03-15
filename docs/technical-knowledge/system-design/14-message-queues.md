@@ -251,7 +251,7 @@ Event contains full state — no need to call back.
 ```
 
 ### Event Sourcing
-Events are the source of truth. See [Database Design](./12-database-design).
+Events are the source of truth. See [Database Design](./database-design).
 
 ---
 

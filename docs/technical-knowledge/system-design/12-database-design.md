@@ -124,7 +124,7 @@ List<Order> findByUserId(Long userId);
 ## Partitioning Strategies
 
 ### Horizontal Partitioning (Sharding)
-See [Scaling Writes](./05-scaling-writes) for full coverage.
+See [Scaling Writes](./scaling-writes) for full coverage.
 
 ### Vertical Partitioning
 ```sql

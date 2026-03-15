@@ -241,7 +241,7 @@ Phase 4: Monolith retired
 ---
 
 ## Saga Pattern (Cross-Service Transactions)
-See [Multi-Step Processes](./09-multi-step-process) for full coverage.
+See [Multi-Step Processes](./multi-step-process) for full coverage.
 
 ---
 

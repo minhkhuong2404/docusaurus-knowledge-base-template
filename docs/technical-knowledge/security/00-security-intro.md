@@ -30,16 +30,16 @@ You don't need to be a security specialist. You need to know **enough to write s
 
 | Topic | Description |
 |---|---|
-| [Authentication & Authorization](./authentication-authorization) | Sessions, JWT, OAuth 2.0, OIDC, MFA, RBAC, ABAC, passkeys |
-| [Web Vulnerabilities & Defenses](./web-vulnerabilities) | OWASP Top 10 — SQL injection, XSS, CSRF, SSRF, IDOR and mitigations |
-| [Cryptography & Secure Design](./cryptography-secure-design) | AES-GCM, RSA, HMAC, signatures, TLS internals, key management |
-| [Privacy & Compliance](./privacy-compliance) | GDPR, CCPA, PCI-DSS, HIPAA, data classification, right to erasure |
-| [Network Security](./network-security) | Firewalls, WAF, DDoS, DNS security, zero trust, mTLS |
-| [Secure SDLC & DevSecOps](./secure-sdlc) | Threat modeling, SAST, DAST, SCA, secrets scanning, container security |
-| [Identity & Access Management](./identity-access-management) | SSO, SAML, LDAP, service accounts, Vault, JIT access, cloud IAM |
-| [API Security](./api-security) | OWASP API Top 10, input validation, rate limiting, GraphQL security |
-| [Incident Response](./incident-response) | IR lifecycle, detection, containment, recovery, post-mortem |
-| [Interview Questions](./security-interview-questions) | 21 deep-dive answers + quick-fire reference table |
+| [Authentication & Authorization](/technical-knowledge/security/authentication-authorization) | Sessions, JWT, OAuth 2.0, OIDC, MFA, RBAC, ABAC, passkeys |
+| [Web Vulnerabilities & Defenses](/technical-knowledge/security/web-vulnerabilities) | OWASP Top 10 — SQL injection, XSS, CSRF, SSRF, IDOR and mitigations |
+| [Cryptography & Secure Design](/technical-knowledge/security/cryptography-secure-design) | AES-GCM, RSA, HMAC, signatures, TLS internals, key management |
+| [Privacy & Compliance](/technical-knowledge/security/privacy-compliance) | GDPR, CCPA, PCI-DSS, HIPAA, data classification, right to erasure |
+| [Network Security](/technical-knowledge/security/network-security) | Firewalls, WAF, DDoS, DNS security, zero trust, mTLS |
+| [Secure SDLC & DevSecOps](/technical-knowledge/security/secure-sdlc) | Threat modeling, SAST, DAST, SCA, secrets scanning, container security |
+| [Identity & Access Management](/technical-knowledge/security/identity-access-management) | SSO, SAML, LDAP, service accounts, Vault, JIT access, cloud IAM |
+| [API Security](/technical-knowledge/security/api-security) | OWASP API Top 10, input validation, rate limiting, GraphQL security |
+| [Incident Response](/technical-knowledge/security/incident-response) | IR lifecycle, detection, containment, recovery, post-mortem |
+| [Interview Questions](/technical-knowledge/security/security-interview-questions) | 21 deep-dive answers + quick-fire reference table |
 
 ---
 
@@ -130,23 +130,23 @@ Attackers **always find the weakest layer**. Defence in depth means there is no 
 ## Learning Path
 
 ### For Interview Preparation
-1. [Authentication & Authorization](./authentication-authorization) — most common interview topic
-2. [Web Vulnerabilities](./web-vulnerabilities) — OWASP Top 10 is expected knowledge
-3. [Cryptography](./cryptography-secure-design) — hashing vs encryption, TLS basics
-4. [Privacy & Compliance](./privacy-compliance) — GDPR basics, PCI-DSS rules
-5. [Interview Questions](./security-interview-questions) — practise with answers
+1. [Authentication & Authorization](/technical-knowledge/security/authentication-authorization) — most common interview topic
+2. [Web Vulnerabilities](/technical-knowledge/security/web-vulnerabilities) — OWASP Top 10 is expected knowledge
+3. [Cryptography](/technical-knowledge/security/cryptography-secure-design) — hashing vs encryption, TLS basics
+4. [Privacy & Compliance](/technical-knowledge/security/privacy-compliance) — GDPR basics, PCI-DSS rules
+5. [Interview Questions](/technical-knowledge/security/security-interview-questions) — practise with answers
 
 ### For Production Systems
-1. Start with [Secure SDLC](./secure-sdlc) — embed security early
-2. [API Security](./api-security) — your primary attack surface
-3. [IAM](./identity-access-management) — get service identities right
-4. [Incident Response](./incident-response) — prepare before you need it
+1. Start with [Secure SDLC](/technical-knowledge/security/secure-sdlc) — embed security early
+2. [API Security](/technical-knowledge/security/api-security) — your primary attack surface
+3. [IAM](/technical-knowledge/security/identity-access-management) — get service identities right
+4. [Incident Response](/technical-knowledge/security/incident-response) — prepare before you need it
 
 ### For Compliance Projects
-1. [Privacy & Compliance](./privacy-compliance) — regulatory requirements
-2. [Cryptography](./cryptography-secure-design) — encryption obligations
-3. [Audit Logging](./incident-response#phase-1-preparation) — evidence trail
-4. [Network Security](./network-security) — infrastructure controls
+1. [Privacy & Compliance](/technical-knowledge/security/privacy-compliance) — regulatory requirements
+2. [Cryptography](/technical-knowledge/security/cryptography-secure-design) — encryption obligations
+3. [Audit Logging](/technical-knowledge/security/incident-response#phase-1-preparation) — evidence trail
+4. [Network Security](/technical-knowledge/security/network-security) — infrastructure controls
 
 ---
 

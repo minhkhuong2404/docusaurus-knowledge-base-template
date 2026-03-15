@@ -51,22 +51,21 @@ Dependencies bundled inside the image — no "works on my machine"
 
 | # | Topic | Level |
 |---|---|---|
-| 01 | [Docker Fundamentals](./docker-fundamentals) | 🟢 Beginner |
-| 02 | [Writing Dockerfiles](./dockerfile) | 🟢 Beginner |
-| 03 | [Docker CLI Commands](./docker-commands) | 🟢 Beginner |
-| 04 | [Docker Networking](./docker-networking) | 🟡 Intermediate |
-| 05 | [Docker Volumes & Storage](./docker-volumes) | 🟡 Intermediate |
-| 06 | [Docker Compose](./docker-compose) | 🟡 Intermediate |
-| 07 | [Kubernetes Fundamentals](./kubernetes-fundamentals) | 🟢 Beginner |
-| 08 | [Pods & Containers](./kubernetes-pods) | 🟢 Beginner |
-| 09 | [Workloads: Deployments, StatefulSets, Jobs](./kubernetes-workloads) | 🟡 Intermediate |
-| 10 | [Services & Networking](./kubernetes-networking) | 🟡 Intermediate |
-| 11 | [Storage: PV, PVC, ConfigMaps, Secrets](./kubernetes-storage) | 🟡 Intermediate |
-| 12 | [Configuration & Resource Management](./kubernetes-configuration) | 🟡 Intermediate |
-| 13 | [Kubernetes Security](./kubernetes-security) | 🔴 Advanced |
-| 14 | [kubectl Command Reference](./kubectl-commands) | 🟡 Intermediate |
-| 15 | [Helm — Package Manager for Kubernetes](./helm) | 🔴 Advanced |
-| 16 | [Interview Questions](./devops-interview-questions) | 🎯 All Levels |
+| 01 | [Docker Fundamentals](/technical-knowledge/devops/docker-fundamentals) | 🟢 Beginner |
+| 02 | [Writing Dockerfiles](/technical-knowledge/devops/dockerfile) | 🟢 Beginner |
+| 03 | [Docker CLI Commands](/technical-knowledge/devops/docker-commands) | 🟢 Beginner |
+| 04 | [Docker Networking](/technical-knowledge/devops/docker-networking) | 🟡 Intermediate |
+| 05 | [Docker Volumes & Storage](/technical-knowledge/devops/docker-volumes) | 🟡 Intermediate |
+| 06 | [Docker Compose](/technical-knowledge/devops/docker-compose) | 🟡 Intermediate |
+| 07 | [Kubernetes Fundamentals](/technical-knowledge/devops/kubernetes-fundamentals) | 🟢 Beginner |
+| 08 | [Pods & Containers](/technical-knowledge/devops/kubernetes-pods) | 🟢 Beginner |
+| 09 | [Workloads: Deployments, StatefulSets, Jobs](/technical-knowledge/devops/kubernetes-workloads) | 🟡 Intermediate |
+| 10 | [Services & Networking](/technical-knowledge/devops/kubernetes-networking) | 🟡 Intermediate |
+| 11 | [Storage: PV, PVC, ConfigMaps, Secrets](/technical-knowledge/devops/kubernetes-storage) | 🟡 Intermediate |
+| 12 | [Configuration & Resource Management](/technical-knowledge/devops/kubernetes-configuration) | 🟡 Intermediate |
+| 13 | [kubectl Command Reference](/technical-knowledge/devops/kubectl-commands) | 🟡 Intermediate |
+| 14 | [Helm — Package Manager for Kubernetes](/technical-knowledge/devops/helm) | 🔴 Advanced |
+| 15 | [Interview Questions](/technical-knowledge/devops/devops-interview-questions) | 🎯 All Levels |
 
 ---
 
@@ -196,7 +195,7 @@ kind load docker-image myapp:latest --name my-cluster
 ---
 
 :::tip Start here if you're new
-Install Docker Desktop, then work through the docs in order starting with [Docker Fundamentals](./docker-fundamentals). Every topic includes runnable examples — type them out rather than copy-pasting for better retention.
+Install Docker Desktop, then work through the docs in order starting with [Docker Fundamentals](/technical-knowledge/devops/docker-fundamentals). Every topic includes runnable examples — type them out rather than copy-pasting for better retention.
 :::
 
 :::info Spring Boot users

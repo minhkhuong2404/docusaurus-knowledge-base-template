@@ -19,7 +19,7 @@ tags: [interview-prep, questions, system-design, faang, practice]
 **Key Discussion Points:**
 - **Hashing**: MD5/SHA256 → base62 encode → take first 7 chars. Handle collisions.
 - **Custom short URLs**: Check uniqueness before storing.
-- **Storage**: Key-value store (Redis for cache, DB for persistence). ~1.8 TB in 5 years (see [Capacity Planning](./02-capacity-planning)).
+- **Storage**: Key-value store (Redis for cache, DB for persistence). ~1.8 TB in 5 years (see [Capacity Planning](./capacity-planning)).
 - **Redirect**: 301 (permanent, browser caches) vs 302 (temporary, tracks every click). Use 302 for analytics.
 - **Analytics**: Click tracking with Kafka → async aggregation.
 - **Read scale**: Cache hot URLs in Redis (top 20% = 80% traffic).
@@ -173,7 +173,7 @@ tags: [interview-prep, questions, system-design, faang, practice]
 **Key Discussion Points:**
 - **Idempotency**: Idempotency keys on every payment API call. Essential.
 - **Double-spend prevention**: Pessimistic lock or database constraint on account.
-- **Saga**: Saga pattern across payment, inventory, fulfillment (see [Multi-Step Process](./09-multi-step-process)).
+- **Saga**: Saga pattern across payment, inventory, fulfillment (see [Multi-Step Process](./multi-step-process)).
 - **Reconciliation**: Async job to compare internal records with payment gateway records.
 - **Compliance**: PCI-DSS — never store raw card numbers; use tokens from payment gateway.
 - **Retry logic**: Exponential backoff with idempotency keys to payment provider.
