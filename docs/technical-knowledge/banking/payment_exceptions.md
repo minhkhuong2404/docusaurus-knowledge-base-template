@@ -311,9 +311,9 @@ After resolving exceptions, capture root cause to prevent recurrence:
 ---
 
 ## Related Concepts
-- [inbound.md](./inbound.md) — Unmatched inbound is the most common exception
-- [sanction.md](./sanction.md) — Sanction holds
-- [fraud.md](./fraud.md) — Fraud holds
-- [reconciliation.md](./reconciliation.md) — Exceptions surfaced through reconciliation
-- [payment_return.md](./payment_return.md) — Resolution via pacs.004 return
-- [debit_reversal.md](./debit_reversal.md) — Resolution via debit reversal
+- [inbound.md](/technical-knowledge/banking/inbound) — Unmatched inbound is the most common exception
+- [sanction.md](/technical-knowledge/banking/sanction) — Sanction holds
+- [fraud.md](/technical-knowledge/banking/fraud) — Fraud holds
+- [reconciliation.md](/technical-knowledge/banking/reconciliation) — Exceptions surfaced through reconciliation
+- [payment_return.md](/technical-knowledge/banking/payment_return) — Resolution via pacs.004 return
+- [debit_reversal.md](/technical-knowledge/banking/debit_reversal) — Resolution via debit reversal

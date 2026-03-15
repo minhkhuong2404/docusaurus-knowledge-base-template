@@ -240,9 +240,9 @@ public class NppPaymentService {
 ---
 
 ## Related Concepts
-- [pacs008.md](./pacs008.md) — Core NPP payment message
-- [inbound.md](./inbound.md) — Receiving NPP payments
-- [outbound.md](./outbound.md) — Sending NPP payments
-- [clearing.md](./clearing.md) — NPP as clearing system
-- [settlement.md](./settlement.md) — RBA FSS real-time settlement
-- [onus.md](./onus.md) — On-us vs NPP routing decision
+- [pacs008.md](/technical-knowledge/banking/pacs008) — Core NPP payment message
+- [inbound.md](/technical-knowledge/banking/inbound) — Receiving NPP payments
+- [outbound.md](/technical-knowledge/banking/outbound) — Sending NPP payments
+- [clearing.md](/technical-knowledge/banking/clearing) — NPP as clearing system
+- [settlement.md](/technical-knowledge/banking/settlement) — RBA FSS real-time settlement
+- [onus.md](/technical-knowledge/banking/onus) — On-us vs NPP routing decision

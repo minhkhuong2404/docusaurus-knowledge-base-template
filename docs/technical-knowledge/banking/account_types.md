@@ -242,8 +242,8 @@ In pacs.008 / pain.001, account type is specified in `CdtrAcct`:
 ---
 
 ## Related Concepts
-- [debtor.md](./debtor.md) — Account holder roles
-- [inbound.md](./inbound.md) — Account lookup on credit
-- [outbound.md](./outbound.md) — Balance check on debit
-- [debit_post.md](./debit_post.md) — How entries are posted to accounts
-- [reconciliation.md](./reconciliation.md) — Balance reconciliation
+- [debtor.md](/technical-knowledge/banking/debtor) — Account holder roles
+- [inbound.md](/technical-knowledge/banking/inbound) — Account lookup on credit
+- [outbound.md](/technical-knowledge/banking/outbound) — Balance check on debit
+- [debit_post.md](/technical-knowledge/banking/debit_post) — How entries are posted to accounts
+- [reconciliation.md](/technical-knowledge/banking/reconciliation) — Balance reconciliation

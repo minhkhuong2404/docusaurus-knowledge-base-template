@@ -200,7 +200,7 @@ public enum FraudDecision {
 ---
 
 ## Related Concepts
-- [sanction.md](./sanction.md) — Related screening; both run at same checkpoint
-- [outbound.md](./outbound.md) — Outbound fraud controls
-- [inbound.md](./inbound.md) — Inbound mule detection
-- [payment_return.md](./payment_return.md) — Recovering funds post-fraud
+- [sanction.md](/technical-knowledge/banking/sanction) — Related screening; both run at same checkpoint
+- [outbound.md](/technical-knowledge/banking/outbound) — Outbound fraud controls
+- [inbound.md](/technical-knowledge/banking/inbound) — Inbound mule detection
+- [payment_return.md](/technical-knowledge/banking/payment_return) — Recovering funds post-fraud

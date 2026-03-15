@@ -3,47 +3,12 @@ import ComponentCreator from '@docusaurus/ComponentCreator';
 
 export default [
   {
-    path: '/__docusaurus/debug',
-    component: ComponentCreator('/__docusaurus/debug', '5ff'),
-    exact: true
-  },
-  {
-    path: '/__docusaurus/debug/config',
-    component: ComponentCreator('/__docusaurus/debug/config', '5ba'),
-    exact: true
-  },
-  {
-    path: '/__docusaurus/debug/content',
-    component: ComponentCreator('/__docusaurus/debug/content', 'a2b'),
-    exact: true
-  },
-  {
-    path: '/__docusaurus/debug/globalData',
-    component: ComponentCreator('/__docusaurus/debug/globalData', 'c3c'),
-    exact: true
-  },
-  {
-    path: '/__docusaurus/debug/metadata',
-    component: ComponentCreator('/__docusaurus/debug/metadata', '156'),
-    exact: true
-  },
-  {
-    path: '/__docusaurus/debug/registry',
-    component: ComponentCreator('/__docusaurus/debug/registry', '88c'),
-    exact: true
-  },
-  {
-    path: '/__docusaurus/debug/routes',
-    component: ComponentCreator('/__docusaurus/debug/routes', '000'),
-    exact: true
-  },
-  {
     path: '/',
-    component: ComponentCreator('/', '2f1'),
+    component: ComponentCreator('/', 'ea5'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '733'),
+        component: ComponentCreator('/', 'bf3'),
         routes: [
           {
             path: '/tags',
@@ -108,6 +73,11 @@ export default [
           {
             path: '/tags/algorithms',
             component: ComponentCreator('/tags/algorithms', '069'),
+            exact: true
+          },
+          {
+            path: '/tags/aml',
+            component: ComponentCreator('/tags/aml', '706'),
             exact: true
           },
           {
@@ -341,6 +311,16 @@ export default [
             exact: true
           },
           {
+            path: '/tags/camt-053',
+            component: ComponentCreator('/tags/camt-053', 'f33'),
+            exact: true
+          },
+          {
+            path: '/tags/camt-054',
+            component: ComponentCreator('/tags/camt-054', '18d'),
+            exact: true
+          },
+          {
             path: '/tags/cap-theorem',
             component: ComponentCreator('/tags/cap-theorem', '8ce'),
             exact: true
@@ -418,6 +398,11 @@ export default [
           {
             path: '/tags/circuit-breaker',
             component: ComponentCreator('/tags/circuit-breaker', 'af6'),
+            exact: true
+          },
+          {
+            path: '/tags/clearing',
+            component: ComponentCreator('/tags/clearing', '0e1'),
             exact: true
           },
           {
@@ -596,6 +581,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/cross-border',
+            component: ComponentCreator('/tags/cross-border', 'a4b'),
+            exact: true
+          },
+          {
             path: '/tags/cryptography',
             component: ComponentCreator('/tags/cryptography', 'cda'),
             exact: true
@@ -676,6 +666,16 @@ export default [
             exact: true
           },
           {
+            path: '/tags/debit',
+            component: ComponentCreator('/tags/debit', '3e7'),
+            exact: true
+          },
+          {
+            path: '/tags/debtor',
+            component: ComponentCreator('/tags/debtor', '0bf'),
+            exact: true
+          },
+          {
             path: '/tags/decorator',
             component: ComponentCreator('/tags/decorator', 'cea'),
             exact: true
@@ -733,6 +733,11 @@ export default [
           {
             path: '/tags/dimensional-modeling',
             component: ComponentCreator('/tags/dimensional-modeling', '1c0'),
+            exact: true
+          },
+          {
+            path: '/tags/direct-debit',
+            component: ComponentCreator('/tags/direct-debit', '99e'),
             exact: true
           },
           {
@@ -971,6 +976,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/fis',
+            component: ComponentCreator('/tags/fis', 'f42'),
+            exact: true
+          },
+          {
             path: '/tags/flow-control',
             component: ComponentCreator('/tags/flow-control', 'd75'),
             exact: true
@@ -1146,6 +1156,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/inbound',
+            component: ComponentCreator('/tags/inbound', '48d'),
+            exact: true
+          },
+          {
             path: '/tags/incident-response',
             component: ComponentCreator('/tags/incident-response', 'c87'),
             exact: true
@@ -1178,6 +1193,11 @@ export default [
           {
             path: '/tags/input-validation',
             component: ComponentCreator('/tags/input-validation', '191'),
+            exact: true
+          },
+          {
+            path: '/tags/integration',
+            component: ComponentCreator('/tags/integration', '75a'),
             exact: true
           },
           {
@@ -1381,6 +1401,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/kyc',
+            component: ComponentCreator('/tags/kyc', 'b59'),
+            exact: true
+          },
+          {
             path: '/tags/labels',
             component: ComponentCreator('/tags/labels', '85a'),
             exact: true
@@ -1418,6 +1443,11 @@ export default [
           {
             path: '/tags/leader-follower',
             component: ComponentCreator('/tags/leader-follower', 'acf'),
+            exact: true
+          },
+          {
+            path: '/tags/ledger',
+            component: ComponentCreator('/tags/ledger', 'bd9'),
             exact: true
           },
           {
@@ -1706,6 +1736,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/on-us',
+            component: ComponentCreator('/tags/on-us', '1b1'),
+            exact: true
+          },
+          {
             path: '/tags/onboarding',
             component: ComponentCreator('/tags/onboarding', 'b8e'),
             exact: true
@@ -1766,6 +1801,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/outbound',
+            component: ComponentCreator('/tags/outbound', '5e7'),
+            exact: true
+          },
+          {
             path: '/tags/outbox',
             component: ComponentCreator('/tags/outbox', '2e4'),
             exact: true
@@ -1798,6 +1838,11 @@ export default [
           {
             path: '/tags/package-manager',
             component: ComponentCreator('/tags/package-manager', '644'),
+            exact: true
+          },
+          {
+            path: '/tags/pacs-002',
+            component: ComponentCreator('/tags/pacs-002', '78d'),
             exact: true
           },
           {
@@ -2166,6 +2211,16 @@ export default [
             exact: true
           },
           {
+            path: '/tags/returns',
+            component: ComponentCreator('/tags/returns', 'ec8'),
+            exact: true
+          },
+          {
+            path: '/tags/reversal',
+            component: ComponentCreator('/tags/reversal', '92a'),
+            exact: true
+          },
+          {
             path: '/tags/reverse-proxy',
             component: ComponentCreator('/tags/reverse-proxy', 'c72'),
             exact: true
@@ -2213,6 +2268,11 @@ export default [
           {
             path: '/tags/saml',
             component: ComponentCreator('/tags/saml', '839'),
+            exact: true
+          },
+          {
+            path: '/tags/sanctions',
+            component: ComponentCreator('/tags/sanctions', 'f79'),
             exact: true
           },
           {
@@ -2303,6 +2363,11 @@ export default [
           {
             path: '/tags/session',
             component: ComponentCreator('/tags/session', '3c3'),
+            exact: true
+          },
+          {
+            path: '/tags/settlement',
+            component: ComponentCreator('/tags/settlement', 'a7f'),
             exact: true
           },
           {
@@ -2543,6 +2608,11 @@ export default [
           {
             path: '/tags/swap',
             component: ComponentCreator('/tags/swap', 'aaf'),
+            exact: true
+          },
+          {
+            path: '/tags/swift',
+            component: ComponentCreator('/tags/swift', '84f'),
             exact: true
           },
           {
@@ -2822,7 +2892,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '9c6'),
+            component: ComponentCreator('/', 'c6d'),
             routes: [
               {
                 path: '/devops',
@@ -2854,8 +2924,68 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/banking/aml_kyc',
+                component: ComponentCreator('/technical-knowledge/banking/aml_kyc', '629'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/banking/bpay',
                 component: ComponentCreator('/technical-knowledge/banking/bpay', '18e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/banking/camt053',
+                component: ComponentCreator('/technical-knowledge/banking/camt053', '935'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/banking/camt054',
+                component: ComponentCreator('/technical-knowledge/banking/camt054', '6cd'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/banking/clearing',
+                component: ComponentCreator('/technical-knowledge/banking/clearing', '9fb'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/banking/credit_post',
+                component: ComponentCreator('/technical-knowledge/banking/credit_post', 'ae6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/banking/debit_post',
+                component: ComponentCreator('/technical-knowledge/banking/debit_post', 'e0d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/banking/debit_reversal',
+                component: ComponentCreator('/technical-knowledge/banking/debit_reversal', '598'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/banking/debtor',
+                component: ComponentCreator('/technical-knowledge/banking/debtor', '083'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/banking/direct_debit',
+                component: ComponentCreator('/technical-knowledge/banking/direct_debit', '452'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/banking/fis',
+                component: ComponentCreator('/technical-knowledge/banking/fis', 'a60'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -2872,6 +3002,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/banking/inbound',
+                component: ComponentCreator('/technical-knowledge/banking/inbound', '1bc'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/banking/iso20022_migration',
                 component: ComponentCreator('/technical-knowledge/banking/iso20022_migration', '215'),
                 exact: true,
@@ -2884,8 +3020,26 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/banking/onus',
+                component: ComponentCreator('/technical-knowledge/banking/onus', 'd98'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/banking/open_banking',
                 component: ComponentCreator('/technical-knowledge/banking/open_banking', '3ed'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/banking/outbound',
+                component: ComponentCreator('/technical-knowledge/banking/outbound', '2d3'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/banking/pacs002',
+                component: ComponentCreator('/technical-knowledge/banking/pacs002', '460'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -2908,8 +3062,32 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/banking/payment_return',
+                component: ComponentCreator('/technical-knowledge/banking/payment_return', '106'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/banking/reconciliation',
                 component: ComponentCreator('/technical-knowledge/banking/reconciliation', 'a51'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/banking/sanction',
+                component: ComponentCreator('/technical-knowledge/banking/sanction', 'b43'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/banking/settlement',
+                component: ComponentCreator('/technical-knowledge/banking/settlement', '3c2'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/banking/swift',
+                component: ComponentCreator('/technical-knowledge/banking/swift', '680'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

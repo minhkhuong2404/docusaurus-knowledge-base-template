@@ -255,8 +255,8 @@ public class MtMxTranslationService {
 ---
 
 ## Related Concepts
-- [pacs008.md](./pacs008.md) — Primary ISO 20022 payment message
-- [swift.md](./swift.md) — SWIFT MT messages being replaced
-- [pain001.md](./pain001.md) — Customer-side ISO 20022 message
-- [camt053.md](./camt053.md) — Replaces MT940 statement
-- [fis.md](./fis.md) — FI readiness for ISO 20022 migration
+- [pacs008.md](/technical-knowledge/banking/pacs008) — Primary ISO 20022 payment message
+- [swift.md](/technical-knowledge/banking/swift) — SWIFT MT messages being replaced
+- [pain001.md](/technical-knowledge/banking/pain001) — Customer-side ISO 20022 message
+- [camt053.md](/technical-knowledge/banking/camt053) — Replaces MT940 statement
+- [fis.md](/technical-knowledge/banking/fis) — FI readiness for ISO 20022 migration

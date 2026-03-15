@@ -564,6 +564,31 @@ const sidebars: SidebarsConfig = {
 					label: '🚀 Modern Banking',
 					collapsed: false,
 					items: ['technical-knowledge/banking/open_banking']
+				},
+				{
+					type: 'category',
+					label: '📚 Banking References',
+					collapsed: true,
+					items: [
+						'technical-knowledge/banking/inbound',
+						'technical-knowledge/banking/outbound',
+						'technical-knowledge/banking/clearing',
+						'technical-knowledge/banking/settlement',
+						'technical-knowledge/banking/onus',
+						'technical-knowledge/banking/debtor',
+						'technical-knowledge/banking/direct_debit',
+						'technical-knowledge/banking/debit_post',
+						'technical-knowledge/banking/credit_post',
+						'technical-knowledge/banking/payment_return',
+						'technical-knowledge/banking/debit_reversal',
+						'technical-knowledge/banking/sanction',
+						'technical-knowledge/banking/swift',
+						'technical-knowledge/banking/fis',
+						'technical-knowledge/banking/aml_kyc',
+						'technical-knowledge/banking/camt053',
+						'technical-knowledge/banking/camt054',
+						'technical-knowledge/banking/pacs002'
+					]
 				}
 			]
 		}

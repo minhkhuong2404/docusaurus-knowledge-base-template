@@ -253,8 +253,8 @@ public class BpayPaymentService {
 ---
 
 ## Related Concepts
-- [outbound.md](./outbound.md) — BPAY is an outbound payment
-- [direct_debit.md](./direct_debit.md) — Pull-based alternative for recurring bills
-- [npp.md](./npp.md) — Real-time alternative for one-off payments
-- [clearing.md](./clearing.md) — BPAY clears via BECS infrastructure
-- [reconciliation.md](./reconciliation.md) — CRN-based remittance matching
+- [outbound.md](/technical-knowledge/banking/outbound) — BPAY is an outbound payment
+- [direct_debit.md](/technical-knowledge/banking/direct_debit) — Pull-based alternative for recurring bills
+- [npp.md](/technical-knowledge/banking/npp) — Real-time alternative for one-off payments
+- [clearing.md](/technical-knowledge/banking/clearing) — BPAY clears via BECS infrastructure
+- [reconciliation.md](/technical-knowledge/banking/reconciliation) — CRN-based remittance matching

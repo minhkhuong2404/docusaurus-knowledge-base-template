@@ -25,8 +25,58 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/banking/aml_kyc",
+              "path": "/technical-knowledge/banking/aml_kyc",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/banking/bpay",
               "path": "/technical-knowledge/banking/bpay",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/camt053",
+              "path": "/technical-knowledge/banking/camt053",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/camt054",
+              "path": "/technical-knowledge/banking/camt054",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/clearing",
+              "path": "/technical-knowledge/banking/clearing",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/credit_post",
+              "path": "/technical-knowledge/banking/credit_post",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/debit_post",
+              "path": "/technical-knowledge/banking/debit_post",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/debit_reversal",
+              "path": "/technical-knowledge/banking/debit_reversal",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/debtor",
+              "path": "/technical-knowledge/banking/debtor",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/direct_debit",
+              "path": "/technical-knowledge/banking/direct_debit",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/fis",
+              "path": "/technical-knowledge/banking/fis",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -40,6 +90,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/banking/inbound",
+              "path": "/technical-knowledge/banking/inbound",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/banking/iso20022_migration",
               "path": "/technical-knowledge/banking/iso20022_migration",
               "sidebar": "tutorialSidebar"
@@ -50,13 +105,28 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/banking/onus",
+              "path": "/technical-knowledge/banking/onus",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/banking/open_banking",
               "path": "/technical-knowledge/banking/open_banking",
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/banking/outbound",
+              "path": "/technical-knowledge/banking/outbound",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/banking/overview",
               "path": "/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/pacs002",
+              "path": "/technical-knowledge/banking/pacs002",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -75,8 +145,28 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/banking/payment_return",
+              "path": "/technical-knowledge/banking/payment_return",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/banking/reconciliation",
               "path": "/technical-knowledge/banking/reconciliation",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/sanction",
+              "path": "/technical-knowledge/banking/sanction",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/settlement",
+              "path": "/technical-knowledge/banking/settlement",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/swift",
+              "path": "/technical-knowledge/banking/swift",
               "sidebar": "tutorialSidebar"
             },
             {

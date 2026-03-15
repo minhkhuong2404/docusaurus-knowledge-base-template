@@ -251,8 +251,8 @@ public class FxConversionService {
 ---
 
 ## Related Concepts
-- [swift.md](./swift.md) — FX is most common on SWIFT cross-border payments
-- [pacs008.md](./pacs008.md) — FX fields in interbank message
-- [inbound.md](./inbound.md) — FX on inbound payments
-- [outbound.md](./outbound.md) — FX on outbound payments
-- [fis.md](./fis.md) — Nostro accounts per currency
+- [swift.md](/technical-knowledge/banking/swift) — FX is most common on SWIFT cross-border payments
+- [pacs008.md](/technical-knowledge/banking/pacs008) — FX fields in interbank message
+- [inbound.md](/technical-knowledge/banking/inbound) — FX on inbound payments
+- [outbound.md](/technical-knowledge/banking/outbound) — FX on outbound payments
+- [fis.md](/technical-knowledge/banking/fis) — Nostro accounts per currency
