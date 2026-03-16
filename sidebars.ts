@@ -507,89 +507,152 @@ const sidebars: SidebarsConfig = {
 			type: 'category',
 			label: '🏛️ Banking & Finance',
 			items: [
-				'technical-knowledge/banking/overview',
+				{ type: 'doc', id: 'technical-knowledge/banking/overview', label: '🏦 Overview' },
+				{
+					type: 'category',
+					label: '🎓 New Learner Guide',
+					collapsed: false,
+					items: [
+						{ type: 'doc', id: 'technical-knowledge/banking/payment_lifecycle_101', label: 'Payment Lifecycle 101' },
+						{ type: 'doc', id: 'technical-knowledge/banking/banking_roles', label: 'Roles & Teams' },
+						{ type: 'doc', id: 'technical-knowledge/banking/glossary', label: 'A-Z Glossary' },
+					]
+				},
 				{
 					type: 'category',
 					label: '📨 ISO 20022 Messages',
 					collapsed: false,
 					items: [
-						'technical-knowledge/banking/pain001',
-						'technical-knowledge/banking/pacs008'
+						{
+							type: 'category',
+							label: 'Payment Initiation (pain)',
+							collapsed: false,
+							items: [
+								{ type: 'doc', id: 'technical-knowledge/banking/pain001', label: 'pain.001 - Credit Transfer Initiation' },
+								{ type: 'doc', id: 'technical-knowledge/banking/pain004', label: 'pain.004 - Clarification' },
+								{ type: 'doc', id: 'technical-knowledge/banking/pain007_pacs007', label: 'pain.007 / pacs.007 - Reversal' }
+							]
+						},
+						{
+							type: 'category',
+							label: 'Payment Clearing & Settlement (pacs)',
+							collapsed: false,
+							items: [
+								{ type: 'doc', id: 'technical-knowledge/banking/pacs008', label: 'pacs.008 - FI-to-FI Credit Transfer' },
+								{ type: 'doc', id: 'technical-knowledge/banking/pacs002', label: 'pacs.002 - FI-to-FI Status Report' },
+								{ type: 'doc', id: 'technical-knowledge/banking/pacs004', label: 'pacs.004 - Payment Return' }
+							]
+						},
+						{
+							type: 'category',
+							label: 'Cash Management (camt)',
+							collapsed: false,
+							items: [
+								{ type: 'doc', id: 'technical-knowledge/banking/camt054', label: 'camt.054 - Debit/Credit Notification' },
+								{ type: 'doc', id: 'technical-knowledge/banking/camt053', label: 'camt.053 - Account Statement' },
+								{ type: 'doc', id: 'technical-knowledge/banking/camt055_camt056', label: 'camt.055 / camt.056 - Cancellation' }
+							]
+						}
 					]
 				},
 				{
 					type: 'category',
 					label: '🔄 ISO 20022 Migration',
+					collapsed: true,
+					items: [{ type: 'doc', id: 'technical-knowledge/banking/iso20022_migration', label: 'MT to MX Migration Guide' }]
+				},
+				{
+					type: 'category',
+					label: '💸 Payment Flows',
 					collapsed: false,
-					items: ['technical-knowledge/banking/iso20022_migration']
+					items: [
+						{ type: 'doc', id: 'technical-knowledge/banking/inbound', label: 'Inbound Payments' },
+						{ type: 'doc', id: 'technical-knowledge/banking/outbound', label: 'Outbound Payments' },
+						{ type: 'doc', id: 'technical-knowledge/banking/onus', label: 'On-Us & Off-Us' }
+					]
 				},
 				{
 					type: 'category',
 					label: '🛤️ Payment Rails & Networks',
 					collapsed: false,
 					items: [
-						'technical-knowledge/banking/npp',
-						'technical-knowledge/banking/bpay'
+						{ type: 'doc', id: 'technical-knowledge/banking/npp', label: 'NPP - New Payments Platform' },
+						{ type: 'doc', id: 'technical-knowledge/banking/swift', label: 'SWIFT - International' },
+						{ type: 'doc', id: 'technical-knowledge/banking/direct_debit', label: 'Direct Debit (BECS & PayTo)' },
+						{ type: 'doc', id: 'technical-knowledge/banking/bpay', label: 'BPAY - Bill Payments' }
 					]
 				},
 				{
 					type: 'category',
 					label: '🏛️ Parties & Institutions',
 					collapsed: false,
-					items: ['technical-knowledge/banking/account_types']
+					items: [
+						{ type: 'doc', id: 'technical-knowledge/banking/debtor', label: 'Debtor & Creditor' },
+						{ type: 'doc', id: 'technical-knowledge/banking/fis', label: 'Financial Institutions' },
+						{ type: 'doc', id: 'technical-knowledge/banking/account_types', label: 'Account Types' },
+						{ type: 'doc', id: 'technical-knowledge/banking/core_banking', label: 'Core Banking System (CBS)' }
+					]
 				},
 				{
 					type: 'category',
 					label: '📒 Accounting & Posting',
 					collapsed: false,
-					items: ['technical-knowledge/banking/fx']
+					items: [
+						{ type: 'doc', id: 'technical-knowledge/banking/debit_post', label: 'Debit Posting' },
+						{ type: 'doc', id: 'technical-knowledge/banking/credit_post', label: 'Credit Posting' },
+						{ type: 'doc', id: 'technical-knowledge/banking/debit_reversal', label: 'Debit Reversal' },
+						{ type: 'doc', id: 'technical-knowledge/banking/payment_return', label: 'Payment Return' },
+						{ type: 'doc', id: 'technical-knowledge/banking/fx', label: 'FX in Payments' },
+						{ type: 'doc', id: 'technical-knowledge/banking/interest_fees', label: 'Interest & Fees' }
+					]
+				},
+				{
+					type: 'category',
+					label: '⚖️ Clearing & Settlement',
+					collapsed: false,
+					items: [
+						{ type: 'doc', id: 'technical-knowledge/banking/clearing', label: 'Clearing' },
+						{ type: 'doc', id: 'technical-knowledge/banking/settlement', label: 'Settlement' }
+					]
+				},
+				{
+					type: 'category',
+					label: '💳 Cards',
+					collapsed: false,
+					items: [{ type: 'doc', id: 'technical-knowledge/banking/cards', label: 'Cards & Card Schemes' }]
 				},
 				{
 					type: 'category',
 					label: '🛡️ Risk & Compliance',
 					collapsed: false,
-					items: ['technical-knowledge/banking/fraud']
+					items: [
+						{ type: 'doc', id: 'technical-knowledge/banking/fraud', label: 'Fraud Detection & Prevention' },
+						{ type: 'doc', id: 'technical-knowledge/banking/sanction', label: 'Sanctions Screening' },
+						{ type: 'doc', id: 'technical-knowledge/banking/aml_kyc', label: 'AML, CTF & KYC' }
+					]
 				},
 				{
 					type: 'category',
 					label: '⚙️ Operations',
 					collapsed: false,
 					items: [
-						'technical-knowledge/banking/reconciliation',
-						'technical-knowledge/banking/payment_exceptions'
+						{ type: 'doc', id: 'technical-knowledge/banking/reconciliation', label: 'Reconciliation' },
+						{ type: 'doc', id: 'technical-knowledge/banking/payment_exceptions', label: 'Exceptions & Investigations' }
 					]
+				},
+				{
+					type: 'category',
+					label: '🧑‍💻 Engineering',
+					collapsed: false,
+					items: [{ type: 'doc', id: 'technical-knowledge/banking/testing_banking', label: 'Testing in Payments' }]
 				},
 				{
 					type: 'category',
 					label: '🚀 Modern Banking',
-					collapsed: false,
-					items: ['technical-knowledge/banking/open_banking']
-				},
-				{
-					type: 'category',
-					label: '📚 Banking References',
 					collapsed: true,
-					items: [
-						'technical-knowledge/banking/inbound',
-						'technical-knowledge/banking/outbound',
-						'technical-knowledge/banking/clearing',
-						'technical-knowledge/banking/settlement',
-						'technical-knowledge/banking/onus',
-						'technical-knowledge/banking/debtor',
-						'technical-knowledge/banking/direct_debit',
-						'technical-knowledge/banking/debit_post',
-						'technical-knowledge/banking/credit_post',
-						'technical-knowledge/banking/payment_return',
-						'technical-knowledge/banking/debit_reversal',
-						'technical-knowledge/banking/sanction',
-						'technical-knowledge/banking/swift',
-						'technical-knowledge/banking/fis',
-						'technical-knowledge/banking/aml_kyc',
-						'technical-knowledge/banking/camt053',
-						'technical-knowledge/banking/camt054',
-						'technical-knowledge/banking/pacs002'
-					]
+					items: [{ type: 'doc', id: 'technical-knowledge/banking/open_banking', label: 'Open Banking & CDR' }]
 				}
+
 			]
 		}
 	]

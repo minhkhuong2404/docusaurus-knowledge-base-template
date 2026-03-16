@@ -30,6 +30,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/banking/banking_roles",
+              "path": "/technical-knowledge/banking/banking_roles",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/banking/bpay",
               "path": "/technical-knowledge/banking/bpay",
               "sidebar": "tutorialSidebar"
@@ -45,8 +50,23 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/banking/camt055_camt056",
+              "path": "/technical-knowledge/banking/camt055_camt056",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/cards",
+              "path": "/technical-knowledge/banking/cards",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/banking/clearing",
               "path": "/technical-knowledge/banking/clearing",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/core_banking",
+              "path": "/technical-knowledge/banking/core_banking",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -90,8 +110,18 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/banking/glossary",
+              "path": "/technical-knowledge/banking/glossary",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/banking/inbound",
               "path": "/technical-knowledge/banking/inbound",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/interest_fees",
+              "path": "/technical-knowledge/banking/interest_fees",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -130,6 +160,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/banking/pacs004",
+              "path": "/technical-knowledge/banking/pacs004",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/banking/pacs008",
               "path": "/technical-knowledge/banking/pacs008",
               "sidebar": "tutorialSidebar"
@@ -140,8 +175,23 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/banking/pain004",
+              "path": "/technical-knowledge/banking/pain004",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/pain007_pacs007",
+              "path": "/technical-knowledge/banking/pain007_pacs007",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/banking/payment_exceptions",
               "path": "/technical-knowledge/banking/payment_exceptions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/payment_lifecycle_101",
+              "path": "/technical-knowledge/banking/payment_lifecycle_101",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -167,6 +217,11 @@
             {
               "id": "technical-knowledge/banking/swift",
               "path": "/technical-knowledge/banking/swift",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/testing_banking",
+              "path": "/technical-knowledge/banking/testing_banking",
               "sidebar": "tutorialSidebar"
             },
             {

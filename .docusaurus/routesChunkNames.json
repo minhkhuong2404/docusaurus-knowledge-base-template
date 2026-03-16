@@ -1,11 +1,11 @@
 {
-  "/-ea5": {
+  "/-090": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-bf3": {
+  "/-69c": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -2313,7 +2313,7 @@
     "__comp": "df203c0f",
     "__props": "cdd99891"
   },
-  "/-c6d": {
+  "/-379": {
     "__comp": "a94703ab"
   },
   "/devops-521": {
@@ -2340,6 +2340,10 @@
     "__comp": "17896441",
     "content": "a7b535ea"
   },
+  "/technical-knowledge/banking/banking_roles-ec6": {
+    "__comp": "17896441",
+    "content": "801aaef3"
+  },
   "/technical-knowledge/banking/bpay-18e": {
     "__comp": "17896441",
     "content": "132261a6"
@@ -2352,9 +2356,21 @@
     "__comp": "17896441",
     "content": "62c8b512"
   },
+  "/technical-knowledge/banking/camt055_camt056-566": {
+    "__comp": "17896441",
+    "content": "afebb541"
+  },
+  "/technical-knowledge/banking/cards-779": {
+    "__comp": "17896441",
+    "content": "b973a717"
+  },
   "/technical-knowledge/banking/clearing-9fb": {
     "__comp": "17896441",
     "content": "34d102cb"
+  },
+  "/technical-knowledge/banking/core_banking-862": {
+    "__comp": "17896441",
+    "content": "af590922"
   },
   "/technical-knowledge/banking/credit_post-ae6": {
     "__comp": "17896441",
@@ -2388,9 +2404,17 @@
     "__comp": "17896441",
     "content": "e9f00403"
   },
+  "/technical-knowledge/banking/glossary-b64": {
+    "__comp": "17896441",
+    "content": "398d1142"
+  },
   "/technical-knowledge/banking/inbound-1bc": {
     "__comp": "17896441",
     "content": "67cc4ab4"
+  },
+  "/technical-knowledge/banking/interest_fees-d77": {
+    "__comp": "17896441",
+    "content": "7efb0b3b"
   },
   "/technical-knowledge/banking/iso20022_migration-215": {
     "__comp": "17896441",
@@ -2416,6 +2440,10 @@
     "__comp": "17896441",
     "content": "121ee202"
   },
+  "/technical-knowledge/banking/pacs004-754": {
+    "__comp": "17896441",
+    "content": "d9d2b623"
+  },
   "/technical-knowledge/banking/pacs008-1d6": {
     "__comp": "17896441",
     "content": "1dc8ca26"
@@ -2424,9 +2452,21 @@
     "__comp": "17896441",
     "content": "38f2bef9"
   },
+  "/technical-knowledge/banking/pain004-959": {
+    "__comp": "17896441",
+    "content": "428c31fd"
+  },
+  "/technical-knowledge/banking/pain007_pacs007-bbf": {
+    "__comp": "17896441",
+    "content": "21512b8e"
+  },
   "/technical-knowledge/banking/payment_exceptions-6dd": {
     "__comp": "17896441",
     "content": "0b441d44"
+  },
+  "/technical-knowledge/banking/payment_lifecycle_101-3c3": {
+    "__comp": "17896441",
+    "content": "fb4429bd"
   },
   "/technical-knowledge/banking/payment_return-106": {
     "__comp": "17896441",
@@ -2447,6 +2487,10 @@
   "/technical-knowledge/banking/swift-680": {
     "__comp": "17896441",
     "content": "14308b2b"
+  },
+  "/technical-knowledge/banking/testing_banking-2f5": {
+    "__comp": "17896441",
+    "content": "36f4d598"
   },
   "/technical-knowledge/database/-103": {
     "__comp": "17896441",

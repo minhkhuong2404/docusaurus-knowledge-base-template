@@ -4,11 +4,11 @@ import ComponentCreator from '@docusaurus/ComponentCreator';
 export default [
   {
     path: '/',
-    component: ComponentCreator('/', 'ea5'),
+    component: ComponentCreator('/', '090'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'bf3'),
+        component: ComponentCreator('/', '69c'),
         routes: [
           {
             path: '/tags',
@@ -2892,7 +2892,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'c6d'),
+            component: ComponentCreator('/', '379'),
             routes: [
               {
                 path: '/devops',
@@ -2930,6 +2930,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/banking/banking_roles',
+                component: ComponentCreator('/technical-knowledge/banking/banking_roles', 'ec6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/banking/bpay',
                 component: ComponentCreator('/technical-knowledge/banking/bpay', '18e'),
                 exact: true,
@@ -2948,8 +2954,26 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/banking/camt055_camt056',
+                component: ComponentCreator('/technical-knowledge/banking/camt055_camt056', '566'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/banking/cards',
+                component: ComponentCreator('/technical-knowledge/banking/cards', '779'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/banking/clearing',
                 component: ComponentCreator('/technical-knowledge/banking/clearing', '9fb'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/banking/core_banking',
+                component: ComponentCreator('/technical-knowledge/banking/core_banking', '862'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -3002,8 +3026,20 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/banking/glossary',
+                component: ComponentCreator('/technical-knowledge/banking/glossary', 'b64'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/banking/inbound',
                 component: ComponentCreator('/technical-knowledge/banking/inbound', '1bc'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/banking/interest_fees',
+                component: ComponentCreator('/technical-knowledge/banking/interest_fees', 'd77'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -3044,6 +3080,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/banking/pacs004',
+                component: ComponentCreator('/technical-knowledge/banking/pacs004', '754'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/banking/pacs008',
                 component: ComponentCreator('/technical-knowledge/banking/pacs008', '1d6'),
                 exact: true,
@@ -3056,8 +3098,26 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/banking/pain004',
+                component: ComponentCreator('/technical-knowledge/banking/pain004', '959'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/banking/pain007_pacs007',
+                component: ComponentCreator('/technical-knowledge/banking/pain007_pacs007', 'bbf'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/banking/payment_exceptions',
                 component: ComponentCreator('/technical-knowledge/banking/payment_exceptions', '6dd'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/banking/payment_lifecycle_101',
+                component: ComponentCreator('/technical-knowledge/banking/payment_lifecycle_101', '3c3'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -3088,6 +3148,12 @@ export default [
               {
                 path: '/technical-knowledge/banking/swift',
                 component: ComponentCreator('/technical-knowledge/banking/swift', '680'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/banking/testing_banking',
+                component: ComponentCreator('/technical-knowledge/banking/testing_banking', '2f5'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
