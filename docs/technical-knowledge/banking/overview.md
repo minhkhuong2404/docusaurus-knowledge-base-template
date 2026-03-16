@@ -3,7 +3,7 @@ id: overview
 title: Banking Domain Knowledge Base
 sidebar_label: Overview
 sidebar_position: 0
-slug: /
+slug: /banking
 description: Overview of Banking Domain Knowledge Base.
 tags: [banking, overview, domain]
 ---

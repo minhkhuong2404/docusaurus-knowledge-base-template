@@ -20,6 +20,156 @@
               "path": "/technical-knowledge/architecture/microservices"
             },
             {
+              "id": "technical-knowledge/aws/api-gateway/index",
+              "path": "/technical-knowledge/aws/api-gateway/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/beanstalk/index",
+              "path": "/technical-knowledge/aws/beanstalk/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/cicd/code-build",
+              "path": "/technical-knowledge/aws/cicd/code-build",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/cicd/code-deploy",
+              "path": "/technical-knowledge/aws/cicd/code-deploy",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/cicd/code-pipeline",
+              "path": "/technical-knowledge/aws/cicd/code-pipeline",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/cicd/index",
+              "path": "/technical-knowledge/aws/cicd/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/cloudformation/index",
+              "path": "/technical-knowledge/aws/cloudformation/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/cloudformation/sam",
+              "path": "/technical-knowledge/aws/cloudformation/sam",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/containers/ecs-ecr",
+              "path": "/technical-knowledge/aws/containers/ecs-ecr",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/dynamodb/advanced",
+              "path": "/technical-knowledge/aws/dynamodb/advanced",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/dynamodb/index",
+              "path": "/technical-knowledge/aws/dynamodb/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/elasticache/index",
+              "path": "/technical-knowledge/aws/elasticache/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/exam-tips",
+              "path": "/technical-knowledge/aws/exam-tips",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/iam/cognito",
+              "path": "/technical-knowledge/aws/iam/cognito",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/iam/index",
+              "path": "/technical-knowledge/aws/iam/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/lambda/index",
+              "path": "/technical-knowledge/aws/lambda/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/lambda/layers-and-versions",
+              "path": "/technical-knowledge/aws/lambda/layers-and-versions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/messaging/kinesis",
+              "path": "/technical-knowledge/aws/messaging/kinesis",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/messaging/sns",
+              "path": "/technical-knowledge/aws/messaging/sns",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/messaging/sqs",
+              "path": "/technical-knowledge/aws/messaging/sqs",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/monitoring/cloudtrail",
+              "path": "/technical-knowledge/aws/monitoring/cloudtrail",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/monitoring/cloudwatch",
+              "path": "/technical-knowledge/aws/monitoring/cloudwatch",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/monitoring/x-ray",
+              "path": "/technical-knowledge/aws/monitoring/x-ray",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/overview",
+              "path": "/aws",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/s3/advanced",
+              "path": "/technical-knowledge/aws/s3/advanced",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/s3/index",
+              "path": "/technical-knowledge/aws/s3/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/security/kms",
+              "path": "/technical-knowledge/aws/security/kms",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/security/secrets-manager",
+              "path": "/technical-knowledge/aws/security/secrets-manager",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/security/ssm-parameter-store",
+              "path": "/technical-knowledge/aws/security/ssm-parameter-store",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/step-functions/index",
+              "path": "/technical-knowledge/aws/step-functions/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/banking/account_types",
               "path": "/technical-knowledge/banking/account_types",
               "sidebar": "tutorialSidebar"
@@ -151,7 +301,7 @@
             },
             {
               "id": "technical-knowledge/banking/overview",
-              "path": "/",
+              "path": "/banking",
               "sidebar": "tutorialSidebar"
             },
             {

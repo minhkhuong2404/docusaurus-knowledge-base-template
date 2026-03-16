@@ -325,6 +325,6 @@ public class Pacs004ProcessingService {
 - [pain007_pacs007.md](./pain007_pacs007.md) — Payment reversal/recall (debtor-initiated)
 - [camt055_camt056.md](./camt055_camt056.md) — Cancellation request that triggers a return
 - [pacs008.md](./pacs008.md) — The original payment message being returned
-- [debit_post.md](./debit_post.md#payment-return) — Accounting treatment of return
+- [payment_return.md](./payment_return.md) — Accounting treatment of return
 - [inbound.md](./inbound.md) — When a creditor bank initiates a return
 - [payment_exceptions.md](./payment_exceptions.md) — Returns as exception handling

@@ -505,6 +505,84 @@ const sidebars: SidebarsConfig = {
 		},
 		{
 			type: 'category',
+			label: '☁️ AWS',
+			items: [
+				'technical-knowledge/aws/overview',
+				{
+					type: 'category',
+					label: '🔐 Identity & Access',
+					collapsed: false,
+					items: [
+						'technical-knowledge/aws/iam/index',
+						'technical-knowledge/aws/iam/cognito',
+					],
+				},
+				{
+					type: 'category',
+					label: '🧠 Compute & APIs',
+					collapsed: false,
+					items: [
+						'technical-knowledge/aws/lambda/index',
+						'technical-knowledge/aws/lambda/layers-and-versions',
+						'technical-knowledge/aws/api-gateway/index',
+						'technical-knowledge/aws/beanstalk/index',
+					],
+				},
+				{
+					type: 'category',
+					label: '🗄️ Storage & Databases',
+					collapsed: false,
+					items: [
+						'technical-knowledge/aws/s3/index',
+						'technical-knowledge/aws/s3/advanced',
+						'technical-knowledge/aws/dynamodb/index',
+						'technical-knowledge/aws/dynamodb/advanced',
+						'technical-knowledge/aws/elasticache/index',
+					],
+				},
+				{
+					type: 'category',
+					label: '📨 Messaging & Workflows',
+					collapsed: false,
+					items: [
+						'technical-knowledge/aws/messaging/sns',
+						'technical-knowledge/aws/messaging/sqs',
+						'technical-knowledge/aws/messaging/kinesis',
+						'technical-knowledge/aws/step-functions/index',
+					],
+				},
+				{
+					type: 'category',
+					label: '🛠️ DevOps & Infrastructure',
+					collapsed: false,
+					items: [
+						'technical-knowledge/aws/cloudformation/index',
+						'technical-knowledge/aws/cloudformation/sam',
+						'technical-knowledge/aws/cicd/index',
+						'technical-knowledge/aws/cicd/code-build',
+						'technical-knowledge/aws/cicd/code-deploy',
+						'technical-knowledge/aws/cicd/code-pipeline',
+						'technical-knowledge/aws/containers/ecs-ecr',
+					],
+				},
+				{
+					type: 'category',
+					label: '📈 Monitoring & Security',
+					collapsed: false,
+					items: [
+						'technical-knowledge/aws/monitoring/cloudwatch',
+						'technical-knowledge/aws/monitoring/cloudtrail',
+						'technical-knowledge/aws/monitoring/x-ray',
+						'technical-knowledge/aws/security/kms',
+						'technical-knowledge/aws/security/secrets-manager',
+						'technical-knowledge/aws/security/ssm-parameter-store',
+					],
+				},
+				'technical-knowledge/aws/exam-tips',
+			],
+		},
+		{
+			type: 'category',
 			label: '🏛️ Banking & Finance',
 			items: [
 				{ type: 'doc', id: 'technical-knowledge/banking/overview', label: '🏦 Overview' },

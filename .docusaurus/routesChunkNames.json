@@ -1,11 +1,11 @@
 {
-  "/-090": {
+  "/-5df": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-69c": {
+  "/-f9b": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -57,9 +57,17 @@
     "__comp": "df203c0f",
     "__props": "92c85ba6"
   },
+  "/tags/alarms-786": {
+    "__comp": "df203c0f",
+    "__props": "f5a85be7"
+  },
   "/tags/algorithms-069": {
     "__comp": "df203c0f",
     "__props": "4f83f949"
+  },
+  "/tags/aliases-11d": {
+    "__comp": "df203c0f",
+    "__props": "a0f48562"
   },
   "/tags/aml-706": {
     "__comp": "df203c0f",
@@ -89,6 +97,10 @@
     "__comp": "df203c0f",
     "__props": "f68b56e1"
   },
+  "/tags/api-logging-63d": {
+    "__comp": "df203c0f",
+    "__props": "debcbe33"
+  },
   "/tags/api-security-441": {
     "__comp": "df203c0f",
     "__props": "12daff82"
@@ -101,6 +113,10 @@
     "__comp": "df203c0f",
     "__props": "596f54e6"
   },
+  "/tags/appspec-8e3": {
+    "__comp": "df203c0f",
+    "__props": "bef8d180"
+  },
   "/tags/architecture-851": {
     "__comp": "df203c0f",
     "__props": "fcc7c18b"
@@ -112,6 +128,10 @@
   "/tags/attack-bf5": {
     "__comp": "df203c0f",
     "__props": "cc86ab95"
+  },
+  "/tags/audit-253": {
+    "__comp": "df203c0f",
+    "__props": "53d55005"
   },
   "/tags/audit-log-de2": {
     "__comp": "df203c0f",
@@ -129,6 +149,10 @@
     "__comp": "df203c0f",
     "__props": "d36aea42"
   },
+  "/tags/authorizer-67a": {
+    "__comp": "df203c0f",
+    "__props": "cc9d964a"
+  },
   "/tags/auto-configuration-2b4": {
     "__comp": "df203c0f",
     "__props": "567932a8"
@@ -137,9 +161,17 @@
     "__comp": "df203c0f",
     "__props": "016e1ffa"
   },
+  "/tags/automation-b06": {
+    "__comp": "df203c0f",
+    "__props": "d38cbdf6"
+  },
   "/tags/availability-21c": {
     "__comp": "df203c0f",
     "__props": "55e3cafc"
+  },
+  "/tags/aws-certification-a6c": {
+    "__comp": "df203c0f",
+    "__props": "f66ea593"
   },
   "/tags/aws-iam-a75": {
     "__comp": "df203c0f",
@@ -181,6 +213,10 @@
     "__comp": "df203c0f",
     "__props": "b1ce8c9f"
   },
+  "/tags/beanstalk-8ee": {
+    "__comp": "df203c0f",
+    "__props": "274e8ec9"
+  },
   "/tags/bearer-token-f4e": {
     "__comp": "df203c0f",
     "__props": "ea5c02f7"
@@ -217,6 +253,10 @@
     "__comp": "df203c0f",
     "__props": "dabd5c88"
   },
+  "/tags/blue-green-2b2": {
+    "__comp": "df203c0f",
+    "__props": "ac725e03"
+  },
   "/tags/bpay-cf7": {
     "__comp": "df203c0f",
     "__props": "84532f86"
@@ -228,6 +268,10 @@
   "/tags/buffer-pool-975": {
     "__comp": "df203c0f",
     "__props": "55251362"
+  },
+  "/tags/build-abe": {
+    "__comp": "df203c0f",
+    "__props": "27f37fd7"
   },
   "/tags/builder-b96": {
     "__comp": "df203c0f",
@@ -256,6 +300,10 @@
   "/tags/camt-054-18d": {
     "__comp": "df203c0f",
     "__props": "e14684b3"
+  },
+  "/tags/canary-5e8": {
+    "__comp": "df203c0f",
+    "__props": "d5654472"
   },
   "/tags/cap-theorem-8ce": {
     "__comp": "df203c0f",
@@ -297,6 +345,10 @@
     "__comp": "df203c0f",
     "__props": "20787609"
   },
+  "/tags/change-sets-568": {
+    "__comp": "df203c0f",
+    "__props": "9dd434a7"
+  },
   "/tags/chaos-engineering-7e9": {
     "__comp": "df203c0f",
     "__props": "518d8bb2"
@@ -305,6 +357,10 @@
     "__comp": "df203c0f",
     "__props": "2685dfa6"
   },
+  "/tags/cheatsheet-5bf": {
+    "__comp": "df203c0f",
+    "__props": "b77374ed"
+  },
   "/tags/choreography-15e": {
     "__comp": "df203c0f",
     "__props": "1219d62f"
@@ -312,6 +368,10 @@
   "/tags/chunking-bee": {
     "__comp": "df203c0f",
     "__props": "829683db"
+  },
+  "/tags/cicd-b00": {
+    "__comp": "df203c0f",
+    "__props": "a4ad0599"
   },
   "/tags/cidr-853": {
     "__comp": "df203c0f",
@@ -337,9 +397,49 @@
     "__comp": "df203c0f",
     "__props": "c3be40bd"
   },
+  "/tags/cloudformation-63e": {
+    "__comp": "df203c0f",
+    "__props": "27985102"
+  },
+  "/tags/cloudtrail-f14": {
+    "__comp": "df203c0f",
+    "__props": "8524a2bd"
+  },
+  "/tags/cloudwatch-d42": {
+    "__comp": "df203c0f",
+    "__props": "7f5e5fba"
+  },
   "/tags/clusterip-0d1": {
     "__comp": "df203c0f",
     "__props": "089fe400"
+  },
+  "/tags/cmk-a0f": {
+    "__comp": "df203c0f",
+    "__props": "441a44a4"
+  },
+  "/tags/codebuild-f60": {
+    "__comp": "df203c0f",
+    "__props": "324a6135"
+  },
+  "/tags/codecommit-50f": {
+    "__comp": "df203c0f",
+    "__props": "1bcb3db0"
+  },
+  "/tags/codedeploy-178": {
+    "__comp": "df203c0f",
+    "__props": "b14df13c"
+  },
+  "/tags/codepipeline-83c": {
+    "__comp": "df203c0f",
+    "__props": "056ea98f"
+  },
+  "/tags/cognito-e99": {
+    "__comp": "df203c0f",
+    "__props": "de1b1fea"
+  },
+  "/tags/cold-start-e83": {
+    "__comp": "df203c0f",
+    "__props": "b1716a86"
   },
   "/tags/collections-f92": {
     "__comp": "df203c0f",
@@ -372,6 +472,10 @@
   "/tags/compression-47e": {
     "__comp": "df203c0f",
     "__props": "b6bc4b9e"
+  },
+  "/tags/compute-a25": {
+    "__comp": "df203c0f",
+    "__props": "9ccafafe"
   },
   "/tags/concurrency-800": {
     "__comp": "df203c0f",
@@ -441,6 +545,10 @@
     "__comp": "df203c0f",
     "__props": "4f5e3efe"
   },
+  "/tags/cors-43e": {
+    "__comp": "df203c0f",
+    "__props": "4be08048"
+  },
   "/tags/cost-based-677": {
     "__comp": "df203c0f",
     "__props": "4475d819"
@@ -465,9 +573,17 @@
     "__comp": "df203c0f",
     "__props": "6e5c0f09"
   },
+  "/tags/cross-account-c7c": {
+    "__comp": "df203c0f",
+    "__props": "bc61e836"
+  },
   "/tags/cross-border-a4b": {
     "__comp": "df203c0f",
     "__props": "8ef1bb74"
+  },
+  "/tags/crr-321": {
+    "__comp": "df203c0f",
+    "__props": "3e467445"
   },
   "/tags/cryptography-cda": {
     "__comp": "df203c0f",
@@ -480,6 +596,10 @@
   "/tags/cte-8e3": {
     "__comp": "df203c0f",
     "__props": "c11a0359"
+  },
+  "/tags/ctf-e91": {
+    "__comp": "df203c0f",
+    "__props": "078bc4f5"
   },
   "/tags/curl-8da": {
     "__comp": "df203c0f",
@@ -509,6 +629,10 @@
     "__comp": "df203c0f",
     "__props": "fa34ec33"
   },
+  "/tags/data-streams-78e": {
+    "__comp": "df203c0f",
+    "__props": "39ad49be"
+  },
   "/tags/data-structures-b54": {
     "__comp": "df203c0f",
     "__props": "99ba9618"
@@ -520,6 +644,10 @@
   "/tags/database-1be": {
     "__comp": "df203c0f",
     "__props": "fa5017f4"
+  },
+  "/tags/dax-fea": {
+    "__comp": "df203c0f",
+    "__props": "391a97f5"
   },
   "/tags/ddos-ec5": {
     "__comp": "df203c0f",
@@ -544,6 +672,10 @@
   "/tags/decorator-cea": {
     "__comp": "df203c0f",
     "__props": "80f9bfa3"
+  },
+  "/tags/decoupling-13a": {
+    "__comp": "df203c0f",
+    "__props": "8c906621"
   },
   "/tags/dependency-injection-206": {
     "__comp": "df203c0f",
@@ -613,9 +745,17 @@
     "__comp": "df203c0f",
     "__props": "7ca5bc58"
   },
+  "/tags/distributed-tracing-0e4": {
+    "__comp": "df203c0f",
+    "__props": "d75d7648"
+  },
   "/tags/distributed-transactions-dbf": {
     "__comp": "df203c0f",
     "__props": "1c39ffa2"
+  },
+  "/tags/dlq-7e3": {
+    "__comp": "df203c0f",
+    "__props": "4b62ef9a"
   },
   "/tags/dns-37e": {
     "__comp": "df203c0f",
@@ -645,9 +785,45 @@
     "__comp": "df203c0f",
     "__props": "21753e00"
   },
+  "/tags/domain-1-3b8": {
+    "__comp": "df203c0f",
+    "__props": "7cfdb3fb"
+  },
+  "/tags/domain-2-851": {
+    "__comp": "df203c0f",
+    "__props": "95c750b8"
+  },
+  "/tags/domain-3-38b": {
+    "__comp": "df203c0f",
+    "__props": "8f107b01"
+  },
+  "/tags/domain-4-8fc": {
+    "__comp": "df203c0f",
+    "__props": "38dac4ef"
+  },
+  "/tags/dva-c-02-fc2": {
+    "__comp": "df203c0f",
+    "__props": "96881746"
+  },
   "/tags/dynamodb-f96": {
     "__comp": "df203c0f",
     "__props": "bab19283"
+  },
+  "/tags/ecr-8e5": {
+    "__comp": "df203c0f",
+    "__props": "324d6a9e"
+  },
+  "/tags/ecs-946": {
+    "__comp": "df203c0f",
+    "__props": "0bf82263"
+  },
+  "/tags/elastic-beanstalk-7f7": {
+    "__comp": "df203c0f",
+    "__props": "26006b2f"
+  },
+  "/tags/elasticache-17c": {
+    "__comp": "df203c0f",
+    "__props": "faa9c8c7"
   },
   "/tags/elasticsearch-392": {
     "__comp": "df203c0f",
@@ -672,6 +848,14 @@
   "/tags/engineering-869": {
     "__comp": "df203c0f",
     "__props": "b0759614"
+  },
+  "/tags/enhanced-client-4cc": {
+    "__comp": "df203c0f",
+    "__props": "5f49ab89"
+  },
+  "/tags/envelope-encryption-6cf": {
+    "__comp": "df203c0f",
+    "__props": "e5a5ebbf"
   },
   "/tags/envoy-7d3": {
     "__comp": "df203c0f",
@@ -701,6 +885,10 @@
     "__comp": "df203c0f",
     "__props": "3cc87f58"
   },
+  "/tags/event-source-mapping-ab3": {
+    "__comp": "df203c0f",
+    "__props": "1501657d"
+  },
   "/tags/event-sourcing-285": {
     "__comp": "df203c0f",
     "__props": "a6005a6c"
@@ -720,6 +908,14 @@
   "/tags/exactly-once-semantics-4a2": {
     "__comp": "df203c0f",
     "__props": "1a3b8eea"
+  },
+  "/tags/exam-guide-5f2": {
+    "__comp": "df203c0f",
+    "__props": "b343f735"
+  },
+  "/tags/exam-tips-c66": {
+    "__comp": "df203c0f",
+    "__props": "ff4bf6b7"
   },
   "/tags/exceptions-2e0": {
     "__comp": "df203c0f",
@@ -757,13 +953,29 @@
     "__comp": "df203c0f",
     "__props": "2fe83020"
   },
+  "/tags/fan-out-d96": {
+    "__comp": "df203c0f",
+    "__props": "1d8528ea"
+  },
+  "/tags/fargate-a8b": {
+    "__comp": "df203c0f",
+    "__props": "27de3080"
+  },
   "/tags/fault-tolerance-1a5": {
     "__comp": "df203c0f",
     "__props": "453e5c9d"
   },
+  "/tags/federation-555": {
+    "__comp": "df203c0f",
+    "__props": "40cfd85b"
+  },
   "/tags/fi-ced": {
     "__comp": "df203c0f",
     "__props": "174a6a31"
+  },
+  "/tags/fifo-843": {
+    "__comp": "df203c0f",
+    "__props": "a41fc9ee"
   },
   "/tags/file-systems-d53": {
     "__comp": "df203c0f",
@@ -776,6 +988,10 @@
   "/tags/files-407": {
     "__comp": "df203c0f",
     "__props": "7b44fdc6"
+  },
+  "/tags/firehose-883": {
+    "__comp": "df203c0f",
+    "__props": "6b06eb61"
   },
   "/tags/firewall-247": {
     "__comp": "df203c0f",
@@ -837,6 +1053,10 @@
     "__comp": "df203c0f",
     "__props": "0aab00a6"
   },
+  "/tags/gradle-9fe": {
+    "__comp": "df203c0f",
+    "__props": "25a2253a"
+  },
   "/tags/grafana-431": {
     "__comp": "df203c0f",
     "__props": "cd093766"
@@ -856,6 +1076,10 @@
   "/tags/grpc-2d8": {
     "__comp": "df203c0f",
     "__props": "a4befbf4"
+  },
+  "/tags/gsi-49a": {
+    "__comp": "df203c0f",
+    "__props": "b03cda2a"
   },
   "/tags/handshake-b4f": {
     "__comp": "df203c0f",
@@ -885,6 +1109,10 @@
     "__comp": "df203c0f",
     "__props": "3597b5ef"
   },
+  "/tags/hooks-809": {
+    "__comp": "df203c0f",
+    "__props": "fba4b180"
+  },
   "/tags/hpa-c7d": {
     "__comp": "df203c0f",
     "__props": "3713c6a1"
@@ -901,6 +1129,10 @@
     "__comp": "df203c0f",
     "__props": "eab6e656"
   },
+  "/tags/http-api-ce6": {
+    "__comp": "df203c0f",
+    "__props": "e0f9ae48"
+  },
   "/tags/https-260": {
     "__comp": "df203c0f",
     "__props": "a7efbe68"
@@ -909,6 +1141,10 @@
     "__comp": "df203c0f",
     "__props": "785b5c1c"
   },
+  "/tags/iac-653": {
+    "__comp": "df203c0f",
+    "__props": "e0f4ce7b"
+  },
   "/tags/iam-bd1": {
     "__comp": "df203c0f",
     "__props": "349f60b5"
@@ -916,6 +1152,10 @@
   "/tags/idempotency-cc3": {
     "__comp": "df203c0f",
     "__props": "72ba4736"
+  },
+  "/tags/identity-pools-99a": {
+    "__comp": "df203c0f",
+    "__props": "32fb0159"
   },
   "/tags/images-9e3": {
     "__comp": "df203c0f",
@@ -940,6 +1180,10 @@
   "/tags/influxdb-bae": {
     "__comp": "df203c0f",
     "__props": "bba1aa88"
+  },
+  "/tags/infrastructure-as-code-b54": {
+    "__comp": "df203c0f",
+    "__props": "c3c166df"
   },
   "/tags/ingress-147": {
     "__comp": "df203c0f",
@@ -988,6 +1232,10 @@
   "/tags/investigations-390": {
     "__comp": "df203c0f",
     "__props": "b71b60eb"
+  },
+  "/tags/invocation-96f": {
+    "__comp": "df203c0f",
+    "__props": "f1d08dfd"
   },
   "/tags/io-a3e": {
     "__comp": "df203c0f",
@@ -1049,6 +1297,10 @@
     "__comp": "df203c0f",
     "__props": "9c57d5e6"
   },
+  "/tags/java-sdk-5e7": {
+    "__comp": "df203c0f",
+    "__props": "130aa459"
+  },
   "/tags/job-0a9": {
     "__comp": "df203c0f",
     "__props": "cfb5aad4"
@@ -1101,9 +1353,21 @@
     "__comp": "df203c0f",
     "__props": "0c7c36f4"
   },
+  "/tags/key-rotation-858": {
+    "__comp": "df203c0f",
+    "__props": "413b0f51"
+  },
   "/tags/keys-38a": {
     "__comp": "df203c0f",
     "__props": "0310c624"
+  },
+  "/tags/kinesis-538": {
+    "__comp": "df203c0f",
+    "__props": "44ab17ff"
+  },
+  "/tags/kms-82c": {
+    "__comp": "df203c0f",
+    "__props": "0a3221fb"
   },
   "/tags/knowledge-base-6af": {
     "__comp": "df203c0f",
@@ -1128,6 +1392,10 @@
   "/tags/labels-85a": {
     "__comp": "df203c0f",
     "__props": "f95bf345"
+  },
+  "/tags/lambda-d81": {
+    "__comp": "df203c0f",
+    "__props": "65ce42cf"
   },
   "/tags/language-features-35c": {
     "__comp": "df203c0f",
@@ -1185,6 +1453,10 @@
     "__comp": "df203c0f",
     "__props": "c3ac2bbf"
   },
+  "/tags/local-testing-0c0": {
+    "__comp": "df203c0f",
+    "__props": "86aeec59"
+  },
   "/tags/locking-a98": {
     "__comp": "df203c0f",
     "__props": "b500003f"
@@ -1193,9 +1465,17 @@
     "__comp": "df203c0f",
     "__props": "49a9524f"
   },
+  "/tags/logs-aa3": {
+    "__comp": "df203c0f",
+    "__props": "46edd360"
+  },
   "/tags/long-polling-a18": {
     "__comp": "df203c0f",
     "__props": "89572ede"
+  },
+  "/tags/lsi-30c": {
+    "__comp": "df203c0f",
+    "__props": "486122aa"
   },
   "/tags/lsm-tree-b94": {
     "__comp": "df203c0f",
@@ -1204,6 +1484,14 @@
   "/tags/mass-assignment-9c2": {
     "__comp": "df203c0f",
     "__props": "8aab17d4"
+  },
+  "/tags/maven-c49": {
+    "__comp": "df203c0f",
+    "__props": "90cb22e8"
+  },
+  "/tags/memcached-a32": {
+    "__comp": "df203c0f",
+    "__props": "42383373"
   },
   "/tags/memory-management-051": {
     "__comp": "df203c0f",
@@ -1220,6 +1508,10 @@
   "/tags/mfa-88e": {
     "__comp": "df203c0f",
     "__props": "4528fb20"
+  },
+  "/tags/mfa-delete-a64": {
+    "__comp": "df203c0f",
+    "__props": "365d358e"
   },
   "/tags/microservices-565": {
     "__comp": "df203c0f",
@@ -1349,6 +1641,10 @@
     "__comp": "df203c0f",
     "__props": "47335036"
   },
+  "/tags/notifications-2fe": {
+    "__comp": "df203c0f",
+    "__props": "f6e6394d"
+  },
   "/tags/npp-cbc": {
     "__comp": "df203c0f",
     "__props": "687e3694"
@@ -1357,9 +1653,17 @@
     "__comp": "df203c0f",
     "__props": "df514add"
   },
+  "/tags/oauth-794": {
+    "__comp": "df203c0f",
+    "__props": "bd30b928"
+  },
   "/tags/oauth-2-775": {
     "__comp": "df203c0f",
     "__props": "f5712fe2"
+  },
+  "/tags/object-lambda-f48": {
+    "__comp": "df203c0f",
+    "__props": "0d0d16a5"
   },
   "/tags/object-oriented-programming-696": {
     "__comp": "df203c0f",
@@ -1501,6 +1805,18 @@
     "__comp": "df203c0f",
     "__props": "91f9fed1"
   },
+  "/tags/parameter-store-af6": {
+    "__comp": "df203c0f",
+    "__props": "dad41313"
+  },
+  "/tags/partiql-bb8": {
+    "__comp": "df203c0f",
+    "__props": "9bcf49ce"
+  },
+  "/tags/partition-key-604": {
+    "__comp": "df203c0f",
+    "__props": "268111bf"
+  },
   "/tags/partitioning-333": {
     "__comp": "df203c0f",
     "__props": "67f8925b"
@@ -1541,6 +1857,10 @@
     "__comp": "df203c0f",
     "__props": "2beffc26"
   },
+  "/tags/pipeline-5fb": {
+    "__comp": "df203c0f",
+    "__props": "e9854325"
+  },
   "/tags/pitr-28c": {
     "__comp": "df203c0f",
     "__props": "3791bff4"
@@ -1552,6 +1872,10 @@
   "/tags/pods-442": {
     "__comp": "df203c0f",
     "__props": "37ba24b2"
+  },
+  "/tags/policies-338": {
+    "__comp": "df203c0f",
+    "__props": "7d4371b6"
   },
   "/tags/polling-d26": {
     "__comp": "df203c0f",
@@ -1576,6 +1900,10 @@
   "/tags/preparation-0dc": {
     "__comp": "df203c0f",
     "__props": "df453be4"
+  },
+  "/tags/presigned-url-141": {
+    "__comp": "df203c0f",
+    "__props": "c9dff181"
   },
   "/tags/prevention-eb7": {
     "__comp": "df203c0f",
@@ -1665,9 +1993,17 @@
     "__comp": "df203c0f",
     "__props": "13cee90d"
   },
+  "/tags/queues-566": {
+    "__comp": "df203c0f",
+    "__props": "ca01482a"
+  },
   "/tags/quic-832": {
     "__comp": "df203c0f",
     "__props": "42c19c71"
+  },
+  "/tags/quick-reference-f7f": {
+    "__comp": "df203c0f",
+    "__props": "60cedcc5"
   },
   "/tags/rabbitmq-009": {
     "__comp": "df203c0f",
@@ -1769,6 +2105,10 @@
     "__comp": "df203c0f",
     "__props": "0ee21320"
   },
+  "/tags/rest-api-71b": {
+    "__comp": "df203c0f",
+    "__props": "3e064d55"
+  },
   "/tags/returns-ec8": {
     "__comp": "df203c0f",
     "__props": "55d6e442"
@@ -1785,9 +2125,25 @@
     "__comp": "df203c0f",
     "__props": "8b9de99a"
   },
+  "/tags/roles-2dc": {
+    "__comp": "df203c0f",
+    "__props": "1afbabb8"
+  },
+  "/tags/rollback-360": {
+    "__comp": "df203c0f",
+    "__props": "f2f99735"
+  },
+  "/tags/rolling-3cf": {
+    "__comp": "df203c0f",
+    "__props": "ec940b2a"
+  },
   "/tags/rolling-update-5b6": {
     "__comp": "df203c0f",
     "__props": "d47559d8"
+  },
+  "/tags/rotation-2aa": {
+    "__comp": "df203c0f",
+    "__props": "18fd5043"
   },
   "/tags/routing-3d3": {
     "__comp": "df203c0f",
@@ -1809,13 +2165,25 @@
     "__comp": "df203c0f",
     "__props": "a6c1cd8d"
   },
+  "/tags/s-3-select-770": {
+    "__comp": "df203c0f",
+    "__props": "7c96f9f0"
+  },
   "/tags/saga-363": {
     "__comp": "df203c0f",
     "__props": "6a2129ea"
   },
+  "/tags/sam-596": {
+    "__comp": "df203c0f",
+    "__props": "02c1df83"
+  },
   "/tags/saml-839": {
     "__comp": "df203c0f",
     "__props": "11c49d3b"
+  },
+  "/tags/sampling-be2": {
+    "__comp": "df203c0f",
+    "__props": "3fe555a8"
   },
   "/tags/sanctions-f79": {
     "__comp": "df203c0f",
@@ -1857,6 +2225,10 @@
     "__comp": "df203c0f",
     "__props": "f1da5bd0"
   },
+  "/tags/secrets-manager-730": {
+    "__comp": "df203c0f",
+    "__props": "99d24bbc"
+  },
   "/tags/secrets-scanning-f6d": {
     "__comp": "df203c0f",
     "__props": "205c9774"
@@ -1872,6 +2244,14 @@
   "/tags/security-operations-110": {
     "__comp": "df203c0f",
     "__props": "bee33de3"
+  },
+  "/tags/segments-ce5": {
+    "__comp": "df203c0f",
+    "__props": "7a9e7971"
+  },
+  "/tags/serverless-e75": {
+    "__comp": "df203c0f",
+    "__props": "1e781f6d"
   },
   "/tags/service-accounts-429": {
     "__comp": "df203c0f",
@@ -1893,6 +2273,10 @@
     "__comp": "df203c0f",
     "__props": "8ded4feb"
   },
+  "/tags/session-store-b5a": {
+    "__comp": "df203c0f",
+    "__props": "d67f2302"
+  },
   "/tags/settlement-a7f": {
     "__comp": "df203c0f",
     "__props": "78871483"
@@ -1900,6 +2284,10 @@
   "/tags/sharding-5aa": {
     "__comp": "df203c0f",
     "__props": "5daf08d3"
+  },
+  "/tags/shards-0c2": {
+    "__comp": "df203c0f",
+    "__props": "38c622ae"
   },
   "/tags/shift-left-4ca": {
     "__comp": "df203c0f",
@@ -1916,6 +2304,10 @@
   "/tags/signals-b13": {
     "__comp": "df203c0f",
     "__props": "d679e450"
+  },
+  "/tags/single-table-design-635": {
+    "__comp": "df203c0f",
+    "__props": "ccb2cc41"
   },
   "/tags/singleton-93b": {
     "__comp": "df203c0f",
@@ -1936,6 +2328,10 @@
   "/tags/smtp-ea0": {
     "__comp": "df203c0f",
     "__props": "187558a9"
+  },
+  "/tags/sns-7d5": {
+    "__comp": "df203c0f",
+    "__props": "3b62957c"
   },
   "/tags/soc-502": {
     "__comp": "df203c0f",
@@ -2013,6 +2409,10 @@
     "__comp": "df203c0f",
     "__props": "9c08cf98"
   },
+  "/tags/srr-fbf": {
+    "__comp": "df203c0f",
+    "__props": "b94e0f2b"
+  },
   "/tags/sse-754": {
     "__comp": "df203c0f",
     "__props": "e005f161"
@@ -2025,6 +2425,10 @@
     "__comp": "df203c0f",
     "__props": "fc938c70"
   },
+  "/tags/ssm-8b5": {
+    "__comp": "df203c0f",
+    "__props": "50aa5dc8"
+  },
   "/tags/sso-504": {
     "__comp": "df203c0f",
     "__props": "6dcf6edf"
@@ -2033,9 +2437,17 @@
     "__comp": "df203c0f",
     "__props": "94a88606"
   },
+  "/tags/stacks-20b": {
+    "__comp": "df203c0f",
+    "__props": "afe84036"
+  },
   "/tags/star-schema-b6c": {
     "__comp": "df203c0f",
     "__props": "af82fe38"
+  },
+  "/tags/state-machine-b4f": {
+    "__comp": "df203c0f",
+    "__props": "fc15835a"
   },
   "/tags/statefulset-eb5": {
     "__comp": "df203c0f",
@@ -2044,6 +2456,10 @@
   "/tags/statistics-461": {
     "__comp": "df203c0f",
     "__props": "6668fc20"
+  },
+  "/tags/step-functions-3a5": {
+    "__comp": "df203c0f",
+    "__props": "8bcd46ef"
   },
   "/tags/stomp-61f": {
     "__comp": "df203c0f",
@@ -2073,9 +2489,25 @@
     "__comp": "df203c0f",
     "__props": "c8c73a53"
   },
+  "/tags/streams-236": {
+    "__comp": "df203c0f",
+    "__props": "52ca1ed9"
+  },
   "/tags/structural-4a2": {
     "__comp": "df203c0f",
     "__props": "a4568ce4"
+  },
+  "/tags/sts-a6e": {
+    "__comp": "df203c0f",
+    "__props": "329c9ac3"
+  },
+  "/tags/study-guide-f32": {
+    "__comp": "df203c0f",
+    "__props": "257c6daa"
+  },
+  "/tags/study-plan-493": {
+    "__comp": "df203c0f",
+    "__props": "36c4a7f4"
   },
   "/tags/subnet-64f": {
     "__comp": "df203c0f",
@@ -2084,6 +2516,10 @@
   "/tags/subquery-c43": {
     "__comp": "df203c0f",
     "__props": "6eaa3e12"
+  },
+  "/tags/subsegments-ab7": {
+    "__comp": "df203c0f",
+    "__props": "e8b5f6fc"
   },
   "/tags/swap-aaf": {
     "__comp": "df203c0f",
@@ -2113,6 +2549,10 @@
     "__comp": "df203c0f",
     "__props": "152a8be7"
   },
+  "/tags/task-definition-d4b": {
+    "__comp": "df203c0f",
+    "__props": "9449d9d8"
+  },
   "/tags/tcp-bb4": {
     "__comp": "df203c0f",
     "__props": "a7ec8345"
@@ -2133,6 +2573,10 @@
     "__comp": "df203c0f",
     "__props": "ae448c5f"
   },
+  "/tags/testing-08a": {
+    "__comp": "df203c0f",
+    "__props": "b2859d8e"
+  },
   "/tags/tfidf-128": {
     "__comp": "df203c0f",
     "__props": "92a0e3e7"
@@ -2144,6 +2588,10 @@
   "/tags/threat-modeling-682": {
     "__comp": "df203c0f",
     "__props": "70b50439"
+  },
+  "/tags/throttling-641": {
+    "__comp": "df203c0f",
+    "__props": "2445043b"
   },
   "/tags/time-series-8b1": {
     "__comp": "df203c0f",
@@ -2185,6 +2633,10 @@
     "__comp": "df203c0f",
     "__props": "a671e131"
   },
+  "/tags/transfer-acceleration-d02": {
+    "__comp": "df203c0f",
+    "__props": "a2bd1cfe"
+  },
   "/tags/transport-68d": {
     "__comp": "df203c0f",
     "__props": "41cf1a72"
@@ -2213,6 +2665,10 @@
     "__comp": "df203c0f",
     "__props": "6c3ec569"
   },
+  "/tags/user-pools-8b3": {
+    "__comp": "df203c0f",
+    "__props": "364d2313"
+  },
   "/tags/values-a08": {
     "__comp": "df203c0f",
     "__props": "cc12519f"
@@ -2225,9 +2681,17 @@
     "__comp": "df203c0f",
     "__props": "a602230a"
   },
+  "/tags/versions-741": {
+    "__comp": "df203c0f",
+    "__props": "ddfa4fb6"
+  },
   "/tags/virtual-memory-b33": {
     "__comp": "df203c0f",
     "__props": "8660da84"
+  },
+  "/tags/visibility-timeout-cda": {
+    "__comp": "df203c0f",
+    "__props": "903faf3d"
   },
   "/tags/volumes-eee": {
     "__comp": "df203c0f",
@@ -2285,6 +2749,10 @@
     "__comp": "df203c0f",
     "__props": "d0eb19c1"
   },
+  "/tags/workflows-298": {
+    "__comp": "df203c0f",
+    "__props": "7f5e4849"
+  },
   "/tags/write-through-b90": {
     "__comp": "df203c0f",
     "__props": "0497c312"
@@ -2292,6 +2760,10 @@
   "/tags/writes-d0b": {
     "__comp": "df203c0f",
     "__props": "349da4f3"
+  },
+  "/tags/x-ray-1e3": {
+    "__comp": "df203c0f",
+    "__props": "260fb986"
   },
   "/tags/xss-af9": {
     "__comp": "df203c0f",
@@ -2313,8 +2785,16 @@
     "__comp": "df203c0f",
     "__props": "cdd99891"
   },
-  "/-379": {
+  "/-6b2": {
     "__comp": "a94703ab"
+  },
+  "/aws-102": {
+    "__comp": "17896441",
+    "content": "78559adb"
+  },
+  "/banking-dce": {
+    "__comp": "17896441",
+    "content": "59e92e34"
   },
   "/devops-521": {
     "__comp": "17896441",
@@ -2331,6 +2811,122 @@
   "/technical-knowledge/architecture/microservices-21e": {
     "__comp": "17896441",
     "content": "12f034a4"
+  },
+  "/technical-knowledge/aws/api-gateway/-305": {
+    "__comp": "17896441",
+    "content": "9b48b4ad"
+  },
+  "/technical-knowledge/aws/beanstalk/-156": {
+    "__comp": "17896441",
+    "content": "e11cab58"
+  },
+  "/technical-knowledge/aws/cicd/-bed": {
+    "__comp": "17896441",
+    "content": "f4746e0c"
+  },
+  "/technical-knowledge/aws/cicd/code-build-b28": {
+    "__comp": "17896441",
+    "content": "b01845cd"
+  },
+  "/technical-knowledge/aws/cicd/code-deploy-a60": {
+    "__comp": "17896441",
+    "content": "33fee3f2"
+  },
+  "/technical-knowledge/aws/cicd/code-pipeline-a73": {
+    "__comp": "17896441",
+    "content": "0d2d99ca"
+  },
+  "/technical-knowledge/aws/cloudformation/-b07": {
+    "__comp": "17896441",
+    "content": "857b188f"
+  },
+  "/technical-knowledge/aws/cloudformation/sam-5f8": {
+    "__comp": "17896441",
+    "content": "2c8bce91"
+  },
+  "/technical-knowledge/aws/containers/ecs-ecr-7a2": {
+    "__comp": "17896441",
+    "content": "63c5afd7"
+  },
+  "/technical-knowledge/aws/dynamodb/-b52": {
+    "__comp": "17896441",
+    "content": "f90180fa"
+  },
+  "/technical-knowledge/aws/dynamodb/advanced-a58": {
+    "__comp": "17896441",
+    "content": "3a17425a"
+  },
+  "/technical-knowledge/aws/elasticache/-15d": {
+    "__comp": "17896441",
+    "content": "2f7f8341"
+  },
+  "/technical-knowledge/aws/exam-tips-2d7": {
+    "__comp": "17896441",
+    "content": "8a5452e1"
+  },
+  "/technical-knowledge/aws/iam/-8f2": {
+    "__comp": "17896441",
+    "content": "e0eddf4b"
+  },
+  "/technical-knowledge/aws/iam/cognito-3ba": {
+    "__comp": "17896441",
+    "content": "4eb80ea8"
+  },
+  "/technical-knowledge/aws/lambda/-eb9": {
+    "__comp": "17896441",
+    "content": "afa07c8d"
+  },
+  "/technical-knowledge/aws/lambda/layers-and-versions-d0a": {
+    "__comp": "17896441",
+    "content": "707ec2fe"
+  },
+  "/technical-knowledge/aws/messaging/kinesis-60e": {
+    "__comp": "17896441",
+    "content": "4ec9b254"
+  },
+  "/technical-knowledge/aws/messaging/sns-3d8": {
+    "__comp": "17896441",
+    "content": "8b89c603"
+  },
+  "/technical-knowledge/aws/messaging/sqs-401": {
+    "__comp": "17896441",
+    "content": "9a9ef1e0"
+  },
+  "/technical-knowledge/aws/monitoring/cloudtrail-73c": {
+    "__comp": "17896441",
+    "content": "c3b5c998"
+  },
+  "/technical-knowledge/aws/monitoring/cloudwatch-988": {
+    "__comp": "17896441",
+    "content": "5753100e"
+  },
+  "/technical-knowledge/aws/monitoring/x-ray-d09": {
+    "__comp": "17896441",
+    "content": "261194b7"
+  },
+  "/technical-knowledge/aws/s3/-577": {
+    "__comp": "17896441",
+    "content": "4f1daaff"
+  },
+  "/technical-knowledge/aws/s3/advanced-281": {
+    "__comp": "17896441",
+    "content": "ed7fe863"
+  },
+  "/technical-knowledge/aws/security/kms-bb8": {
+    "__comp": "17896441",
+    "content": "6bc41c2b"
+  },
+  "/technical-knowledge/aws/security/secrets-manager-517": {
+    "__comp": "17896441",
+    "content": "16e34d91"
+  },
+  "/technical-knowledge/aws/security/ssm-parameter-store-3b8": {
+    "__comp": "17896441",
+    "content": "cdce4984"
+  },
+  "/technical-knowledge/aws/step-functions/-2f4": {
+    "__comp": "17896441",
+    "content": "ca993c49"
   },
   "/technical-knowledge/banking/account_types-f70": {
     "__comp": "17896441",
@@ -3043,9 +3639,5 @@
   "/-fc9": {
     "__comp": "17896441",
     "content": "0e384e19"
-  },
-  "/-1e3": {
-    "__comp": "17896441",
-    "content": "59e92e34"
   }
 }

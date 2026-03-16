@@ -45,7 +45,7 @@ If you searched for `pain.004`, you likely mean one of:
 | **Payment return** (creditor bank returns funds) | [`pacs.004`](./pacs004.md) | Interbank payment return message |
 | **Payment reversal** (bank reverses a payment) | [`pain.007`](./pain007_pacs007.md) + [`pacs.007`](./pain007_pacs007.md) | Customer and interbank reversal |
 | **Recall / cancellation request** | [`camt.055`](./camt055_camt056.md) / [`camt.056`](./camt055_camt056.md) | Request to cancel a sent payment |
-| **Debit reversal** (undo a debit posting) | [Debit Reversal](./debit_post.md#debit-reversal) | Internal accounting reversal |
+| **Debit reversal** (undo a debit posting) | [Debit Reversal](./debit_reversal.md) | Internal accounting reversal |
 
 ---
 
@@ -73,4 +73,4 @@ Internal       →  (no ISO msg)    Technical error / debit reversal
 - [pacs.004 — Payment Return](./pacs004.md) — The message you are most likely looking for
 - [pain.007 & pacs.007 — Payment Reversal](./pain007_pacs007.md)
 - [camt.055 & camt.056 — Cancellation Request](./camt055_camt056.md)
-- [Debit Reversal](./debit_post.md#debit-reversal) — Internal accounting reversal
+- [Debit Reversal](./debit_reversal.md) — Internal accounting reversal

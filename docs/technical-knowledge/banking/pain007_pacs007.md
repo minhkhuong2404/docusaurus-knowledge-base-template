@@ -241,4 +241,4 @@ public class Pain007ProcessingService {
 - [camt055_camt056.md](./camt055_camt056.md) — Formal cancellation request messages
 - [pain001.md](./pain001.md) — The original payment pain.007 reverses
 - [pacs008.md](./pacs008.md) — The interbank message pacs.007 reverses
-- [debit_post.md](./debit_post.md#debit-reversal) — Internal debit reversal accounting
+- [debit_reversal.md](./debit_reversal.md) — Internal debit reversal accounting
