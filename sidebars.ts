@@ -328,23 +328,68 @@ const sidebars: SidebarsConfig = {
 			type: 'category',
 			label: '📨 Kafka',
 			items: [
-				'technical-knowledge/kafka/kafka-complete-guide',
+				'technical-knowledge/kafka/intro',
+				{
+					type: 'category',
+					label: '🏗️ Core Concepts',
+					collapsed: false,
+					items: [
+						'technical-knowledge/kafka/core/kafka-overview',
+						'technical-knowledge/kafka/core/topic',
+						'technical-knowledge/kafka/core/partition',
+						'technical-knowledge/kafka/core/broker',
+						'technical-knowledge/kafka/core/replication'
+					]
+				},
+				{
+					type: 'category',
+					label: '📤 Producer',
+					collapsed: false,
+					items: [
+						'technical-knowledge/kafka/producer/producer-overview',
+						'technical-knowledge/kafka/producer/producer-acks',
+						'technical-knowledge/kafka/producer/producer-idempotency',
+						'technical-knowledge/kafka/producer/producer-transactions'
+					]
+				},
+				{
+					type: 'category',
+					label: '📥 Consumer',
+					collapsed: false,
+					items: [
+						'technical-knowledge/kafka/consumer/consumer-overview',
+						'technical-knowledge/kafka/consumer/consumer-group',
+						'technical-knowledge/kafka/consumer/parallel-consumer'
+					]
+				},
 				{
 					type: 'category',
 					label: '🔌 Ecosystem',
 					collapsed: false,
 					items: [
-						'technical-knowledge/kafka/kafka-connect',
-						'technical-knowledge/kafka/kafka-streams'
+						'technical-knowledge/kafka/advanced/kafka-connect',
+						'technical-knowledge/kafka/advanced/kafka-streams',
+						'technical-knowledge/kafka/advanced/schema-registry'
 					]
 				},
 				{
 					type: 'category',
-					label: '📈 Reliability & Scale',
+					label: '📈 Reliability & Operations',
 					collapsed: false,
 					items: [
-						'technical-knowledge/kafka/kafka-exactly-once',
-						'technical-knowledge/kafka/kafka-parallel-consumer'
+						'technical-knowledge/kafka/advanced/exactly-once',
+						'technical-knowledge/kafka/advanced/order-messages',
+						'technical-knowledge/kafka/advanced/monitoring-operations'
+					]
+				},
+				{
+					type: 'category',
+					label: '🎯 Interview Prep',
+					collapsed: false,
+					items: [
+						'technical-knowledge/kafka/interview/interview-core',
+						'technical-knowledge/kafka/interview/interview-producer-consumer',
+						'technical-knowledge/kafka/interview/interview-advanced'
 					]
 				}
 			]

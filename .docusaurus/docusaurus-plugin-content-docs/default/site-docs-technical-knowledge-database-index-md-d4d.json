@@ -34,8 +34,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Parallel Consumer in Kafka",
-    "permalink": "/technical-knowledge/kafka/kafka-parallel-consumer"
+    "title": "Advanced Topics Q&A",
+    "permalink": "/technical-knowledge/kafka/interview/interview-advanced"
   },
   "next": {
     "title": "Relational Fundamentals",

@@ -4,11 +4,11 @@ import ComponentCreator from '@docusaurus/ComponentCreator';
 export default [
   {
     path: '/',
-    component: ComponentCreator('/', '5df'),
+    component: ComponentCreator('/', 'd72'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'f9b'),
+        component: ComponentCreator('/', '474'),
         routes: [
           {
             path: '/tags',
@@ -651,11 +651,6 @@ export default [
             exact: true
           },
           {
-            path: '/tags/consumers',
-            component: ComponentCreator('/tags/consumers', '15c'),
-            exact: true
-          },
-          {
             path: '/tags/container-security',
             component: ComponentCreator('/tags/container-security', '73e'),
             exact: true
@@ -778,11 +773,6 @@ export default [
           {
             path: '/tags/data-classification',
             component: ComponentCreator('/tags/data-classification', '2ac'),
-            exact: true
-          },
-          {
-            path: '/tags/data-integration',
-            component: ComponentCreator('/tags/data-integration', 'e30'),
             exact: true
           },
           {
@@ -1116,11 +1106,6 @@ export default [
             exact: true
           },
           {
-            path: '/tags/event-streaming',
-            component: ComponentCreator('/tags/event-streaming', '91a'),
-            exact: true
-          },
-          {
             path: '/tags/eventual-consistency',
             component: ComponentCreator('/tags/eventual-consistency', '9c4'),
             exact: true
@@ -1128,11 +1113,6 @@ export default [
           {
             path: '/tags/eviction',
             component: ComponentCreator('/tags/eviction', 'd17'),
-            exact: true
-          },
-          {
-            path: '/tags/exactly-once-semantics',
-            component: ComponentCreator('/tags/exactly-once-semantics', '4a2'),
             exact: true
           },
           {
@@ -1663,16 +1643,6 @@ export default [
           {
             path: '/tags/kafka',
             component: ComponentCreator('/tags/kafka', '472'),
-            exact: true
-          },
-          {
-            path: '/tags/kafka-connect',
-            component: ComponentCreator('/tags/kafka-connect', '3eb'),
-            exact: true
-          },
-          {
-            path: '/tags/kafka-streams',
-            component: ComponentCreator('/tags/kafka-streams', '48b'),
             exact: true
           },
           {
@@ -2248,11 +2218,6 @@ export default [
           {
             path: '/tags/pam',
             component: ComponentCreator('/tags/pam', '0a5'),
-            exact: true
-          },
-          {
-            path: '/tags/parallelism',
-            component: ComponentCreator('/tags/parallelism', '118'),
             exact: true
           },
           {
@@ -3101,11 +3066,6 @@ export default [
             exact: true
           },
           {
-            path: '/tags/stream-processing',
-            component: ComponentCreator('/tags/stream-processing', '3f6'),
-            exact: true
-          },
-          {
             path: '/tags/streaming',
             component: ComponentCreator('/tags/streaming', '957'),
             exact: true
@@ -3268,11 +3228,6 @@ export default [
           {
             path: '/tags/tolerations',
             component: ComponentCreator('/tags/tolerations', 'c3b'),
-            exact: true
-          },
-          {
-            path: '/tags/topology',
-            component: ComponentCreator('/tags/topology', 'c1c'),
             exact: true
           },
           {
@@ -3482,7 +3437,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '6b2'),
+            component: ComponentCreator('/', 'afe'),
             routes: [
               {
                 path: '/aws',
@@ -4294,32 +4249,134 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/kafka/kafka-complete-guide',
-                component: ComponentCreator('/technical-knowledge/kafka/kafka-complete-guide', '8ec'),
+                path: '/technical-knowledge/kafka/advanced/exactly-once',
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/exactly-once', '1c8'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/kafka/kafka-connect',
-                component: ComponentCreator('/technical-knowledge/kafka/kafka-connect', '503'),
+                path: '/technical-knowledge/kafka/advanced/kafka-connect',
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-connect', '249'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/kafka/kafka-exactly-once',
-                component: ComponentCreator('/technical-knowledge/kafka/kafka-exactly-once', 'd9b'),
+                path: '/technical-knowledge/kafka/advanced/kafka-streams',
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-streams', 'a88'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/kafka/kafka-parallel-consumer',
-                component: ComponentCreator('/technical-knowledge/kafka/kafka-parallel-consumer', '75a'),
+                path: '/technical-knowledge/kafka/advanced/monitoring-operations',
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/monitoring-operations', 'da3'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/kafka/kafka-streams',
-                component: ComponentCreator('/technical-knowledge/kafka/kafka-streams', '5c9'),
+                path: '/technical-knowledge/kafka/advanced/order-messages',
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/order-messages', 'c3a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/kafka/advanced/schema-registry',
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/schema-registry', 'c38'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/kafka/consumer/consumer-group',
+                component: ComponentCreator('/technical-knowledge/kafka/consumer/consumer-group', '5f4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/kafka/consumer/consumer-overview',
+                component: ComponentCreator('/technical-knowledge/kafka/consumer/consumer-overview', 'e8e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/kafka/consumer/parallel-consumer',
+                component: ComponentCreator('/technical-knowledge/kafka/consumer/parallel-consumer', '2b3'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/kafka/core/broker',
+                component: ComponentCreator('/technical-knowledge/kafka/core/broker', '5f8'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/kafka/core/kafka-overview',
+                component: ComponentCreator('/technical-knowledge/kafka/core/kafka-overview', '7e0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/kafka/core/partition',
+                component: ComponentCreator('/technical-knowledge/kafka/core/partition', '7db'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/kafka/core/replication',
+                component: ComponentCreator('/technical-knowledge/kafka/core/replication', '700'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/kafka/core/topic',
+                component: ComponentCreator('/technical-knowledge/kafka/core/topic', '95b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/kafka/interview/interview-advanced',
+                component: ComponentCreator('/technical-knowledge/kafka/interview/interview-advanced', '3cf'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/kafka/interview/interview-core',
+                component: ComponentCreator('/technical-knowledge/kafka/interview/interview-core', '4e2'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/kafka/interview/interview-producer-consumer',
+                component: ComponentCreator('/technical-knowledge/kafka/interview/interview-producer-consumer', '53e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/kafka/intro',
+                component: ComponentCreator('/technical-knowledge/kafka/intro', '14c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/kafka/producer/producer-acks',
+                component: ComponentCreator('/technical-knowledge/kafka/producer/producer-acks', 'cc7'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/kafka/producer/producer-idempotency',
+                component: ComponentCreator('/technical-knowledge/kafka/producer/producer-idempotency', 'adc'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/kafka/producer/producer-overview',
+                component: ComponentCreator('/technical-knowledge/kafka/producer/producer-overview', 'aa8'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/kafka/producer/producer-transactions',
+                component: ComponentCreator('/technical-knowledge/kafka/producer/producer-transactions', '97b'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

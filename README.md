@@ -108,7 +108,7 @@ tags: [topic, category]
 Example ID format:
 
 - `technical-knowledge/java/java-overview`
-- `technical-knowledge/kafka/kafka-connect`
+- `technical-knowledge/kafka/core/kafka-overview`
 
 ## Notes
 

@@ -680,28 +680,113 @@
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/kafka/kafka-complete-guide",
-              "path": "/technical-knowledge/kafka/kafka-complete-guide",
+              "id": "technical-knowledge/kafka/advanced/exactly-once",
+              "path": "/technical-knowledge/kafka/advanced/exactly-once",
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/kafka/kafka-connect",
-              "path": "/technical-knowledge/kafka/kafka-connect",
+              "id": "technical-knowledge/kafka/advanced/kafka-connect",
+              "path": "/technical-knowledge/kafka/advanced/kafka-connect",
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/kafka/kafka-exactly-once",
-              "path": "/technical-knowledge/kafka/kafka-exactly-once",
+              "id": "technical-knowledge/kafka/advanced/kafka-streams",
+              "path": "/technical-knowledge/kafka/advanced/kafka-streams",
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/kafka/kafka-parallel-consumer",
-              "path": "/technical-knowledge/kafka/kafka-parallel-consumer",
+              "id": "technical-knowledge/kafka/advanced/monitoring-operations",
+              "path": "/technical-knowledge/kafka/advanced/monitoring-operations",
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/kafka/kafka-streams",
-              "path": "/technical-knowledge/kafka/kafka-streams",
+              "id": "technical-knowledge/kafka/advanced/order-messages",
+              "path": "/technical-knowledge/kafka/advanced/order-messages",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/advanced/schema-registry",
+              "path": "/technical-knowledge/kafka/advanced/schema-registry",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/consumer/consumer-group",
+              "path": "/technical-knowledge/kafka/consumer/consumer-group",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/consumer/consumer-overview",
+              "path": "/technical-knowledge/kafka/consumer/consumer-overview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/consumer/parallel-consumer",
+              "path": "/technical-knowledge/kafka/consumer/parallel-consumer",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/core/broker",
+              "path": "/technical-knowledge/kafka/core/broker",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/core/kafka-overview",
+              "path": "/technical-knowledge/kafka/core/kafka-overview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/core/partition",
+              "path": "/technical-knowledge/kafka/core/partition",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/core/replication",
+              "path": "/technical-knowledge/kafka/core/replication",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/core/topic",
+              "path": "/technical-knowledge/kafka/core/topic",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/interview/interview-advanced",
+              "path": "/technical-knowledge/kafka/interview/interview-advanced",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/interview/interview-core",
+              "path": "/technical-knowledge/kafka/interview/interview-core",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/interview/interview-producer-consumer",
+              "path": "/technical-knowledge/kafka/interview/interview-producer-consumer",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/intro",
+              "path": "/technical-knowledge/kafka/intro",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/producer/producer-acks",
+              "path": "/technical-knowledge/kafka/producer/producer-acks",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/producer/producer-idempotency",
+              "path": "/technical-knowledge/kafka/producer/producer-idempotency",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/producer/producer-overview",
+              "path": "/technical-knowledge/kafka/producer/producer-overview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/producer/producer-transactions",
+              "path": "/technical-knowledge/kafka/producer/producer-transactions",
               "sidebar": "tutorialSidebar"
             },
             {

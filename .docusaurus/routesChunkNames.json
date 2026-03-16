@@ -1,11 +1,11 @@
 {
-  "/-5df": {
+  "/-d72": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-f9b": {
+  "/-474": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -521,10 +521,6 @@
     "__comp": "df203c0f",
     "__props": "8f1267ec"
   },
-  "/tags/consumers-15c": {
-    "__comp": "df203c0f",
-    "__props": "f03a4bb8"
-  },
   "/tags/container-security-73e": {
     "__comp": "df203c0f",
     "__props": "f8722bf6"
@@ -624,10 +620,6 @@
   "/tags/data-classification-2ac": {
     "__comp": "df203c0f",
     "__props": "ee36b8bc"
-  },
-  "/tags/data-integration-e30": {
-    "__comp": "df203c0f",
-    "__props": "fa34ec33"
   },
   "/tags/data-streams-78e": {
     "__comp": "df203c0f",
@@ -893,10 +885,6 @@
     "__comp": "df203c0f",
     "__props": "a6005a6c"
   },
-  "/tags/event-streaming-91a": {
-    "__comp": "df203c0f",
-    "__props": "b0c91c06"
-  },
   "/tags/eventual-consistency-9c4": {
     "__comp": "df203c0f",
     "__props": "f9637d15"
@@ -904,10 +892,6 @@
   "/tags/eviction-d17": {
     "__comp": "df203c0f",
     "__props": "426bf595"
-  },
-  "/tags/exactly-once-semantics-4a2": {
-    "__comp": "df203c0f",
-    "__props": "1a3b8eea"
   },
   "/tags/exam-guide-5f2": {
     "__comp": "df203c0f",
@@ -1332,14 +1316,6 @@
   "/tags/kafka-472": {
     "__comp": "df203c0f",
     "__props": "97b0e84b"
-  },
-  "/tags/kafka-connect-3eb": {
-    "__comp": "df203c0f",
-    "__props": "2a413710"
-  },
-  "/tags/kafka-streams-48b": {
-    "__comp": "df203c0f",
-    "__props": "a26e5d46"
   },
   "/tags/keep-alive-17a": {
     "__comp": "df203c0f",
@@ -1800,10 +1776,6 @@
   "/tags/pam-0a5": {
     "__comp": "df203c0f",
     "__props": "7ef4b618"
-  },
-  "/tags/parallelism-118": {
-    "__comp": "df203c0f",
-    "__props": "91f9fed1"
   },
   "/tags/parameter-store-af6": {
     "__comp": "df203c0f",
@@ -2481,10 +2453,6 @@
     "__comp": "df203c0f",
     "__props": "09ac419e"
   },
-  "/tags/stream-processing-3f6": {
-    "__comp": "df203c0f",
-    "__props": "2c0f1489"
-  },
   "/tags/streaming-957": {
     "__comp": "df203c0f",
     "__props": "c8c73a53"
@@ -2616,10 +2584,6 @@
   "/tags/tolerations-c3b": {
     "__comp": "df203c0f",
     "__props": "6cbbeaf9"
-  },
-  "/tags/topology-c1c": {
-    "__comp": "df203c0f",
-    "__props": "b92b542f"
   },
   "/tags/tracing-dd4": {
     "__comp": "df203c0f",
@@ -2785,7 +2749,7 @@
     "__comp": "df203c0f",
     "__props": "cdd99891"
   },
-  "/-6b2": {
+  "/-afe": {
     "__comp": "a94703ab"
   },
   "/aws-102": {
@@ -3328,25 +3292,93 @@
     "__comp": "17896441",
     "content": "adb02301"
   },
-  "/technical-knowledge/kafka/kafka-complete-guide-8ec": {
+  "/technical-knowledge/kafka/advanced/exactly-once-1c8": {
     "__comp": "17896441",
-    "content": "64240187"
+    "content": "a8e4316f"
   },
-  "/technical-knowledge/kafka/kafka-connect-503": {
+  "/technical-knowledge/kafka/advanced/kafka-connect-249": {
     "__comp": "17896441",
-    "content": "fabc3ea1"
+    "content": "e1e89bb9"
   },
-  "/technical-knowledge/kafka/kafka-exactly-once-d9b": {
+  "/technical-knowledge/kafka/advanced/kafka-streams-a88": {
     "__comp": "17896441",
-    "content": "2b06adde"
+    "content": "c1b7a912"
   },
-  "/technical-knowledge/kafka/kafka-parallel-consumer-75a": {
+  "/technical-knowledge/kafka/advanced/monitoring-operations-da3": {
     "__comp": "17896441",
-    "content": "186258f5"
+    "content": "5cae2ae0"
   },
-  "/technical-knowledge/kafka/kafka-streams-5c9": {
+  "/technical-knowledge/kafka/advanced/order-messages-c3a": {
     "__comp": "17896441",
-    "content": "4a65d68f"
+    "content": "4dca4d8c"
+  },
+  "/technical-knowledge/kafka/advanced/schema-registry-c38": {
+    "__comp": "17896441",
+    "content": "b1dfa883"
+  },
+  "/technical-knowledge/kafka/consumer/consumer-group-5f4": {
+    "__comp": "17896441",
+    "content": "f42e39f5"
+  },
+  "/technical-knowledge/kafka/consumer/consumer-overview-e8e": {
+    "__comp": "17896441",
+    "content": "67ecd1fe"
+  },
+  "/technical-knowledge/kafka/consumer/parallel-consumer-2b3": {
+    "__comp": "17896441",
+    "content": "ad28df9b"
+  },
+  "/technical-knowledge/kafka/core/broker-5f8": {
+    "__comp": "17896441",
+    "content": "820d99b7"
+  },
+  "/technical-knowledge/kafka/core/kafka-overview-7e0": {
+    "__comp": "17896441",
+    "content": "6438a9db"
+  },
+  "/technical-knowledge/kafka/core/partition-7db": {
+    "__comp": "17896441",
+    "content": "d9cff4fb"
+  },
+  "/technical-knowledge/kafka/core/replication-700": {
+    "__comp": "17896441",
+    "content": "55a950f5"
+  },
+  "/technical-knowledge/kafka/core/topic-95b": {
+    "__comp": "17896441",
+    "content": "da3cc1f6"
+  },
+  "/technical-knowledge/kafka/interview/interview-advanced-3cf": {
+    "__comp": "17896441",
+    "content": "69651a4c"
+  },
+  "/technical-knowledge/kafka/interview/interview-core-4e2": {
+    "__comp": "17896441",
+    "content": "2596c5d6"
+  },
+  "/technical-knowledge/kafka/interview/interview-producer-consumer-53e": {
+    "__comp": "17896441",
+    "content": "1cb248e8"
+  },
+  "/technical-knowledge/kafka/intro-14c": {
+    "__comp": "17896441",
+    "content": "4c007013"
+  },
+  "/technical-knowledge/kafka/producer/producer-acks-cc7": {
+    "__comp": "17896441",
+    "content": "ae0ebc3c"
+  },
+  "/technical-knowledge/kafka/producer/producer-idempotency-adc": {
+    "__comp": "17896441",
+    "content": "542ecee1"
+  },
+  "/technical-knowledge/kafka/producer/producer-overview-aa8": {
+    "__comp": "17896441",
+    "content": "296249fb"
+  },
+  "/technical-knowledge/kafka/producer/producer-transactions-97b": {
+    "__comp": "17896441",
+    "content": "7b527991"
   },
   "/technical-knowledge/networking/-146": {
     "__comp": "17896441",
