@@ -1,7 +1,7 @@
 {
   "id": "technical-knowledge/security/web-vulnerabilities",
   "title": "Web Vulnerabilities & Defenses",
-  "description": "Comprehensive guide to OWASP Top 10 and beyond — SQL injection, XSS, CSRF, SSRF, XXE, broken access control, insecure deserialization, and their mitigations in Spring Boot applications.",
+  "description": "Comprehensive guide to OWASP Top 10 — SQL injection, XSS, CSRF, SSRF, XXE, IDOR, insecure deserialization, and their mitigations in Spring Boot applications.",
   "source": "@site/docs/technical-knowledge/security/02-web-vulnerabilities.md",
   "sourceDirName": "technical-knowledge/security",
   "slug": "/technical-knowledge/security/web-vulnerabilities",
@@ -46,18 +46,18 @@
     },
     {
       "inline": true,
-      "label": "vulnerability",
-      "permalink": "/tags/vulnerability"
+      "label": "idor",
+      "permalink": "/tags/idor"
+    },
+    {
+      "inline": true,
+      "label": "insecure-deserialization",
+      "permalink": "/tags/insecure-deserialization"
     },
     {
       "inline": true,
       "label": "spring-security",
       "permalink": "/tags/spring-security"
-    },
-    {
-      "inline": true,
-      "label": "web-security",
-      "permalink": "/tags/web-security"
     }
   ],
   "version": "current",
@@ -66,7 +66,7 @@
     "id": "web-vulnerabilities",
     "title": "Web Vulnerabilities & Defenses",
     "sidebar_label": "Web Vulnerabilities",
-    "description": "Comprehensive guide to OWASP Top 10 and beyond — SQL injection, XSS, CSRF, SSRF, XXE, broken access control, insecure deserialization, and their mitigations in Spring Boot applications.",
+    "description": "Comprehensive guide to OWASP Top 10 — SQL injection, XSS, CSRF, SSRF, XXE, IDOR, insecure deserialization, and their mitigations in Spring Boot applications.",
     "tags": [
       "security",
       "owasp",
@@ -75,9 +75,9 @@
       "csrf",
       "ssrf",
       "xxe",
-      "vulnerability",
-      "spring-security",
-      "web-security"
+      "idor",
+      "insecure-deserialization",
+      "spring-security"
     ]
   },
   "sidebar": "tutorialSidebar",

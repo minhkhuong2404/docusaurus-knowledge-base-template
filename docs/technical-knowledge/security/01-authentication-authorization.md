@@ -2,95 +2,114 @@
 id: authentication-authorization
 title: Authentication & Authorization
 sidebar_label: AuthN & AuthZ
-description: Deep dive into authentication and authorization patterns including sessions, JWT, OAuth 2.0, OIDC, RBAC, ABAC, PBAC, MFA, passwordless, and Spring Security implementation.
-tags: [security, authentication, authorization, jwt, oauth2, oidc, rbac, abac, mfa, spring-security, session]
+description: Deep dive into authentication and authorization patterns including sessions, JWT, OAuth 2.0, OIDC, RBAC, ABAC, MFA, passwordless, passkeys, and Spring Security implementation.
+tags: [security, authentication, authorization, jwt, oauth2, oidc, rbac, abac, mfa, spring-security, session, passkeys]
 ---
 
 # Authentication & Authorization
 
-> **Authentication (AuthN):** *Who are you?*  
+> **Authentication (AuthN):** *Who are you?*
 > **Authorization (AuthZ):** *What are you allowed to do?*
 
-These are separate concerns. A user can be authenticated but not authorized for a specific resource.
+These are **separate concerns**. A user can be authenticated (valid JWT) but not authorized (403 on a specific resource).
+
+| HTTP Status | Meaning |
+|---|---|
+| `401 Unauthorized` | Not authenticated — identity not established |
+| `403 Forbidden` | Authenticated but not authorized for this resource |
 
 ---
 
-## Authentication Mechanisms
-
-### Session-Based Authentication
+## Session-Based Authentication
 
 ```
 1. User submits credentials → Server validates
 2. Server creates session in store (Redis/DB)
 3. Server sends Set-Cookie: SESSIONID=abc123 (HttpOnly, Secure, SameSite)
-4. Client sends cookie on every request
-5. Server looks up session in store → extracts user
+4. Client sends cookie on every request automatically
+5. Server looks up session in store → extracts user context
 ```
 
 ```java
-// Spring Security — session configuration
 @Bean
 public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     return http
         .sessionManagement(session -> session
             .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-            .maximumSessions(1)                        // Prevent session sharing
-            .maxSessionsPreventsLogin(false)           // Newer login kicks old session
-            .sessionRegistry(sessionRegistry())
+            .sessionFixation().changeSessionId()   // Prevent session fixation
+            .maximumSessions(1)
+            .maxSessionsPreventsLogin(false)        // New login kicks old session
         )
         .rememberMe(remember -> remember
-            .tokenRepository(persistentTokenRepository()) // Persistent "remember me"
-            .tokenValiditySeconds(7 * 24 * 3600)
+            .tokenRepository(persistentTokenRepository())
+            .tokenValiditySeconds(7 * 24 * 3600)   // 7 days
         )
         .build();
 }
 ```
 
-**Pros:** Easy to revoke (delete session). Full server control.  
+**Pros:** Easy to revoke (delete session). Full server control over expiry.
 **Cons:** Horizontal scaling requires shared session store (Redis). Stateful.
 
 ---
 
-### Token-Based Authentication (JWT)
+## Token-Based Authentication (JWT)
 
 ```
 1. User submits credentials
-2. Server validates, issues JWT (signed, not encrypted by default)
-3. Client stores JWT (memory > localStorage > cookie)
-4. Client sends Authorization: Bearer <jwt> on every request
-5. Server validates signature — no DB lookup needed
+2. Server validates → issues JWT (signed with private key)
+3. Client stores JWT (memory > httpOnly cookie > localStorage)
+4. Client sends: Authorization: Bearer <jwt> on every request
+5. Server validates signature — no DB lookup needed (stateless)
 ```
 
-#### JWT Structure
+### JWT Structure
+
 ```
-Header.Payload.Signature
+eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImtleS0yMDI0LTAxIn0
+.eyJpc3MiOiJodHRwczovL2F1dGguZXhhbXBsZS5jb20iLCJzdWIiOiJ1c2VyLTEyMzQ1In0
+.SIGNATURE
 ```
+
+Each section is `Base64Url` encoded:
+
 ```json
-// Header
-{ "alg": "RS256", "typ": "JWT", "kid": "key-2024-01" }
-
-// Payload — standard claims
+// HEADER
 {
-  "iss": "https://auth.example.com",        // Issuer
-  "sub": "user-12345",                      // Subject
-  "aud": "https://api.example.com",         // Audience
-  "exp": 1700003600,                        // Expiration
-  "iat": 1700000000,                        // Issued at
-  "jti": "unique-token-id",                 // JWT ID (for revocation)
-  "roles": ["ROLE_USER"],                   // Custom claims
+  "alg": "RS256",
+  "typ": "JWT",
+  "kid": "key-2024-01"    // ← Key ID used to look up public key in JWKS
+}
+
+// PAYLOAD (claims)
+{
+  "iss": "https://auth.example.com",   // Issuer
+  "sub": "user-12345",                 // Subject
+  "aud": "https://api.example.com",    // Audience
+  "exp": 1700003600,                   // Expiration (Unix timestamp)
+  "iat": 1700000000,                   // Issued at
+  "jti": "unique-token-id",            // JWT ID (for revocation)
+  "roles": ["ROLE_USER"],
   "email": "alice@example.com"
 }
+
+// SIGNATURE — computed as:
+// Base64Url(RS256_sign(privateKey, Base64Url(header) + "." + Base64Url(payload)))
 ```
 
-#### Signing Algorithms
-| Algorithm | Type | Key | Use |
+:::note The payload is NOT encrypted
+JWT payload is only Base64Url encoded — anyone can decode it. Never put passwords, secrets, or sensitive PII in JWT payload unless using **JWE** (JSON Web Encryption).
+:::
+
+### Signing Algorithms
+
+| Algorithm | Type | Key | Recommended Use |
 |---|---|---|---|
-| HS256 | Symmetric HMAC | Shared secret | Single-service; secret must not leak |
-| RS256 | Asymmetric RSA | Private + public key | Multi-service; public key can be distributed |
-| ES256 | Asymmetric ECDSA | Private + public key | Better performance than RSA, same security |
+| `HS256` | Symmetric HMAC | Shared secret | Single-service only; secret must not leak |
+| `RS256` | Asymmetric RSA | Private + public key pair | **Multi-service; preferred** |
+| `ES256` | Asymmetric ECDSA | Private + public key pair | Better performance than RSA, same security |
 
 ```java
-// Spring Boot — RS256 JWT resource server
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -117,10 +136,9 @@ public class SecurityConfig {
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        // Fetch JWKS from auth server (e.g., Keycloak, Auth0)
+        // Automatically fetches public keys from JWKS endpoint
+        // Handles kid lookup and key rotation transparently
         return JwtDecoders.fromIssuerLocation("https://auth.example.com");
-        // OR from local public key:
-        // return NimbusJwtDecoder.withPublicKey(loadRsaPublicKey()).build();
     }
 
     @Bean
@@ -128,7 +146,6 @@ public class SecurityConfig {
         JwtGrantedAuthoritiesConverter converter = new JwtGrantedAuthoritiesConverter();
         converter.setAuthoritiesClaimName("roles");
         converter.setAuthorityPrefix("ROLE_");
-
         JwtAuthenticationConverter jwtConverter = new JwtAuthenticationConverter();
         jwtConverter.setJwtGrantedAuthoritiesConverter(converter);
         return jwtConverter;
@@ -136,13 +153,14 @@ public class SecurityConfig {
 }
 ```
 
-#### Access Token + Refresh Token Pattern
+### Access Token + Refresh Token Pattern
+
 ```
-Access Token:  Short-lived (15 min) — sent on every API request
-Refresh Token: Long-lived (30 days) — sent only to /auth/refresh endpoint
+Access Token:  Short-lived (5–15 min)  → sent on every API request
+Refresh Token: Long-lived (7–30 days)  → sent ONLY to /auth/refresh
 
 Flow:
-  Login → {access_token (15min), refresh_token (30 days)}
+  Login → { access_token (15min), refresh_token (30 days) }
   API calls use access_token
   access_token expires → POST /auth/refresh with refresh_token → new access_token
   refresh_token expires → user must log in again
@@ -151,7 +169,6 @@ Flow:
 ```java
 @PostMapping("/auth/refresh")
 public TokenResponse refresh(@RequestBody RefreshRequest req) {
-    // Validate refresh token from DB (check not revoked)
     RefreshToken token = refreshTokenRepository
         .findByToken(req.getRefreshToken())
         .orElseThrow(() -> new InvalidTokenException("Invalid refresh token"));
@@ -161,10 +178,12 @@ public TokenResponse refresh(@RequestBody RefreshRequest req) {
         throw new InvalidTokenException("Refresh token expired");
     }
 
-    // Rotate: issue new refresh token, invalidate old one
+    // ROTATE: issue new refresh token, invalidate old one
+    // If old token is used again → theft detected → lock account
     refreshTokenRepository.delete(token);
     String newRefreshToken = UUID.randomUUID().toString();
-    refreshTokenRepository.save(new RefreshToken(token.getUserId(), newRefreshToken));
+    refreshTokenRepository.save(new RefreshToken(token.getUserId(), newRefreshToken,
+        Instant.now().plus(30, ChronoUnit.DAYS)));
 
     return new TokenResponse(
         jwtService.generateAccessToken(token.getUserId()),
@@ -177,105 +196,97 @@ public TokenResponse refresh(@RequestBody RefreshRequest req) {
 
 ## OAuth 2.0 Flows
 
-### Authorization Code Flow (Web Apps — Most Secure)
+### Authorization Code Flow + PKCE (Most Secure — Web & Mobile)
+
 ```
-1. App redirects to: GET /authorize
+1. App generates: code_verifier (random) + code_challenge = SHA256(code_verifier)
+
+2. Redirect to: GET /authorize
      ?response_type=code
      &client_id=CLIENT_ID
      &redirect_uri=https://app.example.com/callback
      &scope=openid profile email
-     &state=RANDOM_STRING  ← CSRF protection
-     &code_challenge=SHA256(code_verifier)  ← PKCE
+     &state=RANDOM_CSRF_TOKEN
+     &code_challenge=BASE64URL(SHA256(code_verifier))
+     &code_challenge_method=S256
 
-2. User authenticates + consents
+3. User authenticates + consents at IdP
 
-3. Auth server redirects to:
-     https://app.example.com/callback?code=AUTH_CODE&state=...
+4. IdP redirects: https://app.example.com/callback?code=AUTH_CODE&state=SAME_STATE
 
-4. App verifies state, then exchanges code:
+5. App verifies state, then exchanges code:
    POST /token
      grant_type=authorization_code
      &code=AUTH_CODE
-     &code_verifier=VERIFIER  ← PKCE
+     &code_verifier=ORIGINAL_VERIFIER   ← IdP hashes and compares to challenge
      &redirect_uri=...
 
-5. Auth server returns:
-     { access_token, refresh_token, id_token, expires_in }
+6. Response: { access_token, refresh_token, id_token, expires_in }
 ```
 
-### PKCE (Proof Key for Code Exchange)
-Prevents authorization code interception attacks.
-```java
-// Generate PKCE pair
-String codeVerifier = Base64.getUrlEncoder()
-    .encodeToString(new SecureRandom().generateSeed(32));
-String codeChallenge = Base64.getUrlEncoder()
-    .encodeToString(MessageDigest.getInstance("SHA-256")
-        .digest(codeVerifier.getBytes()));
-```
+**PKCE protects against:** Authorization code interception — even if the code is stolen, attacker cannot exchange it without the `code_verifier`.
 
 ### Client Credentials Flow (Machine-to-Machine)
-```
-Service A → POST /token
+
+```java
+// Service A authenticates as itself (no user involved)
+POST /token
   grant_type=client_credentials
   &client_id=SERVICE_A_ID
   &client_secret=SERVICE_A_SECRET
   &scope=read:orders
 
-← { access_token, expires_in }
-
-Service A → GET /orders (Authorization: Bearer access_token)
+// Response: { access_token, expires_in }
+// Service A → GET /orders (Authorization: Bearer access_token)
 ```
 
 ---
 
 ## OpenID Connect (OIDC)
 
-OAuth 2.0 + identity layer. Adds `id_token` (JWT with user claims).
-
 ```
 OAuth 2.0 = Authorization (can access resources)
-OIDC      = Authentication (who the user is)
+OIDC      = Authentication (who the user is) — built on top of OAuth 2.0
 
-id_token claims:
+OIDC adds id_token — a JWT with user identity claims:
 {
-  "sub":   "user-12345",
-  "email": "alice@example.com",
-  "name":  "Alice Smith",
-  "picture": "https://...",
-  "email_verified": true,
+  "sub":             "user-12345",
+  "email":           "alice@example.com",
+  "name":            "Alice Smith",
+  "email_verified":  true,
   "iat": ..., "exp": ...
 }
 ```
+
+**Rule:** Use `access_token` to call APIs. Use `id_token` to establish user identity in your app.
 
 ---
 
 ## Multi-Factor Authentication (MFA)
 
-### Factors
 | Factor | Type | Examples |
 |---|---|---|
-| Something you know | Knowledge | Password, PIN, security question |
+| Something you know | Knowledge | Password, PIN |
 | Something you have | Possession | TOTP app, hardware key (YubiKey), SMS OTP |
 | Something you are | Inherence | Fingerprint, Face ID |
 
-### TOTP (Time-based One-Time Password — RFC 6238)
+### TOTP (RFC 6238 — Google Authenticator)
+
 ```
-Secret key shared during setup
-OTP = HMAC-SHA1(secret, floor(time / 30))[:6]
-Valid for 30-second window (±1 window for clock skew)
+Secret key shared during setup (shown as QR code)
+OTP = HMAC-SHA1(secret, floor(Unix_timestamp / 30)) truncated to 6 digits
+Valid for 30-second window (±1 window tolerance for clock skew)
 ```
 
 ```java
-// Spring Boot TOTP with Google Authenticator
 @Service
 public class TotpService {
-    private static final int WINDOW = 1; // ±1 step tolerance
+    private static final int WINDOW = 1;
 
     public String generateSecret() {
         byte[] buffer = new byte[20];
         new SecureRandom().nextBytes(buffer);
-        return Base32.encode(buffer); // Show as QR code to user
+        return Base32.encode(buffer);
     }
 
     public boolean verifyCode(String secret, int userCode) {
@@ -300,19 +311,27 @@ public class TotpService {
 ```
 
 ### Passkeys (WebAuthn / FIDO2)
-The modern passwordless standard.
-```
-Registration:
-  1. Server sends challenge
-  2. Device creates public/private key pair
-  3. Private key stored in device secure enclave (never leaves device)
-  4. Server stores public key + credential ID
 
-Authentication:
+The modern passwordless standard — phishing-resistant.
+
+```
+REGISTRATION:
   1. Server sends challenge
-  2. User authenticates via biometric/PIN (unlocks private key)
-  3. Device signs challenge with private key
-  4. Server verifies signature with stored public key
+  2. Device creates public/private key pair (per origin)
+  3. Private key stays in device secure enclave — NEVER leaves the device
+  4. Server stores: public key + credential ID
+
+AUTHENTICATION:
+  1. Server sends challenge
+  2. User authenticates via biometric/PIN (unlocks secure enclave)
+  3. Device signs the challenge with private key
+  4. Server verifies signature using stored public key → identity proven
+
+Security properties:
+  ✅ Phishing-resistant (keys are origin-bound)
+  ✅ No password to steal or reuse
+  ✅ No shared secret on server side
+  ✅ Biometric stays on device
 ```
 
 ---
@@ -320,43 +339,35 @@ Authentication:
 ## Authorization Models
 
 ### RBAC (Role-Based Access Control)
+
 ```
-User → Role → Permission
+User → Role(s) → Permission(s)
 
 Roles: ADMIN, MANAGER, USER, GUEST
-Permissions: READ_ALL, WRITE_OWN, DELETE_ALL, MANAGE_USERS
 ```
 
 ```java
-// Spring Security method-level RBAC
 @PreAuthorize("hasRole('ADMIN')")
 public void deleteUser(Long userId) { ... }
 
 @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
 public List<Order> getAllOrders() { ... }
 
-// Secure based on ownership
+// Ownership check inline
 @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.id")
 public UserProfile getProfile(Long userId) { ... }
 ```
 
 ### ABAC (Attribute-Based Access Control)
-More granular — decisions based on user, resource, environment attributes.
 
 ```
-POLICY: Allow if:
+Policy: Allow if:
   user.department == resource.department
   AND user.clearanceLevel >= resource.sensitivityLevel
   AND environment.time between 09:00 and 18:00
 ```
 
 ```java
-// Spring Security with custom PermissionEvaluator
-@Bean
-public PermissionEvaluator permissionEvaluator() {
-    return new DocumentPermissionEvaluator();
-}
-
 public class DocumentPermissionEvaluator implements PermissionEvaluator {
     @Override
     public boolean hasPermission(Authentication auth, Object target, Object permission) {
@@ -375,108 +386,56 @@ public class DocumentPermissionEvaluator implements PermissionEvaluator {
     }
 }
 
-// Usage
 @PreAuthorize("hasPermission(#document, 'EDIT')")
 public void updateDocument(Document document) { ... }
 ```
 
-### ReBAC (Relationship-Based Access Control)
-Used by Google Zanzibar. Access based on object relationships.
-```
-Can Alice view document D?
-  → Is Alice a viewer of D?      → YES → ALLOW
-  → Is Alice a viewer of folder containing D?  → Check recursively
-  → Is Alice an editor of D?     → YES → ALLOW (editor implies viewer)
-```
-
 ---
 
-## Session Security
+## Secure Cookie Flags
 
-```java
-@Configuration
-public class SessionSecurityConfig {
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.sessionManagement(session -> session
-            // Prevent session fixation: create new session after login
-            .sessionFixation().changeSessionId()
-            // Force HTTPS for session cookie
-        );
-        http.headers(headers -> headers
-            // Prevent clickjacking
-            .frameOptions(HeadersConfigurer.FrameOptionsConfig::deny)
-            // XSS protection header
-            .xssProtection(Customizer.withDefaults())
-            // HSTS — HTTPS only
-            .httpStrictTransportSecurity(hsts -> hsts
-                .includeSubDomains(true)
-                .maxAgeInSeconds(31_536_000)
-            )
-        );
-        return http.build();
-    }
-}
-```
-
-### Secure Cookie Flags
 | Flag | Effect |
 |---|---|
-| `HttpOnly` | JavaScript cannot access cookie (XSS protection) |
+| `HttpOnly` | JavaScript **cannot** access cookie — XSS protection |
 | `Secure` | Cookie only sent over HTTPS |
-| `SameSite=Strict` | Cookie not sent on cross-site requests (CSRF protection) |
-| `SameSite=Lax` | Cookie sent on top-level navigation GET only |
-| `SameSite=None; Secure` | Cookie sent cross-site (for embedded apps) |
+| `SameSite=Strict` | Cookie not sent on **any** cross-site request — strongest CSRF protection |
+| `SameSite=Lax` | Cookie not sent on cross-site POST — sufficient for most apps |
+| `SameSite=None; Secure` | Cookie sent cross-site — required for embedded/third-party apps |
 
 ---
 
 ## Password Storage
 
 ```java
-// Spring Security — BCrypt (recommended)
 @Bean
 public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder(12); // Cost factor 12 (~300ms)
-}
-
-// Registration
-public void register(RegisterRequest req) {
-    String hashed = passwordEncoder().encode(req.getPassword());
-    userRepository.save(new User(req.getEmail(), hashed));
-}
-
-// Login
-public boolean authenticate(String email, String rawPassword) {
-    User user = userRepository.findByEmail(email).orElseThrow();
-    return passwordEncoder().matches(rawPassword, user.getPasswordHash());
-    // BCrypt.matches is constant-time — no timing attacks
+    return new BCryptPasswordEncoder(12); // Cost factor 12 ≈ 300ms per hash
 }
 ```
 
-### Password Hashing Algorithms
 | Algorithm | Status | Notes |
 |---|---|---|
-| MD5, SHA-1 | **Broken** — never use | Reversible via rainbow tables |
-| SHA-256 (unsalted) | **Weak** | Rainbow table vulnerable |
-| BCrypt | ✅ Recommended | Adaptive cost factor, built-in salt |
-| Argon2id | ✅ Best current | Memory-hard, resistant to GPU cracking |
-| PBKDF2 | ✅ Acceptable | NIST approved, used in FIPS contexts |
+| MD5, SHA-1 | ❌ **Broken** | Reversible via rainbow tables |
+| SHA-256 (unsalted) | ❌ **Weak** | GPU-crackable |
+| BCrypt | ✅ Recommended | Adaptive cost, built-in salt |
+| Argon2id | ✅ **Best** | Memory-hard, GPU-resistant |
+| PBKDF2 | ✅ Acceptable | NIST-approved, FIPS contexts |
 
 ---
 
 ## Interview Questions
 
-1. What is the difference between authentication and authorization?
+1. What is the difference between authentication and authorization? What HTTP codes represent each failure?
 2. What are the pros and cons of JWT vs session-based authentication?
-3. Explain the OAuth 2.0 Authorization Code flow with PKCE.
+3. Explain the OAuth 2.0 Authorization Code flow with PKCE. What does PKCE protect against?
 4. Why is `RS256` preferred over `HS256` in a microservices architecture?
-5. How do you implement token revocation with JWTs?
-6. What is PKCE and what attack does it prevent?
-7. What is the difference between RBAC, ABAC, and ReBAC?
-8. How does TOTP (Google Authenticator) work?
-9. What are passkeys and how do they differ from passwords?
-10. Why should passwords be hashed with BCrypt instead of SHA-256?
-11. What cookie flags are required for secure session management?
-12. What is session fixation and how do you prevent it?
-13. How does the refresh token rotation pattern work?
-14. What is the difference between OAuth 2.0 and OIDC?
+5. How do you implement token revocation with stateless JWTs?
+6. What is the difference between RBAC, ABAC, and ReBAC?
+7. How does TOTP (Google Authenticator) work?
+8. What are passkeys and how do they differ from passwords?
+9. Why should passwords be hashed with BCrypt instead of SHA-256?
+10. What cookie flags are required for secure session management?
+11. What is session fixation and how do you prevent it?
+12. How does the refresh token rotation pattern work and what attack does it detect?
+13. What is the difference between OAuth 2.0 and OIDC?
+14. What is the `kid` (Key ID) claim in a JWT header used for?

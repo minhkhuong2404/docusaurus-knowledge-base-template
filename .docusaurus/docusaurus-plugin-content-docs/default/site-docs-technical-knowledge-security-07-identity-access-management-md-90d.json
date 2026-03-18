@@ -1,7 +1,7 @@
 {
   "id": "technical-knowledge/security/identity-access-management",
   "title": "Identity & Access Management (IAM)",
-  "description": "Identity and access management patterns including SSO, federated identity, directory services, service accounts, PAM, just-in-time access, and cloud IAM best practices for AWS and Kubernetes.",
+  "description": "SSO, federated identity, directory services, service accounts, PAM, just-in-time access, and cloud IAM best practices for AWS and Kubernetes — for Java/Spring engineers.",
   "source": "@site/docs/technical-knowledge/security/07-identity-access-management.md",
   "sourceDirName": "technical-knowledge/security",
   "slug": "/technical-knowledge/security/identity-access-management",
@@ -26,6 +26,11 @@
     },
     {
       "inline": true,
+      "label": "oidc",
+      "permalink": "/tags/oidc"
+    },
+    {
+      "inline": true,
       "label": "ldap",
       "permalink": "/tags/ldap"
     },
@@ -41,8 +46,8 @@
     },
     {
       "inline": true,
-      "label": "just-in-time-access",
-      "permalink": "/tags/just-in-time-access"
+      "label": "just-in-time",
+      "permalink": "/tags/just-in-time"
     },
     {
       "inline": true,
@@ -58,6 +63,11 @@
       "inline": true,
       "label": "kubernetes-rbac",
       "permalink": "/tags/kubernetes-rbac"
+    },
+    {
+      "inline": true,
+      "label": "vault",
+      "permalink": "/tags/vault"
     }
   ],
   "version": "current",
@@ -66,18 +76,20 @@
     "id": "identity-access-management",
     "title": "Identity & Access Management (IAM)",
     "sidebar_label": "IAM",
-    "description": "Identity and access management patterns including SSO, federated identity, directory services, service accounts, PAM, just-in-time access, and cloud IAM best practices for AWS and Kubernetes.",
+    "description": "SSO, federated identity, directory services, service accounts, PAM, just-in-time access, and cloud IAM best practices for AWS and Kubernetes — for Java/Spring engineers.",
     "tags": [
       "iam",
       "sso",
       "saml",
+      "oidc",
       "ldap",
       "service-accounts",
       "pam",
-      "just-in-time-access",
+      "just-in-time",
       "cloud-iam",
       "aws-iam",
-      "kubernetes-rbac"
+      "kubernetes-rbac",
+      "vault"
     ]
   },
   "sidebar": "tutorialSidebar",

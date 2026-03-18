@@ -218,6 +218,7 @@ const sidebars: SidebarsConfig = {
 						'technical-knowledge/security/authentication-authorization',
 						'technical-knowledge/security/web-vulnerabilities',
 						'technical-knowledge/security/cryptography-secure-design',
+						'technical-knowledge/security/keys-signing-tls',
 						'technical-knowledge/security/api-security',
 					],
 				},
@@ -245,7 +246,7 @@ const sidebars: SidebarsConfig = {
 					label: '🎯 Interview Prep',
 					collapsed: false,
 					items: [
-						'technical-knowledge/security/security-interview-questions',
+						'technical-knowledge/security/interview-questions',
 					],
 				},
 			]

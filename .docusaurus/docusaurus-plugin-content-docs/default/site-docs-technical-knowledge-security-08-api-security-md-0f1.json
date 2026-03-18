@@ -1,7 +1,7 @@
 {
   "id": "technical-knowledge/security/api-security",
   "title": "API Security",
-  "description": "Security patterns specific to REST and GraphQL APIs — API keys, rate limiting, input validation, schema validation, mass assignment, sensitive data exposure, API versioning security, and API gateway hardening.",
+  "description": "Security patterns for REST and GraphQL APIs — input validation, mass assignment prevention, API keys, rate limiting, MLE for APIs, request signing, GraphQL security, and OWASP API Top 10.",
   "source": "@site/docs/technical-knowledge/security/08-api-security.md",
   "sourceDirName": "technical-knowledge/security",
   "slug": "/technical-knowledge/security/api-security",
@@ -36,8 +36,8 @@
     },
     {
       "inline": true,
-      "label": "graphql-security",
-      "permalink": "/tags/graphql-security"
+      "label": "graphql",
+      "permalink": "/tags/graphql"
     },
     {
       "inline": true,
@@ -48,6 +48,16 @@
       "inline": true,
       "label": "spring-validation",
       "permalink": "/tags/spring-validation"
+    },
+    {
+      "inline": true,
+      "label": "mle",
+      "permalink": "/tags/mle"
+    },
+    {
+      "inline": true,
+      "label": "request-signing",
+      "permalink": "/tags/request-signing"
     }
   ],
   "version": "current",
@@ -56,22 +66,24 @@
     "id": "api-security",
     "title": "API Security",
     "sidebar_label": "API Security",
-    "description": "Security patterns specific to REST and GraphQL APIs — API keys, rate limiting, input validation, schema validation, mass assignment, sensitive data exposure, API versioning security, and API gateway hardening.",
+    "description": "Security patterns for REST and GraphQL APIs — input validation, mass assignment prevention, API keys, rate limiting, MLE for APIs, request signing, GraphQL security, and OWASP API Top 10.",
     "tags": [
       "api-security",
       "api-keys",
       "rate-limiting",
       "input-validation",
       "mass-assignment",
-      "graphql-security",
+      "graphql",
       "owasp-api",
-      "spring-validation"
+      "spring-validation",
+      "mle",
+      "request-signing"
     ]
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Cryptography",
-    "permalink": "/technical-knowledge/security/cryptography-secure-design"
+    "title": "Keys, Signing & TLS",
+    "permalink": "/technical-knowledge/security/keys-signing-tls"
   },
   "next": {
     "title": "Privacy & Compliance",

@@ -1,7 +1,7 @@
 {
   "id": "technical-knowledge/security/authentication-authorization",
   "title": "Authentication & Authorization",
-  "description": "Deep dive into authentication and authorization patterns including sessions, JWT, OAuth 2.0, OIDC, RBAC, ABAC, PBAC, MFA, passwordless, and Spring Security implementation.",
+  "description": "Deep dive into authentication and authorization patterns including sessions, JWT, OAuth 2.0, OIDC, RBAC, ABAC, MFA, passwordless, passkeys, and Spring Security implementation.",
   "source": "@site/docs/technical-knowledge/security/01-authentication-authorization.md",
   "sourceDirName": "technical-knowledge/security",
   "slug": "/technical-knowledge/security/authentication-authorization",
@@ -63,6 +63,11 @@
       "inline": true,
       "label": "session",
       "permalink": "/tags/session"
+    },
+    {
+      "inline": true,
+      "label": "passkeys",
+      "permalink": "/tags/passkeys"
     }
   ],
   "version": "current",
@@ -71,7 +76,7 @@
     "id": "authentication-authorization",
     "title": "Authentication & Authorization",
     "sidebar_label": "AuthN & AuthZ",
-    "description": "Deep dive into authentication and authorization patterns including sessions, JWT, OAuth 2.0, OIDC, RBAC, ABAC, PBAC, MFA, passwordless, and Spring Security implementation.",
+    "description": "Deep dive into authentication and authorization patterns including sessions, JWT, OAuth 2.0, OIDC, RBAC, ABAC, MFA, passwordless, passkeys, and Spring Security implementation.",
     "tags": [
       "security",
       "authentication",
@@ -83,7 +88,8 @@
       "abac",
       "mfa",
       "spring-security",
-      "session"
+      "session",
+      "passkeys"
     ]
   },
   "sidebar": "tutorialSidebar",

@@ -1,7 +1,7 @@
 {
   "id": "technical-knowledge/security/incident-response",
   "title": "Incident Response & Security Operations",
-  "description": "Security incident response lifecycle, SIEM, forensics, detection engineering, vulnerability management, penetration testing, and building a security operations program.",
+  "description": "Security incident response lifecycle, detection engineering, SIEM, forensics, vulnerability management, penetration testing, and security metrics for software engineers.",
   "source": "@site/docs/technical-knowledge/security/09-incident-response.md",
   "sourceDirName": "technical-knowledge/security",
   "slug": "/technical-knowledge/security/incident-response",
@@ -43,11 +43,6 @@
       "inline": true,
       "label": "security-operations",
       "permalink": "/tags/security-operations"
-    },
-    {
-      "inline": true,
-      "label": "soc",
-      "permalink": "/tags/soc"
     }
   ],
   "version": "current",
@@ -56,7 +51,7 @@
     "id": "incident-response",
     "title": "Incident Response & Security Operations",
     "sidebar_label": "Incident Response",
-    "description": "Security incident response lifecycle, SIEM, forensics, detection engineering, vulnerability management, penetration testing, and building a security operations program.",
+    "description": "Security incident response lifecycle, detection engineering, SIEM, forensics, vulnerability management, penetration testing, and security metrics for software engineers.",
     "tags": [
       "incident-response",
       "siem",
@@ -64,8 +59,7 @@
       "detection",
       "vulnerability-management",
       "pentesting",
-      "security-operations",
-      "soc"
+      "security-operations"
     ]
   },
   "sidebar": "tutorialSidebar",
@@ -74,7 +68,7 @@
     "permalink": "/technical-knowledge/security/secure-sdlc"
   },
   "next": {
-    "title": "Interview Questions",
-    "permalink": "/technical-knowledge/security/security-interview-questions"
+    "title": "🎯 Interview Questions",
+    "permalink": "/technical-knowledge/security/interview-questions"
   }
 }

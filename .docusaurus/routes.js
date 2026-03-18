@@ -3,12 +3,47 @@ import ComponentCreator from '@docusaurus/ComponentCreator';
 
 export default [
   {
+    path: '/__docusaurus/debug',
+    component: ComponentCreator('/__docusaurus/debug', '5ff'),
+    exact: true
+  },
+  {
+    path: '/__docusaurus/debug/config',
+    component: ComponentCreator('/__docusaurus/debug/config', '5ba'),
+    exact: true
+  },
+  {
+    path: '/__docusaurus/debug/content',
+    component: ComponentCreator('/__docusaurus/debug/content', 'a2b'),
+    exact: true
+  },
+  {
+    path: '/__docusaurus/debug/globalData',
+    component: ComponentCreator('/__docusaurus/debug/globalData', 'c3c'),
+    exact: true
+  },
+  {
+    path: '/__docusaurus/debug/metadata',
+    component: ComponentCreator('/__docusaurus/debug/metadata', '156'),
+    exact: true
+  },
+  {
+    path: '/__docusaurus/debug/registry',
+    component: ComponentCreator('/__docusaurus/debug/registry', '88c'),
+    exact: true
+  },
+  {
+    path: '/__docusaurus/debug/routes',
+    component: ComponentCreator('/__docusaurus/debug/routes', '000'),
+    exact: true
+  },
+  {
     path: '/',
-    component: ComponentCreator('/', 'd72'),
+    component: ComponentCreator('/', '5b7'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '474'),
+        component: ComponentCreator('/', '577'),
         routes: [
           {
             path: '/tags',
@@ -1001,6 +1036,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/ecdsa',
+            component: ComponentCreator('/tags/ecdsa', '98b'),
+            exact: true
+          },
+          {
             path: '/tags/ecr',
             component: ComponentCreator('/tags/ecr', '8e5'),
             exact: true
@@ -1023,11 +1063,6 @@ export default [
           {
             path: '/tags/elasticsearch',
             component: ComponentCreator('/tags/elasticsearch', '392'),
-            exact: true
-          },
-          {
-            path: '/tags/elliptic-curve',
-            component: ComponentCreator('/tags/elliptic-curve', '66a'),
             exact: true
           },
           {
@@ -1316,11 +1351,6 @@ export default [
             exact: true
           },
           {
-            path: '/tags/graphql-security',
-            component: ComponentCreator('/tags/graphql-security', '05d'),
-            exact: true
-          },
-          {
             path: '/tags/grpc',
             component: ComponentCreator('/tags/grpc', '2d8'),
             exact: true
@@ -1363,6 +1393,11 @@ export default [
           {
             path: '/tags/hipaa',
             component: ComponentCreator('/tags/hipaa', 'a32'),
+            exact: true
+          },
+          {
+            path: '/tags/hmac',
+            component: ComponentCreator('/tags/hmac', 'c67'),
             exact: true
           },
           {
@@ -1426,6 +1461,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/idor',
+            component: ComponentCreator('/tags/idor', '8ec'),
+            exact: true
+          },
+          {
             path: '/tags/images',
             component: ComponentCreator('/tags/images', '9e3'),
             exact: true
@@ -1478,6 +1518,11 @@ export default [
           {
             path: '/tags/input-validation',
             component: ComponentCreator('/tags/input-validation', '191'),
+            exact: true
+          },
+          {
+            path: '/tags/insecure-deserialization',
+            component: ComponentCreator('/tags/insecure-deserialization', '174'),
             exact: true
           },
           {
@@ -1621,13 +1666,18 @@ export default [
             exact: true
           },
           {
-            path: '/tags/just-in-time-access',
-            component: ComponentCreator('/tags/just-in-time-access', '60a'),
+            path: '/tags/just-in-time',
+            component: ComponentCreator('/tags/just-in-time', '9c1'),
             exact: true
           },
           {
             path: '/tags/jvm',
             component: ComponentCreator('/tags/jvm', 'c85'),
+            exact: true
+          },
+          {
+            path: '/tags/jwks',
+            component: ComponentCreator('/tags/jwks', '4f6'),
             exact: true
           },
           {
@@ -1878,6 +1928,11 @@ export default [
           {
             path: '/tags/mitm',
             component: ComponentCreator('/tags/mitm', '31c'),
+            exact: true
+          },
+          {
+            path: '/tags/mle',
+            component: ComponentCreator('/tags/mle', '144'),
             exact: true
           },
           {
@@ -2241,6 +2296,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/passkeys',
+            component: ComponentCreator('/tags/passkeys', 'cc2'),
+            exact: true
+          },
+          {
             path: '/tags/paxos',
             component: ComponentCreator('/tags/paxos', '9d8'),
             exact: true
@@ -2361,6 +2421,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/private-key',
+            component: ComponentCreator('/tags/private-key', '5e3'),
+            exact: true
+          },
+          {
             path: '/tags/probes',
             component: ComponentCreator('/tags/probes', '547'),
             exact: true
@@ -2418,6 +2483,11 @@ export default [
           {
             path: '/tags/pub-sub',
             component: ComponentCreator('/tags/pub-sub', '356'),
+            exact: true
+          },
+          {
+            path: '/tags/public-key',
+            component: ComponentCreator('/tags/public-key', '89e'),
             exact: true
           },
           {
@@ -2568,6 +2638,11 @@ export default [
           {
             path: '/tags/replication',
             component: ComponentCreator('/tags/replication', 'e99'),
+            exact: true
+          },
+          {
+            path: '/tags/request-signing',
+            component: ComponentCreator('/tags/request-signing', '933'),
             exact: true
           },
           {
@@ -2756,11 +2831,6 @@ export default [
             exact: true
           },
           {
-            path: '/tags/secure-design',
-            component: ComponentCreator('/tags/secure-design', '02c'),
-            exact: true
-          },
-          {
             path: '/tags/security',
             component: ComponentCreator('/tags/security', '84b'),
             exact: true
@@ -2846,6 +2916,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/signing',
+            component: ComponentCreator('/tags/signing', 'ee4'),
+            exact: true
+          },
+          {
             path: '/tags/single-table-design',
             component: ComponentCreator('/tags/single-table-design', '635'),
             exact: true
@@ -2878,11 +2953,6 @@ export default [
           {
             path: '/tags/sns',
             component: ComponentCreator('/tags/sns', '7d5'),
-            exact: true
-          },
-          {
-            path: '/tags/soc',
-            component: ComponentCreator('/tags/soc', '502'),
             exact: true
           },
           {
@@ -3216,6 +3286,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/tls-handshake',
+            component: ComponentCreator('/tags/tls-handshake', 'ecd'),
+            exact: true
+          },
+          {
             path: '/tags/tmpfs',
             component: ComponentCreator('/tags/tmpfs', '2c3'),
             exact: true
@@ -3296,6 +3371,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/vault',
+            component: ComponentCreator('/tags/vault', 'b99'),
+            exact: true
+          },
+          {
             path: '/tags/vector-clocks',
             component: ComponentCreator('/tags/vector-clocks', '012'),
             exact: true
@@ -3331,11 +3411,6 @@ export default [
             exact: true
           },
           {
-            path: '/tags/vulnerability',
-            component: ComponentCreator('/tags/vulnerability', '804'),
-            exact: true
-          },
-          {
             path: '/tags/vulnerability-management',
             component: ComponentCreator('/tags/vulnerability-management', '41e'),
             exact: true
@@ -3353,11 +3428,6 @@ export default [
           {
             path: '/tags/web',
             component: ComponentCreator('/tags/web', '4aa'),
-            exact: true
-          },
-          {
-            path: '/tags/web-security',
-            component: ComponentCreator('/tags/web-security', 'd42'),
             exact: true
           },
           {
@@ -3437,7 +3507,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'afe'),
+            component: ComponentCreator('/', 'dde'),
             routes: [
               {
                 path: '/aws',
@@ -3468,11 +3538,6 @@ export default [
                 component: ComponentCreator('/system-design', '6ff'),
                 exact: true,
                 sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/architecture/microservices',
-                component: ComponentCreator('/technical-knowledge/architecture/microservices', '21e'),
-                exact: true
               },
               {
                 path: '/technical-knowledge/aws/api-gateway/',
@@ -4585,6 +4650,18 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/security/interview-questions',
+                component: ComponentCreator('/technical-knowledge/security/interview-questions', '562'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/security/keys-signing-tls',
+                component: ComponentCreator('/technical-knowledge/security/keys-signing-tls', 'a2d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/security/network-security',
                 component: ComponentCreator('/technical-knowledge/security/network-security', '75d'),
                 exact: true,
@@ -4599,12 +4676,6 @@ export default [
               {
                 path: '/technical-knowledge/security/secure-sdlc',
                 component: ComponentCreator('/technical-knowledge/security/secure-sdlc', 'b00'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/security/security-interview-questions',
-                component: ComponentCreator('/technical-knowledge/security/security-interview-questions', '062'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

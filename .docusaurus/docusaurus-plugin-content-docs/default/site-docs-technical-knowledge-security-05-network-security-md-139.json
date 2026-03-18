@@ -1,7 +1,7 @@
 {
   "id": "technical-knowledge/security/network-security",
   "title": "Network Security",
-  "description": "Network security fundamentals for software engineers — firewalls, VPNs, network segmentation, DDoS mitigation, DNS security, zero trust networking, and cloud network controls.",
+  "description": "Network security fundamentals for software engineers — firewalls, VPNs, network segmentation, DDoS mitigation, DNS security, zero trust networking, mTLS, and cloud network controls.",
   "source": "@site/docs/technical-knowledge/security/05-network-security.md",
   "sourceDirName": "technical-knowledge/security",
   "slug": "/technical-knowledge/security/network-security",
@@ -53,6 +53,11 @@
       "inline": true,
       "label": "cloud-security",
       "permalink": "/tags/cloud-security"
+    },
+    {
+      "inline": true,
+      "label": "mtls",
+      "permalink": "/tags/mtls"
     }
   ],
   "version": "current",
@@ -61,7 +66,7 @@
     "id": "network-security",
     "title": "Network Security",
     "sidebar_label": "Network Security",
-    "description": "Network security fundamentals for software engineers — firewalls, VPNs, network segmentation, DDoS mitigation, DNS security, zero trust networking, and cloud network controls.",
+    "description": "Network security fundamentals for software engineers — firewalls, VPNs, network segmentation, DDoS mitigation, DNS security, zero trust networking, mTLS, and cloud network controls.",
     "tags": [
       "network-security",
       "firewall",
@@ -71,7 +76,8 @@
       "zero-trust",
       "network-segmentation",
       "waf",
-      "cloud-security"
+      "cloud-security",
+      "mtls"
     ]
   },
   "sidebar": "tutorialSidebar",

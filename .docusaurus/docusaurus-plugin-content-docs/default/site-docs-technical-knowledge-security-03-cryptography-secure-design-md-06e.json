@@ -1,7 +1,7 @@
 {
   "id": "technical-knowledge/security/cryptography-secure-design",
   "title": "Cryptography & Secure Design",
-  "description": "Practical cryptography for software engineers — symmetric and asymmetric encryption, hashing, MACs, digital signatures, TLS internals, key management, and secure coding patterns.",
+  "description": "Practical cryptography for Java engineers — AES-GCM, RSA, HMAC, digital signatures, key management, secure random, constant-time comparisons. Pairs with the Keys, Signing & TLS doc.",
   "source": "@site/docs/technical-knowledge/security/03-cryptography-secure-design.md",
   "sourceDirName": "technical-knowledge/security",
   "slug": "/technical-knowledge/security/cryptography-secure-design",
@@ -26,8 +26,18 @@
     },
     {
       "inline": true,
-      "label": "tls",
-      "permalink": "/tags/tls"
+      "label": "aes",
+      "permalink": "/tags/aes"
+    },
+    {
+      "inline": true,
+      "label": "rsa",
+      "permalink": "/tags/rsa"
+    },
+    {
+      "inline": true,
+      "label": "hmac",
+      "permalink": "/tags/hmac"
     },
     {
       "inline": true,
@@ -41,23 +51,13 @@
     },
     {
       "inline": true,
-      "label": "aes",
-      "permalink": "/tags/aes"
+      "label": "java",
+      "permalink": "/tags/java"
     },
     {
       "inline": true,
-      "label": "rsa",
-      "permalink": "/tags/rsa"
-    },
-    {
-      "inline": true,
-      "label": "elliptic-curve",
-      "permalink": "/tags/elliptic-curve"
-    },
-    {
-      "inline": true,
-      "label": "secure-design",
-      "permalink": "/tags/secure-design"
+      "label": "spring",
+      "permalink": "/tags/spring"
     }
   ],
   "version": "current",
@@ -66,18 +66,18 @@
     "id": "cryptography-secure-design",
     "title": "Cryptography & Secure Design",
     "sidebar_label": "Cryptography",
-    "description": "Practical cryptography for software engineers — symmetric and asymmetric encryption, hashing, MACs, digital signatures, TLS internals, key management, and secure coding patterns.",
+    "description": "Practical cryptography for Java engineers — AES-GCM, RSA, HMAC, digital signatures, key management, secure random, constant-time comparisons. Pairs with the Keys, Signing & TLS doc.",
     "tags": [
       "cryptography",
       "encryption",
       "hashing",
-      "tls",
-      "digital-signature",
-      "key-management",
       "aes",
       "rsa",
-      "elliptic-curve",
-      "secure-design"
+      "hmac",
+      "digital-signature",
+      "key-management",
+      "java",
+      "spring"
     ]
   },
   "sidebar": "tutorialSidebar",
@@ -86,7 +86,7 @@
     "permalink": "/technical-knowledge/security/web-vulnerabilities"
   },
   "next": {
-    "title": "API Security",
-    "permalink": "/technical-knowledge/security/api-security"
+    "title": "Keys, Signing & TLS",
+    "permalink": "/technical-knowledge/security/keys-signing-tls"
   }
 }

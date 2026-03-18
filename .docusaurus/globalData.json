@@ -16,10 +16,6 @@
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/architecture/microservices",
-              "path": "/technical-knowledge/architecture/microservices"
-            },
-            {
               "id": "technical-knowledge/aws/api-gateway/index",
               "path": "/technical-knowledge/aws/api-gateway/",
               "sidebar": "tutorialSidebar"
@@ -960,6 +956,16 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/security/interview-questions",
+              "path": "/technical-knowledge/security/interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/security/keys-signing-tls",
+              "path": "/technical-knowledge/security/keys-signing-tls",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/security/network-security",
               "path": "/technical-knowledge/security/network-security",
               "sidebar": "tutorialSidebar"
@@ -972,11 +978,6 @@
             {
               "id": "technical-knowledge/security/secure-sdlc",
               "path": "/technical-knowledge/security/secure-sdlc",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/security/security-interview-questions",
-              "path": "/technical-knowledge/security/security-interview-questions",
               "sidebar": "tutorialSidebar"
             },
             {

@@ -1,7 +1,7 @@
 {
   "id": "technical-knowledge/security/secure-sdlc",
   "title": "Secure SDLC & DevSecOps",
-  "description": "Embedding security into the software development lifecycle — threat modeling, SAST, DAST, SCA, secrets scanning, container security, IaC scanning, and shift-left security practices.",
+  "description": "Embedding security into the software development lifecycle — threat modeling, SAST, DAST, SCA, secrets scanning, container security, and shift-left security practices for Java/Spring teams.",
   "source": "@site/docs/technical-knowledge/security/06-secure-sdlc.md",
   "sourceDirName": "technical-knowledge/security",
   "slug": "/technical-knowledge/security/secure-sdlc",
@@ -53,6 +53,11 @@
       "inline": true,
       "label": "shift-left",
       "permalink": "/tags/shift-left"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
     }
   ],
   "version": "current",
@@ -61,7 +66,7 @@
     "id": "secure-sdlc",
     "title": "Secure SDLC & DevSecOps",
     "sidebar_label": "Secure SDLC",
-    "description": "Embedding security into the software development lifecycle — threat modeling, SAST, DAST, SCA, secrets scanning, container security, IaC scanning, and shift-left security practices.",
+    "description": "Embedding security into the software development lifecycle — threat modeling, SAST, DAST, SCA, secrets scanning, container security, and shift-left security practices for Java/Spring teams.",
     "tags": [
       "devsecops",
       "sdlc",
@@ -71,7 +76,8 @@
       "sca",
       "secrets-scanning",
       "container-security",
-      "shift-left"
+      "shift-left",
+      "java"
     ]
   },
   "sidebar": "tutorialSidebar",

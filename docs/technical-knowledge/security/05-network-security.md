@@ -2,8 +2,8 @@
 id: network-security
 title: Network Security
 sidebar_label: Network Security
-description: Network security fundamentals for software engineers — firewalls, VPNs, network segmentation, DDoS mitigation, DNS security, zero trust networking, and cloud network controls.
-tags: [network-security, firewall, vpn, ddos, dns, zero-trust, network-segmentation, waf, cloud-security]
+description: Network security fundamentals for software engineers — firewalls, VPNs, network segmentation, DDoS mitigation, DNS security, zero trust networking, mTLS, and cloud network controls.
+tags: [network-security, firewall, vpn, ddos, dns, zero-trust, network-segmentation, waf, cloud-security, mtls]
 ---
 
 # Network Security
@@ -37,9 +37,9 @@ Internet
   ├─ Secrets Store (Vault)
 ```
 
-### Cloud Network (AWS VPC Example)
+### Cloud Network (AWS VPC)
+
 ```yaml
-# Terraform — VPC with public/private/data subnets
 VPC: 10.0.0.0/16
 
 Public Subnets (Load Balancer, NAT Gateway):
@@ -50,80 +50,62 @@ Private Subnets (Application Tier):
   10.0.10.0/24 (us-east-1a)
   10.0.11.0/24 (us-east-1b)
 
-Data Subnets (Database Tier — no internet route):
+Data Subnets (no internet route):
   10.0.20.0/24 (us-east-1a)
   10.0.21.0/24 (us-east-1b)
 ```
 
 ---
 
-## Firewalls and Security Groups
+## Security Groups (Default Deny)
 
-### Security Group Rules (AWS Principle: Default Deny)
 ```
-Application Server Security Group:
+Application Server:
   Inbound:
-    HTTPS (443)  ← from Load Balancer SG only
-    HTTP  (80)   ← from Load Balancer SG only
-    SSH   (22)   ← from Bastion Host SG only
+    HTTPS (443) ← Load Balancer SG only
+    SSH   (22)  ← Bastion Host SG only
   Outbound:
     PostgreSQL (5432) → DB Security Group only
     Redis (6379)      → Cache Security Group only
-    HTTPS (443)       → 0.0.0.0/0 (for external API calls)
+    HTTPS (443)       → 0.0.0.0/0 (external API calls)
 
-Database Security Group:
+Database:
   Inbound:
-    PostgreSQL (5432) ← from App Server SG only
-    NO internet access
-  Outbound:
-    NONE by default
+    PostgreSQL (5432) ← App Server SG only
+  Outbound: NONE
 ```
 
 ---
 
-## TLS/HTTPS Enforcement
+## TLS Enforcement
 
 ```yaml
-# Spring Boot — redirect HTTP to HTTPS
 server:
   ssl:
     enabled: true
     protocol: TLS
-    enabled-protocols: TLSv1.3,TLSv1.2  # Disable TLS 1.0, 1.1
-
-# HSTS — tell browsers to always use HTTPS
-# max-age=31536000 (1 year), includeSubDomains, preload
-Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+    enabled-protocols: TLSv1.3,TLSv1.2
+    ciphers:
+      - TLS_AES_256_GCM_SHA384
+      - TLS_CHACHA20_POLY1305_SHA256
+      - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 ```
 
-### TLS Certificate Management
-```yaml
-# Let's Encrypt with auto-renewal (cert-manager in Kubernetes)
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: api-tls
-spec:
-  secretName: api-tls-secret
-  issuerRef:
-    name: letsencrypt-prod
-    kind: ClusterIssuer
-  dnsNames:
-    - api.example.com
-  renewBefore: 360h  # Renew 15 days before expiry
+```
+# HSTS header — browsers always use HTTPS
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 ```
 
 ---
 
 ## Web Application Firewall (WAF)
 
-Sits in front of your app. Filters malicious HTTP traffic.
+Sits in front of your app. Filters malicious HTTP traffic before it reaches application code.
 
-### What WAF Blocks
-- SQL injection attempts
-- XSS payloads
-- Known attack signatures (CVEs, exploit kits)
-- Bot traffic, scrapers
+**What WAF blocks:**
+- SQL injection and XSS payloads
+- Known exploit signatures (CVEs, exploit kits)
+- Bot traffic and scrapers
 - Geographic IP blocking
 - Rate limiting by IP
 
@@ -132,7 +114,7 @@ Internet → CloudFront (CDN) → WAF Rules → Load Balancer → App
 ```
 
 ```yaml
-# AWS WAF managed rules (via Terraform)
+# AWS WAF Terraform
 resource "aws_wafv2_web_acl" "main" {
   rule {
     name     = "AWSManagedRulesCommonRuleSet"
@@ -151,7 +133,7 @@ resource "aws_wafv2_web_acl" "main" {
     action { block {} }
     statement {
       rate_based_statement {
-        limit              = 2000  # 2000 req/5min per IP
+        limit              = 2000
         aggregate_key_type = "IP"
       }
     }
@@ -159,137 +141,113 @@ resource "aws_wafv2_web_acl" "main" {
 }
 ```
 
+**WAF vs Firewall:**
+- **Firewall** — operates at L3/L4 (IP, port, protocol). Allows/blocks connections.
+- **WAF** — operates at L7 (HTTP). Inspects HTTP content, headers, and body for attacks.
+
 ---
 
 ## DDoS Mitigation
 
-### Types of DDoS Attacks
 | Layer | Attack Type | Example |
 |---|---|---|
-| L3/L4 (Network) | Volumetric | UDP flood, ICMP flood, SYN flood |
-| L4 (Transport) | Protocol | SYN flood exhausts TCP connection table |
-| L7 (Application) | Slow HTTP | Slowloris, keeps connections open |
-| L7 (Application) | HTTP flood | Overwhelms with legitimate-looking requests |
+| L3/L4 | Volumetric | UDP flood, ICMP flood |
+| L4 | Protocol | SYN flood exhausts TCP table |
+| L7 | Slow HTTP | Slowloris holds connections open |
+| L7 | HTTP flood | Overwhelms with HTTP requests |
 
 ### Defense Layers
+
 ```
-1. Upstream scrubbing (Cloudflare, AWS Shield Advanced, Akamai)
-   → Absorbs volumetric attacks at network edge
-   → 99% of DDoS stopped here
-
-2. Rate limiting per IP at CDN/WAF
-   → HTTP flood mitigation
-
-3. Application-level rate limiting (Redis)
-   → Per-user, per-endpoint limits
-
-4. Auto-scaling + CDN offload
-   → Absorb traffic spikes
-
-5. Circuit breakers on downstream calls
-   → Prevent cascade failure under load
+1. Upstream scrubbing (Cloudflare, AWS Shield) → absorbs volumetric attacks at edge
+2. Rate limiting per IP at CDN/WAF → HTTP flood mitigation
+3. Application-level rate limiting (Redis) → per-user, per-endpoint
+4. Auto-scaling + CDN offload → absorb traffic spikes
+5. Circuit breakers on downstream calls → prevent cascade failure
 ```
 
-```java
-// Slowloris mitigation — set aggressive timeouts
+```yaml
+# Slowloris defense — aggressive timeouts
 server:
   tomcat:
-    connection-timeout: 5000       # 5s max to receive headers
-    keep-alive-timeout: 60000      # 60s keep-alive
-    max-connections: 10000         # Max concurrent connections
-    accept-count: 100              # Backlog queue
+    connection-timeout: 5000   # 5s max to receive headers
+    keep-alive-timeout: 60000
+    max-connections: 10000
+    accept-count: 100
 ```
 
 ---
 
 ## DNS Security
 
-### DNS Spoofing / Cache Poisoning
-Attacker returns fake IP for a domain.
-
-**Defense:** DNSSEC — cryptographically sign DNS records.
+### DNSSEC — Prevent Cache Poisoning
 
 ```
-Normal DNS:
-  Query: api.example.com → 1.2.3.4 (unverified)
-
-DNSSEC:
-  Query: api.example.com → 1.2.3.4 + digital signature
-  → Client verifies signature against DNSKEY record → tamper detected
-```
-
-### DNS over HTTPS (DoH)
-Prevents DNS queries being snooped by ISP/attacker.
-```
-Traditional: DNS query sent in plaintext UDP
-DoH: DNS query sent via HTTPS (encrypted, looks like regular web traffic)
+Normal DNS:  api.example.com → 1.2.3.4  (unverified)
+DNSSEC:      api.example.com → 1.2.3.4 + digital signature
+             → Client verifies signature → tampering detected
 ```
 
 ### DNS Rebinding Attack
+
 ```
-1. Attacker controls attacker.com → initially resolves to 1.2.3.4
+1. Attacker controls attacker.com → resolves to 1.2.3.4
 2. Victim visits attacker.com → JavaScript loaded
 3. Attacker changes DNS TTL to 0, rebinds to 192.168.1.1 (victim's router)
-4. JavaScript can now make requests to 192.168.1.1 using attacker.com origin
+4. JavaScript makes requests to 192.168.1.1 using attacker.com origin
 → Bypasses same-origin policy!
 ```
+
 **Defense:** Validate `Host` header, use HTTPS, bind services to specific IPs.
 
 ---
 
-## VPN and Zero Trust Networking
+## Zero Trust Networking
 
 ### Traditional VPN Model
 ```
-Employee → VPN → "Inside" network → Access all internal services
-Problem: Once inside, lateral movement is easy (breach one, own all)
+Employee → VPN → "Inside" network → Access ALL internal services
+Problem: Once inside, lateral movement is trivial
 ```
 
 ### Zero Trust Network Access (ZTNA)
 ```
 Every access request:
-  1. Verified identity (MFA)
+  1. Verified identity (MFA required)
   2. Device health check (MDM compliance)
-  3. Least-privilege access to specific app only
+  3. Least-privilege access to SPECIFIC app only
   4. Continuous verification (not just at login)
-  5. All traffic encrypted (even internal)
-```
-
-```
-Employee Device (verified) → ZTNA Proxy → Identity Check → App A ONLY
-                                        → No access to App B, internal DB, etc.
+  5. All traffic encrypted — even internal
 ```
 
 ---
 
-## mTLS (Mutual TLS) for Service-to-Service
+## mTLS — Mutual TLS
 
-Regular TLS: server proves identity to client.  
-mTLS: **both** sides prove identity.
+Regular TLS: **server** proves identity to client.
+mTLS: **both sides** prove identity via certificates.
 
 ```
 Service A ←─ present cert ──→ Service B
-             verify each other's cert
+             verify each other
              ← encrypted session →
-No API keys needed — identity is the certificate
+No API keys needed — the certificate IS the identity
 ```
 
 ```yaml
-# Istio mTLS — automatic for all pod-to-pod traffic
+# Istio — automatic mTLS for all pods
 apiVersion: security.istio.io/v1beta1
 kind: PeerAuthentication
-metadata:
-  name: default
 spec:
   mtls:
-    mode: STRICT  # Require mTLS for all services in namespace
+    mode: STRICT
 ```
 
-```java
-// Spring Boot mTLS configuration
+```yaml
+# Spring Boot mTLS
 server:
   ssl:
-    client-auth: need     # Require client certificate
+    client-auth: need
     trust-store: classpath:truststore.p12
     trust-store-password: ${TRUST_STORE_PASSWORD}
     key-store: classpath:server-keystore.p12
@@ -298,38 +256,25 @@ server:
 
 ---
 
-## SSH Security
+## SSH Hardening
 
 ```bash
-# /etc/ssh/sshd_config — hardened SSH config
+# /etc/ssh/sshd_config
 PermitRootLogin no
-PasswordAuthentication no        # Key-based only
+PasswordAuthentication no     # Key-based only
 PubkeyAuthentication yes
 MaxAuthTries 3
 LoginGraceTime 30
-AllowUsers deploy-user admin-user
-Protocol 2                       # SSH v2 only
+Protocol 2
 Ciphers aes256-gcm@openssh.com,chacha20-poly1305@openssh.com
-MACs hmac-sha2-512-etm@openssh.com
 ```
 
-### Bastion Host (Jump Server)
+### Bastion Host
+
 ```
-Developer → Internet → Bastion Host (hardened, MFA, logged) → Internal Servers
-                        (minimal attack surface, only SSH port open)
-```
-
----
-
-## Port Scanning & Attack Surface Minimization
-
-```bash
-# What's exposed? Audit with nmap
-nmap -sV -p- your-server.com
-
-# Close unused ports
-# Every open port is a potential attack vector
-# Only open what's absolutely necessary
+Developer → Internet → Bastion Host (hardened, MFA, all sessions logged)
+                             ↓
+                      Internal Servers (not directly accessible)
 ```
 
 ---

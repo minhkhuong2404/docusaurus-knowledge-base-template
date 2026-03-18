@@ -2,45 +2,45 @@
 id: cryptography-secure-design
 title: Cryptography & Secure Design
 sidebar_label: Cryptography
-description: Practical cryptography for software engineers — symmetric and asymmetric encryption, hashing, MACs, digital signatures, TLS internals, key management, and secure coding patterns.
-tags: [cryptography, encryption, hashing, tls, digital-signature, key-management, aes, rsa, elliptic-curve, secure-design]
+description: Practical cryptography for Java engineers — AES-GCM, RSA, HMAC, digital signatures, key management, secure random, constant-time comparisons. Pairs with the Keys, Signing & TLS doc.
+tags: [cryptography, encryption, hashing, aes, rsa, hmac, digital-signature, key-management, java, spring]
 ---
 
 # Cryptography & Secure Design
 
 > You don't need to implement cryptographic algorithms — you need to **choose** and **use** them correctly. Most vulnerabilities come from misuse, not math.
 
+:::tip Related
+See [Keys, Signing & TLS](./03b-keys-signing-tls) for deep dives into public/private keys, JWKS, MLE, and TLS internals.
+:::
+
 ---
 
-## Core Concepts
+## Core Concepts at a Glance
 
-| Concept | Purpose | Example Algorithm |
+| Concept | Purpose | Algorithm |
 |---|---|---|
-| **Symmetric Encryption** | Encrypt/decrypt with same key | AES-256-GCM |
-| **Asymmetric Encryption** | Encrypt with public, decrypt with private | RSA-OAEP |
-| **Hashing** | One-way fingerprint | SHA-256, SHA-3 |
-| **Password Hashing** | Slow hash with salt | Argon2id, BCrypt |
-| **MAC** | Authenticate message integrity | HMAC-SHA256 |
-| **Digital Signature** | Authenticate + non-repudiation | RSA-PSS, ECDSA |
-| **Key Exchange** | Establish shared secret over public channel | ECDH, DH |
-| **TLS/HTTPS** | Combine all above for secure transport | TLS 1.3 |
+| Symmetric Encryption | Encrypt/decrypt with same key | AES-256-GCM |
+| Asymmetric Encryption | Encrypt with public, decrypt with private | RSA-OAEP |
+| Hashing | One-way fingerprint | SHA-256, SHA-3 |
+| Password Hashing | Slow hash with salt | Argon2id, BCrypt |
+| MAC | Prove message integrity + authenticity | HMAC-SHA256 |
+| Digital Signature | Authenticity + non-repudiation | RSA-PSS, ECDSA |
+| Key Exchange | Establish shared secret over public channel | ECDH |
+| Authenticated Encryption | Confidentiality + integrity in one | AES-256-GCM |
 
 ---
 
-## Symmetric Encryption
+## AES-GCM — Symmetric Encryption
 
-Same key encrypts and decrypts. Fast. Good for large data.
-
-### AES-GCM (Recommended)
-
-AES-256-GCM provides both **confidentiality** (encryption) and **integrity** (authentication tag). Prefer over AES-CBC.
+AES-256-GCM provides **confidentiality** (encryption) AND **integrity** (authentication tag). Always prefer over AES-CBC.
 
 ```java
 @Service
 public class AesEncryptionService {
-    private static final int KEY_SIZE = 256;
-    private static final int IV_SIZE = 12;  // 96-bit IV for GCM
-    private static final int TAG_LENGTH = 128; // GCM auth tag
+    private static final int KEY_SIZE  = 256;
+    private static final int IV_SIZE   = 12;   // 96-bit IV for GCM
+    private static final int TAG_LEN   = 128;  // Auth tag length
 
     private final SecretKey secretKey;
 
@@ -49,42 +49,37 @@ public class AesEncryptionService {
         this.secretKey = new SecretKeySpec(keyBytes, "AES");
     }
 
-    public String encrypt(String plaintext) {
+    public String encrypt(String plaintext) throws Exception {
+        // ⚠️ Generate FRESH random IV for EVERY encryption — never reuse!
         byte[] iv = new byte[IV_SIZE];
-        new SecureRandom().nextBytes(iv);  // Random IV every time!
+        new SecureRandom().nextBytes(iv);
 
-        try {
-            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey,
-                new GCMParameterSpec(TAG_LENGTH, iv));
-            byte[] encrypted = cipher.doFinal(plaintext.getBytes(StandardCharsets.UTF_8));
+        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey, new GCMParameterSpec(TAG_LEN, iv));
+        byte[] encrypted = cipher.doFinal(plaintext.getBytes(StandardCharsets.UTF_8));
 
-            // Prepend IV to ciphertext (IV is not secret, just must be unique)
-            byte[] combined = new byte[IV_SIZE + encrypted.length];
-            System.arraycopy(iv, 0, combined, 0, IV_SIZE);
-            System.arraycopy(encrypted, 0, combined, IV_SIZE, encrypted.length);
-            return Base64.getEncoder().encodeToString(combined);
-        } catch (Exception e) {
-            throw new EncryptionException("Encryption failed", e);
-        }
+        // Prepend IV to ciphertext (IV is NOT secret, just must be unique per key)
+        byte[] combined = new byte[IV_SIZE + encrypted.length];
+        System.arraycopy(iv, 0, combined, 0, IV_SIZE);
+        System.arraycopy(encrypted, 0, combined, IV_SIZE, encrypted.length);
+        return Base64.getEncoder().encodeToString(combined);
     }
 
-    public String decrypt(String ciphertext) {
+    public String decrypt(String ciphertext) throws Exception {
         byte[] combined = Base64.getDecoder().decode(ciphertext);
-        byte[] iv = Arrays.copyOfRange(combined, 0, IV_SIZE);
+        byte[] iv        = Arrays.copyOfRange(combined, 0, IV_SIZE);
         byte[] encrypted = Arrays.copyOfRange(combined, IV_SIZE, combined.length);
 
+        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+        cipher.init(Cipher.DECRYPT_MODE, secretKey, new GCMParameterSpec(TAG_LEN, iv));
         try {
-            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
-            cipher.init(Cipher.DECRYPT_MODE, secretKey, new GCMParameterSpec(TAG_LENGTH, iv));
             return new String(cipher.doFinal(encrypted), StandardCharsets.UTF_8);
         } catch (AEADBadTagException e) {
             throw new TamperingDetectedException("Ciphertext was tampered with");
         }
     }
 
-    // Key generation (run once, store securely)
-    public static String generateKey() {
+    public static String generateKey() throws Exception {
         KeyGenerator kg = KeyGenerator.getInstance("AES");
         kg.init(KEY_SIZE, new SecureRandom());
         return Base64.getEncoder().encodeToString(kg.generateKey().getEncoded());
@@ -93,88 +88,22 @@ public class AesEncryptionService {
 ```
 
 ### Common AES Pitfalls
+
 | Mistake | Consequence | Fix |
 |---|---|---|
-| Reusing IV with same key | Complete plaintext recovery possible | Always generate random IV per encryption |
+| Reusing IV with same key | Complete plaintext recovery | Always generate random IV per encryption |
 | AES-CBC without MAC | Padding oracle attacks | Use AES-GCM (includes auth tag) |
-| Hardcoded key in code | Key exposed in repo/binary | Load from secrets manager |
-| ECB mode (AES/ECB) | Patterns visible in ciphertext | Never use ECB — use GCM or CBC+HMAC |
-
----
-
-## Asymmetric Encryption
-
-Two keys: public (encrypt/verify) + private (decrypt/sign). Slower. Used for key exchange and signatures.
-
-### RSA Key Generation & Usage
-```java
-// Key generation (done once, store private key securely)
-KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
-kpg.initialize(4096); // 2048 minimum, 4096 for long-lived keys
-KeyPair keyPair = kpg.generateKeyPair();
-
-// Encryption with RSA-OAEP (preferred over PKCS1 padding)
-public byte[] encryptRsa(byte[] plaintext, PublicKey publicKey) {
-    Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding");
-    cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-    return cipher.doFinal(plaintext);
-    // Note: RSA is slow — only encrypt small data (e.g., an AES key)
-    // For large data: hybrid encryption → encrypt data with AES, encrypt AES key with RSA
-}
-```
-
-### Hybrid Encryption Pattern
-```java
-// Encrypt large payload: AES for data, RSA for AES key
-public EncryptedPayload hybridEncrypt(byte[] data, PublicKey recipientKey) {
-    // 1. Generate random AES key
-    KeyGenerator kg = KeyGenerator.getInstance("AES");
-    kg.init(256); SecretKey aesKey = kg.generateKey();
-
-    // 2. Encrypt data with AES-GCM
-    byte[] encryptedData = aesEncrypt(data, aesKey);
-
-    // 3. Encrypt AES key with recipient's RSA public key
-    byte[] encryptedKey = encryptRsa(aesKey.getEncoded(), recipientKey);
-
-    return new EncryptedPayload(encryptedKey, encryptedData);
-}
-```
-
----
-
-## Hashing
-
-One-way function. Same input always produces same output. Cannot reverse.
-
-```java
-// General purpose hashing (file integrity, fingerprinting)
-MessageDigest md = MessageDigest.getInstance("SHA-256");
-byte[] hash = md.digest(data);
-String hexHash = HexFormat.of().formatHex(hash);
-
-// Use SHA-3 for new designs (SHA-256 still fine for most purposes)
-MessageDigest md3 = MessageDigest.getInstance("SHA3-256");
-```
-
-### Use Cases
-| Use Case | Algorithm | Notes |
-|---|---|---|
-| File integrity check | SHA-256 | Fast, good |
-| Password storage | Argon2id / BCrypt | **Must** be slow + salted |
-| HMAC / message auth | HMAC-SHA256 | Needs a secret key |
-| Non-cryptographic hash | MurmurHash / xxHash | Faster, not for security |
-| Digital certificates | SHA-256 | SHA-1 is broken for certs |
+| Hardcoded key | Key in repo/binary | Load from Vault / Secrets Manager |
+| ECB mode | Patterns visible in ciphertext | Never use ECB |
 
 ---
 
 ## HMAC — Message Authentication Code
 
-Proves both integrity and authenticity of a message (requires shared secret key).
+Proves **integrity + authenticity** of a message (requires a shared secret key).
 
 ```java
-// HMAC-SHA256
-public String generateHmac(String message, String secretKey) {
+public String generateHmac(String message, String secretKey) throws Exception {
     Mac mac = Mac.getInstance("HmacSHA256");
     SecretKeySpec keySpec = new SecretKeySpec(
         secretKey.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
@@ -183,7 +112,7 @@ public String generateHmac(String message, String secretKey) {
         mac.doFinal(message.getBytes(StandardCharsets.UTF_8)));
 }
 
-// Use case: webhook signature verification
+// Webhook signature verification (e.g., GitHub, Stripe)
 @PostMapping("/webhooks/payment")
 public ResponseEntity<Void> receiveWebhook(
         @RequestHeader("X-Signature-256") String signature,
@@ -191,9 +120,8 @@ public ResponseEntity<Void> receiveWebhook(
 
     String expected = "sha256=" + generateHmac(payload, webhookSecret);
 
-    // CRITICAL: constant-time comparison to prevent timing attacks
-    if (!MessageDigest.isEqual(
-            expected.getBytes(), signature.getBytes())) {
+    // CRITICAL: constant-time comparison — prevents timing attacks
+    if (!MessageDigest.isEqual(expected.getBytes(), signature.getBytes())) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
     processWebhook(payload);
@@ -201,99 +129,60 @@ public ResponseEntity<Void> receiveWebhook(
 }
 ```
 
+### HMAC vs Digital Signature
+
+| | HMAC | Digital Signature |
+|---|---|---|
+| Key | Symmetric (shared secret) | Asymmetric (private/public pair) |
+| Non-repudiation | ❌ Either party could generate | ✅ Only private key holder can sign |
+| Performance | Fast | Slower |
+| Use | Webhooks, internal services | JWTs, public APIs, code signing |
+
 ---
 
-## Digital Signatures
-
-Prove authenticity and non-repudiation. Signer uses **private key**; verifier uses **public key**.
+## Hashing
 
 ```java
-// Sign a document
-public byte[] sign(byte[] data, PrivateKey privateKey) {
-    Signature signer = Signature.getInstance("SHA256withECDSA"); // ECDSA — faster than RSA
-    signer.initSign(privateKey);
-    signer.update(data);
-    return signer.sign();
-}
+// File integrity, fingerprinting (fast hash)
+MessageDigest md = MessageDigest.getInstance("SHA-256");
+byte[] hash = md.digest(fileBytes);
+String hexHash = HexFormat.of().formatHex(hash);
 
-// Verify signature
-public boolean verify(byte[] data, byte[] signature, PublicKey publicKey) {
-    Signature verifier = Signature.getInstance("SHA256withECDSA");
-    verifier.initVerify(publicKey);
-    verifier.update(data);
-    return verifier.verify(signature);
-}
+// Use SHA-3 for new designs (SHA-256 still fine for non-password uses)
 ```
 
-### Signature vs MAC
-| | MAC (HMAC) | Digital Signature |
+| Use Case | Algorithm | Notes |
 |---|---|---|
-| Key | Symmetric (shared) | Asymmetric (private/public) |
-| Non-repudiation | ❌ (either party could generate) | ✅ (only private key holder) |
-| Performance | Faster | Slower |
-| Use | Internal service auth, webhooks | Public documents, JWTs (RS256) |
-
----
-
-## TLS/HTTPS Internals
-
-### TLS 1.3 Handshake (Simplified)
-```
-Client                         Server
-  │                               │
-  ├── ClientHello ──────────────→ │  (supported ciphers, key share)
-  │ ←──────────────── ServerHello ┤  (chosen cipher, key share)
-  │ ←──────────────── Certificate ┤  (server's X.509 cert)
-  │ ←──────────── {Finished} ────┤  (encrypted, key derived)
-  ├── {Finished} ───────────────→ │
-  │                               │
-  ├══ Encrypted Application Data ══════════════════ ┤
-```
-
-### What TLS Provides
-| Property | Mechanism |
-|---|---|
-| **Confidentiality** | AES-256-GCM (session key) |
-| **Integrity** | AEAD authentication tag |
-| **Server Authentication** | X.509 certificate (signed by CA) |
-| **Perfect Forward Secrecy** | ECDHE key exchange (session keys not derived from long-term key) |
-
-### Perfect Forward Secrecy (PFS)
-Even if the server's private key is later compromised, past sessions cannot be decrypted.
-```
-Session key = ECDH(server_ephemeral_private, client_ephemeral_public)
-Server throws away ephemeral private key after session
-→ No way to derive session key later, even with long-term private key
-```
+| File integrity | SHA-256 | Fast, standard |
+| Password storage | Argon2id / BCrypt | **Must** be slow + salted |
+| HMAC / message auth | HMAC-SHA256 | Needs secret key |
+| Digital certificates | SHA-256 | SHA-1 is broken for certs |
 
 ---
 
 ## Key Management
 
 ### Key Hierarchy
+
 ```
-Master Key (Hardware Security Module — HSM)
-  ↓ wraps
+Master Key (HSM — Hardware Security Module)
+    ↓ encrypts
 Key Encryption Key (KEK) — stored in Vault
-  ↓ wraps
-Data Encryption Key (DEK) — used for actual encryption
-  ↓ encrypts
-Data
+    ↓ encrypts
+Data Encryption Key (DEK) — rotates frequently
+    ↓ encrypts
+Your Data
 ```
 
-### Key Rotation
+### Key Rotation with Version Tracking
+
 ```java
-// Envelope encryption with versioned keys
 @Entity
 public class EncryptedRecord {
-    @Column(name = "data")
     String encryptedData;
-
-    @Column(name = "key_version")
-    int keyVersion; // Track which key was used
+    int keyVersion; // Track which DEK version encrypted this record
 }
 
-// Rotate: re-encrypt with new key
 @Transactional
 public void rotateKeys(int oldVersion, int newVersion) {
     List<EncryptedRecord> records = repo.findByKeyVersion(oldVersion);
@@ -319,45 +208,26 @@ byte[] token = new byte[32];
 rng.nextBytes(token);
 String sessionId = Base64.getUrlEncoder().withoutPadding().encodeToString(token);
 
-// OTP
-int otp = rng.nextInt(1_000_000); // 6-digit OTP
+// 6-digit OTP
+int otp = rng.nextInt(1_000_000);
 
-// ❌ Never use Math.random() or java.util.Random for security
-// Random random = new Random(); // Predictable seed!
+// ❌ NEVER use Math.random() or java.util.Random for security — predictable seed
 ```
 
 ---
 
 ## Constant-Time Comparisons
 
-Prevent timing attacks on secret comparisons.
-
 ```java
-// ❌ Vulnerable — returns early on first mismatch (timing leak)
-boolean vulnerable = userToken.equals(storedToken);
+// ❌ Vulnerable — early return leaks timing information
+boolean bad = userToken.equals(storedToken);
 
-// ✅ Constant-time — always takes same time regardless of where mismatch is
+// ✅ Constant-time — always takes the same time regardless of mismatch position
 boolean safe = MessageDigest.isEqual(
     userToken.getBytes(StandardCharsets.UTF_8),
     storedToken.getBytes(StandardCharsets.UTF_8)
 );
-
-// Spring Security already uses constant-time in PasswordEncoder.matches()
-```
-
----
-
-## Certificate Pinning (Mobile)
-
-Verify server certificate beyond CA trust chain.
-
-```java
-// OkHttp certificate pinning (Android/mobile)
-OkHttpClient client = new OkHttpClient.Builder()
-    .certificatePinner(new CertificatePinner.Builder()
-        .add("api.example.com", "sha256/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=")
-        .build())
-    .build();
+// Spring Security's PasswordEncoder.matches() is already constant-time
 ```
 
 ---
@@ -369,8 +239,7 @@ OkHttpClient client = new OkHttpClient.Builder()
 | **Defense in Depth** | Multiple independent security controls |
 | **Least Privilege** | Minimal permissions needed to function |
 | **Fail Secure** | Default to deny on failure |
-| **Separation of Concerns** | Auth logic separate from business logic |
-| **Don't Roll Your Own Crypto** | Use vetted libraries (BouncyCastle, JDK) |
+| **Don't Roll Your Own Crypto** | Use vetted libraries (BouncyCastle, JDK, Nimbus) |
 | **Secure by Default** | Secure configuration out of the box |
 | **Complete Mediation** | Check permissions on every access |
 | **Open Design** | Security based on keys, not algorithm secrecy |
@@ -382,12 +251,10 @@ OkHttpClient client = new OkHttpClient.Builder()
 1. What is the difference between encryption and hashing? When do you use each?
 2. Why is AES-GCM preferred over AES-CBC?
 3. What is the difference between a MAC (HMAC) and a digital signature?
-4. What is Perfect Forward Secrecy and why does it matter?
-5. What does TLS protect against? What does it NOT protect?
-6. Why must IVs be unique (even if not secret) in AES-GCM?
-7. What is hybrid encryption and why is it used instead of pure RSA?
-8. What is a timing attack and how do you prevent it in Java?
-9. What is key rotation and how do you implement it without losing access to old data?
-10. Why is MD5 broken and what should you use instead for file integrity checks?
-11. What is the difference between RSA-PKCS1 and RSA-OAEP padding?
-12. What is a rainbow table attack and why does salting prevent it?
+4. Why must IVs be unique (even if not secret) in AES-GCM?
+5. What is hybrid encryption and why is it used instead of pure RSA?
+6. What is a timing attack and how do you prevent it in Java?
+7. What is key rotation and how do you implement it without losing access to old data?
+8. Why is MD5 broken and what should you use instead for file integrity checks?
+9. What is a rainbow table attack and why does salting prevent it?
+10. What is the purpose of the GCM authentication tag?
