@@ -42,34 +42,9 @@ const sidebars: SidebarsConfig = {
 					label: '🎯 Interview Questions',
 					collapsed: false,
 					items: [
-						'technical-knowledge/interview-questions/accenture-java-interview',
-						'technical-knowledge/interview-questions/break-singleton-java',
-						'technical-knowledge/interview-questions/concurrent-collections-interview',
-						'technical-knowledge/interview-questions/concurrent-collections-tricky',
-						'technical-knowledge/interview-questions/java-interview-questions',
-						'technical-knowledge/interview-questions/exception-handling-advanced',
-						'technical-knowledge/interview-questions/experienced-java-backend-interview',
-						'technical-knowledge/interview-questions/java-8-optional-crud',
-						'technical-knowledge/interview-questions/java-8-tricky-interview-questions',
-						'technical-knowledge/interview-questions/java-collections-differences',
-						'technical-knowledge/interview-questions/java-collections-interview',
-						'technical-knowledge/interview-questions/java-collections-interview-p2',
-						'technical-knowledge/interview-questions/java-comprehensive-interview',
-						'technical-knowledge/interview-questions/java-experienced-interview-p1',
-						'technical-knowledge/interview-questions/java-lead-interview-scenarios',
-						'technical-knowledge/interview-questions/java-multithreading-interview',
-						'technical-knowledge/interview-questions/java-runtime-exceptions',
-						'technical-knowledge/interview-questions/java-string-basics',
-						'technical-knowledge/interview-questions/java-string-rotation',
-						'technical-knowledge/interview-questions/java-date-time-api',
-						'technical-knowledge/interview-questions/java-tricky-core-questions',
-						'technical-knowledge/interview-questions/spring-boot-interview',
-						'technical-knowledge/interview-questions/spring-boot-real-time-questions',
-						'technical-knowledge/interview-questions/sql-interview-questions',
-						'technical-knowledge/interview-questions/tricky-java-interview'
+						'technical-knowledge/java/java-interview-questions',
 					]
-				},
-				'technical-knowledge/java/java-interview-questions'
+				}
 			]
 		},
 		{
@@ -813,7 +788,39 @@ const sidebars: SidebarsConfig = {
 				}
 
 			]
-		}
+		},
+		{
+			type: 'category',
+			label: '🎯 Frequently Asked Interview Questions',
+			collapsed: false,
+			items: [
+				'technical-knowledge/interview-questions/accenture-java-interview',
+				'technical-knowledge/interview-questions/break-singleton-java',
+				'technical-knowledge/interview-questions/concurrent-collections-interview',
+				'technical-knowledge/interview-questions/concurrent-collections-tricky',
+				'technical-knowledge/interview-questions/java-interview-questions',
+				'technical-knowledge/interview-questions/exception-handling-advanced',
+				'technical-knowledge/interview-questions/experienced-java-backend-interview',
+				'technical-knowledge/interview-questions/java-8-optional-crud',
+				'technical-knowledge/interview-questions/java-8-tricky-interview-questions',
+				'technical-knowledge/interview-questions/java-collections-differences',
+				'technical-knowledge/interview-questions/java-collections-interview',
+				'technical-knowledge/interview-questions/java-collections-interview-p2',
+				'technical-knowledge/interview-questions/java-comprehensive-interview',
+				'technical-knowledge/interview-questions/java-experienced-interview-p1',
+				'technical-knowledge/interview-questions/java-lead-interview-scenarios',
+				'technical-knowledge/interview-questions/java-multithreading-interview',
+				'technical-knowledge/interview-questions/java-runtime-exceptions',
+				'technical-knowledge/interview-questions/java-string-basics',
+				'technical-knowledge/interview-questions/java-string-rotation',
+				'technical-knowledge/interview-questions/java-date-time-api',
+				'technical-knowledge/interview-questions/java-tricky-core-questions',
+				'technical-knowledge/interview-questions/spring-boot-interview',
+				'technical-knowledge/interview-questions/spring-boot-real-time-questions',
+				'technical-knowledge/interview-questions/sql-interview-questions',
+				'technical-knowledge/interview-questions/tricky-java-interview'
+			]
+		},
 	]
 }
 

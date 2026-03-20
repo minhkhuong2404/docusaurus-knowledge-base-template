@@ -11,7 +11,7 @@ tags: [cryptography, encryption, hashing, aes, rsa, hmac, digital-signature, key
 > You don't need to implement cryptographic algorithms — you need to **choose** and **use** them correctly. Most vulnerabilities come from misuse, not math.
 
 :::tip Related
-See [Keys, Signing & TLS](./03b-keys-signing-tls) for deep dives into public/private keys, JWKS, MLE, and TLS internals.
+See [Keys, Signing & TLS](./keys-signing-tls) for deep dives into public/private keys, JWKS, MLE, and TLS internals.
 :::
 
 ---

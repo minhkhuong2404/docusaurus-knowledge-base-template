@@ -39,7 +39,7 @@ You don't need to be a security specialist. You need to know **enough to write s
 | [Identity & Access Management](/technical-knowledge/security/identity-access-management) | SSO, SAML, LDAP, service accounts, Vault, JIT access, cloud IAM |
 | [API Security](/technical-knowledge/security/api-security) | OWASP API Top 10, input validation, rate limiting, GraphQL security |
 | [Incident Response](/technical-knowledge/security/incident-response) | IR lifecycle, detection, containment, recovery, post-mortem |
-| [Interview Questions](/technical-knowledge/security/security-interview-questions) | 21 deep-dive answers + quick-fire reference table |
+| [Interview Questions](/technical-knowledge/security/interview-questions) | 21 deep-dive answers + quick-fire reference table |
 
 ---
 
@@ -134,7 +134,7 @@ Attackers **always find the weakest layer**. Defence in depth means there is no 
 2. [Web Vulnerabilities](/technical-knowledge/security/web-vulnerabilities) — OWASP Top 10 is expected knowledge
 3. [Cryptography](/technical-knowledge/security/cryptography-secure-design) — hashing vs encryption, TLS basics
 4. [Privacy & Compliance](/technical-knowledge/security/privacy-compliance) — GDPR basics, PCI-DSS rules
-5. [Interview Questions](/technical-knowledge/security/security-interview-questions) — practise with answers
+5. [Interview Questions](/technical-knowledge/security/interview-questions) — practise with answers
 
 ### For Production Systems
 1. Start with [Secure SDLC](/technical-knowledge/security/secure-sdlc) — embed security early
