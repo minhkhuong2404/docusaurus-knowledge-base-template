@@ -631,6 +631,131 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/interview-questions/accenture-java-interview",
+              "path": "/technical-knowledge/interview-questions/accenture-java-interview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/break-singleton-java",
+              "path": "/technical-knowledge/interview-questions/break-singleton-java",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/concurrent-collections-interview",
+              "path": "/technical-knowledge/interview-questions/concurrent-collections-interview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/concurrent-collections-tricky",
+              "path": "/technical-knowledge/interview-questions/concurrent-collections-tricky",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/exception-handling-advanced",
+              "path": "/technical-knowledge/interview-questions/exception-handling-advanced",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/experienced-java-backend-interview",
+              "path": "/technical-knowledge/interview-questions/experienced-java-backend-interview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/java-8-optional-crud",
+              "path": "/technical-knowledge/interview-questions/java-8-optional-crud",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/java-8-tricky-interview-questions",
+              "path": "/technical-knowledge/interview-questions/java-8-tricky-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/java-collections-differences",
+              "path": "/technical-knowledge/interview-questions/java-collections-differences",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/java-collections-interview",
+              "path": "/technical-knowledge/interview-questions/java-collections-interview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/java-collections-interview-p2",
+              "path": "/technical-knowledge/interview-questions/java-collections-interview-p2",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/java-comprehensive-interview",
+              "path": "/technical-knowledge/interview-questions/java-comprehensive-interview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/java-date-time-api",
+              "path": "/technical-knowledge/interview-questions/java-date-time-api",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/java-experienced-interview-p1",
+              "path": "/technical-knowledge/interview-questions/java-experienced-interview-p1",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/java-interview-questions",
+              "path": "/technical-knowledge/interview-questions/java-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/java-lead-interview-scenarios",
+              "path": "/technical-knowledge/interview-questions/java-lead-interview-scenarios",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/java-multithreading-interview",
+              "path": "/technical-knowledge/interview-questions/java-multithreading-interview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/java-runtime-exceptions",
+              "path": "/technical-knowledge/interview-questions/java-runtime-exceptions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/java-string-basics",
+              "path": "/technical-knowledge/interview-questions/java-string-basics",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/java-string-rotation",
+              "path": "/technical-knowledge/interview-questions/java-string-rotation",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/java-tricky-core-questions",
+              "path": "/technical-knowledge/interview-questions/java-tricky-core-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/spring-boot-interview",
+              "path": "/technical-knowledge/interview-questions/spring-boot-interview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/spring-boot-real-time-questions",
+              "path": "/technical-knowledge/interview-questions/spring-boot-real-time-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/sql-interview-questions",
+              "path": "/technical-knowledge/interview-questions/sql-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/tricky-java-interview",
+              "path": "/technical-knowledge/interview-questions/tricky-java-interview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/java/java-collections",
               "path": "/technical-knowledge/java/java-collections",
               "sidebar": "tutorialSidebar"
@@ -681,6 +806,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/kafka/advanced/exactly-once-vs-dedup",
+              "path": "/technical-knowledge/kafka/advanced/exactly-once-vs-dedup",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/kafka/advanced/kafka-connect",
               "path": "/technical-knowledge/kafka/advanced/kafka-connect",
               "sidebar": "tutorialSidebar"
@@ -688,6 +818,11 @@
             {
               "id": "technical-knowledge/kafka/advanced/kafka-streams",
               "path": "/technical-knowledge/kafka/advanced/kafka-streams",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/advanced/kafka-streams-deep-dive",
+              "path": "/technical-knowledge/kafka/advanced/kafka-streams-deep-dive",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -718,6 +853,11 @@
             {
               "id": "technical-knowledge/kafka/consumer/parallel-consumer",
               "path": "/technical-knowledge/kafka/consumer/parallel-consumer",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/consumer/parallel-consumer-deep-dive",
+              "path": "/technical-knowledge/kafka/consumer/parallel-consumer-deep-dive",
               "sidebar": "tutorialSidebar"
             },
             {

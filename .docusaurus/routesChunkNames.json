@@ -42,13 +42,13 @@
       "plugin": "plugin---docusaurus-debugb-38-ad3"
     }
   },
-  "/-5b7": {
+  "/-898": {
     "__comp": "__comp---theme-docs-root-5-e-9-0b6",
     "__context": {
       "plugin": "plugin---aba-d70"
     }
   },
-  "/-577": {
+  "/-0c4": {
     "__comp": "__comp---theme-doc-version-roota-7-b-5de",
     "__props": "__props---22-d-307"
   },
@@ -680,6 +680,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-databasefa-5-e44"
   },
+  "/tags/date-time-07e": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-date-time-8-d-9-8a9"
+  },
   "/tags/dax-fea": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-dax-391-a9a"
@@ -711,6 +715,10 @@
   "/tags/decoupling-13a": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-decoupling-8-c-9-d95"
+  },
+  "/tags/deduplication-95a": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-deduplicationd-96-714"
   },
   "/tags/dependency-injection-206": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -936,6 +944,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-eviction-426-314"
   },
+  "/tags/exactly-once-32b": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-exactly-once-6-c-5-436"
+  },
   "/tags/exam-guide-5f2": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-exam-guideb-34-3fb"
@@ -943,6 +955,10 @@
   "/tags/exam-tips-c66": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-exam-tipsff-4-d2e"
+  },
+  "/tags/exception-handling-3a1": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-exception-handlingb-31-db2"
   },
   "/tags/exceptions-2e0": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -1060,6 +1076,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-full-text-search-526-138"
   },
+  "/tags/functional-interfaces-57c": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-functional-interfaces-41-f-39d"
+  },
   "/tags/fundamentals-b95": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-fundamentals-514-c5d"
@@ -1123,6 +1143,10 @@
   "/tags/helm-053": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-helm-18-b-d0b"
+  },
+  "/tags/hibernate-d06": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-hibernatee-19-aee"
   },
   "/tags/high-availability-c36": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -1328,6 +1352,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-java-217-e-5-1e0"
   },
+  "/tags/java-8-f9d": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-java-8-b-33-bd1"
+  },
   "/tags/java-nio-fb1": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-java-nio-9-c-5-88e"
@@ -1371,6 +1399,10 @@
   "/tags/kafka-472": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-kafka-97-b-c24"
+  },
+  "/tags/kafka-streams-48b": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-kafka-streamsa-26-7a9"
   },
   "/tags/keep-alive-17a": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -1456,6 +1488,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-leader-followerff-3-f3e"
   },
+  "/tags/leadership-b86": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-leadership-435-768"
+  },
   "/tags/ledger-bd9": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-ledgerf-5-e-be3"
@@ -1511,6 +1547,10 @@
   "/tags/lsm-tree-b94": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-lsm-tree-470-9fd"
+  },
+  "/tags/maps-92e": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-maps-9-e-0-b36"
   },
   "/tags/mass-assignment-9c2": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -1768,6 +1808,14 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-optimizerabb-720"
   },
+  "/tags/optional-e8f": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-optional-396-580"
+  },
+  "/tags/optionals-fa5": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-optionals-5-ae-4e1"
+  },
   "/tags/orchestration-13c": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-orchestration-462-6db"
@@ -1835,6 +1883,10 @@
   "/tags/pam-0a5": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-pam-7-ef-9a7"
+  },
+  "/tags/parallel-consumer-50c": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-parallel-consumerbf-9-7c1"
   },
   "/tags/parameter-store-af6": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -2492,6 +2544,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-state-machinefc-1-283"
   },
+  "/tags/stateful-processing-d43": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-stateful-processing-99-d-b01"
+  },
   "/tags/statefulset-eb5": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-statefulset-6-b-6-e03"
@@ -2524,6 +2580,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-strategy-09-a-a01"
   },
+  "/tags/stream-processing-3f6": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-stream-processing-2-c-0-63f"
+  },
   "/tags/streaming-957": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-streamingc-8-c-5c5"
@@ -2531,6 +2591,10 @@
   "/tags/streams-236": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-streams-52-c-53e"
+  },
+  "/tags/strings-e8d": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-strings-088-f2a"
   },
   "/tags/structural-4a2": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -2820,7 +2884,7 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-zero-trustcdd-b57"
   },
-  "/-dde": {
+  "/-199": {
     "__comp": "__comp---theme-doc-roota-94-67a"
   },
   "/aws-102": {
@@ -3323,6 +3387,106 @@
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-devops-kubernetes-workloadse-77-9a3"
   },
+  "/technical-knowledge/interview-questions/accenture-java-interview-815": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-interview-questions-accenture-java-interviewa-13-2dc"
+  },
+  "/technical-knowledge/interview-questions/break-singleton-java-e6f": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-interview-questions-break-singleton-java-73-f-711"
+  },
+  "/technical-knowledge/interview-questions/concurrent-collections-interview-01b": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-interview-questions-concurrent-collections-interview-611-e7c"
+  },
+  "/technical-knowledge/interview-questions/concurrent-collections-tricky-970": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-interview-questions-concurrent-collections-tricky-2-c-6-8ec"
+  },
+  "/technical-knowledge/interview-questions/exception-handling-advanced-fd4": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-interview-questions-exception-handling-advancedec-0-58f"
+  },
+  "/technical-knowledge/interview-questions/experienced-java-backend-interview-a36": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-interview-questions-experienced-java-backend-interviewf-93-ca5"
+  },
+  "/technical-knowledge/interview-questions/java-8-optional-crud-461": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-interview-questions-java-8-optional-crud-85-e-588"
+  },
+  "/technical-knowledge/interview-questions/java-8-tricky-interview-questions-24b": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-interview-questions-java-8-tricky-interview-questionse-21-3c8"
+  },
+  "/technical-knowledge/interview-questions/java-collections-differences-4cf": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-interview-questions-java-collections-differences-8-d-1-2df"
+  },
+  "/technical-knowledge/interview-questions/java-collections-interview-18b": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-interview-questions-java-collections-interview-286-58a"
+  },
+  "/technical-knowledge/interview-questions/java-collections-interview-p2-182": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-interview-questions-java-collections-interview-p-2-b-75-a32"
+  },
+  "/technical-knowledge/interview-questions/java-comprehensive-interview-e98": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-interview-questions-java-comprehensive-interviewa-4-d-337"
+  },
+  "/technical-knowledge/interview-questions/java-date-time-api-cce": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-interview-questions-java-date-time-api-80-b-b66"
+  },
+  "/technical-knowledge/interview-questions/java-experienced-interview-p1-a66": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-interview-questions-java-experienced-interview-p-1135-737"
+  },
+  "/technical-knowledge/interview-questions/java-interview-questions-b3f": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-interview-questions-java-interview-questionsea-3-c38"
+  },
+  "/technical-knowledge/interview-questions/java-lead-interview-scenarios-ae9": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-interview-questions-java-lead-interview-scenariosc-28-886"
+  },
+  "/technical-knowledge/interview-questions/java-multithreading-interview-726": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-interview-questions-java-multithreading-interview-330-076"
+  },
+  "/technical-knowledge/interview-questions/java-runtime-exceptions-cc1": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-interview-questions-java-runtime-exceptions-9-f-7-8fe"
+  },
+  "/technical-knowledge/interview-questions/java-string-basics-5df": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-interview-questions-java-string-basics-410-796"
+  },
+  "/technical-knowledge/interview-questions/java-string-rotation-350": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-interview-questions-java-string-rotatione-12-ab6"
+  },
+  "/technical-knowledge/interview-questions/java-tricky-core-questions-257": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-interview-questions-java-tricky-core-questions-91-a-277"
+  },
+  "/technical-knowledge/interview-questions/spring-boot-interview-704": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-interview-questions-spring-boot-interview-7-a-4-3e2"
+  },
+  "/technical-knowledge/interview-questions/spring-boot-real-time-questions-5d0": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-interview-questions-spring-boot-real-time-questions-9-e-9-6a6"
+  },
+  "/technical-knowledge/interview-questions/sql-interview-questions-a33": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-interview-questions-sql-interview-questions-73-c-e49"
+  },
+  "/technical-knowledge/interview-questions/tricky-java-interview-754": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-interview-questions-tricky-java-interviewdad-463"
+  },
   "/technical-knowledge/java/java-collections-5a4": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-java-java-collectionsa-8-d-2bb"
@@ -3363,6 +3527,10 @@
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-kafka-advanced-exactly-oncea-8-e-bf8"
   },
+  "/technical-knowledge/kafka/advanced/exactly-once-vs-dedup-820": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-kafka-advanced-exactly-once-vs-dedup-5-a-7-d32"
+  },
   "/technical-knowledge/kafka/advanced/kafka-connect-249": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-kafka-advanced-kafka-connecte-1-e-4d9"
@@ -3370,6 +3538,10 @@
   "/technical-knowledge/kafka/advanced/kafka-streams-a88": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-kafka-advanced-kafka-streamsc-1-b-0c8"
+  },
+  "/technical-knowledge/kafka/advanced/kafka-streams-deep-dive-5ba": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-kafka-advanced-kafka-streams-deep-divece-3-b2b"
   },
   "/technical-knowledge/kafka/advanced/monitoring-operations-da3": {
     "__comp": "__comp---theme-doc-item-178-a40",
@@ -3394,6 +3566,10 @@
   "/technical-knowledge/kafka/consumer/parallel-consumer-2b3": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-kafka-consumer-parallel-consumerad-2-bac"
+  },
+  "/technical-knowledge/kafka/consumer/parallel-consumer-deep-dive-249": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-kafka-consumer-parallel-consumer-deep-dive-651-0d6"
   },
   "/technical-knowledge/kafka/core/broker-5f8": {
     "__comp": "__comp---theme-doc-item-178-a40",

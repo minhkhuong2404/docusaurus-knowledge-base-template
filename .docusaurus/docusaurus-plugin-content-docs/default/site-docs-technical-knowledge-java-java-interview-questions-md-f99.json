@@ -45,8 +45,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Java New Features: Java 8 through Java 21+",
-    "permalink": "/technical-knowledge/java/java-new-features"
+    "title": "Tricky Java Q&A",
+    "permalink": "/technical-knowledge/interview-questions/tricky-java-interview"
   },
   "next": {
     "title": "Spring Knowledge Base Overview",

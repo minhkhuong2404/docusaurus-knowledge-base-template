@@ -39,11 +39,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '5b7'),
+    component: ComponentCreator('/', '898'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '577'),
+        component: ComponentCreator('/', '0c4'),
         routes: [
           {
             path: '/tags',
@@ -831,6 +831,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/date-time',
+            component: ComponentCreator('/tags/date-time', '07e'),
+            exact: true
+          },
+          {
             path: '/tags/dax',
             component: ComponentCreator('/tags/dax', 'fea'),
             exact: true
@@ -868,6 +873,11 @@ export default [
           {
             path: '/tags/decoupling',
             component: ComponentCreator('/tags/decoupling', '13a'),
+            exact: true
+          },
+          {
+            path: '/tags/deduplication',
+            component: ComponentCreator('/tags/deduplication', '95a'),
             exact: true
           },
           {
@@ -1151,6 +1161,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/exactly-once',
+            component: ComponentCreator('/tags/exactly-once', '32b'),
+            exact: true
+          },
+          {
             path: '/tags/exam-guide',
             component: ComponentCreator('/tags/exam-guide', '5f2'),
             exact: true
@@ -1158,6 +1173,11 @@ export default [
           {
             path: '/tags/exam-tips',
             component: ComponentCreator('/tags/exam-tips', 'c66'),
+            exact: true
+          },
+          {
+            path: '/tags/exception-handling',
+            component: ComponentCreator('/tags/exception-handling', '3a1'),
             exact: true
           },
           {
@@ -1306,6 +1326,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/functional-interfaces',
+            component: ComponentCreator('/tags/functional-interfaces', '57c'),
+            exact: true
+          },
+          {
             path: '/tags/fundamentals',
             component: ComponentCreator('/tags/fundamentals', 'b95'),
             exact: true
@@ -1383,6 +1408,11 @@ export default [
           {
             path: '/tags/helm',
             component: ComponentCreator('/tags/helm', '053'),
+            exact: true
+          },
+          {
+            path: '/tags/hibernate',
+            component: ComponentCreator('/tags/hibernate', 'd06'),
             exact: true
           },
           {
@@ -1641,6 +1671,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/java-8',
+            component: ComponentCreator('/tags/java-8', 'f9d'),
+            exact: true
+          },
+          {
             path: '/tags/java-nio',
             component: ComponentCreator('/tags/java-nio', 'fb1'),
             exact: true
@@ -1693,6 +1728,11 @@ export default [
           {
             path: '/tags/kafka',
             component: ComponentCreator('/tags/kafka', '472'),
+            exact: true
+          },
+          {
+            path: '/tags/kafka-streams',
+            component: ComponentCreator('/tags/kafka-streams', '48b'),
             exact: true
           },
           {
@@ -1801,6 +1841,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/leadership',
+            component: ComponentCreator('/tags/leadership', 'b86'),
+            exact: true
+          },
+          {
             path: '/tags/ledger',
             component: ComponentCreator('/tags/ledger', 'bd9'),
             exact: true
@@ -1868,6 +1913,11 @@ export default [
           {
             path: '/tags/lsm-tree',
             component: ComponentCreator('/tags/lsm-tree', 'b94'),
+            exact: true
+          },
+          {
+            path: '/tags/maps',
+            component: ComponentCreator('/tags/maps', '92e'),
             exact: true
           },
           {
@@ -2191,6 +2241,16 @@ export default [
             exact: true
           },
           {
+            path: '/tags/optional',
+            component: ComponentCreator('/tags/optional', 'e8f'),
+            exact: true
+          },
+          {
+            path: '/tags/optionals',
+            component: ComponentCreator('/tags/optionals', 'fa5'),
+            exact: true
+          },
+          {
             path: '/tags/orchestration',
             component: ComponentCreator('/tags/orchestration', '13c'),
             exact: true
@@ -2273,6 +2333,11 @@ export default [
           {
             path: '/tags/pam',
             component: ComponentCreator('/tags/pam', '0a5'),
+            exact: true
+          },
+          {
+            path: '/tags/parallel-consumer',
+            component: ComponentCreator('/tags/parallel-consumer', '50c'),
             exact: true
           },
           {
@@ -3096,6 +3161,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/stateful-processing',
+            component: ComponentCreator('/tags/stateful-processing', 'd43'),
+            exact: true
+          },
+          {
             path: '/tags/statefulset',
             component: ComponentCreator('/tags/statefulset', 'eb5'),
             exact: true
@@ -3136,6 +3206,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/stream-processing',
+            component: ComponentCreator('/tags/stream-processing', '3f6'),
+            exact: true
+          },
+          {
             path: '/tags/streaming',
             component: ComponentCreator('/tags/streaming', '957'),
             exact: true
@@ -3143,6 +3218,11 @@ export default [
           {
             path: '/tags/streams',
             component: ComponentCreator('/tags/streams', '236'),
+            exact: true
+          },
+          {
+            path: '/tags/strings',
+            component: ComponentCreator('/tags/strings', 'e8d'),
             exact: true
           },
           {
@@ -3507,7 +3587,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'dde'),
+            component: ComponentCreator('/', '199'),
             routes: [
               {
                 path: '/aws',
@@ -4260,6 +4340,156 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/interview-questions/accenture-java-interview',
+                component: ComponentCreator('/technical-knowledge/interview-questions/accenture-java-interview', '815'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/break-singleton-java',
+                component: ComponentCreator('/technical-knowledge/interview-questions/break-singleton-java', 'e6f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/concurrent-collections-interview',
+                component: ComponentCreator('/technical-knowledge/interview-questions/concurrent-collections-interview', '01b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/concurrent-collections-tricky',
+                component: ComponentCreator('/technical-knowledge/interview-questions/concurrent-collections-tricky', '970'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/exception-handling-advanced',
+                component: ComponentCreator('/technical-knowledge/interview-questions/exception-handling-advanced', 'fd4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/experienced-java-backend-interview',
+                component: ComponentCreator('/technical-knowledge/interview-questions/experienced-java-backend-interview', 'a36'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/java-8-optional-crud',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java-8-optional-crud', '461'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/java-8-tricky-interview-questions',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java-8-tricky-interview-questions', '24b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/java-collections-differences',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java-collections-differences', '4cf'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/java-collections-interview',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java-collections-interview', '18b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/java-collections-interview-p2',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java-collections-interview-p2', '182'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/java-comprehensive-interview',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java-comprehensive-interview', 'e98'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/java-date-time-api',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java-date-time-api', 'cce'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/java-experienced-interview-p1',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java-experienced-interview-p1', 'a66'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/java-interview-questions',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java-interview-questions', 'b3f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/java-lead-interview-scenarios',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java-lead-interview-scenarios', 'ae9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/java-multithreading-interview',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java-multithreading-interview', '726'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/java-runtime-exceptions',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java-runtime-exceptions', 'cc1'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/java-string-basics',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java-string-basics', '5df'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/java-string-rotation',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java-string-rotation', '350'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/java-tricky-core-questions',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java-tricky-core-questions', '257'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/spring-boot-interview',
+                component: ComponentCreator('/technical-knowledge/interview-questions/spring-boot-interview', '704'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/spring-boot-real-time-questions',
+                component: ComponentCreator('/technical-knowledge/interview-questions/spring-boot-real-time-questions', '5d0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/sql-interview-questions',
+                component: ComponentCreator('/technical-knowledge/interview-questions/sql-interview-questions', 'a33'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/tricky-java-interview',
+                component: ComponentCreator('/technical-knowledge/interview-questions/tricky-java-interview', '754'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/java/java-collections',
                 component: ComponentCreator('/technical-knowledge/java/java-collections', '5a4'),
                 exact: true,
@@ -4320,6 +4550,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/kafka/advanced/exactly-once-vs-dedup',
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/exactly-once-vs-dedup', '820'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/kafka/advanced/kafka-connect',
                 component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-connect', '249'),
                 exact: true,
@@ -4328,6 +4564,12 @@ export default [
               {
                 path: '/technical-knowledge/kafka/advanced/kafka-streams',
                 component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-streams', 'a88'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/kafka/advanced/kafka-streams-deep-dive',
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-streams-deep-dive', '5ba'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -4364,6 +4606,12 @@ export default [
               {
                 path: '/technical-knowledge/kafka/consumer/parallel-consumer',
                 component: ComponentCreator('/technical-knowledge/kafka/consumer/parallel-consumer', '2b3'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/kafka/consumer/parallel-consumer-deep-dive',
+                component: ComponentCreator('/technical-knowledge/kafka/consumer/parallel-consumer-deep-dive', '249'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
