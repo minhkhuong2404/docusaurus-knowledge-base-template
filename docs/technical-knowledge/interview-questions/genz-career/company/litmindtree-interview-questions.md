@@ -138,5 +138,5 @@ WHERE Salary < (SELECT MAX(Salary) FROM Employee);
 During the technical round, the candidate was asked to solve the following algorithmic challenges:
 
 1. **Stream API Frequency:** You are given a `List<String>`. Write code using the Java Stream API to calculate the frequency of each string in the list.
-2. **Linked List Reordering:** You are given a Linked List. Write an algorithm to reorder the linked list (typically $L_0 \rightarrow L_n \rightarrow L_1 \rightarrow L_{n-1} \dots$).
+2. **Linked List Reordering:** You are given a Linked List. Write an algorithm to reorder the linked list (typically $L_0 \rightarrow L_n \rightarrow L_1 \rightarrow L_\{n-1\} \dots$).
 3. **Container With Most Water:** A classic algorithmic problem (often found on LeetCode) to find two lines on an axis that, together with the x-axis, forms a container that holds the most water.
