@@ -833,6 +833,112 @@ const sidebars: SidebarsConfig = {
 						'books/effective-java/chapter-11-concurrency',
 						'books/effective-java/chapter-12-serialization'
 					]
+				},
+				{
+					type: 'category',
+					label: '📖 Clean Code',
+					collapsed: true,
+					items: [
+						{
+							type: 'doc',
+							id: 'books/clean-code/intro',
+							label: '📖 Introduction',
+						},
+						{
+							type: 'category',
+							label: '🧭 Part I — Clean Code Principles',
+							collapsed: false,
+							items: [
+								'books/clean-code/chapter-01-clean-code',
+								'books/clean-code/chapter-02-meaningful-names',
+								'books/clean-code/chapter-03-functions',
+								'books/clean-code/chapter-04-comments',
+								'books/clean-code/chapter-05-formatting',
+							],
+						},
+						{
+							type: 'category',
+							label: '🛠️ Part II — Beyond the Basics',
+							collapsed: false,
+							items: [
+								'books/clean-code/chapter-06-objects-data-structures',
+								'books/clean-code/chapter-07-error-handling',
+								'books/clean-code/chapter-08-boundaries',
+								'books/clean-code/chapter-09-unit-tests',
+								'books/clean-code/chapter-10-classes',
+							],
+						},
+						{
+							type: 'category',
+							label: '🏛️ Part III — Architecture & Design',
+							collapsed: false,
+							items: [
+								'books/clean-code/chapter-11-systems',
+								'books/clean-code/chapter-12-emergence',
+								'books/clean-code/chapter-13-concurrency',
+							],
+						},
+						{
+							type: 'category',
+							label: '🧪 Part IV — Case Studies',
+							collapsed: false,
+							items: [
+								'books/clean-code/chapter-14-successive-refinement',
+								'books/clean-code/chapter-15-junit-internals',
+								'books/clean-code/chapter-16-refactoring-serialdate',
+							],
+						},
+						{
+							type: 'doc',
+							id: 'books/clean-code/chapter-17-smells-and-heuristics',
+							label: '🔍 Chapter 17: Smells & Heuristics',
+						},
+					]
+				},
+				{
+					type: 'category',
+					label: '🗃️ Designing Data-Intensive Applications',
+					collapsed: true,
+					items: [
+						{
+							type: 'doc',
+							id: 'books/ddia/intro',
+							label: '📖 Introduction',
+						},
+						{
+							type: 'category',
+							label: '📦 Part I — Foundations',
+							collapsed: false,
+							items: [
+								'books/ddia/part1-foundations/chapter-01',
+								'books/ddia/part1-foundations/chapter-02',
+								'books/ddia/part1-foundations/chapter-03',
+								'books/ddia/part1-foundations/chapter-04',
+							],
+						},
+						{
+							type: 'category',
+							label: '🌐 Part II — Distributed Data',
+							collapsed: false,
+							items: [
+								'books/ddia/part2-distributed-data/chapter-05',
+								'books/ddia/part2-distributed-data/chapter-06',
+								'books/ddia/part2-distributed-data/chapter-07',
+								'books/ddia/part2-distributed-data/chapter-08',
+								'books/ddia/part2-distributed-data/chapter-09',
+							],
+						},
+						{
+							type: 'category',
+							label: '🔄 Part III — Derived Data',
+							collapsed: false,
+							items: [
+								'books/ddia/part3-derived-data/chapter-10',
+								'books/ddia/part3-derived-data/chapter-11',
+								'books/ddia/part3-derived-data/chapter-12',
+							],
+						},
+					]
 				}
 			]
 		},
@@ -948,6 +1054,61 @@ const sidebars: SidebarsConfig = {
 				}
 			]
 		},
+		{
+			type: 'category',
+			label: 'Software Development Life Cycle (SDLC)',
+			items: [
+				{
+					type: 'doc',
+					id: 'non-technical-knowledge/sdlc/intro',
+					label: '🏠 Introduction',
+				},
+				{
+					type: 'category',
+					label: '📋 SDLC Phases',
+					collapsed: false,
+					items: [
+						'non-technical-knowledge/sdlc/phases/planning',
+						'non-technical-knowledge/sdlc/phases/requirements',
+						'non-technical-knowledge/sdlc/phases/system-design',
+						'non-technical-knowledge/sdlc/phases/development',
+						'non-technical-knowledge/sdlc/phases/testing',
+						'non-technical-knowledge/sdlc/phases/deployment',
+						'non-technical-knowledge/sdlc/phases/maintenance',
+					],
+				},
+				{
+					type: 'category',
+					label: '🧪 Testing Strategy',
+					collapsed: false,
+					items: [
+						'non-technical-knowledge/sdlc/testing/unit-testing',
+						'non-technical-knowledge/sdlc/testing/integration-testing',
+						'non-technical-knowledge/sdlc/testing/regression-testing',
+						'non-technical-knowledge/sdlc/testing/end-to-end-testing',
+						'non-technical-knowledge/sdlc/testing/inflight-testing',
+						'non-technical-knowledge/sdlc/testing/component-performance-testing',
+					],
+				},
+				{
+					type: 'category',
+					label: '🚀 Deployment Strategy',
+					collapsed: false,
+					items: [
+						'non-technical-knowledge/sdlc/deployment/roll-forward',
+						'non-technical-knowledge/sdlc/deployment/roll-backward',
+					],
+				},
+				{
+					type: 'category',
+					label: '📊 Reports',
+					collapsed: false,
+					items: [
+						'non-technical-knowledge/sdlc/reports/test-summary-report',
+					],
+				},
+			]
+		}
 	]
 }
 

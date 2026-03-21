@@ -1,0 +1,9 @@
+{
+  "label": "🌐 Part II — Distributed Data",
+  "position": 3,
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "description": "Chapters 5–9 explore what happens when data is spread across multiple machines for scalability and fault tolerance."
+  }
+}

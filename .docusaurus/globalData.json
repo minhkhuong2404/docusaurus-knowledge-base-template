@@ -11,6 +11,161 @@
           "mainDocId": "intro",
           "docs": [
             {
+              "id": "books/clean-code/chapter-01-clean-code",
+              "path": "/books/clean-code/chapter-01-clean-code",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-code/chapter-02-meaningful-names",
+              "path": "/books/clean-code/chapter-02-meaningful-names",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-code/chapter-03-functions",
+              "path": "/books/clean-code/chapter-03-functions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-code/chapter-04-comments",
+              "path": "/books/clean-code/chapter-04-comments",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-code/chapter-05-formatting",
+              "path": "/books/clean-code/chapter-05-formatting",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-code/chapter-06-objects-data-structures",
+              "path": "/books/clean-code/chapter-06-objects-data-structures",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-code/chapter-07-error-handling",
+              "path": "/books/clean-code/chapter-07-error-handling",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-code/chapter-08-boundaries",
+              "path": "/books/clean-code/chapter-08-boundaries",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-code/chapter-09-unit-tests",
+              "path": "/books/clean-code/chapter-09-unit-tests",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-code/chapter-10-classes",
+              "path": "/books/clean-code/chapter-10-classes",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-code/chapter-11-systems",
+              "path": "/books/clean-code/chapter-11-systems",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-code/chapter-12-emergence",
+              "path": "/books/clean-code/chapter-12-emergence",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-code/chapter-13-concurrency",
+              "path": "/books/clean-code/chapter-13-concurrency",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-code/chapter-14-successive-refinement",
+              "path": "/books/clean-code/chapter-14-successive-refinement",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-code/chapter-15-junit-internals",
+              "path": "/books/clean-code/chapter-15-junit-internals",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-code/chapter-16-refactoring-serialdate",
+              "path": "/books/clean-code/chapter-16-refactoring-serialdate",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-code/chapter-17-smells-and-heuristics",
+              "path": "/books/clean-code/chapter-17-smells-and-heuristics",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-code/intro",
+              "path": "/books/clean-code/intro",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/ddia/intro",
+              "path": "/books/ddia/intro",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/ddia/part1-foundations/chapter-01",
+              "path": "/books/ddia/part1-foundations/chapter-01",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/ddia/part1-foundations/chapter-02",
+              "path": "/books/ddia/part1-foundations/chapter-02",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/ddia/part1-foundations/chapter-03",
+              "path": "/books/ddia/part1-foundations/chapter-03",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/ddia/part1-foundations/chapter-04",
+              "path": "/books/ddia/part1-foundations/chapter-04",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/ddia/part2-distributed-data/chapter-05",
+              "path": "/books/ddia/part2-distributed-data/chapter-05",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/ddia/part2-distributed-data/chapter-06",
+              "path": "/books/ddia/part2-distributed-data/chapter-06",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/ddia/part2-distributed-data/chapter-07",
+              "path": "/books/ddia/part2-distributed-data/chapter-07",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/ddia/part2-distributed-data/chapter-08",
+              "path": "/books/ddia/part2-distributed-data/chapter-08",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/ddia/part2-distributed-data/chapter-09",
+              "path": "/books/ddia/part2-distributed-data/chapter-09",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/ddia/part3-derived-data/chapter-10",
+              "path": "/books/ddia/part3-derived-data/chapter-10",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/ddia/part3-derived-data/chapter-11",
+              "path": "/books/ddia/part3-derived-data/chapter-11",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/ddia/part3-derived-data/chapter-12",
+              "path": "/books/ddia/part3-derived-data/chapter-12",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "books/effective-java/chapter-02-creating-destroying-objects",
               "path": "/books/effective-java/chapter-02-creating-destroying-objects",
               "sidebar": "tutorialSidebar"
@@ -78,6 +233,91 @@
             {
               "id": "intro",
               "path": "/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "non-technical-knowledge/sdlc/deployment/roll-backward",
+              "path": "/non-technical-knowledge/sdlc/deployment/roll-backward",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "non-technical-knowledge/sdlc/deployment/roll-forward",
+              "path": "/non-technical-knowledge/sdlc/deployment/roll-forward",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "non-technical-knowledge/sdlc/intro",
+              "path": "/non-technical-knowledge/sdlc/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "non-technical-knowledge/sdlc/phases/deployment",
+              "path": "/non-technical-knowledge/sdlc/phases/deployment",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "non-technical-knowledge/sdlc/phases/development",
+              "path": "/non-technical-knowledge/sdlc/phases/development",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "non-technical-knowledge/sdlc/phases/maintenance",
+              "path": "/non-technical-knowledge/sdlc/phases/maintenance",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "non-technical-knowledge/sdlc/phases/planning",
+              "path": "/non-technical-knowledge/sdlc/phases/planning",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "non-technical-knowledge/sdlc/phases/requirements",
+              "path": "/non-technical-knowledge/sdlc/phases/requirements",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "non-technical-knowledge/sdlc/phases/system-design",
+              "path": "/non-technical-knowledge/sdlc/phases/system-design",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "non-technical-knowledge/sdlc/phases/testing",
+              "path": "/non-technical-knowledge/sdlc/phases/testing",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "non-technical-knowledge/sdlc/reports/test-summary-report",
+              "path": "/non-technical-knowledge/sdlc/reports/test-summary-report",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "non-technical-knowledge/sdlc/testing/component-performance-testing",
+              "path": "/non-technical-knowledge/sdlc/testing/component-performance-testing",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "non-technical-knowledge/sdlc/testing/end-to-end-testing",
+              "path": "/non-technical-knowledge/sdlc/testing/end-to-end-testing",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "non-technical-knowledge/sdlc/testing/inflight-testing",
+              "path": "/non-technical-knowledge/sdlc/testing/inflight-testing",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "non-technical-knowledge/sdlc/testing/integration-testing",
+              "path": "/non-technical-knowledge/sdlc/testing/integration-testing",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "non-technical-knowledge/sdlc/testing/regression-testing",
+              "path": "/non-technical-knowledge/sdlc/testing/regression-testing",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "non-technical-knowledge/sdlc/testing/unit-testing",
+              "path": "/non-technical-knowledge/sdlc/testing/unit-testing",
               "sidebar": "tutorialSidebar"
             },
             {

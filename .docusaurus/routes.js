@@ -9,11 +9,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'cc4'),
+    component: ComponentCreator('/', '5e5'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'db8'),
+        component: ComponentCreator('/', '361'),
         routes: [
           {
             path: '/tags',
@@ -3857,7 +3857,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'f03'),
+            component: ComponentCreator('/', '266'),
             routes: [
               {
                 path: '/aws',
@@ -3868,6 +3868,192 @@ export default [
               {
                 path: '/banking',
                 component: ComponentCreator('/banking', 'dce'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/clean-code/chapter-01-clean-code',
+                component: ComponentCreator('/books/clean-code/chapter-01-clean-code', '32a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/clean-code/chapter-02-meaningful-names',
+                component: ComponentCreator('/books/clean-code/chapter-02-meaningful-names', 'fd3'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/clean-code/chapter-03-functions',
+                component: ComponentCreator('/books/clean-code/chapter-03-functions', '503'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/clean-code/chapter-04-comments',
+                component: ComponentCreator('/books/clean-code/chapter-04-comments', '616'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/clean-code/chapter-05-formatting',
+                component: ComponentCreator('/books/clean-code/chapter-05-formatting', '510'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/clean-code/chapter-06-objects-data-structures',
+                component: ComponentCreator('/books/clean-code/chapter-06-objects-data-structures', '1e1'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/clean-code/chapter-07-error-handling',
+                component: ComponentCreator('/books/clean-code/chapter-07-error-handling', '827'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/clean-code/chapter-08-boundaries',
+                component: ComponentCreator('/books/clean-code/chapter-08-boundaries', '812'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/clean-code/chapter-09-unit-tests',
+                component: ComponentCreator('/books/clean-code/chapter-09-unit-tests', '46d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/clean-code/chapter-10-classes',
+                component: ComponentCreator('/books/clean-code/chapter-10-classes', 'a6f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/clean-code/chapter-11-systems',
+                component: ComponentCreator('/books/clean-code/chapter-11-systems', '005'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/clean-code/chapter-12-emergence',
+                component: ComponentCreator('/books/clean-code/chapter-12-emergence', '844'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/clean-code/chapter-13-concurrency',
+                component: ComponentCreator('/books/clean-code/chapter-13-concurrency', 'a92'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/clean-code/chapter-14-successive-refinement',
+                component: ComponentCreator('/books/clean-code/chapter-14-successive-refinement', 'b06'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/clean-code/chapter-15-junit-internals',
+                component: ComponentCreator('/books/clean-code/chapter-15-junit-internals', '32c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/clean-code/chapter-16-refactoring-serialdate',
+                component: ComponentCreator('/books/clean-code/chapter-16-refactoring-serialdate', 'af9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/clean-code/chapter-17-smells-and-heuristics',
+                component: ComponentCreator('/books/clean-code/chapter-17-smells-and-heuristics', 'f51'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/clean-code/intro',
+                component: ComponentCreator('/books/clean-code/intro', '51b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/ddia/intro',
+                component: ComponentCreator('/books/ddia/intro', '618'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/ddia/part1-foundations/chapter-01',
+                component: ComponentCreator('/books/ddia/part1-foundations/chapter-01', 'b1a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/ddia/part1-foundations/chapter-02',
+                component: ComponentCreator('/books/ddia/part1-foundations/chapter-02', 'bbe'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/ddia/part1-foundations/chapter-03',
+                component: ComponentCreator('/books/ddia/part1-foundations/chapter-03', 'a06'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/ddia/part1-foundations/chapter-04',
+                component: ComponentCreator('/books/ddia/part1-foundations/chapter-04', '5eb'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/ddia/part2-distributed-data/chapter-05',
+                component: ComponentCreator('/books/ddia/part2-distributed-data/chapter-05', '596'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/ddia/part2-distributed-data/chapter-06',
+                component: ComponentCreator('/books/ddia/part2-distributed-data/chapter-06', 'ddb'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/ddia/part2-distributed-data/chapter-07',
+                component: ComponentCreator('/books/ddia/part2-distributed-data/chapter-07', '5be'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/ddia/part2-distributed-data/chapter-08',
+                component: ComponentCreator('/books/ddia/part2-distributed-data/chapter-08', '2b9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/ddia/part2-distributed-data/chapter-09',
+                component: ComponentCreator('/books/ddia/part2-distributed-data/chapter-09', '524'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/ddia/part3-derived-data/chapter-10',
+                component: ComponentCreator('/books/ddia/part3-derived-data/chapter-10', 'c5c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/ddia/part3-derived-data/chapter-11',
+                component: ComponentCreator('/books/ddia/part3-derived-data/chapter-11', '224'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/ddia/part3-derived-data/chapter-12',
+                component: ComponentCreator('/books/ddia/part3-derived-data/chapter-12', 'ba1'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -3952,6 +4138,108 @@ export default [
               {
                 path: '/devops',
                 component: ComponentCreator('/devops', '521'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/non-technical-knowledge/sdlc/',
+                component: ComponentCreator('/non-technical-knowledge/sdlc/', '546'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/non-technical-knowledge/sdlc/deployment/roll-backward',
+                component: ComponentCreator('/non-technical-knowledge/sdlc/deployment/roll-backward', '3a9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/non-technical-knowledge/sdlc/deployment/roll-forward',
+                component: ComponentCreator('/non-technical-knowledge/sdlc/deployment/roll-forward', '134'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/non-technical-knowledge/sdlc/phases/deployment',
+                component: ComponentCreator('/non-technical-knowledge/sdlc/phases/deployment', 'c0b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/non-technical-knowledge/sdlc/phases/development',
+                component: ComponentCreator('/non-technical-knowledge/sdlc/phases/development', 'fb6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/non-technical-knowledge/sdlc/phases/maintenance',
+                component: ComponentCreator('/non-technical-knowledge/sdlc/phases/maintenance', '442'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/non-technical-knowledge/sdlc/phases/planning',
+                component: ComponentCreator('/non-technical-knowledge/sdlc/phases/planning', 'f71'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/non-technical-knowledge/sdlc/phases/requirements',
+                component: ComponentCreator('/non-technical-knowledge/sdlc/phases/requirements', 'f15'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/non-technical-knowledge/sdlc/phases/system-design',
+                component: ComponentCreator('/non-technical-knowledge/sdlc/phases/system-design', 'f51'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/non-technical-knowledge/sdlc/phases/testing',
+                component: ComponentCreator('/non-technical-knowledge/sdlc/phases/testing', '257'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/non-technical-knowledge/sdlc/reports/test-summary-report',
+                component: ComponentCreator('/non-technical-knowledge/sdlc/reports/test-summary-report', '415'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/non-technical-knowledge/sdlc/testing/component-performance-testing',
+                component: ComponentCreator('/non-technical-knowledge/sdlc/testing/component-performance-testing', 'b7e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/non-technical-knowledge/sdlc/testing/end-to-end-testing',
+                component: ComponentCreator('/non-technical-knowledge/sdlc/testing/end-to-end-testing', 'f6a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/non-technical-knowledge/sdlc/testing/inflight-testing',
+                component: ComponentCreator('/non-technical-knowledge/sdlc/testing/inflight-testing', 'bdd'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/non-technical-knowledge/sdlc/testing/integration-testing',
+                component: ComponentCreator('/non-technical-knowledge/sdlc/testing/integration-testing', 'fa8'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/non-technical-knowledge/sdlc/testing/regression-testing',
+                component: ComponentCreator('/non-technical-knowledge/sdlc/testing/regression-testing', 'd7d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/non-technical-knowledge/sdlc/testing/unit-testing',
+                component: ComponentCreator('/non-technical-knowledge/sdlc/testing/unit-testing', '6ac'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

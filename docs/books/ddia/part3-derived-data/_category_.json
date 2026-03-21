@@ -1,0 +1,9 @@
+{
+  "label": "🔄 Part III — Derived Data",
+  "position": 4,
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "description": "Chapters 10–12 cover batch processing, stream processing, and the future of building data-intensive applications."
+  }
+}

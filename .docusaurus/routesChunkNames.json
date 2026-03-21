@@ -5,13 +5,13 @@
       "plugin": "138e0e15"
     }
   },
-  "/-cc4": {
+  "/-5e5": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-db8": {
+  "/-361": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -3087,7 +3087,7 @@
     "__comp": "df203c0f",
     "__props": "cdd99891"
   },
-  "/-f03": {
+  "/-266": {
     "__comp": "a94703ab"
   },
   "/aws-102": {
@@ -3097,6 +3097,130 @@
   "/banking-dce": {
     "__comp": "17896441",
     "content": "59e92e34"
+  },
+  "/books/clean-code/chapter-01-clean-code-32a": {
+    "__comp": "17896441",
+    "content": "6669e16d"
+  },
+  "/books/clean-code/chapter-02-meaningful-names-fd3": {
+    "__comp": "17896441",
+    "content": "902911a4"
+  },
+  "/books/clean-code/chapter-03-functions-503": {
+    "__comp": "17896441",
+    "content": "9f26bb15"
+  },
+  "/books/clean-code/chapter-04-comments-616": {
+    "__comp": "17896441",
+    "content": "3d877638"
+  },
+  "/books/clean-code/chapter-05-formatting-510": {
+    "__comp": "17896441",
+    "content": "c096fea3"
+  },
+  "/books/clean-code/chapter-06-objects-data-structures-1e1": {
+    "__comp": "17896441",
+    "content": "349d6862"
+  },
+  "/books/clean-code/chapter-07-error-handling-827": {
+    "__comp": "17896441",
+    "content": "3102471d"
+  },
+  "/books/clean-code/chapter-08-boundaries-812": {
+    "__comp": "17896441",
+    "content": "fdefd9b2"
+  },
+  "/books/clean-code/chapter-09-unit-tests-46d": {
+    "__comp": "17896441",
+    "content": "196cca05"
+  },
+  "/books/clean-code/chapter-10-classes-a6f": {
+    "__comp": "17896441",
+    "content": "2f927a8c"
+  },
+  "/books/clean-code/chapter-11-systems-005": {
+    "__comp": "17896441",
+    "content": "85315201"
+  },
+  "/books/clean-code/chapter-12-emergence-844": {
+    "__comp": "17896441",
+    "content": "b9ce0f07"
+  },
+  "/books/clean-code/chapter-13-concurrency-a92": {
+    "__comp": "17896441",
+    "content": "3be012d7"
+  },
+  "/books/clean-code/chapter-14-successive-refinement-b06": {
+    "__comp": "17896441",
+    "content": "fef87ea8"
+  },
+  "/books/clean-code/chapter-15-junit-internals-32c": {
+    "__comp": "17896441",
+    "content": "8ef2b855"
+  },
+  "/books/clean-code/chapter-16-refactoring-serialdate-af9": {
+    "__comp": "17896441",
+    "content": "3de808f4"
+  },
+  "/books/clean-code/chapter-17-smells-and-heuristics-f51": {
+    "__comp": "17896441",
+    "content": "76c39e71"
+  },
+  "/books/clean-code/intro-51b": {
+    "__comp": "17896441",
+    "content": "862d45e1"
+  },
+  "/books/ddia/intro-618": {
+    "__comp": "17896441",
+    "content": "693818bc"
+  },
+  "/books/ddia/part1-foundations/chapter-01-b1a": {
+    "__comp": "17896441",
+    "content": "6e76c11d"
+  },
+  "/books/ddia/part1-foundations/chapter-02-bbe": {
+    "__comp": "17896441",
+    "content": "a8be8036"
+  },
+  "/books/ddia/part1-foundations/chapter-03-a06": {
+    "__comp": "17896441",
+    "content": "82f6e2d7"
+  },
+  "/books/ddia/part1-foundations/chapter-04-5eb": {
+    "__comp": "17896441",
+    "content": "fcb9f174"
+  },
+  "/books/ddia/part2-distributed-data/chapter-05-596": {
+    "__comp": "17896441",
+    "content": "fa8ad492"
+  },
+  "/books/ddia/part2-distributed-data/chapter-06-ddb": {
+    "__comp": "17896441",
+    "content": "14976deb"
+  },
+  "/books/ddia/part2-distributed-data/chapter-07-5be": {
+    "__comp": "17896441",
+    "content": "0b712ecb"
+  },
+  "/books/ddia/part2-distributed-data/chapter-08-2b9": {
+    "__comp": "17896441",
+    "content": "ff12b326"
+  },
+  "/books/ddia/part2-distributed-data/chapter-09-524": {
+    "__comp": "17896441",
+    "content": "23548180"
+  },
+  "/books/ddia/part3-derived-data/chapter-10-c5c": {
+    "__comp": "17896441",
+    "content": "17473af4"
+  },
+  "/books/ddia/part3-derived-data/chapter-11-224": {
+    "__comp": "17896441",
+    "content": "22031b13"
+  },
+  "/books/ddia/part3-derived-data/chapter-12-ba1": {
+    "__comp": "17896441",
+    "content": "a3880902"
   },
   "/books/effective-java/chapter-02-creating-destroying-objects-2ee": {
     "__comp": "17896441",
@@ -3153,6 +3277,74 @@
   "/devops-521": {
     "__comp": "17896441",
     "content": "3f8eb35f"
+  },
+  "/non-technical-knowledge/sdlc/-546": {
+    "__comp": "17896441",
+    "content": "6dda571b"
+  },
+  "/non-technical-knowledge/sdlc/deployment/roll-backward-3a9": {
+    "__comp": "17896441",
+    "content": "d70a8c93"
+  },
+  "/non-technical-knowledge/sdlc/deployment/roll-forward-134": {
+    "__comp": "17896441",
+    "content": "d9d1bb30"
+  },
+  "/non-technical-knowledge/sdlc/phases/deployment-c0b": {
+    "__comp": "17896441",
+    "content": "a210864e"
+  },
+  "/non-technical-knowledge/sdlc/phases/development-fb6": {
+    "__comp": "17896441",
+    "content": "ea6ce1da"
+  },
+  "/non-technical-knowledge/sdlc/phases/maintenance-442": {
+    "__comp": "17896441",
+    "content": "782f730c"
+  },
+  "/non-technical-knowledge/sdlc/phases/planning-f71": {
+    "__comp": "17896441",
+    "content": "4bfa2464"
+  },
+  "/non-technical-knowledge/sdlc/phases/requirements-f15": {
+    "__comp": "17896441",
+    "content": "4bd20c68"
+  },
+  "/non-technical-knowledge/sdlc/phases/system-design-f51": {
+    "__comp": "17896441",
+    "content": "c0bb7a0a"
+  },
+  "/non-technical-knowledge/sdlc/phases/testing-257": {
+    "__comp": "17896441",
+    "content": "eb306149"
+  },
+  "/non-technical-knowledge/sdlc/reports/test-summary-report-415": {
+    "__comp": "17896441",
+    "content": "4346b5fa"
+  },
+  "/non-technical-knowledge/sdlc/testing/component-performance-testing-b7e": {
+    "__comp": "17896441",
+    "content": "b8f28480"
+  },
+  "/non-technical-knowledge/sdlc/testing/end-to-end-testing-f6a": {
+    "__comp": "17896441",
+    "content": "9ccca292"
+  },
+  "/non-technical-knowledge/sdlc/testing/inflight-testing-bdd": {
+    "__comp": "17896441",
+    "content": "3ff749f9"
+  },
+  "/non-technical-knowledge/sdlc/testing/integration-testing-fa8": {
+    "__comp": "17896441",
+    "content": "58681c16"
+  },
+  "/non-technical-knowledge/sdlc/testing/regression-testing-d7d": {
+    "__comp": "17896441",
+    "content": "d20b631e"
+  },
+  "/non-technical-knowledge/sdlc/testing/unit-testing-6ac": {
+    "__comp": "17896441",
+    "content": "cb923f1c"
   },
   "/security-0f0": {
     "__comp": "17896441",

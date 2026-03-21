@@ -52,3 +52,10 @@ This knowledge base mirrors the 12 chapters of the book. Each chapter covers one
 11. **Serialization** — alternatives, proxies, security
 
 > 💡 **Tip for Spring developers:** Pay special attention to Items 5 (dependency injection), 17 (immutability), 42–48 (lambdas/streams), and 78–84 (concurrency) — these are the most impactful for modern Spring application development.
+
+## Quick Navigation
+
+- Browse all items: [Items Index](./items-index)
+- Start chapter flow: [Chapter 2 - Creating and Destroying Objects](./chapter-02-creating-destroying-objects)
+- Switch book: [Clean Code Introduction](/books/clean-code/intro)
+- Switch book: [DDIA Introduction](/books/ddia/intro)
