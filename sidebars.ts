@@ -659,7 +659,7 @@ const sidebars: SidebarsConfig = {
 					items: [
 						{
 							type: 'category',
-							label: 'Payment Initiation (pain)',
+							label: '💸 Payment Initiation (pain)',
 							collapsed: false,
 							items: [
 								{ type: 'doc', id: 'technical-knowledge/banking/pain001', label: 'pain.001 - Credit Transfer Initiation' },
@@ -669,7 +669,7 @@ const sidebars: SidebarsConfig = {
 						},
 						{
 							type: 'category',
-							label: 'Payment Clearing & Settlement (pacs)',
+							label: '🏦 Payment Clearing & Settlement (pacs)',
 							collapsed: false,
 							items: [
 								{ type: 'doc', id: 'technical-knowledge/banking/pacs008', label: 'pacs.008 - FI-to-FI Credit Transfer' },
@@ -679,7 +679,7 @@ const sidebars: SidebarsConfig = {
 						},
 						{
 							type: 'category',
-							label: 'Cash Management (camt)',
+							label: '📒 Cash Management (camt)',
 							collapsed: false,
 							items: [
 								{ type: 'doc', id: 'technical-knowledge/banking/camt054', label: 'camt.054 - Debit/Credit Notification' },
@@ -791,12 +791,12 @@ const sidebars: SidebarsConfig = {
 		},
 		{
 			type: 'category',
-			label: 'Books',
+			label: '📚 Books',
 			collapsed: false,
 			items: [
 				{
 					type: 'category',
-					label: 'Effective Java',
+					label: '☕ Effective Java',
 					collapsed: false,
 					items: [
 						'books/effective-java/introduction',
@@ -818,12 +818,12 @@ const sidebars: SidebarsConfig = {
 		},
 		{
 			type: 'category',
-			label: 'Frequently Asked Interview Questions',
+			label: '🎯 Frequently Asked Interview Questions',
 			collapsed: false,
 			items: [
 				{
 					type: 'category',
-					label: 'Core Java',
+					label: '☕ Core Java',
 					collapsed: false,
 					items: [
 						'technical-knowledge/interview-questions/java/break-singleton-java',
@@ -853,7 +853,7 @@ const sidebars: SidebarsConfig = {
 				},
 				{
 					type: 'category',
-					label: 'GenZ Career',
+					label: '💼 GenZ Career',
 					collapsed: false,
 					items: [
 						'technical-knowledge/interview-questions/genz-career/java-collections-interview-questions',
@@ -863,7 +863,7 @@ const sidebars: SidebarsConfig = {
 						'technical-knowledge/interview-questions/genz-career/java-multithreading-interview-guide',
 						{
 							type: 'category',
-							label: 'Company',
+							label: '🏢 Company',
 							collapsed: false,
 							items: [
 								'technical-knowledge/interview-questions/genz-career/company/accenture-java-interview',
@@ -896,7 +896,7 @@ const sidebars: SidebarsConfig = {
 						},
 						{
 							type: 'category',
-							label: 'Mock',
+							label: '🧪 Mock',
 							collapsed: false,
 							items: [
 								'technical-knowledge/interview-questions/genz-career/mock/accenture-java-springboot-interview-3-years',
@@ -912,7 +912,7 @@ const sidebars: SidebarsConfig = {
 						},
 						{
 							type: 'category',
-							label: 'Spring Boot',
+							label: '🚀 Spring Boot',
 							collapsed: false,
 							items: [
 								'technical-knowledge/interview-questions/genz-career/spring-boot/real-time-spring-boot-interview-questions',

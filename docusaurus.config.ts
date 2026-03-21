@@ -77,17 +77,43 @@ const config: Config = {
 			style: 'dark',
 			links: [
 				{
-					title: 'Linkedin',
+					title: 'LinkedIn',
 					items: [
 						{
-							label: 'Linkedin',
+							label: 'luminhkhuong',
 							href: 'https://www.linkedin.com/in/luminhkhuong/',
 						},
 					],
 				},
-				// ... other links
+				{
+					title: 'GitHub',
+					items: [
+						{
+							label: 'minhkhuong2404',
+							href: 'https://github.com/minhkhuong2404'
+						},
+					]
+				},
+				{
+					title: 'Facebook',
+					items: [
+						{
+							label: 'luminhkhuong',
+							href: 'https://www.facebook.com/luminhkhuong/'
+						}
+					]
+				},
+				{
+					title: 'Leetcode',
+					items: [
+						{
+							label: 'luminhkhuong',
+							href: 'https://leetcode.com/u/luminhkhuong/'
+						}
+					]
+				}
 			],
-			copyright: `Copyright © ${new Date().getFullYear()} Khuong, Lu.`, // You can also put own HTML here
+			copyright: `Copyright © ${new Date().getFullYear()} by Khuong Lu,  Inc. Built with Docusaurus and Github Page. ❤️`
 		},
 	},
 }

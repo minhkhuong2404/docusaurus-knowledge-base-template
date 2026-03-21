@@ -260,16 +260,43 @@ export default {
       "style": "dark",
       "links": [
         {
-          "title": "Linkedin",
+          "title": "LinkedIn",
           "items": [
             {
-              "label": "Linkedin",
+              "label": "luminhkhuong",
               "href": "https://www.linkedin.com/in/luminhkhuong/"
+            }
+          ]
+        },
+        {
+          "title": "GitHub",
+          "items": [
+            {
+              "label": "minhkhuong2404",
+              "href": "https://github.com/minhkhuong2404"
+            }
+          ]
+        },
+        {
+          "title": "Facebook",
+          "items": [
+            {
+              "label": "luminhkhuong",
+              "href": "https://www.facebook.com/luminhkhuong/"
+            }
+          ]
+        },
+        {
+          "title": "Leetcode",
+          "items": [
+            {
+              "label": "luminhkhuong",
+              "href": "https://leetcode.com/u/luminhkhuong/"
             }
           ]
         }
       ],
-      "copyright": "Copyright © 2026 Khuong, Lu."
+      "copyright": "Copyright © 2026 by Khuong Lu,  Inc. Built with Docusaurus and Github Page. ❤️"
     },
     "blog": {
       "sidebar": {

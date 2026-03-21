@@ -1,3 +1,5 @@
+@import "@fortawesome/fontawesome-free/css/all.min.css";
+
 /* ============================================
    Code Block Styling — Catppuccin Mocha Theme
    ============================================ */
@@ -124,4 +126,49 @@ div[class*="codeBlockTitle"] {
   transition:
     background-color 0.25s ease,
     border-color 0.25s ease;
+}
+
+/* Footer social link icons */
+.footer .footer__link-item[href*="linkedin.com"],
+.footer .footer__link-item[href*="github.com"],
+.footer .footer__link-item[href*="facebook.com"],
+.footer .footer__link-item[href*="leetcode.com"] {
+  align-items: center;
+  display: inline-flex;
+  gap: 0.5rem;
+}
+
+.footer .footer__link-item[href*="linkedin.com"]::before,
+.footer .footer__link-item[href*="github.com"]::before,
+.footer .footer__link-item[href*="facebook.com"]::before,
+.footer .footer__link-item[href*="leetcode.com"]::before {
+  color: var(--ifm-color-emphasis-200);
+  display: inline-block;
+  font-size: 1rem;
+  line-height: 1;
+  text-rendering: auto;
+}
+
+.footer .footer__link-item[href*="linkedin.com"]::before {
+  content: "\f08c";
+  font-family: "Font Awesome 7 Brands", "Font Awesome 6 Brands";
+  font-weight: 400;
+}
+
+.footer .footer__link-item[href*="github.com"]::before {
+  content: "\f09b";
+  font-family: "Font Awesome 7 Brands", "Font Awesome 6 Brands";
+  font-weight: 400;
+}
+
+.footer .footer__link-item[href*="facebook.com"]::before {
+  content: "\f09a";
+  font-family: "Font Awesome 7 Brands", "Font Awesome 6 Brands";
+  font-weight: 400;
+}
+
+.footer .footer__link-item[href*="leetcode.com"]::before {
+  content: "\f121";
+  font-family: "Font Awesome 7 Free", "Font Awesome 6 Free";
+  font-weight: 900;
 }
