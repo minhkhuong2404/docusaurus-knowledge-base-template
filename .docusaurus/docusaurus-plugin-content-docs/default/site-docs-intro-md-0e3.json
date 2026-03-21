@@ -1,7 +1,7 @@
 {
   "id": "intro",
   "title": "Welcome",
-  "description": "Internal engineering learning hub with practical guides across Java, Spring, system design, Kafka, databases, and operating systems.",
+  "description": "Engineering knowledge base for practical learning, interview preparation, and real-world system design decisions.",
   "source": "@site/docs/intro.md",
   "sourceDirName": ".",
   "slug": "/",
@@ -34,7 +34,7 @@
   "frontMatter": {
     "title": "Welcome",
     "slug": "/",
-    "description": "Internal engineering learning hub with practical guides across Java, Spring, system design, Kafka, databases, and operating systems.",
+    "description": "Engineering knowledge base for practical learning, interview preparation, and real-world system design decisions.",
     "tags": [
       "engineering",
       "documentation",
