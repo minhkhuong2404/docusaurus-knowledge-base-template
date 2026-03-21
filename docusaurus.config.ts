@@ -10,6 +10,18 @@ const config: Config = {
 
 	organizationName: 'minhkhuong2404',
 	projectName: 'docusaurus-knowledge-base-template',
+	future: {
+		v4: true,
+		experimental_faster: {
+			swcJsLoader: true,
+			swcJsMinimizer: true,
+			swcHtmlMinimizer: true,
+			lightningCssMinimizer: true,
+			mdxCrossCompilerCache: true,
+			rspackBundler: true, // required flag
+			rspackPersistentCache: true, // new flag
+		},
+	},
 
 	presets: [
 		[
@@ -36,8 +48,8 @@ const config: Config = {
 				indexPages: false,
 				docsRouteBasePath: '/',
 				language: ['en'],
-				highlightSearchTermsOnTargetPage: true,
-				explicitSearchResultPath: true,
+				highlightSearchTermsOnTargetPage: false,
+				explicitSearchResultPath: false,
 				searchResultLimits: 8,
 				searchBarShortcut: true,
 				searchBarShortcutHint: true,
@@ -113,7 +125,7 @@ const config: Config = {
 					]
 				}
 			],
-			copyright: `Copyright © ${new Date().getFullYear()} by Khuong Lu,  Inc. Built with Docusaurus and Github Page. ❤️`
+			copyright: `Copyright © ${new Date().getFullYear()} by Khuong Lu,  Dev. Built with Docusaurus and Github Page. ❤️`
 		},
 	},
 }

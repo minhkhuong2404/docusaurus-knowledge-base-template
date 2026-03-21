@@ -10,6 +10,27 @@ export default {
   "baseUrl": "/",
   "organizationName": "minhkhuong2404",
   "projectName": "docusaurus-knowledge-base-template",
+  "future": {
+    "v4": {
+      "removeLegacyPostBuildHeadAttribute": true,
+      "useCssCascadeLayers": true
+    },
+    "experimental_faster": {
+      "swcJsLoader": true,
+      "swcJsMinimizer": true,
+      "swcHtmlMinimizer": true,
+      "lightningCssMinimizer": true,
+      "mdxCrossCompilerCache": true,
+      "rspackBundler": true,
+      "rspackPersistentCache": true,
+      "ssgWorkerThreads": false
+    },
+    "experimental_storage": {
+      "type": "localStorage",
+      "namespace": false
+    },
+    "experimental_router": "browser"
+  },
   "presets": [
     [
       "classic",
@@ -36,8 +57,8 @@ export default {
         "language": [
           "en"
         ],
-        "highlightSearchTermsOnTargetPage": true,
-        "explicitSearchResultPath": true,
+        "highlightSearchTermsOnTargetPage": false,
+        "explicitSearchResultPath": false,
         "searchResultLimits": 8,
         "searchBarShortcut": true,
         "searchBarShortcutHint": true,
@@ -296,7 +317,7 @@ export default {
           ]
         }
       ],
-      "copyright": "Copyright © 2026 by Khuong Lu,  Inc. Built with Docusaurus and Github Page. ❤️"
+      "copyright": "Copyright © 2026 by Khuong Lu,  Dev. Built with Docusaurus and Github Page. ❤️"
     },
     "blog": {
       "sidebar": {
@@ -317,27 +338,6 @@ export default {
       "en"
     ],
     "localeConfigs": {}
-  },
-  "future": {
-    "v4": {
-      "removeLegacyPostBuildHeadAttribute": false,
-      "useCssCascadeLayers": false
-    },
-    "experimental_faster": {
-      "swcJsLoader": false,
-      "swcJsMinimizer": false,
-      "swcHtmlMinimizer": false,
-      "lightningCssMinimizer": false,
-      "mdxCrossCompilerCache": false,
-      "rspackBundler": false,
-      "rspackPersistentCache": false,
-      "ssgWorkerThreads": false
-    },
-    "experimental_storage": {
-      "type": "localStorage",
-      "namespace": false
-    },
-    "experimental_router": "browser"
   },
   "onBrokenLinks": "throw",
   "onBrokenAnchors": "warn",

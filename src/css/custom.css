@@ -1,4 +1,6 @@
-@import "@fortawesome/fontawesome-free/css/all.min.css";
+@import "@fortawesome/fontawesome-free/css/fontawesome.min.css";
+@import "@fortawesome/fontawesome-free/css/brands.min.css";
+@import "@fortawesome/fontawesome-free/css/solid.min.css";
 
 /* ============================================
    Code Block Styling — Catppuccin Mocha Theme
@@ -136,6 +138,7 @@ div[class*="codeBlockTitle"] {
   align-items: center;
   display: inline-flex;
   gap: 0.5rem;
+  text-decoration: none;
 }
 
 .footer .footer__link-item[href*="linkedin.com"]::before,

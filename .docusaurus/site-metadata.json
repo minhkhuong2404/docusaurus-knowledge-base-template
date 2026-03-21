@@ -2,6 +2,11 @@
   "docusaurusVersion": "3.9.2",
   "siteVersion": "1.0.0",
   "pluginVersions": {
+    "docusaurus-plugin-css-cascade-layers": {
+      "type": "package",
+      "name": "@docusaurus/plugin-css-cascade-layers",
+      "version": "3.9.2"
+    },
     "docusaurus-plugin-content-docs": {
       "type": "package",
       "name": "@docusaurus/plugin-content-docs",
@@ -12,9 +17,9 @@
       "name": "@docusaurus/plugin-content-pages",
       "version": "3.9.2"
     },
-    "docusaurus-plugin-debug": {
+    "docusaurus-plugin-sitemap": {
       "type": "package",
-      "name": "@docusaurus/plugin-debug",
+      "name": "@docusaurus/plugin-sitemap",
       "version": "3.9.2"
     },
     "docusaurus-plugin-svgr": {
