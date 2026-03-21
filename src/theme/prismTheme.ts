@@ -65,11 +65,11 @@ const theme: PrismTheme = {
 		},
 		{
 			types: ['deleted'],
-			style: { color: '#ff8fab', textDecoration: 'line-through' },
+			style: { color: '#ff8fab', textDecorationLine: 'line-through' },
 		},
 		{
 			types: ['inserted'],
-			style: { color: '#8ef7b2', textDecoration: 'underline' },
+			style: { color: '#8ef7b2', textDecorationLine: 'underline' },
 		},
 		{
 			types: ['changed'],
