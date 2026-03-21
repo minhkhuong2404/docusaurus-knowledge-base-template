@@ -1,7 +1,13 @@
 ---
 id: java-interview-questions-trickiest
 title: 70+ Trickiest Core Java Interview Questions and Answers
-sidebar_label: Java Interview Questions
+sidebar_label: Java Interview Questions Trickiest
+description: A comprehensive guide covering 70+ tricky, real-world interview questions on Core Java for experienced developers.
+tags:
+  - Java
+  - Core Java
+  - Interview Questions
+  - Tricky Questions
 ---
 
 # 70+ Trickiest Core Java Interview Questions and Answers

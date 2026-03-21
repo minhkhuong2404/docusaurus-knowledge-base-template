@@ -4,11 +4,11 @@ import ComponentCreator from '@docusaurus/ComponentCreator';
 export default [
   {
     path: '/',
-    component: ComponentCreator('/', 'c38'),
+    component: ComponentCreator('/', '0ce'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'e81'),
+        component: ComponentCreator('/', '635'),
         routes: [
           {
             path: '/tags',
@@ -3536,6 +3536,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/tricky-questions',
+            component: ComponentCreator('/tags/tricky-questions', '0e1'),
+            exact: true
+          },
+          {
             path: '/tags/troubleshooting',
             component: ComponentCreator('/tags/troubleshooting', '220'),
             exact: true
@@ -3727,7 +3732,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '082'),
+            component: ComponentCreator('/', '857'),
             routes: [
               {
                 path: '/aws',
@@ -4558,42 +4563,6 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/interview-questions/accenture-java-interview',
-                component: ComponentCreator('/technical-knowledge/interview-questions/accenture-java-interview', '815'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/interview-questions/break-singleton-java',
-                component: ComponentCreator('/technical-knowledge/interview-questions/break-singleton-java', 'e6f'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/interview-questions/concurrent-collections-interview',
-                component: ComponentCreator('/technical-knowledge/interview-questions/concurrent-collections-interview', '01b'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/interview-questions/concurrent-collections-tricky',
-                component: ComponentCreator('/technical-knowledge/interview-questions/concurrent-collections-tricky', '970'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/interview-questions/exception-handling-advanced',
-                component: ComponentCreator('/technical-knowledge/interview-questions/exception-handling-advanced', 'fd4'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/interview-questions/experienced-java-backend-interview',
-                component: ComponentCreator('/technical-knowledge/interview-questions/experienced-java-backend-interview', 'a36'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
                 path: '/technical-knowledge/interview-questions/genz-career/company/accenture-java-developer-interview-16lpa',
                 component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/accenture-java-developer-interview-16lpa', '860'),
                 exact: true,
@@ -4602,6 +4571,12 @@ export default [
               {
                 path: '/technical-knowledge/interview-questions/genz-career/company/accenture-java-developer-interview-questions',
                 component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/accenture-java-developer-interview-questions', '9f4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/company/accenture-java-interview',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/accenture-java-interview', 'f6a'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -4870,116 +4845,145 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/interview-questions/java-8-optional-crud',
-                component: ComponentCreator('/technical-knowledge/interview-questions/java-8-optional-crud', '461'),
+                path: '/technical-knowledge/interview-questions/java/break-singleton-java',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java/break-singleton-java', 'cf9'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/interview-questions/java-8-tricky-interview-questions',
-                component: ComponentCreator('/technical-knowledge/interview-questions/java-8-tricky-interview-questions', '24b'),
+                path: '/technical-knowledge/interview-questions/java/concurrent-collections-interview',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java/concurrent-collections-interview', 'c51'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/interview-questions/java-collections-differences',
-                component: ComponentCreator('/technical-knowledge/interview-questions/java-collections-differences', '4cf'),
+                path: '/technical-knowledge/interview-questions/java/concurrent-collections-tricky',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java/concurrent-collections-tricky', '266'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/interview-questions/java-collections-interview',
-                component: ComponentCreator('/technical-knowledge/interview-questions/java-collections-interview', '18b'),
+                path: '/technical-knowledge/interview-questions/java/exception-handling-advanced',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java/exception-handling-advanced', 'fcf'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/interview-questions/java-collections-interview-p2',
-                component: ComponentCreator('/technical-knowledge/interview-questions/java-collections-interview-p2', '182'),
+                path: '/technical-knowledge/interview-questions/java/experienced-java-backend-interview',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java/experienced-java-backend-interview', 'b43'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/interview-questions/java-comprehensive-interview',
-                component: ComponentCreator('/technical-knowledge/interview-questions/java-comprehensive-interview', 'e98'),
+                path: '/technical-knowledge/interview-questions/java/java-8-optional-crud',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java/java-8-optional-crud', '43e'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/interview-questions/java-date-time-api',
-                component: ComponentCreator('/technical-knowledge/interview-questions/java-date-time-api', 'cce'),
+                path: '/technical-knowledge/interview-questions/java/java-8-tricky-interview-questions',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java/java-8-tricky-interview-questions', '526'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/interview-questions/java-experienced-interview-p1',
-                component: ComponentCreator('/technical-knowledge/interview-questions/java-experienced-interview-p1', 'a66'),
+                path: '/technical-knowledge/interview-questions/java/java-collections-differences',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java/java-collections-differences', '766'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/interview-questions/java-interview-questions',
-                component: ComponentCreator('/technical-knowledge/interview-questions/java-interview-questions', 'b3f'),
+                path: '/technical-knowledge/interview-questions/java/java-collections-interview',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java/java-collections-interview', '221'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/interview-questions/java-lead-interview-scenarios',
-                component: ComponentCreator('/technical-knowledge/interview-questions/java-lead-interview-scenarios', 'ae9'),
+                path: '/technical-knowledge/interview-questions/java/java-collections-interview-p2',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java/java-collections-interview-p2', '180'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/interview-questions/java-multithreading-interview',
-                component: ComponentCreator('/technical-knowledge/interview-questions/java-multithreading-interview', '726'),
+                path: '/technical-knowledge/interview-questions/java/java-comprehensive-interview',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java/java-comprehensive-interview', 'f18'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/interview-questions/java-runtime-exceptions',
-                component: ComponentCreator('/technical-knowledge/interview-questions/java-runtime-exceptions', 'cc1'),
+                path: '/technical-knowledge/interview-questions/java/java-date-time-api',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java/java-date-time-api', '42c'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/interview-questions/java-string-basics',
-                component: ComponentCreator('/technical-knowledge/interview-questions/java-string-basics', '5df'),
+                path: '/technical-knowledge/interview-questions/java/java-experienced-interview-p1',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java/java-experienced-interview-p1', '93b'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/interview-questions/java-string-rotation',
-                component: ComponentCreator('/technical-knowledge/interview-questions/java-string-rotation', '350'),
+                path: '/technical-knowledge/interview-questions/java/java-interview-questions',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java/java-interview-questions', '0b1'),
+                exact: true
+              },
+              {
+                path: '/technical-knowledge/interview-questions/java/java-lead-interview-scenarios',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java/java-lead-interview-scenarios', '501'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/interview-questions/java-tricky-core-questions',
-                component: ComponentCreator('/technical-knowledge/interview-questions/java-tricky-core-questions', '257'),
+                path: '/technical-knowledge/interview-questions/java/java-multithreading-interview',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java/java-multithreading-interview', '235'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/interview-questions/spring-boot-interview',
-                component: ComponentCreator('/technical-knowledge/interview-questions/spring-boot-interview', '704'),
+                path: '/technical-knowledge/interview-questions/java/java-runtime-exceptions',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java/java-runtime-exceptions', '766'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/interview-questions/spring-boot-real-time-questions',
-                component: ComponentCreator('/technical-knowledge/interview-questions/spring-boot-real-time-questions', '5d0'),
+                path: '/technical-knowledge/interview-questions/java/java-string-basics',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java/java-string-basics', '48f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/interview-questions/sql-interview-questions',
-                component: ComponentCreator('/technical-knowledge/interview-questions/sql-interview-questions', 'a33'),
+                path: '/technical-knowledge/interview-questions/java/java-string-rotation',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java/java-string-rotation', '33a'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/interview-questions/tricky-java-interview',
-                component: ComponentCreator('/technical-knowledge/interview-questions/tricky-java-interview', '754'),
+                path: '/technical-knowledge/interview-questions/java/java-tricky-core-questions',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java/java-tricky-core-questions', '8c6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/java/spring-boot-interview',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java/spring-boot-interview', 'dfa'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/java/spring-boot-real-time-questions',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java/spring-boot-real-time-questions', '934'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/java/sql-interview-questions',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java/sql-interview-questions', '91c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/java/tricky-java-interview',
+                component: ComponentCreator('/technical-knowledge/interview-questions/java/tricky-java-interview', 'a51'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

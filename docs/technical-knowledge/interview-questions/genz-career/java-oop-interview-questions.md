@@ -1,6 +1,7 @@
 ---
 id: java-oops-interview-guide
 title: 50+ Real & Tricky Java OOPs Interview Questions
+sidebar_label: Java OOPs Interview Questions Tricky
 tags:
   - Java
   - OOPs

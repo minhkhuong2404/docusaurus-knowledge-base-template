@@ -1,11 +1,11 @@
 {
-  "/-c38": {
+  "/-0ce": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-e81": {
+  "/-635": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -2829,6 +2829,10 @@
     "__comp": "df203c0f",
     "__props": "41cf1a72"
   },
+  "/tags/tricky-questions-0e1": {
+    "__comp": "df203c0f",
+    "__props": "e90923a9"
+  },
   "/tags/troubleshooting-220": {
     "__comp": "df203c0f",
     "__props": "04aa852f"
@@ -2981,7 +2985,7 @@
     "__comp": "df203c0f",
     "__props": "cdd99891"
   },
-  "/-082": {
+  "/-857": {
     "__comp": "a94703ab"
   },
   "/aws-102": {
@@ -3536,30 +3540,6 @@
     "__comp": "17896441",
     "content": "e775c6ed"
   },
-  "/technical-knowledge/interview-questions/accenture-java-interview-815": {
-    "__comp": "17896441",
-    "content": "a13efeec"
-  },
-  "/technical-knowledge/interview-questions/break-singleton-java-e6f": {
-    "__comp": "17896441",
-    "content": "73f7224f"
-  },
-  "/technical-knowledge/interview-questions/concurrent-collections-interview-01b": {
-    "__comp": "17896441",
-    "content": "6117d6d0"
-  },
-  "/technical-knowledge/interview-questions/concurrent-collections-tricky-970": {
-    "__comp": "17896441",
-    "content": "2c69ae9e"
-  },
-  "/technical-knowledge/interview-questions/exception-handling-advanced-fd4": {
-    "__comp": "17896441",
-    "content": "ec0c7664"
-  },
-  "/technical-knowledge/interview-questions/experienced-java-backend-interview-a36": {
-    "__comp": "17896441",
-    "content": "f93782f9"
-  },
   "/technical-knowledge/interview-questions/genz-career/company/accenture-java-developer-interview-16lpa-860": {
     "__comp": "17896441",
     "content": "dbc796ca"
@@ -3567,6 +3547,10 @@
   "/technical-knowledge/interview-questions/genz-career/company/accenture-java-developer-interview-questions-9f4": {
     "__comp": "17896441",
     "content": "20094d5d"
+  },
+  "/technical-knowledge/interview-questions/genz-career/company/accenture-java-interview-f6a": {
+    "__comp": "17896441",
+    "content": "6811ab0e"
   },
   "/technical-knowledge/interview-questions/genz-career/company/airtel-java-developer-interview-questions-a17": {
     "__comp": "17896441",
@@ -3744,81 +3728,101 @@
     "__comp": "17896441",
     "content": "386b87ee"
   },
-  "/technical-knowledge/interview-questions/java-8-optional-crud-461": {
+  "/technical-knowledge/interview-questions/java/break-singleton-java-cf9": {
     "__comp": "17896441",
-    "content": "85ec5a08"
+    "content": "16a82f5e"
   },
-  "/technical-knowledge/interview-questions/java-8-tricky-interview-questions-24b": {
+  "/technical-knowledge/interview-questions/java/concurrent-collections-interview-c51": {
     "__comp": "17896441",
-    "content": "e21c8290"
+    "content": "6d98976b"
   },
-  "/technical-knowledge/interview-questions/java-collections-differences-4cf": {
+  "/technical-knowledge/interview-questions/java/concurrent-collections-tricky-266": {
     "__comp": "17896441",
-    "content": "8d188703"
+    "content": "6835911e"
   },
-  "/technical-knowledge/interview-questions/java-collections-interview-18b": {
+  "/technical-knowledge/interview-questions/java/exception-handling-advanced-fcf": {
     "__comp": "17896441",
-    "content": "28600150"
+    "content": "95a5837e"
   },
-  "/technical-knowledge/interview-questions/java-collections-interview-p2-182": {
+  "/technical-knowledge/interview-questions/java/experienced-java-backend-interview-b43": {
     "__comp": "17896441",
-    "content": "b75fffb7"
+    "content": "29d26014"
   },
-  "/technical-knowledge/interview-questions/java-comprehensive-interview-e98": {
+  "/technical-knowledge/interview-questions/java/java-8-optional-crud-43e": {
     "__comp": "17896441",
-    "content": "a4d85c14"
+    "content": "f41bb2e4"
   },
-  "/technical-knowledge/interview-questions/java-date-time-api-cce": {
+  "/technical-knowledge/interview-questions/java/java-8-tricky-interview-questions-526": {
     "__comp": "17896441",
-    "content": "80bed324"
+    "content": "8614bac8"
   },
-  "/technical-knowledge/interview-questions/java-experienced-interview-p1-a66": {
+  "/technical-knowledge/interview-questions/java/java-collections-differences-766": {
     "__comp": "17896441",
-    "content": "13508d41"
+    "content": "706d8acb"
   },
-  "/technical-knowledge/interview-questions/java-interview-questions-b3f": {
+  "/technical-knowledge/interview-questions/java/java-collections-interview-221": {
     "__comp": "17896441",
-    "content": "ea318ef0"
+    "content": "bac09931"
   },
-  "/technical-knowledge/interview-questions/java-lead-interview-scenarios-ae9": {
+  "/technical-knowledge/interview-questions/java/java-collections-interview-p2-180": {
     "__comp": "17896441",
-    "content": "c28fb002"
+    "content": "3f8e6355"
   },
-  "/technical-knowledge/interview-questions/java-multithreading-interview-726": {
+  "/technical-knowledge/interview-questions/java/java-comprehensive-interview-f18": {
     "__comp": "17896441",
-    "content": "330eeee6"
+    "content": "1a4e51be"
   },
-  "/technical-knowledge/interview-questions/java-runtime-exceptions-cc1": {
+  "/technical-knowledge/interview-questions/java/java-date-time-api-42c": {
     "__comp": "17896441",
-    "content": "9f7d844d"
+    "content": "69e483c5"
   },
-  "/technical-knowledge/interview-questions/java-string-basics-5df": {
+  "/technical-knowledge/interview-questions/java/java-experienced-interview-p1-93b": {
     "__comp": "17896441",
-    "content": "4103708a"
+    "content": "39204042"
   },
-  "/technical-knowledge/interview-questions/java-string-rotation-350": {
+  "/technical-knowledge/interview-questions/java/java-interview-questions-0b1": {
     "__comp": "17896441",
-    "content": "e12b962d"
+    "content": "ce75ad85"
   },
-  "/technical-knowledge/interview-questions/java-tricky-core-questions-257": {
+  "/technical-knowledge/interview-questions/java/java-lead-interview-scenarios-501": {
     "__comp": "17896441",
-    "content": "91a2babd"
+    "content": "6c0fe219"
   },
-  "/technical-knowledge/interview-questions/spring-boot-interview-704": {
+  "/technical-knowledge/interview-questions/java/java-multithreading-interview-235": {
     "__comp": "17896441",
-    "content": "7a452e2d"
+    "content": "3ecdd328"
   },
-  "/technical-knowledge/interview-questions/spring-boot-real-time-questions-5d0": {
+  "/technical-knowledge/interview-questions/java/java-runtime-exceptions-766": {
     "__comp": "17896441",
-    "content": "9e957c99"
+    "content": "3d94c26e"
   },
-  "/technical-knowledge/interview-questions/sql-interview-questions-a33": {
+  "/technical-knowledge/interview-questions/java/java-string-basics-48f": {
     "__comp": "17896441",
-    "content": "73c0ffd8"
+    "content": "8bb17dfc"
   },
-  "/technical-knowledge/interview-questions/tricky-java-interview-754": {
+  "/technical-knowledge/interview-questions/java/java-string-rotation-33a": {
     "__comp": "17896441",
-    "content": "dad6cb20"
+    "content": "4809204a"
+  },
+  "/technical-knowledge/interview-questions/java/java-tricky-core-questions-8c6": {
+    "__comp": "17896441",
+    "content": "e7946e9d"
+  },
+  "/technical-knowledge/interview-questions/java/spring-boot-interview-dfa": {
+    "__comp": "17896441",
+    "content": "c45457bd"
+  },
+  "/technical-knowledge/interview-questions/java/spring-boot-real-time-questions-934": {
+    "__comp": "17896441",
+    "content": "74f0c56d"
+  },
+  "/technical-knowledge/interview-questions/java/sql-interview-questions-91c": {
+    "__comp": "17896441",
+    "content": "ce3447ab"
+  },
+  "/technical-knowledge/interview-questions/java/tricky-java-interview-a51": {
+    "__comp": "17896441",
+    "content": "be1ca738"
   },
   "/technical-knowledge/java/java-collections-5a4": {
     "__comp": "17896441",

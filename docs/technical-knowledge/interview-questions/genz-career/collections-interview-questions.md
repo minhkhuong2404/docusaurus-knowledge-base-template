@@ -1,6 +1,7 @@
 ---
 id: java-collections-interview-questions
 title: 50+ Real & Tricky Java Collection Framework Interview Questions
+sidebar_label: Java Collections Interview Questions Tricky
 description: A comprehensive guide covering 50+ tricky, real-world interview questions on the Java Collection Framework for experienced developers.
 tags:
   - Java

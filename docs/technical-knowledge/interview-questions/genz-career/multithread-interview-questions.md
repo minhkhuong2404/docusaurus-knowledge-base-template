@@ -1,6 +1,7 @@
 ---
 id: java-multithreading-interview-guide
 title: 40+ Java Multithreading & Concurrency Interview Questions
+sidebar_label: Java Multithreading Interview Questions Tricky
 tags:
   - Java
   - Multithreading
