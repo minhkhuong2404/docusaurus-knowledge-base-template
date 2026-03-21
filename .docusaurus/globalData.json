@@ -11,6 +11,71 @@
           "mainDocId": "intro",
           "docs": [
             {
+              "id": "books/effective-java/chapter-02-creating-destroying-objects",
+              "path": "/books/effective-java/chapter-02-creating-destroying-objects",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/effective-java/chapter-03-methods-common-to-all-objects",
+              "path": "/books/effective-java/chapter-03-methods-common-to-all-objects",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/effective-java/chapter-04-classes-and-interfaces",
+              "path": "/books/effective-java/chapter-04-classes-and-interfaces",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/effective-java/chapter-05-generics",
+              "path": "/books/effective-java/chapter-05-generics",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/effective-java/chapter-06-enums-and-annotations",
+              "path": "/books/effective-java/chapter-06-enums-and-annotations",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/effective-java/chapter-07-lambdas-and-streams",
+              "path": "/books/effective-java/chapter-07-lambdas-and-streams",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/effective-java/chapter-08-methods",
+              "path": "/books/effective-java/chapter-08-methods",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/effective-java/chapter-09-general-programming",
+              "path": "/books/effective-java/chapter-09-general-programming",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/effective-java/chapter-10-exceptions",
+              "path": "/books/effective-java/chapter-10-exceptions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/effective-java/chapter-11-concurrency",
+              "path": "/books/effective-java/chapter-11-concurrency",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/effective-java/chapter-12-serialization",
+              "path": "/books/effective-java/chapter-12-serialization",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/effective-java/introduction",
+              "path": "/books/effective-java/introduction",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/effective-java/items-index",
+              "path": "/books/effective-java/items-index",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "intro",
               "path": "/",
               "sidebar": "tutorialSidebar"
@@ -658,6 +723,236 @@
             {
               "id": "technical-knowledge/interview-questions/experienced-java-backend-interview",
               "path": "/technical-knowledge/interview-questions/experienced-java-backend-interview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/company/accenture-java-developer-interview-16lpa",
+              "path": "/technical-knowledge/interview-questions/genz-career/company/accenture-java-developer-interview-16lpa",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/company/accenture-java-developer-interview-questions",
+              "path": "/technical-knowledge/interview-questions/genz-career/company/accenture-java-developer-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/company/airtel-java-developer-interview-questions",
+              "path": "/technical-knowledge/interview-questions/genz-career/company/airtel-java-developer-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/company/capgemini-java-developer-interview-questions",
+              "path": "/technical-knowledge/interview-questions/genz-career/company/capgemini-java-developer-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/company/coforge-java-developer-interview-22lpa",
+              "path": "/technical-knowledge/interview-questions/genz-career/company/coforge-java-developer-interview-22lpa",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/company/cognizant-fresher-java-developer-interview",
+              "path": "/technical-knowledge/interview-questions/genz-career/company/cognizant-fresher-java-developer-interview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/company/deloitte-java-developer-interview-17lpa",
+              "path": "/technical-knowledge/interview-questions/genz-career/company/deloitte-java-developer-interview-17lpa",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/company/deloitte-java-developer-interview-questions",
+              "path": "/technical-knowledge/interview-questions/genz-career/company/deloitte-java-developer-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/company/epam-java-developer-interview-22lpa",
+              "path": "/technical-knowledge/interview-questions/genz-career/company/epam-java-developer-interview-22lpa",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/company/hashedin-java-developer-interview-questions",
+              "path": "/technical-knowledge/interview-questions/genz-career/company/hashedin-java-developer-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/company/hcl-java-fullstack-developer-interview",
+              "path": "/technical-knowledge/interview-questions/genz-career/company/hcl-java-fullstack-developer-interview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/company/ibm-java-developer-interview-experience",
+              "path": "/technical-knowledge/interview-questions/genz-career/company/ibm-java-developer-interview-experience",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/company/infosys-java-developer-interview-17lpa",
+              "path": "/technical-knowledge/interview-questions/genz-career/company/infosys-java-developer-interview-17lpa",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/company/java-developer-interview-iris",
+              "path": "/technical-knowledge/interview-questions/genz-career/company/java-developer-interview-iris",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/company/ltimindtree-java-developer-interview-questions",
+              "path": "/technical-knowledge/interview-questions/genz-career/company/ltimindtree-java-developer-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/company/nagarro-java-developer-interview-questions",
+              "path": "/technical-knowledge/interview-questions/genz-career/company/nagarro-java-developer-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/company/ntt-data-java-developer-interview",
+              "path": "/technical-knowledge/interview-questions/genz-career/company/ntt-data-java-developer-interview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/company/oracle-java-developer-interview-questions",
+              "path": "/technical-knowledge/interview-questions/genz-career/company/oracle-java-developer-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/company/paytm-java-developer-interview-questions",
+              "path": "/technical-knowledge/interview-questions/genz-career/company/paytm-java-developer-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/company/pwc-java-developer-interview-questions",
+              "path": "/technical-knowledge/interview-questions/genz-career/company/pwc-java-developer-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/company/tcs-java-developer-interview-13lpa",
+              "path": "/technical-knowledge/interview-questions/genz-career/company/tcs-java-developer-interview-13lpa",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/company/tech-mahindra-java-developer-interview",
+              "path": "/technical-knowledge/interview-questions/genz-career/company/tech-mahindra-java-developer-interview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/company/walmart-java-developer-interview-30lpa",
+              "path": "/technical-knowledge/interview-questions/genz-career/company/walmart-java-developer-interview-30lpa",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/company/wipro-fullstack-java-developer-interview",
+              "path": "/technical-knowledge/interview-questions/genz-career/company/wipro-fullstack-java-developer-interview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/company/wipro-java-developer-interview-questions",
+              "path": "/technical-knowledge/interview-questions/genz-career/company/wipro-java-developer-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/java-collections-interview-questions",
+              "path": "/technical-knowledge/interview-questions/genz-career/java-collections-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/java-interview-questions-100",
+              "path": "/technical-knowledge/interview-questions/genz-career/java-interview-questions-100",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/java-interview-questions-trickiest",
+              "path": "/technical-knowledge/interview-questions/genz-career/java-interview-questions-trickiest",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/java-multithreading-interview-guide",
+              "path": "/technical-knowledge/interview-questions/genz-career/java-multithreading-interview-guide",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/java-oops-interview-guide",
+              "path": "/technical-knowledge/interview-questions/genz-career/java-oops-interview-guide",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/mock/accenture-java-springboot-interview-3-years",
+              "path": "/technical-knowledge/interview-questions/genz-career/mock/accenture-java-springboot-interview-3-years",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/mock/cognizant-java-developer-interview-3-years",
+              "path": "/technical-knowledge/interview-questions/genz-career/mock/cognizant-java-developer-interview-3-years",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/mock/epam-java-developer-interview-experience",
+              "path": "/technical-knowledge/interview-questions/genz-career/mock/epam-java-developer-interview-experience",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/mock/hcl-java-developer-interview-experience",
+              "path": "/technical-knowledge/interview-questions/genz-career/mock/hcl-java-developer-interview-experience",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/mock/ibm-java-springboot-interview-3-years",
+              "path": "/technical-knowledge/interview-questions/genz-career/mock/ibm-java-springboot-interview-3-years",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/mock/paytm-java-developer-interview-first-round",
+              "path": "/technical-knowledge/interview-questions/genz-career/mock/paytm-java-developer-interview-first-round",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/mock/tcs-java-springboot-interview-3-years",
+              "path": "/technical-knowledge/interview-questions/genz-career/mock/tcs-java-springboot-interview-3-years",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/mock/tcs-ninja-nqt-interview-experience",
+              "path": "/technical-knowledge/interview-questions/genz-career/mock/tcs-ninja-nqt-interview-experience",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/mock/wipro-java-springboot-interview-3-years",
+              "path": "/technical-knowledge/interview-questions/genz-career/mock/wipro-java-springboot-interview-3-years",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/spring-boot/real-time-spring-boot-interview-questions",
+              "path": "/technical-knowledge/interview-questions/genz-career/spring-boot/real-time-spring-boot-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/spring-boot/scenario-based-springboot-interview-questions",
+              "path": "/technical-knowledge/interview-questions/genz-career/spring-boot/scenario-based-springboot-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions",
+              "path": "/technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-2",
+              "path": "/technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-2",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-3",
+              "path": "/technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-3",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-4",
+              "path": "/technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-4",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/genz-career/spring-boot/top-spring-security-interview-questions",
+              "path": "/technical-knowledge/interview-questions/genz-career/spring-boot/top-spring-security-interview-questions",
               "sidebar": "tutorialSidebar"
             },
             {

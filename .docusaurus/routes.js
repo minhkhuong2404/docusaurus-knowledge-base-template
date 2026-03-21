@@ -4,11 +4,11 @@ import ComponentCreator from '@docusaurus/ComponentCreator';
 export default [
   {
     path: '/',
-    component: ComponentCreator('/', '898'),
+    component: ComponentCreator('/', 'c38'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '0c4'),
+        component: ComponentCreator('/', 'e81'),
         routes: [
           {
             path: '/tags',
@@ -43,6 +43,11 @@ export default [
           {
             path: '/tags/abstract-factory',
             component: ComponentCreator('/tags/abstract-factory', 'e00'),
+            exact: true
+          },
+          {
+            path: '/tags/accenture',
+            component: ComponentCreator('/tags/accenture', '549'),
             exact: true
           },
           {
@@ -98,6 +103,11 @@ export default [
           {
             path: '/tags/analytics',
             component: ComponentCreator('/tags/analytics', '894'),
+            exact: true
+          },
+          {
+            path: '/tags/angular',
+            component: ComponentCreator('/tags/angular', 'bbd'),
             exact: true
           },
           {
@@ -211,6 +221,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/aws',
+            component: ComponentCreator('/tags/aws', 'ba5'),
+            exact: true
+          },
+          {
             path: '/tags/aws-certification',
             component: ComponentCreator('/tags/aws-certification', 'a6c'),
             exact: true
@@ -233,6 +248,11 @@ export default [
           {
             path: '/tags/backend',
             component: ComponentCreator('/tags/backend', '4ee'),
+            exact: true
+          },
+          {
+            path: '/tags/backend-development',
+            component: ComponentCreator('/tags/backend-development', '3c1'),
             exact: true
           },
           {
@@ -391,6 +411,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/capgemini',
+            component: ComponentCreator('/tags/capgemini', '168'),
+            exact: true
+          },
+          {
             path: '/tags/cardinality',
             component: ComponentCreator('/tags/cardinality', 'dd4'),
             exact: true
@@ -541,8 +566,18 @@ export default [
             exact: true
           },
           {
+            path: '/tags/coforge',
+            component: ComponentCreator('/tags/coforge', '6e1'),
+            exact: true
+          },
+          {
             path: '/tags/cognito',
             component: ComponentCreator('/tags/cognito', 'e99'),
+            exact: true
+          },
+          {
+            path: '/tags/cognizant',
+            component: ComponentCreator('/tags/cognizant', '4be'),
             exact: true
           },
           {
@@ -553,6 +588,11 @@ export default [
           {
             path: '/tags/collections',
             component: ComponentCreator('/tags/collections', 'f92'),
+            exact: true
+          },
+          {
+            path: '/tags/collections-framework',
+            component: ComponentCreator('/tags/collections-framework', 'fd5'),
             exact: true
           },
           {
@@ -846,6 +886,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/deloitte',
+            component: ComponentCreator('/tags/deloitte', '6c8'),
+            exact: true
+          },
+          {
             path: '/tags/dependency-injection',
             component: ComponentCreator('/tags/dependency-injection', '206'),
             exact: true
@@ -1031,6 +1076,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/elastic-search',
+            component: ComponentCreator('/tags/elastic-search', '95d'),
+            exact: true
+          },
+          {
             path: '/tags/elasticache',
             component: ComponentCreator('/tags/elasticache', '17c'),
             exact: true
@@ -1073,6 +1123,11 @@ export default [
           {
             path: '/tags/envoy',
             component: ComponentCreator('/tags/envoy', '7d3'),
+            exact: true
+          },
+          {
+            path: '/tags/epam',
+            component: ComponentCreator('/tags/epam', 'ceb'),
             exact: true
           },
           {
@@ -1281,13 +1336,28 @@ export default [
             exact: true
           },
           {
+            path: '/tags/fresher',
+            component: ComponentCreator('/tags/fresher', '55a'),
+            exact: true
+          },
+          {
             path: '/tags/ftp',
             component: ComponentCreator('/tags/ftp', '001'),
             exact: true
           },
           {
+            path: '/tags/full-stack',
+            component: ComponentCreator('/tags/full-stack', '10d'),
+            exact: true
+          },
+          {
             path: '/tags/full-text-search',
             component: ComponentCreator('/tags/full-text-search', 'c3e'),
+            exact: true
+          },
+          {
+            path: '/tags/fullstack-development',
+            component: ComponentCreator('/tags/fullstack-development', 'ee4'),
             exact: true
           },
           {
@@ -1356,8 +1426,18 @@ export default [
             exact: true
           },
           {
+            path: '/tags/hashed-in',
+            component: ComponentCreator('/tags/hashed-in', '152'),
+            exact: true
+          },
+          {
             path: '/tags/hashing',
             component: ComponentCreator('/tags/hashing', '935'),
+            exact: true
+          },
+          {
+            path: '/tags/hcl',
+            component: ComponentCreator('/tags/hcl', 'a45'),
             exact: true
           },
           {
@@ -1378,6 +1458,11 @@ export default [
           {
             path: '/tags/hibernate',
             component: ComponentCreator('/tags/hibernate', 'd06'),
+            exact: true
+          },
+          {
+            path: '/tags/hibernate-jpa',
+            component: ComponentCreator('/tags/hibernate-jpa', '45b'),
             exact: true
           },
           {
@@ -1446,6 +1531,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/ibm',
+            component: ComponentCreator('/tags/ibm', '181'),
+            exact: true
+          },
+          {
             path: '/tags/idempotency',
             component: ComponentCreator('/tags/idempotency', 'cc3'),
             exact: true
@@ -1488,6 +1578,11 @@ export default [
           {
             path: '/tags/influxdb',
             component: ComponentCreator('/tags/influxdb', 'bae'),
+            exact: true
+          },
+          {
+            path: '/tags/infosys',
+            component: ComponentCreator('/tags/infosys', '4a2'),
             exact: true
           },
           {
@@ -1538,6 +1633,11 @@ export default [
           {
             path: '/tags/interview',
             component: ComponentCreator('/tags/interview', '4d3'),
+            exact: true
+          },
+          {
+            path: '/tags/interview-experience',
+            component: ComponentCreator('/tags/interview-experience', '13b'),
             exact: true
           },
           {
@@ -1881,6 +1981,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/lti-mindtree',
+            component: ComponentCreator('/tags/lti-mindtree', 'b6d'),
+            exact: true
+          },
+          {
             path: '/tags/maps',
             component: ComponentCreator('/tags/maps', '92e'),
             exact: true
@@ -1948,6 +2053,11 @@ export default [
           {
             path: '/tags/mle',
             component: ComponentCreator('/tags/mle', '144'),
+            exact: true
+          },
+          {
+            path: '/tags/mockito',
+            component: ComponentCreator('/tags/mockito', '90c'),
             exact: true
           },
           {
@@ -2101,6 +2211,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/ntt-data',
+            component: ComponentCreator('/tags/ntt-data', '503'),
+            exact: true
+          },
+          {
             path: '/tags/numa',
             component: ComponentCreator('/tags/numa', 'ada'),
             exact: true
@@ -2166,6 +2281,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/oo-ps',
+            component: ComponentCreator('/tags/oo-ps', 'b62'),
+            exact: true
+          },
+          {
             path: '/tags/oop',
             component: ComponentCreator('/tags/oop', '1ef'),
             exact: true
@@ -2213,6 +2333,11 @@ export default [
           {
             path: '/tags/optionals',
             component: ComponentCreator('/tags/optionals', 'fa5'),
+            exact: true
+          },
+          {
+            path: '/tags/oracle',
+            component: ComponentCreator('/tags/oracle', 'd6f'),
             exact: true
           },
           {
@@ -2343,6 +2468,11 @@ export default [
           {
             path: '/tags/payments',
             component: ComponentCreator('/tags/payments', '56c'),
+            exact: true
+          },
+          {
+            path: '/tags/paytm',
+            component: ComponentCreator('/tags/paytm', '3fa'),
             exact: true
           },
           {
@@ -2533,6 +2663,11 @@ export default [
           {
             path: '/tags/pvc',
             component: ComponentCreator('/tags/pvc', '802'),
+            exact: true
+          },
+          {
+            path: '/tags/pw-c',
+            component: ComponentCreator('/tags/pw-c', '3f5'),
             exact: true
           },
           {
@@ -2821,6 +2956,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/scenario-based',
+            component: ComponentCreator('/tags/scenario-based', '076'),
+            exact: true
+          },
+          {
             path: '/tags/scheduling',
             component: ComponentCreator('/tags/scheduling', '331'),
             exact: true
@@ -3011,6 +3151,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/solid-principles',
+            component: ComponentCreator('/tags/solid-principles', '3f2'),
+            exact: true
+          },
+          {
             path: '/tags/spring',
             component: ComponentCreator('/tags/spring', '7a5'),
             exact: true
@@ -3171,6 +3316,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/stream-api',
+            component: ComponentCreator('/tags/stream-api', 'abb'),
+            exact: true
+          },
+          {
             path: '/tags/stream-processing',
             component: ComponentCreator('/tags/stream-processing', '3f6'),
             exact: true
@@ -3278,6 +3428,16 @@ export default [
           {
             path: '/tags/tcpip',
             component: ComponentCreator('/tags/tcpip', 'fc0'),
+            exact: true
+          },
+          {
+            path: '/tags/tcs',
+            component: ComponentCreator('/tags/tcs', '8b6'),
+            exact: true
+          },
+          {
+            path: '/tags/tech-mahindra',
+            component: ComponentCreator('/tags/tech-mahindra', '574'),
             exact: true
           },
           {
@@ -3471,8 +3631,18 @@ export default [
             exact: true
           },
           {
+            path: '/tags/walmart',
+            component: ComponentCreator('/tags/walmart', '021'),
+            exact: true
+          },
+          {
             path: '/tags/web',
             component: ComponentCreator('/tags/web', '4aa'),
+            exact: true
+          },
+          {
+            path: '/tags/web-flux',
+            component: ComponentCreator('/tags/web-flux', 'aa0'),
             exact: true
           },
           {
@@ -3488,6 +3658,11 @@ export default [
           {
             path: '/tags/window-functions',
             component: ComponentCreator('/tags/window-functions', '8f9'),
+            exact: true
+          },
+          {
+            path: '/tags/wipro',
+            component: ComponentCreator('/tags/wipro', '270'),
             exact: true
           },
           {
@@ -3552,7 +3727,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '199'),
+            component: ComponentCreator('/', '082'),
             routes: [
               {
                 path: '/aws',
@@ -3563,6 +3738,84 @@ export default [
               {
                 path: '/banking',
                 component: ComponentCreator('/banking', 'dce'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/effective-java/chapter-02-creating-destroying-objects',
+                component: ComponentCreator('/books/effective-java/chapter-02-creating-destroying-objects', '2ee'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/effective-java/chapter-03-methods-common-to-all-objects',
+                component: ComponentCreator('/books/effective-java/chapter-03-methods-common-to-all-objects', '0a8'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/effective-java/chapter-04-classes-and-interfaces',
+                component: ComponentCreator('/books/effective-java/chapter-04-classes-and-interfaces', '8be'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/effective-java/chapter-05-generics',
+                component: ComponentCreator('/books/effective-java/chapter-05-generics', 'c22'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/effective-java/chapter-06-enums-and-annotations',
+                component: ComponentCreator('/books/effective-java/chapter-06-enums-and-annotations', '689'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/effective-java/chapter-07-lambdas-and-streams',
+                component: ComponentCreator('/books/effective-java/chapter-07-lambdas-and-streams', '997'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/effective-java/chapter-08-methods',
+                component: ComponentCreator('/books/effective-java/chapter-08-methods', 'c58'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/effective-java/chapter-09-general-programming',
+                component: ComponentCreator('/books/effective-java/chapter-09-general-programming', '562'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/effective-java/chapter-10-exceptions',
+                component: ComponentCreator('/books/effective-java/chapter-10-exceptions', '05f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/effective-java/chapter-11-concurrency',
+                component: ComponentCreator('/books/effective-java/chapter-11-concurrency', '597'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/effective-java/chapter-12-serialization',
+                component: ComponentCreator('/books/effective-java/chapter-12-serialization', '16a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/effective-java/introduction',
+                component: ComponentCreator('/books/effective-java/introduction', '648'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/effective-java/items-index',
+                component: ComponentCreator('/books/effective-java/items-index', '69d'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -4337,6 +4590,282 @@ export default [
               {
                 path: '/technical-knowledge/interview-questions/experienced-java-backend-interview',
                 component: ComponentCreator('/technical-knowledge/interview-questions/experienced-java-backend-interview', 'a36'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/company/accenture-java-developer-interview-16lpa',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/accenture-java-developer-interview-16lpa', '860'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/company/accenture-java-developer-interview-questions',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/accenture-java-developer-interview-questions', '9f4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/company/airtel-java-developer-interview-questions',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/airtel-java-developer-interview-questions', 'a17'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/company/capgemini-java-developer-interview-questions',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/capgemini-java-developer-interview-questions', '867'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/company/coforge-java-developer-interview-22lpa',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/coforge-java-developer-interview-22lpa', 'd0c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/company/cognizant-fresher-java-developer-interview',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/cognizant-fresher-java-developer-interview', '044'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/company/deloitte-java-developer-interview-17lpa',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/deloitte-java-developer-interview-17lpa', 'df1'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/company/deloitte-java-developer-interview-questions',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/deloitte-java-developer-interview-questions', 'dbf'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/company/epam-java-developer-interview-22lpa',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/epam-java-developer-interview-22lpa', '8d6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/company/hashedin-java-developer-interview-questions',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/hashedin-java-developer-interview-questions', 'c6f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/company/hcl-java-fullstack-developer-interview',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/hcl-java-fullstack-developer-interview', 'f62'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/company/ibm-java-developer-interview-experience',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/ibm-java-developer-interview-experience', '4b4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/company/infosys-java-developer-interview-17lpa',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/infosys-java-developer-interview-17lpa', '538'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/company/java-developer-interview-iris',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/java-developer-interview-iris', '44c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/company/ltimindtree-java-developer-interview-questions',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/ltimindtree-java-developer-interview-questions', '6a0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/company/nagarro-java-developer-interview-questions',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/nagarro-java-developer-interview-questions', 'd28'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/company/ntt-data-java-developer-interview',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/ntt-data-java-developer-interview', '73e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/company/oracle-java-developer-interview-questions',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/oracle-java-developer-interview-questions', 'a30'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/company/paytm-java-developer-interview-questions',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/paytm-java-developer-interview-questions', 'eee'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/company/pwc-java-developer-interview-questions',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/pwc-java-developer-interview-questions', '521'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/company/tcs-java-developer-interview-13lpa',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/tcs-java-developer-interview-13lpa', '690'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/company/tech-mahindra-java-developer-interview',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/tech-mahindra-java-developer-interview', 'ba0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/company/walmart-java-developer-interview-30lpa',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/walmart-java-developer-interview-30lpa', '914'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/company/wipro-fullstack-java-developer-interview',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/wipro-fullstack-java-developer-interview', '471'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/company/wipro-java-developer-interview-questions',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/wipro-java-developer-interview-questions', '7cf'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/java-collections-interview-questions',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/java-collections-interview-questions', '989'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/java-interview-questions-100',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/java-interview-questions-100', '88d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/java-interview-questions-trickiest',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/java-interview-questions-trickiest', '6a5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/java-multithreading-interview-guide',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/java-multithreading-interview-guide', 'f12'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/java-oops-interview-guide',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/java-oops-interview-guide', '5e9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/mock/accenture-java-springboot-interview-3-years',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/mock/accenture-java-springboot-interview-3-years', '03d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/mock/cognizant-java-developer-interview-3-years',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/mock/cognizant-java-developer-interview-3-years', '468'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/mock/epam-java-developer-interview-experience',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/mock/epam-java-developer-interview-experience', '9b3'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/mock/hcl-java-developer-interview-experience',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/mock/hcl-java-developer-interview-experience', '842'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/mock/ibm-java-springboot-interview-3-years',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/mock/ibm-java-springboot-interview-3-years', '4d0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/mock/paytm-java-developer-interview-first-round',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/mock/paytm-java-developer-interview-first-round', 'fb3'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/mock/tcs-java-springboot-interview-3-years',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/mock/tcs-java-springboot-interview-3-years', '862'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/mock/tcs-ninja-nqt-interview-experience',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/mock/tcs-ninja-nqt-interview-experience', '8ed'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/mock/wipro-java-springboot-interview-3-years',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/mock/wipro-java-springboot-interview-3-years', '97a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/spring-boot/real-time-spring-boot-interview-questions',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/spring-boot/real-time-spring-boot-interview-questions', '6ee'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/spring-boot/scenario-based-springboot-interview-questions',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/spring-boot/scenario-based-springboot-interview-questions', 'a8d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions', 'c39'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-2',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-2', '4b4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-3',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-3', '110'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-4',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-4', '658'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/genz-career/spring-boot/top-spring-security-interview-questions',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/spring-boot/top-spring-security-interview-questions', '7e7'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

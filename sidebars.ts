@@ -791,7 +791,34 @@ const sidebars: SidebarsConfig = {
 		},
 		{
 			type: 'category',
-			label: '🎯 Frequently Asked Interview Questions',
+			label: 'Books',
+			collapsed: false,
+			items: [
+				{
+					type: 'category',
+					label: 'Effective Java',
+					collapsed: false,
+					items: [
+						'books/effective-java/introduction',
+						'books/effective-java/items-index',
+						'books/effective-java/chapter-02-creating-destroying-objects',
+						'books/effective-java/chapter-03-methods-common-to-all-objects',
+						'books/effective-java/chapter-04-classes-and-interfaces',
+						'books/effective-java/chapter-05-generics',
+						'books/effective-java/chapter-06-enums-and-annotations',
+						'books/effective-java/chapter-07-lambdas-and-streams',
+						'books/effective-java/chapter-08-methods',
+						'books/effective-java/chapter-09-general-programming',
+						'books/effective-java/chapter-10-exceptions',
+						'books/effective-java/chapter-11-concurrency',
+						'books/effective-java/chapter-12-serialization'
+					]
+				}
+			]
+		},
+		{
+			type: 'category',
+			label: 'Frequently Asked Interview Questions',
 			collapsed: false,
 			items: [
 				'technical-knowledge/interview-questions/accenture-java-interview',
@@ -818,7 +845,81 @@ const sidebars: SidebarsConfig = {
 				'technical-knowledge/interview-questions/spring-boot-interview',
 				'technical-knowledge/interview-questions/spring-boot-real-time-questions',
 				'technical-knowledge/interview-questions/sql-interview-questions',
-				'technical-knowledge/interview-questions/tricky-java-interview'
+				'technical-knowledge/interview-questions/tricky-java-interview',
+				{
+					type: 'category',
+					label: 'GenZ Career',
+					collapsed: false,
+					items: [
+						'technical-knowledge/interview-questions/genz-career/java-collections-interview-questions',
+						'technical-knowledge/interview-questions/genz-career/java-interview-questions-100',
+						'technical-knowledge/interview-questions/genz-career/java-interview-questions-trickiest',
+						'technical-knowledge/interview-questions/genz-career/java-oops-interview-guide',
+						'technical-knowledge/interview-questions/genz-career/java-multithreading-interview-guide',
+						{
+							type: 'category',
+							label: 'Company',
+							collapsed: false,
+							items: [
+								'technical-knowledge/interview-questions/genz-career/company/accenture-java-developer-interview-questions',
+								'technical-knowledge/interview-questions/genz-career/company/accenture-java-developer-interview-16lpa',
+								'technical-knowledge/interview-questions/genz-career/company/airtel-java-developer-interview-questions',
+								'technical-knowledge/interview-questions/genz-career/company/capgemini-java-developer-interview-questions',
+								'technical-knowledge/interview-questions/genz-career/company/coforge-java-developer-interview-22lpa',
+								'technical-knowledge/interview-questions/genz-career/company/cognizant-fresher-java-developer-interview',
+								'technical-knowledge/interview-questions/genz-career/company/deloitte-java-developer-interview-questions',
+								'technical-knowledge/interview-questions/genz-career/company/deloitte-java-developer-interview-17lpa',
+								'technical-knowledge/interview-questions/genz-career/company/epam-java-developer-interview-22lpa',
+								'technical-knowledge/interview-questions/genz-career/company/hashedin-java-developer-interview-questions',
+								'technical-knowledge/interview-questions/genz-career/company/hcl-java-fullstack-developer-interview',
+								'technical-knowledge/interview-questions/genz-career/company/ibm-java-developer-interview-experience',
+								'technical-knowledge/interview-questions/genz-career/company/infosys-java-developer-interview-17lpa',
+								'technical-knowledge/interview-questions/genz-career/company/java-developer-interview-iris',
+								'technical-knowledge/interview-questions/genz-career/company/ltimindtree-java-developer-interview-questions',
+								'technical-knowledge/interview-questions/genz-career/company/nagarro-java-developer-interview-questions',
+								'technical-knowledge/interview-questions/genz-career/company/ntt-data-java-developer-interview',
+								'technical-knowledge/interview-questions/genz-career/company/oracle-java-developer-interview-questions',
+								'technical-knowledge/interview-questions/genz-career/company/paytm-java-developer-interview-questions',
+								'technical-knowledge/interview-questions/genz-career/company/pwc-java-developer-interview-questions',
+								'technical-knowledge/interview-questions/genz-career/company/tcs-java-developer-interview-13lpa',
+								'technical-knowledge/interview-questions/genz-career/company/tech-mahindra-java-developer-interview',
+								'technical-knowledge/interview-questions/genz-career/company/walmart-java-developer-interview-30lpa',
+								'technical-knowledge/interview-questions/genz-career/company/wipro-fullstack-java-developer-interview',
+								'technical-knowledge/interview-questions/genz-career/company/wipro-java-developer-interview-questions'
+							]
+						},
+						{
+							type: 'category',
+							label: 'Mock',
+							collapsed: false,
+							items: [
+								'technical-knowledge/interview-questions/genz-career/mock/accenture-java-springboot-interview-3-years',
+								'technical-knowledge/interview-questions/genz-career/mock/cognizant-java-developer-interview-3-years',
+								'technical-knowledge/interview-questions/genz-career/mock/epam-java-developer-interview-experience',
+								'technical-knowledge/interview-questions/genz-career/mock/hcl-java-developer-interview-experience',
+								'technical-knowledge/interview-questions/genz-career/mock/ibm-java-springboot-interview-3-years',
+								'technical-knowledge/interview-questions/genz-career/mock/tcs-ninja-nqt-interview-experience',
+								'technical-knowledge/interview-questions/genz-career/mock/paytm-java-developer-interview-first-round',
+								'technical-knowledge/interview-questions/genz-career/mock/tcs-java-springboot-interview-3-years',
+								'technical-knowledge/interview-questions/genz-career/mock/wipro-java-springboot-interview-3-years'
+							]
+						},
+						{
+							type: 'category',
+							label: 'Spring Boot',
+							collapsed: false,
+							items: [
+								'technical-knowledge/interview-questions/genz-career/spring-boot/real-time-spring-boot-interview-questions',
+								'technical-knowledge/interview-questions/genz-career/spring-boot/scenario-based-springboot-interview-questions',
+								'technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions',
+								'technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-2',
+								'technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-3',
+								'technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-4',
+								'technical-knowledge/interview-questions/genz-career/spring-boot/top-spring-security-interview-questions'
+							]
+						}
+					]
+				}
 			]
 		},
 	]
