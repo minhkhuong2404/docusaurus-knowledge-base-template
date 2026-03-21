@@ -141,7 +141,7 @@ D) Lambda SnapStart
 <details>
 <summary>✅ Answer</summary>
 
-**B** — **API Gateway caching** stores Lambda responses at the edge. Subsequent identical requests return from cache in <10ms without invoking Lambda at all. Ideal for cacheable GET endpoints.
+**B** — **API Gateway caching** stores Lambda responses at the edge. Subsequent identical requests return from cache in under 10ms without invoking Lambda at all. Ideal for cacheable GET endpoints.
 </details>
 
 ---

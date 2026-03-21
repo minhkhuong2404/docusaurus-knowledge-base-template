@@ -55,33 +55,34 @@ Domain 1 + 2 = **58%** of the exam. Master Lambda, DynamoDB, S3, IAM, Cognito, a
 ## 🗺️ Study Roadmap
 
 ### Phase 1 — Foundations (Week 1-2)
-- [ ] [IAM & Security Policies](/iam) — roles, policies, STS
-- [ ] [Cognito](/iam/cognito) — User Pools vs Identity Pools
-- [ ] [KMS & Encryption](/security/kms)
-- [ ] [Secrets Manager & Parameter Store](/security/secrets-manager)
+- [ ] [IAM & Security Policies](/technical-knowledge/aws/iam) — roles, policies, STS
+- [ ] [Cognito](/technical-knowledge/aws/iam/cognito) — User Pools vs Identity Pools
+- [ ] [KMS & Encryption](/technical-knowledge/aws/security/kms)
+- [ ] [Secrets Manager & Parameter Store](/technical-knowledge/aws/security/secrets-manager)
 
 ### Phase 2 — Core Compute & APIs (Week 3-4)
-- [ ] [Lambda](/lambda) — triggers, invocation types, concurrency
-- [ ] [API Gateway](/api-gateway) — REST vs HTTP vs WebSocket
-- [ ] [Elastic Beanstalk](/beanstalk) — deployment modes
-- [ ] [ECS & ECR](/containers/ecs-ecr)
+- [ ] [Lambda](/technical-knowledge/aws/lambda) — triggers, invocation types, concurrency
+- [ ] [API Gateway](/technical-knowledge/aws/api-gateway) — REST vs HTTP vs WebSocket
+- [ ] [Elastic Beanstalk](/technical-knowledge/aws/beanstalk) — deployment modes
+- [ ] [ECS & ECR](/technical-knowledge/aws/containers/ecs-ecr)
 
 ### Phase 3 — Data & Storage (Week 5-6)
-- [ ] [S3](/s3) — storage classes, versioning, encryption, presigned URLs
-- [ ] [DynamoDB](/dynamodb) — partition keys, indexes, Streams, DAX
-- [ ] [ElastiCache](/elasticache) — Redis vs Memcached
+- [ ] [S3](/technical-knowledge/aws/s3) — storage classes, versioning, encryption, presigned URLs
+- [ ] [DynamoDB](/technical-knowledge/aws/dynamodb) — partition keys, indexes, Streams, DAX
+- [ ] [ElastiCache](/technical-knowledge/aws/elasticache) — Redis vs Memcached
 
 ### Phase 4 — Messaging & Integration (Week 7)
-- [ ] [SQS](/messaging/sqs) — standard vs FIFO, visibility timeout, DLQ
-- [ ] [SNS](/messaging/sns) — fan-out pattern
-- [ ] [Kinesis](/messaging/kinesis) — Data Streams vs Firehose
-- [ ] [Step Functions](/step-functions)
+- [ ] [SQS](/technical-knowledge/aws/messaging/sqs) — standard vs FIFO, visibility timeout, DLQ
+- [ ] [SNS](/technical-knowledge/aws/messaging/sns) — fan-out pattern
+- [ ] [Kinesis](/technical-knowledge/aws/messaging/kinesis) — Data Streams vs Firehose
+- [ ] [Step Functions](/technical-knowledge/aws/step-functions)
 
 ### Phase 5 — CI/CD & Monitoring (Week 8)
-- [ ] [CodeCommit, CodeBuild, CodeDeploy, CodePipeline](/cicd)
-- [ ] [CloudFormation & SAM](/cloudformation)
-- [ ] [CloudWatch](/monitoring/cloudwatch) — Logs, Metrics, Alarms
-- [ ] [X-Ray](/monitoring/x-ray)
+- [ ] [CodeCommit, CodeBuild, CodeDeploy, CodePipeline](/technical-knowledge/aws/cicd) — end-to-end pipeline
+- [ ] [CloudFormation & SAM](/technical-knowledge/aws/cloudformation) — infrastructure as code
+- [ ] [CloudFront](/technical-knowledge/aws/cloudformation/cloudfront) — CDN basics
+- [ ] [CloudWatch](/technical-knowledge/aws/monitoring/cloudwatch) — Logs, Metrics, Alarms
+- [ ] [X-Ray](/technical-knowledge/aws/monitoring/x-ray)
 
 ---
 
@@ -146,7 +147,10 @@ For "select 2" or "select 3" questions, eliminate wrong answers first. There are
 AWS loves to hide keywords: *most cost-effective*, *least operational overhead*, *highly available*, *serverless*. These narrow the correct answer dramatically.
 :::
 
-:::tip Keyword → Service Mapping
+:::tip Keyword to Service Mapping
+Use this quick mapping during elimination.
+:::
+
 | Keyword | Think of |
 |---|---|
 | Serverless | Lambda, DynamoDB, S3, API Gateway |
@@ -157,7 +161,6 @@ AWS loves to hide keywords: *most cost-effective*, *least operational overhead*,
 | Tracing | X-Ray |
 | Audit logs | CloudTrail |
 | Blue/Green deploy | CodeDeploy or Beanstalk |
-:::
 
 ---
 
@@ -168,19 +171,19 @@ These questions test broad exam knowledge. Detailed questions are in each topic 
 :::
 
 **Q1.** You have 65 questions and 130 minutes. How much average time do you have per question?
-<details>
-<summary>Answer</summary>
-**2 minutes per question.** Flag hard questions and come back. Never leave blanks — there's no penalty for wrong answers.
-</details>
+
+:::note Answer
+**2 minutes per question.** Flag hard questions and come back. Never leave blanks - there is no penalty for wrong answers.
+:::
 
 **Q2.** Which domain has the highest weighting in the DVA-C02 exam?
-<details>
-<summary>Answer</summary>
+
+:::note Answer
 **Domain 1: Development with AWS Services (32%).** Focus heavily on Lambda, DynamoDB, S3, and API Gateway.
-</details>
+:::
 
 **Q3.** A developer needs to pick between storing application secrets or database credentials. Which AWS service is purpose-built for **automatic rotation** of database credentials?
-<details>
-<summary>Answer</summary>
-**AWS Secrets Manager** — it supports automatic rotation for RDS, Redshift, and DocumentDB. SSM Parameter Store does not natively rotate secrets.
-</details>
+
+:::note Answer
+**AWS Secrets Manager** - it supports automatic rotation for RDS, Redshift, and DocumentDB. SSM Parameter Store does not natively rotate secrets.
+:::
