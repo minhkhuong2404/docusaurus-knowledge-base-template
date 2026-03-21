@@ -4,7 +4,7 @@ import ComponentCreator from '@docusaurus/ComponentCreator';
 export default [
   {
     path: '/search',
-    component: ComponentCreator('/search', '5de'),
+    component: ComponentCreator('/search', '822'),
     exact: true
   },
   {

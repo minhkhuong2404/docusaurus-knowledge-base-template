@@ -25,7 +25,34 @@ export default {
       }
     ]
   ],
+  "themes": [
+    [
+      "/Users/lukhuong/Desktop/docusaurus-knowledge-base-template/node_modules/@easyops-cn/docusaurus-search-local/dist/server/server/index.js",
+      {
+        "indexDocs": true,
+        "indexBlog": false,
+        "indexPages": false,
+        "docsRouteBasePath": "/",
+        "language": [
+          "en"
+        ],
+        "highlightSearchTermsOnTargetPage": true,
+        "explicitSearchResultPath": true,
+        "searchResultLimits": 8,
+        "searchBarShortcut": true,
+        "searchBarShortcutHint": true,
+        "hashed": true
+      }
+    ]
+  ],
   "themeConfig": {
+    "docs": {
+      "sidebar": {
+        "hideable": false,
+        "autoCollapseCategories": false
+      },
+      "versionPersistence": "localStorage"
+    },
     "navbar": {
       "title": "Engineering Knowledge Base",
       "items": [
@@ -35,14 +62,6 @@ export default {
         }
       ],
       "hideOnScroll": false
-    },
-    "algolia": {
-      "appId": "YOUR_APP_ID",
-      "apiKey": "YOUR_SEARCH_API_KEY",
-      "indexName": "YOUR_INDEX_NAME",
-      "contextualSearch": true,
-      "searchPagePath": "search",
-      "searchParameters": {}
     },
     "prism": {
       "theme": {
@@ -188,7 +207,7 @@ export default {
             ],
             "style": {
               "color": "#ff8fab",
-              "textDecoration": "line-through"
+              "textDecorationLine": "line-through"
             }
           },
           {
@@ -197,7 +216,7 @@ export default {
             ],
             "style": {
               "color": "#8ef7b2",
-              "textDecoration": "underline"
+              "textDecorationLine": "underline"
             }
           },
           {
@@ -237,12 +256,20 @@ export default {
       "respectPrefersColorScheme": true,
       "disableSwitch": false
     },
-    "docs": {
-      "versionPersistence": "localStorage",
-      "sidebar": {
-        "hideable": false,
-        "autoCollapseCategories": false
-      }
+    "footer": {
+      "style": "dark",
+      "links": [
+        {
+          "title": "Linkedin",
+          "items": [
+            {
+              "label": "Linkedin",
+              "href": "https://www.linkedin.com/in/luminhkhuong/"
+            }
+          ]
+        }
+      ],
+      "copyright": "Copyright © 2026 Khuong, Lu."
     },
     "blog": {
       "sidebar": {
@@ -293,7 +320,6 @@ export default {
   ],
   "customFields": {},
   "plugins": [],
-  "themes": [],
   "scripts": [],
   "headTags": [],
   "stylesheets": [],

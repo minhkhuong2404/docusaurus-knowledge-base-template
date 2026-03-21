@@ -27,10 +27,10 @@
       "name": "@docusaurus/theme-classic",
       "version": "3.9.2"
     },
-    "docusaurus-theme-search-algolia": {
+    "@easyops-cn/docusaurus-search-local": {
       "type": "package",
-      "name": "@docusaurus/theme-search-algolia",
-      "version": "3.9.2"
+      "name": "@easyops-cn/docusaurus-search-local",
+      "version": "0.55.1"
     }
   }
 }

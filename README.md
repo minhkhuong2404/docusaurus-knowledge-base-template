@@ -142,16 +142,11 @@ Example ID format:
 - Docs are served from the root route (`/`).
 - This repository is intended for internal knowledge sharing.
 
-## Algolia DocSearch
+## Local Search
 
-DocSearch is configured in `docusaurus.config.ts` and reads environment variables from `.env`:
+Search is powered by `@easyops-cn/docusaurus-search-local`, which provides full-text client-side search without external dependencies.
 
-- `DOCSEARCH_APP_ID`
-- `DOCSEARCH_API_KEY`
-- `DOCSEARCH_INDEX_NAME`
-
-To make search return content, your site must be indexed by Algolia's crawler.
-
-- A crawler template is provided in `docsearch.config.json`.
-- Update `index_name` and URLs if your production domain changes.
-- Run the crawler through Algolia DocSearch (or Crawler) so article headings and body text are indexed.
+- Search works on both dev server (`npm start`) and production sites
+- No API keys or external configuration required
+- Search index is built during `npm run build` and shipped with static files
+- On luminhkhuong.dev, search queries are executed entirely in the browser

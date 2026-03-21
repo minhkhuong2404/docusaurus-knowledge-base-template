@@ -9,10 +9,9 @@
     "deploy": "docusaurus deploy"
   },
   "dependencies": {
-    "@docsearch/css": "^4.6.0",
-    "@docsearch/react": "^4.6.0",
     "@docusaurus/core": "^3.9.2",
     "@docusaurus/preset-classic": "^3.9.2",
+    "@easyops-cn/docusaurus-search-local": "^0.55.1",
     "prism-react-renderer": "^2.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
