@@ -55,33 +55,33 @@ Domain 1 + 2 = **58%** of the exam. Master Lambda, DynamoDB, S3, IAM, Cognito, a
 ## 🗺️ Study Roadmap
 
 ### Phase 1 — Foundations (Week 1-2)
-- [ ] [IAM & Security Policies](/technical-knowledge/aws/iam) — roles, policies, STS
-- [ ] [Cognito](/technical-knowledge/aws/iam/cognito) — User Pools vs Identity Pools
-- [ ] [KMS & Encryption](/technical-knowledge/aws/security/kms)
-- [ ] [Secrets Manager & Parameter Store](/technical-knowledge/aws/security/secrets-manager)
+- [ ] [IAM & Security Policies](/iam) — roles, policies, STS
+- [ ] [Cognito](/iam/cognito) — User Pools vs Identity Pools
+- [ ] [KMS & Encryption](/security/kms)
+- [ ] [Secrets Manager & Parameter Store](/security/secrets-manager)
 
 ### Phase 2 — Core Compute & APIs (Week 3-4)
-- [ ] [Lambda](/technical-knowledge/aws/lambda) — triggers, invocation types, concurrency
-- [ ] [API Gateway](/technical-knowledge/aws/api-gateway) — REST vs HTTP vs WebSocket
-- [ ] [Elastic Beanstalk](/technical-knowledge/aws/beanstalk) — deployment modes
-- [ ] [ECS & ECR](/technical-knowledge/aws/containers/ecs-ecr)
+- [ ] [Lambda](/lambda) — triggers, invocation types, concurrency
+- [ ] [API Gateway](/api-gateway) — REST vs HTTP vs WebSocket
+- [ ] [Elastic Beanstalk](/beanstalk) — deployment modes
+- [ ] [ECS & ECR](/containers/ecs-ecr)
 
 ### Phase 3 — Data & Storage (Week 5-6)
-- [ ] [S3](/technical-knowledge/aws/s3) — storage classes, versioning, encryption, presigned URLs
-- [ ] [DynamoDB](/technical-knowledge/aws/dynamodb) — partition keys, indexes, Streams, DAX
-- [ ] [ElastiCache](/technical-knowledge/aws/elasticache) — Redis vs Memcached
+- [ ] [S3](/s3) — storage classes, versioning, encryption, presigned URLs
+- [ ] [DynamoDB](/dynamodb) — partition keys, indexes, Streams, DAX
+- [ ] [ElastiCache](/elasticache) — Redis vs Memcached
 
 ### Phase 4 — Messaging & Integration (Week 7)
-- [ ] [SQS](/technical-knowledge/aws/messaging/sqs) — standard vs FIFO, visibility timeout, DLQ
-- [ ] [SNS](/technical-knowledge/aws/messaging/sns) — fan-out pattern
-- [ ] [Kinesis](/technical-knowledge/aws/messaging/kinesis) — Data Streams vs Firehose
-- [ ] [Step Functions](/technical-knowledge/aws/step-functions) 
+- [ ] [SQS](/messaging/sqs) — standard vs FIFO, visibility timeout, DLQ
+- [ ] [SNS](/messaging/sns) — fan-out pattern
+- [ ] [Kinesis](/messaging/kinesis) — Data Streams vs Firehose
+- [ ] [Step Functions](/step-functions)
 
 ### Phase 5 — CI/CD & Monitoring (Week 8)
-- [ ] [CodeCommit, CodeBuild, CodeDeploy, CodePipeline](/technical-knowledge/aws/cicd)
-- [ ] [CloudFormation & SAM](/technical-knowledge/aws/cloudformation)
-- [ ] [CloudWatch](/technical-knowledge/aws/monitoring/cloudwatch) — Logs, Metrics, Alarms
-- [ ] [X-Ray](/technical-knowledge/aws/monitoring/x-ray)
+- [ ] [CodeCommit, CodeBuild, CodeDeploy, CodePipeline](/cicd)
+- [ ] [CloudFormation & SAM](/cloudformation)
+- [ ] [CloudWatch](/monitoring/cloudwatch) — Logs, Metrics, Alarms
+- [ ] [X-Ray](/monitoring/x-ray)
 
 ---
 

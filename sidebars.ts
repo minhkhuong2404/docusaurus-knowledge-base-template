@@ -581,6 +581,7 @@ const sidebars: SidebarsConfig = {
 						'technical-knowledge/aws/lambda/index',
 						'technical-knowledge/aws/lambda/layers-and-versions',
 						'technical-knowledge/aws/api-gateway/index',
+						'technical-knowledge/aws/appsync',
 						'technical-knowledge/aws/beanstalk/index',
 					],
 				},
@@ -594,6 +595,7 @@ const sidebars: SidebarsConfig = {
 						'technical-knowledge/aws/dynamodb/index',
 						'technical-knowledge/aws/dynamodb/advanced',
 						'technical-knowledge/aws/elasticache/index',
+						'technical-knowledge/aws/rds-aurora',
 					],
 				},
 				{
@@ -613,12 +615,14 @@ const sidebars: SidebarsConfig = {
 					collapsed: true,
 					items: [
 						'technical-knowledge/aws/cloudformation/index',
+						'technical-knowledge/aws/cloudformation/cloudfront',
 						'technical-knowledge/aws/cloudformation/sam',
 						'technical-knowledge/aws/cicd/index',
 						'technical-knowledge/aws/cicd/code-build',
 						'technical-knowledge/aws/cicd/code-deploy',
 						'technical-knowledge/aws/cicd/code-pipeline',
 						'technical-knowledge/aws/containers/ecs-ecr',
+						'technical-knowledge/aws/vpc-for-developers',
 					],
 				},
 				{
@@ -634,7 +638,23 @@ const sidebars: SidebarsConfig = {
 						'technical-knowledge/aws/security/ssm-parameter-store',
 					],
 				},
-				'technical-knowledge/aws/exam-tips',
+				{
+					type: 'category',
+					label: '💻 SDK & Developer Tools',
+					collapsed: true,
+					items: [
+						'technical-knowledge/aws/aws-sdk-java',
+					],
+				},
+				{
+					type: 'category',
+					label: '🎯 Exam Prep',
+					collapsed: true,
+					items: [
+						'technical-knowledge/aws/exam-tips',
+						'technical-knowledge/aws/mock-exam',
+					],
+				},
 			],
 		},
 		{
