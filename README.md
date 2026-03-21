@@ -141,3 +141,17 @@ Example ID format:
 - Blog is disabled.
 - Docs are served from the root route (`/`).
 - This repository is intended for internal knowledge sharing.
+
+## Algolia DocSearch
+
+DocSearch is configured in `docusaurus.config.ts` and reads environment variables from `.env`:
+
+- `DOCSEARCH_APP_ID`
+- `DOCSEARCH_API_KEY`
+- `DOCSEARCH_INDEX_NAME`
+
+To make search return content, your site must be indexed by Algolia's crawler.
+
+- A crawler template is provided in `docsearch.config.json`.
+- Update `index_name` and URLs if your production domain changes.
+- Run the crawler through Algolia DocSearch (or Crawler) so article headings and body text are indexed.

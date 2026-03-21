@@ -125,3 +125,21 @@ div[class*="codeBlockTitle"] {
     background-color 0.25s ease,
     border-color 0.25s ease;
 }
+
+/* DocSearch custom UI */
+.custom-docsearch .DocSearch-Button {
+  border: 1px solid #3b4457;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #111827, #1f2937);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.35);
+}
+
+.custom-docsearch .DocSearch-Button:hover {
+  border-color: #7dd3fc;
+  background: linear-gradient(135deg, #0f172a, #111827);
+}
+
+.custom-docsearch .DocSearch-Button-Placeholder,
+.custom-docsearch .DocSearch-Search-Icon {
+  color: #cbd5e1;
+}

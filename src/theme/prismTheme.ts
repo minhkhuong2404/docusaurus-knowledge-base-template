@@ -49,7 +49,7 @@ const theme: PrismTheme = {
 		},
 		{
 			types: ['variable', 'constant', 'symbol'],
-			style: { color: '#f7a8ff' },
+			style: { color: '#ed84f9' },
 		},
 		{
 			types: ['operator', 'entity', 'url'],

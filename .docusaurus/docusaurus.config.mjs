@@ -26,6 +26,24 @@ export default {
     ]
   ],
   "themeConfig": {
+    "navbar": {
+      "title": "Engineering Knowledge Base",
+      "items": [
+        {
+          "type": "search",
+          "position": "right"
+        }
+      ],
+      "hideOnScroll": false
+    },
+    "algolia": {
+      "appId": "YOUR_APP_ID",
+      "apiKey": "YOUR_SEARCH_API_KEY",
+      "indexName": "YOUR_INDEX_NAME",
+      "contextualSearch": true,
+      "searchPagePath": "search",
+      "searchParameters": {}
+    },
     "prism": {
       "theme": {
         "plain": {
@@ -135,7 +153,7 @@ export default {
               "symbol"
             ],
             "style": {
-              "color": "#f7a8ff"
+              "color": "#ed84f9"
             }
           },
           {
@@ -232,10 +250,6 @@ export default {
       }
     },
     "metadata": [],
-    "navbar": {
-      "hideOnScroll": false,
-      "items": []
-    },
     "tableOfContents": {
       "minHeadingLevel": 2,
       "maxHeadingLevel": 3
