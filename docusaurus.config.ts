@@ -58,10 +58,33 @@ const config: Config = {
 		],
 	],
 	themeConfig: {
+		metadata: [
+			{ name: 'keywords', content: 'development, blog, software, programming, engineering' },
+			{ name: 'description', content: 'A knowledge base for software engineers to share and document technical information.' },
+			{ name: 'author', content: 'Khuong Lu' },
+			{ name: 'viewport', content: 'width=device-width, initial-scale=1.0' },
+			{ name: 'robots', content: 'index, follow' },
+			{ name: 'theme-color', content: '#000000' },
+			{ name: 'apple-mobile-web-app-capable', content: 'yes' },
+			{ name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' },
+			{ name: 'format-detection', content: 'telephone=no' },
+			{ name: 'msapplication-TileColor', content: '#000000' },
+			{ name: 'msapplication-config', content: '/browserconfig.xml' },
+			{ name: 'theme-color', content: '#000000' },
+		],
+		headTags: [
+			{
+				tagName: 'link',
+				attributes: {
+					rel: 'preconnect',
+					href: 'https://fonts.googleapis.com',
+				},
+			},
+		],
 		docs: {
 			sidebar: {
-				hideable: false,
-				autoCollapseCategories: false,
+				hideable: true,
+				autoCollapseCategories: true,
 			},
 		},
 		navbar: {

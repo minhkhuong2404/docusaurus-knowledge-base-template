@@ -12,7 +12,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '📘 Core Language',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/java/java-fundamentals',
 						'technical-knowledge/java/java-oop',
@@ -22,7 +22,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🧵 Concurrency & JVM',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/java/java-concurrency',
 						'technical-knowledge/java/java-jvm'
@@ -31,7 +31,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '⚡ I/O & Modern Java',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/java/java-io',
 						'technical-knowledge/java/java-new-features'
@@ -40,7 +40,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🎯 Interview Questions',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/java/java-interview-questions',
 					]
@@ -55,7 +55,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🚀 Spring Boot',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/spring/spring-boot',
 						'technical-knowledge/spring/spring-boot-internals',
@@ -66,7 +66,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🌱 Spring Framework',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/spring/spring-framework',
 						'technical-knowledge/spring/spring-framework-deep-dive',
@@ -76,7 +76,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🔐 Security & Data Access',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/spring/spring-security',
 						'technical-knowledge/spring/spring-data-jpa'
@@ -85,7 +85,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🌐 Web Layer',
-					collapsed: false,
+					collapsed: true,
 					items: ['technical-knowledge/spring/spring-mvc']
 				}
 			]
@@ -98,7 +98,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🏗️ Creational',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/design-patterns/singleton',
 						'technical-knowledge/design-patterns/factory-method',
@@ -110,7 +110,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🧱 Structural',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/design-patterns/adapter',
 						'technical-knowledge/design-patterns/bridge',
@@ -123,7 +123,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🔄 Behavioral',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/design-patterns/chain-of-responsibility',
 						'technical-knowledge/design-patterns/observer',
@@ -142,7 +142,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🏗️ Fundamentals',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/system-design/architecture-fundamentals',
 						'technical-knowledge/system-design/capacity-planning',
@@ -152,7 +152,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '⚡ Scaling Patterns',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/system-design/scaling-reads',
 						'technical-knowledge/system-design/scaling-writes',
@@ -162,7 +162,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🔄 Distributed Patterns',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/system-design/real-time-updates',
 						'technical-knowledge/system-design/handling-contention',
@@ -174,7 +174,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🧩 Architecture',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/system-design/microservices-patterns',
 						'technical-knowledge/system-design/api-design',
@@ -186,7 +186,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🗄️ Storage',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/system-design/large-blobs',
 					],
@@ -194,7 +194,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🔒 Security & Reliability',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/system-design/security-patterns',
 						'technical-knowledge/system-design/load-balancing-reliability',
@@ -205,7 +205,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🎯 Interview Prep',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/system-design/common-interview-questions',
 					],
@@ -220,7 +220,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🔐 Core Security',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/security/authentication-authorization',
 						'technical-knowledge/security/web-vulnerabilities',
@@ -232,7 +232,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🏛️ Governance & Compliance',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/security/privacy-compliance',
 						'technical-knowledge/security/identity-access-management',
@@ -241,7 +241,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🛡️ Operations & Infrastructure',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/security/network-security',
 						'technical-knowledge/security/secure-sdlc',
@@ -251,7 +251,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🎯 Interview Prep',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/security/interview-questions',
 					],
@@ -266,7 +266,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🔩 Foundations',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/networking/osi-tcpip-models',
 						'technical-knowledge/networking/ip-addressing-routing',
@@ -277,7 +277,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🌍 Application Layer',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/networking/http-https-application-layer',
 						'technical-knowledge/networking/dns-resolution',
@@ -288,7 +288,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🏗️ Infrastructure',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/networking/cdn-load-balancing',
 						'technical-knowledge/networking/proxies-nat-firewalls',
@@ -298,7 +298,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🔌 API Design',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/networking/rest-grpc-api-design',
 						'technical-knowledge/networking/api-authentication-security',
@@ -307,7 +307,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '☁️ Distributed & Cloud',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/networking/service-mesh-microservices',
 						'technical-knowledge/networking/network-performance-optimization',
@@ -316,7 +316,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🛡️ Security',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/networking/network-security',
 					],
@@ -324,7 +324,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🔧 Tools & Interview Prep',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/networking/network-troubleshooting-tools',
 						'technical-knowledge/networking/networking-interview-questions',
@@ -340,7 +340,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🏗️ Core Concepts',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/kafka/core/kafka-overview',
 						'technical-knowledge/kafka/core/topic',
@@ -352,7 +352,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '📤 Producer',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/kafka/producer/producer-overview',
 						'technical-knowledge/kafka/producer/producer-acks',
@@ -363,7 +363,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '📥 Consumer',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/kafka/consumer/consumer-overview',
 						'technical-knowledge/kafka/consumer/consumer-group',
@@ -374,7 +374,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🔌 Ecosystem',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/kafka/advanced/kafka-connect',
 						'technical-knowledge/kafka/advanced/kafka-streams',
@@ -386,7 +386,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '📈 Reliability & Operations',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/kafka/advanced/exactly-once',
 						'technical-knowledge/kafka/advanced/order-messages',
@@ -396,7 +396,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🎯 Interview Prep',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/kafka/interview/interview-core',
 						'technical-knowledge/kafka/interview/interview-producer-consumer',
@@ -413,7 +413,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🧱 Relational Databases',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/database/relational-fundamentals',
 						'technical-knowledge/database/database-design',
@@ -424,7 +424,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '⚡ Performance',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/database/indexing-query-optimization',
 						'technical-knowledge/database/query-planner-optimizer',
@@ -435,7 +435,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '⚙️ Internals',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/database/transactions-concurrency',
 						'technical-knowledge/database/storage-engines-data-structures',
@@ -444,7 +444,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🌍 Scale & Distribution',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/database/replication-partitioning',
 						'technical-knowledge/database/nosql-distributed',
@@ -454,7 +454,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🔎 Specialized',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/database/full-text-search',
 						'technical-knowledge/database/data-warehousing-olap',
@@ -464,7 +464,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🛠️ Operations',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/database/backup-recovery',
 						'technical-knowledge/database/database-security',
@@ -480,7 +480,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '⚙️ Core Concepts',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/operating-systems/processes-and-threads',
 						'technical-knowledge/operating-systems/cpu-scheduling',
@@ -491,7 +491,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🖥️ Storage & I/O',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/operating-systems/file-systems-and-io',
 						'technical-knowledge/operating-systems/virtual-memory-deep-dive',
@@ -500,7 +500,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🐧 Linux Internals',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/operating-systems/linux-internals-and-syscalls',
 						'technical-knowledge/operating-systems/networking-and-ipc',
@@ -517,7 +517,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🐳 Docker',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/devops/docker-fundamentals',
 						'technical-knowledge/devops/dockerfile',
@@ -530,7 +530,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '☸️ Kubernetes',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/devops/kubernetes-fundamentals',
 						'technical-knowledge/devops/kubernetes-pods',
@@ -543,7 +543,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🛠️ Tooling',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/devops/kubectl-commands',
 						'technical-knowledge/devops/helm',
@@ -552,7 +552,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🎯 Interview Prep',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/devops/devops-interview-questions',
 					],
@@ -567,7 +567,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🔐 Identity & Access',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/aws/iam/index',
 						'technical-knowledge/aws/iam/cognito',
@@ -576,7 +576,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🧠 Compute & APIs',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/aws/lambda/index',
 						'technical-knowledge/aws/lambda/layers-and-versions',
@@ -587,7 +587,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🗄️ Storage & Databases',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/aws/s3/index',
 						'technical-knowledge/aws/s3/advanced',
@@ -599,7 +599,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '📨 Messaging & Workflows',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/aws/messaging/sns',
 						'technical-knowledge/aws/messaging/sqs',
@@ -610,7 +610,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🛠️ DevOps & Infrastructure',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/aws/cloudformation/index',
 						'technical-knowledge/aws/cloudformation/sam',
@@ -624,7 +624,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '📈 Monitoring & Security',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/aws/monitoring/cloudwatch',
 						'technical-knowledge/aws/monitoring/cloudtrail',
@@ -645,7 +645,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🎓 New Learner Guide',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						{ type: 'doc', id: 'technical-knowledge/banking/payment_lifecycle_101', label: 'Payment Lifecycle 101' },
 						{ type: 'doc', id: 'technical-knowledge/banking/banking_roles', label: 'Roles & Teams' },
@@ -655,12 +655,12 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '📨 ISO 20022 Messages',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						{
 							type: 'category',
 							label: '💸 Payment Initiation (pain)',
-							collapsed: false,
+							collapsed: true,
 							items: [
 								{ type: 'doc', id: 'technical-knowledge/banking/pain001', label: 'pain.001 - Credit Transfer Initiation' },
 								{ type: 'doc', id: 'technical-knowledge/banking/pain004', label: 'pain.004 - Clarification' },
@@ -670,7 +670,7 @@ const sidebars: SidebarsConfig = {
 						{
 							type: 'category',
 							label: '🏦 Payment Clearing & Settlement (pacs)',
-							collapsed: false,
+							collapsed: true,
 							items: [
 								{ type: 'doc', id: 'technical-knowledge/banking/pacs008', label: 'pacs.008 - FI-to-FI Credit Transfer' },
 								{ type: 'doc', id: 'technical-knowledge/banking/pacs002', label: 'pacs.002 - FI-to-FI Status Report' },
@@ -680,7 +680,7 @@ const sidebars: SidebarsConfig = {
 						{
 							type: 'category',
 							label: '📒 Cash Management (camt)',
-							collapsed: false,
+							collapsed: true,
 							items: [
 								{ type: 'doc', id: 'technical-knowledge/banking/camt054', label: 'camt.054 - Debit/Credit Notification' },
 								{ type: 'doc', id: 'technical-knowledge/banking/camt053', label: 'camt.053 - Account Statement' },
@@ -698,7 +698,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '💸 Payment Flows',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						{ type: 'doc', id: 'technical-knowledge/banking/inbound', label: 'Inbound Payments' },
 						{ type: 'doc', id: 'technical-knowledge/banking/outbound', label: 'Outbound Payments' },
@@ -708,7 +708,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🛤️ Payment Rails & Networks',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						{ type: 'doc', id: 'technical-knowledge/banking/npp', label: 'NPP - New Payments Platform' },
 						{ type: 'doc', id: 'technical-knowledge/banking/swift', label: 'SWIFT - International' },
@@ -719,7 +719,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🏛️ Parties & Institutions',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						{ type: 'doc', id: 'technical-knowledge/banking/debtor', label: 'Debtor & Creditor' },
 						{ type: 'doc', id: 'technical-knowledge/banking/fis', label: 'Financial Institutions' },
@@ -730,7 +730,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '📒 Accounting & Posting',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						{ type: 'doc', id: 'technical-knowledge/banking/debit_post', label: 'Debit Posting' },
 						{ type: 'doc', id: 'technical-knowledge/banking/credit_post', label: 'Credit Posting' },
@@ -743,7 +743,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '⚖️ Clearing & Settlement',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						{ type: 'doc', id: 'technical-knowledge/banking/clearing', label: 'Clearing' },
 						{ type: 'doc', id: 'technical-knowledge/banking/settlement', label: 'Settlement' }
@@ -752,13 +752,13 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '💳 Cards',
-					collapsed: false,
+					collapsed: true,
 					items: [{ type: 'doc', id: 'technical-knowledge/banking/cards', label: 'Cards & Card Schemes' }]
 				},
 				{
 					type: 'category',
 					label: '🛡️ Risk & Compliance',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						{ type: 'doc', id: 'technical-knowledge/banking/fraud', label: 'Fraud Detection & Prevention' },
 						{ type: 'doc', id: 'technical-knowledge/banking/sanction', label: 'Sanctions Screening' },
@@ -768,7 +768,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '⚙️ Operations',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						{ type: 'doc', id: 'technical-knowledge/banking/reconciliation', label: 'Reconciliation' },
 						{ type: 'doc', id: 'technical-knowledge/banking/payment_exceptions', label: 'Exceptions & Investigations' }
@@ -777,7 +777,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '🧑‍💻 Engineering',
-					collapsed: false,
+					collapsed: true,
 					items: [{ type: 'doc', id: 'technical-knowledge/banking/testing_banking', label: 'Testing in Payments' }]
 				},
 				{
@@ -792,12 +792,12 @@ const sidebars: SidebarsConfig = {
 		{
 			type: 'category',
 			label: '📚 Books',
-			collapsed: false,
+			collapsed: true,
 			items: [
 				{
 					type: 'category',
 					label: '☕ Effective Java',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'books/effective-java/introduction',
 						'books/effective-java/items-index',
@@ -819,12 +819,12 @@ const sidebars: SidebarsConfig = {
 		{
 			type: 'category',
 			label: '🎯 Frequently Asked Interview Questions',
-			collapsed: false,
+			collapsed: true,
 			items: [
 				{
 					type: 'category',
 					label: '☕ Core Java',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/interview-questions/java/break-singleton-java',
 						'technical-knowledge/interview-questions/java/concurrent-collections-interview',
@@ -854,7 +854,7 @@ const sidebars: SidebarsConfig = {
 				{
 					type: 'category',
 					label: '💼 GenZ Career',
-					collapsed: false,
+					collapsed: true,
 					items: [
 						'technical-knowledge/interview-questions/genz-career/java-collections-interview-questions',
 						'technical-knowledge/interview-questions/genz-career/java-interview-questions-100',
@@ -864,7 +864,7 @@ const sidebars: SidebarsConfig = {
 						{
 							type: 'category',
 							label: '🏢 Company',
-							collapsed: false,
+							collapsed: true,
 							items: [
 								'technical-knowledge/interview-questions/genz-career/company/accenture-java-interview',
 								'technical-knowledge/interview-questions/genz-career/company/accenture-java-developer-interview-questions',
@@ -897,7 +897,7 @@ const sidebars: SidebarsConfig = {
 						{
 							type: 'category',
 							label: '🧪 Mock',
-							collapsed: false,
+							collapsed: true,
 							items: [
 								'technical-knowledge/interview-questions/genz-career/mock/accenture-java-springboot-interview-3-years',
 								'technical-knowledge/interview-questions/genz-career/mock/cognizant-java-developer-interview-3-years',
@@ -913,7 +913,7 @@ const sidebars: SidebarsConfig = {
 						{
 							type: 'category',
 							label: '🚀 Spring Boot',
-							collapsed: false,
+							collapsed: true,
 							items: [
 								'technical-knowledge/interview-questions/genz-career/spring-boot/real-time-spring-boot-interview-questions',
 								'technical-knowledge/interview-questions/genz-career/spring-boot/scenario-based-springboot-interview-questions',
