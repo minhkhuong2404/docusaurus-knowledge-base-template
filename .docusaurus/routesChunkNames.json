@@ -5,13 +5,13 @@
       "plugin": "138e0e15"
     }
   },
-  "/-5e5": {
+  "/-dbe": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-361": {
+  "/-daa": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -3087,7 +3087,7 @@
     "__comp": "df203c0f",
     "__props": "cdd99891"
   },
-  "/-266": {
+  "/-4ef": {
     "__comp": "a94703ab"
   },
   "/aws-102": {
@@ -4438,6 +4438,30 @@
     "__comp": "17896441",
     "content": "49b42f03"
   },
+  "/technical-knowledge/solid/solid/dependency-inversion-0e4": {
+    "__comp": "17896441",
+    "content": "ea0c56a8"
+  },
+  "/technical-knowledge/solid/solid/interface-segregation-3c4": {
+    "__comp": "17896441",
+    "content": "fbeb6a72"
+  },
+  "/technical-knowledge/solid/solid/liskov-substitution-269": {
+    "__comp": "17896441",
+    "content": "ad22e946"
+  },
+  "/technical-knowledge/solid/solid/open-closed-ab5": {
+    "__comp": "17896441",
+    "content": "631d56ee"
+  },
+  "/technical-knowledge/solid/solid/single-responsibility-890": {
+    "__comp": "17896441",
+    "content": "c6135f55"
+  },
+  "/technical-knowledge/solid/summary-09c": {
+    "__comp": "17896441",
+    "content": "5427ac75"
+  },
   "/technical-knowledge/spring/spring-boot-2a7": {
     "__comp": "17896441",
     "content": "070cceee"
@@ -4573,5 +4597,9 @@
   "/-fc9": {
     "__comp": "17896441",
     "content": "0e384e19"
+  },
+  "/-d26": {
+    "__comp": "17896441",
+    "content": "f082910f"
   }
 }

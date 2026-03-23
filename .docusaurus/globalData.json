@@ -1695,6 +1695,41 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/solid/intro",
+              "path": "/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/solid/solid/dependency-inversion",
+              "path": "/technical-knowledge/solid/solid/dependency-inversion",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/solid/solid/interface-segregation",
+              "path": "/technical-knowledge/solid/solid/interface-segregation",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/solid/solid/liskov-substitution",
+              "path": "/technical-knowledge/solid/solid/liskov-substitution",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/solid/solid/open-closed",
+              "path": "/technical-knowledge/solid/solid/open-closed",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/solid/solid/single-responsibility",
+              "path": "/technical-knowledge/solid/solid/single-responsibility",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/solid/summary",
+              "path": "/technical-knowledge/solid/summary",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/spring/spring-boot",
               "path": "/technical-knowledge/spring/spring-boot",
               "sidebar": "tutorialSidebar"

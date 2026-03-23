@@ -136,6 +136,34 @@ const sidebars: SidebarsConfig = {
 		},
 		{
 			type: 'category',
+			label: '🧠 SOLID',
+			items: [
+				{
+					type: 'doc',
+					id: 'technical-knowledge/solid/intro',
+					label: '📘 Introduction',
+				},
+				{
+					type: 'category',
+					label: '🧱 SOLID Principles',
+					collapsed: false,
+					items: [
+						'technical-knowledge/solid/solid/single-responsibility',
+						'technical-knowledge/solid/solid/open-closed',
+						'technical-knowledge/solid/solid/liskov-substitution',
+						'technical-knowledge/solid/solid/interface-segregation',
+						'technical-knowledge/solid/solid/dependency-inversion',
+					],
+				},
+				{
+					type: 'doc',
+					id: 'technical-knowledge/solid/summary',
+					label: '✅ Summary & Cheat Sheet',
+				},
+			]
+		},
+		{
+			type: 'category',
 			label: '📖 System Design',
 			items: [
 				'technical-knowledge/system-design/intro',

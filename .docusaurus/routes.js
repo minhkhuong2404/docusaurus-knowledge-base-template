@@ -9,11 +9,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '5e5'),
+    component: ComponentCreator('/', 'dbe'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '361'),
+        component: ComponentCreator('/', 'daa'),
         routes: [
           {
             path: '/tags',
@@ -3857,7 +3857,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '266'),
+            component: ComponentCreator('/', '4ef'),
             routes: [
               {
                 path: '/aws',
@@ -5881,6 +5881,42 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/solid/solid/dependency-inversion',
+                component: ComponentCreator('/technical-knowledge/solid/solid/dependency-inversion', '0e4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/solid/solid/interface-segregation',
+                component: ComponentCreator('/technical-knowledge/solid/solid/interface-segregation', '3c4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/solid/solid/liskov-substitution',
+                component: ComponentCreator('/technical-knowledge/solid/solid/liskov-substitution', '269'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/solid/solid/open-closed',
+                component: ComponentCreator('/technical-knowledge/solid/solid/open-closed', 'ab5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/solid/solid/single-responsibility',
+                component: ComponentCreator('/technical-knowledge/solid/solid/single-responsibility', '890'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/solid/summary',
+                component: ComponentCreator('/technical-knowledge/solid/summary', '09c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/spring/spring-boot',
                 component: ComponentCreator('/technical-knowledge/spring/spring-boot', '2a7'),
                 exact: true,
@@ -6081,6 +6117,12 @@ export default [
               {
                 path: '/',
                 component: ComponentCreator('/', 'fc9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/',
+                component: ComponentCreator('/', 'd26'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               }

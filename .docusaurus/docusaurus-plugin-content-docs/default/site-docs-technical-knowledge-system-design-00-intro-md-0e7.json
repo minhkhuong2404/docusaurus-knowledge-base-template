@@ -47,8 +47,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Template Method Pattern",
-    "permalink": "/technical-knowledge/design-patterns/template-method"
+    "title": "✅ Summary & Cheat Sheet",
+    "permalink": "/technical-knowledge/solid/summary"
   },
   "next": {
     "title": "Architecture Fundamentals",
