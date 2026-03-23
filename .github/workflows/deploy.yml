@@ -4,6 +4,14 @@ on:
   push:
     branches:
       - master
+  pull_request:
+    branches:
+      - master
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
 
 permissions:
   contents: read
@@ -31,12 +39,16 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: build
 
   deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     needs: build
     runs-on: ubuntu-latest
     environment:
