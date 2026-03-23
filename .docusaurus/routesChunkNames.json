@@ -5,13 +5,13 @@
       "plugin": "138e0e15"
     }
   },
-  "/-dbe": {
+  "/-0f0": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-daa": {
+  "/-80a": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -3087,7 +3087,7 @@
     "__comp": "df203c0f",
     "__props": "cdd99891"
   },
-  "/-4ef": {
+  "/-41a": {
     "__comp": "a94703ab"
   },
   "/aws-102": {
@@ -3858,6 +3858,114 @@
     "__comp": "17896441",
     "content": "e775c6ed"
   },
+  "/technical-knowledge/git/advanced/bisect-5f7": {
+    "__comp": "17896441",
+    "content": "d83a76bb"
+  },
+  "/technical-knowledge/git/advanced/config-aliases-dc2": {
+    "__comp": "17896441",
+    "content": "5b7c9f14"
+  },
+  "/technical-knowledge/git/advanced/hooks-dc0": {
+    "__comp": "17896441",
+    "content": "bf29cb48"
+  },
+  "/technical-knowledge/git/advanced/worktree-c32": {
+    "__comp": "17896441",
+    "content": "f2cfb919"
+  },
+  "/technical-knowledge/git/basics/add-089": {
+    "__comp": "17896441",
+    "content": "fb49eb50"
+  },
+  "/technical-knowledge/git/basics/commit-f63": {
+    "__comp": "17896441",
+    "content": "14004a7d"
+  },
+  "/technical-knowledge/git/basics/fetch-pull-123": {
+    "__comp": "17896441",
+    "content": "a2f19763"
+  },
+  "/technical-knowledge/git/basics/push-457": {
+    "__comp": "17896441",
+    "content": "17cfe222"
+  },
+  "/technical-knowledge/git/basics/status-diff-780": {
+    "__comp": "17896441",
+    "content": "ba5aaa48"
+  },
+  "/technical-knowledge/git/branching/branches-c5a": {
+    "__comp": "17896441",
+    "content": "bb49063c"
+  },
+  "/technical-knowledge/git/branching/conflict-resolution-b5f": {
+    "__comp": "17896441",
+    "content": "2fe9dbad"
+  },
+  "/technical-knowledge/git/branching/merge-69d": {
+    "__comp": "17896441",
+    "content": "6089a6af"
+  },
+  "/technical-knowledge/git/branching/rebase-234": {
+    "__comp": "17896441",
+    "content": "798c5731"
+  },
+  "/technical-knowledge/git/collaboration/remotes-f6b": {
+    "__comp": "17896441",
+    "content": "91269428"
+  },
+  "/technical-knowledge/git/collaboration/stash-c06": {
+    "__comp": "17896441",
+    "content": "7b460c0b"
+  },
+  "/technical-knowledge/git/collaboration/submodules-feb": {
+    "__comp": "17896441",
+    "content": "81787730"
+  },
+  "/technical-knowledge/git/collaboration/tags-095": {
+    "__comp": "17896441",
+    "content": "66e85b9d"
+  },
+  "/technical-knowledge/git/history/cherry-pick-901": {
+    "__comp": "17896441",
+    "content": "0daf3191"
+  },
+  "/technical-knowledge/git/history/fixup-70d": {
+    "__comp": "17896441",
+    "content": "cbc62dae"
+  },
+  "/technical-knowledge/git/history/log-blame-bc5": {
+    "__comp": "17896441",
+    "content": "815fb4e9"
+  },
+  "/technical-knowledge/git/history/reflog-c66": {
+    "__comp": "17896441",
+    "content": "855e9c0e"
+  },
+  "/technical-knowledge/git/history/reset-revert-09f": {
+    "__comp": "17896441",
+    "content": "0ea91e2d"
+  },
+  "/technical-knowledge/git/history/squash-ebc": {
+    "__comp": "17896441",
+    "content": "5a6bd8bf"
+  },
+  "/technical-knowledge/git/workflows/conventional-commits-fe4": {
+    "__comp": "17896441",
+    "content": "4180b5c5"
+  },
+  "/technical-knowledge/git/workflows/git-flow-7a8": {
+    "__comp": "17896441",
+    "content": "97094661"
+  },
+  "/technical-knowledge/git/workflows/pull-request-best-practices-e69": {
+    "__comp": "17896441",
+    "content": "964dd518"
+  },
+  "/technical-knowledge/git/workflows/trunk-based-0f9": {
+    "__comp": "17896441",
+    "content": "592203a7"
+  },
   "/technical-knowledge/interview-questions/genz-career/company/accenture-java-developer-interview-16lpa-860": {
     "__comp": "17896441",
     "content": "dbc796ca"
@@ -4597,6 +4705,10 @@
   "/-fc9": {
     "__comp": "17896441",
     "content": "0e384e19"
+  },
+  "/-7e2": {
+    "__comp": "17896441",
+    "content": "a2262cff"
   },
   "/-d26": {
     "__comp": "17896441",

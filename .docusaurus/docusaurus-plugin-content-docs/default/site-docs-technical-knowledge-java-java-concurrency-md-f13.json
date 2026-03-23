@@ -1,7 +1,7 @@
 {
   "id": "technical-knowledge/java/java-concurrency",
   "title": "Java Concurrency: Threads, Locks & Concurrent Utilities",
-  "description": "Comprehensive guide to Java concurrency, covering threads, synchronization, locks, concurrent utilities, and async programming.",
+  "description": "Comprehensive guide to Java concurrency, covering threads, synchronization, locks, concurrent utilities, the Fork/Join framework, and async programming.",
   "source": "@site/docs/technical-knowledge/java/java-concurrency.md",
   "sourceDirName": "technical-knowledge/java",
   "slug": "/technical-knowledge/java/java-concurrency",
@@ -28,6 +28,11 @@
       "inline": true,
       "label": "async",
       "permalink": "/tags/async"
+    },
+    {
+      "inline": true,
+      "label": "interview-prep",
+      "permalink": "/tags/interview-prep"
     }
   ],
   "version": "current",
@@ -35,12 +40,13 @@
     "id": "java-concurrency",
     "title": "Java Concurrency: Threads, Locks & Concurrent Utilities",
     "slug": "java-concurrency",
-    "description": "Comprehensive guide to Java concurrency, covering threads, synchronization, locks, concurrent utilities, and async programming.",
+    "description": "Comprehensive guide to Java concurrency, covering threads, synchronization, locks, concurrent utilities, the Fork/Join framework, and async programming.",
     "tags": [
       "java",
       "concurrency",
       "multithreading",
-      "async"
+      "async",
+      "interview-prep"
     ]
   },
   "sidebar": "tutorialSidebar",

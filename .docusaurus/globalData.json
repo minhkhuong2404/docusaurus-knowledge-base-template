@@ -966,6 +966,146 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/git/advanced/bisect",
+              "path": "/technical-knowledge/git/advanced/bisect",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/git/advanced/config-aliases",
+              "path": "/technical-knowledge/git/advanced/config-aliases",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/git/advanced/hooks",
+              "path": "/technical-knowledge/git/advanced/hooks",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/git/advanced/worktree",
+              "path": "/technical-knowledge/git/advanced/worktree",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/git/basics/add",
+              "path": "/technical-knowledge/git/basics/add",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/git/basics/commit",
+              "path": "/technical-knowledge/git/basics/commit",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/git/basics/fetch-pull",
+              "path": "/technical-knowledge/git/basics/fetch-pull",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/git/basics/push",
+              "path": "/technical-knowledge/git/basics/push",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/git/basics/status-diff",
+              "path": "/technical-knowledge/git/basics/status-diff",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/git/branching/branches",
+              "path": "/technical-knowledge/git/branching/branches",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/git/branching/conflict-resolution",
+              "path": "/technical-knowledge/git/branching/conflict-resolution",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/git/branching/merge",
+              "path": "/technical-knowledge/git/branching/merge",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/git/branching/rebase",
+              "path": "/technical-knowledge/git/branching/rebase",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/git/collaboration/remotes",
+              "path": "/technical-knowledge/git/collaboration/remotes",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/git/collaboration/stash",
+              "path": "/technical-knowledge/git/collaboration/stash",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/git/collaboration/submodules",
+              "path": "/technical-knowledge/git/collaboration/submodules",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/git/collaboration/tags",
+              "path": "/technical-knowledge/git/collaboration/tags",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/git/history/cherry-pick",
+              "path": "/technical-knowledge/git/history/cherry-pick",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/git/history/fixup",
+              "path": "/technical-knowledge/git/history/fixup",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/git/history/log-blame",
+              "path": "/technical-knowledge/git/history/log-blame",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/git/history/reflog",
+              "path": "/technical-knowledge/git/history/reflog",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/git/history/reset-revert",
+              "path": "/technical-knowledge/git/history/reset-revert",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/git/history/squash",
+              "path": "/technical-knowledge/git/history/squash",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/git/intro",
+              "path": "/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/git/workflows/conventional-commits",
+              "path": "/technical-knowledge/git/workflows/conventional-commits",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/git/workflows/git-flow",
+              "path": "/technical-knowledge/git/workflows/git-flow",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/git/workflows/pull-request-best-practices",
+              "path": "/technical-knowledge/git/workflows/pull-request-best-practices",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/git/workflows/trunk-based",
+              "path": "/technical-knowledge/git/workflows/trunk-based",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/interview-questions/genz-career/company/accenture-java-developer-interview-16lpa",
               "path": "/technical-knowledge/interview-questions/genz-career/company/accenture-java-developer-interview-16lpa",
               "sidebar": "tutorialSidebar"

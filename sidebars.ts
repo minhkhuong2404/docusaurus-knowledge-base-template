@@ -539,6 +539,82 @@ const sidebars: SidebarsConfig = {
 		},
 		{
 			type: 'category',
+			label: 'Git & Version Control',
+			items: [
+				{ type: 'doc', id: 'technical-knowledge/git/intro', label: '🏠 Introduction' },
+				{
+					type: 'category',
+					label: '📦 Basics',
+					collapsed: false,
+					items: [
+						'technical-knowledge/git/basics/add',
+						'technical-knowledge/git/basics/commit',
+						'technical-knowledge/git/basics/push',
+						'technical-knowledge/git/basics/fetch-pull',
+						'technical-knowledge/git/basics/status-diff',
+					],
+				},
+				{
+					type: 'category',
+					label: '🌿 Branching',
+					collapsed: false,
+					items: [
+						'technical-knowledge/git/branching/branches',
+						'technical-knowledge/git/branching/merge',
+						'technical-knowledge/git/branching/rebase',
+						'technical-knowledge/git/branching/conflict-resolution',
+					],
+				},
+				{
+					type: 'category',
+					label: '🕰️ History & Rewriting',
+					collapsed: false,
+					items: [
+						'technical-knowledge/git/history/cherry-pick',
+						'technical-knowledge/git/history/squash',
+						'technical-knowledge/git/history/fixup',
+						'technical-knowledge/git/history/reset-revert',
+						'technical-knowledge/git/history/reflog',
+						'technical-knowledge/git/history/log-blame',
+					],
+				},
+				{
+					type: 'category',
+					label: '🤝 Collaboration',
+					collapsed: false,
+					items: [
+						'technical-knowledge/git/collaboration/remotes',
+						'technical-knowledge/git/collaboration/tags',
+						'technical-knowledge/git/collaboration/stash',
+						'technical-knowledge/git/collaboration/submodules',
+					],
+				},
+				{
+					type: 'category',
+					label: '⚙️ Advanced',
+					collapsed: false,
+					items: [
+						'technical-knowledge/git/advanced/hooks',
+						'technical-knowledge/git/advanced/config-aliases',
+						'technical-knowledge/git/advanced/bisect',
+						'technical-knowledge/git/advanced/worktree',
+					],
+				},
+				{
+					type: 'category',
+					label: '🔀 Workflows',
+					collapsed: false,
+					items: [
+						'technical-knowledge/git/workflows/git-flow',
+						'technical-knowledge/git/workflows/trunk-based',
+						'technical-knowledge/git/workflows/conventional-commits',
+						'technical-knowledge/git/workflows/pull-request-best-practices',
+					],
+				},
+			]
+		},
+		{
+			type: 'category',
 			label: '🐳 DevOps & Containerization',
 			items: [
 				'technical-knowledge/devops/devops-intro',

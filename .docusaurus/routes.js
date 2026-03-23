@@ -9,11 +9,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'dbe'),
+    component: ComponentCreator('/', '0f0'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'daa'),
+        component: ComponentCreator('/', '80a'),
         routes: [
           {
             path: '/tags',
@@ -3857,7 +3857,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '4ef'),
+            component: ComponentCreator('/', '41a'),
             routes: [
               {
                 path: '/aws',
@@ -5012,6 +5012,168 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/git/advanced/bisect',
+                component: ComponentCreator('/technical-knowledge/git/advanced/bisect', '5f7'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/git/advanced/config-aliases',
+                component: ComponentCreator('/technical-knowledge/git/advanced/config-aliases', 'dc2'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/git/advanced/hooks',
+                component: ComponentCreator('/technical-knowledge/git/advanced/hooks', 'dc0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/git/advanced/worktree',
+                component: ComponentCreator('/technical-knowledge/git/advanced/worktree', 'c32'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/git/basics/add',
+                component: ComponentCreator('/technical-knowledge/git/basics/add', '089'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/git/basics/commit',
+                component: ComponentCreator('/technical-knowledge/git/basics/commit', 'f63'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/git/basics/fetch-pull',
+                component: ComponentCreator('/technical-knowledge/git/basics/fetch-pull', '123'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/git/basics/push',
+                component: ComponentCreator('/technical-knowledge/git/basics/push', '457'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/git/basics/status-diff',
+                component: ComponentCreator('/technical-knowledge/git/basics/status-diff', '780'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/git/branching/branches',
+                component: ComponentCreator('/technical-knowledge/git/branching/branches', 'c5a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/git/branching/conflict-resolution',
+                component: ComponentCreator('/technical-knowledge/git/branching/conflict-resolution', 'b5f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/git/branching/merge',
+                component: ComponentCreator('/technical-knowledge/git/branching/merge', '69d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/git/branching/rebase',
+                component: ComponentCreator('/technical-knowledge/git/branching/rebase', '234'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/git/collaboration/remotes',
+                component: ComponentCreator('/technical-knowledge/git/collaboration/remotes', 'f6b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/git/collaboration/stash',
+                component: ComponentCreator('/technical-knowledge/git/collaboration/stash', 'c06'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/git/collaboration/submodules',
+                component: ComponentCreator('/technical-knowledge/git/collaboration/submodules', 'feb'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/git/collaboration/tags',
+                component: ComponentCreator('/technical-knowledge/git/collaboration/tags', '095'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/git/history/cherry-pick',
+                component: ComponentCreator('/technical-knowledge/git/history/cherry-pick', '901'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/git/history/fixup',
+                component: ComponentCreator('/technical-knowledge/git/history/fixup', '70d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/git/history/log-blame',
+                component: ComponentCreator('/technical-knowledge/git/history/log-blame', 'bc5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/git/history/reflog',
+                component: ComponentCreator('/technical-knowledge/git/history/reflog', 'c66'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/git/history/reset-revert',
+                component: ComponentCreator('/technical-knowledge/git/history/reset-revert', '09f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/git/history/squash',
+                component: ComponentCreator('/technical-knowledge/git/history/squash', 'ebc'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/git/workflows/conventional-commits',
+                component: ComponentCreator('/technical-knowledge/git/workflows/conventional-commits', 'fe4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/git/workflows/git-flow',
+                component: ComponentCreator('/technical-knowledge/git/workflows/git-flow', '7a8'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/git/workflows/pull-request-best-practices',
+                component: ComponentCreator('/technical-knowledge/git/workflows/pull-request-best-practices', 'e69'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/git/workflows/trunk-based',
+                component: ComponentCreator('/technical-knowledge/git/workflows/trunk-based', '0f9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/interview-questions/genz-career/company/accenture-java-developer-interview-16lpa',
                 component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/accenture-java-developer-interview-16lpa', '860'),
                 exact: true,
@@ -6117,6 +6279,12 @@ export default [
               {
                 path: '/',
                 component: ComponentCreator('/', 'fc9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/',
+                component: ComponentCreator('/', '7e2'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
