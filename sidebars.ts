@@ -1043,6 +1043,47 @@ const sidebars: SidebarsConfig = {
 							],
 						},
 					]
+				},
+				{
+					type: 'category',
+					label: '📘 System Design Interview Books',
+					collapsed: true,
+					items: [
+						'books/building-microservice/intro',
+						{
+							type: 'category',
+							label: '🏗️ Part I — Foundation',
+							collapsed: false,
+							items: ['books/building-microservice/chapter-01',
+								'books/building-microservice/chapter-02',
+								'books/building-microservice/chapter-03',
+								'books/building-microservice/chapter-04'],
+						},
+						{
+							type: 'category',
+							label: '⚙️ Part II — Implementation',
+							collapsed: false,
+							items: [
+								'books/building-microservice/chapter-05',
+								'books/building-microservice/chapter-06',
+								'books/building-microservice/chapter-07',
+								'books/building-microservice/chapter-08',
+								'books/building-microservice/chapter-09',
+								'books/building-microservice/chapter-10',
+								'books/building-microservice/chapter-11',
+								'books/building-microservice/chapter-12',
+								'books/building-microservice/chapter-13',
+							],
+						},
+						{
+							type: 'category',
+							label: '👥 Part III — People',
+							collapsed: false,
+							items: ['books/building-microservice/chapter-14',
+								'books/building-microservice/chapter-15',
+								'books/building-microservice/chapter-16'],
+						},
+					],
 				}
 			]
 		},

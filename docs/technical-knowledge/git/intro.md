@@ -2,7 +2,7 @@
 id: intro
 title: Git Knowledge Base
 sidebar_label: Introduction
-slug: /
+slug: /technical-knowledge/git
 ---
 
 # Git Knowledge Base

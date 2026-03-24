@@ -11,6 +11,91 @@
           "mainDocId": "intro",
           "docs": [
             {
+              "id": "books/building-microservice/chapter-01",
+              "path": "/books/building-microservice/chapter-01",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/building-microservice/chapter-02",
+              "path": "/books/building-microservice/chapter-02",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/building-microservice/chapter-03",
+              "path": "/books/building-microservice/chapter-03",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/building-microservice/chapter-04",
+              "path": "/books/building-microservice/chapter-04",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/building-microservice/chapter-05",
+              "path": "/books/building-microservice/chapter-05",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/building-microservice/chapter-06",
+              "path": "/books/building-microservice/chapter-06",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/building-microservice/chapter-07",
+              "path": "/books/building-microservice/chapter-07",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/building-microservice/chapter-08",
+              "path": "/books/building-microservice/chapter-08",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/building-microservice/chapter-09",
+              "path": "/books/building-microservice/chapter-09",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/building-microservice/chapter-10",
+              "path": "/books/building-microservice/chapter-10",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/building-microservice/chapter-11",
+              "path": "/books/building-microservice/chapter-11",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/building-microservice/chapter-12",
+              "path": "/books/building-microservice/chapter-12",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/building-microservice/chapter-13",
+              "path": "/books/building-microservice/chapter-13",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/building-microservice/chapter-14",
+              "path": "/books/building-microservice/chapter-14",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/building-microservice/chapter-15",
+              "path": "/books/building-microservice/chapter-15",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/building-microservice/chapter-16",
+              "path": "/books/building-microservice/chapter-16",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/building-microservice/intro",
+              "path": "/books/building-microservice",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "books/clean-code/chapter-01-clean-code",
               "path": "/books/clean-code/chapter-01-clean-code",
               "sidebar": "tutorialSidebar"
@@ -1082,7 +1167,7 @@
             },
             {
               "id": "technical-knowledge/git/intro",
-              "path": "/",
+              "path": "/technical-knowledge/git",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -1836,7 +1921,7 @@
             },
             {
               "id": "technical-knowledge/solid/intro",
-              "path": "/",
+              "path": "/technical-knowledge/solid",
               "sidebar": "tutorialSidebar"
             },
             {

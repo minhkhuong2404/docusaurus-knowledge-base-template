@@ -9,11 +9,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '0f0'),
+    component: ComponentCreator('/', '4a9'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '80a'),
+        component: ComponentCreator('/', 'dba'),
         routes: [
           {
             path: '/tags',
@@ -3857,7 +3857,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '41a'),
+            component: ComponentCreator('/', '303'),
             routes: [
               {
                 path: '/aws',
@@ -3868,6 +3868,108 @@ export default [
               {
                 path: '/banking',
                 component: ComponentCreator('/banking', 'dce'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/building-microservice',
+                component: ComponentCreator('/books/building-microservice', '44c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/building-microservice/chapter-01',
+                component: ComponentCreator('/books/building-microservice/chapter-01', 'f48'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/building-microservice/chapter-02',
+                component: ComponentCreator('/books/building-microservice/chapter-02', 'c3f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/building-microservice/chapter-03',
+                component: ComponentCreator('/books/building-microservice/chapter-03', 'b42'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/building-microservice/chapter-04',
+                component: ComponentCreator('/books/building-microservice/chapter-04', '1a0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/building-microservice/chapter-05',
+                component: ComponentCreator('/books/building-microservice/chapter-05', '64c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/building-microservice/chapter-06',
+                component: ComponentCreator('/books/building-microservice/chapter-06', 'e07'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/building-microservice/chapter-07',
+                component: ComponentCreator('/books/building-microservice/chapter-07', '44b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/building-microservice/chapter-08',
+                component: ComponentCreator('/books/building-microservice/chapter-08', '283'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/building-microservice/chapter-09',
+                component: ComponentCreator('/books/building-microservice/chapter-09', '387'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/building-microservice/chapter-10',
+                component: ComponentCreator('/books/building-microservice/chapter-10', 'a62'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/building-microservice/chapter-11',
+                component: ComponentCreator('/books/building-microservice/chapter-11', '8d7'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/building-microservice/chapter-12',
+                component: ComponentCreator('/books/building-microservice/chapter-12', '5b0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/building-microservice/chapter-13',
+                component: ComponentCreator('/books/building-microservice/chapter-13', '351'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/building-microservice/chapter-14',
+                component: ComponentCreator('/books/building-microservice/chapter-14', '064'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/building-microservice/chapter-15',
+                component: ComponentCreator('/books/building-microservice/chapter-15', 'ad4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/building-microservice/chapter-16',
+                component: ComponentCreator('/books/building-microservice/chapter-16', '006'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -5012,6 +5114,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/git',
+                component: ComponentCreator('/technical-knowledge/git', 'ad5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/git/advanced/bisect',
                 component: ComponentCreator('/technical-knowledge/git/advanced/bisect', '5f7'),
                 exact: true,
@@ -6043,6 +6151,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/solid',
+                component: ComponentCreator('/technical-knowledge/solid', '5bb'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/solid/solid/dependency-inversion',
                 component: ComponentCreator('/technical-knowledge/solid/solid/dependency-inversion', '0e4'),
                 exact: true,
@@ -6279,18 +6393,6 @@ export default [
               {
                 path: '/',
                 component: ComponentCreator('/', 'fc9'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/',
-                component: ComponentCreator('/', '7e2'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/',
-                component: ComponentCreator('/', 'd26'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               }
