@@ -9,11 +9,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'db9'),
+    component: ComponentCreator('/', '366'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '417'),
+        component: ComponentCreator('/', 'e10'),
         routes: [
           {
             path: '/tags',
@@ -4627,7 +4627,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'e5f'),
+            component: ComponentCreator('/', '5a0'),
             routes: [
               {
                 path: '/aws',
@@ -7223,6 +7223,24 @@ export default [
               {
                 path: '/technical-knowledge/system-design/security-patterns',
                 component: ComponentCreator('/technical-knowledge/system-design/security-patterns', '343'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/test/spring-test-annotations',
+                component: ComponentCreator('/technical-knowledge/test/spring-test-annotations', '210'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/test/testing-concepts',
+                component: ComponentCreator('/technical-knowledge/test/testing-concepts', 'cee'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/test/wiremock',
+                component: ComponentCreator('/technical-knowledge/test/wiremock', 'e63'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

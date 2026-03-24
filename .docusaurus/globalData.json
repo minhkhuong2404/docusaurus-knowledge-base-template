@@ -2178,6 +2178,21 @@
               "id": "technical-knowledge/system-design/security-patterns",
               "path": "/technical-knowledge/system-design/security-patterns",
               "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/test/spring-test-annotations",
+              "path": "/technical-knowledge/test/spring-test-annotations",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/test/testing-concepts",
+              "path": "/technical-knowledge/test/testing-concepts",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/test/wiremock",
+              "path": "/technical-knowledge/test/wiremock",
+              "sidebar": "tutorialSidebar"
             }
           ],
           "draftIds": [],

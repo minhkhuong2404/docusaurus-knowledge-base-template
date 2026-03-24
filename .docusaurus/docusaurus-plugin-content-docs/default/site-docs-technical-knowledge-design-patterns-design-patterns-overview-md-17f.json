@@ -45,8 +45,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Spring MVC — Complete Guide",
-    "permalink": "/technical-knowledge/spring/spring-mvc"
+    "title": "🔌 WireMock",
+    "permalink": "/technical-knowledge/test/wiremock"
   },
   "next": {
     "title": "Singleton Pattern",

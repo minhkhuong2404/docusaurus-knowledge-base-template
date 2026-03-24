@@ -36,6 +36,7 @@ The content focuses on clear mental models, engineering trade-offs, and implemen
 - Networking
 - Kafka
 - Database
+- Redis
 - Operating Systems
 - DevOps and Containerization
 - AWS

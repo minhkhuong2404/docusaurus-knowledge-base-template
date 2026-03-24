@@ -92,6 +92,15 @@ const sidebars: SidebarsConfig = {
 		},
 		{
 			type: 'category',
+			label: '🧪 Testing & Mocking',
+			items: [
+				'technical-knowledge/test/testing-concepts',
+				'technical-knowledge/test/spring-test-annotations',
+				'technical-knowledge/test/wiremock'
+			]
+		},
+		{
+			type: 'category',
 			label: '🧩 Design Patterns',
 			items: [
 				'technical-knowledge/design-patterns/design-patterns-overview',

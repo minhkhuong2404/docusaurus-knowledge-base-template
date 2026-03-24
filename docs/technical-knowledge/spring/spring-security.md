@@ -83,6 +83,22 @@ PasswordEncoder (verifies password)
 SecurityContext (stores authenticated principal)
 ```
 
+### End-to-End Authentication Workflow
+
+The complete end-to-end workflow, combining the filter chain and authentication architecture, operates as follows:
+
+1. **Client** sends an HTTP **Request**.
+2. **DelegatingFilterProxy** intercepts the servlet request and delegates it to the Spring-managed **FilterChainProxy**.
+3. **FilterChainProxy** determines which **SecurityFilterChain** to invoke based on the request URL.
+4. The **SecurityFilterChain** contains multiple filters, eventually executing an **Authentication Filter** (e.g., `UsernamePasswordAuthenticationFilter`).
+5. The **Authentication Filter** extracts credentials from the request and creates an unauthenticated **Authentication Object** (e.g., an authentication token).
+6. This unauthenticated object is passed to the **AuthenticationManager** (the default implementation is **ProviderManager**).
+7. The **ProviderManager** delegates to one or more **AuthenticationProvider**s (e.g., `DaoAuthenticationProvider`).
+8. The **AuthenticationProvider** uses a **UserDetailsService** (often a **DAO** accessing a database) to load the user's record.
+9. The `UserDetailsService` returns a **UserDetails** object (containing the stored password and authorities).
+10. The **AuthenticationProvider** validates the credentials (e.g., checking if the password matches). If successful, it creates a fully populated, authenticated **Authentication Object** and returns it back to the `ProviderManager`, which returns it back to the `Authentication Filter`.
+11. Finally, the **Authentication Filter** stores this authenticated object in the **SecurityContextHolder** (Spring Context Holder) where it can be used for authorization decisions later in the filter chain or in your application code.
+
 ---
 
 ## Authorization Architecture: FilterSecurityInterceptor vs. AuthorizationFilter

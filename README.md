@@ -22,6 +22,7 @@ The documentation is grouped into structured learning paths, including:
 - Networking
 - Kafka
 - Database
+- Redis
 - Operating Systems
 - DevOps and Containerization
 - AWS
@@ -54,6 +55,7 @@ docs/
     networking/
     kafka/
     database/
+    redis/
     operating-systems/
     devops/
     aws/
