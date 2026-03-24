@@ -537,6 +537,202 @@ Use `findById()` when you need the data immediately. Use `getReferenceById()` wh
 
 ---
 
+## Specifications (Dynamic Queries)
+
+`JpaSpecificationExecutor` enables type-safe, composable dynamic queries — the correct alternative to building JPQL strings in code.
+
+```java
+public interface UserRepository extends JpaRepository<User, Long>,
+        JpaSpecificationExecutor<User> {
+}
+```
+
+```java
+// Define reusable specifications
+public class UserSpecifications {
+
+    public static Specification<User> hasStatus(UserStatus status) {
+        return (root, query, cb) -> cb.equal(root.get("status"), status);
+    }
+
+    public static Specification<User> emailContains(String email) {
+        return (root, query, cb) -> cb.like(
+            cb.lower(root.get("email")), "%" + email.toLowerCase() + "%"
+        );
+    }
+
+    public static Specification<User> createdAfter(LocalDateTime date) {
+        return (root, query, cb) -> cb.greaterThan(root.get("createdAt"), date);
+    }
+}
+
+// Compose specifications dynamically — no string concatenation
+@Service
+public class UserSearchService {
+
+    public Page<User> search(UserSearchRequest req, Pageable pageable) {
+        Specification<User> spec = Specification.where(null);
+
+        if (req.getStatus() != null) {
+            spec = spec.and(UserSpecifications.hasStatus(req.getStatus()));
+        }
+        if (req.getEmail() != null) {
+            spec = spec.and(UserSpecifications.emailContains(req.getEmail()));
+        }
+        if (req.getCreatedAfter() != null) {
+            spec = spec.and(UserSpecifications.createdAfter(req.getCreatedAfter()));
+        }
+
+        return userRepository.findAll(spec, pageable);
+    }
+}
+```
+
+> **When to use Specifications:** When you have a search/filter API where fields are optional. Avoid building JPQL/SQL strings dynamically — Specifications are type-safe and composable.
+
+---
+
+## Projections
+
+Projections allow fetching only specific fields instead of full entities — reducing memory usage and query complexity.
+
+### 1. Interface Projections (Closed)
+
+Spring Data JPA generates a proxy that reads only the declared fields:
+
+```java
+// Only fetch name and email — no joins for orders, addresses, etc.
+public interface UserSummary {
+    String getUsername();
+    String getEmail();
+
+    // Computed projection using SpEL
+    @Value("#{target.firstName + ' ' + target.lastName}")
+    String getFullName();
+}
+
+public interface UserRepository extends JpaRepository<User, Long> {
+    List<UserSummary> findByStatus(UserStatus status);
+    Optional<UserSummary> findSummaryById(Long id);
+}
+```
+
+### 2. Class Projections (DTO Projections)
+
+Generates a constructor-based query (JPQL `SELECT new ...`):
+
+```java
+public class UserDto {
+    private final String username;
+    private final String email;
+
+    // Constructor must match exactly
+    public UserDto(String username, String email) {
+        this.username = username;
+        this.email = email;
+    }
+}
+
+@Query("SELECT new com.example.dto.UserDto(u.username, u.email) FROM User u WHERE u.status = :status")
+List<UserDto> findUserDtosByStatus(@Param("status") UserStatus status);
+```
+
+### 3. Dynamic Projections
+
+Return different projection types at runtime from the same repository method:
+
+```java
+<T> List<T> findByStatus(UserStatus status, Class<T> type);
+
+// Call site
+List<UserSummary> summaries = repo.findByStatus(ACTIVE, UserSummary.class);
+List<UserDto>     dtos      = repo.findByStatus(ACTIVE, UserDto.class);
+List<User>        entities  = repo.findByStatus(ACTIVE, User.class);
+```
+
+### Projection Comparison
+
+| Type | Performance | Join support | SpEL | Use case |
+|---|---|---|---|---|
+| Interface (closed) | Best | ❌ | ✅ | Simple field subsets |
+| Class (DTO) | Good | ✅ via JPQL | ❌ | Custom aggregations |
+| Open interface | Moderate | ❌ | ✅ | Computed fields |
+| Dynamic | Varies | Depends | Depends | Flexible APIs |
+
+---
+
+## Locking: Optimistic vs Pessimistic
+
+### Optimistic Locking (`@Version`)
+
+Assumes conflicts are rare. Uses a version field to detect concurrent modifications:
+
+```java
+@Entity
+public class Product {
+    @Id
+    private Long id;
+
+    private int stock;
+
+    @Version  // Hibernate automatically includes this in UPDATE WHERE clauses
+    private Long version;
+}
+
+// Thread 1 reads: product.version = 5, stock = 10
+// Thread 2 reads: product.version = 5, stock = 10
+// Thread 1 decrements: UPDATE products SET stock=9, version=6 WHERE id=? AND version=5  ✅
+// Thread 2 decrements: UPDATE products SET stock=9, version=6 WHERE id=? AND version=5  ❌ 0 rows updated
+// → Hibernate throws OptimisticLockException → caller retries
+```
+
+```java
+// Handling optimistic lock conflicts
+@Transactional
+@Retryable(retryFor = OptimisticLockingFailureException.class, maxAttempts = 3)
+public void decrementStock(Long productId, int quantity) {
+    Product product = productRepository.findById(productId).orElseThrow();
+    product.setStock(product.getStock() - quantity);
+    productRepository.save(product);
+}
+```
+
+### Pessimistic Locking (`@Lock`)
+
+Acquires a database lock on read — other transactions must wait:
+
+```java
+public interface ProductRepository extends JpaRepository<Product, Long> {
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)  // SELECT ... FOR UPDATE
+    @Query("SELECT p FROM Product p WHERE p.id = :id")
+    Optional<Product> findByIdForUpdate(@Param("id") Long id);
+
+    @Lock(LockModeType.PESSIMISTIC_READ)   // SELECT ... FOR SHARE
+    @Query("SELECT p FROM Product p WHERE p.id = :id")
+    Optional<Product> findByIdForRead(@Param("id") Long id);
+}
+
+@Transactional
+public void reserveStock(Long productId, int quantity) {
+    Product product = productRepository.findByIdForUpdate(productId).orElseThrow();
+    if (product.getStock() < quantity) throw new InsufficientStockException();
+    product.setStock(product.getStock() - quantity);
+    // Lock released when transaction commits/rolls back
+}
+```
+
+### When to Use Which
+
+| Scenario | Strategy | Reason |
+|---|---|---|
+| Low contention reads with rare conflicts | Optimistic | No lock overhead on reads |
+| High contention writes (inventory, seats) | Pessimistic | Prevent dirty reads under load |
+| Reporting/analytics | `readOnly = true` | No locking, optimized reads |
+| Long-running business transactions | Optimistic + retry | Pessimistic locks held too long |
+
+---
+
 ## Interview Questions
 
 ### Q1: What is Spring Data JPA?

@@ -1,8 +1,12 @@
 ---
 sidebar_position: 12
-title: "Chapter 11: Security"
+title: 'Chapter 11: Security'
+description: '**Part II — Implementation**'
+tags:
+- books
+- building-microservice
+- chapter-11
 ---
-
 # Chapter 11: Security
 
 **Part II — Implementation**

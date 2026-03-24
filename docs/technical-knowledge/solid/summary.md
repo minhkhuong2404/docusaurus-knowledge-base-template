@@ -2,8 +2,13 @@
 id: summary
 title: Summary & Cheat Sheet
 sidebar_position: 3
+description: Congratulations! You've learned all 5 SOLID principles. Here's everything
+  at a glance.
+tags:
+- technical-knowledge
+- solid
+- summary
 ---
-
 # ✅ Summary & Cheat Sheet
 
 Congratulations! You've learned all 5 SOLID principles. Here's everything at a glance.

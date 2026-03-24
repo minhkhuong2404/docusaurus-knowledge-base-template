@@ -2,8 +2,14 @@
 id: deployment
 title: Phase 6 — Deployment
 sidebar_label: Deployment
+description: The **Deployment phase** moves tested, approved software from the staging
+  environment to production. A well-executed deployment is **planned, automated.
+tags:
+- non-technical-knowledge
+- sdlc
+- phases
+- deployment
 ---
-
 # Phase 6 — Deployment
 
 ## Overview

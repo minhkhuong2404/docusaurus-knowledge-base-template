@@ -2,8 +2,14 @@
 id: integration-testing
 title: Integration Testing
 sidebar_label: Integration Testing
+description: '**Integration tests** validate that multiple components work correctly
+  together. Unlike unit tests, they test real interactions — against a real database.'
+tags:
+- non-technical-knowledge
+- sdlc
+- testing
+- integration-testing
 ---
-
 # Integration Testing
 
 ## What is Integration Testing?

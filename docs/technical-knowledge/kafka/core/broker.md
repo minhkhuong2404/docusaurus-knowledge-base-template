@@ -2,8 +2,15 @@
 id: broker
 title: Kafka Broker
 sidebar_label: Broker
+description: A **broker** is a single Kafka server. It receives messages from producers,
+  stores them on disk, and serves them to consumers. A Kafka **cluster** consists
+  of.
+tags:
+- technical-knowledge
+- kafka
+- core
+- broker
 ---
-
 # Kafka Broker
 
 ## What is a Broker?

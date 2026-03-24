@@ -2,8 +2,15 @@
 id: tags
 title: git tag — Marking Releases
 sidebar_label: Tags
+description: A **tag** is an immutable pointer to a specific commit — unlike a branch,
+  it never moves. Tags are used to mark release points (`v1.2.0`), milestones, or
+  any.
+tags:
+- technical-knowledge
+- git
+- collaboration
+- tags
 ---
-
 # Tags — Marking Releases
 
 ## What is a Tag?

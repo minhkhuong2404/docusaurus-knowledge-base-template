@@ -2,8 +2,14 @@
 id: order-messages
 title: Message Ordering with Partition Keys
 sidebar_label: Message Ordering
+description: Kafka guarantees **total ordering within a partition**. Messages written
+  to the same partition are always consumed in the exact order they were produced.
+tags:
+- technical-knowledge
+- kafka
+- advanced
+- order-messages
 ---
-
 # Message Ordering with Partition Keys
 
 ## Kafka's Ordering Guarantee

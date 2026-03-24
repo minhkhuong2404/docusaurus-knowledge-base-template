@@ -1,8 +1,12 @@
 ---
 sidebar_position: 3
-title: "Chapter 2: How to Model Microservices"
+title: 'Chapter 2: How to Model Microservices'
+description: '**Part I — Foundation**'
+tags:
+- books
+- building-microservice
+- chapter-02
 ---
-
 # Chapter 2: How to Model Microservices
 
 **Part I — Foundation**

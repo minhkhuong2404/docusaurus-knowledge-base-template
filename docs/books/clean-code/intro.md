@@ -1,9 +1,13 @@
 ---
 sidebar_position: 1
 title: Introduction
-description: Clean Code - A Handbook of Agile Software Craftsmanship by Robert C. Martin
+description: Clean Code - A Handbook of Agile Software Craftsmanship by Robert C.
+  Martin
+tags:
+- books
+- clean-code
+- intro
 ---
-
 # Clean Code: A Handbook of Agile Software Craftsmanship
 
 > *"Writing clean code is what you must do in order to call yourself a professional. There is no reasonable excuse for doing anything less than your best."*

@@ -2,8 +2,15 @@
 id: rebase
 title: git rebase — Replaying Commits
 sidebar_label: rebase
+description: '`git rebase` moves or replays a sequence of commits onto a new base.
+  It rewrites commit history by creating **new commits** with the same changes but
+  different.'
+tags:
+- technical-knowledge
+- git
+- branching
+- rebase
 ---
-
 # `git rebase` — Replaying Commits
 
 ## What It Does

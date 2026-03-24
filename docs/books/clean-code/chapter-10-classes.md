@@ -1,9 +1,13 @@
 ---
 sidebar_position: 11
-title: "Chapter 10: Classes"
-description: Designing small, cohesive classes with a single responsibility and organizing them for change.
+title: 'Chapter 10: Classes'
+description: Designing small, cohesive classes with a single responsibility and organizing
+  them for change.
+tags:
+- books
+- clean-code
+- chapter-10-classes
 ---
-
 # Chapter 10: Classes
 
 ## Class Organization

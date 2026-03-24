@@ -2,8 +2,14 @@
 id: maintenance
 title: Phase 7 — Maintenance
 sidebar_label: Maintenance
+description: The **Maintenance phase** begins immediately after deployment and continues
+  for the lifetime of the system. It encompasses monitoring, incident response.
+tags:
+- non-technical-knowledge
+- sdlc
+- phases
+- maintenance
 ---
-
 # Phase 7 — Maintenance
 
 ## Overview

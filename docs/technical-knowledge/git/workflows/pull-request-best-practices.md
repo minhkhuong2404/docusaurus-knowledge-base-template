@@ -2,8 +2,14 @@
 id: pull-request-best-practices
 title: Pull Request Best Practices
 sidebar_label: PR Best Practices
+description: 'A pull request (PR) is a unit of communication as much as it is a unit
+  of code change. A good PR:'
+tags:
+- technical-knowledge
+- git
+- workflows
+- pull-request-best-practices
 ---
-
 # Pull Request Best Practices
 
 ## What Makes a Good Pull Request?

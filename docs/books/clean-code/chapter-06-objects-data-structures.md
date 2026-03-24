@@ -1,9 +1,13 @@
 ---
 sidebar_position: 7
-title: "Chapter 6: Objects and Data Structures"
-description: The fundamental tension between objects and data structures, and when to use each.
+title: 'Chapter 6: Objects and Data Structures'
+description: The fundamental tension between objects and data structures, and when
+  to use each.
+tags:
+- books
+- clean-code
+- chapter-06-objects-data-structures
 ---
-
 # Chapter 6: Objects and Data Structures
 
 ## The Core Tension

@@ -1,9 +1,14 @@
 ---
 id: chapter-10-exceptions
-title: "Chapter 10: Exceptions"
-sidebar_label: "10. Exceptions"
+title: 'Chapter 10: Exceptions'
+sidebar_label: 10. Exceptions
+description: When used to best advantage, exceptions can improve a program's readability,
+  reliability, and maintainability. When used improperly, they can have the opposite.
+tags:
+- books
+- effective-java
+- chapter-10-exceptions
 ---
-
 # Chapter 10: Exceptions
 
 When used to best advantage, exceptions can improve a program's readability, reliability, and maintainability. When used improperly, they can have the opposite effect.

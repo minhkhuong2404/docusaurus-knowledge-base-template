@@ -2,8 +2,14 @@
 id: log-blame
 title: git log & git blame — Exploring History
 sidebar_label: log & blame
+description: '`git log` shows the commit history of the current branch — or any branch,
+  range, file, or author you specify.'
+tags:
+- technical-knowledge
+- git
+- history
+- log-blame
 ---
-
 # `git log` & `git blame` — Exploring History
 
 ## git log

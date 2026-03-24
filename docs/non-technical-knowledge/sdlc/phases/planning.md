@@ -2,8 +2,15 @@
 id: planning
 title: Phase 1 — Planning
 sidebar_label: Planning
+description: The **Planning phase** is the foundation of the entire SDLC. It defines
+  the project's purpose, scope, feasibility, budget, timeline, and team structure
+  before.
+tags:
+- non-technical-knowledge
+- sdlc
+- phases
+- planning
 ---
-
 # Phase 1 — Planning
 
 ## Overview

@@ -2,8 +2,15 @@
 id: worktree
 title: git worktree — Multiple Working Trees
 sidebar_label: Worktree
+description: '`git worktree` lets you check out **multiple branches simultaneously**,
+  each in its own directory, all sharing the same `.git` repository. No stashing,
+  no.'
+tags:
+- technical-knowledge
+- git
+- advanced
+- worktree
 ---
-
 # `git worktree` — Multiple Working Trees
 
 ## What It Does

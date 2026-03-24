@@ -3,8 +3,13 @@ id: glossary
 title: Banking & Payments Glossary
 sidebar_label: Glossary
 sidebar_position: 99
+description: A comprehensive A–Z reference of terms used in banking and payments.
+  Essential reading for anyone joining the industry.
+tags:
+- technical-knowledge
+- banking
+- glossary
 ---
-
 # Banking & Payments Glossary
 
 A comprehensive A–Z reference of terms used in banking and payments. Essential reading for anyone joining the industry.

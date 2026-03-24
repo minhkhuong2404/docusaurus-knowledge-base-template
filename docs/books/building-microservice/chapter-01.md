@@ -1,8 +1,12 @@
 ---
 sidebar_position: 2
-title: "Chapter 1: What Are Microservices?"
+title: 'Chapter 1: What Are Microservices?'
+description: '**Part I — Foundation**'
+tags:
+- books
+- building-microservice
+- chapter-01
 ---
-
 # Chapter 1: What Are Microservices?
 
 **Part I — Foundation**

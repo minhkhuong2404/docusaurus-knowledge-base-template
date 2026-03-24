@@ -2,8 +2,14 @@
 id: consumer-overview
 title: Kafka Consumer
 sidebar_label: Consumer Overview
+description: A **consumer** reads messages from Kafka topics. Unlike traditional queues
+  (push-based), Kafka consumers **pull** messages at their own pace. This gives.
+tags:
+- technical-knowledge
+- kafka
+- consumer
+- consumer-overview
 ---
-
 # Kafka Consumer
 
 ## What is a Consumer?

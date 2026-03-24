@@ -3,8 +3,13 @@ id: intro
 title: Designing Data-Intensive Applications
 sidebar_label: 📖 Introduction
 sidebar_position: 1
+description: 'Modern applications are not **compute-intensive** (CPU is rarely the
+  bottleneck) — they are **data-intensive**. The real challenges are:'
+tags:
+- books
+- ddia
+- intro
 ---
-
 # Designing Data-Intensive Applications
 
 > *The Big Ideas Behind Reliable, Scalable, and Maintainable Systems*

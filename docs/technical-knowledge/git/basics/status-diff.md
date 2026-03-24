@@ -2,8 +2,14 @@
 id: status-diff
 title: git status & git diff — Inspecting Changes
 sidebar_label: status & diff
+description: '`git status` shows the state of your working tree and index relative
+  to the current `HEAD` commit.'
+tags:
+- technical-knowledge
+- git
+- basics
+- status-diff
 ---
-
 # `git status` & `git diff` — Inspecting Changes
 
 ## git status

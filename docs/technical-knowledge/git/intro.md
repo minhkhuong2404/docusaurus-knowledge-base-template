@@ -3,8 +3,14 @@ id: intro
 title: Git Knowledge Base
 sidebar_label: Introduction
 slug: /technical-knowledge/git
+description: '**Git** is a distributed version control system (VCS) created by Linus
+  Torvalds in 2005. Every developer has a full copy of the repository — including
+  its.'
+tags:
+- technical-knowledge
+- git
+- intro
 ---
-
 # Git Knowledge Base
 
 > A comprehensive reference for everything Git — from staging your first file to rewriting history, managing complex merges, and running team-wide workflows.

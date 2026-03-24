@@ -3,8 +3,13 @@ id: camt055_camt056
 title: camt.055 & camt.056 — Payment Cancellation Requests
 sidebar_label: camt.055 / camt.056 — Cancellation
 sidebar_position: 9
+description: These two messages form the **formal payment cancellation (recall) workflow**,
+  allowing a payment to be recalled after it has been sent — even after settlement.
+tags:
+- technical-knowledge
+- banking
+- camt055_camt056
 ---
-
 # camt.055 & camt.056 — Payment Cancellation Requests
 
 ## Overview

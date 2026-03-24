@@ -2,8 +2,14 @@
 id: roll-backward
 title: Roll-Backward Strategy
 sidebar_label: Roll-Backward
+description: '**Roll-backward** (commonly called a **rollback**) is a deployment recovery
+  strategy where the system is reverted to the **previously known-good version** when.'
+tags:
+- non-technical-knowledge
+- sdlc
+- deployment
+- roll-backward
 ---
-
 # Roll-Backward Strategy
 
 ## What is Roll-Backward?

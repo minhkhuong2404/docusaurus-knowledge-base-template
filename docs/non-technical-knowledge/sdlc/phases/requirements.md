@@ -2,8 +2,14 @@
 id: requirements
 title: Phase 2 — Requirements Analysis
 sidebar_label: Requirements
+description: The **Requirements Analysis phase** transforms the high-level project
+  vision from the Planning phase into detailed, unambiguous, and testable specifications.
+tags:
+- non-technical-knowledge
+- sdlc
+- phases
+- requirements
 ---
-
 # Phase 2 — Requirements Analysis
 
 ## Overview

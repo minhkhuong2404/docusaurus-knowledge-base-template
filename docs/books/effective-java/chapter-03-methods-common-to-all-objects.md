@@ -1,9 +1,14 @@
 ---
 id: chapter-03-methods-common-to-all-objects
-title: "Chapter 3: Methods Common to All Objects"
-sidebar_label: "3. Methods Common to All Objects"
+title: 'Chapter 3: Methods Common to All Objects'
+sidebar_label: 3. Methods Common to All Objects
+description: Although `Object` is a concrete class, it is designed primarily for extension.
+  All of its nonfinal methods (`equals`, `hashCode`, `toString`, `clone`, and.
+tags:
+- books
+- effective-java
+- chapter-03-methods-common-to-all-objects
 ---
-
 # Chapter 3: Methods Common to All Objects
 
 Although `Object` is a concrete class, it is designed primarily for extension. All of its nonfinal methods (`equals`, `hashCode`, `toString`, `clone`, and `finalize`) have explicit general contracts because they are designed to be overridden. Failure to obey these contracts will prevent classes like `HashMap` and `HashSet` from functioning properly.

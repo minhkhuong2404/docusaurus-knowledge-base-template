@@ -1,8 +1,12 @@
 ---
 sidebar_position: 4
-title: "Chapter 3: Splitting the Monolith"
+title: 'Chapter 3: Splitting the Monolith'
+description: '**Part I — Foundation**'
+tags:
+- books
+- building-microservice
+- chapter-03
 ---
-
 # Chapter 3: Splitting the Monolith
 
 **Part I — Foundation**

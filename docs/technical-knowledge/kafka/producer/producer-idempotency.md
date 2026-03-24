@@ -2,8 +2,13 @@
 id: producer-idempotency
 title: Idempotent Producer
 sidebar_label: Idempotency
+description: 'Without idempotence, the standard retry flow can produce **duplicates**:'
+tags:
+- technical-knowledge
+- kafka
+- producer
+- producer-idempotency
 ---
-
 # Idempotent Producer
 
 ## The Problem: Duplicate Messages on Retry

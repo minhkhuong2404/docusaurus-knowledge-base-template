@@ -1,9 +1,14 @@
 ---
 id: chapter-06-enums-and-annotations
-title: "Chapter 6: Enums and Annotations"
-sidebar_label: "6. Enums and Annotations"
+title: 'Chapter 6: Enums and Annotations'
+sidebar_label: 6. Enums and Annotations
+description: 'Java supports two special-purpose families of reference types: *enum
+  types* (a kind of class) and *annotation types* (a kind of interface). This chapter.'
+tags:
+- books
+- effective-java
+- chapter-06-enums-and-annotations
 ---
-
 # Chapter 6: Enums and Annotations
 
 Java supports two special-purpose families of reference types: *enum types* (a kind of class) and *annotation types* (a kind of interface). This chapter discusses best practices for using these type families.

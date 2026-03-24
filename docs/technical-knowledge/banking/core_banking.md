@@ -3,8 +3,13 @@ id: core_banking
 title: Core Banking System (CBS)
 sidebar_label: Core Banking System
 sidebar_position: 1
+description: The **Core Banking System (CBS)** is the central software platform that
+  manages a bank's **primary banking operations** — account management, transaction.
+tags:
+- technical-knowledge
+- banking
+- core_banking
 ---
-
 # Core Banking System (CBS)
 
 ## Overview

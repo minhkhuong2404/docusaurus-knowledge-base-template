@@ -924,6 +924,400 @@ Spring Boot includes built-in health indicators for common dependencies (DB, Red
 
 ---
 
+## Level VI — Expert (Senior Interview Questions)
+
+### Q39: Why does calling `@Transactional` method from within the same class not start a transaction?
+
+Spring implements `@Transactional` using **AOP proxies**. When code outside the class calls `service.placeOrder()`, it hits the proxy, which opens a transaction. But when `placeOrder()` internally calls `this.sendConfirmation()`, it bypasses the proxy — calling the raw object directly. The proxy never intercepts the call, so `@Transactional` on `sendConfirmation()` is silently ignored.
+
+**Fix:** Extract to a separate bean, or inject `self` to force the call through the proxy.
+
+```java
+// This correctly forces the call through the proxy
+@Service
+public class OrderService {
+    @Autowired private OrderService self;  // inject proxy of itself
+
+    public void placeOrder(Order order) {
+        self.sendConfirmation(order);  // goes through proxy ✅
+    }
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void sendConfirmation(Order order) { ... }
+}
+```
+
+### Q40: What is the difference between `BeanPostProcessor` and `BeanFactoryPostProcessor`? When would you use each?
+
+| | `BeanFactoryPostProcessor` | `BeanPostProcessor` |
+|---|---|---|
+| Runs | Before any beans are instantiated | After each bean instance is created |
+| Modifies | Bean **definitions** (metadata) | Bean **instances** |
+| Example use | Resolve `${...}` placeholders | Wrap beans in AOP proxies |
+| Risk | Calling `getBean()` causes premature init | Must be defined as early as possible |
+
+`PropertySourcesPlaceholderConfigurer` is a `BeanFactoryPostProcessor` — it resolves properties before any bean is created. Spring's AOP mechanism uses `BeanPostProcessor` to replace beans with proxies after creation.
+
+### Q41: What are the trade-offs of virtual threads (Project Loom) in Spring Boot 3.2+?
+
+```yaml
+spring:
+  threads:
+    virtual:
+      enabled: true
+```
+
+**Benefits:** Thousands of concurrent requests with far fewer OS threads; existing blocking code works as-is; no refactoring to reactive.
+
+**Trade-offs and pitfalls:**
+- `synchronized` blocks **pin** the carrier OS thread — blocks the entire JVM thread-by-thread advantage. Migrate to `ReentrantLock`.
+- Third-party libraries (HikariCP, Redis clients) with internal `synchronized` can pin threads — monitor with JFR.
+- No benefit for CPU-bound work — only I/O-bound operations gain.
+- Thread-local caching assumptions may break at scale (99,999 virtual threads can share thread-locals wastefully).
+
+### Q42: What constraints does GraalVM Native Image impose on Spring Boot applications?
+
+GraalVM Native Image compiles the app at build time, eliminating the JVM at runtime. This imposes:
+
+| Constraint | Why | Spring Boot Mitigation |
+|---|---|---|
+| No runtime classpath scanning | Reflection must be registered at build time | `@RegisterReflectionForBinding`, `reflect-config.json` |
+| No dynamic proxy generation at runtime | CGLIB proxies pre-generated at build time | Spring AOT processes these |
+| No lazy initialization | All beans must be resolvable at build time | Spring AOT hints track them |
+| Slower build time | Everything compiled upfront | GraalVM build plugins |
+
+**Build:**
+```bash
+./mvnw -Pnative spring-boot:build-image  # Cloud-native buildpacks + GraalVM
+```
+
+**When to use:** Serverless functions, CLI tools, or anything requiring fast startup + low memory. Not ideal for large monoliths with heavy ORM usage.
+
+### Q43: How does `@Scheduled` behave in a multi-instance deployment, and how do you fix it?
+
+By default, `@Scheduled` runs on **every JVM instance**. In a 5-node cluster running a `@Scheduled` job at midnight, all 5 nodes execute it simultaneously — causing data duplication, double-sends, or conflicts.
+
+**Fix with ShedLock:**
+```java
+@Scheduled(cron = "0 0 0 * * *")
+@SchedulerLock(name = "midnightJob", lockAtLeastFor = "5m", lockAtMostFor = "30m")
+public void midnightJob() { ... }  // Only 1 node acquires the DB lock
+```
+
+**Alternative:** Use a dedicated scheduler (Quartz clustered, AWS EventBridge, Kubernetes CronJob) for critical single-execution jobs.
+
+### Q44: Explain how Spring Boot's auto-configuration ordering works. How do you control it?
+
+Auto-configuration classes are all loaded from `AutoConfiguration.imports`. Their ordering is controlled by:
+
+1. **`@AutoConfigureOrder(n)`** — explicit numeric priority (lower = earlier)
+2. **`@AutoConfigureAfter(X.class)`** — load after specific auto-config
+3. **`@AutoConfigureBefore(X.class)`** — load before specific auto-config
+4. **`@ConditionalOnMissingBean`** — user-defined beans take precedence; auto-config backs off
+
+**Practical example:** Writing a custom starter that should run after `DataSourceAutoConfiguration` but before `JpaAutoConfiguration`:
+
+```java
+@AutoConfiguration
+@AutoConfigureAfter(DataSourceAutoConfiguration.class)
+@AutoConfigureBefore(JpaAutoConfiguration.class)
+public class MyCustomDatabaseConfig {
+    @Bean
+    @ConditionalOnMissingBean
+    public CustomDatabaseInterceptor interceptor(DataSource ds) { ... }
+}
+```
+
+### Q45: How do you propagate `SecurityContext` to `@Async` threads? What pitfalls exist?
+
+By default, `SecurityContextHolder` is `ThreadLocal` — Spring Security context lost on `@Async` execution. Three solutions:
+
+1. **`DelegatingSecurityContextAsyncTaskExecutor`** (recommended) — wraps the thread pool, copies context per task
+2. **`MODE_INHERITABLETHREADLOCAL`** — uses Java's `InheritableThreadLocal`, but reused pooled threads carry stale context
+3. **Explicit pass-through** — pass `Authentication` as a method parameter
+
+The cleanest production pattern:
+```java
+@Override
+public Executor getAsyncExecutor() {
+    return new DelegatingSecurityContextAsyncTaskExecutor(
+        new ThreadPoolTaskExecutor() {{ setCorePoolSize(10); initialize(); }}
+    );
+}
+```
+
+### Q46: Design a custom `HealthIndicator` for a business-critical dependency. What should it check?
+
+```java
+@Component
+public class PaymentGatewayHealthIndicator implements HealthIndicator {
+
+    private final PaymentGatewayClient client;
+
+    @Override
+    public Health health() {
+        try {
+            // ✅ Check actual connectivity (ping endpoint, not just config)
+            GatewayStatus status = client.ping();
+
+            if (status.isUp()) {
+                return Health.up()
+                    .withDetail("gateway", status.getVersion())
+                    .withDetail("latencyMs", status.getLatencyMs())
+                    .build();
+            }
+            return Health.down()
+                .withDetail("reason", status.getErrorMessage())
+                .build();
+        } catch (Exception e) {
+            return Health.down(e)
+                .withDetail("gateway", "unreachable")
+                .build();
+        }
+    }
+}
+```
+
+**What a strong health check verifies:**
+- Network reachability (not just config existence)
+- Authentication success (not just connectivity)
+- Response < timeout threshold
+- Exposed via `/actuator/health/paymentGateway`
+
+**Configuration:**
+```yaml
+management:
+  endpoint:
+    health:
+      show-details: when-authorized
+      group:
+        readiness:
+          include: db, paymentGateway, redis
+```
+
+---
+
+### Q47: In what order do Spring AOP aspects execute when a service method has `@PreAuthorize`, `@Transactional`, `@Cacheable`, and a custom logging aspect?
+
+Order is controlled by `@Order` on each aspect (lower = outermost proxy). Spring's built-in aspect orders:
+
+```
+@PreAuthorize / Method Security → [custom aspects] → @Cacheable → @Transactional → @Validated
+(outermost)                                                                          (innermost)
+```
+
+In practice, the default execution order for a service method call is:
+
+```
+External call
+→ [1] Spring Security MethodSecurityInterceptor (@PreAuthorize) — throws 403 before any work
+  → [2] Custom LoggingAspect @Order(2) — MDC setup, start timer
+    → [3] @Cacheable aspect — return cached value or continue
+      → [4] @Transactional aspect (Integer.MAX_VALUE - 1) — open transaction
+        → target method executes
+      ← commit or rollback
+    ← write to cache on success
+  ← stop timer, clear MDC
+← security check done
+```
+
+**Critical implication:** If the logging aspect is **outside** the transaction aspect, a log entry written in `@AfterReturning` will appear **even if the transaction rolled back** — because the log happened outside the transaction boundary. Always use `@Order` explicitly on custom aspects.
+
+---
+
+### Q48: When would you choose a custom `@Aspect` over Spring Security's `@PreAuthorize` for access control?
+
+| Scenario | Use `@PreAuthorize` | Use Custom `@Aspect` |
+|----------|--------------------|-----------------------|
+| Role/permission check | ✅ Standard, concise | Overkill |
+| Row-level access (check owner) | ✅ SpEL `#entity.ownerId == principal.id` | If complex logic needed |
+| Multi-system access check (external API, DB, cache) | ❌ SpEL can't call remote | ✅ Full Java logic |
+| Audit trail required | ❌ No built-in persistence | ✅ Can persist to DB in aspect |
+| Complex conditional logic | Cumbersome in SpEL | ✅ Readable Java code |
+
+**Custom audit security aspect pattern:**
+
+```java
+@Around("@annotation(sensitiveOp)")
+public Object auditSensitiveOperation(ProceedingJoinPoint pjp, SensitiveOperation sensitiveOp) throws Throwable {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    // Log who, what, when — BEFORE calling the method
+    auditRepo.save(AuditEntry.builder()
+        .user(auth.getName())
+        .action(sensitiveOp.action())
+        .resource(pjp.getArgs()[0].toString())
+        .build());
+    return pjp.proceed();
+}
+```
+
+Note: If you save the audit entry **inside** the same transaction as the business operation and the transaction rolls back, the audit log is ALSO lost. Fix: use `@Transactional(propagation = REQUIRES_NEW)` inside the aspect to save audit in a separate transaction.
+
+---
+
+### Q49: MDC context is lost in `@Async` methods. How do you fix it?
+
+`MDC` uses `ThreadLocal` storage. When `@Async` spawns a new thread from the executor pool, the new thread has NO MDC context — the trace ID, request ID, and user info are all lost.
+
+**Fix 1: TaskDecorator on the async executor:**
+
+```java
+@Configuration
+@EnableAsync
+public class AsyncConfig implements AsyncConfigurer {
+
+    @Override
+    public Executor getAsyncExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(10);
+        executor.setMaxPoolSize(50);
+        // TaskDecorator: wrap each task with MDC propagation
+        executor.setTaskDecorator(runnable -> {
+            Map<String, String> contextMap = MDC.getCopyOfContextMap();
+            return () -> {
+                try {
+                    if (contextMap != null) MDC.setContextMap(contextMap);
+                    runnable.run();
+                } finally {
+                    MDC.clear();  // Always clean up
+                }
+            };
+        });
+        executor.initialize();
+        return executor;
+    }
+}
+```
+
+**Fix 2: SecurityContext propagation for `@Async` + Spring Security:**
+
+```java
+// Spring Security's SecurityContext is also ThreadLocal
+// Fix: configure DelegatingSecurityContextExecutor
+@Bean
+public Executor asyncExecutor() {
+    Executor delegate = new ThreadPoolTaskExecutor();
+    // Wraps each task to copy SecurityContext as well as MDC
+    return new DelegatingSecurityContextExecutor(delegate,
+        SecurityContextHolder.getContext());
+}
+```
+
+Without this fix, `Authentication` is `null` inside `@Async` methods — causing `NullPointerException` when calling `SecurityContextHolder.getContext().getAuthentication()`.
+
+---
+
+### Q50: `@CacheEvict` runs but the cache still returns stale data after a failed transaction. Why?
+
+**Root cause:** `@CacheEvict` defaults to `beforeInvocation = false` — meaning it runs **after** the method returns. If the method is also `@Transactional`, the cache is evicted, but the transaction later **rolls back** → the database still has the old data → the cache is empty → next request refills cache from DB with rolled-back (old) value. Now cache is consistent again.
+
+But the real problem occurs when:
+
+```java
+@CacheEvict(value = "products", key = "#product.id")
+@Transactional
+public void updateProduct(Product product) {
+    productRepository.save(product);
+    // If an exception here causes rollback...
+    // cache was already evicted (the eviction ran after save but before rollback committed)
+    // Next cache fetch gets OLD data from DB → cache filled with stale data
+}
+```
+
+**Fix options:**
+
+```java
+// Option 1: beforeInvocation = true — evict before any logic runs
+// Safer: cache is evicted regardless of transaction outcome
+@CacheEvict(value = "products", key = "#product.id", beforeInvocation = true)
+@Transactional
+public void updateProduct(Product product) { ... }
+
+// Option 2: Use a TransactionSynchronizationAdapter to evict AFTER commit
+@Transactional
+public void updateProduct(Product product) {
+    productRepository.save(product);
+    Long id = product.getId();
+    TransactionSynchronizationManager.registerSynchronization(
+        new TransactionSynchronizationAdapter() {
+            @Override
+            public void afterCommit() {
+                cacheManager.getCache("products").evict(id);  // Only evicts on TX commit
+            }
+        });
+}
+```
+
+Option 2 is the correct production approach — cache only evicted when the database transaction successfully commits.
+
+---
+
+### Q51: Design a custom `@Auditable` annotation and AOP aspect for production use. What edge cases must you handle?
+
+**Production-worthy implementation:**
+
+```java
+// Annotation
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Auditable {
+    String action();               // e.g., "USER_LOGIN", "ORDER_CANCEL"
+    boolean captureArgs() default false;  // careful with PII
+    boolean captureResult() default false;
+}
+
+// Aspect
+@Aspect
+@Component
+@Order(2)  // After security, before transaction (so audit is in same TX as business op)
+public class AuditableAspect {
+
+    private final AuditService auditService;
+
+    @Around("@annotation(auditable)")
+    public Object audit(ProceedingJoinPoint pjp, Auditable auditable) throws Throwable {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = (auth != null) ? auth.getName() : "anonymous";
+
+        AuditRecord record = AuditRecord.builder()
+            .action(auditable.action())
+            .username(username)
+            .traceId(MDC.get("traceId"))
+            .method(pjp.getSignature().toShortString())
+            .args(auditable.captureArgs() ? sanitize(pjp.getArgs()) : null)
+            .timestamp(Instant.now())
+            .build();
+
+        try {
+            Object result = pjp.proceed();
+            record.setOutcome("SUCCESS");
+            if (auditable.captureResult()) record.setResult(sanitize(result));
+            return result;
+        } catch (AccessDeniedException e) {
+            record.setOutcome("ACCESS_DENIED");
+            throw e;
+        } catch (Exception e) {
+            record.setOutcome("FAILURE: " + e.getClass().getSimpleName());
+            throw e;
+        } finally {
+            // Save ALWAYS — success or failure — in a separate transaction to avoid rollback
+            auditService.saveAsync(record);
+        }
+    }
+}
+```
+
+**Edge cases to handle in production:**
+
+| Edge case | Problem | Solution |
+|---|---|---|
+| Transaction rollback | Audit entry lost | Save audit in separate `REQUIRES_NEW` transaction or async |
+| PII in method args | GDPR violation | `captureArgs = false` by default; `sanitize()` removes sensitive fields |
+| High throughput | Audit DB write is on critical path | async save via `@Async` or Kafka |
+| Null authentication | Pre-auth or system task | Null check, default to "system" user |
+| Exception from audit | Breaks business operation | Wrap audit save in try-catch; don't let audit fail business logic |
+
+---
+
 ## Advanced Editorial Pass: Interview Readiness with Production Depth
 
 ### How to Level Up Answers

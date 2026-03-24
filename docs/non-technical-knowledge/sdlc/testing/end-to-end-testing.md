@@ -2,8 +2,14 @@
 id: end-to-end-testing
 title: End-to-End (E2E) Testing
 sidebar_label: E2E Testing
+description: '**End-to-end (E2E) testing** validates complete user journeys through
+  the entire system stack — from the user interface through the API gateway, multiple.'
+tags:
+- non-technical-knowledge
+- sdlc
+- testing
+- end-to-end-testing
 ---
-
 # End-to-End (E2E) Testing
 
 ## What is E2E Testing?

@@ -2,8 +2,14 @@
 id: kafka-connect
 title: Kafka Connect
 sidebar_label: Kafka Connect
+description: '**Kafka Connect** is a framework for **reliably moving data between
+  Kafka and external systems** (databases, file systems, cloud services) without writing.'
+tags:
+- technical-knowledge
+- kafka
+- advanced
+- kafka-connect
 ---
-
 # Kafka Connect
 
 ## What is Kafka Connect?

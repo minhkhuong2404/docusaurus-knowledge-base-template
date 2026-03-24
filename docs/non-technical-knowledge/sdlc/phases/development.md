@@ -2,8 +2,14 @@
 id: development
 title: Phase 4 — Development
 sidebar_label: Development
+description: The **Development phase** is where the system is built according to the
+  approved design. Engineers write code, conduct code reviews, write unit tests, and.
+tags:
+- non-technical-knowledge
+- sdlc
+- phases
+- development
 ---
-
 # Phase 4 — Development
 
 ## Overview

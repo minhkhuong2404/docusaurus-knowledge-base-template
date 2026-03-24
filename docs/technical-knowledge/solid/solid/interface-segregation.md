@@ -2,8 +2,13 @@
 id: interface-segregation
 title: Interface Segregation Principle
 sidebar_position: 4
+description: Keep your interfaces **small and focused**. Don't create a "fat" interface
+  that bundles unrelated methods together, forcing classes to implement things they.
+tags:
+- technical-knowledge
+- solid
+- interface-segregation
 ---
-
 # I — Interface Segregation Principle
 
 > **"No client should be forced to depend on methods it does not use."**

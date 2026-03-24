@@ -1,8 +1,12 @@
 ---
 sidebar_position: 15
-title: "Chapter 14: User Interfaces"
+title: 'Chapter 14: User Interfaces'
+description: '**Part II — People**'
+tags:
+- books
+- building-microservice
+- chapter-14
 ---
-
 # Chapter 14: User Interfaces
 
 **Part II — People**

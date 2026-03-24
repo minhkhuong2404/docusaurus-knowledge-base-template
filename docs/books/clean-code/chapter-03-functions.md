@@ -1,9 +1,13 @@
 ---
 sidebar_position: 4
-title: "Chapter 3: Functions"
-description: Rules for writing small, focused functions that do exactly one thing well.
+title: 'Chapter 3: Functions'
+description: Rules for writing small, focused functions that do exactly one thing
+  well.
+tags:
+- books
+- clean-code
+- chapter-03-functions
 ---
-
 # Chapter 3: Functions
 
 ## The First Rule of Functions

@@ -2,8 +2,15 @@
 id: partition
 title: Partitions
 sidebar_label: Partition
+description: A **partition** is an ordered, immutable sequence of records (a log)
+  within a topic. Each partition lives on exactly one broker at a time (as leader)
+  and.
+tags:
+- technical-knowledge
+- kafka
+- core
+- partition
 ---
-
 # Partitions
 
 ## What is a Partition?

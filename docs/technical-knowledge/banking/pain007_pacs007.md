@@ -3,8 +3,14 @@ id: pain007_pacs007
 title: pain.007 & pacs.007 — Payment Reversal & Recall
 sidebar_label: pain.007 / pacs.007 — Reversal
 sidebar_position: 8
+description: Payment reversals allow **the sending side** (debtor bank or originating
+  customer) to request that a previously submitted payment be reversed — cancelling
+  the.
+tags:
+- technical-knowledge
+- banking
+- pain007_pacs007
 ---
-
 # pain.007 & pacs.007 — Payment Reversal & Recall
 
 ## Overview

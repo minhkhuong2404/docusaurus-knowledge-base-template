@@ -3,8 +3,13 @@ id: pacs004
 title: pacs.004 — Payment Return
 sidebar_label: pacs.004 — Payment Return
 sidebar_position: 6
+description: '`pacs.004` is the **interbank payment return message**. It is sent by
+  the **Creditor Bank back to the Debtor Bank** when a previously received `pacs.008`.'
+tags:
+- technical-knowledge
+- banking
+- pacs004
 ---
-
 # pacs.004 — PaymentReturn
 
 ## Overview

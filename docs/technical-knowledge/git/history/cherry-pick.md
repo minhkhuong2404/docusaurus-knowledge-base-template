@@ -2,8 +2,14 @@
 id: cherry-pick
 title: git cherry-pick — Applying Specific Commits
 sidebar_label: cherry-pick
+description: '`git cherry-pick` copies one or more commits from anywhere in the repository
+  and applies them to the current branch as new commits. The original commits remain.'
+tags:
+- technical-knowledge
+- git
+- history
+- cherry-pick
 ---
-
 # `git cherry-pick` — Applying Specific Commits
 
 ## What It Does

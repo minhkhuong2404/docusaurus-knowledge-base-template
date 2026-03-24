@@ -1,8 +1,12 @@
 ---
 sidebar_position: 16
-title: "Chapter 15: Organizational Structures"
+title: 'Chapter 15: Organizational Structures'
+description: '**Part III — People**'
+tags:
+- books
+- building-microservice
+- chapter-15
 ---
-
 # Chapter 15: Organizational Structures
 
 **Part III — People**

@@ -3,8 +3,13 @@ id: payment_lifecycle_101
 title: Payment Lifecycle 101 — New Learner Guide
 sidebar_label: Payment Lifecycle 101
 sidebar_position: 1
+description: If you're new to banking, the payment ecosystem can feel overwhelming.
+  This page takes you from **zero to "I understand how a payment works"** using plain.
+tags:
+- technical-knowledge
+- banking
+- payment_lifecycle_101
 ---
-
 # Payment Lifecycle 101 — New Learner Guide
 
 ## Welcome to Payments

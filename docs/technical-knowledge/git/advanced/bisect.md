@@ -2,8 +2,15 @@
 id: bisect
 title: git bisect — Finding the Commit that Broke Things
 sidebar_label: bisect
+description: '`git bisect` performs a **binary search through commit history** to
+  efficiently find the exact commit that introduced a bug. Instead of checking commits
+  one by.'
+tags:
+- technical-knowledge
+- git
+- advanced
+- bisect
 ---
-
 # `git bisect` — Finding the Broken Commit
 
 ## What It Does

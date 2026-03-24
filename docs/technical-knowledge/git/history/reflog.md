@@ -2,8 +2,14 @@
 id: reflog
 title: git reflog — The Safety Net
 sidebar_label: reflog
+description: The **reflog** (reference log) is a local journal of every place `HEAD`
+  and your branch pointers have pointed to, in chronological order. Every time you.
+tags:
+- technical-knowledge
+- git
+- history
+- reflog
 ---
-
 # `git reflog` — The Safety Net
 
 ## What is the Reflog?

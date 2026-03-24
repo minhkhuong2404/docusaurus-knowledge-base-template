@@ -2,8 +2,14 @@
 id: producer-transactions
 title: Producer Transactions
 sidebar_label: Producer Transactions
+description: 'Idempotence protects against duplicates within a session, but it doesn''t
+  help when:'
+tags:
+- technical-knowledge
+- kafka
+- producer
+- producer-transactions
 ---
-
 # Producer Transactions
 
 ## Why Transactions?

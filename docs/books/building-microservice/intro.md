@@ -2,8 +2,13 @@
 sidebar_position: 1
 title: Introduction
 slug: /books/building-microservice
+description: This guide provides a detailed, chapter-by-chapter breakdown of Sam Newman's
+  *Building Microservices* (2nd Edition).
+tags:
+- books
+- building-microservice
+- intro
 ---
-
 # Building Microservices — Study Guide
 
 > **Book:** *Building Microservices: Designing Fine-Grained Systems, 2nd Edition*  

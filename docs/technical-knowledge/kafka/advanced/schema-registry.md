@@ -2,8 +2,14 @@
 id: schema-registry
 title: Schema Registry
 sidebar_label: Schema Registry
+description: '**Schema Registry** is a centralized repository for managing and validating
+  schemas for Kafka messages. It ensures that producers and consumers agree on the.'
+tags:
+- technical-knowledge
+- kafka
+- advanced
+- schema-registry
 ---
-
 # Schema Registry
 
 ## What is Schema Registry?

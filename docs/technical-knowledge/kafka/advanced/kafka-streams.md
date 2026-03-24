@@ -2,8 +2,14 @@
 id: kafka-streams
 title: Kafka Streams
 sidebar_label: Kafka Streams
+description: '**Kafka Streams** is a client library for building **stream processing
+  applications** directly on top of Kafka. Unlike batch processing (Spark, Flink running.'
+tags:
+- technical-knowledge
+- kafka
+- advanced
+- kafka-streams
 ---
-
 # Kafka Streams
 
 ## What is Kafka Streams?

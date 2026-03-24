@@ -512,6 +512,110 @@ Java 8  →  Java 17 (LTS)  →  Java 21 (LTS)
 
 ---
 
+## 11. Stream Internals — How Pipelines Actually Execute
+
+Understanding the Stream machinery separates senior developers from mid-level ones in interviews.
+
+### Lazy Evaluation and Pipelines
+
+Stream operations are split into **intermediate** (lazy) and **terminal** (eager):
+
+- **Intermediate:** `filter()`, `map()`, `sorted()`, `distinct()`, `limit()` — builds a pipeline but does nothing
+- **Terminal:** `collect()`, `count()`, `findFirst()`, `forEach()` — triggers actual execution
+
+```java
+// This code does NOTHING until collect() is called:
+Stream<String> pipeline = names.stream()
+    .filter(n -> { System.out.println("filter: " + n); return n.length() > 3; })
+    .map(n -> { System.out.println("map: " + n); return n.toUpperCase(); });
+
+// Execution only starts here — and is interleaved element-by-element:
+List<String> result = pipeline.collect(Collectors.toList());
+// Output: filter: Alice, map: Alice, filter: Bob, filter: Charlie, map: Charlie
+// (NOT: all filters first, then all maps)
+```
+
+Each element flows through the entire pipeline before the next element is processed — this enables **short-circuiting** and minimizes memory use.
+
+### Short-Circuiting Optimization
+
+```java
+names.stream()
+    .filter(n -> n.length() > 3)
+    .findFirst();  // stops as soon as first match found — doesn't process rest
+```
+
+`limit()`, `findFirst()`, `findAny()`, `anyMatch()`, `allMatch()`, `noneMatch()` all short-circuit.
+
+### Spliterator: The Engine Behind Streams
+
+A `Spliterator` is the iterator that powers streams, including parallel stream splitting:
+
+```java
+// Custom object that can be split for parallel processing
+Spliterator<String> spliterator = list.spliterator();
+Spliterator<String> chunk = spliterator.trySplit(); // splits off a chunk for parallel work
+```
+
+**Characteristics** (bitmask flags on Spliterators):
+- `ORDERED` — encounter order is maintained
+- `DISTINCT` — no duplicate elements
+- `SORTED` — elements are in sorted order
+- `SIZED` — known size upfront (enables parallelism optimizations)
+- `NONNULL` — no null elements
+
+Parallel stream performance depends on these characteristics. `SIZED` + `SUBSIZED` lets `ForkJoinPool` split evenly. `LinkedList` (non-`SIZED`) splits poorly for parallel streams.
+
+### Common Senior Interview Traps
+
+```java
+// ❌ forEach ordering is undefined for parallel streams
+list.parallelStream().forEach(System.out::println);  // order not guaranteed
+
+// ✅ Use forEachOrdered for parallel + ordered
+list.parallelStream().forEachOrdered(System.out::println);
+
+// ❌ Stateful lambdas in parallel streams are dangerous
+List<String> result = new ArrayList<>();
+list.parallelStream().filter(...).forEach(result::add);  // race condition!
+
+// ✅ Collect into thread-safe structure
+List<String> result = list.parallelStream().filter(...).collect(Collectors.toList());
+```
+
+---
+
+## 12. Scoped Values (Java 21+ — Preview)
+
+`ScopedValue` is the modern replacement for `ThreadLocal` — designed for **virtual threads** and **structured concurrency** where thread pool reuse breaks `ThreadLocal` semantics.
+
+```java
+// Declare a scoped value (like a typed "dynamic variable")
+static final ScopedValue<User> CURRENT_USER = ScopedValue.newInstance();
+
+// Set and run — value lives only within the scope (not leaked to thread pool)
+ScopedValue.where(CURRENT_USER, authenticatedUser).run(() -> {
+    processRequest();  // CURRENT_USER is readable anywhere in this call stack
+});
+
+// Read anywhere inside the scope
+public void processRequest() {
+    User user = CURRENT_USER.get();  // Safe, no ThreadLocal memory leak risk
+}
+```
+
+### ScopedValue vs ThreadLocal
+
+| | `ThreadLocal` | `ScopedValue` |
+|---|---|---|
+| Scope | Entire thread lifetime | Bounded to a code scope |
+| Virtual thread safe | ❌ (can leak across reused threads) | ✅ |
+| Memory leak risk | High (must call `remove()`) | None (automatically scoped) |
+| Mutable | Yes | Immutable (rebind = new scope) |
+| Structured concurrency | Poor fit | First-class fit |
+
+---
+
 ## Advanced Editorial Pass: Feature Adoption with Migration Discipline
 
 ### Decision Framework

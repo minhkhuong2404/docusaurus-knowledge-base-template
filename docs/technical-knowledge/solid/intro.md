@@ -3,8 +3,14 @@ id: intro
 title: Introduction to SOLID Principles
 sidebar_position: 1
 slug: /technical-knowledge/solid
+description: Welcome! This guide will walk you through the **SOLID principles** —
+  five essential design principles that help you write Java code that is **clean,
+  scalable.
+tags:
+- technical-knowledge
+- solid
+- intro
 ---
-
 # Introduction to SOLID Principles
 
 Welcome! This guide will walk you through the **SOLID principles** — five essential design principles that help you write Java code that is **clean, scalable, and easy to maintain**.

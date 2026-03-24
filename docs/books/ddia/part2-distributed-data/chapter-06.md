@@ -1,10 +1,16 @@
 ---
 id: chapter-06
-title: "Chapter 6: Partitioning"
-sidebar_label: "Ch 6 — Partitioning"
+title: 'Chapter 6: Partitioning'
+sidebar_label: Ch 6 — Partitioning
 sidebar_position: 2
+description: For very large datasets or very high query throughput, a single machine
+  is not enough. **Partitioning** (also called sharding) breaks the data into.
+tags:
+- books
+- ddia
+- part2-distributed-data
+- chapter-06
 ---
-
 # Chapter 6: Partitioning
 
 ## The Big Idea

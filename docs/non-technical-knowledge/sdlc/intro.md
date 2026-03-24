@@ -3,8 +3,13 @@ id: intro
 title: SDLC Knowledge Base
 sidebar_label: Introduction
 slug: /non-technical-knowledge/sdlc/
+description: The **Software Development Life Cycle (SDLC)** is a structured process
+  that defines the phases and activities required to plan, design, build, test, deploy.
+tags:
+- non-technical-knowledge
+- sdlc
+- intro
 ---
-
 # Software Development Life Cycle (SDLC)
 
 > A comprehensive guide covering all phases of the Software Development Life Cycle, testing strategies, deployment practices, and reporting standards used by our engineering teams.

@@ -2,8 +2,14 @@
 id: reset-revert
 title: git reset & git revert — Undoing Changes
 sidebar_label: reset & revert
+description: '**Rule of thumb:** - Use `git reset` on **local, unpushed** changes
+  - Use `git revert` on **pushed or shared** history'
+tags:
+- technical-knowledge
+- git
+- history
+- reset-revert
 ---
-
 # `git reset` & `git revert` — Undoing Changes
 
 ## The Core Difference

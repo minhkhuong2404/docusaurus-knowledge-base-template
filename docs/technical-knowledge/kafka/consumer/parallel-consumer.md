@@ -2,8 +2,13 @@
 id: parallel-consumer
 title: Parallel Consumer
 sidebar_label: Parallel Consumer
+description: 'Standard Kafka consumer processing is **sequential per partition**:'
+tags:
+- technical-knowledge
+- kafka
+- consumer
+- parallel-consumer
 ---
-
 # Parallel Consumer
 
 ## The Problem with Standard Consumers

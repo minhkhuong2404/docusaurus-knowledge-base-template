@@ -2,8 +2,15 @@
 id: producer-acks
 title: Producer Acknowledgements (acks)
 sidebar_label: Producer Acks
+description: The `acks` configuration controls **how many broker acknowledgements
+  the producer requires before considering a send successful**. It directly trades
+  off.
+tags:
+- technical-knowledge
+- kafka
+- producer
+- producer-acks
 ---
-
 # Producer Acknowledgements (acks)
 
 ## What are Producer Acks?

@@ -1,10 +1,17 @@
 ---
 id: chapter-03
-title: "Chapter 3: Storage and Retrieval"
-sidebar_label: "Ch 3 — Storage & Retrieval"
+title: 'Chapter 3: Storage and Retrieval'
+sidebar_label: Ch 3 — Storage & Retrieval
 sidebar_position: 3
+description: As an application developer, you usually just call your database and
+  trust it to do the right thing. But to choose the right database and tune it properly,
+  you.
+tags:
+- books
+- ddia
+- part1-foundations
+- chapter-03
 ---
-
 # Chapter 3: Storage and Retrieval
 
 ## The Big Idea

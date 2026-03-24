@@ -2,8 +2,14 @@
 id: submodules
 title: git submodule — Embedding Repositories
 sidebar_label: Submodules
+description: A **submodule** is a Git repository embedded inside another Git repository.
+  The parent repository stores a reference to a specific commit of the submodule —.
+tags:
+- technical-knowledge
+- git
+- collaboration
+- submodules
 ---
-
 # `git submodule` — Embedding Repositories
 
 ## What is a Submodule?

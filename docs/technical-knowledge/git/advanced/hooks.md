@@ -2,8 +2,15 @@
 id: hooks
 title: Git Hooks — Automating Quality Checks
 sidebar_label: Hooks
+description: '**Git hooks** are scripts that Git automatically executes before or
+  after specific events (commit, push, merge, etc.). They live in `.git/hooks/` and
+  can be.'
+tags:
+- technical-knowledge
+- git
+- advanced
+- hooks
 ---
-
 # Git Hooks — Automating Quality Checks
 
 ## What are Git Hooks?

@@ -1,10 +1,16 @@
 ---
 id: chapter-08
-title: "Chapter 8: The Trouble with Distributed Systems"
-sidebar_label: "Ch 8 — Trouble with Distributed Systems"
+title: 'Chapter 8: The Trouble with Distributed Systems'
+sidebar_label: Ch 8 — Trouble with Distributed Systems
 sidebar_position: 4
+description: Working with distributed systems requires a fundamentally different mindset
+  than single-machine programming. In a single process, if something works once, it.
+tags:
+- books
+- ddia
+- part2-distributed-data
+- chapter-08
 ---
-
 # Chapter 8: The Trouble with Distributed Systems
 
 ## The Big Idea

@@ -1,10 +1,17 @@
 ---
 id: chapter-11
-title: "Chapter 11: Stream Processing"
-sidebar_label: "Ch 11 — Stream Processing"
+title: 'Chapter 11: Stream Processing'
+sidebar_label: Ch 11 — Stream Processing
 sidebar_position: 2
+description: 'Batch processing has one problem: **latency**. A job that runs once
+  a day means insights that are 24 hours stale. Stream processing is like a continuous
+  batch.'
+tags:
+- books
+- ddia
+- part3-derived-data
+- chapter-11
 ---
-
 # Chapter 11: Stream Processing
 
 ## The Big Idea

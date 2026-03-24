@@ -1,9 +1,15 @@
 ---
 id: chapter-11-concurrency
-title: "Chapter 11: Concurrency"
-sidebar_label: "11. Concurrency"
+title: 'Chapter 11: Concurrency'
+sidebar_label: 11. Concurrency
+description: Threads allow multiple activities to proceed concurrently. Concurrent
+  programming is harder than single-threaded programming because more things can go
+  wrong.
+tags:
+- books
+- effective-java
+- chapter-11-concurrency
 ---
-
 # Chapter 11: Concurrency
 
 Threads allow multiple activities to proceed concurrently. Concurrent programming is harder than single-threaded programming because more things can go wrong and failures are harder to reproduce. This chapter contains advice to help you write clear, correct, and well-documented concurrent programs.

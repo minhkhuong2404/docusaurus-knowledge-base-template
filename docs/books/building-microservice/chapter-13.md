@@ -1,8 +1,12 @@
 ---
 sidebar_position: 14
-title: "Chapter 13: Scaling"
+title: 'Chapter 13: Scaling'
+description: '**Part II — Implementation**'
+tags:
+- books
+- building-microservice
+- chapter-13
 ---
-
 # Chapter 13: Scaling
 
 **Part II — Implementation**

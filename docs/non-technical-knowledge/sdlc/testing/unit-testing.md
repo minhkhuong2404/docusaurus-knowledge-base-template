@@ -2,8 +2,15 @@
 id: unit-testing
 title: Unit Testing
 sidebar_label: Unit Testing
+description: A **unit test** validates the behaviour of a single, isolated unit of
+  code — typically a method or class — without involving external dependencies such
+  as.
+tags:
+- non-technical-knowledge
+- sdlc
+- testing
+- unit-testing
 ---
-
 # Unit Testing
 
 ## What is Unit Testing?

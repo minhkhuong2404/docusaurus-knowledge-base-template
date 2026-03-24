@@ -3,8 +3,14 @@ id: banking_roles
 title: Banking Roles & Teams
 sidebar_label: Roles & Teams
 sidebar_position: 2
+description: A bank is made up of many specialised teams. Understanding who does what
+  helps you collaborate effectively, know who to escalate to, and understand where
+  you.
+tags:
+- technical-knowledge
+- banking
+- banking_roles
 ---
-
 # Banking Roles & Teams
 
 ## Overview

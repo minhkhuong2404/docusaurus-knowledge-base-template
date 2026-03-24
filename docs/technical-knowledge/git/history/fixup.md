@@ -2,8 +2,14 @@
 id: fixup
 title: git fixup — Amending Previous Commits
 sidebar_label: fixup
+description: A **fixup** commit is a special type of squash commit that targets a
+  specific earlier commit for amendment. When you run `git rebase --autosquash`, Git.
+tags:
+- technical-knowledge
+- git
+- history
+- fixup
 ---
-
 # `git fixup` — Amending Previous Commits
 
 ## What is a Fixup?

@@ -2,8 +2,15 @@
 id: component-performance-testing
 title: Component Performance Testing
 sidebar_label: Component Performance Testing
+description: '**Component performance testing** measures the behaviour and resource
+  consumption of a **single service or component** under controlled load conditions
+  — in.'
+tags:
+- non-technical-knowledge
+- sdlc
+- testing
+- component-performance-testing
 ---
-
 # Component Performance Testing
 
 ## What is Component Performance Testing?

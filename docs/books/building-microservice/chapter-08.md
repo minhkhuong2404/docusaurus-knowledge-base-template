@@ -1,8 +1,12 @@
 ---
 sidebar_position: 9
-title: "Chapter 8: Deployment"
+title: 'Chapter 8: Deployment'
+description: '**Part II — Implementation**'
+tags:
+- books
+- building-microservice
+- chapter-08
 ---
-
 # Chapter 8: Deployment
 
 **Part II — Implementation**

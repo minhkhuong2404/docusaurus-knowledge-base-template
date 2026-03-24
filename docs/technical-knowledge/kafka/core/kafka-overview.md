@@ -2,8 +2,14 @@
 id: kafka-overview
 title: Kafka Architecture Overview
 sidebar_label: Kafka Overview
+description: Producers  ──►  [ Broker Cluster ]  ──►  Consumers │  │  │ B1 B2 B3 │
+  ZooKeeper / KRaft
+tags:
+- technical-knowledge
+- kafka
+- core
+- kafka-overview
 ---
-
 # Kafka Architecture Overview
 
 ## High-Level Architecture

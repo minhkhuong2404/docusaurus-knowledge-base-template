@@ -1,9 +1,13 @@
 ---
 sidebar_position: 2
-title: "Chapter 1: Clean Code"
-description: Why clean code matters, the cost of bad code, and what experts say good code looks like.
+title: 'Chapter 1: Clean Code'
+description: Why clean code matters, the cost of bad code, and what experts say good
+  code looks like.
+tags:
+- books
+- clean-code
+- chapter-01-clean-code
 ---
-
 # Chapter 1: Clean Code
 
 ## The Big Question: Why Does Code Quality Matter?

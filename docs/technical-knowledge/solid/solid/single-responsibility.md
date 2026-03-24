@@ -2,8 +2,14 @@
 id: single-responsibility
 title: Single Responsibility Principle
 sidebar_position: 1
+description: Every class should do **exactly one thing** and do it well. If a class
+  is handling multiple unrelated responsibilities, then it has multiple reasons to
+  change.
+tags:
+- technical-knowledge
+- solid
+- single-responsibility
 ---
-
 # S — Single Responsibility Principle
 
 > **"A class should have only one reason to change."**

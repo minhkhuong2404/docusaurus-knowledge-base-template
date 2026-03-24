@@ -1,8 +1,12 @@
 ---
 sidebar_position: 17
-title: "Chapter 16: The Evolutionary Architect"
+title: 'Chapter 16: The Evolutionary Architect'
+description: '**Part III — People**'
+tags:
+- books
+- building-microservice
+- chapter-16
 ---
-
 # Chapter 16: The Evolutionary Architect
 
 **Part III — People**

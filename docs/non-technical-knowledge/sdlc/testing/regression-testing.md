@@ -2,8 +2,15 @@
 id: regression-testing
 title: Regression Testing
 sidebar_label: Regression Testing
+description: '**Regression testing** is the process of re-running existing test suites
+  after code changes to verify that previously working functionality has not been
+  broken.'
+tags:
+- non-technical-knowledge
+- sdlc
+- testing
+- regression-testing
 ---
-
 # Regression Testing
 
 ## What is Regression Testing?

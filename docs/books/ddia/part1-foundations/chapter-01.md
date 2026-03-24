@@ -1,10 +1,17 @@
 ---
 id: chapter-01
-title: "Chapter 1: Reliable, Scalable, and Maintainable Applications"
-sidebar_label: "Ch 1 — Reliability, Scalability, Maintainability"
+title: 'Chapter 1: Reliable, Scalable, and Maintainable Applications'
+sidebar_label: Ch 1 — Reliability, Scalability, Maintainability
 sidebar_position: 1
+description: Most modern applications are **data-intensive**, not compute-intensive.
+  The bottleneck is rarely the CPU — it's the amount of data, how fast it changes,
+  and.
+tags:
+- books
+- ddia
+- part1-foundations
+- chapter-01
 ---
-
 # Chapter 1: Reliable, Scalable, and Maintainable Applications
 
 ## The Big Idea

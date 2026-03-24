@@ -2,8 +2,14 @@
 id: push
 title: git push — Uploading to a Remote
 sidebar_label: push
+description: '`git push` uploads your local commits to a remote repository, making
+  them available to other team members. It transfers only the objects (commits, trees.'
+tags:
+- technical-knowledge
+- git
+- basics
+- push
 ---
-
 # `git push` — Uploading to a Remote
 
 ## What It Does

@@ -413,7 +413,82 @@ Use `javap -verbose MyClass.class` to inspect the structure.
 
 ---
 
-## 9. JDK Monitoring & Troubleshooting Tools
+## 9. JIT Compilation (HotSpot C1 / C2)
+
+The JVM doesn't just interpret bytecode — it **dynamically compiles hot code** to native machine code. Understanding the tiers is critical for diagnosing startup slowdowns and latency spikes.
+
+### Compilation Tiers
+
+| Tier | Compiler | Description |
+|---|---|---|
+| 0 | Interpreter | Execute bytecode directly (cold start) |
+| 1–3 | **C1** (Client) | Quick compilation with basic optimization |
+| 4 | **C2** (Server) | Aggressive optimization: inlining, loop unrolling, escape analysis |
+
+**"Compilation storm":** At startup, many methods reach the hot threshold simultaneously → C2 compiler overwhelmed → CPU spike, latency increase. Common in Kubernetes when pods receive traffic immediately.
+
+**Mitigation:** GraalVM Native Image (AOT) for instant startup; JVM Tiered Compilation (`-XX:+TieredCompilation`) for warmup.
+
+### Deoptimization
+
+JIT makes **optimistic assumptions** — e.g., that a virtual method is called with only one concrete type (monomorphic call). When assumptions break:
+
+```java
+// JIT inlines Dog.speak() for all calls — optimized for monomorphic dispatch
+void speak(Animal a) { a.speak(); }
+
+// First Cat appears → JIT's inline prediction invalid → deoptimize → interpreter
+speak(new Cat());
+```
+
+Cold code paths with rare types cause **unexpected production latency spikes** even after warm-up.
+
+```bash
+-XX:+PrintCompilation    # See which methods JIT compiles
+-XX:CompileThreshold=10000  # Invocations before C2 trigger (default)
+```
+
+---
+
+## 10. G1 GC — Internal Mechanics
+
+### Humongous Objects
+
+Objects larger than 50% of a region size are allocated directly in **humongous regions** (multiple contiguous Old gen regions). These are **only collected during a full GC** unless explicitly triggered.
+
+```bash
+# Fix: increase region size to reduce humongous allocations
+-XX:G1HeapRegionSize=32m
+```
+
+### Remembered Sets (RSet) and SATB
+
+**Remembered Sets:** Each G1 region tracks external references into it. Required so G1 can collect a single region without scanning the entire heap.
+
+**SATB (Snapshot-At-The-Beginning):** G1's write barrier during concurrent marking. When a reference is overwritten, G1 records the old value in an SATB log buffer. This ensures that objects alive at mark-start remain live even if pointers are nulled during marking.
+
+```java
+obj.field = newRef;
+// SATB write barrier fires here → logs old obj.field reference
+```
+
+Without SATB, a concurrent mutator could hide a live object from the marking thread, causing premature collection.
+
+### Mixed Collections
+
+After a full concurrent mark cycle, G1 picks the **highest-garbage-density** Old regions and collects them alongside Young gen:
+
+```bash
+-XX:G1MixedGCLiveThresholdPercent=85   # Only collect Old regions < 85% live data
+-XX:G1HeapWastePercent=5               # Stop mixed GC if < 5% heap is reclaimable
+# Diagnosing pauses:
+-Xlog:gc*:file=gc.log:time,uptime,level,tags
+# Look for: "Pause Full" — means G1 fell back to stop-the-world (bad!)
+```
+
+---
+
+## 11. JDK Monitoring & Troubleshooting Tools
 
 ### Command-Line Tools
 

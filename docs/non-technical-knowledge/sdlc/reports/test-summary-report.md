@@ -2,8 +2,14 @@
 id: test-summary-report
 title: Test Summary Report
 sidebar_label: Test Summary Report
+description: A **Test Summary Report (TSR)** is a formal document produced at the
+  end of the testing phase that consolidates all testing activities, results, metrics.
+tags:
+- non-technical-knowledge
+- sdlc
+- reports
+- test-summary-report
 ---
-
 # Test Summary Report
 
 ## What is a Test Summary Report?

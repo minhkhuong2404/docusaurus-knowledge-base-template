@@ -1,10 +1,17 @@
 ---
 id: chapter-04
-title: "Chapter 4: Encoding and Evolution"
-sidebar_label: "Ch 4 — Encoding & Evolution"
+title: 'Chapter 4: Encoding and Evolution'
+sidebar_label: Ch 4 — Encoding & Evolution
 sidebar_position: 4
+description: Applications change over time — requirements evolve, new features are
+  added, bugs are fixed. Your data model must evolve too. But in large systems, you
+  can't.
+tags:
+- books
+- ddia
+- part1-foundations
+- chapter-04
 ---
-
 # Chapter 4: Encoding and Evolution
 
 ## The Big Idea

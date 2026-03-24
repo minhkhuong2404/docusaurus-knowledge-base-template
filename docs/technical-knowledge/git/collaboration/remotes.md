@@ -2,8 +2,15 @@
 id: remotes
 title: git remote — Managing Remote Repositories
 sidebar_label: Remotes
+description: A **remote** is a named reference to another Git repository — typically
+  hosted on GitHub, GitLab, Bitbucket, or an internal server. A remote stores a URL
+  and a.
+tags:
+- technical-knowledge
+- git
+- collaboration
+- remotes
 ---
-
 # Remotes — Managing Remote Repositories
 
 ## What is a Remote?

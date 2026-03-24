@@ -1,9 +1,13 @@
 ---
 sidebar_position: 8
-title: "Chapter 7: Error Handling"
-description: Writing error handling that is robust, clean, and doesn't obscure your business logic.
+title: 'Chapter 7: Error Handling'
+description: Writing error handling that is robust, clean, and doesn't obscure your
+  business logic.
+tags:
+- books
+- clean-code
+- chapter-07-error-handling
 ---
-
 # Chapter 7: Error Handling
 
 ## Error Handling Is Important — But It Shouldn't Dominate

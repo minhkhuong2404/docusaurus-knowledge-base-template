@@ -1,8 +1,12 @@
 ---
 sidebar_position: 11
-title: "Chapter 10: From Monitoring to Observability"
+title: 'Chapter 10: From Monitoring to Observability'
+description: '**Part II — Implementation**'
+tags:
+- books
+- building-microservice
+- chapter-10
 ---
-
 # Chapter 10: From Monitoring to Observability
 
 **Part II — Implementation**

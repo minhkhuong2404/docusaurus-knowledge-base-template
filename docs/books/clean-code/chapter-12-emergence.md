@@ -1,9 +1,13 @@
 ---
 sidebar_position: 13
-title: "Chapter 12: Emergence"
-description: Kent Beck's four rules of simple design and how following them leads to emergent good design.
+title: 'Chapter 12: Emergence'
+description: Kent Beck's four rules of simple design and how following them leads
+  to emergent good design.
+tags:
+- books
+- clean-code
+- chapter-12-emergence
 ---
-
 # Chapter 12: Emergence
 
 ## Good Design Emerges from Simple Rules

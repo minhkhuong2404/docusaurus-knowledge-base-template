@@ -2,8 +2,14 @@
 id: commit
 title: git commit — Recording Changes
 sidebar_label: commit
+description: '`git commit` takes everything in the **index (staging area)** and creates
+  a permanent, immutable snapshot in the repository. Each commit has:'
+tags:
+- technical-knowledge
+- git
+- basics
+- commit
 ---
-
 # `git commit` — Recording Changes
 
 ## What It Does

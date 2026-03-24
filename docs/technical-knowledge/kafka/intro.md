@@ -2,8 +2,13 @@
 id: intro
 title: Kafka Knowledge Base
 sidebar_label: Introduction
+description: Apache Kafka is a **distributed event streaming platform** designed for
+  high-throughput, fault-tolerant, and scalable real-time data pipelines and streaming.
+tags:
+- technical-knowledge
+- kafka
+- intro
 ---
-
 # Apache Kafka Knowledge Base
 
 > A comprehensive guide to mastering Apache Kafka — from core concepts to production-grade patterns, with Java/Spring Boot examples and interview prep.

@@ -1,9 +1,14 @@
 ---
 id: chapter-07-lambdas-and-streams
-title: "Chapter 7: Lambdas and Streams"
-sidebar_label: "7. Lambdas and Streams"
+title: 'Chapter 7: Lambdas and Streams'
+sidebar_label: 7. Lambdas and Streams
+description: Java 8 added lambda expressions, method references, and the Streams API.
+  This chapter covers best practices for using these powerful new facilities.
+tags:
+- books
+- effective-java
+- chapter-07-lambdas-and-streams
 ---
-
 # Chapter 7: Lambdas and Streams
 
 Java 8 added lambda expressions, method references, and the Streams API. This chapter covers best practices for using these powerful new facilities.

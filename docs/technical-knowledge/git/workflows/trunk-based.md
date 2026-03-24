@@ -2,8 +2,15 @@
 id: trunk-based
 title: Trunk-Based Development — High-Frequency Delivery
 sidebar_label: Trunk-Based Development
+description: '**Trunk-Based Development (TBD)** is a branching strategy where all
+  developers integrate their changes into a single shared branch (`main` / `trunk`)
+  multiple.'
+tags:
+- technical-knowledge
+- git
+- workflows
+- trunk-based
 ---
-
 # Trunk-Based Development — High-Frequency Delivery
 
 ## What is Trunk-Based Development?

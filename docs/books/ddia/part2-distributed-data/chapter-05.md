@@ -1,10 +1,16 @@
 ---
 id: chapter-05
-title: "Chapter 5: Replication"
-sidebar_label: "Ch 5 — Replication"
+title: 'Chapter 5: Replication'
+sidebar_label: Ch 5 — Replication
 sidebar_position: 1
+description: '**Replication** means keeping a copy of the same data on multiple machines
+  (connected via a network). Reasons to replicate:'
+tags:
+- books
+- ddia
+- part2-distributed-data
+- chapter-05
 ---
-
 # Chapter 5: Replication
 
 ## The Big Idea

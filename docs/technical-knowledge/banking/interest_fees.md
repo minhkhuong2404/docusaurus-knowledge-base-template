@@ -3,8 +3,13 @@ id: interest_fees
 title: Interest & Fees
 sidebar_label: Interest & Fees
 sidebar_position: 5
+description: Interest and fees are the primary ways banks **generate revenue** from
+  accounts and products. Understanding how they work is important for product.
+tags:
+- technical-knowledge
+- banking
+- interest_fees
 ---
-
 # Interest & Fees
 
 ## Overview

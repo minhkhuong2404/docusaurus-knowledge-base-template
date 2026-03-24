@@ -320,6 +320,163 @@ Use `@Qualifier("beanName")` at the injection point to specify exactly which bea
 
 ---
 
+## Senior-Level Questions
+
+### Q37: What is the difference between CGLIB and JDK Dynamic Proxy? When does Spring use each?
+
+**JDK Dynamic Proxy** wraps an interface using `java.lang.reflect.Proxy` — only works if the target bean implements at least one interface.
+
+**CGLIB Proxy** generates a bytecode subclass of the target class at startup — no interface needed.
+
+Spring Boot **defaults to CGLIB** for all beans (`spring.aop.proxy-target-class=true`). `@Configuration` classes always use CGLIB to ensure `@Bean` methods return the same singleton instance even when called multiple times.
+
+**CGLIB cannot proxy:** `final` classes, `final` methods, or classes without a no-arg constructor.
+
+### Q38: Why does `@Transactional` have no effect when a method calls another `@Transactional` method in the same class?
+
+Spring applies `@Transactional` through an AOP proxy. External callers reach the method via the proxy, which applies transactional behavior. But internal calls (`this.method()`) go directly to the raw object — bypassing the proxy entirely.
+
+This is the **self-invocation problem**. The fix is either:
+1. Extract to a separate `@Service` bean (preferred)
+2. Inject the proxy into itself using `@Autowired private MyService self`
+
+The same problem affects `@Async`, `@Cacheable`, and `@Retryable`.
+
+### Q39: What is `BeanPostProcessor`, and what is the risk of using it incorrectly?
+
+`BeanPostProcessor` intercepts every bean **after instantiation** — Spring uses it internally for AOP proxying and `@Autowired` injection. You can implement it to wrap or modify beans.
+
+**The main risk:** `BeanPostProcessor` beans are instantiated **very early**, before most other beans. If a `BeanPostProcessor` depends on another bean (e.g., a JPA repository), it forces premature instantiation of that bean — potentially before auto-configuration has run, breaking things silently.
+
+**Rule:** `BeanPostProcessor` beans should have minimal dependencies and never depend on auto-configured infrastructure beans.
+
+### Q40: How do you inject a prototype-scoped bean into a singleton bean?
+
+If you inject a `@Scope("prototype")` bean via constructor or `@Autowired`, Spring injects it **once** — effectively making it singleton in that class.
+
+**Correct approaches:**
+
+```java
+// Option 1: @Lookup (Spring overrides this method to return a new prototype each time)
+@Component
+public abstract class OrderProcessor {
+    @Lookup
+    public abstract PrototypeService getService();  // Spring generates impl
+
+    public void process(Order order) {
+        getService().execute(order);  // New instance each call ✅
+    }
+}
+
+// Option 2: ObjectFactory/ObjectProvider
+@Service
+public class OrderService {
+    private final ObjectProvider<PrototypeBean> prototypeProvider;
+
+    public void process() {
+        PrototypeBean bean = prototypeProvider.getObject();  // New instance each time
+    }
+}
+
+// Option 3: ApplicationContext.getBean() — last resort
+```
+
+### Q41: What is SpEL (Spring Expression Language) and where is it commonly used?
+
+SpEL is a runtime expression language evaluated within Spring annotations:
+
+```java
+// @Value — inject computed or conditional values
+@Value("#{systemProperties['user.timezone'] ?: 'UTC'}")
+private String timezone;
+
+// @PreAuthorize — check business data in security expressions
+@PreAuthorize("#order.ownerId == authentication.principal.id or hasRole('ADMIN')")
+public void refundOrder(Order order) { ... }
+
+// @Cacheable — dynamic cache key
+@Cacheable(key = "#userId + '_' + #status.name()")
+public List<Order> findOrders(Long userId, OrderStatus status) { ... }
+
+// @ConditionalOnExpression — in auto-configuration
+@ConditionalOnExpression("${app.feature.enabled:false} && '${app.env}' == 'production'")
+public class ProductionFeatureConfig { ... }
+```
+
+### Q42: How do you detect and break circular dependencies at design time?
+
+Spring Boot will throw `BeanCurrentlyInCreationException` at startup for **constructor injection circular dependencies**. For setter injection, the cycle is silently resolved (beans exist before dependencies are set).
+
+**Detection:**
+```bash
+# Spring Boot 2.6+ detects circular deps at startup by default
+spring.main.allow-circular-references=false  # default — throws exception
+```
+
+**Resolution strategies:**
+1. **Refactor architecture** — introduce a third mediator bean or event-driven pattern (preferred)
+2. **`@Lazy`** — defer initialization of one dependency: `@Autowired @Lazy ServiceB serviceB`
+3. **Use setter/field injection** — allows the cycle to resolve at cost of hidden coupling
+
+### Q43: What is `ApplicationEventPublisher` and what are its use cases?
+
+`ApplicationEventPublisher` decouples components using an in-process event bus — publish events without the publisher knowing about consumers.
+
+```java
+// Define event (can be any object since Spring 4.2)
+public record OrderPlacedEvent(Long orderId, String customerId) {}
+
+// Publisher — doesn't know about consumers
+@Service
+public class OrderService {
+    private final ApplicationEventPublisher publisher;
+
+    @Transactional
+    public Order placeOrder(OrderRequest req) {
+        Order order = orderRepository.save(new Order(req));
+        publisher.publishEvent(new OrderPlacedEvent(order.getId(), req.getCustomerId()));
+        return order;
+    }
+}
+
+// Consumer — decoupled listener
+@Component
+public class NotificationHandler {
+    @EventListener
+    @Async  // Make async to not block the order transaction
+    public void onOrderPlaced(OrderPlacedEvent event) {
+        emailService.sendConfirmation(event.customerId(), event.orderId());
+    }
+}
+```
+
+**`@TransactionalEventListener`** — for events that should only fire if the publishing transaction commits:
+```java
+@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+public void onOrderConfirmed(OrderPlacedEvent event) {
+    // Safe to trigger external systems — only runs after DB commit
+}
+```
+
+### Q44: What is the difference between `@Primary`, `@Qualifier`, and `@ConditionalOnMissingBean`?
+
+| Annotation | Purpose | Where used |
+|---|---|---|
+| `@Primary` | Default bean when multiple candidates exist | On the bean definition |
+| `@Qualifier("name")` | Select a specific bean by name | At the injection point |
+| `@ConditionalOnMissingBean` | Only create this bean if none of this type exists | In auto-configuration |
+
+`@Primary` and `@Qualifier` manage **which bean is chosen** among existing ones. `@ConditionalOnMissingBean` determines **whether a bean is created at all** — used in auto-configuration to allow user-defined beans to override framework defaults.
+
+```java
+// User provides their own DataSource → auto-config backs off
+@Bean
+@ConditionalOnMissingBean(DataSource.class)
+public DataSource defaultDataSource() { ... }  // Only created if user didn't define one
+```
+
+---
+
 ## Advanced Editorial Pass: Spring Interview Answers That Stand Out
 
 ### Upgrade Path for Responses

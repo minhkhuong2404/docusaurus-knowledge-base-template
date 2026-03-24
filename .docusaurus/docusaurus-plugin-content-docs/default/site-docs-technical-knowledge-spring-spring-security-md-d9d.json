@@ -1,7 +1,7 @@
 {
   "id": "technical-knowledge/spring/spring-security",
   "title": "Spring Security — Complete Guide",
-  "description": "Comprehensive guide to Spring Security, including authentication, authorization, filter chains, and common application security patterns.",
+  "description": "Comprehensive guide to Spring Security, including authentication, authorization, filter chains, exception handling, and common application security patterns.",
   "source": "@site/docs/technical-knowledge/spring/spring-security.md",
   "sourceDirName": "technical-knowledge/spring",
   "slug": "/technical-knowledge/spring/spring-security",
@@ -28,17 +28,29 @@
       "inline": true,
       "label": "authentication",
       "permalink": "/tags/authentication"
+    },
+    {
+      "inline": true,
+      "label": "authorization",
+      "permalink": "/tags/authorization"
+    },
+    {
+      "inline": true,
+      "label": "filters",
+      "permalink": "/tags/filters"
     }
   ],
   "version": "current",
   "frontMatter": {
     "title": "Spring Security — Complete Guide",
-    "description": "Comprehensive guide to Spring Security, including authentication, authorization, filter chains, and common application security patterns.",
+    "description": "Comprehensive guide to Spring Security, including authentication, authorization, filter chains, exception handling, and common application security patterns.",
     "tags": [
       "spring-security",
       "spring-boot",
       "java",
-      "authentication"
+      "authentication",
+      "authorization",
+      "filters"
     ]
   },
   "sidebar": "tutorialSidebar",

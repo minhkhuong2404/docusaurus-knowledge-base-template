@@ -378,7 +378,106 @@ Virtual threads are **lightweight threads** managed by the JVM, not the OS. They
 
 ---
 
-## 13. Producer-Consumer Pattern
+## 14. Structured Concurrency (Java 21+)
+
+`StructuredTaskScope` enforces a discipline that child threads cannot outlive their parent — solving the "orphaned thread" problem common in `CompletableFuture` chains.
+
+```java
+// Structured Concurrency: all subtasks are scoped and managed together
+try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+    Subtask<User>  user   = scope.fork(this::fetchUser);
+    Subtask<Order> orders = scope.fork(this::fetchOrders);
+
+    scope.join()           // wait for both
+         .throwIfFailed(); // propagate first failure
+
+    return new Dashboard(user.get(), orders.get());
+} // scope closes — any unfinished subtasks are cancelled automatically
+```
+
+### ShutdownOnFailure vs ShutdownOnSuccess
+
+| Policy | Behavior | Use case |
+|---|---|---|
+| `ShutdownOnFailure` | Cancel all subtasks if **any** fails | All results required |
+| `ShutdownOnSuccess` | Cancel remaining once **one** succeeds | First-response-wins (redundant calls) |
+
+```java
+// ShutdownOnSuccess: try multiple sources, use fastest response
+try (var scope = new StructuredTaskScope.ShutdownOnSuccess<String>()) {
+    scope.fork(() -> fetchFromPrimaryDB());
+    scope.fork(() -> fetchFromCache());
+    scope.fork(() -> fetchFromReplica());
+
+    scope.join();
+    return scope.result();  // returns whichever completed first
+}
+```
+
+> **Key insight:** Unlike `CompletableFuture.allOf()`, structured concurrency ensures all forked threads terminate before the scope exits — either normally or cancelled. No orphaned background work.
+
+---
+
+## 15. Advanced CompletableFuture Patterns
+
+### Combining Multiple Futures
+
+```java
+// Get all results after allOf completes (workaround for allOf's Void return)
+CompletableFuture<List<String>> allResults = CompletableFuture.allOf(future1, future2, future3)
+    .thenApply(v -> Stream.of(future1, future2, future3)
+        .map(CompletableFuture::join)  // safe — all completed
+        .collect(Collectors.toList()));
+```
+
+### Error Handling
+
+```java
+CompletableFuture<User> future = CompletableFuture.supplyAsync(this::fetchUser)
+    .exceptionally(ex -> User.anonymous())      // recover from error with default
+    .handle((user, ex) -> {                     // always runs — inspect both
+        if (ex != null) return User.anonymous();
+        return user;
+    })
+    .whenComplete((user, ex) ->                 // side-effect logging only
+        log.info("Completed: user={}, error={}", user, ex));
+```
+
+### Timeout (Java 9+)
+
+```java
+CompletableFuture<String> withTimeout = CompletableFuture
+    .supplyAsync(this::slowExternalCall)
+    .orTimeout(2, TimeUnit.SECONDS)                         // throws after 2s
+    .completeOnTimeout("fallback", 2, TimeUnit.SECONDS);    // or return fallback
+```
+
+### `thenCompose` vs `thenApply`
+
+```java
+// thenApply: synchronous transform — adapts T → U
+CompletableFuture<String> upper = future.thenApply(String::toUpperCase);
+
+// thenCompose: flatMap — use when transform itself returns a CompletableFuture
+// Prevents CompletableFuture<CompletableFuture<Order>>
+CompletableFuture<Order> orders = userFuture
+    .thenCompose(user -> fetchOrdersFor(user.getId()));
+```
+
+### Always use a custom executor for I/O
+
+```java
+// ❌ Uses ForkJoinPool.commonPool() — designed for CPU-bound, not blocking I/O
+CompletableFuture.supplyAsync(() -> httpClient.fetch(url));
+
+// ✅ Dedicated I/O executor (or virtual threads in Java 21)
+ExecutorService ioExecutor = Executors.newVirtualThreadPerTaskExecutor();
+CompletableFuture.supplyAsync(() -> httpClient.fetch(url), ioExecutor);
+```
+
+---
+
+## 16. Producer-Consumer Pattern
 
 A fundamental pattern where producer threads generate data and consumer threads process it, communicating via a shared buffer. 
 

@@ -2,8 +2,13 @@
 id: open-closed
 title: Open/Closed Principle
 sidebar_position: 2
+description: 'Your class should be: - **Open for extension** → You can add new behavior
+  - **Closed for modification** → You don''t change existing, working code'
+tags:
+- technical-knowledge
+- solid
+- open-closed
 ---
-
 # O — Open/Closed Principle
 
 > **"Software entities should be open for extension, but closed for modification."**

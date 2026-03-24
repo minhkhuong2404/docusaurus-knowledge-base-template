@@ -3,8 +3,14 @@ id: cards
 title: Cards & Card Schemes
 sidebar_label: Cards & Card Schemes
 sidebar_position: 4
+description: '**Payment cards** (debit and credit) are one of the most widely used
+  payment methods globally. They operate on **card schemes** — networks that define
+  rules.'
+tags:
+- technical-knowledge
+- banking
+- cards
 ---
-
 # Cards & Card Schemes
 
 ## Overview

@@ -2,8 +2,15 @@
 id: merge
 title: git merge — Combining Branches
 sidebar_label: merge
+description: '`git merge` integrates the history of one branch into another. It finds
+  the **common ancestor** of the two branches and combines their changes, creating
+  a new.'
+tags:
+- technical-knowledge
+- git
+- branching
+- merge
 ---
-
 # `git merge` — Combining Branches
 
 ## What It Does

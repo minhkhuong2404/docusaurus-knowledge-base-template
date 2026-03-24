@@ -1,9 +1,13 @@
 ---
 sidebar_position: 17
-title: "Chapter 16: Refactoring SerialDate"
-description: A thorough case study refactoring a real-world date library to illustrate deep clean code principles.
+title: 'Chapter 16: Refactoring SerialDate'
+description: A thorough case study refactoring a real-world date library to illustrate
+  deep clean code principles.
+tags:
+- books
+- clean-code
+- chapter-16-refactoring-serialdate
 ---
-
 # Chapter 16: Refactoring SerialDate
 
 ## Real-World Refactoring at Scale

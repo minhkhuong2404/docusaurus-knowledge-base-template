@@ -2,8 +2,14 @@
 id: system-design
 title: Phase 3 — System Design
 sidebar_label: System Design
+description: The **System Design phase** translates approved requirements into a detailed
+  technical blueprint. It defines the architecture, component interactions, data.
+tags:
+- non-technical-knowledge
+- sdlc
+- phases
+- system-design
 ---
-
 # Phase 3 — System Design
 
 ## Overview

@@ -2,8 +2,14 @@
 id: topic
 title: Kafka Topics
 sidebar_label: Topic
+description: A **topic** is a named, durable stream of messages in Kafka. Think of
+  it as a logical category or feed where producers write and consumers read.
+tags:
+- technical-knowledge
+- kafka
+- core
+- topic
 ---
-
 # Kafka Topics
 
 ## What is a Topic?

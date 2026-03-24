@@ -1,10 +1,16 @@
 ---
 id: chapter-12
-title: "Chapter 12: The Future of Data Systems"
-sidebar_label: "Ch 12 — The Future of Data Systems"
+title: 'Chapter 12: The Future of Data Systems'
+sidebar_label: Ch 12 — The Future of Data Systems
 sidebar_position: 3
+description: 'The final chapter synthesizes everything in the book and looks forward.
+  It addresses two questions:'
+tags:
+- books
+- ddia
+- part3-derived-data
+- chapter-12
 ---
-
 # Chapter 12: The Future of Data Systems
 
 ## The Big Idea

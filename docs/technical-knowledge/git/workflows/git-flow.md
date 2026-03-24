@@ -2,8 +2,14 @@
 id: git-flow
 title: Git Flow — Branch Strategy for Scheduled Releases
 sidebar_label: Git Flow
+description: '**Git Flow** is a branching model designed by Vincent Driessen for projects
+  with scheduled, versioned releases. It defines a strict set of branch types and.'
+tags:
+- technical-knowledge
+- git
+- workflows
+- git-flow
 ---
-
 # Git Flow — Branch Strategy for Scheduled Releases
 
 ## What is Git Flow?

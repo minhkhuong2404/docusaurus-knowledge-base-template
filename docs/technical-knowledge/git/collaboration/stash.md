@@ -2,8 +2,14 @@
 id: stash
 title: git stash — Shelving Work in Progress
 sidebar_label: stash
+description: '`git stash` temporarily shelves (stashes) your uncommitted changes —
+  both staged and unstaged — so you can switch context without committing half-finished.'
+tags:
+- technical-knowledge
+- git
+- collaboration
+- stash
 ---
-
 # `git stash` — Shelving Work in Progress
 
 ## What It Does

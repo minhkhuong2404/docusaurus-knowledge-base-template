@@ -2,8 +2,14 @@
 id: producer-overview
 title: Kafka Producer
 sidebar_label: Producer Overview
+description: 'A **producer** is a client application that publishes (writes) messages
+  to Kafka topics. It is responsible for:'
+tags:
+- technical-knowledge
+- kafka
+- producer
+- producer-overview
 ---
-
 # Kafka Producer
 
 ## What is a Producer?

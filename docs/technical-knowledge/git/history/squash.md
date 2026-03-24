@@ -2,8 +2,15 @@
 id: squash
 title: git squash — Combining Commits
 sidebar_label: squash
+description: '**Squashing** combines multiple commits into a single commit. This is
+  used to clean up a messy feature branch before merging — turning a series of `wip`,
+  `fix.'
+tags:
+- technical-knowledge
+- git
+- history
+- squash
 ---
-
 # Squashing Commits
 
 ## What is Squashing?

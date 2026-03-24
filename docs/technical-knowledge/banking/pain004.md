@@ -3,8 +3,12 @@ id: pain004
 title: pain.004 — Does It Exist?
 sidebar_label: pain.004 (Clarification)
 sidebar_position: 7
+description: '**No — `pain.004` is not a defined ISO 20022 message.**'
+tags:
+- technical-knowledge
+- banking
+- pain004
 ---
-
 # pain.004 — Clarification
 
 ## Does pain.004 Exist in ISO 20022?

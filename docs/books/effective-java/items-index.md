@@ -2,8 +2,13 @@
 id: items-index
 title: All 90 Items — Quick Reference Index
 sidebar_label: All 90 Items Index
+description: A complete index of every item in *Effective Java (3rd Edition)* with
+  links to the relevant chapter documentation.
+tags:
+- books
+- effective-java
+- items-index
 ---
-
 # All 90 Items — Quick Reference Index
 
 A complete index of every item in *Effective Java (3rd Edition)* with links to the relevant chapter documentation.

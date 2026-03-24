@@ -1,9 +1,13 @@
 ---
 sidebar_position: 6
-title: "Chapter 5: Formatting"
-description: Code formatting as communication — how visual structure conveys meaning and intent.
+title: 'Chapter 5: Formatting'
+description: Code formatting as communication — how visual structure conveys meaning
+  and intent.
+tags:
+- books
+- clean-code
+- chapter-05-formatting
 ---
-
 # Chapter 5: Formatting
 
 ## Formatting Is Communication

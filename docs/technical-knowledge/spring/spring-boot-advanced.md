@@ -459,6 +459,246 @@ No Dockerfile needed:
 
 ---
 
+## Virtual Threads (Spring Boot 3.2+ / Java 21)
+
+Virtual threads (Project Loom) replace the traditional thread-per-request model with lightweight JVM-managed threads, enabling far greater concurrency without reactive code.
+
+### Enabling Virtual Threads
+
+```yaml
+spring:
+  threads:
+    virtual:
+      enabled: true  # Spring Boot 3.2+ — Tomcat uses virtual threads automatically
+```
+
+```java
+// Custom async executor with virtual threads
+@Bean
+public Executor taskExecutor() {
+    return Executors.newVirtualThreadPerTaskExecutor();
+}
+```
+
+### Virtual Threads vs Reactive (WebFlux)
+
+| Aspect | Virtual Threads | WebFlux (Reactive) |
+|---|---|---|
+| Programming model | Familiar blocking code | Reactive (Mono/Flux) |
+| Code complexity | Low | High |
+| Blocking I/O | **Safe** — virtual threads park, not block OS threads | Must avoid — blocks the event loop |
+| Throughput | Very high for I/O-bound workloads | Very high |
+| CPU-bound work | No gain over platform threads | No gain |
+| Migration cost | Minimal — existing code works | Full rewrite to reactive |
+
+### Virtual Thread Pitfalls
+
+```java
+// ❌ Synchronized blocks pin the carrier thread — kills virtual thread benefits
+@Service
+public class LegacyService {
+    public synchronized void criticalSection() {  // Pins OS thread during blocking ops
+        jdbcTemplate.query(...);  // Blocks inside synchronized = carrier thread blocked
+    }
+}
+
+// ✅ Use ReentrantLock instead for virtual-thread-friendly locking
+private final ReentrantLock lock = new ReentrantLock();
+public void criticalSection() {
+    lock.lock();
+    try {
+        jdbcTemplate.query(...);  // Virtual thread parks — carrier thread freed
+    } finally {
+        lock.unlock();
+    }
+}
+```
+
+---
+
+## @Async — Thread Pool Design and Pitfalls
+
+### Custom Thread Pool Executor
+
+The default `@Async` executor is `SimpleAsyncTaskExecutor` — it creates a **new thread per invocation** with no pooling. Always configure a custom executor in production:
+
+```java
+@Configuration
+@EnableAsync
+public class AsyncConfig implements AsyncConfigurer {
+
+    @Override
+    public Executor getAsyncExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(10);
+        executor.setMaxPoolSize(50);
+        executor.setQueueCapacity(200);
+        executor.setThreadNamePrefix("async-");
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        executor.initialize();
+        return executor;
+    }
+
+    @Override
+    public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
+        return (ex, method, params) ->
+            log.error("Async error in {}: {}", method.getName(), ex.getMessage(), ex);
+    }
+}
+```
+
+### @Async Pitfalls
+
+**1. Exceptions from `void` async methods are silently swallowed without a handler:**
+
+```java
+@Async
+public void sendEmail(String to) {
+    throw new RuntimeException("SMTP failed");
+    // ❌ Exception is LOST unless AsyncUncaughtExceptionHandler is configured
+}
+```
+
+**2. Return type `CompletableFuture` is required to propagate exceptions:**
+
+```java
+@Async
+public CompletableFuture<String> fetchData() {
+    try {
+        return CompletableFuture.completedFuture(externalApi.fetch());
+    } catch (Exception e) {
+        return CompletableFuture.failedFuture(e);  // ✅ Caller can handle it
+    }
+}
+```
+
+**3. SecurityContext is NOT propagated to `@Async` threads by default:**
+
+```java
+// ❌ The async thread has no SecurityContext — authentication.getName() returns null
+@Async
+public void processUserData() {
+    String user = SecurityContextHolder.getContext().getAuthentication().getName();
+}
+
+// ✅ Fix: configure DelegatingSecurityContextAsyncTaskExecutor
+@Bean
+public Executor securityAwareAsyncExecutor() {
+    return new DelegatingSecurityContextAsyncTaskExecutor(taskExecutor());
+}
+```
+
+**4. Self-invocation bypasses `@Async`** — same proxy problem as `@Transactional`.
+
+---
+
+## @Retryable — Retry with Spring Retry
+
+```xml
+<dependency>
+    <groupId>org.springframework.retry</groupId>
+    <artifactId>spring-retry</artifactId>
+</dependency>
+```
+
+```java
+@Configuration
+@EnableRetry
+public class RetryConfig { }
+
+@Service
+public class PaymentService {
+
+    @Retryable(
+        retryFor = {PaymentGatewayException.class, SocketTimeoutException.class},
+        maxAttempts = 3,
+        backoff = @Backoff(delay = 500, multiplier = 2, maxDelay = 5000)
+    )
+    public PaymentResult charge(PaymentRequest request) {
+        return gatewayClient.charge(request);
+    }
+
+    @Recover
+    public PaymentResult fallback(PaymentGatewayException ex, PaymentRequest request) {
+        // Called when all retries are exhausted
+        log.error("Payment failed after retries: {}", request.getOrderId());
+        return PaymentResult.failed("GATEWAY_UNAVAILABLE");
+    }
+}
+```
+
+### Spring Retry vs Resilience4j
+
+| Feature | Spring Retry | Resilience4j |
+|---|---|---|
+| Retry | ✅ | ✅ |
+| Circuit Breaker | ❌ | ✅ |
+| Rate Limiter | ❌ | ✅ |
+| Bulkhead | ❌ | ✅ |
+| Time Limiter | ❌ | ✅ |
+| Reactive support | Limited | Native |
+| Best for | Simple retry scenarios | Production resilience patterns |
+
+> **Senior recommendation:** Use Resilience4j for production microservices — it covers the full resilience pattern set. Use Spring Retry only if you need quick retry-only behavior.
+
+---
+
+## @Scheduled in Clustered Environments
+
+`@Scheduled` runs on **every node** in a cluster by default. This causes duplicate execution — a dangerous behavior for jobs that modify data, send emails, or trigger payments.
+
+### The Problem
+
+```java
+@Scheduled(cron = "0 0 2 * * *")  // Runs at 2 AM
+public void generateDailyReport() {
+    // ❌ Runs on ALL 5 nodes simultaneously → 5 duplicate reports
+}
+```
+
+### Fix: ShedLock (Distributed Lock)
+
+```xml
+<dependency>
+    <groupId>net.javacrumbs.shedlock</groupId>
+    <artifactId>shedlock-spring</artifactId>
+</dependency>
+<dependency>
+    <groupId>net.javacrumbs.shedlock</groupId>
+    <artifactId>shedlock-provider-jdbc-template</artifactId>
+</dependency>
+```
+
+```sql
+-- Required schema
+CREATE TABLE shedlock (
+  name       VARCHAR(64)  NOT NULL,
+  lock_until TIMESTAMP    NOT NULL,
+  locked_at  TIMESTAMP    NOT NULL,
+  locked_by  VARCHAR(255) NOT NULL,
+  PRIMARY KEY (name)
+);
+```
+
+```java
+@Configuration
+@EnableSchedulerLock(defaultLockAtMostFor = "10m")
+public class SchedulerConfig {
+    @Bean
+    public LockProvider lockProvider(DataSource dataSource) {
+        return new JdbcTemplateLockProvider(dataSource);
+    }
+}
+
+@Scheduled(cron = "0 0 2 * * *")
+@SchedulerLock(name = "dailyReport", lockAtLeastFor = "5m", lockAtMostFor = "10m")
+public void generateDailyReport() {
+    // ✅ Only ONE node acquires the lock and runs this — others skip
+}
+```
+
+---
+
 ## Summary
 
 Advanced Spring Boot development requires understanding:
@@ -469,6 +709,10 @@ Advanced Spring Boot development requires understanding:
 - **Performance** — Connection pools, JPA tuning, avoiding anti-patterns
 - **Observability** — Metrics, tracing, and health indicators
 - **Deployment** — Graceful shutdown, layered Docker images, buildpacks
+- **Virtual Threads** — Spring Boot 3.2+ Loom integration for blocking I/O at scale
+- **Async Safety** — Thread pool design, exception handling, SecurityContext propagation
+- **Retry Patterns** — Spring Retry for simple cases, Resilience4j for production resilience
+- **Scheduled Job Safety** — ShedLock for cluster-aware scheduling
 
 ---
 

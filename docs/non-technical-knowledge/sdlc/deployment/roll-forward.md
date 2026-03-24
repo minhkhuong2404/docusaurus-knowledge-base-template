@@ -2,8 +2,15 @@
 id: roll-forward
 title: Roll-Forward Strategy
 sidebar_label: Roll-Forward
+description: '**Roll-forward** is a deployment recovery strategy where, instead of
+  reverting to the previous version when an issue is detected, the team **fixes the
+  defect.'
+tags:
+- non-technical-knowledge
+- sdlc
+- deployment
+- roll-forward
 ---
-
 # Roll-Forward Strategy
 
 ## What is Roll-Forward?

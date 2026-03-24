@@ -1,8 +1,12 @@
 ---
 sidebar_position: 7
-title: "Chapter 6: Workflow"
+title: 'Chapter 6: Workflow'
+description: '**Part II — Implementation**'
+tags:
+- books
+- building-microservice
+- chapter-06
 ---
-
 # Chapter 6: Workflow
 
 **Part II — Implementation**

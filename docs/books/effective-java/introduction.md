@@ -2,8 +2,14 @@
 id: introduction
 title: Introduction
 sidebar_label: Introduction
+description: '**Effective Java (3rd Edition)** by Joshua Bloch is the definitive guide
+  to writing correct, efficient, and maintainable Java code. It contains **90 items**
+  -.'
+tags:
+- books
+- effective-java
+- introduction
 ---
-
 # Introduction
 
 **Effective Java (3rd Edition)** by Joshua Bloch is the definitive guide to writing correct, efficient, and maintainable Java code. It contains **90 items** - each a concise rule distilled from years of experience building the Java platform itself.

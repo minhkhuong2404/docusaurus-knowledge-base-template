@@ -2,8 +2,14 @@
 id: inflight-testing
 title: Inflight Testing
 sidebar_label: Inflight Testing
+description: '**Inflight testing** (also called **production smoke testing** or **synthetic
+  monitoring**) is the practice of running automated tests against a live.'
+tags:
+- non-technical-knowledge
+- sdlc
+- testing
+- inflight-testing
 ---
-
 # Inflight Testing
 
 ## What is Inflight Testing?

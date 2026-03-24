@@ -1,9 +1,13 @@
 ---
 sidebar_position: 14
-title: "Chapter 13: Concurrency"
-description: The challenges of concurrent programming and principles for writing safe, clean concurrent code.
+title: 'Chapter 13: Concurrency'
+description: The challenges of concurrent programming and principles for writing safe,
+  clean concurrent code.
+tags:
+- books
+- clean-code
+- chapter-13-concurrency
 ---
-
 # Chapter 13: Concurrency
 
 ## Why Concurrency Is Hard

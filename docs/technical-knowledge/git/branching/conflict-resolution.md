@@ -2,8 +2,15 @@
 id: conflict-resolution
 title: Conflict Resolution
 sidebar_label: Conflict Resolution
+description: A conflict occurs when two branches have made **different changes to
+  the same line(s)** of the same file, and Git cannot automatically determine which
+  version.
+tags:
+- technical-knowledge
+- git
+- branching
+- conflict-resolution
 ---
-
 # Conflict Resolution
 
 ## What is a Merge Conflict?

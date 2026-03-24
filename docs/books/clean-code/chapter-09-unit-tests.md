@@ -1,9 +1,12 @@
 ---
 sidebar_position: 10
-title: "Chapter 9: Unit Tests"
+title: 'Chapter 9: Unit Tests'
 description: Why tests must be clean, what makes a good test, and the F.I.R.S.T. principles.
+tags:
+- books
+- clean-code
+- chapter-09-unit-tests
 ---
-
 # Chapter 9: Unit Tests
 
 ## Tests Are Not Second-Class Citizens

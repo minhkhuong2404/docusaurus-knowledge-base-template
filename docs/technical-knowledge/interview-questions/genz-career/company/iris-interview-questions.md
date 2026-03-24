@@ -2,8 +2,16 @@
 id: java-developer-interview-iris
 title: Iris Java Developer Interview Experience & Questions [ 14 LPA+ ]
 sidebar_label: Java Interview Questions
+description: '**Q: Explain your current project flow from API request to database.
+  What part of the systems do you own completely? What was the last production bug
+  you fixed.'
+tags:
+- technical-knowledge
+- interview-questions
+- genz-career
+- company
+- iris-interview-questions
 ---
-
 # Iris Java Developer Interview Experience & Questions [ 14 LPA+ ]
 
 **Q: Explain your current project flow from API request to database. What part of the systems do you own completely? What was the last production bug you fixed and how did you debug it? What design decisions in your project didn't scale well initially?**

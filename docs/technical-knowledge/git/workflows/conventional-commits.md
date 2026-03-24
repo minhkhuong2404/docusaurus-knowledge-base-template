@@ -2,8 +2,14 @@
 id: conventional-commits
 title: Conventional Commits — Structured Commit Messages
 sidebar_label: Conventional Commits
+description: '[Conventional Commits](https://www.conventionalcommits.org) is a lightweight
+  convention for writing commit messages in a machine-readable, human-understandable.'
+tags:
+- technical-knowledge
+- git
+- workflows
+- conventional-commits
 ---
-
 # Conventional Commits — Structured Commit Messages
 
 ## What is the Conventional Commits Specification?

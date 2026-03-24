@@ -1,9 +1,14 @@
 ---
 id: chapter-08-methods
-title: "Chapter 8: Methods"
-sidebar_label: "8. Methods"
+title: 'Chapter 8: Methods'
+sidebar_label: 8. Methods
+description: 'This chapter discusses several aspects of method design: how to treat
+  parameters and return values, how to design method signatures, and how to document.'
+tags:
+- books
+- effective-java
+- chapter-08-methods
 ---
-
 # Chapter 8: Methods
 
 This chapter discusses several aspects of method design: how to treat parameters and return values, how to design method signatures, and how to document methods.

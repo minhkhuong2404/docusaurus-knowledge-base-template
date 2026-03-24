@@ -2,8 +2,15 @@
 id: consumer-group
 title: Consumer Groups
 sidebar_label: Consumer Group
+description: A **consumer group** is a set of consumers that collectively consume
+  a topic's partitions. Each partition is assigned to exactly one consumer within
+  the group.
+tags:
+- technical-knowledge
+- kafka
+- consumer
+- consumer-group
 ---
-
 # Consumer Groups
 
 ## What is a Consumer Group?

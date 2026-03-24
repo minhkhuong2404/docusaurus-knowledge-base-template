@@ -1,10 +1,16 @@
 ---
 id: chapter-10
-title: "Chapter 10: Batch Processing"
-sidebar_label: "Ch 10 — Batch Processing"
+title: 'Chapter 10: Batch Processing'
+sidebar_label: Ch 10 — Batch Processing
 sidebar_position: 1
+description: So far the book has focused on systems that handle requests as they arrive
+  (OLTP) or read/write in real-time. But some of the most important data processing.
+tags:
+- books
+- ddia
+- part3-derived-data
+- chapter-10
 ---
-
 # Chapter 10: Batch Processing
 
 ## The Big Idea

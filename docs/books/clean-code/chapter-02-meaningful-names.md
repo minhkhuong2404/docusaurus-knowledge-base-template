@@ -1,9 +1,12 @@
 ---
 sidebar_position: 3
-title: "Chapter 2: Meaningful Names"
+title: 'Chapter 2: Meaningful Names'
 description: How to choose names that reveal intent and make code self-documenting.
+tags:
+- books
+- clean-code
+- chapter-02-meaningful-names
 ---
-
 # Chapter 2: Meaningful Names
 
 ## Why Naming Matters

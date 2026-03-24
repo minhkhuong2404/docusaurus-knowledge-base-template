@@ -2,8 +2,13 @@
 id: liskov-substitution
 title: Liskov Substitution Principle
 sidebar_position: 3
+description: If class `B` extends class `A`, then anywhere you use `A`, you should
+  be able to swap in `B` without anything breaking.
+tags:
+- technical-knowledge
+- solid
+- liskov-substitution
 ---
-
 # L — Liskov Substitution Principle
 
 > **"Objects of a subclass should be replaceable with objects of the superclass without breaking the application."**

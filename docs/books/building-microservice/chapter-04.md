@@ -1,8 +1,12 @@
 ---
 sidebar_position: 5
-title: "Chapter 4: Microservice Communication Styles"
+title: 'Chapter 4: Microservice Communication Styles'
+description: '**Part I — Foundation**'
+tags:
+- books
+- building-microservice
+- chapter-04
 ---
-
 # Chapter 4: Microservice Communication Styles
 
 **Part I — Foundation**

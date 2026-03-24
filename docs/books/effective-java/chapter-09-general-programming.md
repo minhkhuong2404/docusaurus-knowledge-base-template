@@ -1,9 +1,14 @@
 ---
 id: chapter-09-general-programming
-title: "Chapter 9: General Programming"
-sidebar_label: "9. General Programming"
+title: 'Chapter 9: General Programming'
+sidebar_label: 9. General Programming
+description: 'This chapter covers the nuts and bolts of Java programming: local variables,
+  control structures, libraries, data types, and using two non-language features.'
+tags:
+- books
+- effective-java
+- chapter-09-general-programming
 ---
-
 # Chapter 9: General Programming
 
 This chapter covers the nuts and bolts of Java programming: local variables, control structures, libraries, data types, and using two non-language features (reflection and native methods).

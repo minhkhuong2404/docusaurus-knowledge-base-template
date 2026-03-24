@@ -1,9 +1,13 @@
 ---
 sidebar_position: 15
-title: "Chapter 14: Successive Refinement"
-description: A case study showing how iterative refactoring transforms a messy first draft into clean code.
+title: 'Chapter 14: Successive Refinement'
+description: A case study showing how iterative refactoring transforms a messy first
+  draft into clean code.
+tags:
+- books
+- clean-code
+- chapter-14-successive-refinement
 ---
-
 # Chapter 14: Successive Refinement
 
 ## The Process of Getting Clean

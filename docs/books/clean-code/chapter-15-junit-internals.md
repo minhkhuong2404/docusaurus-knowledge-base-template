@@ -1,9 +1,13 @@
 ---
 sidebar_position: 16
-title: "Chapter 15: JUnit Internals"
-description: A case study refactoring real JUnit source code to demonstrate clean code principles in practice.
+title: 'Chapter 15: JUnit Internals'
+description: A case study refactoring real JUnit source code to demonstrate clean
+  code principles in practice.
+tags:
+- books
+- clean-code
+- chapter-15-junit-internals
 ---
-
 # Chapter 15: JUnit Internals
 
 ## A Case Study in Real Code

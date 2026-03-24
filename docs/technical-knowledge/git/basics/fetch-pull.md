@@ -2,8 +2,15 @@
 id: fetch-pull
 title: git fetch & git pull — Getting Remote Changes
 sidebar_label: fetch & pull
+description: '**The golden rule:** Prefer `git fetch` + manual inspect over `git pull`
+  when you want to see what''s changed before integrating. Use `git pull --rebase`
+  for.'
+tags:
+- technical-knowledge
+- git
+- basics
+- fetch-pull
 ---
-
 # `git fetch` & `git pull` — Getting Remote Changes
 
 ## The Difference

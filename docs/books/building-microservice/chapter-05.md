@@ -1,8 +1,12 @@
 ---
 sidebar_position: 6
-title: "Chapter 5: Implementing Microservice Communication"
+title: 'Chapter 5: Implementing Microservice Communication'
+description: '**Part II — Implementation**'
+tags:
+- books
+- building-microservice
+- chapter-05
 ---
-
 # Chapter 5: Implementing Microservice Communication
 
 **Part II — Implementation**

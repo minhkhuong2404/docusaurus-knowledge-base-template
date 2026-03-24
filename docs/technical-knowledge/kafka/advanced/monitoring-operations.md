@@ -2,8 +2,13 @@
 id: monitoring-operations
 title: Monitoring & Operations
 sidebar_label: Monitoring & Operations
+description: 'Consumer lag is the most important consumer metric:'
+tags:
+- technical-knowledge
+- kafka
+- advanced
+- monitoring-operations
 ---
-
 # Kafka Monitoring & Operations
 
 ## Key Metrics to Monitor

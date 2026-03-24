@@ -2,8 +2,13 @@
 id: interview-core
 title: Interview Questions — Core Concepts
 sidebar_label: Core Concepts Q&A
+description: '**Q1: Explain Kafka''s architecture in 2 minutes.**'
+tags:
+- technical-knowledge
+- kafka
+- interview
+- interview-core
 ---
-
 # Interview Questions — Core Kafka Concepts
 
 > 🎯 These are the most commonly asked Kafka interview questions, grouped by topic. Each answer is designed to be comprehensive enough to impress, but concise enough to deliver in an interview.

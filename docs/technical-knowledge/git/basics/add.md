@@ -2,8 +2,15 @@
 id: add
 title: git add — Staging Changes
 sidebar_label: add
+description: '`git add` moves changes from your **working tree** into the **index**
+  (also called the staging area). Think of the index as a draft of your next commit
+  — you.'
+tags:
+- technical-knowledge
+- git
+- basics
+- add
 ---
-
 # `git add` — Staging Changes
 
 ## What It Does

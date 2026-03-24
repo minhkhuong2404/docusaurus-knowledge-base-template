@@ -1,9 +1,15 @@
 ---
 id: chapter-04-classes-and-interfaces
-title: "Chapter 4: Classes and Interfaces"
-sidebar_label: "4. Classes and Interfaces"
+title: 'Chapter 4: Classes and Interfaces'
+sidebar_label: 4. Classes and Interfaces
+description: Classes and interfaces are the heart of the Java programming language.
+  This chapter gives guidelines for making the best use of these language elements
+  so that.
+tags:
+- books
+- effective-java
+- chapter-04-classes-and-interfaces
 ---
-
 # Chapter 4: Classes and Interfaces
 
 Classes and interfaces are the heart of the Java programming language. This chapter gives guidelines for making the best use of these language elements so that classes and interfaces are usable, robust, and flexible.

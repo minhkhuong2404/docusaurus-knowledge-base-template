@@ -2,8 +2,13 @@
 id: interview-producer-consumer
 title: Interview Questions — Producer & Consumer
 sidebar_label: Producer & Consumer Q&A
+description: '**Q1: Walk me through what happens when a producer calls `send()`.**'
+tags:
+- technical-knowledge
+- kafka
+- interview
+- interview-producer-consumer
 ---
-
 # Interview Questions — Producer & Consumer
 
 ---

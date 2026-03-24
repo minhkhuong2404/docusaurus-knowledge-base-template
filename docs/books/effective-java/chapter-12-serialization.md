@@ -1,9 +1,15 @@
 ---
 id: chapter-12-serialization
-title: "Chapter 12: Serialization"
-sidebar_label: "12. Serialization"
+title: 'Chapter 12: Serialization'
+sidebar_label: 12. Serialization
+description: This chapter concerns **object serialization** — Java's framework for
+  encoding objects as byte streams (*serializing*) and reconstructing objects from
+  their.
+tags:
+- books
+- effective-java
+- chapter-12-serialization
 ---
-
 # Chapter 12: Serialization
 
 This chapter concerns **object serialization** — Java's framework for encoding objects as byte streams (*serializing*) and reconstructing objects from their encodings (*deserializing*). Once an object is serialized, its encoding can be sent from one VM to another or stored on disk and later deserialized. This chapter focuses on the dangers of serialization and how to minimize them.

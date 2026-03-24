@@ -2,8 +2,14 @@
 id: interview-advanced
 title: Interview Questions — Advanced Topics
 sidebar_label: Advanced Topics Q&A
+description: '**Q1: What are the three layers required for end-to-end exactly-once
+  in Kafka?**'
+tags:
+- technical-knowledge
+- kafka
+- interview
+- interview-advanced
 ---
-
 # Interview Questions — Advanced Topics
 
 ---

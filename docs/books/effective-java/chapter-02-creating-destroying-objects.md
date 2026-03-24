@@ -1,9 +1,14 @@
 ---
 id: chapter-02-creating-destroying-objects
-title: "Chapter 2: Creating and Destroying Objects"
-sidebar_label: "2. Creating & Destroying Objects"
+title: 'Chapter 2: Creating and Destroying Objects'
+sidebar_label: 2. Creating & Destroying Objects
+description: 'This chapter covers the full lifecycle of objects: when and how to create
+  them, when and how to avoid creating them, how to ensure they are destroyed in a.'
+tags:
+- books
+- effective-java
+- chapter-02-creating-destroying-objects
 ---
-
 # Chapter 2: Creating and Destroying Objects
 
 This chapter covers the full lifecycle of objects: when and how to create them, when and how to avoid creating them, how to ensure they are destroyed in a timely manner, and how to manage any cleanup actions that must precede their destruction.

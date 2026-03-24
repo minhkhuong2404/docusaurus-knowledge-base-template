@@ -3,8 +3,13 @@ id: testing_banking
 title: Testing in Banking & Payments
 sidebar_label: Testing in Payments
 sidebar_position: 3
+description: Testing in banking is **high-stakes** — a defect in a payment system
+  can result in customer funds lost, duplicate payments, regulatory breaches, or system.
+tags:
+- technical-knowledge
+- banking
+- testing_banking
 ---
-
 # Testing in Banking & Payments
 
 ## Overview

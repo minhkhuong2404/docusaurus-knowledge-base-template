@@ -1,9 +1,13 @@
 ---
 sidebar_position: 9
-title: "Chapter 8: Boundaries"
-description: Strategies for cleanly integrating third-party code and managing the edges of your system.
+title: 'Chapter 8: Boundaries'
+description: Strategies for cleanly integrating third-party code and managing the
+  edges of your system.
+tags:
+- books
+- clean-code
+- chapter-08-boundaries
 ---
-
 # Chapter 8: Boundaries
 
 ## The Challenge at the Edge of Your System

@@ -1,10 +1,16 @@
 ---
 id: chapter-07
-title: "Chapter 7: Transactions"
-sidebar_label: "Ch 7 — Transactions"
+title: 'Chapter 7: Transactions'
+sidebar_label: Ch 7 — Transactions
 sidebar_position: 3
+description: Real applications are messy — the database can crash, network connections
+  can drop, multiple clients write concurrently, and partial reads of partially updated.
+tags:
+- books
+- ddia
+- part2-distributed-data
+- chapter-07
 ---
-
 # Chapter 7: Transactions
 
 ## The Big Idea

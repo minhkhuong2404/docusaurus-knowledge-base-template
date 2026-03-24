@@ -2,8 +2,14 @@
 id: config-aliases
 title: git config & Aliases — Customising Git
 sidebar_label: Config & Aliases
+description: 'Git configuration exists at three scopes, each overriding the one above
+  it:'
+tags:
+- technical-knowledge
+- git
+- advanced
+- config-aliases
 ---
-
 # `git config` & Aliases — Customising Git
 
 ## The Three Config Levels

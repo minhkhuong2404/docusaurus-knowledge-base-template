@@ -1,10 +1,17 @@
 ---
 id: chapter-02
-title: "Chapter 2: Data Models and Query Languages"
-sidebar_label: "Ch 2 — Data Models & Query Languages"
+title: 'Chapter 2: Data Models and Query Languages'
+sidebar_label: Ch 2 — Data Models & Query Languages
 sidebar_position: 2
+description: Data models are probably the most important part of developing software
+  — they shape not just how we write the code, but how we *think about the problem*.
+  Each.
+tags:
+- books
+- ddia
+- part1-foundations
+- chapter-02
 ---
-
 # Chapter 2: Data Models and Query Languages
 
 ## The Big Idea

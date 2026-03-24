@@ -1,9 +1,12 @@
 ---
 sidebar_position: 5
-title: "Chapter 4: Comments"
+title: 'Chapter 4: Comments'
 description: When comments help, when they hurt, and why good code rarely needs them.
+tags:
+- books
+- clean-code
+- chapter-04-comments
 ---
-
 # Chapter 4: Comments
 
 ## The Uncomfortable Truth About Comments

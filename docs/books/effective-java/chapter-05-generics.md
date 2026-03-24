@@ -1,9 +1,15 @@
 ---
 id: chapter-05-generics
-title: "Chapter 5: Generics"
-sidebar_label: "5. Generics"
+title: 'Chapter 5: Generics'
+sidebar_label: 5. Generics
+description: Generics were added in Java 5. Before generics, you had to cast every
+  object read from a collection — if someone accidentally inserted an object of the
+  wrong.
+tags:
+- books
+- effective-java
+- chapter-05-generics
 ---
-
 # Chapter 5: Generics
 
 Generics were added in Java 5. Before generics, you had to cast every object read from a collection — if someone accidentally inserted an object of the wrong type, the cast would fail at runtime. With generics, you tell the compiler what types of objects are permitted in each collection. The compiler inserts casts automatically and tells you at **compile time** if you try to insert an object of the wrong type.

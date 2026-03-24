@@ -2,8 +2,14 @@
 id: replication
 title: Replication, ISR & Fault Tolerance
 sidebar_label: Replication & ISR
+description: The **replication factor** defines how many copies of each partition
+  exist across the cluster.
+tags:
+- technical-knowledge
+- kafka
+- core
+- replication
 ---
-
 # Replication, ISR & Fault Tolerance
 
 ## Replication Factor

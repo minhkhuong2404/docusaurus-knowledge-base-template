@@ -1,9 +1,13 @@
 ---
 sidebar_position: 18
-title: "Chapter 17: Smells and Heuristics"
-description: A comprehensive catalog of code smells and heuristics for identifying and fixing bad code.
+title: 'Chapter 17: Smells and Heuristics'
+description: A comprehensive catalog of code smells and heuristics for identifying
+  and fixing bad code.
+tags:
+- books
+- clean-code
+- chapter-17-smells-and-heuristics
 ---
-
 # Chapter 17: Smells and Heuristics
 
 ## The Reference Catalog

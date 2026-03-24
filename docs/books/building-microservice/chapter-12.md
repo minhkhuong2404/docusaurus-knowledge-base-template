@@ -1,8 +1,12 @@
 ---
 sidebar_position: 13
-title: "Chapter 12: Resiliency"
+title: 'Chapter 12: Resiliency'
+description: '**Part II — Implementation**'
+tags:
+- books
+- building-microservice
+- chapter-12
 ---
-
 # Chapter 12: Resiliency
 
 **Part II — Implementation**

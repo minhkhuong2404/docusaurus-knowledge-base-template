@@ -2,8 +2,13 @@
 id: dependency-inversion
 title: Dependency Inversion Principle
 sidebar_position: 5
+description: Don't let your important business logic classes depend directly on concrete
+  implementations (like a specific database driver, a specific email provider, etc.).
+tags:
+- technical-knowledge
+- solid
+- dependency-inversion
 ---
-
 # D — Dependency Inversion Principle
 
 > **"High-level modules should not depend on low-level modules. Both should depend on abstractions."**

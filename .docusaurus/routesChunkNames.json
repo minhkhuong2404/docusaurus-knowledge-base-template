@@ -5,13 +5,13 @@
       "plugin": "138e0e15"
     }
   },
-  "/-4a9": {
+  "/-0f2": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-dba": {
+  "/-72d": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -58,6 +58,10 @@
   "/tags/adapter-153": {
     "__comp": "df203c0f",
     "__props": "9244dba4"
+  },
+  "/tags/add-00a": {
+    "__comp": "df203c0f",
+    "__props": "2ab26087"
   },
   "/tags/advanced-c89": {
     "__comp": "df203c0f",
@@ -251,6 +255,14 @@
     "__comp": "df203c0f",
     "__props": "7b5ec985"
   },
+  "/tags/banking-roles-41e": {
+    "__comp": "df203c0f",
+    "__props": "da161c58"
+  },
+  "/tags/basics-041": {
+    "__comp": "df203c0f",
+    "__props": "48d8117d"
+  },
   "/tags/bcnf-044": {
     "__comp": "df203c0f",
     "__props": "b1ce8c9f"
@@ -287,6 +299,10 @@
     "__comp": "df203c0f",
     "__props": "4f97a266"
   },
+  "/tags/bisect-55f": {
+    "__comp": "df203c0f",
+    "__props": "9a5dffb7"
+  },
   "/tags/blob-44b": {
     "__comp": "df203c0f",
     "__props": "ad684512"
@@ -299,13 +315,29 @@
     "__comp": "df203c0f",
     "__props": "ac725e03"
   },
+  "/tags/books-450": {
+    "__comp": "df203c0f",
+    "__props": "16baf151"
+  },
   "/tags/bpay-cf7": {
     "__comp": "df203c0f",
     "__props": "84532f86"
   },
+  "/tags/branches-acb": {
+    "__comp": "df203c0f",
+    "__props": "7c989f7e"
+  },
+  "/tags/branching-a9f": {
+    "__comp": "df203c0f",
+    "__props": "f7578e71"
+  },
   "/tags/bridge-60f": {
     "__comp": "df203c0f",
     "__props": "6bc84981"
+  },
+  "/tags/broker-8c5": {
+    "__comp": "df203c0f",
+    "__props": "e98ee84e"
   },
   "/tags/buffer-pool-975": {
     "__comp": "df203c0f",
@@ -318,6 +350,10 @@
   "/tags/builder-b96": {
     "__comp": "df203c0f",
     "__props": "d7a3e221"
+  },
+  "/tags/building-microservice-554": {
+    "__comp": "df203c0f",
+    "__props": "ea110ffa"
   },
   "/tags/cache-aside-cb4": {
     "__comp": "df203c0f",
@@ -343,6 +379,10 @@
     "__comp": "df203c0f",
     "__props": "e14684b3"
   },
+  "/tags/camt-055-camt-056-ade": {
+    "__comp": "df203c0f",
+    "__props": "bca04ae1"
+  },
   "/tags/canary-5e8": {
     "__comp": "df203c0f",
     "__props": "d5654472"
@@ -362,6 +402,10 @@
   "/tags/cardinality-dd4": {
     "__comp": "df203c0f",
     "__props": "26260cdf"
+  },
+  "/tags/cards-b2e": {
+    "__comp": "df203c0f",
+    "__props": "7956f788"
   },
   "/tags/career-241": {
     "__comp": "df203c0f",
@@ -399,6 +443,182 @@
     "__comp": "df203c0f",
     "__props": "518d8bb2"
   },
+  "/tags/chapter-01-7c4": {
+    "__comp": "df203c0f",
+    "__props": "f4cb5a28"
+  },
+  "/tags/chapter-01-clean-code-21c": {
+    "__comp": "df203c0f",
+    "__props": "48cfe2e9"
+  },
+  "/tags/chapter-02-5ac": {
+    "__comp": "df203c0f",
+    "__props": "2390a301"
+  },
+  "/tags/chapter-02-creating-destroying-objects-205": {
+    "__comp": "df203c0f",
+    "__props": "0c8a9c6e"
+  },
+  "/tags/chapter-02-meaningful-names-7fd": {
+    "__comp": "df203c0f",
+    "__props": "a2e7d452"
+  },
+  "/tags/chapter-03-32b": {
+    "__comp": "df203c0f",
+    "__props": "97b3754c"
+  },
+  "/tags/chapter-03-functions-1fc": {
+    "__comp": "df203c0f",
+    "__props": "33e06da9"
+  },
+  "/tags/chapter-03-methods-common-to-all-objects-7c2": {
+    "__comp": "df203c0f",
+    "__props": "87fc7433"
+  },
+  "/tags/chapter-04-c79": {
+    "__comp": "df203c0f",
+    "__props": "4cee2a26"
+  },
+  "/tags/chapter-04-classes-and-interfaces-991": {
+    "__comp": "df203c0f",
+    "__props": "63a15130"
+  },
+  "/tags/chapter-04-comments-e11": {
+    "__comp": "df203c0f",
+    "__props": "ce667858"
+  },
+  "/tags/chapter-05-f5c": {
+    "__comp": "df203c0f",
+    "__props": "880eeae1"
+  },
+  "/tags/chapter-05-formatting-d0f": {
+    "__comp": "df203c0f",
+    "__props": "3757b586"
+  },
+  "/tags/chapter-05-generics-a9c": {
+    "__comp": "df203c0f",
+    "__props": "0509c850"
+  },
+  "/tags/chapter-06-31d": {
+    "__comp": "df203c0f",
+    "__props": "a06c2e94"
+  },
+  "/tags/chapter-06-enums-and-annotations-702": {
+    "__comp": "df203c0f",
+    "__props": "e65692c5"
+  },
+  "/tags/chapter-06-objects-data-structures-4b1": {
+    "__comp": "df203c0f",
+    "__props": "336a8b79"
+  },
+  "/tags/chapter-07-5e1": {
+    "__comp": "df203c0f",
+    "__props": "61acbc82"
+  },
+  "/tags/chapter-07-error-handling-ee9": {
+    "__comp": "df203c0f",
+    "__props": "a0798cb8"
+  },
+  "/tags/chapter-07-lambdas-and-streams-371": {
+    "__comp": "df203c0f",
+    "__props": "ed1087b0"
+  },
+  "/tags/chapter-08-efb": {
+    "__comp": "df203c0f",
+    "__props": "b49e09b5"
+  },
+  "/tags/chapter-08-boundaries-e8a": {
+    "__comp": "df203c0f",
+    "__props": "0c0b8867"
+  },
+  "/tags/chapter-08-methods-15a": {
+    "__comp": "df203c0f",
+    "__props": "c4a8c674"
+  },
+  "/tags/chapter-09-19f": {
+    "__comp": "df203c0f",
+    "__props": "39fdc0df"
+  },
+  "/tags/chapter-09-general-programming-54d": {
+    "__comp": "df203c0f",
+    "__props": "1947e9a3"
+  },
+  "/tags/chapter-09-unit-tests-498": {
+    "__comp": "df203c0f",
+    "__props": "41f23793"
+  },
+  "/tags/chapter-10-5a8": {
+    "__comp": "df203c0f",
+    "__props": "bc1e1475"
+  },
+  "/tags/chapter-10-classes-08e": {
+    "__comp": "df203c0f",
+    "__props": "20cc0046"
+  },
+  "/tags/chapter-10-exceptions-001": {
+    "__comp": "df203c0f",
+    "__props": "d6a44ae1"
+  },
+  "/tags/chapter-11-d50": {
+    "__comp": "df203c0f",
+    "__props": "658dc12d"
+  },
+  "/tags/chapter-11-concurrency-a58": {
+    "__comp": "df203c0f",
+    "__props": "0c7d0704"
+  },
+  "/tags/chapter-11-systems-98f": {
+    "__comp": "df203c0f",
+    "__props": "8f1407b8"
+  },
+  "/tags/chapter-12-009": {
+    "__comp": "df203c0f",
+    "__props": "e530b161"
+  },
+  "/tags/chapter-12-emergence-751": {
+    "__comp": "df203c0f",
+    "__props": "4c7852d8"
+  },
+  "/tags/chapter-12-serialization-5d2": {
+    "__comp": "df203c0f",
+    "__props": "cd18d9b2"
+  },
+  "/tags/chapter-13-621": {
+    "__comp": "df203c0f",
+    "__props": "d7fb1648"
+  },
+  "/tags/chapter-13-concurrency-3f5": {
+    "__comp": "df203c0f",
+    "__props": "85377113"
+  },
+  "/tags/chapter-14-fd9": {
+    "__comp": "df203c0f",
+    "__props": "8d9f1732"
+  },
+  "/tags/chapter-14-successive-refinement-4b9": {
+    "__comp": "df203c0f",
+    "__props": "b6af95b6"
+  },
+  "/tags/chapter-15-ebb": {
+    "__comp": "df203c0f",
+    "__props": "66e9bfc3"
+  },
+  "/tags/chapter-15-junit-internals-0d1": {
+    "__comp": "df203c0f",
+    "__props": "112325d2"
+  },
+  "/tags/chapter-16-ece": {
+    "__comp": "df203c0f",
+    "__props": "2b3f1cf3"
+  },
+  "/tags/chapter-16-refactoring-serialdate-a4b": {
+    "__comp": "df203c0f",
+    "__props": "feaef4db"
+  },
+  "/tags/chapter-17-smells-and-heuristics-cc8": {
+    "__comp": "df203c0f",
+    "__props": "7bca75ec"
+  },
   "/tags/charts-ce7": {
     "__comp": "df203c0f",
     "__props": "2685dfa6"
@@ -406,6 +626,10 @@
   "/tags/cheatsheet-5bf": {
     "__comp": "df203c0f",
     "__props": "b77374ed"
+  },
+  "/tags/cherry-pick-9c2": {
+    "__comp": "df203c0f",
+    "__props": "5f7d9031"
   },
   "/tags/choreography-15e": {
     "__comp": "df203c0f",
@@ -426,6 +650,10 @@
   "/tags/circuit-breaker-af6": {
     "__comp": "df203c0f",
     "__props": "d942bea5"
+  },
+  "/tags/clean-code-3c5": {
+    "__comp": "df203c0f",
+    "__props": "665593ca"
   },
   "/tags/clearing-0e1": {
     "__comp": "df203c0f",
@@ -499,6 +727,10 @@
     "__comp": "df203c0f",
     "__props": "b1716a86"
   },
+  "/tags/collaboration-53e": {
+    "__comp": "df203c0f",
+    "__props": "038bd86c"
+  },
   "/tags/collections-f92": {
     "__comp": "df203c0f",
     "__props": "7b4803b5"
@@ -515,9 +747,17 @@
     "__comp": "df203c0f",
     "__props": "e644d54c"
   },
+  "/tags/commit-503": {
+    "__comp": "df203c0f",
+    "__props": "ae4cc6ae"
+  },
   "/tags/communication-2c1": {
     "__comp": "df203c0f",
     "__props": "995d09ba"
+  },
+  "/tags/company-c5b": {
+    "__comp": "df203c0f",
+    "__props": "e6b070c2"
   },
   "/tags/compensating-transaction-fe1": {
     "__comp": "df203c0f",
@@ -526,6 +766,10 @@
   "/tags/compliance-1bf": {
     "__comp": "df203c0f",
     "__props": "26ed4e63"
+  },
+  "/tags/component-performance-testing-159": {
+    "__comp": "df203c0f",
+    "__props": "10f9e8c5"
   },
   "/tags/composite-fb3": {
     "__comp": "df203c0f",
@@ -542,6 +786,10 @@
   "/tags/concurrency-800": {
     "__comp": "df203c0f",
     "__props": "037d5664"
+  },
+  "/tags/config-aliases-5f7": {
+    "__comp": "df203c0f",
+    "__props": "6dcee168"
   },
   "/tags/configmap-59f": {
     "__comp": "df203c0f",
@@ -583,6 +831,14 @@
     "__comp": "df203c0f",
     "__props": "8f1267ec"
   },
+  "/tags/consumer-group-36c": {
+    "__comp": "df203c0f",
+    "__props": "557f701a"
+  },
+  "/tags/consumer-overview-a10": {
+    "__comp": "df203c0f",
+    "__props": "6b77a0c4"
+  },
   "/tags/container-security-73e": {
     "__comp": "df203c0f",
     "__props": "f8722bf6"
@@ -598,6 +854,18 @@
   "/tags/control-plane-a35": {
     "__comp": "df203c0f",
     "__props": "1f34e3dd"
+  },
+  "/tags/conventional-commits-39e": {
+    "__comp": "df203c0f",
+    "__props": "4ca9d798"
+  },
+  "/tags/core-7b7": {
+    "__comp": "df203c0f",
+    "__props": "87ee98da"
+  },
+  "/tags/core-banking-679": {
+    "__comp": "df203c0f",
+    "__props": "e0105bd2"
   },
   "/tags/core-java-d50": {
     "__comp": "df203c0f",
@@ -711,6 +979,10 @@
     "__comp": "df203c0f",
     "__props": "391a97f5"
   },
+  "/tags/ddia-966": {
+    "__comp": "df203c0f",
+    "__props": "28844ade"
+  },
   "/tags/ddos-ec5": {
     "__comp": "df203c0f",
     "__props": "eb687d64"
@@ -751,6 +1023,10 @@
     "__comp": "df203c0f",
     "__props": "90c0aa62"
   },
+  "/tags/dependency-inversion-857": {
+    "__comp": "df203c0f",
+    "__props": "94e65b0c"
+  },
   "/tags/deployment-af0": {
     "__comp": "df203c0f",
     "__props": "672f8da9"
@@ -766,6 +1042,10 @@
   "/tags/detection-b71": {
     "__comp": "df203c0f",
     "__props": "0c6e8666"
+  },
+  "/tags/development-3ae": {
+    "__comp": "df203c0f",
+    "__props": "8e9ca5bd"
   },
   "/tags/devops-408": {
     "__comp": "df203c0f",
@@ -891,6 +1171,10 @@
     "__comp": "df203c0f",
     "__props": "0bf82263"
   },
+  "/tags/effective-java-201": {
+    "__comp": "df203c0f",
+    "__props": "4c483e27"
+  },
   "/tags/elastic-beanstalk-7f7": {
     "__comp": "df203c0f",
     "__props": "26006b2f"
@@ -918,6 +1202,10 @@
   "/tags/encryption-db3": {
     "__comp": "df203c0f",
     "__props": "417f9a90"
+  },
+  "/tags/end-to-end-testing-a8c": {
+    "__comp": "df203c0f",
+    "__props": "eeea3721"
   },
   "/tags/engineering-869": {
     "__comp": "df203c0f",
@@ -1051,6 +1339,10 @@
     "__comp": "df203c0f",
     "__props": "40cfd85b"
   },
+  "/tags/fetch-pull-4e9": {
+    "__comp": "df203c0f",
+    "__props": "eaac4eed"
+  },
   "/tags/fi-ced": {
     "__comp": "df203c0f",
     "__props": "174a6a31"
@@ -1071,6 +1363,10 @@
     "__comp": "df203c0f",
     "__props": "7b44fdc6"
   },
+  "/tags/filters-505": {
+    "__comp": "df203c0f",
+    "__props": "d5bf9af1"
+  },
   "/tags/firehose-883": {
     "__comp": "df203c0f",
     "__props": "6b06eb61"
@@ -1082,6 +1378,10 @@
   "/tags/fis-f42": {
     "__comp": "df203c0f",
     "__props": "eba1d9cc"
+  },
+  "/tags/fixup-2bb": {
+    "__comp": "df203c0f",
+    "__props": "850816c5"
   },
   "/tags/flow-control-d75": {
     "__comp": "df203c0f",
@@ -1151,6 +1451,22 @@
     "__comp": "df203c0f",
     "__props": "0aab00a6"
   },
+  "/tags/genz-career-274": {
+    "__comp": "df203c0f",
+    "__props": "fc586012"
+  },
+  "/tags/git-ff3": {
+    "__comp": "df203c0f",
+    "__props": "6095d2ed"
+  },
+  "/tags/git-flow-f75": {
+    "__comp": "df203c0f",
+    "__props": "ce2c7678"
+  },
+  "/tags/glossary-42e": {
+    "__comp": "df203c0f",
+    "__props": "7e2bdb2c"
+  },
   "/tags/gradle-9fe": {
     "__comp": "df203c0f",
     "__props": "25a2253a"
@@ -1218,6 +1534,10 @@
   "/tags/hipaa-a32": {
     "__comp": "df203c0f",
     "__props": "3597b5ef"
+  },
+  "/tags/history-c56": {
+    "__comp": "df203c0f",
+    "__props": "03e0cda3"
   },
   "/tags/hmac-c67": {
     "__comp": "df203c0f",
@@ -1299,6 +1619,10 @@
     "__comp": "df203c0f",
     "__props": "abb89bd2"
   },
+  "/tags/inflight-testing-fe4": {
+    "__comp": "df203c0f",
+    "__props": "3af5bfea"
+  },
   "/tags/influxdb-bae": {
     "__comp": "df203c0f",
     "__props": "bba1aa88"
@@ -1335,6 +1659,18 @@
     "__comp": "df203c0f",
     "__props": "ca0dba45"
   },
+  "/tags/integration-testing-d76": {
+    "__comp": "df203c0f",
+    "__props": "af5ea25b"
+  },
+  "/tags/interest-fees-61a": {
+    "__comp": "df203c0f",
+    "__props": "6851f1c7"
+  },
+  "/tags/interface-segregation-082": {
+    "__comp": "df203c0f",
+    "__props": "ed2b0b82"
+  },
   "/tags/intermediate-98b": {
     "__comp": "df203c0f",
     "__props": "37531982"
@@ -1347,6 +1683,14 @@
     "__comp": "df203c0f",
     "__props": "d7a7568a"
   },
+  "/tags/interview-advanced-74c": {
+    "__comp": "df203c0f",
+    "__props": "f656a934"
+  },
+  "/tags/interview-core-039": {
+    "__comp": "df203c0f",
+    "__props": "d8ff184f"
+  },
   "/tags/interview-experience-13b": {
     "__comp": "df203c0f",
     "__props": "5fd037e4"
@@ -1355,6 +1699,10 @@
     "__comp": "df203c0f",
     "__props": "3a8a75bc"
   },
+  "/tags/interview-producer-consumer-6a8": {
+    "__comp": "df203c0f",
+    "__props": "d643edb1"
+  },
   "/tags/interview-questions-387": {
     "__comp": "df203c0f",
     "__props": "b8e7618f"
@@ -1362,6 +1710,14 @@
   "/tags/intrinsic-functions-818": {
     "__comp": "df203c0f",
     "__props": "e46a80fc"
+  },
+  "/tags/intro-bfb": {
+    "__comp": "df203c0f",
+    "__props": "0683eda1"
+  },
+  "/tags/introduction-a47": {
+    "__comp": "df203c0f",
+    "__props": "8fb36143"
   },
   "/tags/inverted-index-cf7": {
     "__comp": "df203c0f",
@@ -1403,6 +1759,10 @@
     "__comp": "df203c0f",
     "__props": "338d6136"
   },
+  "/tags/iris-interview-questions-e2f": {
+    "__comp": "df203c0f",
+    "__props": "a87aed90"
+  },
   "/tags/iso-529": {
     "__comp": "df203c0f",
     "__props": "337b7e4d"
@@ -1418,6 +1778,10 @@
   "/tags/istio-87f": {
     "__comp": "df203c0f",
     "__props": "eb6c0fbd"
+  },
+  "/tags/items-index-5ee": {
+    "__comp": "df203c0f",
+    "__props": "4e91dcc4"
   },
   "/tags/jaeger-1ab": {
     "__comp": "df203c0f",
@@ -1478,6 +1842,14 @@
   "/tags/kafka-472": {
     "__comp": "df203c0f",
     "__props": "97b0e84b"
+  },
+  "/tags/kafka-connect-3eb": {
+    "__comp": "df203c0f",
+    "__props": "2a413710"
+  },
+  "/tags/kafka-overview-24b": {
+    "__comp": "df203c0f",
+    "__props": "c8b4da4e"
   },
   "/tags/kafka-streams-48b": {
     "__comp": "df203c0f",
@@ -1599,6 +1971,10 @@
     "__comp": "df203c0f",
     "__props": "8122d7fa"
   },
+  "/tags/liskov-substitution-15d": {
+    "__comp": "df203c0f",
+    "__props": "5255ba54"
+  },
   "/tags/load-balancing-49b": {
     "__comp": "df203c0f",
     "__props": "7fd7751c"
@@ -1614,6 +1990,10 @@
   "/tags/locking-a98": {
     "__comp": "df203c0f",
     "__props": "b500003f"
+  },
+  "/tags/log-blame-57c": {
+    "__comp": "df203c0f",
+    "__props": "bf032dfd"
   },
   "/tags/logging-418": {
     "__comp": "df203c0f",
@@ -1639,6 +2019,10 @@
     "__comp": "df203c0f",
     "__props": "ecf030ff"
   },
+  "/tags/maintenance-7e4": {
+    "__comp": "df203c0f",
+    "__props": "db518b3d"
+  },
   "/tags/maps-92e": {
     "__comp": "df203c0f",
     "__props": "9e0012d6"
@@ -1658,6 +2042,10 @@
   "/tags/memory-management-051": {
     "__comp": "df203c0f",
     "__props": "d1481106"
+  },
+  "/tags/merge-260": {
+    "__comp": "df203c0f",
+    "__props": "537238f0"
   },
   "/tags/messaging-b5f": {
     "__comp": "df203c0f",
@@ -1714,6 +2102,10 @@
   "/tags/monitoring-999": {
     "__comp": "df203c0f",
     "__props": "ecaaa484"
+  },
+  "/tags/monitoring-operations-f41": {
+    "__comp": "df203c0f",
+    "__props": "8e7601a7"
   },
   "/tags/mqtt-818": {
     "__comp": "df203c0f",
@@ -1819,6 +2211,10 @@
     "__comp": "df203c0f",
     "__props": "465845d8"
   },
+  "/tags/non-technical-knowledge-148": {
+    "__comp": "df203c0f",
+    "__props": "31f50e81"
+  },
   "/tags/normalization-886": {
     "__comp": "df203c0f",
     "__props": "1f703912"
@@ -1903,6 +2299,10 @@
     "__comp": "df203c0f",
     "__props": "a0482842"
   },
+  "/tags/open-closed-8ee": {
+    "__comp": "df203c0f",
+    "__props": "846e367b"
+  },
   "/tags/openapi-d1b": {
     "__comp": "df203c0f",
     "__props": "0e31c608"
@@ -1942,6 +2342,10 @@
   "/tags/orchestration-13c": {
     "__comp": "df203c0f",
     "__props": "462cb3aa"
+  },
+  "/tags/order-messages-83c": {
+    "__comp": "df203c0f",
+    "__props": "4675e2ec"
   },
   "/tags/osi-c16": {
     "__comp": "df203c0f",
@@ -1987,6 +2391,10 @@
     "__comp": "df203c0f",
     "__props": "cf2692bd"
   },
+  "/tags/pacs-004-12e": {
+    "__comp": "df203c0f",
+    "__props": "aa59c83f"
+  },
   "/tags/pacs-008-eab": {
     "__comp": "df203c0f",
     "__props": "2dc0545b"
@@ -2003,6 +2411,14 @@
     "__comp": "df203c0f",
     "__props": "10671d06"
   },
+  "/tags/pain-004-48c": {
+    "__comp": "df203c0f",
+    "__props": "f3a2d742"
+  },
+  "/tags/pain-007-pacs-007-7e6": {
+    "__comp": "df203c0f",
+    "__props": "74953ef1"
+  },
   "/tags/pam-0a5": {
     "__comp": "df203c0f",
     "__props": "7ef4b618"
@@ -2015,9 +2431,25 @@
     "__comp": "df203c0f",
     "__props": "dad41313"
   },
+  "/tags/part-1-foundations-53a": {
+    "__comp": "df203c0f",
+    "__props": "239101c4"
+  },
+  "/tags/part-2-distributed-data-838": {
+    "__comp": "df203c0f",
+    "__props": "78b36987"
+  },
+  "/tags/part-3-derived-data-2ed": {
+    "__comp": "df203c0f",
+    "__props": "33cecc28"
+  },
   "/tags/partiql-bb8": {
     "__comp": "df203c0f",
     "__props": "9bcf49ce"
+  },
+  "/tags/partition-6ea": {
+    "__comp": "df203c0f",
+    "__props": "fb6390e6"
   },
   "/tags/partition-key-604": {
     "__comp": "df203c0f",
@@ -2038,6 +2470,10 @@
   "/tags/payment-f08": {
     "__comp": "df203c0f",
     "__props": "3c7dc941"
+  },
+  "/tags/payment-lifecycle-101-eb4": {
+    "__comp": "df203c0f",
+    "__props": "ffa04a94"
   },
   "/tags/payments-56c": {
     "__comp": "df203c0f",
@@ -2071,6 +2507,10 @@
     "__comp": "df203c0f",
     "__props": "2beffc26"
   },
+  "/tags/phases-527": {
+    "__comp": "df203c0f",
+    "__props": "233c6cb2"
+  },
   "/tags/pipeline-5fb": {
     "__comp": "df203c0f",
     "__props": "e9854325"
@@ -2078,6 +2518,10 @@
   "/tags/pitr-28c": {
     "__comp": "df203c0f",
     "__props": "3791bff4"
+  },
+  "/tags/planning-b1b": {
+    "__comp": "df203c0f",
+    "__props": "0772732d"
   },
   "/tags/platform-1aa": {
     "__comp": "df203c0f",
@@ -2155,6 +2599,26 @@
     "__comp": "df203c0f",
     "__props": "0e6372b0"
   },
+  "/tags/producer-d5a": {
+    "__comp": "df203c0f",
+    "__props": "5215d326"
+  },
+  "/tags/producer-acks-494": {
+    "__comp": "df203c0f",
+    "__props": "0bd5a285"
+  },
+  "/tags/producer-idempotency-433": {
+    "__comp": "df203c0f",
+    "__props": "594064a8"
+  },
+  "/tags/producer-overview-863": {
+    "__comp": "df203c0f",
+    "__props": "2dcfa4fb"
+  },
+  "/tags/producer-transactions-4af": {
+    "__comp": "df203c0f",
+    "__props": "e6ee0fad"
+  },
   "/tags/profiling-cf5": {
     "__comp": "df203c0f",
     "__props": "5f279dbf"
@@ -2190,6 +2654,10 @@
   "/tags/public-key-89e": {
     "__comp": "df203c0f",
     "__props": "20d65ca4"
+  },
+  "/tags/pull-request-best-practices-dcf": {
+    "__comp": "df203c0f",
+    "__props": "2160e0fa"
   },
   "/tags/push-fc6": {
     "__comp": "df203c0f",
@@ -2279,6 +2747,10 @@
     "__comp": "df203c0f",
     "__props": "d3fb11d3"
   },
+  "/tags/rebase-f50": {
+    "__comp": "df203c0f",
+    "__props": "832d109c"
+  },
   "/tags/reconciliation-50a": {
     "__comp": "df203c0f",
     "__props": "eaaa185f"
@@ -2303,9 +2775,17 @@
     "__comp": "df203c0f",
     "__props": "66fde120"
   },
+  "/tags/reflog-eb0": {
+    "__comp": "df203c0f",
+    "__props": "f9c67ec5"
+  },
   "/tags/registry-dcf": {
     "__comp": "df203c0f",
     "__props": "4fcc87eb"
+  },
+  "/tags/regression-testing-3b7": {
+    "__comp": "df203c0f",
+    "__props": "eda9a060"
   },
   "/tags/relational-cf7": {
     "__comp": "df203c0f",
@@ -2319,13 +2799,29 @@
     "__comp": "df203c0f",
     "__props": "2cd28f63"
   },
+  "/tags/remotes-67c": {
+    "__comp": "df203c0f",
+    "__props": "2b029f17"
+  },
   "/tags/replication-e99": {
     "__comp": "df203c0f",
     "__props": "68d3743e"
   },
+  "/tags/reports-cc6": {
+    "__comp": "df203c0f",
+    "__props": "ee5e03d3"
+  },
   "/tags/request-signing-933": {
     "__comp": "df203c0f",
     "__props": "8c51b229"
+  },
+  "/tags/requirements-fe8": {
+    "__comp": "df203c0f",
+    "__props": "2ed7ceb0"
+  },
+  "/tags/reset-revert-482": {
+    "__comp": "df203c0f",
+    "__props": "5de857de"
   },
   "/tags/resilience-39f": {
     "__comp": "df203c0f",
@@ -2374,6 +2870,14 @@
   "/tags/roles-2dc": {
     "__comp": "df203c0f",
     "__props": "1afbabb8"
+  },
+  "/tags/roll-backward-660": {
+    "__comp": "df203c0f",
+    "__props": "c8132315"
+  },
+  "/tags/roll-forward-c61": {
+    "__comp": "df203c0f",
+    "__props": "f0eaf0f8"
   },
   "/tags/rollback-360": {
     "__comp": "df203c0f",
@@ -2466,6 +2970,10 @@
   "/tags/schema-design-f61": {
     "__comp": "df203c0f",
     "__props": "583a407d"
+  },
+  "/tags/schema-registry-73e": {
+    "__comp": "df203c0f",
+    "__props": "926e2b92"
   },
   "/tags/sdlc-5bf": {
     "__comp": "df203c0f",
@@ -2567,6 +3075,10 @@
     "__comp": "df203c0f",
     "__props": "4ed304dd"
   },
+  "/tags/single-responsibility-e3d": {
+    "__comp": "df203c0f",
+    "__props": "fd77cf1d"
+  },
   "/tags/single-table-design-635": {
     "__comp": "df203c0f",
     "__props": "ccb2cc41"
@@ -2667,6 +3179,10 @@
     "__comp": "df203c0f",
     "__props": "70ab92e3"
   },
+  "/tags/squash-7e5": {
+    "__comp": "df203c0f",
+    "__props": "8d34bb03"
+  },
   "/tags/sre-b75": {
     "__comp": "df203c0f",
     "__props": "9c08cf98"
@@ -2703,6 +3219,10 @@
     "__comp": "df203c0f",
     "__props": "af82fe38"
   },
+  "/tags/stash-d40": {
+    "__comp": "df203c0f",
+    "__props": "050e01bf"
+  },
   "/tags/state-machine-b4f": {
     "__comp": "df203c0f",
     "__props": "fc15835a"
@@ -2718,6 +3238,10 @@
   "/tags/statistics-461": {
     "__comp": "df203c0f",
     "__props": "6668fc20"
+  },
+  "/tags/status-diff-807": {
+    "__comp": "df203c0f",
+    "__props": "917422fa"
   },
   "/tags/step-functions-3a5": {
     "__comp": "df203c0f",
@@ -2779,6 +3303,10 @@
     "__comp": "df203c0f",
     "__props": "36c4a7f4"
   },
+  "/tags/submodules-aa7": {
+    "__comp": "df203c0f",
+    "__props": "e52d16b8"
+  },
   "/tags/subnet-64f": {
     "__comp": "df203c0f",
     "__props": "305c99b1"
@@ -2794,6 +3322,10 @@
   "/tags/subsegments-ab7": {
     "__comp": "df203c0f",
     "__props": "e8b5f6fc"
+  },
+  "/tags/summary-22a": {
+    "__comp": "df203c0f",
+    "__props": "decfe216"
   },
   "/tags/swap-aaf": {
     "__comp": "df203c0f",
@@ -2818,6 +3350,10 @@
   "/tags/system-design-4b2": {
     "__comp": "df203c0f",
     "__props": "cfa888d2"
+  },
+  "/tags/tags-518": {
+    "__comp": "df203c0f",
+    "__props": "8e6784b7"
   },
   "/tags/taints-88f": {
     "__comp": "df203c0f",
@@ -2847,6 +3383,10 @@
     "__comp": "df203c0f",
     "__props": "26e49a5e"
   },
+  "/tags/technical-knowledge-739": {
+    "__comp": "df203c0f",
+    "__props": "ad3cc94a"
+  },
   "/tags/template-method-4e8": {
     "__comp": "df203c0f",
     "__props": "46da2414"
@@ -2855,9 +3395,17 @@
     "__comp": "df203c0f",
     "__props": "ae448c5f"
   },
+  "/tags/test-summary-report-694": {
+    "__comp": "df203c0f",
+    "__props": "9abe84db"
+  },
   "/tags/testing-08a": {
     "__comp": "df203c0f",
     "__props": "b2859d8e"
+  },
+  "/tags/testing-banking-571": {
+    "__comp": "df203c0f",
+    "__props": "72c59333"
   },
   "/tags/tfidf-128": {
     "__comp": "df203c0f",
@@ -2903,6 +3451,10 @@
     "__comp": "df203c0f",
     "__props": "6cbbeaf9"
   },
+  "/tags/topic-f56": {
+    "__comp": "df203c0f",
+    "__props": "4cef664a"
+  },
   "/tags/tracing-dd4": {
     "__comp": "df203c0f",
     "__props": "ecc30e39"
@@ -2931,6 +3483,10 @@
     "__comp": "df203c0f",
     "__props": "04aa852f"
   },
+  "/tags/trunk-based-f5b": {
+    "__comp": "df203c0f",
+    "__props": "05d2c99a"
+  },
   "/tags/tsvector-ba0": {
     "__comp": "df203c0f",
     "__props": "defa66d8"
@@ -2950,6 +3506,10 @@
   "/tags/udp-6c3": {
     "__comp": "df203c0f",
     "__props": "6c3ec569"
+  },
+  "/tags/unit-testing-838": {
+    "__comp": "df203c0f",
+    "__props": "7ed82b28"
   },
   "/tags/user-pools-8b3": {
     "__comp": "df203c0f",
@@ -3054,6 +3614,10 @@
   "/tags/workflows-298": {
     "__comp": "df203c0f",
     "__props": "7f5e4849"
+  },
+  "/tags/worktree-48f": {
+    "__comp": "df203c0f",
+    "__props": "b2e2c40c"
   },
   "/tags/write-through-b90": {
     "__comp": "df203c0f",

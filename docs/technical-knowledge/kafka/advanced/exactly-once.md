@@ -2,8 +2,14 @@
 id: exactly-once
 title: Exactly-Once Semantics (EOS)
 sidebar_label: Exactly-Once (EOS)
+description: 'Full end-to-end exactly-once in Kafka requires three layers working
+  together:'
+tags:
+- technical-knowledge
+- kafka
+- advanced
+- exactly-once
 ---
-
 # Exactly-Once Semantics (EOS)
 
 ## The Delivery Guarantee Spectrum

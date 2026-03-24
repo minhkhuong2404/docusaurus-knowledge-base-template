@@ -2,8 +2,15 @@
 id: testing
 title: Phase 5 — Testing
 sidebar_label: Testing
+description: The **Testing phase** verifies that the software meets all functional
+  and non-functional requirements before it is deployed to production. Testing is
+  a quality.
+tags:
+- non-technical-knowledge
+- sdlc
+- phases
+- testing
 ---
-
 # Phase 5 — Testing
 
 ## Overview

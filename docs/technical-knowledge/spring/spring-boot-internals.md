@@ -308,6 +308,106 @@ my-app.jar
 
 ---
 
+## Proxy Mechanism: CGLIB vs JDK Dynamic Proxy
+
+Every Spring bean with `@Transactional`, `@Async`, `@Cacheable`, or similar AOP annotations is wrapped in a **proxy object** at startup. Understanding which proxy mechanism is chosen is critical for debugging and for senior architecture decisions.
+
+### Which Proxy Is Used?
+
+| Scenario | Proxy Type |
+|---|---|
+| Bean implements an interface + `proxyTargetClass=false` | JDK Dynamic Proxy |
+| Bean has no interface OR `proxyTargetClass=true` (Spring Boot default) | CGLIB subclass proxy |
+| `@Configuration` classes | CGLIB (always, to intercept `@Bean` method calls) |
+
+```yaml
+# Spring Boot default — forces CGLIB even for beans with interfaces
+spring:
+  aop:
+    proxy-target-class: true  # default
+```
+
+### CGLIB Constraints You Must Know
+
+```java
+// ❌ CGLIB cannot proxy final classes
+@Service
+public final class PaymentService {
+    @Transactional
+    public void pay() { ... }  // Spring will throw at startup
+}
+
+// ❌ CGLIB cannot proxy final methods — silently ignored
+@Service
+public class OrderService {
+    @Transactional
+    public final void place(Order order) { ... }  // @Transactional has no effect
+}
+
+// ❌ CGLIB requires a no-arg constructor (or no explicit constructors)
+@Service
+public class MyService {
+    public MyService(String param) { ... }  // Fails with CGLIB — add no-arg constructor
+}
+```
+
+### Why `@Configuration` Always Uses CGLIB
+
+```java
+@Configuration
+public class AppConfig {
+
+    @Bean
+    public ServiceA serviceA() {
+        return new ServiceA(serviceB());  // calls serviceB() method directly
+    }
+
+    @Bean
+    public ServiceB serviceB() {
+        return new ServiceB();
+    }
+}
+// Without CGLIB: serviceB() would be called twice → two different instances
+// With CGLIB proxy: serviceB() is intercepted → same singleton returned both times
+// This is why @Configuration classes cannot be final!
+```
+
+---
+
+## ImportBeanDefinitionRegistrar
+
+For framework-level programmatic bean registration — the mechanism used internally by Spring Data JPA's `@EnableJpaRepositories` and Spring Security's `@EnableWebSecurity`.
+
+```java
+public class DynamicRepositoryRegistrar implements ImportBeanDefinitionRegistrar {
+
+    @Override
+    public void registerBeanDefinitions(AnnotationMetadata metadata,
+                                        BeanDefinitionRegistry registry) {
+        // Called at configuration phase — before any beans are created
+        // Read annotation attributes from the importing class
+        Map<String, Object> attrs = metadata
+            .getAnnotationAttributes(EnableDynamicRepositories.class.getName());
+        String basePackage = (String) attrs.get("basePackage");
+
+        // Programmatically register beans
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder
+            .genericBeanDefinition(DynamicRepositoryFactory.class)
+            .addConstructorArgValue(basePackage);
+        registry.registerBeanDefinition("dynamicRepositoryFactory", builder.getBeanDefinition());
+    }
+}
+
+// Usage — triggers the registrar
+@Configuration
+@Import(DynamicRepositoryRegistrar.class)
+public class AppConfig { }
+```
+
+> **When to use:** When you need to programmatically register beans based on classpath scanning, annotation attributes, or external configuration — similar to how Spring Data automatically creates repository implementations.
+
+---
+
 ## Profiles Architecture
 
 Profiles control which beans and configurations are active:

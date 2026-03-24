@@ -871,6 +871,181 @@ Common optimization strategies:
 
 ---
 
+## 11. Senior Expert Questions
+
+### 🔴 Explain how Stream pipelines execute lazily. What does "element-by-element" mean?
+
+Stream operations are not executed when chained — only when a **terminal operation** triggers them. When triggered, each element passes through the **entire pipeline** before the next element is processed:
+
+```java
+// Interleaved execution order (NOT filter-all then map-all):
+// filter: Alice → map: Alice → filter: Bob (filtered out) → filter: Charlie → map: Charlie
+names.stream()
+    .filter(n -> n.length() > 3)
+    .map(String::toUpperCase)
+    .collect(Collectors.toList());
+```
+
+This enables **short-circuiting**: `findFirst()` stops processing as soon as a match is found — the remaining elements are never evaluated.
+
+### 🔴 What are the traps when using parallel streams?
+
+```java
+// Trap 1: Non-thread-safe accumulation
+List<String> result = new ArrayList<>();
+list.parallelStream().forEach(result::add);  // ❌ Race condition on ArrayList
+
+// Trap 2: forEach ordering is not guaranteed
+list.parallelStream().forEach(System.out::println);  // ❌ Random order
+
+// Trap 3: Blocking operations in ForkJoinPool.commonPool()
+list.parallelStream().map(this::callDatabase).collect(...);  // ❌ Starves commonPool
+
+// ✅ Correct: use collectors (thread-safe merge) and custom pool
+ForkJoinPool pool = new ForkJoinPool(4);
+pool.submit(() -> list.parallelStream().map(this::heavyTransform).collect(Collectors.toList())).get();
+```
+
+`LinkedList` and `TreeMap` split poorly for parallel streams because they lack the `SIZED` Spliterator characteristic — prefer `ArrayList`, arrays, or `IntStream.range()`.
+
+### 🔴 How does `StructuredTaskScope` fix the problems with `CompletableFuture.allOf()`?
+
+`CompletableFuture.allOf()` has two fundamental problems:
+1. If one future fails, the others **keep running and consuming resources** — no automatic cancellation
+2. **Threads can outlive** their logical scope, making error tracking and cancellation complex
+
+`StructuredTaskScope` enforces that all subtasks finish (normally or cancelled) before the scope exits:
+
+```java
+// With allOf: both fetches run even if one fails
+CompletableFuture.allOf(fetchUser(), fetchOrders()).join();
+
+// With StructuredTaskScope: failure cancels all remaining work
+try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+    var user = scope.fork(this::fetchUser);
+    var orders = scope.fork(this::fetchOrders);
+    scope.join().throwIfFailed();
+    return new Dashboard(user.get(), orders.get());
+} // cancelled subtasks guaranteed to finish here
+```
+
+### 🔴 Why does JIT deoptimization cause latency spikes in production?
+
+JIT compiles methods based on **observed runtime behavior**. If it assumes a virtual method is monomorphic (one concrete type) and inlines it aggressively — then a new type appears — it must **deoptimize**: throw away the compiled version and fall back to interpreter.
+
+This can happen when:
+- A rarely-used code path introduces a new type for an inlined call site
+- A cache miss causes previously-cold code paths to execute
+- Kubernetes pods receive production traffic before JVM warm-up completes
+
+**Detection:** `-XX:+PrintCompilation` shows deoptimization events. Async-profiler can pinpoint which methods deoptimize frequently.
+
+### 🔴 What is a G1 "humongous" object and why is it a GC problem?
+
+Objects larger than 50% of a G1 region (default region = 1–32 MB) are **humongous objects**. They:
+1. Are allocated directly in Old gen (skipping Young gen)
+2. Occupy multiple contiguous regions
+3. Are **only collected during a full GC** (or when the region becomes empty)
+
+Frequent large object allocation (e.g., large JSON payloads, big byte arrays) can fill Old gen with humongous regions that GC cannot efficiently reclaim, causing eventual **Full GC stop-the-world** pauses.
+
+**Fix:** Increase region size (`-XX:G1HeapRegionSize=32m`) or reduce object sizes via streaming/chunking.
+
+### 🔴 When would you use `ScopedValue` over `ThreadLocal`?
+
+**ThreadLocal pitfalls in virtual thread / structured concurrency world:**
+- Thread pool reuse: a virtual thread might be rescheduled on a different carrier thread after an I/O yield, leaving stale `ThreadLocal` values
+- Memory leaks: forgetting to call `remove()` in large thread pools
+- No bounded lifetime: values persist for the thread's entire lifecycle
+
+**`ScopedValue` advantages:**
+```java
+// ThreadLocal: survives beyond its logical scope
+static final ThreadLocal<User> USER = new ThreadLocal<>();
+USER.set(authenticatedUser);
+asyncTask();  // forked task inherits stale user — dangerous
+
+// ScopedValue: bounded, immutable, safe with virtual threads
+static final ScopedValue<User> CURRENT_USER = ScopedValue.newInstance();
+ScopedValue.where(CURRENT_USER, user).run(() -> {
+    asyncTask();  // only accessible within this scope
+});
+```
+
+Use `ScopedValue` for request-scoped context (auth tokens, trace IDs) in Java 21+ applications using virtual threads.
+
+### 🔴 Why does `HashMap` use power-of-2 capacity and a 0.75 load factor?
+
+**Power-of-2 capacity:** Enables `index = hash & (capacity - 1)` — a fast bitwise AND instead of slow modulo division. When the capacity is a power of 2, `capacity - 1` is a bitmask of all 1s in the lower bits.
+
+**Load factor 0.75:** Empirically balances:
+- **Too low (e.g., 0.5):** Wastes memory, more rehashing, better lookup performance
+- **Too high (e.g., 0.9):** Less memory waste, but longer chains → worse lookup O(n) performance
+
+At 0.75, a map of capacity 16 rehashes at 12 entries, giving a good mix of time and space efficiency.
+
+### 🔴 How can a custom ClassLoader cause a `ClassCastException` at runtime even when types look identical?
+
+Each ClassLoader has its own **namespace**. If `ClassA` is loaded by two different ClassLoaders, the JVM treats them as **two different classes** — even if the bytecode is identical.
+
+```
+ClassLoader1.loadClass("com.example.User") → User (version A)
+ClassLoader2.loadClass("com.example.User") → User (version B)
+// These are NOT the same class to the JVM!
+User u = (User) obj;  // ClassCastException if obj was loaded by different loader
+```
+
+This is the root cause of many `ClassCastException` bugs in **Tomcat, OSGi, and hot-reload frameworks** where multiple ClassLoaders exist. The fix is ensuring both sides of a cast use the same ClassLoader.
+
+### 🔴 What is the difference between `thenApply`, `thenCompose`, and `handle` in `CompletableFuture`?
+
+| Method | When it runs | Transform type | Use case |
+|---|---|---|---|
+| `thenApply(f)` | On success | `T → U` (synchronous) | Simple value transform |
+| `thenCompose(f)` | On success | `T → CompletableFuture<U>` | Chain another async call |
+| `handle(f)` | Always (success + failure) | `(T, Throwable) → U` | Recovery + transform in one |
+| `exceptionally(f)` | On failure only | `Throwable → T` | Error fallback value |
+| `whenComplete(f)` | Always | `(T, Throwable) → void` | Side-effect only (logging) |
+
+**`thenCompose` vs `thenApply` is the most common interview trap:**
+```java
+// thenApply wraps: returns CompletableFuture<CompletableFuture<Order>>
+CompletableFuture<CompletableFuture<Order>> bad = userFuture.thenApply(u -> fetchOrders(u));
+
+// thenCompose flattens: returns CompletableFuture<Order> — correct
+CompletableFuture<Order> good = userFuture.thenCompose(u -> fetchOrders(u));
+```
+
+### 🔴 How would you write a custom `Collector` for grouping and counting in a single pass?
+
+```java
+// Built-in: two passes (one to group, one to count)
+Map<String, Long> countByCity = people.stream()
+    .collect(Collectors.groupingBy(Person::getCity, Collectors.counting()));
+
+// Custom Collector for advanced aggregation:
+Collector<Person, Map<String, long[]>, Map<String, Double>> averageSalaryByCity =
+    Collector.of(
+        HashMap::new,                               // supplier
+        (map, p) -> map.computeIfAbsent(             // accumulator
+            p.getCity(), k -> new long[]{0L, 0L})
+            .let(a -> { a[0] += p.getSalary(); a[1]++; }),
+        (map1, map2) -> {                            // combiner (parallel)
+            map2.forEach((k, v) -> map1.merge(k, v,
+                (a, b) -> new long[]{a[0]+b[0], a[1]+b[1]}));
+            return map1;
+        },
+        map -> map.entrySet().stream()               // finisher
+            .collect(Collectors.toMap(
+                Map.Entry::getKey,
+                e -> (double) e.getValue()[0] / e.getValue()[1]))
+    );
+```
+
+For senior interviews, show awareness of the four components: **supplier** (mutable container), **accumulator** (add element), **combiner** (merge parallel results), **finisher** (transform to final result).
+
+---
+
 ## Advanced Editorial Pass: Interview Mastery with System Thinking
 
 ### What Differentiates Senior Answers

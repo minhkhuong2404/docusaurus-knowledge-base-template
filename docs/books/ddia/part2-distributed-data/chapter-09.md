@@ -1,10 +1,16 @@
 ---
 id: chapter-09
-title: "Chapter 9: Consistency and Consensus"
-sidebar_label: "Ch 9 — Consistency & Consensus"
+title: 'Chapter 9: Consistency and Consensus'
+sidebar_label: Ch 9 — Consistency & Consensus
 sidebar_position: 5
+description: 'Chapter 8 cataloged everything that can go wrong in distributed systems.
+  This chapter asks: **given all those failure modes, what guarantees can we actually.'
+tags:
+- books
+- ddia
+- part2-distributed-data
+- chapter-09
 ---
-
 # Chapter 9: Consistency and Consensus
 
 ## The Big Idea

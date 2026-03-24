@@ -1,8 +1,12 @@
 ---
 sidebar_position: 8
-title: "Chapter 7: Build"
+title: 'Chapter 7: Build'
+description: '**Part II — Implementation**'
+tags:
+- books
+- building-microservice
+- chapter-07
 ---
-
 # Chapter 7: Build
 
 **Part II — Implementation**

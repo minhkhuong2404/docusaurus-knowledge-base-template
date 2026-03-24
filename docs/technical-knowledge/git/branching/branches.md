@@ -2,8 +2,14 @@
 id: branches
 title: git branch — Creating & Managing Branches
 sidebar_label: Branches
+description: A branch in Git is a **lightweight movable pointer** to a commit. Creating
+  a branch costs nothing — it is just a 41-byte file containing a SHA. When you commit.
+tags:
+- technical-knowledge
+- git
+- branching
+- branches
 ---
-
 # Branches — Creating & Managing
 
 ## What is a Branch?

@@ -1,9 +1,13 @@
 ---
 sidebar_position: 12
-title: "Chapter 11: Systems"
-description: Separating system construction from use, dependency injection, and scaling clean architecture.
+title: 'Chapter 11: Systems'
+description: Separating system construction from use, dependency injection, and scaling
+  clean architecture.
+tags:
+- books
+- clean-code
+- chapter-11-systems
 ---
-
 # Chapter 11: Systems
 
 ## Cities Don't Get Built in a Day — Neither Do Systems
