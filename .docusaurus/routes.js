@@ -9,11 +9,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '366'),
+    component: ComponentCreator('/', '746'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'e10'),
+        component: ComponentCreator('/', 'dbf'),
         routes: [
           {
             path: '/tags',
@@ -1766,6 +1766,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/flyweight',
+            component: ComponentCreator('/tags/flyweight', '261'),
+            exact: true
+          },
+          {
             path: '/tags/foreign',
             component: ComponentCreator('/tags/foreign', '451'),
             exact: true
@@ -2131,6 +2136,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/interpreter',
+            component: ComponentCreator('/tags/interpreter', '704'),
+            exact: true
+          },
+          {
             path: '/tags/interview',
             component: ComponentCreator('/tags/interview', '4d3'),
             exact: true
@@ -2258,6 +2268,11 @@ export default [
           {
             path: '/tags/items-index',
             component: ComponentCreator('/tags/items-index', '5ee'),
+            exact: true
+          },
+          {
+            path: '/tags/iterator',
+            component: ComponentCreator('/tags/iterator', 'd3d'),
             exact: true
           },
           {
@@ -2581,8 +2596,18 @@ export default [
             exact: true
           },
           {
+            path: '/tags/mediator',
+            component: ComponentCreator('/tags/mediator', '38d'),
+            exact: true
+          },
+          {
             path: '/tags/memcached',
             component: ComponentCreator('/tags/memcached', 'a32'),
+            exact: true
+          },
+          {
+            path: '/tags/memento',
+            component: ComponentCreator('/tags/memento', '13b'),
             exact: true
           },
           {
@@ -4091,6 +4116,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/state',
+            component: ComponentCreator('/tags/state', '8b5'),
+            exact: true
+          },
+          {
             path: '/tags/state-machine',
             component: ComponentCreator('/tags/state-machine', 'b4f'),
             exact: true
@@ -4491,6 +4521,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/visitor',
+            component: ComponentCreator('/tags/visitor', '8a6'),
+            exact: true
+          },
+          {
             path: '/tags/volumes',
             component: ComponentCreator('/tags/volumes', 'eee'),
             exact: true
@@ -4627,7 +4662,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '5a0'),
+            component: ComponentCreator('/', '8a5'),
             routes: [
               {
                 path: '/aws',
@@ -5758,6 +5793,36 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/design-patterns/flyweight',
+                component: ComponentCreator('/technical-knowledge/design-patterns/flyweight', '6d3'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/design-patterns/interpreter',
+                component: ComponentCreator('/technical-knowledge/design-patterns/interpreter', 'eef'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/design-patterns/iterator',
+                component: ComponentCreator('/technical-knowledge/design-patterns/iterator', '27e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/design-patterns/mediator',
+                component: ComponentCreator('/technical-knowledge/design-patterns/mediator', 'ec6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/design-patterns/memento',
+                component: ComponentCreator('/technical-knowledge/design-patterns/memento', '4f2'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/design-patterns/observer',
                 component: ComponentCreator('/technical-knowledge/design-patterns/observer', 'a3d'),
                 exact: true,
@@ -5782,6 +5847,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/design-patterns/state',
+                component: ComponentCreator('/technical-knowledge/design-patterns/state', '979'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/design-patterns/strategy',
                 component: ComponentCreator('/technical-knowledge/design-patterns/strategy', '090'),
                 exact: true,
@@ -5790,6 +5861,12 @@ export default [
               {
                 path: '/technical-knowledge/design-patterns/template-method',
                 component: ComponentCreator('/technical-knowledge/design-patterns/template-method', '5f8'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/design-patterns/visitor',
+                component: ComponentCreator('/technical-knowledge/design-patterns/visitor', 'cdb'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

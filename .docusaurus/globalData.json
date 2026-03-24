@@ -941,6 +941,31 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/design-patterns/flyweight",
+              "path": "/technical-knowledge/design-patterns/flyweight",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/design-patterns/interpreter",
+              "path": "/technical-knowledge/design-patterns/interpreter",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/design-patterns/iterator",
+              "path": "/technical-knowledge/design-patterns/iterator",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/design-patterns/mediator",
+              "path": "/technical-knowledge/design-patterns/mediator",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/design-patterns/memento",
+              "path": "/technical-knowledge/design-patterns/memento",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/design-patterns/observer",
               "path": "/technical-knowledge/design-patterns/observer",
               "sidebar": "tutorialSidebar"
@@ -961,6 +986,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/design-patterns/state",
+              "path": "/technical-knowledge/design-patterns/state",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/design-patterns/strategy",
               "path": "/technical-knowledge/design-patterns/strategy",
               "sidebar": "tutorialSidebar"
@@ -968,6 +998,11 @@
             {
               "id": "technical-knowledge/design-patterns/template-method",
               "path": "/technical-knowledge/design-patterns/template-method",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/design-patterns/visitor",
+              "path": "/technical-knowledge/design-patterns/visitor",
               "sidebar": "tutorialSidebar"
             },
             {

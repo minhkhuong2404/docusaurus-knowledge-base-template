@@ -45,11 +45,11 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Chain of Responsibility Pattern",
-    "permalink": "/technical-knowledge/design-patterns/chain-of-responsibility"
+    "title": "Memento Pattern",
+    "permalink": "/technical-knowledge/design-patterns/memento"
   },
   "next": {
-    "title": "Strategy Pattern",
-    "permalink": "/technical-knowledge/design-patterns/strategy"
+    "title": "State Pattern",
+    "permalink": "/technical-knowledge/design-patterns/state"
   }
 }

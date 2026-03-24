@@ -5,13 +5,13 @@
       "plugin": "138e0e15"
     }
   },
-  "/-366": {
+  "/-746": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-e10": {
+  "/-dbf": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -1415,6 +1415,10 @@
     "__comp": "df203c0f",
     "__props": "1eff3b4a"
   },
+  "/tags/flyweight-261": {
+    "__comp": "df203c0f",
+    "__props": "54a13afa"
+  },
   "/tags/foreign-451": {
     "__comp": "df203c0f",
     "__props": "161bfc3f"
@@ -1707,6 +1711,10 @@
     "__comp": "df203c0f",
     "__props": "698fe1c0"
   },
+  "/tags/interpreter-704": {
+    "__comp": "df203c0f",
+    "__props": "addeec86"
+  },
   "/tags/interview-4d3": {
     "__comp": "df203c0f",
     "__props": "d7a7568a"
@@ -1810,6 +1818,10 @@
   "/tags/items-index-5ee": {
     "__comp": "df203c0f",
     "__props": "4e91dcc4"
+  },
+  "/tags/iterator-d3d": {
+    "__comp": "df203c0f",
+    "__props": "59a19e23"
   },
   "/tags/jaeger-1ab": {
     "__comp": "df203c0f",
@@ -2067,9 +2079,17 @@
     "__comp": "df203c0f",
     "__props": "90cb22e8"
   },
+  "/tags/mediator-38d": {
+    "__comp": "df203c0f",
+    "__props": "fe84f844"
+  },
   "/tags/memcached-a32": {
     "__comp": "df203c0f",
     "__props": "42383373"
+  },
+  "/tags/memento-13b": {
+    "__comp": "df203c0f",
+    "__props": "b8e70802"
   },
   "/tags/memory-1ce": {
     "__comp": "df203c0f",
@@ -3275,6 +3295,10 @@
     "__comp": "df203c0f",
     "__props": "050e01bf"
   },
+  "/tags/state-8b5": {
+    "__comp": "df203c0f",
+    "__props": "4ebf985a"
+  },
   "/tags/state-machine-b4f": {
     "__comp": "df203c0f",
     "__props": "fc15835a"
@@ -3595,6 +3619,10 @@
     "__comp": "df203c0f",
     "__props": "903faf3d"
   },
+  "/tags/visitor-8a6": {
+    "__comp": "df203c0f",
+    "__props": "9449d577"
+  },
   "/tags/volumes-eee": {
     "__comp": "df203c0f",
     "__props": "a843365d"
@@ -3703,7 +3731,7 @@
     "__comp": "df203c0f",
     "__props": "cdd99891"
   },
-  "/-5a0": {
+  "/-8a5": {
     "__comp": "a94703ab"
   },
   "/aws-102": {
@@ -4458,6 +4486,26 @@
     "__comp": "17896441",
     "content": "2004579e"
   },
+  "/technical-knowledge/design-patterns/flyweight-6d3": {
+    "__comp": "17896441",
+    "content": "3b3c3cf0"
+  },
+  "/technical-knowledge/design-patterns/interpreter-eef": {
+    "__comp": "17896441",
+    "content": "56decc1f"
+  },
+  "/technical-knowledge/design-patterns/iterator-27e": {
+    "__comp": "17896441",
+    "content": "aa80ab20"
+  },
+  "/technical-knowledge/design-patterns/mediator-ec6": {
+    "__comp": "17896441",
+    "content": "6596d2c7"
+  },
+  "/technical-knowledge/design-patterns/memento-4f2": {
+    "__comp": "17896441",
+    "content": "f1c75034"
+  },
   "/technical-knowledge/design-patterns/observer-a3d": {
     "__comp": "17896441",
     "content": "192b16bf"
@@ -4474,6 +4522,10 @@
     "__comp": "17896441",
     "content": "746a5032"
   },
+  "/technical-knowledge/design-patterns/state-979": {
+    "__comp": "17896441",
+    "content": "64470322"
+  },
   "/technical-knowledge/design-patterns/strategy-090": {
     "__comp": "17896441",
     "content": "443a2305"
@@ -4481,6 +4533,10 @@
   "/technical-knowledge/design-patterns/template-method-5f8": {
     "__comp": "17896441",
     "content": "7d61f896"
+  },
+  "/technical-knowledge/design-patterns/visitor-cdb": {
+    "__comp": "17896441",
+    "content": "228b4013"
   },
   "/technical-knowledge/devops/devops-interview-questions-c3b": {
     "__comp": "17896441",

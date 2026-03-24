@@ -126,6 +126,7 @@ const sidebars: SidebarsConfig = {
 						'technical-knowledge/design-patterns/composite',
 						'technical-knowledge/design-patterns/decorator',
 						'technical-knowledge/design-patterns/facade',
+						'technical-knowledge/design-patterns/flyweight',
 						'technical-knowledge/design-patterns/proxy'
 					]
 				},
@@ -135,10 +136,16 @@ const sidebars: SidebarsConfig = {
 					collapsed: true,
 					items: [
 						'technical-knowledge/design-patterns/chain-of-responsibility',
-						'technical-knowledge/design-patterns/observer',
-						'technical-knowledge/design-patterns/strategy',
 						'technical-knowledge/design-patterns/command',
-						'technical-knowledge/design-patterns/template-method'
+						'technical-knowledge/design-patterns/interpreter',
+						'technical-knowledge/design-patterns/iterator',
+						'technical-knowledge/design-patterns/mediator',
+						'technical-knowledge/design-patterns/memento',
+						'technical-knowledge/design-patterns/observer',
+						'technical-knowledge/design-patterns/state',
+						'technical-knowledge/design-patterns/strategy',
+						'technical-knowledge/design-patterns/template-method',
+						'technical-knowledge/design-patterns/visitor'
 					]
 				}
 			]

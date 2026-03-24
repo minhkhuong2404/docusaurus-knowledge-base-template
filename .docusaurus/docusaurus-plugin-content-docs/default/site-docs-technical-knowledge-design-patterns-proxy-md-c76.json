@@ -45,8 +45,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Facade Pattern",
-    "permalink": "/technical-knowledge/design-patterns/facade"
+    "title": "Flyweight Pattern",
+    "permalink": "/technical-knowledge/design-patterns/flyweight"
   },
   "next": {
     "title": "Chain of Responsibility Pattern",

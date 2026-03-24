@@ -45,11 +45,11 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Command Pattern",
-    "permalink": "/technical-knowledge/design-patterns/command"
+    "title": "Strategy Pattern",
+    "permalink": "/technical-knowledge/design-patterns/strategy"
   },
   "next": {
-    "title": "📘 Introduction",
-    "permalink": "/technical-knowledge/solid"
+    "title": "Visitor Pattern",
+    "permalink": "/technical-knowledge/design-patterns/visitor"
   }
 }

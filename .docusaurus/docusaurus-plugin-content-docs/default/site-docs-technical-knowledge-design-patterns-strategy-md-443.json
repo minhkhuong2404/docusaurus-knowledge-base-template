@@ -45,11 +45,11 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Observer Pattern",
-    "permalink": "/technical-knowledge/design-patterns/observer"
+    "title": "State Pattern",
+    "permalink": "/technical-knowledge/design-patterns/state"
   },
   "next": {
-    "title": "Command Pattern",
-    "permalink": "/technical-knowledge/design-patterns/command"
+    "title": "Template Method Pattern",
+    "permalink": "/technical-knowledge/design-patterns/template-method"
   }
 }

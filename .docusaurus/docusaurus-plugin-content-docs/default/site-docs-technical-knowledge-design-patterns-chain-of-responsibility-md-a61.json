@@ -49,7 +49,7 @@
     "permalink": "/technical-knowledge/design-patterns/proxy"
   },
   "next": {
-    "title": "Observer Pattern",
-    "permalink": "/technical-knowledge/design-patterns/observer"
+    "title": "Command Pattern",
+    "permalink": "/technical-knowledge/design-patterns/command"
   }
 }

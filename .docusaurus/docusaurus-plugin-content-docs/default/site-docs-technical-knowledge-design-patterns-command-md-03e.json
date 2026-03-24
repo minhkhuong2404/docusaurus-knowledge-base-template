@@ -45,11 +45,11 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Strategy Pattern",
-    "permalink": "/technical-knowledge/design-patterns/strategy"
+    "title": "Chain of Responsibility Pattern",
+    "permalink": "/technical-knowledge/design-patterns/chain-of-responsibility"
   },
   "next": {
-    "title": "Template Method Pattern",
-    "permalink": "/technical-knowledge/design-patterns/template-method"
+    "title": "Interpreter Pattern",
+    "permalink": "/technical-knowledge/design-patterns/interpreter"
   }
 }

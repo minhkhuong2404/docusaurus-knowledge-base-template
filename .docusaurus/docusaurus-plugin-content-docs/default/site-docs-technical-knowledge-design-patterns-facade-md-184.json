@@ -49,7 +49,7 @@
     "permalink": "/technical-knowledge/design-patterns/decorator"
   },
   "next": {
-    "title": "Proxy Pattern",
-    "permalink": "/technical-knowledge/design-patterns/proxy"
+    "title": "Flyweight Pattern",
+    "permalink": "/technical-knowledge/design-patterns/flyweight"
   }
 }
