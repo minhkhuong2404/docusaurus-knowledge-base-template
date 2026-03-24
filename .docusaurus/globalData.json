@@ -1860,6 +1860,61 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/redis/redis-as-database",
+              "path": "/technical-knowledge/redis/redis-as-database",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/redis/redis-clustering-replication",
+              "path": "/technical-knowledge/redis/redis-clustering-replication",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/redis/redis-data-types",
+              "path": "/technical-knowledge/redis/redis-data-types",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/redis/redis-distributed-cache",
+              "path": "/technical-knowledge/redis/redis-distributed-cache",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/redis/redis-interview-questions",
+              "path": "/technical-knowledge/redis/redis-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/redis/redis-overview",
+              "path": "/technical-knowledge/redis/redis-overview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/redis/redis-performance-patterns",
+              "path": "/technical-knowledge/redis/redis-performance-patterns",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/redis/redis-pipeline-transactions",
+              "path": "/technical-knowledge/redis/redis-pipeline-transactions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/redis/redis-pubsub",
+              "path": "/technical-knowledge/redis/redis-pubsub",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/redis/redis-streams",
+              "path": "/technical-knowledge/redis/redis-streams",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/redis/redis-ttl-expiry",
+              "path": "/technical-knowledge/redis/redis-ttl-expiry",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/security/api-security",
               "path": "/technical-knowledge/security/api-security",
               "sidebar": "tutorialSidebar"

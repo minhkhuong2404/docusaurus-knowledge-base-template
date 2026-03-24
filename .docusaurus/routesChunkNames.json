@@ -5,13 +5,13 @@
       "plugin": "138e0e15"
     }
   },
-  "/-0f2": {
+  "/-db9": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-72d": {
+  "/-417": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -106,6 +106,10 @@
   "/tags/anycast-cbf": {
     "__comp": "df203c0f",
     "__props": "4e41eea8"
+  },
+  "/tags/aof-510": {
+    "__comp": "df203c0f",
+    "__props": "8cb67551"
   },
   "/tags/api-042": {
     "__comp": "df203c0f",
@@ -354,6 +358,10 @@
   "/tags/building-microservice-554": {
     "__comp": "df203c0f",
     "__props": "ea110ffa"
+  },
+  "/tags/cache-6ac": {
+    "__comp": "df203c0f",
+    "__props": "93aee0f4"
   },
   "/tags/cache-aside-cb4": {
     "__comp": "df203c0f",
@@ -687,6 +695,10 @@
     "__comp": "df203c0f",
     "__props": "7f5e5fba"
   },
+  "/tags/cluster-07f": {
+    "__comp": "df203c0f",
+    "__props": "d24741b1"
+  },
   "/tags/clusterip-0d1": {
     "__comp": "df203c0f",
     "__props": "089fe400"
@@ -963,6 +975,10 @@
     "__comp": "df203c0f",
     "__props": "99ba9618"
   },
+  "/tags/data-types-6fe": {
+    "__comp": "df203c0f",
+    "__props": "add25aa2"
+  },
   "/tags/data-warehouse-b4d": {
     "__comp": "df203c0f",
     "__props": "4df473cd"
@@ -1086,6 +1102,10 @@
   "/tags/distributed-0a4": {
     "__comp": "df203c0f",
     "__props": "45c52ee6"
+  },
+  "/tags/distributed-cache-262": {
+    "__comp": "df203c0f",
+    "__props": "ff6823f4"
   },
   "/tags/distributed-lock-997": {
     "__comp": "df203c0f",
@@ -1298,6 +1318,10 @@
   "/tags/execution-plan-d97": {
     "__comp": "df203c0f",
     "__props": "835d6ab9"
+  },
+  "/tags/expiry-4f4": {
+    "__comp": "df203c0f",
+    "__props": "77beb5f7"
   },
   "/tags/explain-422": {
     "__comp": "df203c0f",
@@ -1606,6 +1630,10 @@
   "/tags/in-e00": {
     "__comp": "df203c0f",
     "__props": "2fe50f48"
+  },
+  "/tags/in-memory-bfe": {
+    "__comp": "df203c0f",
+    "__props": "58959516"
   },
   "/tags/inbound-48d": {
     "__comp": "df203c0f",
@@ -2019,6 +2047,10 @@
     "__comp": "df203c0f",
     "__props": "ecf030ff"
   },
+  "/tags/lua-66e": {
+    "__comp": "df203c0f",
+    "__props": "84a7192f"
+  },
   "/tags/maintenance-7e4": {
     "__comp": "df203c0f",
     "__props": "db518b3d"
@@ -2038,6 +2070,10 @@
   "/tags/memcached-a32": {
     "__comp": "df203c0f",
     "__props": "42383373"
+  },
+  "/tags/memory-1ce": {
+    "__comp": "df203c0f",
+    "__props": "12e4a441"
   },
   "/tags/memory-management-051": {
     "__comp": "df203c0f",
@@ -2463,6 +2499,10 @@
     "__comp": "df203c0f",
     "__props": "03d2a24d"
   },
+  "/tags/patterns-ba1": {
+    "__comp": "df203c0f",
+    "__props": "9e2753e6"
+  },
   "/tags/paxos-9d8": {
     "__comp": "df203c0f",
     "__props": "17bca331"
@@ -2655,6 +2695,10 @@
     "__comp": "df203c0f",
     "__props": "20d65ca4"
   },
+  "/tags/pubsub-3ae": {
+    "__comp": "df203c0f",
+    "__props": "e0225206"
+  },
   "/tags/pull-request-best-practices-dcf": {
     "__comp": "df203c0f",
     "__props": "2160e0fa"
@@ -2722,6 +2766,10 @@
   "/tags/rbac-203": {
     "__comp": "df203c0f",
     "__props": "c01ad80f"
+  },
+  "/tags/rdb-33e": {
+    "__comp": "df203c0f",
+    "__props": "a91d747b"
   },
   "/tags/rds-381": {
     "__comp": "df203c0f",
@@ -3010,6 +3058,10 @@
   "/tags/segments-ce5": {
     "__comp": "df203c0f",
     "__props": "7a9e7971"
+  },
+  "/tags/sentinel-ed9": {
+    "__comp": "df203c0f",
+    "__props": "0f8b400a"
   },
   "/tags/serverless-e75": {
     "__comp": "df203c0f",
@@ -3651,7 +3703,7 @@
     "__comp": "df203c0f",
     "__props": "cdd99891"
   },
-  "/-303": {
+  "/-e5f": {
     "__comp": "a94703ab"
   },
   "/aws-102": {
@@ -5137,6 +5189,50 @@
   "/technical-knowledge/operating-systems/virtual-memory-deep-dive-168": {
     "__comp": "17896441",
     "content": "2d19a7f5"
+  },
+  "/technical-knowledge/redis/redis-as-database-062": {
+    "__comp": "17896441",
+    "content": "047e591b"
+  },
+  "/technical-knowledge/redis/redis-clustering-replication-105": {
+    "__comp": "17896441",
+    "content": "daff2f1a"
+  },
+  "/technical-knowledge/redis/redis-data-types-a1f": {
+    "__comp": "17896441",
+    "content": "2291e668"
+  },
+  "/technical-knowledge/redis/redis-distributed-cache-591": {
+    "__comp": "17896441",
+    "content": "87d1668b"
+  },
+  "/technical-knowledge/redis/redis-interview-questions-921": {
+    "__comp": "17896441",
+    "content": "ecd8f11b"
+  },
+  "/technical-knowledge/redis/redis-overview-565": {
+    "__comp": "17896441",
+    "content": "55c466bd"
+  },
+  "/technical-knowledge/redis/redis-performance-patterns-d39": {
+    "__comp": "17896441",
+    "content": "0484371a"
+  },
+  "/technical-knowledge/redis/redis-pipeline-transactions-468": {
+    "__comp": "17896441",
+    "content": "408fc847"
+  },
+  "/technical-knowledge/redis/redis-pubsub-98a": {
+    "__comp": "17896441",
+    "content": "9c77e95c"
+  },
+  "/technical-knowledge/redis/redis-streams-78c": {
+    "__comp": "17896441",
+    "content": "c8536b5d"
+  },
+  "/technical-knowledge/redis/redis-ttl-expiry-814": {
+    "__comp": "17896441",
+    "content": "2b763f7c"
   },
   "/technical-knowledge/security/api-security-a53": {
     "__comp": "17896441",

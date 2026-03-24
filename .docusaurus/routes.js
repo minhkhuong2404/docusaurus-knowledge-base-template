@@ -9,11 +9,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '0f2'),
+    component: ComponentCreator('/', 'db9'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '72d'),
+        component: ComponentCreator('/', '417'),
         routes: [
           {
             path: '/tags',
@@ -128,6 +128,11 @@ export default [
           {
             path: '/tags/anycast',
             component: ComponentCreator('/tags/anycast', 'cbf'),
+            exact: true
+          },
+          {
+            path: '/tags/aof',
+            component: ComponentCreator('/tags/aof', '510'),
             exact: true
           },
           {
@@ -438,6 +443,11 @@ export default [
           {
             path: '/tags/building-microservice',
             component: ComponentCreator('/tags/building-microservice', '554'),
+            exact: true
+          },
+          {
+            path: '/tags/cache',
+            component: ComponentCreator('/tags/cache', '6ac'),
             exact: true
           },
           {
@@ -856,6 +866,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/cluster',
+            component: ComponentCreator('/tags/cluster', '07f'),
+            exact: true
+          },
+          {
             path: '/tags/clusterip',
             component: ComponentCreator('/tags/clusterip', '0d1'),
             exact: true
@@ -1201,6 +1216,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/data-types',
+            component: ComponentCreator('/tags/data-types', '6fe'),
+            exact: true
+          },
+          {
             path: '/tags/data-warehouse',
             component: ComponentCreator('/tags/data-warehouse', 'b4d'),
             exact: true
@@ -1353,6 +1373,11 @@ export default [
           {
             path: '/tags/distributed',
             component: ComponentCreator('/tags/distributed', '0a4'),
+            exact: true
+          },
+          {
+            path: '/tags/distributed-cache',
+            component: ComponentCreator('/tags/distributed-cache', '262'),
             exact: true
           },
           {
@@ -1618,6 +1643,11 @@ export default [
           {
             path: '/tags/execution-plan',
             component: ComponentCreator('/tags/execution-plan', 'd97'),
+            exact: true
+          },
+          {
+            path: '/tags/expiry',
+            component: ComponentCreator('/tags/expiry', '4f4'),
             exact: true
           },
           {
@@ -2003,6 +2033,11 @@ export default [
           {
             path: '/tags/in',
             component: ComponentCreator('/tags/in', 'e00'),
+            exact: true
+          },
+          {
+            path: '/tags/in-memory',
+            component: ComponentCreator('/tags/in-memory', 'bfe'),
             exact: true
           },
           {
@@ -2521,6 +2556,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/lua',
+            component: ComponentCreator('/tags/lua', '66e'),
+            exact: true
+          },
+          {
             path: '/tags/maintenance',
             component: ComponentCreator('/tags/maintenance', '7e4'),
             exact: true
@@ -2543,6 +2583,11 @@ export default [
           {
             path: '/tags/memcached',
             component: ComponentCreator('/tags/memcached', 'a32'),
+            exact: true
+          },
+          {
+            path: '/tags/memory',
+            component: ComponentCreator('/tags/memory', '1ce'),
             exact: true
           },
           {
@@ -3076,6 +3121,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/patterns',
+            component: ComponentCreator('/tags/patterns', 'ba1'),
+            exact: true
+          },
+          {
             path: '/tags/paxos',
             component: ComponentCreator('/tags/paxos', '9d8'),
             exact: true
@@ -3316,6 +3366,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/pubsub',
+            component: ComponentCreator('/tags/pubsub', '3ae'),
+            exact: true
+          },
+          {
             path: '/tags/pull-request-best-practices',
             component: ComponentCreator('/tags/pull-request-best-practices', 'dcf'),
             exact: true
@@ -3398,6 +3453,11 @@ export default [
           {
             path: '/tags/rbac',
             component: ComponentCreator('/tags/rbac', '203'),
+            exact: true
+          },
+          {
+            path: '/tags/rdb',
+            component: ComponentCreator('/tags/rdb', '33e'),
             exact: true
           },
           {
@@ -3758,6 +3818,11 @@ export default [
           {
             path: '/tags/segments',
             component: ComponentCreator('/tags/segments', 'ce5'),
+            exact: true
+          },
+          {
+            path: '/tags/sentinel',
+            component: ComponentCreator('/tags/sentinel', 'ed9'),
             exact: true
           },
           {
@@ -4562,7 +4627,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '303'),
+            component: ComponentCreator('/', 'e5f'),
             routes: [
               {
                 path: '/aws',
@@ -6786,6 +6851,72 @@ export default [
               {
                 path: '/technical-knowledge/operating-systems/virtual-memory-deep-dive',
                 component: ComponentCreator('/technical-knowledge/operating-systems/virtual-memory-deep-dive', '168'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/redis/redis-as-database',
+                component: ComponentCreator('/technical-knowledge/redis/redis-as-database', '062'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/redis/redis-clustering-replication',
+                component: ComponentCreator('/technical-knowledge/redis/redis-clustering-replication', '105'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/redis/redis-data-types',
+                component: ComponentCreator('/technical-knowledge/redis/redis-data-types', 'a1f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/redis/redis-distributed-cache',
+                component: ComponentCreator('/technical-knowledge/redis/redis-distributed-cache', '591'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/redis/redis-interview-questions',
+                component: ComponentCreator('/technical-knowledge/redis/redis-interview-questions', '921'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/redis/redis-overview',
+                component: ComponentCreator('/technical-knowledge/redis/redis-overview', '565'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/redis/redis-performance-patterns',
+                component: ComponentCreator('/technical-knowledge/redis/redis-performance-patterns', 'd39'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/redis/redis-pipeline-transactions',
+                component: ComponentCreator('/technical-knowledge/redis/redis-pipeline-transactions', '468'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/redis/redis-pubsub',
+                component: ComponentCreator('/technical-knowledge/redis/redis-pubsub', '98a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/redis/redis-streams',
+                component: ComponentCreator('/technical-knowledge/redis/redis-streams', '78c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/redis/redis-ttl-expiry',
+                component: ComponentCreator('/technical-knowledge/redis/redis-ttl-expiry', '814'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

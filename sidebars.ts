@@ -502,6 +502,51 @@ const sidebars: SidebarsConfig = {
 		},
 		{
 			type: 'category',
+			label: '⚡ Redis',
+			items: [
+				'technical-knowledge/redis/redis-overview',
+				{
+					type: 'category',
+					label: '🧱 Core Concepts',
+					collapsed: true,
+					items: [
+						'technical-knowledge/redis/redis-data-types',
+						'technical-knowledge/redis/redis-ttl-expiry',
+					]
+				},
+				{
+					type: 'category',
+					label: '🔄 Features & Streaming',
+					collapsed: true,
+					items: [
+						'technical-knowledge/redis/redis-pipeline-transactions',
+						'technical-knowledge/redis/redis-pubsub',
+						'technical-knowledge/redis/redis-streams',
+					]
+				},
+				{
+					type: 'category',
+					label: 'Архи Architecture & Patterns',
+					collapsed: true,
+					items: [
+						'technical-knowledge/redis/redis-distributed-cache',
+						'technical-knowledge/redis/redis-as-database',
+						'technical-knowledge/redis/redis-clustering-replication',
+						'technical-knowledge/redis/redis-performance-patterns',
+					]
+				},
+				{
+					type: 'category',
+					label: '🎯 Interview Prep',
+					collapsed: true,
+					items: [
+						'technical-knowledge/redis/redis-interview-questions',
+					]
+				}
+			]
+		},
+		{
+			type: 'category',
 			label: '🖥️ Operating Systems',
 			items: [
 				'technical-knowledge/operating-systems/intro',
