@@ -43,12 +43,38 @@ export default function Root({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const isCheckingRef = useRef(false);
 
+  const enforcePremiumRouteAuth = useCallback(
+    (state: PremiumState) => {
+      const isPremiumRoute = location.pathname.startsWith("/premium/");
+      const isLoginRoute = location.pathname === "/login";
+
+      if (!isPremiumRoute || isLoginRoute || state === "logged_in") {
+        return;
+      }
+
+      const returnTo = `${location.pathname}${location.search}`;
+      const loginUrl = `/login?returnTo=${encodeURIComponent(returnTo)}`;
+      if (window.location.pathname !== "/login") {
+        window.location.href = loginUrl;
+      }
+    },
+    [location.pathname, location.search],
+  );
+
   useEffect(() => {
     const cachedState = readCachedPremiumState();
     if (cachedState) {
       applyPremiumNavState(cachedState);
     }
   }, []);
+
+  useEffect(() => {
+    // On each navigation, enforce quickly with cached state before async check completes.
+    const cachedState = readCachedPremiumState();
+    if (cachedState) {
+      enforcePremiumRouteAuth(cachedState);
+    }
+  }, [location.pathname, location.search, enforcePremiumRouteAuth]);
 
   const syncPremiumSession = useCallback(async () => {
     if (typeof window === "undefined") {
@@ -69,13 +95,15 @@ export default function Root({ children }: { children: React.ReactNode }) {
         : "logged_out";
       window.sessionStorage.setItem(PREMIUM_STATE_KEY, nextState);
       applyPremiumNavState(nextState);
+      enforcePremiumRouteAuth(nextState);
     } catch {
       window.sessionStorage.setItem(PREMIUM_STATE_KEY, "logged_out");
       applyPremiumNavState("logged_out");
+      enforcePremiumRouteAuth("logged_out");
     } finally {
       isCheckingRef.current = false;
     }
-  }, []);
+  }, [enforcePremiumRouteAuth]);
 
   // Re-check premium status on every SPA navigation.
   useEffect(() => {
