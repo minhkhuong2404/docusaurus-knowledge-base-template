@@ -5,6 +5,10 @@ const PREMIUM_STATE_KEY = "premium_session_state";
 
 type PremiumState = "logged_in" | "logged_out";
 
+function isPremiumPath(pathname: string): boolean {
+  return pathname === "/premium" || pathname.startsWith("/premium/");
+}
+
 function applyPremiumNavState(state: PremiumState) {
   const isLoggedIn = state === "logged_in";
   const root = document.documentElement;
@@ -43,22 +47,27 @@ export default function Root({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const isCheckingRef = useRef(false);
 
+  const redirectToLogin = useCallback(() => {
+    const returnTo = `${location.pathname}${location.search}`;
+    const loginUrl = `/login?returnTo=${encodeURIComponent(returnTo)}`;
+    if (window.location.pathname !== "/login") {
+      // Use replace() so browser Back won't bring users to a protected page snapshot.
+      window.location.replace(loginUrl);
+    }
+  }, [location.pathname, location.search]);
+
   const enforcePremiumRouteAuth = useCallback(
     (state: PremiumState) => {
-      const isPremiumRoute = location.pathname.startsWith("/premium/");
+      const isPremiumRoute = isPremiumPath(location.pathname);
       const isLoginRoute = location.pathname === "/login";
 
       if (!isPremiumRoute || isLoginRoute || state === "logged_in") {
         return;
       }
 
-      const returnTo = `${location.pathname}${location.search}`;
-      const loginUrl = `/login?returnTo=${encodeURIComponent(returnTo)}`;
-      if (window.location.pathname !== "/login") {
-        window.location.href = loginUrl;
-      }
+      redirectToLogin();
     },
-    [location.pathname, location.search],
+    [location.pathname, redirectToLogin],
   );
 
   useEffect(() => {
@@ -71,6 +80,13 @@ export default function Root({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // On each navigation, enforce quickly with cached state before async check completes.
     const cachedState = readCachedPremiumState();
+    const isPremiumRoute = isPremiumPath(location.pathname);
+
+    if (isPremiumRoute && cachedState !== "logged_in") {
+      enforcePremiumRouteAuth("logged_out");
+      return;
+    }
+
     if (cachedState) {
       enforcePremiumRouteAuth(cachedState);
     }
@@ -117,8 +133,17 @@ export default function Root({ children }: { children: React.ReactNode }) {
     }
 
     document.addEventListener("click", syncPremiumSession, true);
+
+    // Re-check auth when page is restored from browser cache or when tab regains focus.
+    const handlePageShow = () => syncPremiumSession();
+    const handleFocus = () => syncPremiumSession();
+    window.addEventListener("pageshow", handlePageShow);
+    window.addEventListener("focus", handleFocus);
+
     return () => {
       document.removeEventListener("click", syncPremiumSession, true);
+      window.removeEventListener("pageshow", handlePageShow);
+      window.removeEventListener("focus", handleFocus);
     };
   }, [syncPremiumSession]);
 
