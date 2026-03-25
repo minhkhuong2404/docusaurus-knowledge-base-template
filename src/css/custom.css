@@ -204,3 +204,13 @@ div[class*="codeBlockTitle"] {
 .navbar__item.premium-nav-button:hover::after {
   color: var(--premium-nav-hover-color);
 }
+
+/* Premium indicator on sidebar doc links */
+.theme-doc-sidebar-container .menu__link[href^="/premium/"]::after {
+  content: " - 💎 Premium";
+  color: var(--ifm-color-success);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}

@@ -14,11 +14,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'bbe'),
+    component: ComponentCreator('/', '681'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '569'),
+        component: ComponentCreator('/', '5a0'),
         routes: [
           {
             path: '/tags',
@@ -4742,7 +4742,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '715'),
+            component: ComponentCreator('/', 'e26'),
             routes: [
               {
                 path: '/aws',
@@ -5385,11 +5385,6 @@ export default [
                 component: ComponentCreator('/premium/company/wipro-java-developer-interview-questions', '11d'),
                 exact: true,
                 sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/premium/intro',
-                component: ComponentCreator('/premium/intro', '898'),
-                exact: true
               },
               {
                 path: '/security',

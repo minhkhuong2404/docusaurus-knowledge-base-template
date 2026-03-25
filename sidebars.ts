@@ -1211,7 +1211,7 @@ const sidebars: SidebarsConfig = {
 						'technical-knowledge/interview-questions/genz-career/java-multithreading-interview-guide',
 						{
 							type: 'category',
-							label: '🏢 Company',
+							label: '🏢 Company (💎 Premium)',
 							collapsed: true,
 							items: [
 								'premium/company/accenture-java-interview',
