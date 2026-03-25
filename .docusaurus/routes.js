@@ -14,11 +14,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '695'),
+    component: ComponentCreator('/', '681'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'd39'),
+        component: ComponentCreator('/', '5a0'),
         routes: [
           {
             path: '/tags',
@@ -4742,7 +4742,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'f10'),
+            component: ComponentCreator('/', 'e26'),
             routes: [
               {
                 path: '/aws',
@@ -5231,9 +5231,160 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/premium/intro',
-                component: ComponentCreator('/premium/intro', '898'),
-                exact: true
+                path: '/premium/company/accenture-java-developer-interview-16lpa',
+                component: ComponentCreator('/premium/company/accenture-java-developer-interview-16lpa', 'd92'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/premium/company/accenture-java-developer-interview-questions',
+                component: ComponentCreator('/premium/company/accenture-java-developer-interview-questions', 'e47'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/premium/company/accenture-java-interview',
+                component: ComponentCreator('/premium/company/accenture-java-interview', '1d6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/premium/company/airtel-java-developer-interview-questions',
+                component: ComponentCreator('/premium/company/airtel-java-developer-interview-questions', '819'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/premium/company/capgemini-java-developer-interview-questions',
+                component: ComponentCreator('/premium/company/capgemini-java-developer-interview-questions', '546'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/premium/company/coforge-java-developer-interview-22lpa',
+                component: ComponentCreator('/premium/company/coforge-java-developer-interview-22lpa', 'ebc'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/premium/company/cognizant-fresher-java-developer-interview',
+                component: ComponentCreator('/premium/company/cognizant-fresher-java-developer-interview', '809'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/premium/company/deloitte-java-developer-interview-17lpa',
+                component: ComponentCreator('/premium/company/deloitte-java-developer-interview-17lpa', '22b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/premium/company/deloitte-java-developer-interview-questions',
+                component: ComponentCreator('/premium/company/deloitte-java-developer-interview-questions', '961'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/premium/company/epam-java-developer-interview-22lpa',
+                component: ComponentCreator('/premium/company/epam-java-developer-interview-22lpa', '8e7'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/premium/company/hashedin-java-developer-interview-questions',
+                component: ComponentCreator('/premium/company/hashedin-java-developer-interview-questions', 'aa0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/premium/company/hcl-java-fullstack-developer-interview',
+                component: ComponentCreator('/premium/company/hcl-java-fullstack-developer-interview', 'b78'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/premium/company/ibm-java-developer-interview-experience',
+                component: ComponentCreator('/premium/company/ibm-java-developer-interview-experience', '3ae'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/premium/company/infosys-java-developer-interview-17lpa',
+                component: ComponentCreator('/premium/company/infosys-java-developer-interview-17lpa', 'f4c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/premium/company/java-developer-interview-iris',
+                component: ComponentCreator('/premium/company/java-developer-interview-iris', 'f5c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/premium/company/ltimindtree-java-developer-interview-questions',
+                component: ComponentCreator('/premium/company/ltimindtree-java-developer-interview-questions', '898'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/premium/company/nagarro-java-developer-interview-questions',
+                component: ComponentCreator('/premium/company/nagarro-java-developer-interview-questions', '6ca'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/premium/company/ntt-data-java-developer-interview',
+                component: ComponentCreator('/premium/company/ntt-data-java-developer-interview', '7a0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/premium/company/oracle-java-developer-interview-questions',
+                component: ComponentCreator('/premium/company/oracle-java-developer-interview-questions', '105'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/premium/company/paytm-java-developer-interview-questions',
+                component: ComponentCreator('/premium/company/paytm-java-developer-interview-questions', 'c9b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/premium/company/pwc-java-developer-interview-questions',
+                component: ComponentCreator('/premium/company/pwc-java-developer-interview-questions', '0f6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/premium/company/tcs-java-developer-interview-13lpa',
+                component: ComponentCreator('/premium/company/tcs-java-developer-interview-13lpa', '906'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/premium/company/tech-mahindra-java-developer-interview',
+                component: ComponentCreator('/premium/company/tech-mahindra-java-developer-interview', 'cfd'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/premium/company/walmart-java-developer-interview-30lpa',
+                component: ComponentCreator('/premium/company/walmart-java-developer-interview-30lpa', 'dce'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/premium/company/wipro-fullstack-java-developer-interview',
+                component: ComponentCreator('/premium/company/wipro-fullstack-java-developer-interview', 'f91'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/premium/company/wipro-java-developer-interview-questions',
+                component: ComponentCreator('/premium/company/wipro-java-developer-interview-questions', '11d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
               },
               {
                 path: '/security',
@@ -6240,162 +6391,6 @@ export default [
               {
                 path: '/technical-knowledge/git/workflows/trunk-based',
                 component: ComponentCreator('/technical-knowledge/git/workflows/trunk-based', '0f9'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/interview-questions/genz-career/company/accenture-java-developer-interview-16lpa',
-                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/accenture-java-developer-interview-16lpa', '860'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/interview-questions/genz-career/company/accenture-java-developer-interview-questions',
-                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/accenture-java-developer-interview-questions', '9f4'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/interview-questions/genz-career/company/accenture-java-interview',
-                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/accenture-java-interview', 'f6a'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/interview-questions/genz-career/company/airtel-java-developer-interview-questions',
-                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/airtel-java-developer-interview-questions', 'a17'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/interview-questions/genz-career/company/capgemini-java-developer-interview-questions',
-                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/capgemini-java-developer-interview-questions', '867'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/interview-questions/genz-career/company/coforge-java-developer-interview-22lpa',
-                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/coforge-java-developer-interview-22lpa', 'd0c'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/interview-questions/genz-career/company/cognizant-fresher-java-developer-interview',
-                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/cognizant-fresher-java-developer-interview', '044'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/interview-questions/genz-career/company/deloitte-java-developer-interview-17lpa',
-                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/deloitte-java-developer-interview-17lpa', 'df1'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/interview-questions/genz-career/company/deloitte-java-developer-interview-questions',
-                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/deloitte-java-developer-interview-questions', 'dbf'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/interview-questions/genz-career/company/epam-java-developer-interview-22lpa',
-                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/epam-java-developer-interview-22lpa', '8d6'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/interview-questions/genz-career/company/hashedin-java-developer-interview-questions',
-                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/hashedin-java-developer-interview-questions', 'c6f'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/interview-questions/genz-career/company/hcl-java-fullstack-developer-interview',
-                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/hcl-java-fullstack-developer-interview', 'f62'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/interview-questions/genz-career/company/ibm-java-developer-interview-experience',
-                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/ibm-java-developer-interview-experience', '4b4'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/interview-questions/genz-career/company/infosys-java-developer-interview-17lpa',
-                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/infosys-java-developer-interview-17lpa', '538'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/interview-questions/genz-career/company/java-developer-interview-iris',
-                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/java-developer-interview-iris', '44c'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/interview-questions/genz-career/company/ltimindtree-java-developer-interview-questions',
-                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/ltimindtree-java-developer-interview-questions', '6a0'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/interview-questions/genz-career/company/nagarro-java-developer-interview-questions',
-                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/nagarro-java-developer-interview-questions', 'd28'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/interview-questions/genz-career/company/ntt-data-java-developer-interview',
-                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/ntt-data-java-developer-interview', '73e'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/interview-questions/genz-career/company/oracle-java-developer-interview-questions',
-                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/oracle-java-developer-interview-questions', 'a30'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/interview-questions/genz-career/company/paytm-java-developer-interview-questions',
-                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/paytm-java-developer-interview-questions', 'eee'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/interview-questions/genz-career/company/pwc-java-developer-interview-questions',
-                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/pwc-java-developer-interview-questions', '521'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/interview-questions/genz-career/company/tcs-java-developer-interview-13lpa',
-                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/tcs-java-developer-interview-13lpa', '690'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/interview-questions/genz-career/company/tech-mahindra-java-developer-interview',
-                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/tech-mahindra-java-developer-interview', 'ba0'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/interview-questions/genz-career/company/walmart-java-developer-interview-30lpa',
-                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/walmart-java-developer-interview-30lpa', '914'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/interview-questions/genz-career/company/wipro-fullstack-java-developer-interview',
-                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/wipro-fullstack-java-developer-interview', '471'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/interview-questions/genz-career/company/wipro-java-developer-interview-questions',
-                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/company/wipro-java-developer-interview-questions', '7cf'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
