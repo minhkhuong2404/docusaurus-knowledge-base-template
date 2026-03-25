@@ -137,6 +137,11 @@ export default {
       "title": "Engineering Knowledge Base",
       "items": [
         {
+          "to": "/login",
+          "label": "💎 VIP Login",
+          "position": "right"
+        },
+        {
           "type": "search",
           "position": "right"
         }

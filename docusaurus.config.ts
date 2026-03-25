@@ -89,7 +89,10 @@ const config: Config = {
 		},
 		navbar: {
 			title: 'Engineering Knowledge Base',
-			items: [{ type: 'search', position: 'right' }],
+			items: [
+				{ to: '/login', label: '💎 VIP Login', position: 'right' },
+				{ type: 'search', position: 'right' }
+			],
 		},
 		prism: {
 			theme: prismTheme,
