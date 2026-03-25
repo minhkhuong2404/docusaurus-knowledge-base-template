@@ -2,8 +2,8 @@
 title: Premium Content Access
 sidebar_label: "💎 Premium Intro"
 slug: /premium/intro
+hide_table_of_contents: true
 ---
-
 
 # Welcome to Premium Content
 
