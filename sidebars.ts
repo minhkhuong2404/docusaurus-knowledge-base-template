@@ -1211,39 +1211,6 @@ const sidebars: SidebarsConfig = {
 						'technical-knowledge/interview-questions/genz-career/java-multithreading-interview-guide',
 						{
 							type: 'category',
-							label: '🏢 Company (💎 Premium)',
-							collapsed: true,
-							items: [
-								'premium/company/accenture-java-interview',
-								'premium/company/accenture-java-developer-interview-questions',
-								'premium/company/accenture-java-developer-interview-16lpa',
-								'premium/company/airtel-java-developer-interview-questions',
-								'premium/company/capgemini-java-developer-interview-questions',
-								'premium/company/coforge-java-developer-interview-22lpa',
-								'premium/company/cognizant-fresher-java-developer-interview',
-								'premium/company/deloitte-java-developer-interview-questions',
-								'premium/company/deloitte-java-developer-interview-17lpa',
-								'premium/company/epam-java-developer-interview-22lpa',
-								'premium/company/hashedin-java-developer-interview-questions',
-								'premium/company/hcl-java-fullstack-developer-interview',
-								'premium/company/ibm-java-developer-interview-experience',
-								'premium/company/infosys-java-developer-interview-17lpa',
-								'premium/company/java-developer-interview-iris',
-								'premium/company/ltimindtree-java-developer-interview-questions',
-								'premium/company/nagarro-java-developer-interview-questions',
-								'premium/company/ntt-data-java-developer-interview',
-								'premium/company/oracle-java-developer-interview-questions',
-								'premium/company/paytm-java-developer-interview-questions',
-								'premium/company/pwc-java-developer-interview-questions',
-								'premium/company/tcs-java-developer-interview-13lpa',
-								'premium/company/tech-mahindra-java-developer-interview',
-								'premium/company/walmart-java-developer-interview-30lpa',
-								'premium/company/wipro-fullstack-java-developer-interview',
-								'premium/company/wipro-java-developer-interview-questions'
-							]
-						},
-						{
-							type: 'category',
 							label: '🧪 Mock',
 							collapsed: true,
 							items: [
@@ -1273,7 +1240,40 @@ const sidebars: SidebarsConfig = {
 							]
 						}
 					]
-				}
+				},
+				{
+					type: 'category',
+					label: '🏢 Company (💎 Premium)',
+					collapsed: true,
+					items: [
+						'premium/company/accenture-java-interview',
+						'premium/company/accenture-java-developer-interview-questions',
+						'premium/company/accenture-java-developer-interview-16lpa',
+						'premium/company/airtel-java-developer-interview-questions',
+						'premium/company/capgemini-java-developer-interview-questions',
+						'premium/company/coforge-java-developer-interview-22lpa',
+						'premium/company/cognizant-fresher-java-developer-interview',
+						'premium/company/deloitte-java-developer-interview-questions',
+						'premium/company/deloitte-java-developer-interview-17lpa',
+						'premium/company/epam-java-developer-interview-22lpa',
+						'premium/company/hashedin-java-developer-interview-questions',
+						'premium/company/hcl-java-fullstack-developer-interview',
+						'premium/company/ibm-java-developer-interview-experience',
+						'premium/company/infosys-java-developer-interview-17lpa',
+						'premium/company/java-developer-interview-iris',
+						'premium/company/ltimindtree-java-developer-interview-questions',
+						'premium/company/nagarro-java-developer-interview-questions',
+						'premium/company/ntt-data-java-developer-interview',
+						'premium/company/oracle-java-developer-interview-questions',
+						'premium/company/paytm-java-developer-interview-questions',
+						'premium/company/pwc-java-developer-interview-questions',
+						'premium/company/tcs-java-developer-interview-13lpa',
+						'premium/company/tech-mahindra-java-developer-interview',
+						'premium/company/walmart-java-developer-interview-30lpa',
+						'premium/company/wipro-fullstack-java-developer-interview',
+						'premium/company/wipro-java-developer-interview-questions'
+					]
+				},
 			]
 		},
 		{
