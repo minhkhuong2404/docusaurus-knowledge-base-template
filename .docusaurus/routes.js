@@ -3,17 +3,22 @@ import ComponentCreator from '@docusaurus/ComponentCreator';
 
 export default [
   {
+    path: '/login',
+    component: ComponentCreator('/login', 'f43'),
+    exact: true
+  },
+  {
     path: '/search',
     component: ComponentCreator('/search', '822'),
     exact: true
   },
   {
     path: '/',
-    component: ComponentCreator('/', '0d2'),
+    component: ComponentCreator('/', 'fe9'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '377'),
+        component: ComponentCreator('/', 'd59'),
         routes: [
           {
             path: '/tags',
@@ -4737,7 +4742,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '4b1'),
+            component: ComponentCreator('/', 'e6c'),
             routes: [
               {
                 path: '/aws',
@@ -5222,6 +5227,12 @@ export default [
               {
                 path: '/non-technical-knowledge/sdlc/testing/unit-testing',
                 component: ComponentCreator('/non-technical-knowledge/sdlc/testing/unit-testing', '6ac'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/premium/intro',
+                component: ComponentCreator('/premium/intro', 'e99'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

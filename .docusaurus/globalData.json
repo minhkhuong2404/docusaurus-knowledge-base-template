@@ -406,6 +406,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "premium/intro",
+              "path": "/premium/intro",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/aws/api-gateway/index",
               "path": "/technical-knowledge/aws/api-gateway/",
               "sidebar": "tutorialSidebar"
