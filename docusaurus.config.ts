@@ -90,7 +90,7 @@ const config: Config = {
 		navbar: {
 			title: 'Engineering Knowledge Base',
 			items: [
-				{ to: '/login', label: '💎 VIP Login', position: 'right' },
+				{ to: '/login', label: '💎 VIP Login', position: 'right', className: 'premium-nav-button' },
 				{ type: 'search', position: 'right' }
 			],
 		},

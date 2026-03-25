@@ -139,7 +139,8 @@ export default {
         {
           "to": "/login",
           "label": "💎 VIP Login",
-          "position": "right"
+          "position": "right",
+          "className": "premium-nav-button"
         },
         {
           "type": "search",
