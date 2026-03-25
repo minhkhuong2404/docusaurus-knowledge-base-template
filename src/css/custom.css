@@ -180,27 +180,27 @@ div[class*="codeBlockTitle"] {
    Dynamic Premium Navbar Button
    ============================================ */
 
+:root {
+  --premium-nav-label: "💎 Premium login";
+  --premium-nav-color: var(--ifm-navbar-link-color);
+  --premium-nav-hover-color: var(--ifm-navbar-link-hover-color);
+  --premium-nav-weight: 500;
+}
+
 /* Hide the default text node rendered by Docusaurus */
 .navbar__item.premium-nav-button {
   font-size: 0 !important;
   color: transparent !important;
 }
 
-/* Default "Logged Out" State */
 .navbar__item.premium-nav-button::after {
-  content: "💎 Premium login";
+  content: var(--premium-nav-label);
   font-size: 15px !important;
-  color: var(--ifm-navbar-link-color);
-  font-weight: 500;
+  color: var(--premium-nav-color);
+  font-weight: var(--premium-nav-weight);
+  transition: color 180ms ease;
 }
 
 .navbar__item.premium-nav-button:hover::after {
-  color: var(--ifm-navbar-link-hover-color);
-}
-
-/* "Logged In" State (Driven by src/theme/Root.tsx) */
-html.user-logged-in .navbar__item.premium-nav-button::after {
-  content: "💎 Premium unlocked";
-  color: var(--ifm-color-success);
-  font-weight: 600;
+  color: var(--premium-nav-hover-color);
 }
