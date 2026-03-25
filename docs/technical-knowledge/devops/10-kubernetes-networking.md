@@ -261,6 +261,48 @@ kubectl describe ingress my-ingress
 
 ---
 
+## Gateway API (The Modern Standard)
+
+**Ingress is legacy.** The modern standard for Kubernetes traffic routing is the **Gateway API**. It separates concerns so infrastructure providers manage the Gateway, while application developers manage the Routes.
+
+```
+Ingress (Legacy): 
+  Single object mixing L4/L7 routing, TLS, and infrastructure setup.
+
+Gateway API (Modern):
+  GatewayClass → Describes infrastructure (e.g., AWS ALB, Istio)
+  Gateway      → Provisions the Loadbalancer / IP
+  HTTPRoute    → Developer specifies routing logic
+```
+
+### HTTPRoute Example
+```yaml
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: api-route
+  namespace: production
+spec:
+  parentRefs:
+    - name: my-gateway       # Attach to infrastructure gateway
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /api/v2
+      backendRefs:
+        - name: api-v2-svc
+          port: 8080
+          weight: 90         # Canary rollouts natively supported!
+        - name: api-v2-canary
+          port: 8080
+          weight: 10
+```
+
+> **Why it's better:** Supports header matching, traffic splitting (canary deploys), cross-namespace routing, and generic L4/L7 routing natively without using non-standard annotations.
+
+---
+
 ## Kubernetes DNS
 
 Every Service gets a DNS entry: `<service>.<namespace>.svc.cluster.local`

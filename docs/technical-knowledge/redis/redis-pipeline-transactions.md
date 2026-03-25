@@ -161,6 +161,135 @@ def decrement_balance(redis_client, amount, max_retries=3):
                 continue  # Retry
 ```
 
+### Spring Data Redis: Transactions
+
+#### Method 1: `SessionCallback` (Recommended for WATCH)
+
+```java
+@Service
+public class BankService {
+
+    @Autowired
+    private RedisTemplate<String, Long> redisTemplate;
+
+    public boolean transfer(String from, String to, long amount) {
+        List<Object> results = redisTemplate.execute(new SessionCallback<List<Object>>() {
+            @Override
+            public List<Object> execute(RedisOperations operations) throws DataAccessException {
+                operations.watch("balance:" + from);
+
+                Long balance = (Long) operations.opsForValue().get("balance:" + from);
+                if (balance == null || balance < amount) {
+                    operations.unwatch();
+                    return Collections.emptyList();
+                }
+
+                operations.multi();
+                operations.opsForValue().decrement("balance:" + from, amount);
+                operations.opsForValue().increment("balance:" + to, amount);
+                return operations.exec();
+            }
+        });
+
+        return results != null && !results.isEmpty();
+    }
+}
+```
+
+#### Method 2: `@Transactional` Integration
+
+```java
+@Configuration
+public class RedisConfig {
+    @Bean
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(factory);
+        template.setEnableTransactionSupport(true);  // ← required for @Transactional
+        return template;
+    }
+}
+```
+
+> **Warning:** When `enableTransactionSupport = true`, all `get` operations within a `@Transactional` method return `null` immediately (they are queued). Use `SessionCallback` if you need to read values mid-transaction.
+
+#### Retry Pattern for Optimistic Locking
+
+```java
+public boolean transferWithRetry(String from, String to, long amount) {
+    int maxRetries = 3;
+    for (int attempt = 0; attempt < maxRetries; attempt++) {
+        if (transfer(from, to, amount)) return true;
+
+        try {
+            Thread.sleep(10 * (attempt + 1));  // back-off
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return false;
+        }
+    }
+    return false;
+}
+```
+
+### ReactiveRedisTemplate Pipelining
+
+For reactive/non-blocking applications:
+
+```java
+@Service
+public class ReactiveBulkService {
+
+    @Autowired
+    private ReactiveRedisTemplate<String, String> reactiveTemplate;
+
+    public Mono<List<Boolean>> bulkSet(Map<String, String> data) {
+        return reactiveTemplate.executePipelined(operations ->
+            Flux.fromIterable(data.entrySet())
+                .flatMap(entry ->
+                    operations.opsForValue()
+                        .set(entry.getKey(), entry.getValue())
+                )
+                .then()
+        ).collectList();
+    }
+}
+```
+
+### Practical Example: Warm Up Cache in Bulk
+
+```java
+@Service
+public class CacheWarmupService {
+
+    @Autowired
+    private RedisTemplate<String, Product> redisTemplate;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    private static final int BATCH_SIZE = 500;
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void warmUp() {
+        List<Product> allProducts = productRepository.findAll();
+        
+        // Process in batches to avoid memory spikes
+        for (int i = 0; i < allProducts.size(); i += BATCH_SIZE) {
+            List<Product> batch = allProducts.subList(i, Math.min(i + BATCH_SIZE, allProducts.size()));
+            
+            redisTemplate.executePipelined((RedisCallback<Object>) conn -> {
+                batch.forEach(product -> {
+                    byte[] k = ("product:" + product.getId()).getBytes();
+                    conn.stringCommands().setEx(k, 3600, serialize(product));
+                });
+                return null;
+            });
+        }
+    }
+}
+```
+
 ### MULTI/EXEC vs Pipeline
 
 | | Pipeline | MULTI/EXEC |

@@ -86,6 +86,14 @@ Integration:
     application/json: "Action=SendMessage&MessageBody=$input.body"
 ```
 
+### VPC Links (Private Integrations)
+
+A **VPC Link** enables API Gateway to securely route traffic to private resources inside a VPC (e.g., Application Load Balancers, ECS/Fargate containers, or private EC2 instances) **without exposing them to the public internet**.
+
+- Uses **AWS PrivateLink** under the hood.
+- **REST APIs** use Network Load Balancers (NLB) for the VPC Link.
+- **HTTP APIs** can connect to ALBs, NLBs, or AWS Cloud Map.
+
 ---
 
 ## Authorizers
@@ -106,6 +114,12 @@ Integration:
 - Ideal for internal AWS service-to-service communication.
 - The client must sign the API request using **Signature Version 4 (SigV4)**.
 - You can attach a Resource Policy to the API Gateway to restrict access to specific IP ranges or VPCs.
+
+### 4. Mutual TLS (mTLS)
+- Used for strict B2B (Business-to-Business) applications, open banking, and IoT devices.
+- Requires a **Custom Domain Name**.
+- Client must present an X.509 certificate to authenticate symmetrically.
+- You upload a trust store (PEM file) containing the Certificate Authority (CA) public keys to an S3 bucket and link it to the API Gateway Custom Domain.
 
 ---
 

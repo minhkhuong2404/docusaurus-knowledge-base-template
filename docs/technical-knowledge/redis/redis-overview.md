@@ -132,6 +132,41 @@ Sentinel 1 / Sentinel 2 / Sentinel 3  (quorum-based monitoring)
 
 ---
 
+## Quick Start with Docker
+
+```bash
+# Run Redis locally
+docker run --name redis -p 6379:6379 -d redis:latest
+
+# Connect via CLI
+docker exec -it redis redis-cli
+```
+
+## Spring Boot Integration
+
+Add the dependency to your `pom.xml`:
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-redis</artifactId>
+</dependency>
+```
+
+Configure in `application.yml`:
+
+```yaml
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: your_password  # if set
+      timeout: 2000ms
+```
+
+---
+
 ## Common Use Cases
 
 | Use Case | Redis Features Used | Senior Consideration |

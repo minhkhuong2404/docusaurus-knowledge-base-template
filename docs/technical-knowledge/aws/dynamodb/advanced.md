@@ -120,6 +120,39 @@ public class StreamHandler implements RequestHandler<DynamodbEvent, Void> {
 
 ---
 
+## DynamoDB Transactions
+Provides **ACID** (Atomicity, Consistency, Isolation, Durability) guarantees across multiple tables within the same AWS region.
+- `TransactWriteItems`: Groups up to 100 `Put`, `Update`, `Delete`, or `ConditionCheck` actions. All succeed, or all fail.
+- `TransactGetItems`: Synchronous read of up to 100 items with serializable isolation.
+- **Cost**: Transactions consume exactly **2x** the read/write capacity units compared to standard operations.
+
+---
+
+## DAX (DynamoDB Accelerator)
+A fully managed, highly available, in-memory cache for DynamoDB.
+- **Microsecond** latency for read-heavy workloads.
+- API-compatible with DynamoDB (you don't rewrite your application logic; just point the DynamoDB client endpoint to the DAX cluster).
+- Works with eventually consistent and strongly consistent reads.
+- **Use Case**: Bidding platforms, gaming leaderboards, read-heavy APIs.
+
+---
+
+## Global Tables
+Multi-region, fully managed, active-active database.
+- Useful for globally distributed applications to achieve local read/write latency.
+- Employs **"Last Writer Wins"** (LWW) conflict resolution.
+- Requires DynamoDB Streams to be enabled (it uses streams under the hood to replicate changes to other regions).
+
+---
+
+## Time to Live (TTL)
+Automatically delete expired items without consuming Write Capacity Units (WCUs).
+- Add an attribute (e.g., `expireAt`) containing a strictly formatted **Unix Epoch timestamp** in seconds (not milliseconds).
+- Deletion occurs typically within 48 hours of expiration.
+- Expired items are still returned in queries/scans until deleted, so filter them out in your application (`FilterExpression: expireAt > :now`).
+
+---
+
 ## PartiQL (SQL-Compatible Queries)
 
 ```java

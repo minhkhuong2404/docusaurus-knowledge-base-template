@@ -9,11 +9,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '746'),
+    component: ComponentCreator('/', '0d2'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'dbf'),
+        component: ComponentCreator('/', '377'),
         routes: [
           {
             path: '/tags',
@@ -186,6 +186,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/argocd',
+            component: ComponentCreator('/tags/argocd', '7ff'),
+            exact: true
+          },
+          {
             path: '/tags/async',
             component: ComponentCreator('/tags/async', 'db2'),
             exact: true
@@ -328,6 +333,11 @@ export default [
           {
             path: '/tags/basics',
             component: ComponentCreator('/tags/basics', '041'),
+            exact: true
+          },
+          {
+            path: '/tags/batching',
+            component: ComponentCreator('/tags/batching', 'b52'),
             exact: true
           },
           {
@@ -806,6 +816,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/ci-cd',
+            component: ComponentCreator('/tags/ci-cd', '138'),
+            exact: true
+          },
+          {
             path: '/tags/cicd',
             component: ComponentCreator('/tags/cicd', 'b00'),
             exact: true
@@ -1081,6 +1096,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/controllers',
+            component: ComponentCreator('/tags/controllers', 'c65'),
+            exact: true
+          },
+          {
             path: '/tags/conventional-commits',
             component: ComponentCreator('/tags/conventional-commits', '39e'),
             exact: true
@@ -1118,6 +1138,11 @@ export default [
           {
             path: '/tags/cqrs',
             component: ComponentCreator('/tags/cqrs', 'c4e'),
+            exact: true
+          },
+          {
+            path: '/tags/crd',
+            component: ComponentCreator('/tags/crd', 'fb4'),
             exact: true
           },
           {
@@ -1596,6 +1621,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/eventbridge',
+            component: ComponentCreator('/tags/eventbridge', '086'),
+            exact: true
+          },
+          {
             path: '/tags/eventual-consistency',
             component: ComponentCreator('/tags/eventual-consistency', '9c4'),
             exact: true
@@ -1761,6 +1791,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/fluentd',
+            component: ComponentCreator('/tags/fluentd', '6d7'),
+            exact: true
+          },
+          {
             path: '/tags/flyway',
             component: ComponentCreator('/tags/flyway', '504'),
             exact: true
@@ -1858,6 +1893,11 @@ export default [
           {
             path: '/tags/git-flow',
             component: ComponentCreator('/tags/git-flow', 'f75'),
+            exact: true
+          },
+          {
+            path: '/tags/gitops',
+            component: ComponentCreator('/tags/gitops', '86f'),
             exact: true
           },
           {
@@ -2956,8 +2996,18 @@ export default [
             exact: true
           },
           {
+            path: '/tags/opentelemetry',
+            component: ComponentCreator('/tags/opentelemetry', '316'),
+            exact: true
+          },
+          {
             path: '/tags/operating-systems',
             component: ComponentCreator('/tags/operating-systems', '8ee'),
+            exact: true
+          },
+          {
+            path: '/tags/operators',
+            component: ComponentCreator('/tags/operators', '77b'),
             exact: true
           },
           {
@@ -3141,8 +3191,18 @@ export default [
             exact: true
           },
           {
+            path: '/tags/partitions',
+            component: ComponentCreator('/tags/partitions', '9c1'),
+            exact: true
+          },
+          {
             path: '/tags/passkeys',
             component: ComponentCreator('/tags/passkeys', 'cc2'),
+            exact: true
+          },
+          {
+            path: '/tags/pattern',
+            component: ComponentCreator('/tags/pattern', '5d1'),
             exact: true
           },
           {
@@ -3801,6 +3861,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/scp',
+            component: ComponentCreator('/tags/scp', 'd04'),
+            exact: true
+          },
+          {
             path: '/tags/sdlc',
             component: ComponentCreator('/tags/sdlc', '5bf'),
             exact: true
@@ -3878,6 +3943,11 @@ export default [
           {
             path: '/tags/session',
             component: ComponentCreator('/tags/session', '3c3'),
+            exact: true
+          },
+          {
+            path: '/tags/session-management',
+            component: ComponentCreator('/tags/session-management', '056'),
             exact: true
           },
           {
@@ -4371,6 +4441,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/throughput',
+            component: ComponentCreator('/tags/throughput', '3f5'),
+            exact: true
+          },
+          {
             path: '/tags/time-series',
             component: ComponentCreator('/tags/time-series', '8b1'),
             exact: true
@@ -4662,7 +4737,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '8a5'),
+            component: ComponentCreator('/', '4b1'),
             routes: [
               {
                 path: '/aws',
@@ -5271,6 +5346,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/aws/iam/iam-advanced',
+                component: ComponentCreator('/technical-knowledge/aws/iam/iam-advanced', 'd17'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/aws/lambda/',
                 component: ComponentCreator('/technical-knowledge/aws/lambda/', 'eb9'),
                 exact: true,
@@ -5357,6 +5438,12 @@ export default [
               {
                 path: '/technical-knowledge/aws/security/ssm-parameter-store',
                 component: ComponentCreator('/technical-knowledge/aws/security/ssm-parameter-store', '3b8'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/aws/serverless-patterns',
+                component: ComponentCreator('/technical-knowledge/aws/serverless-patterns', 'b01'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -5877,6 +5964,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/devops/devops-observability',
+                component: ComponentCreator('/technical-knowledge/devops/devops-observability', '20a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/devops/docker-commands',
                 component: ComponentCreator('/technical-knowledge/devops/docker-commands', '93b'),
                 exact: true,
@@ -5913,6 +6006,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/devops/gitops-argocd',
+                component: ComponentCreator('/technical-knowledge/devops/gitops-argocd', 'eae'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/devops/helm',
                 component: ComponentCreator('/technical-knowledge/devops/helm', 'c9c'),
                 exact: true,
@@ -5939,6 +6038,12 @@ export default [
               {
                 path: '/technical-knowledge/devops/kubernetes-networking',
                 component: ComponentCreator('/technical-knowledge/devops/kubernetes-networking', '984'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/devops/kubernetes-operators',
+                component: ComponentCreator('/technical-knowledge/devops/kubernetes-operators', '793'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -6638,6 +6743,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/kafka/advanced/kafka-throughput-optimization',
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-throughput-optimization', '5b3'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/kafka/advanced/monitoring-operations',
                 component: ComponentCreator('/technical-knowledge/kafka/advanced/monitoring-operations', 'da3'),
                 exact: true,
@@ -6956,6 +7067,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/redis/redis-distributed-lock',
+                component: ComponentCreator('/technical-knowledge/redis/redis-distributed-lock', '491'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/redis/redis-interview-questions',
                 component: ComponentCreator('/technical-knowledge/redis/redis-interview-questions', '921'),
                 exact: true,
@@ -6982,6 +7099,18 @@ export default [
               {
                 path: '/technical-knowledge/redis/redis-pubsub',
                 component: ComponentCreator('/technical-knowledge/redis/redis-pubsub', '98a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/redis/redis-rate-limiting',
+                component: ComponentCreator('/technical-knowledge/redis/redis-rate-limiting', 'b05'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/redis/redis-session-management',
+                component: ComponentCreator('/technical-knowledge/redis/redis-session-management', '87f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

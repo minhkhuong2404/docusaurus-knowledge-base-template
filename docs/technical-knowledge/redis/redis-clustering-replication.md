@@ -191,6 +191,43 @@ GET user:1
 GET user:2    # Two round-trips, but cluster-safe
 ```
 
+### Spring Boot with Cluster
+
+In production, enable topology refresh to handle slot migrations or node failures gracefully:
+
+```java
+@Configuration
+public class ClusterConfig {
+
+    @Bean
+    public RedisConnectionFactory redisConnectionFactory() {
+        RedisClusterConfiguration clusterConfig =
+            new RedisClusterConfiguration(Arrays.asList(
+                "redis-node1:6379", "redis-node2:6379", "redis-node3:6379"
+            ));
+        
+        clusterConfig.setMaxRedirects(3);
+
+        ClusterTopologyRefreshOptions topologyRefreshOptions =
+            ClusterTopologyRefreshOptions.builder()
+                .enablePeriodicRefresh(Duration.ofSeconds(60))
+                .enableAllAdaptiveRefreshTriggers()
+                .build();
+
+        ClusterClientOptions clientOptions = ClusterClientOptions.builder()
+            .topologyRefreshOptions(topologyRefreshOptions)
+            .build();
+
+        LettuceClientConfiguration clientConfig = LettuceClientConfiguration.builder()
+            .clientOptions(clientOptions)
+            .readFrom(ReadFrom.REPLICA_PREFERRED)  // Read scaling
+            .build();
+
+        return new LettuceConnectionFactory(clusterConfig, clientConfig);
+    }
+}
+```
+
 ---
 
 ## Sentinel vs Cluster
@@ -246,4 +283,28 @@ slowlog-max-len 128             # Keep last 128 slow commands
 
 SLOWLOG GET 10    # See last 10 slow commands
 SLOWLOG RESET
+```
+
+### Spring Boot Custom Health Check
+
+```java
+@Component
+public class RedisHealthIndicator extends AbstractHealthIndicator {
+
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
+
+    @Override
+    protected void doHealthCheck(Health.Builder builder) {
+        try {
+            redisTemplate.execute((RedisCallback<String>) conn -> {
+                conn.ping();
+                return "PONG";
+            });
+            builder.up().withDetail("status", "Reachable");
+        } catch (Exception e) {
+            builder.down(e).withDetail("error", e.getMessage());
+        }
+    }
+}
 ```

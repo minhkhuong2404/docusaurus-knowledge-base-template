@@ -109,6 +109,41 @@ public class EventPublisher {
 }
 ```
 
+### Pattern Subscription with `@EventListener`
+
+A cleaner Spring approach using `RedisMessageListenerContainer` + Spring events:
+
+```java
+@Service
+public class DynamicSubscriberService {
+
+    @Autowired
+    private RedisMessageListenerContainer container;
+
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
+
+    public void subscribe(String channel) {
+        container.addMessageListener(
+            (message, pattern) -> {
+                String body = new String(message.getBody());
+                eventPublisher.publishEvent(new RedisMessageEvent(channel, body));
+            },
+            new ChannelTopic(channel)
+        );
+    }
+}
+
+@Component
+public class MessageHandler {
+
+    @EventListener
+    public void handleRedisMessage(RedisMessageEvent event) {
+        System.out.println("Event on " + event.getChannel() + ": " + event.getBody());
+    }
+}
+```
+
 ---
 
 ## Real-World Use Cases
@@ -133,6 +168,37 @@ Service B (subscribed to cache:invalidate):
 → ensures all nodes' L1 caches are invalidated on write
 
 (Uses Pub/Sub for broadcast — doesn't need persistence)
+```
+
+```java
+// Publisher: when a product is updated
+@CachePut(value = "products", key = "#product.id")
+public Product updateProduct(Product product) {
+    Product saved = repository.save(product);
+    // Notify all instances to evict their local cache
+    redisTemplate.convertAndSend("cache-invalidation", "products:" + product.getId());
+    return saved;
+}
+
+// Subscriber: all app instances listen
+@Component
+public class CacheInvalidationListener implements MessageListener {
+
+    @Autowired
+    private CacheManager cacheManager;
+
+    @Override
+    public void onMessage(Message message, byte[] pattern) {
+        String key = new String(message.getBody());
+        String[] parts = key.split(":", 2);
+        if (parts.length == 2) {
+            Cache cache = cacheManager.getCache(parts[0]);
+            if (cache != null) {
+                cache.evict(parts[1]);
+            }
+        }
+    }
+}
 ```
 
 ---

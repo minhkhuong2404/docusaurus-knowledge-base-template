@@ -273,3 +273,56 @@ public class StreamConfig {
     }
 }
 ```
+
+### Consumer using `@StreamListener`
+
+```java
+@Component
+@Slf4j
+public class NotificationStreamListener {
+
+    @StreamListener(target = "user-events")
+    public void handleOrderEvent(
+            @Payload Map<String, String> payload,
+            @Header(KafkaHeaders.RECEIVED_MESSAGE_KEY) String key) {
+        log.info("Notification triggered for user: {}", payload.get("userId"));
+    }
+}
+```
+
+### Dead Letter Pattern for Failed Messages
+
+```java
+@Scheduled(fixedDelay = 30_000)
+public void recoverDeadMessages() {
+    // Find messages pending for > 60 seconds
+    PendingMessages pending = redisTemplate.opsForStream()
+        .pending("user-events", Consumer.from("payment-processors", "worker-1"),
+            Range.unbounded(), 100);
+
+    pending.forEach(message -> {
+        Duration pendingFor = Duration.between(
+            message.getLastDeliveryAt(), Instant.now());
+
+        if (pendingFor.toSeconds() > 60) {
+            if (message.getTotalDeliveryCount() > 3) {
+                // Send to dead letter stream
+                redisTemplate.opsForStream().add(
+                    StreamRecords.mapBacked(
+                        Map.of("originalId", message.getId().getValue())
+                    ).withStreamKey("dead-letter:user-events")
+                );
+                redisTemplate.opsForStream()
+                    .acknowledge("user-events", "payment-processors", message.getId());
+            } else {
+                // Re-claim and retry
+                redisTemplate.opsForStream().claim(
+                    "user-events", "payment-processors", "worker-1",
+                    Duration.ofSeconds(0), message.getId()
+                );
+            }
+        }
+    });
+}
+```
+

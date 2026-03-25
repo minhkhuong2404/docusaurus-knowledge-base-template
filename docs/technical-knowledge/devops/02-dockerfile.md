@@ -279,6 +279,24 @@ COPY src ./src                   # ← Changes every commit
 RUN mvn package -DskipTests      # ← Only re-runs when src changes
 ```
 
+### BuildKit Cache Mounts (Advanced)
+
+Modern Docker (using BuildKit) supports **cache mounts**, allowing package managers to keep their cache between builds *without* bloating the image layer.
+
+```dockerfile
+# Syntax directive specifies BuildKit versions
+# syntax=docker/dockerfile:1.4
+
+FROM maven:3.9-eclipse-temurin-21 AS builder
+WORKDIR /app
+
+# The --mount=type=cache persists the ~/.m2 cache directory across multiple `docker build` invocations
+COPY pom.xml .
+COPY src ./src
+RUN --mount=type=cache,target=/root/.m2 \
+    mvn clean package -DskipTests
+```
+
 ---
 
 ## .dockerignore
@@ -306,8 +324,12 @@ docker-compose*.yml
 ## Security Hardening Checklist
 
 ```dockerfile
-# ✅ 1. Use minimal base image
-FROM eclipse-temurin:21-jre-alpine  # NOT full JDK, NOT Debian
+# ✅ 1. Use Distroless or Alpine base images
+# Distroless images contain ONLY your application and its runtime dependencies.
+# They do NOT contain package managers, shells, or any other programs you would expect to find in a standard Linux distribution.
+FROM gcr.io/distroless/java21-debian12
+# No shell (/bin/sh) = massive attack surface reduction
+
 
 # ✅ 2. Non-root user
 RUN addgroup -S app && adduser -S app -G app

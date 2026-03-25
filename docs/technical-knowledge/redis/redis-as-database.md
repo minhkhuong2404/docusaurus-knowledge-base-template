@@ -212,6 +212,56 @@ if acquired >= 3:  # Majority
 
 ---
 
+## Spring Boot: Redis as Primary Store
+
+### Entity Mapping with Spring Data Redis
+
+```java
+@RedisHash(value = "products", timeToLive = 3600)
+public class Product {
+
+    @Id
+    private String id;
+
+    @Indexed  // creates secondary index for queries
+    private String category;
+
+    private String name;
+    private BigDecimal price;
+    private int stock;
+
+    // getters, setters
+}
+```
+
+```java
+public interface ProductRedisRepository extends CrudRepository<Product, String> {
+    List<Product> findByCategory(String category);
+}
+```
+
+```java
+@Service
+public class ProductService {
+
+    @Autowired
+    private ProductRedisRepository repository;
+
+    public Product save(Product product) {
+        if (product.getId() == null) {
+            product.setId(UUID.randomUUID().toString());
+        }
+        return repository.save(product);
+    }
+
+    public List<Product> findByCategory(String category) {
+        return repository.findByCategory(category);
+    }
+}
+```
+
+---
+
 ## Durability Guarantees by Configuration
 
 | Config | Max Data Loss | Throughput | Use Case |

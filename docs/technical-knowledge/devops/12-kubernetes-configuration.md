@@ -213,7 +213,9 @@ spec:
 
 ---
 
-## Node Affinity (Advanced Scheduling)
+## Advanced Scheduling (Affinity & Spread Constraints)
+
+### Node Affinity
 
 ```yaml
 spec:
@@ -238,6 +240,20 @@ spec:
               - key: topology.kubernetes.io/zone
                 operator: In
                 values: ["us-east-1a"]
+```
+
+### Pod Topology Spread Constraints
+Ensures High Availability by preventing all replicas from landing on the same node or in the same Availability Zone.
+
+```yaml
+spec:
+  topologySpreadConstraints:
+    - maxSkew: 1                           # Max difference in pod count between zones
+      topologyKey: topology.kubernetes.io/zone
+      whenUnsatisfiable: DoNotSchedule     # Strict: don't schedule if it violates skew
+      labelSelector:
+        matchLabels:
+          app: my-api
 ```
 
 ---
@@ -270,6 +286,55 @@ kubectl get pdb
 ```
 
 **Scenario:** You have 3 replicas and `minAvailable: 2`. During `kubectl drain node1`, K8s will not remove a Pod if it would leave fewer than 2 running.
+
+---
+
+## Production Secrets Management
+
+By default, Kubernetes `Secret` objects are heavily insecure — they are merely **base64 encoded** (not encrypted). Anyone with access to the YAML or etcd can decode them.
+
+### 1. Enable Encryption at Rest
+Configure the API server to encrypt secrets before saving them to etcd:
+
+```yaml
+# EncryptionConfiguration passed to kube-apiserver
+apiVersion: apiserver.config.k8s.io/v1
+kind: EncryptionConfiguration
+resources:
+  - resources:
+      - secrets
+    providers:
+      - kms:               # Use AWS KMS / GCP KMS broker
+          name: myKmsPlugin
+          endpoint: unix:///tmp/kms-provider.sock
+      - aescbc:            # Or local key (less secure)
+          keys:
+            - name: key1
+              secret: <base64-encoded-key>
+```
+
+### 2. External Secrets Operator (ESO)
+**The Senior Pattern:** Do NOT store secrets in Git or apply them via YAML. Use [External Secrets Operator](https://external-secrets.io/) to automatically sync secrets from AWS Secrets Manager or HashiCorp Vault into the cluster.
+
+```yaml
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: db-credentials
+  namespace: production
+spec:
+  refreshInterval: "1h"
+  secretStoreRef:
+    name: aws-secrets-manager
+    kind: ClusterSecretStore
+  target:
+    name: k8s-db-secret      # Name of the K8s Secret ESO will generate
+  data:
+    - secretKey: password    # Key in the K8s secret
+      remoteRef:
+        key: prod/db/creds   # Key in AWS Secrets Manager
+        property: password
+```
 
 ---
 

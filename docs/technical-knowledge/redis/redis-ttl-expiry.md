@@ -142,6 +142,113 @@ Uniform access patterns (all keys equally likely)?
 
 ---
 
+## Spring Data Redis: TTL Examples
+
+### Setting TTL with `ValueOperations`
+
+```java
+@Service
+public class SessionService {
+
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
+
+    private static final Duration SESSION_TTL = Duration.ofHours(1);
+
+    public void saveSession(String sessionId, Object data) {
+        ValueOperations<String, Object> ops = redisTemplate.opsForValue();
+        ops.set("session:" + sessionId, data, SESSION_TTL);
+    }
+
+    public Object getSession(String sessionId) {
+        return redisTemplate.opsForValue().get("session:" + sessionId);
+    }
+
+    public void extendSession(String sessionId) {
+        redisTemplate.expire("session:" + sessionId, SESSION_TTL);
+    }
+}
+```
+
+### Using `@Cacheable` with TTL via `RedisCacheConfiguration`
+
+```java
+@Configuration
+@EnableCaching
+public class CacheConfig {
+
+    @Bean
+    public RedisCacheManager cacheManager(RedisConnectionFactory factory) {
+        RedisCacheConfiguration defaultConfig = RedisCacheConfiguration
+            .defaultCacheConfig()
+            .entryTtl(Duration.ofMinutes(10))
+            .disableCachingNullValues()
+            .serializeValuesWith(
+                RedisSerializationContext.SerializationPair
+                    .fromSerializer(new GenericJackson2JsonRedisSerializer())
+            );
+
+        Map<String, RedisCacheConfiguration> cacheConfigs = new HashMap<>();
+        // Different TTLs per cache
+        cacheConfigs.put("products", defaultConfig.entryTtl(Duration.ofHours(1)));
+        cacheConfigs.put("sessions", defaultConfig.entryTtl(Duration.ofHours(24)));
+        cacheConfigs.put("rateLimits", defaultConfig.entryTtl(Duration.ofMinutes(1)));
+
+        return RedisCacheManager.builder(factory)
+            .cacheDefaults(defaultConfig)
+            .withInitialCacheConfigurations(cacheConfigs)
+            .build();
+    }
+}
+```
+
+---
+
+## Common TTL Patterns
+
+### Sliding Expiration
+Reset TTL each time a key is accessed (extends session on activity):
+
+```java
+public Object getWithSliding(String key, Duration ttl) {
+    Object value = redisTemplate.opsForValue().get(key);
+    if (value != null) {
+        redisTemplate.expire(key, ttl);  // refresh TTL
+    }
+    return value;
+}
+```
+
+### One-Time Access Token
+Delete the key immediately after reading:
+
+```java
+public String consumeOtp(String phone) {
+    String key = "otp:" + phone;
+    // GETDEL: atomic get + delete (Redis 6.2+)
+    return (String) redisTemplate.execute(
+        (RedisCallback<String>) conn ->
+            conn.stringCommands().getDel(key.getBytes())
+    );
+}
+```
+
+### Leaky Bucket / Rate Limit with TTL
+
+```java
+public boolean isAllowed(String userId, int maxRequests) {
+    String key = "rate:" + userId;
+    Long count = redisTemplate.opsForValue().increment(key);
+    if (count == 1) {
+        // First request — set window TTL
+        redisTemplate.expire(key, Duration.ofMinutes(1));
+    }
+    return count <= maxRequests;
+}
+```
+
+---
+
 ## TTL Antipatterns and Gotchas
 
 ### 1. TTL Reset on Write

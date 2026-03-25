@@ -5,13 +5,13 @@
       "plugin": "138e0e15"
     }
   },
-  "/-746": {
+  "/-0d2": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-dbf": {
+  "/-377": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -151,6 +151,10 @@
     "__comp": "df203c0f",
     "__props": "fcc7c18b"
   },
+  "/tags/argocd-7ff": {
+    "__comp": "df203c0f",
+    "__props": "7aad4a93"
+  },
   "/tags/async-db2": {
     "__comp": "df203c0f",
     "__props": "02105171"
@@ -266,6 +270,10 @@
   "/tags/basics-041": {
     "__comp": "df203c0f",
     "__props": "48d8117d"
+  },
+  "/tags/batching-b52": {
+    "__comp": "df203c0f",
+    "__props": "056b6e11"
   },
   "/tags/bcnf-044": {
     "__comp": "df203c0f",
@@ -647,6 +655,10 @@
     "__comp": "df203c0f",
     "__props": "829683db"
   },
+  "/tags/ci-cd-138": {
+    "__comp": "df203c0f",
+    "__props": "fed8a242"
+  },
   "/tags/cicd-b00": {
     "__comp": "df203c0f",
     "__props": "a4ad0599"
@@ -867,6 +879,10 @@
     "__comp": "df203c0f",
     "__props": "1f34e3dd"
   },
+  "/tags/controllers-c65": {
+    "__comp": "df203c0f",
+    "__props": "9ed38c53"
+  },
   "/tags/conventional-commits-39e": {
     "__comp": "df203c0f",
     "__props": "4ca9d798"
@@ -898,6 +914,10 @@
   "/tags/cqrs-c4e": {
     "__comp": "df203c0f",
     "__props": "f4d6ff7e"
+  },
+  "/tags/crd-fb4": {
+    "__comp": "df203c0f",
+    "__props": "78bcfc6f"
   },
   "/tags/creational-081": {
     "__comp": "df203c0f",
@@ -1279,6 +1299,10 @@
     "__comp": "df203c0f",
     "__props": "a6005a6c"
   },
+  "/tags/eventbridge-086": {
+    "__comp": "df203c0f",
+    "__props": "65548d81"
+  },
   "/tags/eventual-consistency-9c4": {
     "__comp": "df203c0f",
     "__props": "f9637d15"
@@ -1411,6 +1435,10 @@
     "__comp": "df203c0f",
     "__props": "d16f904c"
   },
+  "/tags/fluentd-6d7": {
+    "__comp": "df203c0f",
+    "__props": "01d14f17"
+  },
   "/tags/flyway-504": {
     "__comp": "df203c0f",
     "__props": "1eff3b4a"
@@ -1490,6 +1518,10 @@
   "/tags/git-flow-f75": {
     "__comp": "df203c0f",
     "__props": "ce2c7678"
+  },
+  "/tags/gitops-86f": {
+    "__comp": "df203c0f",
+    "__props": "2cd397fd"
   },
   "/tags/glossary-42e": {
     "__comp": "df203c0f",
@@ -2367,9 +2399,17 @@
     "__comp": "df203c0f",
     "__props": "97a6ab3e"
   },
+  "/tags/opentelemetry-316": {
+    "__comp": "df203c0f",
+    "__props": "d3c440d0"
+  },
   "/tags/operating-systems-8ee": {
     "__comp": "df203c0f",
     "__props": "7dcc51ff"
+  },
+  "/tags/operators-77b": {
+    "__comp": "df203c0f",
+    "__props": "7ded2ea3"
   },
   "/tags/optimistic-locking-d48": {
     "__comp": "df203c0f",
@@ -2515,9 +2555,17 @@
     "__comp": "df203c0f",
     "__props": "67f8925b"
   },
+  "/tags/partitions-9c1": {
+    "__comp": "df203c0f",
+    "__props": "d774288e"
+  },
   "/tags/passkeys-cc2": {
     "__comp": "df203c0f",
     "__props": "03d2a24d"
+  },
+  "/tags/pattern-5d1": {
+    "__comp": "df203c0f",
+    "__props": "a02b2a39"
   },
   "/tags/patterns-ba1": {
     "__comp": "df203c0f",
@@ -3043,6 +3091,10 @@
     "__comp": "df203c0f",
     "__props": "926e2b92"
   },
+  "/tags/scp-d04": {
+    "__comp": "df203c0f",
+    "__props": "8602e95f"
+  },
   "/tags/sdlc-5bf": {
     "__comp": "df203c0f",
     "__props": "8a6d9d6c"
@@ -3106,6 +3158,10 @@
   "/tags/session-3c3": {
     "__comp": "df203c0f",
     "__props": "8ded4feb"
+  },
+  "/tags/session-management-056": {
+    "__comp": "df203c0f",
+    "__props": "b68a4391"
   },
   "/tags/session-store-b5a": {
     "__comp": "df203c0f",
@@ -3499,6 +3555,10 @@
     "__comp": "df203c0f",
     "__props": "2445043b"
   },
+  "/tags/throughput-3f5": {
+    "__comp": "df203c0f",
+    "__props": "c5a6262f"
+  },
   "/tags/time-series-8b1": {
     "__comp": "df203c0f",
     "__props": "2cc7c3d9"
@@ -3731,7 +3791,7 @@
     "__comp": "df203c0f",
     "__props": "cdd99891"
   },
-  "/-8a5": {
+  "/-4b1": {
     "__comp": "a94703ab"
   },
   "/aws-102": {
@@ -4138,6 +4198,10 @@
     "__comp": "17896441",
     "content": "4eb80ea8"
   },
+  "/technical-knowledge/aws/iam/iam-advanced-d17": {
+    "__comp": "17896441",
+    "content": "275c2b8b"
+  },
   "/technical-knowledge/aws/lambda/-eb9": {
     "__comp": "17896441",
     "content": "afa07c8d"
@@ -4197,6 +4261,10 @@
   "/technical-knowledge/aws/security/ssm-parameter-store-3b8": {
     "__comp": "17896441",
     "content": "cdce4984"
+  },
+  "/technical-knowledge/aws/serverless-patterns-b01": {
+    "__comp": "17896441",
+    "content": "a7a9e546"
   },
   "/technical-knowledge/aws/step-functions/-2f4": {
     "__comp": "17896441",
@@ -4542,6 +4610,10 @@
     "__comp": "17896441",
     "content": "5ab7a520"
   },
+  "/technical-knowledge/devops/devops-observability-20a": {
+    "__comp": "17896441",
+    "content": "e9c5c9f2"
+  },
   "/technical-knowledge/devops/docker-commands-93b": {
     "__comp": "17896441",
     "content": "3b1181be"
@@ -4566,6 +4638,10 @@
     "__comp": "17896441",
     "content": "da18171d"
   },
+  "/technical-knowledge/devops/gitops-argocd-eae": {
+    "__comp": "17896441",
+    "content": "70449668"
+  },
   "/technical-knowledge/devops/helm-c9c": {
     "__comp": "17896441",
     "content": "2bda8bde"
@@ -4585,6 +4661,10 @@
   "/technical-knowledge/devops/kubernetes-networking-984": {
     "__comp": "17896441",
     "content": "6a4a3fd0"
+  },
+  "/technical-knowledge/devops/kubernetes-operators-793": {
+    "__comp": "17896441",
+    "content": "c4409ab2"
   },
   "/technical-knowledge/devops/kubernetes-pods-c02": {
     "__comp": "17896441",
@@ -5050,6 +5130,10 @@
     "__comp": "17896441",
     "content": "ce37e8db"
   },
+  "/technical-knowledge/kafka/advanced/kafka-throughput-optimization-5b3": {
+    "__comp": "17896441",
+    "content": "92651169"
+  },
   "/technical-knowledge/kafka/advanced/monitoring-operations-da3": {
     "__comp": "17896441",
     "content": "5cae2ae0"
@@ -5262,6 +5346,10 @@
     "__comp": "17896441",
     "content": "87d1668b"
   },
+  "/technical-knowledge/redis/redis-distributed-lock-491": {
+    "__comp": "17896441",
+    "content": "588595cf"
+  },
   "/technical-knowledge/redis/redis-interview-questions-921": {
     "__comp": "17896441",
     "content": "ecd8f11b"
@@ -5281,6 +5369,14 @@
   "/technical-knowledge/redis/redis-pubsub-98a": {
     "__comp": "17896441",
     "content": "9c77e95c"
+  },
+  "/technical-knowledge/redis/redis-rate-limiting-b05": {
+    "__comp": "17896441",
+    "content": "3d3827a7"
+  },
+  "/technical-knowledge/redis/redis-session-management-87f": {
+    "__comp": "17896441",
+    "content": "52499749"
   },
   "/technical-knowledge/redis/redis-streams-78c": {
     "__comp": "17896441",

@@ -307,6 +307,60 @@ latency-monitor-threshold 100    # Log events > 100ms
 latency-tracking yes
 ```
 
+### Avoid `KEYS` in Production
+
+Never use `KEYS` in production (it blocks the single thread). Use `SCAN`.
+
+```java
+// ❌ Bad — blocks Redis server
+Set<String> keys = redisTemplate.keys("product:*");
+
+// ✅ Good — use SCAN cursor
+ScanOptions options = ScanOptions.scanOptions()
+    .match("product:*")
+    .count(100)
+    .build();
+
+Cursor<byte[]> cursor = redisTemplate.executeWithStickyConnection(
+    conn -> conn.keyCommands().scan(options)
+);
+
+List<String> keys = new ArrayList<>();
+while (cursor.hasNext()) {
+    keys.add(new String(cursor.next()));
+}
+cursor.close();
+```
+
+### Serialization and Compression
+
+Avoid default JDK serialization. It is bloated and vulnerable to deserialization attacks.
+
+```java
+// ✅ JSON Serialization
+template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+
+// ✅ String template to avoid metadata overhead
+// Use StringRedisTemplate instead of RedisTemplate<String, String>
+```
+
+For large JSON payloads, use application-level compression to save RAM and network bandwidth:
+
+```java
+public void setCompressed(String key, Object value, Duration ttl) throws IOException {
+    byte[] json = new ObjectMapper().writeValueAsBytes(value);
+    
+    // GZIP compress
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    try (GZIPOutputStream gzip = new GZIPOutputStream(bos)) {
+        gzip.write(json);
+    }
+    byte[] compressed = bos.toByteArray();
+    
+    redisTemplate.opsForValue().set(key, compressed, ttl);
+}
+```
+
 ### Connection Pooling
 
 ```java

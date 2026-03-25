@@ -87,6 +87,30 @@ Hooks:
 
 ---
 
+## appspec.yaml — ECS (Blue/Green)
+
+CodeDeploy is the standard tool for safely performing Blue/Green deployments for ECS Fargate containers. CodeDeploy shifts traffic on the Application Load Balancer from the Blue target group to the Green target group.
+
+```yaml
+version: 0.0
+Resources:
+  - TargetService:
+      Type: AWS::ECS::Service
+      Properties:
+        TaskDefinition: "arn:aws:ecs:region:account-id:task-definition/my-task:2"
+        LoadBalancerInfo:
+          ContainerName: "api-container"
+          ContainerPort: 8080
+Hooks:
+  - BeforeInstall: "LambdaFunctionToValidateDatabases"
+  - AfterInstall: "LambdaFunctionToRunIntegrationTests"
+  - AfterAllowTestTraffic: "LambdaFunctionToVerifyGreenTargetGroup"
+  - BeforeAllowTraffic: "LambdaFunctionToCheckHealth"
+  - AfterAllowTraffic: "LambdaFunctionToVerifyProductionShifting"
+```
+
+---
+
 ## Deployment Group
 
 | Config | Description |

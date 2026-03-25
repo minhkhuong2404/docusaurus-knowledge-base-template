@@ -35,6 +35,22 @@ MSET k1 v1 k2 v2 k3 v3               # Set multiple (not atomic across keys)
 MGET k1 k2 k3                         # Get multiple (single round-trip)
 ```
 
+### Java (Spring Data Redis)
+
+```java
+@Autowired
+private StringRedisTemplate stringRedisTemplate;
+
+public void stringExamples() {
+    ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();
+    ops.set("user:1:name", "Alice");
+    ops.set("session:abc", "data", Duration.ofHours(1));
+
+    String name = ops.get("user:1:name");
+    Long views = ops.increment("page:views");
+}
+```
+
 ### Internal Encoding
 
 | Value | Encoding | Memory |
@@ -69,6 +85,22 @@ HEXISTS user:1 name                     # Check field existence
 HSCAN user:1 0 MATCH "*" COUNT 100
 ```
 
+### Java (Spring Data Redis)
+
+```java
+public void hashExamples() {
+    HashOperations<String, String, String> hashOps = redisTemplate.opsForHash();
+
+    Map<String, String> user = new HashMap<>();
+    user.put("name", "Alice");
+    user.put("age", "30");
+    hashOps.putAll("user:1", user);
+
+    String name = hashOps.get("user:1", "name");
+    Map<String, String> allFields = hashOps.entries("user:1");
+}
+```
+
 ### Hash vs String Serialization Trade-offs
 
 | Approach | Pros | Cons |
@@ -100,6 +132,20 @@ LINDEX queue 0                         # Get element by index (O(n))
 # Blocking operations — essential for queue patterns
 BLPOP queue 30                          # Block up to 30 seconds waiting for an element
 BRPOPLPUSH queue dead-letter 30        # Blocking reliable queue pattern
+```
+
+### Java (Spring Data Redis)
+
+```java
+public void listExamples() {
+    ListOperations<String, String> listOps = redisTemplate.opsForList();
+
+    listOps.rightPush("queue:jobs", "job1");
+    listOps.rightPush("queue:jobs", "job2");
+
+    String job = listOps.leftPop("queue:jobs");
+    List<String> all = listOps.range("queue:jobs", 0, -1);
+}
 ```
 
 ### List as Queue vs Stack
@@ -150,6 +196,18 @@ SDIFF set1 set2                         # Difference (in set1 but not set2)
 SINTERSTORE dest set1 set2              # Store intersection result
 ```
 
+### Java (Spring Data Redis)
+
+```java
+public void setExamples() {
+    SetOperations<String, String> setOps = redisTemplate.opsForSet();
+
+    setOps.add("tags:post:1", "redis", "java", "backend");
+    Boolean isMember = setOps.isMember("tags:post:1", "redis");
+    Set<String> members = setOps.members("tags:post:1");
+}
+```
+
 ### Use Cases
 
 | Use Case | Pattern |
@@ -184,6 +242,20 @@ ZRANGEBYSCORE leaderboard -inf +inf WITHSCORES LIMIT 0 10  # Paginated
 ZREM leaderboard "charlie"
 ZCARD leaderboard                      # Number of members
 ZCOUNT leaderboard 1000 2000          # Count members in score range
+```
+
+### Java (Spring Data Redis)
+
+```java
+public void sortedSetExamples() {
+    ZSetOperations<String, String> zsetOps = redisTemplate.opsForZSet();
+
+    zsetOps.add("leaderboard", "alice", 1500);
+    zsetOps.add("leaderboard", "bob", 2300);
+
+    Set<ZSetOperations.TypedTuple<String>> top3 =
+        zsetOps.reverseRangeWithScores("leaderboard", 0, 2);
+}
 ```
 
 ### Advanced Sorted Set Patterns

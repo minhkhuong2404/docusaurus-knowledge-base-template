@@ -183,6 +183,17 @@ Environment variables are **not encrypted at rest by default** — enable KMS en
 
 ---
 
+## Lambda Function URLs
+
+A **Function URL** is a dedicated HTTP(S) endpoint for your Lambda function.
+
+- Use **API Gateway** when you need: WAF, throttling, custom domains, usage plans, request validation, caching, or Cognito auth.
+- Use **Function URLs** when you need: A simple, free HTTPS endpoint for a webhook, service-to-service communication, or a simple single-function backend.
+- Supports **CORS** configuration natively.
+- Auth Type: `NONE` (public) or `AWS_IAM` (must sign request with SigV4).
+
+---
+
 ## VPC Integration
 
 When Lambda is in a VPC:
@@ -193,6 +204,31 @@ When Lambda is in a VPC:
 ```
 Lambda (in VPC) → Private Subnet → NAT Gateway → Internet Gateway → Internet
 Lambda (in VPC) → VPC Endpoint → DynamoDB / S3 (no internet needed)
+```
+
+---
+
+## AWS Lambda Powertools (Java)
+
+For **Senior/Production-grade** Serverless applications, never reinvent the wheel for observability. Use **[AWS Lambda Powertools](https://awslabs.github.io/aws-lambda-powertools-java/)**.
+
+It provides aspect-oriented decorators (annotations) to handle the three pillars of observability automatically without boilerplate:
+
+```java
+public class App implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
+
+    // 1. Tracing: Auto-captures cold starts, auto-instruments AWS SDKs, and creates custom X-Ray subsegments
+    @Tracing
+    // 2. Metrics: Auto-publishes EMF (Embedded Metric Format) to CloudWatch asynchronously
+    @Metrics(captureColdStart = true)
+    // 3. Logging: Auto-injects Correlation IDs (e.g., API Gateway Request ID) into every log line
+    @Logging(logEvent = true)
+    public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent event, Context context) {
+        
+        MetricsUtils.metricsLogger().putMetric("SuccessfulCheckout", 1, Unit.COUNT);
+        return new APIGatewayProxyResponseEvent().withStatusCode(200);
+    }
+}
 ```
 
 ---

@@ -434,7 +434,8 @@ const sidebars: SidebarsConfig = {
 					items: [
 						'technical-knowledge/kafka/advanced/exactly-once',
 						'technical-knowledge/kafka/advanced/order-messages',
-						'technical-knowledge/kafka/advanced/monitoring-operations'
+						'technical-knowledge/kafka/advanced/monitoring-operations',
+						'technical-knowledge/kafka/advanced/kafka-throughput-optimization'
 					]
 				},
 				{
@@ -542,13 +543,16 @@ const sidebars: SidebarsConfig = {
 				},
 				{
 					type: 'category',
-					label: 'Архи Architecture & Patterns',
+					label: '🏛️ Architecture & Patterns',
 					collapsed: true,
 					items: [
 						'technical-knowledge/redis/redis-distributed-cache',
 						'technical-knowledge/redis/redis-as-database',
 						'technical-knowledge/redis/redis-clustering-replication',
 						'technical-knowledge/redis/redis-performance-patterns',
+						'technical-knowledge/redis/redis-distributed-lock',
+						'technical-knowledge/redis/redis-rate-limiting',
+						'technical-knowledge/redis/redis-session-management',
 					]
 				},
 				{
@@ -716,6 +720,16 @@ const sidebars: SidebarsConfig = {
 				},
 				{
 					type: 'category',
+					label: '🏗️ Advanced Architecture',
+					collapsed: true,
+					items: [
+						'technical-knowledge/devops/kubernetes-operators',
+						'technical-knowledge/devops/gitops-argocd',
+						'technical-knowledge/devops/devops-observability',
+					],
+				},
+				{
+					type: 'category',
 					label: '🎯 Interview Prep',
 					collapsed: true,
 					items: [
@@ -736,6 +750,7 @@ const sidebars: SidebarsConfig = {
 					items: [
 						'technical-knowledge/aws/iam/index',
 						'technical-knowledge/aws/iam/cognito',
+						'technical-knowledge/aws/iam/iam-advanced',
 					],
 				},
 				{
@@ -748,6 +763,7 @@ const sidebars: SidebarsConfig = {
 						'technical-knowledge/aws/api-gateway/index',
 						'technical-knowledge/aws/appsync',
 						'technical-knowledge/aws/beanstalk/index',
+						'technical-knowledge/aws/serverless-patterns',
 					],
 				},
 				{
@@ -1185,7 +1201,7 @@ const sidebars: SidebarsConfig = {
 				},
 				{
 					type: 'category',
-					label: '💼 GenZ Career',
+					label: '💼 General Java/Spring Boot Interviews',
 					collapsed: true,
 					items: [
 						'technical-knowledge/interview-questions/genz-career/java-collections-interview-questions',

@@ -491,6 +491,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/aws/iam/iam-advanced",
+              "path": "/technical-knowledge/aws/iam/iam-advanced",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/aws/iam/index",
               "path": "/technical-knowledge/aws/iam/",
               "sidebar": "tutorialSidebar"
@@ -573,6 +578,11 @@
             {
               "id": "technical-knowledge/aws/security/ssm-parameter-store",
               "path": "/technical-knowledge/aws/security/ssm-parameter-store",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/serverless-patterns",
+              "path": "/technical-knowledge/aws/serverless-patterns",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -1016,6 +1026,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/devops/devops-observability",
+              "path": "/technical-knowledge/devops/devops-observability",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/devops/docker-commands",
               "path": "/technical-knowledge/devops/docker-commands",
               "sidebar": "tutorialSidebar"
@@ -1046,6 +1061,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/devops/gitops-argocd",
+              "path": "/technical-knowledge/devops/gitops-argocd",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/devops/helm",
               "path": "/technical-knowledge/devops/helm",
               "sidebar": "tutorialSidebar"
@@ -1068,6 +1088,11 @@
             {
               "id": "technical-knowledge/devops/kubernetes-networking",
               "path": "/technical-knowledge/devops/kubernetes-networking",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/devops/kubernetes-operators",
+              "path": "/technical-knowledge/devops/kubernetes-operators",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -1650,6 +1675,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/kafka/advanced/kafka-throughput-optimization",
+              "path": "/technical-knowledge/kafka/advanced/kafka-throughput-optimization",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/kafka/advanced/monitoring-operations",
               "path": "/technical-knowledge/kafka/advanced/monitoring-operations",
               "sidebar": "tutorialSidebar"
@@ -1915,6 +1945,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/redis/redis-distributed-lock",
+              "path": "/technical-knowledge/redis/redis-distributed-lock",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/redis/redis-interview-questions",
               "path": "/technical-knowledge/redis/redis-interview-questions",
               "sidebar": "tutorialSidebar"
@@ -1937,6 +1972,16 @@
             {
               "id": "technical-knowledge/redis/redis-pubsub",
               "path": "/technical-knowledge/redis/redis-pubsub",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/redis/redis-rate-limiting",
+              "path": "/technical-knowledge/redis/redis-rate-limiting",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/redis/redis-session-management",
+              "path": "/technical-knowledge/redis/redis-session-management",
               "sidebar": "tutorialSidebar"
             },
             {
