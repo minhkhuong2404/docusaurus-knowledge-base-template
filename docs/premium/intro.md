@@ -5,6 +5,10 @@ slug: /premium/intro
 hide_table_of_contents: true
 ---
 
+import PremiumWall from '@site/src/components/PremiumWall';
+
+<PremiumWall>
+
 # Welcome to Premium Content
 
 After your account is unlocked, you can access the premium interview collection under:
