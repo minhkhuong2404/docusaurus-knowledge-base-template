@@ -407,8 +407,7 @@
             },
             {
               "id": "premium/intro",
-              "path": "/premium/intro",
-              "sidebar": "tutorialSidebar"
+              "path": "/premium/intro"
             },
             {
               "id": "technical-knowledge/aws/api-gateway/index",

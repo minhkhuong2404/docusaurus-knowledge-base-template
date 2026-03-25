@@ -6,13 +6,6 @@ const sidebars: SidebarsConfig = {
 		'intro',
 		{
 			type: 'category',
-			label: '💎 Premium Access',
-			items: [
-				'premium/intro',
-			],
-		},
-		{
-			type: 'category',
 			label: '☕ Java',
 			items: [
 				'technical-knowledge/java/java-overview',

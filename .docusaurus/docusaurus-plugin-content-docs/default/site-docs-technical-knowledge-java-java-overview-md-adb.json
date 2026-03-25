@@ -34,8 +34,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "💎 Premium Architecture",
-    "permalink": "/premium/intro"
+    "title": "Welcome",
+    "permalink": "/"
   },
   "next": {
     "title": "Java Fundamentals: Core Language Concepts",

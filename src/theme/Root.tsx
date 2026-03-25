@@ -1,24 +1,44 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 
 export default function Root({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    // This executes purely on the client side every time Docusaurus initializes
-    if (typeof window !== 'undefined') {
-      fetch('/api/me')
-        .then(res => res.json())
-        .then(data => {
-          // If the Cloudflare Worker confirms a valid KV session:
-          if (data.loggedIn) {
-            // Apply a global HTML class that CSS uses to instantly change the Navbar button!
-            document.documentElement.classList.add('user-logged-in');
-          } else {
-            document.documentElement.classList.remove('user-logged-in');
-          }
-        })
-        .catch(() => {
-          document.documentElement.classList.remove('user-logged-in');
-        });
+    if (typeof window === "undefined") {
+      return;
     }
+
+    let isChecking = false;
+
+    const syncPremiumSession = async () => {
+      // Avoid overlapping requests when users click rapidly.
+      if (isChecking) {
+        return;
+      }
+
+      isChecking = true;
+      try {
+        const response = await fetch("/api/me");
+        const data = await response.json();
+        if (data.loggedIn) {
+          document.documentElement.classList.add("user-logged-in");
+        } else {
+          document.documentElement.classList.remove("user-logged-in");
+        }
+      } catch {
+        document.documentElement.classList.remove("user-logged-in");
+      } finally {
+        isChecking = false;
+      }
+    };
+
+    // Initial sync when the app mounts.
+    syncPremiumSession();
+
+    // Re-check premium status every time the user clicks on the page.
+    document.addEventListener("click", syncPremiumSession, true);
+
+    return () => {
+      document.removeEventListener("click", syncPremiumSession, true);
+    };
   }, []);
 
   return <>{children}</>;
