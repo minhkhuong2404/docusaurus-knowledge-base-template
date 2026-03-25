@@ -604,7 +604,7 @@ const sidebars: SidebarsConfig = {
 		},
 		{
 			type: 'category',
-			label: 'Git & Version Control',
+			label: '🌿 Git & Version Control',
 			items: [
 				{ type: 'doc', id: 'technical-knowledge/git/intro', label: '🏠 Introduction' },
 				{
