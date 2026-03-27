@@ -65,8 +65,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Interview Questions",
-    "permalink": "/technical-knowledge/system-design/common-interview-questions"
+    "title": "Intervals",
+    "permalink": "/technical-knowledge/coding-interview-prep/intervals/"
   },
   "next": {
     "title": "AuthN & AuthZ",

@@ -12,13 +12,13 @@
       "plugin": "138e0e15"
     }
   },
-  "/-bbe": {
+  "/-e2e": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-569": {
+  "/-0dc": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -741,6 +741,10 @@
   "/tags/codepipeline-83c": {
     "__comp": "df203c0f",
     "__props": "056ea98f"
+  },
+  "/tags/coding-interview-10d": {
+    "__comp": "df203c0f",
+    "__props": "cc7074ea"
   },
   "/tags/coforge-6e1": {
     "__comp": "df203c0f",
@@ -3798,7 +3802,7 @@
     "__comp": "df203c0f",
     "__props": "cdd99891"
   },
-  "/-715": {
+  "/-86e": {
     "__comp": "a94703ab"
   },
   "/aws-102": {
@@ -4548,6 +4552,102 @@
   "/technical-knowledge/banking/testing_banking-2f5": {
     "__comp": "17896441",
     "content": "36f4d598"
+  },
+  "/technical-knowledge/coding-interview-prep/array/-bf8": {
+    "__comp": "17896441",
+    "content": "df0d7937"
+  },
+  "/technical-knowledge/coding-interview-prep/backtracking/-9a0": {
+    "__comp": "17896441",
+    "content": "3cc9e0ed"
+  },
+  "/technical-knowledge/coding-interview-prep/bfs/-128": {
+    "__comp": "17896441",
+    "content": "3e4ef2f7"
+  },
+  "/technical-knowledge/coding-interview-prep/binary-search/-e27": {
+    "__comp": "17896441",
+    "content": "f88fd4cd"
+  },
+  "/technical-knowledge/coding-interview-prep/bit-manipulation/-ebc": {
+    "__comp": "17896441",
+    "content": "aa575ab7"
+  },
+  "/technical-knowledge/coding-interview-prep/dfs/-4a6": {
+    "__comp": "17896441",
+    "content": "5106a157"
+  },
+  "/technical-knowledge/coding-interview-prep/dynamic-programming/-c58": {
+    "__comp": "17896441",
+    "content": "3cb71e0f"
+  },
+  "/technical-knowledge/coding-interview-prep/graph/-3d0": {
+    "__comp": "17896441",
+    "content": "e9884e7b"
+  },
+  "/technical-knowledge/coding-interview-prep/greedy/-5c8": {
+    "__comp": "17896441",
+    "content": "b79a7a53"
+  },
+  "/technical-knowledge/coding-interview-prep/heap/-17d": {
+    "__comp": "17896441",
+    "content": "3c5fc3e0"
+  },
+  "/technical-knowledge/coding-interview-prep/intervals/-115": {
+    "__comp": "17896441",
+    "content": "401e468a"
+  },
+  "/technical-knowledge/coding-interview-prep/intro-38c": {
+    "__comp": "17896441",
+    "content": "6687ac23"
+  },
+  "/technical-knowledge/coding-interview-prep/intro/-cba": {
+    "__comp": "17896441",
+    "content": "e49d3f90"
+  },
+  "/technical-knowledge/coding-interview-prep/linked-list/-aa1": {
+    "__comp": "17896441",
+    "content": "ae741640"
+  },
+  "/technical-knowledge/coding-interview-prep/matrices/-4fc": {
+    "__comp": "17896441",
+    "content": "2c6965b7"
+  },
+  "/technical-knowledge/coding-interview-prep/monotonic-stack/-658": {
+    "__comp": "17896441",
+    "content": "e8c494c6"
+  },
+  "/technical-knowledge/coding-interview-prep/prefix-sum/-4fe": {
+    "__comp": "17896441",
+    "content": "400119be"
+  },
+  "/technical-knowledge/coding-interview-prep/sliding-window/-d90": {
+    "__comp": "17896441",
+    "content": "bd6f9287"
+  },
+  "/technical-knowledge/coding-interview-prep/sorting/-499": {
+    "__comp": "17896441",
+    "content": "81060f52"
+  },
+  "/technical-knowledge/coding-interview-prep/stack/-11a": {
+    "__comp": "17896441",
+    "content": "3150a891"
+  },
+  "/technical-knowledge/coding-interview-prep/tree/-3c0": {
+    "__comp": "17896441",
+    "content": "0db457de"
+  },
+  "/technical-knowledge/coding-interview-prep/trie/-a22": {
+    "__comp": "17896441",
+    "content": "80237457"
+  },
+  "/technical-knowledge/coding-interview-prep/two-pointers/-a98": {
+    "__comp": "17896441",
+    "content": "c3112b2b"
+  },
+  "/technical-knowledge/coding-interview-prep/union-find/-32a": {
+    "__comp": "17896441",
+    "content": "46793316"
   },
   "/technical-knowledge/database/-103": {
     "__comp": "17896441",

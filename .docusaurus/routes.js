@@ -14,11 +14,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'bbe'),
+    component: ComponentCreator('/', 'e2e'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '569'),
+        component: ComponentCreator('/', '0dc'),
         routes: [
           {
             path: '/tags',
@@ -918,6 +918,11 @@ export default [
           {
             path: '/tags/codepipeline',
             component: ComponentCreator('/tags/codepipeline', '83c'),
+            exact: true
+          },
+          {
+            path: '/tags/coding-interview',
+            component: ComponentCreator('/tags/coding-interview', '10d'),
             exact: true
           },
           {
@@ -4742,7 +4747,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '715'),
+            component: ComponentCreator('/', '86e'),
             routes: [
               {
                 path: '/aws',
@@ -5862,6 +5867,149 @@ export default [
               {
                 path: '/technical-knowledge/banking/testing_banking',
                 component: ComponentCreator('/technical-knowledge/banking/testing_banking', '2f5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/coding-interview-prep/array/',
+                component: ComponentCreator('/technical-knowledge/coding-interview-prep/array/', 'bf8'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/coding-interview-prep/backtracking/',
+                component: ComponentCreator('/technical-knowledge/coding-interview-prep/backtracking/', '9a0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/coding-interview-prep/bfs/',
+                component: ComponentCreator('/technical-knowledge/coding-interview-prep/bfs/', '128'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/coding-interview-prep/binary-search/',
+                component: ComponentCreator('/technical-knowledge/coding-interview-prep/binary-search/', 'e27'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/coding-interview-prep/bit-manipulation/',
+                component: ComponentCreator('/technical-knowledge/coding-interview-prep/bit-manipulation/', 'ebc'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/coding-interview-prep/dfs/',
+                component: ComponentCreator('/technical-knowledge/coding-interview-prep/dfs/', '4a6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/coding-interview-prep/dynamic-programming/',
+                component: ComponentCreator('/technical-knowledge/coding-interview-prep/dynamic-programming/', 'c58'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/coding-interview-prep/graph/',
+                component: ComponentCreator('/technical-knowledge/coding-interview-prep/graph/', '3d0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/coding-interview-prep/greedy/',
+                component: ComponentCreator('/technical-knowledge/coding-interview-prep/greedy/', '5c8'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/coding-interview-prep/heap/',
+                component: ComponentCreator('/technical-knowledge/coding-interview-prep/heap/', '17d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/coding-interview-prep/intervals/',
+                component: ComponentCreator('/technical-knowledge/coding-interview-prep/intervals/', '115'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/coding-interview-prep/intro',
+                component: ComponentCreator('/technical-knowledge/coding-interview-prep/intro', '38c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/coding-interview-prep/intro/',
+                component: ComponentCreator('/technical-knowledge/coding-interview-prep/intro/', 'cba'),
+                exact: true
+              },
+              {
+                path: '/technical-knowledge/coding-interview-prep/linked-list/',
+                component: ComponentCreator('/technical-knowledge/coding-interview-prep/linked-list/', 'aa1'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/coding-interview-prep/matrices/',
+                component: ComponentCreator('/technical-knowledge/coding-interview-prep/matrices/', '4fc'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/coding-interview-prep/monotonic-stack/',
+                component: ComponentCreator('/technical-knowledge/coding-interview-prep/monotonic-stack/', '658'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/coding-interview-prep/prefix-sum/',
+                component: ComponentCreator('/technical-knowledge/coding-interview-prep/prefix-sum/', '4fe'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/coding-interview-prep/sliding-window/',
+                component: ComponentCreator('/technical-knowledge/coding-interview-prep/sliding-window/', 'd90'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/coding-interview-prep/sorting/',
+                component: ComponentCreator('/technical-knowledge/coding-interview-prep/sorting/', '499'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/coding-interview-prep/stack/',
+                component: ComponentCreator('/technical-knowledge/coding-interview-prep/stack/', '11a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/coding-interview-prep/tree/',
+                component: ComponentCreator('/technical-knowledge/coding-interview-prep/tree/', '3c0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/coding-interview-prep/trie/',
+                component: ComponentCreator('/technical-knowledge/coding-interview-prep/trie/', 'a22'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/coding-interview-prep/two-pointers/',
+                component: ComponentCreator('/technical-knowledge/coding-interview-prep/two-pointers/', 'a98'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/coding-interview-prep/union-find/',
+                component: ComponentCreator('/technical-knowledge/coding-interview-prep/union-find/', '32a'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

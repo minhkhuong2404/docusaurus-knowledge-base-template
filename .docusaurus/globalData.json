@@ -935,6 +935,125 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/coding-interview-prep/array/array",
+              "path": "/technical-knowledge/coding-interview-prep/array/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/coding-interview-prep/backtracking/backtracking",
+              "path": "/technical-knowledge/coding-interview-prep/backtracking/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/coding-interview-prep/bfs/bfs",
+              "path": "/technical-knowledge/coding-interview-prep/bfs/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/coding-interview-prep/binary-search/binary-search",
+              "path": "/technical-knowledge/coding-interview-prep/binary-search/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/coding-interview-prep/bit-manipulation/bit-manipulation",
+              "path": "/technical-knowledge/coding-interview-prep/bit-manipulation/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/coding-interview-prep/dfs/dfs",
+              "path": "/technical-knowledge/coding-interview-prep/dfs/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/coding-interview-prep/dynamic-programming/dynamic-programming",
+              "path": "/technical-knowledge/coding-interview-prep/dynamic-programming/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/coding-interview-prep/graph/graph",
+              "path": "/technical-knowledge/coding-interview-prep/graph/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/coding-interview-prep/greedy/greedy",
+              "path": "/technical-knowledge/coding-interview-prep/greedy/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/coding-interview-prep/heap/heap",
+              "path": "/technical-knowledge/coding-interview-prep/heap/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/coding-interview-prep/intervals/intervals",
+              "path": "/technical-knowledge/coding-interview-prep/intervals/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/coding-interview-prep/intro",
+              "path": "/technical-knowledge/coding-interview-prep/intro",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/coding-interview-prep/intro/intro",
+              "path": "/technical-knowledge/coding-interview-prep/intro/"
+            },
+            {
+              "id": "technical-knowledge/coding-interview-prep/linked-list/linked-list",
+              "path": "/technical-knowledge/coding-interview-prep/linked-list/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/coding-interview-prep/matrices/matrices",
+              "path": "/technical-knowledge/coding-interview-prep/matrices/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/coding-interview-prep/monotonic-stack/monotonic-stack",
+              "path": "/technical-knowledge/coding-interview-prep/monotonic-stack/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/coding-interview-prep/prefix-sum/prefix-sum",
+              "path": "/technical-knowledge/coding-interview-prep/prefix-sum/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/coding-interview-prep/sliding-window/sliding-window",
+              "path": "/technical-knowledge/coding-interview-prep/sliding-window/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/coding-interview-prep/sorting/sorting",
+              "path": "/technical-knowledge/coding-interview-prep/sorting/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/coding-interview-prep/stack/stack",
+              "path": "/technical-knowledge/coding-interview-prep/stack/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/coding-interview-prep/tree/tree",
+              "path": "/technical-knowledge/coding-interview-prep/tree/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/coding-interview-prep/trie/trie",
+              "path": "/technical-knowledge/coding-interview-prep/trie/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/coding-interview-prep/two-pointers/two-pointers",
+              "path": "/technical-knowledge/coding-interview-prep/two-pointers/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/coding-interview-prep/union-find/union-find",
+              "path": "/technical-knowledge/coding-interview-prep/union-find/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/database/advanced-sql",
               "path": "/technical-knowledge/database/advanced-sql",
               "sidebar": "tutorialSidebar"

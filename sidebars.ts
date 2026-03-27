@@ -258,6 +258,67 @@ const sidebars: SidebarsConfig = {
 		},
 		{
 			type: 'category',
+			label: '🔧 Coding Interview Prep',
+			items: [
+				{
+					type: 'doc',
+					id: 'technical-knowledge/coding-interview-prep/intro',
+					label: '🚀 Getting Started',
+				},
+				{
+					type: 'category',
+					label: '📦 Fundamentals',
+					collapsed: false,
+					items: [
+						'technical-knowledge/coding-interview-prep/array/array',
+						'technical-knowledge/coding-interview-prep/linked-list/linked-list',
+						'technical-knowledge/coding-interview-prep/stack/stack',
+						'technical-knowledge/coding-interview-prep/sorting/sorting',
+					],
+				},
+				{
+					type: 'category',
+					label: '🎯 Core Patterns',
+					collapsed: false,
+					items: [
+						'technical-knowledge/coding-interview-prep/two-pointers/two-pointers',
+						'technical-knowledge/coding-interview-prep/sliding-window/sliding-window',
+						'technical-knowledge/coding-interview-prep/prefix-sum/prefix-sum',
+						'technical-knowledge/coding-interview-prep/binary-search/binary-search',
+						'technical-knowledge/coding-interview-prep/matrices/matrices',
+					],
+				},
+				{
+					type: 'category',
+					label: '🌲 Trees & Graphs',
+					collapsed: false,
+					items: [
+						'technical-knowledge/coding-interview-prep/tree/tree',
+						'technical-knowledge/coding-interview-prep/bfs/bfs',
+						'technical-knowledge/coding-interview-prep/dfs/dfs',
+						'technical-knowledge/coding-interview-prep/graph/graph',
+						'technical-knowledge/coding-interview-prep/union-find/union-find',
+						'technical-knowledge/coding-interview-prep/trie/trie',
+					],
+				},
+				{
+					type: 'category',
+					label: '⚡ Advanced Patterns',
+					collapsed: false,
+					items: [
+						'technical-knowledge/coding-interview-prep/heap/heap',
+						'technical-knowledge/coding-interview-prep/backtracking/backtracking',
+						'technical-knowledge/coding-interview-prep/dynamic-programming/dynamic-programming',
+						'technical-knowledge/coding-interview-prep/greedy/greedy',
+						'technical-knowledge/coding-interview-prep/bit-manipulation/bit-manipulation',
+						'technical-knowledge/coding-interview-prep/monotonic-stack/monotonic-stack',
+						'technical-knowledge/coding-interview-prep/intervals/intervals',
+					],
+				},
+			],
+		},
+		{
+			type: 'category',
 			label: '🔐 Security',
 			items: [
 				'technical-knowledge/security/security-intro',

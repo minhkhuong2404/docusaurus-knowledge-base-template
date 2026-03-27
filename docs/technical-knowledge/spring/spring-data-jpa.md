@@ -408,6 +408,317 @@ public class OrderService {
 
 ---
 
+## Transactions
+
+The `@Transactional` annotation ensures multiple database operations are treated as a single atomic unit:
+
+```java
+@Transactional
+public void placeOrder() {
+    orderRepository.save(order);
+    inventoryService.decrementStock();
+}
+````
+
+👉 All operations:
+
+* Run in a **single transaction**
+* Either **ALL succeed or ALL rollback**
+
+---
+
+# 🔥 Advanced: Transaction Semantics (Senior-Level)
+
+## 1. Default Rollback Rules (CRITICAL)
+
+In Spring Framework:
+
+| Exception Type      | Example                | Behavior   |
+| ------------------- | ---------------------- | ---------- |
+| Unchecked Exception | RuntimeException       | ❌ Rollback |
+| Checked Exception   | Exception, IOException | ✅ Commit   |
+| Error               | OutOfMemoryError       | ❌ Rollback |
+
+### 🔑 Key Insight
+
+Spring **does NOT rollback on checked exceptions by default**.
+
+👉 This is one of the most common production bugs.
+
+---
+
+## 2. Why This Design Exists
+
+Historical reason (EJB):
+
+| Type                | Meaning            |
+| ------------------- | ------------------ |
+| Checked Exception   | Business condition |
+| Unchecked Exception | System failure     |
+
+### 🚨 Reality in Modern Systems
+
+* Business failures SHOULD rollback
+* Default behavior is often **wrong for real-world systems**
+
+---
+
+## 3. Real Production Pitfalls
+
+### Case 1: Checked Exception → Unexpected Commit
+
+```java
+@Transactional
+public void createOrder() throws Exception {
+    orderRepository.save(order);
+    throw new Exception("fail");
+}
+```
+
+👉 ❗ Data is still committed
+
+---
+
+### Case 2: Swallowed Exception → No Rollback
+
+```java
+@Transactional
+public void createOrder() {
+    try {
+        orderRepository.save(order);
+        throw new RuntimeException();
+    } catch (Exception e) {
+        // ignored
+    }
+}
+```
+
+👉 ❗ Transaction commits
+
+---
+
+### Case 3: Self Invocation (Proxy Bypass)
+
+```java
+public void methodA() {
+    methodB(); // bypass proxy
+}
+
+@Transactional
+public void methodB() {
+    throw new RuntimeException();
+}
+```
+
+👉 ❗ Transaction NOT applied
+
+---
+
+### Case 4: Non-public Methods
+
+```java
+@Transactional
+private void doSomething() {}
+```
+
+👉 ❗ Ignored by proxy
+
+---
+
+## 4. Fixing Rollback Behavior
+
+### Option 1: Rollback for checked exceptions
+
+```java
+@Transactional(rollbackFor = Exception.class)
+```
+
+---
+
+### Option 2 (Best Practice): Use RuntimeException
+
+```java
+public class BusinessException extends RuntimeException {}
+```
+
+👉 Ensures consistent rollback behavior
+
+---
+
+## 5. Transaction Lifecycle (Internal Flow)
+
+Understanding this is **senior-level expectation**:
+
+1. Proxy intercepts method call
+2. `PlatformTransactionManager` starts transaction
+3. Business logic executes
+4. If exception occurs:
+
+   * Evaluate rollback rules
+5. Commit or rollback
+
+### Core Components
+
+* `TransactionInterceptor`
+* `PlatformTransactionManager`
+* AOP Proxy (JDK / CGLIB)
+
+---
+
+## 6. Commit vs Flush (Frequently Asked in Interviews)
+
+```java
+@Transactional
+public void example() {
+    repository.save(entity);
+}
+```
+
+👉 `save()` does NOT commit immediately
+
+### Timeline
+
+| Step     | Action                     |
+| -------- | -------------------------- |
+| save()   | Add to persistence context |
+| flush()  | Generate SQL               |
+| commit() | Execute SQL                |
+
+### 🔑 Insight
+
+* JPA uses **write-behind strategy**
+* SQL may execute **before commit** (auto flush on query)
+
+---
+
+## 7. Transaction Propagation (Very Important)
+
+### REQUIRED (default)
+
+* Reuses existing transaction
+* Creates new if none exists
+
+---
+
+### REQUIRES_NEW
+
+```java
+@Transactional(propagation = Propagation.REQUIRES_NEW)
+```
+
+* Suspends current transaction
+* Starts a new one
+
+👉 Use cases:
+
+* Audit logging
+* Outbox pattern
+* Retry isolation
+
+---
+
+### NESTED
+
+* Uses savepoints
+* Partial rollback possible
+
+---
+
+## 8. Isolation Levels (DB Consistency)
+
+```java
+@Transactional(isolation = Isolation.REPEATABLE_READ)
+```
+
+| Level           | Prevents             |
+| --------------- | -------------------- |
+| READ_COMMITTED  | Dirty reads          |
+| REPEATABLE_READ | Non-repeatable reads |
+| SERIALIZABLE    | Phantom reads        |
+
+---
+
+## 9. Senior-Level Design Considerations
+
+### 🔥 1. Keep Transactions SHORT
+
+❌ Bad:
+
+```java
+@Transactional
+public void process() {
+    callExternalAPI(); // slow
+}
+```
+
+👉 Causes:
+
+* Lock contention
+* Deadlocks
+* Throughput collapse
+
+---
+
+### 🔥 2. Never Call Remote Services Inside Transaction
+
+* DB locks are held during network calls
+* High risk of cascading failures
+
+---
+
+### 🔥 3. Define Proper Boundaries
+
+✔ Service Layer
+❌ Controller
+❌ Repository
+
+---
+
+### 🔥 4. Idempotency + Retry
+
+```java
+@Retryable(maxAttempts = 3)
+@Transactional
+public void updateStock() {}
+```
+
+👉 Combine:
+
+* Retry
+* Optimistic locking
+* Idempotent design
+
+---
+
+## 10. Transactions in Microservices
+
+### ❌ Anti-pattern
+
+* Distributed DB transactions (2PC)
+
+### ✅ Recommended
+
+* Saga Pattern
+* Event-driven architecture
+* Transactional Outbox
+
+---
+
+## 🔥 TL;DR (Senior Summary)
+
+| Case                | Result                |
+| ------------------- | --------------------- |
+| No exception        | ✅ Commit              |
+| Checked exception   | ❌ (by default) commit |
+| RuntimeException    | ❌ Rollback            |
+| rollbackFor         | ❌ Rollback            |
+| Swallowed exception | ❌ No rollback         |
+| Self-invocation     | ❌ No transaction      |
+| save()              | ❌ Not commit          |
+| commit()            | ✅ Final write         |
+
+---
+
 ## Query By Example (QBE)
 
 Dynamic queries based on an example entity:
@@ -424,7 +735,6 @@ ExampleMatcher matcher = ExampleMatcher.matching()
 Example<User> example = Example.of(probe, matcher);
 List<User> users = userRepository.findAll(example);
 ```
-
 ---
 
 ## Auditing
@@ -829,6 +1139,51 @@ Configure `spring.jpa.properties.hibernate.jdbc.batch_size` in application prope
 ### Q20: How do you implement caching with Spring Data JPA?
 
 Use the Spring Cache abstraction with a provider like Redis or Caffeine. Annotate repository or service methods with `@Cacheable` to cache query results. Use `@CacheEvict` to invalidate cache entries when data changes. This reduces database queries for frequently accessed data.
+
+### Q21: Why does Spring not rollback on checked exceptions?
+
+Because of legacy EJB design — checked exceptions are considered business cases.
+
+---
+
+### Q22: How does Spring decide to rollback?
+
+* Based on exception type
+* `rollbackFor` / `noRollbackFor`
+* Evaluated inside `TransactionInterceptor`
+
+---
+
+### Q23: Difference between flush and commit?
+
+| flush                                | commit               |
+| ------------------------------------ | -------------------- |
+| Synchronize persistence context → DB | Finalize transaction |
+| Can happen multiple times            | Happens once         |
+
+---
+
+### Q24: Why self-invocation breaks transaction?
+
+Because Spring uses proxy — internal method calls bypass proxy.
+
+---
+
+### Q25: When to use REQUIRES_NEW?
+
+* Logging
+* Outbox
+* Compensation logic
+
+---
+
+### Q26: Why should transactions be short?
+
+To avoid:
+
+* Lock contention
+* Deadlocks
+* Performance degradation
 
 ---
 
