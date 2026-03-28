@@ -24,6 +24,52 @@ The Prototype pattern copies existing objects without making the code dependent 
 
 ---
 
+## ❓ Problem & Solution
+
+**The Problem:** Imagine you have an object, and you want to create an exact copy of it. How would you do it? Normally, you create a new object of the same class, then go through all the fields of the original object and copy their values over. 
+However, not all objects can be copied that way since some fields may be private and not visible from outside the object. Furthermore, doing this makes your code highly dependent on the concrete classes of the objects you copy. Sometimes you only know the interface the object follows, but not its concrete class (e.g., when the object is passed to a method as a parameter).
+
+**The Solution:** The Prototype pattern delegates the cloning process to the actual objects that are being cloned. The pattern declares a common interface for all objects that support cloning, usually containing just a single `clone()` method. This lets you clone an object without coupling your code to the specific class of that object.
+
+---
+
+## 🌍 Real-World Analogy
+
+A great analogy is mitotic cell division in biology. After a cell splits, two completely identical cells form. The original cell acts as a prototype and takes an active role in creating the exact copy.
+Another everyday analogy is formatting a document. Instead of creating a new document from scratch and manually setting up the margins, fonts, and headers, you simply duplicate an existing, well-formatted document (the prototype) and just change the text contents.
+
+---
+
+## 🏗️ Structure
+
+```mermaid
+classDiagram
+    class Prototype {
+        <<interface>>
+        +clone() Prototype
+    }
+    
+    class ConcretePrototype {
+        -field1
+        +ConcretePrototype(source: ConcretePrototype)
+        +clone() Prototype
+    }
+    
+    class SubclassPrototype {
+        -field2
+        +SubclassPrototype(source: SubclassPrototype)
+        +clone() Prototype
+    }
+    
+    class Client
+
+    Prototype <|.. ConcretePrototype
+    ConcretePrototype <|-- SubclassPrototype
+    Client ..> Prototype
+```
+
+---
+
 ## When to Use
 
 - Object creation is expensive (heavy initialization, DB calls, file I/O, network requests)
@@ -287,7 +333,8 @@ Choose Prototype when object initialization is expensive and you already have a 
 2. Prefer copy constructors/factory copy methods when clone() semantics are unclear.
 3. Add regression tests for aliasing bugs in nested object graphs.
 
-### Compare Next
-- [Builder Pattern](./builder.md)
-- [Factory Method Pattern](./factory-method.md)
-- [Singleton Pattern](./singleton.md)
+### 🔄 Relations with Other Patterns
+- **[Factory Method](./factory-method.md)**: Many designs start by using Factory Method (simpler) and naturally evolve toward Prototype or Abstract Factory as complexity increases. Prototype does not require deep inheritance hierarchies but necessitates a complex initialization (cloning) process.
+- **[Abstract Factory](./abstract-factory.md) and [Builder](./builder.md)**: Abstract Factory classes are often based on a set of Factory Methods, but you can also use Prototype to compose the methods on these classes.
+- **[Command](./command.md)**: Prototypes can be very useful when you need to save exact copies of Commands into a history stack.
+- **[Composite](./composite.md) and [Decorator](./decorator.md)**: Designs that make heavy use of Composite and Decorator often benefit from Prototype. You can clone complex structural graphs instead of reconstructing them from scratch.

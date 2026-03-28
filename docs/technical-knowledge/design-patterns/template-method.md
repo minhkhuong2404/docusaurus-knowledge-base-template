@@ -25,6 +25,59 @@ The Template Method pattern defines the overall structure of an algorithm in a b
 
 ---
 
+## ❓ Problem & Solution
+
+**The Problem:** Imagine you're creating a data mining application that analyzes corporate documents. Users feed the app documents in various formats (PDF, DOC, CSV), and it tries to extract meaningful data from these docs in a uniform format.
+The first version of the app could work only with DOC files. In the following version, it was able to support CSV files. A month later, you "taught" it to extract data from PDF files.
+At some point, you noticed that all three classes have a lot of similar code. While the code for dealing with various data formats was entirely different in all classes, the code for data processing and analysis is almost identical. Wouldn't it be great to get rid of the code duplication, leaving the algorithm structure intact?
+There was another problem related to client code that used these classes. It had lots of conditionals that picked a proper course of action depending on the class of the processing object. If all three processing classes had a common interface or a base class, you'd be able to eliminate the conditionals in client code and use polymorphism when calling methods on a processing object.
+
+**The Solution:** The Template Method pattern suggests that you break down an algorithm into a series of steps, turn these steps into methods, and put a series of calls to these methods inside a single *template method*. The steps may either be `abstract`, or have some default implementation. To use the algorithm, the client is supposed to provide its own subclass, implement all abstract steps, and override some of the optional ones if needed (but not the template method itself).
+
+---
+
+## 🌍 Real-World Analogy
+
+The template method approach can be used in mass housing construction. The architectural plan for building a standard house may contain several extension points that would let a potential owner adjust some details of the resulting house.
+Each building step, such as laying the foundation, framing, building walls, installing plumbing and wiring for electricity, etc., can be slightly changed to make the resulting house a little bit different from others.
+
+---
+
+## 🏗️ Structure
+
+```mermaid
+classDiagram
+    class AbstractClass {
+        +templateMethod()
+        +step1()
+        +step2()
+        +step3()
+        +step4()
+    }
+    
+    class ConcreteClass1 {
+        +step3()
+        +step4()
+    }
+    
+    class ConcreteClass2 {
+        +step1()
+        +step2()
+        +step3()
+        +step4()
+    }
+    
+    class Client
+
+    Client --> AbstractClass
+    AbstractClass <|-- ConcreteClass1
+    AbstractClass <|-- ConcreteClass2
+    
+    note for AbstractClass "templateMethod() {\n    step1();\n    step2();\n    step3();\n    step4();\n}"
+```
+
+---
+
 ## When to Use
 
 - Multiple classes share the same algorithm structure but differ in certain steps
@@ -253,7 +306,6 @@ Template Method uses inheritance — the algorithm structure is in the base clas
 2. Define hook contracts clearly (allowed effects, error behavior, timing).
 3. Move high-variance logic to Strategy when inheritance starts to strain.
 
-### Compare Next
-- [Strategy Pattern](./strategy.md)
-- [Chain of Responsibility Pattern](./chain-of-responsibility.md)
-- [Factory Method Pattern](./factory-method.md)
+### 🔄 Relations with Other Patterns
+- **[Factory Method](./factory-method.md)**: Factory Method is a specialization of Template Method. At the same time, a Factory Method may serve as a step in a large Template Method.
+- **[Strategy](./strategy.md)**: Template Method is based on inheritance: it lets you alter parts of an algorithm by extending those parts in subclasses. Strategy is based on composition: you can alter parts of the object's behavior by supplying it with different strategies that correspond to that behavior. Template Method works at the class level, so it's static. Strategy works on the object level, letting you switch behaviors at runtime.

@@ -24,6 +24,50 @@ The Adapter pattern acts as a bridge between two incompatible interfaces. It wra
 
 ---
 
+## ❓ Problem & Solution
+
+**The Problem:** Imagine you're creating a stock market monitoring app. The app downloads stock data from multiple sources in XML format and displays nice charts. Later, you decide to integrate a powerful 3rd-party analytics library. But there's a catch: the analytics library only works with data in JSON format. You can't change the library to work with XML because you might not have the source code, and your existing code is already heavily coupled to XML.
+
+**The Solution:** You can create an *adapter*. This is a special object that converts the interface of one object so that another object can understand it. An adapter wraps one of the objects to hide the complexity of conversion happening behind the scenes. In the stock market app, you create an XML-to-JSON adapter and wrap the analytics library calls in it. Your code communicates with the adapter via the interface it expects, and the adapter translates the request into the format the analytics library needs.
+
+---
+
+## 🌍 Real-World Analogy
+
+When you travel from the US to Europe, you may get a surprise when trying to charge your laptop for the first time. The power plug and socket standards are different across the world. A US plug won't fit a European socket. The problem is trivially solved by using a power plug adapter — it has an American-style socket on one side to accept your laptop's plug, and a European-style plug on the other side to connect to the wall.
+
+---
+
+## 🏗️ Structure
+
+```mermaid
+classDiagram
+    class Target {
+        <<interface>>
+        +request()
+    }
+    
+    class Adapter {
+        -adaptee: Adaptee
+        +Adapter(a: Adaptee)
+        +request()
+    }
+    
+    class Adaptee {
+        +specificRequest()
+    }
+    
+    class Client
+
+    Client --> Target
+    Target <|.. Adapter
+    Adapter --> Adaptee
+    
+    note for Adapter "request() {\n    adaptee.specificRequest();\n}"
+```
+
+---
+
 ## When to Use
 
 - Integrating third-party libraries with different interfaces than your code expects
@@ -224,7 +268,8 @@ It lets you connect the library's interface to your application's interface with
 2. Add contract tests that pin expected translation behavior for request, response, and error paths.
 3. Version adapters explicitly when third-party APIs are unstable.
 
-### Compare Next
-- [Facade Pattern](./facade.md)
-- [Proxy Pattern](./proxy.md)
-- [Bridge Pattern](./bridge.md)
+### 🔄 Relations with Other Patterns
+- **[Bridge](./bridge.md)**: Bridge is usually designed up-front to let you develop parts of an application independently. Adapter is typically used on an existing app to make otherwise-incompatible classes work together.
+- **[Decorator](./decorator.md)**: Adapter changes the interface of an existing object, while Decorator enhances an object without changing its interface. In addition, Decorator supports recursive composition, which isn't possible when you use pure Adapters.
+- **[Facade](./facade.md)**: Facade defines a new interface for entire subsystems of objects. Adapter makes an existing interface usable in a new context. Adapter usually wraps just one object, whereas Facade works with many objects representing an entire subsystem.
+- **[Proxy](./proxy.md)**: Proxy provides the same exact interface as its subject, whereas Adapter provides a different interface.

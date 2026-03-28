@@ -27,6 +27,65 @@ Instead of the collection implementing logic to track the "current position" dur
 
 ---
 
+## ❓ Problem & Solution
+
+**The Problem:** Collections are one of the most used data types in programming. Nonetheless, a collection is just a container for a group of objects. Most collections store their elements in simple lists. However, some of them are based on stacks, trees, graphs and other complex data structures. 
+No matter how a collection is structured, it must provide some way of accessing its elements so that other code can use these elements. There should be a way to go through each element of the collection without accessing the same elements over and over. This may sound like an easy job if you have a collection based on a list. But how do you sequentially traverse elements of a complex data structure, such as a tree? For example, today you might be just fine with depth-first traversal of a tree, but tomorrow you might require breadth-first traversal. And next week, you might need something else, like random access to the tree elements.
+
+**The Solution:** The main idea of the Iterator pattern is to extract the traversal behavior of a collection into a separate object called an *iterator*.
+In addition to implementing the algorithm itself, an iterator object encapsulates all of the traversal details, such as the current position and how many elements are left till the end. Because of this, several iterators can go through the same collection at the same time, independently of each other.
+All iterators must implement the same interface. This makes the client code compatible with any collection type or any traversal algorithm as long as there's a proper iterator.
+
+---
+
+## 🌍 Real-World Analogy
+
+You plan to visit Rome for a few days and visit all of its main sights and attractions. But once there, you could waste a lot of time walking in circles, unable to find even the Colosseum.
+On the other hand, you could buy a virtual guide app for your smartphone and use it for navigation. It's smart and inexpensive, and you could be staying at some interesting places for as long as you want.
+A third alternative is that you could spend some of the trip's budget and hire a local guide who knows the city like the back of their hand. The guide would be able to tailor the tour to your likings, show you every attraction and tell you a lot of exciting stories.
+All of these options—the random directions, the smartphone navigator, and the human guide—act as iterators over the vast collection of sights and attractions located in Rome.
+
+---
+
+## 🏗️ Structure
+
+```mermaid
+classDiagram
+    class Iterator {
+        <<interface>>
+        +getNext()
+        +hasMore() boolean
+    }
+    
+    class IterableCollection {
+        <<interface>>
+        +createIterator() Iterator
+    }
+    
+    class ConcreteCollection {
+        +createIterator() Iterator
+    }
+    
+    class ConcreteIterator {
+        -collection: ConcreteCollection
+        -iterationState
+        +ConcreteIterator(c: ConcreteCollection)
+        +getNext()
+        +hasMore() boolean
+    }
+    
+    class Client
+
+    Client --> Iterator
+    Client --> IterableCollection
+    Client ..> ConcreteIterator: creates via collection
+    IterableCollection <|.. ConcreteCollection
+    Iterator <|.. ConcreteIterator
+    ConcreteCollection --> ConcreteIterator : instantiates
+```
+
+---
+
 ## When to Use
 
 - Your collection has a complex data structure under the hood, but you want to hide complexity from clients.
@@ -236,7 +295,8 @@ Not natively. Modifying a Java collection directly while traversing it using an 
 2. Make iterators fail-fast by tracking a "modification count" integer inside the collection. If the collection's modCount deviates from the iterator's expected modCount, fast-fail immediately.
 3. Keep iterators lightweight to minimize heap allocations during deep traversals.
 
-### Compare Next
-- [Composite Pattern](./composite.md)
-- [Visitor Pattern](./visitor.md)
-- [Observer Pattern](./observer.md)
+### 🔄 Relations with Other Patterns
+- **[Composite](./composite.md)**: You can use Iterators to traverse Composite trees.
+- **[Factory Method](./factory-method.md)**: You can use Factory Method along with Iterator to let collection subclasses return different types of iterators that are compatible with the collections.
+- **[Memento](./memento.md)**: You can use Memento along with Iterator to capture the current iteration state and roll it back if necessary.
+- **[Visitor](./visitor.md)**: You can use Visitor along with Iterator to traverse a complex data structure and execute some operation over its elements, even if they all have different classes.

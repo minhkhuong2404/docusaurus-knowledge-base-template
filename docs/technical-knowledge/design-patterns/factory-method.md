@@ -24,6 +24,59 @@ The Factory Method pattern provides an interface for creating objects in a super
 
 ---
 
+## ❓ Problem & Solution
+
+**The Problem:** Imagine you're creating a logistics management application. Your MVP only handles transportation by land, so most of your code lives in a `Truck` class. When the app becomes popular, maritime companies ask you to incorporate sea logistics. However, your code is so heavily coupled to the `Truck` class that adding a `Ship` class would require major changes across the entire codebase.
+
+**The Solution:** The Factory Method pattern replaces direct object construction calls (using the `new` operator) with calls to a special *factory* method. The objects returned by a factory method are often referred to as "products." Now, you can easily override the factory method in a subclass and change the class of products being created. The only caveat: subclasses must return products that share a common base class or interface (like `Transport`).
+
+---
+
+## 🌍 Real-World Analogy
+
+Consider a large real-world logistics company. The core logistics flow (planning, routing, invoicing) works the same whether a package is delivered overland or overseas. However, the actual vehicle required differs. 
+A `RoadLogistics` manager creates `Truck` objects for ground delivery, whereas a `SeaLogistics` manager creates `Ship` objects for maritime routes. The overarching `planDelivery()` process delegates the creation of the vehicle to these specific managers using a factory method.
+
+---
+
+## 🏗️ Structure
+
+```mermaid
+classDiagram
+    class Product {
+        <<interface>>
+        +doStuff()
+    }
+    class ConcreteProductA {
+        +doStuff()
+    }
+    class ConcreteProductB {
+        +doStuff()
+    }
+    
+    class Creator {
+        <<abstract>>
+        +someOperation()
+        +createProduct()* Product
+    }
+    class ConcreteCreatorA {
+        +createProduct() Product
+    }
+    class ConcreteCreatorB {
+        +createProduct() Product
+    }
+
+    Product <|.. ConcreteProductA
+    Product <|.. ConcreteProductB
+    Creator <|-- ConcreteCreatorA
+    Creator <|-- ConcreteCreatorB
+    
+    ConcreteCreatorA ..> ConcreteProductA
+    ConcreteCreatorB ..> ConcreteProductB
+```
+
+---
+
 ## When to Use
 
 - The exact type of object to create isn't known until runtime
@@ -236,7 +289,7 @@ A Simple Factory is a single class with a static method that creates objects bas
 2. Enforce naming and packaging conventions for creators and products.
 3. Measure extension frequency; collapse hierarchy if variation is not real.
 
-### Compare Next
-- [Abstract Factory Pattern](./abstract-factory.md)
-- [Builder Pattern](./builder.md)
-- [Prototype Pattern](./prototype.md)
+### 🔄 Relations with Other Patterns
+- **[Abstract Factory](./abstract-factory.md)**: Many designs start by using Factory Method (less complicated, highly customizable via subclasses) and naturally evolve toward Abstract Factory, Prototype, or Builder as flexibility needs increase.
+- **[Template Method](./template-method.md)**: Factory Method can be considered a specialization of Template Method. Additionally, a Factory Method often serves as a specific step within a larger Template Method.
+- **[Prototype](./prototype.md)**: Factory Method relies on inheritance to let subclasses determine the objects to create, whereas Prototype avoids deep inheritance hierarchies but requires a complex initialization/cloning process instead.

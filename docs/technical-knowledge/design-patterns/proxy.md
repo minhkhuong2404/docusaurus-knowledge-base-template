@@ -24,6 +24,52 @@ The Proxy pattern creates a stand-in for another object. The proxy controls acce
 
 ---
 
+## ❓ Problem & Solution
+
+**The Problem:** Why would you want to control access to an object? Imagine you have a massive object that consumes a vast amount of system resources (like a database connection or a huge video file). You need it from time to time, but not always.
+You could implement lazy initialization to create this object only when it's actually needed. However, all of the object's clients would have to execute this conditional initialization code, leading to massive code duplication. You could put this check inside the object's class, but the class might be part of a closed 3rd-party library where you can't alter the source code.
+
+**The Solution:** The Proxy pattern suggests creating a new class (the proxy) with the exact same interface as the original service object. You then update your app so it passes the proxy object to the clients instead of the real object. Upon receiving a request from a client, the proxy performs its intermediate duties (like lazy initialization, caching, or access control), and then passes the request to the real service object. Because the proxy acts as a perfect drop-in replacement, you can plug it in anywhere the original object was expected, completely hiding the extra logic from the client.
+
+---
+
+## 🌍 Real-World Analogy
+
+A credit card is a proxy for a bank account, which in turn is a proxy for a bundle of physical cash. Both the credit card and the cash implement the same interface: they can be used for making payments. A consumer feels perfectly fine because there's no need to carry tons of cash around. A shop owner is also happy because the income gets added electronically to their bank account without the risk of being robbed on the way to the deposit box.
+
+---
+
+## 🏗️ Structure
+
+```mermaid
+classDiagram
+    class Subject {
+        <<interface>>
+        +request()
+    }
+    
+    class RealSubject {
+        +request()
+    }
+    
+    class Proxy {
+        -realSubject: RealSubject
+        +checkAccess() boolean
+        +request()
+    }
+    
+    class Client
+
+    Client --> Subject
+    Subject <|.. RealSubject
+    Subject <|.. Proxy
+    Proxy o--> RealSubject
+    
+    note for Proxy "request() {\n    if (checkAccess()) {\n        if (realSubject == null) {\n            realSubject = new RealSubject();\n        }\n        realSubject.request();\n    }\n}"
+```
+
+---
+
 ## When to Use
 
 - **Lazy initialization** — defer creation of resource-heavy objects until actually needed
@@ -309,7 +355,7 @@ Added complexity from the extra indirection layer. Possible performance overhead
 2. Emit proxy-level metrics to distinguish upstream vs proxy-induced issues.
 3. Define strict boundaries: policy layer only, not domain decision engine.
 
-### Compare Next
-- [Decorator Pattern](./decorator.md)
-- [Facade Pattern](./facade.md)
-- [Adapter Pattern](./adapter.md)
+### 🔄 Relations with Other Patterns
+- **[Adapter](./adapter.md)**: Adapter provides a completely different interface to the wrapped object, Proxy provides it with the exactly same interface, and Decorator provides it with an enhanced interface.
+- **[Facade](./facade.md)**: Facade is similar to Proxy in that both buffer a complex entity and handle initialization on their own. Unlike Facade, Proxy has the exact same interface as its service object, which makes them interchangeable.
+- **[Decorator](./decorator.md)**: Decorator and Proxy have similar structures, but very different intents. Both patterns are built on the composition principle, where one object delegates work to another. But a Proxy usually manages the lifecycle of its service object on its own, whereas the composition of Decorators is almost always controlled dynamically by the client.

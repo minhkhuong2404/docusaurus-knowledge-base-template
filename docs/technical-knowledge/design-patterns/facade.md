@@ -24,6 +24,50 @@ The Facade pattern provides a single class with a simplified interface that hide
 
 ---
 
+## ❓ Problem & Solution
+
+**The Problem:** Imagine that you must make your code work with a broad set of objects that belong to a sophisticated library or framework. Ordinarily, you'd need to initialize all of those objects, keep track of dependencies, execute methods in the correct order, and so on. As a result, the business logic of your classes would become tightly coupled to the implementation details of third-party classes, making it hard to comprehend and maintain.
+
+**The Solution:** A facade is a class that provides a simple interface to a complex subsystem which contains lots of moving parts. A facade might provide limited functionality in comparison to working with the subsystem directly. However, it includes only those features that clients really care about. Having a facade is handy when you need to integrate your app with a sophisticated library that has dozens of features, but you just need a tiny bit of its functionality.
+
+---
+
+## 🌍 Real-World Analogy
+
+When you call a shop to place a phone order, an operator is your facade to all services and departments of the shop. The operator provides you with a simple voice interface to the ordering system, payment gateways, and various delivery services. You don't need to navigate the internal complexities of the store; you just talk to the operator.
+
+---
+
+## 🏗️ Structure
+
+```mermaid
+classDiagram
+    class Facade {
+        -subsystem1
+        -subsystem2
+        +subsystemOperation()
+    }
+    
+    class Subsystem1 {
+        +operation1()
+        +operation2()
+    }
+    
+    class Subsystem2 {
+        +operationZ()
+    }
+    
+    class Client
+
+    Client --> Facade
+    Facade --> Subsystem1
+    Facade --> Subsystem2
+    
+    note for Facade "subsystemOperation() {\n    subsystem1.operation1();\n    subsystem2.operationZ();\n}"
+```
+
+---
+
 ## When to Use
 
 - A subsystem has many classes and complex interactions
@@ -236,7 +280,10 @@ When clients need direct, fine-grained access to subsystem features that the fac
 2. Preserve meaningful domain errors; do not over-flatten failure information.
 3. Track bypass rates and enforce architecture boundaries where needed.
 
-### Compare Next
-- [Adapter Pattern](./adapter.md)
-- [Proxy Pattern](./proxy.md)
-- [Abstract Factory Pattern](./abstract-factory.md)
+### 🔄 Relations with Other Patterns
+- **[Adapter](./adapter.md)**: Facade defines a new interface for existing objects, whereas Adapter tries to make the existing interface usable for a specific client. Facade wraps an entire subsystem; Adapter wraps a single object.
+- **[Abstract Factory](./abstract-factory.md)**: Abstract Factory can serve as an alternative to Facade when you just want to hide the way subsystem objects are created from the client code.
+- **[Flyweight](./flyweight.md)**: Flyweight shows how to make lots of little objects, whereas Facade shows how to make a single object that represents an entire subsystem.
+- **[Mediator](./mediator.md)**: Facade and Mediator have similar jobs: they try to organize collaboration between lots of tightly coupled classes. Facade defines a simplified interface to a subsystem, but it doesn't introduce new functionality, and the subsystem itself is unaware of the facade. Mediator centralizes communication between components, and the components only know about the mediator, not each other.
+- **[Singleton](./singleton.md)**: A Facade class can often be transformed into a Singleton since a single facade object representing a subsystem is usually sufficient.
+- **[Proxy](./proxy.md)**: Proxy and Facade both act as a buffer between a complex entity and the client. Proxy provides the same interface as its service object, while Facade provides a different, simplified interface.

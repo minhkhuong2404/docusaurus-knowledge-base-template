@@ -27,6 +27,53 @@ The Memento pattern solves this by delegating the creation of the state snapshot
 
 ---
 
+## ❓ Problem & Solution
+
+**The Problem:** Imagine you're creating a text editor app. In addition to simple text editing, your editor can format text, insert inline images, etc. You decided to let users undo any operations carried out on the text. For this, you want to record the state of all objects before executing any operation. Later, when a user decides to undo an action, you can fetch the latest snapshot from history and use it to restore the state of all objects.
+But how exactly are you going to produce those state snapshots? You'd have to go over all the fields of an object and copy their values into storage. However, this is only possible if the object has quite relaxed access restrictions to its contents, and most real objects hide all significant data in private fields. You could make fields public, but then you'd lose encapsulation and make your code horribly fragile.
+
+**The Solution:** The Memento pattern delegates the creation of the state snapshots to the actual owner of that state, the *originator* object. Hence, instead of other objects trying to copy the editor's state from the outside, the editor class itself can make the snapshot since it has full access to its own state.
+The pattern suggests storing the copy of the object's state in a special object called *memento*. The contents of the memento aren't accessible to any other object except the one that produced it. Other objects must communicate with the memento using a limited interface which may allow fetching the snapshot's metadata (creation time, the name of the performed operation, etc.), but not the original object's state contained in the snapshot.
+These restrictive mementos are usually kept inside another object called the *caretaker*, like an undo history stack.
+
+---
+
+## 🌍 Real-World Analogy
+
+When you play a video game, you usually rely on the ability to save your progress. The game engine saves its state by reading the levels, the player's position, the contents of the inventory, and so on, and writing them all into a file. Later, whenever you want to load the game, you select one of those save files. The game reads the file and restores the state exactly as it was when the save was made.
+
+---
+
+## 🏗️ Structure
+
+```mermaid
+classDiagram
+    class Originator {
+        -state
+        +save() Memento
+        +restore(m: Memento)
+    }
+    
+    class Memento {
+        -state
+        +Memento(state)
+        +getState()
+    }
+    
+    class Caretaker {
+        -history: List~Memento~
+        -originator: Originator
+        +doSomething()
+        +undo()
+    }
+
+    Caretaker o--> Memento
+    Caretaker --> Originator
+    Originator ..> Memento : creates
+```
+
+---
+
 ## When to Use
 
 - You need to produce snapshots of the object's state to be able to restore a previous state of the object (Undo/Redo via Command pattern).
@@ -206,7 +253,7 @@ Deep cloning usually duplicates an object so it can be manipulated independently
 2. Implement memory limitations in the Caretaker (e.g., evicting snapshots older than 20 steps).
 3. If deep copying the state into a Memento is too slow, consider using the Command pattern instead, or switching to an Event Sourcing architectural paradigm.
 
-### Compare Next
-- [Command Pattern](./command.md)
-- [Iterator Pattern](./iterator.md)
-- [State Pattern](./state.md)
+### 🔄 Relations with Other Patterns
+- **[Command](./command.md)**: You can use Memento along with Command to implement "undo". In this case, commands are responsible for performing various operations over a target object, while mementos save the state of that object just before a command gets executed.
+- **[Iterator](./iterator.md)**: You can use Memento along with Iterator to capture the current iteration state and roll it back if necessary.
+- **[Prototype](./prototype.md)**: Sometimes Prototype can be a simpler alternative to Memento. This works if the object, the state of which you want to store in the history, is fairly straightforward and doesn't have links to external resources, or the links are easy to re-establish.

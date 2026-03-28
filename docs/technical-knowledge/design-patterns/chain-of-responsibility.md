@@ -25,6 +25,61 @@ The Chain of Responsibility pattern decouples senders of requests from their rec
 
 ---
 
+## ❓ Problem & Solution
+
+**The Problem:** Imagine you're working on an online ordering system. You want to restrict access to the system so only authenticated users can create orders. Also, users who have administrative permissions must have full access to all orders. 
+Initially, you added these checks seamlessly. But over time, you added more and more sequential checks (e.g., passing a validation step, checking against brute-force attacks, checking if the request comes from a cached IP). The code of the checks became bloated and messy. Adding a new check or changing the order of existing checks required modifying the core code and affected other parts of the system.
+
+**The Solution:** Like many other behavioral design patterns, the Chain of Responsibility relies on transforming particular behaviors into stand-alone objects called *handlers*. In our case, each check should be extracted to its own class with a single method that performs the check.
+The pattern suggests that you link these handlers into a chain. Each linked handler has a field for storing a reference to the next handler in the chain. In addition to processing a request, handlers pass the request further along the chain. The request travels along the chain until all handlers have had a chance to process it. A handler can decide not to pass the request further down the chain and effectively stop any further processing.
+
+---
+
+## 🌍 Real-World Analogy
+
+You've bought and installed a new piece of hardware on your computer, but it's not working. You call the tech support number.
+First, a robotic auto-responder suggests a standard list of solutions. It doesn't help, so it connects you to a live operator. The operator provides a few more standard solutions from a manual. That doesn't work either. Finally, the operator passes your call to an engineer. The engineer knows the exact details of the hardware and tells you how to fix the issue.
+This is a chain of responsibility: multiple handlers got a chance to resolve your issue before it reached the engineer who could finally solve it.
+
+---
+
+## 🏗️ Structure
+
+```mermaid
+classDiagram
+    class Handler {
+        <<interface>>
+        +setNext(h: Handler)
+        +handle(request)
+    }
+    
+    class BaseHandler {
+        -next: Handler
+        +setNext(h: Handler)
+        +handle(request)
+    }
+    
+    class ConcreteHandler1 {
+        +handle(request)
+    }
+    
+    class ConcreteHandler2 {
+        +handle(request)
+    }
+    
+    class Client
+
+    Client --> Handler
+    Handler <|.. BaseHandler
+    BaseHandler o--> Handler : next
+    BaseHandler <|-- ConcreteHandler1
+    BaseHandler <|-- ConcreteHandler2
+    
+    note for BaseHandler "handle(request) {\n    if (next != null) {\n        next.handle(request);\n    }\n}"
+```
+
+---
+
 ## When to Use
 
 - Multiple handlers can process a request, but the handler isn't known in advance
@@ -254,7 +309,7 @@ Requests might pass through many handlers before finding the right one, causing 
 2. Emit structured stage-level telemetry (start, success, failure, duration).
 3. Specify default handling semantics when no handler accepts a request.
 
-### Compare Next
-- [Command Pattern](./command.md)
-- [Template Method Pattern](./template-method.md)
-- [Observer Pattern](./observer.md)
+### 🔄 Relations with Other Patterns
+- **[Command](./command.md), [Mediator](./mediator.md), [Observer](./observer.md), and [Chain of Responsibility](./chain-of-responsibility.md)**: These all address various ways of connecting senders and receivers of requests. CoR passes a request sequentially along a dynamic chain of potential receivers until one of them handles it.
+- **[Composite](./composite.md)**: CoR is often used in conjunction with Composite. When a leaf component gets a request, it may pass it through the chain of all of its parent components down to the root of the object tree.
+- **[Decorator](./decorator.md)**: Handlers in CoR can be thought of as Decorators. However, CoR handlers can stop passing the request down the chain, while Decorators are strictly an extension pattern and are not allowed to break the flow of the request.

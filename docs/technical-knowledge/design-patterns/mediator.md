@@ -26,6 +26,67 @@ The Mediator pattern solves this by introducing a central authority—a "Mediato
 
 ---
 
+## ❓ Problem & Solution
+
+**The Problem:** Say you have a dialog for creating and editing customer profiles. It consists of various form controls such as text fields, checkboxes, buttons, etc.
+Some of the form elements may interact with others. For instance, selecting the "I have a dog" checkbox may reveal a hidden text field for entering the dog's name. Another button may have to validate values of all fields before saving the data.
+By having this logic implemented directly inside the code of the form elements you make these elements' classes much harder to reuse in other forms of the app. For example, you won't be able to use that checkbox class inside another form, because it's coupled to the dog's text field. You can use either all the classes involved in rendering the profile form, or none at all.
+
+**The Solution:** The Mediator pattern suggests that you should cease all direct communication between the components which you want to make independent of each other. Instead, these components must collaborate indirectly, by calling a special mediator object that redirects the calls to appropriate components. As a result, the components depend only on a single mediator class instead of being coupled to dozens of their colleagues.
+In our form example, the dialog class itself can act as the mediator. The dialog class already knows about all of its sub-elements, so you won't even need to introduce new dependencies into this class.
+Now, when a user clicks the "I have a dog" checkbox, the checkbox doesn't toggle the hidden text field directly. Instead, it just notifies the dialog. The dialog receives the notification and performs the actual work (toggling the field).
+
+---
+
+## 🌍 Real-World Analogy
+
+Pilots of aircraft that approach or depart the airport control area don't communicate directly with each other. Instead, they speak to an air traffic controller, who sits in a tall tower somewhere near the airstrip. Without the air traffic controller, pilots would need to be aware of every plane in the vicinity of the airport, discussing landing priorities with a committee of dozens of other pilots. That would probably skyrocket the airplane crash statistics.
+The tower doesn't need to control the whole flight. It exists only to enforce constraints in the terminal area because the number of involved actors there might be overwhelming to a pilot.
+
+---
+
+## 🏗️ Structure
+
+```mermaid
+classDiagram
+    class Mediator {
+        <<interface>>
+        +notify(sender: Component, event: String)
+    }
+    
+    class ConcreteMediator {
+        -component1: Component1
+        -component2: Component2
+        +notify(sender, event)
+    }
+    
+    class BaseComponent {
+        #dialog: Mediator
+        +BaseComponent(m: Mediator)
+    }
+    
+    class Component1 {
+        +doA()
+    }
+    
+    class Component2 {
+        +doB()
+        +doC()
+    }
+
+    BaseComponent --> Mediator
+    Mediator <|.. ConcreteMediator
+    BaseComponent <|-- Component1
+    BaseComponent <|-- Component2
+    ConcreteMediator o--> Component1
+    ConcreteMediator o--> Component2
+    
+    note for ConcreteMediator "notify(sender, event) {\n    if (sender == component1 && event == 'A') {\n        component2.doC();\n    }\n}"
+    note for Component1 "doA() {\n    dialog.notify(this, 'A');\n}"
+```
+
+---
+
 ## When to Use
 
 - When a system has a massive amount of interlocking, communicating classes making it hard to understand and maintain.
@@ -220,7 +281,7 @@ In Spring MVC, controllers do not invoke Views directly, nor do they process raw
 2. If the mediator logic gets too vast, consider splitting it using aspects of the Observer pattern (an event bus) rather than hardcoded method calls.
 3. Use interfaces for both Mediators and Colleagues to prevent circular dependency build paths.
 
-### Compare Next
-- [Observer Pattern](./observer.md)
-- [Facade Pattern](./facade.md)
-- [Command Pattern](./command.md)
+### 🔄 Relations with Other Patterns
+- **[Chain of Responsibility](./chain-of-responsibility.md), [Command](./command.md), [Mediator](./mediator.md), and [Observer](./observer.md)**: These patterns address various ways of connecting senders and receivers of requests. Mediator eliminates direct connections between senders and receivers, forcing them to communicate indirectly via a mediator object.
+- **[Facade](./facade.md)**: Facade and Mediator have similar jobs: they try to organize collaboration between lots of tightly coupled classes. Facade defines a simplified interface to a subsystem, but doesn't introduce new functionality. The subsystem is unaware of the facade. Mediator centralizes communication between components of the system. The components only know about the mediator object and don't communicate directly.
+- **[Observer](./observer.md)**: The difference between Mediator and Observer is often elusive. In most cases, you can implement either of these patterns; but sometimes you can apply both simultaneously. The primary goal of Mediator is to eliminate mutual dependencies among a set of system components. The primary goal of Observer is to establish dynamic one-way connections between objects.

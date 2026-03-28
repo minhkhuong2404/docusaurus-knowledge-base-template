@@ -27,6 +27,77 @@ If you represent these states using massive `if (state == HAS_COIN)` and `else i
 
 ---
 
+## ❓ Problem & Solution
+
+**The Problem:** The State pattern is closely related to the concept of a *Finite-State Machine*. The main idea is that, at any given moment, there's a *finite* number of *states* which a program can be in. Within any unique state, the program behaves differently, and the program can be switched from one state to another instantaneously. However, depending on a current state, the program may or may not switch to certain other states. These routing rules, called *transitions*, are also finite and predetermined.
+You can also apply this approach to objects. Imagine that we have a `Document` class. A document can be in one of three states: `Draft`, `Moderation` and `Published`. The `publish` method of the document works a little bit differently in each state:
+- In `Draft`, it moves the document to moderation.
+- In `Moderation`, it makes the document public, but only if the current user is an administrator.
+- In `Published`, it doesn't do anything at all.
+State machines are usually implemented with lots of conditional operators (`if` or `switch`) that select the appropriate behavior depending on the current state of the object. The biggest weakness of a state machine based on conditionals reveals itself once we start adding more and more states and state-dependent behaviors. Over time, altering transition logic may require changing state conditionals in every method, which makes the code very difficult to maintain.
+
+**The Solution:** The State pattern suggests that you create new classes for all possible states of an object and extract all state-specific behaviors into these classes.
+Instead of implementing all behaviors on its own, the original object, called *context*, stores a reference to one of the state objects that represents its current state, and delegates all the state-related work to that object.
+To transition the context into another state, replace the active state object with another object that represents that new state. This is possible only if all state classes follow the same interface and the context itself works with these objects through that interface.
+
+---
+
+## 🌍 Real-World Analogy
+
+The buttons and switches in your smartphone behave differently depending on the current state of the device:
+- When the phone is unlocked, pressing buttons executes various functions.
+- When the phone is locked, pressing any button leads to the unlock screen.
+- When the phone's charge is low, pressing any button shows the charging screen.
+
+---
+
+## 🏗️ Structure
+
+```mermaid
+classDiagram
+    class Context {
+        -state: State
+        +Context(initialState)
+        +changeState(state)
+        +doThis()
+        +doThat()
+    }
+    
+    class State {
+        <<interface>>
+        +doThis()
+        +doThat()
+    }
+    
+    class ConcreteStateA {
+        -context: Context
+        +setContext(c)
+        +doThis()
+        +doThat()
+    }
+    
+    class ConcreteStateB {
+        -context: Context
+        +setContext(c)
+        +doThis()
+        +doThat()
+    }
+    
+    class Client
+
+    Client --> Context
+    Context o--> State
+    State <|.. ConcreteStateA
+    State <|.. ConcreteStateB
+    ConcreteStateA --> Context : back-reference
+    ConcreteStateB --> Context : back-reference
+    
+    note for Context "doThis() {\n    state.doThis();\n}"
+    note for ConcreteStateA "doThis() {\n    // do work\n    context.changeState(new ConcreteStateB());\n}"
+```
+
+---
+
 ## When to Use
 
 - You have an object that behaves differently depending on its current state.
@@ -244,7 +315,6 @@ Yes, if the Concrete State classes do not hold any instance variables (specifica
 1. Do not use State pattern if the logic consists of a simple boolean (`isPublished` vs `isDraft`). Use standard booleans.
 2. For large, complex enterprise systems, consider using a dedicated State Machine library (like Spring StateMachine) which centralizes transitions into a strict configuration matrix, rather than hardcoding transitions into scattered Java classes.
 
-### Compare Next
-- [Strategy Pattern](./strategy.md)
-- [Memento Pattern](./memento.md)
-- [Command Pattern](./command.md)
+### 🔄 Relations with Other Patterns
+- **[Bridge](./bridge.md), [State](./state.md), [Strategy](./strategy.md), and [Adapter](./adapter.md)**: These patterns all have very similar structures based on composition. However, they all solve different problems.
+- **[State](./state.md) vs. [Strategy](./strategy.md)**: State can be considered as an extension of Strategy. Both patterns are based on composition: they change the behavior of the context by delegating some work to helper objects. Strategy makes these objects completely independent and unaware of each other. However, State doesn't restrict dependencies between concrete states, letting them alter the state of the context at will.

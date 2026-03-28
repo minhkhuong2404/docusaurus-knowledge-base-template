@@ -25,6 +25,59 @@ The Observer pattern establishes a subscription mechanism where multiple objects
 
 ---
 
+## ❓ Problem & Solution
+
+**The Problem:** Imagine you have two types of objects: a `Customer` and a `Store`. The customer is very interested in a particular brand of product (say, a new model of iPhone) which should become available in the store very soon. The customer could visit the store every day to check product availability. But while the product is still en route, most of these trips would be pointless.
+On the other hand, the store could send tons of emails (which might be considered spam) to all customers each time a new product becomes available. This would save some customers from endless trips to the store, but at the same time, it'd upset other customers who aren't interested in new products.
+We've got a conflict. Either the customer wastes time checking product availability, or the store wastes resources notifying the wrong customers.
+
+**The Solution:** The object that has some interesting state is often called *subject*, but since it's also going to notify other objects about the changes to its state, we'll call it *publisher*. All other objects that want to track changes to the publisher's state are called *subscribers*.
+The Observer pattern suggests that you add a subscription mechanism to the publisher class so individual objects can subscribe to or unsubscribe from a stream of events coming from that publisher. In reality, this mechanism consists of 1) an array field for storing a list of references to subscriber objects and 2) several public methods which allow adding subscribers to and removing them from that list.
+Now, whenever an important event happens to the publisher, it goes over its subscribers and calls the specific notification method on their objects.
+
+---
+
+## 🌍 Real-World Analogy
+
+If you subscribe to a newspaper or magazine, you no longer need to go to the store to check if the next issue is available. Instead, the publisher sends new issues directly to your mailbox right after publication or even in advance.
+The publisher maintains a list of subscribers and knows which magazines they're interested in. Subscribers can leave the list at any time when they wish to stop the publisher from sending new magazine issues to them.
+
+---
+
+## 🏗️ Structure
+
+```mermaid
+classDiagram
+    class Publisher {
+        -subscribers: List~Subscriber~
+        -mainState
+        +subscribe(s: Subscriber)
+        +unsubscribe(s: Subscriber)
+        +notifySubscribers()
+        +mainBusinessLogic()
+    }
+    
+    class Subscriber {
+        <<interface>>
+        +update(context)
+    }
+    
+    class ConcreteSubscriber {
+        +update(context)
+    }
+    
+    class Client
+
+    Client --> Publisher
+    Client ..> ConcreteSubscriber: creates
+    Publisher o--> Subscriber
+    Subscriber <|.. ConcreteSubscriber
+    
+    note for Publisher "notifySubscribers() {\n    for (s in subscribers) {\n        s.update(this);\n    }\n}"
+```
+
+---
+
 ## When to Use
 
 - When changes in one object require updating others, and you don't know how many objects need to update
@@ -256,7 +309,6 @@ Spring provides `ApplicationEvent` and `@EventListener`. You publish events with
 2. Separate critical path observers from best-effort listeners.
 3. Add idempotency guards for listeners that can reprocess events.
 
-### Compare Next
-- [Command Pattern](./command.md)
-- [Strategy Pattern](./strategy.md)
-- [Chain of Responsibility Pattern](./chain-of-responsibility.md)
+### 🔄 Relations with Other Patterns
+- **[Chain of Responsibility](./chain-of-responsibility.md), [Command](./command.md), [Mediator](./mediator.md), and [Observer](./observer.md)**: These all address various ways of connecting senders and receivers of requests. Observer lets receivers dynamically subscribe to and unsubscribe from receiving requests.
+- **[Mediator](./mediator.md)**: The difference between Mediator and Observer is often elusive. The primary goal of Mediator is to eliminate mutual dependencies among a set of system components, making them dependent on a single mediator. The primary goal of Observer is to establish dynamic one-way connections between objects, where some objects act as subordinates to others.

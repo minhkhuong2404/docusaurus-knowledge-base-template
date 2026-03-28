@@ -25,6 +25,62 @@ The Strategy pattern extracts related algorithms into separate classes (strategi
 
 ---
 
+## ❓ Problem & Solution
+
+**The Problem:** One day you decided to create a navigation app for casual travelers. The app was centered around a beautiful map which helped users quickly orient themselves in any city. 
+One of the most requested features for the app was automatic route planning. Once a user entered an address, they should be able to see the fastest route to that destination displayed on the map.
+The first version of the app could only build routes over roads. People who traveled by car were bursting with joy. But apparently, not everybody likes to drive on their vacation. So with the next update, you added an option to build walking routes. Right after that, you added another option to let people use public transport in their routes.
+However, that was only the beginning. Later you planned to add route building for cyclists. And even later, another option for building routes through all of a city's tourist attractions.
+While from a business perspective the app was a success, the technical part caused you many headaches. Each time you added a new routing algorithm, the main class of the navigator doubled in size. At some point, the beast became too hard to maintain.
+
+**The Solution:** The Strategy pattern suggests that you take a class that does something specific in a lot of different ways and extract all of these algorithms into separate classes called *strategies*.
+The original class, called *context*, must have a field for storing a reference to one of the strategies. The context delegates the work to a linked strategy object instead of executing it on its own.
+The context isn't responsible for selecting an appropriate algorithm for the job. Instead, the client passes the desired strategy to the context. In fact, the context doesn't know much about strategies. It works with all strategies through the same generic interface, which only exposes a single method for triggering the algorithm encapsulated within the selected strategy.
+
+---
+
+## 🌍 Real-World Analogy
+
+Imagine that you have to get to the airport. You can catch a bus, order a cab, or get on your bicycle. These are your transportation strategies. You can pick one of the strategies depending on factors such as budget or time constraints.
+
+---
+
+## 🏗️ Structure
+
+```mermaid
+classDiagram
+    class Context {
+        -strategy: Strategy
+        +setStrategy(s: Strategy)
+        +executeStrategy()
+    }
+    
+    class Strategy {
+        <<interface>>
+        +execute(data)
+    }
+    
+    class ConcreteStrategyA {
+        +execute(data)
+    }
+    
+    class ConcreteStrategyB {
+        +execute(data)
+    }
+    
+    class Client
+
+    Client --> Context
+    Client ..> ConcreteStrategyA: creates
+    Context o--> Strategy
+    Strategy <|.. ConcreteStrategyA
+    Strategy <|.. ConcreteStrategyB
+    
+    note for Context "executeStrategy() {\n    strategy.execute(data);\n}"
+```
+
+---
+
 ## When to Use
 
 - You have multiple algorithms for a specific task and want to switch between them
@@ -332,7 +388,7 @@ Use Strategy when you need runtime flexibility, when the algorithms are fundamen
 2. Externalize strategy selection policy and make it observable.
 3. Benchmark critical strategies; abstraction should not hide major performance cliffs.
 
-### Compare Next
-- [Template Method Pattern](./template-method.md)
-- [Command Pattern](./command.md)
-- [Bridge Pattern](./bridge.md)
+### 🔄 Relations with Other Patterns
+- **[Bridge](./bridge.md), [State](./state.md), [Strategy](./strategy.md), and [Adapter](./adapter.md)**: These patterns all have very similar structures based on composition: they change the behavior of the context by delegating some work to helper objects. However, they all solve different problems.
+- **[Command](./command.md)**: Command and Strategy may look similar because you can use both to parameterize an object with some action. However, Strategy usually defines different ways of doing the *same* thing, while Command converts *any* operation into an object.
+- **[Template Method](./template-method.md)**: Template Method is based on inheritance: it lets you alter parts of an algorithm by extending those parts in subclasses. Strategy is based on composition: you can alter parts of the object's behavior by supplying it with different strategies that correspond to that behavior.

@@ -24,6 +24,42 @@ The Singleton pattern restricts the instantiation of a class to a single object.
 
 ---
 
+## ❓ Problem & Solution
+
+**The Problem:** You are trying to solve two distinct issues: 
+1. **Ensure a class has just a single instance** (often to control access to a shared resource like a database, cache, or file system).
+2. **Provide a global access point to that instance** (like global variables, but without the risk of other code accidentally overwriting them).
+
+**The Solution:** The Singleton pattern tackles both problems simultaneously by:
+- Modifying the default constructor to be `private`, preventing other objects from using the `new` operator.
+- Implementing a `static` creation method that acts as a constructor. This method creates an object using the private constructor, saves it in a static field, and returns the cached object on all subsequent calls.
+
+---
+
+## 🌍 Real-World Analogy
+
+The government is an excellent analogy for the Singleton pattern. A country can have only one official government. Regardless of the personal identities of the individuals forming the government, the title "The Government of X" serves as a global, recognizable point of access that identifies the single entity in charge.
+
+---
+
+## 🏗️ Structure
+
+```mermaid
+classDiagram
+    class Singleton {
+        -static instance: Singleton
+        -Singleton()
+        +static getInstance() Singleton
+        +doSomething()
+    }
+    
+    note for Singleton "getInstance() {\n    if (instance == null) {\n        instance = new Singleton();\n    }\n    return instance;\n}"
+    
+    Client --> Singleton
+```
+
+---
+
 ## When to Use
 
 - **Shared resources** — configuration managers, loggers, connection pools, thread pools
@@ -282,7 +318,7 @@ A Singleton is a class with a private constructor and a static method to get the
 2. Make initialization and teardown explicit for observability and testing.
 3. Re-evaluate singleton necessity when scaling from monolith to distributed services.
 
-### Compare Next
-- [Factory Method Pattern](./factory-method.md)
-- [Prototype Pattern](./prototype.md)
-- [Abstract Factory Pattern](./abstract-factory.md)
+### 🔄 Relations with Other Patterns
+- **[Facade](./facade.md)**: A Facade class can often be transformed into a Singleton since a single facade object representing the subsystem is usually sufficient.
+- **[Flyweight](./flyweight.md)**: Flyweight resembles Singleton if you manage to reduce all shared states to just one flyweight object. However, Flyweight instances are usually immutable and there can be multiple distinct Flyweights, whereas there is only one mutable Singleton instance.
+- **[Abstract Factory](./abstract-factory.md), [Builder](./builder.md), and [Prototype](./prototype.md)**: These creational patterns can all be implemented as Singletons if exactly one instance of the factory, builder, or registry is needed.

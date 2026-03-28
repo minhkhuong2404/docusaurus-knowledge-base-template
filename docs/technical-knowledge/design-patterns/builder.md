@@ -25,6 +25,68 @@ The Builder pattern constructs complex objects step by step. Unlike constructors
 
 ---
 
+## ❓ Problem & Solution
+
+**The Problem:** Imagine a complex object that requires laborious, step-by-step initialization of many fields and nested objects. Such initialization code is usually buried inside a monstrous telescoping constructor with lots of parameters, or scattered all over the client code.
+For example, consider building a `House` object. You need to construct walls, a floor, install doors, and build a roof. What if you want a house with a swimming pool, a garden, or a heating system? Creating subclasses for every possible configuration (`HouseWithPool`, `HouseWithGardenAndPool`) leads to an unmanageable explosion of classes. Taking the mega-constructor approach (`new House(walls, doors, false, true, false, true)`) makes the code incredibly hard to read and use.
+
+**The Solution:** The Builder pattern extracts the object construction code out of its own class and moves it to separate objects called *builders*. The pattern organizes object construction into a set of steps (`buildWalls()`, `buildPool()`, etc.). To create an object, you execute a series of these steps on a builder object. The crucial part is that you only call the steps you actually need, allowing you to produce vastly different configurations using the exact same construction process.
+
+---
+
+## 🌍 Real-World Analogy
+
+Consider how you order a custom PC online. You don't buy a massive pre-configured object that you must accept as-is. Instead, you use a configuration tool. First, you pick the CPU, then the case, then add optional extras like more RAM or a better graphics card. The "Builder" takes your step-by-step inputs, handles the complexities of making sure the parts are compatible, and finally assembles the exact custom PC representation you requested.
+
+---
+
+## 🏗️ Structure
+
+```mermaid
+classDiagram
+    class Builder {
+        <<interface>>
+        +buildStepA()
+        +buildStepB()
+        +buildStepZ()
+    }
+    
+    class ConcreteBuilder1 {
+        -result: Product1
+        +reset()
+        +buildStepA()
+        +buildStepB()
+        +buildStepZ()
+        +getResult() Product1
+    }
+    
+    class ConcreteBuilder2 {
+        -result: Product2
+        +reset()
+        +buildStepA()
+        +buildStepB()
+        +buildStepZ()
+        +getResult() Product2
+    }
+    
+    class Director {
+        -builder: Builder
+        +Director(Builder)
+        +changeBuilder(Builder)
+        +make(type)
+    }
+    
+    class Client
+
+    Builder <|.. ConcreteBuilder1
+    Builder <|.. ConcreteBuilder2
+    Director o--> Builder
+    Client --> Director
+    Client ..> ConcreteBuilder1
+```
+
+---
+
 ## When to Use
 
 - Objects have many parameters (especially optional ones) — the "telescoping constructor" problem
@@ -249,7 +311,7 @@ Precise control over step-by-step construction. Cleaner code by separating const
 2. Prefer staged builders when mandatory fields are frequently omitted.
 3. Keep builder lifecycle short-lived; never cache builder instances in shared scopes.
 
-### Compare Next
-- [Factory Method Pattern](./factory-method.md)
-- [Abstract Factory Pattern](./abstract-factory.md)
-- [Prototype Pattern](./prototype.md)
+### 🔄 Relations with Other Patterns
+- **[Factory Method](./factory-method.md)**: Many designs start with Factory Method (simpler, highly customizable via subclasses) and evolve toward Builder when the object creation process requires multiple steps and complex configuration.
+- **[Abstract Factory](./abstract-factory.md)**: Builder focuses on constructing complex objects step by step. Abstract Factory specializes in creating families of related objects. Abstract Factory returns the product immediately, whereas Builder lets you run some additional construction steps before fetching the product.
+- **[Composite](./composite.md)**: You can effectively use Builder when creating complex Composite trees because you can program its construction steps to work recursively.

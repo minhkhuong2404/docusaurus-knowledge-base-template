@@ -25,6 +25,56 @@ The Flyweight pattern is an optimization technique used to minimize memory usage
 
 ---
 
+## ❓ Problem & Solution
+
+**The Problem:** Imagine you're creating a fun multiplayer shooter game. The most exciting feature is the massive battles with huge numbers of players and NPCs firing countless bullets. However, soon after you send the game to your friends for playtesting, it crashes on their machines with an `OutOfMemoryError`. 
+You discover the problem is related to the game's particle system. Each bullet, missile, and piece of shrapnel is represented by a separate object containing heavy assets like full 3D meshes and textures. When the battle reaches its climax, the sheer number of these objects exhausts the available RAM and crashes the game.
+
+**The Solution:** On closer inspection, you notice that while the coordinates, movement vectors, and current speed of each particle vary wildly (extrinsic state), the color, 3D model, and texture always remain exactly the same (intrinsic state) for all particles of a given type.
+The Flyweight pattern suggests that you stop storing the extrinsic state inside the object. Instead, you pass this state to specific methods which rely on it. Only the intrinsic state stays within the object, letting you reuse it in different contexts. As a result, you only need a few intrinsic objects (e.g., one for a "Bullet", one for a "Missile") rather than millions, saving enormous amounts of RAM.
+
+---
+
+## 🌍 Real-World Analogy
+
+In a publishing company, printing 100,000 copies of a book doesn't mean the authors have to write the text 100,000 times. The text itself (the intrinsic state) is written once and set into a master printing plate. The individual pieces of paper, the binding, and the ink (the extrinsic state) are provided for each individual copy. The master plate acts as the flyweight, greatly reducing the effort and resources needed to produce mass copies.
+
+---
+
+## 🏗️ Structure
+
+```mermaid
+classDiagram
+    class FlyweightFactory {
+        -cache: Map
+        +getFlyweight(repeatingState) Flyweight
+    }
+    
+    class Flyweight {
+        -intrinsicState
+        +operation(extrinsicState)
+    }
+    
+    class Context {
+        -extrinsicState
+        -flyweight: Flyweight
+        +Context(intrinsicState, extrinsicState)
+        +operation()
+    }
+    
+    class Client
+
+    Client --> Context
+    Client --> FlyweightFactory
+    FlyweightFactory o--> Flyweight
+    Context --> Flyweight
+    
+    note for FlyweightFactory "getFlyweight(state) {\n    if (flyweight doesn't exist) {\n       create new;\n       add to cache;\n    }\n    return flyweight;\n}"
+    note for Context "operation() {\n    flyweight.operation(extrinsicState);\n}"
+```
+
+---
+
 ## When to Use
 
 - A system generates an enormous number of objects causing memory exhaustion (e.g., millions of characters in a text editor, trees in a game forest).
@@ -216,7 +266,7 @@ This is an implementation of the Flyweight pattern. Java's `Integer` class maint
 2. Ensure Flyweights are strictly immutable (`final` fields, no setter methods).
 3. Back your Flyweight Factory with a size-bounded structure (like Guava `Cache` or Caffeine) rather than a boundless `HashMap` to prevent runaway heap consumption.
 
-### Compare Next
-- [Singleton Pattern](./singleton.md)
-- [Proxy Pattern](./proxy.md)
-- [Prototype Pattern](./prototype.md)
+### 🔄 Relations with Other Patterns
+- **[Composite](./composite.md)**: You can implement shared leaf nodes of a Composite tree as Flyweights to save memory.
+- **[Facade](./facade.md)**: Flyweight shows how to make lots of little objects, whereas Facade shows how to make a single object that represents an entire subsystem.
+- **[Singleton](./singleton.md)**: Flyweight would resemble Singleton if you somehow managed to reduce all shared states of the objects to just one flyweight object. However, there are two crucial differences: 1) There should be only one Singleton instance, whereas a Flyweight class can have multiple instances with different intrinsic states. 2) The Singleton object can be mutable, while Flyweight objects are strictly immutable.

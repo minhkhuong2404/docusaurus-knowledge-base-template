@@ -27,6 +27,72 @@ The Visitor pattern extracts these operations out into a separate "Visitor" obje
 
 ---
 
+## ❓ Problem & Solution
+
+**The Problem:** Imagine your team develops an app which works with geographic information structured as one colossal graph. Each node of the graph may represent a complex entity such as a city, but also more granular things like industries, sightseeing areas, etc.
+At some point, you got a task to implement exporting the graph into XML format. At first, the job seemed pretty straightforward. You planned to add an export method to each node class and then leverage recursion to go over each node of the graph.
+Unfortunately, the system architect refused to allow you to alter existing node classes. The architect said that the code was already in production and they didn't want to risk breaking it because of a potential bug in your changes.
+Furthermore, it was highly likely that after this feature was implemented, someone from the marketing department would ask you to provide the ability to export into a different format, or perform some other weird stuff. This would force you to change those fragile classes again.
+
+**The Solution:** The Visitor pattern suggests that you place the new behavior into a separate class called *visitor*, instead of trying to integrate it into existing classes. The original object that had to perform the behavior is now passed to one of the visitor's methods as an argument, providing the method access to all necessary data contained within the object.
+Now, what if the behavior can be executed over objects of different classes? For example, in our case with XML export, the actual implementation will probably be a little bit different across various node classes. Therefore, the visitor class should define a set of methods, each of which could take arguments of different types.
+To figure out which method to call for a given node, the Visitor pattern uses a technique called *Double Dispatch*. Instead of letting the client code select a proper version of the method to call, how about we delegate this choice to objects we're passing to the visitor as an argument? Since the objects know their own classes, they'll be able to pick a proper method on the visitor less awkwardly. They "accept" a visitor and tell it what visiting method should be executed.
+
+---
+
+## 🌍 Real-World Analogy
+
+Imagine a seasoned insurance agent who is eager to get new customers. He can visit every building in a neighborhood, trying to sell insurance to everyone he meets. Depending on the type of organization that occupies the building, he can offer specialized insurance policies:
+- If it's a residential building, he sells medical insurance.
+- If it's a bank, he sells theft insurance.
+- If it's a coffee shop, he sells fire and flood insurance.
+
+---
+
+## 🏗️ Structure
+
+```mermaid
+classDiagram
+    class Visitor {
+        <<interface>>
+        +visitElementA(e: ElementA)
+        +visitElementB(e: ElementB)
+    }
+    
+    class ConcreteVisitor {
+        +visitElementA(e: ElementA)
+        +visitElementB(e: ElementB)
+    }
+    
+    class Element {
+        <<interface>>
+        +accept(v: Visitor)
+    }
+    
+    class ElementA {
+        +accept(v: Visitor)
+        +featureA()
+    }
+    
+    class ElementB {
+        +accept(v: Visitor)
+        +featureB()
+    }
+    
+    class Client
+
+    Client --> Visitor
+    Client --> Element
+    Visitor <|.. ConcreteVisitor
+    Element <|.. ElementA
+    Element <|.. ElementB
+    
+    note for ElementA "accept(v) {\n    v.visitElementA(this);\n}"
+    note for ElementB "accept(v) {\n    v.visitElementB(this);\n}"
+```
+
+---
+
 ## When to Use
 
 - You need to perform operations on all elements of a complex object structure (e.g., a tree or graph).
@@ -218,7 +284,7 @@ Java does not support dynamic method overloading resolution based on the runtime
 1. Ensure your object hierarchy is 99% locked before committing to the Visitor pattern.
 2. If your collection is homogeneous (all `Employee` classes), just use standard Iterators. Visitor is specifically designed for traversing *heterogeneous* sets.
 
-### Compare Next
-- [Iterator Pattern](./iterator.md)
-- [Composite Pattern](./composite.md)
-- [Command Pattern](./command.md)
+### 🔄 Relations with Other Patterns
+- **[Visitor](./visitor.md)** is a very powerful version of the **[Command](./command.md)** pattern. Its object can execute operations over various objects of different classes.
+- You can use **[Visitor](./visitor.md)** to execute an operation over an entire **[Composite](./composite.md)** tree.
+- You can use **[Visitor](./visitor.md)** along with **[Iterator](./iterator.md)** to traverse a complex data structure and execute some operation over its elements, even if they all have different classes.

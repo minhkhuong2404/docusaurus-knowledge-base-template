@@ -25,6 +25,65 @@ The Command pattern turns a request into a stand-alone object containing all inf
 
 ---
 
+## ❓ Problem & Solution
+
+**The Problem:** Imagine you're working on a new text-editor app. Your current task is to create a toolbar with a bunch of buttons for various operations. You created a very neat `Button` class that can be used for buttons on the toolbar as well as for generic buttons in dialogs.
+While all these buttons look similar, they're supposed to do different things. Where would you put the code for the various click handlers? The simplest solution is to create tons of subclasses for each place where the button is used. These subclasses would contain the code to be executed on a button click.
+Before long, you realize this approach is flawed. First, you have an enormous number of subclasses. Second, your GUI code has become awkwardly dependent on the volatile code of the business logic.
+
+**The Solution:** Good software design is often based on the *principle of separation of concerns*, which usually results in breaking an app into layers. The GUI layer should merely render beautiful pictures, capture input, and delegate the actual work to the business logic layer.
+The Command pattern suggests that GUI objects shouldn't send requests to business logic directly. Instead, extract all of the request details—such as the object being called, the method name, and the arguments—into a separate *command* class with a single method that triggers this request.
+Command objects serve as links between GUI and business logic objects. The GUI object doesn't need to know what business logic object will receive the request and how it'll be processed. The GUI just triggers the command, which handles all the details.
+
+---
+
+## 🌍 Real-World Analogy
+
+After a long walk through the city, you enter a nice restaurant and sit at a table. A friendly waiter approaches you, takes your order, and writes it down on a piece of paper. The waiter goes to the kitchen and sticks the order on the wall. After a while, the chef gets to the order, reads it, and cooks the meal accordingly. The chef places the meal on a tray along with the order. The waiter checks the tray and brings you the exact meal that you ordered.
+The paper order serves as a *command*. It remains in a queue until the chef is ready to serve it. The order contains all the relevant information required to cook the meal. It allows the waiter to walk around taking orders from other clients without repeatedly carrying messages back and forth.
+
+---
+
+## 🏗️ Structure
+
+```mermaid
+classDiagram
+    class Invoker {
+        -command: Command
+        +setCommand(c: Command)
+        +executeCommand()
+    }
+    
+    class Command {
+        <<interface>>
+        +execute()
+    }
+    
+    class ConcreteCommand {
+        -receiver: Receiver
+        -params
+        +ConcreteCommand(r: Receiver, params)
+        +execute()
+    }
+    
+    class Receiver {
+        +action(params)
+    }
+    
+    class Client
+
+    Client --> Invoker
+    Client --> Receiver
+    Client ..> ConcreteCommand: creates
+    Invoker o--> Command
+    Command <|.. ConcreteCommand
+    ConcreteCommand --> Receiver : delegates
+    
+    note for ConcreteCommand "execute() {\n    receiver.action(params);\n}"
+```
+
+---
+
 ## When to Use
 
 - You need to parameterize objects with operations
@@ -306,7 +365,8 @@ CQRS (Command Query Responsibility Segregation) separates read operations (queri
 2. Attach idempotency keys where execution can be retried.
 3. Keep handlers side-effect explicit and telemetry-rich.
 
-### Compare Next
-- [Strategy Pattern](./strategy.md)
-- [Chain of Responsibility Pattern](./chain-of-responsibility.md)
-- [Observer Pattern](./observer.md)
+### 🔄 Relations with Other Patterns
+- **[Chain of Responsibility](./chain-of-responsibility.md), [Command](./command.md), [Mediator](./mediator.md), and [Observer](./observer.md)**: These all connect senders and receivers of requests differently. Command establishes a unidirectional connection between a sender and a receiver.
+- **[Memento](./memento.md)**: You can use Memento along with Command to implement "undo". In this case, commands are responsible for performing various operations over a target object, while mementos save the state of that object just before a command gets executed.
+- **[Strategy](./strategy.md)**: Command and Strategy may look similar because you can use both to parameterize an object with some action. However, Strategy usually defines different ways of doing the *same* thing, while Command converts *any* operation into an object.
+- **[Prototype](./prototype.md)**: Prototype can help when you need to save copies of Commands into history.

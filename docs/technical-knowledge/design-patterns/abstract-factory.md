@@ -24,6 +24,25 @@ The Abstract Factory pattern is a "factory of factories." It provides an interfa
 
 ---
 
+## ❓ Problem & Solution
+
+**The Problem:** Imagine you’re creating a furniture shop simulator. Your code needs to represent:
+1. A family of related products, say: `Chair` + `Sofa` + `CoffeeTable`.
+2. Several variants of this family. For example, all products are available in `Modern`, `Victorian`, and `ArtDeco` variants.
+
+You need a way to create individual furniture objects so that they match other objects of the same family. Customers get frustrated when they receive non-matching furniture. Plus, you don’t want to change existing code every time a new furniture style or new product type is added to the catalog.
+
+**The Solution:** The Abstract Factory pattern suggests explicitly declaring interfaces for each distinct product of the product family (e.g., `Chair`, `Sofa`). Then you ensure all variants follow those interfaces.
+Next, you declare the *Abstract Factory*—an interface with a list of creation methods for all products in the family (`createChair()`, `createSofa()`). Finally, for each style variant, you create a dedicated concrete factory class that implements the abstract factory and returns the stylistically matching products.
+
+---
+
+## 🌍 Real-World Analogy
+
+Think of the Abstract Factory as the master template at a furniture manufacturing plant. If you place an order with the "Victorian Factory" (a concrete factory), it guarantees that every `createChair()` and `createSofa()` call returns items styled with intricate wooden carvings. If you switch to the "Modern Factory", those exact same method calls return minimalist, glass-and-steel variants. The client (your living room) simply asks for "a Chair and a Sofa" and trusts the factory to maintain stylistic consistency.
+
+---
+
 ## When to Use
 
 - Your system needs to work with multiple families of related products
@@ -36,20 +55,50 @@ The Abstract Factory pattern is a "factory of factories." It provides an interfa
 
 ## How It Works
 
-### Structure
+### 🏗️ Structure
 
-```
-AbstractFactory (interface)
-├── ConcreteFactory1 → creates ProductA1, ProductB1
-└── ConcreteFactory2 → creates ProductA2, ProductB2
+```mermaid
+classDiagram
+    class AbstractFactory {
+        <<interface>>
+        +createProductA() AbstractProductA
+        +createProductB() AbstractProductB
+    }
+    class ConcreteFactory1 {
+        +createProductA() AbstractProductA
+        +createProductB() AbstractProductB
+    }
+    class ConcreteFactory2 {
+        +createProductA() AbstractProductA
+        +createProductB() AbstractProductB
+    }
 
-AbstractProductA (interface)
-├── ConcreteProductA1
-└── ConcreteProductA2
+    class AbstractProductA { <<interface>> }
+    class ConcreteProductA1
+    class ConcreteProductA2
+    
+    class AbstractProductB { <<interface>> }
+    class ConcreteProductB1
+    class ConcreteProductB2
+    
+    class Client
 
-AbstractProductB (interface)
-├── ConcreteProductB1
-└── ConcreteProductB2
+    Client --> AbstractFactory
+    Client --> AbstractProductA
+    Client --> AbstractProductB
+    
+    AbstractFactory <|.. ConcreteFactory1
+    AbstractFactory <|.. ConcreteFactory2
+    
+    AbstractProductA <|.. ConcreteProductA1
+    AbstractProductA <|.. ConcreteProductA2
+    AbstractProductB <|.. ConcreteProductB1
+    AbstractProductB <|.. ConcreteProductB2
+    
+    ConcreteFactory1 ..> ConcreteProductA1
+    ConcreteFactory1 ..> ConcreteProductB1
+    ConcreteFactory2 ..> ConcreteProductA2
+    ConcreteFactory2 ..> ConcreteProductB2
 ```
 
 ### Example: Cross-Platform UI Components
@@ -228,7 +277,8 @@ New product families can be added by creating new concrete factory classes witho
 2. Keep family interfaces capability-oriented, not implementation-shaped.
 3. Track family evolution metrics; simplify if variation stabilizes.
 
-### Compare Next
-- [Factory Method Pattern](./factory-method.md)
-- [Builder Pattern](./builder.md)
-- [Facade Pattern](./facade.md)
+### 🔄 Relations with Other Patterns
+- **[Factory Method](./factory-method.md)**: Many designs start with Factory Method (simpler, highly customizable via subclasses) and evolve into Abstract Factory when families of related objects appear. An Abstract Factory class is often implemented with a set of Factory Methods.
+- **[Builder](./builder.md)**: Builder focuses on constructing complex objects step by step. Abstract Factory specializes in creating families of related objects. Abstract Factory returns the product immediately, whereas Builder lets you run some additional construction steps before fetching the product.
+- **[Facade](./facade.md)**: An Abstract Factory can serve as an alternative to a Facade when you only want to hide the way subsystem objects are created from the client code.
+- **[Singleton](./singleton.md)**: Concrete factories are almost always implemented as Singletons because you rarely need more than one factory object for a given variant of a product family.

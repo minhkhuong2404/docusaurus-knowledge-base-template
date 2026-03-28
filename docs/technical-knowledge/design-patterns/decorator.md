@@ -25,6 +25,64 @@ The Decorator pattern wraps an object with additional behavior without modifying
 
 ---
 
+## ❓ Problem & Solution
+
+**The Problem:** Imagine you're working on a notification library which lets other programs notify their users about important events. The initial version was based on a `Notifier` class with a single `send()` method that sent email notifications. Later, users demanded SMS, Facebook, and Slack notification support. You could create new subclasses for each (`SMSNotifier`, `FacebookNotifier`), but what if a user wants to be notified via SMS *and* Email simultaneously? Creating special subclasses to combine every possible notification method would cause the class hierarchy to quickly bloat to immense proportions.
+
+**The Solution:** Inheritance is static and limits subclasses to a single parent. Instead, use *Composition* — one object holds a reference to another and delegates some work to it. The Decorator pattern is built on this. A "decorator" (or wrapper) is an object that links with a target object, implements the same interface, and delegates requests to the target. However, the wrapper can alter the result by doing something either before or after passing the request to the target object. You can stack these wrappers on top of each other recursively to combine multiple behaviors at runtime.
+
+---
+
+## 🌍 Real-World Analogy
+
+Wearing clothes is a perfect example of using decorators. When you're cold, you wrap yourself in a sweater. If it's still cold, you can wear a jacket on top. If it's raining, you can put on a raincoat. All of these garments "extend" your basic behavior but aren't part of you physically. You can easily put on or take off any piece of clothing whenever you need. The outer garments also seamlessly delegate basic physical tasks (like walking) back to you!
+
+---
+
+## 🏗️ Structure
+
+```mermaid
+classDiagram
+    class Component {
+        <<interface>>
+        +execute()
+    }
+    
+    class ConcreteComponent {
+        +execute()
+    }
+    
+    class BaseDecorator {
+        -wrappee: Component
+        +BaseDecorator(c: Component)
+        +execute()
+    }
+    
+    class ConcreteDecoratorA {
+        -extraState
+        +execute()
+    }
+    
+    class ConcreteDecoratorB {
+        +execute()
+        +extraBehavior()
+    }
+    
+    class Client
+
+    Component <|.. ConcreteComponent
+    Component <|.. BaseDecorator
+    BaseDecorator o--> Component
+    BaseDecorator <|-- ConcreteDecoratorA
+    BaseDecorator <|-- ConcreteDecoratorB
+    Client --> Component
+    
+    note for BaseDecorator "execute() {\n    wrappee.execute();\n}"
+    note for ConcreteDecoratorB "execute() {\n    super.execute();\n    extraBehavior();\n}"
+```
+
+---
+
 ## When to Use
 
 - You need to add behavior to individual objects without affecting others of the same class
@@ -302,7 +360,9 @@ It allows behavior to be added or removed at runtime without modifying the origi
 2. Expose composition in diagnostics so runtime stacks are inspectable.
 3. Keep each decorator single-purpose and measurable.
 
-### Compare Next
-- [Proxy Pattern](./proxy.md)
-- [Adapter Pattern](./adapter.md)
-- [Composite Pattern](./composite.md)
+### 🔄 Relations with Other Patterns
+- **[Adapter](./adapter.md)**: Adapter changes the interface of an existing object, while Decorator enhances an object without changing its interface. Support for recursive composition is possible with Decorator but not pure Adapters.
+- **[Composite](./composite.md)**: Decorator can be viewed as a degenerate Composite with only one child component. However, Decorator adds additional responsibilities to the wrapped object, while a Composite just "sums up" its children's results.
+- **[Chain of Responsibility](./chain-of-responsibility.md)**: Stacks of Decorators resemble Chains of Responsibility. But there are crucial differences: CoR handlers can execute arbitrary operations and can stop passing the request down the chain; Decorators just extending behavior must pass the request down the stack.
+- **[Proxy](./proxy.md)**: Both Proxy and Decorator have similar structures based on composition. The difference is that a Proxy usually manages the lifecycle of its service object on its own, whereas the composition of Decorators is always controlled by the client.
+- **[Strategy](./strategy.md)**: Decorator lets you change the skin of an object (adding things to the outside), while Strategy lets you change the guts (altering inner workings).

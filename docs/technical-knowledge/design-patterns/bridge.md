@@ -24,6 +24,69 @@ The Bridge pattern splits a large class or a set of closely related classes into
 
 ---
 
+## ❓ Problem & Solution
+
+**The Problem:** Suppose you have a geometric `Shape` class with a pair of subclasses: `Circle` and `Square`. You want to extend this class hierarchy to incorporate colors, so you plan to create `Red` and `Blue` shape subclasses. However, since you already have two subclasses, you'll need to create four class combinations such as `BlueCircle` and `RedSquare`. Adding new shape types and colors to the hierarchy will grow it exponentially. For example, adding a triangle shape would require two new subclasses (one for each color). And after that, adding a new color would require creating three subclasses (one for each shape type).
+
+**The Solution:** This problem occurs because we're trying to extend shape classes in two independent dimensions: by form and by color. That's a very common issue with class inheritance. The Bridge pattern solves this problem by switching from inheritance to object composition. You extract one of the dimensions into a separate class hierarchy, so that the original classes will reference an object of the new hierarchy, instead of having all of its state and behaviors tightly coupled within one class.
+
+---
+
+## 🌍 Real-World Analogy
+
+Think of universal remote controls and the devices they control (TVs, Radios, DVD players). With pure inheritance, you would need a `TVRemote`, an `AdvancedTVRemote`, a `RadioRemote`, and an `AdvancedRadioRemote`—scaling exponentially.
+Instead, the Bridge pattern splits these into two independent hierarchies:
+1. The **Abstraction**: The Remote Control itself (e.g., Basic Remote, Advanced Remote with a screen).
+2. The **Implementation**: The specific Device being controlled (e.g., TV, Radio), which handles fundamental commands like powering on or changing volume.
+The remote control contains a reference (the bridge) to the device. Any remote can control any device through this common implementation interface, meaning you can add new remotes or new devices completely independently.
+
+---
+
+## 🏗️ Structure
+
+```mermaid
+classDiagram
+    class Abstraction {
+        -implementation: Implementation
+        +Abstraction(i: Implementation)
+        +feature1()
+        +feature2()
+    }
+    
+    class RefinedAbstraction {
+        +featureN()
+    }
+    
+    class Implementation {
+        <<interface>>
+        +method1()
+        +method2()
+        +method3()
+    }
+    
+    class ConcreteImplementationA {
+        +method1()
+        +method2()
+        +method3()
+    }
+    
+    class ConcreteImplementationB {
+        +method1()
+        +method2()
+        +method3()
+    }
+    
+    class Client
+
+    Abstraction o--> Implementation
+    Abstraction <|-- RefinedAbstraction
+    Implementation <|.. ConcreteImplementationA
+    Implementation <|.. ConcreteImplementationB
+    Client --> Abstraction
+```
+
+---
+
 ## When to Use
 
 - Both abstraction and implementation need to be extended independently
@@ -272,7 +335,8 @@ Create an interface for the implementation dimension with its concrete classes. 
 2. Ensure both hierarchies can be tested independently with stable contracts.
 3. Document expected extension strategy for each axis to prevent accidental inheritance coupling.
 
-### Compare Next
-- [Strategy Pattern](./strategy.md)
-- [Adapter Pattern](./adapter.md)
-- [Template Method Pattern](./template-method.md)
+### 🔄 Relations with Other Patterns
+- **[Adapter](./adapter.md)**: Bridge is usually designed up-front, letting you develop parts of an application independently. Adapter is commonly used on an existing app to make some otherwise-incompatible classes work together.
+- **[State](./state.md), [Strategy](./strategy.md), and [Bridge](./bridge.md)**: These have very similar solution structures based on composition (delegating work to other objects), but they all solve different problems.
+- **[Abstract Factory](./abstract-factory.md)**: Abstract Factory is often used alongside Bridge. This pairing is useful when some abstractions defined by Bridge can only work with specific implementations. Abstract Factory can encapsulate these creation relations and hide the complexity from the client code.
+- **[Builder](./builder.md)**: You can combine Builder with Bridge. In this scenario, the director class plays the role of the abstraction, while different builders act as implementations.

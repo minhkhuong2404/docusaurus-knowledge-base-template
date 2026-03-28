@@ -24,6 +24,22 @@ The Composite pattern lets clients treat individual objects (leaves) and groups 
 
 ---
 
+## ❓ Problem & Solution
+
+**The Problem:** Using the Composite pattern makes sense only when the core model of your app can be represented as a tree. For example, imagine that you have two types of objects: `Products` and `Boxes`. A `Box` can contain several `Products` as well as a number of smaller `Boxes`. These little `Boxes` can also hold some `Products` or even smaller `Boxes`, and so on.
+Say you decide to create an ordering system that uses these classes. Orders could contain simple products without any wrapping, as well as boxes stuffed with products...and other boxes. How would you determine the total price of such an order? You would have to unwrap all the boxes, go over all the products and then calculate the total. That would require knowing the exact classes of the products and boxes you're looping through, which makes the calculation method too tightly coupled to the object classes.
+
+**The Solution:** The Composite pattern suggests that you work with `Products` and `Boxes` through a common interface which declares a method for calculating the total price.
+How would this method work? For a product, it’d simply return the product's price. For a box, it’d go over each item the box contains, ask its price and then return a total for this box. If one of these items were a smaller box, that box would also start traversing its contents and so on, until the prices of all inner components were calculated. The great benefit is that you don't care about the concrete classes of objects that compose the tree!
+
+---
+
+## 🌍 Real-World Analogy
+
+Armies of most countries are structured as hierarchies. An army consists of several divisions; a division is a set of brigades, and a brigade consists of platoons, which can be broken down into squads. Finally, a squad is a small group of real soldiers. Orders are given at the top of the hierarchy and passed down onto each level until every single soldier knows what needs to be done.
+
+---
+
 ## When to Use
 
 - Representing hierarchical data (file systems, UI component trees, organizational charts)
@@ -35,12 +51,35 @@ The Composite pattern lets clients treat individual objects (leaves) and groups 
 
 ## How It Works
 
-### Structure
+### 🏗️ Structure
 
-```
-Component (interface)
-├── Leaf — has no children, performs actual work
-└── Composite — contains children (Leaf or other Composites), delegates to them
+```mermaid
+classDiagram
+    class Component {
+        <<interface>>
+        +execute()
+    }
+    
+    class Leaf {
+        +execute()
+    }
+    
+    class Composite {
+        -children: List~Component~
+        +add(c: Component)
+        +remove(c: Component)
+        +getChildren() List~Component~
+        +execute()
+    }
+    
+    class Client
+
+    Component <|.. Leaf
+    Component <|.. Composite
+    Composite o--> Component
+    Client --> Component
+    
+    note for Composite "execute() {\n    for (child in children) {\n        child.execute();\n    }\n}"
 ```
 
 ### File System Example
@@ -258,7 +297,10 @@ Create a `Component` interface with common methods (`display()`, `getSize()`). C
 2. Keep traversal strategies explicit (depth-first, breadth-first, short-circuit).
 3. Add safeguards for recursion depth and invalid graph states.
 
-### Compare Next
-- [Decorator Pattern](./decorator.md)
-- [Facade Pattern](./facade.md)
-- [Proxy Pattern](./proxy.md)
+### 🔄 Relations with Other Patterns
+- **[Builder](./builder.md)**: You can use Builder when creating complex Composite trees because you can program its construction steps to work recursively.
+- **[Chain of Responsibility](./chain-of-responsibility.md)**: Chain of Responsibility is often used in conjunction with Composite. In this case, when a leaf component gets a request, it may pass it through the chain of all of its parent components down to the root of the object tree.
+- **[Iterator](./iterator.md)**: You can use Iterators to traverse Composite trees.
+- **[Visitor](./visitor.md)**: You can use Visitor to execute an operation over an entire Composite tree safely.
+- **[Flyweight](./flyweight.md)**: You can implement shared leaf nodes of the Composite tree as Flyweights to save some RAM.
+- **[Decorator](./decorator.md)**: Composite and Decorator have similar structure diagrams since both rely on recursive composition to organize an open-ended number of objects. However, a Decorator only has one child component. Additionally, a Decorator adds responsibilities to the wrapped object, while a Composite just "sums up" its children's results.
