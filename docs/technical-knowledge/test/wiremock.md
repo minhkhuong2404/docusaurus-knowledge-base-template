@@ -73,3 +73,28 @@ stubFor(get(urlPathMatching("/api/users/.*"))
 
 ## WireMock with Testcontainers
 For complex setups or entirely declarative testing architectures without `@AutoConfigureWireMock`, WireMock can also be run inside a Docker container using **Testcontainers**. This completely isolates the mock server and guarantees consistency across local testing and CI pipelines.
+
+---
+
+## Interview Questions
+
+### Q: When is WireMock better than Mockito for HTTP clients?
+**A:** When you need realistic HTTP-level behavior: headers, status codes, retries, serialization, and network faults.
+
+### Q: How do you avoid brittle WireMock tests?
+**A:** Match only contract-relevant fields, keep stubs focused, and avoid over-specifying incidental headers/query order.
+
+### Q: What failure scenarios should senior teams always simulate with WireMock?
+**A:** Timeouts, 429/503 throttling, malformed payloads, connection resets, and slow downstream latency.
+
+### Q: How do you test retry/idempotency with WireMock?
+**A:** Program sequential responses (for example 500 then 200), assert retry count, and verify final side effects are not duplicated.
+
+### Q: What is the role of request verification in integration tests?
+**A:** It validates outbound contract correctness (method, path, headers, payload) rather than only response handling.
+
+### Q: How do you integrate WireMock with CI at scale?
+**A:** Run isolated ports/containers per test suite, keep mappings versioned, and parallelize suites with deterministic setup/teardown.
+
+### Q: What are trade-offs between in-process WireMock and Testcontainers WireMock?
+**A:** In-process is faster and simpler; containerized mode is more environment-consistent and avoids local runtime variance.

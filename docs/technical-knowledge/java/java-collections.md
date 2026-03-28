@@ -487,3 +487,16 @@ list.removeIf(String::isEmpty);
 - [Java Concurrency: Threads, Locks & Concurrent Utilities](./java-concurrency.md)
 - [Java I/O: Streams, NIO & I/O Models](./java-io.md)
 - [Java Fundamentals: Core Language Concepts](./java-fundamentals.md)
+
+## Interview Questions (Senior Level)
+
+1. How do you select collection types for latency-critical code paths where both throughput and GC pressure matter?
+2. When does `ConcurrentHashMap` become a bottleneck, and what mitigation patterns do you apply?
+3. How would you detect and eliminate hidden $O(n^2)$ collection behavior in production services?
+4. What rules do you enforce for map keys, mutability, and equality contracts across domain models?
+
+Short answer guide:
+- Choose based on access pattern, memory locality, and mutation profile.
+- Reduce contention via sharding, key distribution, and workload-aware data structures.
+- Use profiling and allocation analysis to surface algorithmic hotspots.
+- Require immutable keys and correct `equals/hashCode` implementations.

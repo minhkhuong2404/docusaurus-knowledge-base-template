@@ -114,3 +114,25 @@ public class OrderConsumer {
 :::tip Get started
 Head to [Core Concepts → Kafka Overview](./core/kafka-overview) to begin your journey.
 :::
+
+---
+
+## Interview Questions
+
+### Q: When should Kafka be chosen over a traditional message queue?
+**A:** Choose Kafka for high-throughput event streams, replayability, and long retention; use classic queues for simpler point-to-point workflows.
+
+### Q: What is the most important production trade-off in Kafka design?
+**A:** Balancing durability and latency via replication factor, acks, and batching settings.
+
+### Q: How do you avoid hot partitions?
+**A:** Use balanced partition keys and validate key cardinality against traffic distribution.
+
+### Q: Why does consumer group design matter for scaling?
+**A:** Throughput scales by partition count and consumer parallelism constraints; misalignment causes idle consumers or lag.
+
+### Q: What reliability controls should be discussed in a senior interview answer?
+**A:** Idempotent producers, retries with backoff, dead-letter handling, and observability of lag and rebalance behavior.
+
+### Q: How do you explain eventual consistency with Kafka to product stakeholders?
+**A:** Events are processed asynchronously with bounded delay; systems converge to correctness while gaining resilience and scale.

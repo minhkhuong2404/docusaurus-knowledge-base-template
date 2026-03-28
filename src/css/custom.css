@@ -21,6 +21,22 @@
   --code-copy-btn-hover: #cdd6f4;
 }
 
+[data-theme='light'] {
+  --code-bg: #eff1f5;
+  --code-surface: #e6e9ef;
+  --code-border: #bcc0cc;
+  --code-text: #4c4f69;
+  --code-line-number: #9ca0b0;
+  --code-highlight-bg: rgba(4, 165, 229, 0.15);
+  --code-highlight-border: #04a5e5;
+  --code-scrollbar-thumb: #bcc0cc;
+  --code-scrollbar-track: #eff1f5;
+  --code-title-bg: #ccd0da;
+  --code-copy-btn: #8c8fa1;
+  --code-copy-btn-hover: #4c4f69;
+}
+
+
 /* Pre block container */
 pre[class*="language-"],
 div[class*="codeBlockContainer"] pre {

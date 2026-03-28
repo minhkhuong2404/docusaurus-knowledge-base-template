@@ -202,3 +202,16 @@ D) Use buildspec `install` phase to pre-download
 - [buildspec.yml Reference](https://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html)
 - [CodeBuild Environment Variables](https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-env-vars.html)
 - [Maven with CodeBuild](https://docs.aws.amazon.com/codebuild/latest/userguide/sample-maven-5m.html)
+
+## Interview Questions (Senior Level)
+
+1. How do you optimize CodeBuild cost and throughput for large monorepos with mixed Java and container builds?
+2. When a build runs in private subnets, what networking design avoids flaky internet dependency failures?
+3. Which secrets strategy do you use in buildspec to balance security, auditability, and developer velocity?
+4. How would you harden build reproducibility so two builds from the same commit produce equivalent artifacts?
+
+Short answer guide:
+- Use targeted build matrices, caching, and right-sized compute classes.
+- Provide NAT or VPC endpoints for required services and deterministic dependency mirrors.
+- Prefer SSM/Secrets Manager references, avoid plaintext env variables.
+- Pin toolchain versions and isolate mutable external inputs.

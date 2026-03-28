@@ -156,3 +156,25 @@ Both package and deploy applications, but they solve different problems.
 | **Complexity to Write** | Low (Go templates) | High (Go programming, K8s SDK) |
 
 **Best Practice:** Combine them! Deploy the Operator itself using a Helm chart, then let the Operator deploy your databases via CRDs.
+
+---
+
+## Interview Questions
+
+### Q: What separates an Operator from a basic controller?
+**A:** An Operator encodes domain operational knowledge such as backup, failover, and safe upgrade workflows.
+
+### Q: Why must reconcile loops be idempotent?
+**A:** Controllers receive repeated events and retries, so repeated execution must converge safely to the same desired state.
+
+### Q: How do CRD status fields improve platform operations?
+**A:** They expose system health and progress to users and automation without requiring internal controller access.
+
+### Q: What are common failure modes in custom operators?
+**A:** Infinite reconcile loops, non-idempotent side effects, and weak backoff causing API server pressure.
+
+### Q: When should a team build an operator instead of a Helm chart?
+**A:** When day-two automation and lifecycle intelligence are required beyond templated deployment.
+
+### Q: What testing strategy is critical for operator maturity?
+**A:** End-to-end reconciliation tests under failure scenarios, including upgrade, restore, and partial outage behavior.

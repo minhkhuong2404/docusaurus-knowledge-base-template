@@ -657,3 +657,25 @@ public enum AppConfig {
 - [Java Collections Framework: Deep Dive](./java-collections.md)
 - [Java Concurrency: Threads, Locks & Concurrent Utilities](./java-concurrency.md)
 - [JVM Internals: Memory, GC & Class Loading](./java-jvm.md)
+
+---
+
+## Interview Questions
+
+### Q: Why do fundamentals still matter for senior backend roles?
+**A:** Most production bugs involve core language behavior: mutability, equality, exceptions, concurrency, or memory semantics.
+
+### Q: When should BigDecimal be mandatory?
+**A:** For monetary and precision-critical calculations where floating-point rounding is unacceptable.
+
+### Q: What is a common equals/hashCode bug in enterprise code?
+**A:** Using mutable fields in identity methods, causing broken HashMap and HashSet behavior after mutation.
+
+### Q: How do you choose between interface and abstract class?
+**A:** Use interfaces for contracts and flexibility; use abstract classes when shared state or template behavior is needed.
+
+### Q: Why is pass-by-value misunderstood in Java interviews?
+**A:** Object references are copied by value, so object mutation is visible but reference reassignment is not.
+
+### Q: How do you decide if reflection is acceptable?
+**A:** Use it in framework boundaries and tooling, but avoid it in hot paths or core domain logic.

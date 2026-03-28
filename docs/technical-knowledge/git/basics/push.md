@@ -177,3 +177,16 @@ exit 0
 :::warning Never Force-Push to Shared Branches
 `git push --force` on `main` or `develop` will rewrite the public history and corrupt every teammate's local clone. Use `--force-with-lease` on feature branches only, and **never** on protected branches.
 :::
+
+## Interview Questions (Senior Level)
+
+1. How do you design branch protection around safe push behavior at scale?
+2. Why is `--force-with-lease` materially safer than `--force`?
+3. What controls prevent accidental pushes to privileged remotes?
+4. How do you recover quickly from a mistaken force push?
+
+Short answer guide:
+- Use protected branches, required checks, and approval gates.
+- Lease validation prevents overwriting unseen remote commits.
+- Add remote restrictions, hooks, and least-privilege credentials.
+- Recover via reflog/backup refs and coordinated branch restoration.

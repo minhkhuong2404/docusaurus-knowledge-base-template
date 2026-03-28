@@ -366,3 +366,25 @@ public class ProductService {
 Redis PUBLISH cache:invalidate "product:123"
 → All service instances: localCache.invalidate(123)
 ```
+
+---
+
+## Interview Questions
+
+### Q: How do you pick a cache pattern for a write-heavy domain?
+**A:** Start with cache-aside plus invalidation-on-write; use write-through only when freshness requirements justify added write latency.
+
+### Q: What is the most common cache stampede mitigation in practice?
+**A:** TTL jitter plus single-flight lock per hot key, with short fallback windows.
+
+### Q: How do you design cache keys for long-term maintainability?
+**A:** Use stable namespaced keys with explicit versioning and deterministic parameter ordering.
+
+### Q: When should null caching be enabled?
+**A:** For high-cardinality miss patterns, with short TTL to limit stale non-existence assumptions.
+
+### Q: How do you keep L1 and L2 cache coherent in microservices?
+**A:** Broadcast invalidation events and enforce bounded staleness windows with metrics on stale-hit rate.
+
+### Q: What cache metrics matter most in senior reviews?
+**A:** Hit ratio by key family, fill latency, eviction rate, and downstream protection during miss spikes.

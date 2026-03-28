@@ -210,3 +210,28 @@ git push origin v1.2.0
 :::tip Start Small
 You do not need to go fully trunk-based on day one. Start by reducing your feature branch lifetime from "2 weeks" to "3 days" and using feature flags for large features. The reduction in merge conflict pain and PR review lag will be immediately obvious.
 :::
+
+---
+
+## Interview Questions
+
+### Q: Why does trunk-based development often improve deployment frequency?
+**A:** Short-lived branches and continuous integration reduce merge debt, so production-ready code is always close to mainline.
+
+### Q: What is the biggest organizational prerequisite for trunk-based success?
+**A:** Fast, trustworthy CI with strict branch protections. Without that, mainline quality degrades quickly.
+
+### Q: How do feature flags change risk management in TBD?
+**A:** They decouple deployment from release, allowing safe merges of incomplete work while controlling user exposure.
+
+### Q: What are common failure modes when teams migrate from Git Flow to TBD?
+**A:** Long-lived feature branches persist, CI stays slow, and teams skip rebasing, causing mainline instability.
+
+### Q: How do you handle urgent hotfixes in trunk-based repositories?
+**A:** Patch from latest main, keep changes minimal, run full CI gates, and deploy quickly with follow-up hardening tasks.
+
+### Q: What metrics show TBD adoption is healthy?
+**A:** Lower branch lifetime, shorter PR cycle time, reduced merge-conflict frequency, and higher successful deploy rate.
+
+### Q: How do you prevent hidden integration issues when everyone merges daily?
+**A:** Use layered automated tests, contract checks for service dependencies, and post-merge smoke checks on main.

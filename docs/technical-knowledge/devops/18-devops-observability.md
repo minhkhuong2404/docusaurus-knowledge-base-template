@@ -102,3 +102,25 @@ When building observability dashboards for a cluster, always measure the **Four 
 | **Traffic** | The demand placed on your system. | HTTP requests per second (RPS). |
 | **Errors** | Rate of requests that fail. | 5xx HTTP response codes relative to total. |
 | **Saturation** | How "full" your service is. | CPU limits, connection pool utilization, disk I/O. |
+
+---
+
+## Interview Questions
+
+### Q: How do metrics, logs, and traces complement each other during incidents?
+**A:** Metrics detect and scope, traces localize path-level latency, and logs provide root-cause evidence.
+
+### Q: What is a common anti-pattern in observability programs?
+**A:** Collecting high-volume telemetry without clear SLO-aligned questions and alert strategy.
+
+### Q: How do you reduce alert fatigue while preserving reliability?
+**A:** Alert on symptom-based SLO burn and critical dependency failures, not every infrastructure fluctuation.
+
+### Q: Why is trace context propagation mandatory in microservices?
+**A:** Without it, cross-service causality is lost and latency debugging becomes guesswork.
+
+### Q: What sampling strategy would you use in production tracing?
+**A:** Low baseline sampling with dynamic upsampling on errors and high-latency paths.
+
+### Q: Which golden signals should be dashboarded per service by default?
+**A:** Request rate, error rate, latency percentiles, and saturation indicators tied to service capacity.

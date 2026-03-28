@@ -210,3 +210,16 @@ Each page in this knowledge base follows a consistent structure:
 4. **Field/code references** — Lookup tables
 5. **Java/Spring notes** — Practical implementation snippets
 6. **Related concepts** — Cross-links to related pages
+
+## Interview Questions (Senior Level)
+
+1. How do you explain banking payment architecture end-to-end to new backend engineers?
+2. What boundaries should be explicit between payment orchestration and core banking systems?
+3. Which controls are non-negotiable before allowing straight-through processing?
+4. How would you measure payment platform maturity beyond transaction throughput?
+
+Short answer guide:
+- Teach by lifecycle: initiation, screening, clearing, settlement, notification.
+- Keep orchestration stateless and ledger authority centralized.
+- Enforce sanctions/fraud/AML gates with strong observability.
+- Track failure recovery, exception handling quality, and reconciliation accuracy.

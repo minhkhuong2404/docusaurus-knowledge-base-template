@@ -318,6 +318,19 @@ A PEP is a person entrusted with a **prominent public function** — they are at
 | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | **Domestic PEP**                   | Prime Minister, Cabinet Ministers, Senators, Federal Court judges, senior military officers, chiefs of state-owned enterprises |
 | **Foreign PEP**                    | Heads of state, ministers, ambassadors, senior judges of foreign governments                                                   |
+
+## Interview Questions (Senior Level)
+
+1. How do you balance false positives and missed detection risk in AML transaction monitoring?
+2. What governance model should own KYC refresh quality across business and compliance teams?
+3. How do you operationalize EDD for complex ownership structures without onboarding paralysis?
+4. Which data-quality failures most commonly undermine AML/CTF controls?
+
+Short answer guide:
+- Tune scenarios by typology, risk segment, and investigator feedback loops.
+- Define clear ownership, SLAs, and escalation paths for KYC lifecycle tasks.
+- Apply risk-based evidence tiers and senior approvals for high-risk cases.
+- Incomplete customer data and weak entity resolution are frequent root causes.
 | **International Organisation PEP** | Senior officials of UN, IMF, World Bank, Olympic Committee                                                                     |
 | **Family Members**                 | Spouse, children, parents, siblings of any PEP                                                                                 |
 | **Close Associates**               | Business partners and close personal associates of PEPs                                                                        |

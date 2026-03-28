@@ -169,3 +169,16 @@ gfix 9f3e2d1
 
 Combined with `git config --global rebase.autoSquash true`, this becomes the fastest way to maintain clean branch history.
 :::
+
+## Interview Questions (Senior Level)
+
+1. How does a `fixup`-first workflow improve review velocity compared with ad hoc amend/rebase usage?
+2. What branch protection rules should accompany frequent `--autosquash` rewrites?
+3. How do you coach teams to avoid losing context when fixup messages are discarded?
+4. In which cases is `--fixup=amend:` a better choice than plain `--fixup`?
+
+Short answer guide:
+- Fixups separate correction intent from final history cleanup.
+- Combine with protected main branches and controlled force-push on feature branches.
+- Capture rationale in PR discussion and final curated commit messages.
+- Use amend fixup when the original message itself needs correction.

@@ -165,3 +165,25 @@ git flow hotfix finish JIRA-999-fix-npe
 :::tip Git Flow vs Trunk-Based Development
 Git Flow is best for **scheduled, versioned releases** (e.g., monthly releases, mobile apps with store review cycles). If your team deploys to production multiple times per day, [Trunk-Based Development](./trunk-based) is a better fit — fewer branches, simpler rules, faster feedback loops.
 :::
+
+---
+
+## Interview Questions
+
+### Q: When is Git Flow still a good choice in modern teams?
+**A:** For products with scheduled releases, long QA cycles, and strict release governance where branch isolation is valuable.
+
+### Q: What is the biggest operational risk in Git Flow?
+**A:** Merge/back-merge complexity across develop, release, and hotfix branches, which can introduce drift and missed fixes.
+
+### Q: How do you prevent hotfix divergence between main and develop?
+**A:** Automate mandatory back-merge checks and include regression tests to verify parity after hotfix propagation.
+
+### Q: Why can Git Flow reduce deployment speed?
+**A:** Long-lived branches delay integration, increase conflict probability, and lengthen feedback cycles.
+
+### Q: How do you choose between Git Flow and trunk-based in an interview scenario?
+**A:** Base the choice on release cadence, compliance constraints, team maturity, and CI capabilities.
+
+### Q: What governance controls should accompany Git Flow?
+**A:** Clear branch policies, release ownership, CI gates per branch type, and strict tagging/versioning discipline.

@@ -220,3 +220,31 @@ A high-level class should **never** call `new` on a low-level class. Let Spring 
 | **Testability** | Hard — can't mock | Easy — inject a test double |
 
 You've completed all 5 SOLID principles! [See the full summary →](../summary)
+
+---
+
+## Interview Questions
+
+### Q: How is DIP different from dependency injection?
+**A:** DIP is a design principle about dependency direction toward abstractions. Dependency injection is a technique to provide those abstractions at runtime.
+
+### Q: In a Spring application, who should own repository interfaces?
+**A:** The domain/application layer should own the interface contract. Infrastructure modules implement it. This preserves business-level control over required behavior.
+
+### Q: What is the risk of putting framework-specific types in domain interfaces?
+**A:** It leaks infrastructure concerns into core business logic, making tests and future migrations harder.
+
+### Q: How would you apply DIP to external integrations like payment and notification providers?
+**A:** Define provider-agnostic ports (interfaces), implement adapters per vendor, and wire adapter selection via configuration/profile.
+
+### Q: What interview answer shows mature DIP usage in testing?
+**A:** Use contract-focused fakes for domain tests and thin mocks only at boundaries. This validates behavior without over-coupling tests to implementation details.
+
+### Q: When can DIP be overused?
+**A:** Creating interfaces for classes with a single stable implementation and no testing pressure can add unnecessary indirection.
+
+### Q: How do you migrate from hardcoded dependencies to DIP safely?
+**A:** Introduce an interface around the existing concrete class, inject it through constructors, update call sites incrementally, and keep behavior unchanged with regression tests.
+
+### Q: What does good DIP look like in incident response?
+**A:** You can quickly replace failing adapters (for example, switch to fallback provider) without changing core business services.

@@ -249,3 +249,25 @@ public class SessionMetrics {
 | Cookie (JWT) | ✅ | N/A (stateless) | ✅ Fast | Medium |
 
 > **Best practice:** Use Redis sessions for stateful workloads. Use JWT for stateless APIs. Combine both — JWT for auth, Redis for rich session data.
+
+---
+
+## Interview Questions
+
+### Q: When should a team choose Redis sessions over stateless JWT-only auth?
+**A:** When server-side session invalidation, concurrent session control, or rich mutable session state is required.
+
+### Q: What is the biggest operational risk in distributed session storage?
+**A:** Redis unavailability can impact authentication flow, so HA design and fallback behavior are critical.
+
+### Q: How do you implement secure global logout across devices?
+**A:** Index sessions by principal and invalidate all associated session IDs atomically.
+
+### Q: Why is session fixation protection mandatory after login?
+**A:** It prevents attackers from reusing a pre-established session identifier.
+
+### Q: How do you balance session TTL and user experience?
+**A:** Use idle timeout with optional sliding renewal, constrained by security and compliance policy.
+
+### Q: What monitoring should exist for session infrastructure?
+**A:** Active session count, expiration rate, auth failure spikes, and Redis latency/error trends.

@@ -326,3 +326,25 @@ OOP in Java
 - [Java Fundamentals: Core Language Concepts](./java-fundamentals.md)
 - [Java Collections Framework: Deep Dive](./java-collections.md)
 - [Java Interview Questions & Answers](./java-interview-questions.md)
+
+---
+
+## Interview Questions
+
+### Q: How do you decide between inheritance and composition in service design?
+**A:** Prefer composition for runtime variability and lower coupling; use inheritance only for true semantic substitution.
+
+### Q: What is a practical sign of poor encapsulation?
+**A:** Business invariants are enforced in many callers instead of inside the domain object.
+
+### Q: Why is polymorphism useful in payment or notification domains?
+**A:** It lets teams add providers without modifying core orchestration logic.
+
+### Q: How do SOLID principles influence API stability?
+**A:** They reduce ripple effects so extensions and internal refactors do not break consumers.
+
+### Q: When can abstraction harm maintainability?
+**A:** When abstractions are introduced before real variation exists, increasing indirection with no payoff.
+
+### Q: How would you refactor a god service using OOP principles?
+**A:** Split responsibilities, extract domain behaviors, and introduce focused collaborators around clear contracts.

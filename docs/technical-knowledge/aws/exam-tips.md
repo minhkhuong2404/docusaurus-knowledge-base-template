@@ -184,3 +184,16 @@ The best preparation is a combination of **watching/reading** all topics + **han
 
 Target 80%+ on TutorialsDojo mocks before booking the real exam.
 :::
+
+## Interview Questions (Senior Level)
+
+1. How would you adapt exam-style cloud decision frameworks to real production architecture reviews?
+2. What is the biggest gap between certification knowledge and operating AWS at scale?
+3. How do you prioritize service selection when multiple AWS options are valid?
+4. What operational metrics should validate that an AWS design choice was correct?
+
+Short answer guide:
+- Translate keyword mapping into explicit trade-off analysis.
+- Close the gap with hands-on incident and cost experience.
+- Optimize for reliability, security, cost, and team capability.
+- Validate with SLOs, spend trends, and failure-mode behavior.

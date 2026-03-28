@@ -484,3 +484,28 @@ Understanding these internals enables you to debug startup issues, write custom 
 - [Spring Boot - Overview & Why It Matters](./spring-boot.md)
 - [Spring Boot - Advanced Topics](./spring-boot-advanced.md)
 - [Spring Framework: Deep Dive](./spring-framework-deep-dive.md)
+
+---
+
+## Interview Questions
+
+### Q: How do you debug unexpected auto-configuration in production?
+**A:** Inspect condition evaluation reports, bean definitions, and classpath differences between environments.
+
+### Q: What is the practical difference between configuration properties and ad-hoc @Value usage?
+**A:** Properties classes provide typed, validated, maintainable configuration models; @Value is best for isolated simple values.
+
+### Q: Why are conditional annotations central to Boot internals?
+**A:** They control feature activation by classpath, properties, and existing beans, which is the core of Boot's behavior.
+
+### Q: When should a team build a custom starter?
+**A:** When repeated internal platform patterns need standardized auto-configured setup across many services.
+
+### Q: What failure mode appears when classpath changes silently?
+**A:** Different auto-configurations activate and alter runtime behavior without code changes.
+
+### Q: How do you prevent premature bean initialization bugs?
+**A:** Keep post-processors minimal, avoid heavy dependencies in early lifecycle hooks, and add startup invariants tests.
+
+### Q: Why does understanding fat JAR classloading matter operationally?
+**A:** It helps diagnose startup failures, shading conflicts, and environment-specific classpath issues quickly.

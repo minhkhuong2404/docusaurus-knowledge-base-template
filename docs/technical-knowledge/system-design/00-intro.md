@@ -46,3 +46,31 @@ tags: [system-design, overview, architecture, interview-prep]
 - **Identify bottlenecks first** — don't optimize prematurely.
 - **Consistency vs. Availability** — know which one your use case needs.
 - **Data is the hardest part** — compute is cheap, storage and consistency are not.
+
+---
+
+## Interview Questions
+
+### Q: How do you structure the first 5 minutes of a system design interview?
+**A:** Clarify requirements and constraints, define scale assumptions, identify core entities and APIs, then propose a baseline architecture before deep dives.
+
+### Q: What distinguishes a senior-level system design answer from a mid-level one?
+**A:** Seniors make explicit trade-offs, quantify scale, discuss failure modes, and connect design choices to operational concerns like SLOs, cost, and rollout risk.
+
+### Q: How do you decide what to design first: API, data model, or infrastructure?
+**A:** Start from user flows and invariants, then model data and APIs, and finally map to infrastructure based on throughput, latency, and consistency requirements.
+
+### Q: How should you handle unknown numbers during estimation?
+**A:** State assumptions clearly, use round-number math, and show sensitivity analysis to communicate how the design changes at 10x scale.
+
+### Q: What is your framework for discussing consistency trade-offs?
+**A:** Identify correctness requirements per operation, classify tolerance for stale reads, and choose patterns (quorum, idempotency, saga) accordingly.
+
+### Q: How do you include reliability in an interview design without getting lost?
+**A:** Cover failure domains, retries/timeouts, backpressure, graceful degradation, and observability hooks in a concise reliability pass.
+
+### Q: When do you introduce caching in the interview flow?
+**A:** After baseline bottlenecks are identified. Explain cache key design, invalidation strategy, and consistency implications.
+
+### Q: How do you communicate cost-awareness in architecture decisions?
+**A:** Compare options by resource profile (CPU, memory, storage, network, operations), then justify the cheapest design that still meets SLOs.

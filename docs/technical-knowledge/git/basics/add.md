@@ -205,3 +205,16 @@ git add -f src/main/resources/application-template.yml
 :::tip Commit Hygiene Starts Here
 Use `git add -p` to keep commits small and focused. A commit titled `"fix: resolve NPE in TransactionService"` should only contain the fix — not an unrelated refactor you happened to do in the same session. Patch staging makes that easy.
 :::
+
+## Interview Questions (Senior Level)
+
+1. How do you use patch staging to keep commits reviewable in high-change files?
+2. What policy prevents accidental staging of secrets or generated artifacts?
+3. When do you prefer `git add -u` over `git add -A` in production workflows?
+4. How do you coach teams to avoid “everything in one commit” behavior?
+
+Short answer guide:
+- Use `-p` to separate intent and reduce review noise.
+- Combine `.gitignore`, pre-commit checks, and secret scanning.
+- Prefer `-u` when you only want tracked-file updates.
+- Tie commit quality to PR standards and release traceability.

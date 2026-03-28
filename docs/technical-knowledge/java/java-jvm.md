@@ -587,3 +587,28 @@ ExpensiveObject obj = ref.get(); // null after GC
 - [Java Concurrency: Threads, Locks & Concurrent Utilities](./java-concurrency.md)
 - [Java Fundamentals: Core Language Concepts](./java-fundamentals.md)
 - [Java Interview Questions & Answers](./java-interview-questions.md)
+
+---
+
+## Interview Questions
+
+### Q: How do you choose between G1 and ZGC for a backend service?
+**A:** G1 is a strong default for balanced throughput and latency; ZGC is preferred for strict low-latency requirements with larger heaps.
+
+### Q: What metrics indicate GC tuning is required?
+**A:** Rising tail latency, frequent long pauses, promotion failures, and high GC CPU share under normal load.
+
+### Q: Why is allocation rate often more important than heap size?
+**A:** High allocation churn drives GC pressure even on large heaps, so reducing object churn often beats increasing memory.
+
+### Q: How do classloader leaks usually appear in production?
+**A:** Metaspace growth over time after redeploy/plugin cycles and inability to reclaim old class metadata.
+
+### Q: What is a practical JVM tuning workflow for senior engineers?
+**A:** Baseline, form a hypothesis, apply one controlled change, validate with load and latency data, then iterate.
+
+### Q: Why are full GC events high priority incidents?
+**A:** They are stop-the-world and can trigger latency spikes, timeouts, and cascading failures.
+
+### Q: How do you explain JIT warmup impact during autoscaling?
+**A:** New pods initially run colder code paths, so p95/p99 latency can temporarily degrade until optimization stabilizes.

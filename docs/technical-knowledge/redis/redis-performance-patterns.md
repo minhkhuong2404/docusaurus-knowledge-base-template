@@ -414,3 +414,25 @@ CLIENT KILL ID ...    # Kill rogue clients
 # > 1.5 = significant fragmentation → restart or jemalloc
 INFO memory | grep mem_fragmentation_ratio
 ```
+
+---
+
+## Interview Questions
+
+### Q: How do you tune Redis for latency-sensitive workloads?
+**A:** Control payload size, use pipelining, avoid blocking commands, and monitor tail latency not just averages.
+
+### Q: Why is KEYS dangerous in production?
+**A:** It is blocking and can stall the single-threaded event loop under large keyspaces.
+
+### Q: How do you choose between Streams and Lists for queueing?
+**A:** Use Streams for consumer groups and replay semantics; use Lists for simpler lightweight queue flows.
+
+### Q: What is your strategy for safe rate limiter rollout?
+**A:** Start with shadow metrics, validate false-positive rate, then progressively enforce by endpoint tier.
+
+### Q: When should payload compression be introduced?
+**A:** For large values where network and memory savings outweigh CPU compression overhead.
+
+### Q: Which three metrics best predict Redis incidents?
+**A:** Memory fragmentation, command latency spikes, and cache miss surge against backend dependencies.

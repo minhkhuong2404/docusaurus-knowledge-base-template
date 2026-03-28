@@ -170,3 +170,16 @@ D) Use Athena to query the file
 - [S3 Object Lambda](https://docs.aws.amazon.com/AmazonS3/latest/userguide/transforming-objects.html)
 - [S3 Select](https://docs.aws.amazon.com/AmazonS3/latest/userguide/selecting-content-from-objects.html)
 - [S3 Lifecycle](https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html)
+
+## Interview Questions (Senior Level)
+
+1. How do you choose between CRR and SRR for compliance, latency, and operational recovery objectives?
+2. In what scenarios is S3 Object Lambda superior to preprocessing pipelines, and when is it a bad fit?
+3. How would you design lifecycle and retention to control cost without violating legal hold requirements?
+4. Transfer Acceleration is enabled but performance gains are inconsistent. What root-cause areas do you investigate?
+
+Short answer guide:
+- Align replication mode with RTO/RPO and data sovereignty constraints.
+- Use Object Lambda for per-request transformation, not heavy batch transformation.
+- Combine lifecycle tiers with explicit retention exceptions and governance controls.
+- Verify client geography, payload size, and network path before attributing gains.

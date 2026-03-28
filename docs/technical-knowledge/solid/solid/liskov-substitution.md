@@ -246,3 +246,31 @@ public class GiftCardProcessor implements Payable {
 | **Key question** | "Can I swap subclass for parent safely?" | Yes → LSP is satisfied ✅ |
 
 Next up: [Interface Segregation Principle →](./interface-segregation)
+
+---
+
+## Interview Questions
+
+### Q: How do you verify LSP in code reviews?
+**A:** Check whether subclass preconditions are stricter, postconditions are weaker, or invariants are broken compared with the base contract.
+
+### Q: Why is UnsupportedOperationException in overrides usually a red flag?
+**A:** It indicates the subtype cannot honor the parent contract, which means inheritance hierarchy is incorrect.
+
+### Q: How does LSP affect API compatibility?
+**A:** Consumers rely on contract behavior, not concrete type. Breaking substitutability causes hidden runtime failures in downstream services.
+
+### Q: What test strategy helps catch LSP violations early?
+**A:** Contract tests run against all implementations of an interface/base type to ensure behavior remains consistent.
+
+### Q: How can LSP violations appear in exception handling?
+**A:** Subclasses throwing broader/unexpected exceptions violate caller assumptions and break established error-handling paths.
+
+### Q: In Spring, where is LSP especially important?
+**A:** In strategy beans and repository/service interfaces where runtime wiring may substitute implementations by profile or configuration.
+
+### Q: When should composition replace inheritance for LSP safety?
+**A:** When behavior differs substantially and cannot preserve the original type contract without hacks.
+
+### Q: How do LSP and OCP work together?
+**A:** OCP enables extension by substitution, and LSP ensures those substitutions are behaviorally safe.

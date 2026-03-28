@@ -1,5 +1,6 @@
 
 import type { Config } from '@docusaurus/types'
+import { themes as prismThemes } from 'prism-react-renderer'
 import prismTheme from './src/theme/prismTheme'
 
 const config: Config = {
@@ -95,7 +96,8 @@ const config: Config = {
 			],
 		},
 		prism: {
-			theme: prismTheme,
+			theme: prismThemes.github,
+			darkTheme: prismTheme,
 			additionalLanguages: [
 				'java',
 				'bash',

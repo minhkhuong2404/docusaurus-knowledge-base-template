@@ -167,3 +167,25 @@ git cherry-pick -x a3f9bc2
 :::warning Avoid Cherry-Picking as a Substitute for Merging
 Cherry-picking duplicates commits, and duplicate commits cause confusion and conflicts down the line when the originating branch is eventually merged. If you need all of a branch's changes, merge it. Reserve cherry-pick for **specific, targeted** commit transport — particularly hotfix backports.
 :::
+
+---
+
+## Interview Questions
+
+### Q: What is the best use case for cherry-pick in release operations?
+**A:** Backporting targeted hotfix commits from main to maintenance branches without pulling unrelated features.
+
+### Q: Why can excessive cherry-picking create long-term maintenance issues?
+**A:** It duplicates history and increases future conflict complexity when branches eventually merge.
+
+### Q: How does -x help in regulated or audited environments?
+**A:** It embeds source commit traceability directly in commit messages, improving audit trails.
+
+### Q: When should you avoid cherry-picking and prefer merge/rebase?
+**A:** When you need most or all branch changes; cherry-pick is for selective transport, not branch integration.
+
+### Q: How do you cherry-pick safely under incident pressure?
+**A:** Pick minimal commits, run targeted validation, and verify no hidden dependency commits were omitted.
+
+### Q: What is a common pitfall with cherry-picking merge commits?
+**A:** Missing parent selection context; you must specify the correct mainline parent or results can be incorrect.

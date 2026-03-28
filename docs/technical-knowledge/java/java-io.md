@@ -355,3 +355,16 @@ byte b = buffer.get(0);
 - [Java Concurrency: Threads, Locks & Concurrent Utilities](./java-concurrency.md)
 - [JVM Internals: Memory, GC & Class Loading](./java-jvm.md)
 - [Java New Features: Java 8 through Java 21+](./java-new-features.md)
+
+## Interview Questions (Senior Level)
+
+1. How do you choose between BIO, NIO, and AIO for a high-concurrency service with strict tail-latency targets?
+2. What signs indicate buffer sizing and copy behavior are the real bottlenecks, not CPU?
+3. When is zero-copy worth the operational complexity in Java services?
+4. How would you design timeout and backpressure strategy across network and file I/O boundaries?
+
+Short answer guide:
+- Match I/O model to concurrency profile and operational complexity tolerance.
+- Profile syscall rates, allocation churn, and direct-memory pressure.
+- Use zero-copy for large transfer paths with measurable gains.
+- Define explicit timeout budgets and bounded queues to prevent cascading failures.

@@ -314,3 +314,16 @@ public class CardAuthorizationService {
 - [inbound.md](./inbound.md) — Merchant settlement is an inbound credit
 - [outbound.md](./outbound.md) — Card debit is an outbound from customer's perspective
 - [aml_kyc.md](./aml_kyc.md) — KYC required for card issuance
+
+## Interview Questions (Senior Level)
+
+1. How do you reduce card fraud while preserving checkout conversion rates?
+2. What trade-offs drive scheme routing decisions between domestic and international rails?
+3. How do you design chargeback operations to control losses and customer friction?
+4. Which controls are required for PCI scope reduction in modern card platforms?
+
+Short answer guide:
+- Use layered controls: risk scoring, 3DS strategy, and tokenization.
+- Route by cost, acceptance, and dispute profile constraints.
+- Standardize evidence workflows and reason-code analytics.
+- Minimize PAN exposure and segment systems rigorously.

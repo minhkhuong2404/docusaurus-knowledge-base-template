@@ -240,3 +240,28 @@ It is the foundation for modern Java application development, from monoliths to 
 - [Spring Boot - Internals & Architecture](./spring-boot-internals.md)
 - [Spring Boot - Advanced Topics](./spring-boot-advanced.md)
 - [Spring Framework: Overview](./spring-framework.md)
+
+---
+
+## Interview Questions
+
+### Q: Why is Spring Boot preferred for microservices over plain Spring?
+**A:** It reduces setup overhead with auto-configuration and starters, allowing teams to focus on service behavior and delivery speed.
+
+### Q: What is the biggest risk of relying heavily on defaults?
+**A:** Hidden behavior can change after dependency upgrades, so teams should keep critical configuration explicit and validated.
+
+### Q: How do you explain Boot's production value in one sentence?
+**A:** It combines rapid development with operational readiness through configuration model, embedded runtime, and actuator tooling.
+
+### Q: When should you avoid adding another starter dependency?
+**A:** When it introduces broad transitive features you do not need and increases startup complexity or attack surface.
+
+### Q: How do profiles impact deployment safety?
+**A:** They separate environment behavior without rebuilding artifacts, but must be tested to avoid profile drift between staging and production.
+
+### Q: What operational checks should every Spring Boot service expose?
+**A:** Health, readiness, liveness, key latency/error metrics, and dependency status.
+
+### Q: How do you handle feature rollout safely in Boot services?
+**A:** Use feature flags and progressive exposure so deployment and release are decoupled.

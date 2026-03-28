@@ -159,3 +159,25 @@ git add src/main/resources/application.yml
 :::tip Resolving Conflicts in Rebase
 During a rebase, Git replays commits one at a time. You may need to resolve the same logical conflict multiple times across different commits. If this happens frequently, consider squashing your commits first (`git rebase -i`), then rebasing the single resulting commit — you will only need to resolve the conflict once.
 :::
+
+---
+
+## Interview Questions
+
+### Q: What is the first thing you do when conflict count is high?
+**A:** Pause and understand semantic intent on both branches before editing files. Blind conflict marker edits are high risk.
+
+### Q: Why is conflictstyle diff3 useful for senior workflows?
+**A:** The base section reveals original intent and helps decide whether to preserve, replace, or combine both sides correctly.
+
+### Q: How do you reduce repeated conflict resolution during long rebases?
+**A:** Squash logically related commits first and rebase fewer commits with cleaner boundaries.
+
+### Q: When is choosing --ours or --theirs acceptable?
+**A:** For generated files or clearly authoritative config sources, not for business logic where both sides likely matter.
+
+### Q: What process prevents conflict regressions after merge?
+**A:** Run targeted tests around conflicted modules and include reviewer validation on conflict-heavy files.
+
+### Q: How do teams systematically reduce merge conflicts over time?
+**A:** Short-lived branches, smaller PRs, and clear file ownership conventions reduce overlapping edits.

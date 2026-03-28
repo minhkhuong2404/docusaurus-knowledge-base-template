@@ -248,3 +248,16 @@ git push --no-verify
 :::tip Use Hooks for Local Feedback — Not as the Only Gate
 Hooks provide fast local feedback, but they can be bypassed with `--no-verify`. Always enforce the same checks in your CI pipeline as well. Hooks are developer convenience; CI is the authoritative quality gate.
 :::
+
+## Interview Questions (Senior Level)
+
+1. How do you decide which checks belong in local hooks vs CI to optimize feedback without harming productivity?
+2. What governance model do you use to keep hook scripts maintainable across teams and platforms?
+3. How would you secure hook execution to avoid supply-chain or script-tampering risks?
+4. What migration strategy would you use to roll out strict commit-msg and pre-push policies?
+
+Short answer guide:
+- Keep hooks fast and deterministic; reserve heavy/integration checks for CI.
+- Version hooks in repo and standardize installation with documented ownership.
+- Treat hooks as code: review, signing, and least-privilege execution.
+- Roll out in warn mode first, then enforce after adoption metrics stabilize.

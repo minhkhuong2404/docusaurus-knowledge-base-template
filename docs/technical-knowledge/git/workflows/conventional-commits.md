@@ -213,3 +213,25 @@ See [Hooks](../advanced/hooks) for setup instructions.
 :::tip Keep Scopes Consistent
 The value of scopes comes from consistency — if one developer writes `feat(transaction):` and another writes `feat(transactions):`, changelog grouping breaks. Define your project's allowed scopes in a `commitlint.config.js` or team wiki and enforce them in the hook.
 :::
+
+---
+
+## Interview Questions
+
+### Q: How do Conventional Commits improve release automation?
+**A:** They provide machine-readable intent so tooling can generate changelogs and semantic version bumps reliably.
+
+### Q: What is the risk of enforcing conventions too strictly?
+**A:** Overly rigid rules can slow developers and encourage meaningless compliance messages.
+
+### Q: How do you roll out Conventional Commits to an existing team?
+**A:** Start with lightweight linting and templates, provide examples, then progressively enforce in CI once adoption stabilizes.
+
+### Q: Why are scopes important in monorepos or multi-domain services?
+**A:** Scopes improve traceability and changelog usefulness by mapping commits to bounded contexts/components.
+
+### Q: How would you handle a commit that contains both fix and refactor changes?
+**A:** Prefer splitting into separate commits by intent; if unavoidable, choose the dominant intent and explain details in the body.
+
+### Q: Do commit message conventions replace PR descriptions?
+**A:** No. Commit messages capture change intent over time, while PR descriptions provide review-time context and validation evidence.

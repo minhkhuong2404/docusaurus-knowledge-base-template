@@ -130,3 +130,16 @@ You now have two IDE windows, each on a different branch, each with their own ru
 :::tip Worktrees Beat Stashing for Hotfixes
 The classic hotfix workflow requires you to stash, switch, fix, push, switch back, and pop — with the risk of forgetting to pop or creating stash conflicts. Worktrees eliminate all of that: your feature work is untouched in its directory, and the hotfix lives in a separate, parallel workspace.
 :::
+
+## Interview Questions (Senior Level)
+
+1. How do worktrees reduce context-switch risk in incident response workflows?
+2. What operational guardrails should teams define for temporary worktree lifecycle?
+3. When is worktree superior to branch switching and stash-based flows?
+4. How do you avoid branch-lock confusion when one branch is active in another worktree?
+
+Short answer guide:
+- Worktrees isolate changes and minimize accidental carryover.
+- Enforce naming, cleanup, and ownership conventions for temp trees.
+- Prefer for parallel hotfix/review/test contexts.
+- Use `git worktree list` visibility and cleanup routines.

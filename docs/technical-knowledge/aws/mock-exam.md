@@ -20,6 +20,19 @@ tags:
 > 
 > ⏱️ Time yourself: **130 minutes** (2 min/question average)
 
+## Interview Questions (Senior Level)
+
+1. How should a senior engineer use mock exams differently from a junior candidate?
+2. What post-mock review method best converts mistakes into durable architectural judgment?
+3. How do you detect “memorized answers” versus real AWS decision-making competence?
+4. Which mock-exam domains map most directly to production incident ownership?
+
+Short answer guide:
+- Focus on trade-offs and failure modes, not just score.
+- Build error logs by pattern and close gaps with hands-on labs.
+- Reframe each wrong answer as a design scenario.
+- Security, deployment, and troubleshooting domains are most operationally transferable.
+
 ---
 
 ## Domain 1 — Development with AWS Services (21 Questions)

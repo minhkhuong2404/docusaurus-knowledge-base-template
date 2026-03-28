@@ -199,3 +199,25 @@ Do not rebase any branch that other team members have pulled and based work on. 
 | `--autostash` | Stash dirty working tree before rebase, pop after |
 | `--no-ff` | Create a merge commit instead of fast-forward at the end |
 | `-x "cmd"` | Run a shell command after each replayed commit |
+
+---
+
+## Interview Questions
+
+### Q: Why is rebasing shared branches dangerous?
+**A:** It rewrites commit SHAs and invalidates other developers' branch ancestry, creating painful divergence.
+
+### Q: When do you prefer rebase over merge in day-to-day work?
+**A:** Use rebase to keep feature branch history linear before review; use merge to integrate completed work into shared branches.
+
+### Q: How does interactive rebase improve code review quality?
+**A:** It groups commits into logical units, removes noise, and clarifies narrative intent for reviewers.
+
+### Q: What is a safe force-push policy after rebase?
+**A:** Use --force-with-lease only on branches you own, after confirming no one else based work on old SHAs.
+
+### Q: How do you recover if a rebase went wrong?
+**A:** Use git reflog to locate pre-rebase HEAD and reset back to it.
+
+### Q: What indicates a team is overusing rebase?
+**A:** Frequent history rewrites on collaborative branches and recurring confusion about missing/duplicated commits.

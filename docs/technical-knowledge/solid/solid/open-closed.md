@@ -185,3 +185,31 @@ If adding a new feature requires you to **open an existing file and add an `if/e
 | **Key tool** | `if/else`, `switch` | Interfaces + polymorphism |
 
 Next up: [Liskov Substitution Principle →](./liskov-substitution)
+
+---
+
+## Interview Questions
+
+### Q: How do you apply OCP in feature-flag-heavy systems?
+**A:** Keep stable orchestration fixed, and plug variant behavior behind strategy interfaces selected by flags/config.
+
+### Q: What is the difference between OCP and over-engineering?
+**A:** OCP targets expected change points. Over-engineering adds extension points where change is unlikely.
+
+### Q: How does OCP improve release safety?
+**A:** New behavior is introduced by adding isolated implementations, reducing risk of regressions in existing paths.
+
+### Q: In Spring, what is a practical OCP pattern for business rules?
+**A:** Register rule handlers as beans implementing a common interface, then route by key/context instead of adding new switch branches.
+
+### Q: What is an anti-pattern that pretends to follow OCP?
+**A:** A central dispatcher class that still requires modifying a switch map for each new behavior.
+
+### Q: How do you decide when a branch should be replaced by polymorphism?
+**A:** If branching grows with business variants and changes frequently, move to polymorphism. If it is stable and small, keep a simple branch.
+
+### Q: How does OCP interact with API versioning?
+**A:** New versions can be added as new handlers/adapters while preserving old behavior, minimizing risky edits in existing version paths.
+
+### Q: Give a production scenario where OCP paid off.
+**A:** Swapping a notification channel or pricing rule by adding a new implementation without touching order workflow logic.

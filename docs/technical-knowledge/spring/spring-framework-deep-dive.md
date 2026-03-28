@@ -1083,3 +1083,28 @@ public class CustomDataSourceConfig {
 - [Spring Framework: Overview](./spring-framework.md)
 - [Spring Boot - Internals & Architecture](./spring-boot-internals.md)
 - [Spring Security - Complete Guide](./spring-security.md)
+
+---
+
+## Interview Questions
+
+### Q: How do you decide whether a cross-cutting concern belongs in AOP?
+**A:** Use AOP for orthogonal policies such as logging, security, metrics, and transactions, not core business branching.
+
+### Q: What is the highest-impact proxy pitfall in Spring services?
+**A:** Self-invocation bypasses proxies, which can silently disable @Transactional, @Async, and @Cacheable behavior.
+
+### Q: Why should bean post-processing be handled carefully?
+**A:** Early lifecycle hooks can trigger premature bean creation and unstable startup order.
+
+### Q: How do you make transaction boundaries reliable in large codebases?
+**A:** Keep transactional entry points explicit, public, and close to use-case orchestration boundaries.
+
+### Q: What does senior-level AOP debugging look like?
+**A:** Trace advisor order, proxy type, and join-point matching before changing business code.
+
+### Q: When should you avoid creating another custom aspect?
+**A:** When framework-provided mechanisms already cover the concern with lower complexity.
+
+### Q: How do method security and transaction aspects interact operationally?
+**A:** Aspect order determines whether access checks happen before resource usage and transaction opening.

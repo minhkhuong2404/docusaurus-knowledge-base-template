@@ -236,3 +236,16 @@ D) 1%
 - [X-Ray SDK for Java](https://docs.aws.amazon.com/xray/latest/devguide/xray-sdk-java.html)
 - [X-Ray Spring Boot Integration](https://docs.aws.amazon.com/xray/latest/devguide/xray-sdk-java-filters.html)
 - [X-Ray Sampling Rules](https://docs.aws.amazon.com/xray/latest/devguide/xray-console-sampling.html)
+
+## Interview Questions (Senior Level)
+
+1. How do you define sampling strategy across low-traffic critical paths and high-volume commodity endpoints?
+2. What annotation taxonomy would you standardize to support incident debugging without exploding cardinality?
+3. A service map shows healthy latency but users report timeouts. How would you triage observability blind spots?
+4. How do you combine X-Ray with logs and metrics for reliable root-cause analysis in distributed systems?
+
+Short answer guide:
+- Use prioritized sampling rules per endpoint criticality and error budget.
+- Keep searchable annotations bounded and domain-oriented.
+- Validate missing spans, upstream retries, and client-side latency not visible in traces.
+- Correlate trace IDs with structured logs and SLO metrics.

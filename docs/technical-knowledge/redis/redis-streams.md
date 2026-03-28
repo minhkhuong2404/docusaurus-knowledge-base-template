@@ -326,3 +326,16 @@ public void recoverDeadMessages() {
 }
 ```
 
+## Interview Questions (Senior Level)
+
+1. How do you design Redis Streams retention and consumer-group strategy for at-least-once processing under failure?
+2. When should Redis Streams be replaced with Kafka in a growing event platform?
+3. What idempotency and replay controls do you implement to avoid duplicate side effects?
+4. How do you monitor and remediate PEL growth before it becomes an outage?
+
+Short answer guide:
+- Tune `MAXLEN/MINID`, acknowledgments, and claim policies around workload SLOs.
+- Move to Kafka when retention, partitioning, and consumer scale exceed Redis fit.
+- Use deterministic message keys and dedup stores in consumers.
+- Alert on pending age/count and automate stale-message recovery paths.
+

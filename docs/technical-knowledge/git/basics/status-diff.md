@@ -167,3 +167,16 @@ git config --global difftool.intellij.cmd 'idea diff "$LOCAL" "$REMOTE"'
 git difftool HEAD~1
 ```
 :::
+
+## Interview Questions (Senior Level)
+
+1. How do you establish a diff-review routine that catches risky changes early?
+2. When should reviewers insist on split commits based on `status`/`diff` output?
+3. What diff views are most useful for config-heavy versus code-heavy changes?
+4. How do you avoid whitespace-only noise masking critical logic edits?
+
+Short answer guide:
+- Review staged and unstaged deltas separately before commit.
+- Split mixed-intent changes to improve safety and traceability.
+- Use word/stat/name-status modes based on change type.
+- Apply ignore-whitespace views carefully, then re-check full diff.

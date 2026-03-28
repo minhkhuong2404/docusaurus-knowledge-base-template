@@ -157,3 +157,16 @@ git pull --rebase origin main         # catch up
 ```
 This keeps your branch current and avoids large, painful merges at PR time.
 :::
+
+## Interview Questions (Senior Level)
+
+1. How do you design team defaults for `pull` behavior to reduce history drift?
+2. When should engineers avoid `git pull` and prefer explicit `fetch` + inspect?
+3. What risks come with always-on rebase pulls in shared branches?
+4. How do you operationalize `--ff-only` in protected branch workflows?
+
+Short answer guide:
+- Standardize pull strategy by branch type and governance needs.
+- Use fetch-first when risk or uncertainty is high.
+- Rebase can rewrite context and confuse shared history if misused.
+- `--ff-only` enforces explicit conflict resolution before integration.

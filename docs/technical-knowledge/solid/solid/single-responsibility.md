@@ -199,3 +199,31 @@ Ask yourself: **"If I describe what this class does, do I need the word 'AND'?"*
 | **Testability** | Hard (does too much) | Easy (test each class in isolation) |
 
 Next up: [Open/Closed Principle →](./open-closed)
+
+---
+
+## Interview Questions
+
+### Q: How do you identify SRP violations in a mature codebase?
+**A:** Look for classes changed by unrelated tickets, large constructor dependency lists, and methods spanning multiple concerns like validation, persistence, and notification.
+
+### Q: Does SRP mean one method per class?
+**A:** No. SRP is about one reason to change, not tiny class size. A class can have multiple methods if they serve one cohesive responsibility.
+
+### Q: How does SRP help scaling teams?
+**A:** Clear ownership boundaries reduce merge conflicts and improve parallel work. Different developers can evolve separate components independently.
+
+### Q: What is a safe strategy to refactor a god class using SRP?
+**A:** First extract pure functions, then isolate side-effect boundaries, then move cohesive clusters into new collaborators while preserving behavior with tests.
+
+### Q: How would you explain SRP in domain-driven design terms?
+**A:** Align responsibilities to domain boundaries and use cases. A class should map to a clear domain concept or application action, not mixed concerns.
+
+### Q: What are signs of SRP over-refactoring?
+**A:** Excessive indirection and too many tiny classes with unclear names, where tracing a business flow requires jumping through many files.
+
+### Q: Why does SRP reduce production defects?
+**A:** Smaller, focused units are easier to reason about and test, which reduces unintended side effects from routine changes.
+
+### Q: How does SRP relate to observability?
+**A:** Focused components emit clearer logs/metrics per concern, making troubleshooting faster during incidents.

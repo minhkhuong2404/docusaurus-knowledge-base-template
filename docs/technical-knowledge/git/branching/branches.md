@@ -157,3 +157,16 @@ git branch -vv
 :::tip Keep Branches Short-Lived
 Long-lived feature branches accumulate drift from main and lead to painful, large merges. Aim for branches that live no longer than 2–3 days. If a feature is large, break it into smaller branches and merge incrementally behind a feature flag.
 :::
+
+## Interview Questions (Senior Level)
+
+1. How do you enforce short-lived branch discipline in a large team without slowing delivery?
+2. What branching model works best for trunk-based CI/CD with strict compliance approvals?
+3. How do you handle parallel hotfix and feature development while minimizing merge debt?
+4. Which branch naming and lifecycle metrics would you track at team level?
+
+Short answer guide:
+- Automate stale-branch detection and merge cadence policies.
+- Prefer trunk-based with feature flags and release controls.
+- Isolate hotfix branches from release baseline, then back-merge systematically.
+- Track branch age, rebase frequency, and conflict rate.

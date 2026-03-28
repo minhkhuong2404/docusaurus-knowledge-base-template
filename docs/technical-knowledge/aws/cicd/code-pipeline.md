@@ -143,3 +143,16 @@ D) In-memory within the pipeline
 - [CodePipeline User Guide](https://docs.aws.amazon.com/codepipeline/latest/userguide/)
 - [CodePipeline Action Reference](https://docs.aws.amazon.com/codepipeline/latest/userguide/reference-pipeline-structure.html)
 - [Cross-Account Pipelines](https://docs.aws.amazon.com/codepipeline/latest/userguide/pipelines-create-cross-account.html)
+
+## Interview Questions (Senior Level)
+
+1. How would you structure a multi-account pipeline to deploy the same artifact to dev, staging, and prod with least privilege?
+2. What is your strategy to make manual approvals meaningful instead of a rubber-stamp bottleneck?
+3. A deployment action intermittently fails due to missing artifacts. Which artifact-store and encryption checks do you prioritize?
+4. How do you design rollback in CodePipeline when downstream CloudFormation succeeds but application health checks fail?
+
+Short answer guide:
+- Use centralized build account, cross-account roles, and KMS/S3 policies scoped per stage.
+- Tie approvals to objective signals: tests, SLOs, and change risk metadata.
+- Validate artifact names, input/output mapping, and KMS grants across accounts/regions.
+- Implement explicit rollback stages and automated post-deploy validation gates.

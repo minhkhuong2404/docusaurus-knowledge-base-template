@@ -186,3 +186,16 @@ jobs:
 :::tip Tag on Main, Never on Feature Branches
 Always create release tags on `main` (or your release branch) after merging and verifying the release build. Tagging on a feature branch creates a tag that points to an unmerged commit, which is confusing and can lead to incorrect releases.
 :::
+
+## Interview Questions (Senior Level)
+
+1. How do you define a release tagging policy that supports rollback, audit, and SBOM traceability?
+2. When do you require signed tags, and how do you operationalize key rotation?
+3. How would you prevent accidental mutable-release behavior from retagging mistakes?
+4. What is your strategy for prerelease vs stable tags in automated deployment pipelines?
+
+Short answer guide:
+- Use immutable semver tags tied to build metadata and release notes.
+- Enforce signed tags for production releases and rotate trust chains periodically.
+- Protect tag namespaces and disallow force updates to release tags.
+- Separate prerelease channels and promotion gates clearly.

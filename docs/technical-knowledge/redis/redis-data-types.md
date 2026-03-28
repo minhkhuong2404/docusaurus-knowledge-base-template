@@ -365,3 +365,25 @@ A log-like data structure for append-only sequences of messages. Combines the be
 | HyperLogLog | Approximate cardinality | O(1) all ops | Fixed ~12 KB |
 | Geospatial | Location-based queries | O(log N) add, O(N+M log M) search | Like Sorted Set |
 | Stream | Event streaming, message queues | O(1) add, O(log N) read by ID | Moderate |
+
+---
+
+## Interview Questions
+
+### Q: How do you select the right Redis data type for a new feature?
+**A:** Start from access pattern and operation complexity, then optimize for memory and consistency needs.
+
+### Q: Why are Sorted Sets common in senior interview scenarios?
+**A:** They model rank, range queries, and priority semantics efficiently with predictable performance.
+
+### Q: When should HyperLogLog be avoided?
+**A:** When exact distinct counts are required for billing, quotas, or compliance logic.
+
+### Q: What is a key risk when using Hash for object storage?
+**A:** Unbounded field growth can make full reads expensive and increase memory unexpectedly.
+
+### Q: How do hash tags help cluster-safe multi-key operations?
+**A:** They force related keys into the same slot so multi-key commands remain valid.
+
+### Q: Why should teams care about internal encodings like listpack or embstr?
+**A:** Encoding choices directly affect memory footprint and command latency under scale.

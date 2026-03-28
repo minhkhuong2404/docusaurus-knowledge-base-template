@@ -277,3 +277,16 @@ Based on your role:
 1. [NPP](./npp.md), [BPAY](./bpay.md), and [SWIFT](./swift.md) — understanding the rails
 2. [NPP & PayTo](./npp.md) — modern AU payments
 3. [Open Banking / CDR](./open_banking.md) — future of payments
+
+## Interview Questions (Senior Level)
+
+1. Which lifecycle stages are highest risk for production payment failures, and why?
+2. How do you design idempotency so retries do not create duplicate financial outcomes?
+3. What observability events are mandatory for end-to-end payment traceability?
+4. How would you explain clearing vs settlement to non-technical stakeholders?
+
+Short answer guide:
+- Screening, posting, and exception paths usually dominate risk.
+- Use stable transaction keys and duplicate-detection checks at boundaries.
+- Correlate instruction IDs, status updates, and ledger references.
+- Clearing is message exchange; settlement is final funds movement.

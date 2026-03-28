@@ -46,3 +46,31 @@ void calculateTotal_ShouldReturnSum() {
 - **Mock**: Used to verify behavior. You check if a specific method was called with expected arguments.
 - **Stub**: Used to provide predetermined responses to method calls during a test.
 - **Spy**: A partial mock. It wraps a real object, allowing you to track its method calls while still executing its actual behavior unless specifically stubbed.
+
+---
+
+## Interview Questions
+
+### Q: How do you decide what belongs in unit tests vs integration tests in a microservice?
+**A:** Keep business rules and pure logic in unit tests. Put framework wiring, persistence, serialization, and network boundaries in integration tests.
+
+### Q: What does a healthy test pyramid look like for backend services?
+**A:** Many fast unit tests, a smaller layer of integration tests, and very few end-to-end tests for critical flows only.
+
+### Q: How do you reduce flaky tests in CI?
+**A:** Remove time and ordering dependencies, isolate shared state, control clocks/randomness, and avoid real external services in deterministic suites.
+
+### Q: When should you use consumer-driven contract tests?
+**A:** When teams evolve APIs independently and need strong compatibility checks between service providers and consumers.
+
+### Q: What is the risk of over-mocking?
+**A:** Tests become coupled to implementation details and pass even when real integration behavior is broken.
+
+### Q: How do you test eventual consistency workflows?
+**A:** Assert observable outcomes with retries/time bounds, verify emitted events, and validate idempotency rather than synchronous immediate state.
+
+### Q: What is your strategy for testing failure modes?
+**A:** Add tests for timeouts, retries, partial failures, dead-letter flows, and fallback behavior at each external boundary.
+
+### Q: How do you measure test effectiveness beyond coverage percentage?
+**A:** Track escaped defects, mutation score trends, flaky-test rate, and mean time to detect regressions in CI.

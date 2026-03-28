@@ -257,3 +257,16 @@ D) Write a mapping template to inspect the request URL and dynamically invoke th
 - [Lambda Proxy vs Non-Proxy Integrations](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-api-integration-types.html)
 - [CORS Configuration](https://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-cors.html)
 - [API Gateway Error Codes](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-known-issues.html#api-gateway-error-codes)
+
+## Interview Questions (Senior Level)
+
+1. You need one API product with internal service-to-service calls and external partner access. How would you split endpoint types, auth, and throttling to reduce blast radius?
+2. A team reports sporadic `502` from Lambda proxy integration but Lambda logs show success. What concrete checks do you perform first, and how do you prevent recurrence?
+3. How would you design per-tenant rate limiting and monetization while keeping a migration path from REST API to HTTP API?
+4. When would you choose VPC Link private integrations over direct Lambda integrations, and what are the operational trade-offs?
+
+Short answer guide:
+- Separate internal/private APIs (IAM + resource policy) from partner-facing APIs (authorizer + usage plans).
+- Validate proxy response schema, header/body encoding, and integration timeout alignment.
+- Use usage plans + API keys for tenant-level quotas and billing controls.
+- Prefer VPC Link for private backends when network isolation is required, accepting higher networking complexity.

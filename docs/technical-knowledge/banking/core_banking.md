@@ -237,3 +237,16 @@ CBS is the most critical system in a bank. Availability requirements:
 - [inbound.md](./inbound.md) — CBS credit after settlement
 - [outbound.md](./outbound.md) — CBS debit before submission
 - [reconciliation.md](./reconciliation.md) — Reconciling CBS entries against scheme
+
+## Interview Questions (Senior Level)
+
+1. How do you isolate core banking availability risk from channel and payment-service failures?
+2. What migration strategy minimizes risk when modernizing legacy CBS integrations?
+3. How do you enforce ledger integrity under high-concurrency posting workloads?
+4. What recovery controls are mandatory for CBS incident scenarios?
+
+Short answer guide:
+- Use resilient adapters, queues, and controlled degradation around CBS dependencies.
+- Migrate via strangler patterns with parallel validation and reconciliation.
+- Enforce idempotent posting keys and strict accounting invariants.
+- Define RTO/RPO drills, replay safety, and reconciliation checkpoints.

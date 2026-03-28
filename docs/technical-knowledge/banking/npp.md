@@ -246,3 +246,16 @@ public class NppPaymentService {
 - [clearing.md](/technical-knowledge/banking/clearing) — NPP as clearing system
 - [settlement.md](/technical-knowledge/banking/settlement) — RBA FSS real-time settlement
 - [onus.md](/technical-knowledge/banking/onus) — On-us vs NPP routing decision
+
+## Interview Questions (Senior Level)
+
+1. How do you design NPP payment flows for strict idempotency and sub-15-second SLAs?
+2. What operational controls are critical for PayID resolution and misdirection prevention?
+3. How do you handle NPP participant outages while maintaining customer trust?
+4. Which telemetry should drive real-time alerting for NPP service health?
+
+Short answer guide:
+- Use stable transaction IDs, dedup checks, and deterministic state transitions.
+- Add name-check verification and confirmation UX safeguards.
+- Implement queue/retry/fallback policies with transparent status communication.
+- Monitor latency percentiles, reject codes, settlement lag, and exception rates.

@@ -168,3 +168,25 @@ See [Conflict Resolution](./conflict-resolution) for full guidance.
 :::tip Merge vs Rebase
 Use **merge** (`--no-ff`) when integrating **completed** branches into shared branches (`develop`, `main`). Use **rebase** to update a **feature branch** with the latest changes from `main` before opening a PR. This gives you the best of both: linear feature branch history and clear merge points in main.
 :::
+
+---
+
+## Interview Questions
+
+### Q: Why do many teams prefer --no-ff for feature integration?
+**A:** It preserves branch context and makes audit/history navigation easier for incident analysis and change tracing.
+
+### Q: When is ff-only useful?
+**A:** In strict linear-history repositories where merge commits are disallowed and branch hygiene is enforced.
+
+### Q: What is the risk of frequent squash merges?
+**A:** They simplify main history but can hide granular commit intent and complicate later root-cause analysis.
+
+### Q: How do you choose merge strategy for hotfixes?
+**A:** Optimize for speed and traceability: minimal change set, explicit merge record, and immediate back-merge where needed.
+
+### Q: How do merge strategies affect release governance?
+**A:** Strategy choice impacts auditability, rollback confidence, and ability to reconstruct change lineage quickly.
+
+### Q: What should happen before merging conflict-heavy branches?
+**A:** Run focused regression tests and verify critical paths impacted by conflicted files.

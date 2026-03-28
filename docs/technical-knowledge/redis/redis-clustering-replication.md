@@ -308,3 +308,25 @@ public class RedisHealthIndicator extends AbstractHealthIndicator {
     }
 }
 ```
+
+---
+
+## Interview Questions
+
+### Q: How do you decide between Sentinel and Cluster for a new platform?
+**A:** Use Sentinel for simpler HA when data fits one primary; use Cluster for horizontal write and memory scaling.
+
+### Q: What failure behavior should teams expect during Sentinel failover?
+**A:** A short write interruption during detection, election, promotion, and client re-discovery.
+
+### Q: Why do hash tags matter in Redis Cluster design?
+**A:** They co-locate related keys in one slot, enabling safe multi-key operations.
+
+### Q: How do you reduce data loss risk with async replication?
+**A:** Tune min-replicas constraints, monitor lag, and pair with durable persistence strategy.
+
+### Q: What is a common operational anti-pattern in Redis HA setups?
+**A:** Placing primaries and replicas on the same failure domain, defeating failover objectives.
+
+### Q: Which cluster metrics should trigger urgent investigation?
+**A:** Replication lag growth, failed failovers, slot migration instability, and elevated client redirect errors.

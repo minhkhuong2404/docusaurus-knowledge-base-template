@@ -202,3 +202,28 @@ restrictions:
 :::tip The 10-Minute Rule
 If a reviewer can't understand the purpose of a PR within 10 minutes of reading the description and first few commits — it needs a better description or needs to be split. Treat the PR description as documentation that will be read by future engineers doing `git log`.
 :::
+
+---
+
+## Interview Questions
+
+### Q: Why are smaller PRs usually safer than large PRs?
+**A:** They improve review depth, reduce cognitive load, and narrow regression blast radius.
+
+### Q: How do you split a large feature into reviewable PRs without blocking delivery?
+**A:** Sequence by dependency: schema/contracts first, then internals, then API exposure, with feature flags to keep each PR mergeable.
+
+### Q: What does senior-level PR feedback look like?
+**A:** It focuses on correctness, operational risk, maintainability, and long-term design, not only style nits.
+
+### Q: How do branch protection rules influence engineering culture?
+**A:** They enforce quality as a system property, making reliability less dependent on individual discipline.
+
+### Q: What is the trade-off of requiring too many mandatory reviewers?
+**A:** It can increase lead time and queueing delays. Teams should tune approval policy by risk and ownership.
+
+### Q: How do you reduce review latency in distributed teams?
+**A:** Keep PRs small, assign explicit reviewers, enforce response SLAs, and use async context-rich descriptions.
+
+### Q: What should happen when reviewer and author disagree on design?
+**A:** Escalate quickly to agreed decision-makers with documented trade-offs, then codify the decision in architecture notes.

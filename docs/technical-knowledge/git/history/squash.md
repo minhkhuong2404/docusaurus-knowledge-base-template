@@ -153,3 +153,16 @@ See [Fixup](./fixup) for the `--fixup` / `--autosquash` workflow.
 :::tip Squash at PR Review Time
 A good habit: keep whatever commits you need locally while working (safety nets), then squash before requesting review. Reviewers see clean history, and `git log` on main stays meaningful.
 :::
+
+## Interview Questions (Senior Level)
+
+1. How do you decide whether to squash all commits vs preserve a few logical commits before merge?
+2. What are the organizational risks of aggressive squashing in regulated environments?
+3. How would you recover safely if a squash/rebase introduced subtle regressions?
+4. When is `merge --squash` preferable to interactive rebase for team workflows?
+
+Short answer guide:
+- Keep commit granularity aligned with reviewability and rollback needs.
+- Preserve traceability requirements when audit trails matter.
+- Recreate checkpoints from reflog and compare diff equivalence.
+- Use merge squash when teams want simple main history with minimal local rewrite complexity.

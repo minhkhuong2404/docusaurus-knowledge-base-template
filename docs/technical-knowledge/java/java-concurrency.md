@@ -503,3 +503,28 @@ executor.submit(() -> {
 ## Compare Next
 - [JVM Internals: Memory, GC & Class Loading](./java-jvm.md)
 - [Java I/O: Streams, NIO & I/O Models](./java-io.md)
+
+---
+
+## Interview Questions
+
+### Q: How do you pick concurrency primitives in production services?
+**A:** Start with immutability and thread confinement, then use high-level utilities before low-level locks.
+
+### Q: What is the most common thread-pool failure pattern?
+**A:** Pool starvation from blocking I/O on executors sized for CPU-bound tasks.
+
+### Q: How do you design backpressure in asynchronous pipelines?
+**A:** Bound queues, apply rejection policies intentionally, and propagate load-shedding decisions upstream.
+
+### Q: Why is lock ordering still relevant with modern utilities?
+**A:** Mixed synchronization paths can still deadlock if lock acquisition order is inconsistent.
+
+### Q: When are virtual threads not a silver bullet?
+**A:** CPU-bound work, synchronized pinning, and external bottlenecks still limit throughput.
+
+### Q: How do you evaluate CompletableFuture chains in code review?
+**A:** Verify executor selection, error propagation, timeout behavior, and cancellation semantics.
+
+### Q: What does senior-level concurrency testing include?
+**A:** Deterministic stress scenarios, race-condition probes, and latency assertions under contention.

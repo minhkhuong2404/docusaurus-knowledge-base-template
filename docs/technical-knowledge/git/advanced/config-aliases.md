@@ -256,3 +256,16 @@ git clone git@github.com:your-username/dotfiles.git ~/dotfiles
 ln -sf ~/dotfiles/.gitconfig ~/.gitconfig
 ```
 :::
+
+## Interview Questions (Senior Level)
+
+1. What Git defaults should a platform team standardize for safety and consistency?
+2. How do aliases improve productivity without obscuring critical Git behavior?
+3. What risks come with shell aliases that wrap destructive commands?
+4. How do you roll out and version-control team Git config baselines?
+
+Short answer guide:
+- Standardize pull/push/fetch behavior and conflict style.
+- Keep aliases transparent, documented, and predictable.
+- Avoid unsafe wrappers or require explicit confirmation patterns.
+- Distribute via dotfiles/onboarding automation and periodic audits.

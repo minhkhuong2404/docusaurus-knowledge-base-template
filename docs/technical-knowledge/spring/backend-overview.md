@@ -52,3 +52,25 @@ Pair this section with Java and Database knowledge base pages to build end-to-en
 - [Spring Boot](./spring-boot.md)
 - [Spring Security](./spring-security.md)
 - [Spring Data JPA](./spring-data-jpa.md)
+
+---
+
+## Interview Questions
+
+### Q: How do you explain the backend learning order to juniors joining a Spring team?
+**A:** Start with Boot and HTTP layer, then persistence and transactions, then security and production operations.
+
+### Q: What are the minimum architecture pillars for a production backend service?
+**A:** Clear boundaries, transactional correctness, security defaults, observability, and deploy safety.
+
+### Q: How do you evaluate if a backend team is over-coupled to framework details?
+**A:** Business logic becomes hard to test without full context and changes require touching many framework-specific classes.
+
+### Q: Why should backend docs include interview readiness?
+**A:** It forces articulation of design trade-offs and improves shared engineering language across teams.
+
+### Q: How do you decide where to invest optimization effort first?
+**A:** Measure hot paths, then optimize bottlenecks in data access, networking, or concurrency based on evidence.
+
+### Q: What distinguishes senior backend answers in interviews?
+**A:** They connect implementation choices to reliability, scaling, and operational outcomes.

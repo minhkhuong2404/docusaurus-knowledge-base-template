@@ -188,3 +188,16 @@ git config --global core.editor "vim"
 :::tip Commit Early, Commit Often — Then Clean Up
 Make small, frequent commits while working (even messy ones). Before opening a PR, use interactive rebase (`git rebase -i`) to squash and rewrite them into clean, logical commits. You get the safety of frequent saves and the clarity of clean history. See [Squash](../history/squash) and [Fixup](../history/fixup).
 :::
+
+## Interview Questions (Senior Level)
+
+1. What makes a commit history “operationally useful” during incidents?
+2. How do you balance frequent WIP commits with clean merge history?
+3. When is `--amend` appropriate versus creating a follow-up commit?
+4. How do commit conventions improve automated release and rollback workflows?
+
+Short answer guide:
+- Prioritize clear intent, scope, and traceable references.
+- Commit often locally, curate before integration.
+- Amend only before sharing or when branch ownership is clear.
+- Structured messages power changelogs, versioning, and audits.

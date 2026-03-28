@@ -131,3 +131,25 @@ This prevents the API pods from infinitely crash-looping while waiting for a dat
 **ArgoCD vs Flux:**
 * **ArgoCD:** Famously has a beautiful, intuitive UI that provides a visual representation of K8s resource trees and live logs. Extremely popular in enterprise.
 * **Flux:** Designed to be exclusively CLI and Git-driven (no built-in web UI). Operates as a set of highly modular controllers (Source Controller, Kustomize Controller, Helm Controller). Very beloved by platform purists.
+
+---
+
+## Interview Questions
+
+### Q: Why is pull-based GitOps considered more secure than push-based CD?
+**A:** Cluster credentials remain inside the cluster boundary and external CI does not require direct production access.
+
+### Q: What problem does reconciliation solve operationally?
+**A:** It continuously eliminates drift and restores declared desired state after manual or accidental changes.
+
+### Q: How should teams structure repos for GitOps at scale?
+**A:** Separate application source from deployment manifests and enforce promotion flow through reviewed manifest changes.
+
+### Q: What is a key risk of fully automated sync in sensitive environments?
+**A:** Misconfigured manifests can propagate quickly, so guardrails and staged promotion are required.
+
+### Q: How do sync waves improve release reliability?
+**A:** They enforce dependency-aware deployment ordering, reducing startup failures across dependent services.
+
+### Q: How do you decide between ArgoCD and Flux?
+**A:** Choose based on operational workflow preference, UI needs, modularity requirements, and team expertise.

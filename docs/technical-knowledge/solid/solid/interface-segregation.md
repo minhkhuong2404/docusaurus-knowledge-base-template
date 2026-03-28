@@ -223,3 +223,31 @@ If you see `// not applicable` comments or empty implementations in a class, you
 | **Impact of change** | Changing one method can ripple everywhere | Changes are isolated |
 
 Next up: [Dependency Inversion Principle →](./dependency-inversion)
+
+---
+
+## Interview Questions
+
+### Q: How does ISP reduce blast radius in large systems?
+**A:** Smaller interfaces isolate change impact. Updating one capability contract does not force unrelated consumers to recompile or adapt.
+
+### Q: What are indicators of a fat interface in backend services?
+**A:** Many methods unused by each consumer, repeated no-op implementations, and frequent breaking changes across unrelated teams.
+
+### Q: How does ISP help with microservice API design?
+**A:** It encourages consumer-oriented contracts, reducing over-fetching/under-fetching and making service boundaries clearer.
+
+### Q: Should you split every interface aggressively?
+**A:** No. Split by client usage patterns. Too many tiny interfaces with no distinct clients can make navigation harder.
+
+### Q: How does ISP improve test quality?
+**A:** Test doubles only implement needed methods, which keeps tests focused and reduces mock maintenance overhead.
+
+### Q: What is a practical ISP pattern with Spring repositories?
+**A:** Define separate read and write ports, then inject only the required port into each use case.
+
+### Q: How do ISP and DIP reinforce each other?
+**A:** DIP depends on abstractions, and ISP makes those abstractions minimal and meaningful for each client.
+
+### Q: What migration path do you use when splitting a fat interface?
+**A:** Introduce small interfaces, adapt existing implementation to support both temporarily, move consumers incrementally, then remove the old interface.

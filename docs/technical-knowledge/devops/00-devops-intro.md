@@ -201,3 +201,25 @@ Install Docker Desktop, then work through the docs in order starting with [Docke
 :::info Spring Boot users
 All code examples in this guide use Java / Spring Boot where application code is shown. The Docker and Kubernetes concepts apply to any language.
 :::
+
+---
+
+## Interview Questions
+
+### Q: How do you explain the relationship between Docker and Kubernetes to stakeholders?
+**A:** Docker packages workloads consistently; Kubernetes schedules, scales, and heals those workloads in production.
+
+### Q: What is the first production concern beyond containerizing an app?
+**A:** Operational readiness: health checks, resource limits, logging, metrics, and deployment rollback strategy.
+
+### Q: Why are immutable images important in modern delivery pipelines?
+**A:** They guarantee reproducibility across environments and simplify debugging by tying behavior to image version.
+
+### Q: How do you reduce deployment risk in Kubernetes?
+**A:** Use progressive rollout, readiness gates, automated rollback conditions, and clear SLO-based verification.
+
+### Q: What is a common anti-pattern when teams adopt Kubernetes early?
+**A:** Replicating VM-era operational habits without standardizing manifests, observability, and resource governance.
+
+### Q: How do you choose between minikube, kind, and managed clusters for workflows?
+**A:** Use local tools for fast dev feedback and managed clusters for integration, policy, and production-like validation.

@@ -737,3 +737,28 @@ Advanced Spring Boot development requires understanding:
 - [Spring Boot - Internals & Architecture](./spring-boot-internals.md)
 - [Spring Data JPA - Complete Guide](./spring-data-jpa.md)
 - [Spring Security - Complete Guide](./spring-security.md)
+
+---
+
+## Interview Questions
+
+### Q: How do you choose between MVC with virtual threads and WebFlux?
+**A:** Prefer MVC plus virtual threads for simpler code with high I/O concurrency; choose WebFlux for fully non-blocking end-to-end pipelines.
+
+### Q: What is the most common production mistake with @Async?
+**A:** Using default executor settings, leading to uncontrolled thread growth or weak error handling.
+
+### Q: How should retries be designed to avoid cascading failures?
+**A:** Combine bounded retries with backoff, jitter, timeout budgets, and circuit breakers.
+
+### Q: What does good graceful shutdown protect against?
+**A:** Request loss during rolling deployments and incomplete writes during pod termination.
+
+### Q: Why is cache strategy an architecture decision, not an annotation decision?
+**A:** TTL, invalidation, consistency, and failure behavior must align with business correctness, not just performance.
+
+### Q: How do you make observability actionable in advanced Boot services?
+**A:** Define SLO-driven metrics, trace critical paths, and correlate logs with trace/span identifiers.
+
+### Q: What is a safe way to introduce virtual threads in an existing service?
+**A:** Roll out gradually, profile blocking hotspots, and remove synchronized pinning points before broad enablement.

@@ -180,3 +180,25 @@ git reset --hard HEAD@{1}   # recover the lost commit
 - **Need to completely discard local changes:** `git reset --hard origin/main`
 - **Pushed to shared branch, need to undo:** `git revert <sha>` — always
 :::
+
+---
+
+## Interview Questions
+
+### Q: Why is revert preferred over reset on shared branches?
+**A:** Revert preserves immutable history and collaboration safety while still undoing behavior.
+
+### Q: What is the operational risk of reset --hard in active repos?
+**A:** It can permanently discard local work and cause accidental loss when used without backup/reflog awareness.
+
+### Q: How do you undo a bad production deploy safely?
+**A:** Revert the specific release commits (or merge commit), validate rollback behavior in CI, and redeploy with monitoring.
+
+### Q: When should you use revert --no-commit?
+**A:** When batching multiple reversions into one reviewed rollback commit after inspecting cumulative effects.
+
+### Q: How does reflog change recovery strategy after mistakes?
+**A:** It provides a local movement journal for HEAD, enabling restoration of prior states after destructive operations.
+
+### Q: What senior guardrail would you enforce around reset?
+**A:** Forbid reset-based history rewrites on protected branches and require revert-based remediation in team workflows.

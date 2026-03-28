@@ -155,3 +155,16 @@ git gc                                  # clean up dangling objects
 :::tip Commit Often = Larger Safety Net
 Every commit creates a reflog entry. Making frequent WIP commits (even messy ones) while working gives you more recovery points. You can always squash them before merging.
 :::
+
+## Interview Questions (Senior Level)
+
+1. A teammate force-pushed and lost commits. How do you design a safe recovery playbook using reflog and branch recreation?
+2. When is `reflog` insufficient for recovery, and what preventative controls reduce that risk?
+3. How do reflog retention settings affect incident recovery windows in large repos?
+4. What is your policy for destructive history rewrite on shared branches?
+
+Short answer guide:
+- Recover by identifying prior refs in reflog, then branch and validate before push.
+- Reflog is local; enforce protected branches and server-side backups.
+- Tune expiry to your operational recovery SLA.
+- Restrict rewrites and require `--force-with-lease` with clear ownership.

@@ -192,3 +192,16 @@ D) Run a daily cron job inside an ECS container to execute `aws ecr batch-delete
 - [ECS Task Networking (`awsvpc`)](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-networking.html)
 - [CodeDeploy for ECS (AppSpec)](https://docs.aws.amazon.com/codedeploy/latest/userguide/reference-appspec-file-structure-resources.html)
 - [ECS IAM Roles](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-iam-roles.html)
+
+## Interview Questions (Senior Level)
+
+1. In ECS on Fargate, what signals tell you to split a service into multiple task definitions instead of tuning one oversized task?
+2. How do you design IAM boundaries between Task Execution Role and Task Role to pass a security review?
+3. You need near-zero-downtime deploys with rollback. Compare ECS rolling update vs CodeDeploy blue/green in real production terms.
+4. How would you combine ECR scanning, lifecycle policies, and deployment gates so vulnerable images never reach production?
+
+Short answer guide:
+- Split services by scaling profile, fault isolation, and independent release cadence.
+- Keep execution role minimal for image/log bootstrap, app permissions only in task role.
+- Use blue/green when verification and traffic shifting control are critical.
+- Add CI image scanning and policy checks before deployment stage transitions.

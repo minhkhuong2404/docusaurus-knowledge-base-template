@@ -637,3 +637,16 @@ public void processRequest() {
 - [Java Fundamentals: Core Language Concepts](./java-fundamentals.md)
 - [JVM Internals: Memory, GC & Class Loading](./java-jvm.md)
 - [Java OOP](./java-oop.md)
+
+## Interview Questions (Senior Level)
+
+1. How do you prioritize Java language feature adoption across teams with mixed service maturity and SLAs?
+2. What migration plan would you propose from Java 11 to 21 for a large microservice estate?
+3. When do virtual threads provide meaningful gains, and where can they hurt system behavior?
+4. How do records, sealed classes, and pattern matching improve domain modeling in real codebases?
+
+Short answer guide:
+- Adopt by business value, tooling readiness, and operational safety.
+- Use phased upgrades, compatibility test matrices, and runtime observability gates.
+- Apply virtual threads for blocking I/O concurrency, not CPU-bound work.
+- Use modern type features to reduce boilerplate and illegal state space.

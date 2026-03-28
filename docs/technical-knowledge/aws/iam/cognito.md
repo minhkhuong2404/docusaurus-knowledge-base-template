@@ -209,3 +209,16 @@ D) Lambda@Edge
 - [Cognito Identity Pools Docs](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-identity.html)
 - [JWT.io — Decode JWTs](https://jwt.io)
 - [Cognito Lambda Triggers Reference](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-working-with-aws-lambda-triggers.html)
+
+## Interview Questions (Senior Level)
+
+1. How do you model authentication and authorization boundaries across User Pools, Identity Pools, and API Gateway authorizers?
+2. What are the trade-offs of embedding tenant claims in JWTs versus resolving authorization dynamically per request?
+3. How would you migrate from a legacy identity system to Cognito with minimal user disruption?
+4. A security audit flags over-permissive guest access. How do you redesign unauthenticated identity policies safely?
+
+Short answer guide:
+- Use User Pools for identity and Identity Pools for scoped AWS credentials.
+- Keep token claims minimal; use short lifetimes and server-side policy checks for sensitive decisions.
+- Migrate with user-migration triggers, phased cutover, and rollback checkpoints.
+- Apply least privilege to unauth roles and isolate access by prefixes/resources.

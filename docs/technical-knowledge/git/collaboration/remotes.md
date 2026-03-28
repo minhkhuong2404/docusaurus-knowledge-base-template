@@ -164,3 +164,16 @@ ssh-keygen -t ed25519 -C "your@email.com"
 cat ~/.ssh/id_ed25519.pub   # add this to GitHub/GitLab SSH settings
 ```
 :::
+
+## Interview Questions (Senior Level)
+
+1. How do you design remote strategy for fork-based OSS contribution plus internal mirror compliance?
+2. What controls prevent pushing sensitive commits to the wrong remote in multi-remote setups?
+3. How do you manage upstream synchronization at scale to reduce divergence and conflict cost?
+4. When should teams enforce `fetch.prune=true`, and what pitfalls should be communicated?
+
+Short answer guide:
+- Separate origin/upstream roles and automate sync routines.
+- Use protected remotes, pre-push hooks, and scoped credentials.
+- Regular rebase/merge cadence plus automation avoids drift.
+- Pruning keeps refs clean but requires awareness of deleted branch recovery paths.

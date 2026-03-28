@@ -355,3 +355,16 @@ D) From the root account
 - [Spring Cloud AWS](https://docs.awspring.io/spring-cloud-aws/docs/3.0.0/reference/html/)
 - [Lambda with Java Best Practices](https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html)
 - [DynamoDB Enhanced Client](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/dynamodb-enhanced-client.html)
+
+## Interview Questions (Senior Level)
+
+1. How do you standardize AWS SDK client construction across microservices to avoid connection and retry anti-patterns?
+2. When would you choose async clients in Lambda, and when are sync clients simpler and safer?
+3. How do you prevent credential-resolution surprises across local dev, CI, ECS, and Lambda?
+4. What guardrails do you implement for retries and timeouts to avoid retry storms under throttling?
+
+Short answer guide:
+- Centralize client config for region, retry mode, timeouts, and telemetry.
+- Prefer async only when concurrency gains justify complexity.
+- Rely on default provider chain with environment-specific validation tests.
+- Use bounded retries, jitter, and upstream backpressure.

@@ -316,3 +316,25 @@ try {
 | Implement lock renewal for long tasks | Prevents premature expiry |
 | Prefer Redisson for production | Handles edge cases and Redlock |
 | Handle `LockNotAcquiredException` | Retry, queue, or fail gracefully |
+
+---
+
+## Interview Questions
+
+### Q: Why is lock ownership token mandatory in Redis locking?
+**A:** It prevents one process from accidentally releasing another process's lock.
+
+### Q: What is the main limitation of simple single-instance Redis locks?
+**A:** They are vulnerable to node failures and clock/TTL edge cases in distributed environments.
+
+### Q: When is Redlock appropriate and when is it not enough?
+**A:** It improves fault tolerance across nodes, but strict correctness still needs fencing at the resource layer.
+
+### Q: How do you prevent duplicate business side effects even with locks?
+**A:** Combine locking with idempotency keys and deduplication at persistence boundaries.
+
+### Q: What is a safe strategy for long-running critical sections?
+**A:** Use bounded lease time with heartbeat renewal and clear timeout/fallback policy.
+
+### Q: Which production signals indicate lock contention problems?
+**A:** Increasing lock acquisition latency, high timeout rates, and elevated retry loops in critical paths.
