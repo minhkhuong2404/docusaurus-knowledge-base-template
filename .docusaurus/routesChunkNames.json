@@ -12,13 +12,13 @@
       "plugin": "138e0e15"
     }
   },
-  "/-e2e": {
+  "/-deb": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-0dc": {
+  "/-c84": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -3802,7 +3802,7 @@
     "__comp": "df203c0f",
     "__props": "cdd99891"
   },
-  "/-86e": {
+  "/-ffb": {
     "__comp": "a94703ab"
   },
   "/aws-102": {
@@ -4240,6 +4240,10 @@
   "/security-0f0": {
     "__comp": "17896441",
     "content": "47ce4938"
+  },
+  "/suggestions-970": {
+    "__comp": "17896441",
+    "content": "8a8d0fdd"
   },
   "/system-design-6ff": {
     "__comp": "17896441",

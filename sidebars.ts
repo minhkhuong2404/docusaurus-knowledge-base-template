@@ -1391,7 +1391,8 @@ const sidebars: SidebarsConfig = {
 					],
 				},
 			]
-		}
+		},
+		'suggestions'
 	]
 }
 

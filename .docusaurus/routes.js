@@ -14,11 +14,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'e2e'),
+    component: ComponentCreator('/', 'deb'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '0dc'),
+        component: ComponentCreator('/', 'c84'),
         routes: [
           {
             path: '/tags',
@@ -4747,7 +4747,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '86e'),
+            component: ComponentCreator('/', 'ffb'),
             routes: [
               {
                 path: '/aws',
@@ -5399,6 +5399,12 @@ export default [
               {
                 path: '/security',
                 component: ComponentCreator('/security', '0f0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/suggestions',
+                component: ComponentCreator('/suggestions', '970'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
