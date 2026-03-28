@@ -17,14 +17,10 @@ If you have a specific suggestion, found a typo, or want to explicitly request a
 ## 📋 Option 2: Google Form (Recommended for tracking)
 *(Note: You can easily create a free Google Form, Typeform, or Tally form and link it below, or simply embed it directly on this page to track your responses in a spreadsheet!)*
 
-👉 **[Submit a Feedback Form](https://forms.gle/your-google-form-link-here)**
+👉 **[Submit a Feedback Form](https://forms.office.com/r/EmfignFt2R)**
 
 <br />
 
-**Example of how you can embed a Google Form directly:**
-```html
-<iframe src="https://docs.google.com/forms/d/e/YOUR_GOOGLE_FORM_ID/viewform?embedded=true" width="100%" height="600" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
-```
 
 ## What kind of suggestions are welcome?
 - **New Topics**: Are there specific Java, Spring, AWS, System Design, or generic Software Engineering topics you'd like to see covered?
