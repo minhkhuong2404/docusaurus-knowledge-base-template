@@ -22,8 +22,6 @@ This guide focuses on conceptual, tricky, and scenario-based questions commonly 
   names.forEach(System.out::println); // Terminal operation
   // names.count(); // This would throw an IllegalStateException
 
-```
-
 * **Why do we need streams if we can write code without them?**
 Streams make code shorter, cleaner, and more readable by adopting a declarative approach (describing *what* to do rather than *how* to do it). They also support functional programming and easy parallel processing.
 * **Explain the stream pipeline structure.**
@@ -38,7 +36,6 @@ List<String> activeUsers = users.stream() // 1. Source
     .filter(User::isActive)               // 2. Intermediate Operation
     .map(User::getUsername)               // 2. Intermediate Operation
     .collect(Collectors.toList());        // 3. Terminal Operation
-
 ```
 
 
