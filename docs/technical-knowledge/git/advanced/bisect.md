@@ -177,3 +177,11 @@ Short answer guide:
 - Skip only untestable commits to preserve binary-search integrity.
 - Combine manual checkpoints with automated bisect runs.
 - Confirm fix with forward/backward validation and regression tests.
+
+:::info Interview Focus
+Show how `git bisect run` shortens mean-time-to-root-cause during regressions.
+:::
+
+:::danger Interview Trap
+Starting bisect without a deterministic reproduction or clear good/bad boundary.
+:::

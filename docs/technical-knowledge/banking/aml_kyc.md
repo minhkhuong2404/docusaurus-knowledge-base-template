@@ -331,6 +331,14 @@ Short answer guide:
 - Define clear ownership, SLAs, and escalation paths for KYC lifecycle tasks.
 - Apply risk-based evidence tiers and senior approvals for high-risk cases.
 - Incomplete customer data and weak entity resolution are frequent root causes.
+
+:::info Interview Focus
+Differentiate onboarding KYC controls from ongoing AML monitoring and escalation operations.
+:::
+
+:::danger Interview Trap
+Applying uniform due diligence depth to all customer risk segments.
+:::
 | **International Organisation PEP** | Senior officials of UN, IMF, World Bank, Olympic Committee                                                                     |
 | **Family Members**                 | Spouse, children, parents, siblings of any PEP                                                                                 |
 | **Close Associates**               | Business partners and close personal associates of PEPs                                                                        |

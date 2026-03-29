@@ -250,3 +250,11 @@ Short answer guide:
 - Migrate via strangler patterns with parallel validation and reconciliation.
 - Enforce idempotent posting keys and strict accounting invariants.
 - Define RTO/RPO drills, replay safety, and reconciliation checkpoints.
+
+:::info Interview Focus
+Position CBS as ledger authority with strict posting correctness and reconciliation guarantees.
+:::
+
+:::danger Interview Trap
+Treating CBS as a generic downstream service without accounting invariants.
+:::

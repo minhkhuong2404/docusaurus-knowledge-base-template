@@ -153,3 +153,11 @@ Short answer guide:
 - Pin commits, enforce recursive init/update, and validate refs in CI.
 - Train on branch workflow inside submodule repos.
 - Revert pointer commits quickly and test compatibility matrices.
+
+:::info Interview Focus
+Explain when submodules are justified and what CI controls make them reliable.
+:::
+
+:::danger Interview Trap
+Treating submodules like normal directories and forgetting pointer commit management.
+:::

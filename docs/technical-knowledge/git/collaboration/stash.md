@@ -172,3 +172,11 @@ Short answer guide:
 - Use stash for short context switches, not long-running work.
 - Apply with inspection first, then resolve and restage deliberately.
 - Prefer descriptive messages and periodic cleanup checks.
+
+:::info Interview Focus
+Compare stash vs worktree vs WIP commits based on collaboration safety and recoverability.
+:::
+
+:::danger Interview Trap
+Using stash as long-term task storage in team environments.
+:::

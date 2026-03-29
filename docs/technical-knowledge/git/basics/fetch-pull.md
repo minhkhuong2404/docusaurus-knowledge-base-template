@@ -170,3 +170,11 @@ Short answer guide:
 - Use fetch-first when risk or uncertainty is high.
 - Rebase can rewrite context and confuse shared history if misused.
 - `--ff-only` enforces explicit conflict resolution before integration.
+
+:::info Interview Focus
+Compare `fetch`, `pull --rebase`, and `pull --ff-only` using branch policy and team collaboration context.
+:::
+
+:::danger Interview Trap
+Using `git pull` blindly on shared branches without understanding merge/rebase side effects.
+:::

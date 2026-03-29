@@ -290,3 +290,11 @@ Short answer guide:
 - Use stable transaction keys and duplicate-detection checks at boundaries.
 - Correlate instruction IDs, status updates, and ledger references.
 - Clearing is message exchange; settlement is final funds movement.
+
+:::info Interview Focus
+Walk through happy path and failure path, emphasizing idempotency and traceability.
+:::
+
+:::danger Interview Trap
+Confusing acknowledgment messages with actual funds finality.
+:::

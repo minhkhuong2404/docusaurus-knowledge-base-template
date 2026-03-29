@@ -33,6 +33,14 @@ Short answer guide:
 - Reframe each wrong answer as a design scenario.
 - Security, deployment, and troubleshooting domains are most operationally transferable.
 
+:::info Interview Focus
+Use each missed question to build a reusable decision rule for real systems.
+:::
+
+:::danger Interview Trap
+Treating high mock scores as proof of production-level architecture judgment.
+:::
+
 ---
 
 ## Domain 1 — Development with AWS Services (21 Questions)

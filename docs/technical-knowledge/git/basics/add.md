@@ -218,3 +218,11 @@ Short answer guide:
 - Combine `.gitignore`, pre-commit checks, and secret scanning.
 - Prefer `-u` when you only want tracked-file updates.
 - Tie commit quality to PR standards and release traceability.
+
+:::info Interview Focus
+Show how selective staging improves review quality and rollback confidence in real team workflows.
+:::
+
+:::danger Interview Trap
+Staging everything by default without reviewing `git diff --staged`.
+:::

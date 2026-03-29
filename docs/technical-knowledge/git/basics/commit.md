@@ -201,3 +201,11 @@ Short answer guide:
 - Commit often locally, curate before integration.
 - Amend only before sharing or when branch ownership is clear.
 - Structured messages power changelogs, versioning, and audits.
+
+:::info Interview Focus
+Explain how commit structure supports incident forensics, audits, and reliable release automation.
+:::
+
+:::danger Interview Trap
+Giving style-only commit advice without linking it to operational outcomes.
+:::

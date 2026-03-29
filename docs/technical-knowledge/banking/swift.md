@@ -20,3 +20,11 @@ Short answer guide:
 - Enforce sanctions screening and audit trails at multiple checkpoints.
 - Use end-to-end identifiers for deterministic traceability.
 - Repair only when compliance allows and beneficiary intent is preservable.
+
+:::info Interview Focus
+Describe cross-border flow with correspondent banks, sanctions checks, and investigation references.
+:::
+
+:::danger Interview Trap
+Assuming SWIFT messages settle money directly.
+:::

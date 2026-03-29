@@ -143,3 +143,11 @@ Short answer guide:
 - Enforce naming, cleanup, and ownership conventions for temp trees.
 - Prefer for parallel hotfix/review/test contexts.
 - Use `git worktree list` visibility and cleanup routines.
+
+:::info Interview Focus
+Explain how worktrees reduce context-switch risk during hotfixes and parallel reviews.
+:::
+
+:::danger Interview Trap
+Leaving stale worktrees that create branch confusion and cleanup debt.
+:::

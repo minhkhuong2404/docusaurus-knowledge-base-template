@@ -190,3 +190,11 @@ Short answer guide:
 - Lease validation prevents overwriting unseen remote commits.
 - Add remote restrictions, hooks, and least-privilege credentials.
 - Recover via reflog/backup refs and coordinated branch restoration.
+
+:::info Interview Focus
+Tie push strategy to governance: branch protection, approval policy, and recovery procedures.
+:::
+
+:::danger Interview Trap
+Recommending `--force` on collaborative branches instead of `--force-with-lease` on owned feature branches.
+:::

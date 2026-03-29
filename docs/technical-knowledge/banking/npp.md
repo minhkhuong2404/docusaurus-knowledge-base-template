@@ -259,3 +259,11 @@ Short answer guide:
 - Add name-check verification and confirmation UX safeguards.
 - Implement queue/retry/fallback policies with transparent status communication.
 - Monitor latency percentiles, reject codes, settlement lag, and exception rates.
+
+:::info Interview Focus
+Highlight sub-15s SLA design with idempotency, participant dependency handling, and observability.
+:::
+
+:::danger Interview Trap
+Assuming real-time rails remove the need for fallback and exception workflows.
+:::

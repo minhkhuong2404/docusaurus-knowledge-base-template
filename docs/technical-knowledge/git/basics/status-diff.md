@@ -180,3 +180,11 @@ Short answer guide:
 - Split mixed-intent changes to improve safety and traceability.
 - Use word/stat/name-status modes based on change type.
 - Apply ignore-whitespace views carefully, then re-check full diff.
+
+:::info Interview Focus
+Describe a practical diff-review checklist that catches risky changes before they reach PR.
+:::
+
+:::danger Interview Trap
+Relying on file names or summary stats without inspecting actual staged hunks.
+:::

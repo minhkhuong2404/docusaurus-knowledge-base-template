@@ -327,3 +327,11 @@ Short answer guide:
 - Route by cost, acceptance, and dispute profile constraints.
 - Standardize evidence workflows and reason-code analytics.
 - Minimize PAN exposure and segment systems rigorously.
+
+:::info Interview Focus
+Connect auth, clearing, settlement, and chargeback operations into one coherent lifecycle.
+:::
+
+:::danger Interview Trap
+Treating authorization approval as equivalent to settled funds.
+:::

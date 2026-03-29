@@ -269,3 +269,11 @@ Short answer guide:
 - Keep aliases transparent, documented, and predictable.
 - Avoid unsafe wrappers or require explicit confirmation patterns.
 - Distribute via dotfiles/onboarding automation and periodic audits.
+
+:::info Interview Focus
+Position Git config as team reliability infrastructure, not just personal convenience.
+:::
+
+:::danger Interview Trap
+Creating opaque aliases that hide destructive commands or bypass safeguards.
+:::

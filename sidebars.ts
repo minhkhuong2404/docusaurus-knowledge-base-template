@@ -201,6 +201,7 @@ const sidebars: SidebarsConfig = {
 						'technical-knowledge/system-design/scaling-reads',
 						'technical-knowledge/system-design/scaling-writes',
 						'technical-knowledge/system-design/caching-strategies',
+						'technical-knowledge/system-design/bloom-filters',
 					],
 				},
 				{

@@ -269,3 +269,11 @@ Short answer guide:
 - Enforce transparent fee/spread disclosure and reconciliation.
 - Use stale-rate thresholds, circuit breakers, and controlled degradation.
 - Keep execution deterministic while treasury manages exposure policy.
+
+:::info Interview Focus
+Explain rate sourcing, execution, audit trails, and treasury separation of concerns.
+:::
+
+:::danger Interview Trap
+Reducing FX design to conversion math while ignoring stale-rate and disclosure risk.
+:::

@@ -197,3 +197,11 @@ Short answer guide:
 - Close the gap with hands-on incident and cost experience.
 - Optimize for reliability, security, cost, and team capability.
 - Validate with SLOs, spend trends, and failure-mode behavior.
+
+:::info Interview Focus
+Convert exam-style patterns into production decisions with explicit reliability, security, and cost trade-offs.
+:::
+
+:::danger Interview Trap
+Memorizing service mappings without explaining constraints and failure behavior.
+:::
