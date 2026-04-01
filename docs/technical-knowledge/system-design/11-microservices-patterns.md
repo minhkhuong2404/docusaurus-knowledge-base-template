@@ -274,6 +274,38 @@ Phase 3: Expand — route more features to microservices
 Phase 4: Monolith retired
 ```
 
+### Beginner View
+The Strangler pattern avoids a risky "big-bang" rewrite. New features are built in services, and selected old endpoints are routed away from the monolith over time.
+
+### Senior Deep Dive
+Use an explicit migration blueprint:
+1. Edge routing layer (gateway/proxy) decides old vs new path
+2. Anti-corruption layer (ACL) shields new services from monolith schema/domain leaks
+3. Contract tests ensure old/new behavior parity
+4. Cutover metrics define when a route can be fully switched
+
+```
+Client -> Gateway
+           |- /orders/* -> New Order Service
+           |- /legacy/* -> Monolith
+```
+
+### Migration Playbook
+- Phase 0: Identify bounded context seams and ownership
+- Phase 1: Route read-only endpoints first (lower blast radius)
+- Phase 2: Migrate writes with idempotency and outbox events
+- Phase 3: Decommission monolith modules after zero-traffic burn-in
+
+### Failure Modes
+- Shared DB coupling keeps hidden runtime dependencies
+- Cross-service transactions recreated as synchronous chains
+- Incomplete parity checks create data drift after cutover
+
+### Operational Guardrails
+- Keep rollback switch at gateway level
+- Track golden metrics per migrated route: error rate, latency, data mismatch
+- Run dual-read/compare for critical paths before full write cutover
+
 ---
 
 ## Saga Pattern (Cross-Service Transactions)

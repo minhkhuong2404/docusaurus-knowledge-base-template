@@ -25,6 +25,8 @@ const sidebars: SidebarsConfig = {
 					collapsed: true,
 					items: [
 						'technical-knowledge/java/java-concurrency',
+						'technical-knowledge/java/java-aqs-internals',
+						'technical-knowledge/java/java-virtual-threads',
 						'technical-knowledge/java/java-jvm'
 					]
 				},
@@ -87,6 +89,15 @@ const sidebars: SidebarsConfig = {
 					label: '🌐 Web Layer',
 					collapsed: true,
 					items: ['technical-knowledge/spring/spring-mvc']
+				},
+				{
+					type: 'category',
+					label: '☁️ Cloud & Enterprise',
+					collapsed: true,
+					items: [
+						'technical-knowledge/spring/spring-cloud',
+						'technical-knowledge/spring/spring-batch'
+					]
 				}
 			]
 		},
@@ -211,6 +222,7 @@ const sidebars: SidebarsConfig = {
 					items: [
 						'technical-knowledge/system-design/real-time-updates',
 						'technical-knowledge/system-design/handling-contention',
+						'technical-knowledge/system-design/distributed-locking',
 						'technical-knowledge/system-design/multi-step-process',
 						'technical-knowledge/system-design/long-running-tasks',
 						'technical-knowledge/system-design/data-consistency',
@@ -222,6 +234,7 @@ const sidebars: SidebarsConfig = {
 					collapsed: true,
 					items: [
 						'technical-knowledge/system-design/microservices-patterns',
+						'technical-knowledge/system-design/domain-driven-design',
 						'technical-knowledge/system-design/api-design',
 						'technical-knowledge/system-design/database-design',
 						'technical-knowledge/system-design/message-queues',
@@ -245,6 +258,7 @@ const sidebars: SidebarsConfig = {
 						'technical-knowledge/system-design/load-balancing-reliability',
 						'technical-knowledge/system-design/observability',
 						'technical-knowledge/system-design/distributed-systems',
+						'technical-knowledge/system-design/advanced-consensus-bft',
 					],
 				},
 				{
@@ -590,7 +604,9 @@ const sidebars: SidebarsConfig = {
 					collapsed: true,
 					items: [
 						'technical-knowledge/redis/redis-data-types',
+						'technical-knowledge/redis/redis-advanced-data-structures',
 						'technical-knowledge/redis/redis-ttl-expiry',
+						'technical-knowledge/redis/redis-eviction-policies'
 					]
 				},
 				{

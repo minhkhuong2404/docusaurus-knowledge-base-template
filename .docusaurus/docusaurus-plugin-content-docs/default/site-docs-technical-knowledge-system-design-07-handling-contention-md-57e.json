@@ -68,7 +68,7 @@
     "permalink": "/technical-knowledge/system-design/real-time-updates"
   },
   "next": {
-    "title": "Multi-Step Processes",
-    "permalink": "/technical-knowledge/system-design/multi-step-process"
+    "title": "Distributed Locking",
+    "permalink": "/technical-knowledge/system-design/distributed-locking"
   }
 }

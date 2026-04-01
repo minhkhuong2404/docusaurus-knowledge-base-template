@@ -76,8 +76,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Microservices Patterns",
-    "permalink": "/technical-knowledge/system-design/microservices-patterns"
+    "title": "Domain-Driven Design",
+    "permalink": "/technical-knowledge/system-design/domain-driven-design"
   },
   "next": {
     "title": "Database Design",

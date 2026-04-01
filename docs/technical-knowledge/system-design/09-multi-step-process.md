@@ -126,6 +126,51 @@ public void onInventoryFailed(InventoryFailedEvent event) {
 
 ---
 
+## Saga Operations Deep Dive
+
+### Beginner View
+Sagas replace one big transaction with many small local transactions plus compensations.
+
+Key idea for new learners:
+- You cannot reliably "rollback history" across services
+- You create a new business event that semantically compensates prior state
+
+### Senior Deep Dive
+Production saga design needs three hard guarantees:
+1. **Idempotent steps**: retries do not create duplicate side effects
+2. **Durable state transitions**: each step persisted with clear status
+3. **Observable progress**: traceable per-saga timeline for debugging
+
+### Compensation Failure Playbook
+Compensation can fail too (refund API down, downstream timeout). Use explicit retry states:
+
+```
+PAYMENT_CAPTURED
+    -> SHIPPING_FAILED
+    -> REFUND_PENDING
+    -> REFUND_RETRYING (backoff)
+    -> REFUND_ESCALATED (manual ops)
+    -> REFUND_COMPLETED
+```
+
+Operational rules:
+- Retries are bounded and jittered
+- Escalate irrecoverable failures to ops queue
+- Never lose saga state transitions (append state log)
+
+### Observability Requirements
+- Correlation IDs across all commands/events
+- Per-step latency and failure counters
+- Saga age SLO (for example, 99% complete under 2 minutes)
+- Dead-letter queue for malformed events with replay tooling
+
+### When to Prefer Orchestration at Scale
+- Highly regulated flows requiring deterministic audit timeline
+- Complex compensation logic involving many branches
+- Multi-team systems where centralized flow ownership reduces ambiguity
+
+---
+
 ## When to Use Each
 
 | Factor | Orchestration | Choreography |

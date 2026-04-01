@@ -51,6 +51,7 @@ Dependencies bundled inside the image — no "works on my machine"
 
 | # | Topic | Level |
 |---|---|---|
+| 00a | [VMs vs Docker vs Kubernetes](/technical-knowledge/devops/vm-docker-k8s-explained) | 🟢 Beginner to 🔴 Advanced |
 | 01 | [Docker Fundamentals](/technical-knowledge/devops/docker-fundamentals) | 🟢 Beginner |
 | 02 | [Writing Dockerfiles](/technical-knowledge/devops/dockerfile) | 🟢 Beginner |
 | 03 | [Docker CLI Commands](/technical-knowledge/devops/docker-commands) | 🟢 Beginner |

@@ -24,6 +24,8 @@ A structured guide covering backend engineering with Spring, from framework fund
 | 8 | [Spring Security](./spring-security) | Authentication, authorization, filters, method security |
 | 9 | [Spring Data JPA](./spring-data-jpa) | Repository model, ORM behavior, query strategies |
 | 10 | [Spring MVC](./spring-mvc) | Request flow, controllers, validation, exception handling |
+| 11 | [Spring Cloud](./spring-cloud) | Distributed systems, Eureka, Gateway, Config Server |
+| 12 | [Spring Batch](./spring-batch) | Chunk processing, scaling massive data jobs, ETL pipelines |
 
 :::tip Java / Architecture Tip
 Pair this section with Java and Database knowledge base pages to build end-to-end backend decision-making skills.

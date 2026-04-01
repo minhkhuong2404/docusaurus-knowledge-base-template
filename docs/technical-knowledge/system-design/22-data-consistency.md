@@ -227,6 +227,63 @@ public Order createOrder(CreateOrderCommand cmd) {
 
 ---
 
+### Outbox: Beginner View
+Outbox solves dual-write by storing business row and integration event in one DB transaction.
+
+### Outbox: Senior Deep Dive
+Two relay styles:
+- Poller-based relay: app job reads unpublished rows and publishes
+- CDC-based relay: connector reads transaction log and publishes changes
+
+Tradeoff summary:
+- Poller is easy to start but adds read load and polling latency
+- CDC is lower-latency and ordered per log, but operationally heavier
+
+### Outbox Reliability Checklist
+- Use ordered primary key (for example, auto-increment or commit timestamp)
+- Mark publish status atomically and idempotently
+- Include dedup key in event payload (for consumer idempotency)
+- Keep retention/cleanup job for published outbox rows
+
+### Failure Modes
+- Published to broker but status update fails -> duplicate publish on retry
+- Poller crashes mid-batch -> partial publish
+- Poison payload keeps failing serialization
+
+Mitigations:
+- Consumer idempotency by event ID
+- Per-record retry counters + DLQ after threshold
+- Alert on outbox backlog age and growth rate
+
+---
+
+## Quorum Reads and Read Repair
+
+### Beginner View
+In leaderless replication, quorum is configured with `N` replicas:
+- `W` replicas must acknowledge a write
+- `R` replicas are queried for a read
+
+If `W + R > N`, reads are more likely to see latest writes.
+
+### Senior Deep Dive
+Example with `N=3`:
+- Stronger freshness: `W=2, R=2`
+- Higher availability: `W=1, R=1`
+
+Read repair strategy:
+1. Read from multiple replicas
+2. Compare versions/vector clocks
+3. Return latest to client
+4. Asynchronously repair stale replicas
+
+### Tradeoffs
+- Higher `R` increases read latency but reduces stale reads
+- Lower `W` improves write availability but increases reconciliation work
+- Hot partitions can trigger repair storms under read-heavy load
+
+---
+
 ## Idempotency Patterns
 
 ### Database Constraint

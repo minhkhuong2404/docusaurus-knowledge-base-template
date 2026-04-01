@@ -68,7 +68,7 @@
     "permalink": "/technical-knowledge/system-design/scaling-writes"
   },
   "next": {
-    "title": "Real-Time Updates",
-    "permalink": "/technical-knowledge/system-design/real-time-updates"
+    "title": "Bloom Filters",
+    "permalink": "/technical-knowledge/system-design/bloom-filters"
   }
 }

@@ -64,8 +64,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Caching Strategies",
-    "permalink": "/technical-knowledge/system-design/caching-strategies"
+    "title": "Bloom Filters",
+    "permalink": "/technical-knowledge/system-design/bloom-filters"
   },
   "next": {
     "title": "Handling Contention",

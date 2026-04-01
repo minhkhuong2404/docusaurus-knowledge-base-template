@@ -52,8 +52,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Distributed Systems",
-    "permalink": "/technical-knowledge/system-design/distributed-systems"
+    "title": "Advanced Consensus and BFT",
+    "permalink": "/technical-knowledge/system-design/advanced-consensus-bft"
   },
   "next": {
     "title": "Introduction",

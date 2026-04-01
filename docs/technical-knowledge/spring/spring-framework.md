@@ -61,6 +61,11 @@ The Spring Framework is organized into well-defined modules:
 
 IoC is a design principle where the framework controls the flow of a program rather than the developer's code. Instead of objects creating their own dependencies, the **IoC container** creates them and injects them where needed.
 
+#### 👶 Beginner Concept: The "Restaurant Kitchen"
+Imagine cooking a complex meal. 
+- **Without IoC (Manual):** You have to go to the farm, harvest the wheat, mill the flour, fetch water from the well, and then bake the bread. This is like a Java object typing `new DatabaseConnection()` and manually configuring URLs every time.
+- **With IoC (Spring):** You are a Chef in a high-end restaurant. When you arrive at your station, the prep-cooks have already chopped the onions, measured the flour, and boiled the water. You just cook. In Spring, the **IoC Container** is the prep team. You just declare `@Autowired Private Onion onion;` and Spring hands it to you exactly when you need it.
+
 ### Dependency Injection (DI)
 
 DI is the mechanism Spring uses to implement IoC. Dependencies are provided to a class from the outside rather than the class creating them itself.
@@ -154,6 +159,22 @@ Spring heavily utilizes well-known design patterns:
 | **Template Method** | `JdbcTemplate`, `RestTemplate`, `JmsTemplate` |
 | **Observer** | Application event mechanism (`ApplicationEvent`, `@EventListener`) |
 | **Strategy** | Various pluggable strategies (e.g., `ResourceLoader`, `TransactionManager`) |
+
+---
+
+## 🧠 Senior Deep Dive: How Spring AOP & @Transactional *Actually* Work
+
+When you annotate a method with `@Transactional` or `@Async`, you might wonder: *How does Spring intercept my method call without me writing any extra code?*
+
+The answer is **Dynamic Proxies**. When the IoC container creates your Bean, it notices the annotation. Instead of returning the actual object, it returns a "Bodyguard" (a Proxy) that looks exactly like your object.
+
+### The Two Types of Proxies
+
+1. **JDK Dynamic Proxies:** Used if your class implements an Interface (e.g., `UserServiceImpl implements UserService`). The proxy implements the interface, delegates to your object, but adds the database transaction boundaries before and after your method runs.
+2. **CGLIB Proxies:** Used if your class does *not* implement an interface. Spring uses the CGLIB library to physically generate a subclass of your object at runtime (bytecode generation). It overrides your methods to inject the transaction logic.
+
+> [!WARNING]
+> **The Self-Invocation Problem:** Because the Proxy wraps your object *from the outside*, if a method inside your class calls another `@Transactional` method *inside the exact same class*, the call bypasses the proxy entirely! No transaction is started. This is the #1 bug senior developers face with Spring AOP.
 
 ---
 

@@ -134,12 +134,91 @@ If any "No" in Phase 1:
   Coordinator → "Rollback" → All rollback
 ```
 
+### Beginner View
+2PC gives a simple promise: either all participants commit or all rollback. It is useful when strong atomicity is mandatory across multiple resources.
+
+### Senior Deep Dive
+2PC has a blocking window:
+- Participants vote YES in prepare phase and hold locks
+- If coordinator crashes before final decision, participants can be stuck waiting
+
+Crash timeline example:
+1. A and B prepared YES, locks acquired
+2. Coordinator writes COMMIT decision to its log
+3. Coordinator crashes before notifying B
+4. A commits, B remains uncertain until coordinator recovers
+
+This creates high tail latency and lock amplification under failure.
+
+### Coordinator Recovery Rules
+- Coordinator must write durable decision before sending commit/rollback
+- On restart, replay transaction log and resend final decision
+- Participants must be idempotent for duplicate COMMIT/ROLLBACK messages
+
+### When to Use vs Avoid
+- Use 2PC: low-latency LAN, small participant count, strong invariants
+- Prefer Saga/TCC: internet-scale microservices, independent availability goals
+
 **Problems**:
 - Coordinator failure during Phase 2 = participants stuck in limbo
 - Blocking protocol — participants hold locks during prepare
 - Network partition breaks the protocol
 
 **Alternatives**: Saga pattern (non-blocking), 3PC (complex).
+
+---
+
+## CAP Theorem in Real Systems
+
+CAP fundamentals are documented in [Architecture Fundamentals](./architecture-fundamentals). In practice, partition tolerance is non-negotiable, so production choices are usually CP vs AP by workload.
+
+### Applied Decision Guide
+- Payments, inventory, ledger: lean CP for correctness on critical writes
+- Feeds, analytics, recommendations: lean AP for availability and low latency
+- Hybrid systems often expose CP writes and AP reads in different endpoints
+
+### Senior Tradeoff Example
+For `N=3` replicas:
+- `W=2, R=2` gives stronger read freshness but lower availability under partition
+- `W=1, R=1` improves availability but increases stale-read risk
+
+---
+
+## Distributed Locking Essentials
+
+### Beginner View
+Distributed locks ensure only one worker performs a critical operation at a time (for example, one scheduler instance runs a monthly billing job).
+
+### Senior Deep Dive
+Leases are safer than forever locks: each lock has TTL and requires renewal.
+
+Critical safety concept: **fencing tokens**.
+- Lock service returns monotonically increasing token
+- Downstream storage accepts writes only from highest token
+- Prevents stale leader from writing after lease expiry
+
+```
+Worker A gets token 41 (lease expires)
+Worker B gets token 42
+If A wakes up late, storage rejects token 41 writes
+```
+
+See dedicated guide: [Distributed Locking](./distributed-locking).
+
+---
+
+## Beyond Crash Faults: BFT Overview
+
+Raft/Paxos assume crash faults (nodes fail-stop). Byzantine Fault Tolerance (BFT) handles arbitrary or malicious behavior.
+
+### Senior View
+- Crash fault model: typically `2f + 1` nodes tolerate `f` failures
+- Byzantine model: typically `3f + 1` nodes tolerate `f` Byzantine nodes
+- BFT adds communication rounds and signature overhead
+
+Use BFT only when trust boundaries require it (multi-organization consensus, adversarial environments).
+
+See dedicated guide: [Advanced Consensus and BFT](./advanced-consensus-bft).
 
 ---
 

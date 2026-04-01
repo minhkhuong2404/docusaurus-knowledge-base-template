@@ -1369,6 +1369,10 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/devops/vm-docker-k8s-explained",
+              "path": "/technical-knowledge/devops/vm-docker-k8s-explained"
+            },
+            {
               "id": "technical-knowledge/git/advanced/bisect",
               "path": "/technical-knowledge/git/advanced/bisect",
               "sidebar": "tutorialSidebar"
@@ -2053,6 +2057,10 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/redis/redis-advanced-data-structures",
+              "path": "/technical-knowledge/redis/redis-advanced-data-structures"
+            },
+            {
               "id": "technical-knowledge/redis/redis-as-database",
               "path": "/technical-knowledge/redis/redis-as-database",
               "sidebar": "tutorialSidebar"
@@ -2076,6 +2084,10 @@
               "id": "technical-knowledge/redis/redis-distributed-lock",
               "path": "/technical-knowledge/redis/redis-distributed-lock",
               "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/redis/redis-eviction-policies",
+              "path": "/technical-knowledge/redis/redis-eviction-policies"
             },
             {
               "id": "technical-knowledge/redis/redis-interview-questions",
@@ -2218,6 +2230,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/spring/spring-batch",
+              "path": "/technical-knowledge/spring/spring-batch",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/spring/spring-boot",
               "path": "/technical-knowledge/spring/spring-boot",
               "sidebar": "tutorialSidebar"
@@ -2235,6 +2252,11 @@
             {
               "id": "technical-knowledge/spring/spring-boot-interview-questions",
               "path": "/technical-knowledge/spring/spring-boot-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/spring/spring-cloud",
+              "path": "/technical-knowledge/spring/spring-cloud",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -2273,6 +2295,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/advanced-consensus-bft",
+              "path": "/technical-knowledge/system-design/advanced-consensus-bft",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/api-design",
               "path": "/technical-knowledge/system-design/api-design",
               "sidebar": "tutorialSidebar"
@@ -2280,6 +2307,11 @@
             {
               "id": "technical-knowledge/system-design/architecture-fundamentals",
               "path": "/technical-knowledge/system-design/architecture-fundamentals",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/bloom-filters",
+              "path": "/technical-knowledge/system-design/bloom-filters",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -2308,8 +2340,18 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/distributed-locking",
+              "path": "/technical-knowledge/system-design/distributed-locking",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/distributed-systems",
               "path": "/technical-knowledge/system-design/distributed-systems",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/domain-driven-design",
+              "path": "/technical-knowledge/system-design/domain-driven-design",
               "sidebar": "tutorialSidebar"
             },
             {

@@ -249,6 +249,62 @@ Drop old partitions instantly instead of slow DELETEs.
 
 ---
 
+## Consistent Hashing Deep Dive
+
+### Beginner View
+Classic hash sharding uses `hash(key) % N`. It distributes evenly, but adding one shard changes `N`, so almost every key moves.
+
+Consistent hashing places both shards and keys on a logical ring:
+
+```
+0 ------------------------------------------------------ 2^32-1
+|          S1             S2                S3           |
+|   kA kB     kC      kD     kE        kF      kG       |
+
+Rule: key belongs to the first shard clockwise on the ring.
+```
+
+When a new shard is added, only nearby keys move, not the whole dataset.
+
+### Senior Deep Dive
+Real deployments use **virtual nodes (vnodes)** so each physical shard owns many ring positions:
+
+```
+S1 -> [v1, v8, v11]
+S2 -> [v2, v6, v12]
+S3 -> [v3, v4, v5, v7, v9, v10]
+```
+
+Why vnodes matter:
+- Smooths uneven key distribution
+- Makes rebalancing incremental
+- Allows weighted capacity (larger nodes get more vnodes)
+
+### Rebalance Math Intuition
+For `N` equal shards, each shard owns approximately `1/N` of keyspace.
+- Add one shard: expected moved keys approximately `1/(N+1)`
+- Remove one shard: its owned range gets redistributed clockwise
+
+With replication factor `R`, movement cost is multiplied by replica placement constraints.
+
+### Failure Modes and Guardrails
+- Hot keys: one key can still overload one shard even with even distribution
+- Ring churn: frequent add/remove causes copy storms and cache misses
+- Skewed replicas: poor token assignment can create correlated failure domains
+
+Production guardrails:
+- Use vnodes + rack-aware replica placement
+- Track per-shard p95 latency and keyspace ownership drift
+- Throttle data streaming during rebalance
+- Prefer gradual traffic shifting while rebalancing
+
+### Decision Checklist
+- If shard count changes often: consistent hashing is preferred
+- If range scans are dominant: range sharding may still be better
+- If strict locality by tenant is required: explicit tenant placement may beat ring hashing
+
+---
+
 ## Write Scaling Decision Tree
 
 ```

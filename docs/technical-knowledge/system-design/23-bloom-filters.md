@@ -284,11 +284,11 @@ public class UserService {
 
 | Data Structure | Space (1M elements) | Lookup |
 |---|---|---|
-| **HashSet<Long>** | ~32 MB (8 bytes × 1M + overhead) | O(1) avg |
-| **Bloom Filter** | ~1.2 MB (with 1% FP rate) | O(k) hashing |
-| **TreeSet<Long>** | ~40 MB (per-node overhead) | O(log n) |
+| **HashSet< Long >** | ~32 MB (8 bytes × 1M + overhead) | O(1) avg |
+| **Bloom Filter**  | ~1.2 MB (with 1% FP rate) | O(k) hashing |
+| **TreeSet< Long >** | ~40 MB (per-node overhead) | O(log n) |
 
-**Savings**: Bloom filter uses **96% less space** than HashSet with <1% false positive rate.
+**Savings**: Bloom filter uses **96% less space** than HashSet with under 1% false positive rate.
 
 ### Formula for Optimal Parameters
 ```

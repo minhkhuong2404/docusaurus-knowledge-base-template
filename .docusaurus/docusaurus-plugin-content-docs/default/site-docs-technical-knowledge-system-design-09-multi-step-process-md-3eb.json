@@ -64,8 +64,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Handling Contention",
-    "permalink": "/technical-knowledge/system-design/handling-contention"
+    "title": "Distributed Locking",
+    "permalink": "/technical-knowledge/system-design/distributed-locking"
   },
   "next": {
     "title": "Long-Running Tasks",
