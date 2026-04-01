@@ -55,7 +55,7 @@
     "permalink": "/technical-knowledge/java/java-collections"
   },
   "next": {
-    "title": "JVM Internals: Memory, GC & Class Loading",
-    "permalink": "/technical-knowledge/java/java-jvm"
+    "title": "Java Threads, Locks, and Thread Safety",
+    "permalink": "/technical-knowledge/java/java-threads-and-locks"
   }
 }

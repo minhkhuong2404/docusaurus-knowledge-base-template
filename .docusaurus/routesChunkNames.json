@@ -12,13 +12,13 @@
       "plugin": "138e0e15"
     }
   },
-  "/-2f6": {
+  "/-e07": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-d79": {
+  "/-c43": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -157,6 +157,10 @@
   "/tags/appsync-3fe": {
     "__comp": "df203c0f",
     "__props": "516ef331"
+  },
+  "/tags/aqs-772": {
+    "__comp": "df203c0f",
+    "__props": "61f326c9"
   },
   "/tags/architecture-851": {
     "__comp": "df203c0f",
@@ -1646,6 +1650,10 @@
     "__comp": "df203c0f",
     "__props": "a0ddd4e1"
   },
+  "/tags/heap-008": {
+    "__comp": "df203c0f",
+    "__props": "c6df5430"
+  },
   "/tags/helm-053": {
     "__comp": "df203c0f",
     "__props": "18be1d0e"
@@ -2038,6 +2046,10 @@
     "__comp": "df203c0f",
     "__props": "629f607d"
   },
+  "/tags/kraft-0ad": {
+    "__comp": "df203c0f",
+    "__props": "4c5ebb28"
+  },
   "/tags/kubectl-985": {
     "__comp": "df203c0f",
     "__props": "eb430cca"
@@ -2150,6 +2162,10 @@
     "__comp": "df203c0f",
     "__props": "b500003f"
   },
+  "/tags/locks-ade": {
+    "__comp": "df203c0f",
+    "__props": "261d847a"
+  },
   "/tags/log-blame-57c": {
     "__comp": "df203c0f",
     "__props": "bf032dfd"
@@ -2165,6 +2181,10 @@
   "/tags/long-polling-a18": {
     "__comp": "df203c0f",
     "__props": "89572ede"
+  },
+  "/tags/loom-af9": {
+    "__comp": "df203c0f",
+    "__props": "06efaea3"
   },
   "/tags/lru-53c": {
     "__comp": "df203c0f",
@@ -3458,6 +3478,10 @@
     "__comp": "df203c0f",
     "__props": "94a88606"
   },
+  "/tags/stack-829": {
+    "__comp": "df203c0f",
+    "__props": "1bf7b916"
+  },
   "/tags/star-schema-b6c": {
     "__comp": "df203c0f",
     "__props": "af82fe38"
@@ -3794,6 +3818,10 @@
     "__comp": "df203c0f",
     "__props": "8660da84"
   },
+  "/tags/virtual-threads-494": {
+    "__comp": "df203c0f",
+    "__props": "f628637b"
+  },
   "/tags/virtualization-5db": {
     "__comp": "df203c0f",
     "__props": "31d7deab"
@@ -3918,7 +3946,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-16a": {
+  "/-c80": {
     "__comp": "a94703ab"
   },
   "/aws-102": {
@@ -5309,6 +5337,10 @@
     "__comp": "17896441",
     "content": "be1ca738"
   },
+  "/technical-knowledge/java/java-aqs-internals-ac7": {
+    "__comp": "17896441",
+    "content": "2695042f"
+  },
   "/technical-knowledge/java/java-collections-5a4": {
     "__comp": "17896441",
     "content": "a8d4740a"
@@ -5344,6 +5376,18 @@
   "/technical-knowledge/java/java-overview-ee9": {
     "__comp": "17896441",
     "content": "adb02301"
+  },
+  "/technical-knowledge/java/java-stack-vs-heap-0f6": {
+    "__comp": "17896441",
+    "content": "77dd0904"
+  },
+  "/technical-knowledge/java/java-threads-and-locks-98b": {
+    "__comp": "17896441",
+    "content": "6f0e33d4"
+  },
+  "/technical-knowledge/java/java-virtual-threads-ed5": {
+    "__comp": "17896441",
+    "content": "dd9695a1"
   },
   "/technical-knowledge/kafka/advanced/exactly-once-1c8": {
     "__comp": "17896441",
@@ -5404,6 +5448,10 @@
   "/technical-knowledge/kafka/core/kafka-overview-7e0": {
     "__comp": "17896441",
     "content": "6438a9db"
+  },
+  "/technical-knowledge/kafka/core/kraft-vs-zookeeper-b00": {
+    "__comp": "17896441",
+    "content": "f5491934"
   },
   "/technical-knowledge/kafka/core/partition-7db": {
     "__comp": "17896441",
@@ -5565,7 +5613,7 @@
     "__comp": "17896441",
     "content": "2d19a7f5"
   },
-  "/technical-knowledge/redis/redis-advanced-data-structures-160": {
+  "/technical-knowledge/redis/redis-advanced-data-structures-364": {
     "__comp": "17896441",
     "content": "c0c9f4f2"
   },
@@ -5589,7 +5637,7 @@
     "__comp": "17896441",
     "content": "588595cf"
   },
-  "/technical-knowledge/redis/redis-eviction-policies-a11": {
+  "/technical-knowledge/redis/redis-eviction-policies-78c": {
     "__comp": "17896441",
     "content": "d92134ba"
   },

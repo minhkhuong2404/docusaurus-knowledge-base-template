@@ -1737,6 +1737,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/java/java-aqs-internals",
+              "path": "/technical-knowledge/java/java-aqs-internals",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/java/java-collections",
               "path": "/technical-knowledge/java/java-collections",
               "sidebar": "tutorialSidebar"
@@ -1779,6 +1784,21 @@
             {
               "id": "technical-knowledge/java/java-overview",
               "path": "/technical-knowledge/java/java-overview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/java/java-stack-vs-heap",
+              "path": "/technical-knowledge/java/java-stack-vs-heap",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/java/java-threads-and-locks",
+              "path": "/technical-knowledge/java/java-threads-and-locks",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/java/java-virtual-threads",
+              "path": "/technical-knowledge/java/java-virtual-threads",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -1854,6 +1874,11 @@
             {
               "id": "technical-knowledge/kafka/core/kafka-overview",
               "path": "/technical-knowledge/kafka/core/kafka-overview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/core/kraft-vs-zookeeper",
+              "path": "/technical-knowledge/kafka/core/kraft-vs-zookeeper",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -2058,7 +2083,8 @@
             },
             {
               "id": "technical-knowledge/redis/redis-advanced-data-structures",
-              "path": "/technical-knowledge/redis/redis-advanced-data-structures"
+              "path": "/technical-knowledge/redis/redis-advanced-data-structures",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/redis/redis-as-database",
@@ -2087,7 +2113,8 @@
             },
             {
               "id": "technical-knowledge/redis/redis-eviction-policies",
-              "path": "/technical-knowledge/redis/redis-eviction-policies"
+              "path": "/technical-knowledge/redis/redis-eviction-policies",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/redis/redis-interview-questions",

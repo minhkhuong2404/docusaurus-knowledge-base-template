@@ -45,8 +45,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "JVM Internals: Memory, GC & Class Loading",
-    "permalink": "/technical-knowledge/java/java-jvm"
+    "title": "Virtual Threads (Project Loom)",
+    "permalink": "/technical-knowledge/java/java-virtual-threads"
   },
   "next": {
     "title": "Java New Features: Java 8 through Java 21+",

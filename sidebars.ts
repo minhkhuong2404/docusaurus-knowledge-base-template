@@ -21,13 +21,34 @@ const sidebars: SidebarsConfig = {
 				},
 				{
 					type: 'category',
-					label: '🧵 Concurrency & JVM',
+					label: '🧵 Concurrency',
 					collapsed: true,
 					items: [
-						'technical-knowledge/java/java-concurrency',
-						'technical-knowledge/java/java-aqs-internals',
-						'technical-knowledge/java/java-virtual-threads',
-						'technical-knowledge/java/java-jvm'
+						{
+							type: 'category',
+							label: '🧭 Fundamentals',
+							collapsed: true,
+							items: ['technical-knowledge/java/java-concurrency']
+						},
+						{
+							type: 'category',
+							label: '🔒 Threads & Locks',
+							collapsed: true,
+							items: [
+								'technical-knowledge/java/java-threads-and-locks',
+								'technical-knowledge/java/java-aqs-internals'
+							]
+						}
+					]
+				},
+				{
+					type: 'category',
+					label: '🛠️ JVM',
+					collapsed: true,
+					items: [
+						'technical-knowledge/java/java-jvm',
+						'technical-knowledge/java/java-stack-vs-heap',
+						'technical-knowledge/java/java-virtual-threads'
 					]
 				},
 				{
@@ -466,7 +487,8 @@ const sidebars: SidebarsConfig = {
 						'technical-knowledge/kafka/core/topic',
 						'technical-knowledge/kafka/core/partition',
 						'technical-knowledge/kafka/core/broker',
-						'technical-knowledge/kafka/core/replication'
+						'technical-knowledge/kafka/core/replication',
+						'technical-knowledge/kafka/core/kraft-vs-zookeeper'
 					]
 				},
 				{

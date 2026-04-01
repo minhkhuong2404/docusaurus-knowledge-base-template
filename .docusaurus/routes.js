@@ -14,11 +14,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '2f6'),
+    component: ComponentCreator('/', 'e07'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'd79'),
+        component: ComponentCreator('/', 'c43'),
         routes: [
           {
             path: '/tags',
@@ -188,6 +188,11 @@ export default [
           {
             path: '/tags/appsync',
             component: ComponentCreator('/tags/appsync', '3fe'),
+            exact: true
+          },
+          {
+            path: '/tags/aqs',
+            component: ComponentCreator('/tags/aqs', '772'),
             exact: true
           },
           {
@@ -2051,6 +2056,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/heap',
+            component: ComponentCreator('/tags/heap', '008'),
+            exact: true
+          },
+          {
             path: '/tags/helm',
             component: ComponentCreator('/tags/helm', '053'),
             exact: true
@@ -2541,6 +2551,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/kraft',
+            component: ComponentCreator('/tags/kraft', '0ad'),
+            exact: true
+          },
+          {
             path: '/tags/kubectl',
             component: ComponentCreator('/tags/kubectl', '985'),
             exact: true
@@ -2681,6 +2696,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/locks',
+            component: ComponentCreator('/tags/locks', 'ade'),
+            exact: true
+          },
+          {
             path: '/tags/log-blame',
             component: ComponentCreator('/tags/log-blame', '57c'),
             exact: true
@@ -2698,6 +2718,11 @@ export default [
           {
             path: '/tags/long-polling',
             component: ComponentCreator('/tags/long-polling', 'a18'),
+            exact: true
+          },
+          {
+            path: '/tags/loom',
+            component: ComponentCreator('/tags/loom', 'af9'),
             exact: true
           },
           {
@@ -4316,6 +4341,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/stack',
+            component: ComponentCreator('/tags/stack', '829'),
+            exact: true
+          },
+          {
             path: '/tags/star-schema',
             component: ComponentCreator('/tags/star-schema', 'b6c'),
             exact: true
@@ -4736,6 +4766,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/virtual-threads',
+            component: ComponentCreator('/tags/virtual-threads', '494'),
+            exact: true
+          },
+          {
             path: '/tags/virtualization',
             component: ComponentCreator('/tags/virtualization', '5db'),
             exact: true
@@ -4892,7 +4927,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '16a'),
+            component: ComponentCreator('/', 'c80'),
             routes: [
               {
                 path: '/aws',
@@ -6973,6 +7008,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/java/java-aqs-internals',
+                component: ComponentCreator('/technical-knowledge/java/java-aqs-internals', 'ac7'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/java/java-collections',
                 component: ComponentCreator('/technical-knowledge/java/java-collections', '5a4'),
                 exact: true,
@@ -7023,6 +7064,24 @@ export default [
               {
                 path: '/technical-knowledge/java/java-overview',
                 component: ComponentCreator('/technical-knowledge/java/java-overview', 'ee9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/java/java-stack-vs-heap',
+                component: ComponentCreator('/technical-knowledge/java/java-stack-vs-heap', '0f6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/java/java-threads-and-locks',
+                component: ComponentCreator('/technical-knowledge/java/java-threads-and-locks', '98b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/java/java-virtual-threads',
+                component: ComponentCreator('/technical-knowledge/java/java-virtual-threads', 'ed5'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -7113,6 +7172,12 @@ export default [
               {
                 path: '/technical-knowledge/kafka/core/kafka-overview',
                 component: ComponentCreator('/technical-knowledge/kafka/core/kafka-overview', '7e0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/kafka/core/kraft-vs-zookeeper',
+                component: ComponentCreator('/technical-knowledge/kafka/core/kraft-vs-zookeeper', 'b00'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -7358,8 +7423,9 @@ export default [
               },
               {
                 path: '/technical-knowledge/redis/redis-advanced-data-structures',
-                component: ComponentCreator('/technical-knowledge/redis/redis-advanced-data-structures', '160'),
-                exact: true
+                component: ComponentCreator('/technical-knowledge/redis/redis-advanced-data-structures', '364'),
+                exact: true,
+                sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/redis/redis-as-database',
@@ -7393,8 +7459,9 @@ export default [
               },
               {
                 path: '/technical-knowledge/redis/redis-eviction-policies',
-                component: ComponentCreator('/technical-knowledge/redis/redis-eviction-policies', 'a11'),
-                exact: true
+                component: ComponentCreator('/technical-knowledge/redis/redis-eviction-policies', '78c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/redis/redis-interview-questions',
