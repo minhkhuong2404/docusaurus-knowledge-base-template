@@ -183,9 +183,27 @@ Person deepCopy = new Person(original.getName(),
 - **`static` block:** Executed once when the class is loaded.
 - **`static` inner class:** Does not hold a reference to the outer class.
 
-### Value Passing in Java
+### Value Passing in Java (Pass-By-Value)
 
-**Java is always pass-by-value.** For primitive types, a copy of the value is passed. For object references, a copy of the **reference** (pointer) is passed — not the object itself.
+**Java is strictly pass-by-value.** There is no "pass-by-reference" in Java like there is in C++. 
+
+#### 👶 Beginner Concept: The "House Map"
+Imagine you build a beautiful house (The `Object` residing in the Heap). 
+You hold a map the construction company gave you. The map tells you the exact physical street address of your house (The **Reference Variable** living on your Local Stack).
+- When you pass this variable to a method `paintHouse(myHouseMap)`, Java does NOT pass the physical house.
+- Java does NOT pass your original map either!
+- Java walks to a photocopier, **makes a 100% exact copy of your map**, and hands the *copy* of the map to the painter method (Pass by Value).
+
+**Scenario 1: Mutating the Object**
+If the painter looks at the copied map, drives to the actual address, and paints the physical house blue, your physical house becomes blue! The object *state* mutated.
+
+**Scenario 2: Reassigning the Reference**
+If the painter takes his copied map, erases the address with a pencil, and writes down the address to a completely different treehouse (`new House()`), he then paints the treehouse green.
+Your original map back in your hand is **completely untouched**. It still points to your blue house.
+
+#### 🧠 Senior Deep Dive: Stack Frame Pointers
+For primitives (`int`, `double`), the literal binary value (e.g., `42`) is copied. For Objects, the "Value" being passed is the **64-bit memory pointer representing the address on the Java Heap**. 
+When method `A` calls method `B(User u)`, the JVM pushes a brand new Stack Frame onto the CPU for method `B`. It physically copies the 8-byte pointer from A's frame onto B's frame. They are mathematically distinct variables occupying different hardware registers that simply happen to possess the identical 64-bit numerical string pointing to the same Heap sector.
 
 ```java
 public void changeRef(StringBuilder sb) {
