@@ -37,7 +37,9 @@ export default {
       {
         "docs": {
           "sidebarPath": "./sidebars.ts",
-          "routeBasePath": "/"
+          "routeBasePath": "/",
+          "showLastUpdateTime": true,
+          "showLastUpdateAuthor": true
         },
         "blog": false,
         "theme": {

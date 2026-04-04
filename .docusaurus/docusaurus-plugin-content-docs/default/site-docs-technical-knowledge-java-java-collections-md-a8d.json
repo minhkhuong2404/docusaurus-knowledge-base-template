@@ -31,6 +31,8 @@
     }
   ],
   "version": "current",
+  "lastUpdatedBy": "Lữ Minh Khương",
+  "lastUpdatedAt": 1774717528000,
   "frontMatter": {
     "id": "java-collections",
     "title": "Java Collections Framework: Deep Dive",

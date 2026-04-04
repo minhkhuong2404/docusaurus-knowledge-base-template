@@ -12,13 +12,13 @@
       "plugin": "138e0e15"
     }
   },
-  "/-e07": {
+  "/-a14": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-c43": {
+  "/-6e0": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -3946,1978 +3946,1978 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-c80": {
+  "/-1a7": {
     "__comp": "a94703ab"
   },
-  "/aws-102": {
+  "/aws-aae": {
     "__comp": "17896441",
     "content": "78559adb"
   },
-  "/banking-dce": {
+  "/banking-598": {
     "__comp": "17896441",
     "content": "59e92e34"
   },
-  "/books/building-microservice-44c": {
+  "/books/building-microservice-8e3": {
     "__comp": "17896441",
     "content": "7b5d2e61"
   },
-  "/books/building-microservice/chapter-01-f48": {
+  "/books/building-microservice/chapter-01-4b2": {
     "__comp": "17896441",
     "content": "68ab07b1"
   },
-  "/books/building-microservice/chapter-02-c3f": {
+  "/books/building-microservice/chapter-02-301": {
     "__comp": "17896441",
     "content": "11bcc05a"
   },
-  "/books/building-microservice/chapter-03-b42": {
+  "/books/building-microservice/chapter-03-e37": {
     "__comp": "17896441",
     "content": "3b42864a"
   },
-  "/books/building-microservice/chapter-04-1a0": {
+  "/books/building-microservice/chapter-04-95e": {
     "__comp": "17896441",
     "content": "69b5c840"
   },
-  "/books/building-microservice/chapter-05-64c": {
+  "/books/building-microservice/chapter-05-1a9": {
     "__comp": "17896441",
     "content": "1d25b2fe"
   },
-  "/books/building-microservice/chapter-06-e07": {
+  "/books/building-microservice/chapter-06-d20": {
     "__comp": "17896441",
     "content": "9df5b457"
   },
-  "/books/building-microservice/chapter-07-44b": {
+  "/books/building-microservice/chapter-07-ffb": {
     "__comp": "17896441",
     "content": "4aeace3f"
   },
-  "/books/building-microservice/chapter-08-283": {
+  "/books/building-microservice/chapter-08-536": {
     "__comp": "17896441",
     "content": "f68d61b3"
   },
-  "/books/building-microservice/chapter-09-387": {
+  "/books/building-microservice/chapter-09-43e": {
     "__comp": "17896441",
     "content": "b8cded00"
   },
-  "/books/building-microservice/chapter-10-a62": {
+  "/books/building-microservice/chapter-10-6d4": {
     "__comp": "17896441",
     "content": "4b29e76d"
   },
-  "/books/building-microservice/chapter-11-8d7": {
+  "/books/building-microservice/chapter-11-932": {
     "__comp": "17896441",
     "content": "78ebb9c7"
   },
-  "/books/building-microservice/chapter-12-5b0": {
+  "/books/building-microservice/chapter-12-1fe": {
     "__comp": "17896441",
     "content": "eca91fbf"
   },
-  "/books/building-microservice/chapter-13-351": {
+  "/books/building-microservice/chapter-13-bf0": {
     "__comp": "17896441",
     "content": "a71c18db"
   },
-  "/books/building-microservice/chapter-14-064": {
+  "/books/building-microservice/chapter-14-017": {
     "__comp": "17896441",
     "content": "c08887ed"
   },
-  "/books/building-microservice/chapter-15-ad4": {
+  "/books/building-microservice/chapter-15-991": {
     "__comp": "17896441",
     "content": "ed429399"
   },
-  "/books/building-microservice/chapter-16-006": {
+  "/books/building-microservice/chapter-16-05f": {
     "__comp": "17896441",
     "content": "f0cf1ac1"
   },
-  "/books/clean-code/chapter-01-clean-code-32a": {
+  "/books/clean-code/chapter-01-clean-code-32c": {
     "__comp": "17896441",
     "content": "6669e16d"
   },
-  "/books/clean-code/chapter-02-meaningful-names-fd3": {
+  "/books/clean-code/chapter-02-meaningful-names-05c": {
     "__comp": "17896441",
     "content": "902911a4"
   },
-  "/books/clean-code/chapter-03-functions-503": {
+  "/books/clean-code/chapter-03-functions-732": {
     "__comp": "17896441",
     "content": "9f26bb15"
   },
-  "/books/clean-code/chapter-04-comments-616": {
+  "/books/clean-code/chapter-04-comments-3a2": {
     "__comp": "17896441",
     "content": "3d877638"
   },
-  "/books/clean-code/chapter-05-formatting-510": {
+  "/books/clean-code/chapter-05-formatting-f2e": {
     "__comp": "17896441",
     "content": "c096fea3"
   },
-  "/books/clean-code/chapter-06-objects-data-structures-1e1": {
+  "/books/clean-code/chapter-06-objects-data-structures-618": {
     "__comp": "17896441",
     "content": "349d6862"
   },
-  "/books/clean-code/chapter-07-error-handling-827": {
+  "/books/clean-code/chapter-07-error-handling-9ca": {
     "__comp": "17896441",
     "content": "3102471d"
   },
-  "/books/clean-code/chapter-08-boundaries-812": {
+  "/books/clean-code/chapter-08-boundaries-84d": {
     "__comp": "17896441",
     "content": "fdefd9b2"
   },
-  "/books/clean-code/chapter-09-unit-tests-46d": {
+  "/books/clean-code/chapter-09-unit-tests-ca6": {
     "__comp": "17896441",
     "content": "196cca05"
   },
-  "/books/clean-code/chapter-10-classes-a6f": {
+  "/books/clean-code/chapter-10-classes-907": {
     "__comp": "17896441",
     "content": "2f927a8c"
   },
-  "/books/clean-code/chapter-11-systems-005": {
+  "/books/clean-code/chapter-11-systems-775": {
     "__comp": "17896441",
     "content": "85315201"
   },
-  "/books/clean-code/chapter-12-emergence-844": {
+  "/books/clean-code/chapter-12-emergence-bb9": {
     "__comp": "17896441",
     "content": "b9ce0f07"
   },
-  "/books/clean-code/chapter-13-concurrency-a92": {
+  "/books/clean-code/chapter-13-concurrency-05c": {
     "__comp": "17896441",
     "content": "3be012d7"
   },
-  "/books/clean-code/chapter-14-successive-refinement-b06": {
+  "/books/clean-code/chapter-14-successive-refinement-b73": {
     "__comp": "17896441",
     "content": "fef87ea8"
   },
-  "/books/clean-code/chapter-15-junit-internals-32c": {
+  "/books/clean-code/chapter-15-junit-internals-de6": {
     "__comp": "17896441",
     "content": "8ef2b855"
   },
-  "/books/clean-code/chapter-16-refactoring-serialdate-af9": {
+  "/books/clean-code/chapter-16-refactoring-serialdate-45b": {
     "__comp": "17896441",
     "content": "3de808f4"
   },
-  "/books/clean-code/chapter-17-smells-and-heuristics-f51": {
+  "/books/clean-code/chapter-17-smells-and-heuristics-22c": {
     "__comp": "17896441",
     "content": "76c39e71"
   },
-  "/books/clean-code/intro-51b": {
+  "/books/clean-code/intro-abc": {
     "__comp": "17896441",
     "content": "862d45e1"
   },
-  "/books/ddia/intro-618": {
+  "/books/ddia/intro-70c": {
     "__comp": "17896441",
     "content": "693818bc"
   },
-  "/books/ddia/part1-foundations/chapter-01-b1a": {
+  "/books/ddia/part1-foundations/chapter-01-151": {
     "__comp": "17896441",
     "content": "6e76c11d"
   },
-  "/books/ddia/part1-foundations/chapter-02-bbe": {
+  "/books/ddia/part1-foundations/chapter-02-aa0": {
     "__comp": "17896441",
     "content": "a8be8036"
   },
-  "/books/ddia/part1-foundations/chapter-03-a06": {
+  "/books/ddia/part1-foundations/chapter-03-e36": {
     "__comp": "17896441",
     "content": "82f6e2d7"
   },
-  "/books/ddia/part1-foundations/chapter-04-5eb": {
+  "/books/ddia/part1-foundations/chapter-04-e38": {
     "__comp": "17896441",
     "content": "fcb9f174"
   },
-  "/books/ddia/part2-distributed-data/chapter-05-596": {
+  "/books/ddia/part2-distributed-data/chapter-05-13b": {
     "__comp": "17896441",
     "content": "fa8ad492"
   },
-  "/books/ddia/part2-distributed-data/chapter-06-ddb": {
+  "/books/ddia/part2-distributed-data/chapter-06-3aa": {
     "__comp": "17896441",
     "content": "14976deb"
   },
-  "/books/ddia/part2-distributed-data/chapter-07-5be": {
+  "/books/ddia/part2-distributed-data/chapter-07-777": {
     "__comp": "17896441",
     "content": "0b712ecb"
   },
-  "/books/ddia/part2-distributed-data/chapter-08-2b9": {
+  "/books/ddia/part2-distributed-data/chapter-08-747": {
     "__comp": "17896441",
     "content": "ff12b326"
   },
-  "/books/ddia/part2-distributed-data/chapter-09-524": {
+  "/books/ddia/part2-distributed-data/chapter-09-2a4": {
     "__comp": "17896441",
     "content": "23548180"
   },
-  "/books/ddia/part3-derived-data/chapter-10-c5c": {
+  "/books/ddia/part3-derived-data/chapter-10-c45": {
     "__comp": "17896441",
     "content": "17473af4"
   },
-  "/books/ddia/part3-derived-data/chapter-11-224": {
+  "/books/ddia/part3-derived-data/chapter-11-01c": {
     "__comp": "17896441",
     "content": "22031b13"
   },
-  "/books/ddia/part3-derived-data/chapter-12-ba1": {
+  "/books/ddia/part3-derived-data/chapter-12-f46": {
     "__comp": "17896441",
     "content": "a3880902"
   },
-  "/books/effective-java/chapter-02-creating-destroying-objects-2ee": {
+  "/books/effective-java/chapter-02-creating-destroying-objects-b50": {
     "__comp": "17896441",
     "content": "642af255"
   },
-  "/books/effective-java/chapter-03-methods-common-to-all-objects-0a8": {
+  "/books/effective-java/chapter-03-methods-common-to-all-objects-f69": {
     "__comp": "17896441",
     "content": "14e3df88"
   },
-  "/books/effective-java/chapter-04-classes-and-interfaces-8be": {
+  "/books/effective-java/chapter-04-classes-and-interfaces-368": {
     "__comp": "17896441",
     "content": "e3f6b0be"
   },
-  "/books/effective-java/chapter-05-generics-c22": {
+  "/books/effective-java/chapter-05-generics-11e": {
     "__comp": "17896441",
     "content": "531db300"
   },
-  "/books/effective-java/chapter-06-enums-and-annotations-689": {
+  "/books/effective-java/chapter-06-enums-and-annotations-0c1": {
     "__comp": "17896441",
     "content": "bfd8853a"
   },
-  "/books/effective-java/chapter-07-lambdas-and-streams-997": {
+  "/books/effective-java/chapter-07-lambdas-and-streams-126": {
     "__comp": "17896441",
     "content": "556c3bc8"
   },
-  "/books/effective-java/chapter-08-methods-c58": {
+  "/books/effective-java/chapter-08-methods-f23": {
     "__comp": "17896441",
     "content": "5a0d7771"
   },
-  "/books/effective-java/chapter-09-general-programming-562": {
+  "/books/effective-java/chapter-09-general-programming-052": {
     "__comp": "17896441",
     "content": "225b3ed9"
   },
-  "/books/effective-java/chapter-10-exceptions-05f": {
+  "/books/effective-java/chapter-10-exceptions-9d3": {
     "__comp": "17896441",
     "content": "8a1f89b3"
   },
-  "/books/effective-java/chapter-11-concurrency-597": {
+  "/books/effective-java/chapter-11-concurrency-891": {
     "__comp": "17896441",
     "content": "2c558029"
   },
-  "/books/effective-java/chapter-12-serialization-16a": {
+  "/books/effective-java/chapter-12-serialization-082": {
     "__comp": "17896441",
     "content": "ee49b8ac"
   },
-  "/books/effective-java/introduction-648": {
+  "/books/effective-java/introduction-e83": {
     "__comp": "17896441",
     "content": "add78d4b"
   },
-  "/books/effective-java/items-index-69d": {
+  "/books/effective-java/items-index-d45": {
     "__comp": "17896441",
     "content": "2751ed68"
   },
-  "/devops-521": {
+  "/devops-74d": {
     "__comp": "17896441",
     "content": "3f8eb35f"
   },
-  "/non-technical-knowledge/sdlc/-546": {
+  "/non-technical-knowledge/sdlc/-614": {
     "__comp": "17896441",
     "content": "6dda571b"
   },
-  "/non-technical-knowledge/sdlc/deployment/roll-backward-3a9": {
+  "/non-technical-knowledge/sdlc/deployment/roll-backward-9a8": {
     "__comp": "17896441",
     "content": "d70a8c93"
   },
-  "/non-technical-knowledge/sdlc/deployment/roll-forward-134": {
+  "/non-technical-knowledge/sdlc/deployment/roll-forward-8c1": {
     "__comp": "17896441",
     "content": "d9d1bb30"
   },
-  "/non-technical-knowledge/sdlc/phases/deployment-c0b": {
+  "/non-technical-knowledge/sdlc/phases/deployment-dc5": {
     "__comp": "17896441",
     "content": "a210864e"
   },
-  "/non-technical-knowledge/sdlc/phases/development-fb6": {
+  "/non-technical-knowledge/sdlc/phases/development-ede": {
     "__comp": "17896441",
     "content": "ea6ce1da"
   },
-  "/non-technical-knowledge/sdlc/phases/maintenance-442": {
+  "/non-technical-knowledge/sdlc/phases/maintenance-55c": {
     "__comp": "17896441",
     "content": "782f730c"
   },
-  "/non-technical-knowledge/sdlc/phases/planning-f71": {
+  "/non-technical-knowledge/sdlc/phases/planning-4a2": {
     "__comp": "17896441",
     "content": "4bfa2464"
   },
-  "/non-technical-knowledge/sdlc/phases/requirements-f15": {
+  "/non-technical-knowledge/sdlc/phases/requirements-a5a": {
     "__comp": "17896441",
     "content": "4bd20c68"
   },
-  "/non-technical-knowledge/sdlc/phases/system-design-f51": {
+  "/non-technical-knowledge/sdlc/phases/system-design-908": {
     "__comp": "17896441",
     "content": "c0bb7a0a"
   },
-  "/non-technical-knowledge/sdlc/phases/testing-257": {
+  "/non-technical-knowledge/sdlc/phases/testing-90b": {
     "__comp": "17896441",
     "content": "eb306149"
   },
-  "/non-technical-knowledge/sdlc/reports/test-summary-report-415": {
+  "/non-technical-knowledge/sdlc/reports/test-summary-report-eb5": {
     "__comp": "17896441",
     "content": "4346b5fa"
   },
-  "/non-technical-knowledge/sdlc/testing/component-performance-testing-b7e": {
+  "/non-technical-knowledge/sdlc/testing/component-performance-testing-e69": {
     "__comp": "17896441",
     "content": "b8f28480"
   },
-  "/non-technical-knowledge/sdlc/testing/end-to-end-testing-f6a": {
+  "/non-technical-knowledge/sdlc/testing/end-to-end-testing-d84": {
     "__comp": "17896441",
     "content": "9ccca292"
   },
-  "/non-technical-knowledge/sdlc/testing/inflight-testing-bdd": {
+  "/non-technical-knowledge/sdlc/testing/inflight-testing-6c4": {
     "__comp": "17896441",
     "content": "3ff749f9"
   },
-  "/non-technical-knowledge/sdlc/testing/integration-testing-fa8": {
+  "/non-technical-knowledge/sdlc/testing/integration-testing-125": {
     "__comp": "17896441",
     "content": "58681c16"
   },
-  "/non-technical-knowledge/sdlc/testing/regression-testing-d7d": {
+  "/non-technical-knowledge/sdlc/testing/regression-testing-691": {
     "__comp": "17896441",
     "content": "d20b631e"
   },
-  "/non-technical-knowledge/sdlc/testing/unit-testing-6ac": {
+  "/non-technical-knowledge/sdlc/testing/unit-testing-a4e": {
     "__comp": "17896441",
     "content": "cb923f1c"
   },
-  "/premium/company/accenture-java-developer-interview-16lpa-d92": {
+  "/premium/company/accenture-java-developer-interview-16lpa-bdc": {
     "__comp": "17896441",
     "content": "91563f35"
   },
-  "/premium/company/accenture-java-developer-interview-questions-e47": {
+  "/premium/company/accenture-java-developer-interview-questions-b95": {
     "__comp": "17896441",
     "content": "d6206c8f"
   },
-  "/premium/company/accenture-java-interview-1d6": {
+  "/premium/company/accenture-java-interview-c68": {
     "__comp": "17896441",
     "content": "7886862e"
   },
-  "/premium/company/airtel-java-developer-interview-questions-819": {
+  "/premium/company/airtel-java-developer-interview-questions-ee7": {
     "__comp": "17896441",
     "content": "faeba916"
   },
-  "/premium/company/capgemini-java-developer-interview-questions-546": {
+  "/premium/company/capgemini-java-developer-interview-questions-183": {
     "__comp": "17896441",
     "content": "fabc177e"
   },
-  "/premium/company/coforge-java-developer-interview-22lpa-ebc": {
+  "/premium/company/coforge-java-developer-interview-22lpa-9cd": {
     "__comp": "17896441",
     "content": "178de292"
   },
-  "/premium/company/cognizant-fresher-java-developer-interview-809": {
+  "/premium/company/cognizant-fresher-java-developer-interview-197": {
     "__comp": "17896441",
     "content": "654b25c7"
   },
-  "/premium/company/deloitte-java-developer-interview-17lpa-22b": {
+  "/premium/company/deloitte-java-developer-interview-17lpa-0d3": {
     "__comp": "17896441",
     "content": "e8320ceb"
   },
-  "/premium/company/deloitte-java-developer-interview-questions-961": {
+  "/premium/company/deloitte-java-developer-interview-questions-6e1": {
     "__comp": "17896441",
     "content": "b9a550cc"
   },
-  "/premium/company/epam-java-developer-interview-22lpa-8e7": {
+  "/premium/company/epam-java-developer-interview-22lpa-d1b": {
     "__comp": "17896441",
     "content": "9b588213"
   },
-  "/premium/company/hashedin-java-developer-interview-questions-aa0": {
+  "/premium/company/hashedin-java-developer-interview-questions-207": {
     "__comp": "17896441",
     "content": "6a238b16"
   },
-  "/premium/company/hcl-java-fullstack-developer-interview-b78": {
+  "/premium/company/hcl-java-fullstack-developer-interview-2d9": {
     "__comp": "17896441",
     "content": "f190bfa7"
   },
-  "/premium/company/ibm-java-developer-interview-experience-3ae": {
+  "/premium/company/ibm-java-developer-interview-experience-684": {
     "__comp": "17896441",
     "content": "8b82c2e8"
   },
-  "/premium/company/infosys-java-developer-interview-17lpa-f4c": {
+  "/premium/company/infosys-java-developer-interview-17lpa-02b": {
     "__comp": "17896441",
     "content": "bf6aa83c"
   },
-  "/premium/company/java-developer-interview-iris-f5c": {
+  "/premium/company/java-developer-interview-iris-de0": {
     "__comp": "17896441",
     "content": "38e1d12b"
   },
-  "/premium/company/ltimindtree-java-developer-interview-questions-898": {
+  "/premium/company/ltimindtree-java-developer-interview-questions-655": {
     "__comp": "17896441",
     "content": "3cb1051c"
   },
-  "/premium/company/nagarro-java-developer-interview-questions-6ca": {
+  "/premium/company/nagarro-java-developer-interview-questions-c13": {
     "__comp": "17896441",
     "content": "667f6944"
   },
-  "/premium/company/ntt-data-java-developer-interview-7a0": {
+  "/premium/company/ntt-data-java-developer-interview-42e": {
     "__comp": "17896441",
     "content": "98877b99"
   },
-  "/premium/company/oracle-java-developer-interview-questions-105": {
+  "/premium/company/oracle-java-developer-interview-questions-3d4": {
     "__comp": "17896441",
     "content": "e6c6a13a"
   },
-  "/premium/company/paytm-java-developer-interview-questions-c9b": {
+  "/premium/company/paytm-java-developer-interview-questions-fd2": {
     "__comp": "17896441",
     "content": "8a3e6128"
   },
-  "/premium/company/pwc-java-developer-interview-questions-0f6": {
+  "/premium/company/pwc-java-developer-interview-questions-050": {
     "__comp": "17896441",
     "content": "c4d8315e"
   },
-  "/premium/company/tcs-java-developer-interview-13lpa-906": {
+  "/premium/company/tcs-java-developer-interview-13lpa-3ed": {
     "__comp": "17896441",
     "content": "3207b729"
   },
-  "/premium/company/tech-mahindra-java-developer-interview-cfd": {
+  "/premium/company/tech-mahindra-java-developer-interview-59e": {
     "__comp": "17896441",
     "content": "7b2aed58"
   },
-  "/premium/company/walmart-java-developer-interview-30lpa-dce": {
+  "/premium/company/walmart-java-developer-interview-30lpa-40e": {
     "__comp": "17896441",
     "content": "6cd81b99"
   },
-  "/premium/company/wipro-fullstack-java-developer-interview-f91": {
+  "/premium/company/wipro-fullstack-java-developer-interview-733": {
     "__comp": "17896441",
     "content": "374780b0"
   },
-  "/premium/company/wipro-java-developer-interview-questions-11d": {
+  "/premium/company/wipro-java-developer-interview-questions-3d9": {
     "__comp": "17896441",
     "content": "a515711e"
   },
-  "/premium/intro-898": {
+  "/premium/intro-d3f": {
     "__comp": "17896441",
     "content": "5aeaa04a"
   },
-  "/security-0f0": {
+  "/security-7bd": {
     "__comp": "17896441",
     "content": "47ce4938"
   },
-  "/suggestions-970": {
+  "/suggestions-bd2": {
     "__comp": "17896441",
     "content": "8a8d0fdd"
   },
-  "/system-design-6ff": {
+  "/system-design-d17": {
     "__comp": "17896441",
     "content": "0e70ec6c"
   },
-  "/technical-knowledge/aws/api-gateway/-305": {
+  "/technical-knowledge/aws/api-gateway/-ecf": {
     "__comp": "17896441",
     "content": "9b48b4ad"
   },
-  "/technical-knowledge/aws/appsync-6e6": {
+  "/technical-knowledge/aws/appsync-8bc": {
     "__comp": "17896441",
     "content": "80d1a9d2"
   },
-  "/technical-knowledge/aws/aws-sdk-java-093": {
+  "/technical-knowledge/aws/aws-sdk-java-88f": {
     "__comp": "17896441",
     "content": "89db9c27"
   },
-  "/technical-knowledge/aws/beanstalk/-156": {
+  "/technical-knowledge/aws/beanstalk/-0eb": {
     "__comp": "17896441",
     "content": "e11cab58"
   },
-  "/technical-knowledge/aws/cicd/-bed": {
+  "/technical-knowledge/aws/cicd/-b8d": {
     "__comp": "17896441",
     "content": "f4746e0c"
   },
-  "/technical-knowledge/aws/cicd/code-build-b28": {
+  "/technical-knowledge/aws/cicd/code-build-b68": {
     "__comp": "17896441",
     "content": "b01845cd"
   },
-  "/technical-knowledge/aws/cicd/code-deploy-a60": {
+  "/technical-knowledge/aws/cicd/code-deploy-b15": {
     "__comp": "17896441",
     "content": "33fee3f2"
   },
-  "/technical-knowledge/aws/cicd/code-pipeline-a73": {
+  "/technical-knowledge/aws/cicd/code-pipeline-9c0": {
     "__comp": "17896441",
     "content": "0d2d99ca"
   },
-  "/technical-knowledge/aws/cloudformation/-b07": {
+  "/technical-knowledge/aws/cloudformation/-53c": {
     "__comp": "17896441",
     "content": "857b188f"
   },
-  "/technical-knowledge/aws/cloudformation/cloudfront-e9b": {
+  "/technical-knowledge/aws/cloudformation/cloudfront-67d": {
     "__comp": "17896441",
     "content": "bfcc8b32"
   },
-  "/technical-knowledge/aws/cloudformation/sam-5f8": {
+  "/technical-knowledge/aws/cloudformation/sam-708": {
     "__comp": "17896441",
     "content": "2c8bce91"
   },
-  "/technical-knowledge/aws/containers/ecs-ecr-7a2": {
+  "/technical-knowledge/aws/containers/ecs-ecr-e27": {
     "__comp": "17896441",
     "content": "63c5afd7"
   },
-  "/technical-knowledge/aws/dynamodb/-b52": {
+  "/technical-knowledge/aws/dynamodb/-298": {
     "__comp": "17896441",
     "content": "f90180fa"
   },
-  "/technical-knowledge/aws/dynamodb/advanced-a58": {
+  "/technical-knowledge/aws/dynamodb/advanced-755": {
     "__comp": "17896441",
     "content": "3a17425a"
   },
-  "/technical-knowledge/aws/elasticache/-15d": {
+  "/technical-knowledge/aws/elasticache/-a2d": {
     "__comp": "17896441",
     "content": "2f7f8341"
   },
-  "/technical-knowledge/aws/exam-tips-2d7": {
+  "/technical-knowledge/aws/exam-tips-202": {
     "__comp": "17896441",
     "content": "8a5452e1"
   },
-  "/technical-knowledge/aws/iam/-8f2": {
+  "/technical-knowledge/aws/iam/-c4b": {
     "__comp": "17896441",
     "content": "e0eddf4b"
   },
-  "/technical-knowledge/aws/iam/cognito-3ba": {
+  "/technical-knowledge/aws/iam/cognito-ab0": {
     "__comp": "17896441",
     "content": "4eb80ea8"
   },
-  "/technical-knowledge/aws/iam/iam-advanced-d17": {
+  "/technical-knowledge/aws/iam/iam-advanced-970": {
     "__comp": "17896441",
     "content": "275c2b8b"
   },
-  "/technical-knowledge/aws/lambda/-eb9": {
+  "/technical-knowledge/aws/lambda/-151": {
     "__comp": "17896441",
     "content": "afa07c8d"
   },
-  "/technical-knowledge/aws/lambda/layers-and-versions-d0a": {
+  "/technical-knowledge/aws/lambda/layers-and-versions-4d6": {
     "__comp": "17896441",
     "content": "707ec2fe"
   },
-  "/technical-knowledge/aws/messaging/kinesis-60e": {
+  "/technical-knowledge/aws/messaging/kinesis-db1": {
     "__comp": "17896441",
     "content": "4ec9b254"
   },
-  "/technical-knowledge/aws/messaging/sns-3d8": {
+  "/technical-knowledge/aws/messaging/sns-6b3": {
     "__comp": "17896441",
     "content": "8b89c603"
   },
-  "/technical-knowledge/aws/messaging/sqs-401": {
+  "/technical-knowledge/aws/messaging/sqs-56a": {
     "__comp": "17896441",
     "content": "9a9ef1e0"
   },
-  "/technical-knowledge/aws/mock-exam-e86": {
+  "/technical-knowledge/aws/mock-exam-de3": {
     "__comp": "17896441",
     "content": "ff802394"
   },
-  "/technical-knowledge/aws/monitoring/cloudtrail-73c": {
+  "/technical-knowledge/aws/monitoring/cloudtrail-195": {
     "__comp": "17896441",
     "content": "c3b5c998"
   },
-  "/technical-knowledge/aws/monitoring/cloudwatch-988": {
+  "/technical-knowledge/aws/monitoring/cloudwatch-8e0": {
     "__comp": "17896441",
     "content": "5753100e"
   },
-  "/technical-knowledge/aws/monitoring/x-ray-d09": {
+  "/technical-knowledge/aws/monitoring/x-ray-10c": {
     "__comp": "17896441",
     "content": "261194b7"
   },
-  "/technical-knowledge/aws/rds-aurora-676": {
+  "/technical-knowledge/aws/rds-aurora-383": {
     "__comp": "17896441",
     "content": "cbbb6c17"
   },
-  "/technical-knowledge/aws/s3/-577": {
+  "/technical-knowledge/aws/s3/-32a": {
     "__comp": "17896441",
     "content": "4f1daaff"
   },
-  "/technical-knowledge/aws/s3/advanced-281": {
+  "/technical-knowledge/aws/s3/advanced-c25": {
     "__comp": "17896441",
     "content": "ed7fe863"
   },
-  "/technical-knowledge/aws/security/kms-bb8": {
+  "/technical-knowledge/aws/security/kms-d91": {
     "__comp": "17896441",
     "content": "6bc41c2b"
   },
-  "/technical-knowledge/aws/security/secrets-manager-517": {
+  "/technical-knowledge/aws/security/secrets-manager-2a4": {
     "__comp": "17896441",
     "content": "16e34d91"
   },
-  "/technical-knowledge/aws/security/ssm-parameter-store-3b8": {
+  "/technical-knowledge/aws/security/ssm-parameter-store-e5b": {
     "__comp": "17896441",
     "content": "cdce4984"
   },
-  "/technical-knowledge/aws/serverless-patterns-b01": {
+  "/technical-knowledge/aws/serverless-patterns-af6": {
     "__comp": "17896441",
     "content": "a7a9e546"
   },
-  "/technical-knowledge/aws/step-functions/-2f4": {
+  "/technical-knowledge/aws/step-functions/-f2f": {
     "__comp": "17896441",
     "content": "ca993c49"
   },
-  "/technical-knowledge/aws/vpc-for-developers-ed0": {
+  "/technical-knowledge/aws/vpc-for-developers-182": {
     "__comp": "17896441",
     "content": "78ff2832"
   },
-  "/technical-knowledge/banking/account_types-f70": {
+  "/technical-knowledge/banking/account_types-222": {
     "__comp": "17896441",
     "content": "0f5b88ea"
   },
-  "/technical-knowledge/banking/aml_kyc-629": {
+  "/technical-knowledge/banking/aml_kyc-a30": {
     "__comp": "17896441",
     "content": "a7b535ea"
   },
-  "/technical-knowledge/banking/banking_roles-ec6": {
+  "/technical-knowledge/banking/banking_roles-bdc": {
     "__comp": "17896441",
     "content": "801aaef3"
   },
-  "/technical-knowledge/banking/bpay-18e": {
+  "/technical-knowledge/banking/bpay-706": {
     "__comp": "17896441",
     "content": "132261a6"
   },
-  "/technical-knowledge/banking/camt053-935": {
+  "/technical-knowledge/banking/camt053-80b": {
     "__comp": "17896441",
     "content": "d1310fec"
   },
-  "/technical-knowledge/banking/camt054-6cd": {
+  "/technical-knowledge/banking/camt054-3bc": {
     "__comp": "17896441",
     "content": "62c8b512"
   },
-  "/technical-knowledge/banking/camt055_camt056-566": {
+  "/technical-knowledge/banking/camt055_camt056-ea7": {
     "__comp": "17896441",
     "content": "afebb541"
   },
-  "/technical-knowledge/banking/cards-779": {
+  "/technical-knowledge/banking/cards-ec0": {
     "__comp": "17896441",
     "content": "b973a717"
   },
-  "/technical-knowledge/banking/clearing-9fb": {
+  "/technical-knowledge/banking/clearing-937": {
     "__comp": "17896441",
     "content": "34d102cb"
   },
-  "/technical-knowledge/banking/core_banking-862": {
+  "/technical-knowledge/banking/core_banking-860": {
     "__comp": "17896441",
     "content": "af590922"
   },
-  "/technical-knowledge/banking/credit_post-ae6": {
+  "/technical-knowledge/banking/credit_post-05d": {
     "__comp": "17896441",
     "content": "60958e84"
   },
-  "/technical-knowledge/banking/debit_post-e0d": {
+  "/technical-knowledge/banking/debit_post-f7e": {
     "__comp": "17896441",
     "content": "f34b7fab"
   },
-  "/technical-knowledge/banking/debit_reversal-598": {
+  "/technical-knowledge/banking/debit_reversal-4ba": {
     "__comp": "17896441",
     "content": "58214661"
   },
-  "/technical-knowledge/banking/debtor-083": {
+  "/technical-knowledge/banking/debtor-c74": {
     "__comp": "17896441",
     "content": "107b2d84"
   },
-  "/technical-knowledge/banking/direct_debit-452": {
+  "/technical-knowledge/banking/direct_debit-3d6": {
     "__comp": "17896441",
     "content": "57566171"
   },
-  "/technical-knowledge/banking/fis-a60": {
+  "/technical-knowledge/banking/fis-02b": {
     "__comp": "17896441",
     "content": "d16b33c3"
   },
-  "/technical-knowledge/banking/fraud-2b0": {
+  "/technical-knowledge/banking/fraud-39a": {
     "__comp": "17896441",
     "content": "c13c1767"
   },
-  "/technical-knowledge/banking/fx-5d5": {
+  "/technical-knowledge/banking/fx-a9b": {
     "__comp": "17896441",
     "content": "e9f00403"
   },
-  "/technical-knowledge/banking/glossary-b64": {
+  "/technical-knowledge/banking/glossary-eff": {
     "__comp": "17896441",
     "content": "398d1142"
   },
-  "/technical-knowledge/banking/inbound-1bc": {
+  "/technical-knowledge/banking/inbound-003": {
     "__comp": "17896441",
     "content": "67cc4ab4"
   },
-  "/technical-knowledge/banking/interest_fees-d77": {
+  "/technical-knowledge/banking/interest_fees-9b5": {
     "__comp": "17896441",
     "content": "7efb0b3b"
   },
-  "/technical-knowledge/banking/iso20022_migration-215": {
+  "/technical-knowledge/banking/iso20022_migration-3f6": {
     "__comp": "17896441",
     "content": "9a31efff"
   },
-  "/technical-knowledge/banking/npp-41d": {
+  "/technical-knowledge/banking/npp-511": {
     "__comp": "17896441",
     "content": "104bf45b"
   },
-  "/technical-knowledge/banking/onus-d98": {
+  "/technical-knowledge/banking/onus-b65": {
     "__comp": "17896441",
     "content": "00e97688"
   },
-  "/technical-knowledge/banking/open_banking-3ed": {
+  "/technical-knowledge/banking/open_banking-7da": {
     "__comp": "17896441",
     "content": "ecdb5fa9"
   },
-  "/technical-knowledge/banking/outbound-2d3": {
+  "/technical-knowledge/banking/outbound-c1d": {
     "__comp": "17896441",
     "content": "a5289451"
   },
-  "/technical-knowledge/banking/pacs002-460": {
+  "/technical-knowledge/banking/pacs002-eb0": {
     "__comp": "17896441",
     "content": "121ee202"
   },
-  "/technical-knowledge/banking/pacs004-754": {
+  "/technical-knowledge/banking/pacs004-bf1": {
     "__comp": "17896441",
     "content": "d9d2b623"
   },
-  "/technical-knowledge/banking/pacs008-1d6": {
+  "/technical-knowledge/banking/pacs008-0de": {
     "__comp": "17896441",
     "content": "1dc8ca26"
   },
-  "/technical-knowledge/banking/pain001-6e5": {
+  "/technical-knowledge/banking/pain001-e88": {
     "__comp": "17896441",
     "content": "38f2bef9"
   },
-  "/technical-knowledge/banking/pain004-959": {
+  "/technical-knowledge/banking/pain004-d93": {
     "__comp": "17896441",
     "content": "428c31fd"
   },
-  "/technical-knowledge/banking/pain007_pacs007-bbf": {
+  "/technical-knowledge/banking/pain007_pacs007-f3c": {
     "__comp": "17896441",
     "content": "21512b8e"
   },
-  "/technical-knowledge/banking/payment_exceptions-6dd": {
+  "/technical-knowledge/banking/payment_exceptions-a7d": {
     "__comp": "17896441",
     "content": "0b441d44"
   },
-  "/technical-knowledge/banking/payment_lifecycle_101-3c3": {
+  "/technical-knowledge/banking/payment_lifecycle_101-11f": {
     "__comp": "17896441",
     "content": "fb4429bd"
   },
-  "/technical-knowledge/banking/payment_return-106": {
+  "/technical-knowledge/banking/payment_return-86f": {
     "__comp": "17896441",
     "content": "1263aa5e"
   },
-  "/technical-knowledge/banking/reconciliation-a51": {
+  "/technical-knowledge/banking/reconciliation-23e": {
     "__comp": "17896441",
     "content": "7ea59ac7"
   },
-  "/technical-knowledge/banking/sanction-b43": {
+  "/technical-knowledge/banking/sanction-dbd": {
     "__comp": "17896441",
     "content": "20f47e51"
   },
-  "/technical-knowledge/banking/settlement-3c2": {
+  "/technical-knowledge/banking/settlement-5ef": {
     "__comp": "17896441",
     "content": "5be4d20d"
   },
-  "/technical-knowledge/banking/swift-680": {
+  "/technical-knowledge/banking/swift-9b6": {
     "__comp": "17896441",
     "content": "14308b2b"
   },
-  "/technical-knowledge/banking/testing_banking-2f5": {
+  "/technical-knowledge/banking/testing_banking-92b": {
     "__comp": "17896441",
     "content": "36f4d598"
   },
-  "/technical-knowledge/coding-interview-prep/array/-bf8": {
+  "/technical-knowledge/coding-interview-prep/array/-637": {
     "__comp": "17896441",
     "content": "df0d7937"
   },
-  "/technical-knowledge/coding-interview-prep/backtracking/-9a0": {
+  "/technical-knowledge/coding-interview-prep/backtracking/-a2f": {
     "__comp": "17896441",
     "content": "3cc9e0ed"
   },
-  "/technical-knowledge/coding-interview-prep/bfs/-128": {
+  "/technical-knowledge/coding-interview-prep/bfs/-35a": {
     "__comp": "17896441",
     "content": "3e4ef2f7"
   },
-  "/technical-knowledge/coding-interview-prep/binary-search/-e27": {
+  "/technical-knowledge/coding-interview-prep/binary-search/-1cc": {
     "__comp": "17896441",
     "content": "f88fd4cd"
   },
-  "/technical-knowledge/coding-interview-prep/bit-manipulation/-ebc": {
+  "/technical-knowledge/coding-interview-prep/bit-manipulation/-c4b": {
     "__comp": "17896441",
     "content": "aa575ab7"
   },
-  "/technical-knowledge/coding-interview-prep/dfs/-4a6": {
+  "/technical-knowledge/coding-interview-prep/dfs/-91a": {
     "__comp": "17896441",
     "content": "5106a157"
   },
-  "/technical-knowledge/coding-interview-prep/dynamic-programming/-c58": {
+  "/technical-knowledge/coding-interview-prep/dynamic-programming/-bdd": {
     "__comp": "17896441",
     "content": "3cb71e0f"
   },
-  "/technical-knowledge/coding-interview-prep/graph/-3d0": {
+  "/technical-knowledge/coding-interview-prep/graph/-ffe": {
     "__comp": "17896441",
     "content": "e9884e7b"
   },
-  "/technical-knowledge/coding-interview-prep/greedy/-5c8": {
+  "/technical-knowledge/coding-interview-prep/greedy/-494": {
     "__comp": "17896441",
     "content": "b79a7a53"
   },
-  "/technical-knowledge/coding-interview-prep/heap/-17d": {
+  "/technical-knowledge/coding-interview-prep/heap/-cfc": {
     "__comp": "17896441",
     "content": "3c5fc3e0"
   },
-  "/technical-knowledge/coding-interview-prep/intervals/-115": {
+  "/technical-knowledge/coding-interview-prep/intervals/-e1d": {
     "__comp": "17896441",
     "content": "401e468a"
   },
-  "/technical-knowledge/coding-interview-prep/intro-38c": {
+  "/technical-knowledge/coding-interview-prep/intro-eda": {
     "__comp": "17896441",
     "content": "6687ac23"
   },
-  "/technical-knowledge/coding-interview-prep/intro/-cba": {
+  "/technical-knowledge/coding-interview-prep/intro/-223": {
     "__comp": "17896441",
     "content": "e49d3f90"
   },
-  "/technical-knowledge/coding-interview-prep/linked-list/-aa1": {
+  "/technical-knowledge/coding-interview-prep/linked-list/-d23": {
     "__comp": "17896441",
     "content": "ae741640"
   },
-  "/technical-knowledge/coding-interview-prep/matrices/-4fc": {
+  "/technical-knowledge/coding-interview-prep/matrices/-18b": {
     "__comp": "17896441",
     "content": "2c6965b7"
   },
-  "/technical-knowledge/coding-interview-prep/monotonic-stack/-658": {
+  "/technical-knowledge/coding-interview-prep/monotonic-stack/-f4d": {
     "__comp": "17896441",
     "content": "e8c494c6"
   },
-  "/technical-knowledge/coding-interview-prep/prefix-sum/-4fe": {
+  "/technical-knowledge/coding-interview-prep/prefix-sum/-49e": {
     "__comp": "17896441",
     "content": "400119be"
   },
-  "/technical-knowledge/coding-interview-prep/sliding-window/-d90": {
+  "/technical-knowledge/coding-interview-prep/sliding-window/-322": {
     "__comp": "17896441",
     "content": "bd6f9287"
   },
-  "/technical-knowledge/coding-interview-prep/sorting/-499": {
+  "/technical-knowledge/coding-interview-prep/sorting/-0bc": {
     "__comp": "17896441",
     "content": "81060f52"
   },
-  "/technical-knowledge/coding-interview-prep/stack/-11a": {
+  "/technical-knowledge/coding-interview-prep/stack/-565": {
     "__comp": "17896441",
     "content": "3150a891"
   },
-  "/technical-knowledge/coding-interview-prep/tree/-3c0": {
+  "/technical-knowledge/coding-interview-prep/tree/-278": {
     "__comp": "17896441",
     "content": "0db457de"
   },
-  "/technical-knowledge/coding-interview-prep/trie/-a22": {
+  "/technical-knowledge/coding-interview-prep/trie/-a9d": {
     "__comp": "17896441",
     "content": "80237457"
   },
-  "/technical-knowledge/coding-interview-prep/two-pointers/-a98": {
+  "/technical-knowledge/coding-interview-prep/two-pointers/-8d4": {
     "__comp": "17896441",
     "content": "c3112b2b"
   },
-  "/technical-knowledge/coding-interview-prep/union-find/-32a": {
+  "/technical-knowledge/coding-interview-prep/union-find/-a9a": {
     "__comp": "17896441",
     "content": "46793316"
   },
-  "/technical-knowledge/database/-103": {
+  "/technical-knowledge/database/-013": {
     "__comp": "17896441",
     "content": "d4d0b9b0"
   },
-  "/technical-knowledge/database/advanced-sql-07e": {
+  "/technical-knowledge/database/advanced-sql-481": {
     "__comp": "17896441",
     "content": "8a4ffef6"
   },
-  "/technical-knowledge/database/backup-recovery-618": {
+  "/technical-knowledge/database/backup-recovery-f80": {
     "__comp": "17896441",
     "content": "1d655bfd"
   },
-  "/technical-knowledge/database/caching-strategies-3f2": {
+  "/technical-knowledge/database/caching-strategies-acd": {
     "__comp": "17896441",
     "content": "7aa6b45d"
   },
-  "/technical-knowledge/database/data-warehousing-olap-903": {
+  "/technical-knowledge/database/data-warehousing-olap-6b8": {
     "__comp": "17896441",
     "content": "a404a845"
   },
-  "/technical-knowledge/database/database-design-b34": {
+  "/technical-knowledge/database/database-design-90e": {
     "__comp": "17896441",
     "content": "39348cd3"
   },
-  "/technical-knowledge/database/database-patterns-microservices-211": {
+  "/technical-knowledge/database/database-patterns-microservices-c78": {
     "__comp": "17896441",
     "content": "52d464a4"
   },
-  "/technical-knowledge/database/database-security-afc": {
+  "/technical-knowledge/database/database-security-f0c": {
     "__comp": "17896441",
     "content": "c8f8291e"
   },
-  "/technical-knowledge/database/full-text-search-c2e": {
+  "/technical-knowledge/database/full-text-search-b52": {
     "__comp": "17896441",
     "content": "f33f2ff7"
   },
-  "/technical-knowledge/database/indexing-query-optimization-df3": {
+  "/technical-knowledge/database/indexing-query-optimization-652": {
     "__comp": "17896441",
     "content": "3579e0cb"
   },
-  "/technical-knowledge/database/nosql-distributed-cbc": {
+  "/technical-knowledge/database/nosql-distributed-322": {
     "__comp": "17896441",
     "content": "025815b7"
   },
-  "/technical-knowledge/database/performance-monitoring-34b": {
+  "/technical-knowledge/database/performance-monitoring-a8e": {
     "__comp": "17896441",
     "content": "66dfb623"
   },
-  "/technical-knowledge/database/query-planner-optimizer-2e5": {
+  "/technical-knowledge/database/query-planner-optimizer-c3b": {
     "__comp": "17896441",
     "content": "44e5f61d"
   },
-  "/technical-knowledge/database/relational-fundamentals-bc5": {
+  "/technical-knowledge/database/relational-fundamentals-607": {
     "__comp": "17896441",
     "content": "30a60d4b"
   },
-  "/technical-knowledge/database/replication-partitioning-beb": {
+  "/technical-knowledge/database/replication-partitioning-2e3": {
     "__comp": "17896441",
     "content": "353f2454"
   },
-  "/technical-knowledge/database/schema-migrations-eeb": {
+  "/technical-knowledge/database/schema-migrations-121": {
     "__comp": "17896441",
     "content": "008ae538"
   },
-  "/technical-knowledge/database/storage-engines-data-structures-156": {
+  "/technical-knowledge/database/storage-engines-data-structures-6b5": {
     "__comp": "17896441",
     "content": "c28018e1"
   },
-  "/technical-knowledge/database/time-series-databases-2da": {
+  "/technical-knowledge/database/time-series-databases-7d6": {
     "__comp": "17896441",
     "content": "04625431"
   },
-  "/technical-knowledge/database/transactions-concurrency-bb8": {
+  "/technical-knowledge/database/transactions-concurrency-268": {
     "__comp": "17896441",
     "content": "d2fa8756"
   },
-  "/technical-knowledge/design-patterns/abstract-factory-287": {
+  "/technical-knowledge/design-patterns/abstract-factory-bdf": {
     "__comp": "17896441",
     "content": "75a575e6"
   },
-  "/technical-knowledge/design-patterns/adapter-f59": {
+  "/technical-knowledge/design-patterns/adapter-f09": {
     "__comp": "17896441",
     "content": "94a3a592"
   },
-  "/technical-knowledge/design-patterns/bridge-517": {
+  "/technical-knowledge/design-patterns/bridge-d66": {
     "__comp": "17896441",
     "content": "3ba91556"
   },
-  "/technical-knowledge/design-patterns/builder-8f2": {
+  "/technical-knowledge/design-patterns/builder-38d": {
     "__comp": "17896441",
     "content": "88e18de2"
   },
-  "/technical-knowledge/design-patterns/chain-of-responsibility-557": {
+  "/technical-knowledge/design-patterns/chain-of-responsibility-44b": {
     "__comp": "17896441",
     "content": "a616e90a"
   },
-  "/technical-knowledge/design-patterns/command-cbe": {
+  "/technical-knowledge/design-patterns/command-215": {
     "__comp": "17896441",
     "content": "03ec1583"
   },
-  "/technical-knowledge/design-patterns/composite-bed": {
+  "/technical-knowledge/design-patterns/composite-dee": {
     "__comp": "17896441",
     "content": "18d50321"
   },
-  "/technical-knowledge/design-patterns/decorator-f76": {
+  "/technical-knowledge/design-patterns/decorator-b1c": {
     "__comp": "17896441",
     "content": "4387012b"
   },
-  "/technical-knowledge/design-patterns/design-patterns-overview-5f5": {
+  "/technical-knowledge/design-patterns/design-patterns-overview-eb9": {
     "__comp": "17896441",
     "content": "17fe6fad"
   },
-  "/technical-knowledge/design-patterns/facade-80c": {
+  "/technical-knowledge/design-patterns/facade-3d0": {
     "__comp": "17896441",
     "content": "18477c31"
   },
-  "/technical-knowledge/design-patterns/factory-method-f63": {
+  "/technical-knowledge/design-patterns/factory-method-db0": {
     "__comp": "17896441",
     "content": "2004579e"
   },
-  "/technical-knowledge/design-patterns/flyweight-6d3": {
+  "/technical-knowledge/design-patterns/flyweight-348": {
     "__comp": "17896441",
     "content": "3b3c3cf0"
   },
-  "/technical-knowledge/design-patterns/interpreter-eef": {
+  "/technical-knowledge/design-patterns/interpreter-40e": {
     "__comp": "17896441",
     "content": "56decc1f"
   },
-  "/technical-knowledge/design-patterns/iterator-27e": {
+  "/technical-knowledge/design-patterns/iterator-db3": {
     "__comp": "17896441",
     "content": "aa80ab20"
   },
-  "/technical-knowledge/design-patterns/mediator-ec6": {
+  "/technical-knowledge/design-patterns/mediator-beb": {
     "__comp": "17896441",
     "content": "6596d2c7"
   },
-  "/technical-knowledge/design-patterns/memento-4f2": {
+  "/technical-knowledge/design-patterns/memento-6a2": {
     "__comp": "17896441",
     "content": "f1c75034"
   },
-  "/technical-knowledge/design-patterns/observer-a3d": {
+  "/technical-knowledge/design-patterns/observer-f0c": {
     "__comp": "17896441",
     "content": "192b16bf"
   },
-  "/technical-knowledge/design-patterns/prototype-f4f": {
+  "/technical-knowledge/design-patterns/prototype-cb8": {
     "__comp": "17896441",
     "content": "a9e79f73"
   },
-  "/technical-knowledge/design-patterns/proxy-c17": {
+  "/technical-knowledge/design-patterns/proxy-196": {
     "__comp": "17896441",
     "content": "c76a0310"
   },
-  "/technical-knowledge/design-patterns/singleton-5cf": {
+  "/technical-knowledge/design-patterns/singleton-8c1": {
     "__comp": "17896441",
     "content": "746a5032"
   },
-  "/technical-knowledge/design-patterns/state-979": {
+  "/technical-knowledge/design-patterns/state-acf": {
     "__comp": "17896441",
     "content": "64470322"
   },
-  "/technical-knowledge/design-patterns/strategy-090": {
+  "/technical-knowledge/design-patterns/strategy-b62": {
     "__comp": "17896441",
     "content": "443a2305"
   },
-  "/technical-knowledge/design-patterns/template-method-5f8": {
+  "/technical-knowledge/design-patterns/template-method-b3f": {
     "__comp": "17896441",
     "content": "7d61f896"
   },
-  "/technical-knowledge/design-patterns/visitor-cdb": {
+  "/technical-knowledge/design-patterns/visitor-67b": {
     "__comp": "17896441",
     "content": "228b4013"
   },
-  "/technical-knowledge/devops/devops-interview-questions-c3b": {
+  "/technical-knowledge/devops/devops-interview-questions-f9c": {
     "__comp": "17896441",
     "content": "5ab7a520"
   },
-  "/technical-knowledge/devops/devops-observability-20a": {
+  "/technical-knowledge/devops/devops-observability-70b": {
     "__comp": "17896441",
     "content": "e9c5c9f2"
   },
-  "/technical-knowledge/devops/docker-commands-93b": {
+  "/technical-knowledge/devops/docker-commands-ba3": {
     "__comp": "17896441",
     "content": "3b1181be"
   },
-  "/technical-knowledge/devops/docker-compose-bf7": {
+  "/technical-knowledge/devops/docker-compose-72f": {
     "__comp": "17896441",
     "content": "2d9f555e"
   },
-  "/technical-knowledge/devops/docker-fundamentals-d2f": {
+  "/technical-knowledge/devops/docker-fundamentals-6e3": {
     "__comp": "17896441",
     "content": "7c76fc84"
   },
-  "/technical-knowledge/devops/docker-networking-de0": {
+  "/technical-knowledge/devops/docker-networking-924": {
     "__comp": "17896441",
     "content": "7cebdcf3"
   },
-  "/technical-knowledge/devops/docker-volumes-af1": {
+  "/technical-knowledge/devops/docker-volumes-4c6": {
     "__comp": "17896441",
     "content": "6041348f"
   },
-  "/technical-knowledge/devops/dockerfile-404": {
+  "/technical-knowledge/devops/dockerfile-850": {
     "__comp": "17896441",
     "content": "da18171d"
   },
-  "/technical-knowledge/devops/gitops-argocd-eae": {
+  "/technical-knowledge/devops/gitops-argocd-631": {
     "__comp": "17896441",
     "content": "70449668"
   },
-  "/technical-knowledge/devops/helm-c9c": {
+  "/technical-knowledge/devops/helm-9f9": {
     "__comp": "17896441",
     "content": "2bda8bde"
   },
-  "/technical-knowledge/devops/kubectl-commands-2cb": {
+  "/technical-knowledge/devops/kubectl-commands-ed5": {
     "__comp": "17896441",
     "content": "e0faae65"
   },
-  "/technical-knowledge/devops/kubernetes-configuration-6e7": {
+  "/technical-knowledge/devops/kubernetes-configuration-9d3": {
     "__comp": "17896441",
     "content": "064a72bb"
   },
-  "/technical-knowledge/devops/kubernetes-fundamentals-437": {
+  "/technical-knowledge/devops/kubernetes-fundamentals-994": {
     "__comp": "17896441",
     "content": "7f8362fa"
   },
-  "/technical-knowledge/devops/kubernetes-networking-984": {
+  "/technical-knowledge/devops/kubernetes-networking-403": {
     "__comp": "17896441",
     "content": "6a4a3fd0"
   },
-  "/technical-knowledge/devops/kubernetes-operators-793": {
+  "/technical-knowledge/devops/kubernetes-operators-402": {
     "__comp": "17896441",
     "content": "c4409ab2"
   },
-  "/technical-knowledge/devops/kubernetes-pods-c02": {
+  "/technical-knowledge/devops/kubernetes-pods-0d2": {
     "__comp": "17896441",
     "content": "e02b32ce"
   },
-  "/technical-knowledge/devops/kubernetes-storage-89b": {
+  "/technical-knowledge/devops/kubernetes-storage-19f": {
     "__comp": "17896441",
     "content": "f037e452"
   },
-  "/technical-knowledge/devops/kubernetes-workloads-3a6": {
+  "/technical-knowledge/devops/kubernetes-workloads-e06": {
     "__comp": "17896441",
     "content": "e775c6ed"
   },
-  "/technical-knowledge/devops/vm-docker-k8s-explained-dc5": {
+  "/technical-knowledge/devops/vm-docker-k8s-explained-6ee": {
     "__comp": "17896441",
     "content": "c6215eaf"
   },
-  "/technical-knowledge/git-ad5": {
+  "/technical-knowledge/git-bcd": {
     "__comp": "17896441",
     "content": "a2262cff"
   },
-  "/technical-knowledge/git/advanced/bisect-5f7": {
+  "/technical-knowledge/git/advanced/bisect-2a5": {
     "__comp": "17896441",
     "content": "d83a76bb"
   },
-  "/technical-knowledge/git/advanced/config-aliases-dc2": {
+  "/technical-knowledge/git/advanced/config-aliases-e7e": {
     "__comp": "17896441",
     "content": "5b7c9f14"
   },
-  "/technical-knowledge/git/advanced/hooks-dc0": {
+  "/technical-knowledge/git/advanced/hooks-3a7": {
     "__comp": "17896441",
     "content": "bf29cb48"
   },
-  "/technical-knowledge/git/advanced/worktree-c32": {
+  "/technical-knowledge/git/advanced/worktree-657": {
     "__comp": "17896441",
     "content": "f2cfb919"
   },
-  "/technical-knowledge/git/basics/add-089": {
+  "/technical-knowledge/git/basics/add-47d": {
     "__comp": "17896441",
     "content": "fb49eb50"
   },
-  "/technical-knowledge/git/basics/commit-f63": {
+  "/technical-knowledge/git/basics/commit-ab5": {
     "__comp": "17896441",
     "content": "14004a7d"
   },
-  "/technical-knowledge/git/basics/fetch-pull-123": {
+  "/technical-knowledge/git/basics/fetch-pull-263": {
     "__comp": "17896441",
     "content": "a2f19763"
   },
-  "/technical-knowledge/git/basics/push-457": {
+  "/technical-knowledge/git/basics/push-2c4": {
     "__comp": "17896441",
     "content": "17cfe222"
   },
-  "/technical-knowledge/git/basics/status-diff-780": {
+  "/technical-knowledge/git/basics/status-diff-5b4": {
     "__comp": "17896441",
     "content": "ba5aaa48"
   },
-  "/technical-knowledge/git/branching/branches-c5a": {
+  "/technical-knowledge/git/branching/branches-c8c": {
     "__comp": "17896441",
     "content": "bb49063c"
   },
-  "/technical-knowledge/git/branching/conflict-resolution-b5f": {
+  "/technical-knowledge/git/branching/conflict-resolution-3bd": {
     "__comp": "17896441",
     "content": "2fe9dbad"
   },
-  "/technical-knowledge/git/branching/merge-69d": {
+  "/technical-knowledge/git/branching/merge-e7d": {
     "__comp": "17896441",
     "content": "6089a6af"
   },
-  "/technical-knowledge/git/branching/rebase-234": {
+  "/technical-knowledge/git/branching/rebase-447": {
     "__comp": "17896441",
     "content": "798c5731"
   },
-  "/technical-knowledge/git/collaboration/remotes-f6b": {
+  "/technical-knowledge/git/collaboration/remotes-70c": {
     "__comp": "17896441",
     "content": "91269428"
   },
-  "/technical-knowledge/git/collaboration/stash-c06": {
+  "/technical-knowledge/git/collaboration/stash-602": {
     "__comp": "17896441",
     "content": "7b460c0b"
   },
-  "/technical-knowledge/git/collaboration/submodules-feb": {
+  "/technical-knowledge/git/collaboration/submodules-535": {
     "__comp": "17896441",
     "content": "81787730"
   },
-  "/technical-knowledge/git/collaboration/tags-095": {
+  "/technical-knowledge/git/collaboration/tags-e2e": {
     "__comp": "17896441",
     "content": "66e85b9d"
   },
-  "/technical-knowledge/git/history/cherry-pick-901": {
+  "/technical-knowledge/git/history/cherry-pick-a8f": {
     "__comp": "17896441",
     "content": "0daf3191"
   },
-  "/technical-knowledge/git/history/fixup-70d": {
+  "/technical-knowledge/git/history/fixup-50d": {
     "__comp": "17896441",
     "content": "cbc62dae"
   },
-  "/technical-knowledge/git/history/log-blame-bc5": {
+  "/technical-knowledge/git/history/log-blame-c4a": {
     "__comp": "17896441",
     "content": "815fb4e9"
   },
-  "/technical-knowledge/git/history/reflog-c66": {
+  "/technical-knowledge/git/history/reflog-f0e": {
     "__comp": "17896441",
     "content": "855e9c0e"
   },
-  "/technical-knowledge/git/history/reset-revert-09f": {
+  "/technical-knowledge/git/history/reset-revert-3c9": {
     "__comp": "17896441",
     "content": "0ea91e2d"
   },
-  "/technical-knowledge/git/history/squash-ebc": {
+  "/technical-knowledge/git/history/squash-0c8": {
     "__comp": "17896441",
     "content": "5a6bd8bf"
   },
-  "/technical-knowledge/git/workflows/conventional-commits-fe4": {
+  "/technical-knowledge/git/workflows/conventional-commits-49d": {
     "__comp": "17896441",
     "content": "4180b5c5"
   },
-  "/technical-knowledge/git/workflows/git-flow-7a8": {
+  "/technical-knowledge/git/workflows/git-flow-bcd": {
     "__comp": "17896441",
     "content": "97094661"
   },
-  "/technical-knowledge/git/workflows/pull-request-best-practices-e69": {
+  "/technical-knowledge/git/workflows/pull-request-best-practices-857": {
     "__comp": "17896441",
     "content": "964dd518"
   },
-  "/technical-knowledge/git/workflows/trunk-based-0f9": {
+  "/technical-knowledge/git/workflows/trunk-based-904": {
     "__comp": "17896441",
     "content": "592203a7"
   },
-  "/technical-knowledge/interview-questions/genz-career/java-collections-interview-questions-989": {
+  "/technical-knowledge/interview-questions/genz-career/java-collections-interview-questions-e1d": {
     "__comp": "17896441",
     "content": "f7b87e9d"
   },
-  "/technical-knowledge/interview-questions/genz-career/java-interview-questions-100-88d": {
+  "/technical-knowledge/interview-questions/genz-career/java-interview-questions-100-cc5": {
     "__comp": "17896441",
     "content": "92215524"
   },
-  "/technical-knowledge/interview-questions/genz-career/java-interview-questions-trickiest-6a5": {
+  "/technical-knowledge/interview-questions/genz-career/java-interview-questions-trickiest-482": {
     "__comp": "17896441",
     "content": "4c2bd2ed"
   },
-  "/technical-knowledge/interview-questions/genz-career/java-multithreading-interview-guide-f12": {
+  "/technical-knowledge/interview-questions/genz-career/java-multithreading-interview-guide-e66": {
     "__comp": "17896441",
     "content": "67479252"
   },
-  "/technical-knowledge/interview-questions/genz-career/java-oops-interview-guide-5e9": {
+  "/technical-knowledge/interview-questions/genz-career/java-oops-interview-guide-75a": {
     "__comp": "17896441",
     "content": "6b110ee8"
   },
-  "/technical-knowledge/interview-questions/genz-career/mock/accenture-java-springboot-interview-3-years-03d": {
+  "/technical-knowledge/interview-questions/genz-career/mock/accenture-java-springboot-interview-3-years-e48": {
     "__comp": "17896441",
     "content": "ffb676c7"
   },
-  "/technical-knowledge/interview-questions/genz-career/mock/cognizant-java-developer-interview-3-years-468": {
+  "/technical-knowledge/interview-questions/genz-career/mock/cognizant-java-developer-interview-3-years-e2b": {
     "__comp": "17896441",
     "content": "20651026"
   },
-  "/technical-knowledge/interview-questions/genz-career/mock/epam-java-developer-interview-experience-9b3": {
+  "/technical-knowledge/interview-questions/genz-career/mock/epam-java-developer-interview-experience-a68": {
     "__comp": "17896441",
     "content": "4a1fb40c"
   },
-  "/technical-knowledge/interview-questions/genz-career/mock/hcl-java-developer-interview-experience-842": {
+  "/technical-knowledge/interview-questions/genz-career/mock/hcl-java-developer-interview-experience-0dc": {
     "__comp": "17896441",
     "content": "463a1429"
   },
-  "/technical-knowledge/interview-questions/genz-career/mock/ibm-java-springboot-interview-3-years-4d0": {
+  "/technical-knowledge/interview-questions/genz-career/mock/ibm-java-springboot-interview-3-years-6b2": {
     "__comp": "17896441",
     "content": "ebeac939"
   },
-  "/technical-knowledge/interview-questions/genz-career/mock/paytm-java-developer-interview-first-round-fb3": {
+  "/technical-knowledge/interview-questions/genz-career/mock/paytm-java-developer-interview-first-round-cfe": {
     "__comp": "17896441",
     "content": "edc45cfe"
   },
-  "/technical-knowledge/interview-questions/genz-career/mock/tcs-java-springboot-interview-3-years-862": {
+  "/technical-knowledge/interview-questions/genz-career/mock/tcs-java-springboot-interview-3-years-576": {
     "__comp": "17896441",
     "content": "2504ea4e"
   },
-  "/technical-knowledge/interview-questions/genz-career/mock/tcs-ninja-nqt-interview-experience-8ed": {
+  "/technical-knowledge/interview-questions/genz-career/mock/tcs-ninja-nqt-interview-experience-9f0": {
     "__comp": "17896441",
     "content": "75704f55"
   },
-  "/technical-knowledge/interview-questions/genz-career/mock/wipro-java-springboot-interview-3-years-97a": {
+  "/technical-knowledge/interview-questions/genz-career/mock/wipro-java-springboot-interview-3-years-91e": {
     "__comp": "17896441",
     "content": "6262140d"
   },
-  "/technical-knowledge/interview-questions/genz-career/spring-boot/real-time-spring-boot-interview-questions-6ee": {
+  "/technical-knowledge/interview-questions/genz-career/spring-boot/real-time-spring-boot-interview-questions-874": {
     "__comp": "17896441",
     "content": "787df239"
   },
-  "/technical-knowledge/interview-questions/genz-career/spring-boot/scenario-based-springboot-interview-questions-a8d": {
+  "/technical-knowledge/interview-questions/genz-career/spring-boot/scenario-based-springboot-interview-questions-55c": {
     "__comp": "17896441",
     "content": "a2843df9"
   },
-  "/technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-c39": {
+  "/technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-51e": {
     "__comp": "17896441",
     "content": "83ceaff3"
   },
-  "/technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-2-4b4": {
+  "/technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-2-323": {
     "__comp": "17896441",
     "content": "a7e3f982"
   },
-  "/technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-3-110": {
+  "/technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-3-926": {
     "__comp": "17896441",
     "content": "b9567bed"
   },
-  "/technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-4-658": {
+  "/technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-4-9f7": {
     "__comp": "17896441",
     "content": "54f49f74"
   },
-  "/technical-knowledge/interview-questions/genz-career/spring-boot/top-spring-security-interview-questions-7e7": {
+  "/technical-knowledge/interview-questions/genz-career/spring-boot/top-spring-security-interview-questions-7c0": {
     "__comp": "17896441",
     "content": "386b87ee"
   },
-  "/technical-knowledge/interview-questions/java/break-singleton-java-cf9": {
+  "/technical-knowledge/interview-questions/java/break-singleton-java-fdd": {
     "__comp": "17896441",
     "content": "16a82f5e"
   },
-  "/technical-knowledge/interview-questions/java/concurrent-collections-interview-c51": {
+  "/technical-knowledge/interview-questions/java/concurrent-collections-interview-77b": {
     "__comp": "17896441",
     "content": "6d98976b"
   },
-  "/technical-knowledge/interview-questions/java/concurrent-collections-tricky-266": {
+  "/technical-knowledge/interview-questions/java/concurrent-collections-tricky-b48": {
     "__comp": "17896441",
     "content": "6835911e"
   },
-  "/technical-knowledge/interview-questions/java/exception-handling-advanced-fcf": {
+  "/technical-knowledge/interview-questions/java/exception-handling-advanced-66b": {
     "__comp": "17896441",
     "content": "95a5837e"
   },
-  "/technical-knowledge/interview-questions/java/experienced-java-backend-interview-b43": {
+  "/technical-knowledge/interview-questions/java/experienced-java-backend-interview-c86": {
     "__comp": "17896441",
     "content": "29d26014"
   },
-  "/technical-knowledge/interview-questions/java/java-8-optional-crud-43e": {
+  "/technical-knowledge/interview-questions/java/java-8-optional-crud-020": {
     "__comp": "17896441",
     "content": "f41bb2e4"
   },
-  "/technical-knowledge/interview-questions/java/java-8-tricky-interview-questions-526": {
+  "/technical-knowledge/interview-questions/java/java-8-tricky-interview-questions-c5e": {
     "__comp": "17896441",
     "content": "8614bac8"
   },
-  "/technical-knowledge/interview-questions/java/java-collections-differences-766": {
+  "/technical-knowledge/interview-questions/java/java-collections-differences-869": {
     "__comp": "17896441",
     "content": "706d8acb"
   },
-  "/technical-knowledge/interview-questions/java/java-collections-interview-221": {
+  "/technical-knowledge/interview-questions/java/java-collections-interview-14c": {
     "__comp": "17896441",
     "content": "bac09931"
   },
-  "/technical-knowledge/interview-questions/java/java-collections-interview-p2-180": {
+  "/technical-knowledge/interview-questions/java/java-collections-interview-p2-22a": {
     "__comp": "17896441",
     "content": "3f8e6355"
   },
-  "/technical-knowledge/interview-questions/java/java-comprehensive-interview-f18": {
+  "/technical-knowledge/interview-questions/java/java-comprehensive-interview-1b7": {
     "__comp": "17896441",
     "content": "1a4e51be"
   },
-  "/technical-knowledge/interview-questions/java/java-date-time-api-42c": {
+  "/technical-knowledge/interview-questions/java/java-date-time-api-eb8": {
     "__comp": "17896441",
     "content": "69e483c5"
   },
-  "/technical-knowledge/interview-questions/java/java-experienced-interview-p1-93b": {
+  "/technical-knowledge/interview-questions/java/java-experienced-interview-p1-0d3": {
     "__comp": "17896441",
     "content": "39204042"
   },
-  "/technical-knowledge/interview-questions/java/java-interview-questions-0b1": {
+  "/technical-knowledge/interview-questions/java/java-interview-questions-aee": {
     "__comp": "17896441",
     "content": "ce75ad85"
   },
-  "/technical-knowledge/interview-questions/java/java-lead-interview-scenarios-501": {
+  "/technical-knowledge/interview-questions/java/java-lead-interview-scenarios-26f": {
     "__comp": "17896441",
     "content": "6c0fe219"
   },
-  "/technical-knowledge/interview-questions/java/java-multithreading-interview-235": {
+  "/technical-knowledge/interview-questions/java/java-multithreading-interview-504": {
     "__comp": "17896441",
     "content": "3ecdd328"
   },
-  "/technical-knowledge/interview-questions/java/java-runtime-exceptions-766": {
+  "/technical-knowledge/interview-questions/java/java-runtime-exceptions-5e4": {
     "__comp": "17896441",
     "content": "3d94c26e"
   },
-  "/technical-knowledge/interview-questions/java/java-string-basics-48f": {
+  "/technical-knowledge/interview-questions/java/java-string-basics-54d": {
     "__comp": "17896441",
     "content": "8bb17dfc"
   },
-  "/technical-knowledge/interview-questions/java/java-string-rotation-33a": {
+  "/technical-knowledge/interview-questions/java/java-string-rotation-33b": {
     "__comp": "17896441",
     "content": "4809204a"
   },
-  "/technical-knowledge/interview-questions/java/java-tricky-core-questions-8c6": {
+  "/technical-knowledge/interview-questions/java/java-tricky-core-questions-dd6": {
     "__comp": "17896441",
     "content": "e7946e9d"
   },
-  "/technical-knowledge/interview-questions/java/spring-boot-interview-dfa": {
+  "/technical-knowledge/interview-questions/java/spring-boot-interview-2f6": {
     "__comp": "17896441",
     "content": "c45457bd"
   },
-  "/technical-knowledge/interview-questions/java/spring-boot-real-time-questions-934": {
+  "/technical-knowledge/interview-questions/java/spring-boot-real-time-questions-085": {
     "__comp": "17896441",
     "content": "74f0c56d"
   },
-  "/technical-knowledge/interview-questions/java/sql-interview-questions-91c": {
+  "/technical-knowledge/interview-questions/java/sql-interview-questions-586": {
     "__comp": "17896441",
     "content": "ce3447ab"
   },
-  "/technical-knowledge/interview-questions/java/tricky-java-interview-a51": {
+  "/technical-knowledge/interview-questions/java/tricky-java-interview-9d1": {
     "__comp": "17896441",
     "content": "be1ca738"
   },
-  "/technical-knowledge/java/java-aqs-internals-ac7": {
+  "/technical-knowledge/java/java-aqs-internals-bd0": {
     "__comp": "17896441",
     "content": "2695042f"
   },
-  "/technical-knowledge/java/java-collections-5a4": {
+  "/technical-knowledge/java/java-collections-d93": {
     "__comp": "17896441",
     "content": "a8d4740a"
   },
-  "/technical-knowledge/java/java-concurrency-b3c": {
+  "/technical-knowledge/java/java-concurrency-907": {
     "__comp": "17896441",
     "content": "f13bfd67"
   },
-  "/technical-knowledge/java/java-fundamentals-3b1": {
+  "/technical-knowledge/java/java-fundamentals-887": {
     "__comp": "17896441",
     "content": "fb6d755b"
   },
-  "/technical-knowledge/java/java-interview-questions-6a3": {
+  "/technical-knowledge/java/java-interview-questions-37c": {
     "__comp": "17896441",
     "content": "f99a0434"
   },
-  "/technical-knowledge/java/java-io-5ec": {
+  "/technical-knowledge/java/java-io-080": {
     "__comp": "17896441",
     "content": "3744858f"
   },
-  "/technical-knowledge/java/java-jvm-d96": {
+  "/technical-knowledge/java/java-jvm-28a": {
     "__comp": "17896441",
     "content": "2fb67458"
   },
-  "/technical-knowledge/java/java-new-features-0f9": {
+  "/technical-knowledge/java/java-new-features-43d": {
     "__comp": "17896441",
     "content": "0366963e"
   },
-  "/technical-knowledge/java/java-oop-7b0": {
+  "/technical-knowledge/java/java-oop-21a": {
     "__comp": "17896441",
     "content": "5304fd8a"
   },
-  "/technical-knowledge/java/java-overview-ee9": {
+  "/technical-knowledge/java/java-overview-911": {
     "__comp": "17896441",
     "content": "adb02301"
   },
-  "/technical-knowledge/java/java-stack-vs-heap-0f6": {
+  "/technical-knowledge/java/java-stack-vs-heap-632": {
     "__comp": "17896441",
     "content": "77dd0904"
   },
-  "/technical-knowledge/java/java-threads-and-locks-98b": {
+  "/technical-knowledge/java/java-threads-and-locks-427": {
     "__comp": "17896441",
     "content": "6f0e33d4"
   },
-  "/technical-knowledge/java/java-virtual-threads-ed5": {
+  "/technical-knowledge/java/java-virtual-threads-6ce": {
     "__comp": "17896441",
     "content": "dd9695a1"
   },
-  "/technical-knowledge/kafka/advanced/exactly-once-1c8": {
+  "/technical-knowledge/kafka/advanced/exactly-once-c40": {
     "__comp": "17896441",
     "content": "a8e4316f"
   },
-  "/technical-knowledge/kafka/advanced/exactly-once-vs-dedup-820": {
+  "/technical-knowledge/kafka/advanced/exactly-once-vs-dedup-8cd": {
     "__comp": "17896441",
     "content": "5a79051b"
   },
-  "/technical-knowledge/kafka/advanced/kafka-connect-249": {
+  "/technical-knowledge/kafka/advanced/kafka-connect-e40": {
     "__comp": "17896441",
     "content": "e1e89bb9"
   },
-  "/technical-knowledge/kafka/advanced/kafka-streams-a88": {
+  "/technical-knowledge/kafka/advanced/kafka-streams-700": {
     "__comp": "17896441",
     "content": "c1b7a912"
   },
-  "/technical-knowledge/kafka/advanced/kafka-streams-deep-dive-5ba": {
+  "/technical-knowledge/kafka/advanced/kafka-streams-deep-dive-d3a": {
     "__comp": "17896441",
     "content": "ce37e8db"
   },
-  "/technical-knowledge/kafka/advanced/kafka-throughput-optimization-5b3": {
+  "/technical-knowledge/kafka/advanced/kafka-throughput-optimization-7a6": {
     "__comp": "17896441",
     "content": "92651169"
   },
-  "/technical-knowledge/kafka/advanced/monitoring-operations-da3": {
+  "/technical-knowledge/kafka/advanced/monitoring-operations-f85": {
     "__comp": "17896441",
     "content": "5cae2ae0"
   },
-  "/technical-knowledge/kafka/advanced/order-messages-c3a": {
+  "/technical-knowledge/kafka/advanced/order-messages-410": {
     "__comp": "17896441",
     "content": "4dca4d8c"
   },
-  "/technical-knowledge/kafka/advanced/schema-registry-c38": {
+  "/technical-knowledge/kafka/advanced/schema-registry-d6e": {
     "__comp": "17896441",
     "content": "b1dfa883"
   },
-  "/technical-knowledge/kafka/consumer/consumer-group-5f4": {
+  "/technical-knowledge/kafka/consumer/consumer-group-89f": {
     "__comp": "17896441",
     "content": "f42e39f5"
   },
-  "/technical-knowledge/kafka/consumer/consumer-overview-e8e": {
+  "/technical-knowledge/kafka/consumer/consumer-overview-7a5": {
     "__comp": "17896441",
     "content": "67ecd1fe"
   },
-  "/technical-knowledge/kafka/consumer/parallel-consumer-2b3": {
+  "/technical-knowledge/kafka/consumer/parallel-consumer-903": {
     "__comp": "17896441",
     "content": "ad28df9b"
   },
-  "/technical-knowledge/kafka/consumer/parallel-consumer-deep-dive-249": {
+  "/technical-knowledge/kafka/consumer/parallel-consumer-deep-dive-cd3": {
     "__comp": "17896441",
     "content": "651d552f"
   },
-  "/technical-knowledge/kafka/core/broker-5f8": {
+  "/technical-knowledge/kafka/core/broker-ac2": {
     "__comp": "17896441",
     "content": "820d99b7"
   },
-  "/technical-knowledge/kafka/core/kafka-overview-7e0": {
+  "/technical-knowledge/kafka/core/kafka-overview-f7e": {
     "__comp": "17896441",
     "content": "6438a9db"
   },
-  "/technical-knowledge/kafka/core/kraft-vs-zookeeper-b00": {
+  "/technical-knowledge/kafka/core/kraft-vs-zookeeper-cc1": {
     "__comp": "17896441",
     "content": "f5491934"
   },
-  "/technical-knowledge/kafka/core/partition-7db": {
+  "/technical-knowledge/kafka/core/partition-288": {
     "__comp": "17896441",
     "content": "d9cff4fb"
   },
-  "/technical-knowledge/kafka/core/replication-700": {
+  "/technical-knowledge/kafka/core/replication-1c0": {
     "__comp": "17896441",
     "content": "55a950f5"
   },
-  "/technical-knowledge/kafka/core/topic-95b": {
+  "/technical-knowledge/kafka/core/topic-009": {
     "__comp": "17896441",
     "content": "da3cc1f6"
   },
-  "/technical-knowledge/kafka/interview/interview-advanced-3cf": {
+  "/technical-knowledge/kafka/interview/interview-advanced-a32": {
     "__comp": "17896441",
     "content": "69651a4c"
   },
-  "/technical-knowledge/kafka/interview/interview-core-4e2": {
+  "/technical-knowledge/kafka/interview/interview-core-d13": {
     "__comp": "17896441",
     "content": "2596c5d6"
   },
-  "/technical-knowledge/kafka/interview/interview-producer-consumer-53e": {
+  "/technical-knowledge/kafka/interview/interview-producer-consumer-4b4": {
     "__comp": "17896441",
     "content": "1cb248e8"
   },
-  "/technical-knowledge/kafka/intro-14c": {
+  "/technical-knowledge/kafka/intro-4cf": {
     "__comp": "17896441",
     "content": "4c007013"
   },
-  "/technical-knowledge/kafka/producer/producer-acks-cc7": {
+  "/technical-knowledge/kafka/producer/producer-acks-40f": {
     "__comp": "17896441",
     "content": "ae0ebc3c"
   },
-  "/technical-knowledge/kafka/producer/producer-idempotency-adc": {
+  "/technical-knowledge/kafka/producer/producer-idempotency-f03": {
     "__comp": "17896441",
     "content": "542ecee1"
   },
-  "/technical-knowledge/kafka/producer/producer-overview-aa8": {
+  "/technical-knowledge/kafka/producer/producer-overview-b81": {
     "__comp": "17896441",
     "content": "296249fb"
   },
-  "/technical-knowledge/kafka/producer/producer-transactions-97b": {
+  "/technical-knowledge/kafka/producer/producer-transactions-08c": {
     "__comp": "17896441",
     "content": "7b527991"
   },
-  "/technical-knowledge/networking/-146": {
+  "/technical-knowledge/networking/-fe0": {
     "__comp": "17896441",
     "content": "ef1e85d0"
   },
-  "/technical-knowledge/networking/api-authentication-security-37c": {
+  "/technical-knowledge/networking/api-authentication-security-577": {
     "__comp": "17896441",
     "content": "d1a1c7e0"
   },
-  "/technical-knowledge/networking/application-protocols-reference-c07": {
+  "/technical-knowledge/networking/application-protocols-reference-d70": {
     "__comp": "17896441",
     "content": "6120f8a6"
   },
-  "/technical-knowledge/networking/cdn-load-balancing-d16": {
+  "/technical-knowledge/networking/cdn-load-balancing-acf": {
     "__comp": "17896441",
     "content": "deb02025"
   },
-  "/technical-knowledge/networking/dns-resolution-c88": {
+  "/technical-knowledge/networking/dns-resolution-fdc": {
     "__comp": "17896441",
     "content": "ee0ecb9e"
   },
-  "/technical-knowledge/networking/http-https-application-layer-703": {
+  "/technical-knowledge/networking/http-https-application-layer-188": {
     "__comp": "17896441",
     "content": "cd63af30"
   },
-  "/technical-knowledge/networking/ip-addressing-routing-717": {
+  "/technical-knowledge/networking/ip-addressing-routing-683": {
     "__comp": "17896441",
     "content": "24411305"
   },
-  "/technical-knowledge/networking/network-performance-optimization-d8b": {
+  "/technical-knowledge/networking/network-performance-optimization-3b1": {
     "__comp": "17896441",
     "content": "194a39b9"
   },
-  "/technical-knowledge/networking/network-security-b4b": {
+  "/technical-knowledge/networking/network-security-50b": {
     "__comp": "17896441",
     "content": "fd7220cf"
   },
-  "/technical-knowledge/networking/network-troubleshooting-tools-03e": {
+  "/technical-knowledge/networking/network-troubleshooting-tools-d07": {
     "__comp": "17896441",
     "content": "791d024c"
   },
-  "/technical-knowledge/networking/networking-interview-questions-06d": {
+  "/technical-knowledge/networking/networking-interview-questions-f41": {
     "__comp": "17896441",
     "content": "fe351b0c"
   },
-  "/technical-knowledge/networking/osi-tcpip-models-bde": {
+  "/technical-knowledge/networking/osi-tcpip-models-7dc": {
     "__comp": "17896441",
     "content": "d75cea88"
   },
-  "/technical-knowledge/networking/proxies-nat-firewalls-7b3": {
+  "/technical-knowledge/networking/proxies-nat-firewalls-5d5": {
     "__comp": "17896441",
     "content": "5613a0c9"
   },
-  "/technical-knowledge/networking/quic-modern-transport-d76": {
+  "/technical-knowledge/networking/quic-modern-transport-811": {
     "__comp": "17896441",
     "content": "4d4f0566"
   },
-  "/technical-knowledge/networking/rest-grpc-api-design-dd3": {
+  "/technical-knowledge/networking/rest-grpc-api-design-a5a": {
     "__comp": "17896441",
     "content": "8d317826"
   },
-  "/technical-knowledge/networking/service-mesh-microservices-672": {
+  "/technical-knowledge/networking/service-mesh-microservices-cfd": {
     "__comp": "17896441",
     "content": "9efcb713"
   },
-  "/technical-knowledge/networking/socket-programming-io-models-9a5": {
+  "/technical-knowledge/networking/socket-programming-io-models-2e3": {
     "__comp": "17896441",
     "content": "a862eed1"
   },
-  "/technical-knowledge/networking/tcp-udp-transport-layer-9f5": {
+  "/technical-knowledge/networking/tcp-udp-transport-layer-e7c": {
     "__comp": "17896441",
     "content": "ea5e1317"
   },
-  "/technical-knowledge/networking/websockets-realtime-74d": {
+  "/technical-knowledge/networking/websockets-realtime-0ee": {
     "__comp": "17896441",
     "content": "71b58972"
   },
-  "/technical-knowledge/operating-systems/cpu-scheduling-856": {
+  "/technical-knowledge/operating-systems/cpu-scheduling-440": {
     "__comp": "17896441",
     "content": "fb30c349"
   },
-  "/technical-knowledge/operating-systems/file-systems-and-io-5a2": {
+  "/technical-knowledge/operating-systems/file-systems-and-io-835": {
     "__comp": "17896441",
     "content": "5c7d43fe"
   },
-  "/technical-knowledge/operating-systems/interview-questions-d1d": {
+  "/technical-knowledge/operating-systems/interview-questions-3cc": {
     "__comp": "17896441",
     "content": "d51fb45c"
   },
-  "/technical-knowledge/operating-systems/intro-27a": {
+  "/technical-knowledge/operating-systems/intro-1b1": {
     "__comp": "17896441",
     "content": "f6b4f9e1"
   },
-  "/technical-knowledge/operating-systems/linux-internals-and-syscalls-801": {
+  "/technical-knowledge/operating-systems/linux-internals-and-syscalls-a52": {
     "__comp": "17896441",
     "content": "c14f6876"
   },
-  "/technical-knowledge/operating-systems/memory-management-843": {
+  "/technical-knowledge/operating-systems/memory-management-1cb": {
     "__comp": "17896441",
     "content": "868fe66e"
   },
-  "/technical-knowledge/operating-systems/networking-and-ipc-208": {
+  "/technical-knowledge/operating-systems/networking-and-ipc-32c": {
     "__comp": "17896441",
     "content": "66ff3ddc"
   },
-  "/technical-knowledge/operating-systems/processes-and-threads-bce": {
+  "/technical-knowledge/operating-systems/processes-and-threads-c71": {
     "__comp": "17896441",
     "content": "9dd074f3"
   },
-  "/technical-knowledge/operating-systems/synchronization-and-deadlocks-252": {
+  "/technical-knowledge/operating-systems/synchronization-and-deadlocks-3b1": {
     "__comp": "17896441",
     "content": "53d70aa9"
   },
-  "/technical-knowledge/operating-systems/virtual-memory-deep-dive-168": {
+  "/technical-knowledge/operating-systems/virtual-memory-deep-dive-e2d": {
     "__comp": "17896441",
     "content": "2d19a7f5"
   },
-  "/technical-knowledge/redis/redis-advanced-data-structures-364": {
+  "/technical-knowledge/redis/redis-advanced-data-structures-177": {
     "__comp": "17896441",
     "content": "c0c9f4f2"
   },
-  "/technical-knowledge/redis/redis-as-database-062": {
+  "/technical-knowledge/redis/redis-as-database-8fe": {
     "__comp": "17896441",
     "content": "047e591b"
   },
-  "/technical-knowledge/redis/redis-clustering-replication-105": {
+  "/technical-knowledge/redis/redis-clustering-replication-4d7": {
     "__comp": "17896441",
     "content": "daff2f1a"
   },
-  "/technical-knowledge/redis/redis-data-types-a1f": {
+  "/technical-knowledge/redis/redis-data-types-8d1": {
     "__comp": "17896441",
     "content": "2291e668"
   },
-  "/technical-knowledge/redis/redis-distributed-cache-591": {
+  "/technical-knowledge/redis/redis-distributed-cache-946": {
     "__comp": "17896441",
     "content": "87d1668b"
   },
-  "/technical-knowledge/redis/redis-distributed-lock-491": {
+  "/technical-knowledge/redis/redis-distributed-lock-dd7": {
     "__comp": "17896441",
     "content": "588595cf"
   },
-  "/technical-knowledge/redis/redis-eviction-policies-78c": {
+  "/technical-knowledge/redis/redis-eviction-policies-44a": {
     "__comp": "17896441",
     "content": "d92134ba"
   },
-  "/technical-knowledge/redis/redis-interview-questions-921": {
+  "/technical-knowledge/redis/redis-interview-questions-b7f": {
     "__comp": "17896441",
     "content": "ecd8f11b"
   },
-  "/technical-knowledge/redis/redis-overview-565": {
+  "/technical-knowledge/redis/redis-overview-6f3": {
     "__comp": "17896441",
     "content": "55c466bd"
   },
-  "/technical-knowledge/redis/redis-performance-patterns-d39": {
+  "/technical-knowledge/redis/redis-performance-patterns-804": {
     "__comp": "17896441",
     "content": "0484371a"
   },
-  "/technical-knowledge/redis/redis-pipeline-transactions-468": {
+  "/technical-knowledge/redis/redis-pipeline-transactions-09e": {
     "__comp": "17896441",
     "content": "408fc847"
   },
-  "/technical-knowledge/redis/redis-pubsub-98a": {
+  "/technical-knowledge/redis/redis-pubsub-59b": {
     "__comp": "17896441",
     "content": "9c77e95c"
   },
-  "/technical-knowledge/redis/redis-rate-limiting-b05": {
+  "/technical-knowledge/redis/redis-rate-limiting-81b": {
     "__comp": "17896441",
     "content": "3d3827a7"
   },
-  "/technical-knowledge/redis/redis-session-management-87f": {
+  "/technical-knowledge/redis/redis-session-management-477": {
     "__comp": "17896441",
     "content": "52499749"
   },
-  "/technical-knowledge/redis/redis-streams-78c": {
+  "/technical-knowledge/redis/redis-streams-a8a": {
     "__comp": "17896441",
     "content": "c8536b5d"
   },
-  "/technical-knowledge/redis/redis-ttl-expiry-814": {
+  "/technical-knowledge/redis/redis-ttl-expiry-aa2": {
     "__comp": "17896441",
     "content": "2b763f7c"
   },
-  "/technical-knowledge/security/api-security-a53": {
+  "/technical-knowledge/security/api-security-26b": {
     "__comp": "17896441",
     "content": "0f1c16b4"
   },
-  "/technical-knowledge/security/authentication-authorization-c0c": {
+  "/technical-knowledge/security/authentication-authorization-179": {
     "__comp": "17896441",
     "content": "aebb600c"
   },
-  "/technical-knowledge/security/cryptography-secure-design-f51": {
+  "/technical-knowledge/security/cryptography-secure-design-1ae": {
     "__comp": "17896441",
     "content": "06e11990"
   },
-  "/technical-knowledge/security/identity-access-management-ed5": {
+  "/technical-knowledge/security/identity-access-management-07b": {
     "__comp": "17896441",
     "content": "90df2fd4"
   },
-  "/technical-knowledge/security/incident-response-128": {
+  "/technical-knowledge/security/incident-response-c43": {
     "__comp": "17896441",
     "content": "930c44aa"
   },
-  "/technical-knowledge/security/interview-questions-562": {
+  "/technical-knowledge/security/interview-questions-89e": {
     "__comp": "17896441",
     "content": "ee283b96"
   },
-  "/technical-knowledge/security/keys-signing-tls-a2d": {
+  "/technical-knowledge/security/keys-signing-tls-468": {
     "__comp": "17896441",
     "content": "78e05996"
   },
-  "/technical-knowledge/security/network-security-75d": {
+  "/technical-knowledge/security/network-security-e60": {
     "__comp": "17896441",
     "content": "139f78ad"
   },
-  "/technical-knowledge/security/privacy-compliance-ed9": {
+  "/technical-knowledge/security/privacy-compliance-59a": {
     "__comp": "17896441",
     "content": "a232c503"
   },
-  "/technical-knowledge/security/secure-sdlc-b00": {
+  "/technical-knowledge/security/secure-sdlc-a1e": {
     "__comp": "17896441",
     "content": "3488c5df"
   },
-  "/technical-knowledge/security/web-vulnerabilities-6f7": {
+  "/technical-knowledge/security/web-vulnerabilities-267": {
     "__comp": "17896441",
     "content": "49b42f03"
   },
-  "/technical-knowledge/solid-5bb": {
+  "/technical-knowledge/solid-f06": {
     "__comp": "17896441",
     "content": "f082910f"
   },
-  "/technical-knowledge/solid/solid/dependency-inversion-0e4": {
+  "/technical-knowledge/solid/solid/dependency-inversion-376": {
     "__comp": "17896441",
     "content": "ea0c56a8"
   },
-  "/technical-knowledge/solid/solid/interface-segregation-3c4": {
+  "/technical-knowledge/solid/solid/interface-segregation-335": {
     "__comp": "17896441",
     "content": "fbeb6a72"
   },
-  "/technical-knowledge/solid/solid/liskov-substitution-269": {
+  "/technical-knowledge/solid/solid/liskov-substitution-e84": {
     "__comp": "17896441",
     "content": "ad22e946"
   },
-  "/technical-knowledge/solid/solid/open-closed-ab5": {
+  "/technical-knowledge/solid/solid/open-closed-608": {
     "__comp": "17896441",
     "content": "631d56ee"
   },
-  "/technical-knowledge/solid/solid/single-responsibility-890": {
+  "/technical-knowledge/solid/solid/single-responsibility-438": {
     "__comp": "17896441",
     "content": "c6135f55"
   },
-  "/technical-knowledge/solid/summary-09c": {
+  "/technical-knowledge/solid/summary-d59": {
     "__comp": "17896441",
     "content": "5427ac75"
   },
-  "/technical-knowledge/spring/spring-batch-ae2": {
+  "/technical-knowledge/spring/spring-batch-f4d": {
     "__comp": "17896441",
     "content": "ca667498"
   },
-  "/technical-knowledge/spring/spring-boot-2a7": {
+  "/technical-knowledge/spring/spring-boot-9cf": {
     "__comp": "17896441",
     "content": "070cceee"
   },
-  "/technical-knowledge/spring/spring-boot-advanced-0e9": {
+  "/technical-knowledge/spring/spring-boot-advanced-1e2": {
     "__comp": "17896441",
     "content": "44626067"
   },
-  "/technical-knowledge/spring/spring-boot-internals-739": {
+  "/technical-knowledge/spring/spring-boot-internals-b0b": {
     "__comp": "17896441",
     "content": "3177d0e7"
   },
-  "/technical-knowledge/spring/spring-boot-interview-questions-74e": {
+  "/technical-knowledge/spring/spring-boot-interview-questions-157": {
     "__comp": "17896441",
     "content": "c7ff582f"
   },
-  "/technical-knowledge/spring/spring-cloud-482": {
+  "/technical-knowledge/spring/spring-cloud-a93": {
     "__comp": "17896441",
     "content": "b0d8a005"
   },
-  "/technical-knowledge/spring/spring-data-jpa-b44": {
+  "/technical-knowledge/spring/spring-data-jpa-61f": {
     "__comp": "17896441",
     "content": "75687058"
   },
-  "/technical-knowledge/spring/spring-framework-cf6": {
+  "/technical-knowledge/spring/spring-framework-e38": {
     "__comp": "17896441",
     "content": "86571133"
   },
-  "/technical-knowledge/spring/spring-framework-deep-dive-ca9": {
+  "/technical-knowledge/spring/spring-framework-deep-dive-bc1": {
     "__comp": "17896441",
     "content": "cc970964"
   },
-  "/technical-knowledge/spring/spring-interview-questions-3ea": {
+  "/technical-knowledge/spring/spring-interview-questions-944": {
     "__comp": "17896441",
     "content": "91850dbd"
   },
-  "/technical-knowledge/spring/spring-mvc-74b": {
+  "/technical-knowledge/spring/spring-mvc-da6": {
     "__comp": "17896441",
     "content": "a8cf4be1"
   },
-  "/technical-knowledge/spring/spring-overview-1d9": {
+  "/technical-knowledge/spring/spring-overview-2f9": {
     "__comp": "17896441",
     "content": "1b83d90c"
   },
-  "/technical-knowledge/spring/spring-security-be9": {
+  "/technical-knowledge/spring/spring-security-0d8": {
     "__comp": "17896441",
     "content": "d9dc4b65"
   },
-  "/technical-knowledge/system-design/advanced-consensus-bft-e72": {
+  "/technical-knowledge/system-design/advanced-consensus-bft-e2f": {
     "__comp": "17896441",
     "content": "bf45a9e5"
   },
-  "/technical-knowledge/system-design/api-design-8cd": {
+  "/technical-knowledge/system-design/api-design-39a": {
     "__comp": "17896441",
     "content": "a9ea2e2f"
   },
-  "/technical-knowledge/system-design/architecture-fundamentals-156": {
+  "/technical-knowledge/system-design/architecture-fundamentals-25d": {
     "__comp": "17896441",
     "content": "b5598800"
   },
-  "/technical-knowledge/system-design/bloom-filters-942": {
+  "/technical-knowledge/system-design/bloom-filters-b12": {
     "__comp": "17896441",
     "content": "c07aa19d"
   },
-  "/technical-knowledge/system-design/caching-strategies-3dd": {
+  "/technical-knowledge/system-design/caching-strategies-291": {
     "__comp": "17896441",
     "content": "db93d424"
   },
-  "/technical-knowledge/system-design/capacity-planning-83d": {
+  "/technical-knowledge/system-design/capacity-planning-9b9": {
     "__comp": "17896441",
     "content": "29b4f8eb"
   },
-  "/technical-knowledge/system-design/common-interview-questions-8df": {
+  "/technical-knowledge/system-design/common-interview-questions-cab": {
     "__comp": "17896441",
     "content": "a3ac7a0e"
   },
-  "/technical-knowledge/system-design/data-consistency-68d": {
+  "/technical-knowledge/system-design/data-consistency-06e": {
     "__comp": "17896441",
     "content": "2d347e1f"
   },
-  "/technical-knowledge/system-design/database-design-678": {
+  "/technical-knowledge/system-design/database-design-560": {
     "__comp": "17896441",
     "content": "59ac3933"
   },
-  "/technical-knowledge/system-design/distributed-locking-4ce": {
+  "/technical-knowledge/system-design/distributed-locking-690": {
     "__comp": "17896441",
     "content": "dd3dba06"
   },
-  "/technical-knowledge/system-design/distributed-systems-911": {
+  "/technical-knowledge/system-design/distributed-systems-c16": {
     "__comp": "17896441",
     "content": "826527e2"
   },
-  "/technical-knowledge/system-design/domain-driven-design-398": {
+  "/technical-knowledge/system-design/domain-driven-design-669": {
     "__comp": "17896441",
     "content": "18786f2a"
   },
-  "/technical-knowledge/system-design/handling-contention-12f": {
+  "/technical-knowledge/system-design/handling-contention-531": {
     "__comp": "17896441",
     "content": "57e4ec2f"
   },
-  "/technical-knowledge/system-design/interview-framework-99e": {
+  "/technical-knowledge/system-design/interview-framework-068": {
     "__comp": "17896441",
     "content": "6a4316ad"
   },
-  "/technical-knowledge/system-design/large-blobs-9c4": {
+  "/technical-knowledge/system-design/large-blobs-574": {
     "__comp": "17896441",
     "content": "c9693a87"
   },
-  "/technical-knowledge/system-design/load-balancing-reliability-5af": {
+  "/technical-knowledge/system-design/load-balancing-reliability-650": {
     "__comp": "17896441",
     "content": "9ab6bad6"
   },
-  "/technical-knowledge/system-design/long-running-tasks-c2d": {
+  "/technical-knowledge/system-design/long-running-tasks-48e": {
     "__comp": "17896441",
     "content": "286d4467"
   },
-  "/technical-knowledge/system-design/message-queues-d0e": {
+  "/technical-knowledge/system-design/message-queues-e6f": {
     "__comp": "17896441",
     "content": "a9a3cf64"
   },
-  "/technical-knowledge/system-design/microservices-patterns-bd7": {
+  "/technical-knowledge/system-design/microservices-patterns-c21": {
     "__comp": "17896441",
     "content": "c57384c5"
   },
-  "/technical-knowledge/system-design/multi-step-process-d81": {
+  "/technical-knowledge/system-design/multi-step-process-e00": {
     "__comp": "17896441",
     "content": "3ebc575a"
   },
-  "/technical-knowledge/system-design/observability-6af": {
+  "/technical-knowledge/system-design/observability-45b": {
     "__comp": "17896441",
     "content": "6ddbb8c8"
   },
-  "/technical-knowledge/system-design/real-time-updates-2b3": {
+  "/technical-knowledge/system-design/real-time-updates-0aa": {
     "__comp": "17896441",
     "content": "a223bed0"
   },
-  "/technical-knowledge/system-design/scaling-reads-486": {
+  "/technical-knowledge/system-design/scaling-reads-1e3": {
     "__comp": "17896441",
     "content": "2121a34a"
   },
-  "/technical-knowledge/system-design/scaling-writes-4e8": {
+  "/technical-knowledge/system-design/scaling-writes-0c9": {
     "__comp": "17896441",
     "content": "64ded082"
   },
-  "/technical-knowledge/system-design/search-systems-57f": {
+  "/technical-knowledge/system-design/search-systems-a52": {
     "__comp": "17896441",
     "content": "20aa40e3"
   },
-  "/technical-knowledge/system-design/security-patterns-343": {
+  "/technical-knowledge/system-design/security-patterns-4ef": {
     "__comp": "17896441",
     "content": "3e2e0c31"
   },
-  "/technical-knowledge/test/spring-test-annotations-210": {
+  "/technical-knowledge/test/spring-test-annotations-27d": {
     "__comp": "17896441",
     "content": "8425f1aa"
   },
-  "/technical-knowledge/test/testing-concepts-cee": {
+  "/technical-knowledge/test/testing-concepts-9aa": {
     "__comp": "17896441",
     "content": "0a22b1b1"
   },
-  "/technical-knowledge/test/wiremock-e63": {
+  "/technical-knowledge/test/wiremock-d2b": {
     "__comp": "17896441",
     "content": "86ad2214"
   },
-  "/-fc9": {
+  "/-cb7": {
     "__comp": "17896441",
     "content": "0e384e19"
   }

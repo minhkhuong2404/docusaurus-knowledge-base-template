@@ -61,6 +61,8 @@
     }
   ],
   "version": "current",
+  "lastUpdatedBy": "Lữ Minh Khương",
+  "lastUpdatedAt": 1774017766000,
   "sidebarPosition": 3,
   "frontMatter": {
     "id": "cryptography-secure-design",

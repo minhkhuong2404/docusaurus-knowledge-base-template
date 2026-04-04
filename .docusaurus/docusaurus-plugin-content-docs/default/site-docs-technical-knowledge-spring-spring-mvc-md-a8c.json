@@ -31,6 +31,8 @@
     }
   ],
   "version": "current",
+  "lastUpdatedBy": "Lữ Minh Khương",
+  "lastUpdatedAt": 1773417829000,
   "frontMatter": {
     "title": "Spring MVC — Complete Guide",
     "description": "Complete guide to Spring MVC covering controllers, request handling, model binding, validation, and REST application structure.",

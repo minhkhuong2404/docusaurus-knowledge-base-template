@@ -51,6 +51,8 @@
     }
   ],
   "version": "current",
+  "lastUpdatedBy": "Lữ Minh Khương",
+  "lastUpdatedAt": 1773502771000,
   "sidebarPosition": 7,
   "frontMatter": {
     "id": "cdn-load-balancing",
