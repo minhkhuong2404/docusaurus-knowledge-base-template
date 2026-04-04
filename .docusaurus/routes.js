@@ -14,11 +14,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'a14'),
+    component: ComponentCreator('/', '185'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '6e0'),
+        component: ComponentCreator('/', 'fc9'),
         routes: [
           {
             path: '/tags',
@@ -2986,6 +2986,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/new-learner',
+            component: ComponentCreator('/tags/new-learner', '414'),
+            exact: true
+          },
+          {
             path: '/tags/nginx',
             component: ComponentCreator('/tags/nginx', '65f'),
             exact: true
@@ -3061,11 +3066,6 @@ export default [
             exact: true
           },
           {
-            path: '/tags/object-storage',
-            component: ComponentCreator('/tags/object-storage', '098'),
-            exact: true
-          },
-          {
             path: '/tags/observability',
             component: ComponentCreator('/tags/observability', 'e51'),
             exact: true
@@ -3138,6 +3138,11 @@ export default [
           {
             path: '/tags/operating-systems',
             component: ComponentCreator('/tags/operating-systems', '8ee'),
+            exact: true
+          },
+          {
+            path: '/tags/operations',
+            component: ComponentCreator('/tags/operations', '7e5'),
             exact: true
           },
           {
@@ -3931,6 +3936,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/runbook',
+            component: ComponentCreator('/tags/runbook', '995'),
+            exact: true
+          },
+          {
             path: '/tags/s-3',
             component: ComponentCreator('/tags/s-3', 'bd5'),
             exact: true
@@ -4063,6 +4073,11 @@ export default [
           {
             path: '/tags/senior',
             component: ComponentCreator('/tags/senior', 'c31'),
+            exact: true
+          },
+          {
+            path: '/tags/senior-level',
+            component: ComponentCreator('/tags/senior-level', 'e71'),
             exact: true
           },
           {
@@ -4927,7 +4942,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '1a7'),
+            component: ComponentCreator('/', '4a9'),
             routes: [
               {
                 path: '/aws',
@@ -5590,7 +5605,7 @@ export default [
               },
               {
                 path: '/system-design',
-                component: ComponentCreator('/system-design', 'd17'),
+                component: ComponentCreator('/system-design', '8dc'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -7134,6 +7149,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/kafka/advanced/rebalance-storms',
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/rebalance-storms', 'cf1'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/kafka/advanced/schema-registry',
                 component: ComponentCreator('/technical-knowledge/kafka/advanced/schema-registry', 'd6e'),
                 exact: true,
@@ -7705,157 +7726,181 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/advanced-consensus-bft',
-                component: ComponentCreator('/technical-knowledge/system-design/advanced-consensus-bft', 'e2f'),
+                component: ComponentCreator('/technical-knowledge/system-design/advanced-consensus-bft', '39f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/api-design',
-                component: ComponentCreator('/technical-knowledge/system-design/api-design', '39a'),
+                component: ComponentCreator('/technical-knowledge/system-design/api-design', 'f89'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/architecture-fundamentals',
-                component: ComponentCreator('/technical-knowledge/system-design/architecture-fundamentals', '25d'),
+                component: ComponentCreator('/technical-knowledge/system-design/architecture-fundamentals', 'd35'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/bloom-filters',
-                component: ComponentCreator('/technical-knowledge/system-design/bloom-filters', 'b12'),
+                component: ComponentCreator('/technical-knowledge/system-design/bloom-filters', '804'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/caching-strategies',
-                component: ComponentCreator('/technical-knowledge/system-design/caching-strategies', '291'),
+                component: ComponentCreator('/technical-knowledge/system-design/caching-strategies', 'ae2'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/cap-theorem-system-design',
+                component: ComponentCreator('/technical-knowledge/system-design/cap-theorem-system-design', '074'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/capacity-planning',
-                component: ComponentCreator('/technical-knowledge/system-design/capacity-planning', '9b9'),
+                component: ComponentCreator('/technical-knowledge/system-design/capacity-planning', '153'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/common-interview-questions',
-                component: ComponentCreator('/technical-knowledge/system-design/common-interview-questions', 'cab'),
+                component: ComponentCreator('/technical-knowledge/system-design/common-interview-questions', '177'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/consistent-hashing-deep-dive',
+                component: ComponentCreator('/technical-knowledge/system-design/consistent-hashing-deep-dive', '42e'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/data-consistency',
-                component: ComponentCreator('/technical-knowledge/system-design/data-consistency', '06e'),
+                component: ComponentCreator('/technical-knowledge/system-design/data-consistency', 'c0f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/database-design',
-                component: ComponentCreator('/technical-knowledge/system-design/database-design', '560'),
+                component: ComponentCreator('/technical-knowledge/system-design/database-design', 'af7'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/database-indexing-deep-dive',
+                component: ComponentCreator('/technical-knowledge/system-design/database-indexing-deep-dive', 'a6d'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/distributed-locking',
-                component: ComponentCreator('/technical-knowledge/system-design/distributed-locking', '690'),
+                component: ComponentCreator('/technical-knowledge/system-design/distributed-locking', 'f69'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/distributed-systems',
-                component: ComponentCreator('/technical-knowledge/system-design/distributed-systems', 'c16'),
+                component: ComponentCreator('/technical-knowledge/system-design/distributed-systems', '468'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/domain-driven-design',
-                component: ComponentCreator('/technical-knowledge/system-design/domain-driven-design', '669'),
+                component: ComponentCreator('/technical-knowledge/system-design/domain-driven-design', '9e3'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/handling-contention',
-                component: ComponentCreator('/technical-knowledge/system-design/handling-contention', '531'),
+                component: ComponentCreator('/technical-knowledge/system-design/handling-contention', 'd01'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/interview-framework',
-                component: ComponentCreator('/technical-knowledge/system-design/interview-framework', '068'),
+                component: ComponentCreator('/technical-knowledge/system-design/interview-framework', '961'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/large-blobs',
-                component: ComponentCreator('/technical-knowledge/system-design/large-blobs', '574'),
+                component: ComponentCreator('/technical-knowledge/system-design/large-blobs', 'c72'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/load-balancing-reliability',
-                component: ComponentCreator('/technical-knowledge/system-design/load-balancing-reliability', '650'),
+                component: ComponentCreator('/technical-knowledge/system-design/load-balancing-reliability', 'a2d'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/long-running-tasks',
-                component: ComponentCreator('/technical-knowledge/system-design/long-running-tasks', '48e'),
+                component: ComponentCreator('/technical-knowledge/system-design/long-running-tasks', 'b43'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/message-queues',
-                component: ComponentCreator('/technical-knowledge/system-design/message-queues', 'e6f'),
+                component: ComponentCreator('/technical-knowledge/system-design/message-queues', 'b7c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/message-queues-detailed',
+                component: ComponentCreator('/technical-knowledge/system-design/message-queues-detailed', 'c96'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/microservices-patterns',
-                component: ComponentCreator('/technical-knowledge/system-design/microservices-patterns', 'c21'),
+                component: ComponentCreator('/technical-knowledge/system-design/microservices-patterns', '0dd'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/multi-step-process',
-                component: ComponentCreator('/technical-knowledge/system-design/multi-step-process', 'e00'),
+                component: ComponentCreator('/technical-knowledge/system-design/multi-step-process', 'afb'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/observability',
-                component: ComponentCreator('/technical-knowledge/system-design/observability', '45b'),
+                component: ComponentCreator('/technical-knowledge/system-design/observability', '316'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/real-time-updates',
-                component: ComponentCreator('/technical-knowledge/system-design/real-time-updates', '0aa'),
+                component: ComponentCreator('/technical-knowledge/system-design/real-time-updates', 'a9f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/scaling-reads',
-                component: ComponentCreator('/technical-knowledge/system-design/scaling-reads', '1e3'),
+                component: ComponentCreator('/technical-knowledge/system-design/scaling-reads', '6f3'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/scaling-writes',
-                component: ComponentCreator('/technical-knowledge/system-design/scaling-writes', '0c9'),
+                component: ComponentCreator('/technical-knowledge/system-design/scaling-writes', '3a6'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/search-systems',
-                component: ComponentCreator('/technical-knowledge/system-design/search-systems', 'a52'),
+                component: ComponentCreator('/technical-knowledge/system-design/search-systems', 'b96'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/security-patterns',
-                component: ComponentCreator('/technical-knowledge/system-design/security-patterns', '4ef'),
+                component: ComponentCreator('/technical-knowledge/system-design/security-patterns', 'b98'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

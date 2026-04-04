@@ -12,13 +12,13 @@
       "plugin": "138e0e15"
     }
   },
-  "/-a14": {
+  "/-185": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-6e0": {
+  "/-fc9": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -2394,6 +2394,10 @@
     "__comp": "df203c0f",
     "__props": "5590e364"
   },
+  "/tags/new-learner-414": {
+    "__comp": "df203c0f",
+    "__props": "6f000f77"
+  },
   "/tags/nginx-65f": {
     "__comp": "df203c0f",
     "__props": "8c5788ef"
@@ -2454,10 +2458,6 @@
     "__comp": "df203c0f",
     "__props": "5c1a7326"
   },
-  "/tags/object-storage-098": {
-    "__comp": "df203c0f",
-    "__props": "cea62862"
-  },
   "/tags/observability-e51": {
     "__comp": "df203c0f",
     "__props": "3c6dcb86"
@@ -2517,6 +2517,10 @@
   "/tags/operating-systems-8ee": {
     "__comp": "df203c0f",
     "__props": "7dcc51ff"
+  },
+  "/tags/operations-7e5": {
+    "__comp": "df203c0f",
+    "__props": "66a0872f"
   },
   "/tags/operators-77b": {
     "__comp": "df203c0f",
@@ -3150,6 +3154,10 @@
     "__comp": "df203c0f",
     "__props": "5006d98f"
   },
+  "/tags/runbook-995": {
+    "__comp": "df203c0f",
+    "__props": "f23a3535"
+  },
   "/tags/s-3-bd5": {
     "__comp": "df203c0f",
     "__props": "a6c1cd8d"
@@ -3257,6 +3265,10 @@
   "/tags/senior-c31": {
     "__comp": "df203c0f",
     "__props": "61a75b9e"
+  },
+  "/tags/senior-level-e71": {
+    "__comp": "df203c0f",
+    "__props": "6f30cf5c"
   },
   "/tags/sentinel-ed9": {
     "__comp": "df203c0f",
@@ -3946,7 +3958,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-1a7": {
+  "/-4a9": {
     "__comp": "a94703ab"
   },
   "/aws-aae": {
@@ -4389,9 +4401,9 @@
     "__comp": "17896441",
     "content": "8a8d0fdd"
   },
-  "/system-design-d17": {
+  "/system-design-8dc": {
     "__comp": "17896441",
-    "content": "0e70ec6c"
+    "content": "93124d3b"
   },
   "/technical-knowledge/aws/api-gateway/-ecf": {
     "__comp": "17896441",
@@ -5421,6 +5433,10 @@
     "__comp": "17896441",
     "content": "4dca4d8c"
   },
+  "/technical-knowledge/kafka/advanced/rebalance-storms-cf1": {
+    "__comp": "17896441",
+    "content": "4276a506"
+  },
   "/technical-knowledge/kafka/advanced/schema-registry-d6e": {
     "__comp": "17896441",
     "content": "b1dfa883"
@@ -5801,109 +5817,125 @@
     "__comp": "17896441",
     "content": "d9dc4b65"
   },
-  "/technical-knowledge/system-design/advanced-consensus-bft-e2f": {
+  "/technical-knowledge/system-design/advanced-consensus-bft-39f": {
     "__comp": "17896441",
-    "content": "bf45a9e5"
+    "content": "7bce8a09"
   },
-  "/technical-knowledge/system-design/api-design-39a": {
+  "/technical-knowledge/system-design/api-design-f89": {
     "__comp": "17896441",
-    "content": "a9ea2e2f"
+    "content": "0237d5d1"
   },
-  "/technical-knowledge/system-design/architecture-fundamentals-25d": {
+  "/technical-knowledge/system-design/architecture-fundamentals-d35": {
     "__comp": "17896441",
-    "content": "b5598800"
+    "content": "c0e5a9ef"
   },
-  "/technical-knowledge/system-design/bloom-filters-b12": {
+  "/technical-knowledge/system-design/bloom-filters-804": {
     "__comp": "17896441",
-    "content": "c07aa19d"
+    "content": "ce0d883d"
   },
-  "/technical-knowledge/system-design/caching-strategies-291": {
+  "/technical-knowledge/system-design/caching-strategies-ae2": {
     "__comp": "17896441",
-    "content": "db93d424"
+    "content": "724987fe"
   },
-  "/technical-knowledge/system-design/capacity-planning-9b9": {
+  "/technical-knowledge/system-design/cap-theorem-system-design-074": {
     "__comp": "17896441",
-    "content": "29b4f8eb"
+    "content": "75fc6f05"
   },
-  "/technical-knowledge/system-design/common-interview-questions-cab": {
+  "/technical-knowledge/system-design/capacity-planning-153": {
     "__comp": "17896441",
-    "content": "a3ac7a0e"
+    "content": "57eb6c90"
   },
-  "/technical-knowledge/system-design/data-consistency-06e": {
+  "/technical-knowledge/system-design/common-interview-questions-177": {
     "__comp": "17896441",
-    "content": "2d347e1f"
+    "content": "6efb14ae"
   },
-  "/technical-knowledge/system-design/database-design-560": {
+  "/technical-knowledge/system-design/consistent-hashing-deep-dive-42e": {
     "__comp": "17896441",
-    "content": "59ac3933"
+    "content": "65c13a58"
   },
-  "/technical-knowledge/system-design/distributed-locking-690": {
+  "/technical-knowledge/system-design/data-consistency-c0f": {
     "__comp": "17896441",
-    "content": "dd3dba06"
+    "content": "0098328c"
   },
-  "/technical-knowledge/system-design/distributed-systems-c16": {
+  "/technical-knowledge/system-design/database-design-af7": {
     "__comp": "17896441",
-    "content": "826527e2"
+    "content": "9fe414ef"
   },
-  "/technical-knowledge/system-design/domain-driven-design-669": {
+  "/technical-knowledge/system-design/database-indexing-deep-dive-a6d": {
     "__comp": "17896441",
-    "content": "18786f2a"
+    "content": "d628e604"
   },
-  "/technical-knowledge/system-design/handling-contention-531": {
+  "/technical-knowledge/system-design/distributed-locking-f69": {
     "__comp": "17896441",
-    "content": "57e4ec2f"
+    "content": "33fd115f"
   },
-  "/technical-knowledge/system-design/interview-framework-068": {
+  "/technical-knowledge/system-design/distributed-systems-468": {
     "__comp": "17896441",
-    "content": "6a4316ad"
+    "content": "b21b4701"
   },
-  "/technical-knowledge/system-design/large-blobs-574": {
+  "/technical-knowledge/system-design/domain-driven-design-9e3": {
     "__comp": "17896441",
-    "content": "c9693a87"
+    "content": "a12e521a"
   },
-  "/technical-knowledge/system-design/load-balancing-reliability-650": {
+  "/technical-knowledge/system-design/handling-contention-d01": {
     "__comp": "17896441",
-    "content": "9ab6bad6"
+    "content": "89400898"
   },
-  "/technical-knowledge/system-design/long-running-tasks-48e": {
+  "/technical-knowledge/system-design/interview-framework-961": {
     "__comp": "17896441",
-    "content": "286d4467"
+    "content": "fb6e70f5"
   },
-  "/technical-knowledge/system-design/message-queues-e6f": {
+  "/technical-knowledge/system-design/large-blobs-c72": {
     "__comp": "17896441",
-    "content": "a9a3cf64"
+    "content": "5c3590ca"
   },
-  "/technical-knowledge/system-design/microservices-patterns-c21": {
+  "/technical-knowledge/system-design/load-balancing-reliability-a2d": {
     "__comp": "17896441",
-    "content": "c57384c5"
+    "content": "b14a4730"
   },
-  "/technical-knowledge/system-design/multi-step-process-e00": {
+  "/technical-knowledge/system-design/long-running-tasks-b43": {
     "__comp": "17896441",
-    "content": "3ebc575a"
+    "content": "010e7447"
   },
-  "/technical-knowledge/system-design/observability-45b": {
+  "/technical-knowledge/system-design/message-queues-b7c": {
     "__comp": "17896441",
-    "content": "6ddbb8c8"
+    "content": "3940c236"
   },
-  "/technical-knowledge/system-design/real-time-updates-0aa": {
+  "/technical-knowledge/system-design/message-queues-detailed-c96": {
     "__comp": "17896441",
-    "content": "a223bed0"
+    "content": "2fd6c3bc"
   },
-  "/technical-knowledge/system-design/scaling-reads-1e3": {
+  "/technical-knowledge/system-design/microservices-patterns-0dd": {
     "__comp": "17896441",
-    "content": "2121a34a"
+    "content": "a912936e"
   },
-  "/technical-knowledge/system-design/scaling-writes-0c9": {
+  "/technical-knowledge/system-design/multi-step-process-afb": {
     "__comp": "17896441",
-    "content": "64ded082"
+    "content": "e47e154f"
   },
-  "/technical-knowledge/system-design/search-systems-a52": {
+  "/technical-knowledge/system-design/observability-316": {
     "__comp": "17896441",
-    "content": "20aa40e3"
+    "content": "f58357ef"
   },
-  "/technical-knowledge/system-design/security-patterns-4ef": {
+  "/technical-knowledge/system-design/real-time-updates-a9f": {
     "__comp": "17896441",
-    "content": "3e2e0c31"
+    "content": "ec5f7116"
+  },
+  "/technical-knowledge/system-design/scaling-reads-6f3": {
+    "__comp": "17896441",
+    "content": "382009e9"
+  },
+  "/technical-knowledge/system-design/scaling-writes-3a6": {
+    "__comp": "17896441",
+    "content": "91aa5927"
+  },
+  "/technical-knowledge/system-design/search-systems-b96": {
+    "__comp": "17896441",
+    "content": "d0e1a196"
+  },
+  "/technical-knowledge/system-design/security-patterns-b98": {
+    "__comp": "17896441",
+    "content": "e8a6b3e1"
   },
   "/technical-knowledge/test/spring-test-annotations-27d": {
     "__comp": "17896441",

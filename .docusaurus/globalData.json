@@ -1842,6 +1842,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/kafka/advanced/rebalance-storms",
+              "path": "/technical-knowledge/kafka/advanced/rebalance-storms",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/kafka/advanced/schema-registry",
               "path": "/technical-knowledge/kafka/advanced/schema-registry",
               "sidebar": "tutorialSidebar"
@@ -2347,6 +2352,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/cap-theorem-system-design",
+              "path": "/technical-knowledge/system-design/cap-theorem-system-design",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/capacity-planning",
               "path": "/technical-knowledge/system-design/capacity-planning",
               "sidebar": "tutorialSidebar"
@@ -2357,6 +2367,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/consistent-hashing-deep-dive",
+              "path": "/technical-knowledge/system-design/consistent-hashing-deep-dive",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/data-consistency",
               "path": "/technical-knowledge/system-design/data-consistency",
               "sidebar": "tutorialSidebar"
@@ -2364,6 +2379,11 @@
             {
               "id": "technical-knowledge/system-design/database-design",
               "path": "/technical-knowledge/system-design/database-design",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/database-indexing-deep-dive",
+              "path": "/technical-knowledge/system-design/database-indexing-deep-dive",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -2414,6 +2434,11 @@
             {
               "id": "technical-knowledge/system-design/message-queues",
               "path": "/technical-knowledge/system-design/message-queues",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/message-queues-detailed",
+              "path": "/technical-knowledge/system-design/message-queues-detailed",
               "sidebar": "tutorialSidebar"
             },
             {
