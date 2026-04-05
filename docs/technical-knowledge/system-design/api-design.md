@@ -132,13 +132,39 @@ An API is idempotent if making the same request multiple times produces the same
 
 ## Rate Limiting
 
+Rate limiting protects your API from abuse, DDoS attacks, and noisy neighbors by restricting the number of requests a client can make within a specific timeframe. 
+
 ### Algorithms
-| Algorithm      | Behavior                       | Use Case                                 |
-| -------------- | ------------------------------ | ---------------------------------------- |
-| Token Bucket   | Allows burst up to bucket size | APIs with burst tolerance                |
-| Leaky Bucket   | Smooth output rate             | Strict rate enforcement                  |
-| Fixed Window   | Count per time window          | Simple, risk of burst at window boundary |
-| Sliding Window | Rolling count                  | More accurate, slightly complex          |
+
+**1. Token Bucket**
+* **How it works:** Imagine a bucket that holds a maximum number of tokens. Tokens are added to the bucket at a constant rate. Every incoming request consumes one token. If the bucket is empty, the request is dropped (HTTP 429).
+* **Pros:** Highly memory efficient. It natively allows for sudden traffic bursts (up to the bucket's capacity).
+* **Cons:** Tuning the bucket size and refill rate to optimal levels can be challenging.
+* **Use Case:** Consumer APIs where users might send a quick burst of requests but maintain a lower average rate over time (e.g., Amazon API Gateway, Stripe).
+
+**2. Leaky Bucket**
+* **How it works:** Requests enter a queue (the bucket). The server processes (leaks) requests from the queue at a strict, constant rate. If incoming requests fill the queue to its maximum capacity, new requests are dropped.
+* **Pros:** Smooths out traffic completely, ensuring a stable, predictable load on your servers regardless of input volatility.
+* **Cons:** Sudden traffic spikes can fill up the queue with older requests, causing newer, potentially more important requests to be dropped.
+* **Use Case:** Systems that require strict traffic shaping and absolute protection against sudden spikes (e.g., asynchronous task processing, Shopify).
+
+**3. Fixed Window Counter**
+* **How it works:** Time is divided into fixed, discrete windows (e.g., 12:00:00 to 12:01:00). A counter increments for each request within that window. If the counter hits the limit, requests are dropped until the next window begins.
+* **Pros:** Very simple to implement and highly memory efficient.
+* **Cons:** The "Edge Case Spike." If a client sends a burst of requests at the very end of one window and another burst at the very beginning of the next, they can effectively double their allowed rate limit within a very short timeframe.
+* **Use Case:** Simple, low-stakes internal tooling or systems where strict accuracy isn't critical.
+
+**4. Sliding Window Log**
+* **How it works:** Instead of a counter, the system keeps a log of exact timestamps for every single request. When a new request arrives, the system removes timestamps older than the rolling time window and checks if the remaining log size exceeds the limit.
+* **Pros:** Highly accurate. Completely solves the edge-case burst problem of the Fixed Window approach.
+* **Cons:** Extremely memory-intensive and computationally expensive, as it must store and process every request timestamp, even for dropped requests.
+* **Use Case:** High-tier rate limiting where strict accuracy is paramount, though rarely used in high-volume production due to the overhead.
+
+**5. Sliding Window Counter**
+* **How it works:** A hybrid of the Fixed Window and Sliding Window Log. It tracks request counters for fixed windows but estimates the current rolling window's count by calculating a weighted average. This is done based on the previous fixed window's count and the overlap percentage of the current rolling window.
+* **Pros:** Memory efficient (only stores a few counters per user) while effectively smoothing out the boundary spikes of the fixed window approach.
+* **Cons:** Slightly less perfectly precise than the log approach (it assumes an even distribution of requests within the previous window).
+* **Use Case:** The industry standard for high-performance APIs (e.g., Cloudflare, Redis-based rate limiters).
 
 ---
 
@@ -159,3 +185,8 @@ An API is idempotent if making the same request multiple times produces the same
 13. How do you document your API for internal and external developers? What tools do you use (e.g., OpenAPI/Swagger)?
 14. How do you handle backward compatibility when evolving your API?
 15. What are some strategies for testing your API endpoints (unit tests, integration tests, contract tests)?
+16. How do you monitor and log API usage and errors in production?
+17. How do you handle CORS (Cross-Origin Resource Sharing) in your API design?
+18. What are some best practices for designing RESTful APIs?
+19. How do you ensure your API is scalable and can handle high traffic?
+20. How do you handle authentication and authorization in your API design?
