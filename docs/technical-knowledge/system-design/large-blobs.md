@@ -261,12 +261,38 @@ PATCH  /files/{id}?offset=N      → Upload bytes N to M (resume)
 
 ## System Design Interview Questions to Master
 
-1. Why shouldn't you store large files in a relational database? Explain the impact on memory pages and replication.
-2. How do presigned URLs work, and what security considerations apply?
-3. Explain chunked/multipart upload. What are its specific benefits for large files on mobile networks?
-4. How would you design an image upload and delivery system for 10M uploads/day?
-5. How does a CDN work, and what headers determine the cache hit rate?
-6. How do you handle file deduplication at scale to save storage costs?
-7. How do you efficiently stream a 10 GB file from S3 to a client without loading it all into your backend server's RAM?
-8. What are the trade-offs between synchronous and asynchronous image processing pipelines?
-9. How would you implement resumable uploads for a mobile app with spotty connectivity?
+### Q: Why shouldn't you store large files in a relational database? Explain the impact on memory pages and replication.
+
+**A:** Large blobs bloat table pages, degrade cache efficiency, and slow backups/replication log shipping. Keep metadata in relational DB and store file bytes in object storage.
+
+### Q: How do presigned URLs work, and what security considerations apply?
+
+**A:** Server signs a short-lived URL granting scoped object access without exposing permanent credentials. Restrict method/path/content-type, set tight expiry, and audit usage.
+
+### Q: Explain chunked/multipart upload. What are its specific benefits for large files on mobile networks?
+
+**A:** Multipart upload splits a file into independently retriable parts that are committed at the end. On unstable mobile links, only failed chunks retry, reducing wasted bandwidth/time.
+
+### Q: How would you design an image upload and delivery system for 10M uploads/day?
+
+**A:** Use presigned direct uploads to object storage, queue async processing for thumbnails/virus scan, and serve via CDN. Store metadata/status in DB and make processing idempotent.
+
+### Q: How does a CDN work, and what headers determine the cache hit rate?
+
+**A:** CDN caches origin content at edge PoPs and serves nearby users on cache hits. `Cache-Control`, `ETag`, `Last-Modified`, `Vary`, and URL cache key strategy drive hit ratio.
+
+### Q: How do you handle file deduplication at scale to save storage costs?
+
+**A:** Compute strong content hashes and map identical payloads to one stored object with reference counting. Use chunk-level dedupe for very large or partially similar files.
+
+### Q: How do you efficiently stream a 10 GB file from S3 to a client without loading it all into your backend server's RAM?
+
+**A:** Prefer direct signed URL download from client to S3/CDN. If proxying is required, stream in chunks with range support and backpressure rather than buffering whole files.
+
+### Q: What are the trade-offs between synchronous and asynchronous image processing pipelines?
+
+**A:** Synchronous processing gives immediate availability but higher upload latency and tighter timeout risk. Asynchronous processing improves throughput and resiliency but requires status tracking and eventual consistency.
+
+### Q: How would you implement resumable uploads for a mobile app with spotty connectivity?
+
+**A:** Use multipart upload sessions with persisted upload IDs and per-part checkpoints on client. Resume from missing parts after reconnect and finalize with integrity checks.

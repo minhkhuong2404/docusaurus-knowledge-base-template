@@ -257,11 +257,35 @@ cache.set(key, value, ttl);
 
 ## Interview Questions
 
-1. What is the difference between optimistic and pessimistic locking? When do you use each?
-2. How does MVCC work and why is it preferred over traditional locking?
-3. What is a distributed lock and what are its limitations?
-4. How do you prevent deadlocks in a system with multiple shared resources?
-5. What is the thundering herd problem and how do you prevent it?
-6. How would you design a ticket booking system to prevent overselling?
-7. What are fencing tokens and why are they needed even with distributed locks?
-8. How do you handle hot partitions in Kafka?
+### Q: What is the difference between optimistic and pessimistic locking? When do you use each?
+
+**A:** Optimistic locking detects conflicts at commit (version check) and works best when contention is low. Pessimistic locking blocks early (`SELECT ... FOR UPDATE`) and is better for high-conflict, short critical sections.
+
+### Q: How does MVCC work and why is it preferred over traditional locking?
+
+**A:** MVCC keeps multiple row versions so readers see a consistent snapshot without blocking writers. It improves read concurrency and reduces lock contention in mixed workloads.
+
+### Q: What is a distributed lock and what are its limitations?
+
+**A:** A distributed lock coordinates ownership across nodes using a shared coordinator like etcd/ZooKeeper/Redis. It can still fail under partitions, pauses, or lease expiry, so it is not a substitute for idempotency and fencing.
+
+### Q: How do you prevent deadlocks in a system with multiple shared resources?
+
+**A:** Acquire resources in a global order, keep transactions short, and set lock timeouts with retry/backoff. Also monitor wait graphs to detect and remediate recurring cycles.
+
+### Q: What is the thundering herd problem and how do you prevent it?
+
+**A:** Many clients wake and hit the same dependency at once, causing overload. Use jittered retries, request coalescing/single-flight, and staggered cache expiry.
+
+### Q: How would you design a ticket booking system to prevent overselling?
+
+**A:** Use atomic inventory decrement with a guard (`remaining > 0`) in one transaction and idempotent reservation IDs. Optionally serialize by seat/event partition and expire unpaid holds.
+
+### Q: What are fencing tokens and why are they needed even with distributed locks?
+
+**A:** Fencing tokens are monotonic numbers attached to lock holders and validated by storage. They prevent stale owners (for example after GC pause) from writing after lease loss.
+
+### Q: How do you handle hot partitions in Kafka?
+
+**A:** Improve key distribution (salting/composite keys), increase partition count where feasible, and move heavy keys to dedicated topics/flows. Apply producer-side batching/compression and consumer parallelism.
+

@@ -177,8 +177,31 @@ The interviewer will guide this. Common deep dives:
 
 ## Interview Questions
 
-1. How would you approach designing a system you've never built before?
-2. If an interviewer asks you to "design Twitter," what are the first 5 questions you ask?
-3. How do you decide whether to use SQL or NoSQL for a new system?
-4. How do you handle the trade-off between consistency and availability in your design?
-5. Walk me through how you'd estimate QPS for a feature that 1% of 100M users will use daily.
+### Q: How would you approach designing a system you've never built before?
+
+**A:** I follow a repeatable flow: clarify requirements, define scope, estimate traffic/storage, propose a simple high-level architecture, then drill into bottlenecks and trade-offs. I make assumptions explicit and validate them with the interviewer before going deeper.
+
+### Q: If an interviewer asks you to "design Twitter," what are the first 5 questions you ask?
+
+**A:**
+1. What exact features are in scope (posting, timeline, follow graph, search, notifications)?
+2. What scale should we design for (DAU, QPS, peak factor, geo distribution)?
+3. What read/write ratio do we expect?
+4. What are latency and availability targets?
+5. Are there consistency requirements (e.g., timeline freshness, exactly-once delivery) and cost constraints?
+
+### Q: How do you decide whether to use SQL or NoSQL for a new system?
+
+**A:** I choose based on data shape and access patterns. SQL is preferred for relational data, strong consistency, and complex joins/transactions. NoSQL is preferred for horizontal scale, flexible schema, and high-throughput key-value/document access. Many real systems use both, each for the part it fits best.
+
+### Q: How do you handle the trade-off between consistency and availability in your design?
+
+**A:** I classify operations by business criticality. Critical paths (payments, account balance) favor stronger consistency. User-experience paths (feeds, counters, analytics) can accept eventual consistency for higher availability and lower latency. I define failure behavior up front: what can degrade, what must block, and why.
+
+### Q: Walk me through how you'd estimate QPS for a feature that 1% of 100M users will use daily.
+
+**A:**
+1. Daily active users for feature: $100{,}000{,}000 \times 1\% = 1{,}000{,}000$.
+2. Average QPS across a day: $1{,}000{,}000 / 86{,}400 \approx 11.6$ QPS.
+3. Apply peak factor (for example 10x): peak QPS is about $116$.
+4. Add safety margin (for example 2x) for bursts and retries: design target about $200$-$250$ QPS.

@@ -382,13 +382,43 @@ spring:
 
 ## Interview Questions
 
-1. What is an API Gateway? What responsibilities should it have?
-2. Explain the Circuit Breaker pattern. What are its states?
-3. How does service discovery work in a microservices environment?
-4. What is a service mesh and what problems does it solve?
-5. How would you migrate a monolith to microservices?
-6. What is the Bulkhead pattern and how does it prevent cascading failures?
-7. How do you handle data consistency when each microservice has its own database?
-8. What is the difference between orchestration and choreography in microservices?
-9. How do you implement distributed tracing in a Spring Boot microservices system?
-10. What are the signs that you should NOT be using microservices?
+### Q: What is an API Gateway? What responsibilities should it have?
+
+**A:** An API gateway is the entry point that centralizes cross-cutting concerns for external traffic. It should handle routing, auth, rate limiting, request shaping, and observability, not domain business logic.
+
+### Q: Explain the Circuit Breaker pattern. What are its states?
+
+**A:** Circuit breaker stops calling unhealthy dependencies after failures exceed a threshold. States are closed (normal), open (fail fast), and half-open (probe recovery).
+
+### Q: How does service discovery work in a microservices environment?
+
+**A:** Instances register their endpoints in a registry or are discovered via platform DNS. Clients or sidecars resolve healthy endpoints dynamically to avoid hardcoded addresses.
+
+### Q: What is a service mesh and what problems does it solve?
+
+**A:** A service mesh moves retries, mTLS, traffic policy, and telemetry to sidecars/control plane. It standardizes service-to-service networking without rewriting each app.
+
+### Q: How would you migrate a monolith to microservices?
+
+**A:** Start with domain boundaries, extract one vertical slice, and route traffic gradually using strangler pattern. Keep contracts explicit and use observability + rollback at every cutover.
+
+### Q: What is the Bulkhead pattern and how does it prevent cascading failures?
+
+**A:** Bulkheads isolate resources like thread pools/queues per dependency. A failing downstream then consumes only its partition and cannot starve unrelated traffic.
+
+### Q: How do you handle data consistency when each microservice has its own database?
+
+**A:** Prefer local ACID per service and coordinate cross-service workflows with saga/outbox patterns. Accept eventual consistency and design idempotent handlers plus compensation.
+
+### Q: What is the difference between orchestration and choreography in microservices?
+
+**A:** Orchestration uses a central coordinator to direct steps; choreography relies on event reactions among services. Orchestration improves flow visibility, while choreography reduces central coupling.
+
+### Q: How do you implement distributed tracing in a Spring Boot microservices system?
+
+**A:** Propagate W3C trace context across HTTP/Kafka and instrument via OpenTelemetry auto/manual spans. Export to Jaeger/Tempo/Zipkin and correlate with logs/metrics.
+
+### Q: What are the signs that you should NOT be using microservices?
+
+**A:** Small team, unstable domain boundaries, and low scale usually favor a modular monolith. If ops overhead dominates feature delivery, microservices are premature.
+

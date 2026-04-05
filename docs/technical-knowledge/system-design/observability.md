@@ -360,13 +360,43 @@ Every alert should have a runbook:
 
 ## Interview Questions
 
-1. What are the three pillars of observability? How do they differ?
-2. What are the four golden signals? Why those four?
-3. What is the difference between SLI, SLO, and SLA?
-4. What is an error budget and how should it affect engineering decisions?
-5. How do you implement distributed tracing in a Spring Boot microservices system?
-6. What's the difference between liveness and readiness probes in Kubernetes?
-7. How do you prevent alert fatigue?
-8. What should you log? What should you not log?
-9. What is structured logging and why is it better than plain text logs?
-10. How would you debug a latency issue that only affects the p99 of requests?
+### Q: What are the three pillars of observability? How do they differ?
+
+**A:** Metrics show aggregate trends, logs capture discrete events, and traces connect request paths across services. Together they answer what is failing, where, and why.
+
+### Q: What are the four golden signals? Why those four?
+
+**A:** Latency, traffic, errors, and saturation. They cover user experience, load, correctness, and capacity pressure, which are the main failure dimensions.
+
+### Q: What is the difference between SLI, SLO, and SLA?
+
+**A:** SLI is a measured reliability metric, SLO is the internal target for that metric, and SLA is the external contractual commitment. Breaching SLA has business/legal consequences.
+
+### Q: What is an error budget and how should it affect engineering decisions?
+
+**A:** Error budget is allowable unreliability under the SLO. When budget burns fast, prioritize reliability work and slow risky feature releases.
+
+### Q: How do you implement distributed tracing in a Spring Boot microservices system?
+
+**A:** Use OpenTelemetry instrumentation, propagate `traceparent` across sync and async calls, and export spans to a tracing backend. Add key span attributes (endpoint, tenant, DB call) for diagnosis.
+
+### Q: What's the difference between liveness and readiness probes in Kubernetes?
+
+**A:** Liveness decides when to restart a stuck container; readiness decides whether it should receive traffic. A pod can be alive but temporarily not ready.
+
+### Q: How do you prevent alert fatigue?
+
+**A:** Alert on actionable symptoms tied to SLO impact, deduplicate noisy signals, and tune thresholds with burn-rate policies. Route ownership clearly and retire stale alerts.
+
+### Q: What should you log? What should you not log?
+
+**A:** Log state transitions, failures, and contextual identifiers needed for triage. Do not log secrets, raw PII, or high-cardinality noise with little diagnostic value.
+
+### Q: What is structured logging and why is it better than plain text logs?
+
+**A:** Structured logs store fields as key-value JSON for reliable querying and correlation. They improve aggregation, filtering, and automated analysis compared to free text parsing.
+
+### Q: How would you debug a latency issue that only affects the p99 of requests?
+
+**A:** Slice by endpoint, tenant, region, and dependency to isolate outliers, then inspect traces for long-tail hops. Typical causes are lock contention, queue buildup, GC pauses, and retries.
+

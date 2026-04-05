@@ -150,9 +150,27 @@ For Spring Boot service at ~10,000 RPS per instance:
 
 ## Interview Questions
 
-1. Estimate the QPS and storage for a Twitter-like service with 300M DAU.
-2. You need to store 1M images per day. How much storage do you need in 5 years?
-3. A feature requires reading 1 KB per request at 50,000 RPS. What's the bandwidth? Can a single server handle it?
-4. How would you estimate the number of servers needed for a new service?
-5. What's the working set size of a database and why does it matter for memory planning?
-6. How do you estimate cache hit rate and what affects it?
+### Q: Estimate the QPS and storage for a Twitter-like service with 300M DAU.
+
+**A:** Start with actions per user per day, convert to average and peak QPS (for example peak factor $5$-$10$x), then apply read/write split. For storage, multiply daily write volume by retention and replication/compression factors.
+
+### Q: You need to store 1M images per day. How much storage do you need in 5 years?
+
+**A:** Compute $1{,}000{,}000 \times 365 \times 5 \times$ average image size, then add replicas/erasure overhead and metadata/index space. Include growth buffer for derivative sizes (thumbnails/transcodes).
+
+### Q: A feature requires reading 1 KB per request at 50,000 RPS. What's the bandwidth? Can a single server handle it?
+
+**A:** Raw egress is about $50{,}000 \times 1\text{ KB} \approx 50\text{ MB/s}$ before protocol overhead. A single server might handle it on modern NICs, but headroom, TLS, and tail latency usually require horizontal scaling.
+
+### Q: How would you estimate the number of servers needed for a new service?
+
+**A:** Derive peak QPS and per-request CPU/memory/IO cost from benchmarks, then calculate instances at target utilization (for example 60%-70%). Add redundancy for failures, maintenance, and regional capacity.
+
+### Q: What's the working set size of a database and why does it matter for memory planning?
+
+**A:** Working set is the hot subset accessed frequently enough to justify memory residency. If it fits in RAM, latency is stable; if not, random disk I/O and cache churn increase p99.
+
+### Q: How do you estimate cache hit rate and what affects it?
+
+**A:** Use access distribution (often Zipf-like), TTL, and cache size relative to hot keys to model hit rate. Key cardinality growth, invalidation frequency, and burstiness strongly affect real outcomes.
+

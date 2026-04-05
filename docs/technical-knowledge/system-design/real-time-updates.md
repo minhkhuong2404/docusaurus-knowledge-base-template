@@ -242,11 +242,35 @@ Heartbeat:   Client pings every 30s to refresh TTL
 
 ## Interview Questions
 
-1. What's the difference between WebSocket and SSE? When would you choose each?
-2. How do you scale a WebSocket-based chat app to 1 million concurrent connections?
-3. What is the "sticky session" problem and how do you solve it?
-4. How would you implement a real-time notification system for 10M users?
-5. How does long polling differ from short polling, and when is it preferable?
-6. How do you build a presence system (online/offline indicators)?
-7. How do you handle reconnection and message recovery in a WebSocket system?
-8. What's the challenge of delivering ordered messages in a real-time system?
+### Q: What's the difference between WebSocket and SSE? When would you choose each?
+
+**A:** WebSocket is full-duplex and better for interactive bidirectional flows like chat. SSE is server-to-client only, simpler over HTTP, and ideal for one-way live feeds.
+
+### Q: How do you scale a WebSocket-based chat app to 1 million concurrent connections?
+
+**A:** Use many stateless gateway nodes, shard connection state by user/channel, and fan out via pub/sub backplane. Tune kernel/socket limits and place gateways close to users.
+
+### Q: What is the "sticky session" problem and how do you solve it?
+
+**A:** Sticky sessions couple a client to one node, hurting rebalancing and failure recovery. Externalize session/presence state to Redis or a broker so any node can serve reconnections.
+
+### Q: How would you implement a real-time notification system for 10M users?
+
+**A:** Ingest events into a queue, apply preference/routing rules, then push via WebSocket/SSE/mobile push channels. Store durable notification state for retries and offline delivery.
+
+### Q: How does long polling differ from short polling, and when is it preferable?
+
+**A:** Short polling asks at fixed intervals; long polling holds the request until update or timeout, reducing empty responses. Prefer long polling when WebSockets are unavailable but near-real-time is needed.
+
+### Q: How do you build a presence system (online/offline indicators)?
+
+**A:** Track heartbeats with TTL in an in-memory store and derive online status from recent activity windows. Broadcast presence changes through a lightweight pub/sub channel.
+
+### Q: How do you handle reconnection and message recovery in a WebSocket system?
+
+**A:** Issue sequence IDs and client ack checkpoints so reconnecting clients request missed messages from a retention store. Use exponential backoff and session resume tokens.
+
+### Q: What's the challenge of delivering ordered messages in a real-time system?
+
+**A:** Parallel consumers and network retries cause reordering across partitions and regions. Preserve order per key/room with partition affinity and sequence-based reassembly.
+

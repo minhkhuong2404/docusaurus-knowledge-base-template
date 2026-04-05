@@ -275,13 +275,43 @@ Done: [pod1v2, pod2v2, pod3v2, pod4v2]
 
 ## Interview Questions
 
-1. What load balancing algorithm would you use for WebSocket connections? Why?
-2. What is the difference between L4 and L7 load balancing?
-3. What is the difference between liveness and readiness probes in Kubernetes?
-4. What is blue-green deployment and how does it enable zero-downtime releases?
-5. What is canary deployment? How do you decide when to proceed vs rollback?
-6. What is chaos engineering and why is it important?
-7. What is RPO and RTO? How do you design a system to meet given targets?
-8. How do you implement graceful degradation in a microservices system?
-9. What is the difference between active-passive and active-active failover?
-10. How do you design a multi-region system that remains consistent during a regional outage?
+### Q: What load balancing algorithm would you use for WebSocket connections? Why?
+
+**A:** Use least-connections (or weighted least-connections) because WebSockets are long-lived and uneven. It balances concurrent connection load better than round-robin.
+
+### Q: What is the difference between L4 and L7 load balancing?
+
+**A:** L4 routes by IP/port and is fast/protocol-agnostic; L7 routes by HTTP attributes like path, host, or headers. L7 enables smarter routing and policy but adds more processing overhead.
+
+### Q: What is the difference between liveness and readiness probes in Kubernetes?
+
+**A:** Liveness checks if container should be restarted; readiness checks if it can serve traffic now. Readiness protects rollout and dependency warm-up phases.
+
+### Q: What is blue-green deployment and how does it enable zero-downtime releases?
+
+**A:** Run old and new stacks in parallel, then switch traffic atomically to the new stack. Rollback is fast by flipping traffic back to the old environment.
+
+### Q: What is canary deployment? How do you decide when to proceed vs rollback?
+
+**A:** Canary sends a small traffic slice to new version first and expands gradually. Advance only if error/latency/business KPIs stay within guardrails; otherwise auto-rollback.
+
+### Q: What is chaos engineering and why is it important?
+
+**A:** Chaos engineering injects controlled faults to validate resilience assumptions in production-like conditions. It exposes hidden coupling before real incidents do.
+
+### Q: What is RPO and RTO? How do you design a system to meet given targets?
+
+**A:** RPO is acceptable data loss window; RTO is acceptable recovery time. Meet targets with replication frequency, backup strategy, failover automation, and regular disaster drills.
+
+### Q: How do you implement graceful degradation in a microservices system?
+
+**A:** Prioritize core paths and shed optional features during overload/failure. Use timeouts, fallbacks, cached defaults, and feature flags to keep essential functionality alive.
+
+### Q: What is the difference between active-passive and active-active failover?
+
+**A:** Active-passive keeps standby idle until failover, simplifying consistency but increasing failover delay. Active-active serves traffic in multiple sites continuously, improving availability but complicating conflict handling.
+
+### Q: How do you design a multi-region system that remains consistent during a regional outage?
+
+**A:** Classify data by consistency need: strongly consistent writes via quorum/primary strategy, and eventually consistent data via async replication. Automate failover with clear write-routing and reconciliation plans.
+

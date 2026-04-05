@@ -343,13 +343,43 @@ public void projectOrderEvent(OrderEvent event) {
 
 ## Interview Questions
 
-1. What is the difference between Kafka and RabbitMQ? When would you choose each?
-2. How does Kafka guarantee ordering of messages?
-3. What is a consumer group in Kafka and how does it enable parallelism?
-4. What is the difference between at-most-once, at-least-once, and exactly-once delivery?
-5. How do you implement an idempotent consumer?
-6. What happens during a Kafka consumer group rebalance?
-7. How would you design a fan-out system where one event needs to trigger 5 different services?
-8. What is the transactional outbox pattern and why is it needed with Kafka?
-9. How do you handle poison pill messages (messages that always fail)?
-10. How does Kafka's retention and replay capability enable event sourcing?
+### Q: What is the difference between Kafka and RabbitMQ? When would you choose each?
+
+**A:** Kafka is a distributed log optimized for high-throughput replayable streams; RabbitMQ is a broker optimized for flexible routing and work queues. Choose Kafka for event streaming/analytics and RabbitMQ for low-latency task dispatch patterns.
+
+### Q: How does Kafka guarantee ordering of messages?
+
+**A:** Kafka preserves order only within a partition. To keep order for an entity, route all related events with the same key to one partition.
+
+### Q: What is a consumer group in Kafka and how does it enable parallelism?
+
+**A:** A consumer group shares a topic where each partition is assigned to one consumer instance in that group. This enables horizontal parallelism up to partition count.
+
+### Q: What is the difference between at-most-once, at-least-once, and exactly-once delivery?
+
+**A:** At-most-once can lose messages, at-least-once can duplicate, and exactly-once avoids duplicates within defined boundaries. In practice, most systems combine at-least-once with idempotent processing.
+
+### Q: How do you implement an idempotent consumer?
+
+**A:** Use a deterministic message ID and record processed IDs in durable storage with uniqueness constraints. If the ID already exists, skip side effects and ack safely.
+
+### Q: What happens during a Kafka consumer group rebalance?
+
+**A:** Partition ownership is revoked and reassigned when members join/leave or topic partitions change. Consumers pause processing briefly, so cooperative rebalancing and static membership reduce disruption.
+
+### Q: How would you design a fan-out system where one event needs to trigger 5 different services?
+
+**A:** Publish one domain event to a topic and let each service consume independently with its own group. Use schema versioning and DLQs per consumer for isolated failure handling.
+
+### Q: What is the transactional outbox pattern and why is it needed with Kafka?
+
+**A:** Outbox writes domain change and event record in one DB transaction, then a relay publishes events to Kafka. It prevents dual-write inconsistencies between DB commit and broker publish.
+
+### Q: How do you handle poison pill messages (messages that always fail)?
+
+**A:** Retry with bounded attempts/backoff, then move to DLQ including failure context. Provide replay tooling after code/data fixes.
+
+### Q: How does Kafka's retention and replay capability enable event sourcing?
+
+**A:** Retained immutable events can be replayed to rebuild projections or recover consumers. This supports auditability and reprocessing after schema/logic changes.
+

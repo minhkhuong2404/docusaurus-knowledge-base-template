@@ -387,17 +387,21 @@ public class ScalableBloomFilter<T> {
 
 ## Interview Questions (Senior Level)
 
-1. **Design a cache that prevents cache penetration (queries for non-existent keys inflating DB load).**
-   - Answer: Use Bloom filter for deleted IDs. Query filter before DB. Trade 1% false positive rate (recheck DB) for 99% cache misses avoided. Time: O(k) hash + 1 DB query. Space: log(n) bits per deleted key.
+### Q: Design a cache that prevents cache penetration (queries for non-existent keys inflating DB load).
 
-2. **Given 1 billion URLs, design a duplicate-detection system for a web crawler with 100 servers.**
-   - Answer: Distributed Bloom filters (one per server or shared Redis). Hash URL to server to avoid coordination. Use consistent hashing. Handle false positives by storing URLs in Cassandra. Add rebuild strategy when Bloom filter reaches 30% fill (false positive rate degrades).
+**A:** Use a Bloom filter for known-missing or valid IDs and check it before hitting DB. This trades a small false-positive rate for a large reduction in useless database reads.
 
-3. **Compare Bloom filter vs Redis cache for tracking processed event IDs in Kafka.**
-   - Answer: Bloom filter: 1-2 bits/event (~100MB for 1B events), O(k) lookup. Redis Set: 50+ bits/event (~50GB), O(1) lookup. Use Bloom for dedup with Redis fallback. Acceptable false positives (reprocess 0.1% of events) beats storing 500× more memory.
+### Q: Given 1 billion URLs, design a duplicate-detection system for a web crawler with 100 servers.
 
-4. **Design a Bloom filter that supports deletions efficiently.**
-   - Answer: Counting Bloom filter uses 4-bit counters per position vs 1 bit. Space increases by 4×. Supports increment on add, decrement on remove. Still O(k) time. Trade space for deletion capability. Caveat: Hash collision can cause false permanent deletions.
+**A:** Partition URLs by consistent hash and use distributed Bloom filters per partition to avoid global coordination. Persist canonical seen-URLs in durable storage and periodically rebuild filters as they saturate.
+
+### Q: Compare Bloom filter vs Redis cache for tracking processed event IDs in Kafka.
+
+**A:** Bloom filters are far more memory-efficient but allow false positives; Redis Sets are precise but expensive in memory. A common approach is Bloom filter for fast pre-check plus a precise fallback for critical paths.
+
+### Q: Design a Bloom filter that supports deletions efficiently.
+
+**A:** Use a Counting Bloom filter with small counters instead of bits, increment on insert and decrement on delete. It enables removal at the cost of higher memory usage and collision-related caveats.
 
 :::info Interview Focus
 Position Bloom filters as a **memory optimization tool** for permission checks, existence verification, and preventing unnecessary downstream queries. Emphasize the **zero false negatives guarantee** (precision: never miss real data) and acceptable **low false positive rates** (recall: occasionally check DB on false positive). Practice articulating **space vs. accuracy tradeoffs** and real-world scenarios (cache penetration, dedup, URL crawling).

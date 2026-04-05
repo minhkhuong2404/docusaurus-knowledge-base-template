@@ -295,13 +295,43 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
 
 ## Interview Questions
 
-1. What is the difference between authentication and authorization?
-2. How does JWT work? What are its advantages and disadvantages over session tokens?
-3. What is the OAuth 2.0 Authorization Code flow?
-4. How do you revoke a JWT before it expires?
-5. What is Zero Trust architecture?
-6. How do you prevent SQL injection in a Spring Boot application?
-7. What is RBAC and how do you implement it with Spring Security?
-8. How should secrets (API keys, DB passwords) be managed in a microservices system?
-9. What is OWASP Broken Object Level Authorization? Give an example.
-10. How do you rate limit authentication endpoints to prevent brute force?
+### Q: What is the difference between authentication and authorization?
+
+**A:** Authentication verifies who the user/service is; authorization decides what that identity can access. Always authenticate first, then enforce resource-level permissions.
+
+### Q: How does JWT work? What are its advantages and disadvantages over session tokens?
+
+**A:** JWT is a signed token containing claims validated without server-side session lookup. It scales well statelessly but revocation and claim bloat are harder than opaque session IDs.
+
+### Q: What is the OAuth 2.0 Authorization Code flow?
+
+**A:** User authenticates at the authorization server, client gets an auth code, then exchanges it (with client auth/PKCE) for tokens. It keeps access tokens off the browser redirect channel.
+
+### Q: How do you revoke a JWT before it expires?
+
+**A:** Use short-lived access tokens plus refresh-token rotation and server-side denylist/jti checks for high-risk revocations. Token introspection is another option for opaque tokens.
+
+### Q: What is Zero Trust architecture?
+
+**A:** Zero Trust assumes no implicit network trust and verifies every request continuously. It enforces strong identity, least privilege, and device/context-aware policy.
+
+### Q: How do you prevent SQL injection in a Spring Boot application?
+
+**A:** Use parameterized queries/JPA bindings, never string-concatenate SQL, and validate input at boundaries. Apply least-privilege DB accounts and query allowlists where possible.
+
+### Q: What is RBAC and how do you implement it with Spring Security?
+
+**A:** RBAC grants permissions by role rather than per-user hardcoding. In Spring Security, map roles/authorities from identity provider claims and enforce with method or URL policies.
+
+### Q: How should secrets (API keys, DB passwords) be managed in a microservices system?
+
+**A:** Store secrets in a dedicated manager (Vault/AWS Secrets Manager), inject at runtime, and rotate automatically. Never commit secrets to code or logs.
+
+### Q: What is OWASP Broken Object Level Authorization? Give an example.
+
+**A:** BOLA occurs when APIs expose object IDs but do not enforce ownership checks. Example: changing `/orders/123` to `/orders/124` returns another user's order.
+
+### Q: How do you rate limit authentication endpoints to prevent brute force?
+
+**A:** Apply per-IP and per-account limits with exponential backoff and temporary lockouts. Combine with bot detection, MFA prompts, and suspicious activity monitoring.
+

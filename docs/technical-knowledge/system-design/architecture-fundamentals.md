@@ -139,9 +139,27 @@ Total = 1 − (1 − SLA)^N  →  1 − (0.001)^2 = 99.9999%
 
 ## Interview Questions
 
-1. What is the CAP theorem and what trade-off do most modern databases make?
-2. Explain the difference between linearizability and eventual consistency. Give a use case for each.
-3. A service has 99.9% uptime. You depend on 3 such services in series. What's your effective uptime?
-4. When would you choose a CP system over an AP system?
-5. What is the difference between horizontal and vertical scaling?
-6. How does replication lag affect your system, and how do you mitigate it?
+### Q: What is the CAP theorem and what trade-off do most modern databases make?
+
+**A:** Under partition, distributed systems choose between consistency and availability for that operation. Many modern databases expose tunable modes but often default to availability for reads and stronger consistency for critical writes.
+
+### Q: Explain the difference between linearizability and eventual consistency. Give a use case for each.
+
+**A:** Linearizability makes each operation appear instantaneous and globally ordered; eventual consistency allows temporary divergence that converges later. Use linearizability for balances/inventory, eventual consistency for feeds/caches.
+
+### Q: A service has 99.9% uptime. You depend on 3 such services in series. What's your effective uptime?
+
+**A:** Effective uptime is roughly $0.999^3 \approx 0.997$ or about 99.7%. Serial dependencies multiply failure probability, so compositional reliability drops quickly.
+
+### Q: When would you choose a CP system over an AP system?
+
+**A:** Choose CP when correctness of latest state matters more than always serving requests, such as financial ledgers or unique constraints. AP is preferable when availability and partition tolerance dominate.
+
+### Q: What is the difference between horizontal and vertical scaling?
+
+**A:** Vertical scaling adds resources to one node; horizontal scaling adds more nodes and distributes load. Horizontal offers better fault isolation but increases coordination complexity.
+
+### Q: How does replication lag affect your system, and how do you mitigate it?
+
+**A:** Lag causes stale reads and broken user expectations after writes. Mitigate with read-after-write routing, bounded-staleness policies, faster replication paths, and lag-aware query routing.
+

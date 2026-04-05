@@ -278,11 +278,35 @@ public enum JobStatus {
 
 ## Interview Questions
 
-1. Why should long-running operations be made asynchronous? What's the risk of blocking?
-2. How do you design a REST API for an async operation? What HTTP status codes apply?
-3. What is a dead letter queue and when is it used?
-4. How do you track progress of a long-running background job?
-5. What are webhooks? What are their reliability challenges?
-6. How do you prevent duplicate job execution in a distributed scheduler?
-7. How would you design a system that processes video uploads asynchronously?
-8. What happens if a worker crashes mid-job? How do you ensure the job is retried?
+### Q: Why should long-running operations be made asynchronous? What's the risk of blocking?
+
+**A:** Async processing frees request threads quickly and keeps API latency predictable. Blocking ties up workers, increases timeout risk, and can cascade into service-wide saturation.
+
+### Q: How do you design a REST API for an async operation? What HTTP status codes apply?
+
+**A:** Accept request and return `202 Accepted` with a `job_id` and status URL, then expose progress via `GET /jobs/{id}`. Return `200` on completion metadata, `303` to result resource when useful, and terminal failure codes in job state.
+
+### Q: What is a dead letter queue and when is it used?
+
+**A:** A DLQ stores messages that exceeded retry policy or fail permanently. It isolates poison messages so healthy traffic continues while operators inspect and replay selectively.
+
+### Q: How do you track progress of a long-running background job?
+
+**A:** Persist job state transitions (`queued`, `running`, `succeeded`, `failed`) with percent/step counters and timestamps. Emit metrics/events so UI and alerts can track stuck or slow jobs.
+
+### Q: What are webhooks? What are their reliability challenges?
+
+**A:** Webhooks are server-to-server callbacks for asynchronous events. Reliability issues include retries, duplicate deliveries, receiver downtime, and signature verification.
+
+### Q: How do you prevent duplicate job execution in a distributed scheduler?
+
+**A:** Use idempotency keys plus atomic claim semantics (lease or compare-and-set state transition). Keep at-least-once delivery but make execution side effects idempotent.
+
+### Q: How would you design a system that processes video uploads asynchronously?
+
+**A:** Upload to object storage, enqueue a transcoding job, process variants in workers, then publish completion event with CDN URLs. Store job metadata and expose status polling/webhook callbacks.
+
+### Q: What happens if a worker crashes mid-job? How do you ensure the job is retried?
+
+**A:** Use message visibility timeout/lease expiry so unacked work is re-queued automatically. On retry, resume from checkpoints or rerun idempotently and send terminal failures to DLQ.
+

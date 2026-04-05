@@ -170,23 +170,82 @@ Rate limiting protects your API from abuse, DDoS attacks, and noisy neighbors by
 
 ## Interview Questions
 
-1. What is the difference between Path parameters, Query parameters, and Request bodies?
-2. How do you implement cursor-based pagination? Why is it better than offset pagination for high-write systems?
-3. What is API idempotency and how do you implement it for a POST request?
-4. Why would you choose gRPC for internal services, but REST for client-facing APIs?
-5. What is the N+1 problem in GraphQL and how do you solve it?
-6. How do you securely verify user actions without passing `user_id` in the JSON body?
-7. What algorithm would you choose for a rate limiter that allows short bursts?
-8. How would you version an API that has breaking changes? What if you want to avoid versioning?
-9. When would you use WebSockets or Server-Sent Events instead of REST?
-10. How do you handle error responses in a consistent way across your API?
-11. What are some common security vulnerabilities in API design and how do you mitigate them?
-12. How would you design an API gateway to handle authentication, rate limiting, and routing for multiple microservices?
-13. How do you document your API for internal and external developers? What tools do you use (e.g., OpenAPI/Swagger)?
-14. How do you handle backward compatibility when evolving your API?
-15. What are some strategies for testing your API endpoints (unit tests, integration tests, contract tests)?
-16. How do you monitor and log API usage and errors in production?
-17. How do you handle CORS (Cross-Origin Resource Sharing) in your API design?
-18. What are some best practices for designing RESTful APIs?
-19. How do you ensure your API is scalable and can handle high traffic?
-20. How do you handle authentication and authorization in your API design?
+### Q: What is the difference between Path parameters, Query parameters, and Request bodies?
+
+**A:** Path parameters identify a specific resource, query parameters filter/sort/paginate, and the request body carries the state to create or update. Keep resource identity in the URL and business payload in the body.
+
+### Q: How do you implement cursor-based pagination? Why is it better than offset pagination for high-write systems?
+
+**A:** Return a stable cursor like `created_at,id` and fetch `WHERE (created_at,id) < cursor ORDER BY created_at DESC,id DESC LIMIT N`. It avoids deep scans and skipped/duplicated rows caused by concurrent inserts.
+
+### Q: What is API idempotency and how do you implement it for a POST request?
+
+**A:** Idempotency means retries produce one logical result. Use an idempotency key scoped to client and endpoint, persist first response, and return that response for duplicate keys.
+
+### Q: Why would you choose gRPC for internal services, but REST for client-facing APIs?
+
+**A:** gRPC gives strong contracts, HTTP/2 multiplexing, and efficient protobuf payloads for service-to-service calls. REST is broadly compatible with browsers, mobile SDKs, and third-party integrators.
+
+### Q: What is the N+1 problem in GraphQL and how do you solve it?
+
+**A:** Resolvers issue one query for parents and one per child, exploding DB calls. Batch and cache by request with DataLoader so child fetches become a single grouped query.
+
+### Q: How do you securely verify user actions without passing `user_id` in the JSON body?
+
+**A:** Derive identity from verified auth context (JWT/session) and ignore client-supplied `user_id` for authorization decisions. Authorize against claims/scopes and server-side ownership checks.
+
+### Q: What algorithm would you choose for a rate limiter that allows short bursts?
+
+**A:** Use token bucket: tokens refill at a fixed rate, and requests consume tokens. It allows controlled bursts while still enforcing a long-term average rate.
+
+### Q: How would you version an API that has breaking changes? What if you want to avoid versioning?
+
+**A:** Use explicit versioning (for example `/v2` or media-type version) and run versions in parallel with deprecation windows. To avoid frequent versions, add fields compatibly and use capability flags.
+
+### Q: When would you use WebSockets or Server-Sent Events instead of REST?
+
+**A:** Use WebSockets for bidirectional low-latency interactions like chat/collab; use SSE for one-way server push like notifications. REST stays best for request/response CRUD.
+
+### Q: How do you handle error responses in a consistent way across your API?
+
+**A:** Standardize an error envelope with code, message, correlation ID, and optional details. Map domain failures to stable HTTP status + machine-readable codes.
+
+### Q: What are some common security vulnerabilities in API design and how do you mitigate them?
+
+**A:** Common issues are BOLA/IDOR, injection, broken auth, and excessive data exposure. Mitigate with deny-by-default authorization, parameterized queries, schema validation, and output minimization.
+
+### Q: How would you design an API gateway to handle authentication, rate limiting, and routing for multiple microservices?
+
+**A:** Centralize authn/authz policy checks, per-tenant rate limits, and request routing based on path/headers/service discovery. Keep business logic in services and make gateway behavior observable and stateless.
+
+### Q: How do you document your API for internal and external developers? What tools do you use (e.g., OpenAPI/Swagger)?
+
+**A:** Use OpenAPI as source of truth, publish interactive docs, and auto-generate SDKs/examples. Keep docs versioned with the API and enforce contract checks in CI.
+
+### Q: How do you handle backward compatibility when evolving your API?
+
+**A:** Prefer additive changes, never repurpose existing fields, and keep old behavior until clients migrate. Announce deprecations early with telemetry on remaining consumers.
+
+### Q: What are some strategies for testing your API endpoints (unit tests, integration tests, contract tests)?
+
+**A:** Use unit tests for validation/mapping logic, integration tests for DB and auth flows, and contract tests between consumers/providers. Add load and chaos tests for critical paths.
+
+### Q: How do you monitor and log API usage and errors in production?
+
+**A:** Track RED metrics (rate, errors, duration), segment by endpoint/tenant/status code, and emit structured logs with correlation IDs. Alert on SLO burn, not only raw error count.
+
+### Q: How do you handle CORS (Cross-Origin Resource Sharing) in your API design?
+
+**A:** Use an allowlist of trusted origins, methods, and headers, and set credentials only when required. Cache preflight responses and avoid wildcard origins for authenticated APIs.
+
+### Q: What are some best practices for designing RESTful APIs?
+
+**A:** Use resource-oriented URIs, correct HTTP semantics, idempotent methods where applicable, and predictable pagination/filtering. Keep schemas explicit and error contracts stable.
+
+### Q: How do you ensure your API is scalable and can handle high traffic?
+
+**A:** Make handlers stateless, cache aggressively where safe, and use async processing for slow work. Apply rate limits, autoscaling, and load tests based on realistic traffic patterns.
+
+### Q: How do you handle authentication and authorization in your API design?
+
+**A:** Authenticate with standards like OAuth2/OIDC and short-lived tokens; authorize with RBAC/ABAC at resource level. Enforce checks consistently at service boundaries and audit decisions.

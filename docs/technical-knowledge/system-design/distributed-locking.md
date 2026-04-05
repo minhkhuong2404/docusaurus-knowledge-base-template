@@ -107,11 +107,35 @@ Mitigations:
 
 ## Interview Questions
 
-1. Why is lease-based locking safer than permanent locks?
-2. What problem do fencing tokens solve?
-3. Is Redis lock enough for critical financial writes? Why or why not?
-4. How do you safely release a Redis lock without deleting someone else's lock?
-5. When should you use leader election instead of per-task locks?
-6. How would you design lock observability and SLOs?
-7. What can still go wrong even with a lease?
-8. Compare ZooKeeper/etcd locks vs Redis locks for correctness guarantees.
+### Q: Why is lease-based locking safer than permanent locks?
+
+**A:** Leases expire automatically if a holder crashes or gets partitioned, preventing indefinite deadlock. Permanent locks require manual cleanup and are prone to orphaned ownership.
+
+### Q: What problem do fencing tokens solve?
+
+**A:** They prevent stale lock holders from writing after losing lock ownership. Storage accepts only the highest token, so old owners are rejected.
+
+### Q: Is Redis lock enough for critical financial writes? Why or why not?
+
+**A:** Usually no by itself, because failover timing and partition edges can violate strict correctness assumptions. For critical money movement, combine stronger coordination and storage-level safeguards.
+
+### Q: How do you safely release a Redis lock without deleting someone else's lock?
+
+**A:** Store a random owner value at acquire, then release via atomic compare-and-delete Lua script. Never `DEL` by key alone.
+
+### Q: When should you use leader election instead of per-task locks?
+
+**A:** Use leader election when one coordinator should own a stream of tasks or cluster-wide decisions. Use per-task locks when ownership must be fine-grained and parallel.
+
+### Q: How would you design lock observability and SLOs?
+
+**A:** Track acquisition latency, contention rate, lease expiries, and stale-write rejections. Define SLOs on lock success latency and correctness incidents, not just throughput.
+
+### Q: What can still go wrong even with a lease?
+
+**A:** Clock skew, GC pauses, network partitions, and delayed packets can make a client act on an expired lease. Leases reduce risk but must be combined with fencing/idempotency.
+
+### Q: Compare ZooKeeper/etcd locks vs Redis locks for correctness guarantees.
+
+**A:** ZooKeeper/etcd provide stronger linearizable coordination semantics for correctness-critical locking. Redis locks are simpler and fast but better suited to best-effort coordination.
+

@@ -137,7 +137,42 @@ This guide contains the detailed technical questions and answers from a real Jav
 **A:** A payment gateway securely processes online payments. It collects the payment information from the user, encrypts it, sends it to the acquiring bank/payment processor for approval, and then returns a success or failure response back to the application. It ensures data encryption, handles fraud checks, and guarantees a smooth transactional flow between the user and the financial institutions.
 
 ### Q: Write a program to remove duplicates from an ArrayList without using built-in methods or other collections.
-*(A standard whiteboard coding question evaluating manual iteration and element shifting logic).*
+**A:** Use two loops and remove duplicates in place by shifting elements left whenever a duplicate is found.
+```java
+public static int removeDuplicates(ArrayList<Integer> list) {
+  int n = list.size();
+  for (int i = 0; i < n; i++) {
+    for (int j = i + 1; j < n; ) {
+      if (list.get(i).equals(list.get(j))) {
+        for (int k = j; k < n - 1; k++) {
+          list.set(k, list.get(k + 1));
+        }
+        list.remove(n - 1);
+        n--;
+      } else {
+        j++;
+      }
+    }
+  }
+  return n;
+}
+```
 
 ### Q: Write and optimize a program to check if two strings are anagrams.
-*(A standard algorithmic coding question evaluating character frequency counting, usually optimized using a hash map or a fixed-size integer array).*
+**A:** Optimized approach: if lengths differ, return false. Otherwise count characters from first string and decrement using second string. If any count goes negative, not an anagram.
+```java
+public static boolean isAnagram(String a, String b) {
+  if (a == null || b == null || a.length() != b.length()) return false;
+
+  int[] freq = new int[256];
+  for (int i = 0; i < a.length(); i++) {
+    freq[a.charAt(i)]++;
+    freq[b.charAt(i)]--;
+  }
+
+  for (int count : freq) {
+    if (count != 0) return false;
+  }
+  return true;
+}
+```

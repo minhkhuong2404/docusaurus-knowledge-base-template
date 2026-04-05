@@ -64,7 +64,26 @@ This guide covers real-world technical interview questions asked during a Deloit
 * **Communication:** They communicate synchronously using HTTP REST APIs (or gRPC), or asynchronously using message brokers like Apache Kafka or RabbitMQ.
 
 ### Q: Coding Question: Detect a cycle in a Linked List using the Fast and Slow pointer approach.
-*(Standard algorithmic problem known as Floyd’s Cycle-Finding Algorithm. The slow pointer moves 1 step, the fast pointer moves 2 steps. If they meet, a cycle exists).*
+**A:** Use Floyd's Cycle Detection. Move `slow` by one node and `fast` by two nodes. If they ever meet, a cycle exists. If `fast` or `fast.next` becomes `null`, no cycle exists.
+```java
+class ListNode {
+  int val;
+  ListNode next;
+  ListNode(int val) { this.val = val; }
+}
+
+public static boolean hasCycle(ListNode head) {
+  ListNode slow = head;
+  ListNode fast = head;
+
+  while (fast != null && fast.next != null) {
+    slow = slow.next;
+    fast = fast.next.next;
+    if (slow == fast) return true;
+  }
+  return false;
+}
+```
 
 ---
 

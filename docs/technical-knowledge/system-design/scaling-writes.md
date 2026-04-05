@@ -322,11 +322,35 @@ Is write throughput the bottleneck?
 
 ## Interview Questions
 
-1. How would you scale a system from 1,000 writes/sec to 100,000 writes/sec?
-2. What is a write-ahead log and why does it speed up writes?
-3. How do you choose a shard key, and what makes a bad one?
-4. What is consistent hashing and why is it used for sharding?
-5. How do you handle cross-shard transactions?
-6. Why are append-only writes faster than in-place updates?
-7. How do you generate globally unique IDs without a centralized coordinator?
-8. What is backpressure and how do you implement it?
+### Q: How would you scale a system from 1,000 writes/sec to 100,000 writes/sec?
+
+**A:** Remove single-writer bottlenecks first, then partition by a high-cardinality key and batch writes. Add queue-based buffering, async processing, and tuned storage engines before over-splitting services.
+
+### Q: What is a write-ahead log and why does it speed up writes?
+
+**A:** WAL appends intent sequentially before applying changes to main structures. Sequential disk writes are much faster than random in-place updates, improving throughput and crash recovery.
+
+### Q: How do you choose a shard key, and what makes a bad one?
+
+**A:** Choose a key with high cardinality, even distribution, and query locality. Bad keys are low-cardinality, time-hot, or misaligned with access patterns, creating hotspots.
+
+### Q: What is consistent hashing and why is it used for sharding?
+
+**A:** Consistent hashing maps keys and nodes on a ring so adding/removing nodes moves only a small key subset. It reduces rebalancing cost versus modulo-based partitioning.
+
+### Q: How do you handle cross-shard transactions?
+
+**A:** Prefer schema/workflow design that keeps transactions shard-local. For unavoidable cross-shard workflows, use saga/compensation or 2PC only for narrow critical paths.
+
+### Q: Why are append-only writes faster than in-place updates?
+
+**A:** Appends avoid random read-modify-write and minimize page rewrites. They also simplify concurrency and batching, then compaction reconciles old versions later.
+
+### Q: How do you generate globally unique IDs without a centralized coordinator?
+
+**A:** Use Snowflake/ULID-style IDs combining time and node entropy, or UUIDv7 for sortable uniqueness. Ensure clock skew handling and per-node sequence safeguards.
+
+### Q: What is backpressure and how do you implement it?
+
+**A:** Backpressure limits producers when consumers/storage are saturated to prevent collapse. Implement bounded queues, rate limits, adaptive throttling, and explicit retry-after signals.
+

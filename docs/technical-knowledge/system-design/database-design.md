@@ -279,13 +279,43 @@ updated_by    BIGINT REFERENCES users(id)
 
 ## Interview Questions
 
-1. When would you choose NoSQL over SQL and vice versa?
-2. Explain the difference between 1NF, 2NF, and 3NF. When would you intentionally denormalize?
-3. How do composite indexes work? What's the order rule?
-4. What is the N+1 query problem and how do you fix it with Spring Data JPA?
-5. How does table partitioning work and when should you use it?
-6. What is a covering index?
-7. How do you approach schema migration in a system with zero downtime requirement?
-8. What is event sourcing and what are its trade-offs?
-9. How do you handle soft deletes efficiently?
-10. What is connection pool sizing and how do you tune HikariCP?
+### Q: When would you choose NoSQL over SQL and vice versa?
+
+**A:** Choose SQL for strong transactions, joins, and strict relational integrity. Choose NoSQL for flexible schemas, high horizontal scale, and access patterns that do not need multi-row ACID joins.
+
+### Q: Explain the difference between 1NF, 2NF, and 3NF. When would you intentionally denormalize?
+
+**A:** 1NF removes repeating groups, 2NF removes partial dependency on composite keys, and 3NF removes transitive dependency. Denormalize when read latency and query simplicity matter more than write amplification.
+
+### Q: How do composite indexes work? What's the order rule?
+
+**A:** Composite indexes are ordered by leftmost columns first, so predicates must match that prefix for efficient seeks. Put high-selectivity filters first, then sort/group columns used most often.
+
+### Q: What is the N+1 query problem and how do you fix it with Spring Data JPA?
+
+**A:** N+1 happens when loading a parent list triggers one child query per row. Fix with fetch joins, `@EntityGraph`, targeted DTO projections, and batch fetching.
+
+### Q: How does table partitioning work and when should you use it?
+
+**A:** Partitioning splits a logical table into physical partitions by range/hash/list. Use it for very large tables to improve pruning, maintenance, and data lifecycle management.
+
+### Q: What is a covering index?
+
+**A:** A covering index contains all columns needed by a query, so the engine can answer from index pages only. This reduces random I/O from base table lookups.
+
+### Q: How do you approach schema migration in a system with zero downtime requirement?
+
+**A:** Use expand-migrate-contract: add backward-compatible schema first, deploy dual-read/write app changes, backfill, then remove old fields later. Avoid blocking DDL during peak traffic.
+
+### Q: What is event sourcing and what are its trade-offs?
+
+**A:** Event sourcing stores immutable state changes and rebuilds current state by replay. It gives auditability and temporal queries but increases modeling, replay, and operational complexity.
+
+### Q: How do you handle soft deletes efficiently?
+
+**A:** Add `deleted_at`/`is_deleted`, index active records, and keep default scopes excluding deleted rows. Archive or purge old tombstones to prevent index bloat.
+
+### Q: What is connection pool sizing and how do you tune HikariCP?
+
+**A:** Pool size should match DB concurrency capacity, not CPU core count alone. Tune `maximumPoolSize`, timeout/leak settings, and observe queue wait + DB saturation before increasing.
+

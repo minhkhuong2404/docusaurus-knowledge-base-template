@@ -92,10 +92,72 @@ It drastically reduces boilerplate code and simplifies the application setup.
 ## Round 2: Data Structures & Advanced Java
 
 ### Q: Write a Java code to reverse a Singly Linked List.
-*(Standard algorithmic coding question evaluating pointer manipulation).*
+**A:** Iterate once with three pointers: `prev`, `curr`, and `next`. Reverse each node's `next` pointer, then move forward.
+```java
+class Node {
+    int val;
+    Node next;
+    Node(int val) { this.val = val; }
+}
+
+public static Node reverse(Node head) {
+    Node prev = null;
+    Node curr = head;
+
+    while (curr != null) {
+        Node next = curr.next;
+        curr.next = prev;
+        prev = curr;
+        curr = next;
+    }
+    return prev;
+}
+```
 
 ### Q: Given a Linked List where each node represents a character, write code to prove it is a palindrome.
-*(Standard algorithmic coding question, usually solved by finding the middle, reversing the second half, and comparing the two halves).*
+**A:** Find the middle using slow/fast pointers, reverse the second half, compare both halves, and optionally restore the list.
+```java
+class CharNode {
+    char ch;
+    CharNode next;
+    CharNode(char ch) { this.ch = ch; }
+}
+
+public static boolean isPalindrome(CharNode head) {
+    if (head == null || head.next == null) return true;
+
+    CharNode slow = head, fast = head;
+    while (fast != null && fast.next != null) {
+        slow = slow.next;
+        fast = fast.next.next;
+    }
+
+    CharNode second = reverseHalf(slow);
+    CharNode p1 = head, p2 = second;
+    boolean ok = true;
+
+    while (p2 != null) {
+        if (p1.ch != p2.ch) {
+            ok = false;
+            break;
+        }
+        p1 = p1.next;
+        p2 = p2.next;
+    }
+    return ok;
+}
+
+private static CharNode reverseHalf(CharNode head) {
+    CharNode prev = null, curr = head;
+    while (curr != null) {
+        CharNode next = curr.next;
+        curr.next = prev;
+        prev = curr;
+        curr = next;
+    }
+    return prev;
+}
+```
 
 ### Q: Explain the Singleton design pattern and give a thread-safe implementation.
 **A:** The Singleton pattern ensures that a class has only one instance globally. 

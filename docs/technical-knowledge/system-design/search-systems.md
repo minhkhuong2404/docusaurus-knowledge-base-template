@@ -351,13 +351,43 @@ public void onProductChange(DebeziumMessage msg) {
 
 ## Interview Questions
 
-1. Why is Elasticsearch (or search engine) better than SQL LIKE for full-text search?
-2. What is an inverted index? How does it enable fast search?
-3. How do you keep Elasticsearch in sync with your primary database?
-4. What is BM25 and how does it improve over TF-IDF?
-5. How would you design an autocomplete/search-as-you-type feature?
-6. What is faceted search and how do you implement it?
-7. How do you handle Elasticsearch going down while still accepting writes to your primary DB?
-8. How would you scale Elasticsearch to handle 1 billion product documents?
-9. What are the trade-offs of Elasticsearch's near real-time (~1s) indexing?
-10. How do you tune relevance in search results?
+### Q: Why is Elasticsearch (or search engine) better than SQL LIKE for full-text search?
+
+**A:** Search engines use analyzers, inverted indexes, and ranking algorithms optimized for linguistic matching. SQL `LIKE` is limited, often scans heavily, and lacks relevance scoring.
+
+### Q: What is an inverted index? How does it enable fast search?
+
+**A:** An inverted index maps terms to posting lists of matching document IDs. Queries become fast set operations on postings instead of scanning full documents.
+
+### Q: How do you keep Elasticsearch in sync with your primary database?
+
+**A:** Publish DB changes through CDC or outbox events and update Elasticsearch asynchronously with retries. Keep reindex/replay tooling for drift recovery.
+
+### Q: What is BM25 and how does it improve over TF-IDF?
+
+**A:** BM25 is a probabilistic ranking function that better normalizes term frequency and document length. It usually produces more relevant rankings than plain TF-IDF defaults.
+
+### Q: How would you design an autocomplete/search-as-you-type feature?
+
+**A:** Index edge n-grams or use completion suggester with popularity signals and typo tolerance. Cache top prefixes and debounce client queries.
+
+### Q: What is faceted search and how do you implement it?
+
+**A:** Faceted search shows aggregated counts by attributes (brand, price range, category) alongside results. Implement with filtered aggregations over indexed keyword/numeric fields.
+
+### Q: How do you handle Elasticsearch going down while still accepting writes to your primary DB?
+
+**A:** Keep DB as source of truth, queue indexing events durably, and replay when cluster recovers. Degrade gracefully by serving fallback search modes if needed.
+
+### Q: How would you scale Elasticsearch to handle 1 billion product documents?
+
+**A:** Plan shard count by index size/throughput, use index lifecycle tiers, and separate ingest from query workloads. Optimize mappings, refresh intervals, and replica strategy for SLA.
+
+### Q: What are the trade-offs of Elasticsearch's near real-time (~1s) indexing?
+
+**A:** NRT improves throughput by batching refreshes but introduces short visibility delay after writes. Lower refresh intervals reduce delay but increase indexing overhead.
+
+### Q: How do you tune relevance in search results?
+
+**A:** Tune analyzers, field boosts, synonym handling, and business signals (freshness/popularity). Evaluate with offline judgments and online A/B metrics like CTR and conversion.
+

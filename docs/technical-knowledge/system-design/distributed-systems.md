@@ -336,13 +336,43 @@ B: "I'm the leader"
 
 ## Interview Questions
 
-1. What is the consensus problem? What algorithms solve it?
-2. Explain Raft leader election in plain English.
-3. What is a vector clock and how does it detect causal ordering?
-4. What is Two-Phase Commit? What are its failure modes?
-5. How does a gossip protocol work? What is it used for?
-6. What is split-brain syndrome and how do you prevent it?
-7. How do you build a distributed system that is available during a network partition?
-8. What is the difference between a failure detector and a consensus algorithm?
-9. How does Zookeeper achieve distributed coordination?
-10. What are the fallacies of distributed computing and why do they matter?
+### Q: What is the consensus problem? What algorithms solve it?
+
+**A:** Consensus means multiple nodes agree on one sequence of decisions despite failures. Paxos, Raft, and various BFT protocols solve different fault/trust models.
+
+### Q: Explain Raft leader election in plain English.
+
+**A:** When followers stop hearing heartbeats, they start an election and request votes for a new term. A node winning majority becomes leader and starts sending heartbeats.
+
+### Q: What is a vector clock and how does it detect causal ordering?
+
+**A:** A vector clock tracks per-node event counters in updates. Comparing vectors shows whether one event happened-before another or if they are concurrent conflicts.
+
+### Q: What is Two-Phase Commit? What are its failure modes?
+
+**A:** 2PC coordinates distributed commit with prepare then commit/abort phases. If coordinator fails after prepare, participants can block waiting, making availability poor.
+
+### Q: How does a gossip protocol work? What is it used for?
+
+**A:** Nodes periodically exchange state with random peers, and updates spread probabilistically through the cluster. It is used for membership, health signals, and configuration dissemination.
+
+### Q: What is split-brain syndrome and how do you prevent it?
+
+**A:** Split-brain is when partitions each believe they are primary and accept conflicting writes. Prevent it with quorum rules, fencing, and single-writer leadership.
+
+### Q: How do you build a distributed system that is available during a network partition?
+
+**A:** Favor AP behavior for selected operations, allow local writes, and reconcile conflicts later. Classify which paths can be eventually consistent versus requiring strong consistency.
+
+### Q: What is the difference between a failure detector and a consensus algorithm?
+
+**A:** Failure detector guesses node liveness; consensus establishes agreed decisions despite uncertain liveness. One provides signals, the other provides safety/ordering guarantees.
+
+### Q: How does Zookeeper achieve distributed coordination?
+
+**A:** ZooKeeper uses a quorum-backed ordered log and ephemeral/sequential znodes for locks, leader election, and config. Session semantics and watches enable reliable coordination workflows.
+
+### Q: What are the fallacies of distributed computing and why do they matter?
+
+**A:** They are false assumptions like "network is reliable" and "latency is zero." Ignoring them leads to fragile designs that fail under normal production conditions.
+

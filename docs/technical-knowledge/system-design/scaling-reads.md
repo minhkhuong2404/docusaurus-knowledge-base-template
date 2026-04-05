@@ -246,11 +246,35 @@ LIMIT 20;
 
 ## Interview Questions
 
-1. Your read QPS grows to 100,000. What do you do?
-2. How does cache invalidation work, and why is it considered hard?
-3. What's the difference between cache-aside and read-through caching?
-4. How do you handle the thundering herd problem on cache expiry?
-5. When would you use CQRS? What are its downsides?
-6. How do you ensure read-your-own-writes consistency when using read replicas?
-7. What is replication lag and how does it affect your design choices?
-8. How do you paginate efficiently over millions of records?
+### Q: Your read QPS grows to 100,000. What do you do?
+
+**A:** Add multi-layer caching (CDN, app cache, DB cache), offload reads to replicas/search stores, and optimize hot queries/indexes. Scale horizontally with load balancing and protect backends with rate limits.
+
+### Q: How does cache invalidation work, and why is it considered hard?
+
+**A:** Invalidation removes or refreshes stale cache entries when source data changes. It is hard because race conditions, distributed delays, and partial failures can serve stale or inconsistent data.
+
+### Q: What's the difference between cache-aside and read-through caching?
+
+**A:** Cache-aside lets application code read DB on miss and then populate cache; read-through delegates miss handling to cache layer. Cache-aside is flexible; read-through centralizes cache behavior.
+
+### Q: How do you handle the thundering herd problem on cache expiry?
+
+**A:** Use jittered TTL, request coalescing/single-flight, and stale-while-revalidate. Warm critical keys proactively before synchronized expiry.
+
+### Q: When would you use CQRS? What are its downsides?
+
+**A:** Use CQRS when read and write workloads diverge significantly and need different models/scaling paths. Downsides are eventual consistency, duplicate models, and higher operational complexity.
+
+### Q: How do you ensure read-your-own-writes consistency when using read replicas?
+
+**A:** After a write, route that user's reads to primary for a bounded time or until replica catches up to a tracked LSN/timestamp. Sticky sessions or client tokens can enforce this.
+
+### Q: What is replication lag and how does it affect your design choices?
+
+**A:** Replication lag is delay between primary commit and replica visibility. It influences UX guarantees, read routing, and whether you need primary reads for freshness-sensitive endpoints.
+
+### Q: How do you paginate efficiently over millions of records?
+
+**A:** Prefer keyset/cursor pagination on indexed sort keys instead of large offsets. It keeps query cost stable and avoids duplicate/missing rows during concurrent writes.
+

@@ -345,13 +345,43 @@ List<Job> claimJobs();
 
 ## Interview Questions
 
-1. Explain the ACID properties. Can you have a database that satisfies all four?
-2. What is a lost update and how do you prevent it?
-3. What is write skew? How do you detect and prevent it?
-4. What is the dual-write problem in microservices?
-5. What is the transactional outbox pattern?
-6. How do you implement read-your-writes consistency when using read replicas?
-7. What is a CRDT? When would you use one?
-8. What is the difference between optimistic and pessimistic concurrency control?
-9. How do you handle conflicts in a multi-master database setup?
-10. What database isolation level prevents phantom reads?
+### Q: Explain the ACID properties. Can you have a database that satisfies all four?
+
+**A:** ACID means atomicity, consistency, isolation, and durability for transactions. Yes, many relational systems provide all four within a node/transaction scope, though distributed scale can relax guarantees for availability.
+
+### Q: What is a lost update and how do you prevent it?
+
+**A:** Lost update happens when concurrent writers overwrite each other silently. Prevent with optimistic version checks, row locks, or serializable transaction boundaries.
+
+### Q: What is write skew? How do you detect and prevent it?
+
+**A:** Write skew occurs when concurrent transactions read shared predicates and write different rows, violating a global invariant. Prevent with serializable isolation, explicit locking on invariant rows, or materialized guard rows.
+
+### Q: What is the dual-write problem in microservices?
+
+**A:** Dual write is updating DB and publishing event separately, where one can succeed and the other fail. It creates inconsistent state between source of truth and downstream consumers.
+
+### Q: What is the transactional outbox pattern?
+
+**A:** Write business data and outbox event in one local DB transaction, then relay events asynchronously. This guarantees no event is published without its corresponding state change.
+
+### Q: How do you implement read-your-writes consistency when using read replicas?
+
+**A:** Route post-write reads to primary until replica catches up to the client's commit position. Use LSN/GTID tracking or sticky-session windows.
+
+### Q: What is a CRDT? When would you use one?
+
+**A:** CRDTs are data types that merge concurrent updates deterministically without coordination. Use them for collaborative/offline systems where availability and conflict-free sync are priorities.
+
+### Q: What is the difference between optimistic and pessimistic concurrency control?
+
+**A:** Optimistic control checks for conflicts at commit and retries on collision; pessimistic control locks resources before mutation. Choose based on contention level and latency sensitivity.
+
+### Q: How do you handle conflicts in a multi-master database setup?
+
+**A:** Define deterministic merge policy (for example last-write-wins, field-level merge, or domain-specific resolver) and track causality/version metadata. Surface irreconcilable conflicts for business-level resolution.
+
+### Q: What database isolation level prevents phantom reads?
+
+**A:** Serializable isolation prevents phantoms by enforcing full serial equivalence. Some engines also prevent phantoms at repeatable read using predicate/next-key locks.
+

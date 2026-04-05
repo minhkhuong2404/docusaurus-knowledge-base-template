@@ -272,11 +272,35 @@ Design compensations that are **semantically equivalent** to rollback:
 
 ## Interview Questions
 
-1. What is the Saga pattern and why is it needed in microservices?
-2. What is the difference between orchestration and choreography in a Saga?
-3. What is a compensating transaction? Give a real-world example.
-4. How do you ensure idempotency in saga steps?
-5. What is the transactional outbox pattern and what problem does it solve?
-6. How would you design a distributed checkout flow that spans inventory, payment, and shipping services?
-7. What is the dual-write problem and how do you avoid it?
-8. How do you handle a saga that partially completes and the compensating transaction also fails?
+### Q: What is the Saga pattern and why is it needed in microservices?
+
+**A:** Saga is a sequence of local transactions coordinated with events/commands plus compensations on failure. It replaces global ACID transactions across service-owned databases.
+
+### Q: What is the difference between orchestration and choreography in a Saga?
+
+**A:** Orchestration uses a central saga coordinator that commands each step; choreography lets services react to domain events. Orchestration improves visibility, while choreography reduces central coupling.
+
+### Q: What is a compensating transaction? Give a real-world example.
+
+**A:** A compensating transaction semantically undoes a previously completed step. Example: refund payment and release reserved inventory when shipping creation fails.
+
+### Q: How do you ensure idempotency in saga steps?
+
+**A:** Assign idempotency keys per step and store processed outcomes with unique constraints. Retries then return prior result without duplicate side effects.
+
+### Q: What is the transactional outbox pattern and what problem does it solve?
+
+**A:** Outbox stores event records in the same DB transaction as business state changes. It solves dual-write inconsistency between DB commit and message publish.
+
+### Q: How would you design a distributed checkout flow that spans inventory, payment, and shipping services?
+
+**A:** Model it as saga: reserve inventory, authorize payment, create shipment, then finalize order. On failures, execute compensations in reverse and expose state machine progress to clients.
+
+### Q: What is the dual-write problem and how do you avoid it?
+
+**A:** Dual write occurs when two systems are updated separately and one update fails, causing divergence. Avoid with outbox/CDC, idempotent consumers, and replayable event streams.
+
+### Q: How do you handle a saga that partially completes and the compensating transaction also fails?
+
+**A:** Persist failure state, retry compensation with backoff, and route to a manual resolution queue with full audit trail. Keep saga visible as `requires_intervention` until reconciled.
+

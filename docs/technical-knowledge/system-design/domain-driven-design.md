@@ -125,11 +125,35 @@ Pair with Outbox to avoid dual-write inconsistency.
 
 ## Interview Questions
 
-1. What is the difference between an aggregate and an entity?
-2. How do bounded contexts reduce accidental coupling in microservices?
-3. When should you use an anti-corruption layer?
-4. How do you choose aggregate boundaries for high-write systems?
-5. Why can one bounded context map to one service, but not always?
-6. How does DDD integrate with outbox and saga patterns?
-7. What are signs a team is over-applying DDD?
-8. How would you model payment and ledger contexts with different consistency needs?
+### Q: What is the difference between an aggregate and an entity?
+
+**A:** An entity has stable identity across state changes, while an aggregate is a consistency boundary containing one or more entities/value objects. Only the aggregate root is modified from outside.
+
+### Q: How do bounded contexts reduce accidental coupling in microservices?
+
+**A:** They define explicit language and model boundaries per domain area, preventing shared ambiguous schemas. Teams evolve independently through contracts instead of hidden cross-service assumptions.
+
+### Q: When should you use an anti-corruption layer?
+
+**A:** Use ACL when integrating with legacy/external models you do not control. It translates concepts and protects your domain from upstream model leakage.
+
+### Q: How do you choose aggregate boundaries for high-write systems?
+
+**A:** Keep aggregates small and aligned to invariants that must be transactionally consistent. Split hot aggregates to reduce lock contention and increase write parallelism.
+
+### Q: Why can one bounded context map to one service, but not always?
+
+**A:** A bounded context is a conceptual boundary, not a mandatory deployment unit. One context may need multiple services for scale, or multiple small contexts may share one service early on.
+
+### Q: How does DDD integrate with outbox and saga patterns?
+
+**A:** Aggregates emit domain events; outbox publishes them reliably after commit; sagas coordinate cross-context workflows. This preserves local consistency while enabling eventual global consistency.
+
+### Q: What are signs a team is over-applying DDD?
+
+**A:** Excessive abstraction, ceremony-heavy modeling, and slow delivery for simple CRUD needs. If domain complexity is low, a simpler modular design is usually better.
+
+### Q: How would you model payment and ledger contexts with different consistency needs?
+
+**A:** Keep ledger as strongly consistent, append-only source of truth; let payment orchestration be eventually consistent with retries/compensation. Bridge with immutable events and strict reconciliation.
+
