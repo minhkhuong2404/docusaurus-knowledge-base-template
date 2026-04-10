@@ -12,13 +12,13 @@
       "plugin": "138e0e15"
     }
   },
-  "/-185": {
+  "/-b78": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-fc9": {
+  "/-52d": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -50,6 +50,10 @@
     "__comp": "df203c0f",
     "__props": "ab8354fa"
   },
+  "/tags/abstractions-1b2": {
+    "__comp": "df203c0f",
+    "__props": "8e53c666"
+  },
   "/tags/accenture-549": {
     "__comp": "df203c0f",
     "__props": "d410d0da"
@@ -69,6 +73,10 @@
   "/tags/add-00a": {
     "__comp": "df203c0f",
     "__props": "2ab26087"
+  },
+  "/tags/adp-c3b": {
+    "__comp": "df203c0f",
+    "__props": "32a5c438"
   },
   "/tags/advanced-c89": {
     "__comp": "df203c0f",
@@ -310,6 +318,10 @@
     "__comp": "df203c0f",
     "__props": "20f1b4a3"
   },
+  "/tags/behavior-145": {
+    "__comp": "df203c0f",
+    "__props": "8687674b"
+  },
   "/tags/behavioral-d8c": {
     "__comp": "df203c0f",
     "__props": "2ee67156"
@@ -362,6 +374,10 @@
     "__comp": "df203c0f",
     "__props": "16baf151"
   },
+  "/tags/boundaries-615": {
+    "__comp": "df203c0f",
+    "__props": "94f1506b"
+  },
   "/tags/bounded-context-a97": {
     "__comp": "df203c0f",
     "__props": "0682b2eb"
@@ -401,6 +417,10 @@
   "/tags/building-microservice-554": {
     "__comp": "df203c0f",
     "__props": "ea110ffa"
+  },
+  "/tags/business-rules-3c3": {
+    "__comp": "df203c0f",
+    "__props": "538b3c82"
   },
   "/tags/cache-6ac": {
     "__comp": "df203c0f",
@@ -462,9 +482,17 @@
     "__comp": "df203c0f",
     "__props": "8fc830b7"
   },
+  "/tags/case-study-c11": {
+    "__comp": "df203c0f",
+    "__props": "a797cd2d"
+  },
   "/tags/cassandra-2ad": {
     "__comp": "df203c0f",
     "__props": "9d9a673a"
+  },
+  "/tags/ccp-f89": {
+    "__comp": "df203c0f",
+    "__props": "cd3e3d03"
   },
   "/tags/ccpa-313": {
     "__comp": "df203c0f",
@@ -706,6 +734,10 @@
     "__comp": "df203c0f",
     "__props": "d942bea5"
   },
+  "/tags/clean-architecture-cda": {
+    "__comp": "df203c0f",
+    "__props": "d514ab31"
+  },
   "/tags/clean-code-3c5": {
     "__comp": "df203c0f",
     "__props": "665593ca"
@@ -786,6 +818,10 @@
     "__comp": "df203c0f",
     "__props": "2509169b"
   },
+  "/tags/cohesion-fd8": {
+    "__comp": "df203c0f",
+    "__props": "569b3d6d"
+  },
   "/tags/cold-start-e83": {
     "__comp": "df203c0f",
     "__props": "b1716a86"
@@ -833,6 +869,14 @@
   "/tags/component-performance-testing-159": {
     "__comp": "df203c0f",
     "__props": "10f9e8c5"
+  },
+  "/tags/component-principles-36d": {
+    "__comp": "df203c0f",
+    "__props": "22c25627"
+  },
+  "/tags/components-4b4": {
+    "__comp": "df203c0f",
+    "__props": "e76aa2a2"
   },
   "/tags/composite-fb3": {
     "__comp": "df203c0f",
@@ -918,6 +962,10 @@
     "__comp": "df203c0f",
     "__props": "225af632"
   },
+  "/tags/contracts-a9c": {
+    "__comp": "df203c0f",
+    "__props": "3d9cbe46"
+  },
   "/tags/control-plane-a35": {
     "__comp": "df203c0f",
     "__props": "1f34e3dd"
@@ -954,6 +1002,10 @@
     "__comp": "df203c0f",
     "__props": "4475d819"
   },
+  "/tags/coupling-8ac": {
+    "__comp": "df203c0f",
+    "__props": "016af998"
+  },
   "/tags/cpu-scheduling-50d": {
     "__comp": "df203c0f",
     "__props": "43f1e773"
@@ -989,6 +1041,10 @@
   "/tags/cross-border-a4b": {
     "__comp": "df203c0f",
     "__props": "8ef1bb74"
+  },
+  "/tags/crp-ac1": {
+    "__comp": "df203c0f",
+    "__props": "166d16d3"
   },
   "/tags/crr-321": {
     "__comp": "df203c0f",
@@ -1094,6 +1150,10 @@
     "__comp": "df203c0f",
     "__props": "ae544410"
   },
+  "/tags/decisions-597": {
+    "__comp": "df203c0f",
+    "__props": "7ccbd97d"
+  },
   "/tags/decorator-cea": {
     "__comp": "df203c0f",
     "__props": "80f9bfa3"
@@ -1106,9 +1166,17 @@
     "__comp": "df203c0f",
     "__props": "d96eb640"
   },
+  "/tags/deferring-decisions-603": {
+    "__comp": "df203c0f",
+    "__props": "25785a84"
+  },
   "/tags/deloitte-6c8": {
     "__comp": "df203c0f",
     "__props": "e8f7eb26"
+  },
+  "/tags/dependencies-9e4": {
+    "__comp": "df203c0f",
+    "__props": "febc1d67"
   },
   "/tags/dependency-injection-206": {
     "__comp": "df203c0f",
@@ -1117,6 +1185,10 @@
   "/tags/dependency-inversion-857": {
     "__comp": "df203c0f",
     "__props": "94e65b0c"
+  },
+  "/tags/dependency-rule-dd6": {
+    "__comp": "df203c0f",
+    "__props": "e2591c65"
   },
   "/tags/deployment-af0": {
     "__comp": "df203c0f",
@@ -1129,6 +1201,14 @@
   "/tags/design-patterns-52a": {
     "__comp": "df203c0f",
     "__props": "01dac2d7"
+  },
+  "/tags/design-principles-837": {
+    "__comp": "df203c0f",
+    "__props": "25e0671c"
+  },
+  "/tags/details-c44": {
+    "__comp": "df203c0f",
+    "__props": "257c90be"
   },
   "/tags/detection-b71": {
     "__comp": "df203c0f",
@@ -1158,9 +1238,17 @@
     "__comp": "df203c0f",
     "__props": "4c4f8563"
   },
+  "/tags/dijkstra-2ac": {
+    "__comp": "df203c0f",
+    "__props": "0d48988e"
+  },
   "/tags/dimensional-modeling-1c0": {
     "__comp": "df203c0f",
     "__props": "93d3a241"
+  },
+  "/tags/dip-8c4": {
+    "__comp": "df203c0f",
+    "__props": "afdff78c"
   },
   "/tags/direct-debit-99e": {
     "__comp": "df203c0f",
@@ -1169,6 +1257,10 @@
   "/tags/disaster-recovery-e0c": {
     "__comp": "df203c0f",
     "__props": "0f2c72a9"
+  },
+  "/tags/discipline-3cd": {
+    "__comp": "df203c0f",
+    "__props": "429e51ea"
   },
   "/tags/disk-scheduling-09d": {
     "__comp": "df203c0f",
@@ -1278,6 +1370,10 @@
     "__comp": "df203c0f",
     "__props": "4c483e27"
   },
+  "/tags/eisenhower-matrix-312": {
+    "__comp": "df203c0f",
+    "__props": "a8c013dc"
+  },
   "/tags/elastic-beanstalk-7f7": {
     "__comp": "df203c0f",
     "__props": "26006b2f"
@@ -1317,6 +1413,10 @@
   "/tags/enhanced-client-4cc": {
     "__comp": "df203c0f",
     "__props": "5f49ab89"
+  },
+  "/tags/entities-e29": {
+    "__comp": "df203c0f",
+    "__props": "352d582e"
   },
   "/tags/envelope-encryption-6cf": {
     "__comp": "df203c0f",
@@ -1414,6 +1514,10 @@
     "__comp": "df203c0f",
     "__props": "ddefcde0"
   },
+  "/tags/extension-426": {
+    "__comp": "df203c0f",
+    "__props": "3cfef445"
+  },
   "/tags/faang-b2e": {
     "__comp": "df203c0f",
     "__props": "38e37630"
@@ -1425,6 +1529,10 @@
   "/tags/faceted-search-de4": {
     "__comp": "df203c0f",
     "__props": "1c28eaa9"
+  },
+  "/tags/factories-ada": {
+    "__comp": "df203c0f",
+    "__props": "953579d9"
   },
   "/tags/factory-method-45a": {
     "__comp": "df203c0f",
@@ -1441,6 +1549,10 @@
   "/tags/fargate-a8b": {
     "__comp": "df203c0f",
     "__props": "27de3080"
+  },
+  "/tags/fat-interfaces-c28": {
+    "__comp": "df203c0f",
+    "__props": "8790a161"
   },
   "/tags/fault-tolerance-1a5": {
     "__comp": "df203c0f",
@@ -1526,6 +1638,10 @@
     "__comp": "df203c0f",
     "__props": "9bf7169a"
   },
+  "/tags/frameworks-bed": {
+    "__comp": "df203c0f",
+    "__props": "e3a6457c"
+  },
   "/tags/fraud-8f0": {
     "__comp": "df203c0f",
     "__props": "b02e4ea7"
@@ -1550,9 +1666,17 @@
     "__comp": "df203c0f",
     "__props": "7fc5c49c"
   },
+  "/tags/functional-decomposition-462": {
+    "__comp": "df203c0f",
+    "__props": "49ea77f3"
+  },
   "/tags/functional-interfaces-57c": {
     "__comp": "df203c0f",
     "__props": "41fd169f"
+  },
+  "/tags/functional-programming-981": {
+    "__comp": "df203c0f",
+    "__props": "b3586f0b"
   },
   "/tags/fundamentals-b95": {
     "__comp": "df203c0f",
@@ -1601,6 +1725,10 @@
   "/tags/glossary-42e": {
     "__comp": "df203c0f",
     "__props": "7e2bdb2c"
+  },
+  "/tags/goto-e19": {
+    "__comp": "df203c0f",
+    "__props": "2aabfcef"
   },
   "/tags/gradle-9fe": {
     "__comp": "df203c0f",
@@ -1718,6 +1846,10 @@
     "__comp": "df203c0f",
     "__props": "785b5c1c"
   },
+  "/tags/humble-object-e0d": {
+    "__comp": "df203c0f",
+    "__props": "131f89b5"
+  },
   "/tags/hyperloglog-425": {
     "__comp": "df203c0f",
     "__props": "457febee"
@@ -1750,6 +1882,10 @@
     "__comp": "df203c0f",
     "__props": "32b96892"
   },
+  "/tags/immutability-e9f": {
+    "__comp": "df203c0f",
+    "__props": "30e51a16"
+  },
   "/tags/in-e00": {
     "__comp": "df203c0f",
     "__props": "2fe50f48"
@@ -1765,6 +1901,10 @@
   "/tags/incident-response-c87": {
     "__comp": "df203c0f",
     "__props": "c838a251"
+  },
+  "/tags/independence-794": {
+    "__comp": "df203c0f",
+    "__props": "5d0c3cc2"
   },
   "/tags/indexing-e44": {
     "__comp": "df203c0f",
@@ -1789,6 +1929,10 @@
   "/tags/ingress-147": {
     "__comp": "df203c0f",
     "__props": "6f918a64"
+  },
+  "/tags/inheritance-20f": {
+    "__comp": "df203c0f",
+    "__props": "82fa13a5"
   },
   "/tags/init-containers-ed4": {
     "__comp": "df203c0f",
@@ -1930,6 +2074,10 @@
     "__comp": "df203c0f",
     "__props": "1307cdba"
   },
+  "/tags/isp-8a9": {
+    "__comp": "df203c0f",
+    "__props": "2c410df3"
+  },
   "/tags/istio-87f": {
     "__comp": "df203c0f",
     "__props": "eb6c0fbd"
@@ -1945,6 +2093,10 @@
   "/tags/jaeger-1ab": {
     "__comp": "df203c0f",
     "__props": "c3daf4e2"
+  },
+  "/tags/jar-e5d": {
+    "__comp": "df203c0f",
+    "__props": "7d093646"
   },
   "/tags/java-7e9": {
     "__comp": "df203c0f",
@@ -1977,6 +2129,10 @@
   "/tags/joins-b29": {
     "__comp": "df203c0f",
     "__props": "70c88d8f"
+  },
+  "/tags/jpa-db9": {
+    "__comp": "df203c0f",
+    "__props": "f5dd0a2c"
   },
   "/tags/just-in-time-9c1": {
     "__comp": "df203c0f",
@@ -2134,6 +2290,10 @@
     "__comp": "df203c0f",
     "__props": "8176e007"
   },
+  "/tags/linkers-8f7": {
+    "__comp": "df203c0f",
+    "__props": "0c265523"
+  },
   "/tags/linux-371": {
     "__comp": "df203c0f",
     "__props": "d0a33d37"
@@ -2198,6 +2358,10 @@
     "__comp": "df203c0f",
     "__props": "47048e29"
   },
+  "/tags/lsp-049": {
+    "__comp": "df203c0f",
+    "__props": "fadd0de5"
+  },
   "/tags/lti-mindtree-b6d": {
     "__comp": "df203c0f",
     "__props": "ecf030ff"
@@ -2205,6 +2369,10 @@
   "/tags/lua-66e": {
     "__comp": "df203c0f",
     "__props": "84a7192f"
+  },
+  "/tags/main-component-8ae": {
+    "__comp": "df203c0f",
+    "__props": "20232149"
   },
   "/tags/maintenance-7e4": {
     "__comp": "df203c0f",
@@ -2274,6 +2442,10 @@
     "__comp": "df203c0f",
     "__props": "ebc50825"
   },
+  "/tags/missing-chapter-066": {
+    "__comp": "df203c0f",
+    "__props": "3a1b3ae3"
+  },
   "/tags/mitm-31c": {
     "__comp": "df203c0f",
     "__props": "3ca4784f"
@@ -2305,6 +2477,10 @@
   "/tags/monitoring-operations-f41": {
     "__comp": "df203c0f",
     "__props": "8e7601a7"
+  },
+  "/tags/monolith-740": {
+    "__comp": "df203c0f",
+    "__props": "78570bb4"
   },
   "/tags/mqtt-818": {
     "__comp": "df203c0f",
@@ -2454,6 +2630,10 @@
     "__comp": "df203c0f",
     "__props": "0d0d16a5"
   },
+  "/tags/object-oriented-7ce": {
+    "__comp": "df203c0f",
+    "__props": "b4c42507"
+  },
   "/tags/object-oriented-programming-696": {
     "__comp": "df203c0f",
     "__props": "5c1a7326"
@@ -2465,6 +2645,10 @@
   "/tags/observer-8ee": {
     "__comp": "df203c0f",
     "__props": "5573c806"
+  },
+  "/tags/ocp-fa9": {
+    "__comp": "df203c0f",
+    "__props": "276f8d57"
   },
   "/tags/oidc-e0a": {
     "__comp": "df203c0f",
@@ -2546,6 +2730,10 @@
     "__comp": "df203c0f",
     "__props": "5ae70743"
   },
+  "/tags/options-212": {
+    "__comp": "df203c0f",
+    "__props": "419f6cc0"
+  },
   "/tags/oracle-d6f": {
     "__comp": "df203c0f",
     "__props": "08a838f7"
@@ -2594,6 +2782,18 @@
     "__comp": "df203c0f",
     "__props": "2fd253bd"
   },
+  "/tags/package-by-component-3bd": {
+    "__comp": "df203c0f",
+    "__props": "6eda4b97"
+  },
+  "/tags/package-by-feature-2ea": {
+    "__comp": "df203c0f",
+    "__props": "ea1e9d34"
+  },
+  "/tags/package-by-layer-951": {
+    "__comp": "df203c0f",
+    "__props": "30e6be7e"
+  },
   "/tags/package-manager-644": {
     "__comp": "df203c0f",
     "__props": "9ed72c5a"
@@ -2633,6 +2833,10 @@
   "/tags/pam-0a5": {
     "__comp": "df203c0f",
     "__props": "7ef4b618"
+  },
+  "/tags/paradigms-8a9": {
+    "__comp": "df203c0f",
+    "__props": "d9b1f64b"
   },
   "/tags/parallel-consumer-50c": {
     "__comp": "df203c0f",
@@ -2754,6 +2958,10 @@
     "__comp": "df203c0f",
     "__props": "21875f02"
   },
+  "/tags/plugin-architecture-e28": {
+    "__comp": "df203c0f",
+    "__props": "8f10a675"
+  },
   "/tags/pods-442": {
     "__comp": "df203c0f",
     "__props": "37ba24b2"
@@ -2762,9 +2970,17 @@
     "__comp": "df203c0f",
     "__props": "7d4371b6"
   },
+  "/tags/policy-c1d": {
+    "__comp": "df203c0f",
+    "__props": "f9eb2202"
+  },
   "/tags/polling-d26": {
     "__comp": "df203c0f",
     "__props": "0c5ebbc0"
+  },
+  "/tags/polymorphism-561": {
+    "__comp": "df203c0f",
+    "__props": "c477e154"
   },
   "/tags/port-mapping-e81": {
     "__comp": "df203c0f",
@@ -2853,6 +3069,10 @@
   "/tags/producer-transactions-4af": {
     "__comp": "df203c0f",
     "__props": "e6ee0fad"
+  },
+  "/tags/productivity-7f3": {
+    "__comp": "df203c0f",
+    "__props": "9fd51780"
   },
   "/tags/profiling-cf5": {
     "__comp": "df203c0f",
@@ -3046,6 +3266,10 @@
     "__comp": "df203c0f",
     "__props": "2b029f17"
   },
+  "/tags/rep-5d2": {
+    "__comp": "df203c0f",
+    "__props": "72ce7421"
+  },
   "/tags/replication-e99": {
     "__comp": "df203c0f",
     "__props": "68d3743e"
@@ -3109,6 +3333,10 @@
   "/tags/right-5a6": {
     "__comp": "df203c0f",
     "__props": "8b9de99a"
+  },
+  "/tags/robert-c-martin-00a": {
+    "__comp": "df203c0f",
+    "__props": "c1043d82"
   },
   "/tags/roles-2dc": {
     "__comp": "df203c0f",
@@ -3190,6 +3418,10 @@
     "__comp": "df203c0f",
     "__props": "f5be7de7"
   },
+  "/tags/sap-b34": {
+    "__comp": "df203c0f",
+    "__props": "b56721da"
+  },
   "/tags/sast-9ec": {
     "__comp": "df203c0f",
     "__props": "02f31446"
@@ -3226,9 +3458,17 @@
     "__comp": "df203c0f",
     "__props": "8602e95f"
   },
+  "/tags/screaming-architecture-245": {
+    "__comp": "df203c0f",
+    "__props": "c279f254"
+  },
   "/tags/sdlc-5bf": {
     "__comp": "df203c0f",
     "__props": "8a6d9d6c"
+  },
+  "/tags/sdp-a15": {
+    "__comp": "df203c0f",
+    "__props": "bdbad215"
   },
   "/tags/search-8a3": {
     "__comp": "df203c0f",
@@ -3310,6 +3550,10 @@
     "__comp": "df203c0f",
     "__props": "78871483"
   },
+  "/tags/shape-008": {
+    "__comp": "df203c0f",
+    "__props": "785307af"
+  },
   "/tags/sharding-5aa": {
     "__comp": "df203c0f",
     "__props": "5daf08d3"
@@ -3341,6 +3585,10 @@
   "/tags/signing-ee4": {
     "__comp": "df203c0f",
     "__props": "4ed304dd"
+  },
+  "/tags/simon-brown-1b4": {
+    "__comp": "df203c0f",
+    "__props": "aeb35096"
   },
   "/tags/single-responsibility-e3d": {
     "__comp": "df203c0f",
@@ -3462,6 +3710,10 @@
     "__comp": "df203c0f",
     "__props": "9c08cf98"
   },
+  "/tags/srp-4ec": {
+    "__comp": "df203c0f",
+    "__props": "004d70d4"
+  },
   "/tags/srr-fbf": {
     "__comp": "df203c0f",
     "__props": "b94e0f2b"
@@ -3490,9 +3742,17 @@
     "__comp": "df203c0f",
     "__props": "94a88606"
   },
+  "/tags/stable-dependencies-22f": {
+    "__comp": "df203c0f",
+    "__props": "ba0a3c7b"
+  },
   "/tags/stack-829": {
     "__comp": "df203c0f",
     "__props": "1bf7b916"
+  },
+  "/tags/stakeholders-abe": {
+    "__comp": "df203c0f",
+    "__props": "0368f247"
   },
   "/tags/star-schema-b6c": {
     "__comp": "df203c0f",
@@ -3573,6 +3833,14 @@
   "/tags/structural-4a2": {
     "__comp": "df203c0f",
     "__props": "a4568ce4"
+  },
+  "/tags/structure-0b5": {
+    "__comp": "df203c0f",
+    "__props": "808adc4c"
+  },
+  "/tags/structured-programming-8da": {
+    "__comp": "df203c0f",
+    "__props": "0aebbfc0"
   },
   "/tags/sts-a6e": {
     "__comp": "df203c0f",
@@ -3662,9 +3930,17 @@
     "__comp": "df203c0f",
     "__props": "8c0e6cfe"
   },
+  "/tags/tdd-633": {
+    "__comp": "df203c0f",
+    "__props": "cc92f2d8"
+  },
   "/tags/tech-mahindra-574": {
     "__comp": "df203c0f",
     "__props": "26e49a5e"
+  },
+  "/tags/technical-debt-e51": {
+    "__comp": "df203c0f",
+    "__props": "71ae85be"
   },
   "/tags/technical-knowledge-739": {
     "__comp": "df203c0f",
@@ -3678,9 +3954,21 @@
     "__comp": "df203c0f",
     "__props": "ae448c5f"
   },
+  "/tags/test-boundary-6fb": {
+    "__comp": "df203c0f",
+    "__props": "4f9cf8b3"
+  },
   "/tags/test-summary-report-694": {
     "__comp": "df203c0f",
     "__props": "9abe84db"
+  },
+  "/tags/testability-cb6": {
+    "__comp": "df203c0f",
+    "__props": "555eb777"
+  },
+  "/tags/testable-architecture-9db": {
+    "__comp": "df203c0f",
+    "__props": "c95b8ea1"
   },
   "/tags/testing-08a": {
     "__comp": "df203c0f",
@@ -3798,9 +4086,17 @@
     "__comp": "df203c0f",
     "__props": "6c3ec569"
   },
+  "/tags/uncle-bob-c94": {
+    "__comp": "df203c0f",
+    "__props": "e7e6f789"
+  },
   "/tags/unit-testing-838": {
     "__comp": "df203c0f",
     "__props": "7ed82b28"
+  },
+  "/tags/use-cases-b63": {
+    "__comp": "df203c0f",
+    "__props": "aac3a209"
   },
   "/tags/user-pools-8b3": {
     "__comp": "df203c0f",
@@ -3825,6 +4121,10 @@
   "/tags/versions-741": {
     "__comp": "df203c0f",
     "__props": "ddfa4fb6"
+  },
+  "/tags/video-sales-970": {
+    "__comp": "df203c0f",
+    "__props": "1a95625c"
   },
   "/tags/virtual-memory-b33": {
     "__comp": "df203c0f",
@@ -3894,6 +4194,10 @@
     "__comp": "df203c0f",
     "__props": "7ad3369b"
   },
+  "/tags/what-is-architecture-af5": {
+    "__comp": "df203c0f",
+    "__props": "81d00044"
+  },
   "/tags/window-functions-8f9": {
     "__comp": "df203c0f",
     "__props": "91f70e26"
@@ -3905,6 +4209,10 @@
   "/tags/wireshark-b09": {
     "__comp": "df203c0f",
     "__props": "4f065c30"
+  },
+  "/tags/wiring-43b": {
+    "__comp": "df203c0f",
+    "__props": "a52a6d83"
   },
   "/tags/worker-node-398": {
     "__comp": "df203c0f",
@@ -3958,7 +4266,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-4a9": {
+  "/-555": {
     "__comp": "a94703ab"
   },
   "/aws-aae": {
@@ -4036,6 +4344,94 @@
   "/books/building-microservice/chapter-16-05f": {
     "__comp": "17896441",
     "content": "f0cf1ac1"
+  },
+  "/books/clean-architecture/intro-d92": {
+    "__comp": "17896441",
+    "content": "1272b997"
+  },
+  "/books/clean-architecture/part1-introduction/chapter-01-design-and-architecture-fbb": {
+    "__comp": "17896441",
+    "content": "17f132f2"
+  },
+  "/books/clean-architecture/part1-introduction/chapter-02-two-values-074": {
+    "__comp": "17896441",
+    "content": "3ad728fb"
+  },
+  "/books/clean-architecture/part2-programming-paradigms/chapter-03-paradigm-overview-7af": {
+    "__comp": "17896441",
+    "content": "5e8fdc02"
+  },
+  "/books/clean-architecture/part2-programming-paradigms/chapter-04-structured-programming-dcd": {
+    "__comp": "17896441",
+    "content": "a8b4561b"
+  },
+  "/books/clean-architecture/part2-programming-paradigms/chapter-05-oop-256": {
+    "__comp": "17896441",
+    "content": "d926aeba"
+  },
+  "/books/clean-architecture/part2-programming-paradigms/chapter-06-functional-programming-d87": {
+    "__comp": "17896441",
+    "content": "28f33a75"
+  },
+  "/books/clean-architecture/part3-design-principles/chapter-07-srp-cd7": {
+    "__comp": "17896441",
+    "content": "b5ab4f51"
+  },
+  "/books/clean-architecture/part3-design-principles/chapter-08-ocp-d2b": {
+    "__comp": "17896441",
+    "content": "c746eac2"
+  },
+  "/books/clean-architecture/part3-design-principles/chapter-09-lsp-b4a": {
+    "__comp": "17896441",
+    "content": "fa532979"
+  },
+  "/books/clean-architecture/part3-design-principles/chapter-10-isp-d02": {
+    "__comp": "17896441",
+    "content": "730a7a59"
+  },
+  "/books/clean-architecture/part3-design-principles/chapter-11-dip-c49": {
+    "__comp": "17896441",
+    "content": "1d500968"
+  },
+  "/books/clean-architecture/part4-component-principles/chapter-12-components-08f": {
+    "__comp": "17896441",
+    "content": "a9883e45"
+  },
+  "/books/clean-architecture/part4-component-principles/chapter-13-component-cohesion-807": {
+    "__comp": "17896441",
+    "content": "cb37ef52"
+  },
+  "/books/clean-architecture/part4-component-principles/chapter-14-component-coupling-9a2": {
+    "__comp": "17896441",
+    "content": "0fba9ad5"
+  },
+  "/books/clean-architecture/part5-architecture/chapter-15-what-is-architecture-676": {
+    "__comp": "17896441",
+    "content": "4bcd0fab"
+  },
+  "/books/clean-architecture/part5-architecture/chapter-16-independence-a73": {
+    "__comp": "17896441",
+    "content": "cf0cdc92"
+  },
+  "/books/clean-architecture/part5-architecture/chapter-17-20-boundaries-83d": {
+    "__comp": "17896441",
+    "content": "cb0ccb24"
+  },
+  "/books/clean-architecture/part5-architecture/chapter-21-25-screaming-clean-775": {
+    "__comp": "17896441",
+    "content": "4927344b"
+  },
+  "/books/clean-architecture/part5-architecture/chapter-27-29-services-testing-e0f": {
+    "__comp": "17896441",
+    "content": "c9323b5e"
+  },
+  "/books/clean-architecture/part6-details/chapter-30-32-details-0e6": {
+    "__comp": "17896441",
+    "content": "95ec36b7"
+  },
+  "/books/clean-architecture/part6-details/chapter-33-34-case-study-f75": {
+    "__comp": "17896441",
+    "content": "fa6a6542"
   },
   "/books/clean-code/chapter-01-clean-code-32c": {
     "__comp": "17896441",
@@ -4317,7 +4713,7 @@
     "__comp": "17896441",
     "content": "e8320ceb"
   },
-  "/premium/company/deloitte-java-developer-interview-questions-6e1": {
+  "/premium/company/deloitte-java-developer-interview-questions-175": {
     "__comp": "17896441",
     "content": "b9a550cc"
   },
@@ -4349,7 +4745,7 @@
     "__comp": "17896441",
     "content": "3cb1051c"
   },
-  "/premium/company/nagarro-java-developer-interview-questions-c13": {
+  "/premium/company/nagarro-java-developer-interview-questions-0ca": {
     "__comp": "17896441",
     "content": "667f6944"
   },
@@ -4361,7 +4757,7 @@
     "__comp": "17896441",
     "content": "e6c6a13a"
   },
-  "/premium/company/paytm-java-developer-interview-questions-fd2": {
+  "/premium/company/paytm-java-developer-interview-questions-bf3": {
     "__comp": "17896441",
     "content": "8a3e6128"
   },
@@ -4401,7 +4797,7 @@
     "__comp": "17896441",
     "content": "8a8d0fdd"
   },
-  "/system-design-8dc": {
+  "/system-design-433": {
     "__comp": "17896441",
     "content": "93124d3b"
   },
@@ -5433,7 +5829,7 @@
     "__comp": "17896441",
     "content": "4dca4d8c"
   },
-  "/technical-knowledge/kafka/advanced/rebalance-storms-cf1": {
+  "/technical-knowledge/kafka/advanced/rebalance-storms-b07": {
     "__comp": "17896441",
     "content": "4276a506"
   },
@@ -5817,123 +6213,123 @@
     "__comp": "17896441",
     "content": "d9dc4b65"
   },
-  "/technical-knowledge/system-design/advanced-consensus-bft-39f": {
+  "/technical-knowledge/system-design/advanced-consensus-bft-92c": {
     "__comp": "17896441",
     "content": "7bce8a09"
   },
-  "/technical-knowledge/system-design/api-design-f89": {
+  "/technical-knowledge/system-design/api-design-dee": {
     "__comp": "17896441",
     "content": "0237d5d1"
   },
-  "/technical-knowledge/system-design/architecture-fundamentals-d35": {
+  "/technical-knowledge/system-design/architecture-fundamentals-7d0": {
     "__comp": "17896441",
     "content": "c0e5a9ef"
   },
-  "/technical-knowledge/system-design/bloom-filters-804": {
+  "/technical-knowledge/system-design/bloom-filters-f0b": {
     "__comp": "17896441",
     "content": "ce0d883d"
   },
-  "/technical-knowledge/system-design/caching-strategies-ae2": {
+  "/technical-knowledge/system-design/caching-strategies-d0f": {
     "__comp": "17896441",
     "content": "724987fe"
   },
-  "/technical-knowledge/system-design/cap-theorem-system-design-074": {
+  "/technical-knowledge/system-design/cap-theorem-system-design-558": {
     "__comp": "17896441",
     "content": "75fc6f05"
   },
-  "/technical-knowledge/system-design/capacity-planning-153": {
+  "/technical-knowledge/system-design/capacity-planning-98d": {
     "__comp": "17896441",
     "content": "57eb6c90"
   },
-  "/technical-knowledge/system-design/common-interview-questions-177": {
+  "/technical-knowledge/system-design/common-interview-questions-2cb": {
     "__comp": "17896441",
     "content": "6efb14ae"
   },
-  "/technical-knowledge/system-design/consistent-hashing-deep-dive-42e": {
+  "/technical-knowledge/system-design/consistent-hashing-deep-dive-9b5": {
     "__comp": "17896441",
     "content": "65c13a58"
   },
-  "/technical-knowledge/system-design/data-consistency-c0f": {
+  "/technical-knowledge/system-design/data-consistency-3c4": {
     "__comp": "17896441",
     "content": "0098328c"
   },
-  "/technical-knowledge/system-design/database-design-af7": {
+  "/technical-knowledge/system-design/database-design-810": {
     "__comp": "17896441",
     "content": "9fe414ef"
   },
-  "/technical-knowledge/system-design/database-indexing-deep-dive-a6d": {
+  "/technical-knowledge/system-design/database-indexing-deep-dive-261": {
     "__comp": "17896441",
     "content": "d628e604"
   },
-  "/technical-knowledge/system-design/distributed-locking-f69": {
+  "/technical-knowledge/system-design/distributed-locking-7f4": {
     "__comp": "17896441",
     "content": "33fd115f"
   },
-  "/technical-knowledge/system-design/distributed-systems-468": {
+  "/technical-knowledge/system-design/distributed-systems-888": {
     "__comp": "17896441",
     "content": "b21b4701"
   },
-  "/technical-knowledge/system-design/domain-driven-design-9e3": {
+  "/technical-knowledge/system-design/domain-driven-design-558": {
     "__comp": "17896441",
     "content": "a12e521a"
   },
-  "/technical-knowledge/system-design/handling-contention-d01": {
+  "/technical-knowledge/system-design/handling-contention-f31": {
     "__comp": "17896441",
     "content": "89400898"
   },
-  "/technical-knowledge/system-design/interview-framework-961": {
+  "/technical-knowledge/system-design/interview-framework-9ed": {
     "__comp": "17896441",
     "content": "fb6e70f5"
   },
-  "/technical-knowledge/system-design/large-blobs-c72": {
+  "/technical-knowledge/system-design/large-blobs-469": {
     "__comp": "17896441",
     "content": "5c3590ca"
   },
-  "/technical-knowledge/system-design/load-balancing-reliability-a2d": {
+  "/technical-knowledge/system-design/load-balancing-reliability-280": {
     "__comp": "17896441",
     "content": "b14a4730"
   },
-  "/technical-knowledge/system-design/long-running-tasks-b43": {
+  "/technical-knowledge/system-design/long-running-tasks-86e": {
     "__comp": "17896441",
     "content": "010e7447"
   },
-  "/technical-knowledge/system-design/message-queues-b7c": {
+  "/technical-knowledge/system-design/message-queues-0b0": {
     "__comp": "17896441",
     "content": "3940c236"
   },
-  "/technical-knowledge/system-design/message-queues-detailed-c96": {
+  "/technical-knowledge/system-design/message-queues-detailed-72e": {
     "__comp": "17896441",
     "content": "2fd6c3bc"
   },
-  "/technical-knowledge/system-design/microservices-patterns-0dd": {
+  "/technical-knowledge/system-design/microservices-patterns-253": {
     "__comp": "17896441",
     "content": "a912936e"
   },
-  "/technical-knowledge/system-design/multi-step-process-afb": {
+  "/technical-knowledge/system-design/multi-step-process-df1": {
     "__comp": "17896441",
     "content": "e47e154f"
   },
-  "/technical-knowledge/system-design/observability-316": {
+  "/technical-knowledge/system-design/observability-a60": {
     "__comp": "17896441",
     "content": "f58357ef"
   },
-  "/technical-knowledge/system-design/real-time-updates-a9f": {
+  "/technical-knowledge/system-design/real-time-updates-af7": {
     "__comp": "17896441",
     "content": "ec5f7116"
   },
-  "/technical-knowledge/system-design/scaling-reads-6f3": {
+  "/technical-knowledge/system-design/scaling-reads-35a": {
     "__comp": "17896441",
     "content": "382009e9"
   },
-  "/technical-knowledge/system-design/scaling-writes-3a6": {
+  "/technical-knowledge/system-design/scaling-writes-779": {
     "__comp": "17896441",
     "content": "91aa5927"
   },
-  "/technical-knowledge/system-design/search-systems-b96": {
+  "/technical-knowledge/system-design/search-systems-b42": {
     "__comp": "17896441",
     "content": "d0e1a196"
   },
-  "/technical-knowledge/system-design/security-patterns-b98": {
+  "/technical-knowledge/system-design/security-patterns-99c": {
     "__comp": "17896441",
     "content": "e8a6b3e1"
   },

@@ -201,7 +201,7 @@ The interviewer will guide this. Common deep dives:
 ### Q: Walk me through how you'd estimate QPS for a feature that 1% of 100M users will use daily.
 
 **A:**
-1. Daily active users for feature: $100{,}000{,}000 \times 1\% = 1{,}000{,}000$.
-2. Average QPS across a day: $1{,}000{,}000 / 86{,}400 \approx 11.6$ QPS.
+1. Daily active users for feature: $100,000,000 \times 1\% = 1,000,000$.
+2. Average QPS across a day: $1,000,000 / 86,400 \approx 11.6$ QPS.
 3. Apply peak factor (for example 10x): peak QPS is about $116$.
 4. Add safety margin (for example 2x) for bursts and retries: design target about $200$-$250$ QPS.

@@ -1266,6 +1266,77 @@ const sidebars: SidebarsConfig = {
 								'books/building-microservice/chapter-16'],
 						},
 					],
+				},
+				{
+					type: 'category',
+					label: '📙 Clean Architecture',
+					collapsed: true,
+					items: [
+						'books/clean-architecture/intro',
+						{
+							type: 'category',
+							label: 'Part I — Introduction',
+							collapsed: false,
+							items: [
+								'books/clean-architecture/part1-introduction/chapter-01-design-and-architecture',
+								'books/clean-architecture/part1-introduction/chapter-02-two-values',
+							],
+						},
+						{
+							type: 'category',
+							label: 'Part II — Programming Paradigms',
+							collapsed: false,
+							items: [
+								'books/clean-architecture/part2-programming-paradigms/chapter-03-paradigm-overview',
+								'books/clean-architecture/part2-programming-paradigms/chapter-04-structured-programming',
+								'books/clean-architecture/part2-programming-paradigms/chapter-05-oop',
+								'books/clean-architecture/part2-programming-paradigms/chapter-06-functional-programming',
+							],
+						},
+						{
+							type: 'category',
+							label: 'Part III — Design Principles (SOLID)',
+							collapsed: false,
+							items: [
+								'books/clean-architecture/part3-design-principles/chapter-07-srp',
+								'books/clean-architecture/part3-design-principles/chapter-08-ocp',
+								'books/clean-architecture/part3-design-principles/chapter-09-lsp',
+								'books/clean-architecture/part3-design-principles/chapter-10-isp',
+								'books/clean-architecture/part3-design-principles/chapter-11-dip',
+							],
+						},
+						{
+							type: 'category',
+							label: 'Part IV — Component Principles',
+							collapsed: false,
+							items: [
+								'books/clean-architecture/part4-component-principles/chapter-12-components',
+								'books/clean-architecture/part4-component-principles/chapter-13-component-cohesion',
+								'books/clean-architecture/part4-component-principles/chapter-14-component-coupling',
+							],
+						},
+						{
+							type: 'category',
+							label: 'Part V — Architecture',
+							collapsed: false,
+							items: [
+								'books/clean-architecture/part5-architecture/chapter-15-what-is-architecture',
+								'books/clean-architecture/part5-architecture/chapter-16-independence',
+								'books/clean-architecture/part5-architecture/chapter-17-20-boundaries',
+								'books/clean-architecture/part5-architecture/chapter-21-25-screaming-clean',
+								'books/clean-architecture/part5-architecture/chapter-27-29-services-testing',
+							],
+						},
+						{
+							type: 'category',
+							label: 'Part VI — Details & Case Study',
+							collapsed: false,
+							items: [
+								'books/clean-architecture/part6-details/chapter-30-32-details',
+								'books/clean-architecture/part6-details/chapter-33-34-case-study',
+							],
+						},
+					]
 				}
 			]
 		},

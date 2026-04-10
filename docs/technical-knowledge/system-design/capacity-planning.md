@@ -156,11 +156,11 @@ For Spring Boot service at ~10,000 RPS per instance:
 
 ### Q: You need to store 1M images per day. How much storage do you need in 5 years?
 
-**A:** Compute $1{,}000{,}000 \times 365 \times 5 \times$ average image size, then add replicas/erasure overhead and metadata/index space. Include growth buffer for derivative sizes (thumbnails/transcodes).
+**A:** Compute $1,000,000 \times 365 \times 5 \times$ average image size, then add replicas/erasure overhead and metadata/index space. Include growth buffer for derivative sizes (thumbnails/transcodes).
 
 ### Q: A feature requires reading 1 KB per request at 50,000 RPS. What's the bandwidth? Can a single server handle it?
 
-**A:** Raw egress is about $50{,}000 \times 1\text{ KB} \approx 50\text{ MB/s}$ before protocol overhead. A single server might handle it on modern NICs, but headroom, TLS, and tail latency usually require horizontal scaling.
+**A:** Raw egress is about $50,000 \times 1\ KB \approx 50\ MB/s$ before protocol overhead. A single server might handle it on modern NICs, but headroom, TLS, and tail latency usually require horizontal scaling.
 
 ### Q: How would you estimate the number of servers needed for a new service?
 

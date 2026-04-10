@@ -96,6 +96,116 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "books/clean-architecture/intro",
+              "path": "/books/clean-architecture/intro",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-architecture/part1-introduction/chapter-01-design-and-architecture",
+              "path": "/books/clean-architecture/part1-introduction/chapter-01-design-and-architecture",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-architecture/part1-introduction/chapter-02-two-values",
+              "path": "/books/clean-architecture/part1-introduction/chapter-02-two-values",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-architecture/part2-programming-paradigms/chapter-03-paradigm-overview",
+              "path": "/books/clean-architecture/part2-programming-paradigms/chapter-03-paradigm-overview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-architecture/part2-programming-paradigms/chapter-04-structured-programming",
+              "path": "/books/clean-architecture/part2-programming-paradigms/chapter-04-structured-programming",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-architecture/part2-programming-paradigms/chapter-05-oop",
+              "path": "/books/clean-architecture/part2-programming-paradigms/chapter-05-oop",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-architecture/part2-programming-paradigms/chapter-06-functional-programming",
+              "path": "/books/clean-architecture/part2-programming-paradigms/chapter-06-functional-programming",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-architecture/part3-design-principles/chapter-07-srp",
+              "path": "/books/clean-architecture/part3-design-principles/chapter-07-srp",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-architecture/part3-design-principles/chapter-08-ocp",
+              "path": "/books/clean-architecture/part3-design-principles/chapter-08-ocp",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-architecture/part3-design-principles/chapter-09-lsp",
+              "path": "/books/clean-architecture/part3-design-principles/chapter-09-lsp",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-architecture/part3-design-principles/chapter-10-isp",
+              "path": "/books/clean-architecture/part3-design-principles/chapter-10-isp",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-architecture/part3-design-principles/chapter-11-dip",
+              "path": "/books/clean-architecture/part3-design-principles/chapter-11-dip",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-architecture/part4-component-principles/chapter-12-components",
+              "path": "/books/clean-architecture/part4-component-principles/chapter-12-components",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-architecture/part4-component-principles/chapter-13-component-cohesion",
+              "path": "/books/clean-architecture/part4-component-principles/chapter-13-component-cohesion",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-architecture/part4-component-principles/chapter-14-component-coupling",
+              "path": "/books/clean-architecture/part4-component-principles/chapter-14-component-coupling",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-architecture/part5-architecture/chapter-15-what-is-architecture",
+              "path": "/books/clean-architecture/part5-architecture/chapter-15-what-is-architecture",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-architecture/part5-architecture/chapter-16-independence",
+              "path": "/books/clean-architecture/part5-architecture/chapter-16-independence",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-architecture/part5-architecture/chapter-17-20-boundaries",
+              "path": "/books/clean-architecture/part5-architecture/chapter-17-20-boundaries",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-architecture/part5-architecture/chapter-21-25-screaming-clean",
+              "path": "/books/clean-architecture/part5-architecture/chapter-21-25-screaming-clean",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-architecture/part5-architecture/chapter-27-29-services-testing",
+              "path": "/books/clean-architecture/part5-architecture/chapter-27-29-services-testing",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-architecture/part6-details/chapter-30-32-details",
+              "path": "/books/clean-architecture/part6-details/chapter-30-32-details",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/clean-architecture/part6-details/chapter-33-34-case-study",
+              "path": "/books/clean-architecture/part6-details/chapter-33-34-case-study",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "books/clean-code/chapter-01-clean-code",
               "path": "/books/clean-code/chapter-01-clean-code",
               "sidebar": "tutorialSidebar"
