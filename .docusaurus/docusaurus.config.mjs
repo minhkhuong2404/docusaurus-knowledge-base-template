@@ -13,9 +13,12 @@ export default {
   "future": {
     "v4": {
       "removeLegacyPostBuildHeadAttribute": true,
-      "useCssCascadeLayers": true
+      "useCssCascadeLayers": true,
+      "siteStorageNamespacing": true,
+      "fasterByDefault": true,
+      "mdx1CompatDisabledByDefault": true
     },
-    "experimental_faster": {
+    "faster": {
       "swcJsLoader": true,
       "swcJsMinimizer": true,
       "swcHtmlMinimizer": true,
@@ -23,12 +26,10 @@ export default {
       "mdxCrossCompilerCache": true,
       "rspackBundler": true,
       "rspackPersistentCache": true,
-      "ssgWorkerThreads": false
+      "ssgWorkerThreads": true,
+      "gitEagerVcs": true
     },
-    "experimental_storage": {
-      "type": "localStorage",
-      "namespace": false
-    },
+    "experimental_vcs": {},
     "experimental_router": "browser"
   },
   "presets": [
@@ -507,6 +508,10 @@ export default {
     ],
     "localeConfigs": {}
   },
+  "storage": {
+    "type": "localStorage",
+    "namespace": true
+  },
   "onBrokenLinks": "throw",
   "onBrokenAnchors": "warn",
   "onDuplicateRoutes": "warn",
@@ -526,9 +531,9 @@ export default {
     "mermaid": false,
     "emoji": true,
     "mdx1Compat": {
-      "comments": true,
-      "admonitions": true,
-      "headingIds": true
+      "comments": false,
+      "admonitions": false,
+      "headingIds": false
     },
     "anchors": {
       "maintainCase": false

@@ -12,13 +12,13 @@
       "plugin": "138e0e15"
     }
   },
-  "/-b78": {
+  "/-356": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-52d": {
+  "/-c75": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -4266,7 +4266,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-555": {
+  "/-e2a": {
     "__comp": "a94703ab"
   },
   "/aws-aae": {
@@ -4345,91 +4345,91 @@
     "__comp": "17896441",
     "content": "f0cf1ac1"
   },
-  "/books/clean-architecture/intro-d92": {
+  "/books/clean-architecture/intro-e2b": {
     "__comp": "17896441",
     "content": "1272b997"
   },
-  "/books/clean-architecture/part1-introduction/chapter-01-design-and-architecture-fbb": {
+  "/books/clean-architecture/part1-introduction/chapter-01-design-and-architecture-a8d": {
     "__comp": "17896441",
     "content": "17f132f2"
   },
-  "/books/clean-architecture/part1-introduction/chapter-02-two-values-074": {
+  "/books/clean-architecture/part1-introduction/chapter-02-two-values-0b1": {
     "__comp": "17896441",
     "content": "3ad728fb"
   },
-  "/books/clean-architecture/part2-programming-paradigms/chapter-03-paradigm-overview-7af": {
+  "/books/clean-architecture/part2-programming-paradigms/chapter-03-paradigm-overview-57a": {
     "__comp": "17896441",
     "content": "5e8fdc02"
   },
-  "/books/clean-architecture/part2-programming-paradigms/chapter-04-structured-programming-dcd": {
+  "/books/clean-architecture/part2-programming-paradigms/chapter-04-structured-programming-304": {
     "__comp": "17896441",
     "content": "a8b4561b"
   },
-  "/books/clean-architecture/part2-programming-paradigms/chapter-05-oop-256": {
+  "/books/clean-architecture/part2-programming-paradigms/chapter-05-oop-4bf": {
     "__comp": "17896441",
     "content": "d926aeba"
   },
-  "/books/clean-architecture/part2-programming-paradigms/chapter-06-functional-programming-d87": {
+  "/books/clean-architecture/part2-programming-paradigms/chapter-06-functional-programming-9fe": {
     "__comp": "17896441",
     "content": "28f33a75"
   },
-  "/books/clean-architecture/part3-design-principles/chapter-07-srp-cd7": {
+  "/books/clean-architecture/part3-design-principles/chapter-07-srp-f3b": {
     "__comp": "17896441",
     "content": "b5ab4f51"
   },
-  "/books/clean-architecture/part3-design-principles/chapter-08-ocp-d2b": {
+  "/books/clean-architecture/part3-design-principles/chapter-08-ocp-675": {
     "__comp": "17896441",
     "content": "c746eac2"
   },
-  "/books/clean-architecture/part3-design-principles/chapter-09-lsp-b4a": {
+  "/books/clean-architecture/part3-design-principles/chapter-09-lsp-43b": {
     "__comp": "17896441",
     "content": "fa532979"
   },
-  "/books/clean-architecture/part3-design-principles/chapter-10-isp-d02": {
+  "/books/clean-architecture/part3-design-principles/chapter-10-isp-709": {
     "__comp": "17896441",
     "content": "730a7a59"
   },
-  "/books/clean-architecture/part3-design-principles/chapter-11-dip-c49": {
+  "/books/clean-architecture/part3-design-principles/chapter-11-dip-d7f": {
     "__comp": "17896441",
     "content": "1d500968"
   },
-  "/books/clean-architecture/part4-component-principles/chapter-12-components-08f": {
+  "/books/clean-architecture/part4-component-principles/chapter-12-components-354": {
     "__comp": "17896441",
     "content": "a9883e45"
   },
-  "/books/clean-architecture/part4-component-principles/chapter-13-component-cohesion-807": {
+  "/books/clean-architecture/part4-component-principles/chapter-13-component-cohesion-901": {
     "__comp": "17896441",
     "content": "cb37ef52"
   },
-  "/books/clean-architecture/part4-component-principles/chapter-14-component-coupling-9a2": {
+  "/books/clean-architecture/part4-component-principles/chapter-14-component-coupling-e8c": {
     "__comp": "17896441",
     "content": "0fba9ad5"
   },
-  "/books/clean-architecture/part5-architecture/chapter-15-what-is-architecture-676": {
+  "/books/clean-architecture/part5-architecture/chapter-15-what-is-architecture-6cd": {
     "__comp": "17896441",
     "content": "4bcd0fab"
   },
-  "/books/clean-architecture/part5-architecture/chapter-16-independence-a73": {
+  "/books/clean-architecture/part5-architecture/chapter-16-independence-d5e": {
     "__comp": "17896441",
     "content": "cf0cdc92"
   },
-  "/books/clean-architecture/part5-architecture/chapter-17-20-boundaries-83d": {
+  "/books/clean-architecture/part5-architecture/chapter-17-20-boundaries-a87": {
     "__comp": "17896441",
     "content": "cb0ccb24"
   },
-  "/books/clean-architecture/part5-architecture/chapter-21-25-screaming-clean-775": {
+  "/books/clean-architecture/part5-architecture/chapter-21-25-screaming-clean-61b": {
     "__comp": "17896441",
     "content": "4927344b"
   },
-  "/books/clean-architecture/part5-architecture/chapter-27-29-services-testing-e0f": {
+  "/books/clean-architecture/part5-architecture/chapter-27-29-services-testing-6a7": {
     "__comp": "17896441",
     "content": "c9323b5e"
   },
-  "/books/clean-architecture/part6-details/chapter-30-32-details-0e6": {
+  "/books/clean-architecture/part6-details/chapter-30-32-details-e07": {
     "__comp": "17896441",
     "content": "95ec36b7"
   },
-  "/books/clean-architecture/part6-details/chapter-33-34-case-study-f75": {
+  "/books/clean-architecture/part6-details/chapter-33-34-case-study-b5d": {
     "__comp": "17896441",
     "content": "fa6a6542"
   },
@@ -6237,7 +6237,7 @@
     "__comp": "17896441",
     "content": "75fc6f05"
   },
-  "/technical-knowledge/system-design/capacity-planning-98d": {
+  "/technical-knowledge/system-design/capacity-planning-90a": {
     "__comp": "17896441",
     "content": "57eb6c90"
   },
@@ -6277,7 +6277,7 @@
     "__comp": "17896441",
     "content": "89400898"
   },
-  "/technical-knowledge/system-design/interview-framework-9ed": {
+  "/technical-knowledge/system-design/interview-framework-37b": {
     "__comp": "17896441",
     "content": "fb6e70f5"
   },

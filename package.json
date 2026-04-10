@@ -2,6 +2,10 @@
   "name": "engineering-knowledge-base",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
   "scripts": {
     "start": "docusaurus start",
     "build": "DOCUSAURUS_IGNORE_SSG_WARNINGS=true docusaurus build",

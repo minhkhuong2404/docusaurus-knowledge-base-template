@@ -13,7 +13,7 @@ const config: Config = {
 	projectName: 'docusaurus-knowledge-base-template',
 	future: {
 		v4: true,
-		experimental_faster: {
+		faster: {
 			swcJsLoader: true,
 			swcJsMinimizer: true,
 			swcHtmlMinimizer: true,
