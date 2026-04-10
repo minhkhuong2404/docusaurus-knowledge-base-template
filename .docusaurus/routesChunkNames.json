@@ -12,13 +12,13 @@
       "plugin": "138e0e15"
     }
   },
-  "/-356": {
+  "/-ba7": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-c75": {
+  "/-51c": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -121,6 +121,10 @@
   "/tags/angular-bbd": {
     "__comp": "df203c0f",
     "__props": "911daa87"
+  },
+  "/tags/answers-fd9": {
+    "__comp": "df203c0f",
+    "__props": "726177c8"
   },
   "/tags/anycast-cbf": {
     "__comp": "df203c0f",
@@ -2118,6 +2122,10 @@
     "__comp": "df203c0f",
     "__props": "130aa459"
   },
+  "/tags/jdbc-e39": {
+    "__comp": "df203c0f",
+    "__props": "6b455593"
+  },
   "/tags/job-0a9": {
     "__comp": "df203c0f",
     "__props": "cfb5aad4"
@@ -3514,6 +3522,10 @@
     "__comp": "df203c0f",
     "__props": "0f8b400a"
   },
+  "/tags/serialization-38d": {
+    "__comp": "df203c0f",
+    "__props": "94f44a09"
+  },
   "/tags/serverless-e75": {
     "__comp": "df203c0f",
     "__props": "1e781f6d"
@@ -3946,6 +3958,10 @@
     "__comp": "df203c0f",
     "__props": "ad3cc94a"
   },
+  "/tags/telephonic-f86": {
+    "__comp": "df203c0f",
+    "__props": "ed310afc"
+  },
   "/tags/template-method-4e8": {
     "__comp": "df203c0f",
     "__props": "46da2414"
@@ -4266,7 +4282,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-e2a": {
+  "/-ac6": {
     "__comp": "a94703ab"
   },
   "/aws-aae": {
@@ -5649,6 +5665,26 @@
     "__comp": "17896441",
     "content": "386b87ee"
   },
+  "/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-1-2fb": {
+    "__comp": "17896441",
+    "content": "bb396e2f"
+  },
+  "/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-2-507": {
+    "__comp": "17896441",
+    "content": "acf6cb2d"
+  },
+  "/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-3-993": {
+    "__comp": "17896441",
+    "content": "3f91e9c8"
+  },
+  "/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-4-53e": {
+    "__comp": "17896441",
+    "content": "dce1c7f2"
+  },
+  "/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-5-e0b": {
+    "__comp": "17896441",
+    "content": "8a8e4d60"
+  },
   "/technical-knowledge/interview-questions/java/break-singleton-java-fdd": {
     "__comp": "17896441",
     "content": "16a82f5e"
@@ -5785,7 +5821,7 @@
     "__comp": "17896441",
     "content": "adb02301"
   },
-  "/technical-knowledge/java/java-stack-vs-heap-632": {
+  "/technical-knowledge/java/java-stack-vs-heap-c32": {
     "__comp": "17896441",
     "content": "77dd0904"
   },

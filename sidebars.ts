@@ -1377,6 +1377,18 @@ const sidebars: SidebarsConfig = {
 				},
 				{
 					type: 'category',
+					label: '🧠 Grokking Java Answers',
+					collapsed: true,
+					items: [
+						'technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-1',
+						'technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-2',
+						'technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-3',
+						'technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-4',
+						'technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-5',
+					]
+				},
+				{
+					type: 'category',
 					label: '💼 General Java/Spring Boot Interviews',
 					collapsed: true,
 					items: [

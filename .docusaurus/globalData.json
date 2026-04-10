@@ -1728,6 +1728,31 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-1",
+              "path": "/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-1",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-2",
+              "path": "/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-2",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-3",
+              "path": "/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-3",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-4",
+              "path": "/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-4",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-5",
+              "path": "/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-5",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/interview-questions/java/break-singleton-java",
               "path": "/technical-knowledge/interview-questions/java/break-singleton-java",
               "sidebar": "tutorialSidebar"

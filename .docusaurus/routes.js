@@ -14,11 +14,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '356'),
+    component: ComponentCreator('/', 'ba7'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'c75'),
+        component: ComponentCreator('/', '51c'),
         routes: [
           {
             path: '/tags',
@@ -143,6 +143,11 @@ export default [
           {
             path: '/tags/angular',
             component: ComponentCreator('/tags/angular', 'bbd'),
+            exact: true
+          },
+          {
+            path: '/tags/answers',
+            component: ComponentCreator('/tags/answers', 'fd9'),
             exact: true
           },
           {
@@ -2641,6 +2646,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/jdbc',
+            component: ComponentCreator('/tags/jdbc', 'e39'),
+            exact: true
+          },
+          {
             path: '/tags/job',
             component: ComponentCreator('/tags/job', '0a9'),
             exact: true
@@ -4386,6 +4396,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/serialization',
+            component: ComponentCreator('/tags/serialization', '38d'),
+            exact: true
+          },
+          {
             path: '/tags/serverless',
             component: ComponentCreator('/tags/serverless', 'e75'),
             exact: true
@@ -4926,6 +4941,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/telephonic',
+            component: ComponentCreator('/tags/telephonic', 'f86'),
+            exact: true
+          },
+          {
             path: '/tags/template-method',
             component: ComponentCreator('/tags/template-method', '4e8'),
             exact: true
@@ -5327,7 +5347,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'e2a'),
+            component: ComponentCreator('/', 'ac6'),
             routes: [
               {
                 path: '/aws',
@@ -7397,6 +7417,36 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-1',
+                component: ComponentCreator('/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-1', '2fb'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-2',
+                component: ComponentCreator('/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-2', '507'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-3',
+                component: ComponentCreator('/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-3', '993'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-4',
+                component: ComponentCreator('/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-4', '53e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-5',
+                component: ComponentCreator('/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-5', 'e0b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/interview-questions/java/break-singleton-java',
                 component: ComponentCreator('/technical-knowledge/interview-questions/java/break-singleton-java', 'fdd'),
                 exact: true,
@@ -7601,7 +7651,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-stack-vs-heap',
-                component: ComponentCreator('/technical-knowledge/java/java-stack-vs-heap', '632'),
+                component: ComponentCreator('/technical-knowledge/java/java-stack-vs-heap', 'c32'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
