@@ -1648,6 +1648,10 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/interview-questions/genz-career/mock-interview/java-spring-boot-14-years-interview-detailed",
+              "path": "/technical-knowledge/interview-questions/genz-career/mock-interview/java-spring-boot-14-years-interview-detailed"
+            },
+            {
               "id": "technical-knowledge/interview-questions/genz-career/mock/accenture-java-springboot-interview-3-years",
               "path": "/technical-knowledge/interview-questions/genz-career/mock/accenture-java-springboot-interview-3-years",
               "sidebar": "tutorialSidebar"
@@ -2397,6 +2401,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/spring/hibernate-transactions-performance",
+              "path": "/technical-knowledge/spring/hibernate-transactions-performance",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/spring/spring-batch",
               "path": "/technical-knowledge/spring/spring-batch",
               "sidebar": "tutorialSidebar"
@@ -2429,6 +2438,16 @@
             {
               "id": "technical-knowledge/spring/spring-data-jpa",
               "path": "/technical-knowledge/spring/spring-data-jpa",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/spring/spring-data-jpa-interview-questions",
+              "path": "/technical-knowledge/spring/spring-data-jpa-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/spring/spring-data-jpa-repositories-and-queries",
+              "path": "/technical-knowledge/spring/spring-data-jpa-repositories-and-queries",
               "sidebar": "tutorialSidebar"
             },
             {

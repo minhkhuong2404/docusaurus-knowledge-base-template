@@ -14,11 +14,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'ba7'),
+    component: ComponentCreator('/', 'eb3'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '51c'),
+        component: ComponentCreator('/', '185'),
         routes: [
           {
             path: '/tags',
@@ -3926,6 +3926,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/query',
+            component: ComponentCreator('/tags/query', '7ce'),
+            exact: true
+          },
+          {
             path: '/tags/query-optimization',
             component: ComponentCreator('/tags/query-optimization', 'eae'),
             exact: true
@@ -4098,6 +4103,11 @@ export default [
           {
             path: '/tags/reports',
             component: ComponentCreator('/tags/reports', 'cc6'),
+            exact: true
+          },
+          {
+            path: '/tags/repositories',
+            component: ComponentCreator('/tags/repositories', '424'),
             exact: true
           },
           {
@@ -4383,6 +4393,11 @@ export default [
           {
             path: '/tags/senior',
             component: ComponentCreator('/tags/senior', 'c31'),
+            exact: true
+          },
+          {
+            path: '/tags/senior-developer',
+            component: ComponentCreator('/tags/senior-developer', '33d'),
             exact: true
           },
           {
@@ -5347,7 +5362,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'ac6'),
+            component: ComponentCreator('/', '853'),
             routes: [
               {
                 path: '/aws',
@@ -7321,6 +7336,11 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/interview-questions/genz-career/mock-interview/java-spring-boot-14-years-interview-detailed',
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/mock-interview/java-spring-boot-14-years-interview-detailed', '173'),
+                exact: true
+              },
+              {
                 path: '/technical-knowledge/interview-questions/genz-career/mock/accenture-java-springboot-interview-3-years',
                 component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/mock/accenture-java-springboot-interview-3-years', 'e48'),
                 exact: true,
@@ -7418,31 +7438,31 @@ export default [
               },
               {
                 path: '/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-1',
-                component: ComponentCreator('/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-1', '2fb'),
+                component: ComponentCreator('/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-1', '699'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-2',
-                component: ComponentCreator('/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-2', '507'),
+                component: ComponentCreator('/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-2', '818'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-3',
-                component: ComponentCreator('/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-3', '993'),
+                component: ComponentCreator('/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-3', '769'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-4',
-                component: ComponentCreator('/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-4', '53e'),
+                component: ComponentCreator('/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-4', 'a4d'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-5',
-                component: ComponentCreator('/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-5', 'e0b'),
+                component: ComponentCreator('/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-5', '8ec'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -8214,6 +8234,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/spring/hibernate-transactions-performance',
+                component: ComponentCreator('/technical-knowledge/spring/hibernate-transactions-performance', '8ad'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/spring/spring-batch',
                 component: ComponentCreator('/technical-knowledge/spring/spring-batch', 'f4d'),
                 exact: true,
@@ -8252,6 +8278,18 @@ export default [
               {
                 path: '/technical-knowledge/spring/spring-data-jpa',
                 component: ComponentCreator('/technical-knowledge/spring/spring-data-jpa', '61f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/spring/spring-data-jpa-interview-questions',
+                component: ComponentCreator('/technical-knowledge/spring/spring-data-jpa-interview-questions', 'ab5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/spring/spring-data-jpa-repositories-and-queries',
+                component: ComponentCreator('/technical-knowledge/spring/spring-data-jpa-repositories-and-queries', 'b81'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

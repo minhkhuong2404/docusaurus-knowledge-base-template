@@ -102,7 +102,10 @@ const sidebars: SidebarsConfig = {
 					collapsed: true,
 					items: [
 						'technical-knowledge/spring/spring-security',
-						'technical-knowledge/spring/spring-data-jpa'
+						'technical-knowledge/spring/spring-data-jpa',
+						'technical-knowledge/spring/spring-data-jpa-repositories-and-queries',
+						'technical-knowledge/spring/hibernate-transactions-performance',
+						'technical-knowledge/spring/spring-data-jpa-interview-questions'
 					]
 				},
 				{

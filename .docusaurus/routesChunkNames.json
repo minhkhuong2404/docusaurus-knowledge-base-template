@@ -12,13 +12,13 @@
       "plugin": "138e0e15"
     }
   },
-  "/-ba7": {
+  "/-eb3": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-51c": {
+  "/-185": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -3146,6 +3146,10 @@
     "__comp": "df203c0f",
     "__props": "102ed81f"
   },
+  "/tags/query-7ce": {
+    "__comp": "df203c0f",
+    "__props": "e06b880a"
+  },
   "/tags/query-optimization-eae": {
     "__comp": "df203c0f",
     "__props": "e2f72ce1"
@@ -3285,6 +3289,10 @@
   "/tags/reports-cc6": {
     "__comp": "df203c0f",
     "__props": "ee5e03d3"
+  },
+  "/tags/repositories-424": {
+    "__comp": "df203c0f",
+    "__props": "2c3554e0"
   },
   "/tags/request-signing-933": {
     "__comp": "df203c0f",
@@ -3513,6 +3521,10 @@
   "/tags/senior-c31": {
     "__comp": "df203c0f",
     "__props": "61a75b9e"
+  },
+  "/tags/senior-developer-33d": {
+    "__comp": "df203c0f",
+    "__props": "ea2a8faf"
   },
   "/tags/senior-level-e71": {
     "__comp": "df203c0f",
@@ -4282,7 +4294,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-ac6": {
+  "/-853": {
     "__comp": "a94703ab"
   },
   "/aws-aae": {
@@ -5601,6 +5613,10 @@
     "__comp": "17896441",
     "content": "6b110ee8"
   },
+  "/technical-knowledge/interview-questions/genz-career/mock-interview/java-spring-boot-14-years-interview-detailed-173": {
+    "__comp": "17896441",
+    "content": "d1aeca98"
+  },
   "/technical-knowledge/interview-questions/genz-career/mock/accenture-java-springboot-interview-3-years-e48": {
     "__comp": "17896441",
     "content": "ffb676c7"
@@ -5665,23 +5681,23 @@
     "__comp": "17896441",
     "content": "386b87ee"
   },
-  "/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-1-2fb": {
+  "/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-1-699": {
     "__comp": "17896441",
     "content": "bb396e2f"
   },
-  "/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-2-507": {
+  "/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-2-818": {
     "__comp": "17896441",
     "content": "acf6cb2d"
   },
-  "/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-3-993": {
+  "/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-3-769": {
     "__comp": "17896441",
     "content": "3f91e9c8"
   },
-  "/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-4-53e": {
+  "/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-4-a4d": {
     "__comp": "17896441",
     "content": "dce1c7f2"
   },
-  "/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-5-e0b": {
+  "/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-5-8ec": {
     "__comp": "17896441",
     "content": "8a8e4d60"
   },
@@ -6197,6 +6213,10 @@
     "__comp": "17896441",
     "content": "5427ac75"
   },
+  "/technical-knowledge/spring/hibernate-transactions-performance-8ad": {
+    "__comp": "17896441",
+    "content": "2c1c3feb"
+  },
   "/technical-knowledge/spring/spring-batch-f4d": {
     "__comp": "17896441",
     "content": "ca667498"
@@ -6224,6 +6244,14 @@
   "/technical-knowledge/spring/spring-data-jpa-61f": {
     "__comp": "17896441",
     "content": "75687058"
+  },
+  "/technical-knowledge/spring/spring-data-jpa-interview-questions-ab5": {
+    "__comp": "17896441",
+    "content": "3acda406"
+  },
+  "/technical-knowledge/spring/spring-data-jpa-repositories-and-queries-b81": {
+    "__comp": "17896441",
+    "content": "4ddd786a"
   },
   "/technical-knowledge/spring/spring-framework-e38": {
     "__comp": "17896441",
