@@ -210,6 +210,22 @@ Single table stores multiple entity types — enables efficient access patterns.
 
 ---
 
+## 🎯 DVA-C02 Exam Tips
+
+:::tip Quick Exam Rules
+- **Global Tables vs DAX**: If the requirement is *multi-region* read/write, use **Global Tables**. If the requirement is *microsecond latency* for read-heavy workloads, use **DAX**.
+- **Transactions**: Consumes exactly **2x** the RCU/WCU of a standard operation.
+- **Streams**: Guarantees exactly-once processing (within the shard) and strictly ordered events. Use `ReportBatchItemFailures` in Lambda to avoid reprocessing the whole batch on failure.
+- **TTL**: Expired items are **not immediately deleted**. They are still returned in queries/scans until the TTL deletion process catches up (typically within 48 hours). Always filter out expired items in your application logic.
+- **PartiQL**: `SELECT * FROM table` without a WHERE clause on the partition key is a **full table scan** and is very expensive. Always include the partition key condition.
+- **Conditional Writes**: Use `ConditionExpression` with version numbers for optimistic locking. `UpdateItem` with `ConditionExpression` is more efficient than `GetItem` -> `Validate` -> `PutItem`.
+- **Hot Partitions**: If you have a low-cardinality partition key causing hot partitions, use **sharding** by adding a random suffix to the partition key and querying all shards in parallel.
+- **Single-Table Design**: Use a single table for multiple entity types to reduce costs and improve performance. Use `Type` attribute to distinguish between entity types.
+- **DynamoDB Streams vs Kinesis**: DynamoDB Streams is for DynamoDB tables only and provides exactly-once processing. Kinesis is for general-purpose streaming data and provides at-least-once processing.
+:::
+
+---
+
 ## 🧪 Practice Questions
 
 **Q1.** A Lambda ESM processes DynamoDB Stream records in batches of 100. One record causes the Lambda to throw an exception. What happens to the other 99 records by default?

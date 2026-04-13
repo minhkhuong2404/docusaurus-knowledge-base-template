@@ -189,6 +189,21 @@ The Lambda sends a `taskToken` to the approver. They call `SendTaskSuccess` / `S
 
 ---
 
+## 🎯 DVA-C02 Exam Tips
+
+:::tip Quick Exam Rules
+- **Standard vs Express**: Express workflows max at **5 minutes** and are for high-volume, event-driven workloads. Standard workflows can pause for up to **1 year**.
+- **Wait for Callback**: If a workflow needs to wait for human approval or an external system to finish, use the `.waitForTaskToken` callback pattern.
+- **Parallel processing**: Use the `Map` state to run the same workflow logic dynamically over an array of items. Use `Parallel` for executing different distinct logic concurrently.
+- **Error handling**: Use `Retry` for transient failures (e.g., network issues) and `Catch` for specific error types you want to handle differently.
+- **Step Functions vs SQS**: Step Functions is for **orchestration** (coordinating multiple services in a specific order). SQS is for **decoupling** (decoupling services so they can fail independently).
+- **Step Functions vs EventBridge**: Step Functions is for **orchestration** (coordinating multiple services in a specific order). EventBridge is for **event routing** (routing events between services).
+- **Step Functions vs S3**: Step Functions is for **orchestration** (coordinating multiple services in a specific order). S3 is for **storage** (storing objects).
+- **Step Functions vs SNS**: Step Functions is for **orchestration** (coordinating multiple services in a specific order). SNS is for **pub/sub** (publishing and subscribing to messages).
+:::
+
+---
+
 ## 🧪 Practice Questions
 
 **Q1.** A workflow needs to process each item in a list in parallel, up to 5 items at a time. Which state type achieves this?

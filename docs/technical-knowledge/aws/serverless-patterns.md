@@ -66,6 +66,21 @@ How do you migrate a giant legacy on-premise monolith to AWS Serverless without 
 
 ---
 
+## 🎯 DVA-C02 Exam Tips
+
+:::tip Quick Exam Rules
+- **Strangler Fig**: Used to incrementally migrate a legacy monolith to serverless microservices piece by piece behind an API Gateway proxy.
+- **Saga Pattern**: Solves "distributed transactions" in serverless. Handled best by Step Functions natively executing compensating transactions (rollbacks) if a later step fails.
+- **Orchestration vs Choreography**: Step Functions = Orchestration (centralized). EventBridge/SNS = Choreography (decentralized).
+- **Step Functions vs SQS**: Step Functions is for **orchestration** (coordinating multiple services in a specific order). SQS is for **decoupling** (decoupling services so they can fail independently).
+- **Step Functions vs EventBridge**: Step Functions is for **orchestration** (coordinating multiple services in a specific order). EventBridge is for **event routing** (routing events between services).
+- **Step Functions vs S3**: Step Functions is for **orchestration** (coordinating multiple services in a specific order). S3 is for **storage** (storing objects).
+- **Step Functions vs SNS**: Step Functions is for **orchestration** (coordinating multiple services in a specific order). SNS is for **pub/sub** (publishing and subscribing to messages).
+- **Step Functions vs SQS**: Step Functions is for **orchestration** (coordinating multiple services in a specific order). SQS is for **decoupling** (decoupling services so they can fail independently).
+:::
+
+---
+
 ## 🧪 Practice Questions
 
 **Q1.** A company is migrating a large e-commerce monolithic application to a serverless microservices architecture. They want to ensure there is no downtime during the 6-month migration process. Which pattern should they use?

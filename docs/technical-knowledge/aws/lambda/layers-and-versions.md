@@ -149,6 +149,23 @@ MyFunction:
 
 ---
 
+## 🎯 DVA-C02 Exam Tips
+
+:::tip Quick Exam Rules
+- **Versus $LATEST**: Never point production APIs to `$LATEST`. Always publish a version and point an alias (like `prod`) to it.
+- **Deployment strategies**: Be familiar with Canary and Linear traffic shifting through aliases. CodeDeploy integrates natively with Lambda aliases for this.
+- **Layers Limits**: You can attach a maximum of **5 layers** per function. The total unzipped size of the function plus all layers must not exceed **250 MB**.
+- **Layer Versioning**: When you update a layer, you create a **new version**. Existing functions using the old version are unaffected until you explicitly update them to use the new version.
+- **Layer Content**: Layers are extracted to `/opt` directory in the Lambda runtime environment. You can access them via `process.env.LAMBDA_TASK_ROOT` in Node.js or `os.environ['LAMBDA_TASK_ROOT']` in Python.
+- **Layer Permissions**: Layers are **public by default**. To restrict access, set `LayerVersionPermission` with `Principal` set to specific accounts or `*` for public.
+- **Layer Size Limits**: Each layer can be up to **50 MB**, and you can have a maximum of **5 layers** per function. The total unzipped size of the function plus all layers must not exceed **250 MB**.
+- **Layer Caching**: Layers are cached in the Lambda execution environment, so they are reused across invocations of the same function. This can significantly reduce cold start times.
+- **Layer Updates**: When you update a layer, you create a new version. Existing functions using the old version are unaffected until you explicitly update them to use the new version.
+- **Layer Versioning**: When you update a layer, you create a **new version**. Existing functions using the old version are unaffected until you explicitly update them to use the new version.
+:::
+
+---
+
 ## 🧪 Practice Questions
 
 **Q1.** A developer updates Lambda function code at `$LATEST` and publishes version 3. API Gateway points to the `prod` alias. Will prod users see the new code immediately?

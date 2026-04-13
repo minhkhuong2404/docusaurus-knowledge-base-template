@@ -91,6 +91,18 @@ Messages are published with **message attributes**, and SNS only delivers to mat
 
 ---
 
+## 🎯 DVA-C02 Exam Tips
+
+:::tip Quick Exam Rules
+- **Fan-Out Pattern**: The classic exam scenario for SNS is the "Fan-Out Pattern" where a single SNS topic pushes to multiple SQS queues so different downstream services can process the same event independently and asynchronously.
+- **Message Filtering**: To prevent consumers from parsing irrelevant messages, use SNS Message Filtering based on message attributes.
+- **FIFO**: SNS FIFO strictly supports only SQS FIFO queues as subscribers.
+- **SNS vs SQS**: SNS is push-based (pub/sub), SQS is pull-based (queue). SNS does not store messages, SQS does.
+- **SNS FIFO**: SNS FIFO strictly supports only SQS FIFO queues as subscribers.
+:::
+
+---
+
 ## 🧪 Practice Questions
 
 **Q1.** An e-commerce app publishes an `OrderPlaced` event. Three services need to process it: inventory, billing, and shipping. What is the BEST architecture?

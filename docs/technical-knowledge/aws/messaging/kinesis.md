@@ -98,6 +98,26 @@ PutRecordRequest request = PutRecordRequest.builder()
 
 ---
 
+## 🎯 DVA-C02 Exam Tips
+
+:::tip Quick Exam Rules
+- **Kinesis vs SQS**: Kinesis Data Streams supports **multiple consumers** reading the same stream independently and allows **replaying** events. SQS deletes the message after processing.
+- **Sorting/Ordering**: Records with the same partition key go to the same shard and are strictly ordered.
+- **Firehose**: If the goal is simply to "load streaming data into S3/OpenSearch with zero administration," choose **Firehose**.
+- **Enhanced Fan-Out**: Use when you need dedicated read throughput per consumer.
+- **Sharding**: If you need more than 2MB/s read throughput, you need to add more shards.
+- **Lambda ESM**: Use when you need to process Kinesis data with Lambda.
+- **Bisect on error**: splits failed batches
+- **Tumbling windows**: aggregate records over a time window
+- **Iterator position**: `TRIM_HORIZON` (from beginning) or `LATEST`
+- **Scaling**: You can scale throughput by adding shards, but you cannot scale down below the initial shard count.
+- **Retention**: Default is 24 hours, can be extended up to 365 days.
+- **Throughput**: 1 MB/s write, 2 MB/s read per shard
+- **Partition Key**: Same partition key → same shard → ordered
+:::
+
+---
+
 ## 🧪 Practice Questions
 
 **Q1.** An IoT platform generates 5 MB/s of sensor data. Multiple analytics applications need to read the same data simultaneously and replay data from the last 7 days. What service fits best?

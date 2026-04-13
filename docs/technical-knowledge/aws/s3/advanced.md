@@ -132,6 +132,23 @@ Use cases: redact SSN/email from CSV, resize images, add watermarks.
 
 ---
 
+## 🎯 DVA-C02 Exam Tips
+
+:::tip Quick Exam Rules
+- **S3 Select vs Athena**: If the question asks to filter a single S3 object (like a CSV) to retrieve specific rows cost-effectively without downloading the file, the answer is **S3 Select**. For querying across multiple files or complex joins, use Athena.
+- **S3 Transfer Acceleration**: Uses CloudFront's edge network to accelerate *uploads* across geographic distances. It does not cache the data itself like CloudFront.
+- **Replication limits**: Remember that **delete markers are NOT replicated** by default.
+- **S3 Object Ownership**: Bucket owner enforced is the recommended setting.
+- **S3 Lifecycle**: Use lifecycle rules to transition objects to cheaper storage classes and eventually expire them.
+- **S3 Storage Classes**: S3 Standard, S3 Standard-IA, S3 One Zone-IA, S3 Glacier Instant Retrieval, S3 Glacier Flexible Retrieval, S3 Glacier Deep Archive, S3 Intelligent-Tiering
+- **S3 Select**: Use when you need to filter data in S3 objects.
+- **S3 Transfer Acceleration**: Uses CloudFront's edge network to accelerate *uploads* across geographic distances. It does not cache the data itself like CloudFront.
+- **S3 Object Lambda**: Use when you need to transform S3 objects on the fly during a GET request.
+- **S3 Replication**: Use when you need to replicate S3 objects to another region.
+:::
+
+---
+
 ## 🧪 Practice Questions
 
 **Q1.** A company replicates S3 objects from us-east-1 to eu-west-1 for compliance. A user deletes an object in us-east-1. Will the object be deleted in eu-west-1?

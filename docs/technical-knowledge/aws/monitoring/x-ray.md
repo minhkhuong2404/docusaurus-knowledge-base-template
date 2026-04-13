@@ -183,6 +183,19 @@ With the SDK and instrumentation:
 
 ---
 
+## 🎯 DVA-C02 Exam Tips
+
+:::tip Quick Exam Rules
+- **Annotations vs Metadata**: **Annotations** are indexed and can be used in filter expressions (searchable). **Metadata** is not indexed and is only used to store extra detail.
+- **Instrumenting other services**: To trace outgoing AWS SDK calls from your application, you must wrap or instrument your AWS SDK clients using the X-Ray SDK interceptors.
+- **Sampling**: To control costs or trace specific routes more frequently, adjust **Sampling Rules**.
+- **X-Ray Daemon**: The X-Ray daemon buffers and sends trace data to the X-Ray API. It can run as a sidecar container in ECS or as a separate process on EC2.
+- **X-Ray Groups**: Use **X-Ray Groups** to filter and group traces based on specific criteria.
+- **X-Ray Tracing**: Use **X-Ray Tracing** to trace requests through your application.
+:::
+
+---
+
 ## 🧪 Practice Questions
 
 **Q1.** A developer needs to search X-Ray traces for all requests where `userId = "user-123"`. What should they use to make this possible?

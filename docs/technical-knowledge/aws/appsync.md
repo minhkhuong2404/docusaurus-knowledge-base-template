@@ -129,6 +129,16 @@ Reduces: Lambda invocations, DynamoDB reads
 
 ---
 
+## 🎯 DVA-C02 Exam Tips
+
+:::tip Quick Exam Rules
+- **AppSync vs API Gateway**: If you need real-time **WebSocket Subscriptions** natively tied to data changes, choose **AppSync**. If you need simple REST API microservices, choose API Gateway.
+- **Data Source unification**: AppSync allows a single GraphQL endpoint to aggregate data from DynamoDB, RDS, and Lambda simultaneously.
+- **Resolvers**: Use Pipeline Resolvers to sequence operations across multiple data sources.
+:::
+
+---
+
 ## 🧪 Practice Questions
 
 **Q1.** A mobile app needs real-time order status updates pushed to connected clients whenever an order is updated. Which service is BEST suited?

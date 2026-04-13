@@ -101,6 +101,50 @@ public String handleRequest(Object event, Context context) {
 
 ---
 
+## 🎯 DVA-C02 Exam Tips
+
+:::tip Quick Exam Rules
+- **Parameter Store vs Secrets Manager**: If the question mentions **automatic rotation** for RDS/Redshift/DocumentDB, the answer is **Secrets Manager**. If it mentions **free** or **basic configuration strings**, the answer is **SSM Parameter Store**.
+- **KMS Encryption**: SecureStrings in SSM Parameter Store are encrypted using AWS KMS. You need BOTH `ssm:GetParameter` and `kms:Decrypt` permissions to read a SecureString.
+- **CloudFormation**: To use a SecureString in CloudFormation, you MUST use dynamic references (`{{resolve:ssm-secure:...}}`). You cannot pass them via the `Parameters:` block default type `AWS::SSM::Parameter::Value<String>`.
+- **Parameter Policies**: Use parameter policies to enforce expiration dates and receive notifications when parameters are about to expire.
+- **Parameter Store vs Secrets Manager**: If the question mentions **automatic rotation** for RDS/Redshift/DocumentDB, the answer is **Secrets Manager**. If it mentions **free** or **basic configuration strings**, the answer is **SSM Parameter Store**.
+:::
+
+---
+
+## 🧪 Practice Questions
+
+**Q1.** An application needs to store database credentials securely. The credentials must be automatically rotated every 30 days without any custom Lambda code. Which AWS service should be used?
+
+A) AWS KMS  
+B) AWS Systems Manager Parameter Store  
+C) AWS Secrets Manager  
+D) Amazon S3  
+
+<details>
+<summary>✅ Answer & Explanation</summary>
+
+**C** — **Secrets Manager** natively supports automatic rotation of credentials for supported AWS databases like RDS. **SSM Parameter Store** does not support automatic rotation natively (you would have to write custom Lambda logic).
+</details>
+
+---
+
+**Q2.** A developer is writing a CloudFormation template to deploy an RDS instance. They have stored the database password as a `SecureString` in SSM Parameter Store. How should they reference this password in the CloudFormation template?
+
+A) Using `AWS::SSM::Parameter::Value<SecureString>` in the Parameters section  
+B) Using a dynamic reference: `{{resolve:ssm-secure:/path/to/password:version}}`  
+C) Storing an unencrypted string in the Parameters section  
+D) Passing the password using the AWS CLI at deployment time  
+
+<details>
+<summary>✅ Answer & Explanation</summary>
+
+**B** — CloudFormation does not support `SecureString` types in the `Parameters` block. You MUST use a **dynamic reference** (`{{resolve:ssm-secure:...}}`) directly in the resource properties.
+</details>
+
+---
+
 ## 🔗 Resources
 
 - [SSM Parameter Store User Guide](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html)

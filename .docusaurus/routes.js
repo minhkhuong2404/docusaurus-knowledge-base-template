@@ -14,11 +14,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'eb3'),
+    component: ComponentCreator('/', '8b1'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '185'),
+        component: ComponentCreator('/', '183'),
         routes: [
           {
             path: '/tags',
@@ -33,6 +33,11 @@ export default [
           {
             path: '/tags/1-nf',
             component: ComponentCreator('/tags/1-nf', 'c9e'),
+            exact: true
+          },
+          {
+            path: '/tags/2-d-dp',
+            component: ComponentCreator('/tags/2-d-dp', '466'),
             exact: true
           },
           {
@@ -221,6 +226,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/arrays',
+            component: ComponentCreator('/tags/arrays', '755'),
+            exact: true
+          },
+          {
             path: '/tags/async',
             component: ComponentCreator('/tags/async', 'db2'),
             exact: true
@@ -331,8 +341,18 @@ export default [
             exact: true
           },
           {
+            path: '/tags/backend-optimization',
+            component: ComponentCreator('/tags/backend-optimization', 'a0a'),
+            exact: true
+          },
+          {
             path: '/tags/background-tasks',
             component: ComponentCreator('/tags/background-tasks', '58f'),
+            exact: true
+          },
+          {
+            path: '/tags/backtracking',
+            component: ComponentCreator('/tags/backtracking', '629'),
             exact: true
           },
           {
@@ -411,6 +431,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/bfs',
+            component: ComponentCreator('/tags/bfs', '2af'),
+            exact: true
+          },
+          {
             path: '/tags/bft',
             component: ComponentCreator('/tags/bft', '8af'),
             exact: true
@@ -426,6 +451,16 @@ export default [
             exact: true
           },
           {
+            path: '/tags/binary-search',
+            component: ComponentCreator('/tags/binary-search', '280'),
+            exact: true
+          },
+          {
+            path: '/tags/binary-tree',
+            component: ComponentCreator('/tags/binary-tree', '4e8'),
+            exact: true
+          },
+          {
             path: '/tags/bind-mount',
             component: ComponentCreator('/tags/bind-mount', 'b3b'),
             exact: true
@@ -433,6 +468,11 @@ export default [
           {
             path: '/tags/bisect',
             component: ComponentCreator('/tags/bisect', '55f'),
+            exact: true
+          },
+          {
+            path: '/tags/bit-manipulation',
+            component: ComponentCreator('/tags/bit-manipulation', '3db'),
             exact: true
           },
           {
@@ -498,6 +538,11 @@ export default [
           {
             path: '/tags/broker',
             component: ComponentCreator('/tags/broker', '8c5'),
+            exact: true
+          },
+          {
+            path: '/tags/bst',
+            component: ComponentCreator('/tags/bst', '59f'),
             exact: true
           },
           {
@@ -628,6 +673,11 @@ export default [
           {
             path: '/tags/cdr',
             component: ComponentCreator('/tags/cdr', '558'),
+            exact: true
+          },
+          {
+            path: '/tags/certification',
+            component: ComponentCreator('/tags/certification', 'c2a'),
             exact: true
           },
           {
@@ -1531,6 +1581,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/dfs',
+            component: ComponentCreator('/tags/dfs', 'cb0'),
+            exact: true
+          },
+          {
             path: '/tags/diagnostics',
             component: ComponentCreator('/tags/diagnostics', 'cf7'),
             exact: true
@@ -1573,6 +1628,11 @@ export default [
           {
             path: '/tags/discipline',
             component: ComponentCreator('/tags/discipline', '3cd'),
+            exact: true
+          },
+          {
+            path: '/tags/disjoint-set',
+            component: ComponentCreator('/tags/disjoint-set', '688'),
             exact: true
           },
           {
@@ -1681,8 +1741,18 @@ export default [
             exact: true
           },
           {
+            path: '/tags/dsa',
+            component: ComponentCreator('/tags/dsa', '4ff'),
+            exact: true
+          },
+          {
             path: '/tags/dva-c-02',
             component: ComponentCreator('/tags/dva-c-02', 'fc2'),
+            exact: true
+          },
+          {
+            path: '/tags/dynamic-programming',
+            component: ComponentCreator('/tags/dynamic-programming', 'd12'),
             exact: true
           },
           {
@@ -1936,6 +2006,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/fast-slow-pointers',
+            component: ComponentCreator('/tags/fast-slow-pointers', '38b'),
+            exact: true
+          },
+          {
             path: '/tags/fat-interfaces',
             component: ComponentCreator('/tags/fat-interfaces', 'c28'),
             exact: true
@@ -2136,6 +2211,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/getting-started',
+            component: ComponentCreator('/tags/getting-started', '4b7'),
+            exact: true
+          },
+          {
             path: '/tags/git',
             component: ComponentCreator('/tags/git', 'ff3'),
             exact: true
@@ -2181,6 +2261,16 @@ export default [
             exact: true
           },
           {
+            path: '/tags/graphs',
+            component: ComponentCreator('/tags/graphs', '2bc'),
+            exact: true
+          },
+          {
+            path: '/tags/greedy',
+            component: ComponentCreator('/tags/greedy', '731'),
+            exact: true
+          },
+          {
             path: '/tags/grpc',
             component: ComponentCreator('/tags/grpc', '2d8'),
             exact: true
@@ -2193,6 +2283,16 @@ export default [
           {
             path: '/tags/handshake',
             component: ComponentCreator('/tags/handshake', 'b4f'),
+            exact: true
+          },
+          {
+            path: '/tags/hash-sets',
+            component: ComponentCreator('/tags/hash-sets', '4a5'),
+            exact: true
+          },
+          {
+            path: '/tags/hash-tables',
+            component: ComponentCreator('/tags/hash-tables', '1dc'),
             exact: true
           },
           {
@@ -2223,6 +2323,11 @@ export default [
           {
             path: '/tags/heap',
             component: ComponentCreator('/tags/heap', '008'),
+            exact: true
+          },
+          {
+            path: '/tags/heaps',
+            component: ComponentCreator('/tags/heaps', 'bbb'),
             exact: true
           },
           {
@@ -2468,6 +2573,11 @@ export default [
           {
             path: '/tags/interpreter',
             component: ComponentCreator('/tags/interpreter', '704'),
+            exact: true
+          },
+          {
+            path: '/tags/intervals',
+            component: ComponentCreator('/tags/intervals', 'a33'),
             exact: true
           },
           {
@@ -2866,6 +2976,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/linked-lists',
+            component: ComponentCreator('/tags/linked-lists', 'a7f'),
+            exact: true
+          },
+          {
             path: '/tags/linkers',
             component: ComponentCreator('/tags/linkers', '8f7'),
             exact: true
@@ -2986,6 +3101,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/math',
+            component: ComponentCreator('/tags/math', '05e'),
+            exact: true
+          },
+          {
             path: '/tags/maven',
             component: ComponentCreator('/tags/maven', 'c49'),
             exact: true
@@ -3003,6 +3123,11 @@ export default [
           {
             path: '/tags/memento',
             component: ComponentCreator('/tags/memento', '13b'),
+            exact: true
+          },
+          {
+            path: '/tags/memoization',
+            component: ComponentCreator('/tags/memoization', '944'),
             exact: true
           },
           {
@@ -3106,8 +3231,18 @@ export default [
             exact: true
           },
           {
+            path: '/tags/monotonic-stack',
+            component: ComponentCreator('/tags/monotonic-stack', '4c1'),
+            exact: true
+          },
+          {
             path: '/tags/mqtt',
             component: ComponentCreator('/tags/mqtt', '818'),
+            exact: true
+          },
+          {
+            path: '/tags/mst',
+            component: ComponentCreator('/tags/mst', '94d'),
             exact: true
           },
           {
@@ -3761,6 +3896,16 @@ export default [
             exact: true
           },
           {
+            path: '/tags/prefix-sums',
+            component: ComponentCreator('/tags/prefix-sums', '937'),
+            exact: true
+          },
+          {
+            path: '/tags/prefix-trees',
+            component: ComponentCreator('/tags/prefix-trees', '9be'),
+            exact: true
+          },
+          {
             path: '/tags/preparation',
             component: ComponentCreator('/tags/preparation', '0dc'),
             exact: true
@@ -3773,6 +3918,11 @@ export default [
           {
             path: '/tags/prevention',
             component: ComponentCreator('/tags/prevention', 'eb7'),
+            exact: true
+          },
+          {
+            path: '/tags/priority-queue',
+            component: ComponentCreator('/tags/priority-queue', 'df2'),
             exact: true
           },
           {
@@ -4041,6 +4191,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/recursion',
+            component: ComponentCreator('/tags/recursion', 'c2c'),
+            exact: true
+          },
+          {
             path: '/tags/recursive',
             component: ComponentCreator('/tags/recursive', '888'),
             exact: true
@@ -4176,8 +4331,18 @@ export default [
             exact: true
           },
           {
+            path: '/tags/review',
+            component: ComponentCreator('/tags/review', 'c39'),
+            exact: true
+          },
+          {
             path: '/tags/right',
             component: ComponentCreator('/tags/right', '5a6'),
+            exact: true
+          },
+          {
+            path: '/tags/roadmap',
+            component: ComponentCreator('/tags/roadmap', 'c95'),
             exact: true
           },
           {
@@ -4531,6 +4696,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/sliding-window',
+            component: ComponentCreator('/tags/sliding-window', 'a39'),
+            exact: true
+          },
+          {
             path: '/tags/slo',
             component: ComponentCreator('/tags/slo', '2fc'),
             exact: true
@@ -4578,6 +4748,11 @@ export default [
           {
             path: '/tags/solid-principles',
             component: ComponentCreator('/tags/solid-principles', '3f2'),
+            exact: true
+          },
+          {
+            path: '/tags/sorting',
+            component: ComponentCreator('/tags/sorting', 'c5c'),
             exact: true
           },
           {
@@ -4708,6 +4883,11 @@ export default [
           {
             path: '/tags/stack',
             component: ComponentCreator('/tags/stack', '829'),
+            exact: true
+          },
+          {
+            path: '/tags/stacks',
+            component: ComponentCreator('/tags/stacks', '20b'),
             exact: true
           },
           {
@@ -4876,6 +5056,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/sweep-line',
+            component: ComponentCreator('/tags/sweep-line', '65c'),
+            exact: true
+          },
+          {
             path: '/tags/swift',
             component: ComponentCreator('/tags/swift', '84f'),
             exact: true
@@ -4898,6 +5083,11 @@ export default [
           {
             path: '/tags/system-design',
             component: ComponentCreator('/tags/system-design', '4b2'),
+            exact: true
+          },
+          {
+            path: '/tags/tabulation',
+            component: ComponentCreator('/tags/tabulation', '676'),
             exact: true
           },
           {
@@ -5031,6 +5221,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/timeline',
+            component: ComponentCreator('/tags/timeline', 'e2f'),
+            exact: true
+          },
+          {
             path: '/tags/timescaledb',
             component: ComponentCreator('/tags/timescaledb', '9a7'),
             exact: true
@@ -5066,6 +5261,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/topological-sort',
+            component: ComponentCreator('/tags/topological-sort', '0ad'),
+            exact: true
+          },
+          {
             path: '/tags/tracing',
             component: ComponentCreator('/tags/tracing', 'dd4'),
             exact: true
@@ -5096,6 +5296,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/tries',
+            component: ComponentCreator('/tags/tries', 'c53'),
+            exact: true
+          },
+          {
             path: '/tags/troubleshooting',
             component: ComponentCreator('/tags/troubleshooting', '220'),
             exact: true
@@ -5121,6 +5326,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/two-pointers',
+            component: ComponentCreator('/tags/two-pointers', 'd40'),
+            exact: true
+          },
+          {
             path: '/tags/types',
             component: ComponentCreator('/tags/types', '611'),
             exact: true
@@ -5138,6 +5348,11 @@ export default [
           {
             path: '/tags/uncle-bob',
             component: ComponentCreator('/tags/uncle-bob', 'c94'),
+            exact: true
+          },
+          {
+            path: '/tags/union-find',
+            component: ComponentCreator('/tags/union-find', '40e'),
             exact: true
           },
           {
@@ -5271,6 +5486,106 @@ export default [
             exact: true
           },
           {
+            path: '/tags/week-1',
+            component: ComponentCreator('/tags/week-1', '46a'),
+            exact: true
+          },
+          {
+            path: '/tags/week-10',
+            component: ComponentCreator('/tags/week-10', '9f0'),
+            exact: true
+          },
+          {
+            path: '/tags/week-11',
+            component: ComponentCreator('/tags/week-11', '21a'),
+            exact: true
+          },
+          {
+            path: '/tags/week-12',
+            component: ComponentCreator('/tags/week-12', '568'),
+            exact: true
+          },
+          {
+            path: '/tags/week-13',
+            component: ComponentCreator('/tags/week-13', '62f'),
+            exact: true
+          },
+          {
+            path: '/tags/week-14',
+            component: ComponentCreator('/tags/week-14', '9f0'),
+            exact: true
+          },
+          {
+            path: '/tags/week-15',
+            component: ComponentCreator('/tags/week-15', '68c'),
+            exact: true
+          },
+          {
+            path: '/tags/week-16',
+            component: ComponentCreator('/tags/week-16', '87b'),
+            exact: true
+          },
+          {
+            path: '/tags/week-17',
+            component: ComponentCreator('/tags/week-17', '683'),
+            exact: true
+          },
+          {
+            path: '/tags/week-18',
+            component: ComponentCreator('/tags/week-18', '293'),
+            exact: true
+          },
+          {
+            path: '/tags/week-19',
+            component: ComponentCreator('/tags/week-19', '883'),
+            exact: true
+          },
+          {
+            path: '/tags/week-2',
+            component: ComponentCreator('/tags/week-2', '5c8'),
+            exact: true
+          },
+          {
+            path: '/tags/week-20',
+            component: ComponentCreator('/tags/week-20', 'da5'),
+            exact: true
+          },
+          {
+            path: '/tags/week-3',
+            component: ComponentCreator('/tags/week-3', '043'),
+            exact: true
+          },
+          {
+            path: '/tags/week-4',
+            component: ComponentCreator('/tags/week-4', '9ac'),
+            exact: true
+          },
+          {
+            path: '/tags/week-5',
+            component: ComponentCreator('/tags/week-5', 'd74'),
+            exact: true
+          },
+          {
+            path: '/tags/week-6',
+            component: ComponentCreator('/tags/week-6', 'ee7'),
+            exact: true
+          },
+          {
+            path: '/tags/week-7',
+            component: ComponentCreator('/tags/week-7', '035'),
+            exact: true
+          },
+          {
+            path: '/tags/week-8',
+            component: ComponentCreator('/tags/week-8', '73e'),
+            exact: true
+          },
+          {
+            path: '/tags/week-9',
+            component: ComponentCreator('/tags/week-9', '0cd'),
+            exact: true
+          },
+          {
             path: '/tags/what-is-architecture',
             component: ComponentCreator('/tags/what-is-architecture', 'af5'),
             exact: true
@@ -5362,7 +5677,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '853'),
+            component: ComponentCreator('/', '108'),
             routes: [
               {
                 path: '/aws',
@@ -5881,6 +6196,11 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/java/jpa-hibernate-lifecycle-methods',
+                component: ComponentCreator('/java/jpa-hibernate-lifecycle-methods', '640'),
+                exact: true
+              },
+              {
                 path: '/non-technical-knowledge/sdlc/',
                 component: ComponentCreator('/non-technical-knowledge/sdlc/', '614'),
                 exact: true,
@@ -6232,6 +6552,11 @@ export default [
                 component: ComponentCreator('/technical-knowledge/aws/containers/ecs-ecr', 'e27'),
                 exact: true,
                 sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/aws/dva-c02-roadmap',
+                component: ComponentCreator('/technical-knowledge/aws/dva-c02-roadmap', '24b'),
+                exact: true
               },
               {
                 path: '/technical-knowledge/aws/dynamodb/',
@@ -7138,6 +7463,132 @@ export default [
                 exact: true
               },
               {
+                path: '/technical-knowledge/dsa/20-week-dsa-roadmap-intro',
+                component: ComponentCreator('/technical-knowledge/dsa/20-week-dsa-roadmap-intro', '94f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/week-1-arrays-strings-prefix-sums',
+                component: ComponentCreator('/technical-knowledge/dsa/week-1-arrays-strings-prefix-sums', '723'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/week-10-recursion-backtracking',
+                component: ComponentCreator('/technical-knowledge/dsa/week-10-recursion-backtracking', '643'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/week-11-intervals-sweep-line',
+                component: ComponentCreator('/technical-knowledge/dsa/week-11-intervals-sweep-line', '949'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/week-12-heaps-greedy',
+                component: ComponentCreator('/technical-knowledge/dsa/week-12-heaps-greedy', '09c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/week-13-dynamic-programming-1d',
+                component: ComponentCreator('/technical-knowledge/dsa/week-13-dynamic-programming-1d', '0ce'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/week-14-dynamic-programming-2d',
+                component: ComponentCreator('/technical-knowledge/dsa/week-14-dynamic-programming-2d', '59d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/week-15-advanced-sliding-windows',
+                component: ComponentCreator('/technical-knowledge/dsa/week-15-advanced-sliding-windows', '884'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/week-16-tries-prefix-trees',
+                component: ComponentCreator('/technical-knowledge/dsa/week-16-tries-prefix-trees', '490'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/week-17-shortest-paths-mst',
+                component: ComponentCreator('/technical-knowledge/dsa/week-17-shortest-paths-mst', '674'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/week-18-disjoint-set-union',
+                component: ComponentCreator('/technical-knowledge/dsa/week-18-disjoint-set-union', '624'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/week-19-bit-manipulation-math',
+                component: ComponentCreator('/technical-knowledge/dsa/week-19-bit-manipulation-math', 'da4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/week-2-two-pointers-sliding-window',
+                component: ComponentCreator('/technical-knowledge/dsa/week-2-two-pointers-sliding-window', '4b0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/week-20-comprehensive-review-systems',
+                component: ComponentCreator('/technical-knowledge/dsa/week-20-comprehensive-review-systems', '932'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/week-3-linked-lists-pointers',
+                component: ComponentCreator('/technical-knowledge/dsa/week-3-linked-lists-pointers', '49e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/week-4-hash-tables-sets',
+                component: ComponentCreator('/technical-knowledge/dsa/week-4-hash-tables-sets', 'f69'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/week-5-stacks-queues-monotonic',
+                component: ComponentCreator('/technical-knowledge/dsa/week-5-stacks-queues-monotonic', '7d5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/week-6-binary-trees-bst',
+                component: ComponentCreator('/technical-knowledge/dsa/week-6-binary-trees-bst', '9f0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/week-7-graph-foundations',
+                component: ComponentCreator('/technical-knowledge/dsa/week-7-graph-foundations', '718'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/week-8-advanced-graph-concepts',
+                component: ComponentCreator('/technical-knowledge/dsa/week-8-advanced-graph-concepts', 'cc4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/week-9-binary-search',
+                component: ComponentCreator('/technical-knowledge/dsa/week-9-binary-search', '9cd'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/git',
                 component: ComponentCreator('/technical-knowledge/git', 'bcd'),
                 exact: true,
@@ -7337,7 +7788,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/interview-questions/genz-career/mock-interview/java-spring-boot-14-years-interview-detailed',
-                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/mock-interview/java-spring-boot-14-years-interview-detailed', '173'),
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/mock-interview/java-spring-boot-14-years-interview-detailed', 'b0a'),
                 exact: true
               },
               {
@@ -8234,8 +8685,13 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/spring/hibernate-association-best-practices',
+                component: ComponentCreator('/technical-knowledge/spring/hibernate-association-best-practices', '274'),
+                exact: true
+              },
+              {
                 path: '/technical-knowledge/spring/hibernate-transactions-performance',
-                component: ComponentCreator('/technical-knowledge/spring/hibernate-transactions-performance', '8ad'),
+                component: ComponentCreator('/technical-knowledge/spring/hibernate-transactions-performance', '078'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -8277,21 +8733,31 @@ export default [
               },
               {
                 path: '/technical-knowledge/spring/spring-data-jpa',
-                component: ComponentCreator('/technical-knowledge/spring/spring-data-jpa', '61f'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-data-jpa', '324'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/spring/spring-data-jpa-interview-questions',
-                component: ComponentCreator('/technical-knowledge/spring/spring-data-jpa-interview-questions', 'ab5'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-data-jpa-interview-questions', '251'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/spring/spring-data-jpa-query-annotation',
+                component: ComponentCreator('/technical-knowledge/spring/spring-data-jpa-query-annotation', '5b3'),
+                exact: true
+              },
+              {
                 path: '/technical-knowledge/spring/spring-data-jpa-repositories-and-queries',
-                component: ComponentCreator('/technical-knowledge/spring/spring-data-jpa-repositories-and-queries', 'b81'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-data-jpa-repositories-and-queries', '631'),
                 exact: true,
                 sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/spring/spring-data-jpa-transactions',
+                component: ComponentCreator('/technical-knowledge/spring/spring-data-jpa-transactions', '884'),
+                exact: true
               },
               {
                 path: '/technical-knowledge/spring/spring-framework',
