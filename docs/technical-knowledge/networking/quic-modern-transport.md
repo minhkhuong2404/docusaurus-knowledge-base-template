@@ -73,7 +73,7 @@ Client                              Server
   Total: 0 RTT for data (request is sent immediately!)
 ```
 
-:::caution 0-RTT Replay Risk
+:::caution[0-RTT Replay Risk]
 0-RTT data can be **replayed** by an attacker who intercepts and re-sends the initial packet. Only use for **idempotent, non-sensitive** operations (e.g., GET requests). Never for payments, state-changing operations, or auth.
 :::
 

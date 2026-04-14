@@ -150,7 +150,7 @@ See [Fixup](./fixup) for the `--fixup` / `--autosquash` workflow.
 
 ---
 
-:::tip Squash at PR Review Time
+:::tip[Squash at PR Review Time]
 A good habit: keep whatever commits you need locally while working (safety nets), then squash before requesting review. Reviewers see clean history, and `git log` on main stays meaningful.
 :::
 

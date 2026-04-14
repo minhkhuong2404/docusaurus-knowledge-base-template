@@ -172,7 +172,7 @@ dynamoDbClient.executeStatement(ExecuteStatementRequest.builder()
     .build());
 ```
 
-:::caution PartiQL SELECT scans
+:::caution[PartiQL SELECT scans]
 `SELECT * FROM Orders` without a WHERE on the partition key is a **full table scan**! Always include the partition key condition.
 :::
 
@@ -212,7 +212,7 @@ Single table stores multiple entity types — enables efficient access patterns.
 
 ## 🎯 DVA-C02 Exam Tips
 
-:::tip Quick Exam Rules
+:::tip[Quick Exam Rules]
 - **Global Tables vs DAX**: If the requirement is *multi-region* read/write, use **Global Tables**. If the requirement is *microsecond latency* for read-heavy workloads, use **DAX**.
 - **Transactions**: Consumes exactly **2x** the RCU/WCU of a standard operation.
 - **Streams**: Guarantees exactly-once processing (within the shard) and strictly ordered events. Use `ReportBatchItemFailures` in Lambda to avoid reprocessing the whole batch on failure.

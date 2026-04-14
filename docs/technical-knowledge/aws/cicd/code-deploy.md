@@ -125,7 +125,9 @@ Hooks:
 
 ## 🎯 DVA-C02 Exam Tips
 
-:::tip Quick Exam Rules
+:::tip
+Quick Exam Rules
+:::
 - **Rollbacks**: If any lifecycle hook fails (especially `ValidateService`), CodeDeploy will **automatically roll back** to the last known good version.
 - **In-place vs Blue/Green**: EC2 supports in-place and blue/green. **ECS Fargate only supports Blue/Green deployments** (via ALB traffic shifting).
 - **Lambda Hooks**: For Lambda, use `BeforeAllowTraffic` and `AfterAllowTraffic`.

@@ -196,7 +196,7 @@ Repeat this to walk a line's full history backward through time.
 
 ---
 
-:::tip IDE Integration
+:::tip[IDE Integration]
 In IntelliJ IDEA, right-click any line → **Git → Annotate with Git Blame** for an inline blame view with full commit details on hover. For VS Code, the **GitLens** extension provides the same. Use these for day-to-day blame — use the CLI for scripting and custom queries.
 :::
 

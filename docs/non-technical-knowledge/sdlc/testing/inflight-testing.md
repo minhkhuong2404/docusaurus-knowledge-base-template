@@ -216,6 +216,6 @@ Integrate inflight test results with deployment orchestration:
 
 ---
 
-:::danger Critical Rule
+:::danger[Critical Rule]
 Inflight tests run against **production**. They must **never** create, modify, or delete real user data. Always use a dedicated synthetic test account with clearly marked test data.
 :::

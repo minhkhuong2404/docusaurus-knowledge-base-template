@@ -280,7 +280,7 @@ public class OrderService {
 | `NEVER` | Must NOT have tx; throw if one exists |
 | `NESTED` | Nested tx with savepoints |
 
-:::caution Self-invocation trap
+:::caution[Self-invocation trap]
 `@Transactional` only works via Spring's proxy. Calling a `@Transactional` method **from within the same class** bypasses the proxy — the transaction annotation is ignored!
 :::
 

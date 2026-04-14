@@ -199,7 +199,7 @@ restrictions:
 
 ---
 
-:::tip The 10-Minute Rule
+:::tip[The 10-Minute Rule]
 If a reviewer can't understand the purpose of a PR within 10 minutes of reading the description and first few commits — it needs a better description or needs to be split. Treat the PR description as documentation that will be read by future engineers doing `git log`.
 :::
 

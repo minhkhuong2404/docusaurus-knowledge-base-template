@@ -68,7 +68,7 @@ How do you migrate a giant legacy on-premise monolith to AWS Serverless without 
 
 ## 🎯 DVA-C02 Exam Tips
 
-:::tip Quick Exam Rules
+:::tip[Quick Exam Rules]
 - **Strangler Fig**: Used to incrementally migrate a legacy monolith to serverless microservices piece by piece behind an API Gateway proxy.
 - **Saga Pattern**: Solves "distributed transactions" in serverless. Handled best by Step Functions natively executing compensating transactions (rollbacks) if a later step fails.
 - **Orchestration vs Choreography**: Step Functions = Orchestration (centralized). EventBridge/SNS = Choreography (decentralized).

@@ -158,7 +158,7 @@ for (int j = 0; j < NUMBER_OF_TASKS; j++) {
 }
 ```
 
-:::tip Rule of Thumb
+:::tip[Rule of Thumb]
 The **length of a name** should correspond to the **size of its scope**. A loop counter `i` is fine in a 3-line loop. In a method spanning 30 lines, a single letter is dangerous.
 :::
 

@@ -46,7 +46,7 @@ tags:
 | 3 | Deployment | **24%** |
 | 4 | Troubleshooting and Optimization | **18%** |
 
-:::tip Focus your time accordingly
+:::tip[Focus your time accordingly]
 Domain 1 + 2 = **58%** of the exam. Master Lambda, DynamoDB, S3, IAM, Cognito, and KMS first.
 :::
 
@@ -139,15 +139,15 @@ Since you use **Java + Spring**, pay special attention to:
 
 ## 💡 General Exam Strategy
 
-:::note Multiple Response Questions
+:::note[Multiple Response Questions]
 For "select 2" or "select 3" questions, eliminate wrong answers first. There are no partial scores — you need all correct choices.
 :::
 
-:::caution Read carefully
+:::caution[Read carefully]
 AWS loves to hide keywords: *most cost-effective*, *least operational overhead*, *highly available*, *serverless*. These narrow the correct answer dramatically.
 :::
 
-:::tip Keyword to Service Mapping
+:::tip[Keyword to Service Mapping]
 Use this quick mapping during elimination.
 :::
 
@@ -172,18 +172,18 @@ These questions test broad exam knowledge. Detailed questions are in each topic 
 
 **Q1.** You have 65 questions and 130 minutes. How much average time do you have per question?
 
-:::note Answer
+:::note[Answer]
 **2 minutes per question.** Flag hard questions and come back. Never leave blanks - there is no penalty for wrong answers.
 :::
 
 **Q2.** Which domain has the highest weighting in the DVA-C02 exam?
 
-:::note Answer
+:::note[Answer]
 **Domain 1: Development with AWS Services (32%).** Focus heavily on Lambda, DynamoDB, S3, and API Gateway.
 :::
 
 **Q3.** A developer needs to pick between storing application secrets or database credentials. Which AWS service is purpose-built for **automatic rotation** of database credentials?
 
-:::note Answer
+:::note[Answer]
 **AWS Secrets Manager** - it supports automatic rotation for RDS, Redshift, and DocumentDB. SSM Parameter Store does not natively rotate secrets.
 :::

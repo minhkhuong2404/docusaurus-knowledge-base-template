@@ -162,7 +162,7 @@ git flow hotfix finish JIRA-999-fix-npe
 
 ---
 
-:::tip Git Flow vs Trunk-Based Development
+:::tip[Git Flow vs Trunk-Based Development]
 Git Flow is best for **scheduled, versioned releases** (e.g., monthly releases, mobile apps with store review cycles). If your team deploys to production multiple times per day, [Trunk-Based Development](./trunk-based) is a better fit — fewer branches, simpler rules, faster feedback loops.
 :::
 

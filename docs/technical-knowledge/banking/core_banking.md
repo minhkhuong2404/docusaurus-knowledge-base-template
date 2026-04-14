@@ -251,10 +251,10 @@ Short answer guide:
 - Enforce idempotent posting keys and strict accounting invariants.
 - Define RTO/RPO drills, replay safety, and reconciliation checkpoints.
 
-:::info Interview Focus
+:::info[Interview Focus]
 Position CBS as ledger authority with strict posting correctness and reconciliation guarantees.
 :::
 
-:::danger Interview Trap
+:::danger[Interview Trap]
 Treating CBS as a generic downstream service without accounting invariants.
 :::

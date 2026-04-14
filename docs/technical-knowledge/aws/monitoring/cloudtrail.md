@@ -42,7 +42,7 @@ tags:
 | **Data Events** | Data plane — operations on data | `S3:GetObject`, `Lambda:Invoke`, `DynamoDB:PutItem` |
 | **Insights Events** | Unusual API activity detection | Spike in `TerminateInstances` |
 
-:::note Default is management events only
+:::note[Default is management events only]
 Data events are **not enabled by default** — they generate high volume (every S3 GET) and cost extra. Enable selectively.
 :::
 
@@ -62,7 +62,7 @@ aws cloudtrail create-trail \
   --is-multi-region-trail    # Capture events from ALL regions
 ```
 
-:::tip Multi-region trail
+:::tip[Multi-region trail]
 Always create a **multi-region trail** to capture API calls from all regions including global services (IAM, STS, CloudFront).
 :::
 

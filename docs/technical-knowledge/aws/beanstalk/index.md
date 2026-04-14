@@ -34,7 +34,7 @@ When creating a Beanstalk environment, you must choose a tier. You **cannot** ch
 | **Web Server Tier** | Route 53 → Load Balancer → Auto Scaling Group (EC2) | Handling standard HTTP/HTTPS web requests and REST APIs.                                    |
 | **Worker Tier**     | SQS Queue → Auto Scaling Group (EC2) running `sqsd` | Processing background jobs, long-running tasks, or offloading heavy work from the Web Tier. |
 
-:::tip Exam: The Worker Tier Daemon (`sqsd`)
+:::tip[Exam: The Worker Tier Daemon (`sqsd`)]
 In a Worker Tier, Beanstalk installs a daemon called `sqsd` on each EC2 instance. This daemon constantly pulls messages from an SQS queue and sends them as HTTP POST requests to your application running on `localhost`. Your app just needs to expose a local HTTP endpoint to process the work!
 :::
 
@@ -71,7 +71,7 @@ Tells Beanstalk exactly how to run your application.
 
 By default, you can configure Beanstalk to launch an RDS instance *inside* its CloudFormation stack. 
 
-:::warning Danger for Production
+:::warning[Danger for Production]
 If you delete the Beanstalk environment, **the RDS database is deleted with it**. This is fine for Dev/Test, but disastrous for Production.
 :::
 

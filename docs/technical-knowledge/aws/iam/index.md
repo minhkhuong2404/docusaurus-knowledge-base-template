@@ -35,7 +35,7 @@ tags:
 | **Role** | Temporary credentials — assumed by services, users, or external identities |
 | **Policy** | JSON document defining permissions |
 
-:::tip Think of it this way (Java analogy)
+:::tip[Think of it this way (Java analogy)]
 - **User** = a named instance
 - **Group** = an interface users implement
 - **Role** = a context you `assume()` temporarily

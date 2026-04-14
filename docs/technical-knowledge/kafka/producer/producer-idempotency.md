@@ -71,7 +71,7 @@ spring:
         enable.idempotence: true
 ```
 
-:::warning Kafka 3.0+ default
+:::warning[Kafka 3.0+ default]
 Since Kafka 3.0, `enable.idempotence=true` is the **default**. However, explicitly setting it in production configs documents intent and prevents accidental override.
 :::
 

@@ -185,7 +185,7 @@ git config --global core.editor "vim"
 
 ---
 
-:::tip Commit Early, Commit Often — Then Clean Up
+:::tip[Commit Early, Commit Often — Then Clean Up]
 Make small, frequent commits while working (even messy ones). Before opening a PR, use interactive rebase (`git rebase -i`) to squash and rewrite them into clean, logical commits. You get the safety of frequent saves and the clarity of clean history. See [Squash](../history/squash) and [Fixup](../history/fixup).
 :::
 
@@ -202,10 +202,10 @@ Short answer guide:
 - Amend only before sharing or when branch ownership is clear.
 - Structured messages power changelogs, versioning, and audits.
 
-:::info Interview Focus
+:::info[Interview Focus]
 Explain how commit structure supports incident forensics, audits, and reliable release automation.
 :::
 
-:::danger Interview Trap
+:::danger[Interview Trap]
 Giving style-only commit advice without linking it to operational outcomes.
 :::

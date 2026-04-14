@@ -72,7 +72,7 @@ CommonUtilsLayer:
     RetentionPolicy: Retain
 ```
 
-:::note Layer limits
+:::note[Layer limits]
 - Max **5 layers** per function
 - Total unzipped size (function + all layers) ≤ **250 MB**
 :::
@@ -92,7 +92,7 @@ aws lambda publish-version --function-name my-function
 # Returns: FunctionArn: arn:aws:lambda:...:my-function:5
 ```
 
-:::caution $LATEST is mutable
+:::caution[$LATEST is mutable]
 Never point production traffic directly at `$LATEST`. Use **aliases** pointing to published versions.
 :::
 
@@ -151,7 +151,7 @@ MyFunction:
 
 ## 🎯 DVA-C02 Exam Tips
 
-:::tip Quick Exam Rules
+:::tip[Quick Exam Rules]
 - **Versus $LATEST**: Never point production APIs to `$LATEST`. Always publish a version and point an alias (like `prod`) to it.
 - **Deployment strategies**: Be familiar with Canary and Linear traffic shifting through aliases. CodeDeploy integrates natively with Lambda aliases for this.
 - **Layers Limits**: You can attach a maximum of **5 layers** per function. The total unzipped size of the function plus all layers must not exceed **250 MB**.

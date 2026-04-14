@@ -403,11 +403,11 @@ public class ScalableBloomFilter<T> {
 
 **A:** Use a Counting Bloom filter with small counters instead of bits, increment on insert and decrement on delete. It enables removal at the cost of higher memory usage and collision-related caveats.
 
-:::info Interview Focus
+:::info[Interview Focus]
 Position Bloom filters as a **memory optimization tool** for permission checks, existence verification, and preventing unnecessary downstream queries. Emphasize the **zero false negatives guarantee** (precision: never miss real data) and acceptable **low false positive rates** (recall: occasionally check DB on false positive). Practice articulating **space vs. accuracy tradeoffs** and real-world scenarios (cache penetration, dedup, URL crawling).
 :::
 
-:::danger Interview Trap
+:::danger[Interview Trap]
 - **Trap: "Bloom filters support efficient deletion."** Reality: Only Counting Bloom filters support deletion; standard filters don't. Trade space for this capability.
 - **Trap: "False positives can be completely eliminated."** Reality: Trade-off with size. Reducing FP rate to 0.001% requires 3× more bits. Know the formula: m ∝ -n*log(p) / (ln2)².
 - **Trap: "Use Bloom filters when you need fast removal of old elements."** Reality: Standard Bloom doesn't support removal. Use Counting Bloom (4× space) or periodically rebuild with active data only.

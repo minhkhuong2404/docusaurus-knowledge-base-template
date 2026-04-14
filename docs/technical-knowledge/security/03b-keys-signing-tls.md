@@ -646,7 +646,7 @@ OkHttpClient client = new OkHttpClient.Builder()
     .build();
 ```
 
-:::warning Pinning risks
+:::warning[Pinning risks]
 Certificate pinning can cause app outages if the cert rotates without updating the pin. Always include a **backup pin** and have a cert rotation plan.
 :::
 

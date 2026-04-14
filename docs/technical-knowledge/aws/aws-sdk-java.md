@@ -98,7 +98,7 @@ DynamoDbClient testClient = DynamoDbClient.builder()
     .build();
 ```
 
-:::tip Lambda credential resolution
+:::tip[Lambda credential resolution]
 In Lambda, the SDK automatically picks up the **execution role credentials** via the container metadata endpoint (step 5 above). You don't need to configure anything — just use `DefaultCredentialsProvider.create()` or the no-arg client builder.
 :::
 

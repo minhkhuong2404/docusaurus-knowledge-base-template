@@ -44,7 +44,7 @@ When creating a REST API, you must choose an endpoint type based on where your c
 | **HTTP API**      | Low-latency, simple REST                   | JWT authorizer, auto-deploy, OIDC, CORS built-in                              | ~70% cheaper |
 | **WebSocket API** | Real-time bidirectional (chat, dashboards) | Connection management, stateful                                               | Per message  |
 
-:::tip Exam: REST vs HTTP API
+:::tip[Exam: REST vs HTTP API]
 - Need **usage plans / API keys** → REST API
 - Need **response caching** → REST API
 - Need **resource policies / WAF integration** → REST API
@@ -133,7 +133,7 @@ API → [dev stage]   → [https://xyz.execute-api.us-east-1.amazonaws.com/dev](
 - Each stage is an immutable **snapshot** of the API deployment. If you update a resource, you must *deploy* it to a stage for changes to take effect.
 - **Stage variables** act like environment variables for your API Gateway. 
 
-:::info Stage Variables + Lambda Aliases (Highly Testable!)
+:::info[Stage Variables + Lambda Aliases (Highly Testable!)]
 A common pattern is to use stage variables to point different API Gateway stages to different Lambda Aliases (e.g., `dev` API stage points to the `DEV` Lambda alias).
 - Format the Integration URI like this: `arn:aws:lambda:us-east-1:123456789012:function:my-function:${stageVariables.lambdaAlias}`
 - You must grant API Gateway permission to invoke *each* specific Lambda alias.

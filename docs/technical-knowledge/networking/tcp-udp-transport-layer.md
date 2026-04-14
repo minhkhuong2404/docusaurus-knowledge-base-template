@@ -121,7 +121,7 @@ Client                        Server
 - Ensures the last ACK reaches the server (if lost, server retransmits FIN)
 - Lets duplicate packets from the old connection expire
 
-:::tip Java/Spring Note
+:::tip[Java/Spring Note]
 `TIME_WAIT` on a server with many short connections causes port exhaustion. Solutions: enable `SO_REUSEADDR`, use connection pools (HikariCP), use `keep-alive`, or tune `tcp_tw_reuse` on Linux.
 :::
 

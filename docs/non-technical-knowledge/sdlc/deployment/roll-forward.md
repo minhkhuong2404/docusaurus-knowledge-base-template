@@ -223,6 +223,6 @@ Never write a `V1_2_0__rollback__...` Flyway script. Flyway does not support rol
 
 ---
 
-:::tip Feature Flags are Your Best Friend
+:::tip[Feature Flags are Your Best Friend]
 The fastest roll-forward is a feature flag toggle — no deployment required, instant effect. Design new features behind flags so that any issue can be mitigated in seconds while the fix is being prepared.
 :::

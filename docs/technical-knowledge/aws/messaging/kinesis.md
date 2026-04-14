@@ -79,7 +79,7 @@ PutRecordRequest request = PutRecordRequest.builder()
 | **Provisioning** | Manual (shards) | Automatic |
 | **Use case** | Analytics, metrics, logs | Task queues, job processing |
 
-:::tip Kinesis vs SQS keyword triggers
+:::tip[Kinesis vs SQS keyword triggers]
 - "Multiple applications consume same data" → **Kinesis**
 - "Replay data from the past" → **Kinesis**
 - "Job processing, decoupling" → **SQS**
@@ -100,7 +100,7 @@ PutRecordRequest request = PutRecordRequest.builder()
 
 ## 🎯 DVA-C02 Exam Tips
 
-:::tip Quick Exam Rules
+:::tip[Quick Exam Rules]
 - **Kinesis vs SQS**: Kinesis Data Streams supports **multiple consumers** reading the same stream independently and allows **replaying** events. SQS deletes the message after processing.
 - **Sorting/Ordering**: Records with the same partition key go to the same shard and are strictly ordered.
 - **Firehose**: If the goal is simply to "load streaming data into S3/OpenSearch with zero administration," choose **Firehose**.

@@ -35,7 +35,7 @@ tags:
 | **Message Groups** | ❌ | ✅ (parallel per group) |
 | **Naming** | Any | Must end in `.fifo` |
 
-:::tip When to use FIFO
+:::tip[When to use FIFO]
 - Financial transactions (order matters)
 - Sequential processing (step A must complete before step B)
 - Deduplication needed (prevent double-charge)

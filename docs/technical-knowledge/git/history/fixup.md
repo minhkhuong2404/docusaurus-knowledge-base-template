@@ -156,7 +156,7 @@ git push --force-with-lease origin feature/JIRA-123
 
 ---
 
-:::tip Set Up a Shell Alias
+:::tip[Set Up a Shell Alias]
 Speed up the fixup workflow with a shell alias:
 
 ```bash

@@ -145,7 +145,7 @@ Maintenance is ongoing — it formally "ends" when the system is decommissioned:
 
 ---
 
-:::info Tip: Actuator Endpoints for Maintenance
+:::info[Actuator Endpoints for Maintenance]
 Enable Spring Boot Actuator for runtime visibility:
 - `/actuator/health` — liveness and readiness
 - `/actuator/metrics` — all Micrometer metrics

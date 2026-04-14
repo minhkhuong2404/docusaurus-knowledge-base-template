@@ -185,7 +185,7 @@ With the SDK and instrumentation:
 
 ## 🎯 DVA-C02 Exam Tips
 
-:::tip Quick Exam Rules
+:::tip[Quick Exam Rules]
 - **Annotations vs Metadata**: **Annotations** are indexed and can be used in filter expressions (searchable). **Metadata** is not indexed and is only used to store extra detail.
 - **Instrumenting other services**: To trace outgoing AWS SDK calls from your application, you must wrap or instrument your AWS SDK clients using the X-Ray SDK interceptors.
 - **Sampling**: To control costs or trace specific routes more frequently, adjust **Sampling Rules**.

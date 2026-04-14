@@ -155,8 +155,8 @@ export default {
     "prism": {
       "theme": {
         "plain": {
-          "color": "#393A34",
-          "backgroundColor": "#f6f8fa"
+          "backgroundColor": "#eff1f5",
+          "color": "#24324f"
         },
         "styles": [
           {
@@ -167,8 +167,16 @@ export default {
               "cdata"
             ],
             "style": {
-              "color": "#999988",
+              "color": "#74839c",
               "fontStyle": "italic"
+            }
+          },
+          {
+            "types": [
+              "punctuation"
+            ],
+            "style": {
+              "color": "#1f2a44"
             }
           },
           {
@@ -176,81 +184,137 @@ export default {
               "namespace"
             ],
             "style": {
-              "opacity": 0.7
+              "opacity": 0.72
             }
           },
           {
             "types": [
               "string",
+              "char",
+              "template-string",
               "attr-value"
             ],
             "style": {
-              "color": "#e3116c"
+              "color": "#0f9d58"
             }
           },
           {
             "types": [
-              "punctuation",
-              "operator"
-            ],
-            "style": {
-              "color": "#393A34"
-            }
-          },
-          {
-            "types": [
-              "entity",
-              "url",
-              "symbol",
               "number",
-              "boolean",
-              "variable",
-              "constant",
-              "property",
-              "regex",
-              "inserted"
+              "boolean"
             ],
             "style": {
-              "color": "#36acaa"
+              "color": "#f59e0b",
+              "fontWeight": "500"
             }
           },
           {
             "types": [
-              "atrule",
               "keyword",
-              "attr-name",
-              "selector"
+              "important",
+              "atrule"
             ],
             "style": {
-              "color": "#00a4db"
+              "color": "#2f9e44",
+              "fontWeight": "600"
             }
           },
           {
             "types": [
               "function",
-              "deleted",
-              "tag"
+              "class-name"
             ],
             "style": {
-              "color": "#d73a49"
+              "color": "#39ff14",
+              "fontWeight": "600"
             }
           },
           {
             "types": [
-              "function-variable"
+              "builtin"
             ],
             "style": {
-              "color": "#6f42c1"
+              "color": "#51cf66"
             }
           },
           {
             "types": [
               "tag",
-              "selector",
-              "keyword"
+              "selector"
             ],
             "style": {
-              "color": "#00009f"
+              "color": "#51cf66"
+            }
+          },
+          {
+            "types": [
+              "attr-name"
+            ],
+            "style": {
+              "color": "#2f9e44"
+            }
+          },
+          {
+            "types": [
+              "variable",
+              "constant",
+              "symbol"
+            ],
+            "style": {
+              "color": "#1f7a33"
+            }
+          },
+          {
+            "types": [
+              "operator",
+              "entity",
+              "url"
+            ],
+            "style": {
+              "color": "#39ff14"
+            }
+          },
+          {
+            "types": [
+              "regex"
+            ],
+            "style": {
+              "color": "#1f9d00"
+            }
+          },
+          {
+            "types": [
+              "property"
+            ],
+            "style": {
+              "color": "#39ff14"
+            }
+          },
+          {
+            "types": [
+              "deleted"
+            ],
+            "style": {
+              "color": "#51cf66",
+              "textDecorationLine": "line-through"
+            }
+          },
+          {
+            "types": [
+              "inserted"
+            ],
+            "style": {
+              "color": "#1f9d00",
+              "textDecorationLine": "underline"
+            }
+          },
+          {
+            "types": [
+              "changed"
+            ],
+            "style": {
+              "color": "#f59e0b",
+              "fontWeight": "600"
             }
           }
         ]
@@ -327,7 +391,7 @@ export default {
               "class-name"
             ],
             "style": {
-              "color": "#7dd3fc",
+              "color": "#8ef7b2",
               "fontWeight": "600"
             }
           },
@@ -373,7 +437,7 @@ export default {
               "url"
             ],
             "style": {
-              "color": "#8be9fd"
+              "color": "#6df6b2"
             }
           },
           {
@@ -389,7 +453,7 @@ export default {
               "property"
             ],
             "style": {
-              "color": "#8be9fd"
+              "color": "#6df6b2"
             }
           },
           {

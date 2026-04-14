@@ -176,7 +176,7 @@ See [Fixup](../history/fixup) for the full workflow.
 
 ## When NOT to Rebase
 
-:::danger Never rebase shared branches
+:::danger[Never rebase shared branches]
 Do not rebase any branch that other team members have pulled and based work on. Rebase rewrites SHA hashes — anyone who has the old SHAs will have a diverged history that is painful to reconcile.
 
 **Safe to rebase:** your own local feature branch before pushing  

@@ -156,7 +156,7 @@ git add src/main/resources/application.yml
 
 ---
 
-:::tip Resolving Conflicts in Rebase
+:::tip[Resolving Conflicts in Rebase]
 During a rebase, Git replays commits one at a time. You may need to resolve the same logical conflict multiple times across different commits. If this happens frequently, consider squashing your commits first (`git rebase -i`), then rebasing the single resulting commit — you will only need to resolve the conflict once.
 :::
 

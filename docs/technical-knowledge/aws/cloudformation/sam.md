@@ -124,7 +124,7 @@ To enable safe deployments, you only need to add two lines to your `AWS::Serverl
           PostTraffic: !Ref PostTrafficLambdaFunction
 ```
 
-:::tip Exam Scenario: Pre-Traffic Hooks
+:::tip[Exam Scenario: Pre-Traffic Hooks]
 If a `PreTraffic` hook Lambda function fails its tests and returns a "Failed" status to CodeDeploy, the deployment is **instantly rolled back**, and no traffic is shifted to the new Lambda version.
 :::
 
@@ -143,7 +143,7 @@ The SAM CLI is heavily tested on the DVA-C02 exam. You must know the difference 
 | `sam deploy --guided` | Prompts you for stack names, regions, and parameters, then saves them to a `samconfig.toml` file. Packages and deploys to CloudFormation. |
 
 ### 2. Accelerated Development (`sam sync`)
-:::info `sam sync` vs `sam deploy`
+:::info[sam sync vs sam deploy]
 `sam deploy` goes through the slow CloudFormation stack update process. `sam sync --watch` bypasses CloudFormation for code-only updates, updating the Lambda API directly in seconds. **Only use `sam sync` in development environments.**
 :::
 

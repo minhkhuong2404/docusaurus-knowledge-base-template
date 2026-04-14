@@ -30,7 +30,7 @@ Broker 3: P2-Leader,  P0-Follower, P1-Follower
 | 2  | 1 broker lost  | 2           |
 | 3  | 2 brokers lost | 3           |
 
-:::warning Production Rule
+:::warning[Production Rule]
 Always use `replication.factor ≥ 3` in production. A RF of 2 gives you minimal protection and zero tolerance for a second failure during recovery.
 :::
 

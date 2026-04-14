@@ -148,7 +148,7 @@ git pull --ff-only origin main
 
 ---
 
-:::tip Establish a Routine
+:::tip[Establish a Routine]
 Before starting work each day, run:
 ```bash
 git fetch --prune
@@ -171,10 +171,10 @@ Short answer guide:
 - Rebase can rewrite context and confuse shared history if misused.
 - `--ff-only` enforces explicit conflict resolution before integration.
 
-:::info Interview Focus
+:::info[Interview Focus]
 Compare `fetch`, `pull --rebase`, and `pull --ff-only` using branch policy and team collaboration context.
 :::
 
-:::danger Interview Trap
+:::danger[Interview Trap]
 Using `git pull` blindly on shared branches without understanding merge/rebase side effects.
 :::

@@ -134,7 +134,7 @@ Use cases: redact SSN/email from CSV, resize images, add watermarks.
 
 ## 🎯 DVA-C02 Exam Tips
 
-:::tip Quick Exam Rules
+:::tip[Quick Exam Rules]
 - **S3 Select vs Athena**: If the question asks to filter a single S3 object (like a CSV) to retrieve specific rows cost-effectively without downloading the file, the answer is **S3 Select**. For querying across multiple files or complex joins, use Athena.
 - **S3 Transfer Acceleration**: Uses CloudFront's edge network to accelerate *uploads* across geographic distances. It does not cache the data itself like CloudFront.
 - **Replication limits**: Remember that **delete markers are NOT replicated** by default.

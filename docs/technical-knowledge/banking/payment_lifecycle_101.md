@@ -291,10 +291,10 @@ Short answer guide:
 - Correlate instruction IDs, status updates, and ledger references.
 - Clearing is message exchange; settlement is final funds movement.
 
-:::info Interview Focus
+:::info[Interview Focus]
 Walk through happy path and failure path, emphasizing idempotency and traceability.
 :::
 
-:::danger Interview Trap
+:::danger[Interview Trap]
 Confusing acknowledgment messages with actual funds finality.
 :::

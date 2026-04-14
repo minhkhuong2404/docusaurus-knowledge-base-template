@@ -143,7 +143,7 @@ CodeBuildProject:
       SecurityGroupIds: [!Ref BuildSecurityGroup]
 ```
 
-:::caution NAT Gateway required
+:::caution[NAT Gateway required]
 Builds in a VPC cannot reach the internet (for pulling Docker images, downloading Maven artifacts) unless a **NAT Gateway** is configured in the VPC.
 :::
 
@@ -166,7 +166,7 @@ Reports appear in the CodeBuild console with pass/fail trends.
 
 ## 🎯 DVA-C02 Exam Tips
 
-:::tip Quick Exam Rules
+:::tip[Quick Exam Rules]
 - **VPC and Internet Access**: If a CodeBuild project is connected to a VPC (to access private DBs), it **loses internet access** by default. You MUST add a NAT Gateway to the VPC for it to reach external APIs or pull public docker images.
 - **buildspec.yml location**: By default, it must be in the root of the source directory, but you can override the filename and path in the project configuration.
 - **Caching**: Always cache Maven (`/root/.m2/**/*`) or Docker layers to S3 to reduce build times.

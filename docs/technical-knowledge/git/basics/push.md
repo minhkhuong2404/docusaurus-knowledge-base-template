@@ -174,7 +174,7 @@ exit 0
 
 ---
 
-:::warning Never Force-Push to Shared Branches
+:::warning[Never Force-Push to Shared Branches]
 `git push --force` on `main` or `develop` will rewrite the public history and corrupt every teammate's local clone. Use `--force-with-lease` on feature branches only, and **never** on protected branches.
 :::
 
@@ -191,10 +191,10 @@ Short answer guide:
 - Add remote restrictions, hooks, and least-privilege credentials.
 - Recover via reflog/backup refs and coordinated branch restoration.
 
-:::info Interview Focus
+:::info[Interview Focus]
 Tie push strategy to governance: branch protection, approval policy, and recovery procedures.
 :::
 
-:::danger Interview Trap
+:::danger[Interview Trap]
 Recommending `--force` on collaborative branches instead of `--force-with-lease` on owned feature branches.
 :::

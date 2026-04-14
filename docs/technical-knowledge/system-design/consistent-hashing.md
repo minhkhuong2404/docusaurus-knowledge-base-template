@@ -28,7 +28,7 @@ This deterministic approach works flawlessly in a static environment but fails c
 
 Because the modulo base has changed, the mathematical output for almost *every single existing key* changes. For example, a hash value of $67211 \bmod 3$ routes to Server $2$. But $67211 \bmod 4$ routes to Server $3$.
 
-:::danger The Math of Failure
+:::danger[The Math of Failure]
 When the number of nodes changes from $N$ to $N+1$, the probability that a key must be remapped is $N/(N+1)$. In a 10-node cluster, adding one node forces **90%** of the existing data to move. This triggers a massive "thundering herd" of network I/O, cache misses, and database thrashing, often causing cascading failures across the entire backend architecture.
 :::
 
@@ -84,7 +84,7 @@ When a write request arrives, the coordinator node finds the primary owner by wa
 2. It continues walking the ring clockwise to find the next $R-1$ **distinct physical nodes**.
 3. It skips any virtual nodes that map back to a physical machine already holding a replica, ensuring data is distributed across physically isolated hardware (or even distinct availability zones).
 
-:::note Real-World Context
+:::note[Real-World Context]
 In system design interviews, demonstrating a deep mechanical understanding of Consistent Hashing is mandatory when architecting distributed storage, global caches, or stateful load balancers. Understanding how to manage the state of the ring itself (usually via a Gossip Protocol where nodes continually broadcast ring changes to one another) is the mark of senior-level design.
 :::
 

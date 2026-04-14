@@ -36,7 +36,7 @@ Auto-collected from AWS services:
 | API Gateway | Count, Latency, 4XXError, 5XXError |
 | DynamoDB | ConsumedReadCapacityUnits, SuccessfulRequestLatency |
 
-:::caution EC2 — RAM is NOT default
+:::caution[EC2 — RAM is NOT default]
 `MemoryUtilization` requires installing the **CloudWatch Agent** on the EC2 instance. This is a common exam trick question.
 :::
 
@@ -128,7 +128,7 @@ LogGroup:
     RetentionInDays: 30   # Never expires by default!
 ```
 
-:::caution Default = Never Expire
+:::caution[Default = Never Expire]
 By default, log groups **never expire** — costs accumulate. Always set a retention policy!
 :::
 

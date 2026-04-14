@@ -1,7 +1,7 @@
 
 import type { Config } from '@docusaurus/types'
-import { themes as prismThemes } from 'prism-react-renderer'
-import prismTheme from './src/theme/prismTheme'
+import prismTheme from './src/theme/prismTheme.js'
+import prismLightTheme from './src/theme/prismLightTheme.js'
 
 const config: Config = {
 	title: 'Engineering Knowledge Base',
@@ -98,7 +98,7 @@ const config: Config = {
 			],
 		},
 		prism: {
-			theme: prismThemes.github,
+			theme: prismLightTheme,
 			darkTheme: prismTheme,
 			additionalLanguages: [
 				'java',

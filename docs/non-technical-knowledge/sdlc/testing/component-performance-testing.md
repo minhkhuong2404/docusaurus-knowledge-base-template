@@ -227,6 +227,6 @@ Block a release if performance regresses beyond thresholds:
 
 ---
 
-:::tip Tip: Warm Up Before Measuring
+:::tip[Tip: Warm Up Before Measuring]
 Always include a warm-up ramp in Gatling simulations. JVM JIT compilation means the first few minutes of a test will show higher latency. Discard warm-up results from your assertions.
 :::

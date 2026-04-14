@@ -93,7 +93,7 @@ Messages are published with **message attributes**, and SNS only delivers to mat
 
 ## 🎯 DVA-C02 Exam Tips
 
-:::tip Quick Exam Rules
+:::tip[Quick Exam Rules]
 - **Fan-Out Pattern**: The classic exam scenario for SNS is the "Fan-Out Pattern" where a single SNS topic pushes to multiple SQS queues so different downstream services can process the same event independently and asynchronously.
 - **Message Filtering**: To prevent consumers from parsing irrelevant messages, use SNS Message Filtering based on message attributes.
 - **FIFO**: SNS FIFO strictly supports only SQS FIFO queues as subscribers.

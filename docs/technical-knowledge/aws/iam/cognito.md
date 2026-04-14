@@ -34,7 +34,7 @@ tags:
 | **Use case** | Log into your **app** | Call AWS services (S3, DynamoDB) directly |
 | **Think of it as** | Your app's user directory + OAuth server | AWS IAM role vending machine |
 
-:::tip Analogy
+:::tip[Analogy]
 - **User Pool** = Your bouncer — checks the guest list
 - **Identity Pool** = The VIP key card — unlocks AWS services
 :::

@@ -202,7 +202,7 @@ git add -f src/main/resources/application-template.yml
 
 ---
 
-:::tip Commit Hygiene Starts Here
+:::tip[Commit Hygiene Starts Here]
 Use `git add -p` to keep commits small and focused. A commit titled `"fix: resolve NPE in TransactionService"` should only contain the fix — not an unrelated refactor you happened to do in the same session. Patch staging makes that easy.
 :::
 
@@ -219,10 +219,10 @@ Short answer guide:
 - Prefer `-u` when you only want tracked-file updates.
 - Tie commit quality to PR standards and release traceability.
 
-:::info Interview Focus
+:::info[Interview Focus]
 Show how selective staging improves review quality and rollback confidence in real team workflows.
 :::
 
-:::danger Interview Trap
+:::danger[Interview Trap]
 Staging everything by default without reviewing `git diff --staged`.
 :::

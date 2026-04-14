@@ -38,7 +38,7 @@ This is the most critical setting for rolling restarts. It dictates how long the
 # 5 minutes (300000 ms). Adjust this based on your actual patch/restart time.
 scheduled.rebalance.max.delay.ms=300000
 ```
-:::tip How to size this value
+:::tip[How to size this value]
 Measure how long it takes to safely stop the Connect service, apply your OS/software patch, and start the service back up. Add 1-2 minutes of buffer to that time to get your ideal `scheduled.rebalance.max.delay.ms` value.
 :::
 
@@ -90,7 +90,7 @@ Perform these steps **one worker node at a time**:
 6. **Wait.** Ensure the node has fully initialized and resumed its tasks. 
 7. **Proceed to the next node.**
 
-:::warning Important
+:::warning[Important]
 **Do not** stop the next worker until the previous worker has fully rejoined the cluster and stabilized. If multiple workers go down simultaneously, it may trigger an emergency rebalance regardless of your delay settings.
 :::
 

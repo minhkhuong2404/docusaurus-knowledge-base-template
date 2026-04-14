@@ -49,7 +49,7 @@ tags:
 | **Cross-region** | ❌ Same region | ✅ Cross-region possible |
 | **Cost** | 2× instance cost | Additional instance |
 
-:::tip Exam trap — Multi-AZ vs Read Replica
+:::tip[Exam trap — Multi-AZ vs Read Replica]
 "High availability" → **Multi-AZ**
 "Scale read traffic" → **Read Replica**
 "DR across regions" → **Cross-region Read Replica**
@@ -160,7 +160,7 @@ Connection conn = DriverManager.getConnection(jdbcUrl, props);
 | **In transit** | SSL/TLS (enforce via parameter group or connection string) |
 | **Encrypted snapshots** | Can copy to another region + re-encrypt with different key |
 
-:::caution Encryption cannot be toggled
+:::caution[Encryption cannot be toggled]
 You **cannot encrypt an existing unencrypted RDS instance** directly. Workaround: create encrypted snapshot → restore to new encrypted instance.
 :::
 
@@ -190,7 +190,7 @@ spring:
       hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
 ```
 
-:::caution HikariCP pool size for Lambda
+:::caution[HikariCP pool size for Lambda]
 Lambda functions are short-lived — a pool size of 10 means each Lambda **execution environment** holds 10 connections. With 100 concurrent Lambdas = 1,000 connections. Use **RDS Proxy** to manage this.
 :::
 

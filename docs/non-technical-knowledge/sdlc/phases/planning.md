@@ -122,6 +122,6 @@ Define how the project communicates:
 
 ---
 
-:::info Key Deliverable
+:::info[Key Deliverable]
 The **Project Charter** is the primary artifact from this phase. It serves as the contract between the business and engineering teams.
 :::

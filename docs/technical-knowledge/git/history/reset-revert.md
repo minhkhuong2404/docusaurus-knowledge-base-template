@@ -174,7 +174,7 @@ git reset --hard HEAD@{1}   # recover the lost commit
 
 ---
 
-:::tip When to Use Which
+:::tip[When to Use Which]
 - **Just committed but not pushed, want to redo the commit:** `git reset --soft HEAD~1`
 - **Committed wrong files, want to unstage and re-stage:** `git reset HEAD~1` (mixed)
 - **Need to completely discard local changes:** `git reset --hard origin/main`

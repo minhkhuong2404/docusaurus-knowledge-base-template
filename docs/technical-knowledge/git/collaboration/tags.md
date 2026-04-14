@@ -183,7 +183,7 @@ jobs:
 
 ---
 
-:::tip Tag on Main, Never on Feature Branches
+:::tip[Tag on Main, Never on Feature Branches]
 Always create release tags on `main` (or your release branch) after merging and verifying the release build. Tagging on a feature branch creates a tag that points to an unmerged commit, which is confusing and can lead to incorrect releases.
 :::
 

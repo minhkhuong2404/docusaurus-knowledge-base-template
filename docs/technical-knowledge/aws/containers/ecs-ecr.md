@@ -37,7 +37,7 @@ When you create an ECS cluster or run a task, you choose how the underlying infr
 | **Network Mode**   | `bridge`, `host`, `awsvpc`, or `none`.                                        | **Must** use `awsvpc`.                                                       |
 | **Maintenance**    | You are responsible for OS patching and scaling the EC2 Auto Scaling Group.   | No underlying OS to patch.                                                   |
 
-:::tip Exam: Serverless Containers
+:::tip[Exam: Serverless Containers]
 If a scenario asks to run containers with the **lowest operational overhead** or without managing servers, the answer is always **Fargate**.
 :::
 
@@ -72,7 +72,7 @@ There are two completely distinct IAM roles associated with an ECS Task. You *mu
 | **Task Execution Role** | The ECS Agent / Container Runtime | Bootstrapping the container. Pulling the image from ECR, and pushing logs to CloudWatch. | `ecr:GetDownloadUrlForLayer`, `logs:CreateLogStream`, `secretsmanager:GetSecretValue` |
 | **Task Role**           | Your Application Code             | What your actual code needs to do *after* the container is running.                      | `dynamodb:PutItem`, `s3:GetObject`, `sqs:SendMessage`                                 |
 
-:::danger Never hardcode credentials
+:::danger[Never hardcode credentials]
 If an exam question mentions a containerized app needing access to DynamoDB, **never** inject AWS Access Keys as environment variables. Always assign a **Task Role** to the Task Definition.
 :::
 

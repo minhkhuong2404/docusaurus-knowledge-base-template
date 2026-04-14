@@ -179,7 +179,7 @@ WHERE salary > (
 );
 ```
 
-:::caution Performance
+:::caution[Performance]
 Correlated subqueries run once per row — O(n). Prefer JOINs or window functions for large tables.
 :::
 

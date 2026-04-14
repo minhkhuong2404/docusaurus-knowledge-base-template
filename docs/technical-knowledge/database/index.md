@@ -33,7 +33,7 @@ A structured guide covering everything you need to know about databases — from
 | 17 | [Backup & Recovery](./backup-recovery) | RPO/RTO, PITR, DR checklist |
 | 18 | [Database Security](./database-security) | SQL injection, encryption, auditing |
 
-:::tip Java / Spring Tip
+:::tip[Java / Spring Tip]
 Throughout this guide, Java and Spring Data / JPA notes are included where relevant to bridge theory and real-world usage.
 :::
 

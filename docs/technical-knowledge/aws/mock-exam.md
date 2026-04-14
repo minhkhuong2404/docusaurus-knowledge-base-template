@@ -33,11 +33,11 @@ Short answer guide:
 - Reframe each wrong answer as a design scenario.
 - Security, deployment, and troubleshooting domains are most operationally transferable.
 
-:::info Interview Focus
+:::info[Interview Focus]
 Use each missed question to build a reusable decision rule for real systems.
 :::
 
-:::danger Interview Trap
+:::danger[Interview Trap]
 Treating high mock scores as proof of production-level architecture judgment.
 :::
 
@@ -1056,7 +1056,7 @@ D) 503 Service Unavailable
 
 ---
 
-:::tip What to do with wrong answers
+:::tip[What to do with wrong answers]
 For every wrong answer:
 1. Re-read the explanation
 2. Go to the relevant topic page in this guide
@@ -1064,7 +1064,7 @@ For every wrong answer:
 4. Revisit in 2 days to confirm retention
 :::
 
-:::note Next Steps
+:::note[Next Steps]
 - Do this exam again in 1 week without looking at answers first
 - Try [TutorialsDojo](https://tutorialsdojo.com) mock exams for more variety
 - Book exam when consistently scoring 80%+ across 3 different mock exams

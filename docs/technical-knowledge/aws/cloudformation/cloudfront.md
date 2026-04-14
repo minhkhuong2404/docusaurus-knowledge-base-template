@@ -74,7 +74,7 @@ Keep S3 bucket **private** — only CloudFront can access it:
 }
 ```
 
-:::note OAC vs OAI
+:::note[OAC vs OAI]
 **OAC** (Origin Access Control) is the **newer, recommended** replacement for OAI (Origin Access Identity). OAC supports SSE-KMS encrypted S3 buckets; OAI does not.
 :::
 
@@ -117,7 +117,7 @@ aws cloudfront create-invalidation \
     --paths "/*"
 ```
 
-:::tip Version files instead of invalidating
+:::tip[Version files instead of invalidating]
 Use cache-busting filenames (`app.v2.js`, `style.abc123.css`) instead of invalidations — faster, cheaper, no propagation delay.
 :::
 

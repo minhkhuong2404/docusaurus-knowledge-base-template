@@ -191,7 +191,7 @@ The Lambda sends a `taskToken` to the approver. They call `SendTaskSuccess` / `S
 
 ## 🎯 DVA-C02 Exam Tips
 
-:::tip Quick Exam Rules
+:::tip[Quick Exam Rules]
 - **Standard vs Express**: Express workflows max at **5 minutes** and are for high-volume, event-driven workloads. Standard workflows can pause for up to **1 year**.
 - **Wait for Callback**: If a workflow needs to wait for human approval or an external system to finish, use the `.waitForTaskToken` callback pattern.
 - **Parallel processing**: Use the `Map` state to run the same workflow logic dynamically over an array of items. Use `Parallel` for executing different distinct logic concurrently.

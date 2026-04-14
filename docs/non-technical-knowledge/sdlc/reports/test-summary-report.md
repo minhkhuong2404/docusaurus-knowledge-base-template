@@ -254,6 +254,6 @@ Before the TSR can be signed off, these gates must all be green:
 
 ---
 
-:::tip Automate the TSR Data Collection
+:::tip[Automate the TSR Data Collection]
 Use your CI/CD pipeline to auto-generate the test statistics section from JaCoCo XML reports, Surefire XML output, and SonarQube API. Only the narrative summary, defect table, and sign-offs need to be filled in manually. This saves 1–2 hours per release.
 :::

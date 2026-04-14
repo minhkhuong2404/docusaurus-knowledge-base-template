@@ -285,6 +285,6 @@ Rollback procedures must be tested **before** production incidents:
 
 ---
 
-:::info Rollback is Not Failure
+:::info[Rollback is Not Failure]
 A fast, clean rollback is a sign of engineering maturity. The failure is not the rollback — the failure is shipping untested code, or being unable to rollback when needed.
 :::

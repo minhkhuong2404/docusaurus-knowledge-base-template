@@ -25,7 +25,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 }
 ```
 
-:::tip Foundational Principle
+:::tip[Foundational Principle]
 Always prefer JPQL over Native SQL when possible. It maintains database portability and allows Hibernate to optimize the Abstract Syntax Tree (AST) during SQL translation.
 :::
 
@@ -75,7 +75,7 @@ For queries utilizing database-specific functions (e.g., PostgreSQL `JSONB` oper
 List<User> findUsersByTimezoneNative(@Param("timezone") String timezone);
 ```
 
-:::danger Architectural Risk
+:::danger[Architectural Risk]
 Native queries bypass Hibernate's dialect translation. If you migrate from MySQL to PostgreSQL, these queries will require rewrites. Ensure you strictly document database-dependent logic.
 :::
 

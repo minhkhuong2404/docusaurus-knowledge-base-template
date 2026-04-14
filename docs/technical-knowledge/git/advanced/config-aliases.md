@@ -249,7 +249,7 @@ git config --global alias.root \
 
 ---
 
-:::tip Back Up Your `.gitconfig`
+:::tip[Back Up Your `.gitconfig`]
 Store your `~/.gitconfig` in a dotfiles repository on GitHub. This way you can set up a new machine in minutes with all your aliases and config:
 ```bash
 git clone git@github.com:your-username/dotfiles.git ~/dotfiles
@@ -270,10 +270,10 @@ Short answer guide:
 - Avoid unsafe wrappers or require explicit confirmation patterns.
 - Distribute via dotfiles/onboarding automation and periodic audits.
 
-:::info Interview Focus
+:::info[Interview Focus]
 Position Git config as team reliability infrastructure, not just personal convenience.
 :::
 
-:::danger Interview Trap
+:::danger[Interview Trap]
 Creating opaque aliases that hide destructive commands or bypass safeguards.
 :::

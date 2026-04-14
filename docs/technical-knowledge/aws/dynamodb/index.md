@@ -35,7 +35,7 @@ tags:
 | **Partition Key** (Hash Key) | Single attribute, must be unique | Simple lookups by ID |
 | **Partition Key + Sort Key** | Composite key — partition must be unique per sort key combo | Hierarchical data (userId + timestamp) |
 
-:::tip Key Design Rule
+:::tip[Key Design Rule]
 Design your partition key for **even distribution**. Bad partition keys (like `status = "active"`) create hot partitions and throttling.
 
 ✅ Good: `userId`, `orderId` (unique, uniform)  
@@ -95,7 +95,7 @@ Design your partition key for **even distribution**. Bad partition keys (like `s
 - Supports **eventual consistency only**
 - Max **20 GSIs** per table
 
-:::tip Exam Rule
+:::tip[Exam Rule]
 Need to query on a non-key attribute? → **GSI**  
 Need a different sort key for the same partition? → **LSI**  
 :::
@@ -133,7 +133,7 @@ Need a different sort key for the same partition? → **LSI**
 - Best for **read-heavy** workloads
 - Does **not** support strongly consistent reads or transactions
 
-:::note DAX vs ElastiCache
+:::note[DAX vs ElastiCache]
 - **DAX** — DynamoDB-specific, transparent drop-in cache, AWS-managed
 - **ElastiCache** — General-purpose cache (Redis/Memcached), used for any DB
 :::
@@ -187,7 +187,7 @@ var result = dynamoDbClient.transactWriteItems(TransactWriteItemsRequest.builder
 | `TransactGetItems` | Atomic reads from multiple items |
 | `TransactWriteItems` | Atomic writes to multiple items |
 
-:::caution Scan is expensive
+:::caution[Scan is expensive]
 `Scan` reads the **entire table** — use filters but they don't reduce RCU cost (filtering happens after read). Always prefer `Query` or design GSIs to avoid scans.
 :::
 

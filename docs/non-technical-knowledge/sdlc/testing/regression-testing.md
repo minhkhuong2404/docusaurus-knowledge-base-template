@@ -177,6 +177,6 @@ Flaky tests destroy trust in the regression suite. Treat them as P2 defects:
 
 ---
 
-:::warning Regression ≠ New Feature Testing
+:::warning[Regression ≠ New Feature Testing]
 Regression testing validates that **existing** functionality still works. New features require their own dedicated test cases before being added to the regression suite.
 :::

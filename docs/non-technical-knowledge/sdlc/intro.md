@@ -79,6 +79,6 @@ Navigate using the **sidebar on the left**. Each phase and testing type has its 
 - Tools and templates
 - Java/Spring code examples where relevant
 
-:::tip Getting Started
+:::tip[Getting Started]
 If you are new, start with [Planning](./phases/planning) and follow the phases in order to understand the full lifecycle.
 :::

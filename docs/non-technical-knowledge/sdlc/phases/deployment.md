@@ -158,6 +158,6 @@ Key signals to watch for 30–60 minutes after deployment:
 
 ---
 
-:::tip Zero Downtime Deployments in Spring Boot
+:::tip[Zero Downtime Deployments in Spring Boot]
 Use `@ConditionalOnProperty` to wire feature flags at the bean level, and `/actuator/health/liveness` + `/actuator/health/readiness` probes for Kubernetes zero-downtime rollouts.
 :::

@@ -27,7 +27,7 @@ A structured guide covering backend engineering with Spring, from framework fund
 | 11 | [Spring Cloud](./spring-cloud) | Distributed systems, Eureka, Gateway, Config Server |
 | 12 | [Spring Batch](./spring-batch) | Chunk processing, scaling massive data jobs, ETL pipelines |
 
-:::tip Java / Architecture Tip
+:::tip[Java / Architecture Tip]
 Pair this section with Java and Database knowledge base pages to build end-to-end backend decision-making skills.
 :::
 

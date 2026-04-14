@@ -233,6 +233,6 @@ jobs:
 
 ---
 
-:::caution Definition of Done Reminder
+:::caution[Definition of Done Reminder]
 A story is NOT done until it has passing unit tests, a peer code review, and QA sign-off on acceptance criteria. "Works on my machine" is not done.
 :::

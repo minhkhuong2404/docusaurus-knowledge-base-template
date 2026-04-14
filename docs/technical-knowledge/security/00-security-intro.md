@@ -171,11 +171,11 @@ Attackers **always find the weakest layer**. Defence in depth means there is no 
 
 ---
 
-:::tip Interview tip
+:::tip[Interview tip]
 Security questions in system design interviews almost always touch one of three areas: **how do you authenticate/authorize**, **how do you protect sensitive data**, and **what do you do when something goes wrong**. Make sure you can answer all three confidently.
 :::
 
-:::warning Never do this
+:::warning[Never do this]
 - Store passwords in plaintext or MD5
 - Concatenate user input into SQL queries
 - Commit secrets to version control

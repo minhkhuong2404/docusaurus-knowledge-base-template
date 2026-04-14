@@ -240,7 +240,7 @@ spring.jpa.properties.hibernate.format_sql=true
 logging.level.org.hibernate.type.descriptor.sql=TRACE
 ```
 
-:::tip Hibernate Query Plans
+:::tip[Hibernate Query Plans]
 Use Hibernate's Statistics API or tools like **p6spy** and **datasource-proxy** to log execution time per query in production.
 :::
 

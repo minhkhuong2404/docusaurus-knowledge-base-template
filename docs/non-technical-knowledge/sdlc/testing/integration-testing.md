@@ -205,6 +205,6 @@ class PaymentEventConsumerIT {
 
 ---
 
-:::info Naming Convention
+:::info[Naming Convention]
 Name integration test classes with the suffix `IT` (e.g., `TransactionRepositoryIT`) and unit tests with `Test` (e.g., `TransactionServiceTest`). Maven Failsafe runs `*IT` classes in the `verify` phase, separate from Surefire unit tests.
 :::

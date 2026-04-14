@@ -35,7 +35,7 @@ tags:
 | **Sessions** | ✅ | ✅ |
 | **Use case** | Most use cases | Simple horizontal scaling |
 
-:::tip Exam rule
+:::tip[Exam rule]
 **Redis** = exam's preferred answer for almost everything:
 - Need **persistence** → Redis
 - Need **replication/Multi-AZ** → Redis

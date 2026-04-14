@@ -1,41 +1,109 @@
 @import "@fortawesome/fontawesome-free/css/fontawesome.min.css";
 @import "@fortawesome/fontawesome-free/css/brands.min.css";
 @import "@fortawesome/fontawesome-free/css/solid.min.css";
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
 /* ============================================
    Code Block Styling — Catppuccin Mocha Theme
    ============================================ */
 
 :root {
+  /* ── Brand Palette (dark mode) — neon green/purple/lime ─────── */
+  --brand-blue: #4ade80;
+  --brand-blue-mid: #86efac;
+  --brand-teal: #4ade80;
+  --brand-teal-mid: #86efac;
+  --brand-green: #4ade80;
+  --brand-green-mid: #86efac;
+
+  /* Gradient — neon accent */
+  --gradient-brand: linear-gradient(90deg, #4ade80 0%, #86efac 100%);
+  --gradient-brand-deep: linear-gradient(90deg, #166534 0%, #4ade80 100%);
+
+  /* Page & sidebar background */
+  --page-bg: #0f1117;
+  --sidebar-bg: #0d111a;
+  --sidebar-border: rgba(74, 222, 128, 0.22);
+  --sidebar-active-bg: rgba(74, 222, 128, 0.1);
+  --sidebar-active-text: #86efac;
+  --sidebar-active-border: #4ade80;
+  --sidebar-cat-color: #9aa4c0;
+  --sidebar-hover-bg: rgba(74, 222, 128, 0.08);
+  --sidebar-hover-text: #86efac;
+  --sidebar-hover-border: #4ade80;
+
+  /* ── Code Block (dark) ───────────────────── */
   --code-bg: #161923;
   --code-surface: #313244;
   --code-border: #45475a;
   --code-text: #e8eaf3;
   --code-line-number: #585b70;
-  --code-highlight-bg: rgba(125, 211, 252, 0.2);
-  --code-highlight-border: #7dd3fc;
+  --code-highlight-bg: rgba(74, 222, 128, 0.12);
+  --code-highlight-border: #4ade80;
   --code-scrollbar-thumb: #45475a;
   --code-scrollbar-track: #161923;
   --code-title-bg: #181825;
   --code-copy-btn: #6c7086;
   --code-copy-btn-hover: #cdd6f4;
+
+  /* Animated neon accents */
+  --neon-border-gradient: linear-gradient(
+    120deg,
+    #4ade80,
+    #86efac,
+    #4ade80,
+    #4ade80
+  );
+  --neon-glow-color: rgba(74, 222, 128, 0.28);
 }
 
-[data-theme='light'] {
+[data-theme="light"] {
+  /* ── Brand Palette (light mode) — neon with readable contrast ─ */
+  --brand-blue: #2f8f4e;
+  --brand-blue-mid: #4caf6d;
+  --brand-teal: #2f8f4e;
+  --brand-teal-mid: #4caf6d;
+  --brand-green: #21663a;
+  --brand-green-mid: #2e7d46;
+
+  /* Gradient — deeper neon variants for white backgrounds */
+  --gradient-brand: linear-gradient(90deg, #2f8f4e 0%, #4caf6d 100%);
+
+  /* Page & sidebar */
+  --sidebar-bg: #f8fafc;
+  --sidebar-border: rgba(47, 143, 78, 0.18);
+  --sidebar-active-bg: rgba(47, 143, 78, 0.08);
+  --sidebar-active-text: #2f8f4e;
+  --sidebar-active-border: #4caf6d;
+  --sidebar-cat-color: #64748b;
+  --sidebar-hover-bg: rgba(47, 143, 78, 0.06);
+  --sidebar-hover-text: #4caf6d;
+  --sidebar-hover-border: #2f8f4e;
+
+  /* ── Code Block (light) ─────────────────────────── */
   --code-bg: #eff1f5;
   --code-surface: #e6e9ef;
   --code-border: #bcc0cc;
   --code-text: #4c4f69;
   --code-line-number: #9ca0b0;
-  --code-highlight-bg: rgba(4, 165, 229, 0.15);
-  --code-highlight-border: #04a5e5;
+  --code-highlight-bg: rgba(47, 143, 78, 0.12);
+  --code-highlight-border: #2f8f4e;
   --code-scrollbar-thumb: #bcc0cc;
   --code-scrollbar-track: #eff1f5;
   --code-title-bg: #ccd0da;
   --code-copy-btn: #8c8fa1;
   --code-copy-btn-hover: #4c4f69;
-}
 
+  /* Animated neon accents (light mode) */
+  --neon-border-gradient: linear-gradient(
+    120deg,
+    #2f8f4e,
+    #4caf6d,
+    #2f8f4e,
+    #2f8f4e
+  );
+  --neon-glow-color: rgba(47, 143, 78, 0.18);
+}
 
 /* Pre block container */
 pre[class*="language-"],
@@ -87,8 +155,10 @@ span[class*="codeLineNumber"] {
 }
 
 /* Highlighted lines */
-.theme-code-block-highlighted-line,
-span[class*="docusaurus-highlight-code-line"] {
+:is(
+  .theme-code-block-highlighted-line,
+  span[class*="docusaurus-highlight-code-line"]
+) {
   background-color: var(--code-highlight-bg);
   border-left: 3px solid var(--code-highlight-border);
   box-shadow: inset 0 0 0 1px rgba(125, 211, 252, 0.2);
@@ -96,6 +166,23 @@ span[class*="docusaurus-highlight-code-line"] {
   margin: 0 -1.25rem;
   padding: 0 1.25rem;
   padding-left: calc(1.25rem - 3px);
+}
+
+[data-theme="light"]
+  :is(
+    .theme-code-block-highlighted-line,
+    span[class*="docusaurus-highlight-code-line"]
+  ) {
+  border-left-width: 4px;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 87, 255, 0.3) 0%,
+    rgba(255, 255, 255, 0.18) 100%
+  );
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 87, 255, 0.35),
+    0 0 10px -6px rgba(0, 87, 255, 0.5);
+  padding-left: calc(1.25rem - 4px);
 }
 
 /* Copy button */
@@ -229,4 +316,818 @@ div[class*="codeBlockTitle"] {
   font-weight: 600;
   letter-spacing: 0.01em;
   white-space: nowrap;
+}
+
+/* ============================================
+   Blue-Green Design System (Reference-Inspired)
+   ============================================ */
+
+/* ── Global font & base ───────────────────── */
+body {
+  font-family:
+    "Inter",
+    system-ui,
+    -apple-system,
+    sans-serif;
+}
+
+/* ── Dark mode: deep page background ─────── */
+[data-theme="dark"] {
+  --ifm-background-color: #090b14 !important;
+  --ifm-background-surface-color: #101525 !important;
+  --ifm-navbar-background-color: #0a1020 !important;
+  --ifm-footer-background-color: #070b16 !important;
+  --ifm-color-emphasis-200: #2c3a58;
+  --ifm-color-emphasis-300: #445377;
+}
+
+/* Dark sidebar background */
+[data-theme="dark"] .theme-doc-sidebar-container {
+  background: var(--sidebar-bg) !important;
+}
+
+/* ── Navbar ───────────────────────────────── */
+.navbar {
+  border-bottom: 1px solid var(--sidebar-border);
+  box-shadow: 0 1px 0 var(--sidebar-border);
+}
+
+/* Dark navbar: slightly elevated over page */
+[data-theme="dark"] .navbar {
+  background: #0a1020 !important;
+}
+
+/* Light navbar: white with bottom border */
+[data-theme="light"] .navbar {
+  background: #ffffff !important;
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+/* Navbar title — gradient text */
+.navbar__title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 14px rgba(0, 234, 255, 0.35);
+}
+
+[data-theme="light"] .navbar__title {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.navbar__link {
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: color 0.15s ease;
+}
+
+[data-theme="dark"] .navbar__link {
+  color: #9fb0d0 !important;
+}
+
+[data-theme="dark"] .navbar__link:hover {
+  color: var(--brand-blue) !important;
+}
+
+[data-theme="light"] .navbar__link {
+  color: #334155 !important;
+}
+
+[data-theme="light"] .navbar__link:hover {
+  color: var(--brand-blue) !important;
+}
+
+/* ── Headings ─────────────────────────────── */
+
+/* Heading permalink / hash link */
+.markdown .anchor {
+  position: relative;
+}
+
+.markdown .anchor .hash-link {
+  align-items: center;
+  background: none !important;
+  color: var(--brand-teal);
+  display: inline-flex;
+  font-size: 0.82em;
+  font-weight: 700;
+  height: 1.15em;
+  justify-content: center;
+  margin-left: 0.45rem;
+  opacity: 0.78;
+  text-decoration: none;
+  transition:
+    opacity 0.15s ease,
+    color 0.15s ease,
+    text-shadow 0.15s ease,
+    transform 0.15s ease;
+  background-clip: initial;
+  -webkit-background-clip: initial;
+  -webkit-text-fill-color: currentColor;
+  vertical-align: middle;
+  width: 1.15em;
+}
+
+.markdown .anchor .hash-link::before {
+  content: "#";
+}
+
+.markdown .anchor:hover .hash-link,
+.markdown .anchor .hash-link:focus-visible {
+  color: var(--brand-teal-mid);
+  opacity: 1;
+  text-shadow: 0 0 10px rgba(47, 158, 68, 0.45);
+  transform: translateY(-1px);
+}
+
+[data-theme="light"] .markdown .anchor .hash-link {
+  color: var(--brand-teal);
+}
+
+[data-theme="light"] .markdown .anchor:hover .hash-link,
+[data-theme="light"] .markdown .anchor .hash-link:focus-visible {
+  color: var(--brand-teal-mid);
+  text-shadow: 0 0 8px rgba(47, 158, 68, 0.28);
+}
+
+/*
+  H1 — Indigo → mint gradient (from user's radial-gradient palette)
+*/
+[data-theme="dark"] .markdown h1 {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800;
+  font-size: 2.1rem;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(47, 158, 68, 0.24);
+  padding-bottom: 0.65rem;
+}
+
+[data-theme="light"] .markdown h1 {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800;
+  font-size: 2.1rem;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(47, 158, 68, 0.18);
+  padding-bottom: 0.65rem;
+}
+
+/*
+  H2 — Off-white section divider with bottom rule
+  Similar to reference site's "Reading Roadmap", "All Books"
+*/
+[data-theme="dark"] .markdown h2 {
+  color: #e2e8f0;
+  /* soft white */
+  font-weight: 700;
+  font-size: 1.4rem;
+  letter-spacing: -0.02em;
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 0.4rem;
+}
+
+[data-theme="light"] .markdown h2 {
+  color: #1e293b;
+  /* dark slate */
+  font-weight: 700;
+  font-size: 1.4rem;
+  letter-spacing: -0.02em;
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  padding-bottom: 0.4rem;
+}
+
+/*
+  H3 — Indigo → mint gradient (lighter, compact)
+*/
+[data-theme="dark"] .markdown h3 {
+  background: linear-gradient(90deg, #4ade80 0%, #86efac 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: -0.01em;
+  margin-top: 1.75rem;
+  margin-bottom: 0.4rem;
+  border: none;
+  padding: 0;
+}
+
+[data-theme="light"] .markdown h3 {
+  background: linear-gradient(90deg, #2f9e44 0%, #51cf66 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: -0.01em;
+  margin-top: 1.75rem;
+  margin-bottom: 0.4rem;
+  border: none;
+  padding: 0;
+}
+
+/*
+  H4 — Vivid green sub-subsection
+  Reference site uses purple/violet here; we use green
+*/
+[data-theme="dark"] .markdown h4 {
+  color: var(--brand-green);
+  /* green-400 */
+  font-weight: 600;
+  font-size: 0.975rem;
+  margin-top: 1.25rem;
+  margin-bottom: 0.3rem;
+}
+
+[data-theme="light"] .markdown h4 {
+  color: var(--brand-green);
+  /* green-700 */
+  font-weight: 600;
+  font-size: 0.975rem;
+  margin-top: 1.25rem;
+  margin-bottom: 0.3rem;
+}
+
+/* H5 — muted teal (for deep nesting) */
+[data-theme="dark"] .markdown h5 {
+  color: var(--brand-teal-mid);
+  font-weight: 500;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+}
+
+[data-theme="light"] .markdown h5 {
+  color: var(--brand-teal);
+  font-weight: 500;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+}
+
+/* ── Sidebar ──────────────────────────────── */
+
+.theme-doc-sidebar-container {
+  border-right: 1px solid var(--sidebar-border) !important;
+}
+
+/* Category label (collapsed/expanded group header) */
+.menu__list-item-collapsible .menu__link,
+.menu__list-item > .menu__link--sublist {
+  color: var(--sidebar-cat-color) !important;
+  font-weight: 600;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: color 0.15s ease;
+}
+
+/* Category hover: slight brightness boost, no background */
+.menu__list-item-collapsible .menu__link:hover,
+.menu__list-item > .menu__link--sublist:hover {
+  background: transparent !important;
+}
+
+[data-theme="dark"] .menu__list-item-collapsible .menu__link:hover,
+[data-theme="dark"] .menu__list-item > .menu__link--sublist:hover {
+  color: #f0fdf4 !important;
+}
+
+[data-theme="light"] .menu__list-item-collapsible .menu__link:hover,
+[data-theme="light"] .menu__list-item > .menu__link--sublist:hover {
+  color: #334155 !important;
+}
+
+/* All leaf links: transparent left border by default */
+.menu__link:not(.menu__link--sublist) {
+  border-left: 2px solid transparent;
+  border-radius: 0;
+  padding-top: 0.28rem;
+  padding-bottom: 0.28rem;
+  font-size: 0.875rem;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+/* Sidebar leaf — inactive */
+[data-theme="dark"] .menu__link:not(.menu__link--sublist) {
+  color: #566587;
+  /* same as TOC inactive */
+}
+
+[data-theme="light"] .menu__link:not(.menu__link--sublist) {
+  color: #64748b;
+  /* same as TOC inactive */
+}
+
+/* Sidebar leaf — hover */
+.menu__link:not(.menu__link--sublist):hover {
+  background: var(--sidebar-hover-bg) !important;
+  color: var(--sidebar-hover-text) !important;
+  border-left-color: var(--sidebar-hover-border) !important;
+}
+
+/* Sidebar leaf — active */
+.menu__link--active:not(.menu__link--sublist) {
+  background: var(--sidebar-active-bg) !important;
+  color: var(--sidebar-active-text) !important;
+  border-left: 2px solid var(--sidebar-active-border) !important;
+  font-weight: 600;
+}
+
+/* ── Table of Contents (right panel) ──────── */
+/*
+  Consistent with sidebar:
+  - inactive  = same muted gray (#475569 dark / #64748b light)
+  - hover     = same teal color + same subtle bg + left border
+  - active    = same vivid blue + same bg + left border
+*/
+
+/* Container — left border echoes the sidebar's right-border */
+.table-of-contents {
+  border-left: 1px solid var(--sidebar-border);
+  padding-left: 0.65rem;
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+/* Individual links — base reset with left-border slot */
+.table-of-contents__link {
+  display: block;
+  padding: 0.18rem 0.4rem;
+  border-left: 2px solid transparent;
+  /* mirrors sidebar leaf */
+  border-radius: 0;
+  font-size: 0.78rem;
+  font-weight: 400;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Inactive — same muted gray as sidebar ── */
+[data-theme="dark"] .table-of-contents__link {
+  color: #566587;
+}
+
+[data-theme="light"] .table-of-contents__link {
+  color: #64748b;
+}
+
+/* ── Hover — same teal as sidebar hover ───── */
+[data-theme="dark"] .table-of-contents__link:hover {
+  color: var(--sidebar-hover-text);
+  /* #2dd4bf */
+  background: var(--sidebar-hover-bg);
+  /* rgba(teal, 0.07) */
+  border-left-color: var(--sidebar-hover-border);
+}
+
+[data-theme="light"] .table-of-contents__link:hover {
+  color: var(--sidebar-hover-text);
+  /* #0f766e */
+  background: var(--sidebar-hover-bg);
+  border-left-color: var(--sidebar-hover-border);
+}
+
+/* ── Active — same vivid blue + left border as sidebar ── */
+.table-of-contents__link--active,
+.table-of-contents__link--active:hover {
+  font-weight: 600 !important;
+}
+
+[data-theme="dark"] .table-of-contents__link--active,
+[data-theme="dark"] .table-of-contents__link--active:hover {
+  color: var(--sidebar-active-text) !important;
+  /* #38bdf8 */
+  background: var(--sidebar-active-bg) !important;
+  /* rgba(blue, 0.10) */
+  border-left-color: var(--sidebar-active-border) !important;
+}
+
+[data-theme="light"] .table-of-contents__link--active,
+[data-theme="light"] .table-of-contents__link--active:hover {
+  color: var(--sidebar-active-text) !important;
+  /* #1d4ed8 */
+  background: var(--sidebar-active-bg) !important;
+  /* rgba(blue, 0.08) */
+  border-left-color: var(--sidebar-active-border) !important;
+}
+
+/* Nested TOC (h3+ inside h2) — slightly smaller, same inactive color */
+.table-of-contents ul ul .table-of-contents__link {
+  font-size: 0.74rem;
+  padding-left: 0.85rem;
+}
+
+[data-theme="dark"] .table-of-contents ul ul .table-of-contents__link {
+  color: #566587;
+  /* same inactive as top-level */
+}
+
+[data-theme="light"] .table-of-contents ul ul .table-of-contents__link {
+  color: #64748b;
+}
+
+/* ── Thin scrollbar (global) ───────────────── */
+
+/* Webkit (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.table-of-contents__left-border:not(#\#):not(#\#) {
+  border-left: 2px solid var(--sidebar-active-border) !important;
+}
+
+[data-theme="dark"]::-webkit-scrollbar-thumb,
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: rgba(47, 158, 68, 0.24);
+  border-radius: 999px;
+}
+
+[data-theme="dark"]::-webkit-scrollbar-thumb:hover,
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(47, 158, 68, 0.42);
+}
+
+[data-theme="light"]::-webkit-scrollbar-thumb,
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: rgba(47, 158, 68, 0.18);
+  border-radius: 999px;
+}
+
+[data-theme="light"]::-webkit-scrollbar-thumb:hover,
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(47, 158, 68, 0.32);
+}
+
+/* Code blocks keep a slightly thicker scrollbar for ergonomics */
+pre[class*="language-"]::-webkit-scrollbar {
+  height: 5px;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(47, 158, 68, 0.26) transparent;
+}
+
+[data-theme="light"] * {
+  scrollbar-color: rgba(47, 158, 68, 0.22) transparent;
+}
+
+/* ── Tables ───────────────────────────────── */
+
+/* Dark mode table header — dark bg with teal text */
+[data-theme="dark"] table thead {
+  background: #0d1629;
+}
+
+[data-theme="dark"] table thead th {
+  color: #51cf66 !important;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid rgba(47, 158, 68, 0.3);
+  padding: 0.6rem 0.75rem;
+}
+
+[data-theme="dark"] table tbody td {
+  border-color: rgba(51, 65, 85, 0.6);
+  padding: 0.6rem 0.75rem;
+  font-size: 0.9rem;
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] table tbody tr:nth-child(odd) {
+  background: #0d1320;
+}
+
+[data-theme="dark"] table tbody tr:hover {
+  background: rgba(47, 158, 68, 0.06);
+}
+
+/* Light mode table header */
+[data-theme="light"] table thead {
+  background: #edf7ef;
+}
+
+[data-theme="light"] table thead th {
+  color: #2f9e44;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid rgba(47, 158, 68, 0.22);
+}
+
+[data-theme="light"] table tbody tr:hover {
+  background: rgba(47, 158, 68, 0.04);
+}
+
+/* ── Admonitions ──────────────────────────── */
+
+[data-theme="dark"] .alert--info {
+  background: rgba(47, 158, 68, 0.09);
+  border-left: 4px solid #2f9e44;
+}
+
+[data-theme="dark"] .alert--success {
+  background: rgba(47, 158, 68, 0.08);
+  border-left: 4px solid #51cf66;
+}
+
+[data-theme="dark"] .alert--warning {
+  background: rgba(47, 158, 68, 0.08);
+  border-left: 4px solid #2f9e44;
+}
+
+[data-theme="dark"] .alert--danger {
+  background: rgba(239, 68, 68, 0.07);
+  border-left: 4px solid #f87171;
+}
+
+[data-theme="light"] .alert--info {
+  border-left: 4px solid #2f9e44;
+}
+
+[data-theme="light"] .alert--success {
+  border-left: 4px solid #51cf66;
+}
+
+[data-theme="light"] .alert--warning {
+  border-left: 4px solid #2f9e44;
+}
+
+/* ── Pagination ───────────────────────────── */
+
+.pagination-nav__link {
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+[data-theme="dark"] .pagination-nav__link {
+  border: 1px solid rgba(47, 158, 68, 0.3);
+  background: #0d1320;
+}
+
+[data-theme="dark"] .pagination-nav__link:hover {
+  border-color: #51cf66;
+  background: rgba(47, 158, 68, 0.09);
+}
+
+[data-theme="light"] .pagination-nav__link {
+  border: 1px solid rgba(47, 158, 68, 0.22);
+}
+
+[data-theme="light"] .pagination-nav__link:hover {
+  border-color: #51cf66;
+  background: rgba(47, 158, 68, 0.06);
+}
+
+.pagination-nav__sublabel {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+[data-theme="dark"] .pagination-nav__sublabel {
+  color: #51cf66;
+}
+
+[data-theme="light"] .pagination-nav__sublabel {
+  color: #2f9e44;
+}
+
+[data-theme="dark"] .pagination-nav__label {
+  color: #e2e8f0;
+}
+
+[data-theme="light"] .pagination-nav__label {
+  color: #1e293b;
+}
+
+/* ── Last updated bar ─────────────────────── */
+
+.theme-last-updated {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+[data-theme="dark"] .theme-last-updated {
+  color: #51cf66;
+}
+
+[data-theme="light"] .theme-last-updated {
+  color: #2f9e44;
+}
+
+/* ── Inline links ─────────────────────────── */
+
+[data-theme="dark"] .markdown a {
+  color: #51cf66;
+  text-decoration: none;
+}
+
+[data-theme="dark"] .markdown a:hover {
+  color: #a9f0b3;
+  text-decoration: underline;
+}
+
+[data-theme="light"] .markdown a {
+  color: #2f9e44;
+  text-decoration: none;
+}
+
+[data-theme="light"] .markdown a:hover {
+  color: #1f7a33;
+  text-decoration: underline;
+}
+
+/* ── Footer ───────────────────────────────── */
+
+[data-theme="dark"] .footer {
+  background:
+    radial-gradient(circle at top, rgba(74, 222, 128, 0.08), transparent 42%),
+    linear-gradient(180deg, #070b16 0%, #0b1420 100%);
+  border-top: 1px solid rgba(74, 222, 128, 0.2);
+  box-shadow: inset 0 1px 0 rgba(134, 239, 172, 0.08);
+}
+
+[data-theme="light"] .footer {
+  background:
+    radial-gradient(circle at top, rgba(76, 175, 109, 0.08), transparent 45%),
+    linear-gradient(180deg, #f7fbf8 0%, #eef6f0 100%);
+  border-top: 1px solid rgba(47, 143, 78, 0.18);
+  box-shadow: inset 0 1px 0 rgba(76, 175, 109, 0.08);
+}
+
+[data-theme="dark"] .footer__title {
+  color: #86efac;
+}
+
+[data-theme="light"] .footer__title {
+  color: #2f8f4e;
+}
+
+[data-theme="dark"] .footer__link-item {
+  color: #cbd5e1;
+  transition:
+    color 0.15s ease,
+    text-shadow 0.15s ease;
+}
+
+[data-theme="dark"] .footer__link-item:hover {
+  color: #86efac;
+  text-shadow: 0 0 8px rgba(74, 222, 128, 0.35);
+}
+
+[data-theme="light"] .footer__link-item {
+  color: #334155;
+  transition:
+    color 0.15s ease,
+    text-shadow 0.15s ease;
+}
+
+[data-theme="light"] .footer__link-item:hover {
+  color: #2f8f4e;
+  text-shadow: 0 0 7px rgba(47, 143, 78, 0.25);
+}
+
+[data-theme="dark"] .footer .footer__link-item[href*="linkedin.com"]::before,
+[data-theme="dark"] .footer .footer__link-item[href*="github.com"]::before,
+[data-theme="dark"] .footer .footer__link-item[href*="facebook.com"]::before,
+[data-theme="dark"] .footer .footer__link-item[href*="leetcode.com"]::before {
+  color: #86efac;
+}
+
+[data-theme="light"] .footer .footer__link-item[href*="linkedin.com"]::before,
+[data-theme="light"] .footer .footer__link-item[href*="github.com"]::before,
+[data-theme="light"] .footer .footer__link-item[href*="facebook.com"]::before,
+[data-theme="light"] .footer .footer__link-item[href*="leetcode.com"]::before {
+  color: #2f8f4e;
+}
+
+/* ── Neon Borders & Animated Accents ───────────────── */
+
+@keyframes neonGradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.card,
+.pagination-nav__link,
+.alert {
+  position: relative;
+  isolation: isolate;
+}
+
+.card::before,
+.pagination-nav__link::before,
+.alert::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: var(--neon-border-gradient);
+  background-size: 220% 220%;
+  animation: neonGradientShift 8s linear infinite;
+  pointer-events: none;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+.card,
+.pagination-nav__link {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.02),
+    0 0 22px -14px var(--neon-glow-color);
+}
+
+.alert {
+  box-shadow: 0 0 20px -14px var(--neon-glow-color);
+}
+
+[data-theme="dark"] .card:hover,
+[data-theme="dark"] .pagination-nav__link:hover,
+[data-theme="dark"] .alert:hover {
+  box-shadow:
+    0 0 0 1px rgba(0, 234, 255, 0.2),
+    0 0 24px -10px rgba(0, 234, 255, 0.45);
+}
+
+[data-theme="light"] .card:hover,
+[data-theme="light"] .pagination-nav__link:hover,
+[data-theme="light"] .alert:hover {
+  box-shadow:
+    0 0 0 1px rgba(0, 87, 255, 0.2),
+    0 0 22px -12px rgba(0, 87, 255, 0.28);
+}
+
+.card > *,
+.pagination-nav__link > *,
+.alert > * {
+  position: relative;
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card::before,
+  .pagination-nav__link::before,
+  .alert::before {
+    animation: none;
+    background-position: 50% 50%;
+  }
 }

@@ -164,7 +164,7 @@ git cherry-pick -x a3f9bc2
 
 ---
 
-:::warning Avoid Cherry-Picking as a Substitute for Merging
+:::warning[Avoid Cherry-Picking as a Substitute for Merging]
 Cherry-picking duplicates commits, and duplicate commits cause confusion and conflicts down the line when the originating branch is eventually merged. If you need all of a branch's changes, merge it. Reserve cherry-pick for **specific, targeted** commit transport — particularly hotfix backports.
 :::
 

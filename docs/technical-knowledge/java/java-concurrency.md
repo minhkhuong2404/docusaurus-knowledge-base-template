@@ -55,7 +55,7 @@ ExecutorService executor = Executors.newFixedThreadPool(4);
 executor.submit(() -> System.out.println("Running"));
 ```
 
-:::info Interview Focus: `start()` vs `run()`
+:::info[Interview Focus: `start()` vs `run()`]
 **Q: Can we directly call the `run()` method instead of `start()`?** Calling `run()` directly executes the method synchronously in the *current* thread, just like any normal method call. It does not spawn a new thread. Calling `start()` registers the thread with the JVM and OS, transitioning it to the `RUNNABLE` state, which then invokes `run()` concurrently.
 :::
 
@@ -71,7 +71,7 @@ NEW  →  RUNNABLE  ⇄  BLOCKED / WAITING / TIMED_WAITING  →  TERMINATED
 * **TIMED_WAITING:** Waiting with timeout (`Thread.sleep()`, `Object.wait(timeout)`).
 * **TERMINATED:** Run method completed or exception thrown.
 
-:::tip Interview Focus: Thread Control Methods
+:::tip[Interview Focus: Thread Control Methods]
 **Q: What is the difference between `Thread.sleep()` and `Object.wait()`?** 1. **Lock Release:** `sleep()` does *not* release the monitor lock. `wait()` *releases* the lock, allowing other threads to enter the synchronized block.
 2. **Origin:** `sleep()` is a static method in `Thread`. `wait()` is an instance method in `Object`.
 3. **Usage Context:** `wait()` must be called inside a `synchronized` block/method. `sleep()` can be called anywhere.
@@ -110,7 +110,7 @@ public void increment() {
 public static synchronized void staticMethod() { }
 ```
 
-:::tip Interview Focus: Lock Escalation (JDK 1.6+)
+:::tip[Interview Focus: Lock Escalation (JDK 1.6+)]
 **Q: How did JDK 1.6 optimize `synchronized`?** To reduce the heavy OS-level context switching overhead, Java introduced **Lock Escalation**:
 1. **Biased Locking:** Assumes only one thread will access the block. Marks the object header with the thread ID.
 2. **Lightweight Locking:** If another thread requests the lock, it upgrades to a lightweight lock. The new thread uses CAS (Compare-And-Swap) to spin and wait for the lock.
@@ -137,7 +137,7 @@ At the hardware level, `volatile` triggers a **Memory Barrier** (StoreLoad). Whe
 - **The Cost:** The CPU's L1/L2 caches use the **MESI** (Modified, Exclusive, Shared, Invalid) cache coherence protocol. The broadcast forces all other CPU cores to mark their cached cache-lines as "Invalid," forcing them to fetch from slow main RAM on the next read.
 - **False Sharing:** CPU caches load data in 64-byte chunks (Cache Lines). If two independent `volatile` variables sit next to each other in memory, changing Variable A invalidates the entire 64-byte line, destroying the cache for Variable B even though B never changed! Seniors fix this using `@Contended` (padding objects with blank bytes to force them into separate CPU cache lines).
 
-:::danger Interview Trap: Volatile Atomicity
+:::danger[Interview Trap: Volatile Atomicity]
 **Q: Does `volatile` guarantee thread safety for `i++`?** No. `volatile` does NOT provide atomicity. `count++` is a read-modify-write operation (3 steps). Multiple threads can still read the same initial value simultaneously. You need `AtomicInteger` or `synchronized` for atomicity.
 :::
 
@@ -211,7 +211,7 @@ public void accessRateLimitedResource() {
 }
 ```
 
-:::danger Interview Trap: CountDownLatch vs CyclicBarrier
+:::danger[Interview Trap: CountDownLatch vs CyclicBarrier]
 **Q: What is the core difference between CountDownLatch and CyclicBarrier?**
 1.  **Who is waiting?** In `CountDownLatch`, usually *one main thread* waits for *N other threads* to finish. In `CyclicBarrier`, *N threads* wait for *each other*.
 2.  **Reusability:** `CountDownLatch` count cannot be reset. `CyclicBarrier` resets automatically.
@@ -225,7 +225,7 @@ public void accessRateLimitedResource() {
 
 CAS is a **lock-free** atomic operation supported by the CPU: "If the current value equals the expected value, update it. Otherwise, retry." Used extensively in `java.util.concurrent.atomic`.
 
-:::info Interview Focus: The ABA Problem
+:::info[Interview Focus: The ABA Problem]
 **Q: What is the ABA problem in CAS and how is it solved?** If a value changes from A → B → A, CAS checks the value and sees 'A', incorrectly assuming it was never modified. This is dangerous for structures like lock-free linked lists. 
 **Solution:** Use `AtomicStampedReference`. It appends a version stamp (integer) to the reference. The CAS operation now checks both the value AND the version stamp.
 :::
@@ -251,7 +251,7 @@ private static final ThreadLocal<SimpleDateFormat> dateFormat =
     ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd"));
 ```
 
-:::danger Interview Focus: Memory Leaks
+:::danger[Interview Focus: Memory Leaks]
 **Q: Why does ThreadLocal cause memory leaks and how do `WeakReferences` play a role?** Internally, each `Thread` has a `ThreadLocalMap`. The map uses `ThreadLocal` instances as **WeakReference** keys, but the values are strong references. If a `ThreadLocal` is garbage-collected, its key in the map becomes `null`, but the value remains referenced by the thread. In thread pools, where threads are never destroyed, this value lives forever.
 **Fix:** Always call `threadLocal.remove()` in a `finally` block after use.
 :::
@@ -286,7 +286,7 @@ If your Linux server has 8 CPU cores, it can only physically execute 8 threads s
 3. `DiscardPolicy`: Silently drops task.
 4. `DiscardOldestPolicy`: Drops oldest unhandled request and retries.
 
-:::tip Interview Focus: Factory Methods
+:::tip[Interview Focus: Factory Methods]
 **Q: Why do strict engineering guidelines forbid using `Executors` factory methods?** * `Executors.newFixedThreadPool()` uses an **unbounded** `LinkedBlockingQueue`. If tasks build up faster than they process, it will cause an OOM.
 * `Executors.newCachedThreadPool()` allows `Integer.MAX_VALUE` maximum threads, leading to OOM by creating too many threads.
 Always explicitly configure `ThreadPoolExecutor` to control queue sizes and thread limits.
@@ -306,7 +306,7 @@ Introduced in Java 7, the Fork/Join framework is designed for work that can be b
 ### The Work-Stealing Algorithm
 Standard thread pools use a single shared queue, which can become a bottleneck. The `ForkJoinPool` gives every worker thread its own double-ended queue (deque). 
 
-:::info Interview Focus: Work-Stealing
+:::info[Interview Focus: Work-Stealing]
 **Q: How does Fork/Join prevent idle threads?**
 If a worker thread finishes all the tasks in its own deque, it becomes a "thief." It looks at the deques of other busy worker threads and **steals tasks from the tail** (the oldest, largest chunks of work). This minimizes contention, because the owner thread operates on the head of the deque, while the thief operates on the tail.
 :::
@@ -380,7 +380,7 @@ CompletableFuture<String> combined = getPrice()
 | `CopyOnWriteArrayList` | Creates a new array copy on every write. Ideal for read-heavy scenarios.              |
 | `BlockingQueue`        | Interface for producer-consumer queues (`ArrayBlockingQueue`, `LinkedBlockingQueue`). |
 
-:::info Interview Focus: ConcurrentHashMap 1.7 vs 1.8
+:::info[Interview Focus: ConcurrentHashMap 1.7 vs 1.8]
 **Q: How did `ConcurrentHashMap` change from JDK 1.7 to 1.8?** * **JDK 1.7:** Used **Segment-based locking** (an array of Segments). Granularity was locked at the Segment level (default 16).
 * **JDK 1.8:** Removed Segments. Uses a Node array + Linked List + Red-Black tree. Thread safety is achieved using **CAS + `synchronized`**. It locks only the *head node* of the specific bucket being modified, massively reducing lock contention.
 :::

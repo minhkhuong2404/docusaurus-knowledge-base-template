@@ -1,11 +1,11 @@
 {
   "id": "intro",
   "title": "Welcome",
-  "description": "Engineering knowledge base for practical learning, interview preparation, and real-world system design decisions.",
+  "description": "Engineering knowledge base for practical learning, interview preparation, real-world system design, DSA training, and cloud certification.",
   "source": "@site/docs/intro.md",
   "sourceDirName": ".",
-  "slug": "/",
-  "permalink": "/",
+  "slug": "/docs",
+  "permalink": "/docs",
   "draft": false,
   "unlisted": false,
   "tags": [
@@ -28,20 +28,26 @@
       "inline": true,
       "label": "onboarding",
       "permalink": "/tags/onboarding"
+    },
+    {
+      "inline": true,
+      "label": "interview",
+      "permalink": "/tags/interview"
     }
   ],
   "version": "current",
-  "lastUpdatedBy": "Lữ Minh Khương",
-  "lastUpdatedAt": 1774752403000,
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055000,
   "frontMatter": {
     "title": "Welcome",
-    "slug": "/",
-    "description": "Engineering knowledge base for practical learning, interview preparation, and real-world system design decisions.",
+    "slug": "/docs",
+    "description": "Engineering knowledge base for practical learning, interview preparation, real-world system design, DSA training, and cloud certification.",
     "tags": [
       "engineering",
       "documentation",
       "knowledge-base",
-      "onboarding"
+      "onboarding",
+      "interview"
     ]
   },
   "sidebar": "tutorialSidebar",

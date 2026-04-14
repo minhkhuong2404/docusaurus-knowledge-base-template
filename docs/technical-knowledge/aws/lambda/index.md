@@ -46,7 +46,7 @@ tags:
 | **Asynchronous** | Fire and forget | 2 retries (with backoff) | S3, SNS, EventBridge |
 | **Event Source Mapping** | Lambda polls the source | Configurable | SQS, Kinesis, DynamoDB Streams, MSK |
 
-:::caution Retry behavior matters
+:::caution[Retry behavior matters]
 - **Async**: Lambda retries up to **2 times** before sending to DLQ or EventBridge destination
 - **ESM (SQS)**: Messages are not deleted until Lambda succeeds. If it fails, message becomes visible again (visibility timeout)
 :::
@@ -155,7 +155,7 @@ For **asynchronous** invocations, configure where Lambda sends results:
 | **On Success** | SQS, SNS, Lambda, EventBridge |
 | **On Failure** | SQS, SNS, Lambda, EventBridge |
 
-:::note DLQ vs Destinations
+:::note[DLQ vs Destinations]
 - **DLQ** (Dead Letter Queue) — failure only, supports SQS and SNS
 - **Destinations** — both success and failure, more targets, newer feature
 Prefer **Destinations** over DLQ for new implementations.

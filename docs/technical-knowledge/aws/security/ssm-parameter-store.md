@@ -103,7 +103,7 @@ public String handleRequest(Object event, Context context) {
 
 ## 🎯 DVA-C02 Exam Tips
 
-:::tip Quick Exam Rules
+:::tip[Quick Exam Rules]
 - **Parameter Store vs Secrets Manager**: If the question mentions **automatic rotation** for RDS/Redshift/DocumentDB, the answer is **Secrets Manager**. If it mentions **free** or **basic configuration strings**, the answer is **SSM Parameter Store**.
 - **KMS Encryption**: SecureStrings in SSM Parameter Store are encrypted using AWS KMS. You need BOTH `ssm:GetParameter` and `kms:Decrypt` permissions to read a SecureString.
 - **CloudFormation**: To use a SecureString in CloudFormation, you MUST use dynamic references (`{{resolve:ssm-secure:...}}`). You cannot pass them via the `Parameters:` block default type `AWS::SSM::Parameter::Value<String>`.

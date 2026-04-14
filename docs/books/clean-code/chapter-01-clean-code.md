@@ -36,7 +36,7 @@ Martin describes a pattern he's seen at many companies:
 4. Productivity asymptotically approaches **zero**.
 5. Management adds more developers — who also slow down because the code is incomprehensible.
 
-:::danger The Grand Redesign Trap
+:::danger[The Grand Redesign Trap]
 Eventually, teams rebel and demand a full rewrite. A "tiger team" is selected to build the new system from scratch — while the old system keeps evolving. The new system must catch up with a moving target. This grand redesign almost always takes far longer than expected, and often ends up messy too.
 :::
 
@@ -94,7 +94,7 @@ This means the act of writing clean code is an act of communication, not just in
 
 ## The Boy Scout Rule
 
-:::tip Core Principle
+:::tip[Core Principle]
 **Always leave the code cleaner than you found it.**
 
 You don't need to refactor an entire module before committing. Just make one small improvement whenever you touch code. Over time, codebases improve naturally rather than degrade.

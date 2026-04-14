@@ -328,10 +328,10 @@ Short answer guide:
 - Standardize evidence workflows and reason-code analytics.
 - Minimize PAN exposure and segment systems rigorously.
 
-:::info Interview Focus
+:::info[Interview Focus]
 Connect auth, clearing, settlement, and chargeback operations into one coherent lifecycle.
 :::
 
-:::danger Interview Trap
+:::danger[Interview Trap]
 Treating authorization approval as equivalent to settled funds.
 :::

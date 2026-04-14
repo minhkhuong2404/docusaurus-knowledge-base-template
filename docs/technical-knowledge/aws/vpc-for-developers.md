@@ -50,7 +50,7 @@ VPC (10.0.0.0/16)
 | **Evaluation** | All rules evaluated | Rules evaluated in order (lowest number first) |
 | **Default behavior** | Deny all in, allow all out | Allow all (default NACL) |
 
-:::tip Exam hint
+:::tip[Exam hint]
 **Stateful (Security Groups)**: If you allow inbound port 80, the response is automatically allowed out.
 **Stateless (NACLs)**: You must explicitly allow BOTH inbound port 80 AND outbound ephemeral ports (1024–65535).
 :::
@@ -71,7 +71,7 @@ Private Lambda → NAT Gateway (public subnet) → Internet Gateway → Internet
 - Costs money per hour + per GB processed
 - Fully managed (vs NAT Instance which requires maintenance)
 
-:::caution Lambda in VPC needs NAT for internet
+:::caution[Lambda in VPC needs NAT for internet]
 A Lambda function inside a VPC has **no internet access by default**. To call external APIs (Stripe, Twilio...), add a NAT Gateway.
 
 **Cheaper alternative**: Use VPC Endpoints for AWS services (DynamoDB, S3, SQS) — no NAT needed.

@@ -33,6 +33,6 @@ A structured guide covering everything you need to know about computer networkin
 | 17 | [Application Protocols Reference](./application-protocols-reference) | SMTP, FTP, SSH, SNMP, NTP, MQTT, WebRTC |
 | 18 | [Interview Questions — Master List](./networking-interview-questions) | Top questions across all topics, interview-ready answers |
 
-:::tip Java / Spring Focus
+:::tip[Java / Spring Focus]
 Java NIO, Netty, Spring WebFlux, Spring WebSocket, gRPC-Java, WebClient, Spring Security OAuth2, and Resilience4j examples are included throughout.
 :::

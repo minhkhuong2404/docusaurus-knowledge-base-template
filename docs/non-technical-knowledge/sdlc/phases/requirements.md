@@ -166,6 +166,6 @@ resilience4j:
 
 ---
 
-:::warning Common Pitfall
+:::warning[Common Pitfall]
 Do not start development until acceptance criteria are written and approved. Developers coding against vague requirements guarantees rework.
 :::

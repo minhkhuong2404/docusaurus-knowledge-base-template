@@ -21,8 +21,8 @@
     }
   ],
   "version": "current",
-  "lastUpdatedBy": "Lữ Minh Khương",
-  "lastUpdatedAt": 1773417829000,
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055000,
   "sidebarPosition": 1,
   "frontMatter": {
     "id": "java-overview",
@@ -37,7 +37,7 @@
   "sidebar": "tutorialSidebar",
   "previous": {
     "title": "Welcome",
-    "permalink": "/"
+    "permalink": "/docs"
   },
   "next": {
     "title": "Java Fundamentals: Core Language Concepts",

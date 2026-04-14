@@ -61,7 +61,7 @@ compression.type=snappy     # Options: none, gzip, snappy, lz4, zstd
 - ❌ `gzip` can become a throughput bottleneck if the producer is CPU-constrained
 - ❌ If producers and brokers use different compression types, the broker must **recompress**, causing severe latency spikes
 
-:::tip Best Practice
+:::tip[Best Practice]
 Use `zstd` as the default in modern Kafka clusters (2.1+). It delivers the best compression-to-CPU ratio. Avoid `gzip` in real-time pipelines with > 50k msg/s.
 :::
 
@@ -114,7 +114,7 @@ With batching (linger.ms=20, batch.size=128KB):
 - ❌ Large batches increase memory pressure on the producer's JVM buffer pool
 - ❌ If a batch fails mid-send, all messages in the batch must be retried
 
-:::tip Best Practice
+:::tip[Best Practice]
 Set `linger.ms=20` and `batch.size=65536` (64KB) as a starting point. For maximum throughput workloads like analytics pipelines, push `linger.ms` to 50–100ms.
 :::
 
@@ -162,7 +162,7 @@ partitions = max(
 - ❌ **Cannot reduce partition count** — you can only add partitions, never remove them after creation. Poor initial sizing requires topic recreation.
 - ❌ **Message ordering** is guaranteed only within a single partition. More partitions means ordering guarantees apply to a smaller subset of messages.
 
-:::caution Rule
+:::caution[Rule]
 Do NOT pre-emptively create topics with 1000 partitions. Over-partitioning is just as harmful as under-partitioning. Start conservatively and increase systematically.
 :::
 

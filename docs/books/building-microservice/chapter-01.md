@@ -29,7 +29,7 @@ A key insight: a microservice is a **black box** from the outside. Consumers don
 4. **Technology Agnostic** — Different services can use different languages, frameworks, and databases (Java + Spring for one, Go for another).
 5. **Small Enough to Understand** — A service should fit in a developer's head. The concept of size is contextual, not a fixed line count.
 
-:::tip Key Takeaway
+:::tip[Key Takeaway]
 If you take only one thing from this book: **embrace independent deployability**. Everything else follows from it.
 :::
 

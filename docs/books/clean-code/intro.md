@@ -51,7 +51,7 @@ This documentation breaks down each chapter into clear, digestible explanations 
 
 One principle runs through the entire book:
 
-:::tip The Boy Scout Rule
+:::tip[The Boy Scout Rule]
 **Leave the campground cleaner than you found it.**
 
 Apply this to code: every time you touch a module, leave it a little better than before. Rename a poor variable, split a long function, remove dead code. Over time, this compounds.

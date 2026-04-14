@@ -186,7 +186,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 }
 ```
 
-:::caution N+1 Problem
+:::caution[N+1 Problem]
 Using `FetchType.LAZY` on collections can trigger N+1 queries. Use `JOIN FETCH` in JPQL or `@EntityGraph` to eagerly load in specific queries.
 :::
 

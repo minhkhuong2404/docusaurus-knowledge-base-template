@@ -27,7 +27,7 @@ When querying a database without an index, the engine executes a **Full Table Sc
 2. Scans the ~100 rows within that page for the target value.
 3. Evicts the page and fetches the next one.
 
-:::danger The Math Behind the Bottleneck
+:::danger[The Math Behind the Bottleneck]
 If you have 100 million users, and each 8KB page holds 100 rows, your table spans **1 million pages**. 
 At approximately **100 microseconds** per SSD-to-RAM round trip, scanning 1 million pages takes **~100 seconds** in the worst case [00:01:12]. Even with sequential pre-fetching reducing this to 3–5 seconds, this latency is catastrophic for synchronous application flows.
 :::
@@ -57,7 +57,7 @@ Because keys are stored in strictly sorted order, a query like `SELECT * FROM us
 
 A Hash Index uses a standard hash map stored on disk. The search key is passed through a hash function to map directly to a bucket that contains the disk pointer [00:04:06].
 
-:::warning Why are Hash Indexes rarely used in relational databases?
+:::warning[Why are Hash Indexes rarely used in relational databases?]
 Despite offering $O(1)$ lookups, Hash Indexes explicitly **destroy ordering**. If you use a Hash Index, queries like `WHERE age > 50` or `ORDER BY created_at` cannot utilize the index, resulting in a full table scan [00:04:32]. 
 :::
 

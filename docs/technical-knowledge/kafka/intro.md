@@ -111,7 +111,7 @@ public class OrderConsumer {
 
 ---
 
-:::tip Get started
+:::tip[Get started]
 Head to [Core Concepts → Kafka Overview](./core/kafka-overview) to begin your journey.
 :::
 

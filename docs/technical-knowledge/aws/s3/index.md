@@ -57,7 +57,7 @@ tags:
 | **SSE-C** | Customer-provided key | You supply key in request header |
 | **Client-Side Encryption** | Key never leaves client | You |
 
-:::tip Exam tip
+:::tip[Exam tip]
 - `SSE-KMS` → audit trail in CloudTrail + KMS usage cost + throttling (KMS has limits)
 - `SSE-C` → you send the key with every request (HTTPS required)
 - `SSE-S3` → default, no extra cost

@@ -207,7 +207,7 @@ git push origin v1.2.0
 
 ---
 
-:::tip Start Small
+:::tip[Start Small]
 You do not need to go fully trunk-based on day one. Start by reducing your feature branch lifetime from "2 weeks" to "3 days" and using feature flags for large features. The reduction in merge conflict pain and PR review lag will be immediately obvious.
 :::
 

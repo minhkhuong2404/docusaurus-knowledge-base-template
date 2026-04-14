@@ -190,7 +190,7 @@ Methods:
    → Eliminates need for sticky sessions
 ```
 
-:::tip Best Practice
+:::tip[Best Practice]
 Avoid sticky sessions when possible. Store session data in a distributed cache (Redis) so any server can handle any request — true horizontal scaling.
 :::
 

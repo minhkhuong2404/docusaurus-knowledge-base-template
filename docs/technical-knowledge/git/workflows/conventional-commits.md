@@ -210,7 +210,7 @@ See [Hooks](../advanced/hooks) for setup instructions.
 
 ---
 
-:::tip Keep Scopes Consistent
+:::tip[Keep Scopes Consistent]
 The value of scopes comes from consistency — if one developer writes `feat(transaction):` and another writes `feat(transactions):`, changelog grouping breaks. Define your project's allowed scopes in a `commitlint.config.js` or team wiki and enforce them in the hook.
 :::
 

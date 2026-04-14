@@ -82,7 +82,7 @@ X-Request-Id: abc-123
 | 4xx | Client Error | 400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found, 409 Conflict, 429 Too Many Requests |
 | 5xx | Server Error | 500 Internal Server Error, 502 Bad Gateway, 503 Service Unavailable, 504 Gateway Timeout |
 
-:::tip 401 vs 403
+:::tip[401 vs 403]
 `401 Unauthorized` means *unauthenticated* (no valid credentials). `403 Forbidden` means *authenticated but not authorized* (you're logged in but don't have permission).
 :::
 

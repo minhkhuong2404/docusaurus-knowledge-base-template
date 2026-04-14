@@ -213,7 +213,7 @@ A distributed system can guarantee at most **2 of 3**:
 - **CP** (Consistent + Partition tolerant): Returns error or waits when partitioned. Examples: HBase, Zookeeper, etcd, MongoDB (strong consistency mode)
 - **AP** (Available + Partition tolerant): Returns potentially stale data when partitioned. Examples: Cassandra (eventual consistency), CouchDB, DynamoDB
 
-:::info CAP is a simplification
+:::info[CAP is a simplification]
 The PACELC model extends CAP: even without partitions, there's a trade-off between **latency** and **consistency**.
 :::
 

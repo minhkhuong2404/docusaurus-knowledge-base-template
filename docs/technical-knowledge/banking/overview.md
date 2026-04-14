@@ -224,10 +224,10 @@ Short answer guide:
 - Enforce sanctions/fraud/AML gates with strong observability.
 - Track failure recovery, exception handling quality, and reconciliation accuracy.
 
-:::info Interview Focus
+:::info[Interview Focus]
 Explain payment systems as lifecycle stages with explicit control, audit, and recovery boundaries.
 :::
 
-:::danger Interview Trap
+:::danger[Interview Trap]
 Discussing rails without distinguishing clearing from settlement and ledger finality.
 :::

@@ -165,7 +165,7 @@ See [Conflict Resolution](./conflict-resolution) for full guidance.
 
 ---
 
-:::tip Merge vs Rebase
+:::tip[Merge vs Rebase]
 Use **merge** (`--no-ff`) when integrating **completed** branches into shared branches (`develop`, `main`). Use **rebase** to update a **feature branch** with the latest changes from `main` before opening a PR. This gives you the best of both: linear feature branch history and clear merge points in main.
 :::
 

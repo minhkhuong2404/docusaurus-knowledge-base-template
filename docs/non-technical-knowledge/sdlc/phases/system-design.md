@@ -214,6 +214,6 @@ CREATE INDEX idx_transactions_status         ON transactions(status) WHERE statu
 
 ---
 
-:::tip Design Principle
+:::tip[Design Principle]
 Design for failure. Assume every external call will eventually fail and plan your circuit breakers, fallbacks, and retry policies in the design phase — not during an incident.
 :::

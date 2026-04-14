@@ -127,7 +127,7 @@ You now have two IDE windows, each on a different branch, each with their own ru
 
 ---
 
-:::tip Worktrees Beat Stashing for Hotfixes
+:::tip[Worktrees Beat Stashing for Hotfixes]
 The classic hotfix workflow requires you to stash, switch, fix, push, switch back, and pop — with the risk of forgetting to pop or creating stash conflicts. Worktrees eliminate all of that: your feature work is untouched in its directory, and the hotfix lives in a separate, parallel workspace.
 :::
 
@@ -144,10 +144,10 @@ Short answer guide:
 - Prefer for parallel hotfix/review/test contexts.
 - Use `git worktree list` visibility and cleanup routines.
 
-:::info Interview Focus
+:::info[Interview Focus]
 Explain how worktrees reduce context-switch risk during hotfixes and parallel reviews.
 :::
 
-:::danger Interview Trap
+:::danger[Interview Trap]
 Leaving stale worktrees that create branch confusion and cleanup debt.
 :::

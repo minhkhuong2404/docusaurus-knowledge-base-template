@@ -332,11 +332,11 @@ Short answer guide:
 - Apply risk-based evidence tiers and senior approvals for high-risk cases.
 - Incomplete customer data and weak entity resolution are frequent root causes.
 
-:::info Interview Focus
+:::info[Interview Focus]
 Differentiate onboarding KYC controls from ongoing AML monitoring and escalation operations.
 :::
 
-:::danger Interview Trap
+:::danger[Interview Trap]
 Applying uniform due diligence depth to all customer risk segments.
 :::
 | **International Organisation PEP** | Senior officials of UN, IMF, World Bank, Olympic Committee                                                                     |

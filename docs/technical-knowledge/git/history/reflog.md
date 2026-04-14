@@ -152,7 +152,7 @@ git gc                                  # clean up dangling objects
 
 ---
 
-:::tip Commit Often = Larger Safety Net
+:::tip[Commit Often = Larger Safety Net]
 Every commit creates a reflog entry. Making frequent WIP commits (even messy ones) while working gives you more recovery points. You can always squash them before merging.
 :::
 

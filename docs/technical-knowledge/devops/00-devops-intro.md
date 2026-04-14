@@ -195,11 +195,11 @@ kind load docker-image myapp:latest --name my-cluster
 
 ---
 
-:::tip Start here if you're new
+:::tip[Start here if you're new]
 Install Docker Desktop, then work through the docs in order starting with [Docker Fundamentals](/technical-knowledge/devops/docker-fundamentals). Every topic includes runnable examples — type them out rather than copy-pasting for better retention.
 :::
 
-:::info Spring Boot users
+:::info[Spring Boot users]
 All code examples in this guide use Java / Spring Boot where application code is shown. The Docker and Kubernetes concepts apply to any language.
 :::
 

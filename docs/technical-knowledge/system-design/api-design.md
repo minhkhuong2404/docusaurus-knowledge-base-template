@@ -10,7 +10,7 @@ tags: [api, rest, grpc, graphql, versioning, pagination, rate-limiting, idempote
 
 ---
 
-:::tip System Design Interview Tip
+:::tip[System Design Interview Tip]
 If you are designing an API during a system design interview, keep this section brief (under 5 minutes). Focus on the core endpoints, use shorthand for error codes (`2xx`, `4xx`, `5xx`), and don't write out exhaustive JSON response schemas unless explicitly asked.
 :::
 

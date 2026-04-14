@@ -40,7 +40,7 @@ myCar.drive(); // Toyota is driving!
 
 **Encapsulation** means bundling data (fields) and behavior (methods) together, while restricting direct access to internal state using access modifiers.
 
-:::info Key Idea
+:::info[Key Idea]
 Hide the data, expose the behavior.
 :::
 
@@ -75,7 +75,7 @@ public class BankAccount {
 | `protected` |     ✅      |      ✅       |    ✅     |     ❌      |
 | `public`    |     ✅      |      ✅       |    ✅     |     ✅      |
 
-:::tip Spring Tip
+:::tip[Spring Tip]
 Spring beans rely heavily on encapsulation. `@Service`, `@Repository`, and `@Component` classes expose only what's needed through public methods or interfaces.
 :::
 
@@ -183,7 +183,7 @@ List<Shape> shapes = List.of(new Circle(5), new Rectangle(4, 6));
 shapes.forEach(s -> System.out.println(s.area()));
 ```
 
-:::tip Spring Tip
+:::tip[Spring Tip]
 Polymorphism powers Spring's dependency injection. You program to an **interface**, and Spring injects the correct implementation at runtime.
 :::
 
@@ -251,7 +251,7 @@ public class CreditCardPayment implements Payable {
 | Fields               | Any type            | `public static final` only    |
 | Methods              | Abstract + concrete | Abstract + `default`/`static` |
 
-:::tip Spring Tip
+:::tip[Spring Tip]
 Interfaces are everywhere in Spring. `JpaRepository`, `ApplicationContext`, `BeanFactory` — you always code to the interface, letting Spring provide the implementation.
 :::
 

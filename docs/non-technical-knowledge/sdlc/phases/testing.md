@@ -119,7 +119,7 @@ New → Assigned → In Progress → Fixed → Verification → Closed
 
 ---
 
-:::info Testing Tools in the Java/Spring Ecosystem
+:::info[Testing Tools in the Java/Spring Ecosystem]
 - **Unit testing**: JUnit 5, Mockito, AssertJ
 - **Integration testing**: Spring Boot Test, Testcontainers, MockMvc
 - **Contract testing**: Spring Cloud Contract, Pact

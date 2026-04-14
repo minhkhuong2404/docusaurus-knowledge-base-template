@@ -23,7 +23,7 @@ A structured guide covering Java from core language foundations to JVM internals
 | 7 | [Modern Java Features](./java-new-features) | Lambdas, streams, records, sealed types, recent updates |
 | 8 | [Interview Questions](./java-interview-questions) | Practical Q&A across core and advanced topics |
 
-:::tip Backend Engineering Tip
+:::tip[Backend Engineering Tip]
 Use this section as the foundation before diving into Spring, Kafka, and system design topics.
 :::
 

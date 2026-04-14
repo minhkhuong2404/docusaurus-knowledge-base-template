@@ -245,7 +245,7 @@ git push --no-verify
 
 ---
 
-:::tip Use Hooks for Local Feedback — Not as the Only Gate
+:::tip[Use Hooks for Local Feedback — Not as the Only Gate]
 Hooks provide fast local feedback, but they can be bypassed with `--no-verify`. Always enforce the same checks in your CI pipeline as well. Hooks are developer convenience; CI is the authoritative quality gate.
 :::
 

@@ -114,7 +114,7 @@ Git runs your test at each midpoint commit, automatically marking good/bad based
 git bisect run bash scripts/bisect-check.sh
 ```
 
-:::tip Exit Code 125
+:::tip[Exit Code 125]
 If a commit can't be tested (e.g., compile error unrelated to the bug), exit with `125`. Git will skip that commit and move to the next one.
 :::
 
@@ -161,7 +161,7 @@ git bisect replay bisect-session.log
 
 ---
 
-:::tip Bisect Saves Hours
+:::tip[Bisect Saves Hours]
 On a repo with 500 commits between the last known-good release and `HEAD`, manually checking each commit would take all day. `git bisect run` with an automated test finds the exact culprit in under 10 steps — usually in a few minutes. Write the test first.
 :::
 
@@ -178,10 +178,10 @@ Short answer guide:
 - Combine manual checkpoints with automated bisect runs.
 - Confirm fix with forward/backward validation and regression tests.
 
-:::info Interview Focus
+:::info[Interview Focus]
 Show how `git bisect run` shortens mean-time-to-root-cause during regressions.
 :::
 
-:::danger Interview Trap
+:::danger[Interview Trap]
 Starting bisect without a deterministic reproduction or clear good/bad boundary.
 :::

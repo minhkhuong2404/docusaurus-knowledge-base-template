@@ -198,6 +198,6 @@ Design E2E tests to be safe to re-run — idempotent. Do not assume test data st
 
 ---
 
-:::caution E2E Test Smell
+:::caution[E2E Test Smell]
 If your E2E suite takes more than 20 minutes to run, it is too large. Prune low-value scenarios and push them down to integration tests.
 :::

@@ -122,7 +122,7 @@ Every CMK has a **resource-based policy**. Without a key policy that grants acce
 | Encrypt / Decrypt | 5,500 – 30,000/s (region-dependent) |
 | GenerateDataKey | Same |
 
-:::caution Throttling at scale
+:::caution[Throttling at scale]
 If your Lambda is called 10,000 times/second and each call does `kms:Decrypt`, you'll hit KMS throttling.
 
 **Fix**: Use **Data Key Caching** (with AWS Encryption SDK) — cache the plaintext DEK in memory, reducing KMS calls.

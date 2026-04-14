@@ -88,6 +88,6 @@ Use the **sidebar** to navigate by topic area:
 - **Advanced** — hooks, aliases, `bisect`, worktrees
 - **Workflows** — Git Flow, trunk-based development, conventional commits, PR best practices
 
-:::tip Golden Rule of Git
+:::tip[Golden Rule of Git]
 **Never rewrite history on shared branches.** Rebase, squash, and fixup are safe on your own feature branches. Once a branch is pushed and shared with others, use `git revert` instead.
 :::

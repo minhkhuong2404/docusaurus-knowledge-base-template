@@ -154,7 +154,7 @@ git branch -vv
 
 ---
 
-:::tip Keep Branches Short-Lived
+:::tip[Keep Branches Short-Lived]
 Long-lived feature branches accumulate drift from main and lead to painful, large merges. Aim for branches that live no longer than 2–3 days. If a feature is large, break it into smaller branches and merge incrementally behind a feature flag.
 :::
 

@@ -47,7 +47,7 @@ The dominant model for distributed systems is **shared-nothing**: each node has 
 - Deliver packets out of order
 - Lose packets without any notification
 
-:::tip Real-world example
+:::tip[Real-world example]
 In 2012, a network switch at GitHub's data center had a bug that caused 2-minute packet delays. Thousands of servers thought each other were dead and tried to elect new leaders simultaneously. Pure chaos.
 :::
 

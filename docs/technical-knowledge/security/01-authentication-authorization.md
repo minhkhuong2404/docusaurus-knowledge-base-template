@@ -97,7 +97,7 @@ Each section is `Base64Url` encoded:
 // Base64Url(RS256_sign(privateKey, Base64Url(header) + "." + Base64Url(payload)))
 ```
 
-:::note The payload is NOT encrypted
+:::note[The payload is NOT encrypted]
 JWT payload is only Base64Url encoded — anyone can decode it. Never put passwords, secrets, or sensitive PII in JWT payload unless using **JWE** (JSON Web Encryption).
 :::
 

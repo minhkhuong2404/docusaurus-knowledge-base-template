@@ -157,7 +157,7 @@ git push origin main   # pushes to both URLs
 
 ---
 
-:::tip Use SSH Over HTTPS
+:::tip[Use SSH Over HTTPS]
 SSH authentication (via key pair) is more convenient than HTTPS for daily use — no password prompts, and access tokens don't expire. Set up an SSH key once and all Git operations are frictionless:
 ```bash
 ssh-keygen -t ed25519 -C "your@email.com"

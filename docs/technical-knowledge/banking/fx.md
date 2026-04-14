@@ -270,10 +270,10 @@ Short answer guide:
 - Use stale-rate thresholds, circuit breakers, and controlled degradation.
 - Keep execution deterministic while treasury manages exposure policy.
 
-:::info Interview Focus
+:::info[Interview Focus]
 Explain rate sourcing, execution, audit trails, and treasury separation of concerns.
 :::
 
-:::danger Interview Trap
+:::danger[Interview Trap]
 Reducing FX design to conversion math while ignoring stale-rate and disclosure risk.
 :::

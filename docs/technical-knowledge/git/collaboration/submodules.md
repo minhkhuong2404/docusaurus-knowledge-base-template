@@ -137,7 +137,7 @@ git commit -m "chore: remove shared-proto submodule"
 
 ---
 
-:::caution Consider Alternatives to Submodules
+:::caution[Consider Alternatives to Submodules]
 Submodules are powerful but add operational complexity — especially for CI/CD pipelines and teammates unfamiliar with the workflow. For sharing Java libraries across services, consider publishing to a private Maven/Gradle repository (Nexus, GitHub Packages, Artifactory) instead. Reserve submodules for cases where you genuinely need to co-develop the shared code alongside the parent project.
 :::
 
@@ -154,10 +154,10 @@ Short answer guide:
 - Train on branch workflow inside submodule repos.
 - Revert pointer commits quickly and test compatibility matrices.
 
-:::info Interview Focus
+:::info[Interview Focus]
 Explain when submodules are justified and what CI controls make them reliable.
 :::
 
-:::danger Interview Trap
+:::danger[Interview Trap]
 Treating submodules like normal directories and forgetting pointer commit management.
 :::

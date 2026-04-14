@@ -179,7 +179,7 @@ Key patterns:
 
 ---
 
-:::tip You've got this!
+:::tip[You've got this!]
 The best preparation is a combination of **watching/reading** all topics + **hands-on practice** in an AWS account + **practice exams** until you consistently score 80%+.
 
 Target 80%+ on TutorialsDojo mocks before booking the real exam.
@@ -198,10 +198,10 @@ Short answer guide:
 - Optimize for reliability, security, cost, and team capability.
 - Validate with SLOs, spend trends, and failure-mode behavior.
 
-:::info Interview Focus
+:::info[Interview Focus]
 Convert exam-style patterns into production decisions with explicit reliability, security, and cost trade-offs.
 :::
 
-:::danger Interview Trap
+:::danger[Interview Trap]
 Memorizing service mappings without explaining constraints and failure behavior.
 :::

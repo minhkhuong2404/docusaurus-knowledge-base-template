@@ -154,7 +154,7 @@ Controls what happens to a resource when the stack is deleted.
 | **Cross-Stack References** | Stack A `Exports` a value; Stack B uses `!ImportValue`.                                         | Sharing resources *between* different applications or teams (e.g., Core Networking team exports the VPC ID for Dev teams to use). |
 | **Stack Sets**             | Administrator account deploys the exact same template across multiple AWS accounts and regions. | Setting up baseline org-wide infrastructure (e.g., standard IAM roles or AWS Config rules in all member accounts).                |
 
-:::warning Cross-Stack Reference Limitation
+:::warning[Cross-Stack Reference Limitation]
 You **cannot** delete a stack if another stack is currently importing its exported values. You must first update the consuming stack to remove the `!ImportValue` reference.
 :::
 
