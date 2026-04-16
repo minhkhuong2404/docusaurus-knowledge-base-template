@@ -59,7 +59,7 @@ const GLOBAL_STYLES = `
     display: block;
     width: 100%;
     text-align: center;
-    font-size: clamp(2.35rem, 6.4vw, 4.45rem);
+    font-size: clamp(2.94rem, 8vw, 5.56rem);
     font-weight: 900;
     line-height: 1.2;
     letter-spacing: -0.03em;
@@ -101,7 +101,7 @@ const GLOBAL_STYLES = `
 
   /* ── Word-by-word hero banner ── */
   .lp-wbw-wrap {
-    min-height: clamp(5rem, 11vw, 9rem);
+    min-height: clamp(6.25rem, 13.75vw, 11.25rem);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -110,7 +110,7 @@ const GLOBAL_STYLES = `
   .lp-wbw-h1 {
     display: block;
     text-align: center;
-    font-size: clamp(2.8rem, 7vw, 6rem) !important;
+    font-size: clamp(3.50rem, 8.75vw, 7.50rem) !important;
     font-weight: 900;
     line-height: 1.15;
     letter-spacing: -0.04em;
@@ -195,7 +195,7 @@ const GLOBAL_STYLES = `
 
   /* ── Stats counter ── */
   .lp-stat-num {
-    font-size: 2.6rem;
+    font-size: 3.25rem;
     font-weight: 900;
     line-height: 1;
     background: var(--gradient-brand);
@@ -216,7 +216,7 @@ const GLOBAL_STYLES = `
 
   /* ── Section heading ── */
   .lp-section-label {
-    font-size: 0.78rem;
+    font-size: 0.98rem;
     font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -224,7 +224,7 @@ const GLOBAL_STYLES = `
     margin-bottom: 0.5rem;
   }
   .lp-section-title {
-    font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+    font-size: clamp(2.25rem, 4.38vw, 3.25rem);
     font-weight: 800;
     letter-spacing: -0.03em;
     line-height: 1.15;
@@ -236,7 +236,7 @@ const GLOBAL_STYLES = `
   }
   /* ── Global body-text scale-up for the landing page ── */
   .lp-root {
-    font-size: 1.08rem; /* bumps all relative rem sizes ~8% */
+    font-size: 1.35rem; /* bumps all relative rem sizes ~8% */
   }
 
   /* ── Respect reduced motion ── */
@@ -880,7 +880,7 @@ const viewAllStyle: React.CSSProperties = {
   background: "rgba(74,222,128,0.05)",
   textDecoration: "none",
   fontWeight: 600,
-  fontSize: "0.85rem",
+  fontSize: "1.06rem",
   transition: "background 0.2s, transform 0.15s",
 };
 
@@ -974,7 +974,7 @@ export default function Home(): React.ReactNode {
               display: "inline-flex",
               alignItems: "center",
               gap: "0.45rem",
-              fontSize: "0.72rem",
+              fontSize: "0.9rem",
               fontWeight: 700,
               letterSpacing: "0.14em",
               textTransform: "uppercase",
@@ -1007,7 +1007,7 @@ export default function Home(): React.ReactNode {
           <p
             className="lp-sub"
             style={{
-              fontSize: "1.1rem",
+              fontSize: "1.38rem",
               lineHeight: 1.65,
               color: "var(--ifm-color-emphasis-700)",
               maxWidth: 620,
@@ -1039,7 +1039,7 @@ export default function Home(): React.ReactNode {
                 padding: "0.85rem 2rem",
                 borderRadius: 9,
                 fontWeight: 700,
-                fontSize: "0.95rem",
+                fontSize: "1.19rem",
                 background: "var(--gradient-brand)",
                 color: "#0a1020",
                 textDecoration: "none",
@@ -1058,7 +1058,7 @@ export default function Home(): React.ReactNode {
                 padding: "0.85rem 2rem",
                 borderRadius: 9,
                 fontWeight: 700,
-                fontSize: "0.95rem",
+                fontSize: "1.19rem",
                 border: "1px solid rgba(74,222,128,0.35)",
                 color: "var(--brand-blue)",
                 background: "rgba(74,222,128,0.06)",
@@ -1077,7 +1077,7 @@ export default function Home(): React.ReactNode {
                 padding: "0.85rem 2rem",
                 borderRadius: 9,
                 fontWeight: 700,
-                fontSize: "0.95rem",
+                fontSize: "1.19rem",
                 border: "1px solid rgba(74,222,128,0.35)",
                 color: "var(--brand-blue)",
                 background: "rgba(74,222,128,0.06)",
@@ -1121,7 +1121,7 @@ export default function Home(): React.ReactNode {
               <div className="lp-stat-num">{num}</div>
               <div
                 style={{
-                  fontSize: "0.75rem",
+                  fontSize: "0.94rem",
                   fontWeight: 600,
                   letterSpacing: "0.08em",
                   textTransform: "uppercase",
@@ -1146,7 +1146,7 @@ export default function Home(): React.ReactNode {
           <p
             style={{
               color: "var(--ifm-color-emphasis-700)",
-              fontSize: "1rem",
+              fontSize: "1.25rem",
               lineHeight: 1.65,
               maxWidth: 580,
               marginBottom: "2.5rem",
@@ -1177,13 +1177,13 @@ export default function Home(): React.ReactNode {
                   gap: "0.5rem",
                 }}
               >
-                <span style={{ fontSize: "1.6rem", lineHeight: 1 }}>
+                <span style={{ fontSize: "2rem", lineHeight: 1 }}>
                   {p.icon}
                 </span>
                 <span
                   style={{
                     fontWeight: 700,
-                    fontSize: "0.95rem",
+                    fontSize: "1.19rem",
                     color: "var(--ifm-font-color-base)",
                   }}
                 >
@@ -1191,7 +1191,7 @@ export default function Home(): React.ReactNode {
                 </span>
                 <span
                   style={{
-                    fontSize: "0.78rem",
+                    fontSize: "0.98rem",
                     color: "var(--ifm-color-emphasis-600)",
                     lineHeight: 1.5,
                   }}
@@ -1201,7 +1201,7 @@ export default function Home(): React.ReactNode {
                 <span
                   style={{
                     display: "inline-block",
-                    fontSize: "0.65rem",
+                    fontSize: "0.81rem",
                     fontWeight: 700,
                     letterSpacing: "0.08em",
                     textTransform: "uppercase",
@@ -1238,7 +1238,7 @@ export default function Home(): React.ReactNode {
             <p
               style={{
                 color: "var(--ifm-color-emphasis-700)",
-                fontSize: "1rem",
+                fontSize: "1.25rem",
                 lineHeight: 1.65,
                 maxWidth: 580,
                 marginBottom: "2.5rem",
@@ -1272,7 +1272,7 @@ export default function Home(): React.ReactNode {
                     <p
                       style={{
                         fontWeight: 800,
-                        fontSize: "0.85rem",
+                        fontSize: "1.06rem",
                         letterSpacing: "0.05em",
                         textTransform: "uppercase",
                         color: "var(--brand-blue)",
@@ -1307,7 +1307,7 @@ export default function Home(): React.ReactNode {
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            fontSize: "0.62rem",
+                            fontSize: "0.78rem",
                             fontWeight: 800,
                             color: "var(--brand-blue)",
                             flexShrink: 0,
@@ -1319,7 +1319,7 @@ export default function Home(): React.ReactNode {
                         <span>
                           <span
                             style={{
-                              fontSize: "0.82rem",
+                              fontSize: "1.02rem",
                               fontWeight: 600,
                               color: "var(--ifm-font-color-base)",
                               display: "block",
@@ -1329,7 +1329,7 @@ export default function Home(): React.ReactNode {
                           </span>
                           <span
                             style={{
-                              fontSize: "0.7rem",
+                              fontSize: "0.88rem",
                               color: "var(--ifm-color-emphasis-600)",
                             }}
                           >
@@ -1370,7 +1370,7 @@ export default function Home(): React.ReactNode {
                     borderRadius: 8,
                     border: "1px solid rgba(74,222,128,0.12)",
                     background: "rgba(74,222,128,0.04)",
-                    fontSize: "0.78rem",
+                    fontSize: "0.98rem",
                     color: "var(--ifm-color-emphasis-700)",
                     flex: "1 1 200px",
                   }}
@@ -1396,7 +1396,7 @@ export default function Home(): React.ReactNode {
           <p
             style={{
               color: "var(--ifm-color-emphasis-700)",
-              fontSize: "1rem",
+              fontSize: "1.25rem",
               lineHeight: 1.65,
               maxWidth: 580,
               marginBottom: "2.5rem",
@@ -1428,7 +1428,7 @@ export default function Home(): React.ReactNode {
               >
                 <span
                   style={{
-                    fontSize: "0.62rem",
+                    fontSize: "0.78rem",
                     fontWeight: 800,
                     letterSpacing: "0.1em",
                     textTransform: "uppercase",
@@ -1442,7 +1442,7 @@ export default function Home(): React.ReactNode {
                 </span>
                 <span
                   style={{
-                    fontSize: "0.82rem",
+                    fontSize: "1.02rem",
                     fontWeight: 700,
                     color: "var(--ifm-font-color-base)",
                     lineHeight: 1.35,
@@ -1453,7 +1453,7 @@ export default function Home(): React.ReactNode {
                 </span>
                 <span
                   style={{
-                    fontSize: "0.68rem",
+                    fontSize: "0.85rem",
                     color: "var(--ifm-color-emphasis-600)",
                     marginTop: "0.25rem",
                     display: "block",
@@ -1490,7 +1490,7 @@ export default function Home(): React.ReactNode {
             <p
               style={{
                 color: "var(--ifm-color-emphasis-700)",
-                fontSize: "1rem",
+                fontSize: "1.25rem",
                 lineHeight: 1.65,
                 maxWidth: 580,
                 marginBottom: "1.75rem",
@@ -1506,7 +1506,7 @@ export default function Home(): React.ReactNode {
                 border: "1px solid rgba(74,222,128,0.2)",
                 background: "rgba(74,222,128,0.05)",
                 marginBottom: "1.75rem",
-                fontSize: "0.82rem",
+                fontSize: "1.02rem",
                 color: "var(--ifm-color-emphasis-700)",
                 lineHeight: 1.6,
               }}
@@ -1541,7 +1541,7 @@ export default function Home(): React.ReactNode {
                 >
                   <div
                     style={{
-                      fontSize: "2rem",
+                      fontSize: "2.5rem",
                       lineHeight: 1,
                       flexShrink: 0,
                       width: 44,
@@ -1559,7 +1559,7 @@ export default function Home(): React.ReactNode {
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <span
                       style={{
-                        fontSize: "0.6rem",
+                        fontSize: "0.75rem",
                         fontWeight: 700,
                         letterSpacing: "0.1em",
                         textTransform: "uppercase",
@@ -1572,7 +1572,7 @@ export default function Home(): React.ReactNode {
                     </span>
                     <span
                       style={{
-                        fontSize: "0.85rem",
+                        fontSize: "1.06rem",
                         fontWeight: 700,
                         color: "var(--ifm-font-color-base)",
                         lineHeight: 1.35,
@@ -1584,7 +1584,7 @@ export default function Home(): React.ReactNode {
                     </span>
                     <span
                       style={{
-                        fontSize: "0.7rem",
+                        fontSize: "0.88rem",
                         color: "var(--ifm-color-emphasis-600)",
                         display: "block",
                         marginBottom: "0.25rem",
@@ -1594,7 +1594,7 @@ export default function Home(): React.ReactNode {
                     </span>
                     <span
                       style={{
-                        fontSize: "0.7rem",
+                        fontSize: "0.88rem",
                         color: "var(--ifm-color-emphasis-600)",
                         lineHeight: 1.4,
                         display: "block",
@@ -1622,7 +1622,7 @@ export default function Home(): React.ReactNode {
           <p
             style={{
               color: "var(--ifm-color-emphasis-700)",
-              fontSize: "1rem",
+              fontSize: "1.25rem",
               lineHeight: 1.65,
               maxWidth: 580,
               marginBottom: "2rem",
@@ -1651,7 +1651,7 @@ export default function Home(): React.ReactNode {
                   borderRadius: 10,
                   border: "1px solid rgba(74,222,128,0.2)",
                   background: "rgba(74,222,128,0.06)",
-                  fontSize: "0.8rem",
+                  fontSize: "1rem",
                 }}
               >
                 <span
@@ -1666,7 +1666,7 @@ export default function Home(): React.ReactNode {
                 </span>
                 <span
                   style={{
-                    fontSize: "1.15rem",
+                    fontSize: "1.44rem",
                     fontWeight: 900,
                     color: "var(--brand-blue)",
                   }}
@@ -1699,7 +1699,7 @@ export default function Home(): React.ReactNode {
               >
                 <span
                   style={{
-                    fontSize: "0.6rem",
+                    fontSize: "0.75rem",
                     fontWeight: 800,
                     letterSpacing: "0.1em",
                     color: "var(--brand-blue)",
@@ -1712,7 +1712,7 @@ export default function Home(): React.ReactNode {
                 </span>
                 <span
                   style={{
-                    fontSize: "0.85rem",
+                    fontSize: "1.06rem",
                     fontWeight: 700,
                     color: "var(--ifm-font-color-base)",
                     marginBottom: "0.2rem",
@@ -1723,7 +1723,7 @@ export default function Home(): React.ReactNode {
                 </span>
                 <span
                   style={{
-                    fontSize: "0.7rem",
+                    fontSize: "0.88rem",
                     color: "var(--ifm-color-emphasis-600)",
                     lineHeight: 1.45,
                   }}
@@ -1746,7 +1746,7 @@ export default function Home(): React.ReactNode {
             <p
               style={{
                 margin: 0,
-                fontSize: "0.8rem",
+                fontSize: "1rem",
                 lineHeight: 1.65,
                 color: "var(--ifm-color-emphasis-700)",
               }}
@@ -1779,7 +1779,7 @@ export default function Home(): React.ReactNode {
         >
           <h2
             style={{
-              fontSize: "clamp(1.8rem, 4vw, 3rem)",
+              fontSize: "clamp(2.25rem, 5vw, 3.75rem)",
               fontWeight: 900,
               letterSpacing: "-0.04em",
               lineHeight: 1.15,
@@ -1822,7 +1822,7 @@ export default function Home(): React.ReactNode {
                 padding: "0.85rem 2rem",
                 borderRadius: 9,
                 fontWeight: 700,
-                fontSize: "0.95rem",
+                fontSize: "1.19rem",
                 background: "var(--gradient-brand)",
                 color: "#0a1020",
                 textDecoration: "none",
@@ -1841,7 +1841,7 @@ export default function Home(): React.ReactNode {
                 padding: "0.85rem 2rem",
                 borderRadius: 9,
                 fontWeight: 700,
-                fontSize: "0.95rem",
+                fontSize: "1.19rem",
                 border: "1px solid rgba(74,222,128,0.35)",
                 color: "var(--brand-blue)",
                 background: "rgba(74,222,128,0.06)",

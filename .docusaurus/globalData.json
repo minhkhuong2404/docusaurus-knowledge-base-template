@@ -2505,6 +2505,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/security/cookies-vs-sessions-vs-jwt",
+              "path": "/technical-knowledge/security/cookies-vs-sessions-vs-jwt",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/security/cryptography-secure-design",
               "path": "/technical-knowledge/security/cryptography-secure-design",
               "sidebar": "tutorialSidebar"

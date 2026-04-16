@@ -61,8 +61,8 @@
     }
   ],
   "version": "current",
-  "lastUpdatedBy": "Author",
-  "lastUpdatedAt": 1539502055000,
+  "lastUpdatedBy": "Lữ Minh Khương",
+  "lastUpdatedAt": 1773848146000,
   "sidebarPosition": 2,
   "frontMatter": {
     "id": "web-vulnerabilities",
@@ -84,8 +84,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "AuthN & AuthZ",
-    "permalink": "/technical-knowledge/security/authentication-authorization"
+    "title": "Cookies, Sessions, JWT",
+    "permalink": "/technical-knowledge/security/cookies-vs-sessions-vs-jwt"
   },
   "next": {
     "title": "Cryptography",

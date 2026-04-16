@@ -71,8 +71,8 @@
     }
   ],
   "version": "current",
-  "lastUpdatedBy": "Author",
-  "lastUpdatedAt": 1539502055000,
+  "lastUpdatedBy": "Lữ Minh Khương",
+  "lastUpdatedAt": 1776187523000,
   "sidebarPosition": 1,
   "frontMatter": {
     "id": "authentication-authorization",
@@ -100,7 +100,7 @@
     "permalink": "/security"
   },
   "next": {
-    "title": "Web Vulnerabilities",
-    "permalink": "/technical-knowledge/security/web-vulnerabilities"
+    "title": "Cookies, Sessions, JWT",
+    "permalink": "/technical-knowledge/security/cookies-vs-sessions-vs-jwt"
   }
 }

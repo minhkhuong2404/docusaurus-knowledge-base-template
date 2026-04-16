@@ -9,115 +9,408 @@ sidebar_position: 2
 # Week 2: Two Pointers & Basic Sliding Window
 
 ## 1. Overview
-Welcome to Week 2. Having mastered contiguous memory structures last week, we are now focusing on how to traverse them efficiently. The **Two Pointers** and **Sliding Window** techniques are optimization strategies designed to eliminate nested loops. By maintaining multiple references (pointers) to different indices in an array or string, you can reduce $O(N^2)$ brute-force solutions down to single-pass $O(N)$ solutions.
+
+Welcome to Week 2. Having mastered contiguous memory structures last week, we are now focusing on how to **traverse them efficiently**. The **Two Pointers** and **Sliding Window** techniques are optimization strategies designed to eliminate nested loops. By maintaining multiple references (pointers) to different indices in an array or string, you can reduce $O(N^2)$ brute-force solutions down to single-pass $O(N)$ solutions.
+
+### Why Does This Matter?
+
+Consider a naive approach: checking every pair of elements in an array of 100,000 items. That's roughly 5 billion operations. With Two Pointers, you do it in 100,000. **This is the difference between a query timing out and responding in milliseconds.**
 
 **Goals for this week:**
 - Understand the opposite-directional and same-directional two-pointer techniques.
 - Master the fixed-size Sliding Window pattern.
+- Build a reliable instinct for **when** to apply each technique.
 - Learn Java-specific memory optimizations (e.g., `String.charAt()` vs. `toCharArray()`).
 
 ---
 
-## 2. Theory & Fundamentals
+## 2. The Core Mental Model: What Is a "Pointer"?
 
-### Two Pointers
-The Two Pointers technique involves using two integer variables (usually representing indices) to traverse a data structure. 
-- **Opposite Ends:** One pointer starts at the beginning (`left = 0`), the other at the end (`right = n - 1`). They move toward each other until they meet. This heavily relies on the array being **sorted**.
-- **Slow and Fast (Same Direction):** Both start at the beginning. The "fast" pointer explores ahead, while the "slow" pointer keeps track of the position to overwrite or swap data.
+A **pointer** in this context is simply an **integer variable holding an index**. It "points" to a position in the array or string. Nothing more. When we say "move the pointer right," we mean `pointer++`.
 
-### Basic Sliding Window (Fixed Size)
-A Sliding Window is a sublist that runs over an underlying collection. In a *fixed-size* window, the distance between the left and right pointers remains constant (e.g., size $K$).
-- Instead of recalculating the sum or subset from scratch for every position, you **slide** the window: subtract the element that falls out of the left boundary and add the new element that enters the right boundary.
+```
+arr = [2, 4, 7, 11, 15]
+       ↑              ↑
+     left=0        right=4
+```
 
-### Java Specifics
-- **String Traversal:** Beginners often use `str.toCharArray()` to traverse strings. While convenient, this allocates a brand new $O(N)$ array in memory. To strictly adhere to $O(1)$ auxiliary space, use `str.charAt(i)`.
-- **Garbage Collection:** When using pointers to manipulate objects (like in linked lists later), be mindful of leaving orphaned objects in memory, though Java's Garbage Collector generally handles this for standard primitives and local variables.
+The power comes from **moving pointers strategically** based on conditions — avoiding the need to restart from scratch each time.
 
 ---
 
-## 3. Code Templates (Java)
+## 3. Theory & Fundamentals
+
+### 3.1 Two Pointers — Opposite Ends
+
+**Core Idea:** Place one pointer at the start and another at the end. Move them toward each other based on a condition. Stop when they meet or cross.
+
+**When it works:** This technique **requires a sorted array** (or a structure with a predictable ordering). The logic is: if the current pair doesn't satisfy the condition, you can eliminate possibilities systematically.
+
+**Mental model — the "squeeze":**
+
+Imagine squeezing a tube of toothpaste from both ends toward the middle. Each squeeze narrows down the search space.
+
+```
+Sorted array: [1, 3, 5, 7, 9, 11]   Target sum = 12
+
+Step 1:  left=0 (val=1),  right=5 (val=11) → sum=12 ✅ FOUND
+         ↑                           ↑
+
+Step 1b: left=0 (val=1),  right=5 (val=11) → sum=10 < 12 → move left right
+         ↑                           ↑
+
+Step 2:  left=1 (val=3),  right=5 (val=11) → sum=14 > 12 → move right left
+              ↑                      ↑
+
+Step 3:  left=1 (val=3),  right=4 (val=9)  → sum=12 ✅ FOUND
+              ↑                 ↑
+```
+
+**Key invariant:** At every step, you are eliminating at least one element from consideration. This is what guarantees $O(N)$ time — pointers only move in one direction and never backtrack.
+
+**Why does moving left right help when sum is too small?**
+Because the array is sorted, `arr[left]` is the smallest available left value. If even pairing it with the largest right value (`arr[right]`) gives a sum too small, then `arr[left]` can never be part of a valid pair. Discard it.
+
+---
+
+### 3.2 Two Pointers — Slow & Fast (Same Direction)
+
+**Core Idea:** Both pointers start at the beginning. The **fast** pointer scans ahead and "discovers" valid elements. The **slow** pointer marks the position where the next valid element should be written.
+
+**Mental model — the "filter funnel":**
+
+Think of a factory conveyor belt with a quality checker (fast pointer) and a packer (slow pointer). The checker runs ahead looking at each item. When it finds a good item, it hands it back to the packer, who places it in the next valid position.
+
+```
+Remove all zeros from: [0, 1, 0, 3, 12]  (in-place)
+
+Initial:  slow=0, fast=0
+          [0, 1, 0, 3, 12]
+           sf
+
+fast=0: arr[0]=0 (bad) → fast moves on
+fast=1: arr[1]=1 (good) → arr[slow]=arr[fast] → arr[0]=1, slow++
+fast=2: arr[2]=0 (bad) → fast moves on
+fast=3: arr[3]=3 (good) → arr[slow]=arr[fast] → arr[1]=3, slow++
+fast=4: arr[4]=12(good) → arr[slow]=arr[fast] → arr[2]=12, slow++
+
+Result: [1, 3, 12, _, _]  (slow=3, everything from index 3 onward is garbage)
+```
+
+**Key insight:** `slow` always points to the next available "write slot". `fast` always points to the element being evaluated.
+
+---
+
+### 3.3 Fixed-Size Sliding Window
+
+**Core Idea:** Instead of recomputing the sum/result for every window from scratch, **reuse the previous window's result** by removing the element that just left and adding the new element that just entered.
+
+**Mental model — the "train window":**
+
+Imagine looking out of a train window of fixed width. As the train moves forward, the left edge of the view loses one tree and the right edge gains one new tree. You don't redraw the entire scene — you only update the difference.
+
+```
+arr = [2, 1, 5, 1, 3, 2],  k = 3  (find max sum of any 3-element window)
+
+Window 1: [2, 1, 5] | 1, 3, 2     sum = 8
+           ─────────
+
+Window 2:  2,[1, 5, 1]| 3, 2      sum = 8 - arr[0] + arr[3] = 8 - 2 + 1 = 7
+              ─────────
+
+Window 3:  2, 1,[5, 1, 3]| 2      sum = 7 - arr[1] + arr[4] = 7 - 1 + 3 = 9  ← MAX
+                 ─────────
+
+Window 4:  2, 1, 5,[1, 3, 2]      sum = 9 - arr[2] + arr[5] = 9 - 5 + 2 = 6
+                    ─────────
+Answer: 9
+```
+
+**Why is this $O(N)$ and not $O(N \times K)$?** Because for each new window position, you perform exactly **2 operations** (one add, one subtract), regardless of window size. The initial window setup is $O(K)$, and then sliding is $O(N-K)$. Total: $O(N)$.
+
+---
+
+### 3.4 Java Specifics
+
+| Approach            | Memory Cost                             | When to Use                                           |
+| ------------------- | --------------------------------------- | ----------------------------------------------------- |
+| `str.toCharArray()` | $O(N)$ — allocates a new char array     | When you need to modify characters                    |
+| `str.charAt(i)`     | $O(1)$ — reads directly from the String | When you only need to read (preferred for interviews) |
+| `StringBuilder`     | $O(N)$ — mutable buffer                 | When building a result string character by character  |
+
+**Why does `toCharArray()` cost memory?** In Java, `String` objects are immutable. Calling `toCharArray()` creates a brand-new `char[]` on the heap — a full copy of the string. In an interview where the problem says "use $O(1)$ extra space," this silently violates the constraint.
+
+```java
+// ❌ Hidden O(N) space cost
+for (char c : s.toCharArray()) { ... }
+
+// ✅ True O(1) space
+for (int i = 0; i < s.length(); i++) {
+    char c = s.charAt(i);
+}
+```
+
+---
+
+## 4. Code Templates (Java)
 
 ### Template 1: Opposite Ends Two Pointers
+
 ```java
-public boolean twoPointerTemplate(int[] arr) {
+public boolean twoPointerOppositeEnds(int[] arr, int target) {
+    // ✅ PRECONDITION: arr must be sorted
     int left = 0;
     int right = arr.length - 1;
-    
-    while (left < right) {
-        // Example condition
+
+    while (left < right) {          // Stop when pointers meet or cross
         int sum = arr[left] + arr[right];
-        
+
         if (sum == target) {
             return true;
         } else if (sum < target) {
-            left++; // Need a larger sum, move left pointer right
+            left++;                  // Current left is too small, discard it
         } else {
-            right--; // Need a smaller sum, move right pointer left
+            right--;                 // Current right is too large, discard it
         }
     }
     return false;
 }
 ```
 
-### Template 2: Fixed-Size Sliding Window
+**Step-by-step trace through the logic:**
+1. Start with the widest possible search space.
+2. Check the current pair.
+3. If the pair works → return/record result.
+4. If the pair is "too small" → we need a bigger value, so advance `left`.
+5. If the pair is "too large" → we need a smaller value, so retreat `right`.
+6. Each step eliminates one element → pointer can never go backwards → $O(N)$.
+
+---
+
+### Template 2: Slow & Fast Two Pointers
+
 ```java
-public int fixedSlidingWindow(int[] arr, int k) {
-    int currentWindowSum = 0;
-    int maxSum = Integer.MIN_VALUE;
-    
-    // 1. Build the first window
-    for (int i = 0; i < k; i++) {
-        currentWindowSum += arr[i];
+public int removeDuplicates(int[] arr) {
+    // ✅ PRECONDITION: arr must be sorted
+    if (arr.length == 0) return 0;
+
+    int slow = 0;                        // Points to the last unique element written
+
+    for (int fast = 1; fast < arr.length; fast++) {
+        if (arr[fast] != arr[slow]) {    // Found a new unique element
+            slow++;
+            arr[slow] = arr[fast];       // Write it to the next valid position
+        }
+        // If arr[fast] == arr[slow], it's a duplicate → skip (fast moves automatically)
     }
-    maxSum = currentWindowSum;
-    
-    // 2. Slide the window
-    for (int i = k; i < arr.length; i++) {
-        // Add the new element, subtract the element left behind
-        currentWindowSum += arr[i] - arr[i - k];
-        maxSum = Math.max(maxSum, currentWindowSum);
-    }
-    
-    return maxSum;
+
+    return slow + 1;                     // Length of the unique portion
 }
 ```
 
 ---
 
-## 4. Pattern Recognition Guide
+### Template 3: Fixed-Size Sliding Window
 
-**How to spot Two Pointers & Sliding Window problems:**
-1. **"Find two numbers that..." in a *Sorted* Array:** If the array is sorted and you need to find pairs (like Two Sum II), immediately use opposite-end two pointers.
-2. **"In-place" modifications:** If a problem asks you to remove duplicates or move zeros "in-place" with $O(1)$ extra memory, use slow/fast pointers in the same direction.
-3. **"Contiguous Subarray of length K":** Any time a problem asks for the max, min, or average of a contiguous subarray/substring of a *specific, unchanging size*, use a fixed-size sliding window.
-4. **"Longest/Shortest Substring/Window":** If the problem asks for the longest or shortest substring that meets certain criteria (e.g., contains all unique characters), this is a strong signal for a variable-size sliding window, which we will cover in Week 4.
-5. **"Two Sum" or "3Sum" Variants:** If the problem is a variation of Two Sum but the input is sorted, or if it involves finding triplets, this often indicates a two-pointer approach combined with sorting.
-6. **"Palindrome" problems:** When checking if a string is a palindrome or finding palindromic substrings, opposite-end two pointers are typically the most efficient approach.
-7. **"Maximum/Minimum Average" problems:** When asked to find the maximum or minimum average of a contiguous subarray of size `k`, this is a direct application of the fixed-size sliding window technique.
-8. **"In-place Array Modifications":** If the problem requires modifying the array in place (e.g., removing duplicates, moving zeros), this often signals the use of slow/fast pointers to overwrite elements without extra space.
-9. **"Subarray with Certain Properties":** If the problem asks for the longest or shortest subarray that meets certain criteria (e.g., contains all unique characters, has a sum less than a target), this is a strong signal for a variable-size sliding window, which we will cover in Week 4.
-10. **"Sorted Array Pair Problems":** If the problem involves finding pairs in a sorted array that meet certain conditions (e.g., sum to a target, have a specific difference), this often indicates the use of opposite-end two pointers.
+```java
+public int fixedSlidingWindow(int[] arr, int k) {
+    // Guard clause
+    if (arr.length < k) return -1;
+
+    int currentWindowSum = 0;
+
+    // Phase 1: Build the first window of size k
+    for (int i = 0; i < k; i++) {
+        currentWindowSum += arr[i];
+    }
+    int maxSum = currentWindowSum;
+
+    // Phase 2: Slide the window one step at a time
+    for (int i = k; i < arr.length; i++) {
+        // The element leaving the window: arr[i - k]
+        // The element entering the window: arr[i]
+        currentWindowSum += arr[i] - arr[i - k];
+        maxSum = Math.max(maxSum, currentWindowSum);
+    }
+
+    return maxSum;
+}
+```
+
+**Visualizing the index math:**
+
+```
+k=3, i=3 (second window):
+  arr: [2, 1, 5, 1, 3, 2]
+        0  1  2  3  4  5
+
+  Leaving: arr[i - k] = arr[3 - 3] = arr[0] = 2  ← exits from the left
+  Entering: arr[i]    = arr[3]     = 1            ← enters from the right
+```
+
 ---
 
-## 5. Worked Examples
+## 5. Pattern Recognition Guide
 
-### Example 1: LeetCode 125. Valid Palindrome
-**Problem:** Given a string `s`, return true if it is a palindrome, considering only alphanumeric characters and ignoring cases.
-**Solution (Opposite Ends):**
+### 5.1 The Decision Flowchart
+
+Use this flowchart when you encounter a new problem:
+
+```
+                    START
+                      │
+         Is the input an array or string?
+                      │
+           ┌──── YES ─┴─ NO ────┐
+           │                    │
+           ▼                    ▼
+  Is the problem about      (Different technique)
+  a CONTIGUOUS subarray
+  or substring?
+           │
+     ┌─ YES ┴─ NO ──────────────────────────┐
+     │                                      │
+     ▼                                      ▼
+Is window size           Are you finding PAIRS or
+FIXED (given k)?         checking CONDITIONS on two
+     │                   separate ends?
+   YES │  NO                    │
+     │   │                  YES │  NO
+     │   ▼                      │    │
+     │  Variable-size            │    ▼
+     │  Sliding Window           │  (Other technique:
+     │  (Week 4)                 │   HashMap, etc.)
+     ▼                           ▼
+Fixed Sliding             Is array SORTED?
+  Window ✅                      │
+                           YES │  NO
+                               │    │
+                               │    ▼
+                               │  Sort it first,
+                               │  then Two Pointers
+                               ▼
+                        Opposite-Ends
+                        Two Pointers ✅
+```
+
+---
+
+### 5.2 Keyword Trigger Table
+
+| Problem Keywords                        | Technique                            | Why                                          |
+| --------------------------------------- | ------------------------------------ | -------------------------------------------- |
+| "sorted array" + "pair" / "two numbers" | Opposite-Ends Two Pointers           | Sorting enables the squeeze                  |
+| "in-place" + "$O(1)$ space"             | Slow/Fast Two Pointers               | No extra data structures                     |
+| "remove duplicates" / "move zeros"      | Slow/Fast Two Pointers               | Slow=write head, Fast=read head              |
+| "palindrome"                            | Opposite-Ends Two Pointers           | Compare from both ends inward                |
+| "contiguous subarray of size k"         | Fixed Sliding Window                 | Fixed window, slide across                   |
+| "maximum/minimum average of k elements" | Fixed Sliding Window                 | Direct application                           |
+| "anagram" / "permutation" in substring  | Fixed Sliding Window + frequency map | Window = length of the pattern               |
+| "3Sum" / "4Sum"                         | Sort + Opposite-Ends Two Pointers    | Reduce to 2-pointer after fixing one element |
+| "longest/shortest" + "at most/least"    | Variable Sliding Window (Week 4)     | Window size changes dynamically              |
+
+---
+
+### 5.3 Common Traps & How to Avoid Them
+
+**Trap 1: Applying Two Pointers to an unsorted array for pair-finding**
+
+```
+❌ Wrong: [3, 1, 4, 1, 5], target=6
+   left=0 (3), right=4 (5) → sum=8, move right...
+   But arr[1]=1 and arr[4]=5 also sum to 6! We'd miss it.
+
+✅ Fix: Sort first → [1, 1, 3, 4, 5], then apply Two Pointers.
+   (If you can't sort, use a HashMap instead — O(N) time, O(N) space)
+```
+
+**Trap 2: Off-by-one in sliding window index math**
+
+```
+❌ Wrong: currentWindowSum += arr[i] - arr[i - k + 1]  // Removes wrong element
+
+✅ Correct: currentWindowSum += arr[i] - arr[i - k]
+   When i=k (second window), the element leaving is arr[k - k] = arr[0] ✅
+```
+
+**Trap 3: Forgetting to handle the `left < right` guard in inner while loops**
+
+```java
+// This is the Valid Palindrome inner loop:
+while (left < right && !Character.isLetterOrDigit(s.charAt(left))) {
+    left++;
+}
+// The `left < right` check is CRITICAL.
+// Without it, left could overshoot right, causing incorrect comparisons.
+```
+
+**Trap 4: Mutating `slow` before confirming you need to write**
+
+```java
+// ❌ Wrong order
+slow++;
+arr[slow] = arr[fast];  // You incremented slow even if arr[fast] was a duplicate
+
+// ✅ Correct: check FIRST, then act
+if (arr[fast] != arr[slow]) {
+    slow++;
+    arr[slow] = arr[fast];
+}
+```
+
+---
+
+## 6. Worked Examples (Step-by-Step Walkthroughs)
+
+### Example 1: LeetCode 125 — Valid Palindrome
+
+**Problem:** Given a string `s`, return `true` if it is a palindrome, considering only alphanumeric characters and ignoring cases.
+
+**Thought process:**
+1. We need to compare characters from both ends → **Opposite-Ends Two Pointers**.
+2. The tricky part: non-alphanumeric characters must be skipped.
+3. Use inner `while` loops to advance each pointer past invalid characters.
+4. After skipping, compare the characters (case-insensitive).
+
+```
+Input: "A man, a plan, a canal: Panama"
+Cleaned (logical): "amanaplanacanalpanama"
+
+Step 1: left='A', right='a' → 'a'=='a' ✅ → left++, right--
+Step 2: left='m', right='m' → 'm'=='m' ✅ → left++, right--
+...and so on until they meet.
+```
+
+**The "skip" inner loop is a common pattern — memorize this structure:**
+
+```java
+// Skip invalid characters from the left
+while (left < right && !Character.isLetterOrDigit(s.charAt(left))) {
+    left++;
+}
+// Skip invalid characters from the right
+while (left < right && !Character.isLetterOrDigit(s.charAt(right))) {
+    right--;
+}
+```
+
 ```java
 class Solution {
     public boolean isPalindrome(String s) {
         int left = 0;
         int right = s.length() - 1;
-        
+
         while (left < right) {
+            // Skip non-alphanumeric from left
             while (left < right && !Character.isLetterOrDigit(s.charAt(left))) {
                 left++;
             }
+            // Skip non-alphanumeric from right
             while (left < right && !Character.isLetterOrDigit(s.charAt(right))) {
                 right--;
             }
-            
+
+            // Compare characters (case-insensitive)
             if (Character.toLowerCase(s.charAt(left)) != Character.toLowerCase(s.charAt(right))) {
                 return false;
             }
@@ -129,85 +422,232 @@ class Solution {
 }
 ```
 
-### Example 2: LeetCode 643. Maximum Average Subarray I
-**Problem:** You are given an integer array `nums` consisting of `n` elements, and an integer `k`. Find a contiguous subarray whose length is equal to `k` that has the maximum average value and return this value.
-**Solution (Fixed Sliding Window):**
+**Complexity:** Time $O(N)$ — each character is visited at most once. Space $O(1)$ — no extra data structures.
+
+---
+
+### Example 2: LeetCode 643 — Maximum Average Subarray I
+
+**Problem:** Given `nums` and integer `k`, find the contiguous subarray of length `k` with the maximum average.
+
+**Thought process:**
+1. "Contiguous subarray of specific size k" → **Fixed Sliding Window**.
+2. We want to maximize the sum (average = sum / k, and k is constant, so maximizing sum = maximizing average).
+3. Build the first window, then slide.
+
+```
+nums = [1, 12, -5, -6, 50, 3],  k = 4
+
+Window 1: [1, 12, -5, -6]  sum = 2
+Window 2:  [12, -5, -6, 50] sum = 2 - 1 + 50 = 51  ← MAX
+Window 3:   [-5, -6, 50, 3] sum = 51 - 12 + 3 = 42
+
+Answer: 51 / 4 = 12.75
+```
+
 ```java
 class Solution {
     public double findMaxAverage(int[] nums, int k) {
+        // Use long to avoid integer overflow for large sums
         long currentSum = 0;
         for (int i = 0; i < k; i++) {
             currentSum += nums[i];
         }
-        
+
         long maxSum = currentSum;
         for (int i = k; i < nums.length; i++) {
-            currentSum += nums[i] - nums[i - k];
+            currentSum += nums[i] - nums[i - k];   // Slide: add new, remove old
             maxSum = Math.max(maxSum, currentSum);
         }
-        
+
         return (double) maxSum / k;
+    }
+}
+```
+
+**Why `long` instead of `int`?** With 10⁴ elements each up to 10⁴ in value, the sum can reach 10⁸ — safely within `int`, but it's a good habit for safety and prevents subtle bugs in competitions.
+
+---
+
+### Example 3: LeetCode 15 — 3Sum (Advanced: Two Pointers + Sorting)
+
+**Problem:** Find all unique triplets in `nums` that sum to zero.
+
+**Thought process:**
+1. Three elements is too complex for a single two-pointer pass.
+2. **Reduce to a known problem:** Fix one element (`nums[i]`), then the problem becomes **2Sum on the remaining sorted subarray**.
+3. Sort the array first so Two Pointers can work.
+4. Skip duplicates carefully to avoid returning duplicate triplets.
+
+```
+nums = [-4, -1, -1, 0, 1, 2]  (after sorting)
+
+Fix i=0 (val=-4): find pair in [-1,-1,0,1,2] that sums to 4
+  left=1(-1), right=5(2) → -1+2=1 < 4 → left++
+  left=2(-1), right=5(2) → -1+2=1 < 4 → left++
+  left=3(0),  right=5(2) → 0+2=2 < 4 → left++
+  left=4(1),  right=5(2) → 1+2=3 < 4 → left++ → left crosses right, done
+
+Fix i=1 (val=-1): find pair in [-1,0,1,2] that sums to 1
+  left=2(-1), right=5(2) → -1+2=1 == 1 → FOUND: [-1,-1,2] ✅
+  left=3(0),  right=4(1) → 0+1=1 == 1 → FOUND: [-1,0,1] ✅
+
+Fix i=2: nums[2]==nums[1]==-1, SKIP (duplicate)
+Fix i=3 (val=0): find pair in [1,2] that sums to 0
+  → no valid pair
+
+Result: [[-1,-1,2], [-1,0,1]]
+```
+
+```java
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums);   // Sorting is the prerequisite
+        List<List<Integer>> result = new ArrayList<>();
+
+        for (int i = 0; i < nums.length - 2; i++) {
+            // Skip duplicate values for the fixed element
+            if (i > 0 && nums[i] == nums[i - 1]) continue;
+
+            int left = i + 1;
+            int right = nums.length - 1;
+
+            while (left < right) {
+                int sum = nums[i] + nums[left] + nums[right];
+
+                if (sum == 0) {
+                    result.add(Arrays.asList(nums[i], nums[left], nums[right]));
+                    // Skip duplicates for left and right
+                    while (left < right && nums[left] == nums[left + 1]) left++;
+                    while (left < right && nums[right] == nums[right - 1]) right--;
+                    left++;
+                    right--;
+                } else if (sum < 0) {
+                    left++;
+                } else {
+                    right--;
+                }
+            }
+        }
+        return result;
     }
 }
 ```
 
 ---
 
-## 6. 7-Day Practice Plan (21 Problems)
+## 7. Problem-Solving Framework (Use This in Interviews)
 
-**Day 1: Two Pointers Basics (Opposite Ends)**
-1. Valid Palindrome (LC 125)
-2. Reverse String (LC 344)
-3. Two Sum II - Input Array Is Sorted (LC 167)
+When you see a new problem, follow these 5 steps out loud:
 
-**Day 2: Two Pointers (Same Direction & In-Place)**
-4. Remove Duplicates from Sorted Array (LC 26)
-5. Move Zeroes (LC 283)
-6. Remove Element (LC 27)
+### Step 1 — Restate & Clarify (2 min)
+> "So we have a sorted array and need to find... Can the input be empty? Can values be negative? Can k exceed array length?"
 
-**Day 3: Intermediate Two Pointers**
-7. Container With Most Water (LC 11)
-8. Squares of a Sorted Array (LC 977)
-9. 3Sum (LC 15) - *Combines sorting with Two Sum II*
+### Step 2 — Identify the Pattern (1 min)
+> "I see: sorted array + pair finding → Opposite-Ends Two Pointers."
+> "I see: fixed window size + subarray aggregate → Fixed Sliding Window."
 
-**Day 4: Fixed Sliding Window Basics**
-10. Maximum Average Subarray I (LC 643)
-11. Diet Plan Performance (LC 1176 - Premium/Neetcode)
-12. Number of Sub-arrays of Size K and Average Greater than or Equal to Threshold (LC 1343)
+### Step 3 — State the Brute Force (1 min)
+Write it mentally or out loud. It shows you understand correctness.
+> "Brute force: nested loops, $O(N^2)$. Works but won't scale."
 
-**Day 5: Advanced Fixed Sliding Window**
-13. Maximum Points You Can Obtain from Cards (LC 1423)
-14. Find All Anagrams in a String (LC 438)
-15. Permutation in String (LC 567)
+### Step 4 — Apply the Optimization (3–5 min)
+> "I can eliminate one pointer per step because the array is sorted, giving me $O(N)$."
 
-**Day 6: Mixing Pointers & Strings**
-16. Valid Palindrome II (LC 680)
-17. Reverse Vowels of a String (LC 345)
-18. String Compression (LC 443)
-
-**Day 7: Review & Consolidation**
-19. Sort Colors (LC 75) - *Dutch National Flag problem*
-20. 4Sum (LC 18)
-21. Substring of Size Three with Distinct Characters (LC 1876)
+### Step 5 — Test with an Example & Edge Cases (2 min)
+Always test these edge cases:
+- Empty array (`[]`)
+- Single-element array (`[5]`)
+- All duplicates (`[1,1,1,1]`)
+- k equals array length
+- No valid answer exists
 
 ---
 
-## 7. Mock Interview Module
+## 8. 7-Day Practice Plan (21 Problems)
+
+**Day 1: Two Pointers Basics (Opposite Ends)**
+1. Valid Palindrome (LC 125) — *Skipping non-alphanumeric chars*
+2. Reverse String (LC 344) — *Simplest opposite-ends, build intuition*
+3. Two Sum II - Input Array Is Sorted (LC 167) — *Classic application*
+
+> **Day 1 Focus:** After solving each problem, ask yourself: "Why did moving the pointer in this direction help eliminate possibilities?" Write the answer down.
+
+**Day 2: Two Pointers (Same Direction & In-Place)**
+4. Remove Duplicates from Sorted Array (LC 26) — *Slow=write, Fast=read*
+5. Move Zeroes (LC 283) — *Same pattern, different condition*
+6. Remove Element (LC 27) — *Minimal variation of LC 26*
+
+> **Day 2 Focus:** For each problem, draw the slow and fast pointers on paper and trace through a 5-element example before coding.
+
+**Day 3: Intermediate Two Pointers**
+7. Container With Most Water (LC 11) — *Why move the shorter line?*
+8. Squares of a Sorted Array (LC 977) — *Two pointers, building from the outside in*
+9. 3Sum (LC 15) — *Combines sorting with Two Sum II*
+
+> **Day 3 Focus:** LC 11 is conceptually tricky. The key insight: the area is limited by the shorter wall. Moving the taller wall inward can only decrease or maintain width while keeping the same height limit — so it's never beneficial. Always move the shorter wall.
+
+**Day 4: Fixed Sliding Window Basics**
+10. Maximum Average Subarray I (LC 643) — *Direct template application*
+11. Diet Plan Performance (LC 1176)
+12. Number of Sub-arrays of Size K and Average ≥ Threshold (LC 1343) — *Same template, different output*
+
+> **Day 4 Focus:** After Day 4, you should be able to write the Fixed Sliding Window template from memory without looking.
+
+**Day 5: Advanced Fixed Sliding Window**
+13. Maximum Points You Can Obtain from Cards (LC 1423) — *Window from the edges, not the middle!*
+14. Find All Anagrams in a String (LC 438) — *Frequency map inside the window*
+15. Permutation in String (LC 567) — *Same as 438, different output format*
+
+> **Day 5 Focus:** LC 1423 is a twist — the window is actually the part you **don't** take (the middle), not the part you do. Recognizing inverted framings is a senior-level skill.
+
+**Day 6: Mixing Pointers & Strings**
+16. Valid Palindrome II (LC 680) — *At most one deletion: try skipping left OR right*
+17. Reverse Vowels of a String (LC 345) — *Opposite ends, conditional movement*
+18. String Compression (LC 443) — *Slow/Fast on strings*
+
+**Day 7: Review & Consolidation**
+19. Sort Colors (LC 75) — *Dutch National Flag: three pointers*
+20. 4Sum (LC 18) — *Extension of 3Sum: fix two, use two pointers*
+21. Substring of Size Three with Distinct Characters (LC 1876)
+
+> **Day 7 Focus:** On LC 75, pause before looking at the solution. Try to figure out how three pointers (low, mid, high) can partition the array in one pass. This is a great test of your pointer intuition.
+
+---
+
+## 9. Mock Interview Module
 
 ### Problem: The API Traffic Spike Analyzer
-**Context:** You are writing an operational runbook utility to analyze server logs. You are given an array `requests`, where `requests[i]` represents the number of HTTP requests hitting your Tomcat server at second `i`. You are also given an integer `k`, representing a time window in seconds. 
+
+**Context:** You are writing an operational runbook utility to analyze server logs. You are given an array `requests`, where `requests[i]` represents the number of HTTP requests hitting your Tomcat server at second `i`. You are also given an integer `k`, representing a time window in seconds.
+
 To configure your rate-limiting and auto-scaling thresholds properly, you need to find the maximum number of requests that occurred in *any* contiguous `k`-second window.
 
-**Question:** Implement a method `public int maxTrafficSpike(int[] requests, int k)` that returns the maximum requests in a `k`-second window.
+**Question:** Implement `public int maxTrafficSpike(int[] requests, int k)` that returns the maximum requests in a `k`-second window.
+
+---
 
 #### Step 1: Clarifying Questions & Expected Answers
-- *Candidate:* "Can `k` be larger than the size of the `requests` array?" -> *Interviewer:* No, assume $1 \le k \le requests.length$.
-- *Candidate:* "Can the number of requests be negative?" -> *Interviewer:* No, traffic counts are strictly non-negative integers.
+
+- *Candidate:* "Can `k` be larger than the size of the `requests` array?"
+  → *Interviewer:* No, assume $1 \le k \le requests.length$.
+- *Candidate:* "Can the number of requests be negative?"
+  → *Interviewer:* No, traffic counts are strictly non-negative integers.
+- *Candidate:* "Should I handle the case where `requests` is empty?"
+  → *Interviewer:* You can assume a non-empty array.
+- *Candidate:* "Is there a constraint on total request counts? Could the sum overflow an `int`?"
+  → *Interviewer:* Good catch. Assume it fits in an `int` for this problem.
+
+> **Tip:** Asking the integer overflow question signals senior-level thinking. In real systems (millions of requests), sums easily overflow 32-bit integers.
+
+---
 
 #### Step 2: The Brute Force Solution
+
 Explain that we could check every possible window of size `k` and sum its elements.
+
 ```java
-// Time: O(N * K), Space: O(1)
+// Time: O(N × K), Space: O(1)
 public int maxTrafficSpike(int[] requests, int k) {
     int maxSpike = 0;
     for (int i = 0; i <= requests.length - k; i++) {
@@ -220,34 +660,112 @@ public int maxTrafficSpike(int[] requests, int k) {
     return maxSpike;
 }
 ```
+
 *Interviewer Critique:* "This works, but if `requests` represents a month of data (millions of seconds) and `k` is 3600 (one hour), $O(N \times K)$ will cause a massive CPU spike. Can we do this in a single pass?"
 
+**How to recognize the optimization opportunity:**
+- You're computing a sum over a window.
+- The window moves by exactly 1 each time.
+- The contents of adjacent windows overlap by k-1 elements.
+- → **Reuse the previous sum instead of recomputing.**
+
+---
+
 #### Step 3: The Optimized Solution (Fixed Sliding Window)
-Recognize that moving the window by one second only requires subtracting the second that drops off and adding the new second.
+
 ```java
 // Time: O(N), Space: O(1)
 public int maxTrafficSpike(int[] requests, int k) {
     int currentSpike = 0;
-    
-    // Calculate the baseline for the first k-second window
+
+    // Phase 1: Build the first k-second window
     for (int i = 0; i < k; i++) {
         currentSpike += requests[i];
     }
-    
+
     int maxSpike = currentSpike;
-    
-    // Slide the window across the rest of the array
+
+    // Phase 2: Slide the window
     for (int i = k; i < requests.length; i++) {
+        // Remove the second that just left the window: requests[i - k]
+        // Add the new second entering the window:    requests[i]
         currentSpike += requests[i] - requests[i - k];
         maxSpike = Math.max(maxSpike, currentSpike);
     }
-    
+
     return maxSpike;
 }
 ```
 
+**Talk through this during the interview:**
+> "I build the initial window in $O(K)$. Then for each subsequent second, I do exactly 2 operations — subtract the outgoing second, add the incoming second. So the slide phase is $O(N - K)$. Total is $O(N)$, which scales to millions of log entries without issue."
+
+---
+
 #### Step 4: Follow-up Questions
-*Interviewer:* "What if instead of a fixed window `k`, we want to find the *longest* time window where the total requests remained *under* a specific threshold `T` (to identify periods of low activity)?"
-*Candidate's expected thought process:*
-- The window size is no longer fixed (`k`); it is now variable.
-- We would need an **Advanced Sliding Window (Variable Size)**. We would expand the `right` pointer to include more seconds until the sum exceeds `T`. Then, we would shrink the `left` pointer until the sum is valid again, keeping track of the maximum window length observed. (Note: This directly sets up the concepts for Phase 4 of the roadmap).
+
+**Follow-up 1:** "What if instead of a fixed window `k`, we want to find the *longest* time window where the total requests remained *under* a specific threshold `T`?"
+
+*Expected thought process:*
+- Window size is now variable → can't use fixed sliding window.
+- Expand `right` until sum ≥ T, then shrink `left` until sum < T again.
+- Track the maximum `right - left + 1` seen.
+- This is **Variable-Size Sliding Window** (Week 4).
+
+**Follow-up 2:** "What if the array is a stream and you can't store all values in memory?"
+
+*Expected thought process:*
+- You need a **circular buffer** (queue) of size `k`.
+- For each new value, dequeue the oldest, enqueue the new one, update the running sum.
+- This is the real-world production implementation.
+
+**Follow-up 3:** "What if you need to find the window with the minimum and maximum in real-time?"
+
+*Expected thought process:*
+- Sum is easy to maintain with a variable, but min/max is harder.
+- This requires a **Monotonic Deque** (advanced topic).
+
+---
+
+## 10. Quick Reference Cheat Sheet
+
+```
+╔══════════════════════════════════════════════════════════════╗
+║              TWO POINTERS & SLIDING WINDOW                  ║
+║                    CHEAT SHEET                               ║
+╠══════════════════════════════════════════════════════════════╣
+║ OPPOSITE-ENDS TWO POINTERS                                   ║
+║  Requires: Sorted array (or string read from both ends)      ║
+║  Template: left=0, right=n-1, while(left<right)             ║
+║  Move left right  → when result is "too small"               ║
+║  Move right left  → when result is "too large"               ║
+║  Problems: TwoSum II, Valid Palindrome, Container Water      ║
+╠══════════════════════════════════════════════════════════════╣
+║ SLOW/FAST TWO POINTERS (same direction)                      ║
+║  Requires: In-place modification, O(1) space                 ║
+║  Template: slow=0, for fast in 1..n                         ║
+║  Slow = write head, Fast = read/scan head                    ║
+║  Problems: Remove Duplicates, Move Zeros, Remove Element     ║
+╠══════════════════════════════════════════════════════════════╣
+║ FIXED SLIDING WINDOW                                         ║
+║  Requires: Fixed window size k given in problem              ║
+║  Template: Build first window O(k), then slide O(n-k)       ║
+║  Slide:  sum += arr[i] - arr[i - k]                         ║
+║  Problems: Max Average Subarray, Anagrams, Permutation       ║
+╠══════════════════════════════════════════════════════════════╣
+║ COMPLEXITY SUMMARY                                           ║
+║  All three techniques: Time O(N), Space O(1)                ║
+║  Sorting (if needed first): Time O(N log N)                  ║
+╚══════════════════════════════════════════════════════════════╝
+```
+
+---
+
+## 11. What's Coming Next
+
+**Week 3** builds on these patterns:
+- **HashMap + Two Pointers:** When you need to track frequencies inside a window (e.g., Longest Substring Without Repeating Characters).
+- **Prefix Sums:** A related technique for range-sum queries without sliding.
+
+**Week 4** introduces:
+- **Variable-Size Sliding Window:** The window grows and shrinks dynamically based on conditions. The template is different — `right` moves forward in an outer loop, `left` moves forward in an inner `while` loop. This handles problems like "Minimum Window Substring" and "Longest Substring with K Distinct Characters."
