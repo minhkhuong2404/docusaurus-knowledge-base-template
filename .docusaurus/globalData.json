@@ -426,6 +426,86 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "books/ocp/chapters/chapter-01",
+              "path": "/books/ocp/chapters/chapter-01",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/ocp/chapters/chapter-02",
+              "path": "/books/ocp/chapters/chapter-02",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/ocp/chapters/chapter-03",
+              "path": "/books/ocp/chapters/chapter-03",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/ocp/chapters/chapter-04",
+              "path": "/books/ocp/chapters/chapter-04",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/ocp/chapters/chapter-05",
+              "path": "/books/ocp/chapters/chapter-05",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/ocp/chapters/chapter-06",
+              "path": "/books/ocp/chapters/chapter-06",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/ocp/chapters/chapter-07",
+              "path": "/books/ocp/chapters/chapter-07",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/ocp/chapters/chapter-08",
+              "path": "/books/ocp/chapters/chapter-08",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/ocp/chapters/chapter-09",
+              "path": "/books/ocp/chapters/chapter-09",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/ocp/chapters/chapter-10",
+              "path": "/books/ocp/chapters/chapter-10",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/ocp/chapters/chapter-11",
+              "path": "/books/ocp/chapters/chapter-11",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/ocp/chapters/chapter-12",
+              "path": "/books/ocp/chapters/chapter-12",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/ocp/chapters/chapter-13",
+              "path": "/books/ocp/chapters/chapter-13",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/ocp/chapters/chapter-14",
+              "path": "/books/ocp/chapters/chapter-14",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/ocp/exam-tips",
+              "path": "/books/ocp/exam-tips",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/ocp/intro",
+              "path": "/books/ocp",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "intro",
               "path": "/docs",
               "sidebar": "tutorialSidebar"

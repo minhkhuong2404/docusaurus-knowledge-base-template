@@ -1367,6 +1367,57 @@ const sidebars: SidebarsConfig = {
 							],
 						},
 					]
+				},
+				{
+					type: 'category',
+					label: '☕ OCP Java SE 21 Study Guide',
+					collapsed: true,
+					items: [
+						'books/ocp/intro',
+						'books/ocp/exam-tips',
+						{
+							type: 'category',
+							label: '🧱 Part I — Language Foundations',
+							collapsed: false,
+							items: [
+								'books/ocp/chapters/chapter-01',
+								'books/ocp/chapters/chapter-02',
+								'books/ocp/chapters/chapter-03',
+								'books/ocp/chapters/chapter-04',
+								'books/ocp/chapters/chapter-05',
+							],
+						},
+						{
+							type: 'category',
+							label: '🏗️ Part II — Object-Oriented Design',
+							collapsed: false,
+							items: [
+								'books/ocp/chapters/chapter-06',
+								'books/ocp/chapters/chapter-07',
+							],
+						},
+						{
+							type: 'category',
+							label: '⚡ Part III — Functional & Streams',
+							collapsed: false,
+							items: [
+								'books/ocp/chapters/chapter-08',
+								'books/ocp/chapters/chapter-09',
+								'books/ocp/chapters/chapter-10',
+							],
+						},
+						{
+							type: 'category',
+							label: '🔧 Part IV — Advanced Java',
+							collapsed: false,
+							items: [
+								'books/ocp/chapters/chapter-11',
+								'books/ocp/chapters/chapter-12',
+								'books/ocp/chapters/chapter-13',
+								'books/ocp/chapters/chapter-14',
+							],
+						},
+					]
 				}
 			]
 		},

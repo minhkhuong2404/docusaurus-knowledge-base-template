@@ -4,495 +4,360 @@ import Link from "@docusaurus/Link";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   Inline styles — follows the site's neon/dark design tokens perfectly
+   Global CSS injected into <head> via <style> — only active on this page
 ───────────────────────────────────────────────────────────────────────────── */
+const GLOBAL_STYLES = `
+  /* ── Hide navbar search & premium button on landing page ── */
+  .lp-active .premium-nav-button,
+  .lp-active .DocSearch-Button,
+  .lp-active [class*="searchBox"],
+  .lp-active [class*="navbarSearchContainer"] {
+    display: none !important;
+  }
 
-const S = {
-  /* Page shell */
-  page: {
-    minHeight: "100vh",
-    background: "var(--ifm-background-color)",
-    overflowX: "hidden" as const,
-  },
+  /* ── Keyframes ── */
+  @keyframes lp-pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.35; }
+  }
+  @keyframes lp-fadeUp {
+    from { opacity: 0; transform: translateY(22px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes lp-slideIn {
+    from { opacity: 0; transform: translateX(-16px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes lp-shimmer {
+    0%   { background-position: -400% center; }
+    100% { background-position: 400% center; }
+  }
+  @keyframes lp-bgOrb {
+    0%, 100% { transform: scale(1) translate(0, 0); }
+    33%      { transform: scale(1.12) translate(20px, -15px); }
+    66%      { transform: scale(0.92) translate(-15px, 20px); }
+  }
+  @keyframes lp-cardReveal {
+    from { opacity: 0; transform: translateY(20px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes lp-borderGlow {
+    0%, 100% { box-shadow: 0 0 12px -4px rgba(74,222,128,0.0); }
+    50%      { box-shadow: 0 0 22px -4px rgba(74,222,128,0.25); }
+  }
+  @keyframes lp-h1Enter {
+    from { opacity: 0; transform: translateY(20px) scale(0.96); }
+    to   { opacity: 1; transform: translateY(0)    scale(1); }
+  }
+  @keyframes lp-barGrow {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
 
-  /* ── Hero ─────────────────────────────────────────────────────────────── */
-  hero: {
-    position: "relative" as const,
-    padding: "7rem 1.5rem 5rem",
-    textAlign: "center" as const,
-    overflow: "hidden" as const,
-  },
-  heroBg: {
-    position: "absolute" as const,
-    inset: 0,
-    background:
-      "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(74,222,128,0.12) 0%, transparent 70%)," +
-      "radial-gradient(ellipse 60% 40% at 80% 100%, rgba(134,239,172,0.07) 0%, transparent 60%)",
-    pointerEvents: "none" as const,
-  },
-  heroEyebrow: {
-    display: "inline-flex",
-    alignItems: "center",
-    gap: "0.45rem",
-    fontSize: "0.72rem",
-    fontWeight: 700,
-    letterSpacing: "0.14em",
-    textTransform: "uppercase" as const,
-    color: "var(--brand-blue)",
-    background: "rgba(74,222,128,0.1)",
-    border: "1px solid rgba(74,222,128,0.28)",
-    borderRadius: "999px",
-    padding: "0.3rem 1rem",
-    marginBottom: "1.5rem",
-  },
-  heroDot: {
-    width: 7,
-    height: 7,
-    borderRadius: "50%",
-    background: "var(--brand-blue)",
-    boxShadow: "0 0 8px var(--brand-blue)",
-    animation: "pulse 2s ease-in-out infinite",
-  },
-  heroTitle: {
-    fontSize: "clamp(2.4rem, 6vw, 4rem)",
-    fontWeight: 900,
-    lineHeight: 1.1,
-    letterSpacing: "-0.04em",
-    background: "var(--gradient-brand)",
-    WebkitBackgroundClip: "text",
-    WebkitTextFillColor: "transparent",
-    backgroundClip: "text",
-    marginBottom: "1.25rem",
-  },
-  heroSub: {
-    fontSize: "1.1rem",
-    lineHeight: 1.6,
-    color: "var(--ifm-color-emphasis-700)",
-    maxWidth: 620,
-    margin: "0 auto 2.5rem",
-  },
-  heroCtas: {
-    display: "flex",
-    gap: "1rem",
-    justifyContent: "center",
-    flexWrap: "wrap" as const,
-  },
-  ctaPrimary: {
-    display: "inline-flex",
-    alignItems: "center",
-    gap: "0.5rem",
-    padding: "0.8rem 1.8rem",
-    borderRadius: "9px",
-    fontWeight: 700,
-    fontSize: "0.95rem",
-    background: "var(--gradient-brand)",
-    color: "#0a1020",
-    textDecoration: "none",
-    transition: "opacity 0.2s, transform 0.2s, box-shadow 0.2s",
-    boxShadow: "0 0 22px -6px rgba(74,222,128,0.5)",
-  },
-  ctaSecondary: {
-    display: "inline-flex",
-    alignItems: "center",
-    gap: "0.5rem",
-    padding: "0.8rem 1.8rem",
-    borderRadius: "9px",
-    fontWeight: 700,
-    fontSize: "0.95rem",
-    border: "1px solid rgba(74,222,128,0.35)",
-    color: "var(--brand-blue)",
-    background: "rgba(74,222,128,0.06)",
-    textDecoration: "none",
-    transition: "background 0.2s, transform 0.2s, border-color 0.2s",
-  },
+  /* ── Shimmer title ── */
+  .lp-hero-h1 {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: clamp(2.35rem, 6.4vw, 4.45rem);
+    font-weight: 900;
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+    margin: 0 auto 1rem;
+    padding-bottom: 1.25rem; /* space for the accent bar */
+    background: linear-gradient(
+      90deg,
+      #4ade80 0%,
+      #86efac 22%,
+      #4ade80 44%,
+      #86efac 66%,
+      #4ade80 88%,
+      #86efac 100%
+    );
+    background-size: 250% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: lp-h1Enter 0.7s cubic-bezier(0.22,1,0.36,1) 0.15s both,
+               lp-shimmer 5s linear 0.85s infinite;
+  }
+  /* accent bar — use a separate centered div, not ::after,
+     to avoid transform conflicts with the entrance animation */
+  .lp-hero-bar {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+  .lp-hero-bar span {
+    display: block;
+    width: 80px;
+    height: 3px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #4ade80, #86efac);
+    transform: scaleX(0);
+    transform-origin: center;
+    animation: lp-barGrow 0.6s cubic-bezier(0.22,1,0.36,1) 0.85s both;
+  }
 
-  /* ── Stat strip ───────────────────────────────────────────────────────── */
-  statsStrip: {
-    display: "flex",
-    justifyContent: "center",
-    gap: "2.5rem",
-    flexWrap: "wrap" as const,
-    padding: "2.5rem 1.5rem",
-    borderTop: "1px solid rgba(74,222,128,0.1)",
-    borderBottom: "1px solid rgba(74,222,128,0.1)",
-    background: "rgba(74,222,128,0.03)",
-  },
-  stat: { textAlign: "center" as const },
-  statNum: {
-    fontSize: "2.2rem",
-    fontWeight: 900,
-    lineHeight: 1,
-    background: "var(--gradient-brand)",
-    WebkitBackgroundClip: "text",
-    WebkitTextFillColor: "transparent",
-    backgroundClip: "text",
-  },
-  statLabel: {
-    fontSize: "0.75rem",
-    fontWeight: 600,
-    letterSpacing: "0.08em",
-    textTransform: "uppercase" as const,
-    color: "var(--ifm-color-emphasis-600)",
-    marginTop: "0.25rem",
-  },
+  /* ── Word-by-word hero banner ── */
+  .lp-wbw-wrap {
+    min-height: clamp(5rem, 11vw, 9rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.75rem;
+  }
+  .lp-wbw-h1 {
+    display: block;
+    text-align: center;
+    font-size: clamp(2.8rem, 7vw, 6rem) !important;
+    font-weight: 900;
+    line-height: 1.15;
+    letter-spacing: -0.04em;
+    margin: 0;
+    padding: 0 1rem;
+  }
+  .lp-wbw {
+    display: inline-block;
+    margin: 0 0.18em;
+    background: linear-gradient(
+      90deg,
+      #4ade80 0%, #86efac 25%, #22d3ee 55%, #86efac 80%, #4ade80 100%
+    );
+    background-size: 250% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: lp-shimmer 14s linear infinite;
+    transition: opacity 0.32s cubic-bezier(0.22,1,0.36,1),
+                transform 0.32s cubic-bezier(0.22,1,0.36,1),
+                filter 0.32s ease;
+  }
+  .lp-wbw-off {
+    opacity: 0;
+    transform: translateY(16px);
+    filter: blur(5px);
+  }
+  .lp-wbw-on {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
 
-  /* ── Section layout ───────────────────────────────────────────────────── */
-  section: {
-    maxWidth: 1100,
-    margin: "0 auto",
-    padding: "5rem 1.5rem",
-  },
-  sectionAlt: {
-    background: "rgba(74,222,128,0.02)",
-    borderTop: "1px solid rgba(74,222,128,0.08)",
-    borderBottom: "1px solid rgba(74,222,128,0.08)",
-  },
-  sectionLabel: {
-    fontSize: "0.68rem",
-    fontWeight: 700,
-    letterSpacing: "0.16em",
-    textTransform: "uppercase" as const,
-    color: "var(--brand-blue)",
-    marginBottom: "0.5rem",
-  },
-  sectionTitle: {
-    fontSize: "clamp(1.6rem, 3vw, 2.4rem)",
-    fontWeight: 800,
-    letterSpacing: "-0.03em",
-    lineHeight: 1.15,
-    marginBottom: "0.75rem",
-    background: "var(--gradient-brand)",
-    WebkitBackgroundClip: "text",
-    WebkitTextFillColor: "transparent",
-    backgroundClip: "text",
-  },
-  sectionDesc: {
-    color: "var(--ifm-color-emphasis-700)",
-    fontSize: "1rem",
-    lineHeight: 1.65,
-    maxWidth: 580,
-    marginBottom: "2.5rem",
-  },
+  /* ── Eyebrow fade-up ── */
+  .lp-eyebrow   { animation: lp-fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) 0.0s both; }
+  .lp-eyebrow-2 { animation: lp-fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) 0.08s both; }
+  .lp-sub       { animation: lp-fadeUp 0.6s cubic-bezier(0.22,1,0.36,1) 0.5s both; }
+  .lp-ctas      { animation: lp-fadeUp 0.6s cubic-bezier(0.22,1,0.36,1) 0.68s both; }
 
-  /* ── Path cards grid ──────────────────────────────────────────────────── */
-  pathGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
-    gap: "1rem",
-  },
-  pathCard: {
-    position: "relative" as const,
-    padding: "1.4rem 1.2rem",
-    borderRadius: "12px",
-    border: "1px solid rgba(74,222,128,0.14)",
-    background: "var(--ifm-background-surface-color)",
-    textDecoration: "none",
-    transition: "border-color 0.2s, transform 0.2s, box-shadow 0.2s",
-    display: "flex",
-    flexDirection: "column" as const,
-    gap: "0.5rem",
-    cursor: "pointer",
-  },
-  pathIcon: { fontSize: "1.6rem", lineHeight: 1 },
-  pathName: {
-    fontWeight: 700,
-    fontSize: "0.95rem",
-    color: "var(--ifm-font-color-base)",
-  },
-  pathDesc: {
-    fontSize: "0.78rem",
-    color: "var(--ifm-color-emphasis-600)",
-    lineHeight: 1.5,
-  },
-  pathTag: {
-    display: "inline-block",
-    fontSize: "0.65rem",
-    fontWeight: 700,
-    letterSpacing: "0.08em",
-    textTransform: "uppercase" as const,
-    padding: "0.18rem 0.55rem",
-    borderRadius: "999px",
-    background: "rgba(74,222,128,0.12)",
-    color: "var(--brand-blue)",
-    border: "1px solid rgba(74,222,128,0.22)",
-    alignSelf: "flex-start",
-  },
+  /* ── Scroll-reveal cards ── */
+  .lp-card-hidden {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  .lp-card-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition: opacity 0.5s cubic-bezier(0.22,1,0.36,1),
+                transform 0.5s cubic-bezier(0.22,1,0.36,1);
+  }
 
-  /* ── Roadmap phases ───────────────────────────────────────────────────── */
-  phaseGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-    gap: "1.25rem",
-    marginBottom: "2rem",
-  },
-  phaseCard: {
-    borderRadius: "14px",
-    border: "1px solid rgba(74,222,128,0.14)",
-    background: "var(--ifm-background-surface-color)",
-    overflow: "hidden" as const,
-  },
-  phaseHeader: {
-    padding: "1rem 1.2rem 0.75rem",
-    borderBottom: "1px solid rgba(74,222,128,0.1)",
-    background: "rgba(74,222,128,0.06)",
-  },
-  phaseHeaderTitle: {
-    fontWeight: 800,
-    fontSize: "0.85rem",
-    letterSpacing: "0.05em",
-    textTransform: "uppercase" as const,
-    color: "var(--brand-blue)",
-    margin: 0,
-  },
-  phaseBody: { padding: "1rem 1.2rem" },
-  phaseItem: {
-    display: "flex",
-    alignItems: "flex-start",
-    gap: "0.6rem",
-    padding: "0.45rem 0",
-    borderBottom: "1px solid rgba(74,222,128,0.06)",
-    textDecoration: "none",
-  },
-  phaseNum: {
-    width: 22,
-    height: 22,
-    borderRadius: "50%",
-    background: "rgba(74,222,128,0.12)",
-    border: "1px solid rgba(74,222,128,0.22)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: "0.62rem",
-    fontWeight: 800,
-    color: "var(--brand-blue)",
-    flexShrink: 0,
-    marginTop: 1,
-  },
-  phaseItemText: {
-    lineHeight: 1.4,
-  },
-  phaseItemTitle: {
-    fontSize: "0.82rem",
-    fontWeight: 600,
-    color: "var(--ifm-font-color-base)",
-    display: "block",
-  },
-  phaseItemSub: {
-    fontSize: "0.7rem",
-    color: "var(--ifm-color-emphasis-600)",
-  },
+  /* ── Card hover ── */
+  .lp-hcard {
+    transition: transform 0.22s cubic-bezier(0.22,1,0.36,1),
+                box-shadow 0.22s ease,
+                border-color 0.22s ease !important;
+  }
+  .lp-hcard:hover {
+    transform: translateY(-4px) scale(1.015) !important;
+    box-shadow: 0 10px 32px -8px rgba(74,222,128,0.28),
+                0 0 0 1px rgba(74,222,128,0.3) !important;
+    border-color: rgba(74,222,128,0.4) !important;
+    text-decoration: none;
+  }
 
-  /* ── DSA week table ───────────────────────────────────────────────────── */
-  weekGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))",
-    gap: "0.75rem",
-  },
-  weekCard: {
-    padding: "0.9rem 1rem",
-    borderRadius: "10px",
-    border: "1px solid rgba(74,222,128,0.12)",
-    background: "var(--ifm-background-surface-color)",
-    textDecoration: "none",
-    transition: "border-color 0.2s, transform 0.18s, box-shadow 0.2s",
-    display: "block",
-  },
-  weekBadge: {
-    fontSize: "0.62rem",
-    fontWeight: 800,
-    letterSpacing: "0.1em",
-    textTransform: "uppercase" as const,
-    color: "var(--brand-blue)",
-    opacity: 0.8,
-    display: "block",
-    marginBottom: "0.3rem",
-  },
-  weekTitle: {
-    fontSize: "0.82rem",
-    fontWeight: 700,
-    color: "var(--ifm-font-color-base)",
-    lineHeight: 1.35,
-    display: "block",
-  },
-  weekSub: {
-    fontSize: "0.68rem",
-    color: "var(--ifm-color-emphasis-600)",
-    marginTop: "0.25rem",
-    display: "block",
-  },
+  /* ── CTA button hover ── */
+  .lp-cta-primary {
+    transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+  }
+  .lp-cta-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 32px -6px rgba(74,222,128,0.65) !important;
+  }
+  .lp-cta-secondary {
+    transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+  }
+  .lp-cta-secondary:hover {
+    transform: translateY(-2px);
+    background: rgba(74,222,128,0.12) !important;
+    border-color: rgba(74,222,128,0.5) !important;
+  }
 
-  /* ── Books ────────────────────────────────────────────────────────────── */
-  bookGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
-    gap: "1.1rem",
-  },
-  bookCard: {
-    display: "flex",
-    gap: "1rem",
-    padding: "1.1rem 1.2rem",
-    borderRadius: "12px",
-    border: "1px solid rgba(74,222,128,0.12)",
-    background: "var(--ifm-background-surface-color)",
-    textDecoration: "none",
-    transition: "border-color 0.2s, transform 0.18s, box-shadow 0.2s",
-    alignItems: "flex-start",
-  },
-  bookCover: {
-    fontSize: "2rem",
-    lineHeight: 1,
-    flexShrink: 0,
-    width: 44,
-    height: 56,
-    borderRadius: "5px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    background: "rgba(74,222,128,0.08)",
-    border: "1px solid rgba(74,222,128,0.18)",
-  },
-  bookInfo: { flex: 1, minWidth: 0 },
-  bookTrack: {
-    fontSize: "0.6rem",
-    fontWeight: 700,
-    letterSpacing: "0.1em",
-    textTransform: "uppercase" as const,
-    color: "var(--brand-blue)",
-    marginBottom: "0.3rem",
-    display: "block",
-  },
-  bookTitle: {
-    fontSize: "0.85rem",
-    fontWeight: 700,
-    color: "var(--ifm-font-color-base)",
-    lineHeight: 1.35,
-    marginBottom: "0.25rem",
-    display: "block",
-  },
-  bookAuthor: {
-    fontSize: "0.7rem",
-    color: "var(--ifm-color-emphasis-600)",
-    display: "block",
-    marginBottom: "0.25rem",
-  },
-  bookFocus: {
-    fontSize: "0.7rem",
-    color: "var(--ifm-color-emphasis-600)",
-    lineHeight: 1.4,
-    display: "block",
-  },
+  /* ── Stats counter ── */
+  .lp-stat-num {
+    font-size: 2.6rem;
+    font-weight: 900;
+    line-height: 1;
+    background: var(--gradient-brand);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: lp-fadeUp 0.5s ease both;
+  }
 
-  /* ── AWS study path table ─────────────────────────────────────────────── */
-  awsGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-    gap: "0.85rem",
-  },
-  awsCard: {
-    padding: "1rem 1.1rem",
-    borderRadius: "10px",
-    border: "1px solid rgba(74,222,128,0.12)",
-    background: "var(--ifm-background-surface-color)",
-    textDecoration: "none",
-    transition: "border-color 0.2s, transform 0.18s, box-shadow 0.2s",
-    display: "block",
-  },
-  awsNum: {
-    fontSize: "0.6rem",
-    fontWeight: 800,
-    letterSpacing: "0.1em",
-    color: "var(--brand-blue)",
-    opacity: 0.7,
-    display: "block",
-    marginBottom: "0.25rem",
-  },
-  awsTitle: {
-    fontSize: "0.85rem",
-    fontWeight: 700,
-    color: "var(--ifm-font-color-base)",
-    marginBottom: "0.2rem",
-    display: "block",
-  },
-  awsDesc: {
-    fontSize: "0.7rem",
-    color: "var(--ifm-color-emphasis-600)",
-    lineHeight: 1.45,
-  },
+  /* ── Animated background orbs ── */
+  .lp-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    animation: lp-bgOrb 12s ease-in-out infinite;
+  }
 
-  /* ── Domain weight pills ──────────────────────────────────────────────── */
-  domainRow: {
-    display: "flex",
-    flexWrap: "wrap" as const,
-    gap: "0.75rem",
-    marginBottom: "2rem",
-  },
-  domainPill: {
-    padding: "0.6rem 1.1rem",
-    borderRadius: "10px",
-    border: "1px solid rgba(74,222,128,0.2)",
-    background: "rgba(74,222,128,0.06)",
-    fontSize: "0.8rem",
-  },
-  domainName: {
-    fontWeight: 700,
-    color: "var(--ifm-font-color-base)",
-    display: "block",
-    marginBottom: "0.15rem",
-  },
-  domainWeight: {
-    fontSize: "1.15rem",
-    fontWeight: 900,
-    color: "var(--brand-blue)",
-  },
+  /* ── Section heading ── */
+  .lp-section-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--brand-blue);
+    margin-bottom: 0.5rem;
+  }
+  .lp-section-title {
+    font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    margin-bottom: 0.75rem;
+    background: var(--gradient-brand);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  /* ── Global body-text scale-up for the landing page ── */
+  .lp-root {
+    font-size: 1.08rem; /* bumps all relative rem sizes ~8% */
+  }
 
-  /* ── View all link ────────────────────────────────────────────────────── */
-  viewAll: {
-    display: "inline-flex",
-    alignItems: "center",
-    gap: "0.4rem",
-    marginTop: "1.5rem",
-    padding: "0.6rem 1.3rem",
-    borderRadius: "8px",
-    border: "1px solid rgba(74,222,128,0.28)",
-    color: "var(--brand-blue)",
-    background: "rgba(74,222,128,0.05)",
-    textDecoration: "none",
-    fontWeight: 600,
-    fontSize: "0.85rem",
-    transition: "background 0.2s, transform 0.15s",
-  },
+  /* ── Respect reduced motion ── */
+  @media (prefers-reduced-motion: reduce) {
+    .lp-wbw, .lp-eyebrow, .lp-eyebrow-2,
+    .lp-sub, .lp-ctas, .lp-stat-num, .lp-orb { animation: none !important; }
+    .lp-wbw { opacity: 1 !important; transform: none !important; filter: none !important;
+               -webkit-text-fill-color: unset; color: #4ade80; }
+    .lp-card-hidden { opacity: 1; transform: none; }
+    .lp-hcard:hover { transform: none !important; }
+  }
+`;
 
-  /* ── CTA banner ───────────────────────────────────────────────────────── */
-  ctaBanner: {
-    textAlign: "center" as const,
-    padding: "5rem 1.5rem",
-    background:
-      "radial-gradient(ellipse 70% 60% at 50% 50%, rgba(74,222,128,0.08) 0%, transparent 70%)",
-    borderTop: "1px solid rgba(74,222,128,0.1)",
-  },
-  ctaBannerTitle: {
-    fontSize: "clamp(1.8rem, 4vw, 3rem)",
-    fontWeight: 900,
-    letterSpacing: "-0.04em",
-    lineHeight: 1.15,
-    marginBottom: "1rem",
-    background: "var(--gradient-brand)",
-    WebkitBackgroundClip: "text",
-    WebkitTextFillColor: "transparent",
-    backgroundClip: "text",
-  },
-  ctaBannerSub: {
-    color: "var(--ifm-color-emphasis-700)",
-    maxWidth: 500,
-    margin: "0 auto 2rem",
-    lineHeight: 1.6,
-  },
-} as const;
+/* ─────────────────────────────────────────────────────────────────────────────
+   Hook: watch an element with IntersectionObserver and reveal cards in a grid
+───────────────────────────────────────────────────────────────────────────── */
+function useRevealGrid(count: number, delay = 60) {
+  const refs = useRef<(HTMLElement | null)[]>([]);
+  const [visible, setVisible] = useState<boolean[]>(Array(count).fill(false));
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = Number((entry.target as HTMLElement).dataset.idx);
+            // stagger by index position within the GRID, not absolute index
+            const gridIdx = idx % count;
+            setTimeout(() => {
+              setVisible((prev) => {
+                const next = [...prev];
+                next[idx] = true;
+                return next;
+              });
+            }, gridIdx * delay);
+            obs.unobserve(entry.target);
+          }
+        });
+      },
+      // Large rootMargin so cards already in the viewport fire on mount
+      { threshold: 0.01, rootMargin: "200px 0px 0px 0px" },
+    );
+    refs.current.forEach((el) => el && obs.observe(el));
+    return () => obs.disconnect();
+  }, [count, delay]);
+
+  const setRef = (i: number) => (el: HTMLElement | null) => {
+    refs.current[i] = el;
+    if (el) el.dataset.idx = String(i);
+  };
+
+  return { visible, setRef };
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Word-by-Word Banner
+   Each phrase describes what this knowledge base covers.
+   Words reveal left→right, hold, then hide right→left, then next phrase.
+───────────────────────────────────────────────────────────────────────────── */
+const WBW_PHRASES = [
+  ["Prepare", "for", "Tech", "Interviews"],
+  ["Master", "DSA", "in", "20", "Weeks"],
+  ["Pass", "AWS", "Cloud", "Certs"],
+  ["Ace", "System", "Design", "Patterns"],
+  ["Read", "Top", "Engineering", "Books"],
+  ["Ship", "Better", "Java", "Code", "Faster"],
+];
+
+type WBWPhase = "reveal" | "hold" | "hide";
+const WORD_DELAY = 160; // ms per word entering / leaving
+const HOLD_MS = 1200; // ms all words stay visible
+
+function WordByWordBanner() {
+  const [phraseIdx, setPhraseIdx] = useState(0);
+  const [visibleCount, setVisibleCount] = useState(0);
+  const [phase, setPhase] = useState<WBWPhase>("reveal");
+
+  const words = WBW_PHRASES[phraseIdx];
+
+  useEffect(() => {
+    let t: ReturnType<typeof setTimeout>;
+    if (phase === "reveal") {
+      if (visibleCount < words.length) {
+        t = setTimeout(() => setVisibleCount((c) => c + 1), WORD_DELAY);
+      } else {
+        t = setTimeout(() => setPhase("hold"), 80);
+      }
+    } else if (phase === "hold") {
+      t = setTimeout(() => setPhase("hide"), HOLD_MS);
+    } else {
+      if (visibleCount > 0) {
+        t = setTimeout(() => setVisibleCount((c) => c - 1), WORD_DELAY);
+      } else {
+        t = setTimeout(() => {
+          setPhraseIdx((i) => (i + 1) % WBW_PHRASES.length);
+          setPhase("reveal");
+        }, 220);
+      }
+    }
+    return () => clearTimeout(t);
+  }, [phase, visibleCount, words.length]);
+
+  return (
+    <div className="lp-wbw-wrap">
+      <h1 className="lp-wbw-h1">
+        {words.map((word, i) => (
+          <span
+            key={`${phraseIdx}-${i}`}
+            className={`lp-wbw ${i < visibleCount ? "lp-wbw-on" : "lp-wbw-off"}`}
+          >
+            {word}
+          </span>
+        ))}
+      </h1>
+    </div>
+  );
+}
 
 /* ─────────────────────────────────────────────────────────────────────────────
    Data
 ───────────────────────────────────────────────────────────────────────────── */
-
 const LEARNING_PATHS = [
   {
     icon: "☕",
@@ -706,7 +571,7 @@ const INTERVIEW_PHASES = [
       {
         n: 6,
         title: "Common Interview Questions",
-        sub: "URL shortener, Twitter clone, payment system",
+        sub: "URL shortener, Twitter clone, payment",
         href: "/technical-knowledge/system-design/common-interview-questions",
       },
     ],
@@ -729,13 +594,13 @@ const DSA_WEEKS = [
   {
     wk: 3,
     title: "Linked Lists & Pointers",
-    sub: "Reversal, cycle, merge",
+    sub: "Reversal, cycle detection, merge",
     href: "/technical-knowledge/dsa/week-3-linked-lists-pointers",
   },
   {
     wk: 4,
     title: "Hash Tables & Sets",
-    sub: "Frequency, anagram, grouping",
+    sub: "Frequency counting, anagram, grouping",
     href: "/technical-knowledge/dsa/week-4-hash-tables-sets",
   },
   {
@@ -789,7 +654,7 @@ const DSA_WEEKS = [
   {
     wk: 13,
     title: "Dynamic Programming 1D",
-    sub: "Fibonacci, house robber, DP on strings",
+    sub: "Fibonacci, house robber, DP strings",
     href: "/technical-knowledge/dsa/week-13-dynamic-programming-1d",
   },
   {
@@ -838,68 +703,58 @@ const DSA_WEEKS = [
 
 const BOOKS = [
   {
-    icon: "🧠",
-    track: "Interview Prep",
-    title: "Cracking the Coding Interview",
-    author: "Gayle McDowell",
-    focus: "DS, algorithms, system design, OOP, concurrency",
-    href: "/books/clean-code/intro",
-  },
-  {
-    icon: "🏗️",
-    track: "Interview Prep",
-    title: "System Design Interview Vol.1",
-    author: "Alex Xu",
-    focus: "4-step framework + 10 real system designs",
-    href: "/books/ddia/intro",
-  },
-  {
-    icon: "🏗️",
-    track: "Interview Prep",
-    title: "System Design Interview Vol.2",
-    author: "Alex Xu & Sahn Lam",
-    focus: "Payments, maps, stock exchange — advanced designs",
-    href: "/books/ddia/intro",
-  },
-  {
-    icon: "☕",
-    track: "Software Craft",
-    title: "Effective Java",
-    author: "Joshua Bloch",
-    focus: "90 best practices: generics, lambdas, APIs, concurrency",
-    href: "/books/effective-java/introduction",
-  },
-  {
     icon: "🧹",
     track: "Software Craft",
     title: "Clean Code",
     author: "Robert C. Martin",
-    focus: "Naming, functions, error handling, formatting",
+    focus:
+      "Naming, functions, comments, error handling, formatting — 17 chapters",
     href: "/books/clean-code/intro",
   },
   {
-    icon: "🔧",
+    icon: "🏛️",
     track: "Software Craft",
-    title: "Building Microservices",
-    author: "Sam Newman",
-    focus: "Decomposition, resilience, integration, deployment",
-    href: "/books/building-microservice/",
+    title: "Clean Architecture",
+    author: "Robert C. Martin",
+    focus:
+      "Dependency rules, component isolation, SOLID, architecture principles",
+    href: "/books/clean-architecture/intro",
+  },
+  {
+    icon: "☕",
+    track: "Java Mastery",
+    title: "Effective Java",
+    author: "Joshua Bloch",
+    focus:
+      "90 best practices: generics, lambdas, APIs, concurrency, serialization",
+    href: "/books/effective-java/introduction",
   },
   {
     icon: "📊",
     track: "Deep Foundations",
     title: "Designing Data-Intensive Applications",
     author: "Martin Kleppmann",
-    focus: "Replication, partitioning, transactions, distributed systems",
+    focus:
+      "Replication, partitioning, transactions, streams, distributed systems",
     href: "/books/ddia/intro",
   },
   {
-    icon: "🏛️",
-    track: "Deep Foundations",
-    title: "Clean Architecture",
-    author: "Robert C. Martin",
-    focus: "Dependency rules, component isolation, architecture principles",
-    href: "/books/clean-architecture/intro",
+    icon: "🔧",
+    track: "Architecture",
+    title: "Building Microservices",
+    author: "Sam Newman",
+    focus:
+      "Decomposition, resilience, integration, testing, deployment — 16 chapters",
+    href: "/books/building-microservice",
+  },
+  {
+    icon: "☕",
+    track: "Java Certification",
+    title: "OCP Java SE 21 Study Guide",
+    author: "Boyarsky & Selikoff",
+    focus:
+      "14 chapters covering exam 1Z0-830: streams, modules, concurrency, I/O",
+    href: "/books/ocp",
   },
 ];
 
@@ -920,25 +775,25 @@ const AWS_TOPICS = [
   {
     n: 2,
     title: "Lambda",
-    desc: "Invocation, cold start, layers, destinations, DLQ",
+    desc: "Invocation, cold start, layers, destinations",
     href: "/technical-knowledge/aws/lambda/",
   },
   {
     n: 3,
     title: "DynamoDB",
-    desc: "Keys, GSI/LSI, streams, DAX, single-table design",
+    desc: "Keys, GSI/LSI, streams, DAX, single-table",
     href: "/technical-knowledge/aws/dynamodb/",
   },
   {
     n: 4,
     title: "API Gateway",
-    desc: "REST vs HTTP API, authorizers, throttling, caching",
+    desc: "REST vs HTTP API, authorizers, throttling",
     href: "/technical-knowledge/aws/api-gateway/",
   },
   {
     n: 5,
     title: "S3",
-    desc: "Storage classes, lifecycle, encryption, presigned URLs",
+    desc: "Storage classes, lifecycle, encryption",
     href: "/technical-knowledge/aws/s3/",
   },
   {
@@ -973,13 +828,13 @@ const AWS_TOPICS = [
   },
   {
     n: 11,
-    title: "CI/CD (CodePipeline, CodeBuild)",
+    title: "CI/CD (CodePipeline)",
     desc: "Pipelines, buildspec, deploy actions",
     href: "/technical-knowledge/aws/cicd/",
   },
   {
     n: 12,
-    title: "Monitoring (CloudWatch, X-Ray)",
+    title: "CloudWatch & X-Ray",
     desc: "Metrics, alarms, distributed tracing, logs",
     href: "/technical-knowledge/aws/monitoring/cloudwatch",
   },
@@ -992,7 +847,7 @@ const AWS_TOPICS = [
   {
     n: 14,
     title: "Step Functions",
-    desc: "Standard vs Express, wait for callback, Map state",
+    desc: "Standard vs Express, Map state, callbacks",
     href: "/technical-knowledge/aws/step-functions/",
   },
   {
@@ -1004,51 +859,50 @@ const AWS_TOPICS = [
 ];
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   Hover helpers
+   Shared style tokens
 ───────────────────────────────────────────────────────────────────────────── */
-function useHover() {
-  const [hovered, setHovered] = useState(false);
-  return {
-    hovered,
-    onMouseEnter: () => setHovered(true),
-    onMouseLeave: () => setHovered(false),
-  };
-}
+const card: React.CSSProperties = {
+  borderRadius: 12,
+  border: "1px solid rgba(74,222,128,0.14)",
+  background: "var(--ifm-background-surface-color)",
+  textDecoration: "none",
+};
 
-function HoverCard({
-  children,
-  style,
-  href,
-}: {
-  children: React.ReactNode;
-  style: React.CSSProperties;
-  href: string;
-}) {
-  const { hovered, onMouseEnter, onMouseLeave } = useHover();
-  return (
-    // @ts-ignore
-    <Link
-      to={href}
-      style={{
-        ...style,
-        transform: hovered ? "translateY(-3px)" : "none",
-        boxShadow: hovered ? "0 8px 28px -8px rgba(74,222,128,0.22)" : "none",
-        borderColor: hovered ? "rgba(74,222,128,0.38)" : undefined,
-      }}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-    >
-      {children}
-    </Link>
-  );
-}
+const viewAllStyle: React.CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: "0.4rem",
+  marginTop: "1.5rem",
+  padding: "0.6rem 1.3rem",
+  borderRadius: 8,
+  border: "1px solid rgba(74,222,128,0.28)",
+  color: "var(--brand-blue)",
+  background: "rgba(74,222,128,0.05)",
+  textDecoration: "none",
+  fontWeight: 600,
+  fontSize: "0.85rem",
+  transition: "background 0.2s, transform 0.15s",
+};
 
 /* ─────────────────────────────────────────────────────────────────────────────
    Page component
 ───────────────────────────────────────────────────────────────────────────── */
 // @ts-ignore
 export default function Home(): React.ReactNode {
-  const { siteConfig } = useDocusaurusContext();
+  useDocusaurusContext();
+
+  /* Add / remove body class so global CSS can target search & premium btn */
+  useEffect(() => {
+    document.body.classList.add("lp-active");
+    return () => document.body.classList.remove("lp-active");
+  }, []);
+
+  /* Reveal grids */
+  const paths = useRevealGrid(LEARNING_PATHS.length, 45);
+  const dsaWks = useRevealGrid(DSA_WEEKS.length, 35);
+  const books = useRevealGrid(BOOKS.length, 55);
+  const awsTop = useRevealGrid(AWS_TOPICS.length, 40);
+  const phases = useRevealGrid(INTERVIEW_PHASES.length, 80);
 
   return (
     // @ts-ignore
@@ -1056,152 +910,445 @@ export default function Home(): React.ReactNode {
       title="Engineering Knowledge Base"
       description="Practical learning paths for Java engineers — interview prep, DSA training, engineering books, and AWS cloud certification."
     >
-      {/* Global keyframe injection */}
-      <style>{`
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.4; }
-        }
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(18px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        .lp-fadein { animation: fadeInUp 0.6s ease both; }
-        .lp-fadein-1 { animation-delay: 0.05s; }
-        .lp-fadein-2 { animation-delay: 0.15s; }
-        .lp-fadein-3 { animation-delay: 0.25s; }
-        .lp-fadein-4 { animation-delay: 0.35s; }
-      `}</style>
+      <style>{GLOBAL_STYLES}</style>
 
-      <div style={S.page}>
-        {/* ── Hero ───────────────────────────────────────────────────────────── */}
-        <section style={S.hero}>
-          <div style={S.heroBg} />
-          <div className="lp-fadein lp-fadein-1" style={S.heroEyebrow}>
-            <span style={S.heroDot} /> Engineering Knowledge Base
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "var(--ifm-background-color)",
+          overflowX: "hidden",
+        }}
+      >
+        {/* ══════════════════════════════════════════════════════════════════
+            HERO
+        ══════════════════════════════════════════════════════════════════ */}
+        <section
+          style={{
+            position: "relative",
+            padding: "7rem 1.5rem 5rem",
+            textAlign: "center",
+            overflow: "hidden",
+          }}
+        >
+          {/* Animated background orbs */}
+          <div
+            className="lp-orb"
+            style={{
+              width: 480,
+              height: 480,
+              top: "-120px",
+              left: "10%",
+              background: "rgba(74,222,128,0.07)",
+              animationDuration: "14s",
+            }}
+          />
+          <div
+            className="lp-orb"
+            style={{
+              width: 360,
+              height: 360,
+              top: "60px",
+              right: "8%",
+              background: "rgba(134,239,172,0.05)",
+              animationDuration: "18s",
+              animationDelay: "-5s",
+            }}
+          />
+          <div
+            className="lp-orb"
+            style={{
+              width: 280,
+              height: 280,
+              bottom: "-60px",
+              left: "30%",
+              background: "rgba(74,222,128,0.04)",
+              animationDuration: "22s",
+              animationDelay: "-9s",
+            }}
+          />
+
+          {/* Eyebrow */}
+          <div
+            className="lp-eyebrow"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.45rem",
+              fontSize: "0.72rem",
+              fontWeight: 700,
+              letterSpacing: "0.14em",
+              textTransform: "uppercase",
+              color: "var(--brand-blue)",
+              background: "rgba(74,222,128,0.1)",
+              border: "1px solid rgba(74,222,128,0.28)",
+              borderRadius: 999,
+              padding: "0.3rem 1rem",
+              marginBottom: "1.5rem",
+            }}
+          >
+            <span
+              style={{
+                width: 7,
+                height: 7,
+                borderRadius: "50%",
+                background: "var(--brand-blue)",
+                boxShadow: "0 0 8px var(--brand-blue)",
+                animation: "lp-pulse 2s ease-in-out infinite",
+                display: "inline-block",
+              }}
+            />
+            Engineering Knowledge Base
           </div>
-          <h1 className="lp-fadein lp-fadein-2" style={S.heroTitle}>
-            Master Software Engineering,
-            <br />
-            One Concept at a Time
-          </h1>
-          <p className="lp-fadein lp-fadein-3" style={S.heroSub}>
+
+          {/* Word-by-word banner — cycles site purpose phrases */}
+          <WordByWordBanner />
+
+          {/* Sub */}
+          <p
+            className="lp-sub"
+            style={{
+              fontSize: "1.1rem",
+              lineHeight: 1.65,
+              color: "var(--ifm-color-emphasis-700)",
+              maxWidth: 620,
+              margin: "0 auto 2.5rem",
+            }}
+          >
             A practical, structured reference for Java backend engineers.
             Covering interview preparation, DSA training, engineering books, and
             cloud certification — all in one place.
           </p>
-          <div className="lp-fadein lp-fadein-4" style={S.heroCtas}>
-            <Link to="/docs" style={S.ctaPrimary}>
+
+          {/* CTAs */}
+          <div
+            className="lp-ctas"
+            style={{
+              display: "flex",
+              gap: "1rem",
+              justifyContent: "center",
+              flexWrap: "wrap",
+            }}
+          >
+            <Link
+              to="/docs"
+              className="lp-cta-primary"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                padding: "0.85rem 2rem",
+                borderRadius: 9,
+                fontWeight: 700,
+                fontSize: "0.95rem",
+                background: "var(--gradient-brand)",
+                color: "#0a1020",
+                textDecoration: "none",
+                boxShadow: "0 0 22px -6px rgba(74,222,128,0.5)",
+              }}
+            >
               Start Learning →
             </Link>
             <Link
               to="/technical-knowledge/system-design/interview-framework"
-              style={S.ctaSecondary}
+              className="lp-cta-secondary"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                padding: "0.85rem 2rem",
+                borderRadius: 9,
+                fontWeight: 700,
+                fontSize: "0.95rem",
+                border: "1px solid rgba(74,222,128,0.35)",
+                color: "var(--brand-blue)",
+                background: "rgba(74,222,128,0.06)",
+                textDecoration: "none",
+              }}
             >
               Interview Prep
             </Link>
             <Link
               to="/technical-knowledge/dsa/20-week-dsa-roadmap-intro"
-              style={S.ctaSecondary}
+              className="lp-cta-secondary"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                padding: "0.85rem 2rem",
+                borderRadius: 9,
+                fontWeight: 700,
+                fontSize: "0.95rem",
+                border: "1px solid rgba(74,222,128,0.35)",
+                color: "var(--brand-blue)",
+                background: "rgba(74,222,128,0.06)",
+                textDecoration: "none",
+              }}
             >
               DSA Roadmap
             </Link>
           </div>
         </section>
 
-        {/* ── Stats strip ─────────────────────────────────────────────────── */}
-        <div style={S.statsStrip}>
+        {/* ══════════════════════════════════════════════════════════════════
+            STATS STRIP
+        ══════════════════════════════════════════════════════════════════ */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: "2.5rem",
+            flexWrap: "wrap",
+            padding: "2.5rem 1.5rem",
+            borderTop: "1px solid rgba(74,222,128,0.1)",
+            borderBottom: "1px solid rgba(74,222,128,0.1)",
+            background: "rgba(74,222,128,0.03)",
+          }}
+        >
           {[
             { num: "13+", label: "Learning Paths" },
             { num: "20", label: "DSA Weeks" },
             { num: "8", label: "Engineering Books" },
-            { num: "15+", label: "AWS DVA-C02 Topics" },
+            { num: "15+", label: "AWS Topics" },
             { num: "500+", label: "Pages of Content" },
-          ].map(({ num, label }) => (
-            <div key={label} style={S.stat}>
-              <div style={S.statNum}>{num}</div>
-              <div style={S.statLabel}>{label}</div>
+          ].map(({ num, label }, i) => (
+            <div
+              key={label}
+              style={{
+                textAlign: "center",
+                animation: `lp-fadeUp 0.5s ease ${0.8 + i * 0.08}s both`,
+              }}
+            >
+              <div className="lp-stat-num">{num}</div>
+              <div
+                style={{
+                  fontSize: "0.75rem",
+                  fontWeight: 600,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  color: "var(--ifm-color-emphasis-600)",
+                  marginTop: "0.25rem",
+                }}
+              >
+                {label}
+              </div>
             </div>
           ))}
         </div>
 
-        {/* ═══════════════════════════════════════════════════════════════════
+        {/* ══════════════════════════════════════════════════════════════════
             SECTION 1 — Learning Paths
-        ═══════════════════════════════════════════════════════════════════ */}
-        <section style={S.section}>
-          <div style={S.sectionLabel}>🗺️ Overview</div>
-          <h2 style={S.sectionTitle}>Learning Paths</h2>
-          <p style={S.sectionDesc}>
-            Choose your domain. Each path takes you from fundamentals through to
+        ══════════════════════════════════════════════════════════════════ */}
+        <section
+          style={{ maxWidth: 1100, margin: "0 auto", padding: "5rem 1.5rem" }}
+        >
+          <div className="lp-section-label">🗺️ Overview</div>
+          <h2 className="lp-section-title">Learning Paths</h2>
+          <p
+            style={{
+              color: "var(--ifm-color-emphasis-700)",
+              fontSize: "1rem",
+              lineHeight: 1.65,
+              maxWidth: 580,
+              marginBottom: "2.5rem",
+            }}
+          >
+            Choose your domain. Each path builds from fundamentals to
             senior-level topics with practical examples, interview questions,
             and real-world context.
           </p>
-          <div style={S.pathGrid}>
-            {LEARNING_PATHS.map((p) => (
-              <HoverCard key={p.name} href={p.href} style={S.pathCard}>
-                <span style={S.pathIcon}>{p.icon}</span>
-                <span style={S.pathName}>{p.name}</span>
-                <span style={S.pathDesc}>{p.desc}</span>
-                <span style={S.pathTag}>{p.tag}</span>
-              </HoverCard>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(210px, 1fr))",
+              gap: "1rem",
+            }}
+          >
+            {LEARNING_PATHS.map((p, i) => (
+              <Link
+                key={p.name}
+                to={p.href}
+                ref={paths.setRef(i) as any}
+                className={`lp-hcard ${paths.visible[i] ? "lp-card-visible" : "lp-card-hidden"}`}
+                style={{
+                  ...card,
+                  padding: "1.4rem 1.2rem",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.5rem",
+                }}
+              >
+                <span style={{ fontSize: "1.6rem", lineHeight: 1 }}>
+                  {p.icon}
+                </span>
+                <span
+                  style={{
+                    fontWeight: 700,
+                    fontSize: "0.95rem",
+                    color: "var(--ifm-font-color-base)",
+                  }}
+                >
+                  {p.name}
+                </span>
+                <span
+                  style={{
+                    fontSize: "0.78rem",
+                    color: "var(--ifm-color-emphasis-600)",
+                    lineHeight: 1.5,
+                  }}
+                >
+                  {p.desc}
+                </span>
+                <span
+                  style={{
+                    display: "inline-block",
+                    fontSize: "0.65rem",
+                    fontWeight: 700,
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    padding: "0.18rem 0.55rem",
+                    borderRadius: 999,
+                    background: "rgba(74,222,128,0.12)",
+                    color: "var(--brand-blue)",
+                    border: "1px solid rgba(74,222,128,0.22)",
+                    alignSelf: "flex-start",
+                  }}
+                >
+                  {p.tag}
+                </span>
+              </Link>
             ))}
           </div>
         </section>
 
-        {/* ═══════════════════════════════════════════════════════════════════
-            SECTION 2 — Interview Preparation Roadmap
-        ═══════════════════════════════════════════════════════════════════ */}
-        <div style={S.sectionAlt}>
-          <section style={S.section}>
-            <div style={S.sectionLabel}>💼 Interview Prep</div>
-            <h2 style={S.sectionTitle}>Interview Preparation Roadmap</h2>
-            <p style={S.sectionDesc}>
+        {/* ══════════════════════════════════════════════════════════════════
+            SECTION 2 — Interview Prep Roadmap
+        ══════════════════════════════════════════════════════════════════ */}
+        <div
+          style={{
+            background: "rgba(74,222,128,0.02)",
+            borderTop: "1px solid rgba(74,222,128,0.08)",
+            borderBottom: "1px solid rgba(74,222,128,0.08)",
+          }}
+        >
+          <section
+            style={{ maxWidth: 1100, margin: "0 auto", padding: "5rem 1.5rem" }}
+          >
+            <div className="lp-section-label">💼 Interview Prep</div>
+            <h2 className="lp-section-title">Interview Preparation Roadmap</h2>
+            <p
+              style={{
+                color: "var(--ifm-color-emphasis-700)",
+                fontSize: "1rem",
+                lineHeight: 1.65,
+                maxWidth: 580,
+                marginBottom: "2.5rem",
+              }}
+            >
               A three-phase curriculum for engineers targeting backend, system
-              design, and Java/Spring interviews. Follow the phases in order to
-              build deep, connected understanding.
+              design, and Java/Spring interviews.
             </p>
-
-            <div style={S.phaseGrid}>
-              {INTERVIEW_PHASES.map(({ phase, items }) => (
-                <div key={phase} style={S.phaseCard}>
-                  <div style={S.phaseHeader}>
-                    <p style={S.phaseHeaderTitle}>{phase}</p>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+                gap: "1.25rem",
+                marginBottom: "2rem",
+              }}
+            >
+              {INTERVIEW_PHASES.map(({ phase, items }, pi) => (
+                <div
+                  key={phase}
+                  ref={phases.setRef(pi) as any}
+                  className={`lp-hcard ${phases.visible[pi] ? "lp-card-visible" : "lp-card-hidden"}`}
+                  style={{ ...card, overflow: "hidden" }}
+                >
+                  <div
+                    style={{
+                      padding: "1rem 1.2rem 0.75rem",
+                      borderBottom: "1px solid rgba(74,222,128,0.1)",
+                      background: "rgba(74,222,128,0.06)",
+                    }}
+                  >
+                    <p
+                      style={{
+                        fontWeight: 800,
+                        fontSize: "0.85rem",
+                        letterSpacing: "0.05em",
+                        textTransform: "uppercase",
+                        color: "var(--brand-blue)",
+                        margin: 0,
+                      }}
+                    >
+                      {phase}
+                    </p>
                   </div>
-                  <div style={S.phaseBody}>
+                  <div style={{ padding: "1rem 1.2rem" }}>
                     {items.map((item) => (
-                      <HoverCard
+                      <Link
                         key={item.title}
-                        href={item.href}
+                        to={item.href}
                         style={{
-                          ...S.phaseItem,
+                          display: "flex",
+                          alignItems: "flex-start",
+                          gap: "0.6rem",
+                          padding: "0.45rem 0",
                           borderBottom: "1px solid rgba(74,222,128,0.06)",
+                          textDecoration: "none",
+                          transition: "opacity 0.15s",
                         }}
                       >
-                        <span style={S.phaseNum}>{item.n}</span>
-                        <span style={S.phaseItemText}>
-                          <span style={S.phaseItemTitle}>{item.title}</span>
-                          <span style={S.phaseItemSub}>{item.sub}</span>
+                        <span
+                          style={{
+                            width: 22,
+                            height: 22,
+                            borderRadius: "50%",
+                            background: "rgba(74,222,128,0.12)",
+                            border: "1px solid rgba(74,222,128,0.22)",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontSize: "0.62rem",
+                            fontWeight: 800,
+                            color: "var(--brand-blue)",
+                            flexShrink: 0,
+                            marginTop: 1,
+                          }}
+                        >
+                          {item.n}
                         </span>
-                      </HoverCard>
+                        <span>
+                          <span
+                            style={{
+                              fontSize: "0.82rem",
+                              fontWeight: 600,
+                              color: "var(--ifm-font-color-base)",
+                              display: "block",
+                            }}
+                          >
+                            {item.title}
+                          </span>
+                          <span
+                            style={{
+                              fontSize: "0.7rem",
+                              color: "var(--ifm-color-emphasis-600)",
+                            }}
+                          >
+                            {item.sub}
+                          </span>
+                        </span>
+                      </Link>
                     ))}
                   </div>
                 </div>
               ))}
             </div>
 
-            {/* Interview tips row */}
-            <div
-              style={{
-                display: "flex",
-                gap: "1rem",
-                flexWrap: "wrap" as const,
-                marginTop: "1rem",
-              }}
-            >
+            {/* Tips row */}
+            <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
               {[
                 {
                   icon: "✅",
-                  text: "Explain design choices with at least one alternative",
+                  text: "Explain choices with at least one alternative",
                 },
                 {
                   icon: "📈",
@@ -1211,10 +1358,7 @@ export default function Home(): React.ReactNode {
                   icon: "🔧",
                   text: "Connect concept → trade-off → operations",
                 },
-                {
-                  icon: "🚨",
-                  text: "Avoid definition-only answers — show real reasoning",
-                },
+                { icon: "🚨", text: "Avoid definition-only answers" },
               ].map(({ icon, text }) => (
                 <div
                   key={text}
@@ -1222,72 +1366,143 @@ export default function Home(): React.ReactNode {
                     display: "flex",
                     alignItems: "center",
                     gap: "0.5rem",
-                    padding: "0.6rem 1rem",
-                    borderRadius: "8px",
+                    padding: "0.55rem 0.9rem",
+                    borderRadius: 8,
                     border: "1px solid rgba(74,222,128,0.12)",
                     background: "rgba(74,222,128,0.04)",
                     fontSize: "0.78rem",
                     color: "var(--ifm-color-emphasis-700)",
-                    flex: "1 1 220px",
+                    flex: "1 1 200px",
                   }}
                 >
                   <span>{icon}</span> {text}
                 </div>
               ))}
             </div>
-
-            <Link to="/docs" style={S.viewAll}>
+            <Link to="/docs" style={viewAllStyle}>
               View Full Interview Roadmap →
             </Link>
           </section>
         </div>
 
-        {/* ═══════════════════════════════════════════════════════════════════
+        {/* ══════════════════════════════════════════════════════════════════
             SECTION 3 — DSA 20-Week Roadmap
-        ═══════════════════════════════════════════════════════════════════ */}
-        <section style={S.section}>
-          <div style={S.sectionLabel}>📊 DSA Training</div>
-          <h2 style={S.sectionTitle}>20-Week DSA Coding Roadmap</h2>
-          <p style={S.sectionDesc}>
-            A structured algorithm curriculum from arrays through graph theory
-            and dynamic programming. Each week focuses on one core pattern with
-            progressive difficulty and real interview examples.
+        ══════════════════════════════════════════════════════════════════ */}
+        <section
+          style={{ maxWidth: 1100, margin: "0 auto", padding: "5rem 1.5rem" }}
+        >
+          <div className="lp-section-label">📊 DSA Training</div>
+          <h2 className="lp-section-title">20-Week DSA Coding Roadmap</h2>
+          <p
+            style={{
+              color: "var(--ifm-color-emphasis-700)",
+              fontSize: "1rem",
+              lineHeight: 1.65,
+              maxWidth: 580,
+              marginBottom: "2.5rem",
+            }}
+          >
+            A structured algorithm curriculum from arrays to graph theory and
+            dynamic programming. Each week targets one core pattern with
+            progressive difficulty.
           </p>
-          <div style={S.weekGrid}>
-            {DSA_WEEKS.map(({ wk, title, sub, href }) => (
-              <HoverCard key={wk} href={href} style={S.weekCard}>
-                <span style={S.weekBadge}>Week {wk}</span>
-                <span style={S.weekTitle}>{title}</span>
-                <span style={S.weekSub}>{sub}</span>
-              </HoverCard>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(175px, 1fr))",
+              gap: "0.75rem",
+            }}
+          >
+            {DSA_WEEKS.map(({ wk, title, sub, href }, i) => (
+              <Link
+                key={wk}
+                to={href}
+                ref={dsaWks.setRef(i) as any}
+                className={`lp-hcard ${dsaWks.visible[i] ? "lp-card-visible" : "lp-card-hidden"}`}
+                style={{
+                  ...card,
+                  borderRadius: 10,
+                  padding: "0.9rem 1rem",
+                  display: "block",
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: "0.62rem",
+                    fontWeight: 800,
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                    color: "var(--brand-blue)",
+                    opacity: 0.85,
+                    display: "block",
+                    marginBottom: "0.3rem",
+                  }}
+                >
+                  Week {wk}
+                </span>
+                <span
+                  style={{
+                    fontSize: "0.82rem",
+                    fontWeight: 700,
+                    color: "var(--ifm-font-color-base)",
+                    lineHeight: 1.35,
+                    display: "block",
+                  }}
+                >
+                  {title}
+                </span>
+                <span
+                  style={{
+                    fontSize: "0.68rem",
+                    color: "var(--ifm-color-emphasis-600)",
+                    marginTop: "0.25rem",
+                    display: "block",
+                  }}
+                >
+                  {sub}
+                </span>
+              </Link>
             ))}
           </div>
           <Link
             to="/technical-knowledge/dsa/20-week-dsa-roadmap-intro"
-            style={S.viewAll}
+            style={viewAllStyle}
           >
             View Full DSA Curriculum →
           </Link>
         </section>
 
-        {/* ═══════════════════════════════════════════════════════════════════
+        {/* ══════════════════════════════════════════════════════════════════
             SECTION 4 — Engineering Books
-        ═══════════════════════════════════════════════════════════════════ */}
-        <div style={S.sectionAlt}>
-          <section style={S.section}>
-            <div style={S.sectionLabel}>📚 Books</div>
-            <h2 style={S.sectionTitle}>Engineering Books</h2>
-            <p style={S.sectionDesc}>
+        ══════════════════════════════════════════════════════════════════ */}
+        <div
+          style={{
+            background: "rgba(74,222,128,0.02)",
+            borderTop: "1px solid rgba(74,222,128,0.08)",
+            borderBottom: "1px solid rgba(74,222,128,0.08)",
+          }}
+        >
+          <section
+            style={{ maxWidth: 1100, margin: "0 auto", padding: "5rem 1.5rem" }}
+          >
+            <div className="lp-section-label">📚 Books</div>
+            <h2 className="lp-section-title">Engineering Books</h2>
+            <p
+              style={{
+                color: "var(--ifm-color-emphasis-700)",
+                fontSize: "1rem",
+                lineHeight: 1.65,
+                maxWidth: 580,
+                marginBottom: "1.75rem",
+              }}
+            >
               Distilled notes and key takeaways from the most impactful
-              engineering books — organized by track so you read the right book
-              at the right stage of your career.
+              engineering books — organized by track.
             </p>
-
-            {/* Reading order tip */}
             <div
               style={{
                 padding: "0.9rem 1.2rem",
-                borderRadius: "10px",
+                borderRadius: 10,
                 border: "1px solid rgba(74,222,128,0.2)",
                 background: "rgba(74,222,128,0.05)",
                 marginBottom: "1.75rem",
@@ -1299,67 +1514,231 @@ export default function Home(): React.ReactNode {
               <strong style={{ color: "var(--brand-blue)" }}>
                 💡 Recommended reading order —
               </strong>{" "}
-              <strong>Interview track:</strong> Cracking the Coding Interview →
-              System Design Vol.1 → Vol.2 &nbsp;|&nbsp;
-              <strong>Engineering depth:</strong> Effective Java → Clean Code →
-              Building Microservices → DDIA
+              <strong>Software Craft:</strong> Clean Code → Clean Architecture → Effective Java
+              &nbsp;|&nbsp;
+              <strong>Deep Dive:</strong> DDIA → Building Microservices → OCP Java SE 21
             </div>
-
-            <div style={S.bookGrid}>
-              {BOOKS.map(({ icon, track, title, author, focus, href }) => (
-                <HoverCard key={title} href={href} style={S.bookCard}>
-                  <div style={S.bookCover}>{icon}</div>
-                  <div style={S.bookInfo}>
-                    <span style={S.bookTrack}>{track}</span>
-                    <span style={S.bookTitle}>{title}</span>
-                    <span style={S.bookAuthor}>{author}</span>
-                    <span style={S.bookFocus}>{focus}</span>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
+                gap: "1.1rem",
+              }}
+            >
+              {BOOKS.map(({ icon, track, title, author, focus, href }, i) => (
+                <Link
+                  key={title}
+                  to={href}
+                  ref={books.setRef(i) as any}
+                  className={`lp-hcard ${books.visible[i] ? "lp-card-visible" : "lp-card-hidden"}`}
+                  style={{
+                    ...card,
+                    display: "flex",
+                    gap: "1rem",
+                    padding: "1.1rem 1.2rem",
+                    alignItems: "flex-start",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: "2rem",
+                      lineHeight: 1,
+                      flexShrink: 0,
+                      width: 44,
+                      height: 56,
+                      borderRadius: 5,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      background: "rgba(74,222,128,0.08)",
+                      border: "1px solid rgba(74,222,128,0.18)",
+                    }}
+                  >
+                    {icon}
                   </div>
-                </HoverCard>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <span
+                      style={{
+                        fontSize: "0.6rem",
+                        fontWeight: 700,
+                        letterSpacing: "0.1em",
+                        textTransform: "uppercase",
+                        color: "var(--brand-blue)",
+                        marginBottom: "0.3rem",
+                        display: "block",
+                      }}
+                    >
+                      {track}
+                    </span>
+                    <span
+                      style={{
+                        fontSize: "0.85rem",
+                        fontWeight: 700,
+                        color: "var(--ifm-font-color-base)",
+                        lineHeight: 1.35,
+                        marginBottom: "0.25rem",
+                        display: "block",
+                      }}
+                    >
+                      {title}
+                    </span>
+                    <span
+                      style={{
+                        fontSize: "0.7rem",
+                        color: "var(--ifm-color-emphasis-600)",
+                        display: "block",
+                        marginBottom: "0.25rem",
+                      }}
+                    >
+                      {author}
+                    </span>
+                    <span
+                      style={{
+                        fontSize: "0.7rem",
+                        color: "var(--ifm-color-emphasis-600)",
+                        lineHeight: 1.4,
+                        display: "block",
+                      }}
+                    >
+                      {focus}
+                    </span>
+                  </div>
+                </Link>
               ))}
             </div>
           </section>
         </div>
 
-        {/* ═══════════════════════════════════════════════════════════════════
+        {/* ══════════════════════════════════════════════════════════════════
             SECTION 5 — Cloud Certifications
-        ═══════════════════════════════════════════════════════════════════ */}
-        <section style={S.section}>
-          <div style={S.sectionLabel}>☁️ Cloud Certs</div>
-          <h2 style={S.sectionTitle}>Cloud Certifications — AWS DVA-C02</h2>
-          <p style={S.sectionDesc}>
+        ══════════════════════════════════════════════════════════════════ */}
+        <section
+          style={{ maxWidth: 1100, margin: "0 auto", padding: "5rem 1.5rem" }}
+        >
+          <div className="lp-section-label">☁️ Cloud Certs</div>
+          <h2 className="lp-section-title">
+            Cloud Certifications — AWS DVA-C02
+          </h2>
+          <p
+            style={{
+              color: "var(--ifm-color-emphasis-700)",
+              fontSize: "1rem",
+              lineHeight: 1.65,
+              maxWidth: 580,
+              marginBottom: "2rem",
+            }}
+          >
             Targeted preparation for the{" "}
-            <strong>AWS Certified Developer – Associate (DVA-C02)</strong> exam.
-            Each topic page includes exam tips, common traps, and scenario-based
-            practice questions.
+            <strong>AWS Certified Developer – Associate (DVA-C02)</strong> exam
+            with exam tips, traps, and scenario-based practice questions on
+            every topic page.
           </p>
 
           {/* Domain weight pills */}
-          <div style={S.domainRow}>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "0.75rem",
+              marginBottom: "2rem",
+            }}
+          >
             {AWS_DOMAINS.map(({ label, weight }) => (
-              <div key={label} style={S.domainPill}>
-                <span style={S.domainName}>{label}</span>
-                <span style={S.domainWeight}>{weight}</span>
+              <div
+                key={label}
+                style={{
+                  padding: "0.65rem 1.1rem",
+                  borderRadius: 10,
+                  border: "1px solid rgba(74,222,128,0.2)",
+                  background: "rgba(74,222,128,0.06)",
+                  fontSize: "0.8rem",
+                }}
+              >
+                <span
+                  style={{
+                    fontWeight: 700,
+                    color: "var(--ifm-font-color-base)",
+                    display: "block",
+                    marginBottom: "0.15rem",
+                  }}
+                >
+                  {label}
+                </span>
+                <span
+                  style={{
+                    fontSize: "1.15rem",
+                    fontWeight: 900,
+                    color: "var(--brand-blue)",
+                  }}
+                >
+                  {weight}
+                </span>
               </div>
             ))}
           </div>
 
-          <div style={S.awsGrid}>
-            {AWS_TOPICS.map(({ n, title, desc, href }) => (
-              <HoverCard key={title} href={href} style={S.awsCard}>
-                <span style={S.awsNum}>Topic {String(n).padStart(2, "0")}</span>
-                <span style={S.awsTitle}>{title}</span>
-                <span style={S.awsDesc}>{desc}</span>
-              </HoverCard>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(245px, 1fr))",
+              gap: "0.85rem",
+            }}
+          >
+            {AWS_TOPICS.map(({ n, title, desc, href }, i) => (
+              <Link
+                key={title}
+                to={href}
+                ref={awsTop.setRef(i) as any}
+                className={`lp-hcard ${awsTop.visible[i] ? "lp-card-visible" : "lp-card-hidden"}`}
+                style={{
+                  ...card,
+                  borderRadius: 10,
+                  padding: "1rem 1.1rem",
+                  display: "block",
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: "0.6rem",
+                    fontWeight: 800,
+                    letterSpacing: "0.1em",
+                    color: "var(--brand-blue)",
+                    opacity: 0.75,
+                    display: "block",
+                    marginBottom: "0.25rem",
+                  }}
+                >
+                  Topic {String(n).padStart(2, "0")}
+                </span>
+                <span
+                  style={{
+                    fontSize: "0.85rem",
+                    fontWeight: 700,
+                    color: "var(--ifm-font-color-base)",
+                    marginBottom: "0.2rem",
+                    display: "block",
+                  }}
+                >
+                  {title}
+                </span>
+                <span
+                  style={{
+                    fontSize: "0.7rem",
+                    color: "var(--ifm-color-emphasis-600)",
+                    lineHeight: 1.45,
+                  }}
+                >
+                  {desc}
+                </span>
+              </Link>
             ))}
           </div>
 
-          {/* High-priority callout */}
           <div
             style={{
               marginTop: "1.75rem",
               padding: "1rem 1.25rem",
-              borderRadius: "10px",
+              borderRadius: 10,
               border: "1px solid rgba(74,222,128,0.22)",
               background: "rgba(74,222,128,0.05)",
             }}
@@ -1381,36 +1760,93 @@ export default function Home(): React.ReactNode {
               CloudFormation (change sets, rollback triggers, cross-stack refs)
             </p>
           </div>
-
-          <Link to="/aws" style={S.viewAll}>
+          <Link to="/aws" style={viewAllStyle}>
             View Full AWS Study Path →
           </Link>
         </section>
 
-        {/* ═══════════════════════════════════════════════════════════════════
-            CTA Banner
-        ═══════════════════════════════════════════════════════════════════ */}
-        <div style={S.ctaBanner}>
-          <h2 style={S.ctaBannerTitle}>Ready to level up?</h2>
-          <p style={S.ctaBannerSub}>
-            Pick a learning path and start building depth. Every page connects
-            concepts to real engineering decisions, interview scenarios, and
-            production systems.
+        {/* ══════════════════════════════════════════════════════════════════
+            CTA BANNER
+        ══════════════════════════════════════════════════════════════════ */}
+        <div
+          style={{
+            textAlign: "center",
+            padding: "5rem 1.5rem",
+            background:
+              "radial-gradient(ellipse 70% 60% at 50% 50%, rgba(74,222,128,0.08) 0%, transparent 70%)",
+            borderTop: "1px solid rgba(74,222,128,0.1)",
+          }}
+        >
+          <h2
+            style={{
+              fontSize: "clamp(1.8rem, 4vw, 3rem)",
+              fontWeight: 900,
+              letterSpacing: "-0.04em",
+              lineHeight: 1.15,
+              marginBottom: "1rem",
+              background: "var(--gradient-brand)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
+            Ready to level up?
+          </h2>
+          <p
+            style={{
+              color: "var(--ifm-color-emphasis-700)",
+              maxWidth: 500,
+              margin: "0 auto 2rem",
+              lineHeight: 1.65,
+            }}
+          >
+            Pick a path and start building depth. Every page connects concepts
+            to real engineering decisions, interview scenarios, and production
+            systems.
           </p>
           <div
             style={{
               display: "flex",
               gap: "1rem",
               justifyContent: "center",
-              flexWrap: "wrap" as const,
+              flexWrap: "wrap",
             }}
           >
-            <Link to="/docs" style={S.ctaPrimary}>
+            <Link
+              to="/docs"
+              className="lp-cta-primary"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                padding: "0.85rem 2rem",
+                borderRadius: 9,
+                fontWeight: 700,
+                fontSize: "0.95rem",
+                background: "var(--gradient-brand)",
+                color: "#0a1020",
+                textDecoration: "none",
+                boxShadow: "0 0 22px -6px rgba(74,222,128,0.5)",
+              }}
+            >
               Get Started →
             </Link>
             <Link
               to="/technical-knowledge/system-design/interview-framework"
-              style={S.ctaSecondary}
+              className="lp-cta-secondary"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                padding: "0.85rem 2rem",
+                borderRadius: 9,
+                fontWeight: 700,
+                fontSize: "0.95rem",
+                border: "1px solid rgba(74,222,128,0.35)",
+                color: "var(--brand-blue)",
+                background: "rgba(74,222,128,0.06)",
+                textDecoration: "none",
+              }}
             >
               Interview Framework
             </Link>
