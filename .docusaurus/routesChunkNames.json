@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-a71": {
+  "/-aeb": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-552": {
+  "/-747": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -4957,7 +4957,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-79b": {
+  "/-607": {
     "__comp": "a94703ab"
   },
   "/aws-7a1": {
@@ -6224,7 +6224,7 @@
     "__comp": "17896441",
     "content": "518f0c18"
   },
-  "/technical-knowledge/dsa/week-1-arrays-strings-prefix-sums-109": {
+  "/technical-knowledge/dsa/week-1-arrays-strings-prefix-sums-edf": {
     "__comp": "17896441",
     "content": "23321538"
   },
@@ -6268,7 +6268,7 @@
     "__comp": "17896441",
     "content": "ce68f421"
   },
-  "/technical-knowledge/dsa/week-2-two-pointers-sliding-window-1d6": {
+  "/technical-knowledge/dsa/week-2-two-pointers-sliding-window-522": {
     "__comp": "17896441",
     "content": "c1cfa289"
   },
@@ -6276,11 +6276,11 @@
     "__comp": "17896441",
     "content": "45cb3dd1"
   },
-  "/technical-knowledge/dsa/week-3-linked-lists-pointers-511": {
+  "/technical-knowledge/dsa/week-3-linked-lists-pointers-a7e": {
     "__comp": "17896441",
     "content": "4ad1338f"
   },
-  "/technical-knowledge/dsa/week-4-hash-tables-sets-c7c": {
+  "/technical-knowledge/dsa/week-4-hash-tables-sets-573": {
     "__comp": "17896441",
     "content": "6877d740"
   },
@@ -6972,7 +6972,7 @@
     "__comp": "17896441",
     "content": "aebb600c"
   },
-  "/technical-knowledge/security/cookies-vs-sessions-vs-jwt-46a": {
+  "/technical-knowledge/security/cookies-vs-sessions-vs-jwt-8de": {
     "__comp": "17896441",
     "content": "991c719a"
   },

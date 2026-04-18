@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'a71'),
+    component: ComponentCreator('/', 'aeb'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '552'),
+        component: ComponentCreator('/', '747'),
         routes: [
           {
             path: '/tags',
@@ -6187,7 +6187,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '79b'),
+            component: ComponentCreator('/', '607'),
             routes: [
               {
                 path: '/aws',
@@ -8082,7 +8082,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/dsa/week-1-arrays-strings-prefix-sums',
-                component: ComponentCreator('/technical-knowledge/dsa/week-1-arrays-strings-prefix-sums', '109'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-1-arrays-strings-prefix-sums', 'edf'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -8148,7 +8148,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/dsa/week-2-two-pointers-sliding-window',
-                component: ComponentCreator('/technical-knowledge/dsa/week-2-two-pointers-sliding-window', '1d6'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-2-two-pointers-sliding-window', '522'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -8160,13 +8160,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/dsa/week-3-linked-lists-pointers',
-                component: ComponentCreator('/technical-knowledge/dsa/week-3-linked-lists-pointers', '511'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-3-linked-lists-pointers', 'a7e'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-4-hash-tables-sets',
-                component: ComponentCreator('/technical-knowledge/dsa/week-4-hash-tables-sets', 'c7c'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-4-hash-tables-sets', '573'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -9202,7 +9202,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/security/cookies-vs-sessions-vs-jwt',
-                component: ComponentCreator('/technical-knowledge/security/cookies-vs-sessions-vs-jwt', '46a'),
+                component: ComponentCreator('/technical-knowledge/security/cookies-vs-sessions-vs-jwt', '8de'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
