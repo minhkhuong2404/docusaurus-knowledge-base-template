@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'aeb'),
+    component: ComponentCreator('/', '13f'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '747'),
+        component: ComponentCreator('/', '368'),
         routes: [
           {
             path: '/tags',
@@ -6187,7 +6187,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '607'),
+            component: ComponentCreator('/', '4e5'),
             routes: [
               {
                 path: '/aws',
@@ -8088,31 +8088,31 @@ export default [
               },
               {
                 path: '/technical-knowledge/dsa/week-10-recursion-backtracking',
-                component: ComponentCreator('/technical-knowledge/dsa/week-10-recursion-backtracking', 'c07'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-10-recursion-backtracking', 'a4c'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-11-intervals-sweep-line',
-                component: ComponentCreator('/technical-knowledge/dsa/week-11-intervals-sweep-line', '8b6'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-11-intervals-sweep-line', 'dc4'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-12-heaps-greedy',
-                component: ComponentCreator('/technical-knowledge/dsa/week-12-heaps-greedy', '1d1'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-12-heaps-greedy', '6fc'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-13-dynamic-programming-1d',
-                component: ComponentCreator('/technical-knowledge/dsa/week-13-dynamic-programming-1d', '125'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-13-dynamic-programming-1d', 'c74'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-14-dynamic-programming-2d',
-                component: ComponentCreator('/technical-knowledge/dsa/week-14-dynamic-programming-2d', '9b2'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-14-dynamic-programming-2d', 'c30'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -8172,31 +8172,31 @@ export default [
               },
               {
                 path: '/technical-knowledge/dsa/week-5-stacks-queues-monotonic',
-                component: ComponentCreator('/technical-knowledge/dsa/week-5-stacks-queues-monotonic', '560'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-5-stacks-queues-monotonic', '606'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-6-binary-trees-bst',
-                component: ComponentCreator('/technical-knowledge/dsa/week-6-binary-trees-bst', 'd9d'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-6-binary-trees-bst', 'dca'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-7-graph-foundations',
-                component: ComponentCreator('/technical-knowledge/dsa/week-7-graph-foundations', '59b'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-7-graph-foundations', 'ba7'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-8-advanced-graph-concepts',
-                component: ComponentCreator('/technical-knowledge/dsa/week-8-advanced-graph-concepts', '7c3'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-8-advanced-graph-concepts', 'b61'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-9-binary-search',
-                component: ComponentCreator('/technical-knowledge/dsa/week-9-binary-search', 'e8e'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-9-binary-search', '580'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
