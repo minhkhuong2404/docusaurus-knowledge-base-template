@@ -18,6 +18,8 @@ tags:
 
 > **Exam:** 1Z0-830 — 50 questions, 90 minutes, passing score: 68%
 
+This page is the **cross-chapter cram sheet** (mnemonics, matrices, top traps). For topic explanations and **chapter-specific** exam tables and traps, work through the numbered chapters from the [OCP introduction](./intro.md) (e.g. [Chapter 1](./chapters/chapter-01.md) through [Chapter 14](./chapters/chapter-14.md)).
+
 ---
 
 ## High-Frequency Exam Topics

@@ -330,6 +330,15 @@ CyclicBarrier barrier = new CyclicBarrier(3, () -> System.out.println("All ready
 | `ReentrantLock` | Must unlock in `finally`; supports `tryLock()` and `lockInterruptibly()` |
 | `CountDownLatch` | One-time; counts down to zero, then all waiting threads proceed |
 | `CyclicBarrier` | Reusable; all threads must reach barrier before any proceed |
+| `CompletableFuture` | Async composition: `supplyAsync`, `thenApply`, `thenAccept`, `exceptionally` |
+| `ForkJoinPool.commonPool()` | Shared by parallel streams; parallelism tied to available processors |
+| `parallel()` / `parallelStream()` | Uses common pool; avoid blocking/synchronized work in tasks |
+| `Thread.interrupted()` | Clears interrupted flag; static `Thread.interrupted()` vs instance `isInterrupted()` |
+| `ExecutorService.invokeAll` | Submits collection of `Callable`s; blocks until all complete or timeout |
+| `ScheduledExecutorService` | `schedule`, `scheduleAtFixedRate`, `scheduleWithFixedDelay` |
+| `Thread.setDaemon(true)` | JVM exits when only daemon threads remain |
+| `synchronized` reentrancy | Same thread can re-acquire lock it holds |
+| `ReadWriteLock` | Multiple readers OR one writer — `ReentrantReadWriteLock` |
 
 ---
 
@@ -419,7 +428,40 @@ if (!map.containsKey("key")) {       // check
 // ✅ Use atomic operation:
 map.computeIfAbsent("key", k -> computeValue());
 ```
+
+**Trap 9 — `ExecutorService.submit(Runnable)` return value:**
+```java
+Future<?> f = exec.submit(() -> { work(); });
+f.get(); // returns null for Runnable — use Callable for results
+```
+
+**Trap 10 — `InterruptedException` clears interrupt status:**
+```java
+try { Thread.sleep(1000); }
+catch (InterruptedException e) {
+    Thread.currentThread().interrupt(); // ✅ restore interrupt flag
+}
+```
+
+**Trap 11 — `parallelStream()` on small data:**
+```java
+List.of(1,2,3).parallelStream().map(n -> n * 2); // overhead may dominate — not always faster
+```
 :::
+
+### Exam vignettes
+
+```java
+// Vignette 1 — Virtual thread factory
+try (var ex = Executors.newVirtualThreadPerTaskExecutor()) {
+    ex.submit(() -> System.out.println(Thread.currentThread().isVirtual()));
+}
+
+// Vignette 2 — latch
+CountDownLatch latch = new CountDownLatch(1);
+new Thread(() -> { doWork(); latch.countDown(); }).start();
+latch.await();
+```
 
 :::tip[Spring/Senior Relevance]
 - Spring's `@Async` methods run in a thread pool — `Future` and `CompletableFuture` are the return types; understanding `ExecutionException` unwrapping is key for proper error handling in async Spring services.

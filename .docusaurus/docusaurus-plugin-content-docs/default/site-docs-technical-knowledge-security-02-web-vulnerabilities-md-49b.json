@@ -84,7 +84,7 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Cookies, Sessions, JWT",
+    "title": "Cookies, Sessions & JWT",
     "permalink": "/technical-knowledge/security/cookies-vs-sessions-vs-jwt"
   },
   "next": {

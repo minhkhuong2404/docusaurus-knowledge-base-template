@@ -253,6 +253,14 @@ Top-down:   app → [auto-module lib1] → [auto-module lib2]
 | `jpackage` | Creates platform native installer (exe, dmg, deb, rpm) |
 | `ServiceLoader` | Runtime discovery via `uses`/`provides` directives |
 | `module-info.java` | Must be at the **root** of the module's source directory |
+| `java.base` | Implicitly required by every module — need not be declared |
+| Aggregation module | `requires transitive` on several modules to bundle API surface |
+| `--add-reads` / `--add-exports` | JVM flags to break encapsulation at launch (exam: escape hatches) |
+| Classpath vs module-path | Classpath = unnamed module; module-path = named or automatic |
+| `provides` with `with` | Implementation class must be accessible to `ServiceLoader` |
+| `exports` to no module | Same as unqualified `exports` — all readable modules |
+| `open module` | Shorthand: entire module open for deep reflection |
+| `jdeps --generate-module-info` | Suggests `module-info` from bytecode (migration aid) |
 
 ---
 
@@ -334,7 +342,32 @@ jlink --module-path $JAVA_HOME/jmods:mods \
       --add-modules com.myapp \
       --output runtime-image
 ```
+
+**Trap 8 — Named module cannot `requires` unnamed module:**
+```java
+// Classpath JARs are unnamed — a named module cannot declare requires on them
+// Workaround: move dependency to module-path as automatic module or repackage
+```
+
+**Trap 9 — `opens` package does not grant compile-time access:**
+```java
+// opens com.app.internal — other modules may reflect at runtime but cannot import types at compile time
+```
+
+**Trap 10 — `provides` interface must be service type (often interface or abstract class):**
+```java
+// provides com.example.spi.Payment with com.example.impl.PayPal;
+// PayPal must be concrete, public, and have suitable provider constructor
+```
 :::
+
+### Exam vignettes
+
+```java
+// Vignette — implied readability
+// module lib { requires transitive java.sql; }
+// module app { requires lib; } // app can reference java.sql types without requires java.sql
+```
 
 :::tip[Spring/Senior Relevance]
 - Spring Boot 3.x added experimental JPMS support — `opens` directives are required for Spring's reflection-based dependency injection to work on `private` fields in your `@Component` classes.

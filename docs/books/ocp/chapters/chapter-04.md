@@ -344,6 +344,14 @@ Arrays.mismatch(a, a);  // -1 (no mismatch)
 | `indexOf` returns | Returns `-1` if not found (never throws) |
 | `StringBuilder.delete(a,b)` | Deletes from `a` (inclusive) to `b` (exclusive) |
 | `LocalDate.plusMonths` | Adjusts day-of-month if necessary (e.g. Jan 31 + 1 month = Feb 28) |
+| `ZonedDateTime` | Combines local date-time with `ZoneId`; watch for DST gaps/overlaps |
+| `LocalTime` | No date component; `atDate(LocalDate)` to combine |
+| `ZoneId` vs `ZoneOffset` | Named zones vs fixed offset; prefer `ZoneId.of("Europe/Paris")` |
+| `String.intern()` | Returns canonical pool reference — exam may pair with `==` |
+| `String.repeat(n)` | Java 11+ — `n` must be ≥ 0 |
+| `String.stripLeading` / `stripTrailing` | Unicode-aware partial strip |
+| `Arrays.compare` / `compareUnsigned` | Lexicographic; unsigned variant for `byte`/`int` arrays |
+| `StringBuilder` capacity | Default 16; `new StringBuilder(0)` grows as needed |
 
 ---
 
@@ -412,7 +420,33 @@ StringBuilder sb1 = new StringBuilder("a");
 StringBuilder sb2 = sb1.append("b").append("c");
 System.out.println(sb1 == sb2); // TRUE — same object!
 ```
+
+**Trap 9 — `Period` does not mix with `LocalTime`:**
+```java
+LocalTime t = LocalTime.NOON;
+t.plus(Period.ofDays(1)); // ❌ UnsupportedTemporalTypeException — Period is date-based
+```
+
+**Trap 10 — `Instant` vs `LocalDateTime`:**
+```java
+Instant.now(); // UTC instant — no zone until you attach `atZone(ZoneId)`
+```
+
+**Trap 11 — `Arrays.binarySearch` negative return:**
+```java
+int i = Arrays.binarySearch(sorted, key); // if negative: insertion point = -(i+1)
+```
 :::
+
+### Exam vignettes
+
+```java
+// Vignette — Period vs Duration
+LocalDate d = LocalDate.of(2024,1,1);
+d.plus(Period.ofDays(1)); // OK — date-based amount
+d.plus(Duration.ofDays(1)); // OK — day-based Duration converts to days
+// Prefer Period for calendar dates; Duration for time quantities (LocalTime/Instant)
+```
 
 :::tip[Spring/Senior Relevance]
 - `StringBuilder` (or `StringJoiner`) is preferred in Spring's query builders and log formatting instead of `String` concatenation.

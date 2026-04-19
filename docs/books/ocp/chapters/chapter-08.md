@@ -256,6 +256,14 @@ pipeline.apply("  hello  "); // "HELLO"
 | `BiFunction` | Two inputs, one (different type) output |
 | `BinaryOperator` | Two inputs of same type, same type output |
 | Primitive FIs | Prefer `IntSupplier`, `IntFunction`, etc. to avoid boxing overhead |
+| `BiPredicate<T,U>` | `boolean test(T, U)` — two-argument boolean test |
+| `ToIntFunction<T>` | `int applyAsInt(T)` — object to primitive `int` |
+| `ObjIntConsumer<T>` | `void accept(T, int)` — mixed object + primitive |
+| Target typing | Lambda must match assigned FI's SAM; mismatch → compile error |
+| Exception in lambda | Checked exceptions: lambda body must not throw checked unless FI allows (e.g. `Callable`) |
+| `Runnable` vs `Callable` | `Runnable` `run()` void; `Callable<V>` `call()` returns `V`, throws checked |
+| Method ref arity | Must match SAM parameter count (e.g. `String::charAt` → `IntUnaryOperator` on `String` receiver) |
+| `super::` | Bound instance method: `this::` or `Outer.this::method` in nested contexts |
 
 ---
 
@@ -324,7 +332,44 @@ Consumer<String> log    = s -> logger.info(s);
 Consumer<String> both   = print.andThen(log); // runs print then log
 // Consumer.andThen returns Consumer; Function.andThen returns Function — different types!
 ```
+
+**Trap 8 — Wrong FI for a lambda (target typing):**
+```java
+var x = () -> 42; // ❌ cannot infer type — `var` needs a target type
+Supplier<Integer> s = () -> 42; // ✅
+```
+
+**Trap 9 — `UnaryOperator` vs `Function` — both extend `Function`:**
+```java
+UnaryOperator<String> u = String::trim; // apply(String) -> String
+Function<String, String> f = String::trim; // same SAM shape, different type name
+```
+
+**Trap 10 — Method reference to overloaded methods picks specific overload by context:**
+```java
+Consumer<String> c = System.out::println; // println(String)
+// If ambiguous, compiler may fail or pick narrowest match — watch exam questions
+```
+
+**Trap 11 — Lambda body throwing checked exception:**
+```java
+Runnable r = () -> Thread.sleep(100); // ❌ InterruptedException is checked
+Callable<Void> c = () -> { Thread.sleep(100); return null; }; // ✅ Callable allows throws
+```
 :::
+
+### Exam vignettes
+
+```java
+// Vignette 1 — compose order
+Function<Integer,Integer> f = x -> x * 2;
+Function<Integer,Integer> g = x -> x + 1;
+System.out.println(f.compose(g).apply(3)); // g then f → (3+1)*2 = 8
+
+// Vignette 2 — Predicate chain
+Predicate<String> p = s -> s.length() > 2;
+Predicate<String> q = p.negate().or(s -> s.equals("ok"));
+```
 
 :::tip[Spring/Senior Relevance]
 - Spring's `@Bean` definitions with `Supplier<T>` are commonly used for lazy bean initialization and conditional bean creation.

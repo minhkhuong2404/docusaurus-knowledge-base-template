@@ -290,6 +290,13 @@ System.out.println(counter); // 1 (only left side ran, and it was true)
 | Promotion rule | `byte`+`byte` → `int`; must cast back to assign to `byte` |
 | `>>>` vs `>>` | `>>>` fills with 0 (unsigned); `>>` preserves sign bit |
 | String + number | Left-to-right: `"a" + 1 + 2 = "a12"` but `1 + 2 + "a" = "3a"` |
+| `equals` on mixed types | `Integer` vs `Long` with same numeric value → `false` (different types) |
+| `instanceof` null | `null instanceof AnyType` → always `false` |
+| Assignment operators | `=` lowest precedence; expression value is assigned value |
+| `switch` on enum | `case RED:` uses simple constant name (not `Color.RED` in label) |
+| `break` in nested loops | Without label, breaks innermost `switch` or loop only |
+| Floating-point infinity | `Double.POSITIVE_INFINITY`, `1.0/0.0` → `Infinity` for double |
+| `strictfp` | Rare on exam — floating-point semantics consistent across platforms |
 
 ---
 
@@ -353,7 +360,33 @@ System.out.println(5.5 % 3.0); // 2.5 (double — modulo works on floats too!)
 System.out.println(-7 % 3);    // -1 (sign follows left operand)
 System.out.println(7 % -3);    // 1  (sign follows left operand)
 ```
+
+**Trap 8 — `==` on `Integer` outside cache:**
+```java
+Integer a = 200, b = 200;
+System.out.println(a == b); // false — not cached; use equals()
+```
+
+**Trap 9 — String concatenation in loop (performance vs exam):**
+```java
+String s = "";
+for (int i = 0; i < 3; i++) s += i; // creates many intermediate Strings — exam may ask about immutability cost
+```
+
+**Trap 10 — Unary `+` on `char`:**
+```java
+char c = 'A';
+System.out.println(+c); // 65 — promoted to int
+```
 :::
+
+### Exam vignettes
+
+```java
+// Vignette — evaluation order
+int i = 0;
+System.out.println(i++ + ++i + i); // careful: 0 + 2 + 2 = 4? trace: i++ ->0 i=1, ++i ->2 i=2, +i ->2 → 0+2+2=4
+```
 
 :::tip[Spring/Senior Relevance]
 - Bitwise operators appear in Spring Security's permission masks (`hasPermission(obj, 0b0001 | 0b0100)`) and in JPA's `@Column(columnDefinition)` bitmask patterns.

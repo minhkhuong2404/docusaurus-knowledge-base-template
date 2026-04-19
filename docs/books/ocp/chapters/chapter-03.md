@@ -374,6 +374,12 @@ for (String s : list) {
 | `null` in switch | Must be handled explicitly with `case null` or NPE is thrown |
 | Enhanced `for` | Cannot modify the collection while iterating — use `Iterator` |
 | `for` header parts | All three parts optional; `for(;;)` is valid infinite loop |
+| `while (false)` | Body unreachable → compile error for trivial constant false |
+| `if` without braces | Only next statement is conditional — indentation deceives |
+| Enum `switch` exhaustiveness | For enum switch statement (not expression), `default` optional but omitting cases allowed |
+| Pattern switch dominance | Broader type patterns must not hide narrower ones — compiler error if unreachable case |
+| `switch` on `boolean` | Not allowed — use `if` |
+| `break` in `switch` expression | Arrow form does not use `break`; colon block form in classic switch does |
 
 ---
 
@@ -449,7 +455,35 @@ switch (x) {
     case 1, 2 -> System.out.println("one or two"); // ✅ Java 14+
 }
 ```
+
+**Trap 8 — Cannot mix `->` and `:` in one `switch`:**
+```java
+// switch (x) { case 1 -> ... case 2: ... } // ❌ not allowed — pick one style per switch
+```
+
+**Trap 9 — Enhanced `for` on `null` collection:**
+```java
+List<String> list = null;
+for (String s : list) { } // ❌ NullPointerException (not a compile error)
+```
+
+**Trap 10 — Infinite `for` without `break`:**
+```java
+for (;;) { } // infinite — same as while(true)
+```
 :::
+
+### Exam vignettes
+
+```java
+// Vignette — enum switch
+enum Day { MON, TUE }
+Day d = Day.MON;
+switch (d) {
+    case MON -> System.out.println("m");
+    case TUE -> System.out.println("t");
+}
+```
 
 :::tip[Spring/Senior Relevance]
 - Pattern matching with `switch` is heavily used in modern Spring applications for handling `ResponseEntity` types and processing polymorphic DTOs.

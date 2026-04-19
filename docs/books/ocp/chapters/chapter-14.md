@@ -331,6 +331,16 @@ System.out.printf("Hello, %s!%n", "world");
 | `Path` operations | Pure string manipulation — do NOT perform I/O, do NOT check existence |
 | `Files.createDirectories()` | Creates all missing intermediate directories; no-op if already exists |
 | `Files.delete()` | Throws if not found; `Files.deleteIfExists()` does not |
+| `Files.mismatch(Path, Path)` | Returns `-1` if identical; otherwise index of first differing byte |
+| `Files.readAllLines` / `readAllBytes` | Convenience methods — still handle large files carefully |
+| `BufferedInputStream` / `BufferedOutputStream` | Wrap low-level streams to reduce syscalls |
+| `InputStream.transferTo(OutputStream)` | Java 9+ — efficient bulk copy |
+| `Charset` / `StandardCharsets` | Use `UTF_8` constant instead of string `"UTF-8"` |
+| `Serializable` marker | No methods; subclasses inherit serializability |
+| `readResolve` / `writeReplace` | Advanced serialization hooks for singleton control |
+| `Path.relativize` | Other path relative to this path — both typically absolute or both relative |
+| `Files.isSameFile` | Follows symlinks; compares actual file identity |
+| `WatchService` | Register `Path` with `StandardWatchEventKinds` — key must be reset |
 
 ---
 
@@ -414,7 +424,36 @@ try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("data.ser
 }
 // Both ClassNotFoundException AND IOException must be handled/declared
 ```
+
+**Trap 9 — `Files.readString` throws `IOException` for missing file:**
+```java
+Files.readString(Path.of("missing.txt")); // NoSuchFileException extends IOException
+```
+
+**Trap 10 — `Files.walk` max depth:**
+```java
+try (Stream<Path> s = Files.walk(Path.of("root"), 1)) { } // depth 1 = only root + immediate children
+```
+
+**Trap 11 — `Console` may be `null` when no console attached:**
+```java
+Console c = System.console();
+if (c != null) c.readLine();
+```
 :::
+
+### Exam vignettes
+
+```java
+// Vignette 1 — try-with-resources on stream
+try (var lines = Files.lines(Path.of("f.txt"))) {
+    lines.limit(10).forEach(System.out::println);
+}
+
+// Vignette 2 — Path resolve
+Path p = Path.of("/a/b");
+p.resolve("c"); // /a/b/c
+```
 
 :::tip[Spring/Senior Relevance]
 - `Files.walk()` with try-with-resources is used in Spring Boot test utilities to clean up temp directories and in Spring's `ResourcePatternResolver` for scanning classpath resources.

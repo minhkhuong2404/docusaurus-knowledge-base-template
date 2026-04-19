@@ -347,6 +347,13 @@ WeakReference<HeavyObject> weakRef = new WeakReference<>(new HeavyObject());
 | `boolean` default | Instance field default is `false`; local must be initialized |
 | `char` arithmetic | `char` is promoted to `int` in arithmetic expressions |
 | Text block indentation | Common leading whitespace is stripped; trailing spaces stripped per line |
+| Initialization order | Static fields/blocks → instance fields/blocks → constructor ( superclass first ) |
+| `package` | Must be first statement (except comments); directory must match package |
+| `import` | Type names only; `import static` for static members |
+| Unicode escape in source | `\u000a` is a line terminator — can break tokens if misused |
+| `main` method | `public static void main(String[] args)` — varargs `String...` allowed |
+| Identifier rules | Can contain letters, digits, `$`, `_`; cannot start with digit |
+| Wrapper `valueOf` / `parse` | `Integer.valueOf("10")` vs `Integer.parseInt("10")` → object vs `int` |
 
 ---
 
@@ -403,7 +410,41 @@ StringBuilder b = new StringBuilder("b");
 a = b; // Object "a" is now eligible for GC
 // Object "b" is still referenced by both a and b — NOT eligible
 ```
+
+**Trap 8 — Static initializer runs once (class loading):**
+```java
+class C {
+    static { System.out.print("S"); }
+    { System.out.print("I"); }
+    C() { System.out.print("C"); }
+}
+new C(); // S then I then C — instance init runs each new object
+```
+
+**Trap 9 — String literal pool:**
+```java
+String a = "hi";
+String b = "hi";
+String c = new String("hi");
+System.out.println(a == b); // true (pool)
+System.out.println(a == c); // false (new object)
+```
+
+**Trap 10 — `var` in for-each and try-with-resources:**
+```java
+for (var x : List.of(1, 2, 3)) { } // OK — inferred as Integer
+try (var in = Files.newInputStream(Path.of("f"))) { } // OK
+```
 :::
+
+### Exam vignettes
+
+```java
+// Vignette — locals need definite assignment
+int x;
+if (Math.random() > 0.5) x = 1;
+System.out.println(x); // ❌ may be unassigned
+```
 
 :::tip[Spring/Senior Relevance]
 - In Spring, understanding `var` scope rules matters when using local variables inside `@Bean` methods or lambda expressions inside `@Component` classes.

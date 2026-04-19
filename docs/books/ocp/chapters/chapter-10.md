@@ -294,6 +294,16 @@ var result = Stream.of(1,2,3,4,5)
 | `allMatch` on empty | Returns `true` (vacuously true) |
 | `findAny` | May return any element; useful in parallel streams |
 | `peek` | For debugging only — side effects in pipelines are bad practice |
+| `Collectors.groupingBy` | `Map<K, List<T>>` by default; overload with downstream collector |
+| `Collectors.partitioningBy` | `Map<Boolean, List<T>>` — always two buckets (true/false) |
+| `Collectors.mapping` | Adapts elements before downstream collector |
+| `Collectors.flatMapping` | Like `mapping` but flattens nested streams |
+| `Collectors.joining` | Concatenate `CharSequence` with optional delimiter/prefix/suffix |
+| `Stream.toList()` (16+) | Unmodifiable `List`; unlike `collect(toList())` which is mutable `ArrayList` |
+| `Optional.orElseGet` | Supplier evaluated only if empty — prefer over `orElse` for expensive defaults |
+| `Optional.ifPresentOrElse` | Java 9+ — consumer for present, runnable for empty |
+| `Stream.concat` | Lazy concatenation of two streams — order: first stream then second |
+| `distinct()` | Uses `equals()` / `hashCode()` of stream elements (stateful) |
 
 ---
 
@@ -359,7 +369,44 @@ list.parallelStream().forEachOrdered(System.out::println); // ordered, but slowe
 Stream.iterate(0, n -> n + 1).forEach(System.out::println); // ❌ runs forever!
 Stream.iterate(0, n -> n + 1).limit(5).forEach(System.out::println); // ✅ prints 0-4
 ```
+
+**Trap 9 — `Collectors.toMap` duplicate keys:**
+```java
+Stream.of("a","b","a").collect(Collectors.toMap(s -> s, s -> s)); // ❌ IllegalStateException duplicate key
+// Fix: merge function — (a,b) -> a
+```
+
+**Trap 10 — `Optional` of nullable:**
+```java
+Optional.of(null); // ❌ NPE — use Optional.ofNullable(null)
+```
+
+**Trap 11 — `flatMap` on Optional:**
+```java
+Optional<String> o = Optional.of("42");
+Optional<Integer> i = o.flatMap(s -> {
+    try { return Optional.of(Integer.parseInt(s)); }
+    catch (NumberFormatException e) { return Optional.empty(); }
+});
+```
+
+**Trap 12 — `sorted()` without Comparator on non-Comparable:**
+```java
+class Foo {}
+Stream.of(new Foo(), new Foo()).sorted(); // ❌ compile error — Foo not Comparable
+```
 :::
+
+### Exam vignettes
+
+```java
+// Vignette 1 — groupingBy with counting
+Map<Integer, Long> m = Stream.of("a", "bb", "ccc")
+    .collect(Collectors.groupingBy(String::length, Collectors.counting()));
+
+// Vignette 2 — empty stream anyMatch
+boolean b = Stream.<String>empty().anyMatch(s -> true); // false
+```
 
 :::tip[Spring/Senior Relevance]
 - Spring Data's derived query methods return `Stream<T>` when annotated with `@QueryHints` and `@Query` — must close the stream or use try-with-resources to release the database cursor.

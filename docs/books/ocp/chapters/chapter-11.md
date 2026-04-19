@@ -286,6 +286,14 @@ ResourceBundle rb = ResourceBundle.getBundle("Messages",
 | `Closeable` | Extends `AutoCloseable`; `close()` may only throw `IOException` |
 | Multi-catch variable | Implicitly `final` — cannot reassign inside the catch block |
 | `throws` declaration | Required for checked exceptions; allowed but not required for unchecked |
+| `try` resource scope | Resources declared in try-with-resources are effectively final in try block |
+| `Throwable.getSuppressed()` / `addSuppressed()` | Access exceptions suppressed by try-with-resources or try/finally |
+| `MessageFormat` | `MessageFormat.format(pattern, args...)` — positional `{0}`, `{1}` |
+| `DateTimeFormatter` + `Locale` | Use `withLocale(Locale)` for localized month/day names |
+| `NumberFormat.getCurrencyInstance` | Locale controls symbol and grouping |
+| `ExceptionInInitializerError` | Wraps failure in static initializer; `getCause()` has original |
+| `AssertionError` | Unchecked — from `assert` when `-ea` enabled |
+| `try` block rules | `catch` or `finally` required unless try is try-with-resources only |
 
 ---
 
@@ -369,7 +377,39 @@ nf.parse("1.234,56"); // 1234.56 — Germany uses . for thousands, , for decimal
 NumberFormat us = NumberFormat.getInstance(Locale.US);
 us.parse("1,234.56"); // 1234.56 — US uses , for thousands, . for decimal
 ```
+
+**Trap 9 — Rethrowing with narrower type in `throws` (Java 7+):**
+```java
+void m() throws IOException {
+    try { throw new FileNotFoundException(); }
+    catch (IOException e) { throw e; } // OK — declared IOException covers actual type
+}
+```
+
+**Trap 10 — `close()` exception vs body exception (suppressed):**
+```java
+try (AutoCloseable a = () -> { throw new IOException("close"); }) {
+    throw new RuntimeException("body");
+}
+// Primary: RuntimeException; IOException from close is suppressed on primary
+```
+
+**Trap 11 — `finally` without `catch`:**
+```java
+try { work(); }
+finally { cleanup(); } // valid — no catch required
+```
 :::
+
+### Exam vignettes
+
+```java
+// Vignette 1 — Illegal multi-catch
+// catch (Exception | RuntimeException e) {} // ❌ related types
+
+// Vignette 2 — Resource bundle root
+ResourceBundle.getBundle("messages", Locale.FRANCE); // tries messages_fr_FR → messages_fr → ...
+```
 
 :::tip[Spring/Senior Relevance]
 - Spring's `@Transactional` catches exceptions based on their type — by default only `RuntimeException` (unchecked) triggers rollback. Add `rollbackFor = IOException.class` for checked exceptions.

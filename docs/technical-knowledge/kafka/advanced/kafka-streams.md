@@ -260,6 +260,10 @@ This configures:
 
 > It enables exactly-once semantics in Kafka Streams using transactional producers. Each stream task wraps its read-process-write cycle in a Kafka transaction, atomically committing output records and input offsets. V2 (since Kafka 2.6) uses one producer per thread rather than per task, improving performance.
 
+**Q: Why do streams applications with Exactly-Once enabled often show a persistent consumer lag of 1 per partition, even when fully caught up?**
+
+> This is caused by **Kafka Transactions** writing **control records (transaction markers)** to the partition log to mark transactions as committed or aborted. These markers occupy an actual offset at the end of the log (increasing the `LogEndOffset`). Because they are invisible to normal consumers, the consumer's committed offset isn't advanced past them until a new data record arrives. Thus, the standard lag calculation (`LogEndOffset - CurrentOffset`) evaluates to 1. This is intended behavior and safe to ignore in monitoring alerts.
+
 **Q: What is the difference between a windowed aggregation and a sessionized aggregation?**
 
 > A **windowed aggregation** (tumbling, hopping, sliding) groups events into fixed or overlapping time buckets. A **session window** groups events by activity gap — all events for a key with no gap longer than `inactivityGap` are grouped together, creating variable-length windows based on actual activity patterns. Session windows are useful for user session analytics.

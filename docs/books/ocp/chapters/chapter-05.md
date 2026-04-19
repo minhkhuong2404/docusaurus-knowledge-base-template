@@ -254,6 +254,13 @@ public class Point {
 | Overloading ≠ overriding | Overloading is compile-time (different params); overriding is runtime (same params) |
 | `protected` in subclass | A subclass in another package can only access `protected` through its own type |
 | Default access | No modifier = package-private (accessible only within same package) |
+| Recursive constructor | `this()` and `super()` cannot recurse infinitely — compile-time check |
+| `final` parameters | Cannot reassign inside method body |
+| `abstract` + `private` | Illegal — abstract methods must be overridable |
+| `synchronized` method | Locks on `this` (instance) or class object (static) |
+| `strictfp` on method | Rare — consistent FP (legacy exam topic) |
+| Bridge methods | Compiler-generated for generics in overrides — usually invisible |
+| `return` in `void` | `return;` OK; cannot return a value |
 
 ---
 
@@ -328,7 +335,35 @@ class Child extends Parent { static String name() { return "Child"; } }
 Parent p = new Child();
 p.name(); // "Parent" — static method hiding resolved at compile time!
 ```
+
+**Trap 8 — Overloading with wrappers and `null`:**
+```java
+void m(Integer i) { }
+void m(String s) { }
+// m(null); // ❌ ambiguous — both reference types match null
+```
+
+**Trap 9 — `private` method is not overridden:**
+```java
+class A { private void x() {} }
+class B extends A { void x() {} } // not an override — separate method
+```
+
+**Trap 10 — Access cannot narrow on override:**
+```java
+// Parent: public void m()
+// Child: private void m()   // ❌ weaker access
+```
 :::
+
+### Exam vignettes
+
+```java
+// Vignette — overload ambiguity (Object vs int varargs)
+void foo(String s, Object... o) { }
+void foo(String s, int... i) { }
+// foo("a", 1); // ❌ ambiguous — 1 matches both Object... and int...
+```
 
 :::tip[Spring/Senior Relevance]
 - Understanding method visibility is critical in Spring: `@Transactional` on a `private` or `package-private` method is silently **ignored** by Spring's proxy mechanism (only `public` methods are intercepted by default).

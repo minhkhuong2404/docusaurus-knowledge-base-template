@@ -31,6 +31,11 @@ This guide is structured for **two types of learners**:
 
 Each chapter page is split into these two sections so you can read at your level.
 
+### Study resources
+
+- **Chapter deep dives** — Use the numbered chapters below for explanations, **Exam Quick Reference** tables, and chapter-specific traps.
+- **[Exam Tips & Quick Reference](./exam-tips.md)** — Use this page for a **single cram sheet**: mnemonics, cross-chapter traps, stream/collections matrices, and a last-minute checklist before exam day.
+
 ---
 
 ## Exam Blueprint (1Z0-830)
@@ -52,20 +57,20 @@ Each chapter page is split into these two sections so you can read at your level
 
 ## 14 Chapters at a Glance
 
-1. [Chapter 1 — Building Blocks](./chapters/chapter-01.md) — JDK setup, classes, primitives, var
-2. [Chapter 2 — Operators](./chapters/chapter-02.md) — Arithmetic, logical, bitwise operators
-3. [Chapter 3 — Making Decisions](./chapters/chapter-03.md) — if/else, switch expressions, loops
-4. [Chapter 4 — Core APIs](./chapters/chapter-04.md) — String, StringBuilder, arrays, Date-Time
-5. [Chapter 5 — Methods](./chapters/chapter-05.md) — Method design, access modifiers, overloading
-6. [Chapter 6 — Class Design](./chapters/chapter-06.md) — Inheritance, abstract classes, polymorphism
-7. [Chapter 7 — Beyond Classes](./chapters/chapter-07.md) — Interfaces, enums, records, sealed classes
-8. [Chapter 8 — Lambdas & Functional Interfaces](./chapters/chapter-08.md) — Lambdas, method references, built-in FIs
-9. [Chapter 9 — Collections & Generics](./chapters/chapter-09.md) — List, Set, Map, Deque, generics, Comparable
-10. [Chapter 10 — Streams](./chapters/chapter-10.md) — Stream pipelines, Optional, collectors
-11. [Chapter 11 — Exceptions & Localization](./chapters/chapter-11.md) — Exception hierarchy, formatting, resource bundles
-12. [Chapter 12 — Modules](./chapters/chapter-12.md) — JPMS, module-info, services, jlink
-13. [Chapter 13 — Concurrency](./chapters/chapter-13.md) — Threads, executors, atomic, locks, virtual threads
-14. [Chapter 14 — I/O](./chapters/chapter-14.md) — File I/O, NIO.2, serialization, streams
+1. [Chapter 1 — Building Blocks](./chapters/chapter-01.md) — JDK setup, classes, primitives, var — **Exam focus:** defaults, `var`, literals, text blocks, GC eligibility
+2. [Chapter 2 — Operators](./chapters/chapter-02.md) — Arithmetic, logical, bitwise operators — **Exam focus:** pre/post increment, compound assignment casts, `String` `+` ordering
+3. [Chapter 3 — Making Decisions](./chapters/chapter-03.md) — if/else, switch expressions, loops — **Exam focus:** exhaustiveness, `yield`, pattern/`when`, labeled break/continue
+4. [Chapter 4 — Core APIs](./chapters/chapter-04.md) — String, StringBuilder, arrays, Date-Time — **Exam focus:** immutability, `Period` vs `Duration`, zones, array/binary search rules
+5. [Chapter 5 — Methods](./chapters/chapter-05.md) — Method design, access modifiers, overloading — **Exam focus:** overload resolution, varargs, `static`/instance access rules
+6. [Chapter 6 — Class Design](./chapters/chapter-06.md) — Inheritance, abstract classes, polymorphism — **Exam focus:** override vs hide, covariant returns, `equals`/`hashCode`
+7. [Chapter 7 — Beyond Classes](./chapters/chapter-07.md) — Interfaces, enums, records, sealed classes — **Exam focus:** records, sealed exhaustive switch, `instanceof` patterns, enums
+8. [Chapter 8 — Lambdas & Functional Interfaces](./chapters/chapter-08.md) — Lambdas, method references, built-in FIs — **Exam focus:** SAM rules, capture, `andThen`/`compose`, method ref forms
+9. [Chapter 9 — Collections & Generics](./chapters/chapter-09.md) — List, Set, Map, Deque, generics, Comparable — **Exam focus:** `SequencedCollection`, wildcards, `null` rules per implementation, factories
+10. [Chapter 10 — Streams](./chapters/chapter-10.md) — Stream pipelines, Optional, collectors — **Exam focus:** lazy/single-use, short-circuit terminals, empty-stream match behavior, collectors
+11. [Chapter 11 — Exceptions & Localization](./chapters/chapter-11.md) — Exception hierarchy, formatting, resource bundles — **Exam focus:** try-with-resources order, suppressed exceptions, `ResourceBundle` chain
+12. [Chapter 12 — Modules](./chapters/chapter-12.md) — JPMS, module-info, services, jlink — **Exam focus:** `exports` vs `opens`, transitive requires, automatic/unnamed modules, services
+13. [Chapter 13 — Concurrency](./chapters/chapter-13.md) — Threads, executors, atomic, locks, virtual threads — **Exam focus:** `start` vs `run`, virtual threads & pinning, `ConcurrentHashMap`, atomics vs `volatile`
+14. [Chapter 14 — I/O](./chapters/chapter-14.md) — File I/O, NIO.2, serialization, streams — **Exam focus:** `Path` vs I/O, closing stream APIs, serialization contracts
 
 ---
 

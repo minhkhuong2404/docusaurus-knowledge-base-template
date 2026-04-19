@@ -339,6 +339,14 @@ Comparator<String> comp2 = (a, b) -> a.compareTo(b);
 | Enum ordinal | Zero-based; `ordinal()` returns position |
 | Record fields | Implicitly `private final`; no setters auto-generated |
 | `non-sealed` | Removes sealing restriction; subclasses can extend freely |
+| Pattern `instanceof` | Binding variable in scope only where pattern matches; use `&&` carefully with flow scoping |
+| Sealed + `switch` | Exhaustive `switch` on sealed type must cover all permitted subclasses (or use `default` where allowed) |
+| Record `equals`/`hashCode` | Auto-generated from components; two records equal iff all components equal |
+| Enum singleton | JVM guarantees one instance per enum constant; constructors run before static use |
+| Interface `private` methods | Java 9+ — helper methods inside interface; not part of SAM count |
+| Interface `static` methods | Not inherited by implementing classes; call with `InterfaceName.method()` |
+| Sealed + permits | Permitted types must be accessible; typically same module/package per exam |
+| Record cannot declare instance fields | Only components in header; extra state via static fields only |
 
 ---
 
@@ -421,7 +429,58 @@ Runnable r = new Runnable() {
 
 Runnable r2 = () -> { count++; }; // ❌ lambda CANNOT have own instance fields
 ```
+
+**Trap 9 — Pattern variable and `&&` (flow scoping):**
+```java
+Object o = "hi";
+if (o instanceof String s && s.length() > 1) {
+    System.out.println(s); // ✅ s in scope — both conditions required for truth
+}
+if (o instanceof String s || s.length() > 1) { } // ❌ s not in scope in second part
+```
+
+**Trap 10 — Negated `instanceof` and pattern scope:**
+```java
+if (!(o instanceof String s)) {
+    return;
+}
+System.out.println(s.length()); // ✅ s in scope here (pattern holds in remaining block)
+```
+
+**Trap 11 — Record compact constructor is for validation, not field reassignment:**
+```java
+record Range(int min, int max) {
+    Range {
+        if (min > max) throw new IllegalArgumentException(); // ✅
+        // this.min = min; // ❌ illegal — components are assigned implicitly
+    }
+}
+```
+
+**Trap 12 — Enum cannot extend another enum:**
+```java
+enum A { X }
+enum B extends A { Y } // ❌ enums cannot extend another enum (only java.lang.Enum implicitly)
+```
 :::
+
+### Exam vignettes
+
+```java
+// Vignette 1 — Exhaustive switch on sealed hierarchy (Java 21)
+sealed interface Pet permits Dog, Cat {}
+final class Dog implements Pet {}
+final class Cat implements Pet {}
+String s = switch (pet) { // must cover Dog and Cat or use default
+    case Dog d -> "woof";
+    case Cat c -> "meow";
+};
+
+// Vignette 2 — Record accessor naming on exam
+record Box(int id) {}
+new Box(1).id();   // ✅
+new Box(1).getId(); // ❌ compile-time error
+```
 
 :::tip[Spring/Senior Relevance]
 - `sealed` interfaces + records + `switch` pattern matching form the backbone of modern Spring 6 / Boot 3 **discriminated union** patterns — replacing stringly-typed result wrappers.

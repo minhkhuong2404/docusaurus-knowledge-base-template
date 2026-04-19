@@ -247,6 +247,15 @@ list.removeIf(s -> s.equals("b")); // ✅
 | `TreeSet`/`TreeMap` null | `NullPointerException` on first element; no nulls permitted |
 | `Map.getOrDefault()` | Never throws; returns default if key absent |
 | `Map.computeIfAbsent()` | Inserts and returns new value if key absent |
+| `SequencedCollection` (21) | `getFirst()` / `getLast()` / `reversed()` view; `List`, `Deque`, `LinkedHashSet` |
+| `SequencedSet` (21) | `SortedSet` extends `SequencedSet`; `reversed()` returns reverse-order view |
+| `SequencedMap` (21) | `firstEntry()` / `lastEntry()` / `reversed()`; `LinkedHashMap`, `TreeMap` |
+| `Comparator.nullsFirst` / `nullsLast` | Wrap comparator to allow or order null elements safely |
+| `Collections.binarySearch` | List must be sorted by natural order or comparator used |
+| `Set.copyOf` / `Map.copyOf` | Immutable copies; null elements/keys/values forbidden |
+| `Arrays.asList` | Fixed-size list backed by array; `set` OK, `add` throws |
+| Generic array creation | `new T[]` illegal; use varargs warnings with generic arrays |
+| `Comparable<T>` vs `Comparator` | Natural order vs external ordering; `TreeSet` uses `Comparable` unless ctor given `Comparator` |
 
 ---
 
@@ -327,7 +336,43 @@ for (String s : list) {
 // Fix: use removeIf()
 list.removeIf(s -> s.equals("b")); // ✅
 ```
+
+**Trap 9 — `Set.of()` duplicate elements:**
+```java
+Set.of("a", "a"); // ❌ IllegalArgumentException — duplicates not allowed
+```
+
+**Trap 10 — `Map.of()` more than 10 pairs — use entries overload:**
+```java
+// Map.of() overloads cap at 10 key-value pairs; for more, use Map.ofEntries(entry(...), ...)
+```
+
+**Trap 11 — `subList` is a view:**
+```java
+List<Integer> full = new ArrayList<>(List.of(1,2,3,4));
+List<Integer> part = full.subList(1, 3); // view of indices [1,2]
+full.add(5); // ❌ ConcurrentModificationException on subsequent use of part
+```
+
+**Trap 12 — `PriorityQueue` iterator is not priority order:**
+```java
+PriorityQueue<Integer> pq = new PriorityQueue<>(List.of(3,1,2));
+pq.iterator().forEachRemaining(System.out::print); // NOT guaranteed sorted — use poll() for order
+```
 :::
+
+### Exam vignettes
+
+```java
+// Vignette 1 — SequencedCollection (Java 21)
+SequencedCollection<String> sc = new LinkedList<>(List.of("a","b"));
+sc.getFirst(); sc.getLast(); sc.reversed();
+
+// Vignette 2 — Wildcard capture
+void foo(List<?> list) {
+    list.add(null); // only null allowed for unknown type
+}
+```
 
 :::tip[Spring/Senior Relevance]
 - `Map.computeIfAbsent()` is the idiomatic way to implement cache-aside patterns in Spring service methods without introducing race conditions on `HashMap`.

@@ -318,6 +318,13 @@ public abstract class DataProcessor {
 | Initialization order | Static blocks → parent fields/instance → parent constructor → child fields/instance → child constructor |
 | `@Override` | Optional but catches typos at compile time — always use it |
 | Covariant return type | Overriding method can return a subtype of the declared return type |
+| `abstract` class | May contain all concrete methods; no obligation to have abstract methods |
+| `private` constructor | Singleton pattern; prevents external instantiation |
+| Nested class `static` | No implicit reference to enclosing instance |
+| `enum` cannot extend | Implicitly extends `java.lang.Enum` |
+| `Object` methods | `clone()`, `finalize()` (deprecated) — know `equals`/`hashCode`/`toString` |
+| Polymorphism | Only non-static, non-private instance methods are virtual |
+| `super.method()` | Calls parent version from subclass override |
 
 ---
 
@@ -416,7 +423,33 @@ public final class Period {
     }
 }
 ```
+
+**Trap 8 — Package-private override across packages:**
+```java
+// Parent in pkg p1: void m() { } // package-private
+// Child in pkg p2: @Override void m() { } // ❌ cannot override — not visible
+```
+
+**Trap 9 — Cast and `ClassCastException`:**
+```java
+Object o = "hi";
+Integer i = (Integer) o; // ❌ ClassCastException at runtime
+```
+
+**Trap 10 — `==` vs `equals` for `String`:**
+```java
+new String("a") == new String("a"); // false
+new String("a").equals(new String("a")); // true
+```
 :::
+
+### Exam vignettes
+
+```java
+// Vignette — override return type covariance
+class P { Number get() { return 1; } }
+class C extends P { @Override Integer get() { return 2; } } // OK — Integer subtype of Number
+```
 
 :::tip[Spring/Senior Relevance]
 - The `equals`/`hashCode` contract is critical in Spring applications that use entities as `HashMap` keys or `HashSet` elements (e.g., JPA entity caching). JPA requires that entity `equals` be based on the database ID, not object identity.

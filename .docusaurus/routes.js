@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '13f'),
+    component: ComponentCreator('/', '652'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '368'),
+        component: ComponentCreator('/', '464'),
         routes: [
           {
             path: '/tags',
@@ -6187,7 +6187,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '4e5'),
+            component: ComponentCreator('/', '0ac'),
             routes: [
               {
                 path: '/aws',
@@ -8118,31 +8118,31 @@ export default [
               },
               {
                 path: '/technical-knowledge/dsa/week-15-advanced-sliding-windows',
-                component: ComponentCreator('/technical-knowledge/dsa/week-15-advanced-sliding-windows', '604'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-15-advanced-sliding-windows', '493'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-16-tries-prefix-trees',
-                component: ComponentCreator('/technical-knowledge/dsa/week-16-tries-prefix-trees', '091'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-16-tries-prefix-trees', '7a0'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-17-shortest-paths-mst',
-                component: ComponentCreator('/technical-knowledge/dsa/week-17-shortest-paths-mst', 'c4e'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-17-shortest-paths-mst', '5b7'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-18-disjoint-set-union',
-                component: ComponentCreator('/technical-knowledge/dsa/week-18-disjoint-set-union', 'c7f'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-18-disjoint-set-union', '540'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-19-bit-manipulation-math',
-                component: ComponentCreator('/technical-knowledge/dsa/week-19-bit-manipulation-math', '3f3'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-19-bit-manipulation-math', '718'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -8154,7 +8154,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/dsa/week-20-comprehensive-review-systems',
-                component: ComponentCreator('/technical-knowledge/dsa/week-20-comprehensive-review-systems', 'b93'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-20-comprehensive-review-systems', '1fe'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
