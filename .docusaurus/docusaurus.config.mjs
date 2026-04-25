@@ -40,7 +40,10 @@ export default {
           "sidebarPath": "./sidebars.ts",
           "routeBasePath": "/",
           "showLastUpdateTime": true,
-          "showLastUpdateAuthor": true
+          "showLastUpdateAuthor": true,
+          "remarkPlugins": [
+            null
+          ]
         },
         "blog": false,
         "theme": {

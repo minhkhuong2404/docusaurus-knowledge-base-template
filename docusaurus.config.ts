@@ -2,6 +2,7 @@
 import type { Config } from '@docusaurus/types'
 import prismTheme from './src/theme/prismTheme.js'
 import prismLightTheme from './src/theme/prismLightTheme.js'
+import remarkMath from 'remark-math';
 
 const config: Config = {
 	title: 'Engineering Knowledge Base',
@@ -33,6 +34,7 @@ const config: Config = {
 					routeBasePath: '/',
 					showLastUpdateTime: true,
 					showLastUpdateAuthor: true,
+					remarkPlugins: [remarkMath],
 				},
 				blog: false,
 				theme: {

@@ -2145,11 +2145,6 @@
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/kafka/advanced/kafka-streams",
-              "path": "/technical-knowledge/kafka/advanced/kafka-streams",
-              "sidebar": "tutorialSidebar"
-            },
-            {
               "id": "technical-knowledge/kafka/advanced/kafka-streams-deep-dive",
               "path": "/technical-knowledge/kafka/advanced/kafka-streams-deep-dive",
               "sidebar": "tutorialSidebar"

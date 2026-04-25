@@ -554,7 +554,6 @@ const sidebars: SidebarsConfig = {
 					collapsed: true,
 					items: [
 						'technical-knowledge/kafka/advanced/kafka-connect',
-						'technical-knowledge/kafka/advanced/kafka-streams',
 						'technical-knowledge/kafka/advanced/kafka-streams-deep-dive',
 						'technical-knowledge/kafka/advanced/schema-registry',
 						'technical-knowledge/kafka/advanced/exactly-once-vs-dedup'
