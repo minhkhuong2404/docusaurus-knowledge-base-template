@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '59f'),
+    component: ComponentCreator('/', 'dfc'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '72d'),
+        component: ComponentCreator('/', 'd4f'),
         routes: [
           {
             path: '/tags',
@@ -6187,7 +6187,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'f21'),
+            component: ComponentCreator('/', '54a'),
             routes: [
               {
                 path: '/aws',
@@ -8764,13 +8764,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/advanced/kafka-connect',
-                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-connect', 'e40'),
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-connect', '022'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/kafka/advanced/kafka-streams-deep-dive',
-                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-streams-deep-dive', 'd3a'),
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-streams-deep-dive', 'd58'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
