@@ -1,0 +1,5 @@
+# Practo LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 3 | https://leetcode.com/problems/longest-substring-without-repeating-characters | Longest Substring Without Repeating Characters | Medium | 38.5% | 100.0% |

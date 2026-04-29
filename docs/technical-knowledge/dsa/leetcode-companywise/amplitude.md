@@ -1,0 +1,5 @@
+# Amplitude LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 353 | https://leetcode.com/problems/design-snake-game | Design Snake Game | Medium | 40.0% | 100.0% |

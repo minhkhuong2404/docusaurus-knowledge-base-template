@@ -1,0 +1,5 @@
+# Jingchi LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 772 | https://leetcode.com/problems/basic-calculator-iii | Basic Calculator III | Hard | 53.1% | 100.0% |

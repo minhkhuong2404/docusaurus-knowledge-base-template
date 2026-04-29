@@ -1,0 +1,5 @@
+# National Instruments LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 880 | https://leetcode.com/problems/decoded-string-at-index | Decoded String at Index | Medium | 37.2% | 100.0% |

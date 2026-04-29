@@ -1,0 +1,6 @@
+# Coveo LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 42 | https://leetcode.com/problems/trapping-rain-water | Trapping Rain Water | Hard | 66.8% | 100.0% |
+| 11 | https://leetcode.com/problems/container-with-most-water | Container With Most Water | Medium | 59.5% | 100.0% |

@@ -1,0 +1,5 @@
+# Brillio LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 1551 | https://leetcode.com/problems/minimum-operations-to-make-array-equal | Minimum Operations to Make Array Equal | Medium | 82.7% | 100.0% |

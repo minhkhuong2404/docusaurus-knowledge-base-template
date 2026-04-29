@@ -1,0 +1,5 @@
+# Fallible LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 507 | https://leetcode.com/problems/perfect-number | Perfect Number | Easy | 47.9% | 100.0% |

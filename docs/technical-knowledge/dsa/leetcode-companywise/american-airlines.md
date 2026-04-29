@@ -1,0 +1,5 @@
+# American Airlines LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 649 | https://leetcode.com/problems/dota2-senate | Dota2 Senate | Medium | 49.6% | 100.0% |

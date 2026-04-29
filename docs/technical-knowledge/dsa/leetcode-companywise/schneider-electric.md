@@ -1,0 +1,5 @@
+# Schneider Electric LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 3352 | https://leetcode.com/problems/count-k-reducible-numbers-less-than-n | Count K-Reducible Numbers Less Than N | Hard | 27.6% | 100.0% |

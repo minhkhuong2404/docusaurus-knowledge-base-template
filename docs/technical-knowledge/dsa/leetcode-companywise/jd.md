@@ -1,0 +1,5 @@
+# Jd LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 2999 | https://leetcode.com/problems/count-the-number-of-powerful-integers | Count the Number of Powerful Integers | Hard | 46.3% | 100.0% |

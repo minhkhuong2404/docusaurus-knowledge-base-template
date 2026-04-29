@@ -1,0 +1,5 @@
+# Schrodinger LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 632 | https://leetcode.com/problems/smallest-range-covering-elements-from-k-lists | Smallest Range Covering Elements from K Lists | Hard | 70.0% | 100.0% |

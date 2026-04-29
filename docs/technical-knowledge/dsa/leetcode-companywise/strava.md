@@ -1,0 +1,5 @@
+# Strava LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 1990 | https://leetcode.com/problems/count-the-number-of-experiments | Count the Number of Experiments | Medium | 48.8% | 100.0% |

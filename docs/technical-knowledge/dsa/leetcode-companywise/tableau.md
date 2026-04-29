@@ -1,0 +1,5 @@
+# Tableau LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 11 | https://leetcode.com/problems/container-with-most-water | Container With Most Water | Medium | 59.5% | 100.0% |

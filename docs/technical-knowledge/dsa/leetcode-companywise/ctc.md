@@ -1,0 +1,5 @@
+# Ctc LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 122 | https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii | Best Time to Buy and Sell Stock II | Medium | 70.7% | 100.0% |

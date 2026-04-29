@@ -1,0 +1,5 @@
+# Playsimple LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 20 | https://leetcode.com/problems/valid-parentheses | Valid Parentheses | Easy | 43.7% | 100.0% |

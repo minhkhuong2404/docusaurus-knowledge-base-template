@@ -1,0 +1,5 @@
+# Msci LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 49 | https://leetcode.com/problems/group-anagrams | Group Anagrams | Medium | 72.2% | 100.0% |

@@ -1,0 +1,5 @@
+# Discord LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 2301 | https://leetcode.com/problems/match-substring-after-replacement | Match Substring After Replacement | Hard | 43.1% | 100.0% |

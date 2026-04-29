@@ -1,0 +1,5 @@
+# Flatiron Health LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 1664 | https://leetcode.com/problems/ways-to-make-a-fair-array | Ways to Make a Fair Array | Medium | 66.3% | 100.0% |

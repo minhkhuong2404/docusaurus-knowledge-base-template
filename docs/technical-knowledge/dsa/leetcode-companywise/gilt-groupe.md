@@ -1,0 +1,5 @@
+# Gilt Groupe LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 623 | https://leetcode.com/problems/add-one-row-to-tree | Add One Row to Tree | Medium | 64.1% | 100.0% |

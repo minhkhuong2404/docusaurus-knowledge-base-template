@@ -1,0 +1,5 @@
+# Genpact LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 268 | https://leetcode.com/problems/missing-number | Missing Number | Easy | 71.6% | 100.0% |

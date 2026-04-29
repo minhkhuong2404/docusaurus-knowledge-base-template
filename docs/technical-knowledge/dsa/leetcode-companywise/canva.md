@@ -1,0 +1,6 @@
+# Canva LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 227 | https://leetcode.com/problems/basic-calculator-ii | Basic Calculator II | Medium | 46.6% | 100.0% |
+| 224 | https://leetcode.com/problems/basic-calculator | Basic Calculator | Hard | 46.5% | 100.0% |

@@ -1,0 +1,5 @@
+# Noon LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 2062 | https://leetcode.com/problems/count-vowel-substrings-of-a-string | Count Vowel Substrings of a String | Easy | 72.8% | 100.0% |

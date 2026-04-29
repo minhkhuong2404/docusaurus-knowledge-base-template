@@ -1,0 +1,5 @@
+# Yatra LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 713 | https://leetcode.com/problems/subarray-product-less-than-k | Subarray Product Less Than K | Medium | 53.9% | 100.0% |

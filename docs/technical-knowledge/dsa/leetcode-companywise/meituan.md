@@ -1,0 +1,5 @@
+# Meituan LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 2980 | https://leetcode.com/problems/check-if-bitwise-or-has-trailing-zeros | Check if Bitwise OR Has Trailing Zeros | Easy | 71.1% | 100.0% |

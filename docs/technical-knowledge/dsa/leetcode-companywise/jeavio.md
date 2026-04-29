@@ -1,0 +1,5 @@
+# Jeavio LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 2027 | https://leetcode.com/problems/minimum-moves-to-convert-string | Minimum Moves to Convert String | Easy | 57.7% | 100.0% |

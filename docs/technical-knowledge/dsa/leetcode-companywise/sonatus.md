@@ -1,0 +1,5 @@
+# Sonatus LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 165 | https://leetcode.com/problems/compare-version-numbers | Compare Version Numbers | Medium | 46.1% | 100.0% |

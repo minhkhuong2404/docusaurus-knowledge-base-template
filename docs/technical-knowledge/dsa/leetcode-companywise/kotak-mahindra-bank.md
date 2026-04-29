@@ -1,0 +1,5 @@
+# Kotak Mahindra Bank LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 32 | https://leetcode.com/problems/longest-valid-parentheses | Longest Valid Parentheses | Hard | 38.0% | 100.0% |

@@ -1,0 +1,5 @@
+# Purplle LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 2862 | https://leetcode.com/problems/maximum-element-sum-of-a-complete-subset-of-indices | Maximum Element-Sum of a Complete Subset of Indices | Hard | 42.7% | 100.0% |

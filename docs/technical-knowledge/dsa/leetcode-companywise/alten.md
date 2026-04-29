@@ -1,0 +1,5 @@
+# Alten LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 14 | https://leetcode.com/problems/longest-common-prefix | Longest Common Prefix | Easy | 47.1% | 100.0% |

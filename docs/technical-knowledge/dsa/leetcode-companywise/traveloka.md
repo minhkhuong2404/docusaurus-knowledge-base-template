@@ -1,0 +1,5 @@
+# Traveloka LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 3468 | https://leetcode.com/problems/find-the-number-of-copy-arrays | Find the Number of Copy Arrays | Medium | 46.8% | 100.0% |

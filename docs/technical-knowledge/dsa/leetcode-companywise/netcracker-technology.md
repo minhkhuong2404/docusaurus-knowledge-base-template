@@ -1,0 +1,5 @@
+# Netcracker Technology LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 3556 | https://leetcode.com/problems/sum-of-largest-prime-substrings | Sum of Largest Prime Substrings | Medium | 37.8% | 100.0% |

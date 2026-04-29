@@ -1,0 +1,5 @@
+# Circle LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 2043 | https://leetcode.com/problems/simple-bank-system | Simple Bank System | Medium | 69.8% | 100.0% |

@@ -1,0 +1,5 @@
+# Pega LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 258 | https://leetcode.com/problems/add-digits | Add Digits | Easy | 68.6% | 100.0% |

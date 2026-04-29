@@ -1,0 +1,5 @@
+# Forusall LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 828 | https://leetcode.com/problems/count-unique-characters-of-all-substrings-of-a-given-string | Count Unique Characters of All Substrings of a Given String | Hard | 53.5% | 100.0% |

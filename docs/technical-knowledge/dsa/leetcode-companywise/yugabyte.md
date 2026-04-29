@@ -1,0 +1,5 @@
+# Yugabyte LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 882 | https://leetcode.com/problems/reachable-nodes-in-subdivided-graph | Reachable Nodes In Subdivided Graph | Hard | 51.8% | 100.0% |

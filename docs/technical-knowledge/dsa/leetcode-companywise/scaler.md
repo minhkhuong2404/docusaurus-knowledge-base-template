@@ -1,0 +1,5 @@
+# Scaler LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 132 | https://leetcode.com/problems/palindrome-partitioning-ii | Palindrome Partitioning II | Hard | 36.6% | 100.0% |

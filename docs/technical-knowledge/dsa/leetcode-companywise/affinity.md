@@ -1,0 +1,5 @@
+# Affinity LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 1106 | https://leetcode.com/problems/parsing-a-boolean-expression | Parsing A Boolean Expression | Hard | 69.8% | 100.0% |

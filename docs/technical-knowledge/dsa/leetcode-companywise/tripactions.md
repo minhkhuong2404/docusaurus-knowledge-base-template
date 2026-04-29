@@ -1,0 +1,5 @@
+# Tripactions LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 706 | https://leetcode.com/problems/design-hashmap | Design HashMap | Easy | 66.4% | 100.0% |

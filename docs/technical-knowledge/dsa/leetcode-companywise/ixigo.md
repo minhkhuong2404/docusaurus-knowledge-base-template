@@ -1,0 +1,5 @@
+# Ixigo LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 380 | https://leetcode.com/problems/insert-delete-getrandom-o1 | Insert Delete GetRandom O(1) | Medium | 55.3% | 100.0% |

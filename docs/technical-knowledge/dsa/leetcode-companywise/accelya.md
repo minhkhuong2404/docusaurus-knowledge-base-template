@@ -1,0 +1,5 @@
+# Accelya LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 2951 | https://leetcode.com/problems/find-the-peaks | Find the Peaks | Easy | 75.0% | 100.0% |

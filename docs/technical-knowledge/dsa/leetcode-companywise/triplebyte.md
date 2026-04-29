@@ -1,0 +1,5 @@
+# Triplebyte LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 712 | https://leetcode.com/problems/minimum-ascii-delete-sum-for-two-strings | Minimum ASCII Delete Sum for Two Strings | Medium | 70.9% | 100.0% |

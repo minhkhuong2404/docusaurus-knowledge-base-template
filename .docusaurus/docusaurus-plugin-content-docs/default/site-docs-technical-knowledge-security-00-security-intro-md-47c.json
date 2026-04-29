@@ -67,8 +67,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Week 20: Comprehensive Review & System Design Mappings",
-    "permalink": "/technical-knowledge/dsa/week-20-comprehensive-review-systems"
+    "title": "Zynga LeetCode Questions",
+    "permalink": "/technical-knowledge/dsa/leetcode-companywise/zynga"
   },
   "next": {
     "title": "AuthN & AuthZ",

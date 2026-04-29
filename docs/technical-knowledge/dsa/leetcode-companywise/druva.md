@@ -1,0 +1,5 @@
+# Druva LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 1005 | https://leetcode.com/problems/maximize-sum-of-array-after-k-negations | Maximize Sum Of Array After K Negations | Easy | 53.5% | 100.0% |

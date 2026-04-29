@@ -1,0 +1,5 @@
+# Porter LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 71 | https://leetcode.com/problems/simplify-path | Simplify Path | Medium | 50.0% | 100.0% |

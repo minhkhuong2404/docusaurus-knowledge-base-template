@@ -1,0 +1,5 @@
+# Impact Analytics LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 121 | https://leetcode.com/problems/best-time-to-buy-and-sell-stock | Best Time to Buy and Sell Stock | Easy | 56.4% | 100.0% |

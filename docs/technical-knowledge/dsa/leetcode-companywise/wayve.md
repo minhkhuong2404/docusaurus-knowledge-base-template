@@ -1,0 +1,5 @@
+# Wayve LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 2121 | https://leetcode.com/problems/intervals-between-identical-elements | Intervals Between Identical Elements | Medium | 45.5% | 100.0% |

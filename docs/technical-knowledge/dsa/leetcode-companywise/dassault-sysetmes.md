@@ -1,0 +1,5 @@
+# Dassault Sysetmes LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 2988 | https://leetcode.com/problems/manager-of-the-largest-department | Manager of the Largest Department | Medium | 80.7% | 100.0% |

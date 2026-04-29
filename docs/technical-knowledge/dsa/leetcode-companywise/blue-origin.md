@@ -1,0 +1,6 @@
+# Blue Origin LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 1041 | https://leetcode.com/problems/robot-bounded-in-circle | Robot Bounded In Circle | Medium | 56.4% | 100.0% |
+| 696 | https://leetcode.com/problems/count-binary-substrings | Count Binary Substrings | Easy | 70.2% | 87.5% |

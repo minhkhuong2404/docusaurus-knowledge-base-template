@@ -1,0 +1,5 @@
+# Shipsy LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 15 | https://leetcode.com/problems/3sum | 3Sum | Medium | 38.6% | 100.0% |

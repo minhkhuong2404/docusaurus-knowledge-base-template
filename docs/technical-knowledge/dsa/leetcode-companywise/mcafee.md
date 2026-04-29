@@ -1,0 +1,5 @@
+# Mcafee LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 1777 | https://leetcode.com/problems/products-price-for-each-store | Product's Price for Each Store | Easy | 82.1% | 100.0% |

@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '64d'),
+    component: ComponentCreator('/', 'bf6'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '997'),
+        component: ComponentCreator('/', 'dac'),
         routes: [
           {
             path: '/tags',
@@ -6227,7 +6227,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '0ef'),
+            component: ComponentCreator('/', 'de1'),
             routes: [
               {
                 path: '/aws',
@@ -7140,7 +7140,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/aws/api-gateway/',
-                component: ComponentCreator('/technical-knowledge/aws/api-gateway/', '49d'),
+                component: ComponentCreator('/technical-knowledge/aws/api-gateway/', 'fc3'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -7176,7 +7176,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/aws/cicd/code-deploy',
-                component: ComponentCreator('/technical-knowledge/aws/cicd/code-deploy', 'cd2'),
+                component: ComponentCreator('/technical-knowledge/aws/cicd/code-deploy', 'f54'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -7241,19 +7241,19 @@ export default [
               },
               {
                 path: '/technical-knowledge/aws/iam/',
-                component: ComponentCreator('/technical-knowledge/aws/iam/', '549'),
+                component: ComponentCreator('/technical-knowledge/aws/iam/', 'b5c'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/aws/iam/cognito',
-                component: ComponentCreator('/technical-knowledge/aws/iam/cognito', '729'),
+                component: ComponentCreator('/technical-knowledge/aws/iam/cognito', '607'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/aws/iam/iam-advanced',
-                component: ComponentCreator('/technical-knowledge/aws/iam/iam-advanced', '970'),
+                component: ComponentCreator('/technical-knowledge/aws/iam/iam-advanced', '7bc'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -7271,19 +7271,19 @@ export default [
               },
               {
                 path: '/technical-knowledge/aws/messaging/kinesis',
-                component: ComponentCreator('/technical-knowledge/aws/messaging/kinesis', '33a'),
+                component: ComponentCreator('/technical-knowledge/aws/messaging/kinesis', '394'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/aws/messaging/sns',
-                component: ComponentCreator('/technical-knowledge/aws/messaging/sns', '8fc'),
+                component: ComponentCreator('/technical-knowledge/aws/messaging/sns', '0e2'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/aws/messaging/sqs',
-                component: ComponentCreator('/technical-knowledge/aws/messaging/sqs', 'a02'),
+                component: ComponentCreator('/technical-knowledge/aws/messaging/sqs', '5c2'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -7331,19 +7331,19 @@ export default [
               },
               {
                 path: '/technical-knowledge/aws/security/kms',
-                component: ComponentCreator('/technical-knowledge/aws/security/kms', '6bd'),
+                component: ComponentCreator('/technical-knowledge/aws/security/kms', 'fc9'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/aws/security/secrets-manager',
-                component: ComponentCreator('/technical-knowledge/aws/security/secrets-manager', '2a4'),
+                component: ComponentCreator('/technical-knowledge/aws/security/secrets-manager', '8d3'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/aws/security/ssm-parameter-store',
-                component: ComponentCreator('/technical-knowledge/aws/security/ssm-parameter-store', '2c4'),
+                component: ComponentCreator('/technical-knowledge/aws/security/ssm-parameter-store', '236'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -8144,127 +8144,4099 @@ export default [
               },
               {
                 path: '/technical-knowledge/dsa/20-week-dsa-roadmap-intro',
-                component: ComponentCreator('/technical-knowledge/dsa/20-week-dsa-roadmap-intro', '541'),
+                component: ComponentCreator('/technical-knowledge/dsa/20-week-dsa-roadmap-intro', 'cf2'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/1kosmos',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/1kosmos', 'c04'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/6sense',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/6sense', 'b60'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/accelya',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/accelya', 'eed'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/accenture',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/accenture', '41d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/accolite',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/accolite', '5db'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/acko',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/acko', '138'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/acorns',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/acorns', '676'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/activision',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/activision', '813'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/adobe',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/adobe', 'b7e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/adp',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/adp', '0c8'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/aetion',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/aetion', 'f07'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/affinity',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/affinity', '11d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/affirm',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/affirm', '105'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/agoda',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/agoda', 'c63'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/airbnb',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/airbnb', '83a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/airbus',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/airbus', 'e8e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/airtel',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/airtel', 'adb'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/airwallex',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/airwallex', 'bd7'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/akamai',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/akamai', '205'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/akuna-capital',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/akuna-capital', '456'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/alibaba',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/alibaba', '785'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/allincall',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/allincall', '9e3'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/alphonso',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/alphonso', '723'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/alten',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/alten', '819'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/altimetrik',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/altimetrik', 'f2b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/amadeus',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/amadeus', 'e6f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/amazon',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/amazon', '05c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/amd',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/amd', '47a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/amdocs',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/amdocs', 'bab'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/american-airlines',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/american-airlines', '6c8'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/american-express',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/american-express', '957'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/amplitude',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/amplitude', 'a45'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/analytics-quotient',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/analytics-quotient', '462'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/andela',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/andela', '629'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/anduril',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/anduril', '8cd'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/anthropic',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/anthropic', '180'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/anyscale',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/anyscale', '520'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/aon',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/aon', 'c93'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/apolloio',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/apolloio', '5ee'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/appdynamics',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/appdynamics', '769'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/appfolio',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/appfolio', '843'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/apple',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/apple', '978'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/applied-intuition',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/applied-intuition', '8f0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/applovin',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/applovin', '17a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/aqr-capital-management-llc',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/aqr-capital-management-llc', 'f69'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/arcesium',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/arcesium', 'cdc'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/argo-ai',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/argo-ai', 'e69'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/arista-networks',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/arista-networks', '1d9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/asana',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/asana', '721'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/ascend',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/ascend', '365'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/at-t',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/at-t', '0cb'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/athenahealth',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/athenahealth', 'e6d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/atlassian',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/atlassian', '613'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/attentive',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/attentive', 'c39'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/audible',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/audible', '043'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/auriga',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/auriga', 'c8a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/aurora',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/aurora', 'd4e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/autodesk',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/autodesk', '18e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/avalara',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/avalara', '98f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/avito',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/avito', '134'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/axis-bank',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/axis-bank', 'b90'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/axon',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/axon', 'ef7'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/baidu',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/baidu', '52a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/bank-of-america',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/bank-of-america', '63b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/barclays',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/barclays', 'fbb'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/bcg',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/bcg', '009'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/bending-spoons',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/bending-spoons', '3ed'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/bitgo',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/bitgo', '738'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/blackbuck',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/blackbuck', '0ef'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/blackrock',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/blackrock', '849'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/blackstone',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/blackstone', '466'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/blend',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/blend', 'c93'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/blinkit',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/blinkit', 'a04'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/bloomberg',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/bloomberg', 'ff4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/bloomreach',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/bloomreach', 'e56'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/blue-origin',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/blue-origin', '3e7'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/bnp-paribas',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/bnp-paribas', 'b84'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/bny-mellon',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/bny-mellon', '3ca'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/boeing',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/boeing', '744'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/bolt',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/bolt', '830'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/bookingcom',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/bookingcom', '67c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/box',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/box', '61e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/bp',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/bp', 'e43'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/braze',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/braze', '5f4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/bridgewater-associates',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/bridgewater-associates', '5de'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/brillio',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/brillio', 'db3'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/broadcom',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/broadcom', 'b1d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/browserstack',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/browserstack', '1d4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/bt-group',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/bt-group', '1bd'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/buyhatke',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/buyhatke', '58f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/bytedance',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/bytedance', '406'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/c3-ai',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/c3-ai', 'b04'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/cadence',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/cadence', '6c0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/canonical',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/canonical', '0a1'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/canva',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/canva', '8ff'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/capgemini',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/capgemini', '755'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/capital-one',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/capital-one', '476'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/careem',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/careem', '648'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/cars24',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/cars24', '1c6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/carwale',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/carwale', '9bc'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/cashfree',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/cashfree', 'f60'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/caterpillar',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/caterpillar', '511'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/cerner',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/cerner', '723'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/chalo',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/chalo', '4e7'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/chargebee',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/chargebee', 'ae1'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/checkpoint',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/checkpoint', '034'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/chewy',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/chewy', 'c73'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/chime',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/chime', '3df'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/chubb',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/chubb', 'afe'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/ciena',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/ciena', 'd14'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/circle',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/circle', '097'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/cisco',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/cisco', 'f78'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/citadel',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/citadel', '886'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/citi',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/citi', 'c87'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/citrix',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/citrix', '20d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/clari',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/clari', 'be1'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/cleartrip',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/cleartrip', '1de'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/clevertap',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/clevertap', 'd14'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/cloudera',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/cloudera', '807'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/cloudflare',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/cloudflare', '6a9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/clutter',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/clutter', 'c9c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/cme-group',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/cme-group', '8e6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/cockroach-labs',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/cockroach-labs', '224'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/code-studio',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/code-studio', '78e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/cognizant',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/cognizant', 'e3d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/cohesity',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/cohesity', '311'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/coinbase',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/coinbase', 'cf3'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/coindcx',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/coindcx', 'd1b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/coinswitch-kuber',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/coinswitch-kuber', 'c3b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/comcast',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/comcast', '643'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/commvault',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/commvault', '916'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/compass',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/compass', '331'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/confluent',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/confluent', '325'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/couchbase',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/couchbase', 'e73'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/coupa',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/coupa', '1e0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/coupang',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/coupang', '5d9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/coursera',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/coursera', '9cc'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/coveo',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/coveo', 'c5b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/cred',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/cred', '3d5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/credit-karma',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/credit-karma', 'd3e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/criteo',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/criteo', '64b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/crowdstrike',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/crowdstrike', '936'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/cruise-automation',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/cruise-automation', '71a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/ctc',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/ctc', '812'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/curefit',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/curefit', '55b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/cvent',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/cvent', 'b90'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/cyntexa',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/cyntexa', '297'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/cyware',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/cyware', '481'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/dailyhunt',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/dailyhunt', '05a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/darwinbox',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/darwinbox', '4ec'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/dassault-sysetmes',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/dassault-sysetmes', '1b8'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/dataart',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/dataart', '4b8'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/databricks',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/databricks', 'fed'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/datadog',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/datadog', '1fa'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/dataminr',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/dataminr', '7fe'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/de-shaw',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/de-shaw', '411'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/deepmind',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/deepmind', '4f7'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/delhivery',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/delhivery', '4c6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/deliveroo',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/deliveroo', 'af1'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/dell',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/dell', 'c16'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/deloitte',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/deloitte', 'fb5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/deltax',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/deltax', '7ab'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/deutsche-bank',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/deutsche-bank', '257'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/devrev',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/devrev', 'b95'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/dialpad',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/dialpad', 'b95'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/didi',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/didi', 'f42'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/directi',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/directi', '5a7'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/discord',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/discord', 'f09'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/discovery',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/discovery', '41b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/disney',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/disney', 'ee9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/dji',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/dji', 'bf6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/docusign',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/docusign', '534'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/doordash',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/doordash', '298'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/dp-world',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/dp-world', 'ab1'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/drawbridge',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/drawbridge', '349'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/dream11',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/dream11', 'bc8'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/dropbox',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/dropbox', '52b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/druva',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/druva', '2af'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/drw',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/drw', '4c6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/dtcc',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/dtcc', 'b68'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/dunzo',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/dunzo', 'dad'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/duolingo',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/duolingo', 'eea'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/earnin',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/earnin', '62c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/ebay',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/ebay', '95b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/edelweiss',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/edelweiss', '6bb'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/electronic-arts',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/electronic-arts', 'cca'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/elitmus',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/elitmus', '631'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/epam-systems',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/epam-systems', 'd97'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/epic-games',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/epic-games', 'd17'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/epic-systems',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/epic-systems', '68b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/epifi',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/epifi', '6e1'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/equinix',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/equinix', '8d4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/ericsson',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/ericsson', 'b7c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/etsy',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/etsy', 'c0b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/expedia',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/expedia', 'cbf'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/ey',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/ey', 'a7f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/f5-networks',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/f5-networks', 'f03'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/factset',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/factset', 'e9b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/factwise',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/factwise', '5bf'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/faire',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/faire', 'ffa'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/fallible',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/fallible', 'ae3'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/fanatics',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/fanatics', '624'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/fast',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/fast', '9be'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/fastenal',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/fastenal', '6ec'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/fico',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/fico', '58e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/fidelity',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/fidelity', '09d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/fidessa',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/fidessa', '476'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/figma',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/figma', '640'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/fiverr',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/fiverr', '0a9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/fivetran',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/fivetran', 'f8d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/flatiron-health',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/flatiron-health', '0c5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/fleetx',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/fleetx', '60b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/flexera',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/flexera', '752'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/flexport',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/flexport', '870'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/flipkart',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/flipkart', '9b9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/ford',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/ford', '070'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/fortinet',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/fortinet', '7e4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/forusall',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/forusall', 'a22'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/fourkites',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/fourkites', '9b9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/fpt',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/fpt', '2ad'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/fractal-analytics',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/fractal-analytics', '6fd'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/freecharge',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/freecharge', '4bc'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/freshworks',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/freshworks', 'd3a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/fynd',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/fynd', 'bbe'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/gainsight',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/gainsight', 'e39'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/gameskraft',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/gameskraft', '1b5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/garena',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/garena', '11c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/garmin',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/garmin', 'acf'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/gartner',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/gartner', '96a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/ge-digital',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/ge-digital', '050'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/ge-healthcare',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/ge-healthcare', '7e3'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/geico',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/geico', 'ca6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/general-electric',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/general-electric', '4ae'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/general-motors',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/general-motors', '5fd'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/genpact',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/genpact', '74f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/gilt-groupe',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/gilt-groupe', '147'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/github',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/github', '453'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/glassdoor',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/glassdoor', '3f8'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/globallogic',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/globallogic', '36e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/globant',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/globant', '903'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/glovo',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/glovo', '6fa'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/godaddy',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/godaddy', '3fe'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/gojek',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/gojek', 'a02'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/goldman-sachs',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/goldman-sachs', '8eb'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/google',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/google', 'f69'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/gopuff',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/gopuff', '806'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/goto',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/goto', '56e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/grab',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/grab', 'c58'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/grammarly',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/grammarly', '478'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/graviton',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/graviton', 'abc'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/groupon',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/groupon', 'e47'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/groww',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/groww', 'd0e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/grubhub',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/grubhub', '54e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/gsa-capital',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/gsa-capital', 'e31'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/gsn-games',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/gsn-games', '9e1'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/guidewire',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/guidewire', '6ca'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/gusto',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/gusto', '182'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/harness',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/harness', '152'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/hashedin',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/hashedin', 'dca'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/hbo',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/hbo', 'ca4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/hcl',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/hcl', '6a5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/helix',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/helix', 'a0a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/hertz',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/hertz', '5cd'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/highspot',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/highspot', 'e94'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/hilabs',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/hilabs', 'b4d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/hive',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/hive', '01a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/honey',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/honey', '740'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/honeywell',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/honeywell', 'ab7'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/hopper',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/hopper', 'b76'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/hotstar',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/hotstar', '6f5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/houzz',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/houzz', 'f03'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/hp',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/hp', '80b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/hpe',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/hpe', '80b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/hrt',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/hrt', '082'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/hsbc',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/hsbc', '805'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/htc',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/htc', 'e3d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/huawei',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/huawei', '6aa'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/hubspot',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/hubspot', '363'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/hulu',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/hulu', 'be8'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/ibm',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/ibm', 'b15'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/iit-bombay',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/iit-bombay', 'd17'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/imc',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/imc', 'c81'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/impact-analytics',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/impact-analytics', '050'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/increff',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/increff', 'db2'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/indeed',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/indeed', 'bb8'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/info-edge',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/info-edge', '8e6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/informatica',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/informatica', 'b37'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/infosys',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/infosys', 'a11'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/inmobi',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/inmobi', 'fc4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/innovaccer',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/innovaccer', 'd73'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/instabase',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/instabase', '0e0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/instacart',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/instacart', 'fbb'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/intel',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/intel', '509'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/interactive-brokers',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/interactive-brokers', 'fdb'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/intercom',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/intercom', '928'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/intuit',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/intuit', '39b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/ivp',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/ivp', '1a4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/ixigo',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/ixigo', 'da6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/ixl',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/ixl', '042'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/jane-street',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/jane-street', '54a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/jd',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/jd', '477'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/jeavio',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/jeavio', 'fee'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/jetbrains',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/jetbrains', 'faf'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/jingchi',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/jingchi', 'f83'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/jio',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/jio', 'a18'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/josh-technology',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/josh-technology', '118'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/jpmorgan',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/jpmorgan', '493'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/jtg',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/jtg', 'd79'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/jump-trading',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/jump-trading', '6cb'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/junglee-games',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/junglee-games', 'e89'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/juspay',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/juspay', '140'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/justworks',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/justworks', '39e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/kakao',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/kakao', '833'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/karat',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/karat', 'e31'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/keeptruckin',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/keeptruckin', 'c2b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/kickdrum',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/kickdrum', '5fd'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/kla',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/kla', 'ed9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/kla-tencor',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/kla-tencor', 'f80'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/kotak-mahindra-bank',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/kotak-mahindra-bank', 'c93'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/kpit',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/kpit', '717'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/kpmg',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/kpmg', '818'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/lacework',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/lacework', 'df5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/larsen-toubro',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/larsen-toubro', 'a91'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/leap-motion',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/leap-motion', '242'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/lendingkart',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/lendingkart', '6e5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/lenskart',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/lenskart', '3e5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/lg-electronics',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/lg-electronics', 'bc5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/liberty-mutual',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/liberty-mutual', 'f81'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/liftoff',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/liftoff', 'abe'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/lime',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/lime', '49d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/line',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/line', '18d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/linkedin',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/linkedin', '460'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/liveramp',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/liveramp', '203'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/livspace',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/livspace', '7ea'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/lowe',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/lowe', '0d0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/lti',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/lti', '11a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/lucid',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/lucid', 'ef0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/luxoft',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/luxoft', 'd88'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/lyft',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/lyft', '620'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/machine-zone',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/machine-zone', '740'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/machinezone',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/machinezone', '970'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/maersk',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/maersk', '850'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/makemytrip',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/makemytrip', 'a99'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/mapbox',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/mapbox', '362'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/maq-software',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/maq-software', '70c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/marqeta',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/marqeta', '953'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/mastercard',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/mastercard', '146'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/mathworks',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/mathworks', '3bf'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/mcafee',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/mcafee', '7f5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/mcdonalds',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/mcdonalds', '278'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/mckinsey',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/mckinsey', '9cf'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/medianet',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/medianet', 'ff5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/meesho',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/meesho', 'd8e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/meituan',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/meituan', 'a53'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/mercari',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/mercari', '60e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/meta',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/meta', 'ff6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/micro1',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/micro1', '27e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/microsoft',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/microsoft', 'a99'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/microstrategy',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/microstrategy', '2ea'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/millennium',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/millennium', '4b4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/mindtickle',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/mindtickle', 'a94'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/mindtree',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/mindtree', 'a84'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/mishipay',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/mishipay', '7ea'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/mitsogo',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/mitsogo', 'd51'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/mixpanel',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/mixpanel', '630'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/mobileye',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/mobileye', 'e42'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/mobisy',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/mobisy', 'c53'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/moengage',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/moengage', 'f4d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/moloco',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/moloco', 'c0d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/moneylion',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/moneylion', '63d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/mongodb',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/mongodb', '450'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/morgan-stanley',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/morgan-stanley', 'ab1'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/moveworks',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/moveworks', '2f0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/msci',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/msci', '2cb'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/murex',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/murex', '559'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/mykaarma',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/mykaarma', '2c5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/myntra',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/myntra', '6cd'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/nagarro',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/nagarro', '677'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/nasdaq',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/nasdaq', '4f6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/national-instruments',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/national-instruments', '6b7'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/national-payments-coorperation-india',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/national-payments-coorperation-india', '84b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/natwest',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/natwest', '2a1'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/navan',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/navan', '010'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/naver',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/naver', '6e4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/navi',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/navi', '19e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/ncr',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/ncr', 'a87'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/nerdwallet',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/nerdwallet', '77a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/netapp',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/netapp', '3e6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/netcracker-technology',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/netcracker-technology', 'd3e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/netease',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/netease', '53f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/netflix',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/netflix', '038'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/netskope',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/netskope', '0b5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/netsuite',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/netsuite', '8cc'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/newsbreak',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/newsbreak', '12f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/nextdoor',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/nextdoor', '638'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/nextjump',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/nextjump', 'e54'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/nference',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/nference', '3c5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/niantic',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/niantic', '152'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/nielsen',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/nielsen', '04f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/nike',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/nike', '3fa'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/nokia',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/nokia', '0b7'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/noon',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/noon', '9ed'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/nordstrom',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/nordstrom', '2a9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/notion',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/notion', '14c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/npci',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/npci', '600'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/nuro',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/nuro', '4f2'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/nutanix',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/nutanix', '54e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/nvidia',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/nvidia', '88c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/nykaa',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/nykaa', 'd3a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/observeai',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/observeai', 'b1f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/odoo',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/odoo', '858'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/okta',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/okta', 'a50'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/okx',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/okx', 'cfd'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/olx',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/olx', '96f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/openai',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/openai', '4eb'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/opentext',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/opentext', 'cf3'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/oppo',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/oppo', '5f4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/optiver',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/optiver', '687'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/optum',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/optum', '25a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/oracle',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/oracle', '303'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/oscar-health',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/oscar-health', '482'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/otterai',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/otterai', 'f3a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/oyo',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/oyo', 'a70'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/ozon',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/ozon', 'bd4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/palantir-technologies',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/palantir-technologies', '485'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/palo-alto-networks',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/palo-alto-networks', 'dcd'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/park',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/park', '5f9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/patreon',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/patreon', 'e0a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/paycom',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/paycom', 'e8e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/paypal',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/paypal', '0f2'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/paypay',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/paypay', '2c2'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/paytm',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/paytm', '923'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/payu',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/payu', '2f2'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/peak6',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/peak6', '963'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/pega',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/pega', '121'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/peloton',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/peloton', '4f9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/persistent-systems',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/persistent-systems', '83c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/philips',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/philips', '8a9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/phonepe',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/phonepe', 'b92'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/pickrr',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/pickrr', '42e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/pinterest',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/pinterest', 'b24'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/plaid',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/plaid', 'f96'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/playsimple',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/playsimple', '24c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/pocket-gems',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/pocket-gems', '55f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/point72',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/point72', '8cf'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/polar',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/polar', 'bd5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/ponyai',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/ponyai', '670'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/pornhub',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/pornhub', 'ebf'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/porter',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/porter', '752'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/poshmark',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/poshmark', '86e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/postman',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/postman', '338'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/postmates',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/postmates', '538'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/poynt',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/poynt', '742'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/practo',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/practo', 'd04'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/publicis-sapient',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/publicis-sapient', '23b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/pubmatic',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/pubmatic', '994'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/pure',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/pure', '2b9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/pure-storage',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/pure-storage', 'd49'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/purplle',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/purplle', '602'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/pwc',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/pwc', '8c2'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/qualcomm',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/qualcomm', 'f44'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/qualtrics',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/qualtrics', '5e0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/qualys',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/qualys', '016'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/quantcast',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/quantcast', 'd57'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/quantiphi',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/quantiphi', '905'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/quince',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/quince', 'ee9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/quora',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/quora', '78a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/rackspace',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/rackspace', '738'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/radius',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/radius', 'c02'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/rakuten',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/rakuten', 'fc6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/rally-health',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/rally-health', 'b73'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/ramp-2',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/ramp-2', 'f54'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/razorpay',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/razorpay', 'a3c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/rbc',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/rbc', 'e6f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/redbus',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/redbus', '703'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/reddit',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/reddit', '218'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/redfin',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/redfin', '583'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/remitly',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/remitly', '38d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/retailmenot',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/retailmenot', 'afd'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/revolut',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/revolut', '61f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/riot-games',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/riot-games', '36d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/ripple',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/ripple', '5c4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/rippling',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/rippling', '8c5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/rivian',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/rivian', 'f42'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/robinhood',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/robinhood', '619'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/roblox',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/roblox', 'c15'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/rokt',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/rokt', 'c69'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/roku',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/roku', '2e2'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/rubrik',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/rubrik', 'f32'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/salesforce',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/salesforce', 'd5b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/sambanova',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/sambanova', 'b5a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/samsara',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/samsara', '3e5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/samsung',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/samsung', '711'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/sap',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/sap', '8d5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/scale-ai',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/scale-ai', 'e28'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/scaler',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/scaler', 'bcf'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/schlumberger',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/schlumberger', 'ec7'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/schneider-electric',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/schneider-electric', 'fe7'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/schrodinger',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/schrodinger', '44b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/sentry',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/sentry', '4c6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/servicenow',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/servicenow', '12b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/sharechat',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/sharechat', '70f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/shift-technology',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/shift-technology', 'ae1'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/shipsy',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/shipsy', '1f3'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/shopee',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/shopee', 'ab4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/shopify',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/shopify', '38f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/siemens',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/siemens', '956'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/sig',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/sig', '468'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/sigmoid',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/sigmoid', '9ca'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/singlestore',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/singlestore', '15a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/sixt',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/sixt', '369'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/slice',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/slice', 'a75'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/smartnews',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/smartnews', '29d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/smartsheet',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/smartsheet', 'c56'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/snapchat',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/snapchat', '89a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/snapdeal',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/snapdeal', '3d4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/snowflake',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/snowflake', '8c9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/societe-generale',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/societe-generale', 'e95'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/sofi',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/sofi', 'b2f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/softwire',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/softwire', 'a4d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/sonatus',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/sonatus', 'c66'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/sony',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/sony', '53a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/soti',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/soti', 'ffa'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/soundhound',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/soundhound', '364'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/spacex',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/spacex', 'ef7'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/spinny',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/spinny', '913'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/splunk',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/splunk', 'd32'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/spotify',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/spotify', '9c3'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/sprinklr',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/sprinklr', 'f29'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/square',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/square', '52b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/squarepoint-capital',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/squarepoint-capital', '1ab'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/squarespace',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/squarespace', '1ff'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/stackadapt',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/stackadapt', 'ab7'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/stackline',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/stackline', 'dd3'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/starbucks',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/starbucks', '19f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/state-farm',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/state-farm', 'df3'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/strava',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/strava', 'bb7'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/stripe',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/stripe', '4b7'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/sumologic',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/sumologic', 'b11'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/swiggy',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/swiggy', 'b73'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/syfe',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/syfe', 'bc1'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/symantec',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/symantec', '013'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/synopsys',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/synopsys', '1e3'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/ta-digital',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/ta-digital', '2e8'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/tableau',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/tableau', 'c1e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/tanium',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/tanium', '39d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/target',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/target', '3eb'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/tcs',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/tcs', 'ac2'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/tech-mahindra',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/tech-mahindra', '8d6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/tekion',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/tekion', 'f4a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/tencent',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/tencent', '6c5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/teradata',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/teradata', 'b31'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/tesco',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/tesco', '3cb'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/tesla',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/tesla', 'a45'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/texas-instruments',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/texas-instruments', 'c21'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/the-trade-desk',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/the-trade-desk', 'fde'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/thomson-reuters',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/thomson-reuters', 'd44'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/thoughtspot',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/thoughtspot', '500'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/thoughtworks',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/thoughtworks', 'ae1'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/thousandeyes',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/thousandeyes', '456'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/thumbtack',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/thumbtack', '65a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/tiaa',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/tiaa', '806'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/tiger-analytics',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/tiger-analytics', '0c4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/tiktok',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/tiktok', '3aa'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/tinder',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/tinder', '6a7'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/tinkoff',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/tinkoff', '5aa'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/toast',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/toast', 'cef'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/tokopedia',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/tokopedia', 'cf6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/tomtom',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/tomtom', '3d7'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/toptal',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/toptal', '664'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/tower-research',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/tower-research', '4d8'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/tracxn',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/tracxn', '675'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/traveloka',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/traveloka', '013'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/trend-micro',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/trend-micro', '57c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/trexquant',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/trexquant', '52e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/trilogy',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/trilogy', 'f0c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/tripactions',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/tripactions', '562'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/tripadvisor',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/tripadvisor', '218'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/triplebyte',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/triplebyte', '852'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/turing',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/turing', '965'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/turo',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/turo', '828'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/turvo',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/turvo', 'd86'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/tusimple',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/tusimple', '0ab'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/twilio',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/twilio', '172'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/twitch',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/twitch', 'e68'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/twitter',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/twitter', 'fb8'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/two-sigma',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/two-sigma', 'eb4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/uber',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/uber', 'a82'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/ubs',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/ubs', 'ddd'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/udemy',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/udemy', '596'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/uipath',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/uipath', '7a9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/ukg',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/ukg', '494'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/unbxd',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/unbxd', 'ed7'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/unity',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/unity', '2a5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/unstop',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/unstop', 'de8'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/upstart',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/upstart', '639'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/urban-company',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/urban-company', '13e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/ust',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/ust', '288'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/valve',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/valve', 'ffd'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/veeva',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/veeva', '834'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/verily',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/verily', 'a72'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/veritas',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/veritas', 'aa6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/verizon',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/verizon', 'a32'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/verkada',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/verkada', '4c5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/viasat',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/viasat', '064'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/vimeo',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/vimeo', '8c1'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/virtu',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/virtu', '727'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/virtusa',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/virtusa', '958'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/visa',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/visa', 'd2a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/vk',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/vk', 'fbf'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/vmware',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/vmware', 'f53'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/walmart-labs',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/walmart-labs', '9c4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/warnermedia',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/warnermedia', 'e2a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/watchguard',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/watchguard', '7a0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/wayfair',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/wayfair', '5b5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/waymo',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/waymo', 'b13'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/wayve',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/wayve', '3c3'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/wealthfront',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/wealthfront', '39a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/wells-fargo',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/wells-fargo', '04f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/weride',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/weride', 'f15'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/western-digital',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/western-digital', '498'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/whatfix',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/whatfix', 'a53'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/whatnot',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/whatnot', '9cd'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/winzo',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/winzo', '245'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/wipro',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/wipro', '52d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/wise',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/wise', '112'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/wish',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/wish', 'a82'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/wissen',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/wissen', '12e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/wix',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/wix', '646'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/workday',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/workday', 'ab3'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/works-applications',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/works-applications', 'd79'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/worldquant',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/worldquant', 'c65'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/woven-by-toyota',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/woven-by-toyota', '025'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/xing',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/xing', '181'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/yahoo',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/yahoo', 'a40'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/yandex',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/yandex', '2c2'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/yatra',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/yatra', '74c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/yelp',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/yelp', 'd23'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/yext',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/yext', '7a3'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/yugabyte',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/yugabyte', 'c95'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/zalando',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/zalando', '286'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/zappos',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/zappos', '4f8'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/zemoso',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/zemoso', '45d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/zendesk',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/zendesk', '660'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/zenefits',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/zenefits', 'd42'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/zepto',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/zepto', '379'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/zeta',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/zeta', 'cb7'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/zeta-suite',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/zeta-suite', 'ca6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/zillow',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/zillow', '092'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/zip',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/zip', '0f3'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/ziprecruiter',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/ziprecruiter', 'd42'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/zluri',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/zluri', '499'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/zocdoc',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/zocdoc', '47d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/zoho',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/zoho', '492'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/zomato',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/zomato', '272'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/zoom',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/zoom', '9fb'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/zoox',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/zoox', 'c1e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/zopsmart',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/zopsmart', '382'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/zs-associates',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/zs-associates', '0f4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/zscaler',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/zscaler', '2e1'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/zulily',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/zulily', '130'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/zynga',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/zynga', 'f2a'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-1-arrays-strings-prefix-sums',
-                component: ComponentCreator('/technical-knowledge/dsa/week-1-arrays-strings-prefix-sums', 'edf'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-1-arrays-strings-prefix-sums', '219'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-10-recursion-backtracking',
-                component: ComponentCreator('/technical-knowledge/dsa/week-10-recursion-backtracking', 'a4c'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-10-recursion-backtracking', '6b0'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-11-intervals-sweep-line',
-                component: ComponentCreator('/technical-knowledge/dsa/week-11-intervals-sweep-line', 'dc4'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-11-intervals-sweep-line', '138'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-12-heaps-greedy',
-                component: ComponentCreator('/technical-knowledge/dsa/week-12-heaps-greedy', '6fc'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-12-heaps-greedy', '750'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-13-dynamic-programming-1d',
-                component: ComponentCreator('/technical-knowledge/dsa/week-13-dynamic-programming-1d', 'c74'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-13-dynamic-programming-1d', '77d'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-14-dynamic-programming-2d',
-                component: ComponentCreator('/technical-knowledge/dsa/week-14-dynamic-programming-2d', 'c30'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-14-dynamic-programming-2d', '77b'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-15-advanced-sliding-windows',
-                component: ComponentCreator('/technical-knowledge/dsa/week-15-advanced-sliding-windows', '493'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-15-advanced-sliding-windows', '84a'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-16-tries-prefix-trees',
-                component: ComponentCreator('/technical-knowledge/dsa/week-16-tries-prefix-trees', '7a0'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-16-tries-prefix-trees', '96b'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-17-shortest-paths-mst',
-                component: ComponentCreator('/technical-knowledge/dsa/week-17-shortest-paths-mst', '5b7'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-17-shortest-paths-mst', '33c'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-18-disjoint-set-union',
-                component: ComponentCreator('/technical-knowledge/dsa/week-18-disjoint-set-union', '540'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-18-disjoint-set-union', '18e'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-19-bit-manipulation-math',
-                component: ComponentCreator('/technical-knowledge/dsa/week-19-bit-manipulation-math', '718'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-19-bit-manipulation-math', 'be8'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-2-two-pointers-sliding-window',
-                component: ComponentCreator('/technical-knowledge/dsa/week-2-two-pointers-sliding-window', '522'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-2-two-pointers-sliding-window', '7f6'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-20-comprehensive-review-systems',
-                component: ComponentCreator('/technical-knowledge/dsa/week-20-comprehensive-review-systems', '1fe'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-20-comprehensive-review-systems', 'c53'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-3-linked-lists-pointers',
-                component: ComponentCreator('/technical-knowledge/dsa/week-3-linked-lists-pointers', 'a7e'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-3-linked-lists-pointers', '6d3'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-4-hash-tables-sets',
-                component: ComponentCreator('/technical-knowledge/dsa/week-4-hash-tables-sets', '573'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-4-hash-tables-sets', '9a9'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-5-stacks-queues-monotonic',
-                component: ComponentCreator('/technical-knowledge/dsa/week-5-stacks-queues-monotonic', '606'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-5-stacks-queues-monotonic', 'd98'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-6-binary-trees-bst',
-                component: ComponentCreator('/technical-knowledge/dsa/week-6-binary-trees-bst', 'dca'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-6-binary-trees-bst', 'df0'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-7-graph-foundations',
-                component: ComponentCreator('/technical-knowledge/dsa/week-7-graph-foundations', 'ba7'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-7-graph-foundations', 'bab'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-8-advanced-graph-concepts',
-                component: ComponentCreator('/technical-knowledge/dsa/week-8-advanced-graph-concepts', 'b61'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-8-advanced-graph-concepts', '193'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/week-9-binary-search',
-                component: ComponentCreator('/technical-knowledge/dsa/week-9-binary-search', '580'),
+                component: ComponentCreator('/technical-knowledge/dsa/week-9-binary-search', 'b60'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

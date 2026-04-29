@@ -1,0 +1,5 @@
+# Glassdoor LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 908 | https://leetcode.com/problems/smallest-range-i | Smallest Range I | Easy | 73.3% | 100.0% |

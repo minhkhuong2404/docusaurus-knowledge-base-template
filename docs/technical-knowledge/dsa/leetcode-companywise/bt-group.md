@@ -1,0 +1,5 @@
+# Bt Group LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 2974 | https://leetcode.com/problems/minimum-number-game | Minimum Number Game | Easy | 85.3% | 100.0% |

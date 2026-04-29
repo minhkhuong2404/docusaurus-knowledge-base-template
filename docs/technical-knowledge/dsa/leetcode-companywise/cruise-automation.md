@@ -1,0 +1,6 @@
+# Cruise Automation LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 1258 | https://leetcode.com/problems/synonymous-sentences | Synonymous Sentences | Medium | 57.1% | 100.0% |
+| 207 | https://leetcode.com/problems/course-schedule | Course Schedule | Medium | 50.8% | 62.5% |

@@ -1,0 +1,5 @@
+# Browserstack LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 739 | https://leetcode.com/problems/daily-temperatures | Daily Temperatures | Medium | 68.3% | 100.0% |

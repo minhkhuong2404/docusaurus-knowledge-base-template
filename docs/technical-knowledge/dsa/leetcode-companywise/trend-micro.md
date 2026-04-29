@@ -1,0 +1,5 @@
+# Trend Micro LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 1488 | https://leetcode.com/problems/avoid-flood-in-the-city | Avoid Flood in The City | Medium | 39.0% | 100.0% |

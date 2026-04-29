@@ -1,0 +1,5 @@
+# Elitmus LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 3014 | https://leetcode.com/problems/minimum-number-of-pushes-to-type-word-i | Minimum Number of Pushes to Type Word I | Easy | 66.9% | 100.0% |

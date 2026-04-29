@@ -1,0 +1,5 @@
+# Ta Digital LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 2959 | https://leetcode.com/problems/number-of-possible-sets-of-closing-branches | Number of Possible Sets of Closing Branches | Hard | 50.6% | 100.0% |

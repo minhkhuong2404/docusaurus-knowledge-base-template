@@ -1,0 +1,5 @@
+# 1Kosmos LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 2938 | https://leetcode.com/problems/separate-black-and-white-balls | Separate Black and White Balls | Medium | 64.0% | 100.0% |
