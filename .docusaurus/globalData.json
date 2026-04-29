@@ -1468,6 +1468,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/devops/ansible",
+              "path": "/technical-knowledge/devops/ansible",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/devops/devops-interview-questions",
               "path": "/technical-knowledge/devops/devops-interview-questions",
               "sidebar": "tutorialSidebar"
@@ -1560,6 +1565,16 @@
             {
               "id": "technical-knowledge/devops/kubernetes-workloads",
               "path": "/technical-knowledge/devops/kubernetes-workloads",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/devops/linux-for-devops",
+              "path": "/technical-knowledge/devops/linux-for-devops",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/devops/terraform",
+              "path": "/technical-knowledge/devops/terraform",
               "sidebar": "tutorialSidebar"
             },
             {

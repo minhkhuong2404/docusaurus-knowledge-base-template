@@ -818,6 +818,7 @@ const sidebars: SidebarsConfig = {
 			label: '🐳 DevOps & Containerization',
 			items: [
 				'technical-knowledge/devops/devops-intro',
+				'technical-knowledge/devops/linux-for-devops',
 				{
 					type: 'category',
 					label: '🐳 Docker',
@@ -851,6 +852,15 @@ const sidebars: SidebarsConfig = {
 					items: [
 						'technical-knowledge/devops/kubectl-commands',
 						'technical-knowledge/devops/helm',
+					],
+				},
+				{
+					type: 'category',
+					label: '🔧 Infrastructure as Code (IaC)',
+					collapsed: true,
+					items: [
+						'technical-knowledge/devops/terraform',
+						'technical-knowledge/devops/ansible',
 					],
 				},
 				{

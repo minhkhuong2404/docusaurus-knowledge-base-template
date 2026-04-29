@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'c77'),
+    component: ComponentCreator('/', '821'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '4b4'),
+        component: ComponentCreator('/', 'b09'),
         routes: [
           {
             path: '/tags',
@@ -168,6 +168,11 @@ export default [
           {
             path: '/tags/angular',
             component: ComponentCreator('/tags/angular', 'bbd'),
+            exact: true
+          },
+          {
+            path: '/tags/ansible',
+            component: ComponentCreator('/tags/ansible', '6a7'),
             exact: true
           },
           {
@@ -408,6 +413,11 @@ export default [
           {
             path: '/tags/banking-roles',
             component: ComponentCreator('/tags/banking-roles', '41e'),
+            exact: true
+          },
+          {
+            path: '/tags/bash',
+            component: ComponentCreator('/tags/bash', '913'),
             exact: true
           },
           {
@@ -1261,6 +1271,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/configuration-management',
+            component: ComponentCreator('/tags/configuration-management', '19b'),
+            exact: true
+          },
+          {
             path: '/tags/conflict-resolution',
             component: ComponentCreator('/tags/conflict-resolution', '0e9'),
             exact: true
@@ -1603,6 +1618,11 @@ export default [
           {
             path: '/tags/deduplication',
             component: ComponentCreator('/tags/deduplication', '95a'),
+            exact: true
+          },
+          {
+            path: '/tags/deep-dive',
+            component: ComponentCreator('/tags/deep-dive', '484'),
             exact: true
           },
           {
@@ -2698,6 +2718,11 @@ export default [
           {
             path: '/tags/infosys',
             component: ComponentCreator('/tags/infosys', '4a2'),
+            exact: true
+          },
+          {
+            path: '/tags/infrastructure',
+            component: ComponentCreator('/tags/infrastructure', 'a79'),
             exact: true
           },
           {
@@ -5616,6 +5641,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/terraform',
+            component: ComponentCreator('/tags/terraform', '814'),
+            exact: true
+          },
+          {
             path: '/tags/test-boundary',
             component: ComponentCreator('/tags/test-boundary', '6fb'),
             exact: true
@@ -6187,7 +6217,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '46e'),
+            component: ComponentCreator('/', '13b'),
             routes: [
               {
                 path: '/aws',
@@ -7962,6 +7992,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/devops/ansible',
+                component: ComponentCreator('/technical-knowledge/devops/ansible', '275'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/devops/devops-interview-questions',
                 component: ComponentCreator('/technical-knowledge/devops/devops-interview-questions', 'f9c'),
                 exact: true,
@@ -8066,6 +8102,18 @@ export default [
               {
                 path: '/technical-knowledge/devops/kubernetes-workloads',
                 component: ComponentCreator('/technical-knowledge/devops/kubernetes-workloads', 'e06'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/devops/linux-for-devops',
+                component: ComponentCreator('/technical-knowledge/devops/linux-for-devops', 'e81'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/devops/terraform',
+                component: ComponentCreator('/technical-knowledge/devops/terraform', 'b65'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -9160,7 +9208,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/redis/redis-rate-limiting',
-                component: ComponentCreator('/technical-knowledge/redis/redis-rate-limiting', '81b'),
+                component: ComponentCreator('/technical-knowledge/redis/redis-rate-limiting', '074'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

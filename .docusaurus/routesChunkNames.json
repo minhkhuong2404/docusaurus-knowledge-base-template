@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-c77": {
+  "/-821": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-4b4": {
+  "/-b09": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -144,6 +144,10 @@
   "/tags/angular-bbd": {
     "__comp": "df203c0f",
     "__props": "911daa87"
+  },
+  "/tags/ansible-6a7": {
+    "__comp": "df203c0f",
+    "__props": "c91d44e0"
   },
   "/tags/answers-fd9": {
     "__comp": "df203c0f",
@@ -336,6 +340,10 @@
   "/tags/banking-roles-41e": {
     "__comp": "df203c0f",
     "__props": "da161c58"
+  },
+  "/tags/bash-913": {
+    "__comp": "df203c0f",
+    "__props": "6ef34afc"
   },
   "/tags/basics-041": {
     "__comp": "df203c0f",
@@ -1017,6 +1025,10 @@
     "__comp": "df203c0f",
     "__props": "7264f338"
   },
+  "/tags/configuration-management-19b": {
+    "__comp": "df203c0f",
+    "__props": "03e648fe"
+  },
   "/tags/conflict-resolution-0e9": {
     "__comp": "df203c0f",
     "__props": "09d5747f"
@@ -1292,6 +1304,10 @@
   "/tags/deduplication-95a": {
     "__comp": "df203c0f",
     "__props": "d96eb640"
+  },
+  "/tags/deep-dive-484": {
+    "__comp": "df203c0f",
+    "__props": "cf0b6253"
   },
   "/tags/default-methods-fd8": {
     "__comp": "df203c0f",
@@ -2168,6 +2184,10 @@
   "/tags/infosys-4a2": {
     "__comp": "df203c0f",
     "__props": "cf251361"
+  },
+  "/tags/infrastructure-a79": {
+    "__comp": "df203c0f",
+    "__props": "77bdb301"
   },
   "/tags/infrastructure-as-code-b54": {
     "__comp": "df203c0f",
@@ -4501,6 +4521,10 @@
     "__comp": "df203c0f",
     "__props": "0f2cef17"
   },
+  "/tags/terraform-814": {
+    "__comp": "df203c0f",
+    "__props": "520f3fa5"
+  },
   "/tags/test-boundary-6fb": {
     "__comp": "df203c0f",
     "__props": "4f9cf8b3"
@@ -4957,7 +4981,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-46e": {
+  "/-13b": {
     "__comp": "a94703ab"
   },
   "/aws-7a1": {
@@ -6144,6 +6168,10 @@
     "__comp": "17896441",
     "content": "228b4013"
   },
+  "/technical-knowledge/devops/ansible-275": {
+    "__comp": "17896441",
+    "content": "2e222ed3"
+  },
   "/technical-knowledge/devops/devops-interview-questions-f9c": {
     "__comp": "17896441",
     "content": "5ab7a520"
@@ -6215,6 +6243,14 @@
   "/technical-knowledge/devops/kubernetes-workloads-e06": {
     "__comp": "17896441",
     "content": "e775c6ed"
+  },
+  "/technical-knowledge/devops/linux-for-devops-e81": {
+    "__comp": "17896441",
+    "content": "4ef1d832"
+  },
+  "/technical-knowledge/devops/terraform-b65": {
+    "__comp": "17896441",
+    "content": "c2aaa6d4"
   },
   "/technical-knowledge/devops/vm-docker-k8s-explained-6ee": {
     "__comp": "17896441",
@@ -6944,7 +6980,7 @@
     "__comp": "17896441",
     "content": "9c77e95c"
   },
-  "/technical-knowledge/redis/redis-rate-limiting-81b": {
+  "/technical-knowledge/redis/redis-rate-limiting-074": {
     "__comp": "17896441",
     "content": "3d3827a7"
   },
