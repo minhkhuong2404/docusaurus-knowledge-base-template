@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-bf6": {
+  "/-242": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-dac": {
+  "/-d2b": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -4989,7 +4989,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-de1": {
+  "/-7a9": {
     "__comp": "a94703ab"
   },
   "/aws-7a1": {
@@ -6276,2653 +6276,2653 @@
     "__comp": "17896441",
     "content": "518f0c18"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/1kosmos-c04": {
+  "/technical-knowledge/dsa/leetcode-companywise/0-9/1kosmos-bdd": {
     "__comp": "17896441",
-    "content": "82ffe716"
+    "content": "cb43cfd8"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/6sense-b60": {
+  "/technical-knowledge/dsa/leetcode-companywise/0-9/6sense-8fa": {
     "__comp": "17896441",
-    "content": "2259cd1d"
+    "content": "3bdaf377"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/accelya-eed": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/accelya-b23": {
     "__comp": "17896441",
-    "content": "d591b794"
+    "content": "6085bff6"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/accenture-41d": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/accenture-bdb": {
     "__comp": "17896441",
-    "content": "384f82d9"
+    "content": "0bd86476"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/accolite-5db": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/accolite-099": {
     "__comp": "17896441",
-    "content": "5a070ef6"
+    "content": "b45be533"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/acko-138": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/acko-b7c": {
     "__comp": "17896441",
-    "content": "6fd939dd"
+    "content": "71bca8de"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/acorns-676": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/acorns-993": {
     "__comp": "17896441",
-    "content": "20893cd1"
+    "content": "e15e0608"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/activision-813": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/activision-3b0": {
     "__comp": "17896441",
-    "content": "4e5a9dc0"
+    "content": "8125c033"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/adobe-b7e": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/adobe-b81": {
     "__comp": "17896441",
-    "content": "64a631c8"
+    "content": "4d31627a"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/adp-0c8": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/adp-0c0": {
     "__comp": "17896441",
-    "content": "acf24d3f"
+    "content": "93bcf86c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/aetion-f07": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/aetion-dc0": {
     "__comp": "17896441",
-    "content": "bd324657"
+    "content": "cdf260ec"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/affinity-11d": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/affinity-18b": {
     "__comp": "17896441",
-    "content": "f6cc8f98"
+    "content": "a5d74c81"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/affirm-105": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/affirm-68d": {
     "__comp": "17896441",
-    "content": "2f6ceaa8"
+    "content": "ecd096eb"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/agoda-c63": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/agoda-a2b": {
     "__comp": "17896441",
-    "content": "70bc3e93"
+    "content": "e3c862dc"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/airbnb-83a": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/airbnb-a09": {
     "__comp": "17896441",
-    "content": "cdc07f65"
+    "content": "1ac7e16c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/airbus-e8e": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/airbus-15f": {
     "__comp": "17896441",
-    "content": "39c7be1b"
+    "content": "ace1b52b"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/airtel-adb": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/airtel-ad6": {
     "__comp": "17896441",
-    "content": "905c696d"
+    "content": "9b62e552"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/airwallex-bd7": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/airwallex-e41": {
     "__comp": "17896441",
-    "content": "81f49c08"
+    "content": "047cf8a3"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/akamai-205": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/akamai-ea9": {
     "__comp": "17896441",
-    "content": "6b947581"
+    "content": "ccb06ed0"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/akuna-capital-456": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/akuna-capital-9e6": {
     "__comp": "17896441",
-    "content": "8afe55b2"
+    "content": "cc779578"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/alibaba-785": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/alibaba-ab6": {
     "__comp": "17896441",
-    "content": "83665542"
+    "content": "2c867fa3"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/allincall-9e3": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/allincall-b58": {
     "__comp": "17896441",
-    "content": "f4db9b42"
+    "content": "acd1a16e"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/alphonso-723": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/alphonso-2ce": {
     "__comp": "17896441",
-    "content": "8af392c8"
+    "content": "5365dd32"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/alten-819": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/alten-f15": {
     "__comp": "17896441",
-    "content": "bd2b4361"
+    "content": "ff423772"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/altimetrik-f2b": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/altimetrik-936": {
     "__comp": "17896441",
-    "content": "e6f958fb"
+    "content": "7388179c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/amadeus-e6f": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/amadeus-da8": {
     "__comp": "17896441",
-    "content": "9ee4dbc1"
+    "content": "69e6b674"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/amazon-05c": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/amazon-cc7": {
     "__comp": "17896441",
-    "content": "9a7f4c4c"
+    "content": "b3e0157a"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/amd-47a": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/amd-29b": {
     "__comp": "17896441",
-    "content": "9200ee91"
+    "content": "730ef1d2"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/amdocs-bab": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/amdocs-fc3": {
     "__comp": "17896441",
-    "content": "d54f2317"
+    "content": "29719965"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/american-airlines-6c8": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/american-airlines-108": {
     "__comp": "17896441",
-    "content": "6fe03816"
+    "content": "2f2b0af9"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/american-express-957": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/american-express-683": {
     "__comp": "17896441",
-    "content": "14dec9b4"
+    "content": "b9495507"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/amplitude-a45": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/amplitude-5a7": {
     "__comp": "17896441",
-    "content": "cb87b1d9"
+    "content": "26e23ce2"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/analytics-quotient-462": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/analytics-quotient-d32": {
     "__comp": "17896441",
-    "content": "6ae33a99"
+    "content": "d0c2b70a"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/andela-629": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/andela-79d": {
     "__comp": "17896441",
-    "content": "be3071af"
+    "content": "55121c2f"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/anduril-8cd": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/anduril-bff": {
     "__comp": "17896441",
-    "content": "83f61c9b"
+    "content": "83dbf8d1"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/anthropic-180": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/anthropic-94b": {
     "__comp": "17896441",
-    "content": "e86ba737"
+    "content": "04cf3ebc"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/anyscale-520": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/anyscale-2fc": {
     "__comp": "17896441",
-    "content": "f44d5797"
+    "content": "0f2da302"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/aon-c93": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/aon-d0e": {
     "__comp": "17896441",
-    "content": "1ede29eb"
+    "content": "94410931"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/apolloio-5ee": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/apolloio-43e": {
     "__comp": "17896441",
-    "content": "3ccfbed9"
+    "content": "f39f8281"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/appdynamics-769": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/appdynamics-4d5": {
     "__comp": "17896441",
-    "content": "53901d6d"
+    "content": "6851aa5d"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/appfolio-843": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/appfolio-cd7": {
     "__comp": "17896441",
-    "content": "5fad8a5e"
+    "content": "7a87f0dc"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/apple-978": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/apple-b81": {
     "__comp": "17896441",
-    "content": "1351f03f"
+    "content": "1969214b"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/applied-intuition-8f0": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/applied-intuition-297": {
     "__comp": "17896441",
-    "content": "0d040582"
+    "content": "3b1974ad"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/applovin-17a": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/applovin-331": {
     "__comp": "17896441",
-    "content": "cc86f1b2"
+    "content": "589900ce"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/aqr-capital-management-llc-f69": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/aqr-capital-management-llc-257": {
     "__comp": "17896441",
-    "content": "2b889ed1"
+    "content": "6dfbede0"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/arcesium-cdc": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/arcesium-b71": {
     "__comp": "17896441",
-    "content": "0fad84fe"
+    "content": "d47ad58d"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/argo-ai-e69": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/argo-ai-2ea": {
     "__comp": "17896441",
-    "content": "8df45041"
+    "content": "8198cb8f"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/arista-networks-1d9": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/arista-networks-4ca": {
     "__comp": "17896441",
-    "content": "0e205214"
+    "content": "7a7e0c2c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/asana-721": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/asana-ff5": {
     "__comp": "17896441",
-    "content": "7a704b8a"
+    "content": "6c799739"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/ascend-365": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/ascend-01f": {
     "__comp": "17896441",
-    "content": "35e37e03"
+    "content": "39555bb6"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/at-t-0cb": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/at-t-f75": {
     "__comp": "17896441",
-    "content": "c398b4dd"
+    "content": "193f4364"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/athenahealth-e6d": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/athenahealth-bb7": {
     "__comp": "17896441",
-    "content": "3be0e830"
+    "content": "c65918a1"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/atlassian-613": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/atlassian-f45": {
     "__comp": "17896441",
-    "content": "b522a30c"
+    "content": "00ecb6f0"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/attentive-c39": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/attentive-11f": {
     "__comp": "17896441",
-    "content": "cd625dbc"
+    "content": "d9a7df9e"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/audible-043": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/audible-8f6": {
     "__comp": "17896441",
-    "content": "abc4d63a"
+    "content": "c2b5f615"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/auriga-c8a": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/auriga-8a2": {
     "__comp": "17896441",
-    "content": "7cffc9c8"
+    "content": "8278e918"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/aurora-d4e": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/aurora-0d8": {
     "__comp": "17896441",
-    "content": "bb481345"
+    "content": "9776ee80"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/autodesk-18e": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/autodesk-8cb": {
     "__comp": "17896441",
-    "content": "ea426108"
+    "content": "bbf47c07"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/avalara-98f": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/avalara-6e9": {
     "__comp": "17896441",
-    "content": "b70afb3c"
+    "content": "654b3ed9"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/avito-134": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/avito-c24": {
     "__comp": "17896441",
-    "content": "0346dff8"
+    "content": "ab332dcb"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/axis-bank-b90": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/axis-bank-752": {
     "__comp": "17896441",
-    "content": "a186545c"
+    "content": "b3939c52"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/axon-ef7": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/axon-969": {
     "__comp": "17896441",
-    "content": "bf89fa20"
+    "content": "a1779e7f"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/baidu-52a": {
+  "/technical-knowledge/dsa/leetcode-companywise/B/baidu-95b": {
     "__comp": "17896441",
-    "content": "3e842879"
+    "content": "dd9042c5"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/bank-of-america-63b": {
+  "/technical-knowledge/dsa/leetcode-companywise/B/bank-of-america-37b": {
     "__comp": "17896441",
-    "content": "6707b52a"
+    "content": "31ff0e16"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/barclays-fbb": {
+  "/technical-knowledge/dsa/leetcode-companywise/B/barclays-5be": {
     "__comp": "17896441",
-    "content": "1382f4cb"
+    "content": "c6a3057f"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/bcg-009": {
+  "/technical-knowledge/dsa/leetcode-companywise/B/bcg-85b": {
     "__comp": "17896441",
-    "content": "d5695657"
+    "content": "8f268155"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/bending-spoons-3ed": {
+  "/technical-knowledge/dsa/leetcode-companywise/B/bending-spoons-3f5": {
     "__comp": "17896441",
-    "content": "999d6bad"
+    "content": "7db53616"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/bitgo-738": {
+  "/technical-knowledge/dsa/leetcode-companywise/B/bitgo-dd6": {
     "__comp": "17896441",
-    "content": "447460e8"
+    "content": "b8f5fc8b"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/blackbuck-0ef": {
+  "/technical-knowledge/dsa/leetcode-companywise/B/blackbuck-b4e": {
     "__comp": "17896441",
-    "content": "50b23f20"
+    "content": "a4196fcb"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/blackrock-849": {
+  "/technical-knowledge/dsa/leetcode-companywise/B/blackrock-156": {
     "__comp": "17896441",
-    "content": "71a744d2"
+    "content": "ebcb0120"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/blackstone-466": {
+  "/technical-knowledge/dsa/leetcode-companywise/B/blackstone-3da": {
     "__comp": "17896441",
-    "content": "513fe1b1"
+    "content": "d5527cd1"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/blend-c93": {
+  "/technical-knowledge/dsa/leetcode-companywise/B/blend-086": {
     "__comp": "17896441",
-    "content": "f9bd588b"
+    "content": "e65fe5f9"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/blinkit-a04": {
+  "/technical-knowledge/dsa/leetcode-companywise/B/blinkit-2d3": {
     "__comp": "17896441",
-    "content": "7e2aa0bd"
+    "content": "fc879531"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/bloomberg-ff4": {
+  "/technical-knowledge/dsa/leetcode-companywise/B/bloomberg-aa1": {
     "__comp": "17896441",
-    "content": "2e8a4072"
+    "content": "5596c6ac"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/bloomreach-e56": {
+  "/technical-knowledge/dsa/leetcode-companywise/B/bloomreach-382": {
     "__comp": "17896441",
-    "content": "503861aa"
+    "content": "85cef89d"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/blue-origin-3e7": {
+  "/technical-knowledge/dsa/leetcode-companywise/B/blue-origin-0f6": {
     "__comp": "17896441",
-    "content": "c18129e9"
+    "content": "2fd50630"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/bnp-paribas-b84": {
+  "/technical-knowledge/dsa/leetcode-companywise/B/bnp-paribas-877": {
     "__comp": "17896441",
-    "content": "6cc117c6"
+    "content": "5e674b40"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/bny-mellon-3ca": {
+  "/technical-knowledge/dsa/leetcode-companywise/B/bny-mellon-108": {
     "__comp": "17896441",
-    "content": "acc5a50d"
+    "content": "a42b3c05"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/boeing-744": {
+  "/technical-knowledge/dsa/leetcode-companywise/B/boeing-e86": {
     "__comp": "17896441",
-    "content": "c7506195"
+    "content": "58517a7b"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/bolt-830": {
+  "/technical-knowledge/dsa/leetcode-companywise/B/bolt-0b6": {
     "__comp": "17896441",
-    "content": "0c2e104d"
+    "content": "13221dd4"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/bookingcom-67c": {
+  "/technical-knowledge/dsa/leetcode-companywise/B/bookingcom-25f": {
     "__comp": "17896441",
-    "content": "8d1b89e4"
+    "content": "c16cf027"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/box-61e": {
+  "/technical-knowledge/dsa/leetcode-companywise/B/box-a9b": {
     "__comp": "17896441",
-    "content": "87914c5d"
+    "content": "264f0ca6"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/bp-e43": {
+  "/technical-knowledge/dsa/leetcode-companywise/B/bp-650": {
     "__comp": "17896441",
-    "content": "4af738e8"
+    "content": "46632c8e"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/braze-5f4": {
+  "/technical-knowledge/dsa/leetcode-companywise/B/braze-d62": {
     "__comp": "17896441",
-    "content": "1cae3fc7"
+    "content": "3fc0e094"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/bridgewater-associates-5de": {
+  "/technical-knowledge/dsa/leetcode-companywise/B/bridgewater-associates-0e9": {
     "__comp": "17896441",
-    "content": "a2c0e804"
+    "content": "c12f361f"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/brillio-db3": {
+  "/technical-knowledge/dsa/leetcode-companywise/B/brillio-c39": {
     "__comp": "17896441",
-    "content": "a60fcbcf"
+    "content": "22633468"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/broadcom-b1d": {
+  "/technical-knowledge/dsa/leetcode-companywise/B/broadcom-964": {
     "__comp": "17896441",
-    "content": "dca738d9"
+    "content": "9086fc01"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/browserstack-1d4": {
+  "/technical-knowledge/dsa/leetcode-companywise/B/browserstack-f4c": {
     "__comp": "17896441",
-    "content": "e9929e59"
+    "content": "b80b60e9"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/bt-group-1bd": {
+  "/technical-knowledge/dsa/leetcode-companywise/B/bt-group-524": {
     "__comp": "17896441",
-    "content": "0f1f5cd0"
+    "content": "5d55ed97"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/buyhatke-58f": {
+  "/technical-knowledge/dsa/leetcode-companywise/B/buyhatke-fcd": {
     "__comp": "17896441",
-    "content": "c84ba743"
+    "content": "f9643398"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/bytedance-406": {
+  "/technical-knowledge/dsa/leetcode-companywise/B/bytedance-69e": {
     "__comp": "17896441",
-    "content": "b90441ce"
+    "content": "857167c5"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/c3-ai-b04": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/c3-ai-a5b": {
     "__comp": "17896441",
-    "content": "956097b0"
+    "content": "b5b88187"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/cadence-6c0": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/cadence-8a5": {
     "__comp": "17896441",
-    "content": "218dd9df"
+    "content": "1fb79863"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/canonical-0a1": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/canonical-1a3": {
     "__comp": "17896441",
-    "content": "e46eed05"
+    "content": "b2796c38"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/canva-8ff": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/canva-8ba": {
     "__comp": "17896441",
-    "content": "e7837b66"
+    "content": "ce46989c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/capgemini-755": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/capgemini-c3b": {
     "__comp": "17896441",
-    "content": "9561dcdb"
+    "content": "4e5930c5"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/capital-one-476": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/capital-one-6c9": {
     "__comp": "17896441",
-    "content": "02a8f561"
+    "content": "1659b1b7"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/careem-648": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/careem-5d3": {
     "__comp": "17896441",
-    "content": "ff941597"
+    "content": "ef15c931"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/cars24-1c6": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/cars24-fb6": {
     "__comp": "17896441",
-    "content": "acc75711"
+    "content": "778968fd"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/carwale-9bc": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/carwale-d82": {
     "__comp": "17896441",
-    "content": "230181c9"
+    "content": "26285f9a"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/cashfree-f60": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/cashfree-4e0": {
     "__comp": "17896441",
-    "content": "f851a6ed"
+    "content": "db10167e"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/caterpillar-511": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/caterpillar-b36": {
     "__comp": "17896441",
-    "content": "d4ed16f4"
+    "content": "999b8ef6"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/cerner-723": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/cerner-b22": {
     "__comp": "17896441",
-    "content": "41528ab5"
+    "content": "08da5d11"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/chalo-4e7": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/chalo-3a3": {
     "__comp": "17896441",
-    "content": "f18b391b"
+    "content": "03bbf6a7"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/chargebee-ae1": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/chargebee-27e": {
     "__comp": "17896441",
-    "content": "896be555"
+    "content": "1441dd11"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/checkpoint-034": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/checkpoint-149": {
     "__comp": "17896441",
-    "content": "b78c3cf3"
+    "content": "c33e1e65"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/chewy-c73": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/chewy-3b0": {
     "__comp": "17896441",
-    "content": "e8f0dacb"
+    "content": "cafe7009"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/chime-3df": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/chime-f7b": {
     "__comp": "17896441",
-    "content": "54834fbc"
+    "content": "c5581916"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/chubb-afe": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/chubb-90d": {
     "__comp": "17896441",
-    "content": "0c210b00"
+    "content": "a7796909"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/ciena-d14": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/ciena-6e1": {
     "__comp": "17896441",
-    "content": "fd3d63d6"
+    "content": "68429d00"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/circle-097": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/circle-22c": {
     "__comp": "17896441",
-    "content": "224a99b5"
+    "content": "e604d336"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/cisco-f78": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/cisco-a92": {
     "__comp": "17896441",
-    "content": "c998e7e8"
+    "content": "8d5e13ed"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/citadel-886": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/citadel-585": {
     "__comp": "17896441",
-    "content": "eb1f6335"
+    "content": "5931dde9"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/citi-c87": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/citi-417": {
     "__comp": "17896441",
-    "content": "d29965d5"
+    "content": "af70dc28"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/citrix-20d": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/citrix-169": {
     "__comp": "17896441",
-    "content": "ba54eff4"
+    "content": "5daa9331"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/clari-be1": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/clari-adc": {
     "__comp": "17896441",
-    "content": "88211176"
+    "content": "79acbaf3"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/cleartrip-1de": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/cleartrip-1c4": {
     "__comp": "17896441",
-    "content": "0b115429"
+    "content": "168d8ff0"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/clevertap-d14": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/clevertap-453": {
     "__comp": "17896441",
-    "content": "f4b7bdb9"
+    "content": "7da2887c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/cloudera-807": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/cloudera-1b8": {
     "__comp": "17896441",
-    "content": "c02d1af1"
+    "content": "0777fc81"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/cloudflare-6a9": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/cloudflare-8d5": {
     "__comp": "17896441",
-    "content": "4fb56939"
+    "content": "d7ef868f"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/clutter-c9c": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/clutter-851": {
     "__comp": "17896441",
-    "content": "37721936"
+    "content": "6d0a1e73"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/cme-group-8e6": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/cme-group-c8b": {
     "__comp": "17896441",
-    "content": "aac2ba9b"
+    "content": "86102411"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/cockroach-labs-224": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/cockroach-labs-1a4": {
     "__comp": "17896441",
-    "content": "6b35eb23"
+    "content": "99d170fb"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/code-studio-78e": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/code-studio-b64": {
     "__comp": "17896441",
-    "content": "bec35418"
+    "content": "ee0cda6c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/cognizant-e3d": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/cognizant-20c": {
     "__comp": "17896441",
-    "content": "6c45ccfe"
+    "content": "ed024e26"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/cohesity-311": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/cohesity-4a0": {
     "__comp": "17896441",
-    "content": "3bd856b3"
+    "content": "7af891cb"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/coinbase-cf3": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/coinbase-2c2": {
     "__comp": "17896441",
-    "content": "d2ef9cc9"
+    "content": "55682845"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/coindcx-d1b": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/coindcx-873": {
     "__comp": "17896441",
-    "content": "e196d779"
+    "content": "251d06d3"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/coinswitch-kuber-c3b": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/coinswitch-kuber-676": {
     "__comp": "17896441",
-    "content": "85465a85"
+    "content": "762d5ebc"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/comcast-643": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/comcast-684": {
     "__comp": "17896441",
-    "content": "17c3145e"
+    "content": "3fcfb702"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/commvault-916": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/commvault-d43": {
     "__comp": "17896441",
-    "content": "d864bb75"
+    "content": "26aeacb7"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/compass-331": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/compass-b1c": {
     "__comp": "17896441",
-    "content": "4985e74b"
+    "content": "cd6774d5"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/confluent-325": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/confluent-bd1": {
     "__comp": "17896441",
-    "content": "7ddfa4e6"
+    "content": "272bae11"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/couchbase-e73": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/couchbase-536": {
     "__comp": "17896441",
-    "content": "2b559636"
+    "content": "783dfbf9"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/coupa-1e0": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/coupa-d3f": {
     "__comp": "17896441",
-    "content": "ce596e8d"
+    "content": "48b3b198"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/coupang-5d9": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/coupang-790": {
     "__comp": "17896441",
-    "content": "622a4e5a"
+    "content": "e6558c5e"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/coursera-9cc": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/coursera-03b": {
     "__comp": "17896441",
-    "content": "4022e295"
+    "content": "be14b842"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/coveo-c5b": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/coveo-6ce": {
     "__comp": "17896441",
-    "content": "d984aab5"
+    "content": "1924aa6f"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/cred-3d5": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/cred-dfd": {
     "__comp": "17896441",
-    "content": "c48ac552"
+    "content": "dc351f87"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/credit-karma-d3e": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/credit-karma-e7b": {
     "__comp": "17896441",
-    "content": "73dc992d"
+    "content": "b576f839"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/criteo-64b": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/criteo-f9e": {
     "__comp": "17896441",
-    "content": "6d517af1"
+    "content": "5eff2a7c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/crowdstrike-936": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/crowdstrike-a6f": {
     "__comp": "17896441",
-    "content": "d63cb09b"
+    "content": "5c84aaf1"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/cruise-automation-71a": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/cruise-automation-0c9": {
     "__comp": "17896441",
-    "content": "570ab900"
+    "content": "37990c27"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/ctc-812": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/ctc-b57": {
     "__comp": "17896441",
-    "content": "f47fa74c"
+    "content": "2101f892"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/curefit-55b": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/curefit-fb9": {
     "__comp": "17896441",
-    "content": "66c7b91f"
+    "content": "d79ce796"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/cvent-b90": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/cvent-c10": {
     "__comp": "17896441",
-    "content": "81ea37b0"
+    "content": "5ff18629"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/cyntexa-297": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/cyntexa-faa": {
     "__comp": "17896441",
-    "content": "7e09a95d"
+    "content": "4bf3ed35"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/cyware-481": {
+  "/technical-knowledge/dsa/leetcode-companywise/C/cyware-34f": {
     "__comp": "17896441",
-    "content": "6a1ef5bc"
+    "content": "a37deb69"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/dailyhunt-05a": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/dailyhunt-e68": {
     "__comp": "17896441",
-    "content": "d1ee83d8"
+    "content": "b8cc2c85"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/darwinbox-4ec": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/darwinbox-850": {
     "__comp": "17896441",
-    "content": "6f2322fc"
+    "content": "63b3324a"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/dassault-sysetmes-1b8": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/dassault-sysetmes-025": {
     "__comp": "17896441",
-    "content": "3edfe1be"
+    "content": "84ca0a9b"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/dataart-4b8": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/dataart-7cf": {
     "__comp": "17896441",
-    "content": "d908d352"
+    "content": "3556c88c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/databricks-fed": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/databricks-309": {
     "__comp": "17896441",
-    "content": "d12d64ef"
+    "content": "16f1fc73"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/datadog-1fa": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/datadog-adb": {
     "__comp": "17896441",
-    "content": "b2a3006c"
+    "content": "7ab4afd9"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/dataminr-7fe": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/dataminr-828": {
     "__comp": "17896441",
-    "content": "1a398b68"
+    "content": "23e01f08"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/de-shaw-411": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/de-shaw-7b0": {
     "__comp": "17896441",
-    "content": "b15bb79a"
+    "content": "223148aa"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/deepmind-4f7": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/deepmind-b75": {
     "__comp": "17896441",
-    "content": "311936fe"
+    "content": "87ad5661"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/delhivery-4c6": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/delhivery-b47": {
     "__comp": "17896441",
-    "content": "ed0cb1a3"
+    "content": "b60ff73a"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/deliveroo-af1": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/deliveroo-84c": {
     "__comp": "17896441",
-    "content": "041a4e2f"
+    "content": "6f7e130a"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/dell-c16": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/dell-13d": {
     "__comp": "17896441",
-    "content": "f34a800c"
+    "content": "80748f49"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/deloitte-fb5": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/deloitte-6be": {
     "__comp": "17896441",
-    "content": "660e08d7"
+    "content": "9c37233e"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/deltax-7ab": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/deltax-f86": {
     "__comp": "17896441",
-    "content": "d2f96f87"
+    "content": "01bf3edf"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/deutsche-bank-257": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/deutsche-bank-efe": {
     "__comp": "17896441",
-    "content": "0f4fb425"
+    "content": "92897913"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/devrev-b95": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/devrev-daf": {
     "__comp": "17896441",
-    "content": "ae57af13"
+    "content": "c368a11e"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/dialpad-b95": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/dialpad-996": {
     "__comp": "17896441",
-    "content": "e8bc6a31"
+    "content": "f1578e3c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/didi-f42": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/didi-3a1": {
     "__comp": "17896441",
-    "content": "6f23e93c"
+    "content": "2586a2ae"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/directi-5a7": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/directi-820": {
     "__comp": "17896441",
-    "content": "81754589"
+    "content": "620709fe"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/discord-f09": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/discord-277": {
     "__comp": "17896441",
-    "content": "9f6856f4"
+    "content": "4f4011eb"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/discovery-41b": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/discovery-c18": {
     "__comp": "17896441",
-    "content": "34aba1a1"
+    "content": "08521bcc"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/disney-ee9": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/disney-2af": {
     "__comp": "17896441",
-    "content": "9290646f"
+    "content": "4459fe59"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/dji-bf6": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/dji-69b": {
     "__comp": "17896441",
-    "content": "1f5cc930"
+    "content": "bb7e8dfc"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/docusign-534": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/docusign-52c": {
     "__comp": "17896441",
-    "content": "8147a38c"
+    "content": "aad42896"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/doordash-298": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/doordash-8e7": {
     "__comp": "17896441",
-    "content": "06507dff"
+    "content": "882fa52c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/dp-world-ab1": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/dp-world-4d2": {
     "__comp": "17896441",
-    "content": "2bc50641"
+    "content": "5743ed6b"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/drawbridge-349": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/drawbridge-01e": {
     "__comp": "17896441",
-    "content": "f5489a97"
+    "content": "c8d834ef"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/dream11-bc8": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/dream11-58b": {
     "__comp": "17896441",
-    "content": "be047836"
+    "content": "cd59d331"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/dropbox-52b": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/dropbox-17a": {
     "__comp": "17896441",
-    "content": "3a4f1757"
+    "content": "f4f9f918"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/druva-2af": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/druva-f2a": {
     "__comp": "17896441",
-    "content": "104c1486"
+    "content": "efd05be0"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/drw-4c6": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/drw-377": {
     "__comp": "17896441",
-    "content": "f0e43100"
+    "content": "7f02ea23"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/dtcc-b68": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/dtcc-d1a": {
     "__comp": "17896441",
-    "content": "2f2f56b2"
+    "content": "1e1e18d4"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/dunzo-dad": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/dunzo-5ac": {
     "__comp": "17896441",
-    "content": "018c704d"
+    "content": "c4f5d692"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/duolingo-eea": {
+  "/technical-knowledge/dsa/leetcode-companywise/D/duolingo-7c3": {
     "__comp": "17896441",
-    "content": "ed778801"
+    "content": "be4e8a24"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/earnin-62c": {
+  "/technical-knowledge/dsa/leetcode-companywise/E/earnin-24c": {
     "__comp": "17896441",
-    "content": "e5f6a4ab"
+    "content": "e6a3e625"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/ebay-95b": {
+  "/technical-knowledge/dsa/leetcode-companywise/E/ebay-3f5": {
     "__comp": "17896441",
-    "content": "dab1d8ae"
+    "content": "12d769d7"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/edelweiss-6bb": {
+  "/technical-knowledge/dsa/leetcode-companywise/E/edelweiss-538": {
     "__comp": "17896441",
-    "content": "1c3cde44"
+    "content": "cc4892b5"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/electronic-arts-cca": {
+  "/technical-knowledge/dsa/leetcode-companywise/E/electronic-arts-475": {
     "__comp": "17896441",
-    "content": "c5cf2a26"
+    "content": "531bebc7"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/elitmus-631": {
+  "/technical-knowledge/dsa/leetcode-companywise/E/elitmus-33f": {
     "__comp": "17896441",
-    "content": "be39b603"
+    "content": "7d0b0153"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/epam-systems-d97": {
+  "/technical-knowledge/dsa/leetcode-companywise/E/epam-systems-b38": {
     "__comp": "17896441",
-    "content": "300dcdf2"
+    "content": "03aa8d66"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/epic-games-d17": {
+  "/technical-knowledge/dsa/leetcode-companywise/E/epic-games-dc1": {
     "__comp": "17896441",
-    "content": "2b7ab9cd"
+    "content": "6d9e32b2"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/epic-systems-68b": {
+  "/technical-knowledge/dsa/leetcode-companywise/E/epic-systems-cf1": {
     "__comp": "17896441",
-    "content": "ce4e2aa6"
+    "content": "4b6e1718"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/epifi-6e1": {
+  "/technical-knowledge/dsa/leetcode-companywise/E/epifi-4db": {
     "__comp": "17896441",
-    "content": "66129e65"
+    "content": "4f08f768"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/equinix-8d4": {
+  "/technical-knowledge/dsa/leetcode-companywise/E/equinix-6fd": {
     "__comp": "17896441",
-    "content": "44b89fa0"
+    "content": "f7c197d3"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/ericsson-b7c": {
+  "/technical-knowledge/dsa/leetcode-companywise/E/ericsson-bfb": {
     "__comp": "17896441",
-    "content": "d0c3f82f"
+    "content": "c8122d0d"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/etsy-c0b": {
+  "/technical-knowledge/dsa/leetcode-companywise/E/etsy-94b": {
     "__comp": "17896441",
-    "content": "d52b0308"
+    "content": "320b594c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/expedia-cbf": {
+  "/technical-knowledge/dsa/leetcode-companywise/E/expedia-5fe": {
     "__comp": "17896441",
-    "content": "8f0c65fa"
+    "content": "41d1133e"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/ey-a7f": {
+  "/technical-knowledge/dsa/leetcode-companywise/E/ey-d61": {
     "__comp": "17896441",
-    "content": "52d043e3"
+    "content": "636421ac"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/f5-networks-f03": {
+  "/technical-knowledge/dsa/leetcode-companywise/F/f5-networks-f76": {
     "__comp": "17896441",
-    "content": "eee646d2"
+    "content": "08493f0d"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/factset-e9b": {
+  "/technical-knowledge/dsa/leetcode-companywise/F/factset-65f": {
     "__comp": "17896441",
-    "content": "c22cdff8"
+    "content": "76b322c0"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/factwise-5bf": {
+  "/technical-knowledge/dsa/leetcode-companywise/F/factwise-02d": {
     "__comp": "17896441",
-    "content": "d61d0e81"
+    "content": "0191c13c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/faire-ffa": {
+  "/technical-knowledge/dsa/leetcode-companywise/F/faire-f03": {
     "__comp": "17896441",
-    "content": "989d737d"
+    "content": "1458c1e8"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/fallible-ae3": {
+  "/technical-knowledge/dsa/leetcode-companywise/F/fallible-29a": {
     "__comp": "17896441",
-    "content": "38caa87c"
+    "content": "05a943b4"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/fanatics-624": {
+  "/technical-knowledge/dsa/leetcode-companywise/F/fanatics-aea": {
     "__comp": "17896441",
-    "content": "8a6ca810"
+    "content": "122a9cb2"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/fast-9be": {
+  "/technical-knowledge/dsa/leetcode-companywise/F/fast-2e5": {
     "__comp": "17896441",
-    "content": "20ee90a1"
+    "content": "93f82b9c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/fastenal-6ec": {
+  "/technical-knowledge/dsa/leetcode-companywise/F/fastenal-f64": {
     "__comp": "17896441",
-    "content": "23fe382f"
+    "content": "34a50ed3"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/fico-58e": {
+  "/technical-knowledge/dsa/leetcode-companywise/F/fico-7b7": {
     "__comp": "17896441",
-    "content": "aed709c5"
+    "content": "6bbe5858"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/fidelity-09d": {
+  "/technical-knowledge/dsa/leetcode-companywise/F/fidelity-478": {
     "__comp": "17896441",
-    "content": "a95f77dc"
+    "content": "8c978d16"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/fidessa-476": {
+  "/technical-knowledge/dsa/leetcode-companywise/F/fidessa-e67": {
     "__comp": "17896441",
-    "content": "48a005ef"
+    "content": "6d6570ad"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/figma-640": {
+  "/technical-knowledge/dsa/leetcode-companywise/F/figma-d81": {
     "__comp": "17896441",
-    "content": "05f06de1"
+    "content": "08661600"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/fiverr-0a9": {
+  "/technical-knowledge/dsa/leetcode-companywise/F/fiverr-ba6": {
     "__comp": "17896441",
-    "content": "eac4e840"
+    "content": "32cd1726"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/fivetran-f8d": {
+  "/technical-knowledge/dsa/leetcode-companywise/F/fivetran-bc8": {
     "__comp": "17896441",
-    "content": "6f2e3634"
+    "content": "1bc89557"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/flatiron-health-0c5": {
+  "/technical-knowledge/dsa/leetcode-companywise/F/flatiron-health-652": {
     "__comp": "17896441",
-    "content": "4c129336"
+    "content": "f41242b2"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/fleetx-60b": {
+  "/technical-knowledge/dsa/leetcode-companywise/F/fleetx-7fa": {
     "__comp": "17896441",
-    "content": "2910ce4b"
+    "content": "324be6fc"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/flexera-752": {
+  "/technical-knowledge/dsa/leetcode-companywise/F/flexera-166": {
     "__comp": "17896441",
-    "content": "cd8d5b9e"
+    "content": "a2258649"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/flexport-870": {
+  "/technical-knowledge/dsa/leetcode-companywise/F/flexport-ca3": {
     "__comp": "17896441",
-    "content": "5c19da7c"
+    "content": "6729bbc7"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/flipkart-9b9": {
+  "/technical-knowledge/dsa/leetcode-companywise/F/flipkart-bde": {
     "__comp": "17896441",
-    "content": "13328465"
+    "content": "6626efc2"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/ford-070": {
+  "/technical-knowledge/dsa/leetcode-companywise/F/ford-ccc": {
     "__comp": "17896441",
-    "content": "bb566d1c"
+    "content": "b8b54b73"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/fortinet-7e4": {
+  "/technical-knowledge/dsa/leetcode-companywise/F/fortinet-ea5": {
     "__comp": "17896441",
-    "content": "c14e4cfd"
+    "content": "6903502a"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/forusall-a22": {
+  "/technical-knowledge/dsa/leetcode-companywise/F/forusall-50a": {
     "__comp": "17896441",
-    "content": "31b26073"
+    "content": "f462e919"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/fourkites-9b9": {
+  "/technical-knowledge/dsa/leetcode-companywise/F/fourkites-09f": {
     "__comp": "17896441",
-    "content": "6bbf352e"
+    "content": "22f77920"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/fpt-2ad": {
+  "/technical-knowledge/dsa/leetcode-companywise/F/fpt-9b7": {
     "__comp": "17896441",
-    "content": "39f5f9d0"
+    "content": "ef1853b1"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/fractal-analytics-6fd": {
+  "/technical-knowledge/dsa/leetcode-companywise/F/fractal-analytics-b69": {
     "__comp": "17896441",
-    "content": "4d54b993"
+    "content": "ba01a3d2"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/freecharge-4bc": {
+  "/technical-knowledge/dsa/leetcode-companywise/F/freecharge-a16": {
     "__comp": "17896441",
-    "content": "f618b536"
+    "content": "6f532ee1"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/freshworks-d3a": {
+  "/technical-knowledge/dsa/leetcode-companywise/F/freshworks-fc5": {
     "__comp": "17896441",
-    "content": "9ce196ad"
+    "content": "777d6911"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/fynd-bbe": {
+  "/technical-knowledge/dsa/leetcode-companywise/F/fynd-d91": {
     "__comp": "17896441",
-    "content": "ffcdb598"
+    "content": "5424b8db"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/gainsight-e39": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/gainsight-f7f": {
     "__comp": "17896441",
-    "content": "7f05616b"
+    "content": "c66bb112"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/gameskraft-1b5": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/gameskraft-ca5": {
     "__comp": "17896441",
-    "content": "2dbcb27f"
+    "content": "59ea2052"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/garena-11c": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/garena-0db": {
     "__comp": "17896441",
-    "content": "9983c975"
+    "content": "b1ba1145"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/garmin-acf": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/garmin-368": {
     "__comp": "17896441",
-    "content": "521d8b34"
+    "content": "36a4b6d2"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/gartner-96a": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/gartner-d0f": {
     "__comp": "17896441",
-    "content": "039615d2"
+    "content": "50a833a6"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/ge-digital-050": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/ge-digital-b78": {
     "__comp": "17896441",
-    "content": "8ad22fca"
+    "content": "dafa79b4"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/ge-healthcare-7e3": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/ge-healthcare-4ad": {
     "__comp": "17896441",
-    "content": "1557814e"
+    "content": "e7741ac6"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/geico-ca6": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/geico-74a": {
     "__comp": "17896441",
-    "content": "c0b0850a"
+    "content": "ca1b5714"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/general-electric-4ae": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/general-electric-463": {
     "__comp": "17896441",
-    "content": "cef6c1b6"
+    "content": "ca859b70"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/general-motors-5fd": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/general-motors-ff0": {
     "__comp": "17896441",
-    "content": "654f06e5"
+    "content": "edd56b81"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/genpact-74f": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/genpact-86b": {
     "__comp": "17896441",
-    "content": "59144a83"
+    "content": "09a2b59d"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/gilt-groupe-147": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/gilt-groupe-45f": {
     "__comp": "17896441",
-    "content": "a35bbd09"
+    "content": "d82d28cb"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/github-453": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/github-30e": {
     "__comp": "17896441",
-    "content": "12e7e843"
+    "content": "186a2e19"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/glassdoor-3f8": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/glassdoor-953": {
     "__comp": "17896441",
-    "content": "2d1080ba"
+    "content": "83b92526"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/globallogic-36e": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/globallogic-eb7": {
     "__comp": "17896441",
-    "content": "4cb2bb61"
+    "content": "f22d73c3"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/globant-903": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/globant-a90": {
     "__comp": "17896441",
-    "content": "e71007da"
+    "content": "6361914d"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/glovo-6fa": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/glovo-b64": {
     "__comp": "17896441",
-    "content": "3859af0d"
+    "content": "452f7345"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/godaddy-3fe": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/godaddy-bc6": {
     "__comp": "17896441",
-    "content": "2f05ac40"
+    "content": "20895646"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/gojek-a02": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/gojek-dd7": {
     "__comp": "17896441",
-    "content": "119427da"
+    "content": "c8b17948"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/goldman-sachs-8eb": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/goldman-sachs-35b": {
     "__comp": "17896441",
-    "content": "845feb73"
+    "content": "05ea1553"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/google-f69": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/google-891": {
     "__comp": "17896441",
-    "content": "e817cf79"
+    "content": "14ad5a2e"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/gopuff-806": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/gopuff-5ce": {
     "__comp": "17896441",
-    "content": "61c1caf9"
+    "content": "c0b96a3d"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/goto-56e": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/goto-486": {
     "__comp": "17896441",
-    "content": "fdec77ee"
+    "content": "de2189e4"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/grab-c58": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/grab-2d8": {
     "__comp": "17896441",
-    "content": "5a6a055d"
+    "content": "b8095b15"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/grammarly-478": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/grammarly-c8b": {
     "__comp": "17896441",
-    "content": "e8ac924a"
+    "content": "f4f26f92"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/graviton-abc": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/graviton-18c": {
     "__comp": "17896441",
-    "content": "b8990ce4"
+    "content": "c945d91c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/groupon-e47": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/groupon-5fb": {
     "__comp": "17896441",
-    "content": "02e271b4"
+    "content": "3b496aca"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/groww-d0e": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/groww-9a0": {
     "__comp": "17896441",
-    "content": "d56c2135"
+    "content": "7546287c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/grubhub-54e": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/grubhub-de8": {
     "__comp": "17896441",
-    "content": "477bb549"
+    "content": "743905a8"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/gsa-capital-e31": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/gsa-capital-a99": {
     "__comp": "17896441",
-    "content": "d01a21c7"
+    "content": "13e1acdb"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/gsn-games-9e1": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/gsn-games-47d": {
     "__comp": "17896441",
-    "content": "1997051f"
+    "content": "d3436170"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/guidewire-6ca": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/guidewire-f03": {
     "__comp": "17896441",
-    "content": "1f3970f6"
+    "content": "0c343d2a"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/gusto-182": {
+  "/technical-knowledge/dsa/leetcode-companywise/G/gusto-501": {
     "__comp": "17896441",
-    "content": "d3b68229"
+    "content": "db199e80"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/harness-152": {
+  "/technical-knowledge/dsa/leetcode-companywise/H/harness-92c": {
     "__comp": "17896441",
-    "content": "1106f6f2"
+    "content": "9e513381"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/hashedin-dca": {
+  "/technical-knowledge/dsa/leetcode-companywise/H/hashedin-58b": {
     "__comp": "17896441",
-    "content": "b43d3282"
+    "content": "4905ed4c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/hbo-ca4": {
+  "/technical-knowledge/dsa/leetcode-companywise/H/hbo-81b": {
     "__comp": "17896441",
-    "content": "2d5d172d"
+    "content": "d4391951"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/hcl-6a5": {
+  "/technical-knowledge/dsa/leetcode-companywise/H/hcl-58b": {
     "__comp": "17896441",
-    "content": "ce978df5"
+    "content": "8a654411"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/helix-a0a": {
+  "/technical-knowledge/dsa/leetcode-companywise/H/helix-61e": {
     "__comp": "17896441",
-    "content": "e1f3bcf3"
+    "content": "5be49dd7"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/hertz-5cd": {
+  "/technical-knowledge/dsa/leetcode-companywise/H/hertz-de7": {
     "__comp": "17896441",
-    "content": "ec996e4c"
+    "content": "ae224468"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/highspot-e94": {
+  "/technical-knowledge/dsa/leetcode-companywise/H/highspot-519": {
     "__comp": "17896441",
-    "content": "13302678"
+    "content": "054f4103"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/hilabs-b4d": {
+  "/technical-knowledge/dsa/leetcode-companywise/H/hilabs-6ed": {
     "__comp": "17896441",
-    "content": "dd0b717e"
+    "content": "de3ac2b8"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/hive-01a": {
+  "/technical-knowledge/dsa/leetcode-companywise/H/hive-fac": {
     "__comp": "17896441",
-    "content": "9a22fdd2"
+    "content": "3042c33f"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/honey-740": {
+  "/technical-knowledge/dsa/leetcode-companywise/H/honey-7c2": {
     "__comp": "17896441",
-    "content": "de2023d0"
+    "content": "17a87722"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/honeywell-ab7": {
+  "/technical-knowledge/dsa/leetcode-companywise/H/honeywell-b13": {
     "__comp": "17896441",
-    "content": "ef74c596"
+    "content": "c9596ec0"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/hopper-b76": {
+  "/technical-knowledge/dsa/leetcode-companywise/H/hopper-f6f": {
     "__comp": "17896441",
-    "content": "bc497bce"
+    "content": "14c32c77"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/hotstar-6f5": {
+  "/technical-knowledge/dsa/leetcode-companywise/H/hotstar-ccf": {
     "__comp": "17896441",
-    "content": "809e1dd2"
+    "content": "e3194e98"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/houzz-f03": {
+  "/technical-knowledge/dsa/leetcode-companywise/H/houzz-38e": {
     "__comp": "17896441",
-    "content": "b8d811d9"
+    "content": "2d76468e"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/hp-80b": {
+  "/technical-knowledge/dsa/leetcode-companywise/H/hp-996": {
     "__comp": "17896441",
-    "content": "b2889a12"
+    "content": "9b784d0c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/hpe-80b": {
+  "/technical-knowledge/dsa/leetcode-companywise/H/hpe-1d7": {
     "__comp": "17896441",
-    "content": "c980fb78"
+    "content": "4e10ce07"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/hrt-082": {
+  "/technical-knowledge/dsa/leetcode-companywise/H/hrt-fa8": {
     "__comp": "17896441",
-    "content": "2f035b22"
+    "content": "0df4720a"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/hsbc-805": {
+  "/technical-knowledge/dsa/leetcode-companywise/H/hsbc-882": {
     "__comp": "17896441",
-    "content": "c41ee258"
+    "content": "b777a7ef"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/htc-e3d": {
+  "/technical-knowledge/dsa/leetcode-companywise/H/htc-3b5": {
     "__comp": "17896441",
-    "content": "06e3ecb5"
+    "content": "102f285b"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/huawei-6aa": {
+  "/technical-knowledge/dsa/leetcode-companywise/H/huawei-fcd": {
     "__comp": "17896441",
-    "content": "2f4bf9eb"
+    "content": "47022e96"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/hubspot-363": {
+  "/technical-knowledge/dsa/leetcode-companywise/H/hubspot-667": {
     "__comp": "17896441",
-    "content": "1d205962"
+    "content": "5adabafe"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/hulu-be8": {
+  "/technical-knowledge/dsa/leetcode-companywise/H/hulu-62c": {
     "__comp": "17896441",
-    "content": "e721e945"
+    "content": "86bc2651"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/ibm-b15": {
+  "/technical-knowledge/dsa/leetcode-companywise/I/ibm-1a1": {
     "__comp": "17896441",
-    "content": "4cc1fc61"
+    "content": "650107e5"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/iit-bombay-d17": {
+  "/technical-knowledge/dsa/leetcode-companywise/I/iit-bombay-9a7": {
     "__comp": "17896441",
-    "content": "e7aad47e"
+    "content": "fa280992"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/imc-c81": {
+  "/technical-knowledge/dsa/leetcode-companywise/I/imc-305": {
     "__comp": "17896441",
-    "content": "cb9a4d71"
+    "content": "35f0cc5d"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/impact-analytics-050": {
+  "/technical-knowledge/dsa/leetcode-companywise/I/impact-analytics-7ea": {
     "__comp": "17896441",
-    "content": "7023095c"
+    "content": "24bda35f"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/increff-db2": {
+  "/technical-knowledge/dsa/leetcode-companywise/I/increff-213": {
     "__comp": "17896441",
-    "content": "cc921d00"
+    "content": "0cdcce0e"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/indeed-bb8": {
+  "/technical-knowledge/dsa/leetcode-companywise/I/indeed-ab7": {
     "__comp": "17896441",
-    "content": "67d2fe7d"
+    "content": "9d36568b"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/info-edge-8e6": {
+  "/technical-knowledge/dsa/leetcode-companywise/I/info-edge-37f": {
     "__comp": "17896441",
-    "content": "7da3a78a"
+    "content": "72aeb81b"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/informatica-b37": {
+  "/technical-knowledge/dsa/leetcode-companywise/I/informatica-b98": {
     "__comp": "17896441",
-    "content": "de3d8e37"
+    "content": "eb3b064e"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/infosys-a11": {
+  "/technical-knowledge/dsa/leetcode-companywise/I/infosys-a8c": {
     "__comp": "17896441",
-    "content": "40cc6f35"
+    "content": "2cc3c65b"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/inmobi-fc4": {
+  "/technical-knowledge/dsa/leetcode-companywise/I/inmobi-11f": {
     "__comp": "17896441",
-    "content": "8ff5d8c6"
+    "content": "62414c1e"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/innovaccer-d73": {
+  "/technical-knowledge/dsa/leetcode-companywise/I/innovaccer-32c": {
     "__comp": "17896441",
-    "content": "dfd9f744"
+    "content": "1bee9196"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/instabase-0e0": {
+  "/technical-knowledge/dsa/leetcode-companywise/I/instabase-ce2": {
     "__comp": "17896441",
-    "content": "9e1fe89d"
+    "content": "422d7a62"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/instacart-fbb": {
+  "/technical-knowledge/dsa/leetcode-companywise/I/instacart-41b": {
     "__comp": "17896441",
-    "content": "a7aaf2ad"
+    "content": "5f92646e"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/intel-509": {
+  "/technical-knowledge/dsa/leetcode-companywise/I/intel-a1a": {
     "__comp": "17896441",
-    "content": "f8d317dd"
+    "content": "74238e54"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/interactive-brokers-fdb": {
+  "/technical-knowledge/dsa/leetcode-companywise/I/interactive-brokers-b92": {
     "__comp": "17896441",
-    "content": "5bc59398"
+    "content": "192e47e5"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/intercom-928": {
+  "/technical-knowledge/dsa/leetcode-companywise/I/intercom-9b1": {
     "__comp": "17896441",
-    "content": "05b30565"
+    "content": "8c7a79df"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/intuit-39b": {
+  "/technical-knowledge/dsa/leetcode-companywise/I/intuit-b0c": {
     "__comp": "17896441",
-    "content": "ec69951d"
+    "content": "7336f8bd"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/ivp-1a4": {
+  "/technical-knowledge/dsa/leetcode-companywise/I/ivp-46d": {
     "__comp": "17896441",
-    "content": "95f03f8e"
+    "content": "1c9bbf5d"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/ixigo-da6": {
+  "/technical-knowledge/dsa/leetcode-companywise/I/ixigo-adb": {
     "__comp": "17896441",
-    "content": "e8d826fb"
+    "content": "c02708f6"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/ixl-042": {
+  "/technical-knowledge/dsa/leetcode-companywise/I/ixl-fcc": {
     "__comp": "17896441",
-    "content": "a2cf28e3"
+    "content": "ff8413fc"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/jane-street-54a": {
+  "/technical-knowledge/dsa/leetcode-companywise/J/jane-street-b5a": {
     "__comp": "17896441",
-    "content": "fcdf017d"
+    "content": "ae23a403"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/jd-477": {
+  "/technical-knowledge/dsa/leetcode-companywise/J/jd-1f7": {
     "__comp": "17896441",
-    "content": "3219eb7f"
+    "content": "7a278599"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/jeavio-fee": {
+  "/technical-knowledge/dsa/leetcode-companywise/J/jeavio-a03": {
     "__comp": "17896441",
-    "content": "1b49b804"
+    "content": "5cdc0854"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/jetbrains-faf": {
+  "/technical-knowledge/dsa/leetcode-companywise/J/jetbrains-0e8": {
     "__comp": "17896441",
-    "content": "49dfe1a5"
+    "content": "20afbcbf"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/jingchi-f83": {
+  "/technical-knowledge/dsa/leetcode-companywise/J/jingchi-dba": {
     "__comp": "17896441",
-    "content": "51768f5a"
+    "content": "2d2a35e2"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/jio-a18": {
+  "/technical-knowledge/dsa/leetcode-companywise/J/jio-987": {
     "__comp": "17896441",
-    "content": "d17e98b3"
+    "content": "8f8a3589"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/josh-technology-118": {
+  "/technical-knowledge/dsa/leetcode-companywise/J/josh-technology-d5e": {
     "__comp": "17896441",
-    "content": "6ac4938b"
+    "content": "791e2ccf"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/jpmorgan-493": {
+  "/technical-knowledge/dsa/leetcode-companywise/J/jpmorgan-890": {
     "__comp": "17896441",
-    "content": "20e3aa70"
+    "content": "530c8b4e"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/jtg-d79": {
+  "/technical-knowledge/dsa/leetcode-companywise/J/jtg-e29": {
     "__comp": "17896441",
-    "content": "53587e9f"
+    "content": "0172d350"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/jump-trading-6cb": {
+  "/technical-knowledge/dsa/leetcode-companywise/J/jump-trading-2ad": {
     "__comp": "17896441",
-    "content": "67826b95"
+    "content": "ec7e0bd4"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/junglee-games-e89": {
+  "/technical-knowledge/dsa/leetcode-companywise/J/junglee-games-d6e": {
     "__comp": "17896441",
-    "content": "5f4f96c7"
+    "content": "3ab22ef4"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/juspay-140": {
+  "/technical-knowledge/dsa/leetcode-companywise/J/juspay-71e": {
     "__comp": "17896441",
-    "content": "9ef49762"
+    "content": "8771a979"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/justworks-39e": {
+  "/technical-knowledge/dsa/leetcode-companywise/J/justworks-796": {
     "__comp": "17896441",
-    "content": "ad7cbd4a"
+    "content": "3847c95d"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/kakao-833": {
+  "/technical-knowledge/dsa/leetcode-companywise/K/kakao-52f": {
     "__comp": "17896441",
-    "content": "82ad5765"
+    "content": "ff5e7807"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/karat-e31": {
+  "/technical-knowledge/dsa/leetcode-companywise/K/karat-b9f": {
     "__comp": "17896441",
-    "content": "881540c0"
+    "content": "4fa074a3"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/keeptruckin-c2b": {
+  "/technical-knowledge/dsa/leetcode-companywise/K/keeptruckin-bb9": {
     "__comp": "17896441",
-    "content": "e905dabc"
+    "content": "41776086"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/kickdrum-5fd": {
+  "/technical-knowledge/dsa/leetcode-companywise/K/kickdrum-75c": {
     "__comp": "17896441",
-    "content": "22d2b97b"
+    "content": "78c344f3"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/kla-ed9": {
+  "/technical-knowledge/dsa/leetcode-companywise/K/kla-5f2": {
     "__comp": "17896441",
-    "content": "b8188b65"
+    "content": "ac669bb2"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/kla-tencor-f80": {
+  "/technical-knowledge/dsa/leetcode-companywise/K/kla-tencor-99a": {
     "__comp": "17896441",
-    "content": "05041c73"
+    "content": "1068221b"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/kotak-mahindra-bank-c93": {
+  "/technical-knowledge/dsa/leetcode-companywise/K/kotak-mahindra-bank-5a6": {
     "__comp": "17896441",
-    "content": "ea8fe8aa"
+    "content": "47d5068f"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/kpit-717": {
+  "/technical-knowledge/dsa/leetcode-companywise/K/kpit-269": {
     "__comp": "17896441",
-    "content": "d0a990ac"
+    "content": "b82b008a"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/kpmg-818": {
+  "/technical-knowledge/dsa/leetcode-companywise/K/kpmg-846": {
     "__comp": "17896441",
-    "content": "c4106e08"
+    "content": "93a02bec"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/lacework-df5": {
+  "/technical-knowledge/dsa/leetcode-companywise/L/lacework-cf5": {
     "__comp": "17896441",
-    "content": "d9bfb10e"
+    "content": "2a94ff81"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/larsen-toubro-a91": {
+  "/technical-knowledge/dsa/leetcode-companywise/L/larsen-toubro-d55": {
     "__comp": "17896441",
-    "content": "78254984"
+    "content": "3f59fab8"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/leap-motion-242": {
+  "/technical-knowledge/dsa/leetcode-companywise/L/leap-motion-e9c": {
     "__comp": "17896441",
-    "content": "eb311016"
+    "content": "517f6715"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/lendingkart-6e5": {
+  "/technical-knowledge/dsa/leetcode-companywise/L/lendingkart-e3a": {
     "__comp": "17896441",
-    "content": "29b0c0b7"
+    "content": "4d88da6e"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/lenskart-3e5": {
+  "/technical-knowledge/dsa/leetcode-companywise/L/lenskart-aad": {
     "__comp": "17896441",
-    "content": "5b7c5f1a"
+    "content": "f91e33db"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/lg-electronics-bc5": {
+  "/technical-knowledge/dsa/leetcode-companywise/L/lg-electronics-2ab": {
     "__comp": "17896441",
-    "content": "7de00167"
+    "content": "17360772"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/liberty-mutual-f81": {
+  "/technical-knowledge/dsa/leetcode-companywise/L/liberty-mutual-d1f": {
     "__comp": "17896441",
-    "content": "967d58de"
+    "content": "99cfe74f"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/liftoff-abe": {
+  "/technical-knowledge/dsa/leetcode-companywise/L/liftoff-e9a": {
     "__comp": "17896441",
-    "content": "27e6b70b"
+    "content": "fbceb02c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/lime-49d": {
+  "/technical-knowledge/dsa/leetcode-companywise/L/lime-290": {
     "__comp": "17896441",
-    "content": "eb31ad58"
+    "content": "a0562871"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/line-18d": {
+  "/technical-knowledge/dsa/leetcode-companywise/L/line-c59": {
     "__comp": "17896441",
-    "content": "c538775c"
+    "content": "5e92a4e6"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/linkedin-460": {
+  "/technical-knowledge/dsa/leetcode-companywise/L/linkedin-a75": {
     "__comp": "17896441",
-    "content": "48b46501"
+    "content": "f8a57092"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/liveramp-203": {
+  "/technical-knowledge/dsa/leetcode-companywise/L/liveramp-c49": {
     "__comp": "17896441",
-    "content": "5a893d65"
+    "content": "612fb068"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/livspace-7ea": {
+  "/technical-knowledge/dsa/leetcode-companywise/L/livspace-014": {
     "__comp": "17896441",
-    "content": "9c5126a5"
+    "content": "5674221c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/lowe-0d0": {
+  "/technical-knowledge/dsa/leetcode-companywise/L/lowe-43d": {
     "__comp": "17896441",
-    "content": "129fdc78"
+    "content": "a881927a"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/lti-11a": {
+  "/technical-knowledge/dsa/leetcode-companywise/L/lti-1df": {
     "__comp": "17896441",
-    "content": "499cadf4"
+    "content": "dfc4575b"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/lucid-ef0": {
+  "/technical-knowledge/dsa/leetcode-companywise/L/lucid-d82": {
     "__comp": "17896441",
-    "content": "945ccec4"
+    "content": "5059f39e"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/luxoft-d88": {
+  "/technical-knowledge/dsa/leetcode-companywise/L/luxoft-afd": {
     "__comp": "17896441",
-    "content": "886dedf3"
+    "content": "15226200"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/lyft-620": {
+  "/technical-knowledge/dsa/leetcode-companywise/L/lyft-39f": {
     "__comp": "17896441",
-    "content": "d65d473c"
+    "content": "e36eadd5"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/machine-zone-740": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/machine-zone-0cc": {
     "__comp": "17896441",
-    "content": "f89d7875"
+    "content": "c2dfef33"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/machinezone-970": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/machinezone-44b": {
     "__comp": "17896441",
-    "content": "c2914f17"
+    "content": "34a97dc1"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/maersk-850": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/maersk-dd7": {
     "__comp": "17896441",
-    "content": "65e00660"
+    "content": "d7e225a7"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/makemytrip-a99": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/makemytrip-a4b": {
     "__comp": "17896441",
-    "content": "d58bc79c"
+    "content": "ffce7ce0"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/mapbox-362": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/mapbox-30a": {
     "__comp": "17896441",
-    "content": "7d7eecdb"
+    "content": "09296163"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/maq-software-70c": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/maq-software-626": {
     "__comp": "17896441",
-    "content": "7d8b9966"
+    "content": "1c87d1a5"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/marqeta-953": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/marqeta-330": {
     "__comp": "17896441",
-    "content": "8f2011bc"
+    "content": "b5005c60"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/mastercard-146": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/mastercard-06a": {
     "__comp": "17896441",
-    "content": "ebd11f4c"
+    "content": "ef0b2e11"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/mathworks-3bf": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/mathworks-c0b": {
     "__comp": "17896441",
-    "content": "a154cb87"
+    "content": "922064da"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/mcafee-7f5": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/mcafee-13c": {
     "__comp": "17896441",
-    "content": "14be38fd"
+    "content": "258b6f53"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/mcdonalds-278": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/mcdonalds-c5d": {
     "__comp": "17896441",
-    "content": "3ff195bf"
+    "content": "94583ab1"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/mckinsey-9cf": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/mckinsey-0f6": {
     "__comp": "17896441",
-    "content": "afa96cb1"
+    "content": "c0329873"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/medianet-ff5": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/medianet-056": {
     "__comp": "17896441",
-    "content": "22614bb1"
+    "content": "0f7ec875"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/meesho-d8e": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/meesho-384": {
     "__comp": "17896441",
-    "content": "9e51a1d0"
+    "content": "eeb6829d"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/meituan-a53": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/meituan-44e": {
     "__comp": "17896441",
-    "content": "d3cbb039"
+    "content": "15d3c344"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/mercari-60e": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/mercari-17a": {
     "__comp": "17896441",
-    "content": "6abe9d90"
+    "content": "192e184d"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/meta-ff6": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/meta-303": {
     "__comp": "17896441",
-    "content": "8e7f8af7"
+    "content": "8bd8f770"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/micro1-27e": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/micro1-3bb": {
     "__comp": "17896441",
-    "content": "1e5b9642"
+    "content": "81212c9a"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/microsoft-a99": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/microsoft-c85": {
     "__comp": "17896441",
-    "content": "60280fca"
+    "content": "a0a28494"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/microstrategy-2ea": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/microstrategy-0cd": {
     "__comp": "17896441",
-    "content": "e55cd2fa"
+    "content": "94d9d3c6"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/millennium-4b4": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/millennium-1f8": {
     "__comp": "17896441",
-    "content": "d3254819"
+    "content": "f9bba51d"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/mindtickle-a94": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/mindtickle-458": {
     "__comp": "17896441",
-    "content": "2aee4059"
+    "content": "4c25fd5a"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/mindtree-a84": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/mindtree-e24": {
     "__comp": "17896441",
-    "content": "c5fa218d"
+    "content": "267204cd"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/mishipay-7ea": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/mishipay-054": {
     "__comp": "17896441",
-    "content": "a8da226e"
+    "content": "911a11b1"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/mitsogo-d51": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/mitsogo-c5c": {
     "__comp": "17896441",
-    "content": "da6656d9"
+    "content": "f4d6adce"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/mixpanel-630": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/mixpanel-c1e": {
     "__comp": "17896441",
-    "content": "ba7a6cdf"
+    "content": "fcc36edd"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/mobileye-e42": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/mobileye-c5b": {
     "__comp": "17896441",
-    "content": "554ad78f"
+    "content": "7dd89d59"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/mobisy-c53": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/mobisy-3ea": {
     "__comp": "17896441",
-    "content": "f775912b"
+    "content": "56d794e5"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/moengage-f4d": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/moengage-dfb": {
     "__comp": "17896441",
-    "content": "5cc39762"
+    "content": "d4873208"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/moloco-c0d": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/moloco-bad": {
     "__comp": "17896441",
-    "content": "3f67c1a4"
+    "content": "68dcb326"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/moneylion-63d": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/moneylion-6d9": {
     "__comp": "17896441",
-    "content": "0f9c29fe"
+    "content": "2f013641"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/mongodb-450": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/mongodb-a20": {
     "__comp": "17896441",
-    "content": "80d132fb"
+    "content": "dc77ce0a"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/morgan-stanley-ab1": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/morgan-stanley-768": {
     "__comp": "17896441",
-    "content": "10b1a096"
+    "content": "6926cc83"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/moveworks-2f0": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/moveworks-c9d": {
     "__comp": "17896441",
-    "content": "f68b7897"
+    "content": "49c0cb2a"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/msci-2cb": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/msci-ce4": {
     "__comp": "17896441",
-    "content": "65b5b66a"
+    "content": "7a49a853"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/murex-559": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/murex-d00": {
     "__comp": "17896441",
-    "content": "3de1a0c9"
+    "content": "9afff1b9"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/mykaarma-2c5": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/mykaarma-0bd": {
     "__comp": "17896441",
-    "content": "e16c96c5"
+    "content": "c67bc24c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/myntra-6cd": {
+  "/technical-knowledge/dsa/leetcode-companywise/M/myntra-42f": {
     "__comp": "17896441",
-    "content": "e03503d0"
+    "content": "61dee587"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/nagarro-677": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/nagarro-aa4": {
     "__comp": "17896441",
-    "content": "ca9152a7"
+    "content": "4a248529"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/nasdaq-4f6": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/nasdaq-cd4": {
     "__comp": "17896441",
-    "content": "b5455942"
+    "content": "121983b2"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/national-instruments-6b7": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/national-instruments-c3f": {
     "__comp": "17896441",
-    "content": "e822b748"
+    "content": "b9fac7ce"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/national-payments-coorperation-india-84b": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/national-payments-coorperation-india-a53": {
     "__comp": "17896441",
-    "content": "a3c54359"
+    "content": "ee67339a"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/natwest-2a1": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/natwest-2a1": {
     "__comp": "17896441",
-    "content": "e89e90cd"
+    "content": "0bd3dff2"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/navan-010": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/navan-0c7": {
     "__comp": "17896441",
-    "content": "a4ec50f8"
+    "content": "cb8652eb"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/naver-6e4": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/naver-235": {
     "__comp": "17896441",
-    "content": "445df041"
+    "content": "0af53b68"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/navi-19e": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/navi-3f1": {
     "__comp": "17896441",
-    "content": "5b3b3ed9"
+    "content": "b240e7b7"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/ncr-a87": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/ncr-e3c": {
     "__comp": "17896441",
-    "content": "a7e3da45"
+    "content": "cf13eb3e"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/nerdwallet-77a": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/nerdwallet-1ca": {
     "__comp": "17896441",
-    "content": "bc79003e"
+    "content": "0bcd8ecb"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/netapp-3e6": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/netapp-eed": {
     "__comp": "17896441",
-    "content": "c010e3a8"
+    "content": "968f62c6"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/netcracker-technology-d3e": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/netcracker-technology-5c7": {
     "__comp": "17896441",
-    "content": "87d72ed8"
+    "content": "3fde09ff"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/netease-53f": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/netease-48f": {
     "__comp": "17896441",
-    "content": "e91b3788"
+    "content": "a163236f"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/netflix-038": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/netflix-c86": {
     "__comp": "17896441",
-    "content": "0bfe7876"
+    "content": "c71096ae"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/netskope-0b5": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/netskope-642": {
     "__comp": "17896441",
-    "content": "a7c8049d"
+    "content": "26dec805"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/netsuite-8cc": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/netsuite-446": {
     "__comp": "17896441",
-    "content": "6be0747e"
+    "content": "7c1c9d42"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/newsbreak-12f": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/newsbreak-9c9": {
     "__comp": "17896441",
-    "content": "2a84910c"
+    "content": "b81d6115"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/nextdoor-638": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/nextdoor-fad": {
     "__comp": "17896441",
-    "content": "aeabb788"
+    "content": "a4182a03"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/nextjump-e54": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/nextjump-592": {
     "__comp": "17896441",
-    "content": "6d8b3afc"
+    "content": "221c2621"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/nference-3c5": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/nference-822": {
     "__comp": "17896441",
-    "content": "21ceb560"
+    "content": "0f3b302e"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/niantic-152": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/niantic-211": {
     "__comp": "17896441",
-    "content": "2c734cbc"
+    "content": "172cf1dc"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/nielsen-04f": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/nielsen-408": {
     "__comp": "17896441",
-    "content": "4d92cf42"
+    "content": "11207768"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/nike-3fa": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/nike-a39": {
     "__comp": "17896441",
-    "content": "3815ace2"
+    "content": "7701d65d"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/nokia-0b7": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/nokia-c7a": {
     "__comp": "17896441",
-    "content": "2acd22e5"
+    "content": "77a65915"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/noon-9ed": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/noon-d1a": {
     "__comp": "17896441",
-    "content": "4a50089e"
+    "content": "c75e42df"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/nordstrom-2a9": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/nordstrom-59b": {
     "__comp": "17896441",
-    "content": "1bc40a73"
+    "content": "aa91521f"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/notion-14c": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/notion-0e5": {
     "__comp": "17896441",
-    "content": "da66c7e7"
+    "content": "7ad986f2"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/npci-600": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/npci-dee": {
     "__comp": "17896441",
-    "content": "5eddf54f"
+    "content": "a490fe80"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/nuro-4f2": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/nuro-723": {
     "__comp": "17896441",
-    "content": "dcab8b3e"
+    "content": "7aec459b"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/nutanix-54e": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/nutanix-8f6": {
     "__comp": "17896441",
-    "content": "6c74fb90"
+    "content": "2ffe2d77"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/nvidia-88c": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/nvidia-005": {
     "__comp": "17896441",
-    "content": "74e1fe71"
+    "content": "6086899d"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/nykaa-d3a": {
+  "/technical-knowledge/dsa/leetcode-companywise/N/nykaa-8bb": {
     "__comp": "17896441",
-    "content": "cfefd621"
+    "content": "dec3c68a"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/observeai-b1f": {
+  "/technical-knowledge/dsa/leetcode-companywise/O/observeai-ebc": {
     "__comp": "17896441",
-    "content": "f1debff3"
+    "content": "26aa4e83"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/odoo-858": {
+  "/technical-knowledge/dsa/leetcode-companywise/O/odoo-df1": {
     "__comp": "17896441",
-    "content": "140cdc4a"
+    "content": "62e87353"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/okta-a50": {
+  "/technical-knowledge/dsa/leetcode-companywise/O/okta-a6b": {
     "__comp": "17896441",
-    "content": "595fbb03"
+    "content": "65a7761c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/okx-cfd": {
+  "/technical-knowledge/dsa/leetcode-companywise/O/okx-26d": {
     "__comp": "17896441",
-    "content": "de97d9be"
+    "content": "49746a9f"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/olx-96f": {
+  "/technical-knowledge/dsa/leetcode-companywise/O/olx-7ba": {
     "__comp": "17896441",
-    "content": "28a7fd02"
+    "content": "ebcbd983"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/openai-4eb": {
+  "/technical-knowledge/dsa/leetcode-companywise/O/openai-75c": {
     "__comp": "17896441",
-    "content": "a917748b"
+    "content": "d17bb2f7"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/opentext-cf3": {
+  "/technical-knowledge/dsa/leetcode-companywise/O/opentext-375": {
     "__comp": "17896441",
-    "content": "ebf8ae9e"
+    "content": "2e897d07"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/oppo-5f4": {
+  "/technical-knowledge/dsa/leetcode-companywise/O/oppo-7be": {
     "__comp": "17896441",
-    "content": "2f2e88c4"
+    "content": "64fcd3b9"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/optiver-687": {
+  "/technical-knowledge/dsa/leetcode-companywise/O/optiver-b6f": {
     "__comp": "17896441",
-    "content": "5a62d781"
+    "content": "4d381de1"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/optum-25a": {
+  "/technical-knowledge/dsa/leetcode-companywise/O/optum-78e": {
     "__comp": "17896441",
-    "content": "fd5ee103"
+    "content": "a4202340"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/oracle-303": {
+  "/technical-knowledge/dsa/leetcode-companywise/O/oracle-570": {
     "__comp": "17896441",
-    "content": "eb7e2831"
+    "content": "bfb0d002"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/oscar-health-482": {
+  "/technical-knowledge/dsa/leetcode-companywise/O/oscar-health-ce0": {
     "__comp": "17896441",
-    "content": "a970a319"
+    "content": "144cf84b"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/otterai-f3a": {
+  "/technical-knowledge/dsa/leetcode-companywise/O/otterai-9a1": {
     "__comp": "17896441",
-    "content": "451566a3"
+    "content": "15b7185a"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/oyo-a70": {
+  "/technical-knowledge/dsa/leetcode-companywise/O/oyo-613": {
     "__comp": "17896441",
-    "content": "4f309633"
+    "content": "a69a908e"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/ozon-bd4": {
+  "/technical-knowledge/dsa/leetcode-companywise/O/ozon-29d": {
     "__comp": "17896441",
-    "content": "15db169a"
+    "content": "ffdc2cfb"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/palantir-technologies-485": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/palantir-technologies-a1c": {
     "__comp": "17896441",
-    "content": "159378da"
+    "content": "14e2cac8"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/palo-alto-networks-dcd": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/palo-alto-networks-dee": {
     "__comp": "17896441",
-    "content": "92e52315"
+    "content": "b9ea236b"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/park-5f9": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/park-02a": {
     "__comp": "17896441",
-    "content": "0bc83af9"
+    "content": "c5458dd0"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/patreon-e0a": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/patreon-6f8": {
     "__comp": "17896441",
-    "content": "e551e7ff"
+    "content": "7fcecd04"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/paycom-e8e": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/paycom-4e1": {
     "__comp": "17896441",
-    "content": "c5fa905e"
+    "content": "f7d5e886"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/paypal-0f2": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/paypal-1ae": {
     "__comp": "17896441",
-    "content": "542d6055"
+    "content": "9b2696a5"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/paypay-2c2": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/paypay-dd8": {
     "__comp": "17896441",
-    "content": "7c1ced39"
+    "content": "69f073c7"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/paytm-923": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/paytm-ed2": {
     "__comp": "17896441",
-    "content": "9788b0b3"
+    "content": "258efadb"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/payu-2f2": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/payu-be3": {
     "__comp": "17896441",
-    "content": "77c0254d"
+    "content": "a2599304"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/peak6-963": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/peak6-3f8": {
     "__comp": "17896441",
-    "content": "f66c9fd2"
+    "content": "75901b63"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/pega-121": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/pega-b10": {
     "__comp": "17896441",
-    "content": "b1c04b92"
+    "content": "36fc4357"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/peloton-4f9": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/peloton-352": {
     "__comp": "17896441",
-    "content": "536a4225"
+    "content": "11757e57"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/persistent-systems-83c": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/persistent-systems-dad": {
     "__comp": "17896441",
-    "content": "3e53db3d"
+    "content": "0c687b37"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/philips-8a9": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/philips-9e0": {
     "__comp": "17896441",
-    "content": "19b31498"
+    "content": "3ecd0918"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/phonepe-b92": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/phonepe-5e3": {
     "__comp": "17896441",
-    "content": "2e5a8e41"
+    "content": "36e8f796"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/pickrr-42e": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/pickrr-467": {
     "__comp": "17896441",
-    "content": "c5776386"
+    "content": "31cafba3"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/pinterest-b24": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/pinterest-80e": {
     "__comp": "17896441",
-    "content": "196774d4"
+    "content": "b105ef9f"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/plaid-f96": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/plaid-b45": {
     "__comp": "17896441",
-    "content": "066e6a57"
+    "content": "3ed27a3a"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/playsimple-24c": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/playsimple-2eb": {
     "__comp": "17896441",
-    "content": "ac44b342"
+    "content": "0f97e995"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/pocket-gems-55f": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/pocket-gems-9cf": {
     "__comp": "17896441",
-    "content": "3dca521b"
+    "content": "96e832e4"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/point72-8cf": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/point72-bc2": {
     "__comp": "17896441",
-    "content": "6a733932"
+    "content": "df4cdda1"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/polar-bd5": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/polar-62a": {
     "__comp": "17896441",
-    "content": "56d9aaa5"
+    "content": "c4662b4f"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/ponyai-670": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/ponyai-5a8": {
     "__comp": "17896441",
-    "content": "26f02e77"
+    "content": "da4df989"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/pornhub-ebf": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/pornhub-774": {
     "__comp": "17896441",
-    "content": "c4e5df7b"
+    "content": "71a561aa"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/porter-752": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/porter-256": {
     "__comp": "17896441",
-    "content": "3f4dd1e7"
+    "content": "ee6316b7"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/poshmark-86e": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/poshmark-ecb": {
     "__comp": "17896441",
-    "content": "af72f20c"
+    "content": "e12a91fb"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/postman-338": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/postman-62e": {
     "__comp": "17896441",
-    "content": "2284846e"
+    "content": "661218c2"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/postmates-538": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/postmates-43b": {
     "__comp": "17896441",
-    "content": "f9a62bf9"
+    "content": "eff70435"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/poynt-742": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/poynt-ed4": {
     "__comp": "17896441",
-    "content": "17b60b4f"
+    "content": "3ecca382"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/practo-d04": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/practo-5c3": {
     "__comp": "17896441",
-    "content": "b0301bf6"
+    "content": "eaedb586"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/publicis-sapient-23b": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/publicis-sapient-271": {
     "__comp": "17896441",
-    "content": "a99a1481"
+    "content": "28fef94e"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/pubmatic-994": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/pubmatic-d0c": {
     "__comp": "17896441",
-    "content": "0459a87b"
+    "content": "d9669d28"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/pure-2b9": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/pure-749": {
     "__comp": "17896441",
-    "content": "73dbd62e"
+    "content": "1de383ad"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/pure-storage-d49": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/pure-storage-44d": {
     "__comp": "17896441",
-    "content": "80837285"
+    "content": "29c85ed7"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/purplle-602": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/purplle-cd7": {
     "__comp": "17896441",
-    "content": "8fbb5e21"
+    "content": "9484902b"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/pwc-8c2": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/pwc-465": {
     "__comp": "17896441",
-    "content": "7dd33365"
+    "content": "c1983bac"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/qualcomm-f44": {
+  "/technical-knowledge/dsa/leetcode-companywise/Q/qualcomm-a52": {
     "__comp": "17896441",
-    "content": "a0ed59f0"
+    "content": "67795e41"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/qualtrics-5e0": {
+  "/technical-knowledge/dsa/leetcode-companywise/Q/qualtrics-68a": {
     "__comp": "17896441",
-    "content": "d92cccb5"
+    "content": "afcfe324"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/qualys-016": {
+  "/technical-knowledge/dsa/leetcode-companywise/Q/qualys-b95": {
     "__comp": "17896441",
-    "content": "a99cb7d7"
+    "content": "03aeb233"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/quantcast-d57": {
+  "/technical-knowledge/dsa/leetcode-companywise/Q/quantcast-2d1": {
     "__comp": "17896441",
-    "content": "1a5ba506"
+    "content": "975aecad"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/quantiphi-905": {
+  "/technical-knowledge/dsa/leetcode-companywise/Q/quantiphi-dac": {
     "__comp": "17896441",
-    "content": "1125604d"
+    "content": "7bd9c064"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/quince-ee9": {
+  "/technical-knowledge/dsa/leetcode-companywise/Q/quince-896": {
     "__comp": "17896441",
-    "content": "5a512c51"
+    "content": "20abab14"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/quora-78a": {
+  "/technical-knowledge/dsa/leetcode-companywise/Q/quora-e5f": {
     "__comp": "17896441",
-    "content": "a1da0e6a"
+    "content": "abe11899"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/rackspace-738": {
+  "/technical-knowledge/dsa/leetcode-companywise/R/rackspace-06b": {
     "__comp": "17896441",
-    "content": "1967cdbb"
+    "content": "c0a00965"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/radius-c02": {
+  "/technical-knowledge/dsa/leetcode-companywise/R/radius-3f4": {
     "__comp": "17896441",
-    "content": "a79b433b"
+    "content": "51ccd61b"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/rakuten-fc6": {
+  "/technical-knowledge/dsa/leetcode-companywise/R/rakuten-93b": {
     "__comp": "17896441",
-    "content": "482afc6e"
+    "content": "eeb97ec9"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/rally-health-b73": {
+  "/technical-knowledge/dsa/leetcode-companywise/R/rally-health-e2a": {
     "__comp": "17896441",
-    "content": "7817f408"
+    "content": "9423b217"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/ramp-2-f54": {
+  "/technical-knowledge/dsa/leetcode-companywise/R/ramp-2-1c4": {
     "__comp": "17896441",
-    "content": "5b83c1f1"
+    "content": "fe9837b2"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/razorpay-a3c": {
+  "/technical-knowledge/dsa/leetcode-companywise/R/razorpay-b70": {
     "__comp": "17896441",
-    "content": "1c6511e6"
+    "content": "363da6f6"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/rbc-e6f": {
+  "/technical-knowledge/dsa/leetcode-companywise/R/rbc-f1c": {
     "__comp": "17896441",
-    "content": "bb13e038"
+    "content": "789475b3"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/redbus-703": {
+  "/technical-knowledge/dsa/leetcode-companywise/R/redbus-91b": {
     "__comp": "17896441",
-    "content": "c19b45c2"
+    "content": "d39d70ec"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/reddit-218": {
+  "/technical-knowledge/dsa/leetcode-companywise/R/reddit-1ec": {
     "__comp": "17896441",
-    "content": "446e9ea5"
+    "content": "527afdc9"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/redfin-583": {
+  "/technical-knowledge/dsa/leetcode-companywise/R/redfin-f5a": {
     "__comp": "17896441",
-    "content": "2e76c728"
+    "content": "196fbb09"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/remitly-38d": {
+  "/technical-knowledge/dsa/leetcode-companywise/R/remitly-f9b": {
     "__comp": "17896441",
-    "content": "ec1112ea"
+    "content": "97e8174d"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/retailmenot-afd": {
+  "/technical-knowledge/dsa/leetcode-companywise/R/retailmenot-9af": {
     "__comp": "17896441",
-    "content": "a9ed4a51"
+    "content": "0ee52751"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/revolut-61f": {
+  "/technical-knowledge/dsa/leetcode-companywise/R/revolut-5ba": {
     "__comp": "17896441",
-    "content": "0bad946d"
+    "content": "2281c3ef"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/riot-games-36d": {
+  "/technical-knowledge/dsa/leetcode-companywise/R/riot-games-6a2": {
     "__comp": "17896441",
-    "content": "1dd0a782"
+    "content": "d34f5ee5"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/ripple-5c4": {
+  "/technical-knowledge/dsa/leetcode-companywise/R/ripple-208": {
     "__comp": "17896441",
-    "content": "4c6aaba7"
+    "content": "7cb36a4d"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/rippling-8c5": {
+  "/technical-knowledge/dsa/leetcode-companywise/R/rippling-ae4": {
     "__comp": "17896441",
-    "content": "cb880c66"
+    "content": "73ff1f5c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/rivian-f42": {
+  "/technical-knowledge/dsa/leetcode-companywise/R/rivian-aa0": {
     "__comp": "17896441",
-    "content": "7ecc0904"
+    "content": "439abdcf"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/robinhood-619": {
+  "/technical-knowledge/dsa/leetcode-companywise/R/robinhood-957": {
     "__comp": "17896441",
-    "content": "dc9dae75"
+    "content": "cb07b87d"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/roblox-c15": {
+  "/technical-knowledge/dsa/leetcode-companywise/R/roblox-f40": {
     "__comp": "17896441",
-    "content": "d57ab7ff"
+    "content": "b9d657dc"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/rokt-c69": {
+  "/technical-knowledge/dsa/leetcode-companywise/R/rokt-3cb": {
     "__comp": "17896441",
-    "content": "b75341ee"
+    "content": "af29e26a"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/roku-2e2": {
+  "/technical-knowledge/dsa/leetcode-companywise/R/roku-155": {
     "__comp": "17896441",
-    "content": "b22ffd4e"
+    "content": "e7a48c56"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/rubrik-f32": {
+  "/technical-knowledge/dsa/leetcode-companywise/R/rubrik-41c": {
     "__comp": "17896441",
-    "content": "ec127995"
+    "content": "b8e946a8"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/salesforce-d5b": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/salesforce-058": {
     "__comp": "17896441",
-    "content": "8aca6d88"
+    "content": "07ed122c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/sambanova-b5a": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/sambanova-edc": {
     "__comp": "17896441",
-    "content": "7836bb0e"
+    "content": "38321245"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/samsara-3e5": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/samsara-9d9": {
     "__comp": "17896441",
-    "content": "f91bedfe"
+    "content": "a2e25298"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/samsung-711": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/samsung-abc": {
     "__comp": "17896441",
-    "content": "ba958049"
+    "content": "0d51b6f0"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/sap-8d5": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/sap-b6b": {
     "__comp": "17896441",
-    "content": "468d0792"
+    "content": "6198a34a"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/scale-ai-e28": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/scale-ai-3cf": {
     "__comp": "17896441",
-    "content": "3ba3190c"
+    "content": "7d0f0abd"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/scaler-bcf": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/scaler-f27": {
     "__comp": "17896441",
-    "content": "c65fe387"
+    "content": "9216c815"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/schlumberger-ec7": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/schlumberger-373": {
     "__comp": "17896441",
-    "content": "eaffcad6"
+    "content": "b441fe3f"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/schneider-electric-fe7": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/schneider-electric-193": {
     "__comp": "17896441",
-    "content": "2400ce3b"
+    "content": "6e78ad94"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/schrodinger-44b": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/schrodinger-146": {
     "__comp": "17896441",
-    "content": "048607cb"
+    "content": "197a9a9d"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/sentry-4c6": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/sentry-ad3": {
     "__comp": "17896441",
-    "content": "2cc3f0ed"
+    "content": "d335ddf2"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/servicenow-12b": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/servicenow-740": {
     "__comp": "17896441",
-    "content": "10ae5b0e"
+    "content": "714a9094"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/sharechat-70f": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/sharechat-5c5": {
     "__comp": "17896441",
-    "content": "a3f8773a"
+    "content": "e0531404"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/shift-technology-ae1": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/shift-technology-7e9": {
     "__comp": "17896441",
-    "content": "c66fc8bb"
+    "content": "0eac2b63"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/shipsy-1f3": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/shipsy-a79": {
     "__comp": "17896441",
-    "content": "4095c1be"
+    "content": "a720654c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/shopee-ab4": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/shopee-e29": {
     "__comp": "17896441",
-    "content": "26f816f2"
+    "content": "8867d47d"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/shopify-38f": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/shopify-e92": {
     "__comp": "17896441",
-    "content": "6ac45330"
+    "content": "95b0e222"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/siemens-956": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/siemens-2ee": {
     "__comp": "17896441",
-    "content": "b5f2efd7"
+    "content": "ebc8dfa5"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/sig-468": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/sig-acc": {
     "__comp": "17896441",
-    "content": "a2522cfe"
+    "content": "3f59a8ad"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/sigmoid-9ca": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/sigmoid-043": {
     "__comp": "17896441",
-    "content": "7869b950"
+    "content": "d4bb75f2"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/singlestore-15a": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/singlestore-113": {
     "__comp": "17896441",
-    "content": "ace6a888"
+    "content": "fba9691e"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/sixt-369": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/sixt-029": {
     "__comp": "17896441",
-    "content": "6826bc67"
+    "content": "d362c1a2"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/slice-a75": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/slice-d55": {
     "__comp": "17896441",
-    "content": "790807f5"
+    "content": "9cd7f7be"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/smartnews-29d": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/smartnews-77a": {
     "__comp": "17896441",
-    "content": "2324d6ce"
+    "content": "4f52a048"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/smartsheet-c56": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/smartsheet-b06": {
     "__comp": "17896441",
-    "content": "d5c9f2ea"
+    "content": "edba2822"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/snapchat-89a": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/snapchat-f3a": {
     "__comp": "17896441",
-    "content": "25451635"
+    "content": "3299c4c8"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/snapdeal-3d4": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/snapdeal-bf6": {
     "__comp": "17896441",
-    "content": "008e64d7"
+    "content": "35cfe3d5"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/snowflake-8c9": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/snowflake-20d": {
     "__comp": "17896441",
-    "content": "79348135"
+    "content": "774d409c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/societe-generale-e95": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/societe-generale-845": {
     "__comp": "17896441",
-    "content": "ba7e7479"
+    "content": "0141e0f4"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/sofi-b2f": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/sofi-bb5": {
     "__comp": "17896441",
-    "content": "84212af8"
+    "content": "49aaa1ca"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/softwire-a4d": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/softwire-313": {
     "__comp": "17896441",
-    "content": "08f82ccd"
+    "content": "9c66ca5d"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/sonatus-c66": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/sonatus-9a8": {
     "__comp": "17896441",
-    "content": "fc551443"
+    "content": "dbc2a83e"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/sony-53a": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/sony-510": {
     "__comp": "17896441",
-    "content": "db90596d"
+    "content": "f8f4232f"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/soti-ffa": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/soti-e46": {
     "__comp": "17896441",
-    "content": "3473af3a"
+    "content": "fefcea36"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/soundhound-364": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/soundhound-dd4": {
     "__comp": "17896441",
-    "content": "2280a620"
+    "content": "b08f919c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/spacex-ef7": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/spacex-ff4": {
     "__comp": "17896441",
-    "content": "2e97d0eb"
+    "content": "f052ab83"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/spinny-913": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/spinny-d31": {
     "__comp": "17896441",
-    "content": "aee95d94"
+    "content": "a4015dca"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/splunk-d32": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/splunk-13f": {
     "__comp": "17896441",
-    "content": "e79ae7bf"
+    "content": "8e4e8bfc"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/spotify-9c3": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/spotify-b4a": {
     "__comp": "17896441",
-    "content": "f49ba8da"
+    "content": "d747445a"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/sprinklr-f29": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/sprinklr-f36": {
     "__comp": "17896441",
-    "content": "3cdd1b1e"
+    "content": "11417236"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/square-52b": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/square-722": {
     "__comp": "17896441",
-    "content": "d551640b"
+    "content": "c8d101bd"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/squarepoint-capital-1ab": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/squarepoint-capital-746": {
     "__comp": "17896441",
-    "content": "945e7475"
+    "content": "809f5d7c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/squarespace-1ff": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/squarespace-03d": {
     "__comp": "17896441",
-    "content": "28f88d7f"
+    "content": "6f7c866a"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/stackadapt-ab7": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/stackadapt-f92": {
     "__comp": "17896441",
-    "content": "1e0e2b59"
+    "content": "45cec267"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/stackline-dd3": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/stackline-2fb": {
     "__comp": "17896441",
-    "content": "8bfc21bd"
+    "content": "2044f9ab"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/starbucks-19f": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/starbucks-ee6": {
     "__comp": "17896441",
-    "content": "f495e338"
+    "content": "d596fd20"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/state-farm-df3": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/state-farm-f03": {
     "__comp": "17896441",
-    "content": "0db60589"
+    "content": "f9ba033d"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/strava-bb7": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/strava-8ed": {
     "__comp": "17896441",
-    "content": "61f9bf39"
+    "content": "dd429207"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/stripe-4b7": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/stripe-e02": {
     "__comp": "17896441",
-    "content": "ec4fdf9c"
+    "content": "3ba5caaa"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/sumologic-b11": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/sumologic-ba6": {
     "__comp": "17896441",
-    "content": "36998987"
+    "content": "ea607878"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/swiggy-b73": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/swiggy-c40": {
     "__comp": "17896441",
-    "content": "e8cf245e"
+    "content": "67ce617d"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/syfe-bc1": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/syfe-2e8": {
     "__comp": "17896441",
-    "content": "28ef4363"
+    "content": "d08796c9"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/symantec-013": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/symantec-e9c": {
     "__comp": "17896441",
-    "content": "1846fcfa"
+    "content": "19e7eb1d"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/synopsys-1e3": {
+  "/technical-knowledge/dsa/leetcode-companywise/S/synopsys-577": {
     "__comp": "17896441",
-    "content": "7e9d6f1d"
+    "content": "8d41d067"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/ta-digital-2e8": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/ta-digital-ed6": {
     "__comp": "17896441",
-    "content": "f2587af5"
+    "content": "1aec7be0"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/tableau-c1e": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/tableau-a72": {
     "__comp": "17896441",
-    "content": "838d8ea6"
+    "content": "071e5d3b"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/tanium-39d": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/tanium-8ef": {
     "__comp": "17896441",
-    "content": "7b964df2"
+    "content": "8a29b2b2"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/target-3eb": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/target-86f": {
     "__comp": "17896441",
-    "content": "fb813d92"
+    "content": "c4f1f577"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/tcs-ac2": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/tcs-4e7": {
     "__comp": "17896441",
-    "content": "47459f5b"
+    "content": "85c5b3a6"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/tech-mahindra-8d6": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/tech-mahindra-4df": {
     "__comp": "17896441",
-    "content": "e93e1be3"
+    "content": "03929256"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/tekion-f4a": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/tekion-a24": {
     "__comp": "17896441",
-    "content": "f294e25d"
+    "content": "6f921f5c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/tencent-6c5": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/tencent-d9f": {
     "__comp": "17896441",
-    "content": "ee7508ce"
+    "content": "630d2289"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/teradata-b31": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/teradata-88c": {
     "__comp": "17896441",
-    "content": "d56e9e3b"
+    "content": "49c611c3"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/tesco-3cb": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/tesco-605": {
     "__comp": "17896441",
-    "content": "8b63c7da"
+    "content": "243e265a"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/tesla-a45": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/tesla-1a9": {
     "__comp": "17896441",
-    "content": "3c4cc73d"
+    "content": "6bd644f9"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/texas-instruments-c21": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/texas-instruments-9d9": {
     "__comp": "17896441",
-    "content": "4f3b16db"
+    "content": "309caf51"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/the-trade-desk-fde": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/the-trade-desk-8f3": {
     "__comp": "17896441",
-    "content": "6938b893"
+    "content": "3736619d"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/thomson-reuters-d44": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/thomson-reuters-b85": {
     "__comp": "17896441",
-    "content": "647c7e49"
+    "content": "6a02b5b5"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/thoughtspot-500": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/thoughtspot-9f8": {
     "__comp": "17896441",
-    "content": "04693cdc"
+    "content": "f1c053fc"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/thoughtworks-ae1": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/thoughtworks-be6": {
     "__comp": "17896441",
-    "content": "fb5e6435"
+    "content": "ac275082"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/thousandeyes-456": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/thousandeyes-e23": {
     "__comp": "17896441",
-    "content": "118a4ddb"
+    "content": "a9eaad80"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/thumbtack-65a": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/thumbtack-bda": {
     "__comp": "17896441",
-    "content": "ea0a3a06"
+    "content": "5aa0cf16"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/tiaa-806": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/tiaa-2ab": {
     "__comp": "17896441",
-    "content": "8d0c52c3"
+    "content": "47648313"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/tiger-analytics-0c4": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/tiger-analytics-205": {
     "__comp": "17896441",
-    "content": "58258058"
+    "content": "caec965e"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/tiktok-3aa": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/tiktok-d03": {
     "__comp": "17896441",
-    "content": "1ffdae8a"
+    "content": "340106bf"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/tinder-6a7": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/tinder-c8c": {
     "__comp": "17896441",
-    "content": "1580cb25"
+    "content": "b8afc8c3"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/tinkoff-5aa": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/tinkoff-a7a": {
     "__comp": "17896441",
-    "content": "e74da468"
+    "content": "415e2aa0"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/toast-cef": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/toast-e43": {
     "__comp": "17896441",
-    "content": "a33bf171"
+    "content": "05fecca0"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/tokopedia-cf6": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/tokopedia-2be": {
     "__comp": "17896441",
-    "content": "e1c0d3a2"
+    "content": "710fc5d4"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/tomtom-3d7": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/tomtom-5da": {
     "__comp": "17896441",
-    "content": "133c0b5a"
+    "content": "d2aba695"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/toptal-664": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/toptal-05a": {
     "__comp": "17896441",
-    "content": "abb8b163"
+    "content": "d3e9a796"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/tower-research-4d8": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/tower-research-d61": {
     "__comp": "17896441",
-    "content": "a6aa8a8d"
+    "content": "e547ce8d"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/tracxn-675": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/tracxn-3ff": {
     "__comp": "17896441",
-    "content": "958b455b"
+    "content": "4d6de584"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/traveloka-013": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/traveloka-61d": {
     "__comp": "17896441",
-    "content": "031d2902"
+    "content": "1b25b106"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/trend-micro-57c": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/trend-micro-765": {
     "__comp": "17896441",
-    "content": "3cd48fe5"
+    "content": "23c2e72f"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/trexquant-52e": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/trexquant-cea": {
     "__comp": "17896441",
-    "content": "227cc822"
+    "content": "dfccc131"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/trilogy-f0c": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/trilogy-a7c": {
     "__comp": "17896441",
-    "content": "46faeb8b"
+    "content": "fab3b9ca"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/tripactions-562": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/tripactions-d96": {
     "__comp": "17896441",
-    "content": "c6bb2956"
+    "content": "6fa5ed48"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/tripadvisor-218": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/tripadvisor-6f6": {
     "__comp": "17896441",
-    "content": "7ee6d2dc"
+    "content": "e7bb9d60"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/triplebyte-852": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/triplebyte-186": {
     "__comp": "17896441",
-    "content": "4e9b794d"
+    "content": "78b4a120"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/turing-965": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/turing-dd7": {
     "__comp": "17896441",
-    "content": "7514f641"
+    "content": "f5dd1b09"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/turo-828": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/turo-b87": {
     "__comp": "17896441",
-    "content": "a3e858ec"
+    "content": "3fd3250b"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/turvo-d86": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/turvo-95a": {
     "__comp": "17896441",
-    "content": "39f113c0"
+    "content": "9aa852f2"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/tusimple-0ab": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/tusimple-008": {
     "__comp": "17896441",
-    "content": "c135ba16"
+    "content": "539323db"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/twilio-172": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/twilio-ab2": {
     "__comp": "17896441",
-    "content": "70d2aad0"
+    "content": "161a47c2"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/twitch-e68": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/twitch-4fb": {
     "__comp": "17896441",
-    "content": "edde1558"
+    "content": "31d584c0"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/twitter-fb8": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/twitter-4d1": {
     "__comp": "17896441",
-    "content": "6a4a1102"
+    "content": "f2919621"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/two-sigma-eb4": {
+  "/technical-knowledge/dsa/leetcode-companywise/T/two-sigma-d55": {
     "__comp": "17896441",
-    "content": "c87643f2"
+    "content": "35f6e0f6"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/uber-a82": {
+  "/technical-knowledge/dsa/leetcode-companywise/U/uber-c5c": {
     "__comp": "17896441",
-    "content": "04df9620"
+    "content": "30a74aea"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/ubs-ddd": {
+  "/technical-knowledge/dsa/leetcode-companywise/U/ubs-2a0": {
     "__comp": "17896441",
-    "content": "476557ca"
+    "content": "3f49cb58"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/udemy-596": {
+  "/technical-knowledge/dsa/leetcode-companywise/U/udemy-857": {
     "__comp": "17896441",
-    "content": "5d4e709a"
+    "content": "90e9da55"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/uipath-7a9": {
+  "/technical-knowledge/dsa/leetcode-companywise/U/uipath-ae5": {
     "__comp": "17896441",
-    "content": "8a73f1bd"
+    "content": "d0dd9465"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/ukg-494": {
+  "/technical-knowledge/dsa/leetcode-companywise/U/ukg-76c": {
     "__comp": "17896441",
-    "content": "bc628325"
+    "content": "f5bf1630"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/unbxd-ed7": {
+  "/technical-knowledge/dsa/leetcode-companywise/U/unbxd-947": {
     "__comp": "17896441",
-    "content": "d54b869a"
+    "content": "fb29c3a0"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/unity-2a5": {
+  "/technical-knowledge/dsa/leetcode-companywise/U/unity-1ed": {
     "__comp": "17896441",
-    "content": "88bcb7c3"
+    "content": "b91bf399"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/unstop-de8": {
+  "/technical-knowledge/dsa/leetcode-companywise/U/unstop-8f0": {
     "__comp": "17896441",
-    "content": "242b233c"
+    "content": "6c3fec8f"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/upstart-639": {
+  "/technical-knowledge/dsa/leetcode-companywise/U/upstart-515": {
     "__comp": "17896441",
-    "content": "d0f6428d"
+    "content": "f4020ccf"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/urban-company-13e": {
+  "/technical-knowledge/dsa/leetcode-companywise/U/urban-company-cd8": {
     "__comp": "17896441",
-    "content": "444d63ec"
+    "content": "a5b6d27e"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/ust-288": {
+  "/technical-knowledge/dsa/leetcode-companywise/U/ust-24b": {
     "__comp": "17896441",
-    "content": "1b68c323"
+    "content": "2249b105"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/valve-ffd": {
+  "/technical-knowledge/dsa/leetcode-companywise/V/valve-05d": {
     "__comp": "17896441",
-    "content": "0da80ffa"
+    "content": "50c8aae2"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/veeva-834": {
+  "/technical-knowledge/dsa/leetcode-companywise/V/veeva-aba": {
     "__comp": "17896441",
-    "content": "d5a46669"
+    "content": "9df63aeb"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/verily-a72": {
+  "/technical-knowledge/dsa/leetcode-companywise/V/verily-fd4": {
     "__comp": "17896441",
-    "content": "55647acb"
+    "content": "9dfd4f37"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/veritas-aa6": {
+  "/technical-knowledge/dsa/leetcode-companywise/V/veritas-f2b": {
     "__comp": "17896441",
-    "content": "931c2c47"
+    "content": "336a890c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/verizon-a32": {
+  "/technical-knowledge/dsa/leetcode-companywise/V/verizon-b06": {
     "__comp": "17896441",
-    "content": "5575a0d0"
+    "content": "07b36f48"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/verkada-4c5": {
+  "/technical-knowledge/dsa/leetcode-companywise/V/verkada-6ad": {
     "__comp": "17896441",
-    "content": "bcc72817"
+    "content": "1280dccf"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/viasat-064": {
+  "/technical-knowledge/dsa/leetcode-companywise/V/viasat-4ec": {
     "__comp": "17896441",
-    "content": "ef3459fe"
+    "content": "9295f743"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/vimeo-8c1": {
+  "/technical-knowledge/dsa/leetcode-companywise/V/vimeo-818": {
     "__comp": "17896441",
-    "content": "584db956"
+    "content": "ab045241"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/virtu-727": {
+  "/technical-knowledge/dsa/leetcode-companywise/V/virtu-a54": {
     "__comp": "17896441",
-    "content": "63c22345"
+    "content": "e657656e"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/virtusa-958": {
+  "/technical-knowledge/dsa/leetcode-companywise/V/virtusa-f46": {
     "__comp": "17896441",
-    "content": "26218664"
+    "content": "f5e53b66"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/visa-d2a": {
+  "/technical-knowledge/dsa/leetcode-companywise/V/visa-d7f": {
     "__comp": "17896441",
-    "content": "16c210c8"
+    "content": "1136c543"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/vk-fbf": {
+  "/technical-knowledge/dsa/leetcode-companywise/V/vk-08f": {
     "__comp": "17896441",
-    "content": "bd152b2f"
+    "content": "cc5c93e1"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/vmware-f53": {
+  "/technical-knowledge/dsa/leetcode-companywise/V/vmware-5f2": {
     "__comp": "17896441",
-    "content": "86d64c39"
+    "content": "f11cee5f"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/walmart-labs-9c4": {
+  "/technical-knowledge/dsa/leetcode-companywise/W/walmart-labs-bb4": {
     "__comp": "17896441",
-    "content": "e34c9a67"
+    "content": "08e62b36"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/warnermedia-e2a": {
+  "/technical-knowledge/dsa/leetcode-companywise/W/warnermedia-9b2": {
     "__comp": "17896441",
-    "content": "7e80b053"
+    "content": "a6356fb6"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/watchguard-7a0": {
+  "/technical-knowledge/dsa/leetcode-companywise/W/watchguard-2f9": {
     "__comp": "17896441",
-    "content": "65f46d7e"
+    "content": "f6cec63f"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/wayfair-5b5": {
+  "/technical-knowledge/dsa/leetcode-companywise/W/wayfair-b2a": {
     "__comp": "17896441",
-    "content": "f1ab100e"
+    "content": "bce03251"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/waymo-b13": {
+  "/technical-knowledge/dsa/leetcode-companywise/W/waymo-6ae": {
     "__comp": "17896441",
-    "content": "0b77ef59"
+    "content": "0fd5b25c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/wayve-3c3": {
+  "/technical-knowledge/dsa/leetcode-companywise/W/wayve-17a": {
     "__comp": "17896441",
-    "content": "f8d6f76e"
+    "content": "47f74e79"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/wealthfront-39a": {
+  "/technical-knowledge/dsa/leetcode-companywise/W/wealthfront-6ad": {
     "__comp": "17896441",
-    "content": "bb322b5d"
+    "content": "141c4e59"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/wells-fargo-04f": {
+  "/technical-knowledge/dsa/leetcode-companywise/W/wells-fargo-c6f": {
     "__comp": "17896441",
-    "content": "a1eb74eb"
+    "content": "2436057e"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/weride-f15": {
+  "/technical-knowledge/dsa/leetcode-companywise/W/weride-055": {
     "__comp": "17896441",
-    "content": "6d408e8b"
+    "content": "e805a206"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/western-digital-498": {
+  "/technical-knowledge/dsa/leetcode-companywise/W/western-digital-f22": {
     "__comp": "17896441",
-    "content": "644cfc5c"
+    "content": "b9ba9676"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/whatfix-a53": {
+  "/technical-knowledge/dsa/leetcode-companywise/W/whatfix-1d9": {
     "__comp": "17896441",
-    "content": "b250739d"
+    "content": "ef333c87"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/whatnot-9cd": {
+  "/technical-knowledge/dsa/leetcode-companywise/W/whatnot-d08": {
     "__comp": "17896441",
-    "content": "1f8c8677"
+    "content": "5d23a20d"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/winzo-245": {
+  "/technical-knowledge/dsa/leetcode-companywise/W/winzo-120": {
     "__comp": "17896441",
-    "content": "96e5766a"
+    "content": "72d0e6ee"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/wipro-52d": {
+  "/technical-knowledge/dsa/leetcode-companywise/W/wipro-ba6": {
     "__comp": "17896441",
-    "content": "6a9ea133"
+    "content": "29487b5e"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/wise-112": {
+  "/technical-knowledge/dsa/leetcode-companywise/W/wise-dd3": {
     "__comp": "17896441",
-    "content": "462a6cd5"
+    "content": "b0145adf"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/wish-a82": {
+  "/technical-knowledge/dsa/leetcode-companywise/W/wish-0cf": {
     "__comp": "17896441",
-    "content": "b465a4ad"
+    "content": "92588067"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/wissen-12e": {
+  "/technical-knowledge/dsa/leetcode-companywise/W/wissen-a2e": {
     "__comp": "17896441",
-    "content": "674c3f70"
+    "content": "4ecd9446"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/wix-646": {
+  "/technical-knowledge/dsa/leetcode-companywise/W/wix-08e": {
     "__comp": "17896441",
-    "content": "e509f349"
+    "content": "1e5b01b7"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/workday-ab3": {
+  "/technical-knowledge/dsa/leetcode-companywise/W/workday-cf6": {
     "__comp": "17896441",
-    "content": "52204645"
+    "content": "2b784414"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/works-applications-d79": {
+  "/technical-knowledge/dsa/leetcode-companywise/W/works-applications-17b": {
     "__comp": "17896441",
-    "content": "9bc92b3b"
+    "content": "2b555165"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/worldquant-c65": {
+  "/technical-knowledge/dsa/leetcode-companywise/W/worldquant-f58": {
     "__comp": "17896441",
-    "content": "2c327e79"
+    "content": "1ca9a55c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/woven-by-toyota-025": {
+  "/technical-knowledge/dsa/leetcode-companywise/W/woven-by-toyota-0e0": {
     "__comp": "17896441",
-    "content": "1832b28c"
+    "content": "dba484cd"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/xing-181": {
+  "/technical-knowledge/dsa/leetcode-companywise/X/xing-513": {
     "__comp": "17896441",
-    "content": "94d7abb0"
+    "content": "224143c6"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/yahoo-a40": {
+  "/technical-knowledge/dsa/leetcode-companywise/Y/yahoo-fe7": {
     "__comp": "17896441",
-    "content": "37129b2b"
+    "content": "0913c520"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/yandex-2c2": {
+  "/technical-knowledge/dsa/leetcode-companywise/Y/yandex-1f0": {
     "__comp": "17896441",
-    "content": "f44bc6d9"
+    "content": "a8041eb3"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/yatra-74c": {
+  "/technical-knowledge/dsa/leetcode-companywise/Y/yatra-e6c": {
     "__comp": "17896441",
-    "content": "d7e110e3"
+    "content": "1f6c00ab"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/yelp-d23": {
+  "/technical-knowledge/dsa/leetcode-companywise/Y/yelp-7a2": {
     "__comp": "17896441",
-    "content": "6673d00e"
+    "content": "037b3083"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/yext-7a3": {
+  "/technical-knowledge/dsa/leetcode-companywise/Y/yext-54e": {
     "__comp": "17896441",
-    "content": "f375ef5b"
+    "content": "ebb58180"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/yugabyte-c95": {
+  "/technical-knowledge/dsa/leetcode-companywise/Y/yugabyte-00d": {
     "__comp": "17896441",
-    "content": "4a986eb7"
+    "content": "24bfd655"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/zalando-286": {
+  "/technical-knowledge/dsa/leetcode-companywise/Z/zalando-bb8": {
     "__comp": "17896441",
-    "content": "c2b23b7f"
+    "content": "bbddbe32"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/zappos-4f8": {
+  "/technical-knowledge/dsa/leetcode-companywise/Z/zappos-3f0": {
     "__comp": "17896441",
-    "content": "ecd9d1c9"
+    "content": "bba87890"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/zemoso-45d": {
+  "/technical-knowledge/dsa/leetcode-companywise/Z/zemoso-e28": {
     "__comp": "17896441",
-    "content": "aa80e9e7"
+    "content": "d4b902ec"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/zendesk-660": {
+  "/technical-knowledge/dsa/leetcode-companywise/Z/zendesk-30c": {
     "__comp": "17896441",
-    "content": "544c4c75"
+    "content": "7db26ec8"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/zenefits-d42": {
+  "/technical-knowledge/dsa/leetcode-companywise/Z/zenefits-cfa": {
     "__comp": "17896441",
-    "content": "f1267ccc"
+    "content": "77447705"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/zepto-379": {
+  "/technical-knowledge/dsa/leetcode-companywise/Z/zepto-563": {
     "__comp": "17896441",
-    "content": "9d4aa0a2"
+    "content": "f6a3c7ab"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/zeta-cb7": {
+  "/technical-knowledge/dsa/leetcode-companywise/Z/zeta-0a2": {
     "__comp": "17896441",
-    "content": "ba280cf8"
+    "content": "95f2ff72"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/zeta-suite-ca6": {
+  "/technical-knowledge/dsa/leetcode-companywise/Z/zeta-suite-5fd": {
     "__comp": "17896441",
-    "content": "3900bde9"
+    "content": "780cf4fe"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/zillow-092": {
+  "/technical-knowledge/dsa/leetcode-companywise/Z/zillow-7ff": {
     "__comp": "17896441",
-    "content": "6c04f25c"
+    "content": "3f10799d"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/zip-0f3": {
+  "/technical-knowledge/dsa/leetcode-companywise/Z/zip-ad0": {
     "__comp": "17896441",
-    "content": "c32403fd"
+    "content": "870e3112"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/ziprecruiter-d42": {
+  "/technical-knowledge/dsa/leetcode-companywise/Z/ziprecruiter-ea8": {
     "__comp": "17896441",
-    "content": "d6122b36"
+    "content": "2c96e8f5"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/zluri-499": {
+  "/technical-knowledge/dsa/leetcode-companywise/Z/zluri-440": {
     "__comp": "17896441",
-    "content": "0ea3a774"
+    "content": "11e8273f"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/zocdoc-47d": {
+  "/technical-knowledge/dsa/leetcode-companywise/Z/zocdoc-19e": {
     "__comp": "17896441",
-    "content": "72b04c5e"
+    "content": "87403e8b"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/zoho-492": {
+  "/technical-knowledge/dsa/leetcode-companywise/Z/zoho-6fb": {
     "__comp": "17896441",
-    "content": "da75bb37"
+    "content": "5402e9f1"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/zomato-272": {
+  "/technical-knowledge/dsa/leetcode-companywise/Z/zomato-4b5": {
     "__comp": "17896441",
-    "content": "47a6afeb"
+    "content": "936ee0f3"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/zoom-9fb": {
+  "/technical-knowledge/dsa/leetcode-companywise/Z/zoom-d07": {
     "__comp": "17896441",
-    "content": "93ad5cf8"
+    "content": "66c85e78"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/zoox-c1e": {
+  "/technical-knowledge/dsa/leetcode-companywise/Z/zoox-7f2": {
     "__comp": "17896441",
-    "content": "47b3c432"
+    "content": "c5d43d84"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/zopsmart-382": {
+  "/technical-knowledge/dsa/leetcode-companywise/Z/zopsmart-9cf": {
     "__comp": "17896441",
-    "content": "9c1e5a07"
+    "content": "b2fad8d7"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/zs-associates-0f4": {
+  "/technical-knowledge/dsa/leetcode-companywise/Z/zs-associates-86d": {
     "__comp": "17896441",
-    "content": "8ea16cbb"
+    "content": "1380e0af"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/zscaler-2e1": {
+  "/technical-knowledge/dsa/leetcode-companywise/Z/zscaler-b11": {
     "__comp": "17896441",
-    "content": "862cf60d"
+    "content": "ac309adf"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/zulily-130": {
+  "/technical-knowledge/dsa/leetcode-companywise/Z/zulily-315": {
     "__comp": "17896441",
-    "content": "35469c20"
+    "content": "19b9ac52"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/zynga-f2a": {
+  "/technical-knowledge/dsa/leetcode-companywise/Z/zynga-8b5": {
     "__comp": "17896441",
-    "content": "f4eb2d62"
+    "content": "911f36bd"
   },
   "/technical-knowledge/dsa/week-1-arrays-strings-prefix-sums-219": {
     "__comp": "17896441",
