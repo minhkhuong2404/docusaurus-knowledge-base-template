@@ -66,8 +66,8 @@ export default {
         "highlightSearchTermsOnTargetPage": false,
         "explicitSearchResultPath": false,
         "searchResultLimits": 8,
-        "searchBarShortcut": true,
-        "searchBarShortcutHint": true,
+        "searchBarShortcut": false,
+        "searchBarShortcutHint": false,
         "hashed": true
       }
     ]
@@ -117,18 +117,51 @@ export default {
       {
         "name": "msapplication-config",
         "content": "/browserconfig.xml"
-      },
-      {
-        "name": "theme-color",
-        "content": "#000000"
       }
     ],
     "headTags": [
       {
         "tagName": "link",
         "attributes": {
+          "rel": "dns-prefetch",
+          "href": "https://fonts.googleapis.com"
+        }
+      },
+      {
+        "tagName": "link",
+        "attributes": {
+          "rel": "dns-prefetch",
+          "href": "https://fonts.gstatic.com"
+        }
+      },
+      {
+        "tagName": "link",
+        "attributes": {
           "rel": "preconnect",
           "href": "https://fonts.googleapis.com"
+        }
+      },
+      {
+        "tagName": "link",
+        "attributes": {
+          "rel": "preconnect",
+          "href": "https://fonts.gstatic.com",
+          "crossorigin": "anonymous"
+        }
+      },
+      {
+        "tagName": "link",
+        "attributes": {
+          "rel": "preload",
+          "as": "style",
+          "href": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        }
+      },
+      {
+        "tagName": "link",
+        "attributes": {
+          "rel": "stylesheet",
+          "href": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
         }
       }
     ],
@@ -494,14 +527,9 @@ export default {
         ]
       },
       "additionalLanguages": [
-        "java",
         "bash",
         "json",
-        "yaml",
-        "properties",
-        "docker",
-        "groovy",
-        "sql"
+        "yaml"
       ],
       "magicComments": [
         {
