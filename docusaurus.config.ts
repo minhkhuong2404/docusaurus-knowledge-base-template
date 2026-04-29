@@ -94,6 +94,11 @@ const config: Config = {
 		},
 		navbar: {
 			title: 'Engineering Knowledge Base',
+			logo: {
+				alt: 'Engineering Knowledge Base Logo',
+				src: '/logo.svg',
+				srcDark: '/logo-dark.svg',
+			},
 			items: [
 				{ to: '/login', label: '💎 VIP Login', position: 'right', className: 'premium-nav-button' },
 				{ type: 'search', position: 'right' }

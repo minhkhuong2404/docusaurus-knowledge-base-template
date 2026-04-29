@@ -383,6 +383,22 @@ body {
   background-clip: text;
 }
 
+/* Navbar logo — larger size with vertical alignment */
+.navbar__logo {
+  height: 50px !important;
+  width: auto !important;
+  margin-right: 0.75rem !important;
+  vertical-align: middle !important;
+  transform: translateY(-2px) !important;
+}
+
+.navbar__logo img {
+  height: 50px !important;
+  width: auto !important;
+  display: block !important;
+  vertical-align: middle !important;
+}
+
 .navbar__link {
   font-weight: 500;
   font-size: 0.9rem;

@@ -141,6 +141,11 @@ export default {
     },
     "navbar": {
       "title": "Engineering Knowledge Base",
+      "logo": {
+        "alt": "Engineering Knowledge Base Logo",
+        "src": "/logo.svg",
+        "srcDark": "/logo-dark.svg"
+      },
       "items": [
         {
           "to": "/login",

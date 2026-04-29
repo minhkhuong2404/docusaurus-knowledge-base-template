@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'dfc'),
+    component: ComponentCreator('/', 'c77'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'd4f'),
+        component: ComponentCreator('/', '4b4'),
         routes: [
           {
             path: '/tags',
@@ -6187,7 +6187,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '54a'),
+            component: ComponentCreator('/', '46e'),
             routes: [
               {
                 path: '/aws',
@@ -7723,7 +7723,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/caching-strategies',
-                component: ComponentCreator('/technical-knowledge/database/caching-strategies', 'acd'),
+                component: ComponentCreator('/technical-knowledge/database/caching-strategies', 'df3'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

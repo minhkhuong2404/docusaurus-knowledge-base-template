@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-dfc": {
+  "/-c77": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-d4f": {
+  "/-4b4": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -4957,7 +4957,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-54a": {
+  "/-46e": {
     "__comp": "a94703ab"
   },
   "/aws-7a1": {
@@ -5984,7 +5984,7 @@
     "__comp": "17896441",
     "content": "1d655bfd"
   },
-  "/technical-knowledge/database/caching-strategies-acd": {
+  "/technical-knowledge/database/caching-strategies-df3": {
     "__comp": "17896441",
     "content": "7aa6b45d"
   },
