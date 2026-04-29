@@ -35,6 +35,13 @@ Best for: max sum of k elements    Best for: longest/shortest substring
 - Learn the "Exact K = At Most K minus At Most K-1" trick for exact count problems.
 - Avoid the most common subtle bugs: when to check `if` vs. `while` for shrinking.
 
+### Knowledge You Need Before Starting
+
+- Fixed-window confidence from Week 2.
+- HashMap/frequency-array fluency from Week 4.
+- Strong pointer invariant tracking (`left`, `right`, validity condition).
+- Comfort proving each pointer moves at most N times.
+
 ---
 
 ## 2. The Core Mental Models

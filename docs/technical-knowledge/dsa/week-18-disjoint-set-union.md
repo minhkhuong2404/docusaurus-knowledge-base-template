@@ -29,6 +29,13 @@ DSU powers some of the most fundamental infrastructure algorithms:
 - Know when to choose DSU over BFS/DFS and when the reverse is true.
 - Apply the **Reverse-Time Trick** for edge deletion problems.
 
+### Knowledge You Need Before Starting
+
+- Graph connectivity thinking from Weeks 7, 8, and 17.
+- Array-based parent/rank bookkeeping comfort.
+- Familiarity with amortized analysis (not just worst-case only).
+- Clear understanding of when queries are dynamic vs static.
+
 ---
 
 ## 2. The Core Mental Models

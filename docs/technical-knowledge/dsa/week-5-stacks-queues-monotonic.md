@@ -30,6 +30,13 @@ In interviews, stacks appear in roughly 15–20% of problems, and the **Monotoni
 - Master the Monotonic Stack pattern to optimize nested loops dealing with sequential comparisons.
 - Build the ability to recognize when a problem is "secretly" a stack or queue problem.
 
+### Knowledge You Need Before Starting
+
+- Fluency with arrays and index traversal from Weeks 1-2.
+- Comfort with `ArrayDeque` operations and basic API usage.
+- Ability to reason about amortized complexity and one-pass constraints.
+- Pattern recognition from hash-map and two-pointer problems.
+
 ---
 
 ## 2. The Core Mental Models

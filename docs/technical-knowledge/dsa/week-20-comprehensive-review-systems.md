@@ -21,6 +21,13 @@ This final week is not about learning new algorithms. It is about **Synthesis**.
 - Practice translating algorithmic theory into practical system design components.
 - Build a mental interview protocol from problem statement to clean code.
 
+### Knowledge You Need Before Starting
+
+- Completion of Weeks 1-19 with at least one solved medium problem per pattern.
+- Ability to explain trade-offs (time, space, readability, maintainability).
+- Comfort communicating brute force -> optimization progression aloud.
+- Familiarity with Java standard library choices under interview pressure.
+
 ---
 
 ## 2. DSA → Real-World System Mappings

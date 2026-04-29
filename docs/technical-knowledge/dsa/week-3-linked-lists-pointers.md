@@ -17,6 +17,13 @@ Welcome to Week 3! After spending two weeks mastering arrays and strings (contig
 - Master the "Dummy Head" pattern to eliminate edge cases when modifying lists.
 - Learn Floyd's Tortoise and Hare algorithm for cycle detection and finding midpoints.
 
+### Knowledge You Need Before Starting
+
+- Week 1-2 comfort with pointers-as-indices and single-pass thinking.
+- Java references and object mutation basics (`a = b` shares the same node object).
+- Null-handling discipline to avoid `NullPointerException`.
+- Confidence tracing pointer updates step-by-step on paper.
+
 ---
 
 ## 2. Theory & Fundamentals

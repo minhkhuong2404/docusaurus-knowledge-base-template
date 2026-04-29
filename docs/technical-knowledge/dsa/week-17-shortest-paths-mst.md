@@ -22,6 +22,13 @@ This week introduces **Weighted Graphs**. You will master two of the most famous
 - Differentiate between a Shortest Path and a Minimum Spanning Tree (MST).
 - Master Prim's Algorithm and understand why it shares the same Priority Queue structure as Dijkstra.
 
+### Knowledge You Need Before Starting
+
+- Graph traversal and representation fundamentals from Weeks 7-8.
+- Heap/PriorityQueue proficiency from Week 12.
+- Confidence with greedy decision logic and proof sketches.
+- Ability to reason about path cost vs. total network connection cost.
+
 ---
 
 ## 2. Theory & Fundamentals

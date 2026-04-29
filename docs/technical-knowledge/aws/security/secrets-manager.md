@@ -18,7 +18,13 @@ tags:
 
 # Secrets Manager vs SSM Parameter Store
 
-> **Exam hook**: These two services overlap — the exam will ask you to choose the right one for a given scenario.
+> **Exam hook**: These two services overlap — the exam tests your ability to choose the right one for each scenario.
+
+---
+
+## 🔰 When to Use Which?
+
+**Quick rule**: Need **automatic rotation** for database credentials? → **Secrets Manager**. Need **cheap configuration storage**? → **SSM Parameter Store**.
 
 ---
 
@@ -27,171 +33,288 @@ tags:
 | Feature | **Secrets Manager** | **SSM Parameter Store** |
 |---|---|---|
 | **Primary use** | Application secrets (DB passwords, API keys) | Configuration & secrets |
-| **Automatic Rotation** | ✅ Native (RDS, Redshift, DocumentDB, custom Lambda) | ❌ Manual (use custom Lambda) |
-| **Cost** | $0.40/secret/month + API calls | Free (Standard), $0.05/advanced/month |
-| **Max value size** | 64KB | 4KB (Standard), 8KB (Advanced) |
-| **Cross-account** | ✅ Resource policy | Limited |
+| **Automatic Rotation** | ✅ Native (RDS, Redshift, DocumentDB, custom) | ❌ Manual (custom Lambda) |
+| **Cost** | $0.40/secret/month + $0.05/10K API calls | Free (Standard), $0.05/advanced/month |
+| **Max value size** | 64 KB | 4 KB (Standard), 8 KB (Advanced) |
+| **Cross-account** | ✅ Resource policy | ❌ Limited |
 | **Versioning** | ✅ (AWSCURRENT, AWSPREVIOUS, AWSPENDING) | ✅ (by version number/label) |
-| **Encryption** | KMS (required) | SSE with KMS (optional for SecureString) |
-| **AWS SDK** | Separate Secrets Manager SDK calls | SSM SDK calls |
+| **Encryption** | KMS (always encrypted) | Optional KMS (SecureString) |
+| **CloudFormation** | `{{resolve:secretsmanager:...}}` | `{{resolve:ssm:...}}` |
+| **Lambda Extension** | ✅ Caching extension available | ✅ Same extension |
 
 ---
 
-## Secrets Manager — Deep Dive
+## Secrets Manager Deep Dive
 
-### Secret Rotation
+### Secret Rotation Lifecycle
 
 ```
-Application reads secret → AWSCURRENT version
-
-Rotation triggers Lambda:
-  1. CreateSecret  → generate new credentials (AWSPENDING)
-  2. SetSecret     → update credentials in the database
-  3. TestSecret    → verify new credentials work
-  4. FinishSecret  → promote AWSPENDING → AWSCURRENT
-                     demote old AWSCURRENT → AWSPREVIOUS
+1. createSecret    → Generate new credentials (AWSPENDING stage)
+2. setSecret       → Update database with new credentials
+3. testSecret      → Verify new credentials work against database
+4. finishSecret    → Promote AWSPENDING → AWSCURRENT
+                     Demote old AWSCURRENT → AWSPREVIOUS
 ```
 
-### Java — Reading a Secret
+### Supported Auto-Rotation
+
+| Database | Rotation Lambda | Managed By |
+|---|---|---|
+| RDS (MySQL, PostgreSQL, Oracle, SQL Server) | AWS-provided template | AWS |
+| Aurora | AWS-provided template | AWS |
+| Redshift | AWS-provided template | AWS |
+| DocumentDB | AWS-provided template | AWS |
+| **Any other** (API keys, 3rd-party) | Custom Lambda you write | You |
+
+### Java — Reading Secrets
 
 ```java
-SecretsManagerClient client = SecretsManagerClient.create();
+// Static init — cache at INIT time (runs once per cold start)
+private static final SecretsManagerClient smClient = SecretsManagerClient.create();
+private static final ObjectMapper mapper = new ObjectMapper();
 
-GetSecretValueResponse response = client.getSecretValue(
-    GetSecretValueRequest.builder()
-        .secretId("prod/myapp/db-password")
-        .build());
+private static final DbConfig DB_CONFIG;
+static {
+    String secretString = smClient.getSecretValue(GetSecretValueRequest.builder()
+        .secretId("prod/myapp/db-credentials")
+        .build())
+        .secretString();
+    DB_CONFIG = mapper.readValue(secretString, DbConfig.class);
+}
 
-String secretString = response.secretString();
-// Or parse as JSON for structured secrets
-var dbConfig = objectMapper.readValue(secretString, DbConfig.class);
+// Handler uses cached DB_CONFIG — no API call on warm invocations
+public String handleRequest(Object event, Context context) {
+    Connection conn = DriverManager.getConnection(
+        DB_CONFIG.getHost(), DB_CONFIG.getUsername(), DB_CONFIG.getPassword());
+    // ...
+}
 ```
 
-### Caching (Important for Lambda!)
+### Secrets Manager Caching Client
 
 ```java
-// Use the caching client to avoid calling Secrets Manager on every invocation
-// Add: software.amazon.awssdk.secretsmanager:aws-secretsmanager-caching-java
-SecretsManagerCachingClient cachingClient = new SecretsManagerCachingClient(
-    SecretsManagerClient.create(),
+// Reduces API calls by caching secrets in memory with TTL
+// Dependency: software.amazon.awssdk:aws-secretsmanager-caching-java
+SecretCache cache = new SecretCache(
     SecretCacheConfiguration.builder()
         .maxCacheSize(1000)
+        .expiryInMs(300_000)  // 5 minutes
         .build());
 
-String secret = cachingClient.getSecretString("prod/myapp/db-password");
+String secretString = cache.getSecretString("prod/myapp/db-credentials");
+```
+
+### AWS Parameters and Secrets Lambda Extension
+
+```yaml
+# No SDK code needed! Use localhost HTTP endpoint
+# Add the extension layer
+MyFunction:
+  Type: AWS::Serverless::Function
+  Properties:
+    Layers:
+      - arn:aws:lambda:us-east-1:177933569100:layer:AWS-Parameters-and-Secrets-Lambda-Extension:11
+    Environment:
+      Variables:
+        SECRETS_MANAGER_TTL: 300  # Cache for 5 minutes
+```
+
+```java
+// Read secret via HTTP (uses extension's local cache)
+HttpClient client = HttpClient.newHttpClient();
+HttpResponse<String> response = client.send(
+    HttpRequest.newBuilder()
+        .uri(URI.create("http://localhost:2773/secretsmanager/get?secretId=prod/myapp/db-credentials"))
+        .header("X-Aws-Parameters-Secrets-Token", System.getenv("AWS_SESSION_TOKEN"))
+        .build(),
+    HttpResponse.BodyHandlers.ofString());
+```
+
+### Cross-Account Secret Sharing
+
+```json
+// Secret resource policy allowing another account
+{
+  "Effect": "Allow",
+  "Principal": { "AWS": "arn:aws:iam::987654321098:role/AppRole" },
+  "Action": ["secretsmanager:GetSecretValue"],
+  "Resource": "*"
+}
 ```
 
 ---
 
-## SSM Parameter Store — Deep Dive
+## SSM Parameter Store Deep Dive
 
 ### Parameter Types
 
-| Type | Description |
-|---|---|
-| `String` | Plain text, no encryption |
-| `StringList` | Comma-separated list |
-| `SecureString` | Encrypted with KMS |
+| Type | Encryption | Use Case |
+|---|---|---|
+| `String` | None | URLs, feature flags, non-sensitive config |
+| `StringList` | None | Comma-separated values |
+| `SecureString` | KMS encrypted | Passwords, API keys, tokens |
 
 ### Parameter Tiers
 
-| Tier | Max size | Advanced features | Cost |
-|---|---|---|---|
-| Standard | 4KB | No | Free |
-| Advanced | 8KB | Parameter policies, larger | $0.05/month |
+| Tier | Max Size | Policies | Throughput | Cost |
+|---|---|---|---|---|
+| Standard | 4 KB | ❌ | 40 TPS (shared) | Free |
+| Advanced | 8 KB | ✅ Expiration, notification | 10,000 TPS | $0.05/month |
 
-### Java — Reading Parameters
+### Hierarchical Naming
+
+```
+/prod/myapp/db-url          ← String
+/prod/myapp/db-password     ← SecureString
+/prod/myapp/feature-flags   ← StringList
+/dev/myapp/db-url           ← String
+/shared/certificates/ssl    ← SecureString
+```
 
 ```java
-SsmClient ssm = SsmClient.create();
-
-// Read single parameter
-GetParameterResponse response = ssm.getParameter(
-    GetParameterRequest.builder()
-        .name("/prod/myapp/db-url")
-        .withDecryption(true)  // Decrypt SecureString
-        .build());
-
-String dbUrl = response.parameter().value();
-
-// Read multiple parameters at once (efficient for config loading at startup)
-GetParametersByPathResponse allParams = ssm.getParametersByPath(
+// Get all parameters under a path
+GetParametersByPathResponse response = ssmClient.getParametersByPath(
     GetParametersByPathRequest.builder()
         .path("/prod/myapp/")
         .withDecryption(true)
         .recursive(true)
         .build());
+
+response.parameters().forEach(p ->
+    System.out.println(p.name() + " = " + p.value()));
 ```
 
-### Hierarchical Naming
+### Parameter Policies (Advanced Tier)
 
-```
-/prod/myapp/db-url
-/prod/myapp/db-password   ← SecureString
-/prod/myapp/feature-flags
-/dev/myapp/db-url
+```json
+[
+  {
+    "Type": "Expiration",
+    "Version": "1.0",
+    "Attributes": { "Timestamp": "2025-12-31T00:00:00.000Z" }
+  },
+  {
+    "Type": "ExpirationNotification",
+    "Version": "1.0",
+    "Attributes": { "Before": "15", "Unit": "Days" }
+  },
+  {
+    "Type": "NoChangeNotification",
+    "Version": "1.0",
+    "Attributes": { "After": "90", "Unit": "Days" }
+  }
+]
 ```
 
-`GetParametersByPath("/prod/myapp/")` returns all parameters in that hierarchy.
+### CloudFormation Dynamic References
+
+```yaml
+# SSM String/StringList
+MasterUserPassword: "{{resolve:ssm:/prod/myapp/db-url}}"
+
+# SSM SecureString (MUST use ssm-secure)
+MasterUserPassword: "{{resolve:ssm-secure:/prod/myapp/db-password:1}}"
+
+# Secrets Manager
+MasterUserPassword: "{{resolve:secretsmanager:prod/myapp/db-creds:SecretString:password}}"
+```
+
+:::caution[CloudFormation + SecureString]
+You CANNOT use `AWS::SSM::Parameter::Value<String>` parameter type for SecureString. You MUST use dynamic references `{{resolve:ssm-secure:...}}`.
+:::
 
 ---
 
 ## Choosing the Right Service
 
-| Scenario | Use |
-|---|---|
-| Database password with **auto-rotation** | **Secrets Manager** |
-| Store 10+ app config values cheaply | **SSM Parameter Store** |
-| API key that must rotate every 30 days | **Secrets Manager** |
-| Feature flags / non-sensitive config | **SSM Parameter Store (String)** |
-| Sensitive config, no rotation needed | **SSM Parameter Store (SecureString)** |
-| Cross-account secret sharing | **Secrets Manager** |
+| Scenario | Best Choice | Why |
+|---|---|---|
+| RDS password with auto-rotation | **Secrets Manager** | Native rotation support |
+| 50 config values, mostly non-sensitive | **SSM Parameter Store** | Free, hierarchical |
+| API key rotating every 30 days | **Secrets Manager** | Auto-rotation |
+| Feature flags | **SSM Parameter Store (String)** | Free, simple |
+| Sensitive config, no rotation | **SSM Parameter Store (SecureString)** | Free with KMS |
+| Cross-account secret sharing | **Secrets Manager** | Resource policies |
+| CloudFormation template values | **SSM Parameter Store** | Native integration |
+| Database connection strings | **Either** | SM if rotation needed, SSM if not |
+
+---
+
+## 🎯 DVA-C02 Exam Tips
+
+:::tip[Secrets & Parameters Exam Cheat Sheet]
+1. **Auto-rotation** = Secrets Manager (SSM has no native rotation)
+2. **Free storage** = SSM Parameter Store Standard
+3. **SecureString** in CloudFormation = `{{resolve:ssm-secure:...}}` (NOT parameter type)
+4. **Secrets Manager caching** = use caching client or Lambda extension
+5. **Cross-account** = Secrets Manager with resource policy
+6. **Reading SecureString** needs both `ssm:GetParameter` AND `kms:Decrypt`
+7. **Lambda extension** caches both secrets and parameters locally
+8. **Advanced tier** supports parameter policies (expiration, notification)
+9. **Secret versions**: AWSCURRENT (active), AWSPREVIOUS (old), AWSPENDING (rotating)
+10. **Cost**: $0.40/secret/month (SM) vs Free (SSM Standard)
+:::
 
 ---
 
 ## 🧪 Practice Questions
 
-**Q1.** A developer needs to store an RDS password and have it automatically rotated every 30 days. Which service is the BEST choice?
+**Q1.** RDS password with automatic 30-day rotation. Best service?
 
 A) SSM Parameter Store (SecureString)  
-B) AWS Secrets Manager  
-C) KMS encrypted environment variable  
+B) **Secrets Manager**  
+C) KMS encrypted env variable  
 D) S3 encrypted file  
 
 <details>
 <summary>✅ Answer & Explanation</summary>
 
-**B** — **Secrets Manager** has built-in native rotation for RDS. It calls a rotation Lambda that creates new DB credentials, updates them in the database, then updates the secret — all automatically.
+**B** — Secrets Manager has native rotation for RDS with AWS-provided Lambda templates.
 </details>
 
 ---
 
-**Q2.** An application stores 50 configuration values (database URLs, feature flags, thresholds). Most are non-sensitive. What is the MOST cost-effective storage?
+**Q2.** 50 config values, mostly non-sensitive. Most cost-effective?
 
-A) Secrets Manager — one secret per value  
-B) SSM Parameter Store — String type for non-sensitive, SecureString for sensitive  
+A) Secrets Manager (one per value)  
+B) **SSM Parameter Store (String + SecureString)**  
 C) Environment variables  
 D) S3 config file  
 
 <details>
 <summary>✅ Answer & Explanation</summary>
 
-**B** — **SSM Parameter Store Standard** is **free** for standard parameters. Secrets Manager costs $0.40/secret/month, which adds up for 50 values. Use SecureString for sensitive values, String for the rest.
+**B** — SSM Standard is free. 50 secrets in Secrets Manager = $20/month. Use String for non-sensitive, SecureString for sensitive.
 </details>
 
 ---
 
-**Q3.** A Lambda function reads a database secret on every invocation, causing high Secrets Manager API costs. What is the BEST fix?
+**Q3.** Lambda reads DB secret every invocation — high API costs. Best fix?
 
-A) Cache the secret in a DynamoDB table  
-B) Use the **Secrets Manager caching client** in the Lambda initialization code  
-C) Store the secret in an environment variable  
-D) Call `GetSecretValue` only in the warm-up phase  
+A) Cache in DynamoDB  
+B) **Secrets Manager caching client or Lambda extension**  
+C) Store in env variable  
+D) Read only in cold start  
 
 <details>
 <summary>✅ Answer & Explanation</summary>
 
-**B** — The **Secrets Manager Caching Client** library caches secrets in memory with a configurable TTL. Since Lambda reuses execution environments (warm invocations), the cached value is used for subsequent calls, drastically reducing API calls.
+**B** — Caching client caches in memory with TTL. Lambda extension provides HTTP-based caching at `localhost:2773`. Both reduce API calls dramatically.
+</details>
+
+---
+
+**Q4.** CloudFormation needs SecureString from SSM. How to reference?
+
+A) `AWS::SSM::Parameter::Value<SecureString>`  
+B) **`{{resolve:ssm-secure:/path/to/param}}`**  
+C) Direct parameter section default  
+D) Custom resource Lambda  
+
+<details>
+<summary>✅ Answer & Explanation</summary>
+
+**B** — SecureString MUST use dynamic references. The Parameters section doesn't support SecureString type.
 </details>
 
 ---
@@ -199,6 +322,7 @@ D) Call `GetSecretValue` only in the warm-up phase
 ## 🔗 Resources
 
 - [Secrets Manager User Guide](https://docs.aws.amazon.com/secretsmanager/latest/userguide/)
-- [SSM Parameter Store User Guide](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html)
-- [Secrets Manager Java Caching Client](https://github.com/aws/aws-secretsmanager-caching-java)
-- [Rotation Lambda Templates](https://docs.aws.amazon.com/secretsmanager/latest/userguide/reference_available-rotation-templates.html)
+- [SSM Parameter Store Guide](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html)
+- [Lambda Secrets Extension](https://docs.aws.amazon.com/secretsmanager/latest/userguide/retrieving-secrets_lambda.html)
+- [Rotation Templates](https://docs.aws.amazon.com/secretsmanager/latest/userguide/reference_available-rotation-templates.html)
+- [CloudFormation Dynamic References](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/dynamic-references.html)

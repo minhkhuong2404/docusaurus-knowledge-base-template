@@ -20,6 +20,13 @@ Recursion is a method where the solution to a problem depends on solutions to sm
 - Learn the **Backtracking Template**: Choose, Explore, Un-choose.
 - Understand the difference between Permutations, Combinations, and Subsets.
 
+### Knowledge You Need Before Starting
+
+- Strong control-flow basics and method call understanding in Java.
+- Confidence tracing small trees/graphs manually.
+- Ability to define clear base cases and shrinking subproblems.
+- Comfort with arrays/lists mutation and rollback patterns.
+
 ---
 
 ## 2. Theory & Fundamentals

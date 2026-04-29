@@ -29,6 +29,13 @@ Graph problems test whether you can **model a problem correctly** (translating r
 - Apply DFS and BFS confidently to both node-based graphs and 2D grid problems.
 - Build intuition for when BFS is required (shortest path) vs when DFS is sufficient (connected components).
 
+### Knowledge You Need Before Starting
+
+- Tree traversal confidence (DFS/BFS) from Week 6.
+- Queue and stack implementation intuition from Week 5.
+- Matrix indexing fluency (`row`, `col`, boundary checks).
+- Comfort translating real problems into nodes and edges.
+
 ---
 
 ## 2. The Core Mental Models

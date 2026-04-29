@@ -22,59 +22,97 @@ tags:
 
 # Amazon API Gateway
 
-> **Core concept**: API Gateway is the fully managed "front door" for APIs — it routes HTTP requests to Lambda, EC2, HTTP backends, or AWS services directly. It handles traffic management, CORS, authorization, access control, throttling, and API versioning.
+> **Core concept**: API Gateway is the fully managed "front door" for APIs — it routes HTTP requests to Lambda, EC2, HTTP backends, or AWS services directly. It handles traffic management, CORS, authorization, throttling, and API versioning.
+
+---
+
+## 🔰 What Is API Gateway?
+
+API Gateway acts as a **reverse proxy** between your clients (web, mobile, IoT) and your backend services. Think of it as a receptionist at an office building — it checks credentials, routes visitors to the right floor, and manages how many visitors can enter at once.
+
+### Why Use API Gateway?
+
+| Without API Gateway | With API Gateway |
+|---|---|
+| Manage own load balancer | Fully managed scaling |
+| Build auth from scratch | Built-in Cognito/IAM/Lambda auth |
+| No throttling | Per-client rate limiting |
+| No caching | Built-in response caching |
+| No API versioning | Stage-based versioning |
+| No request validation | Schema validation |
 
 ---
 
 ## Endpoint Types (REST API)
 
-When creating a REST API, you must choose an endpoint type based on where your clients are located:
-
-- **Edge-Optimized (Default)**: Best for geographically distributed clients. Requests are routed through the AWS CloudFront Edge network to improve latency.
-- **Regional**: Best for clients in the same AWS region as the API (e.g., an EC2 instance calling the API). Often combined with Route 53 latency-based routing for multi-region active-active setups.
-- **Private**: Can only be accessed from your Amazon VPC using an Interface VPC Endpoint (AWS PrivateLink). Use Resource Policies to allow specific VPCs/Subnets.
+| Type | Description | Best For |
+|---|---|---|
+| **Edge-Optimized** (Default) | Routed through CloudFront edge network | Geographically distributed clients |
+| **Regional** | Direct access in same region | Same-region clients, custom CDN setups |
+| **Private** | VPC-only via Interface VPC Endpoint | Internal microservices |
 
 ---
 
 ## API Types
 
-| Type              | Use Case                                   | Features                                                                      | Cost         |
-| ----------------- | ------------------------------------------ | ----------------------------------------------------------------------------- | ------------ |
-| **REST API**      | Full-featured traditional REST             | Caching, WAF, usage plans, request/response transform, Edge/Private endpoints | Higher       |
-| **HTTP API**      | Low-latency, simple REST                   | JWT authorizer, auto-deploy, OIDC, CORS built-in                              | ~70% cheaper |
-| **WebSocket API** | Real-time bidirectional (chat, dashboards) | Connection management, stateful                                               | Per message  |
+| Type | Use Case | Features | Cost |
+|---|---|---|---|
+| **REST API** | Full-featured REST | Caching, WAF, usage plans, VTL transforms, Edge/Private | Higher |
+| **HTTP API** | Simple, low-latency | JWT auth, OIDC, auto-deploy, CORS | ~70% cheaper |
+| **WebSocket API** | Real-time (chat, dashboards) | Connection management, stateful | Per message |
 
-:::tip[Exam: REST vs HTTP API]
-- Need **usage plans / API keys** → REST API
-- Need **response caching** → REST API
-- Need **resource policies / WAF integration** → REST API
-- Simplest serverless API with Cognito JWT auth / OIDC → **HTTP API**
+### REST vs HTTP API Decision Matrix
+
+| Need | REST API | HTTP API |
+|---|---|---|
+| Usage plans / API keys | ✅ | ❌ |
+| Response caching | ✅ | ❌ |
+| Resource policies / WAF | ✅ | ❌ |
+| Request/response transformation (VTL) | ✅ | ❌ |
+| Cognito JWT auth / OIDC | ✅ | ✅ |
+| Private integrations (VPC Link) | ✅ (NLB) | ✅ (ALB, NLB, Cloud Map) |
+| Lowest cost | ❌ | ✅ |
+| Fastest performance | ❌ | ✅ |
+
+:::tip[Exam Decision]
+If the question mentions **usage plans, API keys, caching, WAF, or VTL** → **REST API**
+If the question asks for **simplest** or **cheapest** → **HTTP API**
 :::
 
 ---
 
 ## Integration Types
 
-### Lambda Proxy vs. Non-Proxy Integration
+### Lambda Proxy vs Non-Proxy
 
-| Feature                 | Lambda Proxy Integration                                                       | Lambda Non-Proxy (Custom) Integration                                      |
-| ----------------------- | ------------------------------------------------------------------------------ | -------------------------------------------------------------------------- |
-| **Request passing**     | API Gateway passes the *entire raw HTTP request* to Lambda.                    | API Gateway extracts parameters and passes a formatted JSON to Lambda.     |
-| **Response**            | Lambda *must* return a specific JSON format (`statusCode`, `body`, `headers`). | Lambda can return anything; API Gateway formats it for the client.         |
-| **Data Transformation** | Not possible at the API Gateway level.                                         | Uses **Velocity Template Language (VTL)** to transform requests/responses. |
-| **Setup effort**        | Minimal (Click and deploy).                                                    | High (Requires writing mapping templates).                                 |
+| Feature | Lambda Proxy | Lambda Non-Proxy (Custom) |
+|---|---|---|
+| **Request** | Entire raw HTTP request passed to Lambda | API Gateway extracts/formats parameters |
+| **Response** | Lambda MUST return `{statusCode, body, headers}` | Lambda returns anything; APIGW formats it |
+| **Transformation** | ❌ Not possible at APIGW level | ✅ Uses VTL mapping templates |
+| **Setup** | Minimal | High (requires mapping templates) |
+| **Error if wrong format** | **502 Bad Gateway** | API Gateway handles |
 
 ### Mapping Templates (VTL)
-Used in Non-Proxy integrations to modify request/response payloads. 
-- **Example use case**: Renaming a JSON key from a legacy client request before sending it to a modern Lambda backend, or converting an XML request to JSON.
-- **Example use case**: Adding default headers or filtering out sensitive data from the backend response.
 
-### Direct SQS Integration (No Lambda!)
+Used in Non-Proxy integrations to transform request/response:
 
-You can bypass Lambda and write directly to an AWS service (like SQS, DynamoDB, or Kinesis) to save costs and reduce latency.
+```velocity
+## Request mapping: Rename JSON field for legacy backend
+#set($inputRoot = $input.path('$'))
+{
+  "customer_name": "$inputRoot.name",
+  "customer_email": "$inputRoot.email",
+  "request_id": "$context.requestId"
+}
+```
+
+### Direct AWS Service Integration
+
+Skip Lambda entirely — call AWS services directly:
 
 ```yaml
-# CloudFormation: API Gateway → SQS directly
+# API Gateway → SQS (no Lambda needed!)
 Integration:
   Type: AWS
   IntegrationHttpMethod: POST
@@ -86,166 +124,373 @@ Integration:
     application/json: "Action=SendMessage&MessageBody=$input.body"
 ```
 
+Other direct integrations: DynamoDB, Kinesis, Step Functions, S3
+
 ### VPC Links (Private Integrations)
 
-A **VPC Link** enables API Gateway to securely route traffic to private resources inside a VPC (e.g., Application Load Balancers, ECS/Fargate containers, or private EC2 instances) **without exposing them to the public internet**.
+```
+API Gateway → VPC Link → NLB/ALB → Private EC2/ECS/Fargate
+```
 
-- Uses **AWS PrivateLink** under the hood.
-- **REST APIs** use Network Load Balancers (NLB) for the VPC Link.
-- **HTTP APIs** can connect to ALBs, NLBs, or AWS Cloud Map.
+- **REST APIs**: Connect via Network Load Balancer (NLB)
+- **HTTP APIs**: Connect via ALB, NLB, or AWS Cloud Map
+- Uses **AWS PrivateLink** — traffic never leaves AWS network
 
 ---
 
 ## Authorizers
 
 ### 1. Cognito User Pool Authorizer
-- Validates the JWT Access token from Cognito.
-- Built-in, no Lambda needed.
-- Cannot inspect the payload logic (only validates the signature/expiration).
 
-### 2. Lambda Authorizer (Custom Authorizer)
-- Your Lambda validates the token (JWT, OAuth, SAML, third-party API key).
-- Returns an IAM policy document (`Allow` or `Deny`).
-- **Token type**: receives a header token (Bearer).
-- **Request type**: receives full request context (headers, query params, etc.).
-- **Caching**: Results are cached (TTL: 0–3600s). Set TTL = 0 to disable caching for dynamic permissions.
+```
+Client → Login to Cognito → Receives JWT token
+Client → API Gateway (Authorization: Bearer <JWT>) → Cognito validates → Allow/Deny
+```
 
-### 3. IAM (Resource Policies & SigV4)
-- Ideal for internal AWS service-to-service communication.
-- The client must sign the API request using **Signature Version 4 (SigV4)**.
-- You can attach a Resource Policy to the API Gateway to restrict access to specific IP ranges or VPCs.
+- Built-in, no Lambda needed
+- Validates JWT signature and expiration
+- Cannot inspect payload or custom logic
+
+### 2. Lambda Authorizer (Custom)
+
+```
+Client → API Gateway → Lambda Authorizer → Returns IAM Policy
+                                           ↓
+                                     {Allow/Deny, Context}
+```
+
+Two subtypes:
+- **Token-based**: Receives Bearer token header
+- **Request-based**: Receives full request context (headers, query params, path)
+
+```java
+// Lambda Authorizer returns IAM policy
+public class AuthorizerHandler implements RequestHandler<Map<String, Object>, Map<String, Object>> {
+    public Map<String, Object> handleRequest(Map<String, Object> event, Context context) {
+        String token = (String) event.get("authorizationToken");
+        
+        // Validate token (JWT, API key, custom logic)
+        boolean isValid = validateToken(token);
+        String userId = extractUserId(token);
+        
+        return Map.of(
+            "principalId", userId,
+            "policyDocument", Map.of(
+                "Version", "2012-10-17",
+                "Statement", List.of(Map.of(
+                    "Action", "execute-api:Invoke",
+                    "Effect", isValid ? "Allow" : "Deny",
+                    "Resource", event.get("methodArn")
+                ))
+            ),
+            "context", Map.of(
+                "userId", userId,
+                "plan", "premium"  // Available in $context.authorizer.plan
+            )
+        );
+    }
+}
+```
+
+**Caching**: Results cached by TTL (0–3600s). Set TTL=0 for dynamic permissions.
+
+### 3. IAM (SigV4)
+
+- Client signs request with AWS credentials (Signature V4)
+- Ideal for **service-to-service** communication
+- Combine with **Resource Policies** for cross-account or IP restrictions
 
 ### 4. Mutual TLS (mTLS)
-- Used for strict B2B (Business-to-Business) applications, open banking, and IoT devices.
-- Requires a **Custom Domain Name**.
-- Client must present an X.509 certificate to authenticate symmetrically.
-- You upload a trust store (PEM file) containing the Certificate Authority (CA) public keys to an S3 bucket and link it to the API Gateway Custom Domain.
+
+- Client presents X.509 certificate to authenticate
+- Requires **Custom Domain Name**
+- Trust store (CA cert PEM file) uploaded to S3
+- Used for B2B, banking, IoT
+
+### Authorizer Comparison
+
+| Authorizer | Use Case | Custom Logic | Caching |
+|---|---|---|---|
+| **Cognito** | User pools, social login | ❌ | Built-in |
+| **Lambda** | Custom validation, 3rd-party tokens | ✅ | 0–3600s TTL |
+| **IAM** | AWS service-to-service | ❌ | N/A |
+| **mTLS** | B2B, banking, IoT | ❌ | N/A |
 
 ---
 
 ## Deployment Stages & Stage Variables
 
 ```
-API → [dev stage]   → [https://xyz.execute-api.us-east-1.amazonaws.com/dev](https://xyz.execute-api.us-east-1.amazonaws.com/dev)
-    → [prod stage]  → [https://xyz.execute-api.us-east-1.amazonaws.com/prod](https://xyz.execute-api.us-east-1.amazonaws.com/prod)
+API → [dev stage]   → https://xyz.execute-api.us-east-1.amazonaws.com/dev
+    → [staging]     → https://xyz.execute-api.us-east-1.amazonaws.com/staging
+    → [prod stage]  → https://xyz.execute-api.us-east-1.amazonaws.com/prod
 ```
 
-- Each stage is an immutable **snapshot** of the API deployment. If you update a resource, you must *deploy* it to a stage for changes to take effect.
-- **Stage variables** act like environment variables for your API Gateway. 
+- Changes require **deployment** to a stage to take effect
+- **Stage variables** = environment variables for API Gateway
 
-:::info[Stage Variables + Lambda Aliases (Highly Testable!)]
-A common pattern is to use stage variables to point different API Gateway stages to different Lambda Aliases (e.g., `dev` API stage points to the `DEV` Lambda alias).
-- Format the Integration URI like this: `arn:aws:lambda:us-east-1:123456789012:function:my-function:${stageVariables.lambdaAlias}`
-- You must grant API Gateway permission to invoke *each* specific Lambda alias.
+### Stage Variables + Lambda Aliases
+
+```
+dev stage:  lambdaAlias = "dev"   → Lambda:dev ($LATEST)
+prod stage: lambdaAlias = "prod"  → Lambda:prod (version 5)
+```
+
+Integration URI: `arn:aws:lambda:...:my-function:${stageVariables.lambdaAlias}`
+
+:::info[Must grant invoke permission for EACH alias]
+API Gateway needs `lambda:InvokeFunction` permission on each specific Lambda alias referenced by stage variables.
 :::
 
 ### Canary Deployments
-Gradually shift traffic to a new deployment to catch errors before fully committing.
+
 ```
 prod stage → 95% → stable deployment
-          →  5% → canary deployment (testing)
+           →  5% → canary deployment (testing new changes)
 ```
 
 ---
 
-## CORS (Cross-Origin Resource Sharing)
+## CORS
 
-If a web application running on `domain-a.com` tries to call an API Gateway on `domain-b.com`, the browser will block it unless CORS is enabled.
+If a browser at `domain-a.com` calls API Gateway at `domain-b.com`:
 
-- API Gateway handles CORS via the **OPTIONS** HTTP method (preflight request).
-- API Gateway must respond to the OPTIONS request with the header: `Access-Control-Allow-Origin: *` (or the specific domain).
-- **Mock Integration** is typically used for the OPTIONS method so it can return the CORS headers immediately without invoking a backend Lambda.
+1. Browser sends **preflight OPTIONS** request
+2. API Gateway responds with CORS headers
+3. Browser allows/blocks the actual request
+
+For **Lambda Proxy** integration, your Lambda function MUST return CORS headers:
+
+```java
+return new APIGatewayProxyResponseEvent()
+    .withStatusCode(200)
+    .withHeaders(Map.of(
+        "Access-Control-Allow-Origin", "https://myapp.example.com",
+        "Access-Control-Allow-Headers", "Content-Type,Authorization",
+        "Access-Control-Allow-Methods", "GET,POST,OPTIONS"
+    ))
+    .withBody(responseBody);
+```
+
+For **Non-Proxy** integration, configure CORS via **Mock Integration** on the OPTIONS method.
 
 ---
 
 ## Caching, Throttling & Usage Plans
 
-### Caching (REST API only)
-- Cache API responses for **0.5 – 3600 seconds** (default is 300s).
-- Reduces backend Lambda invocations and lowers latency.
-- Cache key is calculated using method + path + query params + headers.
-- **Invalidation**: Clients can send `Cache-Control: max-age=0` to force a refresh (requires `execute-api:InvalidateCache` IAM permission).
-- Cache data can be encrypted at rest.
+### Caching (REST API Only)
 
-### Throttling & Usage Plans
-- **Account Limit**: 10,000 Requests Per Second (RPS) with a burst of 5,000. (Returns `429 Too Many Requests` if exceeded).
-- **Usage Plans**: Used to monetize APIs. You can define throttle rates and quotas (e.g., 1000 requests per month).
-- **API Keys**: Alphanumeric strings assigned to customers. You map an API Key to a Usage Plan to track and limit a specific customer's usage.
+| Property | Value |
+|---|---|
+| **TTL** | 0.5 – 3600 seconds (default 300s) |
+| **Size** | 0.5 GB – 237 GB |
+| **Cache key** | Method + path + query params + headers |
+| **Invalidation** | `Cache-Control: max-age=0` header |
+| **Permission** | Requires `execute-api:InvalidateCache` IAM permission |
+| **Encryption** | Can be encrypted at rest |
+
+### Throttling
+
+| Limit | Value |
+|---|---|
+| **Account limit** | 10,000 RPS with burst of 5,000 |
+| **Per-stage/method** | Configurable |
+| **Error** | `429 Too Many Requests` |
+
+### Usage Plans & API Keys
+
+```
+Usage Plan "Basic":
+  Rate: 100 RPS
+  Burst: 200
+  Quota: 10,000 requests/month
+  → Assigned to API Key "customer-A-key"
+
+Usage Plan "Premium":
+  Rate: 1000 RPS
+  Burst: 2000
+  Quota: Unlimited
+  → Assigned to API Key "customer-B-key"
+```
 
 ---
 
-## Common API Gateway Error Codes
+## WebSocket API
 
-| Code    | Meaning             | Exam Context                                                                                                     |
-| ------- | ------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| **400** | Bad Request         | Client sent malformed data or missing parameters.                                                                |
-| **403** | Access Denied       | WAF blocked the request, missing API Key, or denied by Authorizer.                                               |
-| **429** | Too Many Requests   | Throttling limit exceeded (Account, Stage, or Usage Plan limit).                                                 |
-| **502** | Bad Gateway         | **Lambda Proxy integration format error.** Lambda didn't return the required JSON format (`statusCode`, `body`). |
-| **503** | Service Unavailable | Backend server/Lambda is down or out of concurrency.                                                             |
-| **504** | Gateway Timeout     | **29-second hard limit.** Lambda took longer than 29 seconds to respond.                                         |
+### Connection Lifecycle
+
+```
+Client → $connect    → Lambda (save connectionId to DynamoDB)
+Client → $default    → Lambda (process messages)
+Client → $disconnect → Lambda (remove connectionId from DynamoDB)
+Client → customRoute → Lambda (custom action)
+```
+
+### Send Message to Client
+
+```java
+// Server pushes message to a specific connected client
+ApiGatewayManagementApiClient apiClient = ApiGatewayManagementApiClient.builder()
+    .endpointOverride(URI.create("https://abc123.execute-api.us-east-1.amazonaws.com/prod"))
+    .build();
+
+apiClient.postToConnection(PostToConnectionRequest.builder()
+    .connectionId("AbCdEfG=")
+    .data(SdkBytes.fromUtf8String("{\"message\": \"Hello from server!\"}"))
+    .build());
+```
+
+---
+
+## Request Validation
+
+API Gateway can validate requests **before** invoking the backend:
+
+```json
+{
+  "type": "object",
+  "required": ["name", "email"],
+  "properties": {
+    "name": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "email": { "type": "string", "format": "email" },
+    "age": { "type": "integer", "minimum": 0, "maximum": 150 }
+  }
+}
+```
+
+Returns `400 Bad Request` if validation fails — no Lambda invocation (saves cost!).
+
+---
+
+## Common Error Codes
+
+| Code | Meaning | Exam Context |
+|---|---|---|
+| **400** | Bad Request | Failed request validation |
+| **403** | Forbidden | WAF blocked, missing API key, authorizer denied |
+| **429** | Too Many Requests | Throttling limit exceeded |
+| **502** | Bad Gateway | Lambda response format wrong (proxy integration) |
+| **503** | Service Unavailable | Backend down or Lambda out of concurrency |
+| **504** | Gateway Timeout | Lambda >29s (API Gateway hard limit) |
+
+:::caution[502 vs 504 — Exam Classic!]
+- **502** = Lambda returned wrong format (missing `statusCode`/`body`)
+- **504** = Lambda took longer than **29 seconds** (API Gateway timeout limit, NOT Lambda's 15 min limit)
+:::
+
+---
+
+## 🏆 Best Practices
+
+1. **Use HTTP API** when you don't need REST-specific features — 70% cheaper
+2. **Cache responses** to reduce Lambda invocations and latency
+3. **Enable request validation** to reject bad requests before invoking backend
+4. **Use stage variables** for environment-specific configuration
+5. **Direct service integrations** when Lambda is just a pass-through
+6. **Lambda Authorizer caching** — set appropriate TTL to reduce auth calls
+7. **Custom domains** for professional, versioned APIs
+
+---
+
+## 🎯 DVA-C02 Exam Tips
+
+:::tip[API Gateway Exam Cheat Sheet]
+1. **502** = Lambda proxy response format wrong. **504** = timeout >29s
+2. **Usage plans + API keys** = per-customer throttling/quotas (REST only)
+3. **Stage variables** route stages to different Lambda aliases
+4. **HTTP API** = cheapest, simplest. **REST API** = full-featured
+5. **Lambda Proxy** = Lambda must return `{statusCode, body, headers}`
+6. **VTL mapping templates** = Non-Proxy integration only
+7. **CORS in proxy mode** = Lambda must return CORS headers
+8. **Canary deployment** = gradual traffic shift to new API deployment
+9. **Cache invalidation** needs `execute-api:InvalidateCache` permission
+10. **WebSocket** = `$connect`, `$disconnect`, `$default` routes
+:::
 
 ---
 
 ## 🧪 Practice Questions
 
-**Q1.** A developer builds a serverless API with Lambda. They need to throttle API calls per customer and charge customers differently based on API usage tier. What feature should they use?
+**Q1.** Throttle API per customer and charge by usage tier. What feature?
 
 A) Stage Variables  
 B) Lambda Reserved Concurrency  
-C) API Gateway Usage Plans with API Keys  
+C) **Usage Plans with API Keys**  
 D) Cognito User Pools  
 
 <details>
 <summary>✅ Answer & Explanation</summary>
 
-**C** — **Usage Plans** define throttle rates and quotas, assigned to **API Keys**. Each customer gets their own API key mapped to a usage plan.
+**C** — Usage Plans define throttle rates and quotas per API Key per customer.
 </details>
 
 ---
 
-**Q2.** An API needs to return cached responses for most users, but allow admins to bypass the cache. How should this be implemented?
+**Q2.** Cached API but admins need to bypass cache. How?
 
-A) Use a Lambda Authorizer to skip the cache  
-B) Configure different stages (cached vs non-cached)  
-C) Allow clients to send `Cache-Control: max-age=0` to invalidate  
+A) Lambda Authorizer skips cache  
+B) Separate cached/uncached stages  
+C) **`Cache-Control: max-age=0` header with IAM permission**  
 D) Disable caching for admin routes  
 
 <details>
 <summary>✅ Answer & Explanation</summary>
 
-**C** — API Gateway supports `Cache-Control: max-age=0` header to **invalidate the cache per request**. Grant `execute-api:InvalidateCache` permission to authorized users.
+**C** — Clients with `execute-api:InvalidateCache` permission can send `Cache-Control: max-age=0`.
 </details>
 
 ---
 
-**Q3.** A developer has configured an API Gateway with a Lambda Proxy integration. When calling the API, the client receives a `502 Bad Gateway` error, but the Lambda logs show the function executed successfully. What is the most likely cause?
+**Q3.** Lambda Proxy returns `502` but Lambda logs show success. Cause?
 
-A) The Lambda function timed out after 29 seconds.  
-B) The Lambda function is returning a raw string instead of a properly formatted JSON response containing `statusCode` and `body`.  
-C) The client forgot to pass the API Key in the headers.  
-D) API Gateway does not have resource-based permissions to invoke the Lambda function.  
+A) Lambda timeout  
+B) **Lambda returned wrong response format**  
+C) Missing API key  
+D) Missing invoke permission  
 
 <details>
 <summary>✅ Answer & Explanation</summary>
 
-**B** — In a **Lambda Proxy Integration**, the backend Lambda *must* return a specific JSON object structure. If it returns a plain string, integer, or improperly formatted JSON, API Gateway cannot parse it and throws a `502 Bad Gateway`. (Timeout would be 504; Permissions issue would be 500; Missing key is 403).
+**B** — Lambda Proxy requires `{statusCode, body, headers}`. Raw string or wrong format → 502. Timeout → 504.
 </details>
 
 ---
 
-**Q4.** You have an API Gateway with a `dev` and `prod` stage. You want to route `dev` requests to the `$LATEST` version of your Lambda function, and `prod` requests to the `v1` alias of the same function. How can you achieve this with the least amount of management overhead?
+**Q4.** Route `dev` stage to Lambda `$LATEST` and `prod` to `v1` alias. Least effort?
 
-A) Create two separate API Gateways.  
-B) Hardcode the Lambda ARN in the Integration Request for each stage.  
-C) Use Stage Variables in the API Gateway and reference the variable in the Lambda Integration URI.  
-D) Write a mapping template to inspect the request URL and dynamically invoke the correct alias.  
+A) Two API Gateways  
+B) Hardcode ARN per stage  
+C) **Stage Variables referencing Lambda alias in Integration URI**  
+D) Mapping template  
 
 <details>
 <summary>✅ Answer & Explanation</summary>
 
-**C** — **Stage Variables** are designed exactly for this. You define a variable (e.g., `lambdaAlias`) on the stage, set its value to `dev` or `v1`, and use `${stageVariables.lambdaAlias}` in the Lambda Integration setup.
+**C** — Stage variable `lambdaAlias` in the URI `${stageVariables.lambdaAlias}` resolves per stage.
 </details>
+
+---
+
+**Q5.** API must call a private ALB in VPC. Which integration?
+
+A) Lambda Proxy  
+B) **VPC Link (HTTP API → ALB)**  
+C) Direct HTTP integration  
+D) Mock integration  
+
+<details>
+<summary>✅ Answer & Explanation</summary>
+
+**B** — VPC Links connect API Gateway to private resources via PrivateLink. HTTP API supports ALB/NLB; REST API supports NLB only.
+</details>
+
+---
+
+## Interview Questions (Senior Level)
+
+1. How would you design per-tenant rate limiting and monetization while keeping a migration path from REST to HTTP API?
+2. When would you choose VPC Link private integrations over direct Lambda?
+3. How do you handle sporadic `502` from Lambda proxy integration?
 
 ---
 
@@ -253,20 +498,6 @@ D) Write a mapping template to inspect the request URL and dynamically invoke th
 
 - [API Gateway Developer Guide](https://docs.aws.amazon.com/apigateway/latest/developerguide/)
 - [REST vs HTTP API](https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-vs-rest.html)
-- [Set up Stage Variables](https://docs.aws.amazon.com/apigateway/latest/developerguide/amazon-api-gateway-using-stage-variables.html)
-- [Lambda Proxy vs Non-Proxy Integrations](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-api-integration-types.html)
-- [CORS Configuration](https://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-cors.html)
-- [API Gateway Error Codes](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-known-issues.html#api-gateway-error-codes)
-
-## Interview Questions (Senior Level)
-
-1. You need one API product with internal service-to-service calls and external partner access. How would you split endpoint types, auth, and throttling to reduce blast radius?
-2. A team reports sporadic `502` from Lambda proxy integration but Lambda logs show success. What concrete checks do you perform first, and how do you prevent recurrence?
-3. How would you design per-tenant rate limiting and monetization while keeping a migration path from REST API to HTTP API?
-4. When would you choose VPC Link private integrations over direct Lambda integrations, and what are the operational trade-offs?
-
-Short answer guide:
-- Separate internal/private APIs (IAM + resource policy) from partner-facing APIs (authorizer + usage plans).
-- Validate proxy response schema, header/body encoding, and integration timeout alignment.
-- Use usage plans + API keys for tenant-level quotas and billing controls.
-- Prefer VPC Link for private backends when network isolation is required, accepting higher networking complexity.
+- [Stage Variables](https://docs.aws.amazon.com/apigateway/latest/developerguide/amazon-api-gateway-using-stage-variables.html)
+- [Lambda Authorizers](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-use-lambda-authorizer.html)
+- [WebSocket APIs](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-websocket-api.html)

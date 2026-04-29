@@ -20,6 +20,13 @@ Trees are the underlying architecture for databases (B-Trees), file systems, DOM
 - Master Breadth-First Search (Level-order) using a Queue.
 - Understand the strict mathematical properties of a Binary Search Tree.
 
+### Knowledge You Need Before Starting
+
+- Week 5 stack/queue mental models (LIFO and FIFO behavior).
+- Basic recursion traceability from linked-list pointer practice.
+- Comfort with class/object modeling for `TreeNode`.
+- Confidence with null checks and branching edge cases.
+
 ---
 
 ## 2. Theory & Fundamentals

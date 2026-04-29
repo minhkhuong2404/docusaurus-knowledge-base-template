@@ -30,6 +30,13 @@ Bit manipulation appears in:
 - Use Bit Masks to track state and generate subsets for small-N exhaustive problems.
 - Review core Math patterns: Fast Exponentiation, GCD, Sieve of Eratosthenes.
 
+### Knowledge You Need Before Starting
+
+- Binary number basics and place-value conversion comfort.
+- Integer overflow/signedness intuition in Java.
+- Basic algebra and modular arithmetic foundations.
+- Ability to connect bitmasks to subset/state representations.
+
 ---
 
 ## 2. The Core Mental Models

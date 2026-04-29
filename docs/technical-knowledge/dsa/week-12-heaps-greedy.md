@@ -20,6 +20,13 @@ A Heap is the ultimate data structure for dynamically tracking the "best", "larg
 - Master the "Top K Elements" pattern to optimize $O(N \log N)$ sorting down to $O(N \log K)$.
 - Understand the Greedy Choice Property and how to prove a greedy solution is safe.
 
+### Knowledge You Need Before Starting
+
+- Tree shape intuition and array-index mapping basics.
+- Comparator and sorting confidence from Week 11.
+- Comfort with incremental decision-making and proof-oriented reasoning.
+- Understanding of when local optimum does or does not imply global optimum.
+
 ---
 
 ## 2. Theory & Fundamentals

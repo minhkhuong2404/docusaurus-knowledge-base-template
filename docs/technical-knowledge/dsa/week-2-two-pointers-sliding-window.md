@@ -22,6 +22,13 @@ Consider a naive approach: checking every pair of elements in an array of 100,00
 - Build a reliable instinct for **when** to apply each technique.
 - Learn Java-specific memory optimizations (e.g., `String.charAt()` vs. `toCharArray()`).
 
+### Knowledge You Need Before Starting
+
+- Solid Week 1 foundation: arrays/strings traversal and prefix sum basics.
+- Sorting intuition: know why sorted input enables pointer elimination.
+- Index arithmetic fluency (`left++`, `right--`, `i - k`) without off-by-one errors.
+- Ability to reason about loop invariants and moving boundaries.
+
 ---
 
 ## 2. The Core Mental Model: What Is a "Pointer"?

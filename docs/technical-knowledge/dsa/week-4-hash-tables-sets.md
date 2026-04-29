@@ -25,6 +25,13 @@ Without a hash table, finding whether a number exists in an unsorted list takes 
 - Recognize patterns where $O(N^2)$ brute-force solutions can be reduced to $O(N)$ using a HashMap.
 - Build intuition for when to use a `HashMap` vs. a `HashSet` vs. a `LinkedHashMap`.
 
+### Knowledge You Need Before Starting
+
+- Strong grasp of arrays/strings plus two-pointer/window fundamentals.
+- Basic object identity vs equality understanding in Java.
+- Comfort with Big-O average vs worst-case complexity discussion.
+- Ability to model problems as membership, frequency, and key-value lookup.
+
 ---
 
 ## 2. The Core Mental Model: How Does a Hash Table Actually Work?

@@ -31,6 +31,13 @@ The jump from brute-force $O(N^2)$ to sweep line $O(N \log N)$ is what separates
 - Master the Sweep Line pattern to find peak overlaps in a single pass.
 - Build intuition for when to use Sweep Line vs. Merge vs. Priority Queue.
 
+### Knowledge You Need Before Starting
+
+- Sorting fundamentals and comparator safety (`Integer.compare` over subtraction).
+- Comfort with arrays of pairs (`int[][]`) and event modeling.
+- Prefix-sum style "delta then accumulate" thinking.
+- Ability to reason about inclusive/exclusive interval boundaries.
+
 ---
 
 ## 2. The Core Mental Models

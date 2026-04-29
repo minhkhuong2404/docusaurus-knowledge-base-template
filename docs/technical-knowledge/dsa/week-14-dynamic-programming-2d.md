@@ -31,6 +31,13 @@ In 1D DP, your decision at step `i` only depended on previous steps in a **singl
 - Master grid-based DP and know the transition logic by heart.
 - Learn the space optimization that compresses $O(M \times N)$ to $O(N)$.
 
+### Knowledge You Need Before Starting
+
+- Solid Week 13 (1D DP) recurrence and caching fundamentals.
+- Matrix traversal confidence and index-boundary handling.
+- Comfort translating 2-variable states (`i`, `j`) into table coordinates.
+- Clear understanding of dependency direction when filling tables.
+
 ---
 
 ## 2. The Core Mental Models

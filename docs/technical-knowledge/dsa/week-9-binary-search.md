@@ -33,6 +33,13 @@ Binary search on 1 billion items takes **30 operations**. This is why it's used 
 - Handle the rotated sorted array — the most common binary search variation.
 - Master Binary Search on the Answer Space — a pattern that turns "try everything" brute-forces into elegant $O(\log N)$ solutions.
 
+### Knowledge You Need Before Starting
+
+- Sorted-array intuition and boundary-handling rigor from prior weeks.
+- Comfort with loop invariants (`low`, `high`, and termination conditions).
+- Basic monotonic reasoning ("if X works, bigger/smaller also works").
+- Integer overflow awareness and safe midpoint formula usage.
+
 ---
 
 ## 2. The Core Mental Models

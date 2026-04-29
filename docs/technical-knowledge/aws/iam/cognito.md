@@ -21,56 +21,90 @@ tags:
 
 # Amazon Cognito
 
-> **Core concept**: Cognito handles **AuthN** (who are you?) via User Pools and **AuthZ** (what can you access in AWS?) via Identity Pools.
+> **Core concept**: Cognito handles **AuthN** (who are you?) via User Pools and **AuthZ** (what AWS resources can you access?) via Identity Pools.
+
+---
+
+## 🔰 What Is Cognito?
+
+Cognito provides **authentication, authorization, and user management** for web/mobile apps without building your own identity system.
+
+**Analogy**:
+- **User Pool** = hotel front desk that checks your ID and gives you a room key (JWT token)
+- **Identity Pool** = the hotel concierge who gives you a VIP pass (AWS credentials) to access the gym, pool, and spa (S3, DynamoDB, etc.)
 
 ---
 
 ## User Pools vs Identity Pools
 
-| Feature | **User Pool** | **Identity Pool** |
+| Feature | **User Pool** | **Identity Pool** (Federated Identities) |
 |---|---|---|
-| **Purpose** | Authenticate users (sign up / sign in) | Grant AWS credentials to authenticated users |
-| **Returns** | JWT tokens (ID, Access, Refresh) | Temporary AWS credentials (via STS) |
-| **Use case** | Log into your **app** | Call AWS services (S3, DynamoDB) directly |
-| **Think of it as** | Your app's user directory + OAuth server | AWS IAM role vending machine |
+| **Purpose** | Authenticate users (sign up/sign in) | Grant temporary AWS credentials |
+| **Returns** | JWT tokens (ID, Access, Refresh) | AWS credentials (via STS) |
+| **Use case** | Log into your **app** | Call AWS services (S3, DynamoDB) directly from client |
+| **Think of it as** | OAuth 2.0 / OIDC server | AWS IAM role vending machine |
+| **Can work alone** | ✅ Yes | ✅ Yes (with external IdP) |
+| **Can work together** | ✅ User Pool → Identity Pool | ✅ Identity Pool validates User Pool JWT |
 
-:::tip[Analogy]
-- **User Pool** = Your bouncer — checks the guest list
-- **Identity Pool** = The VIP key card — unlocks AWS services
-:::
+### Combined Flow (Most Common)
+
+```
+1. User → Cognito User Pool → Sign In → JWT Tokens (ID, Access, Refresh)
+2. App → Cognito Identity Pool → Exchange JWT for AWS Credentials
+3. App → Call S3/DynamoDB directly with temporary AWS credentials
+```
 
 ---
 
 ## User Pool Deep Dive
 
-### What It Provides
-- Sign-up / Sign-in UI (Hosted UI)
-- Email/phone verification
-- MFA (TOTP, SMS)
-- Password policies
-- Lambda triggers (pre-signup, post-confirmation, pre-token generation...)
-- Federation with social IdPs: Google, Facebook, Apple, Amazon
-- Federation with corporate IdPs: SAML 2.0, OIDC
+### Features
+
+| Feature | Description |
+|---|---|
+| **Sign-up/Sign-in** | Email, phone, username, or social login |
+| **Hosted UI** | Pre-built login page (customizable) |
+| **MFA** | TOTP (authenticator app) or SMS |
+| **Password policies** | Min length, special chars, etc. |
+| **Email/phone verification** | Automatic confirmation workflow |
+| **Lambda triggers** | Customize auth flow at every step |
+| **Social federation** | Google, Facebook, Apple, Amazon |
+| **Corporate federation** | SAML 2.0, OIDC |
+| **User groups** | Group-based access control |
+| **Custom attributes** | Add custom user fields |
 
 ### JWT Token Types
 
-| Token | Expiry | Use |
-|---|---|---|
-| **ID Token** | 1 hour | User identity claims (email, sub, custom attributes) |
-| **Access Token** | 1 hour | Authorize API calls (used with API Gateway Cognito Authorizer) |
-| **Refresh Token** | Up to 10 years | Get new ID/Access tokens without re-login |
+| Token | Expiry | Content | Use |
+|---|---|---|---|
+| **ID Token** | 5 min – 1 day (default 1h) | User identity claims (email, sub, custom attributes) | Identify the user |
+| **Access Token** | 5 min – 1 day (default 1h) | Scopes, groups, client_id | Authorize API calls |
+| **Refresh Token** | 60 min – 10 years (default 30 days) | Opaque token | Get new ID/Access tokens |
 
 ### Lambda Triggers (Exam Favorite!)
 
-| Trigger | When fired | Common Use |
+| Trigger | When Fired | Common Use |
 |---|---|---|
-| `Pre Sign-up` | Before user is confirmed | Block certain email domains |
-| `Post Confirmation` | After user confirms email | Add user to DynamoDB |
-| `Pre Authentication` | Before sign-in | Custom validation |
-| `Post Authentication` | After sign-in | Audit logging |
-| `Pre Token Generation` | Before issuing tokens | Add custom claims to JWT |
+| `Pre Sign-up` | Before user is created | Block disposable email domains |
+| `Post Confirmation` | After email/phone verification | Add user to DynamoDB, send welcome email |
+| `Pre Authentication` | Before sign-in | Custom validation, rate limiting |
+| `Post Authentication` | After successful sign-in | Audit logging, update last-login |
+| `Pre Token Generation` | Before issuing JWT | Add/modify custom claims |
 | `Custom Message` | Before sending verification email/SMS | Brand the message |
-| `User Migration` | When user doesn't exist in User Pool | Migrate from legacy auth |
+| `User Migration` | When user doesn't exist in pool | Migrate from legacy auth system |
+| `Define Auth Challenge` | Custom auth flow | Implement CAPTCHA, magic links |
+| `Create Auth Challenge` | Generate challenge | Send OTP, CAPTCHA |
+| `Verify Auth Challenge` | Verify challenge response | Check OTP, CAPTCHA |
+
+### Custom Auth Flows
+
+```
+Standard: USERNAME_PASSWORD_AUTH → Cognito validates → tokens
+Custom:   CUSTOM_AUTH → Define Auth Challenge → Create Challenge
+          → User responds → Verify Challenge → tokens
+
+Use cases: Magic link login, CAPTCHA, biometrics, passwordless
+```
 
 ---
 
@@ -79,59 +113,102 @@ tags:
 ### Flow
 
 ```
-User authenticates with User Pool (or Google/Facebook)
-         │
-         ▼
-Gets JWT token
-         │
-         ▼
-Calls Cognito Identity Pool with JWT
-         │
-         ▼
-Identity Pool calls STS:AssumeRoleWithWebIdentity
-         │
-         ▼
-Returns temporary AWS credentials (AccessKey + SecretKey + SessionToken)
-         │
-         ▼
-User calls AWS APIs directly (S3, DynamoDB, etc.)
+User authenticates (User Pool / Google / Facebook / SAML)
+    ↓ JWT Token
+Cognito Identity Pool
+    ↓ GetId → GetCredentialsForIdentity (or AssumeRoleWithWebIdentity)
+Temporary AWS Credentials (AccessKey + SecretKey + SessionToken)
+    ↓
+Client calls AWS APIs directly (S3, DynamoDB, etc.)
 ```
 
 ### IAM Roles in Identity Pools
 
-- **Authenticated Role** — permissions for logged-in users
-- **Unauthenticated Role** — permissions for guest/anonymous users
-- **Role Mapping** — assign different roles based on user attributes (group membership, custom claims)
+| Role | Purpose |
+|---|---|
+| **Authenticated** | Permissions for logged-in users |
+| **Unauthenticated** | Permissions for guest/anonymous users |
+
+### Role Mapping
+
+Assign different IAM roles based on user attributes:
+
+```json
+// User in "admins" group → AdminRole
+// User in "users" group → UserRole
+// Default → BasicRole
+
+{
+  "Type": "Token",
+  "AmbiguousRoleResolution": "AuthenticatedRole",
+  "RulesConfiguration": {
+    "Rules": [{
+      "Claim": "cognito:groups",
+      "MatchType": "Contains",
+      "Value": "admins",
+      "RoleARN": "arn:aws:iam::123:role/AdminRole"
+    }]
+  }
+}
+```
+
+### Fine-Grained Access with Policy Variables
+
+```json
+// Each user can only access THEIR OWN S3 prefix
+{
+  "Effect": "Allow",
+  "Action": ["s3:GetObject", "s3:PutObject"],
+  "Resource": "arn:aws:s3:::user-data/${cognito-identity.amazonaws.com:sub}/*"
+}
+```
+
+`${cognito-identity.amazonaws.com:sub}` = unique Cognito identity ID for each user.
 
 ---
 
-## API Gateway + Cognito Authorizer
+## API Gateway + Cognito
+
+### Cognito User Pool Authorizer (REST API)
 
 ```
-Client → API Gateway → Cognito User Pool Authorizer → Validates JWT → Lambda
+Client → Authorization: Bearer <Access Token>
+    → API Gateway → Cognito Authorizer → Validates JWT
+    → ✅ Valid → Forward to Lambda
+    → ❌ Invalid → 401 Unauthorized
 ```
 
-- API Gateway extracts the **Bearer token** from the `Authorization` header
-- Verifies signature against User Pool's JWKS endpoint
-- Returns 401 if invalid/expired
+- Built-in, no Lambda needed
+- Validates JWT signature against User Pool's JWKS
+- Can check scopes: `aws.cognito.signin.user.admin`
+
+### JWT Authorizer (HTTP API)
+
+```yaml
+# HTTP API with Cognito JWT authorizer
+Authorizer:
+  Type: JWT
+  IdentitySource: "$request.header.Authorization"
+  JwtConfiguration:
+    Issuer: "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_abc123"
+    Audience: ["your-app-client-id"]
+```
 
 ---
 
-## Java SDK — Authenticating a User
+## Java SDK Examples
+
+### Authenticate User
 
 ```java
-import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.*;
+CognitoIdentityProviderClient client = CognitoIdentityProviderClient.create();
 
-var client = CognitoIdentityProviderClient.create();
-
-var authResult = client.initiateAuth(InitiateAuthRequest.builder()
+InitiateAuthResponse authResult = client.initiateAuth(InitiateAuthRequest.builder()
     .authFlow(AuthFlowType.USER_PASSWORD_AUTH)
     .clientId("your-app-client-id")
     .authParameters(Map.of(
         "USERNAME", "user@example.com",
-        "PASSWORD", "SecretPass123!"
-    ))
+        "PASSWORD", "SecretPass123!"))
     .build());
 
 String idToken = authResult.authenticationResult().idToken();
@@ -139,86 +216,157 @@ String accessToken = authResult.authenticationResult().accessToken();
 String refreshToken = authResult.authenticationResult().refreshToken();
 ```
 
+### Refresh Tokens
+
+```java
+InitiateAuthResponse refreshResult = client.initiateAuth(InitiateAuthRequest.builder()
+    .authFlow(AuthFlowType.REFRESH_TOKEN_AUTH)
+    .clientId("your-app-client-id")
+    .authParameters(Map.of("REFRESH_TOKEN", refreshToken))
+    .build());
+
+String newAccessToken = refreshResult.authenticationResult().accessToken();
+```
+
+### Sign Up User
+
+```java
+client.signUp(SignUpRequest.builder()
+    .clientId("your-app-client-id")
+    .username("newuser@example.com")
+    .password("StrongPass123!")
+    .userAttributes(
+        AttributeType.builder().name("email").value("newuser@example.com").build(),
+        AttributeType.builder().name("custom:tenant_id").value("TENANT-001").build())
+    .build());
+```
+
+---
+
+## Hosted UI
+
+Cognito provides a pre-built, customizable login page:
+
+```
+https://<your-domain>.auth.<region>.amazoncognito.com/login?
+  response_type=code&
+  client_id=<app-client-id>&
+  redirect_uri=https://myapp.com/callback
+```
+
+**Customization**: Logo, CSS, custom domain (requires ACM certificate in us-east-1)
+
+---
+
+## 🏆 Best Practices
+
+1. **Use Identity Pool** for direct AWS service access from mobile/browser
+2. **Use User Pool Authorizer** with API Gateway — simplest auth setup
+3. **Pre Token Generation trigger** — add custom claims for authorization logic
+4. **Short token TTL** (15-60 min) for sensitive apps
+5. **Use groups** for role-based access control
+6. **Enable MFA** for sensitive operations
+7. **User Migration trigger** for seamless migration from legacy auth
+
+---
+
+## 🎯 DVA-C02 Exam Tips
+
+:::tip[Cognito Exam Cheat Sheet]
+1. **User Pool** = authentication (JWT tokens). **Identity Pool** = AWS credentials
+2. **Pre Token Generation** trigger = add custom claims to JWT
+3. **User Migration** trigger = migrate from legacy auth on first login
+4. **Identity Pool** can work with User Pool, Google, Facebook, SAML, OIDC
+5. **Unauthenticated identities** = guest access with limited IAM role
+6. **Fine-grained access** = use `${cognito-identity.amazonaws.com:sub}` in policies
+7. **Access Token** for API authorization. **ID Token** for user identity
+8. **Refresh Token** can last up to 10 years
+9. **Hosted UI** provides login page without building your own
+10. **Custom Auth Flow** = CUSTOM_AUTH for passwordless, CAPTCHA, magic links
+:::
+
 ---
 
 ## 🧪 Practice Questions
 
-**Q1.** A mobile app stores photos in S3. Users authenticate with Google Sign-In. The app needs to upload directly to S3. Which Cognito component provides the temporary AWS credentials?
+**Q1.** Mobile app uploads photos to S3. Users authenticate with Google. Which provides temporary AWS credentials?
 
-A) Cognito User Pool  
-B) Cognito Identity Pool  
+A) User Pool  
+B) **Identity Pool**  
 C) Cognito Sync  
-D) Cognito Lambda Trigger  
+D) Lambda Trigger  
 
 <details>
 <summary>✅ Answer & Explanation</summary>
 
-**B** — The **Identity Pool** federates the Google JWT and calls STS to return temporary AWS credentials. The User Pool handles authentication; the Identity Pool handles AWS authorization.
+**B** — Identity Pool federates the Google JWT and returns temporary AWS credentials via STS.
 </details>
 
 ---
 
-**Q2.** A developer wants to add custom attributes (e.g., `tenant_id`) to JWT tokens issued by Cognito. Which Lambda trigger should they use?
+**Q2.** Add custom `tenant_id` to JWT tokens. Which trigger?
 
 A) Post Confirmation  
 B) Pre Authentication  
-C) Pre Token Generation  
+C) **Pre Token Generation**  
 D) Custom Message  
 
 <details>
 <summary>✅ Answer & Explanation</summary>
 
-**C** — **Pre Token Generation** fires just before Cognito issues tokens, allowing you to add/override claims in the ID and Access tokens.
+**C** — Pre Token Generation fires before token issuance, allowing custom claim injection.
 </details>
 
 ---
 
-**Q3.** What is the default expiry of a Cognito User Pool Access Token?
+**Q3.** Each user should only access their own S3 prefix. How?
 
-A) 5 minutes  
-B) 30 minutes  
-C) **1 hour**  
-D) 24 hours  
+A) Separate bucket per user  
+B) **IAM policy with `${cognito-identity.amazonaws.com:sub}` variable**  
+C) Lambda@Edge to filter requests  
+D) S3 access points per user  
 
 <details>
 <summary>✅ Answer & Explanation</summary>
 
-**C** — Access and ID tokens expire in **1 hour** by default. Refresh tokens can last up to 10 years (configurable).
+**B** — Use the Cognito identity ID as a policy variable to scope S3 access to user-specific prefixes.
 </details>
 
 ---
 
-**Q4.** A company wants to allow unauthenticated (guest) users to read public content from S3 via the mobile app. Which feature enables this?
+**Q4.** Guest users need read-only access to public content. Which feature?
 
 A) User Pool Guest Mode  
-B) Identity Pool Unauthenticated Identities  
+B) **Identity Pool Unauthenticated Identities**  
 C) S3 Public Access  
-D) Lambda@Edge  
+D) CloudFront signed URLs  
 
 <details>
 <summary>✅ Answer & Explanation</summary>
 
-**B** — Enable **Unauthenticated Identities** in the Identity Pool. Assign a limited IAM role (e.g., S3 read-only on public prefix) to the unauthenticated role.
+**B** — Enable Unauthenticated Identities in Identity Pool with a limited IAM role.
+</details>
+
+---
+
+**Q5.** Company migrating from legacy auth to Cognito. Users should log in without re-registering. Which trigger?
+
+A) Pre Sign-up  
+B) Post Confirmation  
+C) **User Migration**  
+D) Define Auth Challenge  
+
+<details>
+<summary>✅ Answer & Explanation</summary>
+
+**C** — User Migration trigger fires when a user doesn't exist in the User Pool. It validates credentials against the legacy system and creates the user transparently.
 </details>
 
 ---
 
 ## 🔗 Resources
 
-- [Cognito User Pools Docs](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools.html)
-- [Cognito Identity Pools Docs](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-identity.html)
+- [Cognito User Pools](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools.html)
+- [Cognito Identity Pools](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-identity.html)
+- [Lambda Triggers](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-working-with-aws-lambda-triggers.html)
 - [JWT.io — Decode JWTs](https://jwt.io)
-- [Cognito Lambda Triggers Reference](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-working-with-aws-lambda-triggers.html)
-
-## Interview Questions (Senior Level)
-
-1. How do you model authentication and authorization boundaries across User Pools, Identity Pools, and API Gateway authorizers?
-2. What are the trade-offs of embedding tenant claims in JWTs versus resolving authorization dynamically per request?
-3. How would you migrate from a legacy identity system to Cognito with minimal user disruption?
-4. A security audit flags over-permissive guest access. How do you redesign unauthenticated identity policies safely?
-
-Short answer guide:
-- Use User Pools for identity and Identity Pools for scoped AWS credentials.
-- Keep token claims minimal; use short lifetimes and server-side policy checks for sensitive decisions.
-- Migrate with user-migration triggers, phased cutover, and rollback checkpoints.
-- Apply least privilege to unauth roles and isolate access by prefixes/resources.

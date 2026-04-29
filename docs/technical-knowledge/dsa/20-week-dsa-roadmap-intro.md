@@ -40,6 +40,35 @@ This roadmap is broken down into five distinct phases, allowing you to gradually
 
 ---
 
+## 🧱 Prerequisite Matrix (Weeks 1-20)
+
+Use this as a quick readiness check before each week. If you are missing one or two items, spend a short review block first, then continue.
+
+| Week | Topic | Knowledge Needed Before Starting |
+| ---- | ----- | -------------------------------- |
+| 1 | Arrays, Strings & Prefix Sums | Java basics, Big-O fundamentals, 0-indexing, `java.util` basics |
+| 2 | Two Pointers & Basic Sliding Window | Week 1 mastery, sorting intuition, boundary/index math, loop invariants |
+| 3 | Linked Lists & Fast/Slow Pointers | Week 1-2 traversal confidence, Java references, null-safety, pointer tracing |
+| 4 | Hash Tables & Sets | Week 1-3 fluency, identity vs equality, average vs worst-case Big-O, key-value modeling |
+| 5 | Stacks, Queues & Monotonic Stack | Array traversal fluency, `ArrayDeque` basics, amortized analysis, pattern recognition |
+| 6 | Binary Trees & BSTs | Stack/queue intuition, recursion basics, `TreeNode` modeling, null branching discipline |
+| 7 | Graph Foundations | DFS/BFS on trees, queue/stack usage, matrix boundary checks, node-edge modeling |
+| 8 | Advanced Graph Concepts | Week 7 graph fluency, visited-state discipline, dependency direction modeling, in-degree arrays |
+| 9 | Binary Search & Answer Space | Sorted-data reasoning, boundary invariants, monotonic predicates, overflow-safe midpoint |
+| 10 | Recursion & Backtracking | Call-stack intuition, base-case design, recursion tracing, choose-explore-unchoose mutation control |
+| 11 | Intervals & Sweep Line | Comparator-safe sorting, pair/event modeling, prefix-style accumulation thinking, interval boundary semantics |
+| 12 | Heaps & Greedy | Heap/tree shape intuition, `PriorityQueue` comparators, greedy-choice reasoning, local-vs-global trade-offs |
+| 13 | Dynamic Programming I (1D) | Recursion fluency, transition thinking, memo/table state modeling, small-example tracing habit |
+| 14 | Dynamic Programming II (2D) | Week 13 recurrence mastery, matrix indexing, 2-variable state translation, table fill-order reasoning |
+| 15 | Advanced Sliding Windows | Fixed-window foundation, frequency-map fluency, moving-window invariants, amortized 2-pointer proof |
+| 16 | Tries (Prefix Trees) | String indexing, tree traversal, HashMap-vs-array node design trade-offs, DFS confidence |
+| 17 | Shortest Paths & MST | Graph representation/traversal, heap proficiency, greedy proof intuition, path-vs-network cost distinction |
+| 18 | Disjoint Set Union | Connectivity modeling, parent/rank arrays, amortized complexity intuition, dynamic vs static query awareness |
+| 19 | Bit Manipulation & Math | Binary representation basics, signed/unsigned intuition, modular arithmetic basics, bitmask state mapping |
+| 20 | Comprehensive Review & System Mappings | Weeks 1-19 completion, trade-off communication, brute-force-to-optimal storytelling, Java API fluency under pressure |
+
+---
+
 ## 🧠 Rules for Success
 
 To get the most out of this curriculum, you must approach it with the right mindset and discipline.

@@ -20,6 +20,13 @@ A Trie, or Prefix Tree, is an $N$-ary tree designed specifically for string stor
 - Learn the memory vs. speed trade-off between using an Array vs. a HashMap inside your nodes.
 - Master the "Trie + DFS" pattern to solve complex word search problems.
 
+### Knowledge You Need Before Starting
+
+- String and character indexing fluency from Week 1.
+- Tree traversal confidence from Week 6.
+- HashMap-vs-array trade-off intuition from Week 4.
+- Comfort with recursive DFS for dictionary/grid word search.
+
 ---
 
 ## 2. Theory & Fundamentals

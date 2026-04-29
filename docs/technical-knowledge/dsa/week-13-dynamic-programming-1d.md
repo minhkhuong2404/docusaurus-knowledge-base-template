@@ -20,6 +20,13 @@ In backend engineering, when a distributed system performs a heavy database quer
 - Master **Bottom-Up (Tabulation)**: Iteratively building solutions from the smallest subproblem up.
 - Learn how to optimize $O(N)$ space down to $O(1)$ space for sequential DP.
 
+### Knowledge You Need Before Starting
+
+- Recursion/backtracking fluency from Week 10.
+- Strong base-case and transition thinking ("answer at i depends on ...").
+- Array-state modeling comfort for memo and tabulation tables.
+- Willingness to trace tiny examples before coding full DP.
+
 ---
 
 ## 2. Theory & Fundamentals

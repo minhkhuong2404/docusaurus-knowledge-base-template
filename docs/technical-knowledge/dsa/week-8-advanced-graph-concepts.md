@@ -20,6 +20,13 @@ You will focus heavily on **Directed Acyclic Graphs (DAGs)**. These structures a
 - Master **Topological Sorting** using Kahn's Algorithm (BFS).
 - Understand how to schedule tasks that can run in parallel vs. sequentially.
 
+### Knowledge You Need Before Starting
+
+- Week 7 graph representation and traversal fluency.
+- Strong BFS/DFS implementation and visited-state discipline.
+- Basic dependency modeling (prerequisite -> dependent direction).
+- Familiarity with queues and counting arrays (`inDegree[]`).
+
 ---
 
 ## 2. Theory & Fundamentals

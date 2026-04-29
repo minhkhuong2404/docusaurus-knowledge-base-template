@@ -17,6 +17,13 @@ Welcome to Week 1! This week lays the foundation for everything to come. We are 
 - Master String immutability in Java and when to use `StringBuilder`.
 - Learn the Prefix Sum pattern to reduce $O(N)$ range queries to $O(1)$.
 
+### Knowledge You Need Before Starting
+
+- Java basics: variables, loops (`for`/`while`), conditionals, and methods.
+- Big-O fundamentals: distinguish $O(1)$, $O(N)$, and $O(N^2)$.
+- Basic integer math and indexing confidence (0-indexed arrays).
+- Comfort using `java.util` essentials like `ArrayList`, `HashMap`, and `HashSet`.
+
 ---
 
 ## 2. Theory & Fundamentals
