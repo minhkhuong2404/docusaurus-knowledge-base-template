@@ -206,7 +206,7 @@ int jitterSeconds = ThreadLocalRandom.current().nextInt(0, 300);
 redisTemplate.opsForValue().set(key, value, Duration.ofSeconds(1800 + jitterSeconds));
 ```
 
-### Cache Penetration
+### 2. Cache Penetration
 
 Requests for keys that **never exist** bypass cache and hit DB every time:
 
@@ -250,7 +250,7 @@ public Product getProduct(Long id) {
 }
 ```
 
-### Cache Avalanche
+### 3. Cache Avalanche
 
 Many keys expire at the same time — DB is overwhelmed with concurrent misses.
 

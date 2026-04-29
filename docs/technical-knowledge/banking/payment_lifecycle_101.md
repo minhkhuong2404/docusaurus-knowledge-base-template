@@ -135,7 +135,10 @@ Different bank? ───────────────► Which scheme?
   Otherwise?        ─────────── BECS Direct Entry (next day)
 ```
 
-👉 See [NPP](./npp.md), [BPAY](./bpay.md), [SWIFT](./swift.md), and [Clearing & Settlement](./clearing.md)
+If it's **off-us**, your bank must send through an external rail and wait for interbank outcomes (acks, settlement, possible return windows).  
+If it's **on-us**, posting is internal and usually immediate.
+
+👉 See [On-Us](./onus.md), [Off-Us](./offus.md), [NPP](./npp.md), [BPAY](./bpay.md), [SWIFT](./swift.md), and [Clearing & Settlement](./clearing.md)
 
 ---
 
@@ -260,7 +263,7 @@ Based on your role:
 
 ### 🧑‍💻 Developer / Engineer
 1. [pain.001](./pain001.md) → [pacs.008](./pacs008.md) → [camt.054](./camt054.md) — the message chain
-2. [On-Us vs Off-Us](./onus.md) — routing logic
+2. [On-Us](./onus.md) and [Off-Us](./offus.md) — routing logic
 3. [NPP](./npp.md) — the main AU real-time scheme
 
 ### 🔍 Analyst / Operations

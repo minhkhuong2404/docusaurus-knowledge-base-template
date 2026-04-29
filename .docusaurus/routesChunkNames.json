@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-821": {
+  "/-b8b": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-b09": {
+  "/-be0": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -2569,6 +2569,10 @@
     "__comp": "df203c0f",
     "__props": "435f8bdf"
   },
+  "/tags/learning-path-d73": {
+    "__comp": "df203c0f",
+    "__props": "19accb93"
+  },
   "/tags/lease-6a0": {
     "__comp": "df203c0f",
     "__props": "bf94303e"
@@ -3036,6 +3040,10 @@
   "/tags/ocp-fa9": {
     "__comp": "df203c0f",
     "__props": "276f8d57"
+  },
+  "/tags/off-us-fec": {
+    "__comp": "df203c0f",
+    "__props": "a52c91b6"
   },
   "/tags/oidc-e0a": {
     "__comp": "df203c0f",
@@ -4981,7 +4989,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-13b": {
+  "/-b44": {
     "__comp": "a94703ab"
   },
   "/aws-7a1": {
@@ -4991,6 +4999,10 @@
   "/banking-3db": {
     "__comp": "17896441",
     "content": "59e92e34"
+  },
+  "/banking/learning-path-4ef": {
+    "__comp": "17896441",
+    "content": "ab317f3d"
   },
   "/books/building-microservice-8e3": {
     "__comp": "17896441",
@@ -5832,6 +5844,10 @@
     "__comp": "17896441",
     "content": "104bf45b"
   },
+  "/technical-knowledge/banking/offus-8e8": {
+    "__comp": "17896441",
+    "content": "f78de430"
+  },
   "/technical-knowledge/banking/onus-b65": {
     "__comp": "17896441",
     "content": "00e97688"
@@ -6168,7 +6184,7 @@
     "__comp": "17896441",
     "content": "228b4013"
   },
-  "/technical-knowledge/devops/ansible-275": {
+  "/technical-knowledge/devops/ansible-e62": {
     "__comp": "17896441",
     "content": "2e222ed3"
   },
@@ -6244,11 +6260,11 @@
     "__comp": "17896441",
     "content": "e775c6ed"
   },
-  "/technical-knowledge/devops/linux-for-devops-e81": {
+  "/technical-knowledge/devops/linux-for-devops-f8e": {
     "__comp": "17896441",
     "content": "4ef1d832"
   },
-  "/technical-knowledge/devops/terraform-b65": {
+  "/technical-knowledge/devops/terraform-61e": {
     "__comp": "17896441",
     "content": "c2aaa6d4"
   },

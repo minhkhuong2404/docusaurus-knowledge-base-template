@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '821'),
+    component: ComponentCreator('/', 'b8b'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'b09'),
+        component: ComponentCreator('/', 'be0'),
         routes: [
           {
             path: '/tags',
@@ -3201,6 +3201,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/learning-path',
+            component: ComponentCreator('/tags/learning-path', 'd73'),
+            exact: true
+          },
+          {
             path: '/tags/lease',
             component: ComponentCreator('/tags/lease', '6a0'),
             exact: true
@@ -3783,6 +3788,11 @@ export default [
           {
             path: '/tags/ocp',
             component: ComponentCreator('/tags/ocp', 'fa9'),
+            exact: true
+          },
+          {
+            path: '/tags/off-us',
+            component: ComponentCreator('/tags/off-us', 'fec'),
             exact: true
           },
           {
@@ -6217,7 +6227,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '13b'),
+            component: ComponentCreator('/', 'b44'),
             routes: [
               {
                 path: '/aws',
@@ -6230,6 +6240,11 @@ export default [
                 component: ComponentCreator('/banking', '3db'),
                 exact: true,
                 sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/banking/learning-path',
+                component: ComponentCreator('/banking/learning-path', '4ef'),
+                exact: true
               },
               {
                 path: '/books/building-microservice',
@@ -7489,6 +7504,11 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/banking/offus',
+                component: ComponentCreator('/technical-knowledge/banking/offus', '8e8'),
+                exact: true
+              },
+              {
                 path: '/technical-knowledge/banking/onus',
                 component: ComponentCreator('/technical-knowledge/banking/onus', 'b65'),
                 exact: true,
@@ -7993,7 +8013,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/devops/ansible',
-                component: ComponentCreator('/technical-knowledge/devops/ansible', '275'),
+                component: ComponentCreator('/technical-knowledge/devops/ansible', 'e62'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -8107,13 +8127,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/devops/linux-for-devops',
-                component: ComponentCreator('/technical-knowledge/devops/linux-for-devops', 'e81'),
+                component: ComponentCreator('/technical-knowledge/devops/linux-for-devops', 'f8e'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/devops/terraform',
-                component: ComponentCreator('/technical-knowledge/devops/terraform', 'b65'),
+                component: ComponentCreator('/technical-knowledge/devops/terraform', '61e'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

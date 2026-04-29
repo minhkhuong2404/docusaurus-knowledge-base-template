@@ -326,10 +326,11 @@ public class Pacs004ProcessingService {
 ---
 
 ## Related Concepts
-- [pain004.md](./pain004.md) — Why pain.004 doesn't exist (common confusion)
-- [pain007_pacs007.md](./pain007_pacs007.md) — Payment reversal/recall (debtor-initiated)
-- [camt055_camt056.md](./camt055_camt056.md) — Cancellation request that triggers a return
-- [pacs008.md](./pacs008.md) — The original payment message being returned
-- [payment_return.md](./payment_return.md) — Accounting treatment of return
-- [inbound.md](./inbound.md) — When a creditor bank initiates a return
-- [payment_exceptions.md](./payment_exceptions.md) — Returns as exception handling
+- [pain.004 Clarification](./pain004) — Why pain.004 doesn't exist (common confusion)
+- [pain.007 and pacs.007](./pain007_pacs007) — Payment reversal/recall (debtor-initiated)
+- [camt.055 and camt.056](./camt055_camt056) — Cancellation request that triggers a return
+- [pacs.008](./pacs008) — The original payment message being returned
+- [Payment Return](./payment_return) — Accounting treatment of return
+- [Inbound Payments](./inbound) — When a creditor bank initiates a return
+- [Payment Exceptions](./payment_exceptions) — Returns as exception handling
+- [Off-Us Transactions](./offus) — Most interbank returns occur in off-us flows

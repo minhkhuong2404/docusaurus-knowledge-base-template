@@ -12,6 +12,12 @@ In core banking, a **Credit Post** records an increase to a customer's account b
 
 ---
 
+## Overview
+
+Credit posting appears simple, but production behavior depends on settlement confidence and product policy. Key decision: whether funds are immediately available or restricted until settlement finality.
+
+---
+
 ## 🏗️ The Execution Flow
 
 Unlike a debit post, which requires strict validation of available funds before allowing the transaction, a credit post is generally additive. However, deciding **when** the customer can actually spend those funds is a massive operational and risk decision.
@@ -35,6 +41,16 @@ Once the actual funds have settled at the central bank (e.g., via the RBA's Exch
 
 ---
 
+## Controls Checklist
+
+- Beneficiary account and product eligibility checks
+- Duplicate transaction detection before posting
+- Value-date and booking-date consistency controls
+- Compliance holds (sanctions/legal/fraud) before making funds available
+- Idempotent processing for retried inbound notifications
+
+---
+
 ## ⚖️ Double-Entry Accounting
 
 A core banking engine must always balance. A credit to a customer's account is only half of the transaction. The other half must be a debit to an internal suspense, clearing, or correspondent bank account.
@@ -45,6 +61,17 @@ A core banking engine must always balance. A credit to a customer's account is o
 2. **Debit:** Nostro Account / Vostro Account (`Dr $500`) - Asset increases (or liability decreases).
 
 If these two ledgers don't match down to the exact cent at the end of the day, an automated alert triggers an Investigation / Exceptions workflow.
+
+---
+
+## Common Exceptions
+
+- Credit posted, then upstream return received (`pacs.004`)
+- Beneficiary account closed between validation and posting
+- Notification delivered but posting failed (requires replay)
+- Reconciliation mismatch between scheme totals and ledger entries
+
+These exceptions should feed standardized investigation queues with SLA ownership.
 
 ---
 

@@ -1044,6 +1044,10 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/banking/offus",
+              "path": "/technical-knowledge/banking/offus"
+            },
+            {
               "id": "technical-knowledge/banking/onus",
               "path": "/technical-knowledge/banking/onus",
               "sidebar": "tutorialSidebar"
@@ -1107,6 +1111,10 @@
               "id": "technical-knowledge/banking/payment_return",
               "path": "/technical-knowledge/banking/payment_return",
               "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/README",
+              "path": "/banking/learning-path"
             },
             {
               "id": "technical-knowledge/banking/reconciliation",

@@ -45,6 +45,8 @@ If the orchestrator is unaware whether the network gateway processed the payment
 ---
 
 ## 🔗 Related Concepts
-- [Debit Posting](./debit_post.md)
-- [Payment Return](./payment_return.md)
-- [Clearing](./clearing.md)
+- [Debit Posting](./debit_post)
+- [Payment Return](./payment_return)
+- [Clearing](./clearing)
+- [On-Us Transactions](./onus)
+- [Off-Us Transactions](./offus)

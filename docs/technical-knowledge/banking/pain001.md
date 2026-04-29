@@ -106,6 +106,17 @@ pain.001  ──(notified by)──►  camt.054  (account notification on debit
 
 ---
 
+## Routing Outcome: On-Us vs Off-Us
+
+After a `pain.001` is accepted, the debtor bank routes each transaction:
+
+- **On-us:** beneficiary account is internal, so bank posts debit/credit directly
+- **Off-us:** beneficiary bank is external, so bank constructs and sends `pacs.008` through selected rail
+
+Even in on-us cases, core controls still apply (sanctions, fraud, limits, and idempotency). Off-us adds clearing/settlement dependencies and richer exception handling.
+
+---
+
 ## pain.001 vs pain.008
 
 | | pain.001 | pain.008 |

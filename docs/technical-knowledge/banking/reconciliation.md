@@ -244,9 +244,10 @@ public class PaymentMatcher {
 ---
 
 ## Related Concepts
-- [camt053.md](/technical-knowledge/banking/camt053) — Primary reconciliation source
-- [camt054.md](/technical-knowledge/banking/camt054) — Intraday reconciliation triggers
-- [pacs002.md](/technical-knowledge/banking/pacs002) — Transaction status confirmation
-- [debit_post.md](/technical-knowledge/banking/debit_post) — Ledger entries to reconcile
-- [credit_post.md](/technical-knowledge/banking/credit_post) — Ledger entries to reconcile
-- [payment_return.md](/technical-knowledge/banking/payment_return) — Returned payments affect reconciliation
+- [camt.053](./camt053) — Primary reconciliation source
+- [camt.054](./camt054) — Intraday reconciliation triggers
+- [pacs.002](./pacs002) — Transaction status confirmation
+- [Debit Posting](./debit_post) — Ledger entries to reconcile
+- [Credit Posting](./credit_post) — Ledger entries to reconcile
+- [Payment Return](./payment_return) — Returned payments affect reconciliation
+- [Off-Us Transactions](./offus) — Interbank reconciliations are primarily off-us

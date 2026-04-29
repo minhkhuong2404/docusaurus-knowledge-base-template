@@ -12,6 +12,15 @@ In core banking and payment processing, a **Debit Post** is the act of recording
 
 ---
 
+## Overview
+
+Debit posting is one of the highest-risk banking operations because mistakes directly impact customer funds and regulatory exposure. Systems must prioritize:
+- correctness under concurrency
+- exactly-once financial effect
+- full audit traceability
+
+---
+
 ## 🏗️ The Execution Flow
 
 Debit posting is almost never a single mathematical operation. For high-volume transactional accounts, it typically happens in two distinct stages to guarantee safety while waiting for the overarching payment to settle.
@@ -33,6 +42,16 @@ Once the outbound payment is successfully acknowledged by the network or immedia
 
 > [!TIP]
 > This separation allows the bank to quickly release the hold (a **Debit Reversal**) if the payment network times out or rejects the message, without ever touching the immutable official accounting ledger.
+
+---
+
+## Controls Checklist
+
+- Account status validation (active, not blocked/frozen)
+- Available balance + overdraft policy checks
+- Limit controls (daily, per-transaction, channel)
+- Idempotency key required on every debit request
+- Immutable ledger event emitted on completion
 
 ---
 
@@ -58,6 +77,17 @@ Payment systems are highly distributed. If a payment orchestration engine times 
 2. The Core Banking API receives the request and immediately checks a unique index or an idempotency table.
 3. If the `DebitRef` exists, the system bypasses the balance deduction and returns the cached `SUCCESS` response.
 4. If it's new, it processes the debit and inserts the `DebitRef`.
+
+---
+
+## Failure and Recovery Patterns
+
+- **Network timeout after debit success:** return same success on retry via idempotency cache
+- **Downstream rail reject after memo hold:** trigger hold release (debit reversal)
+- **Partial processing in saga:** compensating transaction with strict reason code
+- **Duplicate inbound request:** no second debit, return original outcome
+
+Recovery logic must preserve accounting integrity and customer transparency.
 
 ---
 

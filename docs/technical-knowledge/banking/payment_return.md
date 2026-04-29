@@ -12,6 +12,29 @@ A **Payment Return** represents funds being actively sent back to a sending bank
 
 ---
 
+## Overview
+
+A return is an **after-acceptance** outcome. The original payment was received by the creditor side, but final application failed (or later became invalid), so funds are sent back using a dedicated return flow.
+
+From an operations perspective, returns must be treated as a new financial event linked to the original transfer references.
+
+---
+
+## End-to-End Return Flow
+
+```text
+Original payment accepted
+  -> Creditor bank cannot apply/retain funds
+  -> Creditor bank creates pacs.004 return
+  -> Debtor bank receives and matches to original payment
+  -> Debtor bank credits customer or suspense
+  -> Case closed / customer informed
+```
+
+Key requirement: exact reference linkage (`EndToEndId`, `InstrId`, `TxId`, scheme reference).
+
+---
+
 ## 🚫 Primary Causes
 
 Because a Return means the payment reached its destination untouched by network timeouts, the fault almost always lies with the recipient's information or status:
@@ -21,6 +44,16 @@ Because a Return means the payment reached its destination untouched by network 
 - **Customer Requested Refusal:** For direct debit pull scenarios (`pacs.003`), the debtor can instruct their bank to refuse it.
 
 Unlike a [Debit Reversal](./debit_reversal.md) (which happens *before* or *during* network transit due to technical failures), a return means the payment was technically fully successful from a networking standpoint, but practically unappliable by the business logic at the destination bank.
+
+---
+
+## Controls and Operations
+
+- Maintain return windows and cut-off logic per scheme
+- Enforce idempotent return processing (avoid duplicate credits)
+- Route unmatched returns into exception/suspense workflow
+- Separate customer messaging for reject vs return (different meaning)
+- Track KPIs: return rate, unmatched rate, aged return cases
 
 ## ✉️ ISO 20022 Context: The `pacs.004` Message
 
@@ -51,7 +84,19 @@ If the customer's account has since been closed too (which occasionally happens 
 
 ---
 
+## Common Exception Scenarios
+
+- Return amount differs due to fees or FX rounding
+- Return arrives after account closure at debtor side
+- Original payment not found (reference mismatch)
+- Duplicate return message from network retries
+
+Each scenario should have deterministic case handling and audit evidence.
+
+---
+
 ## 🔗 Related Concepts
-- [Debit Reversal](./debit_reversal.md)
-- [Credit Posting](./credit_post.md)
-- [Payment Exceptions](./payment_exceptions.md)
+- [Debit Reversal](./debit_reversal)
+- [Credit Posting](./credit_post)
+- [Payment Exceptions](./payment_exceptions)
+- [Off-Us Transactions](./offus)

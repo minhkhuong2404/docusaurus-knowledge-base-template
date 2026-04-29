@@ -361,5 +361,5 @@ A legal concept in some jurisdictions: if a bank collapses, transactions from th
 ---
 
 ## Related Concepts
-- [payment_lifecycle_101.md](./payment_lifecycle_101.md) — See these terms in context
-- [overview.md](./overview.md) — Summary glossary on the overview page
+- [Payment Lifecycle 101](./payment_lifecycle_101.md) — See these terms in context
+- [Overview](./overview.md) — Summary glossary on the overview page
