@@ -48,11 +48,16 @@ export default {
         "blog": false,
         "theme": {
           "customCss": "./src/css/custom.css"
-        },
-        "gtag": {
-          "trackingID": "G-79SQQZQMCX",
-          "anonymizeIP": true
         }
+      }
+    ]
+  ],
+  "plugins": [
+    [
+      "/Users/lukhuong/Desktop/docusaurus-knowledge-base-template/node_modules/@docusaurus/plugin-google-gtag/lib/index.js",
+      {
+        "trackingID": "G-79SQQZQMCX",
+        "anonymizeIP": true
       }
     ]
   ],
@@ -623,7 +628,6 @@ export default {
     "static"
   ],
   "customFields": {},
-  "plugins": [],
   "scripts": [],
   "headTags": [],
   "stylesheets": [],
