@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '045'),
+    component: ComponentCreator('/', 'f26'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '902'),
+        component: ComponentCreator('/', '525'),
         routes: [
           {
             path: '/tags',
@@ -6232,7 +6232,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'a70'),
+            component: ComponentCreator('/', '2fc'),
             routes: [
               {
                 path: '/aws',
@@ -6854,6 +6854,12 @@ export default [
               {
                 path: '/docs',
                 component: ComponentCreator('/docs', 'a92'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/intro',
+                component: ComponentCreator('/intro', 'e78'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -12954,6 +12960,108 @@ export default [
               {
                 path: '/technical-knowledge/kafka/producer/producer-transactions',
                 component: ComponentCreator('/technical-knowledge/kafka/producer/producer-transactions', '08c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/low-level-design/concurrency/coordination',
+                component: ComponentCreator('/technical-knowledge/low-level-design/concurrency/coordination', 'b1a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/low-level-design/concurrency/correctness',
+                component: ComponentCreator('/technical-knowledge/low-level-design/concurrency/correctness', '619'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/low-level-design/concurrency/scarcity',
+                component: ComponentCreator('/technical-knowledge/low-level-design/concurrency/scarcity', '6e1'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/low-level-design/design-patterns/behavioral',
+                component: ComponentCreator('/technical-knowledge/low-level-design/design-patterns/behavioral', '995'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/low-level-design/design-patterns/creational',
+                component: ComponentCreator('/technical-knowledge/low-level-design/design-patterns/creational', 'd19'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/low-level-design/design-patterns/overview',
+                component: ComponentCreator('/technical-knowledge/low-level-design/design-patterns/overview', '99c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/low-level-design/design-patterns/structural',
+                component: ComponentCreator('/technical-knowledge/low-level-design/design-patterns/structural', '193'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/low-level-design/oop/concepts',
+                component: ComponentCreator('/technical-knowledge/low-level-design/oop/concepts', 'bdd'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/low-level-design/oop/principles',
+                component: ComponentCreator('/technical-knowledge/low-level-design/oop/principles', '6a1'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/low-level-design/problem/amazon-locker',
+                component: ComponentCreator('/technical-knowledge/low-level-design/problem/amazon-locker', 'efe'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/low-level-design/problem/connect-four',
+                component: ComponentCreator('/technical-knowledge/low-level-design/problem/connect-four', 'df7'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/low-level-design/problem/elevator',
+                component: ComponentCreator('/technical-knowledge/low-level-design/problem/elevator', 'ef1'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/low-level-design/problem/file-system',
+                component: ComponentCreator('/technical-knowledge/low-level-design/problem/file-system', '1e2'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/low-level-design/problem/inventory-management',
+                component: ComponentCreator('/technical-knowledge/low-level-design/problem/inventory-management', '640'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/low-level-design/problem/movie-ticket',
+                component: ComponentCreator('/technical-knowledge/low-level-design/problem/movie-ticket', '685'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/low-level-design/problem/parking-lot',
+                component: ComponentCreator('/technical-knowledge/low-level-design/problem/parking-lot', '166'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/low-level-design/problem/rate-limiter',
+                component: ComponentCreator('/technical-knowledge/low-level-design/problem/rate-limiter', '9fe'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

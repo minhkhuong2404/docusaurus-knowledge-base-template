@@ -5598,6 +5598,96 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/low-level-design/concurrency/coordination",
+              "path": "/technical-knowledge/low-level-design/concurrency/coordination",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/low-level-design/concurrency/correctness",
+              "path": "/technical-knowledge/low-level-design/concurrency/correctness",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/low-level-design/concurrency/scarcity",
+              "path": "/technical-knowledge/low-level-design/concurrency/scarcity",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/low-level-design/design-patterns/behavioral",
+              "path": "/technical-knowledge/low-level-design/design-patterns/behavioral",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/low-level-design/design-patterns/creational",
+              "path": "/technical-knowledge/low-level-design/design-patterns/creational",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/low-level-design/design-patterns/overview",
+              "path": "/technical-knowledge/low-level-design/design-patterns/overview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/low-level-design/design-patterns/structural",
+              "path": "/technical-knowledge/low-level-design/design-patterns/structural",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/low-level-design/intro",
+              "path": "/intro",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/low-level-design/oop/concepts",
+              "path": "/technical-knowledge/low-level-design/oop/concepts",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/low-level-design/oop/principles",
+              "path": "/technical-knowledge/low-level-design/oop/principles",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/low-level-design/problem/amazon-locker",
+              "path": "/technical-knowledge/low-level-design/problem/amazon-locker",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/low-level-design/problem/connect-four",
+              "path": "/technical-knowledge/low-level-design/problem/connect-four",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/low-level-design/problem/elevator",
+              "path": "/technical-knowledge/low-level-design/problem/elevator",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/low-level-design/problem/file-system",
+              "path": "/technical-knowledge/low-level-design/problem/file-system",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/low-level-design/problem/inventory-management",
+              "path": "/technical-knowledge/low-level-design/problem/inventory-management",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/low-level-design/problem/movie-ticket",
+              "path": "/technical-knowledge/low-level-design/problem/movie-ticket",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/low-level-design/problem/parking-lot",
+              "path": "/technical-knowledge/low-level-design/problem/parking-lot",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/low-level-design/problem/rate-limiter",
+              "path": "/technical-knowledge/low-level-design/problem/rate-limiter",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/networking/api-authentication-security",
               "path": "/technical-knowledge/networking/api-authentication-security",
               "sidebar": "tutorialSidebar"

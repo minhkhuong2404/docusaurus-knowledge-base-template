@@ -301,6 +301,58 @@ const sidebars: SidebarsConfig = {
 		},
 		{
 			type: 'category',
+			label: '📚 Low-level Design',
+			items: [
+				'technical-knowledge/low-level-design/intro',
+				{
+					type: 'category',
+					label: '📐 OOP & Principles',
+					collapsed: false,
+					items: [
+						'technical-knowledge/low-level-design/oop/concepts',
+						'technical-knowledge/low-level-design/oop/principles',
+					],
+				},
+				{
+					type: 'category',
+					label: '🏗️ Design Patterns',
+					collapsed: false,
+					items: [
+						'technical-knowledge/low-level-design/design-patterns/overview',
+						'technical-knowledge/low-level-design/design-patterns/creational',
+						'technical-knowledge/low-level-design/design-patterns/structural',
+						'technical-knowledge/low-level-design/design-patterns/behavioral',
+					],
+				},
+				{
+					type: 'category',
+					label: '⚡ Concurrency',
+					collapsed: false,
+					items: [
+						'technical-knowledge/low-level-design/concurrency/correctness',
+						'technical-knowledge/low-level-design/concurrency/coordination',
+						'technical-knowledge/low-level-design/concurrency/scarcity',
+					],
+				},
+				{
+					type: 'category',
+					label: '🧩 Problem Walkthroughs',
+					collapsed: false,
+					items: [
+						'technical-knowledge/low-level-design/problem/connect-four',
+						'technical-knowledge/low-level-design/problem/amazon-locker',
+						'technical-knowledge/low-level-design/problem/elevator',
+						'technical-knowledge/low-level-design/problem/parking-lot',
+						'technical-knowledge/low-level-design/problem/file-system',
+						'technical-knowledge/low-level-design/problem/movie-ticket',
+						'technical-knowledge/low-level-design/problem/rate-limiter',
+						'technical-knowledge/low-level-design/problem/inventory-management',
+					],
+				},
+			],
+		},
+		{
+			type: 'category',
 			label: '🔧 Coding Interview Prep',
 			items: [
 				{
