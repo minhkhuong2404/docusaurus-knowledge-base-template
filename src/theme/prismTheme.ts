@@ -29,11 +29,11 @@ const theme: PrismTheme = {
 		},
 		{
 			types: ['keyword', 'important', 'atrule'],
-			style: { color: '#ff7ac6', fontWeight: '600' },
+			style: { color: '#ff7ac6', fontWeight: '500' },
 		},
 		{
 			types: ['function', 'class-name'],
-			style: { color: '#8ef7b2', fontWeight: '600' },
+			style: { color: '#8ef7b2', fontWeight: '500' },
 		},
 		{
 			types: ['builtin'],

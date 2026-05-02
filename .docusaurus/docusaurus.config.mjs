@@ -538,7 +538,8 @@ export default {
       "additionalLanguages": [
         "bash",
         "json",
-        "yaml"
+        "yaml",
+        "java"
       ],
       "magicComments": [
         {

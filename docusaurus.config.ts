@@ -156,6 +156,7 @@ const config: Config = {
 				'bash',
 				'json',
 				'yaml',
+				'java'
 			],
 		},
 		colorMode: {
