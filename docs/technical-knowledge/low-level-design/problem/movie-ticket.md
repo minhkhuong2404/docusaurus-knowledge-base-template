@@ -401,7 +401,7 @@ The `tryHold()` method uses a per-`ShowSeat` lock — fine-grained locking for h
 
 ## Senior Deep Dive
 
-:::note Senior Deep Dive 🔴
+:::note[Senior Deep Dive 🔴]
 **Optimistic Locking (DB-level):**
 ```sql
 UPDATE show_seats

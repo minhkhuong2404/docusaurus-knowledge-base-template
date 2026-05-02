@@ -63,7 +63,7 @@ Logout → server deletes session from store
 The session ID becomes orphaned → immediate revocation
 ```
 
-:::info Key insight
+:::info[Key insight]
 When developers say "cookie-based auth", they almost always mean session-based auth under the hood. The cookie is just a transport for the opaque session ID — the real state lives on the server.
 :::
 
@@ -107,7 +107,7 @@ Token remains cryptographically valid until exp
 This is the core revocation trade-off
 ```
 
-:::warning Core trade-off
+:::warning[Core trade-off]
 A JWT is valid until it expires, regardless of logout. You cannot "un-sign" a token without additional infrastructure (blacklist, short TTL, refresh rotation). This is the most common senior interview topic around JWTs.
 :::
 

@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-f26": {
+  "/-83a": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-525": {
+  "/-35c": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -4993,7 +4993,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-2fc": {
+  "/-1cc": {
     "__comp": "a94703ab"
   },
   "/aws-7a1": {
@@ -5412,7 +5412,7 @@
     "__comp": "17896441",
     "content": "0e384e19"
   },
-  "/intro-e78": {
+  "/intro-08e": {
     "__comp": "17896441",
     "content": "0dbb9876"
   },
@@ -9488,71 +9488,71 @@
     "__comp": "17896441",
     "content": "7b527991"
   },
-  "/technical-knowledge/low-level-design/concurrency/coordination-b1a": {
+  "/technical-knowledge/low-level-design/concurrency/coordination-f0a": {
     "__comp": "17896441",
     "content": "312f58ce"
   },
-  "/technical-knowledge/low-level-design/concurrency/correctness-619": {
+  "/technical-knowledge/low-level-design/concurrency/correctness-e76": {
     "__comp": "17896441",
     "content": "d7c44f8b"
   },
-  "/technical-knowledge/low-level-design/concurrency/scarcity-6e1": {
+  "/technical-knowledge/low-level-design/concurrency/scarcity-473": {
     "__comp": "17896441",
     "content": "be7a7a2e"
   },
-  "/technical-knowledge/low-level-design/design-patterns/behavioral-995": {
+  "/technical-knowledge/low-level-design/design-patterns/behavioral-4f7": {
     "__comp": "17896441",
     "content": "9a3d3002"
   },
-  "/technical-knowledge/low-level-design/design-patterns/creational-d19": {
+  "/technical-knowledge/low-level-design/design-patterns/creational-957": {
     "__comp": "17896441",
     "content": "9b39a5d1"
   },
-  "/technical-knowledge/low-level-design/design-patterns/overview-99c": {
+  "/technical-knowledge/low-level-design/design-patterns/overview-e53": {
     "__comp": "17896441",
     "content": "f2d53ec6"
   },
-  "/technical-knowledge/low-level-design/design-patterns/structural-193": {
+  "/technical-knowledge/low-level-design/design-patterns/structural-0ad": {
     "__comp": "17896441",
     "content": "947736aa"
   },
-  "/technical-knowledge/low-level-design/oop/concepts-bdd": {
+  "/technical-knowledge/low-level-design/oop/concepts-6fa": {
     "__comp": "17896441",
     "content": "2ee1fdd1"
   },
-  "/technical-knowledge/low-level-design/oop/principles-6a1": {
+  "/technical-knowledge/low-level-design/oop/principles-04a": {
     "__comp": "17896441",
     "content": "b60a330c"
   },
-  "/technical-knowledge/low-level-design/problem/amazon-locker-efe": {
+  "/technical-knowledge/low-level-design/problem/amazon-locker-c27": {
     "__comp": "17896441",
     "content": "d2c43e1c"
   },
-  "/technical-knowledge/low-level-design/problem/connect-four-df7": {
+  "/technical-knowledge/low-level-design/problem/connect-four-5ee": {
     "__comp": "17896441",
     "content": "8d99fd94"
   },
-  "/technical-knowledge/low-level-design/problem/elevator-ef1": {
+  "/technical-knowledge/low-level-design/problem/elevator-edd": {
     "__comp": "17896441",
     "content": "8f812b13"
   },
-  "/technical-knowledge/low-level-design/problem/file-system-1e2": {
+  "/technical-knowledge/low-level-design/problem/file-system-006": {
     "__comp": "17896441",
     "content": "6db63764"
   },
-  "/technical-knowledge/low-level-design/problem/inventory-management-640": {
+  "/technical-knowledge/low-level-design/problem/inventory-management-e7e": {
     "__comp": "17896441",
     "content": "faffd1fc"
   },
-  "/technical-knowledge/low-level-design/problem/movie-ticket-685": {
+  "/technical-knowledge/low-level-design/problem/movie-ticket-23d": {
     "__comp": "17896441",
     "content": "39c04d03"
   },
-  "/technical-knowledge/low-level-design/problem/parking-lot-166": {
+  "/technical-knowledge/low-level-design/problem/parking-lot-e50": {
     "__comp": "17896441",
     "content": "70636b35"
   },
-  "/technical-knowledge/low-level-design/problem/rate-limiter-9fe": {
+  "/technical-knowledge/low-level-design/problem/rate-limiter-f5d": {
     "__comp": "17896441",
     "content": "5e46a3e1"
   },

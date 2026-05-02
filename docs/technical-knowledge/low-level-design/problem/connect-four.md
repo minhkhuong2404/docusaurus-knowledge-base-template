@@ -232,7 +232,7 @@ while (game.getState() == GameState.IN_PROGRESS) {
 
 ## Senior Deep Dive
 
-:::note Senior Deep Dive 🔴
+:::note[Senior Deep Dive 🔴]
 **AI Player:** Abstract `Player` with a `makeMove(Board board)` method. Implement `HumanPlayer` (reads from stdin) and `AIPlayer` (uses Minimax with alpha-beta pruning). The `ConnectFourGame` calls `player.makeMove(board)` polymorphically.
 
 **Win detection optimization:** Instead of checking all 4 directions from scratch each time, maintain 4 bitmask arrays (one per direction) and do bitwise operations — O(1) win check after each move.

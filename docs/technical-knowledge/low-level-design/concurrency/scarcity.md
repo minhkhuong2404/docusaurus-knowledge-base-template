@@ -350,8 +350,6 @@ try {
 | Downstream services | `CircuitBreaker` | Open/half-open/closed state machine |
 | Work queue capacity | `BlockingQueue` + CallerRunsPolicy | Backpressure on producer |
 
-:::note Senior Deep Dive 🔴
+:::note[Senior Deep Dive 🔴]
 The most impressive thing you can say about resource management in an interview: *"I'd make the queue bounded — an unbounded queue just delays the OOM instead of applying backpressure. With a bounded queue and CallerRunsPolicy, the system degrades gracefully under load rather than crashing."*
 :::
-
-**Next →** [Problem: Connect Four](../problems/connect-four)

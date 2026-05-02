@@ -223,7 +223,7 @@ public class Product {
 Product p = entityManager.find(Product.class, 42L); // Hibernate checks cache first
 ```
 
-:::info When to use Read-Through
+:::info[When to use Read-Through]
 Best when your ORM or data layer already supports it (Hibernate L2 cache, AWS DAX for DynamoDB). Don't implement custom read-through logic — cache-aside is simpler and more explicit.
 :::
 
@@ -391,7 +391,7 @@ Access pattern B (skewed / power law):
   → Use LFU: product:1 stays because it has the highest frequency
 ```
 
-:::info Redis 4.0+ LFU
+:::info[Redis 4.0+ LFU]
 Redis 4.0 introduced approximate LFU. Configure it with:
 ```bash
 CONFIG SET maxmemory-policy allkeys-lfu

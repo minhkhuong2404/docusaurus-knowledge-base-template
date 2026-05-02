@@ -321,7 +321,7 @@ public class MetricsRateLimiter implements RateLimiter {
 
 ## Senior Deep Dive: Distributed Rate Limiting
 
-:::note Senior Deep Dive 🔴
+:::note[Senior Deep Dive 🔴]
 **Single node:** The above implementations use in-memory state — fast, but state is lost on restart and doesn't work across multiple service instances.
 
 **Distributed with Redis (Lua script for atomicity):**

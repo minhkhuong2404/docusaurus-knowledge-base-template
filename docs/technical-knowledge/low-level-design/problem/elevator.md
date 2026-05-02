@@ -165,7 +165,7 @@ public class ElevatorDispatcher {
 | **LOOK** | Like SCAN but reverses at last request, not top/bottom | More efficient than SCAN | Slightly complex |
 | **C-SCAN** | Circular: always goes up, jumps to bottom | Uniform wait times | Longer travel |
 
-:::note Senior Deep Dive 🔴
+:::note[Senior Deep Dive 🔴]
 Real elevators use **LOOK** (a variant of SCAN) because it avoids traveling to the top/bottom floor when there are no requests there. The key insight: reverse direction at the last pending request, not at the physical boundary.
 :::
 

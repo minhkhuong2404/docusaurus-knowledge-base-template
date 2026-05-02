@@ -184,7 +184,7 @@ r.setHeight(10);
 System.out.println(r.area()); // Expected 50, got 100!
 ```
 
-:::note Senior Deep Dive 🔴
+:::note[Senior Deep Dive 🔴]
 Prefer **composition over inheritance** for code reuse. Inheritance creates tight coupling between parent and child. A change to the parent can silently break all children. Use inheritance only when the is-a relationship is semantically correct AND the LSP holds.
 :::
 

@@ -104,7 +104,7 @@ public class PriceCalculator {
 }
 ```
 
-:::note Senior Deep Dive 🔴
+:::note[Senior Deep Dive 🔴]
 OCP doesn't mean *never* modify existing code. It means that for a given *axis of variation* (e.g., discount types), you should be able to add new variants without touching the core logic. Identify the axes of variation in your design and apply OCP there.
 :::
 
@@ -262,7 +262,7 @@ OrderService   service  = new OrderService(repo, mailer);
 // Swap PostgreSQL for Mongo? Change one line here, OrderService unchanged.
 ```
 
-:::note Senior Deep Dive 🔴
+:::note[Senior Deep Dive 🔴]
 DIP is why **dependency injection** frameworks (Spring, Guice) exist. In an interview without a framework, demonstrate DIP manually through constructor injection. Avoid `new` inside business logic classes — say: *"I'd inject this dependency through the constructor to keep this class testable and decoupled."*
 :::
 

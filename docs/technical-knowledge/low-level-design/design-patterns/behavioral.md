@@ -175,7 +175,7 @@ item.placeBid("bidder-42", Money.of(150, "USD"));
 // All three observers react automatically
 ```
 
-:::note Senior Deep Dive 🔴
+:::note[Senior Deep Dive 🔴]
 `CopyOnWriteArrayList` for the observer list handles the case where observers unsubscribe themselves during notification (concurrent modification). For high-frequency events, prefer an async event bus (e.g., Guava `EventBus`, or a `BlockingQueue` + dedicated consumer thread) over synchronous notification.
 :::
 

@@ -76,7 +76,7 @@ public class ConnectionPool {
 }
 ```
 
-:::note Senior Deep Dive 🔴
+:::note[Senior Deep Dive 🔴]
 The `volatile` keyword on the instance field is **mandatory** for double-checked locking correctness. Without it, a partially constructed object can be visible to other threads due to instruction reordering. The enum approach avoids this entirely and is preferable.
 :::
 

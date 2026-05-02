@@ -71,19 +71,19 @@ Unlike system design interviews (which focus on distributed systems, scalability
 This guide is organized in the order you should learn things:
 
 ### 1. Foundation
-- **[OOP Concepts](./oop/concepts)** — The 4 pillars, with Java examples
-- **[Design Principles](./oop/principles)** — SOLID + DRY, KISS, YAGNI
+- **[OOP Concepts](/technical-knowledge/low-level-design/oop/concepts)** — The 4 pillars, with Java examples
+- **[Design Principles](/technical-knowledge/low-level-design/oop/principles)** — SOLID + DRY, KISS, YAGNI
 
 ### 2. Design Patterns
-- **[Overview](./design-patterns/overview)** — When to use patterns, common mistakes
-- **[Creational Patterns](./design-patterns/creational)** — Singleton, Factory, Builder, Prototype
-- **[Structural Patterns](./design-patterns/structural)** — Adapter, Decorator, Composite, Facade
-- **[Behavioral Patterns](./design-patterns/behavioral)** — Strategy, Observer, Command, State
+- **[Overview](/technical-knowledge/low-level-design/design-patterns/overview)** — When to use patterns, common mistakes
+- **[Creational Patterns](/technical-knowledge/low-level-design/design-patterns/creational)** — Singleton, Factory, Builder, Prototype
+- **[Structural Patterns](/technical-knowledge/low-level-design/design-patterns/structural)** — Adapter, Decorator, Composite, Facade
+- **[Behavioral Patterns](/technical-knowledge/low-level-design/design-patterns/behavioral)** — Strategy, Observer, Command, State
 
 ### 3. Concurrency
-- **[Correctness](./concurrency/correctness)** — Atomicity, visibility, data races
-- **[Coordination](./concurrency/coordination)** — Locks, semaphores, barriers, condition variables
-- **[Scarcity](./concurrency/scarcity)** — Thread pools, rate limiting, backpressure
+- **[Correctness](/technical-knowledge/low-level-design/concurrency/correctness)** — Atomicity, visibility, data races
+- **[Coordination](/technical-knowledge/low-level-design/concurrency/coordination)** — Locks, semaphores, barriers, condition variables
+- **[Scarcity](/technical-knowledge/low-level-design/concurrency/scarcity)** — Thread pools, rate limiting, backpressure
 
 ### 4. Problems
 Full end-to-end walkthroughs of 8 classic LLD problems.
@@ -96,7 +96,7 @@ Full end-to-end walkthroughs of 8 classic LLD problems.
 
 **If you have 3 days:** Read OOP Concepts + Principles, skim Design Patterns overview, then focus on 3-4 problems relevant to your target company.
 
-**If you have 1 day:** Read [SOLID Principles](./oop/principles), then do [Parking Lot](./problems/parking-lot) and [Rate Limiter](./problems/rate-limiter) end-to-end.
+**If you have 1 day:** Read [SOLID Principles](/technical-knowledge/low-level-design/oop/principles), then do [Parking Lot](/technical-knowledge/low-level-design/problem/parking-lot) and [Rate Limiter](/technical-knowledge/low-level-design/problem/rate-limiter) end-to-end.
 
 ---
 
@@ -113,4 +113,4 @@ All code examples use **Java 17+** with standard library (no frameworks, unless 
 // - var for local type inference where it improves readability
 ```
 
-Let's go! Start with [OOP Concepts →](./oop/concepts)
+Let's go! Start with [OOP Concepts →](/technical-knowledge/low-level-design/oop/concepts)

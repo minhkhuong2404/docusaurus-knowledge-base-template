@@ -367,7 +367,7 @@ public class Main {
 
 ## Senior Deep Dive: What to Add
 
-:::note Senior Deep Dive 🔴
+:::note[Senior Deep Dive 🔴]
 
 **Concurrency:** Spot allocation in `tryPark()` uses `synchronized` per spot. For very high throughput, consider `StampedLock` or CAS-based optimistic locking.
 

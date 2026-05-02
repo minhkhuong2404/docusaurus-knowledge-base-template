@@ -342,7 +342,7 @@ System.out.println("After restock: " + inventory.getTotalAvailable("SKU-001")); 
 
 ## Senior Deep Dive
 
-:::note Senior Deep Dive 🔴
+:::note[Senior Deep Dive 🔴]
 **Optimistic concurrency at DB level:** Use a `version` column on stock rows. CAS update: `UPDATE stock SET quantity = ?, version = version+1 WHERE sku = ? AND version = ?`. If 0 rows updated → retry.
 
 **Split fulfillment:** When one warehouse can't fulfill the entire quantity, split across warehouses. This requires distributed transaction semantics — either 2PC or saga pattern (reserve in WH-EAST, then WH-WEST; if second fails, compensate by releasing first).

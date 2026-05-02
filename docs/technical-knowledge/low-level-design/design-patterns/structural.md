@@ -366,7 +366,7 @@ ImageLoader loader = new AuthenticatedImageProxy(
 );
 ```
 
-:::note Senior Deep Dive 🔴
+:::note[Senior Deep Dive 🔴]
 **Proxy vs Decorator:** Both wrap an object and delegate to it. The key difference is *intent*:
 - **Proxy** controls *access* to the real object (same interface, transparent to client)
 - **Decorator** *adds behavior* (the client knows it's using a decorator)
