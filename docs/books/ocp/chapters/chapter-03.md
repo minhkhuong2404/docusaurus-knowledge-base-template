@@ -213,7 +213,7 @@ for (String name : names) {
 }
 ```
 
-:::note Limitation
+:::note[Limitation]
 You cannot modify the underlying collection or array through the loop variable — you only get a copy of the value.
 :::
 

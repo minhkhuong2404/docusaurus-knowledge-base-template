@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-54a": {
+  "/-772": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-931": {
+  "/-898": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -4993,7 +4993,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-9bf": {
+  "/-bd5": {
     "__comp": "a94703ab"
   },
   "/aws-7a1": {
@@ -6092,35 +6092,35 @@
     "__comp": "17896441",
     "content": "d2fa8756"
   },
-  "/technical-knowledge/design-patterns/abstract-factory-bdf": {
+  "/technical-knowledge/design-patterns/abstract-factory-824": {
     "__comp": "17896441",
     "content": "75a575e6"
   },
-  "/technical-knowledge/design-patterns/adapter-f09": {
+  "/technical-knowledge/design-patterns/adapter-ac6": {
     "__comp": "17896441",
     "content": "94a3a592"
   },
-  "/technical-knowledge/design-patterns/bridge-d66": {
+  "/technical-knowledge/design-patterns/bridge-913": {
     "__comp": "17896441",
     "content": "3ba91556"
   },
-  "/technical-knowledge/design-patterns/builder-38d": {
+  "/technical-knowledge/design-patterns/builder-4c6": {
     "__comp": "17896441",
     "content": "88e18de2"
   },
-  "/technical-knowledge/design-patterns/chain-of-responsibility-44b": {
+  "/technical-knowledge/design-patterns/chain-of-responsibility-a1f": {
     "__comp": "17896441",
     "content": "a616e90a"
   },
-  "/technical-knowledge/design-patterns/command-215": {
+  "/technical-knowledge/design-patterns/command-2f1": {
     "__comp": "17896441",
     "content": "03ec1583"
   },
-  "/technical-knowledge/design-patterns/composite-dee": {
+  "/technical-knowledge/design-patterns/composite-830": {
     "__comp": "17896441",
     "content": "18d50321"
   },
-  "/technical-knowledge/design-patterns/decorator-b1c": {
+  "/technical-knowledge/design-patterns/decorator-97f": {
     "__comp": "17896441",
     "content": "4387012b"
   },
@@ -6128,7 +6128,7 @@
     "__comp": "17896441",
     "content": "17fe6fad"
   },
-  "/technical-knowledge/design-patterns/facade-3d0": {
+  "/technical-knowledge/design-patterns/facade-074": {
     "__comp": "17896441",
     "content": "18477c31"
   },
@@ -9504,7 +9504,7 @@
     "__comp": "17896441",
     "content": "ee0ecb9e"
   },
-  "/technical-knowledge/networking/http-https-application-layer-268": {
+  "/technical-knowledge/networking/http-https-application-layer-638": {
     "__comp": "17896441",
     "content": "cd63af30"
   },
@@ -9768,7 +9768,7 @@
     "__comp": "17896441",
     "content": "c7ff582f"
   },
-  "/technical-knowledge/spring/spring-cloud-a93": {
+  "/technical-knowledge/spring/spring-cloud-c7c": {
     "__comp": "17896441",
     "content": "b0d8a005"
   },
@@ -9828,15 +9828,15 @@
     "__comp": "17896441",
     "content": "c0e5a9ef"
   },
-  "/technical-knowledge/system-design/bloom-filters-e6c": {
+  "/technical-knowledge/system-design/bloom-filters-c15": {
     "__comp": "17896441",
     "content": "ce0d883d"
   },
-  "/technical-knowledge/system-design/caching-strategies-d0f": {
+  "/technical-knowledge/system-design/caching-strategies-8f4": {
     "__comp": "17896441",
     "content": "724987fe"
   },
-  "/technical-knowledge/system-design/cap-theorem-system-design-558": {
+  "/technical-knowledge/system-design/cap-theorem-system-design-822": {
     "__comp": "17896441",
     "content": "75fc6f05"
   },
@@ -9848,11 +9848,11 @@
     "__comp": "17896441",
     "content": "6efb14ae"
   },
-  "/technical-knowledge/system-design/consistent-hashing-deep-dive-89c": {
+  "/technical-knowledge/system-design/consistent-hashing-deep-dive-35a": {
     "__comp": "17896441",
     "content": "65c13a58"
   },
-  "/technical-knowledge/system-design/data-consistency-3c4": {
+  "/technical-knowledge/system-design/data-consistency-b50": {
     "__comp": "17896441",
     "content": "0098328c"
   },
@@ -9860,11 +9860,11 @@
     "__comp": "17896441",
     "content": "9fe414ef"
   },
-  "/technical-knowledge/system-design/database-indexing-deep-dive-55a": {
+  "/technical-knowledge/system-design/database-indexing-deep-dive-984": {
     "__comp": "17896441",
     "content": "d628e604"
   },
-  "/technical-knowledge/system-design/distributed-locking-7f4": {
+  "/technical-knowledge/system-design/distributed-locking-6ab": {
     "__comp": "17896441",
     "content": "33fd115f"
   },
@@ -9872,11 +9872,11 @@
     "__comp": "17896441",
     "content": "b21b4701"
   },
-  "/technical-knowledge/system-design/domain-driven-design-558": {
+  "/technical-knowledge/system-design/domain-driven-design-b00": {
     "__comp": "17896441",
     "content": "a12e521a"
   },
-  "/technical-knowledge/system-design/handling-contention-f31": {
+  "/technical-knowledge/system-design/handling-contention-74d": {
     "__comp": "17896441",
     "content": "89400898"
   },
@@ -9900,7 +9900,7 @@
     "__comp": "17896441",
     "content": "3940c236"
   },
-  "/technical-knowledge/system-design/message-queues-comprehensive-c55": {
+  "/technical-knowledge/system-design/message-queues-comprehensive-e55": {
     "__comp": "17896441",
     "content": "2fd6c3bc"
   },
@@ -9920,11 +9920,11 @@
     "__comp": "17896441",
     "content": "ec5f7116"
   },
-  "/technical-knowledge/system-design/scaling-reads-35a": {
+  "/technical-knowledge/system-design/scaling-reads-a07": {
     "__comp": "17896441",
     "content": "382009e9"
   },
-  "/technical-knowledge/system-design/scaling-writes-779": {
+  "/technical-knowledge/system-design/scaling-writes-678": {
     "__comp": "17896441",
     "content": "91aa5927"
   },

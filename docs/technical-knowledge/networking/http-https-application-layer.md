@@ -27,7 +27,7 @@ A complete guide covering HTTP fundamentals for newcomers, a practical decision 
 
 ## What Is HTTP?
 
-:::note For Newcomers
+:::note[For Newcomers]
 Imagine HTTP as the language your browser and a web server use to talk to each other. When you type a URL and press Enter, your browser sends an HTTP **request** (like asking a question), and the server sends back an HTTP **response** (the answer). Every time you load a page, click a link, or submit a form, HTTP is happening under the hood.
 :::
 
@@ -65,7 +65,7 @@ Content-Length: 85
 {"userId": 42, "items": [...]}     ← (4) Body (optional — only for POST, PUT, PATCH)
 ```
 
-:::note For Newcomers
+:::note[For Newcomers]
 Think of it like a physical letter:
 - **Request Line** = the subject line ("Please process this order")
 - **Headers** = envelope metadata (return address, content type, stamps)
@@ -130,7 +130,7 @@ GET /api/products?category=electronics&sort=price&page=2 HTTP/1.1
 
 **Safe, idempotent** → browsers can prefetch GET requests, CDNs can cache them, load balancers can retry on failure.
 
-:::warning Never use GET to modify state
+:::warning[Never use GET to modify state]
 `GET /api/orders/42/cancel` is a design error. If a browser or CDN prefetches that URL, the order gets cancelled silently. Use `POST /api/orders/42/cancel` or `DELETE /api/orders/42` instead.
 :::
 
@@ -254,7 +254,7 @@ public ResponseEntity<User> replaceUser(
 PUT /api/settings/user:42     ← creates if not exists, replaces if it does
 ```
 
-:::tip PUT vs POST for creation
+:::tip[PUT vs POST for creation]
 Use **POST** when the **server assigns the ID** (`POST /orders` → server creates `order:1001`).
 Use **PUT** when the **client assigns the ID** (`PUT /files/my-document.pdf` → client-named resource).
 :::
@@ -463,7 +463,7 @@ PATCH (correct approach):
   → Much less bandwidth for large objects
 ```
 
-:::tip When to use PUT despite having PATCH
+:::tip[When to use PUT despite having PATCH]
 Use PUT when you **intentionally want to clear unset fields** (e.g., a settings reset to defaults), or when the resource is small enough that sending the full object is trivial. PATCH requires careful merge logic on the server; PUT is simpler to implement correctly.
 :::
 
@@ -501,7 +501,7 @@ Status codes tell the client **what happened** on the server. Choosing the corre
 | `204 No Content`      | Success, no body | DELETE, POST actions that don't return data                  |
 | `206 Partial Content` | Range fulfilled  | File download with `Range` header (video streaming)          |
 
-:::tip 200 vs 204
+:::tip[200 vs 204]
 Use `204` when there is genuinely nothing meaningful to return (after a DELETE, after cancelling an order). Use `200` when you're returning the updated state of the resource. Never return `200` with an empty body when `204` is more correct — it confuses clients and breaks response parsing.
 :::
 
@@ -515,7 +515,7 @@ Use `204` when there is genuinely nothing meaningful to return (after a DELETE, 
 | `307 Temporary Redirect` | Redirect, keep method | Like 302 but preserves the HTTP method (POST stays POST) |
 | `308 Permanent Redirect` | Redirect, keep method | Like 301 but preserves the HTTP method                   |
 
-:::warning 301 vs 302 vs 307 vs 308
+:::warning[301 vs 302 vs 307 vs 308]
 301 and 302 historically allowed browsers to change POST to GET on redirect. 307 and 308 guarantee the method is preserved. For API redirects involving POST or PUT, always use **307** (temp) or **308** (perm).
 :::
 
@@ -567,7 +567,7 @@ Use `204` when there is genuinely nothing meaningful to return (after a DELETE, 
 | `503 Service Unavailable`   | Service overloaded/down | Maintenance mode, circuit breaker tripped       |
 | `504 Gateway Timeout`       | Upstream timed out      | Upstream didn't respond in time                 |
 
-:::tip 503 best practices
+:::tip[503 best practices]
 Always include `Retry-After` on 503 responses. This tells load balancers and clients when to retry, preventing a thundering herd of retries that worsens the outage.
 
 ```
@@ -980,7 +980,7 @@ public class HttpsRedirectConfig {
 
 ## CORS — Cross-Origin Resource Sharing
 
-:::note For Newcomers
+:::note[For Newcomers]
 Browsers have a **Same-Origin Policy**: JavaScript on `https://app.example.com` is blocked from making requests to `https://api.other.com`. This prevents malicious websites from silently reading your Gmail or bank data using your logged-in session. CORS is the mechanism servers use to **selectively lift this restriction**.
 :::
 
@@ -1015,7 +1015,7 @@ sequenceDiagram
     S-->>B: 201 Created
 ```
 
-:::warning CORS is browser-only
+:::warning[CORS is browser-only]
 CORS is enforced by browsers, not servers. Server-to-server API calls (curl, Postman, mobile apps, backend services) are **never subject to CORS**. If someone claims your API has a CORS bug but they found it with Postman — it's not a CORS bug.
 :::
 

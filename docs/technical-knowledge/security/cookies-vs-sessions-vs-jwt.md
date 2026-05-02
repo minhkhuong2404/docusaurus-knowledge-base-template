@@ -312,7 +312,7 @@ Any XSS vulnerability exposes all tokens stored in `localStorage`. There is no b
 
 **Mitigation:** Store JWTs in `HttpOnly` cookies. Now CSRF is the risk — combine with `SameSite=Strict` and a CSRF token if needed.
 
-:::tip The localStorage vs cookie debate
+:::tip[The localStorage vs cookie debate]
 There is no universally safe client-side storage for JWTs. `localStorage` = XSS risk. Cookie = CSRF risk. The practical answer: **HttpOnly cookie + SameSite=Strict** eliminates the most dangerous attack surface (XSS-based token theft is catastrophic and silent; CSRF is detectable and mitigable).
 :::
 
@@ -435,7 +435,7 @@ if (revokedTokens.mightContain(jti)) {
 }
 ```
 
-:::note Trade-off
+:::note[Trade-off]
 Adding a blacklist (Redis or Bloom filter) reintroduces state. Acknowledge this openly in interviews — a fully stateless JWT system cannot support immediate revocation. The design choice depends on the business requirement.
 :::
 

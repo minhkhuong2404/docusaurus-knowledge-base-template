@@ -27,7 +27,7 @@ A complete guide covering caching fundamentals for newcomers, a practical decisi
 
 ## Why Cache?
 
-:::note For Newcomers
+:::note[For Newcomers]
 Think of a cache like a notepad on your desk. Instead of walking to the filing room every time you need a customer's address, you write it on your notepad. The notepad is your **cache** — faster to access, but might go out of date if the actual record changes.
 :::
 
@@ -53,7 +53,7 @@ At a technical level:
 - **Handle traffic spikes** — absorb bursts without overloading the DB
 - **Cost savings** — fewer DB read replicas needed
 
-:::warning When NOT to cache
+:::warning[When NOT to cache]
 - Data that changes on almost every read (e.g., live stock ticker at tick resolution)
 - Results that are unique per user and never repeated
 - Data with strict regulatory requirements for freshness (some financial/medical contexts)
@@ -106,7 +106,7 @@ Product product = cache.get(productId, id -> productRepository.findById(id).orEl
 | Free (uses existing JVM heap)    | Inconsistent state across pods  |
 | Great for config, reference data | Limited by heap size            |
 
-:::tip When to use in-process cache
+:::tip[When to use in-process cache]
 Use it for **rarely-changing, read-heavy, reference data**: country lists, currency rates, feature flags, config values. Every pod has its own copy — that's fine because the data barely changes. Pair it with a short TTL (1–5 min) so stale data self-heals.
 :::
 
@@ -125,7 +125,7 @@ A separate service (Redis, Memcached) that all app instances share.
 
 ## Core Cache Patterns
 
-:::note For Newcomers
+:::note[For Newcomers]
 Each pattern answers two questions differently: **"When do I read from cache?"** and **"When do I write to cache?"**
 :::
 
@@ -262,7 +262,7 @@ public void updateProduct(Product product) {
 | ❌ Cache fills with write-only data | Low-read data wastes memory                      |
 | ❌ Harder failure handling          | What if DB write succeeds but cache write fails? |
 
-:::warning Write-Through Failure Caveat
+:::warning[Write-Through Failure Caveat]
 If you write to cache first and the DB write fails, your cache now holds data that was never persisted. Always write to DB first and treat cache write failure as non-fatal (log and move on), or use the inverse pattern (DB first, then cache update).
 :::
 
@@ -352,7 +352,7 @@ flowchart TD
 | API rate-limit counters  | Redis INCR (no pattern)         | Need atomic operations, not simple K/V           |
 | Paginated search results | Short TTL or no cache           | Invalidation too complex; query-optimize instead |
 
-:::tip The Senior Rule of Thumb
+:::tip[The Senior Rule of Thumb]
 **Start with Cache-Aside + TTL.** It's simple, resilient, and correct in almost all cases. Only move to write-through or write-behind when you have a measured, specific need — don't prematurely optimize. Measure your cache hit rate first; if it's > 90%, you're done.
 :::
 
@@ -362,7 +362,7 @@ flowchart TD
 
 When the cache is full and a new item needs to be stored, something must be evicted.
 
-:::note For Newcomers
+:::note[For Newcomers]
 Imagine your notepad is full. You need to erase something to write a new note. Which note do you erase? That decision is the **eviction policy**.
 :::
 
@@ -496,7 +496,7 @@ public class ProductCacheInvalidator {
 }
 ```
 
-:::warning Use `@TransactionalEventListener` with `AFTER_COMMIT`
+:::warning[Use `@TransactionalEventListener` with `AFTER_COMMIT`]
 This guarantees the cache is invalidated **only after the DB transaction successfully commits**. Without this, you may invalidate the cache before the transaction commits — and the next cache miss reads the old value from DB (transaction hasn't committed yet), re-caches the old value, and the update is invisible until TTL expires.
 :::
 
@@ -1019,7 +1019,7 @@ spring.cache.redis.time-to-live=300000   # 5 min in ms
 spring.cache.redis.cache-null-values=true # cache null results (prevents penetration)
 ```
 
-:::warning `@Cacheable` does NOT work within the same bean
+:::warning[`@Cacheable` does NOT work within the same bean]
 Spring's cache proxy is applied at the bean boundary. If `methodA()` in `ProductService` calls `methodB()` in the **same** bean, `@Cacheable` on `methodB` is not triggered. Inject the service via the Spring proxy (`@Autowired ProductService self`) to work around this.
 :::
 

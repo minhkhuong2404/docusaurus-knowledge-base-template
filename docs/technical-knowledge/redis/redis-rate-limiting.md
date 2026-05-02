@@ -28,7 +28,7 @@ A complete guide covering rate limiting fundamentals for newcomers, a practical 
 
 ## What Is Rate Limiting?
 
-:::note For Newcomers
+:::note[For Newcomers]
 Imagine a nightclub bouncer who only lets 100 people in per hour. It doesn't matter if 1,000 people show up — the bouncer enforces a ceiling. Rate limiting is your API's bouncer. It controls how many requests a client can make in a given time window, protecting your service from being overwhelmed.
 :::
 
@@ -68,7 +68,7 @@ Handler / business logic
 
 ## Core Algorithms
 
-:::note For Newcomers
+:::note[For Newcomers]
 Each algorithm is a different strategy for how to *count* requests. They differ in how accurately they track traffic over time, how much memory they use, and how well they handle sudden bursts.
 :::
 
@@ -483,7 +483,7 @@ flowchart TD
 | DDoS / IP blocking           | **Fixed Window**           | Fastest, lowest overhead           |
 | Per-user API quota (billing) | **Fixed Window**           | Predictable, easy to explain       |
 
-:::tip The Senior Rule of Thumb
+:::tip[The Senior Rule of Thumb]
 **Start with Token Bucket.** It handles bursts gracefully, has low memory overhead, and is easy to explain to clients. Move to Sliding Window Log only when you need exact legal/compliance enforcement. Use Fixed Window only for coarse, high-scale IP-level protection.
 :::
 
@@ -824,7 +824,7 @@ public boolean isAllowed(String identifier, int capacity, int refillPerSec) {
 }
 ```
 
-:::tip Choosing a Failure Policy
+:::tip[Choosing a Failure Policy]
 - **Public API / user-facing:** Fail open. Availability > strict limiting during outages.
 - **Auth endpoints (login, password reset):** Fail closed or local fallback. Security > availability.
 - **Financial / compliance:** Fail closed. Regulatory risk of over-serving outweighs downtime.
