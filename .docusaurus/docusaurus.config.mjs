@@ -61,6 +61,23 @@ export default {
       }
     ]
   ],
+  "markdown": {
+    "mermaid": true,
+    "format": "mdx",
+    "emoji": true,
+    "mdx1Compat": {
+      "comments": false,
+      "admonitions": false,
+      "headingIds": false
+    },
+    "anchors": {
+      "maintainCase": false
+    },
+    "hooks": {
+      "onBrokenMarkdownLinks": "warn",
+      "onBrokenMarkdownImages": "throw"
+    }
+  },
   "themes": [
     [
       "/Users/lukhuong/Desktop/docusaurus-knowledge-base-template/node_modules/@easyops-cn/docusaurus-search-local/dist/server/server/index.js",
@@ -79,7 +96,8 @@ export default {
         "searchBarShortcutHint": false,
         "hashed": true
       }
-    ]
+    ],
+    "@docusaurus/theme-mermaid"
   ],
   "themeConfig": {
     "metadata": [
@@ -432,7 +450,7 @@ export default {
             ],
             "style": {
               "color": "#ff7ac6",
-              "fontWeight": "600"
+              "fontWeight": "500"
             }
           },
           {
@@ -442,7 +460,7 @@ export default {
             ],
             "style": {
               "color": "#8ef7b2",
-              "fontWeight": "600"
+              "fontWeight": "500"
             }
           },
           {
@@ -607,6 +625,13 @@ export default {
     "tableOfContents": {
       "minHeadingLevel": 2,
       "maxHeadingLevel": 3
+    },
+    "mermaid": {
+      "theme": {
+        "dark": "dark",
+        "light": "default"
+      },
+      "options": {}
     }
   },
   "baseUrlIssueBanner": true,
@@ -634,22 +659,5 @@ export default {
   "stylesheets": [],
   "clientModules": [],
   "titleDelimiter": "|",
-  "noIndex": false,
-  "markdown": {
-    "format": "mdx",
-    "mermaid": false,
-    "emoji": true,
-    "mdx1Compat": {
-      "comments": false,
-      "admonitions": false,
-      "headingIds": false
-    },
-    "anchors": {
-      "maintainCase": false
-    },
-    "hooks": {
-      "onBrokenMarkdownLinks": "warn",
-      "onBrokenMarkdownImages": "throw"
-    }
-  }
+  "noIndex": false
 };
