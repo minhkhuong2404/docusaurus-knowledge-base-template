@@ -275,7 +275,7 @@ const sidebars: SidebarsConfig = {
 						'technical-knowledge/system-design/database-design',
 						'technical-knowledge/system-design/database-indexing-deep-dive',
 						'technical-knowledge/system-design/message-queues',
-						'technical-knowledge/system-design/message-queues-detailed',
+						'technical-knowledge/system-design/message-queues-comprehensive',
 						'technical-knowledge/system-design/search-systems',
 						'technical-knowledge/system-design/large-blobs',
 					],

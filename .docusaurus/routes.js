@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'e45'),
+    component: ComponentCreator('/', '54a'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '1c4'),
+        component: ComponentCreator('/', '931'),
         routes: [
           {
             path: '/tags',
@@ -4511,6 +4511,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/rabbit-mq',
+            component: ComponentCreator('/tags/rabbit-mq', 'a03'),
+            exact: true
+          },
+          {
             path: '/tags/rabbitmq',
             component: ComponentCreator('/tags/rabbitmq', '009'),
             exact: true
@@ -6227,7 +6232,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '58d'),
+            component: ComponentCreator('/', '9bf'),
             routes: [
               {
                 path: '/aws',
@@ -13574,8 +13579,8 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/system-design/message-queues-detailed',
-                component: ComponentCreator('/technical-knowledge/system-design/message-queues-detailed', '72e'),
+                path: '/technical-knowledge/system-design/message-queues-comprehensive',
+                component: ComponentCreator('/technical-knowledge/system-design/message-queues-comprehensive', 'c55'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

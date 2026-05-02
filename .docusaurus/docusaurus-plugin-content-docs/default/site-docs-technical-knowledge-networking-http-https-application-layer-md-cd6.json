@@ -1,7 +1,7 @@
 {
   "id": "technical-knowledge/networking/http-https-application-layer",
   "title": "HTTP, HTTPS & Application Layer",
-  "description": "HTTP/1.1, HTTP/2, HTTP/3 evolution, request/response structure, headers, caching, TLS handshake, and HTTPS best practices.",
+  "description": "A complete guide to HTTP — from beginner fundamentals to senior-level protocol internals. Covers methods, status codes, headers, caching, TLS, CORS, and HTTP/1.1 vs HTTP/2 vs HTTP/3 evolution.",
   "source": "@site/docs/technical-knowledge/networking/http-https-application-layer.md",
   "sourceDirName": "technical-knowledge/networking",
   "slug": "/technical-knowledge/networking/http-https-application-layer",
@@ -58,6 +58,11 @@
       "inline": true,
       "label": "quic",
       "permalink": "/tags/quic"
+    },
+    {
+      "inline": true,
+      "label": "rest",
+      "permalink": "/tags/rest"
     }
   ],
   "version": "current",
@@ -67,7 +72,7 @@
   "frontMatter": {
     "id": "http-https-application-layer",
     "title": "HTTP, HTTPS & Application Layer",
-    "description": "HTTP/1.1, HTTP/2, HTTP/3 evolution, request/response structure, headers, caching, TLS handshake, and HTTPS best practices.",
+    "description": "A complete guide to HTTP — from beginner fundamentals to senior-level protocol internals. Covers methods, status codes, headers, caching, TLS, CORS, and HTTP/1.1 vs HTTP/2 vs HTTP/3 evolution.",
     "tags": [
       "networking",
       "http",
@@ -78,7 +83,8 @@
       "ssl",
       "headers",
       "caching",
-      "quic"
+      "quic",
+      "rest"
     ],
     "sidebar_position": 5
   },

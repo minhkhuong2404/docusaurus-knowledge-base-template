@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-e45": {
+  "/-54a": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-1c4": {
+  "/-931": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -3617,6 +3617,10 @@
     "__comp": "df203c0f",
     "__props": "60cedcc5"
   },
+  "/tags/rabbit-mq-a03": {
+    "__comp": "df203c0f",
+    "__props": "3f47f66b"
+  },
   "/tags/rabbitmq-009": {
     "__comp": "df203c0f",
     "__props": "5a0b44b9"
@@ -4989,7 +4993,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-58d": {
+  "/-9bf": {
     "__comp": "a94703ab"
   },
   "/aws-7a1": {
@@ -9896,7 +9900,7 @@
     "__comp": "17896441",
     "content": "3940c236"
   },
-  "/technical-knowledge/system-design/message-queues-detailed-72e": {
+  "/technical-knowledge/system-design/message-queues-comprehensive-c55": {
     "__comp": "17896441",
     "content": "2fd6c3bc"
   },
