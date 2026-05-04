@@ -583,6 +583,7 @@ const sidebars: SidebarsConfig = {
 						'technical-knowledge/kafka/core/kafka-overview',
 						'technical-knowledge/kafka/core/topic',
 						'technical-knowledge/kafka/core/partition',
+						'technical-knowledge/kafka/core/scaling-partitions',
 						'technical-knowledge/kafka/core/broker',
 						'technical-knowledge/kafka/core/replication',
 						'technical-knowledge/kafka/core/kraft-vs-zookeeper'
@@ -594,6 +595,7 @@ const sidebars: SidebarsConfig = {
 					collapsed: true,
 					items: [
 						'technical-knowledge/kafka/producer/producer-overview',
+						'technical-knowledge/kafka/producer/hash-key-partitions',
 						'technical-knowledge/kafka/producer/producer-acks',
 						'technical-knowledge/kafka/producer/producer-idempotency',
 						'technical-knowledge/kafka/producer/producer-transactions'
@@ -606,6 +608,7 @@ const sidebars: SidebarsConfig = {
 					items: [
 						'technical-knowledge/kafka/consumer/consumer-overview',
 						'technical-knowledge/kafka/consumer/consumer-group',
+						'technical-knowledge/kafka/consumer/consumer-lag',
 						'technical-knowledge/kafka/consumer/parallel-consumer',
 						'technical-knowledge/kafka/consumer/parallel-consumer-deep-dive'
 					]
@@ -628,6 +631,7 @@ const sidebars: SidebarsConfig = {
 					items: [
 						'technical-knowledge/kafka/advanced/exactly-once',
 						'technical-knowledge/kafka/advanced/order-messages',
+						'technical-knowledge/kafka/advanced/processing-and-ordering',
 						'technical-knowledge/kafka/advanced/monitoring-operations',
 						'technical-knowledge/kafka/advanced/kafka-throughput-optimization',
 						'technical-knowledge/kafka/advanced/rebalance-storms',

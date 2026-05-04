@@ -5498,6 +5498,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/kafka/advanced/processing-and-ordering",
+              "path": "/technical-knowledge/kafka/advanced/processing-and-ordering",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/kafka/advanced/rebalance-storms",
               "path": "/technical-knowledge/kafka/advanced/rebalance-storms",
               "sidebar": "tutorialSidebar"
@@ -5510,6 +5515,11 @@
             {
               "id": "technical-knowledge/kafka/consumer/consumer-group",
               "path": "/technical-knowledge/kafka/consumer/consumer-group",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/consumer/consumer-lag",
+              "path": "/technical-knowledge/kafka/consumer/consumer-lag",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -5553,6 +5563,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/kafka/core/scaling-partitions",
+              "path": "/technical-knowledge/kafka/core/scaling-partitions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/kafka/core/topic",
               "path": "/technical-knowledge/kafka/core/topic",
               "sidebar": "tutorialSidebar"
@@ -5575,6 +5590,11 @@
             {
               "id": "technical-knowledge/kafka/intro",
               "path": "/technical-knowledge/kafka/intro",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/producer/hash-key-partitions",
+              "path": "/technical-knowledge/kafka/producer/hash-key-partitions",
               "sidebar": "tutorialSidebar"
             },
             {

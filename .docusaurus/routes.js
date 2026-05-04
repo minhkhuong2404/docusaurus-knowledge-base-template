@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '83a'),
+    component: ComponentCreator('/', 'fbd'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '35c'),
+        component: ComponentCreator('/', '1da'),
         routes: [
           {
             path: '/tags',
@@ -6232,7 +6232,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '1cc'),
+            component: ComponentCreator('/', 'ef5'),
             routes: [
               {
                 path: '/aws',
@@ -6859,7 +6859,7 @@ export default [
               },
               {
                 path: '/intro',
-                component: ComponentCreator('/intro', '08e'),
+                component: ComponentCreator('/intro', 'ce0'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -7784,7 +7784,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/caching-strategies',
-                component: ComponentCreator('/technical-knowledge/database/caching-strategies', '3f4'),
+                component: ComponentCreator('/technical-knowledge/database/caching-strategies', '2e2'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -12844,6 +12844,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/kafka/advanced/processing-and-ordering',
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/processing-and-ordering', '77e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/kafka/advanced/rebalance-storms',
                 component: ComponentCreator('/technical-knowledge/kafka/advanced/rebalance-storms', '63d'),
                 exact: true,
@@ -12858,6 +12864,12 @@ export default [
               {
                 path: '/technical-knowledge/kafka/consumer/consumer-group',
                 component: ComponentCreator('/technical-knowledge/kafka/consumer/consumer-group', '89f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/kafka/consumer/consumer-lag',
+                component: ComponentCreator('/technical-knowledge/kafka/consumer/consumer-lag', '4a9'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -12910,6 +12922,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/kafka/core/scaling-partitions',
+                component: ComponentCreator('/technical-knowledge/kafka/core/scaling-partitions', 'b3e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/kafka/core/topic',
                 component: ComponentCreator('/technical-knowledge/kafka/core/topic', '009'),
                 exact: true,
@@ -12936,6 +12954,12 @@ export default [
               {
                 path: '/technical-knowledge/kafka/intro',
                 component: ComponentCreator('/technical-knowledge/kafka/intro', 'c21'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/kafka/producer/hash-key-partitions',
+                component: ComponentCreator('/technical-knowledge/kafka/producer/hash-key-partitions', '124'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -12977,19 +13001,19 @@ export default [
               },
               {
                 path: '/technical-knowledge/low-level-design/concurrency/scarcity',
-                component: ComponentCreator('/technical-knowledge/low-level-design/concurrency/scarcity', '473'),
+                component: ComponentCreator('/technical-knowledge/low-level-design/concurrency/scarcity', 'd7d'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/low-level-design/design-patterns/behavioral',
-                component: ComponentCreator('/technical-knowledge/low-level-design/design-patterns/behavioral', '4f7'),
+                component: ComponentCreator('/technical-knowledge/low-level-design/design-patterns/behavioral', 'fc5'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/low-level-design/design-patterns/creational',
-                component: ComponentCreator('/technical-knowledge/low-level-design/design-patterns/creational', '957'),
+                component: ComponentCreator('/technical-knowledge/low-level-design/design-patterns/creational', '6a9'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13001,19 +13025,19 @@ export default [
               },
               {
                 path: '/technical-knowledge/low-level-design/design-patterns/structural',
-                component: ComponentCreator('/technical-knowledge/low-level-design/design-patterns/structural', '0ad'),
+                component: ComponentCreator('/technical-knowledge/low-level-design/design-patterns/structural', 'e0d'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/low-level-design/oop/concepts',
-                component: ComponentCreator('/technical-knowledge/low-level-design/oop/concepts', '6fa'),
+                component: ComponentCreator('/technical-knowledge/low-level-design/oop/concepts', 'efe'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/low-level-design/oop/principles',
-                component: ComponentCreator('/technical-knowledge/low-level-design/oop/principles', '04a'),
+                component: ComponentCreator('/technical-knowledge/low-level-design/oop/principles', '55e'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13025,13 +13049,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/low-level-design/problem/connect-four',
-                component: ComponentCreator('/technical-knowledge/low-level-design/problem/connect-four', '5ee'),
+                component: ComponentCreator('/technical-knowledge/low-level-design/problem/connect-four', 'ac5'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/low-level-design/problem/elevator',
-                component: ComponentCreator('/technical-knowledge/low-level-design/problem/elevator', 'edd'),
+                component: ComponentCreator('/technical-knowledge/low-level-design/problem/elevator', '77c'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13043,25 +13067,25 @@ export default [
               },
               {
                 path: '/technical-knowledge/low-level-design/problem/inventory-management',
-                component: ComponentCreator('/technical-knowledge/low-level-design/problem/inventory-management', 'e7e'),
+                component: ComponentCreator('/technical-knowledge/low-level-design/problem/inventory-management', '41f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/low-level-design/problem/movie-ticket',
-                component: ComponentCreator('/technical-knowledge/low-level-design/problem/movie-ticket', '23d'),
+                component: ComponentCreator('/technical-knowledge/low-level-design/problem/movie-ticket', '436'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/low-level-design/problem/parking-lot',
-                component: ComponentCreator('/technical-knowledge/low-level-design/problem/parking-lot', 'e50'),
+                component: ComponentCreator('/technical-knowledge/low-level-design/problem/parking-lot', '4eb'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/low-level-design/problem/rate-limiter',
-                component: ComponentCreator('/technical-knowledge/low-level-design/problem/rate-limiter', 'f5d'),
+                component: ComponentCreator('/technical-knowledge/low-level-design/problem/rate-limiter', '1d5'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13349,7 +13373,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/security/cookies-vs-sessions-vs-jwt',
-                component: ComponentCreator('/technical-knowledge/security/cookies-vs-sessions-vs-jwt', 'c21'),
+                component: ComponentCreator('/technical-knowledge/security/cookies-vs-sessions-vs-jwt', '78c'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

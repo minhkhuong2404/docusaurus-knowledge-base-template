@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-83a": {
+  "/-fbd": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-35c": {
+  "/-1da": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -4993,7 +4993,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-1cc": {
+  "/-ef5": {
     "__comp": "a94703ab"
   },
   "/aws-7a1": {
@@ -5412,7 +5412,7 @@
     "__comp": "17896441",
     "content": "0e384e19"
   },
-  "/intro-08e": {
+  "/intro-ce0": {
     "__comp": "17896441",
     "content": "0dbb9876"
   },
@@ -6032,7 +6032,7 @@
     "__comp": "17896441",
     "content": "1d655bfd"
   },
-  "/technical-knowledge/database/caching-strategies-3f4": {
+  "/technical-knowledge/database/caching-strategies-2e2": {
     "__comp": "17896441",
     "content": "7aa6b45d"
   },
@@ -9408,6 +9408,10 @@
     "__comp": "17896441",
     "content": "4dca4d8c"
   },
+  "/technical-knowledge/kafka/advanced/processing-and-ordering-77e": {
+    "__comp": "17896441",
+    "content": "aa5a7f28"
+  },
   "/technical-knowledge/kafka/advanced/rebalance-storms-63d": {
     "__comp": "17896441",
     "content": "4276a506"
@@ -9419,6 +9423,10 @@
   "/technical-knowledge/kafka/consumer/consumer-group-89f": {
     "__comp": "17896441",
     "content": "f42e39f5"
+  },
+  "/technical-knowledge/kafka/consumer/consumer-lag-4a9": {
+    "__comp": "17896441",
+    "content": "26ead6e0"
   },
   "/technical-knowledge/kafka/consumer/consumer-overview-7a5": {
     "__comp": "17896441",
@@ -9452,6 +9460,10 @@
     "__comp": "17896441",
     "content": "55a950f5"
   },
+  "/technical-knowledge/kafka/core/scaling-partitions-b3e": {
+    "__comp": "17896441",
+    "content": "19752490"
+  },
   "/technical-knowledge/kafka/core/topic-009": {
     "__comp": "17896441",
     "content": "da3cc1f6"
@@ -9471,6 +9483,10 @@
   "/technical-knowledge/kafka/intro-c21": {
     "__comp": "17896441",
     "content": "4c007013"
+  },
+  "/technical-knowledge/kafka/producer/hash-key-partitions-124": {
+    "__comp": "17896441",
+    "content": "d306a363"
   },
   "/technical-knowledge/kafka/producer/producer-acks-40f": {
     "__comp": "17896441",
@@ -9496,15 +9512,15 @@
     "__comp": "17896441",
     "content": "d7c44f8b"
   },
-  "/technical-knowledge/low-level-design/concurrency/scarcity-473": {
+  "/technical-knowledge/low-level-design/concurrency/scarcity-d7d": {
     "__comp": "17896441",
     "content": "be7a7a2e"
   },
-  "/technical-knowledge/low-level-design/design-patterns/behavioral-4f7": {
+  "/technical-knowledge/low-level-design/design-patterns/behavioral-fc5": {
     "__comp": "17896441",
     "content": "9a3d3002"
   },
-  "/technical-knowledge/low-level-design/design-patterns/creational-957": {
+  "/technical-knowledge/low-level-design/design-patterns/creational-6a9": {
     "__comp": "17896441",
     "content": "9b39a5d1"
   },
@@ -9512,15 +9528,15 @@
     "__comp": "17896441",
     "content": "f2d53ec6"
   },
-  "/technical-knowledge/low-level-design/design-patterns/structural-0ad": {
+  "/technical-knowledge/low-level-design/design-patterns/structural-e0d": {
     "__comp": "17896441",
     "content": "947736aa"
   },
-  "/technical-knowledge/low-level-design/oop/concepts-6fa": {
+  "/technical-knowledge/low-level-design/oop/concepts-efe": {
     "__comp": "17896441",
     "content": "2ee1fdd1"
   },
-  "/technical-knowledge/low-level-design/oop/principles-04a": {
+  "/technical-knowledge/low-level-design/oop/principles-55e": {
     "__comp": "17896441",
     "content": "b60a330c"
   },
@@ -9528,11 +9544,11 @@
     "__comp": "17896441",
     "content": "d2c43e1c"
   },
-  "/technical-knowledge/low-level-design/problem/connect-four-5ee": {
+  "/technical-knowledge/low-level-design/problem/connect-four-ac5": {
     "__comp": "17896441",
     "content": "8d99fd94"
   },
-  "/technical-knowledge/low-level-design/problem/elevator-edd": {
+  "/technical-knowledge/low-level-design/problem/elevator-77c": {
     "__comp": "17896441",
     "content": "8f812b13"
   },
@@ -9540,19 +9556,19 @@
     "__comp": "17896441",
     "content": "6db63764"
   },
-  "/technical-knowledge/low-level-design/problem/inventory-management-e7e": {
+  "/technical-knowledge/low-level-design/problem/inventory-management-41f": {
     "__comp": "17896441",
     "content": "faffd1fc"
   },
-  "/technical-knowledge/low-level-design/problem/movie-ticket-23d": {
+  "/technical-knowledge/low-level-design/problem/movie-ticket-436": {
     "__comp": "17896441",
     "content": "39c04d03"
   },
-  "/technical-knowledge/low-level-design/problem/parking-lot-e50": {
+  "/technical-knowledge/low-level-design/problem/parking-lot-4eb": {
     "__comp": "17896441",
     "content": "70636b35"
   },
-  "/technical-knowledge/low-level-design/problem/rate-limiter-f5d": {
+  "/technical-knowledge/low-level-design/problem/rate-limiter-1d5": {
     "__comp": "17896441",
     "content": "5e46a3e1"
   },
@@ -9744,7 +9760,7 @@
     "__comp": "17896441",
     "content": "aebb600c"
   },
-  "/technical-knowledge/security/cookies-vs-sessions-vs-jwt-c21": {
+  "/technical-knowledge/security/cookies-vs-sessions-vs-jwt-78c": {
     "__comp": "17896441",
     "content": "991c719a"
   },
