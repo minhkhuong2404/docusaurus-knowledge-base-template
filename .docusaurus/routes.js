@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'fbd'),
+    component: ComponentCreator('/', '88b'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '1da'),
+        component: ComponentCreator('/', '7be'),
         routes: [
           {
             path: '/tags',
@@ -1326,6 +1326,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/consumer-lag',
+            component: ComponentCreator('/tags/consumer-lag', '54b'),
+            exact: true
+          },
+          {
             path: '/tags/consumer-overview',
             component: ComponentCreator('/tags/consumer-overview', 'a10'),
             exact: true
@@ -2488,6 +2493,11 @@ export default [
           {
             path: '/tags/handshake',
             component: ComponentCreator('/tags/handshake', 'b4f'),
+            exact: true
+          },
+          {
+            path: '/tags/hash-key-partitions',
+            component: ComponentCreator('/tags/hash-key-partitions', 'f55'),
             exact: true
           },
           {
@@ -4366,6 +4376,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/processing-and-ordering',
+            component: ComponentCreator('/tags/processing-and-ordering', '7e3'),
+            exact: true
+          },
+          {
             path: '/tags/producer',
             component: ComponentCreator('/tags/producer', 'd5a'),
             exact: true
@@ -4888,6 +4903,11 @@ export default [
           {
             path: '/tags/scaling',
             component: ComponentCreator('/tags/scaling', '37a'),
+            exact: true
+          },
+          {
+            path: '/tags/scaling-partitions',
+            component: ComponentCreator('/tags/scaling-partitions', '35a'),
             exact: true
           },
           {
@@ -6232,7 +6252,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'ef5'),
+            component: ComponentCreator('/', '26d'),
             routes: [
               {
                 path: '/aws',
@@ -12845,7 +12865,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/advanced/processing-and-ordering',
-                component: ComponentCreator('/technical-knowledge/kafka/advanced/processing-and-ordering', '77e'),
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/processing-and-ordering', '5ec'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -12869,7 +12889,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/consumer/consumer-lag',
-                component: ComponentCreator('/technical-knowledge/kafka/consumer/consumer-lag', '4a9'),
+                component: ComponentCreator('/technical-knowledge/kafka/consumer/consumer-lag', '6a7'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -12923,7 +12943,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/core/scaling-partitions',
-                component: ComponentCreator('/technical-knowledge/kafka/core/scaling-partitions', 'b3e'),
+                component: ComponentCreator('/technical-knowledge/kafka/core/scaling-partitions', 'f16'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -12959,7 +12979,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/producer/hash-key-partitions',
-                component: ComponentCreator('/technical-knowledge/kafka/producer/hash-key-partitions', '124'),
+                component: ComponentCreator('/technical-knowledge/kafka/producer/hash-key-partitions', '7e7'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

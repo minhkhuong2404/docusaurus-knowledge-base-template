@@ -2,69 +2,245 @@
 id: hash-key-partitions
 title: Hash Key Partitions
 sidebar_label: Hash Key Partitions
+description: Kafka uses a hash of the message key to determine partition assignment. Understanding this mechanism is essential for ordering guarantees, avoiding hot partitions, and designing correct partition keys.
+tags:
+- technical-knowledge
+- kafka
+- producer
+- hash-key-partitions
 ---
-
 # Hash Key Partitions in Kafka
 
-When producing a message to Kafka, you can provide an optional **Key** (a string, number, or any byte array). This key dictates exactly how Kafka routes the message to a specific partition. Understanding key-based partitioning is fundamental for distributed data modeling and guaranteeing message order.
+## What Is a Partition Key?
+
+When producing a message, you can provide an optional **Key**. Kafka uses this key to deterministically route the message to a specific partition. This is the foundation of Kafka's per-entity ordering guarantee.
+
+```
+Producer sends 6 messages with keys:
+
+  Key="A"  Key="B"  Key="A"  Key="C"  Key="B"  Key="A"
+    │        │        │        │        │        │
+    ▼        ▼        ▼        ▼        ▼        ▼
+ ┌──────────────────────────────────────────────────────┐
+ │              DefaultPartitioner                       │
+ │   hash(key) % numPartitions → target partition        │
+ └──────────────────────────────────────────────────────┘
+    │        │        │        │        │        │
+    ▼        ▼        ▼        ▼        ▼        ▼
+  ┌─P0─┐  ┌─P1─┐  ┌─P0─┐  ┌─P2─┐  ┌─P1─┐  ┌─P0─┐
+
+Result: All "A" messages → P0 (ordered)
+        All "B" messages → P1 (ordered)
+        All "C" messages → P2 (ordered)
+```
 
 ---
 
 ## 👶 For Beginners: The "Mail Sorter" Analogy
 
-Imagine a post office with 10 different mail delivery trucks (Partitions) going to 10 different neighborhoods.
+Imagine a post office with 10 delivery trucks (Partitions), each serving a different neighborhood:
 
-- **No Key (Round Robin)**: You drop a stack of unaddressed flyers into the mail bin. The postmaster just hands one flyer to Truck 1, the next to Truck 2, the next to Truck 3, to distribute them evenly. 
-- **With a Key (Hash Partitioning)**: You drop off letters with specific ZIP Codes (the Key). The postmaster looks at the ZIP Code and says, "All mail for 90210 *always* goes into Truck 4. All mail for 10001 *always* goes into Truck 7." 
+| Scenario | What Happens |
+|----------|-------------|
+| **No Key** (null) | You drop off unaddressed flyers. The postmaster distributes them evenly — Truck 1, Truck 2, Truck 3... No guarantee which truck gets which flyer. |
+| **With Key** (ZIP Code) | You drop off letters with ZIP Codes. The postmaster has a rule: *"All mail for 90210 → Truck 4. All mail for 10001 → Truck 7."* Every letter for the same ZIP always goes to the same truck, in order. |
 
-By using a ZIP Code, you guarantee that all mail for a specific neighborhood is delivered together, in the order it was handed to the postmaster.
+:::tip Key Takeaway
+A message key is like a ZIP Code — it guarantees that all related messages end up in the same "truck" (partition), processed in the order they were sent.
+:::
 
 ---
 
 ## 🧠 Deep Dive: The Default Partitioner Mechanics
 
-If a key is provided, the Kafka producer uses the `DefaultPartitioner` to determine the destination partition before sending the payload over the network.
+### Step 1 — Serialize the Key
 
-### 1. The Hashing Algorithm
-The producer serializes the Key into a byte array. It then applies a hashing algorithm (historically **MurmurHash2**) to generate a 32-bit integer hash.
+The producer serializes the Key into a byte array using the configured `key.serializer`:
 
 ```java
-// Simplified pseudo-code of Kafka's DefaultPartitioner
-byte[] keyBytes = keySerializer.serialize(topic, key);
+byte[] keyBytes = keySerializer.serialize(topic, headers, key);
+// e.g., "user_123" → [117, 115, 101, 114, 95, 49, 50, 51]
+```
+
+### Step 2 — Hash with MurmurHash2
+
+Kafka applies **MurmurHash2** — a fast, non-cryptographic hash function — to the key bytes:
+
+```java
 int hash = Utils.murmur2(keyBytes);
+// "user_123" → 827364 (example)
 ```
 
-### 2. The Modulo Operation
-To map this random integer to an actual partition number, Kafka applies a modulo operation based on the *current* number of partitions available in the topic.
+:::note Why MurmurHash2?
+MurmurHash2 was chosen for its excellent **distribution uniformity** (keys spread evenly across buckets) and **speed** (no CPU-intensive cryptographic operations). It's the same hash function used in many distributed systems.
+:::
+
+### Step 3 — Modulo to Partition Number
+
+The hash is mapped to a partition index:
 
 ```java
-// Ensure positive number, then modulo
-int partition = Math.abs(hash) % numPartitions;
+// toPositive() clears the sign bit without using Math.abs()
+// (Math.abs(Integer.MIN_VALUE) returns a negative number!)
+int partition = Utils.toPositive(Utils.murmur2(keyBytes)) % numPartitions;
 ```
 
-### 3. Guaranteeing Strict Ordering
-Because mathematical functions are deterministic, the same Key will always yield the same Hash. As long as `numPartitions` remains constant, `Hash % numPartitions` will always map to the exact same partition. 
+```
+Example with 6 partitions:
+  "user_123" → hash=827364  → 827364 % 6 = 0  → Partition 0
+  "user_456" → hash=519283  → 519283 % 6 = 1  → Partition 1
+  "user_789" → hash=412057  → 412057 % 6 = 5  → Partition 5
+  "user_123" → hash=827364  → 827364 % 6 = 0  → Partition 0  ← SAME!
+```
 
-Since Kafka guarantees strict FIFO (First-In-First-Out) ordering *within a single partition*, all messages sharing a key are guaranteed to be processed by consumers in the exact order they were produced.
+Because hash functions are **deterministic**, the same key will *always* produce the same hash, and therefore *always* map to the same partition — as long as the partition count doesn't change.
 
 ---
 
-## ⚠️ The Danger: "Hot" Partitions
+## What Happens with Null Keys?
 
-While hash partitioning is powerful, it can lead to **Data Skew**.
+The behavior depends on your Kafka version:
 
-If you choose a poor partition key—for example, a `customer_tier` where 90% of your users are "Free" and 10% are "Premium"—then 90% of your messages will hash to a single partition. 
+| Kafka Version | Null Key Strategy | Description |
+|---|---|---|
+| < 2.4 | **Round-Robin** | Messages rotate across partitions: P0, P1, P2, P0... |
+| ≥ 2.4 | **Sticky Partitioner** | Fills one partition's batch completely, then switches to the next |
+
+### Why Sticky Partitioner Is Better
+
+```
+Round-Robin (old):
+  Batch 1 → P0 (1 msg)  P1 (1 msg)  P2 (1 msg)   ← 3 tiny network requests
+
+Sticky (new):
+  Batch 1 → P0 (3 msgs)                            ← 1 large network request
+  Batch 2 → P1 (3 msgs)                            ← 1 large network request
+```
+
+Sticky partitioning allows the producer to fill batches more efficiently, reducing network overhead and improving compression ratios. **No ordering guarantees** either way for null keys.
+
+---
+
+## ⚠️ The Danger: Hot Partitions (Data Skew)
+
+Hash partitioning assumes the keys are **uniformly distributed**. If they aren't, you get data skew:
+
+```
+Key = "customer_tier"   (BAD — only 3 unique values)
+
+  "free"    → hash → Partition 2  ← 90% of all traffic!
+  "premium" → hash → Partition 0  ← 8%
+  "enterprise" → hash → Partition 4  ← 2%
+
+Result:
+  P0: ░░░░
+  P1:
+  P2: ████████████████████████████████████  ← HOT PARTITION
+  P3:
+  P4: ░░
+```
 
 **Consequences:**
-- The broker hosting the "Free" partition will experience high CPU and disk I/O, creating a bottleneck.
-- The single consumer assigned to that partition will be overwhelmed, leading to high Consumer Lag.
-- The other partitions (and consumers) will sit mostly idle.
+- The broker hosting P2 becomes a CPU/disk bottleneck
+- The consumer assigned to P2 has massive lag while other consumers idle
+- Throughput is limited by the speed of the single slowest partition
+
+### Solutions for Hot Partitions
+
+#### 1. Use High-Cardinality Keys
+
+```java
+// BAD — low cardinality, creates hot partitions
+kafkaTemplate.send("events", event.getCountry(), event);       // ~200 unique values
+
+// GOOD — high cardinality, uniform distribution
+kafkaTemplate.send("events", event.getUserId(), event);        // millions of unique values
+```
+
+#### 2. Key Salting (scatter-gather)
+
+```java
+// Scatter: split hot key into N sub-keys
+String saltedKey = orderId + "-" + ThreadLocalRandom.current().nextInt(4);
+kafkaTemplate.send("order-events", saltedKey, event);
+
+// Gather: consumer must aggregate across all 4 sub-partitions
+// ⚠️ This BREAKS per-key ordering — only use for aggregate/stateless workloads
+```
+
+#### 3. Dedicated Topic for Hot Keys
+
+```java
+public void publish(String orderId, OrderEvent event) {
+    if (hotKeyDetector.isHot(orderId)) {
+        kafkaTemplate.send("order-events-hot", orderId, event);
+    } else {
+        kafkaTemplate.send("order-events", orderId, event);
+    }
+}
+```
+
+#### 4. Custom Partitioner
+
+```java
+public class VipAwarePartitioner implements Partitioner {
+
+    private static final Set<String> VIP_KEYS = Set.of("MEGA_CORP", "BIG_BANK");
+
+    @Override
+    public int partition(String topic, Object key, byte[] keyBytes,
+                         Object value, byte[] valueBytes, Cluster cluster) {
+        int numPartitions = cluster.partitionCountForTopic(topic);
+        String keyStr = (String) key;
+
+        if (VIP_KEYS.contains(keyStr)) {
+            // VIP keys get dedicated partitions (first 2)
+            return Math.abs(keyStr.hashCode()) % 2;
+        }
+        // All other keys share remaining partitions
+        return 2 + (Utils.toPositive(Utils.murmur2(keyBytes)) % (numPartitions - 2));
+    }
+}
+```
+
+```properties
+# Apply custom partitioner
+partitioner.class=com.example.VipAwarePartitioner
+```
 
 ---
 
 ## ✅ Best Practices
 
-1. **Choose High-Cardinality Keys**: Select a key that has millions of unique possible values (e.g., `user_id`, `device_id`, `order_id`) rather than low-cardinality keys (e.g., `country_code`, `status`). This ensures an even, uniform distribution of messages across all partitions.
-2. **Beware of Null Keys**: In older Kafka versions, `null` keys used a pure Round-Robin strategy. In modern Kafka (>= 2.4), `null` keys use **Sticky Partitioning**. The producer sticks to a single partition for a batch of messages to optimize batching and compression, then switches to a new partition. It is highly efficient for throughput but offers zero ordering guarantees.
-3. **Custom Partitioners**: If the default MurmurHash doesn't fit your needs, you can implement Kafka's `Partitioner` interface. This is useful for complex routing, like sending VIP customers to dedicated high-performance partitions while hashing regular users across the rest.
-4. **Never Scale Partitions for Keyed Topics**: As mentioned in the Partition Scaling documentation, altering the partition count breaks the modulo math, permanently destroying ordering guarantees for historical keys.
+| Practice | Why |
+|---|---|
+| Use **entity IDs** as keys (`userId`, `orderId`) | High cardinality → even distribution |
+| Avoid **status/enum** keys (`PENDING`, `ACTIVE`) | Low cardinality → hot partitions |
+| Use **composite keys** for multi-tenant apps | `tenantId + ":" + entityId` → ordering per entity per tenant |
+| **Never change partition count** for keyed topics | Breaks `hash % N` mapping → destroys ordering |
+| Use `Utils.toPositive()` not `Math.abs()` | `Math.abs(Integer.MIN_VALUE)` is negative! Kafka's source uses bit masking |
+| Monitor partition-level throughput | Detect skew early with `kafka.server:type=BrokerTopicMetrics,name=BytesInPerSec` per partition |
+
+---
+
+## Interview Questions — Hash Key Partitions
+
+**Q: How does Kafka decide which partition a keyed message goes to?**
+
+> The producer serializes the key to bytes, hashes it with MurmurHash2, then takes the result modulo the number of partitions: `toPositive(murmur2(keyBytes)) % numPartitions`. This is deterministic — the same key always maps to the same partition as long as partition count is constant.
+
+**Q: What is the Sticky Partitioner and why was it introduced?**
+
+> Before Kafka 2.4, null-key messages used pure round-robin, producing many tiny batches (one per partition per batch interval). The Sticky Partitioner instead fills one partition's batch completely before switching. This improves batching, compression, and throughput — up to 50% latency reduction in benchmarks.
+
+**Q: What is a hot partition and how do you detect it?**
+
+> A hot partition receives disproportionately more traffic than others, caused by a low-cardinality or skewed key. Detect it by monitoring per-partition metrics (`BytesInPerSec`, `MessagesInPerSec`) or by observing uneven consumer lag. Solutions: choose high-cardinality keys, salt hot keys, use a custom partitioner, or route hot keys to a dedicated topic.
+
+**Q: What happens to key→partition mapping when you add partitions?**
+
+> The modulo math changes. `hash % 5` and `hash % 10` yield different results for many keys. New messages for an affected key will go to a different partition than where historical messages reside, permanently breaking per-key ordering. The safe alternative is topic migration.
+
+**Q: Why does Kafka use MurmurHash2 instead of Java's `hashCode()`?**
+
+> MurmurHash2 provides better distribution uniformity and is consistent across languages (the same bytes produce the same hash in Java, Python, Go, etc.). Java's `String.hashCode()` has known clustering patterns and its implementation is not guaranteed across JVM versions.
