@@ -10,7 +10,7 @@ tags: [testing, unit-test, integration-test, tdd, mocking, mockito, test-pyramid
 
 :::info Who this guide is for
 - **New learners** — start at [Why Do We Test?](#why-do-we-test) and read top-to-bottom. Every concept is explained from scratch before code appears.
-- **Senior engineers** — jump to [Advanced Patterns](#-advanced-testing-patterns), [Anti-Patterns](#️-testing-anti-patterns), or [Interview Questions](#interview-questions).
+- **Senior engineers** — jump to [Advanced Patterns](#advanced-testing-patterns), [Anti-Patterns](#-testing-anti-patterns), or [Interview Questions](#interview-questions).
 :::
 
 ---
