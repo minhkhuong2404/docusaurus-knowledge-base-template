@@ -1,7 +1,7 @@
 {
   "id": "technical-knowledge/database/nosql-distributed",
   "title": "NoSQL & Distributed Databases",
-  "description": "Key-value, document, wide-column, and graph databases — their models, trade-offs, and when to choose each.",
+  "description": "From first principles to production — key-value, document, wide-column, and graph databases with deep dives into MongoDB and Cassandra for Java/Spring engineers.",
   "source": "@site/docs/technical-knowledge/database/nosql-distributed.md",
   "sourceDirName": "technical-knowledge/database",
   "slug": "/technical-knowledge/database/nosql-distributed",
@@ -53,16 +53,21 @@
       "inline": true,
       "label": "eventual-consistency",
       "permalink": "/tags/eventual-consistency"
+    },
+    {
+      "inline": true,
+      "label": "spring-data",
+      "permalink": "/tags/spring-data"
     }
   ],
   "version": "current",
   "lastUpdatedBy": "Lữ Minh Khương",
-  "lastUpdatedAt": 1773416819000,
+  "lastUpdatedAt": 1779113721000,
   "sidebarPosition": 7,
   "frontMatter": {
     "id": "nosql-distributed",
     "title": "NoSQL & Distributed Databases",
-    "description": "Key-value, document, wide-column, and graph databases — their models, trade-offs, and when to choose each.",
+    "description": "From first principles to production — key-value, document, wide-column, and graph databases with deep dives into MongoDB and Cassandra for Java/Spring engineers.",
     "tags": [
       "database",
       "nosql",
@@ -72,7 +77,8 @@
       "dynamodb",
       "graph",
       "distributed",
-      "eventual-consistency"
+      "eventual-consistency",
+      "spring-data"
     ],
     "sidebar_position": 7
   },

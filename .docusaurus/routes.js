@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '88b'),
+    component: ComponentCreator('/', 'abd'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '7be'),
+        component: ComponentCreator('/', '7ba'),
         routes: [
           {
             path: '/tags',
@@ -168,6 +168,11 @@ export default [
           {
             path: '/tags/angular',
             component: ComponentCreator('/tags/angular', 'bbd'),
+            exact: true
+          },
+          {
+            path: '/tags/annotations',
+            component: ComponentCreator('/tags/annotations', 'a2e'),
             exact: true
           },
           {
@@ -1356,6 +1361,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/contract-testing',
+            component: ComponentCreator('/tags/contract-testing', 'ecb'),
+            exact: true
+          },
+          {
             path: '/tags/contracts',
             component: ComponentCreator('/tags/contracts', 'a9c'),
             exact: true
@@ -1548,6 +1558,11 @@ export default [
           {
             path: '/tags/database',
             component: ComponentCreator('/tags/database', '1be'),
+            exact: true
+          },
+          {
+            path: '/tags/datajpatest',
+            component: ComponentCreator('/tags/datajpatest', '01b'),
             exact: true
           },
           {
@@ -2776,6 +2791,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/integration-test',
+            component: ComponentCreator('/tags/integration-test', '9a7'),
+            exact: true
+          },
+          {
             path: '/tags/integration-testing',
             component: ComponentCreator('/tags/integration-testing', 'd76'),
             exact: true
@@ -3028,6 +3048,11 @@ export default [
           {
             path: '/tags/jpms',
             component: ComponentCreator('/tags/jpms', '3a0'),
+            exact: true
+          },
+          {
+            path: '/tags/junit-5',
+            component: ComponentCreator('/tags/junit-5', '19c'),
             exact: true
           },
           {
@@ -3518,6 +3543,11 @@ export default [
           {
             path: '/tags/mock-exam',
             component: ComponentCreator('/tags/mock-exam', '808'),
+            exact: true
+          },
+          {
+            path: '/tags/mocking',
+            component: ComponentCreator('/tags/mocking', '417'),
             exact: true
           },
           {
@@ -5171,6 +5201,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/sliced-test',
+            component: ComponentCreator('/tags/sliced-test', 'b05'),
+            exact: true
+          },
+          {
             path: '/tags/sliding-window',
             component: ComponentCreator('/tags/sliding-window', 'a39'),
             exact: true
@@ -5251,8 +5286,18 @@ export default [
             exact: true
           },
           {
+            path: '/tags/spring-boot-test',
+            component: ComponentCreator('/tags/spring-boot-test', 'a5d'),
+            exact: true
+          },
+          {
             path: '/tags/spring-cloud',
             component: ComponentCreator('/tags/spring-cloud', '455'),
+            exact: true
+          },
+          {
+            path: '/tags/spring-data',
+            component: ComponentCreator('/tags/spring-data', 'f4b'),
             exact: true
           },
           {
@@ -5686,6 +5731,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/test-pyramid',
+            component: ComponentCreator('/tags/test-pyramid', '2a0'),
+            exact: true
+          },
+          {
             path: '/tags/test-summary-report',
             component: ComponentCreator('/tags/test-summary-report', '694'),
             exact: true
@@ -5698,6 +5748,11 @@ export default [
           {
             path: '/tags/testable-architecture',
             component: ComponentCreator('/tags/testable-architecture', '9db'),
+            exact: true
+          },
+          {
+            path: '/tags/testcontainers',
+            component: ComponentCreator('/tags/testcontainers', 'd8d'),
             exact: true
           },
           {
@@ -5896,6 +5951,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/unit-test',
+            component: ComponentCreator('/tags/unit-test', '347'),
+            exact: true
+          },
+          {
             path: '/tags/unit-testing',
             component: ComponentCreator('/tags/unit-testing', '838'),
             exact: true
@@ -6041,6 +6101,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/webmvctest',
+            component: ComponentCreator('/tags/webmvctest', '2ec'),
+            exact: true
+          },
+          {
             path: '/tags/websocket',
             component: ComponentCreator('/tags/websocket', 'f92'),
             exact: true
@@ -6166,6 +6231,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/wiremock',
+            component: ComponentCreator('/tags/wiremock', '60c'),
+            exact: true
+          },
+          {
             path: '/tags/wireshark',
             component: ComponentCreator('/tags/wireshark', 'b09'),
             exact: true
@@ -6252,7 +6322,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '26d'),
+            component: ComponentCreator('/', 'f3f'),
             routes: [
               {
                 path: '/aws',
@@ -7846,7 +7916,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/nosql-distributed',
-                component: ComponentCreator('/technical-knowledge/database/nosql-distributed', '322'),
+                component: ComponentCreator('/technical-knowledge/database/nosql-distributed', '448'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -12865,7 +12935,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/advanced/processing-and-ordering',
-                component: ComponentCreator('/technical-knowledge/kafka/advanced/processing-and-ordering', '5ec'),
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/processing-and-ordering', 'de5'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -12889,7 +12959,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/consumer/consumer-lag',
-                component: ComponentCreator('/technical-knowledge/kafka/consumer/consumer-lag', '6a7'),
+                component: ComponentCreator('/technical-knowledge/kafka/consumer/consumer-lag', 'cf0'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -12943,7 +13013,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/core/scaling-partitions',
-                component: ComponentCreator('/technical-knowledge/kafka/core/scaling-partitions', 'f16'),
+                component: ComponentCreator('/technical-knowledge/kafka/core/scaling-partitions', '0ca'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -12979,7 +13049,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/producer/hash-key-partitions',
-                component: ComponentCreator('/technical-knowledge/kafka/producer/hash-key-partitions', '7e7'),
+                component: ComponentCreator('/technical-knowledge/kafka/producer/hash-key-partitions', '02a'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
