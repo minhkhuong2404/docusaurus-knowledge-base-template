@@ -1,341 +1,1088 @@
 ---
 id: nosql-distributed
 title: NoSQL & Distributed Databases
-description: Key-value, document, wide-column, and graph databases — their models, trade-offs, and when to choose each.
-tags: [database, nosql, mongodb, cassandra, redis, dynamodb, graph, distributed, eventual-consistency]
+description: From first principles to production — key-value, document, wide-column, and graph databases with deep dives into MongoDB and Cassandra for Java/Spring engineers.
+tags: [database, nosql, mongodb, cassandra, redis, dynamodb, graph, distributed, eventual-consistency, spring-data]
 sidebar_position: 7
 ---
 
 # NoSQL & Distributed Databases
 
+:::info Who this guide is for
+- **New learners** — start at [Why NoSQL?](#why-nosql) and read top-to-bottom. Every concept is explained from scratch before code appears.
+- **Senior engineers** — jump to [Deep Dives](#-deep-dive-mongodb-internals), [Failure Modes](#️-failure-modes-and-operational-concerns), or [Advanced Patterns](#-advanced-patterns).
+:::
+
+---
+
 ## Why NoSQL?
 
-Relational databases have pain points at scale:
-- **Rigid schema**: changing table structures is costly with large datasets
-- **Vertical scaling limits**: SQL DBs scale up (bigger server), not out
-- **Object-relational impedance mismatch**: mapping objects to tables is cumbersome
-- **Specialized access patterns**: graph traversal, time-series, full-text are second-class citizens
+### The Problem with Pure SQL at Scale
 
-NoSQL databases trade some relational guarantees for **flexibility, scale, and specialized data models**.
+Imagine you are building Twitter. Every user has followers, posts, likes, and hashtags. In PostgreSQL you'd end up with something like:
+
+```sql
+users → posts → likes → hashtags → post_hashtags
+```
+
+Now imagine 400 million daily active users. What breaks?
+
+1. **Schema is rigid** — Adding a `poll` field to `posts` means an `ALTER TABLE` that locks 10 billion rows for hours.
+2. **Joins get expensive** — Rendering a single timeline requires joining `users`, `posts`, `follows`, and `likes`. At scale this kills latency.
+3. **Vertical scaling hits a wall** — You can only put so much RAM and CPU in one server. A single PostgreSQL instance tops out around 100K writes/sec under ideal conditions.
+4. **Everything lives in one box** — One region, one failure domain.
+
+NoSQL databases emerged to solve these specific problems. They are not "better" than SQL — they make different trade-offs:
+
+| They give up... | To gain... |
+|----------------|-----------|
+| Strict ACID guarantees | Horizontal write scalability |
+| Rigid schemas | Schema flexibility / evolution |
+| Universal query patterns | Speed for a specific access pattern |
+| Joins | Simpler distributed architecture |
+
+> **Mental model**: SQL is a Swiss Army knife — great for many tasks, good at all of them. NoSQL databases are specialist tools — excellent at their specific job, intentionally limited elsewhere.
 
 ---
 
-## NoSQL Categories
+## NoSQL Categories at a Glance
 
-| Category | Data Model | Examples | Best For |
-|----------|-----------|---------|----------|
-| Key-Value | `key → opaque blob` | Redis, DynamoDB, Memcached | Sessions, caching, simple lookups |
-| Document | `key → JSON/BSON document` | MongoDB, Couchbase, Firestore | Catalogs, user profiles, CMS |
-| Wide-Column | `row key → column families` | Cassandra, HBase, Bigtable | Time-series, event logs, analytics |
-| Graph | `nodes + edges + properties` | Neo4j, Amazon Neptune, JanusGraph | Social graphs, recommendation, fraud |
-| Time-Series | `metric + timestamp → value` | InfluxDB, TimescaleDB, Prometheus | IoT, monitoring, metrics |
-| Search | Inverted index | Elasticsearch, OpenSearch, Solr | Full-text search, log analytics |
+| Category | Think of it as... | Examples | Best For |
+|----------|------------------|----------|----------|
+| **Key-Value** | Distributed HashMap | Redis, DynamoDB, Memcached | Sessions, caching, leaderboards |
+| **Document** | Distributed JSON file cabinet | MongoDB, Couchbase, Firestore | Catalogs, user profiles, CMS |
+| **Wide-Column** | Distributed sorted map of maps | Cassandra, HBase, Bigtable | Time-series, event logs, IoT |
+| **Graph** | Whiteboard diagram, queryable | Neo4j, Amazon Neptune | Social graphs, fraud detection |
+| **Time-Series** | Append-only metrics log | InfluxDB, TimescaleDB | Monitoring, IoT sensors |
+| **Search** | Indexed text engine | Elasticsearch, OpenSearch | Full-text search, log analytics |
 
 ---
 
-## Key-Value Stores
+## Key-Value Stores (Redis)
 
-The simplest model: a distributed hash map.
+### What is it?
+
+The simplest possible model: a giant distributed hash map. You store a value under a key; you retrieve it by that key. The database has no idea what's inside the value — it's just bytes to store and return.
 
 ```
-SET user:1001:session  "eyJhbGciOiJIUzI..."  EX 3600
-GET user:1001:session
-DEL user:1001:session
+SET  key   value   [expiry]
+GET  key
+DEL  key
 ```
 
-**Redis** extends this with rich data types:
-- `String` → counters, cached values
-- `Hash` → object fields
-- `List` → queues, timelines
-- `Set` → unique members, tags
-- `Sorted Set (ZSet)` → leaderboards, ranked feeds
-- `Stream` → append-only log, event sourcing
+### Why use it?
+
+- **Sub-millisecond latency** — everything lives in RAM
+- **Dead simple API** — no schema, no migrations
+- **Horizontal scaling** — cluster mode shards keys across nodes
+
+### When NOT to use it
+
+- You need to query by value fields (e.g., "find all users where country = VN")
+- Data is too large to fit in RAM
+- You need multi-row ACID transactions
+
+### Redis — Beyond Simple Get/Set
+
+Redis extends the pure key-value model with rich data structures. This is what makes it uniquely useful:
 
 ```bash
-# Leaderboard with ZSet
-ZADD leaderboard 5000 "alice"
-ZADD leaderboard 8200 "bob"
-ZREVRANGE leaderboard 0 9 WITHSCORES   # top 10
-ZRANK leaderboard "alice"               # rank of alice
+# ── String ──────────────────────────────────────────────
+SET  visits:homepage  1042
+INCR visits:homepage         # atomic increment → 1043
+INCRBY visits:homepage 10    # → 1053
+
+# ── Hash (object fields without fetching the whole thing) ──
+HSET user:1001  name "Alice"  email "alice@example.com"  country "VN"
+HGET user:1001 name            # → "Alice"
+HMGET user:1001 name country   # → ["Alice", "VN"]
+
+# ── List (queue / timeline) ──────────────────────────────
+LPUSH  notifications:1001  "You have a new follower"
+LPUSH  notifications:1001  "Your post was liked"
+LRANGE notifications:1001 0 9   # latest 10 notifications
+
+# ── Set (unique membership) ──────────────────────────────
+SADD  post:555:likes  "user:1"  "user:2"  "user:3"
+SCARD post:555:likes   # count → 3
+SISMEMBER post:555:likes "user:2"  # → 1 (true)
+
+# ── Sorted Set (leaderboard / ranked feed) ───────────────
+ZADD leaderboard  5000 "alice"
+ZADD leaderboard  8200 "bob"
+ZADD leaderboard  7100 "carol"
+ZREVRANGE leaderboard 0 9 WITHSCORES  # top 10 with scores
+ZRANK leaderboard "alice"             # rank (0-indexed from bottom)
+ZREVRANK leaderboard "alice"          # rank from top → 2
 ```
 
----
+### Spring Boot + Redis (Practical)
 
-## Document Databases
+```java
+// application.yml
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 10
+          max-idle: 5
 
-Documents are self-contained JSON/BSON objects. No joins required — related data is **embedded**.
+// --- Simple cache-aside pattern ---
+@Service
+@RequiredArgsConstructor
+public class ProductService {
 
-### MongoDB Data Model
+    private final ProductRepository repo;
+    private final RedisTemplate<String, Product> redisTemplate;
+    private static final Duration TTL = Duration.ofMinutes(30);
 
-```json
-{
-  "_id": "ObjectId(64abc...)",
-  "name": "Alice",
-  "email": "alice@example.com",
-  "addresses": [
-    { "type": "home", "city": "NYC", "zip": "10001" },
-    { "type": "work", "city": "NYC", "zip": "10004" }
-  ],
-  "orders": [
-    { "orderId": "ORD-001", "total": 99.90, "status": "shipped" }
-  ]
+    public Product findById(Long id) {
+        String key = "product:" + id;
+        ValueOperations<String, Product> ops = redisTemplate.opsForValue();
+
+        Product cached = ops.get(key);
+        if (cached != null) return cached;
+
+        Product product = repo.findById(id)
+            .orElseThrow(() -> new NotFoundException("Product " + id));
+
+        ops.set(key, product, TTL);
+        return product;
+    }
+
+    public void invalidate(Long id) {
+        redisTemplate.delete("product:" + id);
+    }
+}
+
+// --- Spring Cache abstraction (simpler, less control) ---
+@Service
+public class UserService {
+
+    @Cacheable(value = "users", key = "#id", unless = "#result == null")
+    public User findById(Long id) { /* hits DB only on cache miss */ }
+
+    @CacheEvict(value = "users", key = "#user.id")
+    public User update(User user) { /* evicts on update */ }
+
+    @CachePut(value = "users", key = "#result.id")
+    public User create(User user) { /* writes through to cache */ }
 }
 ```
 
-**Embedding vs Referencing:**
+:::tip Cache-Aside vs Write-Through
+**Cache-aside** (lazy loading): populate cache only on read miss. Risk: cache stampede on cold start.
+**Write-through**: write to cache on every DB write. Risk: cache bloat with rarely-read data.
+**Write-behind**: write to cache first, async flush to DB. Risk: data loss on crash.
+:::
 
-| Strategy | When To Use |
-|---------|------------|
-| **Embed** | 1-to-few, data always read together, child has no independent lifecycle |
-| **Reference** | 1-to-many (large), data accessed independently, frequent updates to child |
+---
+
+## Document Databases (MongoDB)
+
+### What is it?
+
+A document database stores data as self-contained documents — typically JSON or a binary variant of it (BSON). Each document can have a different structure. There is no table schema to define upfront.
+
+```json
+// No predefined schema — each document can look different
+{ "_id": "usr_001", "name": "Alice", "plan": "premium", "verified": true }
+{ "_id": "usr_002", "name": "Bob",   "plan": "free",    "region": "VN", "referrer": "carol" }
+```
+
+### Why use it?
+
+1. **Domain objects map naturally** — A Java `User` with a nested `List<Address>` becomes a single document. No ORM gymnastics.
+2. **Schema evolution is cheap** — Adding a new field to documents doesn't require `ALTER TABLE`.
+3. **Rich queries inside documents** — Unlike Redis, you can query and index on any field inside the document.
+4. **Horizontal sharding** — MongoDB shards collections across nodes using a shard key.
+
+### Real Use Cases
+
+| Domain | Why MongoDB fits |
+|--------|----------------|
+| E-commerce product catalog | Each product category has different attributes (a shirt has size/color, a laptop has RAM/CPU) |
+| User profiles | Arbitrary preferences, feature flags, nested metadata vary per user |
+| CMS / blog | Articles have variable fields; comments embedded naturally |
+| IoT device data | Device telemetry schema varies per device type |
+| Game player state | Complex nested state (inventory, quests, achievements) |
+
+### MongoDB Data Model — The Core Decision
+
+The most important design decision in MongoDB is **embed vs reference**:
+
+```
+Embed → store related data inside the parent document (like JOIN already done)
+Reference → store only an ID and look up separately (like a foreign key)
+```
+
+```json
+// ── EMBEDDED: Order items inside an order document ──────
+{
+  "_id": "ORD-001",
+  "userId": "usr_001",
+  "status": "shipped",
+  "items": [
+    { "productId": "prod_abc", "name": "MacBook Air", "qty": 1, "price": 1299.00 },
+    { "productId": "prod_xyz", "name": "USB-C Hub",   "qty": 2, "price": 29.99  }
+  ],
+  "shippingAddress": {
+    "street": "123 Nguyen Van Linh",
+    "city": "Ho Chi Minh City",
+    "country": "VN"
+  },
+  "createdAt": "2024-11-01T08:30:00Z"
+}
+
+// ── REFERENCED: Blog post references author by ID ────────
+{
+  "_id": "post_001",
+  "title": "Understanding NoSQL",
+  "authorId": "usr_001",       // ← just an ID, not embedded
+  "tags": ["database", "nosql"],
+  "content": "..."
+}
+```
+
+**Decision rules:**
+
+| Embed when... | Reference when... |
+|--------------|------------------|
+| Data is always read together | Data is accessed independently |
+| 1-to-few relationship (< ~20 items) | 1-to-many (unbounded list) |
+| Child has no life beyond parent | Child is updated frequently on its own |
+| You want single-document atomicity | Many parents share the same child |
+
+:::warning The Unbounded Array Anti-Pattern
+Never embed a list that can grow without limit. A `comments` array inside a blog post document will eventually hit MongoDB's 16MB document limit or cause massive read amplification.
+
+**Fix**: create a separate `comments` collection and reference `postId`.
+:::
+
+### MongoDB CRUD & Aggregation
 
 ```javascript
-// MongoDB query
-db.users.find(
-  { "addresses.city": "NYC" },
-  { name: 1, email: 1 }
-).sort({ name: 1 }).limit(10)
+// ── Insert ────────────────────────────────────────────────
+db.products.insertOne({
+  name: "MacBook Air M3",
+  price: 1299,
+  category: "laptop",
+  specs: { ram: 16, storage: 512, chip: "M3" },
+  tags: ["apple", "ultrabook"]
+})
 
-// Aggregation pipeline
+// ── Find with projection ──────────────────────────────────
+db.products.find(
+  { category: "laptop", price: { $lte: 1500 } },
+  { name: 1, price: 1, _id: 0 }        // project: include name & price, exclude _id
+).sort({ price: 1 }).limit(10)
+
+// ── Update ────────────────────────────────────────────────
+db.products.updateOne(
+  { _id: ObjectId("64abc...") },
+  {
+    $set:  { price: 1199 },            // set specific fields
+    $push: { tags: "sale" },           // append to array
+    $inc:  { "stats.viewCount": 1 }    // atomic increment nested field
+  }
+)
+
+// ── Aggregation Pipeline ──────────────────────────────────
+// "What is the average order value per customer, for orders shipped in 2024?"
 db.orders.aggregate([
-  { $match: { status: "shipped" } },
-  { $group: { _id: "$userId", total: { $sum: "$amount" } } },
-  { $sort: { total: -1 } }
+  { $match: {
+      status: "shipped",
+      createdAt: { $gte: ISODate("2024-01-01"), $lt: ISODate("2025-01-01") }
+  }},
+  { $group: {
+      _id: "$userId",
+      avgOrderValue: { $avg: "$total" },
+      orderCount:    { $sum: 1 }
+  }},
+  { $lookup: {                          // JOIN users collection
+      from: "users",
+      localField: "_id",
+      foreignField: "_id",
+      as: "user"
+  }},
+  { $unwind: "$user" },
+  { $project: {
+      customerName: "$user.name",
+      avgOrderValue: { $round: ["$avgOrderValue", 2] },
+      orderCount: 1
+  }},
+  { $sort: { avgOrderValue: -1 } },
+  { $limit: 20 }
 ])
 ```
 
-### Spring Data MongoDB
+### Spring Data MongoDB — Full Example
 
 ```java
-@Document(collection = "users")
-public class User {
-    @Id private String id;
+// ── Domain model ─────────────────────────────────────────
+@Document(collection = "products")
+@CompoundIndex(name = "cat_price_idx", def = "{'category': 1, 'price': 1}")
+public class Product {
+
+    @Id
+    private String id;
+
+    @Indexed
+    private String category;
+
     private String name;
-    private List<Address> addresses;  // embedded documents
+    private BigDecimal price;
+    private ProductSpecs specs;          // embedded document
+    private List<String> tags;
+
+    @CreatedDate
+    private Instant createdAt;
+
+    @LastModifiedDate
+    private Instant updatedAt;
 }
 
-@Repository
-public interface UserRepository extends MongoRepository<User, String> {
-    List<User> findByAddressesCity(String city);
+@Value                                   // Lombok immutable
+public class ProductSpecs {
+    int ram;
+    int storage;
+    String chip;
+}
 
-    @Query("{ 'orders.status': ?0 }")
-    List<User> findByOrderStatus(String status);
+// ── Repository ────────────────────────────────────────────
+@Repository
+public interface ProductRepository extends MongoRepository<Product, String> {
+
+    // Derived query — Spring generates the query from method name
+    List<Product> findByCategoryAndPriceLessThanEqual(String category, BigDecimal maxPrice);
+
+    // Custom query with @Query
+    @Query("{ 'tags': { $in: ?0 }, 'price': { $lte: ?1 } }")
+    List<Product> findByTagsInAndPriceAtMost(List<String> tags, BigDecimal maxPrice);
+
+    // Pagination
+    Page<Product> findByCategory(String category, Pageable pageable);
+
+    // Exists / count
+    boolean existsByName(String name);
+    long countByCategory(String category);
+}
+
+// ── Complex queries with MongoTemplate ───────────────────
+@Service
+@RequiredArgsConstructor
+public class ProductQueryService {
+
+    private final MongoTemplate mongo;
+
+    public List<CategorySummary> getTopCategoriesByRevenue(int topN) {
+        Aggregation agg = newAggregation(
+            match(where("status").is("sold")),
+            group("category")
+                .sum("price").as("totalRevenue")
+                .count().as("unitsSold"),
+            sort(Sort.by(DESC, "totalRevenue")),
+            limit(topN),
+            project("totalRevenue", "unitsSold")
+                .and("_id").as("category")
+        );
+
+        return mongo.aggregate(agg, "products", CategorySummary.class)
+                    .getMappedResults();
+    }
+
+    public void incrementViewCount(String productId) {
+        Query query = query(where("id").is(productId));
+        Update update = new Update().inc("stats.viewCount", 1);
+        mongo.updateFirst(query, update, Product.class);
+    }
+
+    // Bulk write — efficient for batch updates
+    public BulkWriteResult applyDiscount(String category, double discountPct) {
+        BulkOperations ops = mongo.bulkOps(BulkMode.UNORDERED, Product.class);
+
+        Query q = query(where("category").is(category));
+        Update u = new Update().multiply("price", 1 - discountPct / 100);
+        ops.updateMulti(q, u);
+
+        return ops.execute();
+    }
 }
 ```
+
+### Indexing Strategy
+
+```java
+// ── Single field index ────────────────────────────────────
+@Indexed(unique = true)
+private String email;
+
+// ── Compound index (order matters!) ──────────────────────
+// Supports: category, category+price, category+price+status
+// Does NOT support: price alone, status alone
+@CompoundIndex(def = "{'category': 1, 'price': 1, 'status': 1}")
+
+// ── Text index for full-text search ──────────────────────
+@TextIndexed(weight = 2)  // higher weight = more relevance
+private String name;
+
+@TextIndexed
+private String description;
+
+// Query: db.products.find({ $text: { $search: "macbook air" } })
+
+// ── TTL index — auto-delete expired documents ─────────────
+@Indexed(expireAfterSeconds = 3600)
+private Instant expiresAt;   // document deleted after this time + 1hr
+
+// ── Wildcard index — for dynamic fields ───────────────────
+// Useful for product specs that differ per category
+// db.products.createIndex({ "specs.$**": 1 })
+```
+
+:::tip Index Design Rules
+1. **Index fields you filter or sort on frequently**
+2. **Compound index field order**: equality fields first, then range/sort fields
+3. **Don't over-index**: each index costs write performance and RAM
+4. **Use `explain("executionStats")`** to verify index usage before going to production
+:::
 
 ---
 
 ## Wide-Column Stores (Cassandra)
 
-Data organized as: `(partition key, clustering key) → columns`
+### What is it?
 
-Think of it as a distributed, sorted map of maps.
+Think of Cassandra as a distributed, sorted map of maps:
 
-### Cassandra Data Model
+```
+Table = Map<PartitionKey, SortedMap<ClusteringKey, Row>>
+```
+
+Data is spread across nodes by hashing the partition key. Within a partition, rows are physically sorted by the clustering key.
+
+### Why use it?
+
+- **Massive write throughput** — Cassandra can sustain millions of writes/second across a cluster
+- **Linear horizontal scaling** — add nodes, get proportionally more capacity
+- **No single point of failure** — truly masterless, every node is equal
+- **Tunable consistency** — trade consistency for speed per operation
+
+### When to use Cassandra
+
+| ✅ Great fit | ❌ Poor fit |
+|-------------|------------|
+| Time-series data (IoT, metrics, events) | Ad-hoc queries with unknown access patterns |
+| Append-heavy workloads | Frequent updates to existing rows |
+| Multi-region active-active writes | Complex transactions across many rows |
+| Known, fixed access patterns | Aggregations like SUM/GROUP BY at scale |
+
+### Data Model — Think in Queries First
+
+In SQL you normalize first and query later. **In Cassandra, start with your queries and design tables to serve exactly those queries**.
 
 ```sql
--- Design driven by query patterns, not normalization
+-- Query 1: "Get all orders for user X, newest first"
 CREATE TABLE orders_by_user (
     user_id     UUID,
     created_at  TIMESTAMP,
     order_id    UUID,
     total       DECIMAL,
     status      TEXT,
+    items       LIST<FROZEN<order_item>>,
     PRIMARY KEY ((user_id), created_at, order_id)
 ) WITH CLUSTERING ORDER BY (created_at DESC);
 
--- Efficient: scans only one partition
+-- Query 2: "Get all orders with status=shipped (for ops dashboard)"
+-- Needs a SEPARATE table — Cassandra doesn't filter by non-primary-key columns efficiently
+CREATE TABLE orders_by_status (
+    status      TEXT,
+    created_at  TIMESTAMP,
+    order_id    UUID,
+    user_id     UUID,
+    total       DECIMAL,
+    PRIMARY KEY ((status), created_at, order_id)
+) WITH CLUSTERING ORDER BY (created_at DESC);
+
+-- Efficient: hits exactly one partition
 SELECT * FROM orders_by_user
 WHERE user_id = ? AND created_at >= ? AND created_at <= ?;
 ```
 
-**Partition key** → determines which node stores the data (hash-based)
-**Clustering key** → sorts data within a partition
-
-### Cassandra Consistency Levels
+### Consistency Levels
 
 ```
-N = replication factor (e.g., 3)
-W = nodes that must ack a write
-R = nodes that must respond to a read
+Replication factor N = 3 (data exists on 3 nodes)
 
-Quorum: W + R > N → strong consistency
-ONE: fastest, may return stale data
-EACH_QUORUM: quorum per datacenter
-LOCAL_QUORUM: quorum in local DC only
+WRITE consistency levels:
+  ANY      → at least 1 node (including hinted handoff) acked — fastest, weakest
+  ONE      → at least 1 replica acked
+  QUORUM   → majority (⌊N/2⌋ + 1 = 2) acked → strong with QUORUM reads
+  ALL      → all 3 replicas acked — strongest, slowest, unavailable if any node down
+
+READ consistency levels:
+  ONE      → 1 replica responds (may be stale)
+  QUORUM   → majority responds, coordinator picks freshest value
+  ALL      → all replicas respond
+
+Strong consistency: W + R > N
+  QUORUM + QUORUM = 2 + 2 > 3 ✅
+  ONE + ONE       = 1 + 1 > 3 ❌ (stale reads possible)
 ```
-
-### Key Rules in Cassandra
-- **No JOINs** — denormalize data into query-specific tables
-- **No unbounded queries** — always filter by partition key
-- **Partition size** limit: keep under 100MB / 100K rows
-- **Tombstones**: deletes create markers, cleaned up by compaction
 
 ---
 
-## Graph Databases
+## Graph Databases (Neo4j)
 
-Represent data as **nodes** (entities) and **edges** (relationships) with properties.
+### What is it?
+
+A graph database stores data as nodes (things) and edges (relationships between things), both with arbitrary properties.
 
 ```
-(Alice)-[:FOLLOWS]->(Bob)
-(Alice)-[:PURCHASED]->(Product{name:"MacBook"})
-(Bob)-[:REVIEWED{rating:5}]->(Product)
+(Alice:User)-[:FOLLOWS {since: "2023-01"}]->(Bob:User)
+(Bob:User)-[:AUTHORED]->(Post:Post {title: "NoSQL Guide"})
+(Alice:User)-[:LIKED]->(Post)
 ```
 
-### When to use graphs
-- Social networks (friends, followers)
-- Recommendation engines
-- Fraud detection (connected accounts)
-- Knowledge graphs
-- Network topology
+### Why use it?
 
-### Cypher (Neo4j Query Language)
+In SQL, "find all friends of friends" requires a self-join — and "friends 3 hops away" means 3 self-joins, which explodes exponentially. In a graph DB, each hop is `O(1)` — just follow an edge pointer.
+
+### Use Cases
+
+- **Social networks** — friends, followers, mutual connections
+- **Fraud detection** — find accounts connected to known fraud accounts within N hops
+- **Recommendation engines** — "users who bought X also bought Y"
+- **Knowledge graphs** — semantic relationships between concepts
+- **Network topology** — which servers depend on which services
 
 ```cypher
-// Find friends of friends not already connected
+// Friends of friends I don't already follow
 MATCH (me:User {id: $userId})-[:FOLLOWS]->(:User)-[:FOLLOWS]->(fof:User)
 WHERE NOT (me)-[:FOLLOWS]->(fof) AND me <> fof
-RETURN fof, COUNT(*) AS mutualCount
-ORDER BY mutualCount DESC LIMIT 10;
+RETURN fof.name, COUNT(*) AS mutualFriends
+ORDER BY mutualFriends DESC LIMIT 10;
 
-// Shortest path
-MATCH p = shortestPath((alice:User {name:"Alice"})-[*]-(bob:User {name:"Bob"}))
-RETURN p;
+// Fraud ring detection — accounts connected within 3 hops to a known fraudster
+MATCH path = (suspect:Account {flagged: true})-[:TRANSFERRED_TO|SHARES_DEVICE*1..3]->(acc:Account)
+WHERE acc.flagged = false
+RETURN acc, length(path) AS hops
+ORDER BY hops;
+
+// Shortest path between two users
+MATCH p = shortestPath(
+  (alice:User {name: "Alice"})-[*]-(bob:User {name: "Bob"})
+)
+RETURN p, length(p) AS degrees;
 ```
 
 ---
 
 ## DynamoDB (AWS)
 
-- Key-value and document model, fully managed
-- Primary key: Partition Key + optional Sort Key
-- Single-digit millisecond latency at any scale
-- **On-demand** or **provisioned** capacity modes
+### What is it?
 
-```python
-# DynamoDB access patterns (Java SDK)
-# PutItem, GetItem, Query (partition key required), Scan (expensive — avoid)
+DynamoDB is AWS's fully managed, serverless key-value and document database. You pay per read/write unit, not per server.
+
+Primary key is either:
+- **Partition Key only** (simple primary key) — like `userId`
+- **Partition Key + Sort Key** (composite primary key) — like `userId` + `orderId`
+
+### Single-Table Design
+
+The most powerful (and mind-bending) DynamoDB pattern. Store multiple entity types in one table using generic `PK`/`SK` attributes:
+
+```
+PK                | SK               | GSI1PK          | Attributes
+------------------|------------------|-----------------|------------------
+USER#alice        | PROFILE          | STATUS#active   | name, email, plan
+USER#alice        | ORDER#2024-001   | ORDER#2024-001  | total, status
+USER#alice        | ORDER#2024-002   | ORDER#2024-002  | total, status
+PRODUCT#mac-air   | DETAILS          | CAT#laptop      | price, stock
+PRODUCT#mac-air   | REVIEW#rev-001   |                 | rating, comment
 ```
 
-**DynamoDB Single-Table Design:**
-```
-PK              | SK              | attributes
-----------------|-----------------|-----------
-USER#alice      | PROFILE         | name, email
-USER#alice      | ORDER#2024-001  | total, status
-PRODUCT#mac     | DETAILS         | price, stock
-```
+Access patterns all served from one table:
+- Get user profile → `PK = USER#alice, SK = PROFILE`
+- Get all orders for user → `PK = USER#alice, SK begins_with ORDER#`
+- Get all orders (global) → query `GSI1` where `GSI1PK = ORDER#...`
 
-Store multiple entity types in one table → avoid joins, maximize RCU/WCU efficiency.
+### Spring + DynamoDB (Enhanced Client)
+
+```java
+@DynamoDbBean
+public class Order {
+
+    private String pk;          // USER#<userId>
+    private String sk;          // ORDER#<orderId>
+    private BigDecimal total;
+    private String status;
+    private Instant createdAt;
+
+    @DynamoDbPartitionKey
+    public String getPk() { return pk; }
+
+    @DynamoDbSortKey
+    public String getSk() { return sk; }
+}
+
+@Service
+@RequiredArgsConstructor
+public class OrderDynamoService {
+
+    private final DynamoDbEnhancedClient dynamo;
+    private final DynamoDbTable<Order> table;
+
+    public List<Order> getOrdersForUser(String userId) {
+        QueryConditional condition = QueryConditional
+            .sortBeginsWith(Key.builder()
+                .partitionValue("USER#" + userId)
+                .sortValue("ORDER#")
+                .build());
+
+        return table.query(condition)
+                    .items()
+                    .stream()
+                    .toList();
+    }
+}
+```
 
 ---
 
 ## BASE vs ACID
 
-NoSQL systems often follow **BASE** instead of ACID:
+Most NoSQL systems follow **BASE** instead of ACID:
 
-| | ACID | BASE |
-|--|------|------|
-| Consistency | Strong | **B**asically Available |
-| State | Always consistent | **S**oft state (may be stale) |
-| Availability | May block | **E**ventually consistent |
-| Use case | Finance, inventory | Social, analytics, logs |
+```
+ACID                              BASE
+────────────────────────────────────────────────────────
+Atomic    — all or nothing        Basically Available
+Consistent — always valid state   Soft State — may be stale
+Isolated  — transactions          Eventually Consistent
+Durable   — survives crashes
+```
+
+**Eventually consistent** means: if no new writes come in, all replicas will *eventually* converge to the same value. But there's a window where reads may return stale data.
+
+```
+Timeline:
+  t=0  Writer updates X=5 on Node A
+  t=1  Reader queries Node B → returns X=3  ← stale!
+  t=2  Replication propagates to Node B
+  t=3  Reader queries Node B → returns X=5  ← consistent
+```
+
+**Application strategies to handle eventual consistency:**
+
+```java
+// 1. Read-your-writes: always read from same node you wrote to
+// DynamoDB: use strongly consistent reads immediately after writes
+GetItemRequest req = GetItemRequest.builder()
+    .tableName("orders")
+    .key(key)
+    .consistentRead(true)     // ← forces consistent read, doubles RCU cost
+    .build();
+
+// 2. Optimistic concurrency: use version numbers to detect stale writes
+@Document
+public class BankAccount {
+    @Id private String id;
+    private BigDecimal balance;
+
+    @Version                  // Spring Data auto-increments, throws on conflict
+    private Long version;
+}
+
+// 3. UI messaging: set expectations with the user
+// "Your changes are saved. They may take a moment to appear everywhere."
+```
 
 ---
 
-## Choosing the Right Database
+## 🔬 Deep Dive: MongoDB Internals
+
+*For senior engineers who need to reason about performance and correctness at depth.*
+
+### Storage Engine: WiredTiger
+
+MongoDB uses WiredTiger by default. Key characteristics:
+
+- **B-Tree for indexes** — every index is a separate B-Tree; `_id` index always exists
+- **Document-level concurrency** — multiple writes to different documents in the same collection don't block each other
+- **MVCC (Multi-Version Concurrency Control)** — readers don't block writers; each reader sees a consistent snapshot
+- **Compression** — documents are snappy/zstd compressed on disk by default
 
 ```
-Is data relational with complex queries?
-  → PostgreSQL / MySQL
+Write path:
+  1. Write to in-memory cache (WiredTiger cache, default 50% of RAM)
+  2. Write to journal (WAL file) for durability — synced every 100ms by default
+  3. Async checkpoint to data files every 60 seconds
 
-Need massive write throughput + horizontal scale + time-series?
-  → Cassandra, InfluxDB
+Read path:
+  1. Check WiredTiger cache
+  2. If miss: read from data files into cache
+  3. If cache full: evict least-recently-used pages (can cause latency spikes!)
+```
 
-Need flexible schema + rich document queries?
-  → MongoDB
+:::warning WiredTiger Cache Pressure
+If your working set (hot data) exceeds the WiredTiger cache, you'll see latency spikes as MongoDB evicts pages and reads from disk. Monitor `serverStatus.wiredTiger.cache["pages read into cache"]` — a high rate signals cache thrashing.
 
-Need graph traversal?
-  → Neo4j / Amazon Neptune
+Fix: increase `storage.wiredTiger.engineConfig.cacheSizeGB`, upgrade RAM, or archive cold data.
+:::
 
-Need sub-millisecond caching + pub-sub?
-  → Redis
+### Replication: Replica Sets
 
-Need full-text search + log analytics?
-  → Elasticsearch
+```
+       ┌──────────────────────────────────────────┐
+       │              Replica Set                  │
+       │                                           │
+       │  ┌─────────┐   Replication    ┌────────┐  │
+       │  │ Primary │ ──────────────► │Secondary│  │
+       │  │ (writes)│    oplog         │(reads) │  │
+       │  └────┬────┘                 └────────┘  │
+       │       │ oplog                            │
+       │       ▼                      ┌────────┐  │
+       │  ┌─────────┐                 │Arbiter │  │
+       │  │Secondary│ ◄─────────────  │(votes) │  │
+       │  │         │                 └────────┘  │
+       │  └─────────┘                             │
+       └──────────────────────────────────────────┘
+```
 
-Need serverless + auto-scaling on AWS?
-  → DynamoDB
+- **oplog** (operations log): a capped collection on the primary recording every write as an idempotent operation
+- **Replication lag**: secondaries apply oplog entries asynchronously — lag can be seconds to minutes under heavy load
+- **Automatic failover**: if primary is unreachable for `electionTimeoutMillis` (default 10s), secondaries elect a new primary
+- **Write concern**: controls how many nodes must acknowledge a write
+
+```java
+// Write concern — controls durability guarantee
+MongoClientSettings settings = MongoClientSettings.builder()
+    .writeConcern(WriteConcern.MAJORITY)   // waits for majority ack before returning
+    // vs WriteConcern.W1 — ack from primary only (faster, less safe)
+    // vs WriteConcern.UNACKNOWLEDGED — fire-and-forget (dangerous)
+    .readPreference(ReadPreference.secondaryPreferred())  // read from secondaries when possible
+    .readConcern(ReadConcern.MAJORITY)    // only return data acked by majority
+    .build();
+```
+
+### Sharding
+
+Sharding splits a collection across multiple `mongod` instances (shards) using a **shard key**:
+
+```
+                    mongos (query router)
+                    /          |          \
+               Shard A      Shard B      Shard C
+             [a - h]      [i - p]      [q - z]  ← hashed ranges
+```
+
+```java
+// Choosing a shard key — critical, cannot be changed without resharding
+
+// ❌ Bad: low cardinality — all docs end up on one shard ("hotspot")
+{ shardKey: "status" }   // only 3 values: active/inactive/banned
+
+// ❌ Bad: monotonically increasing — all writes go to the last shard
+{ shardKey: "_id" }      // ObjectId is time-ordered
+
+// ✅ Good: high cardinality + even distribution
+{ shardKey: "userId" }   // millions of users, writes spread evenly
+
+// ✅ Good for time-series: compound shard key
+{ shardKey: { "deviceId": 1, "timestamp": 1 } }
+// deviceId spreads writes; timestamp keeps time-range queries on one shard
+```
+
+### Transactions (ACID across documents)
+
+MongoDB 4.0+ supports multi-document ACID transactions on replica sets:
+
+```java
+@Service
+@RequiredArgsConstructor
+public class TransferService {
+
+    private final MongoClient client;
+    private final MongoTemplate mongo;
+
+    public void transfer(String fromId, String toId, BigDecimal amount) {
+        ClientSession session = client.startSession();
+        session.startTransaction(TransactionOptions.builder()
+            .writeConcern(WriteConcern.MAJORITY)
+            .readConcern(ReadConcern.SNAPSHOT)
+            .build());
+        try {
+            Query fromQuery = query(where("id").is(fromId));
+            Query toQuery   = query(where("id").is(toId));
+
+            // Both operations inside one ACID transaction
+            mongo.updateFirst(fromQuery,
+                new Update().inc("balance", amount.negate()), Account.class);
+            mongo.updateFirst(toQuery,
+                new Update().inc("balance", amount), Account.class);
+
+            session.commitTransaction();
+        } catch (Exception e) {
+            session.abortTransaction();
+            throw e;
+        } finally {
+            session.close();
+        }
+    }
+}
+```
+
+:::warning Transactions Are Expensive in MongoDB
+Use transactions sparingly. MongoDB is optimized for **single-document operations** (which are always atomic). Multi-document transactions:
+- Add latency (distributed locking)
+- Abort if they run longer than 60 seconds
+- Hurt throughput at scale
+
+**Prefer** embedding related data so one write covers everything atomically.
+:::
+
+### Change Streams — React to Data Changes
+
+```java
+// Listen to all inserts/updates in the orders collection
+@Component
+@RequiredArgsConstructor
+public class OrderChangeListener implements CommandLineRunner {
+
+    private final MongoClient client;
+
+    @Override
+    public void run(String... args) {
+        MongoCollection<Document> orders =
+            client.getDatabase("shop").getCollection("orders");
+
+        List<Bson> pipeline = List.of(
+            Aggregates.match(
+                Filters.in("operationType", List.of("insert", "update"))
+            )
+        );
+
+        // Non-blocking: use reactive MongoDB driver in production
+        orders.watch(pipeline).forEach(event -> {
+            String type   = event.getOperationType().getValue();
+            Document full = event.getFullDocument();
+            log.info("Order {} was {}", full.get("_id"), type);
+            // Trigger downstream: notify warehouse, update analytics, etc.
+        });
+    }
+}
 ```
 
 ---
 
-## Eventual Consistency in Practice
+## ⚡ Advanced Patterns
 
-With eventual consistency, a read immediately after a write may return stale data:
+### Outbox Pattern (MongoDB + Kafka)
+
+Guarantee that a DB write and a message publication are atomic — even if Kafka is down:
+
+```java
+@Transactional
+public Order placeOrder(PlaceOrderRequest req) {
+    // 1. Write order + outbox message in same transaction
+    Order order = orderRepo.save(new Order(req));
+
+    OutboxEvent event = OutboxEvent.builder()
+        .aggregateId(order.getId())
+        .type("ORDER_PLACED")
+        .payload(toJson(order))
+        .status(PENDING)
+        .build();
+    outboxRepo.save(event);
+
+    return order;
+}
+
+// Separate poller publishes PENDING events to Kafka and marks them SENT
+// If poller crashes, events remain PENDING and will be retried
+@Scheduled(fixedDelay = 1000)
+public void publishPendingEvents() {
+    outboxRepo.findByStatus(PENDING)
+        .forEach(event -> {
+            kafka.send(event.getType(), event.getPayload());
+            event.setStatus(SENT);
+            outboxRepo.save(event);
+        });
+}
+```
+
+### Materialized View with Aggregation Pipeline on a Schedule
+
+```java
+// Pre-compute expensive analytics into a summary collection
+// Run nightly via @Scheduled or a cron job
+
+public void refreshDailySalesSummary() {
+    Aggregation agg = newAggregation(
+        match(where("status").is("completed")
+                             .and("createdAt").gte(startOfDay())),
+        group("category")
+            .sum("total").as("revenue")
+            .count().as("orderCount")
+            .avg("total").as("avgOrderValue"),
+        project("revenue", "orderCount", "avgOrderValue")
+            .and("_id").as("category")
+            .and(DateOperators.dateOf("$$NOW")).as("computedAt")
+    );
+
+    List<DailySummary> results = mongo
+        .aggregate(agg, "orders", DailySummary.class)
+        .getMappedResults();
+
+    // Replace entire summary collection atomically
+    mongo.dropCollection("daily_sales_summary");
+    mongo.insertAll(results);
+}
+```
+
+### Bucket Pattern (for Time-Series in MongoDB)
+
+Instead of one document per event (millions of tiny docs), group events into buckets:
+
+```json
+// ❌ One document per sensor reading — poor performance
+{ "sensorId": "s1", "timestamp": "2024-11-01T00:00:01Z", "value": 22.3 }
+{ "sensorId": "s1", "timestamp": "2024-11-01T00:00:02Z", "value": 22.4 }
+// ... 86,400 docs/day/sensor
+
+// ✅ Bucket: one document per sensor per hour
+{
+  "sensorId": "s1",
+  "hour": "2024-11-01T00:00:00Z",
+  "count": 3600,
+  "min": 21.8, "max": 23.1, "sum": 80640.0,
+  "readings": [22.3, 22.4, 22.4, 22.5, ...]   // array of 3600 values
+}
+```
+
+Benefits: 3600× fewer documents, index is 3600× smaller, range queries scan far fewer docs.
+
+---
+
+## ⚠️ Failure Modes and Operational Concerns
+
+### MongoDB
+
+| Problem | Symptom | Fix |
+|---------|---------|-----|
+| **Working set > RAM** | Disk reads spike, p99 latency balloons | Add RAM or archive cold data |
+| **Index not used** | `COLLSCAN` in `explain()` output | Add index or rewrite query |
+| **Unbounded array** | Document approaching 16MB limit | Split into separate collection |
+| **Replication lag** | Secondaries fall behind | Reduce write load, add secondaries, investigate slow oplog appliers |
+| **Chunk imbalance** | One shard handles 80% of traffic | Choose a better shard key, manual chunk migration |
+| **Too many collections** | Slow startup, RAM pressure | Consolidate; each collection has a min WiredTiger overhead |
+
+### Redis
+
+| Problem | Symptom | Fix |
+|---------|---------|-----|
+| **Cache stampede** | DB overwhelmed after cache expiry | Use probabilistic early expiration or mutex lock |
+| **Memory eviction** | Keys silently deleted | Set `maxmemory-policy` intentionally, monitor `evicted_keys` |
+| **Hot key** | One key receives all traffic | Use key sharding (`key:shard:{0..N}`) |
+| **Blocking commands** | `KEYS *` or `SORT` blocks entire Redis | Use `SCAN` instead of `KEYS`; never `SORT` large sets in prod |
+
+### Cassandra
+
+| Problem | Symptom | Fix |
+|---------|---------|-----|
+| **Hot partition** | One node at 100% CPU | Better partition key distribution |
+| **Tombstone accumulation** | Read latency grows over time | Tune `gc_grace_seconds`, run compaction |
+| **Partition too large** | Reads slow, OOMKiller on nodes | Split partition (e.g., by time bucket) |
+| **Allow filtering** | `ALLOW FILTERING` in query | Create a dedicated table for that query pattern |
+
+---
+
+## Choosing the Right Database — Decision Tree
 
 ```
-t=0: Client writes X=5 to node A
-t=1: Client reads X from node B → gets X=3 (not yet replicated)
-t=2: Replication catches up
-t=3: Client reads X from node B → gets X=5
+Start here: What is the primary access pattern?
+│
+├─ Cache a result / session / leaderboard?
+│   └─ Redis
+│
+├─ Full-text search / log analysis?
+│   └─ Elasticsearch / OpenSearch
+│
+├─ Graph traversal (friends-of-friends, fraud rings)?
+│   └─ Neo4j / Amazon Neptune
+│
+├─ Time-series (IoT, metrics, monitoring)?
+│   └─ InfluxDB / TimescaleDB / Cassandra
+│
+├─ Massive append-only writes + known query patterns?
+│   └─ Cassandra
+│
+├─ Complex relational queries + ACID transactions?
+│   └─ PostgreSQL / MySQL
+│
+├─ Flexible schema + rich document queries + moderate scale?
+│   └─ MongoDB
+│
+├─ AWS serverless + auto-scaling + single-digit ms latency?
+│   └─ DynamoDB
+│
+└─ Multiple concerns in one system?
+    └─ Probably MongoDB + Redis (cache layer) is 80% of use cases
 ```
-
-**Handling in applications:**
-- Show "changes may take a moment to appear"
-- Use **read-your-writes** consistency (read from same node you wrote to)
-- Use **session tokens** (read the version you wrote, or later)
-- Use **monotonic reads** (always read from same replica for a session)
 
 ---
 
 ## 🎯 Interview Questions
 
-**Q1. When would you choose a NoSQL database over a relational database?**
-> Choose NoSQL when: the data model doesn't fit rows/columns well (documents, graphs); you need horizontal write scaling beyond what a single RDBMS can handle; you have a flexible/evolving schema; you need specialized access patterns (full-text, graph traversal, time-series); or you need geographic distribution with eventual consistency.
+### For New Learners
 
-**Q2. What is the difference between embedding and referencing in MongoDB?**
-> Embedding stores related data inside the parent document — good for data always read together (1-to-few, no independent lifecycle). Referencing stores a foreign key — good for large 1-to-many relationships, data accessed independently, or frequently updated sub-documents. MongoDB has no automatic join enforcement; referencing requires application-level lookups.
+**Q: What is NoSQL and why does it exist?**
+> NoSQL databases emerged to solve problems that relational databases struggle with at scale: rigid schemas that are costly to change, the inability to scale horizontally across many servers, and poor fit for data shapes like documents, graphs, or time-series. NoSQL trades some ACID guarantees (like strict consistency) for flexibility, scalability, and specialized performance characteristics.
 
-**Q3. How does Cassandra determine which node stores a piece of data?**
-> Cassandra hashes the partition key using consistent hashing to place it on a virtual ring. The node responsible for that hash range stores the data (plus N-1 replicas on subsequent nodes). Adding nodes only moves ~1/N of partitions, minimizing rebalancing.
+**Q: What is the difference between a key-value store and a document store?**
+> A key-value store treats values as opaque bytes — you can only get/set by key, not query inside the value. A document store (like MongoDB) understands the structure of values (JSON) and lets you query, index, and update individual fields within documents.
 
-**Q4. What is eventual consistency and what problems does it cause?**
-> Eventual consistency means all replicas will eventually converge to the same value, but reads may return stale data in the meantime. Problems: reads after writes return old data, different users see different states simultaneously, lost updates if not handled carefully. Mitigation: quorum reads/writes, read-your-writes patterns, version vectors.
+**Q: What is eventual consistency?**
+> In an eventually consistent system, when you write to one node, other nodes may briefly return the old value until replication completes. The guarantee is that all nodes *will eventually* agree, but there's a window where reads may be stale.
 
-**Q5. Explain BASE properties.**
-> BASE = Basically Available (system remains operational, may return partial/stale data), Soft State (state may change without input due to eventual consistency), Eventually Consistent (system will reach consistency given no new updates). Contrasts with ACID's strict consistency guarantees.
+### For Senior Engineers
 
-**Q6. What is the difference between a key-value store and a document store?**
-> A key-value store treats values as opaque blobs — you can only retrieve by key, not query inside the value. A document store understands the structure of values (JSON/BSON) and lets you query, index, and update individual fields within documents without retrieving the whole thing.
+**Q: How do you decide between embedding and referencing in MongoDB?**
+> Embed when data is always read together, the relationship is 1-to-few, and the child has no independent lifecycle. Reference when the list is unbounded, the child is updated frequently on its own, or many parents share the same child. A key signal: if embedding would cause a document to grow indefinitely (comments, events, logs), use referencing.
 
-**Q7. What is DynamoDB Single-Table Design and why is it used?**
-> Single-Table Design stores multiple entity types in one DynamoDB table, using a generic PK/SK scheme. It avoids the need for multiple tables and joins, maximizes RCU/WCU efficiency (one request fetches all related entities), and models access patterns directly. Trade-off: complex to design and maintain; no ad-hoc queries.
+**Q: A MongoDB query that was fast last month is now slow. Walk me through your diagnosis.**
+> First, run `explain("executionStats")` and look at: `stage` (COLLSCAN = no index used), `totalDocsExamined` vs `totalDocsReturned` (large ratio = poor selectivity), and `executionTimeMillis`. Check if an index exists with `getIndexes()`. If the index exists but isn't used, check field order in compound indexes (ESR rule: equality → sort → range). Check for collection scan due to type mismatch (string vs int in query). Finally, check if the WiredTiger cache is under pressure — use `db.serverStatus().wiredTiger.cache`.
 
-**Q8. How does Neo4j's graph model handle queries that would be expensive in SQL?**
-> Graph DBs store relationships as first-class citizens (edges with direct pointers), so traversal is constant-time per edge. A friends-of-friends query on a social graph would require expensive JOINs in SQL (or multiple self-joins). In Neo4j, it's a simple MATCH pattern. Depth-first searches, shortest path, and cycle detection are all native operations.
+**Q: How does Cassandra achieve high write throughput?**
+> Cassandra writes are append-only to an in-memory structure (MemTable) plus a commit log (WAL). No random disk seeks. When MemTable is full, it's flushed as an immutable SSTable to disk. Reads must merge across SSTables (plus Bloom filters to skip irrelevant files). This trade-off makes writes fast at the cost of more complex reads and compaction overhead.
+
+**Q: When would you use MongoDB transactions, and what are the trade-offs?**
+> Use multi-document transactions when atomicity across multiple documents/collections is a hard business requirement (e.g., transferring funds between accounts). The trade-offs: transactions acquire locks, increasing latency and reducing throughput; they abort after 60 seconds; and they add complexity. The preferred approach is to design documents so a single write covers all related data atomically (embedding), reserving transactions for cases where that's truly not possible.
+
+**Q: What is the Outbox pattern and why is it needed?**
+> The Outbox pattern guarantees that a database write and a message publication (e.g., to Kafka) happen atomically — even if the message broker is temporarily down. You write both the business record and an outbox event in one DB transaction. A separate poller reads PENDING outbox events and publishes them. If the poller crashes, events remain PENDING and are retried. This avoids the dual-write problem where you commit to DB but fail to publish (or vice versa).
 
 ---
 
-## Advanced Editorial Pass: NoSQL Selection with Explicit Consistency Contracts
+## Summary Cheat Sheet
 
-### Senior Engineering Focus
-- Choose model by query shape and consistency budget, not branding.
-- Treat partitioning and quorum behavior as API-visible constraints.
-- Design for rebalance, repair, and schema evolution from day one.
+| Database | Model | Consistency | Horizontal Scale | Java/Spring Integration |
+|----------|-------|-------------|-----------------|------------------------|
+| MongoDB | Document | Tunable (majority/local) | ✅ Sharding | `spring-boot-starter-data-mongodb` |
+| Redis | Key-Value + Structures | Single-node: strong; Cluster: eventual | ✅ Cluster/Sentinel | `spring-boot-starter-data-redis` |
+| Cassandra | Wide-Column | Tunable (ONE/QUORUM/ALL) | ✅ Linear | `spring-boot-starter-data-cassandra` |
+| Neo4j | Graph | Strong (single instance) | Limited | `spring-boot-starter-data-neo4j` |
+| DynamoDB | KV + Document | Eventual / Strong (cost) | ✅ Serverless | AWS SDK v2 + `aws-sdk-java-v2` |
 
-### Failure Modes to Anticipate
-- Unexpected consistency anomalies in multi-region reads.
-- Inefficient data model requiring expensive cross-partition access.
-- Operational overhead from uncontrolled cluster growth.
+## Further Reading
 
-### Practical Heuristics
-1. Write down consistency expectations per endpoint.
-2. Benchmark with realistic partition-key distribution.
-3. Automate repair and compaction health checks.
-
-### Compare Next
 - [Replication & Partitioning](./replication-partitioning.md)
 - [Database Patterns for Microservices](./database-patterns-microservices.md)
 - [Time-Series Databases](./time-series-databases.md)
+- [MongoDB official docs: Data Modeling](https://www.mongodb.com/docs/manual/data-modeling/)
+- [Cassandra: The Definitive Guide (O'Reilly)](https://www.oreilly.com/library/view/cassandra-the-definitive/9781492097136/)
