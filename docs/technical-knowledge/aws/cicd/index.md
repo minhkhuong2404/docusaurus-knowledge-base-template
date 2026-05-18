@@ -48,8 +48,7 @@ Developer pushes code
 - Integrated with IAM for access control
 - Triggers: SNS, Lambda on push/PR events
 
-:::note
-AWS announced CodeCommit is no longer accepting new customers (July 2024). For the exam, it's still tested — but in practice, most teams use GitHub/GitLab with CodePipeline.
+:::note[AWS announced CodeCommit is no longer accepting new customers (July 2024). For the exam, it's still tested — but in practice, most teams use GitHub/GitLab with CodePipeline.]
 :::
 
 ---

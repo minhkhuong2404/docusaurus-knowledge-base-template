@@ -19,8 +19,7 @@ tags:
 
 Hooks enforce quality gates locally, before code ever reaches CI — catching issues in seconds rather than minutes.
 
-:::info
-Hooks in `.git/hooks/` are **not committed to the repository** and are local to each developer's machine. Use **Husky** (JavaScript projects) or a shared `scripts/hooks/` directory with a setup script to distribute hooks to your team.
+:::info[Hooks in `.git/hooks/` are **not committed to the repository** and are local to each developer's machine. Use **Husky** (JavaScript projects) or a shared `scripts/hooks/` directory with a setup script to distribute hooks to your team.]
 :::
 
 ---

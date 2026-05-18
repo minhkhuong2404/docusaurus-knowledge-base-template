@@ -94,8 +94,7 @@ Stream-aligned teams consume:
   └── Connect their services to shared Kafka
 ```
 
-:::tip
-The platform should feel like a product, not an internal bureaucracy. If stream-aligned teams work around the platform instead of using it, the platform isn't providing value.
+:::tip[The platform should feel like a product, not an internal bureaucracy. If stream-aligned teams work around the platform instead of using it, the platform isn't providing value.]
 :::
 
 ---
@@ -164,8 +163,7 @@ A tension arises: should multiple teams share a service (e.g., a notification se
 - Sharing would create a bottleneck (every team coordinates with one team)
 - Teams need different behavior for their domain
 
-:::caution
-A "shared service" with no clear owner and many consumers is a dangerous anti-pattern. It becomes the hardest-to-change service in the system.
+:::caution[A "shared service" with no clear owner and many consumers is a dangerous anti-pattern. It becomes the hardest-to-change service in the system.]
 :::
 
 ---

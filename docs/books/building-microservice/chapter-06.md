@@ -64,8 +64,7 @@ Coordinator
 - **Complex failure handling** — network timeouts between phases create ambiguous states
 - **Requires XA-capable databases** — not all modern datastores support this
 
-:::danger
-Avoid distributed transactions (2PC/XA) in microservices. The performance and reliability costs are not worth it.
+:::danger[Avoid distributed transactions (2PC/XA) in microservices. The performance and reliability costs are not worth it.]
 :::
 
 ---

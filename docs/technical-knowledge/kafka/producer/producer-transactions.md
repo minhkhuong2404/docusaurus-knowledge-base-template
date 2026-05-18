@@ -154,8 +154,7 @@ props.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, "read_committed");
 | `read_uncommitted` (default) | Reads all records, including aborted transactions |
 | `read_committed` | Only reads records from committed transactions |
 
-:::warning
-Always set `isolation.level=read_committed` when consuming from topics written by transactional producers.
+:::warning[Always set `isolation.level=read_committed` when consuming from topics written by transactional producers.]
 :::
 
 ---

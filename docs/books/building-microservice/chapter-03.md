@@ -26,8 +26,7 @@ Before splitting anything, ask: *What problem am I trying to solve?*
 
 Without a clear goal, you'll create microservices that don't deliver value. You'll confuse *activity* (creating services) with *outcome* (faster delivery, better scaling).
 
-:::tip
-Try the simple things first. Vertical slicing, better modular structure, or simply adding capacity to the monolith may be faster and cheaper than a full decomposition.
+:::tip[Try the simple things first. Vertical slicing, better modular structure, or simply adding capacity to the monolith may be faster and cheaper than a full decomposition.]
 :::
 
 ---
@@ -53,8 +52,7 @@ This is a key message in this edition. Many successful systems remain monolithic
 
 The monolith commonly *remains* even after microservice extraction — it just shrinks. For example, if 10% of the system is the scaling bottleneck, extracting that 10% as a microservice may solve the problem completely. The remaining 90% can stay in the monolith indefinitely.
 
-:::caution
-Don't set out to "destroy the monolith." Set out to achieve a specific goal. Stop when the goal is met.
+:::caution[Don't set out to "destroy the monolith." Set out to achieve a specific goal. Stop when the goal is met.]
 :::
 
 ---
@@ -143,8 +141,7 @@ Once the schema is logically separated, extract the service code. The service no
 **Step 3: Separate the database server (optional)**
 For full isolation, move each schema to its own database server.
 
-:::warning
-Removing shared database tables is the highest-risk step. Do it last, and do it incrementally. Introduce an **integration database** period where both old and new code access the same data, then migrate.
+:::warning[Removing shared database tables is the highest-risk step. Do it last, and do it incrementally. Introduce an **integration database** period where both old and new code access the same data, then migrate.]
 :::
 
 ### Shared Static Data

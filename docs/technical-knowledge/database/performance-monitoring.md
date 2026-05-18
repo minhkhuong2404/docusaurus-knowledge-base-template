@@ -168,8 +168,7 @@ default_pool_size = 20      # connections to PostgreSQL per DB/user
 | `transaction` | Transaction ends (most efficient for stateless apps) |
 | `statement` | Each statement (cannot use multi-statement transactions) |
 
-:::caution
-Transaction pooling breaks `SET`, prepared statements (without `server_reset_query`), and advisory locks. Spring apps must disable prepared statement caching.
+:::caution[Transaction pooling breaks `SET`, prepared statements (without `server_reset_query`), and advisory locks. Spring apps must disable prepared statement caching.]
 :::
 
 ---

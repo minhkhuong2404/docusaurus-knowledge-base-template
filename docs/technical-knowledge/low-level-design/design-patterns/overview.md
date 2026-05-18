@@ -77,7 +77,7 @@ public class DatabaseConnection {
 // Wire once in main(), inject everywhere
 ```
 
-:::tip Interview Tip 🎯
+:::tip[Interview Tip 🎯]
 When you mention Singleton in an interview, proactively say: *"I'd use Singleton here for X, but I'm aware of the downsides — global state makes unit testing harder. In a production codebase I'd prefer to manage this lifecycle through a DI framework."* This shows senior thinking.
 :::
 

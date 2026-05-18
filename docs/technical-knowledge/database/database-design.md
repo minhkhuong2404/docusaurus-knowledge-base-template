@@ -169,8 +169,7 @@ ALTER TABLE users ADD COLUMN order_count INT DEFAULT 0;
 UPDATE users SET order_count = order_count + 1 WHERE id = :userId;
 ```
 
-:::caution
-Denormalization moves consistency responsibility to the application. Always have a clear update strategy.
+:::caution[Denormalization moves consistency responsibility to the application. Always have a clear update strategy.]
 :::
 
 ---

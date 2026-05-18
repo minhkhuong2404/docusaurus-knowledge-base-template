@@ -14,7 +14,7 @@ sidebar_label: Correctness
 
 Any LLD problem involving shared state — parking lot spots, movie seats, inventory counts — must handle concurrent access. An interviewer asking *"what happens when two users book the same seat simultaneously?"* is testing whether you think concurrently.
 
-:::tip Interview Tip 🎯
+:::tip[Interview Tip 🎯]
 **Proactively bring up concurrency.** Don't wait to be asked. After designing your classes say: *"Now let me think about concurrency — this `availableSeats` counter will be accessed by multiple threads simultaneously, so I need to make it thread-safe."*
 :::
 

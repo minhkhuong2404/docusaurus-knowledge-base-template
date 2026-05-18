@@ -181,8 +181,7 @@ Each service explicitly opts in to a version. Safe but requires discipline to up
 **2. Client library generated from service contract**
 The service that owns an API publishes a client library (e.g., generated from OpenAPI or proto). Consumers add it as a dependency.
 
-:::warning
-Be careful with shared libraries. A library that couples multiple services (e.g., a shared domain model) creates the same problems as a shared database. Keep shared libraries thin: common utilities, not business logic.
+:::warning[Be careful with shared libraries. A library that couples multiple services (e.g., a shared domain model) creates the same problems as a shared database. Keep shared libraries thin: common utilities, not business logic.]
 :::
 
 ---

@@ -53,8 +53,7 @@ Still one deployment unit, but with internal modular boundaries. Actually a good
 ### 3. Distributed Monolith
 The *worst* of both worlds. Multiple services that still must be deployed together, tightly coupled at the network level. High operational complexity with none of the benefits.
 
-:::warning
-A distributed monolith occurs when teams split services but keep sharing databases or create chatty synchronous coupling between every service. Avoid at all costs.
+:::warning[A distributed monolith occurs when teams split services but keep sharing databases or create chatty synchronous coupling between every service. Avoid at all costs.]
 :::
 
 ---
@@ -98,8 +97,7 @@ Microservices are **not free**. The book is unusually honest about this:
 - **Operational overhead** — more services = more to monitor, deploy, and maintain
 - **Organizational investment** — requires mature DevOps practices
 
-:::caution
-Microservices are not the default right choice. Starting with a well-structured monolith and extracting services incrementally is often the smarter path.
+:::caution[Microservices are not the default right choice. Starting with a well-structured monolith and extracting services incrementally is often the smarter path.]
 :::
 
 ---

@@ -27,8 +27,7 @@ By default in older Kafka versions, Connect uses the "Eager" rebalancing protoco
 # Ensures only affected tasks are paused during a worker leaving/joining
 connect.protocol=compatible
 ```
-:::info
-If you are running Apache Kafka 3.0 or higher, `connect.protocol=compatible` is already the default behavior.
+:::info[If you are running Apache Kafka 3.0 or higher, `connect.protocol=compatible` is already the default behavior.]
 :::
 
 ### 2. Configure the Rebalance Delay

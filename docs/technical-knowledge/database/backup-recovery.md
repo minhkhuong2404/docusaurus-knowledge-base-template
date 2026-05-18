@@ -296,8 +296,7 @@ ON orders (user_id, status);
 -- CONCURRENTLY: no table lock in PostgreSQL
 ```
 
-:::tip
-Always test migrations on a copy of production data before deploying. Use `CREATE INDEX CONCURRENTLY` (PostgreSQL) to avoid locking.
+:::tip[Always test migrations on a copy of production data before deploying. Use `CREATE INDEX CONCURRENTLY` (PostgreSQL) to avoid locking.]
 :::
 
 ---

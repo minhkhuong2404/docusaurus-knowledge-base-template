@@ -171,8 +171,7 @@ Order Service emits "OrderCreated"
 Pros: True decoupling; services don't know about each other.
 Cons: Harder to see the full workflow; debugging requires event tracing tools.
 
-:::info
-Most real systems use a mix. Start with choreography for loose coupling; use orchestration only where visibility into the workflow is critical (e.g., user-facing checkout).
+:::info[Most real systems use a mix. Start with choreography for loose coupling; use orchestration only where visibility into the workflow is critical (e.g., user-facing checkout).]
 :::
 
 ---

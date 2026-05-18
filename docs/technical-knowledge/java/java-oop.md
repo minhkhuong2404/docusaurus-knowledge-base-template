@@ -118,8 +118,7 @@ dog.makeSound(); // Rex barks!
 - Use `super` to access parent class members
 - `@Override` annotation signals an intentional method override — always use it!
 
-:::warning
-Avoid deep inheritance chains (more than 2–3 levels). They make code harder to understand and maintain. Prefer **composition over inheritance** when possible.
+:::warning[Avoid deep inheritance chains (more than 2–3 levels). They make code harder to understand and maintain. Prefer **composition over inheritance** when possible.]
 :::
 
 ---
@@ -281,8 +280,7 @@ public class OrderService {
 }
 ```
 
-:::note
-Following SOLID principles naturally leads to better Spring application design — especially **Dependency Inversion**, which is the backbone of Spring's IoC container.
+:::note[Following SOLID principles naturally leads to better Spring application design — especially **Dependency Inversion**, which is the backbone of Spring's IoC container.]
 :::
 
 ---

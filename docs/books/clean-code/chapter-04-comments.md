@@ -19,8 +19,7 @@ Comments are not automatically good. Every time you write a comment, you've fail
 
 Comments lie. Code runs — it is the truth. But comments drift from the code they describe. Someone updates the code but forgets to update the comment. Now the comment misleads.
 
-:::warning
-Don't celebrate comments. Every comment is a sign that the code could be clearer.
+:::warning[Don't celebrate comments. Every comment is a sign that the code could be clearer.]
 :::
 
 ---

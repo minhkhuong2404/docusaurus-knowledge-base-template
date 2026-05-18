@@ -227,8 +227,7 @@ Run sparingly. Use for the most critical user journeys only. Keep the suite smal
 - **Flaky** — network timeouts, service startup timing, order-dependent state
 - **Ownership unclear** — who owns a test that spans 6 services?
 
-:::tip
-Apply the "10-minute rule": if your full automated test suite takes more than 10 minutes, it will slow down your CI pipeline and developers will start skipping it.
+:::tip[Apply the "10-minute rule": if your full automated test suite takes more than 10 minutes, it will slow down your CI pipeline and developers will start skipping it.]
 :::
 
 ---

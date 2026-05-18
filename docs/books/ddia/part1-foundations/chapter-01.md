@@ -132,8 +132,7 @@ Distribute load across many smaller machines. More complex but cheaper and pract
 #### Elastic Systems
 Automatically add/remove resources as load fluctuates. Good for unpredictable load spikes.
 
-:::tip
-There is no universal "magic scaling architecture." The right approach depends on your specific **load parameters**. An architecture designed for 100K req/s and 1 KB payloads looks completely different from one designed for 3 req/min and 2 GB payloads.
+:::tip[There is no universal "magic scaling architecture." The right approach depends on your specific **load parameters**. An architecture designed for 100K req/s and 1 KB payloads looks completely different from one designed for 3 req/min and 2 GB payloads.]
 :::
 
 ---

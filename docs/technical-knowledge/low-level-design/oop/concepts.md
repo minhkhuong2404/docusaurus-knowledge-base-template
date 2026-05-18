@@ -49,7 +49,7 @@ public class BankAccount {
 }
 ```
 
-:::tip Interview Tip 🎯
+:::tip[Interview Tip 🎯]
 When asked "why is this field `private`?", say: *"I want the class to be the sole authority over its own state. If balance were public, callers could set it to any value, bypassing validation logic."*
 :::
 
@@ -114,7 +114,7 @@ public class OrderService {
 }
 ```
 
-:::tip Interview Tip 🎯
+:::tip[Interview Tip 🎯]
 Early in LLD interviews, say: *"Before I write any class, I'd like to define the key interfaces. That way we can discuss the contract before getting into implementation details."*
 :::
 

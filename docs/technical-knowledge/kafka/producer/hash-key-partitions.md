@@ -45,7 +45,7 @@ Imagine a post office with 10 delivery trucks (Partitions), each serving a diffe
 | **No Key** (null) | You drop off unaddressed flyers. The postmaster distributes them evenly — Truck 1, Truck 2, Truck 3... No guarantee which truck gets which flyer. |
 | **With Key** (ZIP Code) | You drop off letters with ZIP Codes. The postmaster has a rule: *"All mail for 90210 → Truck 4. All mail for 10001 → Truck 7."* Every letter for the same ZIP always goes to the same truck, in order. |
 
-:::tip Key Takeaway
+:::tip[Key Takeaway]
 A message key is like a ZIP Code — it guarantees that all related messages end up in the same "truck" (partition), processed in the order they were sent.
 :::
 
@@ -71,7 +71,7 @@ int hash = Utils.murmur2(keyBytes);
 // "user_123" → 827364 (example)
 ```
 
-:::note Why MurmurHash2?
+:::note[Why MurmurHash2?]
 MurmurHash2 was chosen for its excellent **distribution uniformity** (keys spread evenly across buckets) and **speed** (no CPU-intensive cryptographic operations). It's the same hash function used in many distributed systems.
 :::
 

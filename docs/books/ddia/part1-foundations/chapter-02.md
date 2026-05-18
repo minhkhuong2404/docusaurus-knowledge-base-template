@@ -39,8 +39,7 @@ NoSQL emerged in the late 2000s driven by:
 - Need for more flexible/dynamic data models than rigid relational schemas
 - Frustration with the *object-relational mismatch*
 
-:::note
-"NoSQL" is a poor name — it doesn't mean "no SQL ever." It means a variety of non-relational databases. "Not Only SQL" is a retroactive backronym.
+:::note["NoSQL" is a poor name — it doesn't mean "no SQL ever." It means a variety of non-relational databases. "Not Only SQL" is a retroactive backronym.]
 :::
 
 ### The Object-Relational Mismatch

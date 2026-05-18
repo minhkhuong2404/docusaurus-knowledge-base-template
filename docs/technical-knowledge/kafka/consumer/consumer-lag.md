@@ -44,8 +44,7 @@ Think of your email inbox:
 
 If you receive **10 emails/hour** but can only read **7 emails/hour**, your unread count grows by 3 every hour. After 8 hours, you have **24 unread emails** — that's your "lag."
 
-:::tip
-Lag tells you *"How far behind am I?"*. It doesn't tell you *why* — you need to investigate further with the diagnostics below.
+:::tip[Lag tells you *"How far behind am I?"*. It doesn't tell you *why* — you need to investigate further with the diagnostics below.]
 :::
 
 ---
@@ -83,8 +82,7 @@ Total Group Lag = Σ (Partition Lag) across all assigned partitions
 
 ### Lag of 1: A Common Surprise
 
-:::note
-It's common to see a persistent lag of **1** per partition, even when the system is "caught up." This occurs because Kafka reports the LEO as the *next writable offset*, and the committed offset is the *next readable offset*. If a message was just produced but not yet polled, the lag is 1. This is normal operational behavior — not a bug.
+:::note[It's common to see a persistent lag of **1** per partition, even when the system is "caught up." This occurs because Kafka reports the LEO as the *next writable offset*, and the committed offset is the *next readable offset*. If a message was just produced but not yet polled, the lag is 1. This is normal operational behavior — not a bug.]
 :::
 
 ---
@@ -213,8 +211,7 @@ After:  5 consumers, 10 partitions → 2 partitions each
   Consumer5: [P8, P9]                ← comfortable
 ```
 
-:::warning
-You cannot have more active consumers than partitions. Adding a 11th consumer to a 10-partition topic means it will sit **idle**, doing no work.
+:::warning[You cannot have more active consumers than partitions. Adding a 11th consumer to a 10-partition topic means it will sit **idle**, doing no work.]
 :::
 
 ### 3. Tune Consumer Fetch Configurations

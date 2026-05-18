@@ -201,8 +201,7 @@ ALTER TABLE transactions
   ALTER COLUMN description SET NOT NULL;
 ```
 
-:::warning
-Never write a `V1_2_0__rollback__...` Flyway script. Flyway does not support rollback scripts in the community edition. Use roll-forward migrations exclusively.
+:::warning[Never write a `V1_2_0__rollback__...` Flyway script. Flyway does not support rollback scripts in the community edition. Use roll-forward migrations exclusively.]
 :::
 
 ---

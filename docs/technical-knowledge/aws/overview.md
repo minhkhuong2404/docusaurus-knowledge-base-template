@@ -166,8 +166,7 @@ Use this quick mapping during elimination.
 
 ## 🧪 Practice Questions — Overview Level
 
-:::info
-These questions test broad exam knowledge. Detailed questions are in each topic page.
+:::info[These questions test broad exam knowledge. Detailed questions are in each topic page.]
 :::
 
 **Q1.** You have 65 questions and 130 minutes. How much average time do you have per question?

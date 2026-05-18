@@ -156,8 +156,7 @@ psql -h $DB_HOST -U $DB_USER -d $DB_NAME \
   -c "SELECT version, description, success FROM flyway_schema_history ORDER BY installed_rank DESC LIMIT 5;"
 ```
 
-:::danger
-Always take a database snapshot **immediately before** running a down migration. Down migrations are destructive — they cannot be undone if something goes wrong mid-script.
+:::danger[Always take a database snapshot **immediately before** running a down migration. Down migrations are destructive — they cannot be undone if something goes wrong mid-script.]
 :::
 
 ### Step 4 — Verify Rollback Success

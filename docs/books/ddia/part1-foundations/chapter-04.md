@@ -46,8 +46,7 @@ Java's `Serializable`, Python's `pickle`, Ruby's `Marshal` — built-in serializ
 - Poor forward/backward compatibility
 - Often poor performance
 
-:::danger
-Avoid language-specific serialization for anything that crosses service or storage boundaries. It's fine for ephemeral in-process use, not for long-lived data.
+:::danger[Avoid language-specific serialization for anything that crosses service or storage boundaries. It's fine for ephemeral in-process use, not for long-lived data.]
 :::
 
 ---

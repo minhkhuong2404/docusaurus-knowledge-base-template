@@ -101,7 +101,7 @@ public class ProductCatalog {
 }
 ```
 
-:::tip Interview Tip 🎯
+:::tip[Interview Tip 🎯]
 Mention `ReadWriteLock` when your design has a **read-heavy** workload (e.g., product catalog, configuration, routing tables). Say: *"Since reads vastly outnumber writes here, I'll use a ReadWriteLock to allow concurrent reads while still protecting writes exclusively."*
 :::
 

@@ -150,7 +150,7 @@ encryptedAndCompressed.writeData("sensitive data");
 String data = encryptedAndCompressed.readData();
 ```
 
-:::tip Interview Tip 🎯
+:::tip[Interview Tip 🎯]
 Decorator is perfect for the File System problem (adding permissions, encryption, logging to files). Mention it when you see the need to "stack" behaviors: *"I'll use Decorator here so we can independently combine logging, encryption, and caching without a class explosion."*
 :::
 

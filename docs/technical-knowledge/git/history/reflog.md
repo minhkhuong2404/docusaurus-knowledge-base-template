@@ -18,8 +18,7 @@ The **reflog** (reference log) is a local journal of every place `HEAD` and your
 
 This makes the reflog the ultimate safety net. Even if you `git reset --hard`, run a destructive rebase, or accidentally delete a branch — the commits are still in Git's object store, and the reflog tells you exactly how to get back to them.
 
-:::info
-The reflog is **local only**. It is not pushed to remotes. If you clone a repo, you have no reflog for the original machine's operations.
+:::info[The reflog is **local only**. It is not pushed to remotes. If you clone a repo, you have no reflog for the original machine's operations.]
 :::
 
 ---

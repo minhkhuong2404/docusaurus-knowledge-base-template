@@ -78,7 +78,7 @@ ExecutorService custom = new ThreadPoolExecutor(
 );
 ```
 
-:::tip Interview Tip 🎯
+:::tip[Interview Tip 🎯]
 Mention thread pool sizing when designing any service. The **CallerRunsPolicy** rejection handler is a great talking point: *"If the queue is full, instead of throwing an exception, the thread that submitted the task will run it itself — this naturally slows down the producer and acts as backpressure."*
 :::
 

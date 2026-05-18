@@ -37,7 +37,7 @@ Unlike system design interviews (which focus on distributed systems, scalability
 [0:40 – 0:45]  Edge Cases, Concurrency, Extensions
 ```
 
-:::tip Interview Gold Rule
+:::tip[Interview Gold Rule]
 **Narrate everything.** Interviewers evaluate your *thinking process*, not just the final code. A great engineer who stays silent scores lower than a good engineer who explains each decision.
 :::
 

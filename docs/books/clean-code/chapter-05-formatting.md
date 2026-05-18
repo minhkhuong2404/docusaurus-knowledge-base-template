@@ -26,8 +26,7 @@ Functionality will be refactored. Requirements will change. But the **readabilit
 
 Martin analyzed several well-known Java projects (JUnit, FitNesse, Tomcat) and found that most files were between **200–500 lines**, with many in the 100–200 range. Files rarely exceeded 500 lines.
 
-:::tip
-Files around 200 lines are the sweet spot. They can be understood in a single sitting.
+:::tip[Files around 200 lines are the sweet spot. They can be understood in a single sitting.]
 :::
 
 ### The Newspaper Metaphor
@@ -260,8 +259,7 @@ If you work on a team, the team decides the formatting rules — then **everyone
 
 A codebase that looks like it was written by a single person is the goal. Inconsistent style (some files with 2-space indent, others 4; some with braces on new lines, others inline) signals a fragmented team.
 
-:::tip
-Use an automatic formatter (like **Checkstyle**, **google-java-format**, or IDE formatting profiles) and commit the config to the repo. Automate the disagreement away.
+:::tip[Use an automatic formatter (like **Checkstyle**, **google-java-format**, or IDE formatting profiles) and commit the config to the repo. Automate the disagreement away.]
 :::
 
 ---

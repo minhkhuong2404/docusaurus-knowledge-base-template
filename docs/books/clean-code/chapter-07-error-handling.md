@@ -227,8 +227,7 @@ public List<Employee> getEmployees() {
 }
 ```
 
-:::tip
-If you're using Java, consider `Optional<T>` for values that might be absent. It makes the "might be empty" contract explicit in the type system.
+:::tip[If you're using Java, consider `Optional<T>` for values that might be absent. It makes the "might be empty" contract explicit in the type system.]
 :::
 
 ---

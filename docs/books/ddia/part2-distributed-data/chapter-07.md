@@ -31,8 +31,7 @@ ACID is widely cited but poorly understood. Different databases implement it dif
 
 If a transaction fails halfway, the already-applied writes are **rolled back**. The client can safely retry without fear of partial effects.
 
-:::note
-Atomicity is about **fault tolerance** (not concurrency — that's isolation).
+:::note[Atomicity is about **fault tolerance** (not concurrency — that's isolation).]
 :::
 
 ### Consistency

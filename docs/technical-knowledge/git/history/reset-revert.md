@@ -67,8 +67,7 @@ git reset --hard HEAD~1
 - Working tree and index are both reset to the target commit's state
 - **Use case:** Completely discard bad commits and all associated changes
 
-:::danger
-`git reset --hard` permanently destroys uncommitted changes. The changes are gone — not in the trash, not recoverable via `git reflog` (the commits are recoverable, but any unstaged changes in the working tree are lost forever). Double-check before running.
+:::danger[`git reset --hard` permanently destroys uncommitted changes. The changes are gone — not in the trash, not recoverable via `git reflog` (the commits are recoverable, but any unstaged changes in the working tree are lost forever). Double-check before running.]
 :::
 
 ### Reset to a specific commit

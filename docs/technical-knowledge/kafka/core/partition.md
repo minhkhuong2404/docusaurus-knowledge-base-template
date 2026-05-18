@@ -110,8 +110,7 @@ Producer → writes to P0-Leader on Broker1
               P0-Follower on Broker3
 ```
 
-:::note
-Since Kafka 2.4, **follower fetching** is supported — consumers can optionally read from the nearest follower replica (rack-aware) to reduce cross-AZ traffic.
+:::note[Since Kafka 2.4, **follower fetching** is supported — consumers can optionally read from the nearest follower replica (rack-aware) to reduce cross-AZ traffic.]
 :::
 
 ---

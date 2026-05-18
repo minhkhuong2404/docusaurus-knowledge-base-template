@@ -53,8 +53,7 @@ public class Sensors {
 
 Now the boundary (the raw `Map`) is hidden. The `Sensors` class enforces the domain-appropriate operations.
 
-:::tip
-Don't pass `Map` (or any other boundary interface) across the codebase. Encapsulate it at the boundary.
+:::tip[Don't pass `Map` (or any other boundary interface) across the codebase. Encapsulate it at the boundary.]
 :::
 
 ---

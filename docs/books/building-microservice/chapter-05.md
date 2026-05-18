@@ -188,8 +188,7 @@ public RouteLocator routes(RouteLocatorBuilder builder) {
 }
 ```
 
-:::warning
-Don't let your API gateway become a smart router with business logic. Keep it as a dumb pipe. Business logic belongs in microservices, not the gateway.
+:::warning[Don't let your API gateway become a smart router with business logic. Keep it as a dumb pipe. Business logic belongs in microservices, not the gateway.]
 :::
 
 ---

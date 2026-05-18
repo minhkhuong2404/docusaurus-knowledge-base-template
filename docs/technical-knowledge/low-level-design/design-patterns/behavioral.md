@@ -432,7 +432,7 @@ public class XmlDataMiner extends DataMiner {
 }
 ```
 
-:::tip Interview Tip 🎯
+:::tip[Interview Tip 🎯]
 Template Method vs Strategy: Template Method uses **inheritance** (subclass overrides steps). Strategy uses **composition** (swap the whole algorithm object). Prefer Strategy for flexibility — it avoids the tight coupling of inheritance.
 :::
 

@@ -56,8 +56,7 @@ This is one of Kafka's most powerful features — no message is "consumed" from 
 6 partitions, 8 consumers → 2 consumers idle            (wasteful)
 ```
 
-:::tip
-The number of partitions is the upper bound on consumer parallelism within a group. Plan partition count with your expected consumer scale in mind.
+:::tip[The number of partitions is the upper bound on consumer parallelism within a group. Plan partition count with your expected consumer scale in mind.]
 :::
 
 ---

@@ -50,7 +50,7 @@ public class EmployeeRepository {
 }
 ```
 
-:::tip Interview Tip 🎯
+:::tip[Interview Tip 🎯]
 SRP is the first thing interviewers look for. If they see you put `calculatePrice()`, `sendEmail()`, and `saveToDb()` in one class, it's an immediate red flag. Split responsibilities early.
 :::
 
@@ -204,7 +204,7 @@ public class Eagle implements Eatable, Sleepable, Flyable {
 }
 ```
 
-:::tip Interview Tip 🎯
+:::tip[Interview Tip 🎯]
 When designing interfaces in an LLD interview, ask yourself: *"Is there a client that would use every method in this interface?"* If not, it's a candidate for splitting.
 :::
 
@@ -316,7 +316,7 @@ public String reverse(String s) {
 
 Don't implement features until they're actually needed.
 
-:::tip Interview Tip 🎯
+:::tip[Interview Tip 🎯]
 When an interviewer asks "what if we need to support X in the future?", a great answer is: *"I'd design the interface so it's easy to add X without breaking existing code, but I wouldn't implement X now since it's not in the current requirements. This keeps our codebase lean and the design focused."*
 :::
 

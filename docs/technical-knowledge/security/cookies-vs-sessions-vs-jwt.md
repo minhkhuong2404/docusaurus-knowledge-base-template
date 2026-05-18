@@ -166,7 +166,7 @@ A JWT has three base64url-encoded parts separated by dots:
 | `jti`   | Standard            | JWT ID — unique ID used for blacklisting |
 | `roles` | Custom              | Authorization claims                     |
 
-:::danger Never put sensitive data in the payload
+:::danger[Never put sensitive data in the payload]
 JWT is **signed**, not **encrypted** (unless you're using JWE). The payload is trivially base64-decoded by anyone who has the token. Never store passwords, PII, secrets, or billing data in claims.
 :::
 

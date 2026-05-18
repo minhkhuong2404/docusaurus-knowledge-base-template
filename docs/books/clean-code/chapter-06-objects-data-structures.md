@@ -45,8 +45,7 @@ public interface Point {
 
 The abstract version doesn't just add getters and setters — it forces the *user* to use coordinates in a meaningful way. You can't access `x` without `y`, because they're part of a coordinate pair. The implementation could be Cartesian or polar internally — you don't know and you don't need to.
 
-:::warning
-Adding getters and setters to every field is **not abstraction**. It's just exposing the implementation with extra steps.
+:::warning[Adding getters and setters to every field is **not abstraction**. It's just exposing the implementation with extra steps.]
 :::
 
 The real point of abstraction is to **represent the essence of the data** rather than exposing the internal implementation.

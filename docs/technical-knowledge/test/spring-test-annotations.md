@@ -8,7 +8,7 @@ tags: [testing, junit5, mockito, spring-boot-test, annotations, webmvctest, data
 
 # Testing Annotations in Spring & JUnit
 
-:::info Who this guide is for
+:::info[Who this guide is for]
 - **New learners** — start at [The Big Picture](#the-big-picture) to understand how annotations fit together before diving into specifics.
 - **Senior engineers** — jump to [Annotation Decision Matrix](#-annotation-decision-matrix), [Spring Boot 3.4+ Changes](#-spring-boot-34-migration), or [Interview Questions](#interview-questions).
 :::
@@ -35,7 +35,7 @@ When writing tests in a Spring Boot project, you deal with **three layers** of a
 └────────────────────────────────────────────────────────────┘
 ```
 
-:::tip Rule of Thumb
+:::tip[Rule of Thumb]
 - **Unit tests** → Layer 1 + Layer 2 only (no Spring context → fast ⚡)
 - **Integration tests** → Layer 1 + Layer 3 (Spring context → slower 🐢, but tests real wiring)
 :::
@@ -204,7 +204,7 @@ OrderService
 | `@InjectMocks` | Real object with mocks injected | Auto-wire `@Mock`/`@Spy` into the class under test |
 | `@Captor` | An `ArgumentCaptor` | Capture arguments passed to a mock for detailed assertions |
 
-:::warning Always use `@ExtendWith(MockitoExtension.class)`
+:::warning[Always use `@ExtendWith(MockitoExtension.class)`]
 Without this, `@Mock`, `@Spy`, and `@InjectMocks` do nothing — they are not initialized. This is the #1 mistake beginners make.
 :::
 
@@ -364,7 +364,7 @@ class OrderControllerTest {
 }
 ```
 
-:::warning Common @WebMvcTest Mistake
+:::warning[Common @WebMvcTest Mistake]
 `@WebMvcTest` does **NOT** load `@Service`, `@Repository`, or `@Component` beans. If your controller depends on `OrderService`, you must provide a `@MockitoBean` for it. Forgetting this causes `NoSuchBeanDefinitionException`.
 :::
 
@@ -477,7 +477,7 @@ class NewStyleTest {
 }
 ```
 
-:::tip Why The Change?
+:::tip[Why The Change?]
 The old `@MockBean` sometimes caused **context caching issues** — Spring would create separate application contexts for tests that use different `@MockBean` combinations, dramatically slowing down test suites. The new annotations are designed to integrate more cleanly with Spring's test context framework.
 :::
 

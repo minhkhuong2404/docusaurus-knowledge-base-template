@@ -8,7 +8,7 @@ tags: [testing, wiremock, integration-test, mocking, http, api, spring-boot, tes
 
 # WireMock — Mocking External HTTP APIs
 
-:::info Who this guide is for
+:::info[Who this guide is for]
 - **New learners** — start at [What is WireMock?](#what-is-wiremock) to understand why it exists and when to use it.
 - **Senior engineers** — jump to [Advanced Patterns](#-advanced-patterns), [Fault Injection](#-fault-injection--resilience-testing), or [Contract Testing](#-contract-testing-with-wiremock).
 :::
@@ -46,7 +46,7 @@ Tests with WireMock:
 | **Catches bugs in** | Logic, conditions, calculations | Serialization, headers, status codes, retries, timeouts |
 | **Speed** | ⚡ Milliseconds | 🐢 Seconds (starts HTTP server) |
 
-:::tip Rule of Thumb
+:::tip[Rule of Thumb]
 Use **Mockito** when you want to test *what your code does*. Use **WireMock** when you want to test *how your code talks to external services over HTTP*.
 :::
 

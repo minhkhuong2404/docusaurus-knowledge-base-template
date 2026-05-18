@@ -132,7 +132,7 @@ Notification n = NotificationFactory.create(NotificationType.EMAIL);
 n.send("alice@example.com", "Your order shipped!");
 ```
 
-:::tip Interview Tip 🎯
+:::tip[Interview Tip 🎯]
 When you create objects in an interview, don't use `new` directly in business logic. Say: *"I'll use a factory here so the caller doesn't need to know the concrete type — this keeps the creation logic centralized and makes it easy to add new types."*
 :::
 
@@ -299,7 +299,7 @@ HttpRequest request = HttpRequest.newBuilder("POST", "https://api.example.com/or
     .build();
 ```
 
-:::tip Interview Tip 🎯
+:::tip[Interview Tip 🎯]
 Builder is perfect for problems where objects have many configuration options (think: `ParkingLot`, `ElevatorSystem`). In interviews, build your domain objects with builders and highlight: *"I'm using the Builder pattern here because the parking lot has many optional parameters, and I want construction to be readable and validated."*
 :::
 

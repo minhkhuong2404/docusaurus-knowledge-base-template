@@ -58,8 +58,7 @@ git checkout main
 git switch -
 ```
 
-:::caution
-Git will not let you switch branches with uncommitted changes if those changes would conflict with the target branch. Either commit, stash, or discard changes first.
+:::caution[Git will not let you switch branches with uncommitted changes if those changes would conflict with the target branch. Either commit, stash, or discard changes first.]
 :::
 
 ---

@@ -50,7 +50,7 @@ Imagine a supermarket:
 
 **Scaling partitions** = opening more checkout counters so you can hire more cashiers.
 
-:::tip Key Insight
+:::tip[Key Insight]
 You never need to understand the internals to remember this rule: **More partitions → more parallelism → more throughput. But ordering is only guaranteed within one partition (one checkout line).**
 :::
 
@@ -88,8 +88,7 @@ Step 3: Broadcast metadata update to ALL brokers & connected clients
         → Consumer groups trigger rebalance
 ```
 
-:::warning
-New partitions start **empty**. Existing data stays in the original partitions. There is no automatic data redistribution.
+:::warning[New partitions start **empty**. Existing data stays in the original partitions. There is no automatic data redistribution.]
 :::
 
 ### What Happens to Consumer Groups (Rebalancing)

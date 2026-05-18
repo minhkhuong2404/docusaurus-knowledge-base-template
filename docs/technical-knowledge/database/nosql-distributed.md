@@ -8,7 +8,7 @@ sidebar_position: 7
 
 # NoSQL & Distributed Databases
 
-:::info Who this guide is for
+:::info[Who this guide is for]
 - **New learners** — start at [Why NoSQL?](#why-nosql) and read top-to-bottom. Every concept is explained from scratch before code appears.
 - **Senior engineers** — jump to [Deep Dives](#-deep-dive-mongodb-internals), [Failure Modes](#️-failure-modes-and-operational-concerns), or [Advanced Patterns](#-advanced-patterns).
 :::
@@ -174,7 +174,7 @@ public class UserService {
 }
 ```
 
-:::tip Cache-Aside vs Write-Through
+:::tip[Cache-Aside vs Write-Through]
 **Cache-aside** (lazy loading): populate cache only on read miss. Risk: cache stampede on cold start.
 **Write-through**: write to cache on every DB write. Risk: cache bloat with rarely-read data.
 **Write-behind**: write to cache first, async flush to DB. Risk: data loss on crash.
@@ -257,7 +257,7 @@ Reference → store only an ID and look up separately (like a foreign key)
 | Child has no life beyond parent | Child is updated frequently on its own |
 | You want single-document atomicity | Many parents share the same child |
 
-:::warning The Unbounded Array Anti-Pattern
+:::warning[The Unbounded Array Anti-Pattern]
 Never embed a list that can grow without limit. A `comments` array inside a blog post document will eventually hit MongoDB's 16MB document limit or cause massive read amplification.
 
 **Fix**: create a separate `comments` collection and reference `postId`.
@@ -444,7 +444,7 @@ private Instant expiresAt;   // document deleted after this time + 1hr
 // db.products.createIndex({ "specs.$**": 1 })
 ```
 
-:::tip Index Design Rules
+:::tip[Index Design Rules]
 1. **Index fields you filter or sort on frequently**
 2. **Compound index field order**: equality fields first, then range/sort fields
 3. **Don't over-index**: each index costs write performance and RAM
@@ -729,7 +729,7 @@ Read path:
   3. If cache full: evict least-recently-used pages (can cause latency spikes!)
 ```
 
-:::warning WiredTiger Cache Pressure
+:::warning[WiredTiger Cache Pressure]
 If your working set (hot data) exceeds the WiredTiger cache, you'll see latency spikes as MongoDB evicts pages and reads from disk. Monitor `serverStatus.wiredTiger.cache["pages read into cache"]` — a high rate signals cache thrashing.
 
 Fix: increase `storage.wiredTiger.engineConfig.cacheSizeGB`, upgrade RAM, or archive cold data.
@@ -837,7 +837,7 @@ public class TransferService {
 }
 ```
 
-:::warning Transactions Are Expensive in MongoDB
+:::warning[Transactions Are Expensive in MongoDB]
 Use transactions sparingly. MongoDB is optimized for **single-document operations** (which are always atomic). Multi-document transactions:
 - Add latency (distributed locking)
 - Abort if they run longer than 60 seconds

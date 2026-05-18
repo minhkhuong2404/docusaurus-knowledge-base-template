@@ -80,8 +80,7 @@ In KRaft mode, controller functions are dedicated to a quorum of controller node
 bootstrap.servers=broker1:9092,broker2:9092,broker3:9092
 ```
 
-:::tip
-You don't need all brokers listed. Just enough for fault tolerance during initial connection.
+:::tip[You don't need all brokers listed. Just enough for fault tolerance during initial connection.]
 :::
 
 ---

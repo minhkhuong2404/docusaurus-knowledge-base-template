@@ -213,6 +213,5 @@ Measure with JaCoCo and enforce in CI:
 
 ---
 
-:::tip
-Use `@DisplayName` on every test in JUnit 5. When a test fails in CI, a meaningful display name makes the problem immediately obvious without reading the full test code.
+:::tip[Use `@DisplayName` on every test in JUnit 5. When a test fails in CI, a meaningful display name makes the problem immediately obvious without reading the full test code.]
 :::

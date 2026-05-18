@@ -8,7 +8,7 @@ tags: [testing, unit-test, integration-test, tdd, mocking, mockito, test-pyramid
 
 # Testing Concepts & Best Practices
 
-:::info Who this guide is for
+:::info[Who this guide is for]
 - **New learners** — start at [Why Do We Test?](#why-do-we-test) and read top-to-bottom. Every concept is explained from scratch before code appears.
 - **Senior engineers** — jump to [Advanced Patterns](#advanced-testing-patterns), [Anti-Patterns](#-testing-anti-patterns), or [Interview Questions](#interview-questions).
 :::
@@ -59,7 +59,7 @@ With tests:
 | **Integration** | Multiple components wired together | 🐢 ~seconds | Real DB, HTTP, queues | Wiring correctness |
 | **E2E** | Full user flow through the entire system | 🐌 ~minutes | Everything real | System works end-to-end |
 
-:::tip The 70/20/10 Rule (Google's approach)
+:::tip[The 70/20/10 Rule (Google's approach)]
 Aim for roughly **70% unit tests**, **20% integration tests**, and **10% E2E tests**. This gives maximum coverage with minimum execution time.
 :::
 
@@ -250,7 +250,7 @@ void spy_callsRealMethod_unlessStubbed() {
 }
 ```
 
-:::warning When to use Spy vs Mock
+:::warning[When to use Spy vs Mock]
 Use **Mock** (default choice) when you want full control and isolation. Use **Spy** only when you need the *real* behavior of most methods and want to override just one or two — common when testing legacy code you can't easily refactor.
 :::
 
@@ -379,7 +379,7 @@ class OrderRepositoryIntegrationTest {
 | **Testing framework code** | Testing that Spring `@Autowired` works — that's Spring's job | Focus on **your** business logic and wiring |
 | **No negative tests** | Only testing the happy path — real bugs live in edge cases | Test **invalid input, empty collections, null values, exceptions** |
 
-:::tip The "Delete The Test" Litmus Test
+:::tip[The "Delete The Test" Litmus Test]
 If you deleted a test and introduced a bug, would that test have caught it? If not, the test provides no value — it's testing implementation details, not behavior.
 :::
 

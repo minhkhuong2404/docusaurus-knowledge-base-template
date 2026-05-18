@@ -469,8 +469,7 @@ nmap --script=ssl-cert hostname  # cert info
 nmap --script=http-headers hostname
 ```
 
-:::caution
-Only scan networks and systems you own or have explicit permission to test. Unauthorized scanning is illegal in most jurisdictions.
+:::caution[Only scan networks and systems you own or have explicit permission to test. Unauthorized scanning is illegal in most jurisdictions.]
 :::
 
 ---

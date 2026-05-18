@@ -296,7 +296,7 @@ sequenceDiagram
 
 **Real-world examples:** InnoDB buffer pool, browser localStorage sync, some CDN edge writes.
 
-:::danger Not for transactional systems
+:::danger[Not for transactional systems]
 Write-behind is inappropriate for financial transactions, order processing, or anything where losing even one write is unacceptable. It is appropriate for analytics counters, view counts, "likes", or non-critical metrics.
 :::
 
@@ -1107,7 +1107,7 @@ redis.execute(script, List.of(cacheKey), expectedValue);
 
 ### Cache as a SLA Risk
 
-:::danger Hidden Dependency Anti-Pattern
+:::danger[Hidden Dependency Anti-Pattern]
 If your application **cannot serve requests at all** when the cache is down, you've accidentally made the cache a single point of failure. Always ask: "What happens when Redis is unavailable?"
 
 ✅ Cache miss → DB query → degrade gracefully (slower but correct)  

@@ -59,8 +59,7 @@ All events for `ORD-100` always go to partition 3, regardless of which producer 
 | Payments | `transactionId` |
 | Multi-tenant apps | `tenantId + entityId` |
 
-:::warning
-Avoid keys with **low cardinality** as partition keys (e.g., country, status). They create hot partitions. Use high-cardinality keys (UUIDs, IDs).
+:::warning[Avoid keys with **low cardinality** as partition keys (e.g., country, status). They create hot partitions. Use high-cardinality keys (UUIDs, IDs).]
 :::
 
 ---
@@ -176,8 +175,7 @@ public void consume(ConsumerRecord<String, OrderEvent> record) {
 }
 ```
 
-:::tip
-With `concurrency=6`, Spring creates 6 consumer threads, each assigned to a subset of partitions. Per-partition ordering is still maintained within each thread.
+:::tip[With `concurrency=6`, Spring creates 6 consumer threads, each assigned to a subset of partitions. Per-partition ordering is still maintained within each thread.]
 :::
 
 ---

@@ -144,8 +144,7 @@ parallelConsumer.poll(record -> {
 });
 ```
 
-:::tip
-The `parallel-consumer` library handles the hardest part — **safe, out-of-order offset committing** — using an internal bitmap to track which offsets have completed, only committing the highest contiguous offset.
+:::tip[The `parallel-consumer` library handles the hardest part — **safe, out-of-order offset committing** — using an internal bitmap to track which offsets have completed, only committing the highest contiguous offset.]
 :::
 
 ---
@@ -225,8 +224,7 @@ public void route(ConsumerRecord<String, Event> record) {
 }
 ```
 
-:::warning
-This adds operational complexity (more topics to manage) and an extra hop of latency. Use it only when you've exhausted simpler options.
+:::warning[This adds operational complexity (more topics to manage) and an extra hop of latency. Use it only when you've exhausted simpler options.]
 :::
 
 ---
