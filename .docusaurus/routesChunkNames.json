@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-5e2": {
+  "/-7ba": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-945": {
+  "/-c30": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -5085,7 +5085,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-f4f": {
+  "/-bc9": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -6124,7 +6124,7 @@
     "__comp": "17896441",
     "content": "1d655bfd"
   },
-  "/technical-knowledge/database/caching-strategies-9c4": {
+  "/technical-knowledge/database/caching-strategies-6f7": {
     "__comp": "17896441",
     "content": "7aa6b45d"
   },
@@ -6136,7 +6136,7 @@
     "__comp": "17896441",
     "content": "39348cd3"
   },
-  "/technical-knowledge/database/database-patterns-microservices-c78": {
+  "/technical-knowledge/database/database-patterns-microservices-3ee": {
     "__comp": "17896441",
     "content": "52d464a4"
   },
@@ -6152,7 +6152,7 @@
     "__comp": "17896441",
     "content": "3579e0cb"
   },
-  "/technical-knowledge/database/nosql-distributed-b87": {
+  "/technical-knowledge/database/nosql-distributed-509": {
     "__comp": "17896441",
     "content": "025815b7"
   },
@@ -6168,7 +6168,7 @@
     "__comp": "17896441",
     "content": "30a60d4b"
   },
-  "/technical-knowledge/database/replication-partitioning-cab": {
+  "/technical-knowledge/database/replication-partitioning-477": {
     "__comp": "17896441",
     "content": "353f2454"
   },
@@ -9596,15 +9596,15 @@
     "__comp": "17896441",
     "content": "7b527991"
   },
-  "/technical-knowledge/low-level-design/concurrency/coordination-c33": {
+  "/technical-knowledge/low-level-design/concurrency/coordination-67f": {
     "__comp": "17896441",
     "content": "312f58ce"
   },
-  "/technical-knowledge/low-level-design/concurrency/correctness-023": {
+  "/technical-knowledge/low-level-design/concurrency/correctness-78b": {
     "__comp": "17896441",
     "content": "d7c44f8b"
   },
-  "/technical-knowledge/low-level-design/concurrency/scarcity-4d4": {
+  "/technical-knowledge/low-level-design/concurrency/scarcity-099": {
     "__comp": "17896441",
     "content": "be7a7a2e"
   },
@@ -10024,7 +10024,7 @@
     "__comp": "17896441",
     "content": "57eb6c90"
   },
-  "/technical-knowledge/system-design/cdc-da3": {
+  "/technical-knowledge/system-design/cdc-368": {
     "__comp": "17896441",
     "content": "8c140918"
   },
@@ -10036,15 +10036,15 @@
     "__comp": "17896441",
     "content": "65c13a58"
   },
-  "/technical-knowledge/system-design/cqrs-444": {
+  "/technical-knowledge/system-design/cqrs-afa": {
     "__comp": "17896441",
     "content": "e6611cec"
   },
-  "/technical-knowledge/system-design/data-consistency-b50": {
+  "/technical-knowledge/system-design/data-consistency-537": {
     "__comp": "17896441",
     "content": "0098328c"
   },
-  "/technical-knowledge/system-design/database-design-810": {
+  "/technical-knowledge/system-design/database-design-941": {
     "__comp": "17896441",
     "content": "9fe414ef"
   },
@@ -10060,7 +10060,7 @@
     "__comp": "17896441",
     "content": "b21b4701"
   },
-  "/technical-knowledge/system-design/domain-driven-design-b00": {
+  "/technical-knowledge/system-design/domain-driven-design-32e": {
     "__comp": "17896441",
     "content": "a12e521a"
   },
@@ -10084,7 +10084,7 @@
     "__comp": "17896441",
     "content": "010e7447"
   },
-  "/technical-knowledge/system-design/message-queues-0b0": {
+  "/technical-knowledge/system-design/message-queues-77e": {
     "__comp": "17896441",
     "content": "3940c236"
   },
@@ -10104,7 +10104,7 @@
     "__comp": "17896441",
     "content": "f58357ef"
   },
-  "/technical-knowledge/system-design/outbox-pattern-162": {
+  "/technical-knowledge/system-design/outbox-pattern-149": {
     "__comp": "17896441",
     "content": "5223f567"
   },
@@ -10112,11 +10112,11 @@
     "__comp": "17896441",
     "content": "ec5f7116"
   },
-  "/technical-knowledge/system-design/scaling-reads-a07": {
+  "/technical-knowledge/system-design/scaling-reads-971": {
     "__comp": "17896441",
     "content": "382009e9"
   },
-  "/technical-knowledge/system-design/scaling-writes-678": {
+  "/technical-knowledge/system-design/scaling-writes-c50": {
     "__comp": "17896441",
     "content": "91aa5927"
   },
@@ -10128,7 +10128,7 @@
     "__comp": "17896441",
     "content": "e8a6b3e1"
   },
-  "/technical-knowledge/system-design/sharding-partitioning-e3a": {
+  "/technical-knowledge/system-design/sharding-partitioning-cb5": {
     "__comp": "17896441",
     "content": "1d0030f3"
   },

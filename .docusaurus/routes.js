@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '5e2'),
+    component: ComponentCreator('/', '7ba'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '945'),
+        component: ComponentCreator('/', 'c30'),
         routes: [
           {
             path: '/tags',
@@ -6347,7 +6347,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'f4f'),
+            component: ComponentCreator('/', 'bc9'),
             routes: [
               {
                 path: '/aws',
@@ -7899,7 +7899,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/caching-strategies',
-                component: ComponentCreator('/technical-knowledge/database/caching-strategies', '9c4'),
+                component: ComponentCreator('/technical-knowledge/database/caching-strategies', '6f7'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -7917,7 +7917,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/database-patterns-microservices',
-                component: ComponentCreator('/technical-knowledge/database/database-patterns-microservices', 'c78'),
+                component: ComponentCreator('/technical-knowledge/database/database-patterns-microservices', '3ee'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -7941,7 +7941,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/nosql-distributed',
-                component: ComponentCreator('/technical-knowledge/database/nosql-distributed', 'b87'),
+                component: ComponentCreator('/technical-knowledge/database/nosql-distributed', '509'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -7965,7 +7965,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/replication-partitioning',
-                component: ComponentCreator('/technical-knowledge/database/replication-partitioning', 'cab'),
+                component: ComponentCreator('/technical-knowledge/database/replication-partitioning', '477'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13104,19 +13104,19 @@ export default [
               },
               {
                 path: '/technical-knowledge/low-level-design/concurrency/coordination',
-                component: ComponentCreator('/technical-knowledge/low-level-design/concurrency/coordination', 'c33'),
+                component: ComponentCreator('/technical-knowledge/low-level-design/concurrency/coordination', '67f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/low-level-design/concurrency/correctness',
-                component: ComponentCreator('/technical-knowledge/low-level-design/concurrency/correctness', '023'),
+                component: ComponentCreator('/technical-knowledge/low-level-design/concurrency/correctness', '78b'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/low-level-design/concurrency/scarcity',
-                component: ComponentCreator('/technical-knowledge/low-level-design/concurrency/scarcity', '4d4'),
+                component: ComponentCreator('/technical-knowledge/low-level-design/concurrency/scarcity', '099'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13743,7 +13743,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/cdc',
-                component: ComponentCreator('/technical-knowledge/system-design/cdc', 'da3'),
+                component: ComponentCreator('/technical-knowledge/system-design/cdc', '368'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13761,19 +13761,19 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/cqrs',
-                component: ComponentCreator('/technical-knowledge/system-design/cqrs', '444'),
+                component: ComponentCreator('/technical-knowledge/system-design/cqrs', 'afa'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/data-consistency',
-                component: ComponentCreator('/technical-knowledge/system-design/data-consistency', 'b50'),
+                component: ComponentCreator('/technical-knowledge/system-design/data-consistency', '537'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/database-design',
-                component: ComponentCreator('/technical-knowledge/system-design/database-design', '810'),
+                component: ComponentCreator('/technical-knowledge/system-design/database-design', '941'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13797,7 +13797,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/domain-driven-design',
-                component: ComponentCreator('/technical-knowledge/system-design/domain-driven-design', 'b00'),
+                component: ComponentCreator('/technical-knowledge/system-design/domain-driven-design', '32e'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13833,7 +13833,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/message-queues',
-                component: ComponentCreator('/technical-knowledge/system-design/message-queues', '0b0'),
+                component: ComponentCreator('/technical-knowledge/system-design/message-queues', '77e'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13863,7 +13863,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/outbox-pattern',
-                component: ComponentCreator('/technical-knowledge/system-design/outbox-pattern', '162'),
+                component: ComponentCreator('/technical-knowledge/system-design/outbox-pattern', '149'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13875,13 +13875,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/scaling-reads',
-                component: ComponentCreator('/technical-knowledge/system-design/scaling-reads', 'a07'),
+                component: ComponentCreator('/technical-knowledge/system-design/scaling-reads', '971'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/scaling-writes',
-                component: ComponentCreator('/technical-knowledge/system-design/scaling-writes', '678'),
+                component: ComponentCreator('/technical-knowledge/system-design/scaling-writes', 'c50'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13899,7 +13899,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/sharding-partitioning',
-                component: ComponentCreator('/technical-knowledge/system-design/sharding-partitioning', 'e3a'),
+                component: ComponentCreator('/technical-knowledge/system-design/sharding-partitioning', 'cb5'),
                 exact: true
               },
               {
