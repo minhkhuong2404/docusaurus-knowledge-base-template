@@ -6066,6 +6066,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/spring/spring-boot-daily-quiz",
+              "path": "/technical-knowledge/spring/spring-boot-daily-quiz",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/spring/spring-boot-internals",
               "path": "/technical-knowledge/spring/spring-boot-internals",
               "sidebar": "tutorialSidebar"

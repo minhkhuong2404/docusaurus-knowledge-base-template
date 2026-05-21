@@ -84,6 +84,7 @@ const sidebars: SidebarsConfig = {
 						'technical-knowledge/spring/spring-boot',
 						'technical-knowledge/spring/spring-boot-internals',
 						'technical-knowledge/spring/spring-boot-advanced',
+						'technical-knowledge/spring/spring-boot-daily-quiz',
 						'technical-knowledge/spring/spring-boot-interview-questions'
 					]
 				},

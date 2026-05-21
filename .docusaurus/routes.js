@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'c45'),
+    component: ComponentCreator('/', 'c9a'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'd28'),
+        component: ComponentCreator('/', '9ac'),
         routes: [
           {
             path: '/tags',
@@ -6347,7 +6347,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '8f3'),
+            component: ComponentCreator('/', '560'),
             routes: [
               {
                 path: '/aws',
@@ -12858,7 +12858,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-daily-quiz',
-                component: ComponentCreator('/technical-knowledge/java/java-daily-quiz', '86c'),
+                component: ComponentCreator('/technical-knowledge/java/java-daily-quiz', '576'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13620,6 +13620,12 @@ export default [
               {
                 path: '/technical-knowledge/spring/spring-boot-advanced',
                 component: ComponentCreator('/technical-knowledge/spring/spring-boot-advanced', '1e2'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/spring/spring-boot-daily-quiz',
+                component: ComponentCreator('/technical-knowledge/spring/spring-boot-daily-quiz', '15b'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

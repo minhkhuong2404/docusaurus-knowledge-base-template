@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-c45": {
+  "/-c9a": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-d28": {
+  "/-9ac": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -5085,7 +5085,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-8f3": {
+  "/-560": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -9432,7 +9432,7 @@
     "__comp": "17896441",
     "content": "f13bfd67"
   },
-  "/technical-knowledge/java/java-daily-quiz-86c": {
+  "/technical-knowledge/java/java-daily-quiz-576": {
     "__comp": "17896441",
     "content": "ee229027"
   },
@@ -9943,6 +9943,10 @@
   "/technical-knowledge/spring/spring-boot-advanced-1e2": {
     "__comp": "17896441",
     "content": "44626067"
+  },
+  "/technical-knowledge/spring/spring-boot-daily-quiz-15b": {
+    "__comp": "17896441",
+    "content": "fac5caa9"
   },
   "/technical-knowledge/spring/spring-boot-internals-b0b": {
     "__comp": "17896441",
