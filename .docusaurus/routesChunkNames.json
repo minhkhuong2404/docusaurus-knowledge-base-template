@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-ad8": {
+  "/-c45": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-1da": {
+  "/-d28": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -5085,7 +5085,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-7ae": {
+  "/-8f3": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -5500,7 +5500,7 @@
     "__comp": "17896441",
     "content": "3f8eb35f"
   },
-  "/docs-7c7": {
+  "/docs-154": {
     "__comp": "17896441",
     "content": "0e384e19"
   },
@@ -9431,6 +9431,10 @@
   "/technical-knowledge/java/java-concurrency-b4b": {
     "__comp": "17896441",
     "content": "f13bfd67"
+  },
+  "/technical-knowledge/java/java-daily-quiz-86c": {
+    "__comp": "17896441",
+    "content": "ee229027"
   },
   "/technical-knowledge/java/java-fundamentals-887": {
     "__comp": "17896441",

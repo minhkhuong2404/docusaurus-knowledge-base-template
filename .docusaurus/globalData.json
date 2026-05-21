@@ -5413,6 +5413,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/java/java-daily-quiz",
+              "path": "/technical-knowledge/java/java-daily-quiz",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/java/java-fundamentals",
               "path": "/technical-knowledge/java/java-fundamentals",
               "sidebar": "tutorialSidebar"

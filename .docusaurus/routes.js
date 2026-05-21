@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'ad8'),
+    component: ComponentCreator('/', 'c45'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '1da'),
+        component: ComponentCreator('/', 'd28'),
         routes: [
           {
             path: '/tags',
@@ -6347,7 +6347,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '7ae'),
+            component: ComponentCreator('/', '8f3'),
             routes: [
               {
                 path: '/aws',
@@ -6968,7 +6968,7 @@ export default [
               },
               {
                 path: '/docs',
-                component: ComponentCreator('/docs', '7c7'),
+                component: ComponentCreator('/docs', '154'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -12853,6 +12853,12 @@ export default [
               {
                 path: '/technical-knowledge/java/java-concurrency',
                 component: ComponentCreator('/technical-knowledge/java/java-concurrency', 'b4b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/java/java-daily-quiz',
+                component: ComponentCreator('/technical-knowledge/java/java-daily-quiz', '86c'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

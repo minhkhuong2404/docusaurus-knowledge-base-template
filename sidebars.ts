@@ -65,6 +65,7 @@ const sidebars: SidebarsConfig = {
 					label: '🎯 Interview Questions',
 					collapsed: true,
 					items: [
+						'technical-knowledge/java/java-daily-quiz',
 						'technical-knowledge/java/java-interview-questions',
 					]
 				}
