@@ -18,9 +18,9 @@ A practical, continuously growing knowledge base for software engineers — buil
 | Path | What It Covers | Best For |
 |------|---------------|----------|
 | [💼 Interview Preparation](#-interview-preparation-roadmap) | System design, Java, behavioral, patterns | Upcoming interviews |
-| [📊 DSA Coding Training](#-dsa-coding-training-20--week-roadmap) | 20-week structured algorithm training | LeetCode & coding rounds |
+| [📊 DSA Coding Training](#-dsa-coding-training-20-week-roadmap) | 20-week structured algorithm training | LeetCode & coding rounds |
 | [📚 Engineering Books](#-engineering-books) | Key takeaways from essential books | Deep, long-term growth |
-| [☁️ Cloud Certifications](#️-cloud-certifications--aws-dva-c02) | AWS DVA-C02 exam prep | Cloud developer cert |
+| [☁️ Cloud Certifications](#️-cloud-certifications-aws-dva-c02) | AWS DVA-C02 exam prep | Cloud developer cert |
 
 ---
 
@@ -93,7 +93,7 @@ Good answers connect three layers: **Concept** (what it is) → **Design choice*
 
 ---
 
-## 📊 DSA Coding Training - 20-Week Roadmap
+## 📊 DSA Coding Training 20-Week Roadmap
 
 A structured 20-week curriculum for mastering coding interview patterns. Each week focuses on one core pattern with progressive difficulty.
 
@@ -176,7 +176,7 @@ Distilled notes and key takeaways from essential software engineering books.
 
 ---
 
-## ☁️ Cloud Certifications — AWS DVA-C02
+## ☁️ Cloud Certifications AWS DVA-C02
 
 Targeted preparation for the **AWS Certified Developer – Associate (DVA-C02)** exam.
 

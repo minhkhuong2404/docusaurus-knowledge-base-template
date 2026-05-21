@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '7ba'),
+    component: ComponentCreator('/', 'ad8'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'c30'),
+        component: ComponentCreator('/', '1da'),
         routes: [
           {
             path: '/tags',
@@ -6347,7 +6347,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'bc9'),
+            component: ComponentCreator('/', '7ae'),
             routes: [
               {
                 path: '/aws',
@@ -6968,7 +6968,7 @@ export default [
               },
               {
                 path: '/docs',
-                component: ComponentCreator('/docs', 'a92'),
+                component: ComponentCreator('/docs', '7c7'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
