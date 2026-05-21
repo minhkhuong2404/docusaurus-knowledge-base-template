@@ -272,6 +272,37 @@ public class SafePublication {
 }
 ```
 
+### 🧠 Senior Deep Dive: Hardware Reality & Advanced Patterns
+
+While new learners focus on software locks (`synchronized`), senior engineers must understand hardware implications.
+
+#### 1. False Sharing (The Cache Line Problem)
+Modern CPUs fetch memory from RAM in 64-byte chunks called **Cache Lines**. If two threads update two completely independent `volatile` variables that happen to sit next to each other in memory (in the same cache line), the CPU's cache coherence protocol (MESI) will constantly invalidate the entire cache line across cores. This causes a massive invisible performance penalty.
+* **The Fix**: Use the `@Contended` annotation in Java to pad the variables with empty bytes, forcing them into separate CPU cache lines.
+
+#### 2. The Double-Checked Locking (DCL) Trap
+A classic singleton pattern mistake that tests your knowledge of instruction reordering.
+
+```java
+// ❌ BROKEN Double-Checked Locking (if instance is not volatile)
+public class Singleton {
+    private static Singleton instance; // Missing volatile!
+
+    public static Singleton getInstance() {
+        if (instance == null) {
+            synchronized (Singleton.class) {
+                if (instance == null) {
+                    instance = new Singleton(); // The danger lies here!
+                }
+            }
+        }
+        return instance;
+    }
+}
+```
+**Why it fails**: `instance = new Singleton()` is not atomic. It involves 3 steps: (1) allocate memory, (2) call the constructor, and (3) assign the reference. The JVM/CPU might reorder step 3 *before* step 2. A second thread could check `instance == null`, see it's false, and return a partially constructed object!
+* **The Fix**: You **MUST** declare `private static volatile Singleton instance;`. The `volatile` keyword inserts a memory barrier that prevents this specific instruction reordering.
+
 ---
 
 ## Interview Concurrency Checklist

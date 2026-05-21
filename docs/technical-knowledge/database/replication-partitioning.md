@@ -93,108 +93,10 @@ Quorum: W + R > N → at least one response has latest write
 
 ## Partitioning / Sharding
 
-**Partitioning** = splitting large tables. Can be:
-- **Vertical**: split columns into separate tables
-- **Horizontal (sharding)**: split rows across nodes
-
-### Why Shard?
-- Dataset too large for one server
-- Write throughput exceeds one server's capacity
-- Query load can't be served by replicas alone
-
----
-
-## Sharding Strategies
-
-### Range Partitioning
-
-```
-Shard 1: user_id  1 – 1,000,000
-Shard 2: user_id  1,000,001 – 2,000,000
-Shard 3: user_id  2,000,001 – 3,000,000
-```
-
-✅ Range queries easy (scan one or few shards)
-❌ **Hot spots**: recent data (e.g., order by date) all goes to one shard
-
-### Hash Partitioning
-
-```
-shard = hash(user_id) % num_shards
-```
-
-✅ Even distribution, no hot spots
-❌ Range queries require scanning all shards
-❌ **Rebalancing** when adding shards: most keys must move
-
-### Consistent Hashing
-
-Used by: **Cassandra, DynamoDB, Redis Cluster**
-
-```
-Virtual ring: 0 ──────────────────── 2^32
-Nodes at positions:   N1   N2   N3
-Key maps to nearest node clockwise
-```
-
-✅ Adding/removing a node only redistributes ~1/N keys
-✅ Virtual nodes enable uneven weighting
-❌ More complex to implement
-
-### Directory / Lookup Service
-
-A routing table maps keys to shards:
-```
-user_id range → shard_id → DB host
-```
-
-✅ Flexible, any mapping possible
-❌ Single point of failure (if directory is down)
-❌ Extra lookup hop
-
----
-
-## Partitioning in SQL Databases
-
-### MySQL Partitioning
-
-```sql
--- Range partition by year
-CREATE TABLE orders (
-    id INT,
-    created_at DATE,
-    total DECIMAL(10,2)
-)
-PARTITION BY RANGE (YEAR(created_at)) (
-    PARTITION p2022 VALUES LESS THAN (2023),
-    PARTITION p2023 VALUES LESS THAN (2024),
-    PARTITION p2024 VALUES LESS THAN (2025),
-    PARTITION p_future VALUES LESS THAN MAXVALUE
-);
-
--- Hash partition
-CREATE TABLE sessions (
-    id BIGINT,
-    user_id INT
-)
-PARTITION BY HASH(user_id) PARTITIONS 8;
-```
-
-### PostgreSQL Table Partitioning (Declarative — PG 10+)
-
-```sql
-CREATE TABLE orders (
-    id BIGSERIAL,
-    created_at DATE NOT NULL,
-    total NUMERIC
-) PARTITION BY RANGE (created_at);
-
-CREATE TABLE orders_2024 PARTITION OF orders
-    FOR VALUES FROM ('2024-01-01') TO ('2025-01-01');
-
-CREATE TABLE orders_2025 PARTITION OF orders
-    FOR VALUES FROM ('2025-01-01') TO ('2026-01-01');
-```
+:::info[Deep Dive: Sharding & Partitioning]
+The detailed guide on Horizontal Partitioning, Sharding Strategies (Hash, Range, Consistent Hashing), and Cross-Shard complexity has been moved to its own centralized page. 
+Please see the **[Database Sharding & Partitioning](../system-design/sharding-partitioning.md)** guide.
+:::
 
 ---
 
@@ -303,11 +205,7 @@ public List<Order> getRecentOrders() { ... }
 **Q4. What is the CAP theorem? How does it apply to choosing a database?**
 > CAP states a distributed system can have at most 2 of: Consistency (reads always see latest write), Availability (every request gets a response), and Partition tolerance. Since partitions are inevitable, the real choice is between CP (consistency over availability) and AP (availability with eventual consistency).
 
-**Q5. What are the trade-offs of range partitioning vs hash partitioning?**
-> Range: supports range queries efficiently, but can create hot spots (recent time-range data all on one shard). Hash: evenly distributes data, eliminates hot spots, but makes range queries expensive (scatter-gather across all shards) and rebalancing costly with modulo hashing.
 
-**Q6. What is a hot spot in sharding and how do you prevent it?**
-> A hot spot is a shard receiving disproportionately more traffic than others. Causes: popular key (celebrity user, viral post), monotonically increasing PK with range sharding. Prevention: hash sharding, adding random suffix to hot keys, dedicated shard for hot data, caching.
 
 **Q7. What is leader election and why is it critical for replication?**
 > When the leader fails, a new leader must be elected from replicas. Common algorithms: Raft, Paxos, Zab (ZooKeeper). The new leader must have the most up-to-date data. Split-brain (two leaders simultaneously) is a dangerous failure mode — fencing mechanisms and quorums prevent it.

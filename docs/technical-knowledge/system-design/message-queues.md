@@ -257,73 +257,17 @@ Events are the source of truth. See [Database Design](./database-design).
 
 ## Change Data Capture (CDC)
 
-### Beginner View
-CDC captures database changes and publishes them as events so other services can react without polling tables repeatedly.
-
-```
-App writes row -> DB transaction log -> CDC connector -> Kafka topic -> consumers
-```
-
-### Senior Deep Dive
-Two dominant CDC styles:
-- Log-based CDC (for example Debezium): low overhead, preserves commit order
-- Query-based CDC: simple but expensive and can miss ordering under race conditions
-
-Design concerns:
-- Per-key ordering must align with partition key
-- Schema evolution must be versioned and backward compatible
-- Reprocessing requires idempotent consumers and replay-safe handlers
-
-### Failure Modes and Recovery
-- Connector lag spikes after deployment or broker incidents
-- Poison events block downstream consumers
-- Snapshot + streaming overlap creates duplicate events
-
-Recovery playbook:
-- Track connector lag SLO and alert thresholds
-- Route malformed payloads to DLQ with schema version metadata
-- Use dedup keys: `source_table + primary_key + commit_lsn`
+:::info[Deep Dive: Change Data Capture (CDC)]
+For a comprehensive guide on how CDC integrates with Kafka, log-based vs query-based approaches, and handling failure modes like poison pills, see the centralized **[Change Data Capture (CDC)](./cdc.md)** page.
+:::
 
 ---
 
 ## CQRS (Command Query Responsibility Segregation)
 
-### Beginner View
-CQRS separates write and read models:
-- Command side validates and persists business changes
-- Query side serves fast, denormalized read views
-
-```
-Command API -> write model -> domain events -> read model projector -> query API
-```
-
-### Senior Deep Dive
-CQRS is most useful when:
-- Read and write scaling patterns differ significantly
-- You need many specialized read projections
-- Domain rules are complex and must be isolated from query optimizations
-
-Tradeoffs:
-- Eventual consistency between write and read sides
-- More operational components (projectors, replay tools, drift monitoring)
-- Harder local debugging without good trace correlation
-
-### Spring Projection Example
-```java
-@KafkaListener(topics = "order-events")
-public void projectOrderEvent(OrderEvent event) {
-    OrderReadModel current = readRepo.findByOrderId(event.orderId()).orElse(new OrderReadModel());
-
-    switch (event.type()) {
-        case "ORDER_PLACED" -> current.markPlaced(event.payload());
-        case "PAYMENT_CAPTURED" -> current.markPaid(event.payload());
-        case "ORDER_SHIPPED" -> current.markShipped(event.payload());
-        default -> { return; }
-    }
-
-    readRepo.save(current);
-}
-```
+:::info[Deep Dive: CQRS & Event Sourcing]
+For a comprehensive guide on separating read and write models, synchronization, and Spring Projection examples, see the centralized **[CQRS & Event Sourcing](./cqrs.md)** page.
+:::
 
 ---
 

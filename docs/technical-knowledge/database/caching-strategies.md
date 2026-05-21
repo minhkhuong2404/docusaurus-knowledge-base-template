@@ -557,6 +557,10 @@ flowchart LR
 
 This guarantees that either both the DB update **and** the cache invalidation happen, or neither does (since the outbox row is part of the same DB transaction).
 
+:::info[Deep Dive: Outbox Pattern]
+For a complete guide on how the outbox pattern works under the hood (polling vs CDC), see the **[Transactional Outbox Pattern](../system-design/outbox-pattern.md)** page.
+:::
+
 ---
 
 ## Cache Problems & Solutions

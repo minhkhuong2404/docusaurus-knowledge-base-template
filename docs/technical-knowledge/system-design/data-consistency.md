@@ -27,11 +27,6 @@ tags: [consistency, transactions, acid, eventual-consistency, outbox-pattern, id
   - [CRDT (Conflict-free Replicated Data Types)](#crdt-conflict-free-replicated-data-types)
   - [Application-Level Resolution](#application-level-resolution)
 - [Dual-Write Problem](#dual-write-problem)
-  - [Transactional Outbox Pattern](#transactional-outbox-pattern)
-  - [Outbox: Beginner View](#outbox-beginner-view)
-  - [Outbox: Senior Deep Dive](#outbox-senior-deep-dive)
-  - [Outbox Reliability Checklist](#outbox-reliability-checklist)
-  - [Failure Modes](#failure-modes)
 - [Quorum Reads and Read Repair](#quorum-reads-and-read-repair)
   - [Beginner View](#beginner-view-1)
   - [Senior Deep Dive](#senior-deep-dive)
@@ -289,67 +284,12 @@ public UserProfile merge(UserProfile local, UserProfile remote) {
 
 ## Dual-Write Problem
 
-Writing to two systems (DB + Kafka) without coordination.
+Writing to two systems (DB + Kafka) without coordination is known as the **Dual-Write Problem**.
 
-```java
-@Transactional
-public Order createOrder(CreateOrderCommand cmd) {
-    Order order = orderRepository.save(new Order(cmd));  // DB: success
-    kafkaTemplate.send("orders", new OrderCreatedEvent(order)); // Kafka: FAILS!
-    // DB committed but Kafka never got the event → downstream services don't know
-    return order;
-}
-```
-
-### Transactional Outbox Pattern
-
-```java
-@Transactional
-public Order createOrder(CreateOrderCommand cmd) {
-    Order order = orderRepository.save(new Order(cmd));
-
-    // Write event to outbox table IN SAME TRANSACTION
-    OutboxEvent event = new OutboxEvent("orders", toJson(new OrderCreatedEvent(order)));
-    outboxRepository.save(event);
-    // If transaction commits → both order AND event are durably stored
-    return order;
-}
-
-// Separate process reads outbox and publishes to Kafka
-// (Or use Debezium CDC to read DB transaction log)
-```
-
-### Outbox: Beginner View
-
-Outbox solves dual-write by storing business row and integration event in one DB transaction.
-
-### Outbox: Senior Deep Dive
-
-Two relay styles:
-- **Poller-based relay**: app job reads unpublished rows and publishes
-- **CDC-based relay**: connector reads transaction log and publishes changes
-
-Tradeoff summary:
-- Poller is easy to start but adds read load and polling latency
-- CDC is lower-latency and ordered per log, but operationally heavier
-
-### Outbox Reliability Checklist
-
-- Use ordered primary key (for example, auto-increment or commit timestamp)
-- Mark publish status atomically and idempotently
-- Include dedup key in event payload (for consumer idempotency)
-- Keep retention/cleanup job for published outbox rows
-
-### Failure Modes
-
-- Published to broker but status update fails -> duplicate publish on retry
-- Poller crashes mid-batch -> partial publish
-- Poison payload keeps failing serialization
-
-Mitigations:
-- Consumer idempotency by event ID
-- Per-record retry counters + DLQ after threshold
-- Alert on outbox backlog age and growth rate
+:::info[Deep Dive: Outbox Pattern]
+The standard solution to the Dual-Write problem is the **Transactional Outbox Pattern**. 
+For a comprehensive guide on how it works, polling vs CDC strategies, code examples, and reliability checklists, see the **[Transactional Outbox Pattern](./outbox-pattern.md)** page.
+:::
 
 ---
 
@@ -722,111 +662,17 @@ class RaftNode {
 
 ## Event Sourcing and CQRS
 
-### Event Sourcing
-
-Event sourcing stores state changes as a sequence of events rather than current state.
-
-```
-Traditional:
-  Account: {id: 1, balance: 1000}
-
-Event Sourcing:
-  AccountCreated(id: 1, initialBalance: 1000)
-  MoneyDeposited(id: 1, amount: 500)
-  MoneyWithdrawn(id: 1, amount: 200)
-  Current balance: 1000 + 500 - 200 = 1300
-```
-
-Benefits:
-- Complete audit trail
-- Temporal queries (state at any point in time)
-- Event replay for debugging/testing
-
-Challenges:
-- Event schema evolution
-- Event versioning
-- Snapshotting for performance
-
-### CQRS (Command Query Responsibility Segregation)
-
-CQRS separates read and write models.
-
-```
-Write side:
-  Command: CreateOrder
-  Event: OrderCreated
-  Write model: Order (normalized)
-
-Read side:
-  Event: OrderCreated
-  Projection: OrderView (denormalized)
-  Query: GetOrderView
-```
-
-Benefits:
-- Optimized read models
-- Scalable reads and writes independently
-- Complex queries on read side
-
-Challenges:
-- Eventual consistency
-- Complexity
-- Data synchronization
-
-### Integration
-
-Event sourcing + CQRS = powerful pattern for distributed systems.
-
-```
-Command → Event Store → Projections → Read Models
-         ↓
-      Event Bus → Subscribers
-```
+:::info[Deep Dive: CQRS & Event Sourcing]
+For a comprehensive guide on separating read and write models, synchronization via Domain Events, and Event Sourcing theory, see the centralized **[CQRS & Event Sourcing](./cqrs.md)** page.
+:::
 
 ---
 
 ## Change Data Capture (CDC)
 
-### How CDC Works
-
-CDC captures changes from database transaction logs and streams them to consumers.
-
-```
-Database → Transaction Log → CDC Connector → Kafka → Consumers
-```
-
-Benefits:
-- Real-time change streaming
-- No impact on application code
-- Reliable and ordered
-
-### CDC Implementations
-
-- **Debezium**: Open-source CDC for PostgreSQL, MySQL, MongoDB
-- **Oracle GoldenGate**: Commercial CDC for Oracle
-- **AWS DMS**: Managed CDC service
-
-```java
-// Debezium configuration
-debezium:
-  connector:
-    name: postgres-connector
-    database.hostname: postgres
-    database.port: 5432
-    database.user: debezium
-    database.password: password
-    database.dbname: mydb
-    plugin.name: pgoutput
-```
-
-### CDC vs Polling
-
-| Aspect | CDC | Polling |
-|---|---|---|
-| Latency | Low | High |
-| Impact | None | High (read load) |
-| Complexity | Medium | Low |
-| Ordering | Guaranteed | Not guaranteed |
+:::info[Deep Dive: Change Data Capture (CDC)]
+For a comprehensive guide on how CDC works, implementations like Debezium, and how it compares to polling, see the **[Change Data Capture (CDC)](./cdc.md)** page.
+:::
 
 ---
 
@@ -1246,7 +1092,7 @@ public class AccountService {
 
 ### Q: How does change data capture (CDC) work?
 
-**A:** CDC reads database transaction logs and streams changes to consumers. It provides real-time, reliable change streaming without impacting application code.
+**A:** CDC reads database transaction logs and streams changes to consumers. It provides real-time, reliable change streaming without impacting application code. For more details, see the [CDC Deep Dive](./cdc.md).
 
 ### Q: What is the difference between event sourcing and traditional state persistence?
 

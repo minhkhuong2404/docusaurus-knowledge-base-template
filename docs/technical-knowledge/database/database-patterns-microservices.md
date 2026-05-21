@@ -42,58 +42,10 @@ orderRepository.save(order);      // Step 1: DB commit
 messageQueue.publish(orderEvent); // Step 2: Kafka publish → could fail!
 ```
 
-**Transactional Outbox (correct):**
-```java
-// ✅ Both in same local transaction
-@Transactional
-public void placeOrder(OrderRequest req) {
-    Order order = orderRepository.save(new Order(req));
-
-    // Write event to outbox table IN SAME TRANSACTION
-    outboxRepository.save(OutboxEvent.builder()
-        .aggregateId(order.getId())
-        .aggregateType("Order")
-        .eventType("OrderPlaced")
-        .payload(toJson(order))
-        .build());
-    // Single DB commit — either both persist or neither
-}
-
-// Separate relay process reads outbox and publishes to Kafka
-@Scheduled(fixedDelay = 1000)
-public void relayOutboxEvents() {
-    List<OutboxEvent> pending = outboxRepo.findPending();
-    for (OutboxEvent event : pending) {
-        kafka.send(event.getEventType(), event.getPayload());
-        outboxRepo.markPublished(event.getId());
-    }
-}
-```
-
-```sql
-CREATE TABLE outbox_events (
-    id              BIGSERIAL PRIMARY KEY,
-    aggregate_type  VARCHAR(100) NOT NULL,
-    aggregate_id    VARCHAR(100) NOT NULL,
-    event_type      VARCHAR(100) NOT NULL,
-    payload         JSONB NOT NULL,
-    created_at      TIMESTAMP DEFAULT NOW(),
-    published_at    TIMESTAMP NULL
-);
-
-CREATE INDEX idx_outbox_unpublished ON outbox_events (created_at)
-WHERE published_at IS NULL;
-```
-
-### CDC-Based Outbox (Debezium)
-
-Instead of a polling relay, use **Change Data Capture (CDC)** to read DB WAL/binlog:
-
-```
-DB WAL/binlog → Debezium → Kafka Connect → Kafka topic
-```
-
-Benefits: no polling overhead, exactly-once semantics with Kafka, lower latency.
+:::info[Deep Dive: Outbox Pattern]
+The standard solution to this is the **Transactional Outbox Pattern**. 
+For a complete guide with code examples, polling vs CDC (Debezium) trade-offs, and failure mitigation, see the centralized **[Transactional Outbox Pattern](../system-design/outbox-pattern.md)** page.
+:::
 
 ---
 
@@ -159,59 +111,9 @@ public class OrderSagaOrchestrator {
 
 ## CQRS — Command Query Responsibility Segregation
 
-Separate the **write model** (commands) from the **read model** (queries).
-
-```
-Write Side                          Read Side
-──────────                         ──────────
-POST /orders  ──▶  Command  ──▶  Write DB (normalized)
-                   Handler          │
-                       │       Domain Events
-                       └────────────▶  Read DB (denormalized)
-                                       └──▶ GET /orders/{id}
-                                       └──▶ GET /users/{id}/orders
-```
-
-**Why CQRS:**
-- Read and write have different scalability needs
-- Read model can be optimized for specific query patterns
-- Write model enforces business invariants
-- Read replicas naturally separate read/write
-
-```java
-// Command side — enforce business rules
-@Service
-public class OrderCommandService {
-    @Transactional
-    public OrderId placeOrder(PlaceOrderCommand cmd) {
-        Order order = Order.create(cmd);  // domain logic, validation
-        orderRepo.save(order);
-        eventBus.publish(new OrderPlacedEvent(order));
-        return order.getId();
-    }
-}
-
-// Query side — optimized read model
-@Service
-public class OrderQueryService {
-    // Read from denormalized view or dedicated read DB
-    @Transactional(readOnly = true)
-    public OrderSummaryDto getOrderSummary(Long orderId) {
-        return orderSummaryRepo.findById(orderId); // pre-joined, flat DTO
-    }
-
-    public List<OrderListItem> getUserOrders(Long userId, Pageable pageable) {
-        return orderListRepo.findByUserId(userId, pageable);
-    }
-}
-
-// Event handler updates read model
-@EventListener
-public void on(OrderPlacedEvent event) {
-    orderSummaryRepo.save(new OrderSummaryView(event));
-    userOrderListRepo.addOrder(event.getUserId(), event);
-}
-```
+:::info[Deep Dive: CQRS & Event Sourcing]
+For a comprehensive guide on separating read and write models, synchronization via Domain Events, and Event Sourcing theory, see the centralized **[CQRS & Event Sourcing](../system-design/cqrs.md)** page.
+:::
 
 ---
 
@@ -329,7 +231,7 @@ Solutions:
 > Options: API composition in a BFF/gateway (call both services, merge in memory); CQRS read-side projection (event subscriber builds a pre-joined view in its own DB); API Gateway pattern. Never do cross-database JOINs directly — each service's DB is its private implementation detail.
 
 **Q7. What is Change Data Capture (CDC) and how does Debezium work?**
-> CDC captures row-level changes from the database's transaction log (WAL for PostgreSQL, binlog for MySQL) without modifying the application. Debezium is an open-source CDC tool that connects to the DB log and publishes change events to Kafka. It enables the Outbox pattern without polling, synchronizes read models, and replicates data to data warehouses with low latency.
+> CDC captures row-level changes from the database's transaction log (WAL for PostgreSQL, binlog for MySQL) without modifying the application. For a complete deep dive, including schema evolution and snapshotting challenges, see the **[Change Data Capture (CDC)](../system-design/cdc.md)** page.
 
 **Q8. What is the difference between eventual consistency and strong consistency in microservices?**
 > Strong consistency: every read sees the latest write immediately — achieved within a single database with ACID transactions, but impossible across distributed services without coordination cost. Eventual consistency: all replicas/services will converge to the same state *eventually* (after event propagation) — cheaper, more available, but reads may be stale. Design systems to tolerate eventual consistency; use strong consistency only where business rules require it.

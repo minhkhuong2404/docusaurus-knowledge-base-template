@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-abd": {
+  "/-5e2": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-7ba": {
+  "/-945": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -593,6 +593,10 @@
     "__comp": "df203c0f",
     "__props": "ce6825bc"
   },
+  "/tags/cdc-493": {
+    "__comp": "df203c0f",
+    "__props": "2b149dc3"
+  },
   "/tags/cdn-d12": {
     "__comp": "df203c0f",
     "__props": "1425671b"
@@ -1061,6 +1065,10 @@
     "__comp": "df203c0f",
     "__props": "301c2584"
   },
+  "/tags/consistent-hashing-347": {
+    "__comp": "df203c0f",
+    "__props": "4ff14a27"
+  },
   "/tags/constructors-dec": {
     "__comp": "df203c0f",
     "__props": "ec7d51df"
@@ -1233,6 +1241,10 @@
     "__comp": "df203c0f",
     "__props": "ee36b8bc"
   },
+  "/tags/data-consistency-3fb": {
+    "__comp": "df203c0f",
+    "__props": "af48a6db"
+  },
   "/tags/data-processing-a53": {
     "__comp": "df203c0f",
     "__props": "d96ffc9b"
@@ -1292,6 +1304,10 @@
   "/tags/deadlocks-946": {
     "__comp": "df203c0f",
     "__props": "94c6767f"
+  },
+  "/tags/debezium-4c1": {
+    "__comp": "df203c0f",
+    "__props": "0ac014ee"
   },
   "/tags/debit-3e7": {
     "__comp": "df203c0f",
@@ -1524,6 +1540,10 @@
   "/tags/dsa-4ff": {
     "__comp": "df203c0f",
     "__props": "dc911be7"
+  },
+  "/tags/dual-write-4e8": {
+    "__comp": "df203c0f",
+    "__props": "883bcf9f"
   },
   "/tags/duration-e84": {
     "__comp": "df203c0f",
@@ -5065,10 +5085,10 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-f3f": {
+  "/-f4f": {
     "__comp": "a94703ab"
   },
-  "/aws-7a1": {
+  "/aws-d86": {
     "__comp": "17896441",
     "content": "78559adb"
   },
@@ -5084,7 +5104,7 @@
     "__comp": "17896441",
     "content": "7b5d2e61"
   },
-  "/books/building-microservice/chapter-01-90e": {
+  "/books/building-microservice/chapter-01-770": {
     "__comp": "17896441",
     "content": "68ab07b1"
   },
@@ -5092,23 +5112,23 @@
     "__comp": "17896441",
     "content": "11bcc05a"
   },
-  "/books/building-microservice/chapter-03-e37": {
+  "/books/building-microservice/chapter-03-241": {
     "__comp": "17896441",
     "content": "3b42864a"
   },
-  "/books/building-microservice/chapter-04-95e": {
+  "/books/building-microservice/chapter-04-15f": {
     "__comp": "17896441",
     "content": "69b5c840"
   },
-  "/books/building-microservice/chapter-05-1a9": {
+  "/books/building-microservice/chapter-05-6f5": {
     "__comp": "17896441",
     "content": "1d25b2fe"
   },
-  "/books/building-microservice/chapter-06-d20": {
+  "/books/building-microservice/chapter-06-3ac": {
     "__comp": "17896441",
     "content": "9df5b457"
   },
-  "/books/building-microservice/chapter-07-ffb": {
+  "/books/building-microservice/chapter-07-3fb": {
     "__comp": "17896441",
     "content": "4aeace3f"
   },
@@ -5116,7 +5136,7 @@
     "__comp": "17896441",
     "content": "f68d61b3"
   },
-  "/books/building-microservice/chapter-09-43e": {
+  "/books/building-microservice/chapter-09-fd7": {
     "__comp": "17896441",
     "content": "b8cded00"
   },
@@ -5140,7 +5160,7 @@
     "__comp": "17896441",
     "content": "c08887ed"
   },
-  "/books/building-microservice/chapter-15-991": {
+  "/books/building-microservice/chapter-15-6aa": {
     "__comp": "17896441",
     "content": "ed429399"
   },
@@ -5248,23 +5268,23 @@
     "__comp": "17896441",
     "content": "9f26bb15"
   },
-  "/books/clean-code/chapter-04-comments-3a2": {
+  "/books/clean-code/chapter-04-comments-d5b": {
     "__comp": "17896441",
     "content": "3d877638"
   },
-  "/books/clean-code/chapter-05-formatting-f2e": {
+  "/books/clean-code/chapter-05-formatting-646": {
     "__comp": "17896441",
     "content": "c096fea3"
   },
-  "/books/clean-code/chapter-06-objects-data-structures-618": {
+  "/books/clean-code/chapter-06-objects-data-structures-601": {
     "__comp": "17896441",
     "content": "349d6862"
   },
-  "/books/clean-code/chapter-07-error-handling-9ca": {
+  "/books/clean-code/chapter-07-error-handling-0b9": {
     "__comp": "17896441",
     "content": "3102471d"
   },
-  "/books/clean-code/chapter-08-boundaries-84d": {
+  "/books/clean-code/chapter-08-boundaries-688": {
     "__comp": "17896441",
     "content": "fdefd9b2"
   },
@@ -5312,11 +5332,11 @@
     "__comp": "17896441",
     "content": "693818bc"
   },
-  "/books/ddia/part1-foundations/chapter-01-151": {
+  "/books/ddia/part1-foundations/chapter-01-aae": {
     "__comp": "17896441",
     "content": "6e76c11d"
   },
-  "/books/ddia/part1-foundations/chapter-02-aa0": {
+  "/books/ddia/part1-foundations/chapter-02-298": {
     "__comp": "17896441",
     "content": "a8be8036"
   },
@@ -5324,7 +5344,7 @@
     "__comp": "17896441",
     "content": "82f6e2d7"
   },
-  "/books/ddia/part1-foundations/chapter-04-e38": {
+  "/books/ddia/part1-foundations/chapter-04-eec": {
     "__comp": "17896441",
     "content": "fcb9f174"
   },
@@ -5336,7 +5356,7 @@
     "__comp": "17896441",
     "content": "14976deb"
   },
-  "/books/ddia/part2-distributed-data/chapter-07-777": {
+  "/books/ddia/part2-distributed-data/chapter-07-394": {
     "__comp": "17896441",
     "content": "0b712ecb"
   },
@@ -5484,7 +5504,7 @@
     "__comp": "17896441",
     "content": "0e384e19"
   },
-  "/intro-ce0": {
+  "/intro-bf8": {
     "__comp": "17896441",
     "content": "0dbb9876"
   },
@@ -5496,11 +5516,11 @@
     "__comp": "17896441",
     "content": "6dda571b"
   },
-  "/non-technical-knowledge/sdlc/deployment/roll-backward-3f8": {
+  "/non-technical-knowledge/sdlc/deployment/roll-backward-5fa": {
     "__comp": "17896441",
     "content": "d70a8c93"
   },
-  "/non-technical-knowledge/sdlc/deployment/roll-forward-b68": {
+  "/non-technical-knowledge/sdlc/deployment/roll-forward-270": {
     "__comp": "17896441",
     "content": "d9d1bb30"
   },
@@ -5556,7 +5576,7 @@
     "__comp": "17896441",
     "content": "d20b631e"
   },
-  "/non-technical-knowledge/sdlc/testing/unit-testing-a4e": {
+  "/non-technical-knowledge/sdlc/testing/unit-testing-f52": {
     "__comp": "17896441",
     "content": "cb923f1c"
   },
@@ -5696,7 +5716,7 @@
     "__comp": "17896441",
     "content": "e11cab58"
   },
-  "/technical-knowledge/aws/cicd/-b8d": {
+  "/technical-knowledge/aws/cicd/-a20": {
     "__comp": "17896441",
     "content": "f4746e0c"
   },
@@ -6100,11 +6120,11 @@
     "__comp": "17896441",
     "content": "8a4ffef6"
   },
-  "/technical-knowledge/database/backup-recovery-f80": {
+  "/technical-knowledge/database/backup-recovery-212": {
     "__comp": "17896441",
     "content": "1d655bfd"
   },
-  "/technical-knowledge/database/caching-strategies-2e2": {
+  "/technical-knowledge/database/caching-strategies-9c4": {
     "__comp": "17896441",
     "content": "7aa6b45d"
   },
@@ -6112,7 +6132,7 @@
     "__comp": "17896441",
     "content": "a404a845"
   },
-  "/technical-knowledge/database/database-design-90e": {
+  "/technical-knowledge/database/database-design-5ca": {
     "__comp": "17896441",
     "content": "39348cd3"
   },
@@ -6132,11 +6152,11 @@
     "__comp": "17896441",
     "content": "3579e0cb"
   },
-  "/technical-knowledge/database/nosql-distributed-448": {
+  "/technical-knowledge/database/nosql-distributed-b87": {
     "__comp": "17896441",
     "content": "025815b7"
   },
-  "/technical-knowledge/database/performance-monitoring-a8e": {
+  "/technical-knowledge/database/performance-monitoring-596": {
     "__comp": "17896441",
     "content": "66dfb623"
   },
@@ -9096,7 +9116,7 @@
     "__comp": "17896441",
     "content": "5b7c9f14"
   },
-  "/technical-knowledge/git/advanced/hooks-5a7": {
+  "/technical-knowledge/git/advanced/hooks-037": {
     "__comp": "17896441",
     "content": "bf29cb48"
   },
@@ -9124,7 +9144,7 @@
     "__comp": "17896441",
     "content": "ba5aaa48"
   },
-  "/technical-knowledge/git/branching/branches-5e3": {
+  "/technical-knowledge/git/branching/branches-14f": {
     "__comp": "17896441",
     "content": "bb49063c"
   },
@@ -9168,11 +9188,11 @@
     "__comp": "17896441",
     "content": "815fb4e9"
   },
-  "/technical-knowledge/git/history/reflog-5d0": {
+  "/technical-knowledge/git/history/reflog-c48": {
     "__comp": "17896441",
     "content": "855e9c0e"
   },
-  "/technical-knowledge/git/history/reset-revert-bb1": {
+  "/technical-knowledge/git/history/reset-revert-482": {
     "__comp": "17896441",
     "content": "0ea91e2d"
   },
@@ -9432,7 +9452,7 @@
     "__comp": "17896441",
     "content": "0366963e"
   },
-  "/technical-knowledge/java/java-oop-711": {
+  "/technical-knowledge/java/java-oop-d9e": {
     "__comp": "17896441",
     "content": "5304fd8a"
   },
@@ -9476,15 +9496,15 @@
     "__comp": "17896441",
     "content": "5cae2ae0"
   },
-  "/technical-knowledge/kafka/advanced/order-messages-410": {
+  "/technical-knowledge/kafka/advanced/order-messages-d65": {
     "__comp": "17896441",
     "content": "4dca4d8c"
   },
-  "/technical-knowledge/kafka/advanced/processing-and-ordering-de5": {
+  "/technical-knowledge/kafka/advanced/processing-and-ordering-957": {
     "__comp": "17896441",
     "content": "aa5a7f28"
   },
-  "/technical-knowledge/kafka/advanced/rebalance-storms-63d": {
+  "/technical-knowledge/kafka/advanced/rebalance-storms-d44": {
     "__comp": "17896441",
     "content": "4276a506"
   },
@@ -9492,11 +9512,11 @@
     "__comp": "17896441",
     "content": "b1dfa883"
   },
-  "/technical-knowledge/kafka/consumer/consumer-group-89f": {
+  "/technical-knowledge/kafka/consumer/consumer-group-440": {
     "__comp": "17896441",
     "content": "f42e39f5"
   },
-  "/technical-knowledge/kafka/consumer/consumer-lag-cf0": {
+  "/technical-knowledge/kafka/consumer/consumer-lag-f44": {
     "__comp": "17896441",
     "content": "26ead6e0"
   },
@@ -9512,7 +9532,7 @@
     "__comp": "17896441",
     "content": "651d552f"
   },
-  "/technical-knowledge/kafka/core/broker-ac2": {
+  "/technical-knowledge/kafka/core/broker-37d": {
     "__comp": "17896441",
     "content": "820d99b7"
   },
@@ -9524,7 +9544,7 @@
     "__comp": "17896441",
     "content": "f5491934"
   },
-  "/technical-knowledge/kafka/core/partition-288": {
+  "/technical-knowledge/kafka/core/partition-3ea": {
     "__comp": "17896441",
     "content": "d9cff4fb"
   },
@@ -9532,7 +9552,7 @@
     "__comp": "17896441",
     "content": "55a950f5"
   },
-  "/technical-knowledge/kafka/core/scaling-partitions-0ca": {
+  "/technical-knowledge/kafka/core/scaling-partitions-be2": {
     "__comp": "17896441",
     "content": "19752490"
   },
@@ -9556,7 +9576,7 @@
     "__comp": "17896441",
     "content": "4c007013"
   },
-  "/technical-knowledge/kafka/producer/hash-key-partitions-02a": {
+  "/technical-knowledge/kafka/producer/hash-key-partitions-39c": {
     "__comp": "17896441",
     "content": "d306a363"
   },
@@ -9572,43 +9592,43 @@
     "__comp": "17896441",
     "content": "296249fb"
   },
-  "/technical-knowledge/kafka/producer/producer-transactions-08c": {
+  "/technical-knowledge/kafka/producer/producer-transactions-40c": {
     "__comp": "17896441",
     "content": "7b527991"
   },
-  "/technical-knowledge/low-level-design/concurrency/coordination-f0a": {
+  "/technical-knowledge/low-level-design/concurrency/coordination-c33": {
     "__comp": "17896441",
     "content": "312f58ce"
   },
-  "/technical-knowledge/low-level-design/concurrency/correctness-e76": {
+  "/technical-knowledge/low-level-design/concurrency/correctness-023": {
     "__comp": "17896441",
     "content": "d7c44f8b"
   },
-  "/technical-knowledge/low-level-design/concurrency/scarcity-d7d": {
+  "/technical-knowledge/low-level-design/concurrency/scarcity-4d4": {
     "__comp": "17896441",
     "content": "be7a7a2e"
   },
-  "/technical-knowledge/low-level-design/design-patterns/behavioral-fc5": {
+  "/technical-knowledge/low-level-design/design-patterns/behavioral-534": {
     "__comp": "17896441",
     "content": "9a3d3002"
   },
-  "/technical-knowledge/low-level-design/design-patterns/creational-6a9": {
+  "/technical-knowledge/low-level-design/design-patterns/creational-8f6": {
     "__comp": "17896441",
     "content": "9b39a5d1"
   },
-  "/technical-knowledge/low-level-design/design-patterns/overview-e53": {
+  "/technical-knowledge/low-level-design/design-patterns/overview-761": {
     "__comp": "17896441",
     "content": "f2d53ec6"
   },
-  "/technical-knowledge/low-level-design/design-patterns/structural-e0d": {
+  "/technical-knowledge/low-level-design/design-patterns/structural-cb5": {
     "__comp": "17896441",
     "content": "947736aa"
   },
-  "/technical-knowledge/low-level-design/oop/concepts-efe": {
+  "/technical-knowledge/low-level-design/oop/concepts-773": {
     "__comp": "17896441",
     "content": "2ee1fdd1"
   },
-  "/technical-knowledge/low-level-design/oop/principles-55e": {
+  "/technical-knowledge/low-level-design/oop/principles-a43": {
     "__comp": "17896441",
     "content": "b60a330c"
   },
@@ -9680,7 +9700,7 @@
     "__comp": "17896441",
     "content": "fd7220cf"
   },
-  "/technical-knowledge/networking/network-troubleshooting-tools-d07": {
+  "/technical-knowledge/networking/network-troubleshooting-tools-946": {
     "__comp": "17896441",
     "content": "791d024c"
   },
@@ -9832,7 +9852,7 @@
     "__comp": "17896441",
     "content": "aebb600c"
   },
-  "/technical-knowledge/security/cookies-vs-sessions-vs-jwt-78c": {
+  "/technical-knowledge/security/cookies-vs-sessions-vs-jwt-953": {
     "__comp": "17896441",
     "content": "991c719a"
   },
@@ -10004,6 +10024,10 @@
     "__comp": "17896441",
     "content": "57eb6c90"
   },
+  "/technical-knowledge/system-design/cdc-da3": {
+    "__comp": "17896441",
+    "content": "8c140918"
+  },
   "/technical-knowledge/system-design/common-interview-questions-2cb": {
     "__comp": "17896441",
     "content": "6efb14ae"
@@ -10011,6 +10035,10 @@
   "/technical-knowledge/system-design/consistent-hashing-deep-dive-35a": {
     "__comp": "17896441",
     "content": "65c13a58"
+  },
+  "/technical-knowledge/system-design/cqrs-444": {
+    "__comp": "17896441",
+    "content": "e6611cec"
   },
   "/technical-knowledge/system-design/data-consistency-b50": {
     "__comp": "17896441",
@@ -10076,6 +10104,10 @@
     "__comp": "17896441",
     "content": "f58357ef"
   },
+  "/technical-knowledge/system-design/outbox-pattern-162": {
+    "__comp": "17896441",
+    "content": "5223f567"
+  },
   "/technical-knowledge/system-design/real-time-updates-af7": {
     "__comp": "17896441",
     "content": "ec5f7116"
@@ -10096,15 +10128,19 @@
     "__comp": "17896441",
     "content": "e8a6b3e1"
   },
-  "/technical-knowledge/test/spring-test-annotations-27d": {
+  "/technical-knowledge/system-design/sharding-partitioning-e3a": {
+    "__comp": "17896441",
+    "content": "1d0030f3"
+  },
+  "/technical-knowledge/test/spring-test-annotations-e89": {
     "__comp": "17896441",
     "content": "8425f1aa"
   },
-  "/technical-knowledge/test/testing-concepts-9aa": {
+  "/technical-knowledge/test/testing-concepts-d30": {
     "__comp": "17896441",
     "content": "0a22b1b1"
   },
-  "/technical-knowledge/test/wiremock-d2b": {
+  "/technical-knowledge/test/wiremock-7fc": {
     "__comp": "17896441",
     "content": "86ad2214"
   }

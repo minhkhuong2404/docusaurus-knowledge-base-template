@@ -42,49 +42,9 @@ tags: [database, sql, nosql, indexing, partitioning, replication, schema-design,
 
 ## Indexing
 
-### B-Tree Index (Default)
-Good for: equality, range queries, ORDER BY.
-
-```sql
--- Single column
-CREATE INDEX idx_user_email ON users(email);
-
--- Composite — column order matters!
--- Supports: WHERE user_id = ? AND created_at > ?
--- Does NOT support: WHERE created_at > ? (without user_id)
-CREATE INDEX idx_posts_user_ts ON posts(user_id, created_at DESC);
-
--- Covering index (no table lookup needed)
-CREATE INDEX idx_post_cover ON posts(user_id, created_at, title)
-    INCLUDE (preview_text);
-```
-
-### Index Types
-| Type | Use Case | DB Support |
-|---|---|---|
-| B-Tree | General purpose, range queries | All |
-| Hash | Exact equality only | PostgreSQL |
-| GIN | Full-text search, arrays, JSONB | PostgreSQL |
-| GiST | Geometric, range types | PostgreSQL |
-| Partial | Index subset of rows | PostgreSQL, MySQL |
-| Composite | Multi-column queries | All |
-
-### Partial Index
-```sql
--- Only index active users (ignore deleted)
-CREATE INDEX idx_active_users ON users(email)
-    WHERE deleted_at IS NULL;
-
--- Only index unprocessed orders
-CREATE INDEX idx_pending_orders ON orders(created_at)
-    WHERE status = 'PENDING';
-```
-
-### Index Anti-Patterns
-- Indexing every column (slows writes, wastes storage)
-- Low-cardinality index on boolean/status columns with skewed data
-- Missing index on foreign keys (causes full scan on JOIN)
-- Leading wildcard: `LIKE '%pattern'` — cannot use B-tree index
+:::info[Deep Dive: Database Indexing]
+For a comprehensive guide on B-Trees, LSM-Trees, Composite Indexes, Partial Indexes, and Query Optimization, see the **[Database Indexing Deep Dive](./database-index.md)** page.
+:::
 
 ---
 
@@ -124,7 +84,7 @@ List<Order> findByUserId(Long userId);
 ## Partitioning Strategies
 
 ### Horizontal Partitioning (Sharding)
-See [Scaling Writes](./scaling-writes) for full coverage.
+See **[Database Sharding & Partitioning](./sharding-partitioning.md)** for full coverage.
 
 ### Vertical Partitioning
 ```sql

@@ -351,6 +351,44 @@ public class OrderProcessor {
 }
 ```
 
+### 🧠 Senior Deep Dive: Spurious Wakeups & Interruption
+
+While high-level utilities like `CountDownLatch` and `Semaphore` are powerful, they all rely on lower-level OS thread schedulers and monitor wait sets.
+
+#### 1. The Spurious Wakeup Problem
+When using raw `Object.wait()` or `Condition.await()`, why must we **ALWAYS** put the wait inside a `while` loop instead of an `if` statement?
+
+```java
+// ❌ WRONG: Can fail due to spurious wakeup or state stealing
+if (availableSeats == 0) {
+    seatsAvailable.await(); 
+}
+
+// ✅ CORRECT: The standard idiom
+while (availableSeats == 0) {
+    seatsAvailable.await();
+}
+```
+**Why?** Two reasons:
+1. At the OS level (POSIX threads), a blocked thread can wake up *without any thread explicitly calling `signal()`*. This hardware/OS quirk is called a **spurious wakeup**. 
+2. Even if it was a legitimate `signal()`, between the time the thread wakes up and the time it re-acquires the lock, a third thread might have swooped in and taken the seat! The `while` loop forces the woken thread to re-verify the state condition.
+
+#### 2. Thread Interruption Mechanics
+Seniors must know how `Thread.interrupt()` actually works. It does **NOT** forcibly kill a thread (which would leave locks acquired and memory corrupted). It simply sets a boolean `interrupted` flag inside the JVM Thread object. 
+
+If the thread is currently blocked in `sleep()`, `wait()`, or `await()`, the JVM immediately throws an `InterruptedException` and **clears the interrupted flag**.
+
+```java
+} catch (InterruptedException e) {
+    // ❌ WRONG: Swallowing the exception. The thread pool won't know it was asked to shut down!
+    log.error("Interrupted", e); 
+    
+    // ✅ CORRECT: Restore the interrupt flag so caller methods/pools can handle it!
+    Thread.currentThread().interrupt(); 
+    break;
+}
+```
+
 ---
 
 ## Deadlock vs Livelock vs Starvation

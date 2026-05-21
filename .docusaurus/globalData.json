@@ -6164,6 +6164,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/cdc",
+              "path": "/technical-knowledge/system-design/cdc",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/common-interview-questions",
               "path": "/technical-knowledge/system-design/common-interview-questions",
               "sidebar": "tutorialSidebar"
@@ -6171,6 +6176,11 @@
             {
               "id": "technical-knowledge/system-design/consistent-hashing-deep-dive",
               "path": "/technical-knowledge/system-design/consistent-hashing-deep-dive",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/cqrs",
+              "path": "/technical-knowledge/system-design/cqrs",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -6259,6 +6269,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/outbox-pattern",
+              "path": "/technical-knowledge/system-design/outbox-pattern",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/real-time-updates",
               "path": "/technical-knowledge/system-design/real-time-updates",
               "sidebar": "tutorialSidebar"
@@ -6282,6 +6297,10 @@
               "id": "technical-knowledge/system-design/security-patterns",
               "path": "/technical-knowledge/system-design/security-patterns",
               "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/sharding-partitioning",
+              "path": "/technical-knowledge/system-design/sharding-partitioning"
             },
             {
               "id": "technical-knowledge/test/spring-test-annotations",

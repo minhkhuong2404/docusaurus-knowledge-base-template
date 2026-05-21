@@ -579,16 +579,9 @@ public class OrderProjection {
 
 ### Indexing
 
-```sql
--- Composite index for common query pattern
-CREATE INDEX idx_user_feed ON posts(user_id, created_at DESC);
-
--- Partial index for active records only
-CREATE INDEX idx_active_users ON users(email) WHERE deleted_at IS NULL;
-
--- Covering index (includes all columns needed)
-CREATE INDEX idx_post_cover ON posts(user_id, created_at, title, preview);
-```
+:::info[Deep Dive: Database Indexing]
+For a comprehensive guide on B-Trees, LSM-Trees, Composite Indexes, Partial Indexes, and Query Optimization, see the **[Database Indexing Deep Dive](./database-index.md)** page.
+:::
 
 ### Query Optimization
 

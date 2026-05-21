@@ -884,37 +884,12 @@ public class OrderChangeListener implements CommandLineRunner {
 
 ### Outbox Pattern (MongoDB + Kafka)
 
-Guarantee that a DB write and a message publication are atomic — even if Kafka is down:
+Guarantee that a DB write and a message publication are atomic — even if Kafka is down.
 
-```java
-@Transactional
-public Order placeOrder(PlaceOrderRequest req) {
-    // 1. Write order + outbox message in same transaction
-    Order order = orderRepo.save(new Order(req));
-
-    OutboxEvent event = OutboxEvent.builder()
-        .aggregateId(order.getId())
-        .type("ORDER_PLACED")
-        .payload(toJson(order))
-        .status(PENDING)
-        .build();
-    outboxRepo.save(event);
-
-    return order;
-}
-
-// Separate poller publishes PENDING events to Kafka and marks them SENT
-// If poller crashes, events remain PENDING and will be retried
-@Scheduled(fixedDelay = 1000)
-public void publishPendingEvents() {
-    outboxRepo.findByStatus(PENDING)
-        .forEach(event -> {
-            kafka.send(event.getType(), event.getPayload());
-            event.setStatus(SENT);
-            outboxRepo.save(event);
-        });
-}
-```
+:::info[Deep Dive: Outbox Pattern]
+The standard way to avoid the dual-write problem is the **Transactional Outbox Pattern**. 
+For a complete guide with code examples, polling vs CDC (Debezium) trade-offs, and failure mitigation, see the centralized **[Transactional Outbox Pattern](../system-design/outbox-pattern.md)** page.
+:::
 
 ### Materialized View with Aggregation Pipeline on a Schedule
 
@@ -1064,8 +1039,7 @@ Start here: What is the primary access pattern?
 **Q: When would you use MongoDB transactions, and what are the trade-offs?**
 > Use multi-document transactions when atomicity across multiple documents/collections is a hard business requirement (e.g., transferring funds between accounts). The trade-offs: transactions acquire locks, increasing latency and reducing throughput; they abort after 60 seconds; and they add complexity. The preferred approach is to design documents so a single write covers all related data atomically (embedding), reserving transactions for cases where that's truly not possible.
 
-**Q: What is the Outbox pattern and why is it needed?**
-> The Outbox pattern guarantees that a database write and a message publication (e.g., to Kafka) happen atomically — even if the message broker is temporarily down. You write both the business record and an outbox event in one DB transaction. A separate poller reads PENDING outbox events and publishes them. If the poller crashes, events remain PENDING and are retried. This avoids the dual-write problem where you commit to DB but fail to publish (or vice versa).
+
 
 ---
 

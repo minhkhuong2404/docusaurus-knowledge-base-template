@@ -252,6 +252,7 @@ const sidebars: SidebarsConfig = {
 						'technical-knowledge/system-design/handling-contention',
 						'technical-knowledge/system-design/distributed-locking',
 						'technical-knowledge/system-design/data-consistency',
+						'technical-knowledge/system-design/outbox-pattern',
 						'technical-knowledge/system-design/multi-step-process',
 						'technical-knowledge/system-design/long-running-tasks',
 						'technical-knowledge/system-design/advanced-consensus-bft',
@@ -264,6 +265,7 @@ const sidebars: SidebarsConfig = {
 					items: [
 						'technical-knowledge/system-design/microservices-patterns',
 						'technical-knowledge/system-design/domain-driven-design',
+						'technical-knowledge/system-design/cqrs',
 						'technical-knowledge/system-design/api-design',
 					],
 				},
@@ -274,6 +276,7 @@ const sidebars: SidebarsConfig = {
 					items: [
 						'technical-knowledge/system-design/database-design',
 						'technical-knowledge/system-design/database-indexing-deep-dive',
+						'technical-knowledge/system-design/cdc',
 						'technical-knowledge/system-design/message-queues',
 						'technical-knowledge/system-design/message-queues-comprehensive',
 						'technical-knowledge/system-design/search-systems',

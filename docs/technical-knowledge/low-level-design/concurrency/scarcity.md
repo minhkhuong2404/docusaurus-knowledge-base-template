@@ -337,6 +337,23 @@ try {
 }
 ```
 
+### 🧠 Senior Deep Dive: Little's Law & Pool Starvation
+
+Seniors must mathematically justify their thread pool and connection pool sizes using **Little's Law**:
+`L = λW`
+*(Average number of items in the system = Arrival rate × Average time spent in system)*
+
+#### 1. The "Too Small" Trap (Starvation)
+If your service receives 100 requests per second (`λ = 100`) and each database query takes 50ms (`W = 0.05s`), you need *at least* `L = 5` concurrent connections just to keep up. If your connection pool only has 4 connections, the queue will grow indefinitely until the system crashes or times out.
+
+#### 2. The "Too Large" Trap (Context Switch Death)
+Beginners often set connection pools to `1000` to "handle more traffic." This is catastrophic. Relational databases like PostgreSQL use a process/thread per connection. If you have an 8-core DB server and 1,000 active connections, the CPU spends most of its time *context switching* between the 1000 processes rather than executing your SQL. 
+* **The Fix**: The optimal DB connection pool size is roughly `(Core Count * 2) + Effective Spindle Count`. For an 8-core DB, a pool size of 20 will vastly outperform a pool size of 500. Use a multiplexer like PgBouncer if you need more client connections.
+
+#### 3. Thread Pool Deadlock (The Hidden Assassin)
+If Thread Pool A executes Task X, and Task X submits Task Y to the *same* Thread Pool A and synchronously waits for its result (`future.get()`), you have a recipe for deadlock. If the pool size is 10, and 10 "Task X"s arrive simultaneously, all 10 threads will be blocked waiting for "Task Y"s to run. But there are no threads left to run the "Task Y"s!
+* **The Fix**: Never synchronously wait on sub-tasks submitted to the same thread pool. Isolate thread pools by domain or blocking behavior.
+
 ---
 
 ## Scarcity Summary

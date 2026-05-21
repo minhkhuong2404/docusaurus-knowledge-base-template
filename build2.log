@@ -15,7 +15,10 @@
     at async file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/node_modules/@docusaurus/core/bin/docusaurus.mjs:44:3 {
   [cause]: Error: Invalid sidebar file at "sidebars.ts".
   These sidebar document ids do not exist:
+  - technical-knowledge/system-design/cap-theorem
   - technical-knowledge/system-design/consistent-hashing
+  - technical-knowledge/system-design/database-index
+  - technical-knowledge/system-design/message-queue
   
   Available document ids are:
   - books/building-microservice/chapter-01
