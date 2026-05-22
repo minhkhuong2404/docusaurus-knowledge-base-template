@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'c9a'),
+    component: ComponentCreator('/', '322'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '9ac'),
+        component: ComponentCreator('/', 'c95'),
         routes: [
           {
             path: '/tags',
@@ -6347,7 +6347,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '560'),
+            component: ComponentCreator('/', 'b4e'),
             routes: [
               {
                 path: '/aws',
@@ -13625,7 +13625,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/spring/spring-boot-daily-quiz',
-                component: ComponentCreator('/technical-knowledge/spring/spring-boot-daily-quiz', '15b'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-boot-daily-quiz', 'cc0'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
