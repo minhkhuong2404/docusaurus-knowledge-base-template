@@ -464,6 +464,73 @@ list.removeIf(String::isEmpty);
 // or use CopyOnWriteArrayList for concurrent access
 ```
 
+## 10. Iteration & ModCount (Fail-Fast vs. Fail-Safe)
+
+Java collections provide two distinct behaviors when a collection is modified structurally while a thread is iterating over it: **Fail-Fast** and **Fail-Safe / Weakly Consistent**.
+
+### 🏃 Fail-Fast Iterators & `modCount`
+
+Standard collections (like `ArrayList`, `HashSet`, `HashMap`) return **Fail-Fast** iterators. If the collection is structurally modified (elements added, removed, or the structure resized) at any point after the iterator is created in any way other than through the iterator's own `remove()` method, the iterator throws a `ConcurrentModificationException` immediately.
+
+#### The `modCount` Mechanism
+Fail-fast iterators are implemented using a transient `protected int modCount` field inside the collection class:
+
+1. Every structural change (e.g., `add()`, `remove()`, `clear()`, `resize()`) increments `modCount`.
+2. When the iterator is initialized, it stores the expected version:
+   ```java
+   int expectedModCount = modCount;
+   ```
+3. On every call to `next()`, `remove()`, or `forEachRemaining()`, the iterator verifies:
+   ```java
+   if (modCount != expectedModCount) {
+       throw new ConcurrentModificationException();
+   }
+   ```
+
+##### Example of Fail-Fast Behavior:
+```java
+List<String> list = new ArrayList<>(List.of("A", "B", "C"));
+Iterator<String> it = list.iterator();
+
+list.add("D"); // Modifies modCount
+
+// Next call triggers modCount != expectedModCount check
+it.next(); // ❌ Throws ConcurrentModificationException!
+```
+
+---
+
+### 🛡️ Fail-Safe / Weakly Consistent Iterators
+
+Concurrent collections (like `CopyOnWriteArrayList`, `ConcurrentHashMap`, `ConcurrentLinkedQueue`) return **Fail-Safe / Weakly Consistent** iterators. They do **not** throw `ConcurrentModificationException` when structural modifications occur concurrently.
+
+Instead, they handle modifications via two main strategies:
+
+#### 1. Snapshot Iteration (`CopyOnWriteArrayList`)
+The iterator captures a reference to the underlying array at the exact moment of iterator creation.
+- **Copy-On-Write:** Any writes or deletions create a *new* copy of the array.
+- **Traversing the Snapshot:** The iterator traverses the immutable snapshot array it originally captured, completely insulated from writes.
+- **Trade-off:** No synchronization is needed during reads/iteration, but writes are extremely expensive due to full array copying. Reads can be stale (won't see edits made after iterator creation).
+
+#### 2. Weakly Consistent Iteration (`ConcurrentHashMap`)
+The iterator traverses the live hash buckets directly.
+- **Lock-Free Reads:** Reads leverage volatile reads of node pointers.
+- **Live Updates:** The iterator reflects changes made to elements in buckets it hasn't visited yet, but does not guarantee seeing changes made in already-traversed buckets.
+- **Trade-off:** No memory copies or full locks, but the elements returned represent a weakly consistent state at that point in time.
+
+---
+
+### 📊 Comparative Summary
+
+| Feature | Fail-Fast | Fail-Safe / Weakly Consistent |
+| :--- | :--- | :--- |
+| **Exception Thrown** | `ConcurrentModificationException` | None |
+| **Mechanics** | Checks `modCount == expectedModCount` | Operates on a snapshot or live concurrent nodes |
+| **Source Collection** | Standard (`ArrayList`, `HashMap`) | Concurrent (`CopyOnWriteArrayList`, `ConcurrentHashMap`) |
+| **Memory Overhead** | Negligible | High for copy-on-write; low for concurrent maps |
+| **Stale Reads** | N/A (aborts) | Yes (for snapshot array iterators) |
+| **Thread Safety** | Designed for single-thread detection | Designed for thread-safe concurrent iteration |
+
 ---
 
 ## Advanced Editorial Pass: Collections as Data-Path Architecture

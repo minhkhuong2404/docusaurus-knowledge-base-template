@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-874": {
+  "/-809": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-475": {
+  "/-f7f": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -5025,7 +5025,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-bb4": {
+  "/-a63": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -5636,7 +5636,7 @@
     "__comp": "17896441",
     "content": "8a8d0fdd"
   },
-  "/system-design-433": {
+  "/system-design-8cd": {
     "__comp": "17896441",
     "content": "93124d3b"
   },
@@ -6052,7 +6052,7 @@
     "__comp": "17896441",
     "content": "46793316"
   },
-  "/technical-knowledge/database/-7b1": {
+  "/technical-knowledge/database/-b40": {
     "__comp": "17896441",
     "content": "d4d0b9b0"
   },
@@ -6072,7 +6072,7 @@
     "__comp": "17896441",
     "content": "a404a845"
   },
-  "/technical-knowledge/database/database-design-5ca": {
+  "/technical-knowledge/database/database-design-6f9": {
     "__comp": "17896441",
     "content": "39348cd3"
   },
@@ -6088,7 +6088,7 @@
     "__comp": "17896441",
     "content": "f33f2ff7"
   },
-  "/technical-knowledge/database/indexing-query-optimization-1bd": {
+  "/technical-knowledge/database/indexing-query-optimization-0b5": {
     "__comp": "17896441",
     "content": "3579e0cb"
   },
@@ -6124,7 +6124,7 @@
     "__comp": "17896441",
     "content": "04625431"
   },
-  "/technical-knowledge/database/transactions-concurrency-e21": {
+  "/technical-knowledge/database/transactions-concurrency-4f3": {
     "__comp": "17896441",
     "content": "d2fa8756"
   },
@@ -9368,7 +9368,7 @@
     "__comp": "17896441",
     "content": "a8d4740a"
   },
-  "/technical-knowledge/java/java-concurrency-b4b": {
+  "/technical-knowledge/java/java-concurrency-db2": {
     "__comp": "17896441",
     "content": "f13bfd67"
   },
@@ -9600,7 +9600,7 @@
     "__comp": "17896441",
     "content": "5e46a3e1"
   },
-  "/technical-knowledge/networking/-a5e": {
+  "/technical-knowledge/networking/-720": {
     "__comp": "17896441",
     "content": "ef1e85d0"
   },
@@ -9616,7 +9616,7 @@
     "__comp": "17896441",
     "content": "ee0ecb9e"
   },
-  "/technical-knowledge/networking/http-https-application-layer-119": {
+  "/technical-knowledge/networking/http-https-application-layer-dbf": {
     "__comp": "17896441",
     "content": "cd63af30"
   },
@@ -9748,7 +9748,7 @@
     "__comp": "17896441",
     "content": "9c77e95c"
   },
-  "/technical-knowledge/redis/redis-rate-limiting-baa": {
+  "/technical-knowledge/redis/redis-rate-limiting-01d": {
     "__comp": "17896441",
     "content": "3d3827a7"
   },
@@ -9924,7 +9924,7 @@
     "__comp": "17896441",
     "content": "7bce8a09"
   },
-  "/technical-knowledge/system-design/api-design-19a": {
+  "/technical-knowledge/system-design/api-design-5e5": {
     "__comp": "17896441",
     "content": "0237d5d1"
   },
@@ -9936,7 +9936,7 @@
     "__comp": "17896441",
     "content": "ce0d883d"
   },
-  "/technical-knowledge/system-design/caching-strategies-8f4": {
+  "/technical-knowledge/system-design/caching-strategies-c08": {
     "__comp": "17896441",
     "content": "724987fe"
   },
@@ -9992,7 +9992,7 @@
     "__comp": "17896441",
     "content": "5c3590ca"
   },
-  "/technical-knowledge/system-design/load-balancing-reliability-280": {
+  "/technical-knowledge/system-design/load-balancing-reliability-5c8": {
     "__comp": "17896441",
     "content": "b14a4730"
   },
@@ -10000,11 +10000,11 @@
     "__comp": "17896441",
     "content": "010e7447"
   },
-  "/technical-knowledge/system-design/message-queues-77e": {
+  "/technical-knowledge/system-design/message-queues-ba0": {
     "__comp": "17896441",
     "content": "3940c236"
   },
-  "/technical-knowledge/system-design/microservices-patterns-253": {
+  "/technical-knowledge/system-design/microservices-patterns-c72": {
     "__comp": "17896441",
     "content": "a912936e"
   },
@@ -10020,11 +10020,11 @@
     "__comp": "17896441",
     "content": "5223f567"
   },
-  "/technical-knowledge/system-design/real-time-updates-af7": {
+  "/technical-knowledge/system-design/real-time-updates-91a": {
     "__comp": "17896441",
     "content": "ec5f7116"
   },
-  "/technical-knowledge/system-design/scaling-reads-971": {
+  "/technical-knowledge/system-design/scaling-reads-324": {
     "__comp": "17896441",
     "content": "382009e9"
   },

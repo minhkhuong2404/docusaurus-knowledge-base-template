@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '874'),
+    component: ComponentCreator('/', '809'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '475'),
+        component: ComponentCreator('/', 'f7f'),
         routes: [
           {
             path: '/tags',
@@ -6272,7 +6272,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'bb4'),
+            component: ComponentCreator('/', 'a63'),
             routes: [
               {
                 path: '/aws',
@@ -7185,7 +7185,7 @@ export default [
               },
               {
                 path: '/system-design',
-                component: ComponentCreator('/system-design', '433'),
+                component: ComponentCreator('/system-design', '8cd'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -7806,7 +7806,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/',
-                component: ComponentCreator('/technical-knowledge/database/', '7b1'),
+                component: ComponentCreator('/technical-knowledge/database/', 'b40'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -7836,7 +7836,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/database-design',
-                component: ComponentCreator('/technical-knowledge/database/database-design', '5ca'),
+                component: ComponentCreator('/technical-knowledge/database/database-design', '6f9'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -7860,7 +7860,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/indexing-query-optimization',
-                component: ComponentCreator('/technical-knowledge/database/indexing-query-optimization', '1bd'),
+                component: ComponentCreator('/technical-knowledge/database/indexing-query-optimization', '0b5'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -7914,7 +7914,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/transactions-concurrency',
-                component: ComponentCreator('/technical-knowledge/database/transactions-concurrency', 'e21'),
+                component: ComponentCreator('/technical-knowledge/database/transactions-concurrency', '4f3'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -12777,7 +12777,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-concurrency',
-                component: ComponentCreator('/technical-knowledge/java/java-concurrency', 'b4b'),
+                component: ComponentCreator('/technical-knowledge/java/java-concurrency', 'db2'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13125,7 +13125,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/networking/',
-                component: ComponentCreator('/technical-knowledge/networking/', 'a5e'),
+                component: ComponentCreator('/technical-knowledge/networking/', '720'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13149,7 +13149,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/networking/http-https-application-layer',
-                component: ComponentCreator('/technical-knowledge/networking/http-https-application-layer', '119'),
+                component: ComponentCreator('/technical-knowledge/networking/http-https-application-layer', 'dbf'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13347,7 +13347,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/redis/redis-rate-limiting',
-                component: ComponentCreator('/technical-knowledge/redis/redis-rate-limiting', 'baa'),
+                component: ComponentCreator('/technical-knowledge/redis/redis-rate-limiting', '01d'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13608,7 +13608,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/api-design',
-                component: ComponentCreator('/technical-knowledge/system-design/api-design', '19a'),
+                component: ComponentCreator('/technical-knowledge/system-design/api-design', '5e5'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13626,7 +13626,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/caching-strategies',
-                component: ComponentCreator('/technical-knowledge/system-design/caching-strategies', '8f4'),
+                component: ComponentCreator('/technical-knowledge/system-design/caching-strategies', 'c08'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13710,7 +13710,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/load-balancing-reliability',
-                component: ComponentCreator('/technical-knowledge/system-design/load-balancing-reliability', '280'),
+                component: ComponentCreator('/technical-knowledge/system-design/load-balancing-reliability', '5c8'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13722,13 +13722,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/message-queues',
-                component: ComponentCreator('/technical-knowledge/system-design/message-queues', '77e'),
+                component: ComponentCreator('/technical-knowledge/system-design/message-queues', 'ba0'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/microservices-patterns',
-                component: ComponentCreator('/technical-knowledge/system-design/microservices-patterns', '253'),
+                component: ComponentCreator('/technical-knowledge/system-design/microservices-patterns', 'c72'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13752,13 +13752,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/real-time-updates',
-                component: ComponentCreator('/technical-knowledge/system-design/real-time-updates', 'af7'),
+                component: ComponentCreator('/technical-knowledge/system-design/real-time-updates', '91a'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/scaling-reads',
-                component: ComponentCreator('/technical-knowledge/system-design/scaling-reads', '971'),
+                component: ComponentCreator('/technical-knowledge/system-design/scaling-reads', '324'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

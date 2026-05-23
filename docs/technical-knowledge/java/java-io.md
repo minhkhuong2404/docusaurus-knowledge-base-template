@@ -332,6 +332,93 @@ byte b = buffer.get(0);
 | Framework | Raw `java.io` | Netty, Vert.x | Rarely used directly |
 | Best for | Simple clients, low concurrency | High-concurrency servers | File I/O operations |
 
+## 7. Modern File I/O (NIO.2 Path & Files API)
+
+Java 7 introduced the **NIO.2** file API, built around the `java.nio.file.Path` and `java.nio.file.Files` classes, which completely replaced the legacy, error-prone `java.io.File`.
+
+### 📂 Legacy `java.io.File` vs. Modern NIO.2
+
+| Aspect | Legacy `java.io.File` | Modern NIO.2 (`Path` / `Files`) |
+|:---|:---|:---|
+| **Error Handling** | Methods return `boolean` on failure (e.g. `file.delete()` returns `false` on permission errors, masking exceptions) | Methods throw specific, actionable exceptions (`NoSuchFileException`, `AccessDeniedException`) |
+| **Metadata Queries** | Synchronous, slow, queries OS repeatedly | High performance, supports single-pass bulk metadata requests (`Files.readAttributes`) |
+| **Path Syntax** | OS-specific separator strings, rigid parsing | Platform-independent paths using `Path.of()` and `resolve()` |
+| **Memory Efficiency** | Must read whole file into Heap memory | Supports modern lazy-loaded Streams |
+| **Symlink Support** | ❌ None | ✅ Full support |
+
+### 🛠️ Common Operations with `java.nio.file.Files`
+
+For small files, `Files` provides convenient utility methods that perform the entire operation in a single line, managing resource opening and closing automatically:
+
+```java
+Path path = Path.of("data", "config.json");
+
+// 1. Read all bytes/lines
+byte[] bytes = Files.readAllBytes(path);
+String content = Files.readString(path, StandardCharsets.UTF_8);
+
+// 2. Write all bytes/lines
+Files.writeString(path, "{}", StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+
+// 3. File existence and metadata
+boolean exists = Files.exists(path);
+BasicFileAttributes attrs = Files.readAttributes(path, BasicFileAttributes.class);
+long size = attrs.size();
+```
+
+### 🌊 High-Performance File Streaming (Lazy Loading)
+
+For large files or directory structures, reading all data into memory causes `OutOfMemoryError` events. NIO.2 provides streaming methods that lazy-load data using native OS buffers and file descriptors.
+
+> [!IMPORTANT]
+> **Resource Management:** Streams returned by `Files` (such as `Files.lines()`, `Files.walk()`, and `Files.list()`) open native OS file descriptors and **must** be wrapped in a `try-with-resources` block to prevent descriptor exhaustion leaks.
+
+#### 1. Streaming Lines of a Large File
+`Files.lines()` reads the file lazily, keeping only a single line in memory at any point.
+
+```java
+Path logPath = Path.of("var", "logs", "app.log");
+
+// Lazy-load file line-by-line using Stream API
+try (Stream<String> lines = Files.lines(logPath, StandardCharsets.UTF_8)) {
+    long errorCount = lines
+        .filter(line -> line.contains("ERROR"))
+        .count();
+    System.out.println("Errors found: " + errorCount);
+} catch (IOException e) {
+    // Handle exception
+}
+```
+
+#### 2. Directory Tree Traversal (`Files.walk`)
+`Files.walk()` recursively traverses a directory structure using a depth-first search.
+
+```java
+Path rootDir = Path.of("project");
+
+// Walk directory up to max depth of 5
+try (Stream<Path> stream = Files.walk(rootDir, 5)) {
+    List<Path> javaFiles = stream
+        .filter(Files::isRegularFile)
+        .filter(p -> p.toString().endsWith(".java"))
+        .collect(Collectors.toList());
+} catch (IOException e) {
+    // Handle exception
+}
+```
+
+#### 3. Custom Buffer Streaming
+If you need classic streams decorated with NIO.2 paths:
+
+```java
+try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+    String line;
+    while ((line = reader.readLine()) != null) {
+        // Process line
+    }
+}
+```
+
 ---
 
 ## Advanced Editorial Pass: I/O Strategy Under Throughput and Latency Constraints

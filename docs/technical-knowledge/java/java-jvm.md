@@ -540,7 +540,7 @@ After a full concurrent mark cycle, G1 picks the **highest-garbage-density** Old
 
 ---
 
-## 10. Reference Types & GC
+## 12. Reference Types & GC
 
 Java provides four reference types that influence garbage collection behavior:
 
@@ -563,7 +563,7 @@ ExpensiveObject obj = ref.get(); // null after GC
 
 ---
 
-## 11. Common OOM Scenarios & Solutions
+## 13. Common OOM Scenarios & Solutions
 
 | Error | Cause | Solution |
 |-------|-------|----------|
