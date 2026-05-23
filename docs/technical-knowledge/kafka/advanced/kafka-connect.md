@@ -246,7 +246,49 @@ Step 5: Leader sends assignment to all workers
 Step 6: All workers start their newly assigned tasks
 ```
 
-**Problem:** During steps 2–6, **zero work is being done** across the entire cluster. Adding a single worker causes a full stop-the-world pause for all connectors. This is### Worker Group Membership — Under the Hood
+**Problem:** During steps 2–6, **zero work is being done** across the entire cluster. Adding a single worker causes a full stop-the-world pause for all connectors. This is called the **"stop-the-world" rebalance**.
+
+```
+Timeline:
+Worker-1: [task A] [task B] ─── STOP ──────────────────── [task A] [task C]
+Worker-2: [task C] [task D] ─── STOP ──────────────────── [task B] [task D]
+Worker-3: (joins)           ───────────────────────────── [task E] [task F]
+                                  ▲─── Full pause here ──▲
+```
+
+### Incremental Cooperative Rebalancing (Kafka 2.3+, Connect 2.6+)
+
+This mirrors the **Incremental Cooperative Rebalancing** introduced in the Kafka consumer group protocol. Tasks are only stopped if they need to move — others keep running.
+
+```
+Step 1: Leader detects change → asks workers to revoke only necessary tasks
+         │
+Step 2: Only affected tasks stop; unaffected tasks continue running
+         │
+Step 3: Affected workers re-join, report revoked tasks
+         │
+Step 4: Leader assigns freed tasks to appropriate workers
+         │
+Step 5: Only the newly assigned tasks start
+```
+
+Enable in `worker.properties`:
+```properties
+# Enable incremental cooperative rebalancing
+connect.protocol=sessioned
+```
+
+```
+Timeline with Cooperative Rebalancing:
+Worker-1: [task A] [task B] ──────────── [task A] ─── [task A] [task C←moved]
+Worker-2: [task C] [task D] ──────────── [task D] ─── [task D] (task C moved)
+Worker-3: (joins)           ──────────────────────── [task C] [task E] [task F]
+                                         ▲─ Only task C stops and moves ─▲
+```
+
+**Key benefit:** Adding workers or updating one connector no longer interrupts unrelated connectors.
+
+### Worker Group Membership — Under the Hood
 
 Connect workers use Kafka's **GroupCoordinator** (the same broker-side component used by consumer groups) to manage cluster membership:
 

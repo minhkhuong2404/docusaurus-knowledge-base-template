@@ -614,8 +614,7 @@ const sidebars: SidebarsConfig = {
 						'technical-knowledge/kafka/consumer/consumer-overview',
 						'technical-knowledge/kafka/consumer/consumer-group',
 						'technical-knowledge/kafka/consumer/consumer-lag',
-						'technical-knowledge/kafka/consumer/parallel-consumer',
-						'technical-knowledge/kafka/consumer/parallel-consumer-deep-dive'
+						'technical-knowledge/kafka/consumer/parallel-consumer'
 					]
 				},
 				{

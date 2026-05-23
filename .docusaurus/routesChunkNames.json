@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-322": {
+  "/-577": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-c95": {
+  "/-4cc": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -5085,7 +5085,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-b4e": {
+  "/-e67": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -9484,7 +9484,7 @@
     "__comp": "17896441",
     "content": "5a79051b"
   },
-  "/technical-knowledge/kafka/advanced/kafka-connect-022": {
+  "/technical-knowledge/kafka/advanced/kafka-connect-404": {
     "__comp": "17896441",
     "content": "e1e89bb9"
   },
@@ -9531,10 +9531,6 @@
   "/technical-knowledge/kafka/consumer/parallel-consumer-903": {
     "__comp": "17896441",
     "content": "ad28df9b"
-  },
-  "/technical-knowledge/kafka/consumer/parallel-consumer-deep-dive-cd3": {
-    "__comp": "17896441",
-    "content": "651d552f"
   },
   "/technical-knowledge/kafka/core/broker-37d": {
     "__comp": "17896441",

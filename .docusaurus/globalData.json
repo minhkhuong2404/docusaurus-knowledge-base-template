@@ -5538,11 +5538,6 @@
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/kafka/consumer/parallel-consumer-deep-dive",
-              "path": "/technical-knowledge/kafka/consumer/parallel-consumer-deep-dive",
-              "sidebar": "tutorialSidebar"
-            },
-            {
               "id": "technical-knowledge/kafka/core/broker",
               "path": "/technical-knowledge/kafka/core/broker",
               "sidebar": "tutorialSidebar"

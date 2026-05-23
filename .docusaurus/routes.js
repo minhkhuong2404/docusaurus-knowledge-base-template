@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '322'),
+    component: ComponentCreator('/', '577'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'c95'),
+        component: ComponentCreator('/', '4cc'),
         routes: [
           {
             path: '/tags',
@@ -6347,7 +6347,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'b4e'),
+            component: ComponentCreator('/', 'e67'),
             routes: [
               {
                 path: '/aws',
@@ -12936,7 +12936,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/advanced/kafka-connect',
-                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-connect', '022'),
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-connect', '404'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13003,12 +13003,6 @@ export default [
               {
                 path: '/technical-knowledge/kafka/consumer/parallel-consumer',
                 component: ComponentCreator('/technical-knowledge/kafka/consumer/parallel-consumer', '903'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/kafka/consumer/parallel-consumer-deep-dive',
-                component: ComponentCreator('/technical-knowledge/kafka/consumer/parallel-consumer-deep-dive', 'cd3'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
