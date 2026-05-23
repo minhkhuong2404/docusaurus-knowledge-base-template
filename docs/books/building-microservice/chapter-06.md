@@ -31,9 +31,9 @@ If step 3 fails, how do you un-charge the customer (step 2) and un-reserve the s
 
 ## ACID Transactions — The Monolith Luxury
 
-**ACID** = Atomicity, Consistency, Isolation, Durability
+**[ACID](../../technical-knowledge/database/acid.md)** = Atomicity, Consistency, Isolation, Durability
 
-In a single database, ACID gives you a safety net: either all changes succeed, or none do. With separate databases per microservice, this guarantee disappears at the system level. Each service still has ACID within its own database — you just lose cross-service atomicity.
+In a single database, ACID transactions provide a crucial safety net: either all changes succeed, or none do. With separate databases per microservice, this guarantee disappears at the system level. Each service still has local ACID guarantees within its own database, but you lose cross-service atomicity. For a comprehensive deep-dive into ACID guarantees, see the **[Database ACID Properties](../../technical-knowledge/database/acid.md)** guide.
 
 ---
 

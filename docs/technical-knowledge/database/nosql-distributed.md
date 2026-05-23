@@ -656,7 +656,7 @@ public class OrderDynamoService {
 
 ## BASE vs ACID
 
-Most NoSQL systems follow **BASE** instead of ACID:
+Most NoSQL systems trade strict relational guarantees for scale and horizontal availability by following the **BASE** model instead of the classic **[ACID](./acid.md)** model:
 
 ```
 ACID                              BASE
@@ -666,6 +666,8 @@ Consistent — always valid state   Soft State — may be stale
 Isolated  — transactions          Eventually Consistent
 Durable   — survives crashes
 ```
+
+For a comprehensive comparison of how these properties differ under concurrency, failure modes, and architectural designs, see the **[Database ACID Properties](./acid.md)** guide.
 
 **Eventually consistent** means: if no new writes come in, all replicas will *eventually* converge to the same value. But there's a window where reads may return stale data.
 

@@ -24,21 +24,11 @@ COMMIT;
 
 ## ACID Properties
 
-| Property | Description |
-|----------|-------------|
-| **Atomicity** | All-or-nothing: either all operations commit or all are rolled back |
-| **Consistency** | Transaction brings DB from one valid state to another; constraints are never violated |
-| **Isolation** | Concurrent transactions don't interfere with each other (degree depends on isolation level) |
-| **Durability** | Once committed, data survives crashes (written to persistent storage / WAL) |
+To guarantee data integrity under concurrency and failures, relational databases enforce the ACID properties: **Atomicity**, **Consistency**, **Isolation**, and **Durability**.
 
-### How each property is implemented
-
-| Property | Mechanism |
-|----------|-----------|
-| Atomicity | Undo log / rollback log |
-| Consistency | Constraints, triggers, application logic |
-| Isolation | Locks, MVCC |
-| Durability | WAL (Write-Ahead Log), fsync |
+:::info[Detailed Guide]
+For an in-depth explanation of these properties, including real-world analogies for beginners, deep-dive implementation details (WAL, undo logs, locking models), distributed ACID, and interview Q&As, please refer to the dedicated **[Database ACID Properties](./acid.md)** page.
+:::
 
 ---
 
@@ -289,7 +279,7 @@ public class OrderService {
 ## 🎯 Interview Questions
 
 **Q1. Explain ACID properties with an example.**
-> Using a bank transfer: Atomicity — debit and credit both happen or neither does. Consistency — account balance never goes negative (constraint). Isolation — another query doesn't see the partially-transferred amount. Durability — after commit, power failure doesn't lose the data.
+> ACID stands for Atomicity, Consistency, Isolation, and Durability. A classic example is a bank transfer: Atomicity ensures both debit and credit succeed or neither does; Consistency guarantees that constraints (like non-negative balances) are not violated; Isolation ensures concurrent operations don't see intermediate states; and Durability guarantees committed results survive crashes. For a comprehensive breakdown with analogies, illustrations, and implementation details, see **[Database ACID Properties](./acid.md)**.
 
 **Q2. What is the difference between Repeatable Read and Serializable?**
 > Repeatable Read prevents dirty reads and non-repeatable reads but still allows phantom reads (new rows appearing). Serializable prevents all anomalies by making transactions behave as if run serially — typically via predicate locking or SSI (Serializable Snapshot Isolation in PostgreSQL).

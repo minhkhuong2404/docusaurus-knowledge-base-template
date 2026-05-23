@@ -23,7 +23,7 @@ This chapter breaks down what ACID really means, explores the many levels of tra
 
 ## 🔒 The Meaning of ACID
 
-ACID is widely cited but poorly understood. Different databases implement it differently.
+ACID is widely cited but poorly understood. Different databases implement it differently. For a comprehensive overview of the fundamental concepts, beginner analogies, and low-level execution mechanisms, see the **[Database ACID Properties](../../../technical-knowledge/database/acid.md)** page.
 
 ### Atomicity
 

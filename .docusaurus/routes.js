@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '577'),
+    component: ComponentCreator('/', '627'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '4cc'),
+        component: ComponentCreator('/', '8aa'),
         routes: [
           {
             path: '/tags',
@@ -6347,7 +6347,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'e67'),
+            component: ComponentCreator('/', '5fb'),
             routes: [
               {
                 path: '/aws',
@@ -7882,6 +7882,12 @@ export default [
               {
                 path: '/technical-knowledge/database/',
                 component: ComponentCreator('/technical-knowledge/database/', '0e5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/database/acid',
+                component: ComponentCreator('/technical-knowledge/database/acid', 'def'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -12936,7 +12942,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/advanced/kafka-connect',
-                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-connect', '404'),
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-connect', 'fd3'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13002,7 +13008,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/consumer/parallel-consumer',
-                component: ComponentCreator('/technical-knowledge/kafka/consumer/parallel-consumer', '903'),
+                component: ComponentCreator('/technical-knowledge/kafka/consumer/parallel-consumer', 'd57'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

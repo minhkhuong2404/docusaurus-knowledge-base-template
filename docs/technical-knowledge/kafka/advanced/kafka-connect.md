@@ -388,7 +388,7 @@ Kafka Connect provides native **exactly-once source semantics** by combining Kaf
    ```
 4. **Connector Requirements**:
    - The connector must support transactional source offsets (most modern plugins, including Debezium and official JDBC source connectors, support this out of the box).
-   - If a source connector is not transaction-safe, Connect will fail to start the connector and throw an exception unless `exactly.once.source.support=bound` is configured.
+   - If a source connector is not transaction-safe, Connect will fail to start the connector and throw an exception if the connector-level configuration `exactly.once.support=required` is configured. If set to `exactly.once.support=requested` (the default), it will fallback to at-least-once delivery semantics and start successfully.
 
 ---
 
@@ -425,7 +425,7 @@ The most resilient way to prevent duplication is to design the writes to be **id
    ```
 
 #### Strategy B: Transactional/Two-Phase Commit Sinks (Exactly-Once)
-If the target system supports ACID transactions, the sink task can coordinate writes with offset tracking.
+If the target system supports **[ACID](../../database/acid.md)** transactions, the sink task can coordinate writes with offset tracking.
 
 1. **Atomic DB Transactions**:
    Write the data and the corresponding Kafka offsets to the target database *within the same database transaction*.

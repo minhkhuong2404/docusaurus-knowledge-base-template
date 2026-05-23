@@ -72,8 +72,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Caching Strategies",
-    "permalink": "/technical-knowledge/database/caching-strategies"
+    "title": "Database ACID Properties",
+    "permalink": "/technical-knowledge/database/acid"
   },
   "next": {
     "title": "Storage Engines & Data Structures",

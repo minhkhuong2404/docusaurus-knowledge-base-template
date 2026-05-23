@@ -20,7 +20,7 @@ A structured guide covering everything you need to know about databases — from
 | 4 | [Schema Migrations](./schema-migrations) | Flyway, Liquibase, zero-downtime |
 | 5 | [Indexing & Query Optimization](./indexing-query-optimization) | B-Tree, covering indexes, EXPLAIN |
 | 6 | [Query Planner & Optimizer](./query-planner-optimizer) | CBO, statistics, join algorithms |
-| 7 | [Transactions & Concurrency](./transactions-concurrency) | ACID, isolation levels, MVCC, deadlocks |
+| 7 | [ACID Properties](./acid) & [Transactions](./transactions-concurrency) | ACID, isolation levels, MVCC, deadlocks |
 | 8 | [Storage Engines & Data Structures](./storage-engines-data-structures) | InnoDB, LSM trees, WAL, buffer pool |
 | 9 | [Replication & Partitioning](./replication-partitioning) | Leader-follower, sharding, CAP |
 | 10 | [NoSQL & Distributed Databases](./nosql-distributed) | Document, key-value, wide-column, graph |
@@ -59,4 +59,5 @@ Throughout this guide, Java and Spring Data / JPA notes are included where relev
 ### Compare Next
 - [Relational Fundamentals](./relational-fundamentals.md)
 - [Indexing & Query Optimization](./indexing-query-optimization.md)
+- [Database ACID Properties](./acid.md)
 - [Transactions & Concurrency](./transactions-concurrency.md)

@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-577": {
+  "/-627": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-4cc": {
+  "/-8aa": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -5085,7 +5085,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-e67": {
+  "/-5fb": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -6115,6 +6115,10 @@
   "/technical-knowledge/database/-0e5": {
     "__comp": "17896441",
     "content": "d4d0b9b0"
+  },
+  "/technical-knowledge/database/acid-def": {
+    "__comp": "17896441",
+    "content": "3be25515"
   },
   "/technical-knowledge/database/advanced-sql-fba": {
     "__comp": "17896441",
@@ -9484,7 +9488,7 @@
     "__comp": "17896441",
     "content": "5a79051b"
   },
-  "/technical-knowledge/kafka/advanced/kafka-connect-404": {
+  "/technical-knowledge/kafka/advanced/kafka-connect-fd3": {
     "__comp": "17896441",
     "content": "e1e89bb9"
   },
@@ -9528,7 +9532,7 @@
     "__comp": "17896441",
     "content": "67ecd1fe"
   },
-  "/technical-knowledge/kafka/consumer/parallel-consumer-903": {
+  "/technical-knowledge/kafka/consumer/parallel-consumer-d57": {
     "__comp": "17896441",
     "content": "ad28df9b"
   },
