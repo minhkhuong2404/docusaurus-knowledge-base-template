@@ -8,6 +8,21 @@ sidebar_position: 9
 
 # Database Design & Normalization
 
+## SQL vs NoSQL Decision Guide
+
+Before designing a database schema, you must decide between a Relational (SQL) and Non-Relational (NoSQL) database.
+
+| Criteria | SQL | NoSQL |
+| :--- | :--- | :--- |
+| **Schema** | Fixed, strictly enforced | Flexible, dynamic document |
+| **Relationships** | Strong (JOINs, Foreign Keys) | Weak (denormalized / embedded) |
+| **Transactions** | Strict ACID compliance | Eventual consistency (usually) |
+| **Query Flexibility** | High (arbitrary SQL queries) | Low (query-by-design) |
+| **Scaling Writes** | Hard (requires complex sharding) | Built-in horizontal scaling |
+| **Best For** | Financial, transactional, relational data | Catalogs, user content, fast sessions |
+
+---
+
 ## Entity-Relationship Modeling
 
 An **ER diagram** models the domain before creating tables.
@@ -221,6 +236,52 @@ CREATE TABLE orders_history (
     old_data    JSONB,
     new_data    JSONB
 );
+```
+
+### Vertical Partitioning
+
+Vertical partitioning splits a table by columns, separating frequently accessed "hot" columns from rarely accessed "cold" columns to optimize memory/cache usage and reduce disk I/O.
+
+```sql
+-- Hot columns (frequently accessed)
+CREATE TABLE user_core (
+    id BIGSERIAL PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    name VARCHAR(100),
+    last_login TIMESTAMPTZ
+);
+
+-- Cold columns (rarely accessed)
+CREATE TABLE user_profile (
+    user_id BIGINT REFERENCES user_core(id),
+    bio TEXT,
+    avatar_url TEXT,
+    preferences JSONB
+);
+```
+
+### Table Partitioning (PostgreSQL)
+
+Table partitioning splits a single logical table into multiple physical child tables based on ranges, lists, or hash keys. This is extremely useful for high-volume logs or time-series data.
+
+```sql
+-- Time-based range partitioning
+CREATE TABLE events (
+    id BIGSERIAL,
+    user_id BIGINT,
+    event_type VARCHAR(50),
+    created_at TIMESTAMPTZ NOT NULL,
+    data JSONB
+) PARTITION BY RANGE (created_at);
+
+CREATE TABLE events_2024_q1 PARTITION OF events
+    FOR VALUES FROM ('2024-01-01') TO ('2024-04-01');
+
+CREATE TABLE events_2024_q2 PARTITION OF events
+    FOR VALUES FROM ('2024-04-01') TO ('2024-07-01');
+
+-- Drop old partitions instantly (bypasses slow, locking DELETE queries)
+DROP TABLE events_2023_q1;
 ```
 
 ### Hierarchical Data (Adjacency List)

@@ -78,8 +78,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Service Mesh & Microservices Networking",
-    "permalink": "/technical-knowledge/networking/service-mesh-microservices"
+    "title": "Microservices Patterns",
+    "permalink": "/technical-knowledge/system-design/microservices-patterns"
   },
   "next": {
     "title": "Network Security",

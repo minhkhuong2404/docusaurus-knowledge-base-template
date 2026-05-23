@@ -70,7 +70,7 @@
     "permalink": "/technical-knowledge/networking/http-https-application-layer"
   },
   "next": {
-    "title": "WebSockets & Real-Time Communication",
-    "permalink": "/technical-knowledge/networking/websockets-realtime"
+    "title": "Real-Time Updates",
+    "permalink": "/technical-knowledge/system-design/real-time-updates"
   }
 }

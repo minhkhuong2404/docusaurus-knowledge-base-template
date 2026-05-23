@@ -72,8 +72,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "CDN & Load Balancing",
-    "permalink": "/technical-knowledge/networking/cdn-load-balancing"
+    "title": "Load Balancing & Reliability",
+    "permalink": "/technical-knowledge/system-design/load-balancing-reliability"
   },
   "next": {
     "title": "Socket Programming & I/O Models",

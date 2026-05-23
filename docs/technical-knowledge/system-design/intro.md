@@ -26,7 +26,7 @@ tags: [system-design, overview, architecture, interview-prep]
 | [Multi-Step Processes](/technical-knowledge/system-design/multi-step-process) | Sagas, orchestration, choreography |
 | [Long-Running Tasks](/technical-knowledge/system-design/long-running-tasks) | Job queues, async patterns, progress tracking |
 | [Microservices Patterns](/technical-knowledge/system-design/microservices-patterns) | Service mesh, circuit breaker, API gateway |
-| [Database Design](/technical-knowledge/system-design/database-design) | Normalization, indexing, partitioning |
+| [Database Design](/technical-knowledge/database/database-design) | Normalization, indexing, partitioning |
 | [Caching Strategies](/technical-knowledge/system-design/caching-strategies) | Cache aside, write-through, eviction policies |
 | [Message Queues & Streaming](/technical-knowledge/system-design/message-queues) | Kafka, RabbitMQ, pub/sub, event sourcing |
 | [API Design](/technical-knowledge/system-design/api-design) | REST, gRPC, GraphQL, versioning |

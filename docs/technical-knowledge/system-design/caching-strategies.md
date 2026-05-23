@@ -27,16 +27,16 @@ To understand why this matters, consider the hardware limits: accessing data fro
 - [Eviction Policies](#eviction-policies)
   - [LRU (Least Recently Used)](#lru-least-recently-used)
   - [LFU (Least Frequently Used)](#lfu-least-frequently-used)
-  - [FIFO (First In, First Out)](#fifo-first-in-first-out)
+  - [FIFO (First In, First Out)](#eviction-policies)
   - [TTL (Time to Live)](#ttl-time-to-live)
-  - [Random Eviction](#random-eviction)
-  - [ARC (Adaptive Replacement Cache)](#arc-adaptive-replacement-cache)
+  - [Random Eviction](#eviction-policies)
+  - [ARC (Adaptive Replacement Cache)](#eviction-policies)
 - [The "Hard" Problems in Caching](#the-hard-problems-in-caching)
-  - [Cache Stampede (Thundering Herd)](#cache-stampede-thundering-herd)
-  - [Cache Consistency (Stale Data)](#cache-consistency-stale-data)
-  - [Hotkeys](#hotkeys)
-  - [Cache Penetration](#cache-penetration)
-  - [Cache Avalanche](#cache-avalanche)
+  - [Cache Stampede (Thundering Herd)](#1-cache-stampede-thundering-herd)
+  - [Cache Consistency (Stale Data)](#2-cache-consistency-stale-data)
+  - [Hotkeys](#3-hotkeys)
+  - [Cache Penetration](#4-cache-penetration)
+  - [Cache Avalanche](#5-cache-avalanche)
 - [How to Handle Caching in a System Design Interview](#how-to-handle-caching-in-a-system-design-interview)
 - [How Caching Works Internally](#how-caching-works-internally)
   - [Cache Storage Structures](#cache-storage-structures)
@@ -1827,6 +1827,8 @@ Varnish is a HTTP accelerator and reverse proxy cache.
 
 ### Spring Cache
 
+Spring's `@Cacheable` / `@CachePut` / `@CacheEvict` annotations let you add caching without changing method logic.
+
 ```java
 @Configuration
 @EnableCaching
@@ -1844,24 +1846,57 @@ public class CacheConfig {
 
 @Service
 public class ProductService {
-    @Cacheable(value = "products", key = "#productId")
-    public Product getProduct(String productId) {
-        return productRepository.findById(productId)
-            .orElseThrow(() -> new ProductNotFoundException(productId));
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    // Cache on first call; skip method on subsequent calls with same key
+    @Cacheable(value = "products", key = "#id")
+    public Product getProduct(Long id) {
+        return productRepository.findById(id)
+            .orElseThrow(() -> new ProductNotFoundException(id));
     }
 
-    @CacheEvict(value = "products", key = "#product.id")
-    public void updateProduct(Product product) {
-        productRepository.save(product);
-    }
-
+    // Always execute method AND update cache (use on update operations)
     @CachePut(value = "products", key = "#product.id")
-    public Product refreshProduct(Product product) {
-        return productRepository.findById(product.getId())
-            .orElseThrow(() -> new ProductNotFoundException(product.getId()));
+    public Product updateProduct(Product product) {
+        return productRepository.save(product);
+    }
+
+    // Remove cache entry
+    @CacheEvict(value = "products", key = "#id")
+    public void deleteProduct(Long id) {
+        productRepository.deleteById(id);
+    }
+
+    // Evict all entries in the "products" cache
+    @CacheEvict(value = "products", allEntries = true)
+    public void bulkUpdate(List<Product> products) {
+        productRepository.saveAll(products);
+    }
+
+    // Combine multiple cache operations
+    @Caching(
+        evict = { @CacheEvict("products"), @CacheEvict("productSummaries") }
+    )
+    public void deleteWithRelated(Long id) {
+        productRepository.deleteById(id);
     }
 }
 ```
+
+```properties
+# application.properties
+spring.cache.type=redis
+spring.data.redis.host=localhost
+spring.data.redis.port=6379
+spring.cache.redis.time-to-live=300000   # 5 min in ms
+spring.cache.redis.cache-null-values=true # cache null results (prevents penetration)
+```
+
+:::warning[Self-invocation trap: @Cacheable does NOT work within the same bean]
+Spring's cache proxy is applied at the bean boundary. If `methodA()` in `ProductService` calls `methodB()` in the **same** bean, `@Cacheable` on `methodB` is not triggered because the call bypasses the Spring proxy. To work around this, inject the service into itself via the Spring proxy (e.g., `@Autowired private ProductService self`) and call it via `self.methodB()`.
+:::
 
 ### Caffeine Cache
 

@@ -24,7 +24,7 @@ A structured guide covering everything you need to know about databases — from
 | 8 | [Storage Engines & Data Structures](./storage-engines-data-structures) | InnoDB, LSM trees, WAL, buffer pool |
 | 9 | [Replication & Partitioning](./replication-partitioning) | Leader-follower, sharding, CAP |
 | 10 | [NoSQL & Distributed Databases](./nosql-distributed) | Document, key-value, wide-column, graph |
-| 11 | [Caching Strategies](./caching-strategies) | Redis, eviction, cache patterns, pitfalls |
+| 11 | [Caching Strategies](../system-design/caching-strategies) | Redis, eviction, cache patterns, pitfalls |
 | 12 | [Performance & Monitoring](./performance-monitoring) | Slow queries, profiling, connection pooling |
 | 13 | [Full-Text Search](./full-text-search) | Inverted index, tsvector, Elasticsearch |
 | 14 | [Data Warehousing & OLAP](./data-warehousing-olap) | Star schema, ETL/ELT, materialized views |

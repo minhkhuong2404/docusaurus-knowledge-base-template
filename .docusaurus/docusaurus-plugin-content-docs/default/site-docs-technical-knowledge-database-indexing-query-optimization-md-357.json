@@ -1,7 +1,7 @@
 {
   "id": "technical-knowledge/database/indexing-query-optimization",
   "title": "Indexing & Query Optimization",
-  "description": "Deep dive into database indexes — B-Tree, hash, covering, composite — and strategies to analyze and optimize slow queries.",
+  "description": "Deep dive into database indexing mechanisms — covering disk I/O, B-Trees, hash indexes, composite index design, geospatial indexing, inverted indexes, EXPLAIN analysis, and Spring/JPA performance.",
   "source": "@site/docs/technical-knowledge/database/indexing-query-optimization.md",
   "sourceDirName": "technical-knowledge/database",
   "slug": "/technical-knowledge/database/indexing-query-optimization",
@@ -38,6 +38,11 @@
       "inline": true,
       "label": "performance",
       "permalink": "/tags/performance"
+    },
+    {
+      "inline": true,
+      "label": "system-design",
+      "permalink": "/tags/system-design"
     }
   ],
   "version": "current",
@@ -47,24 +52,25 @@
   "frontMatter": {
     "id": "indexing-query-optimization",
     "title": "Indexing & Query Optimization",
-    "description": "Deep dive into database indexes — B-Tree, hash, covering, composite — and strategies to analyze and optimize slow queries.",
+    "description": "Deep dive into database indexing mechanisms — covering disk I/O, B-Trees, hash indexes, composite index design, geospatial indexing, inverted indexes, EXPLAIN analysis, and Spring/JPA performance.",
     "tags": [
       "database",
       "indexing",
       "query-optimization",
       "b-tree",
       "explain",
-      "performance"
+      "performance",
+      "system-design"
     ],
     "sidebar_position": 3
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Schema Migrations",
-    "permalink": "/technical-knowledge/database/schema-migrations"
+    "title": "Database Design & Normalization",
+    "permalink": "/technical-knowledge/database/database-design"
   },
   "next": {
-    "title": "Query Planner & Optimizer",
-    "permalink": "/technical-knowledge/database/query-planner-optimizer"
+    "title": "CDC",
+    "permalink": "/technical-knowledge/system-design/cdc"
   }
 }

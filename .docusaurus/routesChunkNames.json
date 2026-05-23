@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-627": {
+  "/-874": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-8aa": {
+  "/-475": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -156,10 +156,6 @@
   "/tags/answers-fd9": {
     "__comp": "df203c0f",
     "__props": "726177c8"
-  },
-  "/tags/anycast-cbf": {
-    "__comp": "df203c0f",
-    "__props": "4e41eea8"
   },
   "/tags/aof-510": {
     "__comp": "df203c0f",
@@ -520,10 +516,6 @@
   "/tags/cache-6ac": {
     "__comp": "df203c0f",
     "__props": "93aee0f4"
-  },
-  "/tags/cache-aside-cb4": {
-    "__comp": "df203c0f",
-    "__props": "07d2b096"
   },
   "/tags/cache-invalidation-84c": {
     "__comp": "df203c0f",
@@ -1637,10 +1629,6 @@
     "__comp": "df203c0f",
     "__props": "e5a5ebbf"
   },
-  "/tags/envoy-7d3": {
-    "__comp": "df203c0f",
-    "__props": "1c927815"
-  },
   "/tags/epam-ceb": {
     "__comp": "df203c0f",
     "__props": "8eb293c6"
@@ -2065,10 +2053,6 @@
     "__comp": "df203c0f",
     "__props": "b643b062"
   },
-  "/tags/health-check-0e8": {
-    "__comp": "df203c0f",
-    "__props": "a0ddd4e1"
-  },
   "/tags/heap-008": {
     "__comp": "df203c0f",
     "__props": "c6df5430"
@@ -2397,10 +2381,6 @@
     "__comp": "df203c0f",
     "__props": "2c410df3"
   },
-  "/tags/istio-87f": {
-    "__comp": "df203c0f",
-    "__props": "eb6c0fbd"
-  },
   "/tags/items-index-5ee": {
     "__comp": "df203c0f",
     "__props": "4e91dcc4"
@@ -2696,10 +2676,6 @@
   "/tags/locking-a98": {
     "__comp": "df203c0f",
     "__props": "b500003f"
-  },
-  "/tags/locks-ade": {
-    "__comp": "df203c0f",
-    "__props": "261d847a"
   },
   "/tags/log-blame-57c": {
     "__comp": "df203c0f",
@@ -3000,10 +2976,6 @@
   "/tags/new-742": {
     "__comp": "df203c0f",
     "__props": "5590e364"
-  },
-  "/tags/new-learner-414": {
-    "__comp": "df203c0f",
-    "__props": "6f000f77"
   },
   "/tags/nginx-65f": {
     "__comp": "df203c0f",
@@ -3593,10 +3565,6 @@
     "__comp": "df203c0f",
     "__props": "f38ddaca"
   },
-  "/tags/protobuf-660": {
-    "__comp": "df203c0f",
-    "__props": "9b73f983"
-  },
   "/tags/protocols-a9a": {
     "__comp": "df203c0f",
     "__props": "2f8ee682"
@@ -3672,10 +3640,6 @@
   "/tags/quick-reference-f7f": {
     "__comp": "df203c0f",
     "__props": "60cedcc5"
-  },
-  "/tags/rabbit-mq-a03": {
-    "__comp": "df203c0f",
-    "__props": "3f47f66b"
   },
   "/tags/rabbitmq-009": {
     "__comp": "df203c0f",
@@ -3993,10 +3957,6 @@
     "__comp": "df203c0f",
     "__props": "3b5bfb5f"
   },
-  "/tags/schema-design-f61": {
-    "__comp": "df203c0f",
-    "__props": "583a407d"
-  },
   "/tags/schema-registry-73e": {
     "__comp": "df203c0f",
     "__props": "926e2b92"
@@ -4065,10 +4025,6 @@
     "__comp": "df203c0f",
     "__props": "ea2a8faf"
   },
-  "/tags/senior-level-e71": {
-    "__comp": "df203c0f",
-    "__props": "6f30cf5c"
-  },
   "/tags/sentinel-ed9": {
     "__comp": "df203c0f",
     "__props": "0f8b400a"
@@ -4092,10 +4048,6 @@
   "/tags/service-accounts-429": {
     "__comp": "df203c0f",
     "__props": "ed8453a2"
-  },
-  "/tags/service-discovery-d7b": {
-    "__comp": "df203c0f",
-    "__props": "b22f090e"
   },
   "/tags/service-loader-25d": {
     "__comp": "df203c0f",
@@ -4289,10 +4241,6 @@
     "__comp": "df203c0f",
     "__props": "d2ae44c2"
   },
-  "/tags/spring-websocket-e2f": {
-    "__comp": "df203c0f",
-    "__props": "85069138"
-  },
   "/tags/sql-b91": {
     "__comp": "df203c0f",
     "__props": "f8c45340"
@@ -4400,10 +4348,6 @@
   "/tags/step-functions-3a5": {
     "__comp": "df203c0f",
     "__props": "8bcd46ef"
-  },
-  "/tags/stomp-61f": {
-    "__comp": "df203c0f",
-    "__props": "48116eef"
   },
   "/tags/storage-113": {
     "__comp": "df203c0f",
@@ -5045,10 +4989,6 @@
     "__comp": "df203c0f",
     "__props": "5570e6fa"
   },
-  "/tags/write-through-b90": {
-    "__comp": "df203c0f",
-    "__props": "0497c312"
-  },
   "/tags/writes-d0b": {
     "__comp": "df203c0f",
     "__props": "349da4f3"
@@ -5085,7 +5025,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-5fb": {
+  "/-bb4": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -5124,7 +5064,7 @@
     "__comp": "17896441",
     "content": "1d25b2fe"
   },
-  "/books/building-microservice/chapter-06-3ac": {
+  "/books/building-microservice/chapter-06-b9d": {
     "__comp": "17896441",
     "content": "9df5b457"
   },
@@ -5356,7 +5296,7 @@
     "__comp": "17896441",
     "content": "14976deb"
   },
-  "/books/ddia/part2-distributed-data/chapter-07-394": {
+  "/books/ddia/part2-distributed-data/chapter-07-0d8": {
     "__comp": "17896441",
     "content": "0b712ecb"
   },
@@ -6112,11 +6052,11 @@
     "__comp": "17896441",
     "content": "46793316"
   },
-  "/technical-knowledge/database/-0e5": {
+  "/technical-knowledge/database/-7b1": {
     "__comp": "17896441",
     "content": "d4d0b9b0"
   },
-  "/technical-knowledge/database/acid-def": {
+  "/technical-knowledge/database/acid-59e": {
     "__comp": "17896441",
     "content": "3be25515"
   },
@@ -6127,10 +6067,6 @@
   "/technical-knowledge/database/backup-recovery-212": {
     "__comp": "17896441",
     "content": "1d655bfd"
-  },
-  "/technical-knowledge/database/caching-strategies-6f7": {
-    "__comp": "17896441",
-    "content": "7aa6b45d"
   },
   "/technical-knowledge/database/data-warehousing-olap-6b8": {
     "__comp": "17896441",
@@ -6156,7 +6092,7 @@
     "__comp": "17896441",
     "content": "3579e0cb"
   },
-  "/technical-knowledge/database/nosql-distributed-509": {
+  "/technical-knowledge/database/nosql-distributed-2c8": {
     "__comp": "17896441",
     "content": "025815b7"
   },
@@ -6188,7 +6124,7 @@
     "__comp": "17896441",
     "content": "04625431"
   },
-  "/technical-knowledge/database/transactions-concurrency-416": {
+  "/technical-knowledge/database/transactions-concurrency-e21": {
     "__comp": "17896441",
     "content": "d2fa8756"
   },
@@ -9472,10 +9408,6 @@
     "__comp": "17896441",
     "content": "77dd0904"
   },
-  "/technical-knowledge/java/java-threads-and-locks-427": {
-    "__comp": "17896441",
-    "content": "6f0e33d4"
-  },
   "/technical-knowledge/java/java-virtual-threads-6ce": {
     "__comp": "17896441",
     "content": "dd9695a1"
@@ -9488,7 +9420,7 @@
     "__comp": "17896441",
     "content": "5a79051b"
   },
-  "/technical-knowledge/kafka/advanced/kafka-connect-fd3": {
+  "/technical-knowledge/kafka/advanced/kafka-connect-cfb": {
     "__comp": "17896441",
     "content": "e1e89bb9"
   },
@@ -9680,10 +9612,6 @@
     "__comp": "17896441",
     "content": "6120f8a6"
   },
-  "/technical-knowledge/networking/cdn-load-balancing-b28": {
-    "__comp": "17896441",
-    "content": "deb02025"
-  },
   "/technical-knowledge/networking/dns-resolution-fdc": {
     "__comp": "17896441",
     "content": "ee0ecb9e"
@@ -9724,14 +9652,6 @@
     "__comp": "17896441",
     "content": "4d4f0566"
   },
-  "/technical-knowledge/networking/rest-grpc-api-design-a5a": {
-    "__comp": "17896441",
-    "content": "8d317826"
-  },
-  "/technical-knowledge/networking/service-mesh-microservices-cfd": {
-    "__comp": "17896441",
-    "content": "9efcb713"
-  },
   "/technical-knowledge/networking/socket-programming-io-models-2e3": {
     "__comp": "17896441",
     "content": "a862eed1"
@@ -9739,10 +9659,6 @@
   "/technical-knowledge/networking/tcp-udp-transport-layer-fd7": {
     "__comp": "17896441",
     "content": "ea5e1317"
-  },
-  "/technical-knowledge/networking/websockets-realtime-0ee": {
-    "__comp": "17896441",
-    "content": "71b58972"
   },
   "/technical-knowledge/operating-systems/cpu-scheduling-440": {
     "__comp": "17896441",
@@ -10052,14 +9968,6 @@
     "__comp": "17896441",
     "content": "0098328c"
   },
-  "/technical-knowledge/system-design/database-design-941": {
-    "__comp": "17896441",
-    "content": "9fe414ef"
-  },
-  "/technical-knowledge/system-design/database-indexing-deep-dive-984": {
-    "__comp": "17896441",
-    "content": "d628e604"
-  },
   "/technical-knowledge/system-design/distributed-locking-6ab": {
     "__comp": "17896441",
     "content": "33fd115f"
@@ -10095,10 +10003,6 @@
   "/technical-knowledge/system-design/message-queues-77e": {
     "__comp": "17896441",
     "content": "3940c236"
-  },
-  "/technical-knowledge/system-design/message-queues-comprehensive-e55": {
-    "__comp": "17896441",
-    "content": "2fd6c3bc"
   },
   "/technical-knowledge/system-design/microservices-patterns-253": {
     "__comp": "17896441",

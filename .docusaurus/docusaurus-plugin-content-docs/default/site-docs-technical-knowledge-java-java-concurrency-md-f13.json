@@ -57,7 +57,7 @@
     "permalink": "/technical-knowledge/java/java-collections"
   },
   "next": {
-    "title": "Java Threads, Locks, and Thread Safety",
-    "permalink": "/technical-knowledge/java/java-threads-and-locks"
+    "title": "Java Concurrency: Threads, Locks & Concurrent Utilities",
+    "permalink": "/technical-knowledge/java/java-concurrency"
   }
 }

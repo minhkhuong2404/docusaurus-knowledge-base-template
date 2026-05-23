@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '627'),
+    component: ComponentCreator('/', '874'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '8aa'),
+        component: ComponentCreator('/', '475'),
         routes: [
           {
             path: '/tags',
@@ -183,11 +183,6 @@ export default [
           {
             path: '/tags/answers',
             component: ComponentCreator('/tags/answers', 'fd9'),
-            exact: true
-          },
-          {
-            path: '/tags/anycast',
-            component: ComponentCreator('/tags/anycast', 'cbf'),
             exact: true
           },
           {
@@ -638,11 +633,6 @@ export default [
           {
             path: '/tags/cache',
             component: ComponentCreator('/tags/cache', '6ac'),
-            exact: true
-          },
-          {
-            path: '/tags/cache-aside',
-            component: ComponentCreator('/tags/cache-aside', 'cb4'),
             exact: true
           },
           {
@@ -2036,11 +2026,6 @@ export default [
             exact: true
           },
           {
-            path: '/tags/envoy',
-            component: ComponentCreator('/tags/envoy', '7d3'),
-            exact: true
-          },
-          {
             path: '/tags/epam',
             component: ComponentCreator('/tags/epam', 'ceb'),
             exact: true
@@ -2571,11 +2556,6 @@ export default [
             exact: true
           },
           {
-            path: '/tags/health-check',
-            component: ComponentCreator('/tags/health-check', '0e8'),
-            exact: true
-          },
-          {
             path: '/tags/heap',
             component: ComponentCreator('/tags/heap', '008'),
             exact: true
@@ -2986,11 +2966,6 @@ export default [
             exact: true
           },
           {
-            path: '/tags/istio',
-            component: ComponentCreator('/tags/istio', '87f'),
-            exact: true
-          },
-          {
             path: '/tags/items-index',
             component: ComponentCreator('/tags/items-index', '5ee'),
             exact: true
@@ -3358,11 +3333,6 @@ export default [
           {
             path: '/tags/locking',
             component: ComponentCreator('/tags/locking', 'a98'),
-            exact: true
-          },
-          {
-            path: '/tags/locks',
-            component: ComponentCreator('/tags/locks', 'ade'),
             exact: true
           },
           {
@@ -3738,11 +3708,6 @@ export default [
           {
             path: '/tags/new',
             component: ComponentCreator('/tags/new', '742'),
-            exact: true
-          },
-          {
-            path: '/tags/new-learner',
-            component: ComponentCreator('/tags/new-learner', '414'),
             exact: true
           },
           {
@@ -4481,11 +4446,6 @@ export default [
             exact: true
           },
           {
-            path: '/tags/protobuf',
-            component: ComponentCreator('/tags/protobuf', '660'),
-            exact: true
-          },
-          {
             path: '/tags/protocols',
             component: ComponentCreator('/tags/protocols', 'a9a'),
             exact: true
@@ -4578,11 +4538,6 @@ export default [
           {
             path: '/tags/quick-reference',
             component: ComponentCreator('/tags/quick-reference', 'f7f'),
-            exact: true
-          },
-          {
-            path: '/tags/rabbit-mq',
-            component: ComponentCreator('/tags/rabbit-mq', 'a03'),
             exact: true
           },
           {
@@ -4981,11 +4936,6 @@ export default [
             exact: true
           },
           {
-            path: '/tags/schema-design',
-            component: ComponentCreator('/tags/schema-design', 'f61'),
-            exact: true
-          },
-          {
             path: '/tags/schema-registry',
             component: ComponentCreator('/tags/schema-registry', '73e'),
             exact: true
@@ -5071,11 +5021,6 @@ export default [
             exact: true
           },
           {
-            path: '/tags/senior-level',
-            component: ComponentCreator('/tags/senior-level', 'e71'),
-            exact: true
-          },
-          {
             path: '/tags/sentinel',
             component: ComponentCreator('/tags/sentinel', 'ed9'),
             exact: true
@@ -5103,11 +5048,6 @@ export default [
           {
             path: '/tags/service-accounts',
             component: ComponentCreator('/tags/service-accounts', '429'),
-            exact: true
-          },
-          {
-            path: '/tags/service-discovery',
-            component: ComponentCreator('/tags/service-discovery', 'd7b'),
             exact: true
           },
           {
@@ -5351,11 +5291,6 @@ export default [
             exact: true
           },
           {
-            path: '/tags/spring-websocket',
-            component: ComponentCreator('/tags/spring-websocket', 'e2f'),
-            exact: true
-          },
-          {
             path: '/tags/sql',
             component: ComponentCreator('/tags/sql', 'b91'),
             exact: true
@@ -5488,11 +5423,6 @@ export default [
           {
             path: '/tags/step-functions',
             component: ComponentCreator('/tags/step-functions', '3a5'),
-            exact: true
-          },
-          {
-            path: '/tags/stomp',
-            component: ComponentCreator('/tags/stomp', '61f'),
             exact: true
           },
           {
@@ -6296,11 +6226,6 @@ export default [
             exact: true
           },
           {
-            path: '/tags/write-through',
-            component: ComponentCreator('/tags/write-through', 'b90'),
-            exact: true
-          },
-          {
             path: '/tags/writes',
             component: ComponentCreator('/tags/writes', 'd0b'),
             exact: true
@@ -6347,7 +6272,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '5fb'),
+            component: ComponentCreator('/', 'bb4'),
             routes: [
               {
                 path: '/aws',
@@ -6404,7 +6329,7 @@ export default [
               },
               {
                 path: '/books/building-microservice/chapter-06',
-                component: ComponentCreator('/books/building-microservice/chapter-06', '3ac'),
+                component: ComponentCreator('/books/building-microservice/chapter-06', 'b9d'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -6752,7 +6677,7 @@ export default [
               },
               {
                 path: '/books/ddia/part2-distributed-data/chapter-07',
-                component: ComponentCreator('/books/ddia/part2-distributed-data/chapter-07', '394'),
+                component: ComponentCreator('/books/ddia/part2-distributed-data/chapter-07', '0d8'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -7881,13 +7806,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/',
-                component: ComponentCreator('/technical-knowledge/database/', '0e5'),
+                component: ComponentCreator('/technical-knowledge/database/', '7b1'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/database/acid',
-                component: ComponentCreator('/technical-knowledge/database/acid', 'def'),
+                component: ComponentCreator('/technical-knowledge/database/acid', '59e'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -7900,12 +7825,6 @@ export default [
               {
                 path: '/technical-knowledge/database/backup-recovery',
                 component: ComponentCreator('/technical-knowledge/database/backup-recovery', '212'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/database/caching-strategies',
-                component: ComponentCreator('/technical-knowledge/database/caching-strategies', '6f7'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -7947,7 +7866,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/nosql-distributed',
-                component: ComponentCreator('/technical-knowledge/database/nosql-distributed', '509'),
+                component: ComponentCreator('/technical-knowledge/database/nosql-distributed', '2c8'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -7995,7 +7914,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/transactions-concurrency',
-                component: ComponentCreator('/technical-knowledge/database/transactions-concurrency', '416'),
+                component: ComponentCreator('/technical-knowledge/database/transactions-concurrency', 'e21'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -12917,12 +12836,6 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/java/java-threads-and-locks',
-                component: ComponentCreator('/technical-knowledge/java/java-threads-and-locks', '427'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
                 path: '/technical-knowledge/java/java-virtual-threads',
                 component: ComponentCreator('/technical-knowledge/java/java-virtual-threads', '6ce'),
                 exact: true,
@@ -12942,7 +12855,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/advanced/kafka-connect',
-                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-connect', 'fd3'),
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-connect', 'cfb'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13229,12 +13142,6 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/networking/cdn-load-balancing',
-                component: ComponentCreator('/technical-knowledge/networking/cdn-load-balancing', 'b28'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
                 path: '/technical-knowledge/networking/dns-resolution',
                 component: ComponentCreator('/technical-knowledge/networking/dns-resolution', 'fdc'),
                 exact: true,
@@ -13295,18 +13202,6 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/networking/rest-grpc-api-design',
-                component: ComponentCreator('/technical-knowledge/networking/rest-grpc-api-design', 'a5a'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/networking/service-mesh-microservices',
-                component: ComponentCreator('/technical-knowledge/networking/service-mesh-microservices', 'cfd'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
                 path: '/technical-knowledge/networking/socket-programming-io-models',
                 component: ComponentCreator('/technical-knowledge/networking/socket-programming-io-models', '2e3'),
                 exact: true,
@@ -13315,12 +13210,6 @@ export default [
               {
                 path: '/technical-knowledge/networking/tcp-udp-transport-layer',
                 component: ComponentCreator('/technical-knowledge/networking/tcp-udp-transport-layer', 'fd7'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/networking/websockets-realtime',
-                component: ComponentCreator('/technical-knowledge/networking/websockets-realtime', '0ee'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13784,18 +13673,6 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/system-design/database-design',
-                component: ComponentCreator('/technical-knowledge/system-design/database-design', '941'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/system-design/database-indexing-deep-dive',
-                component: ComponentCreator('/technical-knowledge/system-design/database-indexing-deep-dive', '984'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
                 path: '/technical-knowledge/system-design/distributed-locking',
                 component: ComponentCreator('/technical-knowledge/system-design/distributed-locking', '6ab'),
                 exact: true,
@@ -13846,12 +13723,6 @@ export default [
               {
                 path: '/technical-knowledge/system-design/message-queues',
                 component: ComponentCreator('/technical-knowledge/system-design/message-queues', '77e'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/system-design/message-queues-comprehensive',
-                component: ComponentCreator('/technical-knowledge/system-design/message-queues-comprehensive', 'e55'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

@@ -324,4 +324,4 @@ public class OrderService {
 ### Compare Next
 - [Replication & Partitioning](./replication-partitioning.md)
 - [Database Patterns for Microservices](./database-patterns-microservices.md)
-- [Caching Strategies](./caching-strategies.md)
+- [Caching Strategies](../system-design/caching-strategies.md)

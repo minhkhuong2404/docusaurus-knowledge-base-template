@@ -1107,7 +1107,7 @@ Pro user:  can run a batch job in a burst, then continue at 10 req/sec
 
 ## See Also
 
-- [Caching Strategies](../database/caching-strategies.md) — Redis data structures and patterns used alongside rate limiting
+- [Caching Strategies](../system-design/caching-strategies.md) — Redis data structures and patterns used alongside rate limiting
 - [API Design](../system-design/api-design.md) — 429 response standards, Retry-After, quota documentation
 - [Distributed Systems](../system-design/distributed-systems.md) — Consistency trade-offs in multi-node rate limiting
 - [Security Patterns](../system-design/security-patterns.md) — Brute-force protection, auth endpoint hardening

@@ -380,6 +380,71 @@ spring:
 
 ---
 
+
+## Retry Pattern
+
+```java
+// Resilience4j Retry
+@Bean
+public RetryConfig retryConfig() {
+    return RetryConfig.custom()
+        .maxAttempts(3)
+        .waitDuration(Duration.ofMillis(500))
+        .retryExceptions(ConnectTimeoutException.class, IOException.class)
+        .ignoreExceptions(BadRequestException.class)  // don't retry 4xx
+        .build();
+}
+
+// Exponential backoff with jitter
+RetryConfig.custom()
+    .intervalFunction(IntervalFunction.ofExponentialRandomBackoff(
+        Duration.ofMillis(200),   // initial
+        2.0,                       // multiplier
+        Duration.ofSeconds(10)))   // max
+    .build();
+```
+
+---
+
+
+## Envoy Proxy
+
+Envoy is the data plane proxy used by Istio, AWS App Mesh, and many others.
+
+```
+Envoy capabilities:
+  L3/L4: TCP proxy, TLS termination/origination
+  L7:    HTTP/1.1, HTTP/2, gRPC, WebSocket
+  Observability: distributed tracing (Zipkin, Jaeger, X-Ray), stats
+  Service discovery: via xDS API from control plane
+  Load balancing: round-robin, least-request, ring hash, Maglev
+  Fault injection: inject delays and errors for testing
+```
+
+---
+
+
+## Kubernetes Networking Concepts
+
+```
+Pod networking:
+  Every pod gets its own IP (flat network)
+  Pods can reach each other directly across nodes
+  CNI plugin handles this (Calico, Flannel, Cilium, Weave)
+
+Service types:
+  ClusterIP:    internal-only VIP, reachable within cluster
+  NodePort:     exposes on every node's IP:port (30000-32767)
+  LoadBalancer: provisions cloud LB (AWS ELB, GCP NLB)
+  ExternalName: maps to external DNS name
+
+Ingress:
+  L7 HTTP routing → backend Services
+  nginx Ingress, Traefik, AWS ALB Ingress Controller
+```
+
+```yaml
+
 ## Interview Questions
 
 ### Q: What is an API Gateway? What responsibilities should it have?
@@ -422,3 +487,30 @@ spring:
 
 **A:** Small team, unstable domain boundaries, and low scale usually favor a modular monolith. If ops overhead dominates feature delivery, microservices are premature.
 
+
+### Microservices Networking & Mesh Questions
+
+
+**Q1. What is a circuit breaker and why is it needed in microservices?**
+> A circuit breaker prevents cascading failures: if Service A calls Service B and B is slow/down, without a circuit breaker, A's threads fill up waiting for B's timeouts — eventually A becomes unavailable too. The circuit breaker opens after N failures, immediately failing calls with a fallback (rather than waiting for timeout). After a recovery period, it lets test calls through — if successful, closes and resumes normal operation.
+
+**Q2. What is a service mesh and what problems does it solve?**
+> A service mesh adds a sidecar proxy (Envoy) to every pod, intercepting all network traffic. It moves cross-cutting concerns out of application code: automatic mTLS between services (zero-trust), observability (distributed tracing, metrics without code changes), traffic management (retries, circuit breaking, timeouts), canary deployments, and authorization policies. The app just speaks plain HTTP — the sidecar handles everything.
+
+**Q3. What is the difference between client-side and server-side service discovery?**
+> Client-side: the service queries a registry (Eureka, Consul) to get a list of healthy instances and load-balances among them. Client needs registry client library. Server-side: the client sends to a stable address (Kubernetes Service ClusterIP), and the infrastructure (kube-proxy, load balancer) routes to a healthy instance. Client has no discovery logic. Kubernetes uses server-side discovery — DNS resolves to ClusterIP, kube-proxy routes to pods.
+
+**Q4. What is the bulkhead pattern?**
+> Named after ship compartments, bulkheads isolate resources per dependency. Each downstream service gets its own thread pool (or semaphore limit). If one service is slow and exhausts its thread pool, other services' thread pools are unaffected — the failure is contained. Without bulkheads, one slow service can consume all application threads, bringing down all other endpoints.
+
+**Q5. How does Istio implement mTLS without changing application code?**
+> Istio's control plane (Istiod) automatically provisions X.509 certificates for every service account. The Envoy sidecar intercepts all inbound/outbound traffic — it terminates incoming mTLS and initiates outgoing mTLS, transparently to the application. The app speaks plain HTTP to the sidecar on localhost. The sidecar upgrades to mTLS for inter-service calls. Certificate rotation is also automatic.
+
+**Q6. What is a Kubernetes ClusterIP service and how does kube-proxy route traffic to it?**
+> A ClusterIP is a virtual IP (VIP) — it doesn't correspond to any actual network interface. kube-proxy watches the Kubernetes API and programs iptables (or IPVS) rules on every node: packets destined for the ClusterIP:port are DNAT'd to a randomly selected healthy pod IP:port. This happens in the Linux kernel before the packet reaches any application, with no extra network hops.
+
+**Q7. What is a canary deployment in the context of a service mesh?**
+> A canary deployment gradually routes a small percentage of traffic to a new version of a service while the rest continues to the stable version. Istio VirtualService weight routing allows this: `v1: 95%, v2: 5%`. Monitor v2's error rate and latency. If healthy, increase to 20%, 50%, 100%. If problems appear, instantly route 100% back to v1. The service mesh makes this seamless — no DNS changes, no infrastructure changes, just a YAML update.
+
+**Q8. What is the difference between retry and circuit breaker patterns?**
+> Retries handle **transient failures** — try again immediately or with backoff, hoping the next attempt succeeds (network blip, momentary unavailability). Circuit breakers handle **sustained failures** — stop trying when a service is clearly down, instead failing fast and returning a fallback immediately. They work together: retry handles flickers; circuit breaker trips when retries consistently fail, preventing retry storms from overwhelming a struggling service.

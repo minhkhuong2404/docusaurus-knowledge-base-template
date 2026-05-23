@@ -20,7 +20,7 @@ A complete guide covering HTTP fundamentals for newcomers, a practical decision 
 | You are...             | Start here                                                                                                                                                        |
 | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | New to HTTP            | [What Is HTTP?](#what-is-http) → [Request Structure](#http-request-structure) → [Methods](#http-methods-in-depth)                                                 |
-| Mid-level engineer     | [Decision Framework](#-decision-framework-which-method-to-use) → [Status Codes](#http-status-codes) → [Caching](#http-caching)                                    |
+| Mid-level engineer     | [Decision Framework](#-decision-framework-which-method-to-use) → [Status Codes](#http-response-status-codes) → [Caching](#http-caching)                                    |
 | Senior / system design | [Protocol Evolution](#protocol-evolution-http11--http2--http3) → [TLS Deep Dive](#https--tls-deep-dive) → [Production Checklist](#production-readiness-checklist) |
 
 ---
@@ -1141,7 +1141,7 @@ public class PublicApiController { ... }
 ## See Also
 
 - [Rate Limiting](../redis/redis-rate-limiting.md) — 429 status codes, `Retry-After` header, throttling strategies
-- [Caching Strategies](../database/caching-strategies.md) — `Cache-Control`, ETags, CDN caching in depth
+- [Caching Strategies](../system-design/caching-strategies.md) — `Cache-Control`, ETags, CDN caching in depth
 - [API Design](../system-design/api-design.md) — REST resource naming, versioning, error response schemas
 - [Security Patterns](../system-design/security-patterns.md) — CSRF, XSS, CSP, auth header patterns
 - [Distributed Systems](../system-design/distributed-systems.md) — Connection pooling, circuit breaking, timeouts

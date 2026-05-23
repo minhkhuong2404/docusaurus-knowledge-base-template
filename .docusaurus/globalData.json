@@ -1276,11 +1276,6 @@
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/database/caching-strategies",
-              "path": "/technical-knowledge/database/caching-strategies",
-              "sidebar": "tutorialSidebar"
-            },
-            {
               "id": "technical-knowledge/database/data-warehousing-olap",
               "path": "/technical-knowledge/database/data-warehousing-olap",
               "sidebar": "tutorialSidebar"
@@ -5463,11 +5458,6 @@
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/java/java-threads-and-locks",
-              "path": "/technical-knowledge/java/java-threads-and-locks",
-              "sidebar": "tutorialSidebar"
-            },
-            {
               "id": "technical-knowledge/java/java-virtual-threads",
               "path": "/technical-knowledge/java/java-virtual-threads",
               "sidebar": "tutorialSidebar"
@@ -5723,11 +5713,6 @@
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/networking/cdn-load-balancing",
-              "path": "/technical-knowledge/networking/cdn-load-balancing",
-              "sidebar": "tutorialSidebar"
-            },
-            {
               "id": "technical-knowledge/networking/dns-resolution",
               "path": "/technical-knowledge/networking/dns-resolution",
               "sidebar": "tutorialSidebar"
@@ -5783,16 +5768,6 @@
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/networking/rest-grpc-api-design",
-              "path": "/technical-knowledge/networking/rest-grpc-api-design",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/networking/service-mesh-microservices",
-              "path": "/technical-knowledge/networking/service-mesh-microservices",
-              "sidebar": "tutorialSidebar"
-            },
-            {
               "id": "technical-knowledge/networking/socket-programming-io-models",
               "path": "/technical-knowledge/networking/socket-programming-io-models",
               "sidebar": "tutorialSidebar"
@@ -5800,11 +5775,6 @@
             {
               "id": "technical-knowledge/networking/tcp-udp-transport-layer",
               "path": "/technical-knowledge/networking/tcp-udp-transport-layer",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/networking/websockets-realtime",
-              "path": "/technical-knowledge/networking/websockets-realtime",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -6199,16 +6169,6 @@
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/system-design/database-design",
-              "path": "/technical-knowledge/system-design/database-design",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/system-design/database-indexing-deep-dive",
-              "path": "/technical-knowledge/system-design/database-indexing-deep-dive",
-              "sidebar": "tutorialSidebar"
-            },
-            {
               "id": "technical-knowledge/system-design/distributed-locking",
               "path": "/technical-knowledge/system-design/distributed-locking",
               "sidebar": "tutorialSidebar"
@@ -6256,11 +6216,6 @@
             {
               "id": "technical-knowledge/system-design/message-queues",
               "path": "/technical-knowledge/system-design/message-queues",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/system-design/message-queues-comprehensive",
-              "path": "/technical-knowledge/system-design/message-queues-comprehensive",
               "sidebar": "tutorialSidebar"
             },
             {

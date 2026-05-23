@@ -168,6 +168,196 @@ Rate limiting protects your API from abuse, DDoS attacks, and noisy neighbors by
 
 ---
 
+
+## REST Resource Design
+
+```
+Resources = nouns, not verbs
+HTTP methods = the verbs
+
+✅ Good                       ❌ Bad
+GET    /orders                GET /getOrders
+GET    /orders/42             GET /getOrder?id=42
+POST   /orders                POST /createOrder
+PUT    /orders/42             POST /updateOrder/42
+PATCH  /orders/42             PUT /orders/modifyPartial
+DELETE /orders/42             GET /deleteOrder?id=42
+GET    /users/7/orders        GET /getOrdersForUser?userId=7
+POST   /orders/42/cancel      ← action on resource (acceptable exception)
+```
+
+### Status Codes Mapping
+
+```
+POST /orders          201 Created + Location: /orders/42
+GET  /orders/42       200 OK
+GET  /orders/999      404 Not Found
+PUT  /orders/42       200 OK or 204 No Content
+DELETE /orders/42     204 No Content
+POST /orders (bad)    400 Bad Request + error body
+POST /orders (dup)    409 Conflict
+GET  /orders (auth)   401 Unauthorized
+```
+
+---
+
+
+## REST API Best Practices
+
+### Pagination
+
+```
+
+## Spring REST Implementation
+
+```java
+@RestController
+@RequestMapping("/api/v1/orders")
+@Validated
+public class OrderController {
+
+    @GetMapping
+    public ResponseEntity<Page<OrderDto>> getOrders(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(required = false) String status,
+            @RequestParam(defaultValue = "createdAt,desc") String sort) {
+
+        Pageable pageable = PageRequest.of(page, size, parseSort(sort));
+        Page<OrderDto> orders = orderService.findAll(status, pageable);
+        return ResponseEntity.ok(orders);
+    }
+
+    @PostMapping
+    public ResponseEntity<OrderDto> createOrder(
+            @Valid @RequestBody CreateOrderRequest req,
+            @RequestHeader(value = "Idempotency-Key", required = false) String idempotencyKey) {
+
+        OrderDto order = orderService.create(req, idempotencyKey);
+        URI location = URI.create("/api/v1/orders/" + order.getId());
+        return ResponseEntity.created(location).body(order);
+    }
+
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFound(OrderNotFoundException ex) {
+        return ResponseEntity.status(404)
+            .body(new ErrorResponse("ORDER_NOT_FOUND", ex.getMessage()));
+    }
+}
+```
+
+---
+
+
+## gRPC
+
+gRPC is a **high-performance, open-source RPC framework** from Google, built on HTTP/2 and Protocol Buffers.
+
+```
+REST:  JSON over HTTP/1.1 or HTTP/2
+gRPC:  Protocol Buffers (binary) over HTTP/2
+```
+
+### Protocol Buffers (Protobuf)
+
+```protobuf
+// order_service.proto
+syntax = "proto3";
+package order.v1;
+
+option java_package = "com.example.order.v1";
+option java_outer_classname = "OrderProto";
+
+service OrderService {
+    rpc GetOrder(GetOrderRequest) returns (OrderResponse);
+    rpc CreateOrder(CreateOrderRequest) returns (OrderResponse);
+    rpc StreamOrders(StreamOrdersRequest) returns (stream OrderResponse);  // server streaming
+    rpc CreateOrders(stream CreateOrderRequest) returns (OrderSummary);    // client streaming
+    rpc OrderChat(stream ChatMessage) returns (stream ChatMessage);        // bidirectional
+}
+
+message GetOrderRequest {
+    int64 order_id = 1;
+}
+
+message OrderResponse {
+    int64  id         = 1;
+    int64  user_id    = 2;
+    double total      = 3;
+    string status     = 4;
+    int64  created_at = 5;  // Unix timestamp millis
+}
+
+message CreateOrderRequest {
+    int64           user_id = 1;
+    repeated Item   items   = 2;
+}
+
+message Item {
+    int64  product_id = 1;
+    int32  quantity   = 2;
+    double unit_price = 3;
+}
+```
+
+### gRPC Communication Patterns
+
+| Pattern | Request | Response | Use Case |
+|---------|---------|----------|---------|
+| Unary | Single | Single | Standard request-response |
+| Server Streaming | Single | Stream | Download, logs, events |
+| Client Streaming | Stream | Single | Upload, bulk insert |
+| Bidirectional | Stream | Stream | Chat, real-time sync |
+
+### Spring Boot gRPC (net.devh)
+
+```java
+// Server
+@GrpcService
+public class OrderGrpcService extends OrderServiceGrpc.OrderServiceImplBase {
+
+    @Override
+    public void getOrder(GetOrderRequest req, StreamObserver<OrderResponse> observer) {
+        try {
+            Order order = orderRepo.findById(req.getOrderId())
+                .orElseThrow(() -> Status.NOT_FOUND
+                    .withDescription("Order not found: " + req.getOrderId())
+                    .asRuntimeException());
+
+            observer.onNext(toProto(order));
+            observer.onCompleted();
+        } catch (StatusRuntimeException e) {
+            observer.onError(e);
+        }
+    }
+
+    @Override
+    public void streamOrders(StreamOrdersRequest req,
+                              StreamObserver<OrderResponse> observer) {
+        orderRepo.findByUserId(req.getUserId())
+            .forEach(order -> observer.onNext(toProto(order)));
+        observer.onCompleted();
+    }
+}
+
+// Client
+@GrpcClient("order-service")
+private OrderServiceGrpc.OrderServiceBlockingStub orderStub;
+
+// Call
+OrderResponse response = orderStub.getOrder(
+    GetOrderRequest.newBuilder().setOrderId(42L).build());
+```
+
+---
+
+
+## GraphQL
+
+GraphQL is a **query language for APIs** — clients request exactly the data they need.
+
+```graphql
+
 ## Interview Questions
 
 ### Q: What is the difference between Path parameters, Query parameters, and Request bodies?
@@ -249,3 +439,30 @@ Rate limiting protects your API from abuse, DDoS attacks, and noisy neighbors by
 ### Q: How do you handle authentication and authorization in your API design?
 
 **A:** Authenticate with standards like OAuth2/OIDC and short-lived tokens; authorize with RBAC/ABAC at resource level. Enforce checks consistently at service boundaries and audit decisions.
+
+### REST & gRPC Specific Questions
+
+
+**Q1. What makes an API truly RESTful?**
+> True REST satisfies Fielding's 6 constraints: client-server separation, statelessness (no session state on server), cacheability (responses declare cache policy), uniform interface (resource-based URIs, standard HTTP methods), layered system (client can't distinguish server from proxy), and optionally code-on-demand. Most "REST" APIs are actually HTTP APIs — they miss HATEOAS (Hypermedia As The Engine of Application State), which would include navigable links in responses.
+
+**Q2. What is the difference between PUT and PATCH?**
+> PUT replaces the entire resource — send the complete new state; any field omitted is set to null/default. PUT is idempotent. PATCH partially updates a resource — only send fields to change; omitted fields are unchanged. PATCH is not necessarily idempotent (applying the same delta twice may differ if others wrote between). For most APIs, PATCH is preferred for partial updates.
+
+**Q3. What are the advantages of gRPC over REST for internal microservices?**
+> Protocol Buffers encode data in binary — 3-10x smaller payloads, faster serialization. HTTP/2 multiplexing enables concurrent calls on one connection. Native bidirectional streaming (chat, real-time sync). Strongly typed contracts with code generation in all languages (no manual DTO writing). Rich error model. Better performance for high-throughput internal calls. Downside: not browser-native, binary (not human-readable).
+
+**Q4. What is idempotency and why is it important for APIs?**
+> An operation is idempotent if performing it N times has the same effect as once. GET, PUT, DELETE are inherently idempotent. POST is not — submitting a payment twice charges twice. Idempotency keys let clients safely retry POSTs: include a unique key per logical operation; server deduplicates based on the key and returns the cached response. Critical for reliability in distributed systems where network failures cause retransmissions.
+
+**Q5. How would you design API pagination for a large dataset?**
+> Avoid OFFSET for large datasets (O(offset) scan). Use cursor/keyset pagination: the last-seen record's ID or timestamp becomes the "cursor" for the next page. Return `nextCursor` (opaque token) and `hasMore` in the response. This is O(1) per page regardless of depth. For total count needs, provide a separate count endpoint or include count only on the first page (expensive to recompute on every page).
+
+**Q6. What is the N+1 problem in GraphQL and how is DataLoader solving it?**
+> When resolving a list of N orders each with a user, a naive resolver makes 1 query for orders + N queries for each user — N+1 total. DataLoader batches: instead of fetching user for each order immediately, it collects all user IDs requested during one event loop tick, then makes a single `SELECT * FROM users WHERE id IN (...)`. Dramatically reduces DB queries for nested object resolution.
+
+**Q7. How do you handle API versioning and what are the trade-offs of each approach?**
+> URL versioning (`/v1/orders`): explicit, easy to test, breaks REST uniformity. Recommended for public APIs. Header versioning (`Accept: application/vnd.v2+json`): REST-pure, clients set version once, but harder to test in browsers. Query param (`?version=2`): easy but pollutes URLs. Best practice: URL versioning for public APIs; maintain N-1 versions simultaneously; use Sunset headers to warn of deprecation; never make breaking changes within a version.
+
+**Q8. What is HATEOAS and is it required for REST?**
+> HATEOAS (Hypermedia As The Engine of Application State): responses include links to related actions/resources, so clients can discover API behavior dynamically rather than hardcoding URLs. Example: an order response includes `"links": {"cancel": "/orders/42/cancel", "invoice": "/orders/42/invoice"}`. Technically required for "true" REST per Fielding, but rarely implemented. Benefit: loose coupling between client and API structure. Practical trade-off: complexity vs flexibility.

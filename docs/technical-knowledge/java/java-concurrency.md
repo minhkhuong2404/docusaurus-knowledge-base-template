@@ -145,15 +145,73 @@ At the hardware level, `volatile` triggers a **Memory Barrier** (StoreLoad). Whe
 
 ## 3. Locks & AQS
 
-### ReentrantLock vs `synchronized`
+### Choosing a Locking Primitive
 
-| Feature       | `synchronized`       | `ReentrantLock`                          |
-| ------------- | -------------------- | ---------------------------------------- |
-| Mechanism     | Implicit JVM Monitor | Explicit Java API (`lock()`, `unlock()`) |
-| Fairness      | Non-fair only        | Configurable (Fair or Non-fair)          |
-| Try lock      | ❌                    | ✅ `tryLock()`                            |
-| Interruptible | ❌                    | ✅ `lockInterruptibly()`                  |
-| Conditions    | One (`wait/notify`)  | Multiple (`newCondition()`)              |
+When coordinating access to shared mutable state in Java, select the simplest synchronization mechanism that satisfies your throughput, latency, and correctness requirements:
+
+#### `synchronized`
+Use when you need simple mutual exclusion with clear, lexical boundaries.
+- **Optimized:** Fast under low/zero contention due to JVM lock escalation (biased/lightweight locking).
+- **Limitations:** Cannot configure fairness, try-lock timeout, or interruptible lock acquisition.
+
+```java
+public synchronized void increment() {
+    count++;
+}
+```
+
+#### `ReentrantLock`
+Use when you require advanced capabilities like timeouts, interruptible acquisition, fairness configuration, or multiple condition variables.
+
+```java
+private final ReentrantLock lock = new ReentrantLock();
+
+public void update() {
+    lock.lock();
+    try {
+        sharedState++;
+    } finally {
+        lock.unlock(); // ALWAYS unlock in a finally block
+    }
+}
+```
+
+#### `ReadWriteLock` (`ReentrantReadWriteLock`)
+Use when read operations are significantly more frequent than write operations, allowing multiple threads to read concurrently while ensuring writes remain exclusive.
+
+```java
+private final ReentrantReadWriteLock rwLock = new ReentrantReadWriteLock();
+
+public String readData() {
+    rwLock.readLock().lock();
+    try {
+        return sharedData;
+    } finally {
+        rwLock.readLock().unlock();
+    }
+}
+```
+
+#### `StampedLock`
+Use in highly read-heavy workloads where standard read locks could starve writers. `StampedLock` supports **optimistic read** operations, which do not block writers. The reader acquires a version stamp, reads the values, and validates the stamp. If a write invalidated the stamp, the reader falls back to a blocking read lock.
+
+```java
+private final StampedLock lock = new StampedLock();
+
+public double readWithOptimisticLock() {
+    long stamp = lock.tryOptimisticRead();
+    double currentVal = balance;
+    if (!lock.validate(stamp)) { // Stale read detected?
+        stamp = lock.readLock(); // Fallback to standard blocking read lock
+        try {
+            currentVal = balance;
+        } finally {
+            lock.unlockRead(stamp);
+        }
+    }
+    return currentVal;
+}
+```
 
 ### AQS (AbstractQueuedSynchronizer)
 

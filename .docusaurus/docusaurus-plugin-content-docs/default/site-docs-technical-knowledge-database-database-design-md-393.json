@@ -78,11 +78,11 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Relational Fundamentals",
-    "permalink": "/technical-knowledge/database/relational-fundamentals"
+    "title": "API Design",
+    "permalink": "/technical-knowledge/system-design/api-design"
   },
   "next": {
-    "title": "Advanced SQL",
-    "permalink": "/technical-knowledge/database/advanced-sql"
+    "title": "Indexing & Query Optimization",
+    "permalink": "/technical-knowledge/database/indexing-query-optimization"
   }
 }

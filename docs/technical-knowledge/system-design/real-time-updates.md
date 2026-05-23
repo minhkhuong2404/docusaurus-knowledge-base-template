@@ -240,6 +240,110 @@ Heartbeat:   Client pings every 30s to refresh TTL
 
 ---
 
+
+## Spring WebSocket + STOMP
+
+STOMP (Simple Text Oriented Messaging Protocol) adds pub-sub semantics over WebSocket.
+
+```java
+// Spring WebSocket configuration
+@Configuration
+@EnableWebSocketMessageBroker
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+
+    @Override
+    public void configureMessageBroker(MessageBrokerRegistry config) {
+        config.enableSimpleBroker("/topic", "/queue");  // in-memory broker
+        // or: config.enableStompBrokerRelay("/topic", "/queue")  // RabbitMQ/ActiveMQ
+        config.setApplicationDestinationPrefixes("/app");
+    }
+
+    @Override
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        registry.addEndpoint("/ws")
+                .setAllowedOriginPatterns("https://*.example.com")
+                .withSockJS();  // fallback for browsers without WebSocket
+    }
+}
+
+// Controller handling incoming WebSocket messages
+@Controller
+public class OrderWebSocketController {
+
+    @MessageMapping("/orders/{orderId}/subscribe")
+    @SendTo("/topic/orders/{orderId}")
+    public OrderStatus subscribe(@DestinationVariable Long orderId,
+                                  Principal principal) {
+        return orderService.getStatus(orderId);
+    }
+
+    // Push update to specific user
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
+    public void notifyOrderUpdate(Long userId, OrderUpdate update) {
+        messagingTemplate.convertAndSendToUser(
+            userId.toString(),
+            "/queue/order-updates",
+            update
+        );
+    }
+}
+```
+
+```javascript
+// JavaScript client
+const socket = new SockJS('/ws');
+const client = Stomp.over(socket);
+
+client.connect({}, () => {
+    // Subscribe to order updates
+    client.subscribe('/topic/orders/42', (msg) => {
+        const update = JSON.parse(msg.body);
+        console.log('Order update:', update);
+    });
+
+    // Subscribe to personal queue
+    client.subscribe('/user/queue/order-updates', (msg) => {
+        const update = JSON.parse(msg.body);
+        updateUI(update);
+    });
+
+    // Send message to server
+    client.send('/app/orders/42/subscribe', {}, JSON.stringify({}));
+});
+```
+
+---
+
+
+## Heartbeat & Reconnection
+
+```javascript
+// WebSocket reconnection with exponential backoff
+class ReconnectingWebSocket {
+    connect() {
+        this.ws = new WebSocket(this.url);
+
+        this.ws.onclose = () => {
+            const delay = Math.min(1000 * 2 ** this.retries, 30000);
+            setTimeout(() => { this.retries++; this.connect(); }, delay);
+        };
+
+        this.ws.onopen = () => { this.retries = 0; };  // reset on success
+    }
+}
+
+// STOMP heartbeat
+client.connect(
+    { 'heart-beat': '10000,10000' },  // send/receive heartbeat every 10s
+    onConnected
+);
+```
+
+---
+
+
 ## Interview Questions
 
 ### Q: What's the difference between WebSocket and SSE? When would you choose each?
@@ -274,3 +378,30 @@ Heartbeat:   Client pings every 30s to refresh TTL
 
 **A:** Parallel consumers and network retries cause reordering across partitions and regions. Preserve order per key/room with partition affinity and sequence-based reassembly.
 
+
+### Networking & Protocol Implementation Questions
+
+
+**Q1. What is the difference between WebSocket, SSE, and long polling?**
+> Long polling: client requests, server holds until data or timeout; high overhead, works everywhere. SSE (Server-Sent Events): one-way server→client stream over HTTP; native reconnection, browser-native `EventSource`, text-only. WebSocket: full-duplex bidirectional connection after HTTP upgrade; lowest overhead per message, binary support, but needs more infrastructure (scaling). Use SSE for push-only, WebSocket for two-way communication.
+
+**Q2. How does the WebSocket handshake work?**
+> WebSocket begins as an HTTP request with `Upgrade: websocket` and `Connection: Upgrade` headers plus a random `Sec-WebSocket-Key`. The server responds with `101 Switching Protocols` and a derived `Sec-WebSocket-Accept` value. After this, the TCP connection is no longer HTTP — both ends exchange lightweight WebSocket frames directly. The HTTP upgrade reuses the existing TCP connection with no new handshake.
+
+**Q3. How do you scale WebSocket connections across multiple server instances?**
+> WebSocket connections are stateful — a client is connected to one specific server. To scale: use a shared message broker (Redis Pub/Sub, RabbitMQ, Kafka). Each server subscribes to all channels; when a server needs to push to a client connected elsewhere, it publishes to the broker; all servers receive it and the one with the connected client forwards it. Spring WebSocket supports this via STOMP broker relay.
+
+**Q4. What is STOMP and why would you use it over raw WebSocket?**
+> STOMP (Simple Text Oriented Messaging Protocol) adds structured messaging semantics on top of raw WebSocket: topic subscriptions, message headers, receipts, and error handling. Without STOMP, you'd implement your own message routing. STOMP provides pub/sub patterns, user-specific queues (`/user/queue/...`), and integrates with message brokers (RabbitMQ, ActiveMQ). Spring's `SimpMessagingTemplate` builds on STOMP.
+
+**Q5. Why is HTTP keep-alive important for SSE connections?**
+> SSE relies on a persistent HTTP connection — the server holds the connection open and streams events. HTTP keep-alive prevents the connection from being closed after the first response. Standard HTTP proxies and load balancers may buffer the response or impose timeouts. Configure your proxy with `proxy_read_timeout` / `proxy_buffering off` (nginx) to allow long-lived SSE streams through. CloudFront, by default, buffers responses which breaks SSE — must configure for streaming.
+
+**Q6. How does SSE handle reconnection?**
+> The browser's `EventSource` API automatically reconnects when the connection drops. The server sends `id: <eventId>` with each event. On reconnect, the browser sends `Last-Event-ID: <lastId>` header. The server uses this to replay missed events from that ID forward. This built-in mechanism makes SSE reliable without application code for reconnection logic — unlike raw WebSocket.
+
+**Q7. What are the security considerations for WebSocket connections?**
+> Use `wss://` (WebSocket over TLS) to prevent eavesdropping and MitM. Validate the `Origin` header during handshake to prevent cross-site WebSocket hijacking (CSWSH) — only accept connections from your own domains. Implement authentication before the upgrade (check JWT/cookie in the HTTP handshake or first message). Implement rate limiting and message size limits (malicious clients can send huge frames). Use CORS-like origin restrictions in Spring via `setAllowedOriginPatterns`.
+
+**Q8. When would you NOT use WebSockets?**
+> When one-way server push is sufficient (use SSE — simpler, HTTP-native, no upgrade). When connections are short-lived (HTTP is more appropriate). When working behind HTTP/1.1 proxies that don't understand WebSocket upgrade (SSE uses regular HTTP). When caching is important (HTTP responses can be cached; WebSocket messages cannot). For public API access where HTTP semantics (verbs, status codes, caching) are valuable.

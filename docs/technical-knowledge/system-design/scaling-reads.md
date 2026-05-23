@@ -580,7 +580,7 @@ public class OrderProjection {
 ### Indexing
 
 :::info[Deep Dive: Database Indexing]
-For a comprehensive guide on B-Trees, LSM-Trees, Composite Indexes, Partial Indexes, and Query Optimization, see the **[Database Indexing Deep Dive](./database-index.md)** page.
+For a comprehensive guide on B-Trees, LSM-Trees, Composite Indexes, Partial Indexes, and Query Optimization, see the **[Database Indexing Deep Dive](../database/indexing-query-optimization.md)** page.
 :::
 
 ### Query Optimization
