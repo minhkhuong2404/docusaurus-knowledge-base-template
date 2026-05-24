@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'ddb'),
+    component: ComponentCreator('/', 'fa0'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '939'),
+        component: ComponentCreator('/', '5cd'),
         routes: [
           {
             path: '/tags',
@@ -6272,7 +6272,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '644'),
+            component: ComponentCreator('/', '059'),
             routes: [
               {
                 path: '/aws',
@@ -12807,7 +12807,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-jvm',
-                component: ComponentCreator('/technical-knowledge/java/java-jvm', '1af'),
+                component: ComponentCreator('/technical-knowledge/java/java-jvm', 'd6c'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

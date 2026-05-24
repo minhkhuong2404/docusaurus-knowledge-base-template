@@ -45,8 +45,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "📅 Daily Quiz",
-    "permalink": "/technical-knowledge/spring/spring-boot-daily-quiz"
+    "title": "Spring Boot — Advanced Topics",
+    "permalink": "/technical-knowledge/spring/spring-boot-advanced"
   },
   "next": {
     "title": "Spring Framework: Overview",

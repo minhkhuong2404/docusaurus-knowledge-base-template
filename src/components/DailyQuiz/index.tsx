@@ -9,6 +9,7 @@ export interface QuizQuestion {
   options: string[];
   correctOptionIndex: number;
   explanation: string;
+  difficulty?: 'easy' | 'medium' | 'hard';
 }
 
 interface DailyQuizProps {
@@ -141,6 +142,13 @@ export default function DailyQuiz({ questions, quizKey }: DailyQuizProps) {
         <span className={styles.topicBadge}>
           📅 Daily Challenge • Question {currentIndex + 1} of {shuffledQuestions.length} • {currentQuestion.topic}
         </span>
+        {currentQuestion.difficulty && (
+          <span className={`${styles.difficultyBadge} ${styles[currentQuestion.difficulty]}`}>
+            {currentQuestion.difficulty === 'easy' && '🟢 Easy'}
+            {currentQuestion.difficulty === 'medium' && '🟡 Medium'}
+            {currentQuestion.difficulty === 'hard' && '🔴 Hard'}
+          </span>
+        )}
       </div>
 
       <div className={styles.questionText}>

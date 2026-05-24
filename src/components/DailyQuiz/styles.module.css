@@ -172,3 +172,42 @@
     transform: translateY(0);
   }
 }
+
+.difficultyBadge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.easy {
+  background-color: #e6f4ea;
+  color: #137333;
+}
+
+[data-theme='dark'] .easy {
+  background-color: rgba(52, 168, 83, 0.15);
+  color: #81c995;
+}
+
+.medium {
+  background-color: #fef7e0;
+  color: #b06000;
+}
+
+[data-theme='dark'] .medium {
+  background-color: rgba(251, 188, 4, 0.15);
+  color: #fdd663;
+}
+
+.hard {
+  background-color: #fce8e6;
+  color: #c5221f;
+}
+
+[data-theme='dark'] .hard {
+  background-color: rgba(234, 67, 53, 0.15);
+  color: #f28b82;
+}

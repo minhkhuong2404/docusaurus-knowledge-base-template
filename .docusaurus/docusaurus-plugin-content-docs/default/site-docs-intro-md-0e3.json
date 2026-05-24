@@ -52,7 +52,7 @@
   },
   "sidebar": "tutorialSidebar",
   "next": {
-    "title": "Java Knowledge Base Overview",
-    "permalink": "/technical-knowledge/java/java-overview"
+    "title": "📅 Daily Quiz",
+    "permalink": "/technical-knowledge/java/java-daily-quiz"
   }
 }

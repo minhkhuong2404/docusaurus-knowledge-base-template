@@ -47,8 +47,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "📅 Daily Quiz",
-    "permalink": "/technical-knowledge/java/java-daily-quiz"
+    "title": "Java New Features: Java 8 through Java 21+",
+    "permalink": "/technical-knowledge/java/java-new-features"
   },
   "next": {
     "title": "Spring Knowledge Base Overview",

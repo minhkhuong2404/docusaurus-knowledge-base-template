@@ -36,8 +36,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Welcome",
-    "permalink": "/docs"
+    "title": "📅 Daily Quiz",
+    "permalink": "/technical-knowledge/spring/spring-boot-daily-quiz"
   },
   "next": {
     "title": "Java Fundamentals: Core Language Concepts",

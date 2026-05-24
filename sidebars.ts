@@ -6,6 +6,15 @@ const sidebars: SidebarsConfig = {
 		'intro',
 		{
 			type: 'category',
+			label: '📝 Daily Quizzes',
+			collapsed: false,
+			items: [
+				'technical-knowledge/java/java-daily-quiz',
+				'technical-knowledge/spring/spring-boot-daily-quiz'
+			]
+		},
+		{
+			type: 'category',
 			label: '☕ Java',
 			items: [
 				'technical-knowledge/java/java-overview',
@@ -65,7 +74,6 @@ const sidebars: SidebarsConfig = {
 					label: '🎯 Interview Questions',
 					collapsed: true,
 					items: [
-						'technical-knowledge/java/java-daily-quiz',
 						'technical-knowledge/java/java-interview-questions',
 					]
 				}
@@ -84,7 +92,6 @@ const sidebars: SidebarsConfig = {
 						'technical-knowledge/spring/spring-boot',
 						'technical-knowledge/spring/spring-boot-internals',
 						'technical-knowledge/spring/spring-boot-advanced',
-						'technical-knowledge/spring/spring-boot-daily-quiz',
 						'technical-knowledge/spring/spring-boot-interview-questions'
 					]
 				},
