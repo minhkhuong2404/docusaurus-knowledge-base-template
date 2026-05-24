@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-809": {
+  "/-ddb": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-f7f": {
+  "/-939": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -5025,7 +5025,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-a63": {
+  "/-644": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -9364,11 +9364,11 @@
     "__comp": "17896441",
     "content": "2695042f"
   },
-  "/technical-knowledge/java/java-collections-d93": {
+  "/technical-knowledge/java/java-collections-295": {
     "__comp": "17896441",
     "content": "a8d4740a"
   },
-  "/technical-knowledge/java/java-concurrency-db2": {
+  "/technical-knowledge/java/java-concurrency-bba": {
     "__comp": "17896441",
     "content": "f13bfd67"
   },
@@ -9376,7 +9376,7 @@
     "__comp": "17896441",
     "content": "ee229027"
   },
-  "/technical-knowledge/java/java-fundamentals-887": {
+  "/technical-knowledge/java/java-fundamentals-c28": {
     "__comp": "17896441",
     "content": "fb6d755b"
   },
@@ -9384,11 +9384,11 @@
     "__comp": "17896441",
     "content": "f99a0434"
   },
-  "/technical-knowledge/java/java-io-080": {
+  "/technical-knowledge/java/java-io-b32": {
     "__comp": "17896441",
     "content": "3744858f"
   },
-  "/technical-knowledge/java/java-jvm-28a": {
+  "/technical-knowledge/java/java-jvm-1af": {
     "__comp": "17896441",
     "content": "2fb67458"
   },

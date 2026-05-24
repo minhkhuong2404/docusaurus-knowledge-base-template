@@ -32,7 +32,7 @@
   ],
   "version": "current",
   "lastUpdatedBy": "Lữ Minh Khương",
-  "lastUpdatedAt": 1775051398000,
+  "lastUpdatedAt": 1779560846000,
   "frontMatter": {
     "id": "java-jvm",
     "title": "JVM Internals: Memory, GC & Class Loading",

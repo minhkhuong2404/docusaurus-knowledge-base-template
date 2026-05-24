@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '809'),
+    component: ComponentCreator('/', 'ddb'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'f7f'),
+        component: ComponentCreator('/', '939'),
         routes: [
           {
             path: '/tags',
@@ -6272,7 +6272,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'a63'),
+            component: ComponentCreator('/', '644'),
             routes: [
               {
                 path: '/aws',
@@ -12771,13 +12771,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-collections',
-                component: ComponentCreator('/technical-knowledge/java/java-collections', 'd93'),
+                component: ComponentCreator('/technical-knowledge/java/java-collections', '295'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/java/java-concurrency',
-                component: ComponentCreator('/technical-knowledge/java/java-concurrency', 'db2'),
+                component: ComponentCreator('/technical-knowledge/java/java-concurrency', 'bba'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -12789,7 +12789,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-fundamentals',
-                component: ComponentCreator('/technical-knowledge/java/java-fundamentals', '887'),
+                component: ComponentCreator('/technical-knowledge/java/java-fundamentals', 'c28'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -12801,13 +12801,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-io',
-                component: ComponentCreator('/technical-knowledge/java/java-io', '080'),
+                component: ComponentCreator('/technical-knowledge/java/java-io', 'b32'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/java/java-jvm',
-                component: ComponentCreator('/technical-knowledge/java/java-jvm', '28a'),
+                component: ComponentCreator('/technical-knowledge/java/java-jvm', '1af'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

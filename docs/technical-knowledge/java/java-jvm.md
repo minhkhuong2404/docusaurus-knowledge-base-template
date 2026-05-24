@@ -137,6 +137,30 @@ When the JVM encounters a `new` instruction:
 └─────────────────────────────────────────┘
 ```
 
+### Compressed OOPs & Object Alignment (Memory Optimization)
+
+On 64-bit JVMs, object references (known as **Ordinary Object Pointers / OOPs**) occupy **8 bytes (64 bits)** of memory. This pointer widening increases heap consumption by 30% to 40% compared to 32-bit JVMs. To mitigate this, the JVM uses an optimization called **Compressed OOPs** (`-XX:+UseCompressedOops`).
+
+#### The 8-Byte Object Alignment Trick
+In HotSpot JVM, all objects allocated on the heap are aligned to **8-byte boundaries**. This means an object's memory size is always a multiple of 8, and the JVM adds 1 to 7 bytes of **Padding** at the end of the object layout to satisfy this constraint.
+
+Because every object address is a multiple of 8, the **lower 3 bits of any object memory address are always `000`**:
+- Address `8` is `00001000`
+- Address `16` is `00010000`
+- Address `24` is `00011000`
+
+The JVM exploits this by **shifting the 32-bit pointer left by 3 bits** when loading it from CPU registers, and **shifting it right by 3 bits** when storing it back to the heap. 
+
+This bit-shifting trick allows a 32-bit pointer (which can only address 4GB of memory space) to reference up to **32 GB** of heap space:
+$$\text{Max Addressable Space} = 2^{32} \times 8 \text{ bytes} = 32 \text{ GB}$$
+
+#### ⚠️ The 32GB Heap Threshold Trap (Interview Critical)
+When the heap size configured (`-Xmx`) exceeds 32GB (roughly 32GB to 35GB depending on the OS and JVM vendor), the JVM disables Compressed OOPs and reverts to raw 64-bit pointers.
+
+- **The trap:** When Compressed OOPs are disabled, all pointers instantly widen from 4 bytes to 8 bytes.
+- **The impact:** A heap configured for **33GB** can hold **fewer** actual objects than a heap configured for **31GB** because the wider 64-bit references consume more memory, leading to higher GC pressure.
+- **Senior Heuristic:** Never set your heap size just over the threshold (e.g. 33–36GB). If you need more than 31GB of heap, jump straight to 40GB+ to compensate for pointer widening.
+
 ### Object Access
 
 Two approaches:
@@ -255,10 +279,23 @@ Multi-threaded young + old gen collection. **Throughput-oriented** — minimizes
 
 **Ultra-low-latency** collector (sub-millisecond pauses) using colored pointers and load barriers.
 
-- Pauses are **< 1ms** regardless of heap size
-- Supports **multi-terabyte heaps**
-- Concurrent relocation (moves objects while app runs)
-- **Production-ready since JDK 15**
+- Pauses are **< 1ms** regardless of heap size.
+- Supports **multi-terabyte heaps** (from 16MB to 16TB).
+- Concurrent relocation (moves objects in memory concurrently while application threads are running, resolving fragmentation without STW pauses).
+- **Production-ready since JDK 15**.
+
+#### 🧠 Senior Deep Dive: Generational ZGC (Java 21+ / JEP 439)
+Historically, ZGC was a **single-generation** collector, meaning it concurrently scanned the entire heap during every GC cycle. Under high allocation rate workloads, this design led to **allocation stalls** (where application threads ran out of memory before the concurrent collector finished scanning, freezing the application).
+
+To solve this, Java 21 introduced **Generational ZGC** (`-XX:+UseZGC -XX:+ZGenerational`), which leverages the weak generational hypothesis (most objects die young) by splitting the heap into two logical generations:
+
+- **Young Generation:** Collected frequently in a very fast, low-overhead cycle.
+- **Old Generation:** Collected less frequently.
+
+##### Key Benefits over Non-Generational ZGC:
+1. **Higher Throughput:** Collecting only young objects requires scanning a fraction of the heap, releasing CPU cycles back to application threads.
+2. **Preventing Allocation Stalls:** Rapid reclamation of short-lived objects makes allocation stalls extremely rare under heavy load.
+3. **Sub-millisecond Latency:** Retains the core concurrent guarantees of ZGC, keeping pause times **under 1 millisecond** (typically under 100 microseconds).
 
 ### Collector Selection Guide
 
@@ -337,6 +374,41 @@ protected Class<?> loadClass(String name, boolean resolve) {
 **Why parent delegation?**
 - **Security:** Prevents malicious code from replacing core classes (e.g., custom `java.lang.String`)
 - **Consistency:** Ensures core classes are loaded by the same loader
+
+### Thread Context ClassLoader (TCCL)
+
+While the Parent Delegation model is excellent for security and consistency, it has a fundamental design flaw: **Core classes loaded by parent loaders cannot load classes that only exist in child loaders.**
+
+#### The Service Provider Interface (SPI) Conundrum
+Consider the Java Database Connectivity (JDBC) API:
+1. The JDBC framework class `java.sql.DriverManager` is part of the core Java API and is loaded by the **Bootstrap ClassLoader**.
+2. When `DriverManager` tries to establish a connection, it uses Java's SPI (`ServiceLoader`) to find and load concrete database driver implementations (like `com.mysql.cj.jdbc.Driver`) present on your application's classpath.
+3. However, the classpath is loaded by the **Application ClassLoader**. Since the Bootstrap ClassLoader is a parent loader, it cannot see classes loaded by its child (the Application ClassLoader). Parent delegation only goes *up*, not *down*.
+
+```
+Bootstrap ClassLoader (DriverManager)
+   │
+   ▼ Parent Delegation (DriverManager tries to load MySQL Driver but fails)
+Application ClassLoader (mysql-connector.jar)
+```
+
+#### Breaking the Hierarchy
+To solve this chicken-and-egg problem, Java introduced the **Thread Context ClassLoader (TCCL)**. Each thread holds a reference to a ClassLoader (`Thread.currentThread().getContextClassLoader()`), which defaults to the Application ClassLoader.
+
+Core classes in the parent ClassLoader can "break" the hierarchy by fetching the context loader from the current running thread and using it to load the child classes:
+
+```java
+// How DriverManager breaks parent delegation (simplified)
+ClassLoader cl = Thread.currentThread().getContextClassLoader();
+ServiceLoader<Driver> loadedDrivers = ServiceLoader.load(Driver.class, cl);
+```
+
+##### ⚠️ Senior Context: ClassLoader Memory Leaks in Containers
+In application servers (like Tomcat) or plug-in systems where applications are deployed/undeployed dynamically, TCCL can cause severe memory leaks:
+- When a web application is deployed, Tomcat creates a custom `WebappClassLoader` and sets it as the TCCL for the request thread.
+- If the application starts a thread pool or registers a ThreadLocal that isn't cleaned up, the thread retains a strong reference to the `WebappClassLoader` via its context class loader.
+- When the web application is undeployed, the GC **cannot reclaim the classloader or any of the classes it loaded** because the thread context pointer is still active. This leads to `OutOfMemoryError: Metaspace`.
+- **Mitigation:** Always restore the original context classloader in a `finally` block or clean up custom threads upon application shutdown.
 
 ---
 
@@ -560,6 +632,38 @@ byte[] data = cache.get(); // may be null if GC reclaimed it
 WeakReference<ExpensiveObject> ref = new WeakReference<>(new ExpensiveObject());
 ExpensiveObject obj = ref.get(); // null after GC
 ```
+
+### ReferenceQueues for Cleanups
+
+To cleanly handle post-mortem resources, you can register soft, weak, or phantom references with a **`ReferenceQueue`**. 
+
+When the garbage collector decides to reclaim the referent (the object referenced), it automatically clears the reference (sets it to `null`) and appends the reference container itself (the `SoftReference` or `WeakReference` instance) to the registered `ReferenceQueue`.
+
+The application can poll or block on this queue in a background thread to safely release associated native resources (like database connections, file handles, or off-heap memory) without using slow, deprecated `finalize()` methods.
+
+```java
+ReferenceQueue<ExpensiveObject> queue = new ReferenceQueue<>();
+WeakReference<ExpensiveObject> ref = new WeakReference<>(new ExpensiveObject(), queue);
+
+// ... later, after ExpensiveObject has been garbage-collected ...
+Reference<? extends ExpensiveObject> clearedRef = queue.poll();
+if (clearedRef != null) {
+    // Perform resource cleanup associated with this reference
+}
+```
+
+#### 👻 Phantom References Require ReferenceQueue
+Unlike Soft and Weak references, a **`PhantomReference`**'s `get()` method *always* returns `null`. This prevents the application from accidentally resurrecting the object during garbage collection.
+
+A `PhantomReference` is completely useless without a `ReferenceQueue`. It is used purely as a notification mechanism to know exactly when an object has been fully finalized and its memory reclaimed by the GC.
+
+##### ⚙️ Production Example: DirectByteBuffer & Cleaner
+The most notable use of `PhantomReference` and `ReferenceQueue` is Java's off-heap memory management:
+1. When you allocate off-heap memory using `ByteBuffer.allocateDirect(10 * 1024)`, the JVM creates a `DirectByteBuffer` object on the heap.
+2. This heap object references a native memory address allocated outside the JVM heap.
+3. To prevent memory leaks, `DirectByteBuffer` registers a phantom reference with a `Cleaner` (which uses a `ReferenceQueue` internally).
+4. When the heap-based `DirectByteBuffer` is garbage-collected, the phantom reference is enqueued in the `ReferenceQueue`.
+5. A system-level daemon thread polls this queue and frees the associated off-heap native memory using `unsafe.freeMemory()`.
 
 ---
 
