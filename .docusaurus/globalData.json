@@ -1587,7 +1587,8 @@
             },
             {
               "id": "technical-knowledge/devops/vm-docker-k8s-explained",
-              "path": "/technical-knowledge/devops/vm-docker-k8s-explained"
+              "path": "/technical-knowledge/devops/vm-docker-k8s-explained",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/dsa/20-week-dsa-roadmap-intro",

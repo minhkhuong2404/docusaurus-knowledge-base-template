@@ -895,6 +895,7 @@ const sidebars: SidebarsConfig = {
 			label: '🐳 DevOps & Containerization',
 			items: [
 				'technical-knowledge/devops/devops-intro',
+				'technical-knowledge/devops/vm-docker-k8s-explained',
 				'technical-knowledge/devops/linux-for-devops',
 				{
 					type: 'category',

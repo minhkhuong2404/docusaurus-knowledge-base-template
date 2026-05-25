@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'fa0'),
+    component: ComponentCreator('/', 'e7d'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '5cd'),
+        component: ComponentCreator('/', '40f'),
         routes: [
           {
             path: '/tags',
@@ -6272,7 +6272,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '059'),
+            component: ComponentCreator('/', '198'),
             routes: [
               {
                 path: '/aws',
@@ -8190,8 +8190,9 @@ export default [
               },
               {
                 path: '/technical-knowledge/devops/vm-docker-k8s-explained',
-                component: ComponentCreator('/technical-knowledge/devops/vm-docker-k8s-explained', '6ee'),
-                exact: true
+                component: ComponentCreator('/technical-knowledge/devops/vm-docker-k8s-explained', '96c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/dsa/20-week-dsa-roadmap-intro',
