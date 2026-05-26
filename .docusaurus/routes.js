@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'e7d'),
+    component: ComponentCreator('/', '962'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '40f'),
+        component: ComponentCreator('/', '97e'),
         routes: [
           {
             path: '/tags',
@@ -6272,7 +6272,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '198'),
+            component: ComponentCreator('/', 'b3c'),
             routes: [
               {
                 path: '/aws',
@@ -8190,7 +8190,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/devops/vm-docker-k8s-explained',
-                component: ComponentCreator('/technical-knowledge/devops/vm-docker-k8s-explained', '96c'),
+                component: ComponentCreator('/technical-knowledge/devops/vm-docker-k8s-explained', '28d'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
