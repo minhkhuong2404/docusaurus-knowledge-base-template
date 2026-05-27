@@ -18,10 +18,12 @@ A structured guide covering Java from core language foundations to JVM internals
 | 2 | [Object-Oriented Programming](./java-oop) | Classes, inheritance, polymorphism, encapsulation |
 | 3 | [Collections Framework](./java-collections) | Lists, sets, maps, iteration, complexity trade-offs |
 | 4 | [Concurrency](./java-concurrency) | Threads, executors, locks, memory model, async patterns |
-| 5 | [JVM Internals](./java-jvm) | Class loading, memory areas, GC, JIT, tuning basics |
-| 6 | [I/O and NIO](./java-io) | Streams, channels, buffers, file operations |
-| 7 | [Modern Java Features](./java-new-features) | Lambdas, streams, records, sealed types, recent updates |
-| 8 | [Interview Questions](./java-interview-questions) | Practical Q&A across core and advanced topics |
+| 5 | [Java Memory Model](./java-jmm-memory-model) | Happens-Before relationship, StampedLock, and ThreadLocal internals |
+| 6 | [JVM Internals](./java-jvm) | Class loading, memory areas, GC, JIT, tuning basics |
+| 7 | [Diagnostics & Troubleshooting](./java-diagnostics-troubleshooting) | Production troubleshooting, thread contention, and memory analysis |
+| 8 | [I/O and NIO](./java-io) | Streams, channels, buffers, file operations |
+| 9 | [Modern Java Features](./java-new-features) | Lambdas, streams, records, sealed types, recent updates |
+| 10 | [Interview Questions](./java-interview-questions) | Practical Q&A across core and advanced topics |
 
 :::tip[Backend Engineering Tip]
 Use this section as the foundation before diving into Spring, Kafka, and system design topics.
@@ -49,4 +51,7 @@ Use this section as the foundation before diving into Spring, Kafka, and system 
 ### Compare Next
 - [Java Fundamentals](./java-fundamentals.md)
 - [Java Concurrency](./java-concurrency.md)
+- [Java Memory Model](./java-jmm-memory-model.md)
 - [JVM Internals](./java-jvm.md)
+- [Diagnostics & Troubleshooting](./java-diagnostics-troubleshooting.md)
+

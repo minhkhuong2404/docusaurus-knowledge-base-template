@@ -1044,6 +1044,64 @@ Collector<Person, Map<String, long[]>, Map<String, Double>> averageSalaryByCity 
 
 For senior interviews, show awareness of the four components: **supplier** (mutable container), **accumulator** (add element), **combiner** (merge parallel results), **finisher** (transform to final result).
 
+### 🔴 What is the "Happens-Before" relationship in the Java Memory Model, and why is it important?
+
+**Happens-Before** is a formal memory visibility contract. If action $A$ happens-before action $B$, the memory writes made by $A$ are guaranteed to be visible to the thread performing $B$, and the JIT compiler/CPU is prohibited from reordering these operations.
+
+Without a happens-before relationship, the JVM can reorder instructions or cache variables in CPU registers indefinitely, leading to stale reads and data corruption. Key triggers for happens-before include:
+- Releasing a monitor lock (`unlock`) happens-before subsequently acquiring that same lock (`lock`).
+- A write to a `volatile` field happens-before any subsequent read of that field.
+- Calling `Thread.start()` happens-before any action in the started thread.
+
+### 🔴 How does `StampedLock` optimize performance compared to `ReentrantReadWriteLock`?
+
+`StampedLock` (Java 8+) introduces **Optimistic Reading**. In standard read-write locks, acquiring a read lock blocks write operations. Under heavy read contention, writers can suffer from starvation.
+
+`StampedLock` solves this by allowing non-blocking reads:
+- It returns a numeric stamp representing the lock's state without acquiring a read lock.
+- The thread reads the fields into local variables.
+- It then calls `lock.validate(stamp)` to check if a write lock was acquired concurrently.
+- If validation succeeds, the read data is safe. If it fails, the thread falls back to a blocking read lock.
+
+Optimistic reads are completely lock-free, avoiding CAS operations and memory barriers, which drastically increases scalability in high-read, low-write backend services.
+
+### 🔴 Why does `ThreadLocal` cause memory leaks in web servers, and how do you prevent it?
+
+Web application containers (like Tomcat, Spring Boot) use a pool of worker threads that are reused across HTTP requests.
+
+Each `Thread` contains a `ThreadLocalMap` where keys are weak references to the `ThreadLocal` object, but the values are strong references.
+1. When a request ends, the `ThreadLocal` reference in the stack frame is discarded and cleaned by GC.
+2. The key in the map becomes `null` (since it is weakly referenced).
+3. However, because the thread is returned to the pool and remains alive, the **value object remains strongly reachable** via the thread's map, causing a memory leak.
+
+**Prevention:** Always call `ThreadLocal.remove()` in a `finally` block before the request execution completes.
+
+### 🔴 Explain the internal mechanism of `WeakHashMap` and its caching use cases.
+
+`WeakHashMap` stores its keys wrapped in `WeakReference` objects.
+- When a key has no other strong references in the application, the garbage collector clears it.
+- During garbage collection, the cleared reference is put into a `ReferenceQueue`.
+- On subsequent operations on the map (like `get()`, `put()`, or `size()`), `WeakHashMap` polls the queue and removes the corresponding entries (stale values) from its internal table.
+
+It is useful for memory-sensitive caching (e.g., metadata maps associated with dynamic classloaders or database connection drivers) where you want cached entries to be collected automatically when the owner object is discarded.
+
+### 🔴 How would you troubleshoot a thread deadlock or a CPU spike in a running production JVM?
+
+- **For Deadlocks:** Generate a thread dump using `jcmd <pid> Thread.print` or `jstack <pid>`. The JVM automatically identifies deadlocked threads and prints their stack traces, indicating which lock they hold and which lock they are waiting for.
+- **For CPU Spikes:**
+  1. Identify the high-CPU native thread ID (TID) using `top -H -p <pid>`.
+  2. Convert the decimal TID to hexadecimal (e.g., `12345` $\rightarrow$ `0x3039`).
+  3. Capture a thread dump using `jstack <pid>`.
+  4. Search the dump for `nid=0x3039` to find the exact thread name, state, and line of code causing the CPU utilization.
+
+### 🔴 How did Java 9+ optimize String concatenation under the hood?
+
+Prior to Java 9, string concatenation (e.g., `"a" + "b" + "c"`) compiled to nested `StringBuilder.append()` calls. This hardcoded the optimization strategy in compiled bytecode.
+
+Since Java 9, the compiler emits an **`invokedynamic`** call pointing to `StringConcatFactory`.
+- The bootstrap method resolves the concatenation strategy dynamically at runtime (e.g., allocating a single byte array and copying elements directly).
+- This decouples compiling from runtime optimizations: the JVM can improve string allocation strategies (reducing memory allocations by up to 10% in hot paths) without requiring developers to recompile their classes.
+
 ---
 
 ## Advanced Editorial Pass: Interview Mastery with System Thinking

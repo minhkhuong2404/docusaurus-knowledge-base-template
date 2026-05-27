@@ -115,17 +115,49 @@ Backed by a **doubly-linked list**. Also implements `Deque`.
 
 2. **Bucket index:** `index = hash & (capacity - 1)` (bitwise AND, equivalent to modulo for power-of-2 sizes).
 
-3. **Collision resolution:**
+3. **Collision resolution & Treeification Thresholds:**
    - Entries with the same bucket index form a **linked list**.
-   - When a linked list exceeds **8 nodes** (and capacity ≥ 64), it converts to a **red-black tree** for O(log n) lookup.
-   - When a tree shrinks below **6 nodes**, it converts back to a linked list.
+   - **Treeification:** When a bucket's linked list grows beyond **`TREEIFY_THRESHOLD = 8`** nodes, and the overall map capacity is at least **64**, the bucket converts from a linked list to a **red-black tree** (transforming lookup from $O(n)$ to $O(\log n)$).
+     - *Why 8?* According to the Poisson distribution, the probability of a bucket having 8 elements under a good hash function is extremely low (about 1 in 10 million). A tree structure is a fallback to protect against hash-collision denial-of-service (DoS) attacks or poor custom `hashCode()` implementations.
+   - **Untreeification:** When garbage collection or deletions shrink a bucket's tree below **`UNTREEIFY_THRESHOLD = 6`** nodes, it converts back to a linked list.
+     - *Why not untreeify at 7?* Having a gap between 8 (treeify) and 6 (untreeify) prevents **thrashing**—constant structural conversion back and forth if elements are frequently added and removed around the threshold.
 
 4. **Load factor & expansion:**
-   - Default load factor: **0.75**
-   - Threshold = capacity × load factor
-   - When `size > threshold`, the array **doubles** in size and all entries are rehashed.
+   - Default load factor: **0.75** (empirically balances memory footprint and lookup frequency).
+   - Threshold = capacity × load factor.
+   - When `size > threshold`, the array **doubles** in capacity and all entries are rehashed.
 
 **Important:** `HashMap` is not thread-safe. Use `ConcurrentHashMap` for concurrent access.
+
+### WeakHashMap Internals & Caching
+
+`WeakHashMap` is a specialized `Map` implementation where keys are stored as **Weak References**. It is commonly used for implementing memory-sensitive caches or metadata registries.
+
+#### How It Works Internally
+- Keys are wrapped in a subclass of **`WeakReference<K>`**.
+- If a key object no longer has any **strong references** pointing to it in the application, the Garbage Collector (GC) will clear the key on its next run.
+- When the GC clears a weak reference, it automatically appends that reference object to a **`ReferenceQueue`** associated with the map.
+- During any read or write operation on the `WeakHashMap` (e.g., `get()`, `put()`, `size()`), the map internally calls its private method `expungeStaleEntries()`:
+  ```java
+  private void expungeStaleEntries() {
+      for (Object x; (x = queue.poll()) != null; ) {
+          synchronized (queue) {
+              // Find the entry associated with the cleared reference x
+              // and remove it from the internal bucket table
+          }
+      }
+  }
+  ```
+- This lazily purges garbage-collected entries, preventing memory leaks of the corresponding values.
+
+#### Real-world Use Case: Thread-Local Metadata Caching
+```java
+// Thread-safe weak cache for caching database connection metadata per driver
+private static final Map<Driver, ConnectionPoolMetadata> cache = 
+    Collections.synchronizedMap(new WeakHashMap<>());
+```
+If a dynamic database driver is unloaded (removing its strong references), the cache automatically drops its metadata entry, preventing classloader memory leaks.
+
 
 ### LinkedHashMap
 

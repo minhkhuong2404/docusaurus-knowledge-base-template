@@ -47,8 +47,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Virtual Threads (Project Loom)",
-    "permalink": "/technical-knowledge/java/java-virtual-threads"
+    "title": "JVM Diagnostics & Troubleshooting in Production",
+    "permalink": "/technical-knowledge/java/java-diagnostics-troubleshooting"
   },
   "next": {
     "title": "Java New Features: Java 8 through Java 21+",

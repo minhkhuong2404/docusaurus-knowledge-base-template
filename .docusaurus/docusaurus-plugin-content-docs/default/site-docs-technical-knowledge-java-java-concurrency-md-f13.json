@@ -57,7 +57,7 @@
     "permalink": "/technical-knowledge/java/java-collections"
   },
   "next": {
-    "title": "Java Concurrency: Threads, Locks & Concurrent Utilities",
-    "permalink": "/technical-knowledge/java/java-concurrency"
+    "title": "Java Memory Model & Concurrency Guarantees",
+    "permalink": "/technical-knowledge/java/java-jmm-memory-model"
   }
 }

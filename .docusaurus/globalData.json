@@ -5419,6 +5419,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/java/java-diagnostics-troubleshooting",
+              "path": "/technical-knowledge/java/java-diagnostics-troubleshooting",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/java/java-fundamentals",
               "path": "/technical-knowledge/java/java-fundamentals",
               "sidebar": "tutorialSidebar"
@@ -5431,6 +5436,11 @@
             {
               "id": "technical-knowledge/java/java-io",
               "path": "/technical-knowledge/java/java-io",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/java/java-jmm-memory-model",
+              "path": "/technical-knowledge/java/java-jmm-memory-model",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -6222,6 +6232,11 @@
             {
               "id": "technical-knowledge/system-design/microservices-patterns",
               "path": "/technical-knowledge/system-design/microservices-patterns",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/mongodb-deep-dive",
+              "path": "/technical-knowledge/system-design/mongodb-deep-dive",
               "sidebar": "tutorialSidebar"
             },
             {

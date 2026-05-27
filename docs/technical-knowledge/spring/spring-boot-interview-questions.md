@@ -1318,6 +1318,54 @@ public class AuditableAspect {
 
 ---
 
+### Q31: How do you enable Virtual Threads in Spring Boot 3.2+ and what is the "Carrier Thread Pinning" trap?
+
+**How to Enable:**
+In Spring Boot 3.2+ with Java 21, simply add this configuration property:
+```yaml
+spring:
+  threads:
+    virtual:
+      enabled: true
+```
+This automatically configures Tomcat, Jetty, and default task executors (like the `@Async` executor) to run tasks on Virtual Threads instead of traditional Platform Threads.
+
+**The "Carrier Thread Pinning" Trap:**
+- Virtual Threads run on top of actual OS-level Platform Threads (called **Carrier Threads**). 
+- When a virtual thread encounters a blocking operation (like I/O or sleep), it yields control, allowing the carrier thread to execute other virtual threads.
+- However, if the virtual thread blocks inside a **`synchronized` block or method**, or calls native code, it is **"pinned"** to the carrier thread. The carrier thread cannot be released, blocking all other virtual threads waiting on that platform thread.
+- **How to prevent:** Avoid using `synchronized` blocks inside hot paths or blocking operations. Replace them with **`java.util.concurrent.locks.ReentrantLock`**, which allows virtual threads to yield control correctly when blocking.
+
+### Q32: What is the default rollback behavior of Spring's `@Transactional` for checked vs. unchecked exceptions, and how do you customize it?
+
+**Default Behavior:**
+- Spring's transactional system **only rolls back transactions automatically for Unchecked Exceptions** (subclasses of `RuntimeException` and `Error` like `NullPointerException` or `IllegalArgumentException`).
+- Transactions **do not roll back automatically for Checked Exceptions** (subclasses of `Exception` that require a `try-catch` or `throws` declaration, like `IOException` or `SQLException`). The transaction will still commit even if the checked exception propagates out of the method.
+
+**How to Customize:**
+To force Spring to roll back the transaction when a checked exception occurs, use the `rollbackFor` attribute:
+```java
+@Transactional(rollbackFor = Exception.class)
+public void processPayment() throws IOException {
+    // Both checked and unchecked exceptions will trigger a rollback
+}
+```
+You can also prevent rollbacks for specific runtime exceptions using `noRollbackFor`.
+
+### Q33: Why does calling a method annotated with `@Transactional` or `@Async` from another method in the same class fail to create a transaction or run asynchronously?
+
+**The Cause:**
+Spring applies behavior like transactions and asynchronous execution by wrapping your beans in **Proxy Objects** (usually CGLIB proxies). 
+- When an external client calls a method on your bean, it actually invokes it on the proxy wrapper. The proxy starts the transaction or offloads the task to a thread pool *before* delegating the call to your actual bean.
+- When you invoke a method **internally** from another method within the same class (e.g. `this.doSomething()`), the call bypasses the proxy entirely and executes directly on the target object. Consequently, any annotations on the called method are completely ignored.
+
+**The Solutions:**
+1. **Separate Beans (Recommended):** Move the annotated method to a dedicated collaborator class.
+2. **Self-Injection:** Injected the service into itself (using `@Lazy` to avoid circular dependency errors) and call the method on the injected self-reference.
+3. **`AopContext.currentProxy()`:** Call `((MyService) AopContext.currentProxy()).myMethod()`, which requires `@EnableAspectJAutoProxy(exposeProxy = true)`.
+
+---
+
 ## Advanced Editorial Pass: Interview Readiness with Production Depth
 
 ### How to Level Up Answers

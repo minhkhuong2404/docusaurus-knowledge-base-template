@@ -7,202 +7,71 @@ tags:
 - building-microservice
 - chapter-06
 ---
+
 # Chapter 6: Workflow
 
-**Part II — Implementation**
+**Part I — Foundation**
 
-> When a business process spans multiple services, how do you coordinate them reliably? This chapter covers the pitfalls of distributed transactions and the saga pattern as a practical alternative.
-
----
-
-## The Problem: Multi-Service Business Processes
-
-In a monolith, a business operation that touches multiple tables is wrapped in a single ACID database transaction. In microservices, each service has its own database. There is no single transaction.
-
-Consider a customer checkout flow:
-1. Reserve inventory (Inventory Service)
-2. Charge the customer (Payment Service)
-3. Create the order (Order Service)
-4. Dispatch shipping (Shipping Service)
-
-If step 3 fails, how do you un-charge the customer (step 2) and un-reserve the stock (step 1)?
+> In	the	previous	two	chapters,	we’ve	looked	at	aspects	of	microservices	related	to
 
 ---
 
-## ACID Transactions — The Monolith Luxury
+## Database Transactions
 
-**[ACID](../../technical-knowledge/database/acid.md)** = Atomicity, Consistency, Isolation, Durability
-
-In a single database, ACID transactions provide a crucial safety net: either all changes succeed, or none do. With separate databases per microservice, this guarantee disappears at the system level. Each service still has local ACID guarantees within its own database, but you lose cross-service atomicity. For a comprehensive deep-dive into ACID guarantees, see the **[Database ACID Properties](../../technical-knowledge/database/acid.md)** guide.
+Chapter 6. Workflow In the previous two chapters, we’ve looked at aspects of microservices related to how one microservice talks to another. But what happens when we want multiple microservices to collaborate, perhaps to implement a business process? How we model and implement these sorts of workflows in distributed systems can be a tricky thing to get right. In this chapter, we’ll look at the pitfalls associated with using distributed transactions to solve this problem, and we’ll also look at s...
 
 ---
 
-## Why Distributed Transactions Don't Work Well
+## ACID Transactions
 
-The seemingly obvious solution — a distributed transaction spanning multiple services — is not recommended.
-
-### Two-Phase Commit (2PC)
-
-The classic distributed transaction algorithm:
-
-**Phase 1 (Vote):** Coordinator asks all participants: "Can you commit?"
-- Each participant locks its data and responds "Yes" or "No"
-
-**Phase 2 (Commit/Rollback):** If all say Yes, coordinator sends "Commit". Otherwise, "Rollback".
-
-```
-Coordinator
-  ├── → Inventory: "Can you reserve stock?" → "Yes" (locks record)
-  ├── → Payments: "Can you charge?" → "Yes" (locks record)
-  └── → All: "Commit now"
-```
-
-### Why 2PC is Problematic in Microservices
-- **Locks are held** between phases — reduces throughput significantly
-- **Coordinator is a SPOF** — if it fails mid-way, participants are stuck with locks
-- **Increased latency** — multiple round trips between services
-- **Complex failure handling** — network timeouts between phases create ambiguous states
-- **Requires XA-capable databases** — not all modern datastores support this
-
-:::danger[Avoid distributed transactions (2PC/XA) in microservices. The performance and reliability costs are not worth it.]
-:::
+isolation, and durability , and here is what these properties give us: Atomicity Ensures that the operations attempted within the transaction either all complete or all fail. If any of the changes we’re trying to make fail for some reason, then the whole operation is aborted, and it’s as though no changes were ever made. Consistency When changes are made to our database, we ensure it is left in a valid, consistent state. Isolation Allows multiple transactions to operate at the same time without ...
 
 ---
 
-## The Saga Pattern — The Alternative
+## Still ACID, but Lacking Atomicity?
 
-A **Saga** is a sequence of local transactions, each in a separate service, coordinated without a global transaction. If a step fails, the saga executes **compensating transactions** to undo prior completed steps.
-
-### Two Types of Sagas
-
-#### 1. Choreography-Based Saga
-Services react to events. Each service does its local transaction and emits an event. The next service listens and acts.
-
-```
-1. Order Service: creates order → emits "OrderCreated"
-2. Inventory Service: listens to "OrderCreated" → reserves stock → emits "StockReserved"
-3. Payment Service: listens to "StockReserved" → charges customer → emits "PaymentTaken"
-4. Shipping Service: listens to "PaymentTaken" → dispatches
-```
-
-**Failure path (compensating transactions):**
-```
-Payment fails → emits "PaymentFailed"
-  → Inventory Service listens: releases reserved stock
-  → Order Service listens: cancels order
-```
-
-**Spring + Kafka example:**
-```java
-// Inventory Service
-@KafkaListener(topics = "order-events")
-public void onOrderCreated(OrderCreatedEvent event) {
-    try {
-        inventory.reserve(event.getOrderId(), event.getItems());
-        kafkaTemplate.send("inventory-events", 
-            new StockReservedEvent(event.getOrderId()));
-    } catch (InsufficientStockException e) {
-        kafkaTemplate.send("inventory-events", 
-            new StockReservationFailedEvent(event.getOrderId()));
-    }
-}
-```
-
-#### 2. Orchestration-Based Saga
-A central **saga orchestrator** explicitly coordinates the steps, calling each service and handling failures.
-
-```java
-public class OrderSaga {
-    public void execute(CreateOrderCommand cmd) {
-        try {
-            inventoryClient.reserve(cmd.getItems());      // Step 1
-            paymentClient.charge(cmd.getCustomerId());     // Step 2
-            orderRepository.save(new Order(cmd));          // Step 3
-            shippingClient.dispatch(cmd.getOrderId());     // Step 4
-        } catch (PaymentException e) {
-            inventoryClient.release(cmd.getItems());       // Compensate Step 1
-            throw new OrderCreationFailedException(e);
-        }
-    }
-}
-```
-
-The orchestrator can be implemented as a Spring `@Service` or as a durable workflow using tools like **Axon Framework**, **Temporal**, or **Camunda**.
+Still ACID, but Lacking Atomicity? I want to be clear that we can still use ACID-style transactions when using microservices. A microservice is free to use an ACID transaction for operations to its own database, for example. It’s just that the scope of these transactions is reduced to state change that happens locally within that single microservice. Consider Figure 6-1 . Here, we are keeping track of the process involved in onboarding a new customer to MusicCorp. We’ve reached the end of the pr...
 
 ---
 
-## Choreography vs. Orchestration Comparison
+## Distributed Transactions—Two-Phase Commits
 
-| | Choreography | Orchestration |
-|---|---|---|
-| **Coupling** | Low — services don't know each other | Medium — orchestrator knows all services |
-| **Visibility** | Hard to see end-to-end flow | Easy — orchestrator is the source of truth |
-| **Debugging** | Hard — requires event tracing | Easier — one place to look |
-| **Failure handling** | Distributed across services | Centralized in orchestrator |
-| **Scalability** | High — services scale independently | Limited by orchestrator |
-| **Best for** | Loosely coupled workflows | Complex workflows with many failure scenarios |
+see, distributed transactions may not be the right way forward. Let’s look at one of the most common algorithms for implementing distributed transactions, the two-phase commit, as a way of exploring the challenges associated with distributed transactions as a whole. Distributed Transactions—Two-Phase Commits The two-phase commit algorithm (sometimes shortened to 2PC ) is frequently used in an attempt to give us the ability to make transactional changes in a distributed system, where multiple sep...
 
 ---
 
-## Eventual Consistency
+## Distributed Transactions—Just Say No
 
-Sagas introduce **eventual consistency** — the system will *eventually* reach a consistent state, but there may be a window where intermediate states are visible.
-
-For example, after step 1 (stock reserved) but before step 4 (shipping dispatched), the system is in an intermediate state. This is acceptable — but you need to:
-
-1. **Design your UI** to show intermediate states ("Order being processed...")
-2. **Expose saga status** so customers can track progress
-3. **Handle idempotency** — if a message is replayed, re-processing it shouldn't cause double-charges
-
-### Idempotency Keys
-
-Always include an idempotency key in requests. If a service receives the same request twice (due to network retry), it should handle it gracefully:
-
-```java
-// Before processing, check if already processed
-if (processedEventRepository.exists(event.getSagaId())) {
-    return;  // Already handled — idempotent
-}
-processedEventRepository.save(event.getSagaId());
-// ... process the event
-```
+with the transaction but then not responding when asked to commit. What should we do then? Some of these failure modes can be handled automatically, but some can leave the system in such a state that things need to be fixed manually by an operator. The more participants you have, and the more latency you have in the system, the more issues a two-phase commit will have. 2PC can be a quick way to inject huge amounts of latency into your system, especially if the scope of locking is large, or if th...
 
 ---
 
-## The Outbox Pattern (Transactional Messaging)
+## Sagas
 
-A subtle but critical problem: how do you atomically save to your database AND publish an event to Kafka?
+state change across microservices. In such situations, each microservice is managing its own local durable state (e.g., in its database). Distributed transactional algorithms are being used successfully for some large-scale databases, Google’s Spanner being one such system. In this situation, the distributed transaction is being applied transparently from an application’s point of view by the underling database, and the distributed transaction is just being used to coordinate state changes withi...
 
-```java
-// WRONG — non-atomic: DB succeeds but Kafka fails
-orderRepository.save(order);           // succeeds
-kafkaTemplate.send("events", event);   // might fail!
-```
+---
 
-**Solution: Outbox Pattern**
+## Saga Failure Modes
 
-1. Write the event to an `outbox` table *in the same transaction* as your entity save
-2. A separate background process reads the outbox and publishes to Kafka
-3. After successful publish, mark the outbox entry as processed
+Figure 6-5. An example order fulfillment flow, along with the services responsible for carrying out the operation Saga Failure Modes With a saga being broken into individual transactions, we need to consider how to handle failure—or, more specifically, how to recover when a failure happens. The original saga paper describes two types of recovery: backward recovery and forward recovery. Backward recovery involves reverting the failure and cleaning up afterwards—a rollback. For this to work, we ne...
 
-```sql
--- Same transaction
-INSERT INTO orders (...) VALUES (...);
-INSERT INTO outbox (event_type, payload) VALUES ('OrderCreated', '{"orderId":"..."}');
-```
+---
 
-Tools like **Debezium** (CDC — Change Data Capture) can read the outbox table from PostgreSQL's WAL and publish to Kafka automatically.
+## Implementing Sagas
+
+place. These changes, if they can be accommodated, can make your life much easier, avoiding the need to even create compensating transactions for some steps. This can be especially important if implementing a compensating transaction is difficult. You may be able to move a step later in the process to a stage at which it never needs to be rolled back. Mixing fail-backward and fail-forward situations It is totally appropriate to have a mix of failure recovery modes. Some failures may require a ro...
+
+---
+
+## Sagas Versus Distributed Transactions
+
+Should I use choreography or orchestration (or a mix)? The implementation of choreographed sagas can bring with it ideas that may be unfamiliar to you and your team. They typically assume heavy use of event- driven collaboration, which isn’t widely understood. However, in my experience, the extra complexity associated with tracking the progress of a saga is almost always outweighed by the benefits associated with having a more loosely coupled architecture. Stepping aside from my own personal tas...
 
 ---
 
 ## Summary
 
-| Concept | One-Line Summary |
-|---------|-----------------|
-| ACID (per-service) | Each service still has ACID locally; cross-service ACID is gone |
-| Two-Phase Commit | Distributed transaction algorithm — avoid due to locks and SPOF issues |
-| Saga | Sequence of local transactions with compensating actions for failures |
-| Choreography Saga | Event-driven coordination — no central controller |
-| Orchestration Saga | Central controller explicitly calls each step |
-| Eventual Consistency | System reaches consistency over time, not instantly |
-| Outbox Pattern | Atomically write to DB and guarantee event publication |
+down. When flying an airplane that needs all of its engines to work, adding an engine reduces the availability of the airplane. In my experience, explicitly modeling business processes as a saga avoids many of the challenges of distributed transactions, while having the added benefit of making what might otherwise be implicitly modeled processes much more explicit and obvious to your developers. Making the core business processes of your system a first-class concept will have a host of advantage...
+
+---

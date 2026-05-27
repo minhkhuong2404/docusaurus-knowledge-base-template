@@ -443,9 +443,10 @@ Ingress:
   nginx Ingress, Traefik, AWS ALB Ingress Controller
 ```
 
-```yaml
+```
 
 ## Interview Questions
+
 
 ### Q: What is an API Gateway? What responsibilities should it have?
 
@@ -514,3 +515,454 @@ Ingress:
 
 **Q8. What is the difference between retry and circuit breaker patterns?**
 > Retries handle **transient failures** — try again immediately or with backoff, hoping the next attempt succeeds (network blip, momentary unavailability). Circuit breakers handle **sustained failures** — stop trying when a service is clearly down, instead failing fast and returning a fallback immediately. They work together: retry handles flickers; circuit breaker trips when retries consistently fail, preventing retry storms from overwhelming a struggling service.
+
+---
+
+## Deployment Strategies: Zero-Downtime Releases
+
+:::info[Chapter 8 Reference]
+Building Microservices dedicates substantial coverage to deployment strategies, noting that independent deployability is one of the key benefits of microservices — but it requires sophisticated deployment infrastructure.
+:::
+
+### Blue-Green Deployment
+
+```
+Blue (current production) ←── 100% traffic
+Green (new version)        ←── 0% traffic (being tested)
+
+Switch:
+Blue ←── 0% traffic
+Green←── 100% traffic
+
+Rollback: instant (just flip back)
+Requires: 2x infrastructure
+```
+
+```yaml
+# Kubernetes blue-green via service selector swap
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-service
+spec:
+  selector:
+    app: order-service
+    version: blue    # ← change to "green" to switch
+  ports:
+  - port: 80
+    targetPort: 8080
+---
+# Blue deployment (current)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-service-blue
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: order-service
+      version: blue
+---
+# Green deployment (new version, deployed before cutover)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-service-green
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: order-service
+      version: green
+  template:
+    spec:
+      containers:
+      - name: order-service
+        image: order-service:v2.0.0    # New version
+```
+
+### Canary Deployment
+
+```
+v1 stable  ←── 95% traffic
+v2 canary  ←── 5% traffic (monitor error rate, latency)
+
+If v2 healthy:
+  v1 ←── 80%, v2 ←── 20%
+  v1 ←── 0%,  v2 ←── 100%
+
+If v2 degraded:
+  v1 ←── 100% (instant rollback via weight change)
+```
+
+```yaml
+# Istio VirtualService: canary with header-based routing
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: order-service
+spec:
+  hosts:
+  - order-service
+  http:
+  # Internal QA team sees new version 100%
+  - match:
+    - headers:
+        x-canary:
+          exact: "true"
+    route:
+    - destination:
+        host: order-service
+        subset: v2
+      weight: 100
+  # Everyone else: 95/5 split
+  - route:
+    - destination:
+        host: order-service
+        subset: v1
+      weight: 95
+    - destination:
+        host: order-service
+        subset: v2
+      weight: 5
+```
+
+### Shadow (Dark Launch) Deployment
+
+```
+Production traffic → v1 (responses served to users)
+                  ↓ (mirrored copy)
+                  → v2 (response DISCARDED — never sent to users)
+
+Purpose: Compare v1 vs v2 behavior under real production traffic
+without risking user experience
+```
+
+```yaml
+# Istio traffic mirroring
+http:
+- route:
+  - destination:
+      host: order-service
+      subset: v1
+    weight: 100
+  mirror:
+    host: order-service
+    subset: v2
+  mirrorPercentage:
+    value: 100.0    # Mirror 100% of requests to v2
+```
+
+### Deployment Strategy Comparison
+
+| Strategy | Rollback Speed | Risk | Infrastructure Cost | Use Case |
+|---|---|---|---|---|
+| **Rolling** | Slow (re-roll forward) | Medium | 1x | Standard deployments |
+| **Blue-Green** | Instant (flip selector) | Low | 2x | Critical services, DB migrations |
+| **Canary** | Fast (reduce weight to 0) | Very Low | ~1.1x | User-facing feature flags |
+| **Shadow** | N/A (no user impact) | None | ~2x | Algorithm comparison, load testing |
+| **Feature Flag** | Instant (toggle flag) | Very Low | 1x | Behavioral changes, gradual rollout |
+
+---
+
+## Service Decomposition: Decision Framework
+
+:::info[Chapter 2 Reference]
+Building Microservices Chapter 2 provides the foundational guidance for finding service boundaries using Domain-Driven Design bounded contexts and the concepts of loose coupling and high cohesion.
+:::
+
+### Decomposition Criteria
+
+```
+High Cohesion: Things that change together stay together
+Loose Coupling: Services need to know as little as possible about each other
+
+Right-size a service by asking:
+  1. Can this service be deployed without coordinating with other teams?
+  2. Does it have a single, well-defined bounded context?
+  3. Can a small team (2-3 engineers) own it independently?
+  4. Does it have data that only it should write to?
+```
+
+### Decomposition Patterns
+
+| Pattern | Split By | Best For | Risk |
+|---|---|---|---|
+| **By Business Capability** | What the business does (Orders, Payments, Inventory) | Aligns with org structure | Requires understanding the domain |
+| **By Subdomain (DDD)** | Core, Supporting, Generic subdomains | Strategic alignment | Needs domain expertise |
+| **By Volatility** | How often things change (stable vs. frequently changing) | Reduces deployment friction | Can create odd boundaries |
+| **By Scale** | Which parts need to scale independently | Performance optimization | May create tight coupling |
+| **By Team** | Conway's Law — mirror the team structure | Reduces coordination overhead | Risk of wrong boundaries if teams change |
+
+### The Distributed Monolith: Warning Signs
+
+```
+❌ Signs you've built a distributed monolith:
+
+  1. Services must be deployed in a specific order
+  2. One service failing takes down others synchronously
+  3. Services share a database schema (integration database)
+  4. API changes require coordinating releases across 5+ services
+  5. Testing requires running the full system
+  6. No service can be scaled independently
+  7. Services call each other in synchronous chains (A→B→C→D→E)
+
+✅ Signs of healthy microservices:
+
+  1. Any service can be deployed alone, any day
+  2. Services have well-defined, versioned APIs
+  3. Each service owns its own data store
+  4. Services are independently testable in isolation
+  5. A service failure degrades gracefully (circuit breaker + fallback)
+  6. Teams deploy 10+ times per day independently
+```
+
+---
+
+## Database-per-Service: Data Management Patterns
+
+### The Integration Database Problem
+
+```
+Integration Database (anti-pattern):
+  Order Service   ─┐
+  Payment Service  ├──→ Single shared DB schema
+  User Service    ─┘
+
+Problems:
+  - Schema changes require coordinating all teams
+  - No service can optimize its DB technology for its workload
+  - Any service can read/write any other service's tables
+  - Tight runtime coupling — one service's query can starve others
+
+Database-per-Service (correct pattern):
+  Order Service   → Orders DB (Postgres)
+  Payment Service → Payments DB (Postgres)
+  User Service    → Users DB (Postgres + Redis cache)
+  Search Service  → Elasticsearch
+```
+
+### Cross-Service Data Access Patterns
+
+| Pattern | Mechanism | Consistency | Complexity | Use Case |
+|---|---|---|---|---|
+| **API Composition** | Aggregate data via API calls at query time | Strong | Low | Simple joins across 2-3 services |
+| **CQRS + Event Sourcing** | Read model built from events | Eventual | High | Complex queries across many services |
+| **Saga Pattern** | Choreography/Orchestration for writes | Eventual | Medium-High | Cross-service transactions |
+| **Shared Read Replica** | Services export data to a common analytics DB | Eventual | Medium | Reporting, analytics |
+| **GraphQL Federation** | Each service owns its GraphQL schema, gateway federates | Strong | Medium | BFF/aggregation for frontends |
+
+### Handling Cross-Service Queries
+
+```java
+// Pattern: API Composition — aggregate in the gateway/BFF layer
+@Service
+public class OrderSummaryService {
+
+    public OrderSummaryResponse getSummary(Long orderId) {
+        // Parallel fetch from multiple services
+        CompletableFuture<Order> orderFuture =
+            CompletableFuture.supplyAsync(() -> orderClient.getOrder(orderId));
+
+        CompletableFuture<PaymentStatus> paymentFuture =
+            CompletableFuture.supplyAsync(() -> paymentClient.getStatus(orderId));
+
+        CompletableFuture<ShipmentInfo> shipmentFuture =
+            CompletableFuture.supplyAsync(() -> shipmentClient.getInfo(orderId));
+
+        // Wait for all with timeout
+        CompletableFuture.allOf(orderFuture, paymentFuture, shipmentFuture)
+            .get(2, TimeUnit.SECONDS);
+
+        return OrderSummaryResponse.builder()
+            .order(orderFuture.get())
+            .payment(paymentFuture.get())
+            .shipment(shipmentFuture.get())
+            .build();
+    }
+}
+```
+
+---
+
+## Contract Testing: Preventing Breaking Changes
+
+### Consumer-Driven Contract Testing
+
+```
+Problem: Service A depends on Service B's API.
+  How do you verify Service B's changes don't break Service A
+  without requiring both to be deployed together?
+
+Solution: Consumer-Driven Contracts (Pact)
+  1. Consumer (A) writes a contract: "I expect B to respond with X to request Y"
+  2. Contract is published to Pact Broker
+  3. Provider (B) verifies it can fulfill all consumer contracts
+     before merging any API change
+  4. CI/CD blocks: B's PR fails if any consumer contract breaks
+```
+
+```java
+// Consumer (Order Service) — define contract
+@ExtendWith(PactConsumerTestExt.class)
+@PactTestFor(providerName = "payment-service")
+class OrderServiceContractTest {
+
+    @Pact(consumer = "order-service")
+    public RequestResponsePact paymentChargePact(PactDslWithProvider builder) {
+        return builder
+            .given("Payment service is available")
+            .uponReceiving("a charge request")
+                .path("/api/payments/charge")
+                .method("POST")
+                .body(new PactDslJsonBody()
+                    .stringType("orderId")
+                    .numberType("amount"))
+            .willRespondWith()
+                .status(200)
+                .body(new PactDslJsonBody()
+                    .stringType("transactionId")
+                    .stringValue("status", "SUCCESS"))
+            .toPact();
+    }
+
+    @Test
+    @PactTestFor(pactMethod = "paymentChargePact")
+    void shouldChargePayment(MockServer mockServer) {
+        paymentClient = new PaymentClient(mockServer.getUrl());
+        PaymentResult result = paymentClient.charge(
+            new ChargeRequest("order-123", 99.99));
+        assertThat(result.getStatus()).isEqualTo("SUCCESS");
+    }
+}
+```
+
+### API Versioning Strategy
+
+```
+Versioning approaches:
+
+1. URI versioning: /api/v1/orders, /api/v2/orders
+   Pros: Explicit, easy to route
+   Cons: URL fragmentation, clients must update URLs
+
+2. Header versioning: Accept: application/vnd.myapp.v2+json
+   Pros: Clean URLs
+   Cons: Hidden, hard to test in browser
+
+3. Semantic versioning + backwards compatibility:
+   Never break: existing response fields
+   Safe to add: new optional fields
+   Breaking: removing/renaming fields, changing types
+
+4. Hypermedia (HATEOAS):
+   Responses include links to next actions
+   Clients navigate by following links, not hardcoded URLs
+```
+
+```java
+// Additive change (safe — does not break consumers):
+// Old:  { "orderId": "123", "status": "COMPLETED" }
+// New:  { "orderId": "123", "status": "COMPLETED", "completedAt": "2024-01-01" }
+
+// Breaking change (requires new version):
+// Old:  { "price": 99.99 }              (number)
+// New:  { "price": { "amount": 99.99, "currency": "USD" } }  (object)
+
+// Tolerate unknowns in consumers
+@JsonIgnoreProperties(ignoreUnknown = true)   // ← always configure this
+public class PaymentResponse {
+    private String transactionId;
+    private String status;
+    // new fields from provider are safely ignored
+}
+```
+
+---
+
+## Rate Limiting Patterns: Deep Dive
+
+:::info[Chapter 12 Reference]
+Building Microservices Chapter 12 on resilience covers rate limiting as a key stability pattern protecting services from both internal and external overload.
+:::
+
+### Algorithm Comparison
+
+| Algorithm | Memory | Burst Handling | Fairness | Use Case |
+|---|---|---|---|---|
+| **Fixed Window** | O(1) | Allows 2x burst at window edge | Poor | Simple, low accuracy needed |
+| **Sliding Window Log** | O(requests) | Precise, no burst | Good | Low traffic, high precision |
+| **Sliding Window Counter** | O(1) | Smooth (weighted interpolation) | Good | Production APIs |
+| **Token Bucket** | O(1) | Configurable burst capacity | Good | Network bandwidth limiting |
+| **Leaky Bucket** | O(queue size) | Smooths bursts into constant rate | Fair | Backend protection |
+
+```
+Token Bucket:
+  Tokens refill at steady rate (e.g., 100/sec)
+  Each request consumes 1 token
+  Burst allowed up to bucket capacity (e.g., 500 tokens)
+  Empty bucket → 429 Too Many Requests
+
+Leaky Bucket:
+  Requests enter queue regardless of rate
+  Queue drains at fixed rate (e.g., 100/sec)
+  Queue full → 429 Too Many Requests
+  Output is always smooth — protects backend
+```
+
+### Distributed Rate Limiting with Redis
+
+```java
+// Sliding window rate limiter using Redis sorted set
+@Service
+public class RateLimiter {
+    private final RedisTemplate<String, String> redis;
+
+    public boolean isAllowed(String userId, int limitPerMinute) {
+        String key = "rate:" + userId;
+        long now = System.currentTimeMillis();
+        long windowStart = now - 60_000; // 1-minute window
+
+        // Atomic: remove old entries + add current + count
+        List<Object> results = redis.execute(new SessionCallback<>() {
+            @Override
+            public List<Object> execute(RedisOperations ops) {
+                ops.multi();
+                ops.opsForZSet().removeRangeByScore(key, 0, windowStart);
+                ops.opsForZSet().add(key, String.valueOf(now), now);
+                ops.opsForZSet().size(key);
+                ops.expire(key, Duration.ofMinutes(2));
+                return ops.exec();
+            }
+        });
+
+        Long count = (Long) results.get(2);
+        return count <= limitPerMinute;
+    }
+}
+```
+
+---
+
+## Interview Questions: Senior Level
+
+### Q: How do you decide if something should be one service or two?
+
+**A:** Apply two tests from Building Microservices: loose coupling and high cohesion. If two capabilities share the same deployment cycle, same data, and the same team owns them, they belong together. If they have different scaling requirements, different change rates, or different team ownership, split them. The practical test: can each be deployed independently without coordination? If not, they are too coupled. A key smell for premature splitting is synchronous chains — if Service A always calls Service B, they may be better as one service.
+
+### Q: Explain canary deployments and how you automate them safely.
+
+**A:** A canary routes a small percentage of traffic (5%) to the new version while monitoring its error rate and latency against the baseline. Automation requires: (1) routing infrastructure (Istio VirtualService weights), (2) SLO-aligned success criteria, (3) automated promotion (increase weight) and rollback (reduce weight to 0) triggered by metric thresholds. Argo Rollouts implements this with a ProgressiveDelivery controller that automatically steps from 5% to 20% to 50% to 100% if each stage passes the analysis metrics, or rolls back if any stage breaches the error budget.
+
+### Q: What is consumer-driven contract testing? How does it differ from end-to-end testing?
+
+**A:** Consumer-driven contract tests verify that a service honors the expectations its consumers have documented. The consumer writes the contract (expected request/response), and the provider's CI verifies it can fulfill that contract in isolation. This is far cheaper than end-to-end tests that require all services to be running, and catches breaking API changes before they reach production. The key benefit is that providers get immediate feedback if their change breaks a consumer, without needing a shared integration environment.
+
+### Q: How do you handle the need for cross-service transactions in a microservices system?
+
+**A:** Distributed transactions with 2PC are fragile and blocking — avoid them. Instead, use the Saga pattern: decompose the transaction into a sequence of local ACID transactions, each publishing an event on success, or triggering a compensating transaction on failure. For orchestration sagas, a central Saga Orchestrator (e.g., Temporal workflow) manages the sequence and compensations explicitly. For choreography, each service reacts to events and emits its own events. The Outbox pattern ensures events are published atomically with the database write, preventing the dual-write problem.
+
+### Q: What are the operational challenges of microservices that monoliths avoid?
+
+**A:** (1) Distributed tracing — request debugging requires correlating logs across services. (2) Data consistency — no cross-service transactions; eventual consistency adds complexity. (3) Network overhead — every call is a network hop with latency, failure probability, and serialization cost. (4) Testing — integration tests require running many services. (5) Operational overhead — N services means N CI pipelines, N dashboards, N alert pages. (6) Service discovery — dynamic instance registration required. (7) API versioning — cannot do breaking changes freely. Building Microservices emphasizes: these costs are real and must be justified by the scale and team-size benefits microservices provide.

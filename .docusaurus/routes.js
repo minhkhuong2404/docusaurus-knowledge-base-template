@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '962'),
+    component: ComponentCreator('/', 'cf0'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '97e'),
+        component: ComponentCreator('/', '870'),
         routes: [
           {
             path: '/tags',
@@ -128,6 +128,11 @@ export default [
           {
             path: '/tags/aggregate',
             component: ComponentCreator('/tags/aggregate', '80e'),
+            exact: true
+          },
+          {
+            path: '/tags/aggregation',
+            component: ComponentCreator('/tags/aggregation', 'aff'),
             exact: true
           },
           {
@@ -588,6 +593,11 @@ export default [
           {
             path: '/tags/broker',
             component: ComponentCreator('/tags/broker', '8c5'),
+            exact: true
+          },
+          {
+            path: '/tags/bson',
+            component: ComponentCreator('/tags/bson', '6cb'),
             exact: true
           },
           {
@@ -1866,6 +1876,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/document-store',
+            component: ComponentCreator('/tags/document-store', '543'),
+            exact: true
+          },
+          {
             path: '/tags/documentation',
             component: ComponentCreator('/tags/documentation', '9e6'),
             exact: true
@@ -2731,6 +2746,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/indexes',
+            component: ComponentCreator('/tags/indexes', '99e'),
+            exact: true
+          },
+          {
             path: '/tags/indexing',
             component: ComponentCreator('/tags/indexing', 'e44'),
             exact: true
@@ -3466,6 +3486,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/memory-model',
+            component: ComponentCreator('/tags/memory-model', '0db'),
+            exact: true
+          },
+          {
             path: '/tags/merge',
             component: ComponentCreator('/tags/merge', '260'),
             exact: true
@@ -3903,6 +3928,11 @@ export default [
           {
             path: '/tags/operators',
             component: ComponentCreator('/tags/operators', '77b'),
+            exact: true
+          },
+          {
+            path: '/tags/ops',
+            component: ComponentCreator('/tags/ops', '55f'),
             exact: true
           },
           {
@@ -4686,6 +4716,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/replica-set',
+            component: ComponentCreator('/tags/replica-set', 'a7a'),
+            exact: true
+          },
+          {
             path: '/tags/replication',
             component: ComponentCreator('/tags/replication', 'e99'),
             exact: true
@@ -4933,6 +4968,11 @@ export default [
           {
             path: '/tags/schema',
             component: ComponentCreator('/tags/schema', 'fbe'),
+            exact: true
+          },
+          {
+            path: '/tags/schema-design',
+            component: ComponentCreator('/tags/schema-design', 'f61'),
             exact: true
           },
           {
@@ -6272,7 +6312,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'b3c'),
+            component: ComponentCreator('/', '123'),
             routes: [
               {
                 path: '/aws',
@@ -12789,6 +12829,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/java/java-diagnostics-troubleshooting',
+                component: ComponentCreator('/technical-knowledge/java/java-diagnostics-troubleshooting', '139'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/java/java-fundamentals',
                 component: ComponentCreator('/technical-knowledge/java/java-fundamentals', 'c28'),
                 exact: true,
@@ -12807,6 +12853,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/java/java-jmm-memory-model',
+                component: ComponentCreator('/technical-knowledge/java/java-jmm-memory-model', 'bb6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/java/java-jvm',
                 component: ComponentCreator('/technical-knowledge/java/java-jvm', 'd6c'),
                 exact: true,
@@ -12814,7 +12866,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-new-features',
-                component: ComponentCreator('/technical-knowledge/java/java-new-features', '43d'),
+                component: ComponentCreator('/technical-knowledge/java/java-new-features', '4b7'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13730,6 +13782,12 @@ export default [
               {
                 path: '/technical-knowledge/system-design/microservices-patterns',
                 component: ComponentCreator('/technical-knowledge/system-design/microservices-patterns', 'c72'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/mongodb-deep-dive',
+                component: ComponentCreator('/technical-knowledge/system-design/mongodb-deep-dive', 'b9e'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

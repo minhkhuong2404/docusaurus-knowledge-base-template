@@ -697,6 +697,62 @@ public void generateDailyReport() {
 }
 ```
 
+## Java Records in Spring Boot
+
+Java 14 introduced **Records** as a concise way to model immutable data carriers. In Spring Boot 3.x (which requires Java 17+), records have become the standard choice for data transfer.
+
+### 1. REST Controllers & DTOs
+Records automatically integrate with Jackson for JSON serialization and deserialization. Since they have no setters, they guarantee request and response payloads remain immutable during processing.
+
+```java
+public record UserRegistrationRequest(
+    @NotBlank String username,
+    @Email String email,
+    @Size(min = 8) String password
+) {}
+
+@RestController
+@RequestMapping("/api/users")
+public class UserRegistrationController {
+
+    @PostMapping
+    public ResponseEntity<Void> register(@Valid @RequestBody UserRegistrationRequest request) {
+        // request.username() to access field (no getUsername())
+        return ResponseEntity.ok().build();
+    }
+}
+```
+
+### 2. Spring Data JPA Projections
+Instead of fetching full managed entities, database read queries can fetch light immutable record projections directly:
+
+```java
+public record UserSummary(Long id, String username, String email) {}
+
+public interface UserRepository extends JpaRepository<User, Long> {
+    
+    // Class-based DTO projection
+    List<UserSummary> findByActiveTrue();
+    
+    // Constructor projection using JPQL
+    @Query("SELECT new com.example.dto.UserSummary(u.id, u.username, u.email) FROM User u WHERE u.active = true")
+    List<UserSummary> findActiveUserSummaries();
+}
+```
+
+### 3. Immutable Configuration Properties
+In Spring Boot 3.x, `@ConfigurationProperties` supports constructor binding on record types out of the box, removing the need for boilerplate getters/setters or Lomboks.
+
+```java
+@ConfigurationProperties(prefix = "app.security")
+public record SecurityProperties(
+    String jwtSecret,
+    Duration tokenValidity,
+    List<String> allowedOrigins
+) {}
+```
+To enable this, annotate your configuration with `@ConfigurationPropertiesScan` or `@EnableConfigurationProperties(SecurityProperties.class)`.
+
 ---
 
 ## Summary

@@ -7,225 +7,155 @@ tags:
 - building-microservice
 - chapter-10
 ---
+
 # Chapter 10: From Monitoring to Observability
 
-**Part II — Implementation**
+**Part I — Foundation**
 
-> With dozens of services, traditional monitoring dashboards aren't enough. This chapter introduces the shift to observability — the ability to ask new questions about your system without deploying new instrumentation.
-
----
-
-## Monitoring vs. Observability
-
-**Monitoring** = watching predefined metrics and alerting on thresholds.
-- "CPU usage > 80% → alert"
-- "Error rate > 1% → alert"
-
-**Observability** = the ability to understand the *internal state* of your system from its *external outputs* — even for scenarios you didn't anticipate.
-
-> An observable system lets you ask *any* question about what's happening, not just the ones you predicted when you wrote your dashboards.
-
-In a microservice architecture, monitoring breaks down because:
-- A user request may span 10 services
-- An error in service E may be caused by service B, discovered in service D
-- "Something is slow" requires tracing through multiple hops to find the root cause
-
-Observability solves this.
+> As	I’ve	shown	so	far,	I	hope,	breaking	our	system	up	into	smaller,	fine-grained
 
 ---
 
-## The Three Pillars of Observability
+## Disruption, Panic, and Confusion
 
-### 1. Logs
-Structured, timestamped records of discrete events. The classic debugging tool.
-
-**Best Practices:**
-- Use **structured logging** (JSON) — machine-parseable, filterable
-- Include **correlation IDs** in every log line — trace a request across services
-- Log at appropriate levels: `DEBUG` (dev), `INFO` (normal ops), `WARN` (unexpected but handled), `ERROR` (requires investigation)
-
-**Spring Boot + Logback (structured JSON):**
-```xml
-<!-- logback-spring.xml -->
-<dependency>
-    <groupId>net.logstash.logback</groupId>
-    <artifactId>logstash-logback-encoder</artifactId>
-</dependency>
-```
-
-```java
-@Slf4j
-@Service
-public class OrderService {
-    public Order createOrder(CreateOrderRequest request) {
-        log.info("Creating order for customer={} items={}", 
-            request.getCustomerId(), request.getItems().size());
-        // ...
-        log.info("Order created orderId={} status={}", order.getId(), order.getStatus());
-        return order;
-    }
-}
-```
-
-Output: `{"timestamp":"2024-01-15T10:30:00Z","level":"INFO","message":"Order created","orderId":"ord-123","status":"CONFIRMED","traceId":"abc123"}`
-
-### 2. Metrics
-
-Numerical measurements aggregated over time. CPU, memory, request rates, error rates, latency percentiles.
-
-**Spring Boot Actuator + Micrometer:**
-Spring Boot's Micrometer library instruments everything automatically. Add your own metrics with:
-
-```java
-@Service
-public class OrderService {
-    private final Counter orderCreatedCounter;
-    private final Timer orderCreationTimer;
-
-    public OrderService(MeterRegistry registry) {
-        this.orderCreatedCounter = Counter.builder("orders.created")
-            .description("Number of orders created")
-            .tag("region", "eu-west")
-            .register(registry);
-        this.orderCreationTimer = Timer.builder("orders.creation.duration")
-            .register(registry);
-    }
-
-    public Order createOrder(CreateOrderRequest request) {
-        return orderCreationTimer.record(() -> {
-            Order order = doCreateOrder(request);
-            orderCreatedCounter.increment();
-            return order;
-        });
-    }
-}
-```
-
-Metrics are then scraped by **Prometheus** and visualized in **Grafana**.
-
-### 3. Distributed Tracing
-
-A trace tracks a single request as it flows through multiple services. Each service adds a **span** — a unit of work with start time, end time, and metadata.
-
-```
-Trace ID: abc-123
-│
-├── Span: API Gateway (0ms - 250ms)
-│   ├── Span: Order Service (5ms - 200ms)
-│   │   ├── Span: DB Query - findCustomer (10ms - 25ms)
-│   │   ├── Span: Inventory Service call (30ms - 120ms)  ← Slow!
-│   │   └── Span: DB Insert - saveOrder (130ms - 180ms)
-│   └── Span: Notification Service (205ms - 245ms)
-```
-
-This immediately shows that the Inventory Service call (90ms) is the bottleneck.
-
-**Spring Boot + Micrometer Tracing (replaces Spring Cloud Sleuth):**
-```yaml
-# application.yml
-management:
-  tracing:
-    sampling:
-      probability: 1.0  # Sample 100% in dev; use 0.1 (10%) in prod
-```
-
-Traces are exported to **Zipkin**, **Jaeger**, or **OpenTelemetry Collector**.
-
-```java
-// Trace context propagates automatically via HTTP headers (B3 or W3C TraceContext)
-// Just call other services normally — Spring adds the trace headers
-OrderDto order = orderClient.getOrder(orderId);  // trace header injected automatically
-```
+Chapter 10. From Monitoring to Observability As I’ve shown so far, I hope, breaking our system up into smaller, fine-grained microservices results in multiple benefits. It also, as we’ve also covered in some depth, adds significant sources of new complexity. In no situation is this increased complexity more evident than when it comes to understanding the behavior of our systems in a production environment. Very early on, you’ll find that the tools and techniques that worked well for relatively s...
 
 ---
 
-## Correlation IDs
+## Single Microservice, Single Server
 
-Every request entering your system gets a unique ID. Every service logs this ID. Every downstream call passes it along.
-
-```java
-// Spring Cloud Sleuth / Micrometer Tracing does this automatically
-// But you can also set it manually in a filter:
-@Component
-public class CorrelationIdFilter implements Filter {
-    @Override
-    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
-        throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest) req;
-        String correlationId = Optional.ofNullable(request.getHeader("X-Correlation-Id"))
-            .orElse(UUID.randomUUID().toString());
-        
-        MDC.put("correlationId", correlationId);
-        ((HttpServletResponse) res).setHeader("X-Correlation-Id", correlationId);
-        
-        try {
-            chain.doFilter(req, res);
-        } finally {
-            MDC.remove("correlationId");
-        }
-    }
-}
-```
+Figure 10-1. A single microservice instance on a single host First, we’ll want to get information from the host itself. CPU, memory—all of these things can be useful. Next, we’ll want to have access to the logs from the microservice instance itself. If a user reports an error, we should be able to see the error in these logs, hopefully giving us a way to work out what went wrong. At this point, with our single host, we can probably get by with just logging locally to the host and using command-l...
 
 ---
 
-## Alerting: Semantic vs. Syntactic
+## Single Microservice, Multiple Servers
 
-**Syntactic alerting** = alert on raw metric values. "CPU > 80%"
-**Semantic alerting** = alert on business impact. "Order creation error rate > 0.1%"
-
-Semantic alerts are more meaningful — they directly tell you about user impact. Syntactic alerts cause alert fatigue (CPU can be 80% for perfectly legitimate reasons).
-
-### Alert Design Principles
-- Alert on **symptoms** (high error rate) not **causes** (high CPU)
-- Every alert should require **human action** — if you can't do anything about it, don't alert
-- Target **page-worthy** events only (something waking you up at 3am)
-- Use runbooks linked from alerts — "This alert means X, investigate Y, fix with Z"
+balancer. Things start to get a bit trickier now. We still want to monitor all the same things as before, but we need to do so in such a way that we can isolate the problem. When the CPU is high, is it a problem we are seeing on all hosts, which would point to an issue with the service itself? Or is it isolated to a single host, implying that the host itself has the problem—perhaps a rogue OS process? At this point, we still want to track the host-level metrics, and perhaps maybe even alert on t...
 
 ---
 
-## The ELK Stack / Grafana Stack
+## Multiple Services, Multiple Servers
 
-### Common Observability Stacks
-
-**Grafana Stack (open-source favorite):**
-- **Prometheus** — metrics collection and storage
-- **Grafana** — dashboards and visualization
-- **Loki** — log aggregation (logs-as-metrics approach)
-- **Tempo** — distributed tracing backend
-
-**ELK Stack:**
-- **Elasticsearch** — log storage and search
-- **Logstash** — log ingestion and transformation
-- **Kibana** — log visualization and dashboards
-
-**Cloud-native alternatives:**
-- AWS CloudWatch, X-Ray
-- Google Cloud Operations Suite
-- Datadog, New Relic, Dynatrace (commercial SaaS)
+balancer for downstream calls to microservices. However, we also have to consider what happens if the load balancer is turning out to be the bottleneck in our system—capturing response times both at the load balancer and at the microservices themselves could be needed. At this point, we probably also care a lot more about what a healthy service looks like, as we’ll configure our load balancer to remove unhealthy nodes from our application. Hopefully by the time we get here, we have at least some...
 
 ---
 
-## Key Metrics to Track per Microservice
+## Observability Versus Monitoring
 
-The **RED Method** (for services):
-- **R**ate — requests per second
-- **E**rrors — error rate (4xx, 5xx)
-- **D**uration — latency percentiles (p50, p95, p99)
+Figure 10-3. Multiple collaborating services distributed across multiple hosts Aggregation of information—metrics and logs—play a vital part in making this happen. But this is not the only thing we need to consider. We need to work out how to sift this huge influx of data and try to make sense of it all. Above all, this is largely about a mindset shift, from a fairly static landscape of monitoring to the more active world of observability and testing in production. Observability Versus Monitorin...
 
-The **USE Method** (for infrastructure):
-- **U**tilization — CPU, memory, disk
-- **S**aturation — queue depth, connection pool usage
-- **E**rrors — hardware and OS errors
+---
+
+## The Pillars of Observability? Not So Fast
+
+at least New Relic is trying. Although this simple model initially appealed to me greatly (and I’m a sucker for an acronym!), over time I’ve really moved away from this thinking as being overly reductive but also potentially missing the point. Firstly, reducing a property of a system to implementation details in this way seems backward to me. Observability is a property, and there are many ways I might be able to achieve that property. Focusing too much on specific implementation details runs th...
+
+---
+
+## Building Blocks for Observability
+
+customer has logged in, or any number of things. We can project from this event stream a trace (assuming we can correlate these events), a searchable index, or an aggregation of numbers. Although at present we chose to collect this information in different ways, using different tools and different protocols, our current toolchains shouldn’t limit our thinking in terms of how best to get the information we need. When it comes to making your system observable, think about the outputs you need from...
+
+---
+
+## Log Aggregation
+
+what went wrong and derive accurate latency information Are you doing OK? Looking at error budgets, SLAs, SLOs, and so on to see how they can be used as part of making sure our microservice is meeting the needs of its consumers Alerting What should you alert on? What does a good alert look like? Semantic monitoring Thinking differently about the health of our systems, and about what should wake us up at 3 a.m. Testing in production A summary of various testing in production techniques Let’s star...
+
+---
+
+## Metrics Aggregation
+
+that this was something its developers built for—rather than maintaining an index, they focus on efficient and scalable ingestion of data with some smart solutions to try and keep query times down. Even if you do have a solution that can store the volume of logs you want, these logs can end up containing a lot of valuable and sensitive information. This means that you might have to limit access to the logs (which could further complicate your efforts to have collective ownership of your microser...
+
+---
+
+## Distributed Tracing
+
+including the US Treasury’s network. Distributed Tracing So far, I’ve primarily been talking about collecting information in isolation. Yes, we’re aggregating that information, but understanding the wider context in which this information has been captured can be key. Fundamentally, a microservice architecture is a set of processes that work together to carry out some kind of task—we explored the various different ways we can coordinate these activities in Chapter 6 . Thus it makes sense, when w...
+
+---
+
+## Are We Doing OK?
+
+on work done by the earlier OpenTracing and OpenConsensus APIs, this API now has broad industry support. Are We Doing OK? We’ve talked a lot about the things you could be doing as the operator of a system—the mindset you need, the information you might need to gather. But how do you know if you’re doing too much—or not enough? How do you know if you are doing a good enough job, or that your system is working well enough? Binary concepts of a system being “up” or “down” start to have less and les...
+
+---
+
+## Alerting
+
+its SLOs, we would assume that all the SLAs have also been achieved, but SLOs can speak to other goals not outlined in the SLA—or they might be aspirational, they could be inward facing (trying to carry out some internal change). SLOs can often reflect something that the team itself wants to achieve that may have no relation to an SLA. Service-level indicators To determine if we are meeting our SLOs, we need to gather real data. This is what our service-level indicators (SLI) are. An SLI is a me...
+
+---
+
+## Semantic Monitoring
+
+Help the operator understand what actions need to be taken. Focusing Draw attention to the most important issues. Looking back over my career to times when I’ve worked in production support, it’s depressing to think how rarely the alerts I’ve had to deal with follow any of these rules. All too often, unfortunately, the people providing information to our alerting systems and the people actually on the receiving ends of our alerts are different people. From Shorrock again: Understanding the natur...
+
+---
+
+## Testing in Production
+
+locked away in a database somewhere, we may not be able to collect this information and act on it accordingly. This is why you may need to get better at exposing access to information that you would previously consider to be “business” metrics to your production tooling. If you can emit a CPU rate to your metrics store, and this metric store could be used to alert on this condition, then why can’t you also record a sale and a dollar value into this same store? One of the main drawbacks of real u...
+
+---
+
+## Standardization
+
+pull off is where to allow for decisions to be made narrowly for a single microservice versus where you need to standardize across your system. In my opinion, monitoring and observability is one area in which standardization can be incredibly important. With microservices collaborating in lots of different ways to provide capabilities to users using multiple interfaces, you need to view the system in a holistic way. You should try to write your logs out in a standard format. You definitely want ...
+
+---
+
+## Selecting Tools
+
+pull off is where to allow for decisions to be made narrowly for a single microservice versus where you need to standardize across your system. In my opinion, monitoring and observability is one area in which standardization can be incredibly important. With microservices collaborating in lots of different ways to provide capabilities to users using multiple interfaces, you need to view the system in a holistic way. You should try to write your logs out in a standard format. You definitely want ...
+
+---
+
+## Democratic
+
+If you have tools that are so hard to work with only experienced operators can make use of them, then you limit the number of people who can participate in production activities. Likewise, if you pick tools that are so expensive as to prohibit their use in any situation other than critical production environments, then developers will not have exposure to these tools until it’s too late. Pick tools that consider the needs of all the people whom you will want using them. If you really want to mov...
+
+---
+
+## Easy to Integrate
+
+If you have tools that are so hard to work with only experienced operators can make use of them, then you limit the number of people who can participate in production activities. Likewise, if you pick tools that are so expensive as to prohibit their use in any situation other than critical production environments, then developers will not have exposure to these tools until it’s too late. Pick tools that consider the needs of all the people whom you will want using them. If you really want to mov...
+
+---
+
+## Provide Context
+
+If you have tools that are so hard to work with only experienced operators can make use of them, then you limit the number of people who can participate in production activities. Likewise, if you pick tools that are so expensive as to prohibit their use in any situation other than critical production environments, then developers will not have exposure to these tools until it’s too late. Pick tools that consider the needs of all the people whom you will want using them. If you really want to mov...
+
+---
+
+## Real-Time
+
+How has this changed in relation to other things in the system? Relational context Is something depending on this? Is this depending on something else? Proportional context How bad is this? Is it large or small scoped? Who is impacted? Real-Time You can’t wait ages for this information. You need it now. Your definition of “now” can of course vary somewhat, but in the context of your systems, you need information quickly enough that you have a chance of spotting a problem before a user does, or a...
+
+---
+
+## Suitable for Your Scale
+
+How has this changed in relation to other things in the system? Relational context Is something depending on this? Is this depending on something else? Proportional context How bad is this? Is it large or small scoped? Who is impacted? Real-Time You can’t wait ages for this information. You need it now. Your definition of “now” can of course vary somewhat, but in the context of your systems, you need information quickly enough that you have a chance of spotting a problem before a user does, or a...
+
+---
+
+## The Expert in the Machine
+
+You also ideally want a tool that can scale as you scale. Again, cost effectiveness can come into play here. Even if your tool of choice can technically scale to support the expected growth of your system, can you afford to keep paying for it? The Expert in the Machine I’ve talked a lot about tools in this chapter, perhaps more than in any other chapter in the book. This is partly due to the fundamental shift from viewing the world purely in terms of monitoring to instead thinking about how to m...
+
+---
+
+## Getting Started
+
+help see patterns in the data, showing odd clusters of patients that could be determined by correlating various facets of the data. The data scientists could say “these patients seem related” but had no awareness as to what the meaning of that relationship was. It took a clinician to explain that some of these clusters referred to patients who were, in general, more sick than others. It required expertise to identify the cluster, and a different expertise to understand what this cluster meant an...
 
 ---
 
 ## Summary
 
-| Pillar | Tool (Spring ecosystem) | Purpose |
-|---|---|---|
-| Logs | SLF4J + Logback JSON → Loki/ELK | Discrete events with context |
-| Metrics | Micrometer → Prometheus → Grafana | Aggregated numbers over time |
-| Traces | Micrometer Tracing → Zipkin/Jaeger | Request flow across services |
-| Alerting | Prometheus AlertManager | Page on symptoms, not causes |
-| Correlation ID | Spring Micrometer Tracing (auto) | Tie logs/traces across services |
+place. I’d hesitate to say that you need to start with a dedicated distributed tracing tool. If you have to run and host the tool yourself, this can add significant complexity. On the other hand, if you can make use of a fully managed service offering easily, instrumenting your microservices from the start can make a lot of sense. For key operations, strongly consider creating synthetic transactions as a way of better understanding if the vital aspects of your system are working properly. Build ...
+
+---

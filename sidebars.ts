@@ -37,7 +37,10 @@ const sidebars: SidebarsConfig = {
 							type: 'category',
 							label: '🧭 Fundamentals',
 							collapsed: true,
-							items: ['technical-knowledge/java/java-concurrency']
+							items: [
+								'technical-knowledge/java/java-concurrency',
+								'technical-knowledge/java/java-jmm-memory-model'
+							]
 						},
 						{
 							type: 'category',
@@ -57,7 +60,8 @@ const sidebars: SidebarsConfig = {
 					items: [
 						'technical-knowledge/java/java-jvm',
 						'technical-knowledge/java/java-stack-vs-heap',
-						'technical-knowledge/java/java-virtual-threads'
+						'technical-knowledge/java/java-virtual-threads',
+						'technical-knowledge/java/java-diagnostics-troubleshooting'
 					]
 				},
 				{
@@ -289,6 +293,7 @@ const sidebars: SidebarsConfig = {
 						'technical-knowledge/system-design/message-queues',
 						'technical-knowledge/system-design/search-systems',
 						'technical-knowledge/system-design/large-blobs',
+						'technical-knowledge/system-design/mongodb-deep-dive'
 					],
 				},
 				{
@@ -1346,7 +1351,7 @@ const sidebars: SidebarsConfig = {
 				},
 				{
 					type: 'category',
-					label: '📘 System Design Interview Books',
+					label: '📘 Building Microservices: Designing Fine-Grained Systems, 2nd Edition',
 					collapsed: true,
 					items: [
 						'books/building-microservice/intro',

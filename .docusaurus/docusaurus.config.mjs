@@ -617,6 +617,13 @@ export default {
       ],
       "copyright": "Copyright © 2026 by Khuong Lu,  Dev. Built with Docusaurus and Github Page. ❤️"
     },
+    "mermaid": {
+      "theme": {
+        "dark": "dark",
+        "light": "default"
+      },
+      "options": {}
+    },
     "blog": {
       "sidebar": {
         "groupByYear": true
@@ -625,13 +632,6 @@ export default {
     "tableOfContents": {
       "minHeadingLevel": 2,
       "maxHeadingLevel": 3
-    },
-    "mermaid": {
-      "theme": {
-        "dark": "dark",
-        "light": "default"
-      },
-      "options": {}
     }
   },
   "baseUrlIssueBanner": true,

@@ -7,170 +7,125 @@ tags:
 - building-microservice
 - chapter-03
 ---
+
 # Chapter 3: Splitting the Monolith
 
 **Part I — Foundation**
 
-> Most teams don't start from scratch. This chapter gives practical, pattern-driven guidance on how to decompose an existing monolith into microservices — incrementally and safely.
+> Many	of	you	reading	this	book	likely	don’t	have	a	blank	slate	on	which	to	design
 
 ---
 
-## Start With a Goal
+## Have a Goal
 
-**Microservices are not the goal. The goal is what microservices enable.**
-
-Before splitting anything, ask: *What problem am I trying to solve?*
-- Need to scale a specific component under load?
-- Want independent team deployments?
-- Need to replace a dying technology?
-
-Without a clear goal, you'll create microservices that don't deliver value. You'll confuse *activity* (creating services) with *outcome* (faster delivery, better scaling).
-
-:::tip[Try the simple things first. Vertical slicing, better modular structure, or simply adding capacity to the monolith may be faster and cheaper than a full decomposition.]
-:::
+Chapter 3. Splitting the Monolith Many of you reading this book likely don’t have a blank slate on which to design your system, and even if you did, starting with microservices might not be a great idea, for reasons we explored in Chapter 1 . Many of you will already have an existing system, perhaps some form of monolithic architecture, which you are looking to migrate to a microservice architecture. In this chapter I’ll outline some first steps, patterns, and general tips to help you navigate t...
 
 ---
 
-## The Case for Incremental Migration
+## Incremental Migration
 
-> "If you do a big-bang rewrite, the only thing you're guaranteed of is a big bang." — Martin Fowler
-
-Incremental migration (chip away, one service at a time) is almost always better than a full rewrite because:
-
-1. You learn as you go — early mistakes stay small
-2. You can stop at any time if the value isn't materializing
-3. You can deploy and get production feedback from each new service
-4. Teams build operational confidence gradually
-
-**Think of the monolith as a block of marble.** You don't detonate it — you chip away carefully.
+Microservices aren’t easy. Try the simple stuff first. Finally, without a clear goal, it becomes difficult to know where to start. Which microservice should you create first? Without an overarching understanding of what you are trying to achieve, you’re flying blind. So be clear about what change you are trying to achieve, and consider easier ways to achieve that end goal before considering microservices. If microservices really are the best way to move forward, then track your progress against ...
 
 ---
 
-## The Monolith Is Not the Enemy
+## The Monolith Is Rarely the Enemy
 
-This is a key message in this edition. Many successful systems remain monolithic throughout their entire lives. A well-structured modular monolith can outperform a poorly designed microservice architecture.
-
-The monolith commonly *remains* even after microservice extraction — it just shrinks. For example, if 10% of the system is the scaling bottleneck, extracting that 10% as a microservice may solve the problem completely. The remaining 90% can stay in the monolith indefinitely.
-
-:::caution[Don't set out to "destroy the monolith." Set out to achieve a specific goal. Stop when the goal is met.]
-:::
+microservices: if you think microservices are a good idea, start somewhere small. Choose one or two areas of functionality, implement them as microservices, get them deployed into production, and then reflect on whether creating your new microservices helped you get closer to your end goal. WARNING You won’t appreciate the true horror, pain, and suffering that a microservice architecture can bring until you are running in production. The Monolith Is Rarely the Enemy While I already made the case...
 
 ---
 
-## Dangers of Premature Decomposition
+## The Dangers of Premature Decomposition
 
-The Snap CI case study from Thoughtworks illustrates this perfectly:
-
-- Team had prior domain knowledge from GoCD and moved quickly to microservices
-- After a few months, use cases proved different enough that boundaries were wrong
-- The team merged services back into a monolith, worked to understand the domain better
-- A year later, split again — this time with stable, correct boundaries
-
-**Lesson:** Deep domain understanding is a prerequisite to stable service boundaries. If you're building something new, a monolith-first approach lets you learn the domain before committing to split points.
+requirement. In my experience, this is often limited to situations in which the existing monolith is based on dead or dying technology, is tied to infrastructure that needs to be retired, or is perhaps an expensive third-party system that you want to ditch. Even in these situations, an incremental approach to decomposition is warranted for the reasons I’ve outlined. The Dangers of Premature Decomposition There is danger in creating microservices when you have an unclear understanding of the doma...
 
 ---
 
 ## What to Split First?
 
-Balance two forces:
-1. **Benefit** — how much value does extracting this give you?
-2. **Feasibility** — how deeply embedded is this functionality?
-
-### High-Value Candidates
-- Parts that need to scale independently (the bottleneck)
-- Parts that change most frequently (volatile code)
-- Parts that many teams need to touch simultaneously (coordination bottleneck)
-
-### Tools to Find Hotspots
-Static analysis tools like **CodeScene** can visualize "hotspot" files — code that changes frequently AND is highly coupled. These are prime candidates for extraction.
-
-### Easy Wins First
-Functionality that is already somewhat self-contained makes for an easier first microservice. Early wins build team confidence and demonstrate value.
+requirement. In my experience, this is often limited to situations in which the existing monolith is based on dead or dying technology, is tied to infrastructure that needs to be retired, or is perhaps an expensive third-party system that you want to ditch. Even in these situations, an incremental approach to decomposition is warranted for the reasons I’ve outlined. The Dangers of Premature Decomposition There is danger in creating microservices when you have an unclear understanding of the doma...
 
 ---
 
-## Key Decomposition Patterns
+## Decomposition by Layer
 
-### Strangler Fig Pattern
-From Martin Fowler. Wrap the monolith behind a facade/proxy. Redirect specific routes/calls to new microservices. As new services absorb functionality, the monolith shrinks.
-
-```
-                      ┌──────────────────┐
-HTTP Request ──────►  │ Facade / Proxy   │
-                      └────┬───────┬─────┘
-                           │       │
-              ┌────────────▼─┐  ┌──▼─────────────┐
-              │  New Service  │  │  Old Monolith   │
-              │ (Catalog)     │  │ (everything     │
-              └───────────────┘  │  else)          │
-                                 └─────────────────┘
-```
-
-The proxy intercepts requests. Over time, more and more routes are directed to new services.
-
-### Branch by Abstraction
-Used when the code you want to extract is deeply tangled in the monolith:
-1. Create an abstraction (interface) over the functionality to extract
-2. Make the existing monolith code implement the abstraction
-3. Build the new microservice also implementing the abstraction
-4. Switch over and remove the old implementation
-
-### Parallel Run
-Run old monolith code and new microservice side by side. Compare outputs. Useful for high-risk extractions where correctness is critical before fully committing.
-
-### Decorating Collaborator
-Add behavior to existing calls without modifying the monolith. A separate service intercepts and decorates calls, adding new business logic.
+With a few successes and some lessons learned, you’ll be much better placed to tackle more complex extractions, which may also be operating in more critical areas of functionality. Decomposition by Layer So you’ve identified your first microservice to extract; what next? Well, we can break that decomposition down into further, smaller steps. If we consider the traditional three tiers of a web-based services stack, then we can look at the functionality we want to extract in terms of its user inte...
 
 ---
 
-## Database Decomposition
+## Code First
 
-The hardest part of decomposing a monolith is often the database, not the code.
-
-### Pattern: Database-per-Service (Goal State)
-Each microservice has its own database (or schema). No sharing.
-
-### Getting There: Migration Strategies
-
-**Step 1: Separate the schema first**
-Before moving service code, create separate schemas within the same database. Introduce a join via application code (or service calls) instead of SQL joins.
-
-**Step 2: Move the service code**
-Once the schema is logically separated, extract the service code. The service now owns its schema.
-
-**Step 3: Separate the database server (optional)**
-For full isolation, move each schema to its own database server.
-
-:::warning[Removing shared database tables is the highest-risk step. Do it last, and do it incrementally. Introduce an **integration database** period where both old and new code access the same data, then migrate.]
-:::
-
-### Shared Static Data
-Reference data (e.g., country codes, currency codes) shared across services is a common problem. Options:
-- Duplicate the data in each service (simple, cheap, eventually consistent)
-- Create a dedicated reference data service (adds a dependency)
-- Share via configuration or a read-only data store
+Figure 3-3. Moving the wishlist code into a new microservice first, leaving the data in the monolithic database In my experience, this tends to be the most common first step. The main reason for this is that it tends to deliver more short-term benefit. If we left the data in the monolithic database, we’re storing up lots of pain for the future, so that does need to be addressed too, but we have gained a lot from our new microservice. Extracting the application code tends to be easier than extrac...
 
 ---
 
-## Incremental Migration Checklist
+## Data First
 
-Before extracting a microservice:
+see this approach less often, but it can be useful in situations in which you are unsure whether the data can be separated cleanly. Here, you prove that this can be done before moving on to the hopefully easier application code extraction. Figure 3-4. The tables associated with the wishlist functionality are extracted first The main benefit of this approach in the short term is in derisking the full extraction of the microservice. It forces you to deal up front with issues like loss of enforced ...
 
-- [ ] You have a clear goal for why this extraction adds value
-- [ ] You understand the domain well enough to draw stable boundaries
-- [ ] The team has basic CI/CD pipeline capability
-- [ ] You've identified all database tables owned by this service
-- [ ] You've mapped all upstream callers (what currently calls this code?)
-- [ ] You have a rollback plan
+---
+
+## Useful Decompositional Patterns
+
+Many of these are explored in detail in my book Monolith to Microservices ; rather than repeat them all here, I will share an overview of some of them to give you an idea of what is possible. Strangler Fig Pattern A technique that has seen frequent use during system rewrites is the strangler fig pattern , a term coined by Martin Fowler . Inspired by a type of plant, the pattern describes the process of wrapping an old system with the new system over time, allowing the new system to take over mor...
+
+---
+
+## Strangler Fig Pattern
+
+Many of these are explored in detail in my book Monolith to Microservices ; rather than repeat them all here, I will share an overview of some of them to give you an idea of what is possible. Strangler Fig Pattern A technique that has seen frequent use during system rewrites is the strangler fig pattern , a term coined by Martin Fowler . Inspired by a type of plant, the pattern describes the process of wrapping an old system with the new system over time, allowing the new system to take over mor...
+
+---
+
+## Parallel Run
+
+it has even been “wrapped” with a newer system. Parallel Run When switching from functionality provided by an existing tried and tested application architecture to a fancy new microservice-based one, there may be some nervousness, especially if the functionality being migrated is critical to your organization. One way to make sure the new functionality is working well without risking the existing system behavior is to make use of the parallel run pattern: running both your monolithic implementat...
+
+---
+
+## Feature Toggle
+
+it has even been “wrapped” with a newer system. Parallel Run When switching from functionality provided by an existing tried and tested application architecture to a fancy new microservice-based one, there may be some nervousness, especially if the functionality being migrated is critical to your organization. One way to make sure the new functionality is working well without risking the existing system behavior is to make use of the parallel run pattern: running both your monolithic implementat...
+
+---
+
+## Data Decomposition Concerns
+
+it has even been “wrapped” with a newer system. Parallel Run When switching from functionality provided by an existing tried and tested application architecture to a fancy new microservice-based one, there may be some nervousness, especially if the functionality being migrated is critical to your organization. One way to make sure the new functionality is working well without risking the existing system behavior is to make use of the parallel run pattern: running both your monolithic implementat...
+
+---
+
+## Performance
+
+Performance Databases, especially relational databases, are good at joining data across different tables. Very good. So good, in fact, that we take this for granted. Often, though, when we split databases apart in the name of microservices, we end up having to move join operations from the data tier up into the microservices themselves. And try as we might, it’s unlikely to be as fast. Consider Figure 3-6 , which illustrates a situation we find ourselves in regarding MusicCorp. We’ve decided to ...
+
+---
+
+## Data Integrity
+
+microservice in bulk, or perhaps even by caching the required album information locally. Data Integrity Databases can be useful in ensuring integrity of our data. Coming back to Figure 3-6 , with both the Album and Ledger tables being in the same database, we could (and likely would) define a foreign key relationship between the rows in the Ledger table and the Album table. This would ensure that we’d always be able to navigate from a record in the Ledger table back to information about the albu...
+
+---
+
+## Transactions
+
+microservice in bulk, or perhaps even by caching the required album information locally. Data Integrity Databases can be useful in ensuring integrity of our data. Coming back to Figure 3-6 , with both the Album and Ledger tables being in the same database, we could (and likely would) define a foreign key relationship between the rows in the Ledger table and the Album table. This would ensure that we’d always be able to navigate from a record in the Ledger table back to information about the albu...
+
+---
+
+### Tooling
+
+For people moving from a system in which all state changes could be managed in a single transactional boundary, the shift to distributed systems can be a shock, and often the reaction is to look to implement distributed transactions to regain the guarantees that ACID transactions gave us with simpler architectures. Unfortunately, as we’ll cover in depth in “Database Transactions” , distributed transactions are not only complex to implement, even when done well, but they also don’t actually give ...
+
+---
+
+## Reporting Database
+
+interfaces, which make independent deployability possible. Unfortunately, this causes us issues when we do have legitimate use cases for accessing data from more than one microservice, or when that data is better made available in a database, rather than via something like a REST API. With a reporting database, we instead create a dedicated database that is designed for external access, and we make it the responsibility of the microservice to push data from internal storage to the externally acc...
 
 ---
 
 ## Summary
 
-| Concept | One-Line Summary |
-|---------|-----------------|
-| Incremental migration | Chip away one service at a time; don't big-bang rewrite |
-| Goal-first | Know *why* you're splitting before you split |
-| Strangler Fig | Proxy pattern to intercept and redirect traffic to new services |
-| Database decomposition | Hardest step; do schema separation before code extraction |
-| Premature splitting | Splitting too early locks you into wrong boundaries |
+reporting database is the responsibility of the people who develop the microservice itself. Summary So, to distill things down, when embarking on work to migrate functionality from a monolithic architecture to a microservice architecture, you must have a clear understanding of what you expect to achieve. This goal will shape how you go about the work and will also help you understand whether you’re moving in the right direction. Migration should be incremental. Make a change, roll that change ou...
+
+---

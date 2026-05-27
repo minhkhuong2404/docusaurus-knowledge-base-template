@@ -43,7 +43,7 @@ When you inject a service bean containing a `@Transactional` method, Spring dyna
 3. **Completion:** After the method returns, the proxy automatically commits the transaction. If a `RuntimeException` or `Error` occurs, the proxy rolls the transaction back.
 
 ### ⚠️ Senior Deep Dive: The "Self-Invocation" Proxy Pitfall
-Because Spring uses proxies, the proxy only intercepts calls coming from *outside* the bean. If you call a `@Transactional` method from another method *within the same class*, the proxy is bypassed entirely, and no transaction is created.
+Because Spring uses proxies to handle cross-cutting concerns (like transactions), the proxy only intercepts calls coming from *outside* the bean. If you call a `@Transactional` method from another method *within the same class*, the proxy is bypassed entirely, and no transaction is created.
 
 **Incorrect Implementation (Transaction Bypassed):**
 ```java
@@ -63,8 +63,58 @@ public class OrderService {
 }
 ```
 
-**Correct Implementation:**
-To fix this, the transactional method should be in a separate injected service, or you must inject the service into itself (Self-Injection), though moving it to a dedicated service is the cleaner architectural choice.
+**Correct Remediation Strategies:**
+
+#### 1. Splitting Beans (Recommended)
+Move the transactional method to a separate service class. This adheres to the **Single Responsibility Principle** and makes dependencies clean.
+```java
+@Service
+public class OrderService {
+    @Autowired private InventoryService inventoryService;
+
+    public void placeOrder() {
+        // ... some logic
+        inventoryService.updateInventory(); // Runs through the proxy!
+    }
+}
+
+@Service
+public class InventoryService {
+    @Transactional
+    public void updateInventory() {
+        // Database updates here
+    }
+}
+```
+
+#### 2. Self-Injection (Lazy Loading)
+If splitting is not feasible, you can inject the bean into itself. We use `@Lazy` or constructor injection to prevent circular dependency resolution issues.
+```java
+@Service
+public class OrderService {
+    @Autowired @Lazy private OrderService self; // Self-injecting the proxy
+
+    public void placeOrder() {
+        // ... some logic
+        self.updateInventory(); // Invoked on the proxy instance!
+    }
+
+    @Transactional
+    public void updateInventory() {
+        // Database updates here
+    }
+}
+```
+
+#### 3. Using `AopContext.currentProxy()` (Framework Bound)
+You can fetch the current active proxy dynamically. Note that this requires enabling expose-proxy (`@EnableAspectJAutoProxy(exposeProxy = true)`).
+```java
+public void placeOrder() {
+    // ... some logic
+    ((OrderService) AopContext.currentProxy()).updateInventory(); // Runs through proxy
+}
+```
+*Avoid this in general production development, as it tightly couples your business code to Spring AOP internals.*
 
 ---
 

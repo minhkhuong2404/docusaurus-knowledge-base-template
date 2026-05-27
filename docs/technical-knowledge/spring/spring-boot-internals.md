@@ -271,6 +271,10 @@ public class CacheProperties {
     private int maxSize;
     // getters and setters
 }
+
+// Or using Java Records (Spring Boot 3.x Constructor Binding):
+@ConfigurationProperties(prefix = "app.cache")
+public record CacheProperties(boolean enabled, int ttl, int maxSize) {}
 ```
 
 **Binding features:**

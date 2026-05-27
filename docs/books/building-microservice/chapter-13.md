@@ -7,249 +7,131 @@ tags:
 - building-microservice
 - chapter-13
 ---
+
 # Chapter 13: Scaling
 
-**Part II — Implementation**
+**Part I — Foundation**
 
-> Microservices enable targeted, independent scaling. But not all scaling problems are the same. This chapter introduces the four axes of scaling and how to apply them intelligently.
-
----
-
-## Why Scale?
-
-Scaling isn't just about handling more traffic. You scale for:
-- **Performance** — reduce response latency
-- **Throughput** — handle more requests per second
-- **Availability** — survive the failure of individual nodes
-
-Microservices enable *selective* scaling: if the Catalog service is under load, scale just the Catalog service — not everything.
+> “You’re	gonna	need	a	bigger	boat.”
 
 ---
 
 ## The Four Axes of Scaling
 
-Sam Newman adapts Martin Abbott and Michael Fisher's **Scale Cube** into four axes:
+Chapter 13. Scaling “You’re gonna need a bigger boat.” — Chief Brody, Jaws When we scale our systems, we do so for one of two reasons. Firstly, it allows us to improve the performance of our system, perhaps by allowing us to handle more load or by improving latency. Secondly, we can scale our system to improve its robustness. In this chapter, we’ll look at a model to describe the different types of scaling, and then we’ll look in detail at how each type of scaling can be implemented using a micr...
 
-### Axis 1: Vertical Scaling (Scale Up)
-Add more resources (CPU, RAM) to existing instances.
+---
 
-```
-Before: 2 CPU, 4GB RAM
-After:  8 CPU, 16GB RAM
-```
+## Vertical Scaling
 
-Simple to implement, no code changes. But there's a ceiling — you can't vertically scale forever, and it can get expensive fast.
+Vertical scaling In a nutshell, this means getting a bigger machine. Horizontal duplication Having multiple things capable of doing the same work. Data partitioning Dividing work based on some attribute of the data, e.g., customer group. Functional decomposition Separation of work based on the type, e.g., microservice decomposition. Understanding what combination of these scaling techniques is most appropriate will fundamentally come down to the nature of the scaling issue you are facing. To exp...
 
-**Best for:** Quick short-term relief for resource-constrained services.
+---
 
-### Axis 2: Horizontal Duplication (Scale Out)
-Run multiple identical instances behind a load balancer.
+## Horizontal Duplication
 
-```
-              Load Balancer
-             /       |       \
-    Instance 1  Instance 2  Instance 3
-```
+we’ll look at, vertical scaling is unlikely to have much impact in improving your system’s robustness. Finally, as the machines get larger, they get more expensive—but not always in a way that is matched by the increased resources available to you. Sometimes this means it can be more cost effective to have a larger number of small machines, rather than a smaller number of large machines. Horizontal Duplication With horizontal duplication, you duplicate part of your system to handle more workload...
 
-This is the primary scaling mechanism for stateless microservices. Kubernetes makes this trivial:
-```bash
-kubectl scale deployment order-service --replicas=5
-```
+---
 
-Or with Horizontal Pod Autoscaler (HPA):
-```yaml
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: order-service-hpa
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: order-service
-  minReplicas: 2
-  maxReplicas: 20
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: 60
-```
+## Data Partitioning
 
-**Requirement:** The service must be **stateless** — no in-memory state that differs between instances. Use Redis for shared session/cache.
+experiencing scaling issues. Much of the work here is in implementing your load distribution mechanisms. These can range from the simple, such as HTTP load balancing, to the more complex, such as using a message broker or configuring database read replicas. You are relying on this load distribution mechanism to do its job—coming to grips with how it works and with any limitations of your specific choice will be key. Some systems might place additional requirements on the load distribution mechan...
 
-### Axis 3: Data Partitioning (Shard / Functional Decomposition)
-Split by data characteristics — route different subsets of data to different instances.
+---
 
-**Example — Sharding by customer region:**
-```
-Requests for EU customers → EU Order Service cluster → EU database
-Requests for US customers → US Order Service cluster → US database
-```
+## Functional Decomposition
 
-**Example — Functional decomposition:**
-Split a large service into smaller, focused services. Order Service splits into:
-- `order-creation-service` (write-heavy)
-- `order-query-service` (read-heavy, backed by a read replica or Elasticsearch)
+We can also hit an issue with queries. Looking up an individual record is easy, as I can just apply the hashing function to find which instance the data should be on and then retrieve it from the correct shard. But what about queries that span the data in multiple nodes—for example, finding all the customers who are over 18? If you want to query all shards, you need to either query each individual shard and join in memory or else have an alternative read store where both data sets are available....
 
-This is Command Query Responsibility Segregation (CQRS) — reads and writes scale independently.
+---
 
-**CQRS with Spring:**
-```java
-// Command side — writes to PostgreSQL
-@Service
-public class OrderCommandService {
-    public void createOrder(CreateOrderCommand cmd) {
-        Order order = new Order(cmd);
-        orderRepository.save(order);
-        eventPublisher.publish(new OrderCreatedEvent(order));
-    }
-}
+## Combining Models
 
-// Query side — reads from denormalized Elasticsearch index
-@Service
-public class OrderQueryService {
-    public List<OrderSummary> getOrdersForCustomer(String customerId) {
-        return elasticsearchTemplate.search(
-            Query.of(q -> q.term(t -> t.field("customerId").value(customerId))),
-            OrderSummary.class
-        ).getSearchHits().stream()
-            .map(SearchHit::getContent)
-            .collect(toList());
-    }
-}
-```
+to microservices potentially brings with it a host of other things that the organization is looking for. In the case of FoodCo, for example, its drive to grow its development team to both support more countries and deliver more features is key, so a migration toward microservices offers the company a chance to solve not only some of its system scaling issues but also its organizational scaling issues as well. Combining Models One of the main drivers behind the original Scale Cube was to stop us ...
 
-### Axis 4: Caching
-Reduce load by storing frequently accessed, infrequently changing data in a fast cache.
+---
 
-**Types of caches:**
+## Start Small
 
-| Type | Example | Use |
-|---|---|---|
-| In-process | Caffeine | Per-instance cache; invalidation tricky with multiple instances |
-| Distributed | Redis | Shared across instances; consistent |
-| HTTP cache | CDN, Varnish | Cache public HTTP responses at the edge |
+optimization is the root of all evil (or at least most of it) in programming. Optimizing our system to solve problems we don’t have is a great way to waste time that could be better spent on other activities, and also to ensure that we have a system that is needlessly more complex. Any form of optimization should be driven by real need. As we talked about in “Robustness” , adding new complexity to our system can introduce new sources of fragility as well. By scaling one part of our application, ...
 
-**Spring Boot + Redis:**
-```java
-@Configuration
-@EnableCaching
-public class CacheConfig {
-    @Bean
-    public RedisCacheConfiguration cacheConfig() {
-        return RedisCacheConfiguration.defaultCacheConfig()
-            .entryTtl(Duration.ofMinutes(10))
-            .serializeValuesWith(RedisSerializationContext.SerializationPair
-                .fromSerializer(new GenericJackson2JsonRedisSerializer()));
-    }
-}
+---
 
-@Service
-public class ProductService {
-    @Cacheable(value = "products", key = "#productId")
-    public Product getProduct(String productId) {
-        return productRepository.findById(productId).orElseThrow();
-    }
+## Caching
 
-    @CacheEvict(value = "products", key = "#product.id")
-    public void updateProduct(Product product) {
-        productRepository.save(product);
-    }
-}
-```
+Arguably, CQRS is doing something very similar in our application tier to what read replicas can do in the data tier, although due to the large number of different ways CQRS can be implemented, this is a simplification. Personally, although I see value in the CQRS pattern in some situations, it’s a complex pattern to execute well. I’ve spoken to very smart people who have hit not insignificant issues in making CQRS work. As such, if you are considering CQRS as a way to help scale your applicatio...
+
+---
+
+## For Performance
+
+stock levels before recommending an item—there isn’t any point in recommending something we don’t have in stock! But we’ve decided to keep a local copy of stock levels in Recommendation (a form of client-side caching) to improve the latency of our operations—we avoid the need to check stock levels whenever we need to recommend something. The source of truth for stock levels is the Inventory microservice, which is considered to be the origin for the client cache in the Recommendation microservice...
+
+---
+
+## For Scale
+
+For Scale If you can divert reads to caches, you can avoid contention on parts of your system to allow it to better scale. An example of this that we’ve already covered in this chapter is the use of database read replicas. The read traffic is served by the read replicas, reducing the load on the primary database node and allowing reads to be scaled effectively. The reads on a replica are done against data that might be stale. The read replica will eventually get updated by the replication from p...
+
+---
+
+## For Robustness
+
+For Scale If you can divert reads to caches, you can avoid contention on parts of your system to allow it to better scale. An example of this that we’ve already covered in this chapter is the use of database read replicas. The read traffic is served by the read replicas, reducing the load on the primary database node and allowing reads to be scaled effectively. The reads on a replica are done against data that might be stale. The read replica will eventually get updated by the replication from p...
+
+---
+
+## Where to Cache
+
+For Scale If you can divert reads to caches, you can avoid contention on parts of your system to allow it to better scale. An example of this that we’ve already covered in this chapter is the use of database read replicas. The read traffic is served by the read replicas, reducing the load on the primary database node and allowing reads to be scaled effectively. The reads on a replica are done against data that might be stale. The read replica will eventually get updated by the replication from p...
+
+---
+
+## Invalidation
+
+The benefits here are obvious. This is super efficient, for one thing. However, we need to recognize that this form of caching is highly specific. We’ve only cached the result of this specific request. This means that other operations that hit Sales or Catalog won’t be hitting a cache and thus won’t benefit in any way from this form of optimization. Invalidation There are only two hard things in Computer Science: cache invalidation and naming things. — Phil Karlton Invalidation is the process by...
+
+---
+
+## The Golden Rule of Caching
+
+updated. Conceptually, you can think of the cache as a buffer. Writing into the cache is faster than updating the origin. So we write the result into the cache, allowing faster subsequent reads, and trust that the origin will be updated afterward. The main concern around write-behind caches is going to be the potential for data loss. If the cache itself isn’t durable, we could lose the data before the data is written to the origin. Additionally, we’re now in an interesting spot—what is the origi...
+
+---
+
+## Freshness Versus Optimization
+
+request from Recommendation to Inventory to get an up-to-date stock level, but unbeknownst to us, our request hits the server-side cache, which at this point could also be up to one minute old. So we could end up storing a record in our client-side cache that is already up to one minute old from the start. This means that the stock levels Recommendation is using could potentially be up to two minutes out of date, even though from the point of view of Recommendation , we think they could be only ...
+
+---
+
+## Cache Poisoning: A Cautionary Tale
+
+Balancing these forces is going to come down to understanding the requirements of the end user and of the wider system. Users will obviously always want to operate on the freshest data, but not if that means the system falls down under load. Likewise, sometimes the safest thing to do is to turn off features if a cache fails, in order to avoid an overload on the origin causing more serious issues. When it comes to fine-tuning what, where, and how to cache, you’ll often find yourself having to bal...
 
 ---
 
 ## Autoscaling
 
-Manual scaling is reactive; autoscaling is proactive.
-
-### Metrics-Based Autoscaling
-Scale based on CPU, memory, or custom metrics:
-
-```yaml
-# Scale on custom Kafka consumer lag metric
-- type: External
-  external:
-    metric:
-      name: kafka_consumer_group_lag
-      selector:
-        matchLabels:
-          topic: order-events
-          group: inventory-service
-    target:
-      type: AverageValue
-      averageValue: "1000"  # Scale up when average lag > 1000 messages
-```
-
-### KEDA (Kubernetes Event-Driven Autoscaling)
-KEDA scales based on event sources — Kafka lag, SQS queue depth, Cron schedule:
-```yaml
-apiVersion: keda.sh/v1alpha1
-kind: ScaledObject
-metadata:
-  name: inventory-service-scaler
-spec:
-  scaleTargetRef:
-    name: inventory-service
-  triggers:
-    - type: kafka
-      metadata:
-        bootstrapServers: kafka:9092
-        consumerGroup: inventory-service
-        topic: order-events
-        lagThreshold: "100"
-```
+cache. However, that wasn’t enough. As we just discussed, you can cache in multiple places—but sometimes having lots of caches makes your life harder, not easier. When it comes to serving up content to users of a public-facing web application, you could have multiple caches between you and your customer. Not only might you be fronting your website with something like a content delivery network, but some ISPs make use of caching. Can you control those caches? And even if you could, there is one c...
 
 ---
 
-## Database Scaling
+## Starting Again
 
-The database is often the bottleneck when scaling microservices. Options:
-
-### Read Replicas
-Direct read traffic to replicas; writes go to the primary. Useful for read-heavy workloads.
-
-```yaml
-# Spring datasource routing
-spring:
-  datasource:
-    primary:
-      url: jdbc:postgresql://primary-db:5432/orders
-    replica:
-      url: jdbc:postgresql://replica-db:5432/orders
-```
-
-### Connection Pooling
-Each microservice instance needs database connections. With 20 instances of order-service, you quickly exhaust PostgreSQL's default 100 connection limit. Use **PgBouncer** as a connection pooler in front of PostgreSQL.
-
-### Database Sharding
-Partition data across multiple database instances by a shard key (e.g., customer ID). Complex to implement; avoid until truly necessary.
-
----
-
-## CAP Theorem and Scaling Trade-offs
-
-When scaling distributed systems, you inevitably face trade-offs defined by the CAP theorem:
-- **C**onsistency — every read receives the most recent write
-- **A**vailability — every request receives a response
-- **P**artition Tolerance — system continues to operate despite network partition
-
-In practice, partition tolerance is unavoidable in distributed systems. So you choose between Consistency and Availability when a partition occurs.
-
-**Most microservice use cases favor Availability + Eventual Consistency** — be available and eventually become consistent, rather than blocking operations to guarantee immediate consistency.
+impact on the architecture of your system—vertical scaling and horizontal duplication, for example. At certain points, though, you need to do something pretty radical to change the architecture of your system to support the next level of growth. Recall the story of Gilt, which we touched on in “Isolated Execution” . A simple monolithic Rails application did well for Gilt for two years. Its business became increasingly successful, which meant more customers and more load. At a certain tipping poi...
 
 ---
 
 ## Summary
 
-| Axis | Technique | Best For |
-|---|---|---|
-| Vertical | Scale up CPU/RAM | Quick relief; early-stage scaling |
-| Horizontal | Multiple instances + LB | Stateless services — the primary scaling mechanism |
-| Data Partitioning | Sharding, CQRS | Read/write imbalance; region-based data |
-| Caching | Redis, CDN, Caffeine | Frequently-read, rarely-changed data |
-| Autoscaling | HPA, KEDA | Dynamic workloads, cost efficiency |
+The scaling axes can be a useful model to use when considering what types of scaling are available to you: Vertical scaling In a nutshell, this means getting a bigger machine. Horizontal duplication Having multiple things capable of doing the same work. Data partitioning Dividing work based on some attribute of the data, e.g., customer group. Functional decomposition Separation of work based on the type, e.g., microservice decomposition. Key to a lot of this is understanding what it is you want—...
+
+---
+
+## III. People
+
+Part III. People
+
+---

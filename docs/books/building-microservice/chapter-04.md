@@ -7,211 +7,191 @@ tags:
 - building-microservice
 - chapter-04
 ---
+
 # Chapter 4: Microservice Communication Styles
 
 **Part I — Foundation**
 
-> Services must talk to each other. This chapter surveys the landscape of inter-service communication — synchronous vs. asynchronous, request/response vs. event-driven — and the trade-offs of each.
+> Getting	communication	between	microservices	right	is	problematic	for	many
 
 ---
 
-## The Communication Landscape
+## From In-Process to Inter-Process
 
-When one microservice needs something from another, it has two fundamental choices:
-
-1. **Synchronous** — caller waits for a response
-2. **Asynchronous** — caller sends a message and continues; it may get a response later or not at all
-
-And two interaction styles:
-
-1. **Request/Response** — caller explicitly asks; receives an answer
-2. **Event-Driven** — services react to things that have happened
-
-These two axes combine into four styles. Understanding them is essential to making the right architecture choices.
+Chapter 4. Microservice Communication Styles Getting communication between microservices right is problematic for many due in great part, I feel, to the fact that people gravitate toward a chosen technological approach without first considering the different types of communication they might want. In this chapter, I’ll try and tease apart the different styles of communication to help you understand the pros and cons of each, as well as which approach will best fit your problem space. We’ll be lo...
 
 ---
 
-## Synchronous Blocking Communication
+## Performance
 
-The caller sends a request and **waits** until it gets a response before continuing.
-
-```
-Service A  ──── request ────►  Service B
-Service A  ◄─── response ────  Service B
-(A is blocked until B replies)
-```
-
-### Advantages
-- Simple mental model — works like a method call
-- Easy to reason about success/failure
-- Natural for request/response use cases (e.g., "get product details")
-
-### Disadvantages
-- **Temporal coupling** — if B is slow or unavailable, A is stuck
-- Cascading failures — a slow downstream service can exhaust A's thread pool
-- Scales poorly under latency
-
-### Common technologies
-- **REST over HTTP** — the default for most Java/Spring teams
-- **gRPC** — binary, schema-driven, very efficient; good for internal service-to-service calls
-- **GraphQL** — useful for aggregating data for UI clients
+The performance of an in-process call is fundamentally different from that of an inter-process call. When I make an in-process call, the underlying compiler and runtime can carry out a whole host of optimizations to reduce the impact of the call, including inlining the invocation so it’s as though there was never a call in the first place. No such optimizations are possible with inter-process calls. Packets have to be sent. Expect the overhead of an inter-process call to be significant compared ...
 
 ---
 
-## Asynchronous Non-Blocking Communication
+## Changing Interfaces
 
-The caller sends a message and **does not wait**. Work continues independently. This decouples services in time.
-
-```
-Service A  ──── message ────►  Message Broker  ──── delivers ────►  Service B
-(A continues immediately)
-```
-
-### Advantages
-- No temporal coupling — B can be offline; messages queue up
-- Better resilience — downstream slowness doesn't block the caller
-- Natural for long-running processes
-
-### Disadvantages
-- More complex mental model
-- Harder to trace failures end-to-end
-- Requires message broker infrastructure (Kafka, RabbitMQ, etc.)
+aware if they are doing something that will result in a network call; otherwise, you should not be surprised if you end up with some nasty performance bottlenecks further down the line caused by odd inter-service interactions that weren’t visible to the developer writing the code. Changing Interfaces When we consider changes to an interface inside a process, the act of rolling out the change is straightforward. The code implementing the interface and the code calling the interface are all packag...
 
 ---
 
-## Communication Patterns
+## Error Handling
 
-### 1. Request/Response (Synchronous or Async)
-
-The caller explicitly requests something and expects a result. Can be done synchronously (HTTP) or asynchronously (request sent to queue; response comes back on reply queue).
-
-**Synchronous example (Spring):**
-```java
-// RestTemplate or WebClient
-ResponseEntity<OrderDto> response = restTemplate.getForEntity(
-    "http://order-service/orders/{id}", OrderDto.class, orderId);
-```
-
-**Asynchronous request-response:**
-- Caller sends a message with a `correlationId` and `replyTo` address
-- Responder processes and sends result to `replyTo` queue
-- Caller picks up result by matching `correlationId`
-
-### 2. Event-Driven Communication
-
-Services publish events when something happens. Other services subscribe and react. No direct coupling — the publisher doesn't know who's listening.
-
-```
-Order Service ──► "OrderPlaced" event ──► [ Broker ]
-                                              │
-                              ┌───────────────┼─────────────────┐
-                              ▼               ▼                 ▼
-                     Notification       Inventory         Recommendation
-                       Service           Service             Service
-```
-
-**Example (Spring + Kafka):**
-```java
-// Publisher
-kafkaTemplate.send("order-events", new OrderPlacedEvent(orderId, customerId));
-
-// Subscriber
-@KafkaListener(topics = "order-events")
-public void onOrderPlaced(OrderPlacedEvent event) {
-    notificationService.sendConfirmation(event.getCustomerId());
-}
-```
-
-Events are the most powerful form of decoupling. The Order service doesn't know or care about Notifications, Inventory, or Recommendations.
-
-### 3. Common Data (Event Collaboration via Shared Store)
-Services communicate by reading and writing to shared data stores (e.g., a data lake or S3). Less common in real-time microservices, more common in data pipeline architectures.
+aware if they are doing something that will result in a network call; otherwise, you should not be surprised if you end up with some nasty performance bottlenecks further down the line caused by odd inter-service interactions that weren’t visible to the developer writing the code. Changing Interfaces When we consider changes to an interface inside a process, the act of rolling out the change is straightforward. The code implementing the interface and the code calling the interface are all packag...
 
 ---
 
-## Choosing a Style
+## Technology for Inter-Process Communication: So Many Choices
 
-| Question | Recommendation |
-|----------|----------------|
-| Do you need an immediate response? | Synchronous request/response |
-| Is the operation long-running? | Async + polling or callback |
-| Does one event need to trigger many services? | Event-driven |
-| Are services from different teams? | Prefer async; reduces inter-team coordination |
-| Is the domain transactional (e.g., payment)? | Be careful — consider sagas (Chapter 6) |
+service is telling the client that there is something wrong with the original request. As such, it’s probably something you should give up on—is there any point retrying a 404 Not Found , for example? The 500 series response codes relate to downstream issues, a subset of which indicate to the client that the issue might be temporary. A 503 Service Unavailable , for example, indicates that the downstream server is unable to handle the request, but it may be a temporary state, in which case an ups...
 
 ---
 
-## The Choreography vs. Orchestration Debate
+## Styles of Microservice Communication
 
-Two patterns for coordinating multi-service workflows:
-
-### Orchestration (Centralized)
-One service explicitly tells others what to do, step by step.
-
-```
-Order Service (Orchestrator)
-  ├── calls Inventory: "reserve stock"
-  ├── calls Payments: "charge customer"
-  └── calls Shipping: "dispatch"
-```
-
-Pros: Easy to see the full workflow in one place.
-Cons: The orchestrator becomes tightly coupled to all other services.
-
-### Choreography (Decentralized)
-Services react to events emitted by others. No central controller.
-
-```
-Order Service emits "OrderCreated"
-  → Inventory reacts: reserves stock, emits "StockReserved"
-  → Payments reacts to "StockReserved": charges customer, emits "PaymentTaken"
-  → Shipping reacts to "PaymentTaken": dispatches
-```
-
-Pros: True decoupling; services don't know about each other.
-Cons: Harder to see the full workflow; debugging requires event tracing tools.
-
-:::info[Most real systems use a mix. Start with choreography for loose coupling; use orchestration only where visibility into the workflow is critical (e.g., user-facing checkout).]
-:::
+considering whether it actually fits their problem. Thus when it comes to the bewildering array of technology available to us for communication between microservices, I think it’s important to talk first about the style of communication you want, and only then look for the right technology to implement that style. With that in mind, let’s take a look at a model I’ve been using for several years to help distinguish between the different approaches for microservice-to-microservice communication, w...
 
 ---
 
-## Schema and Contract Evolution
+## Mix and Match
 
-No matter which style you choose, you need a strategy for changing APIs without breaking consumers.
+Mix and Match It’s important to note that a microservice architecture as a whole may have a mix of styles of collaboration, and this is typically the norm. Some interactions just make sense as request-response, while others make sense as event-driven. In fact, it’s common for a single microservice to implement more than one form of collaboration. Consider an Order microservice that exposes a request-response API that allows for orders to be placed or changed and then fires events when these chan...
 
-### Backward Compatible Changes (Safe)
-- Adding new optional fields to a response
-- Adding new endpoints
+---
 
-### Breaking Changes (Dangerous)
-- Removing fields consumers rely on
-- Renaming fields
-- Changing field types
+## Pattern: Synchronous Blocking
 
-### Strategies
-1. **Semantic Versioning** of APIs: `/v1/orders`, `/v2/orders`
-2. **Expand and Contract**: add new field + old field together; migrate consumers; then remove old field
-3. **Tolerant Reader**: consumers ignore unknown fields (default in JSON; use `@JsonIgnoreProperties(ignoreUnknown = true)` in Jackson)
+Mix and Match It’s important to note that a microservice architecture as a whole may have a mix of styles of collaboration, and this is typically the norm. Some interactions just make sense as request-response, while others make sense as event-driven. In fact, it’s common for a single microservice to implement more than one form of collaboration. Consider an Order microservice that exposes a request-response API that allows for orders to be placed or changed and then fires events when these chan...
 
-```java
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class OrderDto {
-    private String orderId;
-    private String status;
-    // Ignores any new fields added by the server — safe to evolve
-}
-```
+---
+
+## Advantages
+
+Advantages There is something simple and familiar about a blocking, synchronous call. Many of us learned to program in a fundamentally synchronous style—reading a piece of code like a script, with each line executing in turn, and with the next line of code waiting its turn to do something. Most of the situations in which you would have used inter-process calls were probably done in a synchronous, blocking style—running a SQL query on a database, for example, or making an HTTP request of a downst...
+
+---
+
+## Disadvantages
+
+Advantages There is something simple and familiar about a blocking, synchronous call. Many of us learned to program in a fundamentally synchronous style—reading a piece of code like a script, with each line executing in turn, and with the next line of code waiting its turn to do something. Most of the situations in which you would have used inter-process calls were probably done in a synchronous, blocking style—running a SQL query on a database, for example, or making an HTTP request of a downst...
+
+---
+
+## Where to Use It
+
+slowly. Thus the use of synchronous calls can make a system vulnerable to cascading issues caused by downstream outages more readily than can the use of asynchronous calls. Where to Use It For simple microservice architectures, I don’t have a massive problem with the use of synchronous, blocking calls. Their familiarity for many people is an advantage when coming to grips with distributed systems. For me, these types of calls begin to be problematic when you start having more chains of calls—in ...
+
+---
+
+## Pattern: Asynchronous Nonblocking
+
+Figure 4-4. Moving Fraud Detection to a background process can reduce concerns around the length of the call chain Of course, we could also replace the use of blocking calls with some style of nonblocking interaction without changing the workflow here, an approach we’ll explore next. Pattern: Asynchronous Nonblocking With asynchronous communication, the act of sending a call out over the network doesn’t block the microservice issuing the call. It is able to carry on with any other processing wit...
+
+---
+
+## Advantages
+
+Communication through common data The upstream microservice changes some common data, which one or more microservices later make use of. Request-response A microservice sends a request to another microservice asking it to do something. When the requested operation completes, whether successfully or not, the upstream microservice receives the response. Specifically, any instance of the upstream microservice should be able to handle the response. Event-driven interaction A microservice broadcasts ...
+
+---
+
+## Disadvantages
+
+communication. Figure 4-5. The Order Processor kicks off the process to package and ship an order, which is done in an asynchronous fashion If we tried doing something similar with synchronous blocking calls, then we’d have to restructure the interactions between Order Processor and Warehouse —it wouldn’t be feasible for Order Processor to open a connection, send a request, block any further operations in calling the thread, and wait for a response for what might be hours or days. Disadvantages ...
+
+---
+
+## Where to Use It
+
+Even though our exchange rates are being received in an asynchronous fashion, the use of await in this context means we are blocking until the state of latestRate is resolved. So even if the underlying technology we are using to get the rate could be considered asynchronous in nature (for example, waiting for the rate), from the point of our code, this is inherently a synchronous, blocking interaction. Where to Use It Ultimately, when considering whether asynchronous communication is right for y...
+
+---
+
+## Pattern: Communication Through Common Data
+
+Even though our exchange rates are being received in an asynchronous fashion, the use of await in this context means we are blocking until the state of latestRate is resolved. So even if the underlying technology we are using to get the rate could be considered asynchronous in nature (for example, waiting for the rate), from the point of our code, this is inherently a synchronous, blocking interaction. Where to Use It Ultimately, when considering whether asynchronous communication is right for y...
+
+---
+
+## Implementation
+
+Figure 4-6. One microservice writes out a file that other microservices make use of This pattern is in some ways the most common general inter-process communication pattern that you’ll see, and yet we sometimes fail to see it as a communication pattern at all—I think largely because the communication between processes is often so indirect as to be hard to spot. Implementation To implement this pattern, you need some sort of persistent store for the data. A filesystem in many cases can be enough....
+
+---
+
+## Advantages
+
+technology. If you can read or write to a file or read and write to a database, you can use this pattern. The use of prevalent and well-understood technology also enables interoperability between different types of systems, including older mainframe applications or customizable off-the-shelf (COTS) software products. Data volumes are also less of a concern here—if you’re sending lots of data in one big go, this pattern can work well. Disadvantages Downstream consuming microservices will typicall...
+
+---
+
+## Disadvantages
+
+technology. If you can read or write to a file or read and write to a database, you can use this pattern. The use of prevalent and well-understood technology also enables interoperability between different types of systems, including older mainframe applications or customizable off-the-shelf (COTS) software products. Data volumes are also less of a concern here—if you’re sending lots of data in one big go, this pattern can work well. Disadvantages Downstream consuming microservices will typicall...
+
+---
+
+## Where to Use It
+
+that might have restrictions on what technology they can use. Having an existing system talk to your microservice’s GRPC interface or subscribe to its Kafka topic might well be more convenient from the point of view of the microservice, but not from the point of view of a consumer. Older systems may have limitations on what technology they can support and may have high costs of change. On the other hand, even old mainframe systems should be able to read data out of a file. This does of course al...
+
+---
+
+## Pattern: Request-Response Communication
+
+that might have restrictions on what technology they can use. Having an existing system talk to your microservice’s GRPC interface or subscribe to its Kafka topic might well be more convenient from the point of view of the microservice, but not from the point of view of a consumer. Older systems may have limitations on what technology they can support and may have high costs of change. On the other hand, even old mainframe systems should be able to read data out of a file. This does of course al...
+
+---
+
+## Implementation: Synchronous Versus Asynchronous
+
+the request should be acted on. If the request it has been sent violates internal logic, the microservice should reject it. Although it’s a subtle difference, I don’t feel that the term command conveys the same meaning. I’ll stick to using request over command , but whatever term you decide to use, just remember that a microservice gets to reject the request/command if appropriate. Implementation: Synchronous Versus Asynchronous Request-response calls like this can be implemented in either a blo...
+
+---
+
+## Where to Use It
+
+One last note: all forms of request-response interaction are likely going to require some form of time-out handling to avoid issues where the system gets blocked waiting for something that may never happen. How this time-out functionality is implemented can vary based on the implementation technology, but it will be needed. We’ll look at time-outs in more detail in Chapter 12 . PARALLEL VERSUS SEQUENTIAL CALLS When working with request-response interactions, you’ll often encounter a situation in...
+
+---
+
+## Pattern: Event-Driven Communication
+
+implementation, with the same trade-offs we discussed earlier. Pattern: Event-Driven Communication Event-driven communication looks quite odd compared to request-response calls. Rather than a microservice asking some other microservice to do something, a microservice emits events that may or may not be received by other microservices. It is an inherently asynchronous interaction, as the event listeners will be running on their own thread of execution. An event is a statement about something that...
+
+---
+
+## Implementation
+
+create more autonomous teams. Rather than holding all the responsibility centrally, we want to push it into the teams themselves to allow them to operate in a more autonomous fashion—a concept we will revisit in Chapter 15 . Here, we are pushing responsibility from Warehouse into Notifications and Payment —this can help us reduce the complexity of microservices like Warehouse and lead to a more even distribution of “smarts” in our system. We’ll explore that idea in more detail when we compare ch...
+
+---
+
+## What’s in an Event?
+
+using it to handle publishing and subscribing to events. If you don’t already have one, give Atom a look, but be aware of the sunk cost fallacy. If you find yourself wanting more and more of the support that a message broker gives you, at a certain point you might want to change your approach. In terms of what we actually send over these asynchronous protocols, the same considerations apply as with synchronous communication. If you are currently happy with encoding requests and responses using J...
+
+---
+
+## Where to Use It
+
+event, the more assumptions external parties will have about the event. My general rule is that I am OK putting information into an event if I’d be happy sharing the same data over a request-response API. Where to Use It Event-driven collaboration thrives in situations in which information wants to be broadcast, and in situations in which you are happy to invert intent. Moving away from a model of telling other things what to do and instead letting downstream microservices work this out for them...
+
+---
+
+## Proceed with Caution
+
+Some of this asynchronous stuff seems fun, right? Event-driven architectures seem to lead to significantly more decoupled, scalable systems. And they can. But these communication styles do lead to an increase in complexity. This isn’t just the complexity required to manage publishing and subscribing to messages, as we just discussed, but also complexity in the other problems we might face. For example, when considering long-running async request-response, we have to think about what to do when t...
 
 ---
 
 ## Summary
 
-| Style | Blocking? | Use When |
-|-------|-----------|----------|
-| Sync Request/Response | Yes | Need immediate answer; simple use case |
-| Async Request/Response | No | Long-running; caller doesn't need to wait |
-| Event-Driven | No | One change should trigger many services |
-| Common Data | No | Batch/data pipeline scenarios |
-| Orchestration | — | Workflow visibility is important |
-| Choreography | — | Maximum decoupling between teams |
+immediately obvious if you are familiar only with synchronous point-to-point communication. The associated complexity with event-driven architectures and asynchronous programming in general leads me to believe that you should be cautious in how eagerly you start adopting these ideas. Ensure you have good monitoring in place, and strongly consider the use of correlation IDs, which allow you to trace requests across process boundaries, as we’ll cover in depth in Chapter 10 . I also strongly recomm...
+
+---
+
+## II. Implementation
+
+Part II. Implementation
+
+---

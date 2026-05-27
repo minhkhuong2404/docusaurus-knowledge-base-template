@@ -610,9 +610,59 @@ After a full concurrent mark cycle, G1 picks the **highest-garbage-density** Old
 2. Check if old gen is filling up (memory leak?) or if young gen is too small (premature promotion)
 3. Consider switching to G1 or ZGC for better pause behavior
 
+## 12. Java Agents & Instrumentation (Telemetry Hooks)
+
+For Senior and Lead developers working on APM (Application Performance Monitoring) tools or custom frameworks, understanding **Java Agents** is essential.
+
+### What is a Java Agent?
+A Java Agent is a pluggable JVM-level tool that uses the **Java Instrumentation API** (`java.lang.instrument`) to intercept and modify the bytecode of classes loaded into the JVM.
+
+### Execution Mechanisms
+A Java Agent can be loaded in two ways:
+
+#### 1. Static Loading (`premain`)
+The agent is specified at JVM startup using the `-javaagent` flag. The JVM runs the agent's `premain` method *before* the application's `main` method starts.
+```java
+// Command: java -javaagent:myagent.jar -jar myapp.jar
+public static void premain(String agentArgs, Instrumentation inst) {
+    inst.addTransformer(new MyClassFileTransformer());
+}
+```
+
+#### 2. Dynamic Attachment (`agentmain`)
+The agent is dynamically loaded into a running JVM using the VirtualMachine API (from the `tools.jar` Attach API) after the application has already started.
+```java
+public static void agentmain(String agentArgs, Instrumentation inst) {
+    inst.addTransformer(new MyClassFileTransformer(), true);
+    // Force retransformation of already-loaded classes
+    inst.retransformClasses(TargetClass.class);
+}
+```
+
+### Bytecode Modification
+Inside the `ClassFileTransformer`, you inspect the class bytes, modify them (usually using libraries like **ByteBuddy**, **ASM**, or **Javassist**), and return the modified byte array:
+```java
+public class MyClassFileTransformer implements ClassFileTransformer {
+    @Override
+    public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined,
+                            ProtectionDomain protectionDomain, byte[] classfileBuffer) {
+        if ("com/example/service/BillingService".equals(className)) {
+            // Intercept billing methods, inject entry/exit logs or latency trackers
+            return injectLatencyProfilingBytes(classfileBuffer);
+        }
+        return null; // Return null to indicate no changes
+    }
+}
+```
+
+### Real-world Use Cases:
+1. **APM Tooling (Datadog, Dynatrace, New Relic):** Auto-instruments database drivers, HTTP controllers, and outbound clients to record transaction traces and execution metrics without changing application code.
+2. **Dynamic Profiling (async-profiler, Arthas):** Inspects class bytecode and system metrics dynamically in production.
+3. **Frameworks & Testing (Lombok, Mockito):** Lombok uses compile-time annotation processing, but Mockito uses runtime bytecode generation (ByteBuddy) to mock interfaces and classes.
+
 ---
 
-## 12. Reference Types & GC
+## 13. Reference Types & GC
 
 Java provides four reference types that influence garbage collection behavior:
 

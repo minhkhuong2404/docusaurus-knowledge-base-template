@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-962": {
+  "/-cf0": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-97e": {
+  "/-870": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -112,6 +112,10 @@
   "/tags/aggregate-80e": {
     "__comp": "df203c0f",
     "__props": "9f124b1e"
+  },
+  "/tags/aggregation-aff": {
+    "__comp": "df203c0f",
+    "__props": "c96f6f2d"
   },
   "/tags/alarms-786": {
     "__comp": "df203c0f",
@@ -480,6 +484,10 @@
   "/tags/broker-8c5": {
     "__comp": "df203c0f",
     "__props": "e98ee84e"
+  },
+  "/tags/bson-6cb": {
+    "__comp": "df203c0f",
+    "__props": "77409c84"
   },
   "/tags/bst-59f": {
     "__comp": "df203c0f",
@@ -1501,6 +1509,10 @@
     "__comp": "df203c0f",
     "__props": "2a0ed10e"
   },
+  "/tags/document-store-543": {
+    "__comp": "df203c0f",
+    "__props": "f9a720c8"
+  },
   "/tags/documentation-9e6": {
     "__comp": "df203c0f",
     "__props": "bf87ce40"
@@ -2193,6 +2205,10 @@
     "__comp": "df203c0f",
     "__props": "5d0c3cc2"
   },
+  "/tags/indexes-99e": {
+    "__comp": "df203c0f",
+    "__props": "a4c3bd58"
+  },
   "/tags/indexing-e44": {
     "__comp": "df203c0f",
     "__props": "abb89bd2"
@@ -2781,6 +2797,10 @@
     "__comp": "df203c0f",
     "__props": "d1481106"
   },
+  "/tags/memory-model-0db": {
+    "__comp": "df203c0f",
+    "__props": "331da4a6"
+  },
   "/tags/merge-260": {
     "__comp": "df203c0f",
     "__props": "537238f0"
@@ -3132,6 +3152,10 @@
   "/tags/operators-77b": {
     "__comp": "df203c0f",
     "__props": "7ded2ea3"
+  },
+  "/tags/ops-55f": {
+    "__comp": "df203c0f",
+    "__props": "f1a2dd99"
   },
   "/tags/optimistic-locking-d48": {
     "__comp": "df203c0f",
@@ -3757,6 +3781,10 @@
     "__comp": "df203c0f",
     "__props": "72ce7421"
   },
+  "/tags/replica-set-a7a": {
+    "__comp": "df203c0f",
+    "__props": "4e74af90"
+  },
   "/tags/replication-e99": {
     "__comp": "df203c0f",
     "__props": "68d3743e"
@@ -3956,6 +3984,10 @@
   "/tags/schema-fbe": {
     "__comp": "df203c0f",
     "__props": "3b5bfb5f"
+  },
+  "/tags/schema-design-f61": {
+    "__comp": "df203c0f",
+    "__props": "583a407d"
   },
   "/tags/schema-registry-73e": {
     "__comp": "df203c0f",
@@ -5025,7 +5057,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-b3c": {
+  "/-123": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -9376,6 +9408,10 @@
     "__comp": "17896441",
     "content": "ee229027"
   },
+  "/technical-knowledge/java/java-diagnostics-troubleshooting-139": {
+    "__comp": "17896441",
+    "content": "e89fd18d"
+  },
   "/technical-knowledge/java/java-fundamentals-c28": {
     "__comp": "17896441",
     "content": "fb6d755b"
@@ -9388,11 +9424,15 @@
     "__comp": "17896441",
     "content": "3744858f"
   },
+  "/technical-knowledge/java/java-jmm-memory-model-bb6": {
+    "__comp": "17896441",
+    "content": "331d11cc"
+  },
   "/technical-knowledge/java/java-jvm-d6c": {
     "__comp": "17896441",
     "content": "2fb67458"
   },
-  "/technical-knowledge/java/java-new-features-43d": {
+  "/technical-knowledge/java/java-new-features-4b7": {
     "__comp": "17896441",
     "content": "0366963e"
   },
@@ -10007,6 +10047,10 @@
   "/technical-knowledge/system-design/microservices-patterns-c72": {
     "__comp": "17896441",
     "content": "a912936e"
+  },
+  "/technical-knowledge/system-design/mongodb-deep-dive-b9e": {
+    "__comp": "17896441",
+    "content": "9aee46ea"
   },
   "/technical-knowledge/system-design/multi-step-process-df1": {
     "__comp": "17896441",

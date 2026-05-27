@@ -225,6 +225,130 @@ mutate(original);
 System.out.println(original);  // "original modified"
 ```
 
+### String Immutability & The String Constant Pool
+
+String is one of the most critical classes in Java. To save memory and increase performance, Java uses a unique memory management area called the **String Constant Pool** (located within the Heap).
+
+#### 1. String Immutability
+Once a `String` object is created, its value cannot be modified.
+- **Why is String immutable?**
+  1. **String Pool Cache:** If Strings were mutable, changing the value of one variable would silently change the values of other references pointing to the same pool object.
+  2. **Security:** Strings are widely used as parameters for database connection URLs, file paths, and network ports. Mutability would allow attackers to bypass security checks by modifying the string value after authorization.
+  3. **Thread Safety:** Immutability makes String objects inherently thread-safe without requiring external synchronization.
+  4. **HashCode Caching:** Since the string value cannot change, its `hashCode()` can be cached upon creation, making hash-based collections (like `HashMap` and `HashSet`) extremely fast when using strings as keys.
+
+#### 2. String Constant Pool (SCP)
+When you create a string literal, the JVM checks the SCP first:
+```java
+String s1 = "Hello"; // Checks pool. If not present, creates "Hello" in pool. s1 points to pool object.
+String s2 = "Hello"; // Checks pool. "Hello" is already present. s2 points to the SAME pool object.
+System.out.println(s1 == s2); // true (both point to same memory address)
+```
+
+If you use the `new` operator, you explicitly force heap allocation:
+```java
+String s3 = new String("Hello"); // Creates a brand new object in the normal Heap.
+System.out.println(s1 == s3); // false (different objects, different memory regions)
+```
+
+```
+       Heap Memory
+┌───────────────────────────────┐
+│  Normal Heap                  │
+│  ┌─────────────────┐          │
+│  │ s3 -> "Hello"   │          │
+│  └─────────────────┘          │
+│                               │
+│  String Constant Pool (SCP)   │
+│  ┌─────────────────┐          │
+│  │ s1, s2 ->"Hello"│          │
+│  └─────────────────┘          │
+└───────────────────────────────┘
+```
+
+#### 3. String Interning (`String.intern()`)
+Calling `.intern()` on a string checks the pool for a string with the identical character sequence. If present, it returns the pool reference. If not, it adds the string to the pool and returns its reference.
+```java
+String s4 = s3.intern();
+System.out.println(s1 == s4); // true (s4 now points to the pool instance)
+```
+
+---
+
+### String Concatenation & `invokedynamic` (Java 9+)
+
+Before Java 9, string concatenation (e.g., `String s = a + b + c`) was compiled into nested `StringBuilder.append()` calls by the compiler:
+```java
+// Prior to Java 9 compiler translation:
+String s = new StringBuilder().append(a).append(b).append(c).toString();
+```
+While this works, it hardcodes a specific implementation and size estimation algorithm into the compiled bytecode.
+
+#### Modern Concatenation with `invokedynamic`
+Since Java 9, the compiler translates string concatenation into a single **`invokedynamic`** call pointing to the bootstrap method `StringConcatFactory.makeConcatWithTemplate()`.
+- **Decoupling:** By generating dynamic call sites at runtime instead of hardcoding `StringBuilder` instantiation, the JVM can change and optimize the implementation strategy (e.g., using direct byte array copying, byte-preallocation, or MethodHandles) without requiring recompilation of your code.
+- **Performance:** Decoupled allocation results in reduced CPU instructions and up to a 10% reduction in object allocation overhead in hot paths.
+
+---
+
+### Object Finalization & Alternatives
+
+For a long time, `Object.finalize()` was the standard hook to perform resource cleanup before an object was reclaimed by the GC. However, **`finalize()` is deprecated** (since Java 9) and terminally marked for removal (Java 18+).
+
+#### Why is `finalize()` bad?
+1. **Unpredictable Timing:** The GC is not guaranteed to run at any specific time, meaning resource release is delayed indefinitely.
+2. **Performance Degradation:** Objects with finalizers require at least two GC cycles to be reclaimed (one to enqueue them for finalization, another to reclaim them after the finalizer runs).
+3. **Security Risks:** Finalizer attacks can exploit partially constructed objects that throw exceptions during construction.
+4. **Thread Starvation:** The JVM uses a single low-priority thread to run all finalizers.
+
+#### Modern Alternatives
+
+##### 1. try-with-resources (`AutoCloseable`)
+For synchronous resource release, implement `AutoCloseable` and clean up deterministically:
+```java
+public class Resource implements AutoCloseable {
+    @Override
+    public void close() {
+        // Clean up connections/files
+    }
+}
+```
+
+##### 2. `java.lang.ref.Cleaner` (Java 9+)
+For asynchronous safety nets, use `Cleaner`. Cleaners do not rely on inheritance (avoiding `finalize()` overrides) and prevent memory leaks by using static nested cleanup actions that do not keep a strong reference to the monitored object.
+```java
+import java.lang.ref.Cleaner;
+
+public class DatabaseClient implements AutoCloseable {
+    private static final Cleaner cleaner = Cleaner.create();
+    
+    private static class State implements Runnable {
+        private final long nativeSocketAddress;
+        
+        State(long address) { this.nativeSocketAddress = address; }
+        
+        @Override
+        public void run() {
+            // Clean up native resources
+            System.out.println("Native resource cleaned up");
+        }
+    }
+    
+    private final State state;
+    private final Cleaner.Cleanable cleanable;
+    
+    public DatabaseClient(long address) {
+        this.state = new State(address);
+        this.cleanable = cleaner.register(this, state);
+    }
+    
+    @Override
+    public void close() {
+        cleanable.clean(); // Runs state.run() once, either now or during GC
+    }
+}
+```
+
 ---
 
 ## 5. Exception Handling
