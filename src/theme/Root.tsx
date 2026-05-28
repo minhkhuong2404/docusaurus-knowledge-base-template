@@ -162,11 +162,18 @@ export default function Root({ children }: { children: React.ReactNode }) {
 
   const isPremiumRoute = isPremiumPath(location.pathname);
   if (isPremiumRoute) {
-    if (!isClient) {
-      return null;
-    }
-    if (authState !== "logged_in") {
-      return null;
+    const showBlur = authState !== "logged_in";
+    if (showBlur) {
+      return (
+        <div style={{
+          filter: "blur(16px)",
+          pointerEvents: "none",
+          userSelect: "none",
+          transition: "filter 0.5s ease-in-out",
+        }}>
+          {children}
+        </div>
+      );
     }
   }
 
