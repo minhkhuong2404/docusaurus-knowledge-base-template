@@ -46,6 +46,13 @@ function readCachedPremiumState(): PremiumState | null {
 export default function Root({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const isCheckingRef = useRef(false);
+  const [isClient, setIsClient] = React.useState(false);
+  const [authState, setAuthState] = React.useState<PremiumState | null>(null);
+
+  useEffect(() => {
+    setIsClient(true);
+    setAuthState(readCachedPremiumState());
+  }, []);
 
   const redirectToLogin = useCallback(() => {
     const returnTo = `${location.pathname}${location.search}`;
@@ -82,6 +89,10 @@ export default function Root({ children }: { children: React.ReactNode }) {
     const cachedState = readCachedPremiumState();
     const isPremiumRoute = isPremiumPath(location.pathname);
 
+    if (cachedState) {
+      setAuthState(cachedState);
+    }
+
     if (isPremiumRoute && cachedState !== "logged_in") {
       enforcePremiumRouteAuth("logged_out");
       return;
@@ -110,10 +121,12 @@ export default function Root({ children }: { children: React.ReactNode }) {
         ? "logged_in"
         : "logged_out";
       window.sessionStorage.setItem(PREMIUM_STATE_KEY, nextState);
+      setAuthState(nextState);
       applyPremiumNavState(nextState);
       enforcePremiumRouteAuth(nextState);
     } catch {
       window.sessionStorage.setItem(PREMIUM_STATE_KEY, "logged_out");
+      setAuthState("logged_out");
       applyPremiumNavState("logged_out");
       enforcePremiumRouteAuth("logged_out");
     } finally {
@@ -146,6 +159,16 @@ export default function Root({ children }: { children: React.ReactNode }) {
       window.removeEventListener("focus", handleFocus);
     };
   }, [syncPremiumSession]);
+
+  const isPremiumRoute = isPremiumPath(location.pathname);
+  if (isPremiumRoute) {
+    if (!isClient) {
+      return null;
+    }
+    if (authState !== "logged_in") {
+      return null;
+    }
+  }
 
   return <>{children}</>;
 }

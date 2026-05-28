@@ -4,6 +4,7 @@ import { useLocation } from '@docusaurus/router';
 
 // @ts-ignore
 export default function Login(): React.ReactNode {
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -42,14 +43,14 @@ export default function Login(): React.ReactNode {
       const response = await fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ email, password }),
       });
 
       if (response.ok) {
         // Successful login! Force full page reload to trigger Cloudflare Proxy cookie validation
         window.location.href = returnTo;
       } else {
-        setError('Invalid access code. Please try again.');
+        setError('Invalid credentials. Please try again.');
       }
     } catch (err) {
       setError('An unexpected error occurred during login.');
@@ -112,6 +113,25 @@ export default function Login(): React.ReactNode {
           <p style={{ textAlign: 'center', color: 'var(--ifm-color-emphasis-600)', marginBottom: '2rem' }}>Please log in to read this locked article.</p>
 
           <form onSubmit={handleLogin}>
+            <div style={{ marginBottom: '1.25rem' }}>
+              <label htmlFor="email" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Email / Username (Optional)</label>
+              <input
+                id="email"
+                type="text"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  borderRadius: '6px',
+                  border: '1px solid var(--ifm-color-emphasis-300)',
+                  backgroundColor: 'var(--ifm-color-emphasis-100)',
+                  color: 'var(--ifm-font-color-base)'
+                }}
+                placeholder="Leave empty for password-only login"
+              />
+            </div>
+
             <div style={{ marginBottom: '1.5rem' }}>
               <label htmlFor="password" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Password</label>
               <input

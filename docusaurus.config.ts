@@ -91,6 +91,15 @@ const config: Config = {
 		],
 		headTags: [
 			{
+				tagName: 'script',
+				innerHTML: `
+					if (typeof window !== 'undefined' && !window.gtag) {
+						window.dataLayer = window.dataLayer || [];
+						window.gtag = function() { window.dataLayer.push(arguments); };
+					}
+				`,
+			},
+			{
 				tagName: 'link',
 				attributes: {
 					rel: 'dns-prefetch',

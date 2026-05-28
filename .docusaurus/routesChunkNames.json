@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-cf0": {
+  "/-3e0": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-870": {
+  "/-6ae": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -5057,7 +5057,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-123": {
+  "/-c5d": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -5076,67 +5076,67 @@
     "__comp": "17896441",
     "content": "7b5d2e61"
   },
-  "/books/building-microservice/chapter-01-770": {
+  "/books/building-microservice/chapter-01-4e9": {
     "__comp": "17896441",
     "content": "68ab07b1"
   },
-  "/books/building-microservice/chapter-02-301": {
+  "/books/building-microservice/chapter-02-113": {
     "__comp": "17896441",
     "content": "11bcc05a"
   },
-  "/books/building-microservice/chapter-03-241": {
+  "/books/building-microservice/chapter-03-e31": {
     "__comp": "17896441",
     "content": "3b42864a"
   },
-  "/books/building-microservice/chapter-04-15f": {
+  "/books/building-microservice/chapter-04-78b": {
     "__comp": "17896441",
     "content": "69b5c840"
   },
-  "/books/building-microservice/chapter-05-6f5": {
+  "/books/building-microservice/chapter-05-c16": {
     "__comp": "17896441",
     "content": "1d25b2fe"
   },
-  "/books/building-microservice/chapter-06-b9d": {
+  "/books/building-microservice/chapter-06-583": {
     "__comp": "17896441",
     "content": "9df5b457"
   },
-  "/books/building-microservice/chapter-07-3fb": {
+  "/books/building-microservice/chapter-07-c12": {
     "__comp": "17896441",
     "content": "4aeace3f"
   },
-  "/books/building-microservice/chapter-08-536": {
+  "/books/building-microservice/chapter-08-338": {
     "__comp": "17896441",
     "content": "f68d61b3"
   },
-  "/books/building-microservice/chapter-09-fd7": {
+  "/books/building-microservice/chapter-09-caf": {
     "__comp": "17896441",
     "content": "b8cded00"
   },
-  "/books/building-microservice/chapter-10-6d4": {
+  "/books/building-microservice/chapter-10-df5": {
     "__comp": "17896441",
     "content": "4b29e76d"
   },
-  "/books/building-microservice/chapter-11-932": {
+  "/books/building-microservice/chapter-11-17d": {
     "__comp": "17896441",
     "content": "78ebb9c7"
   },
-  "/books/building-microservice/chapter-12-1fe": {
+  "/books/building-microservice/chapter-12-b0b": {
     "__comp": "17896441",
     "content": "eca91fbf"
   },
-  "/books/building-microservice/chapter-13-bf0": {
+  "/books/building-microservice/chapter-13-347": {
     "__comp": "17896441",
     "content": "a71c18db"
   },
-  "/books/building-microservice/chapter-14-017": {
+  "/books/building-microservice/chapter-14-99b": {
     "__comp": "17896441",
     "content": "c08887ed"
   },
-  "/books/building-microservice/chapter-15-6aa": {
+  "/books/building-microservice/chapter-15-bfb": {
     "__comp": "17896441",
     "content": "ed429399"
   },
-  "/books/building-microservice/chapter-16-05f": {
+  "/books/building-microservice/chapter-16-35d": {
     "__comp": "17896441",
     "content": "f0cf1ac1"
   },
@@ -9396,7 +9396,7 @@
     "__comp": "17896441",
     "content": "2695042f"
   },
-  "/technical-knowledge/java/java-collections-295": {
+  "/technical-knowledge/java/java-collections-f5a": {
     "__comp": "17896441",
     "content": "a8d4740a"
   },
@@ -9408,15 +9408,15 @@
     "__comp": "17896441",
     "content": "ee229027"
   },
-  "/technical-knowledge/java/java-diagnostics-troubleshooting-139": {
+  "/technical-knowledge/java/java-diagnostics-troubleshooting-a75": {
     "__comp": "17896441",
     "content": "e89fd18d"
   },
-  "/technical-knowledge/java/java-fundamentals-c28": {
+  "/technical-knowledge/java/java-fundamentals-69c": {
     "__comp": "17896441",
     "content": "fb6d755b"
   },
-  "/technical-knowledge/java/java-interview-questions-37c": {
+  "/technical-knowledge/java/java-interview-questions-1d1": {
     "__comp": "17896441",
     "content": "f99a0434"
   },
@@ -9424,11 +9424,11 @@
     "__comp": "17896441",
     "content": "3744858f"
   },
-  "/technical-knowledge/java/java-jmm-memory-model-bb6": {
+  "/technical-knowledge/java/java-jmm-memory-model-116": {
     "__comp": "17896441",
     "content": "331d11cc"
   },
-  "/technical-knowledge/java/java-jvm-d6c": {
+  "/technical-knowledge/java/java-jvm-baf": {
     "__comp": "17896441",
     "content": "2fb67458"
   },
@@ -9440,7 +9440,7 @@
     "__comp": "17896441",
     "content": "5304fd8a"
   },
-  "/technical-knowledge/java/java-overview-2db": {
+  "/technical-knowledge/java/java-overview-422": {
     "__comp": "17896441",
     "content": "adb02301"
   },
@@ -9896,7 +9896,7 @@
     "__comp": "17896441",
     "content": "070cceee"
   },
-  "/technical-knowledge/spring/spring-boot-advanced-1e2": {
+  "/technical-knowledge/spring/spring-boot-advanced-fb1": {
     "__comp": "17896441",
     "content": "44626067"
   },
@@ -9904,11 +9904,11 @@
     "__comp": "17896441",
     "content": "fac5caa9"
   },
-  "/technical-knowledge/spring/spring-boot-internals-b0b": {
+  "/technical-knowledge/spring/spring-boot-internals-882": {
     "__comp": "17896441",
     "content": "3177d0e7"
   },
-  "/technical-knowledge/spring/spring-boot-interview-questions-157": {
+  "/technical-knowledge/spring/spring-boot-interview-questions-ee3": {
     "__comp": "17896441",
     "content": "c7ff582f"
   },
@@ -9932,7 +9932,7 @@
     "__comp": "17896441",
     "content": "4ddd786a"
   },
-  "/technical-knowledge/spring/spring-data-jpa-transactions-f7c": {
+  "/technical-knowledge/spring/spring-data-jpa-transactions-a92": {
     "__comp": "17896441",
     "content": "da45351f"
   },
@@ -9968,7 +9968,7 @@
     "__comp": "17896441",
     "content": "0237d5d1"
   },
-  "/technical-knowledge/system-design/architecture-fundamentals-7d0": {
+  "/technical-knowledge/system-design/architecture-fundamentals-e59": {
     "__comp": "17896441",
     "content": "c0e5a9ef"
   },
@@ -10000,7 +10000,7 @@
     "__comp": "17896441",
     "content": "65c13a58"
   },
-  "/technical-knowledge/system-design/cqrs-afa": {
+  "/technical-knowledge/system-design/cqrs-8c6": {
     "__comp": "17896441",
     "content": "e6611cec"
   },
@@ -10044,11 +10044,11 @@
     "__comp": "17896441",
     "content": "3940c236"
   },
-  "/technical-knowledge/system-design/microservices-patterns-c72": {
+  "/technical-knowledge/system-design/microservices-patterns-0f6": {
     "__comp": "17896441",
     "content": "a912936e"
   },
-  "/technical-knowledge/system-design/mongodb-deep-dive-b9e": {
+  "/technical-knowledge/system-design/mongodb-deep-dive-e73": {
     "__comp": "17896441",
     "content": "9aee46ea"
   },
@@ -10056,7 +10056,7 @@
     "__comp": "17896441",
     "content": "e47e154f"
   },
-  "/technical-knowledge/system-design/observability-a60": {
+  "/technical-knowledge/system-design/observability-7f4": {
     "__comp": "17896441",
     "content": "f58357ef"
   },
@@ -10080,7 +10080,7 @@
     "__comp": "17896441",
     "content": "d0e1a196"
   },
-  "/technical-knowledge/system-design/security-patterns-99c": {
+  "/technical-knowledge/system-design/security-patterns-bab": {
     "__comp": "17896441",
     "content": "e8a6b3e1"
   },
