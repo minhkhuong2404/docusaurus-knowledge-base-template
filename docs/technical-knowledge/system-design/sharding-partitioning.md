@@ -798,7 +798,7 @@ A sharded system introduces failure modes that don't exist on single-server data
 
 ## See Also
 
-- [NoSQL & MongoDB — Complete Guide](./nosql-mongodb.mdx)
-- [Replication & High Availability](./replication-ha.md)
-- [Database Patterns for Microservices](./database-patterns-microservices.md)
-- [CAP Theorem & Consistency Models](./cap-consistency.md)
+- [NoSQL & MongoDB — Complete Guide](./mongodb-deep-dive.md)
+- [Distributed Systems — Overview](./distributed-systems.md)
+- [Database Patterns for Microservices](./microservices-patterns.md)
+- [CAP Theorem & Consistency Models](./cap-theorem.md)
