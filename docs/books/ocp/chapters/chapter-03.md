@@ -18,68 +18,78 @@ tags:
 
 <span class="chapter-badge">Exam Domain: Controlling Program Flow</span>
 
-> **Key Topics:** `if`/`else`, `switch` statements & expressions, `while`, `do-while`, `for`, enhanced `for`, `break`, `continue`, labels, pattern matching with `switch`.
+> **Key Topics:** Control flow statements, code blocks, `if`/`else` statements, pattern matching with `instanceof`, pattern variables, flow scoping, `switch` statements vs. `switch` expressions, case constants, enum case labels, arrow operator (`->`) vs. colon (`:`), break/continue statements, labels in nested structures, `yield` statement, exhaustiveness, dominance (unreachable cases), guard clauses (`when`), pattern matching for `switch` (Java 21), `case null`, loop structures (`while`, `do-while`, traditional `for`, enhanced `for-each`).
 
 ---
 
 ## 🟦 New Learner: Control Flow
 
-### if / else Statements
+### Statements and Blocks
+- A **statement** is a complete unit of execution terminated with a semicolon (`;`).
+- A **block of code** is a group of zero or more statements enclosed in braces `{}`. It can be used anywhere a single statement is allowed.
+- Indentation is for readability only; Java ignores tabs and spaces.
 
+:::danger[Misleading Indentation Trap]
+Without braces `{}`, only the **first statement** immediately following the `if` is executed conditionally.
 ```java
-int score = 78;
-
-if (score >= 90) {
-    System.out.println("A");
-} else if (score >= 80) {
-    System.out.println("B");
-} else if (score >= 70) {
-    System.out.println("C");
-} else {
-    System.out.println("F");
-}
-// Output: C
-```
-
-:::caution[Always Use Braces]
-Without braces, only the next **single statement** belongs to the `if`. This is a very common exam trap:
-```java
-if (false)
-    System.out.println("Not printed");
-    System.out.println("Always printed!"); // NOT part of the if!
+if (hourOfDay < 11)
+    System.out.println("Good Morning");
+    morningGreetingCount++; // ❌ Always executed, regardless of hourOfDay!
 ```
 :::
 
 ---
 
-### Pattern Matching with `instanceof` (Java 16+)
+### The `if` / `else` Statements
+The condition inside an `if` statement **must** evaluate to a `boolean` expression. Other types are not implicitly converted to booleans:
+```java
+int hour = 1;
+if (hour) { } // ❌ DOES NOT COMPILE (Unlike JavaScript/C++, integers are NOT boolean)
+```
+
+---
+
+### Pattern Matching with `instanceof`
+
+Pattern matching reduces boilerplate code by combining type checking and casting in a single operation.
 
 ```java
-Object obj = "Hello, World!";
-
-// Old way
-if (obj instanceof String) {
-    String s = (String) obj;
-    System.out.println(s.length());
+// Traditional boilerplate
+if (number instanceof Integer) {
+    Integer data = (Integer) number;
+    System.out.print(data.compareTo(5));
 }
 
-// New way (pattern matching)
-if (obj instanceof String s) {
-    System.out.println(s.length()); // s is already cast
+// Pattern matching (Java 16+)
+if (number instanceof Integer data) {
+    System.out.print(data.compareTo(5)); // 'data' is the pattern variable, automatically cast
 }
+```
 
-// With guard condition
-if (obj instanceof String s && s.length() > 5) {
-    System.out.println("Long string: " + s);
+#### Final Pattern Variables
+You can mark the pattern variable as `final` to prevent reassigning it inside the block:
+```java
+if (number instanceof final Integer data) {
+    data = 10; // ❌ DOES NOT COMPILE
+}
+```
+
+#### Pattern Matching with `null`
+The `instanceof` operator always returns `false` when checked against `null`. Therefore, pattern matching is safe from throwing `NullPointerException`:
+```java
+String text = null;
+if (text instanceof String s) {
+    System.out.println(s.length()); // Skipped; block never executes
 }
 ```
 
 ---
 
-### switch Statement (Classic)
+### Classic `switch` Statements
+
+A `switch` statement redirects execution flow to one or more branches based on a single runtime value.
 
 ```java
-int day = 3;
 switch (day) {
     case 1:
         System.out.println("Monday");
@@ -87,272 +97,231 @@ switch (day) {
     case 2:
         System.out.println("Tuesday");
         break;
-    case 3:
-    case 4:
+    case 3, 4: // Comma-separated cases (Java 14+)
         System.out.println("Mid-week");
-        break; // covers both 3 and 4 (fall-through)
+        break;
     default:
-        System.out.println("Other");
+        System.out.println("Other day");
+        break;
 }
 ```
 
-**Valid types for `switch`:**
-- `int`, `Integer`
-- `byte`, `Byte`, `short`, `Short`, `char`, `Character`
+#### Supported Types for Switch Variable:
+- `int` and `Integer`
+- `byte` and `Byte`
+- `short` and `Short`
+- `char` and `Character`
 - `String`
-- `enum`
-- **NOT** `long`, `float`, `double`, `boolean`
+- Enum values
+- Any object type (when used with Java 21 pattern matching)
+- `var` (if it resolves to one of the above)
+- **NOT SUPPORTED:** `boolean`, `long`, `float`, `double`.
+
+#### Compile-Time Constants as Case Values:
+Case values must be literals, enum constants, or `final` constant variables initialized with literals on the same line:
+```java
+final int bananas = 1;
+int apples = 2;
+final int cookies = getCookies(); // Evaluated at runtime
+
+switch (items) {
+    case bananas:     // ✅ Valid (compile-time constant)
+    case apples:      // ❌ DOES NOT COMPILE (not final)
+    case cookies:     // ❌ DOES NOT COMPILE (initialized at runtime via method)
+    case 3 * 5:       // ✅ Valid (evaluates to literal 15 at compile time)
+}
+```
+
+#### Case Label Syntax:
+- Arrow (`->`) cases eliminate the need for `break` statements and prevent fall-through.
+- Colon (`:`) cases require `break` statements. Without a `break`, the execution falls through to subsequent branches (including `default`).
+- **Do not mix** `->` and `:` in the same `switch` block:
+  ```java
+  switch (x) {
+      case 1 -> System.out.print("One");
+      case 2 : System.out.print("Two"); // ❌ DOES NOT COMPILE (mixed syntax)
+  }
+  ```
 
 ---
 
-### switch Expressions (Java 14+)
+### `switch` Expressions
 
-The new arrow syntax eliminates fall-through and returns a value:
+Introduced in Java 14, `switch` expressions return a value that can be assigned or used directly.
 
 ```java
-// Arrow form — no fall-through, no break needed
-String dayName = switch (day) {
-    case 1 -> "Monday";
-    case 2 -> "Tuesday";
-    case 3, 4 -> "Mid-week";   // multiple labels in one case
-    default -> "Other";
-};
-
-// Block form with yield
-String result = switch (score) {
-    case 100 -> "Perfect!";
-    default -> {
-        String grade = score >= 60 ? "Pass" : "Fail";
-        yield grade + " (" + score + ")"; // yield returns from block
-    }
-};
+String meal = switch (food) {
+    case 1 -> "Dessert";
+    case 2, 3 -> "Snack";
+    default -> "Porridge";
+}; // Semicolon is required at the end of the assignment statement
 ```
 
-:::tip[`switch` Expression Must Be Exhaustive]
-Every possible value must be covered. For `int`, `String`, etc. you need a `default`. For `enum` you can cover all constants instead.
+#### The `yield` Keyword
+Used to return a value from a `case` block inside a `switch` expression:
+```java
+var name = switch (fish) {
+    case 1 -> "Goldfish";
+    case 2 -> {
+        yield "Trout"; // yield returns the value from the block
+    }
+    default -> "Unknown";
+};
+```
+:::note[yield vs return]
+Use `yield` to return a value from a `switch` expression block. Using `return` inside a `switch` expression will attempt to return from the enclosing method, which is a compilation error if the method returns a different type (or is void).
 :::
 
 ---
 
-### Pattern Matching with switch (Java 21)
+### Loop Structures
 
+#### `while` vs. `do-while`
+- **`while` loop:** Evaluates the boolean condition **before** executing the loop body. If the condition starts as `false`, the body is never executed.
+- **`do-while` loop:** Evaluates the boolean condition **after** executing the loop body. The body is guaranteed to run **at least once**.
 ```java
-Object shape = new Circle(5.0);
+while (false) { } // ❌ DOES NOT COMPILE: Unreachable code detected by compiler
 
-String desc = switch (shape) {
-    case Circle c    -> "Circle with radius " + c.radius();
-    case Rectangle r -> "Rectangle " + r.width() + "x" + r.height();
-    case null        -> "No shape";
-    default          -> "Unknown shape";
-};
-```
-
----
-
-### while Loop
-
-```java
-int count = 0;
-while (count < 5) {
-    System.out.println(count);
-    count++;
-} // prints 0, 1, 2, 3, 4
-```
-
-The condition is checked **before** entering the loop. If `false` from the start, the loop body never runs.
-
----
-
-### do-while Loop
-
-```java
-int count = 0;
 do {
-    System.out.println(count);
-    count++;
-} while (count < 5);
-// prints 0, 1, 2, 3, 4
+    // Executes once
+} while (false); // ✅ Compiles (condition checked after execution)
 ```
 
-The condition is checked **after** the first iteration — body always runs **at least once**.
-
----
-
-### Basic for Loop
-
+#### Traditional `for` Loops
+A `for` loop has three sections: `for (initialization; booleanExpression; update)`.
 ```java
-for (int i = 0; i < 5; i++) {
-    System.out.println(i);
-}
-// prints 0, 1, 2, 3, 4
-
-// Multiple variables (same type)
+// Multiple variables in the initialization block (must share the same type)
 for (int i = 0, j = 10; i < j; i++, j--) {
     System.out.println(i + " " + j);
 }
-
-// Infinite loop
-for (;;) { ... }
+```
+All three parts of the `for` header are optional:
+```java
+for ( ; ; ) { } // Valid infinite loop (identical to while(true))
 ```
 
-All three parts of the `for` header are optional.
-
----
-
-### Enhanced for-each Loop
-
+#### Enhanced `for-each` Loops
+Used to iterate through arrays or objects implementing `java.lang.Iterable`.
 ```java
-int[] numbers = {1, 2, 3, 4, 5};
+int[] numbers = {1, 2, 3};
 for (int num : numbers) {
-    System.out.println(num);
+    num = num * 2; // Modifies the local copy 'num' only!
 }
-
-List<String> names = List.of("Alice", "Bob", "Charlie");
-for (String name : names) {
-    System.out.println(name);
-}
-```
-
-:::note[Limitation]
-You cannot modify the underlying collection or array through the loop variable — you only get a copy of the value.
-:::
-
----
-
-### break and continue
-
-```java
-// break — exits the entire loop
-for (int i = 0; i < 10; i++) {
-    if (i == 5) break;
-    System.out.print(i + " "); // 0 1 2 3 4
-}
-
-// continue — skips rest of current iteration
-for (int i = 0; i < 10; i++) {
-    if (i % 2 == 0) continue;
-    System.out.print(i + " "); // 1 3 5 7 9
-}
+System.out.println(numbers[0]); // Prints 1 (underlying array is unmodified)
 ```
 
 ---
 
-### Labeled Statements
+### Branching and Labeled Statements
 
-Labels let you `break`/`continue` **outer** loops from an inner one:
+#### `break` vs. `continue`
+- `break` exits the innermost loop immediately.
+- `continue` skips the remaining statements of the current iteration and jumps to the update statement or loop check.
 
+#### Optional Labels
+A **label** is an identifier followed by a colon (`:`) placed before a loop. They allow you to jump or break out of outer loops from an inner loop.
 ```java
-outer:
-for (int i = 0; i < 3; i++) {
-    for (int j = 0; j < 3; j++) {
-        if (j == 1) continue outer; // skip to next i
+OUTER_LOOP: for (int i = 0; i < 3; i++) {
+    INNER_LOOP: for (int j = 0; j < 3; j++) {
+        if (i == 1 && j == 1) {
+            continue OUTER_LOOP; // Jumps directly to the update section of OUTER_LOOP
+        }
         System.out.println(i + "," + j);
     }
 }
-// Output: 0,0  1,0  2,0
 ```
 
 ---
 
 ## 🟣 Senior Deep Dive
 
-### Switch Fall-Through — Intentional vs Accidental
+### Flow Scoping
 
-Fall-through is one of the biggest bugs in legacy Java code:
+Flow scoping restricts a pattern variable's scope to regions where the compiler can guarantee the cast succeeded.
 
 ```java
-int x = 2;
-switch (x) {
-    case 1:
-    case 2:               // intentional: 1 and 2 share same action
-        System.out.println("one or two");
-        // missing break — falls through to case 3!
-    case 3:
-        System.out.println("three");
+// AND operator (&&)
+if (number instanceof Integer data && data.compareTo(5) > 0) {
+    // data is in scope here because the left side must be true to evaluate the right side
 }
-// Output:
-// one or two
-// three    ← accidental fall-through!
+
+// OR operator (||)
+if (number instanceof Integer data || data.compareTo(5) > 0) { // ❌ DOES NOT COMPILE
+    // If number is not an Integer, data is undefined on the right side!
+}
 ```
 
-**Java 14+ arrow cases eliminate fall-through entirely.** Prefer the new switch expression syntax.
-
-### Switch Expressions and `yield` vs `return`
-
+#### Flow Scoping with `return`
+Flow scoping can extend beyond the `if` block if the execution path terminates (e.g., via `return` or `throw`):
 ```java
-int x = 3;
-int result = switch (x) {
-    case 1 -> 10;
-    case 2 -> 20;
-    default -> {
-        // yield is REQUIRED in block switch cases
-        // return would exit the enclosing method, not the switch
-        int calculated = x * 7;
-        yield calculated;  // correct!
+void printOnlyIntegers(Number number) {
+    if (!(number instanceof Integer data)) {
+        return; // Exits if not Integer
     }
-};
-```
-
-### Pattern Matching Guard Conditions in switch (Java 21)
-
-```java
-Object obj = 42;
-String result = switch (obj) {
-    case Integer i when i < 0  -> "negative int";
-    case Integer i when i == 0 -> "zero";
-    case Integer i             -> "positive int: " + i;
-    case String s              -> "string: " + s;
-    default                    -> "other";
-};
-```
-
-The `when` clause adds a **guard** — the pattern only matches if both the type AND the condition are true. Cases are evaluated **top to bottom**, so order matters.
-
-### Dominance in Pattern Matching
-
-```java
-// ❌ COMPILE ERROR: Integer i before Integer i when i > 0
-// The unrestricted case dominates the guarded one
-switch (obj) {
-    case Integer i        -> "any int";   // dominates the next case
-    case Integer i when i > 0 -> "positive"; // unreachable!
+    System.out.print(data.intValue()); // ✅ Compiles! data is in scope because the method didn't return
 }
 ```
 
-### Sealed Classes + switch Exhaustiveness
+---
 
-When switching over a sealed hierarchy, the compiler knows all permitted subclasses:
+### Switch Pattern Matching & Guard Clauses (Java 21)
+
+Java 21 allows switching on any object type using pattern matching, along with **guard clauses** specified by the `when` keyword.
 
 ```java
-sealed interface Shape permits Circle, Rectangle, Triangle {}
-
-// No default needed — compiler verifies all cases covered
-String area = switch (shape) {
-    case Circle c    -> String.valueOf(Math.PI * c.radius() * c.radius());
-    case Rectangle r -> String.valueOf(r.width() * r.height());
-    case Triangle t  -> String.valueOf(0.5 * t.base() * t.height());
-};
+String getTrainer(Object animal) {
+    return switch (animal) {
+        case Integer i when i > 10 -> "Joseph"; // Guarded pattern
+        case Integer i             -> "John";   // Unguarded pattern
+        case String s when s.length() > 5 -> "Sarah";
+        case null                  -> "No Trainer"; // Null case pattern
+        default                    -> "Unknown";
+    };
+}
 ```
 
-Adding a new subclass to `Shape` will cause a **compile error** in the switch — this is intentional and safe!
+---
 
-### Loop Performance Considerations
+### Exhaustiveness in Switch Statements
+
+While legacy `switch` statements did not require covering all possible paths, **switch expressions** and **pattern-matching switch statements** must be exhaustive.
+```java
+// Switch statement using pattern matching:
+switch (obj) { // ❌ DOES NOT COMPILE if not exhaustive
+    case String s -> System.out.println("String: " + s);
+    // Needs default case or additional cases to cover all Object types
+}
+```
+
+#### Exhaustive Enums
+An enum `switch` expression is exhaustive if it covers all defined enum constants, meaning a `default` case is not required:
+```java
+enum Season { SPRING, SUMMER, FALL, WINTER }
+
+String weather = switch (season) {
+    case SPRING -> "Rainy";
+    case SUMMER -> "Hot";
+    case FALL -> "Windy";
+    case WINTER -> "Cold";
+}; // ✅ Exhaustive (no default needed)
+```
+
+---
+
+### Dominance (Pattern Ordering)
+
+The compiler evaluates cases from top to bottom. A case is **dominated** (unreachable) if a preceding case matches a broader or identical set of conditions:
 
 ```java
-// Cache list size in traditional for loops (micro-optimization)
-List<String> list = getHugeList();
-for (int i = 0, size = list.size(); i < size; i++) { ... }
+switch (obj) {
+    case Number n  -> System.out.println("Number");
+    case Integer i -> System.out.println("Int"); // ❌ DOES NOT COMPILE: Dominated by Number (Integer is a subtype)
+}
 
-// Enhanced for uses Iterator internally
-for (String s : list) { ... }
-// equivalent to:
-Iterator<String> it = list.iterator();
-while (it.hasNext()) { String s = it.next(); ... }
-
-// ConcurrentModificationException risk
-for (String s : list) {
-    if (s.equals("remove")) list.remove(s); // ❌ throws CME!
-    // Use it.remove() instead, or collect to a separate list
+// Guarded Dominance:
+switch (obj) {
+    case Integer i             -> System.out.println("Any Int");
+    case Integer i when i > 10 -> System.out.println("Big Int"); // ❌ DOES NOT COMPILE: Unguarded case dominates guarded case
 }
 ```
 
@@ -360,148 +329,127 @@ for (String s : list) {
 
 ## 📝 Exam Quick Reference
 
-| Topic | Key Fact |
-|-------|----------|
-| `switch` valid types | int/Integer, byte/Byte, short/Short, char/Character, String, enum — NOT long/float/double/boolean |
-| `switch` expression | Must be exhaustive (cover all values); use `default` |
-| `yield` | Returns a value from a block in a `switch` expression |
-| Fall-through | Only with `case X:` (colon syntax); arrow `->` cases never fall through |
-| `do-while` | Body always executes at least once |
-| `break` with label | Exits the labeled loop entirely |
-| `continue` with label | Skips to next iteration of labeled loop |
-| Pattern matching | `instanceof String s` — variable `s` is in scope only when cast succeeds |
-| `when` guard | Only Java 21+ `switch`; filters a pattern case further |
-| `null` in switch | Must be handled explicitly with `case null` or NPE is thrown |
-| Enhanced `for` | Cannot modify the collection while iterating — use `Iterator` |
-| `for` header parts | All three parts optional; `for(;;)` is valid infinite loop |
-| `while (false)` | Body unreachable → compile error for trivial constant false |
-| `if` without braces | Only next statement is conditional — indentation deceives |
-| Enum `switch` exhaustiveness | For enum switch statement (not expression), `default` optional but omitting cases allowed |
-| Pattern switch dominance | Broader type patterns must not hide narrower ones — compiler error if unreachable case |
-| `switch` on `boolean` | Not allowed — use `if` |
-| `break` in `switch` expression | Arrow form does not use `break`; colon block form in classic switch does |
+### Rules & Restrictions Summary
+
+| Topic | Critical Fact |
+|-------|---------------|
+| **Switch Types** | Integral primitives (except `long`), wrappers (except `Long`), `String`, `enum`, and objects (in pattern switch). |
+| **`switch` Exhaustiveness** | All `switch` expressions, and any `switch` statement using pattern matching/sealed types, must be exhaustive. |
+| **Dominance Rule** | Narrower cases (subtypes, guarded cases) must appear before broader cases (supertypes, unguarded cases). |
+| **`case null`** | Java 21 supports explicit null checking in `switch`. If `null` is passed and no `case null` is present, `switch` throws `NullPointerException`. |
+| **`when` Keyword** | Used for guard conditions in `switch` cases. Relies on the pattern variable. |
+| **`yield` Semicolon** | A semicolon is required after a `yield` statement. |
+| **Arrow vs Colon Semicolon** | `case X -> expr;` requires a semicolon. `case X -> { ... }` block does not. |
+| **Labeled Loops** | Labels are followed by a colon (`:`). Unlabeled `break`/`continue` only targets the innermost loop. |
+| **Constant Expressions** | In classic `switch`, case labels must be constant expressions evaluated at compile time. |
 
 ---
 
 ## 🚨 Extra Exam Tips
 
 :::danger[Top Traps in Chapter 3]
-**Trap 1 — Brace-less if and misleading indentation:**
+**Trap 1 — Mixed switch case styles:**
 ```java
-if (x > 0)
-    System.out.println("positive");
-    System.out.println("always prints"); // NOT in the if!
-```
-
-**Trap 2 — switch on `String` is case-sensitive:**
-```java
-String day = "monday";
-switch (day) {
-    case "Monday" -> System.out.println("Start"); // ❌ won't match!
-    case "monday" -> System.out.println("Start"); // ✅
-}
-```
-
-**Trap 3 — `yield` is required in block switch cases:**
-```java
-int result = switch (x) {
-    case 1 -> 10;           // arrow: implicit return
-    default -> {
-        int y = x * 2;
-        // return y;        // ❌ COMPILE ERROR — use yield, not return
-        yield y;            // ✅
-    }
-};
-```
-
-**Trap 4 — `null` in switch (Java 21):**
-```java
-Object obj = null;
-switch (obj) {                     // Before Java 21: NPE here
-    case null -> System.out.println("null");  // Java 21: safe
-    case String s -> System.out.println(s);
-    default -> System.out.println("other");
-}
-```
-
-**Trap 5 — Labeled `break` vs `continue`:**
-```java
-outer:
-for (int i = 0; i < 3; i++) {
-    for (int j = 0; j < 3; j++) {
-        if (i == 1 && j == 1) break outer;    // exits outer loop completely
-        if (i == 1 && j == 1) continue outer; // would skip to next i
-        System.out.println(i + "," + j);
-    }
-}
-```
-
-**Trap 6 — Enhanced for loop does NOT update array via loop variable:**
-```java
-int[] arr = {1, 2, 3};
-for (int n : arr) {
-    n = n * 2; // modifies copy only — arr unchanged!
-}
-System.out.println(arr[0]); // still 1
-```
-
-**Trap 7 — switch expression with multiple case labels:**
-```java
-// Old style (comma not allowed with colon in traditional switch):
-switch (x) { case 1: case 2: break; } // fall-through idiom
-
-// New style (comma is fine with arrows):
 switch (x) {
-    case 1, 2 -> System.out.println("one or two"); // ✅ Java 14+
+    case 1 -> "One";
+    case 2 : yield "Two"; // ❌ DOES NOT COMPILE: Cannot mix -> and : in same switch
 }
 ```
 
-**Trap 8 — Cannot mix `->` and `:` in one `switch`:**
+**Trap 2 — `switch` on `boolean`/`long`/`float`/`double`:**
 ```java
-// switch (x) { case 1 -> ... case 2: ... } // ❌ not allowed — pick one style per switch
+long val = 5L;
+switch (val) { } // ❌ DOES NOT COMPILE: long is not supported
 ```
 
-**Trap 9 — Enhanced `for` on `null` collection:**
+**Trap 3 — Unreachable loop check:**
+```java
+while (false) {
+    System.out.println("Test"); // ❌ DOES NOT COMPILE: Compiler detects unreachable code
+}
+```
+
+**Trap 4 — Comma in switch case label syntax:**
+```java
+switch (x) {
+    case 1: 2: System.out.print("Test"); // ❌ DOES NOT COMPILE: Colon cannot separate labels (use comma)
+    case 1, 2: System.out.print("Test");  // ✅ Valid
+}
+```
+
+**Trap 5 — Missing semicolon in block expression assignment:**
+```java
+String result = switch (x) {
+    default -> "Value"
+}; // ❌ Missing semicolons inside and outside the switch
+```
+
+**Trap 6 — Pattern variable scope leaks:**
+```java
+if (!(obj instanceof String s)) {
+    System.out.println(s); // ❌ DOES NOT COMPILE: s is not in scope here
+}
+```
+
+**Trap 7 — Enhanced `for` on `null` reference:**
 ```java
 List<String> list = null;
-for (String s : list) { } // ❌ NullPointerException (not a compile error)
+for (var item : list) {} // Throws NullPointerException at runtime (compiles fine!)
 ```
 
-**Trap 10 — Infinite `for` without `break`:**
+**Trap 8 — Dominated pattern case in switch:**
 ```java
-for (;;) { } // infinite — same as while(true)
+switch (value) {
+    case Object o -> System.out.print("Obj");
+    case String s -> System.out.print("Str"); // ❌ DOES NOT COMPILE: s is dominated by Object o
+}
+```
+
+**Trap 9 — Traditional `for` initialization variable type restriction:**
+```java
+for (int i = 0, long j = 10; i < j; i++) {} // ❌ DOES NOT COMPILE: variables in initialization block must share same type declaration
+```
+
+**Trap 10 — `yield` vs `return` inside switch expression blocks:**
+```java
+int val = switch(x) {
+    default -> { return 5; } // ❌ DOES NOT COMPILE: cannot use return to return value from switch block
+};
 ```
 :::
 
-### Exam vignettes
+### Exam Vignettes
 
 ```java
-// Vignette — enum switch
-enum Day { MON, TUE }
-Day d = Day.MON;
-switch (d) {
-    case MON -> System.out.println("m");
-    case TUE -> System.out.println("t");
+// Vignette: Complex loop label trace
+int count = 0;
+ROW_LOOP: for(int i=1; i<=3; i++) {
+    for(int j=1; j<=3; j++) {
+        if(i * j > 3) break ROW_LOOP;
+        count++;
+    }
 }
+// i=1: j=1 (1*1=1 -> count=1), j=2 (1*2=2 -> count=2), j=3 (1*3=3 -> count=3)
+// i=2: j=1 (2*1=2 -> count=4), j=2 (2*2=4 -> breaks OUTER)
+// Output: count = 4
 ```
 
 :::tip[Spring/Senior Relevance]
-- Pattern matching with `switch` is heavily used in modern Spring applications for handling `ResponseEntity` types and processing polymorphic DTOs.
-- `switch` expressions (no fall-through) make Spring `@Service` strategy patterns cleaner — use them instead of `if-else` chains in factory methods.
-- The `when` guard in `switch` is useful for building type-safe route handlers in functional Spring WebFlux routers.
+- **Polymorphic request body routing:** Pattern matching `switch` makes implementing custom payload handlers in web sockets or message consumers much more readable.
+- **Sealed validation records:** Combining sealed types and switch exhaustiveness ensures that all business rule validation outcomes are handled compile-safe.
 :::
 
 ---
 
 ## 🔗 Review Questions Focus
 
-1. Which data types are **not** valid in a `switch` statement?
-2. What is the output when `break` is missing in a `switch` case?
-3. What does `yield` do in a switch expression?
-4. How does a labeled `continue` differ from an unlabeled one?
-5. What is the difference between `while` and `do-while`?
-6. Can you modify a collection element through an enhanced for-each loop variable?
-7. What happens if no `default` is provided in a `switch` expression?
-8. What is the scope of a pattern variable declared in `instanceof`?
-9. What does `case null` do in a Java 21 switch?
-10. Can arrow and colon cases be mixed in the same `switch`?
+1. **Exhaustiveness requirements:** Differentiate when a `switch` is required to have a `default` case.
+2. **Dominance checking:** Recognize dominated pattern cases in custom object hierarchies.
+3. **`yield` applicability:** Identify when `yield` is required vs. optional in switch case statements.
+4. **Boolean checks in if-statements:** Spot expressions that return numbers or objects instead of actual booleans.
+5. **Short-circuiting logic:** Trace variable state changes inside complex boolean loop checks.
+6. **Initialization limitations:** Catch loops that declare variables of different types in the initialization block.
+7. **`case null` processing:** Predict switch outputs when `null` is passed under different Java versions.
+8. **Label scope behavior:** Understand where labeled `break` and `continue` jump.
+9. **Pattern matching scopes:** Trace where a pattern variable is visible (flow scoping).
+10. **Enhanced loop limitations:** Explain why modifications to loop variables inside for-each loops do not persist.

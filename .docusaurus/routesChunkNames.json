@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-3e0": {
+  "/-a3e": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-6ae": {
+  "/-07f": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -496,10 +496,6 @@
   "/tags/buffer-pool-975": {
     "__comp": "df203c0f",
     "__props": "55251362"
-  },
-  "/tags/bufferedreader-8bf": {
-    "__comp": "df203c0f",
-    "__props": "f6bf9bb5"
   },
   "/tags/build-abe": {
     "__comp": "df203c0f",
@@ -1069,9 +1065,9 @@
     "__comp": "df203c0f",
     "__props": "4ff14a27"
   },
-  "/tags/constructors-dec": {
+  "/tags/console-4f0": {
     "__comp": "df203c0f",
-    "__props": "ec7d51df"
+    "__props": "c6646635"
   },
   "/tags/consumer-68a": {
     "__comp": "df203c0f",
@@ -1136,6 +1132,10 @@
   "/tags/core-7b7": {
     "__comp": "df203c0f",
     "__props": "87ee98da"
+  },
+  "/tags/core-apis-7d3": {
+    "__comp": "df203c0f",
+    "__props": "09ab9189"
   },
   "/tags/core-banking-679": {
     "__comp": "df203c0f",
@@ -1549,10 +1549,6 @@
     "__comp": "df203c0f",
     "__props": "883bcf9f"
   },
-  "/tags/duration-e84": {
-    "__comp": "df203c0f",
-    "__props": "f84f647c"
-  },
   "/tags/dva-c-02-fc2": {
     "__comp": "df203c0f",
     "__props": "96881746"
@@ -1817,6 +1813,10 @@
     "__comp": "df203c0f",
     "__props": "a41fc9ee"
   },
+  "/tags/file-attributes-de9": {
+    "__comp": "df203c0f",
+    "__props": "cd54450e"
+  },
   "/tags/file-systems-d53": {
     "__comp": "df203c0f",
     "__props": "ab9dbd11"
@@ -1828,10 +1828,6 @@
   "/tags/files-407": {
     "__comp": "df203c0f",
     "__props": "7b44fdc6"
-  },
-  "/tags/files-walk-198": {
-    "__comp": "df203c0f",
-    "__props": "fcf625cb"
   },
   "/tags/filters-505": {
     "__comp": "df203c0f",
@@ -2433,6 +2429,10 @@
     "__comp": "df203c0f",
     "__props": "130aa459"
   },
+  "/tags/java-se-21-8d9": {
+    "__comp": "df203c0f",
+    "__props": "b0961fcd"
+  },
   "/tags/jdbc-e39": {
     "__comp": "df203c0f",
     "__props": "6b455593"
@@ -2672,14 +2672,6 @@
   "/tags/local-testing-0c0": {
     "__comp": "df203c0f",
     "__props": "86aeec59"
-  },
-  "/tags/localdate-6c8": {
-    "__comp": "df203c0f",
-    "__props": "0b9bde29"
-  },
-  "/tags/localdatetime-f3e": {
-    "__comp": "df203c0f",
-    "__props": "5c45df41"
   },
   "/tags/locale-283": {
     "__comp": "df203c0f",
@@ -3401,9 +3393,9 @@
     "__comp": "df203c0f",
     "__props": "79199b91"
   },
-  "/tags/period-954": {
+  "/tags/period-duration-fc7": {
     "__comp": "df203c0f",
-    "__props": "b81052d0"
+    "__props": "ec91be69"
   },
   "/tags/persistence-af7": {
     "__comp": "df203c0f",
@@ -3712,6 +3704,10 @@
   "/tags/real-time-036": {
     "__comp": "df203c0f",
     "__props": "d3fb11d3"
+  },
+  "/tags/rebalancing-07c": {
+    "__comp": "df203c0f",
+    "__props": "026768f6"
   },
   "/tags/rebase-f50": {
     "__comp": "df203c0f",
@@ -4069,10 +4065,6 @@
     "__comp": "df203c0f",
     "__props": "94f44a09"
   },
-  "/tags/serialversionuid-a55": {
-    "__comp": "df203c0f",
-    "__props": "15600bb9"
-  },
   "/tags/serverless-e75": {
     "__comp": "df203c0f",
     "__props": "1e781f6d"
@@ -4192,6 +4184,10 @@
   "/tags/smtp-ea0": {
     "__comp": "df203c0f",
     "__props": "187558a9"
+  },
+  "/tags/snowflake-id-161": {
+    "__comp": "df203c0f",
+    "__props": "860d1e66"
   },
   "/tags/sns-7d5": {
     "__comp": "df203c0f",
@@ -4412,14 +4408,6 @@
   "/tags/streams-236": {
     "__comp": "df203c0f",
     "__props": "52ca1ed9"
-  },
-  "/tags/string-481": {
-    "__comp": "df203c0f",
-    "__props": "05228ff0"
-  },
-  "/tags/stringbuilder-169": {
-    "__comp": "df203c0f",
-    "__props": "65429980"
   },
   "/tags/strings-e8d": {
     "__comp": "df203c0f",
@@ -4697,10 +4685,6 @@
     "__comp": "df203c0f",
     "__props": "a2bd1cfe"
   },
-  "/tags/transient-3fd": {
-    "__comp": "df203c0f",
-    "__props": "8e4006a6"
-  },
   "/tags/transport-68d": {
     "__comp": "df203c0f",
     "__props": "41cf1a72"
@@ -4868,10 +4852,6 @@
   "/tags/walmart-021": {
     "__comp": "df203c0f",
     "__props": "19c9cb7d"
-  },
-  "/tags/watchservice-6c7": {
-    "__comp": "df203c0f",
-    "__props": "d278bb97"
   },
   "/tags/web-4aa": {
     "__comp": "df203c0f",
@@ -5057,7 +5037,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-c5d": {
+  "/-410": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -5076,67 +5056,67 @@
     "__comp": "17896441",
     "content": "7b5d2e61"
   },
-  "/books/building-microservice/chapter-01-4e9": {
+  "/books/building-microservice/chapter-01-b4d": {
     "__comp": "17896441",
     "content": "68ab07b1"
   },
-  "/books/building-microservice/chapter-02-113": {
+  "/books/building-microservice/chapter-02-bf1": {
     "__comp": "17896441",
     "content": "11bcc05a"
   },
-  "/books/building-microservice/chapter-03-e31": {
+  "/books/building-microservice/chapter-03-383": {
     "__comp": "17896441",
     "content": "3b42864a"
   },
-  "/books/building-microservice/chapter-04-78b": {
+  "/books/building-microservice/chapter-04-015": {
     "__comp": "17896441",
     "content": "69b5c840"
   },
-  "/books/building-microservice/chapter-05-c16": {
+  "/books/building-microservice/chapter-05-8b9": {
     "__comp": "17896441",
     "content": "1d25b2fe"
   },
-  "/books/building-microservice/chapter-06-583": {
+  "/books/building-microservice/chapter-06-02f": {
     "__comp": "17896441",
     "content": "9df5b457"
   },
-  "/books/building-microservice/chapter-07-c12": {
+  "/books/building-microservice/chapter-07-33f": {
     "__comp": "17896441",
     "content": "4aeace3f"
   },
-  "/books/building-microservice/chapter-08-338": {
+  "/books/building-microservice/chapter-08-ac7": {
     "__comp": "17896441",
     "content": "f68d61b3"
   },
-  "/books/building-microservice/chapter-09-caf": {
+  "/books/building-microservice/chapter-09-a6d": {
     "__comp": "17896441",
     "content": "b8cded00"
   },
-  "/books/building-microservice/chapter-10-df5": {
+  "/books/building-microservice/chapter-10-f86": {
     "__comp": "17896441",
     "content": "4b29e76d"
   },
-  "/books/building-microservice/chapter-11-17d": {
+  "/books/building-microservice/chapter-11-88c": {
     "__comp": "17896441",
     "content": "78ebb9c7"
   },
-  "/books/building-microservice/chapter-12-b0b": {
+  "/books/building-microservice/chapter-12-4d6": {
     "__comp": "17896441",
     "content": "eca91fbf"
   },
-  "/books/building-microservice/chapter-13-347": {
+  "/books/building-microservice/chapter-13-f89": {
     "__comp": "17896441",
     "content": "a71c18db"
   },
-  "/books/building-microservice/chapter-14-99b": {
+  "/books/building-microservice/chapter-14-dca": {
     "__comp": "17896441",
     "content": "c08887ed"
   },
-  "/books/building-microservice/chapter-15-bfb": {
+  "/books/building-microservice/chapter-15-1a7": {
     "__comp": "17896441",
     "content": "ed429399"
   },
-  "/books/building-microservice/chapter-16-35d": {
+  "/books/building-microservice/chapter-16-e66": {
     "__comp": "17896441",
     "content": "f0cf1ac1"
   },
@@ -9464,7 +9444,7 @@
     "__comp": "17896441",
     "content": "e1e89bb9"
   },
-  "/technical-knowledge/kafka/advanced/kafka-streams-deep-dive-d58": {
+  "/technical-knowledge/kafka/advanced/kafka-streams-deep-dive-719": {
     "__comp": "17896441",
     "content": "ce37e8db"
   },
@@ -10060,7 +10040,7 @@
     "__comp": "17896441",
     "content": "f58357ef"
   },
-  "/technical-knowledge/system-design/outbox-pattern-149": {
+  "/technical-knowledge/system-design/outbox-pattern-60f": {
     "__comp": "17896441",
     "content": "5223f567"
   },
@@ -10084,7 +10064,7 @@
     "__comp": "17896441",
     "content": "e8a6b3e1"
   },
-  "/technical-knowledge/system-design/sharding-partitioning-cb5": {
+  "/technical-knowledge/system-design/sharding-partitioning-5f0": {
     "__comp": "17896441",
     "content": "1d0030f3"
   },

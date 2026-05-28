@@ -21,465 +21,256 @@ tags:
 
 <span class="chapter-badge">Exam Domain: Managing Concurrent Code Execution</span>
 
-> **Key Topics:** Platform threads, virtual threads, `Runnable`, `Callable`, `ExecutorService`, `Future`, atomic classes, locks, concurrent collections, parallel streams.
+> **Key Topics:** Platform vs. Virtual Threads, Thread Lifecycle & States, Runnable vs. Callable, ExecutorService (Single-Threaded, Scheduled, Pooled), Future API, Thread Safety (Atomic Classes, synchronized, ReentrantLock, volatile, memory consistency happens-before), Concurrent Collections, Threading Problems (Deadlock, Starvation, Livelock, Race Conditions), and Parallel Streams.
 
 ---
 
 ## 🟦 New Learner: Threads and Executors
 
-### Creating Threads
+### 1. Platforms Threads vs. Virtual Threads (Java 21)
+A **thread** is the smallest unit of execution that can be scheduled by an operating system. A **process** is a group of threads executing in a shared environment (sharing memory and address space).
+*   **Platform Threads**: Map one-to-one to operating system threads. They are heavy, resource-intensive (~1MB stack size), and limited in scale (thousands).
+*   **Virtual Threads**: Lightweight threads managed by the JVM rather than the OS. They mount to a **carrier thread** (which is a platform thread) only when they are actively running. When blocked (e.g. waiting on I/O or sleep), the virtual thread is unmounted from the carrier thread, freeing it up to run other virtual threads. Scale up to millions.
+*   **Virtual Thread Execution**: Always daemon threads. Their priority is always 5 (`Thread.NORM_PRIORITY`) and cannot be changed (calling `setPriority()` has no effect). They do not need to be pooled because they are extremely lightweight and cheap to create.
 
-```java
-// Option 1: Extend Thread
-class MyThread extends Thread {
-    @Override
-    public void run() { System.out.println("Running in: " + Thread.currentThread().getName()); }
-}
-new MyThread().start(); // start() — NOT run()!
+---
 
-// Option 2: Implement Runnable (preferred)
-Runnable task = () -> System.out.println("Running!");
-Thread t = new Thread(task);
-t.start();
+### 2. Creating and Starting Threads
 
-// Option 3: Virtual Thread (Java 21)
-Thread vt = Thread.ofVirtual().start(() -> System.out.println("Virtual!"));
-```
+| Thread Type | Creation Method | Starting Method |
+| :--- | :--- | :--- |
+| **Platform Thread** | `Thread.ofPlatform().unstarted(runnable)` | `.start()` |
+| **Platform Thread** | `Thread.ofPlatform().start(runnable)` | Starts immediately |
+| **Platform Thread** | `new Thread(runnable)` | `.start()` |
+| **Virtual Thread** | `Thread.ofVirtual().unstarted(runnable)` | `.start()` |
+| **Virtual Thread** | `Thread.ofVirtual().start(runnable)` | Starts immediately |
+| **Virtual Thread** | `Thread.startVirtualThread(runnable)` | Starts immediately |
 
-:::caution[`start()` vs `run()`]
-Calling `run()` directly executes in the **current thread** — no new thread is created!  
-Always call `start()` to create a new thread.
+:::caution[`start()` vs. `run()` Trap]
+Calling `run()` on a `Thread` or a `Runnable` executes the task **synchronously** in the *current thread*—it does **not** start a new thread. Always call `start()` to run a task asynchronously in a new thread.
 :::
 
----
-
-### Thread Lifecycle
-
-```
-NEW → RUNNABLE → [BLOCKED/WAITING/TIMED_WAITING] → TERMINATED
-```
-
-```java
-Thread t = new Thread(() -> { ... });
-t.getState();    // NEW
-t.start();
-t.getState();    // RUNNABLE
-
-// Wait for thread to finish
-t.join();        // calling thread blocks until t terminates
-t.join(1000);    // wait at most 1 second
-```
+#### Daemon Threads
+A Java application terminates when the only threads left running are **daemon threads** (the JVM does not wait for daemon threads to finish). Platform threads are non-daemon by default (can be set via `.daemon(true)`). Virtual threads are always daemons and cannot be changed to non-daemons.
 
 ---
 
-### ExecutorService
+### 3. Managing Thread Lifecycles
+You can query a thread's state by calling `getState()`, which returns a `Thread.State` enum value:
+1.  **`NEW`**: Thread has been created but not yet started (via `start()`).
+2.  **`RUNNABLE`**: Thread is executing or ready to execute when scheduled.
+3.  **`BLOCKED`**: Thread is waiting to acquire a monitor lock.
+4.  **`WAITING`**: Thread is waiting indefinitely for another thread to perform an action (e.g. via `join()`, `wait()`).
+5.  **`TIMED_WAITING`**: Thread is waiting for a specified period (e.g. via `sleep(ms)`, `join(ms)`, `wait(ms)`).
+6.  **`TERMINATED`**: Thread has completed executing its task or exited due to an uncaught exception.
 
-`ExecutorService` manages a thread pool — preferred over raw threads:
-
-```java
-ExecutorService executor = Executors.newFixedThreadPool(4);
-
-// Submit Runnable (no return value)
-executor.execute(() -> System.out.println("Task 1"));
-
-// Submit Callable (returns a value)
-Future<Integer> future = executor.submit(() -> {
-    Thread.sleep(1000);
-    return 42;
-});
-
-// Get result (blocks until ready)
-Integer result = future.get();         // waits indefinitely
-Integer result2 = future.get(2, TimeUnit.SECONDS); // with timeout
-
-// Shutdown
-executor.shutdown();            // no new tasks; waits for current to finish
-executor.shutdownNow();         // tries to stop all running tasks
-executor.awaitTermination(30, TimeUnit.SECONDS);
-```
+#### Interruption
+Calling `interrupt()` on a thread in a waiting state (`WAITING` or `TIMED_WAITING`) wakes it up, throwing an `InterruptedException`.
+If `interrupt()` is called on a running thread, it does not throw an exception but sets the interrupt flag. The thread can check `Thread.interrupted()` (which clears the flag) or `isInterrupted()` (does not clear the flag) to check for interrupts.
 
 ---
 
-### Types of Executors
+### 4. The Concurrency API: Executor Services
+`ExecutorService` manages task execution and thread pooling, separating task definition from thread creation.
 
-| Factory Method | Description |
-|----------------|-------------|
-| `newSingleThreadExecutor()` | Single thread, tasks queued |
-| `newFixedThreadPool(n)` | Fixed number of threads |
-| `newCachedThreadPool()` | Grows/shrinks as needed |
-| `newScheduledThreadPool(n)` | For scheduled/recurring tasks |
-| `newVirtualThreadPerTaskExecutor()` | One virtual thread per task (Java 21) |
+#### Creating Executors (`Executors` Factory)
+*   `Executors.newSingleThreadExecutor()`: Single platform thread, runs tasks sequentially.
+*   `Executors.newSingleThreadScheduledExecutor()`: Single platform thread for delayed/periodic tasks.
+*   `Executors.newCachedThreadPool()`: Grows pool as needed; reuses idle threads.
+*   `Executors.newFixedThreadPool(n)`: Reuses a fixed number of platform threads.
+*   `Executors.newScheduledThreadPool(n)`: Pooled executor for scheduled/periodic tasks.
+*   `Executors.newVirtualThreadPerTaskExecutor()`: Creates a new virtual thread for each task (Java 21).
 
-```java
-// Scheduled tasks
-ScheduledExecutorService scheduled = Executors.newScheduledThreadPool(2);
-scheduled.schedule(() -> System.out.println("Delayed!"), 3, TimeUnit.SECONDS);
-scheduled.scheduleAtFixedRate(() -> System.out.println("Repeating"), 0, 1, TimeUnit.SECONDS);
-```
+#### Submitting Tasks
+*   `execute(Runnable)`: Fire-and-forget; returns `void`.
+*   `submit(Runnable)`: Returns a `Future<?>`. `Future.get()` returns `null` on completion.
+*   `submit(Callable<V>)`: Returns a `Future<V>` containing the result.
+*   `invokeAll(Collection<Callable>)`: Executes all tasks, blocks until all are complete. Returns list of `Future`s.
+*   `invokeAny(Collection<Callable>)`: Executes all tasks, blocks until at least one completes, returns its value, and cancels all others.
 
----
-
-### Virtual Threads (Java 21)
-
-Virtual threads are **lightweight** threads managed by the JVM, not the OS:
-
-```java
-// Create virtual threads
-Thread vt = Thread.ofVirtual().start(runnable);
-Thread.startVirtualThread(runnable); // shortcut
-
-// Virtual thread executor (best practice for I/O-bound tasks)
-try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
-    for (int i = 0; i < 100_000; i++) {
-        executor.submit(() -> doIoWork());
-    }
-} // auto-closes and waits
-```
-
-| | Platform Thread | Virtual Thread |
-|--|---------------|----------------|
-| Managed by | OS | JVM |
-| Cost per thread | ~1MB stack | ~few KB |
-| Scale | Thousands | Millions |
-| Best for | CPU-bound | I/O-bound |
+#### Shutting Down Executors
+Always manage executors in a try-with-resources block (added to `ExecutorService` in Java 19), which calls `close()`, implicitly shutting down and waiting for tasks to finish.
+*   `shutdown()`: Stops accepting new tasks, but runs existing queued tasks to completion.
+*   `shutdownNow()`: Attempts to stop executing tasks immediately, discards waiting tasks, and returns a list of unstarted tasks.
+*   `isShutdown()`: Returns `true` if `shutdown()` or `shutdownNow()` has been called.
+*   `isTerminated()`: Returns `true` if all tasks have completed after shutdown.
 
 ---
 
-### Thread Safety Problems
-
-**Race Condition** — Two threads access shared data simultaneously with incorrect results:
-
-```java
-class Counter {
-    int count = 0;
-    void increment() { count++; } // NOT thread-safe: read-modify-write
-}
-// Two threads running increment() 1000 times may not give 2000!
-```
+### 5. Future API
+A `Future<V>` represents the pending result of an asynchronous task.
+*   `get()`: Blocks indefinitely until the task completes. If the task threw an exception, it wraps it in an `ExecutionException` (original retrieved via `.getCause()`).
+*   `get(long timeout, TimeUnit unit)`: Blocks up to the timeout. Throws `TimeoutException` if not ready in time.
+*   `cancel(boolean mayInterruptIfRunning)`: Attempts to cancel execution.
+*   `isDone()` / `isCancelled()`: Checks task completion/cancellation status.
 
 ---
 
-### Atomic Classes
-
-Atomic classes provide **lock-free thread-safe** operations:
-
-```java
-AtomicInteger counter = new AtomicInteger(0);
-counter.incrementAndGet();          // atomic ++
-counter.getAndIncrement();          // atomic (returns old value) then ++
-counter.addAndGet(5);               // atomic += 5
-counter.compareAndSet(10, 20);      // if value==10, set to 20
-
-AtomicBoolean flag = new AtomicBoolean(false);
-AtomicLong longVal = new AtomicLong(0L);
-AtomicReference<String> ref = new AtomicReference<>("initial");
-```
-
----
-
-### Synchronization
-
-```java
-class SafeCounter {
-    private int count = 0;
-
-    // Option 1: synchronized method
-    public synchronized void increment() { count++; }
-
-    // Option 2: synchronized block (finer-grained)
-    public void incrementBlock() {
-        synchronized (this) { count++; }
-    }
-}
-```
-
----
-
-### Locks
-
-`ReentrantLock` gives more control than `synchronized`:
-
-```java
-ReentrantLock lock = new ReentrantLock();
-
-lock.lock();
-try {
-    // critical section
-} finally {
-    lock.unlock(); // ALWAYS unlock in finally!
-}
-
-// Try to acquire without blocking
-if (lock.tryLock()) {
-    try { ... }
-    finally { lock.unlock(); }
-}
-```
-
----
-
-### Concurrent Collections
-
-| Type | Thread-Safe Alternative |
-|------|------------------------|
-| `ArrayList` | `CopyOnWriteArrayList` |
-| `HashMap` | `ConcurrentHashMap` |
-| `LinkedList` | `ConcurrentLinkedQueue` |
-| `TreeMap` | `ConcurrentSkipListMap` |
-| `PriorityQueue` | `PriorityBlockingQueue` |
-
-```java
-ConcurrentHashMap<String, Integer> map = new ConcurrentHashMap<>();
-map.put("a", 1);
-map.computeIfAbsent("b", k -> k.length()); // thread-safe compute
-
-CopyOnWriteArrayList<String> list = new CopyOnWriteArrayList<>();
-// Iteration never throws ConcurrentModificationException
-```
+### 6. Scheduled Executor Services (`ScheduledExecutorService`)
+*   `schedule(Callable/Runnable, delay, unit)`: Runs the task once after the delay.
+*   `scheduleAtFixedRate(Runnable, initialDelay, period, unit)`: Runs the task repeatedly at a fixed interval (e.g. every 5 minutes), regardless of how long the task takes. Can crash if tasks queue up faster than they execute.
+*   `scheduleWithFixedDelay(Runnable, initialDelay, delay, unit)`: Runs the task repeatedly, ensuring the specified delay passes between the completion of one task and the start of the next (e.g. task finishes, waits 2 minutes, then starts next).
 
 ---
 
 ## 🟣 Senior Deep Dive
 
-### `volatile` Keyword
+### 1. Writing Thread-Safe Code
 
-`volatile` ensures **visibility** — reads always see the latest written value from any thread:
+#### Atomic Classes
+Atomics perform read-and-write operations on a single variable as a single unit without synchronization overhead.
+*   Classes: `AtomicBoolean`, `AtomicInteger`, `AtomicLong`, `AtomicReference<V>`
+*   Methods: `get()`, `set()`, `getAndSet()`, `incrementAndGet()` (`++x`), `getAndIncrement()` (`x++`), `decrementAndGet()` (`--x`), `getAndDecrement()` (`x--`), and `compareAndSet(expected, newValue)` (sets if current equals expected).
+
+#### Volatile Variables
+`volatile` guarantees **visibility** (reads always see the latest write across threads by bypassing CPU local cache) but does **not** guarantee **atomicity** for compound operations (e.g. `count++` is read-modify-write and is **not** safe with `volatile`).
+
+#### Synchronized Blocks and Methods
+*   Uses a **monitor lock** to ensure only one thread can execute a block of code at a time.
+*   Synchronized method (instance): Locks on `this`.
+*   Synchronized method (`static`): Locks on `ClassName.class` object.
+*   Synchronized block: Locks on a specific object reference.
 
 ```java
-class FlagHolder {
-    volatile boolean running = true; // without volatile, other threads may see stale value
+// Instance method lock on 'this'
+public synchronized void increment() { count++; }
 
-    void stop() { running = false; }
-    void run() { while (running) { /* process */ } }
+// Equivalent block:
+public void incrementBlock() {
+    synchronized(this) { count++; }
 }
 ```
 
-`volatile` does NOT provide atomicity. For compound operations (check-then-act, read-modify-write), use `synchronized` or atomics.
-
-### Memory Consistency and Happens-Before
-
-Java Memory Model defines **happens-before** relationships:
-- Actions in a thread happen-before `thread.join()`
-- `lock.unlock()` happens-before subsequent `lock.lock()`
-- `volatile` write happens-before subsequent reads of same variable
-- `Thread.start()` happens-before any action in the started thread
-
-### `CompletableFuture` (Java 8+)
+#### ReentrantLock (Locks Framework)
+An alternative to `synchronized` offering finer control.
+*   Must call `unlock()` inside a `finally` block to prevent deadlocks.
+*   `tryLock()`: Non-blocking; attempts to acquire lock immediately and returns a boolean.
+*   `tryLock(timeout, unit)`: Blocks up to timeout trying to acquire lock.
+*   *Virtual Threads Note*: Avoid `synchronized` in I/O-heavy virtual thread tasks as it "pins" the virtual thread to its carrier platform thread, defeating virtual thread scaling. Use `ReentrantLock` instead.
 
 ```java
-CompletableFuture<String> cf = CompletableFuture
-    .supplyAsync(() -> fetchData())           // run async
-    .thenApply(data -> transform(data))       // chain non-blocking
-    .thenCompose(result -> fetchMore(result)) // async chain
-    .exceptionally(ex -> "Error: " + ex.getMessage()); // handle errors
-
-cf.thenAccept(System.out::println);  // consume when done
-String result = cf.join();           // block and get result
-```
-
-### Deadlock
-
-```java
-// Classic deadlock pattern
-Object lock1 = new Object(), lock2 = new Object();
-
-Thread t1 = new Thread(() -> {
-    synchronized (lock1) {
-        synchronized (lock2) { /* work */ }
+Lock lock = new ReentrantLock();
+if (lock.tryLock()) {
+    try {
+        // critical section
+    } finally {
+        lock.unlock(); // Always unlock in finally
     }
-});
-Thread t2 = new Thread(() -> {
-    synchronized (lock2) {       // reversed order!
-        synchronized (lock1) { /* work */ }
-    }
-});
-// t1 and t2 can deadlock — always acquire locks in the SAME order
+}
 ```
 
-### `CyclicBarrier` and `CountDownLatch`
+---
 
-```java
-// CountDownLatch — wait for N events
-CountDownLatch latch = new CountDownLatch(3);
-// 3 threads each call latch.countDown() when done
-// Main thread:
-latch.await(); // blocks until count reaches 0
+### 2. Concurrent Collections
+Standard collections throw `ConcurrentModificationException` if modified while iterating. Use concurrent versions:
+*   `ConcurrentHashMap`: High performance, lock-striping. **Does not allow null keys or values** (throws NPE).
+*   `CopyOnWriteArrayList`: Creates a copy of the underlying array whenever modified. Iterators never throw `ConcurrentModificationException`. Best for read-heavy, write-rare scenarios.
+*   `ConcurrentSkipListMap` / `ConcurrentSkipListSet`: Sorted concurrent map/set.
+*   `BlockingQueue` (`LinkedBlockingQueue`, `ArrayBlockingQueue`): Queues that block on retrieve if empty, or on insert if full.
 
-// CyclicBarrier — wait for N threads to reach a point, then reset
-CyclicBarrier barrier = new CyclicBarrier(3, () -> System.out.println("All ready!"));
-// Each thread calls barrier.await(); when all 3 have called it, they all proceed
-```
+---
+
+### 3. Threading Problems
+*   **Deadlock**: Two or more threads are blocked forever, waiting for a lock held by the other (circular dependency).
+*   **Starvation**: A thread is perpetually denied CPU time or lock access because other threads take priority.
+*   **Livelock**: Active threads perpetually change state in response to each other, never making actual progress (active deadlock).
+*   **Race Conditions**: Two or more threads access a resource simultaneously, resulting in incorrect, unpredictable data.
+
+---
+
+### 4. Parallel Streams
+Decomposes stream processing into multiple threads using `ForkJoinPool.commonPool()`.
+*   Created via `stream().parallel()` or `collection.parallelStream()`.
+*   **Stateful Lambdas Danger**: Do not use stateful lambdas (lambdas that depend on or modify external state) in parallel streams—results will be inconsistent and unordered.
+*   **Ordering**: Use `forEachOrdered()` instead of `forEach()` to guarantee original stream order.
+*   **Decomposition & Parallel Reduction**:
+    *   `reduce(identity, accumulator, combiner)`: The third parameter combines results from parallel subthreads. Must be associative.
+    *   `collect(supplier, accumulator, combiner)`: Accumulates parallel results.
+    *   `Collectors.toConcurrentMap()` and `groupingByConcurrent()` support parallel reductions.
 
 ---
 
 ## 📝 Exam Quick Reference
 
-| Topic | Key Fact |
-|-------|----------|
-| `start()` vs `run()` | `start()` creates new thread; `run()` runs in current thread |
-| `Callable` vs `Runnable` | `Callable` returns a value and can throw checked exceptions |
-| `Future.get()` | Blocks until result available; wraps task exception in `ExecutionException` |
-| `shutdown()` | No new tasks; waits for running ones to finish |
-| `shutdownNow()` | Attempts to interrupt running tasks; returns pending task list |
-| `AtomicInteger` | Lock-free thread-safe integer operations |
-| `synchronized` | Provides mutual exclusion + visibility |
-| `volatile` | Visibility only — NOT atomicity; no compound-action safety |
-| `ConcurrentHashMap` | Thread-safe, segment-locked, no null keys or values |
-| Virtual thread | Lightweight, best for blocking I/O; `Thread.ofVirtual()` |
-| Deadlock | Two threads each hold a lock the other needs — circular wait |
-| `ReentrantLock` | Must unlock in `finally`; supports `tryLock()` and `lockInterruptibly()` |
-| `CountDownLatch` | One-time; counts down to zero, then all waiting threads proceed |
-| `CyclicBarrier` | Reusable; all threads must reach barrier before any proceed |
-| `CompletableFuture` | Async composition: `supplyAsync`, `thenApply`, `thenAccept`, `exceptionally` |
-| `ForkJoinPool.commonPool()` | Shared by parallel streams; parallelism tied to available processors |
-| `parallel()` / `parallelStream()` | Uses common pool; avoid blocking/synchronized work in tasks |
-| `Thread.interrupted()` | Clears interrupted flag; static `Thread.interrupted()` vs instance `isInterrupted()` |
-| `ExecutorService.invokeAll` | Submits collection of `Callable`s; blocks until all complete or timeout |
-| `ScheduledExecutorService` | `schedule`, `scheduleAtFixedRate`, `scheduleWithFixedDelay` |
-| `Thread.setDaemon(true)` | JVM exits when only daemon threads remain |
-| `synchronized` reentrancy | Same thread can re-acquire lock it holds |
-| `ReadWriteLock` | Multiple readers OR one writer — `ReentrantReadWriteLock` |
+### Runnable vs. Callable
+*   `Runnable`: `void run()`, cannot throw checked exceptions.
+*   `Callable<V>`: `V call() throws Exception`, returns generic type and throws checked exceptions.
+
+### Happens-Before Relationships
+The JMM guarantees memory visibility order:
+*   A write to a `volatile` variable happens-before subsequent reads.
+*   An `unlock()` on a monitor happens-before subsequent `lock()` on the same monitor.
+*   `Thread.start()` happens-before any actions in the started thread.
+*   All actions in a thread happen-before a successful return from `join()` on that thread.
 
 ---
 
 ## 🚨 Extra Exam Tips
 
 :::danger[Top Traps in Chapter 13]
-**Trap 1 — Calling `run()` instead of `start()`:**
+**Trap 1 — Synchronizing on different objects:**
+Threads must coordinate on the *same* monitor object for synchronization to work. Locking on separate objects allows concurrent access.
 ```java
-Thread t = new Thread(() -> System.out.println(Thread.currentThread().getName()));
-t.run();   // prints "main" — NOT a new thread!
-t.start(); // prints "Thread-0" — creates a new thread ✅
+// ❌ Thread 1 locks on a, Thread 2 locks on b. No mutual exclusion!
+synchronized(new Object()) { count++; }
 ```
 
-**Trap 2 — `Future.get()` exception wrapping:**
+**Trap 2 — Null values in ConcurrentHashMap:**
+Standard `HashMap` allows one `null` key and `null` values. `ConcurrentHashMap` throws `NullPointerException` on `null` keys or values.
 ```java
-Future<Integer> f = executor.submit(() -> { throw new IOException("oops"); });
-try {
-    f.get(); // ❌ throws ExecutionException, not IOException!
-} catch (ExecutionException e) {
-    Throwable cause = e.getCause(); // the original IOException
-}
+var map = new ConcurrentHashMap<String, String>();
+map.put(null, "val"); // ❌ Throws NullPointerException
 ```
 
-**Trap 3 — `volatile` does NOT make compound operations atomic:**
-```java
-volatile int count = 0;
-// This is NOT thread-safe!
-count++; // read-modify-write: 3 operations, not atomic despite volatile
+**Trap 3 — Forgetting to call `start()`:**
+Creating a `Thread` and calling `.run()` executes code inside the current main thread, not concurrently. Always use `.start()`.
 
-// Use AtomicInteger instead:
-AtomicInteger count = new AtomicInteger(0);
-count.incrementAndGet(); // ✅ atomic
+**Trap 4 — Modifying variables in streams:**
+Modifying external variables inside stream lambdas causes race conditions. Keep stream lambdas stateless.
+```java
+// ❌ Race condition on count
+List.of(1,2,3).parallelStream().forEach(i -> count++);
 ```
 
-**Trap 4 — Forgetting to unlock `ReentrantLock`:**
-```java
-ReentrantLock lock = new ReentrantLock();
-lock.lock();
-// ❌ If exception thrown here, unlock never called → deadlock!
-doWork();
-lock.unlock();
+**Trap 5 — Mixing Single-Thread Executor with concurrent schedule tasks:**
+Using `Executors.newSingleThreadScheduledExecutor()` only has *one* thread. If you schedule a repeating task, it cannot execute concurrently with itself or other tasks; they wait in queue.
 
-// ✅ Always use try/finally:
-lock.lock();
-try { doWork(); }
-finally { lock.unlock(); }
+**Trap 6 — `volatile` is not atomic:**
+A `volatile` counter does not make `count++` safe. Use `AtomicInteger` instead.
+
+**Trap 7 — CyclicBarrier count mismatch:**
+A `CyclicBarrier(N)` requires exactly `N` threads to call `.await()`. If fewer threads call it (e.g. 9 threads for a barrier of 10), they will wait forever (hang).
+
+**Trap 8 — ReentrantLock `unlock()` without `lock()`:**
+Calling `unlock()` on a lock that is not held by the current thread throws an `IllegalMonitorStateException` at runtime.
+
+**Trap 9 — Double-increment / decrement on Atomics:**
+Watch out for methods like `incrementAndGet()` (pre-increment) vs `getAndIncrement()` (post-increment) returns.
+```java
+var atom = new AtomicInteger(5);
+System.out.print(atom.getAndIncrement()); // Prints 5 (value is now 6)
 ```
 
-**Trap 5 — Thread pool shutdown timing:**
-```java
-ExecutorService exec = Executors.newFixedThreadPool(4);
-exec.submit(() -> heavyWork());
-exec.shutdown(); // signals shutdown — tasks already submitted still run!
-// exec.submit(newTask); // ❌ RejectedExecutionException after shutdown
-
-boolean done = exec.awaitTermination(10, TimeUnit.SECONDS);
-// done = true if all tasks finished within 10 sec, false if timeout
-```
-
-**Trap 6 — Virtual threads and pinning:**
-```java
-// Virtual threads should NOT use synchronized on I/O-heavy code
-// Using synchronized with blocking I/O "pins" the virtual thread to a platform thread
-// Use ReentrantLock instead of synchronized for I/O-heavy virtual thread code
-
-// ✅ Best for virtual threads:
-ReentrantLock lock = new ReentrantLock();
-lock.lock();
-try { doIoWork(); }
-finally { lock.unlock(); }
-```
-
-**Trap 7 — `ConcurrentHashMap` does NOT allow null keys/values:**
-```java
-ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>();
-map.put(null, "value"); // ❌ NullPointerException
-map.put("key", null);   // ❌ NullPointerException
-// HashMap allows one null key; ConcurrentHashMap does NOT
-```
-
-**Trap 8 — Race condition with check-then-act:**
-```java
-// NOT thread-safe even with synchronized get/put separately:
-if (!map.containsKey("key")) {       // check
-    map.put("key", computeValue());  // act ← another thread may have inserted between!
-}
-// ✅ Use atomic operation:
-map.computeIfAbsent("key", k -> computeValue());
-```
-
-**Trap 9 — `ExecutorService.submit(Runnable)` return value:**
-```java
-Future<?> f = exec.submit(() -> { work(); });
-f.get(); // returns null for Runnable — use Callable for results
-```
-
-**Trap 10 — `InterruptedException` clears interrupt status:**
-```java
-try { Thread.sleep(1000); }
-catch (InterruptedException e) {
-    Thread.currentThread().interrupt(); // ✅ restore interrupt flag
-}
-```
-
-**Trap 11 — `parallelStream()` on small data:**
-```java
-List.of(1,2,3).parallelStream().map(n -> n * 2); // overhead may dominate — not always faster
-```
+**Trap 10 — SingleThreadExecutor does not accept new tasks after shutdown:**
+Submitting tasks after `shutdown()` throws `RejectedExecutionException`.
 :::
 
-### Exam vignettes
-
-```java
-// Vignette 1 — Virtual thread factory
-try (var ex = Executors.newVirtualThreadPerTaskExecutor()) {
-    ex.submit(() -> System.out.println(Thread.currentThread().isVirtual()));
-}
-
-// Vignette 2 — latch
-CountDownLatch latch = new CountDownLatch(1);
-new Thread(() -> { doWork(); latch.countDown(); }).start();
-latch.await();
-```
-
 :::tip[Spring/Senior Relevance]
-- Spring's `@Async` methods run in a thread pool — `Future` and `CompletableFuture` are the return types; understanding `ExecutionException` unwrapping is key for proper error handling in async Spring services.
-- Virtual threads (Java 21 + Spring Boot 3.2+) are enabled via `spring.threads.virtual.enabled=true`. Understanding that virtual threads are best for blocking I/O (JDBC, HTTP calls) explains why Spring's traditional thread-per-request model benefits most.
-- `ConcurrentHashMap.computeIfAbsent()` is the standard pattern for Spring's component registry, cache managers, and bean scope caches — avoiding the check-then-act race condition that plagues naive `HashMap` usage in `@Component` singletons.
+*   **Virtual Threads Configuration**: Enabling virtual threads in Spring Boot 3.2 (`spring.threads.virtual.enabled=true`) changes the default Tomcat connector thread pool to use virtual threads. Ideal for microservices that spend most time blocking on SQL or REST client calls.
+*   **Pinning Warning**: If your Spring application uses virtual threads, avoid blocking calls inside `synchronized` blocks (like legacy JDBC drivers or synchronization libraries). Refactor them to `ReentrantLock` to avoid platform thread pinning.
 :::
 
 ---
 
 ## 🔗 Review Questions Focus
 
-1. What is the difference between `shutdown()` and `shutdownNow()`?
-2. What is a race condition and give an example with `count++`?
-3. What does `volatile` guarantee? What does it NOT guarantee?
-4. When should you use virtual threads vs platform threads?
-5. What does `AtomicInteger.compareAndSet()` do?
-6. Why must `ReentrantLock.unlock()` be called in a `finally` block?
-7. What exception does `Future.get()` throw if the task threw an exception?
-8. What is the difference between `CountDownLatch` and `CyclicBarrier`?
-9. What happens when you call `t.run()` instead of `t.start()`?
-10. Why does `ConcurrentHashMap` not allow null keys?
+1.  What is the difference between `Thread.ofPlatform().start(task)` and `new Thread(task).run()`?
+2.  Which states does a thread transition between when waiting to acquire a `synchronized` lock vs when executing `Thread.sleep()`?
+3.  Why is `volatile boolean flag = true;` safe for thread signaling, but `volatile int count = 0; count++;` is not thread-safe?
+4.  Why are virtual threads not pooled?
+5.  What exception is thrown if you submit a task to an `ExecutorService` after calling `shutdown()`?
+6.  How does `scheduleAtFixedRate()` differ from `scheduleWithFixedDelay()` when the task execution time exceeds the scheduled period?
+7.  What is the benefit of `CopyOnWriteArrayList` over a synchronized list? What is the performance trade-off?
+8.  How can you safely combine results in parallel streams using `reduce()`?
+9.  Under what conditions does `CyclicBarrier` release the waiting threads?
+10. Does `ConcurrentHashMap.putIfAbsent("key", null)` succeed? Why?

@@ -19,486 +19,391 @@ tags:
 
 <span class="chapter-badge">Exam Domain: Using Object-Oriented Concepts in Java</span>
 
-> **Key Topics:** Interfaces, default/static/private interface methods, enums, records, sealed classes, nested classes.
+> **Key Topics:** Interface members (abstract, default, static, private methods), implicit modifiers, enums (fields, constructors, custom methods), sealed classes & interfaces, record classes (canonical/compact constructors, immutability, pattern matching), nested classes (inner, static nested, local, anonymous), casting, and polymorphism.
 
 ---
 
-## 🟦 New Learner: Modern Java Type System
+## 🟦 New Learner: Interfaces, Enums, & Records
 
-### Interfaces
-
-An interface defines a **contract** — what a class can do, not how:
+### Implementing Interfaces
+An **interface** is an abstract data type that specifies a contract of abstract methods that implementing classes must define.
+* **Syntax:** Declared using the `interface` keyword.
+* **Inheritance:** A class may implement any number of interfaces (separated by commas). An interface can extend multiple other interfaces using the `extends` keyword.
+* **Implicit Modifiers:**
+  * Interfaces are implicitly `abstract` (specifying `abstract` is optional; marking them `final` is a compiler error).
+  * Interface variables are implicitly `public static final` (constants).
+  * Interface methods without a body are implicitly `public abstract`.
+  * Non-private interface methods without an access modifier are implicitly `public`.
 
 ```java
-public interface Flyable {
-    // Implicitly: public abstract
-    double getMaxAltitude();
-
-    // Default method (Java 8+) — provides implementation
-    default String describe() {
-        return "Can fly up to " + getMaxAltitude() + "m";
-    }
-
-    // Static method (Java 8+) — utility, called on interface
-    static boolean isHighAltitude(double altitude) {
-        return altitude > 10000;
-    }
-
-    // Private method (Java 9+) — shared helper for default methods
-    private void logFlight() {
-        System.out.println("Flying...");
-    }
-}
-
-public class Eagle implements Flyable {
-    @Override
-    public double getMaxAltitude() { return 3000; }
+public interface WalksOnTwoLegs {
+    int MAX_LEGS = 2; // Implicitly: public static final int MAX_LEGS = 2;
+    void walk();      // Implicitly: public abstract void walk();
 }
 ```
 
-| Member Type | Modifier | Inherited by implementing class? |
-|-------------|----------|----------------------------------|
-| Abstract method | `public abstract` (implicit) | Yes |
-| Default method | `public default` | Yes (can override) |
-| Static method | `public static` | No (call on interface) |
-| Private method | `private` | No |
-| Constant | `public static final` (implicit) | Yes |
-
----
-
-### Multiple Interface Implementation
-
 ```java
-interface Swimmable {
-    void swim();
-}
-interface Flyable {
-    void fly();
-}
-
-class Duck implements Swimmable, Flyable {
-    @Override public void swim() { System.out.println("Swimming"); }
-    @Override public void fly()  { System.out.println("Flying"); }
-}
-```
-
-**Default method conflict resolution:** If two interfaces provide the same default method, the implementing class MUST override it:
-
-```java
-interface A { default void hello() { System.out.println("A"); } }
-interface B { default void hello() { System.out.println("B"); } }
-
-class C implements A, B {
-    @Override
-    public void hello() {
-        A.super.hello(); // explicitly call A's version
-    }
-}
+// Multiple interface inheritance
+public interface Nocturnal {}
+public interface CanFly {}
+public interface HasBigEyes extends Nocturnal, CanFly {} // ✅ Interfaces can extend multiple interfaces
 ```
 
 ---
 
-### Enums
-
-Enums represent a fixed set of constants:
+### Working with Enums
+An **enumeration** (enum) represents a fixed, finite set of type-safe constants.
+* **Values:** Enum values are public static final constants, commonly written in uppercase.
+* **Construction:** Enums are initialized exactly once when the class is first loaded. You cannot extend an enum, and enums cannot be marked `final`.
+* **Switch exhaustiveness:** When using enums in switch expressions, a `default` branch is not required if all enum values are covered.
 
 ```java
 public enum Season {
-    SPRING, SUMMER, FALL, WINTER;
-
-    // Enums can have methods
-    public boolean isWarm() {
-        return this == SPRING || this == SUMMER;
-    }
-}
-
-Season s = Season.SUMMER;
-System.out.println(s.name());    // "SUMMER"
-System.out.println(s.ordinal()); // 1 (zero-based)
-Season[] all = Season.values();  // all constants
-Season parsed = Season.valueOf("WINTER"); // WINTER
-
-// In switch
-switch (s) {
-    case SUMMER, SPRING -> System.out.println("Warm");
-    default -> System.out.println("Cold");
+    WINTER, SPRING, SUMMER, FALL; // Semicolon optional if only listing constants
 }
 ```
 
-**Enums with fields and constructors:**
+#### Common Enum Methods:
+* `values()`: Returns an array of all constants in declaration order.
+* `name()`: Returns the string representation of the constant.
+* `ordinal()`: Returns the zero-based declaration order position of the constant.
+* `valueOf(String)`: Converts a String to the matching enum constant (case-sensitive; throws `IllegalArgumentException` on mismatch).
+
+---
+
+### Records Basics
+A **record** is a special type of immutable class that removes boilerplate when carrying data.
+* **Automatic Members:** The compiler automatically inserts:
+  1. `private final` instance fields for each record component.
+  2. A constructor with parameters matching the components (Canonical Constructor).
+  3. Getter accessor methods named exactly after the components (e.g., `x()`, **not** `getX()`).
+  4. `equals()`, `hashCode()`, and `toString()` implementations based on the components.
 
 ```java
-public enum Planet {
-    MERCURY(3.303e+23, 2.4397e6),
-    VENUS  (4.869e+24, 6.0518e6),
-    EARTH  (5.976e+24, 6.37814e6);
+public record Point(int x, int y) {} // That's it!
+```
 
-    private final double mass;
-    private final double radius;
+---
 
-    Planet(double mass, double radius) { // constructor is always private
-        this.mass = mass;
-        this.radius = radius;
+## 🟣 Senior Deep Dive: Interface Methods, Sealed Classes, Record Constructors, & Nested Types
+
+### Interface Methods Matrix
+Interfaces support six member types. Only `abstract`, `default`, and instance `private` methods are associated with an instance of the interface.
+
+| Member Type | Access Modifier | Modifiers Required | Body? | Class or Instance? |
+| :--- | :--- | :--- | :--- | :--- |
+| **Constant variable** | `public` (implicit) | `static final` (implicit) | Yes | Class |
+| **Abstract method** | `public` (implicit) | `abstract` (implicit) | No | Instance |
+| **Default method** | `public` (implicit) | `default` | Yes | Instance |
+| **Static method** | `public` (implicit) | `static` | Yes | Class |
+| **Private method** | `private` | `private` | Yes | Instance |
+| **Private static method**| `private` | `private static` | Yes | Class |
+
+> [!WARNING]
+> Interfaces do **not** support `protected` or package-private members. Any explicit attempt to use these modifiers results in a compilation error.
+
+#### Default Method Conflict Resolution
+If a class implements two interfaces that declare default methods with matching signatures, the compiler errors out due to ambiguity. The class **must** override the method:
+```java
+interface Walk { default int getSpeed() { return 5; } }
+interface Run  { default int getSpeed() { return 10; } }
+
+class Athlete implements Walk, Run {
+    @Override
+    public int getSpeed() {
+        return Walk.super.getSpeed(); // ✅ Accesses Walk's default implementation
     }
+}
+```
 
-    double surfaceGravity() {
-        final double G = 6.67300E-11;
-        return G * mass / (radius * radius);
+#### Static Interface Methods
+Unlike class static methods, static interface methods are **not inherited** by implementing classes or subinterfaces.
+```java
+interface Hop { static int getHeight() { return 8; } }
+class Bunny implements Hop {
+    public void print() {
+        // System.out.println(getHeight());     // ❌ DOES NOT COMPILE
+        System.out.println(Hop.getHeight());    // ✅ Compiles (Interface name required)
     }
 }
 ```
 
 ---
 
-### Records (Java 16+)
-
-Records are **immutable data carriers** — they auto-generate constructor, getters, `equals`, `hashCode`, and `toString`:
+### Complex Enums
+Enums can contain instance variables, static variables, constructors, and methods.
+* **Constructor Rule:** All enum constructors are implicitly `private`. Specifying `public` or `protected` is a compiler error.
+* **Abstract Methods:** An enum can declare abstract methods. If it does, **every** enum constant must override it.
 
 ```java
-public record Point(int x, int y) {}
-// Equivalent to a class with:
-// - private final int x, y
-// - canonical constructor Point(int x, int y)
-// - getters: x(), y() (not getX()!)
-// - equals, hashCode, toString
+public enum SeasonWithHours {
+    WINTER {
+        public String getHours() { return "10am-3pm"; }
+    },
+    SUMMER {
+        public String getHours() { return "9am-7pm"; }
+    },
+    SPRING, FALL; // Uses default implementation below
+    
+    public String getHours() { return "9am-5pm"; } // Default implementation
+}
+```
 
-Point p = new Point(3, 4);
-System.out.println(p.x());        // 3
-System.out.println(p.y());        // 4
-System.out.println(p);            // Point[x=3, y=4]
+---
 
-// Compact constructor (validate/normalize)
+### Sealed Classes and Interfaces
+Sealed types restrict which subclasses or subinterfaces are allowed to extend or implement them.
+* **Declaring:** Use the `sealed` modifier along with the `permits` clause.
+* **Package/Module Constraint:** Subclasses must be declared in the **same package** (or same named module) as the sealed class.
+* **Subclass Modifiers:** Every class that directly extends a sealed class must declare exactly one of these modifiers:
+  1. `final`: Prevents any further subclasses.
+  2. `sealed`: Permits a specific, nested subclass list.
+  3. `non-sealed`: Opens the class so any unspecified subclass can extend it.
+
+```java
+public sealed class Shape permits Circle, Rectangle {}
+
+public final class Circle extends Shape {}                  // ✅ Prevents further inheritance
+public non-sealed class Rectangle extends Shape {}         // ✅ Can be extended by any class
+```
+
+#### Omitting the `permits` Clause:
+If the sealed class and its subclasses are declared in the **same file**, or if the subclasses are **nested** inside the sealed class, the `permits` clause is optional.
+```java
+// Cobra.java
+public sealed class Snake {
+    final class Cobra extends Snake {} // ✅ Implicitly permitted since it's nested
+}
+```
+
+#### Sealed Interfaces:
+Sealed interfaces can restrict which interfaces can extend them or classes can implement them. Since interfaces cannot be marked `final`, subinterfaces can only be marked `sealed` or `non-sealed`.
+
+---
+
+### Customizing Records & Constructors
+Records are implicitly `final` and cannot be extended. They cannot declare instance variables outside the record header. However, you can declare constructors:
+
+#### 1. Compact Constructors
+Specifically designed for records. It has **no parameters** and no parentheses. It processes validation/normalization before assigning fields implicitly.
+```java
 public record Range(int min, int max) {
-    Range { // no parameter list in compact constructor
-        if (min > max) throw new IllegalArgumentException("min > max");
+    public Range { // ✅ Compact constructor (no parameter list)
+        if (min > max) throw new IllegalArgumentException();
+        // min = min; // Normalizes parameter value
+        // this.min = min; // ❌ DOES NOT COMPILE (Cannot assign final fields directly here)
     }
 }
 ```
 
----
-
-### Sealed Classes (Java 17+)
-
-Sealed classes restrict which classes can extend them:
-
+#### 2. Canonical (Long) Constructors
+Declares the full parameter list. Every field **must** be explicitly assigned.
 ```java
-public sealed class Shape permits Circle, Rectangle, Triangle {}
-
-public final class Circle extends Shape {
-    private final double radius;
-    public Circle(double radius) { this.radius = radius; }
+public record Range(int min, int max) {
+    public Range(int min, int max) {
+        if (min > max) throw new IllegalArgumentException();
+        this.min = min;
+        this.max = max; // ✅ Required explicit assignments
+    }
 }
-
-public non-sealed class Rectangle extends Shape { // can be freely extended
-    public double width, height;
-}
-
-public sealed class Triangle extends Shape permits RightTriangle {}
 ```
 
-**Permitted subclasses must be:**
-- `final` — no further extension
-- `sealed` — further restricts subclasses
-- `non-sealed` — opens up extension freely
+#### 3. Overloaded Constructors
+Must call the canonical constructor on the **very first line** using `this(...)`.
+```java
+public record Range(int min, int max) {
+    public Range(int singleValue) {
+        this(singleValue, singleValue); // ✅ Must delegate
+    }
+}
+```
+
+#### Record Pattern Matching (Java 21)
+Destructuring records inside `instanceof` checks:
+```java
+record Monkey(String name, int age) {}
+
+public void checkAnimal(Object obj) {
+    if (obj instanceof Monkey(String name, int age)) {
+        System.out.println(name + " is " + age); // ✅ Access variables directly
+    }
+}
+```
+* **Generics & var:** You can use `var` inside record patterns. Nested record patterns are also supported.
+```java
+if (couple instanceof Couple(Bear(var name, List<String> favs), var b)) {
+    // Yogi bear nested extraction
+}
+```
 
 ---
 
 ### Nested Classes
+There are four types of nested classes:
 
-| Type | Keyword | Can access outer fields? | Requires outer instance? |
-|------|---------|--------------------------|--------------------------|
-| Inner class | none | Yes (including private) | Yes |
-| Static nested | `static` | Only static fields | No |
-| Local | inside method | Effectively final locals | No |
-| Anonymous | inline | Effectively final locals | No |
+| Type | Declared Location | Static? | Access to Outer Members? |
+| :--- | :--- | :--- | :--- |
+| **Inner Class** | Member level | No | Yes (all fields & methods) |
+| **Static Nested Class** | Member level | Yes | Only static fields & methods |
+| **Local Class** | Inside method/block | No | Only final or effectively final local variables |
+| **Anonymous Class** | Inline instantiation | No | Only final or effectively final local variables |
 
+#### Inner Class Scope Referencing:
+If an inner class defines variables with names matching the outer class, use `OuterClassName.this.variable` to reference the outer scope:
 ```java
 public class Outer {
     private int x = 10;
-
-    class Inner {                      // inner class
-        void show() { System.out.println(x); } // can access x
-    }
-
-    static class StaticNested {       // static nested
-        void show() { System.out.println("no outer"); }
-    }
-
-    void method() {
-        class Local {                 // local class
-            void show() { System.out.println(x); }
+    class Inner {
+        private int x = 20;
+        public void print() {
+            System.out.println(x);            // 20
+            System.out.println(this.x);       // 20
+            System.out.println(Outer.this.x); // 10
         }
-        Runnable r = new Runnable() { // anonymous class
-            public void run() { System.out.println(x); }
-        };
     }
 }
+```
 
-// Usage
-Outer outer = new Outer();
-Outer.Inner inner = outer.new Inner(); // needs outer instance
-Outer.StaticNested nested = new Outer.StaticNested(); // no outer needed
+#### Local Classes and Variable Scope:
+A local class can only reference variables in the enclosing method scope if they are marked `final` or are **effectively final** (never reassigned after initialization).
+```java
+public void process() {
+    int size = 10; // Effectively final
+    int limit = 50;
+    limit = 60;    // Not effectively final
+
+    class Checker {
+        public void check() {
+            System.out.println(size);  // ✅ Compiles
+            // System.out.println(limit); // ❌ DOES NOT COMPILE (Not effectively final)
+        }
+    }
+}
+```
+
+#### Anonymous Classes:
+Must either extend exactly one class or implement exactly one interface. You cannot declare constructor blocks in an anonymous class.
+
+---
+
+### Polymorphism & Casting
+Polymorphism allows a subclass instance to be accessed via its superclass or interface reference types.
+* **Implicit Cast:** Casting subclass -> superclass (always safe, no operator required).
+* **Explicit Cast:** Casting superclass -> subclass (requires explicit `(Type)` cast; throws `ClassCastException` at runtime if incompatible).
+* **Compiler Rules:** The compiler disallows casting between unrelated class types. For interfaces, the compiler permits casting to unrelated interfaces *unless* the class is marked `final` (which guarantees no subclass could implement that interface).
+
+```java
+interface Climb {}
+class Animal {}
+final class Dog extends Animal {} // final!
+
+public class Test {
+    public void test() {
+        Animal a = new Animal();
+        Climb c = (Climb) a; // ✅ Compiles (a could be a subclass that implements Climb)
+        
+        Dog d = new Dog();
+        // Climb c2 = (Climb) d; // ❌ DOES NOT COMPILE (Dog is final and does not implement Climb!)
+    }
+}
 ```
 
 ---
 
-## 🟣 Senior Deep Dive
+## 🚨 Top 10 Exam Traps
 
-### Interface Default Method Resolution Rules
-
-Java uses three rules (in order):
-
-1. **Classes win over interfaces** — if the class or its superclass provides the method, it wins
-2. **More specific interface wins** — if one interface extends another, the more specific one's default wins
-3. **Override required** — if neither rule resolves the conflict, the class must override
-
-### Sealed Classes and Pattern Matching
-
-Sealed classes enable **exhaustive** pattern matching — the compiler verifies all permitted subclasses are handled:
-
+### Trap 1: Interface variable reassignments
+All variables in interfaces are implicitly constants (`final`).
 ```java
-sealed interface Expr permits Num, Add, Mul {}
-record Num(int value) implements Expr {}
-record Add(Expr left, Expr right) implements Expr {}
-record Mul(Expr left, Expr right) implements Expr {}
+interface Limits { int MIN = 1; }
+// Limits.MIN = 5; // ❌ DOES NOT COMPILE (Cannot assign a value to a final variable)
+```
 
-int eval(Expr e) {
-    return switch (e) {
-        case Num(int v)          -> v;
-        case Add(var l, var r)   -> eval(l) + eval(r);
-        case Mul(var l, var r)   -> eval(l) * eval(r);
-        // No default needed — all subclasses covered!
-    };
+### Trap 2: Incorrect interface static method invocations
+You cannot call a static interface method using an implementing class reference.
+```java
+interface Jump { static void high() {} }
+class Frog implements Jump {}
+// Frog.high(); // ❌ DOES NOT COMPILE (Must call Jump.high())
+```
+
+### Trap 3: Interface method access override mismatch
+Because interface methods are implicitly `public`, the implementing class must explicitly declare them `public`.
+```java
+interface Bark { void bark(); }
+class Dog implements Bark {
+    // void bark() {} // ❌ DOES NOT COMPILE (reduces visibility from public to package-private)
+    public void bark() {} // ✅ Correct
 }
 ```
 
-### Record Internals
-
-Records are NOT just "data classes":
-
+### Trap 4: Non-exhaustive switch with pattern matching
+When pattern matching sealed classes, the compiler verifies all subclasses are handled. If one is missing and there is no default block, it fails.
 ```java
-// Records can implement interfaces
-public record Coordinate(double lat, double lon) implements Comparable<Coordinate> {
-    // Custom static factory
-    public static Coordinate of(String latLon) { ... }
-
-    // Additional instance methods allowed
-    public double distanceTo(Coordinate other) { ... }
-
-    @Override
-    public int compareTo(Coordinate other) {
-        return Double.compare(this.lat, other.lat);
-    }
-
-    // You can override component accessors
-    @Override
-    public double lat() { return Math.round(lat * 1000.0) / 1000.0; }
-}
-
-// Records CANNOT:
-// - extend another class (implicitly extends Record)
-// - be abstract
-// - have non-static non-final instance fields
-// - have mutable state
-```
-
-### Anonymous Class vs Lambda
-
-```java
-// Anonymous class — can implement interface with multiple methods, has state
-Comparator<String> comp = new Comparator<>() {
-    private int callCount = 0; // has state!
-    @Override
-    public int compare(String a, String b) {
-        callCount++;
-        return a.compareTo(b);
-    }
-};
-
-// Lambda — only for functional interfaces (exactly 1 abstract method)
-Comparator<String> comp2 = (a, b) -> a.compareTo(b);
-// Lambdas cannot have their own instance state
-```
-
----
-
-## 📝 Exam Quick Reference
-
-| Topic | Key Fact |
-|-------|----------|
-| Interface constants | `public static final` (implicit) |
-| `default` methods | Can be overridden; class implementation wins over interface |
-| Enum constructor | Always `private`; called when constants created |
-| `values()` / `valueOf()` | `values()` returns all constants; `valueOf("X")` parses from name |
-| Record accessors | `x()` NOT `getX()` — no `get` prefix! |
-| Record compact constructor | No parameter list; params in scope implicitly |
-| Sealed permitted subclass | Must be `final`, `sealed`, or `non-sealed` |
-| Inner class | Requires outer instance: `outer.new Inner()` |
-| Static nested class | No outer instance needed: `new Outer.StaticNested()` |
-| Interface variables | Implicitly `public static final` — cannot be reassigned |
-| Enum ordinal | Zero-based; `ordinal()` returns position |
-| Record fields | Implicitly `private final`; no setters auto-generated |
-| `non-sealed` | Removes sealing restriction; subclasses can extend freely |
-| Pattern `instanceof` | Binding variable in scope only where pattern matches; use `&&` carefully with flow scoping |
-| Sealed + `switch` | Exhaustive `switch` on sealed type must cover all permitted subclasses (or use `default` where allowed) |
-| Record `equals`/`hashCode` | Auto-generated from components; two records equal iff all components equal |
-| Enum singleton | JVM guarantees one instance per enum constant; constructors run before static use |
-| Interface `private` methods | Java 9+ — helper methods inside interface; not part of SAM count |
-| Interface `static` methods | Not inherited by implementing classes; call with `InterfaceName.method()` |
-| Sealed + permits | Permitted types must be accessible; typically same module/package per exam |
-| Record cannot declare instance fields | Only components in header; extra state via static fields only |
-
----
-
-## 🚨 Extra Exam Tips
-
-:::danger[Top Traps in Chapter 7]
-**Trap 1 — Interface variables are implicitly final:**
-```java
-interface Limits {
-    int MAX = 100; // public static final int MAX = 100
-}
-Limits.MAX = 200; // ❌ COMPILE ERROR — cannot reassign final
-```
-
-**Trap 2 — Enum with abstract methods:**
-```java
-enum Operation {
-    PLUS {
-        @Override public int apply(int a, int b) { return a + b; }
-    },
-    MINUS {
-        @Override public int apply(int a, int b) { return a - b; }
-    };
-    public abstract int apply(int a, int b); // each constant MUST implement this
-}
-```
-
-**Trap 3 — Record accessors use field name, NOT JavaBean style:**
-```java
-record Person(String firstName, int age) {}
-Person p = new Person("Duke", 21);
-p.firstName(); // ✅ correct accessor
-p.getFirstName(); // ❌ NO such method — records don't use "get" prefix
-```
-
-**Trap 4 — Records cannot extend classes:**
-```java
-record Point(int x, int y) extends Object { } // ✅ Object is implicit
-record Point(int x, int y) extends Shape { }  // ❌ records cannot extend classes
-// Records can implement interfaces:
-record Point(int x, int y) implements Comparable<Point> { ... } // ✅
-```
-
-**Trap 5 — sealed class — permitted subclass must be same compilation unit or explicitly listed:**
-```java
-// File: Shape.java
-public sealed class Shape permits Circle, Rectangle { }
-
-// ❌ Triangle cannot be added later in a separate module without updating permits
-// ✅ All permitted types must be in the same package (or module)
-```
-
-**Trap 6 — Default method conflict resolution:**
-```java
-interface A { default String greet() { return "A"; } }
-interface B { default String greet() { return "B"; } }
-
-class C implements A, B {
-    // ❌ COMPILE ERROR unless C overrides greet()
-    @Override
-    public String greet() {
-        return A.super.greet(); // explicitly pick A's version
-    }
-}
-```
-
-**Trap 7 — Enum `values()` vs `valueOf()` exception:**
-```java
-Season s = Season.valueOf("SUMMER"); // ✅
-Season s2 = Season.valueOf("summer"); // ❌ IllegalArgumentException — case-sensitive!
-Season s3 = Season.valueOf("INVALID"); // ❌ IllegalArgumentException
-```
-
-**Trap 8 — Anonymous class vs lambda limitations:**
-```java
-Runnable r = new Runnable() {
-    int count = 0;             // ✅ anonymous class CAN have state
-    public void run() { count++; }
-};
-
-Runnable r2 = () -> { count++; }; // ❌ lambda CANNOT have own instance fields
-```
-
-**Trap 9 — Pattern variable and `&&` (flow scoping):**
-```java
-Object o = "hi";
-if (o instanceof String s && s.length() > 1) {
-    System.out.println(s); // ✅ s in scope — both conditions required for truth
-}
-if (o instanceof String s || s.length() > 1) { } // ❌ s not in scope in second part
-```
-
-**Trap 10 — Negated `instanceof` and pattern scope:**
-```java
-if (!(o instanceof String s)) {
-    return;
-}
-System.out.println(s.length()); // ✅ s in scope here (pattern holds in remaining block)
-```
-
-**Trap 11 — Record compact constructor is for validation, not field reassignment:**
-```java
-record Range(int min, int max) {
-    Range {
-        if (min > max) throw new IllegalArgumentException(); // ✅
-        // this.min = min; // ❌ illegal — components are assigned implicitly
-    }
-}
-```
-
-**Trap 12 — Enum cannot extend another enum:**
-```java
-enum A { X }
-enum B extends A { Y } // ❌ enums cannot extend another enum (only java.lang.Enum implicitly)
-```
-:::
-
-### Exam vignettes
-
-```java
-// Vignette 1 — Exhaustive switch on sealed hierarchy (Java 21)
 sealed interface Pet permits Dog, Cat {}
 final class Dog implements Pet {}
 final class Cat implements Pet {}
-String s = switch (pet) { // must cover Dog and Cat or use default
-    case Dog d -> "woof";
-    case Cat c -> "meow";
-};
 
-// Vignette 2 — Record accessor naming on exam
-record Box(int id) {}
-new Box(1).id();   // ✅
-new Box(1).getId(); // ❌ compile-time error
+public void feed(Pet p) {
+    switch (p) {
+        case Dog d -> System.out.println("Bone");
+        // case Cat c -> ... // ❌ DOES NOT COMPILE (Non-exhaustive switch)
+    }
+}
 ```
 
-:::tip[Spring/Senior Relevance]
-- `sealed` interfaces + records + `switch` pattern matching form the backbone of modern Spring 6 / Boot 3 **discriminated union** patterns — replacing stringly-typed result wrappers.
-- Spring `@Configuration` classes that implement interfaces with `default` methods must carefully follow the interface default method resolution rules, especially when multiple `@Configuration` classes are involved via `@Import`.
-- Enums are widely used in Spring as strategy selectors (e.g., `@ConditionalOnProperty`), and their `valueOf()` is called internally for `@Value` injection — understand why case sensitivity matters.
-:::
+### Trap 5: Declaring instance fields in Records
+Records cannot declare instance variables outside the record header.
+```java
+public record Box(int size) {
+    // private int weight; // ❌ DOES NOT COMPILE
+    private static int maxWeight = 100; // ✅ Static fields are allowed
+}
+```
+
+### Trap 6: Calling `this(...)` loop cycles in Records
+Record overloaded constructors must invoke the canonical constructor, and cannot cycle.
+```java
+public record Card(int rank) {
+    public Card() { this(1); } // ✅ Compiles (invokes canonical constructor)
+}
+```
+
+### Trap 7: Case-sensitivity of Enum `valueOf()`
+Passing incorrect case or invalid string throws runtime exceptions.
+```java
+Season s = Season.valueOf("summer"); // ❌ Throws IllegalArgumentException (must be "SUMMER")
+```
+
+### Trap 8: Instantiating Inner Classes in Static Contexts
+Inner classes require an outer class instance.
+```java
+class Outer {
+    class Inner {}
+    public static void main(String[] args) {
+        // Inner i = new Inner(); // ❌ DOES NOT COMPILE
+        Inner i = new Outer().new Inner(); // ✅ Correct
+    }
+}
+```
+
+### Trap 9: Duplicate default methods override failure
+If a class implements two interfaces with the same default method signature, it must override it.
+```java
+interface A { default void run() {} }
+interface B { default void run() {} }
+// class Runner implements A, B {} // ❌ DOES NOT COMPILE
+```
+
+### Trap 10: Modifiers compatibility conflicts
+Combining invalid modifier combinations (e.g., static abstract, private abstract, abstract final).
+```java
+// public abstract final class Shape {} // ❌ DOES NOT COMPILE
+```
 
 ---
 
-## 🔗 Review Questions Focus
-
-1. What happens when two interfaces declare the same default method?
-2. Can an enum have abstract methods?
-3. What methods does a record auto-generate?
-4. What are the three options for a permitted subclass of a sealed class?
-5. How do you instantiate an inner (non-static nested) class?
-6. Can a record implement an interface?
-7. Can a record extend another class?
-8. What is the difference between a static nested class and an inner class?
-9. What does `Season.valueOf("SUMMER")` throw if "SUMMER" does not exist?
-10. Can an interface have `private` methods in Java 9+?
+## 🔗 Spring / Enterprise Relevance
+* **DTOs with Records:** Spring Boot 3.x extensively supports Java Records as request body payloads (`@RequestBody`) and query parameter projections, eliminating lombok requirements for immutable DTO structures.
+* **Strategy Selection with Enums:** Enums combined with Spring context lookups are utilized to resolve runtime bean behavior dynamically based on environment configuration or database flag values.
+* **Component Encapsulation:** Nested classes are often used inside `@Configuration` classes to define nested bean requirements or specific properties mappings locally, limiting configuration visibility.

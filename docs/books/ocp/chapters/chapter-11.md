@@ -19,415 +19,394 @@ tags:
 
 <span class="chapter-badge">Exam Domain: Handling Exceptions · Implementing Localization</span>
 
-> **Key Topics:** Exception hierarchy, checked vs unchecked, try-catch-finally, multi-catch, try-with-resources, custom exceptions, `Locale`, resource bundles, `NumberFormat`, `DateTimeFormatter`.
+> **Key Topics:** Java Exception Hierarchy, Checked vs. Unchecked, Try-Catch-Finally, Multi-Catch, Try-With-Resources (Effectively Final Resources), Suppressed Exceptions, custom exceptions, `Locale` creation, localizing numbers and dates, `CompactNumberFormat`, `ResourceBundle` fallback hierarchy, `MessageFormat`, and the `Properties` class.
 
 ---
 
 ## 🟦 New Learner: Exception Handling
 
-### Exception Hierarchy
+### 1. Exception Classification and Hierarchy
+An exception is an event that alters program flow. The parent of all exception types is `java.lang.Throwable`.
 
 ```
-Throwable
-├── Error (unrecoverable — don't catch)
-│     ├── OutOfMemoryError
-│     ├── StackOverflowError
-│     └── VirtualMachineError
-└── Exception
-      ├── RuntimeException (unchecked — optional handling)
-      │     ├── NullPointerException
-      │     ├── ArrayIndexOutOfBoundsException
-      │     ├── ClassCastException
-      │     ├── ArithmeticException
-      │     ├── IllegalArgumentException
-      │     └── UnsupportedOperationException
-      └── [checked exceptions — must handle or declare]
-            ├── IOException
-            ├── SQLException
-            └── ParseException
+                  Throwable
+                 /         \
+          Exception         Error
+          /       \
+  RuntimeException  [Checked Exceptions]
 ```
 
-| Type | Must Handle/Declare? | Examples |
-|------|---------------------|---------|
-| Checked | **Yes** | `IOException`, `SQLException` |
-| Unchecked (`RuntimeException`) | No | `NPE`, `ClassCastException` |
-| `Error` | No (and shouldn't!) | `OutOfMemoryError` |
+*   **`java.lang.Error`**: Indicates serious, unrecoverable system problems (e.g., `OutOfMemoryError`, `StackOverflowError`, `NoClassDefFoundError`). Application code should not handle or declare them.
+*   **Checked Exceptions**: Must be handled or declared (the *handle or declare rule*). They inherit `Exception` but not `RuntimeException` (e.g., `IOException`, `FileNotFoundException`, `ParseException`).
+*   **Unchecked Exceptions (Runtime Exceptions)**: Inherit `RuntimeException` (or `Error`). They do not need to be handled or declared. Can be thrown by the JVM or programmatically (e.g., `NullPointerException`, `ArithmeticException`, `ArrayIndexOutOfBoundsException`, `ClassCastException`, `IllegalArgumentException`, `NumberFormatException`).
 
 ---
 
-### try-catch-finally
+### 2. Method Overriding and Exception Boundaries
+When overriding a method, the subclass version is constrained by the exceptions declared in the parent method:
+*   An overridden method **cannot** declare new or broader checked exceptions.
+*   An overridden method **can** declare narrower checked exceptions (subclasses) or omit checked exceptions entirely.
+*   There are **no restrictions** on declaring unchecked (runtime) exceptions or errors.
+
+```java
+class SuperClass {
+    void doWork() throws IOException {}
+}
+class SubClass extends SuperClass {
+    // OK: Declaring a subclass of IOException
+    void doWork() throws FileNotFoundException {} 
+    
+    // OK: Omitting throws
+    // void doWork() {} 
+    
+    // Compile Error: Exception is broader than IOException
+    // void doWork() throws Exception {} 
+}
+```
+
+---
+
+### 3. Syntax and Behavior of Try-Catch Statements
+A traditional `try` statement must be followed by at least one `catch` block or a `finally` block. Braces `{}` are mandatory even if there is only a single statement inside the block.
 
 ```java
 try {
-    int result = 10 / 0; // ArithmeticException
-    System.out.println("never reached");
+    System.out.println(10 / 0);
 } catch (ArithmeticException e) {
-    System.out.println("Caught: " + e.getMessage()); // / by zero
-} finally {
-    System.out.println("Always runs"); // even if exception is uncaught
+    System.out.println("Divided by zero: " + e.getMessage());
 }
 ```
 
-**Key rules:**
-- `finally` **always** runs (even if `catch` re-throws or there's a `return`)
-- Only exception: `System.exit()` or JVM crash
-
----
-
-### Multi-catch
+#### Chaining Catch Blocks (Order Rules)
+When catching multiple exceptions, Java checks them in the order they are written.
+*   A **subclass exception** catch block must appear **before** its superclass exception catch block.
+*   If a superclass catch block is placed before a subclass catch block, the code will fail to compile due to unreachable code.
 
 ```java
 try {
-    // code that might throw multiple types
-} catch (IOException | SQLException e) { // multi-catch
-    System.out.println("I/O or SQL error: " + e.getMessage());
+    // some file access
+} catch (FileNotFoundException e) { // Subclass of IOException
+    System.out.println("File not found");
+} catch (IOException e) { // Superclass
+    System.out.println("General I/O error");
 }
-// Note: you CANNOT multi-catch related exceptions (one must not extend the other)
 ```
 
 ---
 
-### try-with-resources
-
-Automatically closes `AutoCloseable` resources:
+### 4. Multi-Catch Blocks
+Java allows catching multiple unrelated exception types in a single `catch` block using the pipe (`|`) character.
+*   **Syntax**: `catch (ExceptionType1 | ExceptionType2 variableName)`
+*   The variable name must appear only once at the end.
+*   The exception variable in a multi-catch is **implicitly final** and cannot be reassigned inside the block.
+*   Redundant or related exceptions (e.g. subclass and superclass) cannot be caught in the same multi-catch.
 
 ```java
-try (FileReader fr = new FileReader("data.txt");
-     BufferedReader br = new BufferedReader(fr)) {
-    String line = br.readLine();
-} catch (IOException e) {
-    e.printStackTrace();
+try {
+    System.out.println(Integer.parseInt(args[1]));
+} catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
+    // e is implicitly final here
+    System.out.println("Missing or invalid input: " + e.getMessage());
 }
-// fr and br are closed automatically in REVERSE order
-// Close happens BEFORE catch/finally blocks
 ```
 
 ---
 
-### Custom Exceptions
+### 5. Finally Block Control Flow
+The `finally` block runs regardless of whether an exception is thrown or caught.
+
+#### The Return Value Override Trap
+If a `finally` block contains a `return` statement, it will override any previous `return` statements or thrown exceptions inside the `try` or `catch` blocks.
 
 ```java
-// Checked custom exception
-public class InsufficientFundsException extends Exception {
-    private final double amount;
-    public InsufficientFundsException(double amount) {
-        super("Insufficient funds: need " + amount + " more");
-        this.amount = amount;
-    }
-    public double getAmount() { return amount; }
-}
-
-// Unchecked custom exception
-public class InvalidUserException extends RuntimeException {
-    public InvalidUserException(String message) { super(message); }
-    public InvalidUserException(String message, Throwable cause) {
-        super(message, cause); // wrapping another exception
+int getNumber() {
+    try {
+        return 1;
+    } finally {
+        return 2; // Overrides the return value of 1! Returns 2.
     }
 }
 ```
 
----
-
-### Localization
-
-```java
-// Locale represents a language + region
-Locale english = Locale.ENGLISH;           // en
-Locale usEnglish = Locale.US;              // en_US
-Locale french = new Locale("fr", "FR");    // fr_FR
-Locale.setDefault(Locale.US);             // set default
-```
-
-#### NumberFormat
-
-```java
-Locale locale = Locale.US;
-NumberFormat nf = NumberFormat.getInstance(locale);        // general number
-NumberFormat currency = NumberFormat.getCurrencyInstance(locale); // $1,234.56
-NumberFormat percent = NumberFormat.getPercentInstance(locale);   // 12%
-
-double amount = 1234567.89;
-System.out.println(currency.format(amount)); // $1,234,567.89
-
-// Parsing
-Number parsed = nf.parse("1,234.56"); // 1234.56
-```
-
-#### DateTimeFormatter
-
-```java
-LocalDate date = LocalDate.of(2024, 3, 15);
-
-// Predefined formatters
-DateTimeFormatter isoDate = DateTimeFormatter.ISO_LOCAL_DATE;
-System.out.println(date.format(isoDate)); // 2024-03-15
-
-// Custom patterns
-DateTimeFormatter custom = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-System.out.println(date.format(custom)); // 03/15/2024
-
-// Localized
-DateTimeFormatter localized = DateTimeFormatter
-    .ofLocalizedDate(FormatStyle.LONG)
-    .withLocale(Locale.US);
-System.out.println(date.format(localized)); // March 15, 2024
-```
-
-#### Resource Bundles (Internationalization)
-
-```java
-// Zoo_en.properties
-// greeting=Hello!
-// animal=Animal
-
-// Zoo_fr.properties
-// greeting=Bonjour!
-// animal=Animal
-
-ResourceBundle rb = ResourceBundle.getBundle("Zoo", Locale.FRENCH);
-System.out.println(rb.getString("greeting")); // Bonjour!
-```
-
-**Bundle selection hierarchy:**
-1. Exact locale match: `Zoo_fr_FR.properties`
-2. Language only: `Zoo_fr.properties`
-3. Default locale
-4. Default bundle: `Zoo.properties`
-5. `MissingResourceException`
+#### Exceptions in the `finally` block
+If the `finally` block throws an exception, any exception previously thrown inside the `try` or `catch` blocks is **swallowed** (lost).
+Additionally, the only way a `finally` block will not execute is if the JVM terminates (e.g., calling `System.exit(status)`).
 
 ---
 
 ## 🟣 Senior Deep Dive
 
-### Exception Chaining
+### 1. Try-With-Resources and Effectively Final Resources
+Try-with-resources automatically closes resources that implement `java.lang.AutoCloseable` (or its child `java.io.Closeable`).
+*   The resource's `close()` method is called implicitly in a hidden `finally` block.
+*   Implicit resource closing occurs **before** any programmer-defined `catch` or `finally` blocks run.
+*   Multiple resources are closed in the **reverse** order of their declaration.
+
+#### Variable Declaration Rules
+*   Resources are separated by semicolons (`;`). Semicolons are optional after the last resource.
+*   You can declare new variables (including using `var`) inside the `try` parentheses.
+*   **Effectively Final Resources**: Since Java 9, resources declared *before* the `try` block can be used inside the `try` parentheses, provided they are `final` or effectively final.
 
 ```java
-try {
-    // low-level operation
-    Files.readAllBytes(Path.of("file.txt"));
-} catch (IOException e) {
-    // Wrap with higher-level context
-    throw new ServiceException("Failed to load config", e); // e is the cause
-}
+final var input = new MyResource(1);
+var output = new MyResource(2); // Effectively final
 
-// Later, retrieve cause
-try { ... }
-catch (ServiceException e) {
-    Throwable cause = e.getCause(); // original IOException
-    cause.printStackTrace();
+try (input; output; var temp = new MyResource(3)) {
+    System.out.println("Inside try");
+} finally {
+    System.out.println("Inside finally");
 }
+// Closing Order: temp (3) -> output (2) -> input (1)
 ```
 
-### Suppressed Exceptions in try-with-resources
+---
+
+### 2. Suppressed Exceptions
+If a resource's `close()` method throws an exception, and the `try` block also throws an exception, the exception from the `try` block becomes the **primary** exception. The exception from `close()` is added as a **suppressed exception**.
+
+*   Suppressed exceptions are retrieved by calling `Throwable.getSuppressed()` on the primary exception.
+*   If multiple resources throw exceptions during closing, they are all added as suppressed exceptions to the primary exception.
 
 ```java
-class Resource implements AutoCloseable {
-    @Override
-    public void close() throws Exception {
-        throw new Exception("Close failed");
-    }
-}
-
-try (Resource r = new Resource()) {
-    throw new RuntimeException("Primary exception");
+try (var resource = new JammedResource()) { // close() throws JammedException
+    throw new RuntimeException("Primary Exception");
 } catch (RuntimeException e) {
-    System.out.println(e.getMessage()); // "Primary exception"
+    System.out.println("Caught: " + e.getMessage()); // Primary Exception
     for (Throwable t : e.getSuppressed()) {
-        System.out.println(t.getMessage()); // "Close failed"
+        System.out.println("Suppressed: " + t.getMessage()); // JammedException
     }
 }
 ```
 
-The exception from `close()` is **suppressed** — attached to the primary exception, not lost.
+---
 
-### `finally` Return Value Trap
+### 3. Formatting Numbers, Dates, and Custom Escapes
 
-```java
-int tricky() {
-    try {
-        return 1;
-    } finally {
-        return 2; // ← OVERRIDES the try's return 1!
-    }
-}
-System.out.println(tricky()); // 2 (not 1!)
-// Avoid returning from finally — it swallows exceptions too!
-```
-
-### Resource Bundle Caching and `Control`
+#### Formatting Numbers (`DecimalFormat` Symbols)
+`DecimalFormat` is a concrete subclass of `NumberFormat`.
+*   `#`: Digit placeholder. Omitted if no digit exists.
+*   `0`: Digit placeholder. Prints `0` if no digit exists in that position.
 
 ```java
-// Bundles are cached by default — reloading requires:
-ResourceBundle.clearCache();
-
-// Custom Control for different encoding
-ResourceBundle rb = ResourceBundle.getBundle("Messages",
-    Locale.JAPAN,
-    ResourceBundle.Control.getControl(ResourceBundle.Control.FORMAT_PROPERTIES));
+double d = 123.456;
+System.out.println(new DecimalFormat("0000.00").format(d)); // 0123.46 (rounds)
+System.out.println(new DecimalFormat("####.##").format(d)); // 123.46
 ```
+
+#### DateTimeFormatter Custom Patterns & Escaping Text
+You can design custom patterns using standard formatting symbols (e.g. `y` for year, `M` for month, `d` for day, `h` for hour, `m` for minute).
+*   Literal text in custom patterns must be **escaped** using single quotes (`'`).
+*   To output a literal single quote, place two single quotes together (`''`).
+
+```java
+var dt = LocalDateTime.of(2025, 10, 20, 15, 30);
+var formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy 'at' hh:mm a");
+System.out.println(dt.format(formatter)); // October 20, 2025 at 03:30 PM
+
+var quoteFormatter = DateTimeFormatter.ofPattern("hh:mm 'o''clock'");
+System.out.println(dt.format(quoteFormatter)); // 03:30 o'clock
+```
+
+---
+
+### 4. Internationalization (I18n) & Localization (L10n)
+
+#### Picking a Locale
+A `Locale` represents a geographical or cultural region. Creation methods:
+1.  **Constants**: `Locale.US`, `Locale.GERMANY`, `Locale.GERMAN`
+2.  **Factory method**: `Locale.of("en")`, `Locale.of("fr", "CA")` (Java 19+)
+3.  **Builder**: `new Locale.Builder().setLanguage("es").setRegion("MX").build()`
+4.  *(Deprecated constructor: `new Locale("en", "US")`)*
+*   **Format**: language (lowercase, e.g. `en`) + underscore + region (uppercase, e.g. `US`). You cannot have a region without a language code.
+
+#### NumberFormat and Currency/Percentage Instances
+*   `NumberFormat.getInstance(locale)` / `getNumberInstance(locale)`
+*   `NumberFormat.getCurrencyInstance(locale)`
+*   `NumberFormat.getPercentInstance(locale)`
+*   `NumberFormat.parse(String)`: parses strings to numbers. Throws checked `ParseException`.
+
+```java
+String s = "40.45";
+double usValue = (Double) NumberFormat.getInstance(Locale.US).parse(s); // 40.45
+double frValue = (Double) NumberFormat.getInstance(Locale.FRANCE).parse(s); // 40.0 ( France uses ',' as decimal separator)
+```
+
+#### CompactNumberFormat (Style SHORT vs LONG)
+Useful for limited display spaces. It rounds numbers and appends locale-appropriate symbols.
+
+```java
+var formatterShort = NumberFormat.getCompactNumberInstance(Locale.US, NumberFormat.Style.SHORT);
+var formatterLong = NumberFormat.getCompactNumberInstance(Locale.US, NumberFormat.Style.LONG);
+
+System.out.println(formatterShort.format(120_000)); // 120K
+System.out.println(formatterLong.format(120_000));  // 120 thousand
+```
+
+#### Specifying Locale Category
+You can set display (language names) and formatting (currency, dates) locales independently using `Locale.setDefault(Locale.Category, Locale)`.
+*   `Locale.Category.DISPLAY`: For displaying UI languages.
+*   `Locale.Category.FORMAT`: For formatting dates, currency, numbers.
+
+---
+
+### 5. Resource Bundles
+A resource bundle is a key-value collection of locale-specific objects, typically saved in properties files.
+
+#### Naming Convention:
+`BundleName_Language_Country.properties` (e.g., `Zoo_fr_CA.properties`).
+
+#### Selection and Lookup Hierarchy
+When Java looks up a resource bundle `BundleName` for a requested locale `R` when the default system locale is `D`:
+1.  **Requested Locale match**: `BundleName_R.properties` (language + country)
+2.  **Requested Language only**: `BundleName_RLanguage.properties`
+3.  **Default Locale match**: `BundleName_D.properties` (language + country)
+4.  **Default Language only**: `BundleName_DLanguage.properties`
+5.  **Default Bundle**: `BundleName.properties` (Root bundle)
+6.  Throws `MissingResourceException` if none are found.
+
+#### Property Inheritance (Selection Rules)
+Once a resource bundle is selected, Java will **only search along that bundle's parent hierarchy** to resolve keys. It will not fall back to the default locale.
+
+```
+Zoo_fr_CA.properties ──► Zoo_fr.properties ──► Zoo.properties (Root)
+```
+*(If the requested locale was `fr_CA`, and a key isn't found in `Zoo_fr_CA`, it checks `Zoo_fr` and then `Zoo`. It will NOT check default locale `Zoo_en_US`).*
+
+#### MessageFormat Positional Substitution
+Uses curly braces `{0}`, `{1}`, etc. inside resource bundle strings to inject dynamic variables.
+
+```java
+// Property: welcome=Hello, {0}! Welcome to {1}.
+String pattern = rb.getString("welcome");
+String result = MessageFormat.format(pattern, "Alice", "the zoo"); // Hello, Alice! Welcome to the zoo.
+```
+
+#### The `java.util.Properties` Class
+Functions like a hashtable where keys and values are both `String`s.
+*   `setProperty(key, value)`: Stores a property.
+*   `getProperty(key)`: Retrieves a property (returns `null` if key is missing).
+*   `getProperty(key, defaultValue)`: Retrieves a property, returning the default value if the key does not exist.
 
 ---
 
 ## 📝 Exam Quick Reference
 
-| Topic | Key Fact |
-|-------|----------|
-| Checked exception | Must handle or declare with `throws` |
-| `RuntimeException` | Unchecked — no `throws` required |
-| `Error` | Never catch (OutOfMemory, StackOverflow) |
-| `finally` | Always executes (except `System.exit()`) |
-| try-with-resources | Resources closed in **reverse** declaration order |
-| Close before catch | `close()` runs **before** `catch`/`finally` |
-| Multi-catch | Cannot catch related types (`IOException \| FileNotFoundException`) |
-| Suppressed exceptions | Stored in primary exception when `close()` also throws |
-| Resource bundle | Selection: exact → language → default locale → root |
-| `DateTimeFormatter` | Immutable and thread-safe |
-| `AutoCloseable` | Single method `close()` — any class can be used in try-with-resources |
-| `Closeable` | Extends `AutoCloseable`; `close()` may only throw `IOException` |
-| Multi-catch variable | Implicitly `final` — cannot reassign inside the catch block |
-| `throws` declaration | Required for checked exceptions; allowed but not required for unchecked |
-| `try` resource scope | Resources declared in try-with-resources are effectively final in try block |
-| `Throwable.getSuppressed()` / `addSuppressed()` | Access exceptions suppressed by try-with-resources or try/finally |
-| `MessageFormat` | `MessageFormat.format(pattern, args...)` — positional `{0}`, `{1}` |
-| `DateTimeFormatter` + `Locale` | Use `withLocale(Locale)` for localized month/day names |
-| `NumberFormat.getCurrencyInstance` | Locale controls symbol and grouping |
-| `ExceptionInInitializerError` | Wraps failure in static initializer; `getCause()` has original |
-| `AssertionError` | Unchecked — from `assert` when `-ea` enabled |
-| `try` block rules | `catch` or `finally` required unless try is try-with-resources only |
+### Unchecked Runtime Exceptions & Errors
+*   `ArithmeticException`: `/ by zero`
+*   `ArrayIndexOutOfBoundsException`: Index out of array bounds.
+*   `ClassCastException`: Invalid reference cast at runtime.
+*   `NullPointerException`: Invoking methods/variables on `null`.
+*   `IllegalArgumentException`: Caller passed inappropriate arguments.
+*   `NumberFormatException`: Subclass of `IllegalArgumentException`. Failed conversion of string to number.
+*   `ExceptionInInitializerError`: Static initializer block threw an exception.
+*   `StackOverflowError`: Infinite recursion.
+
+### AutoCloseable vs Closeable
+*   `AutoCloseable` defines `close() throws Exception`.
+*   `Closeable` extends `AutoCloseable` and defines `close() throws IOException`.
 
 ---
 
 ## 🚨 Extra Exam Tips
 
 :::danger[Top Traps in Chapter 11]
-**Trap 1 — Multi-catch with related exception types:**
+**Trap 1 — Checked Exceptions caught in Try/Catch that cannot be thrown:**
+Java does not allow catching checked exceptions in a `try` block if the code in the `try` block cannot throw them (with the exception of broad types like `Exception` or `Throwable`). This throws a compile-time error. Unchecked exceptions can be caught anywhere.
 ```java
-try { ... }
-catch (IOException | Exception e) { } // ❌ IOException is-a Exception — compile error!
-// Multi-catch types must be UNRELATED (no inheritance relationship)
-
-catch (FileNotFoundException | IOException e) { } // ❌ FileNotFoundException is-a IOException
-catch (IOException | SQLException e) { }          // ✅ unrelated
-```
-
-**Trap 2 — try-with-resources close order:**
-```java
-try (ResourceA a = new ResourceA();  // opened first
-     ResourceB b = new ResourceB()) { // opened second
-    // use a and b
-}
-// Closed in REVERSE: b.close() first, then a.close()
-// close() runs BEFORE catch and finally
-```
-
-**Trap 3 — `finally` swallows exceptions:**
-```java
-void dangerous() throws Exception {
+public void bad() {
     try {
-        throw new RuntimeException("try");
-    } finally {
-        throw new IOException("finally"); // ❌ RuntimeException lost!
+        System.out.println("No exception thrown here");
+    } catch (IOException e) { // ❌ DOES NOT COMPILE (IOException is checked)
+    } catch (NullPointerException e) { // ✅ Compiles (NPE is unchecked)
     }
 }
-// Only IOException propagates — RuntimeException is silently swallowed!
 ```
 
-**Trap 4 — `finally` return overrides try return:**
+**Trap 2 — Multi-catch with Related Exceptions:**
+Catching subclass and superclass exception types in a single multi-catch block causes a compiler error.
 ```java
-int get() {
-    try { return 1; }
-    finally { return 2; } // return 2 wins; return 1 is discarded
-}
-// Also: if finally throws, any return/throw from try is discarded
+try {
+    throw new FileNotFoundException();
+} catch (FileNotFoundException | IOException e) {} // ❌ DOES NOT COMPILE
 ```
 
-**Trap 5 — Custom exception must call super with message:**
+**Trap 3 — Suppressed Exception Loss due to Finally Block Throw:**
+If both the try-with-resources statement and a programmer-defined `finally` block throw exceptions, the exceptions from try-with-resources (including suppressed exceptions) are **lost**, and only the exception thrown by the `finally` block is propagated.
 ```java
-class MyException extends RuntimeException {
-    MyException() { } // ❌ getMessage() returns null — always pass message
-    MyException(String msg) { super(msg); } // ✅
-    MyException(String msg, Throwable cause) { super(msg, cause); } // ✅ with chaining
-}
-```
-
-**Trap 6 — Multi-catch variable is implicitly final:**
-```java
-try { ... }
-catch (IOException | SQLException e) {
-    e = new IOException("replaced"); // ❌ COMPILE ERROR — e is effectively final
+try (var r = new ClosedResource()) { // close() throws Exception A
+    throw new Exception("Body Exception");
+} finally {
+    throw new Exception("Finally Exception"); // ❌ Body Exception & Exception A are both lost!
 }
 ```
 
-**Trap 7 — Resource bundle locale fallback chain:**
+**Trap 4 — Mutating the Multi-Catch Variable:**
+The exception parameter variable in a multi-catch block is implicitly `final`.
 ```java
-// Requested: fr_FR, default locale: en_US
-// Search order:
-// 1. Messages_fr_FR.properties  (exact match)
-// 2. Messages_fr.properties     (language only)
-// 3. Messages_en_US.properties  (default locale exact)
-// 4. Messages_en.properties     (default locale language)
-// 5. Messages.properties        (root bundle)
-// 6. MissingResourceException   (none found)
-```
-
-**Trap 8 — `NumberFormat.parse()` is locale-sensitive:**
-```java
-NumberFormat nf = NumberFormat.getInstance(Locale.GERMANY);
-nf.parse("1.234,56"); // 1234.56 — Germany uses . for thousands, , for decimal
-NumberFormat us = NumberFormat.getInstance(Locale.US);
-us.parse("1,234.56"); // 1234.56 — US uses , for thousands, . for decimal
-```
-
-**Trap 9 — Rethrowing with narrower type in `throws` (Java 7+):**
-```java
-void m() throws IOException {
-    try { throw new FileNotFoundException(); }
-    catch (IOException e) { throw e; } // OK — declared IOException covers actual type
+catch (ArithmeticException | NullPointerException e) {
+    e = new ArithmeticException(); // ❌ DOES NOT COMPILE
 }
 ```
 
-**Trap 10 — `close()` exception vs body exception (suppressed):**
+**Trap 5 — `Properties` get vs getProperty:**
+Only `getProperty(key, default)` allows specifying a fallback default value. `get(key, default)` does not compile.
 ```java
-try (AutoCloseable a = () -> { throw new IOException("close"); }) {
-    throw new RuntimeException("body");
-}
-// Primary: RuntimeException; IOException from close is suppressed on primary
+var props = new Properties();
+props.get("key", "default"); // ❌ DOES NOT COMPILE
+props.getProperty("key", "default"); // ✅ Compiles
 ```
 
-**Trap 11 — `finally` without `catch`:**
+**Trap 6 — Formatting Dates with Time Symbols (and vice versa):**
+Formatting a `LocalDate` using time symbols (e.g., `hh:mm`) or a `LocalTime` using date symbols (e.g., `yyyy`) throws a `DateTimeException` at runtime.
 ```java
-try { work(); }
-finally { cleanup(); } // valid — no catch required
+LocalDate date = LocalDate.now();
+date.format(DateTimeFormatter.ofPattern("hh:mm")); // ❌ Throws DateTimeException at runtime
 ```
+
+**Trap 7 — Unescaped Text in DateTimeFormatter patterns:**
+Literal characters (other than space, commas, colons, dashes, etc.) in date/time format patterns must be escaped.
+```java
+DateTimeFormatter.ofPattern("The time is hh:mm"); // ❌ Throws IllegalArgumentException at runtime
+DateTimeFormatter.ofPattern("'The time is' hh:mm"); // ✅ Compiles and works
+```
+
+**Trap 8 — Reassigning an Effectively Final Resource:**
+If a resource variable declared outside try-with-resources is reassigned anywhere in the method, it is no longer effectively final and cannot be used.
+```java
+var r = new MyResource();
+try (r) { // ❌ DOES NOT COMPILE because r is reassigned on the next line
+}
+r = null;
+```
+
+**Trap 9 — `Locale` invalid string formats:**
+Look out for reversed language/region codes or incorrect casing. Language codes are lowercase, country codes are uppercase. Country cannot exist without language.
+```java
+Locale.of("US", "en"); // ❌ Invalid locale codes reversed
+Locale.of("US"); // ❌ Invalid, region code alone is not allowed
+```
+
+**Trap 10 — Missing constructor in custom checked exception:**
+Custom exceptions should supply constructors that call `super(message)` so that `getMessage()` doesn't return `null`.
 :::
 
-### Exam vignettes
-
-```java
-// Vignette 1 — Illegal multi-catch
-// catch (Exception | RuntimeException e) {} // ❌ related types
-
-// Vignette 2 — Resource bundle root
-ResourceBundle.getBundle("messages", Locale.FRANCE); // tries messages_fr_FR → messages_fr → ...
-```
-
 :::tip[Spring/Senior Relevance]
-- Spring's `@Transactional` catches exceptions based on their type — by default only `RuntimeException` (unchecked) triggers rollback. Add `rollbackFor = IOException.class` for checked exceptions.
-- `try-with-resources` is the standard pattern for Spring's `JdbcTemplate` connection management — understanding the close-before-catch ordering explains why exceptions from `close()` appear as suppressed.
-- Spring Boot's `MessageSource` (i18n) is built on `ResourceBundle` fallback chains — knowing the locale resolution order explains why `messages_fr_FR.properties` is preferred over `messages_fr.properties` for French-France users.
+*   **Transaction Rollback rules**: By default, Spring's `@Transactional` annotation only rolls back transactions on unchecked exceptions (`RuntimeException`). Checked exceptions do not trigger rollbacks unless configured via `@Transactional(rollbackFor = Exception.class)`.
+*   **Database Resource leaks**: Connection pools (e.g. HikariCP) can quickly run out of connections if `Connection`, `PreparedStatement`, or `ResultSet` resources are not closed using try-with-resources, hanging the entire application.
+*   **Spring i18n**: The default `MessageSource` in Spring Boot resolves locale resources following the standard properties file inheritance chain.
 :::
 
 ---
 
 ## 🔗 Review Questions Focus
 
-1. What is the difference between a checked and unchecked exception?
-2. In try-with-resources, when are resources closed relative to catch/finally?
-3. What are suppressed exceptions and how do you access them?
-4. What is the resource bundle selection order for a `fr_FR` locale?
-5. What happens if `finally` has a `return` statement?
-6. Can you use multi-catch for `FileNotFoundException` and `IOException` together? Why?
-7. What interface must a class implement to be used in try-with-resources?
-8. What does `Exception.getSuppressed()` return?
-9. What happens to the original exception if `finally` also throws?
-10. Why must `throws` be declared on a method that throws a checked exception?
+1.  If a method is overridden, can the subclass method add a new checked exception? What about a new runtime exception?
+2.  What is the output of `System.out.println(new DecimalFormat("000.00").format(1.2));`?
+3.  Why does `try (var r = new MyResource()) {}` compile even if `MyResource` does not implement `Closeable` but implements `AutoCloseable`?
+4.  In a try-with-resources statement, does the resource close method run before or after the catch blocks?
+5.  What happens if an exception is thrown in a `try` block, another in `close()`, and another in `finally`? Which exception propagates to the caller?
+6.  Explain the fallback lookup hierarchy of Resource Bundles if a French Canadian (`fr_CA`) user makes a request on a system where the default locale is German (`de_DE`).
+7.  How does `Locale.Category.FORMAT` differ from `Locale.Category.DISPLAY`?
+8.  Which class and method are used to format a resource bundle string that contains placeholders like `Hello, {0}`?
+9.  Why does `catch(IOException | FileNotFoundException e)` fail to compile?
+10. What exception is thrown when an initializer block throws a runtime exception?

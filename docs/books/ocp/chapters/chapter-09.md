@@ -20,377 +20,353 @@ tags:
 
 <span class="chapter-badge">Exam Domain: Working with Arrays and Collections</span>
 
-> **Key Topics:** `List`, `Set`, `Map`, `Deque`, `Queue`, `Comparable`, `Comparator`, generics, wildcards, `SequencedCollection`.
+> **Key Topics:** Collections Framework hierarchy, List/Set/Queue/Deque implementations, Map API, factory methods (`List.of()`, `Arrays.asList()`), unmodifiable views, sequenced collections (Java 21), Comparable & Comparator interfaces, binary search, custom generic classes/interfaces/methods/records, type erasure, and bounded wildcards (`extends` vs `super`).
 
 ---
 
-## 🟦 New Learner: The Collections Framework
+## 🟦 New Learner: Collections API, Lists, Sets, & Queues
 
-### Java Collections Hierarchy
+### Understanding the Java Collections Framework (JCF)
+The JCF resides in `java.util` and provides standard interfaces and implementations for storing groups of objects.
 
+```mermaid
+classDiagram
+    class Iterable {
+        <<interface>>
+    }
+    class Collection {
+        <<interface>>
+    }
+    class List {
+        <<interface>>
+    }
+    class Set {
+        <<interface>>
+    }
+    class Queue {
+        <<interface>>
+    }
+    class Deque {
+        <<interface>>
+    }
+    class Map {
+        <<interface>>
+    }
+    Iterable <|-- Collection
+    Collection <|-- List
+    Collection <|-- Set
+    Collection <|-- Queue
+    Queue <|-- Deque
 ```
-Iterable
-  └── Collection
-        ├── List (ordered, allows duplicates)
-        │     ├── ArrayList
-        │     └── LinkedList
-        ├── Set (no duplicates)
-        │     ├── HashSet (no order)
-        │     ├── LinkedHashSet (insertion order)
-        │     └── TreeSet (sorted)
-        └── Queue / Deque
-              ├── LinkedList
-              └── ArrayDeque
-Map (key-value pairs, separate hierarchy)
-  ├── HashMap
-  ├── LinkedHashMap
-  └── TreeMap
+*Note: `Map` does not implement `Collection` or `Iterable`, but is considered part of the framework as it manages collections of key-value pairs.*
+
+---
+
+### Common Collection APIs
+The `Collection` interface defines core operations implemented by all lists, sets, and queues:
+* **`add(E)`:** Adds an element; returns `true` if successful. In `Set`, returns `false` on duplicate.
+* **`remove(Object)`:** Removes one matching element; returns `true` if successful.
+* **`isEmpty()` & `size()`:** Check size and presence of elements.
+* **`clear()`:** Removes all elements.
+* **`contains(Object)`:** Checks if an element exists using `equals()`.
+* **`removeIf(Predicate)`:** Removes elements matching the predicate.
+* **`forEach(Consumer)`:** Iterates over the collection.
+* **`iterator()`:** Returns an `Iterator` for manual iteration.
+
+#### Autoboxing Nulls Trap
+Collections can store `null` references, but attempting to unbox a `null` wrapper to a primitive throws a `NullPointerException`.
+```java
+List<Integer> list = new ArrayList<>();
+list.add(null); 
+int value = list.get(0); // ❌ Throws NullPointerException!
 ```
 
 ---
 
-### List
+### The `List` Interface
+An ordered collection that allows duplicate entries and index-based access.
+
+#### 1. Implementations:
+* **`ArrayList`:** Backed by a resizable array. Constant-time `O(1)` lookup. Ideal for read-heavy operations.
+* **`LinkedList`:** Doubly-linked list. Implements both `List` and `Deque`. Constant-time `O(1)` insertion/deletion at the ends, but linear-time `O(n)` index lookup.
+
+#### 2. Creation Factory Methods:
+* **`Arrays.asList(T...)`:** Fixed-size list backed by the original array. Changes to the array write through to the list, and vice versa. Structural changes (`add`/`remove`) throw `UnsupportedOperationException`.
+* **`List.of(T...)`:** Fully **immutable** list. Modifying or setting throws `UnsupportedOperationException`. Null values are forbidden.
+* **`List.copyOf(Collection)`:** Returns an immutable copy of the collection.
 
 ```java
-// Factory methods (immutable)
-List<String> immutable = List.of("a", "b", "c");
-List<String> copyOf = List.copyOf(existingList);
+String[] array = {"a", "b"};
+List<String> list1 = Arrays.asList(array);
+list1.set(0, "z"); // ✅ Allowed. array[0] becomes "z"
+// list1.add("c"); // ❌ Throws UnsupportedOperationException
 
-// Mutable
-List<String> list = new ArrayList<>();
-list.add("Alice");
-list.add("Bob");
-list.add(0, "Zoe");        // insert at index 0
-list.remove("Bob");        // by value
-list.remove(0);            // by index
-list.set(0, "Charlie");    // replace
+List<String> list2 = List.of(array);
+// list2.set(0, "y"); // ❌ Throws UnsupportedOperationException
+```
 
-list.get(0);               // access by index
-list.size();
-list.contains("Alice");
-list.indexOf("Alice");     // -1 if not found
+#### 3. Converting to Array:
+```java
+List<String> list = new ArrayList<>(List.of("hawk", "robin"));
+Object[] objArr = list.toArray();               // Defaults to Object[]
+String[] strArr = list.toArray(new String[0]); // ✅ Recommended: creates typed array of correct size
 ```
 
 ---
 
-### Set
+### The `Set` Interface
+A collection that does not allow duplicate entries.
+* **`HashSet`:** Backed by a hash table. Uses elements' `hashCode()` and `equals()` to prevent duplicates. Unordered.
+* **`LinkedHashSet`:** Maintains insertion order via a linked list running through the hash table.
+* **`TreeSet`:** Backed by a red-black tree. Stores elements in a sorted order. Requires elements to implement `Comparable` (or a custom `Comparator` must be provided). **Does not allow null values.**
+
+---
+
+### The `Queue` and `Deque` Interfaces
+* **`Queue`:** Designed for holding elements prior to processing (typically FIFO).
+* **`Deque`:** Double-ended queue. Supports inserting/removing from both ends. Can act as a FIFO Queue or LIFO Stack.
+
+#### Queue Method Contracts:
+Queues provide two versions of their primary operations: one that throws an exception on failure, and one that returns a special value (like `false` or `null`).
+
+| Operation | Throws Exception | Returns Special Value |
+| :--- | :--- | :--- |
+| **Add to Back** | `add(e)` | `offer(e)` (returns `false` if full) |
+| **Read from Front** | `element()` | `peek()` (returns `null` if empty) |
+| **Remove from Front** | `remove()` | `poll()` (returns `null` if empty) |
+
+#### Deque as a Stack (LIFO):
+To use a `Deque` as a LIFO stack, use `push()`, `pop()`, and `peek()` which operate exclusively on the **front (top)** of the queue.
 
 ```java
-Set<String> hashSet = new HashSet<>(List.of("c", "a", "b")); // no order
-Set<String> linked = new LinkedHashSet<>(List.of("c", "a", "b")); // [c, a, b]
-Set<String> tree = new TreeSet<>(List.of("c", "a", "b")); // [a, b, c] sorted
-
-hashSet.add("d");
-hashSet.remove("a");
-hashSet.contains("b"); // true
-// No index access — sets have no guaranteed order
+Deque<Integer> stack = new ArrayDeque<>();
+stack.push(10); // [10]
+stack.push(20); // [20, 10]
+stack.pop();    // Returns 20 -> [10]
 ```
 
 ---
 
-### Map
+### The `Map` Interface
+Maps unique keys to values. Does not implement `Collection`.
+* **`HashMap`:** Unordered. Permits one null key and multiple null values.
+* **`LinkedHashMap`:** Preserves insertion order.
+* **`TreeMap`:** Keys sorted in natural order. **Does not permit null keys.**
 
-```java
-Map<String, Integer> map = new HashMap<>();
-map.put("Alice", 90);
-map.put("Bob", 85);
-map.put("Alice", 95);  // replaces old value
+#### Core Map Methods:
+* **`putIfAbsent(K, V)`:** Sets the value only if the key is absent or mapped to `null`.
+* **`getOrDefault(Object, V)`:** Returns the value or the default if the key is absent.
+* **`merge(K, V, BiFunction)`:** Combines map entries (see table below).
 
-map.get("Alice");       // 95
-map.getOrDefault("Carol", 0); // 0 (key absent)
-map.containsKey("Bob"); // true
-map.containsValue(85);  // true
-map.remove("Bob");
-map.size();             // 1
+#### Detailed `Map.merge()` Behavior:
 
-// Iteration
-map.forEach((k, v) -> System.out.println(k + ": " + v));
-for (Map.Entry<String, Integer> entry : map.entrySet()) {
-    System.out.println(entry.getKey() + "=" + entry.getValue());
-}
-
-// Compute methods
-map.putIfAbsent("Carol", 70);
-map.computeIfAbsent("Dave", k -> k.length()); // 4
-map.merge("Alice", 5, Integer::sum); // Alice: 95+5 = 100
-```
+| Key State in Map | Mapping Function Result | Resulting Map State |
+| :--- | :--- | :--- |
+| **Absent or mapped to `null`**| *Not evaluated* | Key is mapped to the new `value` parameter. |
+| **Present and non-null** | Mapped to `null` | Key is **removed** from the map. |
+| **Present and non-null** | Mapped to a non-null `newVal` | Key is updated to the `newVal` result. |
 
 ---
 
-### Queue and Deque
+## 🟣 Senior Deep Dive: Sorting contracts, Sequenced Collections, and Generics PECS
+
+### Sorting Contracts: `Comparable` vs `Comparator`
+
+#### `Comparable<T>`
+Defines the **natural ordering** of a class. Must implement `compareTo(T o)`.
+* **Return values:**
+  * Negative: `this < o` (sorts `this` before `o`).
+  * Zero: `this == o`.
+  * Positive: `this > o` (sorts `this` after `o`).
+
+> [!CAUTION]
+> Avoid direct subtraction in `compareTo()` for numbers as it can cause integer overflow errors. Use `Integer.compare(x, y)` instead.
 
 ```java
-// Queue — FIFO
-Queue<String> queue = new LinkedList<>();
-queue.offer("first");  // add to tail (returns false if full, safe)
-queue.peek();          // view head (null if empty)
-queue.poll();          // remove head (null if empty)
-
-// Deque — Double-Ended Queue (also a Stack)
-Deque<String> deque = new ArrayDeque<>();
-deque.offerFirst("a"); // add to front
-deque.offerLast("b");  // add to back
-deque.peekFirst();     // view front
-deque.pollLast();      // remove from back
-
-// As Stack (LIFO)
-deque.push("x");   // = addFirst
-deque.pop();       // = removeFirst
-deque.peek();      // = peekFirst
-```
-
-:::tip[Prefer `ArrayDeque` over `Stack`]
-`Stack` is a legacy class synchronized on every operation. `ArrayDeque` is faster and the preferred choice.
-:::
-
----
-
-### Sorting: Comparable and Comparator
-
-```java
-// Comparable — natural ordering (implement in the class)
-public class Student implements Comparable<Student> {
-    String name; int gpa;
+public record Student(int id, String name) implements Comparable<Student> {
     @Override
     public int compareTo(Student other) {
-        return Integer.compare(this.gpa, other.gpa); // ascending GPA
+        return Integer.compare(this.id, other.id); // ✅ Safe comparison
     }
 }
-
-// Comparator — external ordering (use for multiple orderings)
-Comparator<Student> byName = Comparator.comparing(s -> s.name);
-Comparator<Student> byGpaDesc = Comparator.comparingInt((Student s) -> s.gpa).reversed();
-Comparator<Student> byNameThenGpa = Comparator.comparing(Student::getName)
-    .thenComparingInt(Student::getGpa);
-
-List<Student> students = ...;
-Collections.sort(students);                   // uses Comparable
-students.sort(byName);                        // uses Comparator
-students.sort(Comparator.naturalOrder());
-students.sort(Comparator.reverseOrder());
 ```
+
+#### `Comparator<T>`
+Defines **external or alternative orderings**. Must implement `compare(T o1, T o2)`.
+* Helper static methods: `Comparator.comparing(Function)`, `Comparator.naturalOrder()`, `Comparator.reverseOrder()`.
+* Chaining methods: `thenComparing()`, `thenComparingInt()`, `reversed()`.
+
+```java
+Comparator<Student> comp = Comparator.comparing(Student::name)
+                                     .thenComparingInt(Student::id);
+```
+
+#### Binary Search
+`Collections.binarySearch(List, key, [Comparator])` searches a sorted list in `O(log n)` time.
+* **Precondition:** The list **must** be sorted in the order specified by the comparator (or natural order).
+* **Return value:**
+  * If found: returns the index of the key.
+  * If not found: returns `(-insertionPoint - 1)`.
 
 ---
 
-### Generics and Wildcards
+### Sequenced Collections (Java 21)
+Introduces interfaces representing collections with a well-defined encounter order.
+
+```mermaid
+graph TD
+    A["SequencedCollection"] --> B["List"]
+    A --> C["Deque"]
+    A --> D["SequencedSet"]
+    D --> E["LinkedHashSet"]
+    D --> F["TreeSet"]
+```
+
+#### 1. SequencedCollection Methods
+* `getFirst()` / `getLast()`
+* `addFirst(e)` / `addLast(e)` *(TreeSet throws UnsupportedOperationException here)*
+* `removeFirst()` / `removeLast()`
+* `reversed()` *(returns a reversed encounter order view)*
+
+#### 2. SequencedMap Methods
+* `firstEntry()` / `lastEntry()`
+* `pollFirstEntry()` / `pollLastEntry()`
+* `putFirst(k, v)` / `putLast(k, v)` *(TreeMap throws UnsupportedOperationException here)*
+* `sequencedKeySet()` / `sequencedValues()` / `sequencedEntrySet()`
+* `reversed()`
+
+---
+
+### Generics & PECS (Producer Extends, Consumer Super)
+
+#### Type Erasure
+Generics exist only for compile-time type safety. At compilation, Java erases all generic type parameters to `Object` (or their bound type), introducing explicit casts automatically.
+* **Erasure Collision:** Because of erasure, you cannot overload methods by changing generic parameters only:
+```java
+public class Handler {
+    // Both erase to: void chew(List list) -> ❌ DOES NOT COMPILE
+    // void chew(List<String> list) {}
+    // void chew(List<Integer> list) {}
+}
+```
+
+#### Covariant Overrides
+An overriding method can return a subtype of the parent return type. However, the generic parameter types must match **exactly**:
+```java
+class Parent { List<CharSequence> getList() { return null; } }
+class Child extends Parent {
+    // @Override List<String> getList() { return null; } // ❌ DOES NOT COMPILE (generics are invariant)
+    @Override ArrayList<CharSequence> getList() { return null; } // ✅ Compiles (ArrayList is subtype of List)
+}
+```
+
+#### Bounded Wildcards (PECS)
+* **Upper Bound (`? extends T`):** Represents `T` or any subclass of `T`. Act as **Producers**. You can **read** from them as type `T`, but you **cannot write** to them (except `null`).
+* **Lower Bound (`? super T`):** Represents `T` or any superclass of `T`. Act as **Consumers**. You can **write** `T` or its subclasses to them, but reads return only `Object` references.
 
 ```java
-// Bounded wildcards
-List<? extends Number> upper = List.of(1, 2, 3); // read-only: producer
-List<? super Integer> lower = new ArrayList<Number>(); // write: consumer
-
-// PECS: Producer Extends, Consumer Super
-void copy(List<? extends Number> src, List<? super Number> dst) {
-    for (Number n : src) dst.add(n);
+public static void copy(List<? extends Number> src, List<? super Number> dest) {
+    for (Number n : src) { // ✅ Read allowed (src produces Numbers)
+        dest.add(n);      // ✅ Write allowed (dest consumes Numbers)
+    }
 }
 ```
 
 ---
 
-## 🟣 Senior Deep Dive
+## 📝 Quick Reference Summary
 
-### `SequencedCollection` (Java 21)
+| Collection | Order | Duplicates | Null Elements | Key Methods |
+| :--- | :--- | :--- | :--- | :--- |
+| **`ArrayList`** | Insertion | Yes | Yes | `get(index)`, `set(index, e)`, `add(index, e)` |
+| **`LinkedList`** | Insertion | Yes | Yes | Implements both `List` and `Deque` |
+| **`HashSet`** | None | No | Yes (one) | `add()`, `remove()`, `contains()` |
+| **`TreeSet`** | Sorted | No | **No** | `first()`, `last()`, `headSet()`, `tailSet()` |
+| **`ArrayDeque`** | FIFO/LIFO | Yes | **No** | `push()`, `pop()`, `offerLast()`, `pollFirst()` |
+| **`HashMap`** | None | Keys: No | Yes (one null key) | `put()`, `get()`, `getOrDefault()`, `merge()` |
+| **`TreeMap`** | Sorted | Keys: No | **No null keys** | `firstEntry()`, `lastEntry()`, `subMap()` |
 
-New interface giving uniform access to first/last elements:
+---
 
+## 🚨 Top 10 Exam Traps
+
+### Trap 1: `List.of()` returns an immutable list
+Structural modification attempts throw runtime exceptions.
 ```java
-SequencedCollection<String> seq = new ArrayList<>(List.of("a","b","c"));
-seq.getFirst(); // "a"
-seq.getLast();  // "c"
-seq.addFirst("z"); // ["z","a","b","c"]
-seq.reversed(); // reversed view
+List<String> list = List.of("a", "b");
+// list.add("c"); // ❌ Throws UnsupportedOperationException at runtime
 ```
 
-`List`, `Deque`, `LinkedHashSet` all implement `SequencedCollection`.
-
-### Fail-Fast vs Fail-Safe Iterators
-
+### Trap 2: `remove(int)` vs `remove(Object)` in `List<Integer>`
+Primitive parameter overrides win over autoboxing.
 ```java
-List<String> list = new ArrayList<>(List.of("a","b","c"));
+List<Integer> list = new ArrayList<>(List.of(1, 2, 3));
+list.remove(1); // ❌ Removes index 1 (value 2), not value 1! list becomes [1, 3]
+```
+
+### Trap 3: `TreeSet` elements must be `Comparable`
+Adding elements that do not implement `Comparable` to a `TreeSet` (without providing a custom `Comparator` in the constructor) throws a `ClassCastException`.
+```java
+class Cat {}
+Set<Cat> cats = new TreeSet<>();
+cats.add(new Cat()); // ❌ Throws ClassCastException at runtime!
+```
+
+### Trap 4: Write restrictions on upper-bounded wildcards
+You cannot add any objects (except `null`) to an upper-bounded wildcard collection.
+```java
+List<? extends Number> list = new ArrayList<Integer>();
+// list.add(10); // ❌ DOES NOT COMPILE
+```
+
+### Trap 5: Read restrictions on lower-bounded wildcards
+Reading from a lower-bounded collection returns only `Object` references.
+```java
+List<? super Integer> list = new ArrayList<Number>();
+// Integer val = list.get(0); // ❌ DOES NOT COMPILE
+Object val = list.get(0);    // ✅ Compiles
+```
+
+### Trap 6: mixing `var` and diamond operators
+Combining both without type hints results in `Object` mapping generics.
+```java
+var list = new ArrayList<>(); // Equivalent to ArrayList<Object>()
+```
+
+### Trap 7: Subtraction overflow in custom comparisons
+Do not subtract values in `compareTo()` that could exceed primitive limits.
+```java
+// return id1 - id2; // ❌ Vulnerable to overflow if one is highly positive and other highly negative
+return Integer.compare(id1, id2); // ✅ Safe
+```
+
+### Trap 8: Binary search on unsorted collections
+The behavior of `Collections.binarySearch()` is undefined if the list is not sorted.
+```java
+List<Integer> list = List.of(3, 1, 2);
+int idx = Collections.binarySearch(list, 1); // ❌ Undefined result (unsorted list)
+```
+
+### Trap 9: Adding elements to Array-backed lists
+`Arrays.asList()` returns a fixed-size list. Elements can be replaced (`set`), but not added or removed.
+```java
+List<String> list = Arrays.asList("a", "b");
+list.set(0, "c"); // ✅ Allowed
+// list.add("d"); // ❌ Throws UnsupportedOperationException
+```
+
+### Trap 10: Modifying lists inside for-each loops
+Modifying a collection structurally while iterating over it via an iterator or for-each loop throws a `ConcurrentModificationException`. Use `removeIf()` instead.
+```java
+List<String> list = new ArrayList<>(List.of("a", "b"));
 for (String s : list) {
-    if (s.equals("b")) list.remove(s); // ❌ ConcurrentModificationException!
+    // list.remove(s); // ❌ Throws ConcurrentModificationException at runtime!
 }
-
-// Fix 1: Iterator.remove()
-Iterator<String> it = list.iterator();
-while (it.hasNext()) {
-    if (it.next().equals("b")) it.remove(); // ✅
-}
-
-// Fix 2: removeIf (Java 8+)
-list.removeIf(s -> s.equals("b")); // ✅
 ```
 
 ---
 
-## 📝 Exam Quick Reference
-
-| Collection | Order | Duplicates | Null key/value | Thread-Safe |
-|-----------|-------|-----------|----------------|-------------|
-| `ArrayList` | Insertion | Yes | Yes | No |
-| `LinkedHashSet` | Insertion | No | One null | No |
-| `TreeSet` | Sorted | No | No (needs Comparable) | No |
-| `HashMap` | None | Keys: No | One null key | No |
-| `TreeMap` | Sorted | Keys: No | No null key | No |
-| `ArrayDeque` | FIFO/LIFO | Yes | No nulls | No |
-| `ConcurrentHashMap` | None | Keys: No | No nulls | **Yes** |
-
-| Topic | Key Fact |
-|-------|----------|
-| `List.of()` | **Immutable** — `add`/`remove`/`set` all throw `UnsupportedOperationException` |
-| `Collections.unmodifiableList()` | View-only wrapper; original list can still be mutated |
-| `poll()` vs `remove()` | `poll()` returns `null` if empty; `remove()` throws `NoSuchElementException` |
-| `offer()` vs `add()` | `offer()` returns `false` if capacity exceeded; `add()` throws |
-| `Comparator.comparing()` | Takes a key extractor; can chain with `.thenComparing()` |
-| `compareTo` return | Negative = this before other; 0 = equal; positive = this after |
-| PECS | **P**roducer **E**xtends (read), **C**onsumer **S**uper (write) |
-| `TreeSet`/`TreeMap` null | `NullPointerException` on first element; no nulls permitted |
-| `Map.getOrDefault()` | Never throws; returns default if key absent |
-| `Map.computeIfAbsent()` | Inserts and returns new value if key absent |
-| `SequencedCollection` (21) | `getFirst()` / `getLast()` / `reversed()` view; `List`, `Deque`, `LinkedHashSet` |
-| `SequencedSet` (21) | `SortedSet` extends `SequencedSet`; `reversed()` returns reverse-order view |
-| `SequencedMap` (21) | `firstEntry()` / `lastEntry()` / `reversed()`; `LinkedHashMap`, `TreeMap` |
-| `Comparator.nullsFirst` / `nullsLast` | Wrap comparator to allow or order null elements safely |
-| `Collections.binarySearch` | List must be sorted by natural order or comparator used |
-| `Set.copyOf` / `Map.copyOf` | Immutable copies; null elements/keys/values forbidden |
-| `Arrays.asList` | Fixed-size list backed by array; `set` OK, `add` throws |
-| Generic array creation | `new T[]` illegal; use varargs warnings with generic arrays |
-| `Comparable<T>` vs `Comparator` | Natural order vs external ordering; `TreeSet` uses `Comparable` unless ctor given `Comparator` |
-
----
-
-## 🚨 Extra Exam Tips
-
-:::danger[Top Traps in Chapter 9]
-**Trap 1 — `List.of()` vs `new ArrayList()`:**
-```java
-List<String> immutable = List.of("a", "b");
-immutable.add("c");    // ❌ UnsupportedOperationException
-immutable.set(0, "x"); // ❌ UnsupportedOperationException
-// Even immutable.contains() works — only structural modification throws
-
-List<String> mutable = new ArrayList<>(List.of("a", "b"));
-mutable.add("c"); // ✅
-```
-
-**Trap 2 — `list.remove(int)` vs `list.remove(Object)` on `List<Integer>`:**
-```java
-List<Integer> nums = new ArrayList<>(List.of(1, 2, 3));
-nums.remove(1);                // removes by INDEX 1 → [1, 3]
-nums.remove(Integer.valueOf(1)); // removes by VALUE 1 → [2, 3]
-// Autoboxing does NOT apply to remove(int) — the int version wins!
-```
-
-**Trap 3 — `TreeSet` requires Comparable (or Comparator):**
-```java
-TreeSet<String> ts = new TreeSet<>();
-ts.add("b"); ts.add("a"); // ✅ String implements Comparable
-System.out.println(ts); // [a, b] — sorted!
-
-class Foo {} // does NOT implement Comparable
-TreeSet<Foo> bad = new TreeSet<>();
-bad.add(new Foo()); // ❌ ClassCastException at runtime
-```
-
-**Trap 4 — `Map.merge()` behavior:**
-```java
-Map<String, Integer> scores = new HashMap<>();
-scores.put("Alice", 10);
-scores.merge("Alice", 5, Integer::sum); // key exists → merge: 10+5=15
-scores.merge("Bob",   5, Integer::sum); // key absent → insert: 5
-// If merging function returns null, the key is REMOVED
-scores.merge("Alice", 0, (old, v) -> null); // removes "Alice"!
-```
-
-**Trap 5 — `ArrayDeque` does NOT allow nulls:**
-```java
-Deque<String> d = new ArrayDeque<>();
-d.push(null); // ❌ NullPointerException
-// LinkedList allows nulls but is slower and uses more memory
-```
-
-**Trap 6 — `compareTo` with subtraction overflow:**
-```java
-// WRONG — can overflow with large negatives and positives:
-public int compareTo(MyObj o) { return this.id - o.id; } // ❌
-
-// CORRECT — use Integer.compare():
-public int compareTo(MyObj o) { return Integer.compare(this.id, o.id); } // ✅
-```
-
-**Trap 7 — Upper-bounded wildcard prevents adding:**
-```java
-List<? extends Number> nums = new ArrayList<Integer>();
-nums.add(1);   // ❌ COMPILE ERROR — can't add to ? extends
-nums.add(null); // ✅ null is always OK (but bad practice)
-
-Number n = nums.get(0); // ✅ reading is fine
-```
-
-**Trap 8 — `ConcurrentModificationException` in for-each:**
-```java
-List<String> list = new ArrayList<>(List.of("a","b","c"));
-for (String s : list) {
-    if (s.equals("b")) list.remove(s); // ❌ ConcurrentModificationException
-}
-// Fix: use removeIf()
-list.removeIf(s -> s.equals("b")); // ✅
-```
-
-**Trap 9 — `Set.of()` duplicate elements:**
-```java
-Set.of("a", "a"); // ❌ IllegalArgumentException — duplicates not allowed
-```
-
-**Trap 10 — `Map.of()` more than 10 pairs — use entries overload:**
-```java
-// Map.of() overloads cap at 10 key-value pairs; for more, use Map.ofEntries(entry(...), ...)
-```
-
-**Trap 11 — `subList` is a view:**
-```java
-List<Integer> full = new ArrayList<>(List.of(1,2,3,4));
-List<Integer> part = full.subList(1, 3); // view of indices [1,2]
-full.add(5); // ❌ ConcurrentModificationException on subsequent use of part
-```
-
-**Trap 12 — `PriorityQueue` iterator is not priority order:**
-```java
-PriorityQueue<Integer> pq = new PriorityQueue<>(List.of(3,1,2));
-pq.iterator().forEachRemaining(System.out::print); // NOT guaranteed sorted — use poll() for order
-```
-:::
-
-### Exam vignettes
-
-```java
-// Vignette 1 — SequencedCollection (Java 21)
-SequencedCollection<String> sc = new LinkedList<>(List.of("a","b"));
-sc.getFirst(); sc.getLast(); sc.reversed();
-
-// Vignette 2 — Wildcard capture
-void foo(List<?> list) {
-    list.add(null); // only null allowed for unknown type
-}
-```
-
-:::tip[Spring/Senior Relevance]
-- `Map.computeIfAbsent()` is the idiomatic way to implement cache-aside patterns in Spring service methods without introducing race conditions on `HashMap`.
-- `LinkedHashMap` with `accessOrder=true` (LRU mode) is commonly used to implement Spring's in-memory caches before pulling in Caffeine or Redis.
-- The `List.of()` immutability trap causes runtime failures when Spring auto-wires a list from a `@Bean` returning `List.of(...)` and downstream code tries to add to it — always use `new ArrayList<>(List.of(...))` for mutable beans.
-:::
-
----
-
-## 🔗 Review Questions Focus
-
-1. What is the difference between `poll()` and `remove()` on a Queue?
-2. What does `Map.merge()` do when the key already exists?
-3. When should you use `? extends T` vs `? super T`?
-4. Which collection maintains insertion order and prevents duplicates?
-5. What method does `Comparable` require implementing?
-6. What does `list.remove(1)` do on a `List<Integer>`?
-7. Can `TreeSet` store `null` elements?
-8. What does `Map.put()` return when the key already exists?
-9. Why should you avoid subtraction in `compareTo()`?
-10. What is the difference between `List.of()` and `Collections.unmodifiableList()`?
+## 🔗 Spring / Enterprise Relevance
+* **Dynamic Queries:** `Specification<T>` in Spring Data JPA heavily uses Predicate and Collections mapping to query database entities.
+* **Entity Caching:** Spring's `@Cacheable` collections must be configured carefully to avoid returning unmodifiable collections directly to clients that might modify them.
+* **Data Transfer Objects (DTOs):** Generics are crucial in establishing reusable wrappers like `ResponseEntity<T>` or custom API wrapper envelopes `Response<T>`.

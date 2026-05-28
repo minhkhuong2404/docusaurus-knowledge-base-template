@@ -19,375 +19,297 @@ tags:
 
 <span class="chapter-badge">Exam Domain: Working with Streams and Lambda Expressions</span>
 
-> **Key Topics:** Lambda syntax, functional interfaces, `java.util.function` package, method references, variable capture.
+> **Key Topics:** Lambda expression syntax, deferred execution, Functional Interfaces, SAM (Single Abstract Method) rule, `@FunctionalInterface`, built-in functional interfaces, primitive-specific functional interfaces, method references, constructor references, variable scopes (final and effectively final capture), and composition convenience methods.
 
 ---
 
-## 🟦 New Learner: Lambdas
+## 🟦 New Learner: Lambdas, SAM, & Syntax Options
 
-### What is a Lambda?
-
-A lambda is a **short anonymous function** that can be passed around like a value. It implements a **functional interface** (an interface with exactly one abstract method).
+### What is a Lambda Expression?
+A **lambda expression** is a block of code passed around using a deferred execution model. It acts like an unnamed method inside an anonymous class, focusing on behaviors and expressions rather than object state.
+* **SAM (Single Abstract Method) Rule:** A lambda expression implements a **functional interface** — an interface that contains exactly **one** abstract method.
+* **Context Inference:** Java uses surrounding context (variable declarations, method arguments) to infer the types of lambda parameters and the return type.
 
 ```java
-// Full syntax
-Runnable r = (/* no params */) -> { System.out.println("Hello!"); };
+// Example: Animal record and trait checking interface
+public record Animal(String species, boolean canHop, boolean canSwim) {}
 
-// Shorter forms (when unambiguous)
-Runnable r2 = () -> System.out.println("Hello!"); // no braces for single statement
+@FunctionalInterface
+public interface CheckTrait {
+    boolean test(Animal a);
+}
 
-// With parameter
-Comparator<String> comp = (String a, String b) -> { return a.compareTo(b); };
-Comparator<String> comp2 = (a, b) -> a.compareTo(b); // types inferred, return implicit
-```
-
-**Lambda syntax options:**
-
-```
-(params) -> expression              // single expression, implicit return
-(params) -> { statements; }         // block body, explicit return
-() -> expression                    // no parameters
-param -> expression                 // single param, no parens needed
-(Type param) -> expression          // typed params (parens required)
+// In client code:
+List<Animal> animals = List.of(new Animal("rabbit", true, false));
+// We pass a lambda block matching (Animal a) -> boolean
+print(animals, a -> a.canHop()); 
 ```
 
 ---
 
-### Functional Interfaces
+### Lambda Syntax Rules
+A lambda expression consists of three parts: parameters, the arrow operator (`->`), and a body.
 
-A functional interface has **exactly ONE abstract method** (but can have many `default`/`static` methods). Annotated with `@FunctionalInterface` (optional but recommended).
+```
+a -> a.canHop()                        // ✅ Shortest form (1 inferred parameter, single expression)
+(Animal a) -> a.canHop()              // ✅ Parentheses required for explicit type
+(a, b) -> a.canHop()                  // ✅ Parentheses required for multiple parameters
+(var a) -> a.canHop()                 // ✅ var parameter allowed (parentheses required)
+a -> { return a.canHop(); }           // ✅ Block body requires braces, return keyword, and semicolon
+() -> true                             // ✅ Parentheses required for zero parameters
+```
+
+> [!WARNING]
+> Parentheses are optional **only** when there is a single parameter and the type is **inferred** (not explicitly declared).
+
+```java
+// ❌ INVALID SYNTAX EXAMPLES
+var invalid = (Animal a) -> a.canHop(); // ❌ DOES NOT COMPILE (var cannot infer type from a lambda directly without target context)
+a, b -> a.canHop()                      // ❌ DOES NOT COMPILE (Missing parentheses for multiple parameters)
+a -> { a.canHop(); }                    // ❌ DOES NOT COMPILE (Block body must return boolean; missing return keyword)
+(Animal a) -> { return a.canHop() }     // ❌ DOES NOT COMPILE (Missing semicolon inside braces)
+```
+
+---
+
+## 🟣 Senior Deep Dive: Object Methods, Primitive Interfaces, Method References, & Scopes
+
+### Object Methods Exception
+An interface is still a functional interface if it declares abstract methods that match `public` methods in `java.lang.Object`. These do **not** count toward the Single Abstract Method (SAM) count.
+* **Reasoning:** Since all classes implicitly inherit from `Object`, any implementation of the interface will always have concrete implementations of these methods.
+* **Object signatures to check:** `public String toString()`, `public boolean equals(Object)`, and `public int hashCode()`.
 
 ```java
 @FunctionalInterface
-interface Greeting {
-    String greet(String name); // the one abstract method
+public interface Dive {
+    String toString();            // Extracted from Object (ignored in SAM count)
+    boolean equals(Object o);     // Extracted from Object (ignored in SAM count)
+    int hashCode();               // Extracted from Object (ignored in SAM count)
+    void dive();                  // ✅ The SINGLE abstract method (SAM)
 }
-
-Greeting hello = name -> "Hello, " + name + "!";
-System.out.println(hello.greet("Duke")); // "Hello, Duke!"
 ```
 
----
-
-### Built-in Functional Interfaces (`java.util.function`)
-
-| Interface | Method | Input | Output | Use Case |
-|-----------|--------|-------|--------|---------|
-| `Supplier<T>` | `T get()` | None | T | Factory, lazy value |
-| `Consumer<T>` | `void accept(T)` | T | None | Side effects |
-| `BiConsumer<T,U>` | `void accept(T,U)` | T, U | None | Side effects on two |
-| `Function<T,R>` | `R apply(T)` | T | R | Transform |
-| `BiFunction<T,U,R>` | `R apply(T,U)` | T, U | R | Transform two → one |
-| `Predicate<T>` | `boolean test(T)` | T | boolean | Filter/condition |
-| `BiPredicate<T,U>` | `boolean test(T,U)` | T, U | boolean | Two-input condition |
-| `UnaryOperator<T>` | `T apply(T)` | T | T (same type) | Transform same type |
-| `BinaryOperator<T>` | `T apply(T,T)` | T, T | T (same type) | Combine two same |
+> [!IMPORTANT]
+> The signature must match the `Object` signature exactly. If the parameter type differs, it is counted as a new abstract method.
 
 ```java
-Supplier<String> s   = () -> "Hello";
-Consumer<String> c   = str -> System.out.println(str);
-Function<String, Integer> f = str -> str.length();
-Predicate<String> p  = str -> str.isEmpty();
-
-s.get();           // "Hello"
-c.accept("Duke");  // prints "Duke"
-f.apply("Java");   // 4
-p.test("");        // true
+@FunctionalInterface
+public interface Hibernate {
+    boolean equals(Hibernate h); // ❌ Declares equals(Hibernate) instead of equals(Object)
+    void rest();                 // Counted as a second abstract method -> NOT a functional interface!
+}
 ```
 
 ---
 
-### Convenience Methods on Functional Interfaces
+### Built-in Functional Interfaces Reference
 
-```java
-Predicate<String> isLong = s -> s.length() > 5;
-Predicate<String> startsWithJ = s -> s.startsWith("J");
-
-// Compose predicates
-Predicate<String> both = isLong.and(startsWithJ);
-Predicate<String> either = isLong.or(startsWithJ);
-Predicate<String> notLong = isLong.negate();
-
-// Compose functions (execute in sequence)
-Function<Integer, Integer> doubleIt = x -> x * 2;
-Function<Integer, Integer> addTen = x -> x + 10;
-
-Function<Integer, Integer> doubleThenAdd = doubleIt.andThen(addTen);
-doubleThenAdd.apply(5); // (5*2)+10 = 20
-
-Function<Integer, Integer> addThenDouble = doubleIt.compose(addTen);
-addThenDouble.apply(5); // (5+10)*2 = 30
-```
+| Interface | Method | Inputs | Return Type | Use Case |
+| :--- | :--- | :--- | :--- | :--- |
+| **`Supplier<T>`** | `T get()` | 0 | `T` | Supplying or generating values lazily |
+| **`Consumer<T>`** | `void accept(T t)` | 1 (`T`) | `void` | Performing actions on a value (printing, saving) |
+| **`BiConsumer<T, U>`** | `void accept(T t, U u)` | 2 (`T`, `U`) | `void` | Performing actions on two values |
+| **`Predicate<T>`** | `boolean test(T t)` | 1 (`T`) | `boolean` | Testing conditions/filtering |
+| **`BiPredicate<T, U>`** | `boolean test(T t, U u)` | 2 (`T`, `U`) | `boolean` | Testing conditions on two inputs |
+| **`Function<T, R>`** | `R apply(T t)` | 1 (`T`) | `R` | Transforming an input into another type |
+| **`BiFunction<T, U, R>`**| `R apply(T t, U u)` | 2 (`T`, `U`) | `R` | Transforming two inputs into another type |
+| **`UnaryOperator<T>`** | `T apply(T t)` | 1 (`T`) | `T` | Transforming a value into the same type |
+| **`BinaryOperator<T>`** | `T apply(T t1, T t2)` | 2 (`T`, `T`) | `T` | Merging two values of the same type into one |
 
 ---
-
-### Method References
-
-Method references are a shorthand for lambdas that just call a method:
-
-| Type | Syntax | Lambda Equivalent |
-|------|--------|-------------------|
-| Static method | `Class::staticMethod` | `(args) -> Class.staticMethod(args)` |
-| Instance method (specific object) | `obj::method` | `(args) -> obj.method(args)` |
-| Instance method (arbitrary object) | `Class::instanceMethod` | `(obj, args) -> obj.method(args)` |
-| Constructor | `Class::new` | `(args) -> new Class(args)` |
-
-```java
-// Static method reference
-Function<String, Integer> parser = Integer::parseInt;
-parser.apply("42"); // 42
-
-// Specific instance method reference
-String prefix = "Hello, ";
-Function<String, String> greeter = prefix::concat;
-greeter.apply("Duke"); // "Hello, Duke"
-
-// Arbitrary instance method reference
-Function<String, String> upper = String::toUpperCase;
-upper.apply("hello"); // "HELLO"
-
-// Constructor reference
-Supplier<ArrayList<String>> listFactory = ArrayList::new;
-ArrayList<String> list = listFactory.get();
-```
-
----
-
-### Variable Capture
-
-Lambdas can use variables from their enclosing scope, but those variables must be **effectively final** (never reassigned):
-
-```java
-int multiplier = 3; // effectively final
-Function<Integer, Integer> triple = x -> x * multiplier; // ✅
-
-multiplier = 5; // ❌ COMPILE ERROR: makes multiplier not effectively final
-```
-
----
-
-## 🟣 Senior Deep Dive
 
 ### Primitive Functional Interfaces
+To prevent performance degradation from autoboxing/unboxing wrapper classes (like `Double`, `Integer`, `Long`), Java provides primitive-specific functional interfaces.
 
-Avoid boxing/unboxing with specialized variants:
+#### 1. Boolean Variant
+* **`BooleanSupplier`** defines `boolean getAsBoolean()`.
 
-| Type | Interfaces |
-|------|-----------|
-| `int` | `IntSupplier`, `IntConsumer`, `IntFunction<R>`, `IntPredicate`, `IntUnaryOperator`, `IntBinaryOperator` |
-| `long` | `LongSupplier`, `LongConsumer`, `LongFunction<R>`, etc. |
-| `double` | `DoubleSupplier`, `DoubleConsumer`, `DoubleFunction<R>`, etc. |
+#### 2. Double, Int, and Long Variants
+These interfaces omit generic parameter declarations when the primitive type is explicitly named.
 
-```java
-// Avoid Integer boxing:
-IntFunction<String> intToStr = i -> "Value: " + i;
-IntSupplier rand = () -> (int)(Math.random() * 100);
-IntPredicate isEven = n -> n % 2 == 0;
-IntUnaryOperator square = n -> n * n;
-IntBinaryOperator add = (a, b) -> a + b;
+| Generic Shape | `double` Equivalent | `int` Equivalent | `long` Equivalent | Abstract Method |
+| :--- | :--- | :--- | :--- | :--- |
+| `Supplier<T>` | `DoubleSupplier` | `IntSupplier` | `LongSupplier` | `getAsXXX()` |
+| `Consumer<T>` | `DoubleConsumer` | `IntConsumer` | `LongConsumer` | `accept()` |
+| `Predicate<T>` | `DoublePredicate` | `IntPredicate` | `LongPredicate` | `test()` |
+| `Function<T, R>` | `DoubleFunction<R>` | `IntFunction<R>` | `LongFunction<R>` | `apply()` |
+| `UnaryOperator<T>` | `DoubleUnaryOperator` | `IntUnaryOperator` | `LongUnaryOperator` | `applyAsXXX()` |
+| `BinaryOperator<T>` | `DoubleBinaryOperator` | `IntBinaryOperator` | `LongBinaryOperator` | `applyAsXXX()` |
 
-// Cross-type conversion
-ToIntFunction<String> strLen = String::length;  // String → int
-IntToLongFunction intToLong = i -> (long)i * i; // int → long
+#### 3. Cross-Type Conversion and Mixed Interfaces
+* **To-Primitive Functions:** `ToDoubleFunction<T>`, `ToIntFunction<T>`, `ToLongFunction<T>`.
+* **Bi-To-Primitive Functions:** `ToDoubleBiFunction<T,U>`, `ToIntBiFunction<T,U>`, `ToLongBiFunction<T,U>`.
+* **Primitive-to-Primitive Functions:** `DoubleToIntFunction`, `DoubleToLongFunction`, `IntToDoubleFunction`, `IntToLongFunction`, `LongToDoubleFunction`, `LongToIntFunction`.
+* **Object-Primitive Consumers:** `ObjDoubleConsumer<T>`, `ObjIntConsumer<T>`, `ObjLongConsumer<T>` (declares `accept(T t, primitive value)`).
+
+---
+
+### Four Formats of Method References
+Method references (`::`) provide a shorthand notation for lambda expressions that only call a single method.
+
+```mermaid
+graph TD
+    A["Method Reference (::)"] --> B["1. Static Methods (Math::round)"]
+    A --> C["2. Instance Methods on specific object (str::startsWith)"]
+    A --> D["3. Instance Methods on arbitrary parameter (String::isEmpty)"]
+    A --> E["4. Constructor References (String::new)"]
 ```
 
-### Lambdas and Closures — The JVM's `invokedynamic`
-
-Lambdas in Java are NOT anonymous inner classes. They use `invokedynamic` (a JVM instruction added in Java 7) which defers the linkage to runtime. The actual class implementing the functional interface is generated at first call by `LambdaMetafactory`, and the same instance may be reused.
-
-This means:
+#### Arity & Parameter Mapping
+* **Static Methods:** `Class::staticMethod` maps parameters directly to the method arguments.
+* **Instance Methods on specific object:** `instance::method` captures the instance reference and maps the lambda parameters directly to method arguments.
+* **Instance Methods on arbitrary parameter:** `Class::instanceMethod` uses the first parameter of the lambda as the object instance on which the method is called, and remaining parameters (if any) as arguments.
+* **Constructor References:** `Class::new` maps parameters to the matching class constructor.
 
 ```java
-Runnable r1 = () -> System.out.println("hi");
-Runnable r2 = () -> System.out.println("hi");
+// Specific instance method reference (captures 'str')
+String str = "Zoo";
+Predicate<String> lambda1 = s -> str.startsWith(s);
+Predicate<String> methodRef1 = str::startsWith; // ✅ Same arity
 
-// These may or may NOT be the same instance — don't rely on identity!
-System.out.println(r1 == r2); // implementation-defined (often false)
+// Arbitrary instance method reference (uses first parameter as target)
+BiPredicate<String, String> lambda2 = (s, p) -> s.startsWith(p);
+BiPredicate<String, String> methodRef2 = String::startsWith; // ✅ First param is target, second is argument
 ```
 
-### Effectively Final — Subtle Case
+---
+
+### Variable Capture Rules
+Lambda expressions can reference variables from the enclosing scope only under strict rules:
+
+| Scope of Variable | Access from Lambda Body |
+| :--- | :--- |
+| **Instance Variable** | Always allowed (can read/write) |
+| **Static Class Variable**| Always allowed (can read/write) |
+| **Local Variable** | Allowed **only** if marked `final` or is **effectively final** |
+| **Method Parameter** | Allowed **only** if marked `final` or is **effectively final** |
+| **Lambda Parameter** | Always allowed |
+
+> [!NOTE]
+> A variable is **effectively final** if its value is never changed after it is initialized. If you can add the `final` keyword without causing compilation errors, the variable is effectively final.
 
 ```java
-for (int i = 0; i < 5; i++) {
-    // i is modified in the loop — NOT effectively final
-    Runnable r = () -> System.out.println(i); // ❌ COMPILE ERROR
-}
-
-// Fix: use a local effectively final copy
-for (int i = 0; i < 5; i++) {
-    final int copy = i;
-    Runnable r = () -> System.out.println(copy); // ✅
-}
-```
-
-### Custom Functional Interface Composition
-
-```java
-@FunctionalInterface
-interface Transformer<T> extends Function<T, T> {
-    default Transformer<T> then(Transformer<T> after) {
-        return t -> after.apply(this.apply(t));
+public class Crow {
+    private String color;
+    public void caw(String name) {
+        String volume = "loudly";
+        
+        name = "Caty"; // ❌ name is reassigned, no longer effectively final!
+        
+        Consumer<String> consumer = s -> {
+            // System.out.println(name); // ❌ DOES NOT COMPILE (name not effectively final)
+            System.out.println(volume);   // ✅ Compiles (volume is effectively final)
+        };
+        
+        // volume = "softly"; // If uncommented, it breaks 'volume' capture above!
     }
 }
-
-Transformer<String> trim = String::trim;
-Transformer<String> upper = String::toUpperCase;
-Transformer<String> pipeline = trim.then(upper);
-pipeline.apply("  hello  "); // "HELLO"
 ```
 
 ---
 
-## 📝 Exam Quick Reference
+### Convenience Methods on FIs
+These methods chain, compose, or negate functional interfaces:
 
-| Topic | Key Fact |
-|-------|----------|
-| Functional interface | Exactly ONE abstract method; `@FunctionalInterface` optional |
-| `Supplier` | No input → output (`get()`) |
-| `Consumer` | Input → no output (`accept()`) |
-| `Function` | Input → different output (`apply()`) |
-| `Predicate` | Input → boolean (`test()`) |
-| `UnaryOperator` | Input → SAME type output |
-| Method ref types | static, instance on specific obj, instance on arbitrary, constructor |
-| Effectively final | Variable never reassigned after initialization |
-| `andThen` | Executes current function THEN the next |
-| `compose` | Executes argument function FIRST, then current |
-| `BiConsumer` | Two inputs, no output |
-| `BiFunction` | Two inputs, one (different type) output |
-| `BinaryOperator` | Two inputs of same type, same type output |
-| Primitive FIs | Prefer `IntSupplier`, `IntFunction`, etc. to avoid boxing overhead |
-| `BiPredicate<T,U>` | `boolean test(T, U)` — two-argument boolean test |
-| `ToIntFunction<T>` | `int applyAsInt(T)` — object to primitive `int` |
-| `ObjIntConsumer<T>` | `void accept(T, int)` — mixed object + primitive |
-| Target typing | Lambda must match assigned FI's SAM; mismatch → compile error |
-| Exception in lambda | Checked exceptions: lambda body must not throw checked unless FI allows (e.g. `Callable`) |
-| `Runnable` vs `Callable` | `Runnable` `run()` void; `Callable<V>` `call()` returns `V`, throws checked |
-| Method ref arity | Must match SAM parameter count (e.g. `String::charAt` → `IntUnaryOperator` on `String` receiver) |
-| `super::` | Bound instance method: `this::` or `Outer.this::method` in nested contexts |
+```java
+Predicate<String> egg = s -> s.contains("egg");
+Predicate<String> brown = s -> s.contains("brown");
+
+Predicate<String> brownEggs = egg.and(brown); // ✅ Combined check
+Predicate<String> nonBrownEggs = egg.and(brown.negate()); // ✅ Negated check
+```
+
+* **`Function` Composition (`andThen` vs `compose`):**
+  * `f.andThen(g)` runs `f` first, then passes the result to `g`.
+  * `f.compose(g)` runs `g` first, then passes the result to `f`.
+
+```java
+Function<Integer, Integer> addOne = x -> x + 1;
+Function<Integer, Integer> multiplyTwo = x -> x * 2;
+
+System.out.println(addOne.andThen(multiplyTwo).apply(3)); // (3+1)*2 = 8
+System.out.println(addOne.compose(multiplyTwo).apply(3)); // (3*2)+1 = 7
+```
 
 ---
 
-## 🚨 Extra Exam Tips
+## 🚨 Top 10 Exam Traps
 
-:::danger[Top Traps in Chapter 8]
-**Trap 1 — Lambda without braces: implicit return, no semicolon inside:**
+### Trap 1: redeclaring lambda parameters
+You cannot declare a parameter in a lambda body with the same name as a local variable in the enclosing method.
 ```java
-Function<Integer, Integer> f = x -> x * 2;         // ✅ implicit return
-Function<Integer, Integer> g = x -> { x * 2; };     // ❌ missing return keyword
-Function<Integer, Integer> h = x -> { return x * 2; }; // ✅ explicit with braces
-```
-
-**Trap 2 — `@FunctionalInterface` does NOT limit method count:**
-```java
-@FunctionalInterface
-interface Worker {
-    void work();             // abstract — the one SAM
-    default void log() { }  // ✅ default methods are fine
-    static void help() { }  // ✅ static methods are fine
-    // void work2();        // ❌ second abstract method — won't compile
+public void test(int x) {
+    // Predicate<Integer> p = x -> x > 5; // ❌ DOES NOT COMPILE (x is already defined in scope)
 }
 ```
 
-**Trap 3 — `andThen` vs `compose` direction:**
+### Trap 2: Mixing implicit and explicit parameter types
+You cannot mix inferred types, explicit types, or `var` in the same lambda parameter list.
 ```java
-Function<Integer, Integer> times2 = x -> x * 2;
-Function<Integer, Integer> plus3  = x -> x + 3;
-
-times2.andThen(plus3).apply(5); // (5*2)+3 = 13  → times2 first, then plus3
-times2.compose(plus3).apply(5); // (5+3)*2 = 16  → plus3 first, then times2
+// (var x, y) -> x + y;            // ❌ DOES NOT COMPILE
+// (String x, var y) -> x + y;     // ❌ DOES NOT COMPILE
+(var x, var y) -> x + y;           // ✅ Correct
 ```
 
-**Trap 4 — `Predicate.negate()` vs `!`:**
+### Trap 3: Missing lambda assignment semicolon
+A lambda statement assigning to a variable must end in a semicolon.
 ```java
-Predicate<String> isEmpty = String::isEmpty;
-Predicate<String> isNotEmpty = isEmpty.negate(); // ✅ correct composition
-// Predicate<String> wrong = !isEmpty;           // ❌ ! doesn't work on Predicate
+Predicate<String> p = s -> s.isEmpty(); // ✅ Semicolon required
 ```
 
-**Trap 5 — Effectively final in loops:**
+### Trap 4: Throwing checked exceptions in Lambdas
+If a lambda body throws a checked exception, the functional interface's abstract method must declare that exception.
 ```java
-List<Runnable> tasks = new ArrayList<>();
-for (int i = 0; i < 5; i++) {
-    tasks.add(() -> System.out.println(i)); // ❌ i is modified — not effectively final!
-    int copy = i;
-    tasks.add(() -> System.out.println(copy)); // ✅ copy is effectively final
+// Runnable r = () -> Thread.sleep(100); // ❌ DOES NOT COMPILE (InterruptedException is checked)
+Callable<Void> c = () -> { Thread.sleep(100); return null; }; // ✅ Compiles (Callable throws Exception)
+```
+
+### Trap 5: Modifying local variables inside Lambdas
+Lambdas cannot modify local variables captured from the enclosing context.
+```java
+int count = 0;
+// Runnable r = () -> count++; // ❌ DOES NOT COMPILE (attempts to modify local variable)
+```
+
+### Trap 6: Calling `negate()` directly with `!` operator
+The logical negation operator `!` cannot be applied directly to a Predicate object reference.
+```java
+Predicate<String> p = String::isEmpty;
+// Predicate<String> bad = !p; // ❌ DOES NOT COMPILE
+Predicate<String> good = p.negate(); // ✅ Correct
+```
+
+### Trap 7: Missing return keywords inside Braces
+When braces are used in a lambda body, a `return` keyword is mandatory if the method returns a value.
+```java
+// Function<String, Integer> f = s -> { s.length(); }; // ❌ DOES NOT COMPILE
+Function<String, Integer> f = s -> { return s.length(); }; // ✅ Correct
+```
+
+### Trap 8: Implicitly returning a value inside Braces
+Conversely, you cannot return a value in a single-expression lambda if there are no braces.
+```java
+// Function<String, Integer> f = s -> return s.length(); // ❌ DOES NOT COMPILE
+```
+
+### Trap 9: Wrong arity in method references
+Ensure the parameters of the functional interface match the parameters expected by the method reference.
+```java
+// Supplier<String> s = String::concat; // ❌ DOES NOT COMPILE (concat needs a target and a parameter)
+BiFunction<String, String, String> s = String::concat; // ✅ Correct
+```
+
+### Trap 10: Re-assigning instance parameters inside loops
+Using loop indices inside lambdas violates the effectively final rule.
+```java
+for (int i = 0; i < 3; i++) {
+    // Supplier<Integer> s = () -> i; // ❌ DOES NOT COMPILE (i is modified)
 }
 ```
 
-**Trap 6 — Method reference for instance method on arbitrary object:**
-```java
-// Instance method on SPECIFIC object:
-String prefix = "Hello, ";
-Function<String, String> greet = prefix::concat; // prefix is captured
-
-// Instance method on ARBITRARY object:
-Function<String, String> upper = String::toUpperCase; // no instance captured
-// Equivalent lambda: (String s) -> s.toUpperCase()
-```
-
-**Trap 7 — `Consumer.andThen` vs `Function.andThen`:**
-```java
-Consumer<String> print  = System.out::println;
-Consumer<String> log    = s -> logger.info(s);
-Consumer<String> both   = print.andThen(log); // runs print then log
-// Consumer.andThen returns Consumer; Function.andThen returns Function — different types!
-```
-
-**Trap 8 — Wrong FI for a lambda (target typing):**
-```java
-var x = () -> 42; // ❌ cannot infer type — `var` needs a target type
-Supplier<Integer> s = () -> 42; // ✅
-```
-
-**Trap 9 — `UnaryOperator` vs `Function` — both extend `Function`:**
-```java
-UnaryOperator<String> u = String::trim; // apply(String) -> String
-Function<String, String> f = String::trim; // same SAM shape, different type name
-```
-
-**Trap 10 — Method reference to overloaded methods picks specific overload by context:**
-```java
-Consumer<String> c = System.out::println; // println(String)
-// If ambiguous, compiler may fail or pick narrowest match — watch exam questions
-```
-
-**Trap 11 — Lambda body throwing checked exception:**
-```java
-Runnable r = () -> Thread.sleep(100); // ❌ InterruptedException is checked
-Callable<Void> c = () -> { Thread.sleep(100); return null; }; // ✅ Callable allows throws
-```
-:::
-
-### Exam vignettes
-
-```java
-// Vignette 1 — compose order
-Function<Integer,Integer> f = x -> x * 2;
-Function<Integer,Integer> g = x -> x + 1;
-System.out.println(f.compose(g).apply(3)); // g then f → (3+1)*2 = 8
-
-// Vignette 2 — Predicate chain
-Predicate<String> p = s -> s.length() > 2;
-Predicate<String> q = p.negate().or(s -> s.equals("ok"));
-```
-
-:::tip[Spring/Senior Relevance]
-- Spring's `@Bean` definitions with `Supplier<T>` are commonly used for lazy bean initialization and conditional bean creation.
-- Spring Data's `Specification<T>` API is built on `Predicate` composition (`and`, `or`, `not`) — understanding functional composition is essential for dynamic JPA queries.
-- `Function` and `Consumer` are used extensively in Spring's `RestTemplate`/`WebClient` request builder APIs and in `ReactiveStream` operators (Project Reactor's `Mono`/`Flux` operators map directly to these concepts).
-:::
-
 ---
 
-## 🔗 Review Questions Focus
-
-1. Which functional interface takes no argument and returns a value?
-2. What is the difference between `andThen` and `compose` on `Function`?
-3. Can a lambda reference a variable that has been modified after the lambda is created?
-4. What type does `Predicate.and(other)` return?
-5. Write a method reference for `String.valueOf(int)`.
-6. What is the difference between `Consumer.andThen` and `Function.andThen`?
-7. Can a functional interface have `default` methods?
-8. What is the lambda equivalent of `Integer::parseInt`?
-9. What happens at compile time if `@FunctionalInterface` has two abstract methods?
-10. What is the difference between `UnaryOperator<T>` and `Function<T,T>`?
+## 🔗 Spring / Enterprise Relevance
+* **Dynamic Specifications:** Spring Data JPA `Specification<T>` allows combining database predicates dynamically using `and()`, `or()`, and `not()` methods.
+* **Spring Boot Task Scheduling:** `TaskScheduler` and `@Scheduled` setups execute tasks asynchronously using `Runnable` lambdas internally.
+* **Reactive Programming:** Spring WebFlux (Project Reactor) uses `Function` and `Consumer` heavily within `map()`, `flatMap()`, and `subscribe()` operators.

@@ -19,455 +19,472 @@ tags:
 
 <span class="chapter-badge">Exam Domain: Using Object-Oriented Concepts in Java</span>
 
-> **Key Topics:** Inheritance, `extends`, `super`, method overriding, `abstract` classes, polymorphism, `final`, immutable classes, `Object` methods.
+> **Key Topics:** Inheritance relationships, single vs. multiple inheritance, the `Object` class, constructor chaining rules, `this()` and `super()`, order of initialization (static and instance), method overriding rules, covariant return types, method hiding (`static`), field hiding (non-polymorphic fields), `abstract` classes/methods, and creating immutable objects via defensive copying.
 
 ---
 
-## 🟦 New Learner: Inheritance & Polymorphism
+## 🟦 New Learner: Inheritance, Constructors, & Class Basics
 
 ### Inheritance Basics
+Inheritance is the mechanism by which a *subclass* (child class) automatically includes accessible members (fields and methods) defined in a *superclass* (parent class).
+* **Transitive Nature:** If class `X` extends `Y`, and `Y` extends `Z`, then `X` is an indirect subclass of `Z`, automatically inheriting all accessible members of both `Y` and `Z`.
+* **Access Control Boundaries:**
+  * `public` and `protected` members are always inherited.
+  * Package-private (default) members are inherited *only* if the subclass is in the same package as the parent.
+  * `private` members are never inherited and cannot be directly accessed by subclasses.
 
 ```java
-public class Animal {
-    protected String name;
-    public Animal(String name) { this.name = name; }
-    public void speak() { System.out.println(name + " makes a sound"); }
+// Parent.java
+package p1;
+public class Parent {
+    private int privateVar = 1;
+    int packageVar = 2;
+    protected int protectedVar = 3;
+    public int publicVar = 4;
 }
 
-public class Dog extends Animal {
-    public Dog(String name) {
-        super(name); // MUST call super constructor first
-    }
-
-    @Override
-    public void speak() {
-        System.out.println(name + " barks!");
+// Child.java
+package p2; // Different package!
+import p1.Parent;
+public class Child extends Parent {
+    public void testAccess() {
+        // System.out.println(privateVar);   // ❌ DOES NOT COMPILE (private)
+        // System.out.println(packageVar);   // ❌ DOES NOT COMPILE (different package)
+        System.out.println(protectedVar);    // ✅ Compiles (inherited protected variable)
+        System.out.println(publicVar);       // ✅ Compiles (inherited public variable)
     }
 }
 ```
 
-`super(...)` must be the **first** statement in the child constructor.  
-If you don't explicitly call `super()`, Java inserts a no-arg `super()` automatically — which fails if the parent has no no-arg constructor.
+### Single vs. Multiple Inheritance
+* **Single Inheritance:** Java classes can only directly extend one class. Multiple inheritance of classes (e.g., `class Dog extends Canine, Domestic`) is forbidden in Java to prevent method resolution conflicts (the Diamond Problem).
+* **Multiple Interface Inheritance:** A class may implement multiple interfaces (discussed in Chapter 7).
+* **Root of All Classes:** Every class in Java (except `java.lang.Object` itself) implicitly extends `java.lang.Object` if no explicit parent class is declared.
 
----
-
-### Method Overriding Rules
-
-| Rule | Requirement |
-|------|------------|
-| Signature | Must match exactly (name + parameter types) |
-| Return type | Same type or **covariant** (subtype) |
-| Access | Same or **wider** access (can make `protected` → `public`, not `public` → `private`) |
-| Exceptions | Cannot throw **new or broader checked** exceptions |
-| Annotation | `@Override` is optional but strongly recommended (compiler catches errors) |
+### The `this` and `super` References
+* `this` refers to the current instance of the class and can access any member (declared or inherited).
+* `super` refers directly to the parent class scope, bypassing overrides or hidden members in the child class.
+* **Static Context Restriction:** Neither `this` nor `super` can be used inside static methods or static initializers, as static members belong to the class, not an object instance.
 
 ```java
 class Parent {
-    protected Number getValue() throws IOException { return 1; }
+    String name = "Parent";
+}
+public class Child extends Parent {
+    String name = "Child"; // Hides parent name
+
+    public void printNames() {
+        System.out.println(name);       // Child (resolves to narrowest scope)
+        System.out.println(this.name);  // Child
+        System.out.println(super.name); // Parent
+    }
+}
+```
+
+---
+
+### Declaring Constructors
+A constructor is a special block of code that initializes a new object.
+1. **Name:** Must match the class name exactly (case-sensitive).
+2. **Return Type:** Must not declare *any* return type, not even `void`. If it has a return type, Java treats it as a standard method.
+3. **Parameters:** Can declare any type except `var`.
+
+```java
+public class Bunny {
+    public Bunny() {} // ✅ Valid constructor
+    public bunny() {} // ❌ DOES NOT COMPILE (case mismatch; lacks return type)
+    public void Bunny() {} // ✅ Valid method, but NOT a constructor!
+}
+```
+
+### The Default Constructor
+If you write a class with **no** constructors, the Java compiler automatically generates a `public` no-argument constructor with an empty body:
+```java
+public class Rabbit {} // Compiler automatically adds: public Rabbit() { super(); }
+```
+> [!IMPORTANT]
+> If you declare **any** constructor (even private or parameterized), the compiler will **not** insert the default no-argument constructor.
+
+```java
+public class Elephant {
+    public Elephant(int age) {}
+}
+// Elephant e = new Elephant(); // ❌ DOES NOT COMPILE! No no-arg constructor exists.
+```
+
+### Calling Constructors with `this()` and `super()`
+* **`this()`:** Calls another overloaded constructor in the same class.
+* **`super()`:** Calls a constructor in the direct parent class.
+
+#### Structural Constraints:
+* The call to `this()` or `super()` **must be the very first statement** in a constructor.
+* You cannot call both `this()` and `super()` in the same constructor.
+* If a constructor does not contain an explicit call to `this()` or `super()`, the compiler automatically inserts `super();` (a call to the parent's no-argument constructor) as the first line.
+
+```java
+class Mammal {
+    public Mammal(int age) {} // No no-arg constructor!
+}
+
+class Seal extends Mammal {
+    public Seal() {
+        // super(); // ❌ Compiler inserts this, but Mammal has no no-arg constructor!
+    }
+    
+    public Seal(int age) {
+        super(age); // ✅ Compiles because it explicitly calls Mammal(int)
+    }
+}
+```
+
+* **Constructor Cycles:** The compiler detects and rejects recursive constructor calls (infinite loops).
+```java
+public class Cycle {
+    public Cycle() { this(5); }    // ❌ DOES NOT COMPILE (Cyclic constructor calls)
+    public Cycle(int x) { this(); } // ❌ DOES NOT COMPILE
+}
+```
+
+---
+
+## 🟣 Senior Deep Dive: Initialization, Overriding, Hiding, & Immutability
+
+### Class and Instance Initialization Order
+When an object is instantiated, initialization occurs in a rigid order:
+
+```mermaid
+graph TD
+    A["1. Superclass Static Members & Initializers (in order of declaration)"] --> B["2. Child Class Static Members & Initializers"]
+    B --> C["3. Superclass Instance Variables & Initializers (in order of declaration)"]
+    C --> D["4. Superclass Constructor Body"]
+    D --> E["5. Child Instance Variables & Initializers (in order of declaration)"]
+    E --> F["6. Child Constructor Body"]
+```
+
+> [!NOTE]
+> Static initialization runs exactly **once** when the class is first loaded by the JVM. Instance initialization runs every time a new instance is created with `new`.
+
+#### Complex Trace Example
+```java
+class Parent {
+    static { System.out.print("1"); }
+    { System.out.print("3"); }
+    public Parent() { System.out.print("4"); }
 }
 class Child extends Parent {
+    static { System.out.print("2"); }
+    { System.out.print("5"); }
+    public Child() { System.out.print("6"); }
+}
+// Execution of: new Child();
+// Prints: 123456
+```
+
+---
+
+### Initializing `final` Fields
+`final` fields cannot be reassigned once initialized.
+* **`static final` variables:** Must be assigned a value exactly once, either at declaration or inside a `static` initializer block.
+* **Instance `final` variables:** Must be assigned a value exactly once, either at declaration, in an instance initializer block, or **by the time every constructor completes**.
+
+```java
+public class finalExample {
+    private final int x;
+    private final int y = 2; // Assigned at declaration
+    private final int z;
+
+    {
+        x = 1; // Assigned in instance initializer
+    }
+
+    public finalExample() {
+        z = 3; // Assigned in constructor
+    }
+
+    public finalExample(int value) {
+        z = value; // Assigned in overloaded constructor
+    }
+    
+    public finalExample(String s) {
+        // z is never assigned! ❌ DOES NOT COMPILE
+    }
+}
+```
+
+---
+
+### Method Overriding Rules (Deep Dive)
+Overriding occurs when a subclass redefines an inherited instance method. The Java compiler strictly enforces **four rules**:
+
+| Rule | Requirement | Detail & Exceptions |
+| :--- | :--- | :--- |
+| **1. Signature** | Must match the parent method exactly. | Must have the same method name and argument list (types and order). |
+| **2. Access Level**| Must be same or broader than the parent method.| Parent `protected` can be overridden as `protected` or `public`. It cannot be overridden as package-private or `private`. |
+| **3. Exceptions** | Cannot throw new or broader **checked** exceptions. | May throw *narrower* checked exceptions, any *unchecked* (runtime) exceptions, or omit them entirely. |
+| **4. Return Type** | Must be same or **covariant** return type. | If parent returns type `T`, child must return `T` or a subclass of `T`. If parent returns a primitive (e.g. `int`), child must match exactly. |
+
+```java
+import java.io.*;
+
+class Parent {
+    protected Number process() throws IOException {
+        return 10;
+    }
+}
+
+class Child extends Parent {
+    // ✅ Compiles: public is wider, Integer is covariant to Number,
+    // FileNotFoundException is narrower than IOException.
     @Override
-    public Integer getValue() { return 42; } // ✅ wider access, covariant return, fewer exceptions
-}
-```
-
----
-
-### Abstract Classes
-
-An `abstract` class cannot be instantiated — it's a template:
-
-```java
-public abstract class Shape {
-    private String color;
-
-    public Shape(String color) { this.color = color; }
-    public String getColor() { return color; }
-
-    public abstract double area(); // no implementation
-    public abstract double perimeter();
-
-    // Concrete method available to all subclasses
-    public void describe() {
-        System.out.printf("A %s %s with area %.2f%n",
-            color, getClass().getSimpleName(), area());
-    }
-}
-
-public class Circle extends Shape {
-    private double radius;
-    public Circle(String color, double radius) {
-        super(color);
-        this.radius = radius;
-    }
-    @Override public double area() { return Math.PI * radius * radius; }
-    @Override public double perimeter() { return 2 * Math.PI * radius; }
-}
-```
-
-:::tip[Abstract Class Rules]
-- Cannot be instantiated with `new`
-- Can have constructors (called by subclasses via `super`)
-- Can have abstract and concrete methods
-- Subclass must implement ALL abstract methods, or also be declared `abstract`
-:::
-
----
-
-### Polymorphism
-
-The declared type (reference type) and actual type (object type) can differ:
-
-```java
-Shape shape = new Circle("red", 5.0); // reference: Shape, object: Circle
-
-shape.area();     // calls Circle.area() — runtime dispatch
-shape.describe(); // calls Shape.describe()
-
-// Cannot call Circle-specific methods via Shape reference:
-// shape.radius; // ❌ compile error
-
-// Cast to access Circle methods
-if (shape instanceof Circle c) {
-    System.out.println(c.radius); // ✅
-}
-```
-
----
-
-### `final` Keyword
-
-| Applied To | Effect |
-|------------|--------|
-| `final` class | Cannot be subclassed (`String`, `Integer` are final) |
-| `final` method | Cannot be overridden |
-| `final` variable | Cannot be reassigned (but object's state can still change) |
-
----
-
-### Immutable Classes
-
-An immutable class cannot change state after construction:
-
-```java
-public final class Money {
-    private final String currency;
-    private final double amount;
-
-    public Money(String currency, double amount) {
-        this.currency = currency;
-        this.amount = amount;
-    }
-
-    // Only getters, no setters
-    public String getCurrency() { return currency; }
-    public double getAmount() { return amount; }
-
-    // Operations return NEW instances
-    public Money add(Money other) {
-        return new Money(this.currency, this.amount + other.amount);
+    public Integer process() throws FileNotFoundException {
+        return 20;
     }
 }
 ```
 
-**Immutability rules:**
-1. Class is `final`
-2. All fields are `private final`
-3. No setters
-4. No methods that modify state
-5. Defensive copies for mutable field types (e.g., `Date`, arrays)
+> [!WARNING]
+> If a parent method return type is `void`, the overriding child method **must** also return `void`. Nothing is covariant with `void`.
 
 ---
 
-### Object Class Methods
-
-Every Java class inherits from `Object`:
-
-```java
-// toString: called by println, string concatenation
-@Override
-public String toString() { return "Dog[name=" + name + "]"; }
-
-// equals: content equality
-@Override
-public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof Dog d)) return false;
-    return Objects.equals(name, d.name);
-}
-
-// hashCode: must be consistent with equals
-@Override
-public int hashCode() { return Objects.hash(name); }
-```
-
-:::caution[equals and hashCode Contract]
-If two objects are **equal** (`a.equals(b)` is `true`), they **must** have the same `hashCode`. If you override `equals`, always override `hashCode` too!
-:::
-
----
-
-## 🟣 Senior Deep Dive
-
-### Constructor Chaining and Initialization Order
-
-When creating an object, Java initializes in this order:
-
-1. Parent static initializers (once, when class first loaded)
-2. Child static initializers (once, when class first loaded)
-3. Parent instance initializers + fields
-4. Parent constructor body
-5. Child instance initializers + fields
-6. Child constructor body
+### Redeclaring `private` Methods vs. Method Hiding
+* **Redeclaring `private` methods:** `private` methods are not inherited. A child class can declare a method with the same signature, but it is an independent method. None of the overriding rules (like access modifiers or return types) apply.
+* **Method Hiding (`static` methods):** If a child class defines a `static` method with the same signature as an inherited parent `static` method, it hides it.
+  * **Rule 5 of Method Hiding:** You cannot override a static method with an instance method, nor can you hide an instance method with a static method. Both must be static (hiding) or both must be instance (overriding).
 
 ```java
 class Parent {
-    static { System.out.println("1. Parent static"); }
-    { System.out.println("3. Parent instance init"); }
-    Parent() { System.out.println("4. Parent constructor"); }
+    public static void printStatic() { System.out.println("Parent Static"); }
+    public void printInstance() { System.out.println("Parent Instance"); }
 }
 class Child extends Parent {
-    static { System.out.println("2. Child static"); }
-    { System.out.println("5. Child instance init"); }
-    Child() { System.out.println("6. Child constructor"); }
-}
-new Child();
-// Output: 1, 2, 3, 4, 5, 6
-```
-
-### Hiding Fields (Exam Trap)
-
-Unlike methods, **fields are never overridden — they are hidden**:
-
-```java
-class Parent { String name = "Parent"; }
-class Child extends Parent { String name = "Child"; } // hides, not overrides
-
-Parent obj = new Child();
-System.out.println(obj.name);        // "Parent" (field resolved at compile time!)
-System.out.println(((Child)obj).name); // "Child"
-```
-
-### `super` Keyword in Methods
-
-```java
-class Animal {
-    String describe() { return "Animal"; }
-}
-class Dog extends Animal {
-    @Override
-    String describe() {
-        return super.describe() + " > Dog"; // explicitly call parent
-    }
-}
-// new Dog().describe() == "Animal > Dog"
-```
-
-### Polymorphism and Reference Type Rules
-
-```java
-// Allowed assignments (widening reference conversion)
-Animal a = new Dog(); // ✅
-Object o = new Dog(); // ✅ Object is root
-
-// Narrowing (requires explicit cast + runtime check)
-Dog d = (Dog) a;      // ✅ (a actually IS a Dog)
-Cat c = (Cat) a;      // ❌ ClassCastException at runtime!
-
-// Use instanceof to guard
-if (a instanceof Dog dog) {
-    dog.fetch(); // safe
-}
-```
-
-### Designing for Extensibility
-
-```java
-// Template Method Pattern using abstract classes
-public abstract class DataProcessor {
-    // Template method — final to prevent override
-    public final void process() {
-        readData();
-        validateData();
-        transformData();
-        writeData();
-    }
-
-    protected abstract void readData();
-    protected abstract void validateData();
-    protected abstract void transformData();
-    protected abstract void writeData();
+    // public void printStatic() {}       // ❌ DOES NOT COMPILE (Instance cannot override static)
+    // public static void printInstance() {} // ❌ DOES NOT COMPILE (Static cannot hide instance)
+    
+    public static void printStatic() { System.out.println("Child Static"); } // ✅ Hides parent static
 }
 ```
 
 ---
 
-## 📝 Exam Quick Reference
+### Variable Hiding (Non-Polymorphic Fields)
+> [!CAUTION]
+> **Variables (fields) are never overridden — they are only hidden.** 
+> While method calls are resolved at runtime based on the actual object type (polymorphism), variable references are resolved at compile time based on the **reference variable type**.
 
-| Topic | Key Fact |
-|-------|----------|
-| `super()` | Must be first statement in child constructor |
-| Abstract class | Cannot instantiate; subclass must implement all abstract methods |
-| `final` class | Cannot extend (e.g., `String`, `Integer`) |
-| `final` method | Cannot override |
-| Overriding access | Must be same or wider |
-| Overriding exceptions | Cannot add new/broader checked exceptions |
-| Field hiding | Fields resolved at compile time (reference type); not polymorphic |
-| `equals`+`hashCode` | Must override both together; contract: equal objects have same hash |
-| Immutable class | `final`, all fields `private final`, no setters, defensive copies |
-| Initialization order | Static blocks → parent fields/instance → parent constructor → child fields/instance → child constructor |
-| `@Override` | Optional but catches typos at compile time — always use it |
-| Covariant return type | Overriding method can return a subtype of the declared return type |
-| `abstract` class | May contain all concrete methods; no obligation to have abstract methods |
-| `private` constructor | Singleton pattern; prevents external instantiation |
-| Nested class `static` | No implicit reference to enclosing instance |
-| `enum` cannot extend | Implicitly extends `java.lang.Enum` |
-| `Object` methods | `clone()`, `finalize()` (deprecated) — know `equals`/`hashCode`/`toString` |
-| Polymorphism | Only non-static, non-private instance methods are virtual |
-| `super.method()` | Calls parent version from subclass override |
-
----
-
-## 🚨 Extra Exam Tips
-
-:::danger[Top Traps in Chapter 6]
-**Trap 1 — Abstract class CAN have constructors:**
-```java
-abstract class Shape {
-    private String color;
-    Shape(String color) { this.color = color; } // ✅ valid constructor
-    abstract double area();
-}
-class Circle extends Shape {
-    Circle(String color, double r) {
-        super(color); // must call the abstract class constructor
-    }
-    double area() { return Math.PI * r * r; }
-}
-```
-
-**Trap 2 — Calling overridden method from constructor (dangerous):**
 ```java
 class Parent {
-    Parent() { print(); } // ⚠️ calls overridden version!
+    public String value = "Parent";
+}
+class Child extends Parent {
+    public String value = "Child"; // Hides parent field
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Child child = new Child();
+        Parent parent = child; // Polymorphic assignment
+        
+        System.out.println(child.value);  // Child
+        System.out.println(parent.value); // Parent (Compiled reference type is Parent)
+    }
+}
+```
+
+---
+
+### Abstract Classes & Methods
+An `abstract` class is a class template that cannot be instantiated and may declare `abstract` methods (methods without a body).
+* **Abstract Method Rules:**
+  * Must end in a semicolon (`;`), not a body enclosed in braces (`{}`).
+  * Can only be declared within an `abstract` class or interface.
+  * Cannot be marked `private`, `final`, or `static` (since they must be overridden to be implemented).
+* **Concrete Subclass Responsibility:** The first non-abstract (concrete) class that extends an abstract class **must** implement all inherited abstract methods.
+
+```java
+public abstract class Animal {
+    public abstract void eat(); // Semicolon, no body
+    // public abstract void sleep() {} // ❌ DOES NOT COMPILE (abstract methods cannot have bodies)
+}
+
+public class Lion extends Animal {
+    // First concrete subclass must implement eat()
+    @Override
+    public void eat() {
+        System.out.println("Lion eats meat");
+    }
+}
+```
+
+---
+
+### Designing Immutable Classes
+An immutable class is designed so that its state cannot change after instantiation.
+1. **No Setters:** Do not define any setter methods.
+2. **Private & Final:** Mark all instance fields `private` and `final`.
+3. **Prevent Subclassing:** Mark the class `final` (or make all constructors `private`).
+4. **Defensive Copying in Constructors:** If a constructor receives a reference to a mutable object (e.g. `List`, `Date`, `Map`), make a copy of it rather than storing the original reference.
+5. **Defensive Copying in Getters:** If a getter returns a mutable field, return a copy of the object or wrap it in an unmodifiable view.
+
+```java
+import java.util.*;
+
+public final class ImmutableRecord {
+    private final String name;
+    private final List<String> items; // Mutable container
+
+    public ImmutableRecord(String name, List<String> items) {
+        this.name = name;
+        if (items == null) {
+            this.items = new ArrayList<>();
+        } else {
+            // Defensive copy: creates a new list so caller cannot mutate via original reference
+            this.items = new ArrayList<>(items); 
+        }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<String> getItems() {
+        // Defensive copy or unmodifiable wrapper on read
+        return Collections.unmodifiableList(items);
+    }
+}
+```
+
+---
+
+## 📝 Quick Reference Summary
+
+| Modifier Pair | Compatible? | Reason |
+| :--- | :--- | :--- |
+| `static` and `final` | ✅ Yes | Commonly used for constants. |
+| `private` and `static` | ✅ Yes | Utility methods local to the class. |
+| `static` and `abstract` | ❌ No | Static methods cannot be overridden/implemented. |
+| `private` and `abstract` | ❌ No | Private methods are not inherited, so they can't be implemented. |
+| `abstract` and `final` | ❌ No | Abstract requires inheritance; final prevents inheritance. |
+
+---
+
+## 🚨 Top 10 Exam Traps
+
+### Trap 1: Calling Overridable Methods inside Constructors
+If a parent constructor calls an overridden method, the child's implementation runs **before** the child's instance variables have been initialized!
+```java
+class Parent {
+    Parent() { print(); }
     void print() { System.out.println("Parent"); }
 }
 class Child extends Parent {
     int value = 42;
-    Child() { super(); } // implicitly
-    @Override void print() { System.out.println(value); }
+    @Override
+    void print() { System.out.println(value); }
 }
-new Child(); // prints 0, not 42 — value not yet initialized when print() runs!
+// new Child(); 
+// Prints: 0 (value is not initialized when parent constructor runs!)
 ```
 
-**Trap 3 — Field hiding vs method overriding:**
-```java
-class A { String name = "A"; String name() { return "A"; } }
-class B extends A { String name = "B"; String name() { return "B"; } }
-
-A obj = new B();
-obj.name;    // "A"  — field: compile-time type wins
-obj.name();  // "B"  — method: runtime type wins (polymorphism)
-```
-
-**Trap 4 — Narrowing checked exceptions in overrides:**
+### Trap 2: Invalid Override Exception Rules
+Checked exceptions in overriding methods cannot be broader than those in parent methods.
 ```java
 class Parent {
-    void method() throws IOException { }
+    void process() throws IOException {}
 }
 class Child extends Parent {
-    @Override
-    void method() throws FileNotFoundException { } // ✅ narrower (subtype)
-    // void method() throws Exception { }          // ❌ broader — compile error
-    // void method() throws SQLException { }       // ❌ unrelated checked exception
+    // void process() throws Exception {} // ❌ DOES NOT COMPILE (Exception is broader than IOException)
+    // void process() throws SQLException {} // ❌ DOES NOT COMPILE (checked & unrelated)
 }
 ```
 
-**Trap 5 — `equals` contract with null and wrong type:**
+### Trap 3: The Hidden Field Pitfall
+Fields do not participate in polymorphism. The compile-time reference type determines which field is accessed.
 ```java
-// Always follow this pattern:
-@Override
-public boolean equals(Object o) {
-    if (this == o) return true;           // same object
-    if (o == null) return false;          // null check
-    if (!(o instanceof MyClass m)) return false; // type check + cast
-    return Objects.equals(field, m.field);
-}
-// "this.equals(null)" must always return false — NEVER throw NPE
+Parent p = new Child();
+System.out.println(p.value); // Prints Parent's value, not Child's!
 ```
 
-**Trap 6 — `hashCode` contract violation:**
+### Trap 4: Missing `super()` call when Parent lacks No-Arg Constructor
+If the parent class does not have a no-argument constructor, the child's constructor **must** explicitly invoke `super(args)` on its very first line.
 ```java
-class Bad {
-    int id;
-    @Override public boolean equals(Object o) {
-        return o instanceof Bad b && this.id == b.id;
-    }
-    // No hashCode override!
+class Parent {
+    Parent(String s) {}
 }
-// If a.equals(b) → true, but a.hashCode() != b.hashCode() → broken HashMap behavior!
-```
-
-**Trap 7 — Immutable class with mutable fields:**
-```java
-public final class Period {
-    private final Date start; // Date is mutable!
-    public Period(Date start) {
-        this.start = start; // ❌ caller can mutate via original reference
-    }
-    public Period(Date start) {
-        this.start = new Date(start.getTime()); // ✅ defensive copy
-    }
-    public Date getStart() {
-        return new Date(start.getTime()); // ✅ defensive copy in getter too
+class Child extends Parent {
+    // Child() {} // ❌ DOES NOT COMPILE (implicit super() fails because Parent() does not exist)
+    Child() {
+        super("val"); // ✅ Explicit call fixes it
     }
 }
 ```
 
-**Trap 8 — Package-private override across packages:**
+### Trap 5: Modifiers order error
+`abstract` and `class` or return types cannot be interchanged incorrectly.
 ```java
-// Parent in pkg p1: void m() { } // package-private
-// Child in pkg p2: @Override void m() { } // ❌ cannot override — not visible
+public class abstract Animal {} // ❌ DOES NOT COMPILE (abstract must precede class)
 ```
 
-**Trap 9 — Cast and `ClassCastException`:**
+### Trap 6: Abstract Methods inside Concrete Classes
+You cannot declare an abstract method inside a class that is not marked `abstract`.
 ```java
-Object o = "hi";
-Integer i = (Integer) o; // ❌ ClassCastException at runtime
+public class Hawk {
+    public abstract void fly(); // ❌ DOES NOT COMPILE (Hawk must be abstract)
+}
 ```
 
-**Trap 10 — `==` vs `equals` for `String`:**
+### Trap 7: Mutable escape in Immutable Class
+Exposing direct references to mutable instance variables violates immutability.
 ```java
-new String("a") == new String("a"); // false
-new String("a").equals(new String("a")); // true
-```
-:::
-
-### Exam vignettes
-
-```java
-// Vignette — override return type covariance
-class P { Number get() { return 1; } }
-class C extends P { @Override Integer get() { return 2; } } // OK — Integer subtype of Number
+public final class MutableEscape {
+    private final List<String> list = new ArrayList<>();
+    public List<String> getList() { return list; } // ❌ Caller can call getList().clear()
+}
 ```
 
-:::tip[Spring/Senior Relevance]
-- The `equals`/`hashCode` contract is critical in Spring applications that use entities as `HashMap` keys or `HashSet` elements (e.g., JPA entity caching). JPA requires that entity `equals` be based on the database ID, not object identity.
-- Spring's `@Transactional` propagation relies heavily on polymorphism — understanding how method overriding works explains why self-invocation doesn't trigger transaction boundaries.
-- Abstract class + template method pattern is the foundation of many Spring abstractions: `AbstractMessageConverterMethodArgumentResolver`, `AbstractController`, `JdbcTemplate`, etc.
-:::
+### Trap 8: Redeclaring `private` methods without visibility constraints
+Since `private` methods are not inherited, redeclaring them with different return types or modifiers does not cause compilation errors, because they aren't overrides.
+```java
+class Parent { private void run() {} }
+class Child extends Parent { public int run() { return 1; } } // ✅ Compiles! Unrelated method.
+```
+
+### Trap 9: Static method override attempts
+Static methods cannot be overridden. If a child class creates a non-static method with the same signature as a static parent method, or vice versa, a compilation error occurs.
+```java
+class Parent { public static void m() {} }
+class Child extends Parent { public void m() {} } // ❌ DOES NOT COMPILE
+```
+
+### Trap 10: `this()` or `super()` not as the first statement
+Any executable statement before `this()` or `super()` causes compiler failure.
+```java
+public class Test {
+    public Test() {
+        System.out.println("Start");
+        // this(5); // ❌ DOES NOT COMPILE (must be first statement)
+    }
+    public Test(int x) {}
+}
+```
+
+---
+
+## 🔗 Spring / Enterprise Relevance
+* **JPA/Hibernate Entities:** Dynamic proxy subclasses generated by Hibernate rely heavily on class design. Entity classes must not be declared `final`, and their constructors must have at least `protected` visibility.
+* **AOP Proxies:** Spring uses CGLIB subclasses or JDK Dynamic Proxies to implement `@Transactional` and `@Async`. If a bean invokes a method on itself (`this.method()`), the proxy is bypassed because polymorphism is skipped during self-invocation.
+* **Template Method Pattern:** Framework patterns (e.g., `AbstractRoutingDataSource`, `JdbcTemplate` internals) use abstract classes to enforce execution sequences while delegating step implementation to developers.
 
 ---
 
 ## 🔗 Review Questions Focus
-
-1. What is printed when a child class hides a parent field?
-2. Can an abstract class have a constructor?
-3. What access modifier can an overriding method NOT use?
-4. What is the initialization order for parent and child classes?
-5. Why must `equals()` and `hashCode()` be overridden together?
-6. Can an abstract class have no abstract methods?
-7. What is the danger of calling an overridable method from a constructor?
-8. What are the requirements for an immutable class?
-9. Can a `final` class have abstract methods?
-10. What is a covariant return type and when can you use it?
+1. How does class initialization order differ from instance initialization order?
+2. What are the rules for checked exceptions in overriding methods?
+3. When is a default constructor generated by the compiler?
+4. How do you construct a class so that it is strictly immutable?
+5. Why are variables not polymorphic in Java?
+6. Can an abstract class contain a constructor? Under what condition is it executed?
+7. What happens if you try to override a static method with an instance method?
+8. What is the covariant return type rule and how does it apply to primitives?
+9. Does a redeclared private method need to match the signature of the parent class method?
+10. What compiles first: initialization blocks or field declarations?

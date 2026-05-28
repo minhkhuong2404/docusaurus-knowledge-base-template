@@ -20,372 +20,284 @@ tags:
 
 <span class="chapter-badge">Exam Domain: Packaging and Deploying Java Code</span>
 
-> **Key Topics:** JPMS (Java Platform Module System), `module-info.java`, `requires`, `exports`, `opens`, services, `jlink`, `jdeps`, `jpackage`, unnamed/automatic modules.
+> **Key Topics:** Java Platform Module System (JPMS), `module-info.java` syntax & directives, Named vs. Automatic vs. Unnamed Modules, Service Loader Pattern, CLI tools (`javac`, `java`, `jar`, `jdeps`, `jmod`, `jlink`, `jpackage`), and migration strategies (circular dependency rules).
 
 ---
 
 ## 🟦 New Learner: The Module System
 
-### Why Modules?
-
-Before Java 9, Java had a flat classpath with no real encapsulation between JARs. The **Java Platform Module System (JPMS)** introduced in Java 9 adds:
-- **Strong encapsulation** — only explicitly exported packages are accessible
-- **Explicit dependencies** — a module declares what it needs
-- **Reliable configuration** — missing or duplicate modules are detected at startup
+### 1. Introduction to JPMS and Benefits
+The Java Platform Module System (JPMS) groups packages into modules. It addresses the issues of a flat classpath ("JAR hell") by enforcing:
+*   **Strong Encapsulation**: A module explicitly controls which packages are accessible outside.
+*   **Reliable Configuration**: Dependencies are declared explicitly. The JVM checks them at startup, preventing runtime `NoClassDefFoundError`s.
+*   **Performance & Security**: Allows custom JVM runtime builds containing only needed modules, reducing memory footprint and security vulnerability surfaces.
+*   **Unique Package Enforcement**: Ensures each package name is unique across all modules.
 
 ---
 
-### module-info.java
-
-Every module has a `module-info.java` at the **root** of the source tree:
+### 2. The `module-info.java` File
+Every module requires a `module-info.java` file in its root directory (compiled as `module-info.class`).
+*   It must use the `module` keyword instead of `class`/`interface`.
+*   Module names follow the standard naming rules of package names (e.g., lowercase, dots allowed, hyphens not allowed).
+*   Directives can appear in any order.
 
 ```java
-module com.example.myapp {
-    // Declare dependencies
-    requires java.sql;
-    requires java.logging;
-    requires transitive java.xml; // transitive: dependents also get java.xml
-
-    // Export packages to everyone
-    exports com.example.myapp.api;
-
-    // Export only to specific modules (qualified export)
-    exports com.example.myapp.internal to com.example.partner;
-
-    // Open package for deep reflection (needed by frameworks like Spring)
-    opens com.example.myapp.model;
-
-    // Open only to specific module (qualified open)
-    opens com.example.myapp.entity to org.hibernate.orm;
-
-    // Service declarations
-    uses com.example.spi.PaymentProvider;       // consumer
-    provides com.example.spi.PaymentProvider     // provider
-        with com.example.myapp.PayPalProvider;
+module zoo.animal.feeding {
+    // Declares that other modules can access this package
+    exports zoo.animal.feeding;
 }
 ```
 
 ---
 
-### Key Directives
+### 3. Basic Directives
+*   `exports <packageName>`: Exposes a package so other modules can import its public types.
+*   `requires <moduleName>`: Declares a compile-time and runtime dependency on another module.
+*   `java.base`: The foundation module of the JDK (containing packages like `java.lang`, `java.util`). It is implicitly required by all modules—declaring it explicitly is redundant but legal.
 
-| Directive | Meaning |
-|-----------|---------|
-| `requires X` | This module depends on module X |
-| `requires transitive X` | Dependents of this module also get X |
-| `requires static X` | Compile-time only dependency (optional at runtime) |
-| `exports pkg` | Makes `pkg` accessible to all modules |
-| `exports pkg to M` | Makes `pkg` accessible only to module M |
-| `opens pkg` | Allows deep reflection on `pkg` at runtime |
-| `opens pkg to M` | Allows deep reflection only by module M |
-| `uses SPI` | This module is a consumer of SPI |
-| `provides SPI with Impl` | This module is a provider of SPI |
-
----
-
-### Module Directory Structure
-
-```
-src/
-  com.example.myapp/
-    module-info.java
-    com/example/myapp/
-      Main.java
-      api/
-        Service.java
-```
-
-Compile:
-```bash
-javac -d out --module-source-path src -m com.example.myapp
-```
-
-Run:
-```bash
-java --module-path out -m com.example.myapp/com.example.myapp.Main
+```java
+module zoo.animal.care {
+    exports zoo.animal.care.medical;
+    requires zoo.animal.feeding; // Depends on feeding module
+}
 ```
 
 ---
 
-### Types of Modules
+### 4. Compiling, Packaging, and Running Modules
+Unlike classpath compilation, modular compilation and execution rely on the **module path** (`--module-path` or `-p`), which replaces the classpath (`-cp`).
 
-| Type | Description | Has module-info.java? |
-|------|-------------|----------------------|
-| Named module | Fully modularized JAR | Yes |
-| Unnamed module | JAR on the classpath | No |
-| Automatic module | Named JAR on module-path without module-info | No (name from filename) |
-
----
-
-### Access Control with Modules
-
-| Accessible to | Without Module | With Module |
-|--------------|----------------|-------------|
-| `public` in exported package | Any code | Only requiring modules |
-| `public` in non-exported package | Any code | Nobody outside the module |
-| `private` | Same class | Same class |
-
----
-
-### Command-Line Tools
-
-#### javac module options
+#### Compilation
+The `-d` option specifies the directory for compiled class files.
 ```bash
-javac --module-source-path src       # source root for modules
-      --module-path mods             # where to find module dependencies
-      -d out                         # output directory
-      -m com.myapp                   # compile specific module
+javac -p mods -d feeding feeding/zoo/animal/feeding/*.java feeding/module-info.java
 ```
 
-#### java module options
+#### Packaging
+Creating a modular JAR is identical to a standard JAR, packaging the compiled root folder:
 ```bash
-java --module-path mods
-     --module com.myapp/com.myapp.Main
-     --add-modules java.sql          # add optional modules
-     --add-opens java.base/java.lang=ALL-UNNAMED  # open for reflection
+jar -cvf mods/zoo.animal.feeding.jar -C feeding/ .
 ```
 
-#### jar
+#### Running
+Specify the module path and the module name along with the fully qualified class name containing the `main()` method, formatted as `moduleName/packageName.ClassName`:
 ```bash
-jar --create --file myapp.jar --main-class com.myapp.Main -C out .
+java -p mods -m zoo.animal.feeding/zoo.animal.feeding.Task
 ```
-
-#### jdeps — dependency analysis
-```bash
-jdeps --module-path mods myapp.jar   # show module dependencies
-jdeps --generate-module-info out myapp.jar  # generate module-info.java
-```
-
-#### jlink — create custom runtime image
-```bash
-jlink --module-path $JAVA_HOME/jmods:mods \
-      --add-modules com.myapp \
-      --output myapp-runtime
-```
-
-#### jpackage — create native installer
-```bash
-jpackage --name MyApp \
-         --module-path mods \
-         --module com.myapp/com.myapp.Main \
-         --type exe   # or dmg, deb, rpm
-```
+*(Alternative syntax: `--module` instead of `-m`, `--module-path` instead of `-p`)*
 
 ---
 
 ## 🟣 Senior Deep Dive
 
-### Service Loader Pattern
+### 1. Detailed Directives: Exports, Requires Transitive, and Opens
 
-The `ServiceLoader` API enables plug-in architectures:
+#### Qualified Exports (`exports ... to ...`)
+Restricts access of a package to specific listed modules instead of exposing it to all.
+```java
+module zoo.animal.talks {
+    exports zoo.animal.talks.content to zoo.staff; // Only zoo.staff can access
+}
+```
+
+#### Transitive Dependencies (`requires transitive`)
+If Module A requires Module B transitively, any module that requires Module A automatically obtains readability of Module B (implied readability).
+*   Avoids requiring callers to specify redundant dependencies in their `module-info` files.
+*   **Rule**: You cannot duplicate the same module name in `requires` and `requires transitive` statements in a single module definition (e.g., compile error).
 
 ```java
-// SPI (service provider interface) — in a separate module
-public interface SearchEngine {
-    List<String> search(String query);
-}
-
-// Consumer module — uses the service
-module com.myapp {
-    uses com.spi.SearchEngine;
-}
-
-// Implementation module — provides the service
-module com.google.search {
-    requires com.spi;
-    provides com.spi.SearchEngine with com.google.search.GoogleSearchEngine;
-}
-
-// Consumer code
-ServiceLoader<SearchEngine> loader = ServiceLoader.load(SearchEngine.class);
-for (SearchEngine engine : loader) {
-    engine.search("Java modules");
+module zoo.animal.care {
+    requires transitive zoo.animal.feeding;
 }
 ```
 
-### `exports` vs `opens`
+#### Open Packages and Reflection (`opens` vs. `open module`)
+By default, modular types are protected against runtime reflection (deep inspection).
+*   `opens <packageName>`: Allows other modules to reflect (read private fields/methods) on that package at runtime. No compile-time access is granted.
+*   `opens <packageName> to <moduleName>`: Restricts reflection access to a specific module.
+*   `open module <moduleName>`: Opens all packages inside the module for runtime reflection. An `open module` cannot contain `opens` directives inside it (compile error).
 
-| Feature | `exports` | `opens` |
-|---------|-----------|---------|
-| Public type access | ✅ | ✅ |
-| Reflection (private members) | ❌ | ✅ |
-| Needed for frameworks | Sometimes | Usually (Spring, Hibernate) |
-| Available at compile time | ✅ | ❌ (runtime only) |
-
-### Automatic Module Name from JAR
-
-When a JAR without `module-info.java` is placed on the **module-path**, Java creates an automatic module whose name comes from:
-
-1. `Automatic-Module-Name` entry in `MANIFEST.MF` (preferred)
-2. JAR filename — dots replace hyphens, version stripped
-
-```
-my-library-1.2.3.jar → automatic module name: my.library
+```java
+open module zoo.animal.talks {
+    // All packages open for reflection, no opens directives allowed here
+}
 ```
 
-### Migration Strategies
+---
 
-**Bottom-up:** Start with libraries (low-level modules), work up to the app. Best when you control all the code.
-
-**Top-down:** Start with the app, treat dependencies as automatic modules. Good when using third-party libs.
+### 2. The Service Loader Pattern
+Loose coupling in JPMS is achieved using Services. A **Service** consists of an interface (or abstract class), a service locator, a consumer, and a provider.
 
 ```
-Bottom-up:  lib1 → lib2 → app      (modularize leaves first)
-Top-down:   app → [auto-module lib1] → [auto-module lib2]
+[Consumer Module] ──► [Service Locator] ──► [Service Provider Interface] ◄── [Provider Module]
 ```
+
+*   **Service Provider Interface (SPI)**: The interface or abstract class defining the service (e.g., `zoo.tours.api.Tour`).
+*   **Service Locator**: Discovers implementations at runtime using `java.util.ServiceLoader`.
+    *   The service locator module must declare `uses <SPI-fully-qualified-name>`.
+    *   `ServiceLoader.load(SPI.class)` returns an iterable containing loaded providers.
+    *   `ServiceLoader.load(SPI.class).stream()` returns a `Stream<Provider<SPI>>` (requiring `.map(Provider::get)`).
+*   **Service Provider**: The implementation module.
+    *   Must declare `provides <SPI> with <ImplementationClass>`.
+    *   The implementation class must have a public no-argument constructor (or a public static `provider()` method returning the instance).
+    *   The implementation module does **not** need to export its implementation package.
+
+```java
+// Service Locator Module Definition
+module zoo.tours.reservations {
+    exports zoo.tours.reservations;
+    requires zoo.tours.api;
+    uses zoo.tours.api.Tour; // Declares SPI usage
+}
+
+// Service Provider Module Definition
+module zoo.tours.agency {
+    requires zoo.tours.api;
+    provides zoo.tours.api.Tour with zoo.tours.agency.TourImpl; // Binds implementation
+}
+```
+
+---
+
+### 3. Comparing Module Types: Named, Automatic, and Unnamed
+Understanding where JARs are placed determines how they behave:
+
+| Characteristic | Named Module | Automatic Module | Unnamed Module |
+| :--- | :--- | :--- | :--- |
+| **Location** | Module Path | Module Path | Classpath |
+| **Contains `module-info.java`?** | Yes | No | No (ignored if present) |
+| **Module Name** | Defined in `module-info` | `Automatic-Module-Name` in manifest, or derived from JAR filename | None |
+| **Exports Packages** | Explicitly declared packages | Exports **all** packages | No packages exported to named modules |
+| **Reads Other Modules** | Declared in `module-info` | Reads **all** modules | Reads **all** modules |
+| **Access to Classpath** | No | Yes (reads unnamed modules) | Yes |
+
+#### Automatic Module Naming Rules (No manifest entry)
+If `Automatic-Module-Name` is not in `META-INF/MANIFEST.MF`, Java derives it from the filename:
+1.  Remove `.jar` extension.
+2.  Remove version info from the end (e.g., `-1.0.0`, `-RC`).
+3.  Replace all non-alphanumeric characters with dots (`.`).
+4.  Merge consecutive dots, and strip leading/trailing dots.
+
+```
+cat-1.2.3-RC1.jar -> cat
+jackson-databind-2.15.jar -> jackson.databind
+```
+
+---
+
+### 4. CLI Tool Cheat Sheet for JPMS
+*   `javac --module-path <dir> -d <out> <files>`: Compiles modular files.
+*   `java --module-path <dir> --list-modules`: Lists all observable modules (including JDK modules).
+*   `java --module-path <dir> --describe-module <moduleName>`: (or `-d`) Describes a module's exports and dependencies.
+*   `java -p <dir> --show-module-resolution -m <module/class>`: Debugs module loading resolution hierarchy.
+*   `jar --file <jarFile> --describe-module`: Describes a modular JAR's definition.
+*   `jdeps --module-path <dir> <jarFile>`: Prints static dependency maps of packages/modules.
+*   `jdeps -s <jarFile>`: (or `-summary`) Prints module summary only.
+*   `jdeps --jdk-internals <jarFile>`: Detects references to unsupported internal JDK APIs (e.g., `sun.misc.Unsafe`) and suggests replacements.
+*   `jmod`: Used to work with JMOD files (JDK modular format containing native code). Modes include `create`, `extract`, `describe`, `list`.
+*   `jlink --module-path <path> --add-modules <modules> --output <dir>`: Links modular dependencies to create a custom, lightweight Java Runtime Image (no compiler included).
+*   `jpackage --name <name> --module-path <path> --module <module/class>`: Packages modular or non-modular JARs into a platform-native self-contained executable installer (e.g. `.exe`, `.dmg`, `.deb`).
+
+---
+
+### 5. Migration Strategies and Cyclic Dependencies
+*   **Bottom-Up Migration**: Start with the lowest-level libraries (no dependencies). Turn them into named modules first and move them to the module path. Higher-level code stays on the classpath as unnamed modules.
+*   **Top-Down Migration**: Place all JARs on the module path (treating them as automatic modules). Modularize the highest-level application first by adding `module-info.java` requiring the automatic modules.
+
+#### Circular Dependencies
+Modular systems do **not** allow circular dependencies (e.g., A requires B, and B requires A).
+*   **Compilation Failure**: If circular dependencies exist between modules, the compiler throws an error and code will not compile.
+*   **Resolution**: Break the cycle by introducing a third module containing the shared code, or reorganize packages.
+*   *(Note: Circular dependencies between packages within the same module are allowed, but discouraged).*
 
 ---
 
 ## 📝 Exam Quick Reference
 
-| Topic | Key Fact |
-|-------|----------|
-| `requires transitive` | Dependents of this module also get that dependency (implied readability) |
-| `requires static` | Compile-time only; optional at runtime (e.g., annotation processors) |
-| `exports` | Makes package publicly accessible to other modules |
-| `exports X to M` | Qualified export — only module M can access package X |
-| `opens` | Allows deep reflection (runtime only — no compile-time access) |
-| `opens X to M` | Qualified open — only module M can reflect on package X |
-| Unnamed module | Classpath code; reads ALL named modules; cannot be required by name |
-| Automatic module | JAR on module-path without `module-info`; exports all packages, reads all modules |
-| `jlink` | Creates minimal custom runtime image containing only required modules |
-| `jdeps` | Analyzes class/module dependencies; can generate `module-info.java` |
-| `jpackage` | Creates platform native installer (exe, dmg, deb, rpm) |
-| `ServiceLoader` | Runtime discovery via `uses`/`provides` directives |
-| `module-info.java` | Must be at the **root** of the module's source directory |
-| `java.base` | Implicitly required by every module — need not be declared |
-| Aggregation module | `requires transitive` on several modules to bundle API surface |
-| `--add-reads` / `--add-exports` | JVM flags to break encapsulation at launch (exam: escape hatches) |
-| Classpath vs module-path | Classpath = unnamed module; module-path = named or automatic |
-| `provides` with `with` | Implementation class must be accessible to `ServiceLoader` |
-| `exports` to no module | Same as unqualified `exports` — all readable modules |
-| `open module` | Shorthand: entire module open for deep reflection |
-| `jdeps --generate-module-info` | Suggests `module-info` from bytecode (migration aid) |
+### Module Directives Summary
+| Directive | Argument | Purpose |
+| :--- | :--- | :--- |
+| `exports` | Package name | Exposes package public types to other modules. |
+| `exports ... to` | Package to Module | Exposes package public types only to specific modules. |
+| `requires` | Module name | Declares dependency on a module. |
+| `requires transitive` | Module name | Declares transitive dependency (implied readability). |
+| `requires static` | Module name | Compile-time optional dependency. |
+| `opens` | Package name | Allows runtime reflection on package. |
+| `opens ... to` | Package to Module | Restricts runtime reflection on package to listed modules. |
+| `uses` | Service Interface | Declares consumer of a service. |
+| `provides ... with` | Service with ImplClass | Declares implementation of a service. |
 
 ---
 
 ## 🚨 Extra Exam Tips
 
 :::danger[Top Traps in Chapter 12]
-**Trap 1 — `exports` vs `opens` — what each allows:**
+**Trap 1 — `exports` vs. `opens` compile-time availability:**
+*   `exports` makes types available at compile-time and runtime. It does **not** allow reflection on private class members.
+*   `opens` does **not** make types available at compile-time (you cannot import classes in an opened package if it is not exported). It only allows runtime reflection.
+
+**Trap 2 — Requiring a Transitive Module by Name:**
+If module A has `requires transitive B;`, and module C has `requires A;`, module C can use B without declaring it. However, if C explicitly declares `requires B;`, this is legal (just redundant). Repeating the exact same module name in `requires` and `requires transitive` inside the *same* module-info file is a **compile error**.
 ```java
-module com.myapp {
-    exports com.myapp.api;   // ✅ compile-time AND runtime access to public types
-    opens com.myapp.model;   // ✅ runtime deep reflection (private fields too)
-    // A package can be both exported AND opened
+module bad.module {
+    requires zoo.animal;
+    requires transitive zoo.animal; // ❌ DOES NOT COMPILE
 }
-// exports alone: no reflection on private members
-// opens alone: reflection OK, but no compile-time import of types
 ```
 
-**Trap 2 — Unnamed module vs automatic module:**
-```java
-// Unnamed module = JAR on CLASSPATH:
-// - Has no name → cannot be 'required' by named modules
-// - Reads ALL named modules automatically
-// - All its packages are accessible to other unnamed modules
+**Trap 3 — Named Modules Accessing the Classpath:**
+A named module on the module path cannot declare dependency on (`requires`) or access unnamed modules on the classpath. If you try, the code fails to compile.
 
-// Automatic module = JAR on MODULE-PATH (no module-info.java):
-// - Gets a name derived from JAR filename
-// - Exports ALL its packages
-// - Reads ALL other modules (named and unnamed)
-// - Named modules CAN require it
+**Trap 4 — Location of `module-info.java`:**
+The `module-info.java` file must be in the root folder of the module, not inside any package subdirectory.
+```
+src/zoo.animal/module-info.java // ✅ Correct
+src/zoo.animal/zoo/animal/module-info.java // ❌ WRONG
 ```
 
-**Trap 3 — `requires transitive` creates implied readability:**
-```java
-module A { requires transitive B; }
-module C { requires A; }
-// C can now use types from B WITHOUT explicitly requiring B
-// This is essential for library APIs that expose types from their dependencies
-```
+**Trap 5 — Missing `uses` or `requires` in Service Locators:**
+A service locator module needs:
+1.  `requires <service-interface-module>;` (to compile the interface types).
+2.  `uses <service-interface-fully-qualified-name>;` (to look up implementations at runtime).
+If either is missing, compilation or lookup will fail.
 
-**Trap 4 — `module-info.java` location matters:**
-```java
-// CORRECT structure:
-src/
-  com.myapp/
-    module-info.java   ← must be here (root of module source)
-    com/myapp/Main.java
+**Trap 6 — Illegal Characters in Module Names:**
+Module names can use dots (`.`) but cannot contain hyphens (`-`) or other special characters.
 
-// WRONG — module-info.java inside a package directory won't work
-```
+**Trap 7 — Jlink and Automatic/Unnamed Modules:**
+`jlink` requires all modules to be named modules. If any dependency is an automatic module or unnamed module, `jlink` fails.
 
-**Trap 5 — Service provider binding:**
-```java
-// Consumer declares: uses com.spi.Engine;
-// Provider declares: provides com.spi.Engine with com.impl.TurboEngine;
-// TurboEngine MUST:
-//   1. Implement (or extend) Engine
-//   2. Have a public no-arg constructor OR a public static provider() method
-// ServiceLoader.load(Engine.class) discovers providers at runtime
-```
+**Trap 8 — Package Split Conflict:**
+Java does not allow two different modules to define packages with the exact same name (split package). Doing so results in a compilation error.
 
-**Trap 6 — Automatic module name from JAR filename:**
-```java
-// Rules:
-// 1. Strip version suffix: my-lib-1.2.3.jar → my-lib
-// 2. Replace hyphens with dots: my-lib → my.lib
-// 3. Remove leading/trailing dots
-// Examples:
-// spring-core-6.0.jar → spring.core
-// jackson-databind-2.15.jar → jackson.databind
-// Prefer MANIFEST.MF "Automatic-Module-Name" header to control the name
-```
+**Trap 9 — Service Provider Constructor requirements:**
+The implementation class supplied in `provides ... with ...` must have a public no-arg constructor, or a public static `provider()` method returning the instance. If it lacks both, `ServiceLoader` throws a runtime error when trying to instantiate it.
 
-**Trap 7 — `jlink` only works with named modules:**
+**Trap 10 — Mixing `open module` with `opens` directives:**
+An `open module` cannot contain `opens` directives inside the body since all packages are already open.
 ```java
-// jlink CANNOT package unnamed modules or automatic modules
-// All dependencies must be proper named modules with module-info.java
-// This is why migrating to modules is required before using jlink
-jlink --module-path $JAVA_HOME/jmods:mods \
-      --add-modules com.myapp \
-      --output runtime-image
-```
-
-**Trap 8 — Named module cannot `requires` unnamed module:**
-```java
-// Classpath JARs are unnamed — a named module cannot declare requires on them
-// Workaround: move dependency to module-path as automatic module or repackage
-```
-
-**Trap 9 — `opens` package does not grant compile-time access:**
-```java
-// opens com.app.internal — other modules may reflect at runtime but cannot import types at compile time
-```
-
-**Trap 10 — `provides` interface must be service type (often interface or abstract class):**
-```java
-// provides com.example.spi.Payment with com.example.impl.PayPal;
-// PayPal must be concrete, public, and have suitable provider constructor
+open module bad {
+    opens com.bad; // ❌ DOES NOT COMPILE
+}
 ```
 :::
 
-### Exam vignettes
-
-```java
-// Vignette — implied readability
-// module lib { requires transitive java.sql; }
-// module app { requires lib; } // app can reference java.sql types without requires java.sql
-```
-
 :::tip[Spring/Senior Relevance]
-- Spring Boot 3.x added experimental JPMS support — `opens` directives are required for Spring's reflection-based dependency injection to work on `private` fields in your `@Component` classes.
-- `requires transitive` mirrors Spring's concept of transitive bean dependencies — if your `@Configuration` class exposes beans that return types from another library, consumers of your config get access to those types.
-- The `ServiceLoader` pattern is the foundation for Spring Boot's auto-configuration mechanism (`spring.factories` / `AutoConfiguration.imports`) — a Java-native SPI that Spring Boot extends with its own discovery layer.
+*   **Framework Reflection Access**: Libraries like Spring Boot, Hibernate, and Jackson utilize deep reflection on private entity/bean fields. When modularizing Spring applications, you must use `opens` or `open module` for your controller, service, and entity packages, otherwise runtime DI will fail.
+*   **Plugin architectures**: JPMS services provide a native, JVM-level alternative to Spring's dynamic beans, useful in highly decoupled microservices or standalone utilities.
 :::
 
 ---
 
 ## 🔗 Review Questions Focus
 
-1. What is the difference between `exports` and `opens`?
-2. How does `requires transitive` differ from `requires`?
-3. What is an automatic module and how is its name determined?
-4. What tool creates a custom runtime image?
-5. What directive does a service consumer use vs a service provider?
-6. Can a named module require an unnamed module?
-7. What is the difference between bottom-up and top-down module migration?
-8. What does `jdeps` do?
-9. Can an automatic module be required by a named module?
-10. What must be true for a class to be a valid service provider?
+1.  What is the difference between `exports com.zoo.animal;` and `exports com.zoo.animal to zoo.staff;`?
+2.  If Module X `requires transitive Y`, and Module Z `requires X`, does Z need to declare `requires Y`?
+3.  Why does `jlink` fail if one of the dependencies is an automatic module?
+4.  Given the file `library-1.5.0-beta.jar` on the module path, what is its automatic module name?
+5.  What must a service consumer specify in `module-info.java` to use an interface `com.spi.Parser`?
+6.  How does a named module declare that its packages can be inspected by reflection, but not imported at compile time?
+7.  What tool is used to identify if an application depends on unsupported internal APIs (like `sun.misc.Unsafe`)?
+8.  Why does Java fail to compile modules that contain circular dependencies?
+9.  Under what conditions does code in an unnamed module have access to code in a named module?
+10. If a service provider implements `provides com.spi.Logger with com.impl.ConsoleLogger`, does `com.impl` need to be exported?

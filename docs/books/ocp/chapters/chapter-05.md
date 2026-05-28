@@ -2,7 +2,7 @@
 id: chapter-05
 title: "Chapter 5 — Methods"
 sidebar_label: "Ch 5 · Methods"
-description: "Master Java method design: access modifiers, static vs instance members, varargs, method overloading resolution order, pass-by-value semantics, and constructor chaining — all commonly tested on the OCP exam."
+description: "Master Java method design: access modifiers, static vs instance members, static imports, varargs, method overloading resolution order, pass-by-value semantics, and final variable boundaries."
 tags:
   - methods
   - access-modifiers
@@ -10,15 +10,14 @@ tags:
   - varargs
   - pass-by-value
   - static
-  - constructors
-  - encapsulation
+  - final
 ---
 
 # Chapter 5 — Methods
 
 <span class="chapter-badge">Exam Domain: Using Object-Oriented Concepts in Java</span>
 
-> **Key Topics:** Method declaration, access modifiers, `static` vs instance, `varargs`, method overloading, `pass-by-value`.
+> **Key Topics:** Method declaration anatomy, method signature components, access modifiers, optional specifiers, return type and return statement rules, identifier naming rules, local and instance variables, `final` and effectively final variables, varargs rules, calling varargs (array vs. list, zero args, `null` parameters), access modifiers in detail (`private`, package-private, `protected`, `public`), protected access across packages (inheritance vs. reference type boundaries), static fields/methods, static initializers, static imports, pass-by-value semantics, method overloading rules, and overload resolution order.
 
 ---
 
@@ -26,362 +25,375 @@ tags:
 
 ### Method Declaration Anatomy
 
+A method declaration defines the contract for how a method is called. It consists of:
+1. **Access modifier** *(optional)*
+2. **Optional specifiers** *(optional, zero or more)*
+3. **Return type** *(required)*
+4. **Method name** *(required)*
+5. **Parameter list** *(required, but can be empty)*
+6. **Exception list** *(optional)*
+7. **Method body** *(required, except for abstract/native methods)*
+
 ```java
-//  [access] [optional modifiers] returnType name(params) [throws] { body }
-public static final int add(int a, int b) throws ArithmeticException {
+// [access] [specifiers] [returnType] [name]([parameters]) [throws] { [body] }
+public static final int calculate(int a, int b) throws ArithmeticException {
     return a + b;
 }
 ```
 
-| Element | Required? | Example |
-|---------|-----------|---------|
-| Access modifier | No (default if omitted) | `public`, `private`, `protected` |
-| Optional modifiers | No | `static`, `final`, `abstract`, `synchronized` |
-| Return type | **Yes** | `int`, `void`, `String` |
-| Method name | **Yes** | `add` |
-| Parameter list | **Yes** (can be empty) | `(int a, int b)` |
-| Exception list | No | `throws IOException` |
-| Body | **Yes** (unless abstract/native) | `{ return a + b; }` |
+#### Method Signature
+The **method signature** uniquely identifies a method and consists of:
+- **Method name**
+- **Parameter list** (types and order only; parameter names and return type are **not** part of the signature).
 
 ---
 
-### Access Modifiers
+### Access Modifiers & Optional Specifiers
 
-| Modifier | Same Class | Same Package | Subclass | Anywhere |
-|----------|-----------|--------------|---------|---------|
-| `private` | ✅ | ❌ | ❌ | ❌ |
-| package-private (none) | ✅ | ✅ | ❌ | ❌ |
-| `protected` | ✅ | ✅ | ✅ | ❌ |
-| `public` | ✅ | ✅ | ✅ | ✅ |
+Java offers four access levels, which must appear before the return type:
 
+- **`private`**: Accessible only within the same class.
+- **Package Access (Default)**: Omit the modifier. Accessible only from classes in the same package.
+- **`protected`**: Accessible from classes in the same package or subclasses.
+- **`public`**: Accessible from anywhere.
+
+:::danger[Default Access Modifier Trap]
+The keyword `default` is used in switch blocks and interfaces, but it is **not** an access modifier:
 ```java
-public class BankAccount {
-    private double balance;      // only this class
-    protected String owner;      // this class + subclasses + package
-    public String id;            // everyone
-    int transactions;            // package-private
-}
-```
-
----
-
-### Static vs Instance Members
-
-```java
-public class Counter {
-    private static int count = 0; // shared across ALL instances
-    private int id;               // unique per instance
-
-    public Counter() {
-        count++;
-        this.id = count;
-    }
-
-    public static int getCount() { return count; } // static method
-    public int getId() { return id; }               // instance method
-}
-
-// Static — call on class, not object
-System.out.println(Counter.getCount()); // 0
-
-Counter a = new Counter();
-Counter b = new Counter();
-System.out.println(Counter.getCount()); // 2
-System.out.println(a.getId());          // 1
-System.out.println(b.getId());          // 2
-```
-
-:::caution[Static Cannot Access Instance Members]
-```java
-public class Foo {
-    int x = 10;
-    static void bar() {
-        System.out.println(x); // ❌ COMPILE ERROR: non-static field x
-    }
-}
+default void skip() { } // ❌ DOES NOT COMPILE
 ```
 :::
 
----
-
-### Pass-by-Value
-
-Java is **always pass-by-value**. For objects, the *reference* is passed by value.
-
-```java
-// Primitives: original cannot be changed
-void doubleIt(int x) { x = x * 2; }
-int n = 5;
-doubleIt(n);
-System.out.println(n); // still 5
-
-// Objects: reference copy — can mutate the object, but not reassign the caller's reference
-void addToList(List<String> list) { list.add("new"); }
-List<String> myList = new ArrayList<>();
-addToList(myList);
-System.out.println(myList); // [new] — mutation visible!
-
-void reassign(List<String> list) { list = new ArrayList<>(); }
-reassign(myList);
-System.out.println(myList); // still [new] — reassignment invisible!
-```
+#### Optional Specifiers:
+Multiple specifiers can be combined and declared in any order, but must appear before the return type:
+- **`static`**: Indicates the method belongs to the class rather than an instance.
+- **`final`**: Prevents the method from being overridden in a subclass.
+- **`abstract`**: Excludes the method body (used in abstract classes and interfaces).
+- Other specifiers: `synchronized`, `native`, `transient`, `volatile`.
 
 ---
 
-### varargs (Variable Arguments)
+### Return Types & Return Statements
+
+- If a method returns no value, the return type **must** be declared `void` (it cannot be omitted).
+- Methods returning a type other than `void` must have a return statement that evaluates to an assignable type on all execution branches:
+  ```java
+  int getVal(int a) {
+      if (a > 0) return 10;
+      // ❌ DOES NOT COMPILE: Missing return statement for the else branch!
+  }
+  ```
+- Constant-looking expressions inside conditional branches still require an explicit fallback return:
+  ```java
+  String check() {
+      if (1 < 2) return "yes";
+      // ❌ DOES NOT COMPILE: Compiler does not evaluate 1 < 2 at compile-time for return analysis
+  }
+  ```
+
+---
+
+### Local and Instance Variables
+
+#### Local Variables
+Declared inside a method. The only modifier allowed is `final`.
+- **`final` local variables:** Must be initialized before use, but don't need to be initialized at declaration:
+  ```java
+  final int limit;
+  if (check) limit = 10; else limit = 20;
+  System.out.println(limit); // ✅ Valid (definitely assigned)
+  ```
+- **Effectively final:** A variable that is never modified after its initial assignment. You can verify this by adding the `final` keyword; if it still compiles, the variable is effectively final.
+
+#### Instance Variables
+Declared at the class level.
+- Can use modifiers: `private`, `protected`, `public`, default, `final`, `transient`, `volatile`.
+- **`final` instance variables:** Must be initialized when declared, in an instance initializer block, or in the constructor:
+  ```java
+  public class PolarBear {
+      final int age = 10;
+      final int fishEaten;
+      final String name;
+      { fishEaten = 5; } // Instance initializer
+      public PolarBear() { name = "Robert"; } // Constructor
+  }
+  ```
+
+---
+
+### Varargs (Variable Arguments)
+
+Varargs represent a variable-length parameter list.
 
 ```java
-public static int sum(int... numbers) {
-    int total = 0;
-    for (int n : numbers) total += n;
-    return total;
+public void walk(int... steps) {
+    System.out.println(steps.length); // steps is treated as int[] inside the method
 }
-
-sum();           // OK — zero args → empty array
-sum(1);          // OK
-sum(1, 2, 3);    // OK
-sum(new int[]{1,2,3}); // OK — explicit array
 ```
 
-**Rules:**
-- `varargs` must be the **last** parameter
-- Only **one** `varargs` per method
-- Treated as an array inside the method
-
----
-
-### Method Overloading
-
-Multiple methods with the same name but different parameter lists:
-
+#### Rules for Varargs:
+1. A method can have **at most one** varargs parameter.
+2. The varargs parameter **must be the last parameter** in the parameter list.
 ```java
-public class Printer {
-    void print(int i)    { System.out.println("int: " + i); }
-    void print(double d) { System.out.println("double: " + d); }
-    void print(String s) { System.out.println("String: " + s); }
-}
-
-Printer p = new Printer();
-p.print(10);     // int: 10
-p.print(10.0);   // double: 10.0
-p.print("hi");   // String: hi
-p.print(10L);    // double: 10.0 (long promoted to double — no long method)
+void bad1(int... steps, int start) {}   // ❌ DOES NOT COMPILE (not last)
+void bad2(int... steps, int... space) {} // ❌ DOES NOT COMPILE (multiple varargs)
 ```
 
-**Java's overload resolution order:**
-1. Exact match
-2. Widening primitive conversion
-3. Autoboxing
-4. Varargs
+#### Calling Varargs:
+You can pass an array, a comma-separated list of arguments, or omit the argument entirely (Java creates an empty array of length 0):
+```java
+walk(new int[] {1, 2}); // Passed as array
+walk(1, 2, 3);          // Passed as list
+walk();                 // Passed as empty array (length = 0)
+walk(null);             // Passed as null array reference (throws NullPointerException if dereferenced)
+```
 
 ---
 
 ## 🟣 Senior Deep Dive
 
-### Method Hiding vs Overriding
+### Protected Access Boundaries across Packages
+
+Protected access allows subclasses and classes in the same package to access members. However, accessing `protected` members from a subclass in a **different package** has a strict restriction:
+
+1. **Via Inheritance:** The subclass can access inherited protected members directly or via its own type.
+2. **Via Reference Variable:** The subclass **cannot** access protected members using a reference variable of the parent type, nor a reference of a different sibling class.
 
 ```java
-class Parent {
-    static void staticMethod() { System.out.println("Parent static"); }
-    void instanceMethod()      { System.out.println("Parent instance"); }
+// Package pond.shore:
+package pond.shore;
+public class Bird {
+    protected String text = "floating";
+    protected void floatInWater() {}
 }
-class Child extends Parent {
-    static void staticMethod() { System.out.println("Child static"); } // HIDING
-    void instanceMethod()      { System.out.println("Child instance"); } // OVERRIDING
-}
 
-Parent obj = new Child();
-obj.staticMethod();   // "Parent static" — resolved at compile time (hiding)
-obj.instanceMethod(); // "Child instance" — resolved at runtime (polymorphism)
-```
+// Package pond.swan (Different package):
+package pond.swan;
+import pond.shore.Bird;
 
-### Covariant Return Types
+public class Swan extends Bird {
+    public void swim() {
+        floatInWater(); // ✅ Valid (access via inheritance)
+        System.out.print(text); // ✅ Valid (access via inheritance)
+    }
 
-An overriding method can return a **subtype** of the original return type:
+    public void helpOtherSwan() {
+        Swan other = new Swan();
+        other.floatInWater(); // ✅ Valid (reference type is Swan, which is the subclass itself)
+    }
 
-```java
-class Animal { Animal create() { return new Animal(); } }
-class Dog extends Animal {
-    @Override
-    Dog create() { return new Dog(); } // covariant: Dog is-a Animal ✅
-}
-```
-
-### Autoboxing in Overloading — Subtle Traps
-
-```java
-void test(Integer i) { System.out.println("Integer"); }
-void test(long l)    { System.out.println("long"); }
-void test(Object o)  { System.out.println("Object"); }
-
-test(5);     // "long" — widening preferred over boxing!
-test((Integer)5); // "Integer" — explicit box
-```
-
-Widening beats autoboxing beats varargs in overload resolution.
-
-### `this()` and Constructor Chaining
-
-```java
-public class Point {
-    int x, y, z;
-
-    public Point() { this(0, 0, 0); }       // chains to (int,int,int)
-    public Point(int x, int y) { this(x, y, 0); } // chains to (int,int,int)
-    public Point(int x, int y, int z) {
-        this.x = x; this.y = y; this.z = z;
+    public void helpOtherBird() {
+        Bird other = new Bird();
+        other.floatInWater(); // ❌ DOES NOT COMPILE (reference type is parent Bird, not subclass Swan!)
     }
 }
 ```
 
-`this()` must be the **first** statement in a constructor. Cannot call `this()` and `super()` in the same constructor.
+---
+
+### Static Members and Static Initializers
+
+- **Static members** (fields/methods) are shared across all instances of a class.
+- They can be accessed using the class name or an instance reference:
+  ```java
+  class Rope { public static int length = 5; }
+  
+  Rope r = null;
+  System.out.println(r.length); // ✅ Valid! Prints 5 without throwing NullPointerException
+  ```
+- **Static initializers** run once when the class is first loaded by the JVM:
+  ```java
+  public class Rope {
+      public static int LENGTH = 5;
+      static { LENGTH = 10; } // Runs once on class load
+  }
+  ```
+
+#### Static Imports
+Used to import static members of a class. Must be written as `import static`, not `static import`:
+```java
+import static java.util.Collections.sort; // Imports specific static method
+import static java.util.Collections.*;    // Imports all static members
+// ❌ static import java.util.Collections.*; (invalid order)
+// ❌ import static java.util.Collections;   (cannot import a class name using static import)
+```
+
+---
+
+### Pass-by-Value Semantics
+
+Java is strictly **pass-by-value**.
+- For primitives, a copy of the value is passed. The original variable is unmodified.
+- For objects, a copy of the **reference address** is passed. 
+  - Modifying the object state via the copied reference **mutates the original object** (visible to the caller).
+  - Reassigning the parameter reference to a new object **does not affect the caller's reference**.
+
+```java
+public class ValueTest {
+    public static void work(StringBuilder a, StringBuilder b) {
+        a = new StringBuilder("a"); // Reassigned (ignored by caller)
+        b.append("b");              // Mutated (visible to caller)
+    }
+    public static void main(String[] args) {
+        var s1 = new StringBuilder("s1");
+        var s2 = new StringBuilder("s2");
+        work(s1, s2);
+        System.out.println(s1); // s1 (unmodified reference)
+        System.out.println(s2); // s2b (mutated state)
+    }
+}
+```
+
+---
+
+### Method Overloading & Resolution Order
+
+Overloaded methods share a name but have different parameter lists. Return type and access modifiers are not checked during overload resolution.
+
+#### Overload Resolution Order:
+1. **Exact match** (by type).
+2. **Larger primitive type** (widening, e.g., `int` -> `long` -> `float` -> `double`).
+3. **Autoboxed type** (boxing/unboxing, e.g., `int` -> `Integer`).
+4. **Varargs** (e.g., `int...`).
+
+```java
+public class Run {
+    static void execute(int num)     { System.out.print("int "); }
+    static void execute(Integer num) { System.out.print("Integer "); }
+    static void execute(long num)    { System.out.print("long "); }
+    static void execute(int... nums) { System.out.print("varargs "); }
+
+    public static void main(String[] args) {
+        execute(100);  // Prints "int" (Exact match)
+        // If execute(int) is removed:
+        // execute(100) -> Prints "long" (Widening preferred over Autoboxing!)
+    }
+}
+```
+
+:::warning[Double Promotion Restrictions]
+Java cannot perform a double-step promotion (e.g., boxing and then widening) in a single overload call:
+```java
+void print(Long x) {}
+// Calling print(5) where 5 is int:
+// ❌ DOES NOT COMPILE (cannot box int to Integer, then widen to Long)
+```
+:::
 
 ---
 
 ## 📝 Exam Quick Reference
 
-| Topic | Key Fact |
-|-------|----------|
-| `private` | Same class only |
-| `protected` | Package + subclasses (even different packages) |
-| Static method call | Can call on instance variable, but compiles as class call |
-| Overloading rule | Widening > boxing > varargs |
-| `varargs` | Last parameter; treated as array; only one per method |
-| Pass-by-value | Java ALWAYS passes by value; object references are copied |
-| Covariant return | Override can return subtype |
-| Method hiding | Static methods are hidden, not overridden |
-| `this()` | Must be first statement in constructor; cannot combine with `super()` |
-| Overloading ≠ overriding | Overloading is compile-time (different params); overriding is runtime (same params) |
-| `protected` in subclass | A subclass in another package can only access `protected` through its own type |
-| Default access | No modifier = package-private (accessible only within same package) |
-| Recursive constructor | `this()` and `super()` cannot recurse infinitely — compile-time check |
-| `final` parameters | Cannot reassign inside method body |
-| `abstract` + `private` | Illegal — abstract methods must be overridable |
-| `synchronized` method | Locks on `this` (instance) or class object (static) |
-| `strictfp` on method | Rare — consistent FP (legacy exam topic) |
-| Bridge methods | Compiler-generated for generics in overrides — usually invisible |
-| `return` in `void` | `return;` OK; cannot return a value |
+### Rules & Restrictions Summary
+
+| Topic | Critical Fact |
+|-------|---------------|
+| **Method Signature** | Consists of the method name and parameter types/order. Return type is excluded. |
+| **`default` Keyword** | Not an access modifier. Used only in interfaces and switch statements. |
+| **`final` Instance Fields** | Must be initialized at declaration, in an instance initializer block, or in all constructors. |
+| **Protected access** | A subclass in a different package cannot access a protected member via a parent reference. |
+| **Varargs limit** | At most one per method. Must be the last parameter in the list. |
+| **Static Reference** | Calling a static method on a `null` variable reference works without throwing NPE. |
+| **Static Imports** | Syntactically declared as `import static`. Cannot import class names. |
+| **Overloading Resolution** | Exact Match > Widening > Autoboxing > Varargs. |
+| **Pass-by-Value** | Reassignment of reference parameters inside a method has no effect on the caller. |
+| **Unreachable Code** | Writing code that is mathematically or logically unreachable triggers compile-time errors. |
 
 ---
 
 ## 🚨 Extra Exam Tips
 
 :::danger[Top Traps in Chapter 5]
-**Trap 1 — Static method called on an instance (compiler resolves to class):**
+**Trap 1 — Return types in overloaded signatures:**
 ```java
-class Dog { static void bark() { System.out.println("Woof"); } }
-Dog d = null;
-d.bark(); // ✅ Compiles and runs — resolves to Dog.bark(), d is never dereferenced
+public int calculate(int a) { return 0; }
+public void calculate(int a) {} // ❌ DOES NOT COMPILE (duplicate method signature)
 ```
 
-**Trap 2 — Widening beats autoboxing in overload resolution:**
+**Trap 2 — `static import` declaration syntax:**
 ```java
-void test(long l)    { System.out.println("long"); }
-void test(Integer i) { System.out.println("Integer"); }
-
-test(5); // "long" — widening int→long preferred over boxing int→Integer
+static import java.util.Arrays.*; // ❌ DOES NOT COMPILE (must be import static)
 ```
 
-**Trap 3 — varargs can be passed as an array OR individual elements:**
+**Trap 3 — Widening vs. Autoboxing choice:**
 ```java
-void sum(int... nums) { ... }
-sum(1, 2, 3);              // ✅ individual
-sum(new int[]{1, 2, 3});   // ✅ array
-sum();                     // ✅ empty (nums.length == 0)
-
-// BUT:
-void bad(int... a, int... b) { } // ❌ COMPILE ERROR — only one varargs allowed
-void bad2(int... a, int b) { }   // ❌ COMPILE ERROR — varargs must be LAST
+void test(long x) { System.out.println("long"); }
+void test(Integer x) { System.out.println("Integer"); }
+test(5); // prints "long" (widening int -> long beats boxing int -> Integer)
 ```
 
-**Trap 4 — `protected` access across packages:**
+**Trap 4 — Static context accessing instance fields:**
 ```java
-// Package com.parent:
-public class Parent {
-    protected void secret() { }
-}
-// Package com.child:
-public class Child extends Parent {
-    void test() {
-        secret();           // ✅ via inheritance
-        new Parent().secret(); // ❌ cannot access protected via Parent reference from different package!
+public class Test {
+    int value = 10;
+    public static void main(String[] args) {
+        System.out.println(value); // ❌ DOES NOT COMPILE (static context cannot access instance field)
     }
 }
 ```
 
-**Trap 5 — Pass-by-value with object mutation vs reassignment:**
+**Trap 5 — Ambiguous null overloads:**
 ```java
-void addItem(List<String> list) { list.add("new"); } // mutates → visible to caller
-void replace(List<String> list) { list = new ArrayList<>(); } // reassigns → NOT visible
+void method(Integer x) {}
+void method(String x) {}
+method(null); // ❌ DOES NOT COMPILE (ambiguous call)
 ```
 
-**Trap 6 — Constructor chaining order:**
+**Trap 6 — Varargs vs. Array overloads:**
 ```java
-class A {
-    A() { this("hello"); System.out.println("A()"); }
-    A(String s) { System.out.println("A(String)"); }
-}
-new A();
-// Output:
-// A(String)   ← this() called first
-// A()         ← then rest of no-arg constructor runs
+void fly(int[] x) {}
+void fly(int... x) {} // ❌ DOES NOT COMPILE (duplicate method signature - both compile to int[])
 ```
 
-**Trap 7 — Method hiding vs overriding with polymorphism:**
+**Trap 7 — Protected access with Parent reference in different packages:**
 ```java
-class Parent { static String name() { return "Parent"; } }
-class Child extends Parent { static String name() { return "Child"; } }
-
-Parent p = new Child();
-p.name(); // "Parent" — static method hiding resolved at compile time!
+// Parent class has protected void m()
+// Subclass in different package cannot run: Parent p = new Subclass(); p.m();
 ```
 
-**Trap 8 — Overloading with wrappers and `null`:**
+**Trap 8 — Effectively final variable reassignment:**
 ```java
-void m(Integer i) { }
-void m(String s) { }
-// m(null); // ❌ ambiguous — both reference types match null
+int x = 5;
+x = 10;
+Runnable r = () -> System.out.println(x); // ❌ DOES NOT COMPILE (x is not effectively final)
 ```
 
-**Trap 9 — `private` method is not overridden:**
+**Trap 9 — Changing parameters in pass-by-value:**
 ```java
-class A { private void x() {} }
-class B extends A { void x() {} } // not an override — separate method
+void change(int value) { value = 10; }
+int val = 5;
+change(val); // val remains 5
 ```
 
-**Trap 10 — Access cannot narrow on override:**
-```java
-// Parent: public void m()
-// Child: private void m()   // ❌ weaker access
-```
+**Trap 10 — Initializing static final fields:**
+`static final` fields must be initialized when declared or in a `static` initializer block. They **cannot** be initialized in constructors.
 :::
 
-### Exam vignettes
+### Exam Vignettes
 
 ```java
-// Vignette — overload ambiguity (Object vs int varargs)
-void foo(String s, Object... o) { }
-void foo(String s, int... i) { }
-// foo("a", 1); // ❌ ambiguous — 1 matches both Object... and int...
+// Vignette: Nested static imports conflict
+import static java.lang.Integer.MAX_VALUE;
+import static java.lang.Long.MAX_VALUE;
+// System.out.println(MAX_VALUE); // ❌ DOES NOT COMPILE (ambiguous import)
 ```
 
 :::tip[Spring/Senior Relevance]
-- Understanding method visibility is critical in Spring: `@Transactional` on a `private` or `package-private` method is silently **ignored** by Spring's proxy mechanism (only `public` methods are intercepted by default).
-- `protected` methods in abstract Spring components (like `WebMvcConfigurer`) follow the same overriding rules as Java — knowing the difference between overriding and hiding prevents subtle bugs in Spring MVC configurations.
-- Pass-by-value semantics explain why Spring's `@Autowired` constructor injection always works correctly — the reference to the dependency is copied into the field, but both point to the same bean.
+- **Spring Transaction AOP:** Adding `@Transactional` on a non-public method (e.g. package-private or private) fails silently because Spring's CGLIB proxying only wraps public methods by default.
+- **Factory Beans:** Static factory methods are used in Spring Configuration classes (`@Bean`) to control instantiation logic, similar to Date-Time's factory pattern.
 :::
 
 ---
 
 ## 🔗 Review Questions Focus
 
-1. Can `private` methods be overridden?
-2. What is the order Java uses to resolve overloaded methods?
-3. Can a `static` method access an instance field?
-4. What happens when you pass an object to a method and reassign it?
-5. Where must `varargs` appear in a parameter list?
-6. What is the difference between method overloading and overriding?
-7. Can a subclass in a different package access a `protected` method via a parent reference?
-8. What happens when `this()` is called in a constructor?
-9. If a method is called on a `null` reference and the method is `static`, does it throw NPE?
-10. Can you overload a method by changing only the return type?
+1. **Overload resolution hierarchies:** Predict outputs when a call matches widening vs. boxing vs. varargs.
+2. **Access modifier scopes:** Recognize class visibility limits across package boundaries.
+3. **Protected boundaries:** Catch invalid accesses of protected members via parent reference variables.
+4. **Static import validations:** Identify compile-time failures from poorly ordered static imports.
+5. **Pass-by-value mutations:** Trace state updates to objects passed to methods vs. reference reassignments.
+6. **Effectively final calculations:** Scan variables in lambda scopes to verify they are not reassigned.
+7. **Varargs parameter layout:** Spot compile failures from varargs parameters that are not at the end of the signature.
+8. **Constant field initialization:** Identify missing static or instance final field initializations.
+9. **Ambiguous overloads:** Point out calls that fail to compile due to matching multiple overloaded wrappers with `null`.
+10. **Constructor chaining limits:** Detect recursive loops or multiple calls to `this()`/`super()` in constructors.
