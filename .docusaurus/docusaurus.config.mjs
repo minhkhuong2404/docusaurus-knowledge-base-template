@@ -8,6 +8,7 @@ export default {
   "tagline": "Internal technical documentation",
   "url": "https://luminhkhuong.dev",
   "baseUrl": "/",
+  "onBrokenLinks": "warn",
   "organizationName": "minhkhuong2404",
   "projectName": "docusaurus-knowledge-base-template",
   "future": {
@@ -651,7 +652,6 @@ export default {
     "type": "localStorage",
     "namespace": true
   },
-  "onBrokenLinks": "throw",
   "onBrokenAnchors": "warn",
   "onDuplicateRoutes": "warn",
   "staticDirectories": [

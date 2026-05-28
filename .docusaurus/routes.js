@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'a3e'),
+    component: ComponentCreator('/', 'ead'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '07f'),
+        component: ComponentCreator('/', '5ae'),
         routes: [
           {
             path: '/tags',
@@ -6287,7 +6287,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '410'),
+            component: ComponentCreator('/', 'f71'),
             routes: [
               {
                 path: '/aws',
@@ -6812,85 +6812,85 @@ export default [
               },
               {
                 path: '/books/ocp/chapters/chapter-01',
-                component: ComponentCreator('/books/ocp/chapters/chapter-01', 'a5c'),
+                component: ComponentCreator('/books/ocp/chapters/chapter-01', '2db'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/books/ocp/chapters/chapter-02',
-                component: ComponentCreator('/books/ocp/chapters/chapter-02', '24c'),
+                component: ComponentCreator('/books/ocp/chapters/chapter-02', '7b9'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/books/ocp/chapters/chapter-03',
-                component: ComponentCreator('/books/ocp/chapters/chapter-03', 'c3e'),
+                component: ComponentCreator('/books/ocp/chapters/chapter-03', 'd63'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/books/ocp/chapters/chapter-04',
-                component: ComponentCreator('/books/ocp/chapters/chapter-04', '35f'),
+                component: ComponentCreator('/books/ocp/chapters/chapter-04', 'e96'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/books/ocp/chapters/chapter-05',
-                component: ComponentCreator('/books/ocp/chapters/chapter-05', '01d'),
+                component: ComponentCreator('/books/ocp/chapters/chapter-05', '4a0'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/books/ocp/chapters/chapter-06',
-                component: ComponentCreator('/books/ocp/chapters/chapter-06', 'c9d'),
+                component: ComponentCreator('/books/ocp/chapters/chapter-06', '583'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/books/ocp/chapters/chapter-07',
-                component: ComponentCreator('/books/ocp/chapters/chapter-07', '94d'),
+                component: ComponentCreator('/books/ocp/chapters/chapter-07', 'e3c'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/books/ocp/chapters/chapter-08',
-                component: ComponentCreator('/books/ocp/chapters/chapter-08', '474'),
+                component: ComponentCreator('/books/ocp/chapters/chapter-08', '836'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/books/ocp/chapters/chapter-09',
-                component: ComponentCreator('/books/ocp/chapters/chapter-09', '819'),
+                component: ComponentCreator('/books/ocp/chapters/chapter-09', 'b2b'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/books/ocp/chapters/chapter-10',
-                component: ComponentCreator('/books/ocp/chapters/chapter-10', '658'),
+                component: ComponentCreator('/books/ocp/chapters/chapter-10', '185'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/books/ocp/chapters/chapter-11',
-                component: ComponentCreator('/books/ocp/chapters/chapter-11', '996'),
+                component: ComponentCreator('/books/ocp/chapters/chapter-11', '7f9'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/books/ocp/chapters/chapter-12',
-                component: ComponentCreator('/books/ocp/chapters/chapter-12', 'fa1'),
+                component: ComponentCreator('/books/ocp/chapters/chapter-12', '3dd'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/books/ocp/chapters/chapter-13',
-                component: ComponentCreator('/books/ocp/chapters/chapter-13', '247'),
+                component: ComponentCreator('/books/ocp/chapters/chapter-13', 'c2d'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/books/ocp/chapters/chapter-14',
-                component: ComponentCreator('/books/ocp/chapters/chapter-14', 'f50'),
+                component: ComponentCreator('/books/ocp/chapters/chapter-14', '549'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
