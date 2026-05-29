@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '3b6'),
+    component: ComponentCreator('/', '0be'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '983'),
+        component: ComponentCreator('/', 'f4d'),
         routes: [
           {
             path: '/tags',
@@ -3381,6 +3381,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/locks',
+            component: ComponentCreator('/tags/locks', 'ade'),
+            exact: true
+          },
+          {
             path: '/tags/log-blame',
             component: ComponentCreator('/tags/log-blame', '57c'),
             exact: true
@@ -6337,7 +6342,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '526'),
+            component: ComponentCreator('/', 'b09'),
             routes: [
               {
                 path: '/aws',
@@ -12843,7 +12848,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-concurrency',
-                component: ComponentCreator('/technical-knowledge/java/java-concurrency', 'bba'),
+                component: ComponentCreator('/technical-knowledge/java/java-concurrency', '9e3'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -12890,6 +12895,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/java/java-locks',
+                component: ComponentCreator('/technical-knowledge/java/java-locks', 'be7'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/java/java-new-features',
                 component: ComponentCreator('/technical-knowledge/java/java-new-features', '4b7'),
                 exact: true,
@@ -12910,6 +12921,12 @@ export default [
               {
                 path: '/technical-knowledge/java/java-stack-vs-heap',
                 component: ComponentCreator('/technical-knowledge/java/java-stack-vs-heap', 'e74'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/java/java-threads',
+                component: ComponentCreator('/technical-knowledge/java/java-threads', '7e2'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13574,7 +13591,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/spring/spring-aop',
-                component: ComponentCreator('/technical-knowledge/spring/spring-aop', 'd00'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-aop', 'c6a'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13586,7 +13603,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/spring/spring-boot',
-                component: ComponentCreator('/technical-knowledge/spring/spring-boot', '9cf'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-boot', '98f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13650,7 +13667,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/spring/spring-exception-handling',
-                component: ComponentCreator('/technical-knowledge/spring/spring-exception-handling', '18e'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-exception-handling', '633'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

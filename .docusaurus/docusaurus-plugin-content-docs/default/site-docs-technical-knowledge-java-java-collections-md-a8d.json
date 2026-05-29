@@ -51,7 +51,7 @@
     "permalink": "/technical-knowledge/java/java-oop"
   },
   "next": {
-    "title": "Java Concurrency: Threads, Locks & Concurrent Utilities",
+    "title": "Java Concurrency & Utilities",
     "permalink": "/technical-knowledge/java/java-concurrency"
   }
 }

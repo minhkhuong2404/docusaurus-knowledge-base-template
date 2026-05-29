@@ -5449,6 +5449,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/java/java-locks",
+              "path": "/technical-knowledge/java/java-locks",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/java/java-new-features",
               "path": "/technical-knowledge/java/java-new-features",
               "sidebar": "tutorialSidebar"
@@ -5466,6 +5471,11 @@
             {
               "id": "technical-knowledge/java/java-stack-vs-heap",
               "path": "/technical-knowledge/java/java-stack-vs-heap",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/java/java-threads",
+              "path": "/technical-knowledge/java/java-threads",
               "sidebar": "tutorialSidebar"
             },
             {

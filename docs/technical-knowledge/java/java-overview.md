@@ -17,7 +17,9 @@ A structured guide covering Java from core language foundations to JVM internals
 | 1 | [Java Fundamentals](./java-fundamentals) | Syntax, types, control flow, and core APIs |
 | 2 | [Object-Oriented Programming](./java-oop) | Classes, inheritance, polymorphism, encapsulation |
 | 3 | [Collections Framework](./java-collections) | Lists, sets, maps, iteration, complexity trade-offs |
-| 4 | [Concurrency](./java-concurrency) | Threads, executors, locks, memory model, async patterns |
+| 4 | [Concurrency & Utilities](./java-concurrency) | Concurrent utilities, thread pools, async patterns |
+|   | └─ [Threads & Processes](./java-threads) | Thread lifecycle, coordination, deadlocks, livelocks |
+|   | └─ [Locks & Synchronization](./java-locks) | Monitor locks, ReentrantLock, ReadWriteLock, StampedLock |
 | 5 | [Java Memory Model](./java-jmm-memory-model) | Happens-Before relationship, StampedLock, and ThreadLocal internals |
 | 6 | [JVM Internals](./java-jvm) | Class loading, memory areas, GC, JIT, tuning basics |
 | 7 | [Diagnostics & Troubleshooting](./java-diagnostics-troubleshooting) | Production troubleshooting, thread contention, and memory analysis |
@@ -50,6 +52,8 @@ Use this section as the foundation before diving into Spring, Kafka, and system 
 
 ### Compare Next
 - [Java Fundamentals](./java-fundamentals.md)
+- [Java Threads & Processes](./java-threads.md)
+- [Java Locks & Synchronization](./java-locks.md)
 - [Java Concurrency](./java-concurrency.md)
 - [Java Memory Model](./java-jmm-memory-model.md)
 - [JVM Internals](./java-jvm.md)

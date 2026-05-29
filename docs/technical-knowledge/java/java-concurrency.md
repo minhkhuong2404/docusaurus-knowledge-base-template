@@ -1,549 +1,23 @@
 ---
 id: java-concurrency
-title: "Java Concurrency: Threads, Locks & Concurrent Utilities"
+title: "Java Concurrency & Utilities"
 slug: java-concurrency
-description: Comprehensive guide to Java concurrency, covering threads, synchronization, locks, concurrent utilities, the Fork/Join framework, and async programming.
+description: Comprehensive guide to Java concurrency, covering concurrent utilities, thread pools, the Fork/Join framework, and async programming.
 tags: [java, concurrency, multithreading, async, interview-prep]
 ---
 
-# Java Concurrency: Threads, Locks & Concurrent Utilities
+# Java Concurrency & Utilities
 
-A comprehensive guide to concurrent programming in Java — from thread basics and synchronization primitives to advanced work-stealing algorithms like Fork/Join and modern virtual threads.
+A comprehensive guide to concurrent programming in Java — from thread pools and atomic classes to advanced work-stealing algorithms like Fork/Join and modern structured concurrency.
 
----
-
-## 1. Threads & Processes
-
-### 👶 Beginner Concept: The "Restaurant Kitchen"
-Multithreading is famously difficult to learn. Imagine a massive, professional kitchen:
-- **The Process:** This is the *entire kitchen building*. It has its own isolated walls, 5 ovens, and a giant walk-in fridge (The Heap Memory). If the kitchen building burns down, the restaurant next door is totally fine (Crash Isolation).
-- **The Threads:** These are the *individual Chefs* working inside the kitchen. They all share the exact same ovens and fridge (Shared Memory). They each have their own personal cutting board (The Call Stack). 
-  - **The Danger:** Because the chefs share the fridge, if Chef A takes the last onion, and Chef B blindly reaches for it at the exact same millisecond, you get a kitchen disaster (A Race Condition).
-
-### Process vs Thread
-
-| Aspect          | Process                                                 | Thread                                            |
-| --------------- | ------------------------------------------------------- | ------------------------------------------------- |
-| Definition      | Independent unit of execution with its own memory space | Lightweight unit of execution within a process    |
-| Memory          | Isolated address space                                  | Shares heap with other threads; has own stack     |
-| Communication   | IPC (sockets, pipes, shared memory)                     | Shared variables (requires synchronization)       |
-| Cost            | Expensive to create/switch                              | Cheaper to create/switch                          |
-| Crash isolation | One process crash doesn't affect others                 | One thread crash can bring down the whole process |
-
-### Creating Threads
-
-```java
-// 1. Extending Thread
-class MyThread extends Thread {
-    @Override
-    public void run() { System.out.println("Running"); }
-}
-new MyThread().start();
-
-// 2. Implementing Runnable (preferred — allows extending another class)
-Runnable task = () -> System.out.println("Running");
-new Thread(task).start();
-
-// 3. Using Callable + FutureTask (returns a result)
-Callable<Integer> callable = () -> 42;
-FutureTask<Integer> future = new FutureTask<>(callable);
-new Thread(future).start();
-int result = future.get();  // blocks until complete
-
-// 4. Using ExecutorService (production choice)
-ExecutorService executor = Executors.newFixedThreadPool(4);
-executor.submit(() -> System.out.println("Running"));
-```
-
-### 👶 Beginner Example: Seeing `start()` vs `run()` in Action
-
-This example makes the difference unmistakable:
-
-```java
-public class StartVsRun {
-    public static void main(String[] args) {
-        Runnable task = () -> System.out.println(
-            "Executing on: " + Thread.currentThread().getName()
-        );
-
-        Thread t1 = new Thread(task, "Worker-Thread");
-
-        // ❌ Wrong — runs synchronously in main thread
-        t1.run();    // Output: "Executing on: main"
-
-        // ✅ Correct — spawns a new OS thread
-        t1.start();  // Output: "Executing on: Worker-Thread"
-    }
-}
-```
-
-:::info[Interview Focus: `start()` vs `run()`]
-**Q: Can we directly call the `run()` method instead of `start()`?** Calling `run()` directly executes the method synchronously in the *current* thread, just like any normal method call. It does not spawn a new thread. Calling `start()` registers the thread with the JVM and OS, transitioning it to the `RUNNABLE` state, which then invokes `run()` concurrently.
-:::
-
-### Thread Lifecycle States
-
-```text
-NEW  →  RUNNABLE  ⇄  BLOCKED / WAITING / TIMED_WAITING  →  TERMINATED
-```
-* **NEW:** Thread created but `start()` not yet called.
-* **RUNNABLE:** Executing or ready to execute (includes OS "running" and "ready").
-* **BLOCKED:** Waiting to acquire a monitor lock.
-* **WAITING:** Waiting indefinitely (`Object.wait()`, `Thread.join()`, `LockSupport.park()`).
-* **TIMED_WAITING:** Waiting with timeout (`Thread.sleep()`, `Object.wait(timeout)`).
-* **TERMINATED:** Run method completed or exception thrown.
-
-:::tip[Interview Focus: Thread Control Methods]
-**Q: What is the difference between `Thread.sleep()` and `Object.wait()`?** 1. **Lock Release:** `sleep()` does *not* release the monitor lock. `wait()` *releases* the lock, allowing other threads to enter the synchronized block.
-2. **Origin:** `sleep()` is a static method in `Thread`. `wait()` is an instance method in `Object`.
-3. **Usage Context:** `wait()` must be called inside a `synchronized` block/method. `sleep()` can be called anywhere.
-:::
-
-### Thread Coordination: `join()` and `interrupt()`
-
-#### `Thread.join()` — Wait for Another Thread to Finish
-
-`join()` makes the calling thread **block and wait** until the target thread completes. This is essential when one thread depends on the result of another.
-
-```java
-public class JoinExample {
-    public static void main(String[] args) throws InterruptedException {
-        Thread dataLoader = new Thread(() -> {
-            System.out.println("Loading data from database...");
-            try { Thread.sleep(2000); } catch (InterruptedException e) { /* ... */ }
-            System.out.println("Data loaded.");
-        });
-
-        dataLoader.start();
-        dataLoader.join();  // Main thread BLOCKS here until dataLoader finishes
-        // join(5000) — wait at most 5 seconds, then continue regardless
-
-        System.out.println("Processing data...");  // Guaranteed to run AFTER data is loaded
-    }
-}
-```
-
-#### `Thread.interrupt()` — Cooperative Cancellation
-
-Java threads cannot be forcibly killed (`Thread.stop()` is deprecated). Instead, `interrupt()` sets a **flag** that the target thread must cooperatively check:
-
-```java
-Thread worker = new Thread(() -> {
-    while (!Thread.currentThread().isInterrupted()) {
-        // do work...
-    }
-    System.out.println("Worker noticed interrupt, cleaning up...");
-});
-
-worker.start();
-Thread.sleep(1000);
-worker.interrupt();  // Sets the interrupt flag — does NOT kill the thread
-
-// If the thread is in sleep()/wait()/join(), an InterruptedException is thrown.
-// Best practice: catch it and re-set the flag:
-// catch (InterruptedException e) { Thread.currentThread().interrupt(); }
-```
-
-:::danger[Common Mistake: Swallowing InterruptedException]
-Never write `catch (InterruptedException e) { /* ignore */ }`. This silently clears the interrupt flag, preventing upstream code from knowing the thread was interrupted. Always re-interrupt: `Thread.currentThread().interrupt()`.
-:::
-
-### Daemon Threads
-
-Daemon threads are **background service threads** that the JVM terminates automatically when all non-daemon (user) threads finish. They are used for housekeeping tasks like garbage collection, monitoring, or background cache cleanup.
-
-```java
-Thread daemon = new Thread(() -> {
-    while (true) {
-        cleanExpiredCacheEntries();
-        try { Thread.sleep(60_000); } catch (InterruptedException e) { break; }
-    }
-});
-daemon.setDaemon(true);  // MUST be set BEFORE start()
-daemon.start();
-
-// When main() and all user threads finish, this daemon is killed automatically.
-// ⚠️ Daemon threads do NOT run finally blocks or shutdown hooks on JVM exit!
-```
-
-> **Use case:** Log flushing, heartbeat pings, periodic metric collection — any task where abrupt termination is acceptable.
-
-### Deadlock
-
-Deadlock occurs when two or more threads are **blocked forever**, each waiting for a lock held by the other.
-
-**Four necessary conditions:**
-1. **Mutual exclusion** — resources cannot be shared.
-2. **Hold and wait** — holding one lock while waiting for another.
-3. **No preemption** — locks cannot be forcibly taken.
-4. **Circular wait** — A waits for B, B waits for A.
-
-#### 👶 Beginner Example: Deadlock in Code
-
-```java
-public class DeadlockDemo {
-    private static final Object LOCK_A = new Object();
-    private static final Object LOCK_B = new Object();
-
-    public static void main(String[] args) {
-        Thread t1 = new Thread(() -> {
-            synchronized (LOCK_A) {                    // 1. t1 acquires LOCK_A
-                System.out.println("T1: Holding LOCK_A, waiting for LOCK_B...");
-                try { Thread.sleep(50); } catch (InterruptedException e) {}
-                synchronized (LOCK_B) {                // 3. t1 waits for LOCK_B (held by t2) → DEADLOCK
-                    System.out.println("T1: Got both locks!");
-                }
-            }
-        });
-
-        Thread t2 = new Thread(() -> {
-            synchronized (LOCK_B) {                    // 2. t2 acquires LOCK_B
-                System.out.println("T2: Holding LOCK_B, waiting for LOCK_A...");
-                try { Thread.sleep(50); } catch (InterruptedException e) {}
-                synchronized (LOCK_A) {                // 4. t2 waits for LOCK_A (held by t1) → DEADLOCK
-                    System.out.println("T2: Got both locks!");
-                }
-            }
-        });
-
-        t1.start();
-        t2.start();
-        // Both threads hang forever. Use jstack <pid> or ThreadMXBean to detect.
-    }
-}
-
-// FIX: Both threads acquire locks in the SAME order (LOCK_A → LOCK_B)
-```
-
-**Prevention:** Always acquire locks in a **consistent global order**.
-
-### Deadlock vs Livelock vs Starvation
-
-| Problem       | Behavior | Threads Blocked? | Example |
-|:---|:---|:---|:---|
-| **Deadlock**  | Threads wait for each other's locks **forever** | Yes — permanently blocked | T1 holds A, waits B; T2 holds B, waits A |
-| **Livelock**  | Threads keep **reacting** to each other but make **no progress** | No — actively running, but useless | Two people in a hallway keep stepping aside for each other |
-| **Starvation** | A thread **never gets CPU time** because higher-priority threads monopolize the scheduler | Partially — runnable but never scheduled | A low-priority thread never acquires a `ReentrantLock(fair=false)` |
-
-:::tip[How to detect deadlocks in production]
-1. **`jstack <pid>`** — prints all thread stack traces; JVM automatically detects and reports deadlock cycles.
-2. **`ThreadMXBean.findDeadlockedThreads()`** — programmatic detection you can wire into health checks.
-3. **`ReentrantLock.tryLock(timeout)`** — prevents deadlocks by failing instead of blocking forever.
+:::note[Core Concurrency Guides]
+For fundamental concepts on threads and locking, please refer to the dedicated pages:
+- **[Threads & Processes](./java-threads)**: Thread creation, lifecycles, states, daemon threads, and deadlocks.
+- **[Locks & Synchronization](./java-locks)**: Monitor locks (`synchronized`), visibility (`volatile`), lock interfaces (`ReentrantLock`, `ReadWriteLock`), `StampedLock`, and AQS intro.
 :::
 
 ---
-
-## 2. Synchronization Primitives
-
-### 👶 Beginner Example: Race Condition in Action
-
-Before learning synchronization, you must *see* what breaks without it:
-
-```java
-public class RaceConditionDemo {
-    private static int counter = 0;
-
-    public static void main(String[] args) throws InterruptedException {
-        Runnable task = () -> {
-            for (int i = 0; i < 100_000; i++) {
-                counter++;  // NOT atomic: read → increment → write (3 steps)
-            }
-        };
-
-        Thread t1 = new Thread(task);
-        Thread t2 = new Thread(task);
-        t1.start(); t2.start();
-        t1.join();  t2.join();
-
-        // Expected: 200,000
-        // Actual:   ~130,000–190,000 (varies every run!)
-        System.out.println("Counter: " + counter);
-    }
-}
-// Fix: use synchronized, AtomicInteger, or ReentrantLock
-```
-
-> **Why?** Both threads read `counter = 5`, both compute `5 + 1 = 6`, both write `6`. One increment is **lost**. This is the classic "lost update" race condition.
-
-### `synchronized`
-
-Java's built-in monitor lock. Can be applied to methods or blocks.
-
-```java
-// Synchronized method — locks on `this`
-public synchronized void increment() { count++; }
-
-// Synchronized block — locks on specific object
-public void increment() {
-    synchronized (this) { count++; }
-}
-
-// Static synchronized — locks on the Class object
-public static synchronized void staticMethod() { }
-```
-
-:::tip[Interview Focus: Lock Escalation (JDK 1.6+)]
-**Q: How did JDK 1.6 optimize `synchronized`?** To reduce the heavy OS-level context switching overhead, Java introduced **Lock Escalation**:
-1. **Biased Locking:** Assumes only one thread will access the block. Marks the object header with the thread ID.
-2. **Lightweight Locking:** If another thread requests the lock, it upgrades to a lightweight lock. The new thread uses CAS (Compare-And-Swap) to spin and wait for the lock.
-3. **Heavyweight Locking:** If the spin-lock fails too many times (high contention), it escalates to a heavyweight lock, which delegates to the OS mutex, blocking threads entirely.
-:::
-
-### `volatile`
-
-Ensures **visibility** and prevents JVM **instruction reordering**.
-
-#### 👶 Beginner Concept: The "Whiteboard vs Pocket Notebook"
-When a Chef (Thread) works, she doesn't want to constantly walk to the giant fridge (Main System RAM) just to check the temperature of an oven. So, she writes the temperature down in her personal *Pocket Notebook* (CPU L1 Cache).
-- If Chef A updates the oven temp in her notebook, Chef B has *no idea* it changed because Chef B is looking at his own notebook! (A Visibility Problem).
-- Adding the `volatile` keyword tells the Chefs: "Do not write this in your notebook. You must walk over and write this change on the giant shared Whiteboard (Main System RAM) for everyone to see instantly."
-
-```java
-private volatile boolean running = true;
-// Writer thread
-running = false;  // automatically flushes CPU cache to main RAM
-```
-
-#### 🧠 Senior Deep Dive: The MESI Protocol & False Sharing
-At the hardware level, `volatile` triggers a **Memory Barrier** (StoreLoad). When a core writes to a volatile variable, it broadcasts an invalidation signal across the motherboard's bus.
-- **The Cost:** The CPU's L1/L2 caches use the **MESI** (Modified, Exclusive, Shared, Invalid) cache coherence protocol. The broadcast forces all other CPU cores to mark their cached cache-lines as "Invalid," forcing them to fetch from slow main RAM on the next read.
-- **False Sharing:** CPU caches load data in 64-byte chunks (Cache Lines). If two independent `volatile` variables sit next to each other in memory, changing Variable A invalidates the entire 64-byte line, destroying the cache for Variable B even though B never changed! Seniors fix this using `@Contended` (padding objects with blank bytes to force them into separate CPU cache lines).
-
-:::danger[Interview Trap: Volatile Atomicity]
-**Q: Does `volatile` guarantee thread safety for `i++`?** No. `volatile` does NOT provide atomicity. `count++` is a read-modify-write operation (3 steps). Multiple threads can still read the same initial value simultaneously. You need `AtomicInteger` or `synchronized` for atomicity.
-:::
-
-### 🧠 Double-Checked Locking Singleton (The Classic `volatile` Use Case)
-
-The most famous real-world application of `volatile`. Without `volatile`, this pattern is **broken** due to instruction reordering:
-
-```java
-public class Singleton {
-    // volatile prevents reordering of object construction steps
-    private static volatile Singleton INSTANCE;
-
-    private Singleton() { /* expensive initialization */ }
-
-    public static Singleton getInstance() {
-        if (INSTANCE == null) {                    // 1st check: avoid locking on every call
-            synchronized (Singleton.class) {
-                if (INSTANCE == null) {             // 2nd check: prevent double-creation
-                    INSTANCE = new Singleton();
-                }
-            }
-        }
-        return INSTANCE;
-    }
-}
-```
-
-> **Why is `volatile` required?** `INSTANCE = new Singleton()` compiles to 3 steps: (1) allocate memory, (2) invoke constructor, (3) assign reference to `INSTANCE`. The JIT can reorder step 3 before step 2. Without `volatile`, Thread B can read a **non-null but uninitialized** `INSTANCE`, bypassing the `null` check and using an object whose constructor hasn't finished.
-
-### Quick Comparison: `synchronized` vs `ReentrantLock`
-
-| Feature | `synchronized` | `ReentrantLock` |
-|:---|:---|:---|
-| Lock/unlock scope | Lexical (block/method) | Programmatic (`lock()`/`unlock()`) |
-| Fairness | Not configurable | `new ReentrantLock(true)` |
-| Try-lock with timeout | ❌ Not possible | `tryLock(5, TimeUnit.SECONDS)` |
-| Interruptible waiting | ❌ | `lockInterruptibly()` |
-| Multiple conditions | Single wait-set per object | Multiple `Condition` objects |
-| Performance (low contention) | Slightly faster (JVM optimized) | Slightly slower |
-| Risk of forgetting unlock | Impossible (auto-released) | Must use `finally` block |
-| **Recommendation** | Default choice for simple cases | Use when you need advanced features |
-
----
-
-## 3. Locks & AQS
-
-### Choosing a Locking Primitive
-
-When coordinating access to shared mutable state in Java, select the simplest synchronization mechanism that satisfies your throughput, latency, and correctness requirements:
-
-#### `synchronized`
-Use when you need simple mutual exclusion with clear, lexical boundaries.
-- **Optimized:** Fast under low/zero contention due to JVM lock escalation (biased/lightweight locking).
-- **Limitations:** Cannot configure fairness, try-lock timeout, or interruptible lock acquisition.
-
-```java
-public synchronized void increment() {
-    count++;
-}
-```
-
-#### `ReentrantLock`
-Use when you require advanced capabilities like timeouts, interruptible acquisition, fairness configuration, or multiple condition variables.
-
-```java
-private final ReentrantLock lock = new ReentrantLock();
-
-public void update() {
-    lock.lock();
-    try {
-        sharedState++;
-    } finally {
-        lock.unlock(); // ALWAYS unlock in a finally block
-    }
-}
-```
-
-#### `tryLock()` — Avoiding Deadlocks with Timeouts
-
-```java
-private final ReentrantLock lock = new ReentrantLock();
-
-public boolean tryUpdate() {
-    try {
-        // Try to acquire for 2 seconds; if another thread holds it, give up gracefully
-        if (lock.tryLock(2, TimeUnit.SECONDS)) {
-            try {
-                sharedState++;
-                return true;
-            } finally {
-                lock.unlock();
-            }
-        } else {
-            log.warn("Could not acquire lock within timeout — skipping update");
-            return false;  // Fail fast instead of deadlocking
-        }
-    } catch (InterruptedException e) {
-        Thread.currentThread().interrupt();
-        return false;
-    }
-}
-```
-
-#### `Condition` Variables — Precise Thread Signaling
-
-`Condition` is the `ReentrantLock` equivalent of `wait()`/`notify()`, but with the power of having **multiple wait-sets** on the same lock:
-
-```java
-// Producer-Consumer with Condition (more flexible than wait/notify)
-public class BoundedBuffer<T> {
-    private final Queue<T> queue = new LinkedList<>();
-    private final int capacity;
-    private final ReentrantLock lock = new ReentrantLock();
-    private final Condition notFull  = lock.newCondition();  // producers wait here
-    private final Condition notEmpty = lock.newCondition();  // consumers wait here
-
-    public BoundedBuffer(int capacity) { this.capacity = capacity; }
-
-    public void put(T item) throws InterruptedException {
-        lock.lock();
-        try {
-            while (queue.size() == capacity) {
-                notFull.await();     // Release lock & wait; re-acquire on wake
-            }
-            queue.add(item);
-            notEmpty.signal();       // Wake ONE waiting consumer
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    public T take() throws InterruptedException {
-        lock.lock();
-        try {
-            while (queue.isEmpty()) {
-                notEmpty.await();    // Release lock & wait; re-acquire on wake
-            }
-            T item = queue.remove();
-            notFull.signal();        // Wake ONE waiting producer
-            return item;
-        } finally {
-            lock.unlock();
-        }
-    }
-}
-```
-
-> **Why Condition is better than `wait()`/`notify()`:** With `synchronized`, there is only ONE wait-set. `notifyAll()` wakes ALL waiting threads (both producers AND consumers), even though only one type can make progress. With two `Condition` objects, `signal()` wakes exactly the right thread.
-
-#### `ReadWriteLock` (`ReentrantReadWriteLock`)
-Use when read operations are significantly more frequent than write operations, allowing multiple threads to read concurrently while ensuring writes remain exclusive.
-
-##### Real-World Use Case: In-Memory Configuration Cache
-
-```java
-public class ConfigCache {
-    private final ReentrantReadWriteLock rwLock = new ReentrantReadWriteLock();
-    private final Map<String, String> cache = new HashMap<>();
-
-    // Multiple threads can read concurrently — no blocking
-    public String getConfig(String key) {
-        rwLock.readLock().lock();
-        try {
-            return cache.get(key);
-        } finally {
-            rwLock.readLock().unlock();
-        }
-    }
-
-    // Write lock blocks ALL readers AND writers — exclusive access
-    public void reloadConfig(Map<String, String> newConfig) {
-        rwLock.writeLock().lock();
-        try {
-            cache.clear();
-            cache.putAll(newConfig);
-            log.info("Config reloaded: {} entries", newConfig.size());
-        } finally {
-            rwLock.writeLock().unlock();
-        }
-    }
-}
-// Perfect when: config is read 1000x/sec but updated once every few minutes
-```
-
-#### `StampedLock`
-Use in highly read-heavy workloads where standard read locks could starve writers. `StampedLock` supports **optimistic read** operations, which do not block writers. The reader acquires a version stamp, reads the values, and validates the stamp. If a write invalidated the stamp, the reader falls back to a blocking read lock.
-
-```java
-private final StampedLock lock = new StampedLock();
-
-public double readWithOptimisticLock() {
-    long stamp = lock.tryOptimisticRead();
-    double currentVal = balance;
-    if (!lock.validate(stamp)) { // Stale read detected?
-        stamp = lock.readLock(); // Fallback to standard blocking read lock
-        try {
-            currentVal = balance;
-        } finally {
-            lock.unlockRead(stamp);
-        }
-    }
-    return currentVal;
-}
-```
-
-### 🧠 Complete Lock Comparison Matrix
-
-| Feature | `synchronized` | `ReentrantLock` | `ReadWriteLock` | `StampedLock` |
-|:---|:---|:---|:---|:---|
-| Lock type | Exclusive | Exclusive | Shared read / Exclusive write | Optimistic read / Shared read / Exclusive write |
-| Fairness | Not configurable | Configurable | Configurable | Not configurable |
-| Try-lock / Timeout | ❌ | ✅ | ✅ | ✅ |
-| Interruptible | ❌ | ✅ | ✅ | ✅ |
-| Condition variables | 1 (implicit) | Multiple | Multiple (write lock only) | ❌ |
-| Reentrant | ✅ | ✅ | ✅ | ❌ (not reentrant!) |
-| Optimistic read | ❌ | ❌ | ❌ | ✅ |
-| Best for | Simple mutual exclusion | Advanced locking needs | Read-heavy workloads | Ultra-read-heavy, write-rare |
-
-:::danger[Interview Trap: StampedLock Is NOT Reentrant]
-Unlike every other lock in Java, `StampedLock` is **not reentrant**. If a thread holding a `StampedLock` write lock tries to acquire it again, it will **deadlock itself**. Always ensure your code path doesn't recursively enter a stamped-locked section.
-:::
-
-### AQS (AbstractQueuedSynchronizer)
-
-AQS is the **foundation framework** for `ReentrantLock`, `Semaphore`, `CountDownLatch`, and `CyclicBarrier`.
-
-> [!TIP] 🧠 Senior Deep Dive
-> Because AQS internals are one of the most rigorously tested topics in Senior Java interviews (involving the CLH queue, `LockSupport.park()`, and `Unsafe` memory management), we have dedicated an entire guide to it. 
-> 
-> 👉 **[Read the AbstractQueuedSynchronizer Deep Dive here](./java-aqs-internals)**
-
----
-
-## 4. AQS Synchronization Utilities
+## 1. AQS Synchronization Utilities
 
 While `ReentrantLock` provides basic mutual exclusion, the AQS framework powers several high-level coordination utilities essential for distributed systems and microservice architectures.
 
@@ -686,7 +160,7 @@ Thread producer = new Thread(() -> {
 
 ---
 
-## 5. Atomic Classes & CAS
+## 2. Atomic Classes & CAS
 
 ### CAS (Compare-And-Swap)
 
@@ -775,7 +249,7 @@ boolean success = ref.compareAndSet(current, "B", stampHolder[0], stampHolder[0]
 
 ---
 
-## 6. Java Memory Model (JMM)
+## 3. Java Memory Model (JMM)
 
 ### 👶 Why Does This Matter?
 
@@ -918,7 +392,7 @@ public class ImmutableHolder {
 
 ---
 
-## 7. ThreadLocal
+## 4. ThreadLocal
 
 `ThreadLocal` provides **per-thread isolated variables**.
 
@@ -1010,7 +484,7 @@ public void handleRequest(String userId) {
 
 ---
 
-## 8. Thread Pools & Executors
+## 5. Thread Pools & Executors
 
 ### 👶 Beginner: `ThreadPoolExecutor` Constructor Walkthrough
 
@@ -1101,7 +575,7 @@ Always explicitly configure `ThreadPoolExecutor` to control queue sizes and thre
 
 ---
 
-## 9. The Fork/Join Framework
+## 6. The Fork/Join Framework
 
 Introduced in Java 7, the Fork/Join framework is designed for work that can be broken down recursively into smaller pieces (Divide and Conquer). It is the engine that powers `Arrays.parallelSort()` and parallel Streams.
 
@@ -1174,7 +648,7 @@ long total = pool.invoke(new SumTask(massiveArray, 0, massiveArray.length));
 
 ---
 
-## 10. CompletableFuture
+## 7. CompletableFuture
 
 `CompletableFuture` (Java 8+) provides a powerful API for composing asynchronous, non-blocking operations. By default, it uses the `ForkJoinPool.commonPool()`.
 
@@ -1231,7 +705,7 @@ CompletableFuture<String> combined = getPrice()
 
 ---
 
-## 11. Concurrent Collections
+## 8. Concurrent Collections
 
 | Collection             | Description                                                                           |
 | ---------------------- | ------------------------------------------------------------------------------------- |
@@ -1292,7 +766,7 @@ for (EventListener l : listeners) {        // Iterates over a snapshot (lock-fre
 
 ---
 
-## 12. Virtual Threads (Java 21+)
+## 9. Virtual Threads (Java 21+)
 
 Virtual threads (Project Loom) completely change the physical threading model of Java, solving the "thread-per-request" bottleneck without the callback-hell of Reactive Programming.
 
@@ -1304,7 +778,7 @@ Virtual threads (Project Loom) completely change the physical threading model of
 
 ---
 
-## 14. Structured Concurrency (Java 21+)
+## 10. Structured Concurrency (Java 21+)
 
 `StructuredTaskScope` enforces a discipline that child threads cannot outlive their parent — solving the "orphaned thread" problem common in `CompletableFuture` chains.
 
@@ -1389,7 +863,7 @@ try (var scope = new CollectingScope<SearchResult>()) {
 
 ---
 
-## 15. Advanced CompletableFuture Patterns
+## 11. Advanced CompletableFuture Patterns
 
 ### Combining Multiple Futures
 
@@ -1503,7 +977,7 @@ CompletableFuture.supplyAsync(() -> httpClient.fetch(url), ioExecutor);
 
 ---
 
-## 16. Producer-Consumer Pattern
+## 12. Producer-Consumer Pattern
 
 A fundamental pattern where producer threads generate data and consumer threads process it, communicating via a shared buffer. 
 

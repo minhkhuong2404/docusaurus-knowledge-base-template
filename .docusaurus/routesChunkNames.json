@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-3b6": {
+  "/-0be": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-983": {
+  "/-f4d": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -2713,6 +2713,10 @@
     "__comp": "df203c0f",
     "__props": "b500003f"
   },
+  "/tags/locks-ade": {
+    "__comp": "df203c0f",
+    "__props": "261d847a"
+  },
   "/tags/log-blame-57c": {
     "__comp": "df203c0f",
     "__props": "bf032dfd"
@@ -5077,7 +5081,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-526": {
+  "/-b09": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -9420,7 +9424,7 @@
     "__comp": "17896441",
     "content": "a8d4740a"
   },
-  "/technical-knowledge/java/java-concurrency-bba": {
+  "/technical-knowledge/java/java-concurrency-9e3": {
     "__comp": "17896441",
     "content": "f13bfd67"
   },
@@ -9452,6 +9456,10 @@
     "__comp": "17896441",
     "content": "2fb67458"
   },
+  "/technical-knowledge/java/java-locks-be7": {
+    "__comp": "17896441",
+    "content": "efefd14e"
+  },
   "/technical-knowledge/java/java-new-features-4b7": {
     "__comp": "17896441",
     "content": "0366963e"
@@ -9467,6 +9475,10 @@
   "/technical-knowledge/java/java-stack-vs-heap-e74": {
     "__comp": "17896441",
     "content": "77dd0904"
+  },
+  "/technical-knowledge/java/java-threads-7e2": {
+    "__comp": "17896441",
+    "content": "190bfe65"
   },
   "/technical-knowledge/java/java-virtual-threads-de7": {
     "__comp": "17896441",
@@ -9908,7 +9920,7 @@
     "__comp": "17896441",
     "content": "2c1c3feb"
   },
-  "/technical-knowledge/spring/spring-aop-d00": {
+  "/technical-knowledge/spring/spring-aop-c6a": {
     "__comp": "17896441",
     "content": "690a1177"
   },
@@ -9916,7 +9928,7 @@
     "__comp": "17896441",
     "content": "ca667498"
   },
-  "/technical-knowledge/spring/spring-boot-9cf": {
+  "/technical-knowledge/spring/spring-boot-98f": {
     "__comp": "17896441",
     "content": "070cceee"
   },
@@ -9960,7 +9972,7 @@
     "__comp": "17896441",
     "content": "da45351f"
   },
-  "/technical-knowledge/spring/spring-exception-handling-18e": {
+  "/technical-knowledge/spring/spring-exception-handling-633": {
     "__comp": "17896441",
     "content": "5a9a573d"
   },

@@ -47,6 +47,8 @@ const sidebars: SidebarsConfig = {
 							label: '🔒 Threads & Locks',
 							collapsed: true,
 							items: [
+								'technical-knowledge/java/java-threads',
+								'technical-knowledge/java/java-locks',
 								'technical-knowledge/java/java-aqs-internals'
 							]
 						}
