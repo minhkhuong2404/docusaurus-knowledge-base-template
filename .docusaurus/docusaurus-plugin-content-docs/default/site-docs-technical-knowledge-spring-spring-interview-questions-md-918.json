@@ -45,8 +45,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Spring Framework: Deep Dive",
-    "permalink": "/technical-knowledge/spring/spring-framework-deep-dive"
+    "title": "Spring AOP",
+    "permalink": "/technical-knowledge/spring/spring-aop"
   },
   "next": {
     "title": "Spring Security — Complete Guide",

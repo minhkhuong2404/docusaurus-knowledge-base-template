@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-ead": {
+  "/-3b6": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-5ae": {
+  "/-983": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -165,6 +165,10 @@
     "__comp": "df203c0f",
     "__props": "8cb67551"
   },
+  "/tags/aop-3e1": {
+    "__comp": "df203c0f",
+    "__props": "71cd607c"
+  },
   "/tags/api-042": {
     "__comp": "df203c0f",
     "__props": "30b7df4b"
@@ -216,6 +220,10 @@
   "/tags/arrays-755": {
     "__comp": "df203c0f",
     "__props": "1c8395b0"
+  },
+  "/tags/aspect-oriented-programming-893": {
+    "__comp": "df203c0f",
+    "__props": "a3a1d29c"
   },
   "/tags/async-db2": {
     "__comp": "df203c0f",
@@ -605,6 +613,10 @@
     "__comp": "df203c0f",
     "__props": "552c799b"
   },
+  "/tags/cglib-d01": {
+    "__comp": "df203c0f",
+    "__props": "f9705c70"
+  },
   "/tags/cgroups-e1f": {
     "__comp": "df203c0f",
     "__props": "77fb06d6"
@@ -804,6 +816,10 @@
   "/tags/cheatsheet-5bf": {
     "__comp": "df203c0f",
     "__props": "b77374ed"
+  },
+  "/tags/checked-exception-c5f": {
+    "__comp": "df203c0f",
+    "__props": "8fdd44fb"
   },
   "/tags/checked-exceptions-481": {
     "__comp": "df203c0f",
@@ -1117,6 +1133,10 @@
     "__comp": "df203c0f",
     "__props": "1f34e3dd"
   },
+  "/tags/controlleradvice-009": {
+    "__comp": "df203c0f",
+    "__props": "d4782206"
+  },
   "/tags/controllers-c65": {
     "__comp": "df203c0f",
     "__props": "9ed38c53"
@@ -1192,6 +1212,10 @@
   "/tags/cross-border-a4b": {
     "__comp": "df203c0f",
     "__props": "8ef1bb74"
+  },
+  "/tags/cross-cutting-concerns-a3b": {
+    "__comp": "df203c0f",
+    "__props": "ba4b166b"
   },
   "/tags/crp-ac1": {
     "__comp": "df203c0f",
@@ -1652,6 +1676,10 @@
   "/tags/erd-97c": {
     "__comp": "df203c0f",
     "__props": "a958c90a"
+  },
+  "/tags/error-response-70f": {
+    "__comp": "df203c0f",
+    "__props": "5e907a37"
   },
   "/tags/estimation-74f": {
     "__comp": "df203c0f",
@@ -3841,6 +3869,10 @@
     "__comp": "df203c0f",
     "__props": "3e064d55"
   },
+  "/tags/restcontrolleradvice-939": {
+    "__comp": "df203c0f",
+    "__props": "e40c3230"
+  },
   "/tags/returns-ec8": {
     "__comp": "df203c0f",
     "__props": "55d6e442"
@@ -4741,6 +4773,10 @@
     "__comp": "df203c0f",
     "__props": "6c3ec569"
   },
+  "/tags/unchecked-exception-927": {
+    "__comp": "df203c0f",
+    "__props": "de04667e"
+  },
   "/tags/uncle-bob-c94": {
     "__comp": "df203c0f",
     "__props": "e7e6f789"
@@ -4764,6 +4800,10 @@
   "/tags/user-pools-8b3": {
     "__comp": "df203c0f",
     "__props": "364d2313"
+  },
+  "/tags/validation-41e": {
+    "__comp": "df203c0f",
+    "__props": "1a0d0fdb"
   },
   "/tags/values-a08": {
     "__comp": "df203c0f",
@@ -5037,7 +5077,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-f71": {
+  "/-526": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -9416,7 +9456,7 @@
     "__comp": "17896441",
     "content": "0366963e"
   },
-  "/technical-knowledge/java/java-oop-d9e": {
+  "/technical-knowledge/java/java-oop-39c": {
     "__comp": "17896441",
     "content": "5304fd8a"
   },
@@ -9424,11 +9464,11 @@
     "__comp": "17896441",
     "content": "adb02301"
   },
-  "/technical-knowledge/java/java-stack-vs-heap-c32": {
+  "/technical-knowledge/java/java-stack-vs-heap-e74": {
     "__comp": "17896441",
     "content": "77dd0904"
   },
-  "/technical-knowledge/java/java-virtual-threads-6ce": {
+  "/technical-knowledge/java/java-virtual-threads-de7": {
     "__comp": "17896441",
     "content": "dd9695a1"
   },
@@ -9836,23 +9876,23 @@
     "__comp": "17896441",
     "content": "f082910f"
   },
-  "/technical-knowledge/solid/solid/dependency-inversion-376": {
+  "/technical-knowledge/solid/solid/dependency-inversion-e45": {
     "__comp": "17896441",
     "content": "ea0c56a8"
   },
-  "/technical-knowledge/solid/solid/interface-segregation-335": {
+  "/technical-knowledge/solid/solid/interface-segregation-0bb": {
     "__comp": "17896441",
     "content": "fbeb6a72"
   },
-  "/technical-knowledge/solid/solid/liskov-substitution-e84": {
+  "/technical-knowledge/solid/solid/liskov-substitution-318": {
     "__comp": "17896441",
     "content": "ad22e946"
   },
-  "/technical-knowledge/solid/solid/open-closed-608": {
+  "/technical-knowledge/solid/solid/open-closed-d5d": {
     "__comp": "17896441",
     "content": "631d56ee"
   },
-  "/technical-knowledge/solid/solid/single-responsibility-438": {
+  "/technical-knowledge/solid/solid/single-responsibility-d12": {
     "__comp": "17896441",
     "content": "c6135f55"
   },
@@ -9867,6 +9907,10 @@
   "/technical-knowledge/spring/hibernate-transactions-performance-078": {
     "__comp": "17896441",
     "content": "2c1c3feb"
+  },
+  "/technical-knowledge/spring/spring-aop-d00": {
+    "__comp": "17896441",
+    "content": "690a1177"
   },
   "/technical-knowledge/spring/spring-batch-f4d": {
     "__comp": "17896441",
@@ -9915,6 +9959,10 @@
   "/technical-knowledge/spring/spring-data-jpa-transactions-a92": {
     "__comp": "17896441",
     "content": "da45351f"
+  },
+  "/technical-knowledge/spring/spring-exception-handling-18e": {
+    "__comp": "17896441",
+    "content": "5a9a573d"
   },
   "/technical-knowledge/spring/spring-framework-e38": {
     "__comp": "17896441",
@@ -10064,7 +10112,7 @@
     "__comp": "17896441",
     "content": "e8a6b3e1"
   },
-  "/technical-knowledge/system-design/sharding-partitioning-5f0": {
+  "/technical-knowledge/system-design/sharding-partitioning-4e4": {
     "__comp": "17896441",
     "content": "1d0030f3"
   },

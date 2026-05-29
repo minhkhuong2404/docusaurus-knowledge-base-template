@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'ead'),
+    component: ComponentCreator('/', '3b6'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '5ae'),
+        component: ComponentCreator('/', '983'),
         routes: [
           {
             path: '/tags',
@@ -196,6 +196,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/aop',
+            component: ComponentCreator('/tags/aop', '3e1'),
+            exact: true
+          },
+          {
             path: '/tags/api',
             component: ComponentCreator('/tags/api', '042'),
             exact: true
@@ -258,6 +263,11 @@ export default [
           {
             path: '/tags/arrays',
             component: ComponentCreator('/tags/arrays', '755'),
+            exact: true
+          },
+          {
+            path: '/tags/aspect-oriented-programming',
+            component: ComponentCreator('/tags/aspect-oriented-programming', '893'),
             exact: true
           },
           {
@@ -746,6 +756,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/cglib',
+            component: ComponentCreator('/tags/cglib', 'd01'),
+            exact: true
+          },
+          {
             path: '/tags/cgroups',
             component: ComponentCreator('/tags/cgroups', 'e1f'),
             exact: true
@@ -993,6 +1008,11 @@ export default [
           {
             path: '/tags/cheatsheet',
             component: ComponentCreator('/tags/cheatsheet', '5bf'),
+            exact: true
+          },
+          {
+            path: '/tags/checked-exception',
+            component: ComponentCreator('/tags/checked-exception', 'c5f'),
             exact: true
           },
           {
@@ -1386,6 +1406,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/controlleradvice',
+            component: ComponentCreator('/tags/controlleradvice', '009'),
+            exact: true
+          },
+          {
             path: '/tags/controllers',
             component: ComponentCreator('/tags/controllers', 'c65'),
             exact: true
@@ -1478,6 +1503,11 @@ export default [
           {
             path: '/tags/cross-border',
             component: ComponentCreator('/tags/cross-border', 'a4b'),
+            exact: true
+          },
+          {
+            path: '/tags/cross-cutting-concerns',
+            component: ComponentCreator('/tags/cross-cutting-concerns', 'a3b'),
             exact: true
           },
           {
@@ -2053,6 +2083,11 @@ export default [
           {
             path: '/tags/erd',
             component: ComponentCreator('/tags/erd', '97c'),
+            exact: true
+          },
+          {
+            path: '/tags/error-response',
+            component: ComponentCreator('/tags/error-response', '70f'),
             exact: true
           },
           {
@@ -4791,6 +4826,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/restcontrolleradvice',
+            component: ComponentCreator('/tags/restcontrolleradvice', '939'),
+            exact: true
+          },
+          {
             path: '/tags/returns',
             component: ComponentCreator('/tags/returns', 'ec8'),
             exact: true
@@ -5916,6 +5956,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/unchecked-exception',
+            component: ComponentCreator('/tags/unchecked-exception', '927'),
+            exact: true
+          },
+          {
             path: '/tags/uncle-bob',
             component: ComponentCreator('/tags/uncle-bob', 'c94'),
             exact: true
@@ -5943,6 +5988,11 @@ export default [
           {
             path: '/tags/user-pools',
             component: ComponentCreator('/tags/user-pools', '8b3'),
+            exact: true
+          },
+          {
+            path: '/tags/validation',
+            component: ComponentCreator('/tags/validation', '41e'),
             exact: true
           },
           {
@@ -6287,7 +6337,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'f71'),
+            component: ComponentCreator('/', '526'),
             routes: [
               {
                 path: '/aws',
@@ -12847,7 +12897,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-oop',
-                component: ComponentCreator('/technical-knowledge/java/java-oop', 'd9e'),
+                component: ComponentCreator('/technical-knowledge/java/java-oop', '39c'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -12859,13 +12909,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-stack-vs-heap',
-                component: ComponentCreator('/technical-knowledge/java/java-stack-vs-heap', 'c32'),
+                component: ComponentCreator('/technical-knowledge/java/java-stack-vs-heap', 'e74'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/java/java-virtual-threads',
-                component: ComponentCreator('/technical-knowledge/java/java-virtual-threads', '6ce'),
+                component: ComponentCreator('/technical-knowledge/java/java-virtual-threads', 'de7'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13477,31 +13527,31 @@ export default [
               },
               {
                 path: '/technical-knowledge/solid/solid/dependency-inversion',
-                component: ComponentCreator('/technical-knowledge/solid/solid/dependency-inversion', '376'),
+                component: ComponentCreator('/technical-knowledge/solid/solid/dependency-inversion', 'e45'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/solid/solid/interface-segregation',
-                component: ComponentCreator('/technical-knowledge/solid/solid/interface-segregation', '335'),
+                component: ComponentCreator('/technical-knowledge/solid/solid/interface-segregation', '0bb'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/solid/solid/liskov-substitution',
-                component: ComponentCreator('/technical-knowledge/solid/solid/liskov-substitution', 'e84'),
+                component: ComponentCreator('/technical-knowledge/solid/solid/liskov-substitution', '318'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/solid/solid/open-closed',
-                component: ComponentCreator('/technical-knowledge/solid/solid/open-closed', '608'),
+                component: ComponentCreator('/technical-knowledge/solid/solid/open-closed', 'd5d'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/solid/solid/single-responsibility',
-                component: ComponentCreator('/technical-knowledge/solid/solid/single-responsibility', '438'),
+                component: ComponentCreator('/technical-knowledge/solid/solid/single-responsibility', 'd12'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13519,6 +13569,12 @@ export default [
               {
                 path: '/technical-knowledge/spring/hibernate-transactions-performance',
                 component: ComponentCreator('/technical-knowledge/spring/hibernate-transactions-performance', '078'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/spring/spring-aop',
+                component: ComponentCreator('/technical-knowledge/spring/spring-aop', 'd00'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13591,6 +13647,12 @@ export default [
                 path: '/technical-knowledge/spring/spring-data-jpa-transactions',
                 component: ComponentCreator('/technical-knowledge/spring/spring-data-jpa-transactions', 'a92'),
                 exact: true
+              },
+              {
+                path: '/technical-knowledge/spring/spring-exception-handling',
+                component: ComponentCreator('/technical-knowledge/spring/spring-exception-handling', '18e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/spring/spring-framework',
@@ -13816,7 +13878,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/sharding-partitioning',
-                component: ComponentCreator('/technical-knowledge/system-design/sharding-partitioning', '5f0'),
+                component: ComponentCreator('/technical-knowledge/system-design/sharding-partitioning', '4e4'),
                 exact: true
               },
               {

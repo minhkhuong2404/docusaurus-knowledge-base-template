@@ -6032,6 +6032,11 @@
               "path": "/java/jpa-hibernate-lifecycle-methods"
             },
             {
+              "id": "technical-knowledge/spring/spring-aop",
+              "path": "/technical-knowledge/spring/spring-aop",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/spring/spring-batch",
               "path": "/technical-knowledge/spring/spring-batch",
               "sidebar": "tutorialSidebar"
@@ -6088,6 +6093,11 @@
             {
               "id": "technical-knowledge/spring/spring-data-jpa-transactions",
               "path": "/technical-knowledge/spring/spring-data-jpa-transactions"
+            },
+            {
+              "id": "technical-knowledge/spring/spring-exception-handling",
+              "path": "/technical-knowledge/spring/spring-exception-handling",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/spring/spring-framework",

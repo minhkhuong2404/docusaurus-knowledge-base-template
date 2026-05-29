@@ -47,7 +47,6 @@ const sidebars: SidebarsConfig = {
 							label: '🔒 Threads & Locks',
 							collapsed: true,
 							items: [
-								'technical-knowledge/java/java-concurrency',
 								'technical-knowledge/java/java-aqs-internals'
 							]
 						}
@@ -106,6 +105,7 @@ const sidebars: SidebarsConfig = {
 					items: [
 						'technical-knowledge/spring/spring-framework',
 						'technical-knowledge/spring/spring-framework-deep-dive',
+						'technical-knowledge/spring/spring-aop',
 						'technical-knowledge/spring/spring-interview-questions'
 					]
 				},
@@ -125,7 +125,10 @@ const sidebars: SidebarsConfig = {
 					type: 'category',
 					label: '🌐 Web Layer',
 					collapsed: true,
-					items: ['technical-knowledge/spring/spring-mvc']
+					items: [
+						'technical-knowledge/spring/spring-mvc',
+						'technical-knowledge/spring/spring-exception-handling'
+					]
 				},
 				{
 					type: 'category',
