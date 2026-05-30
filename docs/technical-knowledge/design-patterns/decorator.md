@@ -25,6 +25,14 @@ The Decorator pattern wraps an object with additional behavior without modifying
 
 ---
 
+## 👶 Explain Like I'm 5
+
+Imagine you have a plain donut. You can add **chocolate frosting** on top. Then add **sprinkles** on top of that. Then add **whipped cream** on top of that. Each topping is added **on top of** the previous one. The donut is still a donut — you're just adding more stuff to it, layer by layer.
+
+The Decorator pattern works the same way: you start with a basic object, and wrap it with extra behavior, one layer at a time. Each wrapper adds something new, but the object still looks and acts like the original type.
+
+---
+
 ## 🎓 Learning Curve: Beginner vs. Deep Dive
 
 ### For New Learners
@@ -113,10 +121,24 @@ classDiagram
 
 ## When to Use
 
-- You need to add behavior to individual objects without affecting others of the same class
-- Extending functionality through subclassing would lead to a class explosion
-- Responsibilities need to be added or removed at runtime
-- You want to combine multiple behaviors in different combinations
+**✅ Use this when:**
+- You need to add behavior to **individual objects** without affecting others of the same class.
+- Extending functionality through **subclassing would cause a class explosion** (e.g., 3 base types × 4 optional behaviors = 12+ subclasses).
+- Responsibilities need to be **added or removed at runtime**.
+- You want to **combine multiple behaviors** in different combinations (logging + caching + retry).
+- You're implementing **cross-cutting concerns** (logging, metrics, security, caching) around existing interfaces.
+
+**❌ Don't use this when:**
+- The interface has **too many methods** (50+ methods) — decorators become boilerplate nightmares.
+- You always need the **same combination** of decorators — just bake the behavior into the base class.
+- **Order of decoration matters** and is hard to enforce — consider Chain of Responsibility instead.
+- You need to **change the interface**, not just add behavior — that's an Adapter.
+
+**🔍 Quick Decision Checklist:**
+1. Do you need to add behavior **without modifying** the original class? → Yes = Decorator.
+2. Should the added behavior be **optional and combinable**? → Yes = Decorator.
+3. Does the enhanced object need to **look like the original** (same interface)? → Yes = Decorator.
+4. Will you stack **multiple behaviors** on top of each other? → Yes = Decorator.
 
 ---
 
@@ -322,6 +344,99 @@ Each wrapper adds functionality while preserving the `InputStream` interface.
 
 ---
 
+## 🔄 Before & After: Why Decorator Matters
+
+### ❌ Without Decorator — Class explosion for every combination
+
+```java
+// Need logging + caching + retry? Make a class for EACH combination:
+class HttpClient { ... }
+class LoggingHttpClient extends HttpClient { ... }
+class CachingHttpClient extends HttpClient { ... }
+class LoggingCachingHttpClient extends HttpClient { ... }    // combo 1
+class LoggingRetryHttpClient extends HttpClient { ... }       // combo 2
+class CachingRetryHttpClient extends HttpClient { ... }       // combo 3
+class LoggingCachingRetryHttpClient extends HttpClient { ... } // combo 4
+// 3 behaviors = 7 possible classes. 5 behaviors = 31 classes. Unmanageable!
+```
+
+### ✅ With Decorator — Stack behaviors freely
+
+```java
+HttpClient client = new LoggingDecorator(
+    new CachingDecorator(
+        new RetryDecorator(
+            new BaseHttpClient()
+        )
+    )
+);
+// 3 behaviors = 3 small decorator classes. Any combination, any order.
+// Don't need caching? Just remove that wrapper. No class changes.
+```
+
+---
+
+## 💼 Decorator in Spring & Enterprise Java
+
+### Spring's `@Transactional` Is a Decorator
+
+Spring AOP proxies are essentially decorators around your beans:
+
+```java
+@Service
+public class OrderService {
+    @Transactional  // Spring wraps this method with a transaction decorator
+    public void placeOrder(Order order) {
+        orderRepository.save(order);
+        paymentService.charge(order);
+        // If either fails, the decorator rolls back the transaction.
+    }
+}
+// The @Transactional proxy is a Decorator that adds:
+// 1. Begin transaction (before)
+// 2. Delegate to real method
+// 3. Commit or rollback (after)
+```
+
+### Custom Spring Decorator for Resilience
+
+```java
+public interface ExternalApiClient {
+    String fetchData(String endpoint);
+}
+
+@Component("base")
+public class BaseApiClient implements ExternalApiClient {
+    public String fetchData(String endpoint) { /* HTTP call */ }
+}
+
+@Component
+@Primary
+public class ResilientApiClient implements ExternalApiClient {
+    private final ExternalApiClient delegate;
+    private final MeterRegistry metrics;
+
+    public ResilientApiClient(@Qualifier("base") ExternalApiClient delegate,
+                              MeterRegistry metrics) {
+        this.delegate = delegate;
+        this.metrics = metrics;
+    }
+
+    @Override
+    @Retryable(maxAttempts = 3)
+    public String fetchData(String endpoint) {
+        Timer.Sample sample = Timer.start();
+        try {
+            return delegate.fetchData(endpoint);  // decorates with retry + metrics
+        } finally {
+            sample.stop(metrics.timer("api.call", "endpoint", endpoint));
+        }
+    }
+}
+```
+
+---
+
 ## Decorator vs Inheritance vs Proxy
 
 | Aspect | Decorator | Inheritance | Proxy |
@@ -406,3 +521,13 @@ It allows behavior to be added or removed at runtime without modifying the origi
 - **[Chain of Responsibility](./chain-of-responsibility.md)**: Stacks of Decorators resemble Chains of Responsibility. But there are crucial differences: CoR handlers can execute arbitrary operations and can stop passing the request down the chain; Decorators just extending behavior must pass the request down the stack.
 - **[Proxy](./proxy.md)**: Both Proxy and Decorator have similar structures based on composition. The difference is that a Proxy usually manages the lifecycle of its service object on its own, whereas the composition of Decorators is always controlled by the client.
 - **[Strategy](./strategy.md)**: Decorator lets you change the skin of an object (adding things to the outside), while Strategy lets you change the guts (altering inner workings).
+
+### ⚖️ Decorator vs. Commonly Confused Patterns
+
+| Aspect | Decorator | Proxy | Adapter | Strategy |
+|--------|-----------|-------|---------|----------|
+| **Changes interface?** | ❌ No | ❌ No | ✅ Yes | ❌ No |
+| **Adds behavior?** | ✅ Yes (stacked) | ✅ Yes (access control) | ❌ No (just translates) | ✅ Yes (swaps algorithm) |
+| **Stackable?** | ✅ Multiple layers | Usually single | Single | Single |
+| **Who controls composition?** | Client | Proxy manages lifecycle | Client | Client (injects strategy) |
+| **When to pick** | Add optional, combinable behaviors | Control access/caching/lazy init | Incompatible interface | Swap entire algorithm |

@@ -24,6 +24,14 @@ The Factory Method pattern provides an interface for creating objects in a super
 
 ---
 
+## 👶 Explain Like I'm 5
+
+Imagine a toy vending machine. You press a button labeled "Car" and a toy car comes out. You press "Airplane" and a toy airplane comes out. You don't know how the machine builds each toy inside — you just press the button and get what you asked for.
+
+The Factory Method is that vending machine. Your code says "I need a Notification" and the factory decides *which kind* to make (email, SMS, push). If someone adds a new type of toy (Slack notification), the machine just gets a new button — nothing else changes.
+
+---
+
 ## ❓ Problem & Solution
 
 **The Problem:** Imagine you're creating a logistics management application. Your MVP only handles transportation by land, so most of your code lives in a `Truck` class. When the app becomes popular, maritime companies ask you to incorporate sea logistics. However, your code is so heavily coupled to the `Truck` class that adding a `Ship` class would require major changes across the entire codebase.
@@ -79,11 +87,24 @@ classDiagram
 
 ## When to Use
 
-- The exact type of object to create isn't known until runtime
-- Multiple classes share a common interface but have different implementations
-- Complex initialization logic needs to be encapsulated
-- You want to centralize object creation to simplify maintenance
-- A class wants to delegate the responsibility of instantiation to its subclasses
+**✅ Use this when:**
+- The exact type of object to create **isn't known until runtime** (e.g., config-driven or user-input-driven creation).
+- Multiple classes share a **common interface** but have different implementations (e.g., `EmailNotification`, `SmsNotification`, `PushNotification`).
+- Object creation involves **complex initialization logic** (DB lookups, config parsing, validation) that shouldn't leak into client code.
+- You want to **centralize creation** so adding new types is a single-file change.
+- A class wants to **delegate instantiation** to its subclasses (the classic GoF use case).
+
+**❌ Don't use this when:**
+- You only have **one product type** and no realistic plan for more — a simple `new MyClass()` is clearer.
+- The creation logic is **trivial** (no parameters, no config) — the factory adds indirection without value.
+- You're in a **Spring/DI environment** where the container already selects implementations via profiles, qualifiers, or conditional beans.
+- The factory `switch` statement is growing uncontrollably — consider the **Registry** or **Abstract Factory** pattern instead.
+
+**🔍 Quick Decision Checklist:**
+1. Do you have **2+ implementations** of the same interface? → Yes = Factory candidate.
+2. Does the caller need to be **shielded** from knowing which concrete class is used? → Yes = Factory.
+3. Is creation logic **complex** (not just `new`)? → Yes = Factory adds value.
+4. Are you already using Spring `@Bean` methods? → You're already using Factory Method! Spring's `@Bean` is a factory method.
 
 ---
 
@@ -224,6 +245,43 @@ NotificationRegistry.register("SLACK", SlackNotification::new);
 
 ---
 
+## 🔄 Before & After: Why Factory Method Matters
+
+### ❌ Without Factory — Tight coupling, painful to extend
+
+```java
+public class OrderService {
+    public void notifyCustomer(String channel, String message) {
+        // Every new channel = edit this method = violates Open/Closed Principle
+        if (channel.equals("EMAIL")) {
+            EmailNotification n = new EmailNotification();
+            n.send(message);
+        } else if (channel.equals("SMS")) {
+            SmsNotification n = new SmsNotification();
+            n.send(message);
+        } else if (channel.equals("PUSH")) {
+            PushNotification n = new PushNotification();
+            n.send(message);
+        }
+        // Adding Slack? Edit this method AGAIN. And every other place that creates notifications.
+    }
+}
+```
+
+### ✅ With Factory Method — Open for extension, closed for modification
+
+```java
+public class OrderService {
+    public void notifyCustomer(String channel, String message) {
+        Notification notification = NotificationFactory.create(channel);
+        notification.send(message);
+        // Adding Slack? Just add SlackNotification class + register it. Zero changes here.
+    }
+}
+```
+
+---
+
 ## Real-World Examples in Java
 
 | Class/Method | Description |
@@ -233,6 +291,58 @@ NotificationRegistry.register("SLACK", SlackNotification::new);
 | `java.util.Collections.unmodifiableList()` | Wraps and returns a different list implementation |
 | `java.nio.charset.Charset.forName()` | Returns a charset by name |
 | Spring's `BeanFactory` | Creates and manages bean instances |
+
+---
+
+## 💼 Factory Method in Spring & Enterprise Java
+
+### Spring's `@Bean` IS a Factory Method
+
+Every `@Bean` method in a `@Configuration` class is literally the Factory Method pattern:
+
+```java
+@Configuration
+public class AppConfig {
+
+    @Bean
+    public PaymentProcessor paymentProcessor(
+            @Value("${payment.provider}") String provider) {
+        return switch (provider) {
+            case "stripe"  -> new StripeProcessor();
+            case "paypal"  -> new PaypalProcessor();
+            case "square"  -> new SquareProcessor();
+            default -> throw new IllegalArgumentException("Unknown: " + provider);
+        };
+    }
+}
+
+// All consumers just inject the interface — they never know which implementation:
+@Service
+public class CheckoutService {
+    private final PaymentProcessor processor; // injected by Spring
+    // ...
+}
+```
+
+### Spring Profiles as Factory Method
+
+```java
+@Configuration
+public class StorageConfig {
+    @Bean
+    @Profile("local")
+    public StorageService localStorage() {
+        return new LocalFileStorageService();
+    }
+
+    @Bean
+    @Profile("prod")
+    public StorageService cloudStorage() {
+        return new S3StorageService();
+    }
+}
+// Active profile determines which factory method Spring calls.
+```
 
 ---
 
@@ -293,3 +403,14 @@ A Simple Factory is a single class with a static method that creates objects bas
 - **[Abstract Factory](./abstract-factory.md)**: Many designs start by using Factory Method (less complicated, highly customizable via subclasses) and naturally evolve toward Abstract Factory, Prototype, or Builder as flexibility needs increase.
 - **[Template Method](./template-method.md)**: Factory Method can be considered a specialization of Template Method. Additionally, a Factory Method often serves as a specific step within a larger Template Method.
 - **[Prototype](./prototype.md)**: Factory Method relies on inheritance to let subclasses determine the objects to create, whereas Prototype avoids deep inheritance hierarchies but requires a complex initialization/cloning process instead.
+
+### ⚖️ Factory Method vs. Similar Patterns
+
+| Aspect | Simple Factory | Factory Method | Abstract Factory | Builder |
+|--------|---------------|----------------|------------------|---------|
+| **Mechanism** | Static method + switch | Inheritance + override | Factory of factories | Step-by-step construction |
+| **Extension** | Modify switch | Add new subclass | Add new factory family | Add new builder |
+| **# of products** | One type | One type | Family of related types | One complex type |
+| **Complexity** | Low | Medium | High | Medium |
+| **OCP compliant** | ❌ (edit switch) | ✅ | ✅ | ✅ |
+| **When to pick** | Few simple types | Need inheritance-based extension | Related product families | Complex object construction |

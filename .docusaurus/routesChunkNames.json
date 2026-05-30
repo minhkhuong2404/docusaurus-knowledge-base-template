@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-0be": {
+  "/-c89": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-f4d": {
+  "/-0da": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -2641,10 +2641,6 @@
     "__comp": "df203c0f",
     "__props": "435f8bdf"
   },
-  "/tags/learning-path-d73": {
-    "__comp": "df203c0f",
-    "__props": "19accb93"
-  },
   "/tags/lease-6a0": {
     "__comp": "df203c0f",
     "__props": "bf94303e"
@@ -5081,7 +5077,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-b09": {
+  "/-a2a": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -5091,10 +5087,6 @@
   "/banking-3db": {
     "__comp": "17896441",
     "content": "59e92e34"
-  },
-  "/banking/learning-path-9be": {
-    "__comp": "17896441",
-    "content": "ab317f3d"
   },
   "/books/building-microservice-8e3": {
     "__comp": "17896441",
@@ -5504,7 +5496,7 @@
     "__comp": "17896441",
     "content": "0dbb9876"
   },
-  "/java/jpa-hibernate-lifecycle-methods-608": {
+  "/java/jpa-hibernate-lifecycle-methods-848": {
     "__comp": "17896441",
     "content": "3daf4956"
   },
@@ -5680,7 +5672,7 @@
     "__comp": "17896441",
     "content": "a515711e"
   },
-  "/premium/intro-d3f": {
+  "/premium/intro-b07": {
     "__comp": "17896441",
     "content": "5aeaa04a"
   },
@@ -5744,7 +5736,7 @@
     "__comp": "17896441",
     "content": "63c5afd7"
   },
-  "/technical-knowledge/aws/dva-c02-roadmap-838": {
+  "/technical-knowledge/aws/dva-c02-roadmap-e02": {
     "__comp": "17896441",
     "content": "deb59bdb"
   },
@@ -5940,7 +5932,7 @@
     "__comp": "17896441",
     "content": "104bf45b"
   },
-  "/technical-knowledge/banking/offus-d94": {
+  "/technical-knowledge/banking/offus-ec4": {
     "__comp": "17896441",
     "content": "f78de430"
   },
@@ -6056,11 +6048,11 @@
     "__comp": "17896441",
     "content": "401e468a"
   },
-  "/technical-knowledge/coding-interview-prep/intro-eda": {
+  "/technical-knowledge/coding-interview-prep/intro-cc2": {
     "__comp": "17896441",
     "content": "6687ac23"
   },
-  "/technical-knowledge/coding-interview-prep/intro/-223": {
+  "/technical-knowledge/coding-interview-prep/intro/-493": {
     "__comp": "17896441",
     "content": "e49d3f90"
   },
@@ -9232,7 +9224,7 @@
     "__comp": "17896441",
     "content": "6b110ee8"
   },
-  "/technical-knowledge/interview-questions/genz-career/mock-interview/java-spring-boot-14-years-interview-detailed-b0a": {
+  "/technical-knowledge/interview-questions/genz-career/mock-interview/java-spring-boot-14-years-interview-detailed-86c": {
     "__comp": "17896441",
     "content": "d1aeca98"
   },
@@ -9372,7 +9364,7 @@
     "__comp": "17896441",
     "content": "39204042"
   },
-  "/technical-knowledge/interview-questions/java/java-interview-questions-aee": {
+  "/technical-knowledge/interview-questions/java/java-interview-questions-a18": {
     "__comp": "17896441",
     "content": "ce75ad85"
   },
@@ -9424,7 +9416,7 @@
     "__comp": "17896441",
     "content": "a8d4740a"
   },
-  "/technical-knowledge/java/java-concurrency-9e3": {
+  "/technical-knowledge/java/java-concurrency-9d4": {
     "__comp": "17896441",
     "content": "f13bfd67"
   },
@@ -9456,7 +9448,7 @@
     "__comp": "17896441",
     "content": "2fb67458"
   },
-  "/technical-knowledge/java/java-locks-be7": {
+  "/technical-knowledge/java/java-locks-3f5": {
     "__comp": "17896441",
     "content": "efefd14e"
   },
@@ -9468,7 +9460,7 @@
     "__comp": "17896441",
     "content": "5304fd8a"
   },
-  "/technical-knowledge/java/java-overview-422": {
+  "/technical-knowledge/java/java-overview-e20": {
     "__comp": "17896441",
     "content": "adb02301"
   },
@@ -9476,7 +9468,7 @@
     "__comp": "17896441",
     "content": "77dd0904"
   },
-  "/technical-knowledge/java/java-threads-7e2": {
+  "/technical-knowledge/java/java-threads-a03": {
     "__comp": "17896441",
     "content": "190bfe65"
   },
@@ -9912,7 +9904,7 @@
     "__comp": "17896441",
     "content": "5427ac75"
   },
-  "/technical-knowledge/spring/hibernate-association-best-practices-19a": {
+  "/technical-knowledge/spring/hibernate-association-best-practices-a45": {
     "__comp": "17896441",
     "content": "2b6ca1be"
   },
@@ -9960,7 +9952,7 @@
     "__comp": "17896441",
     "content": "3acda406"
   },
-  "/technical-knowledge/spring/spring-data-jpa-query-annotation-d2f": {
+  "/technical-knowledge/spring/spring-data-jpa-query-annotation-d7b": {
     "__comp": "17896441",
     "content": "a81d3731"
   },
@@ -9968,7 +9960,7 @@
     "__comp": "17896441",
     "content": "4ddd786a"
   },
-  "/technical-knowledge/spring/spring-data-jpa-transactions-a92": {
+  "/technical-knowledge/spring/spring-data-jpa-transactions-d81": {
     "__comp": "17896441",
     "content": "da45351f"
   },
@@ -10124,7 +10116,7 @@
     "__comp": "17896441",
     "content": "e8a6b3e1"
   },
-  "/technical-knowledge/system-design/sharding-partitioning-4e4": {
+  "/technical-knowledge/system-design/sharding-partitioning-b36": {
     "__comp": "17896441",
     "content": "1d0030f3"
   },

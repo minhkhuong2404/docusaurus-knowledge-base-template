@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '0be'),
+    component: ComponentCreator('/', 'c89'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'f4d'),
+        component: ComponentCreator('/', '0da'),
         routes: [
           {
             path: '/tags',
@@ -3291,11 +3291,6 @@ export default [
             exact: true
           },
           {
-            path: '/tags/learning-path',
-            component: ComponentCreator('/tags/learning-path', 'd73'),
-            exact: true
-          },
-          {
             path: '/tags/lease',
             component: ComponentCreator('/tags/lease', '6a0'),
             exact: true
@@ -6342,7 +6337,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'b09'),
+            component: ComponentCreator('/', 'a2a'),
             routes: [
               {
                 path: '/aws',
@@ -6355,11 +6350,6 @@ export default [
                 component: ComponentCreator('/banking', '3db'),
                 exact: true,
                 sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/banking/learning-path',
-                component: ComponentCreator('/banking/learning-path', '9be'),
-                exact: true
               },
               {
                 path: '/books/building-microservice',
@@ -6975,8 +6965,9 @@ export default [
               },
               {
                 path: '/java/jpa-hibernate-lifecycle-methods',
-                component: ComponentCreator('/java/jpa-hibernate-lifecycle-methods', '608'),
-                exact: true
+                component: ComponentCreator('/java/jpa-hibernate-lifecycle-methods', '848'),
+                exact: true,
+                sidebar: "tutorialSidebar"
               },
               {
                 path: '/non-technical-knowledge/sdlc/',
@@ -7238,8 +7229,9 @@ export default [
               },
               {
                 path: '/premium/intro',
-                component: ComponentCreator('/premium/intro', 'd3f'),
-                exact: true
+                component: ComponentCreator('/premium/intro', 'b07'),
+                exact: true,
+                sidebar: "tutorialSidebar"
               },
               {
                 path: '/security',
@@ -7333,8 +7325,9 @@ export default [
               },
               {
                 path: '/technical-knowledge/aws/dva-c02-roadmap',
-                component: ComponentCreator('/technical-knowledge/aws/dva-c02-roadmap', '838'),
-                exact: true
+                component: ComponentCreator('/technical-knowledge/aws/dva-c02-roadmap', 'e02'),
+                exact: true,
+                sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/aws/dynamodb/',
@@ -7626,8 +7619,9 @@ export default [
               },
               {
                 path: '/technical-knowledge/banking/offus',
-                component: ComponentCreator('/technical-knowledge/banking/offus', 'd94'),
-                exact: true
+                component: ComponentCreator('/technical-knowledge/banking/offus', 'ec4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/banking/onus',
@@ -7799,14 +7793,14 @@ export default [
               },
               {
                 path: '/technical-knowledge/coding-interview-prep/intro',
-                component: ComponentCreator('/technical-knowledge/coding-interview-prep/intro', 'eda'),
-                exact: true,
-                sidebar: "tutorialSidebar"
+                component: ComponentCreator('/technical-knowledge/coding-interview-prep/intro', 'cc2'),
+                exact: true
               },
               {
                 path: '/technical-knowledge/coding-interview-prep/intro/',
-                component: ComponentCreator('/technical-knowledge/coding-interview-prep/intro/', '223'),
-                exact: true
+                component: ComponentCreator('/technical-knowledge/coding-interview-prep/intro/', '493'),
+                exact: true,
+                sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/coding-interview-prep/linked-list/',
@@ -12562,8 +12556,9 @@ export default [
               },
               {
                 path: '/technical-knowledge/interview-questions/genz-career/mock-interview/java-spring-boot-14-years-interview-detailed',
-                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/mock-interview/java-spring-boot-14-years-interview-detailed', 'b0a'),
-                exact: true
+                component: ComponentCreator('/technical-knowledge/interview-questions/genz-career/mock-interview/java-spring-boot-14-years-interview-detailed', '86c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/interview-questions/genz-career/mock/accenture-java-springboot-interview-3-years',
@@ -12771,8 +12766,9 @@ export default [
               },
               {
                 path: '/technical-knowledge/interview-questions/java/java-interview-questions',
-                component: ComponentCreator('/technical-knowledge/interview-questions/java/java-interview-questions', 'aee'),
-                exact: true
+                component: ComponentCreator('/technical-knowledge/interview-questions/java/java-interview-questions', 'a18'),
+                exact: true,
+                sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/interview-questions/java/java-lead-interview-scenarios',
@@ -12848,7 +12844,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-concurrency',
-                component: ComponentCreator('/technical-knowledge/java/java-concurrency', '9e3'),
+                component: ComponentCreator('/technical-knowledge/java/java-concurrency', '9d4'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -12896,7 +12892,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-locks',
-                component: ComponentCreator('/technical-knowledge/java/java-locks', 'be7'),
+                component: ComponentCreator('/technical-knowledge/java/java-locks', '3f5'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -12914,7 +12910,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-overview',
-                component: ComponentCreator('/technical-knowledge/java/java-overview', '422'),
+                component: ComponentCreator('/technical-knowledge/java/java-overview', 'e20'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -12926,7 +12922,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-threads',
-                component: ComponentCreator('/technical-knowledge/java/java-threads', '7e2'),
+                component: ComponentCreator('/technical-knowledge/java/java-threads', 'a03'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13580,8 +13576,9 @@ export default [
               },
               {
                 path: '/technical-knowledge/spring/hibernate-association-best-practices',
-                component: ComponentCreator('/technical-knowledge/spring/hibernate-association-best-practices', '19a'),
-                exact: true
+                component: ComponentCreator('/technical-knowledge/spring/hibernate-association-best-practices', 'a45'),
+                exact: true,
+                sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/spring/hibernate-transactions-performance',
@@ -13651,8 +13648,9 @@ export default [
               },
               {
                 path: '/technical-knowledge/spring/spring-data-jpa-query-annotation',
-                component: ComponentCreator('/technical-knowledge/spring/spring-data-jpa-query-annotation', 'd2f'),
-                exact: true
+                component: ComponentCreator('/technical-knowledge/spring/spring-data-jpa-query-annotation', 'd7b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/spring/spring-data-jpa-repositories-and-queries',
@@ -13662,8 +13660,9 @@ export default [
               },
               {
                 path: '/technical-knowledge/spring/spring-data-jpa-transactions',
-                component: ComponentCreator('/technical-knowledge/spring/spring-data-jpa-transactions', 'a92'),
-                exact: true
+                component: ComponentCreator('/technical-knowledge/spring/spring-data-jpa-transactions', 'd81'),
+                exact: true,
+                sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/spring/spring-exception-handling',
@@ -13895,8 +13894,9 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/sharding-partitioning',
-                component: ComponentCreator('/technical-knowledge/system-design/sharding-partitioning', '4e4'),
-                exact: true
+                component: ComponentCreator('/technical-knowledge/system-design/sharding-partitioning', 'b36'),
+                exact: true,
+                sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/test/spring-test-annotations',

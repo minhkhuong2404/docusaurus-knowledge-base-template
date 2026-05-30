@@ -119,6 +119,10 @@ const sidebars: SidebarsConfig = {
 						'technical-knowledge/spring/spring-security',
 						'technical-knowledge/spring/spring-data-jpa',
 						'technical-knowledge/spring/spring-data-jpa-repositories-and-queries',
+						'technical-knowledge/spring/spring-data-jpa-custom-query',
+						'technical-knowledge/spring/hibernate-association-best-practices',
+						'technical-knowledge/spring/spring-data-jpa-transactions',
+						'technical-knowledge/spring/jpa-hibernate-lifecycle-methods',
 						'technical-knowledge/spring/hibernate-transactions-performance',
 						'technical-knowledge/spring/spring-data-jpa-interview-questions'
 					]
@@ -254,6 +258,7 @@ const sidebars: SidebarsConfig = {
 					items: [
 						'technical-knowledge/system-design/scaling-reads',
 						'technical-knowledge/system-design/scaling-writes',
+						'technical-knowledge/system-design/sharding-partitioning',
 						'technical-knowledge/system-design/caching-strategies',
 						'technical-knowledge/system-design/bloom-filters',
 						'technical-knowledge/system-design/load-balancing-reliability',
@@ -378,7 +383,7 @@ const sidebars: SidebarsConfig = {
 			items: [
 				{
 					type: 'doc',
-					id: 'technical-knowledge/coding-interview-prep/intro',
+					id: 'technical-knowledge/coding-interview-prep/intro/intro',
 					label: '🚀 Getting Started',
 				},
 				{
@@ -1065,6 +1070,7 @@ const sidebars: SidebarsConfig = {
 					label: '🎯 Exam Prep',
 					collapsed: true,
 					items: [
+						'technical-knowledge/aws/dva-c02-roadmap',
 						'technical-knowledge/aws/exam-tips',
 						'technical-knowledge/aws/mock-exam',
 					],
@@ -1136,7 +1142,8 @@ const sidebars: SidebarsConfig = {
 					items: [
 						{ type: 'doc', id: 'technical-knowledge/banking/inbound', label: 'Inbound Payments' },
 						{ type: 'doc', id: 'technical-knowledge/banking/outbound', label: 'Outbound Payments' },
-						{ type: 'doc', id: 'technical-knowledge/banking/onus', label: 'On-Us & Off-Us' }
+						{ type: 'doc', id: 'technical-knowledge/banking/onus', label: 'On-Us Transactions' },
+						{ type: 'doc', id: 'technical-knowledge/banking/offus', label: 'Off-Us Transactions' }
 					]
 				},
 				{
@@ -1529,6 +1536,7 @@ const sidebars: SidebarsConfig = {
 					label: '☕ Core Java',
 					collapsed: true,
 					items: [
+						'technical-knowledge/interview-questions/java/java-interview-questions',
 						'technical-knowledge/interview-questions/java/break-singleton-java',
 						'technical-knowledge/interview-questions/java/concurrent-collections-interview',
 						'technical-knowledge/interview-questions/java/concurrent-collections-tricky',
@@ -1589,7 +1597,8 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/interview-questions/genz-career/mock/tcs-ninja-nqt-interview-experience',
 								'technical-knowledge/interview-questions/genz-career/mock/paytm-java-developer-interview-first-round',
 								'technical-knowledge/interview-questions/genz-career/mock/tcs-java-springboot-interview-3-years',
-								'technical-knowledge/interview-questions/genz-career/mock/wipro-java-springboot-interview-3-years'
+								'technical-knowledge/interview-questions/genz-career/mock/wipro-java-springboot-interview-3-years',
+								'technical-knowledge/interview-questions/genz-career/mock-interview/java-spring-boot-14-years-interview-detailed'
 							]
 						},
 						{
@@ -1613,6 +1622,7 @@ const sidebars: SidebarsConfig = {
 					label: '🏢 Company (💎 Premium)',
 					collapsed: true,
 					items: [
+						'premium/intro',
 						'premium/company/accenture-java-interview',
 						'premium/company/accenture-java-developer-interview-questions',
 						'premium/company/accenture-java-developer-interview-16lpa',

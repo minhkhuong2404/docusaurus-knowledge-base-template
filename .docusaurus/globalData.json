@@ -727,7 +727,8 @@
             },
             {
               "id": "premium/intro",
-              "path": "/premium/intro"
+              "path": "/premium/intro",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "suggestions",
@@ -796,7 +797,8 @@
             },
             {
               "id": "technical-knowledge/aws/dva-c02-roadmap",
-              "path": "/technical-knowledge/aws/dva-c02-roadmap"
+              "path": "/technical-knowledge/aws/dva-c02-roadmap",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/aws/dynamodb/advanced",
@@ -1045,7 +1047,8 @@
             },
             {
               "id": "technical-knowledge/banking/offus",
-              "path": "/technical-knowledge/banking/offus"
+              "path": "/technical-knowledge/banking/offus",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/banking/onus",
@@ -1111,10 +1114,6 @@
               "id": "technical-knowledge/banking/payment_return",
               "path": "/technical-knowledge/banking/payment_return",
               "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/banking/README",
-              "path": "/banking/learning-path"
             },
             {
               "id": "technical-knowledge/banking/reconciliation",
@@ -1198,12 +1197,12 @@
             },
             {
               "id": "technical-knowledge/coding-interview-prep/intro",
-              "path": "/technical-knowledge/coding-interview-prep/intro",
-              "sidebar": "tutorialSidebar"
+              "path": "/technical-knowledge/coding-interview-prep/intro"
             },
             {
               "id": "technical-knowledge/coding-interview-prep/intro/intro",
-              "path": "/technical-knowledge/coding-interview-prep/intro/"
+              "path": "/technical-knowledge/coding-interview-prep/intro/",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/coding-interview-prep/linked-list/linked-list",
@@ -5172,7 +5171,8 @@
             },
             {
               "id": "technical-knowledge/interview-questions/genz-career/mock-interview/java-spring-boot-14-years-interview-detailed",
-              "path": "/technical-knowledge/interview-questions/genz-career/mock-interview/java-spring-boot-14-years-interview-detailed"
+              "path": "/technical-knowledge/interview-questions/genz-career/mock-interview/java-spring-boot-14-years-interview-detailed",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/interview-questions/genz-career/mock/accenture-java-springboot-interview-3-years",
@@ -5346,7 +5346,8 @@
             },
             {
               "id": "technical-knowledge/interview-questions/java/java-interview-questions",
-              "path": "/technical-knowledge/interview-questions/java/java-interview-questions"
+              "path": "/technical-knowledge/interview-questions/java/java-interview-questions",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/interview-questions/java/java-lead-interview-scenarios",
@@ -6030,7 +6031,8 @@
             },
             {
               "id": "technical-knowledge/spring/hibernate-association-best-practices",
-              "path": "/technical-knowledge/spring/hibernate-association-best-practices"
+              "path": "/technical-knowledge/spring/hibernate-association-best-practices",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/spring/hibernate-transactions-performance",
@@ -6039,7 +6041,8 @@
             },
             {
               "id": "technical-knowledge/spring/jpa-hibernate-lifecycle-methods",
-              "path": "/java/jpa-hibernate-lifecycle-methods"
+              "path": "/java/jpa-hibernate-lifecycle-methods",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/spring/spring-aop",
@@ -6088,7 +6091,8 @@
             },
             {
               "id": "technical-knowledge/spring/spring-data-jpa-custom-query",
-              "path": "/technical-knowledge/spring/spring-data-jpa-query-annotation"
+              "path": "/technical-knowledge/spring/spring-data-jpa-query-annotation",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/spring/spring-data-jpa-interview-questions",
@@ -6102,7 +6106,8 @@
             },
             {
               "id": "technical-knowledge/spring/spring-data-jpa-transactions",
-              "path": "/technical-knowledge/spring/spring-data-jpa-transactions"
+              "path": "/technical-knowledge/spring/spring-data-jpa-transactions",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/spring/spring-exception-handling",
@@ -6301,7 +6306,8 @@
             },
             {
               "id": "technical-knowledge/system-design/sharding-partitioning",
-              "path": "/technical-knowledge/system-design/sharding-partitioning"
+              "path": "/technical-knowledge/system-design/sharding-partitioning",
+              "sidebar": "tutorialSidebar"
             },
             {
               "id": "technical-knowledge/test/spring-test-annotations",

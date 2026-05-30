@@ -25,6 +25,14 @@ The Builder pattern constructs complex objects step by step. Unlike constructors
 
 ---
 
+## 👶 Explain Like I'm 5
+
+Imagine you're building a LEGO castle. You don't get the whole castle in one piece — you add bricks one by one. First the walls, then the tower, then the drawbridge. You can choose to skip the moat, or add extra flags. When you're done, you have a finished castle that nobody can take apart.
+
+The Builder pattern works the same way: you set up your object piece by piece (`.name("Alice").age(30).email("alice@test.com")`), and when you call `.build()`, you get a finished, locked object that can't be accidentally changed.
+
+---
+
 ## 🎓 Learning Curve: Beginner vs. Deep Dive
 
 ### For New Learners
@@ -122,11 +130,24 @@ classDiagram
 
 ## When to Use
 
-- Objects have many parameters (especially optional ones) — the "telescoping constructor" problem
-- Object construction involves multiple steps or configurations
-- You need to create different representations of the same type of object
-- You want to enforce immutability in the constructed object
-- Object creation requires validation across multiple fields
+**✅ Use this when:**
+- Objects have **many parameters** (especially optional ones) — the "telescoping constructor" problem.
+- Object construction involves **multiple steps** or configurations.
+- You need to create **different representations** of the same type of object.
+- You want to **enforce immutability** in the constructed object.
+- Object creation requires **cross-field validation** (e.g., `startDate` must be before `endDate`).
+
+**❌ Don't use this when:**
+- Your class has **2-3 parameters** — a simple constructor or static factory method is cleaner.
+- The object is **mutable** anyway (has setters) — Builder's main value is enabling immutable construction.
+- You can use **Lombok `@Builder`** or records and don't need custom build logic — avoid hand-written boilerplate.
+- Object creation is **trivial** and doesn't require validation or step ordering.
+
+**🔍 Quick Decision Checklist:**
+1. Does the constructor have **4+ parameters**? → Yes = Builder.
+2. Are some parameters **optional** with sensible defaults? → Yes = Builder.
+3. Do you need the resulting object to be **immutable**? → Yes = Builder.
+4. Is **cross-field validation** needed at creation time? → Yes = Builder's `build()` is the perfect validation point.
 
 ---
 
@@ -277,6 +298,106 @@ HttpRequest request = HttpRequestDirector.jsonPost(
 
 ---
 
+## 🔄 Before & After: Why Builder Matters
+
+### ❌ Without Builder — Unreadable constructor, easy to get wrong
+
+```java
+// What do these booleans mean? What's 30000? Is it timeout or port?
+HttpRequest request = new HttpRequest(
+    "https://api.example.com/users",
+    "POST",
+    "application/json",
+    "{\"name\":\"John\"}",
+    30000,   // is this timeout? retries? port?
+    true,    // follow redirects? SSL? keepAlive?
+    false    // ???
+);
+```
+
+### ✅ With Builder — Self-documenting, impossible to confuse
+
+```java
+HttpRequest request = new HttpRequest.Builder("https://api.example.com/users")
+    .method("POST")
+    .header("Content-Type", "application/json")
+    .body("{\"name\":\"John\"}")
+    .timeout(30_000)
+    .followRedirects(true)
+    .build();
+// Every parameter is named. Optional ones have defaults. Build() validates.
+```
+
+---
+
+## 💼 Builder in Spring & Enterprise Java
+
+### Lombok `@Builder` — Zero Boilerplate
+
+In modern Spring applications, you rarely write Builder boilerplate by hand:
+
+```java
+@Builder
+@Getter
+public class CreateOrderRequest {
+    private final String customerId;
+    private final List<OrderItem> items;
+    @Builder.Default
+    private final String currency = "USD";
+    @Builder.Default
+    private final boolean expressDelivery = false;
+}
+
+// Usage:
+CreateOrderRequest request = CreateOrderRequest.builder()
+    .customerId("C123")
+    .items(List.of(item1, item2))
+    .expressDelivery(true)
+    // currency defaults to "USD"
+    .build();
+```
+
+### Spring Security — Builder-Heavy API
+
+```java
+@Configuration
+public class SecurityConfig {
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/public/**").permitAll()
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .anyRequest().authenticated()
+            )
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
+            .build(); // Builder pattern everywhere in Spring Security
+    }
+}
+```
+
+### Test Data Builders in Spring Boot Tests
+
+```java
+// Clean test setup — only override what matters for each test
+@Test
+void shouldApplyVipDiscount() {
+    Order order = TestOrderBuilder.anOrder()
+        .withCustomerType(CustomerType.VIP)
+        .withTotal(BigDecimal.valueOf(100))
+        .build();
+
+    BigDecimal discounted = pricingService.applyDiscount(order);
+
+    assertThat(discounted).isEqualByComparingTo("80.00");
+}
+```
+
+---
+
 ## Real-World Examples in Java
 
 | Class | Description |
@@ -361,3 +482,14 @@ Precise control over step-by-step construction. Cleaner code by separating const
 - **[Factory Method](./factory-method.md)**: Many designs start with Factory Method (simpler, highly customizable via subclasses) and evolve toward Builder when the object creation process requires multiple steps and complex configuration.
 - **[Abstract Factory](./abstract-factory.md)**: Builder focuses on constructing complex objects step by step. Abstract Factory specializes in creating families of related objects. Abstract Factory returns the product immediately, whereas Builder lets you run some additional construction steps before fetching the product.
 - **[Composite](./composite.md)**: You can effectively use Builder when creating complex Composite trees because you can program its construction steps to work recursively.
+
+### ⚖️ Builder vs. Similar Approaches
+
+| Aspect | Constructor | Builder | Factory Method | Lombok `@Builder` | Java Record |
+|--------|-------------|---------|---------------|-------------------|-------------|
+| **Parameters** | All at once | Step by step | Hidden from caller | Step by step (generated) | All at once (compact) |
+| **Optional params** | Telescoping or null | ✅ Natural defaults | N/A | ✅ `@Builder.Default` | Limited |
+| **Immutability** | Possible but ugly | ✅ Natural fit | Depends on product | ✅ Works with `final` | ✅ Built-in |
+| **Validation** | In constructor | In `build()` | In factory | In `build()` (custom) | In compact constructor |
+| **Boilerplate** | Low | High | Medium | ✅ Zero (generated) | ✅ Very low |
+| **When to pick** | ≤2 required params | 4+ params, immutable | Type selection needed | Standard Java projects | Simple value objects |
