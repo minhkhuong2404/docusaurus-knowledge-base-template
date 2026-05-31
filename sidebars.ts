@@ -262,6 +262,7 @@ const sidebars: SidebarsConfig = {
 						'technical-knowledge/system-design/caching-strategies',
 						'technical-knowledge/system-design/bloom-filters',
 						'technical-knowledge/system-design/load-balancing-reliability',
+						'technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway',
 						'technical-knowledge/system-design/consistent-hashing-deep-dive',
 					],
 				},

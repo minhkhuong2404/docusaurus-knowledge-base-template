@@ -28,6 +28,10 @@ tags:
 
 ## 🔰 What Is API Gateway?
 
+:::tip Reverse Proxy vs. Load Balancer vs. API Gateway
+API Gateways are often confused with general-purpose reverse proxies and load balancers. To see a detailed comparison of their differences, feature matrices, and how they coexist in production, see the [Reverse Proxy vs. Load Balancer vs. API Gateway Guide](../../system-design/reverse-proxy-load-balancer-api-gateway).
+:::
+
 API Gateway acts as a **reverse proxy** between your clients (web, mobile, IoT) and your backend services. Think of it as a receptionist at an office building — it checks credentials, routes visitors to the right floor, and manages how many visitors can enter at once.
 
 ### Why Use API Gateway?

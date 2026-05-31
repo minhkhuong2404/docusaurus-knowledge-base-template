@@ -28,6 +28,10 @@ tags: [microservices, api-gateway, circuit-breaker, service-mesh, spring-cloud, 
 
 ## API Gateway Pattern
 
+:::tip Reverse Proxy vs. Load Balancer vs. API Gateway
+API Gateways are often confused with reverse proxies and load balancers. To see a detailed comparison of their roles and how they coexist in a production topology, check out the [Reverse Proxy vs. Load Balancer vs. API Gateway Guide](./reverse-proxy-load-balancer-api-gateway.md).
+:::
+
 **The Problem:** In a microservices architecture, a client application frequently needs to consume data from dozens of distinct services to render a single screen. If the client communicates directly with each service, it leads to chatty communication, tight coupling to backend infrastructure, and security nightmares (since every internal service must be exposed to the public internet and handle its own authentication).
 
 **The Solution:** Implement an API Gateway as the single, unified entry point for all client requests. It acts as a highly resilient reverse proxy, routing requests to appropriate backend services and aggregating results.

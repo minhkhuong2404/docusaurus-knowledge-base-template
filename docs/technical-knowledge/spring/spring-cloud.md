@@ -153,6 +153,10 @@ eureka:
 
 ## 🚪 3. API Gateway {/* #3-api-gateway */}
 
+:::tip Comparative Architecture
+An API Gateway sits at a different layer of the network than load balancers and reverse proxies. To understand how they differ and how they work together, see the [Reverse Proxy vs. Load Balancer vs. API Gateway Guide](../system-design/reverse-proxy-load-balancer-api-gateway.md).
+:::
+
 If you have 50 microservices, you don't want your frontend React app to memorize 50 different IP addresses and handle CORS for all of them.
 
 **Spring Cloud Gateway** provides a single, unified entry point for all external traffic.

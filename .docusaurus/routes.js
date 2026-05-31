@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '6ca'),
+    component: ComponentCreator('/', 'ee3'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'dd8'),
+        component: ComponentCreator('/', 'c98'),
         routes: [
           {
             path: '/tags',
@@ -2101,6 +2101,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/envoy',
+            component: ComponentCreator('/tags/envoy', '7d3'),
+            exact: true
+          },
+          {
             path: '/tags/epam',
             component: ComponentCreator('/tags/epam', 'ceb'),
             exact: true
@@ -2633,6 +2638,11 @@ export default [
           {
             path: '/tags/hashing',
             component: ComponentCreator('/tags/hashing', '935'),
+            exact: true
+          },
+          {
+            path: '/tags/hateoas',
+            component: ComponentCreator('/tags/hateoas', '951'),
             exact: true
           },
           {
@@ -3251,6 +3261,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/kong',
+            component: ComponentCreator('/tags/kong', 'b76'),
+            exact: true
+          },
+          {
             path: '/tags/kraft',
             component: ComponentCreator('/tags/kraft', '0ad'),
             exact: true
@@ -3418,6 +3433,11 @@ export default [
           {
             path: '/tags/llms',
             component: ComponentCreator('/tags/llms', '001'),
+            exact: true
+          },
+          {
+            path: '/tags/load-balancer',
+            component: ComponentCreator('/tags/load-balancer', 'f76'),
             exact: true
           },
           {
@@ -5461,6 +5481,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/spring-cloud-gateway',
+            component: ComponentCreator('/tags/spring-cloud-gateway', '000'),
+            exact: true
+          },
+          {
             path: '/tags/spring-data',
             component: ComponentCreator('/tags/spring-data', 'f4b'),
             exact: true
@@ -6487,7 +6512,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'fc1'),
+            component: ComponentCreator('/', '77c'),
             routes: [
               {
                 path: '/aws',
@@ -7115,7 +7140,7 @@ export default [
               },
               {
                 path: '/java/jpa-hibernate-lifecycle-methods',
-                component: ComponentCreator('/java/jpa-hibernate-lifecycle-methods', '848'),
+                component: ComponentCreator('/java/jpa-hibernate-lifecycle-methods', '6ed'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -7403,31 +7428,31 @@ export default [
               },
               {
                 path: '/technical-knowledge/ai-agents/agents',
-                component: ComponentCreator('/technical-knowledge/ai-agents/agents', '1aa'),
+                component: ComponentCreator('/technical-knowledge/ai-agents/agents', 'ef3'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/ai-agents/harness',
-                component: ComponentCreator('/technical-knowledge/ai-agents/harness', 'c6d'),
+                component: ComponentCreator('/technical-knowledge/ai-agents/harness', 'c4c'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/ai-agents/overview',
-                component: ComponentCreator('/technical-knowledge/ai-agents/overview', 'c9f'),
+                component: ComponentCreator('/technical-knowledge/ai-agents/overview', '1a8'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/ai-agents/skills',
-                component: ComponentCreator('/technical-knowledge/ai-agents/skills', 'e86'),
+                component: ComponentCreator('/technical-knowledge/ai-agents/skills', '09f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/ai-agents/vibe-coding',
-                component: ComponentCreator('/technical-knowledge/ai-agents/vibe-coding', 'e64'),
+                component: ComponentCreator('/technical-knowledge/ai-agents/vibe-coding', '53f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13774,7 +13799,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/spring/spring-batch',
-                component: ComponentCreator('/technical-knowledge/spring/spring-batch', 'f4d'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-batch', 'cbb'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13810,7 +13835,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/spring/spring-cloud',
-                component: ComponentCreator('/technical-knowledge/spring/spring-cloud', 'c7c'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-cloud', '7a3'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13828,7 +13853,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/spring/spring-data-jpa-query-annotation',
-                component: ComponentCreator('/technical-knowledge/spring/spring-data-jpa-query-annotation', 'd7b'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-data-jpa-query-annotation', '3d8'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13906,7 +13931,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/bloom-filters',
-                component: ComponentCreator('/technical-knowledge/system-design/bloom-filters', 'c15'),
+                component: ComponentCreator('/technical-knowledge/system-design/bloom-filters', '656'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13918,7 +13943,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/cap-theorem-system-design',
-                component: ComponentCreator('/technical-knowledge/system-design/cap-theorem-system-design', '822'),
+                component: ComponentCreator('/technical-knowledge/system-design/cap-theorem-system-design', '19c'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13942,7 +13967,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/consistent-hashing-deep-dive',
-                component: ComponentCreator('/technical-knowledge/system-design/consistent-hashing-deep-dive', '35a'),
+                component: ComponentCreator('/technical-knowledge/system-design/consistent-hashing-deep-dive', '75a'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13954,7 +13979,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/data-consistency',
-                component: ComponentCreator('/technical-knowledge/system-design/data-consistency', '537'),
+                component: ComponentCreator('/technical-knowledge/system-design/data-consistency', '063'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13972,7 +13997,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/domain-driven-design',
-                component: ComponentCreator('/technical-knowledge/system-design/domain-driven-design', '32e'),
+                component: ComponentCreator('/technical-knowledge/system-design/domain-driven-design', 'd4a'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14038,13 +14063,19 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/outbox-pattern',
-                component: ComponentCreator('/technical-knowledge/system-design/outbox-pattern', '60f'),
+                component: ComponentCreator('/technical-knowledge/system-design/outbox-pattern', '7bc'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/real-time-updates',
                 component: ComponentCreator('/technical-knowledge/system-design/real-time-updates', '91a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway',
+                component: ComponentCreator('/technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway', '2a5'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14056,7 +14087,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/scaling-writes',
-                component: ComponentCreator('/technical-knowledge/system-design/scaling-writes', 'c50'),
+                component: ComponentCreator('/technical-knowledge/system-design/scaling-writes', '012'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14074,7 +14105,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/sharding-partitioning',
-                component: ComponentCreator('/technical-knowledge/system-design/sharding-partitioning', 'b36'),
+                component: ComponentCreator('/technical-knowledge/system-design/sharding-partitioning', '438'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14086,7 +14117,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/test/testing-concepts',
-                component: ComponentCreator('/technical-knowledge/test/testing-concepts', 'd30'),
+                component: ComponentCreator('/technical-knowledge/test/testing-concepts', '364'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
