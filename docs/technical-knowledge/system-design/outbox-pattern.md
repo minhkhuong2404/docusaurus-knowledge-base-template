@@ -12,7 +12,7 @@ tags: [system-design, outbox-pattern, microservices, kafka, dual-write, database
 
 :::info[Who this guide is for]
 - **New learners** — start at [The Dual-Write Problem](#the-dual-write-problem) and [The Beginner Analogy](#the-beginner-analogy).
-- **Senior engineers** — jump to [Relay Strategies](#relay-strategies), [Alternatives Comparison](#alternatives--when-to-choose-what), [Ordering Guarantees](#4-ordering-guarantees), or [Production Failure Modes](#5-production-failure-modes-and-mitigations).
+- **Senior engineers** — jump to [Relay Strategies](#strategy-a-polling-publisher), [Alternatives Comparison](#alternatives--when-to-choose-what), [Ordering Guarantees](#4-ordering-guarantees), or [Production Failure Modes](#5-production-failure-modes-and-mitigations).
 :::
 
 ---

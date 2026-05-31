@@ -14,22 +14,22 @@ tags: [bloom-filter, data-structures, probabilistic, caching, performance, space
 
 ## 📚 Table of Contents
 
-1. [Problem Bloom Filters Solve](#-1-problem-bloom-filters-solve)
-2. [How Bloom Filters Work](#-2-how-bloom-filters-work)
-3. [Java Implementation](#-3-java-implementation)
-4. [Real-World Use Cases](#-4-real-world-use-cases)
-5. [Space Complexity Analysis](#-5-space-complexity-analysis)
-6. [Tradeoffs & Limitations](#-6-tradeoffs--limitations)
-7. [Variants](#-7-variants)
-8. [How Bloom Filters Work Internally](#-8-how-bloom-filters-work-internally)
-9. [Integration Patterns](#-9-integration-patterns)
-10. [Pros and Cons](#-10-pros-and-cons)
-11. [Interview Questions](#-11-interview-questions)
-12. [Senior Deep Dive: Advanced Topics](#-12-senior-deep-dive-advanced-topics)
+1. [Problem Bloom Filters Solve](#1-problem-bloom-filters-solve)
+2. [How Bloom Filters Work](#2-how-bloom-filters-work)
+3. [Java Implementation](#3-java-implementation)
+4. [Real-World Use Cases](#4-real-world-use-cases)
+5. [Space Complexity Analysis](#5-space-complexity-analysis)
+6. [Tradeoffs & Limitations](#6-tradeoffs-limitations)
+7. [Variants](#7-variants)
+8. [How Bloom Filters Work Internally](#8-how-bloom-filters-work-internally)
+9. [Integration Patterns](#9-integration-patterns)
+10. [Pros and Cons](#10-pros-and-cons)
+11. [Interview Questions](#11-interview-questions)
+12. [Senior Deep Dive: Advanced Topics](#12-senior-deep-dive-advanced-topics)
 
 ---
 
-## 🎯 1. Problem Bloom Filters Solve
+## 🎯 1. Problem Bloom Filters Solve {/* #1-problem-bloom-filters-solve */}
 
 ### The Challenge
 
@@ -79,7 +79,7 @@ Check if user_id might exist?
 
 ---
 
-## ⚙️ 2. How Bloom Filters Work
+## ⚙️ 2. How Bloom Filters Work {/* #2-how-bloom-filters-work */}
 
 ### Core Concept
 
@@ -181,7 +181,7 @@ Where $p$ is the desired false positive rate.
 
 ---
 
-## 💻 3. Java Implementation
+## 💻 3. Java Implementation {/* #3-java-implementation */}
 
 ### Using Guava Library (Recommended)
 
@@ -361,7 +361,7 @@ print(bloom.might_contain("user_456"))  # False (probably)
 
 ---
 
-## 🌐 4. Real-World Use Cases
+## 🌐 4. Real-World Use Cases {/* #4-real-world-use-cases */}
 
 ### 1. Cache Penetration Prevention
 
@@ -535,7 +535,7 @@ public class RecommendationService {
 
 ---
 
-## 📊 5. Space Complexity Analysis
+## 📊 5. Space Complexity Analysis {/* #5-space-complexity-analysis */}
 
 ### Bloom Filter vs Alternatives
 
@@ -612,7 +612,7 @@ Example: n=1,000,000, p=0.01 (1%)
 
 ---
 
-## ⚖️ 6. Tradeoffs & Limitations
+## ⚖️ 6. Tradeoffs & Limitations {/* #6-tradeoffs-limitations */}
 
 ### Advantages
 
@@ -652,7 +652,7 @@ Example: n=1,000,000, p=0.01 (1%)
 
 ---
 
-## 🔄 7. Variants
+## 🔄 7. Variants {/* #7-variants */}
 
 ### Counting Bloom Filter (with deletions)
 
@@ -821,7 +821,7 @@ public class DistributedBloomFilter<T> {
 
 ---
 
-## ⚙️ 8. How Bloom Filters Work Internally
+## ⚙️ 8. How Bloom Filters Work Internally {/* #8-how-bloom-filters-work-internally */}
 
 ### Hash Function Selection
 
@@ -1045,7 +1045,7 @@ public class CacheFriendlyBloomFilter<T> {
 
 ---
 
-## 🔗 9. Integration Patterns
+## 🔗 9. Integration Patterns {/* #9-integration-patterns */}
 
 ### Pattern 1: Bloom Filter + Database
 
@@ -1200,7 +1200,7 @@ public class SearchService {
 
 ---
 
-## ⚖️ 10. Pros and Cons
+## ⚖️ 10. Pros and Cons {/* #10-pros-and-cons */}
 
 ### Pros
 
@@ -1243,7 +1243,7 @@ public class SearchService {
 
 ---
 
-## 🎓 11. Interview Questions
+## 🎓 11. Interview Questions {/* #11-interview-questions */}
 
 ### Beginner Level
 
@@ -1315,7 +1315,7 @@ A: Choose based on: 1) Memory constraints vs. accuracy requirements, 2) Need for
 
 ---
 
-## 🧠 12. Senior Deep Dive: Advanced Topics
+## 🧠 12. Senior Deep Dive: Advanced Topics {/* #12-senior-deep-dive-advanced-topics */}
 
 ### Topic 1: Cuckoo Filter
 

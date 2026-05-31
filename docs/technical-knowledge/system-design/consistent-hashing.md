@@ -17,20 +17,20 @@ This guide breaks down the progression from naive hashing to Consistent Hashing,
 
 ## 📚 Table of Contents
 
-1. [The Bottleneck: Naive Modulo Hashing](#-1-the-bottleneck-naive-modulo-hashing)
-2. [The Solution: Consistent Hashing](#-2-the-solution-consistent-hashing)
-3. [Resolving Data Skew: Virtual Nodes](#-3-resolving-data-skew-virtual-nodes)
-4. [High Availability: Replication on the Ring](#-4-high-availability-replication-on-the-ring)
-5. [How Consistent Hashing Works Internally](#-5-how-consistent-hashing-works-internally)
-6. [Real-World Implementations](#-6-real-world-implementations)
-7. [Integration Patterns](#-7-integration-patterns)
-8. [Pros and Cons](#-8-pros-and-cons)
-9. [Interview Questions](#-9-interview-questions)
-10. [Senior Deep Dive: Advanced Topics](#-10-senior-deep-dive-advanced-topics)
+1. [The Bottleneck: Naive Modulo Hashing](#1-the-bottleneck-naive-modulo-hashing)
+2. [The Solution: Consistent Hashing](#2-the-solution-consistent-hashing)
+3. [Resolving Data Skew: Virtual Nodes](#3-resolving-data-skew-virtual-nodes)
+4. [High Availability: Replication on the Ring](#4-high-availability-replication-on-the-ring)
+5. [How Consistent Hashing Works Internally](#5-how-consistent-hashing-works-internally)
+6. [Real-World Implementations](#6-real-world-implementations)
+7. [Integration Patterns](#7-integration-patterns)
+8. [Pros and Cons](#8-pros-and-cons)
+9. [Interview Questions](#9-interview-questions)
+10. [Senior Deep Dive: Advanced Topics](#10-senior-deep-dive-advanced-topics)
 
 ---
 
-## 🚧 1. The Bottleneck: Naive Modulo Hashing
+## 🚧 1. The Bottleneck: Naive Modulo Hashing {/* #1-the-bottleneck-naive-modulo-hashing */}
 
 When horizontally scaling a stateful tier (e.g., moving from 1 cache node to 3), the immediate architectural question is: *How do we determine which server stores which piece of data?* The standard, naive approach uses a simple Hash and Modulo function:
 
@@ -98,7 +98,7 @@ Result: ALL keys moved to different servers!
 
 ---
 
-## ✅ 2. The Solution: Consistent Hashing
+## ✅ 2. The Solution: Consistent Hashing {/* #2-the-solution-consistent-hashing */}
 
 To safely scale without catastrophic data movement, we must decouple the data mapping from the immediate number of active servers. **Consistent Hashing** achieves this by projecting both the data keys and the server identifiers onto a massive, fixed geometric space.
 
@@ -296,7 +296,7 @@ With $N$ servers and $K$ keys, the expected number of keys per server is $K/N$. 
 
 ---
 
-## ⚖️ 3. Resolving Data Skew: Virtual Nodes
+## ⚖️ 3. Resolving Data Skew: Virtual Nodes {/* #3-resolving-data-skew-virtual-nodes */}
 
 While the standard ring solves mass redistribution, it suffers from severe data skew. Hashing a small number of physical servers (e.g., 5 nodes) onto a massive ring almost never results in an even distribution. Furthermore, if a node crashes, its clockwise neighbor inherits 100% of its load, instantly doubling its capacity and risking a cascading failure.
 
@@ -401,7 +401,7 @@ class ConsistentHashWithVirtualNodes:
 
 ---
 
-## 🔄 4. High Availability: Replication on the Ring
+## 🔄 4. High Availability: Replication on the Ring {/* #4-high-availability-replication-on-the-ring */}
 
 In a production system (like Cassandra or DynamoDB), storing data on a single node is unacceptable due to the risk of hardware failure. Consistent hashing natively supports deterministic replication without central coordination.
 
@@ -539,7 +539,7 @@ def read_with_repair(key):
 
 ---
 
-## ⚙️ 5. How Consistent Hashing Works Internally
+## ⚙️ 5. How Consistent Hashing Works Internally {/* #5-how-consistent-hashing-works-internally */}
 
 ### Hash Function Selection
 
@@ -745,7 +745,7 @@ class BitmapRing:
 
 ---
 
-## 🌐 6. Real-World Implementations
+## 🌐 6. Real-World Implementations {/* #6-real-world-implementations */}
 
 ### DynamoDB (Amazon)
 
@@ -860,7 +860,7 @@ Node 2: [3, 4, 6]
 
 ---
 
-## 🔗 7. Integration Patterns
+## 🔗 7. Integration Patterns {/* #7-integration-patterns */}
 
 ### Pattern 1: Client-Side Routing
 
@@ -995,7 +995,7 @@ class HotspotAwareRing:
 
 ---
 
-## ⚖️ 8. Pros and Cons
+## ⚖️ 8. Pros and Cons {/* #8-pros-and-cons */}
 
 ### Pros
 
@@ -1046,7 +1046,7 @@ class HotspotAwareRing:
 
 ---
 
-## 🎓 9. Interview Questions
+## 🎓 9. Interview Questions {/* #9-interview-questions */}
 
 ### Beginner Level
 
@@ -1118,7 +1118,7 @@ A: Implement comprehensive logging and monitoring. Track key distribution and no
 
 ---
 
-## 🧠 10. Senior Deep Dive: Advanced Topics
+## 🧠 10. Senior Deep Dive: Advanced Topics {/* #10-senior-deep-dive-advanced-topics */}
 
 ### Topic 1: Consistency Models
 

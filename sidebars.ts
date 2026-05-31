@@ -119,7 +119,7 @@ const sidebars: SidebarsConfig = {
 						'technical-knowledge/spring/spring-security',
 						'technical-knowledge/spring/spring-data-jpa',
 						'technical-knowledge/spring/spring-data-jpa-repositories-and-queries',
-						'technical-knowledge/spring/spring-data-jpa-custom-query',
+						'technical-knowledge/spring/spring-data-jpa-query-annotation',
 						'technical-knowledge/spring/hibernate-association-best-practices',
 						'technical-knowledge/spring/spring-data-jpa-transactions',
 						'technical-knowledge/spring/jpa-hibernate-lifecycle-methods',
@@ -1228,6 +1228,18 @@ const sidebars: SidebarsConfig = {
 					items: [{ type: 'doc', id: 'technical-knowledge/banking/open_banking', label: 'Open Banking & CDR' }]
 				}
 
+			]
+		},
+		{
+			type: 'category',
+			label: '🤖 AI Agents & Vibe Coding',
+			collapsed: true,
+			items: [
+				'technical-knowledge/ai-agents/overview',
+				'technical-knowledge/ai-agents/agents',
+				'technical-knowledge/ai-agents/skills',
+				'technical-knowledge/ai-agents/harness',
+				'technical-knowledge/ai-agents/vibe-coding'
 			]
 		},
 		{

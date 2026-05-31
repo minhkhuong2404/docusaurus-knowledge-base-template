@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-c89": {
+  "/-6ca": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-0da": {
+  "/-dd8": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -109,6 +109,10 @@
     "__comp": "df203c0f",
     "__props": "92c85ba6"
   },
+  "/tags/agent-harness-198": {
+    "__comp": "df203c0f",
+    "__props": "19583bca"
+  },
   "/tags/aggregate-80e": {
     "__comp": "df203c0f",
     "__props": "9f124b1e"
@@ -116,6 +120,10 @@
   "/tags/aggregation-aff": {
     "__comp": "df203c0f",
     "__props": "c96f6f2d"
+  },
+  "/tags/ai-agents-d48": {
+    "__comp": "df203c0f",
+    "__props": "98ac0923"
   },
   "/tags/alarms-786": {
     "__comp": "df203c0f",
@@ -213,6 +221,10 @@
     "__comp": "df203c0f",
     "__props": "fcc7c18b"
   },
+  "/tags/architectures-6d1": {
+    "__comp": "df203c0f",
+    "__props": "c8606d11"
+  },
   "/tags/argocd-7ff": {
     "__comp": "df203c0f",
     "__props": "7aad4a93"
@@ -272,6 +284,10 @@
   "/tags/autocomplete-704": {
     "__comp": "df203c0f",
     "__props": "016e1ffa"
+  },
+  "/tags/autogen-197": {
+    "__comp": "df203c0f",
+    "__props": "35581f16"
   },
   "/tags/automatic-modules-f51": {
     "__comp": "df203c0f",
@@ -833,6 +849,10 @@
     "__comp": "df203c0f",
     "__props": "1219d62f"
   },
+  "/tags/chunk-processing-3f8": {
+    "__comp": "df203c0f",
+    "__props": "8ee02089"
+  },
   "/tags/chunking-bee": {
     "__comp": "df203c0f",
     "__props": "829683db"
@@ -1201,6 +1221,10 @@
     "__comp": "df203c0f",
     "__props": "ceed218e"
   },
+  "/tags/crewai-d9d": {
+    "__comp": "df203c0f",
+    "__props": "ee7405dd"
+  },
   "/tags/cronjob-67b": {
     "__comp": "df203c0f",
     "__props": "6e5c0f09"
@@ -1420,6 +1444,10 @@
   "/tags/detection-b71": {
     "__comp": "df203c0f",
     "__props": "0c6e8666"
+  },
+  "/tags/developer-productivity-02e": {
+    "__comp": "df203c0f",
+    "__props": "28dc5006"
   },
   "/tags/development-3ae": {
     "__comp": "df203c0f",
@@ -1693,6 +1721,10 @@
     "__comp": "df203c0f",
     "__props": "5e9cc89a"
   },
+  "/tags/evaluations-76b": {
+    "__comp": "df203c0f",
+    "__props": "a083a284"
+  },
   "/tags/event-driven-3a7": {
     "__comp": "df203c0f",
     "__props": "3cc87f58"
@@ -1945,6 +1977,10 @@
     "__comp": "df203c0f",
     "__props": "ed47a768"
   },
+  "/tags/function-calling-d0c": {
+    "__comp": "df203c0f",
+    "__props": "b8623cff"
+  },
   "/tags/functional-decomposition-462": {
     "__comp": "df203c0f",
     "__props": "49ea77f3"
@@ -2120,6 +2156,10 @@
   "/tags/history-c56": {
     "__comp": "df203c0f",
     "__props": "03e0cda3"
+  },
+  "/tags/hitl-f4f": {
+    "__comp": "df203c0f",
+    "__props": "7e31cb52"
   },
   "/tags/hmac-c67": {
     "__comp": "df203c0f",
@@ -2493,6 +2533,10 @@
     "__comp": "df203c0f",
     "__props": "a1c7995c"
   },
+  "/tags/jpql-e20": {
+    "__comp": "df203c0f",
+    "__props": "6f3234dc"
+  },
   "/tags/junit-5-19c": {
     "__comp": "df203c0f",
     "__props": "7f45c5a5"
@@ -2605,6 +2649,14 @@
     "__comp": "df203c0f",
     "__props": "fff7470f"
   },
+  "/tags/langchain-729": {
+    "__comp": "df203c0f",
+    "__props": "0ee9beb3"
+  },
+  "/tags/langgraph-9ff": {
+    "__comp": "df203c0f",
+    "__props": "2ef9e7db"
+  },
   "/tags/language-features-35c": {
     "__comp": "df203c0f",
     "__props": "d7d8705e"
@@ -2684,6 +2736,14 @@
   "/tags/list-0dc": {
     "__comp": "df203c0f",
     "__props": "2c6ff2ac"
+  },
+  "/tags/llm-916": {
+    "__comp": "df203c0f",
+    "__props": "4d7c6f87"
+  },
+  "/tags/llms-001": {
+    "__comp": "df203c0f",
+    "__props": "6d1eacb7"
   },
   "/tags/load-balancing-49b": {
     "__comp": "df203c0f",
@@ -2793,6 +2853,10 @@
     "__comp": "df203c0f",
     "__props": "90cb22e8"
   },
+  "/tags/mcp-7a7": {
+    "__comp": "df203c0f",
+    "__props": "7340c92c"
+  },
   "/tags/mediator-38d": {
     "__comp": "df203c0f",
     "__props": "fe84f844"
@@ -2889,6 +2953,10 @@
     "__comp": "df203c0f",
     "__props": "b55010a3"
   },
+  "/tags/model-context-protocol-50e": {
+    "__comp": "df203c0f",
+    "__props": "b305bc8e"
+  },
   "/tags/modern-java-f10": {
     "__comp": "df203c0f",
     "__props": "b1d0021c"
@@ -2932,6 +3000,10 @@
   "/tags/mtls-6e4": {
     "__comp": "df203c0f",
     "__props": "859125e9"
+  },
+  "/tags/multi-agent-3e6": {
+    "__comp": "df203c0f",
+    "__props": "33de6f4d"
   },
   "/tags/multi-az-716": {
     "__comp": "df203c0f",
@@ -3609,6 +3681,14 @@
     "__comp": "df203c0f",
     "__props": "f38ddaca"
   },
+  "/tags/prompt-engineering-c02": {
+    "__comp": "df203c0f",
+    "__props": "b14396a9"
+  },
+  "/tags/prompt-injection-b87": {
+    "__comp": "df203c0f",
+    "__props": "2ef6feb0"
+  },
   "/tags/protocols-a9a": {
     "__comp": "df203c0f",
     "__props": "2f8ee682"
@@ -3697,6 +3777,10 @@
     "__comp": "df203c0f",
     "__props": "a2934b07"
   },
+  "/tags/rag-d35": {
+    "__comp": "df203c0f",
+    "__props": "43e962f6"
+  },
   "/tags/rate-limiting-ca6": {
     "__comp": "df203c0f",
     "__props": "c2f9ca5e"
@@ -3716,6 +3800,10 @@
   "/tags/rds-proxy-dea": {
     "__comp": "df203c0f",
     "__props": "ac009e7b"
+  },
+  "/tags/react-loop-a04": {
+    "__comp": "df203c0f",
+    "__props": "2633704b"
   },
   "/tags/reactor-4c4": {
     "__comp": "df203c0f",
@@ -3949,6 +4037,10 @@
     "__comp": "df203c0f",
     "__props": "f23a3535"
   },
+  "/tags/runtime-cb0": {
+    "__comp": "df203c0f",
+    "__props": "f0e9c779"
+  },
   "/tags/s-3-bd5": {
     "__comp": "df203c0f",
     "__props": "a6c1cd8d"
@@ -3980,6 +4072,10 @@
   "/tags/sanctions-f79": {
     "__comp": "df203c0f",
     "__props": "f5be7de7"
+  },
+  "/tags/sandboxing-c0a": {
+    "__comp": "df203c0f",
+    "__props": "ff01e51d"
   },
   "/tags/sap-b34": {
     "__comp": "df203c0f",
@@ -4240,6 +4336,10 @@
   "/tags/software-design-5b9": {
     "__comp": "df203c0f",
     "__props": "40131997"
+  },
+  "/tags/software-engineering-b74": {
+    "__comp": "df203c0f",
+    "__props": "c7a46553"
   },
   "/tags/solid-f87": {
     "__comp": "df203c0f",
@@ -4505,6 +4605,10 @@
     "__comp": "df203c0f",
     "__props": "87ec7de5"
   },
+  "/tags/swe-bench-fe1": {
+    "__comp": "df203c0f",
+    "__props": "b16844f4"
+  },
   "/tags/sweep-line-65c": {
     "__comp": "df203c0f",
     "__props": "09d6da3a"
@@ -4693,6 +4797,10 @@
     "__comp": "df203c0f",
     "__props": "6cbbeaf9"
   },
+  "/tags/tool-use-e24": {
+    "__comp": "df203c0f",
+    "__props": "ab3a4457"
+  },
   "/tags/topic-f56": {
     "__comp": "df203c0f",
     "__props": "4cef664a"
@@ -4825,6 +4933,10 @@
     "__comp": "df203c0f",
     "__props": "214c6006"
   },
+  "/tags/vector-database-868": {
+    "__comp": "df203c0f",
+    "__props": "34e4187a"
+  },
   "/tags/versioning-cef": {
     "__comp": "df203c0f",
     "__props": "a602230a"
@@ -4832,6 +4944,10 @@
   "/tags/versions-741": {
     "__comp": "df203c0f",
     "__props": "ddfa4fb6"
+  },
+  "/tags/vibe-coding-e6e": {
+    "__comp": "df203c0f",
+    "__props": "70d4ac69"
   },
   "/tags/video-sales-970": {
     "__comp": "df203c0f",
@@ -4892,6 +5008,10 @@
   "/tags/walmart-021": {
     "__comp": "df203c0f",
     "__props": "19c9cb7d"
+  },
+  "/tags/wasm-892": {
+    "__comp": "df203c0f",
+    "__props": "b0588829"
   },
   "/tags/web-4aa": {
     "__comp": "df203c0f",
@@ -5077,14 +5197,14 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-a2a": {
+  "/-fc1": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
     "__comp": "17896441",
     "content": "78559adb"
   },
-  "/banking-3db": {
+  "/banking-8dc": {
     "__comp": "17896441",
     "content": "59e92e34"
   },
@@ -5688,6 +5808,26 @@
     "__comp": "17896441",
     "content": "93124d3b"
   },
+  "/technical-knowledge/ai-agents/agents-1aa": {
+    "__comp": "17896441",
+    "content": "8c495483"
+  },
+  "/technical-knowledge/ai-agents/harness-c6d": {
+    "__comp": "17896441",
+    "content": "23da8883"
+  },
+  "/technical-knowledge/ai-agents/overview-c9f": {
+    "__comp": "17896441",
+    "content": "88b58d73"
+  },
+  "/technical-knowledge/ai-agents/skills-e86": {
+    "__comp": "17896441",
+    "content": "db3aad75"
+  },
+  "/technical-knowledge/ai-agents/vibe-coding-e64": {
+    "__comp": "17896441",
+    "content": "de2714d4"
+  },
   "/technical-knowledge/aws/api-gateway/-fc3": {
     "__comp": "17896441",
     "content": "9b48b4ad"
@@ -6176,19 +6316,19 @@
     "__comp": "17896441",
     "content": "d2fa8756"
   },
-  "/technical-knowledge/design-patterns/abstract-factory-824": {
+  "/technical-knowledge/design-patterns/abstract-factory-b2c": {
     "__comp": "17896441",
     "content": "75a575e6"
   },
-  "/technical-knowledge/design-patterns/adapter-ac6": {
+  "/technical-knowledge/design-patterns/adapter-f93": {
     "__comp": "17896441",
     "content": "94a3a592"
   },
-  "/technical-knowledge/design-patterns/bridge-913": {
+  "/technical-knowledge/design-patterns/bridge-8c2": {
     "__comp": "17896441",
     "content": "3ba91556"
   },
-  "/technical-knowledge/design-patterns/builder-4c6": {
+  "/technical-knowledge/design-patterns/builder-5a2": {
     "__comp": "17896441",
     "content": "88e18de2"
   },
@@ -6200,11 +6340,11 @@
     "__comp": "17896441",
     "content": "03ec1583"
   },
-  "/technical-knowledge/design-patterns/composite-830": {
+  "/technical-knowledge/design-patterns/composite-3fa": {
     "__comp": "17896441",
     "content": "18d50321"
   },
-  "/technical-knowledge/design-patterns/decorator-97f": {
+  "/technical-knowledge/design-patterns/decorator-318": {
     "__comp": "17896441",
     "content": "4387012b"
   },
@@ -6216,7 +6356,7 @@
     "__comp": "17896441",
     "content": "18477c31"
   },
-  "/technical-knowledge/design-patterns/factory-method-db0": {
+  "/technical-knowledge/design-patterns/factory-method-88e": {
     "__comp": "17896441",
     "content": "2004579e"
   },
@@ -6244,7 +6384,7 @@
     "__comp": "17896441",
     "content": "192b16bf"
   },
-  "/technical-knowledge/design-patterns/prototype-cb8": {
+  "/technical-knowledge/design-patterns/prototype-c4c": {
     "__comp": "17896441",
     "content": "a9e79f73"
   },
@@ -6252,7 +6392,7 @@
     "__comp": "17896441",
     "content": "c76a0310"
   },
-  "/technical-knowledge/design-patterns/singleton-8c1": {
+  "/technical-knowledge/design-patterns/singleton-1e8": {
     "__comp": "17896441",
     "content": "746a5032"
   },
@@ -10020,7 +10160,7 @@
     "__comp": "17896441",
     "content": "57eb6c90"
   },
-  "/technical-knowledge/system-design/cdc-368": {
+  "/technical-knowledge/system-design/cdc-5d0": {
     "__comp": "17896441",
     "content": "8c140918"
   },

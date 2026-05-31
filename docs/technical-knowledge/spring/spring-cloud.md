@@ -13,21 +13,21 @@ As applications grow beyond single monolithic structures into distributed Micros
 
 ## 📚 Table of Contents
 
-1. [What is Spring Cloud?](#-1-what-is-spring-cloud)
-2. [Service Discovery (Eureka)](#-2-service-discovery-eureka)
-3. [API Gateway](#-3-api-gateway)
-4. [Centralized Configuration](#-4-centralized-configuration-spring-cloud-config)
-5. [Circuit Breakers (Resilience4j)](#-5-circuit-breakers-resilience4j)
-6. [Distributed Tracing (Sleuth + Zipkin)](#-6-distributed-tracing-sleuth--zipkin)
-7. [How Spring Cloud Works Internally](#-7-how-spring-cloud-works-internally)
-8. [Integration Patterns](#-8-integration-patterns)
-9. [Pros and Cons](#-9-pros-and-cons)
-10. [Interview Questions](#-10-interview-questions)
-11. [Senior Deep Dive: CAP Theorem](#-11-senior-deep-dive-the-cap-theorem--spring-cloud)
+1. [What is Spring Cloud?](#1-what-is-spring-cloud)
+2. [Service Discovery (Eureka)](#2-service-discovery-eureka)
+3. [API Gateway](#3-api-gateway)
+4. [Centralized Configuration](#4-centralized-configuration-spring-cloud-config)
+5. [Circuit Breakers (Resilience4j)](#5-circuit-breakers-resilience4j)
+6. [Distributed Tracing (Sleuth + Zipkin)](#6-distributed-tracing-sleuth-zipkin)
+7. [How Spring Cloud Works Internally](#7-how-spring-cloud-works-internally)
+8. [Integration Patterns](#8-integration-patterns)
+9. [Pros and Cons](#9-pros-and-cons)
+10. [Interview Questions](#10-interview-questions)
+11. [Senior Deep Dive: CAP Theorem](#11-senior-deep-dive-the-cap-theorem--spring-cloud)
 
 ---
 
-## 🏗️ 1. What is Spring Cloud?
+## 🏗️ 1. What is Spring Cloud? {/* #1-what-is-spring-cloud */}
 
 Spring Cloud isn't a single framework; it is an umbrella project. It provides out-of-the-box configurations for the common patterns you need when running 10, 50, or 100 separate Spring Boot services that all need to talk to each other safely.
 
@@ -53,7 +53,7 @@ Now imagine an entire City of specialized restaurants (Microservices).
 
 ---
 
-## 📞 2. Service Discovery (Eureka)
+## 📞 2. Service Discovery (Eureka) {/* #2-service-discovery-eureka */}
 
 In a microservice environment, instances scale up and down constantly. Hardcoding IP addresses (e.g., `http://192.168.1.5:8081/payment`) is impossible because that IP might change 5 times a day.
 
@@ -151,7 +151,7 @@ eureka:
 
 ---
 
-## 🚪 3. API Gateway
+## 🚪 3. API Gateway {/* #3-api-gateway */}
 
 If you have 50 microservices, you don't want your frontend React app to memorize 50 different IP addresses and handle CORS for all of them.
 
@@ -228,7 +228,7 @@ filters:
 
 ---
 
-## 📜 4. Centralized Configuration (Spring Cloud Config)
+## 📜 4. Centralized Configuration (Spring Cloud Config) {/* #4-centralized-configuration-spring-cloud-config */}
 
 If you need to change the database password across 50 services, redeploying all 50 services is a nightmare.
 
@@ -315,7 +315,7 @@ curl -X POST http://localhost:8080/actuator/refresh
 
 ---
 
-## 🛡️ 5. Circuit Breakers (Resilience4j)
+## 🛡️ 5. Circuit Breakers (Resilience4j) {/* #5-circuit-breakers-resilience4j */}
 
 In distributed systems, **partial failure is inevitable.** If Service A calls Service B, and Service B is hanging (taking 30 seconds to respond), Service A's threads will quickly get exhausted waiting for B. Soon, Service A crashes too. This is a cascading failure.
 
@@ -414,7 +414,7 @@ public String processPayment() {
 
 ---
 
-## 🔍 6. Distributed Tracing (Sleuth + Zipkin)
+## 🔍 6. Distributed Tracing (Sleuth + Zipkin) {/* #6-distributed-tracing-sleuth-zipkin */}
 
 In a microservice architecture, a single user request might traverse 10+ services. When something goes wrong, finding the root cause is like finding a needle in a haystack.
 
@@ -509,7 +509,7 @@ public class OrderService {
 
 ---
 
-## ⚙️ 7. How Spring Cloud Works Internally
+## ⚙️ 7. How Spring Cloud Works Internally {/* #7-how-spring-cloud-works-internally */}
 
 ### Spring Cloud Architecture
 
@@ -616,7 +616,7 @@ public class OrderService {
 
 ---
 
-## 🔗 8. Integration Patterns
+## 🔗 8. Integration Patterns {/* #8-integration-patterns */}
 
 ### Pattern 1: Service-to-Service Communication
 
@@ -734,7 +734,7 @@ public class OrderSaga {
 
 ---
 
-## ⚖️ 9. Pros and Cons
+## ⚖️ 9. Pros and Cons {/* #9-pros-and-cons */}
 
 ### Pros
 
@@ -781,7 +781,7 @@ public class OrderSaga {
 
 ---
 
-## 🎓 10. Interview Questions
+## 🎓 10. Interview Questions {/* #10-interview-questions */}
 
 ### Beginner Level
 
@@ -853,7 +853,7 @@ A: Use the Strangler Fig pattern: gradually replace parts of the monolith with m
 
 ---
 
-## 🧠 11. Senior Deep Dive: The CAP Theorem & Spring Cloud
+## 🧠 11. Senior Deep Dive: The CAP Theorem & Spring Cloud {/* #11-senior-deep-dive-the-cap-theorem--spring-cloud */}
 
 When architecting Spring Cloud systems at an enterprise level, seniors must grapple with the **CAP Theorem** (Consistency, Availability, Partition Tolerance). In distributed systems, Network Partitions (P) are guaranteed to happen. Therefore, you must choose between Consistency (C) and Availability (A).
 

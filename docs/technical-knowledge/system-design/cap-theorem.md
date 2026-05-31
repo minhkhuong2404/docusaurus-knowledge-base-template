@@ -17,20 +17,20 @@ This guide moves beyond the theoretical definition and explores the pragmatic im
 
 ## 📚 Table of Contents
 
-1. [The Core Definition and the "P" Constraint](#-1-the-core-definition-and-the-p-constraint)
-2. [Choosing Your Trade-off: CP vs. AP](#-2-choosing-your-trade-off-cp-vs-ap)
-3. [Senior Nuance #1: Granularity of CAP](#-3-senior-nuance-1-granularity-of-cap)
-4. [Senior Nuance #2: The Consistency Spectrum](#-4-senior-nuance-2-the-consistency-spectrum)
-5. [How CAP Works Internally](#-5-how-cap-works-internally)
-6. [Real-World Implementations](#-6-real-world-implementations)
-7. [Integration Patterns](#-7-integration-patterns)
-8. [Pros and Cons](#-8-pros-and-cons)
-9. [Interview Questions](#-9-interview-questions)
-10. [Senior Deep Dive: Advanced Topics](#-10-senior-deep-dive-advanced-topics)
+1. [The Core Definition and the "P" Constraint](#1-the-core-definition-and-the-p-constraint)
+2. [Choosing Your Trade-off: CP vs. AP](#2-choosing-your-trade-off-cp-vs-ap)
+3. [Senior Nuance #1: Granularity of CAP](#3-senior-nuance-1-granularity-of-cap)
+4. [Senior Nuance #2: The Consistency Spectrum](#4-senior-nuance-2-the-consistency-spectrum)
+5. [How CAP Works Internally](#5-how-cap-works-internally)
+6. [Real-World Implementations](#6-real-world-implementations)
+7. [Integration Patterns](#7-integration-patterns)
+8. [Pros and Cons](#8-pros-and-cons)
+9. [Interview Questions](#9-interview-questions)
+10. [Senior Deep Dive: Advanced Topics](#10-senior-deep-dive-advanced-topics)
 
 ---
 
-## 🎯 1. The Core Definition and the "P" Constraint
+## 🎯 1. The Core Definition and the "P" Constraint {/* #1-the-core-definition-and-the-p-constraint */}
 
 The CAP theorem states that a distributed data store can only simultaneously guarantee two of the following three traits:
 
@@ -138,7 +138,7 @@ Network Partition (AP System):
 
 ---
 
-## ⚖️ 2. Choosing Your Trade-off: CP vs. AP
+## ⚖️ 2. Choosing Your Trade-off: CP vs. AP {/* #2-choosing-your-trade-off-cp-vs-ap */}
 
 When aligning on non-functional requirements during a system design interview, your core decision is whether the specific workflow prioritizes Strong Consistency or High Availability.
 
@@ -258,7 +258,7 @@ public class SocialMediaService {
 
 ---
 
-## 🎯 3. Senior Nuance #1: Granularity of CAP
+## 🎯 3. Senior Nuance #1: Granularity of CAP {/* #3-senior-nuance-1-granularity-of-cap */}
 
 A common mistake made by junior engineers is applying a single CAP label to an entire massive system (e.g., "Ticketmaster is CP"). Modern systems are compositions of microservices, and **CAP theorem trade-offs exist at the sub-system level**.
 
@@ -313,7 +313,7 @@ To demonstrate seniority, break down the system:
 
 ---
 
-## 📊 4. Senior Nuance #2: The Consistency Spectrum
+## 📊 4. Senior Nuance #2: The Consistency Spectrum {/* #4-senior-nuance-2-the-consistency-spectrum */}
 
 When the CAP theorem mentions "Consistency," it explicitly refers to **Strong (Linearizable) Consistency**. However, giving up Strong Consistency does not mean your system has *no* consistency. If you choose an AP system, you can still engineer specific consistency guarantees:
 
@@ -518,7 +518,7 @@ public class EventualConsistencyService {
 
 ---
 
-## ⚙️ 5. How CAP Works Internally
+## ⚙️ 5. How CAP Works Internally {/* #5-how-cap-works-internally */}
 
 ### Network Partition Detection
 
@@ -770,7 +770,7 @@ public class ConflictResolver {
 
 ---
 
-## 🌐 6. Real-World Implementations
+## 🌐 6. Real-World Implementations {/* #6-real-world-implementations */}
 
 ### Google Spanner (CP)
 
@@ -985,7 +985,7 @@ for message in pubsub.listen():
 
 ---
 
-## 🔗 7. Integration Patterns
+## 🔗 7. Integration Patterns {/* #7-integration-patterns */}
 
 ### Pattern 1: Hybrid CP/AP Architecture
 
@@ -1160,7 +1160,7 @@ public class CircuitBreakerService {
 
 ---
 
-## ⚖️ 8. Pros and Cons
+## ⚖️ 8. Pros and Cons {/* #8-pros-and-cons */}
 
 ### CP Systems
 
@@ -1210,7 +1210,7 @@ public class CircuitBreakerService {
 
 ---
 
-## 🎓 9. Interview Questions
+## 🎓 9. Interview Questions {/* #9-interview-questions */}
 
 ### Beginner Level
 
@@ -1282,7 +1282,7 @@ A: Evaluate the business impact of stale data vs. downtime. Consider regulatory 
 
 ---
 
-## 🧠 10. Senior Deep Dive: Advanced Topics
+## 🧠 10. Senior Deep Dive: Advanced Topics {/* #10-senior-deep-dive-advanced-topics */}
 
 ### Topic 1: Consensus Algorithms
 

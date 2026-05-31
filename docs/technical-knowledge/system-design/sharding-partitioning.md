@@ -13,7 +13,7 @@ import TabItem from '@theme/TabItem';
 
 :::info Who this guide is for
 - **New learners** — start at [Why Shard?](#why-shard) and [Sharding Strategies](#sharding-strategies) to understand the core concepts.
-- **Senior engineers** — jump to [Consistent Hashing deep dive](#consistent-hashing), [Cross-Shard Problems](#cross-shard-problems), [Rebalancing](#rebalancing-strategies), or [Real-World Database Comparison](#real-world-database-comparison).
+- **Senior engineers** — jump to [Consistent Hashing deep dive](#consistent-hashing-deep-dive), [Cross-Shard Problems](#cross-shard-problems), [Rebalancing](#rebalancing-strategies), or [Real-World Database Comparison](#real-world-database-comparison).
 :::
 
 ---
@@ -247,7 +247,7 @@ shard_id → host:port
 
 ---
 
-## Consistent Hashing — Deep Dive
+## Consistent Hashing — Deep Dive {/* #consistent-hashing-deep-dive */}
 
 ### Virtual nodes (vnodes)
 
