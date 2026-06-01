@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'ee3'),
+    component: ComponentCreator('/', '873'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'c98'),
+        component: ComponentCreator('/', '885'),
         routes: [
           {
             path: '/tags',
@@ -6512,7 +6512,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '77c'),
+            component: ComponentCreator('/', '170'),
             routes: [
               {
                 path: '/aws',
@@ -7458,7 +7458,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/aws/api-gateway/',
-                component: ComponentCreator('/technical-knowledge/aws/api-gateway/', 'fc3'),
+                component: ComponentCreator('/technical-knowledge/aws/api-gateway/', '3a2'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13487,7 +13487,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/networking/proxies-nat-firewalls',
-                component: ComponentCreator('/technical-knowledge/networking/proxies-nat-firewalls', '5d5'),
+                component: ComponentCreator('/technical-knowledge/networking/proxies-nat-firewalls', '142'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13835,7 +13835,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/spring/spring-cloud',
-                component: ComponentCreator('/technical-knowledge/spring/spring-cloud', '7a3'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-cloud', '2b1'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13919,7 +13919,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/api-design',
-                component: ComponentCreator('/technical-knowledge/system-design/api-design', '5e5'),
+                component: ComponentCreator('/technical-knowledge/system-design/api-design', '47c'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14021,7 +14021,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/load-balancing-reliability',
-                component: ComponentCreator('/technical-knowledge/system-design/load-balancing-reliability', '5c8'),
+                component: ComponentCreator('/technical-knowledge/system-design/load-balancing-reliability', 'ece'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14039,7 +14039,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/microservices-patterns',
-                component: ComponentCreator('/technical-knowledge/system-design/microservices-patterns', '0f6'),
+                component: ComponentCreator('/technical-knowledge/system-design/microservices-patterns', '8ad'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14075,7 +14075,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway',
-                component: ComponentCreator('/technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway', '2a5'),
+                component: ComponentCreator('/technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway', '533'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

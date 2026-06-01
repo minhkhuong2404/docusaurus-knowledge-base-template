@@ -48,7 +48,7 @@ Client ──► [Proxy passes through] ──► Server: TLS handshake
 
 ## Reverse Proxy
 
-:::tip Comparative Architecture
+:::tip[Comparative Architecture]
 To see how a reverse proxy differs from a load balancer and an API gateway, and how they coexist in production, check out the [Reverse Proxy vs. Load Balancer vs. API Gateway Guide](../system-design/reverse-proxy-load-balancer-api-gateway.md).
 :::
 

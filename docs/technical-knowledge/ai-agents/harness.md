@@ -11,7 +11,7 @@ import TabItem from '@theme/TabItem';
 
 # The Agent Harness: Runtimes, Safety & Evaluations
 
-:::info Who this guide is for
+:::info[Who this guide is for]
 - **New learners** — start at [What is an Agent Harness?](#what-is-an-agent-harness) and [Why You Need One](#why-you-need-one) to understand the problem this solves.
 - **Senior engineers** — jump to [Production Harness Architecture](#production-harness-architecture), [Advanced Sandboxing](#sandboxing-code-execution), [Security Threat Model](#security-threat-model), or [Evaluation Frameworks](#evaluation-frameworks).
 :::

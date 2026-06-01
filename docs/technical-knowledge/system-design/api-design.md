@@ -11,12 +11,12 @@ import TabItem from '@theme/TabItem';
 
 # API Design — REST, gRPC & GraphQL
 
-:::info Who this guide is for
+:::info[Who this guide is for]
 - **New learners** — start at [What is an API?](#what-is-an-api) and [REST Fundamentals](#rest-fundamentals) to build the foundational mental model.
 - **Senior engineers** — jump to [gRPC Deep Dive](#grpc-deep-dive), [GraphQL Internals](#graphql), [Rate Limiting Algorithms](#rate-limiting), [API Gateway](#api-gateway-patterns), or [Security Threat Model](#api-security).
 :::
 
-:::tip System design interview tip
+:::tip[System design interview tip]
 When designing an API in a system design interview, spend under 5 minutes on this section. Declare your protocol choice (REST/gRPC/GraphQL) and why, sketch the 3–5 core endpoints, reference shorthand status codes (`2xx`, `4xx`, `5xx`), and move on to the system architecture. Only expand if the interviewer asks you to.
 :::
 
@@ -90,7 +90,7 @@ POST /updateOrderStatus     → method name, not a resource
 GET  /getOrdersForUser?userId=7  → should be GET /users/7/orders
 ```
 
-:::tip URL rules
+:::tip[URL rules]
 - Use **plural nouns** for collections (`/orders`, not `/order`)
 - Use **lowercase and hyphens** (`/order-items`, not `/orderItems` or `/OrderItems`)
 - Nest only one level deep for relationships (`/orders/42/items` — fine; `/users/7/orders/42/items/5` — too deep, flatten it)
@@ -273,7 +273,7 @@ LIMIT 20;
 }
 ```
 
-:::tip Cursor encoding
+:::tip[Cursor encoding]
 Base64-encode the cursor to prevent clients from parsing or manipulating it. The internal structure (`id`, `created_at`) is an implementation detail — clients treat the cursor as an opaque token.
 :::
 
@@ -362,7 +362,7 @@ message HeartBeat {
 }
 ```
 
-:::warning Never change field numbers in a .proto file
+:::warning[Never change field numbers in a .proto file]
 Protobuf uses field numbers (not names) in the binary encoding. Changing `int64 order_id = 1` to `= 2` breaks all existing serialized messages. You can rename fields (the name is not in the wire format) but **never reuse or change field numbers**. Adding new fields is always safe — old clients ignore unknown fields.
 :::
 
@@ -984,7 +984,7 @@ The safest strategy is to never need a version bump:
 | Change status code semantics | ✅ | ❌ |
 | Make a previously optional field required | ✅ | ❌ |
 
-:::tip Sunset headers — deprecation signals
+:::tip[Sunset headers — deprecation signals]
 When deprecating a version, tell clients with the `Sunset` header:
 ```
 Sunset: Sat, 31 Dec 2025 23:59:59 GMT
@@ -1109,7 +1109,7 @@ Web browser  ─┤                           ┌─► Order Service
 | Data validation | ❌ | ✅ |
 | Database access | ❌ | ✅ |
 
-:::warning Don't put business logic in the gateway
+:::warning[Don't put business logic in the gateway]
 The gateway should be a dumb pipe for cross-cutting infrastructure concerns. Business rules ("can this user see this order?") must live in the service — they depend on business data the gateway doesn't have.
 :::
 

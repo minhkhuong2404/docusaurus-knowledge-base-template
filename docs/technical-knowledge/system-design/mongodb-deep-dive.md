@@ -45,7 +45,7 @@ Forget rows with foreign-key joins. One user document holds everything about tha
 }
 ```
 
-:::info BSON vs JSON
+:::info[BSON vs JSON]
 MongoDB stores documents as **BSON** (Binary JSON) — a superset of JSON with extra types like `ObjectId`, `Date`, `Decimal128`, and `BinData`. The driver converts between BSON and your language's native types automatically.
 :::
 
@@ -74,7 +74,7 @@ MongoDB stores documents as **BSON** (Binary JSON) — a superset of JSON with e
 | Query language | SQL (declarative, universal) | MQL — MongoDB Query Language (JSON-based) |
 | Best for | Complex queries, strict integrity, BI | Documents, scale-out, evolving schemas |
 
-:::warning When NOT to use MongoDB
+:::warning[When NOT to use MongoDB]
 Financial ledgers, stock inventory, reservation systems — anywhere **strict ACID consistency across many related records** is the primary concern, a mature relational database is usually the better choice. MongoDB added multi-document transactions, but they carry a real performance cost.
 :::
 
@@ -123,7 +123,7 @@ ObjectId("64abc1230000000000000001")
 //  Unix TS   machine  PID   counter
 ```
 
-:::tip ObjectId includes a timestamp
+:::tip[ObjectId includes a timestamp]
 You can extract the creation time of any document for free: `document._id.getTimestamp()` — no separate `createdAt` field needed.
 :::
 
@@ -218,7 +218,7 @@ db.orders.aggregate([
 | Sub-items rarely change individually | Sub-items are updated frequently |
 | Document size stays under 16 MB | Embedding would exceed the 16 MB document limit |
 
-:::warning The 16 MB document limit
+:::warning[The 16 MB document limit]
 MongoDB documents cannot exceed 16 MB. An order with 2 line items — fine to embed. A social post with unbounded comments — **never embed comments**. Use a separate `comments` collection referenced by `postId`.
 :::
 
@@ -298,7 +298,7 @@ Reference the foreign document's `_id`, but also duplicate the **most frequently
 }
 ```
 
-:::tip Trade-off
+:::tip[Trade-off]
 If `name` changes in the products collection, order history shows the old name — which is often *correct* for an order (you want the name at time of purchase). Choose deliberately.
 :::
 
@@ -530,7 +530,7 @@ db.orders.aggregate([
 | `$bucket` | Histogram | Group by numeric range (price brackets, age ranges) |
 | `$out` / `$merge` | `INSERT INTO` / UPSERT | Write pipeline results to a collection |
 
-:::tip Performance rule: `$match` and `$sort` early
+:::tip[Performance rule: `$match` and `$sort` early]
 Place `$match` as the **first stage** so MongoDB can use an index and skip irrelevant documents. A `$match` after `$group` forces full-collection processing. A `$sort` immediately after `$match` can leverage a compound index covering the same fields.
 :::
 
@@ -653,7 +653,7 @@ db.orders.find({ userId: "alice" }).explain("executionStats")
 // executionStats.executionTimeMillis   → wall time
 ```
 
-:::warning Index overhead on writes
+:::warning[Index overhead on writes]
 Every index costs write overhead — MongoDB must update every index on every insert, update, and delete. Don't create indexes speculatively. Measure first with `explain()`, then add the minimum indexes needed.
 :::
 
@@ -765,7 +765,7 @@ Sharding partitions data across multiple replica sets ("shards"). A **mongos** r
 | Ranged (e.g. `createdAt`) | Range queries hit one shard | Monotonic keys (time, ObjectId) cause write hotspots |
 | Compound (e.g. `userId + date`) | Locality per user, efficient range queries | Complex to choose; requires high cardinality |
 
-:::danger The shard key is permanent
+:::danger[The shard key is permanent]
 The shard key is a **permanent architectural decision**. MongoDB 5.0+ allows limited updates, but practically speaking a poor shard key — causing hotspots or scatter-gather on every read — requires a full reshard. Design carefully before sharding.
 :::
 
@@ -808,7 +808,7 @@ try {
 }
 ```
 
-:::warning Transactions are expensive in MongoDB
+:::warning[Transactions are expensive in MongoDB]
 MongoDB transactions add significant latency and acquire collection-level locks with a 60-second timeout by default. Use them **sparingly** — only when atomicity across multiple documents is truly required. If you're reaching for transactions everywhere, your data model is likely wrong. Consider embedding the related data instead.
 :::
 

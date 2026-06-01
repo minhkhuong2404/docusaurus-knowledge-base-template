@@ -11,7 +11,7 @@ import TabItem from '@theme/TabItem';
 
 # AI Agent Skills: Tools, MCP, Memory & RAG
 
-:::info Who this guide is for
+:::info[Who this guide is for]
 - **New learners** — start at [What is an AI Agent?](#what-is-an-ai-agent) and [Tool Use basics](#tool-use-function-calling) to understand how agents extend beyond text generation.
 - **Senior engineers** — jump to [Writing Production-Grade Skills](#writing-production-grade-skills), [MCP Architecture](#model-context-protocol-mcp), [Advanced RAG](#advanced-agentic-rag), or [Memory Architecture Decisions](#memory-architecture-decisions).
 :::
@@ -146,7 +146,7 @@ A tool declaration is a JSON Schema that tells the LLM:
 }
 ```
 
-:::tip The description is the most important field
+:::tip[The description is the most important field]
 The LLM decides **which tool to call** entirely based on the `description`. A vague or misleading description causes the LLM to call the wrong tool or miss a tool entirely. Write descriptions that explain: what the tool does, when to use it, and what its inputs mean — as if explaining to a smart colleague who has never seen the tool.
 :::
 

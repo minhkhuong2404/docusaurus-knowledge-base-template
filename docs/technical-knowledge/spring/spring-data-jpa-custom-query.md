@@ -11,7 +11,7 @@ import TabItem from '@theme/TabItem';
 
 # Spring Data JPA: Custom Queries with @Query
 
-:::info Who this guide is for
+:::info[Who this guide is for]
 - **New learners** — start at [What is Spring Data JPA?](#what-is-spring-data-jpa) and [Why @Query?](#why-query) to understand where custom queries fit.
 - **Senior engineers** — jump to [Persistence Context Internals](#persistence-context-internals), [N+1 Problem](#the-n1-problem), [DTO Projections](#dto-projections-for-memory-optimization), or [Performance Tuning](#performance-tuning).
 :::
@@ -151,7 +151,7 @@ List<User> findByTimezone(@Param("tz") String timezone);
 - Full-text search with `tsvector` / `MATCH AGAINST`.
 - Complex `UNION`, `INTERSECT`, or recursive CTEs.
 
-:::danger Architectural trade-off with native SQL
+:::danger[Architectural trade-off with native SQL]
 Native queries bypass Hibernate's dialect translation. Migrating from MySQL to PostgreSQL requires rewriting every `nativeQuery = true` query. Always add a comment documenting the database dependency, and centralise native queries in one repository to make a future migration manageable.
 :::
 
@@ -182,7 +182,7 @@ Parameters are referenced by their position in the method signature — `?1` for
 Optional<User> findByFullName(String firstName, String lastName);
 ```
 
-:::warning Positional parameters are fragile
+:::warning[Positional parameters are fragile]
 If you reorder method parameters during a refactor, positional references silently break — `?1` now maps to the wrong argument. Prefer named parameters.
 :::
 
@@ -279,7 +279,7 @@ page.getTotalPages();     // 847 / 20 = 43 pages
 page.hasNext();           // true
 ```
 
-:::tip Pagination requires a count query
+:::tip[Pagination requires a count query]
 `Page<T>` automatically runs a `SELECT COUNT(*)` alongside your data query. If your main query is expensive (many JOINs), the count query may also be slow. You can provide a separate, optimised count query:
 
 ```java
@@ -311,7 +311,7 @@ int deactivateDormantAccounts(@Param("threshold") LocalDate threshold);
 int purgeDeletedUsers(@Param("before") LocalDate before);
 ```
 
-:::warning Always add @Transactional to @Modifying methods
+:::warning[Always add @Transactional to @Modifying methods]
 `@Modifying` without `@Transactional` throws `InvalidDataAccessApiUsageException` at runtime. Either annotate the repository method or ensure the calling service method is transactional.
 :::
 
@@ -409,7 +409,7 @@ public class UserSummaryDto {
 List<UserSummaryDto> getActiveUserSummaries();
 ```
 
-:::tip Why DTO projections matter for performance
+:::tip[Why DTO projections matter for performance]
 | | Full entity | Interface projection | DTO projection |
 |-|------------|---------------------|---------------|
 | **Columns fetched** | All | Only declared getters | Only constructor args |
@@ -518,7 +518,7 @@ int softDeleteUser(@Param("userId") Long userId, @Param("actorId") Long actorId)
 
 ## Persistence Context Internals
 
-:::note Senior deep-dive starts here
+:::note[Senior deep-dive starts here]
 The sections below focus on JVM memory mechanics, Hibernate internals, and production performance patterns. Understanding these separates developers who write working queries from engineers who write efficient ones.
 :::
 
@@ -590,7 +590,7 @@ Step 2: @Modifying UPDATE → executes SQL → clears L1 cache
 Step 3: findById(1) → MISS (cache cleared) → fresh SELECT from DB ✅
 ```
 
-:::warning `clearAutomatically` clears the entire L1 cache
+:::warning[`clearAutomatically` clears the entire L1 cache]
 All currently tracked entities are evicted — not just the ones affected by your query. Any entity loaded before this call that you planned to use afterward must be re-fetched. Design your transaction flow to run bulk modifications before loading entities you need afterward.
 :::
 
@@ -645,7 +645,7 @@ List<User> findActiveUsersWithOrders(@Param("status") String status);
 @Query("SELECT u FROM User u LEFT JOIN FETCH u.orders WHERE u.status = :status")
 ```
 
-:::danger JOIN FETCH with pagination — the silent memory problem
+:::danger[JOIN FETCH with pagination — the silent memory problem]
 You **cannot** safely combine `JOIN FETCH` with `Pageable`:
 
 ```java
@@ -734,7 +734,7 @@ List<User> findActiveUsersWithRolesAndDepartment(@Param("status") String status)
 | **Condition on joined table** | ❌ No | ✅ Yes |
 | **Multiple collections** | ⚠️ Cartesian product risk | ⚠️ Cartesian product risk |
 
-:::warning Multiple collections — the Cartesian product trap
+:::warning[Multiple collections — the Cartesian product trap]
 Fetching two `@OneToMany` collections in one query produces a Cartesian product — if a user has 5 orders and 3 roles, the result set has 15 rows for that user. For `JOIN FETCH`, Hibernate deduplicates with `DISTINCT`. For large collections this is still wasteful:
 
 ```java
@@ -881,7 +881,7 @@ public void exportUsers(OutputStream out) {
 }
 ```
 
-:::warning Always close the Stream
+:::warning[Always close the Stream]
 A `Stream<T>` from Spring Data holds an open JDBC cursor and therefore an active database connection. Not closing it leaks the connection. Always use `try-with-resources` or call `.close()` explicitly.
 :::
 
@@ -985,7 +985,7 @@ class UserRepositoryTest {
 }
 ```
 
-:::tip Use a real database for native queries
+:::tip[Use a real database for native queries]
 H2 doesn't support PostgreSQL-specific syntax (`JSONB`, `LATERAL`, `ON CONFLICT`). Test native queries against a real database using Testcontainers:
 
 ```java

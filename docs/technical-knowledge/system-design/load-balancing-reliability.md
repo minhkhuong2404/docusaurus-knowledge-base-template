@@ -8,7 +8,7 @@ tags: [load-balancing, reliability, failover, chaos-engineering, disaster-recove
 
 # Load Balancing & Service Reliability
 
-:::tip Comparative Architecture
+:::tip[Comparative Architecture]
 To understand how a Load Balancer differs from a Reverse Proxy and an API Gateway, and how they coexist in a production network path, see the [Reverse Proxy vs. Load Balancer vs. API Gateway Guide](./reverse-proxy-load-balancer-api-gateway.md).
 :::
 

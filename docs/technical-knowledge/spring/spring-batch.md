@@ -11,7 +11,7 @@ import TabItem from '@theme/TabItem';
 
 # Spring Batch — Complete Guide
 
-:::info Who this guide is for
+:::info[Who this guide is for]
 - **New learners** — start at [What is Spring Batch?](#what-is-spring-batch) and [Core Architecture](#core-architecture) to understand the foundational model.
 - **Senior engineers** — jump to [Scaling Patterns](#scaling-patterns), [Transaction Boundaries](#chunk-transaction-boundaries), [Partitioning](#pattern-3-partitioning), or [Production Patterns](#production-patterns).
 :::
@@ -130,7 +130,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/mydb
 ```
 
-:::tip Use a dedicated schema for batch metadata
+:::tip[Use a dedicated schema for batch metadata]
 In production, isolate batch metadata in its own schema or database to prevent it from polluting your application's tables:
 ```yaml
 spring.batch.jdbc.table-prefix: BATCH_   # default — all metadata tables prefixed BATCH_
@@ -208,7 +208,7 @@ public class BatchConfig {
 | External API write (per-item HTTP call) | 1–10 | API latency dominates; small chunk = faster retry |
 | Chunk with Async processor | 50–200 | Futures resolve concurrently; larger batch improves throughput |
 
-:::warning The large chunk size trap
+:::warning[The large chunk size trap]
 Setting `chunk(10_000)` to reduce commits sounds efficient but creates:
 - A **long-running DB transaction** — locks rows/tables for seconds, causing deadlocks with live user traffic.
 - **10,000 large objects in JVM heap simultaneously** — OutOfMemoryError risk.
@@ -692,7 +692,7 @@ public SynchronizedItemStreamReader<UserCsvDto> synchronizedReader() {
 }
 ```
 
-:::danger Thread-safety of ItemReader is the most common multi-threaded mistake
+:::danger[Thread-safety of ItemReader is the most common multi-threaded mistake]
 `FlatFileItemReader` and `JdbcCursorItemReader` are **not thread-safe** — multiple threads will read the same rows or corrupt the file position. Always use `SynchronizedItemStreamReader` for file readers, or switch to `JdbcPagingItemReader` (inherently thread-safe) for database readers.
 :::
 

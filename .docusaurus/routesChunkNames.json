@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-ee3": {
+  "/-873": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-c98": {
+  "/-885": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -5217,7 +5217,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-77c": {
+  "/-170": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -5848,7 +5848,7 @@
     "__comp": "17896441",
     "content": "de2714d4"
   },
-  "/technical-knowledge/aws/api-gateway/-fc3": {
+  "/technical-knowledge/aws/api-gateway/-3a2": {
     "__comp": "17896441",
     "content": "9b48b4ad"
   },
@@ -9868,7 +9868,7 @@
     "__comp": "17896441",
     "content": "d75cea88"
   },
-  "/technical-knowledge/networking/proxies-nat-firewalls-5d5": {
+  "/technical-knowledge/networking/proxies-nat-firewalls-142": {
     "__comp": "17896441",
     "content": "5613a0c9"
   },
@@ -10100,7 +10100,7 @@
     "__comp": "17896441",
     "content": "c7ff582f"
   },
-  "/technical-knowledge/spring/spring-cloud-7a3": {
+  "/technical-knowledge/spring/spring-cloud-2b1": {
     "__comp": "17896441",
     "content": "b0d8a005"
   },
@@ -10156,7 +10156,7 @@
     "__comp": "17896441",
     "content": "7bce8a09"
   },
-  "/technical-knowledge/system-design/api-design-5e5": {
+  "/technical-knowledge/system-design/api-design-47c": {
     "__comp": "17896441",
     "content": "0237d5d1"
   },
@@ -10224,7 +10224,7 @@
     "__comp": "17896441",
     "content": "5c3590ca"
   },
-  "/technical-knowledge/system-design/load-balancing-reliability-5c8": {
+  "/technical-knowledge/system-design/load-balancing-reliability-ece": {
     "__comp": "17896441",
     "content": "b14a4730"
   },
@@ -10236,7 +10236,7 @@
     "__comp": "17896441",
     "content": "3940c236"
   },
-  "/technical-knowledge/system-design/microservices-patterns-0f6": {
+  "/technical-knowledge/system-design/microservices-patterns-8ad": {
     "__comp": "17896441",
     "content": "a912936e"
   },
@@ -10260,7 +10260,7 @@
     "__comp": "17896441",
     "content": "ec5f7116"
   },
-  "/technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway-2a5": {
+  "/technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway-533": {
     "__comp": "17896441",
     "content": "36929883"
   },

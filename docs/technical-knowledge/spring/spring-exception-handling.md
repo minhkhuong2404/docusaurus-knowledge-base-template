@@ -11,7 +11,7 @@ import TabItem from '@theme/TabItem';
 
 # Exception Handling in Spring Boot
 
-:::info Who this guide is for
+:::info[Who this guide is for]
 - **New learners** — start at [Checked vs Unchecked Exceptions](#checked-vs-unchecked-exceptions) and [Your First @RestControllerAdvice](#your-first-restcontrolleradvice) to understand the foundational patterns.
 - **Senior engineers** — jump to [Custom Exception Hierarchy](#custom-exception-hierarchy), [Validation Errors](#handling-validation-errors), [Problem Details (RFC 7807)](#problem-details-rfc-7807), or [Production Patterns](#production-patterns).
 :::
@@ -102,7 +102,7 @@ try {
 | **Spring Web recommendation** | Wrap in unchecked or catch in `@ExceptionHandler` | Directly handled by `@ExceptionHandler` |
 | **Examples** | `IOException`, `SQLException`, `ParseException` | `IllegalArgumentException`, `NullPointerException`, your custom domain exceptions |
 
-:::tip Spring Boot's own convention
+:::tip[Spring Boot's own convention]
 Spring itself almost exclusively throws unchecked exceptions (`DataAccessException`, `HttpMessageNotReadableException`, `MethodArgumentNotValidException`, etc.) — wrapping checked exceptions from JDBC, Jackson, etc. into unchecked. Following this pattern in your own code keeps controllers clean.
 :::
 
@@ -256,7 +256,7 @@ public class GlobalExceptionHandler {
 }
 ```
 
-:::info Handler resolution order
+:::info[Handler resolution order]
 Spring picks the **most specific** exception type that matches. `UserNotFoundException extends ResourceNotFoundException` → the `handleUserNotFound` handler fires, not `handleNotFound`. If no specific handler matches, Spring walks up the hierarchy until it reaches `Exception.class`.
 :::
 

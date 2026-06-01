@@ -153,7 +153,7 @@ eureka:
 
 ## 🚪 3. API Gateway {/* #3-api-gateway */}
 
-:::tip Comparative Architecture
+:::tip[Comparative Architecture]
 An API Gateway sits at a different layer of the network than load balancers and reverse proxies. To understand how they differ and how they work together, see the [Reverse Proxy vs. Load Balancer vs. API Gateway Guide](../system-design/reverse-proxy-load-balancer-api-gateway.md).
 :::
 

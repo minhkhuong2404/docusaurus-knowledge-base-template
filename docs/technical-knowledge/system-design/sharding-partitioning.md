@@ -11,7 +11,7 @@ import TabItem from '@theme/TabItem';
 
 # Database Sharding & Partitioning
 
-:::info Who this guide is for
+:::info[Who this guide is for]
 - **New learners** — start at [Why Shard?](#why-shard) and [Sharding Strategies](#sharding-strategies) to understand the core concepts.
 - **Senior engineers** — jump to [Consistent Hashing deep dive](#consistent-hashing-deep-dive), [Cross-Shard Problems](#cross-shard-problems), [Rebalancing](#rebalancing-strategies), or [Real-World Database Comparison](#real-world-database-comparison).
 :::
@@ -69,7 +69,7 @@ A single database server has hard physical limits. Understanding *which* limit y
 | **Dataset size** | Disk full, slow full-table scans | Archival, compression | When data exceeds one server's storage capacity |
 | **RAM (working set)** | High disk reads, cache miss rate rising | Bigger instance | When the working set no longer fits in memory |
 
-:::tip Exhaust simpler options first
+:::tip[Exhaust simpler options first]
 Before sharding, try in this order: **query tuning → indexes → vertical scaling → read replicas → caching (Redis)**. Sharding adds enormous operational complexity. It should be a last resort, not a first instinct.
 :::
 
@@ -121,7 +121,7 @@ CREATE TABLE orders_2024_q2 PARTITION OF orders
 - High risk of **hot spots** (see below). Sharding by `created_at` or auto-increment means all new writes always go to the last shard.
 - Uneven data distribution if the key is not uniformly spread.
 
-:::danger The hot spot problem with range partitioning
+:::danger[The hot spot problem with range partitioning]
 If you shard by `timestamp` or a monotonically increasing ID:
 
 ```
@@ -381,7 +381,7 @@ Result: Alice lost $100, Bob received nothing → inconsistency
 | **Avoid cross-shard writes** | Design data model so all writes for a logical operation touch one shard only (co-location). | Best option when achievable — zero coordination cost. |
 | **Optimistic locking + reconciliation** | Allow eventual inconsistency; detect and reconcile conflicts later. | Works for some use cases (analytics); unacceptable for money. |
 
-:::tip The best solution is avoiding the problem
+:::tip[The best solution is avoiding the problem]
 If you find yourself writing a lot of cross-shard transactions, your shard key is probably wrong. Revisit whether a different key can co-locate the data that is written together.
 :::
 
@@ -536,7 +536,7 @@ Adding Node D:
 
 Only metadata (partition→node mapping) changes; the partitions themselves remain stable. Used by **Elasticsearch** (fixed primary shards).
 
-:::warning You can't change the number of primary shards in Elasticsearch after index creation
+:::warning[You can't change the number of primary shards in Elasticsearch after index creation]
 This is why choosing the right initial shard count matters so much. Rule of thumb: aim for shards of 10–50 GB each. For a 500 GB index, 10–50 shards is reasonable.
 :::
 

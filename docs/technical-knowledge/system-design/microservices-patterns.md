@@ -28,7 +28,7 @@ tags: [microservices, api-gateway, circuit-breaker, service-mesh, spring-cloud, 
 
 ## API Gateway Pattern
 
-:::tip Reverse Proxy vs. Load Balancer vs. API Gateway
+:::tip[Reverse Proxy vs. Load Balancer vs. API Gateway]
 API Gateways are often confused with reverse proxies and load balancers. To see a detailed comparison of their roles and how they coexist in a production topology, check out the [Reverse Proxy vs. Load Balancer vs. API Gateway Guide](./reverse-proxy-load-balancer-api-gateway.md).
 :::
 
