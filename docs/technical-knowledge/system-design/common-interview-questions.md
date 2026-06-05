@@ -173,7 +173,7 @@ tags: [interview-prep, questions, system-design, faang, practice]
 **Key Discussion Points:**
 - **Idempotency**: Idempotency keys on every payment API call. Essential.
 - **Double-spend prevention**: Pessimistic lock or database constraint on account.
-- **Saga**: Saga pattern across payment, inventory, fulfillment (see [Multi-Step Process](./multi-step-process)).
+- **Saga**: Saga pattern across payment, inventory, fulfillment (see [Data Consistency & Transactions](./data-consistency#saga-pattern)).
 - **Reconciliation**: Async job to compare internal records with payment gateway records.
 - **Compliance**: PCI-DSS — never store raw card numbers; use tokens from payment gateway.
 - **Retry logic**: Exponential backoff with idempotency keys to payment provider.

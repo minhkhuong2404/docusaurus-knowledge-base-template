@@ -56,6 +56,35 @@ Client (Internet)
 
 The client sees only `api.company.com`. The backend's actual IP, port, and technology stack are completely hidden.
 
+### Forward Proxy vs. Reverse Proxy
+
+To understand a reverse proxy, it helps to contrast it with a **Forward Proxy** (the type of proxy most people are familiar with, like VPNs or IP masking tools):
+
+* **Forward Proxy (Client-Side):** Acts on behalf of the **client**. It sits between the client and the public internet, masking the client's identity. The destination server thinks the request originated from the proxy, not the actual client.
+* **Reverse Proxy (Server-Side):** Acts on behalf of the **server**. It sits between the public internet and your backend infrastructure, masking the servers' identities. The client thinks they are talking directly to the destination server, but they are actually talking to the reverse proxy.
+
+```mermaid
+graph TD
+    subgraph ClientSpace [Client Side]
+        Client[💻 Client] -->|Private Request| FP[🛡️ Forward Proxy\ne.g., Corporate VPN]
+    end
+    FP -->|Masked Request| Internet((🌐 Public Internet))
+    
+    Internet -->|Public Request| RP[🚪 Reverse Proxy\ne.g., Nginx / Caddy]
+    
+    subgraph ServerSpace [Backend Subnet]
+        RP -->|Internal HTTP| Backend[⚙️ Application Server]
+    end
+    
+    classDef client fill:#d6eaf8,stroke:#2980b9,stroke-width:2px;
+    classDef server fill:#d5f5e3,stroke:#27ae60,stroke-width:2px;
+    classDef proxy fill:#fdebd0,stroke:#e67e22,stroke-width:2px;
+    
+    class Client client;
+    class Backend server;
+    class FP,RP proxy;
+```
+
 ### How It Works Internally
 
 ```mermaid
@@ -153,6 +182,15 @@ server {
 		return 301 https://$host$request_uri;
 }
 ```
+
+### Core Limitations: A General-Purpose Utility
+
+While a reverse proxy is highly capable, it is fundamentally a general-purpose network utility that operates at the connection and routing layer (typically Layer 7 for HTTP proxying, but without application-level policy awareness). It has key limitations in modern microservices architectures:
+- **No API Semantics Awareness:** It does not understand the business logic of your APIs. It does not know what `/users` means versus `/orders`, or whether a request is authenticated.
+- **No Application Auth/AuthZ:** It cannot natively validate user identities, verify JWT signature claims against a user registry, or enforce user-specific scopes.
+- **Domain Blindness:** It treats all HTTP requests as raw bytes to be routed based on basic rules (hostnames, paths, headers) rather than understanding developer policies, business tiers, or client quotas.
+
+Because a reverse proxy alone cannot solve these application-level challenges, systems must evolve to use more specialized components as they grow.
 
 ### When to Use a Reverse Proxy
 
@@ -317,11 +355,15 @@ graph TD
 |---|---|---|
 | **Round Robin** | Distributes requests in sequential order | Stateless services with uniform request cost |
 | **Weighted Round Robin** | Servers with higher weight receive proportionally more traffic | Mixed instance sizes (e.g., some pods have more CPU) |
-| **Least Connections** | Routes to the server with the fewest active connections | Long-running requests (file uploads, streaming, DB queries) |
+| **Least Connections** | Routes to the server with the fewest active connections | Long-running requests (file uploads, streaming, DB queries, or varying execution costs) |
 | **Least Response Time** | Routes to the server with the lowest average response time | Latency-sensitive applications |
 | **IP Hash** | Hashes client IP to always route to the same server | Stateful applications requiring session affinity |
 | **Random** | Picks a random healthy server | Simple, surprisingly effective at scale |
 | **Resource-based** | Routes based on actual CPU/memory utilization | Cloud-native environments with heterogeneous pods |
+
+:::info[Least Connections for Heterogeneous Traffic]
+Unlike Round Robin, which blindly distributes requests, the **Least Connections** algorithm dynamically adjusts to the actual workload. It is highly effective when request execution times vary significantly (e.g., when some users trigger expensive database queries or file uploads while others hit simple static endpoints).
+:::
 
 ### Session Stickiness (Sticky Sessions)
 
@@ -334,8 +376,12 @@ Client with session cookie SESS=abc123
 		→ NOT Server A or C
 ```
 
+There are two primary ways to configure session stickiness:
+1. **IP Hashing:** Routes requests based on hashing the client's IP. However, this is highly prone to traffic imbalances when many clients connect through a shared gateway or NAT (such as a large corporate office).
+2. **Cookie-Based Stickiness:** The load balancer injects its own cookie (or reads an existing session cookie) to maintain the association. This is much more precise.
+
 :::warning[Sticky Sessions Are a Scaling Anti-Pattern]
-Sticky sessions mean you cannot freely remove or replace backend instances — sessions will be lost. For modern stateless services, store session state externally (Redis, a database) and remove the need for stickiness entirely.
+Sticky sessions mean you cannot freely scale down, restart, or replace backend instances without losing active user sessions. For modern systems, favor a **stateless architecture** where session state is externalized (e.g., in Redis or a database), allowing the load balancer to distribute requests completely freely.
 :::
 
 ### When to Use a Load Balancer
@@ -369,6 +415,14 @@ Mobile App / Browser / Partner API
 				├──► Order Service    (internal gRPC)
 				└──► Payment Service  (internal gRPC)
 ```
+
+### The Microservice Perimeter Problem
+
+When scaling a system from a monolith to a microservices architecture, a major architectural pain point emerges: **duplicating infrastructure concerns**. 
+
+If you have 12 separate services (e.g., user service, order service, payment service), they all require authentication, rate limiting, logging, and error tracking. Implementing these concerns independently leads to **12 duplicate copies of the same infrastructure code**, managed by different teams, written in potentially different languages. This creates severe maintenance overhead, configuration drift, and security vulnerabilities.
+
+The API Gateway solves this by acting as the **single "front door" or perimeter guard**, handling these cross-cutting, domain-agnostic policies once at the edge, freeing the backend services to focus purely on their core business logic.
 
 ### How It Works Internally — Request Pipeline
 
@@ -581,14 +635,17 @@ public class DashboardAggregator {
 }
 ```
 
-#### 5. Protocol Translation
+#### 5. Protocol & Content Translation
 
-The gateway exposes a REST/HTTP interface to external clients but translates internally to gRPC for high-performance inter-service communication.
+The gateway can translate network protocols (e.g., exposing public HTTP REST/WebSocket endpoints but translating them to internal gRPC or AMQP message broker commands) and perform payload transformations. 
+
+* **Legacy Systems Integration:** E.g., translating a modern client JSON payload into legacy XML format required by an old SOAP payment service.
+* **Response Sanitization:** E.g., stripping internal backend debug fields, database IDs, or sensitive stack traces from headers/bodies before returning responses to the client.
 
 ```
 External Client:   POST /v1/orders HTTP/1.1  (JSON over HTTP)
 													↓
-API Gateway:       Translates to gRPC
+API Gateway:       Translates protocol & format
 													↓
 Internal Service:  OrderService.CreateOrder(CreateOrderRequest)  (Protobuf over HTTP/2)
 ```
@@ -601,6 +658,39 @@ Internal Service:  OrderService.CreateOrder(CreateOrderRequest)  (Protobuf over 
 ✅ You need to shield clients from internal service topology changes (service renamed, split, merged).
 ✅ You need protocol translation (REST → gRPC, HTTP/1.1 → HTTP/2, REST → WebSocket).
 ✅ You need API versioning (`/v1/`, `/v2/`) without touching downstream services.
+
+---
+
+## 🌀 The Spectrum of Capabilities & Tool Overlap
+
+To design scalable systems, it is vital to realize that **Reverse Proxies, Load Balancers, and API Gateways are not competing, isolated technologies — they represent an evolutionary spectrum of network capabilities.**
+
+```mermaid
+graph LR
+    subgraph Spectrum [The Capability Spectrum]
+        RP[🛡️ Reverse Proxy\nGeneral Traffic Concerns] --> LB[⚖️ Load Balancer\nIntelligent Traffic Distribution]
+        LB --> GW[🚪 API Gateway\nAPI-Aware Policy Enforcement]
+    end
+    
+    style RP fill:#f5f7f8,stroke:#95a5a6,stroke-width:2px;
+    style LB fill:#eaf2f8,stroke:#2980b9,stroke-width:2px;
+    style GW fill:#fef9e7,stroke:#f1c40f,stroke-width:2px;
+```
+
+Each stage builds upon the foundation of the previous one:
+1. **Reverse Proxy (Foundational Layer):** Focuses on raw connection handling, TLS termination, caching, compression, and basic IP hiding.
+2. **Load Balancer (Scale Layer):** Adds horizontal scaling, backend health awareness, failover handling, and L4/L7 traffic distribution.
+3. **API Gateway (Application Layer):** Adds fine-grained API semantics, authorization scopes, per-client rate limits, payload transformations, monetization, and developer portal policies.
+
+### Why the Lines Are Blurred: The Tool Overlap
+
+Because these roles represent a spectrum, the software tools we use do not strictly respect these boundaries. A single product is often configured to wear multiple hats:
+
+* **NGINX:** Originally designed as a high-performance **reverse proxy** and web server. By adding an `upstream` block, it acts as a **load balancer**. By compiling it with Lua (via OpenResty) and injecting plugins for authentication and rate-limiting, it behaves as an **API gateway**.
+* **Kong:** A dedicated **API gateway**. However, underneath the hood, Kong is built directly on top of NGINX and OpenResty. It relies on NGINX's reverse proxying and load balancing capabilities, layering its own admin API and plugins on top.
+* **AWS Application Load Balancer (ALB) vs. AWS API Gateway:** An AWS ALB operates at Layer 7 and is capable of content-based routing (e.g., directing `/users` to a user service). However, it does not validate JWTs, rate limit per user, or perform payload translation. For those capabilities, you must layer the AWS API Gateway in front of or instead of the ALB.
+
+Understanding these overlaps allows you to choose tools based on the **specific capabilities your architecture demands**, rather than the marketing names of the products.
 
 ---
 
@@ -737,8 +827,8 @@ graph TD
 **2. WAF (Web Application Firewall):**
 Sits in front of everything. Inspects raw HTTP for SQL injection patterns, XSS payloads, known CVE exploit patterns, and blocks malicious IPs. This is not a proxy, load balancer, or gateway — it is a security appliance. But it belongs in this request lifecycle.
 
-**3. CDN Edge:**
-Static assets (JS, CSS, images, API responses with long TTLs) are served directly from the CDN's edge node, never reaching your servers. Only cache misses reach the origin.
+**3. CDN Edge (A Global Network of Reverse Proxies):**
+A CDN (like Cloudflare, CloudFront, or Fastly) is essentially a massive, globally distributed network of reverse proxies. By placing edge servers geographically closer to users, the CDN terminates TLS at the edge, serves static assets (JS, CSS, images) and cached API responses instantly, and absorbs massive traffic spikes before they ever reach your origin network.
 
 **4. L4 Load Balancer (AWS NLB):**
 Handles raw TCP connection distribution across multiple API Gateway instances. Does not inspect HTTP. Does not terminate TLS (or optionally does). Operates at wire speed — millions of connections per second. Provides cross-AZ redundancy for the API Gateway cluster itself.

@@ -484,39 +484,9 @@ By default, a single bad record **kills the entire task**. The task enters `FAIL
 
 ### Error Tolerance Configuration
 
-```json
-{
-  "errors.tolerance": "all",
-  "errors.log.enable": "true",
-  "errors.log.include.messages": "true",
-  "errors.deadletterqueue.topic.name": "dlq.my-connector",
-  "errors.deadletterqueue.topic.replication.factor": "3",
-  "errors.deadletterqueue.context.headers.enable": "true"
-}
-```
+Kafka Connect allows routing invalid or unparseable sink records to a Dead Letter Queue (DLQ) to prevent a single malformed payload from killing the entire connector task.
 
-| Config                                          | Value            | Behavior                              |
-| ----------------------------------------------- | ---------------- | ------------------------------------- |
-| `errors.tolerance`                              | `none` (default) | Fail fast — task dies on first error  |
-| `errors.tolerance`                              | `all`            | Skip bad records, continue processing |
-| `errors.deadletterqueue.topic.name`             | topic name       | Route failed records to this topic    |
-| `errors.deadletterqueue.context.headers.enable` | `true`           | Add error metadata in Kafka headers   |
-
-### Dead Letter Queue (DLQ) Message Structure
-
-When a record is routed to DLQ, Connect adds headers explaining what went wrong:
-
-```
-Header: __connect.errors.topic          = "orders"
-Header: __connect.errors.partition      = "2"
-Header: __connect.errors.offset         = "10043"
-Header: __connect.errors.connector.name = "mysql-orders-source"
-Header: __connect.errors.task.id        = "0"
-Header: __connect.errors.stage          = "VALUE_CONVERTER"
-Header: __connect.errors.class.name     = "JsonConverter"
-Header: __connect.errors.exception.message = "JsonParseException: ..."
-Header: __connect.errors.exception.stacktrace = "..."
-```
+For the JSON configuration blocks, error-handling properties, and detailed Kafka Connect DLQ header structures (e.g. exception classes and stack traces), see the centralized **[Kafka Connect DLQ](../../system-design/dead-letter-queue.md#kafka-connect-dlq)** section.
 
 ### Classifying Error Types
 

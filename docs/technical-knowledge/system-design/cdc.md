@@ -155,59 +155,9 @@ public class OrderService {
 
 ### 3. Transactional Outbox Pattern
 
-A bridge between application-controlled events and guaranteed delivery. The application writes the event to an `outbox` table **in the same database transaction** as the business data. A separate process (powered by CDC or polling) reads the outbox table and publishes to Kafka.
+A bridge between application-controlled events and guaranteed delivery. The application writes events to an `outbox` table in the same database transaction as the business data, and CDC (via a log tailer like Debezium) reads the outbox table to publish them to Kafka.
 
-```java
-// ✅ SAFE — both writes are in the same ACID transaction
-@Service
-@Transactional
-public class OrderService {
-
-    public void placeOrder(Order order) {
-        orderRepository.save(order);
-
-        // Write the event to the outbox table in the same transaction
-        OutboxEvent event = OutboxEvent.builder()
-                .aggregateType("Order")
-                .aggregateId(order.getId())
-                .eventType("OrderPlaced")
-                .payload(serialize(order))
-                .build();
-        outboxRepository.save(event);
-        // If either write fails, the transaction rolls back — both fail together
-    }
-}
-```
-
-```mermaid
-sequenceDiagram
-    participant App as Application
-    participant DB as Database (orders + outbox tables)
-    participant CDC as Debezium (CDC)
-    participant Kafka
-
-    App->>DB: BEGIN TRANSACTION
-    App->>DB: INSERT INTO orders ...
-    App->>DB: INSERT INTO outbox (event_type, payload) ...
-    App->>DB: COMMIT
-    CDC-->>DB: Tail WAL / outbox table
-    CDC->>Kafka: Publish OrderPlaced event
-    Kafka-->>App: (consumers react)
-```
-
-**Strengths:**
-- Atomic: the event is published if and only if the business transaction commits. No partial failures.
-- Full control over event payload (not coupled to the raw database schema).
-- Works well with Debezium — CDC tails the `outbox` table specifically.
-- Framework support: [Debezium Outbox Event Router](https://debezium.io/documentation/reference/stable/transformations/outbox-event-router.html) handles routing out of the box.
-
-**Weaknesses:**
-- Requires application code changes — every service must write to the outbox table.
-- Doubles write IOPS: every business operation writes two rows.
-- The outbox table must be purged periodically (processed rows can be deleted after delivery confirmation).
-- Not zero-code like pure CDC log tailing.
-
-**Choose Outbox when:** you need full control over event schema/content, you are building a new service from scratch, and you want the simplicity of not managing Debezium's schema evolution for every business table.
+For the complete architectural design, sequence diagrams, Spring Boot entity/service implementations, and Debezium Outbox Event Router configurations, see the centralized **[Transactional Outbox Pattern](./data-consistency.md#outbox-pattern)** section.
 
 ---
 
@@ -383,60 +333,7 @@ public class OrderCdcConsumer {
 
 **Step 4: Transactional Outbox with Debezium Outbox Router**
 
-```java
-// 1. The outbox table entity
-@Entity
-@Table(name = "outbox_events")
-public class OutboxEvent {
-    @Id
-    private UUID id = UUID.randomUUID();
-    private String aggregateType;   // e.g., "Order"
-    private String aggregateId;     // e.g., order UUID
-    private String eventType;       // e.g., "OrderPlaced"
-    private String payload;         // JSON
-    private Instant createdAt = Instant.now();
-}
-
-// 2. Service writes to both tables in one transaction
-@Service
-@Transactional
-public class OrderService {
-
-    public Order placeOrder(PlaceOrderRequest request) {
-        Order order = Order.create(request);
-        orderRepository.save(order);
-
-        outboxRepository.save(OutboxEvent.builder()
-                .aggregateType("Order")
-                .aggregateId(order.getId().toString())
-                .eventType("OrderPlaced")
-                .payload(objectMapper.writeValueAsString(new OrderPlacedEvent(order)))
-                .build());
-
-        return order;
-    }
-}
-```
-
-```json
-// Debezium connector targeting only the outbox table
-// with the OutboxEventRouter SMT for topic routing
-{
-  "name": "outbox-connector",
-  "config": {
-    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
-    "table.include.list": "public.outbox_events",
-    "transforms": "outbox",
-    "transforms.outbox.type": "io.debezium.transforms.outbox.EventRouter",
-    "transforms.outbox.route.topic.replacement": "outbox.${routedByValue}",
-    "transforms.outbox.table.field.event.key": "aggregate_id",
-    "transforms.outbox.table.field.event.type": "event_type",
-    "transforms.outbox.table.field.event.payload": "payload"
-  }
-}
-// OrderPlaced events → Kafka topic: outbox.Order
-// PaymentProcessed events → Kafka topic: outbox.Payment
-```
+For Spring Boot entity/service code and Debezium Kafka Connect configurations specifically tailored for logical outbox routing, see the centralized **[Relay Strategy B: CDC with Debezium](./data-consistency.md#relay-strategy-b-cdc-with-debezium)** section.
 
 ---
 

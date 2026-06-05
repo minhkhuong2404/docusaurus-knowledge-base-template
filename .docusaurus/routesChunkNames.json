@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-873": {
+  "/-1bc": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-885": {
+  "/-beb": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -533,10 +533,6 @@
     "__comp": "df203c0f",
     "__props": "669f0600"
   },
-  "/tags/building-microservice-554": {
-    "__comp": "df203c0f",
-    "__props": "ea110ffa"
-  },
   "/tags/business-rules-3c3": {
     "__comp": "df203c0f",
     "__props": "538b3c82"
@@ -789,33 +785,17 @@
     "__comp": "df203c0f",
     "__props": "cd18d9b2"
   },
-  "/tags/chapter-13-621": {
-    "__comp": "df203c0f",
-    "__props": "d7fb1648"
-  },
   "/tags/chapter-13-concurrency-3f5": {
     "__comp": "df203c0f",
     "__props": "85377113"
-  },
-  "/tags/chapter-14-fd9": {
-    "__comp": "df203c0f",
-    "__props": "8d9f1732"
   },
   "/tags/chapter-14-successive-refinement-4b9": {
     "__comp": "df203c0f",
     "__props": "b6af95b6"
   },
-  "/tags/chapter-15-ebb": {
-    "__comp": "df203c0f",
-    "__props": "66e9bfc3"
-  },
   "/tags/chapter-15-junit-internals-0d1": {
     "__comp": "df203c0f",
     "__props": "112325d2"
-  },
-  "/tags/chapter-16-ece": {
-    "__comp": "df203c0f",
-    "__props": "2b3f1cf3"
   },
   "/tags/chapter-16-refactoring-serialdate-a4b": {
     "__comp": "df203c0f",
@@ -844,10 +824,6 @@
   "/tags/cherry-pick-9c2": {
     "__comp": "df203c0f",
     "__props": "5f7d9031"
-  },
-  "/tags/choreography-15e": {
-    "__comp": "df203c0f",
-    "__props": "1219d62f"
   },
   "/tags/chunk-processing-3f8": {
     "__comp": "df203c0f",
@@ -1013,10 +989,6 @@
     "__comp": "df203c0f",
     "__props": "72da110f"
   },
-  "/tags/compensating-transaction-fe1": {
-    "__comp": "df203c0f",
-    "__props": "1c9fce8f"
-  },
   "/tags/compliance-1bf": {
     "__comp": "df203c0f",
     "__props": "26ed4e63"
@@ -1164,10 +1136,6 @@
   "/tags/conventional-commits-39e": {
     "__comp": "df203c0f",
     "__props": "4ca9d798"
-  },
-  "/tags/coordination-bba": {
-    "__comp": "df203c0f",
-    "__props": "6a9a59a8"
   },
   "/tags/core-7b7": {
     "__comp": "df203c0f",
@@ -1345,6 +1313,10 @@
     "__comp": "df203c0f",
     "__props": "eb687d64"
   },
+  "/tags/dead-letter-queue-517": {
+    "__comp": "df203c0f",
+    "__props": "29261ed1"
+  },
   "/tags/deadlock-1c7": {
     "__comp": "df203c0f",
     "__props": "72cb411a"
@@ -1521,10 +1493,6 @@
     "__comp": "df203c0f",
     "__props": "1f9c4f44"
   },
-  "/tags/distributed-locking-ee0": {
-    "__comp": "df203c0f",
-    "__props": "2a5b22a6"
-  },
   "/tags/distributed-systems-808": {
     "__comp": "df203c0f",
     "__props": "7ca5bc58"
@@ -1532,10 +1500,6 @@
   "/tags/distributed-tracing-0e4": {
     "__comp": "df203c0f",
     "__props": "d75d7648"
-  },
-  "/tags/distributed-transactions-dbf": {
-    "__comp": "df203c0f",
-    "__props": "1c39ffa2"
   },
   "/tags/dlq-7e3": {
     "__comp": "df203c0f",
@@ -1596,10 +1560,6 @@
   "/tags/dsa-4ff": {
     "__comp": "df203c0f",
     "__props": "dc911be7"
-  },
-  "/tags/dual-write-4e8": {
-    "__comp": "df203c0f",
-    "__props": "883bcf9f"
   },
   "/tags/dva-c-02-fc2": {
     "__comp": "df203c0f",
@@ -1861,10 +1821,6 @@
     "__comp": "df203c0f",
     "__props": "40cfd85b"
   },
-  "/tags/fencing-token-340": {
-    "__comp": "df203c0f",
-    "__props": "63d1c236"
-  },
   "/tags/fetch-pull-4e9": {
     "__comp": "df203c0f",
     "__props": "eaac4eed"
@@ -2033,6 +1989,10 @@
     "__comp": "df203c0f",
     "__props": "fc586012"
   },
+  "/tags/geohash-bdd": {
+    "__comp": "df203c0f",
+    "__props": "b4acb959"
+  },
   "/tags/geospatial-d39": {
     "__comp": "df203c0f",
     "__props": "463c8156"
@@ -2096,6 +2056,10 @@
   "/tags/gsi-49a": {
     "__comp": "df203c0f",
     "__props": "b03cda2a"
+  },
+  "/tags/h-3-3b5": {
+    "__comp": "df203c0f",
+    "__props": "51ee35c2"
   },
   "/tags/handshake-b4f": {
     "__comp": "df203c0f",
@@ -2704,10 +2668,6 @@
   "/tags/leadership-b86": {
     "__comp": "df203c0f",
     "__props": "435f8bdf"
-  },
-  "/tags/lease-6a0": {
-    "__comp": "df203c0f",
-    "__props": "bf94303e"
   },
   "/tags/ledger-bd9": {
     "__comp": "df203c0f",
@@ -3549,6 +3509,10 @@
     "__comp": "df203c0f",
     "__props": "37ba24b2"
   },
+  "/tags/poison-pills-b4e": {
+    "__comp": "df203c0f",
+    "__props": "373fdd82"
+  },
   "/tags/policies-338": {
     "__comp": "df203c0f",
     "__props": "7d4371b6"
@@ -3649,10 +3613,6 @@
     "__comp": "df203c0f",
     "__props": "0672e7de"
   },
-  "/tags/process-manager-8a8": {
-    "__comp": "df203c0f",
-    "__props": "5fa9f3d9"
-  },
   "/tags/processes-262": {
     "__comp": "df203c0f",
     "__props": "0e6372b0"
@@ -3713,6 +3673,10 @@
     "__comp": "df203c0f",
     "__props": "4f97ffc4"
   },
+  "/tags/proximity-search-826": {
+    "__comp": "df203c0f",
+    "__props": "4b795d81"
+  },
   "/tags/proxy-d73": {
     "__comp": "df203c0f",
     "__props": "4dfd97f1"
@@ -3753,6 +3717,10 @@
     "__comp": "df203c0f",
     "__props": "102ed81f"
   },
+  "/tags/quadtree-e9a": {
+    "__comp": "df203c0f",
+    "__props": "683a4067"
+  },
   "/tags/query-7ce": {
     "__comp": "df203c0f",
     "__props": "e06b880a"
@@ -3780,6 +3748,10 @@
   "/tags/quick-reference-f7f": {
     "__comp": "df203c0f",
     "__props": "60cedcc5"
+  },
+  "/tags/r-tree-43b": {
+    "__comp": "df203c0f",
+    "__props": "21abc3b7"
   },
   "/tags/rabbitmq-009": {
     "__comp": "df203c0f",
@@ -3977,6 +3949,10 @@
     "__comp": "df203c0f",
     "__props": "e40c3230"
   },
+  "/tags/retry-policies-624": {
+    "__comp": "df203c0f",
+    "__props": "78032fb0"
+  },
   "/tags/returns-ec8": {
     "__comp": "df203c0f",
     "__props": "55d6e442"
@@ -4056,6 +4032,10 @@
   "/tags/runtime-cb0": {
     "__comp": "df203c0f",
     "__props": "f0e9c779"
+  },
+  "/tags/s-2-351": {
+    "__comp": "df203c0f",
+    "__props": "bde52711"
   },
   "/tags/s-3-bd5": {
     "__comp": "df203c0f",
@@ -5165,10 +5145,6 @@
     "__comp": "df203c0f",
     "__props": "2f70976e"
   },
-  "/tags/workflow-1d8": {
-    "__comp": "df203c0f",
-    "__props": "d0eb19c1"
-  },
   "/tags/workflows-298": {
     "__comp": "df203c0f",
     "__props": "7f5e4849"
@@ -5217,7 +5193,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-170": {
+  "/-7fc": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -5227,74 +5203,6 @@
   "/banking-8dc": {
     "__comp": "17896441",
     "content": "59e92e34"
-  },
-  "/books/building-microservice-8e3": {
-    "__comp": "17896441",
-    "content": "7b5d2e61"
-  },
-  "/books/building-microservice/chapter-01-b4d": {
-    "__comp": "17896441",
-    "content": "68ab07b1"
-  },
-  "/books/building-microservice/chapter-02-bf1": {
-    "__comp": "17896441",
-    "content": "11bcc05a"
-  },
-  "/books/building-microservice/chapter-03-383": {
-    "__comp": "17896441",
-    "content": "3b42864a"
-  },
-  "/books/building-microservice/chapter-04-015": {
-    "__comp": "17896441",
-    "content": "69b5c840"
-  },
-  "/books/building-microservice/chapter-05-8b9": {
-    "__comp": "17896441",
-    "content": "1d25b2fe"
-  },
-  "/books/building-microservice/chapter-06-02f": {
-    "__comp": "17896441",
-    "content": "9df5b457"
-  },
-  "/books/building-microservice/chapter-07-33f": {
-    "__comp": "17896441",
-    "content": "4aeace3f"
-  },
-  "/books/building-microservice/chapter-08-ac7": {
-    "__comp": "17896441",
-    "content": "f68d61b3"
-  },
-  "/books/building-microservice/chapter-09-a6d": {
-    "__comp": "17896441",
-    "content": "b8cded00"
-  },
-  "/books/building-microservice/chapter-10-f86": {
-    "__comp": "17896441",
-    "content": "4b29e76d"
-  },
-  "/books/building-microservice/chapter-11-88c": {
-    "__comp": "17896441",
-    "content": "78ebb9c7"
-  },
-  "/books/building-microservice/chapter-12-4d6": {
-    "__comp": "17896441",
-    "content": "eca91fbf"
-  },
-  "/books/building-microservice/chapter-13-f89": {
-    "__comp": "17896441",
-    "content": "a71c18db"
-  },
-  "/books/building-microservice/chapter-14-dca": {
-    "__comp": "17896441",
-    "content": "c08887ed"
-  },
-  "/books/building-microservice/chapter-15-1a7": {
-    "__comp": "17896441",
-    "content": "ed429399"
-  },
-  "/books/building-microservice/chapter-16-e66": {
-    "__comp": "17896441",
-    "content": "f0cf1ac1"
   },
   "/books/clean-architecture/intro-e2b": {
     "__comp": "17896441",
@@ -5832,7 +5740,7 @@
     "__comp": "17896441",
     "content": "8c495483"
   },
-  "/technical-knowledge/ai-agents/harness-c4c": {
+  "/technical-knowledge/ai-agents/harness-6ae": {
     "__comp": "17896441",
     "content": "23da8883"
   },
@@ -5840,7 +5748,7 @@
     "__comp": "17896441",
     "content": "88b58d73"
   },
-  "/technical-knowledge/ai-agents/skills-09f": {
+  "/technical-knowledge/ai-agents/skills-2a9": {
     "__comp": "17896441",
     "content": "db3aad75"
   },
@@ -5848,7 +5756,7 @@
     "__comp": "17896441",
     "content": "de2714d4"
   },
-  "/technical-knowledge/aws/api-gateway/-3a2": {
+  "/technical-knowledge/aws/api-gateway/-c14": {
     "__comp": "17896441",
     "content": "9b48b4ad"
   },
@@ -9868,7 +9776,7 @@
     "__comp": "17896441",
     "content": "d75cea88"
   },
-  "/technical-knowledge/networking/proxies-nat-firewalls-142": {
+  "/technical-knowledge/networking/proxies-nat-firewalls-86f": {
     "__comp": "17896441",
     "content": "5613a0c9"
   },
@@ -10076,7 +9984,7 @@
     "__comp": "17896441",
     "content": "690a1177"
   },
-  "/technical-knowledge/spring/spring-batch-cbb": {
+  "/technical-knowledge/spring/spring-batch-216": {
     "__comp": "17896441",
     "content": "ca667498"
   },
@@ -10100,7 +10008,7 @@
     "__comp": "17896441",
     "content": "c7ff582f"
   },
-  "/technical-knowledge/spring/spring-cloud-2b1": {
+  "/technical-knowledge/spring/spring-cloud-c26": {
     "__comp": "17896441",
     "content": "b0d8a005"
   },
@@ -10112,7 +10020,7 @@
     "__comp": "17896441",
     "content": "3acda406"
   },
-  "/technical-knowledge/spring/spring-data-jpa-query-annotation-3d8": {
+  "/technical-knowledge/spring/spring-data-jpa-query-annotation-fcf": {
     "__comp": "17896441",
     "content": "a81d3731"
   },
@@ -10124,7 +10032,7 @@
     "__comp": "17896441",
     "content": "da45351f"
   },
-  "/technical-knowledge/spring/spring-exception-handling-633": {
+  "/technical-knowledge/spring/spring-exception-handling-870": {
     "__comp": "17896441",
     "content": "5a9a573d"
   },
@@ -10156,7 +10064,7 @@
     "__comp": "17896441",
     "content": "7bce8a09"
   },
-  "/technical-knowledge/system-design/api-design-47c": {
+  "/technical-knowledge/system-design/api-design-fb1": {
     "__comp": "17896441",
     "content": "0237d5d1"
   },
@@ -10200,9 +10108,9 @@
     "__comp": "17896441",
     "content": "0098328c"
   },
-  "/technical-knowledge/system-design/distributed-locking-6ab": {
+  "/technical-knowledge/system-design/dead-letter-queue-bbe": {
     "__comp": "17896441",
-    "content": "33fd115f"
+    "content": "8a82e430"
   },
   "/technical-knowledge/system-design/distributed-systems-888": {
     "__comp": "17896441",
@@ -10224,7 +10132,7 @@
     "__comp": "17896441",
     "content": "5c3590ca"
   },
-  "/technical-knowledge/system-design/load-balancing-reliability-ece": {
+  "/technical-knowledge/system-design/load-balancing-reliability-49e": {
     "__comp": "17896441",
     "content": "b14a4730"
   },
@@ -10236,25 +10144,21 @@
     "__comp": "17896441",
     "content": "3940c236"
   },
-  "/technical-knowledge/system-design/microservices-patterns-8ad": {
+  "/technical-knowledge/system-design/microservices-patterns-25e": {
     "__comp": "17896441",
     "content": "a912936e"
   },
-  "/technical-knowledge/system-design/mongodb-deep-dive-e73": {
+  "/technical-knowledge/system-design/mongodb-deep-dive-35d": {
     "__comp": "17896441",
     "content": "9aee46ea"
-  },
-  "/technical-knowledge/system-design/multi-step-process-df1": {
-    "__comp": "17896441",
-    "content": "e47e154f"
   },
   "/technical-knowledge/system-design/observability-7f4": {
     "__comp": "17896441",
     "content": "f58357ef"
   },
-  "/technical-knowledge/system-design/outbox-pattern-7bc": {
+  "/technical-knowledge/system-design/proximity-search-geospatial-indexes-5fa": {
     "__comp": "17896441",
-    "content": "5223f567"
+    "content": "929b92a0"
   },
   "/technical-knowledge/system-design/real-time-updates-91a": {
     "__comp": "17896441",
@@ -10280,7 +10184,7 @@
     "__comp": "17896441",
     "content": "e8a6b3e1"
   },
-  "/technical-knowledge/system-design/sharding-partitioning-438": {
+  "/technical-knowledge/system-design/sharding-partitioning-c2d": {
     "__comp": "17896441",
     "content": "1d0030f3"
   },

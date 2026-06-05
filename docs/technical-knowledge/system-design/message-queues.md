@@ -239,17 +239,7 @@ User uploads corrupted image → Worker A crashes → Queue redelivers
 A "Poison Message" will bounce around forever, destroying your worker pool.
 
 **The Solution:**
-```
-Max Retry Count: 5
-├─ Attempt 1: Fail
-├─ Attempt 2: Fail
-├─ Attempt 3: Fail
-├─ Attempt 4: Fail
-├─ Attempt 5: Fail
-└─ Route to Dead Letter Queue (DLQ)
-```
-
-Implement a **Max Retry Count** (e.g., 5). If a message fails 5 times, automatically route it to a **Dead Letter Queue (DLQ)**. The main queue moves on, and an engineer can manually inspect the DLQ later.
+Implement a **Max Retry Count** (e.g., 5). If a message fails 5 times, automatically route it to a **Dead Letter Queue (DLQ)**. For full design patterns and configurations, see the centralized **[Dead Letter Queue (DLQ) Pattern](./dead-letter-queue.md)** page.
 
 ---
 
@@ -655,39 +645,9 @@ public void projectOrderEvent(OrderEvent event) {
 
 ### Transactional Outbox Pattern
 
-**Problem:**
-When you need to publish an event after a database transaction, you face a dual-write problem:
-```
-1. Save order to DB
-2. Publish event to Kafka
-```
-If step 2 fails, you have data in the database but no event. If step 1 fails, you have an event but no data.
+To ensure that database updates and event publications to message queues/streams occur atomically (preventing the dual-write problem), use the Transactional Outbox Pattern.
 
-**Solution:**
-```java
-@Transactional
-public void placeOrder(Order order) {
-    // 1. Save order
-    orderRepository.save(order);
-
-    // 2. Save outbox event in same transaction
-    OutboxEvent event = new OutboxEvent("order.placed", order.getId(), order);
-    outboxRepository.save(event);
-}
-
-// Separate process polls outbox and publishes to Kafka
-@Scheduled(fixedDelay = 1000)
-public void publishOutboxEvents() {
-    List<OutboxEvent> events = outboxRepository.findUnpublished();
-    for (OutboxEvent event : events) {
-        kafkaTemplate.send(event.getTopic(), event.getPayload());
-        event.markPublished();
-        outboxRepository.save(event);
-    }
-}
-```
-
----
+For a complete guide with code examples, polling vs. CDC (Debezium) trade-offs, schemas, and production checklists, see the centralized **[Transactional Outbox Pattern](./data-consistency.md#outbox-pattern)** section.
 
 ## ⚖️ Pros and Cons
 
@@ -812,11 +772,7 @@ Queues are inherently designed for work that can happen *later*. Introducing one
 > - Consumer group rebalance frequency
 
 ### Q15: What is a Dead Letter Queue (DLQ) and when should you use it?
-> **Answer:** A DLQ is a secondary queue where messages that cannot be processed are moved after repeated failures. Use it for:
-> - Poison messages that crash consumers.
-> - Messages with validation errors.
-> - Events that need manual intervention.
-> - Debugging production issues.
+> **Answer:** A DLQ is a secondary queue dedicated to isolating unprocessable messages (poison pills) to prevent blocking the main queue pipeline. For a full breakdown of DLQ use cases, SQS/Kafka/RabbitMQ configurations, and operational checklists, see the centralized **[Dead Letter Queue (DLQ) Pattern](./dead-letter-queue.md)** page.
 
 ### Q16: How do you ensure exactly-once processing when writing to an external database?
 > **Answer:** You cannot achieve true exactly-once when writing to external systems. Instead, use idempotent database operations, track processed message IDs, use database transactions with the outbox pattern, or accept at-least-once with deduplication.

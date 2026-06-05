@@ -44,68 +44,16 @@ messageQueue.publish(orderEvent); // Step 2: Kafka publish → could fail!
 
 :::info[Deep Dive: Outbox Pattern]
 The standard solution to this is the **Transactional Outbox Pattern**. 
-For a complete guide with code examples, polling vs CDC (Debezium) trade-offs, and failure mitigation, see the centralized **[Transactional Outbox Pattern](../system-design/outbox-pattern.md)** page.
+For a complete guide with code examples, polling vs CDC (Debezium) trade-offs, and failure mitigation, see the centralized **[Transactional Outbox Pattern](../system-design/data-consistency.md#outbox-pattern)** page.
 :::
 
 ---
 
 ## Saga Pattern
 
-**Problem**: Multi-step business transaction spanning multiple services — can't use distributed ACID transactions.
+To coordinate multi-step workflows across microservice boundaries without blocking database resources or relying on fragile distributed transactions (like 2PC), use the Saga Pattern (via Choreography or Orchestration).
 
-**Saga**: a sequence of local transactions, each publishing events or messages to trigger the next step. If a step fails → compensating transactions undo previous steps.
-
-### Choreography-Based Saga (Event-Driven)
-
-Services react to each other's events autonomously:
-
-```
-Order Service                Inventory Service         Payment Service
-     │                             │                        │
-     │──OrderPlaced event─────────▶│                        │
-     │                             │──InventoryReserved─────▶│
-     │                             │   event                 │
-     │                             │                   PaymentProcessed
-     │◀────────────────────────────────────────────── event  │
-     │ (OrderConfirmed)            │                        │
-```
-
-**Compensation (failure):**
-```
-PaymentFailed event
-→ Inventory Service: release reservation
-→ Order Service: cancel order
-```
-
-### Orchestration-Based Saga (Central Coordinator)
-
-A **Saga Orchestrator** directs all steps:
-
-```java
-@Component
-public class OrderSagaOrchestrator {
-
-    public void execute(Order order) {
-        try {
-            inventoryClient.reserveItems(order);         // Step 1
-            paymentClient.processPayment(order);         // Step 2
-            shippingClient.scheduleShipment(order);      // Step 3
-            orderService.confirm(order.getId());         // Step 4
-        } catch (PaymentException e) {
-            inventoryClient.releaseReservation(order);   // Compensate step 1
-            orderService.cancel(order.getId());
-            throw e;
-        }
-    }
-}
-```
-
-| | Choreography | Orchestration |
-|--|-------------|--------------|
-| Coupling | Loose (event-driven) | Tighter (services know orchestrator) |
-| Visibility | Harder to trace | Clear in orchestrator |
-| Complexity | Grows with steps | Centralized, easier to reason |
-| Best for | Simple sagas | Complex, multi-step flows |
+For a complete guide including a detailed Orchestration vs. Choreography comparison matrix, compensating transaction playbooks, idempotency strategies, and Java entity/orchestrator implementations, see the centralized **[Saga Pattern & Distributed Workflows](../system-design/data-consistency.md#saga-pattern)** section.
 
 ---
 

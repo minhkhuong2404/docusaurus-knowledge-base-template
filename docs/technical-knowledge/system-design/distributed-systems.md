@@ -203,7 +203,7 @@ Worker B gets token 42
 If A wakes up late, storage rejects token 41 writes
 ```
 
-See dedicated guide: [Distributed Locking](./distributed-locking).
+See dedicated guide: [Distributed Locking](./data-consistency#distributed-locking).
 
 ---
 

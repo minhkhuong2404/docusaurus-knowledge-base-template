@@ -128,29 +128,9 @@ When Lambda processes SQS via ESM, set visibility timeout ≥ **6× Lambda timeo
 
 ## Dead Letter Queue (DLQ)
 
-```
-Producer → [Main Queue]
-                │ fails maxReceiveCount times
-                ▼
-           [Dead Letter Queue]
-                │
-           Monitor → Alert → Debug → Fix → Redrive
-```
+Amazon SQS supports dead letter queues (DLQs) to isolate unprocessable messages (poison pills) from healthy source queues. 
 
-| Property | Details |
-|---|---|
-| **Same type** | Standard DLQ for Standard, FIFO DLQ for FIFO |
-| **Redrive** | Move messages back to source queue after bug fix |
-| **Max receive count** | Configure on the source queue's redrive policy |
-| **Retention** | Set longer retention on DLQ (14 days) to give time to debug |
-
-### DLQ Redrive (Re-process Failed Messages)
-
-```bash
-aws sqs start-message-move-task \
-    --source-arn arn:aws:sqs:us-east-1:123:my-dlq \
-    --destination-arn arn:aws:sqs:us-east-1:123:my-main-queue
-```
+For the complete design principles, retention strategies, and exact CLI redrive instructions (`start-message-move-task`), see the centralized **[AWS SQS DLQ & Redrive](../../system-design/dead-letter-queue.md#aws-sqs-dlq--redrive)** section.
 
 ---
 

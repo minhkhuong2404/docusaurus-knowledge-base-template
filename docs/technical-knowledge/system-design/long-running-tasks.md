@@ -237,22 +237,9 @@ public Trigger reportTrigger(JobDetail reportJobDetail) {
 
 ## Dead Letter Queue (DLQ) — Failed Job Handling
 
-```
-Normal Queue → Worker (fails 3x) → Dead Letter Queue (DLQ)
-                                          ↓
-                                   Alert / Manual inspection / Replay
-```
+For workers processing asynchronous long-running tasks, permanent failures and poison pills should be routed to a Dead Letter Queue (DLQ) to prevent blocking healthy jobs.
 
-```yaml
-# Spring Kafka DLQ config
-spring:
-  kafka:
-    consumer:
-      group-id: report-workers
-    listener:
-      ack-mode: manual_immediate
-# Custom error handler → send to DLQ after N retries
-```
+For the complete architectural patterns, Spring Boot/Kafka error handlers, and monitoring metrics, see the centralized **[Dead Letter Queue (DLQ) Pattern](./dead-letter-queue.md)** page.
 
 ---
 

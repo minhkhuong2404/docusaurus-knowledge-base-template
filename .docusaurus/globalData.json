@@ -11,91 +11,6 @@
           "mainDocId": "intro",
           "docs": [
             {
-              "id": "books/building-microservice/chapter-01",
-              "path": "/books/building-microservice/chapter-01",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "books/building-microservice/chapter-02",
-              "path": "/books/building-microservice/chapter-02",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "books/building-microservice/chapter-03",
-              "path": "/books/building-microservice/chapter-03",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "books/building-microservice/chapter-04",
-              "path": "/books/building-microservice/chapter-04",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "books/building-microservice/chapter-05",
-              "path": "/books/building-microservice/chapter-05",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "books/building-microservice/chapter-06",
-              "path": "/books/building-microservice/chapter-06",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "books/building-microservice/chapter-07",
-              "path": "/books/building-microservice/chapter-07",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "books/building-microservice/chapter-08",
-              "path": "/books/building-microservice/chapter-08",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "books/building-microservice/chapter-09",
-              "path": "/books/building-microservice/chapter-09",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "books/building-microservice/chapter-10",
-              "path": "/books/building-microservice/chapter-10",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "books/building-microservice/chapter-11",
-              "path": "/books/building-microservice/chapter-11",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "books/building-microservice/chapter-12",
-              "path": "/books/building-microservice/chapter-12",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "books/building-microservice/chapter-13",
-              "path": "/books/building-microservice/chapter-13",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "books/building-microservice/chapter-14",
-              "path": "/books/building-microservice/chapter-14",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "books/building-microservice/chapter-15",
-              "path": "/books/building-microservice/chapter-15",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "books/building-microservice/chapter-16",
-              "path": "/books/building-microservice/chapter-16",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "books/building-microservice/intro",
-              "path": "/books/building-microservice",
-              "sidebar": "tutorialSidebar"
-            },
-            {
               "id": "books/clean-architecture/intro",
               "path": "/books/clean-architecture/intro",
               "sidebar": "tutorialSidebar"
@@ -6230,8 +6145,8 @@
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/system-design/distributed-locking",
-              "path": "/technical-knowledge/system-design/distributed-locking",
+              "id": "technical-knowledge/system-design/dead-letter-queue",
+              "path": "/technical-knowledge/system-design/dead-letter-queue",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -6290,18 +6205,13 @@
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/system-design/multi-step-process",
-              "path": "/technical-knowledge/system-design/multi-step-process",
-              "sidebar": "tutorialSidebar"
-            },
-            {
               "id": "technical-knowledge/system-design/observability",
               "path": "/technical-knowledge/system-design/observability",
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/system-design/outbox-pattern",
-              "path": "/technical-knowledge/system-design/outbox-pattern",
+              "id": "technical-knowledge/system-design/proximity-search-geospatial-indexes",
+              "path": "/technical-knowledge/system-design/proximity-search-geospatial-indexes",
               "sidebar": "tutorialSidebar"
             },
             {

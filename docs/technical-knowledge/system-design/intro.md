@@ -23,7 +23,7 @@ tags: [system-design, overview, architecture, interview-prep]
 | [Real-Time Updates](/technical-knowledge/system-design/real-time-updates) | WebSocket, SSE, polling strategies |
 | [Handling Contention](/technical-knowledge/system-design/handling-contention) | Locks, MVCC, optimistic concurrency |
 | [Large Blob Storage](/technical-knowledge/system-design/large-blobs) | Object storage, chunking, CDN delivery |
-| [Multi-Step Processes](/technical-knowledge/system-design/multi-step-process) | Sagas, orchestration, choreography |
+| [Multi-Step Processes](/technical-knowledge/system-design/data-consistency#saga-pattern) | Sagas, orchestration, choreography |
 | [Long-Running Tasks](/technical-knowledge/system-design/long-running-tasks) | Job queues, async patterns, progress tracking |
 | [Microservices Patterns](/technical-knowledge/system-design/microservices-patterns) | Service mesh, circuit breaker, API gateway |
 | [Database Design](/technical-knowledge/database/database-design) | Normalization, indexing, partitioning |

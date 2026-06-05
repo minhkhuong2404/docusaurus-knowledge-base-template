@@ -26,7 +26,7 @@ tags: [consistency, transactions, acid, eventual-consistency, outbox-pattern, id
   - [Last-Write-Wins (LWW)](#last-write-wins-lww)
   - [CRDT (Conflict-free Replicated Data Types)](#crdt-conflict-free-replicated-data-types)
   - [Application-Level Resolution](#application-level-resolution)
-- [Dual-Write Problem](#dual-write-problem)
+- [Transactional Outbox Pattern](#transactional-outbox-pattern-solving-the-dual-write-problem)
 - [Quorum Reads and Read Repair](#quorum-reads-and-read-repair)
   - [Beginner View](#beginner-view-1)
   - [Senior Deep Dive](#senior-deep-dive)
@@ -34,9 +34,9 @@ tags: [consistency, transactions, acid, eventual-consistency, outbox-pattern, id
 - [Idempotency Patterns](#idempotency-patterns)
   - [Database Constraint](#database-constraint)
   - [Application-Level](#application-level)
-- [Database Lock Patterns](#database-lock-patterns)
-  - [Advisory Locks (PostgreSQL)](#advisory-locks-postgresql)
-  - [SELECT FOR UPDATE SKIP LOCKED](#select-for-update-skip-locked)
+- [Locking Patterns: Local to Distributed](#locking-patterns-local-to-distributed)
+  - [Local Database Locks](#local-database-locks)
+  - [Distributed Locking \& Coordination](#distributed-locking-coordination)
 - [How Transactions Work Internally](#how-transactions-work-internally)
   - [Transaction Lifecycle](#transaction-lifecycle)
   - [Write-Ahead Logging (WAL)](#write-ahead-logging-wal)
@@ -47,8 +47,7 @@ tags: [consistency, transactions, acid, eventual-consistency, outbox-pattern, id
 - [Distributed Transaction Protocols](#distributed-transaction-protocols)
   - [Two-Phase Commit (2PC)](#two-phase-commit-2pc)
   - [Three-Phase Commit (3PC)](#three-phase-commit-3pc)
-  - [Saga Pattern](#saga-pattern)
-  - [Compensating Transactions](#compensating-transactions)
+  - [Saga Pattern \& Distributed Workflows](#saga-pattern-distributed-workflows)
 - [Consensus Algorithms](#consensus-algorithms)
   - [Paxos](#paxos)
   - [Raft](#raft)
@@ -62,12 +61,9 @@ tags: [consistency, transactions, acid, eventual-consistency, outbox-pattern, id
   - [Cassandra](#cassandra)
   - [DynamoDB](#dynamodb)
   - [Google Spanner](#google-spanner)
-- [Integration Patterns](#integration-patterns)
-  - [Outbox Pattern](#outbox-pattern-1)
-  - [Saga Orchestration](#saga-orchestration)
-  - [Eventual Consistency with Versioning](#eventual-consistency-with-versioning)
-  - [Optimistic Concurrency Control](#optimistic-concurrency-control)
-  - [Pessimistic Concurrency Control](#pessimistic-concurrency-control)
+- [Application Transaction Integration Patterns](#application-transaction-integration-patterns)
+  - [Optimistic Concurrency Control (OCC) with JPA @Version](#optimistic-concurrency-control-occ-with-jpa-version)
+  - [Pessimistic Concurrency Control (PCC) with JPA @Lock](#pessimistic-concurrency-control-pcc-with-jpa-lock)
 - [Pros and Cons](#pros-and-cons)
   - [Strong Consistency](#strong-consistency)
   - [Eventual Consistency](#eventual-consistency-1)
@@ -276,14 +272,321 @@ public UserProfile merge(UserProfile local, UserProfile remote) {
 
 ---
 
-## Dual-Write Problem
+<a id="outbox-pattern" />
 
-Writing to two systems (DB + Kafka) without coordination is known as the **Dual-Write Problem**.
+## Transactional Outbox Pattern (Solving the Dual-Write Problem)
 
-:::info[Deep Dive: Outbox Pattern]
-The standard solution to the Dual-Write problem is the **Transactional Outbox Pattern**. 
-For a comprehensive guide on how it works, polling vs CDC strategies, code examples, and reliability checklists, see the **[Transactional Outbox Pattern](./outbox-pattern.md)** page.
+In a microservices architecture, a service frequently needs to do two things simultaneously when a business action occurs:
+1. **Write to its own database** — persist the new/updated business entity.
+2. **Publish an event to a message broker** — notify downstream services.
+
+The naive implementation attempts both writes in sequence:
+```java
+@Transactional
+public Order createOrder(CreateOrderCommand cmd) {
+    Order order = orderRepository.save(new Order(cmd)); // Write 1: DB
+    kafkaTemplate.send("orders", new OrderCreatedEvent(order)); // Write 2: Kafka
+    return order;
+}
+```
+
+This is called a **Dual Write** — and it is fundamentally broken. These are two independent systems. No single ACID transaction spans both. Every possible failure scenario leads to inconsistency:
+
+| Failure Point | DB State | Kafka State | Outcome |
+|---|---|---|---|
+| Crash after DB write, before Kafka publish | ✅ Committed | ❌ Never published | **Silent data loss** — downstream services never learn of the event |
+| Kafka timeout, DB transaction rolled back | ❌ Rolled back | ✅ Published | **Phantom event** — consumers process an action that doesn't exist in DB |
+| Both succeed, but concurrent writes in wrong order | ✅ Correct | ⚠️ Wrong sequence | **Ordering violation** — consumers see a stale state or process events out of order |
+| Retry logic re-publishes after transient failure | ✅ Correct | ✅ Duplicate | **Duplicate event** — consumer must be idempotent or will process twice |
+
+The worst aspect of the dual-write failure is that **it is silent**. No exception is thrown that your monitoring will catch. The DB write succeeded. The application returns HTTP 200. The change exists in the database. Downstream services simply never find out about it.
+
+:::danger[The "Retry" False Fix]
+A common attempted fix is wrapping the Kafka publish in a retry loop. This does not solve the problem — it only reduces the probability of failure. A crash or a network partition between DB commit and Kafka publish will still silently lose the event, regardless of retry count. The fundamental issue is the lack of atomicity, not the reliability of a single publish attempt.
 :::
+
+### The Beginner Analogy
+
+Imagine you are a CEO who must sign a contract (the database write) and mail it to your partner (publish to the message broker).
+
+* **The Dual-Write approach:** You sign the contract, seal the envelope, and walk outside to hand it to the mailman. But the mailman is not there. The contract is signed and legally binding, but your partner never receives it. You have no way of knowing whether to try again without risking sending two copies.
+* **The Outbox approach:** You sign the contract and drop the sealed envelope into your office's outgoing **"Outbox" tray**. Because the tray is physically inside your office (the database), you know it is safe — both the signed contract and the envelope are in the same room. Later, a dedicated mailroom clerk (the relay process) walks by, picks up everything in the tray, and takes it to the post office. If the post office is closed, the clerk holds on to it and keeps trying. Your job is done the moment you drop the envelope — the rest is the clerk's responsibility.
+
+The key insight: **atomicity within the database** (same room = same transaction) is easy and reliable. **Atomicity across two systems** is the hard problem. The Outbox Pattern converts the hard problem into the easy one.
+
+### How the Outbox Pattern Works
+
+```mermaid
+sequenceDiagram
+    participant App as Application Service
+    participant DB as Database<br/>(business + outbox tables)
+    participant Relay as Relay Process<br/>(Polling or CDC)
+    participant Kafka as Kafka Broker
+    participant Consumer as Downstream Service
+
+    App->>DB: BEGIN TRANSACTION
+    App->>DB: INSERT INTO business_table (...)
+    App->>DB: INSERT INTO outbox_events (event_type, payload, status=PENDING)
+    App->>DB: COMMIT
+    Note over App,DB: Both writes succeed or both fail — atomically
+
+    loop Relay loop
+        Relay->>DB: SELECT * FROM outbox_events WHERE status='PENDING'
+        Relay->>Kafka: Publish event payload
+        Relay->>DB: UPDATE outbox_events SET status='PUBLISHED'
+    end
+
+    Kafka->>Consumer: Deliver event (at-least-once)
+    Consumer->>Consumer: Idempotency check → process
+```
+
+**Step-by-step:**
+1. **Atomic write:** The application opens a database transaction, writes the business entity (e.g., `Order`), and inserts a row into `outbox_events` describing the event to be published. Both writes live in the same local ACID transaction — they either both commit or both roll back.
+2. **Relay:** A separate background process (the Relay) reads `PENDING` rows from `outbox_events` and publishes them to the message broker.
+3. **Acknowledgement:** Once the broker confirms receipt, the Relay marks the outbox row as `PUBLISHED` (or deletes it).
+4. **At-least-once semantics:** If the Relay crashes after publishing but before marking the row as `PUBLISHED`, it will re-publish on restart. Consumers must be idempotent.
+
+### Outbox Pattern Schema (PostgreSQL)
+
+```sql
+CREATE TABLE outbox_events (
+    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    aggregate_type  VARCHAR(255)  NOT NULL,  -- e.g., 'Order', 'Payment'
+    aggregate_id    VARCHAR(255)  NOT NULL,  -- e.g., order UUID
+    event_type      VARCHAR(255)  NOT NULL,  -- e.g., 'OrderPlaced', 'OrderCancelled'
+    payload         JSONB         NOT NULL,
+    status          VARCHAR(50)   NOT NULL DEFAULT 'PENDING',
+    created_at      TIMESTAMPTZ   NOT NULL DEFAULT now(),
+    published_at    TIMESTAMPTZ,
+    retry_count     INT           NOT NULL DEFAULT 0,
+    last_error      TEXT
+);
+
+-- Index for the relay query — covering index to avoid full table scan
+CREATE INDEX idx_outbox_pending
+    ON outbox_events (status, created_at)
+    WHERE status = 'PENDING';
+```
+
+### Outbox Write Phase Code (Spring Boot)
+
+```java
+@Entity
+@Table(name = "outbox_events")
+@Builder
+public class OutboxEvent {
+    @Id
+    private UUID id = UUID.randomUUID();
+    private String aggregateType;
+    private String aggregateId;
+    private String eventType;
+    @Column(columnDefinition = "jsonb")
+    private String payload;
+    @Enumerated(EnumType.STRING)
+    private OutboxStatus status = OutboxStatus.PENDING;
+    private Instant createdAt = Instant.now();
+    private Instant publishedAt;
+    private int retryCount;
+    private String lastError;
+}
+
+@Service
+@RequiredArgsConstructor
+public class OrderService {
+    private final OrderRepository orderRepository;
+    private final OutboxRepository outboxRepository;
+    private final ObjectMapper objectMapper;
+
+    @Transactional // Single ACID transaction — both writes or neither
+    public Order createOrder(CreateOrderCommand cmd) {
+        Order order = Order.create(cmd);
+        orderRepository.save(order);
+
+        OutboxEvent event = OutboxEvent.builder()
+                .aggregateType("Order")
+                .aggregateId(order.getId().toString())
+                .eventType("OrderPlaced")
+                .payload(serialize(new OrderPlacedPayload(order)))
+                .build();
+
+        outboxRepository.save(event);
+        return order;
+    }
+
+    private String serialize(Object obj) {
+        try {
+            return objectMapper.writeValueAsString(obj);
+        } catch (JsonProcessingException e) {
+            throw new IllegalStateException("Failed to serialize outbox payload", e);
+        }
+    }
+}
+```
+
+### Relay Strategy A: Polling Publisher with `SKIP LOCKED`
+
+```java
+@Component
+@RequiredArgsConstructor
+@Slf4j
+public class OutboxPollingRelay {
+    private final OutboxRepository outboxRepository;
+    private final KafkaTemplate<String, String> kafkaTemplate;
+
+    private static final int BATCH_SIZE = 100;
+    private static final int MAX_RETRIES = 5;
+
+    // ShedLock ensures only ONE instance runs across all pods
+    @Scheduled(fixedDelay = 1000)
+    @SchedulerLock(name = "outbox-relay", lockAtLeastFor = "PT1S", lockAtMostFor = "PT30S")
+    public void relay() {
+        List<OutboxEvent> pending = outboxRepository
+                .findPendingForUpdate(PageRequest.of(0, BATCH_SIZE));
+
+        for (OutboxEvent event : pending) {
+            try {
+                publishToKafka(event);
+                markPublished(event);
+            } catch (Exception ex) {
+                handleFailure(event, ex);
+                break; // Stop processing batch to preserve ordering
+            }
+        }
+    }
+
+    private void publishToKafka(OutboxEvent event) throws Exception {
+        String topic = "outbox." + event.getAggregateType().toLowerCase();
+        kafkaTemplate.send(topic, event.getAggregateId(), event.getPayload()).get();
+        // .get() makes the send synchronous — we know it succeeded before marking PUBLISHED
+    }
+
+    @Transactional
+    private void markPublished(OutboxEvent event) {
+        event.setStatus(OutboxStatus.PUBLISHED);
+        event.setPublishedAt(Instant.now());
+        outboxRepository.save(event);
+    }
+
+    @Transactional
+    private void handleFailure(OutboxEvent event, Exception ex) {
+        log.error("Failed to publish outbox event {}: {}", event.getId(), ex.getMessage());
+        event.setRetryCount(event.getRetryCount() + 1);
+        event.setLastError(ex.getMessage());
+        if (event.getRetryCount() >= MAX_RETRIES) {
+            event.setStatus(OutboxStatus.DEAD_LETTER);
+        }
+        outboxRepository.save(event);
+    }
+}
+```
+
+```java
+public interface OutboxRepository extends JpaRepository<OutboxEvent, UUID> {
+    @Query(value = """
+            SELECT * FROM outbox_events
+            WHERE status = 'PENDING'
+            ORDER BY created_at ASC
+            LIMIT :#{#pageable.pageSize}
+            FOR UPDATE SKIP LOCKED
+            """, nativeQuery = true)
+    List<OutboxEvent> findPendingForUpdate(Pageable pageable);
+}
+```
+
+:::tip[`SKIP LOCKED` in Polling]
+`FOR UPDATE` blocks other sessions trying to lock the same rows. `FOR UPDATE SKIP LOCKED` silently skips rows already locked by another session — enabling safe parallel polling across multiple instances. Each instance processes a different subset of pending events without blocking each other.
+:::
+
+### Relay Strategy B: CDC with Debezium
+
+When sub-second latency or high throughput is required, replace the polling scheduler with Debezium tailing the `outbox_events` table:
+
+```json
+{
+  "name": "outbox-connector",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "database.hostname": "postgres",
+    "database.port": "5432",
+    "database.user": "debezium",
+    "database.password": "secret",
+    "database.dbname": "myapp",
+    "database.server.name": "myapp",
+    "table.include.list": "public.outbox_events",
+
+    // OutboxEventRouter SMT: routes events to topic per aggregate type
+    // and extracts payload from the outbox envelope
+    "transforms": "outbox",
+    "transforms.outbox.type": "io.debezium.transforms.outbox.EventRouter",
+    "transforms.outbox.route.topic.replacement": "outbox.${routedByValue}",
+    "transforms.outbox.table.field.event.key":     "aggregate_id",
+    "transforms.outbox.table.field.event.type":    "event_type",
+    "transforms.outbox.table.field.event.payload": "payload",
+    "transforms.outbox.table.fields.additional.placement": "event_type:header",
+    "transforms.outbox.route.tombstone.on.empty.payload": "false",
+
+    "key.converter":   "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter": "io.confluent.kafka.serializers.KafkaAvroSerializer",
+    "value.converter.schema.registry.url": "http://schema-registry:8081"
+  }
+}
+```
+
+With the `EventRouter` SMT, an outbox event with `aggregate_type = "Order"` is routed to Kafka topic `outbox.order`. The raw outbox envelope is stripped, so consumers only see the `payload`. The Kafka message key is set to `aggregate_id`, ensuring all events for the same aggregate go to the same partition (ordering guarantee).
+
+### Lightweight Alternative: `@TransactionalEventListener`
+
+Spring's `@TransactionalEventListener` fires *after* the surrounding transaction commits, solving the "crash before publish" half of the dual-write problem within a single JVM without an outbox table.
+
+```java
+@Service
+@Transactional
+public class OrderService {
+    private final ApplicationEventPublisher eventPublisher;
+
+    public Order createOrder(CreateOrderCommand cmd) {
+        Order order = orderRepository.save(new Order(cmd));
+        eventPublisher.publishEvent(new OrderCreatedSpringEvent(order));
+        return order;
+    }
+}
+
+@Component
+public class OrderEventPublisher {
+    private final KafkaTemplate<String, Object> kafkaTemplate;
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Async // Run in a separate thread to avoid blocking the TX thread
+    public void publish(OrderCreatedSpringEvent springEvent) {
+        kafkaTemplate.send("orders", springEvent.getOrderId().toString(),
+                new OrderCreatedEvent(springEvent.getOrder()));
+    }
+}
+```
+
+**Trade-offs:**
+* **Pros:** Zero extra infrastructure (no outbox table, no Debezium). Very low latency.
+* **Cons (Not crash-safe):** If the JVM crashes between the DB transaction commit and the Kafka publish (inside `@Async`), the event is permanently lost. No retry, no recovery.
+
+### Outbox Production Checklists
+
+#### Exactly-Once vs. At-Least-Once
+The Outbox Pattern guarantees **at-least-once** delivery, not exactly-once. True exactly-once delivery requires a distributed transaction spanning the database and the message broker, which degrades performance. The pragmatic alternative is at-least-once delivery combined with **idempotent consumers** using unique event IDs:
+```java
+if (processedEventRepository.existsById(eventId)) {
+    return; // Skip duplicate
+}
+processedEventRepository.save(new ProcessedEvent(eventId, Instant.now()));
+```
+
+#### Schema Evolution
+Register each event type's schema with a Schema Registry (e.g., Avro/Protobuf) enforcing `BACKWARD` compatibility. Alternatively, use an explicit `version` field inside the JSON payload and handle versions using logic switching inside the consumer.
+
+#### Table Cleanups
+An outbox table must be cleaned up regularly, or it will grow unboundedly and degrade query performance. Run a daily scheduled deletion task for old `PUBLISHED` rows:
+```sql
+DELETE FROM outbox_events WHERE status = 'PUBLISHED' AND published_at < NOW() - INTERVAL '7 days';
+```
 
 ---
 
@@ -349,9 +652,11 @@ public PaymentResult processPayment(PaymentRequest req) {
 
 ---
 
-## Database Lock Patterns
+## Locking Patterns: Local to Distributed
 
-### Advisory Locks (PostgreSQL)
+### Local Database Locks
+
+#### Advisory Locks (PostgreSQL)
 
 ```sql
 -- Application-level lock, not tied to a row
@@ -360,7 +665,7 @@ SELECT pg_advisory_xact_lock(user_id); -- Lock for this transaction
 SELECT pg_try_advisory_lock(user_id);  -- Non-blocking attempt
 ```
 
-### SELECT FOR UPDATE SKIP LOCKED
+#### SELECT FOR UPDATE SKIP LOCKED
 
 ```sql
 -- Worker picks up jobs without blocking other workers
@@ -377,6 +682,162 @@ FOR UPDATE SKIP LOCKED; -- Skip rows locked by other workers
 @Query("SELECT j FROM Job j WHERE j.status = 'PENDING' ORDER BY j.createdAt LIMIT 10")
 List<Job> claimJobs();
 ```
+
+<a id="distributed-locking" />
+
+### Distributed Locking & Coordination
+
+A distributed lock coordinates mutually exclusive work across multiple independent nodes or processes (e.g., preventing two scheduled pods from running the same billing job simultaneously).
+
+#### Why Naive Locks Fail
+A naive lock implementation like `SET lock_key worker-A NX` followed by `DEL lock_key` fails in production due to:
+1. **Worker Crashes:** If a worker crashes before deleting the key, the lock is stuck forever. (Mitigation: Add a Lease/TTL).
+2. **GC Pauses / Network Delays:** A worker acquires a lock with a 30s TTL. A JVM Garbage Collection (GC) pause halts the worker for 35s. The lock expires, another worker acquires it, and both workers execute the critical section concurrently.
+3. **Clock Skew:** Relying on physical system time sync across nodes for lock expiration leads to split ownership.
+
+#### The Solution: Leases and Fencing Tokens
+To make distributed locks safe, every lock must return a **fencing token** (a monotonically increasing number). The target storage system must validate the token on every write:
+- Lock service returns token 101 to Worker A.
+- Worker A goes into a GC pause. The lock expires.
+- Lock service returns token 102 to Worker B.
+- Worker B writes to storage (token 102 is recorded as active).
+- Worker A wakes up and attempts to write to storage with token 101.
+- Storage rejects Worker A's write because `101 < 102`.
+
+```mermaid
+sequenceDiagram
+    participant LockSvc as Distributed Lock Service
+    participant A as Worker A
+    participant B as Worker B
+    participant DB as Storage Engine
+
+    A->>LockSvc: Acquire lock
+    LockSvc-->>A: Lock acquired (token=101)
+    Note over A: GC Pause (locks expires)
+    
+    B->>LockSvc: Acquire lock
+    LockSvc-->>B: Lock acquired (token=102)
+    B->>DB: Write data (token=102)
+    DB-->>B: Success (current_token=102)
+
+    Note over A: GC Pause ends / wakes up
+    A->>DB: Write data (token=101)
+    DB-->>A: Reject write (101 < 102)
+```
+
+#### Implementation A: Redis Distributed Lock (Jedis/Lettuce/Redisson)
+Redis locking uses `SET key value NX PX milliseconds` to acquire, and an atomic Lua script to release (ensuring a worker only deletes the lock if they own it):
+
+```java
+public class RedisLock {
+    private final RedisTemplate<String, String> redisTemplate;
+    private final String lockKey;
+    private final String ownerId;
+    private final long leaseTimeMs;
+
+    public boolean tryLock() {
+        Boolean acquired = redisTemplate.opsForValue()
+            .setIfAbsent(lockKey, ownerId, leaseTimeMs, TimeUnit.MILLISECONDS);
+        return Boolean.TRUE.equals(acquired);
+    }
+
+    public void unlock() {
+        String script = """
+            if redis.call("get", KEYS[1]) == ARGV[1] then
+                return redis.call("del", KEYS[1])
+            else
+                return 0
+            end
+            """;
+        redisTemplate.execute(
+            new DefaultRedisScript<>(script, Long.class),
+            Collections.singletonList(lockKey),
+            ownerId
+        );
+    }
+}
+```
+
+##### RedLock Algorithm & Criticisms
+To overcome single-point-of-failure issues, the **RedLock** algorithm acquires locks across `N` independent Redis nodes (needing a quorum of `N/2 + 1` nodes to succeed).
+However, distributed systems expert Martin Kleppmann criticized RedLock because:
+- It relies on physical clock synchronization (system time) to calculate lease durations, which is unsafe due to clock drift.
+- It does not natively issue fencing tokens, meaning it cannot protect against GC-pause concurrency anomalies without storage-level checks.
+- *Best practice:* For strict safety, use ZooKeeper or database advisory locks; for high-throughput, soft coordination, Redis is excellent.
+
+#### Implementation B: ZooKeeper Distributed Lock
+ZooKeeper achieves lock safety via **ephemeral sequential nodes** and **watchers**. Ephemeral nodes delete themselves automatically if the client's session disconnects, preventing permanent deadlocks.
+
+```java
+public class ZooKeeperLock {
+    private final ZooKeeper zk;
+    private final String lockPath;
+    private String currentPath;
+
+    public boolean tryLock() throws Exception {
+        // 1. Create ephemeral sequential node
+        currentPath = zk.create(lockPath + "/lock-",
+            new byte[0], ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
+
+        while (true) {
+            // 2. Get all children and sort them
+            List<String> children = zk.getChildren(lockPath, false);
+            Collections.sort(children);
+
+            // 3. If our node is the smallest, we have the lock
+            String firstNode = children.get(0);
+            if (currentPath.endsWith(firstNode)) {
+                return true;
+            }
+
+            // 4. Otherwise, watch the node immediately preceding ours
+            int index = children.indexOf(currentPath.substring(lockPath.length() + 1));
+            String watchPath = lockPath + "/" + children.get(index - 1);
+
+            CountDownLatch latch = new CountDownLatch(1);
+            if (zk.exists(watchPath, event -> {
+                if (event.getType() == EventType.NodeDeleted) {
+                    latch.countDown();
+                }
+            }) != null) {
+                latch.await(); // Block until the previous node is deleted
+            }
+        }
+    }
+
+    public void unlock() throws Exception {
+        zk.delete(currentPath, -1);
+    }
+}
+```
+
+#### Implementation C: Kubernetes Lease Coordination
+Kubernetes uses the `Lease` resource in `coordination.k8s.io` to coordinate leader election and active locks across controller pods:
+
+```yaml
+apiVersion: coordination.k8s.io/v1
+kind: Lease
+metadata:
+  name: lead-election-lock
+  namespace: default
+spec:
+  holderIdentity: pod-worker-a
+  leaseDurationSeconds: 15
+  acquireTime: "2026-06-05T15:00:00Z"
+  renewTime: "2026-06-05T15:00:10Z"
+```
+Pods periodically issue heartbeat updates to the `renewTime` field. If a leader crashes, its lease expires, and other candidate pods attempt to update `holderIdentity` with their own ID.
+
+#### Leader Election Algorithms
+When operations are "leader-only," distributed systems elect a single coordinator node using consensus algorithms:
+* **Bully Algorithm:** Nodes broadcast elections to nodes with higher IDs. If no higher ID responds, the caller becomes the leader.
+* **Ring-based Election:** Nodes send election tokens around a logical ring. The node with the highest ID is elected when the token completes the circle.
+* **Raft/Paxos Election:** Term-based candidate voting with randomized timeouts. The candidate obtaining a quorum of votes becomes the leader.
+
+#### Distributed Coordination Patterns
+- **Barriers:** Block all processes until a specified number of participants join.
+- **Distributed Semaphores:** Coordinate access to a pool of `N` shared resources.
+- **Distributed Counters:** Maintain a consistent numeric value (e.g., using Redis INCR or Paxos register writes).
 
 ---
 
@@ -526,39 +987,125 @@ Problems:
 - Still vulnerable to network partitions
 - Higher latency
 
-### Saga Pattern
+<a id="saga-pattern" />
 
-Saga breaks long transactions into a sequence of local transactions with compensating actions.
+### Saga Pattern & Distributed Workflows
+
+Distributed systems cannot easily enforce ACID transactions across database boundaries. The **Saga Pattern** coordinates a sequence of local ACID transactions across microservices, ensuring eventual consistency.
 
 ```
-Order Saga:
-1. Create Order (local transaction)
-2. Reserve Inventory (local transaction)
-3. Process Payment (local transaction)
-4. Ship Order (local transaction)
-
-If step 3 fails:
-  Compensate step 2: Release Inventory
-  Compensate step 1: Cancel Order
+T1 (Order) ──► T2 (Inventory) ──► T3 (Payment) ──► FAIL
+                                                    │ (Compensate)
+T1_Comp   ◄─── T2_Comp       ◄──────────────────────┘
 ```
 
-Types:
-- **Choreography**: Each step emits events, next step listens
-- **Orchestration**: Central coordinator orchestrates steps
+A Saga consists of:
+1. **Local Transactions ($T_i$):** Small, independent database commits executed sequentially by each service.
+2. **Compensating Transactions ($C_i$):** Actions that **semantically undo** the corresponding local transaction (e.g., issuing a refund instead of "rolling back" a database write).
 
-### Compensating Transactions
+#### Saga Coordination: Orchestration vs. Choreography
 
-Compensating transactions undo the effects of a previous transaction.
+| Dimension | Orchestration (Central Coordinator) | Choreography (Event-Driven) |
+|---|---|---|
+| **Control** | Centralized manager decides execution order | Decoupled; services react to and emit domain events |
+| **Coupling** | High (coordinator must import client libraries of all services) | Low (services only require knowledge of event schemas) |
+| **SPOF Risk** | High (coordinator down blocks new sagas) | Low (no single coordinator) |
+| **Visibility** | Easy to audit and trace overall workflow state | Harder to debug without distributed tracing |
+| **Best For** | Complex, multi-branch, highly regulated business flows | Simple, linear, decoupled event-driven systems |
 
+##### Orchestration Code Example (Central Coordinator)
 ```java
-public void compensatePayment(Payment payment) {
-    // Reverse the payment
-    paymentService.refund(payment.getId(), payment.getAmount());
-    // Update payment status
-    payment.setStatus(PaymentStatus.REFUNDED);
-    paymentRepository.save(payment);
+@Service
+public class OrderSagaOrchestrator {
+    private final OrderRepository orderRepository;
+    private final InventoryClient inventoryClient;
+    private final PaymentClient paymentClient;
+
+    @Transactional
+    public void executeSaga(CreateOrderCommand cmd) {
+        Order order = orderRepository.save(new Order(cmd));
+        try {
+            inventoryClient.reserve(order.getId(), cmd.getItems());
+            paymentClient.charge(order.getId(), cmd.getPaymentInfo());
+            order.markCompleted();
+        } catch (InventoryException ex) {
+            order.markFailed("Inventory reservation failed");
+        } catch (PaymentException ex) {
+            // Compensate previous step
+            inventoryClient.release(order.getId(), cmd.getItems());
+            order.markFailed("Payment failed");
+        }
+        orderRepository.save(order);
+    }
 }
 ```
+
+##### Choreography Code Example (Event-Driven)
+```java
+// Choreography inside Inventory Service
+@KafkaListener(topics = "order-placed")
+public void onOrderPlaced(OrderPlacedEvent event) {
+    try {
+        inventoryRepository.reserve(event.getOrderId(), event.getItems());
+        kafkaTemplate.send("inventory-reserved", new InventoryReservedEvent(event.getOrderId()));
+    } catch (InsufficientStockException e) {
+        kafkaTemplate.send("inventory-failed", new InventoryFailedEvent(event.getOrderId()));
+    }
+}
+
+// Choreography inside Order Service (reacts to failures)
+@KafkaListener(topics = "inventory-failed")
+public void onInventoryFailed(InventoryFailedEvent event) {
+    orderRepository.markFailed(event.getOrderId(), "Stock unavailable");
+}
+```
+
+#### Process Manager Pattern
+For complex orchestration, store the saga's state in a dedicated table, creating a state machine called a **Process Manager**:
+
+```java
+@Entity
+@Table(name = "saga_states")
+public class SagaState {
+    @Id
+    private UUID sagaId;
+    private Long orderId;
+    @Enumerated(EnumType.STRING)
+    private SagaStep currentStep; // PENDING, INVENTORY_RESERVED, PAYMENT_CHARGED, COMPLETED, FAILED
+    private String failureReason;
+    private LocalDateTime lastUpdated;
+}
+
+public enum SagaStep {
+    PENDING, INVENTORY_RESERVED, PAYMENT_CHARGED, SHIPPING_SCHEDULED, COMPLETED, FAILED
+}
+```
+
+#### Idempotency in Saga Steps
+Since network errors lead to step retries, every saga handler must be **idempotent**. Assign a unique `saga_id` or `idempotency_key` to each transaction:
+```java
+public ChargeResult chargeCard(ChargeRequest request) {
+    String idempotencyKey = "saga:charge:" + request.getSagaId();
+    return chargeRepository.findByIdempotencyKey(idempotencyKey)
+        .map(Charge::getResult) // Return previously cached result
+        .orElseGet(() -> {
+            ChargeResult result = paymentGateway.charge(request);
+            chargeRepository.save(new Charge(idempotencyKey, result));
+            return result;
+        });
+}
+```
+
+#### Compensation Failure Playbook
+If a compensating transaction fails (e.g., the refund gateway is down), the saga cannot automatically resolve. Use the following escalation playbook:
+1. **Bounded Retry with Backoff:** Retry the compensation task with exponential backoff and jitter.
+2. **Alert and Escalate:** Move the saga state to `MANUAL_INTERVENTION_REQUIRED` or `ESCALATED`.
+3. **Ops Queue:** Route the failure to a human operations dashboard with full audit trail logging of all successful and failed steps.
+
+#### Semantic Rollbacks
+Some real-world actions are physically impossible to undo (e.g., an email notification has already been sent, or cash has been dispensed from an ATM). For these steps, design **semantic rollbacks**:
+- Instead of "un-sending" an email $\rightarrow$ send a correction/cancellation email.
+- Instead of "un-dispensing" cash $\rightarrow$ log an adjustment/charge event to the ledger.
 
 ---
 
@@ -819,109 +1366,21 @@ COMMIT;
 
 ---
 
-## Integration Patterns
+## Application Transaction Integration Patterns
 
-### Outbox Pattern
+### Optimistic Concurrency Control (OCC) with JPA `@Version`
 
-```java
-@Entity
-public class Order {
-    @Id
-    private Long id;
-    private BigDecimal amount;
-    private OrderStatus status;
-}
-
-@Entity
-public class OutboxEvent {
-    @Id
-    private Long id;
-    private String aggregateType;
-    private String aggregateId;
-    private String eventType;
-    private String payload;
-    private Instant createdAt;
-    private Instant publishedAt;
-    private EventStatus status;
-}
-
-@Service
-public class OrderService {
-    @Transactional
-    public Order createOrder(CreateOrderCommand cmd) {
-        Order order = new Order(cmd);
-        orderRepository.save(order);
-
-        OutboxEvent event = new OutboxEvent(
-            "Order",
-            order.getId().toString(),
-            "OrderCreated",
-            toJson(new OrderCreatedEvent(order))
-        );
-        outboxRepository.save(event);
-
-        return order;
-    }
-}
-```
-
-### Saga Orchestration
-
-```java
-@Service
-public class OrderSagaOrchestrator {
-    @SagaOrchestrationStart
-    public void handle(OrderCreatedEvent event) {
-        sagaManager.createSaga(event.getOrderId())
-            .step("reserveInventory")
-            .invokeParticipant(inventoryService::reserve)
-            .onCompensation(inventoryService::release)
-            .step("processPayment")
-            .invokeParticipant(paymentService::process)
-            .onCompensation(paymentService::refund)
-            .step("shipOrder")
-            .invokeParticipant(shippingService::ship)
-            .onCompensation(shippingService::cancel)
-            .start();
-    }
-}
-```
-
-### Eventual Consistency with Versioning
+Optimistic Concurrency Control is ideal when read-to-write ratios are high and concurrent collisions are rare. It avoids taking locks by checking a version number at commit time:
 
 ```java
 @Entity
-public class Document {
-    @Id
-    private Long id;
-    private String content;
-    @Version
-    private Long version;
-}
-
-@Service
-public class DocumentService {
-    public Document updateDocument(Long id, String newContent, Long expectedVersion) {
-        Document doc = documentRepository.findById(id).orElseThrow();
-        if (!doc.getVersion().equals(expectedVersion)) {
-            throw new OptimisticLockException("Document modified by another transaction");
-        }
-        doc.setContent(newContent);
-        return documentRepository.save(doc);
-    }
-}
-```
-
-### Optimistic Concurrency Control
-
-```java
-@Entity
+@Table(name = "accounts")
 public class Account {
     @Id
     private Long id;
     private BigDecimal balance;
     @Version
-    private Long version;
+    private Long version; // Incremented automatically by Hibernate on update
 }
 
 @Service
@@ -936,17 +1395,22 @@ public class AccountService {
 
         accountRepository.save(from);
         accountRepository.save(to);
+        // If another transaction updated either account in the meantime,
+        // a database-level version mismatch is detected, and Hibernate
+        // throws OptimisticLockException, triggering a rollback.
     }
 }
 ```
 
-### Pessimistic Concurrency Control
+### Pessimistic Concurrency Control (PCC) with JPA `@Lock`
+
+Pessimistic Concurrency Control is preferred under heavy contention. It locks the records immediately upon reading, preventing other writers from accessing them:
 
 ```java
 @Service
 public class AccountService {
     @Transactional
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Lock(LockModeType.PESSIMISTIC_WRITE) // Generates SELECT ... FOR UPDATE
     public void transfer(Long fromId, Long toId, BigDecimal amount) {
         Account from = accountRepository.findById(fromId).orElseThrow();
         Account to = accountRepository.findById(toId).orElseThrow();
@@ -1103,6 +1567,26 @@ public class AccountService {
 ### Q: What is write-ahead logging (WAL) and why is it important?
 
 **A:** WAL writes changes to a log before applying to data files, ensuring durability and enabling crash recovery by replaying the log.
+
+### Q: Why does a naive distributed lock (e.g., SET key NX PX) fail in production?
+
+**A:** It fails due to GC pauses or network delays. If a worker is suspended by a JVM GC pause that exceeds the lock's TTL, the lock expires and another worker acquires it. When the first worker resumes, both execute the critical section concurrently. Naive locks also offer no protection against clock drift.
+
+### Q: What is a fencing token and how does it prevent concurrency anomalies?
+
+**A:** A fencing token is a monotonically increasing number returned by the lock service (e.g., ZooKeeper's node version). The storage system records the token of the last write. If a client tries to write with a lower/stale token (due to a delay or GC pause), the storage system rejects the write, ensuring safety.
+
+### Q: How does the RedLock algorithm work and what are its main criticisms?
+
+**A:** RedLock attempts to acquire locks on a quorum of independent Redis instances (e.g., 3 out of 5). Criticisms (e.g., by Martin Kleppmann) highlight that it relies on physical clocks for lease calculation (which drift and can jump), and it does not natively provide fencing tokens, making it unsafe for systems requiring absolute correctness.
+
+### Q: How do you handle a saga where a step succeeds, but its corresponding compensating transaction fails?
+
+**A:** Use exponential backoff with jitter to retry the compensation. If it continues to fail (e.g., due to an error from the external gateway), transition the saga state to `MANUAL_INTERVENTION_REQUIRED` and route it to an operator queue. Do not discard the state.
+
+### Q: How would you design a distributed checkout flow that spans inventory, payment, and shipping?
+
+**A:** Implement a Stateful Saga (Orchestrator). The Order Service acts as the coordinator. It writes the Saga state to its DB, then calls the Inventory Service to reserve stock. If successful, it calls the Payment Service to capture funds. If that succeeds, it calls the Shipping Service. If payment fails, the coordinator triggers compensating steps: releasing reserved stock. Each step uses unique idempotency keys to handle retries safely.
 
 ---
 

@@ -890,7 +890,7 @@ Guarantee that a DB write and a message publication are atomic — even if Kafka
 
 :::info[Deep Dive: Outbox Pattern]
 The standard way to avoid the dual-write problem is the **Transactional Outbox Pattern**. 
-For a complete guide with code examples, polling vs CDC (Debezium) trade-offs, and failure mitigation, see the centralized **[Transactional Outbox Pattern](../system-design/outbox-pattern.md)** page.
+For a complete guide with code examples, polling vs CDC (Debezium) trade-offs, and failure mitigation, see the centralized **[Transactional Outbox Pattern](../system-design/data-consistency.md#outbox-pattern)** page.
 :::
 
 ### Materialized View with Aggregation Pipeline on a Schedule

@@ -313,7 +313,7 @@ Client -> Gateway
 ---
 
 ## Saga Pattern (Cross-Service Transactions)
-See [Multi-Step Processes](./multi-step-process) for full coverage.
+See [Data Consistency & Transactions](./data-consistency#saga-pattern) for full coverage.
 
 ---
 
