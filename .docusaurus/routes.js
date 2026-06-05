@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '1bc'),
+    component: ComponentCreator('/', 'c25'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'beb'),
+        component: ComponentCreator('/', 'cc8'),
         routes: [
           {
             path: '/tags',
@@ -2641,6 +2641,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/hikaricp',
+            component: ComponentCreator('/tags/hikaricp', '46f'),
+            exact: true
+          },
+          {
             path: '/tags/hipaa',
             component: ComponentCreator('/tags/hipaa', 'a32'),
             exact: true
@@ -4408,6 +4413,11 @@ export default [
           {
             path: '/tags/posix',
             component: ComponentCreator('/tags/posix', 'b03'),
+            exact: true
+          },
+          {
+            path: '/tags/postgis',
+            component: ComponentCreator('/tags/postgis', 'dc5'),
             exact: true
           },
           {
@@ -6482,7 +6492,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '7fc'),
+            component: ComponentCreator('/', 'a68'),
             routes: [
               {
                 path: '/aws',
@@ -7290,7 +7300,7 @@ export default [
               },
               {
                 path: '/system-design',
-                component: ComponentCreator('/system-design', '8cd'),
+                component: ComponentCreator('/system-design', '82c'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -7470,7 +7480,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/aws/messaging/sqs',
-                component: ComponentCreator('/technical-knowledge/aws/messaging/sqs', '5c2'),
+                component: ComponentCreator('/technical-knowledge/aws/messaging/sqs', '6a2'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -7979,7 +7989,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/database-patterns-microservices',
-                component: ComponentCreator('/technical-knowledge/database/database-patterns-microservices', '3ee'),
+                component: ComponentCreator('/technical-knowledge/database/database-patterns-microservices', '867'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -8003,7 +8013,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/nosql-distributed',
-                component: ComponentCreator('/technical-knowledge/database/nosql-distributed', '2c8'),
+                component: ComponentCreator('/technical-knowledge/database/nosql-distributed', '448'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13019,7 +13029,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/advanced/kafka-connect',
-                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-connect', 'cfb'),
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-connect', '76e'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13823,13 +13833,19 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/cdc',
-                component: ComponentCreator('/technical-knowledge/system-design/cdc', '5d0'),
+                component: ComponentCreator('/technical-knowledge/system-design/cdc', '422'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/common-interview-questions',
-                component: ComponentCreator('/technical-knowledge/system-design/common-interview-questions', '2cb'),
+                component: ComponentCreator('/technical-knowledge/system-design/common-interview-questions', '092'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/connection-pooling',
+                component: ComponentCreator('/technical-knowledge/system-design/connection-pooling', '6a7'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13847,19 +13863,19 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/data-consistency',
-                component: ComponentCreator('/technical-knowledge/system-design/data-consistency', '063'),
+                component: ComponentCreator('/technical-knowledge/system-design/data-consistency', 'c3a'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/dead-letter-queue',
-                component: ComponentCreator('/technical-knowledge/system-design/dead-letter-queue', 'bbe'),
+                component: ComponentCreator('/technical-knowledge/system-design/dead-letter-queue', '2a3'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/distributed-systems',
-                component: ComponentCreator('/technical-knowledge/system-design/distributed-systems', '888'),
+                component: ComponentCreator('/technical-knowledge/system-design/distributed-systems', 'bf3'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13895,19 +13911,19 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/long-running-tasks',
-                component: ComponentCreator('/technical-knowledge/system-design/long-running-tasks', '86e'),
+                component: ComponentCreator('/technical-knowledge/system-design/long-running-tasks', 'bde'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/message-queues',
-                component: ComponentCreator('/technical-knowledge/system-design/message-queues', 'ba0'),
+                component: ComponentCreator('/technical-knowledge/system-design/message-queues', '9d1'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/microservices-patterns',
-                component: ComponentCreator('/technical-knowledge/system-design/microservices-patterns', '25e'),
+                component: ComponentCreator('/technical-knowledge/system-design/microservices-patterns', '9e5'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13925,7 +13941,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/proximity-search-geospatial-indexes',
-                component: ComponentCreator('/technical-knowledge/system-design/proximity-search-geospatial-indexes', '5fa'),
+                component: ComponentCreator('/technical-knowledge/system-design/proximity-search-geospatial-indexes', '71d'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13937,7 +13953,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway',
-                component: ComponentCreator('/technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway', '533'),
+                component: ComponentCreator('/technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway', '6ff'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

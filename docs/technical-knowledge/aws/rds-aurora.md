@@ -177,10 +177,8 @@ spring:
     password: ${DB_PASSWORD}    # From Secrets Manager
     hikari:
       minimum-idle: 2
-      maximum-pool-size: 10     # Keep low for Lambda!
+      maximum-pool-size: 10
       connection-timeout: 30000
-      idle-timeout: 600000
-      max-lifetime: 1800000
 
   jpa:
     hibernate:
@@ -191,7 +189,7 @@ spring:
 ```
 
 :::caution[HikariCP pool size for Lambda]
-Lambda functions are short-lived — a pool size of 10 means each Lambda **execution environment** holds 10 connections. With 100 concurrent Lambdas = 1,000 connections. Use **RDS Proxy** to manage this.
+Lambda functions are short-lived — a pool size of 10 means each Lambda execution environment holds up to 10 connections. High concurrency leads to connection exhaustion. Use **[RDS Proxy](../system-design/connection-pooling.md#b-aws-rds-proxy)** to queue and multiplex connections. For general pool tuning rules, see **[Database Connection Pooling](../system-design/connection-pooling.md)**.
 :::
 
 ---

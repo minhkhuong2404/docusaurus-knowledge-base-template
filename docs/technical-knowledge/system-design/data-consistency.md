@@ -26,7 +26,7 @@ tags: [consistency, transactions, acid, eventual-consistency, outbox-pattern, id
   - [Last-Write-Wins (LWW)](#last-write-wins-lww)
   - [CRDT (Conflict-free Replicated Data Types)](#crdt-conflict-free-replicated-data-types)
   - [Application-Level Resolution](#application-level-resolution)
-- [Transactional Outbox Pattern](#transactional-outbox-pattern-solving-the-dual-write-problem)
+- [Transactional Outbox Pattern](#outbox-pattern)
 - [Quorum Reads and Read Repair](#quorum-reads-and-read-repair)
   - [Beginner View](#beginner-view-1)
   - [Senior Deep Dive](#senior-deep-dive)
@@ -36,7 +36,7 @@ tags: [consistency, transactions, acid, eventual-consistency, outbox-pattern, id
   - [Application-Level](#application-level)
 - [Locking Patterns: Local to Distributed](#locking-patterns-local-to-distributed)
   - [Local Database Locks](#local-database-locks)
-  - [Distributed Locking \& Coordination](#distributed-locking-coordination)
+  - [Distributed Locking \& Coordination](#distributed-locking)
 - [How Transactions Work Internally](#how-transactions-work-internally)
   - [Transaction Lifecycle](#transaction-lifecycle)
   - [Write-Ahead Logging (WAL)](#write-ahead-logging-wal)
@@ -47,7 +47,7 @@ tags: [consistency, transactions, acid, eventual-consistency, outbox-pattern, id
 - [Distributed Transaction Protocols](#distributed-transaction-protocols)
   - [Two-Phase Commit (2PC)](#two-phase-commit-2pc)
   - [Three-Phase Commit (3PC)](#three-phase-commit-3pc)
-  - [Saga Pattern \& Distributed Workflows](#saga-pattern-distributed-workflows)
+  - [Saga Pattern \& Distributed Workflows](#saga-pattern)
 - [Consensus Algorithms](#consensus-algorithms)
   - [Paxos](#paxos)
   - [Raft](#raft)
@@ -65,11 +65,11 @@ tags: [consistency, transactions, acid, eventual-consistency, outbox-pattern, id
   - [Optimistic Concurrency Control (OCC) with JPA @Version](#optimistic-concurrency-control-occ-with-jpa-version)
   - [Pessimistic Concurrency Control (PCC) with JPA @Lock](#pessimistic-concurrency-control-pcc-with-jpa-lock)
 - [Pros and Cons](#pros-and-cons)
-  - [Strong Consistency](#strong-consistency)
-  - [Eventual Consistency](#eventual-consistency-1)
-  - [Outbox Pattern](#outbox-pattern-2)
-  - [Saga Pattern](#saga-pattern-1)
-  - [CRDTs](#crdts)
+  - [Strong Consistency](#strong-consistency-pros-cons)
+  - [Eventual Consistency](#eventual-consistency-pros-cons)
+  - [Outbox Pattern](#outbox-pattern-pros-cons)
+  - [Saga Pattern](#saga-pattern-pros-cons)
+  - [CRDTs](#crdts-pros-cons)
 - [Interview Questions](#interview-questions)
 - [Senior Deep Dive: Advanced Topics](#senior-deep-dive-advanced-topics)
   - [Vector Clocks](#vector-clocks)
@@ -272,9 +272,7 @@ public UserProfile merge(UserProfile local, UserProfile remote) {
 
 ---
 
-<a id="outbox-pattern" />
-
-## Transactional Outbox Pattern (Solving the Dual-Write Problem)
+## Transactional Outbox Pattern (Solving the Dual-Write Problem) {/* #outbox-pattern */}
 
 In a microservices architecture, a service frequently needs to do two things simultaneously when a business action occurs:
 1. **Write to its own database** — persist the new/updated business entity.
@@ -683,9 +681,7 @@ FOR UPDATE SKIP LOCKED; -- Skip rows locked by other workers
 List<Job> claimJobs();
 ```
 
-<a id="distributed-locking" />
-
-### Distributed Locking & Coordination
+### Distributed Locking & Coordination {/* #distributed-locking */}
 
 A distributed lock coordinates mutually exclusive work across multiple independent nodes or processes (e.g., preventing two scheduled pods from running the same billing job simultaneously).
 
@@ -987,9 +983,7 @@ Problems:
 - Still vulnerable to network partitions
 - Higher latency
 
-<a id="saga-pattern" />
-
-### Saga Pattern & Distributed Workflows
+### Saga Pattern & Distributed Workflows {/* #saga-pattern */}
 
 Distributed systems cannot easily enforce ACID transactions across database boundaries. The **Saga Pattern** coordinates a sequence of local ACID transactions across microservices, ensuring eventual consistency.
 
@@ -1428,7 +1422,7 @@ public class AccountService {
 
 ## Pros and Cons
 
-### Strong Consistency
+### Strong Consistency (Pros & Cons) {/* #strong-consistency-pros-cons */}
 
 **Pros:**
 - Guarantees correct data
@@ -1440,7 +1434,7 @@ public class AccountService {
 - Higher latency
 - Harder to scale
 
-### Eventual Consistency
+### Eventual Consistency (Pros & Cons) {/* #eventual-consistency-pros-cons */}
 
 **Pros:**
 - High availability
@@ -1452,7 +1446,7 @@ public class AccountService {
 - Complex conflict resolution
 - Harder to reason about
 
-### Outbox Pattern
+### Outbox Pattern (Pros & Cons) {/* #outbox-pattern-pros-cons */}
 
 **Pros:**
 - Guarantees event delivery
@@ -1464,7 +1458,7 @@ public class AccountService {
 - Polling/CDC complexity
 - Event ordering challenges
 
-### Saga Pattern
+### Saga Pattern (Pros & Cons) {/* #saga-pattern-pros-cons */}
 
 **Pros:**
 - Long-running transactions
@@ -1476,7 +1470,7 @@ public class AccountService {
 - Eventual consistency
 - Hard to debug
 
-### CRDTs
+### CRDTs (Pros & Cons) {/* #crdts-pros-cons */}
 
 **Pros:**
 - Conflict-free merging

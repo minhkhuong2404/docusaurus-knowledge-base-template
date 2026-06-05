@@ -82,7 +82,7 @@
     "permalink": "/technical-knowledge/system-design/api-design"
   },
   "next": {
-    "title": "Indexing & Query Optimization",
-    "permalink": "/technical-knowledge/database/indexing-query-optimization"
+    "title": "🔌 Connection Pooling",
+    "permalink": "/technical-knowledge/system-design/connection-pooling"
   }
 }

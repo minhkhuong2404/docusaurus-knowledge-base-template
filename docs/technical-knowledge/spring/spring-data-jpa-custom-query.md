@@ -820,42 +820,7 @@ List<User> findActiveUsersReadOnly();
 <details>
 <summary>🔬 Senior deep-dive: HikariCP and connection pool starvation</summary>
 
-Every query borrows a connection from HikariCP's pool. The default pool size is **10 connections**. N+1 queries, long transactions, or blocking reads can exhaust the pool — all other requests queue and eventually timeout.
-
-```yaml
-# application.yaml — tune for your workload
-spring:
-  datasource:
-    hikari:
-      maximum-pool-size: 20          # max concurrent connections
-      minimum-idle: 5                # keep 5 connections warm
-      connection-timeout: 3000       # fail fast if no connection in 3s
-      idle-timeout: 600000           # remove idle connections after 10m
-      max-lifetime: 1800000          # recycle connections after 30m
-      leak-detection-threshold: 2000 # warn if connection held > 2s
-```
-
-**Detecting pool starvation:**
-```java
-// Add this bean to get pool metrics in Actuator / Micrometer
-@Bean
-public MeterRegistryCustomizer<MeterRegistry> hikariMetrics(DataSource dataSource) {
-    return registry -> {
-        if (dataSource instanceof HikariDataSource hds) {
-            HikariDataSourcePoolMetrics metrics =
-                new HikariDataSourcePoolMetrics(hds, registry, Tags.empty());
-            metrics.bindTo(registry);
-        }
-    };
-}
-// Metrics exposed: hikaricp.connections.active, hikaricp.connections.pending
-```
-
-**Root cause checklist when pool is exhausted:**
-1. N+1 queries holding connections for long transactions.
-2. `@Transactional` on methods that do heavy computation before/after the DB call.
-3. Missing `@Transactional(readOnly = true)` on read-only methods — prevents flushing overhead.
-4. Fetching too many rows per query — consider streaming or pagination.
+For detailed guidelines on pool sizing, parameter details, starvation patterns, and Micrometer instrumentation, see the centralized **[Database Connection Pooling](../system-design/connection-pooling.md)** guide.
 
 </details>
 
@@ -1041,7 +1006,7 @@ class NativeQueryTest {
 > For read-only, high-frequency endpoints where you need only a subset of fields. Full entities incur: reading all columns, allocating the entity object, creating a dirty-checking snapshot, and storing everything in the L1 cache. DTO projections skip all of this — Hibernate reads only the projected columns, allocates a plain object, and does no tracking. For a list of 10,000 records, this can reduce heap usage by 10–25×.
 
 **Q5. (Senior) How does HikariCP connection pool starvation relate to N+1 queries?**
-> Each database query borrows a connection from HikariCP for the duration of the call. N+1 queries inside a single transaction hold a connection open while issuing 100 serial queries — 10× longer than a single JOIN query. Under concurrent load, many threads each holding connections with N+1 queries can exhaust the pool (default size 10). New requests queue waiting for a connection and eventually time out — a cascade failure. The fix: eliminate N+1 with `JOIN FETCH` / `@EntityGraph`, reduce transaction scope, and tune pool size with `maximum-pool-size` and `leak-detection-threshold`.
+> Each query borrows a connection from HikariCP for the duration of the call. N+1 queries inside a single transaction hold a connection open while issuing serial queries, quickly depleting the pool and causing other requests to time out. For details, sizing, and solutions, see **[Database Connection Pooling](../system-design/connection-pooling.md)**.
 
 **Q6. (Senior) How do `@EntityGraph` and `JOIN FETCH` differ, and when do you choose each?**
 > Both solve N+1 by eagerly loading associations in a JOIN. Differences: `@EntityGraph` always uses LEFT OUTER JOIN, works with `Pageable` and derived methods, but offers no control over JOIN type or conditions on the joined table. `JOIN FETCH` in `@Query` allows INNER or LEFT JOIN, supports WHERE conditions on the joined table, and is explicit — but cannot be safely combined with `Pageable`. Rule of thumb: use `@EntityGraph` for paginated lists or when derived methods are sufficient; use `JOIN FETCH` in `@Query` when you need precise SQL control and are not paginating.
@@ -1056,4 +1021,4 @@ class NativeQueryTest {
 - [Spring Exception Handling — @RestControllerAdvice](./spring-exception-handling.md)
 - [Spring Data JPA — Entity Relationships & Fetch Strategies](./spring-data-jpa-mappings.md)
 - [Hibernate Query Cache & Second-Level Cache](./jpa-vs-hibernate.md#4-second-level-cache-l2-cache)
-- [Database Connection Pool Tuning (HikariCP)](./jpa-vs-hibernate.md#1-connection-pool-exhaustion-hikaricp)
+- [Database Connection Pooling](../system-design/connection-pooling.md)

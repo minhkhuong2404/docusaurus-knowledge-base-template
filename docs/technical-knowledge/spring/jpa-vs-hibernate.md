@@ -614,6 +614,8 @@ With `IDENTITY`, if you do an external API call between `persist()` and commit, 
 
 **Configuration for optimal HikariCP behavior with SEQUENCE:**
 
+For a comprehensive guide on pool sizing formulas and parameter details, see **[Database Connection Pooling](../system-design/connection-pooling.md)**.
+
 ```yaml
 # application.yml
 spring:
@@ -621,10 +623,7 @@ spring:
     hikari:
       maximum-pool-size: 20
       minimum-idle: 5
-      connection-timeout: 30000       # Max wait for connection
-      idle-timeout: 600000            # Remove idle connections after 10min
-      max-lifetime: 1800000           # Recycle connections after 30min
-      leak-detection-threshold: 60000 # Warn if connection held > 60s
+      connection-timeout: 30000
 
   jpa:
     properties:
@@ -959,3 +958,4 @@ public Product findProduct(UUID id) {
 - [jOOQ Documentation](https://www.jooq.org/doc/latest/manual/) — Official jOOQ reference; the best starting point for type-safe SQL in Java.
 - [Spring Data JDBC Reference](https://docs.spring.io/spring-data/relational/reference/) — Official docs for Spring Data JDBC; understand the philosophical differences from JPA before choosing.
 - [HikariCP Documentation](https://github.com/brettwooldridge/HikariCP#configuration-knobs-baby) — Configuration reference for the default Spring Boot connection pool; the "About Pool Sizing" wiki page is essential reading.
+- [Database Connection Pooling](../system-design/connection-pooling.md) — Centralized guide for pool sizing, configuration knobs, and troubleshooting.

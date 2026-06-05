@@ -794,6 +794,8 @@ public class DatabaseService {
 
 ### Connection Pooling
 
+For details on pool mechanics, sizing formulas, and parameter configurations, see the centralized **[Database Connection Pooling](./connection-pooling.md)** guide.
+
 ```yaml
 # application.yml — HikariCP (Spring Boot default)
 spring:
@@ -801,10 +803,9 @@ spring:
     hikari:
       maximum-pool-size: 20
       minimum-idle: 5
-      connection-timeout: 3000    # 3s max wait for connection
-      idle-timeout: 600000        # 10 min
-      max-lifetime: 1800000       # 30 min
+      connection-timeout: 3000
 ```
+
 
 ---
 

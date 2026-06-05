@@ -159,7 +159,7 @@ Distilled notes and key takeaways from essential software engineering books.
 |------|--------|-------|-------|
 | **Effective Java** | Joshua Bloch | 90 best practices: generics, lambdas, APIs, concurrency, serialization | [→ Notes](/books/effective-java/introduction) |
 | **Clean Code** | Robert C. Martin | Naming, functions, comments, formatting, error handling | [→ Notes](/books/clean-code/intro) |
-| **Building Microservices** | Sam Newman | Service decomposition, resilience, integration, deployment | [→ Notes](/books/building-microservice/) |
+| **Building Microservices** | Sam Newman | Service decomposition, resilience, integration, deployment | *Coming soon* |
 
 ### Deep Foundations Track
 

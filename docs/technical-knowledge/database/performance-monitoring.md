@@ -122,33 +122,20 @@ Key things to check:
 
 ## Connection Pooling
 
-Opening a DB connection is expensive (~20-50ms, TLS + auth + backend process). Applications must use a **connection pool**.
+Opening a DB connection is expensive. Applications must use a connection pool to reuse connections.
 
-### HikariCP (Default in Spring Boot)
+For detailed guidelines on pool sizing formulas, parameter details, failure modes, and PgBouncer/RDS Proxy configuration, see the centralized **[Database Connection Pooling](../system-design/connection-pooling.md)** guide.
 
 ```yaml
 # application.yml
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/mydb
     hikari:
-      maximum-pool-size: 20         # max connections to DB
-      minimum-idle: 5               # keep alive connections
-      connection-timeout: 30000     # ms to wait for connection
-      idle-timeout: 600000          # ms before idle connection closed
-      max-lifetime: 1800000         # ms max connection lifetime
-      pool-name: MyHikariPool
-      # Validate connection before use
-      connection-test-query: SELECT 1
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
 ```
 
-**Pool sizing formula (rough guide):**
-```
-pool_size = (num_cores * 2) + effective_spindle_count
-
-For most OLTP apps: 10-20 connections per app instance
-For high-concurrency: scale horizontally (more app instances), not pool size
-```
 
 ### PgBouncer (PostgreSQL Connection Pooler)
 

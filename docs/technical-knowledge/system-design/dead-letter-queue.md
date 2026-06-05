@@ -12,7 +12,7 @@ tags: [dead-letter-queue, dlq, poison-pills, system-design, retry-policies, mess
 
 ---
 
-## 👶 Beginner View: What is a DLQ?
+## Beginner View: What is a DLQ?
 
 Imagine a post office. Letters flow down a conveyor belt to sorting machines. Most letters are successfully stamped, sorted, and routed to their destination. 
 
@@ -29,7 +29,7 @@ In distributed systems, a DLQ isolates **"poison pills"** (messages that consist
 
 ---
 
-## 🏗️ Core System Design Concepts
+## Core System Design Concepts
 
 ```
 Normal Queue ──► [ Consumer / Worker ] ── (fails maxReceiveCount times)
@@ -58,7 +58,7 @@ If a message fails, the consumer releases it back to the queue (or negative-ackn
 
 ---
 
-## 📬 AWS SQS DLQ & Redrive
+## AWS SQS DLQ & Redrive
 
 In AWS, standard and FIFO SQS queues can be configured with a DLQ.
 
@@ -89,7 +89,7 @@ aws sqs start-message-move-task \
 
 ---
 
-## ⚡ Spring Boot & Event-Driven Configurations
+## Spring Boot & Event-Driven Configurations
 
 ### 1. Spring Boot + Kafka (Non-Blocking Retries & DLQ)
 Spring Kafka provides a robust error-handling mechanism that redirects messages to a DLQ topic after a specified number of attempts without blocking the main partition thread.
@@ -160,7 +160,7 @@ public Queue dlQueue() {
 
 ---
 
-## 🔌 Kafka Connect DLQ
+## Kafka Connect DLQ
 
 Kafka Connect allows routing invalid or unparseable source/sink records to a DLQ. This is crucial when a connector encounters a record that violates schema requirements.
 
@@ -195,7 +195,7 @@ When Kafka Connect routes a message to a DLQ, it attaches critical metadata head
 
 ---
 
-## ⚠️ Failure Modes & Production Playbooks
+## Failure Modes & Production Playbooks
 
 ### 1. The Ordering vs. Latency Trade-Off
 When a message fails and is sent to a DLQ, strict chronological processing order is broken.

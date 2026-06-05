@@ -13,13 +13,13 @@ tags: [geospatial, proximity-search, quadtree, r-tree, geohash, s2, h3, system-d
 The core challenge is a dimensional mismatch: traditional database B-Trees index **one dimension** efficiently. Geographic coordinates are **two-dimensional**. Every geospatial indexing technique is fundamentally a strategy for bridging this gap — either by building natively 2D data structures, or by mathematically collapsing 2D coordinates into a 1D space that a standard B-Tree can handle.
 
 :::info[Who this guide is for]
-- **New learners** — start at [Why Standard Indexes Fail](#-why-standard-indexes-fail) and [The Beginner Analogy](#-beginner-analogy-the-city-map).
-- **Senior engineers** — jump to [Approach 1: Spatial Trees](#-approach-1-custom-spatial-trees), [Approach 2: Encoded Keys](#-approach-2-encoded-key-indexes-space-filling-curves), [When They Coexist](#-how-approaches-coexist-in-production), or [Production Deep Dives](#-senior-deep-dive).
+- **New learners** — start at [Why Standard Indexes Fail](#why-standard-indexes-fail) and [The Beginner Analogy](#beginner-analogy-the-city-map).
+- **Senior engineers** — jump to [Approach 1: Spatial Trees](#approach-1-custom-spatial-trees), [Approach 2: Encoded Keys](#approach-2-encoded-key-indexes-space-filling-curves), [When They Coexist](#use-case-4-tiered-geo-index), or [Production Deep Dives](#senior-deep-dive).
 :::
 
 ---
 
-## 👶 Why Standard Indexes Fail
+## 👶 Why Standard Indexes Fail {/* #why-standard-indexes-fail */}
 
 Before understanding the solutions, you must deeply understand the problem.
 
@@ -68,7 +68,7 @@ Step 3 is an in-memory set intersection on potentially millions of IDs. Step 4 a
 
 ---
 
-## 👶 Beginner Analogy: The City Map
+## 👶 Beginner Analogy: The City Map {/* #beginner-analogy-the-city-map */}
 
 Imagine you are trying to find all coffee shops within a 10-minute walk from your hotel.
 
@@ -82,7 +82,7 @@ Imagine you are trying to find all coffee shops within a 10-minute walk from you
 
 ---
 
-## 🔢 The Fundamental Approaches
+## 🔢 The Fundamental Approaches {/* #the-fundamental-approaches */}
 
 Every geospatial indexing system is a variant of one of two strategies:
 
@@ -108,7 +108,7 @@ graph TD
 
 ---
 
-## 🌳 Approach 1: Custom Spatial Trees
+## 🌳 Approach 1: Custom Spatial Trees {/* #approach-1-custom-spatial-trees */}
 
 Spatial trees are purpose-built data structures that partition multidimensional space natively. Rather than sorting coordinates along a single axis, they recursively divide 2D space into manageable regions, keeping geographically close items physically close in the index.
 
@@ -253,7 +253,7 @@ R* Tree improvement:
 
 ---
 
-## 🗺️ Approach 2: Encoded Key Indexes (Space-Filling Curves)
+## 🗺️ Approach 2: Encoded Key Indexes (Space-Filling Curves) {/* #approach-2-encoded-key-indexes-space-filling-curves */}
 
 Instead of building custom tree structures, this approach mathematically transforms 2D coordinates into a single 1D integer or string. A standard B-Tree can then index this 1D key — making proximity search a standard range scan, usable with any database.
 
@@ -464,7 +464,7 @@ List<Long> ring2 = h3.hexRing(h3Index, 2); // 12 cells
 
 ---
 
-## ⚖️ Alternatives & Decision Framework
+## ⚖️ Alternatives & Decision Framework {/* #alternatives-decision-framework */}
 
 ### Full Comparison Matrix
 
@@ -516,7 +516,7 @@ What is your primary data type?
 
 ---
 
-## ⚙️ Production Implementation: Java & Spring Boot
+## ⚙️ Production Implementation: Java & Spring Boot {/* #production-implementation-java-spring-boot */}
 
 ### Use Case 1: Real-Time Driver Tracking (Redis Geohash)
 
@@ -788,7 +788,7 @@ public class SurgePricingService {
 
 ---
 
-### Use Case 4: Scalable Architecture — Tiered Geo Index
+### Use Case 4: Tiered Geo Index
 
 Production ride-sharing systems combine all three approaches in a tiered architecture:
 
@@ -822,7 +822,7 @@ graph TD
 
 ---
 
-## 🧠 Senior Deep Dive
+## 🧠 Senior Deep Dive {/* #senior-deep-dive */}
 
 ### 1. The Haversine vs. Euclidean Distance Problem
 
@@ -1058,7 +1058,7 @@ public class GeoMetrics {
 
 ---
 
-## 🎯 Interview Decision Matrix
+## 🎯 Interview Decision Matrix {/* #interview-decision-matrix */}
 
 | Scenario | Recommended Approach | Key Reasoning |
 |---|---|---|
@@ -1085,7 +1085,7 @@ public class GeoMetrics {
 
 ---
 
-## 📚 Further Reading
+## 📚 Further Reading {/* #further-reading */}
 
 - [PostGIS Documentation — Spatial Indexes](https://postgis.net/workshops/postgis-intro/indexing.html) — Official PostGIS guide; covers GIST index construction, ST_DWithin vs ST_Distance, and VACUUM for index bloat.
 - [Redis GEO Commands](https://redis.io/docs/data-types/geospatial/) — Complete reference for GEOADD, GEODIST, GEOSEARCH; covers the Sorted Set internals and Geohash encoding.

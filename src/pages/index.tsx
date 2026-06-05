@@ -1162,7 +1162,7 @@ const BOOKS = [
     author: "Sam Newman",
     focus:
       "Decomposition, resilience, integration, testing, deployment — 16 chapters",
-    href: "/books/building-microservice",
+    href: "#",
   },
   {
     icon: "☕",
@@ -2172,86 +2172,115 @@ export default function Home(): React.ReactNode {
                   gap: "1.1rem",
                 }}
               >
-                {BOOKS.map(({ icon, track, title, author, focus, href }, i) => (
-                  <Link
-                    key={title}
-                    to={href}
-                    ref={books.setRef(i) as any}
-                    className={`lp-hcard ${books.visible[i] ? "lp-card-visible" : "lp-card-hidden"}`}
-                    style={{
-                      ...card,
-                      display: "flex",
-                      gap: "1rem",
-                      padding: "1.1rem 1.2rem",
-                      alignItems: "flex-start",
-                    }}
-                  >
+                {BOOKS.map(({ icon, track, title, author, focus, href }, i) => {
+                  const isLink = href && href !== "#";
+                  const cardEl = (
+                    <>
+                      <div
+                        style={{
+                          fontSize: "2.5rem",
+                          lineHeight: 1,
+                          flexShrink: 0,
+                          width: 44,
+                          height: 56,
+                          borderRadius: 5,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          background: "rgba(74,222,128,0.08)",
+                          border: "1px solid rgba(74,222,128,0.18)",
+                        }}
+                      >
+                        {icon}
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <span
+                          style={{
+                            fontSize: "0.75rem",
+                            fontWeight: 700,
+                            letterSpacing: "0.1em",
+                            textTransform: "uppercase",
+                            color: "var(--brand-blue)",
+                            marginBottom: "0.3rem",
+                            display: "block",
+                          }}
+                        >
+                          {track}
+                        </span>
+                        <span
+                          style={{
+                            fontSize: "1.06rem",
+                            fontWeight: 700,
+                            color: "var(--ifm-font-color-base)",
+                            lineHeight: 1.35,
+                            marginBottom: "0.25rem",
+                            display: "block",
+                          }}
+                        >
+                          {title}
+                        </span>
+                        <span
+                          style={{
+                            fontSize: "0.88rem",
+                            color: "var(--ifm-color-emphasis-600)",
+                            display: "block",
+                            marginBottom: "0.25rem",
+                          }}
+                        >
+                          {author}
+                        </span>
+                        <span
+                          style={{
+                            fontSize: "0.88rem",
+                            color: "var(--ifm-color-emphasis-600)",
+                            lineHeight: 1.4,
+                            display: "block",
+                          }}
+                        >
+                          {focus}
+                        </span>
+                      </div>
+                    </>
+                  );
+
+                  if (isLink) {
+                    return (
+                      <Link
+                        key={title}
+                        to={href}
+                        ref={books.setRef(i) as any}
+                        className={`lp-hcard ${books.visible[i] ? "lp-card-visible" : "lp-card-hidden"}`}
+                        style={{
+                          ...card,
+                          display: "flex",
+                          gap: "1rem",
+                          padding: "1.1rem 1.2rem",
+                          alignItems: "flex-start",
+                        }}
+                      >
+                        {cardEl}
+                      </Link>
+                    );
+                  }
+
+                  return (
                     <div
+                      key={title}
+                      ref={books.setRef(i) as any}
+                      className={`lp-hcard ${books.visible[i] ? "lp-card-visible" : "lp-card-hidden"}`}
                       style={{
-                        fontSize: "2.5rem",
-                        lineHeight: 1,
-                        flexShrink: 0,
-                        width: 44,
-                        height: 56,
-                        borderRadius: 5,
+                        ...card,
                         display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        background: "rgba(74,222,128,0.08)",
-                        border: "1px solid rgba(74,222,128,0.18)",
+                        gap: "1rem",
+                        padding: "1.1rem 1.2rem",
+                        alignItems: "flex-start",
+                        cursor: "default",
                       }}
                     >
-                      {icon}
+                      {cardEl}
                     </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <span
-                        style={{
-                          fontSize: "0.75rem",
-                          fontWeight: 700,
-                          letterSpacing: "0.1em",
-                          textTransform: "uppercase",
-                          color: "var(--brand-blue)",
-                          marginBottom: "0.3rem",
-                          display: "block",
-                        }}
-                      >
-                        {track}
-                      </span>
-                      <span
-                        style={{
-                          fontSize: "1.06rem",
-                          fontWeight: 700,
-                          color: "var(--ifm-font-color-base)",
-                          lineHeight: 1.35,
-                          marginBottom: "0.25rem",
-                          display: "block",
-                        }}
-                      >
-                        {title}
-                      </span>
-                      <span
-                        style={{
-                          fontSize: "0.88rem",
-                          color: "var(--ifm-color-emphasis-600)",
-                          display: "block",
-                          marginBottom: "0.25rem",
-                        }}
-                      >
-                        {author}
-                      </span>
-                      <span
-                        style={{
-                          fontSize: "0.88rem",
-                          color: "var(--ifm-color-emphasis-600)",
-                          lineHeight: 1.4,
-                          display: "block",
-                        }}
-                      >
-                        {focus}
-                      </span>
-                    </div>
-                  </Link>
-                ))}
+                  );
+                })}
               </div>
             </section>
           </div>

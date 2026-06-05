@@ -35,8 +35,6 @@ tags: [scaling, writes, sharding, partitioning, kafka, wal, async, performance]
   - [Leaky Bucket](#leaky-bucket)
   - [Adaptive Throttling](#adaptive-throttling)
 - [Connection Pooling](#connection-pooling)
-  - [HikariCP Configuration](#hikaricp-configuration)
-  - [Connection Pool Best Practices](#connection-pool-best-practices)
 - [Idempotent Writes](#idempotent-writes)
   - [Idempotency Keys](#idempotency-keys)
   - [Optimistic Concurrency](#optimistic-concurrency)
@@ -617,9 +615,7 @@ public class AdaptiveThrottler {
 
 ## Connection Pooling
 
-DB connections are expensive. Pool and reuse them.
-
-### HikariCP Configuration
+For detailed guidelines on pool sizing, configuration parameters, and failure modes, see the centralized **[Database Connection Pooling](./connection-pooling.md)** guide.
 
 ```yaml
 # application.yml — HikariCP (Spring Boot default)
@@ -628,53 +624,9 @@ spring:
     hikari:
       maximum-pool-size: 20
       minimum-idle: 5
-      connection-timeout: 3000    # 3s max wait for connection
-      idle-timeout: 600000        # 10 min
-      max-lifetime: 1800000       # 30 min
+      connection-timeout: 3000
 ```
 
-**Rule of thumb**: `pool_size = (core_count * 2) + effective_spindle_count`
-
-### Connection Pool Best Practices
-
-```java
-@Configuration
-public class DataSourceConfig {
-
-    @Bean
-    @Primary
-    public DataSource primaryDataSource() {
-        HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:postgresql://primary:5432/db");
-        config.setUsername("user");
-        config.setPassword("password");
-        config.setMaximumPoolSize(20);
-        config.setMinimumIdle(5);
-        config.setConnectionTimeout(3000);
-        config.setIdleTimeout(600000);
-        config.setMaxLifetime(1800000);
-        config.setPoolName("PrimaryPool");
-
-        return new HikariDataSource(config);
-    }
-
-    @Bean
-    public DataSource replicaDataSource() {
-        HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:postgresql://replica:5432/db");
-        config.setUsername("user");
-        config.setPassword("password");
-        config.setMaximumPoolSize(10);
-        config.setMinimumIdle(2);
-        config.setConnectionTimeout(3000);
-        config.setIdleTimeout(600000);
-        config.setMaxLifetime(1800000);
-        config.setPoolName("ReplicaPool");
-
-        return new HikariDataSource(config);
-    }
-}
-```
 
 ---
 

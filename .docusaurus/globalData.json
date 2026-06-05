@@ -6130,6 +6130,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/connection-pooling",
+              "path": "/technical-knowledge/system-design/connection-pooling",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/consistent-hashing-deep-dive",
               "path": "/technical-knowledge/system-design/consistent-hashing-deep-dive",
               "sidebar": "tutorialSidebar"

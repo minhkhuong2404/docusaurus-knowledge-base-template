@@ -316,16 +316,15 @@ server:
 
 ### Connection Pool Tuning (HikariCP)
 
+For detailed guidelines on pool sizing, parameter details, and starvation patterns, see the **[Database Connection Pooling](../system-design/connection-pooling.md)** guide.
+
 ```yaml
 spring:
   datasource:
     hikari:
       maximum-pool-size: 20
       minimum-idle: 5
-      idle-timeout: 300000
-      max-lifetime: 1800000
       connection-timeout: 30000
-      leak-detection-threshold: 60000
 ```
 
 ### JPA Performance
@@ -350,7 +349,7 @@ spring:
 |--------------|--------|----------|
 | N+1 query problem | Excessive DB calls | Use `JOIN FETCH`, `@EntityGraph`, or batch fetching |
 | Open Session in View (OSIV) | DB connection held through view rendering | Set `spring.jpa.open-in-view=false` |
-| No connection pool tuning | Connection exhaustion under load | Configure HikariCP appropriately |
+| No connection pool tuning | Connection exhaustion under load | Configure HikariCP (see [Connection Pooling](../system-design/connection-pooling.md)) |
 | Unbounded queries | Memory exhaustion | Always use pagination (`Pageable`) |
 | Missing indexes | Slow queries | Analyze query plans, add database indexes |
 | Synchronous external calls | Thread starvation | Use async (`@Async`) or reactive patterns |

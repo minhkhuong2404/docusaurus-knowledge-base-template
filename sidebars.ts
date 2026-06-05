@@ -297,6 +297,7 @@ const sidebars: SidebarsConfig = {
 					collapsed: true,
 					items: [
 						'technical-knowledge/database/database-design',
+						'technical-knowledge/system-design/connection-pooling',
 						'technical-knowledge/database/indexing-query-optimization',
 						'technical-knowledge/system-design/cdc',
 						'technical-knowledge/system-design/message-queues',

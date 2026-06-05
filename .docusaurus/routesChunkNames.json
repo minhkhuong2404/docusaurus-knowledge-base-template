@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-1bc": {
+  "/-c25": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-beb": {
+  "/-cc8": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -2121,6 +2121,10 @@
     "__comp": "df203c0f",
     "__props": "626d5414"
   },
+  "/tags/hikaricp-46f": {
+    "__comp": "df203c0f",
+    "__props": "63c663ee"
+  },
   "/tags/hipaa-a32": {
     "__comp": "df203c0f",
     "__props": "3597b5ef"
@@ -3536,6 +3540,10 @@
   "/tags/posix-b03": {
     "__comp": "df203c0f",
     "__props": "a11544ca"
+  },
+  "/tags/postgis-dc5": {
+    "__comp": "df203c0f",
+    "__props": "1a8f54c1"
   },
   "/tags/postgresql-ad1": {
     "__comp": "df203c0f",
@@ -5193,7 +5201,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-7fc": {
+  "/-a68": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -5732,7 +5740,7 @@
     "__comp": "17896441",
     "content": "8a8d0fdd"
   },
-  "/system-design-8cd": {
+  "/system-design-82c": {
     "__comp": "17896441",
     "content": "93124d3b"
   },
@@ -5852,7 +5860,7 @@
     "__comp": "17896441",
     "content": "8b89c603"
   },
-  "/technical-knowledge/aws/messaging/sqs-5c2": {
+  "/technical-knowledge/aws/messaging/sqs-6a2": {
     "__comp": "17896441",
     "content": "9a9ef1e0"
   },
@@ -6192,7 +6200,7 @@
     "__comp": "17896441",
     "content": "39348cd3"
   },
-  "/technical-knowledge/database/database-patterns-microservices-3ee": {
+  "/technical-knowledge/database/database-patterns-microservices-867": {
     "__comp": "17896441",
     "content": "52d464a4"
   },
@@ -6208,7 +6216,7 @@
     "__comp": "17896441",
     "content": "3579e0cb"
   },
-  "/technical-knowledge/database/nosql-distributed-2c8": {
+  "/technical-knowledge/database/nosql-distributed-448": {
     "__comp": "17896441",
     "content": "025815b7"
   },
@@ -9552,7 +9560,7 @@
     "__comp": "17896441",
     "content": "5a79051b"
   },
-  "/technical-knowledge/kafka/advanced/kafka-connect-cfb": {
+  "/technical-knowledge/kafka/advanced/kafka-connect-76e": {
     "__comp": "17896441",
     "content": "e1e89bb9"
   },
@@ -10088,13 +10096,17 @@
     "__comp": "17896441",
     "content": "57eb6c90"
   },
-  "/technical-knowledge/system-design/cdc-5d0": {
+  "/technical-knowledge/system-design/cdc-422": {
     "__comp": "17896441",
     "content": "8c140918"
   },
-  "/technical-knowledge/system-design/common-interview-questions-2cb": {
+  "/technical-knowledge/system-design/common-interview-questions-092": {
     "__comp": "17896441",
     "content": "6efb14ae"
+  },
+  "/technical-knowledge/system-design/connection-pooling-6a7": {
+    "__comp": "17896441",
+    "content": "b0bbd9f9"
   },
   "/technical-knowledge/system-design/consistent-hashing-deep-dive-75a": {
     "__comp": "17896441",
@@ -10104,15 +10116,15 @@
     "__comp": "17896441",
     "content": "e6611cec"
   },
-  "/technical-knowledge/system-design/data-consistency-063": {
+  "/technical-knowledge/system-design/data-consistency-c3a": {
     "__comp": "17896441",
     "content": "0098328c"
   },
-  "/technical-knowledge/system-design/dead-letter-queue-bbe": {
+  "/technical-knowledge/system-design/dead-letter-queue-2a3": {
     "__comp": "17896441",
     "content": "8a82e430"
   },
-  "/technical-knowledge/system-design/distributed-systems-888": {
+  "/technical-knowledge/system-design/distributed-systems-bf3": {
     "__comp": "17896441",
     "content": "b21b4701"
   },
@@ -10136,15 +10148,15 @@
     "__comp": "17896441",
     "content": "b14a4730"
   },
-  "/technical-knowledge/system-design/long-running-tasks-86e": {
+  "/technical-knowledge/system-design/long-running-tasks-bde": {
     "__comp": "17896441",
     "content": "010e7447"
   },
-  "/technical-knowledge/system-design/message-queues-ba0": {
+  "/technical-knowledge/system-design/message-queues-9d1": {
     "__comp": "17896441",
     "content": "3940c236"
   },
-  "/technical-knowledge/system-design/microservices-patterns-25e": {
+  "/technical-knowledge/system-design/microservices-patterns-9e5": {
     "__comp": "17896441",
     "content": "a912936e"
   },
@@ -10156,7 +10168,7 @@
     "__comp": "17896441",
     "content": "f58357ef"
   },
-  "/technical-knowledge/system-design/proximity-search-geospatial-indexes-5fa": {
+  "/technical-knowledge/system-design/proximity-search-geospatial-indexes-71d": {
     "__comp": "17896441",
     "content": "929b92a0"
   },
@@ -10164,7 +10176,7 @@
     "__comp": "17896441",
     "content": "ec5f7116"
   },
-  "/technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway-533": {
+  "/technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway-6ff": {
     "__comp": "17896441",
     "content": "36929883"
   },

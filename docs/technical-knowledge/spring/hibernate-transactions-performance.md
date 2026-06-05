@@ -213,6 +213,8 @@ Use second-level cache selectively for high-read, low-churn data.
 
 ## Connection Pool and Batch Tuning
 
+For detailed pool configuration, sizing heuristics, and failure modes, see the centralized **[Database Connection Pooling](../system-design/connection-pooling.md)** guide.
+
 ```yaml
 spring:
   datasource:
@@ -230,14 +232,8 @@ spring:
         order_updates: true
 ```
 
-PostgreSQL-oriented rule of thumb:
-
-`connections ≈ (core_count * 2) + effective_spindle_count`
-
-Oversized pools can reduce throughput by increasing context switching.
-
 Guidelines:
-- Keep pool sizes realistic for DB CPU capacity.
+- Keep pool sizes realistic for DB CPU capacity (see [Connection Pooling](../system-design/connection-pooling.md)).
 - Enable batching for bulk writes.
 - Monitor slow queries and lock waits continuously.
 
