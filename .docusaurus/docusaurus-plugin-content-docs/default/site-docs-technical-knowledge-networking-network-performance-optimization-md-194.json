@@ -78,8 +78,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Microservices Patterns",
-    "permalink": "/technical-knowledge/system-design/microservices-patterns"
+    "title": "API Authentication & Authorization",
+    "permalink": "/technical-knowledge/networking/api-authentication-security"
   },
   "next": {
     "title": "Network Security",

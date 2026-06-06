@@ -316,7 +316,7 @@ server:
 
 ### Connection Pool Tuning (HikariCP)
 
-For detailed guidelines on pool sizing, parameter details, and starvation patterns, see the **[Database Connection Pooling](../system-design/connection-pooling.md)** guide.
+For detailed guidelines on pool sizing, parameter details, and starvation patterns, see the **[Database Connection Pooling](../database/connection-pooling.md)** guide.
 
 ```yaml
 spring:
@@ -349,7 +349,7 @@ spring:
 |--------------|--------|----------|
 | N+1 query problem | Excessive DB calls | Use `JOIN FETCH`, `@EntityGraph`, or batch fetching |
 | Open Session in View (OSIV) | DB connection held through view rendering | Set `spring.jpa.open-in-view=false` |
-| No connection pool tuning | Connection exhaustion under load | Configure HikariCP (see [Connection Pooling](../system-design/connection-pooling.md)) |
+| No connection pool tuning | Connection exhaustion under load | Configure HikariCP (see [Connection Pooling](../database/connection-pooling.md)) |
 | Unbounded queries | Memory exhaustion | Always use pagination (`Pageable`) |
 | Missing indexes | Slow queries | Analyze query plans, add database indexes |
 | Synchronous external calls | Thread starvation | Use async (`@Async`) or reactive patterns |

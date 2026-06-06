@@ -66,8 +66,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Database Design & Normalization",
-    "permalink": "/technical-knowledge/database/database-design"
+    "title": "Connection Pooling",
+    "permalink": "/technical-knowledge/database/connection-pooling"
   },
   "next": {
     "title": "Schema Migrations",

@@ -615,7 +615,7 @@ public class AdaptiveThrottler {
 
 ## Connection Pooling
 
-For detailed guidelines on pool sizing, configuration parameters, and failure modes, see the centralized **[Database Connection Pooling](./connection-pooling.md)** guide.
+For detailed guidelines on pool sizing, configuration parameters, and failure modes, see the centralized **[Database Connection Pooling](../database/connection-pooling.md)** guide.
 
 ```yaml
 # application.yml — HikariCP (Spring Boot default)

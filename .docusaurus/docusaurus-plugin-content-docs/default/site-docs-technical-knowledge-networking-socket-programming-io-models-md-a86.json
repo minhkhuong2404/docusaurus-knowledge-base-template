@@ -88,7 +88,7 @@
     "permalink": "/technical-knowledge/networking/proxies-nat-firewalls"
   },
   "next": {
-    "title": "API Design",
-    "permalink": "/technical-knowledge/system-design/api-design"
+    "title": "API Authentication & Authorization",
+    "permalink": "/technical-knowledge/networking/api-authentication-security"
   }
 }

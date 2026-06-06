@@ -1004,5 +1004,5 @@ kafka_server_requesthandlerpool_idlepercent
 - [Kafka Producer — Complete Guide](../producer/producer-overview)
 - [Kafka Consumer — Complete Guide](../consumer/consumer-overview)
 - [Kafka Streams — Stream Processing](../advanced/kafka-streams-deep-dive)
-- [Database Connection Pooling](../../system-design/connection-pooling)
+- [Database Connection Pooling](../../database/connection-pooling)
 - [Database Sharding & Partitioning](../../system-design/sharding-partitioning)

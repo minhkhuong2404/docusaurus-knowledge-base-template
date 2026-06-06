@@ -72,8 +72,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Load Balancing & Reliability",
-    "permalink": "/technical-knowledge/system-design/load-balancing-reliability"
+    "title": "Application Protocols Reference",
+    "permalink": "/technical-knowledge/networking/application-protocols-reference"
   },
   "next": {
     "title": "Socket Programming & I/O Models",

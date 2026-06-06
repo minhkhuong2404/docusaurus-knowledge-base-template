@@ -213,7 +213,7 @@ Use second-level cache selectively for high-read, low-churn data.
 
 ## Connection Pool and Batch Tuning
 
-For detailed pool configuration, sizing heuristics, and failure modes, see the centralized **[Database Connection Pooling](../system-design/connection-pooling.md)** guide.
+For detailed pool configuration, sizing heuristics, and failure modes, see the centralized **[Database Connection Pooling](../database/connection-pooling.md)** guide.
 
 ```yaml
 spring:
@@ -233,7 +233,7 @@ spring:
 ```
 
 Guidelines:
-- Keep pool sizes realistic for DB CPU capacity (see [Connection Pooling](../system-design/connection-pooling.md)).
+- Keep pool sizes realistic for DB CPU capacity (see [Connection Pooling](../database/connection-pooling.md)).
 - Enable batching for bulk writes.
 - Monitor slow queries and lock waits continuously.
 

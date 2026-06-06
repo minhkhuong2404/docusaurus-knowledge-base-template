@@ -1,6 +1,7 @@
 ---
 id: database-design
 title: Database Design & Normalization
+sidebar_label: Database Design
 description: Entity-Relationship modeling, normal forms (1NF through BCNF), denormalization trade-offs, and schema design patterns.
 tags: [database, design, normalization, erd, 1nf, 2nf, 3nf, bcnf, schema]
 sidebar_position: 9

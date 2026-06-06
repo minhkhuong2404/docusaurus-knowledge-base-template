@@ -78,11 +78,11 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Real-Time Updates",
-    "permalink": "/technical-knowledge/system-design/real-time-updates"
+    "title": "DNS Resolution",
+    "permalink": "/technical-knowledge/networking/dns-resolution"
   },
   "next": {
-    "title": "Load Balancing & Reliability",
-    "permalink": "/technical-knowledge/system-design/load-balancing-reliability"
+    "title": "Proxies, NAT & Firewalls",
+    "permalink": "/technical-knowledge/networking/proxies-nat-firewalls"
   }
 }

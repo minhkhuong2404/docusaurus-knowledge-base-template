@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-1fc": {
+  "/-898": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-e4f": {
+  "/-81a": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -5213,7 +5213,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-894": {
+  "/-cdd": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -5572,7 +5572,7 @@
     "__comp": "17896441",
     "content": "6dda571b"
   },
-  "/non-technical-knowledge/sdlc/deployment/deployment-configuration-verification-e95": {
+  "/non-technical-knowledge/sdlc/deployment/deployment-configuration-verification-ded": {
     "__comp": "17896441",
     "content": "476e3e3a"
   },
@@ -6207,6 +6207,10 @@
   "/technical-knowledge/database/backup-recovery-212": {
     "__comp": "17896441",
     "content": "1d655bfd"
+  },
+  "/technical-knowledge/database/connection-pooling-94b": {
+    "__comp": "17896441",
+    "content": "0dd1e07c"
   },
   "/technical-knowledge/database/data-warehousing-olap-6b8": {
     "__comp": "17896441",
@@ -9624,7 +9628,7 @@
     "__comp": "17896441",
     "content": "ad28df9b"
   },
-  "/technical-knowledge/kafka/core/kafka-broker-1b6": {
+  "/technical-knowledge/kafka/core/kafka-broker-161": {
     "__comp": "17896441",
     "content": "820d99b7"
   },
@@ -9632,7 +9636,7 @@
     "__comp": "17896441",
     "content": "6438a9db"
   },
-  "/technical-knowledge/kafka/core/kraft-vs-zookeeper-cc1": {
+  "/technical-knowledge/kafka/core/kraft-vs-zookeeper-523": {
     "__comp": "17896441",
     "content": "f5491934"
   },
@@ -10020,7 +10024,7 @@
     "__comp": "17896441",
     "content": "44626067"
   },
-  "/technical-knowledge/spring/spring-boot-bootstrap-yml-db8": {
+  "/technical-knowledge/spring/spring-boot-bootstrap-yml-1ff": {
     "__comp": "17896441",
     "content": "5751fe5c"
   },
@@ -10124,10 +10128,6 @@
     "__comp": "17896441",
     "content": "6efb14ae"
   },
-  "/technical-knowledge/system-design/connection-pooling-1da": {
-    "__comp": "17896441",
-    "content": "b0bbd9f9"
-  },
   "/technical-knowledge/system-design/consistent-hashing-deep-dive-75a": {
     "__comp": "17896441",
     "content": "65c13a58"
@@ -10140,7 +10140,7 @@
     "__comp": "17896441",
     "content": "0098328c"
   },
-  "/technical-knowledge/system-design/dead-letter-queue-675": {
+  "/technical-knowledge/system-design/dead-letter-queue-718": {
     "__comp": "17896441",
     "content": "8a82e430"
   },

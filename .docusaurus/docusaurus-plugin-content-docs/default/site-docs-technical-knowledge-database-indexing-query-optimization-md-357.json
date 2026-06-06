@@ -66,11 +66,11 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Connection Pooling",
-    "permalink": "/technical-knowledge/system-design/connection-pooling"
+    "title": "Schema Migrations",
+    "permalink": "/technical-knowledge/database/schema-migrations"
   },
   "next": {
-    "title": "CDC",
-    "permalink": "/technical-knowledge/system-design/cdc"
+    "title": "Query Planner & Optimizer",
+    "permalink": "/technical-knowledge/database/query-planner-optimizer"
   }
 }

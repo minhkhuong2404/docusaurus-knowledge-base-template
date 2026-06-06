@@ -1220,6 +1220,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/database/connection-pooling",
+              "path": "/technical-knowledge/database/connection-pooling",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/database/data-warehousing-olap",
               "path": "/technical-knowledge/database/data-warehousing-olap",
               "sidebar": "tutorialSidebar"
@@ -6137,11 +6142,6 @@
             {
               "id": "technical-knowledge/system-design/common-interview-questions",
               "path": "/technical-knowledge/system-design/common-interview-questions",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/system-design/connection-pooling",
-              "path": "/technical-knowledge/system-design/connection-pooling",
               "sidebar": "tutorialSidebar"
             },
             {

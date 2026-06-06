@@ -820,7 +820,7 @@ List<User> findActiveUsersReadOnly();
 <details>
 <summary>🔬 Senior deep-dive: HikariCP and connection pool starvation</summary>
 
-For detailed guidelines on pool sizing, parameter details, starvation patterns, and Micrometer instrumentation, see the centralized **[Database Connection Pooling](../system-design/connection-pooling.md)** guide.
+For detailed guidelines on pool sizing, parameter details, starvation patterns, and Micrometer instrumentation, see the centralized **[Database Connection Pooling](../database/connection-pooling.md)** guide.
 
 </details>
 
@@ -1006,7 +1006,7 @@ class NativeQueryTest {
 > For read-only, high-frequency endpoints where you need only a subset of fields. Full entities incur: reading all columns, allocating the entity object, creating a dirty-checking snapshot, and storing everything in the L1 cache. DTO projections skip all of this — Hibernate reads only the projected columns, allocates a plain object, and does no tracking. For a list of 10,000 records, this can reduce heap usage by 10–25×.
 
 **Q5. (Senior) How does HikariCP connection pool starvation relate to N+1 queries?**
-> Each query borrows a connection from HikariCP for the duration of the call. N+1 queries inside a single transaction hold a connection open while issuing serial queries, quickly depleting the pool and causing other requests to time out. For details, sizing, and solutions, see **[Database Connection Pooling](../system-design/connection-pooling.md)**.
+> Each query borrows a connection from HikariCP for the duration of the call. N+1 queries inside a single transaction hold a connection open while issuing serial queries, quickly depleting the pool and causing other requests to time out. For details, sizing, and solutions, see **[Database Connection Pooling](../database/connection-pooling.md)**.
 
 **Q6. (Senior) How do `@EntityGraph` and `JOIN FETCH` differ, and when do you choose each?**
 > Both solve N+1 by eagerly loading associations in a JOIN. Differences: `@EntityGraph` always uses LEFT OUTER JOIN, works with `Pageable` and derived methods, but offers no control over JOIN type or conditions on the joined table. `JOIN FETCH` in `@Query` allows INNER or LEFT JOIN, supports WHERE conditions on the joined table, and is explicit — but cannot be safely combined with `Pageable`. Rule of thumb: use `@EntityGraph` for paginated lists or when derived methods are sufficient; use `JOIN FETCH` in `@Query` when you need precise SQL control and are not paginating.
@@ -1021,4 +1021,4 @@ class NativeQueryTest {
 - [Spring Exception Handling — @RestControllerAdvice](./spring-exception-handling.md)
 - [Spring Data JPA — Entity Relationships & Fetch Strategies](./spring-data-jpa-mappings.md)
 - [Hibernate Query Cache & Second-Level Cache](./jpa-vs-hibernate.md#4-second-level-cache-l2-cache)
-- [Database Connection Pooling](../system-design/connection-pooling.md)
+- [Database Connection Pooling](../database/connection-pooling.md)

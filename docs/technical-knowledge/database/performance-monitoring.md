@@ -124,7 +124,7 @@ Key things to check:
 
 Opening a DB connection is expensive. Applications must use a connection pool to reuse connections.
 
-For detailed guidelines on pool sizing formulas, parameter details, failure modes, and PgBouncer/RDS Proxy configuration, see the centralized **[Database Connection Pooling](../system-design/connection-pooling.md)** guide.
+For detailed guidelines on pool sizing formulas, parameter details, failure modes, and PgBouncer/RDS Proxy configuration, see the centralized **[Database Connection Pooling](./connection-pooling.md)** guide.
 
 ```yaml
 # application.yml

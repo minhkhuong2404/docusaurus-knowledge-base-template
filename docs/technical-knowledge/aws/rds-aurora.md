@@ -189,7 +189,7 @@ spring:
 ```
 
 :::caution[HikariCP pool size for Lambda]
-Lambda functions are short-lived — a pool size of 10 means each Lambda execution environment holds up to 10 connections. High concurrency leads to connection exhaustion. Use **[RDS Proxy](../system-design/connection-pooling.md#b-aws-rds-proxy)** to queue and multiplex connections. For general pool tuning rules, see **[Database Connection Pooling](../system-design/connection-pooling.md)**.
+Lambda functions are short-lived — a pool size of 10 means each Lambda execution environment holds up to 10 connections. High concurrency leads to connection exhaustion. Use **[RDS Proxy](../database/connection-pooling.md#b-aws-rds-proxy)** to queue and multiplex connections. For general pool tuning rules, see **[Database Connection Pooling](../database/connection-pooling.md)**.
 :::
 
 ---

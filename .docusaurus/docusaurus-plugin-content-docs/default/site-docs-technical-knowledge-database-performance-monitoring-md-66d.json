@@ -70,7 +70,7 @@
     "permalink": "/technical-knowledge/database/query-planner-optimizer"
   },
   "next": {
-    "title": "Caching Strategies",
-    "permalink": "/technical-knowledge/system-design/caching-strategies"
+    "title": "Database ACID Properties",
+    "permalink": "/technical-knowledge/database/acid"
   }
 }

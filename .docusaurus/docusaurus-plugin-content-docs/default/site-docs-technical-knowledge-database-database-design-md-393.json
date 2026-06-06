@@ -62,6 +62,7 @@
   "frontMatter": {
     "id": "database-design",
     "title": "Database Design & Normalization",
+    "sidebar_label": "Database Design",
     "description": "Entity-Relationship modeling, normal forms (1NF through BCNF), denormalization trade-offs, and schema design patterns.",
     "tags": [
       "database",
@@ -78,11 +79,11 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "API Design",
-    "permalink": "/technical-knowledge/system-design/api-design"
+    "title": "Relational Fundamentals",
+    "permalink": "/technical-knowledge/database/relational-fundamentals"
   },
   "next": {
     "title": "Connection Pooling",
-    "permalink": "/technical-knowledge/system-design/connection-pooling"
+    "permalink": "/technical-knowledge/database/connection-pooling"
   }
 }

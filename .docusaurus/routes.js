@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '1fc'),
+    component: ComponentCreator('/', '898'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'e4f'),
+        component: ComponentCreator('/', '81a'),
         routes: [
           {
             path: '/tags',
@@ -6507,7 +6507,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '894'),
+            component: ComponentCreator('/', 'cdd'),
             routes: [
               {
                 path: '/aws',
@@ -7045,7 +7045,7 @@ export default [
               },
               {
                 path: '/non-technical-knowledge/sdlc/deployment/deployment-configuration-verification',
-                component: ComponentCreator('/non-technical-knowledge/sdlc/deployment/deployment-configuration-verification', 'e95'),
+                component: ComponentCreator('/non-technical-knowledge/sdlc/deployment/deployment-configuration-verification', 'ded'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -7993,6 +7993,12 @@ export default [
               {
                 path: '/technical-knowledge/database/backup-recovery',
                 component: ComponentCreator('/technical-knowledge/database/backup-recovery', '212'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/database/connection-pooling',
+                component: ComponentCreator('/technical-knowledge/database/connection-pooling', '94b'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13122,7 +13128,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/core/kafka-broker',
-                component: ComponentCreator('/technical-knowledge/kafka/core/kafka-broker', '1b6'),
+                component: ComponentCreator('/technical-knowledge/kafka/core/kafka-broker', '161'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13134,7 +13140,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/core/kraft-vs-zookeeper',
-                component: ComponentCreator('/technical-knowledge/kafka/core/kraft-vs-zookeeper', 'cc1'),
+                component: ComponentCreator('/technical-knowledge/kafka/core/kraft-vs-zookeeper', '523'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13716,7 +13722,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/spring/spring-boot-bootstrap-yml',
-                component: ComponentCreator('/technical-knowledge/spring/spring-boot-bootstrap-yml', 'db8'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-boot-bootstrap-yml', '1ff'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13871,12 +13877,6 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/system-design/connection-pooling',
-                component: ComponentCreator('/technical-knowledge/system-design/connection-pooling', '1da'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
                 path: '/technical-knowledge/system-design/consistent-hashing-deep-dive',
                 component: ComponentCreator('/technical-knowledge/system-design/consistent-hashing-deep-dive', '75a'),
                 exact: true,
@@ -13896,7 +13896,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/dead-letter-queue',
-                component: ComponentCreator('/technical-knowledge/system-design/dead-letter-queue', '675'),
+                component: ComponentCreator('/technical-knowledge/system-design/dead-letter-queue', '718'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

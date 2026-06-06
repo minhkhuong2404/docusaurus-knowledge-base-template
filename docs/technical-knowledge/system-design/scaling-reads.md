@@ -794,7 +794,7 @@ public class DatabaseService {
 
 ### Connection Pooling
 
-For details on pool mechanics, sizing formulas, and parameter configurations, see the centralized **[Database Connection Pooling](./connection-pooling.md)** guide.
+For details on pool mechanics, sizing formulas, and parameter configurations, see the centralized **[Database Connection Pooling](../database/connection-pooling.md)** guide.
 
 ```yaml
 # application.yml — HikariCP (Spring Boot default)

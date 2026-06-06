@@ -1084,5 +1084,5 @@ spring:
 
 - [Spring Data JPA: Custom Queries with @Query](../spring/spring-data-jpa-query-annotation)
 - [Spring Batch — Complete Guide](../spring/spring-batch)
-- [Database Sharding & Partitioning](./sharding-partitioning)
+- [Database Sharding & Partitioning](../system-design/sharding-partitioning)
 - [Spring Exception Handling — @RestControllerAdvice](../spring/spring-exception-handling)

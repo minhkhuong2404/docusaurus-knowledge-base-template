@@ -297,9 +297,6 @@ const sidebars: SidebarsConfig = {
 					label: '🗄️ Data & Storage',
 					collapsed: true,
 					items: [
-						'technical-knowledge/database/database-design',
-						'technical-knowledge/system-design/connection-pooling',
-						'technical-knowledge/database/indexing-query-optimization',
 						'technical-knowledge/system-design/cdc',
 						'technical-knowledge/system-design/message-queues',
 						'technical-knowledge/system-design/search-systems',
@@ -547,7 +544,6 @@ const sidebars: SidebarsConfig = {
 					items: [
 						'technical-knowledge/networking/http-https-application-layer',
 						'technical-knowledge/networking/dns-resolution',
-						'technical-knowledge/system-design/real-time-updates',
 						'technical-knowledge/networking/application-protocols-reference',
 					],
 				},
@@ -556,7 +552,6 @@ const sidebars: SidebarsConfig = {
 					label: '🏗️ Infrastructure',
 					collapsed: true,
 					items: [
-						'technical-knowledge/system-design/load-balancing-reliability',
 						'technical-knowledge/networking/proxies-nat-firewalls',
 						'technical-knowledge/networking/socket-programming-io-models',
 					],
@@ -566,7 +561,6 @@ const sidebars: SidebarsConfig = {
 					label: '🔌 API Design',
 					collapsed: true,
 					items: [
-						'technical-knowledge/system-design/api-design',
 						'technical-knowledge/networking/api-authentication-security',
 					],
 				},
@@ -575,7 +569,6 @@ const sidebars: SidebarsConfig = {
 					label: '☁️ Distributed & Cloud',
 					collapsed: true,
 					items: [
-						'technical-knowledge/system-design/microservices-patterns',
 						'technical-knowledge/networking/network-performance-optimization',
 					],
 				},
@@ -688,6 +681,7 @@ const sidebars: SidebarsConfig = {
 					items: [
 						'technical-knowledge/database/relational-fundamentals',
 						'technical-knowledge/database/database-design',
+						'technical-knowledge/database/connection-pooling',
 						'technical-knowledge/database/advanced-sql',
 						'technical-knowledge/database/schema-migrations',
 					],
@@ -700,7 +694,6 @@ const sidebars: SidebarsConfig = {
 						'technical-knowledge/database/indexing-query-optimization',
 						'technical-knowledge/database/query-planner-optimizer',
 						'technical-knowledge/database/performance-monitoring',
-						'technical-knowledge/system-design/caching-strategies',
 					],
 				},
 				{
