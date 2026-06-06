@@ -32,7 +32,7 @@
   ],
   "version": "current",
   "lastUpdatedBy": "Lữ Minh Khương",
-  "lastUpdatedAt": 1779895894000,
+  "lastUpdatedAt": 1780678888000,
   "frontMatter": {
     "title": "Spring Boot — Advanced Topics",
     "description": "Advanced Spring Boot topics covering security, performance tuning, reactive systems, deployment, and production-ready design.",
@@ -45,8 +45,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Spring Boot — Internals & Architecture",
-    "permalink": "/technical-knowledge/spring/spring-boot-internals"
+    "title": "bootstrap.yml Guide",
+    "permalink": "/technical-knowledge/spring/spring-boot-bootstrap-yml"
   },
   "next": {
     "title": "Spring Boot: Interview Questions",

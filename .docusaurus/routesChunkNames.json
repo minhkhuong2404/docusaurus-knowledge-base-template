@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-c25": {
+  "/-1fc": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-cc8": {
+  "/-e4f": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -2437,6 +2437,10 @@
     "__comp": "df203c0f",
     "__props": "2c410df3"
   },
+  "/tags/isr-b23": {
+    "__comp": "df203c0f",
+    "__props": "9d4f1a70"
+  },
   "/tags/items-index-5ee": {
     "__comp": "df203c0f",
     "__props": "4e91dcc4"
@@ -2756,6 +2760,10 @@
   "/tags/log-blame-57c": {
     "__comp": "df203c0f",
     "__props": "bf032dfd"
+  },
+  "/tags/log-compaction-ccc": {
+    "__comp": "df203c0f",
+    "__props": "b5aaefb4"
   },
   "/tags/logging-418": {
     "__comp": "df203c0f",
@@ -3484,6 +3492,10 @@
   "/tags/persistentvolume-4ac": {
     "__comp": "df203c0f",
     "__props": "2beffc26"
+  },
+  "/tags/pgbouncer-a23": {
+    "__comp": "df203c0f",
+    "__props": "756c4108"
   },
   "/tags/phases-527": {
     "__comp": "df203c0f",
@@ -5201,7 +5213,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-a68": {
+  "/-894": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -5544,7 +5556,7 @@
     "__comp": "17896441",
     "content": "3f8eb35f"
   },
-  "/docs-154": {
+  "/docs-3d7": {
     "__comp": "17896441",
     "content": "0e384e19"
   },
@@ -5552,13 +5564,17 @@
     "__comp": "17896441",
     "content": "0dbb9876"
   },
-  "/java/jpa-hibernate-lifecycle-methods-6ed": {
+  "/java/jpa-hibernate-lifecycle-methods-38d": {
     "__comp": "17896441",
     "content": "3daf4956"
   },
   "/non-technical-knowledge/sdlc/-6f0": {
     "__comp": "17896441",
     "content": "6dda571b"
+  },
+  "/non-technical-knowledge/sdlc/deployment/deployment-configuration-verification-e95": {
+    "__comp": "17896441",
+    "content": "476e3e3a"
   },
   "/non-technical-knowledge/sdlc/deployment/roll-backward-5fa": {
     "__comp": "17896441",
@@ -5880,7 +5896,7 @@
     "__comp": "17896441",
     "content": "261194b7"
   },
-  "/technical-knowledge/aws/rds-aurora-b2b": {
+  "/technical-knowledge/aws/rds-aurora-147": {
     "__comp": "17896441",
     "content": "cbbb6c17"
   },
@@ -6220,7 +6236,7 @@
     "__comp": "17896441",
     "content": "025815b7"
   },
-  "/technical-knowledge/database/performance-monitoring-596": {
+  "/technical-knowledge/database/performance-monitoring-3b2": {
     "__comp": "17896441",
     "content": "66dfb623"
   },
@@ -9608,7 +9624,7 @@
     "__comp": "17896441",
     "content": "ad28df9b"
   },
-  "/technical-knowledge/kafka/core/broker-37d": {
+  "/technical-knowledge/kafka/core/kafka-broker-1b6": {
     "__comp": "17896441",
     "content": "820d99b7"
   },
@@ -9984,7 +10000,7 @@
     "__comp": "17896441",
     "content": "2b6ca1be"
   },
-  "/technical-knowledge/spring/hibernate-transactions-performance-078": {
+  "/technical-knowledge/spring/hibernate-transactions-performance-3c1": {
     "__comp": "17896441",
     "content": "2c1c3feb"
   },
@@ -10000,9 +10016,13 @@
     "__comp": "17896441",
     "content": "070cceee"
   },
-  "/technical-knowledge/spring/spring-boot-advanced-fb1": {
+  "/technical-knowledge/spring/spring-boot-advanced-b43": {
     "__comp": "17896441",
     "content": "44626067"
+  },
+  "/technical-knowledge/spring/spring-boot-bootstrap-yml-db8": {
+    "__comp": "17896441",
+    "content": "5751fe5c"
   },
   "/technical-knowledge/spring/spring-boot-daily-quiz-cc0": {
     "__comp": "17896441",
@@ -10028,7 +10048,7 @@
     "__comp": "17896441",
     "content": "3acda406"
   },
-  "/technical-knowledge/spring/spring-data-jpa-query-annotation-fcf": {
+  "/technical-knowledge/spring/spring-data-jpa-query-annotation-418": {
     "__comp": "17896441",
     "content": "a81d3731"
   },
@@ -10104,7 +10124,7 @@
     "__comp": "17896441",
     "content": "6efb14ae"
   },
-  "/technical-knowledge/system-design/connection-pooling-6a7": {
+  "/technical-knowledge/system-design/connection-pooling-1da": {
     "__comp": "17896441",
     "content": "b0bbd9f9"
   },
@@ -10116,11 +10136,11 @@
     "__comp": "17896441",
     "content": "e6611cec"
   },
-  "/technical-knowledge/system-design/data-consistency-c3a": {
+  "/technical-knowledge/system-design/data-consistency-163": {
     "__comp": "17896441",
     "content": "0098328c"
   },
-  "/technical-knowledge/system-design/dead-letter-queue-2a3": {
+  "/technical-knowledge/system-design/dead-letter-queue-675": {
     "__comp": "17896441",
     "content": "8a82e430"
   },
@@ -10168,7 +10188,7 @@
     "__comp": "17896441",
     "content": "f58357ef"
   },
-  "/technical-knowledge/system-design/proximity-search-geospatial-indexes-71d": {
+  "/technical-knowledge/system-design/proximity-search-geospatial-indexes-c61": {
     "__comp": "17896441",
     "content": "929b92a0"
   },
@@ -10180,11 +10200,11 @@
     "__comp": "17896441",
     "content": "36929883"
   },
-  "/technical-knowledge/system-design/scaling-reads-324": {
+  "/technical-knowledge/system-design/scaling-reads-9ce": {
     "__comp": "17896441",
     "content": "382009e9"
   },
-  "/technical-knowledge/system-design/scaling-writes-012": {
+  "/technical-knowledge/system-design/scaling-writes-282": {
     "__comp": "17896441",
     "content": "91aa5927"
   },

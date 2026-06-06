@@ -426,6 +426,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "non-technical-knowledge/sdlc/deployment/deployment-configuration-verification",
+              "path": "/non-technical-knowledge/sdlc/deployment/deployment-configuration-verification",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "non-technical-knowledge/sdlc/deployment/roll-backward",
               "path": "/non-technical-knowledge/sdlc/deployment/roll-backward",
               "sidebar": "tutorialSidebar"
@@ -5495,8 +5500,8 @@
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/kafka/core/broker",
-              "path": "/technical-knowledge/kafka/core/broker",
+              "id": "technical-knowledge/kafka/core/kafka-broker",
+              "path": "/technical-knowledge/kafka/core/kafka-broker",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -6002,6 +6007,11 @@
             {
               "id": "technical-knowledge/spring/spring-boot-advanced",
               "path": "/technical-knowledge/spring/spring-boot-advanced",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/spring/spring-boot-bootstrap-yml",
+              "path": "/technical-knowledge/spring/spring-boot-bootstrap-yml",
               "sidebar": "tutorialSidebar"
             },
             {

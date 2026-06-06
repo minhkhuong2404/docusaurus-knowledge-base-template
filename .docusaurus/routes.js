@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'c25'),
+    component: ComponentCreator('/', '1fc'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'cc8'),
+        component: ComponentCreator('/', 'e4f'),
         routes: [
           {
             path: '/tags',
@@ -3036,6 +3036,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/isr',
+            component: ComponentCreator('/tags/isr', 'b23'),
+            exact: true
+          },
+          {
             path: '/tags/items-index',
             component: ComponentCreator('/tags/items-index', '5ee'),
             exact: true
@@ -3433,6 +3438,11 @@ export default [
           {
             path: '/tags/log-blame',
             component: ComponentCreator('/tags/log-blame', '57c'),
+            exact: true
+          },
+          {
+            path: '/tags/log-compaction',
+            component: ComponentCreator('/tags/log-compaction', 'ccc'),
             exact: true
           },
           {
@@ -4343,6 +4353,11 @@ export default [
           {
             path: '/tags/persistentvolume',
             component: ComponentCreator('/tags/persistentvolume', '4ac'),
+            exact: true
+          },
+          {
+            path: '/tags/pgbouncer',
+            component: ComponentCreator('/tags/pgbouncer', 'a23'),
             exact: true
           },
           {
@@ -6492,7 +6507,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'a68'),
+            component: ComponentCreator('/', '894'),
             routes: [
               {
                 path: '/aws',
@@ -7006,7 +7021,7 @@ export default [
               },
               {
                 path: '/docs',
-                component: ComponentCreator('/docs', '154'),
+                component: ComponentCreator('/docs', '3d7'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -7018,13 +7033,19 @@ export default [
               },
               {
                 path: '/java/jpa-hibernate-lifecycle-methods',
-                component: ComponentCreator('/java/jpa-hibernate-lifecycle-methods', '6ed'),
+                component: ComponentCreator('/java/jpa-hibernate-lifecycle-methods', '38d'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/non-technical-knowledge/sdlc/',
                 component: ComponentCreator('/non-technical-knowledge/sdlc/', '6f0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/non-technical-knowledge/sdlc/deployment/deployment-configuration-verification',
+                component: ComponentCreator('/non-technical-knowledge/sdlc/deployment/deployment-configuration-verification', 'e95'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -7510,7 +7531,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/aws/rds-aurora',
-                component: ComponentCreator('/technical-knowledge/aws/rds-aurora', 'b2b'),
+                component: ComponentCreator('/technical-knowledge/aws/rds-aurora', '147'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -8019,7 +8040,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/performance-monitoring',
-                component: ComponentCreator('/technical-knowledge/database/performance-monitoring', '596'),
+                component: ComponentCreator('/technical-knowledge/database/performance-monitoring', '3b2'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13100,8 +13121,8 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/kafka/core/broker',
-                component: ComponentCreator('/technical-knowledge/kafka/core/broker', '37d'),
+                path: '/technical-knowledge/kafka/core/kafka-broker',
+                component: ComponentCreator('/technical-knowledge/kafka/core/kafka-broker', '1b6'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13665,7 +13686,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/spring/hibernate-transactions-performance',
-                component: ComponentCreator('/technical-knowledge/spring/hibernate-transactions-performance', '078'),
+                component: ComponentCreator('/technical-knowledge/spring/hibernate-transactions-performance', '3c1'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13689,7 +13710,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/spring/spring-boot-advanced',
-                component: ComponentCreator('/technical-knowledge/spring/spring-boot-advanced', 'fb1'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-boot-advanced', 'b43'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/spring/spring-boot-bootstrap-yml',
+                component: ComponentCreator('/technical-knowledge/spring/spring-boot-bootstrap-yml', 'db8'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13731,7 +13758,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/spring/spring-data-jpa-query-annotation',
-                component: ComponentCreator('/technical-knowledge/spring/spring-data-jpa-query-annotation', 'fcf'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-data-jpa-query-annotation', '418'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13845,7 +13872,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/connection-pooling',
-                component: ComponentCreator('/technical-knowledge/system-design/connection-pooling', '6a7'),
+                component: ComponentCreator('/technical-knowledge/system-design/connection-pooling', '1da'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13863,13 +13890,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/data-consistency',
-                component: ComponentCreator('/technical-knowledge/system-design/data-consistency', 'c3a'),
+                component: ComponentCreator('/technical-knowledge/system-design/data-consistency', '163'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/dead-letter-queue',
-                component: ComponentCreator('/technical-knowledge/system-design/dead-letter-queue', '2a3'),
+                component: ComponentCreator('/technical-knowledge/system-design/dead-letter-queue', '675'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13941,7 +13968,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/proximity-search-geospatial-indexes',
-                component: ComponentCreator('/technical-knowledge/system-design/proximity-search-geospatial-indexes', '71d'),
+                component: ComponentCreator('/technical-knowledge/system-design/proximity-search-geospatial-indexes', 'c61'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13959,13 +13986,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/scaling-reads',
-                component: ComponentCreator('/technical-knowledge/system-design/scaling-reads', '324'),
+                component: ComponentCreator('/technical-knowledge/system-design/scaling-reads', '9ce'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/scaling-writes',
-                component: ComponentCreator('/technical-knowledge/system-design/scaling-writes', '012'),
+                component: ComponentCreator('/technical-knowledge/system-design/scaling-writes', '282'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

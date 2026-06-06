@@ -96,6 +96,7 @@ const sidebars: SidebarsConfig = {
 					items: [
 						'technical-knowledge/spring/spring-boot',
 						'technical-knowledge/spring/spring-boot-internals',
+						'technical-knowledge/spring/spring-boot-bootstrap-yml',
 						'technical-knowledge/spring/spring-boot-advanced',
 						'technical-knowledge/spring/spring-boot-interview-questions'
 					]
@@ -611,7 +612,7 @@ const sidebars: SidebarsConfig = {
 						'technical-knowledge/kafka/core/topic',
 						'technical-knowledge/kafka/core/partition',
 						'technical-knowledge/kafka/core/scaling-partitions',
-						'technical-knowledge/kafka/core/broker',
+						'technical-knowledge/kafka/core/kafka-broker',
 						'technical-knowledge/kafka/core/replication',
 						'technical-knowledge/kafka/core/kraft-vs-zookeeper'
 					]
@@ -1668,6 +1669,7 @@ const sidebars: SidebarsConfig = {
 					items: [
 						'non-technical-knowledge/sdlc/deployment/roll-forward',
 						'non-technical-knowledge/sdlc/deployment/roll-backward',
+						'non-technical-knowledge/sdlc/deployment/deployment-configuration-verification',
 					],
 				},
 				{
