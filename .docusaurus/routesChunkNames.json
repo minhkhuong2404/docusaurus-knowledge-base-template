@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-898": {
+  "/-d7d": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-81a": {
+  "/-7c8": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -5213,7 +5213,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-cdd": {
+  "/-616": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -5564,7 +5564,7 @@
     "__comp": "17896441",
     "content": "0dbb9876"
   },
-  "/java/jpa-hibernate-lifecycle-methods-38d": {
+  "/java/jpa-hibernate-lifecycle-methods-21a": {
     "__comp": "17896441",
     "content": "3daf4956"
   },
@@ -5896,7 +5896,7 @@
     "__comp": "17896441",
     "content": "261194b7"
   },
-  "/technical-knowledge/aws/rds-aurora-147": {
+  "/technical-knowledge/aws/rds-aurora-1e1": {
     "__comp": "17896441",
     "content": "cbbb6c17"
   },
@@ -6208,7 +6208,7 @@
     "__comp": "17896441",
     "content": "1d655bfd"
   },
-  "/technical-knowledge/database/connection-pooling-94b": {
+  "/technical-knowledge/database/connection-pooling-9db": {
     "__comp": "17896441",
     "content": "0dd1e07c"
   },
@@ -6216,7 +6216,7 @@
     "__comp": "17896441",
     "content": "a404a845"
   },
-  "/technical-knowledge/database/database-design-6f9": {
+  "/technical-knowledge/database/database-design-071": {
     "__comp": "17896441",
     "content": "39348cd3"
   },
@@ -6240,7 +6240,7 @@
     "__comp": "17896441",
     "content": "025815b7"
   },
-  "/technical-knowledge/database/performance-monitoring-3b2": {
+  "/technical-knowledge/database/performance-monitoring-e9d": {
     "__comp": "17896441",
     "content": "66dfb623"
   },
@@ -9628,7 +9628,7 @@
     "__comp": "17896441",
     "content": "ad28df9b"
   },
-  "/technical-knowledge/kafka/core/kafka-broker-161": {
+  "/technical-knowledge/kafka/core/kafka-broker-dea": {
     "__comp": "17896441",
     "content": "820d99b7"
   },
@@ -10004,7 +10004,7 @@
     "__comp": "17896441",
     "content": "2b6ca1be"
   },
-  "/technical-knowledge/spring/hibernate-transactions-performance-3c1": {
+  "/technical-knowledge/spring/hibernate-transactions-performance-498": {
     "__comp": "17896441",
     "content": "2c1c3feb"
   },
@@ -10020,7 +10020,7 @@
     "__comp": "17896441",
     "content": "070cceee"
   },
-  "/technical-knowledge/spring/spring-boot-advanced-b43": {
+  "/technical-knowledge/spring/spring-boot-advanced-04e": {
     "__comp": "17896441",
     "content": "44626067"
   },
@@ -10052,7 +10052,7 @@
     "__comp": "17896441",
     "content": "3acda406"
   },
-  "/technical-knowledge/spring/spring-data-jpa-query-annotation-418": {
+  "/technical-knowledge/spring/spring-data-jpa-query-annotation-f23": {
     "__comp": "17896441",
     "content": "a81d3731"
   },
@@ -10200,11 +10200,11 @@
     "__comp": "17896441",
     "content": "36929883"
   },
-  "/technical-knowledge/system-design/scaling-reads-9ce": {
+  "/technical-knowledge/system-design/scaling-reads-eb6": {
     "__comp": "17896441",
     "content": "382009e9"
   },
-  "/technical-knowledge/system-design/scaling-writes-282": {
+  "/technical-knowledge/system-design/scaling-writes-8c6": {
     "__comp": "17896441",
     "content": "91aa5927"
   },

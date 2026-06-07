@@ -11,7 +11,7 @@ import TabItem from '@theme/TabItem';
 
 # Database Connection Pooling
 
-:::info Who this guide is for
+:::info[Who this guide is for]
 - **New learners** — start at [What is a Database Connection?](#what-is-a-database-connection) and [What is a Connection Pool?](#what-is-a-connection-pool) to understand why this problem exists and how pools solve it.
 - **Senior engineers** — jump to [Pool Sizing](#pool-sizing), [Failure Modes](#failure-modes), [PgBouncer](#pgbouncer), [RDS Proxy](#rds-proxy-for-serverless), or [Production Observability](#monitoring--observability).
 :::
@@ -268,7 +268,7 @@ Examples:
   16-core DB server, SSD RAID-10 (4 disks): (16 × 2) + 4 = 36 → start at 40
 ```
 
-:::tip This formula gives you a starting point, not the final answer
+:::tip[This formula gives you a starting point, not the final answer]
 The formula captures CPU and I/O saturation. It does not account for:
 - Query mix (read-heavy vs write-heavy)
 - Average query duration

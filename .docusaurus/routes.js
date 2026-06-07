@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '898'),
+    component: ComponentCreator('/', 'd7d'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '81a'),
+        component: ComponentCreator('/', '7c8'),
         routes: [
           {
             path: '/tags',
@@ -6507,7 +6507,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'cdd'),
+            component: ComponentCreator('/', '616'),
             routes: [
               {
                 path: '/aws',
@@ -7033,7 +7033,7 @@ export default [
               },
               {
                 path: '/java/jpa-hibernate-lifecycle-methods',
-                component: ComponentCreator('/java/jpa-hibernate-lifecycle-methods', '38d'),
+                component: ComponentCreator('/java/jpa-hibernate-lifecycle-methods', '21a'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -7531,7 +7531,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/aws/rds-aurora',
-                component: ComponentCreator('/technical-knowledge/aws/rds-aurora', '147'),
+                component: ComponentCreator('/technical-knowledge/aws/rds-aurora', '1e1'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -7998,7 +7998,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/connection-pooling',
-                component: ComponentCreator('/technical-knowledge/database/connection-pooling', '94b'),
+                component: ComponentCreator('/technical-knowledge/database/connection-pooling', '9db'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -8010,7 +8010,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/database-design',
-                component: ComponentCreator('/technical-knowledge/database/database-design', '6f9'),
+                component: ComponentCreator('/technical-knowledge/database/database-design', '071'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -8046,7 +8046,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/performance-monitoring',
-                component: ComponentCreator('/technical-knowledge/database/performance-monitoring', '3b2'),
+                component: ComponentCreator('/technical-knowledge/database/performance-monitoring', 'e9d'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13128,7 +13128,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/core/kafka-broker',
-                component: ComponentCreator('/technical-knowledge/kafka/core/kafka-broker', '161'),
+                component: ComponentCreator('/technical-knowledge/kafka/core/kafka-broker', 'dea'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13692,7 +13692,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/spring/hibernate-transactions-performance',
-                component: ComponentCreator('/technical-knowledge/spring/hibernate-transactions-performance', '3c1'),
+                component: ComponentCreator('/technical-knowledge/spring/hibernate-transactions-performance', '498'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13716,7 +13716,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/spring/spring-boot-advanced',
-                component: ComponentCreator('/technical-knowledge/spring/spring-boot-advanced', 'b43'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-boot-advanced', '04e'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13764,7 +13764,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/spring/spring-data-jpa-query-annotation',
-                component: ComponentCreator('/technical-knowledge/spring/spring-data-jpa-query-annotation', '418'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-data-jpa-query-annotation', 'f23'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13986,13 +13986,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/scaling-reads',
-                component: ComponentCreator('/technical-knowledge/system-design/scaling-reads', '9ce'),
+                component: ComponentCreator('/technical-knowledge/system-design/scaling-reads', 'eb6'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/scaling-writes',
-                component: ComponentCreator('/technical-knowledge/system-design/scaling-writes', '282'),
+                component: ComponentCreator('/technical-knowledge/system-design/scaling-writes', '8c6'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

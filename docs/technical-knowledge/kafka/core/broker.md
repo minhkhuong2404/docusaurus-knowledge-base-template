@@ -11,7 +11,7 @@ import TabItem from '@theme/TabItem';
 
 # Kafka Broker — Complete Guide
 
-:::info Who this guide is for
+:::info[Who this guide is for]
 - **New learners** — start at [What is Kafka?](#what-is-kafka) and [What is a Broker?](#what-is-a-broker) to understand the foundational model before diving into storage and replication.
 - **Senior engineers** — jump to [Replication & ISR](#replication--isr), [Broker Internals](#broker-internals), [KRaft vs ZooKeeper](#kraft-vs-zookeeper), [Log Compaction](#log-retention-and-compaction), or [Performance Tuning](#performance-tuning).
 :::
@@ -491,7 +491,7 @@ Separate sets of nodes: 3 dedicated controllers (Raft quorum) + N broker nodes. 
 | **Supported since** | Kafka 0.x | Kafka 2.8 (preview), 3.3 (production) |
 | **Status** | Deprecated — removed in Kafka 4.0 | Default from Kafka 3.3+ |
 
-:::warning ZooKeeper removed in Kafka 4.0
+:::warning[ZooKeeper removed in Kafka 4.0]
 If you are running Kafka 3.x with ZooKeeper, migrate to KRaft before upgrading to 4.0. Use `kafka-storage.sh` to format the metadata log in KRaft mode.
 :::
 
@@ -567,7 +567,7 @@ Client startup sequence:
   6. On error (broker down) → refresh metadata → reconnect to new leader
 ```
 
-:::tip List only 2–3 bootstrap servers
+:::tip[List only 2–3 bootstrap servers]
 You don't need to list every broker. List 2–3 for redundancy in case one is down during startup. The client discovers the rest automatically from the metadata response.
 :::
 

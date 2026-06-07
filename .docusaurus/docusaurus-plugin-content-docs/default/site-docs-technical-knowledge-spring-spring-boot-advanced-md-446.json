@@ -32,7 +32,7 @@
   ],
   "version": "current",
   "lastUpdatedBy": "Lữ Minh Khương",
-  "lastUpdatedAt": 1780678888000,
+  "lastUpdatedAt": 1780769824000,
   "frontMatter": {
     "title": "Spring Boot — Advanced Topics",
     "description": "Advanced Spring Boot topics covering security, performance tuning, reactive systems, deployment, and production-ready design.",
