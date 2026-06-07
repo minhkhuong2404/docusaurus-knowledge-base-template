@@ -4955,6 +4955,26 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/elasticsearch/elasticsearch-internals",
+              "path": "/technical-knowledge/elasticsearch/elasticsearch-internals",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/elasticsearch/elasticsearch-overview",
+              "path": "/technical-knowledge/elasticsearch/elasticsearch-overview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/elasticsearch/elasticsearch-senior-deep-dive",
+              "path": "/technical-knowledge/elasticsearch/elasticsearch-senior-deep-dive",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/elasticsearch/logstash-kibana-integration",
+              "path": "/technical-knowledge/elasticsearch/logstash-kibana-integration",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/git/advanced/bisect",
               "path": "/technical-knowledge/git/advanced/bisect",
               "sidebar": "tutorialSidebar"
@@ -5522,6 +5542,11 @@
             {
               "id": "technical-knowledge/kafka/core/partition",
               "path": "/technical-knowledge/kafka/core/partition",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/core/raft-consensus",
+              "path": "/technical-knowledge/kafka/core/raft-consensus",
               "sidebar": "tutorialSidebar"
             },
             {

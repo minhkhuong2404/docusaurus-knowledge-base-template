@@ -607,7 +607,8 @@ const sidebars: SidebarsConfig = {
 						'technical-knowledge/kafka/core/scaling-partitions',
 						'technical-knowledge/kafka/core/kafka-broker',
 						'technical-knowledge/kafka/core/replication',
-						'technical-knowledge/kafka/core/kraft-vs-zookeeper'
+						'technical-knowledge/kafka/core/kraft-vs-zookeeper',
+						'technical-knowledge/kafka/core/raft-consensus'
 					]
 				},
 				{
@@ -785,6 +786,16 @@ const sidebars: SidebarsConfig = {
 						'technical-knowledge/redis/redis-interview-questions',
 					]
 				}
+			]
+		},
+		{
+			type: 'category',
+			label: '🔎 Elasticsearch & ELK',
+			items: [
+				'technical-knowledge/elasticsearch/elasticsearch-overview',
+				'technical-knowledge/elasticsearch/elasticsearch-internals',
+				'technical-knowledge/elasticsearch/logstash-kibana-integration',
+				'technical-knowledge/elasticsearch/elasticsearch-senior-deep-dive'
 			]
 		},
 		{

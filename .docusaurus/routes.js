@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'c45'),
+    component: ComponentCreator('/', '6d1'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '389'),
+        component: ComponentCreator('/', '976'),
         routes: [
           {
             path: '/tags',
@@ -478,6 +478,11 @@ export default [
           {
             path: '/tags/bearer-token',
             component: ComponentCreator('/tags/bearer-token', 'f4e'),
+            exact: true
+          },
+          {
+            path: '/tags/beats',
+            component: ComponentCreator('/tags/beats', 'cf1'),
             exact: true
           },
           {
@@ -1108,6 +1113,16 @@ export default [
           {
             path: '/tags/cluster',
             component: ComponentCreator('/tags/cluster', '07f'),
+            exact: true
+          },
+          {
+            path: '/tags/cluster-architecture',
+            component: ComponentCreator('/tags/cluster-architecture', '03c'),
+            exact: true
+          },
+          {
+            path: '/tags/clustering',
+            component: ComponentCreator('/tags/clustering', '132'),
             exact: true
           },
           {
@@ -2011,6 +2026,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/elk-stack',
+            component: ComponentCreator('/tags/elk-stack', '5aa'),
+            exact: true
+          },
+          {
             path: '/tags/elt',
             component: ComponentCreator('/tags/elt', '245'),
             exact: true
@@ -2476,6 +2496,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/gelf',
+            component: ComponentCreator('/tags/gelf', '066'),
+            exact: true
+          },
+          {
             path: '/tags/generics',
             component: ComponentCreator('/tags/generics', 'cb5'),
             exact: true
@@ -2623,6 +2648,11 @@ export default [
           {
             path: '/tags/heap',
             component: ComponentCreator('/tags/heap', '008'),
+            exact: true
+          },
+          {
+            path: '/tags/heap-tuning',
+            component: ComponentCreator('/tags/heap-tuning', '9b2'),
             exact: true
           },
           {
@@ -2806,6 +2836,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/index-lifecycle',
+            component: ComponentCreator('/tags/index-lifecycle', '4b8'),
+            exact: true
+          },
+          {
             path: '/tags/indexes',
             component: ComponentCreator('/tags/indexes', '99e'),
             exact: true
@@ -2813,6 +2848,11 @@ export default [
           {
             path: '/tags/indexing',
             component: ComponentCreator('/tags/indexing', 'e44'),
+            exact: true
+          },
+          {
+            path: '/tags/indexing-speed',
+            component: ComponentCreator('/tags/indexing-speed', 'e97'),
             exact: true
           },
           {
@@ -3146,6 +3186,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/json-logs',
+            component: ComponentCreator('/tags/json-logs', '64e'),
+            exact: true
+          },
+          {
             path: '/tags/junit-5',
             component: ComponentCreator('/tags/junit-5', '19c'),
             exact: true
@@ -3218,6 +3263,11 @@ export default [
           {
             path: '/tags/keys',
             component: ComponentCreator('/tags/keys', '38a'),
+            exact: true
+          },
+          {
+            path: '/tags/kibana',
+            component: ComponentCreator('/tags/kibana', 'f68'),
             exact: true
           },
           {
@@ -3456,6 +3506,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/logback',
+            component: ComponentCreator('/tags/logback', '0f5'),
+            exact: true
+          },
+          {
             path: '/tags/logging',
             component: ComponentCreator('/tags/logging', '418'),
             exact: true
@@ -3463,6 +3518,11 @@ export default [
           {
             path: '/tags/logs',
             component: ComponentCreator('/tags/logs', 'aa3'),
+            exact: true
+          },
+          {
+            path: '/tags/logstash',
+            component: ComponentCreator('/tags/logstash', '3f4'),
             exact: true
           },
           {
@@ -3508,6 +3568,11 @@ export default [
           {
             path: '/tags/lua',
             component: ComponentCreator('/tags/lua', '66e'),
+            exact: true
+          },
+          {
+            path: '/tags/lucene',
+            component: ComponentCreator('/tags/lucene', '3e5'),
             exact: true
           },
           {
@@ -4353,6 +4418,11 @@ export default [
           {
             path: '/tags/performance',
             component: ComponentCreator('/tags/performance', '69d'),
+            exact: true
+          },
+          {
+            path: '/tags/performance-optimization',
+            component: ComponentCreator('/tags/performance-optimization', '016'),
             exact: true
           },
           {
@@ -6532,7 +6602,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '10e'),
+            component: ComponentCreator('/', '2e7'),
             routes: [
               {
                 path: '/aws',
@@ -7526,7 +7596,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/aws/messaging/sqs',
-                component: ComponentCreator('/technical-knowledge/aws/messaging/sqs', '6a2'),
+                component: ComponentCreator('/technical-knowledge/aws/messaging/sqs', '6da'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -7556,7 +7626,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/aws/rds-aurora',
-                component: ComponentCreator('/technical-knowledge/aws/rds-aurora', '1e1'),
+                component: ComponentCreator('/technical-knowledge/aws/rds-aurora', 'a67'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -12492,6 +12562,30 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/elasticsearch/elasticsearch-internals',
+                component: ComponentCreator('/technical-knowledge/elasticsearch/elasticsearch-internals', 'd51'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/elasticsearch/elasticsearch-overview',
+                component: ComponentCreator('/technical-knowledge/elasticsearch/elasticsearch-overview', '826'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/elasticsearch/elasticsearch-senior-deep-dive',
+                component: ComponentCreator('/technical-knowledge/elasticsearch/elasticsearch-senior-deep-dive', '069'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/elasticsearch/logstash-kibana-integration',
+                component: ComponentCreator('/technical-knowledge/elasticsearch/logstash-kibana-integration', '080'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/git',
                 component: ComponentCreator('/technical-knowledge/git', '07c'),
                 exact: true,
@@ -13081,7 +13175,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/advanced/kafka-connect',
-                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-connect', '76e'),
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-connect', '5b5'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13165,13 +13259,19 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/core/kraft-vs-zookeeper',
-                component: ComponentCreator('/technical-knowledge/kafka/core/kraft-vs-zookeeper', '523'),
+                component: ComponentCreator('/technical-knowledge/kafka/core/kraft-vs-zookeeper', '244'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/kafka/core/partition',
                 component: ComponentCreator('/technical-knowledge/kafka/core/partition', '3ea'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/kafka/core/raft-consensus',
+                component: ComponentCreator('/technical-knowledge/kafka/core/raft-consensus', 'ded'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13471,7 +13571,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/operating-systems/memory-management',
-                component: ComponentCreator('/technical-knowledge/operating-systems/memory-management', '1cb'),
+                component: ComponentCreator('/technical-knowledge/operating-systems/memory-management', '442'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13483,7 +13583,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/operating-systems/processes-and-threads',
-                component: ComponentCreator('/technical-knowledge/operating-systems/processes-and-threads', 'c71'),
+                component: ComponentCreator('/technical-knowledge/operating-systems/processes-and-threads', 'b5d'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13495,7 +13595,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/operating-systems/virtual-memory-deep-dive',
-                component: ComponentCreator('/technical-knowledge/operating-systems/virtual-memory-deep-dive', 'e2d'),
+                component: ComponentCreator('/technical-knowledge/operating-systems/virtual-memory-deep-dive', '7d7'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13921,7 +14021,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/dead-letter-queue',
-                component: ComponentCreator('/technical-knowledge/system-design/dead-letter-queue', '718'),
+                component: ComponentCreator('/technical-knowledge/system-design/dead-letter-queue', 'cc8'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

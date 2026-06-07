@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-c45": {
+  "/-6d1": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-389": {
+  "/-976": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -392,6 +392,10 @@
   "/tags/bearer-token-f4e": {
     "__comp": "df203c0f",
     "__props": "ea5c02f7"
+  },
+  "/tags/beats-cf1": {
+    "__comp": "df203c0f",
+    "__props": "72a469b2"
   },
   "/tags/beginner-823": {
     "__comp": "df203c0f",
@@ -896,6 +900,14 @@
   "/tags/cluster-07f": {
     "__comp": "df203c0f",
     "__props": "d24741b1"
+  },
+  "/tags/cluster-architecture-03c": {
+    "__comp": "df203c0f",
+    "__props": "d66b6a7a"
+  },
+  "/tags/clustering-132": {
+    "__comp": "df203c0f",
+    "__props": "8e905724"
   },
   "/tags/clusterip-0d1": {
     "__comp": "df203c0f",
@@ -1617,6 +1629,10 @@
     "__comp": "df203c0f",
     "__props": "d6c03ee6"
   },
+  "/tags/elk-stack-5aa": {
+    "__comp": "df203c0f",
+    "__props": "e581494f"
+  },
   "/tags/elt-245": {
     "__comp": "df203c0f",
     "__props": "b0d61f7f"
@@ -1989,6 +2005,10 @@
     "__comp": "df203c0f",
     "__props": "184794eb"
   },
+  "/tags/gelf-066": {
+    "__comp": "df203c0f",
+    "__props": "bd68a3b3"
+  },
   "/tags/generics-cb5": {
     "__comp": "df203c0f",
     "__props": "0aab00a6"
@@ -2108,6 +2128,10 @@
   "/tags/heap-008": {
     "__comp": "df203c0f",
     "__props": "c6df5430"
+  },
+  "/tags/heap-tuning-9b2": {
+    "__comp": "df203c0f",
+    "__props": "010ae50a"
   },
   "/tags/heaps-bbb": {
     "__comp": "df203c0f",
@@ -2253,6 +2277,10 @@
     "__comp": "df203c0f",
     "__props": "5d0c3cc2"
   },
+  "/tags/index-lifecycle-4b8": {
+    "__comp": "df203c0f",
+    "__props": "b28a1bbc"
+  },
   "/tags/indexes-99e": {
     "__comp": "df203c0f",
     "__props": "a4c3bd58"
@@ -2260,6 +2288,10 @@
   "/tags/indexing-e44": {
     "__comp": "df203c0f",
     "__props": "abb89bd2"
+  },
+  "/tags/indexing-speed-e97": {
+    "__comp": "df203c0f",
+    "__props": "621fa47e"
   },
   "/tags/inflight-testing-fe4": {
     "__comp": "df203c0f",
@@ -2525,6 +2557,10 @@
     "__comp": "df203c0f",
     "__props": "6f3234dc"
   },
+  "/tags/json-logs-64e": {
+    "__comp": "df203c0f",
+    "__props": "2f8dcd85"
+  },
   "/tags/junit-5-19c": {
     "__comp": "df203c0f",
     "__props": "7f45c5a5"
@@ -2584,6 +2620,10 @@
   "/tags/keys-38a": {
     "__comp": "df203c0f",
     "__props": "0310c624"
+  },
+  "/tags/kibana-f68": {
+    "__comp": "df203c0f",
+    "__props": "4fe9d8a1"
   },
   "/tags/kinesis-538": {
     "__comp": "df203c0f",
@@ -2773,6 +2813,10 @@
     "__comp": "df203c0f",
     "__props": "b5aaefb4"
   },
+  "/tags/logback-0f5": {
+    "__comp": "df203c0f",
+    "__props": "83a27770"
+  },
   "/tags/logging-418": {
     "__comp": "df203c0f",
     "__props": "49a9524f"
@@ -2780,6 +2824,10 @@
   "/tags/logs-aa3": {
     "__comp": "df203c0f",
     "__props": "46edd360"
+  },
+  "/tags/logstash-3f4": {
+    "__comp": "df203c0f",
+    "__props": "cea8b4a4"
   },
   "/tags/long-polling-a18": {
     "__comp": "df203c0f",
@@ -2816,6 +2864,10 @@
   "/tags/lua-66e": {
     "__comp": "df203c0f",
     "__props": "84a7192f"
+  },
+  "/tags/lucene-3e5": {
+    "__comp": "df203c0f",
+    "__props": "8a2b6095"
   },
   "/tags/main-component-8ae": {
     "__comp": "df203c0f",
@@ -3492,6 +3544,10 @@
   "/tags/performance-69d": {
     "__comp": "df203c0f",
     "__props": "79199b91"
+  },
+  "/tags/performance-optimization-016": {
+    "__comp": "df203c0f",
+    "__props": "a97cf2c0"
   },
   "/tags/period-duration-fc7": {
     "__comp": "df203c0f",
@@ -5233,7 +5289,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-10e": {
+  "/-2e7": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -5896,7 +5952,7 @@
     "__comp": "17896441",
     "content": "8b89c603"
   },
-  "/technical-knowledge/aws/messaging/sqs-6a2": {
+  "/technical-knowledge/aws/messaging/sqs-6da": {
     "__comp": "17896441",
     "content": "9a9ef1e0"
   },
@@ -5916,7 +5972,7 @@
     "__comp": "17896441",
     "content": "261194b7"
   },
-  "/technical-knowledge/aws/rds-aurora-1e1": {
+  "/technical-knowledge/aws/rds-aurora-a67": {
     "__comp": "17896441",
     "content": "cbbb6c17"
   },
@@ -9208,6 +9264,22 @@
     "__comp": "17896441",
     "content": "1bfd8fec"
   },
+  "/technical-knowledge/elasticsearch/elasticsearch-internals-d51": {
+    "__comp": "17896441",
+    "content": "6a0a5d32"
+  },
+  "/technical-knowledge/elasticsearch/elasticsearch-overview-826": {
+    "__comp": "17896441",
+    "content": "e3b59b1d"
+  },
+  "/technical-knowledge/elasticsearch/elasticsearch-senior-deep-dive-069": {
+    "__comp": "17896441",
+    "content": "87b0d34b"
+  },
+  "/technical-knowledge/elasticsearch/logstash-kibana-integration-080": {
+    "__comp": "17896441",
+    "content": "007359b1"
+  },
   "/technical-knowledge/git-07c": {
     "__comp": "17896441",
     "content": "a2262cff"
@@ -9600,7 +9672,7 @@
     "__comp": "17896441",
     "content": "5a79051b"
   },
-  "/technical-knowledge/kafka/advanced/kafka-connect-76e": {
+  "/technical-knowledge/kafka/advanced/kafka-connect-5b5": {
     "__comp": "17896441",
     "content": "e1e89bb9"
   },
@@ -9656,13 +9728,17 @@
     "__comp": "17896441",
     "content": "6438a9db"
   },
-  "/technical-knowledge/kafka/core/kraft-vs-zookeeper-523": {
+  "/technical-knowledge/kafka/core/kraft-vs-zookeeper-244": {
     "__comp": "17896441",
     "content": "f5491934"
   },
   "/technical-knowledge/kafka/core/partition-3ea": {
     "__comp": "17896441",
     "content": "d9cff4fb"
+  },
+  "/technical-knowledge/kafka/core/raft-consensus-ded": {
+    "__comp": "17896441",
+    "content": "4e515793"
   },
   "/technical-knowledge/kafka/core/replication-789": {
     "__comp": "17896441",
@@ -9860,7 +9936,7 @@
     "__comp": "17896441",
     "content": "c14f6876"
   },
-  "/technical-knowledge/operating-systems/memory-management-1cb": {
+  "/technical-knowledge/operating-systems/memory-management-442": {
     "__comp": "17896441",
     "content": "868fe66e"
   },
@@ -9868,7 +9944,7 @@
     "__comp": "17896441",
     "content": "66ff3ddc"
   },
-  "/technical-knowledge/operating-systems/processes-and-threads-c71": {
+  "/technical-knowledge/operating-systems/processes-and-threads-b5d": {
     "__comp": "17896441",
     "content": "9dd074f3"
   },
@@ -9876,7 +9952,7 @@
     "__comp": "17896441",
     "content": "53d70aa9"
   },
-  "/technical-knowledge/operating-systems/virtual-memory-deep-dive-e2d": {
+  "/technical-knowledge/operating-systems/virtual-memory-deep-dive-7d7": {
     "__comp": "17896441",
     "content": "2d19a7f5"
   },
@@ -10160,7 +10236,7 @@
     "__comp": "17896441",
     "content": "0098328c"
   },
-  "/technical-knowledge/system-design/dead-letter-queue-718": {
+  "/technical-knowledge/system-design/dead-letter-queue-cc8": {
     "__comp": "17896441",
     "content": "8a82e430"
   },
