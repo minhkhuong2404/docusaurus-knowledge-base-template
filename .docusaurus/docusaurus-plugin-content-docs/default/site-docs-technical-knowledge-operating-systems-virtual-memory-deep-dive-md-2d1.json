@@ -1,7 +1,7 @@
 {
   "id": "technical-knowledge/operating-systems/virtual-memory-deep-dive",
-  "title": "Virtual Memory Deep Dive",
-  "description": "Address spaces, swap, OOM killer, huge pages, NUMA, and practical Linux memory tuning.",
+  "title": "Virtual Memory — Deep Dive",
+  "description": "A comprehensive guide to virtual memory — covering address spaces, paging mechanics, swap, OOM killer, huge pages, NUMA, and practical Linux/JVM tuning for senior engineers.",
   "source": "@site/docs/technical-knowledge/operating-systems/virtual-memory-deep-dive.md",
   "sourceDirName": "technical-knowledge/operating-systems",
   "slug": "/technical-knowledge/operating-systems/virtual-memory-deep-dive",
@@ -43,6 +43,16 @@
       "inline": true,
       "label": "performance",
       "permalink": "/tags/performance"
+    },
+    {
+      "inline": true,
+      "label": "jvm",
+      "permalink": "/tags/jvm"
+    },
+    {
+      "inline": true,
+      "label": "java",
+      "permalink": "/tags/java"
     }
   ],
   "version": "current",
@@ -51,8 +61,8 @@
   "sidebarPosition": 7,
   "frontMatter": {
     "id": "virtual-memory-deep-dive",
-    "title": "Virtual Memory Deep Dive",
-    "description": "Address spaces, swap, OOM killer, huge pages, NUMA, and practical Linux memory tuning.",
+    "title": "Virtual Memory — Deep Dive",
+    "description": "A comprehensive guide to virtual memory — covering address spaces, paging mechanics, swap, OOM killer, huge pages, NUMA, and practical Linux/JVM tuning for senior engineers.",
     "tags": [
       "operating-systems",
       "virtual-memory",
@@ -60,7 +70,9 @@
       "numa",
       "huge-pages",
       "linux",
-      "performance"
+      "performance",
+      "jvm",
+      "java"
     ],
     "sidebar_position": 7
   },

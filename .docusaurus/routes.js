@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'd7d'),
+    component: ComponentCreator('/', 'c45'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '7c8'),
+        component: ComponentCreator('/', '389'),
         routes: [
           {
             path: '/tags',
@@ -1376,6 +1376,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/context-switching',
+            component: ComponentCreator('/tags/context-switching', 'b26'),
+            exact: true
+          },
+          {
             path: '/tags/contract-testing',
             component: ComponentCreator('/tags/contract-testing', 'ecb'),
             exact: true
@@ -2458,6 +2463,11 @@ export default [
           {
             path: '/tags/garbage-collection',
             component: ComponentCreator('/tags/garbage-collection', '218'),
+            exact: true
+          },
+          {
+            path: '/tags/gc-tuning',
+            component: ComponentCreator('/tags/gc-tuning', 'fc5'),
             exact: true
           },
           {
@@ -3943,6 +3953,11 @@ export default [
           {
             path: '/tags/ocp',
             component: ComponentCreator('/tags/ocp', 'fa9'),
+            exact: true
+          },
+          {
+            path: '/tags/off-heap',
+            component: ComponentCreator('/tags/off-heap', '46e'),
             exact: true
           },
           {
@@ -5951,6 +5966,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/thread-pool',
+            component: ComponentCreator('/tags/thread-pool', '057'),
+            exact: true
+          },
+          {
             path: '/tags/threads',
             component: ComponentCreator('/tags/threads', 'f0b'),
             exact: true
@@ -5983,6 +6003,11 @@ export default [
           {
             path: '/tags/timescaledb',
             component: ComponentCreator('/tags/timescaledb', '9a7'),
+            exact: true
+          },
+          {
+            path: '/tags/tlb',
+            component: ComponentCreator('/tags/tlb', '2e5'),
             exact: true
           },
           {
@@ -6507,7 +6532,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '616'),
+            component: ComponentCreator('/', '10e'),
             routes: [
               {
                 path: '/aws',
@@ -7998,7 +8023,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/connection-pooling',
-                component: ComponentCreator('/technical-knowledge/database/connection-pooling', '9db'),
+                component: ComponentCreator('/technical-knowledge/database/connection-pooling', '18c'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13128,7 +13153,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/core/kafka-broker',
-                component: ComponentCreator('/technical-knowledge/kafka/core/kafka-broker', 'dea'),
+                component: ComponentCreator('/technical-knowledge/kafka/core/kafka-broker', '82f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

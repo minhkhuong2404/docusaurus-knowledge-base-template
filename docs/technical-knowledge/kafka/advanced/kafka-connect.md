@@ -486,7 +486,7 @@ By default, a single bad record **kills the entire task**. The task enters `FAIL
 
 Kafka Connect allows routing invalid or unparseable sink records to a Dead Letter Queue (DLQ) to prevent a single malformed payload from killing the entire connector task.
 
-For the JSON configuration blocks, error-handling properties, and detailed Kafka Connect DLQ header structures (e.g. exception classes and stack traces), see the centralized **[Kafka Connect DLQ](../../system-design/dead-letter-queue.md#kafka-connect-dlq)** section.
+For the JSON configuration blocks, error-handling properties, and detailed Kafka Connect DLQ header structures (e.g. exception classes and stack traces), see the centralized **[Dead Letter Queue](../../system-design/dead-letter-queue.md)** guide.
 
 ### Classifying Error Types
 

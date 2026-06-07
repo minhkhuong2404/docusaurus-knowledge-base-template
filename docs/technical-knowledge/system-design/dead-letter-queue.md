@@ -13,13 +13,13 @@ tags: [dead-letter-queue, dlq, poison-pills, system-design, retry-policies, mess
 The DLQ is not just an error bin — it is a **reliability contract**. It guarantees that no message is silently dropped and that every failure can be investigated, fixed, and replayed.
 
 :::info[Who this guide is for]
-- **New learners** — start at [The Post Office Analogy](#-the-post-office-analogy) and [Core Concepts](#-core-concepts).
-- **Senior engineers** — jump to [Retry Strategy Deep Dive](#-retry-strategy-deep-dive), [Alternatives Comparison](#-alternatives--when-to-choose-what), [Ordering vs. Throughput Trade-off](#1-the-ordering-vs-throughput-trade-off), or [Production Playbooks](#-production-playbooks).
+- **New learners** — start at [The Post Office Analogy](#the-post-office-analogy) and [Core Concepts](#core-concepts).
+- **Senior engineers** — jump to [Retry Strategy Deep Dive](#core-concepts), [Alternatives Comparison](#alternatives-and-when-to-choose-what), [Ordering vs. Throughput Trade-off](#1-the-ordering-vs-throughput-trade-off), or [Production Playbooks](#6-production-incident-runbook).
 :::
 
 ---
 
-## 👶 The Post Office Analogy
+## The Post Office Analogy
 
 Imagine a high-volume post office. Letters flow down a conveyor belt to automated sorting machines. Most letters are stamped, sorted, and routed correctly.
 
@@ -37,7 +37,7 @@ The conveyor belt is your **message queue**. The sorting machine is your **consu
 
 ---
 
-## 🔄 How It Works: The Full Lifecycle
+## How It Works: The Full Lifecycle
 
 ```mermaid
 sequenceDiagram
@@ -90,7 +90,7 @@ sequenceDiagram
 
 ---
 
-## 🧩 Core Concepts
+## Core Concepts
 
 ### Poison Pills vs. Transient Failures
 
@@ -175,7 +175,7 @@ maxReceiveCount = 3 means:
 
 ---
 
-## ⚖️ Alternatives & When to Choose What
+## Alternatives and When to Choose What
 
 A DLQ is not the only error-handling strategy. Understanding the full landscape prevents over-engineering and ensures the right tool for each failure scenario.
 
@@ -322,7 +322,7 @@ public void processPayment(PaymentRequest request) {
 
 ---
 
-## 🛠️ Implementation: Spring Boot + Kafka
+## Implementation: Spring Boot and Kafka
 
 ### Production-Grade Configuration
 
@@ -510,7 +510,7 @@ public class DlqRedriveService {
 
 ---
 
-## 🛠️ Implementation: RabbitMQ
+## Implementation: RabbitMQ
 
 ### Queue Declaration with DLX (Dead Letter Exchange)
 
@@ -628,7 +628,7 @@ spring:
 
 ---
 
-## 🛠️ Implementation: AWS SQS
+## Implementation: AWS SQS
 
 ### Terraform Configuration
 
@@ -764,7 +764,7 @@ public class SqsRedriveService {
 
 ---
 
-## 🧠 Senior Deep Dive
+## Senior Deep Dive
 
 ### 1. The Ordering vs. Throughput Trade-off
 
@@ -1085,7 +1085,7 @@ Step 5: Post-mortem
 
 ---
 
-## 🎯 Interview Decision Matrix
+## Interview Decision Matrix
 
 | Scenario | Recommended Strategy | Why |
 |---|---|---|
@@ -1108,7 +1108,7 @@ Step 5: Post-mortem
 
 ---
 
-## 📚 Further Reading
+## Further Reading
 
 - [Spring Kafka — Error Handling and Retries](https://docs.spring.io/spring-kafka/reference/kafka/annotation-error-handling.html) — Official Spring Kafka docs covering `DefaultErrorHandler`, `DeadLetterPublishingRecoverer`, and retry configuration.
 - [AWS SQS — Dead Letter Queues](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html) — AWS documentation on DLQ setup, redrive policy, and the `StartMessageMoveTask` API.

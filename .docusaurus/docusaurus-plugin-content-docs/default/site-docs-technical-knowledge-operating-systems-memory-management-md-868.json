@@ -1,7 +1,7 @@
 {
   "id": "technical-knowledge/operating-systems/memory-management",
-  "title": "Memory Management",
-  "description": "Virtual memory, paging, segmentation, TLB, page replacement algorithms, and Java heap management with GC fundamentals.",
+  "title": "Memory Management — OS & Java",
+  "description": "A complete guide to memory management — virtual memory, paging, TLB, page replacement, fragmentation, Linux allocators, JVM heap regions, GC algorithms, tuning, and production memory profiling. Beginner through senior depth.",
   "source": "@site/docs/technical-knowledge/operating-systems/memory-management.md",
   "sourceDirName": "technical-knowledge/operating-systems",
   "slug": "/technical-knowledge/operating-systems/memory-management",
@@ -43,6 +43,21 @@
       "inline": true,
       "label": "java",
       "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "tlb",
+      "permalink": "/tags/tlb"
+    },
+    {
+      "inline": true,
+      "label": "gc-tuning",
+      "permalink": "/tags/gc-tuning"
+    },
+    {
+      "inline": true,
+      "label": "off-heap",
+      "permalink": "/tags/off-heap"
     }
   ],
   "version": "current",
@@ -51,8 +66,9 @@
   "sidebarPosition": 3,
   "frontMatter": {
     "id": "memory-management",
-    "title": "Memory Management",
-    "description": "Virtual memory, paging, segmentation, TLB, page replacement algorithms, and Java heap management with GC fundamentals.",
+    "title": "Memory Management — OS & Java",
+    "sidebar_label": "Memory Management",
+    "description": "A complete guide to memory management — virtual memory, paging, TLB, page replacement, fragmentation, Linux allocators, JVM heap regions, GC algorithms, tuning, and production memory profiling. Beginner through senior depth.",
     "tags": [
       "operating-systems",
       "memory-management",
@@ -60,7 +76,10 @@
       "paging",
       "garbage-collection",
       "jvm",
-      "java"
+      "java",
+      "tlb",
+      "gc-tuning",
+      "off-heap"
     ],
     "sidebar_position": 3
   },

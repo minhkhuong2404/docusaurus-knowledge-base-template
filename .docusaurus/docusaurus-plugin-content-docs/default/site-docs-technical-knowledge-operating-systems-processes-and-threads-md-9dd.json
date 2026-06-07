@@ -1,7 +1,7 @@
 {
   "id": "technical-knowledge/operating-systems/processes-and-threads",
-  "title": "Processes & Threads",
-  "description": "Deep dive into processes, threads, their lifecycle, memory layout, context switching, and Java/JVM perspective on concurrency primitives.",
+  "title": "Processes & Threads — Complete Guide",
+  "description": "A complete guide to processes and threads — memory layout, lifecycles, IPC, threading models, context switching, Java concurrency, virtual threads, thread pool tuning, memory visibility, and production patterns. Beginner through senior depth.",
   "source": "@site/docs/technical-knowledge/operating-systems/processes-and-threads.md",
   "sourceDirName": "technical-knowledge/operating-systems",
   "slug": "/technical-knowledge/operating-systems/processes-and-threads",
@@ -38,6 +38,26 @@
       "inline": true,
       "label": "java",
       "permalink": "/tags/java"
+    },
+    {
+      "inline": true,
+      "label": "virtual-threads",
+      "permalink": "/tags/virtual-threads"
+    },
+    {
+      "inline": true,
+      "label": "context-switching",
+      "permalink": "/tags/context-switching"
+    },
+    {
+      "inline": true,
+      "label": "ipc",
+      "permalink": "/tags/ipc"
+    },
+    {
+      "inline": true,
+      "label": "thread-pool",
+      "permalink": "/tags/thread-pool"
     }
   ],
   "version": "current",
@@ -46,15 +66,20 @@
   "sidebarPosition": 1,
   "frontMatter": {
     "id": "processes-and-threads",
-    "title": "Processes & Threads",
-    "description": "Deep dive into processes, threads, their lifecycle, memory layout, context switching, and Java/JVM perspective on concurrency primitives.",
+    "title": "Processes & Threads — Complete Guide",
+    "sidebar_label": "Processes & Threads",
+    "description": "A complete guide to processes and threads — memory layout, lifecycles, IPC, threading models, context switching, Java concurrency, virtual threads, thread pool tuning, memory visibility, and production patterns. Beginner through senior depth.",
     "tags": [
       "operating-systems",
       "processes",
       "threads",
       "concurrency",
       "jvm",
-      "java"
+      "java",
+      "virtual-threads",
+      "context-switching",
+      "ipc",
+      "thread-pool"
     ],
     "sidebar_position": 1
   },

@@ -130,7 +130,7 @@ When Lambda processes SQS via ESM, set visibility timeout ≥ **6× Lambda timeo
 
 Amazon SQS supports dead letter queues (DLQs) to isolate unprocessable messages (poison pills) from healthy source queues. 
 
-For the complete design principles, retention strategies, and exact CLI redrive instructions (`start-message-move-task`), see the centralized **[AWS SQS DLQ & Redrive](../../system-design/dead-letter-queue.md#aws-sqs-dlq--redrive)** section.
+For the complete design principles, retention strategies, and exact CLI redrive instructions (`start-message-move-task`), see the centralized **[AWS SQS DLQ & Redrive](../../system-design/dead-letter-queue.md#sqs-redrive-aws-cli--java-sdk)** section.
 
 ---
 
