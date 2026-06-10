@@ -647,7 +647,7 @@ public void projectOrderEvent(OrderEvent event) {
 
 To ensure that database updates and event publications to message queues/streams occur atomically (preventing the dual-write problem), use the Transactional Outbox Pattern.
 
-For a complete guide with code examples, polling vs. CDC (Debezium) trade-offs, schemas, and production checklists, see the centralized **[Transactional Outbox Pattern](./data-consistency.md#outbox-pattern)** section.
+For a complete guide with code examples, polling vs. CDC (Debezium) trade-offs, schemas, and production checklists, see the dedicated **[Transactional Outbox Pattern Guide](./outbox-pattern.md)**.
 
 ## ⚖️ Pros and Cons
 

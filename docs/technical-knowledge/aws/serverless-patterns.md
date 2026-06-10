@@ -35,22 +35,11 @@ Like dancers moving to music without a central conductor. Each service does its 
 
 ## The Saga Pattern (Distributed Transactions)
 
-In a monolithic PostgreSQL database, you have ACID transactions. If an order fails, the database rolls back the inventory deduction automatically.
+In serverless microservices, you cannot have a single ACID database transaction spanning DynamoDB (Orders) and an external SaaS Payment Provider. 
 
-In Serverless microservices, you cannot have a single database transaction spanning DynamoDB (Orders) and an external SaaS Payment Provider. 
+The **Saga Pattern** solves distributed transactions by defining **compensating transactions** (semantic rollbacks). In a serverless environment, this is typically orchestrated via **AWS Step Functions** to execute the exact reverse operations if a later step in the sequence fails.
 
-The **Saga Pattern** solves distributed transactions by defining **compensating transactions**.
-
-**Scenario:**
-1. **Book Flight** (Success)
-2. **Book Hotel** (Success)
-3. **Book Rental Car** (Fails!)
-
-Instead of a database rollback, a **Saga Orchestrator (AWS Step Functions)** executes the exact reverse operations:
-1. **Cancel Hotel**
-2. **Cancel Flight**
-
-*This ensures data consistency across disjointed microservices.*
+For a complete guide on Saga coordination models (Orchestration vs. Choreography), Spring Boot examples, and comparison tables with **Two-Phase Commit (2PC)**, see the dedicated [Saga Pattern Guide](../system-design/saga-pattern.md).
 
 ---
 

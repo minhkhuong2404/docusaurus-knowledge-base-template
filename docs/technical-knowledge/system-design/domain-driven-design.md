@@ -1757,25 +1757,9 @@ public class OrderController {
 
 ### Saga Integration
 
-```java
-@Service
-public class OrderSagaOrchestrator {
-    @SagaOrchestrationStart
-    public void handle(OrderPlacedEvent event) {
-        sagaManager.createSaga(event.getOrderId())
-            .step("reserveInventory")
-            .invokeParticipant(inventoryService::reserve)
-            .onCompensation(inventoryService::release)
-            .step("processPayment")
-            .invokeParticipant(paymentService::process)
-            .onCompensation(paymentService::refund)
-            .step("shipOrder")
-            .invokeParticipant(shippingService::ship)
-            .onCompensation(shippingService::cancel)
-            .start();
-    }
-}
-```
+In Domain-Driven Design, complex business workflows that span multiple aggregate boundaries (or different bounded contexts) cannot be executed in a single local transaction. Instead, they are coordinated using the **Saga Pattern**. 
+
+For complete orchestration and choreography implementation code, comparative tables, and compensations logic in DDD-based environments, see the dedicated [Saga Pattern Guide](./saga-pattern.md).
 
 ---
 
@@ -1823,7 +1807,7 @@ public class OrderSagaOrchestrator {
 
 ### Q: How does DDD integrate with outbox and saga patterns?
 
-**A:** Aggregates emit domain events; outbox publishes them reliably after commit; sagas coordinate cross-context workflows. This preserves local consistency while enabling eventual global consistency.
+**A:** Aggregates emit domain events. The **Transactional Outbox Pattern** ensures these events are written to the database atomically with aggregate state changes and subsequently published. The **Saga Pattern** listens to these events to coordinate multi-step workflows across different bounded contexts. For architectural details and Spring Boot configurations, see the dedicated [Saga Pattern Guide](./saga-pattern.md) and [Transactional Outbox Pattern Guide](./outbox-pattern.md).
 
 ### Q: What are signs a team is over-applying DDD?
 

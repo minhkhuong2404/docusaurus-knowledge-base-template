@@ -1115,5 +1115,5 @@ Step 5: Post-mortem
 - [RabbitMQ — Dead Letter Exchanges](https://www.rabbitmq.com/dlx.html) — Official RabbitMQ docs on DLX routing arguments, per-message TTL, and queue-length-based dead lettering.
 - [Confluent — Error Handling in Kafka Streams](https://docs.confluent.io/platform/current/streams/developer-guide/error-handling.html) — Covers DLQ integration patterns for Kafka Streams applications.
 - [Designing Data-Intensive Applications — Chapter 11 (Stream Processing)](https://dataintensive.net/) — Kleppmann's treatment of exactly-once semantics, fault tolerance, and ordering guarantees; foundational context for DLQ trade-offs.
-- [Transactional Outbox Pattern](./data-consistency#outbox-pattern) — The companion pattern: ensuring messages are reliably published to the queue in the first place, so the DLQ only handles genuine processing failures rather than publish failures.
+- [Transactional Outbox Pattern](./outbox-pattern.md) — The companion pattern: ensuring messages are reliably published to the queue in the first place, so the DLQ only handles genuine processing failures rather than publish failures.
 - [Resilience4j Documentation](https://resilience4j.readme.io/docs/retry) — Circuit breakers, retry policies, and bulkheads that work alongside DLQs to handle transient failures without unnecessary DLQ routing.

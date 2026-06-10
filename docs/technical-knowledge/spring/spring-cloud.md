@@ -701,40 +701,9 @@ public interface OrderProcessor {
 
 ### Pattern 4: Saga Pattern (Distributed Transactions)
 
-For distributed transactions, use the Saga pattern:
+Spring Cloud does not provide a built-in distributed transaction manager. Instead, microservices rely on eventual consistency via the **Saga Pattern** or the **Transactional Outbox Pattern** to coordinate database writes and event publishing without blocking locks.
 
-```java
-@Service
-public class OrderSaga {
-    @Autowired
-    private PaymentService paymentService;
-    @Autowired
-    private InventoryService inventoryService;
-
-    @SagaOrchestrationStart
-    public void createOrder(Order order) {
-        // Step 1: Reserve inventory
-        inventoryService.reserve(order.getInventoryId(), order.getQuantity());
-
-        // Step 2: Process payment
-        paymentService.charge(order.getPaymentId(), order.getAmount());
-
-        // Step 3: Confirm order
-        order.setStatus(OrderStatus.CONFIRMED);
-    }
-
-    @Compensation
-    public void compensateOrder(Order order) {
-        // Compensate: Release inventory
-        inventoryService.release(order.getInventoryId(), order.getQuantity());
-
-        // Compensate: Refund payment
-        paymentService.refund(order.getPaymentId(), order.getAmount());
-
-        order.setStatus(OrderStatus.CANCELLED);
-    }
-}
-```
+For Java code implementations of both Orchestration and Choreography sagas, compensation escalation strategies, and outbox relay configurations, see the dedicated [Saga Pattern Guide](../system-design/saga-pattern.md) and [Transactional Outbox Pattern Guide](../system-design/outbox-pattern.md).
 
 ---
 
@@ -827,7 +796,7 @@ A: You can use Resilience4j's `@Retry` annotation or configure it in `applicatio
 A: The CAP Theorem states that in a distributed system, you can only have two out of three: Consistency, Availability, and Partition Tolerance. In Spring Cloud, Eureka chooses Availability (AP) over Consistency, meaning it continues serving requests even if some instances have stale data. Consul and Zookeeper choose Consistency (CP), meaning they stop serving requests if they can't guarantee consistency.
 
 **Q12: How do you handle distributed transactions in Spring Cloud?**
-A: Spring Cloud doesn't provide built-in distributed transaction support. Instead, you use patterns like Saga (orchestration or choreography), 2-Phase Commit (2PC), or Eventual Consistency. The Saga pattern is most common, where you break the transaction into a series of local transactions with compensating actions for rollback.
+A: Spring Cloud has no built-in coordinator for distributed transactions. Avoid synchronous blocking protocols (like 2PC) in high-scale environments. Instead, implement eventual consistency using the **Saga Pattern** (orchestrator- or choreography-driven) and secure local transactional writes using the **Transactional Outbox Pattern**. Refer to the [Saga Pattern Guide](../system-design/saga-pattern.md) and the [Transactional Outbox Pattern Guide](../system-design/outbox-pattern.md) for architecture and code samples.
 
 **Q13: What is the difference between synchronous and asynchronous communication in microservices?**
 A: Synchronous communication (HTTP/REST) is simpler but creates tight coupling and can lead to cascading failures. Asynchronous communication (message queues) provides loose coupling and better resilience but adds complexity and eventual consistency. The choice depends on the use case and requirements.
@@ -844,7 +813,7 @@ A: Security is typically implemented at the API Gateway using OAuth2/JWT. The ga
 A: Design for failure by implementing resilience patterns: circuit breakers, retries, timeouts, bulkheads, and fallbacks. Use chaos engineering to test failure scenarios. Implement graceful degradation where services can function with reduced capabilities. Monitor everything and have automated rollback procedures.
 
 **Q17: How do you handle data consistency across microservices?**
-A: Data consistency is handled through patterns like Saga for distributed transactions, event sourcing for audit trails, and CQRS for read/write separation. Use eventual consistency for most operations and strong consistency only where absolutely necessary. Implement idempotent operations to handle duplicate events.
+A: Rather than trying to maintain immediate consistency across boundaries, design for eventual consistency. Coordinate service modifications using Sagas with compensating actions, and use the Transactional Outbox pattern paired with CDC (e.g., Debezium) or polling relays to ensure message delivery without dual-write bugs. Ensure all event listeners are idempotent. For details, refer to the [Saga Pattern Guide](../system-design/saga-pattern.md) and [Transactional Outbox Pattern Guide](../system-design/outbox-pattern.md).
 
 **Q18: How do you optimize performance in a Spring Cloud application?**
 A: Optimize by reducing network calls (API composition), using caching (Redis, CDN), implementing connection pooling, using reactive programming (WebFlux), optimizing database queries, and using efficient serialization (Protocol Buffers instead of JSON). Monitor performance using APM tools and optimize bottlenecks.

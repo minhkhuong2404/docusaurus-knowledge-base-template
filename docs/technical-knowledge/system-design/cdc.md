@@ -157,7 +157,7 @@ public class OrderService {
 
 A bridge between application-controlled events and guaranteed delivery. The application writes events to an `outbox` table in the same database transaction as the business data, and CDC (via a log tailer like Debezium) reads the outbox table to publish them to Kafka.
 
-For the complete architectural design, sequence diagrams, Spring Boot entity/service implementations, and Debezium Outbox Event Router configurations, see the centralized **[Transactional Outbox Pattern](./data-consistency.md#outbox-pattern)** section.
+For the complete architectural design, sequence diagrams, Spring Boot entity/service implementations, and Debezium Outbox Event Router configurations, see the dedicated **[Transactional Outbox Pattern Guide](./outbox-pattern.md)**.
 
 ---
 
@@ -333,7 +333,7 @@ public class OrderCdcConsumer {
 
 **Step 4: Transactional Outbox with Debezium Outbox Router**
 
-For Spring Boot entity/service code and Debezium Kafka Connect configurations specifically tailored for logical outbox routing, see the centralized **[Relay Strategy B: CDC with Debezium](./data-consistency.md#relay-strategy-b-cdc-with-debezium)** section.
+For Spring Boot entity/service code and Debezium Kafka Connect configurations specifically tailored for logical outbox routing, see the dedicated **[Relay Strategy B: CDC with Debezium](./outbox-pattern.md#strategy-b-change-data-capture-cdc-via-debezium)** section.
 
 ---
 

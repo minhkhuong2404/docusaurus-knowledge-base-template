@@ -313,7 +313,7 @@ Client -> Gateway
 ---
 
 ## Saga Pattern (Cross-Service Transactions)
-See [Data Consistency & Transactions](./data-consistency#saga-pattern) for full coverage.
+See the dedicated [Saga Pattern Guide](./saga-pattern.md) for full coverage.
 
 ---
 
@@ -965,7 +965,7 @@ public class RateLimiter {
 
 ### Q: How do you handle the need for cross-service transactions in a microservices system?
 
-**A:** Distributed transactions with 2PC are fragile and blocking — avoid them. Instead, use the Saga pattern: decompose the transaction into a sequence of local ACID transactions, each publishing an event on success, or triggering a compensating transaction on failure. For orchestration sagas, a central Saga Orchestrator (e.g., Temporal workflow) manages the sequence and compensations explicitly. For choreography, each service reacts to events and emits its own events. The Outbox pattern ensures events are published atomically with the database write, preventing the dual-write problem.
+**A:** Avoid blocking distributed transaction protocols (like 2PC). Instead, implement eventual consistency patterns like the **Saga Pattern** (using Orchestration or Choreography to coordinate local ACID transactions and semantic compensations) and the **Transactional Outbox Pattern** (to solve the dual-write problem). For complete architectural schemas and implementation code, see the [Saga Pattern Guide](./saga-pattern.md) and [Transactional Outbox Pattern Guide](./outbox-pattern.md).
 
 ### Q: What are the operational challenges of microservices that monoliths avoid?
 

@@ -74,7 +74,7 @@ tags: [scaling, writes, sharding, partitioning, kafka, wal, async, performance]
   - [Write Amplification](#write-amplification)
   - [Compaction Strategies](#compaction-strategies)
   - [Distributed Transactions](#distributed-transactions)
-  - [Two-Phase Commit](#two-phase-commit)
+  - [Two-Phase Commit (2PC)](#two-phase-commit-2pc)
   - [Three-Phase Commit](#three-phase-commit)
 - [Additional Resources](#additional-resources)
 - [Best Practices](#best-practices)
@@ -1336,38 +1336,11 @@ public class DistributedTransactionService {
 }
 ```
 
-### Two-Phase Commit
+### Two-Phase Commit (2PC)
 
-```java
-@Service
-public class TwoPhaseCommitService {
-    private final List<TransactionParticipant> participants;
+Two-Phase Commit (2PC) is a classic protocol used to scale writes atomically across distributed systems using a prepare-then-commit voting mechanism. 
 
-    public void executeTransaction(List<Operation> operations) {
-        // Phase 1: Prepare
-        List<TransactionParticipant> preparedParticipants = new ArrayList<>();
-
-        for (Operation operation : operations) {
-            TransactionParticipant participant = getParticipant(operation);
-
-            if (participant.prepare(operation)) {
-                preparedParticipants.add(participant);
-            } else {
-                // Rollback all prepared participants
-                for (TransactionParticipant prepared : preparedParticipants) {
-                    prepared.rollback(operation);
-                }
-                throw new TransactionException("Prepare phase failed");
-            }
-        }
-
-        // Phase 2: Commit
-        for (TransactionParticipant participant : preparedParticipants) {
-            participant.commit(operation);
-        }
-    }
-}
-```
+For Java code implementations of 2PC, structural sequence diagrams, and alternative coordination models (like the **Saga Pattern**), see the dedicated [Two-Phase Commit (2PC) & Three-Phase Commit (3PC) Guide](./two-phase-commit.md).
 
 ### Three-Phase Commit
 

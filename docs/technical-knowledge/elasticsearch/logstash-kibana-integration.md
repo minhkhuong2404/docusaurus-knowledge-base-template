@@ -221,6 +221,6 @@ Add the Logstash TCP appender to write structured JSON events directly to the pi
 </configuration>
 ```
 
-:::tip Encoder Configuration Details
+:::tip[Encoder Configuration Details]
 By using `net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder` instead of standard layout text formats, the application outputs pure, compact JSON. Elasticsearch is then able to index each field (`severity`, `service`, `trace_id`, `duration_ms`) directly without needing complex Grok regular expression parsing in Logstash, which saves significant CPU resources.
 :::

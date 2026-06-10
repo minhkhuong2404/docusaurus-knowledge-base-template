@@ -610,68 +610,13 @@ my-app.jar
 
 This is why you can't run `java -cp my-app.jar com.example.MyApp` — the custom launcher is required.
 
-### Q27: How do you implement saga pattern for distributed transactions in Spring Boot?
+### Q27: How do you implement the saga pattern for distributed transactions in Spring Boot?
 
-**Choreography-based saga (event-driven):**
+**A:** Avoid blocking distributed transaction protocols (like 2PC). Instead, decompose cross-service workflows into a sequence of local transactions using the **Saga Pattern**. You can implement this in Spring Boot using:
+- **Choreography-based Sagas (Event-Driven):** Services listen to and publish events (e.g., via Spring Boot Kafka binders) to trigger subsequent steps.
+- **Orchestration-based Sagas (Central Coordinator):** A dedicated controller bean coordinates calls to other services and schedules compensating actions if any steps fail.
 
-```java
-// Order Service publishes event
-@Service
-public class OrderService {
-
-    private final KafkaTemplate<String, OrderEvent> kafka;
-
-    @Transactional
-    public Order createOrder(OrderRequest request) {
-        Order order = orderRepository.save(new Order(request, Status.PENDING));
-        kafka.send("order-events", new OrderCreatedEvent(order.getId(), request));
-        return order;
-    }
-
-    @KafkaListener(topics = "payment-events")
-    public void handlePaymentResult(PaymentEvent event) {
-        if (event.isSuccess()) {
-            orderRepository.updateStatus(event.getOrderId(), Status.CONFIRMED);
-        } else {
-            // Compensating transaction
-            orderRepository.updateStatus(event.getOrderId(), Status.CANCELLED);
-            kafka.send("inventory-events", new ReleaseInventoryEvent(event.getOrderId()));
-        }
-    }
-}
-```
-
-**Orchestration-based saga:**
-
-```java
-@Service
-public class OrderSagaOrchestrator {
-
-    public Order processOrder(OrderRequest request) {
-        // Step 1: Create order
-        Order order = orderService.createOrder(request);
-        try {
-            // Step 2: Reserve inventory
-            inventoryService.reserve(order);
-            // Step 3: Process payment
-            paymentService.charge(order);
-            // Step 4: Confirm order
-            orderService.confirm(order.getId());
-        } catch (InventoryException e) {
-            orderService.cancel(order.getId()); // Compensate
-        } catch (PaymentException e) {
-            inventoryService.release(order);    // Compensate step 2
-            orderService.cancel(order.getId()); // Compensate step 1
-        }
-        return order;
-    }
-}
-```
-
-| Approach | Pros | Cons |
-|----------|------|------|
-| Choreography | Loose coupling, scalable | Hard to track, complex failure handling |
-| Orchestration | Centralized logic, easier to understand | Single point of failure, tighter coupling |
+For complete structural code examples of both orchestration and choreography sagas, idempotency handling, and the compensating transaction playbook in Spring Boot, see the dedicated [Saga Pattern Guide](../system-design/saga-pattern.md).
 
 ### Q28: How do you implement CQRS in Spring Boot?
 

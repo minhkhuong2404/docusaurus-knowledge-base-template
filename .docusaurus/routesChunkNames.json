@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-6d1": {
+  "/-766": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-976": {
+  "/-d73": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -53,9 +53,17 @@
     "__comp": "df203c0f",
     "__props": "0cf57cad"
   },
+  "/tags/2-pc-473": {
+    "__comp": "df203c0f",
+    "__props": "325993d1"
+  },
   "/tags/3-nf-ad9": {
     "__comp": "df203c0f",
     "__props": "70438f52"
+  },
+  "/tags/3-pc-66a": {
+    "__comp": "df203c0f",
+    "__props": "535b7794"
   },
   "/tags/abac-205": {
     "__comp": "df203c0f",
@@ -1673,6 +1681,10 @@
     "__comp": "df203c0f",
     "__props": "1c927815"
   },
+  "/tags/eos-d49": {
+    "__comp": "df203c0f",
+    "__props": "fa4441e1"
+  },
   "/tags/epam-ceb": {
     "__comp": "df203c0f",
     "__props": "8eb293c6"
@@ -2232,6 +2244,10 @@
   "/tags/idempotency-cc3": {
     "__comp": "df203c0f",
     "__props": "72ba4736"
+  },
+  "/tags/idempotent-producer-e71": {
+    "__comp": "df203c0f",
+    "__props": "63ffd3ba"
   },
   "/tags/identity-pools-99a": {
     "__comp": "df203c0f",
@@ -5289,7 +5305,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-2e7": {
+  "/-133": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -9264,19 +9280,19 @@
     "__comp": "17896441",
     "content": "1bfd8fec"
   },
-  "/technical-knowledge/elasticsearch/elasticsearch-internals-d51": {
+  "/technical-knowledge/elasticsearch/elasticsearch-internals-c78": {
     "__comp": "17896441",
     "content": "6a0a5d32"
   },
-  "/technical-knowledge/elasticsearch/elasticsearch-overview-826": {
+  "/technical-knowledge/elasticsearch/elasticsearch-overview-f34": {
     "__comp": "17896441",
     "content": "e3b59b1d"
   },
-  "/technical-knowledge/elasticsearch/elasticsearch-senior-deep-dive-069": {
+  "/technical-knowledge/elasticsearch/elasticsearch-senior-deep-dive-fd6": {
     "__comp": "17896441",
     "content": "87b0d34b"
   },
-  "/technical-knowledge/elasticsearch/logstash-kibana-integration-080": {
+  "/technical-knowledge/elasticsearch/logstash-kibana-integration-2e7": {
     "__comp": "17896441",
     "content": "007359b1"
   },
@@ -9664,10 +9680,6 @@
     "__comp": "17896441",
     "content": "dd9695a1"
   },
-  "/technical-knowledge/kafka/advanced/exactly-once-c40": {
-    "__comp": "17896441",
-    "content": "a8e4316f"
-  },
   "/technical-knowledge/kafka/advanced/exactly-once-vs-dedup-8cd": {
     "__comp": "17896441",
     "content": "5a79051b"
@@ -9675,6 +9687,10 @@
   "/technical-knowledge/kafka/advanced/kafka-connect-5b5": {
     "__comp": "17896441",
     "content": "e1e89bb9"
+  },
+  "/technical-knowledge/kafka/advanced/kafka-exactly-once-367": {
+    "__comp": "17896441",
+    "content": "a8e4316f"
   },
   "/technical-knowledge/kafka/advanced/kafka-streams-deep-dive-719": {
     "__comp": "17896441",
@@ -9736,7 +9752,7 @@
     "__comp": "17896441",
     "content": "d9cff4fb"
   },
-  "/technical-knowledge/kafka/core/raft-consensus-ded": {
+  "/technical-knowledge/kafka/core/raft-consensus-733": {
     "__comp": "17896441",
     "content": "4e515793"
   },
@@ -10284,6 +10300,10 @@
     "__comp": "17896441",
     "content": "f58357ef"
   },
+  "/technical-knowledge/system-design/outbox-pattern-574": {
+    "__comp": "17896441",
+    "content": "5223f567"
+  },
   "/technical-knowledge/system-design/proximity-search-geospatial-indexes-c61": {
     "__comp": "17896441",
     "content": "929b92a0"
@@ -10295,6 +10315,10 @@
   "/technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway-6ff": {
     "__comp": "17896441",
     "content": "36929883"
+  },
+  "/technical-knowledge/system-design/saga-pattern-db3": {
+    "__comp": "17896441",
+    "content": "bd0308dc"
   },
   "/technical-knowledge/system-design/scaling-reads-eb6": {
     "__comp": "17896441",
@@ -10315,6 +10339,10 @@
   "/technical-knowledge/system-design/sharding-partitioning-c2d": {
     "__comp": "17896441",
     "content": "1d0030f3"
+  },
+  "/technical-knowledge/system-design/two-phase-commit-c17": {
+    "__comp": "17896441",
+    "content": "4c5a6247"
   },
   "/technical-knowledge/test/spring-test-annotations-e89": {
     "__comp": "17896441",

@@ -276,6 +276,9 @@ const sidebars: SidebarsConfig = {
 						'technical-knowledge/system-design/real-time-updates',
 						'technical-knowledge/system-design/handling-contention',
 						'technical-knowledge/system-design/data-consistency',
+						'technical-knowledge/system-design/two-phase-commit',
+						'technical-knowledge/system-design/saga-pattern',
+						'technical-knowledge/system-design/outbox-pattern',
 						'technical-knowledge/system-design/long-running-tasks',
 						'technical-knowledge/system-design/dead-letter-queue',
 						'technical-knowledge/system-design/advanced-consensus-bft',
@@ -650,7 +653,7 @@ const sidebars: SidebarsConfig = {
 					label: '📈 Reliability & Operations',
 					collapsed: true,
 					items: [
-						'technical-knowledge/kafka/advanced/exactly-once',
+						'technical-knowledge/kafka/advanced/kafka-exactly-once',
 						'technical-knowledge/kafka/advanced/order-messages',
 						'technical-knowledge/kafka/advanced/processing-and-ordering',
 						'technical-knowledge/kafka/advanced/monitoring-operations',

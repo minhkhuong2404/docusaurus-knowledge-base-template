@@ -5455,11 +5455,6 @@
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/kafka/advanced/exactly-once",
-              "path": "/technical-knowledge/kafka/advanced/exactly-once",
-              "sidebar": "tutorialSidebar"
-            },
-            {
               "id": "technical-knowledge/kafka/advanced/exactly-once-vs-dedup",
               "path": "/technical-knowledge/kafka/advanced/exactly-once-vs-dedup",
               "sidebar": "tutorialSidebar"
@@ -5467,6 +5462,11 @@
             {
               "id": "technical-knowledge/kafka/advanced/kafka-connect",
               "path": "/technical-knowledge/kafka/advanced/kafka-connect",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/advanced/kafka-exactly-once",
+              "path": "/technical-knowledge/kafka/advanced/kafka-exactly-once",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -6250,6 +6250,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/outbox-pattern",
+              "path": "/technical-knowledge/system-design/outbox-pattern",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/proximity-search-geospatial-indexes",
               "path": "/technical-knowledge/system-design/proximity-search-geospatial-indexes",
               "sidebar": "tutorialSidebar"
@@ -6262,6 +6267,11 @@
             {
               "id": "technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway",
               "path": "/technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/saga-pattern",
+              "path": "/technical-knowledge/system-design/saga-pattern",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -6287,6 +6297,11 @@
             {
               "id": "technical-knowledge/system-design/sharding-partitioning",
               "path": "/technical-knowledge/system-design/sharding-partitioning",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/two-phase-commit",
+              "path": "/technical-knowledge/system-design/two-phase-commit",
               "sidebar": "tutorialSidebar"
             },
             {

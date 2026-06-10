@@ -119,52 +119,9 @@ Causality: if VC(a) < VC(b) for all components → a happened-before b
 
 ## Two-Phase Commit (2PC)
 
-Atomic commit across multiple databases.
+Two-Phase Commit (2PC) is a distributed transaction protocol that ensures atomic commit across multiple participants. 
 
-```
-Phase 1 (Prepare):
-  Coordinator → "Can you commit?" → Participant A: "Yes"
-                                  → Participant B: "Yes"
-
-Phase 2 (Commit):
-  Coordinator → "Commit!" → Participant A commits
-                          → Participant B commits
-
-If any "No" in Phase 1:
-  Coordinator → "Rollback" → All rollback
-```
-
-### Beginner View
-2PC gives a simple promise: either all participants commit or all rollback. It is useful when strong atomicity is mandatory across multiple resources.
-
-### Senior Deep Dive
-2PC has a blocking window:
-- Participants vote YES in prepare phase and hold locks
-- If coordinator crashes before final decision, participants can be stuck waiting
-
-Crash timeline example:
-1. A and B prepared YES, locks acquired
-2. Coordinator writes COMMIT decision to its log
-3. Coordinator crashes before notifying B
-4. A commits, B remains uncertain until coordinator recovers
-
-This creates high tail latency and lock amplification under failure.
-
-### Coordinator Recovery Rules
-- Coordinator must write durable decision before sending commit/rollback
-- On restart, replay transaction log and resend final decision
-- Participants must be idempotent for duplicate COMMIT/ROLLBACK messages
-
-### When to Use vs Avoid
-- Use 2PC: low-latency LAN, small participant count, strong invariants
-- Prefer Saga/TCC: internet-scale microservices, independent availability goals
-
-**Problems**:
-- Coordinator failure during Phase 2 = participants stuck in limbo
-- Blocking protocol — participants hold locks during prepare
-- Network partition breaks the protocol
-
-**Alternatives**: Saga pattern (non-blocking), 3PC (complex).
+For complete sequence diagrams, failure mode analyses (e.g., blocking coordinators, network partitions), and a comparison with **Three-Phase Commit (3PC)** and the **Saga Pattern**, see the dedicated [Two-Phase Commit (2PC) & Three-Phase Commit (3PC) Guide](./two-phase-commit.md) and the [Saga Pattern Guide](./saga-pattern.md).
 
 ---
 
@@ -350,7 +307,7 @@ B: "I'm the leader"
 
 ### Q: What is Two-Phase Commit? What are its failure modes?
 
-**A:** 2PC coordinates distributed commit with prepare then commit/abort phases. If coordinator fails after prepare, participants can block waiting, making availability poor.
+**A:** Two-Phase Commit (2PC) coordinates distributed resource updates by voting to prepare before executing a commit. Its primary failure modes are coordinator failure (leaving participants blocked holding locks) and network partitions. See the [Two-Phase Commit Guide](./two-phase-commit.md) for details.
 
 ### Q: How does a gossip protocol work? What is it used for?
 

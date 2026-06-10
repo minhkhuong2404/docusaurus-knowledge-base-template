@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '6d1'),
+    component: ComponentCreator('/', '766'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '976'),
+        component: ComponentCreator('/', 'd73'),
         routes: [
           {
             path: '/tags',
@@ -56,8 +56,18 @@ export default [
             exact: true
           },
           {
+            path: '/tags/2-pc',
+            component: ComponentCreator('/tags/2-pc', '473'),
+            exact: true
+          },
+          {
             path: '/tags/3-nf',
             component: ComponentCreator('/tags/3-nf', 'ad9'),
+            exact: true
+          },
+          {
+            path: '/tags/3-pc',
+            component: ComponentCreator('/tags/3-pc', '66a'),
             exact: true
           },
           {
@@ -2081,6 +2091,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/eos',
+            component: ComponentCreator('/tags/eos', 'd49'),
+            exact: true
+          },
+          {
             path: '/tags/epam',
             component: ComponentCreator('/tags/epam', 'ceb'),
             exact: true
@@ -2778,6 +2793,11 @@ export default [
           {
             path: '/tags/idempotency',
             component: ComponentCreator('/tags/idempotency', 'cc3'),
+            exact: true
+          },
+          {
+            path: '/tags/idempotent-producer',
+            component: ComponentCreator('/tags/idempotent-producer', 'e71'),
             exact: true
           },
           {
@@ -6602,7 +6622,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '2e7'),
+            component: ComponentCreator('/', '133'),
             routes: [
               {
                 path: '/aws',
@@ -12563,25 +12583,25 @@ export default [
               },
               {
                 path: '/technical-knowledge/elasticsearch/elasticsearch-internals',
-                component: ComponentCreator('/technical-knowledge/elasticsearch/elasticsearch-internals', 'd51'),
+                component: ComponentCreator('/technical-knowledge/elasticsearch/elasticsearch-internals', 'c78'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/elasticsearch/elasticsearch-overview',
-                component: ComponentCreator('/technical-knowledge/elasticsearch/elasticsearch-overview', '826'),
+                component: ComponentCreator('/technical-knowledge/elasticsearch/elasticsearch-overview', 'f34'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/elasticsearch/elasticsearch-senior-deep-dive',
-                component: ComponentCreator('/technical-knowledge/elasticsearch/elasticsearch-senior-deep-dive', '069'),
+                component: ComponentCreator('/technical-knowledge/elasticsearch/elasticsearch-senior-deep-dive', 'fd6'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/elasticsearch/logstash-kibana-integration',
-                component: ComponentCreator('/technical-knowledge/elasticsearch/logstash-kibana-integration', '080'),
+                component: ComponentCreator('/technical-knowledge/elasticsearch/logstash-kibana-integration', '2e7'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13162,12 +13182,6 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/kafka/advanced/exactly-once',
-                component: ComponentCreator('/technical-knowledge/kafka/advanced/exactly-once', 'c40'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
                 path: '/technical-knowledge/kafka/advanced/exactly-once-vs-dedup',
                 component: ComponentCreator('/technical-knowledge/kafka/advanced/exactly-once-vs-dedup', '8cd'),
                 exact: true,
@@ -13176,6 +13190,12 @@ export default [
               {
                 path: '/technical-knowledge/kafka/advanced/kafka-connect',
                 component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-connect', '5b5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/kafka/advanced/kafka-exactly-once',
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-exactly-once', '367'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13271,7 +13291,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/core/raft-consensus',
-                component: ComponentCreator('/technical-knowledge/kafka/core/raft-consensus', 'ded'),
+                component: ComponentCreator('/technical-knowledge/kafka/core/raft-consensus', '733'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14092,6 +14112,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/system-design/outbox-pattern',
+                component: ComponentCreator('/technical-knowledge/system-design/outbox-pattern', '574'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/system-design/proximity-search-geospatial-indexes',
                 component: ComponentCreator('/technical-knowledge/system-design/proximity-search-geospatial-indexes', 'c61'),
                 exact: true,
@@ -14106,6 +14132,12 @@ export default [
               {
                 path: '/technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway',
                 component: ComponentCreator('/technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway', '6ff'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/saga-pattern',
+                component: ComponentCreator('/technical-knowledge/system-design/saga-pattern', 'db3'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14136,6 +14168,12 @@ export default [
               {
                 path: '/technical-knowledge/system-design/sharding-partitioning',
                 component: ComponentCreator('/technical-knowledge/system-design/sharding-partitioning', 'c2d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/two-phase-commit',
+                component: ComponentCreator('/technical-knowledge/system-design/two-phase-commit', 'c17'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

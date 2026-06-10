@@ -44,7 +44,7 @@ messageQueue.publish(orderEvent); // Step 2: Kafka publish → could fail!
 
 :::info[Deep Dive: Outbox Pattern]
 The standard solution to this is the **Transactional Outbox Pattern**. 
-For a complete guide with code examples, polling vs CDC (Debezium) trade-offs, and failure mitigation, see the centralized **[Transactional Outbox Pattern](../system-design/data-consistency.md#outbox-pattern)** page.
+For a complete guide with code examples, polling vs CDC (Debezium) trade-offs, and failure mitigation, see the dedicated **[Transactional Outbox Pattern Guide](../system-design/outbox-pattern.md)**.
 :::
 
 ---
@@ -53,7 +53,7 @@ For a complete guide with code examples, polling vs CDC (Debezium) trade-offs, a
 
 To coordinate multi-step workflows across microservice boundaries without blocking database resources or relying on fragile distributed transactions (like 2PC), use the Saga Pattern (via Choreography or Orchestration).
 
-For a complete guide including a detailed Orchestration vs. Choreography comparison matrix, compensating transaction playbooks, idempotency strategies, and Java entity/orchestrator implementations, see the centralized **[Saga Pattern & Distributed Workflows](../system-design/data-consistency.md#saga-pattern)** section.
+For a complete guide including a detailed Orchestration vs. Choreography comparison matrix, compensating transaction playbooks, idempotency strategies, and Java entity/orchestrator implementations, see the dedicated **[Saga Pattern Guide](../system-design/saga-pattern.md)**.
 
 ---
 
