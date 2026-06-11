@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-766": {
+  "/-cbe": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-d73": {
+  "/-0cc": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -5277,6 +5277,10 @@
     "__comp": "df203c0f",
     "__props": "260fb986"
   },
+  "/tags/xa-392": {
+    "__comp": "df203c0f",
+    "__props": "63cd6f25"
+  },
   "/tags/xss-af9": {
     "__comp": "df203c0f",
     "__props": "f417c6c0"
@@ -5305,7 +5309,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-133": {
+  "/-50b": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -5848,7 +5852,7 @@
     "__comp": "17896441",
     "content": "8a8d0fdd"
   },
-  "/system-design-82c": {
+  "/system-design-192": {
     "__comp": "17896441",
     "content": "93124d3b"
   },
@@ -6012,7 +6016,7 @@
     "__comp": "17896441",
     "content": "cdce4984"
   },
-  "/technical-knowledge/aws/serverless-patterns-9bd": {
+  "/technical-knowledge/aws/serverless-patterns-119": {
     "__comp": "17896441",
     "content": "a7a9e546"
   },
@@ -6312,7 +6316,7 @@
     "__comp": "17896441",
     "content": "39348cd3"
   },
-  "/technical-knowledge/database/database-patterns-microservices-867": {
+  "/technical-knowledge/database/database-patterns-microservices-74d": {
     "__comp": "17896441",
     "content": "52d464a4"
   },
@@ -6328,7 +6332,7 @@
     "__comp": "17896441",
     "content": "3579e0cb"
   },
-  "/technical-knowledge/database/nosql-distributed-448": {
+  "/technical-knowledge/database/nosql-distributed-631": {
     "__comp": "17896441",
     "content": "025815b7"
   },
@@ -9292,7 +9296,7 @@
     "__comp": "17896441",
     "content": "87b0d34b"
   },
-  "/technical-knowledge/elasticsearch/logstash-kibana-integration-2e7": {
+  "/technical-knowledge/elasticsearch/logstash-kibana-integration-0fb": {
     "__comp": "17896441",
     "content": "007359b1"
   },
@@ -9680,7 +9684,7 @@
     "__comp": "17896441",
     "content": "dd9695a1"
   },
-  "/technical-knowledge/kafka/advanced/exactly-once-vs-dedup-8cd": {
+  "/technical-knowledge/kafka/advanced/exactly-once-vs-dedup-1ba": {
     "__comp": "17896441",
     "content": "5a79051b"
   },
@@ -9688,7 +9692,7 @@
     "__comp": "17896441",
     "content": "e1e89bb9"
   },
-  "/technical-knowledge/kafka/advanced/kafka-exactly-once-367": {
+  "/technical-knowledge/kafka/advanced/kafka-exactly-once-834": {
     "__comp": "17896441",
     "content": "a8e4316f"
   },
@@ -10148,11 +10152,11 @@
     "__comp": "17896441",
     "content": "3177d0e7"
   },
-  "/technical-knowledge/spring/spring-boot-interview-questions-ee3": {
+  "/technical-knowledge/spring/spring-boot-interview-questions-30b": {
     "__comp": "17896441",
     "content": "c7ff582f"
   },
-  "/technical-knowledge/spring/spring-cloud-c26": {
+  "/technical-knowledge/spring/spring-cloud-e2b": {
     "__comp": "17896441",
     "content": "b0d8a005"
   },
@@ -10232,11 +10236,11 @@
     "__comp": "17896441",
     "content": "57eb6c90"
   },
-  "/technical-knowledge/system-design/cdc-422": {
+  "/technical-knowledge/system-design/cdc-930": {
     "__comp": "17896441",
     "content": "8c140918"
   },
-  "/technical-knowledge/system-design/common-interview-questions-092": {
+  "/technical-knowledge/system-design/common-interview-questions-a31": {
     "__comp": "17896441",
     "content": "6efb14ae"
   },
@@ -10248,19 +10252,19 @@
     "__comp": "17896441",
     "content": "e6611cec"
   },
-  "/technical-knowledge/system-design/data-consistency-163": {
+  "/technical-knowledge/system-design/data-consistency-427": {
     "__comp": "17896441",
     "content": "0098328c"
   },
-  "/technical-knowledge/system-design/dead-letter-queue-cc8": {
+  "/technical-knowledge/system-design/dead-letter-queue-4f8": {
     "__comp": "17896441",
     "content": "8a82e430"
   },
-  "/technical-knowledge/system-design/distributed-systems-bf3": {
+  "/technical-knowledge/system-design/distributed-systems-26c": {
     "__comp": "17896441",
     "content": "b21b4701"
   },
-  "/technical-knowledge/system-design/domain-driven-design-d4a": {
+  "/technical-knowledge/system-design/domain-driven-design-e4b": {
     "__comp": "17896441",
     "content": "a12e521a"
   },
@@ -10284,11 +10288,11 @@
     "__comp": "17896441",
     "content": "010e7447"
   },
-  "/technical-knowledge/system-design/message-queues-9d1": {
+  "/technical-knowledge/system-design/message-queues-41d": {
     "__comp": "17896441",
     "content": "3940c236"
   },
-  "/technical-knowledge/system-design/microservices-patterns-9e5": {
+  "/technical-knowledge/system-design/microservices-patterns-523": {
     "__comp": "17896441",
     "content": "a912936e"
   },
@@ -10300,7 +10304,7 @@
     "__comp": "17896441",
     "content": "f58357ef"
   },
-  "/technical-knowledge/system-design/outbox-pattern-574": {
+  "/technical-knowledge/system-design/outbox-pattern-74e": {
     "__comp": "17896441",
     "content": "5223f567"
   },
@@ -10316,7 +10320,7 @@
     "__comp": "17896441",
     "content": "36929883"
   },
-  "/technical-knowledge/system-design/saga-pattern-db3": {
+  "/technical-knowledge/system-design/saga-pattern-894": {
     "__comp": "17896441",
     "content": "bd0308dc"
   },
@@ -10324,7 +10328,7 @@
     "__comp": "17896441",
     "content": "382009e9"
   },
-  "/technical-knowledge/system-design/scaling-writes-8c6": {
+  "/technical-knowledge/system-design/scaling-writes-ba9": {
     "__comp": "17896441",
     "content": "91aa5927"
   },
@@ -10340,7 +10344,7 @@
     "__comp": "17896441",
     "content": "1d0030f3"
   },
-  "/technical-knowledge/system-design/two-phase-commit-c17": {
+  "/technical-knowledge/system-design/two-phase-commit-79c": {
     "__comp": "17896441",
     "content": "4c5a6247"
   },

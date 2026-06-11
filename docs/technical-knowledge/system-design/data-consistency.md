@@ -66,7 +66,7 @@ tags: [consistency, transactions, acid, eventual-consistency, outbox-pattern, id
 - [Pros and Cons](#pros-and-cons)
   - [Strong Consistency](#strong-consistency-pros-cons)
   - [Eventual Consistency](#eventual-consistency-pros-cons)
-  - [Outbox Pattern](./outbox-pattern.md#summary-comparison)
+  - [Outbox Pattern](./outbox-pattern.md#summary-comparison-2pc-vs-saga-vs-outbox)
   - [Saga Pattern](./saga-pattern.md)
   - [CRDTs](#crdts-pros-cons)
 - [Interview Questions](#interview-questions)
@@ -977,7 +977,7 @@ public class AccountService {
 
 ### Outbox Pattern (Pros & Cons) {/* #outbox-pattern-pros-cons */}
 
-For a complete breakdown of the trade-offs and performance characteristics of the Transactional Outbox Pattern, see the dedicated [Transactional Outbox Pattern Guide](./outbox-pattern.md#summary-comparison).
+For a complete breakdown of the trade-offs and performance characteristics of the Transactional Outbox Pattern, see the dedicated [Transactional Outbox Pattern Guide](./outbox-pattern.md#summary-comparison-2pc-vs-saga-vs-outbox).
 
 ### Saga Pattern (Pros & Cons) {/* #saga-pattern-pros-cons */}
 

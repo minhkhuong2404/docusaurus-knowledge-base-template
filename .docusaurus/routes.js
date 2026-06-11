@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '766'),
+    component: ComponentCreator('/', 'cbe'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'd73'),
+        component: ComponentCreator('/', '0cc'),
         routes: [
           {
             path: '/tags',
@@ -6586,6 +6586,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/xa',
+            component: ComponentCreator('/tags/xa', '392'),
+            exact: true
+          },
+          {
             path: '/tags/xss',
             component: ComponentCreator('/tags/xss', 'af9'),
             exact: true
@@ -6622,7 +6627,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '133'),
+            component: ComponentCreator('/', '50b'),
             routes: [
               {
                 path: '/aws',
@@ -7436,7 +7441,7 @@ export default [
               },
               {
                 path: '/system-design',
-                component: ComponentCreator('/system-design', '82c'),
+                component: ComponentCreator('/system-design', '192'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -7682,7 +7687,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/aws/serverless-patterns',
-                component: ComponentCreator('/technical-knowledge/aws/serverless-patterns', '9bd'),
+                component: ComponentCreator('/technical-knowledge/aws/serverless-patterns', '119'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -8131,7 +8136,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/database-patterns-microservices',
-                component: ComponentCreator('/technical-knowledge/database/database-patterns-microservices', '867'),
+                component: ComponentCreator('/technical-knowledge/database/database-patterns-microservices', '74d'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -8155,7 +8160,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/nosql-distributed',
-                component: ComponentCreator('/technical-knowledge/database/nosql-distributed', '448'),
+                component: ComponentCreator('/technical-knowledge/database/nosql-distributed', '631'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -12601,7 +12606,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/elasticsearch/logstash-kibana-integration',
-                component: ComponentCreator('/technical-knowledge/elasticsearch/logstash-kibana-integration', '2e7'),
+                component: ComponentCreator('/technical-knowledge/elasticsearch/logstash-kibana-integration', '0fb'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13183,7 +13188,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/advanced/exactly-once-vs-dedup',
-                component: ComponentCreator('/technical-knowledge/kafka/advanced/exactly-once-vs-dedup', '8cd'),
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/exactly-once-vs-dedup', '1ba'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13195,7 +13200,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/advanced/kafka-exactly-once',
-                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-exactly-once', '367'),
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-exactly-once', '834'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13885,13 +13890,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/spring/spring-boot-interview-questions',
-                component: ComponentCreator('/technical-knowledge/spring/spring-boot-interview-questions', 'ee3'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-boot-interview-questions', '30b'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/spring/spring-cloud',
-                component: ComponentCreator('/technical-knowledge/spring/spring-cloud', 'c26'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-cloud', 'e2b'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14011,13 +14016,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/cdc',
-                component: ComponentCreator('/technical-knowledge/system-design/cdc', '422'),
+                component: ComponentCreator('/technical-knowledge/system-design/cdc', '930'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/common-interview-questions',
-                component: ComponentCreator('/technical-knowledge/system-design/common-interview-questions', '092'),
+                component: ComponentCreator('/technical-knowledge/system-design/common-interview-questions', 'a31'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14035,25 +14040,25 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/data-consistency',
-                component: ComponentCreator('/technical-knowledge/system-design/data-consistency', '163'),
+                component: ComponentCreator('/technical-knowledge/system-design/data-consistency', '427'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/dead-letter-queue',
-                component: ComponentCreator('/technical-knowledge/system-design/dead-letter-queue', 'cc8'),
+                component: ComponentCreator('/technical-knowledge/system-design/dead-letter-queue', '4f8'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/distributed-systems',
-                component: ComponentCreator('/technical-knowledge/system-design/distributed-systems', 'bf3'),
+                component: ComponentCreator('/technical-knowledge/system-design/distributed-systems', '26c'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/domain-driven-design',
-                component: ComponentCreator('/technical-knowledge/system-design/domain-driven-design', 'd4a'),
+                component: ComponentCreator('/technical-knowledge/system-design/domain-driven-design', 'e4b'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14089,13 +14094,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/message-queues',
-                component: ComponentCreator('/technical-knowledge/system-design/message-queues', '9d1'),
+                component: ComponentCreator('/technical-knowledge/system-design/message-queues', '41d'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/microservices-patterns',
-                component: ComponentCreator('/technical-knowledge/system-design/microservices-patterns', '9e5'),
+                component: ComponentCreator('/technical-knowledge/system-design/microservices-patterns', '523'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14113,7 +14118,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/outbox-pattern',
-                component: ComponentCreator('/technical-knowledge/system-design/outbox-pattern', '574'),
+                component: ComponentCreator('/technical-knowledge/system-design/outbox-pattern', '74e'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14137,7 +14142,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/saga-pattern',
-                component: ComponentCreator('/technical-knowledge/system-design/saga-pattern', 'db3'),
+                component: ComponentCreator('/technical-knowledge/system-design/saga-pattern', '894'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14149,7 +14154,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/scaling-writes',
-                component: ComponentCreator('/technical-knowledge/system-design/scaling-writes', '8c6'),
+                component: ComponentCreator('/technical-knowledge/system-design/scaling-writes', 'ba9'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14173,7 +14178,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/two-phase-commit',
-                component: ComponentCreator('/technical-knowledge/system-design/two-phase-commit', 'c17'),
+                component: ComponentCreator('/technical-knowledge/system-design/two-phase-commit', '79c'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
