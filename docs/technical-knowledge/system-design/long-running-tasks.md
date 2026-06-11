@@ -11,7 +11,7 @@ import TabItem from '@theme/TabItem';
 
 # Managing Long-Running Tasks
 
-:::info Who this guide is for
+:::info[Who this guide is for]
 - **New learners** — start at [Why Long-Running Tasks Need Special Handling](#why-long-running-tasks-need-special-handling) and [The Core Async Job Pattern](#the-core-async-job-pattern) to understand the fundamental approach.
 - **Senior engineers** — jump to [Task State Machine](#task-state-machine), [Worker Reliability & Exactly-Once Processing](#worker-reliability--exactly-once-processing), [Distributed Scheduling](#distributed-scheduling), or [Production Observability](#production-observability).
 :::
@@ -634,7 +634,7 @@ public void generateDailyReport() {
 }
 ```
 
-:::warning Single-node only
+:::warning[Single-node only]
 `@Scheduled` runs on **every instance** in a multi-node deployment. If you have 3 replicas, the job runs 3 times simultaneously.
 :::
 

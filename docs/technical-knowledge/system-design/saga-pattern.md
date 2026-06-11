@@ -11,7 +11,7 @@ import TabItem from '@theme/TabItem';
 
 # Saga Pattern (Distributed Workflows)
 
-:::info Who this guide is for
+:::info[Who this guide is for]
 - **New learners** — start at [The Problem: Why Can't We Just Use a Database Transaction?](#the-problem-why-cant-we-just-use-a-database-transaction) and [The Travel Booking Analogy](#the-travel-booking-analogy) to understand the core concept.
 - **Senior engineers** — jump to [Saga State Machine Design](#saga-state-machine-design), [Idempotency & Exactly-Once Semantics](#idempotency--exactly-once-semantics), [Choreography vs Orchestration Trade-offs](#choreography-vs-orchestration-trade-offs), or [Production Failure Handling](#production-failure-handling).
 :::
@@ -68,7 +68,7 @@ C1 (Cancel Order) ◄────────────────
 
 ### What Are Compensating Transactions?
 
-:::caution Compensations are NOT rollbacks
+:::caution[Compensations are NOT rollbacks]
 A database rollback erases changes as if they never happened. A **compensating transaction** is a new, forward-moving operation that **semantically reverses** the effect of a previous step.
 
 | Step | Forward Transaction | Compensation |

@@ -11,7 +11,7 @@ import TabItem from '@theme/TabItem';
 
 # Transactional Outbox Pattern
 
-:::info Who this guide is for
+:::info[Who this guide is for]
 - **New learners** — start at [The Dual-Write Problem](#the-dual-write-problem) and [The Coffee Shop Analogy](#the-coffee-shop-analogy) to build intuition.
 - **Senior engineers** — jump to [How the Relay Works Internally](#how-the-relay-works-internally), [CDC vs Polling Deep Dive](#cdc-vs-polling-publisher-deep-dive), [Ordering Semantics](#ordering-semantics--partitioning), or [Production Observability](#production-observability).
 :::
@@ -118,7 +118,7 @@ CREATE INDEX idx_outbox_published_at
     WHERE status = 'PUBLISHED';
 ```
 
-:::tip Why a partial index?
+:::tip[Why a partial index?]
 `WHERE status = 'PENDING'` makes the index only cover unpublished rows — which is the tiny minority of rows in a mature system. The relay's SELECT query scans only this index, not the full table, giving O(1) relay performance regardless of total table size.
 :::
 
@@ -490,7 +490,7 @@ public class OutboxMetrics {
 | **Saga (Choreography)** | Eventual | High | Low (async) | Medium | Simple linear event chains between loosely coupled services |
 | **Transactional Outbox** | Eventual (at-least-once) | High | Very low (relay async) | Low–Medium | Reliable event publishing from any service |
 
-:::tip The Outbox is not an alternative to Sagas — it's complementary
+:::tip[The Outbox is not an alternative to Sagas — it's complementary]
 Use the **Outbox Pattern inside each Saga step** to make event publishing within each step reliable. The Outbox solves "how do I reliably publish an event?". The Saga solves "how do I coordinate a multi-step workflow?". They work together.
 :::
 

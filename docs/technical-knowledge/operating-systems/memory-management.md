@@ -12,7 +12,7 @@ import TabItem from '@theme/TabItem';
 
 # Memory Management — OS & Java
 
-:::info Who this guide is for
+:::info[Who this guide is for]
 - **New learners** — start at [Why Memory Management?](#why-memory-management) and [Virtual Memory](#virtual-memory) to understand the problem and the elegant solution.
 - **Senior engineers** — jump to [Multi-Level Page Tables](#multi-level-page-tables), [Page Replacement Algorithms](#page-replacement-algorithms), [Linux Memory Internals](#linux-memory-internals), [JVM GC Deep Dive](#jvm-gc-deep-dive), or [Production Tuning](#production-memory-tuning).
 :::

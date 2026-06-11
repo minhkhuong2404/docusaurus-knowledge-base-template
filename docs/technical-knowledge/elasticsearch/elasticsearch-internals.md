@@ -285,7 +285,7 @@ Client ──► [Coordinating Node]
 3.  Shards retrieve the source documents from Lucene segments and return them to the Coordinating Node.
 4.  The Coordinating Node merges the JSON list and returns the response to the client.
 
-:::warning Deep Pagination Warning
+:::warning[Deep Pagination Warning]
 The scatter-gather pattern explains why deep pagination is extremely expensive in Elasticsearch. If you query `{ "from": 9000, "size": 10 }`, each shard must build a priority queue of 9010 documents and send it to the coordinating node, which then sorts $9010 \times \text{number of shards}$ documents. This causes high memory consumption and GC pressure. To paginate safely through millions of documents, use `search_after` or the `Scroll API` instead of `from` and `size`.
 :::
 

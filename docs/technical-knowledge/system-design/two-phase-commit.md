@@ -8,7 +8,7 @@ tags: [system-design, distributed-systems, transactions, 2pc, 3pc, consistency, 
 
 # Two-Phase Commit (2PC) & Three-Phase Commit (3PC)
 
-:::info Who this guide is for
+:::info[Who this guide is for]
 - **New learners** — start at [The Problem: Why Is This Hard?](#the-problem-why-is-this-hard) and [The Restaurant Analogy](#the-restaurant-analogy) to build intuition before looking at how 2PC works.
 - **Senior engineers** — jump to [2PC Internals & WAL](#2pc-internals--wal), [Failure Modes](#failure-modes-in-depth), [XA Transactions](#xa-transactions), or [When to Use 2PC vs Alternatives](#when-to-use-2pc-vs-alternatives).
 :::
@@ -340,7 +340,7 @@ public class OrderService {
 }
 ```
 
-:::warning XA in Practice
+:::warning[XA in Practice]
 XA transactions are **notoriously slow and operationally complex**. The `prepare()` → `commit()` round trips add 5–20ms per transaction. Most modern architectures avoid XA entirely in favor of the **Saga Pattern** or **Transactional Outbox Pattern**.
 :::
 

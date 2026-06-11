@@ -12,7 +12,7 @@ import TabItem from '@theme/TabItem';
 
 # Processes & Threads — Complete Guide
 
-:::info Who this guide is for
+:::info[Who this guide is for]
 - **New learners** — start at [What is a Process?](#what-is-a-process) and [What is a Thread?](#what-is-a-thread) to build the foundational mental model before looking at concurrency.
 - **Senior engineers** — jump to [Context Switching Internals](#context-switching-internals), [Java Thread Pool Tuning](#java-thread-pool-tuning), [Memory Visibility](#memory-visibility--the-jmm), [Virtual Threads](#virtual-threads-java-21--project-loom), or [Production Patterns](#production-patterns).
 :::
@@ -701,7 +701,7 @@ public class RequestContextFilter extends OncePerRequestFilter {
 }
 ```
 
-:::warning ThreadLocal with thread pools
+:::warning[ThreadLocal with thread pools]
 In a thread pool, threads are reused across many requests. If you set a `ThreadLocal` value and don't clear it in a `finally` block, the next request handled by the same thread sees the previous request's stale value. This is a common source of security bugs (wrong user ID) and data leaks.
 :::
 

@@ -11,7 +11,7 @@ import TabItem from '@theme/TabItem';
 
 # Kafka Exactly-Once Semantics (EOS)
 
-:::info Who this guide is for
+:::info[Who this guide is for]
 - **New learners** — start at [The Delivery Guarantee Problem](#the-delivery-guarantee-problem) and [Why Exactly-Once is Hard](#why-exactly-once-is-hard) to understand the distributed systems challenge before looking at the solution.
 - **Senior engineers** — jump to [Idempotent Producer Internals](#pillar-1--idempotent-producer), [Transaction Protocol](#pillar-2--kafka-transactions), [Zombie Producer Fencing](#zombie-producer-fencing), [Kafka Streams EOS](#kafka-streams-eos), or [Failure Scenarios](#failure-scenarios).
 :::
