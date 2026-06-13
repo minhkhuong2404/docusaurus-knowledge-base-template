@@ -27,7 +27,7 @@ If you do these three steps in sequence and the second step crashes, you've char
 
 A single local database transaction doesn't help here — you have **three separate databases** that each know nothing about each other.
 
-:::note The Core Challenge
+:::note[The Core Challenge]
 A local `BEGIN; ...; COMMIT;` gives you ACID guarantees within one database. But there is no built-in mechanism to make that atomicity span across multiple, independent databases.
 :::
 

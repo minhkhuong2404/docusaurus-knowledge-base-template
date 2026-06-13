@@ -30,7 +30,7 @@ Operations that take more than 2–5 seconds — video transcoding, PDF generati
 4. **No progress visibility** — the client sees nothing until the operation completes or fails.
 5. **No retry safety** — if the server crashes mid-operation, there's no record of what state things are in.
 
-:::note The rule of thumb
+:::note[The rule of thumb]
 Any operation expected to take more than **2 seconds** should be made asynchronous.
 :::
 

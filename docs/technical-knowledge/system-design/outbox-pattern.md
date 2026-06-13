@@ -357,7 +357,7 @@ CREATE PUBLICATION debezium_publication FOR TABLE outbox_events;
 └─────────────────────┴──────────────────┴───────────────────────┘
 ```
 
-:::note Both strategies deliver at-least-once
+:::note[Both strategies deliver at-least-once]
 Neither polling nor CDC guarantees exactly-once delivery to Kafka. Your consumers must handle duplicates using idempotency keys. See the [Deduplication Guide](../kafka/advanced/exactly-once-vs-dedup.md) for implementation patterns.
 :::
 
