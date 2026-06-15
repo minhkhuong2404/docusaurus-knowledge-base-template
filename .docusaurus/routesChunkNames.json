@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-19c": {
+  "/-d6c": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-233": {
+  "/-b7b": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -5313,7 +5313,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-fc7": {
+  "/-53b": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -9824,11 +9824,11 @@
     "__comp": "17896441",
     "content": "be7a7a2e"
   },
-  "/technical-knowledge/low-level-design/design-patterns/behavioral-534": {
+  "/technical-knowledge/low-level-design/design-patterns/behavioral-a1f": {
     "__comp": "17896441",
     "content": "9a3d3002"
   },
-  "/technical-knowledge/low-level-design/design-patterns/creational-8f6": {
+  "/technical-knowledge/low-level-design/design-patterns/creational-ce0": {
     "__comp": "17896441",
     "content": "9b39a5d1"
   },
@@ -9836,7 +9836,7 @@
     "__comp": "17896441",
     "content": "f2d53ec6"
   },
-  "/technical-knowledge/low-level-design/design-patterns/structural-cb5": {
+  "/technical-knowledge/low-level-design/design-patterns/structural-92b": {
     "__comp": "17896441",
     "content": "947736aa"
   },

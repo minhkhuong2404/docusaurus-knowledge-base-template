@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '19c'),
+    component: ComponentCreator('/', 'd6c'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '233'),
+        component: ComponentCreator('/', 'b7b'),
         routes: [
           {
             path: '/tags',
@@ -6632,7 +6632,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'fc7'),
+            component: ComponentCreator('/', '53b'),
             routes: [
               {
                 path: '/aws',
@@ -13397,13 +13397,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/low-level-design/design-patterns/behavioral',
-                component: ComponentCreator('/technical-knowledge/low-level-design/design-patterns/behavioral', '534'),
+                component: ComponentCreator('/technical-knowledge/low-level-design/design-patterns/behavioral', 'a1f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/low-level-design/design-patterns/creational',
-                component: ComponentCreator('/technical-knowledge/low-level-design/design-patterns/creational', '8f6'),
+                component: ComponentCreator('/technical-knowledge/low-level-design/design-patterns/creational', 'ce0'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13415,7 +13415,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/low-level-design/design-patterns/structural',
-                component: ComponentCreator('/technical-knowledge/low-level-design/design-patterns/structural', 'cb5'),
+                component: ComponentCreator('/technical-knowledge/low-level-design/design-patterns/structural', '92b'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

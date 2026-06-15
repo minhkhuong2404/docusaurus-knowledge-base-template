@@ -62,9 +62,9 @@ graph TD
 Instead of running a background thread to add tokens (which is highly inefficient at scale), the refill logic is calculated **lazily** upon each request arrival:
 
 1. Retrieve the timestamp of the last request and current token count.
-2. Calculate the elapsed time: $\Delta t = \text{now} - \text{last\_request\_time}$.
-3. Calculate the newly generated tokens: $\text{new\_tokens} = \Delta t \times r$.
-4. Update token count: $\text{tokens} = \min(C, \text{tokens} + \text{new\_tokens})$.
+2. Calculate the elapsed time: $\Delta t = \text{now} - \text{last request time}$.
+3. Calculate the newly generated tokens: $\text{new tokens} = \Delta t \times r$.
+4. Update token count: $\text{tokens} = \min(C, \text{tokens} + \text{new tokens})$.
 5. If $\text{tokens} \ge 1$: consume 1 token, update $\text{last\_request\_time} = \text{now}$, and approve the request. Otherwise, reject the request.
 
 ### Java Implementation (Lazy Refill)
@@ -235,7 +235,7 @@ Timestamp Log: [ 10:00:02, 10:00:15, 10:00:44 ] (Current Time: 10:01:00, Limit W
 ```
 
 ### Working Mechanics
-1. Upon a new request, delete all logged timestamps older than $(\text{now} - \text{window\_size})$.
+1. Upon a new request, delete all logged timestamps older than $(\text{now} - \text{window size})$.
 2. Append the current request's timestamp to the log.
 3. Count the remaining elements in the log. If the count is less than or equal to the limit, approve the request. Otherwise, remove the newly appended timestamp (as it failed) and reject the request.
 
@@ -302,12 +302,12 @@ Estimate count = (80 * 0.7) + 30 = 86 -> Under limit (Approved)
 ### Mathematical Model
 For a window size of 1 minute, the estimated count is calculated as:
 
-$$\text{Estimated Count} = C_{\text{prev}} \times \left( \frac{\text{window\_size} - \text{elapsed\_time}}{\text{window\_size}} \right) + C_{\text{curr}}$$
+$$\text{Estimated Count} = C_{\text{prev}} \times \left( \frac{\text{window size} - \text{elapsed time}}{\text{window size}} \right) + C_{\text{curr}}$$
 
 Where:
 * $C_{\text{prev}}$: Request count in the previous fixed window.
 * $C_{\text{curr}}$: Request count in the current fixed window.
-* $\text{elapsed\_time}$: The amount of time elapsed in the current window.
+* $\text{elapsed time}$: The amount of time elapsed in the current window.
 
 ### Java Implementation
 
