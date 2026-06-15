@@ -821,3 +821,8 @@ Queues are inherently designed for work that can happen *later*. Introducing one
 - [Designing Data-Intensive Applications](https://dataintensive.net/) by Martin Kleppmann
 - [Confluent Platform](https://www.confluent.io/)
 - [AWS SQS Documentation](https://docs.aws.amazon.com/sqs/)
+
+## See Also
+* **[Scaling Reads](./scaling-reads.md)**: Explore cache-aside/event-driven invalidation and read replication concepts.
+* **[Scaling Writes](./scaling-writes.md)**: Explore async write pipelines, producer configurations, batching, and Kafka throughput settings.
+

@@ -511,7 +511,12 @@ public class JwtAuthenticationFilter implements GatewayFilter {
 
 The gateway enforces per-client request quotas using algorithms stored in Redis (for distributed, multi-instance enforcement).
 
+:::info[Centralized Algorithms Guide]
+For a comprehensive architectural breakdown of rate-limiting algorithms, implementation code, and decision trade-offs, see the **[Rate Limiting Algorithms Guide](./rate-limiting-algorithms.md)**.
+:::
+
 **Token Bucket algorithm (conceptual):**
+
 
 ```
 Each client gets a "bucket" that holds N tokens.
@@ -1092,3 +1097,7 @@ Do services need to communicate SECURELY with each other INSIDE the cluster?
 - [Istio Service Mesh Concepts](https://istio.io/latest/docs/concepts/) — How service meshes complement API gateways for east-west traffic.
 - [Designing Data-Intensive Applications — Chapter 1](https://dataintensive.net/) — Covers reliability, scalability, and maintainability foundations that motivate load balancing architecture.
 - [The Twelve-Factor App](https://12factor.net/) — Principles for stateless services that make load balancing effective; especially factor VI (Processes) and IX (Disposability).
+
+## See Also
+* **[Rate Limiting Algorithms](./rate-limiting-algorithms.md)**: Explore the conceptual design, comparison, and pseudocode implementations of all core rate-limiting algorithms.
+

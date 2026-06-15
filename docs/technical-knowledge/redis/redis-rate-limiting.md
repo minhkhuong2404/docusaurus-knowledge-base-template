@@ -68,9 +68,12 @@ Handler / business logic
 
 ## Core Algorithms
 
-:::note[For Newcomers]
-Each algorithm is a different strategy for how to *count* requests. They differ in how accurately they track traffic over time, how much memory they use, and how well they handle sudden bursts.
+:::info[Centralized Algorithms Guide]
+For a comprehensive architectural guide detailing how each of these rate-limiting algorithms works, their pseudocode implementations, and when to use each of them, see the **[Rate Limiting Algorithms Guide](../system-design/rate-limiting-algorithms.md)**.
 :::
+
+Each algorithm is a different strategy for how to *count* requests. They differ in how accurately they track traffic over time, how much memory they use, and how well they handle sudden bursts.
+
 
 ### Algorithm 1: Fixed Window Counter
 
@@ -1111,3 +1114,6 @@ Pro user:  can run a batch job in a burst, then continue at 10 req/sec
 - [API Design](../system-design/api-design.md) — 429 response standards, Retry-After, quota documentation
 - [Distributed Systems](../system-design/distributed-systems.md) — Consistency trade-offs in multi-node rate limiting
 - [Security Patterns](../system-design/security-patterns.md) — Brute-force protection, auth endpoint hardening
+- [Scaling Reads](../system-design/scaling-reads.md) — How rate limiting protects read caches from stampedes and dynamic hotspots
+- [Scaling Writes](../system-design/scaling-writes.md) — Implementing write pipelines backpressure and adaptive database rate limits
+- [Rate Limiting Algorithms](../system-design/rate-limiting-algorithms.md) — Conceptual mechanics and comparisons of all core algorithms

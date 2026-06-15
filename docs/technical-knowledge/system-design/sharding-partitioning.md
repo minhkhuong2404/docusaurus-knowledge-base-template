@@ -802,3 +802,4 @@ A sharded system introduces failure modes that don't exist on single-server data
 - [Distributed Systems — Overview](./distributed-systems.md)
 - [Database Patterns for Microservices](./microservices-patterns.md)
 - [CAP Theorem & Consistency Models](./cap-theorem.md)
+- [Scaling Writes](./scaling-writes.md)

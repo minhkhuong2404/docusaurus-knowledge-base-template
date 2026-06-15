@@ -2,463 +2,764 @@
 id: scaling-writes
 title: Scaling Writes
 sidebar_label: Scaling Writes
-description: Techniques for handling high write throughput including sharding, partitioning, write-ahead logging, append-only patterns, batching, and async write pipelines.
-tags: [scaling, writes, sharding, partitioning, kafka, wal, async, performance]
+description: Deep-dive into high write throughput techniques — sharding, partitioning, WAL internals, LSM trees, async pipelines, batching, backpressure, idempotency, and distributed transactions — with production Java/Spring code and failure mode analysis.
+tags: [scaling, writes, sharding, partitioning, kafka, wal, lsm, async, performance, distributed-systems]
 ---
 
 # Scaling Writes
 
-> Write scaling is harder than read scaling — writes mutate state and require consistency guarantees.
+Write scaling is fundamentally more challenging than read scaling. Reads can be scaled almost indefinitely with caches and read replicas. **Writes mutate shared state** — which means every optimization must reason about consistency, ordering, durability, and contention simultaneously.
 
-## Table of Contents
+This guide is a deep dive into the internals, tradeoffs, and production patterns for scaling write throughput in distributed Java/Spring systems.
 
-- [Write Bottleneck Diagnosis](#write-bottleneck-diagnosis)
-- [Async Write Pipelines](#async-write-pipelines)
-  - [When to Use](#when-to-use)
-  - [Spring Boot + Kafka Producer](#spring-boot--kafka-producer)
-  - [Message Queue Options](#message-queue-options)
-- [Batching Writes](#batching-writes)
-  - [Manual Batching](#manual-batching)
-  - [Spring Batch](#spring-batch)
-  - [Bulk Insert Performance](#bulk-insert-performance)
-- [Write-Ahead Log (WAL)](#write-ahead-log-wal)
-  - [How WAL Works](#how-wal-works)
-  - [WAL Implementations](#wal-implementations)
-  - [WAL Performance](#wal-performance)
-- [Sharding (Horizontal Partitioning)](#sharding-horizontal-partitioning)
-- [Append-Only Patterns](#append-only-patterns)
-  - [Event Sourcing](#event-sourcing)
-  - [Ledger Pattern](#ledger-pattern)
-  - [Immutable Data](#immutable-data)
-- [Backpressure & Rate Limiting Writes](#backpressure--rate-limiting-writes)
-  - [Token Bucket](#token-bucket)
-  - [Leaky Bucket](#leaky-bucket)
-  - [Adaptive Throttling](#adaptive-throttling)
-- [Connection Pooling](#connection-pooling)
-- [Idempotent Writes](#idempotent-writes)
-  - [Idempotency Keys](#idempotency-keys)
-  - [Optimistic Concurrency](#optimistic-concurrency)
-  - [Deduplication](#deduplication)
-- [Database Write Optimization](#database-write-optimization)
-  - [Indexing Trade-offs](#indexing-trade-offs)
-  - [Bulk Insert Performance](#bulk-insert-performance-1)
-  - [Partitioned Tables](#partitioned-tables)
-  - [Write Optimization Techniques](#write-optimization-techniques)
-- [Consistent Hashing Deep Dive](./consistent-hashing.md)
-- [Write Scaling Decision Tree](#write-scaling-decision-tree)
-- [How Write Scaling Works Internally](#how-write-scaling-works-internally)
-  - [Write Path](#write-path)
-  - [Commit Protocol](#commit-protocol)
-  - [Replication](#replication)
-  - [Durability](#durability)
-- [Real-World Implementations](#real-world-implementations)
-  - [Kafka](#kafka)
-  - [Cassandra](#cassandra)
-  - [DynamoDB](#dynamodb)
-  - [MongoDB](#mongodb)
-  - [PostgreSQL](#postgresql)
-- [Integration Patterns](#integration-patterns)
-  - [Spring Kafka Integration](#spring-kafka-integration)
-  - [Spring Batch Integration](#spring-batch-integration)
-  - [Database Sharding Integration](#database-sharding-integration)
-- [Pros and Cons](#pros-and-cons)
-  - [Async Write Pipelines](#async-write-pipelines-1)
-  - [Batching](#batching)
-  - [Sharding](#sharding)
-  - [Append-Only](#append-only)
-- [Interview Questions](#interview-questions)
-- [Senior Deep Dive: Advanced Topics](#senior-deep-dive-advanced-topics)
-  - [Write-Ahead Logging Internals](#write-ahead-logging-internals)
-  - [LSM Trees](#lsm-trees)
-  - [B-Tree vs LSM Tree](#b-tree-vs-lsm-tree)
-  - [Write Amplification](#write-amplification)
-  - [Compaction Strategies](#compaction-strategies)
-  - [Distributed Transactions](#distributed-transactions)
-  - [Two-Phase Commit (2PC)](#two-phase-commit-2pc)
-  - [Three-Phase Commit](#three-phase-commit)
-- [Additional Resources](#additional-resources)
-- [Best Practices](#best-practices)
+---
+
+## Mental Model: The Write Pipeline
+
+Every database write traverses multiple layers before being considered durable:
+
+```
+Application Thread
+       │
+       ▼
+  SQL/ORM Layer  ──── serialization, query planning, connection acquisition
+       │
+       ▼
+  Network Socket  ──── TCP, TLS overhead, latency to DB host
+       │
+       ▼
+  DB Process Buffer ── shared_buffers (PostgreSQL) / buffer pool (MySQL InnoDB)
+       │
+       ▼
+  WAL / Redo Log  ──── sequential disk append (the "fast" path)
+       │
+       ▼
+  fsync()         ──── OS page cache → physical disk commit (durability guarantee)
+       │
+       ▼
+  Table Pages     ──── random I/O, B-tree page splits (deferred via checkpointing)
+```
+
+The bottleneck is almost always at one of: **lock contention → fsync latency → network round-trips → serialization CPU**. Measure before optimizing.
 
 ---
 
 ## Write Bottleneck Diagnosis
 
-Before adding complexity, measure:
-- Is the bottleneck **CPU**, **I/O**, **network**, or **lock contention**?
-- What's the current write QPS vs the DB's limit?
-- Are writes synchronous or could they be async?
+Before architecting a solution, instrument and identify the actual constraint:
 
-```java
-@Service
-public class WriteBottleneckAnalyzer {
-    private final MeterRegistry meterRegistry;
-
-    public WriteBottleneckReport analyze() {
-        WriteBottleneckReport report = new WriteBottleneckReport();
-
-        // CPU usage
-        double cpuUsage = getCpuUsage();
-        report.setCpuUsage(cpuUsage);
-
-        // I/O usage
-        double ioUsage = getIoUsage();
-        report.setIoUsage(ioUsage);
-
-        // Network usage
-        double networkUsage = getNetworkUsage();
-        report.setNetworkUsage(networkUsage);
-
-        // Lock contention
-        double lockContention = getLockContention();
-        report.setLockContention(lockContention);
-
-        // Write QPS
-        double writeQps = meterRegistry.counter("write.operations").count();
-        report.setWriteQps(writeQps);
-
-        return report;
-    }
-
-    private double getCpuUsage() {
-        // Implementation to get CPU usage
-        return 0.0;
-    }
-
-    private double getIoUsage() {
-        // Implementation to get I/O usage
-        return 0.0;
-    }
-
-    private double getNetworkUsage() {
-        // Implementation to get network usage
-        return 0.0;
-    }
-
-    private double getLockContention() {
-        // Implementation to get lock contention
-        return 0.0;
-    }
-}
+```mermaid
+graph TD
+    Bottleneck{Write Bottleneck?}
+    Bottleneck -->|Disk I/O Bound| WAL["Optimize WAL fsync strategy<br/>Upgrade to NVMe / io_uring<br/>Consider LSM-Tree engine"]
+    Bottleneck -->|CPU Bound| Serialize["Optimize serialization codec<br/>Switch JSON → Protobuf/Avro<br/>Reduce GC pressure"]
+    Bottleneck -->|Lock Contention| Locks["Use MVCC / optimistic locking<br/>Shrink transaction scope<br/>Partition hot rows"]
+    Bottleneck -->|Network Bound| Batching["Message batching + compression<br/>Connection pooling<br/>Co-locate app + DB"]
+    Bottleneck -->|Connection Exhaustion| Pool["Tune HikariCP pool size<br/>Add PgBouncer proxy<br/>Implement async drivers (R2DBC)"]
 ```
+
+### Key Metrics to Measure
+
+| Metric | Tool | Warning Threshold |
+|:---|:---|:---|
+| **fsync latency** | `pg_stat_bgwriter`, iostat | > 5ms average |
+| **Lock wait time** | `pg_locks`, `pg_stat_activity` | > 10ms p99 |
+| **Write Amplification Factor (WAF)** | iostat bytes_written / app bytes | > 10× |
+| **Connection wait time** | HikariCP `pool.Wait` metric | > 50ms |
+| **Replication lag** | `pg_stat_replication` | > 500ms |
+| **Kafka consumer lag** | `kafka-consumer-groups --describe` | > 100k messages |
+
+### Write Amplification Explained
+
+**Write Amplification** is the ratio of bytes physically written to disk versus bytes logically written by the application.
+
+```
+WAF = Physical bytes written to storage / Logical bytes written by app
+```
+
+Sources of write amplification:
+- **B-tree page rewrites**: Updating a single integer column rewrites the entire 8KB page it lives on
+- **WAL duplication**: The same change is written to WAL _and_ eventually to the table page
+- **Replication**: WAL records are streamed to each replica
+- **Vacuum/Compaction**: PostgreSQL VACUUM rewrites dead tuple space; LSM compaction rewrites SSTables
+
+Target WAF < 3–5× for OLTP workloads. NVMe drives reduce the cost of high WAF but don't eliminate it.
 
 ---
 
 ## Async Write Pipelines
 
-The first optimization: **don't make users wait for writes to persist**.
+The core technique: **decouple the HTTP response from the database write**. Return `202 Accepted` immediately and persist asynchronously through a durable message queue.
 
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Client
+    participant API as API Gateway / Producer
+    participant MQ as Kafka Broker
+    participant Consumer as Consumer Worker
+    participant DB as Write DB
+
+    Client->>API: POST /orders (Write Request)
+    API->>MQ: Publish event (partitioned by order_id)
+    MQ-->>API: ack (ISR confirmed)
+    API-->>Client: 202 Accepted {orderId, traceId}
+    Note over Client: Client polls GET /orders/{id} or uses WebSocket
+
+    Consumer->>MQ: Poll batch (max 500 records, 100ms timeout)
+    Consumer->>DB: Batch INSERT / UPSERT
+    DB-->>Consumer: Commit
+    Consumer->>MQ: Commit offsets (at-least-once)
 ```
-Client → API → Message Queue (Kafka) → Consumer → DB
-                    ↑ ack immediately
+
+### Guarantees and Failure Modes
+
+| Scenario | Behavior |
+|:---|:---|
+| Kafka broker crashes after ack | Message replicated to ISRs; no loss with `acks=all` |
+| Consumer crashes mid-batch | Offsets not committed → batch re-consumed (idempotent writes required) |
+| DB rejects batch | Route to DLQ; alert on-call; replay after fix |
+| Consumer is slow (lag builds) | Scale consumer instances up to partition count |
+
+### Kafka Producer Tuning for High Throughput
+
+```yaml
+# application.yml
+spring:
+  kafka:
+    producer:
+      bootstrap-servers: kafka-1:9092,kafka-2:9092,kafka-3:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all                    # Wait for all ISR replicas
+      properties:
+        enable.idempotence: true   # Prevent duplicate records on retry (requires acks=all)
+        max.in.flight.requests.per.connection: 5  # Safe with idempotence enabled
+        batch.size: 65536          # 64KB batch accumulation buffer per partition
+        linger.ms: 20              # Wait up to 20ms to fill batches; zero means send immediately
+        compression.type: snappy   # snappy = low CPU + good ratio; lz4 = lowest latency; zstd = best ratio
+        retries: 2147483647        # Retry indefinitely; rely on delivery.timeout.ms to bound
+        delivery.timeout.ms: 120000
+        request.timeout.ms: 30000
 ```
 
-### When to Use
-- Writes don't need to be read back immediately
-- Non-financial: activity logs, analytics events, notifications
+**Understanding `linger.ms` vs `batch.size` interaction:**
+- If `batch.size` fills first → send immediately (throughput-limited case)
+- If `linger.ms` expires first → send whatever is buffered (latency-limited case)
+- At high ingestion rates, `batch.size` dominates. At low rates, `linger.ms` controls latency.
 
-### Spring Boot + Kafka Producer
+**`enable.idempotence` internals:** Each producer is assigned a **Producer ID (PID)** and attaches a **sequence number** to every batch. The broker deduplicates retransmitted batches with the same PID+sequence within the epoch. This protects against duplicates from transient network failures, but not application-level retries from a restarted JVM (different PID).
+
+### Consumer-Side Batch Processing
 
 ```java
-@Service
-public class EventService {
-    @Autowired private KafkaTemplate<String, ActivityEvent> kafkaTemplate;
+@Configuration
+public class KafkaConsumerConfig {
 
-    public void recordActivity(ActivityEvent event) {
-        // Return immediately; Kafka handles delivery
-        kafkaTemplate.send("activity-events", event.getUserId().toString(), event);
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, OrderEvent> kafkaListenerContainerFactory(
+            ConsumerFactory<String, OrderEvent> consumerFactory) {
+        var factory = new ConcurrentKafkaListenerContainerFactory<String, OrderEvent>();
+        factory.setConsumerFactory(consumerFactory);
+        factory.setBatchListener(true);                     // Enable batch consumption
+        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
+        factory.getContainerProperties().setPollTimeout(3000);
+        return factory;
     }
+}
 
-    @KafkaListener(topics = "activity-events")
-    public void processActivity(ActivityEvent event) {
-        activityRepository.save(event); // Async, batched by Kafka consumer
+@Service
+@Slf4j
+public class OrderEventConsumer {
+
+    private final OrderRepository orderRepository;
+    private final MeterRegistry meterRegistry;
+
+    @KafkaListener(
+        topics = "orders",
+        groupId = "order-writer",
+        concurrency = "6"           // Match partition count; never exceed it
+    )
+    public void consume(List<ConsumerRecord<String, OrderEvent>> records, Acknowledgment ack) {
+        long start = System.currentTimeMillis();
+        try {
+            List<Order> orders = records.stream()
+                .map(r -> toEntity(r.value(), r.offset()))
+                .collect(Collectors.toList());
+
+            orderRepository.saveAllAndFlush(orders);  // Single batch INSERT
+
+            ack.acknowledge();  // Commit offsets only after successful DB write
+
+            meterRegistry.counter("kafka.consumer.processed", "topic", "orders")
+                         .increment(records.size());
+            meterRegistry.timer("kafka.consumer.batch.duration")
+                         .record(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
+
+        } catch (Exception e) {
+            log.error("Batch processing failed. Size={}, FirstOffset={}, LastOffset={}",
+                records.size(),
+                records.get(0).offset(),
+                records.get(records.size() - 1).offset(), e);
+            // Do NOT ack — Kafka will re-deliver the batch
+            // After max retries, route to DLQ via SeekToCurrentErrorHandler
+            throw e;
+        }
     }
 }
 ```
 
-### Message Queue Options
-
-| Queue | Use Case | Pros | Cons |
-|---|---|---|---|
-| **Kafka** | High throughput, event streaming | High throughput, durable, ordered | Complex setup |
-| **RabbitMQ** | Reliable messaging, work queues | Flexible routing, reliable | Lower throughput |
-| **AWS SQS** | Simple queue, cloud-native | Managed, scalable | Not ordered |
-| **Redis Streams** | Lightweight streaming | Fast, simple | Limited features |
+**Concurrency rule:** `concurrency` must be ≤ partition count. Extra threads sit idle and waste resources. Scale partitions first, then match consumer concurrency.
 
 ---
 
 ## Batching Writes
 
-Accumulate writes in memory and flush as one batch.
+### Why Batching Matters — The Math
 
-### Manual Batching
+Every individual SQL `INSERT` has fixed overhead: TCP round-trip (~0.1–1ms), query parse + plan (~0.05ms), transaction commit + fsync (~2–10ms).
+
+```
+1,000 individual INSERTs × 5ms overhead = 5,000ms = 5 seconds
+1 batch INSERT of 1,000 rows × 5ms overhead = 5ms
+```
+
+Batch inserts deliver **3–4 orders of magnitude improvement** on commit-heavy workloads.
+
+### The Accumulator Pattern
+
+An accumulator buffers writes in-memory and flushes on two triggers:
+1. **Size trigger**: Buffer reaches capacity (e.g., 500 items)
+2. **Time trigger**: Max age elapsed (e.g., 100ms) — prevents unbounded latency on low-traffic periods
 
 ```java
 @Service
-public class BatchWriteService {
-    private final List<Event> batch = new ArrayList<>();
-    private final int batchSize = 100;
+@Slf4j
+public class WriteBatchAccumulator<T> implements Closeable {
 
-    @Scheduled(fixedRate = 1000)
-    public void flushBatch() {
-        if (batch.isEmpty()) {
-            return;
-        }
+    private final List<T> buffer = new CopyOnWriteArrayList<>();
+    private final int maxBatchSize;
+    private final long maxDelayMs;
+    private final Consumer<List<T>> flushFn;
+    private final ScheduledExecutorService scheduler;
+    private final AtomicLong lastFlushEpoch = new AtomicLong(System.currentTimeMillis());
+    private final ReentrantLock flushLock = new ReentrantLock();
+    private final MeterRegistry meterRegistry;
 
-        List<Event> eventsToWrite = new ArrayList<>(batch);
-        batch.clear();
-
-        jdbcTemplate.batchUpdate(
-            "INSERT INTO events(user_id, type, ts) VALUES (?, ?, ?)",
-            eventsToWrite,
-            batchSize,
-            (ps, e) -> {
-                ps.setLong(1, e.getUserId());
-                ps.setString(2, e.getType());
-                ps.setTimestamp(3, Timestamp.from(e.getTimestamp()));
-            }
-        );
+    public WriteBatchAccumulator(
+            Consumer<List<T>> flushFn,
+            int maxBatchSize,
+            long maxDelayMs,
+            MeterRegistry meterRegistry) {
+        this.flushFn = flushFn;
+        this.maxBatchSize = maxBatchSize;
+        this.maxDelayMs = maxDelayMs;
+        this.meterRegistry = meterRegistry;
+        this.scheduler = Executors.newSingleThreadScheduledExecutor(
+            r -> new Thread(r, "batch-flush-scheduler"));
+        // Poll every 10ms — fine-grained enough for 100ms max delay
+        this.scheduler.scheduleWithFixedDelay(this::timedFlushCheck, 10, 10, TimeUnit.MILLISECONDS);
     }
 
-    public void addEvent(Event event) {
-        batch.add(event);
-
-        if (batch.size() >= batchSize) {
-            flushBatch();
+    public void add(T item) {
+        buffer.add(item);
+        meterRegistry.gauge("batch.buffer.size", buffer, List::size);
+        if (buffer.size() >= maxBatchSize) {
+            flush("size-trigger");
         }
+    }
+
+    private void timedFlushCheck() {
+        long age = System.currentTimeMillis() - lastFlushEpoch.get();
+        if (age >= maxDelayMs && !buffer.isEmpty()) {
+            flush("time-trigger");
+        }
+    }
+
+    private void flush(String trigger) {
+        // ReentrantLock prevents double-flush from concurrent size + time triggers
+        if (!flushLock.tryLock()) return;
+        try {
+            if (buffer.isEmpty()) return;
+
+            List<T> batch = new ArrayList<>(buffer);
+            buffer.clear();
+            lastFlushEpoch.set(System.currentTimeMillis());
+
+            meterRegistry.counter("batch.flush.count", "trigger", trigger).increment();
+            meterRegistry.timer("batch.flush.size").record(batch.size(), TimeUnit.MILLISECONDS);
+
+            // Async flush — does not block ingestion thread
+            CompletableFuture.runAsync(() -> {
+                try {
+                    flushFn.accept(batch);
+                } catch (Exception e) {
+                    log.error("Flush failed. Batch size={}. Routing to DLQ.", batch.size(), e);
+                    routeToDlq(batch, e);
+                }
+            });
+        } finally {
+            flushLock.unlock();
+        }
+    }
+
+    private void routeToDlq(List<T> failedBatch, Exception cause) {
+        // Persist to a dead_letter_writes table or send to a Kafka DLQ topic
+        // Emit alert metric
+        meterRegistry.counter("batch.flush.dlq").increment(failedBatch.size());
+    }
+
+    @Override
+    public void close() {
+        scheduler.shutdown();
+        flush("shutdown");  // Drain buffer on graceful shutdown
     }
 }
 ```
 
-### Spring Batch
+**Critical subtlety:** Use `ReentrantLock.tryLock()` (non-blocking) — not `synchronized` — to avoid the time-trigger thread blocking the ingestion thread during a size-trigger flush.
+
+### Spring JPA Batch Insert Configuration
+
+JPA/Hibernate silently disables batching by default. You must configure it explicitly:
+
+```yaml
+spring:
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 500           # Max rows per JDBC batch
+          batch_versioned_data: true # Enable batching for versioned entities
+          order_inserts: true        # Group INSERTs by entity type to avoid interleaving
+          order_updates: true        # Same for UPDATEs
+        generate_statistics: true    # Enable for debugging batch efficiency
+```
+
+**Critical:** If your entity uses `@GeneratedValue(strategy = GenerationType.IDENTITY)`, Hibernate **cannot batch inserts** because it needs to return each generated ID immediately after each row. Switch to `SEQUENCE` strategy:
 
 ```java
-@Configuration
-@EnableBatchProcessing
-public class BatchConfig {
+@Entity
+public class Order {
 
-    @Bean
-    public Job importEventsJob(JobBuilderFactory jobs, Step step1) {
-        return jobs.get("importEventsJob")
-            .incrementer(new RunIdIncrementer())
-            .flow(step1)
-            .end()
-            .build();
-    }
-
-    @Bean
-    public Step step1(StepBuilderFactory stepBuilderFactory,
-                      ItemReader<Event> reader,
-                      ItemWriter<Event> writer) {
-        return stepBuilderFactory.get("step1")
-            .<Event, Event>chunk(100)
-            .reader(reader)
-            .writer(writer)
-            .build();
-    }
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_seq")
+    @SequenceGenerator(
+        name = "order_seq",
+        sequenceName = "order_id_seq",
+        allocationSize = 500          // Pre-allocate 500 IDs per DB call — huge performance boost
+    )
+    private Long id;
+    // ...
 }
 ```
 
-### Bulk Insert Performance
+`allocationSize = 500` means one `SELECT NEXTVAL('order_id_seq')` call allocates 500 IDs in memory. ID generation becomes lock-free until the block is exhausted.
+
+### Bulk Insert SQL Patterns
 
 ```sql
--- Use COPY in PostgreSQL (fastest bulk load)
-COPY events(user_id, type, ts) FROM '/data/events.csv' CSV;
+-- FAST: Single statement, single parse, one transaction commit
+INSERT INTO events (id, type, payload, created_at) VALUES
+  (1, 'ORDER_PLACED', '{"amount":100}', NOW()),
+  (2, 'ORDER_PLACED', '{"amount":200}', NOW()),
+  -- ... up to 500-1000 rows per statement
+;
 
--- Or multi-row VALUES
-INSERT INTO events(user_id, type, ts) VALUES
-  (1, 'click', now()), (2, 'view', now()), ...;
+-- FASTER for conflicts: UPSERT with ON CONFLICT
+INSERT INTO order_states (order_id, status, updated_at)
+VALUES (101, 'CONFIRMED', NOW()), (102, 'SHIPPED', NOW())
+ON CONFLICT (order_id) DO UPDATE
+  SET status = EXCLUDED.status,
+      updated_at = EXCLUDED.updated_at;
+
+-- For analytics / time-series: COPY protocol (PostgreSQL)
+-- COPY is 5-10x faster than INSERT for bulk loads — bypasses query planner entirely
+COPY events (id, type, payload, created_at) FROM STDIN WITH (FORMAT binary);
 ```
 
-**Performance gain**: 10–100× fewer round trips to DB.
+For COPY via JDBC:
+
+```java
+// Using postgresql JDBC CopyManager for maximum bulk insert throughput
+@Repository
+public class EventBulkRepository {
+
+    @PersistenceContext
+    private EntityManager em;
+
+    public void bulkInsert(List<Event> events) throws SQLException, IOException {
+        var connection = em.unwrap(SessionImpl.class)
+                           .getJdbcConnectionAccess()
+                           .obtainConnection();
+        var copyManager = new CopyManager((BaseConnection) connection);
+
+        StringBuilder csv = new StringBuilder();
+        for (Event e : events) {
+            csv.append(e.getId()).append('\t')
+               .append(e.getType()).append('\t')
+               .append(e.getPayload()).append('\t')
+               .append(e.getCreatedAt()).append('\n');
+        }
+
+        // Streams rows directly into PostgreSQL COPY protocol — no ORM overhead
+        copyManager.copyIn(
+            "COPY events (id, type, payload, created_at) FROM STDIN",
+            new StringReader(csv.toString())
+        );
+    }
+}
+```
 
 ---
 
-## Write-Ahead Log (WAL)
+## Write-Ahead Log (WAL) Internals
 
-Append writes to a sequential log first (fast), apply to storage later (async).
+The WAL is the heart of database durability. Understanding it deeply allows you to tune fsync behavior, replication lag, and checkpoint frequency.
 
-```
-Write → WAL (append-only, sequential I/O) → ACK to client
-              ↓ (async)
-         Apply to B-Tree / Storage Engine
-```
-
-**Used in**: PostgreSQL, MySQL (InnoDB redo log), Kafka itself.  
-**Why fast**: Sequential I/O is 10–100× faster than random I/O.
-
-### How WAL Works
+### WAL Write Path (PostgreSQL)
 
 ```
-1. Client sends write request
-2. DB appends write to WAL (sequential)
-3. DB acknowledges to client
-4. DB applies write to data structures (async)
-5. Checkpoint: flush dirty pages to disk
+Client COMMIT
+      │
+      ▼
+WAL Writer Thread appends LSN record to WAL segment file (pg_wal/)
+      │
+      ├──── fsync() ──── OS flushes kernel page cache → physical disk platters
+      │         └── This is the durability guarantee. Without fsync, a crash = data loss.
+      │
+      ▼
+Client receives "COMMIT OK"
+      │
+      (background)
+      ▼
+Checkpoint Process flushes dirty buffer pool pages → heap files (table pages)
+      │
+      └── WAL segments before the checkpoint LSN are now eligible for recycling
 ```
 
-### WAL Implementations
+### Key WAL Concepts
 
-**PostgreSQL WAL:**
+**Log Sequence Number (LSN):** A monotonically increasing 64-bit integer identifying every WAL record. LSNs are used to:
+- Track replication progress (replica sends its `replay_lsn`; primary knows how far behind it is)
+- Coordinate crash recovery (`pg_control` stores the last checkpoint LSN; recovery replays WAL from there)
+- Time travel queries (logical decoding reads WAL from a specific LSN)
 
 ```sql
--- Check WAL settings
-SHOW wal_level;
-SHOW max_wal_size;
-SHOW wal_buffers;
-
--- Force WAL flush
+-- Query current WAL position
 SELECT pg_current_wal_lsn();
+
+-- Measure replication lag in bytes
+SELECT client_addr, sent_lsn, replay_lsn,
+       (sent_lsn - replay_lsn) AS lag_bytes
+FROM pg_stat_replication;
 ```
 
-**MySQL InnoDB Redo Log:**
+**Checkpointing:** The process of writing all dirty (modified-in-memory) buffer pool pages to their respective table files on disk. After a checkpoint, everything before that checkpoint LSN is safe — WAL segments can be recycled.
 
-```sql
--- Check InnoDB log settings
-SHOW VARIABLES LIKE 'innodb_log%';
-SHOW VARIABLES LIKE 'innodb_flush_log%';
+Too-frequent checkpoints = excessive I/O. Too-infrequent = longer crash recovery time and large WAL accumulation.
+
+```
+# Tuning checkpoint behavior in postgresql.conf:
+checkpoint_completion_target = 0.9  # Spread checkpoint I/O over 90% of checkpoint_timeout
+checkpoint_timeout = 15min          # Maximum time between automatic checkpoints
+max_wal_size = 4GB                  # Triggers checkpoint if WAL grows beyond this
 ```
 
-### WAL Performance
+**WAL Durability vs. Performance Tradeoff:**
 
-```java
-@Service
-public class WalPerformanceService {
-    private final MeterRegistry meterRegistry;
-
-    public void recordWrite(Duration writeTime) {
-        meterRegistry.timer("write.time").record(writeTime);
-    }
-
-    public void recordWalFlush(Duration flushTime) {
-        meterRegistry.timer("wal.flush.time").record(flushTime);
-    }
-
-    public void recordCheckpoint(Duration checkpointTime) {
-        meterRegistry.timer("checkpoint.time").record(checkpointTime);
-    }
-}
 ```
+# synchronous_commit controls the fsync guarantee:
+
+synchronous_commit = on          # DEFAULT: fsync before COMMIT returns. Full durability.
+synchronous_commit = off         # Return COMMIT immediately; fsync happens async (~200ms lag).
+                                 # Risk: up to ~200ms of committed transactions lost on crash.
+                                 # Gain: 3-5x write throughput improvement on fsync-bound workloads.
+synchronous_commit = remote_apply # Wait for standby to apply WAL before COMMIT returns.
+                                  # Strong consistency reads from replica guaranteed.
+```
+
+`synchronous_commit = off` is safe for workloads that can tolerate ~200ms of data loss on a crash (e.g., analytics event ingestion, session data). **Never use it for financial transactions or orders.**
+
+### WAL and Replication
+
+Streaming replication works by shipping WAL records from primary to standby in real-time:
+
+```
+Primary WAL Writer ──── WAL segments ────► WAL Receiver (Standby)
+                                                │
+                                                └──► WAL Applier replays records
+                                                     updating standby's buffer pool
+```
+
+Logical Replication (used by CDC tools like Debezium) decodes WAL records into row-level change events. This requires `wal_level = logical` — which writes additional metadata into WAL, increasing WAL volume ~20–30%.
 
 ---
 
 ## Sharding (Horizontal Partitioning)
 
-Split data across multiple DB instances. Each shard handles a subset of writes.
+### When to Shard
 
-:::info[Deep Dive: Sharding & Partitioning]
-The detailed guide on Horizontal Partitioning, Sharding Strategies (Hash, Range, Consistent Hashing), Cross-Shard complexity, and Snowflake IDs has been moved to its own centralized page. 
-Please see the **[Database Sharding & Partitioning](./sharding-partitioning.md)** guide.
-:::
+Sharding is expensive operationally. Exhaust these options first:
+1. Read replicas (for read-heavy workloads)
+2. Vertical scaling (faster CPU, more RAM, NVMe)
+3. Table partitioning (within a single DB instance)
+4. Caching hot data
+
+Shard when: single-node write throughput is maxed AND you've exhausted vertical options.
+
+### Shard Key Selection — The Most Critical Decision
+
+A bad shard key causes hotspots that negate all benefits of sharding.
+
+| Shard Key | Distribution | Hotspot Risk | Cross-Shard Query Risk |
+|:---|:---|:---|:---|
+| `user_id` (random UUID) | Even | Low | Medium |
+| `timestamp` / `created_at` | Monotonic | **Critical** — all writes hit newest shard | Low for time-range queries |
+| `tenant_id` | Uneven if tenants vary in size | **High** for large tenants | Low |
+| `order_id` (UUID) | Even | Low | Medium |
+| Composite `(tenant_id, user_id)` | Even within tenant | Low | Low for tenant-scoped queries |
+
+**Never shard on a monotonically increasing sequence** (auto-increment, timestamps). All writes concentrate on the "last" shard, turning sharding into a single-node bottleneck with extra operational complexity.
+
+### Hash-Based Sharding
+
+```java
+@Service
+public class ShardRouter {
+
+    private final List<DataSource> shards;   // One DataSource per shard
+    private final int shardCount;
+
+    public ShardRouter(List<DataSource> shards) {
+        this.shards = shards;
+        this.shardCount = shards.size();
+    }
+
+    public DataSource getShardForKey(String shardKey) {
+        // MurmurHash3 — better distribution than Java's hashCode()
+        int hash = Hashing.murmur3_32().hashString(shardKey, StandardCharsets.UTF_8).asInt();
+        int shardIndex = Math.abs(hash % shardCount);
+        return shards.get(shardIndex);
+    }
+}
+```
+
+**Problem with naive hash modulo:** Adding a new shard changes `N`, which remaps ~(N-1)/N keys — requiring massive data migration.
+
+### Consistent Hashing
+
+Consistent hashing places both nodes and keys on a virtual ring (0 to 2³²-1). A key is owned by the first node clockwise from its hash position.
+
+```
+Ring position:  0 ──── NodeA(100) ──── NodeB(200) ──── NodeC(300) ──── 2^32
+Key "user-42" hashes to position 150 → owned by NodeB
+Key "user-99" hashes to position 250 → owned by NodeC
+```
+
+Adding NodeD at position 250: only keys between 200–250 (previously owned by NodeC) migrate to NodeD. All other keys are unaffected.
+
+**Virtual nodes (vnodes):** Each physical node gets multiple positions on the ring (e.g., 150 vnodes per node). This distributes load more evenly when node counts are small and handles heterogeneous hardware.
+
+```java
+@Component
+public class ConsistentHashRouter {
+
+    private final TreeMap<Long, DataSource> ring = new TreeMap<>();
+    private static final int VNODES_PER_NODE = 150;
+
+    public void addNode(String nodeId, DataSource ds) {
+        for (int i = 0; i < VNODES_PER_NODE; i++) {
+            long position = hash(nodeId + "-vnode-" + i);
+            ring.put(position, ds);
+        }
+    }
+
+    public DataSource getNode(String key) {
+        if (ring.isEmpty()) throw new IllegalStateException("No nodes available");
+        long hash = hash(key);
+        // Find the first node at or after the key's hash position
+        Map.Entry<Long, DataSource> entry = ring.ceilingEntry(hash);
+        // Wrap around the ring if no node found clockwise
+        return (entry != null ? entry : ring.firstEntry()).getValue();
+    }
+
+    private long hash(String key) {
+        return Hashing.murmur3_128().hashString(key, StandardCharsets.UTF_8).asLong() & 0x7FFFFFFFL;
+    }
+}
+```
+
+### Cross-Shard Operations — The Hard Problems
+
+Sharding eliminates global ACID transactions. Strategies:
+
+| Problem | Solution |
+|:---|:---|
+| Cross-shard JOIN | Denormalize data; embed foreign data at write time |
+| Cross-shard aggregation | Scatter-gather: query all shards in parallel, merge in app layer |
+| Cross-shard transactions | Saga pattern with compensating transactions |
+| Re-sharding (adding nodes) | Double-write to old + new shard; backfill; cutover |
 
 ---
 
-## Append-Only Patterns
+## LSM Trees vs. B-Trees — Write Path Internals
 
-Instead of updating records, append new state. Enables high write throughput.
+### B-Tree Write Path (PostgreSQL, MySQL InnoDB)
+
+```
+INSERT INTO users VALUES (...)
+        │
+        ▼
+1. Locate target leaf page in buffer pool (or load from disk — random I/O)
+2. Write WAL record (sequential I/O — fast)
+3. Modify leaf page in-memory (buffer pool)
+4. If page is full → page split: allocate new page, redistribute keys, update parent
+5. Mark page "dirty" for background flush
+```
+
+**Write amplification sources in B-trees:**
+- Page splits cascade upward (a full leaf splits; its parent may also split)
+- Entire 8KB page written for any change within it
+- VACUUM (PostgreSQL) rewrites pages to reclaim dead tuple space
+
+### LSM-Tree Write Path (Cassandra, RocksDB, LevelDB)
+
+```
+INSERT/UPDATE
+      │
+      ▼
+1. Append to Write-Ahead Log (sequential I/O — durability)
+2. Write to Memtable (in-memory sorted structure — essentially a Red-Black Tree)
+3. Return "write success" to caller  ← DONE. Extremely fast.
+
+Background (async):
+4. When Memtable reaches threshold (e.g., 64MB) → flush to immutable SSTable on disk (sequential I/O)
+5. Compaction: merge overlapping SSTables, remove tombstones, sort keys
+```
+
+```
+Memtable (memory):     [k3:v3, k7:v7, k9:v9]  ← current writes
+SSTable L0:            [k1:v1, k3:v2, k8:v8]  ← older flushes (may overlap)
+SSTable L1:            [k1:v1, k2:v2, ..., k100:v100]  ← compacted, no overlap
+SSTable L2:            [k1:v1, ..., k10000:v10000]  ← further compacted
+```
+
+**Read amplification** is the LSM tradeoff: to read key K, check Memtable → L0 SSTables (may be many) → L1 → L2. Each level may require a disk seek. Bloom filters eliminate most false-positive disk reads.
+
+**Compaction strategies:**
+
+| Strategy | Write Amplification | Read Amplification | Space Amplification | Use Case |
+|:---|:---|:---|:---|:---|
+| **Leveled** (RocksDB default) | High | Low | Low | Read-heavy with occasional writes |
+| **Size-Tiered** (Cassandra default) | Low | High | High | Write-heavy, time-series |
+| **FIFO** | Lowest | Highest | Low | TTL-based data (metrics, logs) |
+| **Tiered + Leveled (TWCS)** | Medium | Medium | Medium | Time-series with time-window TTL |
+
+### When to Choose LSM over B-Tree
+
+Choose LSM (Cassandra, ScyllaDB, RocksDB) when:
+- Write throughput > 100k writes/sec on a single node
+- Data is append-heavy with infrequent point-reads
+- Time-series or event store patterns
+- You can tolerate eventual consistency (tunable with quorum reads)
+
+Choose B-Tree (PostgreSQL, MySQL) when:
+- Complex SQL queries, JOINs, full ACID transactions
+- Balanced read/write workloads
+- Strong consistency required
+
+---
+
+## Append-Only / Event Sourcing
+
+### Why Appends Beat Updates
 
 ```sql
--- Instead of UPDATE account SET balance = balance - 100
--- Use append-only ledger:
-INSERT INTO ledger(account_id, delta, ts) VALUES (42, -100, now());
+-- In-place UPDATE: touches existing page, generates WAL, may cause lock contention
+UPDATE accounts SET balance = balance - 50 WHERE id = 1204;
 
--- Balance = SUM(delta) for account_id = 42
+-- Append-only INSERT: sequential, lock-free, naturally auditable
+INSERT INTO account_ledger (account_id, amount_delta, event_type, event_id, created_at)
+VALUES (1204, -50.00, 'WITHDRAWAL', gen_random_uuid(), NOW());
 ```
 
-**Used by**: Event sourcing, accounting systems, Kafka.
+Appends are faster because:
+- No need to locate and lock existing rows
+- Sequential I/O (ideal for both B-trees and LSM)
+- No dead-tuple accumulation (no VACUUM needed on ledger tables)
+- Naturally immutable — safe to cache, replicate, and audit
 
-### Event Sourcing
+### Projection Rebuilding
+
+Current state is derived by replaying events:
 
 ```java
-@Entity
-public class AccountEvent {
-    @Id
-    private Long id;
-    private String accountId;
-    private String eventType;
-    private BigDecimal amount;
-    private Instant timestamp;
-}
-
 @Service
-public class AccountService {
-    private final AccountEventRepository eventRepository;
+public class AccountProjectionService {
 
-    public void deposit(String accountId, BigDecimal amount) {
-        AccountEvent event = new AccountEvent();
-        event.setAccountId(accountId);
-        event.setEventType("DEPOSIT");
-        event.setAmount(amount);
-        event.setTimestamp(Instant.now());
+    private final LedgerRepository ledgerRepository;
 
-        eventRepository.save(event);
-    }
-
-    public BigDecimal getBalance(String accountId) {
-        return eventRepository.findByAccountId(accountId).stream()
-            .map(event -> {
-                if ("DEPOSIT".equals(event.getEventType())) {
-                    return event.getAmount();
-                } else if ("WITHDRAWAL".equals(event.getEventType())) {
-                    return event.getAmount().negate();
-                }
-                return BigDecimal.ZERO;
-            })
+    // Naive: scan all events — O(n). Acceptable only for small histories.
+    public BigDecimal getCurrentBalance(Long accountId) {
+        return ledgerRepository.findByAccountId(accountId)
+            .stream()
+            .map(LedgerEntry::getAmountDelta)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
 ```
 
-### Ledger Pattern
+### Snapshot Pattern
+
+Snapshots solve the O(n) replay problem:
+
+```
+Events:     E1 → E2 → ... → E999 → [Snapshot: balance=5000 at E1000] → E1001 → E1002
+                                          ▲
+                              Reads start here — only replay E1001+
+```
 
 ```java
 @Entity
-public class LedgerEntry {
+public class AccountSnapshot {
     @Id
-    private Long id;
-    private String accountId;
-    private BigDecimal delta;
-    private Instant timestamp;
-    private String description;
+    private Long accountId;
+    private BigDecimal balance;
+    private Long lastEventSequence;   // LSN / event sequence at snapshot time
+    private Instant snapshotAt;
 }
 
 @Service
-public class LedgerService {
-    private final LedgerEntryRepository ledgerRepository;
+public class AccountProjectionService {
 
-    @Transactional
-    public void recordTransaction(String accountId, BigDecimal delta, String description) {
-        LedgerEntry entry = new LedgerEntry();
-        entry.setAccountId(accountId);
-        entry.setDelta(delta);
-        entry.setTimestamp(Instant.now());
-        entry.setDescription(description);
+    private final LedgerRepository ledgerRepository;
+    private final AccountSnapshotRepository snapshotRepository;
 
-        ledgerRepository.save(entry);
+    public BigDecimal getCurrentBalance(Long accountId) {
+        // 1. Load latest snapshot (if any)
+        AccountSnapshot snapshot = snapshotRepository.findLatest(accountId);
+        long fromSequence = snapshot != null ? snapshot.getLastEventSequence() : 0L;
+        BigDecimal base = snapshot != null ? snapshot.getBalance() : BigDecimal.ZERO;
+
+        // 2. Apply only events after snapshot
+        List<LedgerEntry> recentEvents = ledgerRepository
+            .findByAccountIdAndSequenceGreaterThan(accountId, fromSequence);
+
+        return recentEvents.stream()
+            .map(LedgerEntry::getAmountDelta)
+            .reduce(base, BigDecimal::add);
     }
 
-    public BigDecimal getBalance(String accountId) {
-        return ledgerRepository.findByAccountId(accountId).stream()
-            .map(LedgerEntry::getDelta)
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-}
-```
-
-### Immutable Data
-
-```java
-@Immutable
-public class ImmutableUser {
-    private final String id;
-    private final String name;
-    private final String email;
-
-    public ImmutableUser withName(String newName) {
-        return new ImmutableUser(this.id, newName, this.email);
-    }
-
-    public ImmutableUser withEmail(String newEmail) {
-        return new ImmutableUser(this.id, this.name, newEmail);
+    // Triggered by a scheduled job or after every N events
+    @Scheduled(fixedDelay = 60_000)
+    public void rebuildSnapshots() {
+        List<Long> activeAccounts = ledgerRepository.findAccountsWithUnsnapshotedEvents(1000);
+        activeAccounts.forEach(accountId -> {
+            BigDecimal balance = getCurrentBalance(accountId);
+            long lastSeq = ledgerRepository.findMaxSequence(accountId);
+            snapshotRepository.save(new AccountSnapshot(accountId, balance, lastSeq, Instant.now()));
+        });
     }
 }
 ```
@@ -467,1002 +768,445 @@ public class ImmutableUser {
 
 ## Backpressure & Rate Limiting Writes
 
-Prevent upstream from overwhelming downstream.
+### Why Backpressure is Not Optional
 
-### Token Bucket
-
-```java
-@Service
-public class TokenBucketRateLimiter {
-    private final long capacity;
-    private final long refillRate;
-    private final AtomicLong tokens;
-    private final AtomicLong lastRefillTime;
-
-    public TokenBucketRateLimiter(long capacity, long refillRate) {
-        this.capacity = capacity;
-        this.refillRate = refillRate;
-        this.tokens = new AtomicLong(capacity);
-        this.lastRefillTime = new AtomicLong(System.currentTimeMillis());
-    }
-
-    public boolean tryAcquire() {
-        refillTokens();
-
-        long currentTokens = tokens.get();
-        if (currentTokens > 0) {
-            return tokens.compareAndSet(currentTokens, currentTokens - 1);
-        }
-        return false;
-    }
-
-    private void refillTokens() {
-        long now = System.currentTimeMillis();
-        long lastRefill = lastRefillTime.get();
-        long elapsed = now - lastRefill;
-
-        if (elapsed > 0) {
-            long newTokens = (elapsed * refillRate) / 1000;
-            if (newTokens > 0) {
-                tokens.updateAndGet(current -> Math.min(capacity, current + newTokens));
-                lastRefillTime.compareAndSet(lastRefill, now);
-            }
-        }
-    }
-}
+Without backpressure, a traffic spike causes:
+```
+Spike → DB connection pool exhaustion → Thread pool exhaustion → OOM / GC storms → Full outage
 ```
 
-### Leaky Bucket
-
-```java
-@Service
-public class LeakyBucketRateLimiter {
-    private final long capacity;
-    private final long leakRate;
-    private final AtomicLong volume;
-    private final AtomicLong lastLeakTime;
-
-    public LeakyBucketRateLimiter(long capacity, long leakRate) {
-        this.capacity = capacity;
-        this.leakRate = leakRate;
-        this.volume = new AtomicLong(0);
-        this.lastLeakTime = new AtomicLong(System.currentTimeMillis());
-    }
-
-    public boolean tryAcquire() {
-        leak();
-
-        long currentVolume = volume.get();
-        if (currentVolume < capacity) {
-            return volume.compareAndSet(currentVolume, currentVolume + 1);
-        }
-        return false;
-    }
-
-    private void leak() {
-        long now = System.currentTimeMillis();
-        long lastLeak = lastLeakTime.get();
-        long elapsed = now - lastLeak;
-
-        if (elapsed > 0) {
-            long leaked = (elapsed * leakRate) / 1000;
-            if (leaked > 0) {
-                volume.updateAndGet(current -> Math.max(0, current - leaked));
-                lastLeakTime.compareAndSet(lastLeak, now);
-            }
-        }
-    }
-}
+With backpressure:
+```
+Spike → Bounded queue fills → New requests get 429 → System remains stable
 ```
 
-### Adaptive Throttling
+```mermaid
+graph TD
+    Ingest[Write Requests] --> Gateway{API Gateway / Rate Limiter}
+    Gateway -->|Rate Limit Exceeded| Reject["429 Too Many Requests<br/>Retry-After: 30"]
+    Gateway -->|Within Limits| Queue[Bounded In-Memory Queue]
+    Queue -->|Queue Buffer Full| Backpressure["TCP Backpressure /<br/>503 Service Unavailable"]
+    Queue -->|Drain Batch| DB[(Write DB)]
+```
+
+### Token Bucket vs. Leaky Bucket
+
+| Algorithm | Burst Behavior | Output Rate | Use Case |
+|:---|:---|:---|:---|
+| **Token Bucket** | Allows bursts up to bucket capacity | Variable (burst + sustained) | API rate limiting; allows legitimate burst traffic |
+| **Leaky Bucket** | No bursts; excess dropped/queued | Constant | Protecting DB write rate; smoothing ingestion |
+| **Sliding Window Counter** | Smooth; no burst at window boundary | Smooth | Distributed API limiting with Redis |
+| **Fixed Window Counter** | Burst at window boundary | Jagged | Simple cases; avoid for high-precision limiting |
+
+### Distributed Sliding Window Rate Limiter (Redis)
 
 ```java
 @Service
-public class AdaptiveThrottler {
-    private final AtomicLong successCount = new AtomicLong(0);
-    private final AtomicLong failureCount = new AtomicLong(0);
-    private final AtomicInteger currentLimit = new AtomicInteger(100);
+public class RedisSlidingWindowRateLimiter {
 
-    public boolean tryAcquire() {
-        int limit = currentLimit.get();
+    private final RedisTemplate<String, String> redisTemplate;
+    private final MeterRegistry meterRegistry;
 
-        if (limit <= 0) {
+    public boolean isAllowed(String clientKey, int maxRequests, Duration window) {
+        long now = System.currentTimeMillis();
+        long windowMs = window.toMillis();
+        long clearBefore = now - windowMs;
+        String redisKey = "rate_limit:" + clientKey;
+
+        List<Object> results = redisTemplate.executePipelined(new SessionCallback<Object>() {
+            @Override
+            public Object execute(RedisOperations operations) throws DataAccessException {
+                // Atomic pipeline: remove expired, count, add current, set TTL
+                operations.opsForZSet().removeRangeByScore(redisKey, 0, clearBefore);
+                operations.opsForZSet().zCard(redisKey);
+                operations.opsForZSet().add(redisKey, String.valueOf(now) + "-" + UUID.randomUUID(), now);
+                operations.expire(redisKey, window);
+                return null;
+            }
+        });
+
+        Long currentCount = (Long) results.get(1);  // Count BEFORE current request added
+        boolean allowed = currentCount != null && currentCount < maxRequests;
+
+        meterRegistry.counter("rate_limiter.requests",
+            "client", clientKey,
+            "allowed", String.valueOf(allowed)).increment();
+
+        return allowed;
+    }
+}
+
+// Spring MVC interceptor integration
+@Component
+public class WriteLimitInterceptor implements HandlerInterceptor {
+
+    private final RedisSlidingWindowRateLimiter limiter;
+
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        String clientId = request.getHeader("X-Client-Id");
+        if (!limiter.isAllowed(clientId, 1000, Duration.ofMinutes(1))) {
+            response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
+            response.setHeader("Retry-After", "30");
+            response.setHeader("X-RateLimit-Limit", "1000");
             return false;
         }
-
-        if (currentLimit.decrementAndGet() >= 0) {
-            return true;
-        } else {
-            currentLimit.incrementAndGet();
-            return false;
-        }
-    }
-
-    public void recordSuccess() {
-        successCount.incrementAndGet();
-        adjustLimit();
-    }
-
-    public void recordFailure() {
-        failureCount.incrementAndGet();
-        adjustLimit();
-    }
-
-    private void adjustLimit() {
-        long successes = successCount.get();
-        long failures = failureCount.get();
-        long total = successes + failures;
-
-        if (total == 0) {
-            return;
-        }
-
-        double successRate = (double) successes / total;
-
-        if (successRate > 0.9) {
-            // Increase limit
-            currentLimit.updateAndGet(limit -> Math.min(1000, limit + 10));
-        } else if (successRate < 0.5) {
-            // Decrease limit
-            currentLimit.updateAndGet(limit -> Math.max(10, limit - 10));
-        }
+        return true;
     }
 }
 ```
 
----
+**Redis pipeline atomicity note:** `executePipelined` sends all commands in a single network round-trip but is **not atomic** — another client can insert between commands. For strict atomicity, use a **Lua script**:
 
-## Connection Pooling
+```lua
+-- atomic_rate_limit.lua (execute via RedisTemplate.execute(RedisScript))
+local key = KEYS[1]
+local now = tonumber(ARGV[1])
+local window = tonumber(ARGV[2])
+local limit = tonumber(ARGV[3])
 
-For detailed guidelines on pool sizing, configuration parameters, and failure modes, see the centralized **[Database Connection Pooling](../database/connection-pooling.md)** guide.
-
-```yaml
-# application.yml — HikariCP (Spring Boot default)
-spring:
-  datasource:
-    hikari:
-      maximum-pool-size: 20
-      minimum-idle: 5
-      connection-timeout: 3000
+redis.call('ZREMRANGEBYSCORE', key, 0, now - window)
+local count = redis.call('ZCARD', key)
+if count < limit then
+    redis.call('ZADD', key, now, now .. '-' .. math.random(1, 1000000))
+    redis.call('PEXPIRE', key, window)
+    return 1
+end
+return 0
 ```
-
 
 ---
 
 ## Idempotent Writes
 
-Ensure retrying a write doesn't cause duplicates.
+### Why Idempotency is Required in Distributed Systems
 
-### Idempotency Keys
+Any write in a distributed system can produce:
+- **At-most-once**: If you don't retry on failure → data loss
+- **At-least-once**: If you retry on timeout → possible duplicates
+- **Exactly-once**: Idempotent writes + deduplication → safe retries
 
-```java
-// Idempotency key in DB
-@Transactional
-public OrderResult placeOrder(PlaceOrderCommand cmd) {
-    // Check if already processed
-    if (orderRepository.existsByIdempotencyKey(cmd.getIdempotencyKey())) {
-        return orderRepository.findByIdempotencyKey(cmd.getIdempotencyKey());
-    }
-    Order order = new Order(cmd);
-    order.setIdempotencyKey(cmd.getIdempotencyKey());
-    return orderRepository.save(order);
-}
-```
+Network timeouts are ambiguous — the server may have processed the request and the response was lost. **Always retry with idempotency keys.**
 
-### Optimistic Concurrency
+### Idempotency Key Pattern
 
 ```java
 @Entity
-public class Product {
-    @Id
+@Table(name = "idempotency_keys", indexes = {
+    @Index(name = "idx_idem_key", columnList = "idempotency_key", unique = true)
+})
+public class IdempotencyRecord {
+    @Id @GeneratedValue
     private Long id;
-    private String name;
-    private Integer stock;
 
-    @Version
+    @Column(unique = true, nullable = false)
+    private String idempotencyKey;       // UUID provided by client
+
+    @Enumerated(EnumType.STRING)
+    private IdempotencyStatus status;    // PROCESSING, COMPLETED, FAILED
+
+    @Column(columnDefinition = "jsonb")
+    private String responseBody;         // Cached response for duplicate requests
+
+    private Instant createdAt;
+    private Instant expiresAt;           // TTL — clean up after 24h
+}
+
+@Service
+@Transactional
+public class IdempotentOrderService {
+
+    private final IdempotencyRepository idempotencyRepo;
+    private final OrderRepository orderRepo;
+
+    public OrderResponse createOrder(String idempotencyKey, CreateOrderRequest request) {
+        // 1. Check for existing record
+        return idempotencyRepo.findByKey(idempotencyKey)
+            .map(record -> switch (record.getStatus()) {
+                case COMPLETED -> deserialize(record.getResponseBody(), OrderResponse.class);
+                case PROCESSING -> throw new ConflictException("Request already in flight");
+                case FAILED -> throw new PreviousRequestFailedException(record.getResponseBody());
+            })
+            .orElseGet(() -> {
+                // 2. Reserve the key (unique constraint prevents races)
+                var record = idempotencyRepo.save(new IdempotencyRecord(
+                    idempotencyKey, PROCESSING, Instant.now(), Instant.now().plus(24, HOURS)
+                ));
+
+                try {
+                    // 3. Execute the actual write
+                    Order order = orderRepo.save(toEntity(request));
+                    OrderResponse response = toResponse(order);
+
+                    // 4. Store cached response
+                    record.setStatus(COMPLETED);
+                    record.setResponseBody(serialize(response));
+                    idempotencyRepo.save(record);
+
+                    return response;
+                } catch (Exception e) {
+                    record.setStatus(FAILED);
+                    record.setResponseBody(e.getMessage());
+                    idempotencyRepo.save(record);
+                    throw e;
+                }
+            });
+    }
+}
+```
+
+### Compare-And-Swap (Optimistic Locking)
+
+CAS prevents the lost-update problem when multiple writers race on the same row:
+
+```java
+@Entity
+public class Account {
+    @Id private Long id;
+    private BigDecimal balance;
+
+    @Version                          // JPA optimistic lock version column
     private Long version;
-
-    public void decreaseStock(int quantity) {
-        if (this.stock < quantity) {
-            throw new InsufficientStockException(this.stock, quantity);
-        }
-        this.stock -= quantity;
-    }
 }
 
 @Service
-public class ProductService {
+public class AccountService {
+
+    @Retryable(
+        value = ObjectOptimisticLockingFailureException.class,
+        maxAttempts = 3,
+        backoff = @Backoff(delay = 50, multiplier = 2)
+    )
     @Transactional
-    @Retryable(value = OptimisticLockingFailureException.class, maxAttempts = 3)
-    public void purchaseProduct(Long productId, int quantity) {
-        Product product = productRepository.findById(productId)
-            .orElseThrow(() -> new ProductNotFoundException(productId));
+    public void debit(Long accountId, BigDecimal amount) {
+        Account account = accountRepo.findById(accountId)
+            .orElseThrow(() -> new AccountNotFoundException(accountId));
 
-        product.decreaseStock(quantity);
-        productRepository.save(product);
-    }
-}
-```
-
-### Deduplication
-
-```java
-@Service
-public class DeduplicationService {
-    private final RedisTemplate<String, String> redisTemplate;
-
-    public boolean isDuplicate(String idempotencyKey) {
-        String key = "dedup:" + idempotencyKey;
-        Boolean exists = redisTemplate.hasKey(key);
-
-        if (Boolean.FALSE.equals(exists)) {
-            redisTemplate.opsForValue().set(key, "1", Duration.ofHours(24));
-            return false;
+        if (account.getBalance().compareTo(amount) < 0) {
+            throw new InsufficientFundsException();
         }
 
-        return true;
+        account.setBalance(account.getBalance().subtract(amount));
+        // Hibernate generates: UPDATE accounts SET balance=?, version=N+1 WHERE id=? AND version=N
+        // If version mismatch → OptimisticLockException → @Retryable kicks in
+        accountRepo.save(account);
     }
 }
 ```
+
+**When to use optimistic vs. pessimistic locking:**
+
+| | Optimistic (`@Version`) | Pessimistic (`SELECT FOR UPDATE`) |
+|:---|:---|:---|
+| **Best for** | Low contention (most reads succeed) | High contention (many concurrent writes to same row) |
+| **Failure mode** | Retry on conflict | Long lock wait / deadlock |
+| **Throughput** | Higher (no lock overhead) | Lower (serialized access) |
+| **Deadlock risk** | None | Yes — always acquire locks in consistent order |
 
 ---
 
-## Database Write Optimization
+## Connection Pooling Deep Dive
 
-### Indexing Trade-offs
+### HikariCP Sizing Formula
 
-- **Every index slows writes** (must update index on every insert/update)
-- Audit indexes regularly; drop unused ones
-- Partial indexes for filtered writes
+```
+Pool Size = Tn × (Cm - 1) + 1
 
-```sql
--- Partial index for active records only
-CREATE INDEX idx_active_users ON users(email) WHERE deleted_at IS NULL;
+Where:
+  Tn = Number of threads doing DB work concurrently
+  Cm = Number of simultaneous queries each thread can send
 
--- Covering index (includes all columns needed)
-CREATE INDEX idx_post_cover ON posts(user_id, created_at, title, preview);
+For typical web apps: Pool Size ≈ (CPU cores × 2) + effective_spindle_count
+
+Example: 8-core machine, SSD (no spindle seek):
+  Pool Size = (8 × 2) + 1 = 17 connections
 ```
 
-### Bulk Insert Performance
+The Hikari team's recommendation: **don't over-pool**. A 10-connection pool often outperforms a 100-connection pool on PostgreSQL because:
+- Each connection = a PostgreSQL backend process (~5MB RAM)
+- Too many connections cause OS scheduler contention and lock manager overhead
 
-```sql
--- Use COPY in PostgreSQL (fastest bulk load)
-COPY events(user_id, type, ts) FROM '/data/events.csv' CSV;
-
--- Or multi-row VALUES
-INSERT INTO events(user_id, type, ts) VALUES
-  (1, 'click', now()), (2, 'view', now()), ...;
+```yaml
+spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 20          # Upper bound — tune based on workload
+      minimum-idle: 5               # Keep warm connections ready
+      connection-timeout: 3000      # Max wait for a connection (3s — fail fast)
+      idle-timeout: 600000          # Remove idle connections after 10min
+      max-lifetime: 1800000         # Recycle connections every 30min (avoids DB-side timeouts)
+      keepalive-time: 30000         # Send keepalive to prevent firewall drops
+      pool-name: "write-pool"
+      data-source-properties:
+        prepareThreshold: 5         # PostgreSQL: use server-side prepared statements after 5 uses
+        preparedStatementCacheQueries: 256
+        tcpKeepAlive: true
 ```
 
-### Partitioned Tables
+### PgBouncer for C10K Write Workloads
 
-```sql
-CREATE TABLE events (
-    id BIGSERIAL,
-    ts TIMESTAMPTZ NOT NULL,
-    data JSONB
-) PARTITION BY RANGE (ts);
+For services with thousands of threads competing for DB connections, put PgBouncer in front:
 
-CREATE TABLE events_2024_01 PARTITION OF events
-    FOR VALUES FROM ('2024-01-01') TO ('2024-02-01');
+```
+10,000 app threads → PgBouncer (pool: 100 connections) → PostgreSQL
 ```
 
-Drop old partitions instantly instead of slow DELETEs.
+PgBouncer modes:
+- **Session mode**: Connection held for entire client session. Best compatibility; least pooling benefit.
+- **Transaction mode**: Connection returned to pool after each transaction. Best for high concurrency. Incompatible with `SET` statements and advisory locks.
+- **Statement mode**: Connection returned after each statement. Incompatible with multi-statement transactions.
 
-### Write Optimization Techniques
-
-```java
-@Service
-public class WriteOptimizationService {
-    private final JdbcTemplate jdbcTemplate;
-
-    @Transactional
-    public void batchInsert(List<Event> events) {
-        jdbcTemplate.batchUpdate(
-            "INSERT INTO events(user_id, type, ts) VALUES (?, ?, ?)",
-            events,
-            100,
-            (ps, event) -> {
-                ps.setLong(1, event.getUserId());
-                ps.setString(2, event.getType());
-                ps.setTimestamp(3, Timestamp.from(event.getTimestamp()));
-            }
-        );
-    }
-
-    @Transactional
-    public void bulkInsert(List<Event> events) {
-        String sql = "INSERT INTO events(user_id, type, ts) VALUES ";
-
-        List<String> values = events.stream()
-            .map(event -> String.format("(%d, '%s', '%s')",
-                event.getUserId(),
-                event.getType(),
-                event.getTimestamp()))
-            .toList();
-
-        sql += String.join(", ", values);
-
-        jdbcTemplate.update(sql);
-    }
-}
-```
+Use **transaction mode** for microservices that issue short-lived write transactions.
 
 ---
 
-## Consistent Hashing Deep Dive
-
-:::info[Deep Dive: Consistent Hashing]
-For a deep dive into the math, rebalancing, and virtual nodes, see the centralized **[Consistent Hashing](./consistent-hashing.md)** page.
-:::
-
----
-
-## Write Scaling Decision Tree
-
-```
-Is write throughput the bottleneck?
-  ├─ Can writes be async? → Use queue (Kafka)
-  ├─ Can writes be batched? → Batch + WAL
-  ├─ Single DB maxed out?
-  │    ├─ < 5,000 wps → Optimize queries, add indexes
-  │    ├─ 5,000–50,000 wps → Connection pool, caching, async
-  │    └─ > 50,000 wps → Sharding or specialized DB
-  └─ Hot rows/tables? → See Handling Contention
-```
-
----
-
-## How Write Scaling Works Internally
-
-### Write Path
-
-```
-1. Client sends write request
-2. Application validates request
-3. Application generates write operation
-4. Write operation sent to database
-5. Database acquires locks
-6. Database writes to WAL
-7. Database acknowledges to client
-8. Database applies write to data structures
-9. Database releases locks
-```
-
-### Commit Protocol
-
-```
-1. Begin transaction
-2. Execute write operations
-3. Write to WAL
-4. Commit transaction
-5. Release locks
-6. Acknowledge to client
-```
-
-### Replication
-
-```
-Primary:
-1. Receive write request
-2. Write to WAL
-3. Apply to data structures
-4. Send replication stream to replicas
-
-Replica:
-1. Receive replication stream
-2. Apply changes
-3. Update replication position
-```
-
-### Durability
-
-```
-1. Write to WAL (durable)
-2. Flush WAL to disk
-3. Acknowledge to client
-4. Apply to data structures (async)
-5. Checkpoint: flush dirty pages
-```
-
----
-
-## Real-World Implementations
-
-### Kafka
-
-Kafka uses append-only logs for high write throughput:
-
-- **Partitioning**: Data partitioned across multiple brokers
-- **Replication**: Each partition replicated for durability
-- **Batching**: Messages batched for efficiency
-- **Compression**: Messages compressed to reduce I/O
-
-### Cassandra
-
-Cassandra uses LSM trees for high write throughput:
-
-- **No master**: All nodes can accept writes
-- **Tunable consistency**: Choose consistency level per operation
-- **Automatic sharding**: Data automatically distributed
-- **Write path**: Write to commit log, memtable, then SSTable
-
-### DynamoDB
-
-DynamoDB uses partitioning for high write throughput:
-
-- **Partition key**: Determines which partition stores data
-- **Sort key**: Enables range queries within partition
-- **Auto-scaling**: Automatically adjusts capacity
-- **Write capacity**: Provisioned or on-demand
-
-### MongoDB
-
-MongoDB uses document model for flexible writes:
-
-- **Sharding**: Data distributed across shards
-- **Replica sets**: Each shard has replicas
-- **Write concern**: Control write durability
-- **Journaling**: WAL for durability
-
-### PostgreSQL
-
-PostgreSQL uses MVCC for high concurrency:
-
-- **WAL**: Write-ahead log for durability
-- **MVCC**: Multi-version concurrency control
-- **Replication**: Streaming replication
-- **Partitioning**: Table partitioning for large tables
-
----
-
-## Integration Patterns
-
-### Spring Kafka Integration
-
-```java
-@Configuration
-@EnableKafka
-public class KafkaConfig {
-
-    @Bean
-    public ProducerFactory<String, Object> producerFactory() {
-        Map<String, Object> config = new HashMap<>();
-        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-        config.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
-        return new DefaultKafkaProducerFactory<>(config);
-    }
-
-    @Bean
-    public KafkaTemplate<String, Object> kafkaTemplate() {
-        return new KafkaTemplate<>(producerFactory());
-    }
-}
-
-@Service
-public class EventProducer {
-    private final KafkaTemplate<String, Object> kafkaTemplate;
-
-    public void sendEvent(String topic, Object event) {
-        kafkaTemplate.send(topic, event);
-    }
-}
-```
-
-### Spring Batch Integration
-
-```java
-@Configuration
-@EnableBatchProcessing
-public class BatchConfig {
-
-    @Bean
-    public Job importEventsJob(JobBuilderFactory jobs, Step step1) {
-        return jobs.get("importEventsJob")
-            .incrementer(new RunIdIncrementer())
-            .flow(step1)
-            .end()
-            .build();
-    }
-
-    @Bean
-    public Step step1(StepBuilderFactory stepBuilderFactory,
-                      ItemReader<Event> reader,
-                      ItemWriter<Event> writer) {
-        return stepBuilderFactory.get("step1")
-            .<Event, Event>chunk(100)
-            .reader(reader)
-            .writer(writer)
-            .build();
-    }
-}
-```
-
-### Database Sharding Integration
-
-```java
-@Configuration
-public class ShardingConfig {
-
-    @Bean
-    public ShardingDataSource shardingDataSource() {
-        Map<String, DataSource> dataSourceMap = new HashMap<>();
-        dataSourceMap.put("shard0", createDataSource("shard0"));
-        dataSourceMap.put("shard1", createDataSource("shard1"));
-        dataSourceMap.put("shard2", createDataSource("shard2"));
-
-        return new ShardingDataSource(dataSourceMap);
-    }
-
-    private DataSource createDataSource(String shardName) {
-        HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:postgresql://" + shardName + ":5432/db");
-        config.setUsername("user");
-        config.setPassword("password");
-        return new HikariDataSource(config);
-    }
-}
-```
-
----
-
-## Pros and Cons
-
-### Async Write Pipelines
-
-**Pros:**
-- High throughput
-- Low latency
-- Decouples producers and consumers
-- Handles backpressure
-
-**Cons:**
-- Eventual consistency
-- Complex error handling
-- Requires message broker
-- Monitoring complexity
-
-### Batching
-
-**Pros:**
-- Reduced database round trips
-- Improved throughput
-- Lower resource usage
-- Better transaction efficiency
-
-**Cons:**
-- Increased latency
-- Memory overhead
-- Complex error handling
-- Batch size tuning required
-
-### Sharding
-
-**Pros:**
-- Horizontal scalability
-- Improved write throughput
-- Geographic distribution
-- Reduced contention
-
-**Cons:**
-- Complex routing
-- Cross-shard transactions
-- Rebalancing complexity
-- Operational overhead
-
-### Append-Only
-
-**Pros:**
-- High write throughput
-- Simple concurrency
-- Natural audit trail
-- Easy replication
-
-**Cons:**
-- Read performance overhead
-- Storage growth
-- Compaction required
-- Query complexity
-
----
-
-## Interview Questions
-
-### Q: How would you scale a system from 1,000 writes/sec to 100,000 writes/sec?
-
-**A:** Remove single-writer bottlenecks first, then partition by a high-cardinality key and batch writes. Add queue-based buffering, async processing, and tuned storage engines before over-splitting services.
-
-### Q: What is a write-ahead log and why does it speed up writes?
-
-**A:** WAL appends intent sequentially before applying changes to main structures. Sequential disk writes are much faster than random in-place updates, improving throughput and crash recovery.
-
-### Q: How do you choose a shard key, and what makes a bad one?
-
-**A:** Choose a key with high cardinality, even distribution, and query locality. Bad keys are low-cardinality, time-hot, or misaligned with access patterns, creating hotspots.
-
-### Q: What is consistent hashing and why is it used for sharding?
-
-**A:** Consistent hashing maps keys and nodes on a ring so adding/removing nodes moves only a small key subset. It reduces rebalancing cost versus modulo-based partitioning.
-
-### Q: How do you handle cross-shard transactions?
-
-**A:** Prefer schema/workflow design that keeps transactions shard-local. For unavoidable cross-shard workflows, use saga/compensation or 2PC only for narrow critical paths.
-
-### Q: Why are append-only writes faster than in-place updates?
-
-**A:** Appends avoid random read-modify-write and minimize page rewrites. They also simplify concurrency and batching, then compaction reconciles old versions later.
-
-### Q: How do you generate globally unique IDs without a centralized coordinator?
-
-**A:** Use Snowflake/ULID-style IDs combining time and node entropy, or UUIDv7 for sortable uniqueness. Ensure clock skew handling and per-node sequence safeguards.
-
-### Q: What is backpressure and how do you implement it?
-
-**A:** Backpressure limits producers when consumers/storage are saturated to prevent collapse. Implement bounded queues, rate limits, adaptive throttling, and explicit retry-after signals.
-
-### Q: What is the difference between LSM trees and B-trees for write performance?
-
-**A:** LSM trees optimize writes by appending to memtables and flushing to SSTables, making writes fast but reads slower. B-trees provide balanced read/write performance but with higher write amplification.
-
-### Q: How do you handle write amplification in high-throughput systems?
-
-**A:** Use LSM trees, compression, and efficient compaction strategies. Monitor write amplification metrics and tune compaction parameters based on workload characteristics.
-
-### Q: What is the role of partitioning in write scaling?
-
-**A:** Partitioning distributes writes across multiple storage units, reducing contention and improving parallelism. Time-based partitioning enables efficient data lifecycle management.
-
-### Q: How do you implement idempotent writes in a distributed system?
-
-**A:** Use idempotency keys stored in a unique constraint table, or embed version/timestamp in data and check before applying changes. Ensure idempotency across retries and failures.
-
-### Q: What is the difference between synchronous and asynchronous replication?
-
-**A:** Synchronous replication waits for acknowledgment from replicas before committing, ensuring consistency but adding latency. Asynchronous replication commits immediately and replicates later, providing lower latency but potential data loss.
-
-### Q: How do you optimize database connection pooling for high write throughput?
-
-**A:** Tune pool size based on workload, use connection validation, set appropriate timeouts, and monitor pool metrics. Consider separate pools for read and write operations.
-
-### Q: What is the impact of indexes on write performance?
-
-**A:** Every index must be updated on write, increasing write amplification and reducing throughput. Balance read performance benefits against write performance costs, and use partial indexes when possible.
-
-### Q: How do you handle write failures in a distributed system?
-
-**A:** Implement retry logic with exponential backoff, use dead letter queues for failed messages, implement compensation transactions, and provide monitoring and alerting for failure scenarios.
-
----
-
-## Senior Deep Dive: Advanced Topics
-
-### Write-Ahead Logging Internals
-
-```java
-public class WriteAheadLog {
-    private final FileChannel logFile;
-    private final ByteBuffer buffer;
-    private final AtomicLong lsn = new AtomicLong(0);
-
-    public void append(LogRecord record) throws IOException {
-        long currentLsn = lsn.getAndIncrement();
-        record.setLsn(currentLsn);
-
-        buffer.clear();
-        record.serialize(buffer);
-        buffer.flip();
-
-        logFile.write(buffer);
-        logFile.force(true); // fsync
-    }
-
-    public List<LogRecord> read(long startLsn, long endLsn) throws IOException {
-        List<LogRecord> records = new ArrayList<>();
-
-        buffer.clear();
-        logFile.position(startLsn);
-        logFile.read(buffer);
-        buffer.flip();
-
-        while (buffer.hasRemaining()) {
-            LogRecord record = LogRecord.deserialize(buffer);
-            if (record.getLsn() >= startLsn && record.getLsn() <= endLsn) {
-                records.add(record);
-            }
-        }
-
-        return records;
-    }
-}
-```
-
-### LSM Trees
-
-```java
-public class LSMTree {
-    private final MemTable memTable;
-    private final List<SSTable> sstables;
-    private final CompactionStrategy compactionStrategy;
-
-    public void put(Key key, Value value) {
-        memTable.put(key, value);
-
-        if (memTable.size() > MEMTABLE_THRESHOLD) {
-            flush();
-        }
-    }
-
-    public Value get(Key key) {
-        // Check memtable first
-        Value value = memTable.get(key);
-        if (value != null) {
-            return value;
-        }
-
-        // Check SSTables in reverse order (newest first)
-        for (int i = sstables.size() - 1; i >= 0; i--) {
-            value = sstables.get(i).get(key);
-            if (value != null) {
-                return value;
-            }
-        }
-
-        return null;
-    }
-
-    private void flush() {
-        SSTable sstable = new SSTable(memTable);
-        sstables.add(sstable);
-        memTable.clear();
-
-        // Trigger compaction if needed
-        compactionStrategy.compact(sstables);
-    }
-}
-```
-
-### B-Tree vs LSM Tree
-
-| Aspect | B-Tree | LSM Tree |
-|---|---|---|
-| Write Performance | Slower (random I/O) | Faster (sequential I/O) |
-| Read Performance | Faster (single lookup) | Slower (multiple lookups) |
-| Write Amplification | Higher | Lower |
-| Space Amplification | Lower | Higher |
-| Use Case | Read-heavy | Write-heavy |
-
-### Write Amplification
-
-```java
-@Service
-public class WriteAmplificationAnalyzer {
-    private final MeterRegistry meterRegistry;
-
-    public void recordWrite(int bytesWritten) {
-        meterRegistry.counter("write.bytes").increment(bytesWritten);
-    }
-
-    public void recordFlush(int bytesFlushed) {
-        meterRegistry.counter("flush.bytes").increment(bytesFlushed);
-    }
-
-    public double getWriteAmplification() {
-        long bytesWritten = meterRegistry.counter("write.bytes").count();
-        long bytesFlushed = meterRegistry.counter("flush.bytes").count();
-
-        return bytesWritten > 0 ? (double) bytesFlushed / bytesWritten : 0;
-    }
-}
-```
-
-### Compaction Strategies
-
-```java
-public interface CompactionStrategy {
-    void compact(List<SSTable> sstables);
-}
-
-public class SizeTieredCompaction implements CompactionStrategy {
-    private final int maxSSTablesPerTier;
-
-    @Override
-    public void compact(List<SSTable> sstables) {
-        // Group SSTables by size tiers
-        Map<Integer, List<SSTable>> tiers = groupBySizeTiers(sstables);
-
-        // Compact each tier
-        for (List<SSTable> tier : tiers.values()) {
-            if (tier.size() >= maxSSTablesPerTier) {
-                compactTier(tier);
-            }
-        }
-    }
-
-    private void compactTier(List<SSTable> tier) {
-        // Merge SSTables in the tier
-        SSTable merged = mergeSSTables(tier);
-
-        // Replace old SSTables with merged one
-        tier.clear();
-        tier.add(merged);
-    }
-}
-```
-
-### Distributed Transactions
-
-```java
-@Service
-public class DistributedTransactionService {
-    private final List<TransactionParticipant> participants;
-
-    @Transactional
-    public void executeTransaction(List<Operation> operations) {
-        // Two-phase commit
-        if (!prepare(operations)) {
-            rollback(operations);
-            throw new TransactionException("Prepare phase failed");
-        }
-
-        commit(operations);
-    }
-
-    private boolean prepare(List<Operation> operations) {
-        for (Operation operation : operations) {
-            TransactionParticipant participant = getParticipant(operation);
-            if (!participant.prepare(operation)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private void commit(List<Operation> operations) {
-        for (Operation operation : operations) {
-            TransactionParticipant participant = getParticipant(operation);
-            participant.commit(operation);
-        }
-    }
-
-    private void rollback(List<Operation> operations) {
-        for (Operation operation : operations) {
-            TransactionParticipant participant = getParticipant(operation);
-            participant.rollback(operation);
-        }
-    }
-}
-```
+## Distributed Transactions
 
 ### Two-Phase Commit (2PC)
 
-Two-Phase Commit (2PC) is a classic protocol used to scale writes atomically across distributed systems using a prepare-then-commit voting mechanism. 
+2PC provides atomic commit across multiple databases or services:
 
-For Java code implementations of 2PC, structural sequence diagrams, and alternative coordination models (like the **Saga Pattern**), see the dedicated [Two-Phase Commit (2PC) & Three-Phase Commit (3PC) Guide](./two-phase-commit.md).
+```
+Phase 1 (Prepare):
+  Coordinator → Participant A: "Can you commit txn-123?"
+  Coordinator → Participant B: "Can you commit txn-123?"
+  Participant A → Coordinator: "Yes (PREPARED)" — locks held
+  Participant B → Coordinator: "Yes (PREPARED)" — locks held
 
-### Three-Phase Commit
+Phase 2 (Commit):
+  Coordinator → Participant A: "Commit txn-123"
+  Coordinator → Participant B: "Commit txn-123"
+  Participants commit and release locks
+```
+
+**2PC failure modes:**
+
+| Failure | Impact |
+|:---|:---|
+| Participant crashes after PREPARE but before COMMIT | Participant holds locks indefinitely until coordinator recovers |
+| Coordinator crashes after PREPARE | All participants blocked — **in-doubt transaction** — requires manual DBA intervention |
+| Network partition during commit | Split-brain: some participants commit, others don't |
+
+**2PC is rarely used in microservices** because of the blocking failure mode. Use **Saga** instead.
+
+### Saga Pattern
+
+A Saga replaces a distributed transaction with a sequence of local transactions + compensating actions:
+
+```mermaid
+sequenceDiagram
+    participant OS as Order Service
+    participant IS as Inventory Service
+    participant PS as Payment Service
+
+    OS->>OS: Create Order (PENDING)
+    OS->>IS: Reserve Inventory
+    IS-->>OS: Reserved OK
+    OS->>PS: Charge Payment
+    PS-->>OS: Charge Failed ← Failure!
+    OS->>IS: Release Inventory (compensate)
+    OS->>OS: Mark Order FAILED (compensate)
+```
 
 ```java
+// Choreography-based Saga via Kafka events
 @Service
-public class ThreePhaseCommitService {
-    private final List<TransactionParticipant> participants;
+@Slf4j
+public class InventoryService {
 
-    public void executeTransaction(List<Operation> operations) {
-        // Phase 1: CanCommit
-        List<TransactionParticipant> canCommitParticipants = new ArrayList<>();
-
-        for (Operation operation : operations) {
-            TransactionParticipant participant = getParticipant(operation);
-
-            if (participant.canCommit(operation)) {
-                canCommitParticipants.add(participant);
-            } else {
-                // Abort all participants
-                for (TransactionParticipant canCommit : canCommitParticipants) {
-                    canCommit.abort(operation);
-                }
-                throw new TransactionException("CanCommit phase failed");
-            }
+    @KafkaListener(topics = "order.created")
+    public void onOrderCreated(OrderCreatedEvent event) {
+        try {
+            inventoryRepository.reserveStock(event.getProductId(), event.getQuantity());
+            eventPublisher.publish(new InventoryReservedEvent(event.getOrderId()));
+        } catch (InsufficientStockException e) {
+            // Publish failure event — Order Service listens and compensates
+            eventPublisher.publish(new InventoryReservationFailedEvent(event.getOrderId(), e.getMessage()));
         }
+    }
 
-        // Phase 2: PreCommit
-        List<TransactionParticipant> preCommitParticipants = new ArrayList<>();
-
-        for (TransactionParticipant participant : canCommitParticipants) {
-            if (participant.preCommit(operation)) {
-                preCommitParticipants.add(participant);
-            } else {
-                // Abort all participants
-                for (TransactionParticipant preCommit : preCommitParticipants) {
-                    preCommit.abort(operation);
-                }
-                throw new TransactionException("PreCommit phase failed");
-            }
-        }
-
-        // Phase 3: DoCommit
-        for (TransactionParticipant participant : preCommitParticipants) {
-            participant.doCommit(operation);
-        }
+    @KafkaListener(topics = "payment.failed")
+    public void onPaymentFailed(PaymentFailedEvent event) {
+        // Compensating transaction — release the reservation
+        inventoryRepository.releaseReservation(event.getOrderId());
+        log.info("Released inventory reservation for order={}", event.getOrderId());
     }
 }
 ```
 
----
+**Orchestration vs. Choreography:**
 
-## Additional Resources
-
-### Books
-- "Designing Data-Intensive Applications" by Martin Kleppmann
-- "Database Internals" by Alex Petrov
-- "High Performance MySQL" by Baron Schwartz
-
-### Papers
-- "The Log: What every software engineer should know about real-time data's unifying abstraction" by Jay Kreps
-- "Dynamo: Amazon's Highly Available Key-value Store" by DeCandia et al.
-
-### Tools
-- **Kafka**: Distributed streaming platform
-- **Cassandra**: Distributed NoSQL database
-- **PostgreSQL**: Relational database with WAL
-- **HikariCP**: JDBC connection pool
-
-### Standards
-- **ACID**: Database transaction properties
-- **WAL**: Write-ahead logging standard
-- **LSM**: Log-structured merge trees
+| | Choreography | Orchestration |
+|:---|:---|:---|
+| **How** | Services react to events; no central coordinator | Central Saga orchestrator drives each step |
+| **Coupling** | Low — services only know event schemas | Medium — orchestrator knows all participants |
+| **Observability** | Hard — flow distributed across services | Easy — single orchestrator tracks state |
+| **Failure handling** | Each service must know all compensation logic | Orchestrator centralizes failure logic |
+| **Best for** | Simple 2–3 step flows | Complex multi-step flows with many failure modes |
 
 ---
 
-## Best Practices
+## Observability for Write Systems
 
-### Write Optimization
-1. Use async writes when possible
-2. Batch writes to reduce round trips
-3. Implement proper connection pooling
-4. Use WAL for durability
-5. Monitor write performance
+Metrics every write-heavy service must expose:
 
-### Sharding
-1. Choose appropriate shard key
-2. Use consistent hashing for rebalancing
-3. Implement cross-shard transaction handling
-4. Monitor shard distribution
-5. Plan for shard rebalancing
+```java
+@Component
+public class WriteMetrics {
 
-### Idempotency
-1. Use idempotency keys
-2. Implement retry logic
-3. Handle duplicate requests gracefully
-4. Monitor duplicate rates
-5. Document idempotency behavior
+    private final MeterRegistry registry;
+    private final Timer writeLatencyTimer;
+    private final Counter writesTotal;
+    private final Counter writeFailures;
+    private final DistributionSummary batchSizeHistogram;
 
-### Error Handling
-1. Implement retry with exponential backoff
-2. Use dead letter queues
-3. Implement compensation transactions
-4. Monitor error rates
-5. Alert on critical failures
+    public WriteMetrics(MeterRegistry registry) {
+        this.registry = registry;
+        this.writeLatencyTimer = Timer.builder("db.write.latency")
+            .description("End-to-end write latency including connection wait")
+            .percentiles(0.5, 0.95, 0.99, 0.999)
+            .publishPercentileHistogram()
+            .register(registry);
+        this.writesTotal = Counter.builder("db.writes.total").register(registry);
+        this.writeFailures = Counter.builder("db.writes.failed").register(registry);
+        this.batchSizeHistogram = DistributionSummary.builder("db.batch.size")
+            .percentiles(0.5, 0.95, 0.99)
+            .register(registry);
+    }
+}
+```
 
-### Monitoring
-1. Track write throughput
-2. Monitor write latency
-3. Measure write amplification
-4. Track error rates
-5. Monitor resource usage
+**Key SLOs for write systems:**
 
-### Testing
-1. Test write performance under load
-2. Test failure scenarios
-3. Test idempotency
-4. Test cross-shard transactions
-5. Test rebalancing
+| Metric | Warning | Critical |
+|:---|:---|:---|
+| Write p99 latency | > 100ms | > 500ms |
+| Write error rate | > 0.1% | > 1% |
+| Kafka consumer lag | > 10k messages | > 100k messages |
+| DB connection wait p99 | > 50ms | > 200ms |
+| Batch flush failure rate | > 0.01% | > 0.1% |
+| WAL replication lag | > 100MB | > 1GB |
 
-### Security
-1. Validate write permissions
-2. Implement rate limiting
-3. Use encryption for sensitive data
-4. Audit write operations
-5. Implement access controls
+---
+
+## Best Practices for Senior Engineers
+
+1. **Profile before optimizing.** `pg_stat_statements`, async-profiler, and Hikari metrics will tell you what to fix. Architecture changes based on assumptions are expensive.
+
+2. **Append-first schema design.** Build tables as immutable event logs from day one. Adding `updated_at` mutation semantics later is much harder than projecting state from an append-only log.
+
+3. **Sequence strategy over identity.** `SEQUENCE` + `allocationSize` eliminates the Hibernate batch insert limitation and reduces DB round-trips for ID generation.
+
+4. **Tune `synchronous_commit` per transaction class.** Use `SET LOCAL synchronous_commit = off` inside high-throughput, loss-tolerant write transactions. Never apply globally to a mixed workload.
+
+5. **Shard key is forever.** You cannot change a shard key in production without a full data migration. Invest heavily in shard key analysis before going live.
+
+6. **Exactly-once requires idempotent consumers.** `enable.idempotence=true` on the producer prevents broker-level duplicates but not application-level retries. Build idempotent write operations at every consumer.
+
+7. **Rate limit at the perimeter, not in the DB.** Your database should never be the first thing to feel a spike. API Gateway → bounded queue → DB is the correct blast radius containment hierarchy.
+
+8. **Never let 2PC touch your critical path.** The blocking failure mode of 2PC will eventually bring down your write pipeline. Saga + eventual consistency is operationally safer for all non-financial distributed writes.
+
+9. **Batch sizes are empirical, not theoretical.** Start at 500, measure throughput and latency under production load, adjust. The optimal batch size depends on row width, network RTT, and DB CPU — it cannot be calculated.
+
+10. **Design for replay.** Every async write pipeline will have a bug or failure. If your writes are idempotent and your events are in Kafka (with infinite retention or a DLQ), you can always replay and self-heal without data loss.

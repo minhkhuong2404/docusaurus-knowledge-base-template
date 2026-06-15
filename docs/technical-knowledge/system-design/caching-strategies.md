@@ -2469,3 +2469,7 @@ public class OptimizedCacheService {
 3. Implement cache warming
 4. Use efficient data structures
 5. Minimize cache overhead
+
+## See Also
+* **[Scaling Reads](./scaling-reads.md)**: Explore how caching strategies fit into a broader high-scale read architecture.
+

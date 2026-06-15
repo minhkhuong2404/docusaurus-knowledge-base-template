@@ -236,3 +236,6 @@ public List<Order> getRecentOrders() { ... }
 - [NoSQL & Distributed Databases](./nosql-distributed.md)
 - [Transactions & Concurrency](./transactions-concurrency.md)
 - [Backup & Recovery](./backup-recovery.md)
+- [Scaling Reads](../system-design/scaling-reads.md)
+- [Scaling Writes](../system-design/scaling-writes.md)
+

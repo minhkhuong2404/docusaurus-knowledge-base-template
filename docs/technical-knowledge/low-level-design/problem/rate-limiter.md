@@ -364,3 +364,7 @@ end
 - [ ] Applied Strategy pattern for algorithm swappability
 - [ ] Compared algorithm trade-offs (memory, accuracy, burst)
 - [ ] Mentioned distributed approach (Redis Lua scripts or sticky routing)
+
+## See Also
+* **[Rate Limiting Algorithms](../../system-design/rate-limiting-algorithms.md)**: Deep dive into the mathematical models, workflow details, and comparative trade-offs of all core rate-limiting algorithms.
+

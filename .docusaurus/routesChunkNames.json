@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-cbe": {
+  "/-a7d": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-0cc": {
+  "/-ed7": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -2865,6 +2865,10 @@
     "__comp": "df203c0f",
     "__props": "486122aa"
   },
+  "/tags/lsm-cf2": {
+    "__comp": "df203c0f",
+    "__props": "b14b84ef"
+  },
   "/tags/lsm-tree-b94": {
     "__comp": "df203c0f",
     "__props": "47048e29"
@@ -5309,7 +5313,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-50b": {
+  "/-301": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -9284,7 +9288,7 @@
     "__comp": "17896441",
     "content": "1bfd8fec"
   },
-  "/technical-knowledge/elasticsearch/elasticsearch-internals-c78": {
+  "/technical-knowledge/elasticsearch/elasticsearch-internals-9ae": {
     "__comp": "17896441",
     "content": "6a0a5d32"
   },
@@ -9692,7 +9696,7 @@
     "__comp": "17896441",
     "content": "e1e89bb9"
   },
-  "/technical-knowledge/kafka/advanced/kafka-exactly-once-834": {
+  "/technical-knowledge/kafka/advanced/kafka-exactly-once-147": {
     "__comp": "17896441",
     "content": "a8e4316f"
   },
@@ -9956,7 +9960,7 @@
     "__comp": "17896441",
     "content": "c14f6876"
   },
-  "/technical-knowledge/operating-systems/memory-management-442": {
+  "/technical-knowledge/operating-systems/memory-management-aff": {
     "__comp": "17896441",
     "content": "868fe66e"
   },
@@ -9964,7 +9968,7 @@
     "__comp": "17896441",
     "content": "66ff3ddc"
   },
-  "/technical-knowledge/operating-systems/processes-and-threads-b5d": {
+  "/technical-knowledge/operating-systems/processes-and-threads-7e8": {
     "__comp": "17896441",
     "content": "9dd074f3"
   },
@@ -10252,7 +10256,7 @@
     "__comp": "17896441",
     "content": "e6611cec"
   },
-  "/technical-knowledge/system-design/data-consistency-427": {
+  "/technical-knowledge/system-design/data-consistency-d9b": {
     "__comp": "17896441",
     "content": "0098328c"
   },
@@ -10284,7 +10288,7 @@
     "__comp": "17896441",
     "content": "b14a4730"
   },
-  "/technical-knowledge/system-design/long-running-tasks-bde": {
+  "/technical-knowledge/system-design/long-running-tasks-b92": {
     "__comp": "17896441",
     "content": "010e7447"
   },
@@ -10304,13 +10308,17 @@
     "__comp": "17896441",
     "content": "f58357ef"
   },
-  "/technical-knowledge/system-design/outbox-pattern-74e": {
+  "/technical-knowledge/system-design/outbox-pattern-af3": {
     "__comp": "17896441",
     "content": "5223f567"
   },
   "/technical-knowledge/system-design/proximity-search-geospatial-indexes-c61": {
     "__comp": "17896441",
     "content": "929b92a0"
+  },
+  "/technical-knowledge/system-design/rate-limiting-algorithms-b65": {
+    "__comp": "17896441",
+    "content": "cb6f5ebf"
   },
   "/technical-knowledge/system-design/real-time-updates-91a": {
     "__comp": "17896441",
@@ -10320,7 +10328,7 @@
     "__comp": "17896441",
     "content": "36929883"
   },
-  "/technical-knowledge/system-design/saga-pattern-894": {
+  "/technical-knowledge/system-design/saga-pattern-851": {
     "__comp": "17896441",
     "content": "bd0308dc"
   },
@@ -10344,7 +10352,7 @@
     "__comp": "17896441",
     "content": "1d0030f3"
   },
-  "/technical-knowledge/system-design/two-phase-commit-79c": {
+  "/technical-knowledge/system-design/two-phase-commit-728": {
     "__comp": "17896441",
     "content": "4c5a6247"
   },

@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'cbe'),
+    component: ComponentCreator('/', 'a7d'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '0cc'),
+        component: ComponentCreator('/', 'ed7'),
         routes: [
           {
             path: '/tags',
@@ -3571,6 +3571,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/lsm',
+            component: ComponentCreator('/tags/lsm', 'cf2'),
+            exact: true
+          },
+          {
             path: '/tags/lsm-tree',
             component: ComponentCreator('/tags/lsm-tree', 'b94'),
             exact: true
@@ -6627,7 +6632,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '50b'),
+            component: ComponentCreator('/', '301'),
             routes: [
               {
                 path: '/aws',
@@ -12588,7 +12593,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/elasticsearch/elasticsearch-internals',
-                component: ComponentCreator('/technical-knowledge/elasticsearch/elasticsearch-internals', 'c78'),
+                component: ComponentCreator('/technical-knowledge/elasticsearch/elasticsearch-internals', '9ae'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13200,7 +13205,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/advanced/kafka-exactly-once',
-                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-exactly-once', '834'),
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-exactly-once', '147'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13596,7 +13601,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/operating-systems/memory-management',
-                component: ComponentCreator('/technical-knowledge/operating-systems/memory-management', '442'),
+                component: ComponentCreator('/technical-knowledge/operating-systems/memory-management', 'aff'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13608,7 +13613,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/operating-systems/processes-and-threads',
-                component: ComponentCreator('/technical-knowledge/operating-systems/processes-and-threads', 'b5d'),
+                component: ComponentCreator('/technical-knowledge/operating-systems/processes-and-threads', '7e8'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14040,7 +14045,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/data-consistency',
-                component: ComponentCreator('/technical-knowledge/system-design/data-consistency', '427'),
+                component: ComponentCreator('/technical-knowledge/system-design/data-consistency', 'd9b'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14088,7 +14093,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/long-running-tasks',
-                component: ComponentCreator('/technical-knowledge/system-design/long-running-tasks', 'bde'),
+                component: ComponentCreator('/technical-knowledge/system-design/long-running-tasks', 'b92'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14118,13 +14123,19 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/outbox-pattern',
-                component: ComponentCreator('/technical-knowledge/system-design/outbox-pattern', '74e'),
+                component: ComponentCreator('/technical-knowledge/system-design/outbox-pattern', 'af3'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/proximity-search-geospatial-indexes',
                 component: ComponentCreator('/technical-knowledge/system-design/proximity-search-geospatial-indexes', 'c61'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/rate-limiting-algorithms',
+                component: ComponentCreator('/technical-knowledge/system-design/rate-limiting-algorithms', 'b65'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14142,7 +14153,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/saga-pattern',
-                component: ComponentCreator('/technical-knowledge/system-design/saga-pattern', '894'),
+                component: ComponentCreator('/technical-knowledge/system-design/saga-pattern', '851'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14178,7 +14189,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/two-phase-commit',
-                component: ComponentCreator('/technical-knowledge/system-design/two-phase-commit', '79c'),
+                component: ComponentCreator('/technical-knowledge/system-design/two-phase-commit', '728'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

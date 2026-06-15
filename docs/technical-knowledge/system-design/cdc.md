@@ -641,3 +641,7 @@ public class DebeziumHealthIndicator implements HealthIndicator {
 - [Martin Fowler — Strangler Fig Pattern](https://martinfowler.com/bliki/StranglerFigApplication.html) — CDC is a key enabler for this migration pattern.
 - [Confluent — The Log: What Every Software Engineer Should Know](https://engineering.linkedin.com/distributed-systems/log-what-every-software-engineer-should-know-about-real-time-datas-unifying) — Jay Kreps' foundational essay on the database transaction log as a unifying abstraction.
 - [PostgreSQL Logical Replication](https://www.postgresql.org/docs/current/logical-replication.html) — Deep dive into the WAL mechanism that powers Debezium for Postgres.
+
+## See Also
+* **[Scaling Reads](./scaling-reads.md)**: Explore CDC-based cache invalidation and database read scaling architectures.
+* **[Scaling Writes](./scaling-writes.md)**: Explore WAL (Write-Ahead Log) segment lifecycles and recovery pathways.

@@ -6260,6 +6260,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/rate-limiting-algorithms",
+              "path": "/technical-knowledge/system-design/rate-limiting-algorithms",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/real-time-updates",
               "path": "/technical-knowledge/system-design/real-time-updates",
               "sidebar": "tutorialSidebar"

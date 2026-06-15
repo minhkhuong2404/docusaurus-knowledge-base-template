@@ -530,3 +530,6 @@ Most teams use option 1 with `tenant_id` as part of the partition key for Kafka,
 - [Two-Phase Commit (2PC)](./two-phase-commit.md) — Synchronous alternative to understand the trade-offs
 - [Change Data Capture (CDC)](./cdc.md) — The broader CDC pattern that Debezium implements
 - [Dead Letter Queue (DLQ)](./dead-letter-queue.md) — Handling permanently failed relay events
+- [Scaling Reads](./scaling-reads.md) — How outbox pattern / event-driven invalidation keeps caches consistent with database state
+- [Scaling Writes](./scaling-writes.md) — Using async write pipelines and transactional deduplication to scale ingestion
+

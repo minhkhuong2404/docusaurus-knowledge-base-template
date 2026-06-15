@@ -451,3 +451,6 @@ sequenceDiagram
 - [Saga Pattern](./saga-pattern.md) — Eventual consistency alternative to 2PC for microservices
 - [Transactional Outbox Pattern](./outbox-pattern.md) — Reliable event publishing without distributed transactions
 - [Data Consistency Deep Dive](./data-consistency.md) — Isolation levels, MVCC, WAL internals
+- [Scaling Reads](./scaling-reads.md) — Understand how replication lag and data consistency relate to scaling read throughput
+- [Scaling Writes](./scaling-writes.md) — Explore sharding, partitioning, write pipelines, and how distributed transactions fit into write-scaling architectures
+

@@ -283,3 +283,6 @@ Used by: **Redshift, BigQuery, ClickHouse, Parquet, Apache ORC**
 - [Indexing & Query Optimization](./indexing-query-optimization.md)
 - [Performance & Monitoring](./performance-monitoring.md)
 - [Backup & Recovery](./backup-recovery.md)
+- [Scaling Reads](../system-design/scaling-reads.md)
+- [Scaling Writes](../system-design/scaling-writes.md)
+
