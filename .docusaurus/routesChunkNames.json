@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-a7d": {
+  "/-19c": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-ed7": {
+  "/-233": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -5313,7 +5313,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-301": {
+  "/-fc7": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -6352,7 +6352,7 @@
     "__comp": "17896441",
     "content": "30a60d4b"
   },
-  "/technical-knowledge/database/replication-partitioning-477": {
+  "/technical-knowledge/database/replication-partitioning-c90": {
     "__comp": "17896441",
     "content": "353f2454"
   },
@@ -6360,7 +6360,7 @@
     "__comp": "17896441",
     "content": "008ae538"
   },
-  "/technical-knowledge/database/storage-engines-data-structures-6b5": {
+  "/technical-knowledge/database/storage-engines-data-structures-152": {
     "__comp": "17896441",
     "content": "c28018e1"
   },
@@ -9876,7 +9876,7 @@
     "__comp": "17896441",
     "content": "70636b35"
   },
-  "/technical-knowledge/low-level-design/problem/rate-limiter-1d5": {
+  "/technical-knowledge/low-level-design/problem/rate-limiter-8cb": {
     "__comp": "17896441",
     "content": "5e46a3e1"
   },
@@ -10028,7 +10028,7 @@
     "__comp": "17896441",
     "content": "9c77e95c"
   },
-  "/technical-knowledge/redis/redis-rate-limiting-01d": {
+  "/technical-knowledge/redis/redis-rate-limiting-ddb": {
     "__comp": "17896441",
     "content": "3d3827a7"
   },
@@ -10228,7 +10228,7 @@
     "__comp": "17896441",
     "content": "ce0d883d"
   },
-  "/technical-knowledge/system-design/caching-strategies-c08": {
+  "/technical-knowledge/system-design/caching-strategies-f31": {
     "__comp": "17896441",
     "content": "724987fe"
   },
@@ -10240,7 +10240,7 @@
     "__comp": "17896441",
     "content": "57eb6c90"
   },
-  "/technical-knowledge/system-design/cdc-930": {
+  "/technical-knowledge/system-design/cdc-986": {
     "__comp": "17896441",
     "content": "8c140918"
   },
@@ -10248,11 +10248,11 @@
     "__comp": "17896441",
     "content": "6efb14ae"
   },
-  "/technical-knowledge/system-design/consistent-hashing-deep-dive-75a": {
+  "/technical-knowledge/system-design/consistent-hashing-deep-dive-af0": {
     "__comp": "17896441",
     "content": "65c13a58"
   },
-  "/technical-knowledge/system-design/cqrs-8c6": {
+  "/technical-knowledge/system-design/cqrs-467": {
     "__comp": "17896441",
     "content": "e6611cec"
   },
@@ -10272,7 +10272,7 @@
     "__comp": "17896441",
     "content": "a12e521a"
   },
-  "/technical-knowledge/system-design/handling-contention-74d": {
+  "/technical-knowledge/system-design/handling-contention-c14": {
     "__comp": "17896441",
     "content": "89400898"
   },
@@ -10292,7 +10292,7 @@
     "__comp": "17896441",
     "content": "010e7447"
   },
-  "/technical-knowledge/system-design/message-queues-41d": {
+  "/technical-knowledge/system-design/message-queues-98e": {
     "__comp": "17896441",
     "content": "3940c236"
   },
@@ -10308,7 +10308,7 @@
     "__comp": "17896441",
     "content": "f58357ef"
   },
-  "/technical-knowledge/system-design/outbox-pattern-af3": {
+  "/technical-knowledge/system-design/outbox-pattern-589": {
     "__comp": "17896441",
     "content": "5223f567"
   },
@@ -10316,7 +10316,7 @@
     "__comp": "17896441",
     "content": "929b92a0"
   },
-  "/technical-knowledge/system-design/rate-limiting-algorithms-b65": {
+  "/technical-knowledge/system-design/rate-limiting-algorithms-23e": {
     "__comp": "17896441",
     "content": "cb6f5ebf"
   },
@@ -10324,7 +10324,7 @@
     "__comp": "17896441",
     "content": "ec5f7116"
   },
-  "/technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway-6ff": {
+  "/technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway-187": {
     "__comp": "17896441",
     "content": "36929883"
   },
@@ -10332,11 +10332,11 @@
     "__comp": "17896441",
     "content": "bd0308dc"
   },
-  "/technical-knowledge/system-design/scaling-reads-eb6": {
+  "/technical-knowledge/system-design/scaling-reads-5ea": {
     "__comp": "17896441",
     "content": "382009e9"
   },
-  "/technical-knowledge/system-design/scaling-writes-ba9": {
+  "/technical-knowledge/system-design/scaling-writes-70e": {
     "__comp": "17896441",
     "content": "91aa5927"
   },
@@ -10348,11 +10348,11 @@
     "__comp": "17896441",
     "content": "e8a6b3e1"
   },
-  "/technical-knowledge/system-design/sharding-partitioning-c2d": {
+  "/technical-knowledge/system-design/sharding-partitioning-374": {
     "__comp": "17896441",
     "content": "1d0030f3"
   },
-  "/technical-knowledge/system-design/two-phase-commit-728": {
+  "/technical-knowledge/system-design/two-phase-commit-bd2": {
     "__comp": "17896441",
     "content": "4c5a6247"
   },
