@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'd6c'),
+    component: ComponentCreator('/', 'ec3'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'b7b'),
+        component: ComponentCreator('/', '748'),
         routes: [
           {
             path: '/tags',
@@ -1438,6 +1438,11 @@ export default [
           {
             path: '/tags/conventional-commits',
             component: ComponentCreator('/tags/conventional-commits', '39e'),
+            exact: true
+          },
+          {
+            path: '/tags/cookies',
+            component: ComponentCreator('/tags/cookies', '5f0'),
             exact: true
           },
           {
@@ -6632,7 +6637,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '53b'),
+            component: ComponentCreator('/', '498'),
             routes: [
               {
                 path: '/aws',
@@ -13792,6 +13797,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/security/web-security-fundamentals',
+                component: ComponentCreator('/technical-knowledge/security/web-security-fundamentals', '9fe'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/security/web-vulnerabilities',
                 component: ComponentCreator('/technical-knowledge/security/web-vulnerabilities', '267'),
                 exact: true,
@@ -14135,7 +14146,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/rate-limiting-algorithms',
-                component: ComponentCreator('/technical-knowledge/system-design/rate-limiting-algorithms', '23e'),
+                component: ComponentCreator('/technical-knowledge/system-design/rate-limiting-algorithms', '83d'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

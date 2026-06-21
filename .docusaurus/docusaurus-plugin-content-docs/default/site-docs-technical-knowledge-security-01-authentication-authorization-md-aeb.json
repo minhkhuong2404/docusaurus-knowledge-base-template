@@ -100,7 +100,7 @@
     "permalink": "/security"
   },
   "next": {
-    "title": "Cookies, Sessions & JWT",
-    "permalink": "/technical-knowledge/security/cookies-vs-sessions-vs-jwt"
+    "title": "Web Security Fundamentals",
+    "permalink": "/technical-knowledge/security/web-security-fundamentals"
   }
 }

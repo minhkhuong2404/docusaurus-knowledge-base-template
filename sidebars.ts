@@ -490,6 +490,7 @@ const sidebars: SidebarsConfig = {
 					collapsed: true,
 					items: [
 						'technical-knowledge/security/authentication-authorization',
+						'technical-knowledge/security/web-security-fundamentals',
 						'technical-knowledge/security/cookies-vs-sessions-vs-jwt',
 						'technical-knowledge/security/web-vulnerabilities',
 						'technical-knowledge/security/cryptography-secure-design',

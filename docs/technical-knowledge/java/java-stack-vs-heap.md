@@ -334,7 +334,7 @@ public String buildReport(List<String> lines) {
 
 ### The Complete JVM Memory Model
 
-The stack and heap are just two parts of a larger picture:
+The stack and heap are just two parts of a larger picture. For a comprehensive, detailed architectural diagram illustrating the differences and relationships between On-Heap and Off-Heap (Native) memory regions, see the [JVM Memory Layout Section](./java-jvm.md#2-on-heap-vs-off-heap-memory-layout).
 
 ```
 JVM Memory Layout

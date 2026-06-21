@@ -807,7 +807,7 @@ watch -n1 'grep -E "MemAvailable|AnonPages|Cached|SwapCached|Dirty|HugePages" /p
 
 ## JVM and Virtual Memory
 
-The JVM has its own memory model layered on top of Linux virtual memory. Understanding the interaction prevents misdiagnosis of memory issues.
+The JVM has its own memory model layered on top of Linux virtual memory. Understanding the interaction prevents misdiagnosis of memory issues. For a detailed, comprehensive block diagram illustrating the JVM's On-Heap vs. Off-Heap/Native Memory regions, see the [JVM Memory Layout Section](../java/java-jvm.md#2-on-heap-vs-off-heap-memory-layout).
 
 ### JVM Memory Regions and OS Mapping
 

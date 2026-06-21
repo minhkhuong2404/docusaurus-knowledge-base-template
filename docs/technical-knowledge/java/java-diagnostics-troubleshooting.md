@@ -104,7 +104,7 @@ Open the `.hprof` file in MAT:
 
 ## 4. Off-Heap Memory Leak Troubleshooting
 
-Sometimes, memory leaks happen outside the heap, causing the container process to get killed by the OS (OOM Killer) even though heap usage is low.
+Sometimes, memory leaks happen outside the heap, causing the container process to get killed by the OS (OOM Killer) even though heap usage is low. For a detailed diagram and structural overview of where these Native/Off-Heap components reside, see the [JVM Memory Layout Section](./java-jvm.md#2-on-heap-vs-off-heap-memory-layout).
 
 ### Diagnostic Steps
 1. **Enable Native Memory Tracking (NMT):** Start your JVM with NMT enabled:

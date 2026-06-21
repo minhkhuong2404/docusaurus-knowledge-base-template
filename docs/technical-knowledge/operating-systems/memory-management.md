@@ -645,6 +645,8 @@ java -XX:+UseLargePages -XX:LargePageSizeInBytes=2m -jar app.jar
 
 ### JVM memory areas
 
+For a comprehensive architectural layout and detailed explanation of JVM memory architecture (On-Heap vs. Off-Heap/Native Memory), refer to the [JVM Internals Guide](../java/java-jvm.md#2-on-heap-vs-off-heap-memory-layout).
+
 ```
 JVM Process (example: -Xmx4g)
 ┌───────────────────────────────────────────────────────────────┐

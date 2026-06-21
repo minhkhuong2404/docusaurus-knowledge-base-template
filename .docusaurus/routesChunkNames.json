@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-d6c": {
+  "/-ec3": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-b7b": {
+  "/-748": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -1160,6 +1160,10 @@
   "/tags/conventional-commits-39e": {
     "__comp": "df203c0f",
     "__props": "4ca9d798"
+  },
+  "/tags/cookies-5f0": {
+    "__comp": "df203c0f",
+    "__props": "365e0060"
   },
   "/tags/core-7b7": {
     "__comp": "df203c0f",
@@ -5313,7 +5317,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-53b": {
+  "/-498": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -10088,6 +10092,10 @@
     "__comp": "17896441",
     "content": "3488c5df"
   },
+  "/technical-knowledge/security/web-security-fundamentals-9fe": {
+    "__comp": "17896441",
+    "content": "84fac450"
+  },
   "/technical-knowledge/security/web-vulnerabilities-267": {
     "__comp": "17896441",
     "content": "49b42f03"
@@ -10316,7 +10324,7 @@
     "__comp": "17896441",
     "content": "929b92a0"
   },
-  "/technical-knowledge/system-design/rate-limiting-algorithms-23e": {
+  "/technical-knowledge/system-design/rate-limiting-algorithms-83d": {
     "__comp": "17896441",
     "content": "cb6f5ebf"
   },

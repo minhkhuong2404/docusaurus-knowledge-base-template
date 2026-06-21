@@ -5965,6 +5965,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/security/web-security-fundamentals",
+              "path": "/technical-knowledge/security/web-security-fundamentals",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/security/web-vulnerabilities",
               "path": "/technical-knowledge/security/web-vulnerabilities",
               "sidebar": "tutorialSidebar"
