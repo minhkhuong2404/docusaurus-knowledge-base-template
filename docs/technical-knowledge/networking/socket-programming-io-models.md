@@ -275,6 +275,8 @@ public class MyBusinessHandler extends SimpleChannelInboundHandler<FullHttpReque
 
 ---
 
+> 📘 **For a complete guide** on Netty's EventLoop internals, how it compares to Tomcat, and production configuration, see **[Thread Pools, Netty, Tomcat & HikariCP](../java/thread-pools-and-connection-pooling)**.
+
 ## Spring WebFlux (Reactive I/O)
 
 Spring WebFlux uses Netty and Project Reactor for non-blocking HTTP.

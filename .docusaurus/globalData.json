@@ -5455,6 +5455,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/java/thread-pools-and-connection-pooling",
+              "path": "/technical-knowledge/java/thread-pools-and-connection-pooling",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/kafka/advanced/exactly-once-vs-dedup",
               "path": "/technical-knowledge/kafka/advanced/exactly-once-vs-dedup",
               "sidebar": "tutorialSidebar"

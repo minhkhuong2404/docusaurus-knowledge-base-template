@@ -570,6 +570,8 @@ public class DatabaseConfig {
 
 HikariCP handles this gracefully — virtual threads waiting for a connection **unmount** (free the carrier), so thousands of virtual threads can safely queue for 50 connections without wasting OS threads.
 
+> 📘 **For a complete guide** on how thread pools, Tomcat, Netty, and HikariCP relate and how to size them in production, see **[Thread Pools, Netty, Tomcat & HikariCP](./thread-pools-and-connection-pooling)**.
+
 ---
 
 ## 🧪 Testing Virtual Threads

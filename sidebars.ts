@@ -39,7 +39,8 @@ const sidebars: SidebarsConfig = {
 							collapsed: true,
 							items: [
 								'technical-knowledge/java/java-concurrency',
-								'technical-knowledge/java/java-jmm-memory-model'
+								'technical-knowledge/java/java-jmm-memory-model',
+								'technical-knowledge/java/thread-pools-and-connection-pooling'
 							]
 						},
 						{

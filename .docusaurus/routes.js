@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'ec3'),
+    component: ComponentCreator('/', '9ec'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '748'),
+        component: ComponentCreator('/', '737'),
         routes: [
           {
             path: '/tags',
@@ -1328,6 +1328,11 @@ export default [
           {
             path: '/tags/connection-migration',
             component: ComponentCreator('/tags/connection-migration', 'f20'),
+            exact: true
+          },
+          {
+            path: '/tags/connection-pool',
+            component: ComponentCreator('/tags/connection-pool', 'dfb'),
             exact: true
           },
           {
@@ -6136,6 +6141,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/tomcat',
+            component: ComponentCreator('/tags/tomcat', '68b'),
+            exact: true
+          },
+          {
             path: '/tags/tool-use',
             component: ComponentCreator('/tags/tool-use', 'e24'),
             exact: true
@@ -6637,7 +6647,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '498'),
+            component: ComponentCreator('/', '1cb'),
             routes: [
               {
                 path: '/aws',
@@ -13120,7 +13130,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-diagnostics-troubleshooting',
-                component: ComponentCreator('/technical-knowledge/java/java-diagnostics-troubleshooting', 'a75'),
+                component: ComponentCreator('/technical-knowledge/java/java-diagnostics-troubleshooting', 'd44'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13150,7 +13160,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-jvm',
-                component: ComponentCreator('/technical-knowledge/java/java-jvm', 'baf'),
+                component: ComponentCreator('/technical-knowledge/java/java-jvm', '58d'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13180,7 +13190,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-stack-vs-heap',
-                component: ComponentCreator('/technical-knowledge/java/java-stack-vs-heap', 'e74'),
+                component: ComponentCreator('/technical-knowledge/java/java-stack-vs-heap', '310'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13193,6 +13203,12 @@ export default [
               {
                 path: '/technical-knowledge/java/java-virtual-threads',
                 component: ComponentCreator('/technical-knowledge/java/java-virtual-threads', 'de7'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/java/thread-pools-and-connection-pooling',
+                component: ComponentCreator('/technical-knowledge/java/thread-pools-and-connection-pooling', 'ca5'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13606,7 +13622,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/operating-systems/memory-management',
-                component: ComponentCreator('/technical-knowledge/operating-systems/memory-management', 'aff'),
+                component: ComponentCreator('/technical-knowledge/operating-systems/memory-management', '108'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13630,7 +13646,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/operating-systems/virtual-memory-deep-dive',
-                component: ComponentCreator('/technical-knowledge/operating-systems/virtual-memory-deep-dive', '7d7'),
+                component: ComponentCreator('/technical-knowledge/operating-systems/virtual-memory-deep-dive', '0f7'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13798,7 +13814,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/security/web-security-fundamentals',
-                component: ComponentCreator('/technical-knowledge/security/web-security-fundamentals', '9fe'),
+                component: ComponentCreator('/technical-knowledge/security/web-security-fundamentals', '4d4'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

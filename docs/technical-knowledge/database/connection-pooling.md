@@ -14,6 +14,7 @@ import TabItem from '@theme/TabItem';
 :::info[Who this guide is for]
 - **New learners** — start at [What is a Database Connection?](#what-is-a-database-connection) and [What is a Connection Pool?](#what-is-a-connection-pool) to understand why this problem exists and how pools solve it.
 - **Senior engineers** — jump to [Pool Sizing](#pool-sizing), [Failure Modes](#failure-modes), [PgBouncer](#pgbouncer), [RDS Proxy](#rds-proxy-for-serverless), or [Production Observability](#monitoring--observability).
+- **Cross-cutting context** — see **[Thread Pools, Netty, Tomcat & HikariCP](../java/thread-pools-and-connection-pooling)** for how connection pools relate to Tomcat threads, Netty EventLoops, and production sizing.
 :::
 
 ---

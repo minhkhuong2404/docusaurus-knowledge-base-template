@@ -316,7 +316,7 @@ server:
 
 ### Connection Pool Tuning (HikariCP)
 
-For detailed guidelines on pool sizing, parameter details, and starvation patterns, see the **[Database Connection Pooling](../database/connection-pooling.md)** guide.
+For detailed guidelines on pool sizing, parameter details, and starvation patterns, see the **[Database Connection Pooling](../database/connection-pooling.md)** guide. For how HikariCP relates to Tomcat threads, Netty, and production sizing, see **[Thread Pools, Netty, Tomcat & HikariCP](../java/thread-pools-and-connection-pooling.md)**.
 
 ```yaml
 spring:

@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-ec3": {
+  "/-9ec": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-748": {
+  "/-737": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -1072,6 +1072,10 @@
   "/tags/connection-migration-f20": {
     "__comp": "df203c0f",
     "__props": "dd43ff77"
+  },
+  "/tags/connection-pool-dfb": {
+    "__comp": "df203c0f",
+    "__props": "660b75e2"
   },
   "/tags/connection-pooling-8d4": {
     "__comp": "df203c0f",
@@ -4917,6 +4921,10 @@
     "__comp": "df203c0f",
     "__props": "6cbbeaf9"
   },
+  "/tags/tomcat-68b": {
+    "__comp": "df203c0f",
+    "__props": "3d94d7a4"
+  },
   "/tags/tool-use-e24": {
     "__comp": "df203c0f",
     "__props": "ab3a4457"
@@ -5317,7 +5325,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-498": {
+  "/-1cb": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -9640,7 +9648,7 @@
     "__comp": "17896441",
     "content": "ee229027"
   },
-  "/technical-knowledge/java/java-diagnostics-troubleshooting-a75": {
+  "/technical-knowledge/java/java-diagnostics-troubleshooting-d44": {
     "__comp": "17896441",
     "content": "e89fd18d"
   },
@@ -9660,7 +9668,7 @@
     "__comp": "17896441",
     "content": "331d11cc"
   },
-  "/technical-knowledge/java/java-jvm-baf": {
+  "/technical-knowledge/java/java-jvm-58d": {
     "__comp": "17896441",
     "content": "2fb67458"
   },
@@ -9680,7 +9688,7 @@
     "__comp": "17896441",
     "content": "adb02301"
   },
-  "/technical-knowledge/java/java-stack-vs-heap-e74": {
+  "/technical-knowledge/java/java-stack-vs-heap-310": {
     "__comp": "17896441",
     "content": "77dd0904"
   },
@@ -9691,6 +9699,10 @@
   "/technical-knowledge/java/java-virtual-threads-de7": {
     "__comp": "17896441",
     "content": "dd9695a1"
+  },
+  "/technical-knowledge/java/thread-pools-and-connection-pooling-ca5": {
+    "__comp": "17896441",
+    "content": "89378099"
   },
   "/technical-knowledge/kafka/advanced/exactly-once-vs-dedup-1ba": {
     "__comp": "17896441",
@@ -9964,7 +9976,7 @@
     "__comp": "17896441",
     "content": "c14f6876"
   },
-  "/technical-knowledge/operating-systems/memory-management-aff": {
+  "/technical-knowledge/operating-systems/memory-management-108": {
     "__comp": "17896441",
     "content": "868fe66e"
   },
@@ -9980,7 +9992,7 @@
     "__comp": "17896441",
     "content": "53d70aa9"
   },
-  "/technical-knowledge/operating-systems/virtual-memory-deep-dive-7d7": {
+  "/technical-knowledge/operating-systems/virtual-memory-deep-dive-0f7": {
     "__comp": "17896441",
     "content": "2d19a7f5"
   },
@@ -10092,7 +10104,7 @@
     "__comp": "17896441",
     "content": "3488c5df"
   },
-  "/technical-knowledge/security/web-security-fundamentals-9fe": {
+  "/technical-knowledge/security/web-security-fundamentals-4d4": {
     "__comp": "17896441",
     "content": "84fac450"
   },

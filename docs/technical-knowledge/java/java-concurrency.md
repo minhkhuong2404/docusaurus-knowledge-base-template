@@ -573,6 +573,8 @@ scheduler.scheduleWithFixedDelay(() -> cleanupTempFiles(), 0, 30, TimeUnit.SECON
 Always explicitly configure `ThreadPoolExecutor` to control queue sizes and thread limits.
 :::
 
+> 📘 **For a complete guide** on how thread pools relate to Tomcat, Netty, HikariCP, and production sizing, see **[Thread Pools, Netty, Tomcat & HikariCP](./thread-pools-and-connection-pooling)**.
+
 ---
 
 ## 6. The Fork/Join Framework
