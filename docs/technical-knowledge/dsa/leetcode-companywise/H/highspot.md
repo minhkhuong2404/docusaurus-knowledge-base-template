@@ -2,4 +2,5 @@
 
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
-| 227 | https://leetcode.com/problems/basic-calculator-ii | Basic Calculator II | Medium | 46.6% | 100.0% |
+| 227 | https://leetcode.com/problems/basic-calculator-ii | Basic Calculator II | Medium | 46.9% | 100.0% |
+

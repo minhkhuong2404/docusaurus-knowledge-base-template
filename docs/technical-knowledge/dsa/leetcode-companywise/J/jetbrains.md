@@ -1,5 +1,0 @@
-# Jetbrains LeetCode Questions
-
-| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
-|---|---|---|---|---|---|
-| 70 | https://leetcode.com/problems/climbing-stairs | Climbing Stairs | Easy | 53.9% | 100.0% |

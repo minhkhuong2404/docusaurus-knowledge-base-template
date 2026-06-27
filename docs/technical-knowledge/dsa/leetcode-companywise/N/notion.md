@@ -2,4 +2,5 @@
 
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
-| 68 | https://leetcode.com/problems/text-justification | Text Justification | Hard | 50.4% | 100.0% |
+| 68 | https://leetcode.com/problems/text-justification | Text Justification | Hard | 51.2% | 100.0% |
+

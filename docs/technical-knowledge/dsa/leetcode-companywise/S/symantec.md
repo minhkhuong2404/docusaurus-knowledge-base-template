@@ -2,4 +2,5 @@
 
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
-| 19 | https://leetcode.com/problems/remove-nth-node-from-end-of-list | Remove Nth Node From End of List | Medium | 51.0% | 100.0% |
+| 19 | https://leetcode.com/problems/remove-nth-node-from-end-of-list | Remove Nth Node From End of List | Medium | 51.6% | 100.0% |
+

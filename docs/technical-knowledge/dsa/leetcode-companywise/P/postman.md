@@ -2,4 +2,5 @@
 
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
-| 1416 | https://leetcode.com/problems/restore-the-array | Restore The Array | Hard | 46.8% | 100.0% |
+| 1416 | https://leetcode.com/problems/restore-the-array | Restore The Array | Hard | 46.7% | 100.0% |
+

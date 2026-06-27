@@ -1,5 +1,0 @@
-# Junglee Games LeetCode Questions
-
-| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
-|---|---|---|---|---|---|
-| 1 | https://leetcode.com/problems/two-sum | Two Sum | Easy | 57.1% | 100.0% |

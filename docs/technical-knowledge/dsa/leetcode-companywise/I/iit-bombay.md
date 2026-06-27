@@ -3,3 +3,4 @@
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
 | 861 | https://leetcode.com/problems/score-after-flipping-matrix | Score After Flipping Matrix | Medium | 80.3% | 100.0% |
+

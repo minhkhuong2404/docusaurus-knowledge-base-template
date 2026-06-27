@@ -2,4 +2,5 @@
 
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
-| 557 | https://leetcode.com/problems/reverse-words-in-a-string-iii | Reverse Words in a String III | Easy | 83.9% | 100.0% |
+| 557 | https://leetcode.com/problems/reverse-words-in-a-string-iii | Reverse Words in a String III | Easy | 84.0% | 100.0% |
+

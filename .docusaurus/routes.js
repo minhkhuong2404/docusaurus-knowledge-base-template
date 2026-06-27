@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '9ec'),
+    component: ComponentCreator('/', '526'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '737'),
+        component: ComponentCreator('/', '635'),
         routes: [
           {
             path: '/tags',
@@ -4021,6 +4021,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/object-class',
+            component: ComponentCreator('/tags/object-class', '857'),
+            exact: true
+          },
+          {
             path: '/tags/object-lambda',
             component: ComponentCreator('/tags/object-lambda', 'f48'),
             exact: true
@@ -4328,6 +4333,11 @@ export default [
           {
             path: '/tags/parallel-streams',
             component: ComponentCreator('/tags/parallel-streams', '3ec'),
+            exact: true
+          },
+          {
+            path: '/tags/parallelism',
+            component: ComponentCreator('/tags/parallelism', '118'),
             exact: true
           },
           {
@@ -6647,7 +6657,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '1cb'),
+            component: ComponentCreator('/', '509'),
             routes: [
               {
                 path: '/aws',
@@ -8138,7 +8148,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/connection-pooling',
-                component: ComponentCreator('/technical-knowledge/database/connection-pooling', '18c'),
+                component: ComponentCreator('/technical-knowledge/database/connection-pooling', 'ac4'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -8773,14 +8783,8 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/dsa/leetcode-companywise/A/applovin',
-                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/A/applovin', '6cd'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/dsa/leetcode-companywise/A/aqr-capital-management-llc',
-                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/A/aqr-capital-management-llc', '44b'),
+                path: '/technical-knowledge/dsa/leetcode-companywise/A/aqr-capital-management',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/A/aqr-capital-management', '2a4'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -8815,12 +8819,6 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/dsa/leetcode-companywise/A/at-t',
-                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/A/at-t', 'fb0'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
                 path: '/technical-knowledge/dsa/leetcode-companywise/A/athenahealth',
                 component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/A/athenahealth', '9d6'),
                 exact: true,
@@ -8829,6 +8827,12 @@ export default [
               {
                 path: '/technical-knowledge/dsa/leetcode-companywise/A/atlassian',
                 component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/A/atlassian', 'fc2'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/A/att',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/A/att', '2cc'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -8913,6 +8917,12 @@ export default [
               {
                 path: '/technical-knowledge/dsa/leetcode-companywise/B/bending-spoons',
                 component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/B/bending-spoons', 'ced'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/B/bill-com',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/B/bill-com', 'f52'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -9259,6 +9269,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/dsa/leetcode-companywise/C/coditas',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/C/coditas', '3dc'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/dsa/leetcode-companywise/C/cognizant',
                 component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/C/cognizant', '918'),
                 exact: true,
@@ -9345,12 +9361,6 @@ export default [
               {
                 path: '/technical-knowledge/dsa/leetcode-companywise/C/cred',
                 component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/C/cred', 'ab5'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/dsa/leetcode-companywise/C/credit-karma',
-                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/C/credit-karma', 'dca'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -9505,12 +9515,6 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/dsa/leetcode-companywise/D/didi',
-                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/D/didi', '4d9'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
                 path: '/technical-knowledge/dsa/leetcode-companywise/D/directi',
                 component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/D/directi', '621'),
                 exact: true,
@@ -9637,6 +9641,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/dsa/leetcode-companywise/E/envoy',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/E/envoy', 'a12'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/dsa/leetcode-companywise/E/epam-systems',
                 component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/E/epam-systems', 'fd5'),
                 exact: true,
@@ -9679,6 +9689,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/dsa/leetcode-companywise/E/exl',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/E/exl', 'bbb'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/dsa/leetcode-companywise/E/expedia',
                 component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/E/expedia', 'ab9'),
                 exact: true,
@@ -9699,12 +9715,6 @@ export default [
               {
                 path: '/technical-knowledge/dsa/leetcode-companywise/F/factset',
                 component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/F/factset', '7fe'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/dsa/leetcode-companywise/F/factwise',
-                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/F/factwise', '909'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -9801,12 +9811,6 @@ export default [
               {
                 path: '/technical-knowledge/dsa/leetcode-companywise/F/flipkart',
                 component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/F/flipkart', '1f2'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/dsa/leetcode-companywise/F/ford',
-                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/F/ford', '788'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -9919,12 +9923,6 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/dsa/leetcode-companywise/G/genpact',
-                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/G/genpact', '71e'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
                 path: '/technical-knowledge/dsa/leetcode-companywise/G/gilt-groupe',
                 component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/G/gilt-groupe', '698'),
                 exact: true,
@@ -9945,12 +9943,6 @@ export default [
               {
                 path: '/technical-knowledge/dsa/leetcode-companywise/G/globallogic',
                 component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/G/globallogic', '767'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/dsa/leetcode-companywise/G/globant',
-                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/G/globant', '70a'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -10087,12 +10079,6 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/dsa/leetcode-companywise/H/hertz',
-                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/H/hertz', 'c82'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
                 path: '/technical-knowledge/dsa/leetcode-companywise/H/highspot',
                 component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/H/highspot', 'b7b'),
                 exact: true,
@@ -10213,6 +10199,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/dsa/leetcode-companywise/I/impetus',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/I/impetus', 'd98'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/dsa/leetcode-companywise/I/increff',
                 component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/I/increff', '1e3'),
                 exact: true,
@@ -10327,12 +10319,6 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/dsa/leetcode-companywise/J/jetbrains',
-                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/J/jetbrains', '502'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
                 path: '/technical-knowledge/dsa/leetcode-companywise/J/jingchi',
                 component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/J/jingchi', 'b01'),
                 exact: true,
@@ -10369,20 +10355,8 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/dsa/leetcode-companywise/J/junglee-games',
-                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/J/junglee-games', '50e'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
                 path: '/technical-knowledge/dsa/leetcode-companywise/J/juspay',
                 component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/J/juspay', '13b'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/dsa/leetcode-companywise/J/justworks',
-                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/J/justworks', '7cf'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -10395,12 +10369,6 @@ export default [
               {
                 path: '/technical-knowledge/dsa/leetcode-companywise/K/karat',
                 component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/K/karat', '09e'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/dsa/leetcode-companywise/K/keeptruckin',
-                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/K/keeptruckin', '118'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -10429,20 +10397,8 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/dsa/leetcode-companywise/K/kpit',
-                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/K/kpit', '40f'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
                 path: '/technical-knowledge/dsa/leetcode-companywise/K/kpmg',
                 component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/K/kpmg', '77e'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/dsa/leetcode-companywise/L/lacework',
-                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/L/lacework', '16a'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -10747,8 +10703,20 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/dsa/leetcode-companywise/M/motive',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/M/motive', '231'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/dsa/leetcode-companywise/M/moveworks',
                 component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/M/moveworks', '3e6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/M/mphasis',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/M/mphasis', '39f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -10887,12 +10855,6 @@ export default [
               {
                 path: '/technical-knowledge/dsa/leetcode-companywise/N/nextjump',
                 component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/N/nextjump', '99e'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/dsa/leetcode-companywise/N/nference',
-                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/N/nference', 'd41'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -11059,8 +11021,8 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/dsa/leetcode-companywise/P/palantir-technologies',
-                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/P/palantir-technologies', 'a1e'),
+                path: '/technical-knowledge/dsa/leetcode-companywise/P/palantir',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/P/palantir', 'ab6'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -11377,6 +11339,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/dsa/leetcode-companywise/R/reliance-retails',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/R/reliance-retails', 'b2c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/dsa/leetcode-companywise/R/remitly',
                 component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/R/remitly', '58c'),
                 exact: true,
@@ -11539,6 +11507,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/dsa/leetcode-companywise/S/shopback',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/S/shopback', '8bc'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/dsa/leetcode-companywise/S/shopee',
                 component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/S/shopee', '0e0'),
                 exact: true,
@@ -11547,6 +11521,12 @@ export default [
               {
                 path: '/technical-knowledge/dsa/leetcode-companywise/S/shopify',
                 component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/S/shopify', '09f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/S/shopup',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/S/shopup', '7e7'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -11995,12 +11975,6 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/dsa/leetcode-companywise/T/turo',
-                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/T/turo', 'c79'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
                 path: '/technical-knowledge/dsa/leetcode-companywise/T/turvo',
                 component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/T/turvo', 'dc5'),
                 exact: true,
@@ -12039,6 +12013,12 @@ export default [
               {
                 path: '/technical-knowledge/dsa/leetcode-companywise/U/uber',
                 component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/U/uber', 'a69'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/U/ubisoft',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/U/ubisoft', 'c41'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -12093,12 +12073,6 @@ export default [
               {
                 path: '/technical-knowledge/dsa/leetcode-companywise/U/urban-company',
                 component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/U/urban-company', 'e1e'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/dsa/leetcode-companywise/U/ust',
-                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/U/ust', '05a'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -12189,12 +12163,6 @@ export default [
               {
                 path: '/technical-knowledge/dsa/leetcode-companywise/W/warnermedia',
                 component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/W/warnermedia', '418'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/dsa/leetcode-companywise/W/watchguard',
-                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/W/watchguard', '2f6'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -12339,12 +12307,6 @@ export default [
               {
                 path: '/technical-knowledge/dsa/leetcode-companywise/Y/yelp',
                 component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/Y/yelp', 'efb'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/dsa/leetcode-companywise/Y/yext',
-                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/Y/yext', '4a0'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13105,6 +13067,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/java/concurrency-vs-parallelism',
+                component: ComponentCreator('/technical-knowledge/java/concurrency-vs-parallelism', '5b1'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/java/java-aqs-internals',
                 component: ComponentCreator('/technical-knowledge/java/java-aqs-internals', 'bd0'),
                 exact: true,
@@ -13118,7 +13086,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-concurrency',
-                component: ComponentCreator('/technical-knowledge/java/java-concurrency', '9d4'),
+                component: ComponentCreator('/technical-knowledge/java/java-concurrency', 'b7b'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13177,6 +13145,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/java/java-object-class',
+                component: ComponentCreator('/technical-knowledge/java/java-object-class', 'fe3'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/java/java-oop',
                 component: ComponentCreator('/technical-knowledge/java/java-oop', '39c'),
                 exact: true,
@@ -13202,13 +13176,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-virtual-threads',
-                component: ComponentCreator('/technical-knowledge/java/java-virtual-threads', 'de7'),
+                component: ComponentCreator('/technical-knowledge/java/java-virtual-threads', 'e62'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/java/thread-pools-and-connection-pooling',
-                component: ComponentCreator('/technical-knowledge/java/thread-pools-and-connection-pooling', 'ca5'),
+                component: ComponentCreator('/technical-knowledge/java/thread-pools-and-connection-pooling', 'c1a'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13580,7 +13554,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/networking/socket-programming-io-models',
-                component: ComponentCreator('/technical-knowledge/networking/socket-programming-io-models', '2e3'),
+                component: ComponentCreator('/technical-knowledge/networking/socket-programming-io-models', '89a'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13790,7 +13764,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/security/keys-signing-tls',
-                component: ComponentCreator('/technical-knowledge/security/keys-signing-tls', 'cc5'),
+                component: ComponentCreator('/technical-knowledge/security/keys-signing-tls', 'cc7'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13831,32 +13805,32 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/solid/solid/dependency-inversion',
-                component: ComponentCreator('/technical-knowledge/solid/solid/dependency-inversion', 'e45'),
+                path: '/technical-knowledge/solid/dependency-inversion',
+                component: ComponentCreator('/technical-knowledge/solid/dependency-inversion', 'f5c'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/solid/solid/interface-segregation',
-                component: ComponentCreator('/technical-knowledge/solid/solid/interface-segregation', '0bb'),
+                path: '/technical-knowledge/solid/interface-segregation',
+                component: ComponentCreator('/technical-knowledge/solid/interface-segregation', 'a81'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/solid/solid/liskov-substitution',
-                component: ComponentCreator('/technical-knowledge/solid/solid/liskov-substitution', '318'),
+                path: '/technical-knowledge/solid/liskov-substitution',
+                component: ComponentCreator('/technical-knowledge/solid/liskov-substitution', '2c5'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/solid/solid/open-closed',
-                component: ComponentCreator('/technical-knowledge/solid/solid/open-closed', 'd5d'),
+                path: '/technical-knowledge/solid/open-closed',
+                component: ComponentCreator('/technical-knowledge/solid/open-closed', 'b6f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/solid/solid/single-responsibility',
-                component: ComponentCreator('/technical-knowledge/solid/solid/single-responsibility', 'd12'),
+                path: '/technical-knowledge/solid/single-responsibility',
+                component: ComponentCreator('/technical-knowledge/solid/single-responsibility', '5da'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13898,7 +13872,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/spring/spring-boot-advanced',
-                component: ComponentCreator('/technical-knowledge/spring/spring-boot-advanced', '04e'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-boot-advanced', 'e69'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

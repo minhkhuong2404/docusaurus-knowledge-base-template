@@ -2,4 +2,5 @@
 
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
-| 757 | https://leetcode.com/problems/set-intersection-size-at-least-two | Set Intersection Size At Least Two | Hard | 57.9% | 100.0% |
+| 757 | https://leetcode.com/problems/set-intersection-size-at-least-two | Set Intersection Size At Least Two | Hard | 58.0% | 100.0% |
+

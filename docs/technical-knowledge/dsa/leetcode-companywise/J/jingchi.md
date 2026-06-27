@@ -2,4 +2,5 @@
 
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
-| 772 | https://leetcode.com/problems/basic-calculator-iii | Basic Calculator III | Hard | 53.1% | 100.0% |
+| 772 | https://leetcode.com/problems/basic-calculator-iii | Basic Calculator III | Hard | 53.3% | 100.0% |
+

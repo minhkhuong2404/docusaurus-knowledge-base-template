@@ -2,4 +2,5 @@
 
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
-| 696 | https://leetcode.com/problems/count-binary-substrings | Count Binary Substrings | Easy | 70.2% | 100.0% |
+| 696 | https://leetcode.com/problems/count-binary-substrings | Count Binary Substrings | Easy | 70.4% | 100.0% |
+

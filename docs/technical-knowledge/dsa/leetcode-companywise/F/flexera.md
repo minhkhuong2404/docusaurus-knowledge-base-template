@@ -4,3 +4,4 @@
 |---|---|---|---|---|---|
 | 3170 | https://leetcode.com/problems/lexicographically-minimum-string-after-removing-stars | Lexicographically Minimum String After Removing Stars | Medium | 51.0% | 100.0% |
 | 3174 | https://leetcode.com/problems/clear-digits | Clear Digits | Easy | 82.7% | 100.0% |
+

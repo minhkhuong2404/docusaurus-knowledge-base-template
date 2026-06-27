@@ -1760,13 +1760,8 @@
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/dsa/leetcode-companywise/A/applovin",
-              "path": "/technical-knowledge/dsa/leetcode-companywise/A/applovin",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/dsa/leetcode-companywise/A/aqr-capital-management-llc",
-              "path": "/technical-knowledge/dsa/leetcode-companywise/A/aqr-capital-management-llc",
+              "id": "technical-knowledge/dsa/leetcode-companywise/A/aqr-capital-management",
+              "path": "/technical-knowledge/dsa/leetcode-companywise/A/aqr-capital-management",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -1795,11 +1790,6 @@
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/dsa/leetcode-companywise/A/at-t",
-              "path": "/technical-knowledge/dsa/leetcode-companywise/A/at-t",
-              "sidebar": "tutorialSidebar"
-            },
-            {
               "id": "technical-knowledge/dsa/leetcode-companywise/A/athenahealth",
               "path": "/technical-knowledge/dsa/leetcode-companywise/A/athenahealth",
               "sidebar": "tutorialSidebar"
@@ -1807,6 +1797,11 @@
             {
               "id": "technical-knowledge/dsa/leetcode-companywise/A/atlassian",
               "path": "/technical-knowledge/dsa/leetcode-companywise/A/atlassian",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/dsa/leetcode-companywise/A/att",
+              "path": "/technical-knowledge/dsa/leetcode-companywise/A/att",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -1877,6 +1872,11 @@
             {
               "id": "technical-knowledge/dsa/leetcode-companywise/B/bending-spoons",
               "path": "/technical-knowledge/dsa/leetcode-companywise/B/bending-spoons",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/dsa/leetcode-companywise/B/bill-com",
+              "path": "/technical-knowledge/dsa/leetcode-companywise/B/bill-com",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -2165,6 +2165,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/dsa/leetcode-companywise/C/coditas",
+              "path": "/technical-knowledge/dsa/leetcode-companywise/C/coditas",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/dsa/leetcode-companywise/C/cognizant",
               "path": "/technical-knowledge/dsa/leetcode-companywise/C/cognizant",
               "sidebar": "tutorialSidebar"
@@ -2237,11 +2242,6 @@
             {
               "id": "technical-knowledge/dsa/leetcode-companywise/C/cred",
               "path": "/technical-knowledge/dsa/leetcode-companywise/C/cred",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/dsa/leetcode-companywise/C/credit-karma",
-              "path": "/technical-knowledge/dsa/leetcode-companywise/C/credit-karma",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -2370,11 +2370,6 @@
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/dsa/leetcode-companywise/D/didi",
-              "path": "/technical-knowledge/dsa/leetcode-companywise/D/didi",
-              "sidebar": "tutorialSidebar"
-            },
-            {
               "id": "technical-knowledge/dsa/leetcode-companywise/D/directi",
               "path": "/technical-knowledge/dsa/leetcode-companywise/D/directi",
               "sidebar": "tutorialSidebar"
@@ -2480,6 +2475,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/dsa/leetcode-companywise/E/envoy",
+              "path": "/technical-knowledge/dsa/leetcode-companywise/E/envoy",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/dsa/leetcode-companywise/E/epam-systems",
               "path": "/technical-knowledge/dsa/leetcode-companywise/E/epam-systems",
               "sidebar": "tutorialSidebar"
@@ -2515,6 +2515,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/dsa/leetcode-companywise/E/exl",
+              "path": "/technical-knowledge/dsa/leetcode-companywise/E/exl",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/dsa/leetcode-companywise/E/expedia",
               "path": "/technical-knowledge/dsa/leetcode-companywise/E/expedia",
               "sidebar": "tutorialSidebar"
@@ -2532,11 +2537,6 @@
             {
               "id": "technical-knowledge/dsa/leetcode-companywise/F/factset",
               "path": "/technical-knowledge/dsa/leetcode-companywise/F/factset",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/dsa/leetcode-companywise/F/factwise",
-              "path": "/technical-knowledge/dsa/leetcode-companywise/F/factwise",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -2617,11 +2617,6 @@
             {
               "id": "technical-knowledge/dsa/leetcode-companywise/F/flipkart",
               "path": "/technical-knowledge/dsa/leetcode-companywise/F/flipkart",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/dsa/leetcode-companywise/F/ford",
-              "path": "/technical-knowledge/dsa/leetcode-companywise/F/ford",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -2715,11 +2710,6 @@
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/dsa/leetcode-companywise/G/genpact",
-              "path": "/technical-knowledge/dsa/leetcode-companywise/G/genpact",
-              "sidebar": "tutorialSidebar"
-            },
-            {
               "id": "technical-knowledge/dsa/leetcode-companywise/G/gilt-groupe",
               "path": "/technical-knowledge/dsa/leetcode-companywise/G/gilt-groupe",
               "sidebar": "tutorialSidebar"
@@ -2737,11 +2727,6 @@
             {
               "id": "technical-knowledge/dsa/leetcode-companywise/G/globallogic",
               "path": "/technical-knowledge/dsa/leetcode-companywise/G/globallogic",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/dsa/leetcode-companywise/G/globant",
-              "path": "/technical-knowledge/dsa/leetcode-companywise/G/globant",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -2855,11 +2840,6 @@
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/dsa/leetcode-companywise/H/hertz",
-              "path": "/technical-knowledge/dsa/leetcode-companywise/H/hertz",
-              "sidebar": "tutorialSidebar"
-            },
-            {
               "id": "technical-knowledge/dsa/leetcode-companywise/H/highspot",
               "path": "/technical-knowledge/dsa/leetcode-companywise/H/highspot",
               "sidebar": "tutorialSidebar"
@@ -2960,6 +2940,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/dsa/leetcode-companywise/I/impetus",
+              "path": "/technical-knowledge/dsa/leetcode-companywise/I/impetus",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/dsa/leetcode-companywise/I/increff",
               "path": "/technical-knowledge/dsa/leetcode-companywise/I/increff",
               "sidebar": "tutorialSidebar"
@@ -3055,11 +3040,6 @@
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/dsa/leetcode-companywise/J/jetbrains",
-              "path": "/technical-knowledge/dsa/leetcode-companywise/J/jetbrains",
-              "sidebar": "tutorialSidebar"
-            },
-            {
               "id": "technical-knowledge/dsa/leetcode-companywise/J/jingchi",
               "path": "/technical-knowledge/dsa/leetcode-companywise/J/jingchi",
               "sidebar": "tutorialSidebar"
@@ -3090,18 +3070,8 @@
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/dsa/leetcode-companywise/J/junglee-games",
-              "path": "/technical-knowledge/dsa/leetcode-companywise/J/junglee-games",
-              "sidebar": "tutorialSidebar"
-            },
-            {
               "id": "technical-knowledge/dsa/leetcode-companywise/J/juspay",
               "path": "/technical-knowledge/dsa/leetcode-companywise/J/juspay",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/dsa/leetcode-companywise/J/justworks",
-              "path": "/technical-knowledge/dsa/leetcode-companywise/J/justworks",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -3112,11 +3082,6 @@
             {
               "id": "technical-knowledge/dsa/leetcode-companywise/K/karat",
               "path": "/technical-knowledge/dsa/leetcode-companywise/K/karat",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/dsa/leetcode-companywise/K/keeptruckin",
-              "path": "/technical-knowledge/dsa/leetcode-companywise/K/keeptruckin",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -3140,18 +3105,8 @@
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/dsa/leetcode-companywise/K/kpit",
-              "path": "/technical-knowledge/dsa/leetcode-companywise/K/kpit",
-              "sidebar": "tutorialSidebar"
-            },
-            {
               "id": "technical-knowledge/dsa/leetcode-companywise/K/kpmg",
               "path": "/technical-knowledge/dsa/leetcode-companywise/K/kpmg",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/dsa/leetcode-companywise/L/lacework",
-              "path": "/technical-knowledge/dsa/leetcode-companywise/L/lacework",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -3405,8 +3360,18 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/dsa/leetcode-companywise/M/motive",
+              "path": "/technical-knowledge/dsa/leetcode-companywise/M/motive",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/dsa/leetcode-companywise/M/moveworks",
               "path": "/technical-knowledge/dsa/leetcode-companywise/M/moveworks",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/dsa/leetcode-companywise/M/mphasis",
+              "path": "/technical-knowledge/dsa/leetcode-companywise/M/mphasis",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -3522,11 +3487,6 @@
             {
               "id": "technical-knowledge/dsa/leetcode-companywise/N/nextjump",
               "path": "/technical-knowledge/dsa/leetcode-companywise/N/nextjump",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/dsa/leetcode-companywise/N/nference",
-              "path": "/technical-knowledge/dsa/leetcode-companywise/N/nference",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -3665,8 +3625,8 @@
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/dsa/leetcode-companywise/P/palantir-technologies",
-              "path": "/technical-knowledge/dsa/leetcode-companywise/P/palantir-technologies",
+              "id": "technical-knowledge/dsa/leetcode-companywise/P/palantir",
+              "path": "/technical-knowledge/dsa/leetcode-companywise/P/palantir",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -3930,6 +3890,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/dsa/leetcode-companywise/R/reliance-retails",
+              "path": "/technical-knowledge/dsa/leetcode-companywise/R/reliance-retails",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/dsa/leetcode-companywise/R/remitly",
               "path": "/technical-knowledge/dsa/leetcode-companywise/R/remitly",
               "sidebar": "tutorialSidebar"
@@ -4065,6 +4030,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/dsa/leetcode-companywise/S/shopback",
+              "path": "/technical-knowledge/dsa/leetcode-companywise/S/shopback",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/dsa/leetcode-companywise/S/shopee",
               "path": "/technical-knowledge/dsa/leetcode-companywise/S/shopee",
               "sidebar": "tutorialSidebar"
@@ -4072,6 +4042,11 @@
             {
               "id": "technical-knowledge/dsa/leetcode-companywise/S/shopify",
               "path": "/technical-knowledge/dsa/leetcode-companywise/S/shopify",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/dsa/leetcode-companywise/S/shopup",
+              "path": "/technical-knowledge/dsa/leetcode-companywise/S/shopup",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -4445,11 +4420,6 @@
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/dsa/leetcode-companywise/T/turo",
-              "path": "/technical-knowledge/dsa/leetcode-companywise/T/turo",
-              "sidebar": "tutorialSidebar"
-            },
-            {
               "id": "technical-knowledge/dsa/leetcode-companywise/T/turvo",
               "path": "/technical-knowledge/dsa/leetcode-companywise/T/turvo",
               "sidebar": "tutorialSidebar"
@@ -4482,6 +4452,11 @@
             {
               "id": "technical-knowledge/dsa/leetcode-companywise/U/uber",
               "path": "/technical-knowledge/dsa/leetcode-companywise/U/uber",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/dsa/leetcode-companywise/U/ubisoft",
+              "path": "/technical-knowledge/dsa/leetcode-companywise/U/ubisoft",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -4527,11 +4502,6 @@
             {
               "id": "technical-knowledge/dsa/leetcode-companywise/U/urban-company",
               "path": "/technical-knowledge/dsa/leetcode-companywise/U/urban-company",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/dsa/leetcode-companywise/U/ust",
-              "path": "/technical-knowledge/dsa/leetcode-companywise/U/ust",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -4607,11 +4577,6 @@
             {
               "id": "technical-knowledge/dsa/leetcode-companywise/W/warnermedia",
               "path": "/technical-knowledge/dsa/leetcode-companywise/W/warnermedia",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/dsa/leetcode-companywise/W/watchguard",
-              "path": "/technical-knowledge/dsa/leetcode-companywise/W/watchguard",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -4732,11 +4697,6 @@
             {
               "id": "technical-knowledge/dsa/leetcode-companywise/Y/yelp",
               "path": "/technical-knowledge/dsa/leetcode-companywise/Y/yelp",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/dsa/leetcode-companywise/Y/yext",
-              "path": "/technical-knowledge/dsa/leetcode-companywise/Y/yext",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -5370,6 +5330,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/java/concurrency-vs-parallelism",
+              "path": "/technical-knowledge/java/concurrency-vs-parallelism",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/java/java-aqs-internals",
               "path": "/technical-knowledge/java/java-aqs-internals",
               "sidebar": "tutorialSidebar"
@@ -5427,6 +5392,11 @@
             {
               "id": "technical-knowledge/java/java-new-features",
               "path": "/technical-knowledge/java/java-new-features",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/java/java-object-class",
+              "path": "/technical-knowledge/java/java-object-class",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -5980,33 +5950,33 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/solid/dependency-inversion",
+              "path": "/technical-knowledge/solid/dependency-inversion",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/solid/interface-segregation",
+              "path": "/technical-knowledge/solid/interface-segregation",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/solid/intro",
               "path": "/technical-knowledge/solid",
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/solid/solid/dependency-inversion",
-              "path": "/technical-knowledge/solid/solid/dependency-inversion",
+              "id": "technical-knowledge/solid/liskov-substitution",
+              "path": "/technical-knowledge/solid/liskov-substitution",
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/solid/solid/interface-segregation",
-              "path": "/technical-knowledge/solid/solid/interface-segregation",
+              "id": "technical-knowledge/solid/open-closed",
+              "path": "/technical-knowledge/solid/open-closed",
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/solid/solid/liskov-substitution",
-              "path": "/technical-knowledge/solid/solid/liskov-substitution",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/solid/solid/open-closed",
-              "path": "/technical-knowledge/solid/solid/open-closed",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/solid/solid/single-responsibility",
-              "path": "/technical-knowledge/solid/solid/single-responsibility",
+              "id": "technical-knowledge/solid/single-responsibility",
+              "path": "/technical-knowledge/solid/single-responsibility",
               "sidebar": "tutorialSidebar"
             },
             {

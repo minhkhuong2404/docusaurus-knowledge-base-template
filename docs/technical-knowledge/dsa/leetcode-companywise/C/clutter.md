@@ -2,4 +2,5 @@
 
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
-| 1181 | https://leetcode.com/problems/before-and-after-puzzle | Before and After Puzzle | Medium | 51.8% | 100.0% |
+| 1181 | https://leetcode.com/problems/before-and-after-puzzle | Before and After Puzzle | Medium | 51.9% | 100.0% |
+

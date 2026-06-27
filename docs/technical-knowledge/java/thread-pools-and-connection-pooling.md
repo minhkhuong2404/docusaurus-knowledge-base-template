@@ -17,6 +17,10 @@ import TabItem from '@theme/TabItem';
 - **Senior engineers** — see [How They All Relate](#5-how-they-all-relate), [Production Sizing](#6-production-sizing-guide), and [Troubleshooting](#7-troubleshooting--common-failures).
 :::
 
+:::tip[Core Prerequisite]
+Before learning how threads and connections are pooled, make sure you understand the fundamental difference between logical multi-tasking and physical simultaneous execution. Check out the dedicated guide: **[Concurrency vs. Parallelism](./concurrency-vs-parallelism)**.
+:::
+
 ---
 
 ## 1. Thread Pools — `ThreadPoolExecutor`
@@ -273,6 +277,29 @@ With slow requests (2s average):
   User #201 waits in the Poller queue
 ```
 
+### Tomcat and Direct Memory: The Temporary Cache
+
+Like all Java network libraries, Tomcat relies on **Direct Memory** (off-heap memory) to transmit data between the OS socket buffers and the JVM. Because the Operating System's `read()` system call requires a static, absolute physical memory address, it cannot write directly to Java heap objects (which are constantly relocated by the Garbage Collector during compaction). A static, off-heap native buffer acts as the intermediate landing pad.
+
+Tomcat's I/O pipeline uses two copy operations:
+```
+NIC (Network Card) ──► OS Socket Buffer (Kernel) ──► Temporary Direct Buffer (Off-Heap) ──► Heap Byte Array (On-Heap) ──► Java Object
+```
+
+#### The Per-Thread Cache Footprint
+Tomcat manages this direct memory using a **temporary thread-local cache** inside the JDK (`sun.nio.ch.Util`).
+- Every worker thread is assigned a single direct buffer.
+- This buffer is initially sized to Tomcat's default buffer size (configured by `appReadBufSize`, usually `8KB`).
+- When a request is read, Tomcat reuses the same 8KB direct buffer repeatedly instead of allocating new blocks or releasing it to the OS.
+- For 200 default worker threads, this consumes only $200 \times 8\text{KB} = 1.6\text{MB}$ of direct memory, which is negligible and virtually immune to out-of-memory issues.
+
+#### The Thread-Local Cache Trap (e.g., The Ehcache Trap)
+Although Tomcat's HTTP reading is safe, a major memory leak trap occurs if your business logic uses the same worker thread to perform a large file or socket channel operation:
+- The JDK NIO utility (`sun.nio.ch.Util`) caches the **largest buffer ever requested** by that thread.
+- If your business code reads a 50MB file into a heap byte array using a `FileChannel` on a Tomcat worker thread, the JIT/NIO allocates and caches a **50MB native direct buffer** on that thread's local storage.
+- The buffer remains bound to the thread forever and is never resized down. If 100 worker threads run this code path once, your application will silently bleed **5GB of off-heap native memory**, leading to container-level `OOMKilled` crashes while heap usage looks perfectly normal.
+- **Remediation:** Set the JVM flag `-Djdk.nio.maxCachedBufferSize=262144` (e.g., 256KB) to restrict the maximum size of cached thread-local direct buffers, forcing large buffers to be discarded instead of cached.
+
 ### Tomcat vs Jetty vs Undertow
 
 | Feature | Tomcat | Jetty | Undertow |
@@ -413,6 +440,31 @@ ch.pipeline().addLast(blockingGroup, new MyBlockingHandler());
 ```
 :::
 
+### Netty and Direct Memory: Pooled Chunks & Reference Counting
+
+Netty optimizes network performance by bypassing the secondary copy operation of Tomcat:
+```
+NIC (Network Card) ──► OS Socket Buffer (Kernel) ──► Pooled Direct Memory (Off-Heap) ──► Java Object (On-Heap)
+```
+By parsing packets directly on the off-heap direct buffer, Netty saves CPU cycles and prevents heap garbage accumulation, resulting in higher throughput and smoother p99 latency. However, because Netty maintains permanent residency on direct memory, it introduces critical off-heap management responsibilities.
+
+#### Netty's Pooled Allocator (`PooledByteBufAllocator`)
+Direct memory allocations via the OS are expensive system operations. To avoid doing this on every request, Netty grabs large blocks of native memory called **chunks** (defaulting to **4MB** a chunk since Netty 4.1.75) and manages them using a custom allocator.
+- Each HTTP/gRPC request is leased a tiny slice (e.g., 64KB) of a 4MB chunk.
+- Unlike Tomcat (which scales direct memory with thread count), Netty scales direct memory with the **volume of concurrent active data** across all connections at a given moment.
+- If client connections slow down or backpressure builds up, data accumulates in these direct buffers, causing the allocator to request more 4MB chunks from the OS.
+
+#### The GC Blind Spot & Reference Counting Leak
+Because the Garbage Collector cannot see or clean off-heap chunks, Netty implements manual **Reference Counting**:
+- Each `ByteBuf` wrapper on the heap holds a reference counter. When you call `.release()`, the reference count drops. When it hits zero, the off-heap memory slice is immediately returned to the pool.
+- **The Wrapper Leak Trap:** If your code forgets to call `release()` (or fails to call it inside a `finally` block), the heap wrapper object eventually goes out of scope and is garbage collected. The heap remains completely clean, but the off-heap slice is **never returned** to the Netty pool.
+- **The Pinning Effect:** Netty can only return a 4MB chunk to the OS when *every single slice* leased from it has been released. A leak of a single 64KB slice is enough to pin the entire 4MB chunk in physical memory forever.
+- **Remediation:** Always run with Netty's leak detection enabled in development and staging:
+  ```bash
+  -Dio.netty.leakDetection.level=ADVANCED
+  ```
+  This tracks resource allocations and prints detailed stack traces when a `ByteBuf` is garbage-collected without being released.
+
 > **See also:** [Socket Programming & I/O Models](../networking/socket-programming-io-models) for epoll, the Reactor pattern, and how Netty uses them under the hood.
 
 ---
@@ -482,55 +534,11 @@ Step 3: Handoff Queue (slowest — waits for a return)
   → If timeout expires → SQLTransientConnectionException
 ```
 
-### HikariCP Configuration (Production-Ready)
+### HikariCP Configuration & Sizing
 
-```yaml
-spring:
-  datasource:
-    url: jdbc:postgresql://db-host:5432/mydb
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
-    hikari:
-      # === Pool Size ===
-      maximum-pool-size: 20      # Total connections (active + idle)
-      minimum-idle: 20           # Fixed-size pool (no dynamic churn)
+For details on how to configure HikariCP for production, fixed-size vs dynamic pools, and the baseline database sizing metrics, see the comprehensive [Database Connection Pooling Guide](../database/connection-pooling#hikaricp-spring-boot-default-pool).
 
-      # === Timeouts ===
-      connection-timeout: 3000   # 3s — fail fast, don't queue for 30s
-      idle-timeout: 600000       # 10min — only matters if min-idle < max
-      max-lifetime: 1800000      # 30min — recycle before DB kills them
-      validation-timeout: 3000   # 3s — how long to test a connection
-
-      # === Health ===
-      keepalive-time: 30000      # Ping idle connections every 30s
-      leak-detection-threshold: 5000  # Warn if connection held > 5s
-
-      # === Identity ===
-      pool-name: HikariPool-Orders
-```
-
-### Pool Sizing Formula
-
-```
-connections = (CPU_cores × 2) + effective_spindle_count
-
-Where:
-  CPU_cores             = physical cores on the DATABASE server
-  effective_spindle_count = 1 for SSD, disk count for RAID
-
-Examples:
-  4-core DB, SSD:   (4 × 2) + 1 = 9  → set to 10
-  8-core DB, SSD:   (8 × 2) + 1 = 17 → set to 20
-  
-Divide by app instances:
-  20 total connections, 4 pods → 5 per pod
-```
-
-:::tip[Fixed-Size Pool is Best for Production]
-Set `minimum-idle = maximum-pool-size`. A dynamic pool that shrinks during quiet periods means cold-start latency during the next traffic spike (new connections take 10–100ms each).
-:::
-
-> **See also:** [Database Connection Pooling](../database/connection-pooling) for the complete guide on pool starvation, failure modes, PgBouncer, RDS Proxy, and anti-patterns.
+For the step-by-step mathematical calculation of Tomcat thread pools vs. HikariCP pool sizes and database cores, see the [Production Sizing Guide](#6-production-sizing-guide) below.
 
 ---
 
@@ -707,47 +715,110 @@ Virtual thread is garbage collected (not returned to a pool)
 
 ## 6. Production Sizing Guide
 
-### The Bottleneck Chain
+Sizing thread pools and connection pools is not about choosing arbitrary numbers. It is a mathematical chain of constraints extending from your user request rates down to your physical database cores. 
 
-```
-Internet → Load Balancer → Tomcat Threads → HikariCP Connections → Database CPU
-                                ↑                    ↑                    ↑
-                           Bottleneck 1         Bottleneck 2         Bottleneck 3
+---
 
-If Tomcat has 200 threads but HikariCP has 10 connections:
-  → 190 threads will queue waiting for a connection
-  → If those threads also serve other endpoints, the ENTIRE API stalls
+### 1. Tomcat Thread Pool Sizing
 
-If HikariCP has 200 connections but the DB only has 8 CPU cores:
-  → 192 queries queue in the DB waiting for CPU
-  → Query latency spikes → connection hold time increases → pool exhaustion
-```
+Tomcat's default pool size of `200` worker threads is often an anti-pattern when running in modern containerized environments (Kubernetes pods or Docker containers) capped at 1 or 2 vCPUs. Too many active threads cause context-switching overhead, CPU throttling, and cache invalidation.
 
-### Sizing Checklist
+To calculate the optimal worker thread count, use the **Brian Goetz formula** (from *Java Concurrency in Practice*):
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│ Component          │ Formula / Rule                              │
-├────────────────────┼────────────────────────────────────────────┤
-│ Tomcat max-threads │ Start at 200 (default). Tune down if CPU   │
-│                    │ context-switching dominates.                │
-├────────────────────┼────────────────────────────────────────────┤
-│ HikariCP pool-size │ (DB_CPU × 2) + 1, divided by # app pods   │
-│                    │ Example: 8-core DB, 4 pods → 5 per pod     │
-├────────────────────┼────────────────────────────────────────────┤
-│ Netty workers      │ 2 × CPU cores (default). Rarely needs      │
-│                    │ adjustment.                                 │
-├────────────────────┼────────────────────────────────────────────┤
-│ @Async pool        │ CPU-bound: cores + 1                       │
-│                    │ I/O-bound: cores × (1 + wait/compute)      │
-├────────────────────┼────────────────────────────────────────────┤
-│ ForkJoinPool       │ Defaults to CPU cores. Only for CPU-bound   │
-│                    │ parallel work (parallel streams).           │
-├────────────────────┼────────────────────────────────────────────┤
-│ Virtual Threads    │ Don't pool them. Unlimited. Use Semaphore   │
-│                    │ to guard downstream resources.              │
-└─────────────────────────────────────────────────────────────────┘
-```
+$$\text{Optimal Threads} = \text{Available Cores} \times \text{Target CPU Utilization} \times \left(1 + \frac{\text{Wait Time}}{\text{Compute Time}}\right)$$
+
+* **Available Cores:** The CPU core limits allocated to your container (e.g. `resources.limits.cpu` in Kubernetes).
+* **Target CPU Utilization:** The desired average CPU load (typically `0.8` or 80% to leave headroom for GC, serialization, and traffic spikes).
+* **Wait Time / Compute Time (Blocking Coefficient):** The ratio of time a request spends waiting for off-thread I/O (database, cache, HTTP downstream calls) vs. actually processing on the CPU.
+
+#### Sizing Example
+Suppose a Spring Boot microservice is deployed inside a container with **2 vCPUs**. Performance profiling shows that a typical request takes **55ms** total: **50ms** waiting for the database (Wait Time) and **5ms** computing JSON serialization and business logic (Compute Time).
+
+$$\text{Tomcat Threads} = 2 \times 0.8 \times \left(1 + \frac{50}{5}\right) = 1.6 \times 11 = 17.6 \approx 18 \text{ threads}$$
+
+Instead of the default `200` threads, setting `server.tomcat.threads.max = 18` is the correct, mathematically derived starting point for performance testing.
+
+#### Calculating Throughput Capacity (Little's Law)
+Using **Little's Law** ($L = \lambda \times W$), we can calculate the theoretical throughput of a single instance:
+* $L$ (Number of concurrent requests in-flight) = `18` (our max threads).
+* $W$ (Latency per request) = `55ms` ($0.055\text{ seconds}$).
+* $\lambda$ (Throughput / Requests Per Second) = $\frac{L}{W}$.
+
+$$\text{Throughput} = \frac{18}{0.055} \approx 327 \text{ RPS per instance}$$
+
+If your business requirement is to handle **1,600 RPS**, you will need to scale out to at least $\frac{1600}{327} \approx 5$ application instances.
+
+#### ⚠️ Container Core-Counting Warning
+In Java versions prior to 8u191, the JVM was unaware of container limits and read the host's physical cores (e.g. 64 cores). This caused the JVM to spawn too many internal threads (GC, JIT, ForkJoinPool), leading to massive CPU throttling. 
+* **Fix:** Use modern JVMs (Java 11, 17, 21, or 25) which are container-aware by default and properly read cgroups memory and CPU limits.
+
+#### ⚡ Cloud Run Concurrency Aligning
+If you deploy to serverless containers like Google Cloud Run, there is a `concurrency` setting (max concurrent requests routed per instance). 
+* If you set `concurrency = 80` (default) but configure Tomcat `threads.max = 18`, Cloud Run will route up to 80 requests to a single instance. Tomcat will process 18, and the remaining 62 will sit in Tomcat's `TaskQueue`, causing request latency to explode.
+* **Fix:** Keep `concurrency` aligned closely with your Tomcat `threads.max` (e.g., `20`). This forces Cloud Run's native load balancer to scale-out horizontally to a new pod immediately rather than queuing requests internally.
+
+---
+
+### 2. Database Connection Pool Sizing (HikariCP)
+
+Once the application threads are sized, the connection pool must be sized to support them. In a thread-per-request architecture, a worker thread only needs a database connection during the database execution phase of the request, not for the entire request lifecycle (e.g. not during CPU-bound serialization or external HTTP calls).
+
+To calculate the connection pool size per instance, use the formula:
+
+$$\text{Hikari Pool Size} = \text{max-threads} \times \frac{\text{Connection Hold Time}}{\text{Total Request Time}}$$
+
+Using our 2 vCPU example (18 threads, total request 55ms, connection held for 50ms):
+
+$$\text{Hikari Pool Size} = 18 \times \frac{50}{55} = 16.3 \approx 17 \text{ connections}$$
+
+Set `maximum-pool-size: 17` and `minimum-idle: 17` to keep the pool warm and avoid connection handshake latency during traffic spikes.
+
+#### 📉 Why Smaller Pools are Faster
+A common trap is assuming that more connections equal higher throughput. The database engine can only process queries in parallel up to its hardware limits. Excess active connections result in disk spindle thrashing, lock contention, and OS thread context switching, which degrades throughput and causes latency spikes.
+
+The optimal connection limit for a database is defined by the PostgreSQL/HikariCP formula:
+
+$$\text{Optimal Executing Connections} = (\text{Database CPU Cores} \times 2) + \text{Spindle}$$
+
+* **Spindle:** The number of physical hard disks. On modern SSDs or NVMe drives where the working set fits in cache, this is essentially `0`.
+* A **4-Core DB** running on SSDs can only run $(4 \times 2) + 0 = 8$ queries in parallel optimally.
+
+#### Resolving the Mismatch
+If 5 application instances each open 17 connections, the database has **85 total connections** open. How does this align with the DB's optimal limit of 8-9 executing queries?
+
+The key is distinguishing between **open connections** (idle/waiting on network) and **executing queries** (utilizing database CPU). 
+* Out of the 50ms database phase, the database CPU might only spend **5ms** executing the query. The other 45ms is network transit, connection checkout, and client-side data buffering.
+* Out of the 85 connections open from the cluster, the concurrent active executing queries are:
+
+$$\text{Active executing queries} = 85 \times \frac{5\text{ms}}{50\text{ms}} = 8.5 \text{ queries}$$
+
+This matches the 4-core database capacity perfectly! 
+
+#### Complete Sizing Chain Example
+To support **1,600 RPS** under the 55ms total latency profile:
+1. **Instances:** $\frac{1600}{327} \approx 5$ instances.
+2. **Hikari Pool size per instance:** $18 \times \frac{50}{55} \approx 17$. (Total cluster connections = $17 \times 5 = 85$).
+3. **Database execution load:** $85 \times \frac{5\text{ms}}{50\text{ms}} = 8.5$ active executing connections.
+4. **Database sizing:** $\text{Cores} = \frac{\text{Executing Connections}}{2} = \frac{8.5}{2} \approx 4.25 \approx 4$ to $8$ cores.
+
+*Recommendation:* Set the database `max_connections` limit significantly higher (e.g., `150` to `200`) to provide headroom for administrator logins, indexing jobs, and monitoring metrics, even though the cluster pool only checks out 85.
+
+#### ⏳ Connection Hold Time Leaks
+If connection usage spikes in production while the database CPU is idle, check for hold time leaks:
+* **The Transaction Trap:** Placing `@Transactional` annotations on outer service methods that call slow external REST APIs keeps the database connection checked out doing absolutely nothing while waiting for the network call.
+* **Fix:** Keep transactions short. Only hold connections during database operations. Use Hikari's `leak-detection-threshold` to log warnings for connections held longer than a specific limit (e.g. 5 seconds).
+
+---
+
+### 3. Virtual Threads (Project Loom) Sizing Impact
+
+When virtual threads are enabled (`spring.threads.virtual.enabled=true`), the Tomcat thread pool bottleneck disappears because virtual threads do not require a 1MB native OS stack. 
+
+* **The Trap:** If you have 5,000 concurrent requests, Spring will spawn 5,000 virtual threads. However, your database connection pool **does not scale**. 
+* **The Result:** All 5,000 virtual threads will block at the gates of the HikariCP pool waiting for a connection, leading to connection timeouts. Virtual threads shift the application concurrency bottleneck entirely down to the database connection layer.
+* **Fix:** Use semaphores, rate limiters, or Spring's `@ConcurrencyLimit` annotations to cap downstream resource access, preventing database pool exhaustion under Loom.
+
+---
 
 ### The Mismatch Deadlock
 
@@ -789,6 +860,63 @@ Fix:
 | Memory growing (OOM) | Unbounded queue or thread count | Heap dump shows many task objects or threads | Use bounded queues; explicit `ThreadPoolExecutor` |
 | Tomcat stops accepting requests | All 200 worker threads blocked | Thread dump shows all threads in `WAITING` on HikariCP | Fix connection leak; reduce connection-timeout |
 | Netty EventLoop blocked | Blocking call in a ChannelHandler | Slow channel handlers, increasing event loop latency | Offload blocking work to separate executor |
+
+---
+
+### 🌐 Timeout Exceptions Deep Dive
+
+When connections start failing under load, clients will log network exceptions. Rather than treating them as unrelated glitches, recognize that **Connection refused, Connect timed out, Read timed out, and Connection reset** are different phases of the same congestion problem.
+
+```
+       Connect Timeout Clock (SYN)                  Read Timeout Clock (Request)
+Client ───────────────────────────► Server (Kernel) ─────────────────────────────► Tomcat Thread (max-threads: 200)
+    ▲                                    │                                                 │
+    │ SYN dropped                        │ Connection Accepted                             │ Blocked on DB
+    └─ Connect timed out /               ├─ max-connections (8192)                         └─ Read timed out
+       Connection refused                └─ accept-count (100) (Accept Queue)
+
+                                   Server-Side connection-timeout (20s)
+Client ───────────────────────────► Server (No request sent) ────────────────────► Closed unilaterally
+    ▲                                                                                      │
+    └──────────────────────────────────────────────────────────────────────────────────────┴─ Connection reset
+```
+
+Understanding these clocks and server settings allows you to pinpoint precisely where a request fails:
+
+#### 1. Connection refused vs. Connect timed out (TCP Handshake)
+* **What it means:** The client attempts to initiate the 3-way TCP handshake (sends a `SYN` packet) but cannot complete the connection.
+* **The Root Cause:**
+  * **`Connection refused` (`ConnectException`):** The server kernel actively rejects the connection by replying with a `RST` (Reset) packet. This happens if the target port has no process listening on it, or if the server process has completely shut down.
+  * **`Connect timed out` (`SocketTimeoutException: connect timed out`):** The target port is open, but Tomcat's connection capacity is exceeded.
+* **The Tomcat Mechanism:**
+  * Tomcat accepts up to `server.tomcat.max-connections` (default `8192`) active sockets.
+  * Sockets beyond this are queued in the OS Kernel TCP Accept Queue, sized by `server.tomcat.accept-count` (default `100`).
+  * **Request 8293+:** When both the 8192 active slots and the 100 queue spots are full, the Linux kernel silent drops incoming `SYN` packets. The client receives no response, retries the handshake, and eventually gives up when its client-side `connectTimeout` clock expires.
+* **Troubleshooting:**
+  * If logging `Connect timed out`, check if your cluster is undersized (RPS is exceeding cluster capacity). 
+  * *Trap:* Increasing `accept-count` to a massive number (e.g., `5000`) just creates a longer queue, which eventually converts into `Read timed out` exceptions as clients wait too long for their turn in the queue.
+
+#### 2. Read timed out (Socket Wait State)
+* **What it means:** The TCP handshake completed successfully, the connection was checked out, and the client sent the HTTP request payload. However, the client-side `readTimeout` expired before the server sent back a response.
+* **The Root Cause:** The Tomcat thread pool (`threads.max`, default `200`) is fully saturated. Threads are blocked waiting on slow downstream microservices, unindexed database queries, or connection pools.
+* **The Mechanism:**
+  * Tomcat accepted the connection into its `max-connections` buffer, but no worker thread is free to parse or process the HTTP headers. The request sits idle.
+  * The client waits, its `readTimeout` expires, and the client throws `SocketTimeoutException: Read timed out` and terminates the socket.
+  * *Nghịch lý:* The client reports timeouts, but Tomcat logs remain blank and CPU utilization is low. The client aborted the request, but the blocked Tomcat thread is still running the query in the background, unaware the client has departed.
+* **Troubleshooting:**
+  * Do not blindly increase the client `readTimeout`. This simply holds resources (sockets and client threads) blocked for longer. 
+  * Locate the thread bottleneck: take a thread dump (`jstack`) and inspect why Tomcat threads are in `WAITING` or `BLOCKED` states.
+
+#### 3. Connection reset / Broken pipe (Server-Side Eviction)
+* **What it means:** The TCP socket was open, but the server unilaterally closed the connection, causing the client's next write operation to fail.
+* **The Root Cause:** The client opened a socket but did not send any bytes within Tomcat's configured `server.tomcat.connection-timeout` limit (default `20000ms` / 20 seconds).
+* **The Mechanism:**
+  * Tomcat keeps open idle TCP connections to support Keep-Alive. However, if a client holds a socket open but doesn't send HTTP headers (e.g., slow clients, network hiccups, port scanning scripts), Tomcat closes the socket to free up resources.
+  * If the client tries to send data on this closed socket, the OS returns a `RST` packet, throwing `IOException: Connection reset by peer` or `Broken pipe` on the client.
+* **Troubleshooting:**
+  * Verify if clients are experiencing high network latency or sending headers slowly. If keep-alive connections are being recycled too quickly, tune `server.tomcat.connection-timeout` carefully.
+
+---
 
 ### Essential Metrics to Monitor
 
@@ -836,6 +964,44 @@ jstack <pid> > threaddump.txt
   → Thread B holds Lock 2, waits for Lock 1
 ```
 
+### 🧠 Senior Deep Dive: The RUNNABLE Database Call Illusion
+
+When database queries slow down, you might take a thread dump to diagnose the issue, only to find a paradox: dozens of threads are blocked waiting for database results, yet their JVM state is reported as **`RUNNABLE`** rather than `WAITING` or `BLOCKED`. 
+
+#### 1. Why JVM States Mismatch Reality
+To understand why a waiting thread reports as runnable, we must look at where thread states are managed:
+* **JVM-Managed States (`BLOCKED`, `WAITING`, `TIMED_WAITING`):** These states represent synchronization queues controlled entirely inside the JVM's memory boundary. 
+  * `BLOCKED` means a thread is waiting to acquire a Java monitor lock (to enter a `synchronized` block).
+  * `WAITING` / `TIMED_WAITING` means the thread is parked inside the JVM via `Object.wait()`, `Thread.join()`, or `LockSupport.park()`, waiting for another Java thread to wake it up.
+* **OS-Level Blocking (The JVM Blind Spot):** When a Java thread issues a blocking database query via JDBC, the JVM execution engine drops down into native code to perform an OS kernel system call (syscall) to read from a TCP socket (seen in thread dumps as `socketRead0`). 
+  * The thread is blocked at the **Operating System kernel level**, waiting for the network card to receive TCP database packets.
+  * Because the wait occurs outside the JVM's synchronization structures, the JVM cannot track it portably across different operating systems.
+  * Therefore, the JVM maintains the thread state as **`RUNNABLE`** (defined by the Java spec as *"executing in the JVM but may be waiting for other resources from the operating system"*).
+
+> **The Timesheet Analogy:** Imagine an office check-in sheet. When an employee quets their card, they are marked "In Office / Working" on the timesheet. If they sit at their desk staring at a loading screen waiting for an external vendor to email them files, the HR department (JVM) still marks them as "Working" because they haven't checked out. They are only marked "Away" when in an official internal state (e.g. locked out of a meeting room — `BLOCKED`, or waiting for a colleague — `WAITING`).
+
+#### 2. The Traditional Platform Thread Bottleneck
+In classic Java, each platform thread maps **1:1 to a physical OS thread** (each consuming a fixed **1MB native stack**). 
+* When a database query blocks, the underlying OS thread is pinned in the kernel. It cannot do any other work.
+* An I/O-bound microservice spending 90% of its time waiting on network round-trips will quickly exhaust its Tomcat thread pool (`threads.max = 200`).
+* **The Symptom:** You observe 200 threads in `RUNNABLE` (actually blocked in `socketRead0` syscalls), CPU utilization is idle at 10-20%, but the application is starved, throwing connection timeouts.
+
+#### 3. How Java 21+ Virtual Threads Resolve the Illusion
+Virtual Threads (Project Loom) decouple logical threads from OS threads, running thousands of virtual threads on a small pool of platform **carrier threads**:
+* **Unmounting on I/O:** When a virtual thread executes a blocking socket read (like database queries), the JDK intercepts the call. Instead of blocking the carrier OS thread, the JDK **unmounts** the virtual thread, serializes its stack frame onto the Java Heap as a continuation, and frees the carrier thread to run other virtual threads.
+* **Accurate States:** Because the JVM scheduler now manages the block, the virtual thread's state changes to **`WAITING`** (and `Thread.getState()` correctly returns `WAITING`).
+* **Pinning Limit in Java 21/23:** If a virtual thread blocks inside a `synchronized` block or native method, it gets **pinned** to the carrier thread, reverting to the old 1:1 behavior.
+* **Java 24+ Fix (JEP 491):** Java 24 completely resolves pinning inside `synchronized` blocks, allowing virtual threads to unmount freely.
+
+#### 4. Diagnostic Caveat: The `jstack` Blind Spot
+Traditional profiling tools like `jstack` only display platform/carrier threads. If your service uses virtual threads and hangs, a standard `jstack` output will show a completely idle, clean JVM.
+* **To dump virtual threads:** Run the following `jcmd` command to output all virtual thread stacks:
+  ```bash
+  jcmd <PID> Thread.dump_to_file -format=json threads.json
+  # Or plain text format:
+  jcmd <PID> Thread.dump_to_file threads.txt
+  ```
+
 ---
 
 ## 8. Interview Questions
@@ -870,6 +1036,7 @@ jstack <pid> > threaddump.txt
 
 | Topic | Link |
 |-------|------|
+| Concurrency vs. Parallelism beginner guide | [Concurrency vs. Parallelism](./concurrency-vs-parallelism) |
 | ThreadPoolExecutor & Fork/Join details | [Java Concurrency](./java-concurrency) |
 | Virtual Threads deep dive | [Virtual Threads (Project Loom)](./java-virtual-threads) |
 | HikariCP anti-patterns & PgBouncer | [Database Connection Pooling](../database/connection-pooling) |

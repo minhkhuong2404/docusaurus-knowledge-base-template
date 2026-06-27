@@ -1,0 +1,6 @@
+# Ubisoft LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 409 | https://leetcode.com/problems/longest-palindrome | Longest Palindrome | Easy | 56.0% | 100.0% |
+

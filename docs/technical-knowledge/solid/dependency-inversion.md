@@ -767,7 +767,7 @@ A high-level class should **never** call `new` on a low-level class. Let Spring 
 | **Swap implementation** | Must modify business class | Just provide a different bean |
 | **Testability** | Hard — can't mock | Easy — inject a test double |
 
-You've completed all 5 SOLID principles! [See the full summary →](../summary)
+You've completed all 5 SOLID principles! [See the full summary →](./summary)
 
 ---
 

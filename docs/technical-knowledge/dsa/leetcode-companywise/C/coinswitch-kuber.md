@@ -2,4 +2,5 @@
 
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
-| 283 | https://leetcode.com/problems/move-zeroes | Move Zeroes | Easy | 63.5% | 100.0% |
+| 283 | https://leetcode.com/problems/move-zeroes | Move Zeroes | Easy | 63.8% | 100.0% |
+

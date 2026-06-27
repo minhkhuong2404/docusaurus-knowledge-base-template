@@ -2,4 +2,5 @@
 
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
-| 64 | https://leetcode.com/problems/minimum-path-sum | Minimum Path Sum | Medium | 67.8% | 100.0% |
+| 64 | https://leetcode.com/problems/minimum-path-sum | Minimum Path Sum | Medium | 68.2% | 100.0% |
+

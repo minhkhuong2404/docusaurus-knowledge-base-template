@@ -2,4 +2,5 @@
 
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
-| 655 | https://leetcode.com/problems/print-binary-tree | Print Binary Tree | Medium | 66.4% | 100.0% |
+| 655 | https://leetcode.com/problems/print-binary-tree | Print Binary Tree | Medium | 66.6% | 100.0% |
+

@@ -1,5 +1,0 @@
-# Nference LeetCode Questions
-
-| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
-|---|---|---|---|---|---|
-| 202 | https://leetcode.com/problems/happy-number | Happy Number | Easy | 59.2% | 100.0% |

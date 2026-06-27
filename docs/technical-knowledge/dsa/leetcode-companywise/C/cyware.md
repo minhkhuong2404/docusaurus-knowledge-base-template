@@ -2,4 +2,5 @@
 
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
-| 1547 | https://leetcode.com/problems/minimum-cost-to-cut-a-stick | Minimum Cost to Cut a Stick | Hard | 62.8% | 100.0% |
+| 1547 | https://leetcode.com/problems/minimum-cost-to-cut-a-stick | Minimum Cost to Cut a Stick | Hard | 63.0% | 100.0% |
+

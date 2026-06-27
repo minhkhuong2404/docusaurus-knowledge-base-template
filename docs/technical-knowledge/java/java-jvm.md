@@ -201,9 +201,10 @@ Each thread has its own stack. Each method call creates a **stack frame** contai
 - **Frame data** — constant pool reference, return address
 
 ##### 🧠 Senior Deep Dive: Escape Analysis & Scalar Replacement
-Seniors know a critical JVM hardware optimization: **Objects do NOT always go to the Heap.** 
-Since Java 1.6, the JIT Compiler runs **Escape Analysis**. If the compiler proves that an object created inside a method never "escapes" that method (it isn't returned, nor passed to another thread), it performs **Scalar Replacement**. 
-The JVM literally breaks the object apart and places its primitive fields directly onto the **CPU registers / VM Stack**. This completely averts Heap allocation, meaning **zero Garbage Collection overhead** for those objects.
+Seniors know a critical JVM optimization: **Objects do NOT always go to the Heap.** 
+Since Java 1.6, the JIT Compiler runs **Escape Analysis**. If the compiler proves that an object created inside a method never "escapes" that method (it isn't returned, nor passed to another thread), it performs **Scalar Replacement**, allocating its fields directly on the stack or CPU registers. 
+
+For complete code examples, optimizations (like Lock Elimination and Lock Coarsening), and mechanics, see the [Escape Analysis Deep Dive in Stack vs. Heap Memory](./java-stack-vs-heap.md#escape-analysis-when-objects-skip-the-heap).
 
 Errors:
 - `StackOverflowError` — too many nested calls (e.g., infinite recursion)
@@ -316,66 +317,85 @@ Two approaches:
 
 ## 4. Garbage Collection
 
+While the JVM automates memory allocation, garbage collection (GC) is responsible for sweeping and defragmenting the heap. Understanding how the GC manages this space is vital for writing high-performance backend systems.
+
 ### How GC Identifies Garbage
 
-#### Reference Counting
+#### ❌ Reference Counting (Not Used by JVM)
+In reference counting, each object maintains a counter tracks how many active references point to it. The object is reclaimed when the count hits zero.
+- **The Circular Reference Flaw:** If Object A references Object B, and Object B references Object A, but neither is referenced by any other active part of the application, their counters remain at `1`. The memory is permanently leaked.
 
-Each object has a counter incremented/decremented when references are added/removed. Object is garbage when count = 0.
+#### ✅ Reachability Analysis (Used by JVM)
+To resolve circular references, Java uses **Reachability Analysis** based on tracing reference graphs from a set of starting nodes called **GC Roots**:
+- **GC Roots** are references that are guaranteed to be active, including:
+  - Local variables and input parameters inside active thread stacks.
+  - Static variables declared in classes loaded in the Method Area.
+  - Active threads.
+  - JNI (Java Native Interface) global/local references.
+  - Active JVM internal system classes.
+- **The Algorithm:** The GC starts at the roots and traverses all references. Any object that can be reached from a GC Root is marked "alive" (reachable). Any object that is unreachable (even if they form a closed loop of references among themselves) is identified as garbage and reclaimed.
 
-**Problem:** Cannot detect **circular references** (A → B → A).
+> [!TIP]
+> **The Dock Analogy:** Imagine GC Roots as secure docks on a riverbank. Boats that are tied directly to the docks, or tied to other boats that eventually lead back to a dock, are safe. A cluster of boats floating freely in the middle of the river, even if tied tightly to one another, will be swept away by the current (garbage collected) because they have no line connecting them to a dock.
 
-#### Reachability Analysis (Used by JVM)
+---
 
-Starting from **GC Roots**, traverse all reachable objects. Anything unreachable is garbage.
+### Core GC Algorithms
 
-**GC Roots include:**
-- Objects referenced in VM stack (local variables)
-- Static fields in the method area
-- Objects referenced by active threads
-- JNI references
-- Synchronized monitors
+#### 1. Mark-Sweep
+- **Mark:** Traces reference paths from GC Roots and marks all reachable objects as alive.
+- **Sweep:** Scans the heap and releases memory blocks of unmarked (dead) objects.
+- **Drawback:** Leaves **Memory Fragmentation** (holes of free space scattered between live objects). If the JVM needs to allocate a large contiguous array, it may fail and throw an `OutOfMemoryError` even if total free space is sufficient.
 
-### GC Algorithms
+#### 2. Mark-Compact (Mark-Sweep-Compact)
+- **Mark & Sweep:** Same as above.
+- **Compact:** Relocates (slides) all surviving objects to one end of the memory block, creating a single, contiguous block of free memory.
+- **Drawback:** Relocating objects requires pausing threads to update reference memory addresses, introducing higher CPU overhead.
 
-#### Mark-Sweep
+#### 3. Copying (Mark-Copy)
+- **Mechanism:** Memory is split into active and inactive zones. The GC traces and copies surviving objects from the active zone to the inactive zone, then completely wipes the active zone in one bulk delete.
+- **Drawback:** Consumes twice the memory space, but it is extremely fast and leaves no fragmentation.
 
-1. **Mark** all reachable objects
-2. **Sweep** (free) unmarked objects
-
-Pros: Simple. Cons: **Memory fragmentation** (scattered free spaces).
-
-#### Mark-Compact (Mark-Sweep-Compact)
-
-1. **Mark** reachable objects
-2. **Compact** — move live objects to one end
-3. **Clear** the rest
-
-Pros: No fragmentation. Cons: **Slower** (requires moving objects).
-
-#### Copying
-
-Divide memory into two halves. Copy live objects from one half to the other, then clear the first half.
-
-Pros: Fast, no fragmentation. Cons: **Wastes 50% of memory**.
-
-> The Young generation uses a modified copying algorithm with Eden + 2 Survivors (only ~10% wasted).
+---
 
 ### Generational Collection
+The JVM applies these algorithms based on the **Weak Generational Hypothesis**:
+1. Most objects die very young (e.g., temporary variables in a method loop).
+2. Objects that survive initial GC cycles tend to remain active for a very long time (e.g., Spring singleton beans, connection pools, caches).
 
-Most objects die young (**weak generational hypothesis**). The JVM exploits this:
+To exploit this, the JVM splits the heap into two main generations:
 
-| Generation | Algorithm | Trigger | Name |
-|-----------|-----------|---------|------|
-| **Young** | Copying (Eden → Survivor) | Eden full | **Minor GC** / Young GC |
-| **Old** | Mark-Compact or Mark-Sweep | Old gen full | **Major GC** / Old GC |
-| **Both** | Full heap collection | Various | **Full GC** (stop-the-world) |
+| Generation | Memory Space | Main Algorithm | Trigger | Collection Name |
+|---|---|---|---|---|
+| **Young Generation** | Eden + Survivor 0 (S0) + Survivor 1 (S1) | **Copying** (Mark-Copy) | Eden Space is full | **Minor GC** (Young GC) |
+| **Old Generation** | Tenured Space | **Mark-Compact** | Old Generation is full | **Major GC** (Old GC) |
+| **Entire Heap** | Young + Old + Metaspace | Combined | Various triggers | **Full GC** (Stop-The-World) |
 
-**Minor GC flow:**
-1. New objects allocated in Eden
-2. Eden fills up → Minor GC triggered
-3. Live objects in Eden + active Survivor → copied to the empty Survivor
-4. Ages incremented; objects exceeding threshold (default 15) → promoted to Old gen
-5. If Survivor can't hold all survivors → overflow to Old gen
+#### Minor GC Lifecycle Flow
+1. **Allocation:** New objects are created in **Eden**.
+2. **First GC:** Eden fills up, triggering a **Minor GC**. The GC copies surviving objects from Eden into `Survivor 0 (S0 / From)`, then wipes Eden entirely.
+3. **Subsequent GCs:** In the next Minor GC, survivors from Eden and `S0` are copied into `Survivor 1 (S1 / To)`. Eden and `S0` are wiped. The survivor spaces swap roles.
+4. **Aging & Promotion:** Each copy increment's an object's age. When an object's age exceeds the threshold (configured by `-XX:MaxTenuringThreshold`, default is `15`), it is promoted (copied) into the **Old Generation**.
+
+---
+
+### 🚨 Stop-The-World (STW) Pauses & Container Risks
+During certain garbage collection phases, the JVM must freeze all application execution threads so the GC can safely manipulate memory reference pointers without race conditions. This freeze is called a **Stop-The-World (STW)** pause.
+
+- **Minor GC:** STW pauses are usually negligible (a few milliseconds) because the Young Gen is small and the copy operation is fast.
+- **Major GC / Full GC:** These run on the Old Generation (or the entire heap + Metaspace). Because the Old Gen is much larger, tracing and compacting it can take hundreds of milliseconds to several seconds.
+- **The Container Danger:** If a containerized Java service experiences a long STW pause (e.g., a 2-second Full GC), it will stop responding to TCP traffic. Kubernetes liveness/readiness probes will fail, leading Kubernetes to assume the container has hung and trigger an unexpected restart (`OOMKilled` or simple container reboot).
+
+This danger led to the development of modern low-pause collectors like **G1GC** and **ZGC/Shenandoah** (which perform marking and compaction concurrently with application threads, keeping STW pauses under 1 millisecond).
+
+---
+
+### 🛑 Memory Leaks: The GC Cannot Save You
+A common misconception is that Java's automatic garbage collection prevents memory leaks. This is false.
+
+A **memory leak in Java** occurs when objects are logically abandoned by your application but remain physically reachable from a **GC Root**.
+- **Common Causes:** A static `Map` where entries are added but never removed, forgotten event listener registrations, or uncleaned `ThreadLocal` variables in a thread-pool reuse environment.
+- **The Consequence:** Because these object graphs are reachable from GC Roots, the GC is forced to keep them in the Old Generation. Eventually, the Old Gen fills up, triggering continuous Full GCs that fail to reclaim memory, culminating in a `java.lang.OutOfMemoryError: Java heap space`.
 
 ---
 

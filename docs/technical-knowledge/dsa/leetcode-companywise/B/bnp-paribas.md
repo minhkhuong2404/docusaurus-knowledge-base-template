@@ -2,4 +2,5 @@
 
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
-| 761 | https://leetcode.com/problems/special-binary-string | Special Binary String | Hard | 79.1% | 100.0% |
+| 761 | https://leetcode.com/problems/special-binary-string | Special Binary String | Hard | 79.3% | 100.0% |
+

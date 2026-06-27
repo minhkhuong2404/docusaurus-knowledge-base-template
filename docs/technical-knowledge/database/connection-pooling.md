@@ -130,7 +130,7 @@ This is called POOL STARVATION — the most common connection pool failure.
 
 ---
 
-## HikariCP — Spring Boot's Default Pool
+## HikariCP Spring Boot Default Pool
 
 HikariCP is the fastest JVM connection pool. It is the default in Spring Boot since 2.x and is chosen for its extremely low overhead (single-digit microsecond borrow time) and robust failure detection.
 
@@ -281,19 +281,19 @@ Always validate with load testing — find the "knee" where adding connections s
 
 ### Sizing across multiple application instances
 
-The formula gives the **total connections the DB can handle**. With multiple app instances, divide across them:
+The database connection capacity formula ($(\text{CPU\_cores} \times 2) + \text{spindle}$) calculates the number of **concurrently executing queries** the database server can handle optimally, not the maximum number of idle/open socket connections.
 
-```
-DB can handle: 20 connections total (from formula)
-Running 4 app instances (pods/containers):
+With multiple application instances (e.g., 5 instances each configured with a Hikari pool size of 17), you will have **85 total connections** open down to the database. However, this is optimal because:
+* A database connection is held by a thread for the entire round-trip (e.g., 50ms), but the database engine might only spend a fraction of that time (e.g., 5ms) actually executing the SQL query on CPU. The remaining 45ms is spent waiting on network transit and data transfer.
+* Out of 85 open connections, only a fraction are executing queries at any single millisecond:
 
-Max pool per instance = 20 / 4 = 5
+$$\text{Executing Connections} = 85 \times \frac{5\text{ms}}{50\text{ms}} = 8.5 \text{ concurrent executing queries}$$
 
-# application.yaml on each instance:
-hikari.maximum-pool-size: 5
-```
+This matches a 4-core database capacity perfectly.
 
-If you scale from 4 to 8 app instances without adjusting the pool size, you go from 20 total connections to 40 — overloading the database. Either reduce per-instance pool size or put a connection proxy (PgBouncer/RDS Proxy) in front.
+For the complete, step-by-step mathematical sizing chain (calculating container limits, Tomcat thread pools, HikariCP pool sizes, database cores, and serverless cgroups constraints), see the [Production Sizing Guide in Thread Pools & Connection Pooling](../java/thread-pools-and-connection-pooling#6-production-sizing-guide).
+
+If you scale application pods dynamically without setting PgBouncer or RDS Proxy, you risk blowing past the database's socket limits (`max_connections`). Always set a container safety buffer or database-side multiplexer.
 
 ---
 
@@ -405,7 +405,7 @@ List<Order> findAllWithUsers(@Param("ids") List<Long> ids);
 
 ### Anti-pattern 3 — Thread pool / connection pool mismatch deadlock
 
-If your web server has more threads than the pool has connections, you can hit a **deadlock** when threads depend on each other:
+If your web server has more threads than the pool has connections, you can hit a **deadlock** when threads depend on each other. For a detailed step-by-step thread state walkthrough, see the [Mismatch Deadlock Guide in Thread Pools & Connection Pooling](../java/thread-pools-and-connection-pooling#the-mismatch-deadlock).
 
 ```
 Setup:

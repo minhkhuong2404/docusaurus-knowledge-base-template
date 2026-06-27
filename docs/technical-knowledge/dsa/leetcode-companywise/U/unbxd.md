@@ -2,4 +2,5 @@
 
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
-| 2492 | https://leetcode.com/problems/minimum-score-of-a-path-between-two-cities | Minimum Score of a Path Between Two Cities | Medium | 58.5% | 100.0% |
+| 2492 | https://leetcode.com/problems/minimum-score-of-a-path-between-two-cities | Minimum Score of a Path Between Two Cities | Medium | 58.8% | 100.0% |
+

@@ -1,6 +1,0 @@
-# Ford LeetCode Questions
-
-| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
-|---|---|---|---|---|---|
-| 146 | https://leetcode.com/problems/lru-cache | LRU Cache | Medium | 46.8% | 100.0% |
-| 1 | https://leetcode.com/problems/two-sum | Two Sum | Easy | 57.1% | 100.0% |

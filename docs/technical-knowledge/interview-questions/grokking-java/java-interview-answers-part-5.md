@@ -8,119 +8,129 @@ tags: [java, interview, generics, jdbc, java8, streams, functional-programming]
 
 # Java Interview Questions & Answers: Part 5
 
+This guide covers advanced concepts in Java Generics (PECS, type erasure), JDBC database transaction isolation levels, locking mechanisms, and functional stream operations.
+
+---
+
 ## Generics
 
-### 1. What is Generics in Java? What are advantages of using Generics?
-Generics provide compile-time type safety. Before Java 5, developers had to cast objects retrieved from collections back to their correct type, which could lead to runtime `ClassCastException`s. Generics prevent this by allowing you to specify the type of objects a collection can hold at compile time, ensuring you only insert the correct type.
+### 1. What is Type Erasure and how does it work?
 
-### 2. How do Generics work in Java? What is type erasure?
-Generics are implemented using **Type Erasure**. The compiler erases all generic type information during compilation, replacing it with the bounds or `Object` (if unbounded), and inserts necessary casts. This means no generic type information is available at runtime (e.g., `List<String>` becomes just `List`). This was done to ensure backward compatibility with legacy code written prior to Java 5.
+Java implements Generics using **Type Erasure** to maintain backward compatibility with legacy non-generic code written before Java 5.
 
-### 3. What is Bounded and Unbounded wildcards in Generics?
-* **Bounded Wildcards** impose restrictions on the type. 
-  * `<? extends T>` establishes an upper bound, meaning the type must be `T` or a subclass of `T`. 
-  * `<? super T>` establishes a lower bound, meaning the type must be `T` or a superclass of `T`.
-* **Unbounded Wildcards** `<?>` represent an unknown type and can be replaced with any type.
+#### Compilation Translation
+During compilation, the compiler translates all generic types into raw types:
+1. Replaces all type parameters in generic classes with their bounds (`Object` if unbounded, or the first bound if bounded).
+2. Inserts type casts where necessary to preserve type safety.
+3. Generates bridge methods to preserve polymorphism in extended generic classes.
 
-### 4. What is the difference between List&lt;? extends T&gt; and List&lt;? super T&gt;?
-* `List<? extends T>` accepts any list whose elements are of type `T` or a subclass of `T` (e.g., `List<? extends Number>` accepts `List<Integer>` or `List<Float>`). You generally read from this list.
-* `List<? super T>` accepts any list whose elements are of type `T` or a superclass of `T`. You generally write to this list.
-
-### 5. How to write a generic method which accepts a generic argument and returns a Generic Type?
-You declare the generic type parameter before the return type. Standard placeholders are `T` (Type), `E` (Element), or `K, V` (Key, Value).
 ```java
-public <K, V> V put(K key, V value) {
-    return cache.put(key, value);
+// BEFORE compilation
+public class Box<T> {
+    private T value;
+    public T getValue() { return value; }
+}
+
+// AFTER compilation (Bytecode representation)
+public class Box {
+    private Object value; // T replaced by Object
+    public Object getValue() { return value; }
 }
 ```
+**Runtime Impact:** Generic type information is completely unavailable at runtime. You cannot write `new T()` or `instanceof List<String>` because the JVM only sees `List` at runtime.
 
-### 6. Can you pass List&lt;String&gt; to a method which accepts List&lt;Object&gt;?
-No, doing so will result in a compilation error. While `String` is an `Object`, a `List<String>` is *not* a `List<Object>`. A `List<Object>` can hold any object (like an `Integer`), so allowing a `List<String>` to act as a `List<Object>` would break type safety.
+---
 
-### 7. Can we use Generics with Arrays?
-No, Java arrays do not support Generics. Arrays are covariant and reified (they retain their element type at runtime), whereas Generics are invariant and use type erasure. This is why it is generally recommended to prefer `List` over arrays when working with generic types.
+### 2. What is PECS (Producer Extends, Consumer Super)?
 
-### 8. How can you suppress an unchecked warning in Java?
-If you are mixing legacy raw types with generic types, the compiler will generate an unchecked warning. You can suppress this by annotating the method or variable with `@SuppressWarnings("unchecked")`.
+PECS is a guide for using wildcards in generic parameters:
 
-### 9. Difference between List&lt;Object&gt; and raw type List?
-The compiler does not check type safety for the raw `List`, but it does for `List<Object>`. Furthermore, you can pass any parameterized type (like `List<String>`) to a raw `List`, but you *cannot* pass a `List<String>` to a method expecting a `List<Object>`.
+* **Producer (`? extends T`):** Use this if your method reads/produces elements of type `T` from a collection. You can read elements as `T`, but you **cannot write** anything to this collection (except `null`) because the compiler cannot guarantee the exact subtype of the list.
+* **Consumer (`? super T`):** Use this if your method writes/consumes elements of type `T` into a collection. You can safely **write** `T` and its subclasses to this collection, but reading from it only returns `Object`.
 
-### 10. Difference between List&lt;?&gt; and List&lt;Object&gt;?
-`List<?>` is a list of an *unknown* type, whereas `List<Object>` is explicitly a list of any type of `Object`. You can assign `List<String>` or `List<Integer>` to a `List<?>`, but you cannot assign them to a `List<Object>`.
+```java
+// Producer: Reads Numbers. Safe to read, cannot write.
+public double sumOfList(List<? extends Number> list) {
+    double sum = 0.0;
+    for (Number n : list) {
+        sum += n.doubleValue(); // Reading is safe
+    }
+    // list.add(42); // Compilation Error!
+    return sum;
+}
+
+// Consumer: Writes Integers. Safe to write, cannot read specific types.
+public void addNumbers(List<? super Integer> list) {
+    list.add(1);  // Writing is safe
+    list.add(2);
+    // Object obj = list.get(0); // Reading only yields Object
+}
+```
 
 ---
 
 ## Java Database Connectivity (JDBC)
 
-### 1. What is JDBC?
-Java Database Connectivity (JDBC) is a Java API used to communicate with relational databases. It consists of Java classes and interfaces that allow developers to execute SQL queries and interact with databases using database-specific drivers.
+### 3. Database Isolation Levels & Real-world Anomalies
 
-### 2. What are the main steps in Java to make JDBC connectivity?
-1. **Load the Driver:** Load the database-specific JDBC driver.
-2. **Make Connection:** Use `DriverManager` to get a `Connection` object.
-3. **Get Statement:** Create a `Statement` or `PreparedStatement` from the connection.
-4. **Execute Query:** Execute the SQL query to get a `ResultSet`.
-5. **Close Connection:** Close the `ResultSet`, `Statement`, and `Connection` resources (usually in a `finally` block or try-with-resources).
+JDBC Connection interface exposes four isolation levels to manage concurrent transaction anomalies:
 
-### 3. What is a "dirty read" in a database?
-A dirty read occurs when one transaction modifies a field, and another transaction reads that modified field *before* the first transaction commits or rolls back. If the first transaction rolls back, the second transaction is left with an invalid, "dirty" value.
+| Isolation Level | Dirty Reads | Non-Repeatable Reads | Phantom Reads |
+|:----------------|:------------|:---------------------|:--------------|
+| **`TRANSACTION_READ_UNCOMMITTED`** | Yes | Yes | Yes |
+| **`TRANSACTION_READ_COMMITTED`** | **No** | Yes | Yes |
+| **`TRANSACTION_REPEATABLE_READ`** | **No** | **No** | Yes |
+| **`TRANSACTION_SERIALIZABLE`** | **No** | **No** | **No** |
 
-### 4. What is a 2-Phase Commit?
-It is a protocol used in distributed systems to ensure data consistency across multiple databases. 
-* **Phase 1 (Commit Request):** The coordinator asks all participating databases if they are ready to commit. They lock the resources and vote "Yes" or "No".
-* **Phase 2 (Commit Phase):** If all vote "Yes", the coordinator issues the final commit command. If any vote "No", a rollback is issued to all databases.
-
-### 5. What are the different types of Statements in JDBC?
-* **Statement:** Used for executing static SQL queries without parameters. (Vulnerable to SQL injection).
-* **PreparedStatement:** Used for executing pre-compiled SQL queries with parameters. Highly recommended as it prevents SQL injection and performs better when executed multiple times.
-* **CallableStatement:** Used to execute stored procedures in the database.
-
-### 6. What is connection pooling?
-Creating a database connection is an expensive and slow operation. Connection pooling creates a pool of ready-to-use connection objects at application startup. When a client needs a connection, it borrows one from the pool, and when finished, returns it to the pool instead of closing it, vastly improving performance.
-
-### 7. What are the locking systems in JDBC?
-* **Optimistic Locking:** Assumes multiple transactions will rarely collide. It does not lock the record when reading; instead, it checks if the record was modified by someone else at the exact moment of an update (often using a version column).
-* **Pessimistic Locking:** Assumes collisions are highly likely. It explicitly locks the record (e.g., using `SELECT ... FOR UPDATE`) as soon as it selects the row, preventing others from updating it until the transaction completes.
+* **Dirty Read:** Transaction A reads changes made by Transaction B before B has committed. If B rolls back, A's data is corrupted.
+* **Non-Repeatable Read:** Transaction A reads a row. Transaction B updates that row and commits. Transaction A re-reads the row and gets different data.
+* **Phantom Read:** Transaction A queries a range of rows. Transaction B inserts new rows in that range and commits. Transaction A re-runs the query and gets "phantom" new rows.
 
 ---
 
-## Stream API and Functional Programming (Java 8+)
+### 4. Optimistic vs. Pessimistic Locking
 
-### 1. What is the difference between a Collection and a Stream?
-A Collection is an in-memory data structure that holds all its elements. A Stream is a computational view or pipeline that processes data from a source (like a Collection). Streams do *not* store data themselves, and unlike Collections, Streams do not modify the underlying data source.
+#### Optimistic Locking
+Assumes database conflicts are rare. Does not lock database rows when reading. Instead, it uses a version or timestamp column to check if the record was modified by another transaction before updating:
+```sql
+-- Step 1: Read entity version
+SELECT id, name, version FROM products WHERE id = 1; -- returns version = 3
 
-### 2. What does the map() function do?
-`map()` transforms one type of object into another by applying a function to each element in the stream. For example, applying a function that extracts the lengths of strings in a `List<String>` will result in a stream of `Integer` lengths.
+-- Step 2: Attempt update checking version
+UPDATE products 
+SET name = 'New Name', version = 4 
+WHERE id = 1 AND version = 3; -- If rows updated = 0, throw OptimisticLockException
+```
 
-### 3. What does the filter() method do?
-It filters elements based on a condition specified by a `Predicate` (a function that returns a boolean). Elements that satisfy the condition are passed down the stream, while others are discarded.
+#### Pessimistic Locking
+Assumes conflicts are frequent. Explicitly locks rows immediately upon selection, blocking other transactions from reading/writing until the transaction commits or rolls back:
+```sql
+-- Locks the row immediately. Other writers wait.
+SELECT * FROM products WHERE id = 1 FOR UPDATE;
+```
 
-### 4. What is the difference between map() and flatMap()?
-While `map()` transforms objects one-to-one, `flatMap()` transforms *and* flattens. If you have a list of lists, `flatMap()` can unpack the inner lists and merge all their individual elements into a single, massive, flat stream.
+---
 
-### 5. Intermediate vs. Terminal operations on a Stream?
-* **Intermediate Operations** (e.g., `map()`, `filter()`) return another Stream, allowing you to chain multiple operations together to form a pipeline. They are evaluated *lazily*.
-* **Terminal Operations** (e.g., `forEach()`, `collect()`, `count()`) trigger the execution of the pipeline and produce a non-stream result (a value, a collection, or void). Once a terminal operation is called, the stream is consumed and cannot be reused.
+## Stream API and Functional Programming
 
-### 6. What do you mean by saying Stream is "lazy"?
-Intermediate operations on a stream do not perform any processing immediately. They merely build up the pipeline. The actual processing only begins when a terminal operation is invoked. The stream also "short-circuits" when possible, finishing execution as soon as it finds the required data (e.g., `findFirst()`) without scanning the rest of the dataset.
+### 5. `findFirst()` vs. `findAny()` in Parallel Streams
 
-### 7. What is a functional interface in Java 8?
-A functional interface is an interface that contains exactly **one abstract method**. They are used as the assignment target for lambda expressions or method references. You can explicitly mark them with the `@FunctionalInterface` annotation so the compiler ensures they only have one abstract method.
+* **`findFirst()`**: Returns the very first element in the stream's **encounter order**. In parallel streams, this is expensive because threads must coordinate and synchronize their results to guarantee they return the true first element, reducing parallel performance.
+* **`findAny()`**: Returns any element found by any of the processing threads. In parallel streams, it has **no ordering constraints** — whichever thread finds a match first returns it immediately, maximizing parallel scaling.
 
-### 8. What is the difference between findFirst() and findAny()?
-In a sequential stream, they generally do the same thing. In a parallel stream, `findFirst()` guarantees it will return the very first element meeting the criteria based on the stream's encounter order. `findAny()` is optimized for performance and will return whichever matching element it finds first across any of the parallel threads.
+---
 
-### 9. What is a Predicate interface?
-It is a built-in functional interface that takes one argument and returns a `boolean` (its abstract method is `test(T t)`). It is heavily used in the `filter()` method.
+### 6. Short-Circuiting Stream Operations
 
-### 10. What are the Supplier and Consumer functional interfaces?
-* **Supplier:** Takes no arguments and returns an object (abstract method: `get()`). It acts like a factory.
-* **Consumer:** Takes an argument and returns nothing (abstract method: `accept(T t)`). It consumes the input and operates via side effects (e.g., `System.out.println` used in `forEach`).
+Short-circuiting operations limit the traversal of data, allowing streams to handle infinite sources efficiently:
 
-### 11. Can you convert an array to a Stream?
-Yes, using `Stream.of(array)` or `Arrays.stream(array)`.
+* **Intermediate Short-circuiting:** `limit(n)` stops downstream processing once $n$ elements are passed.
+* **Terminal Short-circuiting:** `findFirst()`, `findAny()`, `anyMatch()`, `allMatch()`, `noneMatch()` stop executing the pipeline as soon as the result is determined.
 
-### 12. What is a parallel Stream?
-A parallel stream splits the data processing tasks across multiple threads, utilizing multi-core processors. You can easily get a parallel stream from a list by calling `list.parallelStream()`. It is excellent for CPU-intensive operations on massive datasets, but the overhead of spinning up threads can make it slower than sequential streams for small or simple tasks.
+```java
+// Stops after finding the first positive number (does not evaluate elements 2 to 1000)
+Integer firstPositive = Stream.of(-2, -1, 5, 10, 20)
+    .filter(x -> x > 0)
+    .findFirst()
+    .orElse(null);
+```

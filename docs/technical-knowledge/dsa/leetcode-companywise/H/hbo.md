@@ -2,4 +2,5 @@
 
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
-| 341 | https://leetcode.com/problems/flatten-nested-list-iterator | Flatten Nested List Iterator | Medium | 65.6% | 100.0% |
+| 341 | https://leetcode.com/problems/flatten-nested-list-iterator | Flatten Nested List Iterator | Medium | 65.7% | 100.0% |
+

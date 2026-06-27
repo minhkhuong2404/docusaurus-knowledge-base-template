@@ -2,4 +2,5 @@
 
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
-| 1674 | https://leetcode.com/problems/minimum-moves-to-make-array-complementary | Minimum Moves to Make Array Complementary | Medium | 43.3% | 100.0% |
+| 1674 | https://leetcode.com/problems/minimum-moves-to-make-array-complementary | Minimum Moves to Make Array Complementary | Medium | 65.0% | 100.0% |
+

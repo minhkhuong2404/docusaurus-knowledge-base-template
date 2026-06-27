@@ -2,4 +2,5 @@
 
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
-| 33 | https://leetcode.com/problems/search-in-rotated-sorted-array | Search in Rotated Sorted Array | Medium | 44.1% | 100.0% |
+| 33 | https://leetcode.com/problems/search-in-rotated-sorted-array | Search in Rotated Sorted Array | Medium | 44.9% | 100.0% |
+

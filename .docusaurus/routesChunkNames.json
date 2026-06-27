@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-9ec": {
+  "/-526": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-737": {
+  "/-635": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -3225,6 +3225,10 @@
     "__comp": "df203c0f",
     "__props": "f5712fe2"
   },
+  "/tags/object-class-857": {
+    "__comp": "df203c0f",
+    "__props": "fb231c5d"
+  },
   "/tags/object-lambda-f48": {
     "__comp": "df203c0f",
     "__props": "0d0d16a5"
@@ -3472,6 +3476,10 @@
   "/tags/parallel-streams-3ec": {
     "__comp": "df203c0f",
     "__props": "ebbc1253"
+  },
+  "/tags/parallelism-118": {
+    "__comp": "df203c0f",
+    "__props": "91f9fed1"
   },
   "/tags/parameter-store-af6": {
     "__comp": "df203c0f",
@@ -5325,7 +5333,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-1cb": {
+  "/-509": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -6320,7 +6328,7 @@
     "__comp": "17896441",
     "content": "1d655bfd"
   },
-  "/technical-knowledge/database/connection-pooling-18c": {
+  "/technical-knowledge/database/connection-pooling-ac4": {
     "__comp": "17896441",
     "content": "0dd1e07c"
   },
@@ -6744,13 +6752,9 @@
     "__comp": "17896441",
     "content": "3b1974ad"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/A/applovin-6cd": {
+  "/technical-knowledge/dsa/leetcode-companywise/A/aqr-capital-management-2a4": {
     "__comp": "17896441",
-    "content": "589900ce"
-  },
-  "/technical-knowledge/dsa/leetcode-companywise/A/aqr-capital-management-llc-44b": {
-    "__comp": "17896441",
-    "content": "6dfbede0"
+    "content": "68d04182"
   },
   "/technical-knowledge/dsa/leetcode-companywise/A/arcesium-7b5": {
     "__comp": "17896441",
@@ -6772,10 +6776,6 @@
     "__comp": "17896441",
     "content": "39555bb6"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/A/at-t-fb0": {
-    "__comp": "17896441",
-    "content": "193f4364"
-  },
   "/technical-knowledge/dsa/leetcode-companywise/A/athenahealth-9d6": {
     "__comp": "17896441",
     "content": "c65918a1"
@@ -6783,6 +6783,10 @@
   "/technical-knowledge/dsa/leetcode-companywise/A/atlassian-fc2": {
     "__comp": "17896441",
     "content": "00ecb6f0"
+  },
+  "/technical-knowledge/dsa/leetcode-companywise/A/att-2cc": {
+    "__comp": "17896441",
+    "content": "69474abc"
   },
   "/technical-knowledge/dsa/leetcode-companywise/A/attentive-613": {
     "__comp": "17896441",
@@ -6839,6 +6843,10 @@
   "/technical-knowledge/dsa/leetcode-companywise/B/bending-spoons-ced": {
     "__comp": "17896441",
     "content": "7db53616"
+  },
+  "/technical-knowledge/dsa/leetcode-companywise/B/bill-com-f52": {
+    "__comp": "17896441",
+    "content": "6de883db"
   },
   "/technical-knowledge/dsa/leetcode-companywise/B/bitgo-fa3": {
     "__comp": "17896441",
@@ -7068,6 +7076,10 @@
     "__comp": "17896441",
     "content": "ee0cda6c"
   },
+  "/technical-knowledge/dsa/leetcode-companywise/C/coditas-3dc": {
+    "__comp": "17896441",
+    "content": "b5d6708c"
+  },
   "/technical-knowledge/dsa/leetcode-companywise/C/cognizant-918": {
     "__comp": "17896441",
     "content": "ed024e26"
@@ -7127,10 +7139,6 @@
   "/technical-knowledge/dsa/leetcode-companywise/C/cred-ab5": {
     "__comp": "17896441",
     "content": "dc351f87"
-  },
-  "/technical-knowledge/dsa/leetcode-companywise/C/credit-karma-dca": {
-    "__comp": "17896441",
-    "content": "b576f839"
   },
   "/technical-knowledge/dsa/leetcode-companywise/C/criteo-941": {
     "__comp": "17896441",
@@ -7232,10 +7240,6 @@
     "__comp": "17896441",
     "content": "f1578e3c"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/D/didi-4d9": {
-    "__comp": "17896441",
-    "content": "2586a2ae"
-  },
   "/technical-knowledge/dsa/leetcode-companywise/D/directi-621": {
     "__comp": "17896441",
     "content": "620709fe"
@@ -7320,6 +7324,10 @@
     "__comp": "17896441",
     "content": "7d0b0153"
   },
+  "/technical-knowledge/dsa/leetcode-companywise/E/envoy-a12": {
+    "__comp": "17896441",
+    "content": "fd5b4b29"
+  },
   "/technical-knowledge/dsa/leetcode-companywise/E/epam-systems-fd5": {
     "__comp": "17896441",
     "content": "03aa8d66"
@@ -7348,6 +7356,10 @@
     "__comp": "17896441",
     "content": "320b594c"
   },
+  "/technical-knowledge/dsa/leetcode-companywise/E/exl-bbb": {
+    "__comp": "17896441",
+    "content": "f354e81a"
+  },
   "/technical-knowledge/dsa/leetcode-companywise/E/expedia-ab9": {
     "__comp": "17896441",
     "content": "41d1133e"
@@ -7363,10 +7375,6 @@
   "/technical-knowledge/dsa/leetcode-companywise/F/factset-7fe": {
     "__comp": "17896441",
     "content": "76b322c0"
-  },
-  "/technical-knowledge/dsa/leetcode-companywise/F/factwise-909": {
-    "__comp": "17896441",
-    "content": "0191c13c"
   },
   "/technical-knowledge/dsa/leetcode-companywise/F/faire-f99": {
     "__comp": "17896441",
@@ -7431,10 +7439,6 @@
   "/technical-knowledge/dsa/leetcode-companywise/F/flipkart-1f2": {
     "__comp": "17896441",
     "content": "6626efc2"
-  },
-  "/technical-knowledge/dsa/leetcode-companywise/F/ford-788": {
-    "__comp": "17896441",
-    "content": "b8b54b73"
   },
   "/technical-knowledge/dsa/leetcode-companywise/F/fortinet-7c2": {
     "__comp": "17896441",
@@ -7508,10 +7512,6 @@
     "__comp": "17896441",
     "content": "edd56b81"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/G/genpact-71e": {
-    "__comp": "17896441",
-    "content": "09a2b59d"
-  },
   "/technical-knowledge/dsa/leetcode-companywise/G/gilt-groupe-698": {
     "__comp": "17896441",
     "content": "d82d28cb"
@@ -7527,10 +7527,6 @@
   "/technical-knowledge/dsa/leetcode-companywise/G/globallogic-767": {
     "__comp": "17896441",
     "content": "f22d73c3"
-  },
-  "/technical-knowledge/dsa/leetcode-companywise/G/globant-70a": {
-    "__comp": "17896441",
-    "content": "6361914d"
   },
   "/technical-knowledge/dsa/leetcode-companywise/G/glovo-c4a": {
     "__comp": "17896441",
@@ -7620,10 +7616,6 @@
     "__comp": "17896441",
     "content": "5be49dd7"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/H/hertz-c82": {
-    "__comp": "17896441",
-    "content": "ae224468"
-  },
   "/technical-knowledge/dsa/leetcode-companywise/H/highspot-b7b": {
     "__comp": "17896441",
     "content": "054f4103"
@@ -7704,6 +7696,10 @@
     "__comp": "17896441",
     "content": "24bda35f"
   },
+  "/technical-knowledge/dsa/leetcode-companywise/I/impetus-d98": {
+    "__comp": "17896441",
+    "content": "f550ba8d"
+  },
   "/technical-knowledge/dsa/leetcode-companywise/I/increff-1e3": {
     "__comp": "17896441",
     "content": "0cdcce0e"
@@ -7780,10 +7776,6 @@
     "__comp": "17896441",
     "content": "5cdc0854"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/J/jetbrains-502": {
-    "__comp": "17896441",
-    "content": "20afbcbf"
-  },
   "/technical-knowledge/dsa/leetcode-companywise/J/jingchi-b01": {
     "__comp": "17896441",
     "content": "2d2a35e2"
@@ -7808,17 +7800,9 @@
     "__comp": "17896441",
     "content": "ec7e0bd4"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/J/junglee-games-50e": {
-    "__comp": "17896441",
-    "content": "3ab22ef4"
-  },
   "/technical-knowledge/dsa/leetcode-companywise/J/juspay-13b": {
     "__comp": "17896441",
     "content": "8771a979"
-  },
-  "/technical-knowledge/dsa/leetcode-companywise/J/justworks-7cf": {
-    "__comp": "17896441",
-    "content": "3847c95d"
   },
   "/technical-knowledge/dsa/leetcode-companywise/K/kakao-44e": {
     "__comp": "17896441",
@@ -7827,10 +7811,6 @@
   "/technical-knowledge/dsa/leetcode-companywise/K/karat-09e": {
     "__comp": "17896441",
     "content": "4fa074a3"
-  },
-  "/technical-knowledge/dsa/leetcode-companywise/K/keeptruckin-118": {
-    "__comp": "17896441",
-    "content": "41776086"
   },
   "/technical-knowledge/dsa/leetcode-companywise/K/kickdrum-415": {
     "__comp": "17896441",
@@ -7848,17 +7828,9 @@
     "__comp": "17896441",
     "content": "47d5068f"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/K/kpit-40f": {
-    "__comp": "17896441",
-    "content": "b82b008a"
-  },
   "/technical-knowledge/dsa/leetcode-companywise/K/kpmg-77e": {
     "__comp": "17896441",
     "content": "93a02bec"
-  },
-  "/technical-knowledge/dsa/leetcode-companywise/L/lacework-16a": {
-    "__comp": "17896441",
-    "content": "2a94ff81"
   },
   "/technical-knowledge/dsa/leetcode-companywise/L/larsen-toubro-1c4": {
     "__comp": "17896441",
@@ -8060,9 +8032,17 @@
     "__comp": "17896441",
     "content": "6926cc83"
   },
+  "/technical-knowledge/dsa/leetcode-companywise/M/motive-231": {
+    "__comp": "17896441",
+    "content": "b605b1e1"
+  },
   "/technical-knowledge/dsa/leetcode-companywise/M/moveworks-3e6": {
     "__comp": "17896441",
     "content": "49c0cb2a"
+  },
+  "/technical-knowledge/dsa/leetcode-companywise/M/mphasis-39f": {
+    "__comp": "17896441",
+    "content": "3c00fa16"
   },
   "/technical-knowledge/dsa/leetcode-companywise/M/msci-d4b": {
     "__comp": "17896441",
@@ -8155,10 +8135,6 @@
   "/technical-knowledge/dsa/leetcode-companywise/N/nextjump-99e": {
     "__comp": "17896441",
     "content": "221c2621"
-  },
-  "/technical-knowledge/dsa/leetcode-companywise/N/nference-d41": {
-    "__comp": "17896441",
-    "content": "0f3b302e"
   },
   "/technical-knowledge/dsa/leetcode-companywise/N/niantic-d5a": {
     "__comp": "17896441",
@@ -8268,9 +8244,9 @@
     "__comp": "17896441",
     "content": "ffdc2cfb"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/P/palantir-technologies-a1e": {
+  "/technical-knowledge/dsa/leetcode-companywise/P/palantir-ab6": {
     "__comp": "17896441",
-    "content": "14e2cac8"
+    "content": "384f527c"
   },
   "/technical-knowledge/dsa/leetcode-companywise/P/palo-alto-networks-b91": {
     "__comp": "17896441",
@@ -8480,6 +8456,10 @@
     "__comp": "17896441",
     "content": "196fbb09"
   },
+  "/technical-knowledge/dsa/leetcode-companywise/R/reliance-retails-b2c": {
+    "__comp": "17896441",
+    "content": "77fe3a5c"
+  },
   "/technical-knowledge/dsa/leetcode-companywise/R/remitly-58c": {
     "__comp": "17896441",
     "content": "97e8174d"
@@ -8588,6 +8568,10 @@
     "__comp": "17896441",
     "content": "a720654c"
   },
+  "/technical-knowledge/dsa/leetcode-companywise/S/shopback-8bc": {
+    "__comp": "17896441",
+    "content": "9d7a1540"
+  },
   "/technical-knowledge/dsa/leetcode-companywise/S/shopee-0e0": {
     "__comp": "17896441",
     "content": "8867d47d"
@@ -8595,6 +8579,10 @@
   "/technical-knowledge/dsa/leetcode-companywise/S/shopify-09f": {
     "__comp": "17896441",
     "content": "95b0e222"
+  },
+  "/technical-knowledge/dsa/leetcode-companywise/S/shopup-7e7": {
+    "__comp": "17896441",
+    "content": "425cbfdf"
   },
   "/technical-knowledge/dsa/leetcode-companywise/S/siemens-fcc": {
     "__comp": "17896441",
@@ -8892,10 +8880,6 @@
     "__comp": "17896441",
     "content": "f5dd1b09"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/T/turo-c79": {
-    "__comp": "17896441",
-    "content": "3fd3250b"
-  },
   "/technical-knowledge/dsa/leetcode-companywise/T/turvo-dc5": {
     "__comp": "17896441",
     "content": "9aa852f2"
@@ -8923,6 +8907,10 @@
   "/technical-knowledge/dsa/leetcode-companywise/U/uber-a69": {
     "__comp": "17896441",
     "content": "30a74aea"
+  },
+  "/technical-knowledge/dsa/leetcode-companywise/U/ubisoft-c41": {
+    "__comp": "17896441",
+    "content": "addf5b77"
   },
   "/technical-knowledge/dsa/leetcode-companywise/U/ubs-099": {
     "__comp": "17896441",
@@ -8959,10 +8947,6 @@
   "/technical-knowledge/dsa/leetcode-companywise/U/urban-company-e1e": {
     "__comp": "17896441",
     "content": "a5b6d27e"
-  },
-  "/technical-knowledge/dsa/leetcode-companywise/U/ust-05a": {
-    "__comp": "17896441",
-    "content": "2249b105"
   },
   "/technical-knowledge/dsa/leetcode-companywise/V/valve-ea2": {
     "__comp": "17896441",
@@ -9023,10 +9007,6 @@
   "/technical-knowledge/dsa/leetcode-companywise/W/warnermedia-418": {
     "__comp": "17896441",
     "content": "a6356fb6"
-  },
-  "/technical-knowledge/dsa/leetcode-companywise/W/watchguard-2f6": {
-    "__comp": "17896441",
-    "content": "f6cec63f"
   },
   "/technical-knowledge/dsa/leetcode-companywise/W/wayfair-289": {
     "__comp": "17896441",
@@ -9123,10 +9103,6 @@
   "/technical-knowledge/dsa/leetcode-companywise/Y/yelp-efb": {
     "__comp": "17896441",
     "content": "037b3083"
-  },
-  "/technical-knowledge/dsa/leetcode-companywise/Y/yext-4a0": {
-    "__comp": "17896441",
-    "content": "ebb58180"
   },
   "/technical-knowledge/dsa/leetcode-companywise/Y/yugabyte-7a2": {
     "__comp": "17896441",
@@ -9632,6 +9608,10 @@
     "__comp": "17896441",
     "content": "be1ca738"
   },
+  "/technical-knowledge/java/concurrency-vs-parallelism-5b1": {
+    "__comp": "17896441",
+    "content": "e2052292"
+  },
   "/technical-knowledge/java/java-aqs-internals-bd0": {
     "__comp": "17896441",
     "content": "2695042f"
@@ -9640,7 +9620,7 @@
     "__comp": "17896441",
     "content": "a8d4740a"
   },
-  "/technical-knowledge/java/java-concurrency-9d4": {
+  "/technical-knowledge/java/java-concurrency-b7b": {
     "__comp": "17896441",
     "content": "f13bfd67"
   },
@@ -9680,6 +9660,10 @@
     "__comp": "17896441",
     "content": "0366963e"
   },
+  "/technical-knowledge/java/java-object-class-fe3": {
+    "__comp": "17896441",
+    "content": "8e1d77b1"
+  },
   "/technical-knowledge/java/java-oop-39c": {
     "__comp": "17896441",
     "content": "5304fd8a"
@@ -9696,11 +9680,11 @@
     "__comp": "17896441",
     "content": "190bfe65"
   },
-  "/technical-knowledge/java/java-virtual-threads-de7": {
+  "/technical-knowledge/java/java-virtual-threads-e62": {
     "__comp": "17896441",
     "content": "dd9695a1"
   },
-  "/technical-knowledge/java/thread-pools-and-connection-pooling-ca5": {
+  "/technical-knowledge/java/thread-pools-and-connection-pooling-c1a": {
     "__comp": "17896441",
     "content": "89378099"
   },
@@ -9948,7 +9932,7 @@
     "__comp": "17896441",
     "content": "4d4f0566"
   },
-  "/technical-knowledge/networking/socket-programming-io-models-2e3": {
+  "/technical-knowledge/networking/socket-programming-io-models-89a": {
     "__comp": "17896441",
     "content": "a862eed1"
   },
@@ -10088,7 +10072,7 @@
     "__comp": "17896441",
     "content": "ee283b96"
   },
-  "/technical-knowledge/security/keys-signing-tls-cc5": {
+  "/technical-knowledge/security/keys-signing-tls-cc7": {
     "__comp": "17896441",
     "content": "78e05996"
   },
@@ -10116,25 +10100,25 @@
     "__comp": "17896441",
     "content": "f082910f"
   },
-  "/technical-knowledge/solid/solid/dependency-inversion-e45": {
+  "/technical-knowledge/solid/dependency-inversion-f5c": {
     "__comp": "17896441",
-    "content": "ea0c56a8"
+    "content": "41ff6ee9"
   },
-  "/technical-knowledge/solid/solid/interface-segregation-0bb": {
+  "/technical-knowledge/solid/interface-segregation-a81": {
     "__comp": "17896441",
-    "content": "fbeb6a72"
+    "content": "1558cd5b"
   },
-  "/technical-knowledge/solid/solid/liskov-substitution-318": {
+  "/technical-knowledge/solid/liskov-substitution-2c5": {
     "__comp": "17896441",
-    "content": "ad22e946"
+    "content": "0921ef15"
   },
-  "/technical-knowledge/solid/solid/open-closed-d5d": {
+  "/technical-knowledge/solid/open-closed-b6f": {
     "__comp": "17896441",
-    "content": "631d56ee"
+    "content": "d66b4907"
   },
-  "/technical-knowledge/solid/solid/single-responsibility-d12": {
+  "/technical-knowledge/solid/single-responsibility-5da": {
     "__comp": "17896441",
-    "content": "c6135f55"
+    "content": "9b551f63"
   },
   "/technical-knowledge/solid/summary-d59": {
     "__comp": "17896441",
@@ -10160,7 +10144,7 @@
     "__comp": "17896441",
     "content": "070cceee"
   },
-  "/technical-knowledge/spring/spring-boot-advanced-04e": {
+  "/technical-knowledge/spring/spring-boot-advanced-e69": {
     "__comp": "17896441",
     "content": "44626067"
   },

@@ -2,4 +2,5 @@
 
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
-| 2381 | https://leetcode.com/problems/shifting-letters-ii | Shifting Letters II | Medium | 53.5% | 100.0% |
+| 2381 | https://leetcode.com/problems/shifting-letters-ii | Shifting Letters II | Medium | 53.7% | 100.0% |
+

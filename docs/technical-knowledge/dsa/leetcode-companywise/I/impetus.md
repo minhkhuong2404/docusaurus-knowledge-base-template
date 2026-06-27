@@ -1,0 +1,6 @@
+# Impetus LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 26 | https://leetcode.com/problems/remove-duplicates-from-sorted-array | Remove Duplicates from Sorted Array | Easy | 62.8% | 100.0% |
+

@@ -2,4 +2,5 @@
 
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
-| 695 | https://leetcode.com/problems/max-area-of-island | Max Area of Island | Medium | 73.8% | 100.0% |
+| 695 | https://leetcode.com/problems/max-area-of-island | Max Area of Island | Medium | 74.0% | 100.0% |
+

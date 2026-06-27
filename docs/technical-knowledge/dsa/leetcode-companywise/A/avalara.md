@@ -2,4 +2,5 @@
 
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
-| 2117 | https://leetcode.com/problems/abbreviating-the-product-of-a-range | Abbreviating the Product of a Range | Hard | 24.8% | 100.0% |
+| 2117 | https://leetcode.com/problems/abbreviating-the-product-of-a-range | Abbreviating the Product of a Range | Hard | 24.9% | 100.0% |
+

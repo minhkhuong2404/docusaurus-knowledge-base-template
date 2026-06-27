@@ -2,4 +2,5 @@
 
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
-| 1979 | https://leetcode.com/problems/find-greatest-common-divisor-of-array | Find Greatest Common Divisor of Array | Easy | 79.7% | 100.0% |
+| 1979 | https://leetcode.com/problems/find-greatest-common-divisor-of-array | Find Greatest Common Divisor of Array | Easy | 80.0% | 100.0% |
+

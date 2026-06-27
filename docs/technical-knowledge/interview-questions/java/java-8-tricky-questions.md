@@ -17,19 +17,17 @@ This guide focuses on conceptual, tricky, and scenario-based questions commonly 
 ### Basic Concepts
 * **Why can a stream be consumed only once?**
   A Java stream acts like a data pipeline. Once a terminal operation (like `forEach`, `collect`, or `count`) is executed, the stream processes the elements step-by-step and closes automatically. Reusing it will throw an `IllegalStateException`.
-  ```java
-  Stream<String> names = Stream.of("Alice", "Bob", "Charlie");
-  names.forEach(System.out::println); // Terminal operation
-  // names.count(); // This would throw an IllegalStateException
+  
+  **Under the Hood:** Stream maintains an internal `linkedOrConsumed` boolean flag. Any invocation of an intermediate or terminal operation checks this flag first. If it's true, it throws `IllegalStateException("stream has already been operated upon or closed")`.
 
 * **Why do we need streams if we can write code without them?**
-Streams make code shorter, cleaner, and more readable by adopting a declarative approach (describing *what* to do rather than *how* to do it). They also support functional programming and easy parallel processing.
-* **Explain the stream pipeline structure.**
-A stream pipeline consists of three main parts:
-1. **Source:** Where data comes from (e.g., a List, Set, or Array).
-2. **Intermediate Operations:** Transformations like `filter`, `map`, or `sorted`. These are lazy and just prepare the pipeline.
-3. **Terminal Operation:** Operations like `forEach` or `collect` that trigger the execution and produce a result.
+  Streams make code shorter, cleaner, and more readable by adopting a declarative approach (describing *what* to do rather than *how* to do it). They also support functional programming and easy parallel processing.
 
+* **Explain the stream pipeline structure.**
+  A stream pipeline consists of three main parts:
+  1. **Source:** Where data comes from (e.g., a List, Set, or Array).
+  2. **Intermediate Operations:** Transformations like `filter`, `map`, or `sorted`. These are lazy and just prepare the pipeline.
+  3. **Terminal Operation:** Operations like `forEach` or `collect` that trigger the execution and produce a result.
 
 ```java
 List<String> activeUsers = users.stream() // 1. Source
@@ -38,132 +36,116 @@ List<String> activeUsers = users.stream() // 1. Source
     .collect(Collectors.toList());        // 3. Terminal Operation
 ```
 
-
 * **Why are intermediate operations called "lazy"?**
-They do not run immediately when written. They simply prepare the pipeline, and the actual processing only begins when a terminal operation is called.
+  They do not run immediately when written. They simply prepare the pipeline, and the actual processing only begins when a terminal operation is called. This is implemented via a linked pipeline of `AbstractPipeline` nodes.
+
 * **Why is a Stream not a Data Structure?**
-Unlike Collections, Streams do not store data. They are simply a conduit to process data flowing from a source.
+  Unlike Collections, Streams do not store data. They are simply a conduit to process data flowing from a source. They do not modify the underlying source data.
 
 ### Execution & Performance
 
 * **If a pipeline has multiple filters, does it iterate the collection multiple times?**
-No. Intermediate operations are combined into a single pass. Java applies all filters to the first element before moving to the second, making it highly efficient.
+  No. Intermediate operations are combined into a single pass. Java applies all filters to the first element before moving to the second, making it highly efficient. This is known as **loop fusion**.
+
 * **How can you debug a stream without affecting the result?**
-Use the `peek()` method. It allows you to observe (e.g., log or print) elements as they flow through the pipeline without modifying them.
-```java
-List<Order> highValueOrders = orders.stream()
-    .filter(o -> o.getAmount() > 1000)
-    .peek(o -> log.info("Found high value order: {}", o.getId()))
-    .collect(Collectors.toList());
-
-```
-
+  Use the `peek()` method. It allows you to observe (e.g., log or print) elements as they flow through the pipeline without modifying them.
+  
+  **Production warning:** `peek()` is primarily for debugging. Do not use it for side-effects that modify state, as the JVM may skip executing `peek()` if it optimizes the pipeline (e.g., in `stream.peek(...).count()`, newer JVMs might optimize away the elements traversal entirely).
 
 * **What factors should you check if processing 10 million records is slow?**
-You should verify:
-* If the logic inside `filter` or `map` is too heavy (e.g., network calls or heavy computations).
-* If there are unnecessary operations in the pipeline.
-* If object creation inside the stream is causing high GC overhead.
-* Whether switching to a `parallelStream()` would help.
-
+  1. **Primitive Boxing:** Are you using `Stream<Integer>` instead of `IntStream`? Boxing/unboxing in streams introduces severe GC overhead.
+  2. **Blocking Operations:** Are there I/O calls (database queries, HTTP calls) inside `.map()` or `.filter()`? This serializes operations and wastes CPU cycles.
+  3. **Spliterator Efficiency:** Is the source collection easy to split (like an `ArrayList` or array) or difficult (like a `LinkedList` or `BufferedReader`)?
+  4. **Parallelism overhead:** Is the task too small to justify the `ForkJoinPool` overhead?
 
 * **When should streams be avoided?**
-Streams should be avoided when the logic is highly complex with nested conditionals, as a traditional loop might be easier to read and maintain.
+  Streams should be avoided when the logic is highly complex with nested conditionals, when you need to write/read variables outside the loop scope (since variables must be final or effectively final), or when working on performance-critical code where boxing/unboxing or class/iterator allocations are bottlenecks.
+
 * **What happens if you modify the source collection during stream processing?**
-It can lead to unpredictable results or throw a `ConcurrentModificationException`. The source data should remain unchanged during processing.
+  It will throw a `ConcurrentModificationException` (fail-fast behavior) if the underlying iterator detects a change in the collection's `modCount`. Always collect elements to a separate collection first before modifying.
 
 ### Parallel Streams
 
 * **How does Java decide the number of threads for a parallel stream?**
-It typically depends on the number of available CPU cores in the system (specifically `Runtime.getRuntime().availableProcessors()`).
+  It depends on the number of available CPU cores in the system:
+  $$\text{Thread Count} = \text{Runtime.getRuntime().availableProcessors()} - 1$$
+  The subtraction of 1 accounts for the thread calling the parallel stream.
+
 * **Why can parallel streams sometimes make performance worse?**
-The overhead of creating, managing, and synchronizing multiple threads can outweigh the benefits of parallelism, especially for very small tasks or operations involving heavy synchronization.
+  1. **Fork/Join Overhead:** Splitting the data, scheduling tasks in the pool, and merging results has a non-trivial cost.
+  2. **Thread Contention:** If threads are competing for shared locks or mutable state, they block, negating the benefits of parallelism.
+  3. **Bad Splitting:** Collections like `LinkedList` cannot be split efficiently (O(n) split time), meaning the splitting phase blocks the pool.
+
 * **Which operations are unsuitable for parallel streams?**
-Operations that modify shared variables, depend on order, or are extremely lightweight. Furthermore, if operations depend on the results of previous elements (like a running total), parallel processing can yield unpredictable results.
+  Operations that depend on order (like `limit()`, `skip()`, `findFirst()`), operations with side-effects on shared state, and operations on sources that don't split evenly (e.g. `LinkedList`, files).
+
 * **Which thread pool do parallel streams use?**
-They internally use the `ForkJoinPool.commonPool()`. Heavily utilizing parallel streams can impact other tasks in the application that rely on this same shared pool.
+  They use the shared **`ForkJoinPool.commonPool()`**.
+  
+  **Production Gotcha:** Because the common pool is shared across the entire JVM, running a long-running or blocking operation (like an HTTP call) inside a parallel stream can starve the pool, blocking other unrelated tasks in the application.
 
 ---
 
 ## 🛠️ Functional Interfaces & Lambdas
 
 * **What makes an interface functional?**
-It must have exactly **one** abstract method. However, it can have any number of `default` or `static` methods.
-```java
-@FunctionalInterface
-public interface PaymentProcessor {
-    boolean process(Payment payment); // The single abstract method
+  It must have exactly **one** abstract method. It can have any number of `default` or `static` methods. The `@FunctionalInterface` annotation is optional but recommended to enforce this rule at compile time.
 
-    default void logTransaction(Payment payment) {
-        System.out.println("Logging: " + payment.getId());
-    }
-}
-
-```
-
-
-* **Why are multiple default methods allowed?**
-Default methods already have an implementation, so they don't interfere with the primary purpose of the interface. The single abstract method rule exists so the compiler knows exactly which method a lambda expression is implementing.
 * **Why is the `@FunctionalInterface` annotation used if it's optional?**
-It provides compile-time safety by triggering a compiler error if someone accidentally adds a second abstract method to the interface.
-* **What is the difference between Predicate, Function, Consumer, and Supplier?**
-* **Predicate:** Takes a value and returns a boolean. `Predicate<String> isEmpty = String::isEmpty;`
-* **Function:** Takes a value and returns a transformed value. `Function<User, String> getName = User::getName;`
-* **Consumer:** Takes a value and performs an action, returning nothing. `Consumer<String> print = System.out::println;`
-* **Supplier:** Takes no input but returns a value. `Supplier<UUID> idGenerator = UUID::randomUUID;`
+  It prevents developers from accidentally adding new abstract methods to the interface in the future, which would break all lambda expressions implementing it.
 
+* **What is the difference between Predicate, Function, Consumer, and Supplier?**
+  * **Predicate:** `T → boolean` (e.g. testing conditions)
+  * **Function:** `T → R` (e.g. mapping/transforming values)
+  * **Consumer:** `T → void` (e.g. logging, printing)
+  * **Supplier:** `() → T` (e.g. lazy initialization, factories)
 
 * **Why must variables inside a lambda be "final" or "effectively final"?**
-To prevent unexpected value changes and ensure thread safety while the lambda is executing. "Effectively final" means the variable isn't explicitly declared with the `final` keyword, but its value is assigned only once and never changed.
+  To prevent race conditions and ensure thread safety. When a lambda captures a local variable from its enclosing scope, the JVM makes a **copy** of the variable. If the variable's value could change, the copy and the original would go out of sync, leading to unpredictable behavior.
+
+* **Lambda Compilation: Under the Hood**
+  Lambdas do not compile to anonymous inner classes. Instead:
+  1. The compiler generates a private static method containing the lambda body.
+  2. The compiler emits an `invokedynamic` (indy) instruction.
+  3. At runtime, the JVM uses `LambdaMetafactory.metafactory()` to dynamically generate a class that implements the functional interface and routes calls to the private static method.
+  4. This avoids creating class files on disk and reduces JVM memory footprint.
 
 ---
 
 ## 📦 Optionals & Modern Java Features
 
 * **Why was Optional introduced?**
-To handle null values safely, express clear API contracts, and reduce `NullPointerException`s. It acts as a container that clearly indicates a value may or may not be present.
+  To provide a clear API contract indicating the absence of a value, helping prevent `NullPointerException`s.
+
 * **What is the difference between `orElse` and `orElseGet`?**
-* `orElse()`: Always evaluates and creates the default value, even if the Optional is not empty.
-* `orElseGet()`: Only evaluates and creates the default value when the Optional is actually empty, making it much more efficient for expensive operations (like DB calls).
-
-
-```java
-// Bad: The DB call happens even if user is found
-User user = optionalUser.orElse(userRepository.createDefaultUser()); 
-
-// Good: The DB call ONLY happens if the optional is empty
-User user = optionalUser.orElseGet(() -> userRepository.createDefaultUser());
-
-```
-
+  * `orElse()`: Always evaluates its argument, even if the Optional has a value.
+  * `orElseGet()`: Evaluates the supplier lazily — only if the Optional is empty.
+  
+  **Performance trap:** Never use `orElse()` with database or network calls; it will execute them on every single invocation.
 
 * **`Optional.of` vs `Optional.ofNullable`:**
-* `Optional.of()`: Used when you are certain the value is not null (throws an exception if it is).
-* `Optional.ofNullable()`: Safer, as it gracefully returns an `Optional.empty()` if the value is null.
+  * `Optional.of()`: Throws NullPointerException if the argument is null. Use when null represents a bug.
+  * `Optional.ofNullable()`: Returns `Optional.empty()` if the argument is null. Use when null is a valid potential value.
 
+### Collector Internals (Custom Collectors)
+When you call `.collect(Collector)`, the stream uses a collector to reduce elements. The `Collector<T, A, R>` interface defines:
+- **`supplier()`**: Creates a container (`Supplier<A>`).
+- **`accumulator()`**: Adds an element to the container (`BiConsumer<A, T>`).
+- **`combiner()`**: Merges two containers (used in parallel streams, `BinaryOperator<A>`).
+- **`finisher()`**: Transforms the container to the final result (`Function<A, R>`).
+- **`characteristics()`**: Optimizer hints (`CONCURRENT`, `UNORDERED`, `IDENTITY_FINISH`).
 
+---
 
-### Features Beyond Java 8
+## 🚀 Virtual Threads (Java 21+)
 
-* **Java 10 (`var`):** Introduces local variable type inference, allowing the compiler to automatically detect the variable type based on the assigned value.
-```java
-var userMap = new HashMap<String, User>(); // Type is inferred
+Virtual threads are lightweight threads managed by the JVM instead of the OS.
 
-```
+* **Platform Threads vs. Virtual Threads:**
+  - **Platform Threads:** 1-to-1 mapping to OS threads. Heavy (~1MB stack size), expensive to create, and context switches involve OS kernel scheduling.
+  - **Virtual Threads:** M-to-N mapping (thousands of virtual threads share a small pool of carrier platform threads). Tiny stack, cheap to create, and context switches are managed by the JVM in user space.
 
-
-* **Java 14 (Records):** Special classes designed specifically for immutable data carriers. They automatically generate constructors, getters, `toString`, `equals`, and `hashCode` to reduce boilerplate.
-```java
-public record UserDto(UUID id, String email, String role) {}
-
-```
-
-
-* **Java 17 (Sealed Classes):** Restricts which other classes can extend or implement a class, providing better domain modeling and design control.
-```java
-public sealed interface Event permits LoginEvent, LogoutEvent {}
-
-```
-
-
-* **Java 21 (Virtual Threads):** Highly lightweight threads managed by the JVM rather than the OS, allowing blocking operations (like database queries or HTTP calls) to scale massively without consuming native OS threads.
+* **Thread Pinning Gotcha:**
+  When a virtual thread executes inside a `synchronized` block/method, or performs a native call, the virtual thread becomes **pinned** to its carrier platform thread. This means the carrier thread is blocked and cannot execute other virtual threads, negating the scaling benefit.
+  
+  **Solution:** Replace `synchronized` blocks with `ReentrantLock` in virtual thread-heavy applications.

@@ -4,3 +4,4 @@
 |---|---|---|---|---|---|
 | 1454 | https://leetcode.com/problems/active-users | Active Users | Medium | 36.6% | 100.0% |
 | 2107 | https://leetcode.com/problems/number-of-unique-flavors-after-sharing-k-candies | Number of Unique Flavors After Sharing K Candies | Medium | 60.5% | 100.0% |
+

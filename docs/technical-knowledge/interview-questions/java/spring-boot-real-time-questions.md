@@ -97,9 +97,40 @@ It auto-configures `DataSource` and JPA settings. It provides `JpaRepository` fo
 * **18. What are best practices for managing transactions?**
 Always apply `@Transactional` at the Service layer (where business logic resides) so multiple repository calls succeed or roll back together.
 * **19. How would you implement a "Soft Delete" feature?**
-Add a `deleted` boolean column. Update this column instead of running a SQL `DELETE`. Use Hibernate's `@Where(clause = "deleted=false")` to automatically filter out soft-deleted records.
+Add a `deleted` boolean column. Update this column instead of running a SQL `DELETE` using `@SQLDelete`, and use Hibernate's `@Where` to automatically filter out soft-deleted records.
+```java
+@Entity
+@Table(name = "products")
+@SQLDelete(sql = "UPDATE products SET deleted = true WHERE id = ?")
+@Where(clause = "deleted = false")
+public class Product {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+    private boolean deleted = Boolean.FALSE;
+}
+```
 * **20. How do you build a non-blocking reactive REST API?**
-Use **Spring WebFlux**. Return `Mono<T>` or `Flux<T>` from controllers, and use reactive database repositories (like R2DBC) to ensure the entire stack is non-blocking.
+Use **Spring WebFlux**. Return `Mono<T>` (for 0 or 1 result) or `Flux<T>` (for 0 to N results) from controllers, and use reactive database repositories (like R2DBC) to ensure the entire stack is non-blocking.
+```java
+@RestController
+@RequestMapping("/api/reactive/products")
+public class ReactiveProductController {
+    @Autowired
+    private ReactiveProductRepository repository;
+
+    @GetMapping("/{id}")
+    public Mono<Product> getProductById(@PathVariable Long id) {
+        return repository.findById(id);
+    }
+
+    @GetMapping(produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<Product> getAllProductsStream() {
+        return repository.findAll();
+    }
+}
+```
 * **21. How can you implement pagination?**
 Pass a `PageRequest` (implementing the `Pageable` interface) containing the page number and size to Spring Data JPA repository methods to return a `Page<T>` object.
 ```java

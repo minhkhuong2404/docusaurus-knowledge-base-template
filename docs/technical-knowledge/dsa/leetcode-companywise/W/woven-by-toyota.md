@@ -3,3 +3,4 @@
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
 | 716 | https://leetcode.com/problems/max-stack | Max Stack | Hard | 45.9% | 100.0% |
+

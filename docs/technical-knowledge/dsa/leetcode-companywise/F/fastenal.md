@@ -3,3 +3,4 @@
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
 | 726 | https://leetcode.com/problems/number-of-atoms | Number of Atoms | Hard | 65.1% | 100.0% |
+

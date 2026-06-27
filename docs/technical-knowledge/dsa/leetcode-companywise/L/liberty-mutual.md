@@ -2,4 +2,5 @@
 
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
-| 2296 | https://leetcode.com/problems/design-a-text-editor | Design a Text Editor | Hard | 49.9% | 100.0% |
+| 2296 | https://leetcode.com/problems/design-a-text-editor | Design a Text Editor | Hard | 50.7% | 100.0% |
+

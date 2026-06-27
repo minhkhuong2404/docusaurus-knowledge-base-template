@@ -1,5 +1,0 @@
-# Hertz LeetCode Questions
-
-| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
-|---|---|---|---|---|---|
-| 394 | https://leetcode.com/problems/decode-string | Decode String | Medium | 62.2% | 100.0% |

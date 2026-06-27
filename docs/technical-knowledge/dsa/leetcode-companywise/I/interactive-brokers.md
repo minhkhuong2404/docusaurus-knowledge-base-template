@@ -2,4 +2,5 @@
 
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
-| 2303 | https://leetcode.com/problems/calculate-amount-paid-in-taxes | Calculate Amount Paid in Taxes | Easy | 69.0% | 100.0% |
+| 2303 | https://leetcode.com/problems/calculate-amount-paid-in-taxes | Calculate Amount Paid in Taxes | Easy | 69.3% | 100.0% |
+

@@ -3,3 +3,4 @@
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
 | 966 | https://leetcode.com/problems/vowel-spellchecker | Vowel Spellchecker | Medium | 61.4% | 100.0% |
+

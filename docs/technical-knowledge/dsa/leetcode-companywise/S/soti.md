@@ -2,4 +2,5 @@
 
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
-| 605 | https://leetcode.com/problems/can-place-flowers | Can Place Flowers | Easy | 29.0% | 100.0% |
+| 605 | https://leetcode.com/problems/can-place-flowers | Can Place Flowers | Easy | 29.1% | 100.0% |
+

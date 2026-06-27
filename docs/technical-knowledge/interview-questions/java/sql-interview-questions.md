@@ -8,52 +8,101 @@ tags: [sql, interview, database, backend]
 
 # Top SQL Interview Questions & Answers
 
-These questions cover essential SQL techniques like finding the Nth highest salary and understanding database indexing as discussed in the Code Decode tutorial.
-
-## 1. How to find the 3rd Highest Salary?
-There are several ways to approach this. While nested subqueries work for small values, they are not scalable.
-
-### Scalable Solution (using `LIMIT` and `OFFSET`)
-The most efficient way is to sort the salaries in descending order and use the `LIMIT` clause:
-```sql
-SELECT salary 
-FROM employee_test 
-ORDER BY salary DESC 
-LIMIT 2, 1;
-```
-* **Explanation:** `ORDER BY salary DESC` sorts the list from highest to lowest. `LIMIT 2, 1` tells the database to skip the first 2 rows and return only the next 1 row (the 3rd row).
-
-
-## 2. What are Indexes and why are they used?
-Indexes are special database objects created to help retrieve records more quickly and efficiently.
-* **Purpose:** To reduce the time it takes to find a record (avoiding a **Full Table Scan**).
-* **Internal Working:** SQL creates a data structure (typically a **B-Tree**) that stores a specific column (e.g., Name) in a sorted manner. Each entry in the index points to the actual row in the table memory.
-* **Performance:** Looking up a record in a B-Tree takes **O(log n)** time, which is much faster than the **O(n)** time required to scan every row in a table.
-
-
-### How to Create an Index:
-```sql
-CREATE INDEX name_index ON employee_test(name);
-```
-
-### How to Drop an Index:
-```sql
-DROP INDEX name_index ON employee_test;
-```
-
-## 3. What are the disadvantages of Indexing?
-While indexes speed up retrieval, they have two main drawbacks:
-1.  **Storage Space:** Indexes are separate objects and require additional disk space. The larger the table, the larger the index.
-2.  **Slower Write Operations:** Every time you perform an `INSERT`, `UPDATE`, or `DELETE` on the table, the database must also update the corresponding index to keep it in sync.
-
-## 4. Does dropping a table also drop related objects?
-* **Yes:** Objects that exist *inside* the table scope are dropped, including **Constraints, Indexes, and Columns**.
-* **No:** Objects that exist *outside* the table scope are not dropped, such as **Views and Stored Procedures**.
-
-## 5. SQL Query Tuning Best Practices
-To optimize performance, consider the following tips:
-* **Avoid `SELECT *`**: Only fetch the columns you actually need.
-* **Use Inner Joins**: Prefer explicit `JOIN` syntax over using `WHERE` for joins, as the latter can sometimes lead to unintentional cartesian products.
-* **Avoid `SELECT DISTINCT`**: This is a costly operation; try to structure your data or query to avoid duplicates naturally.
+These questions cover essential SQL techniques, database index architectures, execution plan analysis, and query optimization.
 
 ---
+
+## 1. How to find the Nth Highest Salary? (With duplicate handling)
+
+Using `LIMIT offset, limit` is simple but has a major flaw: **it does not handle duplicates (ties) correctly**. If two employees share the highest salary, the 2nd highest salary query would return the same value.
+
+### Standard Solution: Using Window Functions (DENSE_RANK)
+To find the 3rd highest salary handling duplicates correctly, use `DENSE_RANK()`. This function assigns ranks without gaps (e.g. 1, 2, 2, 3):
+
+```sql
+WITH SalaryRanking AS (
+    SELECT salary,
+           DENSE_RANK() OVER (ORDER BY salary DESC) as rnk
+    FROM employee
+)
+SELECT salary 
+FROM SalaryRanking 
+WHERE rnk = 3;
+```
+
+### Rank vs. Dense Rank vs. Row Number
+
+If salaries are: `[100, 100, 90, 80]`
+
+| Function | Row 1 (100) | Row 2 (100) | Row 3 (90) | Row 4 (80) |
+|:---------|:------------|:------------|:------------|:------------|
+| `ROW_NUMBER()` | 1 | 2 | 3 | 4 |
+| `RANK()` | 1 | 1 | 3 (skips 2) | 4 |
+| `DENSE_RANK()`| 1 | 1 | **2** | **3** (no gaps) |
+
+- **`ROW_NUMBER()`**: Assigns a unique sequential integer starting from 1 (does not care about duplicates).
+- **`RANK()`**: Assigns identical ranks to duplicates but skips subsequent ranks.
+- **`DENSE_RANK()`**: Assigns identical ranks to duplicates without skipping ranks. **Always use DENSE_RANK for Nth highest queries.**
+
+---
+
+## 2. Under the Hood: B-Tree vs. Hash Indexing
+
+Databases use indices to speed up query execution. The two most common indexing structures are B-Trees and Hash Tables.
+
+### B-Tree Index (Default in most RDBMS)
+A B-Tree (Balanced Tree) stores index data in a sorted, self-balancing tree structure.
+
+- **Time Complexity:** O(log n) for lookups, insertions, and deletions.
+- **Why preferred:** B-Trees store data sequentially. This allows them to support **Range Queries** (`WHERE age BETWEEN 20 AND 30` or `WHERE age > 25`) and sorting (`ORDER BY`).
+- **Equality search:** Yes (`=`).
+
+### Hash Index
+A Hash Index uses a hash table structure where columns are hashed into bucket pointers.
+
+- **Time Complexity:** O(1) average lookup time (extremely fast).
+- **Limitations:** Does NOT support range queries, sorting, or partial key lookups (e.g., prefix match like `LIKE 'John%'`). It only supports **Exact Match** equality lookups (`=`).
+
+---
+
+## 3. What is a Composite Index and the Left-Prefix Rule?
+
+A Composite Index is an index created on multiple columns:
+```sql
+CREATE INDEX idx_user_status_age ON users(status, age);
+```
+
+### The Left-Prefix Rule
+For a composite index to be utilized, queries must filter by columns starting from the **leftmost** index column.
+
+Using the index `(status, age)`:
+- `WHERE status = 'ACTIVE' AND age = 25` -> **Uses index** (both columns).
+- `WHERE status = 'ACTIVE'` -> **Uses index** (left prefix).
+- `WHERE age = 25` -> **Does NOT use index** (leftmost column `status` is missing. Performs full table scan).
+
+### Index Selectivity
+When creating composite indexes, place the column with the **highest selectivity** (highest number of unique values, e.g. `user_id` or `email` vs `gender`) as the leftmost column to filter out the maximum number of rows early.
+
+---
+
+## 4. How to analyze and optimize a query? (Execution Plans)
+
+To optimize a slow query, do not guess. Generate and read the **Execution Plan** using the `EXPLAIN` keyword:
+
+```sql
+EXPLAIN ANALYZE 
+SELECT * FROM users WHERE email = 'test@example.com';
+```
+
+### Key Execution Plan Indicators to Check
+
+| Scan Type | Cost / Quality | Meaning |
+|:----------|:---------------|:--------|
+| **Seq Scan** (Full Table Scan) | ❌ Poor | The database scans every row in the table. Sign of a missing index. |
+| **Index Scan** | limit_icon | The database traverses the index B-Tree to find the row. Fast. |
+| **Index Only Scan** | limit_icon Excellent | The database reads the index only (the requested columns exist entirely within the index, avoiding reading the table heap). |
+
+### Query Tuning Best Practices
+- **Avoid `SELECT *`**: Fetching unnecessary columns increases network overhead and prevents the optimizer from choosing an **Index Only Scan**.
+- **Avoid wildcard prefixes:** `LIKE '%term'` prevents index utilization. `LIKE 'term%'` can use indexes.
+- **Use Union All instead of Union:** `UNION` removes duplicates using an expensive sort operation. If duplicates aren't possible or don't matter, use `UNION ALL` (no sorting).

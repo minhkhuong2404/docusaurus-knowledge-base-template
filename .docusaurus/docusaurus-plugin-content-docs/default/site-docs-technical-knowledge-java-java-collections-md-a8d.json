@@ -51,7 +51,7 @@
     "permalink": "/technical-knowledge/java/java-oop"
   },
   "next": {
-    "title": "Java Concurrency & Utilities",
-    "permalink": "/technical-knowledge/java/java-concurrency"
+    "title": "Java Object Class: Methods and Contracts",
+    "permalink": "/technical-knowledge/java/java-object-class"
   }
 }

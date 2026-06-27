@@ -1,5 +1,0 @@
-# Applovin LeetCode Questions
-
-| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
-|---|---|---|---|---|---|
-| 76 | https://leetcode.com/problems/minimum-window-substring | Minimum Window Substring | Hard | 46.9% | 100.0% |

@@ -1,0 +1,6 @@
+# Bill Com LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 1962 | https://leetcode.com/problems/remove-stones-to-minimize-the-total | Remove Stones to Minimize the Total | Medium | 65.7% | 100.0% |
+

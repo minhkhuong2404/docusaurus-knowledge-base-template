@@ -2,4 +2,5 @@
 
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
-| 146 | https://leetcode.com/problems/lru-cache | LRU Cache | Medium | 46.8% | 100.0% |
+| 146 | https://leetcode.com/problems/lru-cache | LRU Cache | Medium | 47.4% | 100.0% |
+

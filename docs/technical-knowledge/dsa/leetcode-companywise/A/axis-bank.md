@@ -2,4 +2,5 @@
 
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
-| 3495 | https://leetcode.com/problems/minimum-operations-to-make-array-elements-zero | Minimum Operations to Make Array Elements Zero | Hard | 60.4% | 100.0% |
+| 3495 | https://leetcode.com/problems/minimum-operations-to-make-array-elements-zero | Minimum Operations to Make Array Elements Zero | Hard | 60.3% | 100.0% |
+

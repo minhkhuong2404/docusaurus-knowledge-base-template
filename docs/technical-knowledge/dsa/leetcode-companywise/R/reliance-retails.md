@@ -1,0 +1,6 @@
+# Reliance Retails LeetCode Questions
+
+| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
+|---|---|---|---|---|---|
+| 1572 | https://leetcode.com/problems/matrix-diagonal-sum | Matrix Diagonal Sum | Easy | 84.3% | 100.0% |
+

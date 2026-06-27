@@ -37,7 +37,7 @@
   ],
   "version": "current",
   "lastUpdatedBy": "Lữ Minh Khương",
-  "lastUpdatedAt": 1780069752000,
+  "lastUpdatedAt": 1782142504000,
   "frontMatter": {
     "id": "java-concurrency",
     "title": "Java Concurrency & Utilities",
@@ -53,8 +53,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Java Collections Framework: Deep Dive",
-    "permalink": "/technical-knowledge/java/java-collections"
+    "title": "Concurrency vs. Parallelism — The Complete Beginner's Guide",
+    "permalink": "/technical-knowledge/java/concurrency-vs-parallelism"
   },
   "next": {
     "title": "Java Memory Model & Concurrency Guarantees",

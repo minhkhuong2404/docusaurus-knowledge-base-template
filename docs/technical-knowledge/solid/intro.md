@@ -31,11 +31,11 @@ SOLID gives you a set of guidelines so your code stays healthy as it grows — e
 
 | Letter | Principle | One-liner |
 |--------|-----------|-----------|
-| **S** | [Single Responsibility](/technical-knowledge/solid/solid/single-responsibility) | One class, one job |
-| **O** | [Open/Closed](/technical-knowledge/solid/solid/open-closed) | Open to extend, closed to modify |
-| **L** | [Liskov Substitution](/technical-knowledge/solid/solid/liskov-substitution) | Subtypes must behave like their parent |
-| **I** | [Interface Segregation](/technical-knowledge/solid/solid/interface-segregation) | Don't force classes to implement what they don't need |
-| **D** | [Dependency Inversion](/technical-knowledge/solid/solid/dependency-inversion) | Depend on abstractions, not concretions |
+| **S** | [Single Responsibility](/technical-knowledge/solid/single-responsibility) | One class, one job |
+| **O** | [Open/Closed](/technical-knowledge/solid/open-closed) | Open to extend, closed to modify |
+| **L** | [Liskov Substitution](/technical-knowledge/solid/liskov-substitution) | Subtypes must behave like their parent |
+| **I** | [Interface Segregation](/technical-knowledge/solid/interface-segregation) | Don't force classes to implement what they don't need |
+| **D** | [Dependency Inversion](/technical-knowledge/solid/dependency-inversion) | Depend on abstractions, not concretions |
 
 ---
 
@@ -55,7 +55,7 @@ Each principle has:
 3. **A ✅ Good Example** — refactored clean code
 4. **Real-world Spring context** — where you'd actually apply it
 
-Start with [Single Responsibility →](/technical-knowledge/solid/solid/single-responsibility)
+Start with [Single Responsibility →](/technical-knowledge/solid/single-responsibility)
 
 ---
 

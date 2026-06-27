@@ -25,7 +25,8 @@ const sidebars: SidebarsConfig = {
 					items: [
 						'technical-knowledge/java/java-fundamentals',
 						'technical-knowledge/java/java-oop',
-						'technical-knowledge/java/java-collections'
+						'technical-knowledge/java/java-collections',
+						'technical-knowledge/java/java-object-class'
 					]
 				},
 				{
@@ -38,6 +39,7 @@ const sidebars: SidebarsConfig = {
 							label: '🧭 Fundamentals',
 							collapsed: true,
 							items: [
+								'technical-knowledge/java/concurrency-vs-parallelism',
 								'technical-knowledge/java/java-concurrency',
 								'technical-knowledge/java/java-jmm-memory-model',
 								'technical-knowledge/java/thread-pools-and-connection-pooling'
@@ -223,11 +225,11 @@ const sidebars: SidebarsConfig = {
 					label: '🧱 SOLID Principles',
 					collapsed: false,
 					items: [
-						'technical-knowledge/solid/solid/single-responsibility',
-						'technical-knowledge/solid/solid/open-closed',
-						'technical-knowledge/solid/solid/liskov-substitution',
-						'technical-knowledge/solid/solid/interface-segregation',
-						'technical-knowledge/solid/solid/dependency-inversion',
+						'technical-knowledge/solid/single-responsibility',
+						'technical-knowledge/solid/open-closed',
+						'technical-knowledge/solid/liskov-substitution',
+						'technical-knowledge/solid/interface-segregation',
+						'technical-knowledge/solid/dependency-inversion',
 					],
 				},
 				{

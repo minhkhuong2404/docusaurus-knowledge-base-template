@@ -1306,11 +1306,11 @@ These 5 principles guide writing clean, maintainable OOP code. Each principle is
 
 | Principle                 | Description                                                | Deep Dive |
 | ------------------------- | ---------------------------------------------------------- | --------- |
-| **S**ingle Responsibility | A class should have only one reason to change              | [Read more →](../solid/solid/single-responsibility) |
-| **O**pen/Closed           | Open for extension, closed for modification                | [Read more →](../solid/solid/open-closed) |
-| **L**iskov Substitution   | Subclasses must be substitutable for their base class      | [Read more →](../solid/solid/liskov-substitution) |
-| **I**nterface Segregation | Prefer small, specific interfaces over large, general ones | [Read more →](../solid/solid/interface-segregation) |
-| **D**ependency Inversion  | Depend on abstractions, not concrete implementations       | [Read more →](../solid/solid/dependency-inversion) |
+| **S**ingle Responsibility | A class should have only one reason to change              | [Read more →](../solid/single-responsibility) |
+| **O**pen/Closed           | Open for extension, closed for modification                | [Read more →](../solid/open-closed) |
+| **L**iskov Substitution   | Subclasses must be substitutable for their base class      | [Read more →](../solid/liskov-substitution) |
+| **I**nterface Segregation | Prefer small, specific interfaces over large, general ones | [Read more →](../solid/interface-segregation) |
+| **D**ependency Inversion  | Depend on abstractions, not concrete implementations       | [Read more →](../solid/dependency-inversion) |
 
 ```java
 // ✅ Dependency Inversion in Spring

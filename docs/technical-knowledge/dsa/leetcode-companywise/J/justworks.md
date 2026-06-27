@@ -1,5 +1,0 @@
-# Justworks LeetCode Questions
-
-| ID | URL | Title | Difficulty | Acceptance % | Frequency % |
-|---|---|---|---|---|---|
-| 56 | https://leetcode.com/problems/merge-intervals | Merge Intervals | Medium | 51.1% | 100.0% |

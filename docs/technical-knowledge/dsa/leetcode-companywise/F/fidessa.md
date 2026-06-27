@@ -2,4 +2,5 @@
 
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
-| 888 | https://leetcode.com/problems/fair-candy-swap | Fair Candy Swap | Easy | 64.5% | 100.0% |
+| 888 | https://leetcode.com/problems/fair-candy-swap | Fair Candy Swap | Easy | 65.0% | 100.0% |
+

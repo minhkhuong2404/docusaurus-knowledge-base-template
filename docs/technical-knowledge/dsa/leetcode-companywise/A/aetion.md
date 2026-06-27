@@ -3,3 +3,4 @@
 | ID | URL | Title | Difficulty | Acceptance % | Frequency % |
 |---|---|---|---|---|---|
 | 413 | https://leetcode.com/problems/arithmetic-slices | Arithmetic Slices | Medium | 64.8% | 100.0% |
+
