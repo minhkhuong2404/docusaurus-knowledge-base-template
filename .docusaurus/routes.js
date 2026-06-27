@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '819'),
+    component: ComponentCreator('/', '51d'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '609'),
+        component: ComponentCreator('/', 'aee'),
         routes: [
           {
             path: '/tags',
@@ -6657,7 +6657,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '8ee'),
+            component: ComponentCreator('/', 'f36'),
             routes: [
               {
                 path: '/aws',
@@ -7160,6 +7160,168 @@ export default [
               {
                 path: '/books/ocp/exam-tips',
                 component: ComponentCreator('/books/ocp/exam-tips', '53d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/category/0-9',
+                component: ComponentCreator('/category/0-9', '59f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/category/a',
+                component: ComponentCreator('/category/a', '699'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/category/b',
+                component: ComponentCreator('/category/b', '142'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/category/c',
+                component: ComponentCreator('/category/c', '8d8'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/category/d',
+                component: ComponentCreator('/category/d', '95e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/category/e',
+                component: ComponentCreator('/category/e', '82d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/category/f',
+                component: ComponentCreator('/category/f', '0f1'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/category/g',
+                component: ComponentCreator('/category/g', '9bd'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/category/h',
+                component: ComponentCreator('/category/h', 'd84'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/category/i',
+                component: ComponentCreator('/category/i', '230'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/category/j',
+                component: ComponentCreator('/category/j', '12b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/category/k',
+                component: ComponentCreator('/category/k', '387'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/category/l',
+                component: ComponentCreator('/category/l', 'ff3'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/category/m',
+                component: ComponentCreator('/category/m', 'a41'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/category/n',
+                component: ComponentCreator('/category/n', '7ac'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/category/o',
+                component: ComponentCreator('/category/o', '5f4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/category/p',
+                component: ComponentCreator('/category/p', '915'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/category/q',
+                component: ComponentCreator('/category/q', '59e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/category/r',
+                component: ComponentCreator('/category/r', '4ba'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/category/s',
+                component: ComponentCreator('/category/s', '976'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/category/t',
+                component: ComponentCreator('/category/t', '49b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/category/u',
+                component: ComponentCreator('/category/u', 'f13'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/category/v',
+                component: ComponentCreator('/category/v', 'df9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/category/w',
+                component: ComponentCreator('/category/w', '06a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/category/x',
+                component: ComponentCreator('/category/x', 'b52'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/category/y',
+                component: ComponentCreator('/category/y', '24c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/category/z',
+                component: ComponentCreator('/category/z', '56f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -11023,7 +11185,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/dsa/leetcode-companywise/overview',
-                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/overview', 'fa1'),
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/overview', '4e6'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

@@ -12,19 +12,6 @@ Welcome to the LeetCode Company-Wise Questions directory. This section curates l
 
 ---
 
-## 🎯 How to Use This Directory
-
-1. **Find Your Target Company**: Navigate through the alphabetical folders (`A` through `Z`) or the `0-9` numerical folder to find the company you are interviewing with.
-2. **Review Problem Frequency**: Within each company page, problems are listed along with their:
-   - **ID**: The LeetCode problem ID.
-   - **Title**: The problem name.
-   - **Difficulty**: Easy, Medium, or Hard.
-   - **Acceptance %**: Standard LeetCode acceptance rate.
-   - **Frequency %**: A relative frequency metric indicating how often this problem was reported for this company in recent interview windows.
-3. **Practice Directly**: Click on the URL link for any question to open the problem description on LeetCode and start solving.
-
----
-
 ## 📁 Alphabetical Index
 
 Select a folder below to browse companies starting with that letter or digit:

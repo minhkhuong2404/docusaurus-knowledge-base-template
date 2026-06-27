@@ -1,3 +1,7 @@
 {
-  "label": "Z"
+  "label": "Z",
+  "link": {
+    "type": "generated-index",
+    "description": "LeetCode company-wise questions starting with Z"
+  }
 }

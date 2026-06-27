@@ -6309,6 +6309,141 @@
               "id": "technical-knowledge/test/wiremock",
               "path": "/technical-knowledge/test/wiremock",
               "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "/category/0-9",
+              "path": "/category/0-9",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "/category/a",
+              "path": "/category/a",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "/category/b",
+              "path": "/category/b",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "/category/c",
+              "path": "/category/c",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "/category/d",
+              "path": "/category/d",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "/category/e",
+              "path": "/category/e",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "/category/f",
+              "path": "/category/f",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "/category/g",
+              "path": "/category/g",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "/category/h",
+              "path": "/category/h",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "/category/i",
+              "path": "/category/i",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "/category/j",
+              "path": "/category/j",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "/category/k",
+              "path": "/category/k",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "/category/l",
+              "path": "/category/l",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "/category/m",
+              "path": "/category/m",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "/category/n",
+              "path": "/category/n",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "/category/o",
+              "path": "/category/o",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "/category/p",
+              "path": "/category/p",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "/category/q",
+              "path": "/category/q",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "/category/r",
+              "path": "/category/r",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "/category/s",
+              "path": "/category/s",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "/category/t",
+              "path": "/category/t",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "/category/u",
+              "path": "/category/u",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "/category/v",
+              "path": "/category/v",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "/category/w",
+              "path": "/category/w",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "/category/x",
+              "path": "/category/x",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "/category/y",
+              "path": "/category/y",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "/category/z",
+              "path": "/category/z",
+              "sidebar": "tutorialSidebar"
             }
           ],
           "draftIds": [],

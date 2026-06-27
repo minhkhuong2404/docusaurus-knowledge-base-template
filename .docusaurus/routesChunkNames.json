@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-819": {
+  "/-51d": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-609": {
+  "/-aee": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -5333,7 +5333,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-8ee": {
+  "/-f36": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -5671,6 +5671,114 @@
   "/books/ocp/exam-tips-53d": {
     "__comp": "17896441",
     "content": "99380288"
+  },
+  "/category/0-9-59f": {
+    "__comp": "14eb3368",
+    "__props": "3e382f5a"
+  },
+  "/category/a-699": {
+    "__comp": "14eb3368",
+    "__props": "3c03d811"
+  },
+  "/category/b-142": {
+    "__comp": "14eb3368",
+    "__props": "d110060c"
+  },
+  "/category/c-8d8": {
+    "__comp": "14eb3368",
+    "__props": "3fa60272"
+  },
+  "/category/d-95e": {
+    "__comp": "14eb3368",
+    "__props": "a0a445ff"
+  },
+  "/category/e-82d": {
+    "__comp": "14eb3368",
+    "__props": "02b94f25"
+  },
+  "/category/f-0f1": {
+    "__comp": "14eb3368",
+    "__props": "f1141872"
+  },
+  "/category/g-9bd": {
+    "__comp": "14eb3368",
+    "__props": "ca648d15"
+  },
+  "/category/h-d84": {
+    "__comp": "14eb3368",
+    "__props": "a5fdb1b6"
+  },
+  "/category/i-230": {
+    "__comp": "14eb3368",
+    "__props": "c2883e73"
+  },
+  "/category/j-12b": {
+    "__comp": "14eb3368",
+    "__props": "8b50c3ce"
+  },
+  "/category/k-387": {
+    "__comp": "14eb3368",
+    "__props": "643b2000"
+  },
+  "/category/l-ff3": {
+    "__comp": "14eb3368",
+    "__props": "5dcfa599"
+  },
+  "/category/m-a41": {
+    "__comp": "14eb3368",
+    "__props": "942eff19"
+  },
+  "/category/n-7ac": {
+    "__comp": "14eb3368",
+    "__props": "0e99fb04"
+  },
+  "/category/o-5f4": {
+    "__comp": "14eb3368",
+    "__props": "4e6c4063"
+  },
+  "/category/p-915": {
+    "__comp": "14eb3368",
+    "__props": "e645391d"
+  },
+  "/category/q-59e": {
+    "__comp": "14eb3368",
+    "__props": "0536b9b5"
+  },
+  "/category/r-4ba": {
+    "__comp": "14eb3368",
+    "__props": "93e0ce99"
+  },
+  "/category/s-976": {
+    "__comp": "14eb3368",
+    "__props": "4c1e398a"
+  },
+  "/category/t-49b": {
+    "__comp": "14eb3368",
+    "__props": "99647116"
+  },
+  "/category/u-f13": {
+    "__comp": "14eb3368",
+    "__props": "c71d57b5"
+  },
+  "/category/v-df9": {
+    "__comp": "14eb3368",
+    "__props": "6a2ef971"
+  },
+  "/category/w-06a": {
+    "__comp": "14eb3368",
+    "__props": "108e8c86"
+  },
+  "/category/x-b52": {
+    "__comp": "14eb3368",
+    "__props": "f9e6fa75"
+  },
+  "/category/y-24c": {
+    "__comp": "14eb3368",
+    "__props": "b9d4fbd4"
+  },
+  "/category/z-56f": {
+    "__comp": "14eb3368",
+    "__props": "ce409f81"
   },
   "/devops-396": {
     "__comp": "17896441",
@@ -8244,7 +8352,7 @@
     "__comp": "17896441",
     "content": "ffdc2cfb"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/overview-fa1": {
+  "/technical-knowledge/dsa/leetcode-companywise/overview-4e6": {
     "__comp": "17896441",
     "content": "e6ccab76"
   },

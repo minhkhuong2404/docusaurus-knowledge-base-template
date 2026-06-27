@@ -88,11 +88,18 @@ def main():
         subfolder_path = os.path.join(leetcode_dir, subfolder)
         os.makedirs(subfolder_path, exist_ok=True)
 
-        # Ensure _category_.json exists for the subfolder
+        # Ensure _category_.json exists for the subfolder with generated-index link
         category_json_path = os.path.join(subfolder_path, "_category_.json")
-        if not os.path.exists(category_json_path):
-            with open(category_json_path, 'w', encoding='utf-8') as cf:
-                cf.write(f'{{\n  "label": "{subfolder}"\n}}\n')
+        category_content = f"""{{
+  "label": "{subfolder}",
+  "link": {{
+    "type": "generated-index",
+    "description": "LeetCode company-wise questions starting with {subfolder}"
+  }}
+}}
+"""
+        with open(category_json_path, 'w', encoding='utf-8') as cf:
+            cf.write(category_content)
 
         # Read CSV and build markdown table
         rows = []
@@ -133,6 +140,8 @@ def main():
     for filepath in current_md_files:
         # Determine relative path from leetcode_dir
         rel_path = os.path.relpath(filepath, leetcode_dir)
+        if rel_path == "overview.md":
+            continue
         if rel_path not in generated_files:
             try:
                 os.remove(filepath)

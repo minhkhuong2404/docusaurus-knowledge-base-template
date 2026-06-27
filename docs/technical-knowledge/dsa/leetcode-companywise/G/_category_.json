@@ -1,3 +1,7 @@
 {
-  "label": "G"
+  "label": "G",
+  "link": {
+    "type": "generated-index",
+    "description": "LeetCode company-wise questions starting with G"
+  }
 }
