@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '6a7'),
+    component: ComponentCreator('/', '677'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '0ee'),
+        component: ComponentCreator('/', 'a5f'),
         routes: [
           {
             path: '/tags',
@@ -6657,7 +6657,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '65a'),
+            component: ComponentCreator('/', 'c06'),
             routes: [
               {
                 path: '/aws',
@@ -11185,7 +11185,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/dsa/leetcode-companywise/overview',
-                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/overview', '369'),
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/overview', '82b'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -12614,6 +12614,12 @@ export default [
               {
                 path: '/technical-knowledge/dsa/leetcode-companywise/Z/zynga',
                 component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/Z/zynga', '572'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-daily',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-daily', '9d5'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

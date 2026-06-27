@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-6a7": {
+  "/-677": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-0ee": {
+  "/-a5f": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -5333,7 +5333,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-65a": {
+  "/-c06": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -8352,7 +8352,7 @@
     "__comp": "17896441",
     "content": "ffdc2cfb"
   },
-  "/technical-knowledge/dsa/leetcode-companywise/overview-369": {
+  "/technical-knowledge/dsa/leetcode-companywise/overview-82b": {
     "__comp": "17896441",
     "content": "e6ccab76"
   },
@@ -9307,6 +9307,10 @@
   "/technical-knowledge/dsa/leetcode-companywise/Z/zynga-572": {
     "__comp": "17896441",
     "content": "911f36bd"
+  },
+  "/technical-knowledge/dsa/leetcode-daily-9d5": {
+    "__comp": "17896441",
+    "content": "4fa6d07d"
   },
   "/technical-knowledge/dsa/week-1-arrays-strings-prefix-sums-219": {
     "__comp": "17896441",

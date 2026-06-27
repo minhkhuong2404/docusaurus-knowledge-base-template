@@ -4821,6 +4821,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/dsa/leetcode-daily",
+              "path": "/technical-knowledge/dsa/leetcode-daily",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/dsa/week-1-arrays-strings-prefix-sums",
               "path": "/technical-knowledge/dsa/week-1-arrays-strings-prefix-sums",
               "sidebar": "tutorialSidebar"

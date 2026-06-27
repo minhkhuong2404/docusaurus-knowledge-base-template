@@ -2,6 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import Layout from "@theme/Layout";
 import Link from "@docusaurus/Link";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
+import DailyJavaQuiz from '../components/DailyJavaQuiz';
+import DailySpringBootQuiz from '../components/DailySpringBootQuiz';
+import LeetCodeDaily from '../components/LeetCodeDaily';
 
 /* ─────────────────────────────────────────────────────────────────────────────
    Global CSS injected into <head> via <style> — only active on this page
@@ -1307,6 +1310,7 @@ const viewAllStyle: React.CSSProperties = {
 // @ts-ignore
 export default function Home(): React.ReactNode {
   useDocusaurusContext();
+  const [activeQuiz, setActiveQuiz] = useState<'java' | 'springboot'>('java');
 
   /* Add / remove body class so global CSS can target search & premium btn */
   useEffect(() => {
@@ -2015,6 +2019,128 @@ export default function Home(): React.ReactNode {
               <Link to="/docs" style={viewAllStyle}>
                 View Full Interview Roadmap →
               </Link>
+            </section>
+          </div>
+
+          {/* ══════════════════════════════════════════════════════════════════
+            SECTION — Interactive Daily Challenge
+          ══════════════════════════════════════════════════════════════════ */}
+          <section
+            style={{
+              maxWidth: 800,
+              margin: "0 auto",
+              padding: "5rem 1.5rem",
+              position: "relative",
+            }}
+          >
+            <div className="lp-section-label" style={{ textAlign: "center", marginBottom: "0.5rem" }}>🎮 Interactive Challenge</div>
+            <h2 className="lp-section-title" style={{ textAlign: "center", marginBottom: "1rem" }}>
+              Daily Practice Challenge
+            </h2>
+            <p
+              style={{
+                color: "var(--ifm-color-emphasis-700)",
+                fontSize: "1.15rem",
+                textAlign: "center",
+                marginBottom: "2rem",
+                maxWidth: 600,
+                margin: "0 auto 2rem auto",
+                lineHeight: 1.5,
+              }}
+            >
+              Sharpen your engineering skills with our interactive daily challenges. Test your understanding of Java fundamentals or Spring Boot core patterns.
+            </p>
+
+            {/* Quiz Toggle Tabs */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "1rem",
+                marginBottom: "2rem",
+              }}
+            >
+              <button
+                onClick={() => setActiveQuiz('java')}
+                style={{
+                  padding: "0.6rem 1.5rem",
+                  fontSize: "1rem",
+                  fontWeight: 700,
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                  border: activeQuiz === 'java' ? "2px solid var(--ifm-color-primary)" : "2px solid var(--ifm-color-emphasis-350)",
+                  background: activeQuiz === 'java' ? "rgba(74,222,128,0.12)" : "transparent",
+                  color: activeQuiz === 'java' ? "var(--ifm-color-primary)" : "var(--ifm-font-color-base)",
+                  transition: "all 0.2s ease",
+                }}
+              >
+                ☕ Java Challenge
+              </button>
+              <button
+                onClick={() => setActiveQuiz('springboot')}
+                style={{
+                  padding: "0.6rem 1.5rem",
+                  fontSize: "1rem",
+                  fontWeight: 700,
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                  border: activeQuiz === 'springboot' ? "2px solid var(--ifm-color-primary)" : "2px solid var(--ifm-color-emphasis-350)",
+                  background: activeQuiz === 'springboot' ? "rgba(74,222,128,0.12)" : "transparent",
+                  color: activeQuiz === 'springboot' ? "var(--ifm-color-primary)" : "var(--ifm-font-color-base)",
+                  transition: "all 0.2s ease",
+                }}
+              >
+                🍃 Spring Boot Challenge
+              </button>
+            </div>
+
+            {/* Render selected Quiz */}
+            <div style={{ minHeight: "350px" }}>
+              {activeQuiz === 'java' ? (
+                <DailyJavaQuiz />
+              ) : (
+                <DailySpringBootQuiz />
+              )}
+            </div>
+          </section>
+
+          {/* ══════════════════════════════════════════════════════════════════
+            SECTION — LeetCode Daily Challenge
+          ══════════════════════════════════════════════════════════════════ */}
+          <div
+            style={{
+              background: "rgba(74,222,128,0.03)",
+              borderTop: "1px solid rgba(74,222,128,0.08)",
+              borderBottom: "1px solid rgba(74,222,128,0.08)",
+              backdropFilter: "blur(4px)",
+            }}
+          >
+            <section
+              style={{
+                maxWidth: 1100,
+                margin: "0 auto",
+                padding: "5rem 1.5rem",
+              }}
+            >
+              <div className="lp-section-label" style={{ textAlign: "center", marginBottom: "0.5rem" }}>📅 LeetCode Challenge</div>
+              <h2 className="lp-section-title" style={{ textAlign: "center", marginBottom: "1rem" }}>
+                LeetCode Coding Challenge
+              </h2>
+              <p
+                style={{
+                  color: "var(--ifm-color-emphasis-700)",
+                  fontSize: "1.15rem",
+                  textAlign: "center",
+                  marginBottom: "2rem",
+                  maxWidth: 600,
+                  margin: "0 auto 2rem auto",
+                  lineHeight: 1.5,
+                }}
+              >
+                Consistency is key to mastering technical interviews. Solve our daily curated LeetCode problem, pick a random task to test yourself, or explore different data structures and algorithms.
+              </p>
+
+              <LeetCodeDaily />
             </section>
           </div>
 

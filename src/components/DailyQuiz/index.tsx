@@ -129,6 +129,30 @@ export default function DailyQuiz({ questions, quizKey }: DailyQuizProps) {
     localStorage.setItem(storageKey, JSON.stringify(state));
   };
 
+  const handleSkipQuestion = () => {
+    handleNextQuestion();
+  };
+
+  const handleRandomize = () => {
+    if (!questions || questions.length === 0) return;
+    // Shuffle the array of questions
+    const shuffled = [...questions].sort(() => Math.random() - 0.5);
+    setShuffledQuestions(shuffled);
+    setCurrentIndex(0);
+    setSelectedOptionIndex(null);
+    setIsAnswered(false);
+
+    const today = new Date().toDateString();
+    const storageKey = `quiz-state-${quizKey}`;
+    const state: LocalQuizState = {
+      date: today,
+      shuffledIds: shuffled.map(q => q.id),
+      currentIndex: 0,
+      answeredOption: null,
+    };
+    localStorage.setItem(storageKey, JSON.stringify(state));
+  };
+
   if (!isInitialized || shuffledQuestions.length === 0) {
     return <div className={styles.quizContainer}>Loading daily challenge...</div>;
   }
@@ -142,13 +166,18 @@ export default function DailyQuiz({ questions, quizKey }: DailyQuizProps) {
         <span className={styles.topicBadge}>
           📅 Daily Challenge • Question {currentIndex + 1} of {shuffledQuestions.length} • {currentQuestion.topic}
         </span>
-        {currentQuestion.difficulty && (
-          <span className={`${styles.difficultyBadge} ${styles[currentQuestion.difficulty]}`}>
-            {currentQuestion.difficulty === 'easy' && '🟢 Easy'}
-            {currentQuestion.difficulty === 'medium' && '🟡 Medium'}
-            {currentQuestion.difficulty === 'hard' && '🔴 Hard'}
-          </span>
-        )}
+        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+          <button className={styles.shuffleButton} onClick={handleRandomize} title="Randomize Questions">
+            🔀 Shuffle
+          </button>
+          {currentQuestion.difficulty && (
+            <span className={`${styles.difficultyBadge} ${styles[currentQuestion.difficulty]}`}>
+              {currentQuestion.difficulty === 'easy' && '🟢 Easy'}
+              {currentQuestion.difficulty === 'medium' && '🟡 Medium'}
+              {currentQuestion.difficulty === 'hard' && '🔴 Hard'}
+            </span>
+          )}
+        </div>
       </div>
 
       <div className={styles.questionText}>
@@ -195,13 +224,17 @@ export default function DailyQuiz({ questions, quizKey }: DailyQuizProps) {
         </div>
       )}
 
-      {isAnswered && (
-        <div className={styles.footer}>
+      <div className={styles.footer}>
+        {!isAnswered ? (
+          <button className={styles.skipButton} onClick={handleSkipQuestion}>
+            Skip Question ➡️
+          </button>
+        ) : (
           <button className={styles.nextButton} onClick={handleNextQuestion}>
             Next Question ⏭️
           </button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

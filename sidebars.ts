@@ -451,6 +451,7 @@ const sidebars: SidebarsConfig = {
 			label: '🧠 DSA Roadmap (20 Weeks)',
 			items: [
 				'technical-knowledge/dsa/20-week-dsa-roadmap-intro',
+				'technical-knowledge/dsa/leetcode-daily',
 				'technical-knowledge/dsa/week-1-arrays-strings-prefix-sums',
 				'technical-knowledge/dsa/week-2-two-pointers-sliding-window',
 				'technical-knowledge/dsa/week-3-linked-lists-pointers',

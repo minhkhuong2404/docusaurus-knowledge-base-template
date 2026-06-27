@@ -211,3 +211,43 @@
   background-color: rgba(234, 67, 53, 0.15);
   color: #f28b82;
 }
+
+.shuffleButton {
+  background-color: transparent;
+  border: 1px solid var(--ifm-color-emphasis-350);
+  color: var(--ifm-font-color-base);
+  padding: 0.25rem 0.75rem;
+  border-radius: 16px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: all 0.2s ease;
+}
+
+.shuffleButton:hover {
+  background-color: var(--ifm-color-emphasis-200);
+  border-color: var(--ifm-color-emphasis-500);
+}
+
+.skipButton {
+  background-color: transparent;
+  border: 2px solid var(--ifm-color-emphasis-350);
+  color: var(--ifm-font-color-base);
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.skipButton:hover {
+  background-color: var(--ifm-color-emphasis-200);
+  border-color: var(--ifm-color-emphasis-500);
+}
