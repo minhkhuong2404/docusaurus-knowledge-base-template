@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-677": {
+  "/-f13": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-a5f": {
+  "/-d33": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -5333,7 +5333,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-c06": {
+  "/-edf": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -9308,7 +9308,7 @@
     "__comp": "17896441",
     "content": "911f36bd"
   },
-  "/technical-knowledge/dsa/leetcode-daily-9d5": {
+  "/technical-knowledge/dsa/leetcode-daily-71f": {
     "__comp": "17896441",
     "content": "4fa6d07d"
   },

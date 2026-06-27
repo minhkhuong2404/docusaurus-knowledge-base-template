@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '677'),
+    component: ComponentCreator('/', 'f13'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'a5f'),
+        component: ComponentCreator('/', 'd33'),
         routes: [
           {
             path: '/tags',
@@ -6657,7 +6657,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'c06'),
+            component: ComponentCreator('/', 'edf'),
             routes: [
               {
                 path: '/aws',
@@ -12619,7 +12619,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/dsa/leetcode-daily',
-                component: ComponentCreator('/technical-knowledge/dsa/leetcode-daily', '9d5'),
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-daily', '71f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
