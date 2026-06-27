@@ -388,6 +388,7 @@ const sidebars: SidebarsConfig = {
 			type: 'category',
 			label: '🔧 Coding Interview Prep',
 			items: [
+				'technical-knowledge/coding-interview-prep/intro',
 				{
 					type: 'doc',
 					id: 'technical-knowledge/coding-interview-prep/intro/intro',
