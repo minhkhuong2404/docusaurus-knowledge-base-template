@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'd1b'),
+    component: ComponentCreator('/', '819'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '58b'),
+        component: ComponentCreator('/', '609'),
         routes: [
           {
             path: '/tags',
@@ -6657,7 +6657,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '4b8'),
+            component: ComponentCreator('/', '8ee'),
             routes: [
               {
                 path: '/aws',
@@ -11018,6 +11018,12 @@ export default [
               {
                 path: '/technical-knowledge/dsa/leetcode-companywise/O/ozon',
                 component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/O/ozon', '8bd'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/dsa/leetcode-companywise/overview',
+                component: ComponentCreator('/technical-knowledge/dsa/leetcode-companywise/overview', 'fa1'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

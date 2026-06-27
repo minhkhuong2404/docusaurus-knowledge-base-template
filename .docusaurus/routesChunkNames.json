@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-d1b": {
+  "/-819": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-58b": {
+  "/-609": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -5333,7 +5333,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-4b8": {
+  "/-8ee": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -8243,6 +8243,10 @@
   "/technical-knowledge/dsa/leetcode-companywise/O/ozon-8bd": {
     "__comp": "17896441",
     "content": "ffdc2cfb"
+  },
+  "/technical-knowledge/dsa/leetcode-companywise/overview-fa1": {
+    "__comp": "17896441",
+    "content": "e6ccab76"
   },
   "/technical-knowledge/dsa/leetcode-companywise/P/palantir-61e": {
     "__comp": "17896441",
