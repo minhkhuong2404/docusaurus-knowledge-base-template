@@ -12,6 +12,10 @@ on:
       - synchronize
       - reopened
       - ready_for_review
+  schedule:
+    # Run at 00:05 UTC every day (after LeetCode daily resets)
+    - cron: '5 0 * * *'
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -53,7 +57,7 @@ jobs:
           path: build
 
   deploy:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
     needs: build
     runs-on: ubuntu-latest
     environment:
