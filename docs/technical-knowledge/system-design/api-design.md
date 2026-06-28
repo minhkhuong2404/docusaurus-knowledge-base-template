@@ -97,6 +97,36 @@ GET  /getOrdersForUser?userId=7  → should be GET /users/7/orders
 - Actions that don't map to CRUD use a verb sub-resource: `POST /orders/42/cancel`, `POST /payments/99/refund`
 :::
 
+### HTTP Methods: GET vs. POST vs. PUT
+
+Understanding the semantic and architectural differences between HTTP verbs is essential for designing robust REST APIs:
+
+| Attribute | `GET` | `POST` | `PUT` | `PATCH` |
+|---|---|---|---|---|
+| **Semantic Action** | Read / Retrieve | Create / Process Action | Replace / Overwrite | Partial Update |
+| **Request Body** | ❌ No | ✅ Yes | ✅ Yes | ✅ Yes |
+| **Safe Method** | ✅ Yes | ❌ No | ❌ No | ❌ No |
+| **Idempotent** | ✅ Yes | ❌ No | ✅ Yes | ❌ No (generally) |
+| **Cacheable** | ✅ Yes | ❌ No (unless specified) | ❌ No | ❌ No |
+
+#### Key Architectural Distinctions
+
+1. **Idempotency (`PUT` vs. `POST`)**
+   - **`PUT` is idempotent**: Sending `PUT /orders/42 { "status": "shipped" }` multiple times consecutively results in the exact same resource state as sending it once.
+   - **`POST` is NOT idempotent**: Sending `POST /orders { "item": "laptop" }` multiple times creates multiple distinct order records (generating new IDs) and triggers multiple downstream events (e.g. charging a payment gateway twice).
+
+2. **Resource Addressing (`PUT` vs. `POST`)**
+   - Use **`POST`** when the server determines the URI of the newly created resource (e.g., `POST /orders` returns path `/orders/12345`).
+   - Use **`PUT`** when the client determines or already knows the target URI (e.g., `PUT /users/lukhuong` creates or overwrites that specific resource).
+
+3. **Safe Methods (`GET` vs. Others)**
+   - A method is **safe** if it does not change resource state on the server. `GET` is safe.
+   - Any side effects of a `GET` request (like logging DB analytics, page-view counters, etc.) must not mutate the primary representation of the target resource.
+
+4. **Complete Replacement vs. Partial Update (`PUT` vs. `PATCH`)**
+   - **`PUT`** replaces the entire target resource with the request payload. Missing fields are either overwritten to `null` or reset to defaults.
+   - **`PATCH`** applies a partial delta update, modifying only the fields explicitly supplied in the payload.
+
 ### Where to put inputs
 
 | Input type | Location | When to use |
