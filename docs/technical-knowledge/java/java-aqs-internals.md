@@ -1,6 +1,6 @@
 ---
 id: java-aqs-internals
-title: "AbstractQueuedSynchronizer (AQS) Internals"
+title: "AQS Internals"
 slug: java-aqs-internals
 description: "A senior deep dive into the JVM's AbstractQueuedSynchronizer: exploring the CLH queue, LockSupport.park(), and CAS state transitions in ReentrantLock."
 tags: [java, concurrency, aqs, jvm, backend]

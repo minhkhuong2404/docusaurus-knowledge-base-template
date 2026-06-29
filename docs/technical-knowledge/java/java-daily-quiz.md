@@ -1,7 +1,7 @@
 ---
 id: java-daily-quiz
 title: "Java Daily Quiz"
-sidebar_label: 📅 Daily Quiz
+sidebar_label: 📅 Java Daily Quiz
 description: Test your Java knowledge daily with our interactive quiz.
 ---
 

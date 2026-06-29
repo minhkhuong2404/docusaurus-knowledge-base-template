@@ -1,8 +1,8 @@
 {
-  "id": "1846",
-  "title": "Maximum Element After Decreasing and Rearranging",
-  "url": "https://leetcode.com/problems/maximum-element-after-decreasing-and-rearranging/",
-  "difficulty": "medium",
-  "topic": "Array, Greedy, Sorting",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-06-28."
+  "id": "1967",
+  "title": "Number of Strings That Appear as Substrings in Word",
+  "url": "https://leetcode.com/problems/number-of-strings-that-appear-as-substrings-in-word/",
+  "difficulty": "easy",
+  "topic": "Array, String",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-06-29."
 }

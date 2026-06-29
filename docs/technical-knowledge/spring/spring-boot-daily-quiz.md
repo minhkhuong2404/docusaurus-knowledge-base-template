@@ -1,7 +1,7 @@
 ---
 id: spring-boot-daily-quiz
 title: "Spring Boot Daily Quiz"
-sidebar_label: 📅 Daily Quiz
+sidebar_label: 📅 Spring Boot Daily Quiz
 description: Test your Spring Boot and Spring Framework knowledge daily with our interactive quiz.
 ---
 

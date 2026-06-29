@@ -89,7 +89,7 @@ tags:
 1. **Mark:** Starting from GC roots, traverse all reachable objects and mark them as "alive."
 2. **Sweep/Compact:** Reclaim memory of unmarked (dead) objects. Optionally compact surviving objects to eliminate fragmentation.
 
-Modern collectors (G1, ZGC) work incrementally — they divide the heap into regions and collect the most garbage-dense regions first, targeting pause times of 10ms (G1) or <1ms (ZGC).
+Modern collectors (G1, ZGC) work incrementally — they divide the heap into regions and collect the most garbage-dense regions first, targeting pause times of 10ms (G1) or less than 1ms (ZGC).
 
 **Q: What's the role of finalize method in garbage collection?**
 **A:** `finalize()` was designed to run cleanup code before GC reclaims an object — but it's **deeply flawed** and **deprecated since Java 9**:
@@ -793,7 +793,7 @@ cache.size();     // Likely 0
 ```
 
 **Q: What is Java Flight Recorder?**
-**A:** A low-overhead (<1%) profiling and diagnostics framework built into the JVM (formerly commercial, free since Java 11). Records: CPU usage per method, memory allocation rates, GC pauses, thread contention, I/O waits, lock profiling, and custom application events. Data is saved to `.jfr` files, analyzed with **JDK Mission Control** or programmatically.
+**A:** A low-overhead (less than 1%) profiling and diagnostics framework built into the JVM (formerly commercial, free since Java 11). Records: CPU usage per method, memory allocation rates, GC pauses, thread contention, I/O waits, lock profiling, and custom application events. Data is saved to `.jfr` files, analyzed with **JDK Mission Control** or programmatically.
 ```bash
 # Start recording with the JVM
 java -XX:StartFlightRecording=duration=60s,filename=recording.jfr MyApp

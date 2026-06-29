@@ -212,12 +212,6 @@ export default {
       },
       "items": [
         {
-          "to": "/login",
-          "label": "💎 VIP Login",
-          "position": "right",
-          "className": "premium-nav-button"
-        },
-        {
           "type": "search",
           "position": "right"
         }
@@ -227,8 +221,8 @@ export default {
     "prism": {
       "theme": {
         "plain": {
-          "backgroundColor": "#eff1f5",
-          "color": "#24324f"
+          "backgroundColor": "#161923",
+          "color": "#e8eaf3"
         },
         "styles": [
           {
@@ -239,7 +233,7 @@ export default {
               "cdata"
             ],
             "style": {
-              "color": "#74839c",
+              "color": "#8d93ab",
               "fontStyle": "italic"
             }
           },
@@ -248,7 +242,7 @@ export default {
               "punctuation"
             ],
             "style": {
-              "color": "#1f2a44"
+              "color": "#cfd4e8"
             }
           },
           {
@@ -256,7 +250,7 @@ export default {
               "namespace"
             ],
             "style": {
-              "opacity": 0.72
+              "opacity": 0.7
             }
           },
           {
@@ -267,7 +261,7 @@ export default {
               "attr-value"
             ],
             "style": {
-              "color": "#0f9d58"
+              "color": "#8ef7b2"
             }
           },
           {
@@ -276,7 +270,7 @@ export default {
               "boolean"
             ],
             "style": {
-              "color": "#f59e0b",
+              "color": "#ffb86c",
               "fontWeight": "500"
             }
           },
@@ -287,8 +281,8 @@ export default {
               "atrule"
             ],
             "style": {
-              "color": "#2f9e44",
-              "fontWeight": "600"
+              "color": "#ff7ac6",
+              "fontWeight": "500"
             }
           },
           {
@@ -297,8 +291,8 @@ export default {
               "class-name"
             ],
             "style": {
-              "color": "#39ff14",
-              "fontWeight": "600"
+              "color": "#8ef7b2",
+              "fontWeight": "500"
             }
           },
           {
@@ -306,7 +300,7 @@ export default {
               "builtin"
             ],
             "style": {
-              "color": "#51cf66"
+              "color": "#ff8fab"
             }
           },
           {
@@ -315,7 +309,7 @@ export default {
               "selector"
             ],
             "style": {
-              "color": "#51cf66"
+              "color": "#ff8fab"
             }
           },
           {
@@ -323,7 +317,7 @@ export default {
               "attr-name"
             ],
             "style": {
-              "color": "#2f9e44"
+              "color": "#ffe08a"
             }
           },
           {
@@ -333,7 +327,7 @@ export default {
               "symbol"
             ],
             "style": {
-              "color": "#1f7a33"
+              "color": "#ed84f9"
             }
           },
           {
@@ -343,7 +337,7 @@ export default {
               "url"
             ],
             "style": {
-              "color": "#39ff14"
+              "color": "#6df6b2"
             }
           },
           {
@@ -351,7 +345,7 @@ export default {
               "regex"
             ],
             "style": {
-              "color": "#1f9d00"
+              "color": "#6df6b2"
             }
           },
           {
@@ -359,7 +353,7 @@ export default {
               "property"
             ],
             "style": {
-              "color": "#39ff14"
+              "color": "#6df6b2"
             }
           },
           {
@@ -367,7 +361,7 @@ export default {
               "deleted"
             ],
             "style": {
-              "color": "#51cf66",
+              "color": "#ff8fab",
               "textDecorationLine": "line-through"
             }
           },
@@ -376,7 +370,7 @@ export default {
               "inserted"
             ],
             "style": {
-              "color": "#1f9d00",
+              "color": "#8ef7b2",
               "textDecorationLine": "underline"
             }
           },
@@ -385,7 +379,7 @@ export default {
               "changed"
             ],
             "style": {
-              "color": "#f59e0b",
+              "color": "#ffe08a",
               "fontWeight": "600"
             }
           }
@@ -578,48 +572,6 @@ export default {
       "defaultMode": "dark",
       "respectPrefersColorScheme": true,
       "disableSwitch": false
-    },
-    "footer": {
-      "style": "dark",
-      "links": [
-        {
-          "title": "LinkedIn",
-          "items": [
-            {
-              "label": "luminhkhuong",
-              "href": "https://www.linkedin.com/in/luminhkhuong/"
-            }
-          ]
-        },
-        {
-          "title": "GitHub",
-          "items": [
-            {
-              "label": "minhkhuong2404",
-              "href": "https://github.com/minhkhuong2404"
-            }
-          ]
-        },
-        {
-          "title": "Facebook",
-          "items": [
-            {
-              "label": "luminhkhuong",
-              "href": "https://www.facebook.com/luminhkhuong/"
-            }
-          ]
-        },
-        {
-          "title": "Leetcode",
-          "items": [
-            {
-              "label": "luminhkhuong",
-              "href": "https://leetcode.com/u/luminhkhuong/"
-            }
-          ]
-        }
-      ],
-      "copyright": "Copyright © 2026 by Khuong Lu,  Dev. Built with Docusaurus and Github Page. ❤️"
     },
     "blog": {
       "sidebar": {

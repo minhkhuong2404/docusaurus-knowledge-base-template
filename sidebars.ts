@@ -3,7 +3,11 @@ import type { SidebarsConfig } from '@docusaurus/plugin-content-docs'
 
 const sidebars: SidebarsConfig = {
 	tutorialSidebar: [
-		'intro',
+		{
+			type: 'doc',
+			id: 'intro',
+			label: '🏠 Introduction'
+		},
 		{
 			type: 'category',
 			label: '📝 Daily Quizzes',
@@ -15,1248 +19,990 @@ const sidebars: SidebarsConfig = {
 		},
 		{
 			type: 'category',
-			label: '☕ Java',
+			label: '🛠️ Technical Knowledge',
+			collapsed: false,
 			items: [
-				'technical-knowledge/java/java-overview',
 				{
 					type: 'category',
-					label: '📘 Core Language',
-					collapsed: true,
+					label: '☕ Java',
 					items: [
-						'technical-knowledge/java/java-fundamentals',
-						'technical-knowledge/java/java-oop',
-						'technical-knowledge/java/java-collections',
-						'technical-knowledge/java/java-object-class'
-					]
-				},
-				{
-					type: 'category',
-					label: '🧵 Concurrency',
-					collapsed: true,
-					items: [
+						'technical-knowledge/java/java-overview',
 						{
 							type: 'category',
-							label: '🧭 Fundamentals',
+							label: '📘 Core Language',
 							collapsed: true,
 							items: [
-								'technical-knowledge/java/concurrency-vs-parallelism',
-								'technical-knowledge/java/java-concurrency',
-								'technical-knowledge/java/java-jmm-memory-model',
-								'technical-knowledge/java/thread-pools-and-connection-pooling'
+								'technical-knowledge/java/java-fundamentals',
+								'technical-knowledge/java/java-oop',
+								'technical-knowledge/java/java-collections',
+								'technical-knowledge/java/java-object-class'
 							]
 						},
 						{
 							type: 'category',
-							label: '🔒 Threads & Locks',
+							label: '🧵 Concurrency',
 							collapsed: true,
 							items: [
-								'technical-knowledge/java/java-threads',
-								'technical-knowledge/java/java-locks',
-								'technical-knowledge/java/java-aqs-internals'
+								{
+									type: 'category',
+									label: '🧭 Fundamentals',
+									collapsed: true,
+									items: [
+										'technical-knowledge/java/concurrency-vs-parallelism',
+										'technical-knowledge/java/java-concurrency',
+										'technical-knowledge/java/java-jmm-memory-model',
+										'technical-knowledge/java/thread-pools-and-connection-pooling'
+									]
+								},
+								{
+									type: 'category',
+									label: '🔒 Threads & Locks',
+									collapsed: true,
+									items: [
+										'technical-knowledge/java/java-threads',
+										'technical-knowledge/java/java-locks',
+										'technical-knowledge/java/java-aqs-internals'
+									]
+								}
+							]
+						},
+						{
+							type: 'category',
+							label: '🛠️ JVM',
+							collapsed: true,
+							items: [
+								'technical-knowledge/java/java-jvm',
+								'technical-knowledge/java/java-stack-vs-heap',
+								'technical-knowledge/java/java-virtual-threads',
+								'technical-knowledge/java/java-diagnostics-troubleshooting'
+							]
+						},
+						{
+							type: 'category',
+							label: '⚡ I/O & Modern Java',
+							collapsed: true,
+							items: [
+								'technical-knowledge/java/java-io',
+								'technical-knowledge/java/java-new-features'
+							]
+						},
+						{
+							type: 'category',
+							label: '🎯 Interview Questions',
+							collapsed: true,
+							items: [
+								'technical-knowledge/java/java-interview-questions',
 							]
 						}
 					]
 				},
 				{
 					type: 'category',
-					label: '🛠️ JVM',
-					collapsed: true,
+					label: '⚙️ Spring Ecosystem',
 					items: [
-						'technical-knowledge/java/java-jvm',
-						'technical-knowledge/java/java-stack-vs-heap',
-						'technical-knowledge/java/java-virtual-threads',
-						'technical-knowledge/java/java-diagnostics-troubleshooting'
-					]
-				},
-				{
-					type: 'category',
-					label: '⚡ I/O & Modern Java',
-					collapsed: true,
-					items: [
-						'technical-knowledge/java/java-io',
-						'technical-knowledge/java/java-new-features'
-					]
-				},
-				{
-					type: 'category',
-					label: '🎯 Interview Questions',
-					collapsed: true,
-					items: [
-						'technical-knowledge/java/java-interview-questions',
-					]
-				}
-			]
-		},
-		{
-			type: 'category',
-			label: '⚙️ Spring Ecosystem',
-			items: [
-				'technical-knowledge/spring/spring-overview',
-				{
-					type: 'category',
-					label: '🚀 Spring Boot',
-					collapsed: true,
-					items: [
-						'technical-knowledge/spring/spring-boot',
-						'technical-knowledge/spring/spring-boot-internals',
-						'technical-knowledge/spring/spring-boot-bootstrap-yml',
-						'technical-knowledge/spring/spring-boot-advanced',
-						'technical-knowledge/spring/spring-boot-interview-questions'
-					]
-				},
-				{
-					type: 'category',
-					label: '🌱 Spring Framework',
-					collapsed: true,
-					items: [
-						'technical-knowledge/spring/spring-framework',
-						'technical-knowledge/spring/spring-framework-deep-dive',
-						'technical-knowledge/spring/spring-aop',
-						'technical-knowledge/spring/spring-interview-questions'
-					]
-				},
-				{
-					type: 'category',
-					label: '🔐 Security & Data Access',
-					collapsed: true,
-					items: [
-						'technical-knowledge/spring/spring-security',
-						'technical-knowledge/spring/spring-data-jpa',
-						'technical-knowledge/spring/spring-data-jpa-repositories-and-queries',
-						'technical-knowledge/spring/spring-data-jpa-query-annotation',
-						'technical-knowledge/spring/hibernate-association-best-practices',
-						'technical-knowledge/spring/spring-data-jpa-transactions',
-						'technical-knowledge/spring/jpa-hibernate-lifecycle-methods',
-						'technical-knowledge/spring/hibernate-transactions-performance',
-						'technical-knowledge/spring/spring-data-jpa-interview-questions'
-					]
-				},
-				{
-					type: 'category',
-					label: '🌐 Web Layer',
-					collapsed: true,
-					items: [
-						'technical-knowledge/spring/spring-mvc',
-						'technical-knowledge/spring/spring-exception-handling'
-					]
-				},
-				{
-					type: 'category',
-					label: '☁️ Cloud & Enterprise',
-					collapsed: true,
-					items: [
-						'technical-knowledge/spring/spring-cloud',
-						'technical-knowledge/spring/spring-batch'
-					]
-				}
-			]
-		},
-		{
-			type: 'category',
-			label: '🧪 Testing & Mocking',
-			items: [
-				'technical-knowledge/test/testing-concepts',
-				'technical-knowledge/test/spring-test-annotations',
-				'technical-knowledge/test/wiremock'
-			]
-		},
-		{
-			type: 'category',
-			label: '🧩 Design Patterns',
-			items: [
-				'technical-knowledge/design-patterns/design-patterns-overview',
-				{
-					type: 'category',
-					label: '🏗️ Creational',
-					collapsed: true,
-					items: [
-						'technical-knowledge/design-patterns/singleton',
-						'technical-knowledge/design-patterns/factory-method',
-						'technical-knowledge/design-patterns/abstract-factory',
-						'technical-knowledge/design-patterns/builder',
-						'technical-knowledge/design-patterns/prototype'
-					]
-				},
-				{
-					type: 'category',
-					label: '🧱 Structural',
-					collapsed: true,
-					items: [
-						'technical-knowledge/design-patterns/adapter',
-						'technical-knowledge/design-patterns/bridge',
-						'technical-knowledge/design-patterns/composite',
-						'technical-knowledge/design-patterns/decorator',
-						'technical-knowledge/design-patterns/facade',
-						'technical-knowledge/design-patterns/flyweight',
-						'technical-knowledge/design-patterns/proxy'
-					]
-				},
-				{
-					type: 'category',
-					label: '🔄 Behavioral',
-					collapsed: true,
-					items: [
-						'technical-knowledge/design-patterns/chain-of-responsibility',
-						'technical-knowledge/design-patterns/command',
-						'technical-knowledge/design-patterns/interpreter',
-						'technical-knowledge/design-patterns/iterator',
-						'technical-knowledge/design-patterns/mediator',
-						'technical-knowledge/design-patterns/memento',
-						'technical-knowledge/design-patterns/observer',
-						'technical-knowledge/design-patterns/state',
-						'technical-knowledge/design-patterns/strategy',
-						'technical-knowledge/design-patterns/template-method',
-						'technical-knowledge/design-patterns/visitor'
-					]
-				}
-			]
-		},
-		{
-			type: 'category',
-			label: '🧠 SOLID',
-			items: [
-				{
-					type: 'doc',
-					id: 'technical-knowledge/solid/intro',
-					label: '📘 Introduction',
-				},
-				{
-					type: 'category',
-					label: '🧱 SOLID Principles',
-					collapsed: false,
-					items: [
-						'technical-knowledge/solid/single-responsibility',
-						'technical-knowledge/solid/open-closed',
-						'technical-knowledge/solid/liskov-substitution',
-						'technical-knowledge/solid/interface-segregation',
-						'technical-knowledge/solid/dependency-inversion',
-					],
-				},
-				{
-					type: 'doc',
-					id: 'technical-knowledge/solid/summary',
-					label: '✅ Summary & Cheat Sheet',
-				},
-			]
-		},
-		{
-			type: 'category',
-			label: '📖 System Design',
-			items: [
-				'technical-knowledge/system-design/intro',
-				{
-					type: 'category',
-					label: '🏗️ Fundamentals',
-					collapsed: true,
-					items: [
-						'technical-knowledge/system-design/architecture-fundamentals',
-						'technical-knowledge/system-design/capacity-planning',
-						'technical-knowledge/system-design/interview-framework',
-						'technical-knowledge/system-design/cap-theorem-system-design',
-					],
-				},
-				{
-					type: 'category',
-					label: '⚡ Scalability Patterns',
-					collapsed: true,
-					items: [
-						'technical-knowledge/system-design/scaling-reads',
-						'technical-knowledge/system-design/scaling-writes',
-						'technical-knowledge/system-design/sharding-partitioning',
-						'technical-knowledge/system-design/caching-strategies',
-						'technical-knowledge/system-design/bloom-filters',
-						'technical-knowledge/system-design/load-balancing-reliability',
-						'technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway',
-						'technical-knowledge/system-design/consistent-hashing-deep-dive',
-						'technical-knowledge/system-design/rate-limiting-algorithms',
-					],
-
-				},
-				{
-					type: 'category',
-					label: '🔄 Distributed Workflows',
-					collapsed: true,
-					items: [
-						'technical-knowledge/system-design/distributed-systems',
-						'technical-knowledge/system-design/real-time-updates',
-						'technical-knowledge/system-design/handling-contention',
-						'technical-knowledge/system-design/data-consistency',
-						'technical-knowledge/system-design/two-phase-commit',
-						'technical-knowledge/system-design/saga-pattern',
-						'technical-knowledge/system-design/outbox-pattern',
-						'technical-knowledge/system-design/long-running-tasks',
-						'technical-knowledge/system-design/dead-letter-queue',
-						'technical-knowledge/system-design/advanced-consensus-bft',
-					],
-				},
-				{
-					type: 'category',
-					label: '🧩 Architecture & APIs',
-					collapsed: true,
-					items: [
-						'technical-knowledge/system-design/microservices-patterns',
-						'technical-knowledge/system-design/domain-driven-design',
-						'technical-knowledge/system-design/cqrs',
-						'technical-knowledge/system-design/api-design',
-					],
-				},
-				{
-					type: 'category',
-					label: '🗄️ Data & Storage',
-					collapsed: true,
-					items: [
-						'technical-knowledge/system-design/cdc',
-						'technical-knowledge/system-design/message-queues',
-						'technical-knowledge/system-design/search-systems',
-						'technical-knowledge/system-design/proximity-search-geospatial-indexes',
-						'technical-knowledge/system-design/large-blobs',
-						'technical-knowledge/system-design/mongodb-deep-dive'
-					],
-				},
-				{
-					type: 'category',
-					label: '🔒 Security & Observability',
-					collapsed: true,
-					items: [
-						'technical-knowledge/system-design/security-patterns',
-						'technical-knowledge/system-design/observability',
-					],
-				},
-				{
-					type: 'category',
-					label: '🎯 Interview Prep',
-					collapsed: true,
-					items: [
-						'technical-knowledge/system-design/common-interview-questions',
-					],
-				},
-			]
-		},
-		{
-			type: 'category',
-			label: '📚 Low-level Design',
-			items: [
-				'technical-knowledge/low-level-design/intro',
-				{
-					type: 'category',
-					label: '📐 OOP & Principles',
-					collapsed: false,
-					items: [
-						'technical-knowledge/low-level-design/oop/concepts',
-						'technical-knowledge/low-level-design/oop/principles',
-					],
-				},
-				{
-					type: 'category',
-					label: '🏗️ Design Patterns',
-					collapsed: false,
-					items: [
-						'technical-knowledge/low-level-design/design-patterns/overview',
-						'technical-knowledge/low-level-design/design-patterns/creational',
-						'technical-knowledge/low-level-design/design-patterns/structural',
-						'technical-knowledge/low-level-design/design-patterns/behavioral',
-					],
-				},
-				{
-					type: 'category',
-					label: '⚡ Concurrency',
-					collapsed: false,
-					items: [
-						'technical-knowledge/low-level-design/concurrency/correctness',
-						'technical-knowledge/low-level-design/concurrency/coordination',
-						'technical-knowledge/low-level-design/concurrency/scarcity',
-					],
-				},
-				{
-					type: 'category',
-					label: '🧩 Problem Walkthroughs',
-					collapsed: false,
-					items: [
-						'technical-knowledge/low-level-design/problem/connect-four',
-						'technical-knowledge/low-level-design/problem/amazon-locker',
-						'technical-knowledge/low-level-design/problem/elevator',
-						'technical-knowledge/low-level-design/problem/parking-lot',
-						'technical-knowledge/low-level-design/problem/file-system',
-						'technical-knowledge/low-level-design/problem/movie-ticket',
-						'technical-knowledge/low-level-design/problem/rate-limiter',
-						'technical-knowledge/low-level-design/problem/inventory-management',
-					],
-				},
-			],
-		},
-		{
-			type: 'category',
-			label: '🔧 Coding Interview Prep',
-			items: [
-				'technical-knowledge/coding-interview-prep/intro',
-				{
-					type: 'doc',
-					id: 'technical-knowledge/coding-interview-prep/intro/intro',
-					label: '🚀 Getting Started',
-				},
-				{
-					type: 'category',
-					label: '📦 Fundamentals',
-					collapsed: false,
-					items: [
-						'technical-knowledge/coding-interview-prep/array/array',
-						'technical-knowledge/coding-interview-prep/linked-list/linked-list',
-						'technical-knowledge/coding-interview-prep/stack/stack',
-						'technical-knowledge/coding-interview-prep/sorting/sorting',
-					],
-				},
-				{
-					type: 'category',
-					label: '🎯 Core Patterns',
-					collapsed: false,
-					items: [
-						'technical-knowledge/coding-interview-prep/two-pointers/two-pointers',
-						'technical-knowledge/coding-interview-prep/sliding-window/sliding-window',
-						'technical-knowledge/coding-interview-prep/prefix-sum/prefix-sum',
-						'technical-knowledge/coding-interview-prep/binary-search/binary-search',
-						'technical-knowledge/coding-interview-prep/matrices/matrices',
-					],
-				},
-				{
-					type: 'category',
-					label: '🌲 Trees & Graphs',
-					collapsed: false,
-					items: [
-						'technical-knowledge/coding-interview-prep/tree/tree',
-						'technical-knowledge/coding-interview-prep/bfs/bfs',
-						'technical-knowledge/coding-interview-prep/dfs/dfs',
-						'technical-knowledge/coding-interview-prep/graph/graph',
-						'technical-knowledge/coding-interview-prep/union-find/union-find',
-						'technical-knowledge/coding-interview-prep/trie/trie',
-					],
-				},
-				{
-					type: 'category',
-					label: '⚡ Advanced Patterns',
-					collapsed: false,
-					items: [
-						'technical-knowledge/coding-interview-prep/heap/heap',
-						'technical-knowledge/coding-interview-prep/backtracking/backtracking',
-						'technical-knowledge/coding-interview-prep/dynamic-programming/dynamic-programming',
-						'technical-knowledge/coding-interview-prep/greedy/greedy',
-						'technical-knowledge/coding-interview-prep/bit-manipulation/bit-manipulation',
-						'technical-knowledge/coding-interview-prep/monotonic-stack/monotonic-stack',
-						'technical-knowledge/coding-interview-prep/intervals/intervals',
-					],
-				},
-			],
-		},
-		{
-			type: 'category',
-			label: '🧠 DSA Roadmap (20 Weeks)',
-			items: [
-				'technical-knowledge/dsa/20-week-dsa-roadmap-intro',
-				'technical-knowledge/dsa/leetcode-daily',
-				'technical-knowledge/dsa/week-1-arrays-strings-prefix-sums',
-				'technical-knowledge/dsa/week-2-two-pointers-sliding-window',
-				'technical-knowledge/dsa/week-3-linked-lists-pointers',
-				'technical-knowledge/dsa/week-4-hash-tables-sets',
-				'technical-knowledge/dsa/week-5-stacks-queues-monotonic',
-				'technical-knowledge/dsa/week-6-binary-trees-bst',
-				'technical-knowledge/dsa/week-7-graph-foundations',
-				'technical-knowledge/dsa/week-8-advanced-graph-concepts',
-				'technical-knowledge/dsa/week-9-binary-search',
-				'technical-knowledge/dsa/week-10-recursion-backtracking',
-				'technical-knowledge/dsa/week-11-intervals-sweep-line',
-				'technical-knowledge/dsa/week-12-heaps-greedy',
-				'technical-knowledge/dsa/week-13-dynamic-programming-1d',
-				'technical-knowledge/dsa/week-14-dynamic-programming-2d',
-				'technical-knowledge/dsa/week-15-advanced-sliding-windows',
-				'technical-knowledge/dsa/week-16-tries-prefix-trees',
-				'technical-knowledge/dsa/week-17-shortest-paths-mst',
-				'technical-knowledge/dsa/week-18-disjoint-set-union',
-				'technical-knowledge/dsa/week-19-bit-manipulation-math',
-				'technical-knowledge/dsa/week-20-comprehensive-review-systems',
-			],
-		},
-		{
-			type: 'category',
-			label: '🏢 LeetCode Companywise',
-			items: [
-				{
-					type: 'autogenerated',
-					dirName: 'technical-knowledge/dsa/leetcode-companywise',
-				},
-			],
-		},
-		{
-			type: 'category',
-			label: '🔐 Security',
-			items: [
-				'technical-knowledge/security/security-intro',
-				{
-					type: 'category',
-					label: '🔐 Core Security',
-					collapsed: true,
-					items: [
-						'technical-knowledge/security/authentication-authorization',
-						'technical-knowledge/security/web-security-fundamentals',
-						'technical-knowledge/security/cookies-vs-sessions-vs-jwt',
-						'technical-knowledge/security/web-vulnerabilities',
-						'technical-knowledge/security/cryptography-secure-design',
-						'technical-knowledge/security/keys-signing-tls',
-						'technical-knowledge/security/api-security',
-					],
-				},
-				{
-					type: 'category',
-					label: '🏛️ Governance & Compliance',
-					collapsed: true,
-					items: [
-						'technical-knowledge/security/privacy-compliance',
-						'technical-knowledge/security/identity-access-management',
-					],
-				},
-				{
-					type: 'category',
-					label: '🛡️ Operations & Infrastructure',
-					collapsed: true,
-					items: [
-						'technical-knowledge/security/network-security',
-						'technical-knowledge/security/secure-sdlc',
-						'technical-knowledge/security/incident-response',
-					],
-				},
-				{
-					type: 'category',
-					label: '🎯 Interview Prep',
-					collapsed: true,
-					items: [
-						'technical-knowledge/security/interview-questions',
-					],
-				},
-			]
-		},
-		{
-			type: 'category',
-			label: '🌐 Network Overview',
-			items: [
-				'technical-knowledge/networking/networking-overview',
-				{
-					type: 'category',
-					label: '🔩 Foundations',
-					collapsed: true,
-					items: [
-						'technical-knowledge/networking/osi-tcpip-models',
-						'technical-knowledge/networking/ip-addressing-routing',
-						'technical-knowledge/networking/tcp-udp-transport-layer',
-						'technical-knowledge/networking/quic-modern-transport',
-					],
-				},
-				{
-					type: 'category',
-					label: '🌍 Application Layer',
-					collapsed: true,
-					items: [
-						'technical-knowledge/networking/http-https-application-layer',
-						'technical-knowledge/networking/dns-resolution',
-						'technical-knowledge/networking/application-protocols-reference',
-					],
-				},
-				{
-					type: 'category',
-					label: '🏗️ Infrastructure',
-					collapsed: true,
-					items: [
-						'technical-knowledge/networking/proxies-nat-firewalls',
-						'technical-knowledge/networking/socket-programming-io-models',
-					],
-				},
-				{
-					type: 'category',
-					label: '🔌 API Design',
-					collapsed: true,
-					items: [
-						'technical-knowledge/networking/api-authentication-security',
-					],
-				},
-				{
-					type: 'category',
-					label: '☁️ Distributed & Cloud',
-					collapsed: true,
-					items: [
-						'technical-knowledge/networking/network-performance-optimization',
-					],
-				},
-				{
-					type: 'category',
-					label: '🛡️ Security',
-					collapsed: true,
-					items: [
-						'technical-knowledge/networking/network-security',
-					],
-				},
-				{
-					type: 'category',
-					label: '🔧 Tools & Interview Prep',
-					collapsed: true,
-					items: [
-						'technical-knowledge/networking/network-troubleshooting-tools',
-						'technical-knowledge/networking/networking-interview-questions',
-					],
-				},
-			]
-		},
-		{
-			type: 'category',
-			label: '📨 Kafka',
-			items: [
-				'technical-knowledge/kafka/intro',
-				{
-					type: 'category',
-					label: '🏗️ Core Concepts',
-					collapsed: true,
-					items: [
-						'technical-knowledge/kafka/core/kafka-overview',
-						'technical-knowledge/kafka/core/topic',
-						'technical-knowledge/kafka/core/partition',
-						'technical-knowledge/kafka/core/scaling-partitions',
-						'technical-knowledge/kafka/core/kafka-broker',
-						'technical-knowledge/kafka/core/replication',
-						'technical-knowledge/kafka/core/kraft-vs-zookeeper',
-						'technical-knowledge/kafka/core/raft-consensus'
-					]
-				},
-				{
-					type: 'category',
-					label: '📤 Producer',
-					collapsed: true,
-					items: [
-						'technical-knowledge/kafka/producer/producer-overview',
-						'technical-knowledge/kafka/producer/hash-key-partitions',
-						'technical-knowledge/kafka/producer/producer-acks',
-						'technical-knowledge/kafka/producer/producer-idempotency',
-						'technical-knowledge/kafka/producer/producer-transactions'
-					]
-				},
-				{
-					type: 'category',
-					label: '📥 Consumer',
-					collapsed: true,
-					items: [
-						'technical-knowledge/kafka/consumer/consumer-overview',
-						'technical-knowledge/kafka/consumer/consumer-group',
-						'technical-knowledge/kafka/consumer/consumer-lag',
-						'technical-knowledge/kafka/consumer/parallel-consumer'
-					]
-				},
-				{
-					type: 'category',
-					label: '🔌 Ecosystem',
-					collapsed: true,
-					items: [
-						'technical-knowledge/kafka/advanced/kafka-connect',
-						'technical-knowledge/kafka/advanced/kafka-streams-deep-dive',
-						'technical-knowledge/kafka/advanced/schema-registry',
-						'technical-knowledge/kafka/advanced/exactly-once-vs-dedup'
-					]
-				},
-				{
-					type: 'category',
-					label: '📈 Reliability & Operations',
-					collapsed: true,
-					items: [
-						'technical-knowledge/kafka/advanced/kafka-exactly-once',
-						'technical-knowledge/kafka/advanced/order-messages',
-						'technical-knowledge/kafka/advanced/processing-and-ordering',
-						'technical-knowledge/kafka/advanced/monitoring-operations',
-						'technical-knowledge/kafka/advanced/kafka-throughput-optimization',
-						'technical-knowledge/kafka/advanced/rebalance-storms',
-					]
-				},
-				{
-					type: 'category',
-					label: '🎯 Interview Prep',
-					collapsed: true,
-					items: [
-						'technical-knowledge/kafka/interview/interview-core',
-						'technical-knowledge/kafka/interview/interview-producer-consumer',
-						'technical-knowledge/kafka/interview/interview-advanced'
-					]
-				}
-			]
-		},
-		{
-			type: 'category',
-			label: '🗄️ Database',
-			items: [
-				'technical-knowledge/database/database-overview',
-				{
-					type: 'category',
-					label: '🧱 Relational Databases',
-					collapsed: true,
-					items: [
-						'technical-knowledge/database/relational-fundamentals',
-						'technical-knowledge/database/database-design',
-						'technical-knowledge/database/connection-pooling',
-						'technical-knowledge/database/advanced-sql',
-						'technical-knowledge/database/schema-migrations',
-					],
-				},
-				{
-					type: 'category',
-					label: '⚡ Performance',
-					collapsed: true,
-					items: [
-						'technical-knowledge/database/indexing-query-optimization',
-						'technical-knowledge/database/query-planner-optimizer',
-						'technical-knowledge/database/performance-monitoring',
-					],
-				},
-				{
-					type: 'category',
-					label: '⚙️ Internals',
-					collapsed: true,
-					items: [
-						'technical-knowledge/database/acid',
-						'technical-knowledge/database/transactions-concurrency',
-						'technical-knowledge/database/storage-engines-data-structures',
-					],
-				},
-				{
-					type: 'category',
-					label: '🌍 Scale & Distribution',
-					collapsed: true,
-					items: [
-						'technical-knowledge/database/replication-partitioning',
-						'technical-knowledge/database/nosql-distributed',
-						'technical-knowledge/database/database-patterns-microservices',
-					],
-				},
-				{
-					type: 'category',
-					label: '🔎 Specialized',
-					collapsed: true,
-					items: [
-						'technical-knowledge/database/full-text-search',
-						'technical-knowledge/database/data-warehousing-olap',
-						'technical-knowledge/database/time-series-databases',
-					],
-				},
-				{
-					type: 'category',
-					label: '🛠️ Operations',
-					collapsed: true,
-					items: [
-						'technical-knowledge/database/backup-recovery',
-						'technical-knowledge/database/database-security',
-					],
-				}
-			]
-		},
-		{
-			type: 'category',
-			label: '⚡ Redis',
-			items: [
-				'technical-knowledge/redis/redis-overview',
-				{
-					type: 'category',
-					label: '🧱 Core Concepts',
-					collapsed: true,
-					items: [
-						'technical-knowledge/redis/redis-data-types',
-						'technical-knowledge/redis/redis-advanced-data-structures',
-						'technical-knowledge/redis/redis-ttl-expiry',
-						'technical-knowledge/redis/redis-eviction-policies'
-					]
-				},
-				{
-					type: 'category',
-					label: '🔄 Features & Streaming',
-					collapsed: true,
-					items: [
-						'technical-knowledge/redis/redis-pipeline-transactions',
-						'technical-knowledge/redis/redis-pubsub',
-						'technical-knowledge/redis/redis-streams',
-					]
-				},
-				{
-					type: 'category',
-					label: '🏛️ Architecture & Patterns',
-					collapsed: true,
-					items: [
-						'technical-knowledge/redis/redis-distributed-cache',
-						'technical-knowledge/redis/redis-as-database',
-						'technical-knowledge/redis/redis-clustering-replication',
-						'technical-knowledge/redis/redis-performance-patterns',
-						'technical-knowledge/redis/redis-distributed-lock',
-						'technical-knowledge/redis/redis-rate-limiting',
-						'technical-knowledge/redis/redis-session-management',
-					]
-				},
-				{
-					type: 'category',
-					label: '🎯 Interview Prep',
-					collapsed: true,
-					items: [
-						'technical-knowledge/redis/redis-interview-questions',
-					]
-				}
-			]
-		},
-		{
-			type: 'category',
-			label: '🔎 Elasticsearch & ELK',
-			items: [
-				'technical-knowledge/elasticsearch/elasticsearch-overview',
-				'technical-knowledge/elasticsearch/elasticsearch-internals',
-				'technical-knowledge/elasticsearch/logstash-kibana-integration',
-				'technical-knowledge/elasticsearch/elasticsearch-senior-deep-dive'
-			]
-		},
-		{
-			type: 'category',
-			label: '🖥️ Operating Systems',
-			items: [
-				'technical-knowledge/operating-systems/intro',
-				{
-					type: 'category',
-					label: '⚙️ Core Concepts',
-					collapsed: true,
-					items: [
-						'technical-knowledge/operating-systems/processes-and-threads',
-						'technical-knowledge/operating-systems/cpu-scheduling',
-						'technical-knowledge/operating-systems/memory-management',
-						'technical-knowledge/operating-systems/synchronization-and-deadlocks',
-					],
-				},
-				{
-					type: 'category',
-					label: '🖥️ Storage & I/O',
-					collapsed: true,
-					items: [
-						'technical-knowledge/operating-systems/file-systems-and-io',
-						'technical-knowledge/operating-systems/virtual-memory-deep-dive',
-					],
-				},
-				{
-					type: 'category',
-					label: '🐧 Linux Internals',
-					collapsed: true,
-					items: [
-						'technical-knowledge/operating-systems/linux-internals-and-syscalls',
-						'technical-knowledge/operating-systems/networking-and-ipc',
-					],
-				},
-				'technical-knowledge/operating-systems/interview-questions',
-			]
-		},
-		{
-			type: 'category',
-			label: '🌿 Git & Version Control',
-			items: [
-				{ type: 'doc', id: 'technical-knowledge/git/intro', label: '🏠 Introduction' },
-				{
-					type: 'category',
-					label: '📦 Basics',
-					collapsed: false,
-					items: [
-						'technical-knowledge/git/basics/add',
-						'technical-knowledge/git/basics/commit',
-						'technical-knowledge/git/basics/push',
-						'technical-knowledge/git/basics/fetch-pull',
-						'technical-knowledge/git/basics/status-diff',
-					],
-				},
-				{
-					type: 'category',
-					label: '🌿 Branching',
-					collapsed: false,
-					items: [
-						'technical-knowledge/git/branching/branches',
-						'technical-knowledge/git/branching/merge',
-						'technical-knowledge/git/branching/rebase',
-						'technical-knowledge/git/branching/conflict-resolution',
-					],
-				},
-				{
-					type: 'category',
-					label: '🕰️ History & Rewriting',
-					collapsed: false,
-					items: [
-						'technical-knowledge/git/history/cherry-pick',
-						'technical-knowledge/git/history/squash',
-						'technical-knowledge/git/history/fixup',
-						'technical-knowledge/git/history/reset-revert',
-						'technical-knowledge/git/history/reflog',
-						'technical-knowledge/git/history/log-blame',
-					],
-				},
-				{
-					type: 'category',
-					label: '🤝 Collaboration',
-					collapsed: false,
-					items: [
-						'technical-knowledge/git/collaboration/remotes',
-						'technical-knowledge/git/collaboration/tags',
-						'technical-knowledge/git/collaboration/stash',
-						'technical-knowledge/git/collaboration/submodules',
-					],
-				},
-				{
-					type: 'category',
-					label: '⚙️ Advanced',
-					collapsed: false,
-					items: [
-						'technical-knowledge/git/advanced/hooks',
-						'technical-knowledge/git/advanced/config-aliases',
-						'technical-knowledge/git/advanced/bisect',
-						'technical-knowledge/git/advanced/worktree',
-					],
-				},
-				{
-					type: 'category',
-					label: '🔀 Workflows',
-					collapsed: false,
-					items: [
-						'technical-knowledge/git/workflows/git-flow',
-						'technical-knowledge/git/workflows/trunk-based',
-						'technical-knowledge/git/workflows/conventional-commits',
-						'technical-knowledge/git/workflows/pull-request-best-practices',
-					],
-				},
-			]
-		},
-		{
-			type: 'category',
-			label: '🐳 DevOps & Containerization',
-			items: [
-				'technical-knowledge/devops/devops-intro',
-				'technical-knowledge/devops/vm-docker-k8s-explained',
-				'technical-knowledge/devops/linux-for-devops',
-				{
-					type: 'category',
-					label: '🐳 Docker',
-					collapsed: true,
-					items: [
-						'technical-knowledge/devops/docker-fundamentals',
-						'technical-knowledge/devops/dockerfile',
-						'technical-knowledge/devops/docker-commands',
-						'technical-knowledge/devops/docker-networking',
-						'technical-knowledge/devops/docker-volumes',
-						'technical-knowledge/devops/docker-compose',
-					],
-				},
-				{
-					type: 'category',
-					label: '☸️ Kubernetes',
-					collapsed: true,
-					items: [
-						'technical-knowledge/devops/kubernetes-fundamentals',
-						'technical-knowledge/devops/kubernetes-pods',
-						'technical-knowledge/devops/kubernetes-workloads',
-						'technical-knowledge/devops/kubernetes-networking',
-						'technical-knowledge/devops/kubernetes-storage',
-						'technical-knowledge/devops/kubernetes-configuration',
-					],
-				},
-				{
-					type: 'category',
-					label: '🛠️ Tooling',
-					collapsed: true,
-					items: [
-						'technical-knowledge/devops/kubectl-commands',
-						'technical-knowledge/devops/helm',
-					],
-				},
-				{
-					type: 'category',
-					label: '🔧 Infrastructure as Code (IaC)',
-					collapsed: true,
-					items: [
-						'technical-knowledge/devops/terraform',
-						'technical-knowledge/devops/ansible',
-					],
-				},
-				{
-					type: 'category',
-					label: '🏗️ Advanced Architecture',
-					collapsed: true,
-					items: [
-						'technical-knowledge/devops/kubernetes-operators',
-						'technical-knowledge/devops/gitops-argocd',
-						'technical-knowledge/devops/devops-observability',
-					],
-				},
-				{
-					type: 'category',
-					label: '🎯 Interview Prep',
-					collapsed: true,
-					items: [
-						'technical-knowledge/devops/devops-interview-questions',
-					],
-				},
-			]
-		},
-		{
-			type: 'category',
-			label: '☁️ AWS',
-			items: [
-				'technical-knowledge/aws/overview',
-				{
-					type: 'category',
-					label: '🔐 Identity & Access',
-					collapsed: true,
-					items: [
-						'technical-knowledge/aws/iam/index',
-						'technical-knowledge/aws/iam/cognito',
-						'technical-knowledge/aws/iam/iam-advanced',
-					],
-				},
-				{
-					type: 'category',
-					label: '🧠 Compute & APIs',
-					collapsed: true,
-					items: [
-						'technical-knowledge/aws/lambda/index',
-						'technical-knowledge/aws/lambda/layers-and-versions',
-						'technical-knowledge/aws/api-gateway/index',
-						'technical-knowledge/aws/appsync',
-						'technical-knowledge/aws/beanstalk/index',
-						'technical-knowledge/aws/serverless-patterns',
-					],
-				},
-				{
-					type: 'category',
-					label: '🗄️ Storage & Databases',
-					collapsed: true,
-					items: [
-						'technical-knowledge/aws/s3/index',
-						'technical-knowledge/aws/s3/advanced',
-						'technical-knowledge/aws/dynamodb/index',
-						'technical-knowledge/aws/dynamodb/advanced',
-						'technical-knowledge/aws/elasticache/index',
-						'technical-knowledge/aws/rds-aurora',
-					],
-				},
-				{
-					type: 'category',
-					label: '📨 Messaging & Workflows',
-					collapsed: true,
-					items: [
-						'technical-knowledge/aws/messaging/sns',
-						'technical-knowledge/aws/messaging/sqs',
-						'technical-knowledge/aws/messaging/kinesis',
-						'technical-knowledge/aws/step-functions/index',
-					],
-				},
-				{
-					type: 'category',
-					label: '🛠️ DevOps & Infrastructure',
-					collapsed: true,
-					items: [
-						'technical-knowledge/aws/cloudformation/index',
-						'technical-knowledge/aws/cloudformation/cloudfront',
-						'technical-knowledge/aws/cloudformation/sam',
-						'technical-knowledge/aws/cicd/index',
-						'technical-knowledge/aws/cicd/code-build',
-						'technical-knowledge/aws/cicd/code-deploy',
-						'technical-knowledge/aws/cicd/code-pipeline',
-						'technical-knowledge/aws/containers/ecs-ecr',
-						'technical-knowledge/aws/vpc-for-developers',
-					],
-				},
-				{
-					type: 'category',
-					label: '📈 Monitoring & Security',
-					collapsed: true,
-					items: [
-						'technical-knowledge/aws/monitoring/cloudwatch',
-						'technical-knowledge/aws/monitoring/cloudtrail',
-						'technical-knowledge/aws/monitoring/x-ray',
-						'technical-knowledge/aws/security/kms',
-						'technical-knowledge/aws/security/secrets-manager',
-						'technical-knowledge/aws/security/ssm-parameter-store',
-					],
-				},
-				{
-					type: 'category',
-					label: '💻 SDK & Developer Tools',
-					collapsed: true,
-					items: [
-						'technical-knowledge/aws/aws-sdk-java',
-					],
-				},
-				{
-					type: 'category',
-					label: '🎯 Exam Prep',
-					collapsed: true,
-					items: [
-						'technical-knowledge/aws/dva-c02-roadmap',
-						'technical-knowledge/aws/exam-tips',
-						'technical-knowledge/aws/mock-exam',
-					],
-				},
-			],
-		},
-		{
-			type: 'category',
-			label: '🏛️ Banking & Finance',
-			items: [
-				{ type: 'doc', id: 'technical-knowledge/banking/overview', label: '🏦 Overview' },
-				{
-					type: 'category',
-					label: '🎓 New Learner Guide',
-					collapsed: true,
-					items: [
-						{ type: 'doc', id: 'technical-knowledge/banking/payment_lifecycle_101', label: 'Payment Lifecycle 101' },
-						{ type: 'doc', id: 'technical-knowledge/banking/banking_roles', label: 'Roles & Teams' },
-						{ type: 'doc', id: 'technical-knowledge/banking/glossary', label: 'A-Z Glossary' },
-					]
-				},
-				{
-					type: 'category',
-					label: '📨 ISO 20022 Messages',
-					collapsed: true,
-					items: [
+						'technical-knowledge/spring/spring-overview',
 						{
 							type: 'category',
-							label: '💸 Payment Initiation (pain)',
+							label: '🚀 Spring Boot',
 							collapsed: true,
 							items: [
-								{ type: 'doc', id: 'technical-knowledge/banking/pain001', label: 'pain.001 - Credit Transfer Initiation' },
-								{ type: 'doc', id: 'technical-knowledge/banking/pain004', label: 'pain.004 - Clarification' },
-								{ type: 'doc', id: 'technical-knowledge/banking/pain007_pacs007', label: 'pain.007 / pacs.007 - Reversal' }
+								'technical-knowledge/spring/spring-boot',
+								'technical-knowledge/spring/spring-boot-internals',
+								'technical-knowledge/spring/spring-boot-bootstrap-yml',
+								'technical-knowledge/spring/spring-boot-advanced',
+								'technical-knowledge/spring/spring-boot-interview-questions'
 							]
 						},
 						{
 							type: 'category',
-							label: '🏦 Payment Clearing & Settlement (pacs)',
+							label: '🌱 Spring Framework',
 							collapsed: true,
 							items: [
-								{ type: 'doc', id: 'technical-knowledge/banking/pacs008', label: 'pacs.008 - FI-to-FI Credit Transfer' },
-								{ type: 'doc', id: 'technical-knowledge/banking/pacs002', label: 'pacs.002 - FI-to-FI Status Report' },
-								{ type: 'doc', id: 'technical-knowledge/banking/pacs004', label: 'pacs.004 - Payment Return' }
+								'technical-knowledge/spring/spring-framework',
+								'technical-knowledge/spring/spring-framework-deep-dive',
+								'technical-knowledge/spring/spring-aop',
+								'technical-knowledge/spring/spring-interview-questions'
 							]
 						},
 						{
 							type: 'category',
-							label: '📒 Cash Management (camt)',
+							label: '🔐 Security & Data Access',
 							collapsed: true,
 							items: [
-								{ type: 'doc', id: 'technical-knowledge/banking/camt054', label: 'camt.054 - Debit/Credit Notification' },
-								{ type: 'doc', id: 'technical-knowledge/banking/camt053', label: 'camt.053 - Account Statement' },
-								{ type: 'doc', id: 'technical-knowledge/banking/camt055_camt056', label: 'camt.055 / camt.056 - Cancellation' }
+								'technical-knowledge/spring/spring-security',
+								'technical-knowledge/spring/spring-data-jpa',
+								'technical-knowledge/spring/spring-data-jpa-repositories-and-queries',
+								'technical-knowledge/spring/spring-data-jpa-query-annotation',
+								'technical-knowledge/spring/hibernate-association-best-practices',
+								'technical-knowledge/spring/spring-data-jpa-transactions',
+								'technical-knowledge/spring/jpa-hibernate-lifecycle-methods',
+								'technical-knowledge/spring/hibernate-transactions-performance',
+								'technical-knowledge/spring/spring-data-jpa-interview-questions'
+							]
+						},
+						{
+							type: 'category',
+							label: '🌐 Web Layer',
+							collapsed: true,
+							items: [
+								'technical-knowledge/spring/spring-mvc',
+								'technical-knowledge/spring/spring-exception-handling'
+							]
+						},
+						{
+							type: 'category',
+							label: '☁️ Cloud & Enterprise',
+							collapsed: true,
+							items: [
+								'technical-knowledge/spring/spring-cloud',
+								'technical-knowledge/spring/spring-batch'
 							]
 						}
 					]
 				},
 				{
 					type: 'category',
-					label: '🔄 ISO 20022 Migration',
-					collapsed: true,
-					items: [{ type: 'doc', id: 'technical-knowledge/banking/iso20022_migration', label: 'MT to MX Migration Guide' }]
-				},
-				{
-					type: 'category',
-					label: '💸 Payment Flows',
-					collapsed: true,
+					label: '🧪 Testing & Mocking',
 					items: [
-						{ type: 'doc', id: 'technical-knowledge/banking/inbound', label: 'Inbound Payments' },
-						{ type: 'doc', id: 'technical-knowledge/banking/outbound', label: 'Outbound Payments' },
-						{ type: 'doc', id: 'technical-knowledge/banking/onus', label: 'On-Us Transactions' },
-						{ type: 'doc', id: 'technical-knowledge/banking/offus', label: 'Off-Us Transactions' }
+						'technical-knowledge/test/testing-concepts',
+						'technical-knowledge/test/spring-test-annotations',
+						'technical-knowledge/test/wiremock'
 					]
 				},
 				{
 					type: 'category',
-					label: '🛤️ Payment Rails & Networks',
-					collapsed: true,
+					label: '🧩 Design Patterns',
 					items: [
-						{ type: 'doc', id: 'technical-knowledge/banking/npp', label: 'NPP - New Payments Platform' },
-						{ type: 'doc', id: 'technical-knowledge/banking/swift', label: 'SWIFT - International' },
-						{ type: 'doc', id: 'technical-knowledge/banking/direct_debit', label: 'Direct Debit (BECS & PayTo)' },
-						{ type: 'doc', id: 'technical-knowledge/banking/bpay', label: 'BPAY - Bill Payments' }
+						'technical-knowledge/design-patterns/design-patterns-overview',
+						{
+							type: 'category',
+							label: '🏗️ Creational',
+							collapsed: true,
+							items: [
+								'technical-knowledge/design-patterns/singleton',
+								'technical-knowledge/design-patterns/factory-method',
+								'technical-knowledge/design-patterns/abstract-factory',
+								'technical-knowledge/design-patterns/builder',
+								'technical-knowledge/design-patterns/prototype'
+							]
+						},
+						{
+							type: 'category',
+							label: '🧱 Structural',
+							collapsed: true,
+							items: [
+								'technical-knowledge/design-patterns/adapter',
+								'technical-knowledge/design-patterns/bridge',
+								'technical-knowledge/design-patterns/composite',
+								'technical-knowledge/design-patterns/decorator',
+								'technical-knowledge/design-patterns/facade',
+								'technical-knowledge/design-patterns/flyweight',
+								'technical-knowledge/design-patterns/proxy'
+							]
+						},
+						{
+							type: 'category',
+							label: '🔄 Behavioral',
+							collapsed: true,
+							items: [
+								'technical-knowledge/design-patterns/chain-of-responsibility',
+								'technical-knowledge/design-patterns/command',
+								'technical-knowledge/design-patterns/interpreter',
+								'technical-knowledge/design-patterns/iterator',
+								'technical-knowledge/design-patterns/mediator',
+								'technical-knowledge/design-patterns/memento',
+								'technical-knowledge/design-patterns/observer',
+								'technical-knowledge/design-patterns/state',
+								'technical-knowledge/design-patterns/strategy',
+								'technical-knowledge/design-patterns/template-method',
+								'technical-knowledge/design-patterns/visitor'
+							]
+						}
 					]
 				},
 				{
 					type: 'category',
-					label: '🏛️ Parties & Institutions',
-					collapsed: true,
+					label: '🧠 SOLID',
 					items: [
-						{ type: 'doc', id: 'technical-knowledge/banking/debtor', label: 'Debtor & Creditor' },
-						{ type: 'doc', id: 'technical-knowledge/banking/fis', label: 'Financial Institutions' },
-						{ type: 'doc', id: 'technical-knowledge/banking/account_types', label: 'Account Types' },
-						{ type: 'doc', id: 'technical-knowledge/banking/core_banking', label: 'Core Banking System (CBS)' }
+						{
+							type: 'doc',
+							id: 'technical-knowledge/solid/intro',
+							label: '📘 Introduction',
+						},
+						{
+							type: 'category',
+							label: '🧱 SOLID Principles',
+							collapsed: false,
+							items: [
+								'technical-knowledge/solid/single-responsibility',
+								'technical-knowledge/solid/open-closed',
+								'technical-knowledge/solid/liskov-substitution',
+								'technical-knowledge/solid/interface-segregation',
+								'technical-knowledge/solid/dependency-inversion',
+							],
+						},
+						{
+							type: 'doc',
+							id: 'technical-knowledge/solid/summary',
+							label: '✅ Summary & Cheat Sheet',
+						},
 					]
 				},
 				{
 					type: 'category',
-					label: '📒 Accounting & Posting',
-					collapsed: true,
+					label: '📖 System Design',
 					items: [
-						{ type: 'doc', id: 'technical-knowledge/banking/debit_post', label: 'Debit Posting' },
-						{ type: 'doc', id: 'technical-knowledge/banking/credit_post', label: 'Credit Posting' },
-						{ type: 'doc', id: 'technical-knowledge/banking/debit_reversal', label: 'Debit Reversal' },
-						{ type: 'doc', id: 'technical-knowledge/banking/payment_return', label: 'Payment Return' },
-						{ type: 'doc', id: 'technical-knowledge/banking/fx', label: 'FX in Payments' },
-						{ type: 'doc', id: 'technical-knowledge/banking/interest_fees', label: 'Interest & Fees' }
-					]
-				},
-				{
-					type: 'category',
-					label: '⚖️ Clearing & Settlement',
-					collapsed: true,
-					items: [
-						{ type: 'doc', id: 'technical-knowledge/banking/clearing', label: 'Clearing' },
-						{ type: 'doc', id: 'technical-knowledge/banking/settlement', label: 'Settlement' }
-					]
-				},
-				{
-					type: 'category',
-					label: '💳 Cards',
-					collapsed: true,
-					items: [{ type: 'doc', id: 'technical-knowledge/banking/cards', label: 'Cards & Card Schemes' }]
-				},
-				{
-					type: 'category',
-					label: '🛡️ Risk & Compliance',
-					collapsed: true,
-					items: [
-						{ type: 'doc', id: 'technical-knowledge/banking/fraud', label: 'Fraud Detection & Prevention' },
-						{ type: 'doc', id: 'technical-knowledge/banking/sanction', label: 'Sanctions Screening' },
-						{ type: 'doc', id: 'technical-knowledge/banking/aml_kyc', label: 'AML, CTF & KYC' }
-					]
-				},
-				{
-					type: 'category',
-					label: '⚙️ Operations',
-					collapsed: true,
-					items: [
-						{ type: 'doc', id: 'technical-knowledge/banking/reconciliation', label: 'Reconciliation' },
-						{ type: 'doc', id: 'technical-knowledge/banking/payment_exceptions', label: 'Exceptions & Investigations' }
-					]
-				},
-				{
-					type: 'category',
-					label: '🧑‍💻 Engineering',
-					collapsed: true,
-					items: [{ type: 'doc', id: 'technical-knowledge/banking/testing_banking', label: 'Testing in Payments' }]
-				},
-				{
-					type: 'category',
-					label: '🚀 Modern Banking',
-					collapsed: true,
-					items: [{ type: 'doc', id: 'technical-knowledge/banking/open_banking', label: 'Open Banking & CDR' }]
-				}
+						'technical-knowledge/system-design/intro',
+						{
+							type: 'category',
+							label: '🏗️ Fundamentals',
+							collapsed: true,
+							items: [
+								'technical-knowledge/system-design/architecture-fundamentals',
+								'technical-knowledge/system-design/capacity-planning',
+								'technical-knowledge/system-design/interview-framework',
+								'technical-knowledge/system-design/cap-theorem-system-design',
+							],
+						},
+						{
+							type: 'category',
+							label: '⚡ Scalability Patterns',
+							collapsed: true,
+							items: [
+								'technical-knowledge/system-design/scaling-reads',
+								'technical-knowledge/system-design/scaling-writes',
+								'technical-knowledge/system-design/sharding-partitioning',
+								'technical-knowledge/system-design/caching-strategies',
+								'technical-knowledge/system-design/bloom-filters',
+								'technical-knowledge/system-design/load-balancing-reliability',
+								'technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway',
+								'technical-knowledge/system-design/consistent-hashing-deep-dive',
+								'technical-knowledge/system-design/rate-limiting-algorithms',
+							],
 
-			]
-		},
-		{
-			type: 'category',
-			label: '🤖 AI Agents & Vibe Coding',
-			collapsed: true,
-			items: [
-				'technical-knowledge/ai-agents/overview',
-				'technical-knowledge/ai-agents/agents',
-				'technical-knowledge/ai-agents/skills',
-				'technical-knowledge/ai-agents/harness',
-				'technical-knowledge/ai-agents/vibe-coding'
+						},
+						{
+							type: 'category',
+							label: '🔄 Distributed Workflows',
+							collapsed: true,
+							items: [
+								'technical-knowledge/system-design/distributed-systems',
+								'technical-knowledge/system-design/real-time-updates',
+								'technical-knowledge/system-design/handling-contention',
+								'technical-knowledge/system-design/data-consistency',
+								'technical-knowledge/system-design/two-phase-commit',
+								'technical-knowledge/system-design/saga-pattern',
+								'technical-knowledge/system-design/outbox-pattern',
+								'technical-knowledge/system-design/long-running-tasks',
+								'technical-knowledge/system-design/dead-letter-queue',
+								'technical-knowledge/system-design/advanced-consensus-bft',
+							],
+						},
+						{
+							type: 'category',
+							label: '🧩 Architecture & APIs',
+							collapsed: true,
+							items: [
+								'technical-knowledge/system-design/microservices-patterns',
+								'technical-knowledge/system-design/domain-driven-design',
+								'technical-knowledge/system-design/cqrs',
+								'technical-knowledge/system-design/api-design',
+							],
+						},
+						{
+							type: 'category',
+							label: '🗄️ Data & Storage',
+							collapsed: true,
+							items: [
+								'technical-knowledge/system-design/cdc',
+								'technical-knowledge/system-design/message-queues',
+								'technical-knowledge/system-design/search-systems',
+								'technical-knowledge/system-design/proximity-search-geospatial-indexes',
+								'technical-knowledge/system-design/large-blobs',
+								'technical-knowledge/system-design/mongodb-deep-dive'
+							],
+						},
+						{
+							type: 'category',
+							label: '🔒 Security & Observability',
+							collapsed: true,
+							items: [
+								'technical-knowledge/system-design/security-patterns',
+								'technical-knowledge/system-design/observability',
+							],
+						},
+						{
+							type: 'category',
+							label: '🎯 Interview Prep',
+							collapsed: true,
+							items: [
+								'technical-knowledge/system-design/common-interview-questions',
+							],
+						},
+					]
+				},
+				{
+					type: 'category',
+					label: '📚 Low-level Design',
+					items: [
+						'technical-knowledge/low-level-design/intro',
+						{
+							type: 'category',
+							label: '📐 OOP & Principles',
+							collapsed: false,
+							items: [
+								'technical-knowledge/low-level-design/oop/concepts',
+								'technical-knowledge/low-level-design/oop/principles',
+							],
+						},
+						{
+							type: 'category',
+							label: '🏗️ Design Patterns',
+							collapsed: false,
+							items: [
+								'technical-knowledge/low-level-design/design-patterns/overview',
+								'technical-knowledge/low-level-design/design-patterns/creational',
+								'technical-knowledge/low-level-design/design-patterns/structural',
+								'technical-knowledge/low-level-design/design-patterns/behavioral',
+							],
+						},
+						{
+							type: 'category',
+							label: '⚡ Concurrency',
+							collapsed: false,
+							items: [
+								'technical-knowledge/low-level-design/concurrency/correctness',
+								'technical-knowledge/low-level-design/concurrency/coordination',
+								'technical-knowledge/low-level-design/concurrency/scarcity',
+							],
+						},
+						{
+							type: 'category',
+							label: '🧩 Problem Walkthroughs',
+							collapsed: false,
+							items: [
+								'technical-knowledge/low-level-design/problem/connect-four',
+								'technical-knowledge/low-level-design/problem/amazon-locker',
+								'technical-knowledge/low-level-design/problem/elevator',
+								'technical-knowledge/low-level-design/problem/parking-lot',
+								'technical-knowledge/low-level-design/problem/file-system',
+								'technical-knowledge/low-level-design/problem/movie-ticket',
+								'technical-knowledge/low-level-design/problem/rate-limiter',
+								'technical-knowledge/low-level-design/problem/inventory-management',
+							],
+						},
+					],
+				},
+				{
+					type: 'category',
+					label: '🔐 Security',
+					items: [
+						'technical-knowledge/security/security-intro',
+						{
+							type: 'category',
+							label: '🔐 Core Security',
+							collapsed: true,
+							items: [
+								'technical-knowledge/security/authentication-authorization',
+								'technical-knowledge/security/web-security-fundamentals',
+								'technical-knowledge/security/cookies-vs-sessions-vs-jwt',
+								'technical-knowledge/security/web-vulnerabilities',
+								'technical-knowledge/security/cryptography-secure-design',
+								'technical-knowledge/security/keys-signing-tls',
+								'technical-knowledge/security/api-security',
+							],
+						},
+						{
+							type: 'category',
+							label: '🏛️ Governance & Compliance',
+							collapsed: true,
+							items: [
+								'technical-knowledge/security/privacy-compliance',
+								'technical-knowledge/security/identity-access-management',
+							],
+						},
+						{
+							type: 'category',
+							label: '🛡️ Operations & Infrastructure',
+							collapsed: true,
+							items: [
+								'technical-knowledge/security/network-security',
+								'technical-knowledge/security/secure-sdlc',
+								'technical-knowledge/security/incident-response',
+							],
+						},
+						{
+							type: 'category',
+							label: '🎯 Interview Prep',
+							collapsed: true,
+							items: [
+								'technical-knowledge/security/interview-questions',
+							],
+						},
+					]
+				},
+				{
+					type: 'category',
+					label: '🌐 Network Overview',
+					items: [
+						'technical-knowledge/networking/networking-overview',
+						{
+							type: 'category',
+							label: '🔩 Foundations',
+							collapsed: true,
+							items: [
+								'technical-knowledge/networking/osi-tcpip-models',
+								'technical-knowledge/networking/ip-addressing-routing',
+								'technical-knowledge/networking/tcp-udp-transport-layer',
+								'technical-knowledge/networking/quic-modern-transport',
+							],
+						},
+						{
+							type: 'category',
+							label: '🌍 Application Layer',
+							collapsed: true,
+							items: [
+								'technical-knowledge/networking/http-https-application-layer',
+								'technical-knowledge/networking/dns-resolution',
+								'technical-knowledge/networking/application-protocols-reference',
+							],
+						},
+						{
+							type: 'category',
+							label: '🏗️ Infrastructure',
+							collapsed: true,
+							items: [
+								'technical-knowledge/networking/proxies-nat-firewalls',
+								'technical-knowledge/networking/socket-programming-io-models',
+							],
+						},
+						{
+							type: 'category',
+							label: '🔌 API Design',
+							collapsed: true,
+							items: [
+								'technical-knowledge/networking/api-authentication-security',
+							],
+						},
+						{
+							type: 'category',
+							label: '☁️ Distributed & Cloud',
+							collapsed: true,
+							items: [
+								'technical-knowledge/networking/network-performance-optimization',
+							],
+						},
+						{
+							type: 'category',
+							label: '🛡️ Security',
+							collapsed: true,
+							items: [
+								'technical-knowledge/networking/network-security',
+							],
+						},
+						{
+							type: 'category',
+							label: '🔧 Tools & Interview Prep',
+							collapsed: true,
+							items: [
+								'technical-knowledge/networking/network-troubleshooting-tools',
+								'technical-knowledge/networking/networking-interview-questions',
+							],
+						},
+					]
+				},
+				{
+					type: 'category',
+					label: '📨 Kafka',
+					items: [
+						'technical-knowledge/kafka/intro',
+						{
+							type: 'category',
+							label: '🏗️ Core Concepts',
+							collapsed: true,
+							items: [
+								'technical-knowledge/kafka/core/kafka-overview',
+								'technical-knowledge/kafka/core/topic',
+								'technical-knowledge/kafka/core/partition',
+								'technical-knowledge/kafka/core/scaling-partitions',
+								'technical-knowledge/kafka/core/kafka-broker',
+								'technical-knowledge/kafka/core/replication',
+								'technical-knowledge/kafka/core/kraft-vs-zookeeper',
+								'technical-knowledge/kafka/core/raft-consensus'
+							]
+						},
+						{
+							type: 'category',
+							label: '📤 Producer',
+							collapsed: true,
+							items: [
+								'technical-knowledge/kafka/producer/producer-overview',
+								'technical-knowledge/kafka/producer/hash-key-partitions',
+								'technical-knowledge/kafka/producer/producer-acks',
+								'technical-knowledge/kafka/producer/producer-idempotency',
+								'technical-knowledge/kafka/producer/producer-transactions'
+							]
+						},
+						{
+							type: 'category',
+							label: '📥 Consumer',
+							collapsed: true,
+							items: [
+								'technical-knowledge/kafka/consumer/consumer-overview',
+								'technical-knowledge/kafka/consumer/consumer-group',
+								'technical-knowledge/kafka/consumer/consumer-lag',
+								'technical-knowledge/kafka/consumer/parallel-consumer'
+							]
+						},
+						{
+							type: 'category',
+							label: '🔌 Ecosystem',
+							collapsed: true,
+							items: [
+								'technical-knowledge/kafka/advanced/kafka-connect',
+								'technical-knowledge/kafka/advanced/kafka-streams-deep-dive',
+								'technical-knowledge/kafka/advanced/schema-registry',
+								'technical-knowledge/kafka/advanced/exactly-once-vs-dedup'
+							]
+						},
+						{
+							type: 'category',
+							label: '📈 Reliability & Operations',
+							collapsed: true,
+							items: [
+								'technical-knowledge/kafka/advanced/kafka-exactly-once',
+								'technical-knowledge/kafka/advanced/order-messages',
+								'technical-knowledge/kafka/advanced/processing-and-ordering',
+								'technical-knowledge/kafka/advanced/monitoring-operations',
+								'technical-knowledge/kafka/advanced/kafka-throughput-optimization',
+								'technical-knowledge/kafka/advanced/rebalance-storms',
+							]
+						},
+						{
+							type: 'category',
+							label: '🎯 Interview Prep',
+							collapsed: true,
+							items: [
+								'technical-knowledge/kafka/interview/interview-core',
+								'technical-knowledge/kafka/interview/interview-producer-consumer',
+								'technical-knowledge/kafka/interview/interview-advanced'
+							]
+						}
+					]
+				},
+				{
+					type: 'category',
+					label: '🗄️ Database',
+					items: [
+						'technical-knowledge/database/database-overview',
+						{
+							type: 'category',
+							label: '🧱 Relational Databases',
+							collapsed: true,
+							items: [
+								'technical-knowledge/database/relational-fundamentals',
+								'technical-knowledge/database/database-design',
+								'technical-knowledge/database/connection-pooling',
+								'technical-knowledge/database/advanced-sql',
+								'technical-knowledge/database/schema-migrations',
+							],
+						},
+						{
+							type: 'category',
+							label: '⚡ Performance',
+							collapsed: true,
+							items: [
+								'technical-knowledge/database/indexing-query-optimization',
+								'technical-knowledge/database/query-planner-optimizer',
+								'technical-knowledge/database/performance-monitoring',
+							],
+						},
+						{
+							type: 'category',
+							label: '⚙️ Internals',
+							collapsed: true,
+							items: [
+								'technical-knowledge/database/acid',
+								'technical-knowledge/database/transactions-concurrency',
+								'technical-knowledge/database/storage-engines-data-structures',
+							],
+						},
+						{
+							type: 'category',
+							label: '🌍 Scale & Distribution',
+							collapsed: true,
+							items: [
+								'technical-knowledge/database/replication-partitioning',
+								'technical-knowledge/database/nosql-distributed',
+								'technical-knowledge/database/database-patterns-microservices',
+							],
+						},
+						{
+							type: 'category',
+							label: '🔎 Specialized',
+							collapsed: true,
+							items: [
+								'technical-knowledge/database/full-text-search',
+								'technical-knowledge/database/data-warehousing-olap',
+								'technical-knowledge/database/time-series-databases',
+							],
+						},
+						{
+							type: 'category',
+							label: '🛠️ Operations',
+							collapsed: true,
+							items: [
+								'technical-knowledge/database/backup-recovery',
+								'technical-knowledge/database/database-security',
+							],
+						}
+					]
+				},
+				{
+					type: 'category',
+					label: '⚡ Redis',
+					items: [
+						'technical-knowledge/redis/redis-overview',
+						{
+							type: 'category',
+							label: '🧱 Core Concepts',
+							collapsed: true,
+							items: [
+								'technical-knowledge/redis/redis-data-types',
+								'technical-knowledge/redis/redis-advanced-data-structures',
+								'technical-knowledge/redis/redis-ttl-expiry',
+								'technical-knowledge/redis/redis-eviction-policies'
+							]
+						},
+						{
+							type: 'category',
+							label: '🔄 Features & Streaming',
+							collapsed: true,
+							items: [
+								'technical-knowledge/redis/redis-pipeline-transactions',
+								'technical-knowledge/redis/redis-pubsub',
+								'technical-knowledge/redis/redis-streams',
+							]
+						},
+						{
+							type: 'category',
+							label: '🏛️ Architecture & Patterns',
+							collapsed: true,
+							items: [
+								'technical-knowledge/redis/redis-distributed-cache',
+								'technical-knowledge/redis/redis-as-database',
+								'technical-knowledge/redis/redis-clustering-replication',
+								'technical-knowledge/redis/redis-performance-patterns',
+								'technical-knowledge/redis/redis-distributed-lock',
+								'technical-knowledge/redis/redis-rate-limiting',
+								'technical-knowledge/redis/redis-session-management',
+							]
+						},
+						{
+							type: 'category',
+							label: '🎯 Interview Prep',
+							collapsed: true,
+							items: [
+								'technical-knowledge/redis/redis-interview-questions',
+							]
+						}
+					]
+				},
+				{
+					type: 'category',
+					label: '🔎 Elasticsearch & ELK',
+					items: [
+						'technical-knowledge/elasticsearch/elasticsearch-overview',
+						'technical-knowledge/elasticsearch/elasticsearch-internals',
+						'technical-knowledge/elasticsearch/logstash-kibana-integration',
+						'technical-knowledge/elasticsearch/elasticsearch-senior-deep-dive'
+					]
+				},
+				{
+					type: 'category',
+					label: '🖥️ Operating Systems',
+					items: [
+						'technical-knowledge/operating-systems/intro',
+						{
+							type: 'category',
+							label: '⚙️ Core Concepts',
+							collapsed: true,
+							items: [
+								'technical-knowledge/operating-systems/processes-and-threads',
+								'technical-knowledge/operating-systems/cpu-scheduling',
+								'technical-knowledge/operating-systems/memory-management',
+								'technical-knowledge/operating-systems/synchronization-and-deadlocks',
+							],
+						},
+						{
+							type: 'category',
+							label: '🖥️ Storage & I/O',
+							collapsed: true,
+							items: [
+								'technical-knowledge/operating-systems/file-systems-and-io',
+								'technical-knowledge/operating-systems/virtual-memory-deep-dive',
+							],
+						},
+						{
+							type: 'category',
+							label: '🐧 Linux Internals',
+							collapsed: true,
+							items: [
+								'technical-knowledge/operating-systems/linux-internals-and-syscalls',
+								'technical-knowledge/operating-systems/networking-and-ipc',
+							],
+						},
+						'technical-knowledge/operating-systems/interview-questions',
+					]
+				},
+				{
+					type: 'category',
+					label: '🌿 Git & Version Control',
+					items: [
+						{ type: 'doc', id: 'technical-knowledge/git/intro', label: '🏠 Introduction' },
+						{
+							type: 'category',
+							label: '📦 Basics',
+							collapsed: false,
+							items: [
+								'technical-knowledge/git/basics/add',
+								'technical-knowledge/git/basics/commit',
+								'technical-knowledge/git/basics/push',
+								'technical-knowledge/git/basics/fetch-pull',
+								'technical-knowledge/git/basics/status-diff',
+							],
+						},
+						{
+							type: 'category',
+							label: '🌿 Branching',
+							collapsed: false,
+							items: [
+								'technical-knowledge/git/branching/branches',
+								'technical-knowledge/git/branching/merge',
+								'technical-knowledge/git/branching/rebase',
+								'technical-knowledge/git/branching/conflict-resolution',
+							],
+						},
+						{
+							type: 'category',
+							label: '🕰️ History & Rewriting',
+							collapsed: false,
+							items: [
+								'technical-knowledge/git/history/cherry-pick',
+								'technical-knowledge/git/history/squash',
+								'technical-knowledge/git/history/fixup',
+								'technical-knowledge/git/history/reset-revert',
+								'technical-knowledge/git/history/reflog',
+								'technical-knowledge/git/history/log-blame',
+							],
+						},
+						{
+							type: 'category',
+							label: '🤝 Collaboration',
+							collapsed: false,
+							items: [
+								'technical-knowledge/git/collaboration/remotes',
+								'technical-knowledge/git/collaboration/tags',
+								'technical-knowledge/git/collaboration/stash',
+								'technical-knowledge/git/collaboration/submodules',
+							],
+						},
+						{
+							type: 'category',
+							label: '⚙️ Advanced',
+							collapsed: false,
+							items: [
+								'technical-knowledge/git/advanced/hooks',
+								'technical-knowledge/git/advanced/config-aliases',
+								'technical-knowledge/git/advanced/bisect',
+								'technical-knowledge/git/advanced/worktree',
+							],
+						},
+						{
+							type: 'category',
+							label: '🔀 Workflows',
+							collapsed: false,
+							items: [
+								'technical-knowledge/git/workflows/git-flow',
+								'technical-knowledge/git/workflows/trunk-based',
+								'technical-knowledge/git/workflows/conventional-commits',
+								'technical-knowledge/git/workflows/pull-request-best-practices',
+							],
+						},
+					]
+				},
+				{
+					type: 'category',
+					label: '🐳 DevOps & Containerization',
+					items: [
+						'technical-knowledge/devops/devops-intro',
+						'technical-knowledge/devops/vm-docker-k8s-explained',
+						'technical-knowledge/devops/linux-for-devops',
+						{
+							type: 'category',
+							label: '🐳 Docker',
+							collapsed: true,
+							items: [
+								'technical-knowledge/devops/docker-fundamentals',
+								'technical-knowledge/devops/dockerfile',
+								'technical-knowledge/devops/docker-commands',
+								'technical-knowledge/devops/docker-networking',
+								'technical-knowledge/devops/docker-volumes',
+								'technical-knowledge/devops/docker-compose',
+							],
+						},
+						{
+							type: 'category',
+							label: '☸️ Kubernetes',
+							collapsed: true,
+							items: [
+								'technical-knowledge/devops/kubernetes-fundamentals',
+								'technical-knowledge/devops/kubernetes-pods',
+								'technical-knowledge/devops/kubernetes-workloads',
+								'technical-knowledge/devops/kubernetes-networking',
+								'technical-knowledge/devops/kubernetes-storage',
+								'technical-knowledge/devops/kubernetes-configuration',
+							],
+						},
+						{
+							type: 'category',
+							label: '🛠️ Tooling',
+							collapsed: true,
+							items: [
+								'technical-knowledge/devops/kubectl-commands',
+								'technical-knowledge/devops/helm',
+							],
+						},
+						{
+							type: 'category',
+							label: '🔧 Infrastructure as Code (IaC)',
+							collapsed: true,
+							items: [
+								'technical-knowledge/devops/terraform',
+								'technical-knowledge/devops/ansible',
+							],
+						},
+						{
+							type: 'category',
+							label: '🏗️ Advanced Architecture',
+							collapsed: true,
+							items: [
+								'technical-knowledge/devops/kubernetes-operators',
+								'technical-knowledge/devops/gitops-argocd',
+								'technical-knowledge/devops/devops-observability',
+							],
+						},
+						{
+							type: 'category',
+							label: '🎯 Interview Prep',
+							collapsed: true,
+							items: [
+								'technical-knowledge/devops/devops-interview-questions',
+							],
+						},
+					]
+				},
+				{
+					type: 'category',
+					label: '☁️ AWS',
+					items: [
+						'technical-knowledge/aws/overview',
+						{
+							type: 'category',
+							label: '🔐 Identity & Access',
+							collapsed: true,
+							items: [
+								'technical-knowledge/aws/iam/index',
+								'technical-knowledge/aws/iam/cognito',
+								'technical-knowledge/aws/iam/iam-advanced',
+							],
+						},
+						{
+							type: 'category',
+							label: '🧠 Compute & APIs',
+							collapsed: true,
+							items: [
+								'technical-knowledge/aws/lambda/index',
+								'technical-knowledge/aws/lambda/layers-and-versions',
+								'technical-knowledge/aws/api-gateway/index',
+								'technical-knowledge/aws/appsync',
+								'technical-knowledge/aws/beanstalk/index',
+								'technical-knowledge/aws/serverless-patterns',
+							],
+						},
+						{
+							type: 'category',
+							label: '🗄️ Storage & Databases',
+							collapsed: true,
+							items: [
+								'technical-knowledge/aws/s3/index',
+								'technical-knowledge/aws/s3/advanced',
+								'technical-knowledge/aws/dynamodb/index',
+								'technical-knowledge/aws/dynamodb/advanced',
+								'technical-knowledge/aws/elasticache/index',
+								'technical-knowledge/aws/rds-aurora',
+							],
+						},
+						{
+							type: 'category',
+							label: '📨 Messaging & Workflows',
+							collapsed: true,
+							items: [
+								'technical-knowledge/aws/messaging/sns',
+								'technical-knowledge/aws/messaging/sqs',
+								'technical-knowledge/aws/messaging/kinesis',
+								'technical-knowledge/aws/step-functions/index',
+							],
+						},
+						{
+							type: 'category',
+							label: '🛠️ DevOps & Infrastructure',
+							collapsed: true,
+							items: [
+								'technical-knowledge/aws/cloudformation/index',
+								'technical-knowledge/aws/cloudformation/cloudfront',
+								'technical-knowledge/aws/cloudformation/sam',
+								'technical-knowledge/aws/cicd/index',
+								'technical-knowledge/aws/cicd/code-build',
+								'technical-knowledge/aws/cicd/code-deploy',
+								'technical-knowledge/aws/cicd/code-pipeline',
+								'technical-knowledge/aws/containers/ecs-ecr',
+								'technical-knowledge/aws/vpc-for-developers',
+							],
+						},
+						{
+							type: 'category',
+							label: '📈 Monitoring & Security',
+							collapsed: true,
+							items: [
+								'technical-knowledge/aws/monitoring/cloudwatch',
+								'technical-knowledge/aws/monitoring/cloudtrail',
+								'technical-knowledge/aws/monitoring/x-ray',
+								'technical-knowledge/aws/security/kms',
+								'technical-knowledge/aws/security/secrets-manager',
+								'technical-knowledge/aws/security/ssm-parameter-store',
+							],
+						},
+						{
+							type: 'category',
+							label: '💻 SDK & Developer Tools',
+							collapsed: true,
+							items: [
+								'technical-knowledge/aws/aws-sdk-java',
+							],
+						},
+						{
+							type: 'category',
+							label: '🎯 Exam Prep',
+							collapsed: true,
+							items: [
+								'technical-knowledge/aws/dva-c02-roadmap',
+								'technical-knowledge/aws/exam-tips',
+								'technical-knowledge/aws/mock-exam',
+							],
+						},
+					],
+				}
 			]
 		},
 		{
@@ -1516,188 +1262,474 @@ const sidebars: SidebarsConfig = {
 		},
 		{
 			type: 'category',
-			label: '🎯 Frequently Asked Interview Questions',
+			label: '💼 Non-Technical Knowledge',
 			collapsed: true,
 			items: [
 				{
 					type: 'category',
-					label: '☕ Core Java',
-					collapsed: true,
+					label: 'Software Development Life Cycle (SDLC)',
 					items: [
-						'technical-knowledge/interview-questions/java/java-interview-questions',
-						'technical-knowledge/interview-questions/java/break-singleton-java',
-						'technical-knowledge/interview-questions/java/concurrent-collections-interview',
-						'technical-knowledge/interview-questions/java/concurrent-collections-tricky',
-						'technical-knowledge/interview-questions/java/exception-handling-advanced',
-						'technical-knowledge/interview-questions/java/experienced-java-backend-interview',
-						'technical-knowledge/interview-questions/java/java-8-optional-crud',
-						'technical-knowledge/interview-questions/java/java-8-tricky-interview-questions',
-						'technical-knowledge/interview-questions/java/java-collections-differences',
-						'technical-knowledge/interview-questions/java/java-collections-interview',
-						'technical-knowledge/interview-questions/java/java-collections-interview-p2',
-						'technical-knowledge/interview-questions/java/java-comprehensive-interview',
-						'technical-knowledge/interview-questions/java/java-experienced-interview-p1',
-						'technical-knowledge/interview-questions/java/java-lead-interview-scenarios',
-						'technical-knowledge/interview-questions/java/java-multithreading-interview',
-						'technical-knowledge/interview-questions/java/java-runtime-exceptions',
-						'technical-knowledge/interview-questions/java/java-string-basics',
-						'technical-knowledge/interview-questions/java/java-string-rotation',
-						'technical-knowledge/interview-questions/java/java-date-time-api',
-						'technical-knowledge/interview-questions/java/java-tricky-core-questions',
-						'technical-knowledge/interview-questions/java/spring-boot-interview',
-						'technical-knowledge/interview-questions/java/spring-boot-real-time-questions',
-						'technical-knowledge/interview-questions/java/sql-interview-questions',
-						'technical-knowledge/interview-questions/java/tricky-java-interview',
-					]
-				},
-				{
-					type: 'category',
-					label: '🧠 Grokking Java Answers',
-					collapsed: true,
-					items: [
-						'technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-1',
-						'technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-2',
-						'technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-3',
-						'technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-4',
-						'technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-5',
-					]
-				},
-				{
-					type: 'category',
-					label: '💼 General Java/Spring Boot Interviews',
-					collapsed: true,
-					items: [
-						'technical-knowledge/interview-questions/genz-career/java-collections-interview-questions',
-						'technical-knowledge/interview-questions/genz-career/java-interview-questions-100',
-						'technical-knowledge/interview-questions/genz-career/java-interview-questions-trickiest',
-						'technical-knowledge/interview-questions/genz-career/java-oops-interview-guide',
-						'technical-knowledge/interview-questions/genz-career/java-multithreading-interview-guide',
+						{
+							type: 'doc',
+							id: 'non-technical-knowledge/sdlc/intro',
+							label: '🏠 Introduction',
+						},
 						{
 							type: 'category',
-							label: '🧪 Mock',
+							label: '📋 SDLC Phases',
+							collapsed: false,
+							items: [
+								'non-technical-knowledge/sdlc/phases/planning',
+								'non-technical-knowledge/sdlc/phases/requirements',
+								'non-technical-knowledge/sdlc/phases/system-design',
+								'non-technical-knowledge/sdlc/phases/development',
+								'non-technical-knowledge/sdlc/phases/testing',
+								'non-technical-knowledge/sdlc/phases/deployment',
+								'non-technical-knowledge/sdlc/phases/maintenance',
+							],
+						},
+						{
+							type: 'category',
+							label: '🧪 Testing Strategy',
+							collapsed: false,
+							items: [
+								'non-technical-knowledge/sdlc/testing/unit-testing',
+								'non-technical-knowledge/sdlc/testing/integration-testing',
+								'non-technical-knowledge/sdlc/testing/regression-testing',
+								'non-technical-knowledge/sdlc/testing/end-to-end-testing',
+								'non-technical-knowledge/sdlc/testing/inflight-testing',
+								'non-technical-knowledge/sdlc/testing/component-performance-testing',
+							],
+						},
+						{
+							type: 'category',
+							label: '🚀 Deployment Strategy',
+							collapsed: false,
+							items: [
+								'non-technical-knowledge/sdlc/deployment/roll-forward',
+								'non-technical-knowledge/sdlc/deployment/roll-backward',
+								'non-technical-knowledge/sdlc/deployment/deployment-configuration-verification',
+							],
+						},
+						{
+							type: 'category',
+							label: '📊 Reports',
+							collapsed: false,
+							items: [
+								'non-technical-knowledge/sdlc/reports/test-summary-report',
+							],
+						},
+					]
+				}
+			]
+		},
+		{
+			type: 'category',
+			label: '🚀 Coding Interview Prep',
+			collapsed: true,
+			items: [
+				'technical-knowledge/coding-interview-prep/intro',
+				{
+					type: 'doc',
+					id: 'technical-knowledge/coding-interview-prep/intro/intro',
+					label: '🚀 Getting Started',
+				},
+				{
+					type: 'category',
+					label: '📦 Fundamentals',
+					collapsed: false,
+					items: [
+						'technical-knowledge/coding-interview-prep/array/array',
+						'technical-knowledge/coding-interview-prep/linked-list/linked-list',
+						'technical-knowledge/coding-interview-prep/stack/stack',
+						'technical-knowledge/coding-interview-prep/sorting/sorting',
+					],
+				},
+				{
+					type: 'category',
+					label: '🎯 Core Patterns',
+					collapsed: false,
+					items: [
+						'technical-knowledge/coding-interview-prep/two-pointers/two-pointers',
+						'technical-knowledge/coding-interview-prep/sliding-window/sliding-window',
+						'technical-knowledge/coding-interview-prep/prefix-sum/prefix-sum',
+						'technical-knowledge/coding-interview-prep/binary-search/binary-search',
+						'technical-knowledge/coding-interview-prep/matrices/matrices',
+					],
+				},
+				{
+					type: 'category',
+					label: '🌲 Trees & Graphs',
+					collapsed: false,
+					items: [
+						'technical-knowledge/coding-interview-prep/tree/tree',
+						'technical-knowledge/coding-interview-prep/bfs/bfs',
+						'technical-knowledge/coding-interview-prep/dfs/dfs',
+						'technical-knowledge/coding-interview-prep/graph/graph',
+						'technical-knowledge/coding-interview-prep/union-find/union-find',
+						'technical-knowledge/coding-interview-prep/trie/trie',
+					],
+				},
+				{
+					type: 'category',
+					label: '⚡ Advanced Patterns',
+					collapsed: false,
+					items: [
+						'technical-knowledge/coding-interview-prep/heap/heap',
+						'technical-knowledge/coding-interview-prep/backtracking/backtracking',
+						'technical-knowledge/coding-interview-prep/dynamic-programming/dynamic-programming',
+						'technical-knowledge/coding-interview-prep/greedy/greedy',
+						'technical-knowledge/coding-interview-prep/bit-manipulation/bit-manipulation',
+						'technical-knowledge/coding-interview-prep/monotonic-stack/monotonic-stack',
+						'technical-knowledge/coding-interview-prep/intervals/intervals',
+					],
+				},
+				{
+					type: 'category',
+					label: '🎯 Frequently Asked Interview Questions',
+					collapsed: true,
+					items: [
+						{
+							type: 'category',
+							label: '☕ Core Java',
 							collapsed: true,
 							items: [
-								'technical-knowledge/interview-questions/genz-career/mock/accenture-java-springboot-interview-3-years',
-								'technical-knowledge/interview-questions/genz-career/mock/cognizant-java-developer-interview-3-years',
-								'technical-knowledge/interview-questions/genz-career/mock/epam-java-developer-interview-experience',
-								'technical-knowledge/interview-questions/genz-career/mock/hcl-java-developer-interview-experience',
-								'technical-knowledge/interview-questions/genz-career/mock/ibm-java-springboot-interview-3-years',
-								'technical-knowledge/interview-questions/genz-career/mock/tcs-ninja-nqt-interview-experience',
-								'technical-knowledge/interview-questions/genz-career/mock/paytm-java-developer-interview-first-round',
-								'technical-knowledge/interview-questions/genz-career/mock/tcs-java-springboot-interview-3-years',
-								'technical-knowledge/interview-questions/genz-career/mock/wipro-java-springboot-interview-3-years',
-								'technical-knowledge/interview-questions/genz-career/mock-interview/java-spring-boot-14-years-interview-detailed'
+								'technical-knowledge/interview-questions/java/java-interview-questions',
+								'technical-knowledge/interview-questions/java/break-singleton-java',
+								'technical-knowledge/interview-questions/java/concurrent-collections-interview',
+								'technical-knowledge/interview-questions/java/concurrent-collections-tricky',
+								'technical-knowledge/interview-questions/java/exception-handling-advanced',
+								'technical-knowledge/interview-questions/java/experienced-java-backend-interview',
+								'technical-knowledge/interview-questions/java/java-8-optional-crud',
+								'technical-knowledge/interview-questions/java/java-8-tricky-interview-questions',
+								'technical-knowledge/interview-questions/java/java-collections-differences',
+								'technical-knowledge/interview-questions/java/java-collections-interview',
+								'technical-knowledge/interview-questions/java/java-collections-interview-p2',
+								'technical-knowledge/interview-questions/java/java-comprehensive-interview',
+								'technical-knowledge/interview-questions/java/java-experienced-interview-p1',
+								'technical-knowledge/interview-questions/java/java-lead-interview-scenarios',
+								'technical-knowledge/interview-questions/java/java-multithreading-interview',
+								'technical-knowledge/interview-questions/java/java-runtime-exceptions',
+								'technical-knowledge/interview-questions/java/java-string-basics',
+								'technical-knowledge/interview-questions/java/java-string-rotation',
+								'technical-knowledge/interview-questions/java/java-date-time-api',
+								'technical-knowledge/interview-questions/java/java-tricky-core-questions',
+								'technical-knowledge/interview-questions/java/spring-boot-interview',
+								'technical-knowledge/interview-questions/java/spring-boot-real-time-questions',
+								'technical-knowledge/interview-questions/java/sql-interview-questions',
+								'technical-knowledge/interview-questions/java/tricky-java-interview',
 							]
 						},
 						{
 							type: 'category',
-							label: '🚀 Spring Boot',
+							label: '🧠 Grokking Java Answers',
 							collapsed: true,
 							items: [
-								'technical-knowledge/interview-questions/genz-career/spring-boot/real-time-spring-boot-interview-questions',
-								'technical-knowledge/interview-questions/genz-career/spring-boot/scenario-based-springboot-interview-questions',
-								'technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions',
-								'technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-2',
-								'technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-3',
-								'technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-4',
-								'technical-knowledge/interview-questions/genz-career/spring-boot/top-spring-security-interview-questions'
+								'technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-1',
+								'technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-2',
+								'technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-3',
+								'technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-4',
+								'technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-5',
+							]
+						},
+						{
+							type: 'category',
+							label: '💼 General Java/Spring Boot Interviews',
+							collapsed: true,
+							items: [
+								'technical-knowledge/interview-questions/genz-career/java-collections-interview-questions',
+								'technical-knowledge/interview-questions/genz-career/java-interview-questions-100',
+								'technical-knowledge/interview-questions/genz-career/java-interview-questions-trickiest',
+								'technical-knowledge/interview-questions/genz-career/java-oops-interview-guide',
+								'technical-knowledge/interview-questions/genz-career/java-multithreading-interview-guide',
+								{
+									type: 'category',
+									label: '🧪 Mock',
+									collapsed: true,
+									items: [
+										'technical-knowledge/interview-questions/genz-career/mock/accenture-java-springboot-interview-3-years',
+										'technical-knowledge/interview-questions/genz-career/mock/cognizant-java-developer-interview-3-years',
+										'technical-knowledge/interview-questions/genz-career/mock/epam-java-developer-interview-experience',
+										'technical-knowledge/interview-questions/genz-career/mock/hcl-java-developer-interview-experience',
+										'technical-knowledge/interview-questions/genz-career/mock/ibm-java-springboot-interview-3-years',
+										'technical-knowledge/interview-questions/genz-career/mock/tcs-ninja-nqt-interview-experience',
+										'technical-knowledge/interview-questions/genz-career/mock/paytm-java-developer-interview-first-round',
+										'technical-knowledge/interview-questions/genz-career/mock/tcs-java-springboot-interview-3-years',
+										'technical-knowledge/interview-questions/genz-career/mock/wipro-java-springboot-interview-3-years',
+										'technical-knowledge/interview-questions/genz-career/mock-interview/java-spring-boot-14-years-interview-detailed'
+									]
+								},
+								{
+									type: 'category',
+									label: '🚀 Spring Boot',
+									collapsed: true,
+									items: [
+										'technical-knowledge/interview-questions/genz-career/spring-boot/real-time-spring-boot-interview-questions',
+										'technical-knowledge/interview-questions/genz-career/spring-boot/scenario-based-springboot-interview-questions',
+										'technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions',
+										'technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-2',
+										'technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-3',
+										'technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-4',
+										'technical-knowledge/interview-questions/genz-career/spring-boot/top-spring-security-interview-questions'
+									]
+								}
+							]
+						},
+						{
+							type: 'category',
+							label: '🏢 Company (💎 Premium)',
+							collapsed: true,
+							items: [
+								'premium/intro',
+								'premium/company/accenture-java-interview',
+								'premium/company/accenture-java-developer-interview-questions',
+								'premium/company/accenture-java-developer-interview-16lpa',
+								'premium/company/airtel-java-developer-interview-questions',
+								'premium/company/capgemini-java-developer-interview-questions',
+								'premium/company/coforge-java-developer-interview-22lpa',
+								'premium/company/cognizant-fresher-java-developer-interview',
+								'premium/company/deloitte-java-developer-interview-questions',
+								'premium/company/deloitte-java-developer-interview-17lpa',
+								'premium/company/epam-java-developer-interview-22lpa',
+								'premium/company/hashedin-java-developer-interview-questions',
+								'premium/company/hcl-java-fullstack-developer-interview',
+								'premium/company/ibm-java-developer-interview-experience',
+								'premium/company/infosys-java-developer-interview-17lpa',
+								'premium/company/java-developer-interview-iris',
+								'premium/company/ltimindtree-java-developer-interview-questions',
+								'premium/company/nagarro-java-developer-interview-questions',
+								'premium/company/ntt-data-java-developer-interview',
+								'premium/company/oracle-java-developer-interview-questions',
+								'premium/company/paytm-java-developer-interview-questions',
+								'premium/company/pwc-java-developer-interview-questions',
+								'premium/company/tcs-java-developer-interview-13lpa',
+								'premium/company/tech-mahindra-java-developer-interview',
+								'premium/company/walmart-java-developer-interview-30lpa',
+								'premium/company/wipro-fullstack-java-developer-interview',
+								'premium/company/wipro-java-developer-interview-questions'
+							]
+						},
+					]
+				}
+			]
+		},
+		{
+			type: 'category',
+			label: '📈 DSA Roadmap',
+			collapsed: true,
+			items: [
+				{
+					type: 'category',
+					label: '🧠 DSA Roadmap (20 Weeks)',
+					items: [
+						'technical-knowledge/dsa/20-week-dsa-roadmap-intro',
+						'technical-knowledge/dsa/leetcode-daily',
+						'technical-knowledge/dsa/week-1-arrays-strings-prefix-sums',
+						'technical-knowledge/dsa/week-2-two-pointers-sliding-window',
+						'technical-knowledge/dsa/week-3-linked-lists-pointers',
+						'technical-knowledge/dsa/week-4-hash-tables-sets',
+						'technical-knowledge/dsa/week-5-stacks-queues-monotonic',
+						'technical-knowledge/dsa/week-6-binary-trees-bst',
+						'technical-knowledge/dsa/week-7-graph-foundations',
+						'technical-knowledge/dsa/week-8-advanced-graph-concepts',
+						'technical-knowledge/dsa/week-9-binary-search',
+						'technical-knowledge/dsa/week-10-recursion-backtracking',
+						'technical-knowledge/dsa/week-11-intervals-sweep-line',
+						'technical-knowledge/dsa/week-12-heaps-greedy',
+						'technical-knowledge/dsa/week-13-dynamic-programming-1d',
+						'technical-knowledge/dsa/week-14-dynamic-programming-2d',
+						'technical-knowledge/dsa/week-15-advanced-sliding-windows',
+						'technical-knowledge/dsa/week-16-tries-prefix-trees',
+						'technical-knowledge/dsa/week-17-shortest-paths-mst',
+						'technical-knowledge/dsa/week-18-disjoint-set-union',
+						'technical-knowledge/dsa/week-19-bit-manipulation-math',
+						'technical-knowledge/dsa/week-20-comprehensive-review-systems',
+					],
+				}
+			]
+		},
+		{
+			type: 'category',
+			label: '🏢 LeetCode Company',
+			collapsed: true,
+			items: [
+				{
+					type: 'autogenerated',
+					dirName: 'technical-knowledge/dsa/leetcode-companywise',
+				},
+			]
+		},
+		{
+			type: 'category',
+			label: '🏦 Banking & Finance',
+			collapsed: true,
+			items: [
+				{ type: 'doc', id: 'technical-knowledge/banking/overview', label: '🏦 Overview' },
+				{
+					type: 'category',
+					label: '🎓 New Learner Guide',
+					collapsed: true,
+					items: [
+						{ type: 'doc', id: 'technical-knowledge/banking/payment_lifecycle_101', label: 'Payment Lifecycle 101' },
+						{ type: 'doc', id: 'technical-knowledge/banking/banking_roles', label: 'Roles & Teams' },
+						{ type: 'doc', id: 'technical-knowledge/banking/glossary', label: 'A-Z Glossary' },
+					]
+				},
+				{
+					type: 'category',
+					label: '📨 ISO 20022 Messages',
+					collapsed: true,
+					items: [
+						{
+							type: 'category',
+							label: '💸 Payment Initiation (pain)',
+							collapsed: true,
+							items: [
+								{ type: 'doc', id: 'technical-knowledge/banking/pain001', label: 'pain.001 - Credit Transfer Initiation' },
+								{ type: 'doc', id: 'technical-knowledge/banking/pain004', label: 'pain.004 - Clarification' },
+								{ type: 'doc', id: 'technical-knowledge/banking/pain007_pacs007', label: 'pain.007 / pacs.007 - Reversal' }
+							]
+						},
+						{
+							type: 'category',
+							label: '🏦 Payment Clearing & Settlement (pacs)',
+							collapsed: true,
+							items: [
+								{ type: 'doc', id: 'technical-knowledge/banking/pacs008', label: 'pacs.008 - FI-to-FI Credit Transfer' },
+								{ type: 'doc', id: 'technical-knowledge/banking/pacs002', label: 'pacs.002 - FI-to-FI Status Report' },
+								{ type: 'doc', id: 'technical-knowledge/banking/pacs004', label: 'pacs.004 - Payment Return' }
+							]
+						},
+						{
+							type: 'category',
+							label: '📒 Cash Management (camt)',
+							collapsed: true,
+							items: [
+								{ type: 'doc', id: 'technical-knowledge/banking/camt054', label: 'camt.054 - Debit/Credit Notification' },
+								{ type: 'doc', id: 'technical-knowledge/banking/camt053', label: 'camt.053 - Account Statement' },
+								{ type: 'doc', id: 'technical-knowledge/banking/camt055_camt056', label: 'camt.055 / camt.056 - Cancellation' }
 							]
 						}
 					]
 				},
 				{
 					type: 'category',
-					label: '🏢 Company (💎 Premium)',
+					label: '🔄 ISO 20022 Migration',
+					collapsed: true,
+					items: [{ type: 'doc', id: 'technical-knowledge/banking/iso20022_migration', label: 'MT to MX Migration Guide' }]
+				},
+				{
+					type: 'category',
+					label: '💸 Payment Flows',
 					collapsed: true,
 					items: [
-						'premium/intro',
-						'premium/company/accenture-java-interview',
-						'premium/company/accenture-java-developer-interview-questions',
-						'premium/company/accenture-java-developer-interview-16lpa',
-						'premium/company/airtel-java-developer-interview-questions',
-						'premium/company/capgemini-java-developer-interview-questions',
-						'premium/company/coforge-java-developer-interview-22lpa',
-						'premium/company/cognizant-fresher-java-developer-interview',
-						'premium/company/deloitte-java-developer-interview-questions',
-						'premium/company/deloitte-java-developer-interview-17lpa',
-						'premium/company/epam-java-developer-interview-22lpa',
-						'premium/company/hashedin-java-developer-interview-questions',
-						'premium/company/hcl-java-fullstack-developer-interview',
-						'premium/company/ibm-java-developer-interview-experience',
-						'premium/company/infosys-java-developer-interview-17lpa',
-						'premium/company/java-developer-interview-iris',
-						'premium/company/ltimindtree-java-developer-interview-questions',
-						'premium/company/nagarro-java-developer-interview-questions',
-						'premium/company/ntt-data-java-developer-interview',
-						'premium/company/oracle-java-developer-interview-questions',
-						'premium/company/paytm-java-developer-interview-questions',
-						'premium/company/pwc-java-developer-interview-questions',
-						'premium/company/tcs-java-developer-interview-13lpa',
-						'premium/company/tech-mahindra-java-developer-interview',
-						'premium/company/walmart-java-developer-interview-30lpa',
-						'premium/company/wipro-fullstack-java-developer-interview',
-						'premium/company/wipro-java-developer-interview-questions'
+						{ type: 'doc', id: 'technical-knowledge/banking/inbound', label: 'Inbound Payments' },
+						{ type: 'doc', id: 'technical-knowledge/banking/outbound', label: 'Outbound Payments' },
+						{ type: 'doc', id: 'technical-knowledge/banking/onus', label: 'On-Us Transactions' },
+						{ type: 'doc', id: 'technical-knowledge/banking/offus', label: 'Off-Us Transactions' }
 					]
 				},
+				{
+					type: 'category',
+					label: '🛤️ Payment Rails & Networks',
+					collapsed: true,
+					items: [
+						{ type: 'doc', id: 'technical-knowledge/banking/npp', label: 'NPP - New Payments Platform' },
+						{ type: 'doc', id: 'technical-knowledge/banking/swift', label: 'SWIFT - International' },
+						{ type: 'doc', id: 'technical-knowledge/banking/direct_debit', label: 'Direct Debit (BECS & PayTo)' },
+						{ type: 'doc', id: 'technical-knowledge/banking/bpay', label: 'BPAY - Bill Payments' }
+					]
+				},
+				{
+					type: 'category',
+					label: '🏛️ Parties & Institutions',
+					collapsed: true,
+					items: [
+						{ type: 'doc', id: 'technical-knowledge/banking/debtor', label: 'Debtor & Creditor' },
+						{ type: 'doc', id: 'technical-knowledge/banking/fis', label: 'Financial Institutions' },
+						{ type: 'doc', id: 'technical-knowledge/banking/account_types', label: 'Account Types' },
+						{ type: 'doc', id: 'technical-knowledge/banking/core_banking', label: 'Core Banking System (CBS)' }
+					]
+				},
+				{
+					type: 'category',
+					label: '📒 Accounting & Posting',
+					collapsed: true,
+					items: [
+						{ type: 'doc', id: 'technical-knowledge/banking/debit_post', label: 'Debit Posting' },
+						{ type: 'doc', id: 'technical-knowledge/banking/credit_post', label: 'Credit Posting' },
+						{ type: 'doc', id: 'technical-knowledge/banking/debit_reversal', label: 'Debit Reversal' },
+						{ type: 'doc', id: 'technical-knowledge/banking/payment_return', label: 'Payment Return' },
+						{ type: 'doc', id: 'technical-knowledge/banking/fx', label: 'FX in Payments' },
+						{ type: 'doc', id: 'technical-knowledge/banking/interest_fees', label: 'Interest & Fees' }
+					]
+				},
+				{
+					type: 'category',
+					label: '⚖️ Clearing & Settlement',
+					collapsed: true,
+					items: [
+						{ type: 'doc', id: 'technical-knowledge/banking/clearing', label: 'Clearing' },
+						{ type: 'doc', id: 'technical-knowledge/banking/settlement', label: 'Settlement' }
+					]
+				},
+				{
+					type: 'category',
+					label: '💳 Cards',
+					collapsed: true,
+					items: [{ type: 'doc', id: 'technical-knowledge/banking/cards', label: 'Cards & Card Schemes' }]
+				},
+				{
+					type: 'category',
+					label: '🛡️ Risk & Compliance',
+					collapsed: true,
+					items: [
+						{ type: 'doc', id: 'technical-knowledge/banking/fraud', label: 'Fraud Detection & Prevention' },
+						{ type: 'doc', id: 'technical-knowledge/banking/sanction', label: 'Sanctions Screening' },
+						{ type: 'doc', id: 'technical-knowledge/banking/aml_kyc', label: 'AML, CTF & KYC' }
+					]
+				},
+				{
+					type: 'category',
+					label: '⚙️ Operations',
+					collapsed: true,
+					items: [
+						{ type: 'doc', id: 'technical-knowledge/banking/reconciliation', label: 'Reconciliation' },
+						{ type: 'doc', id: 'technical-knowledge/banking/payment_exceptions', label: 'Exceptions & Investigations' }
+					]
+				},
+				{
+					type: 'category',
+					label: '🧑‍💻 Engineering',
+					collapsed: true,
+					items: [{ type: 'doc', id: 'technical-knowledge/banking/testing_banking', label: 'Testing in Payments' }]
+				},
+				{
+					type: 'category',
+					label: '🚀 Modern Banking',
+					collapsed: true,
+					items: [{ type: 'doc', id: 'technical-knowledge/banking/open_banking', label: 'Open Banking & CDR' }]
+				}
+
 			]
 		},
 		{
 			type: 'category',
-			label: 'Software Development Life Cycle (SDLC)',
+			label: '🤖 AI Agents & Vibe Coding',
+			collapsed: true,
 			items: [
-				{
-					type: 'doc',
-					id: 'non-technical-knowledge/sdlc/intro',
-					label: '🏠 Introduction',
-				},
-				{
-					type: 'category',
-					label: '📋 SDLC Phases',
-					collapsed: false,
-					items: [
-						'non-technical-knowledge/sdlc/phases/planning',
-						'non-technical-knowledge/sdlc/phases/requirements',
-						'non-technical-knowledge/sdlc/phases/system-design',
-						'non-technical-knowledge/sdlc/phases/development',
-						'non-technical-knowledge/sdlc/phases/testing',
-						'non-technical-knowledge/sdlc/phases/deployment',
-						'non-technical-knowledge/sdlc/phases/maintenance',
-					],
-				},
-				{
-					type: 'category',
-					label: '🧪 Testing Strategy',
-					collapsed: false,
-					items: [
-						'non-technical-knowledge/sdlc/testing/unit-testing',
-						'non-technical-knowledge/sdlc/testing/integration-testing',
-						'non-technical-knowledge/sdlc/testing/regression-testing',
-						'non-technical-knowledge/sdlc/testing/end-to-end-testing',
-						'non-technical-knowledge/sdlc/testing/inflight-testing',
-						'non-technical-knowledge/sdlc/testing/component-performance-testing',
-					],
-				},
-				{
-					type: 'category',
-					label: '🚀 Deployment Strategy',
-					collapsed: false,
-					items: [
-						'non-technical-knowledge/sdlc/deployment/roll-forward',
-						'non-technical-knowledge/sdlc/deployment/roll-backward',
-						'non-technical-knowledge/sdlc/deployment/deployment-configuration-verification',
-					],
-				},
-				{
-					type: 'category',
-					label: '📊 Reports',
-					collapsed: false,
-					items: [
-						'non-technical-knowledge/sdlc/reports/test-summary-report',
-					],
-				},
+				'technical-knowledge/ai-agents/overview',
+				'technical-knowledge/ai-agents/agents',
+				'technical-knowledge/ai-agents/skills',
+				'technical-knowledge/ai-agents/harness',
+				'technical-knowledge/ai-agents/vibe-coding'
 			]
 		},
-		'suggestions'
+		{
+			type: 'doc',
+			id: 'suggestions',
+			label: '💡 Suggestions'
+		}
 	]
 }
 

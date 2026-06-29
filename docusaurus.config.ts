@@ -158,12 +158,12 @@ const config: Config = {
 				srcDark: '/logo-dark.svg',
 			},
 			items: [
-				{ to: '/login', label: '💎 VIP Login', position: 'right', className: 'premium-nav-button' },
+				// { to: '/login', label: '💎 VIP Login', position: 'right', className: 'premium-nav-button' },
 				{ type: 'search', position: 'right' }
 			],
 		},
 		prism: {
-			theme: prismLightTheme,
+			theme: prismTheme,
 			darkTheme: prismTheme,
 			additionalLanguages: [
 				'bash',
@@ -175,48 +175,6 @@ const config: Config = {
 		colorMode: {
 			defaultMode: 'dark',
 			respectPrefersColorScheme: true,
-		},
-		footer: {
-			style: 'dark',
-			links: [
-				{
-					title: 'LinkedIn',
-					items: [
-						{
-							label: 'luminhkhuong',
-							href: 'https://www.linkedin.com/in/luminhkhuong/',
-						},
-					],
-				},
-				{
-					title: 'GitHub',
-					items: [
-						{
-							label: 'minhkhuong2404',
-							href: 'https://github.com/minhkhuong2404'
-						},
-					]
-				},
-				{
-					title: 'Facebook',
-					items: [
-						{
-							label: 'luminhkhuong',
-							href: 'https://www.facebook.com/luminhkhuong/'
-						}
-					]
-				},
-				{
-					title: 'Leetcode',
-					items: [
-						{
-							label: 'luminhkhuong',
-							href: 'https://leetcode.com/u/luminhkhuong/'
-						}
-					]
-				}
-			],
-			copyright: `Copyright © ${new Date().getFullYear()} by Khuong Lu,  Dev. Built with Docusaurus and Github Page. ❤️`
 		},
 	},
 }

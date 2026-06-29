@@ -177,5 +177,101 @@ export default function Root({ children }: { children: React.ReactNode }) {
     }
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      <div className="space-decorations">
+        {/* Planets */}
+        <div className="planet mercury" />
+        <div className="planet venus" />
+        <div className="planet earth" />
+        <div className="planet mars" />
+        <div className="planet jupiter" />
+        <div className="planet saturn" />
+        <div className="planet uranus" />
+        <div className="planet neptune" />
+
+        {/* Satellites & Space Stations */}
+        <div className="satellite iss" />
+        <div className="satellite sputnik" />
+
+        {/* Comets & Meteors */}
+        <div className="comet comet-1" />
+        <div className="comet comet-2" />
+        <div className="comet comet-3" />
+        <div className="comet comet-4" />
+
+        {/* Rockets */}
+        <div className="rocket-bg rocket-1" />
+        <div className="rocket-bg rocket-2" />
+        <div className="rocket-bg rocket-3" />
+
+        {/* Dark Mode Moon */}
+        <div className="moon" />
+
+        {/* Light Mode Tropical Nature */}
+        <div className="sun" />
+        <div className="nature-item leaf-1" />
+        <div className="nature-item leaf-2" />
+        <div className="nature-item leaf-3" />
+        <div className="nature-item flower-1" />
+        <div className="nature-item flower-2" />
+        <div className="nature-item flower-3" />
+        <div className="nature-item palm-1" />
+        <div className="nature-item palm-2" />
+        <div className="nature-item hibiscus-1" />
+        <div className="nature-item hibiscus-2" />
+        <div className="nature-item coconut-1" />
+        <div className="nature-item wave-1" />
+        <div className="nature-item wave-2" />
+        <div className="nature-item parrot-1" />
+        <div className="nature-item butterfly-1" />
+        <div className="nature-item butterfly-2" />
+
+        {/* Dark Mode Universal Elements */}
+        <div className="universal-item galaxy-1" />
+        <div className="universal-item galaxy-2" />
+        <div className="universal-item nebula-1" />
+        <div className="universal-item nebula-2" />
+        <div className="universal-item shooting-star-1" />
+        <div className="universal-item shooting-star-2" />
+        <div className="universal-item constellation-1" />
+        <div className="universal-item constellation-2" />
+      </div>
+      <div className="navbar-space-decorations">
+        {/* Header Planets */}
+        <div className="header-planet earth-h" />
+        <div className="header-planet mars-h" />
+        <div className="header-planet venus-h" />
+
+        {/* Header Moon */}
+        <div className="header-moon-h" />
+
+        {/* Header Comets */}
+        <div className="comet header-comet-1" />
+        <div className="comet header-comet-2" />
+
+        {/* Header Rockets & Satellites */}
+        <div className="header-rocket h-rocket-1" />
+        <div className="header-rocket h-rocket-2" />
+        <div className="header-satellite h-sat" />
+
+        {/* Light Mode Header Tropical */}
+        <div className="header-sun" />
+        <div className="header-leaf h-leaf-1" />
+        <div className="header-leaf h-leaf-2" />
+        <div className="header-flower h-flower-1" />
+        <div className="header-flower h-flower-2" />
+        <div className="header-tropical h-palm" />
+        <div className="header-tropical h-hibiscus" />
+        <div className="header-tropical h-wave" />
+        <div className="header-tropical h-butterfly" />
+
+        {/* Dark Mode Header Universal */}
+        <div className="header-universal h-galaxy" />
+        <div className="header-universal h-nebula" />
+        <div className="header-universal h-shooting" />
+      </div>
+      {children}
+    </>
+  );
 }
