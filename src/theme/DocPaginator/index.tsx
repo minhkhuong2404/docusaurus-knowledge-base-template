@@ -1,11 +1,11 @@
-import React, {type ReactNode} from 'react';
+import React, { type ReactNode } from 'react';
 import clsx from 'clsx';
-import Translate, {translate} from '@docusaurus/Translate';
+import Translate, { translate } from '@docusaurus/Translate';
 import PaginatorNavLink from '@theme/PaginatorNavLink';
-import type {Props} from '@theme/DocPaginator';
+import type { Props } from '@theme/DocPaginator';
 
 export default function DocPaginator(props: Props): ReactNode {
-  const {className, previous, next} = props;
+  const { className, previous, next } = props;
   return (
     <>
       <nav
