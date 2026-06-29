@@ -555,7 +555,9 @@ body {
   to render as a solid block of the gradient color. This resets just the
   emoji spans so they display with their actual glyph colors.
 */
-.markdown h1 .heading-emoji {
+.markdown h1 .heading-emoji,
+.markdown h2 .heading-emoji,
+.markdown h3 .heading-emoji {
   -webkit-text-fill-color: initial;
   background: none;
   background-clip: initial;

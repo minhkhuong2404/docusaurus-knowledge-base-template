@@ -17,7 +17,7 @@ const EMOJI_REGEX =
  * Split text into alternating text/emoji segments so we can render
  * emoji inside a <span> that resets -webkit-text-fill-color, allowing
  * emoji to display with their natural colors instead of being clipped
- * to the gradient background used on h1 headings.
+ * to the gradient background used on gradient headings (h1, h2, h3).
  */
 function wrapEmoji(children: React.ReactNode): React.ReactNode {
   if (typeof children !== "string") {
@@ -66,19 +66,23 @@ function wrapEmoji(children: React.ReactNode): React.ReactNode {
   return parts.length > 0 ? parts : children;
 }
 
-/**
- * Custom h1 that wraps emoji characters in a span so they display
- * with their natural colors, not clipped to the gradient text fill.
- */
-function H1({
-  children,
-  ...props
-}: React.HTMLAttributes<HTMLHeadingElement>): React.ReactElement {
-  const wrappedChildren = React.Children.map(children, wrapEmoji);
-  return <h1 {...props}>{wrappedChildren}</h1>;
+/** Heading factories — wraps emoji in all gradient headings. */
+function makeHeading(
+  Tag: "h1" | "h2" | "h3"
+): (props: React.HTMLAttributes<HTMLHeadingElement>) => React.ReactElement {
+  return function HeadingWithEmoji({ children, ...props }) {
+    const wrappedChildren = React.Children.map(children, wrapEmoji);
+    return <Tag {...props}>{wrappedChildren}</Tag>;
+  };
 }
+
+const H1 = makeHeading("h1");
+const H2 = makeHeading("h2");
+const H3 = makeHeading("h3");
 
 export default {
   ...MDXComponents,
   h1: H1,
+  h2: H2,
+  h3: H3,
 };
