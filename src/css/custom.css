@@ -2639,3 +2639,286 @@ pre[class*="language-"]::-webkit-scrollbar {
   display: none !important;
 }
 
+/* ============================================================
+   Override Docusaurus / Infima Search Input Defaults
+   ============================================================
+   Infima ships `.navbar__search-input` with:
+     - border-radius: 2rem  (pill shape — breaks our square border glow)
+     - background via --ifm-navbar-search-input-background-color
+     - its own search icon background-image
+   We override these so the traveling orb border sits cleanly around
+   a rectangular/rounded-rect input instead of a pill.
+   ============================================================ */
+
+/* ── CSS variable overrides (both themes) ── */
+:root {
+  /* Remove the rounded pill — use a rectangle that matches our glow border-radius */
+  --ifm-navbar-search-input-border-radius: 8px;
+  /* Dark mode: near-black glass so the glow contrasts nicely */
+  --ifm-navbar-search-input-background-color: rgba(13, 17, 26, 0.88);
+  --ifm-navbar-search-input-color: #e2e8f0;
+  --ifm-navbar-search-input-placeholder-color: rgba(148, 163, 184, 0.75);
+}
+
+[data-theme="light"] {
+  /* Light mode: white glass */
+  --ifm-navbar-search-input-background-color: rgba(248, 250, 252, 0.9);
+  --ifm-navbar-search-input-color: #1e293b;
+  --ifm-navbar-search-input-placeholder-color: rgba(100, 116, 139, 0.8);
+}
+
+/* ── Hard overrides for properties Infima sets inline ── */
+.navbar__search-input {
+  border-radius: 8px !important;    /* override Infima's 2rem pill */
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  /* Ensure input background covers the area so glow shows only at edges */
+  background-color: var(--ifm-navbar-search-input-background-color) !important;
+  color: var(--ifm-navbar-search-input-color) !important;
+  transition: background-color 0.3s ease;
+}
+
+/* Remove Docusaurus's default focus ring (our glow is the focus indicator) */
+.navbar__search-input:focus,
+.navbar__search-input:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Placeholder */
+.navbar__search-input::placeholder {
+  color: var(--ifm-navbar-search-input-placeholder-color) !important;
+}
+.navbar__search-input::-webkit-input-placeholder {
+  color: var(--ifm-navbar-search-input-placeholder-color) !important;
+}
+.navbar__search-input::-moz-placeholder {
+  color: var(--ifm-navbar-search-input-placeholder-color) !important;
+}
+
+/* ── Search icon tint — match the brand color ── */
+[data-theme="dark"] .navbar__search-input {
+  /* Recolor the embedded SVG search icon to match our green brand */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath stroke='%234ade80' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M13 13l4 4M9 15A6 6 0 109 3a6 6 0 000 12z'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: 0.75rem center !important;
+  background-size: 1rem 1rem !important;
+}
+
+[data-theme="light"] .navbar__search-input {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath stroke='%232f8f4e' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M13 13l4 4M9 15A6 6 0 109 3a6 6 0 000 12z'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: 0.75rem center !important;
+  background-size: 1rem 1rem !important;
+}
+
+/* ── Search dropdown modal — match dark theme ── */
+[data-theme="dark"] {
+  --search-local-modal-background: #0d111a;
+  --search-local-modal-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(74, 222, 128, 0.15);
+  --search-local-hit-background: #131720;
+  --search-local-hit-shadow: none;
+  --search-local-hit-color: #c9d1e0;
+  --search-local-hit-active-color: #ffffff;
+  --search-local-highlight-color: #4ade80;
+  --search-local-muted-color: #4a5568;
+}
+
+[data-theme="light"] {
+  --search-local-modal-background: #f8fafc;
+  --search-local-modal-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(47, 143, 78, 0.12);
+  --search-local-hit-background: #ffffff;
+  --search-local-hit-color: #1e293b;
+  --search-local-highlight-color: #2f8f4e;
+  --search-local-muted-color: #94a3b8;
+}
+
+/* ============================================================
+   Traveling Glow Orb — Navbar Search Border
+   ============================================================
+   A single glowing bead moves *around* the border perimeter.
+
+   Technique:
+   1. @property registers --search-orb as an animatable angle.
+   2. CRITICAL: each pseudo-element owns and animates --search-orb itself
+      (not the parent). With inherits:false, var() on a pseudo-element
+      always reads the initial-value from the parent — the orb never moved.
+   3. The conic-gradient is mostly transparent, only ~75° arc is colored.
+   4. mask-composite: exclude + -webkit-mask-composite: destination-out
+      punches the interior leaving only the 2px border ring.
+   5. Animation always runs; opacity 0→1 on hover/focus controls visibility.
+   ============================================================ */
+
+/* ── Animatable angle property — scoped to pseudo-elements ── */
+@property --search-orb {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes search-travel {
+  from { --search-orb: 0deg; }
+  to   { --search-orb: 360deg; }
+}
+
+/* ---------- Wrapper ---------- */
+.navbar__search {
+  position: relative;
+  z-index: 0;
+  border-radius: 10px;
+}
+
+/* ── Border ring — animated orb ── */
+.navbar__search::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 12px;
+  padding: 2px;                /* border thickness */
+
+  /* Mostly transparent — only a ~75° comet arc carries color */
+  background: conic-gradient(
+    from var(--search-orb),
+    transparent   0deg,
+    transparent 282deg,
+    #818cf8     294deg,
+    #a855f7     306deg,
+    #f472b6     316deg,
+    #4ade80     328deg,
+    #2dd4bf     340deg,
+    transparent 354deg,
+    transparent 360deg
+  );
+
+  /*
+    Punch the interior out — only the 2px edge ring is visible.
+    Standard: mask-composite: exclude
+    WebKit:   -webkit-mask-composite: destination-out  ← was wrong ('xor')
+  */
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+
+  z-index: 0;
+  pointer-events: none;
+
+  /* Animation runs directly on ::before so --search-orb actually updates */
+  animation: search-travel 3s linear infinite;
+
+  /* Hidden at rest, fades in on hover/focus */
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+/* ── Outer glow bloom ── */
+.navbar__search::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 14px;
+
+  background: conic-gradient(
+    from var(--search-orb),
+    transparent   0deg,
+    transparent 278deg,
+    #818cf8     292deg,
+    #a855f7     307deg,
+    #f472b6     318deg,
+    #4ade80     330deg,
+    #2dd4bf     342deg,
+    transparent 358deg,
+    transparent 360deg
+  );
+
+  z-index: -1;
+  filter: blur(14px);
+  pointer-events: none;
+
+  /* Same animation, same speed → stays in sync with ::before */
+  animation: search-travel 3s linear infinite;
+
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+/* ══════════════════════════════════════════
+   ON HOVER / FOCUS / ACTIVE — reveal orb
+   ══════════════════════════════════════════ */
+.navbar__search:hover::before,
+.navbar__search:focus-within::before,
+.navbar__search:active::before {
+  opacity: 1;
+}
+
+.navbar__search:hover::after,
+.navbar__search:focus-within::after,
+.navbar__search:active::after {
+  opacity: 0.5;
+}
+
+/* Focus → faster travel */
+.navbar__search:focus-within::before,
+.navbar__search:focus-within::after {
+  animation-duration: 1.8s;
+}
+
+.navbar__search:focus-within::after {
+  opacity: 0.65;
+  filter: blur(18px);
+}
+
+/* Input above the pseudo-elements */
+.navbar__search .navbar__search-input,
+.navbar__search input[type="search"] {
+  position: relative;
+  z-index: 1;
+  border-radius: 8px;
+}
+
+/* Light mode — soften */
+[data-theme="light"] .navbar__search:hover::before,
+[data-theme="light"] .navbar__search:focus-within::before,
+[data-theme="light"] .navbar__search:active::before {
+  opacity: 0.7;
+}
+
+[data-theme="light"] .navbar__search:hover::after,
+[data-theme="light"] .navbar__search:focus-within::after,
+[data-theme="light"] .navbar__search:active::after {
+  opacity: 0.28;
+}
+
+[data-theme="light"] .navbar__search:focus-within::before {
+  opacity: 0.9;
+}
+
+[data-theme="light"] .navbar__search:focus-within::after {
+  opacity: 0.42;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .navbar__search::before,
+  .navbar__search::after {
+    animation: none;
+  }
+}
+
+/* Mobile — hide */
+@media (max-width: 996px) {
+  .navbar__search::before,
+  .navbar__search::after {
+    display: none;
+  }
+}
+
+
+
+
+
