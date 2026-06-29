@@ -494,10 +494,25 @@ body {
 }
 
 /*
-  H1 — Indigo → mint gradient (from user's radial-gradient palette)
+  H1 — Animated multi-color gradient: purple → green → teal → blue
+  Uses the full neon palette from the design system with a slow shimmer.
 */
+@keyframes h1-gradient-shift {
+  0%   { background-position: 0%   50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0%   50%; }
+}
+
 [data-theme="dark"] .markdown h1 {
-  background: var(--gradient-brand);
+  background: linear-gradient(
+    120deg,
+    #a855f7 0%,
+    #4ade80 35%,
+    #2dd4bf 65%,
+    #818cf8 100%
+  );
+  background-size: 200% 200%;
+  animation: h1-gradient-shift 6s ease infinite;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -507,12 +522,20 @@ body {
   line-height: 1.2;
   margin-top: 0;
   margin-bottom: 1rem;
-  border-bottom: 1px solid rgba(47, 158, 68, 0.24);
+  border-bottom: 1px solid rgba(168, 85, 247, 0.2);
   padding-bottom: 0.65rem;
 }
 
 [data-theme="light"] .markdown h1 {
-  background: var(--gradient-brand);
+  background: linear-gradient(
+    120deg,
+    #7c3aed 0%,
+    #059669 35%,
+    #0891b2 65%,
+    #4f46e5 100%
+  );
+  background-size: 200% 200%;
+  animation: h1-gradient-shift 6s ease infinite;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -522,9 +545,24 @@ body {
   line-height: 1.2;
   margin-top: 0;
   margin-bottom: 1rem;
-  border-bottom: 1px solid rgba(47, 158, 68, 0.18);
+  border-bottom: 1px solid rgba(124, 58, 237, 0.18);
   padding-bottom: 0.65rem;
 }
+
+/*
+  Emoji inside h1 gradient headings — restore natural color rendering.
+  The gradient uses -webkit-text-fill-color: transparent which causes emoji
+  to render as a solid block of the gradient color. This resets just the
+  emoji spans so they display with their actual glyph colors.
+*/
+.markdown h1 .heading-emoji {
+  -webkit-text-fill-color: initial;
+  background: none;
+  background-clip: initial;
+  -webkit-background-clip: initial;
+  font-style: normal;
+}
+
 
 /*
   H2 — Off-white section divider with bottom rule
