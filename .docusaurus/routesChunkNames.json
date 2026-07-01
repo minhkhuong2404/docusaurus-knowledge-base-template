@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-38e": {
+  "/-70d": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-7c3": {
+  "/-949": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -5573,7 +5573,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-81a": {
+  "/-c27": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -6452,11 +6452,11 @@
     "__comp": "17896441",
     "content": "2f7d2773"
   },
-  "/technical-knowledge/banking/credit_post-444": {
+  "/technical-knowledge/banking/credit_post-393": {
     "__comp": "17896441",
     "content": "60958e84"
   },
-  "/technical-knowledge/banking/debit_post-116": {
+  "/technical-knowledge/banking/debit_post-328": {
     "__comp": "17896441",
     "content": "f34b7fab"
   },
@@ -6964,7 +6964,7 @@
     "__comp": "17896441",
     "content": "c6215eaf"
   },
-  "/technical-knowledge/dsa/20-week-dsa-roadmap-intro-cf2": {
+  "/technical-knowledge/dsa/20-week-dsa-roadmap-intro-6a7": {
     "__comp": "17896441",
     "content": "518f0c18"
   },
@@ -10024,7 +10024,7 @@
     "__comp": "17896441",
     "content": "ee229027"
   },
-  "/technical-knowledge/java/java-diagnostics-troubleshooting-d44": {
+  "/technical-knowledge/java/java-diagnostics-troubleshooting-edd": {
     "__comp": "17896441",
     "content": "e89fd18d"
   },
@@ -10048,7 +10048,7 @@
     "__comp": "17896441",
     "content": "2fb67458"
   },
-  "/technical-knowledge/java/java-locks-3f5": {
+  "/technical-knowledge/java/java-locks-4ba": {
     "__comp": "17896441",
     "content": "efefd14e"
   },

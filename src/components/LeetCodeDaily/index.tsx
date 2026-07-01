@@ -91,9 +91,9 @@ export default function LeetCodeDaily() {
 
       <div className={styles.grid}>
         {/* 🔀 SECTION 2: Random Leetcode Problem */}
-        <div>
+        <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
           <h3 className={styles.sectionTitle}>🔀 Random Challenge</h3>
-          <div className={styles.card} style={{ minHeight: '260px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div className={styles.card} style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             {randomProblem && (
               <div>
                 <div className={styles.metaRow}>
@@ -110,7 +110,7 @@ export default function LeetCodeDaily() {
                 </p>
               </div>
             )}
-            <div style={{ marginTop: '1rem', display: 'flex', gap: '0.75rem' }}>
+            <div style={{ marginTop: '1rem', display: 'flex', gap: '0.75rem', justifyContent: 'center' }}>
               {randomProblem && (
                 <a
                   href={randomProblem.url}
@@ -129,9 +129,9 @@ export default function LeetCodeDaily() {
         </div>
 
         {/* 🎯 SECTION 3: Random from Selected Topic */}
-        <div>
+        <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
           <h3 className={styles.sectionTitle}>🎯 Topic Explorer</h3>
-          <div className={styles.card} style={{ minHeight: '260px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div className={styles.card} style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <div>
               <div className={styles.controlGroup}>
                 <select
@@ -172,7 +172,7 @@ export default function LeetCodeDaily() {
             </div>
 
             {topicRandomProblem && (
-              <div style={{ marginTop: '1rem' }}>
+              <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'center' }}>
                 <a
                   href={topicRandomProblem.url}
                   target="_blank"

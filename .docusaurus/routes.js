@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '38e'),
+    component: ComponentCreator('/', '70d'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '7c3'),
+        component: ComponentCreator('/', '949'),
         routes: [
           {
             path: '/tags',
@@ -6957,7 +6957,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '81a'),
+            component: ComponentCreator('/', 'c27'),
             routes: [
               {
                 path: '/aws',
@@ -8272,13 +8272,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/banking/credit_post',
-                component: ComponentCreator('/technical-knowledge/banking/credit_post', '444'),
+                component: ComponentCreator('/technical-knowledge/banking/credit_post', '393'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/banking/debit_post',
-                component: ComponentCreator('/technical-knowledge/banking/debit_post', '116'),
+                component: ComponentCreator('/technical-knowledge/banking/debit_post', '328'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -9033,7 +9033,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/dsa/20-week-dsa-roadmap-intro',
-                component: ComponentCreator('/technical-knowledge/dsa/20-week-dsa-roadmap-intro', 'cf2'),
+                component: ComponentCreator('/technical-knowledge/dsa/20-week-dsa-roadmap-intro', '6a7'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13623,7 +13623,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-diagnostics-troubleshooting',
-                component: ComponentCreator('/technical-knowledge/java/java-diagnostics-troubleshooting', 'd44'),
+                component: ComponentCreator('/technical-knowledge/java/java-diagnostics-troubleshooting', 'edd'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13659,7 +13659,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-locks',
-                component: ComponentCreator('/technical-knowledge/java/java-locks', '3f5'),
+                component: ComponentCreator('/technical-knowledge/java/java-locks', '4ba'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

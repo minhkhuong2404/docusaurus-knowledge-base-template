@@ -273,6 +273,9 @@ export default function DSADashboard() {
   const [selectedWeek, setSelectedWeek] = useState<number | 'All'>('All');
   const [selectedDifficulty, setSelectedDifficulty] = useState<'All' | 'Easy' | 'Medium' | 'Hard'>('All');
   const [showUnsolvedOnly, setShowUnsolvedOnly] = useState(false);
+  const [expandedWeeks, setExpandedWeeks] = useState<number[]>([1]);
+
+
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -327,6 +330,50 @@ export default function DSADashboard() {
 
     return matchesSearch && matchesWeek && matchesDifficulty && matchesUnsolved;
   });
+
+  // Group problems by week
+  const problemsByWeek = React.useMemo(() => {
+    const groups: { [key: number]: { weekNum: number; topic: string; weekSlug: string; problems: typeof PROBLEMS } } = {};
+    filteredProblems.forEach(p => {
+      if (!groups[p.week]) {
+        groups[p.week] = {
+          weekNum: p.week,
+          topic: p.topic,
+          weekSlug: p.weekSlug,
+          problems: []
+        };
+      }
+      groups[p.week].problems.push(p);
+    });
+    return Object.values(groups).sort((a, b) => a.weekNum - b.weekNum);
+  }, [filteredProblems]);
+
+  const toggleWeek = (weekNum: number) => {
+    setExpandedWeeks(prev =>
+      prev.includes(weekNum)
+        ? prev.filter(w => w !== weekNum)
+        : [...prev, weekNum]
+    );
+  };
+
+  const expandAll = () => {
+    const allWeeks = problemsByWeek.map(g => g.weekNum);
+    setExpandedWeeks(allWeeks);
+  };
+
+  const collapseAll = () => {
+    setExpandedWeeks([]);
+  };
+
+  // Sync expanded weeks when search or week filters change
+  useEffect(() => {
+    if (search.trim() !== '') {
+      const activeWeeks = problemsByWeek.map(g => g.weekNum);
+      setExpandedWeeks(activeWeeks);
+    } else if (selectedWeek !== 'All') {
+      setExpandedWeeks([selectedWeek]);
+    }
+  }, [search, selectedWeek, problemsByWeek]);
 
   // Stats for the active plan level
   const totalCount = planProblems.length;
@@ -508,8 +555,8 @@ export default function DSADashboard() {
           </select>
         </div>
 
-        {/* Checkbox Flags */}
-        <div style={{ display: 'flex', gap: '1.2rem', alignItems: 'center' }}>
+        {/* Checkbox Flags & Accordion Controls */}
+        <div style={{ display: 'flex', gap: '1.2rem', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', width: '100%' }}>
           <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', userSelect: 'none', color: '#e2e8f0' }}>
             <input
               type="checkbox"
@@ -519,165 +566,292 @@ export default function DSADashboard() {
             />
             ❌ Unsolved Only
           </label>
+
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <button
+              onClick={expandAll}
+              style={{
+                background: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '6px',
+                padding: '4px 10px',
+                fontSize: '0.8rem',
+                fontWeight: 600,
+                color: '#cbd5e1',
+                cursor: 'pointer',
+                transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(74, 222, 128, 0.08)';
+                e.currentTarget.style.borderColor = 'rgba(74, 222, 128, 0.2)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+              }}
+            >
+              👐 Expand All
+            </button>
+            <button
+              onClick={collapseAll}
+              style={{
+                background: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '6px',
+                padding: '4px 10px',
+                fontSize: '0.8rem',
+                fontWeight: 600,
+                color: '#cbd5e1',
+                cursor: 'pointer',
+                transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(74, 222, 128, 0.08)';
+                e.currentTarget.style.borderColor = 'rgba(74, 222, 128, 0.2)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+              }}
+            >
+              🪗 Collapse All
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* 4. Problems Table Card */}
-      <div style={{
-        overflowX: 'auto',
-        border: '1px solid rgba(255, 255, 255, 0.06)',
-        borderRadius: '14px',
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.15)',
-        background: 'var(--ifm-background-surface-color, #101525)'
-      }}>
-        <table style={{
-          width: '100%',
-          borderCollapse: 'separate',
-          borderSpacing: 0,
-          textAlign: 'left',
-          color: '#e2e8f0'
-        }}>
-          <thead>
-            <tr style={{ background: '#0f121d', borderBottom: '2px solid rgba(74, 222, 128, 0.25)' }}>
-              <th style={{ padding: '14px 16px', color: 'var(--brand-green)', fontWeight: 700, width: '70px', textAlign: 'center', borderBottom: '2px solid rgba(74, 222, 128, 0.25)' }}>Solved</th>
-              <th style={{ padding: '14px 16px', color: 'var(--brand-green)', fontWeight: 700, textAlign: 'center', borderBottom: '2px solid rgba(74, 222, 128, 0.25)' }}>Problem</th>
-              <th style={{ padding: '14px 16px', color: 'var(--brand-green)', fontWeight: 700, textAlign: 'center', borderBottom: '2px solid rgba(74, 222, 128, 0.25)' }}>Week / Topic</th>
-              <th style={{ padding: '14px 16px', color: 'var(--brand-green)', fontWeight: 700, width: '110px', textAlign: 'center', borderBottom: '2px solid rgba(74, 222, 128, 0.25)' }}>Diff</th>
-              <th style={{ padding: '14px 16px', color: 'var(--brand-green)', fontWeight: 700, textAlign: 'center', borderBottom: '2px solid rgba(74, 222, 128, 0.25)' }}>Target Companies</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredProblems.length === 0 ? (
-              <tr>
-                <td colSpan={5} style={{ padding: '2rem', textAlign: 'center', color: '#8f9cae' }}>
-                  📭 No problems found matching the selected filters.
-                </td>
-              </tr>
-            ) : (
-              filteredProblems.map((p, idx) => {
-                const isSolved = solved.includes(p.id);
+      {/* 4. Problems Grouped by Week Accordion */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        {filteredProblems.length === 0 ? (
+          <div style={{
+            padding: '3rem 2rem',
+            textAlign: 'center',
+            color: '#8f9cae',
+            border: '1px solid rgba(255, 255, 255, 0.06)',
+            borderRadius: '14px',
+            background: 'var(--ifm-background-surface-color, #101525)'
+          }}>
+            📭 No problems found matching the selected filters.
+          </div>
+        ) : (
+          problemsByWeek.map(group => {
+            const isExpanded = expandedWeeks.includes(group.weekNum);
+            const groupSolvedCount = group.problems.filter(p => solved.includes(p.id)).length;
+            const groupTotalCount = group.problems.length;
+            const groupIsCompleted = groupSolvedCount === groupTotalCount;
 
-                return (
-                  <tr 
-                    key={p.id}
-                    style={{
-                      background: idx % 2 === 0 ? 'rgba(255, 255, 255, 0.015)' : 'transparent',
-                      transition: 'background-color 0.2s ease',
-                      borderBottom: '1px solid rgba(255, 255, 255, 0.04)'
-                    }}
-                  >
-                    {/* Solved check box */}
-                    <td style={{ padding: '12px 16px', verticalAlign: 'middle', textAlign: 'center', borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
-                      <input
-                        type="checkbox"
-                        checked={isSolved}
-                        onChange={() => toggleSolved(p.id)}
-                        style={{
-                          cursor: 'pointer',
-                          width: '18px',
-                          height: '18px',
-                          accentColor: 'var(--brand-green)'
-                        }}
-                      />
-                    </td>
-
-                    {/* Problem Name & link */}
-                    <td style={{ padding: '12px 16px', verticalAlign: 'middle', textAlign: 'center', borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
-                      <a 
-                        href={p.url} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        style={{ 
-                          color: '#e2e8f0', 
-                          fontSize: '0.88rem',
-                          fontWeight: 600, 
-                          textDecoration: 'none',
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          gap: '6px'
-                        }}
-                      >
-                        {p.title} 
-                        <span style={{ fontSize: '0.75rem', color: '#8f9cae' }}>#{p.id}</span>
-                        <span style={{ fontSize: '0.8rem' }}>🔗</span>
-                      </a>
-                    </td>
-
-                    {/* Week slug path link */}
-                    <td style={{ padding: '12px 16px', verticalAlign: 'middle', textAlign: 'center', borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
-                      <Link 
-                        to={`/technical-knowledge/dsa/${p.weekSlug}`}
-                        style={{ 
-                          color: 'var(--brand-purple)', 
-                          fontSize: '0.85rem',
-                          fontWeight: 600,
-                          textDecoration: 'none'
-                        }}
-                      >
-                        Week {p.week}: {p.topic}
-                      </Link>
-                    </td>
-
-                    {/* Difficulty Badge */}
-                    <td style={{ padding: '12px 16px', verticalAlign: 'middle', textAlign: 'center', borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
-                      <span style={{
-                        padding: '3px 8px',
+            return (
+              <div 
+                key={group.weekNum}
+                style={{
+                  border: '1px solid rgba(255, 255, 255, 0.06)',
+                  borderRadius: '12px',
+                  background: 'var(--ifm-background-surface-color, #101525)',
+                  overflow: 'hidden',
+                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)'
+                }}
+              >
+                {/* Accordion Header */}
+                <div 
+                  onClick={() => toggleWeek(group.weekNum)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '1rem 1.25rem',
+                    background: isExpanded ? 'rgba(74, 222, 128, 0.02)' : 'transparent',
+                    cursor: 'pointer',
+                    userSelect: 'none',
+                    borderBottom: isExpanded ? '1px solid rgba(255, 255, 255, 0.04)' : 'none',
+                    transition: 'background-color 0.2s ease',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    {/* Caret icon */}
+                    <span style={{
+                      display: 'inline-block',
+                      transition: 'transform 0.2s ease',
+                      transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
+                      fontSize: '0.85rem',
+                      color: 'var(--brand-green)'
+                    }}>
+                      ▶
+                    </span>
+                    <span style={{ fontWeight: 700, fontSize: '1.05rem', color: '#f8fafc' }}>
+                      Week {group.weekNum}: {group.topic}
+                    </span>
+                    <Link
+                      to={`/technical-knowledge/dsa/${group.weekSlug}`}
+                      onClick={(e) => e.stopPropagation()}
+                      style={{
+                        marginLeft: '0.5rem',
+                        fontSize: '0.78rem',
+                        fontWeight: 600,
+                        color: 'var(--brand-purple)',
+                        textDecoration: 'none',
+                        background: 'rgba(168, 85, 247, 0.08)',
+                        border: '1px solid rgba(168, 85, 247, 0.15)',
+                        padding: '2px 8px',
                         borderRadius: '6px',
-                        fontSize: '0.75rem',
-                        fontWeight: 700,
-                        backgroundColor: p.difficulty === 'Easy' 
-                          ? 'rgba(74, 222, 128, 0.1)' 
-                          : p.difficulty === 'Medium' 
-                            ? 'rgba(251, 191, 36, 0.1)' 
-                            : 'rgba(248, 113, 113, 0.1)',
-                        color: p.difficulty === 'Easy' 
-                          ? '#4ade80' 
-                          : p.difficulty === 'Medium' 
-                            ? '#fbbf24' 
-                            : '#f87171',
-                        border: `1px solid ${
-                          p.difficulty === 'Easy' 
-                             ? 'rgba(74, 222, 128, 0.2)' 
-                             : p.difficulty === 'Medium' 
-                               ? 'rgba(251, 191, 36, 0.2)' 
-                               : 'rgba(248, 113, 113, 0.2)'
-                        }`
-                      }}>
-                        {p.difficulty}
-                      </span>
-                    </td>
+                        transition: 'all 0.15s ease'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = 'rgba(168, 85, 247, 0.15)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = 'rgba(168, 85, 247, 0.08)';
+                      }}
+                    >
+                      Lesson Doc 📖
+                    </Link>
+                  </div>
 
-                    {/* Target Companies */}
-                    <td style={{ padding: '12px 16px', verticalAlign: 'middle', textAlign: 'center', borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', justifyContent: 'center' }}>
-                        {p.companies.map(c => (
-                          <Link
-                            key={c}
-                            to={getCompanyLink(c)}
-                            style={{
-                              padding: '2px 6px',
-                              borderRadius: '4px',
-                              fontSize: '0.75rem',
-                              fontWeight: 600,
-                              backgroundColor: 'rgba(129, 140, 248, 0.08)',
-                              color: '#818cf8',
-                              border: '1px solid rgba(129, 140, 248, 0.15)',
-                              textDecoration: 'none',
-                              transition: 'all 0.15s ease'
-                            }}
-                          >
-                            {c}
-                          </Link>
-                        ))}
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })
-            )}
-          </tbody>
-        </table>
+                  <span style={{
+                    padding: '3px 10px',
+                    borderRadius: '20px',
+                    fontSize: '0.78rem',
+                    fontWeight: 700,
+                    backgroundColor: groupIsCompleted ? 'rgba(74, 222, 128, 0.12)' : 'rgba(255, 255, 255, 0.04)',
+                    color: groupIsCompleted ? '#4ade80' : '#8f9cae',
+                    border: groupIsCompleted ? '1px solid rgba(74, 222, 128, 0.25)' : '1px solid rgba(255, 255, 255, 0.06)',
+                  }}>
+                    {groupSolvedCount} / {groupTotalCount} Solved
+                  </span>
+                </div>
+
+                {/* Collapsible Content */}
+                {isExpanded && (
+                  <div style={{ overflowX: 'auto' }}>
+                    <table style={{
+                      width: '100%',
+                      borderCollapse: 'separate',
+                      borderSpacing: 0,
+                      textAlign: 'left',
+                      color: '#e2e8f0'
+                    }}>
+                      <thead>
+                        <tr style={{ background: 'rgba(15, 18, 29, 0.3)', borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
+                          <th style={{ padding: '10px 16px', color: 'var(--brand-green)', fontWeight: 700, width: '70px', textAlign: 'center', borderBottom: '1px solid rgba(255, 255, 255, 0.04)', fontSize: '0.85rem' }}>Solved</th>
+                          <th style={{ padding: '10px 16px', color: 'var(--brand-green)', fontWeight: 700, textAlign: 'center', borderBottom: '1px solid rgba(255, 255, 255, 0.04)', fontSize: '0.85rem' }}>Problem</th>
+                          <th style={{ padding: '10px 16px', color: 'var(--brand-green)', fontWeight: 700, width: '100px', textAlign: 'center', borderBottom: '1px solid rgba(255, 255, 255, 0.04)', fontSize: '0.85rem' }}>Diff</th>
+                          <th style={{ padding: '10px 16px', color: 'var(--brand-green)', fontWeight: 700, textAlign: 'center', borderBottom: '1px solid rgba(255, 255, 255, 0.04)', fontSize: '0.85rem' }}>Target Companies</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {group.problems.map((p, pIdx) => {
+                          const isSolved = solved.includes(p.id);
+
+                          return (
+                            <tr 
+                              key={p.id}
+                              style={{
+                                background: pIdx % 2 === 0 ? 'rgba(255, 255, 255, 0.008)' : 'transparent',
+                                transition: 'background-color 0.2s ease',
+                                borderBottom: pIdx === group.problems.length - 1 ? 'none' : '1px solid rgba(255, 255, 255, 0.02)'
+                              }}
+                            >
+                              {/* Solved check box */}
+                              <td style={{ padding: '10px 16px', verticalAlign: 'middle', textAlign: 'center', borderBottom: pIdx === group.problems.length - 1 ? 'none' : '1px solid rgba(255, 255, 255, 0.02)' }}>
+                                <input
+                                  type="checkbox"
+                                  checked={isSolved}
+                                  onChange={() => toggleSolved(p.id)}
+                                  style={{
+                                    cursor: 'pointer',
+                                    width: '18px',
+                                    height: '18px',
+                                    accentColor: 'var(--brand-green)'
+                                  }}
+                                />
+                              </td>
+
+                              {/* Problem Name & link */}
+                              <td style={{ padding: '10px 16px', verticalAlign: 'middle', textAlign: 'center', borderBottom: pIdx === group.problems.length - 1 ? 'none' : '1px solid rgba(255, 255, 255, 0.02)' }}>
+                                <a 
+                                  href={p.url} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  style={{ 
+                                    color: '#e2e8f0', 
+                                    fontSize: '0.88rem',
+                                    fontWeight: 600, 
+                                    textDecoration: 'none',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '6px'
+                                  }}
+                                >
+                                  {p.title} 
+                                  <span style={{ fontSize: '0.75rem', color: '#8f9cae' }}>#{p.id}</span>
+                                  <span style={{ fontSize: '0.8rem' }}>🔗</span>
+                                </a>
+                              </td>
+
+                              {/* Difficulty Badge */}
+                              <td style={{ padding: '10px 16px', verticalAlign: 'middle', textAlign: 'center', borderBottom: pIdx === group.problems.length - 1 ? 'none' : '1px solid rgba(255, 255, 255, 0.02)' }}>
+                                <span style={{
+                                  padding: '3px 8px',
+                                  borderRadius: '6px',
+                                  fontSize: '0.75rem',
+                                  fontWeight: 700,
+                                  backgroundColor: p.difficulty === 'Easy' 
+                                    ? 'rgba(74, 222, 128, 0.1)' 
+                                    : p.difficulty === 'Medium' 
+                                      ? 'rgba(251, 191, 36, 0.1)' 
+                                      : 'rgba(248, 113, 113, 0.1)',
+                                  color: p.difficulty === 'Easy' 
+                                    ? '#4ade80' 
+                                    : p.difficulty === 'Medium' 
+                                      ? '#fbbf24' 
+                                      : '#f87171',
+                                  border: `1px solid ${
+                                    p.difficulty === 'Easy' 
+                                       ? 'rgba(74, 222, 128, 0.2)' 
+                                       : p.difficulty === 'Medium' 
+                                         ? 'rgba(251, 191, 36, 0.2)' 
+                                         : 'rgba(248, 113, 113, 0.2)'
+                                  }`
+                                }}>
+                                  {p.difficulty}
+                                </span>
+                              </td>
+
+                              {/* Target Companies */}
+                              <td style={{ padding: '10px 16px', verticalAlign: 'middle', textAlign: 'center', borderBottom: pIdx === group.problems.length - 1 ? 'none' : '1px solid rgba(255, 255, 255, 0.02)' }}>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', justifyContent: 'center' }}>
+                                  {p.companies.map(c => (
+                                    <Link
+                                      key={c}
+                                      to={getCompanyLink(c)}
+                                      style={{
+                                        padding: '2px 6px',
+                                        borderRadius: '4px',
+                                        fontSize: '0.75rem',
+                                        fontWeight: 600,
+                                        backgroundColor: 'rgba(129, 140, 248, 0.08)',
+                                        color: '#818cf8',
+                                        border: '1px solid rgba(129, 140, 248, 0.15)',
+                                        textDecoration: 'none',
+                                        transition: 'all 0.15s ease'
+                                      }}
+                                    >
+                                      {c}
+                                    </Link>
+                                  ))}
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            );
+          })
+        )}
       </div>
     </div>
   );

@@ -24,7 +24,12 @@ Use this skill when:
    - Match existing capitalization of companies from the existing workspace files.
    - Generate updated markdown tables in `docs/technical-knowledge/dsa/leetcode-companywise/`.
    - Delete company markdown files that are no longer part of the cloned repository snapshot.
-3. Validate by running a local Docusaurus build:
+3. Update the dynamic progress dashboard database (if new/modified company lists affect the Blind 75, NeetCode 150, or All 250 lists):
+   ```bash
+   python scratch/generate_dsa_data.py
+   ```
+   This script parses company-wise tags, cleans duplicate mappings, validates the phase counts, and injects popular interview problems until each plan category matches exactly `75`, `150`, or `250` unique items. It then writes the database array directly into `src/components/DSADashboard.tsx`.
+4. Validate by running a local Docusaurus build:
    ```bash
    npm run build
    ```

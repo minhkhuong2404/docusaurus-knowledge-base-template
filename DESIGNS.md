@@ -180,3 +180,22 @@ For comfortable navigation across very long document pages:
   * TOC Links: Styled as rounded pills (`border-radius: 8px`) that transition to brand green (`var(--brand-green)`) on hover and active states.
   * Nested Subheadings (H3+): Indented slightly (`padding-left: 1.5rem`) inside the card to visually map document structure.
   * Left border line: Docusaurus's default left timeline border is disabled (`border-left: none !important`) to keep the floating card outline clean.
+
+---
+
+## ⚡ Daily Practice Hub & 📊 DSA Study Dashboard
+
+### 1. Daily Practice Hub Layout
+- **Tabbed Full-Width Design**: Solves layout compression by rendering interactive daily tasks (`LeetCodeDaily` and `DailyQuiz`) inside a tabbed full-width section rather than side-by-side columns.
+- **Toggle Tabs**: Includes rounded custom tab buttons (`border-radius: 8px`) with subtle borders and primary hover states to toggle between LeetCode Daily and Concept Quizzes.
+- **Themed Callouts**: Quiz answers/explanations (`.explanationContainer`) are restricted to `max-width: 680px` and styled with a soft neon green tint background (`rgba(74, 222, 128, 0.03)`), matching the site's dark mode palette.
+
+### 2. DSA Study Dashboard Specifications
+- **Validated Curriculums**: Supports three intensity levels:
+  - **Blind 75**: Exactly 75 problems.
+  - **NeetCode 150**: Exactly 150 problems (superset of Blind 75).
+  - **All 250+**: Exactly 250 problems (superset of NeetCode 150).
+- **Data Centering**: All table data columns (checkboxes, problem links, topics, difficulty tags, and company lists) are center-aligned (`textAlign: 'center'`, `justifyContent: 'center'`) to maintain balanced visual weight.
+- **Typography Alignment**: Font weights are set consistently to `600` for all links and tags to prevent visual hierarchy conflicts.
+- **Topic Dropdown Selector**: The topic select menu (`.select`) utilizes high-contrast background and text colors mapped explicitly for both light mode (`#ffffff` bg, `#0f172a` text) and dark mode (`#1a2035` bg, `#f8fafc` text) with a minimum width safety clamp of `220px` to prevent layout collapse.
+
