@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '6c8'),
+    component: ComponentCreator('/', '5c7'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '002'),
+        component: ComponentCreator('/', '3c5'),
         routes: [
           {
             path: '/tags',
@@ -6922,7 +6922,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'af4'),
+            component: ComponentCreator('/', '735'),
             routes: [
               {
                 path: '/aws',
@@ -6932,7 +6932,7 @@ export default [
               },
               {
                 path: '/banking',
-                component: ComponentCreator('/banking', '8dc'),
+                component: ComponentCreator('/banking', '7cd'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -8180,7 +8180,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/banking/becs',
-                component: ComponentCreator('/technical-knowledge/banking/becs', '9b3'),
+                component: ComponentCreator('/technical-knowledge/banking/becs', 'f1f'),
                 exact: true
               },
               {
@@ -8215,13 +8215,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/banking/clearing',
-                component: ComponentCreator('/technical-knowledge/banking/clearing', '5f3'),
+                component: ComponentCreator('/technical-knowledge/banking/clearing', 'e07'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/banking/cop',
-                component: ComponentCreator('/technical-knowledge/banking/cop', '505'),
+                component: ComponentCreator('/technical-knowledge/banking/cop', '81b'),
                 exact: true
               },
               {
@@ -8232,7 +8232,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/banking/correspondent_banking',
-                component: ComponentCreator('/technical-knowledge/banking/correspondent_banking', '569'),
+                component: ComponentCreator('/technical-knowledge/banking/correspondent_banking', '2c9'),
                 exact: true
               },
               {
@@ -8255,24 +8255,24 @@ export default [
               },
               {
                 path: '/technical-knowledge/banking/debtor',
-                component: ComponentCreator('/technical-knowledge/banking/debtor', '1fa'),
+                component: ComponentCreator('/technical-knowledge/banking/debtor', '5cf'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/banking/direct_debit',
-                component: ComponentCreator('/technical-knowledge/banking/direct_debit', '16f'),
+                component: ComponentCreator('/technical-knowledge/banking/direct_debit', '96b'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/banking/error_codes',
-                component: ComponentCreator('/technical-knowledge/banking/error_codes', 'ad8'),
+                component: ComponentCreator('/technical-knowledge/banking/error_codes', '4a8'),
                 exact: true
               },
               {
                 path: '/technical-knowledge/banking/fis',
-                component: ComponentCreator('/technical-knowledge/banking/fis', '380'),
+                component: ComponentCreator('/technical-knowledge/banking/fis', 'cd2'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -8296,12 +8296,12 @@ export default [
               },
               {
                 path: '/technical-knowledge/banking/idempotency',
-                component: ComponentCreator('/technical-knowledge/banking/idempotency', 'c9a'),
+                component: ComponentCreator('/technical-knowledge/banking/idempotency', '768'),
                 exact: true
               },
               {
                 path: '/technical-knowledge/banking/inbound',
-                component: ComponentCreator('/technical-knowledge/banking/inbound', '133'),
+                component: ComponentCreator('/technical-knowledge/banking/inbound', '90e'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -8319,7 +8319,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/banking/liquidity',
-                component: ComponentCreator('/technical-knowledge/banking/liquidity', 'f72'),
+                component: ComponentCreator('/technical-knowledge/banking/liquidity', '576'),
                 exact: true
               },
               {
@@ -8348,7 +8348,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/banking/outbound',
-                component: ComponentCreator('/technical-knowledge/banking/outbound', '3f6'),
+                component: ComponentCreator('/technical-knowledge/banking/outbound', 'e47'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -8396,7 +8396,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/banking/payment_hub',
-                component: ComponentCreator('/technical-knowledge/banking/payment_hub', 'f33'),
+                component: ComponentCreator('/technical-knowledge/banking/payment_hub', '980'),
                 exact: true
               },
               {
@@ -8413,7 +8413,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/banking/payto',
-                component: ComponentCreator('/technical-knowledge/banking/payto', '448'),
+                component: ComponentCreator('/technical-knowledge/banking/payto', '21f'),
                 exact: true
               },
               {
@@ -8424,12 +8424,12 @@ export default [
               },
               {
                 path: '/technical-knowledge/banking/regulatory_reporting',
-                component: ComponentCreator('/technical-knowledge/banking/regulatory_reporting', 'f17'),
+                component: ComponentCreator('/technical-knowledge/banking/regulatory_reporting', '725'),
                 exact: true
               },
               {
                 path: '/technical-knowledge/banking/rtgs',
-                component: ComponentCreator('/technical-knowledge/banking/rtgs', 'b8c'),
+                component: ComponentCreator('/technical-knowledge/banking/rtgs', '9b3'),
                 exact: true
               },
               {
@@ -8440,13 +8440,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/banking/settlement',
-                component: ComponentCreator('/technical-knowledge/banking/settlement', 'd00'),
+                component: ComponentCreator('/technical-knowledge/banking/settlement', '824'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/banking/swift',
-                component: ComponentCreator('/technical-knowledge/banking/swift', 'b16'),
+                component: ComponentCreator('/technical-knowledge/banking/swift', 'b6c'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13618,7 +13618,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-jvm',
-                component: ComponentCreator('/technical-knowledge/java/java-jvm', '821'),
+                component: ComponentCreator('/technical-knowledge/java/java-jvm', 'c4b'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

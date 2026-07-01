@@ -371,13 +371,21 @@ resilience4j:
 ### 🔍 How Circuit Breaker Works Internally
 
 **State Machine:**
-```
-CLOSED ──[failure rate > threshold]──> OPEN
-  ↑                                    │
-  │                                    │
-  └────[success in HALF-OPEN]──────────┘
-         │
-         └──[failure in HALF-OPEN]──> OPEN
+```mermaid
+flowchart TD
+    Closed["CLOSED (Normal Operations)"] -->|"Failure rate > threshold"| Open["OPEN (Calls trip instantly)"]
+    Open -->|"Wait duration elapsed"| HalfOpen["HALF-OPEN (Test requests)"]
+    HalfOpen -->|"Success in test"| Closed
+    HalfOpen -->|"Failure in test"| Open
+
+    %% Styles
+    classDef closedStyle fill:#14532d,stroke:#4ade80,stroke-width:1.5px,color:#e2e8f0;
+    classDef openStyle fill:#7f1d1d,stroke:#f87171,stroke-width:1.5px,color:#e2e8f0;
+    classDef halfStyle fill:#78350f,stroke:#fbbf24,stroke-width:1.5px,color:#e2e8f0;
+
+    class Closed closedStyle;
+    class Open openStyle;
+    class HalfOpen halfStyle;
 ```
 
 **Metrics Collection:**

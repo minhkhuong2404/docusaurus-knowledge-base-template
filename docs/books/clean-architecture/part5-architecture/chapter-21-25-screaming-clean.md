@@ -59,19 +59,32 @@ This screams "e-commerce order system." The framework is an implementation detai
 
 Martin synthesizes everything into the definitive model — **four concentric rings**:
 
-```
-┌─────────────────────────────────────────────┐
-│         Frameworks & Drivers                │  Ring 4 (outermost)
-│   ┌─────────────────────────────────────┐   │  Spring, JPA, Kafka, DB drivers
-│   │      Interface Adapters             │   │
-│   │  ┌─────────────────────────────┐   │   │  Ring 3
-│   │  │        Use Cases            │   │   │  Controllers, Presenters, Gateways
-│   │  │  ┌─────────────────────┐   │   │   │
-│   │  │  │      Entities       │   │   │   │  Ring 2: Application Business Rules
-│   │  │  └─────────────────────┘   │   │   │
-│   │  └─────────────────────────────┘   │   │  Ring 1 (innermost)
-│   └─────────────────────────────────────┘   │  Enterprise Business Rules
-└─────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph Ring4 ["Frameworks & Drivers (Outermost - Details)"]
+        direction TB
+        subgraph Ring3 ["Interface Adapters (Controllers, Gateways)"]
+            direction TB
+            subgraph Ring2 ["Use Cases (Application Business Rules)"]
+                direction TB
+                subgraph Ring1 ["Entities (Enterprise Business Rules)"]
+                    direction TB
+                    PureDomain["Pure Domain Entities"]
+                end
+            end
+        end
+    end
+
+    %% Styles
+    classDef ring4Style fill:#1e293b,stroke:#475569,stroke-width:1.5px,color:#e2e8f0;
+    classDef ring3Style fill:#1e1b4b,stroke:#818cf8,stroke-width:1.5px,color:#e2e8f0;
+    classDef ring2Style fill:#581c87,stroke:#a855f7,stroke-width:1.5px,color:#e2e8f0;
+    classDef ring1Style fill:#14532d,stroke:#4ade80,stroke-width:1.5px,color:#e2e8f0;
+
+    class Ring4 ring4Style;
+    class Ring3 ring3Style;
+    class Ring2 ring2Style;
+    class Ring1,PureDomain ring1Style;
 ```
 
 **The Dependency Rule**: Source code dependencies can only point **inward**. Nothing in an inner ring can know anything about an outer ring.

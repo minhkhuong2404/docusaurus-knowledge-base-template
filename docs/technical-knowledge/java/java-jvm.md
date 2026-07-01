@@ -641,11 +641,17 @@ Consider the Java Database Connectivity (JDBC) API:
 2. When `DriverManager` tries to establish a connection, it uses Java's SPI (`ServiceLoader`) to find and load concrete database driver implementations (like `com.mysql.cj.jdbc.Driver`) present on your application's classpath.
 3. However, the classpath is loaded by the **Application ClassLoader**. Since the Bootstrap ClassLoader is a parent loader, it cannot see classes loaded by its child (the Application ClassLoader). Parent delegation only goes *up*, not *down*.
 
-```
-Bootstrap ClassLoader (DriverManager)
-   │
-   ▼ Parent Delegation (DriverManager tries to load MySQL Driver but fails)
-Application ClassLoader (mysql-connector.jar)
+```mermaid
+flowchart TD
+    Boot["Bootstrap ClassLoader<br/>(DriverManager)"] -.->|x Cannot look down x| App["Application ClassLoader<br/>(mysql-connector.jar)"]
+    App -->|"Parent Delegation (Upward)"| Boot
+
+    %% Styles
+    classDef loaderStyle fill:#161f30,stroke:#a855f7,stroke-width:1.5px,color:#e2e8f0;
+    classDef bootStyle fill:#0d111a,stroke:#4ade80,stroke-width:2px,color:#e2e8f0;
+    
+    class App loaderStyle;
+    class Boot bootStyle;
 ```
 
 #### Breaking the Hierarchy

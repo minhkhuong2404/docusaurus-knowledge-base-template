@@ -23,19 +23,27 @@ Modern engineering teams treat testing as a **continuous activity** throughout t
 
 ## Testing Pyramid
 
-```
-          ┌─────────────────┐
-          │   E2E Tests     │  ← Slowest, fewest, highest confidence
-          │ (User journeys) │
-         ─┴─────────────────┴─
-        ┌───────────────────────┐
-        │  Integration Tests    │  ← Service interactions, DB, queues
-        │  + Inflight / Perf    │
-       ─┴───────────────────────┴─
-      ┌─────────────────────────────┐
-      │        Unit Tests           │  ← Fastest, most numerous
-      │  (Methods, Classes, Logic)  │
-      └─────────────────────────────┘
+```mermaid
+flowchart TD
+    subgraph TestingPyramid ["The Testing Pyramid"]
+        direction TB
+        E2E["E2E Tests<br/>(User Journeys)<br/>&bull; Slowest &bull; Fewest &bull; High Maintenance"]
+        Integration["Integration Tests<br/>(DB, APIs, Queues, Performance)<br/>&bull; Medium Speed &bull; Service Boundaries"]
+        Unit["Unit Tests<br/>(Isolated Methods, Logic, Classes)<br/>&bull; Fastest &bull; Most Numerous &bull; Lowest Cost"]
+        
+        E2E --> Integration --> Unit
+    end
+
+    %% Styles
+    classDef e2eStyle fill:#7f1d1d,stroke:#f87171,stroke-width:1.5px,color:#e2e8f0;
+    classDef intStyle fill:#78350f,stroke:#fbbf24,stroke-width:1.5px,color:#e2e8f0;
+    classDef unitStyle fill:#14532d,stroke:#4ade80,stroke-width:1.5px,color:#e2e8f0;
+    classDef titleStyle fill:#0d111a,stroke:#3b82f6,stroke-width:2px,color:#e2e8f0;
+
+    class TestingPyramid titleStyle;
+    class E2E e2eStyle;
+    class Integration intStyle;
+    class Unit unitStyle;
 ```
 
 Tests should be abundant at the bottom and sparse at the top. Each layer complements, not replaces, the others.

@@ -3176,6 +3176,113 @@ pre[class*="language-"]::-webkit-scrollbar {
   color: #64748b !important;
 }
 
+/* ============================================================
+   Global Premium Mermaid Diagram Theme Overrides
+   ============================================================ */
+
+/* Root SVG container */
+[class*="mermaidSvg"] svg {
+  background: transparent !important;
+  font-family: var(--ifm-font-family-base) !important;
+}
+
+/* Subgraphs / Cluster box styling */
+[class*="mermaidSvg"] svg .cluster rect,
+[class*="mermaidSvg"] svg [id^="subgraph"] rect,
+[class*="mermaidSvg"] svg .subgraph-title {
+  fill: rgba(13, 17, 26, 0.6) !important;
+  stroke: var(--sidebar-border, rgba(74, 222, 128, 0.2)) !important;
+  stroke-width: 1.5px !important;
+  rx: 8px !important;
+}
+
+/* Default Nodes */
+[class*="mermaidSvg"] svg .node rect,
+[class*="mermaidSvg"] svg .node circle,
+[class*="mermaidSvg"] svg .node ellipse,
+[class*="mermaidSvg"] svg .node polygon,
+[class*="mermaidSvg"] svg .node path {
+  fill: #161f30;
+  stroke: #2dd4bf;
+  stroke-width: 1.5px;
+  transition: fill 0.2s ease, stroke 0.2s ease, filter 0.2s ease;
+}
+
+/* Hover effect on nodes */
+[class*="mermaidSvg"] svg .node:hover rect,
+[class*="mermaidSvg"] svg .node:hover circle,
+[class*="mermaidSvg"] svg .node:hover ellipse,
+[class*="mermaidSvg"] svg .node:hover polygon,
+[class*="mermaidSvg"] svg .node:hover path {
+  fill: #1c2d42;
+  stroke: #4ade80;
+  filter: drop-shadow(0 0 8px rgba(74, 222, 128, 0.3));
+}
+
+/* Node labels (text) */
+[class*="mermaidSvg"] svg .node .label,
+[class*="mermaidSvg"] svg .node .label *,
+[class*="mermaidSvg"] svg .label foreignObject {
+  color: #e2e8f0 !important;
+  fill: #e2e8f0 !important;
+  font-weight: 500 !important;
+  font-size: 13px !important;
+}
+
+/* Flowchart Edges / Paths (Lines connecting nodes) */
+[class*="mermaidSvg"] svg .edgePath .path {
+  stroke: #818cf8 !important;
+  stroke-width: 1.5px !important;
+  transition: stroke 0.2s ease;
+}
+
+/* Edge hover effect */
+[class*="mermaidSvg"] svg .edgePath:hover .path {
+  stroke: #a855f7 !important;
+  stroke-width: 2px !important;
+}
+
+/* Arrow heads */
+[class*="mermaidSvg"] svg .marker,
+[class*="mermaidSvg"] svg marker path {
+  fill: #818cf8 !important;
+  stroke: #818cf8 !important;
+}
+
+/* Light mode overrides */
+[data-theme="light"] [class*="mermaidSvg"] svg .cluster rect,
+[data-theme="light"] [class*="mermaidSvg"] svg [id^="subgraph"] rect {
+  fill: rgba(248, 250, 252, 0.8) !important;
+  stroke: rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] [class*="mermaidSvg"] svg .node rect,
+[data-theme="light"] [class*="mermaidSvg"] svg .node circle,
+[data-theme="light"] [class*="mermaidSvg"] svg .node ellipse,
+[data-theme="light"] [class*="mermaidSvg"] svg .node polygon,
+[data-theme="light"] [class*="mermaidSvg"] svg .node path {
+  fill: #ffffff;
+  stroke: #2f8f4e;
+}
+
+[data-theme="light"] [class*="mermaidSvg"] svg .node:hover rect,
+[data-theme="light"] [class*="mermaidSvg"] svg .node:hover circle,
+[data-theme="light"] [class*="mermaidSvg"] svg .node:hover ellipse,
+[data-theme="light"] [class*="mermaidSvg"] svg .node:hover polygon,
+[data-theme="light"] [class*="mermaidSvg"] svg .node:hover path {
+  fill: rgba(47, 143, 78, 0.04);
+  stroke: #4caf6d;
+  filter: drop-shadow(0 0 6px rgba(47, 143, 78, 0.15));
+}
+
+[data-theme="light"] [class*="mermaidSvg"] svg .node .label,
+[data-theme="light"] [class*="mermaidSvg"] svg .node .label *,
+[data-theme="light"] [class*="mermaidSvg"] svg .label foreignObject {
+  color: #1e293b !important;
+  fill: #1e293b !important;
+}
+
+
 
 
 
