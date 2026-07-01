@@ -113,26 +113,39 @@
 }
 
 .explanationContainer {
-  background-color: var(--ifm-color-emphasis-100);
-  border-radius: 8px;
-  padding: 1.5rem;
-  margin-top: 1.5rem;
-  border-left: 4px solid var(--ifm-color-primary);
+  background-color: rgba(74, 222, 128, 0.03);
+  border: 1px solid rgba(74, 222, 128, 0.12);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  margin-top: 1.25rem;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 680px;
   animation: slideDown 0.3s ease-out;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .explanationTitle {
+  font-size: 1rem;
   font-weight: 700;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
   color: var(--ifm-color-primary);
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
 }
 
 .explanationText {
   margin: 0;
-  line-height: 1.6;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--ifm-color-emphasis-800);
+  text-align: center;
 }
 
 .footer {

@@ -5,6 +5,7 @@ import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import DailyJavaQuiz from '../components/DailyJavaQuiz';
 import DailySpringBootQuiz from '../components/DailySpringBootQuiz';
 import LeetCodeDaily from '../components/LeetCodeDaily';
+import DSADashboard from '../components/DSADashboard';
 
 /* ─────────────────────────────────────────────────────────────────────────────
    Global CSS injected into <head> via <style> — only active on this page
@@ -1311,6 +1312,7 @@ const viewAllStyle: React.CSSProperties = {
 export default function Home(): React.ReactNode {
   useDocusaurusContext();
   const [activeQuiz, setActiveQuiz] = useState<'java' | 'springboot'>('java');
+  const [activeHubTab, setActiveHubTab] = useState<'leetcode' | 'quiz'>('leetcode');
 
   /* Add / remove body class so global CSS can target search & premium btn */
   useEffect(() => {
@@ -2023,89 +2025,7 @@ export default function Home(): React.ReactNode {
           </div>
 
           {/* ══════════════════════════════════════════════════════════════════
-            SECTION — Interactive Daily Challenge
-          ══════════════════════════════════════════════════════════════════ */}
-          <section
-            style={{
-              maxWidth: 800,
-              margin: "0 auto",
-              padding: "5rem 1.5rem",
-              position: "relative",
-            }}
-          >
-            <div className="lp-section-label" style={{ textAlign: "center", marginBottom: "0.5rem" }}>🎮 Interactive Challenge</div>
-            <h2 className="lp-section-title" style={{ textAlign: "center", marginBottom: "1rem" }}>
-              Daily Practice Challenge
-            </h2>
-            <p
-              style={{
-                color: "var(--ifm-color-emphasis-700)",
-                fontSize: "1.15rem",
-                textAlign: "center",
-                marginBottom: "2rem",
-                maxWidth: 600,
-                margin: "0 auto 2rem auto",
-                lineHeight: 1.5,
-              }}
-            >
-              Sharpen your engineering skills with our interactive daily challenges. Test your understanding of Java fundamentals or Spring Boot core patterns.
-            </p>
-
-            {/* Quiz Toggle Tabs */}
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                gap: "1rem",
-                marginBottom: "2rem",
-              }}
-            >
-              <button
-                onClick={() => setActiveQuiz('java')}
-                style={{
-                  padding: "0.6rem 1.5rem",
-                  fontSize: "1rem",
-                  fontWeight: 700,
-                  borderRadius: "8px",
-                  cursor: "pointer",
-                  border: activeQuiz === 'java' ? "2px solid var(--ifm-color-primary)" : "2px solid var(--ifm-color-emphasis-350)",
-                  background: activeQuiz === 'java' ? "rgba(74,222,128,0.12)" : "transparent",
-                  color: activeQuiz === 'java' ? "var(--ifm-color-primary)" : "var(--ifm-font-color-base)",
-                  transition: "all 0.2s ease",
-                }}
-              >
-                ☕ Java Challenge
-              </button>
-              <button
-                onClick={() => setActiveQuiz('springboot')}
-                style={{
-                  padding: "0.6rem 1.5rem",
-                  fontSize: "1rem",
-                  fontWeight: 700,
-                  borderRadius: "8px",
-                  cursor: "pointer",
-                  border: activeQuiz === 'springboot' ? "2px solid var(--ifm-color-primary)" : "2px solid var(--ifm-color-emphasis-350)",
-                  background: activeQuiz === 'springboot' ? "rgba(74,222,128,0.12)" : "transparent",
-                  color: activeQuiz === 'springboot' ? "var(--ifm-color-primary)" : "var(--ifm-font-color-base)",
-                  transition: "all 0.2s ease",
-                }}
-              >
-                🍃 Spring Boot Challenge
-              </button>
-            </div>
-
-            {/* Render selected Quiz */}
-            <div style={{ minHeight: "350px" }}>
-              {activeQuiz === 'java' ? (
-                <DailyJavaQuiz />
-              ) : (
-                <DailySpringBootQuiz />
-              )}
-            </div>
-          </section>
-
-          {/* ══════════════════════════════════════════════════════════════════
-            SECTION — LeetCode Daily Challenge
+            SECTION — Daily Practice Hub (Quizzes & LeetCode Daily)
           ══════════════════════════════════════════════════════════════════ */}
           <div
             style={{
@@ -2113,18 +2033,13 @@ export default function Home(): React.ReactNode {
               borderTop: "1px solid rgba(74,222,128,0.08)",
               borderBottom: "1px solid rgba(74,222,128,0.08)",
               backdropFilter: "blur(4px)",
+              padding: "5rem 1.5rem"
             }}
           >
-            <section
-              style={{
-                maxWidth: 1100,
-                margin: "0 auto",
-                padding: "5rem 1.5rem",
-              }}
-            >
-              <div className="lp-section-label" style={{ textAlign: "center", marginBottom: "0.5rem" }}>📅 LeetCode Challenge</div>
-              <h2 className="lp-section-title" style={{ textAlign: "center", marginBottom: "1rem" }}>
-                LeetCode Coding Challenge
+            <section style={{ maxWidth: 1100, margin: "0 auto" }}>
+              <div className="lp-section-label" style={{ textAlign: "center", marginBottom: "0.5rem" }}>⚡ Daily Practice Hub</div>
+              <h2 className="lp-section-title" style={{ textAlign: "center", marginBottom: "1.5rem" }}>
+                Keep Your Engineering Skills Sharp
               </h2>
               <p
                 style={{
@@ -2137,10 +2052,111 @@ export default function Home(): React.ReactNode {
                   lineHeight: 1.5,
                 }}
               >
-                Consistency is key to mastering technical interviews. Solve our daily curated LeetCode problem, pick a random task to test yourself, or explore different data structures and algorithms.
+                Consistency is key to mastering technical interviews. Solve today's curated LeetCode problem, or test your conceptual knowledge of Java and Spring Boot.
               </p>
 
-              <LeetCodeDaily />
+              {/* Hub Toggle Tabs */}
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: "1rem",
+                  marginBottom: "2.5rem",
+                }}
+              >
+                <button
+                  onClick={() => setActiveHubTab('leetcode')}
+                  style={{
+                    padding: "0.6rem 1.5rem",
+                    fontSize: "1rem",
+                    fontWeight: 700,
+                    borderRadius: "8px",
+                    cursor: "pointer",
+                    border: activeHubTab === 'leetcode' ? "2px solid var(--ifm-color-primary)" : "2px solid var(--ifm-color-emphasis-350)",
+                    background: activeHubTab === 'leetcode' ? "rgba(74,222,128,0.12)" : "transparent",
+                    color: activeHubTab === 'leetcode' ? "var(--ifm-color-primary)" : "var(--ifm-font-color-base)",
+                    transition: "all 0.2s ease",
+                  }}
+                >
+                  📅 LeetCode Daily
+                </button>
+                <button
+                  onClick={() => setActiveHubTab('quiz')}
+                  style={{
+                    padding: "0.6rem 1.5rem",
+                    fontSize: "1rem",
+                    fontWeight: 700,
+                    borderRadius: "8px",
+                    cursor: "pointer",
+                    border: activeHubTab === 'quiz' ? "2px solid var(--ifm-color-primary)" : "2px solid var(--ifm-color-emphasis-350)",
+                    background: activeHubTab === 'quiz' ? "rgba(74,222,128,0.12)" : "transparent",
+                    color: activeHubTab === 'quiz' ? "var(--ifm-color-primary)" : "var(--ifm-font-color-base)",
+                    transition: "all 0.2s ease",
+                  }}
+                >
+                  🎮 Concept Quizzes
+                </button>
+              </div>
+
+              {/* Render selected Hub Tab */}
+              <div>
+                {activeHubTab === 'leetcode' ? (
+                  <LeetCodeDaily />
+                ) : (
+                  <div style={{ maxWidth: 800, margin: "0 auto" }}>
+                    {/* Quiz Type Selector */}
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        gap: "1rem",
+                        marginBottom: "2rem",
+                      }}
+                    >
+                      <button
+                        onClick={() => setActiveQuiz('java')}
+                        style={{
+                          padding: "0.5rem 1.25rem",
+                          fontSize: "0.9rem",
+                          fontWeight: 700,
+                          borderRadius: "8px",
+                          cursor: "pointer",
+                          border: activeQuiz === 'java' ? "2px solid var(--ifm-color-primary)" : "2px solid var(--ifm-color-emphasis-350)",
+                          background: activeQuiz === 'java' ? "rgba(74,222,128,0.12)" : "transparent",
+                          color: activeQuiz === 'java' ? "var(--ifm-color-primary)" : "var(--ifm-font-color-base)",
+                          transition: "all 0.2s ease",
+                        }}
+                      >
+                        ☕ Java Challenge
+                      </button>
+                      <button
+                        onClick={() => setActiveQuiz('springboot')}
+                        style={{
+                          padding: "0.5rem 1.25rem",
+                          fontSize: "0.9rem",
+                          fontWeight: 700,
+                          borderRadius: "8px",
+                          cursor: "pointer",
+                          border: activeQuiz === 'springboot' ? "2px solid var(--ifm-color-primary)" : "2px solid var(--ifm-color-emphasis-350)",
+                          background: activeQuiz === 'springboot' ? "rgba(74,222,128,0.12)" : "transparent",
+                          color: activeQuiz === 'springboot' ? "var(--ifm-color-primary)" : "var(--ifm-font-color-base)",
+                          transition: "all 0.2s ease",
+                        }}
+                      >
+                        🍃 Spring Boot Challenge
+                      </button>
+                    </div>
+
+                    <div style={{ minHeight: "350px" }}>
+                      {activeQuiz === 'java' ? (
+                        <DailyJavaQuiz />
+                      ) : (
+                        <DailySpringBootQuiz />
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
             </section>
           </div>
 
@@ -2173,6 +2189,12 @@ export default function Home(): React.ReactNode {
               dynamic programming. Each week targets one core pattern with
               progressive difficulty.
             </p>
+            <DSADashboard />
+
+            <h3 style={{ color: "var(--brand-purple)", fontWeight: 800, marginTop: "3.5rem", marginBottom: "1.5rem", fontSize: "1.3rem" }}>
+              🗺️ 20-Week Lesson Navigation Blueprint
+            </h3>
+
             <div
               style={{
                 display: "grid",

@@ -6,11 +6,15 @@ tags: [dsa, java, roadmap, introduction, algorithms, getting-started]
 sidebar_position: 0
 ---
 
+import DSADashboard from '@site/src/components/DSADashboard';
+
 # Introduction: The 20-Week DSA Roadmap
 
 Welcome to the **20-Week Data Structures and Algorithms (DSA) Roadmap**. 
 
 Whether you are preparing for grueling technical interviews at top-tier tech companies or aiming to become a significantly stronger backend engineer, mastering DSA is non-negotiable. This curriculum is not just a list of LeetCode problems; it is a carefully sequenced journey designed to build **pattern recognition, algorithmic intuition, and system-level understanding** using **Java**.
+
+<DSADashboard />
 
 ---
 

@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-5c7": {
+  "/-38e": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-3c5": {
+  "/-7c3": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -1241,6 +1241,10 @@
     "__comp": "df203c0f",
     "__props": "4475d819"
   },
+  "/tags/countdown-latch-7ea": {
+    "__comp": "df203c0f",
+    "__props": "d60d5931"
+  },
   "/tags/coupling-8ac": {
     "__comp": "df203c0f",
     "__props": "016af998"
@@ -1320,6 +1324,10 @@
   "/tags/customer-c46": {
     "__comp": "df203c0f",
     "__props": "8cda6463"
+  },
+  "/tags/cyclic-barrier-75a": {
+    "__comp": "df203c0f",
+    "__props": "35bbfbde"
   },
   "/tags/daemonset-759": {
     "__comp": "df203c0f",
@@ -1648,6 +1656,10 @@
   "/tags/domain-modeling-5d4": {
     "__comp": "df203c0f",
     "__props": "50d408cf"
+  },
+  "/tags/double-entry-13f": {
+    "__comp": "df203c0f",
+    "__props": "7fbd3d78"
   },
   "/tags/dsa-4ff": {
     "__comp": "df203c0f",
@@ -2089,6 +2101,10 @@
     "__comp": "df203c0f",
     "__props": "37e090a4"
   },
+  "/tags/gc-796": {
+    "__comp": "df203c0f",
+    "__props": "0f304c73"
+  },
   "/tags/gc-tuning-fc5": {
     "__comp": "df203c0f",
     "__props": "91c3c201"
@@ -2224,6 +2240,10 @@
   "/tags/heap-008": {
     "__comp": "df203c0f",
     "__props": "c6df5430"
+  },
+  "/tags/heap-dump-8f4": {
+    "__comp": "df203c0f",
+    "__props": "9f7ebe17"
   },
   "/tags/heap-tuning-9b2": {
     "__comp": "df203c0f",
@@ -3753,6 +3773,10 @@
     "__comp": "df203c0f",
     "__props": "756c4108"
   },
+  "/tags/phaser-e1d": {
+    "__comp": "df203c0f",
+    "__props": "94ce80e0"
+  },
   "/tags/phases-527": {
     "__comp": "df203c0f",
     "__props": "233c6cb2"
@@ -4476,6 +4500,10 @@
   "/tags/segments-ce5": {
     "__comp": "df203c0f",
     "__props": "7a9e7971"
+  },
+  "/tags/semaphore-0fd": {
+    "__comp": "df203c0f",
+    "__props": "998a1d64"
   },
   "/tags/senior-c31": {
     "__comp": "df203c0f",
@@ -5545,7 +5573,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-735": {
+  "/-81a": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -5628,7 +5656,7 @@
     "__comp": "17896441",
     "content": "cb0ccb24"
   },
-  "/books/clean-architecture/part5-architecture/chapter-21-25-screaming-clean-61b": {
+  "/books/clean-architecture/part5-architecture/chapter-21-25-screaming-clean-93c": {
     "__comp": "17896441",
     "content": "4927344b"
   },
@@ -6048,7 +6076,7 @@
     "__comp": "17896441",
     "content": "c0bb7a0a"
   },
-  "/non-technical-knowledge/sdlc/phases/testing-388": {
+  "/non-technical-knowledge/sdlc/phases/testing-237": {
     "__comp": "17896441",
     "content": "eb306149"
   },
@@ -10016,7 +10044,7 @@
     "__comp": "17896441",
     "content": "331d11cc"
   },
-  "/technical-knowledge/java/java-jvm-c4b": {
+  "/technical-knowledge/java/java-jvm-f4d": {
     "__comp": "17896441",
     "content": "2fb67458"
   },
@@ -10532,7 +10560,7 @@
     "__comp": "17896441",
     "content": "c7ff582f"
   },
-  "/technical-knowledge/spring/spring-cloud-e2b": {
+  "/technical-knowledge/spring/spring-cloud-2a6": {
     "__comp": "17896441",
     "content": "b0d8a005"
   },

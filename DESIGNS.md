@@ -34,13 +34,21 @@ The sidebar is built as a fully custom desktop React layout ([CustomSidebarDeskt
 
 | Metric State | Width | Content Margin Offset | Behavior |
 | :--- | :--- | :--- | :--- |
-| **Expanded** | `300px` | `300px` | Shows category names, carets, labels, and horizontal socials at bottom. |
+| **Expanded** | Dynamic (default `300px`) | Matching dynamic width | Shows category names, carets, labels, and horizontal socials at bottom. |
 | **Collapsed** | `60px` | `60px` | Triggers via high-specificity ID negation selector `[class*='docSidebarContainerHidden']:not(#\#_AOxo):not(#\#_AOxo)`. Hides carets and text labels, rendering only the emojis. |
+
+### 3. Drag-and-Drop Resizable Sidebar
+- **Mechanism**: The left desktop sidebar implements interactive resizing using React mouse events (`onMouseDown`, `mousemove`, `mouseup`).
+- **Resize Handle**: A 6px transparent overlay element (`.custom-sidebar-resize-handle`) is positioned on the right edge of the sidebar. When hovered or dragged, it lights up in brand green (`var(--brand-green)`) with an active neon glow.
+- **Constraints**: Resizing width is clamped between `200px` (min) and `480px` (max) using the client X coordinate minus offset margins.
+- **Visual Smoothness**: While active resizing is in progress, a class `.resizing-sidebar` is appended to the `body` which disables text selections (`user-select: none !important`) and disables layout transition delays (`transition: none !important`) across all child elements to ensure 60fps tracking.
+- **State Persistence**: The dynamic width is written directly to the document root element's styling variable (`--doc-sidebar-width`) and saved to `localStorage` under the key `'sidebar-width'` to persist across page refreshes and route navigations.
 
 ---
 
 ## 🚀 Navigation & Link Highlight States
 
+### 1. Active Navigation Pill & Hierarchy
 - **Normal Menu Link**: `font-weight: 500; font-size: 0.9rem; padding: 10px 14px; margin: 4px 12px;`
 - **Active Expanded Pill**:
   - Background: `rgba(74, 222, 128, 0.12) !important;`
@@ -55,6 +63,11 @@ The sidebar is built as a fully custom desktop React layout ([CustomSidebarDeskt
   - Guide lines: Vertical dashed guide line (`border-left: 1px dashed rgba(255, 255, 255, 0.08) !important`) running down children blocks to map directory nesting.
   - Scale & size: Child links have slightly compressed sizing (`padding: 8px 12px`, `font-size: 0.85rem`) to contrast hierarchy.
   - Bullet helper: Uses a dynamic bullet prefix `•` (`::before` selector) that shifts highlight color to brand green on hover or active states.
+
+### 2. Premium Search Glow Orbit & Highlight Animations
+- **Search Orbit Effects**: The navbar search box container (`.navbar__search`) features animated radial glowing pseudo-elements (`::before` and `::after`) that spin in orbit with keyframes (`search-travel`). Hovering or focusing transitions the orb opacity to visible, and active input focus accelerates the orbit speed.
+- **SVG Distortion Filter**: A squiggly distortion filter (`#search-squiggle`) utilizing SVG `<feTurbulence>` (noise with animated frequency shifts over `8s`) and `<feDisplacementMap>` is attached to the search input border to create a liquid organic hand-drawn glow.
+- **Autocomplete Result Highlights**: In-dropdown suggestion lists style highlighted matches (`mark` tag) in high contrast brand green (`#4ade80` for dark mode, `#2f8f4e` for light mode). Inactive and helper metadata (such as hierarchy trees and hit paths) are styled in `#94a3b8` / `#64748b`. The active cursor suggestion shifts `4px` to the right (`transform: translateX(4px)`) and gains a left colored border and shadow glow.
 
 ---
 
@@ -93,9 +106,16 @@ Code block layout styles are matched with the brand green theme accents.
 
 ## 🎨 Diagram Styling Guidelines (Mermaid)
 
-Mermaid diagrams inherit the premium table cards design layout:
-- **Card Wrapper**: Rendered inside a card with a `#0c0e17` background (`#ffffff` in light mode), `border: 1px solid rgba(255, 255, 255, 0.08)`, `border-radius: 12px`, and a soft drop shadow (`0 8px 32px rgba(0, 0, 0, 0.25)`).
-- **Alignment**: Centered with comfortable `1.5rem` inner padding for high readability.
+Mermaid diagrams are rendered within a custom interactive wrapper ([Mermaid/index.tsx](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/src/theme/Mermaid/index.tsx)) that matches the site's premium design systems:
+- **Interactive Controls Toolbar**: Floating controls overlay features buttons to Zoom In (`➕`), Zoom Out (`➖`), Reset View (`🔄`), and Toggle Fullscreen (`🖥️`/`📴`).
+- **Interactive Panning & Zooming**: Supports dragging to pan the diagram (`grabbing` cursor) and scale adjustment via toolbar. Supports mouse drag handlers as well as touch handlers (`onTouchStart`, `onTouchMove`, `onTouchEnd`) for fluid zooming/panning on mobile screens.
+- **Fullscreen Overlay**: Toggling fullscreen enters a high-contrast viewport backdrop overlay with comfortable space and orbital background grid meshes.
+- **Styling Card**: Rendered inside a card container with a `#0c0e17` background (`#ffffff` in light mode), `border: 1px solid rgba(255, 255, 255, 0.08)`, `border-radius: 12px`, and a soft drop shadow (`0 8px 32px rgba(0, 0, 0, 0.25)`), with a radial grid point canvas background texture.
+- **Custom Theme Overrides**:
+  - **Subgraphs / Cluster Boxes**: Styled with a deep translucent fill `rgba(13, 17, 26, 0.6)`, and custom borders (`rgba(74, 222, 128, 0.2)`) with rounded corners.
+  - **Nodes**: Rendered with `#161f30` fill, cyan outline borders (`#2dd4bf`), and transition to glowing neon green on hover. Node text labels are styled in `#e2e8f0`.
+  - **Edges / Connections**: Colored indigo (`#818cf8`) and transition to purple (`#a855f7`) with custom thickness on hover.
+  - **Light Theme**: Automatically falls back to clean green outlines, white fills, and soft gray subgraphs with matching shadows.
 
 ---
 

@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '5c7'),
+    component: ComponentCreator('/', '38e'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '3c5'),
+        component: ComponentCreator('/', '7c3'),
         routes: [
           {
             path: '/tags',
@@ -1541,6 +1541,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/countdown-latch',
+            component: ComponentCreator('/tags/countdown-latch', '7ea'),
+            exact: true
+          },
+          {
             path: '/tags/coupling',
             component: ComponentCreator('/tags/coupling', '8ac'),
             exact: true
@@ -1638,6 +1643,11 @@ export default [
           {
             path: '/tags/customer',
             component: ComponentCreator('/tags/customer', 'c46'),
+            exact: true
+          },
+          {
+            path: '/tags/cyclic-barrier',
+            component: ComponentCreator('/tags/cyclic-barrier', '75a'),
             exact: true
           },
           {
@@ -2048,6 +2058,11 @@ export default [
           {
             path: '/tags/domain-modeling',
             component: ComponentCreator('/tags/domain-modeling', '5d4'),
+            exact: true
+          },
+          {
+            path: '/tags/double-entry',
+            component: ComponentCreator('/tags/double-entry', '13f'),
             exact: true
           },
           {
@@ -2601,6 +2616,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/gc',
+            component: ComponentCreator('/tags/gc', '796'),
+            exact: true
+          },
+          {
             path: '/tags/gc-tuning',
             component: ComponentCreator('/tags/gc-tuning', 'fc5'),
             exact: true
@@ -2768,6 +2788,11 @@ export default [
           {
             path: '/tags/heap',
             component: ComponentCreator('/tags/heap', '008'),
+            exact: true
+          },
+          {
+            path: '/tags/heap-dump',
+            component: ComponentCreator('/tags/heap-dump', '8f4'),
             exact: true
           },
           {
@@ -4681,6 +4706,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/phaser',
+            component: ComponentCreator('/tags/phaser', 'e1d'),
+            exact: true
+          },
+          {
             path: '/tags/phases',
             component: ComponentCreator('/tags/phases', '527'),
             exact: true
@@ -5583,6 +5613,11 @@ export default [
           {
             path: '/tags/segments',
             component: ComponentCreator('/tags/segments', 'ce5'),
+            exact: true
+          },
+          {
+            path: '/tags/semaphore',
+            component: ComponentCreator('/tags/semaphore', '0fd'),
             exact: true
           },
           {
@@ -6922,7 +6957,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '735'),
+            component: ComponentCreator('/', '81a'),
             routes: [
               {
                 path: '/aws',
@@ -7046,7 +7081,7 @@ export default [
               },
               {
                 path: '/books/clean-architecture/part5-architecture/chapter-21-25-screaming-clean',
-                component: ComponentCreator('/books/clean-architecture/part5-architecture/chapter-21-25-screaming-clean', '61b'),
+                component: ComponentCreator('/books/clean-architecture/part5-architecture/chapter-21-25-screaming-clean', '93c'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -7676,7 +7711,7 @@ export default [
               },
               {
                 path: '/non-technical-knowledge/sdlc/phases/testing',
-                component: ComponentCreator('/non-technical-knowledge/sdlc/phases/testing', '388'),
+                component: ComponentCreator('/non-technical-knowledge/sdlc/phases/testing', '237'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13618,7 +13653,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-jvm',
-                component: ComponentCreator('/technical-knowledge/java/java-jvm', 'c4b'),
+                component: ComponentCreator('/technical-knowledge/java/java-jvm', 'f4d'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14392,7 +14427,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/spring/spring-cloud',
-                component: ComponentCreator('/technical-knowledge/spring/spring-cloud', 'e2b'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-cloud', '2a6'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
