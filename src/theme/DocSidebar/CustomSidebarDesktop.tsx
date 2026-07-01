@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from '@docusaurus/Link';
 import clsx from 'clsx';
 import type { Props as DesktopProps } from '@theme/DocSidebar/Desktop';
@@ -20,6 +20,55 @@ function isCategoryActive(item: SidebarItem, activePath: string): boolean {
 
 export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidden }: CustomSidebarProps) {
   const [openCategories, setOpenCategories] = useState<Record<string, boolean>>({});
+  const [isResizing, setIsResizing] = useState(false);
+  const sidebarWidthRef = useRef(300);
+
+  // Load saved width on mount
+  useEffect(() => {
+    const savedWidth = localStorage.getItem('sidebar-width');
+    if (savedWidth) {
+      const width = parseInt(savedWidth, 10);
+      if (!isNaN(width)) {
+        sidebarWidthRef.current = width;
+        document.documentElement.style.setProperty('--doc-sidebar-width', `${width}px`);
+      }
+    }
+  }, []);
+
+  // Handle resizing mouse events
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isResizing) return;
+      // Docusaurus sidebar has a 16px margin on the left
+      const newWidth = Math.max(200, Math.min(480, e.clientX - 16));
+      sidebarWidthRef.current = newWidth;
+      document.documentElement.style.setProperty('--doc-sidebar-width', `${newWidth}px`);
+    };
+
+    const handleMouseUp = () => {
+      if (isResizing) {
+        setIsResizing(false);
+        document.body.classList.remove('resizing-sidebar');
+        localStorage.setItem('sidebar-width', `${sidebarWidthRef.current}px`);
+      }
+    };
+
+    if (isResizing) {
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+    }
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isResizing]);
+
+  const startResizing = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsResizing(true);
+    document.body.classList.add('resizing-sidebar');
+  };
 
   // Auto-open active categories on load/path change
   useEffect(() => {
@@ -167,6 +216,14 @@ export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidd
           <span className="toggle-label">Collapse Sidebar</span>
         </button>
       </div>
+
+      {/* Resize Handle */}
+      {!isHidden && (
+        <div
+          className="custom-sidebar-resize-handle"
+          onMouseDown={startResizing}
+        />
+      )}
     </div>
   );
 }

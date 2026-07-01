@@ -786,7 +786,40 @@ body {
   flex-direction: column;
   height: 100%;
   width: 100%;
+  position: relative;
 }
+
+/* Custom Resize Handle styling */
+.custom-sidebar-resize-handle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 6px;
+  height: 100%;
+  cursor: col-resize;
+  z-index: 10;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+  user-select: none;
+  background-color: transparent;
+}
+
+/* Visual highlights on hover/active dragging */
+.custom-sidebar-resize-handle:hover,
+.resizing-sidebar .custom-sidebar-resize-handle {
+  background-color: var(--brand-green);
+  opacity: 0.8;
+  box-shadow: 0 0 8px var(--brand-green);
+}
+
+/* Suppress all transitions during active resizing to ensure smooth dragging */
+body.resizing-sidebar * {
+  user-select: none !important;
+}
+
+body.resizing-sidebar .theme-doc-sidebar-container {
+  transition: none !important;
+}
+
 
 /* Header Branding */
 .custom-sidebar-header {
@@ -1010,7 +1043,167 @@ body {
   font-size: 0.85rem !important;
 }
 
+/* ============================================================
+   Dark Mode Sidebar Enhancement
+   ============================================================
+   Goals:
+   1. Brighter, easier-to-read idle item text
+   2. Glowing left-bar accent on hover (neon green)
+   3. Pop category headers with color + weight
+   4. Animated shimmer on the active item
+   5. Colored, readable tree-line for nested items
+   6. Subtle neon glow on the sidebar container border
+   ============================================================ */
+
+/* ── Sidebar container — add a soft neon border glow in dark mode ── */
+@keyframes sidebar-border-pulse {
+  0%, 100% { box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(74,222,128,0.10), 0 0 24px rgba(74,222,128,0.04); }
+  50%       { box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(74,222,128,0.22), 0 0 32px rgba(74,222,128,0.10); }
+}
+
+[data-theme="dark"] .theme-doc-sidebar-container {
+  border: 1px solid rgba(74, 222, 128, 0.15) !important;
+  animation: sidebar-border-pulse 4s ease-in-out infinite;
+}
+
+/* ── Idle menu items — brighter base text ── */
+[data-theme="dark"] .custom-menu-link,
+[data-theme="dark"] .custom-menu-category-header {
+  color: #b8c6dc;                      /* was #8f9cae — much more readable */
+  font-size: 0.88rem;
+}
+
+/* ── Category headers — stand out as section titles ── */
+[data-theme="dark"] .custom-menu-category-header {
+  color: #cdd6e8;
+  font-weight: 600;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ── Hover — glowing left-bar accent + background ── */
+[data-theme="dark"] .custom-menu-link,
+[data-theme="dark"] .custom-menu-category-header {
+  position: relative;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="dark"] .custom-menu-link::before,
+[data-theme="dark"] .custom-menu-category-header::before {
+  content: "";
+  position: absolute;
+  left: -12px;              /* outside the item's left edge */
+  top: 20%;
+  height: 60%;
+  width: 3px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #a855f7, #4ade80, #2dd4bf);
+  opacity: 0;
+  transform: scaleY(0.5);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+[data-theme="dark"] .custom-menu-link:hover::before,
+[data-theme="dark"] .custom-menu-category-header:hover::before {
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+[data-theme="dark"] .custom-menu-link:hover,
+[data-theme="dark"] .custom-menu-category-header:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #e8f0fe !important;
+  transform: translateX(4px);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+/* ── Active item — animated shimmer glow ── */
+@keyframes active-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+[data-theme="dark"] .custom-menu-link.active {
+  background: rgba(74, 222, 128, 0.10) !important;
+  color: #86efac !important;
+  border: 1px solid rgba(74, 222, 128, 0.30) !important;
+  box-shadow:
+    0 0 0 1px rgba(74, 222, 128, 0.12),
+    0 4px 20px rgba(74, 222, 128, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+  font-weight: 600;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Shimmer sweep across active item */
+[data-theme="dark"] .custom-menu-link.active::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(74, 222, 128, 0.12) 50%,
+    transparent 80%
+  );
+  background-size: 200% 100%;
+  animation: active-shimmer 3s linear infinite;
+  pointer-events: none;
+  border-radius: 12px;
+}
+
+/* Active left bar — always visible */
+[data-theme="dark"] .custom-menu-link.active::before {
+  opacity: 1 !important;
+  transform: scaleY(1) !important;
+  background: linear-gradient(180deg, #4ade80, #86efac) !important;
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.7);
+}
+
+/* ── Category header with active child — highlight ── */
+[data-theme="dark"] .custom-menu-category-header.active-child {
+  color: #a5f3c4 !important;
+  background: rgba(74, 222, 128, 0.05) !important;
+}
+
+[data-theme="dark"] .custom-menu-category-header.active-child::before {
+  opacity: 0.7 !important;
+  transform: scaleY(1) !important;
+}
+
+/* ── Nested items tree-line — colored and visible ── */
+[data-theme="dark"] .custom-menu-category-items {
+  border-left: 1px solid rgba(74, 222, 128, 0.20) !important;
+}
+
+/* ── Nested item links — brighter than before ── */
+[data-theme="dark"] .custom-menu-category-items .custom-menu-link {
+  color: #9ab0c8 !important;           /* was #7a889b — more readable */
+  font-size: 0.84rem !important;
+}
+
+[data-theme="dark"] .custom-menu-category-items .custom-menu-link:hover {
+  color: #dce8f8 !important;
+}
+
+/* ── Menu icon — slightly brighter in dark mode ── */
+[data-theme="dark"] .custom-menu-link .menu-icon,
+[data-theme="dark"] .custom-menu-category-header .menu-icon {
+  opacity: 0.85;
+  transition: opacity 0.2s ease, filter 0.2s ease;
+}
+
+[data-theme="dark"] .custom-menu-link:hover .menu-icon,
+[data-theme="dark"] .custom-menu-category-header:hover .menu-icon,
+[data-theme="dark"] .custom-menu-link.active .menu-icon {
+  opacity: 1;
+  filter: drop-shadow(0 0 4px rgba(74, 222, 128, 0.5));
+}
+
 /* Footer & Socials */
+
 .custom-sidebar-footer {
   padding: 1.25rem 1rem;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
@@ -2917,6 +3110,72 @@ pre[class*="language-"]::-webkit-scrollbar {
     display: none;
   }
 }
+
+/* ============================================================
+   Premium Search Result Row Highlight Effects
+   ============================================================ */
+
+/* Common suggestion item styles */
+.navbar__search [class*="dropdownMenu"] [class*="suggestion"] {
+  transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1), 
+              background-color 0.22s ease, 
+              border-left 0.22s ease, 
+              box-shadow 0.22s ease !important;
+  border-left: 4px solid transparent !important;
+}
+
+/* Dark theme active row */
+[data-theme="dark"] .navbar__search [class*="dropdownMenu"] [class*="suggestion"][class*="cursor"] {
+  background-color: rgba(74, 222, 128, 0.1) !important;
+  border-left-color: #4ade80 !important;
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), 
+              0 0 8px rgba(74, 222, 128, 0.08) !important;
+}
+
+/* Dark theme active row text contrast overrides */
+[data-theme="dark"] .navbar__search [class*="suggestion"][class*="cursor"] {
+  color: #f1f5f9 !important;
+}
+[data-theme="dark"] .navbar__search [class*="suggestion"][class*="cursor"] mark {
+  color: #4ade80 !important;
+  text-decoration: none !important;
+  font-weight: 600;
+}
+[data-theme="dark"] .navbar__search [class*="suggestion"][class*="cursor"] [class*="hitPath"] {
+  color: #94a3b8 !important;
+}
+[data-theme="dark"] .navbar__search [class*="suggestion"][class*="cursor"] [class*="hitTree"],
+[data-theme="dark"] .navbar__search [class*="suggestion"][class*="cursor"] [class*="hitIcon"] {
+  color: #94a3b8 !important;
+}
+
+/* Light theme active row */
+[data-theme="light"] .navbar__search [class*="dropdownMenu"] [class*="suggestion"][class*="cursor"] {
+  background-color: rgba(47, 143, 78, 0.06) !important;
+  border-left-color: #2f8f4e !important;
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06), 
+              0 0 8px rgba(47, 143, 78, 0.05) !important;
+}
+
+/* Light theme active row text contrast overrides */
+[data-theme="light"] .navbar__search [class*="suggestion"][class*="cursor"] {
+  color: #0f172a !important;
+}
+[data-theme="light"] .navbar__search [class*="suggestion"][class*="cursor"] mark {
+  color: #2f8f4e !important;
+  text-decoration: none !important;
+  font-weight: 600;
+}
+[data-theme="light"] .navbar__search [class*="suggestion"][class*="cursor"] [class*="hitPath"] {
+  color: #64748b !important;
+}
+[data-theme="light"] .navbar__search [class*="suggestion"][class*="cursor"] [class*="hitTree"],
+[data-theme="light"] .navbar__search [class*="suggestion"][class*="cursor"] [class*="hitIcon"] {
+  color: #64748b !important;
+}
+
 
 
 

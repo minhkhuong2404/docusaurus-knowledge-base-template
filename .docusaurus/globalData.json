@@ -891,6 +891,10 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/banking/becs",
+              "path": "/technical-knowledge/banking/becs"
+            },
+            {
               "id": "technical-knowledge/banking/bpay",
               "path": "/technical-knowledge/banking/bpay",
               "sidebar": "tutorialSidebar"
@@ -921,9 +925,17 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/banking/cop",
+              "path": "/technical-knowledge/banking/cop"
+            },
+            {
               "id": "technical-knowledge/banking/core_banking",
               "path": "/technical-knowledge/banking/core_banking",
               "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/correspondent_banking",
+              "path": "/technical-knowledge/banking/correspondent_banking"
             },
             {
               "id": "technical-knowledge/banking/credit_post",
@@ -951,6 +963,10 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/banking/error_codes",
+              "path": "/technical-knowledge/banking/error_codes"
+            },
+            {
               "id": "technical-knowledge/banking/fis",
               "path": "/technical-knowledge/banking/fis",
               "sidebar": "tutorialSidebar"
@@ -971,6 +987,10 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/banking/idempotency",
+              "path": "/technical-knowledge/banking/idempotency"
+            },
+            {
               "id": "technical-knowledge/banking/inbound",
               "path": "/technical-knowledge/banking/inbound",
               "sidebar": "tutorialSidebar"
@@ -984,6 +1004,10 @@
               "id": "technical-knowledge/banking/iso20022_migration",
               "path": "/technical-knowledge/banking/iso20022_migration",
               "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/liquidity",
+              "path": "/technical-knowledge/banking/liquidity"
             },
             {
               "id": "technical-knowledge/banking/npp",
@@ -1051,6 +1075,10 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/banking/payment_hub",
+              "path": "/technical-knowledge/banking/payment_hub"
+            },
+            {
               "id": "technical-knowledge/banking/payment_lifecycle_101",
               "path": "/technical-knowledge/banking/payment_lifecycle_101",
               "sidebar": "tutorialSidebar"
@@ -1061,9 +1089,21 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/banking/payto",
+              "path": "/technical-knowledge/banking/payto"
+            },
+            {
               "id": "technical-knowledge/banking/reconciliation",
               "path": "/technical-knowledge/banking/reconciliation",
               "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/banking/regulatory_reporting",
+              "path": "/technical-knowledge/banking/regulatory_reporting"
+            },
+            {
+              "id": "technical-knowledge/banking/rtgs",
+              "path": "/technical-knowledge/banking/rtgs"
             },
             {
               "id": "technical-knowledge/banking/sanction",

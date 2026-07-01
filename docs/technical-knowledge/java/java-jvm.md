@@ -14,28 +14,50 @@ A guide to the Java Virtual Machine — runtime memory areas, garbage collection
 
 ## 1. JVM Architecture Overview
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                        JVM                                  │
-│  ┌──────────┐  ┌──────────────────────────────────────┐    │
-│  │ Class    │  │        Runtime Data Areas             │    │
-│  │ Loader   │  │  ┌──────────┐  ┌───────────────┐    │    │
-│  │ Subsystem│──▶│  │  Method  │  │     Heap      │    │    │
-│  └──────────┘  │  │  Area    │  │ (Young + Old) │    │    │
-│                │  └──────────┘  └───────────────┘    │    │
-│                │  ┌──────────┐  ┌───────────────┐    │    │
-│                │  │  VM      │  │  Program      │    │    │
-│                │  │  Stack   │  │  Counter      │    │    │
-│                │  └──────────┘  └───────────────┘    │    │
-│                │  ┌──────────────────────────────┐    │    │
-│                │  │     Native Method Stack      │    │    │
-│                │  └──────────────────────────────┘    │    │
-│                └──────────────────────────────────────┘    │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │           Execution Engine                           │  │
-│  │  Interpreter + JIT Compiler + Garbage Collector      │  │
-│  └──────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph JVM ["JVM (Java Virtual Machine)"]
+        direction TB
+
+        subgraph ClassLoaderSub ["ClassLoader Subsystem"]
+            direction TB
+            CL["Loading &rarr; Linking &rarr; Initialization"]
+        end
+
+        subgraph RuntimeAreas ["Runtime Data Areas"]
+            direction TB
+            subgraph SharedMemory ["Shared Memory (All Threads)"]
+                direction LR
+                MethodArea["Method Area<br/>(Class Metadata, Constant Pool)"]
+                HeapArea["Heap Area<br/>(Objects, Young + Old Gen)"]
+            end
+            subgraph PrivateMemory ["Private Memory (Per-Thread)"]
+                direction LR
+                VMStack["VM Stack<br/>(Frames, Local Variables)"]
+                PC["Program Counter<br/>(Instruction Address)"]
+                NativeStack["Native Method Stack<br/>(Native Method Calls)"]
+            end
+        end
+
+        subgraph ExecEngine ["Execution Engine"]
+            direction LR
+            Interpreter["Interpreter"]
+            JIT["JIT Compiler<br/>(C1 / C2 Compilers)"]
+            GC["Garbage Collector"]
+        end
+    end
+
+    ClassLoaderSub -->|"Loads Classes"| RuntimeAreas
+    RuntimeAreas -->|"Executes Bytecode"| ExecEngine
+
+    %% Style classes
+    classDef jvmStyle fill:#0d111a,stroke:#4ade80,stroke-width:2px,color:#e2e8f0;
+    classDef areaStyle fill:#161f30,stroke:#2dd4bf,stroke-width:1.5px,color:#e2e8f0;
+    classDef componentStyle fill:#1c2d42,stroke:#a855f7,stroke-width:1.5px,color:#e2e8f0;
+    
+    class JVM jvmStyle;
+    class MethodArea,HeapArea,VMStack,PC,NativeStack areaStyle;
+    class CL,Interpreter,JIT,GC componentStyle;
 ```
 
 ---
@@ -57,12 +79,12 @@ graph TB
             direction LR
             subgraph Young_Gen ["Young Generation (-Xmn or -XX:NewRatio)"]
                 direction TB
-                Eden["Eden Space<br/>(New object allocation)"]
-                S0["Survivor 0 (S0/From)<br/>(GC copy space)"]
-                S1["Survivor 1 (S1/To)<br/>(GC copy space)"]
+                Eden["Eden Space<br/>(New Object Allocation)"]
+                S0["Survivor 0 (S0 / From)<br/>(GC Copy Space)"]
+                S1["Survivor 1 (S1 / To)<br/>(GC Copy Space)"]
             end
             subgraph Old_Gen ["Old Generation (Tenured)"]
-                Old["Old Space<br/>(Long-lived objects, promoted)"]
+                Old["Old Space<br/>(Long-lived Objects, Promoted)"]
             end
         end
         
@@ -72,16 +94,16 @@ graph TB
                 Meta["Class Metadata & Methods<br/>Constant Pool, Annotations"]
             end
             subgraph Code_Cache_Group ["Code Cache (-XX:ReservedCodeCacheSize)"]
-                CC["JIT Compiled Native Code<br/>(C1/C2 optimized bytecode)"]
+                CC["JIT Compiled Native Code<br/>(C1/C2 Optimized Bytecode)"]
             end
-            subgraph Thread_Stacks ["Thread Stacks (-Xss per thread)"]
-                TS["VM Stack Frames & Native Stacks<br/>(Local vars, operand stack, frames)"]
+            subgraph Thread_Stacks ["Thread Stacks (-Xss per Thread)"]
+                TS["VM Stack Frames & Native Stacks<br/>(Local Vars, Operand Stack, Frames)"]
             end
             subgraph Direct_Memory ["Direct Memory (-XX:MaxDirectMemorySize)"]
                 DM["Direct Byte Buffers<br/>(Zero-copy I/O, Netty, sun.misc.Unsafe)"]
             end
             subgraph GC_Overhead ["GC Internal Metadata"]
-                GCO["Card Tables, RSets, Mark Bitmaps<br/>(Collector-specific structures)"]
+                GCO["Card Tables, RSets, Mark Bitmaps<br/>(Collector-specific Structures)"]
             end
             subgraph JVM_Internal ["JVM Internal Structures"]
                 JVM_Int["C++ Heap (VM Code)<br/>Thread Local Storage (TLS), JNI"]
@@ -96,6 +118,19 @@ graph TB
     DM <-->|"Zero-Copy JNI Bridging"| On_Heap
     Meta -->|"Points to class references in"| On_Heap
     TS -->|"References to heap objects"| On_Heap
+
+    %% Style classes
+    classDef osStyle fill:#0d111a,stroke:#3b82f6,stroke-width:2px,color:#e2e8f0;
+    classDef heapStyle fill:#14532d,stroke:#4ade80,stroke-width:1.5px,color:#e2e8f0;
+    classDef offHeapStyle fill:#1e1b4b,stroke:#818cf8,stroke-width:1.5px,color:#e2e8f0;
+    classDef subgenStyle fill:#1c2d42,stroke:#a855f7,stroke-width:1px,color:#e2e8f0;
+    classDef detailStyle fill:#161f30,stroke:#2dd4bf,stroke-width:1px,color:#e2e8f0;
+
+    class OS_Memory osStyle;
+    class On_Heap heapStyle;
+    class Off_Heap offHeapStyle;
+    class Young_Gen,Old_Gen subgenStyle;
+    class Eden,S0,S1,Old,Meta,CC,TS,DM,GCO,JVM_Int detailStyle;
 ```
 
 ### Detailed Side-by-Side Comparison
@@ -163,13 +198,23 @@ If you set your Kubernetes resource limit to `4GB`, your `-Xmx` should not excee
 
 The largest memory area. Stores **all object instances and arrays**. Divided into generations for GC efficiency:
 
-```
-Heap
-├── Young Generation
-│   ├── Eden Space        (~80% of young gen)
-│   ├── Survivor 0 (S0)  (~10%)
-│   └── Survivor 1 (S1)  (~10%)
-└── Old Generation (Tenured)
+```mermaid
+flowchart LR
+    Heap["Heap Memory"] --> Young["Young Generation<br/>(Minor GC Copying)"]
+    Heap --> Old["Old Generation (Tenured)<br/>(Major GC Mark-Compact)"]
+    
+    Young --> Eden["Eden Space<br/>(~80% size)"]
+    Young --> S0["Survivor 0 (S0 / From)<br/>(~10% size)"]
+    Young --> S1["Survivor 1 (S1 / To)<br/>(~10% size)"]
+
+    %% Styles
+    classDef rootStyle fill:#0d111a,stroke:#818cf8,stroke-width:2px,color:#e2e8f0;
+    classDef genStyle fill:#161f30,stroke:#a855f7,stroke-width:1.5px,color:#e2e8f0;
+    classDef spaceStyle fill:#1c2d42,stroke:#4ade80,stroke-width:1px,color:#e2e8f0;
+
+    class Heap rootStyle;
+    class Young,Old genStyle;
+    class Eden,S0,S1 spaceStyle;
 ```
 
 - **Eden:** New objects are allocated here.
@@ -267,20 +312,33 @@ When the JVM encounters a `new` instruction:
 
 ### Object Memory Layout
 
-```
-┌─────────────────────────────────────────┐
-│              Object Header              │
-│  ┌───────────────┐  ┌───────────────┐  │
-│  │  Mark Word    │  │  Class Pointer│  │
-│  │  (hash, GC    │  │  (pointer to  │  │
-│  │  age, lock)   │  │  Class meta)  │  │
-│  └───────────────┘  └───────────────┘  │
-├─────────────────────────────────────────┤
-│           Instance Data                 │
-│  (fields from this class + parents)     │
-├─────────────────────────────────────────┤
-│           Padding (alignment)           │
-└─────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph ObjectLayout ["Object Memory Layout (Aligned to 8-Byte Boundaries)"]
+        direction TB
+
+        subgraph Header ["Object Header (8/16 Bytes)"]
+            direction LR
+            MarkWord["Mark Word (8 Bytes)<br/>- Hashcode<br/>- GC Age (0-15)<br/>- Lock State Flags"]
+            ClassPointer["Class Pointer (4/8 Bytes)<br/>- Pointer to Class Metadata<br/>- Compressed OOPs (4 bytes)"]
+        end
+
+        InstanceData["Instance Data<br/>- Member fields & types<br/>- Fields inherited from parent classes"]
+        Padding["Padding (0-7 Bytes)<br/>- Alignment buffer to ensure size is multiple of 8 bytes"]
+        
+        Header --> InstanceData --> Padding
+    end
+
+    %% Styles
+    classDef objStyle fill:#0d111a,stroke:#2dd4bf,stroke-width:2px,color:#e2e8f0;
+    classDef headerStyle fill:#161f30,stroke:#a855f7,stroke-width:1.5px,color:#e2e8f0;
+    classDef dataStyle fill:#1c2d42,stroke:#4ade80,stroke-width:1px,color:#e2e8f0;
+    classDef paddingStyle fill:#232d3d,stroke:#94a3b8,stroke-dasharray: 5 5,stroke-width:1px,color:#94a3b8;
+
+    class ObjectLayout objStyle;
+    class Header,MarkWord,ClassPointer headerStyle;
+    class InstanceData dataStyle;
+    class Padding paddingStyle;
 ```
 
 ### Compressed OOPs & Object Alignment (Memory Optimization)
@@ -424,14 +482,41 @@ Multi-threaded young + old gen collection. **Throughput-oriented** — minimizes
 
 **Region-based** collector. Divides the heap into equal-sized regions (~2048). Each region can be Eden, Survivor, Old, or Humongous (for large objects).
 
-```
-┌─────┬─────┬─────┬─────┬─────┬─────┐
-│ Eden│ Old │Surv │ Eden│ Old │Hum. │
-├─────┼─────┼─────┼─────┼─────┼─────┤
-│ Old │ Eden│Free │ Old │ Old │ Eden│
-├─────┼─────┼─────┼─────┼─────┼─────┤
-│Free │ Old │ Old │Surv │Free │ Old │
-└─────┴─────┴─────┴─────┴─────┴─────┘
+```mermaid
+flowchart TD
+    subgraph G1Heap ["G1 Region-Based Heap Layout (Logical Divisions)"]
+        direction TB
+        
+        subgraph Row1 ["Row 1"]
+            direction LR
+            E1["Eden"] --- O1["Old"] --- S1["Survivor"] --- E2["Eden"] --- O2["Old"] --- H1["Humongous"]
+        end
+        
+        subgraph Row2 ["Row 2"]
+            direction LR
+            O3["Old"] --- E3["Eden"] --- F1["Free"] --- O4["Old"] --- O5["Old"] --- E4["Eden"]
+        end
+        
+        subgraph Row3 ["Row 3"]
+            direction LR
+            F2["Free"] --- O6["Old"] --- O7["Old"] --- S2["Survivor"] --- F3["Free"] --- O8["Old"]
+        end
+    end
+
+    %% Styles
+    classDef eden fill:#14532d,stroke:#4ade80,stroke-width:1.5px,color:#e2e8f0;
+    classDef old fill:#581c87,stroke:#a855f7,stroke-width:1.5px,color:#e2e8f0;
+    classDef surv fill:#1e3a8a,stroke:#3b82f6,stroke-width:1.5px,color:#e2e8f0;
+    classDef hum fill:#854d0e,stroke:#eab308,stroke-width:1.5px,color:#e2e8f0;
+    classDef free fill:#1f2937,stroke:#4b5563,stroke-width:1.5px,color:#9ca3af;
+    classDef gridStyle fill:#0d111a,stroke:#3b82f6,stroke-width:2px,color:#e2e8f0;
+
+    class G1Heap gridStyle;
+    class E1,E2,E3,E4 eden;
+    class O1,O2,O3,O4,O5,O6,O7,O8 old;
+    class S1,S2 surv;
+    class H1 hum;
+    class F1,F2,F3 free;
 ```
 
 **Key features:**
@@ -478,37 +563,43 @@ To solve this, Java 21 introduced **Generational ZGC** (`-XX:+UseZGC -XX:+ZGener
 
 ### Class Loading Process
 
-```
-Loading → Verification → Preparation → Resolution → Initialization
-│          │              │              │             │
-│          │              │              │             └─ Execute <clinit>
-│          │              │              │                (static initializers)
-│          │              │              └─ Resolve symbolic
-│          │              │                 references to direct
-│          │              └─ Allocate memory for
-│          │                 static fields (set defaults)
-│          └─ Verify bytecode correctness
-│             (format, semantics, bytecode, symbol)
-└─ Read .class file into memory,
-   create Class object
+```mermaid
+flowchart TD
+    Start([Start Class Load Request]) --> Load["1. Loading<br/>(Read bytes, create Class instance)"]
+    Load --> Verify["2. Verification<br/>(Check bytecode sanity & security checks)"]
+    Verify --> Prepare["3. Preparation<br/>(Allocate memory for static variables, set default values)"]
+    Prepare --> Resolve["4. Resolution<br/>(Convert symbolic reference names to actual memory addresses)"]
+    Resolve --> Init["5. Initialization<br/>(Execute &lt;clinit&gt; block & static constructor)"]
+    Init --> Done([Class Fully Loaded & Ready])
+
+    %% Styles
+    classDef processStyle fill:#161f30,stroke:#2dd4bf,stroke-width:1.5px,color:#e2e8f0;
+    classDef edgeStyle fill:#0d111a,stroke:#818cf8,stroke-width:2px,color:#e2e8f0;
+    
+    class Load,Verify,Prepare,Resolve,Init processStyle;
+    class Start,Done edgeStyle;
 ```
 
 ### Class Loaders
 
 Java uses a **hierarchical delegation model** (parent delegation):
 
-```
-Bootstrap ClassLoader (C/C++)
-  └── loads: java.lang.*, java.util.* (core JDK)
+```mermaid
+flowchart BT
+    Custom["4. Custom ClassLoader<br/>(Loads plugin/dynamic classes)"] -->|"Delegates Up"| App["3. Application ClassLoader<br/>(Loads CLASSPATH classes)"]
+    App -->|"Delegates Up"| Ext["2. Extension ClassLoader<br/>(Loads Extension directories)"]
+    Ext -->|"Delegates Up"| Boot["1. Bootstrap ClassLoader<br/>(Loads core java.lang.* packages)"]
 
-Extension ClassLoader (Java)
-  └── loads: javax.*, java.ext.dirs
+    Boot -.->|"If unable, tries to load"| Ext
+    Ext -.->|"If unable, tries to load"| App
+    App -.->|"If unable, tries to load"| Custom
 
-Application ClassLoader (Java)
-  └── loads: classpath classes (your code)
+    %% Styles
+    classDef loaderStyle fill:#161f30,stroke:#a855f7,stroke-width:1.5px,color:#e2e8f0;
+    classDef bootStyle fill:#0d111a,stroke:#4ade80,stroke-width:2px,color:#e2e8f0;
 
-Custom ClassLoader (your implementation)
-  └── loads: special sources (network, encrypted, etc.)
+    class Custom,App,Ext loaderStyle;
+    class Boot bootStyle;
 ```
 
 ### Parent Delegation Model

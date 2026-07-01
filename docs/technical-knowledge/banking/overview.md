@@ -18,14 +18,15 @@ A comprehensive, engineer-focused reference for payment systems, ISO 20022 messa
 
 | Section | Topics Covered |
 |---------|---------------|
-| **ISO 20022 Messages** | pain.001, pain.002, pacs.008, pacs.002, camt.053, camt.054 |
+| **ISO 20022 Messages** | pain.001, pain.002, pacs.008, pacs.002, camt.053, camt.054, camt.055/056, pain.007/pacs.007 |
 | **Payment Flows** | Inbound, Outbound, On-Us, Off-Us |
-| **Payment Rails** | NPP, SWIFT, BECS/Direct Debit, BPAY, RTGS, PayTo |
-| **Parties & Institutions** | Debtor, Creditor, FIs, Correspondent Banks |
+| **Payment Rails** | NPP, PayTo, SWIFT, BECS, Direct Debit, BPAY, RTGS/HVCS |
+| **Parties & Institutions** | Debtor, Creditor, FIs, Correspondent Banks, Nostro/Vostro |
 | **Accounting & Posting** | Debit/Credit Post, Debit Reversal, Payment Return |
-| **Clearing & Settlement** | DNS, RTGS, ESA, Liquidity |
-| **Risk & Compliance** | Fraud, Sanctions, AML/CTF, KYC |
-| **Operations** | Reconciliation, Exceptions & Investigations, FX |
+| **Clearing & Settlement** | DNS, RTGS, ESA, Liquidity Management, Gridlock Resolution |
+| **Risk & Compliance** | Fraud, CoP, Sanctions, AML/CTF, KYC, Regulatory Reporting |
+| **Operations** | Reconciliation, Exceptions & Investigations, FX, Error Codes |
+| **Architecture** | Payment Hub, Idempotency, FIS Integration |
 | **Modern Banking** | Open Banking/CDR, ISO 20022 Migration, Account Types |
 
 ---
@@ -71,9 +72,13 @@ Then exception messages:
 
 ### Stage 3 - Rails and Networks (Intermediate)
 1. [NPP](./npp.md)
-2. [BPAY](./bpay.md)
-3. [Direct Debit](./direct_debit.md)
-4. [SWIFT](./swift.md)
+2. [PayTo](./payto.md) — Modern pull payments / NPP mandates
+3. [BECS Direct Entry](./becs.md) — Batch credit/debit rail
+4. [Direct Debit / BECS DDR](./direct_debit.md)
+5. [BPAY](./bpay.md)
+6. [RTGS / HVCS / RITS](./rtgs.md) — High-value settlement
+7. [SWIFT](./swift.md) — Cross-border messaging
+8. [Correspondent Banking](./correspondent_banking.md)
 
 ### Stage 4 - Ledger and Core Banking (Intermediate -> Advanced)
 1. [Core Banking System](./core_banking.md)
@@ -85,17 +90,25 @@ Then exception messages:
 7. [Payment Return](./payment_return.md)
 8. [FX in Payments](./fx.md)
 9. [Interest and Fees](./interest_fees.md)
-10. [FIS](./fis.md)
+10. [FIS Integration](./fis.md)
+11. [Liquidity Management](./liquidity.md)
 
 ### Stage 5 - Risk, Compliance, and Operations (Advanced)
 1. [Fraud Detection and Prevention](./fraud.md)
-2. [Sanctions Screening](./sanction.md)
-3. [AML, CTF, and KYC](./aml_kyc.md)
-4. [Payment Exceptions and Investigations](./payment_exceptions.md)
-5. [Reconciliation](./reconciliation.md)
-6. [Testing in Banking and Payments](./testing_banking.md)
+2. [Confirmation of Payee (CoP)](./cop.md)
+3. [Sanctions Screening](./sanction.md)
+4. [AML, CTF, and KYC](./aml_kyc.md)
+5. [Regulatory Reporting](./regulatory_reporting.md) — TTR, IFTI, SMR, APRA
+6. [Payment Exceptions and Investigations](./payment_exceptions.md)
+7. [Reconciliation](./reconciliation.md)
+8. [Error Codes Reference](./error_codes.md)
+9. [Testing in Banking and Payments](./testing_banking.md)
 
-### Stage 6 - Modernization and Strategy
+### Stage 6 - Architecture and Engineering Patterns (Advanced)
+1. [Idempotency in Payments](./idempotency.md)
+2. [Payment Hub Architecture](./payment_hub.md)
+
+### Stage 7 - Modernization and Strategy
 1. [ISO 20022 Migration](./iso20022_migration.md)
 2. [Open Banking and CDR](./open_banking.md)
 

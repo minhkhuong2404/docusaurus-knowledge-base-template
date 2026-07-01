@@ -1,30 +1,282 @@
 ---
-title: SWIFT
-description: Overview of SWIFT messaging in cross-border payments.
-tags: [banking, swift, cross-border]
+id: swift
+title: SWIFT — Cross-Border Payment Messaging
+sidebar_label: SWIFT
+sidebar_position: 5
+description: Comprehensive guide to SWIFT messaging, MT vs MX formats, SWIFT gpi, UETR tracking, correspondent banking chains, and charges in cross-border payments.
+tags: [banking, swift, cross-border, iso20022, gpi, mt103]
 ---
 
-# SWIFT
+# 🌐 SWIFT — Cross-Border Payment Messaging
 
-SWIFT is a global financial messaging network used by institutions to exchange standardized payment instructions.
+SWIFT (Society for Worldwide Interbank Financial Telecommunication) is the global standard messaging network used by 11,000+ financial institutions in 200+ countries to communicate payment instructions, confirmations, and statements for cross-border transactions.
 
-## Interview Questions (Senior Level)
+> SWIFT does **not** move money. It transmits **messages** that instruct banks to debit and credit accounts.
 
-1. How do you design resilient SWIFT processing for delayed acknowledgments and correspondent-bank hops?
-2. What controls are essential to prevent sanctions breaches in cross-border flows?
-3. How do UETR and message references support payment investigations?
-4. When should a payment be repaired versus returned in SWIFT operations?
+---
 
-Short answer guide:
-- Build robust state machines with timeout and repair workflows.
-- Enforce sanctions screening and audit trails at multiple checkpoints.
-- Use end-to-end identifiers for deterministic traceability.
-- Repair only when compliance allows and beneficiary intent is preservable.
+## MT vs MX Formats
 
-:::info[Interview Focus]
-Describe cross-border flow with correspondent banks, sanctions checks, and investigation references.
+| Format | Standard | Era | Description |
+|--------|----------|-----|-------------|
+| **MT** (Message Type) | SWIFT proprietary | 1970s–present | Fixed-field, `\|`-delimited, human-readable tags like `:32A:` |
+| **MX** (Message XML) | ISO 20022 | 2000s–present | XML-structured, richer data, machine-readable |
+
+SWIFT is migrating from MT to MX (ISO 20022) with a coexistence period ending **November 2025**.
+
+---
+
+## Key MT Message Types
+
+### Payments (Category 1 & 2)
+
+| Message | Purpose | Typical Use |
+|---------|---------|-------------|
+| **MT103** | Single customer credit transfer | Customer cross-border payment (most common) |
+| **MT103 STP** | Straight-through-processing variant | Low-risk, automated routing |
+| **MT202** | Financial institution (FI) transfer | Bank-to-bank cover payment, treasury |
+| **MT202 COV** | Cover payment for MT103 | Always used with an MT103 for regulatory transparency |
+| **MT199** | Free-format FI message | Ad hoc queries, clarifications |
+| **MT299** | Free-format FI message | Confirmations, free text |
+
+### Statements & Reporting (Category 9)
+
+| Message | Purpose |
+|---------|---------|
+| **MT900** | Confirmation of debit |
+| **MT910** | Confirmation of credit |
+| **MT940** | Customer statement (like camt.053) |
+| **MT942** | Interim transaction report |
+| **MT950** | Statement message |
+
+---
+
+## MT103 — Deep Dive
+
+The MT103 is the workhorse of cross-border retail payments.
+
+### Key Fields
+
+```
+:20:  Transaction Reference Number (TRN) — sender's unique reference
+:23B: Bank Operation Code — always "CRED" for standard credit transfer
+:32A: Value Date, Currency, Amount — e.g. 230615USD10000,
+:33B: Currency/Instructed Amount — original currency if converted
+:50K: Ordering Customer (Debtor) — name and account
+:52A: Ordering Institution (Debtor's Bank) — BIC
+:53B: Sender's Correspondent — nostro account bank
+:54A: Receiver's Correspondent — intermediary bank
+:56A: Intermediary Institution — if more than one hop
+:57A: Account With Institution (Creditor's Bank) — BIC
+:59:  Beneficiary Customer (Creditor) — name and account
+:70:  Remittance Information — free text (limited to 4x35 chars)
+:71A: Details of Charges — DEBT / CRED / SHAR (see below)
+:72:  Sender to Receiver Information — bank-to-bank instructions
+:77B: Regulatory Reporting — AML/CTF codes (ORDERRES, CHQB, etc.)
+```
+
+### Charge Bearer `:71A:`
+
+| Code | Who Pays Fees | Description |
+|------|--------------|-------------|
+| **DEBT** | Debtor (sender) | All charges taken from the sender |
+| **CRED** | Creditor (receiver) | All charges deducted from the received amount |
+| **SHAR** | Shared | Each party pays their own bank's fees |
+| **SLEV** | Service Level | Fees as defined by the service level agreement |
+
+> 💡 **SEPA regulation mandates SHA for EUR payments within Europe.**
+
+---
+
+## MT202 COV — Cover Payments
+
+When an MT103 cannot be routed directly to the beneficiary bank, the debtor bank sends:
+1. **MT103** directly to the beneficiary bank (customer details included)
+2. **MT202 COV** to the correspondent bank (covers the funds movement)
+
+This dual-message pattern exists for transparency — regulators can see the originating customer details in the MT202 COV `:50K:` field.
+
+```
+Debtor Bank ──[MT103]──────────────────────────────────► Creditor Bank
+            ──[MT202 COV]──► Correspondent Bank ──► Creditor Bank
+```
+
+---
+
+## SWIFT gpi (Global Payments Innovation)
+
+SWIFT gpi transformed cross-border payments from a "fire and forget" model to a **trackable, end-to-end visible** service.
+
+### Key Features
+
+| Feature | Description |
+|---------|-------------|
+| **Speed** | Same-day credit to beneficiary (95%+ of gpi payments within 24h) |
+| **Transparency** | Fee deduction at each hop is visible |
+| **Tracking** | Real-time status via UETR |
+| **Unalterable credit** | Beneficiary bank must credit the full amount same day (unless deductions explicitly allowed) |
+| **gpi Instant** | Connection to real-time domestic rails (NPP, Faster Payments, SEPA Inst) |
+
+### UETR — Universal End-to-End Transaction Reference
+
+Every gpi payment carries a **UETR** — a UUID4 generated by the instructing bank:
+
+```
+UETR Example: 6f14d0ab-9605-4a62-a9e4-5ed26688389b
+```
+
+- Propagated unchanged through every bank in the chain
+- Used in the gpi Tracker to show real-time status at each hop
+- Included in ISO 20022 MX messages as `<UETR>` and mapped to SWIFT MT via field `:121:`
+
+### gpi Tracker Status Codes
+
+| Code | Meaning |
+|------|---------|
+| `ACSP` | Accepted, Settlement in Progress |
+| `ACCC` | Accepted, Credit to Customer Completed |
+| `RJCT` | Rejected |
+| `PDNG` | Pending (usually compliance hold) |
+| `PART` | Partially accepted |
+
+### gpi Observer
+
+Banks can query the SWIFT gpi Tracker via API to retrieve real-time status updates for any UETR. Used for customer-facing payment trackers.
+
+---
+
+## Correspondent Banking & Routing
+
+### Why Correspondents Exist
+
+Banks rarely have direct accounts with every counterparty globally. They maintain **Nostro accounts** (our money held at another bank) at correspondent banks in key currencies.
+
+### Routing Chain
+
+```
+Debtor Customer
+     │ pain.001
+     ▼
+Debtor Bank (AU)
+     │ MT103 / pacs.008
+     ▼
+Debtor's Correspondent (USD clearing bank, e.g. JP Morgan NY)
+     │ MT103 / pacs.008 (intermediary-to-intermediary)
+     ▼
+Creditor's Correspondent (e.g. Wells Fargo NY)
+     │ MT103 / pacs.008
+     ▼
+Creditor Bank (US regional)
+     │ camt.054 / credit posting
+     ▼
+Creditor Customer
+```
+
+### BIC Routing Fields in MT103
+
+| Field | Role |
+|-------|------|
+| `:52A:` | Ordering Institution (Debtor Bank) |
+| `:53A:` | Sender's Correspondent — bank where debtor bank holds nostro |
+| `:54A:` | Receiver's Correspondent — bank where creditor bank holds nostro |
+| `:56A:` | Intermediary — additional hop if needed |
+| `:57A:` | Account With Institution — creditor's bank |
+
+---
+
+## ISO 20022 MX Equivalents
+
+| MT Message | ISO 20022 MX Equivalent |
+|-----------|------------------------|
+| MT103 | pacs.008 (FIToFICustomerCreditTransfer) |
+| MT202 | pacs.009 (FinancialInstitutionCreditTransfer) |
+| MT900/910 | camt.054 (BankToCustomerDebitCreditNotification) |
+| MT940/950 | camt.053 (BankToCustomerStatement) |
+| MT199 | camt.028 / pacs.028 |
+
+---
+
+## SWIFT Cut-Off Times
+
+Cross-border payments are time-sensitive. Each currency has a cut-off time after which same-day value is not guaranteed:
+
+| Currency | Typical SWIFT Cut-Off (Sydney local) |
+|---------|--------------------------------------|
+| USD | ~3:00 AM AEST (CHIPS/Fedwire close) |
+| EUR | ~6:00 PM AEST (TARGET2 close) |
+| GBP | ~4:00 AM AEST (CHAPS close) |
+| AUD (RTGS) | 8:30 PM AEST |
+| JPY | ~3:00 AM AEST |
+
+> ⚠️ Payments arriving after cut-off receive **next value date** — this affects FX and liquidity.
+
+---
+
+## Straight-Through Processing (STP) Requirements
+
+An MT103 can be processed STP only if:
+
+- All mandatory fields are present and correctly formatted
+- BIC codes are valid and resolvable
+- No sanctions hits (automated screening)
+- No fraud triggers
+- Correspondent routing is unambiguous
+- Charge bearer `:71A:` is defined
+
+Manual intervention ("exception") is required when any of these fail.
+
+---
+
+## Java / Spring Engineering Notes
+
+```java
+// Parse MT103 using prowide-core library
+SwiftMessage msg = SwiftMessage.parse(rawMT103);
+MT103 mt103 = new MT103(msg);
+
+String trn = mt103.getField20().getValue();           // :20: TRN
+String amount = mt103.getField32A().getAmount();      // :32A: amount
+String debtor = mt103.getField50K().getValue();       // :50K: ordering customer
+String creditor = mt103.getField59().getValue();      // :59: beneficiary
+String chargeBearer = mt103.getField71A().getValue(); // :71A: DEBT/CRED/SHAR
+
+// UETR from gpi field :121: (in block 3)
+String uetr = msg.getBlock3().getTagValue("121");
+```
+
+**Key libraries:**
+- `prowide-core` (open-source SWIFT MT parser)
+- `prowide-iso20022` (MX/ISO 20022 parsing)
+- SWIFT SDK (licensed, for production)
+
+---
+
+## Interview Questions
+
+**Q: What is the difference between MT103 and MT202?**
+> MT103 is a customer credit transfer (retail cross-border payment). MT202 is a bank-to-bank FI transfer used for cover payments and treasury. MT202 COV must include originating customer details for AML transparency.
+
+**Q: What does UETR solve that wasn't possible with MT103 alone?**
+> MT103's `:20:` TRN reference is only unique within the sending bank. UETR is a UUID4 that is globally unique and propagated unchanged across the entire correspondent chain, enabling end-to-end tracking via the gpi Tracker.
+
+**Q: How do SWIFT cut-off times affect payment processing?**
+> Each currency clears through its home RTGS (Fedwire for USD, TARGET2 for EUR). Payments after the cut-off receive next-value-date processing, impacting FX rates, liquidity, and customer SLA promises.
+
+:::info[Key Engineering Principle]
+SWIFT is a messaging network, not a settlement system. Settlement happens bilaterally through Nostro/Vostro accounts and via domestic RTGS systems.
 :::
 
-:::danger[Interview Trap]
-Assuming SWIFT messages settle money directly.
+:::warning[Common Mistake]
+Using MT202 without COV for payments that should carry customer details. Since 2011, MT202 COV is mandatory when funds relate to a customer payment, for AML traceability.
 :::
+
+---
+
+## Related Concepts
+
+- [Correspondent Banking](./correspondent_banking)
+- [FX in Payments](./fx)
+- [ISO 20022 Migration](./iso20022_migration)
+- [pacs.008](./pacs008)
+- [Clearing](./clearing)
+- [Settlement](./settlement)

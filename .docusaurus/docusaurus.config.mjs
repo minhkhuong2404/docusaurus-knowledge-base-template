@@ -10,6 +10,7 @@ export default {
   "baseUrl": "/",
   "organizationName": "minhkhuong2404",
   "projectName": "docusaurus-knowledge-base-template",
+  "onBrokenLinks": "warn",
   "future": {
     "v4": {
       "removeLegacyPostBuildHeadAttribute": true,
@@ -603,7 +604,6 @@ export default {
     "type": "localStorage",
     "namespace": true
   },
-  "onBrokenLinks": "throw",
   "onBrokenAnchors": "warn",
   "onDuplicateRoutes": "warn",
   "staticDirectories": [
