@@ -6221,6 +6221,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/bulkhead-pattern",
+              "path": "/technical-knowledge/system-design/bulkhead-pattern",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/caching-strategies",
               "path": "/technical-knowledge/system-design/caching-strategies",
               "sidebar": "tutorialSidebar"
@@ -6241,6 +6246,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/circuit-breaker-pattern",
+              "path": "/technical-knowledge/system-design/circuit-breaker-pattern",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/common-interview-questions",
               "path": "/technical-knowledge/system-design/common-interview-questions",
               "sidebar": "tutorialSidebar"
@@ -6248,6 +6258,11 @@
             {
               "id": "technical-knowledge/system-design/consistent-hashing-deep-dive",
               "path": "/technical-knowledge/system-design/consistent-hashing-deep-dive",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/contract-testing",
+              "path": "/technical-knowledge/system-design/contract-testing",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -6261,8 +6276,18 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/database-per-service",
+              "path": "/technical-knowledge/system-design/database-per-service",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/dead-letter-queue",
               "path": "/technical-knowledge/system-design/dead-letter-queue",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/deployment-strategies",
+              "path": "/technical-knowledge/system-design/deployment-strategies",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -6271,8 +6296,23 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/distributed-tracing",
+              "path": "/technical-knowledge/system-design/distributed-tracing",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/domain-driven-design",
               "path": "/technical-knowledge/system-design/domain-driven-design",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/envoy-proxy",
+              "path": "/technical-knowledge/system-design/envoy-proxy",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/event-driven-microservices",
+              "path": "/technical-knowledge/system-design/event-driven-microservices",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -6288,6 +6328,11 @@
             {
               "id": "technical-knowledge/system-design/intro",
               "path": "/system-design",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/kubernetes-networking",
+              "path": "/technical-knowledge/system-design/kubernetes-networking",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -6346,6 +6391,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/retry-pattern",
+              "path": "/technical-knowledge/system-design/retry-pattern",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway",
               "path": "/technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway",
               "sidebar": "tutorialSidebar"
@@ -6376,8 +6426,33 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/service-decomposition",
+              "path": "/technical-knowledge/system-design/service-decomposition",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/service-discovery",
+              "path": "/technical-knowledge/system-design/service-discovery",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/service-mesh",
+              "path": "/technical-knowledge/system-design/service-mesh",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/sharding-partitioning",
               "path": "/technical-knowledge/system-design/sharding-partitioning",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/sidecar-pattern",
+              "path": "/technical-knowledge/system-design/sidecar-pattern",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/strangler-fig-pattern",
+              "path": "/technical-knowledge/system-design/strangler-fig-pattern",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -6548,6 +6623,15 @@
         }
       ],
       "breadcrumbs": true
+    }
+  },
+  "docusaurus-plugin-google-gtag": {
+    "default": {
+      "trackingID": [
+        "G-79SQQZQMCX"
+      ],
+      "anonymizeIP": true,
+      "id": "default"
     }
   }
 }

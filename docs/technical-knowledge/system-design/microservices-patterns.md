@@ -97,6 +97,10 @@ public class GatewayConfig {
 
 ## Circuit Breaker Pattern
 
+:::tip[Dedicated Guide]
+For a deep dive into circuit breaker state transitions, tuning parameters, and complete Resilience4j configuration examples, see the [Circuit Breaker Pattern Guide](./circuit-breaker-pattern.md).
+:::
+
 **The Problem:** When one microservice synchronously calls another over a network, network glitches or heavy downstream load can cause timeouts. If Service A calls a struggling Service B, Service A's worker threads block while waiting. Eventually, Service A runs completely out of threads responding to incoming requests, causing a cascading failure that rips across the entire distributed system.
 
 **The Solution:** Wrap remote calls in a Circuit Breaker object, which actively monitors for failures and prevents cascading collapse.
@@ -163,6 +167,10 @@ resilience4j:
 
 ## Bulkhead Pattern
 
+:::tip[Dedicated Guide]
+For in-depth analysis of thread-pool vs. semaphore bulkheads, capacity calculation metrics, and full Resilience4j config, see the [Bulkhead Pattern Guide](./bulkhead-pattern.md).
+:::
+
 **The Problem:** If a service uses a single shared thread pool or connection pool to execute all outgoing network requests, a single slow downstream dependency will exhaust the entire pool. For example, if the Payment Integration is experiencing severe lag, all available application threads will eventually get stuck blocking on the Payment call. This leaves zero threads available to process incoming requests for completely unrelated, perfectly healthy endpoints (like viewing a user profile entirely read from a local cache).
 
 **The Solution:** Isolate failure domains by partitioning system resources. The name comes from shipbuilding: a ship's hull is divided into isolated watertight compartments (bulkheads). If one compartment gets punctured and floods, the water is contained strictly to that section, preventing the entire ship from sinking.
@@ -195,6 +203,10 @@ resilience4j:
 
 ## Service Discovery
 
+:::tip[Dedicated Guide]
+For a full comparison of client-side vs. server-side discovery, Eureka configs, and Kubernetes DNS/Kube-proxy routing, see the [Service Discovery Guide](./service-discovery.md).
+:::
+
 ### Client-Side (Eureka)
 ```java
 // Register service
@@ -219,6 +231,10 @@ restTemplate.getForObject("http://inventory-service/items/{id}", Item.class, id)
 
 ## Sidecar Pattern
 
+:::tip[Dedicated Guide]
+For sidecar proxy setups, shared lifecycles, and a complete multi-container Kubernetes pod configuration, see the [Sidecar Pattern Guide](./sidecar-pattern.md).
+:::
+
 Attach a proxy container to each service for cross-cutting concerns.
 
 ```
@@ -236,6 +252,10 @@ Attach a proxy container to each service for cross-cutting concerns.
 ---
 
 ## Service Mesh
+
+:::tip[Dedicated Guide]
+For service mesh architectures, Istio control/data plane details, mTLS PeerAuthentication, and dynamic traffic routing YAMLs, see the [Service Mesh Guide](./service-mesh.md).
+:::
 
 Automates service-to-service communication: retries, timeouts, mTLS, load balancing, observability.
 
@@ -268,6 +288,10 @@ spec:
 ---
 
 ## Strangler Fig Pattern
+
+:::tip[Dedicated Guide]
+For step-by-step monolith migration playbooks, Anti-Corruption Layer (ACL) patterns, Nginx gateway configurations, and rollback safety rules, see the [Strangler Fig Pattern Guide](./strangler-fig-pattern.md).
+:::
 
 Incrementally migrate a monolith to microservices.
 
@@ -319,6 +343,10 @@ See the dedicated [Saga Pattern Guide](./saga-pattern.md) for full coverage.
 
 ## Event-Driven Microservices
 
+:::tip[Dedicated Guide]
+For details on domain events, transactional outboxes, CDC Debezium workflows, and Spring Data event publisher setups, see the [Event-Driven Microservices Guide](./event-driven-microservices.md).
+:::
+
 ```
 Service A (producer) → Kafka → Service B (consumer)
                              → Service C (consumer)
@@ -349,6 +377,10 @@ public void onOrderCompleted(OrderCompletedEvent event) {
 ---
 
 ## Distributed Tracing
+
+:::tip[Dedicated Guide]
+For OpenTelemetry span propagation, W3C TraceContext standards, Spring Boot 3 Micrometer configurations, and Log correlation setups, see the [Distributed Tracing Guide](./distributed-tracing.md).
+:::
 
 Track requests across services.
 
@@ -387,6 +419,10 @@ spring:
 
 ## Retry Pattern
 
+:::tip[Dedicated Guide]
+For transient vs. persistent error rules, exponential backoff, randomized jitter details, and full Resilience4j configuration, see the [Retry Pattern Guide](./retry-pattern.md).
+:::
+
 ```java
 // Resilience4j Retry
 @Bean
@@ -413,6 +449,10 @@ RetryConfig.custom()
 
 ## Envoy Proxy
 
+:::tip[Dedicated Guide]
+For Envoy listeners, filters, clusters setup, dynamic configurations via xDS, and complete static Envoy YAML templates, see the [Envoy Proxy Guide](./envoy-proxy.md).
+:::
+
 Envoy is the data plane proxy used by Istio, AWS App Mesh, and many others.
 
 ```
@@ -429,6 +469,10 @@ Envoy capabilities:
 
 
 ## Kubernetes Networking Concepts
+
+:::tip[Dedicated Guide]
+For CNI plugins (Calico/Cilium), Service types (ClusterIP/NodePort/LoadBalancer), kube-proxy iptables rules, and Ingress routing rules, see the [Kubernetes Networking Guide](./kubernetes-networking.md).
+:::
 
 ```
 Pod networking:
@@ -523,6 +567,10 @@ Ingress:
 ---
 
 ## Deployment Strategies: Zero-Downtime Releases
+
+:::tip[Dedicated Guide]
+For comparisons of Rolling, Blue-Green, Canary, and Shadow (Dark Launch) deployments, along with DB expand/contract patterns, see the [Deployment Strategies Guide](./deployment-strategies.md).
+:::
 
 :::info[Chapter 8 Reference]
 Building Microservices dedicates substantial coverage to deployment strategies, noting that independent deployability is one of the key benefits of microservices — but it requires sophisticated deployment infrastructure.
@@ -672,6 +720,10 @@ http:
 
 ## Service Decomposition: Decision Framework
 
+:::tip[Dedicated Guide]
+For strategic DDD Bounded Context mapping, Conway's law, service splitting criteria, and avoiding the distributed monolith, see the [Service Decomposition Guide](./service-decomposition.md).
+:::
+
 :::info[Chapter 2 Reference]
 Building Microservices Chapter 2 provides the foundational guidance for finding service boundaries using Domain-Driven Design bounded contexts and the concepts of loose coupling and high cohesion.
 :::
@@ -725,6 +777,10 @@ Right-size a service by asking:
 ---
 
 ## Database-per-Service: Data Management Patterns
+
+:::tip[Dedicated Guide]
+For shared database hazards, API composition, CQRS read models, shared replica setups, and parallel aggregation Java code, see the [Database per Service Guide](./database-per-service.md).
+:::
 
 ### The Integration Database Problem
 
@@ -791,6 +847,10 @@ public class OrderSummaryService {
 ---
 
 ## Contract Testing: Preventing Breaking Changes
+
+:::tip[Dedicated Guide]
+For Pact consumer-driven flow, Pact Broker builds, and complete JUnit consumer/provider validation code templates, see the [Contract Testing Guide](./contract-testing.md).
+:::
 
 ### Consumer-Driven Contract Testing
 

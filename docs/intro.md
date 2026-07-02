@@ -19,6 +19,8 @@ A practical, continuously growing knowledge base for software engineers — buil
 |------|---------------|----------|
 | [💼 Interview Preparation](#-interview-preparation-roadmap) | System design, Java, behavioral, patterns | Upcoming interviews |
 | [📊 DSA Coding Training](#-dsa-coding-training-20-week-roadmap) | 20-week structured algorithm training | LeetCode & coding rounds |
+| [🏦 Banking & Finance](#-banking--finance) | Payment lifecycles, ISO 20022 messages, clearing & settlement | Fintech & banking developers |
+| [🤖 AI Agents & Vibe Coding](#-ai-agents--vibe-coding) | Agents, skills, harnesses, vibe coding, context engineering | AI-assisted software engineering |
 | [📚 Engineering Books](#-engineering-books) | Key takeaways from essential books | Deep, long-term growth |
 | [☁️ Cloud Certifications](#️-cloud-certifications-aws-dva-c02) | AWS DVA-C02 exam prep | Cloud developer cert |
 
@@ -68,6 +70,10 @@ A structured path for engineers targeting backend, system design, and Java/Sprin
 | **Redis** | Data structures, pub/sub, caching, Lua scripting | [→ Redis](/technical-knowledge/redis/redis-overview) |
 | **Networking** | TCP/IP, DNS, TLS, HTTP/2, gRPC | [→ Networking](/technical-knowledge/networking/) |
 | **Security** | Auth flows, JWT, OAuth2, encryption, OWASP | [→ Security](/security) |
+| **Elasticsearch** | Inverted index, tokenizers, search queries, cluster state | [→ Elasticsearch](/technical-knowledge/elasticsearch/elasticsearch-overview) |
+| **Operating Systems** | Processes, threads, memory management, syscalls, scheduling | [→ OS](/technical-knowledge/operating-systems/intro) |
+| **LLD & OOD** | Class diagrams, SOLID principles, design problems | [→ LLD](/intro) |
+| **Testing & Mocking** | Unit testing, Spring annotations, Wiremock | [→ Testing](/technical-knowledge/test/testing-concepts) |
 | **DevOps** | Docker, Kubernetes, CI/CD pipelines | [→ DevOps](/devops) |
 | **Git** | Branching, rebase, cherry-pick, worktrees | [→ Git](/technical-knowledge/git/) |
 
@@ -138,6 +144,40 @@ New to DSA training? Read the [20-Week Roadmap Introduction](/technical-knowledg
 | **Heap** | K-th element, streaming median | O(n log k) |
 | **Union-Find** | Dynamic connectivity, cycle detection in graphs | O(α(n)) ≈ O(1) |
 | **Trie** | Prefix matching, word search | O(L) per operation |
+
+---
+
+## 🏦 Banking & Finance
+
+A comprehensive guide to financial core systems, transaction lifecycles, global payment networks, and compliance frameworks.
+
+### Core Modules
+
+| Module | Key Topics | Link |
+|--------|------------|------|
+| **Payment Fundamentals** | Payment lifecycles, banking roles, A-Z banking glossary | [→ Learner Guide](/technical-knowledge/banking/overview) |
+| **ISO 20022 Standards** | MX messages: pain (initiation), pacs (clearing), camt (statement) | [→ ISO 20022 Messages](/technical-knowledge/banking/pain001) |
+| **Payment Flows** | Inbound, outbound, On-Us, and Off-Us transaction clearing | [→ Payment Flows](/technical-knowledge/banking/inbound) |
+| **Payment Rails** | NPP (instant), SWIFT (cross-border), BECS (debit), BPAY | [→ Payment Rails](/technical-knowledge/banking/npp) |
+| **CBS & Posting** | Core Banking Systems, debit/credit posting, reversals, interest | [→ CBS & Posting](/technical-knowledge/banking/core_banking) |
+| **Clearing & Settlement**| Direct, bilateral, multilateral clearing and RTGS settlement | [→ Settlement](/technical-knowledge/banking/clearing) |
+| **Compliance & Risk** | Fraud detection, sanctions screening, AML/CTF & KYC | [→ Compliance](/technical-knowledge/banking/fraud) |
+| **Operations & Testing** | Reconciliation, investigation workflows, end-to-end payment testing | [→ Operations](/technical-knowledge/banking/reconciliation) |
+
+---
+
+## 🤖 AI Agents & Vibe Coding
+
+Understanding modern agentic AI development, harness testing, prompts, and context engineering patterns.
+
+| Topic | Focus | Link |
+|-------|-------|------|
+| **AI Agents Overview** | Introduction to agentic design loops, tool calling, and planning | [→ Overview](/technical-knowledge/ai-agents/overview) |
+| **Agent Design** | Agent architecture, memory, state machines, and decision patterns | [→ Agent Design](/technical-knowledge/ai-agents/agents) |
+| **Skill Systems** | Extensibility, tool registries, custom skills, and sandbox runs | [→ Skill Systems](/technical-knowledge/ai-agents/skills) |
+| **Testing Harness** | Evaluating agents, test harnesses, simulation environments, and validation | [→ Harness](/technical-knowledge/ai-agents/harness) |
+| **Vibe Coding** | Natural language coding paradigms, prompt orchestration, and iteration loops | [→ Vibe Coding](/technical-knowledge/ai-agents/vibe-coding) |
+| **Context Engineering**| Context window optimization, RAG patterns, and instruction tuning | [→ Context Engineering](/technical-knowledge/ai-agents/context-engineering) |
 
 ---
 
