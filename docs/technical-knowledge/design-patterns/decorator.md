@@ -8,7 +8,9 @@ tags: [design-patterns, java, structural, decorator]
 
 # Decorator Pattern
 
-> **Category:** Structural  
+> **Category:** Structural    
+> **Complexity:** ⭐⭐☆ (2/3)  
+> **Popularity:** ⭐⭐☆ (2/3)  
 > **Intent:** Attach additional responsibilities to an object dynamically, providing a flexible alternative to subclassing for extending functionality.
 
 ---

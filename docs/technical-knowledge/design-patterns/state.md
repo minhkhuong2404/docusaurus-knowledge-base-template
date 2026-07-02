@@ -8,7 +8,9 @@ tags: [design-patterns, java, behavioral, state]
 
 # State Pattern
 
-> **Category:** Behavioral  
+> **Category:** Behavioral    
+> **Complexity:** ⭐☆☆ (1/3)  
+> **Popularity:** ⭐⭐☆ (2/3)  
 > **Intent:** Allow an object to alter its behavior when its internal state changes. The object will appear to change its class.
 
 ---

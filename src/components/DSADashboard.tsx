@@ -404,7 +404,7 @@ export default function DSADashboard() {
         marginBottom: '1.5rem',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)'
       }}>
-        <span style={{ fontWeight: 700, fontSize: '0.95rem', color: '#e2e8f0', marginRight: '0.5rem' }}>
+        <span style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--ifm-font-color-base, #e2e8f0)', marginRight: '0.5rem' }}>
           🚀 Study Intensity Level:
         </span>
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
@@ -423,9 +423,9 @@ export default function DSADashboard() {
                   fontSize: '0.85rem',
                   fontWeight: 600,
                   borderRadius: '8px',
-                  border: isActive ? '1px solid rgba(74, 222, 128, 0.3)' : '1px solid rgba(255, 255, 255, 0.08)',
-                  background: isActive ? 'rgba(74, 222, 128, 0.12)' : 'rgba(255, 255, 255, 0.02)',
-                  color: isActive ? 'var(--brand-green)' : '#94a3b8',
+                  border: isActive ? '1px solid rgba(74, 222, 128, 0.3)' : '1px solid var(--ifm-color-emphasis-300, rgba(255, 255, 255, 0.08))',
+                  background: isActive ? 'rgba(74, 222, 128, 0.12)' : 'var(--ifm-color-emphasis-100, rgba(255, 255, 255, 0.02))',
+                  color: isActive ? 'var(--brand-green)' : 'var(--ifm-color-emphasis-600, #94a3b8)',
                   cursor: 'pointer',
                   boxShadow: isActive ? '0 0 12px rgba(74, 222, 128, 0.15)' : 'none',
                   transition: 'all 0.2s ease'
@@ -452,13 +452,13 @@ export default function DSADashboard() {
             <h3 style={{ margin: 0, color: 'var(--brand-purple)', fontSize: '1.4rem', fontWeight: 700 }}>
               🎯 20-Week DSA Progress Tracker
             </h3>
-            <p style={{ margin: '0.2rem 0 0 0', color: 'var(--text-muted-dark, #8f9cae)', fontSize: '0.9rem' }}>
+            <p style={{ margin: '0.2rem 0 0 0', color: 'var(--ifm-color-content-secondary, #8f9cae)', fontSize: '0.9rem' }}>
               Tracking progress for the active {intensity === '75' ? 'Blind 75' : intensity === '150' ? 'NeetCode 150' : 'Comprehensive 250'} list
             </p>
           </div>
           <div style={{ textAlign: 'right' }}>
             <span style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--brand-green)' }}>{solvedCount}</span>
-            <span style={{ color: '#8f9cae', fontSize: '1.1rem' }}> / {totalCount} Solved ({solvedPercent}%)</span>
+            <span style={{ color: 'var(--ifm-color-content-secondary, #8f9cae)', fontSize: '1.1rem' }}> / {totalCount} Solved ({solvedPercent}%)</span>
           </div>
         </div>
 
@@ -509,9 +509,9 @@ export default function DSADashboard() {
             style={{
               padding: '0.5rem 1rem',
               borderRadius: '8px',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
+              border: '1px solid var(--ifm-color-emphasis-300, rgba(255, 255, 255, 0.12))',
               background: 'var(--ifm-background-surface-color, #101525)',
-              color: '#e2e8f0',
+              color: 'var(--ifm-font-color-base, #e2e8f0)',
               flex: 1,
               minWidth: '200px',
               outline: 'none'
@@ -524,9 +524,9 @@ export default function DSADashboard() {
             style={{
               padding: '0.5rem 1rem',
               borderRadius: '8px',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
+              border: '1px solid var(--ifm-color-emphasis-300, rgba(255, 255, 255, 0.12))',
               background: 'var(--ifm-background-surface-color, #101525)',
-              color: '#e2e8f0',
+              color: 'var(--ifm-font-color-base, #e2e8f0)',
               outline: 'none'
             }}
           >
@@ -542,9 +542,9 @@ export default function DSADashboard() {
             style={{
               padding: '0.5rem 1rem',
               borderRadius: '8px',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
+              border: '1px solid var(--ifm-color-emphasis-300, rgba(255, 255, 255, 0.12))',
               background: 'var(--ifm-background-surface-color, #101525)',
-              color: '#e2e8f0',
+              color: 'var(--ifm-font-color-base, #e2e8f0)',
               outline: 'none'
             }}
           >
@@ -557,7 +557,7 @@ export default function DSADashboard() {
 
         {/* Checkbox Flags & Accordion Controls */}
         <div style={{ display: 'flex', gap: '1.2rem', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', width: '100%' }}>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', userSelect: 'none', color: '#e2e8f0' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', userSelect: 'none', color: 'var(--ifm-font-color-base, #e2e8f0)' }}>
             <input
               type="checkbox"
               checked={showUnsolvedOnly}
@@ -571,13 +571,13 @@ export default function DSADashboard() {
             <button
               onClick={expandAll}
               style={{
-                background: 'rgba(255, 255, 255, 0.04)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
+                background: 'var(--ifm-color-emphasis-100, rgba(255, 255, 255, 0.04))',
+                border: '1px solid var(--ifm-color-emphasis-300, rgba(255, 255, 255, 0.08))',
                 borderRadius: '6px',
                 padding: '4px 10px',
                 fontSize: '0.8rem',
                 fontWeight: 600,
-                color: '#cbd5e1',
+                color: 'var(--ifm-color-emphasis-800, #cbd5e1)',
                 cursor: 'pointer',
                 transition: 'all 0.2s'
               }}
@@ -586,8 +586,8 @@ export default function DSADashboard() {
                 e.currentTarget.style.borderColor = 'rgba(74, 222, 128, 0.2)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+                e.currentTarget.style.background = 'var(--ifm-color-emphasis-100, rgba(255, 255, 255, 0.04))';
+                e.currentTarget.style.borderColor = 'var(--ifm-color-emphasis-300, rgba(255, 255, 255, 0.08))';
               }}
             >
               👐 Expand All
@@ -595,13 +595,13 @@ export default function DSADashboard() {
             <button
               onClick={collapseAll}
               style={{
-                background: 'rgba(255, 255, 255, 0.04)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
+                background: 'var(--ifm-color-emphasis-100, rgba(255, 255, 255, 0.04))',
+                border: '1px solid var(--ifm-color-emphasis-300, rgba(255, 255, 255, 0.08))',
                 borderRadius: '6px',
                 padding: '4px 10px',
                 fontSize: '0.8rem',
                 fontWeight: 600,
-                color: '#cbd5e1',
+                color: 'var(--ifm-color-emphasis-800, #cbd5e1)',
                 cursor: 'pointer',
                 transition: 'all 0.2s'
               }}
@@ -610,8 +610,8 @@ export default function DSADashboard() {
                 e.currentTarget.style.borderColor = 'rgba(74, 222, 128, 0.2)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+                e.currentTarget.style.background = 'var(--ifm-color-emphasis-100, rgba(255, 255, 255, 0.04))';
+                e.currentTarget.style.borderColor = 'var(--ifm-color-emphasis-300, rgba(255, 255, 255, 0.08))';
               }}
             >
               🪗 Collapse All
@@ -662,7 +662,7 @@ export default function DSADashboard() {
                     background: isExpanded ? 'rgba(74, 222, 128, 0.02)' : 'transparent',
                     cursor: 'pointer',
                     userSelect: 'none',
-                    borderBottom: isExpanded ? '1px solid rgba(255, 255, 255, 0.04)' : 'none',
+                    borderBottom: isExpanded ? '1px solid var(--ifm-table-border-color, rgba(255, 255, 255, 0.04))' : 'none',
                     transition: 'background-color 0.2s ease',
                   }}
                 >
@@ -677,7 +677,7 @@ export default function DSADashboard() {
                     }}>
                       ▶
                     </span>
-                    <span style={{ fontWeight: 700, fontSize: '1.05rem', color: '#f8fafc' }}>
+                    <span style={{ fontWeight: 700, fontSize: '1.05rem', color: 'var(--ifm-font-color-base, #f8fafc)' }}>
                       Week {group.weekNum}: {group.topic}
                     </span>
                     <Link
@@ -711,9 +711,9 @@ export default function DSADashboard() {
                     borderRadius: '20px',
                     fontSize: '0.78rem',
                     fontWeight: 700,
-                    backgroundColor: groupIsCompleted ? 'rgba(74, 222, 128, 0.12)' : 'rgba(255, 255, 255, 0.04)',
-                    color: groupIsCompleted ? '#4ade80' : '#8f9cae',
-                    border: groupIsCompleted ? '1px solid rgba(74, 222, 128, 0.25)' : '1px solid rgba(255, 255, 255, 0.06)',
+                    backgroundColor: groupIsCompleted ? 'rgba(74, 222, 128, 0.12)' : 'var(--ifm-color-emphasis-100, rgba(255, 255, 255, 0.04))',
+                    color: groupIsCompleted ? '#4ade80' : 'var(--ifm-color-content-secondary, #8f9cae)',
+                    border: groupIsCompleted ? '1px solid rgba(74, 222, 128, 0.25)' : '1px solid var(--ifm-color-emphasis-300, rgba(255, 255, 255, 0.06))',
                   }}>
                     {groupSolvedCount} / {groupTotalCount} Solved
                   </span>
@@ -722,19 +722,22 @@ export default function DSADashboard() {
                 {/* Collapsible Content */}
                 {isExpanded && (
                   <div style={{ overflowX: 'auto' }}>
-                    <table style={{
-                      width: '100%',
-                      borderCollapse: 'separate',
-                      borderSpacing: 0,
-                      textAlign: 'left',
-                      color: '#e2e8f0'
-                    }}>
+                    <table 
+                      className="dsa-dashboard-table"
+                      style={{
+                        width: '100%',
+                        borderCollapse: 'separate',
+                        borderSpacing: 0,
+                        textAlign: 'left',
+                        color: 'var(--ifm-font-color-base, #e2e8f0)'
+                      }}
+                    >
                       <thead>
-                        <tr style={{ background: 'rgba(15, 18, 29, 0.3)', borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
-                          <th style={{ padding: '10px 16px', color: 'var(--brand-green)', fontWeight: 700, width: '70px', textAlign: 'center', borderBottom: '1px solid rgba(255, 255, 255, 0.04)', fontSize: '0.85rem' }}>Solved</th>
-                          <th style={{ padding: '10px 16px', color: 'var(--brand-green)', fontWeight: 700, textAlign: 'center', borderBottom: '1px solid rgba(255, 255, 255, 0.04)', fontSize: '0.85rem' }}>Problem</th>
-                          <th style={{ padding: '10px 16px', color: 'var(--brand-green)', fontWeight: 700, width: '100px', textAlign: 'center', borderBottom: '1px solid rgba(255, 255, 255, 0.04)', fontSize: '0.85rem' }}>Diff</th>
-                          <th style={{ padding: '10px 16px', color: 'var(--brand-green)', fontWeight: 700, textAlign: 'center', borderBottom: '1px solid rgba(255, 255, 255, 0.04)', fontSize: '0.85rem' }}>Target Companies</th>
+                        <tr style={{ background: 'rgba(15, 18, 29, 0.3)', borderBottom: '1px solid var(--ifm-table-border-color, rgba(255, 255, 255, 0.04))' }}>
+                          <th style={{ padding: '10px 16px', color: 'var(--brand-green)', fontWeight: 700, width: '70px', textAlign: 'center', borderBottom: '1px solid var(--ifm-table-border-color, rgba(255, 255, 255, 0.04))', fontSize: '0.85rem' }}>Solved</th>
+                          <th style={{ padding: '10px 16px', color: 'var(--brand-green)', fontWeight: 700, textAlign: 'center', borderBottom: '1px solid var(--ifm-table-border-color, rgba(255, 255, 255, 0.04))', fontSize: '0.85rem' }}>Problem</th>
+                          <th style={{ padding: '10px 16px', color: 'var(--brand-green)', fontWeight: 700, width: '100px', textAlign: 'center', borderBottom: '1px solid var(--ifm-table-border-color, rgba(255, 255, 255, 0.04))', fontSize: '0.85rem' }}>Diff</th>
+                          <th style={{ padding: '10px 16px', color: 'var(--brand-green)', fontWeight: 700, textAlign: 'center', borderBottom: '1px solid var(--ifm-table-border-color, rgba(255, 255, 255, 0.04))', fontSize: '0.85rem' }}>Target Companies</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -747,11 +750,11 @@ export default function DSADashboard() {
                               style={{
                                 background: pIdx % 2 === 0 ? 'rgba(255, 255, 255, 0.008)' : 'transparent',
                                 transition: 'background-color 0.2s ease',
-                                borderBottom: pIdx === group.problems.length - 1 ? 'none' : '1px solid rgba(255, 255, 255, 0.02)'
+                                borderBottom: '1px solid var(--ifm-table-border-color, rgba(255, 255, 255, 0.02))'
                               }}
                             >
                               {/* Solved check box */}
-                              <td style={{ padding: '10px 16px', verticalAlign: 'middle', textAlign: 'center', borderBottom: pIdx === group.problems.length - 1 ? 'none' : '1px solid rgba(255, 255, 255, 0.02)' }}>
+                              <td style={{ padding: '10px 16px', verticalAlign: 'middle', textAlign: 'center', borderBottom: '1px solid var(--ifm-table-border-color, rgba(255, 255, 255, 0.02))' }}>
                                 <input
                                   type="checkbox"
                                   checked={isSolved}
@@ -766,13 +769,13 @@ export default function DSADashboard() {
                               </td>
 
                               {/* Problem Name & link */}
-                              <td style={{ padding: '10px 16px', verticalAlign: 'middle', textAlign: 'center', borderBottom: pIdx === group.problems.length - 1 ? 'none' : '1px solid rgba(255, 255, 255, 0.02)' }}>
+                              <td style={{ padding: '10px 16px', verticalAlign: 'middle', textAlign: 'center', borderBottom: '1px solid var(--ifm-table-border-color, rgba(255, 255, 255, 0.02))' }}>
                                 <a 
                                   href={p.url} 
                                   target="_blank" 
                                   rel="noopener noreferrer"
                                   style={{ 
-                                    color: '#e2e8f0', 
+                                    color: 'var(--ifm-font-color-base, #e2e8f0)', 
                                     fontSize: '0.88rem',
                                     fontWeight: 600, 
                                     textDecoration: 'none',
@@ -783,13 +786,13 @@ export default function DSADashboard() {
                                   }}
                                 >
                                   {p.title} 
-                                  <span style={{ fontSize: '0.75rem', color: '#8f9cae' }}>#{p.id}</span>
+                                  <span style={{ fontSize: '0.75rem', color: 'var(--ifm-color-content-secondary, #8f9cae)' }}>#{p.id}</span>
                                   <span style={{ fontSize: '0.8rem' }}>🔗</span>
                                 </a>
                               </td>
 
                               {/* Difficulty Badge */}
-                              <td style={{ padding: '10px 16px', verticalAlign: 'middle', textAlign: 'center', borderBottom: pIdx === group.problems.length - 1 ? 'none' : '1px solid rgba(255, 255, 255, 0.02)' }}>
+                              <td style={{ padding: '10px 16px', verticalAlign: 'middle', textAlign: 'center', borderBottom: '1px solid var(--ifm-table-border-color, rgba(255, 255, 255, 0.02))' }}>
                                 <span style={{
                                   padding: '3px 8px',
                                   borderRadius: '6px',
@@ -818,7 +821,7 @@ export default function DSADashboard() {
                               </td>
 
                               {/* Target Companies */}
-                              <td style={{ padding: '10px 16px', verticalAlign: 'middle', textAlign: 'center', borderBottom: pIdx === group.problems.length - 1 ? 'none' : '1px solid rgba(255, 255, 255, 0.02)' }}>
+                              <td style={{ padding: '10px 16px', verticalAlign: 'middle', textAlign: 'center', borderBottom: '1px solid var(--ifm-table-border-color, rgba(255, 255, 255, 0.02))' }}>
                                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', justifyContent: 'center' }}>
                                   {p.companies.map(c => (
                                     <Link

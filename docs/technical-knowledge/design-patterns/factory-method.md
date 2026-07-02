@@ -8,7 +8,9 @@ tags: [design-patterns, java, creational, factory-method]
 
 # Factory Method Pattern
 
-> **Category:** Creational  
+> **Category:** Creational    
+> **Complexity:** ⭐☆☆ (1/3)  
+> **Popularity:** ⭐⭐⭐ (3/3)  
 > **Intent:** Define an interface for creating objects, but let subclasses decide which class to instantiate.
 
 ---

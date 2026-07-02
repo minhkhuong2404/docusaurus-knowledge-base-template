@@ -8,7 +8,9 @@ tags: [design-patterns, java, structural, adapter]
 
 # Adapter Pattern
 
-> **Category:** Structural  
+> **Category:** Structural    
+> **Complexity:** ⭐☆☆ (1/3)  
+> **Popularity:** ⭐⭐⭐ (3/3)  
 > **Intent:** Convert the interface of a class into another interface clients expect, allowing incompatible interfaces to work together.
 
 ---

@@ -41,3 +41,7 @@ The following files in `docs/technical-knowledge/interview-questions/grokking-ja
 27. `java-interview-answers-part-3.md` - HashMap index bitwise AND logic, custom key immutability, NavigableMap APIs, synchronized collection lock requirements.
 28. `java-interview-answers-part-4.md` - Decorator pattern code structure, Liskov Substitution Principle violation/fix code, generational GC promotion flow, G1 GC vs ZGC, GC log times.
 29. `java-interview-answers-part-5.md` - Generics PECS wildcard logic (extends vs super), generic type erasure bytecode representation, database transaction isolation levels table, optimistic vs pessimistic SQL locks.
+
+## Build Verification Guidelines
+- Do not run `npm run build` automatically to verify changes unless explicitly requested by the user, as the build process is very slow and compiles the entire website.
+

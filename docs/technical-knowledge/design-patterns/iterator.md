@@ -8,7 +8,9 @@ tags: [design-patterns, java, behavioral, iterator]
 
 # Iterator Pattern
 
-> **Category:** Behavioral  
+> **Category:** Behavioral    
+> **Complexity:** ⭐⭐☆ (2/3)  
+> **Popularity:** ⭐⭐⭐ (3/3)  
 > **Intent:** Provide a way to access the elements of an aggregate object sequentially without exposing its underlying representation (list, stack, tree, etc.).
 
 ---

@@ -1,8 +1,8 @@
 {
-  "id": "2812",
-  "title": "Find the Safest Path in a Grid",
-  "url": "https://leetcode.com/problems/find-the-safest-path-in-a-grid/",
+  "id": "3286",
+  "title": "Find a Safe Walk Through a Grid",
+  "url": "https://leetcode.com/problems/find-a-safe-walk-through-a-grid/",
   "difficulty": "medium",
-  "topic": "Array, Binary Search, Breadth-First Search, Union-Find, Heap (Priority Queue), Matrix",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-07-01."
+  "topic": "Array, Breadth-First Search, Graph Theory, Heap (Priority Queue), Matrix, Shortest Path",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-07-02."
 }

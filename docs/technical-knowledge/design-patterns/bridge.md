@@ -8,7 +8,9 @@ tags: [design-patterns, java, structural, bridge]
 
 # Bridge Pattern
 
-> **Category:** Structural  
+> **Category:** Structural    
+> **Complexity:** ⭐⭐⭐ (3/3)  
+> **Popularity:** ⭐☆☆ (1/3)  
 > **Intent:** Decouple an abstraction from its implementation so that the two can vary independently.
 
 ---

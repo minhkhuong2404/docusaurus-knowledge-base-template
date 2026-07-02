@@ -661,6 +661,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/ai-agents/context-engineering",
+              "path": "/technical-knowledge/ai-agents/context-engineering",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/ai-agents/harness",
               "path": "/technical-knowledge/ai-agents/harness",
               "sidebar": "tutorialSidebar"
@@ -5126,6 +5131,41 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/interview-questions/behavioral/behavioral-amazon-lp",
+              "path": "/technical-knowledge/interview-questions/behavioral/behavioral-amazon-lp",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/behavioral/behavioral-conflict-failure",
+              "path": "/technical-knowledge/interview-questions/behavioral/behavioral-conflict-failure",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/behavioral/behavioral-interview-overview",
+              "path": "/technical-knowledge/interview-questions/behavioral/behavioral-interview-overview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/behavioral/behavioral-questions-to-ask",
+              "path": "/technical-knowledge/interview-questions/behavioral/behavioral-questions-to-ask",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/behavioral/behavioral-star-method",
+              "path": "/technical-knowledge/interview-questions/behavioral/behavioral-star-method",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/behavioral/behavioral-story-bank",
+              "path": "/technical-knowledge/interview-questions/behavioral/behavioral-story-bank",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/behavioral/behavioral-top-50-questions",
+              "path": "/technical-knowledge/interview-questions/behavioral/behavioral-top-50-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/interview-questions/genz-career/java-collections-interview-questions",
               "path": "/technical-knowledge/interview-questions/genz-career/java-collections-interview-questions",
               "sidebar": "tutorialSidebar"
@@ -5258,6 +5298,11 @@
             {
               "id": "technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-5",
               "path": "/technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-5",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/interview-framework",
+              "path": "/technical-knowledge/interview-questions/interview-framework",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -6503,15 +6548,6 @@
         }
       ],
       "breadcrumbs": true
-    }
-  },
-  "docusaurus-plugin-google-gtag": {
-    "default": {
-      "trackingID": [
-        "G-79SQQZQMCX"
-      ],
-      "anonymizeIP": true,
-      "id": "default"
     }
   }
 }

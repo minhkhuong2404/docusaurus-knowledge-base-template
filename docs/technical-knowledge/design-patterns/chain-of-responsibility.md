@@ -8,7 +8,9 @@ tags: [design-patterns, java, behavioral, chain-of-responsibility]
 
 # Chain of Responsibility Pattern
 
-> **Category:** Behavioral  
+> **Category:** Behavioral    
+> **Complexity:** ⭐⭐☆ (2/3)  
+> **Popularity:** ⭐⭐☆ (2/3)  
 > **Intent:** Pass a request along a chain of handlers. Each handler decides to process the request or pass it to the next handler.
 
 ---

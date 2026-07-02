@@ -8,7 +8,9 @@ tags: [design-patterns, java, behavioral, visitor]
 
 # Visitor Pattern
 
-> **Category:** Behavioral  
+> **Category:** Behavioral    
+> **Complexity:** ⭐⭐⭐ (3/3)  
+> **Popularity:** ⭐☆☆ (1/3)  
 > **Intent:** Represent an operation to be performed on the elements of an object structure. Visitor lets you define a new operation without changing the classes of the elements on which it operates.
 
 ---

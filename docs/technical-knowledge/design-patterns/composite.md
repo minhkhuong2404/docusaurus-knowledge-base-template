@@ -8,7 +8,9 @@ tags: [design-patterns, java, structural, composite]
 
 # Composite Pattern
 
-> **Category:** Structural  
+> **Category:** Structural    
+> **Complexity:** ⭐⭐☆ (2/3)  
+> **Popularity:** ⭐⭐☆ (2/3)  
 > **Intent:** Compose objects into tree structures to represent part-whole hierarchies, and treat individual objects and compositions uniformly.
 
 ---

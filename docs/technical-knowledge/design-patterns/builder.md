@@ -8,7 +8,9 @@ tags: [design-patterns, java, creational, builder]
 
 # Builder Pattern
 
-> **Category:** Creational  
+> **Category:** Creational    
+> **Complexity:** ⭐⭐☆ (2/3)  
+> **Popularity:** ⭐⭐⭐ (3/3)  
 > **Intent:** Separate the construction of a complex object from its representation, allowing the same construction process to create different representations.
 
 ---

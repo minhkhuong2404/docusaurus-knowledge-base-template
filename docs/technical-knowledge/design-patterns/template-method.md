@@ -8,7 +8,9 @@ tags: [design-patterns, java, behavioral, template-method]
 
 # Template Method Pattern
 
-> **Category:** Behavioral  
+> **Category:** Behavioral    
+> **Complexity:** ⭐☆☆ (1/3)  
+> **Popularity:** ⭐⭐☆ (2/3)  
 > **Intent:** Define the skeleton of an algorithm in a superclass, letting subclasses override specific steps without changing the algorithm's structure.
 
 ---

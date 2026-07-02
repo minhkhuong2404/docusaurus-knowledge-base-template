@@ -8,7 +8,9 @@ tags: [design-patterns, java, creational, prototype]
 
 # Prototype Pattern
 
-> **Category:** Creational  
+> **Category:** Creational    
+> **Complexity:** ⭐☆☆ (1/3)  
+> **Popularity:** ⭐⭐☆ (2/3)  
 > **Intent:** Create new objects by cloning an existing instance (prototype) rather than constructing from scratch.
 
 ---

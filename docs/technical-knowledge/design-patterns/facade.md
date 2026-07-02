@@ -8,7 +8,9 @@ tags: [design-patterns, java, structural, facade]
 
 # Facade Pattern
 
-> **Category:** Structural  
+> **Category:** Structural    
+> **Complexity:** ⭐☆☆ (1/3)  
+> **Popularity:** ⭐⭐☆ (2/3)  
 > **Intent:** Provide a simplified, unified interface to a complex subsystem.
 
 ---

@@ -3,7 +3,7 @@ id: vibe-coding
 title: "The Vibe Coding Handbook"
 sidebar_label: 🚀 Vibe Coding
 description: Actionable guidelines, workflow frameworks, best practices, and anti-patterns for software development in the era of AI agentic orchestration.
-tags: [ai-agents, vibe-coding, software-engineering, workflows, prompt-engineering, developer-productivity]
+tags: [ai-agents, vibe-coding, software-engineering, workflows, prompt-engineering, developer-productivity, context-engineering, context-compaction]
 ---
 
 # The Vibe Coding Handbook
@@ -97,6 +97,121 @@ Avoid these common vibe-coding anti-patterns:
 *   **The Risk:** Code degradation. The agent keeps layering quick fixes on top of quick fixes, turning your code into spaghetti.
 *   **The Fix:** Break the loop. Stop the agent. Look at the code yourself, locate the root cause, and tell the agent: *"The bug is because of X. Modify the function Y to handle it this way."*
 
+### ❌ Pitfall 4: Context Drift
+*   **The Symptom:** After 20+ turns of debugging, the agent starts ignoring the architectural constraints you set at the start of the session. It uses the wrong patterns, imports the wrong libraries, or re-introduces bugs it already fixed.
+*   **The Risk:** The agent's "effective persona" has drifted from "senior engineer following conventions" to "debugging assistant focused on the immediate error." Early instructions are effectively forgotten.
+*   **The Fix:** Compact the session (use `/compact` or start a fresh session) and feed a concise handoff prompt summarizing what was done and what the next task is.
+
+---
+
+## 🧠 Context Engineering for Vibe Coders (2026)
+
+> **The 2026 upgrade:** Vibe coding matured from "prompting" to **context engineering** — the discipline of managing what the agent sees, when it sees it, and how much fits in its working memory.
+
+### What is Context Engineering?
+
+The context window is the agent's RAM. Context engineering is RAM management:
+
+| Old (Prompt Engineering) | New (Context Engineering) |
+|:---|:---|
+| "How do I phrase this question?" | "What is the optimal set of tokens the model needs right now?" |
+| Load all open files into context | Load only the 2–3 files relevant to the current task |
+| Keep the whole conversation history | Compact at 70% capacity; summarize old steps |
+| One model for everything | Route simple tasks to fast/cheap models |
+| Long sessions until the task is done | Reset between features; use handoff prompts |
+
+### Context Rot — The Silent Agent Killer
+
+**Context rot** is the gradual degradation of agent quality as its context fills — _before_ hitting hard limits.
+
+```
+Turn 1:  "Build a REST controller for /api/orders"
+         → Perfect, idiomatic code ✅
+
+Turn 15: "Add validation to the orders endpoint"
+         → Mixes in code from other files, duplicates existing methods ⚠️
+
+Turn 25: "Fix the import error"
+         → Re-introduces a bug that was fixed in Turn 8 ❌
+```
+
+**Signs you have context rot:**
+- Agent contradicts decisions it made earlier
+- Agent duplicates code it already wrote
+- Agent introduces bugs that were already fixed
+
+**Immediate fix:** Use `/compact` or start a fresh session with a handoff prompt (see below).
+
+### The Context Reset Handoff Pattern
+
+When you notice context drift or rot, the fastest fix is a **fresh session with a curated handoff**:
+
+```markdown
+## Handoff (paste into new session)
+
+### What was done
+- Added `PaymentService.processTransfer()` with idempotency key check
+- Fixed NPE when `recipientId` is null — null check on line 42
+- All tests pass (including new `testIdempotentTransfer`)
+
+### Current state
+- Modified: PaymentService.java, PaymentServiceTest.java
+- Build: GREEN ✅
+
+### Next task
+Add rate limiting to `processTransfer()` — max 10 calls/minute per sender.
+Use our existing Redis rate limiter at `infrastructure/RateLimiter.java`.
+```
+
+This costs ~200 tokens instead of carrying 50,000 tokens of accumulated history.
+
+### Scoped Prompting
+
+A **scoped prompt** tells the agent exactly what it may and may not touch:
+
+```
+❌ Unscoped: "Refactor the payment module"
+   → Agent rewrites half the codebase, touches files it shouldn't
+
+✅ Scoped: "In PaymentService.java only, extract the validation logic
+   on lines 45-78 into a private method called validateTransfer().
+   Do NOT touch any other file. Run the tests after."
+   → Agent makes exactly the surgical change requested
+```
+
+**Scoping vocabulary:**
+
+| Constraint | Example |
+|:---|:---|
+| **File scope** | "Only modify `PaymentService.java`" |
+| **Line scope** | "Only the `processTransfer()` method, lines 45–120" |
+| **Library scope** | "Do not add new dependencies — use only existing imports" |
+| **Approach scope** | "Do not use Lombok. Do not use reflection." |
+| **Size scope** | "This should be a 10–20 line change, not a full refactor" |
+
+### The AGENTS.md / CLAUDE.md Pattern
+
+Create a project configuration file the agent loads at session start — eliminating the need to re-explain your project's conventions every time:
+
+```markdown
+# AGENTS.md — Project Rules
+
+## Stack
+- Java 21, Spring Boot 3.3.x, no Lombok (use records)
+- PostgreSQL 16, Flyway migrations, JUnit 5 + Testcontainers
+
+## Build & Test
+- Build: `./gradlew build`
+- Test: `./gradlew test`
+
+## Constraints
+- Do NOT modify the DB schema directly — only via Flyway
+- Do NOT hardcode credentials
+- Ask before refactoring code outside the current task scope
+```
+
+> **Keep AGENTS.md lean.** A bloated configuration file is a form of context pollution — it wastes tokens on irrelevant constraints and dilutes the signal of what actually matters right now.
+
 ---
 
 ## 🎨 Case Study: Building a Spring Boot REST Endpoint
@@ -116,3 +231,11 @@ Here is a comparison of how a traditional developer vs. a vibe coder builds a ne
 ```
 
 By transitioning to the **Vibe Coding** paradigm, the developer shifts focus from writing repetitive boilerplate to directing architecture, styling, security, and verification—boosting development throughput by up to **10x** while maintaining software quality.
+
+---
+
+## 📚 Go Deeper
+
+- **[Context Engineering Guide](./context-engineering)** — Deep dive into context compaction, model routing, thinking budget, subagents, and all the advanced 2026 concepts referenced here.
+- **[AI Agent Architectures](./agents)** — ReAct loops, multi-agent patterns, and production engineering of agents.
+- **[Agent Skills: MCP, RAG & Memory](./skills)** — Tool design, Model Context Protocol (MCP), RAG, and memory systems.

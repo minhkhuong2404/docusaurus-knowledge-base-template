@@ -8,7 +8,9 @@ tags: [design-patterns, java, behavioral, observer]
 
 # Observer Pattern
 
-> **Category:** Behavioral  
+> **Category:** Behavioral    
+> **Complexity:** ⭐⭐☆ (2/3)  
+> **Popularity:** ⭐⭐⭐ (3/3)  
 > **Intent:** Define a one-to-many dependency so that when one object changes state, all its dependents are notified and updated automatically.
 
 ---

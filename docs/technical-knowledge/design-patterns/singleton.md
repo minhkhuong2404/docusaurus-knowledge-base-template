@@ -8,7 +8,9 @@ tags: [design-patterns, java, creational, singleton]
 
 # Singleton Pattern
 
-> **Category:** Creational  
+> **Category:** Creational    
+> **Complexity:** ⭐☆☆ (1/3)  
+> **Popularity:** ⭐⭐☆ (2/3)  
 > **Intent:** Ensure a class has only one instance and provide a global point of access to it.
 
 ---

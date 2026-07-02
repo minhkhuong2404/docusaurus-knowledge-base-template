@@ -8,7 +8,9 @@ tags: [design-patterns, java, behavioral, memento]
 
 # Memento Pattern
 
-> **Category:** Behavioral  
+> **Category:** Behavioral    
+> **Complexity:** ⭐⭐⭐ (3/3)  
+> **Popularity:** ⭐☆☆ (1/3)  
 > **Intent:** Without violating encapsulation, capture and externalize an object's internal state so that the object can be restored to this state later.
 
 ---

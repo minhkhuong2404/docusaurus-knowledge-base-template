@@ -8,7 +8,9 @@ tags: [design-patterns, java, behavioral, strategy]
 
 # Strategy Pattern
 
-> **Category:** Behavioral  
+> **Category:** Behavioral    
+> **Complexity:** ⭐☆☆ (1/3)  
+> **Popularity:** ⭐⭐⭐ (3/3)  
 > **Intent:** Define a family of algorithms, encapsulate each one, and make them interchangeable. Strategy lets the algorithm vary independently from clients that use it.
 
 ---

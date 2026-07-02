@@ -8,7 +8,9 @@ tags: [design-patterns, java, structural, flyweight]
 
 # Flyweight Pattern
 
-> **Category:** Structural  
+> **Category:** Structural    
+> **Complexity:** ⭐⭐⭐ (3/3)  
+> **Popularity:** ⭐☆☆ (1/3)  
 > **Intent:** Use sharing to support large numbers of fine-grained objects efficiently.
 
 ---

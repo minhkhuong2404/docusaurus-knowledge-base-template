@@ -1670,7 +1670,7 @@ export default function Home(): React.ReactNode {
                 Start Learning →
               </Link>
               <Link
-                to="/technical-knowledge/system-design/interview-framework"
+                to="/technical-knowledge/interview-questions/interview-framework"
                 className="lp-cta-secondary"
                 style={{
                   display: "inline-flex",
@@ -2023,6 +2023,221 @@ export default function Home(): React.ReactNode {
               </Link>
             </section>
           </div>
+
+          {/* ══════════════════════════════════════════════════════════════════
+            SECTION — Behavioral Interview
+          ══════════════════════════════════════════════════════════════════ */}
+          <section
+            style={{ maxWidth: 1100, margin: "0 auto", padding: "5rem 1.5rem" }}
+          >
+            <div className="lp-section-label" style={{ color: "#fb923c" }}>🎭 Soft Skills</div>
+            <h2
+              className="lp-section-title"
+              style={{
+                background: "linear-gradient(90deg, #fb923c 0%, #fbbf24 50%, #fb923c 100%)",
+                backgroundSize: "200% auto",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              Behavioral Interview Prep
+            </h2>
+            <p
+              style={{
+                color: "var(--ifm-color-emphasis-700)",
+                fontSize: "1.25rem",
+                lineHeight: 1.65,
+                maxWidth: 620,
+                marginBottom: "2.5rem",
+              }}
+            >
+              Ace the round that most engineers ignore. Master the STAR method, build your story bank, and walk into any behavioral interview with confidence.
+            </p>
+
+            {/* Nav Table / Dashboard */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+                gap: "1rem",
+                marginBottom: "2rem",
+              }}
+            >
+              {[
+                {
+                  icon: "🎯",
+                  title: "Overview & Strategy",
+                  desc: "The STAR method, 8 core themes, how companies evaluate you, and a full prep checklist.",
+                  tag: "Start here",
+                  tagColor: "rgba(251,146,60,0.15)",
+                  tagBorder: "rgba(251,146,60,0.3)",
+                  tagText: "#fb923c",
+                  href: "/technical-knowledge/interview-questions/behavioral/behavioral-interview-overview",
+                },
+                {
+                  icon: "⭐",
+                  title: "STAR Method Deep Dive",
+                  desc: "Detailed templates, before/after examples, timing guides, and power word lists.",
+                  tag: "Framework",
+                  tagColor: "rgba(251,191,36,0.12)",
+                  tagBorder: "rgba(251,191,36,0.3)",
+                  tagText: "#d97706",
+                  href: "/technical-knowledge/interview-questions/behavioral/behavioral-star-method",
+                },
+                {
+                  icon: "📚",
+                  title: "Story Bank Builder",
+                  desc: "How to mine your experience for 10–13 strong stories and map them to any question.",
+                  tag: "Preparation",
+                  tagColor: "rgba(251,146,60,0.12)",
+                  tagBorder: "rgba(251,146,60,0.28)",
+                  tagText: "#ea580c",
+                  href: "/technical-knowledge/interview-questions/behavioral/behavioral-story-bank",
+                },
+                {
+                  icon: "💬",
+                  title: "Top 50 Questions & Answers",
+                  desc: "The 50 most-asked behavioral questions with full STAR answers across all 8 themes.",
+                  tag: "Essential",
+                  tagColor: "rgba(239,68,68,0.1)",
+                  tagBorder: "rgba(239,68,68,0.25)",
+                  tagText: "#dc2626",
+                  href: "/technical-knowledge/interview-questions/behavioral/behavioral-top-50-questions",
+                },
+                {
+                  icon: "🏢",
+                  title: "Amazon LP Guide",
+                  desc: "All 16 Leadership Principles with example questions, story strategies, and priority tiers.",
+                  tag: "FAANG",
+                  tagColor: "rgba(99,102,241,0.12)",
+                  tagBorder: "rgba(99,102,241,0.28)",
+                  tagText: "#6366f1",
+                  href: "/technical-knowledge/interview-questions/behavioral/behavioral-amazon-lp",
+                },
+                {
+                  icon: "⚔️",
+                  title: "Conflict & Failure Stories",
+                  desc: "Tactical guide for the hardest questions — full sample answers with golden rules.",
+                  tag: "Advanced",
+                  tagColor: "rgba(20,184,166,0.1)",
+                  tagBorder: "rgba(20,184,166,0.25)",
+                  tagText: "#0d9488",
+                  href: "/technical-knowledge/interview-questions/behavioral/behavioral-conflict-failure",
+                },
+                {
+                  icon: "❓",
+                  title: "Questions to Ask",
+                  desc: "34 thoughtful questions to ask interviewers, by type — including red-flag detectors.",
+                  tag: "Pro tip",
+                  tagColor: "rgba(74,222,128,0.1)",
+                  tagBorder: "rgba(74,222,128,0.25)",
+                  tagText: "var(--brand-blue)",
+                  href: "/technical-knowledge/interview-questions/behavioral/behavioral-questions-to-ask",
+                },
+              ].map((item, i) => (
+                <Link
+                  key={item.title}
+                  to={item.href}
+                  className="lp-hcard"
+                  style={{
+                    ...card,
+                    borderColor: "rgba(251,146,60,0.18)",
+                    padding: "1.4rem 1.2rem",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "0.55rem",
+                    animation: `lp-cardReveal 0.5s cubic-bezier(0.22,1,0.36,1) ${i * 0.07}s both`,
+                  }}
+                >
+                  <span style={{ fontSize: "2rem", lineHeight: 1 }}>{item.icon}</span>
+                  <span
+                    style={{
+                      fontWeight: 700,
+                      fontSize: "1.1rem",
+                      color: "var(--ifm-font-color-base)",
+                    }}
+                  >
+                    {item.title}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "0.95rem",
+                      color: "var(--ifm-color-emphasis-600)",
+                      lineHeight: 1.55,
+                      flex: 1,
+                    }}
+                  >
+                    {item.desc}
+                  </span>
+                  <span
+                    style={{
+                      display: "inline-block",
+                      fontSize: "0.78rem",
+                      fontWeight: 700,
+                      letterSpacing: "0.08em",
+                      textTransform: "uppercase",
+                      padding: "0.18rem 0.55rem",
+                      borderRadius: 999,
+                      background: item.tagColor,
+                      color: item.tagText,
+                      border: `1px solid ${item.tagBorder}`,
+                      alignSelf: "flex-start",
+                    }}
+                  >
+                    {item.tag}
+                  </span>
+                </Link>
+              ))}
+            </div>
+
+            {/* Quick stats row */}
+            <div
+              style={{
+                display: "flex",
+                gap: "0.75rem",
+                flexWrap: "wrap",
+                marginBottom: "1.5rem",
+              }}
+            >
+              {[
+                { icon: "🎤", text: "50 questions with full STAR answers" },
+                { icon: "🏢", text: "All 16 Amazon Leadership Principles covered" },
+                { icon: "📖", text: "10 story types to build your bank" },
+                { icon: "✅", text: "Scoring rubric used by real interviewers" },
+              ].map(({ icon, text }) => (
+                <div
+                  key={text}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                    padding: "0.55rem 0.9rem",
+                    borderRadius: 8,
+                    border: "1px solid rgba(251,146,60,0.15)",
+                    background: "rgba(251,146,60,0.05)",
+                    fontSize: "0.95rem",
+                    color: "var(--ifm-color-emphasis-700)",
+                    flex: "1 1 200px",
+                  }}
+                >
+                  <span>{icon}</span> {text}
+                </div>
+              ))}
+            </div>
+
+            <Link
+              to="/technical-knowledge/interview-questions/behavioral/behavioral-interview-overview"
+              style={{
+                ...viewAllStyle,
+                borderColor: "rgba(251,146,60,0.3)",
+                color: "#fb923c",
+                background: "rgba(251,146,60,0.06)",
+              }}
+            >
+              Start Behavioral Prep →
+            </Link>
+          </section>
 
           {/* ══════════════════════════════════════════════════════════════════
             SECTION — Daily Practice Hub (Quizzes & LeetCode Daily)
@@ -2665,7 +2880,7 @@ export default function Home(): React.ReactNode {
                 Get Started →
               </Link>
               <Link
-                to="/technical-knowledge/system-design/interview-framework"
+                to="/technical-knowledge/interview-questions/interview-framework"
                 className="lp-cta-secondary"
                 style={{
                   display: "inline-flex",

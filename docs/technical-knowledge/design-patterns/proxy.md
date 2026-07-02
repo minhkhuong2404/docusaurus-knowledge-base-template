@@ -8,7 +8,9 @@ tags: [design-patterns, java, structural, proxy]
 
 # Proxy Pattern
 
-> **Category:** Structural  
+> **Category:** Structural    
+> **Complexity:** ⭐⭐☆ (2/3)  
+> **Popularity:** ⭐☆☆ (1/3)  
 > **Intent:** Provide a surrogate or placeholder for another object to control access to it.
 
 ---

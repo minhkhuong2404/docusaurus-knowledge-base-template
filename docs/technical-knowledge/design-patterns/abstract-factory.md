@@ -8,7 +8,9 @@ tags: [design-patterns, java, creational, abstract-factory]
 
 # Abstract Factory Pattern
 
-> **Category:** Creational  
+> **Category:** Creational    
+> **Complexity:** ⭐⭐☆ (2/3)  
+> **Popularity:** ⭐⭐⭐ (3/3)  
 > **Intent:** Provide an interface for creating **families of related objects** without specifying their concrete classes.
 
 ---

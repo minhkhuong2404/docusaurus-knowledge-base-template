@@ -8,7 +8,9 @@ tags: [design-patterns, java, behavioral, command]
 
 # Command Pattern
 
-> **Category:** Behavioral  
+> **Category:** Behavioral    
+> **Complexity:** ⭐☆☆ (1/3)  
+> **Popularity:** ⭐⭐⭐ (3/3)  
 > **Intent:** Encapsulate a request as an object, thereby letting you parameterize clients with different requests, queue or log requests, and support undoable operations.
 
 ---

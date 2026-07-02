@@ -8,7 +8,9 @@ tags: [design-patterns, java, behavioral, interpreter]
 
 # Interpreter Pattern
 
-> **Category:** Behavioral  
+> **Category:** Behavioral    
+> **Complexity:** ⭐⭐⭐ (3/3)  
+> **Popularity:** ⭐☆☆ (1/3)  
 > **Intent:** Given a language, define a representation for its grammar along with an interpreter that uses the representation to interpret sentences in the language.
 
 ---

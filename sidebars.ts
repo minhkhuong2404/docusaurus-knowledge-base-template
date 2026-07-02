@@ -18,6 +18,11 @@ const sidebars: SidebarsConfig = {
 			]
 		},
 		{
+			type: 'doc',
+			id: 'technical-knowledge/interview-questions/interview-framework',
+			label: '💼 General Interview Framework'
+		},
+		{
 			type: 'category',
 			label: '🛠️ Technical Knowledge',
 			collapsed: false,
@@ -1007,7 +1012,320 @@ const sidebars: SidebarsConfig = {
 		},
 		{
 			type: 'category',
-			label: '📚 Books',
+			label: '💼 Non-Technical Knowledge',
+			collapsed: true,
+			items: [
+				{
+					type: 'category',
+					label: 'Software Development Life Cycle (SDLC)',
+					items: [
+						{
+							type: 'doc',
+							id: 'non-technical-knowledge/sdlc/intro',
+							label: '🏠 Introduction',
+						},
+						{
+							type: 'category',
+							label: '📋 SDLC Phases',
+							collapsed: false,
+							items: [
+								'non-technical-knowledge/sdlc/phases/planning',
+								'non-technical-knowledge/sdlc/phases/requirements',
+								'non-technical-knowledge/sdlc/phases/system-design',
+								'non-technical-knowledge/sdlc/phases/development',
+								'non-technical-knowledge/sdlc/phases/testing',
+								'non-technical-knowledge/sdlc/phases/deployment',
+								'non-technical-knowledge/sdlc/phases/maintenance',
+							],
+						},
+						{
+							type: 'category',
+							label: '🧪 Testing Strategy',
+							collapsed: false,
+							items: [
+								'non-technical-knowledge/sdlc/testing/unit-testing',
+								'non-technical-knowledge/sdlc/testing/integration-testing',
+								'non-technical-knowledge/sdlc/testing/regression-testing',
+								'non-technical-knowledge/sdlc/testing/end-to-end-testing',
+								'non-technical-knowledge/sdlc/testing/inflight-testing',
+								'non-technical-knowledge/sdlc/testing/component-performance-testing',
+							],
+						},
+						{
+							type: 'category',
+							label: '🚀 Deployment Strategy',
+							collapsed: false,
+							items: [
+								'non-technical-knowledge/sdlc/deployment/roll-forward',
+								'non-technical-knowledge/sdlc/deployment/roll-backward',
+								'non-technical-knowledge/sdlc/deployment/deployment-configuration-verification',
+							],
+						},
+						{
+							type: 'category',
+							label: '📊 Reports',
+							collapsed: false,
+							items: [
+								'non-technical-knowledge/sdlc/reports/test-summary-report',
+							],
+						},
+					]
+				}
+			]
+		},
+		{
+			type: 'category',
+			label: '🚀 Coding Interview Prep',
+			collapsed: true,
+			items: [
+				'technical-knowledge/coding-interview-prep/intro',
+				{
+					type: 'doc',
+					id: 'technical-knowledge/coding-interview-prep/intro/intro',
+					label: '🚀 Getting Started',
+				},
+				{
+					type: 'category',
+					label: '📦 Fundamentals',
+					collapsed: false,
+					items: [
+						'technical-knowledge/coding-interview-prep/array/array',
+						'technical-knowledge/coding-interview-prep/linked-list/linked-list',
+						'technical-knowledge/coding-interview-prep/stack/stack',
+						'technical-knowledge/coding-interview-prep/sorting/sorting',
+					],
+				},
+				{
+					type: 'category',
+					label: '🎯 Core Patterns',
+					collapsed: false,
+					items: [
+						'technical-knowledge/coding-interview-prep/two-pointers/two-pointers',
+						'technical-knowledge/coding-interview-prep/sliding-window/sliding-window',
+						'technical-knowledge/coding-interview-prep/prefix-sum/prefix-sum',
+						'technical-knowledge/coding-interview-prep/binary-search/binary-search',
+						'technical-knowledge/coding-interview-prep/matrices/matrices',
+					],
+				},
+				{
+					type: 'category',
+					label: '🌲 Trees & Graphs',
+					collapsed: false,
+					items: [
+						'technical-knowledge/coding-interview-prep/tree/tree',
+						'technical-knowledge/coding-interview-prep/bfs/bfs',
+						'technical-knowledge/coding-interview-prep/dfs/dfs',
+						'technical-knowledge/coding-interview-prep/graph/graph',
+						'technical-knowledge/coding-interview-prep/union-find/union-find',
+						'technical-knowledge/coding-interview-prep/trie/trie',
+					],
+				},
+				{
+					type: 'category',
+					label: '⚡ Advanced Patterns',
+					collapsed: false,
+					items: [
+						'technical-knowledge/coding-interview-prep/heap/heap',
+						'technical-knowledge/coding-interview-prep/backtracking/backtracking',
+						'technical-knowledge/coding-interview-prep/dynamic-programming/dynamic-programming',
+						'technical-knowledge/coding-interview-prep/greedy/greedy',
+						'technical-knowledge/coding-interview-prep/bit-manipulation/bit-manipulation',
+						'technical-knowledge/coding-interview-prep/monotonic-stack/monotonic-stack',
+						'technical-knowledge/coding-interview-prep/intervals/intervals',
+					],
+				},
+				{
+					type: 'category',
+					label: '🎯 Frequently Asked Interview Questions',
+					collapsed: true,
+					items: [
+						{
+							type: 'category',
+							label: '☕ Core Java',
+							collapsed: true,
+							items: [
+								'technical-knowledge/interview-questions/java/java-interview-questions',
+								'technical-knowledge/interview-questions/java/break-singleton-java',
+								'technical-knowledge/interview-questions/java/concurrent-collections-interview',
+								'technical-knowledge/interview-questions/java/concurrent-collections-tricky',
+								'technical-knowledge/interview-questions/java/exception-handling-advanced',
+								'technical-knowledge/interview-questions/java/experienced-java-backend-interview',
+								'technical-knowledge/interview-questions/java/java-8-optional-crud',
+								'technical-knowledge/interview-questions/java/java-8-tricky-interview-questions',
+								'technical-knowledge/interview-questions/java/java-collections-differences',
+								'technical-knowledge/interview-questions/java/java-collections-interview',
+								'technical-knowledge/interview-questions/java/java-collections-interview-p2',
+								'technical-knowledge/interview-questions/java/java-comprehensive-interview',
+								'technical-knowledge/interview-questions/java/java-experienced-interview-p1',
+								'technical-knowledge/interview-questions/java/java-lead-interview-scenarios',
+								'technical-knowledge/interview-questions/java/java-multithreading-interview',
+								'technical-knowledge/interview-questions/java/java-runtime-exceptions',
+								'technical-knowledge/interview-questions/java/java-string-basics',
+								'technical-knowledge/interview-questions/java/java-string-rotation',
+								'technical-knowledge/interview-questions/java/java-date-time-api',
+								'technical-knowledge/interview-questions/java/java-tricky-core-questions',
+								'technical-knowledge/interview-questions/java/spring-boot-interview',
+								'technical-knowledge/interview-questions/java/spring-boot-real-time-questions',
+								'technical-knowledge/interview-questions/java/sql-interview-questions',
+								'technical-knowledge/interview-questions/java/tricky-java-interview',
+							]
+						},
+						{
+							type: 'category',
+							label: '🧠 Grokking Java Answers',
+							collapsed: true,
+							items: [
+								'technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-1',
+								'technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-2',
+								'technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-3',
+								'technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-4',
+								'technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-5',
+							]
+						},
+						{
+							type: 'category',
+							label: '💼 General Java/Spring Boot Interviews',
+							collapsed: true,
+							items: [
+								'technical-knowledge/interview-questions/genz-career/java-collections-interview-questions',
+								'technical-knowledge/interview-questions/genz-career/java-interview-questions-100',
+								'technical-knowledge/interview-questions/genz-career/java-interview-questions-trickiest',
+								'technical-knowledge/interview-questions/genz-career/java-oops-interview-guide',
+								'technical-knowledge/interview-questions/genz-career/java-multithreading-interview-guide',
+								{
+									type: 'category',
+									label: '🧪 Mock',
+									collapsed: true,
+									items: [
+										'technical-knowledge/interview-questions/genz-career/mock/accenture-java-springboot-interview-3-years',
+										'technical-knowledge/interview-questions/genz-career/mock/cognizant-java-developer-interview-3-years',
+										'technical-knowledge/interview-questions/genz-career/mock/epam-java-developer-interview-experience',
+										'technical-knowledge/interview-questions/genz-career/mock/hcl-java-developer-interview-experience',
+										'technical-knowledge/interview-questions/genz-career/mock/ibm-java-springboot-interview-3-years',
+										'technical-knowledge/interview-questions/genz-career/mock/tcs-ninja-nqt-interview-experience',
+										'technical-knowledge/interview-questions/genz-career/mock/paytm-java-developer-interview-first-round',
+										'technical-knowledge/interview-questions/genz-career/mock/tcs-java-springboot-interview-3-years',
+										'technical-knowledge/interview-questions/genz-career/mock/wipro-java-springboot-interview-3-years',
+										'technical-knowledge/interview-questions/genz-career/mock-interview/java-spring-boot-14-years-interview-detailed'
+									]
+								},
+								{
+									type: 'category',
+									label: '🚀 Spring Boot',
+									collapsed: true,
+									items: [
+										'technical-knowledge/interview-questions/genz-career/spring-boot/real-time-spring-boot-interview-questions',
+										'technical-knowledge/interview-questions/genz-career/spring-boot/scenario-based-springboot-interview-questions',
+										'technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions',
+										'technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-2',
+										'technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-3',
+										'technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-4',
+										'technical-knowledge/interview-questions/genz-career/spring-boot/top-spring-security-interview-questions'
+									]
+								}
+							]
+						},
+						{
+							type: 'category',
+							label: '🏢 Company (💎 Premium)',
+							collapsed: true,
+							items: [
+								'premium/intro',
+								'premium/company/accenture-java-interview',
+								'premium/company/accenture-java-developer-interview-questions',
+								'premium/company/accenture-java-developer-interview-16lpa',
+								'premium/company/airtel-java-developer-interview-questions',
+								'premium/company/capgemini-java-developer-interview-questions',
+								'premium/company/coforge-java-developer-interview-22lpa',
+								'premium/company/cognizant-fresher-java-developer-interview',
+								'premium/company/deloitte-java-developer-interview-questions',
+								'premium/company/deloitte-java-developer-interview-17lpa',
+								'premium/company/epam-java-developer-interview-22lpa',
+								'premium/company/hashedin-java-developer-interview-questions',
+								'premium/company/hcl-java-fullstack-developer-interview',
+								'premium/company/ibm-java-developer-interview-experience',
+								'premium/company/infosys-java-developer-interview-17lpa',
+								'premium/company/java-developer-interview-iris',
+								'premium/company/ltimindtree-java-developer-interview-questions',
+								'premium/company/nagarro-java-developer-interview-questions',
+								'premium/company/ntt-data-java-developer-interview',
+								'premium/company/oracle-java-developer-interview-questions',
+								'premium/company/paytm-java-developer-interview-questions',
+								'premium/company/pwc-java-developer-interview-questions',
+								'premium/company/tcs-java-developer-interview-13lpa',
+								'premium/company/tech-mahindra-java-developer-interview',
+								'premium/company/walmart-java-developer-interview-30lpa',
+								'premium/company/wipro-fullstack-java-developer-interview',
+								'premium/company/wipro-java-developer-interview-questions'
+							]
+						},
+					]
+				}
+			]
+		},
+		{
+			type: 'category',
+			label: '🎭 Behavioral Interview',
+			collapsed: true,
+			items: [
+				'technical-knowledge/interview-questions/behavioral/behavioral-interview-overview',
+				'technical-knowledge/interview-questions/behavioral/behavioral-star-method',
+				'technical-knowledge/interview-questions/behavioral/behavioral-story-bank',
+				'technical-knowledge/interview-questions/behavioral/behavioral-conflict-failure',
+				'technical-knowledge/interview-questions/behavioral/behavioral-questions-to-ask',
+				'technical-knowledge/interview-questions/behavioral/behavioral-top-50-questions',
+				'technical-knowledge/interview-questions/behavioral/behavioral-amazon-lp'
+			]
+		},
+		{
+			type: 'category',
+			label: '📈 DSA Roadmap',
+			collapsed: true,
+			items: [
+				{
+					type: 'category',
+					label: '🧠 DSA Roadmap (20 Weeks)',
+					items: [
+						'technical-knowledge/dsa/20-week-dsa-roadmap-intro',
+						'technical-knowledge/dsa/leetcode-daily',
+						'technical-knowledge/dsa/week-1-arrays-strings-prefix-sums',
+						'technical-knowledge/dsa/week-2-two-pointers-sliding-window',
+						'technical-knowledge/dsa/week-3-linked-lists-pointers',
+						'technical-knowledge/dsa/week-4-hash-tables-sets',
+						'technical-knowledge/dsa/week-5-stacks-queues-monotonic',
+						'technical-knowledge/dsa/week-6-binary-trees-bst',
+						'technical-knowledge/dsa/week-7-graph-foundations',
+						'technical-knowledge/dsa/week-8-advanced-graph-concepts',
+						'technical-knowledge/dsa/week-9-binary-search',
+						'technical-knowledge/dsa/week-10-recursion-backtracking',
+						'technical-knowledge/dsa/week-11-intervals-sweep-line',
+						'technical-knowledge/dsa/week-12-heaps-greedy',
+						'technical-knowledge/dsa/week-13-dynamic-programming-1d',
+						'technical-knowledge/dsa/week-14-dynamic-programming-2d',
+						'technical-knowledge/dsa/week-15-advanced-sliding-windows',
+						'technical-knowledge/dsa/week-16-tries-prefix-trees',
+						'technical-knowledge/dsa/week-17-shortest-paths-mst',
+						'technical-knowledge/dsa/week-18-disjoint-set-union',
+						'technical-knowledge/dsa/week-19-bit-manipulation-math',
+						'technical-knowledge/dsa/week-20-comprehensive-review-systems',
+					],
+				}
+			]
+		},
+		{
+			type: 'category',
+			label: '🏢 LeetCode Company',
+			collapsed: true,
+			items: [
+				{
+					type: 'autogenerated',
+					dirName: 'technical-knowledge/dsa/leetcode-companywise',
+				},
+			]
+		},
+		{
+			type: 'category',
+			label: '📚 Software Engineer Books',
 			collapsed: true,
 			items: [
 				{
@@ -1262,305 +1580,6 @@ const sidebars: SidebarsConfig = {
 		},
 		{
 			type: 'category',
-			label: '💼 Non-Technical Knowledge',
-			collapsed: true,
-			items: [
-				{
-					type: 'category',
-					label: 'Software Development Life Cycle (SDLC)',
-					items: [
-						{
-							type: 'doc',
-							id: 'non-technical-knowledge/sdlc/intro',
-							label: '🏠 Introduction',
-						},
-						{
-							type: 'category',
-							label: '📋 SDLC Phases',
-							collapsed: false,
-							items: [
-								'non-technical-knowledge/sdlc/phases/planning',
-								'non-technical-knowledge/sdlc/phases/requirements',
-								'non-technical-knowledge/sdlc/phases/system-design',
-								'non-technical-knowledge/sdlc/phases/development',
-								'non-technical-knowledge/sdlc/phases/testing',
-								'non-technical-knowledge/sdlc/phases/deployment',
-								'non-technical-knowledge/sdlc/phases/maintenance',
-							],
-						},
-						{
-							type: 'category',
-							label: '🧪 Testing Strategy',
-							collapsed: false,
-							items: [
-								'non-technical-knowledge/sdlc/testing/unit-testing',
-								'non-technical-knowledge/sdlc/testing/integration-testing',
-								'non-technical-knowledge/sdlc/testing/regression-testing',
-								'non-technical-knowledge/sdlc/testing/end-to-end-testing',
-								'non-technical-knowledge/sdlc/testing/inflight-testing',
-								'non-technical-knowledge/sdlc/testing/component-performance-testing',
-							],
-						},
-						{
-							type: 'category',
-							label: '🚀 Deployment Strategy',
-							collapsed: false,
-							items: [
-								'non-technical-knowledge/sdlc/deployment/roll-forward',
-								'non-technical-knowledge/sdlc/deployment/roll-backward',
-								'non-technical-knowledge/sdlc/deployment/deployment-configuration-verification',
-							],
-						},
-						{
-							type: 'category',
-							label: '📊 Reports',
-							collapsed: false,
-							items: [
-								'non-technical-knowledge/sdlc/reports/test-summary-report',
-							],
-						},
-					]
-				}
-			]
-		},
-		{
-			type: 'category',
-			label: '🚀 Coding Interview Prep',
-			collapsed: true,
-			items: [
-				'technical-knowledge/coding-interview-prep/intro',
-				{
-					type: 'doc',
-					id: 'technical-knowledge/coding-interview-prep/intro/intro',
-					label: '🚀 Getting Started',
-				},
-				{
-					type: 'category',
-					label: '📦 Fundamentals',
-					collapsed: false,
-					items: [
-						'technical-knowledge/coding-interview-prep/array/array',
-						'technical-knowledge/coding-interview-prep/linked-list/linked-list',
-						'technical-knowledge/coding-interview-prep/stack/stack',
-						'technical-knowledge/coding-interview-prep/sorting/sorting',
-					],
-				},
-				{
-					type: 'category',
-					label: '🎯 Core Patterns',
-					collapsed: false,
-					items: [
-						'technical-knowledge/coding-interview-prep/two-pointers/two-pointers',
-						'technical-knowledge/coding-interview-prep/sliding-window/sliding-window',
-						'technical-knowledge/coding-interview-prep/prefix-sum/prefix-sum',
-						'technical-knowledge/coding-interview-prep/binary-search/binary-search',
-						'technical-knowledge/coding-interview-prep/matrices/matrices',
-					],
-				},
-				{
-					type: 'category',
-					label: '🌲 Trees & Graphs',
-					collapsed: false,
-					items: [
-						'technical-knowledge/coding-interview-prep/tree/tree',
-						'technical-knowledge/coding-interview-prep/bfs/bfs',
-						'technical-knowledge/coding-interview-prep/dfs/dfs',
-						'technical-knowledge/coding-interview-prep/graph/graph',
-						'technical-knowledge/coding-interview-prep/union-find/union-find',
-						'technical-knowledge/coding-interview-prep/trie/trie',
-					],
-				},
-				{
-					type: 'category',
-					label: '⚡ Advanced Patterns',
-					collapsed: false,
-					items: [
-						'technical-knowledge/coding-interview-prep/heap/heap',
-						'technical-knowledge/coding-interview-prep/backtracking/backtracking',
-						'technical-knowledge/coding-interview-prep/dynamic-programming/dynamic-programming',
-						'technical-knowledge/coding-interview-prep/greedy/greedy',
-						'technical-knowledge/coding-interview-prep/bit-manipulation/bit-manipulation',
-						'technical-knowledge/coding-interview-prep/monotonic-stack/monotonic-stack',
-						'technical-knowledge/coding-interview-prep/intervals/intervals',
-					],
-				},
-				{
-					type: 'category',
-					label: '🎯 Frequently Asked Interview Questions',
-					collapsed: true,
-					items: [
-						{
-							type: 'category',
-							label: '☕ Core Java',
-							collapsed: true,
-							items: [
-								'technical-knowledge/interview-questions/java/java-interview-questions',
-								'technical-knowledge/interview-questions/java/break-singleton-java',
-								'technical-knowledge/interview-questions/java/concurrent-collections-interview',
-								'technical-knowledge/interview-questions/java/concurrent-collections-tricky',
-								'technical-knowledge/interview-questions/java/exception-handling-advanced',
-								'technical-knowledge/interview-questions/java/experienced-java-backend-interview',
-								'technical-knowledge/interview-questions/java/java-8-optional-crud',
-								'technical-knowledge/interview-questions/java/java-8-tricky-interview-questions',
-								'technical-knowledge/interview-questions/java/java-collections-differences',
-								'technical-knowledge/interview-questions/java/java-collections-interview',
-								'technical-knowledge/interview-questions/java/java-collections-interview-p2',
-								'technical-knowledge/interview-questions/java/java-comprehensive-interview',
-								'technical-knowledge/interview-questions/java/java-experienced-interview-p1',
-								'technical-knowledge/interview-questions/java/java-lead-interview-scenarios',
-								'technical-knowledge/interview-questions/java/java-multithreading-interview',
-								'technical-knowledge/interview-questions/java/java-runtime-exceptions',
-								'technical-knowledge/interview-questions/java/java-string-basics',
-								'technical-knowledge/interview-questions/java/java-string-rotation',
-								'technical-knowledge/interview-questions/java/java-date-time-api',
-								'technical-knowledge/interview-questions/java/java-tricky-core-questions',
-								'technical-knowledge/interview-questions/java/spring-boot-interview',
-								'technical-knowledge/interview-questions/java/spring-boot-real-time-questions',
-								'technical-knowledge/interview-questions/java/sql-interview-questions',
-								'technical-knowledge/interview-questions/java/tricky-java-interview',
-							]
-						},
-						{
-							type: 'category',
-							label: '🧠 Grokking Java Answers',
-							collapsed: true,
-							items: [
-								'technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-1',
-								'technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-2',
-								'technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-3',
-								'technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-4',
-								'technical-knowledge/interview-questions/grokking-java/java-interview-answers-part-5',
-							]
-						},
-						{
-							type: 'category',
-							label: '💼 General Java/Spring Boot Interviews',
-							collapsed: true,
-							items: [
-								'technical-knowledge/interview-questions/genz-career/java-collections-interview-questions',
-								'technical-knowledge/interview-questions/genz-career/java-interview-questions-100',
-								'technical-knowledge/interview-questions/genz-career/java-interview-questions-trickiest',
-								'technical-knowledge/interview-questions/genz-career/java-oops-interview-guide',
-								'technical-knowledge/interview-questions/genz-career/java-multithreading-interview-guide',
-								{
-									type: 'category',
-									label: '🧪 Mock',
-									collapsed: true,
-									items: [
-										'technical-knowledge/interview-questions/genz-career/mock/accenture-java-springboot-interview-3-years',
-										'technical-knowledge/interview-questions/genz-career/mock/cognizant-java-developer-interview-3-years',
-										'technical-knowledge/interview-questions/genz-career/mock/epam-java-developer-interview-experience',
-										'technical-knowledge/interview-questions/genz-career/mock/hcl-java-developer-interview-experience',
-										'technical-knowledge/interview-questions/genz-career/mock/ibm-java-springboot-interview-3-years',
-										'technical-knowledge/interview-questions/genz-career/mock/tcs-ninja-nqt-interview-experience',
-										'technical-knowledge/interview-questions/genz-career/mock/paytm-java-developer-interview-first-round',
-										'technical-knowledge/interview-questions/genz-career/mock/tcs-java-springboot-interview-3-years',
-										'technical-knowledge/interview-questions/genz-career/mock/wipro-java-springboot-interview-3-years',
-										'technical-knowledge/interview-questions/genz-career/mock-interview/java-spring-boot-14-years-interview-detailed'
-									]
-								},
-								{
-									type: 'category',
-									label: '🚀 Spring Boot',
-									collapsed: true,
-									items: [
-										'technical-knowledge/interview-questions/genz-career/spring-boot/real-time-spring-boot-interview-questions',
-										'technical-knowledge/interview-questions/genz-career/spring-boot/scenario-based-springboot-interview-questions',
-										'technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions',
-										'technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-2',
-										'technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-3',
-										'technical-knowledge/interview-questions/genz-career/spring-boot/spring-boot-tricky-interview-questions-4',
-										'technical-knowledge/interview-questions/genz-career/spring-boot/top-spring-security-interview-questions'
-									]
-								}
-							]
-						},
-						{
-							type: 'category',
-							label: '🏢 Company (💎 Premium)',
-							collapsed: true,
-							items: [
-								'premium/intro',
-								'premium/company/accenture-java-interview',
-								'premium/company/accenture-java-developer-interview-questions',
-								'premium/company/accenture-java-developer-interview-16lpa',
-								'premium/company/airtel-java-developer-interview-questions',
-								'premium/company/capgemini-java-developer-interview-questions',
-								'premium/company/coforge-java-developer-interview-22lpa',
-								'premium/company/cognizant-fresher-java-developer-interview',
-								'premium/company/deloitte-java-developer-interview-questions',
-								'premium/company/deloitte-java-developer-interview-17lpa',
-								'premium/company/epam-java-developer-interview-22lpa',
-								'premium/company/hashedin-java-developer-interview-questions',
-								'premium/company/hcl-java-fullstack-developer-interview',
-								'premium/company/ibm-java-developer-interview-experience',
-								'premium/company/infosys-java-developer-interview-17lpa',
-								'premium/company/java-developer-interview-iris',
-								'premium/company/ltimindtree-java-developer-interview-questions',
-								'premium/company/nagarro-java-developer-interview-questions',
-								'premium/company/ntt-data-java-developer-interview',
-								'premium/company/oracle-java-developer-interview-questions',
-								'premium/company/paytm-java-developer-interview-questions',
-								'premium/company/pwc-java-developer-interview-questions',
-								'premium/company/tcs-java-developer-interview-13lpa',
-								'premium/company/tech-mahindra-java-developer-interview',
-								'premium/company/walmart-java-developer-interview-30lpa',
-								'premium/company/wipro-fullstack-java-developer-interview',
-								'premium/company/wipro-java-developer-interview-questions'
-							]
-						},
-					]
-				}
-			]
-		},
-		{
-			type: 'category',
-			label: '📈 DSA Roadmap',
-			collapsed: true,
-			items: [
-				{
-					type: 'category',
-					label: '🧠 DSA Roadmap (20 Weeks)',
-					items: [
-						'technical-knowledge/dsa/20-week-dsa-roadmap-intro',
-						'technical-knowledge/dsa/leetcode-daily',
-						'technical-knowledge/dsa/week-1-arrays-strings-prefix-sums',
-						'technical-knowledge/dsa/week-2-two-pointers-sliding-window',
-						'technical-knowledge/dsa/week-3-linked-lists-pointers',
-						'technical-knowledge/dsa/week-4-hash-tables-sets',
-						'technical-knowledge/dsa/week-5-stacks-queues-monotonic',
-						'technical-knowledge/dsa/week-6-binary-trees-bst',
-						'technical-knowledge/dsa/week-7-graph-foundations',
-						'technical-knowledge/dsa/week-8-advanced-graph-concepts',
-						'technical-knowledge/dsa/week-9-binary-search',
-						'technical-knowledge/dsa/week-10-recursion-backtracking',
-						'technical-knowledge/dsa/week-11-intervals-sweep-line',
-						'technical-knowledge/dsa/week-12-heaps-greedy',
-						'technical-knowledge/dsa/week-13-dynamic-programming-1d',
-						'technical-knowledge/dsa/week-14-dynamic-programming-2d',
-						'technical-knowledge/dsa/week-15-advanced-sliding-windows',
-						'technical-knowledge/dsa/week-16-tries-prefix-trees',
-						'technical-knowledge/dsa/week-17-shortest-paths-mst',
-						'technical-knowledge/dsa/week-18-disjoint-set-union',
-						'technical-knowledge/dsa/week-19-bit-manipulation-math',
-						'technical-knowledge/dsa/week-20-comprehensive-review-systems',
-					],
-				}
-			]
-		},
-		{
-			type: 'category',
-			label: '🏢 LeetCode Company',
-			collapsed: true,
-			items: [
-				{
-					type: 'autogenerated',
-					dirName: 'technical-knowledge/dsa/leetcode-companywise',
-				},
-			]
-		},
-		{
-			type: 'category',
 			label: '🏦 Banking & Finance',
 			collapsed: true,
 			items: [
@@ -1722,7 +1741,8 @@ const sidebars: SidebarsConfig = {
 				'technical-knowledge/ai-agents/agents',
 				'technical-knowledge/ai-agents/skills',
 				'technical-knowledge/ai-agents/harness',
-				'technical-knowledge/ai-agents/vibe-coding'
+				'technical-knowledge/ai-agents/vibe-coding',
+				'technical-knowledge/ai-agents/context-engineering'
 			]
 		},
 		{

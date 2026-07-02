@@ -3282,6 +3282,74 @@ pre[class*="language-"]::-webkit-scrollbar {
   fill: #1e293b !important;
 }
 
+/* ── Reset styles for DSA Dashboard Table to make it inline and responsive ── */
+table.dsa-dashboard-table {
+  display: table !important;
+  width: 100% !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
+  border: none !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+}
+
+[data-theme="light"] table.dsa-dashboard-table {
+  border: none !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+}
+
+table.dsa-dashboard-table thead {
+  background: transparent !important;
+}
+
+table.dsa-dashboard-table th {
+  padding: 10px 16px !important;
+  border: none !important;
+  border-bottom: 1px solid var(--ifm-table-border-color, rgba(255, 255, 255, 0.04)) !important;
+  color: var(--brand-green) !important;
+  font-size: 0.85rem !important;
+  font-weight: 700 !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  background: none !important;
+}
+
+table.dsa-dashboard-table tr {
+  background: transparent !important;
+  border: none !important;
+}
+
+table.dsa-dashboard-table tr:nth-child(even) {
+  background: transparent !important;
+}
+
+table.dsa-dashboard-table td {
+  padding: 10px 16px !important;
+  border: none !important;
+  border-bottom: 1px solid var(--ifm-table-border-color, rgba(255, 255, 255, 0.02)) !important;
+  vertical-align: middle !important;
+  color: var(--ifm-font-color-base) !important;
+  font-size: 0.88rem !important;
+}
+
+[data-theme="light"] table.dsa-dashboard-table td {
+  color: var(--ifm-font-color-base) !important;
+  border-bottom: 1px solid var(--ifm-table-border-color) !important;
+}
+
+table.dsa-dashboard-table tr:hover {
+  background: rgba(74, 222, 128, 0.04) !important;
+}
+
+[data-theme="light"] table.dsa-dashboard-table tr:hover {
+  background: rgba(47, 143, 78, 0.04) !important;
+}
+
+
 
 
 

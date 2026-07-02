@@ -90,7 +90,8 @@ Understanding this evolution helps us see why "agents nowadays" are so different
 | **Gen 1 (2022-2023)** | **Direct Completion** | Short prompts, precise questions | Generates a single block of text or code. No loop. | ChatGPT (GPT-3.5), early playground models |
 | **Gen 2 (2023-2024)** | **RAG & Chatbots** | Contextual queries with documents | Retrieves documents (Vector Search) and answers questions using that context. | Custom GPTs, Retrieval-Augmented Chatbots |
 | **Gen 3 (2024-2025)** | **Agentic Workflows** | High-level goals | Interacts in loop (ReAct), calls APIs, edits files, runs tests, self-corrects. | Cursor Composer, Devin, Windsurf, Antigravity |
-| **Gen 4 (Present/2026)** | **Multi-Agent Systems** | Enterprise/System goals | Teams of specialized agents collaborating via message passing and standardized protocols (MCP). | Production LangGraph teams, AutoGen networks |
+| **Gen 4 (2025-2026)** | **Multi-Agent Systems** | Enterprise/System goals | Teams of specialized agents collaborating via message passing and standardized protocols (MCP). | Production LangGraph teams, AutoGen networks |
+| **Gen 5 (2026-Present)** | **Context Engineering** | Intent + constraints | Engineers manage context budgets, model routing, compaction, and AGENTS.md to maximize agent reliability at scale. | Context-aware IDEs, orchestrated agent fleets |
 
 ---
 
@@ -137,3 +138,4 @@ If you are beginning your journey with AI Agents, focus on understanding these c
 - [ ] **Agentic Skills ([skills.md](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/docs/technical-knowledge/ai-agents/skills.md)):** Understand how function calling, Vector DBs, and the new **Model Context Protocol (MCP)** work.
 - [ ] **Agent Harnesses ([harness.md](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/docs/technical-knowledge/ai-agents/harness.md)):** Explore the runtimes that execute agents, keep them secure, and evaluate their success rates.
 - [ ] **Vibe Coding Workflows ([vibe-coding.md](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/docs/technical-knowledge/ai-agents/vibe-coding.md)):** Master the art of prompting, structuring projects, and steering agents for high-speed delivery.
+- [ ] **Context Engineering ([context-engineering.md](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/docs/technical-knowledge/ai-agents/context-engineering.md)):** The 2026 discipline — context compaction, context rot/drift, model routing, thinking budget, subagents, and AGENTS.md configuration.
