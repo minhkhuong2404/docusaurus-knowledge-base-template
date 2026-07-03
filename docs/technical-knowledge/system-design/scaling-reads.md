@@ -319,6 +319,34 @@ Where:
 
 ---
 
+#### Hot Key Saturation (High Cache Hit, Low System Performance)
+
+A distinct class of failure occurs when the cache hit rate remains extremely high (e.g., 99%), but system performance degrades significantly. This indicates that traffic is highly concentrated on a few **hot keys**.
+
+Unlike a Cache Stampede (which is a storm of cache *misses* hammering the database), Hot Key Saturation is a bottleneck at the *cache tier itself* caused by cache *hits*.
+
+```mermaid
+graph TD
+    UserRequests["10,000 requests/sec for homepage:layout"] --> ShardA[Redis Shard A]
+    UserRequests --> NIC["NIC Bandwidth Saturation: Limit Exceeded (e.g., 10 Gbps)"]
+    ShardA --> SingleThreadBlocked["Single Thread Blocked on O(N) command HGETALL"]
+    SingleThreadBlocked --> LatencySpike[System-wide Latency Spike & Timeouts]
+```
+
+**Core Bottlenecks at Scale:**
+* **Network NIC Saturation:** Reading a 500 KB serialized JSON key at 10,000 QPS requires 5 GB/s ($\approx$ 40 Gbps) network throughput. This easily saturates the physical network interface cards of both the cache nodes and application servers, leading to packet loss, retransmissions, and timeouts.
+* **Single-Thread Event Loop Blocking:** Key-value stores like Redis process commands sequentially in a single thread. Running heavy commands (e.g., `HGETALL`, `SMEMBERS`, `LRANGE 0 -1`) on large hot keys blocks the event loop, queuing up all other requests.
+* **Hot Shards:** In clustered environments, keys are distributed by hash slot to different nodes. A hot key directs all QPS to a single cluster node, causing a CPU hotspot on that node while the rest of the cluster sits idle.
+
+**Solutions & Mitigations:**
+1. **L1 Near Cache:** Store hot keys in the application's local heap memory (e.g., Caffeine/Guava) for a very short duration (1–5 seconds). This intercepts the majority of requests before they hit the network.
+2. **Key Replication (Splitting):** Replicate the hot key across shards by appending random suffixes (e.g., `global_config:0`, `global_config:1`, ..., `global_config:N`). Update all replicas on writes, and query a random suffix on reads.
+3. **Avoid O(N) Commands:** Query specific fields (`HGET`/`HMGET`) or use cursors (`HSCAN`) instead of loading entire data structures.
+
+For detailed design patterns, detection commands, and a defensive Java Caffeine+Redis implementation, see the **[Redis Hot Keys Guide](../redis/redis-performance-patterns.md#redis-hot-keys)**.
+
+---
+
 ## Read Replicas
 
 When read volume surpasses the memory capacity or budget of a cache layer — or when queries are too varied/ad-hoc to cache effectively (e.g., admin dashboards, reporting) — scale the storage tier itself using read replicas.

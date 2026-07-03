@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'b5d'),
+    component: ComponentCreator('/', '227'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '4cf'),
+        component: ComponentCreator('/', '057'),
         routes: [
           {
             path: '/tags',
@@ -7117,7 +7117,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'b7a'),
+            component: ComponentCreator('/', '10c'),
             routes: [
               {
                 path: '/aws',
@@ -13657,7 +13657,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/interview-questions/interview-framework',
-                component: ComponentCreator('/technical-knowledge/interview-questions/interview-framework', 'd72'),
+                component: ComponentCreator('/technical-knowledge/interview-questions/interview-framework', '8bd'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14941,7 +14941,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/retry-pattern',
-                component: ComponentCreator('/technical-knowledge/system-design/retry-pattern', '9ee'),
+                component: ComponentCreator('/technical-knowledge/system-design/retry-pattern', '689'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14995,7 +14995,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/service-mesh',
-                component: ComponentCreator('/technical-knowledge/system-design/service-mesh', '9c3'),
+                component: ComponentCreator('/technical-knowledge/system-design/service-mesh', '6da'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

@@ -284,6 +284,204 @@ FT.AGGREGATE product-idx "*"
 
 ---
 
+## Redis Hot Keys
+
+A **Hot Key** is a specific cache key that receives a disproportionately large share of total requests (extreme QPS). While a high cache hit rate (e.g., 95%–99%) is generally positive, a system can still degrade or fail if those hits are concentrated on a few hot keys.
+
+### Why High Cache Hit Rate is Deceptive
+
+A standard dashboard showing a high cache hit rate only indicates that Redis successfully returned data. It does not measure the distribution of requests or resource consumption per key. A hot key causes bottlenecks through four main mechanisms:
+
+1. **Network Bandwidth Saturation (NIC Bottleneck):**
+   If a cached JSON payload is 700 KB (e.g., a detailed homepage layout or product page) and is requested 5,000 times per second, the network throughput required is:
+   $$\text{700 KB} \times \text{5,000 req/sec} = 3.5 \text{ GB/sec} \approx 28 \text{ Gbps}$$
+   This quickly saturates the network interface card (NIC) of both the Redis node and the application instances, leading to packet drops, TCP retransmissions, and latency spikes.
+
+2. **Redis Single-Threaded CPU Blockage:**
+   Redis command execution is single-threaded. If a hot key contains a large collection (Hash, Set, List) and is queried using $O(N)$ operations (like `HGETALL`, `SMEMBERS`, or `LRANGE`), that single command can block the event loop for milliseconds. Because Redis handles all commands sequentially, this blocks all other incoming requests, causing P99 latency to jump and clients to timeout.
+
+3. **Application Deserialization Overhead:**
+   Every client instance fetching a large hot key must allocate memory, copy bytes from network buffers, and deserialize the payload (e.g., from raw bytes/JSON to Java Objects). Under high QPS, this causes client-side garbage collection (GC) pressure and high CPU utilization.
+
+4. **Cluster Shard Imbalance (Hot Shards):**
+   In a Redis Cluster, keys are distributed across 16,384 hash slots, and each slot belongs to a specific master shard. If traffic is heavily skewed towards one hot key, all requests land on the single shard hosting that key. While the cluster as a whole might show low CPU usage, that single master shard is saturated.
+
+---
+
+### Classification of Hot Keys
+
+| Hot Key Type | Examples | Primary Bottleneck | Primary Mitigation |
+| :--- | :--- | :--- | :--- |
+| **Small Payload, Extreme QPS** | `feature_flags:global`, `config:maintenance_mode`, `public_key:payment` | Redis client connection limits, network packet overhead. | L1 Near Cache (in-memory JVM cache with short TTL). |
+| **Large Payload, High QPS** | `homepage:layout:v2`, `flash_sale:product:98231` | Network bandwidth saturation, application deserialization CPU. | Payload compression, local L1 cache, payload splitting. |
+| **Heavy Command on Large Collection** | `HGETALL user:roles:admin`, `SMEMBERS tenant:permissions:active` | Redis single-thread CPU blockage (blocked event loop). | Avoid $O(N)$ commands; use `HSCAN`/`HMGET`/`HGET` or separate String keys. |
+
+---
+
+### Detection and Monitoring
+
+To locate hot keys on production systems:
+
+1. **Redis Stats (`redis-cli INFO stats`):**
+   Monitor `total_net_output_bytes` and `instantaneous_ops_per_sec`. A sharp rise in output bandwidth with static CPU/memory points to heavy reads on large keys.
+
+2. **Command Stats (`redis-cli INFO commandstats`):**
+   Look at `usec_per_call` for commands like `hgetall`, `smembers`, and `lrange`. If these show high average times, check which keys they query.
+
+3. **Slow Log (`redis-cli SLOWLOG GET 20`):**
+   Redis logs commands exceeding `slowlog-log-slower-than` (default 10ms). Hot keys accessed via heavy operations will immediately appear here.
+
+4. **Built-in Scanner Tools:**
+   - `redis-cli --bigkeys`: Scans the keyspace and reports the largest keys per data type.
+   - `redis-cli --hotkeys`: Scans using the **LFU (Least Frequently Used)** algorithm to find keys with the highest access frequency. 
+     *(Requires LFU eviction policy enabled, e.g., `maxmemory-policy allkeys-lfu` or `volatile-lfu`).*
+
+5. **Client-Side/Application Monitoring:**
+   Standardize key schemas and instrument the cache client wrapper to record QPS and payload sizes by key prefixes (e.g., `product:detail:*`).
+
+---
+
+### Mitigation and Solutions
+
+#### 1. L1 Local Cache (Near Cache)
+The most effective way to protect Redis from hot keys is to serve them before the request leaves the application process. Add a short-lived local cache (e.g., Caffeine or Guava) in front of Redis. Even a 2-second TTL for hot keys can absorb 99% of the traffic.
+
+#### 2. Key Splitting & Replication (Replicated Hot Keys)
+If a key must be read from Redis directly and cannot be cached locally due to real-time consistency requirements, replicate it across multiple shards by appending a random suffix:
+- Original key: `global_config`
+- Replicated keys: `global_config:0`, `global_config:1`, `global_config:2`, `global_config:3`
+When writing, update all replicas. When reading, randomly query one of the replicas: `global_config: + random(0, 3)`. This distributes the QPS evenly across different slots and cluster shards.
+
+#### 3. Command Optimization
+Never fetch entire collections when only a few fields are needed.
+- Replace `HGETALL key` with `HMGET key field1 field2` or `HGET key field1`.
+- Replace `SMEMBERS key` with `SISMEMBER key member` or paginate using `SSCAN`.
+
+#### 4. Payload Compression and Field Pruning
+Store only the minimum required fields. For large JSON blocks, compress the payload on the client side using GZIP or Brotli before writing to Redis. This trade-off shifts CPU load to the application layer to save critical network bandwidth.
+
+#### 5. Request Coalescing (Singleflight)
+For cache updates or fallback DB lookups, use a Singleflight pattern. If 1,000 threads request the same missing hot key, only the first thread executes the lookup and writes it to cache, while the remaining 999 threads await that single result.
+
+---
+
+### Implementation: Defensive 2-Level Cache (Caffeine + Redis)
+
+Below is a robust Java implementation utilizing Caffeine as a local L1 cache and Spring Boot's `RedisTemplate` as L2, incorporating defensive checks, local short-term caching for hot keys, and network recovery protection.
+
+```java
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
+
+import java.time.Duration;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+
+@Service
+@Slf4j
+public class ProductCacheService {
+
+    private final RedisTemplate<String, byte[]> redisTemplate;
+    private final ProductRepository productRepository;
+
+    // L1 Local Cache: Caffeine
+    // We enforce a small maximum size and short TTL to protect against stale data,
+    // which serves as our first line of defense against Hot Keys.
+    private final Cache<Long, Product> l1CaffeineCache = Caffeine.newBuilder()
+            .maximumSize(5000)
+            .expireAfterWrite(5, TimeUnit.SECONDS) // Very short L1 TTL (5s) to mitigate hot key QPS
+            .recordStats()
+            .build();
+
+    public ProductCacheService(RedisTemplate<String, byte[]> redisTemplate, 
+                               ProductRepository productRepository) {
+        this.redisTemplate = redisTemplate;
+        this.productRepository = productRepository;
+    }
+
+    public Product getProduct(Long id) {
+        // 1. Read from L1 Cache (In-Memory JVM Heap)
+        Product product = l1CaffeineCache.getIfPresent(id);
+        if (product != null) {
+            log.debug("L1 Cache Hit for product id: {}", id);
+            return product;
+        }
+
+        // 2. Read from L2 Cache (Redis)
+        String redisKey = "product:detail:" + id;
+        byte[] rawBytes = null;
+        try {
+            rawBytes = redisTemplate.opsForValue().get(redisKey);
+        } catch (Exception e) {
+            // Redis failure should NOT break the application.
+            // Degrade gracefully by falling back directly to DB.
+            log.error("Redis unreachable while reading key: {}. Degrading to DB.", redisKey, e);
+            return fetchFromDbAndFallback(id);
+        }
+
+        if (rawBytes != null) {
+            log.debug("L2 Cache Hit (Redis) for product id: {}", id);
+            product = deserialize(rawBytes);
+            
+            // Warm L1 cache to absorb subsequent QPS immediately
+            l1CaffeineCache.put(id, product);
+            return product;
+        }
+
+        // 3. Cache Miss (L1 & L2) - Load from Database
+        return loadAndWarmCache(id, redisKey);
+    }
+
+    private synchronized Product loadAndWarmCache(Long id, String redisKey) {
+        // Double-check L1 in case another thread populated it while waiting for the lock
+        Product product = l1CaffeineCache.getIfPresent(id);
+        if (product != null) return product;
+
+        log.info("L1 & L2 Cache Miss. Querying DB for product: {}", id);
+        product = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found: " + id));
+
+        // Warm both L1 (sync) and L2 (async to avoid blocking response)
+        l1CaffeineCache.put(id, product);
+        
+        byte[] serializedProduct = serialize(product);
+        CompletableFuture.runAsync(() -> {
+            try {
+                // Set key with a jittered L2 TTL to avoid Cache Avalanche
+                long jitter = java.util.concurrent.ThreadLocalRandom.current().nextLong(60, 300);
+                Duration ttl = Duration.ofMinutes(30).plusSeconds(jitter);
+                
+                redisTemplate.opsForValue().set(redisKey, serializedProduct, ttl);
+            } catch (Exception e) {
+                log.error("Failed to write key {} to Redis", redisKey, e);
+            }
+        });
+
+        return product;
+    }
+
+    private Product fetchFromDbAndFallback(Long id) {
+        // Under Redis outage, we bypass cache warming to avoid piling writes on a dead socket
+        return productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found: " + id));
+    }
+
+    private byte[] serialize(Product product) {
+        // Implement fast client-side serialization (e.g. Kryo, Protobuf, or Jackson JSON bytes)
+        return JacksonSerializer.toBytes(product);
+    }
+
+    private Product deserialize(byte[] bytes) {
+        return JacksonSerializer.fromBytes(bytes, Product.class);
+    }
+}
+```
+
+---
+
 ## Performance Tuning
 
 ### Key Settings

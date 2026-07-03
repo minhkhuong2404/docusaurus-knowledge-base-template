@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-b5d": {
+  "/-227": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-4cf": {
+  "/-057": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -5701,7 +5701,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-b7a": {
+  "/-10c": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -10068,7 +10068,7 @@
     "__comp": "17896441",
     "content": "8a8e4d60"
   },
-  "/technical-knowledge/interview-questions/interview-framework-d72": {
+  "/technical-knowledge/interview-questions/interview-framework-8bd": {
     "__comp": "17896441",
     "content": "45806eee"
   },
@@ -10924,7 +10924,7 @@
     "__comp": "17896441",
     "content": "ec5f7116"
   },
-  "/technical-knowledge/system-design/retry-pattern-9ee": {
+  "/technical-knowledge/system-design/retry-pattern-689": {
     "__comp": "17896441",
     "content": "59112a05"
   },
@@ -10960,7 +10960,7 @@
     "__comp": "17896441",
     "content": "c5e9f580"
   },
-  "/technical-knowledge/system-design/service-mesh-9c3": {
+  "/technical-knowledge/system-design/service-mesh-6da": {
     "__comp": "17896441",
     "content": "820ce876"
   },

@@ -413,3 +413,34 @@ public class ReliableJobQueue {
 ```
 
 **Better alternative for new systems:** Use Redis Streams with consumer groups — built-in PEL (Pending Entries List) tracks unACKed messages with delivery count and idle time.
+
+---
+
+### 🔴 What is a Redis Hot Key, and how do you resolve it in production when cache hit rate remains high but system latency increases?
+
+A **Redis Hot Key** occurs when a specific cache key receives a disproportionate volume of incoming requests (extreme QPS). 
+
+#### Why Cache Hit Rate is Deceptive
+A high cache hit rate (e.g., 99%) only indicates that Redis successfully returned data for 99% of requests. It does not measure key access distribution or downstream resource overhead. A single hot key can overwhelm the infrastructure despite high hit rates due to:
+1. **Network NIC Saturation:** If a cached product catalog or layout JSON is 500 KB and requested 10,000 times/sec, it consumes:
+   $$500\text{ KB} \times 10,000\text{ req/s} = 5\text{ GB/s} \approx 40\text{ Gbps}$$
+   This exceeds standard NIC limits, causing packet drops, TCP retransmissions, and high latency.
+2. **Single-Thread CPU Blockage:** Redis command execution is single-threaded. Fetching massive collections or running $O(N)$ operations (e.g., `HGETALL`, `SMEMBERS`, `LRANGE 0 -1`) blocks the event loop. Other concurrent operations queue up, causing timeouts.
+3. **Application CPU Load:** Client instances waste CPU cycles deserializing the large payload repeatedly.
+4. **Cluster Shard Imbalance (Hot Shards):** In a Redis Cluster, slots are assigned to specific master nodes. A hot key routes 100% of its QPS to a single shard, saturating that node while other shards remain idle.
+
+#### How to Detect Hot Keys
+- **High-level metrics:** Run `redis-cli INFO stats` and monitor `total_net_output_bytes` and `keyspace_hits`. Compare CPU load and `instantaneous_ops_per_sec` per node in a cluster to identify hot shards.
+- **Detailed profiling:** Check `redis-cli INFO commandstats` for average execution times (`usec_per_call`) and inspect `redis-cli SLOWLOG GET 20`.
+- **Key scanning:** Use `redis-cli --hotkeys` to scan key frequencies *(requires LFU eviction enabled, e.g., `maxmemory-policy allkeys-lfu`)*.
+- **Real-time sampling:** Run `redis-cli MONITOR` for a short period (1–2 seconds) to sample traffic. Avoid keeping it active long-term as it degrades Redis performance.
+
+#### Production Mitigations
+1. **L1 Local Cache (Near Cache):** Add a short-lived local cache (e.g., Caffeine/Guava in Java, in-process memory) in front of Redis. A TTL of just 2–5 seconds absorbs extreme QPS at the application layer, protecting the network.
+2. **Key Splitting / Replication:** Append random suffixes to replicate the hot key across shards:
+   - Write path: Update all replicas (`global_config:0`, `global_config:1`, ..., `global_config:N`).
+   - Read path: Randomly load-balance reads (`global_config:` + `random(0, N)`). This distributes QPS across different slots and nodes.
+3. **Optimize Query Commands:** Avoid fetching entire collections. Replace `HGETALL` with `HMGET`/`HGET` or paginate with `HSCAN`.
+4. **Payload Reduction & Compression:** Compress heavy payloads on the client side using GZIP or Brotli before writing to Redis, and prune unused fields to save network bandwidth.
+5. **Request Coalescing (Singleflight):** For cache updates, use a singleflight/coalescer so that concurrent threads request the DB/Redis once and share the result.
+6. **Read Replicas:** Distribute read traffic by querying Redis replicas rather than the master.
