@@ -92,8 +92,9 @@ Evaluating your ability to design scalable, highly available distributed systems
   * **I**nitial Architecture: Draw high-level blocks (Load Balancer, API Gateway, Services, DBs).
   * **O**ptimizations: Scale reads/writes, introduce caching, sharding, and message queues.
 
-> [!IMPORTANT]
-> Never jump straight to the architecture drawing. Always establish requirements and QPS estimates first. Refer to the [System Design Interview Framework](/technical-knowledge/system-design/interview-framework) for detailed deep dives.
+:::tip
+Never jump straight to the architecture drawing. Always establish requirements and QPS estimates first. Refer to the [System Design Interview Framework](/technical-knowledge/system-design/interview-framework) for detailed deep dives.
+:::
 
 ### 3. Low-Level Design (LLD) / OOD Round
 Testing your code extensibility, design pattern application, and object-oriented clean code.
@@ -126,8 +127,9 @@ Prepare 6 to 8 stories from your past experience that you can adapt to different
 * **Leadership:** Mentoring someone or taking initiative to solve a technical debt.
 * **Delivery:** Meeting a tight deadline under constraints.
 
-> [!TIP]
-> Use numbers to highlight results: *"reduced latency by 45%"*, *"onboarded 3 new engineers, reducing setup time by 2 days"*, or *"saved $12K/month in cloud infrastructure costs."*
+:::tip
+Use numbers to highlight results: *"reduced latency by 45%"*, *"onboarded 3 new engineers, reducing setup time by 2 days"*, or *"saved $12K/month in cloud infrastructure costs."*
+:::
 
 ---
 

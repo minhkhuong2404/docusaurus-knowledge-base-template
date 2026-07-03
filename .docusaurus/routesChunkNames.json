@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-68a": {
+  "/-b5d": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-f99": {
+  "/-4cf": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -380,6 +380,10 @@
   "/tags/background-tasks-58f": {
     "__comp": "df203c0f",
     "__props": "4193a23b"
+  },
+  "/tags/backoff-3b7": {
+    "__comp": "df203c0f",
+    "__props": "ea5afe8a"
   },
   "/tags/backtracking-629": {
     "__comp": "df203c0f",
@@ -5293,6 +5297,10 @@
     "__comp": "df203c0f",
     "__props": "ecc30e39"
   },
+  "/tags/traffic-management-599": {
+    "__comp": "df203c0f",
+    "__props": "1b774b04"
+  },
   "/tags/transactions-286": {
     "__comp": "df203c0f",
     "__props": "f62a9cd8"
@@ -5693,7 +5701,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-279": {
+  "/-b7a": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -6144,7 +6152,7 @@
     "__comp": "17896441",
     "content": "3f8eb35f"
   },
-  "/docs-3d7": {
+  "/docs-fa8": {
     "__comp": "17896441",
     "content": "0e384e19"
   },
@@ -10784,7 +10792,7 @@
     "__comp": "17896441",
     "content": "ce0d883d"
   },
-  "/technical-knowledge/system-design/bulkhead-pattern-4cb": {
+  "/technical-knowledge/system-design/bulkhead-pattern-9a7": {
     "__comp": "17896441",
     "content": "bc804bd9"
   },
@@ -10804,7 +10812,7 @@
     "__comp": "17896441",
     "content": "8c140918"
   },
-  "/technical-knowledge/system-design/circuit-breaker-pattern-509": {
+  "/technical-knowledge/system-design/circuit-breaker-pattern-13a": {
     "__comp": "17896441",
     "content": "62899fb2"
   },
@@ -10816,7 +10824,7 @@
     "__comp": "17896441",
     "content": "65c13a58"
   },
-  "/technical-knowledge/system-design/contract-testing-58d": {
+  "/technical-knowledge/system-design/contract-testing-925": {
     "__comp": "17896441",
     "content": "875aa17a"
   },
@@ -10828,7 +10836,7 @@
     "__comp": "17896441",
     "content": "0098328c"
   },
-  "/technical-knowledge/system-design/database-per-service-057": {
+  "/technical-knowledge/system-design/database-per-service-ed5": {
     "__comp": "17896441",
     "content": "73d1f34f"
   },
@@ -10836,7 +10844,7 @@
     "__comp": "17896441",
     "content": "8a82e430"
   },
-  "/technical-knowledge/system-design/deployment-strategies-bcf": {
+  "/technical-knowledge/system-design/deployment-strategies-3b8": {
     "__comp": "17896441",
     "content": "eaab6fc7"
   },
@@ -10844,7 +10852,7 @@
     "__comp": "17896441",
     "content": "b21b4701"
   },
-  "/technical-knowledge/system-design/distributed-tracing-852": {
+  "/technical-knowledge/system-design/distributed-tracing-0d6": {
     "__comp": "17896441",
     "content": "de33b6d0"
   },
@@ -10852,11 +10860,11 @@
     "__comp": "17896441",
     "content": "a12e521a"
   },
-  "/technical-knowledge/system-design/envoy-proxy-651": {
+  "/technical-knowledge/system-design/envoy-proxy-65e": {
     "__comp": "17896441",
     "content": "ec34228d"
   },
-  "/technical-knowledge/system-design/event-driven-microservices-6eb": {
+  "/technical-knowledge/system-design/event-driven-microservices-814": {
     "__comp": "17896441",
     "content": "9ebe4bab"
   },
@@ -10868,7 +10876,7 @@
     "__comp": "17896441",
     "content": "fb6e70f5"
   },
-  "/technical-knowledge/system-design/kubernetes-networking-e4a": {
+  "/technical-knowledge/system-design/kubernetes-networking-90f": {
     "__comp": "17896441",
     "content": "f7ca0986"
   },
@@ -10888,7 +10896,7 @@
     "__comp": "17896441",
     "content": "3940c236"
   },
-  "/technical-knowledge/system-design/microservices-patterns-523": {
+  "/technical-knowledge/system-design/microservices-patterns-ec8": {
     "__comp": "17896441",
     "content": "a912936e"
   },
@@ -10916,7 +10924,7 @@
     "__comp": "17896441",
     "content": "ec5f7116"
   },
-  "/technical-knowledge/system-design/retry-pattern-d36": {
+  "/technical-knowledge/system-design/retry-pattern-9ee": {
     "__comp": "17896441",
     "content": "59112a05"
   },
@@ -10944,15 +10952,15 @@
     "__comp": "17896441",
     "content": "e8a6b3e1"
   },
-  "/technical-knowledge/system-design/service-decomposition-9c7": {
+  "/technical-knowledge/system-design/service-decomposition-4b4": {
     "__comp": "17896441",
     "content": "c046f152"
   },
-  "/technical-knowledge/system-design/service-discovery-d74": {
+  "/technical-knowledge/system-design/service-discovery-f4d": {
     "__comp": "17896441",
     "content": "c5e9f580"
   },
-  "/technical-knowledge/system-design/service-mesh-dc0": {
+  "/technical-knowledge/system-design/service-mesh-9c3": {
     "__comp": "17896441",
     "content": "820ce876"
   },
@@ -10960,11 +10968,11 @@
     "__comp": "17896441",
     "content": "1d0030f3"
   },
-  "/technical-knowledge/system-design/sidecar-pattern-0ee": {
+  "/technical-knowledge/system-design/sidecar-pattern-f00": {
     "__comp": "17896441",
     "content": "7bef6529"
   },
-  "/technical-knowledge/system-design/strangler-fig-pattern-33c": {
+  "/technical-knowledge/system-design/strangler-fig-pattern-f38": {
     "__comp": "17896441",
     "content": "609055e5"
   },

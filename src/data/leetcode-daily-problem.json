@@ -1,8 +1,8 @@
 {
-  "id": "3286",
-  "title": "Find a Safe Walk Through a Grid",
-  "url": "https://leetcode.com/problems/find-a-safe-walk-through-a-grid/",
-  "difficulty": "medium",
-  "topic": "Array, Breadth-First Search, Graph Theory, Heap (Priority Queue), Matrix, Shortest Path",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-07-02."
+  "id": "3620",
+  "title": "Network Recovery Pathways",
+  "url": "https://leetcode.com/problems/network-recovery-pathways/",
+  "difficulty": "hard",
+  "topic": "Array, Binary Search, Dynamic Programming, Graph Theory, Topological Sort, Heap (Priority Queue), Shortest Path",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-07-03."
 }

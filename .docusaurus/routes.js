@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '68a'),
+    component: ComponentCreator('/', 'b5d'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'f99'),
+        component: ComponentCreator('/', '4cf'),
         routes: [
           {
             path: '/tags',
@@ -463,6 +463,11 @@ export default [
           {
             path: '/tags/background-tasks',
             component: ComponentCreator('/tags/background-tasks', '58f'),
+            exact: true
+          },
+          {
+            path: '/tags/backoff',
+            component: ComponentCreator('/tags/backoff', '3b7'),
             exact: true
           },
           {
@@ -6606,6 +6611,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/traffic-management',
+            component: ComponentCreator('/tags/traffic-management', '599'),
+            exact: true
+          },
+          {
             path: '/tags/transactions',
             component: ComponentCreator('/tags/transactions', '286'),
             exact: true
@@ -7107,7 +7117,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '279'),
+            component: ComponentCreator('/', 'b7a'),
             routes: [
               {
                 path: '/aws',
@@ -7783,7 +7793,7 @@ export default [
               },
               {
                 path: '/docs',
-                component: ComponentCreator('/docs', '3d7'),
+                component: ComponentCreator('/docs', 'fa8'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14733,7 +14743,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/bulkhead-pattern',
-                component: ComponentCreator('/technical-knowledge/system-design/bulkhead-pattern', '4cb'),
+                component: ComponentCreator('/technical-knowledge/system-design/bulkhead-pattern', '9a7'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14763,7 +14773,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/circuit-breaker-pattern',
-                component: ComponentCreator('/technical-knowledge/system-design/circuit-breaker-pattern', '509'),
+                component: ComponentCreator('/technical-knowledge/system-design/circuit-breaker-pattern', '13a'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14781,7 +14791,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/contract-testing',
-                component: ComponentCreator('/technical-knowledge/system-design/contract-testing', '58d'),
+                component: ComponentCreator('/technical-knowledge/system-design/contract-testing', '925'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14799,7 +14809,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/database-per-service',
-                component: ComponentCreator('/technical-knowledge/system-design/database-per-service', '057'),
+                component: ComponentCreator('/technical-knowledge/system-design/database-per-service', 'ed5'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14811,7 +14821,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/deployment-strategies',
-                component: ComponentCreator('/technical-knowledge/system-design/deployment-strategies', 'bcf'),
+                component: ComponentCreator('/technical-knowledge/system-design/deployment-strategies', '3b8'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14823,7 +14833,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/distributed-tracing',
-                component: ComponentCreator('/technical-knowledge/system-design/distributed-tracing', '852'),
+                component: ComponentCreator('/technical-knowledge/system-design/distributed-tracing', '0d6'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14835,13 +14845,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/envoy-proxy',
-                component: ComponentCreator('/technical-knowledge/system-design/envoy-proxy', '651'),
+                component: ComponentCreator('/technical-knowledge/system-design/envoy-proxy', '65e'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/event-driven-microservices',
-                component: ComponentCreator('/technical-knowledge/system-design/event-driven-microservices', '6eb'),
+                component: ComponentCreator('/technical-knowledge/system-design/event-driven-microservices', '814'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14859,7 +14869,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/kubernetes-networking',
-                component: ComponentCreator('/technical-knowledge/system-design/kubernetes-networking', 'e4a'),
+                component: ComponentCreator('/technical-knowledge/system-design/kubernetes-networking', '90f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14889,7 +14899,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/microservices-patterns',
-                component: ComponentCreator('/technical-knowledge/system-design/microservices-patterns', '523'),
+                component: ComponentCreator('/technical-knowledge/system-design/microservices-patterns', 'ec8'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14931,7 +14941,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/retry-pattern',
-                component: ComponentCreator('/technical-knowledge/system-design/retry-pattern', 'd36'),
+                component: ComponentCreator('/technical-knowledge/system-design/retry-pattern', '9ee'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14973,19 +14983,19 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/service-decomposition',
-                component: ComponentCreator('/technical-knowledge/system-design/service-decomposition', '9c7'),
+                component: ComponentCreator('/technical-knowledge/system-design/service-decomposition', '4b4'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/service-discovery',
-                component: ComponentCreator('/technical-knowledge/system-design/service-discovery', 'd74'),
+                component: ComponentCreator('/technical-knowledge/system-design/service-discovery', 'f4d'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/service-mesh',
-                component: ComponentCreator('/technical-knowledge/system-design/service-mesh', 'dc0'),
+                component: ComponentCreator('/technical-knowledge/system-design/service-mesh', '9c3'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14997,13 +15007,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/sidecar-pattern',
-                component: ComponentCreator('/technical-knowledge/system-design/sidecar-pattern', '0ee'),
+                component: ComponentCreator('/technical-knowledge/system-design/sidecar-pattern', 'f00'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/strangler-fig-pattern',
-                component: ComponentCreator('/technical-knowledge/system-design/strangler-fig-pattern', '33c'),
+                component: ComponentCreator('/technical-knowledge/system-design/strangler-fig-pattern', 'f38'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
