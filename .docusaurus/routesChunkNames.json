@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-227": {
+  "/-82c": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-057": {
+  "/-faa": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -5701,7 +5701,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-10c": {
+  "/-823": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -10568,7 +10568,7 @@
     "__comp": "17896441",
     "content": "d92134ba"
   },
-  "/technical-knowledge/redis/redis-interview-questions-b7f": {
+  "/technical-knowledge/redis/redis-interview-questions-c72": {
     "__comp": "17896441",
     "content": "ecd8f11b"
   },
@@ -10576,7 +10576,7 @@
     "__comp": "17896441",
     "content": "55c466bd"
   },
-  "/technical-knowledge/redis/redis-performance-patterns-804": {
+  "/technical-knowledge/redis/redis-performance-patterns-c7f": {
     "__comp": "17896441",
     "content": "0484371a"
   },
@@ -10936,7 +10936,7 @@
     "__comp": "17896441",
     "content": "bd0308dc"
   },
-  "/technical-knowledge/system-design/scaling-reads-5ea": {
+  "/technical-knowledge/system-design/scaling-reads-573": {
     "__comp": "17896441",
     "content": "382009e9"
   },
@@ -10968,11 +10968,11 @@
     "__comp": "17896441",
     "content": "1d0030f3"
   },
-  "/technical-knowledge/system-design/sidecar-pattern-f00": {
+  "/technical-knowledge/system-design/sidecar-pattern-836": {
     "__comp": "17896441",
     "content": "7bef6529"
   },
-  "/technical-knowledge/system-design/strangler-fig-pattern-f38": {
+  "/technical-knowledge/system-design/strangler-fig-pattern-ec3": {
     "__comp": "17896441",
     "content": "609055e5"
   },

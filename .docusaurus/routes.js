@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '227'),
+    component: ComponentCreator('/', '82c'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '057'),
+        component: ComponentCreator('/', 'faa'),
         routes: [
           {
             path: '/tags',
@@ -7117,7 +7117,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '10c'),
+            component: ComponentCreator('/', '823'),
             routes: [
               {
                 path: '/aws',
@@ -14407,7 +14407,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/redis/redis-interview-questions',
-                component: ComponentCreator('/technical-knowledge/redis/redis-interview-questions', 'b7f'),
+                component: ComponentCreator('/technical-knowledge/redis/redis-interview-questions', 'c72'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14419,7 +14419,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/redis/redis-performance-patterns',
-                component: ComponentCreator('/technical-knowledge/redis/redis-performance-patterns', '804'),
+                component: ComponentCreator('/technical-knowledge/redis/redis-performance-patterns', 'c7f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14959,7 +14959,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/scaling-reads',
-                component: ComponentCreator('/technical-knowledge/system-design/scaling-reads', '5ea'),
+                component: ComponentCreator('/technical-knowledge/system-design/scaling-reads', '573'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -15007,13 +15007,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/sidecar-pattern',
-                component: ComponentCreator('/technical-knowledge/system-design/sidecar-pattern', 'f00'),
+                component: ComponentCreator('/technical-knowledge/system-design/sidecar-pattern', '836'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/strangler-fig-pattern',
-                component: ComponentCreator('/technical-knowledge/system-design/strangler-fig-pattern', 'f38'),
+                component: ComponentCreator('/technical-knowledge/system-design/strangler-fig-pattern', 'ec3'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

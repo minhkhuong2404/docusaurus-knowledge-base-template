@@ -91,6 +91,63 @@ Understanding how a request flows through Spring MVC is essential:
 
 ---
 
+## The Servlet API Foundation (How Tomcat Bridges to Spring)
+
+Spring MVC (including its REST API capabilities) does not run in isolation; it is built entirely on top of the standard Java **Servlet API**. 
+
+When a client sends an HTTP request, it enters a servlet container (like Apache Tomcat or Jetty) which acts as the web server, handles the network TCP handshake, and maps the request into the Spring application.
+
+### Request Flow: From Network Socket to Spring Controllers
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Client
+    participant Tomcat as Tomcat Server (Servlet Container)
+    participant Filters as Servlet Filter Chain
+    participant DS as DispatcherServlet (Spring Front Controller)
+    participant Spring as Spring Application Code (Controller, Service)
+
+    Client->>Tomcat: TCP / HTTP Request
+    Note over Tomcat: Parses raw HTTP to HttpServletRequest & HttpServletResponse
+    Tomcat->>Filters: doFilter(request, response)
+    Note over Filters: Executes Filters (e.g., CorsFilter, Spring Security FilterChainProxy)
+    Filters->>DS: service(request, response)
+    Note over DS: Entry point into Spring. Executes doService() / doDispatch()
+    DS->>Spring: Routes request to Handler & invokes @RestController/Controller
+    Spring-->>DS: Returns response entity or view name
+    DS-->>Tomcat: Writes output to HttpServletResponse
+    Tomcat-->>Client: Flushes HTTP response over TCP
+```
+
+### Under-the-Hood Mechanics
+
+#### 1. Parsing HTTP to Servlet Objects (Tomcat Layer)
+When Tomcat receives bytes over the TCP connection, it reads the HTTP headers and body. It parses these into implementation classes of the Servlet API interfaces:
+- **`HttpServletRequest`:** Usually wrapped in Tomcat's `RequestFacade` object, providing access to headers, parameters, URIs, and input streams.
+- **`HttpServletResponse`:** Usually wrapped in Tomcat's `ResponseFacade` object, containing the response headers and output stream.
+
+#### 2. The Filter Chain (Servlet Filter Layer)
+Before reaching Spring MVC, the request passes through a chain of **Servlet Filters**. These are low-level components configured within the servlet container.
+- Common filters include:
+  - `CharacterEncodingFilter` (forces standard UTF-8 encoding).
+  - `CorsFilter` (intercepts preflight requests and adds CORS headers).
+  - `DelegatingFilterProxy` / `FilterChainProxy` (Spring Security's entry point, which handles authentication and authorization).
+- Each filter calls `chain.doFilter(request, response)` to pass control to the next filter or servlet.
+
+#### 3. DispatcherServlet (The HttpServlet Bridge)
+`DispatcherServlet` is structurally a standard Java Servlet. Its inheritance hierarchy is:
+$$\text{DispatcherServlet} \rightarrow \text{FrameworkServlet} \rightarrow \text{HttpServletBean} \rightarrow \text{HttpServlet}$$
+Because it is registered to intercept all paths (mapping `/`), Tomcat invokes `DispatcherServlet.service(HttpServletRequest, HttpServletResponse)` once the filter chain completes. 
+
+#### 4. The Dispatch Process
+Inside `DispatcherServlet`, the entry point redirects through `doService()` to `doDispatch()`. This is where the Spring codebase takes over:
+- Spring queries its local list of beans (`HandlerMapping`, `HandlerAdapter`) to determine which controller class and method should handle the request.
+- Path parameters, request bodies, and query parameters are bound to the controller method arguments.
+- Once the controller executes, the returned value is written back to the container-managed `HttpServletResponse` output stream, and Tomcat flushes the response back to the socket.
+
+---
+
 ## DispatcherServlet
 
 The `DispatcherServlet` is the **front controller** of Spring MVC. It is the single entry point for all HTTP requests.
