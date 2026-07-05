@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './styles.module.css';
+import CodeBlock from '../CodeBlock';
 
 export interface QuizQuestion {
   id: string;
@@ -183,6 +184,12 @@ export default function DailyQuiz({ questions, quizKey }: DailyQuizProps) {
       <div className={styles.questionText}>
         {currentQuestion.questionText}
       </div>
+
+      {currentQuestion.codeSnippet && (
+        <div className={styles.codeSnippetContainer}>
+          <CodeBlock code={currentQuestion.codeSnippet} language="java" />
+        </div>
+      )}
 
       <div className={styles.optionsContainer}>
         {currentQuestion.options.map((option, index) => {

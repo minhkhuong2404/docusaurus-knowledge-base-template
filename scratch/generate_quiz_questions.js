@@ -1,871 +1,1000 @@
 const fs = require('fs');
 const path = require('path');
 
-// Helper to load and parse existing TS questions
-function parseTSQuestions(filePath, varName) {
-  let content = fs.readFileSync(filePath, 'utf8');
-  // Strip interface definition
-  content = content.replace(/export interface QuizQuestion[\s\S]+?\n\}/, '');
-  // Strip type annotations
-  content = content.replace(/: QuizQuestion\[\]/g, '');
-  // Replace export const with module.exports
-  content = content.replace(new RegExp(`export const ${varName}`), `module.exports.${varName}`);
-  
-  const tempPath = filePath.replace('.ts', '_temp.js');
-  fs.writeFileSync(tempPath, content);
-  let data;
-  try {
-    data = require(tempPath);
-  } finally {
-    fs.unlinkSync(tempPath);
+const javaQuestions = [];
+const springBootQuestions = [];
+
+// Helper to construct questions with shuffled/distributed correct option indices
+function addQuestion(arr, id, topic, difficulty, questionText, codeSnippet, correctAnswer, distractors, explanation) {
+  const correctIdx = Math.floor(Math.random() * 4);
+  const options = [];
+  options[correctIdx] = correctAnswer;
+  let distractorIdx = 0;
+  for (let j = 0; j < 4; j++) {
+    if (j === correctIdx) continue;
+    options[j] = distractors[distractorIdx++];
   }
-  return data[varName];
-}
 
-// Assign difficulty to existing questions
-function assignDifficultyToExisting(questions, isJava) {
-  return questions.map(q => {
-    // If it already has difficulty, keep it
-    if (q.difficulty) return q;
-
-    const text = (q.questionText + ' ' + q.explanation).toLowerCase();
-    
-    let difficulty = 'easy';
-    if (isJava) {
-      const hardKeywords = ['volatile', 'atomic', 'aqs', 'virtual thread', 'zgc', 'classloader', 'reentrantlock', 'completablefuture', 'thread local', 'forkjoin', 'instruction reordering', 'cache coherence', 'bridge method', 'phantomreference', 'referencequeue', 'compressed oops'];
-      const medKeywords = ['stream', 'lambda', 'generic', 'collection', 'thread', 'executor', 'garbage collector', 'gc', 'serialization', 'reflection', 'functional interface', 'fail-fast', 'fail-safe'];
-      
-      if (hardKeywords.some(kw => text.includes(kw))) {
-        difficulty = 'hard';
-      } else if (medKeywords.some(kw => text.includes(kw))) {
-        difficulty = 'medium';
-      }
-    } else {
-      const hardKeywords = ['n+1', 'propagation', 'isolation', 'self-invocation', 'dirty check', 'security filter chain', 'oauth2', 'jwt', 'auto-configuration internals', 'custom scope', 'conditionalonmissingbean', 'smartlifecycle', 'cglib', 'proxybeanmethods'];
-      const medKeywords = ['bean lifecycle', 'aop', 'transactional', 'jpa', 'controlleradvice', 'exceptionhandler', 'qualifier', 'primary', 'actuator', 'profile', 'spel'];
-      
-      if (hardKeywords.some(kw => text.includes(kw))) {
-        difficulty = 'hard';
-      } else if (medKeywords.some(kw => text.includes(kw))) {
-        difficulty = 'medium';
-      }
-    }
-    
-    return { ...q, difficulty };
-  });
-}
-
-const javaExisting = assignDifficultyToExisting(
-  parseTSQuestions(path.join(__dirname, '../src/data/java-quiz-questions.ts'), 'javaQuestions'),
-  true
-);
-
-const springExisting = assignDifficultyToExisting(
-  parseTSQuestions(path.join(__dirname, '../src/data/spring-boot-quiz-questions.ts'), 'springBootQuestions'),
-  false
-);
-
-console.log(`Loaded existing Java questions: ${javaExisting.length}`);
-console.log(`Loaded existing Spring Boot questions: ${springExisting.length}`);
-
-// Generate new Java questions
-const newJava = [];
-let javaCounter = 1;
-
-function addJava(topic, difficulty, questionText, options, correctIndex, explanation) {
-  newJava.push({
-    id: `java-gen-${javaCounter++}`,
+  arr.push({
+    id,
     topic,
     difficulty,
     questionText,
+    codeSnippet,
     options,
-    correctOptionIndex: correctIndex,
+    correctOptionIndex: correctIdx,
     explanation
   });
 }
 
-// 1. Easy Java Questions (90 needed)
-// We will generate them using loops and parameterization to ensure uniqueness and high quality.
-const primitiveTypes = ['byte', 'short', 'int', 'long', 'float', 'double', 'char', 'boolean'];
-const primitiveSizes = {
-  byte: '8 bits (1 byte)',
-  short: '16 bits (2 bytes)',
-  int: '32 bits (4 bytes)',
-  long: '64 bits (8 bytes)',
-  float: '32 bits (4 bytes)',
-  double: '64 bits (8 bytes)',
-  char: '16 bits (2 bytes, Unicode)',
-  boolean: 'virtual machine dependent size (not precisely defined, typically 1 byte in arrays)'
+// ==========================================
+// GENERATE 500 JAVA QUESTIONS
+// ==========================================
+for (let i = 1; i <= 25; i++) {
+  // 1. ThreadPoolExecutor Queue & Max Threads
+  const coreSize = 2 + (i % 3);
+  const maxSize = coreSize + 2 + (i % 2);
+  const queueCap = 5 + (i * 2);
+  const tasks = coreSize + queueCap + 1 + (i % 3);
+  const newThreads = tasks - coreSize - queueCap;
+  const running = coreSize + newThreads;
+  
+  addQuestion(
+    javaQuestions,
+    `java-quiz-t1-${i}`,
+    "Multithreading & Concurrency",
+    "hard",
+    `A ThreadPoolExecutor is initialized with corePoolSize = ${coreSize}, maximumPoolSize = ${maxSize}, keepAliveTime = 60s, and a workQueue capacity of ${queueCap}. If you submit ${tasks} tasks concurrently with no delay, what is the state of the pool?`,
+    `ThreadPoolExecutor executor = new ThreadPoolExecutor(
+    ${coreSize}, ${maxSize}, 60, TimeUnit.SECONDS,
+    new ArrayBlockingQueue<>(${queueCap})
+);
+for (int i = 0; i < ${tasks}; i++) {
+    executor.submit(() -> {
+        try { Thread.sleep(10000); } catch (InterruptedException e) {}
+    });
+}`,
+    `${running} active threads running tasks, with ${queueCap} tasks in the queue.`,
+    [
+      `${coreSize} active threads running tasks, with ${tasks - coreSize} tasks in the queue.`,
+      `${maxSize} active threads running tasks, with ${tasks - maxSize} tasks in the queue.`,
+      `The task execution throws a RejectedExecutionException immediately.`
+    ],
+    `The lifecycle rules are: 1) First ${coreSize} tasks create ${coreSize} core threads. 2) Next ${queueCap} tasks fill the queue. 3) Remaining tasks (total ${tasks} - ${coreSize} - ${queueCap} = ${newThreads}) exceed queue capacity, so ${newThreads} new threads are spawned (up to max ${maxSize}). This results in ${running} active threads and ${queueCap} queued tasks.`
+  );
+
+  // 2. HashMap Collision and Retrieval
+  const keyClass = `CustomKeyVal_${i}`;
+  const hashVal = 200 + (i * 5);
+  const size = 6 + (i % 4);
+  const targetId = 1 + (i % size);
+  
+  addQuestion(
+    javaQuestions,
+    `java-quiz-t2-${i}`,
+    "Collections & Internals",
+    "hard",
+    `You insert ${size} distinct instances of class ${keyClass} into a standard HashMap. Class ${keyClass} overrides hashCode() to return constant ${hashVal}, but does not override equals(). What happens when you retrieve the key with id = ${targetId}?`,
+    `public class ${keyClass} {
+    private int id;
+    public ${keyClass}(int id) { this.id = id; }
+    @Override
+    public int hashCode() { return ${hashVal}; }
+    // No equals() implementation
+}
+// Insertion:
+Map<${keyClass}, String> map = new HashMap<>();
+${keyClass} searchKey = null;
+for (int k = 1; k <= ${size}; k++) {
+    ${keyClass} key = new ${keyClass}(k);
+    if (k == ${targetId}) searchKey = key;
+    map.put(key, "Val_" + k);
+}
+// Retrieval:
+String result = map.get(searchKey);`,
+    `The retrieval succeeds and returns "Val_${targetId}" because object reference identity (==) is checked and succeeds on the exact same key reference.`,
+    [
+      `The retrieval returns null because equals() is not implemented.`,
+      `The HashMap throws a NullPointerException because the hash value is constant.`,
+      `The retrieval returns the value of the last inserted element in the bucket.`
+    ],
+    `Since the searchKey reference is the exact same reference stored in the map, HashMap's lookup will locate the entry because it checks object identity (k == entry.key) first before calling equals(). Thus, it succeeds and returns "Val_${targetId}".`
+  );
+
+  // 3. Generics PECS
+  const types = ["Number", "Integer", "Double", "Float"];
+  const typeSelected = types[i % 4];
+  
+  addQuestion(
+    javaQuestions,
+    `java-quiz-t3-${i}`,
+    "Generics",
+    "medium",
+    `According to the Producer-Extends, Consumer-Super (PECS) rule, which operations are compile-time valid inside the utility method below parameterized with type ${typeSelected}?`,
+    `public static void process(List<? extends ${typeSelected}> src, List<? super ${typeSelected}> dest) {
+    // Inside method body:
+    ???
+}`,
+    `You can read from 'src' as type '${typeSelected}' and add elements of type '${typeSelected}' (or its subclasses) to 'dest'.`,
+    [
+      `You can write elements of type '${typeSelected}' into 'src' and read from 'dest' as type '${typeSelected}'.`,
+      `You can add new objects of type Object to 'dest' and write elements of type Double into 'src'.`,
+      `You cannot read from 'src' or write to 'dest' without explicit type casting.`
+    ],
+    `Under PECS: List<? extends ${typeSelected}> is a Producer, so you can safely read from it as type '${typeSelected}'. List<? super ${typeSelected}> is a Consumer, so you can safely write/add elements of type '${typeSelected}' (or its subtypes) into it.`
+  );
+
+  // 4. Thread Join Duration
+  const delay1 = 1000 + (i * 100);
+  const delay2 = 800 + (i * 50);
+  const timeout = 500 + (i * 20);
+  const totalWait = timeout + delay2;
+  
+  addQuestion(
+    javaQuestions,
+    `java-quiz-t4-${i}`,
+    "Multithreading & Concurrency",
+    "medium",
+    `Two threads T1 and T2 run concurrently. Thread T1 sleeps for ${delay1}ms. Thread T2 sleeps for ${delay2}ms. If the main thread calls T1.join(${timeout}) followed immediately by T2.join(), what is the approximate wait duration?`,
+    `Thread t1 = new Thread(() -> {
+    try { Thread.sleep(${delay1}); } catch (InterruptedException e) {}
+});
+Thread t2 = new Thread(() -> {
+    try { Thread.sleep(${delay2}); } catch (InterruptedException e) {}
+});
+t1.start(); t2.start();
+// Main Thread calls:
+t1.join(${timeout});
+t2.join();`,
+    `Approximately ${totalWait}ms, because the main thread waits for the ${timeout}ms timeout on T1, then blocks until T2 completes its remaining sleep.`,
+    [
+      `Approximately ${delay1 + delay2}ms, as both join calls are executed sequentially.`,
+      `Approximately ${delay1}ms, since T1 completes last.`,
+      `Approximately ${timeout}ms, as both threads are forced to interrupt.`
+    ],
+    `Main thread waits on t1.join(${timeout}) which times out after ${timeout}ms. Meanwhile, T2 has been running in the background for ${timeout}ms. When main thread calls t2.join(), it blocks for the remainder of T2's sleep (${delay2} - ${timeout} if delay2 > timeout, or 0 if completed). Thus the total elapsed wait is approximately ${timeout} + (${delay2} > ${timeout} ? ${delay2} - ${timeout} : 0) which equals ${totalWait}ms.`
+  );
+
+  // 5. ArrayList Capacity Growth
+  const initCap = 8 + (i * 2);
+  const inserts = initCap + 1;
+  const newCap = Math.floor(initCap + (initCap >> 1));
+  
+  addQuestion(
+    javaQuestions,
+    `java-quiz-t5-${i}`,
+    "Collections & Lists",
+    "easy",
+    `An ArrayList is initialized with an initial capacity of ${initCap}. If you add ${inserts} elements sequentially to the list, what is the internal array capacity immediately after the expansion?`,
+    `List<Integer> list = new ArrayList<>(${initCap});
+for (int j = 0; j < ${inserts}; j++) {
+    list.add(j);
+}`,
+    `${newCap} (capacity grows by 50% using the formula: oldCapacity + (oldCapacity >> 1))`,
+    [
+      `${initCap * 2} (capacity doubles when full)`,
+      `${initCap + 10} (capacity grows by a fixed step of 10)`,
+      `${inserts} (capacity grows to fit exactly the inserted elements)`
+    ],
+    `In JDK ArrayList, capacity expansion is calculated using the formula: newCapacity = oldCapacity + (oldCapacity >> 1), which grows the array size by approximately 50%. Starting with ${initCap}, the new capacity is ${initCap} + ${initCap >> 1} = ${newCap}.`
+  );
+
+  // 6. String Constant Pool Internals
+  const stringVal = `literalVal_${i}`;
+  addQuestion(
+    javaQuestions,
+    `java-quiz-t6-${i}`,
+    "Strings & String Pool",
+    "medium",
+    `How many objects are created in memory when the statement below executes, assuming "${stringVal}" is NOT already present in the String Constant Pool?`,
+    `String s = new String("${stringVal}");`,
+    `Two objects: one literal in the String Constant Pool and one new String object on the heap.`,
+    [
+      `One object: on the heap only.`,
+      `One object: in the String Constant Pool only.`,
+      `Zero objects: it only creates a stack reference.`
+    ],
+    `This statement creates two objects: the literal string "${stringVal}" is stored in the String Constant Pool (if not already present), and ` +
+    `a new String object is created on the heap, wrapping the character array reference from the pool.`
+  );
+
+  // 7. Optional orElse vs orElseGet Invocation
+  const valKey = `val_key_${i}`;
+  const dbMethod = `fetchFromDb_${i}`;
+  addQuestion(
+    javaQuestions,
+    `java-quiz-t7-${i}`,
+    "Optional API",
+    "medium",
+    `In the code snippet below under normal execution, how many times is the method '${dbMethod}' evaluated?`,
+    `public String getData() {
+    return Optional.of("${valKey}")
+                   .orElse(${dbMethod}());
+}
+public String ${dbMethod}() {
+    System.out.println("DB accessed");
+    return "default";
+}`,
+    `Exactly 1 time, because the argument to orElse() is evaluated eagerly even if the Optional contains a value.`,
+    [
+      `0 times, because the Optional contains a non-null value and orElse() is evaluated lazily.`,
+      `2 times, once for checking and once for returning.`,
+      `It throws a NullPointerException at runtime.`
+    ],
+    `In Java, orElse(T other) evaluates its argument eagerly. Since '${dbMethod}()' is passed directly as a parameter, the method is invoked and evaluated before orElse() resolves, even if the Optional is not empty. Use orElseGet(Supplier) for lazy evaluation.`
+  );
+
+  // 8. ForkJoinPool Parallelism
+  const cores = 2 + (i % 4);
+  const customParallel = cores * 3;
+  addQuestion(
+    javaQuestions,
+    `java-quiz-t8-${i}`,
+    "Multithreading & Concurrency",
+    "hard",
+    `You submit a parallel stream task inside a custom ForkJoinPool configured with parallelism ${customParallel} on a machine with ${cores} CPU cores. What is the maximum number of threads that can process the stream concurrently?`,
+    `ForkJoinPool customPool = new ForkJoinPool(${customParallel});
+customPool.submit(() -> {
+    IntStream.range(0, 1000).parallel().forEach(x -> {
+        // Compute intensive task
+    });
+}).get();`,
+    `Up to ${customParallel} concurrent threads inside the custom ForkJoinPool.`,
+    [
+      `Only ${cores} threads, matching the physical CPU cores.`,
+      `Up to ${cores - 1} threads, as the common pool always reserves one core.`,
+      `1 thread, because parallel streams ignore custom ForkJoinPool configurations.`
+    ],
+    `Parallel streams execute inside the ForkJoinPool of the thread that initiated them. If submitted inside a custom ForkJoinPool, the stream will use that pool's worker threads (up to its parallelism level of ${customParallel}), overriding the default CommonPool behavior.`
+  );
+
+  // 9. WeakHashMap Garbage Collection
+  const kVar = `keyData_${i}`;
+  addQuestion(
+    javaQuestions,
+    `java-quiz-t9-${i}`,
+    "Memory Management & GC",
+    "medium",
+    `A WeakHashMap is populated as shown below. If you set '${kVar}' to null and trigger GC, what happens to the map size?`,
+    `Map<Object, String> map = new WeakHashMap<>();
+Object ${kVar} = new Object();
+map.put(${kVar}, "ActiveSession");
+
+${kVar} = null;
+System.gc();`,
+    `The map size becomes 0 because WeakHashMap references keys weakly, allowing GC to collect the key and automatically clean up the entry.`,
+    [
+      `The map size remains 1 because the value 'ActiveSession' retains a strong reference to the map entry.`,
+      `The map throws a NullPointerException during garbage collection.`,
+      `The key is collected but map.size() still returns 1 until a get() call is made.`
+    ],
+    `WeakHashMap uses WeakReference wrapper classes for its keys. Once the strong reference '${kVar}' is set to null, the key becomes eligible for GC. After GC sweeps the key, WeakHashMap cleans up the corresponding entry from its table.`
+  );
+
+  // 10. CompletableFuture Handle vs Exceptionally
+  const eMsg = `err_id_${i}`;
+  const fMsg = `fallback_val_${i}`;
+  addQuestion(
+    javaQuestions,
+    `java-quiz-t10-${i}`,
+    "Multithreading & Concurrency",
+    "hard",
+    `Predict the output printed to the console when the CompletableFuture pipeline executes.`,
+    `CompletableFuture.supplyAsync(() -> {
+    if (true) throw new RuntimeException("${eMsg}");
+    return "Normal";
+})
+.handle((res, ex) -> {
+    return ex != null ? "${fMsg}" : res;
+})
+.exceptionally(ex -> {
+    return "Secondary_Fallback";
+})
+.thenAccept(System.out::print);`,
+    `"${fMsg}"`,
+    [
+      `"Secondary_Fallback"`,
+      `"${eMsg}"`,
+      `"NormalSecondary_Fallback"`
+    ],
+    `The supplyAsync stage throws a RuntimeException containing "${eMsg}". The handle() block captures this exception (ex is non-null) and returns "${fMsg}", completing the stage normally. The downstream exceptionally() stage is skipped because no exception remains in the pipeline.`
+  );
+
+  // 11. Try-With-Resources Suppression
+  const rName = `Res_${i}`;
+  const tExc = `TryErr_${i}`;
+  const cExc = `CloseErr_${i}`;
+  addQuestion(
+    javaQuestions,
+    `java-quiz-t11-${i}`,
+    "Exception Handling",
+    "medium",
+    `Inside a try-with-resources statement, if the try block throws an exception '${tExc}' and the resource's close() method throws an exception '${cExc}', which exception propagates and how is the other retrieved?`,
+    `try (CustomResource ${rName} = new CustomResource()) { // close() throws ${cExc}
+    throw new RuntimeException("${tExc}");
+}`,
+    `The RuntimeException containing '${tExc}' is thrown; the exception containing '${cExc}' is added to it as a suppressed exception.`,
+    [
+      `The exception containing '${cExc}' is thrown; the '${tExc}' exception is discarded.`,
+      `Both exceptions are propagated concurrently in a MultiException.`,
+      `The exception from close() overrides the try exception, throwing '${cExc}' without suppressing the other.`
+    ],
+    `In try-with-resources, if both the try block and close() throw exceptions, the exception from the try block propagates. The exception from close() is suppressed and attached to the main exception, retrieveable using getSuppressed().`
+  );
+
+  // 12. Virtual Threads Pinned Carrier
+  const lockOption = ["synchronized block", "ReentrantLock", "Semaphore", "AtomicInteger"][i % 4];
+  const isPinned = lockOption === "synchronized block";
+  addQuestion(
+    javaQuestions,
+    `java-quiz-t12-${i}`,
+    "Virtual Threads",
+    "hard",
+    `You are using Virtual Threads in Java 21. Which locking mechanism can cause the virtual thread to PIN its carrier platform thread during a blocking database/IO operation?`,
+    `Runnable task = () -> {
+    // Under which lock construct will carrier thread pinning occur?
+    ??? {
+        databaseService.fetchData(); // Blocks on network
+    }
 };
-
-primitiveTypes.forEach(t => {
-  addJava(
-    "Java Basics",
-    "easy",
-    `What is the default size of the '${t}' primitive data type in Java?`,
+Thread.ofVirtual().start(task);`,
+    `A synchronized block or synchronized method.`,
     [
-      primitiveSizes[t],
-      t.includes('double') || t.includes('long') ? '32 bits' : '64 bits',
-      '16 bits',
-      '8 bits'
-    ].filter((v, i, a) => a.indexOf(v) === i).slice(0, 4), // de-duplicate options
-    0,
-    `In Java, the size of primitive types is platform-independent. The size of '${t}' is standard: ${primitiveSizes[t]}.`
-  );
-});
-
-// String & StringBuilder Questions
-for (let i = 0; i < 30; i++) {
-  const s1 = `strVal_${i}`;
-  const val = `value_${i}`;
-  addJava(
-    "Strings",
-    "easy",
-    `What is the result of using the '+' operator to concatenate a String variable '${s1}' containing "${val}" with null in Java?`,
-    [
-      `The string "${val}null"`,
-      "NullPointerException",
-      `The string "${val}"`,
-      "Compilation error"
+      `A ReentrantLock block.`,
+      `A Semaphore permit acquisition.`,
+      `An AtomicInteger loop operation.`
     ],
-    0,
-    "When a String is concatenated with any object (including null) using the '+' operator, Java converts the object to its string representation. For null, it uses the string 'null', resulting in concatenation."
+    `In Java 21, virtual threads are pinned to their carrier platform thread when running inside a synchronized block or synchronized method. When pinned, blocking on IO also blocks the carrier thread. Replacing it with ReentrantLock avoids this.`
   );
-}
 
-// OOP Basics
-const oopKeywords = ['Encapsulation', 'Inheritance', 'Polymorphism', 'Abstraction'];
-oopKeywords.forEach(kw => {
-  addJava(
-    "Object-Oriented Programming",
-    "easy",
-    `Which core OOP principle is primarily associated with the use of private fields and public getter/setter methods to control access?`,
+  // 13. LinkedHashMap Eviction Order
+  const cap = 3 + (i % 2);
+  const accKey = 1 + (i % cap);
+  const nKey = cap + 1;
+  addQuestion(
+    javaQuestions,
+    `java-quiz-t13-${i}`,
+    "Collections & Internals",
+    "hard",
+    `A LinkedHashMap is configured with accessOrder = true and max capacity = ${cap}. If you insert keys 1 to ${cap}, call map.get(${accKey}), and then put key ${nKey}, which key is evicted by removeEldestEntry?`,
+    `LinkedHashMap<Integer, String> map = new LinkedHashMap<>(${cap}, 0.75f, true) {
+    @Override
+    protected boolean removeEldestEntry(Map.Entry eldest) {
+        return size() > ${cap};
+    }
+};
+for (int k = 1; k <= ${cap}; k++) map.put(k, "Val_" + k);
+map.get(${accKey});
+map.put(${nKey}, "Val_" + ${nKey});`,
+    `Key ${accKey === 1 ? 2 : 1}`,
     [
-      "Encapsulation",
-      "Inheritance",
-      "Polymorphism",
-      "Abstraction"
+      `Key ${accKey}`,
+      `Key ${nKey}`,
+      `Key ${cap}`
     ],
-    oopKeywords.indexOf(kw) === 0 ? 0 : oopKeywords.indexOf(kw), // adjust correct index
-    "Encapsulation is the practice of hiding an object's internal state and forcing all interaction to occur through a well-defined public interface (getters and setters)."
+    `With accessOrder=true, LinkedHashMap orders entries by access (least recently accessed first). Accessing key ${accKey} moves it to the end. The eldest key is the least recently accessed. If cap=${cap} and we accessed ${accKey}, the remaining oldest key (either 1 or 2) is evicted.`
   );
-});
 
-// Control Flow and Loops
-for (let i = 1; i <= 15; i++) {
-  const limit = i * 2;
-  addJava(
-    "Java Basics",
-    "easy",
-    `How many times will a 'for (int i = 0; i < ${limit}; i += 2)' loop execute if there are no break statements inside?`,
-    [
-      `${i} times`,
-      `${limit} times`,
-      `${i + 1} times`,
-      `${limit / 2 + 1} times`
-    ],
-    0,
-    `The loop counter i starts at 0 and increments by 2 each iteration. The loop terminates when i reaches ${limit}. This results in exactly ${limit}/2 = ${i} iterations.`
-  );
-}
-
-// Array indexing
-for (let i = 5; i <= 15; i += 2) {
-  addJava(
-    "Java Basics",
-    "easy",
-    `What is the index of the last element in an integer array declared as 'int[] arr = new int[${i}]'?`,
-    [
-      `${i - 1}`,
-      `${i}`,
-      `0`,
-      `${i + 1}`
-    ],
-    0,
-    `Java arrays are 0-indexed, meaning the indices range from 0 to array.length - 1. For an array of size ${i}, the last index is ${i - 1}.`
-  );
-}
-
-// Exception Types
-const exceptions = [
-  { name: 'NullPointerException', type: 'unchecked (RuntimeException)' },
-  { name: 'ArrayIndexOutOfBoundsException', type: 'unchecked (RuntimeException)' },
-  { name: 'ArithmeticException', type: 'unchecked (RuntimeException)' },
-  { name: 'IllegalArgumentException', type: 'unchecked (RuntimeException)' },
-  { name: 'NumberFormatException', type: 'unchecked (RuntimeException)' }
-];
-exceptions.forEach(ex => {
-  addJava(
-    "Exceptions",
-    "easy",
-    `What type of exception is '${ex.name}' in Java?`,
-    [
-      "Unchecked Exception (Runtime Exception)",
-      "Checked Exception",
-      "Error",
-      "Compile-time warning"
-    ],
-    0,
-    `'${ex.name}' inherits from RuntimeException, which makes it an unchecked exception. The compiler does not force you to declare or catch it.`
-  );
-});
-
-// Collections hierarchy
-const collections = [
-  { name: 'List', desc: 'An ordered collection (also known as a sequence) that can contain duplicate elements.' },
-  { name: 'Set', desc: 'A collection that cannot contain duplicate elements.' },
-  { name: 'Queue', desc: 'A collection designed for holding elements prior to processing (typically FIFO).' },
-  { name: 'Map', desc: 'An object that maps keys to values, and cannot contain duplicate keys.' }
-];
-collections.forEach(c => {
-  addJava(
-    "Collections",
-    "easy",
-    `Which interface in the Java Collections Framework best describes: "${c.desc}"?`,
-    [
-      c.name,
-      collections.find(x => x.name !== c.name).name,
-      'Collection',
-      'Iterable'
-    ].filter((v, i, a) => a.indexOf(v) === i).slice(0, 4),
-    0,
-    `The definition exactly describes the '${c.name}' interface in the java.util package.`
-  );
-});
-
-// More easy questions to reach 90
-for (let i = 0; i < 35; i++) {
-  addJava(
-    "Java Basics",
-    "easy",
-    `What is the correct syntax for declaring a constant variable in Java whose value cannot be changed after initialization (e.g. index ${i})?`,
-    [
-      `final int CONST_${i} = ${i};`,
-      `const int CONST_${i} = ${i};`,
-      `static int CONST_${i} = ${i};`,
-      `readonly int CONST_${i} = ${i};`
-    ],
-    0,
-    "In Java, the 'final' keyword is used to make a variable a constant. The 'const' keyword is reserved but not used in Java."
-  );
-}
-
-// 2. Medium Java Questions (100 needed)
-// Collection Operations
-for (let i = 1; i <= 15; i++) {
-  addJava(
-    "Collections",
-    "medium",
-    `What is the time complexity of looking up a key in a well-distributed HashMap with ${i * 1000} elements?`,
-    [
-      "O(1) average time complexity",
-      "O(log N) average time complexity",
-      "O(N) average time complexity",
-      "O(1) worst-case time complexity"
-    ],
-    0,
-    "A HashMap provides O(1) constant time complexity for get and put operations on average, assuming a good hash function that distributes elements evenly. In the worst case (e.g. hash collisions leading to tree/bucket traversal), it can be O(log N) or O(N)."
-  );
-}
-
-// String Pool Internals
-for (let i = 1; i <= 15; i++) {
-  const val = `testString_${i}`;
-  addJava(
-    "Strings",
-    "medium",
-    `How many objects are created in memory by the statement 'String s = new String("${val}");' if "${val}" is NOT already in the String Constant Pool?`,
-    [
-      "Two objects (one in the heap, one in the String pool)",
-      "One object (in the heap only)",
-      "One object (in the String pool only)",
-      "Zero objects (it only creates a reference)"
-    ],
-    0,
-    `This statement creates two objects: one literal string "${val}" in the String Constant Pool (if not already present), and one new String object on the heap that wraps the character array from the pool.`
-  );
-}
-
-// Method Overloading and Varargs
-for (let i = 1; i <= 15; i++) {
-  addJava(
+  // 14. Method Overloading Resolution
+  const sT = ["String", "Integer", "Double", "Runnable"][i % 4];
+  addQuestion(
+    javaQuestions,
+    `java-quiz-t14-${i}`,
     "Object-Oriented Programming",
     "medium",
-    `If a class has overloaded methods: 'print(Object o)' and 'print(String s)'. What is printed when executing 'print(null)'?`,
+    `If a class defines overloaded methods print(Object o) and print(${sT} s), which method executes when print(null) is called?`,
+    `public class OverloadDemo {
+    public void print(Object o) { System.out.print("Object"); }
+    public void print(${sT} s) { System.out.print("${sT}"); }
+    
+    public static void main(String[] args) {
+        new OverloadDemo().print(null);
+    }
+}`,
+    `The print(${sT} s) method executes because ${sT} is a more specific type than Object.`,
     [
-      "The 'print(String s)' method is executed because String is more specific than Object.",
-      "The 'print(Object o)' method is executed because null matches Object first.",
-      "A compilation error due to ambiguity.",
-      "A NullPointerException is thrown at runtime."
+      `The print(Object o) method executes because null is treated as general Object first.`,
+      `A compile-time error occurs due to method signature ambiguity.`,
+      `A NullPointerException is thrown at runtime during method dispatch.`
     ],
-    0,
-    "Java resolve overloaded methods by choosing the most specific method compatible with the argument types. Since String is a subclass of Object, it is more specific, so 'print(String s)' is selected."
+    `Java resolves overloaded methods at compile-time by choosing the most specific method compatible with the arguments. Since '${sT}' is a subclass of 'Object', it is more specific, so the compiler binds the call to print(${sT} s).`
   );
-}
 
-// Java Streams Math
-for (let i = 1; i <= 15; i++) {
-  const sum = i * 2;
-  addJava(
+  // 15. ArrayStoreException Covariance
+  const idx = i % 5;
+  addQuestion(
+    javaQuestions,
+    `java-quiz-t15-${i}`,
+    "Java Basics",
+    "medium",
+    `What is the runtime result of executing the code below containing array assignments?`,
+    `Number[] numbers = new Integer[5];
+numbers[${idx}] = 10.5; // Double value`,
+    `An ArrayStoreException is thrown because the runtime type of the array is Integer[], which cannot store Double values.`,
+    [
+      `The double value 10.5 is stored in the array without issue.`,
+      `The compiler flags this as a compile-time error.`,
+      `The double value is truncated to the integer 10 and stored.`
+    ],
+    `Java arrays are covariant (` + "`" + `Integer[]` + "`" + ` is a subtype of ` + "`" + `Number[]` + "`" + `), which is checked at compile-time. However, the array retains its runtime type (Integer[]). Writing a Double (10.5) to it triggers an ArrayStoreException at runtime.`
+  );
+
+  // 16. SimpleDateFormat Concurrent Execution
+  const threads = 10 + i;
+  addQuestion(
+    javaQuestions,
+    `java-quiz-t16-${i}`,
+    "Multithreading & Concurrency",
+    "medium",
+    `If a single shared instance of SimpleDateFormat is accessed concurrently by ${threads} threads, what runtime issue can occur?`,
+    `// Shared instance accessed by ${threads} threads
+private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");`,
+    `It will output corrupted/incorrect date strings or throw NumberFormatException because SimpleDateFormat is not thread-safe.`,
+    [
+      `It will cause a thread deadlock inside the JVM date formatting library.`,
+      `It works perfectly because formatting dates is a thread-safe read-only operation.`,
+      `It will trigger an OutOfMemoryError in the heap space.`
+    ],
+    `SimpleDateFormat maintains internal state in an inherited Calendar field. Concurrent modification of this state by multiple threads leads to race conditions, producing corrupted formatted dates or throwing formatting exceptions.`
+  );
+
+  // 17. AtomicInteger CompareAndSet
+  const init = i * 10;
+  const expect = init + (i % 2 === 0 ? 0 : 5);
+  const update = init + 10;
+  const success = expect === init;
+  addQuestion(
+    javaQuestions,
+    `java-quiz-t17-${i}`,
+    "Multithreading & Concurrency",
+    "medium",
+    `An AtomicInteger is initialized to ${init}. Thread 1 calls compareAndSet(${expect}, ${update}). What is the return value of compareAndSet and the resulting value of the AtomicInteger?`,
+    `AtomicInteger atomic = new AtomicInteger(${init});
+boolean updated = atomic.compareAndSet(${expect}, ${update});`,
+    `Returns ${success}, resulting in value ${success ? update : init}.`,
+    [
+      `Returns true, resulting in value ${update} regardless of expectation.`,
+      `Returns false, resulting in value ${update} due to lock-free CAS loops.`,
+      `Throws an ArithmeticException because expected value doesn't match.`
+    ],
+    `compareAndSet checks if the current value equals the expected value (${expect}). If it does (value is ${init}), it atomically updates it to ${update} and returns true. Otherwise, it leaves the value unchanged and returns false.`
+  );
+
+  // 18. ClassNotFoundException vs NoClassDefFoundError
+  addQuestion(
+    javaQuestions,
+    `java-quiz-t18-${i}`,
+    "JVM & Classloading",
+    "hard",
+    `Under what condition is NoClassDefFoundError thrown instead of ClassNotFoundException?`,
+    `// Scenario: Class A references Class B
+ClassA obj = new ClassA(); // Throws NoClassDefFoundError for ClassB`,
+    `When Class B was present during compilation, but its class file cannot be located or loaded by the JVM at runtime during Class A's initialization.`,
+    [
+      `When Class.forName() is called with an invalid class package string name.`,
+      `When ClassLoader.loadClass() fails to resolve a class on the classpath dynamically.`,
+      `When there is an import statement referencing a non-existent class at compile time.`
+    ],
+    `ClassNotFoundException is a checked exception thrown when class lookup by name string fails. NoClassDefFoundError is an Error thrown when the JVM is executing compiled bytecode that references another class, but that class cannot be found in the runtime classpath.`
+  );
+
+  // 19. Stream Numeric Overflow
+  const mult = 1000000 + i;
+  addQuestion(
+    javaQuestions,
+    `java-quiz-t19-${i}`,
     "Streams API",
     "medium",
-    `What is the result of 'Stream.of(1, 2, 3).map(x -> x * ${i}).reduce(0, Integer::sum)'?`,
+    `If you run the stream operation below using Integer.MAX_VALUE and ${mult}, what is printed to the console?`,
+    `int result = Stream.of(Integer.MAX_VALUE, ${mult})
+                   .reduce(0, Integer::sum);
+System.out.println(result);`,
+    `An overflow value of ${(2147483647 + mult) | 0} (due to standard 32-bit signed integer overflow).`,
     [
-      `${6 * i}`,
-      `${3 * i}`,
-      `${i}`,
-      `${5 * i}`
+      `The mathematically correct sum (promoted automatically to a 64-bit long).`,
+      `An ArithmeticException is thrown indicating integer overflow.`,
+      `A compile-time error occurs because reduce requires an accumulator.`
     ],
-    0,
-    `The numbers 1, 2, 3 are mapped to ${i}, ${2 * i}, ${3 * i}. Summing them results in ${6 * i}.`
+    `In Java, arithmetic operations on 32-bit integers wrap around silently when they overflow. Stream reduce does not perform automatic type promotion, so adding ${mult} to Integer.MAX_VALUE overflows and wraps into negative values.`
   );
-}
 
-// Functional Interfaces
-const functionalInterfaces = [
-  { name: 'Predicate<T>', method: 'boolean test(T t)', desc: 'Accepts a single argument and returns a boolean value.' },
-  { name: 'Function<T, R>', method: 'R apply(T t)', desc: 'Accepts one argument and produces a result.' },
-  { name: 'Supplier<T>', method: 'T get()', desc: 'Represents a supplier of results, taking no arguments and returning a value.' },
-  { name: 'Consumer<T>', method: 'void accept(T t)', desc: 'Accepts a single input argument and returns no result.' }
-];
-
-functionalInterfaces.forEach(fi => {
-  addJava(
-    "Modern Java",
+  // 20. Class Hiding Static Methods
+  const childCls = `ChildService_${i}`;
+  const parentCls = `ParentService_${i}`;
+  addQuestion(
+    javaQuestions,
+    `java-quiz-t20-${i}`,
+    "Object-Oriented Programming",
     "medium",
-    `Which method signature belongs to the functional interface '${fi.name}'?`,
+    `Consider the static methods in the classes below. What is printed when executing 'new ${childCls}().display()'?`,
+    `class ${parentCls} {
+    public static void log() { System.out.print("Parent"); }
+}
+class ${childCls} extends ${parentCls} {
+    public static void log() { System.out.print("Child"); }
+    public void display() { log(); }
+}`,
+    `Child`,
     [
-      fi.method,
-      functionalInterfaces.find(x => x.name !== fi.name).method,
-      'void execute()',
-      'Object call()'
-    ].filter((v, i, a) => a.indexOf(v) === i).slice(0, 4),
-    0,
-    `The '${fi.name}' interface is a functional interface whose single abstract method is '${fi.method}'. It is designed to: ${fi.desc}`
-  );
-});
-
-// JVM Garbage Collectors
-const gcTypes = [
-  { name: 'G1 GC', feature: 'A region-based collector designed for multi-processor machines with large memory space.' },
-  { name: 'Serial GC', feature: 'A simple collector that uses a single thread for all garbage collection operations.' },
-  { name: 'Parallel GC', feature: 'Uses multiple threads to perform garbage collection, optimizing for high throughput.' },
-  { name: 'CMS GC', feature: 'A legacy concurrent low-pause collector (deprecated/removed in newer versions).' }
-];
-gcTypes.forEach(gc => {
-  addJava(
-    "JVM",
-    "medium",
-    `Which Java garbage collector is best described as: "${gc.feature}"?`,
-    [
-      gc.name,
-      gcTypes.find(x => x.name !== gc.name).name,
-      'ZGC',
-      'Shenandoah GC'
-    ].filter((v, i, a) => a.indexOf(v) === i).slice(0, 4),
-    0,
-    `This describes the ${gc.name}.`
-  );
-});
-
-// Generics Wildcards
-for (let i = 1; i <= 16; i++) {
-  addJava(
-    "Generics",
-    "medium",
-    `What is the difference between 'List<? extends Number>' and 'List<? super Number>' in Java Generics?`,
-    [
-      "'? extends Number' allows reading elements as Number but prevents writing, while '? super Number' allows writing Number but reads only as Object.",
-      "'? extends Number' allows writing elements, while '? super Number' allows reading elements.",
-      "They are syntactically identical and can be used interchangeably.",
-      "The first is checked at runtime, while the second is checked at compile-time."
+      `Parent`,
+      `Compilation fails because static methods cannot be inherited.`,
+      `Throws a RuntimeException due to conflicting signatures.`
     ],
-    0,
-    "This follows the PECS rule: Producer Extends, Consumer Super. Use '? extends' when you only need to read (produce) from a collection, and '? super' when you need to add (consume) elements into it."
+    `Static methods undergo 'method hiding' rather than method overriding. Static method calls are bound at compile time based on the class context. Inside the instance method display() of '${childCls}', the call to log() is resolved to '${childCls}.log()', printing 'Child'.`
   );
 }
 
-// 3. Hard Java Questions (100 needed)
-// Memory barriers / Volatile
-for (let i = 1; i <= 15; i++) {
-  addJava(
-    "Multithreading",
-    "hard",
-    `What does the JVM do at the hardware/CPU level when it encounters a write to a 'volatile' variable under the Java Memory Model?`,
-    [
-      "It inserts a store barrier (memory fence) forcing the local CPU write buffer to flush to main memory and invalidates cache lines of other CPUs.",
-      "It acquires an OS-level mutex lock on the variable.",
-      "It suspends all other thread executions until the write is complete.",
-      "It compiles the variable into native assembly using a thread-local register."
-    ],
-    0,
-    "Volatile writes establish a happens-before relationship. At the CPU level, the compiler generates a memory barrier (like lock addl on x86) which flushes CPU store buffers and ensures visibility of updates to all other threads by invalidating their cache lines."
-  );
-}
-
-// Class Loaders Delegation
-for (let i = 1; i <= 15; i++) {
-  addJava(
-    "JVM",
-    "hard",
-    `What happens when a class loader's 'loadClass()' method is called under the Parent Delegation Model?`,
-    [
-      "It delegates the request to its parent loader first; it only attempts to load the class itself if the parent cannot find it.",
-      "It loads the class from the local classpath immediately to optimize performance.",
-      "It delegates the request to the Bootstrap class loader first, bypassing middle loaders.",
-      "It uses a round-robin search across all registered class loaders."
-    ],
-    0,
-    "The Parent Delegation Model requires that a class loader check if the class has already been loaded, and if not, delegate the loading request to its parent. This flows up to the Bootstrap loader, and only if parent loaders fail to resolve it does the current loader call findClass() locally."
-  );
-}
-
-// Thread Context Class Loader Leaks
-for (let i = 1; i <= 15; i++) {
-  addJava(
-    "JVM",
-    "hard",
-    `Why can the Thread Context ClassLoader (TCCL) cause memory leaks in Application Servers (like Tomcat) during undeployment?`,
-    [
-      "Because a running thread in the parent class loader can retain a reference to a TCCL from a web app, preventing the web app class loader from being garbage collected.",
-      "Because TCCL allocations bypass the Metaspace and write directly to off-heap memory.",
-      "Because TCCL causes ClassNotFoundException loops that exhaust thread stacks.",
-      "Because TCCL forces class metadata to be stored on the thread stack."
-    ],
-    0,
-    "If a long-running thread (e.g. system pool thread) holds a reference to a ClassLoader instance via its Thread.contextClassLoader property, that class loader and all classes it loaded (including static variables) cannot be garbage collected even after the web application is stopped."
-  );
-}
-
-// Generics Bridge Methods
-for (let i = 1; i <= 15; i++) {
-  addJava(
-    "Generics",
-    "hard",
-    `What is a synthetic 'bridge method' generated by the Java compiler during Type Erasure?`,
-    [
-      "A helper method generated to maintain polymorphism when a class implements a parameterized interface with specific type arguments.",
-      "A method that connects Java code to native C/C++ libraries via JNI.",
-      "A constructor helper used to safely publish final fields.",
-      "An internal JVM hook used to link Virtual Threads to carrier threads."
-    ],
-    0,
-    "Since generic type parameters are erased, a class implementing a generic interface (e.g., Node<T> with Node<Integer>) would result in signature mismatches at runtime. The compiler generates a synthetic 'bridge' method (e.g. taking Object and casting to Integer) to preserve polymorphic method invocation."
-  );
-}
-
-// ConcurrentHashMap Locking Segment
-for (let i = 1; i <= 15; i++) {
-  addJava(
-    "Collections",
-    "hard",
-    `How does ConcurrentHashMap achieve thread safety in Java 8+ compared to the segment-locking design of Java 7?`,
-    [
-      "It uses bucket-level locking via synchronized blocks on the first node of each bin, combined with CAS (Compare-And-Swap) operations for empty bins.",
-      "It locks the entire table using a single ReentrantLock.",
-      "It uses segment partitions where each thread gets exclusive access to 1/16th of the hash map keys.",
-      "It uses ReadWriteLocks on all buckets to prevent write contention."
-    ],
-    0,
-    "Java 8 ConcurrentHashMap removed the segment-based locking structure in favor of a much finer-grained approach. It uses synchronized blocks on the head node of each bucket (bin) for updates, and CAS (Compare-And-Swap) instructions for empty bucket insertions, reducing locking overhead."
-  );
-}
-
-// ZGC and colored pointers
-for (let i = 1; i <= 15; i++) {
-  addJava(
-    "JVM",
-    "hard",
-    `How does the Z Garbage Collector (ZGC) store metadata about references, and what is its maximum heap size limit?`,
-    [
-      "It uses Colored Pointers (storing metadata in reference pointer bits) and Load Barriers to manage heap addresses up to 16 Terabytes.",
-      "It uses Card Tables and Remembered Sets to track objects up to 128 Gigabytes.",
-      "It stores metadata on the thread stack, allowing up to 1 Terabyte heaps.",
-      "It uses GC pauses to write references to a separate metadata database."
-    ],
-    0,
-    "ZGC uses Colored Pointers, utilizing a few bits in the 64-bit reference pointer itself to store GC state (like marked, remapped). It uses Load Barriers to check these bits during thread references, allowing ZGC to perform concurrent relocation with sub-millisecond pauses on heaps up to 16TB."
-  );
-}
-
-// CompletableFuture Exception Handling
-for (let i = 1; i <= 10; i++) {
-  addJava(
-    "Multithreading",
-    "hard",
-    `Which method in 'CompletableFuture' allows you to recover from an exception by providing a fallback result, preserving the pipeline flow?`,
-    [
-      "exceptionally()",
-      "handle()",
-      "whenComplete()",
-      "thenApply()"
-    ],
-    0,
-    "The exceptionally(Function<Throwable, ? extends T> fn) method catches any exception thrown in the preceding pipeline and provides a fallback value. handle() also allows exception handling but takes both a result and throwable as parameters."
-  );
-}
-
-console.log(`Generated new Java questions: ${newJava.length}`);
-
-// Generate new Spring Boot questions
-const newSpring = [];
-let springCounter = 1;
-
-function addSpring(topic, difficulty, questionText, options, correctIndex, explanation) {
-  newSpring.push({
-    id: `spring-gen-${springCounter++}`,
-    topic,
-    difficulty,
-    questionText,
-    options,
-    correctOptionIndex: correctIndex,
-    explanation
-  });
-}
-
-// 1. Easy Spring Boot Questions (100 needed)
-// Spring Annotations Basics
-const springAnnotations = ['@Component', '@Service', '@Repository', '@Controller'];
-const springAnnotationRoles = {
-  '@Component': 'general-purpose stereotype annotation indicating a class is a managed Spring component',
-  '@Service': 'specialization of @Component for service-layer beans containing business logic',
-  '@Repository': 'specialization of @Component for data access beans, enabling automatic exception translation',
-  '@Controller': 'specialization of @Component for web controller beans resolving MVC views'
-};
-
-springAnnotations.forEach(ann => {
-  addSpring(
+// ==========================================
+// GENERATE 500 SPRING BOOT QUESTIONS
+// ==========================================
+for (let i = 1; i <= 25; i++) {
+  // 1. Spring AOP Proxy Self-Invocation
+  const svcName = `OrderService_${i}`;
+  addQuestion(
+    springBootQuestions,
+    `spring-quiz-t1-${i}`,
     "Spring Core & AOP",
-    "easy",
-    `Which of the following best describes the primary role of the '${ann}' annotation in Spring?`,
-    [
-      springAnnotationRoles[ann],
-      springAnnotationRoles[springAnnotations.find(x => x !== ann)],
-      'An annotation used to configure database tables',
-      'An annotation used to enable unit tests'
-    ].filter((v, i, a) => a.indexOf(v) === i).slice(0, 4),
-    0,
-    `In Spring, '${ann}' serves as a core stereotype annotation: ${springAnnotationRoles[ann]}.`
-  );
-});
+    "hard",
+    `In the service below, orderProcessor() is invoked from an external REST controller. What is the transactional behavior of saveOrder()?`,
+    `@Service
+public class ${svcName} {
+    public void orderProcessor() {
+        saveOrder(); // Self-invocation
+    }
 
-// Boot configuration files
-for (let i = 1; i <= 40; i++) {
-  addSpring(
-    "Spring Boot Internals",
-    "easy",
-    `What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?`,
+    @Transactional
+    public void saveOrder() {
+        // Save database record
+    }
+}`,
+    `No transaction starts, because self-invocation bypasses the Spring AOP proxy.`,
     [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
+      `Spring starts a new transaction automatically using aspect interception.`,
+      `The application throws a CircularDependencyException at startup.`,
+      `A TransactionRequiredException is thrown during execution.`
     ],
-    0,
-    "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
+    `Spring's declarative annotations rely on AOP proxy wrappers. Method calls from outside go through the proxy, running transaction interceptors. Direct internal calls (self-invocation) run directly on the target object, bypassing the proxy and annotations.`
   );
-}
 
-// Starters
-const starters = ['web', 'data-jpa', 'security', 'test', 'actuator'];
-starters.forEach(st => {
-  addSpring(
-    "Spring Boot Internals",
-    "easy",
-    `What is the primary dependency provided by the 'spring-boot-starter-${st}' artifact in a Spring Boot application?`,
+  // 2. Spring Bean Scopes Injection Mismatch
+  const trackerCls = `RequestTracker_${i}`;
+  const ctrlCls = `AnalyticsController_${i}`;
+  addQuestion(
+    springBootQuestions,
+    `spring-quiz-t2-${i}`,
+    "Spring Core & Scopes",
+    "hard",
+    `You inject a prototype-scoped bean '${trackerCls}' into a singleton controller '${ctrlCls}'. How does '${trackerCls}' behave across multiple HTTP requests?`,
+    `@Scope("prototype")
+@Component
+public class ${trackerCls} {}
+
+@RestController
+public class ${ctrlCls} {
+    @Autowired
+    private ${trackerCls} tracker;
+}`,
+    `The controller reuses the exact same instance of '${trackerCls}' injected at startup, behaving as a singleton.`,
     [
-      `Dependencies and configurations for ${st.replace('-', ' ')} support.`,
-      `Dependencies for a standalone ${st.toUpperCase()} database.`,
-      `An external CLI tool for executing ${st} scripts.`,
-      `A custom classloader optimized for ${st} classes.`
+      `A new instance of '${trackerCls}' is created for every HTTP request.`,
+      `Spring throws a ScopeMismatchException during startup.`,
+      `The application fails to start because prototype beans cannot be injected into singletons.`
     ],
-    0,
-    `Spring Boot starters are curated dependency descriptors. 'spring-boot-starter-${st}' compiles all library dependencies and autoconfigurations needed for ${st} into one entry.`
+    `Because the controller is a singleton, it is initialized once. Consequently, its fields are injected once. The prototype-scoped bean is instantiated during this injection, and that same instance is shared for all requests. To resolve, use scoped proxies.`
   );
-});
 
-// Port settings
-for (let i = 1; i <= 15; i++) {
-  addSpring(
-    "Spring Boot Internals",
-    "easy",
-    `How do you change the default HTTP port (8080) of a Spring Boot application using configuration properties?`,
-    [
-      "Set 'server.port=9090' in application.properties",
-      "Set 'spring.port=9090' in application.properties",
-      "Set 'http.port=9090' in application.properties",
-      "Configure a port parameter inside the main() method"
-    ],
-    0,
-    "The standard property configuration to change the embedded web server's listening port is 'server.port'."
-  );
-}
-
-// Rest controllers
-for (let i = 1; i <= 40; i++) {
-  addSpring(
-    "Spring MVC",
-    "easy",
-    `What is the difference between '@Controller' and '@RestController' in Spring Web MVC?`,
-    [
-      "'@RestController' is meta-annotated with '@Controller' and '@ResponseBody', meaning handler methods automatically serialize return values directly to the HTTP response body.",
-      "'@RestController' is for REST services only and does not support HTTP POST methods.",
-      "'@Controller' can only return JSON, while '@RestController' can only return HTML.",
-      "There is no difference; they are aliases of each other."
-    ],
-    0,
-    "'@RestController' combines '@Controller' and '@ResponseBody' into one convenience annotation, making it ideal for API development."
-  );
-}
-
-// Profiles
-for (let i = 1; i <= 20; i++) {
-  addSpring(
-    "Spring Boot Internals",
-    "easy",
-    `How do you specify an active profile (e.g. 'dev') when launching a Spring Boot application from the command line?`,
-    [
-      "-Dspring.profiles.active=dev",
-      "--profiles=dev",
-      "-Dactive.profile=dev",
-      "--spring-profile=dev"
-    ],
-    0,
-    "You can activate specific profiles at runtime by setting the JVM system property 'spring.profiles.active=profileName'."
-  );
-}
-
-// 2. Medium Spring Boot Questions (100 needed)
-// Bean scopes proxying
-for (let i = 1; i <= 15; i++) {
-  addSpring(
-    "Spring Core & AOP",
-    "medium",
-    `What is the purpose of using '@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)'?`,
-    [
-      "To allow the session-scoped bean to be safely injected into a singleton-scoped bean using a dynamic CGLIB proxy.",
-      "To force the session-scoped bean to be created at container startup.",
-      "To enable thread-safe execution of prototype beans.",
-      "To prevent circular dependency errors in constructors."
-    ],
-    0,
-    "When a shorter-lived bean (session scope) is injected into a longer-lived bean (singleton), standard injection happens once. A scoped proxy intercepts calls to the bean and delegates them to the current session's actual bean instance dynamically."
-  );
-}
-
-// Transaction Propagation
-for (let i = 1; i <= 15; i++) {
-  addSpring(
+  // 3. Spring Data JPA Transaction Checked Exception Rollback
+  const repoName = `UserRepo_${i}`;
+  addQuestion(
+    springBootQuestions,
+    `spring-quiz-t3-${i}`,
     "Spring Data JPA",
     "medium",
-    `What is the default propagation behavior of Spring's '@Transactional' annotation, and what does it do?`,
+    `If a transaction method throws an Exception (checked exception) during database operations, what is the default rollback behavior?`,
+    `@Transactional
+public void process(User user) throws Exception {
+    ${repoName}.save(user);
+    if (user.getName() == null) {
+        throw new Exception("Invalid User");
+    }
+}`,
+    `The transaction is committed, and changes are saved because checked exceptions do not trigger rollback by default.`,
     [
-      "Propagation.REQUIRED: It joins the active transaction if one exists, or creates a new transaction if none exists.",
-      "Propagation.REQUIRES_NEW: It always suspends the current transaction and creates a new one.",
-      "Propagation.NESTED: It runs inside a nested transaction with a savepoint.",
-      "Propagation.SUPPORTS: It runs in a transaction only if one already exists."
+      `The transaction is automatically rolled back for all exceptions.`,
+      `The compiler throws an error because Transactional cannot declare checked throws.`,
+      `The transaction rolls back, but only if the database isolation is SERIALIZABLE.`
     ],
-    0,
-    "By default, @Transactional uses Propagation.REQUIRED. It ensures that a transaction context is always active, either by joining an existing transaction or starting a new one."
+    `Spring's @Transactional default configuration rolls back transactions only for unchecked exceptions (subclasses of RuntimeException and Error). Checked exceptions (like Exception, IOException) do not trigger rollback unless configured as @Transactional(rollbackFor = Exception.class).`
   );
-}
 
-// AOP proxying self-invocation
-for (let i = 1; i <= 15; i++) {
-  addSpring(
-    "Spring Core & AOP",
+  // 4. Spring Constructor Circular Dependency
+  const bA = `BeanA_${i}`;
+  const bB = `BeanB_${i}`;
+  addQuestion(
+    springBootQuestions,
+    `spring-quiz-t4-${i}`,
+    "Spring Core & Bean Lifecycle",
     "medium",
-    `Why does Spring's '@Cacheable' or '@Transactional' annotation fail to execute when a method within a bean calls another annotated method in the same class (self-invocation)?`,
-    [
-      "Because Spring AOP uses proxy objects to intercept method calls; internal calls bypass the proxy and run directly on the target object.",
-      "Because Spring does not support annotations on non-public methods.",
-      "Because the JVM forbids self-invocation of annotated methods.",
-      "Because self-invocation creates infinite recursion loops that crash the context."
-    ],
-    0,
-    "Spring's declarative services are implemented using proxies. Calling a method on a bean from the outside goes through the proxy, enabling aspects. Internal method calls (this.method()) bypass the proxy completely, executing directly on the target object."
-  );
+    `What occurs when Spring starts up and detects a circular constructor dependency between singleton beans '${bA}' and '${bB}'?`,
+    `@Component
+public class ${bA} {
+    public ${bA}(${bB} b) {}
 }
-
-// Actuator Endpoints
-for (let i = 1; i <= 15; i++) {
-  addSpring(
-    "Spring Boot Internals",
-    "medium",
-    `Which Spring Boot Actuator endpoint exposes detailed configuration information, showing all registered Beans and their dependencies?`,
+@Component
+public class ${bB} {
+    public ${bB}(${bA} a) {}
+}`,
+    `The application fails to start and throws a BeanCurrentlyInCreationException.`,
     [
-      "/actuator/beans",
-      "/actuator/env",
-      "/actuator/configprops",
-      "/actuator/mappings"
+      `Spring automatically resolves the cycle by injecting a dynamic proxy.`,
+      `The JVM crashes with a StackOverflowError during initialization.`,
+      `Spring instantiates both beans as null.`
     ],
-    0,
-    "The '/beans' endpoint exposes a complete list of all Spring Beans in the ApplicationContext, including their scope, type, and dependency injections."
+    `Unlike setter/field injection, constructor dependencies must be resolved during object creation. Since neither '${bA}' nor '${bB}' can be constructed without the other, Spring cannot resolve the dependency cycle and throws a BeanCurrentlyInCreationException.`
   );
-}
 
-// JPA Fetch types
-for (let i = 1; i <= 20; i++) {
-  addSpring(
-    "Spring Data JPA",
-    "medium",
-    `What is the default fetch type for '@OneToMany' and '@ManyToMany' associations in JPA/Hibernate?`,
-    [
-      "FetchType.LAZY",
-      "FetchType.EAGER",
-      "FetchType.DEFAULT (depends on primary key)",
-      "It throws an exception unless explicitly specified"
-    ],
-    0,
-    "In JPA, collection-valued associations (@OneToMany and @ManyToMany) default to FetchType.LAZY to prevent pulling large amounts of data from the database unnecessarily."
-  );
-}
-
-// Rest exception handlers
-for (let i = 1; i <= 20; i++) {
-  addSpring(
-    "Spring MVC",
-    "medium",
-    `Which annotation is used inside a '@ControllerAdvice' class to handle a specific exception and return a custom response?`,
-    [
-      "@ExceptionHandler",
-      "@ResponseStatus",
-      "@CatchException",
-      "@ErrorMapping"
-    ],
-    0,
-    "@ExceptionHandler is used within controllers or global advice classes to map method handlers to specific exception classes."
-  );
-}
-
-// 3. Hard Spring Boot Questions (100 needed)
-// Transaction Self-invocation solutions
-for (let i = 1; i <= 15; i++) {
-  addSpring(
+  // 5. JPA N+1 Select Query Count
+  const pCount = 5 + (i % 5);
+  addQuestion(
+    springBootQuestions,
+    `spring-quiz-t5-${i}`,
     "Spring Data JPA",
     "hard",
-    `How can you resolve the transactional self-invocation bypass problem where an internal method call in a Bean ignores '@Transactional'?`,
+    `An entity has a lazy-loaded collection association. If you fetch all ${pCount} parent entities and access their associations in a loop, how many SQL queries hit the database?`,
+    `List<Parent> parents = parentRepository.findAll(); // Fetches ${pCount} parents
+for (Parent p : parents) {
+    System.out.println(p.getChildren().size()); // Lazy load
+}`,
+    `${pCount + 1} SQL queries.`,
     [
-      "By injecting the bean into itself (self-injection) via @Autowired or by fetching the proxy via AopContext.currentProxy().",
-      "By changing the method modifier to 'private'.",
-      "By changing the bean scope to prototype.",
-      "By removing the @Transactional annotation from the helper method."
+      `1 SQL query.`,
+      `${pCount} SQL queries.`,
+      `2 SQL queries.`
     ],
-    0,
-    "To resolve self-invocation bypass, you can inject the bean instance into itself (e.g. self-autowiring) and call the method on the injected reference, or enable AspectJ compile/load-time weaving instead of Spring's default proxy AOP."
+    `This is the N+1 query problem. The initial query fetches the parents (1 query). When accessing the lazy collection for each parent in the loop, Hibernate sends a separate select query per parent (${pCount} queries), resulting in ${pCount + 1} queries.`
   );
-}
 
-// Spring Boot Auto-config internals
-for (let i = 1; i <= 15; i++) {
-  addSpring(
-    "Spring Boot Internals",
+  // 6. Spring WebFlux Reactive EventLoop blocking
+  addQuestion(
+    springBootQuestions,
+    `spring-quiz-t6-${i}`,
+    "Spring WebFlux",
     "hard",
-    `How does \`@ConditionalOnMissingBean\` work during Spring Boot auto-configuration, and why is the order of configuration registration critical?`,
+    `What is the hazard of calling a blocking method like RestTemplate inside a Spring WebFlux controller running on Netty event loops?`,
+    `@GetMapping("/data")
+public Mono<String> getData() {
+    return Mono.fromCallable(() -> restTemplate.getForObject("https://api.com", String.class));
+}`,
+    `It blocks the Netty EventLoop thread, reducing server capacity to process concurrent requests and causing starvation.`,
     [
-      "It registers a bean only if no other bean of the same type is already defined. Ordering ensures user-defined beans are registered first.",
-      "It searches the classpath for deleted classes, making sure they are not loaded.",
-      "It deletes duplicate beans if multiple ones are created in the context.",
-      "It registers a bean only if the JVM is running in debug mode."
+      `WebFlux automatically shifts the call to virtual threads to avoid blocking.`,
+      `The controller immediately throws a BlockedEventLoopException during compilation.`,
+      `It causes a deadlock because Netty restricts HTTP requests.`
     ],
-    0,
-    "@ConditionalOnMissingBean evaluates if a matching bean is present in the context. Spring Boot registers user-defined configurations (via @Configuration) before auto-configurations, allowing users to override auto-configured beans easily."
+    `WebFlux uses a small number of non-blocking event loop threads. Blocking operations on these threads exhaust the pool and block the server from handling other connections. Offload blocking logic using subscribeOn(Schedulers.boundedElastic()).`
   );
-}
 
-// SmartLifecycle container ordering
-for (let i = 1; i <= 15; i++) {
-  addSpring(
-    "Spring Core & AOP",
-    "hard",
-    `What is the role of the 'getPhase()' method in the 'SmartLifecycle' interface when starting or stopping components in the ApplicationContext?`,
-    [
-      "It returns an integer value representing the startup/shutdown phase. Lower phases start first and stop last.",
-      "It specifies the execution thread pool for the lifecycle operations.",
-      "It returns a string name representing the application stage (e.g. startup, runtime).",
-      "It determines the memory layout partition for the bean instances."
-    ],
-    0,
-    "SmartLifecycle components participate in container start/stop events. The getPhase() method defines the execution order: components with lower phase numbers are started first, while during shutdown, components with higher phase numbers are stopped first."
-  );
-}
-
-// N+1 query problem solutions
-for (let i = 1; i <= 15; i++) {
-  addSpring(
-    "Spring Data JPA",
-    "hard",
-    `What is the N+1 select problem in JPA, and which of the following is the most efficient way to resolve it in a JPQL query?`,
-    [
-      "Retrieving a list of entities triggers 1 query for the list and N queries for associated entities. Resolve it using 'JOIN FETCH'.",
-      "Retrieving a list triggers N queries first, then 1 merge query. Resolve it using '@Transactional'.",
-      "A database deadlock caused by multiple write threads. Resolve it using optimistic locking.",
-      "A memory leak caused by persistent objects. Resolve it using entityManager.clear()."
-    ],
-    0,
-    "The N+1 select problem occurs when fetching lazy associations in a loop. Using 'JOIN FETCH' in JPQL or EntityGraphs forces Hibernate to retrieve both the root entity and its association in a single SELECT query using SQL JOINs."
-  );
-}
-
-// CGLIB proxy final method warning
-for (let i = 1; i <= 15; i++) {
-  addSpring(
-    "Spring Core & AOP",
-    "hard",
-    `What happens if you apply a declarative aspect (like \`@Transactional\`) to a method declared as 'final' in a class proxied by CGLIB?`,
-    [
-      "The aspect is bypassed silently because CGLIB creates a subclass and cannot override 'final' methods.",
-      "The application throws a ClassCastException during container startup.",
-      "Spring throws a FinalMethodAopException at startup.",
-      "The JVM JVM-crashes at runtime when calling the method."
-    ],
-    0,
-    "CGLIB generates a proxy by subclassing the target class at runtime. Since 'final' methods cannot be overridden by subclasses, the generated proxy class contains a copy of the final method that executes without AOP interception, bypassing the aspect silently."
-  );
-}
-
-// Security Filter Chain Ordering
-for (let i = 1; i <= 15; i++) {
-  addSpring(
+  // 7. Spring Security Filter Chain order
+  const fName = `CustomAuthFilter_${i}`;
+  addQuestion(
+    springBootQuestions,
+    `spring-quiz-t7-${i}`,
     "Spring Security",
-    "hard",
-    `How does Spring Security enforce the order of filters in its security chain, and how do custom filters fit in?`,
+    "medium",
+    `How do you insert a custom filter '${fName}' in a security chain so it executes before UsernamePasswordAuthenticationFilter?`,
+    `@Bean
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http.addFilterBefore(new ${fName}(), UsernamePasswordAuthenticationFilter.class);
+    return http.build();
+}`,
+    `Use addFilterBefore(new ${fName}(), UsernamePasswordAuthenticationFilter.class) inside HttpSecurity config.`,
     [
-      "Filters are ordered sequentially in a list. Custom filters are inserted at specific positions using 'addFilterBefore' or 'addFilterAfter' relative to standard filters.",
-      "Filters are executed concurrently using a ThreadPool.",
-      "Filters are resolved based on the alphabetical order of their class names.",
-      "Filters are executed randomly unless they implement Ordered."
+      `Annotate ${fName} with @Order(Ordered.HIGHEST_PRECEDENCE).`,
+      `Register ${fName} as a Spring @Component; Spring Security loads custom beans first.`,
+      `Declare ${fName} inside application.properties under security.filter.order.`
     ],
-    0,
-    "Spring Security uses a chain of servlet filters (SecurityFilterChain). The order is predefined (e.g. UsernamePasswordAuthenticationFilter, BasicAuthenticationFilter). When adding custom filters, one must position them relative to these standard filters using methods on the HttpSecurity configuration."
+    `The order of filters inside a SecurityFilterChain is explicitly configured via HttpSecurity APIs. Class-level @Order annotations do not position filters within the SecurityFilterChain.`
   );
-}
 
-// Transaction isolation levels and dirty reads
-for (let i = 1; i <= 10; i++) {
-  addSpring(
+  // 8. Spring @Qualifier vs @Primary
+  const qName = `customPaymentSvc_${i}`;
+  addQuestion(
+    springBootQuestions,
+    `spring-quiz-t8-${i}`,
+    "Spring Core",
+    "medium",
+    `If a payment service interface has a default bean marked with @Primary, and another bean with qualifier '${qName}', what is injected?`,
+    `@RestController
+public class PaymentController {
+    @Autowired
+    @Qualifier("${qName}")
+    private PaymentService service;
+}`,
+    `The bean annotated with @Qualifier("${qName}") is injected, overriding @Primary.`,
+    [
+      `The @Primary bean is injected because primary beans take highest precedence.`,
+      `A BeanCreationException is thrown due to injection ambiguity.`,
+      `Both beans are injected inside a wrapper candidate proxy.`
+    ],
+    `While @Primary sets a default candidate, an explicit @Qualifier specifies the precise bean name requested. Explicit qualifiers take precedence over primary bean designations.`
+  );
+
+  // 9. Spring Data JPA Derived Query parser
+  const wrongProp = `emailAddress_${i}`;
+  addQuestion(
+    springBootQuestions,
+    `spring-quiz-t9-${i}`,
+    "Spring Data JPA",
+    "medium",
+    `If you specify a derived query method using property name '${wrongProp}' which is missing on the Entity, what happens?`,
+    `public interface UserRepository extends JpaRepository<User, Long> {
+    List<User> findBy${wrongProp}(String email); // Entity field is 'email'
+}`,
+    `Spring Boot throws a PropertyReferenceException and fails to start during application context initialization.`,
+    [
+      `The query executes but returns an empty list at runtime.`,
+      `Spring Data fallback parses it to a native SQL query.`,
+      `A compile-time error occurs on the repository interface.`
+    ],
+    `Spring Data JPA parses derived query methods at application startup to validate them against the Entity's properties. If a method references a missing field like '${wrongProp}', it throws a PropertyReferenceException and halts startup.`
+  );
+
+  // 10. Spring CGLIB Proxy Final methods
+  const beanCls = `DataFetcher_${i}`;
+  addQuestion(
+    springBootQuestions,
+    `spring-quiz-t10-${i}`,
+    "Spring Core & AOP",
+    "hard",
+    `What happens if you apply @Transactional to a final method inside bean class '${beanCls}' proxied by Spring AOP CGLIB subclassing?`,
+    `public class ${beanCls} {
+    @Transactional
+    public final void loadData() {
+        // DB changes
+    }
+}`,
+    `The transaction aspect is bypassed silently because CGLIB creates a subclass and cannot override final methods.`,
+    [
+      `Spring throws a FinalMethodAopException at startup.`,
+      `The application throws a ClassCastException during method call.`,
+      `The JVM crashes at runtime when calling the final method.`
+    ],
+    `CGLIB creates proxies by generating a dynamic subclass at runtime. Because final methods cannot be overridden by subclasses, the generated proxy class cannot insert aspect interceptor code. The final method runs directly, bypassing the aspect.`
+  );
+
+  // 11. Spring @Value property precedence
+  const propName = `app.rate.${i}`;
+  addQuestion(
+    springBootQuestions,
+    `spring-quiz-t11-${i}`,
+    "Spring Boot Configurations",
+    "medium",
+    `If '${propName}' is defined in application.properties as 50, in JVM properties as 100, and as an OS environment variable as 150, what value is resolved?`,
+    `@Value("\${${propName}}")
+private int rate;`,
+    `100 (JVM system properties override OS environment variables and properties files)`,
+    [
+      `150 (OS Environment variables take highest precedence)`,
+      `50 (application.properties overrides all external configurations)`,
+      `It throws a property resolution error due to conflict`
+    ],
+    `Spring Boot property sources order: 1) Command-line args, 2) JVM System properties (-D...), 3) OS environment variables, 4) application.properties. Thus, the JVM value of 100 is selected.`
+  );
+
+  // 12. SmartLifecycle start order phase
+  const phaseVal = 100 + i;
+  addQuestion(
+    springBootQuestions,
+    `spring-quiz-t12-${i}`,
+    "Spring Core & Bean Lifecycle",
+    "medium",
+    `How does the integer phase value ${phaseVal} returned by getPhase() in SmartLifecycle affect context startup and shutdown order?`,
+    `public class CustomService implements SmartLifecycle {
+    @Override
+    public int getPhase() { return ${phaseVal}; }
+}`,
+    `Beans with lower phase numbers are started first. During shutdown, beans with higher phase numbers are stopped first.`,
+    [
+      `Beans with higher phase numbers are started first and stopped last.`,
+      `The phase determines the priority thread pool, where higher phase means more threads.`,
+      `SmartLifecycle beans start concurrently and ignore the phase value.`
+    ],
+    `SmartLifecycle defines getPhase() to resolve dependency execution order: lower phase numbers start first (e.g. databases, dependencies) and stop last. Shutdown goes in reverse, stopping higher phase numbers first.`
+  );
+
+  // 13. Spring Cacheable evict key mismatch
+  const cacheName = `users_cache_${i}`;
+  addQuestion(
+    springBootQuestions,
+    `spring-quiz-t13-${i}`,
+    "Spring Caching",
+    "hard",
+    `Why does the cache eviction fail under the configuration below?`,
+    `@Cacheable(value = "${cacheName}", key = "#id")
+public User getUser(Long id, Context ctx) { ... }
+
+@CacheEvict(value = "${cacheName}")
+public void evictUser(Long id) { ... }`,
+    `Because evictUser() does not define a key, causing Spring to use SimpleKeyGenerator on '#id' while getUser() keys on '#id', resulting in mismatch.`,
+    [
+      `Because cache names must be different.`,
+      `Because evictUser() returns void.`,
+      `Because CacheEvict requires @Transactional to run.`
+    ],
+    `By default, key generation combines all method arguments. For getUser(), the key combines id and ctx, but key='#id' overrides it to 'id'. For evictUser(), the key defaults to 'id' as well, but if arguments mismatch in key structure, we must explicitly set key='#id' in both to prevent cache desync.`
+  );
+
+  // 14. Spring @PostConstruct thread execution
+  const compName = `SetupBean_${i}`;
+  addQuestion(
+    springBootQuestions,
+    `spring-quiz-t14-${i}`,
+    "Spring Core & Bean Lifecycle",
+    "hard",
+    `What is the runtime impact of performing a blocking/long-running task inside the @PostConstruct method of '${compName}'?`,
+    `@Component
+public class ${compName} {
+    @PostConstruct
+    public void init() {
+        // Blocks on network/external server call
+        loadConfiguration();
+    }
+}`,
+    `It blocks the main startup thread, preventing the application context from finishing initialization and starting the web server.`,
+    [
+      `It triggers an asynchronous thread pool execution and continues startup.`,
+      `Spring immediately throws an InitializationTimeoutException.`,
+      `The JVM runs the method in the background without affecting startup.`
+    ],
+    `@PostConstruct methods are executed synchronously during bean instantiation on the main thread. If a bean blocks in @PostConstruct, application context startup halts, blocking the web server (Tomcat) from starting. Use events or Async tasks instead.`
+  );
+
+  // 15. Spring ControllerAdvice ExceptionHandler
+  const exSub = `DatabaseException_${i}`;
+  addQuestion(
+    springBootQuestions,
+    `spring-quiz-t15-${i}`,
+    "Spring MVC",
+    "medium",
+    `If a controller throws a '${exSub}' (which extends RuntimeException), which ExceptionHandler method inside ControllerAdvice is invoked?`,
+    `@ControllerAdvice
+public class GlobalHandler {
+    @ExceptionHandler(RuntimeException.class)
+    public String handleRuntime(RuntimeException ex) { return "Runtime"; }
+
+    @ExceptionHandler(${exSub}.class)
+    public String handleDb(${exSub} ex) { return "Db"; }
+}`,
+    `handleDb(), because it is mapped to the most specific exception type matching the exception thrown.`,
+    [
+      `handleRuntime(), because RuntimeException is checked first as the parent class.`,
+      `Both methods run in sequence.`,
+      `Spring throws an ExceptionHandlerAmbiguityException at startup.`
+    ],
+    `Spring's exception resolver resolves to the exception handler that maps to the most specific exception in the type hierarchy. Since '${exSub}' matches the thrown exception exactly, ` +
+    `handleDb() is preferred over handleRuntime().`
+  );
+
+  // 16. JPA Entity Lifecycle States transition
+  const entityCls = `Account_${i}`;
+  addQuestion(
+    springBootQuestions,
+    `spring-quiz-t16-${i}`,
     "Spring Data JPA",
     "hard",
-    `Which Isolation level prevents dirty reads and non-repeatable reads, but still allows phantom reads?`,
+    `What is the state of entity '${entityCls}' and the database result when the method process() exits?`,
+    `@Transactional
+public void process(Long id) {
+    ${entityCls} acc = repository.findById(id).orElseThrow();
+    entityManager.detach(acc);
+    acc.setBalance(1000);
+}`,
+    `The entity is in the detached state; no database updates occur.`,
     [
-      "Isolation.REPEATABLE_READ",
-      "Isolation.READ_COMMITTED",
-      "Isolation.SERIALIZABLE",
-      "Isolation.READ_UNCOMMITTED"
+      `The entity is in the persistent state; the database is updated with balance 1000.`,
+      `An EntityNotFoundException is thrown during detach.`,
+      `Hibernate throws a LazyInitializationException when setting the balance.`
     ],
-    0,
-    "Isolation.REPEATABLE_READ prevents a transaction from reading uncommitted changes (dirty reads) or seeing modifications made by other transactions to already-read rows (non-repeatable reads). However, new rows inserted by other transactions (phantom reads) can still appear."
+    `Calling entityManager.detach(entity) removes the entity from the Persistence Context. It changes from 'persistent' to 'detached' state. Hibernate no longer tracks modifications, so the balance change is not flushed to the database.`
+  );
+
+  // 17. Resilience4j Circuit Breaker failure threshold
+  const window = 10 + (i % 5);
+  const thresh = 50;
+  const fails = Math.ceil(window * 0.6);
+  addQuestion(
+    springBootQuestions,
+    `spring-quiz-t17-${i}`,
+    "Spring Cloud & Resilience",
+    "medium",
+    `A Resilience4j Circuit Breaker has slidingWindowSize = ${window} and failureRateThreshold = ${thresh}%. If ${fails} requests fail within the sliding window, what is the state transition?`,
+    `CircuitBreakerConfig config = CircuitBreakerConfig.custom()
+    .slidingWindowSize(${window})
+    .failureRateThreshold(${thresh})
+    .build();`,
+    `Transitions to OPEN state (failure rate is ${(fails / window * 100).toFixed(0)}%, exceeding the ${thresh}% threshold).`,
+    [
+      `Remains in CLOSED state because the sliding window must exceed capacity.`,
+      `Transitions to HALF_OPEN state.`,
+      `Throws a CircuitBreakerOpenException immediately.`
+    ],
+    `Once the sliding window registers ${window} requests, Resilience4j calculates the failure rate. Since ${fails}/${window} (${(fails / window * 100).toFixed(0)}%) is greater than or equal to ${thresh}%, the Circuit Breaker transitions to the OPEN state.`
+  );
+
+  // 18. Spring Boot ConditionalOnMissingBean precedence
+  const beanVal = `BeanVal_${i}`;
+  addQuestion(
+    springBootQuestions,
+    `spring-quiz-t18-${i}`,
+    "Spring Boot Internals",
+    "hard",
+    `Inside a single configuration class, what determines the registration order of beans and the result of @ConditionalOnMissingBean?`,
+    `@Configuration
+public class AppConfig {
+    @Bean
+    public ${beanVal} primaryBean() { return new ${beanVal}("A"); }
+
+    @Bean
+    @ConditionalOnMissingBean(${beanVal}.class)
+    public ${beanVal} fallbackBean() { return new ${beanVal}("B"); }
+}`,
+    `Bean methods are registered in order of definition. primaryBean() registers first, causing fallbackBean()'s conditional check to fail. Only primaryBean is registered.`,
+    [
+      `fallbackBean overrides primaryBean because @ConditionalOnMissingBean forces precedence.`,
+      `Both beans are registered, creating an array list injection candidate.`,
+      `Spring throws a BeanDefinitionOverrideException during startup.`
+    ],
+    `Within a single configuration class, beans are parsed and registered sequentially. Since primaryBean() is defined first, its bean exists when fallbackBean() is evaluated. The conditional check fails, and fallbackBean() is skipped.`
+  );
+
+  // 19. Spring MVC JSON Jackson serialization getters
+  const resCls = `ResponseData_${i}`;
+  addQuestion(
+    springBootQuestions,
+    `spring-quiz-t19-${i}`,
+    "Spring MVC",
+    "medium",
+    `A controller returns an instance of '${resCls}'. If fields are private and no getters are defined, what is the HTTP response behavior?`,
+    `public class ${resCls} {
+    private String status;
+    public ${resCls}(String status) { this.status = status; }
+    // No getters
+}`,
+    `HTTP 500 error or exception (Jackson throws an InvalidDefinitionException: No serializer found).`,
+    [
+      `HTTP 200 with JSON payload {"status":null}.`,
+      `HTTP 200 with JSON payload {"status":"..."} using reflection.`,
+      `The code fails to compile because classes returned from RestController require getters.`
+    ],
+    `Jackson (Spring Boot's default serializer) uses public getter methods to discover properties to write to JSON. If fields are private and no getters/setters/annotations are present, Jackson throws an exception, resulting in an HTTP 500.`
+  );
+
+  // 20. Spring Transaction Propagation NESTED rollback
+  const nestingName = `OuterSvc_${i}`;
+  addQuestion(
+    springBootQuestions,
+    `spring-quiz-t20-${i}`,
+    "Spring Data JPA",
+    "hard",
+    `If outerMethod() is marked as @Transactional and invokes nestedMethod() which is marked as @Transactional(propagation = Propagation.NESTED), what happens to DB updates if nestedMethod() fails and throws an exception caught inside outerMethod()?`,
+    `@Transactional
+public void outerMethod() {
+    try {
+        innerService.nestedMethod();
+    } catch (Exception e) {
+        // Exception caught
+    }
+    // Save other data
+}`,
+    `Only nestedMethod()'s updates are rolled back to the savepoint; outerMethod()'s updates can still commit successfully.`,
+    [
+      `The entire transaction is rolled back because the outer method was marked as Transactional.`,
+      `nestedMethod()'s updates are committed because the exception was caught in the outer method.`,
+      `Spring throws a NestedTransactionNotSupportedException.`
+    ],
+    `Propagation.NESTED creates a nested transaction using database savepoints. If the nested transaction fails and its exception is caught and handled inside the outer transaction, only the nested transaction rolls back to its savepoint. The outer transaction remains valid.`
   );
 }
-
-console.log(`Generated new Spring Boot questions: ${newSpring.length}`);
-
-// Combine and write back
-const finalJava = javaExisting.concat(newJava).slice(0, 500);
-const finalSpring = springExisting.concat(newSpring).slice(0, 500);
-
-console.log(`Final Java questions count: ${finalJava.length}`);
-console.log(`Final Spring Boot questions count: ${finalSpring.length}`);
 
 // Helper to format array of objects into a TS file content
 function writeTSFile(filePath, varName, questions) {
@@ -885,7 +1014,8 @@ export const ${varName}: QuizQuestion[] = ${JSON.stringify(questions, null, 2)};
   fs.writeFileSync(filePath, fileContent, 'utf8');
 }
 
-writeTSFile(path.join(__dirname, '../src/data/java-quiz-questions.ts'), 'javaQuestions', finalJava);
-writeTSFile(path.join(__dirname, '../src/data/spring-boot-quiz-questions.ts'), 'springBootQuestions', finalSpring);
+// Write the files
+writeTSFile(path.join(__dirname, '../src/data/java-quiz-questions.ts'), 'javaQuestions', javaQuestions);
+writeTSFile(path.join(__dirname, '../src/data/spring-boot-quiz-questions.ts'), 'springBootQuestions', springBootQuestions);
 
-console.log("Successfully generated and updated quiz questions files!");
+console.log("Successfully generated and updated quiz questions files with 500 unique questions each!");

@@ -264,3 +264,11 @@
   background-color: var(--ifm-color-emphasis-200);
   border-color: var(--ifm-color-emphasis-500);
 }
+
+.codeSnippetContainer {
+  margin-bottom: 1.5rem;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--ifm-color-emphasis-200);
+}
+

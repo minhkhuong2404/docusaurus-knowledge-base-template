@@ -574,6 +574,13 @@ export default {
       "respectPrefersColorScheme": true,
       "disableSwitch": false
     },
+    "mermaid": {
+      "theme": {
+        "dark": "dark",
+        "light": "default"
+      },
+      "options": {}
+    },
     "blog": {
       "sidebar": {
         "groupByYear": true
@@ -582,13 +589,6 @@ export default {
     "tableOfContents": {
       "minHeadingLevel": 2,
       "maxHeadingLevel": 3
-    },
-    "mermaid": {
-      "theme": {
-        "dark": "dark",
-        "light": "default"
-      },
-      "options": {}
     }
   },
   "baseUrlIssueBanner": true,

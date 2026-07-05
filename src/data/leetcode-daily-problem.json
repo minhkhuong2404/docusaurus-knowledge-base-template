@@ -1,8 +1,8 @@
 {
-  "id": "2492",
-  "title": "Minimum Score of a Path Between Two Cities",
-  "url": "https://leetcode.com/problems/minimum-score-of-a-path-between-two-cities/",
-  "difficulty": "medium",
-  "topic": "Depth-First Search, Breadth-First Search, Union-Find, Graph Theory",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-07-04."
+  "id": "1301",
+  "title": "Number of Paths with Max Score",
+  "url": "https://leetcode.com/problems/number-of-paths-with-max-score/",
+  "difficulty": "hard",
+  "topic": "Array, Dynamic Programming, Matrix",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-07-05."
 }

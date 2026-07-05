@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '82c'),
+    component: ComponentCreator('/', '8e1'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'faa'),
+        component: ComponentCreator('/', '9c4'),
         routes: [
           {
             path: '/tags',
@@ -7117,7 +7117,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '823'),
+            component: ComponentCreator('/', 'd38'),
             routes: [
               {
                 path: '/aws',
@@ -14701,7 +14701,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/spring/spring-mvc',
-                component: ComponentCreator('/technical-knowledge/spring/spring-mvc', 'da6'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-mvc', '395'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

@@ -11,7003 +11,7503 @@ export interface QuizQuestion {
 
 export const springBootQuestions: QuizQuestion[] = [
   {
-    "id": "spring-core-1",
+    "id": "spring-quiz-t1-1",
     "topic": "Spring Core & AOP",
-    "questionText": "In Spring, which of the following best describes the difference between Constructor Injection and Setter Injection regarding dependency immutability?",
+    "difficulty": "hard",
+    "questionText": "In the service below, orderProcessor() is invoked from an external REST controller. What is the transactional behavior of saveOrder()?",
+    "codeSnippet": "@Service\npublic class OrderService_1 {\n    public void orderProcessor() {\n        saveOrder(); // Self-invocation\n    }\n\n    @Transactional\n    public void saveOrder() {\n        // Save database record\n    }\n}",
     "options": [
-      "Constructor injection allows injecting immutable dependencies via final fields, whereas setter injection does not.",
-      "Setter injection allows final fields to be initialized, whereas constructor injection is purely for optional dependencies.",
-      "Both constructor and setter injection allow dependencies to be declared as final.",
-      "Constructor injection is only used for circular dependencies, whereas setter injection prevents them."
+      "No transaction starts, because self-invocation bypasses the Spring AOP proxy.",
+      "Spring starts a new transaction automatically using aspect interception.",
+      "The application throws a CircularDependencyException at startup.",
+      "A TransactionRequiredException is thrown during execution."
     ],
     "correctOptionIndex": 0,
-    "explanation": "Constructor injection is the recommended way to inject mandatory dependencies as it allows the fields to be declared as 'final', ensuring immutability. Setter injection cannot be used for 'final' fields since they must be initialized at object construction time.",
-    "difficulty": "easy"
+    "explanation": "Spring's declarative annotations rely on AOP proxy wrappers. Method calls from outside go through the proxy, running transaction interceptors. Direct internal calls (self-invocation) run directly on the target object, bypassing the proxy and annotations."
   },
   {
-    "id": "spring-core-2",
-    "topic": "Spring Core & AOP",
-    "questionText": "You have a Spring bean with a circular dependency issue between two singleton beans, Bean A and Bean B, which are using constructor injection. What is Spring's default behavior, and how can it be resolved without changing bean scopes?",
+    "id": "spring-quiz-t2-1",
+    "topic": "Spring Core & Scopes",
+    "difficulty": "hard",
+    "questionText": "You inject a prototype-scoped bean 'RequestTracker_1' into a singleton controller 'AnalyticsController_1'. How does 'RequestTracker_1' behave across multiple HTTP requests?",
+    "codeSnippet": "@Scope(\"prototype\")\n@Component\npublic class RequestTracker_1 {}\n\n@RestController\npublic class AnalyticsController_1 {\n    @Autowired\n    private RequestTracker_1 tracker;\n}",
     "options": [
-      "Spring throws a BeanCurrentlyInCreationException. It can be resolved by using @Lazy on one of the constructor parameters.",
-      "Spring resolves circular dependencies automatically for all types of injection, including constructor injection.",
-      "Spring will fail to start and the only way to resolve it is to switch the beans to prototype scope.",
-      "Spring throws a CircularDependencyException. It can be resolved by declaring both beans as @Scope(\"prototype\")."
+      "The controller reuses the exact same instance of 'RequestTracker_1' injected at startup, behaving as a singleton.",
+      "A new instance of 'RequestTracker_1' is created for every HTTP request.",
+      "Spring throws a ScopeMismatchException during startup.",
+      "The application fails to start because prototype beans cannot be injected into singletons."
     ],
     "correctOptionIndex": 0,
-    "explanation": "Spring can automatically resolve circular dependencies for setter or field injection in singleton beans using its three-level cache. However, for constructor injection, it cannot resolve it and throws a BeanCurrentlyInCreationException. Using @Lazy on one of the constructor injection points resolves this by injecting a lazy-resolution proxy instead of the fully initialized bean.",
-    "difficulty": "easy"
+    "explanation": "Because the controller is a singleton, it is initialized once. Consequently, its fields are injected once. The prototype-scoped bean is instantiated during this injection, and that same instance is shared for all requests. To resolve, use scoped proxies."
   },
   {
-    "id": "spring-core-3",
-    "topic": "Spring Core & AOP",
-    "questionText": "Consider a scenario where a Singleton bean 'ReportService' needs to access a Prototype bean 'ReportGenerator' for each method invocation. If 'ReportGenerator' is injected using standard field injection via @Autowired, what will be the behavior?",
+    "id": "spring-quiz-t3-1",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If a transaction method throws an Exception (checked exception) during database operations, what is the default rollback behavior?",
+    "codeSnippet": "@Transactional\npublic void process(User user) throws Exception {\n    UserRepo_1.save(user);\n    if (user.getName() == null) {\n        throw new Exception(\"Invalid User\");\n    }\n}",
     "options": [
-      "A new instance of ReportGenerator is created and injected on every call to ReportService methods.",
-      "ReportService will hold a single, cached instance of ReportGenerator that was injected at creation time.",
-      "Spring will throw a BeanCreationException due to scope mismatch.",
-      "The prototype bean will behave as a singleton only if it is marked as @Lazy."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "Because ReportService is a singleton, it is only instantiated once. Consequently, its dependencies (including the prototype-scoped ReportGenerator) are also injected only once. Thus, the same ReportGenerator instance will be reused on subsequent method calls, defeating the purpose of the prototype scope. To resolve this, one must use method injection (like @Lookup) or retrieve it programmatically.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-core-4",
-    "topic": "Spring Core & AOP",
-    "questionText": "Which annotation is used to specify that a bean should be injected based on a specific qualifier name when multiple beans of the same type exist in the context?",
-    "options": [
-      "@Primary",
-      "@Qualifier",
-      "@Resource",
-      "@Named"
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "@Qualifier is used alongside @Autowired to resolve ambiguity when there are multiple beans of the same type by specifying the exact name of the bean to inject. @Primary is used on a bean definition to designate it as the default choice.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-core-5",
-    "topic": "Spring Core & AOP",
-    "questionText": "If a class has multiple constructors, how does Spring decide which constructor to use for Dependency Injection when no @Autowired annotations are present?",
-    "options": [
-      "Spring will always use the default (no-argument) constructor if it exists.",
-      "Spring will randomly choose one of the constructors.",
-      "Spring will fail to start because @Autowired is mandatory for constructor injection if multiple constructors exist.",
-      "Spring will choose the constructor with the maximum number of arguments that can be resolved."
+      "The transaction is committed, and changes are saved because checked exceptions do not trigger rollback by default.",
+      "The transaction is automatically rolled back for all exceptions.",
+      "The compiler throws an error because Transactional cannot declare checked throws.",
+      "The transaction rolls back, but only if the database isolation is SERIALIZABLE."
     ],
     "correctOptionIndex": 0,
-    "explanation": "If no constructor is annotated with @Autowired (or @Inject), Spring will look for the default (no-argument) constructor. If it is present, Spring will use it. If there is no default constructor and multiple parameterized constructors exist, Spring will throw a BeanCreationException unless one constructor is explicitly annotated.",
-    "difficulty": "easy"
+    "explanation": "Spring's @Transactional default configuration rolls back transactions only for unchecked exceptions (subclasses of RuntimeException and Error). Checked exceptions (like Exception, IOException) do not trigger rollback unless configured as @Transactional(rollbackFor = Exception.class)."
   },
   {
-    "id": "spring-core-6",
-    "topic": "Spring Core & AOP",
-    "questionText": "How does the @Resource annotation differ from @Autowired in Spring?",
+    "id": "spring-quiz-t4-1",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "What occurs when Spring starts up and detects a circular constructor dependency between singleton beans 'BeanA_1' and 'BeanB_1'?",
+    "codeSnippet": "@Component\npublic class BeanA_1 {\n    public BeanA_1(BeanB_1 b) {}\n}\n@Component\npublic class BeanB_1 {\n    public BeanB_1(BeanA_1 a) {}\n}",
     "options": [
-      "@Resource is a Spring-proprietary annotation, whereas @Autowired is a standard JSR-250 annotation.",
-      "@Resource performs dependency lookup by type first, then by name, whereas @Autowired resolves by name first.",
-      "@Resource resolves dependencies by name first (defaulting to the field/property name), whereas @Autowired resolves by type first.",
-      "@Resource only supports field injection, whereas @Autowired only supports constructor injection."
-    ],
-    "correctOptionIndex": 2,
-    "explanation": "@Resource is a standard Java annotation (JSR-250/Jakarta EE) supported by Spring, which resolves dependencies by name first. If no bean matches the name, it falls back to type matching. Conversely, @Autowired is Spring-specific and resolves dependencies by type first, falling back to name matching (using @Qualifier or field/parameter names) if there are multiple matches.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-core-7",
-    "topic": "Spring Core & AOP",
-    "questionText": "Under what condition is the @Autowired(required = false) property useful, and what is its default value?",
-    "options": [
-      "It makes injection optional; the default value is false.",
-      "It makes injection optional; the default value is true.",
-      "It allows injecting null if no bean of the matching type is found; the default value is true.",
-      "It allows injecting a mock object if no bean of the matching type is found; the default value is false."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "By default, @Autowired has required = true, meaning Spring will fail to start if it cannot find a matching bean to inject. Setting required = false allows the application to start and injects null (or empty Optional/List) if the bean is missing.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-core-8",
-    "topic": "Spring Core & AOP",
-    "questionText": "Which of the following is true regarding @Component vs @Bean in Spring?",
-    "options": [
-      "@Component is a class-level annotation scanned via classpath scanning, while @Bean is a method-level annotation used within @Configuration classes to register a bean.",
-      "@Component is used for external libraries where source code is unavailable, while @Bean is used for local classes.",
-      "@Bean automatically enables autowiring on the returned object, whereas @Component requires manual configuration.",
-      "There is no difference; they are completely interchangeable aliases."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@Component is used for auto-detection and classpath scanning of custom classes. @Bean is used to explicitly declare a bean in a configuration class, which is especially useful when integrating third-party classes where you cannot modify the source code to add @Component.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-core-9",
-    "topic": "Spring Core & AOP",
-    "questionText": "What is the correct execution order of the following lifecycle callbacks during the initialization phase of a Spring Bean?",
-    "options": [
-      "@PostConstruct method -> InitializingBean.afterPropertiesSet() -> Custom init-method (specified in @Bean(initMethod = \"...\"))",
-      "InitializingBean.afterPropertiesSet() -> @PostConstruct method -> Custom init-method",
-      "Custom init-method -> @PostConstruct method -> InitializingBean.afterPropertiesSet()",
-      "@PostConstruct method -> Custom init-method -> InitializingBean.afterPropertiesSet()"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "During the bean initialization phase, the callbacks run in this order: @PostConstruct annotated method first (handled by CommonAnnotationBeanPostProcessor), then InitializingBean's afterPropertiesSet() method, and finally the custom init-method defined via XML or @Bean(initMethod = \"...\").",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-core-10",
-    "topic": "Spring Core & AOP",
-    "questionText": "Which bean post-processor is responsible for processing the @PostConstruct and @PreDestroy annotations in a Spring container?",
-    "options": [
-      "AutowiredAnnotationBeanPostProcessor",
-      "CommonAnnotationBeanPostProcessor",
-      "RequiredAnnotationBeanPostProcessor",
-      "ConfigurationClassPostProcessor"
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "@PostConstruct and @PreDestroy are JSR-250 annotations. They are processed by the CommonAnnotationBeanPostProcessor registered automatically by Spring.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-core-11",
-    "topic": "Spring Core & AOP",
-    "questionText": "What is the primary difference between a BeanFactoryPostProcessor and a BeanPostProcessor in the Spring container lifecycle?",
-    "options": [
-      "BeanFactoryPostProcessor operates on the bean configuration metadata before any beans are instantiated, while BeanPostProcessor operates on the instantiated bean instances.",
-      "BeanFactoryPostProcessor runs after beans are created, whereas BeanPostProcessor runs before beans are created.",
-      "BeanFactoryPostProcessor is only used for prototype beans, whereas BeanPostProcessor is only for singleton beans.",
-      "BeanFactoryPostProcessor modifies the runtime bean instances, while BeanPostProcessor modifies the XML/Java configuration files."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "BeanFactoryPostProcessor executes first. It can read and modify the bean definition metadata (e.g., resolving property placeholders) before the container instantiates any beans (other than the BFPPs themselves). BeanPostProcessor operates on bean instances, allowing custom modifications before and after bean initialization callbacks.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-core-12",
-    "topic": "Spring Core & AOP",
-    "questionText": "When does a Spring bean become eligible for destruction callbacks, and for which bean scopes does Spring NOT manage the destruction phase?",
-    "options": [
-      "Destruction happens when the context is closed; Spring does not execute destruction callbacks for prototype-scoped beans.",
-      "Destruction happens when the GC runs; Spring does not execute destruction callbacks for singleton beans.",
-      "Destruction happens when the bean is dereferenced; Spring does not execute destruction callbacks for request-scoped beans.",
-      "Destruction happens when the context is closed; Spring manages destruction for all scopes including prototype."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring manages the full lifecycle of singleton beans, including their destruction when the application context is closed. However, for prototype-scoped beans, Spring instantiates, configures, and assembles the bean and hands it over to the client, but does not track it or call its destruction lifecycle methods. The client must clean up prototype beans.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-core-13",
-    "topic": "Spring Core & AOP",
-    "questionText": "How can you programmatically receive notifications of the container's lifecycle events, such as when the context is started or stopped?",
-    "options": [
-      "Implement the SmartLifecycle interface or register an ApplicationListener for ContextRefreshedEvent / ContextClosedEvent.",
-      "Implement the InitializingBean and DisposableBean interfaces.",
-      "Annotate methods with @PostConstruct and @PreDestroy.",
-      "Define custom init-method and destroy-method attributes."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "SmartLifecycle and ApplicationListener (monitoring events like ContextStartedEvent, ContextStoppedEvent, ContextRefreshedEvent, etc.) allow beans to participate in container startup and shutdown phases. InitializingBean and @PostConstruct are for individual bean lifecycle phases, not the container's.",
-    "difficulty": "hard"
-  },
-  {
-    "id": "spring-core-14",
-    "topic": "Spring Core & AOP",
-    "questionText": "Which Aware interface would you implement if a bean needs direct access to the ApplicationContext that created it?",
-    "options": [
-      "BeanNameAware",
-      "BeanFactoryAware",
-      "ApplicationContextAware",
-      "EnvironmentAware"
-    ],
-    "correctOptionIndex": 2,
-    "explanation": "Implementing ApplicationContextAware gives a bean access to the ApplicationContext object through the setApplicationContext method. (Note that @Autowired ApplicationContext is also widely used, but the Aware interface is the classic callback mechanism).",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-core-15",
-    "topic": "Spring Core & AOP",
-    "questionText": "During bean instantiation, when does Spring inject dependencies via setters or fields relative to the Aware interface callbacks?",
-    "options": [
-      "Dependencies are injected after the Aware callbacks are executed.",
-      "Dependencies are injected before the Aware callbacks are executed.",
-      "Dependencies are injected simultaneously with Aware callbacks.",
-      "Aware callbacks are executed before bean construction, and dependencies are injected after."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "The sequence of bean creation is: 1) Instantiate bean, 2) Populate properties (inject dependencies), 3) Call Aware interfaces (e.g., BeanNameAware, BeanFactoryAware, ApplicationContextAware), 4) BeanPostProcessor pre-initialization, 5) Initialization callbacks (@PostConstruct, afterPropertiesSet, custom init), 6) BeanPostProcessor post-initialization.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-core-16",
-    "topic": "Spring Core & AOP",
-    "questionText": "If a bean implements BeanPostProcessor, what is the default behavior if it returns null from postProcessBeforeInitialization or postProcessAfterInitialization?",
-    "options": [
-      "The initialization process is aborted, and a BeanCreationException is thrown.",
-      "The bean instance becomes null in the application context, and other beans get a null reference.",
-      "The post-processor behaves as a no-op, and Spring continues using the original bean instance.",
-      "The bean is registered as a prototype bean instead."
-    ],
-    "correctOptionIndex": 2,
-    "explanation": "According to the BeanPostProcessor contract in Spring, returning null from either of the post-process methods means that no modification was made to the bean, and the original bean instance will be passed down the chain.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-core-17",
-    "topic": "Spring Core & AOP",
-    "questionText": "What is the significance of the @Configuration annotation's proxyBeanMethods attribute (introduced in Spring 5.2), and what is its default value?",
-    "options": [
-      "It defaults to true. When true, @Bean methods are proxied via CGLIB to ensure inter-bean references return the same singleton instance.",
-      "It defaults to false. When false, it disables AOP proxying entirely for all beans declared within the configuration class.",
-      "It defaults to true. When true, it prevents circular dependencies from being resolved.",
-      "It defaults to false. When false, CGLIB proxying is used to optimize bean initialization speed."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "proxyBeanMethods defaults to true (Full mode). In this mode, @Bean methods are proxied via CGLIB, so calling one @Bean method from another within the same configuration class returns the cached singleton bean instance rather than invoking the method again. Setting it to false (Lite mode) avoids proxy generation, which improves startup performance and reduces memory overhead, but inter-bean method calls behave like regular Java calls (returning new instances).",
-    "difficulty": "hard"
-  },
-  {
-    "id": "spring-core-18",
-    "topic": "Spring Core & AOP",
-    "questionText": "How can you import multiple configuration classes or XML configuration files into a main @Configuration class?",
-    "options": [
-      "Using @Import for Java configuration classes and @ImportResource for XML files.",
-      "Using @ComponentScan for both Java and XML configurations.",
-      "Using @PropertySource for both Java configurations and XML files.",
-      "Using @EnableAutoConfiguration for Java configurations and @XmlRootElement for XML."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@Import allows you to load other @Configuration classes or components into the current context. @ImportResource is used to load legacy XML bean definition files.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-core-19",
-    "topic": "Spring Core & AOP",
-    "questionText": "What happens if you define a bean with the same ID in both a Java @Configuration class and an XML configuration file, and both are loaded by the ApplicationContext?",
-    "options": [
-      "The application throws a ConflictingBeanDefinitionException during context startup.",
-      "The XML bean definition will always override the Java-based configuration, regardless of the loading order.",
-      "The overriding behavior depends on whether bean definition overriding is enabled, and typically the last processed definition overrides the previous ones.",
-      "Both beans are instantiated, and Spring uses a qualifier to differentiate them automatically."
-    ],
-    "correctOptionIndex": 2,
-    "explanation": "By default, Spring allows bean definition overriding. If enabled, the last processed bean definition overrides the earlier one. If disabled, a BeanDefinitionOverrideException is thrown at startup. (Note: in Spring Boot, overriding is disabled by default, but core Spring allows it by default).",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-core-20",
-    "topic": "Spring Core & AOP",
-    "questionText": "Which annotation should you use to register a bean conditionally based on the presence of a specific system property or environment variable?",
-    "options": [
-      "@ConditionalOnExpression or @Conditional",
-      "@DependsOn",
-      "@Profile",
-      "@Lazy"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@Conditional (along with custom Condition implementations) or specialized annotations like @ConditionalOnProperty / @ConditionalOnExpression allow conditional bean registration based on properties, environment variables, or other custom criteria.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-core-21",
-    "topic": "Spring Core & AOP",
-    "questionText": "How does the @Profile annotation work behind the scenes in Spring's configuration?",
-    "options": [
-      "It uses the @Conditional annotation under the hood, checking if the specified profile(s) are active in the Environment.",
-      "It dynamically parses XML configuration files at runtime.",
-      "It modifies the JVM system properties to force-load specific classes.",
-      "It compiles separate bytecode versions of the class for each profile."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@Profile is meta-annotated with @Conditional(ProfileCondition.class). The ProfileCondition class reads the active profiles from the Spring Environment and determines if the bean configuration should be registered.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-core-22",
-    "topic": "Spring Core & AOP",
-    "questionText": "Which annotation is used to map a property file (e.g., app.properties) to the Spring Environment so that properties can be resolved via @Value?",
-    "options": [
-      "@PropertySource",
-      "@ConfigFile",
-      "@Resource",
-      "@ValueSource"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@PropertySource is used to add property sources to Spring's Environment. Once added, values from the property file can be injected using @Value(\"${property.name}\").",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-core-23",
-    "topic": "Spring Core & AOP",
-    "questionText": "In a Java configuration class, what is the role of the @Bean annotation's destroyMethod attribute, and what is its default value?",
-    "options": [
-      "It specifies the destruction method; the default value is '(inferred)', which automatically looks for public 'close' or 'shutdown' methods.",
-      "It specifies the destruction method; the default value is empty, meaning no destruction method is called unless explicitly named.",
-      "It specifies the method to call before garbage collection; the default value is 'finalize'.",
-      "It registers a thread hook; the default value is 'destroy'."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "By default, @Bean(destroyMethod = \"(inferred)\") is configured. This instructs Spring to look for public methods named 'close' or 'shutdown' on the bean class and execute them upon container destruction. To prevent this automatic destruction behavior, you must explicitly set @Bean(destroyMethod = \"\").",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-core-24",
-    "topic": "Spring Core & AOP",
-    "questionText": "How can you declare that a configuration class or bean definition should only be loaded after another specific bean has been successfully created?",
-    "options": [
-      "Use the @DependsOn annotation.",
-      "Use the @Order annotation.",
-      "Use the @Priority annotation.",
-      "Configure a BeanPostProcessor to re-order instantiation."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The @DependsOn annotation can be used on any class directly or indirectly annotated with @Component or on methods annotated with @Bean to force the initialization of one or more beans before the target bean is initialized.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-core-25",
-    "topic": "Spring Core & AOP",
-    "questionText": "Which of the following features is supported by ApplicationContext but NOT by the basic BeanFactory interface?",
-    "options": [
-      "Constructor dependency injection",
-      "Prototype and singleton scopes",
-      "Application event publication (Event Handling) and internationalization (MessageSource)",
-      "Registration of BeanPostProcessors"
-    ],
-    "correctOptionIndex": 2,
-    "explanation": "ApplicationContext inherits from BeanFactory but adds enterprise-specific features such as message resolution (for internationalization/i18n via MessageSource), event publication (via ApplicationEventPublisher), resource loading, and automatic registration of BeanFactoryPostProcessor and BeanPostProcessor implementations.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-core-26",
-    "topic": "Spring Core & AOP",
-    "questionText": "How do BeanFactory and ApplicationContext differ in terms of bean instantiation timing for singleton-scoped beans?",
-    "options": [
-      "BeanFactory instantiates singleton beans eagerly, while ApplicationContext instantiates them lazily.",
-      "Both instantiate singleton beans eagerly by default.",
-      "BeanFactory instantiates singleton beans lazily on demand (when getBean is called), while ApplicationContext instantiates them eagerly at startup.",
-      "Both instantiate singleton beans lazily by default."
-    ],
-    "correctOptionIndex": 2,
-    "explanation": "A basic BeanFactory instantiates singleton beans lazily (on demand when they are requested). In contrast, ApplicationContext pre-instantiates singleton beans eagerly at startup to fail-fast if there are configuration or instantiation issues.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-core-27",
-    "topic": "Spring Core & AOP",
-    "questionText": "Which class is the most common implementation of ApplicationContext used for standalone Java applications configured via Java configuration classes?",
-    "options": [
-      "ClassPathXmlApplicationContext",
-      "FileSystemXmlApplicationContext",
-      "AnnotationConfigApplicationContext",
-      "XmlWebApplicationContext"
-    ],
-    "correctOptionIndex": 2,
-    "explanation": "AnnotationConfigApplicationContext is used for standalone applications that use Java configuration classes (annotated with @Configuration) and component scanning.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-core-28",
-    "topic": "Spring Core & AOP",
-    "questionText": "If you want to prevent ApplicationContext from eagerly instantiating a specific singleton bean during startup, which annotation should you apply to the bean?",
-    "options": [
-      "@Scope(\"prototype\")",
-      "@Lazy",
-      "@Delay",
-      "@Conditional"
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "The @Lazy annotation prevents eager initialization of a singleton bean during startup. Instead, the bean is created when it is first requested (either via dependency injection or direct lookup).",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-core-29",
-    "topic": "Spring Core & AOP",
-    "questionText": "In Spring, which container hierarchy is typical for Web applications, and how do child contexts access beans from parent contexts?",
-    "options": [
-      "The parent context can access all beans of the child context, but the child cannot access the parent.",
-      "A child context (e.g., dispatcher servlet) can access beans in the parent context (e.g., root WebApplicationContext), but the parent context cannot access beans in the child context.",
-      "Parent and child contexts are completely isolated and cannot access each other's beans.",
-      "Child and parent contexts share all beans bi-directionally without any restriction."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "Spring supports hierarchical context structures. A child context inherits from a parent context. Therefore, beans inside the child context can look up and depend on beans in the parent context. However, the parent context does not have access to beans defined in the child context.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-core-30",
-    "topic": "Spring Core & AOP",
-    "questionText": "Which method in the ConfigurableApplicationContext interface should be called to trigger the destruction of all singletons and clean up resources in a standalone application?",
-    "options": [
-      "stop()",
-      "close()",
-      "refresh()",
-      "destroy()"
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "Calling close() on the ApplicationContext triggers the JVM shutdown hook (if registered via registerShutdownHook()), closes the application context, and destroys all singleton beans by calling their destruction callbacks.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-core-31",
-    "topic": "Spring Core & AOP",
-    "questionText": "What are the two standard scopes available in any Spring container (including non-web environments), and what are the web-aware scopes?",
-    "options": [
-      "Standard: singleton and prototype. Web-aware: request, session, application, and websocket.",
-      "Standard: singleton, prototype, and request. Web-aware: session and application.",
-      "Standard: singleton and request. Web-aware: prototype, session, and application.",
-      "Standard: singleton and global-session. Web-aware: prototype, request, and session."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Singleton and prototype scopes are available in any Spring container. The request, session, application, and websocket scopes are web-aware and are only available in a web-related ApplicationContext (like XmlWebApplicationContext).",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-core-32",
-    "topic": "Spring Core & AOP",
-    "questionText": "What is the behavior of a prototype scoped bean when it is retrieved multiple times from the ApplicationContext?",
-    "options": [
-      "The container returns the exact same bean instance every time.",
-      "The container returns a new instance of the bean every time it is requested.",
-      "The container returns a new instance only if the previous instance was garbage collected.",
-      "The container throws a ScopeException if it is requested more than once."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "Prototype scope results in the creation of a new bean instance every time a request for that specific bean is made (via injection or context.getBean()).",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-core-33",
-    "topic": "Spring Core & AOP",
-    "questionText": "How can you inject a request-scoped bean into a singleton-scoped controller without converting the controller itself into a request scope?",
-    "options": [
-      "Declare the request-scoped bean with a proxy mode of target class or interface (using @Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)).",
-      "Annotate the request-scoped bean with @Lazy(false).",
-      "Use field injection on the request-scoped bean in the controller.",
-      "Use @Autowired with a @Qualifier on the controller."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Since the controller is a singleton, it is initialized once. If you inject a request-scoped bean directly, Spring will fail at startup or inject a static instance. By using a scoped proxy (proxyMode = ScopedProxyMode.TARGET_CLASS), Spring injects a thread-safe proxy that delegates method calls to the actual request-scoped bean instance associated with the current HTTP request.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-core-34",
-    "topic": "Spring Core & AOP",
-    "questionText": "What is the primary difference between the session scope and the application scope in Spring Web MVC?",
-    "options": [
-      "Session scope creates a bean instance per HTTP Session, while Application scope creates a single bean instance for the lifecycle of the ServletContext (shared by all sessions).",
-      "Session scope is shared by all users, while Application scope is restricted to a single user thread.",
-      "Session scope is stored in the database, while Application scope is stored in the JVM heap.",
-      "Application scope is equivalent to the singleton scope in all contexts."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Session scope binds a bean instance to the lifecycle of an HTTP Session. Application scope binds a bean instance to the lifecycle of the ServletContext (analogous to a singleton, but scoped at the servlet context level rather than the Spring context level).",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-core-35",
-    "topic": "Spring Core & AOP",
-    "questionText": "You want to implement a custom scope in Spring. Which interface must you implement, and how do you register it with the container?",
-    "options": [
-      "Implement org.springframework.beans.factory.config.Scope and register it using ConfigurableBeanFactory.registerScope().",
-      "Implement org.springframework.context.Lifecycle and register it using @Bean.",
-      "Implement org.springframework.beans.factory.FactoryBean and register it in web.xml.",
-      "Implement org.springframework.beans.factory.config.BeanPostProcessor and annotate it with @CustomScope."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Custom scopes require implementing the Scope interface (methods: get, remove, registerDestructionCallback, etc.). Once implemented, the scope must be registered programmatically on the bean factory using beanFactory.registerScope(\"scopeName\", new CustomScope()), typically done within a BeanFactoryPostProcessor or configuration step.",
-    "difficulty": "hard"
-  },
-  {
-    "id": "spring-core-36",
-    "topic": "Spring Core & AOP",
-    "questionText": "What is the default scope of a bean in Spring if none is specified?",
-    "options": [
-      "prototype",
-      "singleton",
-      "request",
-      "session"
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "The default bean scope in Spring is singleton.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-core-37",
-    "topic": "Spring Core & AOP",
-    "questionText": "When using a prototype-scoped bean, does Spring manage the destruction of the bean, and does @PreDestroy get called when the application context is closed?",
-    "options": [
-      "Yes, Spring manages the destruction of all beans and calls @PreDestroy.",
-      "No, Spring does not manage the destruction of prototype beans, and @PreDestroy is NOT called by the container.",
-      "Yes, but only if the prototype bean is explicitly registered in XML.",
-      "No, but @PreDestroy is called if the GC destroys the bean."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "Spring does not track or manage the destruction of prototype-scoped beans. Consequently, any destruction callbacks (like @PreDestroy or DisposableBean.destroy()) are not invoked by the Spring container. The client code is responsible for cleaning up resources held by prototype beans.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-core-38",
-    "topic": "Spring Core & AOP",
-    "questionText": "In a Spring Web application, what is the purpose of the RequestContextListener or RequestContextFilter in web.xml or Servlet configuration?",
-    "options": [
-      "They enable security filters for authentication.",
-      "They expose HTTP request, session, and application scopes to Spring beans outside of Spring's DispatcherServlet.",
-      "They map static resources to the classpath.",
-      "They configure database connection pools."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "When using web-scoped beans (request, session) outside Spring's DispatcherServlet (e.g., inside JSF or custom filters), you must declare RequestContextListener or RequestContextFilter in the web application configuration to expose the current request attributes.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-core-39",
-    "topic": "Spring Core & AOP",
-    "questionText": "Which of the following is the correct SpEL syntax to access a property named 'dbPort' from a Spring bean named 'dbConfig' inside an @Value annotation?",
-    "options": [
-      "@Value(\"${dbConfig.dbPort}\")",
-      "@Value(\"#{dbConfig.dbPort}\")",
-      "@Value(\"#dbConfig.dbPort\")",
-      "@Value(\"${dbConfig[dbPort]}\")"
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "In SpEL, bean references and property evaluation are denoted by the #{expression} syntax. A property of a bean is accessed via #{beanName.propertyName}. The ${property.name} syntax is used for property placeholder resolution, not SpEL.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-core-40",
-    "topic": "Spring Core & AOP",
-    "questionText": "What is the purpose of the safe navigation operator (?.) in SpEL?",
-    "options": [
-      "It checks if a bean is initialized; if not, it initializes it.",
-      "It prevents NullPointerException by returning null if the object before the operator is null.",
-      "It evaluates an expression asynchronously in a separate thread.",
-      "It compares two variables for null-safe equality."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "SpEL's safe navigation operator ?. prevents a NullPointerException. If the object reference is null, the expression evaluates to null instead of throwing an exception (e.g., #{user?.address?.city}).",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-core-41",
-    "topic": "Spring Core & AOP",
-    "questionText": "How do you reference a system property or environment variable directly inside a SpEL expression?",
-    "options": [
-      "Use #{systemProperties['os.name']} and #{systemEnvironment['PATH']} respectively.",
-      "Use #{systemProperty.os.name} and #{environment.PATH}.",
-      "Use #{OS_NAME} and #{PATH}.",
-      "Use #{system.properties['os.name']} and #{system.env['PATH']}."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring pre-registers implicit variables named systemProperties (a Map of JVM system properties) and systemEnvironment (a Map of OS environment variables) in the SpEL evaluation context, which can be accessed using map key syntax.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-core-42",
-    "topic": "Spring Core & AOP",
-    "questionText": "How do you invoke a static method of a class using SpEL?",
-    "options": [
-      "#{T(fully.qualified.ClassName).methodName(args)}",
-      "#{fully.qualified.ClassName::methodName(args)}",
-      "#{class(fully.qualified.ClassName).methodName(args)}",
-      "#{T[fully.qualified.ClassName].methodName(args)}"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The T() operator in SpEL is used to specify an instance of java.lang.Class. Once the class is specified, static methods and constants can be invoked or accessed directly (e.g., #{T(java.lang.Math).random()}).",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-core-43",
-    "topic": "Spring Core & AOP",
-    "questionText": "In SpEL, what do the selection operator ^[...] and projection operator ![...] do when applied to a collection?",
-    "options": [
-      "^[...] returns the first matching element, while ![...] projects a new collection by extracting a property from each element.",
-      "^[...] sorts the collection, while ![...] filters the collection.",
-      "^[...] returns all matching elements, while ![...] checks if any element matches.",
-      "^[...] gets the first element, while ![...] gets the last element."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "SpEL supports collection selection and projection. Selection filters a collection: ?[expression] selects all matching elements, ^[expression] selects the first matching element, and $[expression] selects the last matching element. Projection ![expression] maps a collection by evaluating an expression against each element.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-core-44",
-    "topic": "Spring Core & AOP",
-    "questionText": "Which SpEL operator behaves like a ternary operator but simplifies null-coalescing, returning a default value if the expression evaluates to null?",
-    "options": [
-      "The Elvis operator (?:)",
-      "The safe navigation operator (?.)",
-      "The ternary shorthand (?)",
-      "The null checker (??)"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The Elvis operator ?: is used to provide a fallback/default value when an expression evaluates to null or empty (e.g., #{user.name ?: 'Guest'}).",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-core-45",
-    "topic": "Spring Core & AOP",
-    "questionText": "What are the differences between JoinPoint and Pointcut in Spring AOP?",
-    "options": [
-      "JoinPoint represents an execution point in the application (like method execution), whereas Pointcut is a predicate expression that matches one or more JoinPoints.",
-      "Pointcut represents the execution point, whereas JoinPoint defines when the advice should run.",
-      "JoinPoint is the logic implemented by the aspect, whereas Pointcut is the class target.",
-      "There is no difference; they are synonymous terms in Spring AOP."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "A JoinPoint is a candidate point in the execution of an application where an aspect can be plugged in (in Spring AOP, this is always a method execution). A Pointcut is an expression that filters or defines which specific JoinPoints should be intercepted.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-core-46",
-    "topic": "Spring Core & AOP",
-    "questionText": "Which type of Advice in Spring AOP has the maximum control, allowing it to decide whether to proceed with the target method execution, modify the arguments, or return a custom value?",
-    "options": [
-      "Before Advice",
-      "After Returning Advice",
-      "Around Advice",
-      "After Throwing Advice"
-    ],
-    "correctOptionIndex": 2,
-    "explanation": "Around Advice (declared with @Around and taking a ProceedingJoinPoint as a parameter) has complete control over the intercepted method. It can choose to invoke the method via proceed(), skip invocation, modify arguments before calling proceed(), catch exceptions, or modify the return value.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-core-47",
-    "topic": "Spring Core & AOP",
-    "questionText": "A class 'MyService' has two public methods: methodA() and methodB(). methodA() calls methodB() internally using standard Java invocation (this.methodB()). Both methods are targeted by a Spring AOP aspect. What happens when an external client calls methodA()?",
-    "options": [
-      "Both methodA() and methodB() will trigger the aspect's advice.",
-      "Only methodA() will trigger the aspect's advice; the internal call to methodB() bypasses the proxy.",
-      "Only methodB() will trigger the aspect's advice.",
-      "The application throws a ClassCastException because internal self-invocation is forbidden."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "Spring AOP is proxy-based. When an external client calls methodA(), it calls the method on the proxy object, which triggers the aspect. However, the proxy delegates the call to the actual target object. Once inside the target object, the internal call to methodB() is executed on 'this' (the raw target, not the proxy). Therefore, the aspect is bypassed for the internal call.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-core-48",
-    "topic": "Spring Core & AOP",
-    "questionText": "What is the default proxying mechanism used by Spring AOP, and how does it change based on the target class interfaces?",
-    "options": [
-      "JDK dynamic proxies are used if the target class implements at least one interface; otherwise, CGLIB is used.",
-      "CGLIB is always used, regardless of interfaces.",
-      "JDK dynamic proxies are always used; classes without interfaces cannot be proxied.",
-      "AspectJ compile-time weaving is used by default."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "By default, Spring AOP uses JDK dynamic proxies if the target class implements at least one interface. If the class does not implement any interface, Spring AOP automatically uses CGLIB to generate a subclass proxy.",
-    "difficulty": "hard"
-  },
-  {
-    "id": "spring-core-49",
-    "topic": "Spring Core & AOP",
-    "questionText": "Which Pointcut designator (PCD) is used to match JoinPoints (method executions) within classes that have a specific class-level annotation?",
-    "options": [
-      "@within()",
-      "execution()",
-      "@annotation()",
-      "args()"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@within() matches join points within types that have a given annotation. @annotation() matches join points where the executing method itself is annotated with the given annotation. execution() matches method execution signatures.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-core-50",
-    "topic": "Spring Core & AOP",
-    "questionText": "In Spring AOP, what is the default order of execution when multiple advices of different types (Before, After, After Returning, Around) are configured on the same join point?",
-    "options": [
-      "Around (entry) -> Before -> Target Method -> After Returning / After Throwing -> After -> Around (exit)",
-      "Before -> Around (entry) -> Target Method -> Around (exit) -> After Returning -> After",
-      "Around (entry) -> Before -> Target Method -> Around (exit) -> After -> After Returning",
-      "Before -> After -> After Returning -> Around"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "In Spring AOP, the Around advice wraps all other advices. On entry, the Around advice starts execution first, then it calls proceed(), which executes Before advice. Then the target method is invoked. On exit, the target returns, executing the After Returning (or After Throwing) advice, then the After (finally-like) advice runs, and finally, execution returns to the Around advice to complete.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-boot-1",
-    "topic": "Spring Boot Internals",
-    "questionText": "In Spring Boot 3.x, what is the standard location for registering custom auto-configuration classes, replacing the legacy META-INF/spring.factories entry under EnableAutoConfiguration?",
-    "options": [
-      "META-INF/spring-autoconfigure-metadata.properties",
-      "META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports",
-      "META-INF/spring/org.springframework.boot.autoconfigure.EnableAutoConfiguration.imports",
-      "META-INF/services/org.springframework.boot.autoconfigure.AutoConfiguration"
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "Starting in Spring Boot 2.7 and strictly enforced in Spring Boot 3.0, auto-configuration classes must be registered in META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports. The key under META-INF/spring.factories is no longer supported for auto-configuration classes in 3.0.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-boot-2",
-    "topic": "Spring Boot Internals",
-    "questionText": "Which class is primarily responsible for reading the auto-configuration import files and filtering out candidate configurations based on conditional annotations during application startup?",
-    "options": [
-      "AutoConfigurationImportSelector",
-      "SpringFactoriesLoader",
-      "ConfigurationClassParser",
-      "AutoConfigurationPackages"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "AutoConfigurationImportSelector implements DeferredImportSelector and is responsible for loading the candidate auto-configuration classes, sorting them, and filtering them against conditional annotations before import.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-boot-3",
-    "topic": "Spring Boot Internals",
-    "questionText": "How can you programmatically exclude specific auto-configuration classes (e.g., DataSourceAutoConfiguration) from being loaded, without using the 'exclude' attribute of the @SpringBootApplication annotation?",
-    "options": [
-      "Setting the 'spring.autoconfigure.exclude' property in application.properties or yaml",
-      "Registering a custom bean of type AutoConfigurationExcludeFilter",
-      "Annotating a configuration class with the @ExcludeAutoConfiguration annotation",
-      "Defining a system environment variable named SPRING_AUTOCONFIGURE_IGNORE"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The 'spring.autoconfigure.exclude' property (in properties/yaml, or as a command-line / environment property) allows you to specify a comma-separated list of auto-configuration classes to exclude.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-boot-4",
-    "topic": "Spring Boot Internals",
-    "questionText": "What is the primary design characteristic of Spring Boot 'Starters' (e.g., spring-boot-starter-data-jpa) regarding their codebase?",
-    "options": [
-      "They contain binary compiled classes that implement custom auto-configurations.",
-      "They are empty descriptors (POMs/Gradle files) that only contain transitive dependencies and no source code.",
-      "They contain properties files that override Spring Boot default properties.",
-      "They contain custom compiler plugins to optimize runtime bean definitions."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "Spring Boot Starters are dependency descriptors containing transitive dependencies required for a specific technology stack. They do not contain application code or configuration classes of their own; the auto-configuration logic resides in the corresponding 'spring-boot-autoconfigure' library.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-boot-5",
-    "topic": "Spring Boot Internals",
-    "questionText": "The @SpringBootApplication annotation is a convenience annotation that combines which three core annotations?",
-    "options": [
-      "@Configuration, @EnableAutoConfiguration, @ComponentScan",
-      "@SpringBootConfiguration, @EnableAutoConfiguration, @ComponentScan",
-      "@SpringBootConfiguration, @AutoConfiguration, @Component",
-      "@Configuration, @EnableConfigurationProperties, @ComponentScan"
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "@SpringBootApplication is meta-annotated with @SpringBootConfiguration (which is a specialization of @Configuration), @EnableAutoConfiguration, and @ComponentScan.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-boot-6",
-    "topic": "Spring Boot Internals",
-    "questionText": "What is the primary difference between @SpringBootConfiguration and standard Spring @Configuration?",
-    "options": [
-      "@SpringBootConfiguration allows beans to be registered asynchronously.",
-      "@SpringBootConfiguration allows automatic detection of configuration by integration tests (e.g., via @SpringBootTest).",
-      "@SpringBootConfiguration disables proxyBeanMethods by default.",
-      "@SpringBootConfiguration is processed during a separate, earlier compiler phase."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "@SpringBootConfiguration is a specialized @Configuration that Spring's test framework uses to automatically detect the bootstrap configuration class for integration testing. There is no behavioral difference in application runtime bean definition parsing.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-boot-7",
-    "topic": "Spring Boot Internals",
-    "questionText": "If you define @SpringBootApplication on a class in the package 'com.example.app', which packages are scanned for components by default?",
-    "options": [
-      "Only the package 'com.example' and all its sibling packages",
-      "The package 'com.example.app' and all its subpackages",
-      "The entire classpath, searching for all @Component annotated classes",
-      "Only classes in the default (unnamed) package"
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "By default, @ComponentScan (which is part of @SpringBootApplication) scans the package of the class it is declared on and all its subpackages.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-boot-8",
-    "topic": "Spring Boot Internals",
-    "questionText": "You want your custom auto-configuration class MyAutoConfiguration to be processed after Spring Boot's standard DataSourceAutoConfiguration. Which annotation should you apply to MyAutoConfiguration?",
-    "options": [
-      "@Order(Ordered.LOWEST_PRECEDENCE)",
-      "@AutoConfigureAfter(DataSourceAutoConfiguration.class)",
-      "@DependsOn(\"dataSource\")",
-      "@AutoConfigureOrder(Ordered.LOWEST_PRECEDENCE)"
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "@AutoConfigureAfter and @AutoConfigureBefore are specifically designed to order auto-configurations. Standard Spring @Order does not affect the loading order of auto-configuration classes.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-boot-9",
-    "topic": "Spring Boot Internals",
-    "questionText": "How does @AutoConfigureOrder differ from Spring's standard @Order annotation?",
-    "options": [
-      "@AutoConfigureOrder applies to Bean definitions, while @Order applies to classes.",
-      "@AutoConfigureOrder is only used to resolve ordering between auto-configuration classes themselves, whereas @Order resolves ordering of regular beans or command-line runners.",
-      "@AutoConfigureOrder takes a String value pointing to property keys.",
-      "@AutoConfigureOrder is processed by the Servlet container, not the Spring ApplicationContext."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "@AutoConfigureOrder is designed specifically to sort auto-configuration classes, whereas standard @Order is used for regular Spring beans (like command-line runners, filters, etc.).",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-boot-10",
-    "topic": "Spring Boot Internals",
-    "questionText": "Under what condition will a configuration annotated with @ConditionalOnClass(name = \"com.mysql.cj.jdbc.Driver\") be loaded?",
-    "options": [
-      "If the MySQL driver class is present in the application's runtime classpath.",
-      "If the MySQL database is currently running and reachable.",
-      "If the MySQL driver has been explicitly initialized as a Spring bean.",
-      "If the MySQL dependency is defined in the pom.xml at compile time only."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ConditionalOnClass matches only when the specified class (or class name) is present on the runtime classpath of the application.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-boot-11",
-    "topic": "Spring Boot Internals",
-    "questionText": "Why is it common practice to annotate @Bean methods in auto-configurations with @ConditionalOnMissingBean?",
-    "options": [
-      "To ensure that the bean is only created if the user has NOT defined their own bean of that type.",
-      "To throw an exception if the bean is already defined by the user.",
-      "To register the bean as a fallback lazy-initialized singleton.",
-      "To force Spring to override any user-defined bean of the same type."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ConditionalOnMissingBean provides a default bean declaration that backs off if a bean of that type (or name) is already registered in the context, allowing users to easily override defaults.",
-    "difficulty": "hard"
-  },
-  {
-    "id": "spring-boot-12",
-    "topic": "Spring Boot Internals",
-    "questionText": "Consider the annotation @ConditionalOnProperty(prefix = \"app.feature\", name = \"enabled\", havingValue = \"true\", matchIfMissing = false). Under which condition will the bean/configuration be created?",
-    "options": [
-      "When the property 'app.feature.enabled' is absent from properties.",
-      "When the property 'app.feature.enabled' is explicitly set to 'true'.",
-      "When the property 'app.feature.enabled' is set to any value other than 'false'.",
-      "When the property 'app.feature.enabled' matches the default value in spring-boot-starter."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "@ConditionalOnProperty requires the property 'app.feature.enabled' to be set explicitly to 'true' (since havingValue is 'true' and matchIfMissing is 'false').",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-boot-13",
-    "topic": "Spring Boot Internals",
-    "questionText": "How can a custom condition implemented via Spring's 'Condition' interface control whether it is evaluated during the configuration class parsing phase or the bean registration phase?",
-    "options": [
-      "By implementing the ConfigurationCondition interface and returning the appropriate ConfigurationPhase.",
-      "By annotating the condition class with @Order.",
-      "By implementing OrderedCondition and specifying the precedence level.",
-      "By throwing a specific PhaseException from the matches() method."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The ConfigurationCondition interface extends Condition and provides the getConfigurationPhase() method, which returns either PARSE_CONFIGURATION (evaluated during config class parsing) or REGISTER_BEAN (evaluated when registering the bean).",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-boot-14",
-    "topic": "Spring Boot Internals",
-    "questionText": "During the execution of SpringApplication.run(), which of the following events happens first?",
-    "options": [
-      "The ApplicationContext is created.",
-      "The command-line runners are executed.",
-      "The SpringApplicationRunListeners are starting and preparing the ConfigurableEnvironment.",
-      "Singleton beans are instantiated."
-    ],
-    "correctOptionIndex": 2,
-    "explanation": "The environment is prepared before the ApplicationContext is created or any beans are instantiated. Command-line runners run at the very end of the bootstrapping process.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-boot-15",
-    "topic": "Spring Boot Internals",
-    "questionText": "How does Spring Boot decide whether to create an AnnotationConfigApplicationContext, an AnnotationConfigServletWebServerApplicationContext, or an AnnotationConfigReactiveWebServerApplicationContext at startup?",
-    "options": [
-      "Based on the WebApplicationType inferred from the presence of specific classes on the classpath (like Servlet, DispatcherHandler, etc.).",
-      "Based on the presence of @EnableWebMvc on the main application class.",
-      "Based on the value of the 'spring.main.context-class' property in application.properties.",
-      "By querying the active OS process type and memory footprint."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "SpringApplication infers the WebApplicationType (NONE, SERVLET, REACTIVE) from the classpath and creates the corresponding ApplicationContext subclass.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-boot-16",
-    "topic": "Spring Boot Internals",
-    "questionText": "Which component can be registered in spring.factories to listen to the entire bootstrapping lifecycle of a Spring Boot application, starting before the environment is prepared?",
-    "options": [
-      "ApplicationListener<ApplicationStartingEvent>",
-      "SpringApplicationRunListener",
-      "CommandLineRunner",
-      "ApplicationContextInitializer"
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "SpringApplicationRunListener is designed specifically to listen to the bootstrap sequence of SpringApplication. It must be registered in META-INF/spring.factories.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-boot-17",
-    "topic": "Spring Boot Internals",
-    "questionText": "You have both a CommandLineRunner and an ApplicationRunner bean in your context. Both are annotated with @Order(1). How are their arguments passed differently, and in what order are they run relative to bean initialization?",
-    "options": [
-      "CommandLineRunner receives raw String[] arguments, ApplicationRunner receives ApplicationArguments. They both run after bean initialization.",
-      "CommandLineRunner receives ApplicationArguments, ApplicationRunner receives String[]. They both run before bean initialization.",
-      "CommandLineRunner runs before the ApplicationContext is fully refreshed, while ApplicationRunner runs after.",
-      "They both receive String[] arguments, but CommandLineRunner executes with higher priority."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Both runners execute after the application context has fully refreshed and singleton beans are initialized. CommandLineRunner takes raw String[] arguments, whereas ApplicationRunner takes ApplicationArguments.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-boot-18",
-    "topic": "Spring Boot Internals",
-    "questionText": "If a property named 'my.setting' is defined in all of the following locations, which source has the HIGHEST precedence and will override the others according to Spring Boot's Externalized Configuration rules?",
-    "options": [
-      "A property in application.properties packaged inside the jar.",
-      "A property in application.yaml defined in the same directory as the jar.",
-      "An environment variable (e.g. MY_SETTING=value).",
-      "A command-line argument (e.g. --my.setting=value)."
+      "Spring automatically resolves the cycle by injecting a dynamic proxy.",
+      "The JVM crashes with a StackOverflowError during initialization.",
+      "Spring instantiates both beans as null.",
+      "The application fails to start and throws a BeanCurrentlyInCreationException."
     ],
     "correctOptionIndex": 3,
-    "explanation": "Command-line arguments have higher precedence than environment variables, packaged configuration, and config files in the directory. The precedence order is: command-line args > env variables > config files (external > internal).",
-    "difficulty": "easy"
+    "explanation": "Unlike setter/field injection, constructor dependencies must be resolved during object creation. Since neither 'BeanA_1' nor 'BeanB_1' can be constructed without the other, Spring cannot resolve the dependency cycle and throws a BeanCurrentlyInCreationException."
   },
   {
-    "id": "spring-boot-19",
-    "topic": "Spring Boot Internals",
-    "questionText": "Which of the following is an example of Spring Boot's 'Relaxed Binding' where a property defined in the environment as 'APP_DATABASE_MAX_POOL_SIZE' is successfully bound to a @ConfigurationProperties class field?",
+    "id": "spring-quiz-t5-1",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "An entity has a lazy-loaded collection association. If you fetch all 6 parent entities and access their associations in a loop, how many SQL queries hit the database?",
+    "codeSnippet": "List<Parent> parents = parentRepository.findAll(); // Fetches 6 parents\nfor (Parent p : parents) {\n    System.out.println(p.getChildren().size()); // Lazy load\n}",
     "options": [
-      "A field named 'appDatabaseMaxPoolSize'",
-      "A field named 'app_database_max_pool_size'",
-      "A field named 'appdatabasemaxpoolsize'",
-      "All of the above will bind successfully."
-    ],
-    "correctOptionIndex": 3,
-    "explanation": "Relaxed binding allows properties to be resolved using camelCase, kebab-case, snake_case, or UPPER_SNAKE_CASE (for environment variables) to bind to properties fields like 'appDatabaseMaxPoolSize'.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-boot-20",
-    "topic": "Spring Boot Internals",
-    "questionText": "In Spring Boot 3.x, how can you define an immutable @ConfigurationProperties class that uses constructor injection without needing to explicitly add @ConstructorBinding to the constructor?",
-    "options": [
-      "By ensuring the class is annotated with @ImmutableConfiguration.",
-      "By defining the class as a Java 'record' annotated with @ConfigurationProperties.",
-      "By making the class final and all its fields package-private.",
-      "In Spring Boot 3.x, constructor binding always requires @ConstructorBinding at the class level."
+      "1 SQL query.",
+      "7 SQL queries.",
+      "6 SQL queries.",
+      "2 SQL queries."
     ],
     "correctOptionIndex": 1,
-    "explanation": "For Java records and classes with a single parameterized constructor, @ConstructorBinding is automatically assumed and is not required explicitly in Spring Boot 3.x.",
-    "difficulty": "easy"
+    "explanation": "This is the N+1 query problem. The initial query fetches the parents (1 query). When accessing the lazy collection for each parent in the loop, Hibernate sends a separate select query per parent (6 queries), resulting in 7 queries."
   },
   {
-    "id": "spring-boot-21",
-    "topic": "Spring Boot Internals",
-    "questionText": "If the active profiles are 'prod' and 'mysql', in what order of precedence will Spring Boot load properties from application.yaml, application-prod.yaml, and application-mysql.yaml? (Assume the profile activation order was 'prod', then 'mysql')",
+    "id": "spring-quiz-t6-1",
+    "topic": "Spring WebFlux",
+    "difficulty": "hard",
+    "questionText": "What is the hazard of calling a blocking method like RestTemplate inside a Spring WebFlux controller running on Netty event loops?",
+    "codeSnippet": "@GetMapping(\"/data\")\npublic Mono<String> getData() {\n    return Mono.fromCallable(() -> restTemplate.getForObject(\"https://api.com\", String.class));\n}",
     "options": [
-      "application-mysql.yaml > application-prod.yaml > application.yaml",
-      "application.yaml > application-prod.yaml > application-mysql.yaml",
-      "application-prod.yaml > application-mysql.yaml > application.yaml",
-      "Properties are merged alphabetically, so application-mysql.yaml takes precedence over application-prod.yaml."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Profile-specific properties override non-specific properties (application.yaml). Among profile-specific properties, those activated later in the declaration list (e.g. mysql after prod) override those activated earlier.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-boot-22",
-    "topic": "Spring Boot Internals",
-    "questionText": "How can you define a profile group in application.yaml so that activating the profile 'production' automatically activates the profiles 'db-prod' and 'metrics'?",
-    "options": [
-      "spring.profiles.group.production: db-prod, metrics",
-      "spring.profiles.include.production: db-prod, metrics",
-      "spring.profiles.active.production: db-prod, metrics",
-      "spring.profiles.production.imports: db-prod, metrics"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The 'spring.profiles.group' property allows grouping related profiles together so that activating the group profile activates all the profiles defined within it.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-boot-23",
-    "topic": "Spring Boot Internals",
-    "questionText": "By default, in Spring Boot 3.x, which Actuator endpoints are exposed over HTTP (Web) without any custom configuration?",
-    "options": [
-      "Only /actuator/health and /actuator/info",
-      "All actuator endpoints except /actuator/shutdown",
-      "/actuator/health and /actuator/metrics",
-      "None, HTTP endpoints are completely disabled by default for security."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "For security, only the 'health' and 'info' endpoints are exposed via HTTP/Web by default in Spring Boot 3.x.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-boot-24",
-    "topic": "Spring Boot Internals",
-    "questionText": "Which annotations must be used to create a custom read-only Actuator endpoint named '/actuator/release-info' that works over both HTTP and JMX?",
-    "options": [
-      "@Component and @Endpoint(id = \"release-info\") with @ReadOperation on the read method.",
-      "@RestController and @GetMapping(\"/actuator/release-info\").",
-      "@Component and @WebEndpoint(id = \"release-info\") with @GetMapping.",
-      "@Component and @JmxEndpoint(id = \"release-info\") with @WriteOperation."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@Endpoint creates a technology-agnostic endpoint (HTTP and JMX). The read operation method must be annotated with @ReadOperation.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-boot-25",
-    "topic": "Spring Boot Internals",
-    "questionText": "You are writing a custom health indicator for Actuator. How can you register it so that it is automatically picked up, and what interface must it implement?",
-    "options": [
-      "Implement HealthIndicator and register it as a Spring @Component.",
-      "Implement HealthContributor and register it in META-INF/spring.factories.",
-      "Annotate a method with @HealthCheck returning a Map<String, Object>.",
-      "Implement ReactiveHealthIndicator and annotate the class with @Endpoint."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Implementing HealthIndicator (or ReactiveHealthIndicator) and exposing it as a bean (@Component or @Bean) is sufficient for Spring Boot to automatically register it in the health endpoint.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-boot-26",
-    "topic": "Spring Boot Internals",
-    "questionText": "How does Spring Boot DevTools achieve fast application restarts when code changes are detected?",
-    "options": [
-      "By utilizing two classloaders: a base classloader for static jars (dependencies) and a restart classloader for active development classes.",
-      "By dynamically modifying JVM byte code using Java agents.",
-      "By running the application in a lightweight container and hot-swapping classes using OSGi.",
-      "By utilizing the standard JVM Hotswap mechanism which works for all structural changes."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "DevTools uses two classloaders. Classes that do not change (e.g. third-party jars) are loaded into a base classloader. Classes that change are loaded into a restart classloader. When a restart is triggered, only the restart classloader is discarded and recreated.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-boot-27",
-    "topic": "Spring Boot Internals",
-    "questionText": "How does the LiveReload feature of DevTools notify the browser to refresh when resources are updated?",
-    "options": [
-      "Through a WebSocket connection established by an embedded LiveReload server.",
-      "Through long-polling HTTP requests initiated by the browser.",
-      "By injecting a custom Javascript snippet into all generated HTML responses.",
-      "By sending a push notification via the browser's Service Worker."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "DevTools runs an embedded LiveReload server that communicates with a browser extension or custom script via WebSockets to trigger a reload.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-boot-28",
-    "topic": "Spring Boot Internals",
-    "questionText": "How can you programmatically set active profiles before the application context is refreshed, within a custom ApplicationContextInitializer?",
-    "options": [
-      "context.getEnvironment().setActiveProfiles(\"profileName\");",
-      "System.setProperty(\"spring.profiles.active\", \"profileName\");",
-      "SpringApplication.addProfiles(\"profileName\");",
-      "context.getBeanFactory().registerSingleton(\"profile\", \"profileName\");"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The profile can be programmatically set on the environment of the context before refresh via 'context.getEnvironment().setActiveProfiles(...)' or 'addActiveProfile(...)'.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-boot-29",
-    "topic": "Spring Boot Internals",
-    "questionText": "If you want to configure a fallback bean only when a library (e.g., Jackson) is NOT available on the classpath, which annotation is correct?",
-    "options": [
-      "@ConditionalOnMissingClass(\"com.fasterxml.jackson.databind.ObjectMapper\")",
-      "@ConditionalOnClass(value = ObjectMapper.class, negate = true)",
-      "@ConditionalOnMissingBean(ObjectMapper.class)",
-      "@ConditionalOnResource(resources = \"!classpath:jackson.jar\")"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ConditionalOnMissingClass matches when the specified class name is not present on the classpath. Note that we must specify the class name as a String, since referencing ObjectMapper.class directly would cause a compilation error if Jackson is missing.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-boot-30",
-    "topic": "Spring Boot Internals",
-    "questionText": "If you import spring-boot-starter-web but want to use Jetty instead of Tomcat, how do you configure your build file and dependencies?",
-    "options": [
-      "Exclude spring-boot-starter-tomcat from spring-boot-starter-web and add spring-boot-starter-jetty.",
-      "Set server.jetty.enabled=true in application.properties.",
-      "Exclude tomcat-embed-core and add jetty-server as a direct dependency.",
-      "Annotate your main configuration with @EnableJettyServer."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The standard practice is to exclude the transitive spring-boot-starter-tomcat dependency from spring-boot-starter-web and include the spring-boot-starter-jetty dependency.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-boot-31",
-    "topic": "Spring Boot Internals",
-    "questionText": "When writing an auto-configuration, what is the purpose of annotating it with @EnableConfigurationProperties(MyProperties.class)?",
-    "options": [
-      "It registers MyProperties as a Spring bean in the application context and enables property binding to it.",
-      "It validates that the property fields match the system environment variables.",
-      "It exports the properties to the Actuator /configprops endpoint.",
-      "It disables relaxed binding for the class MyProperties."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@EnableConfigurationProperties registers the specified @ConfigurationProperties class as a bean in the context so that other beans can inject it.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-boot-32",
-    "topic": "Spring Boot Internals",
-    "questionText": "Which annotation allows you to conditionally configure a bean based on a SpEL (Spring Expression Language) expression checking multiple properties?",
-    "options": [
-      "@ConditionalOnExpression",
-      "@ConditionalOnSpEL",
-      "@ConditionalOnPropertyExpression",
-      "@ConditionalOnCondition"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ConditionalOnExpression evaluates a SpEL expression to decide whether a configuration should match.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-boot-33",
-    "topic": "Spring Boot Internals",
-    "questionText": "What is the benefit of injecting the ApplicationArguments bean instead of parsing raw String[] arguments in your bean?",
-    "options": [
-      "It parses command-line arguments into option arguments (e.g. --debug) and non-option arguments.",
-      "It allows arguments to be loaded dynamically from a remote config server.",
-      "It validates command-line arguments against a pre-defined schema.",
-      "It automatically converts arguments to camelCase."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "ApplicationArguments parses command-line arguments and exposes them through helper methods like getOptionNames(), getOptionValues(), and getNonOptionArgs().",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-boot-34",
-    "topic": "Spring Boot Internals",
-    "questionText": "To enable JSR-380 validation (e.g. @NotNull, @Min) on a @ConfigurationProperties bean, what annotation must be added to the class?",
-    "options": [
-      "@Validated",
-      "@Valid",
-      "@ConfigurationPropertiesValidator",
-      "@NonNull"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "A @ConfigurationProperties bean must be annotated with Spring's @Validated annotation to trigger validation of its properties during configuration binding.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-boot-35",
-    "topic": "Spring Boot Internals",
-    "questionText": "In Spring Boot 3.x, what is the recommended way to record custom metrics (e.g., a counter for login attempts) using Actuator and Micrometer?",
-    "options": [
-      "Inject a MeterRegistry bean and use it to register and increment a Counter.",
-      "Implement MetricWriter and register it as a bean.",
-      "Call Actuator.incrementMetric(\"login.attempts\") statically.",
-      "Annotate the login method with @CountedMetric."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The standard approach in Spring Boot 3/Micrometer is to inject the MeterRegistry bean and programmatically create or retrieve counters, gauges, or timers.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-boot-36",
-    "topic": "Spring Boot Internals",
-    "questionText": "How can you disable the automatic restart feature of DevTools programmatically in your application's main method?",
-    "options": [
-      "System.setProperty(\"spring.devtools.restart.enabled\", \"false\");",
-      "SpringApplication.setDevToolsEnabled(false);",
-      "DevTools.disableRestart();",
-      "Setting spring.devtools.livereload.enabled=false"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "You must set the system property 'spring.devtools.restart.enabled' to 'false' before calling 'SpringApplication.run(..., args)' because DevTools reads the system property early in the bootstrapping phase.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-boot-37",
-    "topic": "Spring Boot Internals",
-    "questionText": "Which of the following annotations correctly configures a bean to load ONLY if both the 'production' profile and the 'eu-west' profile are active?",
-    "options": [
-      "@Profile(\"production & eu-west\")",
-      "@Profile({\"production\", \"eu-west\"})",
-      "@Profile(\"production && eu-west\")",
-      "@Profile(\"production + eu-west\")"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring 5.1+ supports profile expressions using operators like & (AND), | (OR), and ! (NOT). In contrast, @Profile({'production', 'eu-west'}) matches if EITHER is active.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-boot-38",
-    "topic": "Spring Boot Internals",
-    "questionText": "What is the purpose of an ApplicationContextInitializer in Spring Boot?",
-    "options": [
-      "To perform customization of the ConfigurableApplicationContext before it is refreshed.",
-      "To bootstrap the embedded Tomcat or Jetty servlet container.",
-      "To run initialization scripts against an active database.",
-      "To initialize singleton beans after the context is refreshed."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "ApplicationContextInitializer is called after the context is created but before it is refreshed, allowing programmatically modifying the context (e.g. adding property sources, registering beans, etc.).",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-boot-39",
-    "topic": "Spring Boot Internals",
-    "questionText": "How can you expose additional custom application details under the /actuator/info endpoint?",
-    "options": [
-      "Implement InfoContributor and register it as a bean.",
-      "Define properties starting with info.custom.* in application.properties.",
-      "Create a custom JSON file named info.json in the classpath.",
-      "Both A and B are valid ways."
-    ],
-    "correctOptionIndex": 3,
-    "explanation": "You can expose details in the info endpoint by either adding properties under the 'info.*' prefix (which are read by the built-in MapInfoContributor) or by implementing the InfoContributor interface.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-boot-40",
-    "topic": "Spring Boot Internals",
-    "questionText": "Why is it risky to use @ConditionalOnBean or @ConditionalOnMissingBean on configuration classes instead of bean methods?",
-    "options": [
-      "The condition evaluation order depends heavily on the ordering of configuration class parsing, which is not guaranteed.",
-      "It forces all beans in the class to be lazily initialized.",
-      "It completely disables auto-configuration imports.",
-      "It conflicts with @ConfigurationProperties."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Bean conditions are evaluated based on what has been parsed so far. When applied at the configuration level, if the target bean has not been registered yet due to class parsing order, the condition might evaluate incorrectly.",
-    "difficulty": "hard"
-  },
-  {
-    "id": "spring-boot-41",
-    "topic": "Spring Boot Internals",
-    "questionText": "Which Spring Boot interface allows you to intercept startup exceptions (such as port already in use) and present a clean, diagnostic error message?",
-    "options": [
-      "FailureAnalyzer",
-      "ApplicationStartupFailureHandler",
-      "SpringApplicationRunListener",
-      "StartupErrorHandler"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "FailureAnalyzer parses exceptions thrown on startup and returns a FailureAnalysis containing a description and a suggested action.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-boot-42",
-    "topic": "Spring Boot Internals",
-    "questionText": "Where can you place a global configuration file to configure DevTools properties (like remote secrets) across all Spring Boot projects on a developer's machine?",
-    "options": [
-      "~/.config/spring-boot/spring-boot-devtools.properties",
-      "/etc/spring/devtools.properties",
-      ".spring-boot-devtools.properties in the project root directory",
-      "~/.spring-boot-devtools.properties"
-    ],
-    "correctOptionIndex": 3,
-    "explanation": "DevTools looks for a global properties file named '.spring-boot-devtools.properties' in the user's home directory (~/).",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-boot-43",
-    "topic": "Spring Boot Internals",
-    "questionText": "What is a major advantage of @ConfigurationProperties over @Value?",
-    "options": [
-      "@ConfigurationProperties supports relaxed binding and structured/hierarchical binding.",
-      "@ConfigurationProperties supports SpEL expressions.",
-      "@ConfigurationProperties can be used directly on static methods.",
-      "@ConfigurationProperties doesn't require getter and setter methods in any configuration style."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ConfigurationProperties supports relaxed binding, JSR-380 validation, constructor binding, and binding structured/nested data, while @Value does not support relaxed binding or structured data binding.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-boot-44",
-    "topic": "Spring Boot Internals",
-    "questionText": "What is the recommended naming convention for custom, third-party Spring Boot starters to avoid clashing with official starters?",
-    "options": [
-      "projectname-spring-boot-starter",
-      "spring-boot-starter-projectname",
-      "starter-projectname-spring",
-      "custom-starter-projectname"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Official Spring Boot starters start with 'spring-boot-starter-'. Third-party starters should follow the format 'projectname-spring-boot-starter'.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-boot-45",
-    "topic": "Spring Boot Internals",
-    "questionText": "Under what condition will @ConditionalOnWebApplication(type = Type.REACTIVE) evaluate to true?",
-    "options": [
-      "When the application context is a reactive web application context (e.g., using WebFlux).",
-      "When the application includes both WebFlux and Spring Web MVC on the classpath.",
-      "When the application is running in an embedded Tomcat instance.",
-      "When reactive programming is enabled via @EnableReactiveStreams."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Type.REACTIVE matches only when the running application context is reactive-based (e.g., AnnotationConfigReactiveWebServerApplicationContext).",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-boot-46",
-    "topic": "Spring Boot Internals",
-    "questionText": "How does Spring Boot Actuator sanitize sensitive keys (like passwords, keys, tokens) in endpoints like /env or /configprops?",
-    "options": [
-      "By replacing their values with ****** (asterisks) using a configured Sanitizer.",
-      "By encrypting the sensitive fields using AES-256.",
-      "By completely omitting sensitive keys from the output.",
-      "By requiring a special JWT token to view any key containing 'password'."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Actuator sanitizes sensitive values by replacing them with ******. You can customize the keys to be sanitized using 'management.endpoint.env.keys-to-sanitize'.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-boot-47",
-    "topic": "Spring Boot Internals",
-    "questionText": "When using Spring Security, how are Spring Boot Actuator endpoints secured by default?",
-    "options": [
-      "They are secured with the same security rules as the rest of the application unless specific request matchers are added for EndpointRequest.",
-      "They bypass security entirely because they run on a different port by default.",
-      "They are secured with HTTP Basic authentication using a generated developer password.",
-      "Web actuator endpoints are completely open, while JMX endpoints are secured."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Once Spring Security is on the classpath, all actuator endpoints are secured by default. To customize access, you typically use EndpointRequest.toAnyEndpoint() or EndpointRequest.to(...) in the security filter chain configuration.",
-    "difficulty": "hard"
-  },
-  {
-    "id": "spring-boot-48",
-    "topic": "Spring Boot Internals",
-    "questionText": "Since Spring Boot 2.4, how can you import external config files from another location (like a directory or a volume mount) directly within application.properties?",
-    "options": [
-      "Using the 'spring.config.import' property.",
-      "Using the 'spring.config.additional-location' property.",
-      "Annotating the configuration class with @ImportResource.",
-      "Using the 'spring.profiles.include' property."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot 2.4+ introduced the 'spring.config.import' property which allows importing additional configuration files (like 'file:/etc/config/') or configuration trees.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-boot-49",
-    "topic": "Spring Boot Internals",
-    "questionText": "In a multi-profile environment, what is the default behavior if multiple profile-specific files define the same property value?",
-    "options": [
-      "The last active profile in the spring.profiles.active list takes precedence and overrides the others.",
-      "The application fails to start due to a profile conflict exception.",
-      "They are merged into a list of comma-separated values.",
-      "The profile file with the shortest filename takes precedence."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The properties are overridden sequentially in the order that the profiles are specified in the active profiles list. The last one wins.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-boot-50",
-    "topic": "Spring Boot Internals",
-    "questionText": "Which property can be used to prevent DevTools from restarting the application when specific static assets (like HTML, CSS) are modified?",
-    "options": [
-      "spring.devtools.restart.exclude",
-      "spring.devtools.restart.ignore",
-      "spring.devtools.livereload.exclude",
-      "spring.devtools.static.ignore"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The 'spring.devtools.restart.exclude' property allows defining a list of paths/files (using ant patterns) that should not trigger an application restart when modified.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-data-1",
-    "topic": "Spring Data JPA Repositories",
-    "questionText": "You have a repository interface extending JpaRepository. Which of the following statements is true regarding its relation to CrudRepository and PagingAndSortingRepository?",
-    "options": [
-      "JpaRepository extends PagingAndSortingRepository, which in turn extends CrudRepository.",
-      "CrudRepository extends JpaRepository, which in turn extends PagingAndSortingRepository.",
-      "JpaRepository and PagingAndSortingRepository are completely independent interfaces that only share common implementation classes.",
-      "JpaRepository extends CrudRepository directly, bypassing PagingAndSortingRepository entirely."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "In the Spring Data Repository hierarchy, JpaRepository extends ListPagingAndSortingRepository (or PagingAndSortingRepository in older versions), which extends CrudRepository, which extends Repository. Therefore, JpaRepository inherits all CRUD, paging, and sorting operations.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-data-2",
-    "topic": "Spring Data JPA Repositories",
-    "questionText": "When implementing custom repository behavior, you want to merge custom logic into your standard spring repository interface. What is the default naming convention that Spring Data JPA uses to find the custom implementation class for an interface named 'UserRepository'?",
-    "options": [
-      "UserRepositoryCustom",
-      "UserRepositoryImpl",
-      "CustomUserRepository",
-      "UserRepositoryCustomImpl"
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "By default, Spring Data looks for the implementation of the custom interface by appending the 'Impl' suffix to the repository interface name (e.g., UserRepositoryImpl). This postfix can be customized via @EnableJpaRepositories(repositoryImplementationPostfix = '...').",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-data-3",
-    "topic": "Spring Data JPA Repositories",
-    "questionText": "You are creating several repository interfaces that share a set of common custom queries. To prevent Spring Data from trying to instantiate a repository bean for the shared base interface, which annotation must you place on the base interface?",
-    "options": [
-      "@NoRepositoryBean",
-      "@Transient",
-      "@IgnoreRepository",
-      "@Component"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@NoRepositoryBean is used to exclude repository interfaces from being picked up as Spring beans. This is crucial for base interfaces that act as shared parent interfaces but should not be instantiated directly.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-data-4",
-    "topic": "Spring Data JPA Repositories",
-    "questionText": "A developer wants to restrict access to database operations by exposing only 'findById' and 'save' methods in their repository, preventing delete or bulk select operations. How can they achieve this?",
-    "options": [
-      "Extend CrudRepository and annotate all unwanted methods with @Deprecated.",
-      "Extend the base Repository interface (which is empty) and declare only 'findById' and 'save' method signatures matching the CrudRepository signatures.",
-      "Override the delete methods in a JpaRepository sub-interface and throw an UnsupportedOperationException.",
-      "Use @Repository(readOnly = true) to prevent modifications, although this does not hide delete method signatures."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "By extending the marker Repository interface, Spring Data will only expose the methods explicitly declared in your interface. The method names and signatures must match those of CrudRepository to be correctly routed to the default implementation.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-data-5",
-    "topic": "Spring Data JPA Repositories",
-    "questionText": "Which interface can an entity implement to programmatically control whether Spring Data's SimpleJpaRepository treats it as 'new' versus 'existing' when save() is called?",
-    "options": [
-      "Serializable",
-      "Persistable",
-      "Identifiable",
-      "EntityStateCallback"
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "By implementing org.springframework.data.domain.Persistable, an entity can implement the 'isNew()' method. This allows custom logic (like checking a boolean flag or a timestamp) to determine if save() should trigger persist() or merge() when using assigned IDs.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-data-6",
-    "topic": "Spring Data JPA Repositories",
-    "questionText": "What is a key architectural difference between standard Spring Data JPA Repositories and Reactive Repositories (like Spring Data R2DBC)?",
-    "options": [
-      "Standard Spring Data JPA relies on blocking JDBC drivers and blocking threads, while Reactive Repositories use non-blocking database drivers and reactive streams (Flux/Mono).",
-      "Reactive Repositories support JPQL and full Hibernate caching natively, whereas standard JPA repositories do not.",
-      "Reactive Repositories support lazy loading of nested collections automatically using proxy objects.",
-      "Standard JPA repositories cannot participate in transactions, while Reactive Repositories can."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Standard JPA (and Hibernate) is built on top of the blocking JDBC API and requires blocking threads. Spring Data R2DBC provides a non-blocking reactive API returning Publisher types (Flux/Mono) and does not use JPA/Hibernate under the hood.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-data-7",
-    "topic": "Query Methods",
-    "questionText": "Consider the query method: List<User> findByAddress_ZipCode(String zipCode). How does Spring Data JPA resolve the property path in this method?",
-    "options": [
-      "It splits the name by the underscore '_' to explicitly treat 'address' as a property of User, and 'zipCode' as a property of Address, resolving property path ambiguity.",
-      "The underscore is ignored, and Spring Data attempts to match a property named 'address_ZipCode' in the User entity.",
-      "The underscore represents a database native underscore matching constraint for column names.",
-      "It triggers an automatic SQL JOIN using a native query fallback mechanism."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Although Spring Data can traverse properties automatically (e.g., findByAddressZipCode), ambiguity can arise if the User entity has an 'addressZip' property. Using an underscore (_) acts as a delimiter to explicitly define the traversal path (address -> zipCode).",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-data-8",
-    "topic": "Query Methods",
-    "questionText": "Which query method suffix will generate an SQL statement containing 'LIKE %?1%' (where the search parameter is automatically wrapped with wildcard characters)?",
-    "options": [
-      "findByLastNameLike",
-      "findByLastNameContaining",
-      "findByLastNameStartingWith",
-      "findByLastNameEndingWith"
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "findByLastNameContaining (and findByLastNameIsContaining / findByLastNameContains) automatically surrounds the query parameter with '%' characters before executing the query. 'Like' does not append '%' characters automatically; the developer must pass them in the argument.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-data-9",
-    "topic": "Query Methods",
-    "questionText": "When returning a java.util.stream.Stream<User> from a Spring Data JPA query method, what requirement must be met by the caller to avoid an Exception?",
-    "options": [
-      "The stream must be processed asynchronously using a CompletableFuture.",
-      "The method must be invoked within an active transaction, and the stream must be closed after consumption.",
-      "The entity must have second-level cache enabled.",
-      "The query method must be annotated with @Modifying."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "Streaming results requires the underlying database connection and Hibernate Session to remain open during streaming. Thus, the calling method must be annotated with @Transactional, and the Stream should be wrapped in a try-with-resources block to ensure it is closed.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-data-10",
-    "topic": "Query Methods",
-    "questionText": "Which method signature correctly limits the result set to the first 3 users sorted by their creation date in descending order?",
-    "options": [
-      "List<User> findTop3ByOrderByCreatedDateDesc();",
-      "List<User> findFirst3ByCreatedDateDesc();",
-      "List<User> findByCreatedDateDescLimit3();",
-      "List<User> findTopByOrderByCreatedDateDesc(int limit);"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Data supports query limiting using 'First' or 'Top' followed by a number. To sort, we append 'OrderBy' followed by the property name and direction ('Desc' or 'Asc'). Thus, findTop3ByOrderByCreatedDateDesc() is the correct signature.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-data-11",
-    "topic": "Query Methods",
-    "questionText": "You want to find all products that are either marked as active or have a stock count greater than zero. Which query method name is valid and correct?",
-    "options": [
-      "List<Product> findByActiveTrueOrStockGreaterThan(Integer stock);",
-      "List<Product> findByActiveOrStockGreaterThanZero();",
-      "List<Product> findActiveOrStockGreaterThan(Integer stock);",
-      "List<Product> findByActiveIsTrueOrStockIsGreaterThan(Integer stock);"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Data matches properties and keywords. 'ActiveTrue' maps to active = true (omitting the need for a parameter for that property), and 'OrStockGreaterThan' maps to 'OR stock > ?'. The argument passed corresponds to the 'stock' parameter.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-data-12",
-    "topic": "Query Methods",
-    "questionText": "If an entity has both a field 'accountNumber' and an embedded object 'account' with a field 'number', how does Spring Data resolve the method name 'findByAccountNumber(String number)' if no underscore is used?",
-    "options": [
-      "It will prioritize the direct property 'accountNumber' first. If that doesn't exist, it splits the property path using camel case and looks for 'account.number'.",
-      "It splits the property path first ('account.number'), throwing an exception if 'account' is null.",
-      "It throws a startup exception due to ambiguity.",
-      "It requires a native query fallback because nested properties must contain underscores."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Data JPA's property parser first checks for a direct property matching the name (accountNumber). Only if that match fails does it split the name from right to left based on camel case (account and number).",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-data-13",
-    "topic": "@Query annotation",
-    "questionText": "When using the @Query annotation, which parameter binding style is recommended to prevent issues when refactoring method parameter positions?",
-    "options": [
-      "Positional parameters (?1, ?2)",
-      "Named parameters (:name) using the @Param annotation",
-      "Index-based parameters (?index)",
-      "Spring Data does not support named parameter binding in JPQL."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "Named parameters (e.g., :status bound via @Param(\"status\")) make queries robust against refactoring because their binding does not depend on the order of arguments in the method signature.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-data-14",
-    "topic": "@Query annotation",
-    "questionText": "Which of the following describes the difference in query validation between JPQL/HQL queries and Native queries defined via @Query?",
-    "options": [
-      "JPQL/HQL queries are validated by the persistence provider (Hibernate) during Spring application context startup, while Native queries are executed directly and validated by the database at runtime.",
-      "Native queries are validated at compilation time, while JPQL queries are validated at runtime.",
-      "JPQL queries run directly in the database, whereas native queries run in the JVM cache.",
-      "There is no difference; both are fully validated at startup against the database schema."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Hibernate parses JPQL/HQL queries when building the SessionFactory at startup, throwing errors for invalid syntax or wrong properties. Native queries (nativeQuery = true) are passed directly to the DB and are not validated until executed.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-data-15",
-    "topic": "@Query annotation",
-    "questionText": "How can you refer to the entity name dynamically in a JPQL @Query template, ensuring that if the entity class is renamed or has a custom JPA name, the query remains valid?",
-    "options": [
-      "Using SpEL: #{#entityName}",
-      "Using the wildcard: $Entity",
-      "Using the template placeholder: %entity%",
-      "It is not possible to refer to the entity dynamically; the name must be hardcoded."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Data JPA supports SpEL templates. Using #{#entityName} resolves dynamically to the entity name associated with the repository interface, which respects @Entity(name = \"...\") settings.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-data-16",
-    "topic": "@Query annotation",
-    "questionText": "A developer runs a bulk update query using @Query(\"UPDATE User u SET u.active = false\"). The update executes, but subsequent findById() calls in the same transaction still return the old active state. What annotation configuration is missing?",
-    "options": [
-      "@Modifying(clearAutomatically = true)",
-      "@Transactional(propagation = Propagation.REQUIRES_NEW)",
-      "@Query(nativeQuery = true)",
-      "@CacheEvict(allEntries = true)"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Modifying queries execute updates directly in the database, bypassing the Hibernate Persistence Context (first-level cache). By setting @Modifying(clearAutomatically = true), Spring Data will clear the Persistence Context, forcing Hibernate to reload fresh entity states from the database.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-data-17",
-    "topic": "@Query annotation",
-    "questionText": "You want to retrieve a subset of fields from an entity using a JPQL query and map them directly into a read-only class (DTO). Which JPQL syntax is correct?",
-    "options": [
-      "SELECT new com.example.UserDto(u.id, u.name) FROM User u",
-      "SELECT u.id, u.name AS dto FROM User u",
-      "SELECT (UserDto) u FROM User u",
-      "SELECT u.id, u.name INTO UserDto FROM User u"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "JPQL constructor expressions require the 'new' keyword followed by the fully qualified class name of the DTO and the arguments matching the DTO's constructor: SELECT new path.to.Dto(args) FROM Entity e.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-data-18",
-    "topic": "@Query annotation",
-    "questionText": "When using pagination with a native @Query, what attribute must be defined in the @Query annotation if the native query contains joins or complex filtering that prevents automatic count query generation?",
-    "options": [
-      "countQuery",
-      "countProjection",
-      "value",
-      "countQueryRequired = true"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "For paginated native queries, Spring Data JPA cannot reliably auto-generate a count query. You must explicitly define a secondary query in the 'countQuery' attribute (e.g., @Query(value = \"...\", countQuery = \"...\")) to fetch the total records.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-data-19",
-    "topic": "@Query annotation",
-    "questionText": "If you pass an empty collection (e.g., an empty List) into a JPQL query parameter used in an 'IN' clause (e.g., WHERE u.id IN :ids), what is the behavior in modern Hibernate versions?",
-    "options": [
-      "It throws a PreparedStatement Exception because an empty IN clause (IN ()) is syntax-invalid in SQL.",
-      "Hibernate translates it to a query that evaluates to false (like '1=0' or returns no results) without throwing an exception.",
-      "It returns all records in the table, ignoring the clause.",
-      "It blocks the thread and causes a deadlock."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "Historically, empty collections caused syntax errors. Modern Hibernate versions handle this gracefully by generating a dummy condition (e.g., '1=0' or matching against NULL) so the query executes and safely returns no matches for that criteria.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-data-20",
-    "topic": "Entity lifecycle states",
-    "questionText": "An entity instance that has an assigned primary key but is not associated with an active persistence context (EntityManager) and has no counterpart in the database yet is in which state?",
-    "options": [
-      "Transient",
-      "Managed",
-      "Detached",
-      "Removed"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "An entity is 'Transient' if it is newly created in Java memory and not yet associated with an EntityManager session. Even if it has an assigned ID, it remains transient until persist() is called or it is saved.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-data-21",
-    "topic": "Entity lifecycle states",
-    "questionText": "What is the difference between EntityManager.persist() and EntityManager.merge() when dealing with a detached entity?",
-    "options": [
-      "persist() will throw an EntityExistsException (or duplicate key database error) because it attempts to insert a new row; merge() copies the state to a managed instance, querying the DB first if necessary.",
-      "persist() attaches the detached entity directly back into the session; merge() deletes and re-inserts the entity.",
-      "persist() returns a managed copy of the entity; merge() does not return anything (void).",
-      "There is no difference; both perform SQL inserts."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "persist() is strictly for making transient instances managed (SQL INSERT). Calling it with a detached instance (which already has an ID) violates this and throws an exception. merge() is for copying detached state into a managed instance (SQL UPDATE or INSERT).",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-data-22",
-    "topic": "Entity lifecycle states",
-    "questionText": "In Spring Data JPA, when you call repository.save(entity), how does the default SimpleJpaRepository implementation decide whether to call persist() or merge()?",
-    "options": [
-      "If the entity implements Persistable and isNew() returns true, or if its @Id annotated field is null (or 0 for primitive types), it calls persist(); otherwise, it calls merge().",
-      "It always calls merge() first, and if that fails, it catches the exception and calls persist().",
-      "It parses the database logs to see if the record exists.",
-      "It performs a SELECT count query for every single save() invocation to determine presence."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "SimpleJpaRepository inspects the identifier property. If the ID is null or zero, it is assumed new and persist() is called. Otherwise, it is assumed existing, calling merge(). If using assigned IDs, you should implement Persistable to avoid unnecessary SELECT statements triggered by merge().",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-data-23",
-    "topic": "Entity lifecycle states",
-    "questionText": "By default, when Hibernate performs dirty checking, how does it determine which columns to include in the SQL UPDATE statement?",
-    "options": [
-      "It updates all columns of the table, regardless of which fields were modified, unless the entity is annotated with @DynamicUpdate.",
-      "It only updates the columns that were modified, by default.",
-      "It compares the hashcode of the entity fields to update only changed columns.",
-      "It updates only the primary key and the modified columns."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "By default, Hibernate generates static UPDATE statements that update all columns of the entity to improve SQL execution plan caching. If you want Hibernate to generate dynamic SQL containing only modified fields, you must annotate the entity class with @DynamicUpdate.",
-    "difficulty": "hard"
-  },
-  {
-    "id": "spring-data-24",
-    "topic": "Entity lifecycle states",
-    "questionText": "Which JPA entity lifecycle callback annotation is executed immediately before an entity is written to the database (either on insert or update) to perform audit-logging fields setup?",
-    "options": [
-      "@PrePersist and @PreUpdate",
-      "@PostPersist and @PostUpdate",
-      "@PreFlush",
-      "@PostLoad"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@PrePersist is executed before an entity is first saved (SQL INSERT), and @PreUpdate is executed before an update (SQL UPDATE). These are perfect for setting fields like 'lastModifiedDate'.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-data-25",
-    "topic": "Entity lifecycle states",
-    "questionText": "A User entity has a One-to-Many association to Address with orphanRemoval = true. What happens when you remove an Address instance from the User's address list and save the User?",
-    "options": [
-      "Hibernate automatically executes a DELETE statement for that Address record in the database.",
-      "Hibernate sets the foreign key column of the Address table to NULL but leaves the record in the database.",
-      "It throws a Foreign Key Constraint violation exception.",
-      "Nothing happens until you call addressRepository.delete()."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Unlike CascadeType.REMOVE (which only deletes child entities when the parent itself is deleted), 'orphanRemoval = true' means that if a child is dissociated from the parent (removed from the collection), it becomes an orphan and Hibernate automatically deletes it from the database.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-data-26",
-    "topic": "Transaction management",
-    "questionText": "Method A is annotated with @Transactional(propagation = Propagation.REQUIRED). It calls Method B, which is annotated with @Transactional(propagation = Propagation.REQUIRES_NEW). If Method B completes successfully but Method A subsequently throws a RuntimeException, what is the status of the changes made in Method B?",
-    "options": [
-      "Method B's changes are committed because it ran in its own independent transaction which completed before Method A rolled back.",
-      "Method B's changes are rolled back because it joined Method A's outer transaction.",
-      "Both transactions are rolled back because they are linked through the transaction manager.",
-      "Method B's transaction goes into a suspended state indefinitely."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Propagation.REQUIRES_NEW suspends the outer transaction and starts a new independent transaction. Once Method B completes, its transaction commits. A rollback in the outer Method A has no effect on Method B's already-committed transaction.",
-    "difficulty": "hard"
-  },
-  {
-    "id": "spring-data-27",
-    "topic": "Transaction management",
-    "questionText": "To prevent phantom reads (where a query inside transaction T1 returns new rows inserted by a concurrent transaction T2), which minimum isolation level should be configured?",
-    "options": [
-      "Isolation.READ_COMMITTED",
-      "Isolation.REPEATABLE_READ",
-      "Isolation.SERIALIZABLE",
-      "Isolation.DEFAULT"
+      "WebFlux automatically shifts the call to virtual threads to avoid blocking.",
+      "The controller immediately throws a BlockedEventLoopException during compilation.",
+      "It blocks the Netty EventLoop thread, reducing server capacity to process concurrent requests and causing starvation.",
+      "It causes a deadlock because Netty restricts HTTP requests."
     ],
     "correctOptionIndex": 2,
-    "explanation": "While REPEATABLE_READ prevents dirty and non-repeatable reads, only SERIALIZABLE guarantees prevention of phantom reads in SQL standards by locking ranges of keys (though some databases like MySQL/InnoDB can prevent them in REPEATABLE_READ using Next-Key Locks).",
-    "difficulty": "hard"
+    "explanation": "WebFlux uses a small number of non-blocking event loop threads. Blocking operations on these threads exhaust the pool and block the server from handling other connections. Offload blocking logic using subscribeOn(Schedulers.boundedElastic())."
   },
   {
-    "id": "spring-data-28",
-    "topic": "Transaction management",
-    "questionText": "You have a UserService class with two methods: public void register() and @Transactional public void saveUser(). If register() calls saveUser() directly (e.g., this.saveUser()), is the transaction applied?",
+    "id": "spring-quiz-t7-1",
+    "topic": "Spring Security",
+    "difficulty": "medium",
+    "questionText": "How do you insert a custom filter 'CustomAuthFilter_1' in a security chain so it executes before UsernamePasswordAuthenticationFilter?",
+    "codeSnippet": "@Bean\npublic SecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n    http.addFilterBefore(new CustomAuthFilter_1(), UsernamePasswordAuthenticationFilter.class);\n    return http.build();\n}",
     "options": [
-      "No, because Spring's declarative transaction management uses AOP proxies, and self-invocation bypasses the proxy.",
-      "Yes, Spring AOP intercepts all internal calls automatically.",
-      "Yes, but only if the class is annotated with @Component instead of @Service.",
-      "No, unless saveUser() is declared as private."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring's transaction management is proxy-based. When method register() calls saveUser() internally, it calls it on the target object directly ('this'), not on the proxy. Thus, the proxy interceptor is bypassed, and no transaction is started.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-data-29",
-    "topic": "Transaction management",
-    "questionText": "By default, which of the following exceptions will cause a Spring @Transactional method to roll back the current transaction?",
-    "options": [
-      "Any exception inheriting from java.lang.Exception (both checked and unchecked exceptions).",
-      "Only unchecked exceptions (RuntimeException) and Errors.",
-      "Only checked exceptions (IOException, SQLException).",
-      "Only NullPointerException and IllegalArgumentException."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "Spring's default rollback behavior aligns with EJB: a transaction is rolled back automatically on unchecked exceptions (RuntimeException and subclasses) and java.lang.Error. For checked exceptions (subclasses of Exception excluding RuntimeException), it will not rollback unless 'rollbackFor' is specified.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-data-30",
-    "topic": "Transaction management",
-    "questionText": "When using @Transactional(readOnly = true) with Hibernate as the JPA provider, how does Hibernate optimize the persistence context?",
-    "options": [
-      "It sets the FlushMode to FlushMode.MANUAL, skips dirty checking for entities, and avoids taking database write locks.",
-      "It caches all query results in the second-level cache automatically.",
-      "It disables the first-level cache entirely to save memory.",
-      "It forces the database connection to use read-only hardware replicas."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Setting readOnly = true optimizes Hibernate session management. Hibernate sets FlushMode to MANUAL, which means it won't perform dirty checking checks on flush, improving CPU/memory performance. It also hints to the JDBC driver that the transaction is read-only.",
-    "difficulty": "hard"
-  },
-  {
-    "id": "spring-data-31",
-    "topic": "Transaction management",
-    "questionText": "If method outer() with Propagation.REQUIRED calls method inner() with Propagation.MANDATORY, what happens if there is no active transaction when outer() is invoked?",
-    "options": [
-      "outer() starts a transaction, and inner() joins it successfully.",
-      "An IllegalTransactionStateException is thrown when inner() is called.",
-      "outer() runs without a transaction, and inner() throws an exception immediately upon invocation of outer().",
-      "inner() starts a new transaction, leaving outer() non-transactional."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "Propagation.MANDATORY requires that an active transaction must already exist. Since there is no transaction when outer() runs (assuming outer didn't start one), when the code reaches inner(), Spring will throw an IllegalTransactionStateException.",
-    "difficulty": "hard"
-  },
-  {
-    "id": "spring-data-32",
-    "topic": "Transaction management",
-    "questionText": "You need to execute database updates in a separate transaction, but the transaction must be committed programmatically inside a specific block of code rather than waiting for the method to return. What is the recommended Spring component to use?",
-    "options": [
-      "TransactionTemplate",
-      "JdbcTemplate",
-      "PlatformTransactionManager directly with try-catch",
-      "EntityManager.getTransaction().commit()"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "TransactionTemplate is Spring's programmatic transaction management helper. It provides thread-safe transaction demarcation, exceptions handling, and proper rollback/commit resource cleanups, making it cleaner than raw PlatformTransactionManager calls.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-data-33",
-    "topic": "Transaction management",
-    "questionText": "You want to publish a Spring ApplicationEvent inside a transaction, but ensure that the event listener is executed only after the transaction commits successfully. Which annotation should be used on the listener method?",
-    "options": [
-      "@EventListener",
-      "@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)",
-      "@TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)",
-      "@Async"
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "@TransactionalEventListener binds listener execution to a transaction phase. The default phase is AFTER_COMMIT, ensuring the event is processed only after the database transaction has committed successfully.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-data-34",
-    "topic": "Caching in Spring Boot",
-    "questionText": "A developer annotates a method with @Cacheable(value = 'books', key = '#isbn'). What does the key attribute represent?",
-    "options": [
-      "It defines the cache key using a Spring Expression Language (SpEL) expression that references the 'isbn' parameter of the method.",
-      "It is a hardcoded string literal that represents the cache entry key.",
-      "It refers to a property in application.properties.",
-      "It specifies the database primary key of the Book entity."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The 'key' attribute in Spring's caching annotations accepts SpEL. '#isbn' retrieves the value of the method parameter named 'isbn' and uses it as the key for storing/retrieving values in the 'books' cache.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-data-35",
-    "topic": "Caching in Spring Boot",
-    "questionText": "You want a method to invalidate and clear all entries in the 'products' cache whenever it is called. How should you configure the annotation?",
-    "options": [
-      "@CacheEvict(value = 'products', allEntries = true)",
-      "@CacheEvict(value = 'products', clearAll = true)",
-      "@CachePut(value = 'products', evict = true)",
-      "@Cacheable(value = 'products', evictAll = true)"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@CacheEvict is used to remove data from caches. Setting 'allEntries = true' forces the cache manager to clear the entire 'products' cache, ignoring individual key resolutions.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-data-36",
-    "topic": "Caching in Spring Boot",
-    "questionText": "What is the key difference between the @Cacheable and @CachePut annotations in Spring Boot?",
-    "options": [
-      "@Cacheable skips method execution if the key is found in the cache; @CachePut always executes the method and updates the cache with the result.",
-      "@CachePut skips method execution if found, while @Cacheable always executes.",
-      "@Cacheable is only for reading from DB; @CachePut is only for SQL UPDATE statements.",
-      "There is no difference; they are aliases for each other."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@Cacheable acts as a cache look-aside: it reads from the cache first. @CachePut is used to update the cache; it always runs the method body and stores the returned value under the designated key.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-data-37",
-    "topic": "Caching in Spring Boot",
-    "questionText": "Similar to @Transactional, why does calling a @Cacheable method from within another method of the same class fail to hit the cache?",
-    "options": [
-      "Because Spring's cache abstraction is implemented using AOP proxies, and internal calls bypass the proxy wrapper.",
-      "Because caching does not support local method calls.",
-      "Because Spring Boot cache requires an active JTA transaction.",
-      "Because the second-level cache only works for direct entity queries."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Caching is powered by Spring AOP proxies. An internal call (self-invocation) targets the 'this' instance directly rather than the proxy object, meaning the interceptor that handles caching logic is never executed.",
-    "difficulty": "hard"
-  },
-  {
-    "id": "spring-data-38",
-    "topic": "Caching in Spring Boot",
-    "questionText": "You want to cache the result of a method findBook(Long id), but ONLY if the returned Book object has its 'isRare' property set to true. Which attribute configuration is correct?",
-    "options": [
-      "@Cacheable(value = 'books', condition = '#result.isRare')",
-      "@Cacheable(value = 'books', unless = '!#result.isRare')",
-      "@Cacheable(value = 'books', filter = '#result.isRare')",
-      "@Cacheable(value = 'books', unless = '#result == null || !#result.isRare')"
-    ],
-    "correctOptionIndex": 3,
-    "explanation": "The 'unless' expression is evaluated AFTER the method completes, and has access to '#result'. If 'unless' is true, caching is vetoed. Therefore, unless '#result is null or not rare' (meaning we cache only when result is NOT null AND is rare) is the correct expression.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-data-39",
-    "topic": "Caching in Spring Boot",
-    "questionText": "By default, if no external cache provider (like Redis, Hazelcast, or Caffeine) is configured in a Spring Boot application, what cache implementation is fallback-registered?",
-    "options": [
-      "ConcurrentMapCacheManager (using JVM ConcurrentHashMap)",
-      "NoOpCacheManager (caching disabled)",
-      "EhCacheManager",
-      "RedisCacheManager"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "If cache support is enabled (@EnableCaching) but no specific provider is configured, Spring Boot registers a ConcurrentMapCacheManager which stores cache data in simple ConcurrentHashMaps in JVM memory.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-data-40",
-    "topic": "Pagination & Sorting",
-    "questionText": "What is the primary performance advantage of returning a Slice<User> instead of a Page<User> from a repository query method?",
-    "options": [
-      "Slice does not execute a count query to determine the total number of elements, saving a database roundtrip and query parsing overhead.",
-      "Slice uses reactive non-blocking execution under the hood.",
-      "Slice keeps all records in the first-level cache, while Page does not.",
-      "Slice does not require a Pageable parameter."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Returning Page requires Spring Data to execute a count query to calculate total elements and pages. Slice only queries for the requested limit + 1 elements to determine if there is a next page, avoiding the expensive count query.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-data-41",
-    "topic": "Pagination & Sorting",
-    "questionText": "Which of the following is the correct way to instantiate a Sort object to sort first by 'lastName' ascending, and then by 'firstName' descending?",
-    "options": [
-      "Sort.by('lastName').ascending().and(Sort.by('firstName').descending())",
-      "Sort.by(Order.asc('lastName'), Order.desc('firstName'))",
-      "new Sort('lastName ASC', 'firstName DESC')",
-      "Sort.by('lastName', 'firstName').descending()"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Data's Sort class is fluent. You can combine sorts using .and(): Sort.by('lastName').ascending().and(Sort.by('firstName').descending()) is the standard approach.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-data-42",
-    "topic": "Pagination & Sorting",
-    "questionText": "Why is offset-based pagination (e.g. LIMIT 10 OFFSET 100000) considered an anti-pattern for large datasets, and what is the alternative?",
-    "options": [
-      "The database must scan and discard all preceding offset rows, degrading performance. The alternative is keyset pagination (cursor-based), which filters using the last seen ID (e.g., WHERE id > last_id LIMIT 10).",
-      "Offset-based pagination triggers an N+1 query problem automatically. The alternative is Fetch Joins.",
-      "Offset-based pagination causes memory leaks in Hibernate first-level cache. The alternative is Slice.",
-      "Offset is not supported by PostgreSQL or Oracle. The alternative is Pageable."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Offset pagination forces the database to read all rows up to OFFSET + LIMIT, even though it discards the offset rows. Keyset pagination avoids this scan by querying for values greater than the last record of the previous page.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-data-43",
-    "topic": "Pagination & Sorting",
-    "questionText": "When using Pageable in a native query (nativeQuery = true), how does Spring Data JPA handle the ORDER BY clause if you pass a Sort object dynamically?",
-    "options": [
-      "It attempts to append the sort properties to the end of the native SQL query, but this can fail if the property names do not match the database column names exactly.",
-      "It translates the camel-case properties of the Sort object to snake-case column names automatically.",
-      "It ignores the Sort object entirely for native queries.",
-      "It performs sorting in-memory in the JVM after fetching all records."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Data appends sorting to native queries. However, because Sort properties correspond to Java Entity fields (e.g., firstName), it will append ORDER BY firstName, which will fail if the DB column is named first_name. You must map Sort names to match database columns.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-data-44",
-    "topic": "Pagination & Sorting",
-    "questionText": "What does Hibernate do when you attempt to paginate a query that uses 'JOIN FETCH' to load a collection (e.g., fetching a User and their list of Orders)?",
-    "options": [
-      "It logs a warning ('firstResult/maxResults specified with collection fetch; applying in memory!') and fetches ALL rows to paginate them in memory, which can lead to OutOfMemoryError.",
-      "It throws a QuerySyntaxException at application startup.",
-      "It splits the query into two queries automatically to run pagination safely.",
-      "It ignores the JOIN FETCH and executes lazy loading on-demand."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "When join-fetching collections, database result rows duplicate parent entities (e.g., 1 user with 3 orders produces 3 rows). If Hibernate applied LIMIT/OFFSET, it would truncate the child rows, corrupting the collection. Thus, Hibernate is forced to load all records and paginate in memory.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-data-45",
-    "topic": "Hibernate & N+1 Query Problem",
-    "questionText": "Which of the following scenarios triggers the classic N+1 query problem in Hibernate?",
-    "options": [
-      "You fetch a list of N parents, and then iterate through them to access a lazy-loaded child association for each parent, causing 1 query for parents + N individual queries for children.",
-      "You execute a single query that updates N rows in the database.",
-      "You save N entities inside a loop, causing Hibernate to open N database connections.",
-      "You fetch 1 entity that has N different columns."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The N+1 query problem occurs when you run 1 query to fetch N parent records (e.g., select * from user), and then for each user, you access an uninitialized lazy collection, forcing Hibernate to fire another SELECT query (N times).",
-    "difficulty": "hard"
-  },
-  {
-    "id": "spring-data-46",
-    "topic": "Hibernate & N+1 Query Problem",
-    "questionText": "How does the @EntityGraph annotation solve the N+1 query problem when declared on a repository query method?",
-    "options": [
-      "It instructs Hibernate to perform an SQL JOIN FETCH for the specified paths in a single query, overriding their lazy-loading configuration.",
-      "It saves all entities to the second-level cache, avoiding database calls.",
-      "It uses a batch fetch size of 100 to group child queries.",
-      "It generates a database view and queries the view instead."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@EntityGraph defines a plan for fetching associations. By specifying paths in @EntityGraph(attributePaths = {'orders'}), Hibernate generates an SQL JOIN to fetch those associations in a single database roundtrip, converting LAZY to EAGER for that query.",
-    "difficulty": "hard"
-  },
-  {
-    "id": "spring-data-47",
-    "topic": "Hibernate & N+1 Query Problem",
-    "questionText": "In JPQL, what is the syntactic difference between 'LEFT JOIN' and 'LEFT JOIN FETCH'?",
-    "options": [
-      "'LEFT JOIN' queries the related entities but does not populate the parent's association collection; 'LEFT JOIN FETCH' populates the association collection, preventing lazy loading queries.",
-      "'LEFT JOIN FETCH' only works on native SQL queries, while 'LEFT JOIN' works in JPQL.",
-      "'LEFT JOIN' is eager by default, while 'LEFT JOIN FETCH' is lazy.",
-      "There is no difference; Hibernate treats them identically."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "'JOIN' or 'LEFT JOIN' is used for filtering or projections (e.g. joining to query on order status). 'JOIN FETCH' tells Hibernate to fetch the association data and immediately construct the object graph and populate the collections of the returned entities.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-data-48",
-    "topic": "Hibernate & N+1 Query Problem",
-    "questionText": "If you cannot modify the repository query to use join fetches, which annotation can you put on a target entity collection to mitigate the N+1 query problem by loading child entities in chunks rather than one by one?",
-    "options": [
-      "@BatchSize(size = X)",
-      "@Fetch(FetchMode.SUBSELECT)",
-      "Both @BatchSize(size = X) and @Fetch(FetchMode.SUBSELECT) are valid approaches.",
-      "@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)"
+      "Annotate CustomAuthFilter_1 with @Order(Ordered.HIGHEST_PRECEDENCE).",
+      "Register CustomAuthFilter_1 as a Spring @Component; Spring Security loads custom beans first.",
+      "Use addFilterBefore(new CustomAuthFilter_1(), UsernamePasswordAuthenticationFilter.class) inside HttpSecurity config.",
+      "Declare CustomAuthFilter_1 inside application.properties under security.filter.order."
     ],
     "correctOptionIndex": 2,
-    "explanation": "Both options mitigate N+1. @BatchSize loads child associations in batches of size X (e.g. SELECT ... WHERE parent_id IN (1, 2, ... X)). @Fetch(FetchMode.SUBSELECT) fetches all child associations using a subselect of the original query.",
-    "difficulty": "hard"
+    "explanation": "The order of filters inside a SecurityFilterChain is explicitly configured via HttpSecurity APIs. Class-level @Order annotations do not position filters within the SecurityFilterChain."
   },
   {
-    "id": "spring-data-49",
-    "topic": "Hibernate & N+1 Query Problem",
-    "questionText": "What is the scope and duration of Hibernate's First-Level Cache?",
+    "id": "spring-quiz-t8-1",
+    "topic": "Spring Core",
+    "difficulty": "medium",
+    "questionText": "If a payment service interface has a default bean marked with @Primary, and another bean with qualifier 'customPaymentSvc_1', what is injected?",
+    "codeSnippet": "@RestController\npublic class PaymentController {\n    @Autowired\n    @Qualifier(\"customPaymentSvc_1\")\n    private PaymentService service;\n}",
     "options": [
-      "It is bound to the EntityManager (Session) and lasts for the duration of the transaction/session.",
-      "It is shared across all threads and lasts until the application restarts.",
-      "It is bound to the JVM heap and managed by the Garbage Collector.",
-      "It is stored in the database temporary tables."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The First-Level Cache is the Hibernate Session (or JPA EntityManager). It is transaction/session-scoped and isolated to the executing thread. It is cleared when the session is closed or cleared.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-data-50",
-    "topic": "Hibernate & N+1 Query Problem",
-    "questionText": "Why does accessing a Lazy-loaded association (e.g., user.getOrders().size()) outside a @Transactional service method throw a LazyInitializationException?",
-    "options": [
-      "Because the EntityManager/Session has already closed, and the uninitialized proxy object cannot access the database to load the data.",
-      "Because lazy loading is disabled when using DTOs.",
-      "Because the collection exceeds the max-fetch size limit.",
-      "Because Hibernate does not support collection methods outside transactions."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Hibernate uses proxy objects (or byte-code enhancement) for lazy associations. When the transaction completes, the EntityManager is closed. If you subsequently access the lazy collection, the proxy attempts to lazy-load but fails because the Session is closed, throwing LazyInitializationException.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-web-sec-1",
-    "topic": "Spring Web & Security",
-    "questionText": "A developer wants to build a RESTful API where every handler method automatically serializes the returned object directly into the HTTP response body instead of resolving an HTML view. Which annotation is the most appropriate to use at the class level?",
-    "options": [
-      "@Controller",
-      "@RestController",
-      "@ResponseBody",
-      "@Component"
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "@RestController is a convenience annotation that combines @Controller and @ResponseBody. This ensures that all handler methods within the controller return their data directly in the response body (typically serialized to JSON or XML) rather than using a ViewResolver.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-web-sec-2",
-    "topic": "Spring Web & Security",
-    "questionText": "In Spring Web MVC, what is the key difference between using @PathVariable and @RequestParam for capturing request data?",
-    "options": [
-      "@PathVariable reads variables from the HTTP headers, while @RequestParam reads them from the request path segment.",
-      "@PathVariable maps placeholders in the URI path template (e.g., /users/{id}), while @RequestParam extracts query parameters from the query string (e.g., /users?id=123) or form parameters.",
-      "@PathVariable is only used for POST request payloads, whereas @RequestParam is exclusively used for GET request query parameters.",
-      "There is no difference; they are aliases for each other and can be used interchangeably in any scenario."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "@PathVariable is used to extract values directly from the URI path template (matching placeholder variables like {id} in @GetMapping(\"/users/{id}\")). @RequestParam is used to extract query parameters from the request URI (e.g., ?id=123) or form data from a POST request.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-web-sec-3",
-    "topic": "Spring Web & Security",
-    "questionText": "A developer wants a controller method to handle requests sent to either /api/v1/items or /api/v2/items. How can this be configured using the @RequestMapping annotation (or one of its shortcuts like @GetMapping)?",
-    "options": [
-      "By defining multiple controller methods with identical signatures, each mapping to one of the paths.",
-      "By providing an array of string paths to the value or path attribute, e.g., @GetMapping(value = {\"/api/v1/items\", \"/api/v2/items\"}).",
-      "By using a wildcard match like @GetMapping(\"/api/*/items\") which automatically restricts it to only v1 and v2.",
-      "This is not supported in Spring MVC; a controller method can only map to exactly one path pattern."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "The value (or path) attribute of @RequestMapping (and its shortcut annotations like @GetMapping, @PostMapping, etc.) accepts an array of Strings, allowing a single method to handle requests directed to multiple distinct paths.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-web-sec-4",
-    "topic": "Spring Web & Security",
-    "questionText": "Under what condition can a developer use Matrix Variables (e.g., /cars;color=red;year=2012) in a Spring MVC controller, and how must it be enabled?",
-    "options": [
-      "They are enabled by default and require no configuration; you only need to annotate the controller method parameter with @MatrixVariable.",
-      "The developer must set the removeSemicolonContent property of UrlPathHelper to false in the MVC configuration, and use the @MatrixVariable annotation in the handler method.",
-      "Matrix variables are only supported when using Spring WebFlux and are completely unsupported in Spring Web MVC.",
-      "The developer must change the HTTP method to PATCH, as matrix variables are only parsed for PATCH request paths."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "In Spring Web MVC, request paths are parsed by UrlPathHelper, which by default removes semicolon content (matrix variables) for path matching. To use matrix variables, you must configure Spring MVC to disable this behavior (setting removeSemicolonContent to false via a WebMvcConfigurer implementation) and use @MatrixVariable in the controller method parameters.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-web-sec-5",
-    "topic": "Spring Web & Security",
-    "questionText": "A controller method should only handle POST requests containing JSON payloads and must return a JSON response. Which configuration on @PostMapping is correct?",
-    "options": [
-      "@PostMapping(path = \"/data\", consumes = \"application/json\", produces = \"application/json\")",
-      "@PostMapping(path = \"/data\", headers = {\"Content-Type=application/json\", \"Accept=application/json\"})",
-      "@PostMapping(path = \"/data\", params = \"format=json\")",
-      "Both A and B are identical in behavior and represent the standard way of handling content negotiation."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The consumes attribute specifies the media types that the request's Content-Type header must match (e.g., application/json). The produces attribute specifies the media types that the controller can return, which must match the request's Accept header. While headers could check headers, using consumes and produces is the standard, built-in mechanism for mapping requests based on content negotiation.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-web-sec-6",
-    "topic": "Spring Web & Security",
-    "questionText": "If a query parameter is optional in a request (e.g., /search?query=spring), how should the @RequestParam parameter be defined in the controller method to avoid a MissingServletRequestParameterException when the parameter is absent?",
-    "options": [
-      "By setting the required attribute to false, e.g., @RequestParam(value = \"query\", required = false).",
-      "By wrapping the parameter type in java.util.Optional, e.g., @RequestParam(\"query\") Optional<String> query.",
-      "By providing a defaultValue, e.g., @RequestParam(value = \"query\", defaultValue = \"\").",
-      "All of the above options are valid ways to prevent the exception."
-    ],
-    "correctOptionIndex": 3,
-    "explanation": "All three options are valid: setting required = false returns null for objects when absent; using java.util.Optional wraps the value or returns an empty optional; providing a defaultValue automatically supplies the specified default string, which also implicitly sets required to false.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-web-sec-7",
-    "topic": "Spring Web & Security",
-    "questionText": "A developer wants to redirect the client to an external URL https://example.com/login from a Spring MVC @Controller method. What is the most idiomatic way to achieve this?",
-    "options": [
-      "Return the string \"redirect:https://example.com/login\".",
-      "Return new RedirectView(\"https://example.com/login\").",
-      "Return a ResponseEntity with status HttpStatus.FOUND (302) and a Location header containing the URL.",
-      "All of the above are valid methods to trigger a redirect to the external URL."
-    ],
-    "correctOptionIndex": 3,
-    "explanation": "Returning a string prefixed with \"redirect:\", returning a RedirectView instance, or returning a ResponseEntity with a 302/307 status and the Location header are all fully supported and valid methods to redirect a client in Spring MVC.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-web-sec-8",
-    "topic": "Spring Web & Security",
-    "questionText": "In a Spring Web MVC controller, what is the primary benefit of returning a DeferredResult<ResponseEntity<T>> instead of a direct ResponseEntity<T>?",
-    "options": [
-      "It automatically serializes the response using XML instead of JSON.",
-      "It offloads long-running request processing to a separate thread, freeing up the Servlet container thread (e.g., Tomcat request thread) to handle other incoming requests.",
-      "It bypasses the Spring Security filter chain entirely to speed up execution.",
-      "It enables reactive backpressure control directly on the client side using HTTP/2 flow control."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "DeferredResult is used for asynchronous request processing. When a controller returns DeferredResult, Spring MVC releases the container's request thread immediately so it can process other requests. The response is written asynchronously once another thread sets a value in the DeferredResult object.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-web-sec-9",
-    "topic": "Spring Web & Security",
-    "questionText": "A client sends a POST request with a JSON body representing a user registration. How does Spring MVC extract this JSON body and bind it to a Java object in the controller method?",
-    "options": [
-      "By using the @RequestParam annotation on a Map parameter.",
-      "By annotating the parameter with @RequestBody, which instructs an HttpMessageConverter to deserialize the body into the target Java object.",
-      "By injecting the HttpServletRequest and manually parsing the InputStream using a raw Jackson ObjectMapper.",
-      "Spring MVC does this automatically for any parameter that matches the request object name without any annotation."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "The @RequestBody annotation indicates that a method parameter should be bound to the body of the web request. Internally, Spring uses configured HttpMessageConverters (like MappingJackson2HttpMessageConverter) to convert the request body (e.g., JSON) into the Java object representation.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-web-sec-10",
-    "topic": "Spring Web & Security",
-    "questionText": "Which annotation is used to map a specific HTTP header value from an incoming request to a controller method argument?",
-    "options": [
-      "@RequestHeader",
-      "@HeaderValue",
-      "@HttpHeader",
-      "@PathVariable"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@RequestHeader is the official Spring MVC annotation used to bind request headers to controller method parameters. For example: @RequestHeader(\"User-Agent\") String userAgent.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-web-sec-11",
-    "topic": "Spring Web & Security",
-    "questionText": "How does the scope of an @ExceptionHandler method declared inside a specific @Controller class differ from one declared inside a @ControllerAdvice class?",
-    "options": [
-      "The @ExceptionHandler in a controller only applies to exceptions thrown within that controller, whereas one in a @ControllerAdvice applies globally across all controllers.",
-      "The @ExceptionHandler in a controller applies globally, while one in a @ControllerAdvice only applies to security-related exceptions.",
-      "There is no difference; both are global and will conflict if they handle the same exception type.",
-      "@ControllerAdvice only works for REST controllers, while local @ExceptionHandler methods only work for traditional MVC view controllers."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "An @ExceptionHandler method defined within a specific @Controller or @RestController handles exceptions thrown only by handler methods in that specific controller class. If defined in a @ControllerAdvice or @RestControllerAdvice class, it acts globally and can handle exceptions thrown across all controllers in the application context.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-web-sec-12",
-    "topic": "Spring Web & Security",
-    "questionText": "If a controller throws a NullPointerException (which extends RuntimeException), and a @ControllerAdvice has defined handlers for both NullPointerException and RuntimeException, which exception handler will Spring MVC execute?",
-    "options": [
-      "It will throw an AmbiguousExceptionHandlerException because two matching handlers are found.",
-      "It will execute the handler for RuntimeException because it is the more general/generic type.",
-      "It will execute the handler for NullPointerException because Spring MVC resolves the most specific matching handler first.",
-      "It will execute both handlers sequentially starting from the most generic one."
+      "The @Primary bean is injected because primary beans take highest precedence.",
+      "A BeanCreationException is thrown due to injection ambiguity.",
+      "The bean annotated with @Qualifier(\"customPaymentSvc_1\") is injected, overriding @Primary.",
+      "Both beans are injected inside a wrapper candidate proxy."
     ],
     "correctOptionIndex": 2,
-    "explanation": "Spring MVC's exception resolver matches the thrown exception to the handler using a hierarchy traversal, picking the handler for the exception type that is closest in the inheritance tree (the most specific match). Thus, NullPointerException will be handled by the handler declared for NullPointerException, not RuntimeException.",
-    "difficulty": "medium"
+    "explanation": "While @Primary sets a default candidate, an explicit @Qualifier specifies the precise bean name requested. Explicit qualifiers take precedence over primary bean designations."
   },
   {
-    "id": "spring-web-sec-13",
-    "topic": "Spring Web & Security",
-    "questionText": "A developer wants a custom exception ResourceNotFoundException to automatically result in an HTTP 404 Not Found response whenever it is thrown from a controller, without writing a separate @ExceptionHandler method. How can this be done?",
+    "id": "spring-quiz-t9-1",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If you specify a derived query method using property name 'emailAddress_1' which is missing on the Entity, what happens?",
+    "codeSnippet": "public interface UserRepository extends JpaRepository<User, Long> {\n    List<User> findByemailAddress_1(String email); // Entity field is 'email'\n}",
     "options": [
-      "Annotate the ResourceNotFoundException class with @ResponseStatus(value = HttpStatus.NOT_FOUND).",
-      "Implement the HandlerExceptionResolver interface inside the custom exception class.",
-      "Annotate the exception class with @ControllerAdvice.",
-      "Configure the default error page in application.properties to redirect all errors to 404."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ResponseStatus can be applied directly to custom exception classes. When such an exception is thrown from a controller method and goes unhandled, the ResponseStatusExceptionResolver automatically intercepts it and sets the response status and reason according to the values specified in the annotation.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-web-sec-14",
-    "topic": "Spring Web & Security",
-    "questionText": "What is the primary difference between @ControllerAdvice and @RestControllerAdvice?",
-    "options": [
-      "@RestControllerAdvice is only active if the application is using Spring WebFlux instead of Spring MVC.",
-      "@RestControllerAdvice combines @ControllerAdvice with @ResponseBody, meaning exception handler methods inside it automatically serialize their return values to the response body (e.g., as JSON) rather than rendering a view.",
-      "@ControllerAdvice only intercepts security exceptions, while @RestControllerAdvice handles all exceptions.",
-      "@RestControllerAdvice runs before the Spring Security filter chain, whereas @ControllerAdvice runs after it."
+      "The query executes but returns an empty list at runtime.",
+      "Spring Boot throws a PropertyReferenceException and fails to start during application context initialization.",
+      "Spring Data fallback parses it to a native SQL query.",
+      "A compile-time error occurs on the repository interface."
     ],
     "correctOptionIndex": 1,
-    "explanation": "Just like @RestController is a convenience annotation that combines @Controller and @ResponseBody, @RestControllerAdvice is a convenience annotation that combines @ControllerAdvice and @ResponseBody. This ensures that any object returned from an @ExceptionHandler method inside it will be converted directly to the response body (typically JSON) using an HttpMessageConverter.",
-    "difficulty": "medium"
+    "explanation": "Spring Data JPA parses derived query methods at application startup to validate them against the Entity's properties. If a method references a missing field like 'emailAddress_1', it throws a PropertyReferenceException and halts startup."
   },
   {
-    "id": "spring-web-sec-15",
-    "topic": "Spring Web & Security",
-    "questionText": "When customizing default error responses in a Spring Boot application, which bean can be overridden to customize the attributes included in the default JSON error payload returned on /error?",
+    "id": "spring-quiz-t10-1",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "What happens if you apply @Transactional to a final method inside bean class 'DataFetcher_1' proxied by Spring AOP CGLIB subclassing?",
+    "codeSnippet": "public class DataFetcher_1 {\n    @Transactional\n    public final void loadData() {\n        // DB changes\n    }\n}",
     "options": [
-      "ErrorController",
-      "DefaultErrorAttributes",
-      "HandlerExceptionResolver",
-      "HttpErrorFieldCustomizer"
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "Spring Boot uses a DefaultErrorAttributes bean to collect error attributes (such as message, path, timestamp, status, etc.) to expose in the error response. By declaring a custom @Bean of type ErrorAttributes (or extending DefaultErrorAttributes), developers can modify or remove default fields from the JSON error payload.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-web-sec-16",
-    "topic": "Spring Web & Security",
-    "questionText": "A controller method returns a Callable<String> to process a request asynchronously. If an exception is thrown inside the Callable task, how does Spring MVC handle it?",
-    "options": [
-      "The exception is swallowed and a blank HTTP 200 OK is returned to the client.",
-      "The Servlet container immediately crashes because the thread running the Callable does not have access to the DispatcherServlet.",
-      "Spring MVC intercepts the exception thrown during asynchronous execution and passes it to the configured @ExceptionHandler methods (e.g. in a @ControllerAdvice) just as if it were thrown by a synchronous handler.",
-      "Asynchronous exceptions cannot be handled by @ExceptionHandler and must be handled using a custom DeferredResultProcessingInterceptor only."
+      "Spring throws a FinalMethodAopException at startup.",
+      "The application throws a ClassCastException during method call.",
+      "The transaction aspect is bypassed silently because CGLIB creates a subclass and cannot override final methods.",
+      "The JVM crashes at runtime when calling the final method."
     ],
     "correctOptionIndex": 2,
-    "explanation": "During asynchronous request processing (with Callable or DeferredResult), if an error occurs during the async task execution, Spring MVC catches it and dispatches the request back to the container with the error. This triggers standard error dispatching where the ExceptionHandlerExceptionResolver is used to invoke the appropriate @ExceptionHandler method.",
-    "difficulty": "medium"
+    "explanation": "CGLIB creates proxies by generating a dynamic subclass at runtime. Because final methods cannot be overridden by subclasses, the generated proxy class cannot insert aspect interceptor code. The final method runs directly, bypassing the aspect."
   },
   {
-    "id": "spring-web-sec-17",
-    "topic": "Spring Web & Security",
-    "questionText": "In Spring MVC, which component is responsible for serializing a Java object returned from a @ResponseBody method into JSON for the HTTP response body?",
+    "id": "spring-quiz-t11-1",
+    "topic": "Spring Boot Configurations",
+    "difficulty": "medium",
+    "questionText": "If 'app.rate.1' is defined in application.properties as 50, in JVM properties as 100, and as an OS environment variable as 150, what value is resolved?",
+    "codeSnippet": "@Value(\"${app.rate.1}\")\nprivate int rate;",
     "options": [
-      "ViewResolver",
-      "HttpMessageConverter (specifically MappingJackson2HttpMessageConverter)",
-      "ContentNegotiationManager",
-      "ModelAndView"
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "HttpMessageConverter implementations are responsible for converting request payloads to Java objects and Java objects to response payloads. For JSON serialization and deserialization, Spring MVC uses MappingJackson2HttpMessageConverter by default if Jackson is on the classpath.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-web-sec-18",
-    "topic": "Spring Web & Security",
-    "questionText": "A developer needs to configure Spring MVC to determine the requested media type using a query parameter named mediaType (e.g., /products?mediaType=xml) rather than using the Accept header. Which method on ContentNegotiationConfigurer enables this?",
-    "options": [
-      "configurer.favorParameter(true).parameterName(\"mediaType\")",
-      "configurer.useQueryString(true).queryParamName(\"mediaType\")",
-      "configurer.mediaTypeParameter(\"mediaType\")",
-      "configurer.enableParameterNegotiation().name(\"mediaType\")"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "To configure content negotiation in Spring MVC, you implement WebMvcConfigurer and override configureContentNegotiation. Using ContentNegotiationConfigurer, you can call favorParameter(true) and set the custom parameter name with parameterName(\"mediaType\") to allow clients to request a specific media type via a query parameter.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-web-sec-19",
-    "topic": "Spring Web & Security",
-    "questionText": "By default in modern Spring Boot (Spring Boot 3.x / Spring MVC 6.x), which strategy is NOT enabled for content negotiation due to security issues like Reflected File Download (RFD) attacks?",
-    "options": [
-      "Content negotiation via HTTP Accept headers.",
-      "Content negotiation via request query parameters.",
-      "Content negotiation via URI path extensions (e.g., /users.json).",
-      "Content negotiation via default fallback to application/json."
+      "150 (OS Environment variables take highest precedence)",
+      "50 (application.properties overrides all external configurations)",
+      "100 (JVM system properties override OS environment variables and properties files)",
+      "It throws a property resolution error due to conflict"
     ],
     "correctOptionIndex": 2,
-    "explanation": "Content negotiation via suffix/path extension (e.g., /users.json or /users.xml) has been deprecated and disabled by default in Spring MVC for security reasons (RFD attacks) and to align with modern web standards. The HTTP Accept header is the primary recommended approach.",
-    "difficulty": "medium"
+    "explanation": "Spring Boot property sources order: 1) Command-line args, 2) JVM System properties (-D...), 3) OS environment variables, 4) application.properties. Thus, the JVM value of 100 is selected."
   },
   {
-    "id": "spring-web-sec-20",
-    "topic": "Spring Web & Security",
-    "questionText": "To implement a custom message converter for a proprietary data format (e.g., proto or custom CSV), which base class should a developer extend to simplify the implementation?",
+    "id": "spring-quiz-t12-1",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "How does the integer phase value 101 returned by getPhase() in SmartLifecycle affect context startup and shutdown order?",
+    "codeSnippet": "public class CustomService implements SmartLifecycle {\n    @Override\n    public int getPhase() { return 101; }\n}",
     "options": [
-      "AbstractHttpMessageConverter<T>",
-      "GenericHttpMessageConverter<T>",
-      "HttpMessageConverter interface directly",
-      "ObjectToStringHttpMessageConverter"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Extending AbstractHttpMessageConverter<T> is the standard way to write a custom message converter. It handles common tasks like checking supported media types, writing headers, and delegates the actual reading and writing of the object to template methods readInternal and writeInternal which the developer implements.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-web-sec-21",
-    "topic": "Spring Web & Security",
-    "questionText": "During content negotiation, a client sends a request with Accept: application/xml, application/json;q=0.8. If the server controller method is capable of returning both XML and JSON, which format will the client receive and why?",
-    "options": [
-      "JSON, because JSON has a higher default priority in Spring Boot applications.",
-      "XML, because it has a higher quality factor (q-value of 1.0 implicitly, compared to q=0.8 for JSON).",
-      "The server will return HTTP 406 Not Acceptable because the client provided conflicting formats.",
-      "The server will return a multipart response containing both formats."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "In HTTP content negotiation, the q parameter indicates the relative quality factor/preference of the media type (ranging from 0.0 to 1.0, defaulting to 1.0 if omitted). Since application/xml has an implicit q of 1.0 and application/json has q=0.8, the server selects application/xml because it has the higher priority for the client.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-web-sec-22",
-    "topic": "Spring Web & Security",
-    "questionText": "In Spring Security, how is the security filter chain integrated into the standard Servlet container filter lifecycle?",
-    "options": [
-      "Spring Security bypasses the Servlet container and hooks directly into the JVM network sockets.",
-      "Spring Security registers a single Servlet filter named DelegatingFilterProxy in the Servlet container, which delegates HTTP requests to a Spring-managed bean named FilterChainProxy.",
-      "Spring Security requires replacing the default Servlet container (like Tomcat) with a custom Spring-branded servlet container.",
-      "Every Spring Security filter is registered individually as a standard Servlet filter bean in the Tomcat context."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "The standard Servlet container does not know about Spring beans. Therefore, Spring registers DelegatingFilterProxy (a standard Servlet Filter) which acts as a bridge, delegating all filtering work to a Spring-managed FilterChainProxy bean. FilterChainProxy then runs the request through the configured SecurityFilterChain beans.",
-    "difficulty": "hard"
-  },
-  {
-    "id": "spring-web-sec-23",
-    "topic": "Spring Web & Security",
-    "questionText": "In a Spring Boot application, how can a developer configure multiple distinct security policies (e.g., one for public APIs /api/public/** using JWT and another for web UI /web/** using form login)?",
-    "options": [
-      "By defining a single SecurityFilterChain bean and splitting it using a standard Java if-else statement.",
-      "By defining multiple SecurityFilterChain beans in the Spring context, each configured with an @Order annotation and a securityMatcher to define which request paths it applies to.",
-      "Spring Security only allows a single SecurityFilterChain bean to be active per application; multiple policies require running separate microservices.",
-      "By using the WebSecurityConfigurerAdapter and overriding the configure method twice."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "Spring Security supports multiple SecurityFilterChain beans. By using the @Order annotation on the filter chain beans and configuring a matcher (like http.securityMatcher(\"/api/public/**\")), you specify the order of evaluation and the path patterns each chain handles. The first chain that matches the incoming request URL is selected.",
-    "difficulty": "hard"
-  },
-  {
-    "id": "spring-web-sec-24",
-    "topic": "Spring Web & Security",
-    "questionText": "What is the primary contract/interface used by Spring Security's DaoAuthenticationProvider to retrieve user credentials and authorities based on a username?",
-    "options": [
-      "AuthenticationManager",
-      "UserDetailsService",
-      "UserDetails",
-      "PasswordEncoder"
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "UserDetailsService is the core interface used to retrieve user authentication and authorization information. It contains a single method: loadUserByUsername(String username), which returns a UserDetails object containing the username, password, and granted authorities.",
-    "difficulty": "medium"
-  },
-  {
-    "id": "spring-web-sec-25",
-    "topic": "Spring Web & Security",
-    "questionText": "A developer wants to support authentication via both database-backed credentials and LDAP credentials. What is the correct way to model this in Spring Security's architecture?",
-    "options": [
-      "Implement a single UserDetailsService that manually queries both database and LDAP servers sequentially.",
-      "Register two separate AuthenticationProvider beans (e.g., DaoAuthenticationProvider and LdapAuthenticationProvider) within the AuthenticationManager.",
-      "Define two separate SecurityFilterChain beans with identical matchers.",
-      "It is not possible; Spring Security's AuthenticationManager can only handle one authentication provider at a time."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "The AuthenticationManager (typically ProviderManager) contains a list of AuthenticationProvider instances. When authenticating, it iterates through these providers. The first provider that supports the authentication token and successfully validates the credentials returns a fully authenticated token, allowing multiple authentication mechanisms (database, LDAP, etc.) to coexist.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-web-sec-26",
-    "topic": "Spring Web & Security",
-    "questionText": "By default, Spring Security stores the security context (currently logged-in user details) in a ThreadLocal. What is the implication of this when a request handler spawns child threads or uses @Async methods?",
-    "options": [
-      "The child threads automatically inherit the security context from the parent thread.",
-      "The security context is not available in the child threads because ThreadLocal variables are restricted to the thread that set them.",
-      "Spring Security automatically intercepts all thread creations in the JVM to copy the context.",
-      "The application will crash with a ConcurrentModificationException as soon as the child thread starts."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "Because the default strategy is MODE_THREADLOCAL, the security context is bound strictly to the current thread. Child threads (including tasks executed in @Async methods or thread pools) will not have access to the security context unless the strategy is changed (e.g., to MODE_INHERITABLETHREADLOCAL) or the tasks are wrapped with Spring Security's concurrent primitives (like DelegatingSecurityContextExecutor).",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-web-sec-27",
-    "topic": "Spring Web & Security",
-    "questionText": "In Spring Security 6, how should you obtain and expose the AuthenticationManager bean if it is needed for manual authentication (e.g., in a custom login REST endpoint)?",
-    "options": [
-      "By injecting the AuthenticationManagerBuilder into the controller and building it on every request.",
-      "By declaring a bean of type AuthenticationManager that retrieves it from the AuthenticationConfiguration, using authenticationConfiguration.getAuthenticationManager().",
-      "By extending WebSecurityConfigurerAdapter and calling super.authenticationManagerBean().",
-      "The AuthenticationManager is automatically exposed as a public bean by default and can be directly @Autowired without any configuration."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "In Spring Security 6 (where configuration is component-based and WebSecurityConfigurerAdapter is removed), you expose the AuthenticationManager as a bean by defining a @Bean method that takes AuthenticationConfiguration as a parameter and calls getAuthenticationManager().",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-web-sec-28",
-    "topic": "Spring Web & Security",
-    "questionText": "What is the design reason for extending OncePerRequestFilter instead of implementing jakarta.servlet.Filter or extending GenericFilterBean when writing a custom authentication filter?",
-    "options": [
-      "OncePerRequestFilter runs asynchronously, whereas the others run synchronously.",
-      "OncePerRequestFilter guarantees that the filter is only executed once per request, preventing redundant executions that can occur during internal servlet forwards or error dispatches.",
-      "OncePerRequestFilter automatically performs JWT parsing, whereas the others require manual parsing.",
-      "OncePerRequestFilter is the only filter type supported by the SecurityFilterChain."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "A standard Servlet Filter might be invoked multiple times for a single request if the request is forwarded internally (e.g., forward to an error page or a JSP view). OncePerRequestFilter ensures that the filter's doFilterInternal method is executed exactly once per incoming request.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-web-sec-29",
-    "topic": "Spring Web & Security",
-    "questionText": "A client makes a request using HTTP Basic authentication. What does the Authorization header in the HTTP request contain?",
-    "options": [
-      "A cryptographically signed JSON Web Token (JWT).",
-      "The plain string Basic followed by the username and password separated by a colon (e.g., Basic admin:password).",
-      "The string Basic followed by the Base64-encoded representation of the username and password joined by a colon (e.g., Basic YWRtaW46cGFzc3dvcmQ=).",
-      "An MD5 hash of the username, password, and request URI."
+      "Beans with higher phase numbers are started first and stopped last.",
+      "The phase determines the priority thread pool, where higher phase means more threads.",
+      "Beans with lower phase numbers are started first. During shutdown, beans with higher phase numbers are stopped first.",
+      "SmartLifecycle beans start concurrently and ignore the phase value."
     ],
     "correctOptionIndex": 2,
-    "explanation": "HTTP Basic Authentication requires the client to send an Authorization header containing the word Basic followed by a space and a Base64-encoded string of username:password.",
-    "difficulty": "easy"
+    "explanation": "SmartLifecycle defines getPhase() to resolve dependency execution order: lower phase numbers start first (e.g. databases, dependencies) and stop last. Shutdown goes in reverse, stopping higher phase numbers first."
   },
   {
-    "id": "spring-web-sec-30",
-    "topic": "Spring Web & Security",
-    "questionText": "When configuring a Spring Security Resource Server to validate JWTs locally using a set of public keys, which configuration property in application.yml is commonly used to auto-configure the JWT decoder with the authorization server's JWKS (JSON Web Key Set) endpoint?",
+    "id": "spring-quiz-t13-1",
+    "topic": "Spring Caching",
+    "difficulty": "hard",
+    "questionText": "Why does the cache eviction fail under the configuration below?",
+    "codeSnippet": "@Cacheable(value = \"users_cache_1\", key = \"#id\")\npublic User getUser(Long id, Context ctx) { ... }\n\n@CacheEvict(value = \"users_cache_1\")\npublic void evictUser(Long id) { ... }",
     "options": [
-      "spring.security.oauth2.resourceserver.jwt.jwk-set-uri",
-      "spring.security.oauth2.resourceserver.jwt.issuer-uri",
-      "spring.security.oauth2.resourceserver.jwt.client-secret",
-      "Both A and B are valid properties that can auto-configure the JWT decoder."
+      "Because cache names must be different.",
+      "Because evictUser() returns void.",
+      "Because evictUser() does not define a key, causing Spring to use SimpleKeyGenerator on '#id' while getUser() keys on '#id', resulting in mismatch.",
+      "Because CacheEvict requires @Transactional to run."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "By default, key generation combines all method arguments. For getUser(), the key combines id and ctx, but key='#id' overrides it to 'id'. For evictUser(), the key defaults to 'id' as well, but if arguments mismatch in key structure, we must explicitly set key='#id' in both to prevent cache desync."
+  },
+  {
+    "id": "spring-quiz-t14-1",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "hard",
+    "questionText": "What is the runtime impact of performing a blocking/long-running task inside the @PostConstruct method of 'SetupBean_1'?",
+    "codeSnippet": "@Component\npublic class SetupBean_1 {\n    @PostConstruct\n    public void init() {\n        // Blocks on network/external server call\n        loadConfiguration();\n    }\n}",
+    "options": [
+      "It blocks the main startup thread, preventing the application context from finishing initialization and starting the web server.",
+      "It triggers an asynchronous thread pool execution and continues startup.",
+      "Spring immediately throws an InitializationTimeoutException.",
+      "The JVM runs the method in the background without affecting startup."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "@PostConstruct methods are executed synchronously during bean instantiation on the main thread. If a bean blocks in @PostConstruct, application context startup halts, blocking the web server (Tomcat) from starting. Use events or Async tasks instead."
+  },
+  {
+    "id": "spring-quiz-t15-1",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "If a controller throws a 'DatabaseException_1' (which extends RuntimeException), which ExceptionHandler method inside ControllerAdvice is invoked?",
+    "codeSnippet": "@ControllerAdvice\npublic class GlobalHandler {\n    @ExceptionHandler(RuntimeException.class)\n    public String handleRuntime(RuntimeException ex) { return \"Runtime\"; }\n\n    @ExceptionHandler(DatabaseException_1.class)\n    public String handleDb(DatabaseException_1 ex) { return \"Db\"; }\n}",
+    "options": [
+      "handleRuntime(), because RuntimeException is checked first as the parent class.",
+      "Both methods run in sequence.",
+      "Spring throws an ExceptionHandlerAmbiguityException at startup.",
+      "handleDb(), because it is mapped to the most specific exception type matching the exception thrown."
     ],
     "correctOptionIndex": 3,
-    "explanation": "Both properties work. Setting jwk-set-uri points directly to the JWK Set endpoint for public key retrieval. Setting issuer-uri allows the resource server to use OpenID Connect discovery to find the JWKS endpoint (along with validating the token's issuer claim).",
-    "difficulty": "hard"
+    "explanation": "Spring's exception resolver resolves to the exception handler that maps to the most specific exception in the type hierarchy. Since 'DatabaseException_1' matches the thrown exception exactly, handleDb() is preferred over handleRuntime()."
   },
   {
-    "id": "spring-web-sec-31",
-    "topic": "Spring Web & Security",
-    "questionText": "In Spring Security, what is the main difference between configuring an application as an OAuth2 Client versus an OAuth2 Resource Server?",
+    "id": "spring-quiz-t16-1",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "What is the state of entity 'Account_1' and the database result when the method process() exits?",
+    "codeSnippet": "@Transactional\npublic void process(Long id) {\n    Account_1 acc = repository.findById(id).orElseThrow();\n    entityManager.detach(acc);\n    acc.setBalance(1000);\n}",
     "options": [
-      "An OAuth2 Client handles user login (redirection to authorization server, exchange of code for tokens), while a Resource Server accepts and validates access tokens in incoming request headers to protect API endpoints.",
-      "An OAuth2 Client validates JWTs, while an OAuth2 Resource Server issues JWTs.",
-      "An OAuth2 Client is used for microservices, whereas an OAuth2 Resource Server is only used for monoliths.",
-      "There is no difference; the terms are synonyms in Spring Security."
+      "The entity is in the detached state; no database updates occur.",
+      "The entity is in the persistent state; the database is updated with balance 1000.",
+      "An EntityNotFoundException is thrown during detach.",
+      "Hibernate throws a LazyInitializationException when setting the balance."
     ],
     "correctOptionIndex": 0,
-    "explanation": "An OAuth2 Client is responsible for initiating authentication, acquiring tokens (using authorization code grant, client credentials, etc.), and managing OAuth2/OIDC sessions. A Resource Server is an API that verifies access tokens (typically sent as Bearer tokens in the Authorization header) to authorize access to its resources.",
-    "difficulty": "hard"
+    "explanation": "Calling entityManager.detach(entity) removes the entity from the Persistence Context. It changes from 'persistent' to 'detached' state. Hibernate no longer tracks modifications, so the balance change is not flushed to the database."
   },
   {
-    "id": "spring-web-sec-32",
-    "topic": "Spring Web & Security",
-    "questionText": "Under the OpenID Connect (OIDC) specification supported by Spring Security, what is the primary purpose of the id_token compared to the access_token?",
+    "id": "spring-quiz-t17-1",
+    "topic": "Spring Cloud & Resilience",
+    "difficulty": "medium",
+    "questionText": "A Resilience4j Circuit Breaker has slidingWindowSize = 11 and failureRateThreshold = 50%. If 7 requests fail within the sliding window, what is the state transition?",
+    "codeSnippet": "CircuitBreakerConfig config = CircuitBreakerConfig.custom()\n    .slidingWindowSize(11)\n    .failureRateThreshold(50)\n    .build();",
     "options": [
-      "The id_token is used to authorize API calls, while the access_token is used to identify the user.",
-      "The id_token is a JWT containing claims about the identity of the authenticated user (designed for the client application), while the access_token is an opaque or JWT token intended for the resource server to authorize API requests.",
-      "The id_token is used for Basic Authentication, while the access_token is used for JWT Authentication.",
-      "The id_token is stored on the server side, whereas the access_token is stored on the client side."
+      "Remains in CLOSED state because the sliding window must exceed capacity.",
+      "Transitions to OPEN state (failure rate is 64%, exceeding the 50% threshold).",
+      "Transitions to HALF_OPEN state.",
+      "Throws a CircuitBreakerOpenException immediately."
     ],
     "correctOptionIndex": 1,
-    "explanation": "An id_token is specific to OIDC and contains information (claims) about the authenticated user's identity (e.g., name, email, sub). It is intended to be read by the client application. The access_token is designed to authorize access to resources and is sent to resource servers (APIs) which validate it to grant access.",
-    "difficulty": "medium"
+    "explanation": "Once the sliding window registers 11 requests, Resilience4j calculates the failure rate. Since 7/11 (64%) is greater than or equal to 50%, the Circuit Breaker transitions to the OPEN state."
   },
   {
-    "id": "spring-web-sec-33",
-    "topic": "Spring Web & Security",
-    "questionText": "A developer wants to add a custom JWT authentication filter (JwtAuthenticationFilter) before the standard username-password authentication filter. What is the correct way to register it in the SecurityFilterChain configuration?",
+    "id": "spring-quiz-t18-1",
+    "topic": "Spring Boot Internals",
+    "difficulty": "hard",
+    "questionText": "Inside a single configuration class, what determines the registration order of beans and the result of @ConditionalOnMissingBean?",
+    "codeSnippet": "@Configuration\npublic class AppConfig {\n    @Bean\n    public BeanVal_1 primaryBean() { return new BeanVal_1(\"A\"); }\n\n    @Bean\n    @ConditionalOnMissingBean(BeanVal_1.class)\n    public BeanVal_1 fallbackBean() { return new BeanVal_1(\"B\"); }\n}",
     "options": [
-      "http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)",
-      "http.addFilterAt(jwtFilter, UsernamePasswordAuthenticationFilter.class)",
-      "http.registerFilter(jwtFilter).before(UsernamePasswordAuthenticationFilter.class)",
-      "Spring Security automatically detects the custom filter if it is declared as a @Component and orders it correctly."
+      "fallbackBean overrides primaryBean because @ConditionalOnMissingBean forces precedence.",
+      "Both beans are registered, creating an array list injection candidate.",
+      "Bean methods are registered in order of definition. primaryBean() registers first, causing fallbackBean()'s conditional check to fail. Only primaryBean is registered.",
+      "Spring throws a BeanDefinitionOverrideException during startup."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Within a single configuration class, beans are parsed and registered sequentially. Since primaryBean() is defined first, its bean exists when fallbackBean() is evaluated. The conditional check fails, and fallbackBean() is skipped."
+  },
+  {
+    "id": "spring-quiz-t19-1",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "A controller returns an instance of 'ResponseData_1'. If fields are private and no getters are defined, what is the HTTP response behavior?",
+    "codeSnippet": "public class ResponseData_1 {\n    private String status;\n    public ResponseData_1(String status) { this.status = status; }\n    // No getters\n}",
+    "options": [
+      "HTTP 500 error or exception (Jackson throws an InvalidDefinitionException: No serializer found).",
+      "HTTP 200 with JSON payload {\"status\":null}.",
+      "HTTP 200 with JSON payload {\"status\":\"...\"} using reflection.",
+      "The code fails to compile because classes returned from RestController require getters."
     ],
     "correctOptionIndex": 0,
-    "explanation": "To position a custom filter relative to standard Spring Security filters, you use the addFilterBefore method of HttpSecurity (or addFilterAfter, addFilterAt). In this case, http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class) is the correct API call. Note: registering custom filters as Spring @Components can sometimes cause them to be registered twice (once in the Servlet filter chain and once in the Security filter chain), which is why manual registration in the config is preferred.",
-    "difficulty": "hard"
+    "explanation": "Jackson (Spring Boot's default serializer) uses public getter methods to discover properties to write to JSON. If fields are private and no getters/setters/annotations are present, Jackson throws an exception, resulting in an HTTP 500."
   },
   {
-    "id": "spring-web-sec-34",
-    "topic": "Spring Web & Security",
-    "questionText": "In modern Spring Security OAuth2 configurations, why is Proof Key for Code Exchange (PKCE) used in conjunction with the Authorization Code Grant?",
+    "id": "spring-quiz-t20-1",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "If outerMethod() is marked as @Transactional and invokes nestedMethod() which is marked as @Transactional(propagation = Propagation.NESTED), what happens to DB updates if nestedMethod() fails and throws an exception caught inside outerMethod()?",
+    "codeSnippet": "@Transactional\npublic void outerMethod() {\n    try {\n        innerService.nestedMethod();\n    } catch (Exception e) {\n        // Exception caught\n    }\n    // Save other data\n}",
     "options": [
-      "To encrypt the client secret so it is never transmitted over the network.",
-      "To prevent authorization code interception attacks, especially in public clients (like mobile or single-page apps) that cannot securely store a client secret.",
-      "To bypass the requirement of having an HTTPS connection.",
-      "To speed up the token exchange process by caching the authorization code."
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "PKCE (RFC 7636) is an extension to the OAuth 2.0 Authorization Code Flow. It prevents an attacker who intercepts the authorization code from exchanging it for an access token by requiring a dynamically generated cryptographic challenge (code_challenge and code_verifier), which does not rely on a static client secret.",
-    "difficulty": "hard"
-  },
-  {
-    "id": "spring-web-sec-35",
-    "topic": "Spring Web & Security",
-    "questionText": "In Spring Security 6, which annotation is used at the configuration class level to enable method-level security annotations such as @PreAuthorize and @PostAuthorize?",
-    "options": [
-      "@EnableGlobalMethodSecurity(prePostEnabled = true)",
-      "@EnableMethodSecurity",
-      "@EnableMethodSecurity(prePostEnabled = true)",
-      "@EnableSecured"
-    ],
-    "correctOptionIndex": 1,
-    "explanation": "In Spring Security 6, @EnableMethodSecurity is the modern annotation used to enable method-level security, replacing the deprecated @EnableGlobalMethodSecurity. By default, @EnableMethodSecurity has prePostEnabled set to true, so you don't need to specify it explicitly.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-web-sec-36",
-    "topic": "Spring Web & Security",
-    "questionText": "A developer wants to secure a service method such that it only executes if the authenticated user's username matches the method's string argument named username. Which annotation and expression is correct?",
-    "options": [
-      "@PreAuthorize(\"#username == authentication.name\")",
-      "@PostAuthorize(\"username == principal.username\")",
-      "@PreAuthorize(\"authentication.principal.username == #username\")",
-      "Both A and C are valid configurations, assuming the principal is a standard UserDetails."
+      "The entire transaction is rolled back because the outer method was marked as Transactional.",
+      "nestedMethod()'s updates are committed because the exception was caught in the outer method.",
+      "Spring throws a NestedTransactionNotSupportedException.",
+      "Only nestedMethod()'s updates are rolled back to the savepoint; outerMethod()'s updates can still commit successfully."
     ],
     "correctOptionIndex": 3,
-    "explanation": "In @PreAuthorize, SpEL (Spring Expression Language) has access to the method arguments prefixed with # (e.g., #username). It also has access to the authentication object. authentication.name returns the username. If the principal is a UserDetails object, authentication.principal.username is also valid.",
-    "difficulty": "medium"
+    "explanation": "Propagation.NESTED creates a nested transaction using database savepoints. If the nested transaction fails and its exception is caught and handled inside the outer transaction, only the nested transaction rolls back to its savepoint. The outer transaction remains valid."
   },
   {
-    "id": "spring-web-sec-37",
-    "topic": "Spring Web & Security",
-    "questionText": "What is the primary difference between using @PreAuthorize and @PostAuthorize on a service method?",
+    "id": "spring-quiz-t1-2",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "In the service below, orderProcessor() is invoked from an external REST controller. What is the transactional behavior of saveOrder()?",
+    "codeSnippet": "@Service\npublic class OrderService_2 {\n    public void orderProcessor() {\n        saveOrder(); // Self-invocation\n    }\n\n    @Transactional\n    public void saveOrder() {\n        // Save database record\n    }\n}",
     "options": [
-      "@PreAuthorize works for database operations, whereas @PostAuthorize only works for REST endpoints.",
-      "@PreAuthorize performs authorization checks before the method is invoked, while @PostAuthorize executes the method first and then performs the check on the returned object before returning it to the caller.",
-      "@PreAuthorize checks roles, while @PostAuthorize checks permissions.",
-      "@PostAuthorize is used to catch exceptions thrown by the method, while @PreAuthorize prevents exceptions."
+      "Spring starts a new transaction automatically using aspect interception.",
+      "The application throws a CircularDependencyException at startup.",
+      "A TransactionRequiredException is thrown during execution.",
+      "No transaction starts, because self-invocation bypasses the Spring AOP proxy."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring's declarative annotations rely on AOP proxy wrappers. Method calls from outside go through the proxy, running transaction interceptors. Direct internal calls (self-invocation) run directly on the target object, bypassing the proxy and annotations."
+  },
+  {
+    "id": "spring-quiz-t2-2",
+    "topic": "Spring Core & Scopes",
+    "difficulty": "hard",
+    "questionText": "You inject a prototype-scoped bean 'RequestTracker_2' into a singleton controller 'AnalyticsController_2'. How does 'RequestTracker_2' behave across multiple HTTP requests?",
+    "codeSnippet": "@Scope(\"prototype\")\n@Component\npublic class RequestTracker_2 {}\n\n@RestController\npublic class AnalyticsController_2 {\n    @Autowired\n    private RequestTracker_2 tracker;\n}",
+    "options": [
+      "The controller reuses the exact same instance of 'RequestTracker_2' injected at startup, behaving as a singleton.",
+      "A new instance of 'RequestTracker_2' is created for every HTTP request.",
+      "Spring throws a ScopeMismatchException during startup.",
+      "The application fails to start because prototype beans cannot be injected into singletons."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Because the controller is a singleton, it is initialized once. Consequently, its fields are injected once. The prototype-scoped bean is instantiated during this injection, and that same instance is shared for all requests. To resolve, use scoped proxies."
+  },
+  {
+    "id": "spring-quiz-t3-2",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If a transaction method throws an Exception (checked exception) during database operations, what is the default rollback behavior?",
+    "codeSnippet": "@Transactional\npublic void process(User user) throws Exception {\n    UserRepo_2.save(user);\n    if (user.getName() == null) {\n        throw new Exception(\"Invalid User\");\n    }\n}",
+    "options": [
+      "The transaction is automatically rolled back for all exceptions.",
+      "The compiler throws an error because Transactional cannot declare checked throws.",
+      "The transaction rolls back, but only if the database isolation is SERIALIZABLE.",
+      "The transaction is committed, and changes are saved because checked exceptions do not trigger rollback by default."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring's @Transactional default configuration rolls back transactions only for unchecked exceptions (subclasses of RuntimeException and Error). Checked exceptions (like Exception, IOException) do not trigger rollback unless configured as @Transactional(rollbackFor = Exception.class)."
+  },
+  {
+    "id": "spring-quiz-t4-2",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "What occurs when Spring starts up and detects a circular constructor dependency between singleton beans 'BeanA_2' and 'BeanB_2'?",
+    "codeSnippet": "@Component\npublic class BeanA_2 {\n    public BeanA_2(BeanB_2 b) {}\n}\n@Component\npublic class BeanB_2 {\n    public BeanB_2(BeanA_2 a) {}\n}",
+    "options": [
+      "Spring automatically resolves the cycle by injecting a dynamic proxy.",
+      "The JVM crashes with a StackOverflowError during initialization.",
+      "The application fails to start and throws a BeanCurrentlyInCreationException.",
+      "Spring instantiates both beans as null."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Unlike setter/field injection, constructor dependencies must be resolved during object creation. Since neither 'BeanA_2' nor 'BeanB_2' can be constructed without the other, Spring cannot resolve the dependency cycle and throws a BeanCurrentlyInCreationException."
+  },
+  {
+    "id": "spring-quiz-t5-2",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "An entity has a lazy-loaded collection association. If you fetch all 7 parent entities and access their associations in a loop, how many SQL queries hit the database?",
+    "codeSnippet": "List<Parent> parents = parentRepository.findAll(); // Fetches 7 parents\nfor (Parent p : parents) {\n    System.out.println(p.getChildren().size()); // Lazy load\n}",
+    "options": [
+      "1 SQL query.",
+      "8 SQL queries.",
+      "7 SQL queries.",
+      "2 SQL queries."
     ],
     "correctOptionIndex": 1,
-    "explanation": "@PreAuthorize is evaluated before the method execution begins; if the check fails, execution is blocked and an AccessDeniedException is thrown. @PostAuthorize is evaluated after the method completes, allowing access to the method's return value (via the returnObject placeholder in SpEL) to determine if the client is authorized to receive it.",
-    "difficulty": "medium"
+    "explanation": "This is the N+1 query problem. The initial query fetches the parents (1 query). When accessing the lazy collection for each parent in the loop, Hibernate sends a separate select query per parent (7 queries), resulting in 8 queries."
   },
   {
-    "id": "spring-web-sec-38",
-    "topic": "Spring Web & Security",
-    "questionText": "In a @PreAuthorize SpEL expression, what is the conceptual difference between hasRole('ADMIN') and hasAuthority('ADMIN') in Spring Security?",
+    "id": "spring-quiz-t6-2",
+    "topic": "Spring WebFlux",
+    "difficulty": "hard",
+    "questionText": "What is the hazard of calling a blocking method like RestTemplate inside a Spring WebFlux controller running on Netty event loops?",
+    "codeSnippet": "@GetMapping(\"/data\")\npublic Mono<String> getData() {\n    return Mono.fromCallable(() -> restTemplate.getForObject(\"https://api.com\", String.class));\n}",
     "options": [
-      "hasRole('ADMIN') automatically prefixes the string with ROLE_ (resulting in a check for ROLE_ADMIN), whereas hasAuthority('ADMIN') checks for the exact authority string ADMIN without modification.",
-      "hasAuthority('ADMIN') prefixes the string with ROLE_, whereas hasRole('ADMIN') does not.",
-      "hasRole only works for static roles, while hasAuthority is used for dynamic database roles.",
-      "There is no conceptual or functional difference; they behave identically in all scenarios."
+      "It blocks the Netty EventLoop thread, reducing server capacity to process concurrent requests and causing starvation.",
+      "WebFlux automatically shifts the call to virtual threads to avoid blocking.",
+      "The controller immediately throws a BlockedEventLoopException during compilation.",
+      "It causes a deadlock because Netty restricts HTTP requests."
     ],
     "correctOptionIndex": 0,
-    "explanation": "By default, Spring Security's hasRole expression automatically prefixes the input role name with ROLE_ (e.g., hasRole('ADMIN') checks for the authority ROLE_ADMIN in the user's authority list). hasAuthority checks for the exact authority string matches (e.g., hasAuthority('ADMIN') checks for ADMIN).",
-    "difficulty": "medium"
+    "explanation": "WebFlux uses a small number of non-blocking event loop threads. Blocking operations on these threads exhaust the pool and block the server from handling other connections. Offload blocking logic using subscribeOn(Schedulers.boundedElastic())."
   },
   {
-    "id": "spring-web-sec-39",
-    "topic": "Spring Web & Security",
-    "questionText": "A service method returns a list of items. A developer wants Spring Security to filter out any items from the returned list that do not belong to the currently logged-in user before returning the list. Which annotation should be used?",
+    "id": "spring-quiz-t7-2",
+    "topic": "Spring Security",
+    "difficulty": "medium",
+    "questionText": "How do you insert a custom filter 'CustomAuthFilter_2' in a security chain so it executes before UsernamePasswordAuthenticationFilter?",
+    "codeSnippet": "@Bean\npublic SecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n    http.addFilterBefore(new CustomAuthFilter_2(), UsernamePasswordAuthenticationFilter.class);\n    return http.build();\n}",
     "options": [
-      "@PreFilter",
-      "@PostFilter",
-      "@PostAuthorize",
-      "@Secured"
+      "Annotate CustomAuthFilter_2 with @Order(Ordered.HIGHEST_PRECEDENCE).",
+      "Use addFilterBefore(new CustomAuthFilter_2(), UsernamePasswordAuthenticationFilter.class) inside HttpSecurity config.",
+      "Register CustomAuthFilter_2 as a Spring @Component; Spring Security loads custom beans first.",
+      "Declare CustomAuthFilter_2 inside application.properties under security.filter.order."
     ],
     "correctOptionIndex": 1,
-    "explanation": "@PostFilter is designed to filter the returned collection or map of a method. Spring Security evaluates the filter expression for each element in the returned collection (using the filterObject placeholder) and retains only the elements for which the expression evaluates to true.",
-    "difficulty": "easy"
+    "explanation": "The order of filters inside a SecurityFilterChain is explicitly configured via HttpSecurity APIs. Class-level @Order annotations do not position filters within the SecurityFilterChain."
   },
   {
-    "id": "spring-web-sec-40",
-    "topic": "Spring Web & Security",
-    "questionText": "To support hierarchical roles (e.g., ROLE_ADMIN implicitly includes all permissions of ROLE_USER), which bean should be registered and configured in Spring Security?",
+    "id": "spring-quiz-t8-2",
+    "topic": "Spring Core",
+    "difficulty": "medium",
+    "questionText": "If a payment service interface has a default bean marked with @Primary, and another bean with qualifier 'customPaymentSvc_2', what is injected?",
+    "codeSnippet": "@RestController\npublic class PaymentController {\n    @Autowired\n    @Qualifier(\"customPaymentSvc_2\")\n    private PaymentService service;\n}",
     "options": [
-      "RoleHierarchy (configured with a rule string like ROLE_ADMIN > ROLE_USER)",
-      "AccessDecisionManager",
-      "GrantedAuthoritiesMapper",
-      "SecurityExpressionHandler"
+      "The bean annotated with @Qualifier(\"customPaymentSvc_2\") is injected, overriding @Primary.",
+      "The @Primary bean is injected because primary beans take highest precedence.",
+      "A BeanCreationException is thrown due to injection ambiguity.",
+      "Both beans are injected inside a wrapper candidate proxy."
     ],
     "correctOptionIndex": 0,
-    "explanation": "A RoleHierarchy bean (e.g., RoleHierarchyImpl) can be configured with role relationships (e.g., ROLE_ADMIN > ROLE_USER). Once configured, it is registered with the method security expression handler or web security expression handler, which resolves authority checks considering the configured hierarchy.",
-    "difficulty": "easy"
+    "explanation": "While @Primary sets a default candidate, an explicit @Qualifier specifies the precise bean name requested. Explicit qualifiers take precedence over primary bean designations."
   },
   {
-    "id": "spring-web-sec-41",
-    "topic": "Spring Web & Security",
-    "questionText": "How does Cross-Site Request Forgery (CSRF) protection in Spring Security prevent unauthorized state-changing requests?",
+    "id": "spring-quiz-t9-2",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If you specify a derived query method using property name 'emailAddress_2' which is missing on the Entity, what happens?",
+    "codeSnippet": "public interface UserRepository extends JpaRepository<User, Long> {\n    List<User> findByemailAddress_2(String email); // Entity field is 'email'\n}",
     "options": [
-      "By blocking all requests coming from different IP addresses.",
-      "By requiring a cryptographically secure, random token (the CSRF token) to be included in all state-changing HTTP requests (POST, PUT, DELETE) and validating it on the server.",
-      "By enforcing CORS headers on the browser to block foreign script executions.",
-      "By disabling the use of cookies entirely for authentication."
+      "The query executes but returns an empty list at runtime.",
+      "Spring Data fallback parses it to a native SQL query.",
+      "Spring Boot throws a PropertyReferenceException and fails to start during application context initialization.",
+      "A compile-time error occurs on the repository interface."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Spring Data JPA parses derived query methods at application startup to validate them against the Entity's properties. If a method references a missing field like 'emailAddress_2', it throws a PropertyReferenceException and halts startup."
+  },
+  {
+    "id": "spring-quiz-t10-2",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "What happens if you apply @Transactional to a final method inside bean class 'DataFetcher_2' proxied by Spring AOP CGLIB subclassing?",
+    "codeSnippet": "public class DataFetcher_2 {\n    @Transactional\n    public final void loadData() {\n        // DB changes\n    }\n}",
+    "options": [
+      "The transaction aspect is bypassed silently because CGLIB creates a subclass and cannot override final methods.",
+      "Spring throws a FinalMethodAopException at startup.",
+      "The application throws a ClassCastException during method call.",
+      "The JVM crashes at runtime when calling the final method."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "CGLIB creates proxies by generating a dynamic subclass at runtime. Because final methods cannot be overridden by subclasses, the generated proxy class cannot insert aspect interceptor code. The final method runs directly, bypassing the aspect."
+  },
+  {
+    "id": "spring-quiz-t11-2",
+    "topic": "Spring Boot Configurations",
+    "difficulty": "medium",
+    "questionText": "If 'app.rate.2' is defined in application.properties as 50, in JVM properties as 100, and as an OS environment variable as 150, what value is resolved?",
+    "codeSnippet": "@Value(\"${app.rate.2}\")\nprivate int rate;",
+    "options": [
+      "150 (OS Environment variables take highest precedence)",
+      "100 (JVM system properties override OS environment variables and properties files)",
+      "50 (application.properties overrides all external configurations)",
+      "It throws a property resolution error due to conflict"
     ],
     "correctOptionIndex": 1,
-    "explanation": "CSRF protection works by generating a unique, unpredictable token associated with the user's session. Any state-changing request (POST, PUT, DELETE, PATCH) must include this token (as a request parameter or HTTP header). The server validates the token against the one stored in the session/cookie; if it is missing or incorrect, the request is rejected with a 403 Forbidden.",
-    "difficulty": "easy"
+    "explanation": "Spring Boot property sources order: 1) Command-line args, 2) JVM System properties (-D...), 3) OS environment variables, 4) application.properties. Thus, the JVM value of 100 is selected."
   },
   {
-    "id": "spring-web-sec-42",
-    "topic": "Spring Web & Security",
-    "questionText": "Under what circumstance is it considered safe and standard practice to disable CSRF protection in a Spring Security configuration?",
+    "id": "spring-quiz-t12-2",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "How does the integer phase value 102 returned by getPhase() in SmartLifecycle affect context startup and shutdown order?",
+    "codeSnippet": "public class CustomService implements SmartLifecycle {\n    @Override\n    public int getPhase() { return 102; }\n}",
     "options": [
-      "When the application is a traditional server-side rendered web app using Thymeleaf and session cookies.",
-      "When the API is stateless and authentication is performed solely via headers (e.g., JWT access tokens) that are not stored in cookies or automatically sent by the browser.",
-      "When the application is deployed behind a reverse proxy like Nginx.",
-      "It is never safe to disable CSRF protection under any circumstances."
+      "Beans with lower phase numbers are started first. During shutdown, beans with higher phase numbers are stopped first.",
+      "Beans with higher phase numbers are started first and stopped last.",
+      "The phase determines the priority thread pool, where higher phase means more threads.",
+      "SmartLifecycle beans start concurrently and ignore the phase value."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "SmartLifecycle defines getPhase() to resolve dependency execution order: lower phase numbers start first (e.g. databases, dependencies) and stop last. Shutdown goes in reverse, stopping higher phase numbers first."
+  },
+  {
+    "id": "spring-quiz-t13-2",
+    "topic": "Spring Caching",
+    "difficulty": "hard",
+    "questionText": "Why does the cache eviction fail under the configuration below?",
+    "codeSnippet": "@Cacheable(value = \"users_cache_2\", key = \"#id\")\npublic User getUser(Long id, Context ctx) { ... }\n\n@CacheEvict(value = \"users_cache_2\")\npublic void evictUser(Long id) { ... }",
+    "options": [
+      "Because cache names must be different.",
+      "Because evictUser() returns void.",
+      "Because evictUser() does not define a key, causing Spring to use SimpleKeyGenerator on '#id' while getUser() keys on '#id', resulting in mismatch.",
+      "Because CacheEvict requires @Transactional to run."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "By default, key generation combines all method arguments. For getUser(), the key combines id and ctx, but key='#id' overrides it to 'id'. For evictUser(), the key defaults to 'id' as well, but if arguments mismatch in key structure, we must explicitly set key='#id' in both to prevent cache desync."
+  },
+  {
+    "id": "spring-quiz-t14-2",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "hard",
+    "questionText": "What is the runtime impact of performing a blocking/long-running task inside the @PostConstruct method of 'SetupBean_2'?",
+    "codeSnippet": "@Component\npublic class SetupBean_2 {\n    @PostConstruct\n    public void init() {\n        // Blocks on network/external server call\n        loadConfiguration();\n    }\n}",
+    "options": [
+      "It blocks the main startup thread, preventing the application context from finishing initialization and starting the web server.",
+      "It triggers an asynchronous thread pool execution and continues startup.",
+      "Spring immediately throws an InitializationTimeoutException.",
+      "The JVM runs the method in the background without affecting startup."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "@PostConstruct methods are executed synchronously during bean instantiation on the main thread. If a bean blocks in @PostConstruct, application context startup halts, blocking the web server (Tomcat) from starting. Use events or Async tasks instead."
+  },
+  {
+    "id": "spring-quiz-t15-2",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "If a controller throws a 'DatabaseException_2' (which extends RuntimeException), which ExceptionHandler method inside ControllerAdvice is invoked?",
+    "codeSnippet": "@ControllerAdvice\npublic class GlobalHandler {\n    @ExceptionHandler(RuntimeException.class)\n    public String handleRuntime(RuntimeException ex) { return \"Runtime\"; }\n\n    @ExceptionHandler(DatabaseException_2.class)\n    public String handleDb(DatabaseException_2 ex) { return \"Db\"; }\n}",
+    "options": [
+      "handleRuntime(), because RuntimeException is checked first as the parent class.",
+      "Both methods run in sequence.",
+      "handleDb(), because it is mapped to the most specific exception type matching the exception thrown.",
+      "Spring throws an ExceptionHandlerAmbiguityException at startup."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Spring's exception resolver resolves to the exception handler that maps to the most specific exception in the type hierarchy. Since 'DatabaseException_2' matches the thrown exception exactly, handleDb() is preferred over handleRuntime()."
+  },
+  {
+    "id": "spring-quiz-t16-2",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "What is the state of entity 'Account_2' and the database result when the method process() exits?",
+    "codeSnippet": "@Transactional\npublic void process(Long id) {\n    Account_2 acc = repository.findById(id).orElseThrow();\n    entityManager.detach(acc);\n    acc.setBalance(1000);\n}",
+    "options": [
+      "The entity is in the persistent state; the database is updated with balance 1000.",
+      "The entity is in the detached state; no database updates occur.",
+      "An EntityNotFoundException is thrown during detach.",
+      "Hibernate throws a LazyInitializationException when setting the balance."
     ],
     "correctOptionIndex": 1,
-    "explanation": "CSRF attacks rely on the browser automatically attaching authentication credentials (like session cookies) to requests made to a different site. If the API is stateless and does not use cookies for authentication (e.g., using JWTs sent in the Authorization: Bearer header, which the browser does not automatically send), CSRF attacks are not possible, and it is safe to disable CSRF.",
-    "difficulty": "hard"
+    "explanation": "Calling entityManager.detach(entity) removes the entity from the Persistence Context. It changes from 'persistent' to 'detached' state. Hibernate no longer tracks modifications, so the balance change is not flushed to the database."
   },
   {
-    "id": "spring-web-sec-43",
-    "topic": "Spring Web & Security",
-    "questionText": "In Spring Security, which CSRF token repository implementation is commonly used to support Single Page Applications (SPAs) like Angular or React, where the client reads the token from a cookie and sends it back in a custom HTTP header (typically X-XSRF-TOKEN)?",
+    "id": "spring-quiz-t17-2",
+    "topic": "Spring Cloud & Resilience",
+    "difficulty": "medium",
+    "questionText": "A Resilience4j Circuit Breaker has slidingWindowSize = 12 and failureRateThreshold = 50%. If 8 requests fail within the sliding window, what is the state transition?",
+    "codeSnippet": "CircuitBreakerConfig config = CircuitBreakerConfig.custom()\n    .slidingWindowSize(12)\n    .failureRateThreshold(50)\n    .build();",
     "options": [
-      "HttpSessionCsrfTokenRepository",
-      "CookieCsrfTokenRepository.withHttpOnlyFalse()",
-      "CookieCsrfTokenRepository.withHttpOnlyTrue()",
-      "InMemoryCsrfTokenRepository"
+      "Remains in CLOSED state because the sliding window must exceed capacity.",
+      "Transitions to HALF_OPEN state.",
+      "Throws a CircuitBreakerOpenException immediately.",
+      "Transitions to OPEN state (failure rate is 67%, exceeding the 50% threshold)."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Once the sliding window registers 12 requests, Resilience4j calculates the failure rate. Since 8/12 (67%) is greater than or equal to 50%, the Circuit Breaker transitions to the OPEN state."
+  },
+  {
+    "id": "spring-quiz-t18-2",
+    "topic": "Spring Boot Internals",
+    "difficulty": "hard",
+    "questionText": "Inside a single configuration class, what determines the registration order of beans and the result of @ConditionalOnMissingBean?",
+    "codeSnippet": "@Configuration\npublic class AppConfig {\n    @Bean\n    public BeanVal_2 primaryBean() { return new BeanVal_2(\"A\"); }\n\n    @Bean\n    @ConditionalOnMissingBean(BeanVal_2.class)\n    public BeanVal_2 fallbackBean() { return new BeanVal_2(\"B\"); }\n}",
+    "options": [
+      "fallbackBean overrides primaryBean because @ConditionalOnMissingBean forces precedence.",
+      "Both beans are registered, creating an array list injection candidate.",
+      "Bean methods are registered in order of definition. primaryBean() registers first, causing fallbackBean()'s conditional check to fail. Only primaryBean is registered.",
+      "Spring throws a BeanDefinitionOverrideException during startup."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Within a single configuration class, beans are parsed and registered sequentially. Since primaryBean() is defined first, its bean exists when fallbackBean() is evaluated. The conditional check fails, and fallbackBean() is skipped."
+  },
+  {
+    "id": "spring-quiz-t19-2",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "A controller returns an instance of 'ResponseData_2'. If fields are private and no getters are defined, what is the HTTP response behavior?",
+    "codeSnippet": "public class ResponseData_2 {\n    private String status;\n    public ResponseData_2(String status) { this.status = status; }\n    // No getters\n}",
+    "options": [
+      "HTTP 200 with JSON payload {\"status\":null}.",
+      "HTTP 200 with JSON payload {\"status\":\"...\"} using reflection.",
+      "HTTP 500 error or exception (Jackson throws an InvalidDefinitionException: No serializer found).",
+      "The code fails to compile because classes returned from RestController require getters."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Jackson (Spring Boot's default serializer) uses public getter methods to discover properties to write to JSON. If fields are private and no getters/setters/annotations are present, Jackson throws an exception, resulting in an HTTP 500."
+  },
+  {
+    "id": "spring-quiz-t20-2",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "If outerMethod() is marked as @Transactional and invokes nestedMethod() which is marked as @Transactional(propagation = Propagation.NESTED), what happens to DB updates if nestedMethod() fails and throws an exception caught inside outerMethod()?",
+    "codeSnippet": "@Transactional\npublic void outerMethod() {\n    try {\n        innerService.nestedMethod();\n    } catch (Exception e) {\n        // Exception caught\n    }\n    // Save other data\n}",
+    "options": [
+      "The entire transaction is rolled back because the outer method was marked as Transactional.",
+      "Only nestedMethod()'s updates are rolled back to the savepoint; outerMethod()'s updates can still commit successfully.",
+      "nestedMethod()'s updates are committed because the exception was caught in the outer method.",
+      "Spring throws a NestedTransactionNotSupportedException."
     ],
     "correctOptionIndex": 1,
-    "explanation": "To allow a Single Page Application (SPA) running in the browser to read the CSRF token, the cookie containing the token must not be marked HttpOnly (otherwise JavaScript cannot read it). CookieCsrfTokenRepository.withHttpOnlyFalse() writes the token to a cookie named XSRF-TOKEN with HttpOnly set to false, allowing front-end frameworks to read the cookie and include it in the X-XSRF-TOKEN header.",
-    "difficulty": "easy"
+    "explanation": "Propagation.NESTED creates a nested transaction using database savepoints. If the nested transaction fails and its exception is caught and handled inside the outer transaction, only the nested transaction rolls back to its savepoint. The outer transaction remains valid."
   },
   {
-    "id": "spring-web-sec-44",
-    "topic": "Spring Web & Security",
-    "questionText": "A frontend application hosted on https://frontend.com makes an API request to a Spring Boot backend on https://api.backend.com. When configuring CORS, which component executes first and must allow the pre-flight request?",
+    "id": "spring-quiz-t1-3",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "In the service below, orderProcessor() is invoked from an external REST controller. What is the transactional behavior of saveOrder()?",
+    "codeSnippet": "@Service\npublic class OrderService_3 {\n    public void orderProcessor() {\n        saveOrder(); // Self-invocation\n    }\n\n    @Transactional\n    public void saveOrder() {\n        // Save database record\n    }\n}",
     "options": [
-      "The DispatcherServlet controller mapping.",
-      "Spring Security's CorsFilter registered at the very beginning of the security filter chain.",
-      "The Spring MVC WebMvcConfigurer CORS configuration.",
-      "The system's DNS resolver."
+      "Spring starts a new transaction automatically using aspect interception.",
+      "The application throws a CircularDependencyException at startup.",
+      "A TransactionRequiredException is thrown during execution.",
+      "No transaction starts, because self-invocation bypasses the Spring AOP proxy."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring's declarative annotations rely on AOP proxy wrappers. Method calls from outside go through the proxy, running transaction interceptors. Direct internal calls (self-invocation) run directly on the target object, bypassing the proxy and annotations."
+  },
+  {
+    "id": "spring-quiz-t2-3",
+    "topic": "Spring Core & Scopes",
+    "difficulty": "hard",
+    "questionText": "You inject a prototype-scoped bean 'RequestTracker_3' into a singleton controller 'AnalyticsController_3'. How does 'RequestTracker_3' behave across multiple HTTP requests?",
+    "codeSnippet": "@Scope(\"prototype\")\n@Component\npublic class RequestTracker_3 {}\n\n@RestController\npublic class AnalyticsController_3 {\n    @Autowired\n    private RequestTracker_3 tracker;\n}",
+    "options": [
+      "The controller reuses the exact same instance of 'RequestTracker_3' injected at startup, behaving as a singleton.",
+      "A new instance of 'RequestTracker_3' is created for every HTTP request.",
+      "Spring throws a ScopeMismatchException during startup.",
+      "The application fails to start because prototype beans cannot be injected into singletons."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Because the controller is a singleton, it is initialized once. Consequently, its fields are injected once. The prototype-scoped bean is instantiated during this injection, and that same instance is shared for all requests. To resolve, use scoped proxies."
+  },
+  {
+    "id": "spring-quiz-t3-3",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If a transaction method throws an Exception (checked exception) during database operations, what is the default rollback behavior?",
+    "codeSnippet": "@Transactional\npublic void process(User user) throws Exception {\n    UserRepo_3.save(user);\n    if (user.getName() == null) {\n        throw new Exception(\"Invalid User\");\n    }\n}",
+    "options": [
+      "The transaction is committed, and changes are saved because checked exceptions do not trigger rollback by default.",
+      "The transaction is automatically rolled back for all exceptions.",
+      "The compiler throws an error because Transactional cannot declare checked throws.",
+      "The transaction rolls back, but only if the database isolation is SERIALIZABLE."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Spring's @Transactional default configuration rolls back transactions only for unchecked exceptions (subclasses of RuntimeException and Error). Checked exceptions (like Exception, IOException) do not trigger rollback unless configured as @Transactional(rollbackFor = Exception.class)."
+  },
+  {
+    "id": "spring-quiz-t4-3",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "What occurs when Spring starts up and detects a circular constructor dependency between singleton beans 'BeanA_3' and 'BeanB_3'?",
+    "codeSnippet": "@Component\npublic class BeanA_3 {\n    public BeanA_3(BeanB_3 b) {}\n}\n@Component\npublic class BeanB_3 {\n    public BeanB_3(BeanA_3 a) {}\n}",
+    "options": [
+      "Spring automatically resolves the cycle by injecting a dynamic proxy.",
+      "The application fails to start and throws a BeanCurrentlyInCreationException.",
+      "The JVM crashes with a StackOverflowError during initialization.",
+      "Spring instantiates both beans as null."
     ],
     "correctOptionIndex": 1,
-    "explanation": "For cross-origin requests, browsers send an HTTP OPTIONS pre-flight request before the actual request. This pre-flight request must be intercepted and permitted early in the request processing pipeline. Spring Security's CorsFilter runs before Spring Security's authorization filters; if configured correctly, it handles the OPTIONS request and returns a 200 OK with the proper CORS headers, allowing the subsequent actual request to proceed.",
-    "difficulty": "easy"
+    "explanation": "Unlike setter/field injection, constructor dependencies must be resolved during object creation. Since neither 'BeanA_3' nor 'BeanB_3' can be constructed without the other, Spring cannot resolve the dependency cycle and throws a BeanCurrentlyInCreationException."
   },
   {
-    "id": "spring-web-sec-45",
-    "topic": "Spring Web & Security",
-    "questionText": "If both Spring Security CORS configuration and Spring MVC CORS configuration (e.g., @CrossOrigin) are defined in a project, which configuration takes precedence and controls cross-origin access?",
+    "id": "spring-quiz-t5-3",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "An entity has a lazy-loaded collection association. If you fetch all 8 parent entities and access their associations in a loop, how many SQL queries hit the database?",
+    "codeSnippet": "List<Parent> parents = parentRepository.findAll(); // Fetches 8 parents\nfor (Parent p : parents) {\n    System.out.println(p.getChildren().size()); // Lazy load\n}",
     "options": [
-      "Spring MVC @CrossOrigin takes precedence because it is closer to the controller.",
-      "Spring Security CORS configuration takes precedence because security filters intercept requests before they reach the DispatcherServlet and the MVC handler mappings.",
-      "They merge together, and any conflict results in a compilation error.",
-      "CORS is handled solely by the Servlet container, so both configurations are ignored."
+      "1 SQL query.",
+      "8 SQL queries.",
+      "2 SQL queries.",
+      "9 SQL queries."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "This is the N+1 query problem. The initial query fetches the parents (1 query). When accessing the lazy collection for each parent in the loop, Hibernate sends a separate select query per parent (8 queries), resulting in 9 queries."
+  },
+  {
+    "id": "spring-quiz-t6-3",
+    "topic": "Spring WebFlux",
+    "difficulty": "hard",
+    "questionText": "What is the hazard of calling a blocking method like RestTemplate inside a Spring WebFlux controller running on Netty event loops?",
+    "codeSnippet": "@GetMapping(\"/data\")\npublic Mono<String> getData() {\n    return Mono.fromCallable(() -> restTemplate.getForObject(\"https://api.com\", String.class));\n}",
+    "options": [
+      "WebFlux automatically shifts the call to virtual threads to avoid blocking.",
+      "The controller immediately throws a BlockedEventLoopException during compilation.",
+      "It blocks the Netty EventLoop thread, reducing server capacity to process concurrent requests and causing starvation.",
+      "It causes a deadlock because Netty restricts HTTP requests."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "WebFlux uses a small number of non-blocking event loop threads. Blocking operations on these threads exhaust the pool and block the server from handling other connections. Offload blocking logic using subscribeOn(Schedulers.boundedElastic())."
+  },
+  {
+    "id": "spring-quiz-t7-3",
+    "topic": "Spring Security",
+    "difficulty": "medium",
+    "questionText": "How do you insert a custom filter 'CustomAuthFilter_3' in a security chain so it executes before UsernamePasswordAuthenticationFilter?",
+    "codeSnippet": "@Bean\npublic SecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n    http.addFilterBefore(new CustomAuthFilter_3(), UsernamePasswordAuthenticationFilter.class);\n    return http.build();\n}",
+    "options": [
+      "Annotate CustomAuthFilter_3 with @Order(Ordered.HIGHEST_PRECEDENCE).",
+      "Register CustomAuthFilter_3 as a Spring @Component; Spring Security loads custom beans first.",
+      "Use addFilterBefore(new CustomAuthFilter_3(), UsernamePasswordAuthenticationFilter.class) inside HttpSecurity config.",
+      "Declare CustomAuthFilter_3 inside application.properties under security.filter.order."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "The order of filters inside a SecurityFilterChain is explicitly configured via HttpSecurity APIs. Class-level @Order annotations do not position filters within the SecurityFilterChain."
+  },
+  {
+    "id": "spring-quiz-t8-3",
+    "topic": "Spring Core",
+    "difficulty": "medium",
+    "questionText": "If a payment service interface has a default bean marked with @Primary, and another bean with qualifier 'customPaymentSvc_3', what is injected?",
+    "codeSnippet": "@RestController\npublic class PaymentController {\n    @Autowired\n    @Qualifier(\"customPaymentSvc_3\")\n    private PaymentService service;\n}",
+    "options": [
+      "The @Primary bean is injected because primary beans take highest precedence.",
+      "A BeanCreationException is thrown due to injection ambiguity.",
+      "Both beans are injected inside a wrapper candidate proxy.",
+      "The bean annotated with @Qualifier(\"customPaymentSvc_3\") is injected, overriding @Primary."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "While @Primary sets a default candidate, an explicit @Qualifier specifies the precise bean name requested. Explicit qualifiers take precedence over primary bean designations."
+  },
+  {
+    "id": "spring-quiz-t9-3",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If you specify a derived query method using property name 'emailAddress_3' which is missing on the Entity, what happens?",
+    "codeSnippet": "public interface UserRepository extends JpaRepository<User, Long> {\n    List<User> findByemailAddress_3(String email); // Entity field is 'email'\n}",
+    "options": [
+      "Spring Boot throws a PropertyReferenceException and fails to start during application context initialization.",
+      "The query executes but returns an empty list at runtime.",
+      "Spring Data fallback parses it to a native SQL query.",
+      "A compile-time error occurs on the repository interface."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Spring Data JPA parses derived query methods at application startup to validate them against the Entity's properties. If a method references a missing field like 'emailAddress_3', it throws a PropertyReferenceException and halts startup."
+  },
+  {
+    "id": "spring-quiz-t10-3",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "What happens if you apply @Transactional to a final method inside bean class 'DataFetcher_3' proxied by Spring AOP CGLIB subclassing?",
+    "codeSnippet": "public class DataFetcher_3 {\n    @Transactional\n    public final void loadData() {\n        // DB changes\n    }\n}",
+    "options": [
+      "Spring throws a FinalMethodAopException at startup.",
+      "The transaction aspect is bypassed silently because CGLIB creates a subclass and cannot override final methods.",
+      "The application throws a ClassCastException during method call.",
+      "The JVM crashes at runtime when calling the final method."
     ],
     "correctOptionIndex": 1,
-    "explanation": "Because Spring Security's filter chain executes before the request reaches Spring MVC's DispatcherServlet, the CORS configuration defined in Spring Security (typically http.cors(...)) takes precedence. If Spring Security blocks the cross-origin request during the filter phase, the MVC configuration will never be evaluated.",
-    "difficulty": "easy"
+    "explanation": "CGLIB creates proxies by generating a dynamic subclass at runtime. Because final methods cannot be overridden by subclasses, the generated proxy class cannot insert aspect interceptor code. The final method runs directly, bypassing the aspect."
   },
   {
-    "id": "spring-web-sec-46",
-    "topic": "Spring Web & Security",
-    "questionText": "In Spring WebFlux, what is the main conceptual difference between return types Mono<T> and Flux<T>?",
+    "id": "spring-quiz-t11-3",
+    "topic": "Spring Boot Configurations",
+    "difficulty": "medium",
+    "questionText": "If 'app.rate.3' is defined in application.properties as 50, in JVM properties as 100, and as an OS environment variable as 150, what value is resolved?",
+    "codeSnippet": "@Value(\"${app.rate.3}\")\nprivate int rate;",
     "options": [
-      "Mono<T> is synchronous, while Flux<T> is asynchronous.",
-      "Mono<T> represents a publisher that emits at most one item (0 or 1), while Flux<T> represents a publisher that emits 0 to N items.",
-      "Mono<T> is used for database queries, while Flux<T> is only used for WebSockets.",
-      "Mono<T> blocks the thread until completion, while Flux<T> is completely non-blocking."
+      "150 (OS Environment variables take highest precedence)",
+      "50 (application.properties overrides all external configurations)",
+      "100 (JVM system properties override OS environment variables and properties files)",
+      "It throws a property resolution error due to conflict"
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Spring Boot property sources order: 1) Command-line args, 2) JVM System properties (-D...), 3) OS environment variables, 4) application.properties. Thus, the JVM value of 100 is selected."
+  },
+  {
+    "id": "spring-quiz-t12-3",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "How does the integer phase value 103 returned by getPhase() in SmartLifecycle affect context startup and shutdown order?",
+    "codeSnippet": "public class CustomService implements SmartLifecycle {\n    @Override\n    public int getPhase() { return 103; }\n}",
+    "options": [
+      "Beans with lower phase numbers are started first. During shutdown, beans with higher phase numbers are stopped first.",
+      "Beans with higher phase numbers are started first and stopped last.",
+      "The phase determines the priority thread pool, where higher phase means more threads.",
+      "SmartLifecycle beans start concurrently and ignore the phase value."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "SmartLifecycle defines getPhase() to resolve dependency execution order: lower phase numbers start first (e.g. databases, dependencies) and stop last. Shutdown goes in reverse, stopping higher phase numbers first."
+  },
+  {
+    "id": "spring-quiz-t13-3",
+    "topic": "Spring Caching",
+    "difficulty": "hard",
+    "questionText": "Why does the cache eviction fail under the configuration below?",
+    "codeSnippet": "@Cacheable(value = \"users_cache_3\", key = \"#id\")\npublic User getUser(Long id, Context ctx) { ... }\n\n@CacheEvict(value = \"users_cache_3\")\npublic void evictUser(Long id) { ... }",
+    "options": [
+      "Because cache names must be different.",
+      "Because evictUser() does not define a key, causing Spring to use SimpleKeyGenerator on '#id' while getUser() keys on '#id', resulting in mismatch.",
+      "Because evictUser() returns void.",
+      "Because CacheEvict requires @Transactional to run."
     ],
     "correctOptionIndex": 1,
-    "explanation": "Both Mono and Flux are reactive publishers implementing the Reactive Streams Publisher interface. Mono<T> emits 0 or 1 element before completing. Flux<T> emits 0 to N elements (potentially infinite) before completing.",
-    "difficulty": "easy"
+    "explanation": "By default, key generation combines all method arguments. For getUser(), the key combines id and ctx, but key='#id' overrides it to 'id'. For evictUser(), the key defaults to 'id' as well, but if arguments mismatch in key structure, we must explicitly set key='#id' in both to prevent cache desync."
   },
   {
-    "id": "spring-web-sec-47",
-    "topic": "Spring Web & Security",
-    "questionText": "What makes Spring WebFlux's WebClient preferred over RestTemplate in high-throughput microservices?",
+    "id": "spring-quiz-t14-3",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "hard",
+    "questionText": "What is the runtime impact of performing a blocking/long-running task inside the @PostConstruct method of 'SetupBean_3'?",
+    "codeSnippet": "@Component\npublic class SetupBean_3 {\n    @PostConstruct\n    public void init() {\n        // Blocks on network/external server call\n        loadConfiguration();\n    }\n}",
     "options": [
-      "WebClient is simpler to write and requires no configuration.",
-      "WebClient is non-blocking and reactive, allowing a small number of threads to handle a large number of concurrent HTTP connections, whereas RestTemplate uses a blocking 'one-thread-per-request' model.",
-      "WebClient automatically encrypts all payloads using SHA-256 by default.",
-      "WebClient is designed to run only on Apache Tomcat, which is faster than Netty."
+      "It triggers an asynchronous thread pool execution and continues startup.",
+      "It blocks the main startup thread, preventing the application context from finishing initialization and starting the web server.",
+      "Spring immediately throws an InitializationTimeoutException.",
+      "The JVM runs the method in the background without affecting startup."
     ],
     "correctOptionIndex": 1,
-    "explanation": "RestTemplate is a blocking API that holds onto a servlet container thread for the duration of the HTTP call. In contrast, WebClient is non-blocking and reactive, meaning it releases the calling thread immediately and uses callbacks when data becomes available, leading to much higher concurrency and resource efficiency.",
-    "difficulty": "easy"
+    "explanation": "@PostConstruct methods are executed synchronously during bean instantiation on the main thread. If a bean blocks in @PostConstruct, application context startup halts, blocking the web server (Tomcat) from starting. Use events or Async tasks instead."
   },
   {
-    "id": "spring-web-sec-48",
-    "topic": "Spring Web & Security",
-    "questionText": "How does the concept of 'backpressure' work in a Spring WebFlux application?",
+    "id": "spring-quiz-t15-3",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "If a controller throws a 'DatabaseException_3' (which extends RuntimeException), which ExceptionHandler method inside ControllerAdvice is invoked?",
+    "codeSnippet": "@ControllerAdvice\npublic class GlobalHandler {\n    @ExceptionHandler(RuntimeException.class)\n    public String handleRuntime(RuntimeException ex) { return \"Runtime\"; }\n\n    @ExceptionHandler(DatabaseException_3.class)\n    public String handleDb(DatabaseException_3 ex) { return \"Db\"; }\n}",
     "options": [
-      "The client forces the server to crash if the server sends too much data.",
-      "It is a mechanism where a downstream subscriber controls the rate at which an upstream publisher sends data, requesting only as many items as the subscriber can process.",
-      "It is a network-level protocol that automatically compresses JSON payloads.",
-      "Backpressure is a thread-pooling strategy that prioritizes database threads over HTTP threads."
+      "handleRuntime(), because RuntimeException is checked first as the parent class.",
+      "Both methods run in sequence.",
+      "Spring throws an ExceptionHandlerAmbiguityException at startup.",
+      "handleDb(), because it is mapped to the most specific exception type matching the exception thrown."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring's exception resolver resolves to the exception handler that maps to the most specific exception in the type hierarchy. Since 'DatabaseException_3' matches the thrown exception exactly, handleDb() is preferred over handleRuntime()."
+  },
+  {
+    "id": "spring-quiz-t16-3",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "What is the state of entity 'Account_3' and the database result when the method process() exits?",
+    "codeSnippet": "@Transactional\npublic void process(Long id) {\n    Account_3 acc = repository.findById(id).orElseThrow();\n    entityManager.detach(acc);\n    acc.setBalance(1000);\n}",
+    "options": [
+      "The entity is in the detached state; no database updates occur.",
+      "The entity is in the persistent state; the database is updated with balance 1000.",
+      "An EntityNotFoundException is thrown during detach.",
+      "Hibernate throws a LazyInitializationException when setting the balance."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Calling entityManager.detach(entity) removes the entity from the Persistence Context. It changes from 'persistent' to 'detached' state. Hibernate no longer tracks modifications, so the balance change is not flushed to the database."
+  },
+  {
+    "id": "spring-quiz-t17-3",
+    "topic": "Spring Cloud & Resilience",
+    "difficulty": "medium",
+    "questionText": "A Resilience4j Circuit Breaker has slidingWindowSize = 13 and failureRateThreshold = 50%. If 8 requests fail within the sliding window, what is the state transition?",
+    "codeSnippet": "CircuitBreakerConfig config = CircuitBreakerConfig.custom()\n    .slidingWindowSize(13)\n    .failureRateThreshold(50)\n    .build();",
+    "options": [
+      "Remains in CLOSED state because the sliding window must exceed capacity.",
+      "Transitions to HALF_OPEN state.",
+      "Throws a CircuitBreakerOpenException immediately.",
+      "Transitions to OPEN state (failure rate is 62%, exceeding the 50% threshold)."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Once the sliding window registers 13 requests, Resilience4j calculates the failure rate. Since 8/13 (62%) is greater than or equal to 50%, the Circuit Breaker transitions to the OPEN state."
+  },
+  {
+    "id": "spring-quiz-t18-3",
+    "topic": "Spring Boot Internals",
+    "difficulty": "hard",
+    "questionText": "Inside a single configuration class, what determines the registration order of beans and the result of @ConditionalOnMissingBean?",
+    "codeSnippet": "@Configuration\npublic class AppConfig {\n    @Bean\n    public BeanVal_3 primaryBean() { return new BeanVal_3(\"A\"); }\n\n    @Bean\n    @ConditionalOnMissingBean(BeanVal_3.class)\n    public BeanVal_3 fallbackBean() { return new BeanVal_3(\"B\"); }\n}",
+    "options": [
+      "fallbackBean overrides primaryBean because @ConditionalOnMissingBean forces precedence.",
+      "Both beans are registered, creating an array list injection candidate.",
+      "Spring throws a BeanDefinitionOverrideException during startup.",
+      "Bean methods are registered in order of definition. primaryBean() registers first, causing fallbackBean()'s conditional check to fail. Only primaryBean is registered."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Within a single configuration class, beans are parsed and registered sequentially. Since primaryBean() is defined first, its bean exists when fallbackBean() is evaluated. The conditional check fails, and fallbackBean() is skipped."
+  },
+  {
+    "id": "spring-quiz-t19-3",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "A controller returns an instance of 'ResponseData_3'. If fields are private and no getters are defined, what is the HTTP response behavior?",
+    "codeSnippet": "public class ResponseData_3 {\n    private String status;\n    public ResponseData_3(String status) { this.status = status; }\n    // No getters\n}",
+    "options": [
+      "HTTP 200 with JSON payload {\"status\":null}.",
+      "HTTP 500 error or exception (Jackson throws an InvalidDefinitionException: No serializer found).",
+      "HTTP 200 with JSON payload {\"status\":\"...\"} using reflection.",
+      "The code fails to compile because classes returned from RestController require getters."
     ],
     "correctOptionIndex": 1,
-    "explanation": "Backpressure is a core concept of Reactive Streams. It allows a subscriber to signal to the publisher (via the Subscription.request(n) method) how many elements it is currently ready to process, preventing the publisher from overwhelming the subscriber with too much data.",
-    "difficulty": "easy"
+    "explanation": "Jackson (Spring Boot's default serializer) uses public getter methods to discover properties to write to JSON. If fields are private and no getters/setters/annotations are present, Jackson throws an exception, resulting in an HTTP 500."
   },
   {
-    "id": "spring-web-sec-49",
-    "topic": "Spring Web & Security",
-    "questionText": "In WebFlux, besides annotation-based controllers (using @RestController and @GetMapping), what alternative functional programming model is supported for routing and handling requests?",
+    "id": "spring-quiz-t20-3",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "If outerMethod() is marked as @Transactional and invokes nestedMethod() which is marked as @Transactional(propagation = Propagation.NESTED), what happens to DB updates if nestedMethod() fails and throws an exception caught inside outerMethod()?",
+    "codeSnippet": "@Transactional\npublic void outerMethod() {\n    try {\n        innerService.nestedMethod();\n    } catch (Exception e) {\n        // Exception caught\n    }\n    // Save other data\n}",
     "options": [
-      "Using XML configuration files.",
-      "Using RouterFunction and HandlerFunction beans to define routes and handlers programmatically.",
-      "Writing raw Servlets that extend HttpServlet.",
-      "WebFlux does not support any alternative; annotation-based controllers are mandatory."
+      "The entire transaction is rolled back because the outer method was marked as Transactional.",
+      "Only nestedMethod()'s updates are rolled back to the savepoint; outerMethod()'s updates can still commit successfully.",
+      "nestedMethod()'s updates are committed because the exception was caught in the outer method.",
+      "Spring throws a NestedTransactionNotSupportedException."
     ],
     "correctOptionIndex": 1,
-    "explanation": "WebFlux supports a functional routing model. It uses RouterFunction to route requests to a HandlerFunction programmatically. This is configured using RouterFunctions.route() and provides an alternative to the annotation-based @Controller approach.",
-    "difficulty": "easy"
+    "explanation": "Propagation.NESTED creates a nested transaction using database savepoints. If the nested transaction fails and its exception is caught and handled inside the outer transaction, only the nested transaction rolls back to its savepoint. The outer transaction remains valid."
   },
   {
-    "id": "spring-web-sec-50",
-    "topic": "Spring Web & Security",
-    "questionText": "What is the default runtime server/engine that Spring Boot uses to run Spring WebFlux applications, and how does its threading model compare to standard Spring MVC?",
-    "options": [
-      "Netty, which uses a small, fixed number of event loop threads to handle non-blocking requests, compared to Tomcat (used in Spring MVC) which uses a large thread pool of blocking request threads.",
-      "Tomcat, which runs WebFlux in blocking servlet mode.",
-      "Glassfish, which uses a single main thread for all operations.",
-      "Apache HTTPD, which forks a new OS process for every request."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "By default, Spring Boot WebFlux applications run on an embedded Netty server. Netty is built on a non-blocking, event-driven I/O model (Event Loop). It typically creates one thread per CPU core to handle all incoming requests asynchronously. Spring MVC, by default, runs on Tomcat with a pool of threads (typically 200) where each thread blocks waiting for input/output.",
-    "difficulty": "easy"
-  },
-  {
-    "id": "spring-gen-1",
-    "topic": "Spring Core & AOP",
-    "difficulty": "easy",
-    "questionText": "Which of the following best describes the primary role of the '@Component' annotation in Spring?",
-    "options": [
-      "general-purpose stereotype annotation indicating a class is a managed Spring component",
-      "specialization of @Component for service-layer beans containing business logic",
-      "An annotation used to configure database tables",
-      "An annotation used to enable unit tests"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "In Spring, '@Component' serves as a core stereotype annotation: general-purpose stereotype annotation indicating a class is a managed Spring component."
-  },
-  {
-    "id": "spring-gen-2",
-    "topic": "Spring Core & AOP",
-    "difficulty": "easy",
-    "questionText": "Which of the following best describes the primary role of the '@Service' annotation in Spring?",
-    "options": [
-      "specialization of @Component for service-layer beans containing business logic",
-      "general-purpose stereotype annotation indicating a class is a managed Spring component",
-      "An annotation used to configure database tables",
-      "An annotation used to enable unit tests"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "In Spring, '@Service' serves as a core stereotype annotation: specialization of @Component for service-layer beans containing business logic."
-  },
-  {
-    "id": "spring-gen-3",
-    "topic": "Spring Core & AOP",
-    "difficulty": "easy",
-    "questionText": "Which of the following best describes the primary role of the '@Repository' annotation in Spring?",
-    "options": [
-      "specialization of @Component for data access beans, enabling automatic exception translation",
-      "general-purpose stereotype annotation indicating a class is a managed Spring component",
-      "An annotation used to configure database tables",
-      "An annotation used to enable unit tests"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "In Spring, '@Repository' serves as a core stereotype annotation: specialization of @Component for data access beans, enabling automatic exception translation."
-  },
-  {
-    "id": "spring-gen-4",
-    "topic": "Spring Core & AOP",
-    "difficulty": "easy",
-    "questionText": "Which of the following best describes the primary role of the '@Controller' annotation in Spring?",
-    "options": [
-      "specialization of @Component for web controller beans resolving MVC views",
-      "general-purpose stereotype annotation indicating a class is a managed Spring component",
-      "An annotation used to configure database tables",
-      "An annotation used to enable unit tests"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "In Spring, '@Controller' serves as a core stereotype annotation: specialization of @Component for web controller beans resolving MVC views."
-  },
-  {
-    "id": "spring-gen-5",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
-    "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
-  },
-  {
-    "id": "spring-gen-6",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
-    "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
-  },
-  {
-    "id": "spring-gen-7",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
-    "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
-  },
-  {
-    "id": "spring-gen-8",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
-    "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
-  },
-  {
-    "id": "spring-gen-9",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
-    "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
-  },
-  {
-    "id": "spring-gen-10",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
-    "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
-  },
-  {
-    "id": "spring-gen-11",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
-    "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
-  },
-  {
-    "id": "spring-gen-12",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
-    "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
-  },
-  {
-    "id": "spring-gen-13",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
-    "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
-  },
-  {
-    "id": "spring-gen-14",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
-    "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
-  },
-  {
-    "id": "spring-gen-15",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
-    "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
-  },
-  {
-    "id": "spring-gen-16",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
-    "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
-  },
-  {
-    "id": "spring-gen-17",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
-    "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
-  },
-  {
-    "id": "spring-gen-18",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
-    "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
-  },
-  {
-    "id": "spring-gen-19",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
-    "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
-  },
-  {
-    "id": "spring-gen-20",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
-    "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
-  },
-  {
-    "id": "spring-gen-21",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
-    "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
-  },
-  {
-    "id": "spring-gen-22",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
-    "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
-  },
-  {
-    "id": "spring-gen-23",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
-    "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
-  },
-  {
-    "id": "spring-gen-24",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
-    "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
-  },
-  {
-    "id": "spring-gen-25",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What is the primary dependency provided by the 'spring-boot-starter-web' artifact in a Spring Boot application?",
-    "options": [
-      "Dependencies and configurations for web support.",
-      "Dependencies for a standalone WEB database.",
-      "An external CLI tool for executing web scripts.",
-      "A custom classloader optimized for web classes."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot starters are curated dependency descriptors. 'spring-boot-starter-web' compiles all library dependencies and autoconfigurations needed for web into one entry."
-  },
-  {
-    "id": "spring-gen-26",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What is the primary dependency provided by the 'spring-boot-starter-data-jpa' artifact in a Spring Boot application?",
-    "options": [
-      "Dependencies and configurations for data jpa support.",
-      "Dependencies for a standalone DATA-JPA database.",
-      "An external CLI tool for executing data-jpa scripts.",
-      "A custom classloader optimized for data-jpa classes."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot starters are curated dependency descriptors. 'spring-boot-starter-data-jpa' compiles all library dependencies and autoconfigurations needed for data-jpa into one entry."
-  },
-  {
-    "id": "spring-gen-27",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What is the primary dependency provided by the 'spring-boot-starter-security' artifact in a Spring Boot application?",
-    "options": [
-      "Dependencies and configurations for security support.",
-      "Dependencies for a standalone SECURITY database.",
-      "An external CLI tool for executing security scripts.",
-      "A custom classloader optimized for security classes."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot starters are curated dependency descriptors. 'spring-boot-starter-security' compiles all library dependencies and autoconfigurations needed for security into one entry."
-  },
-  {
-    "id": "spring-gen-28",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What is the primary dependency provided by the 'spring-boot-starter-test' artifact in a Spring Boot application?",
-    "options": [
-      "Dependencies and configurations for test support.",
-      "Dependencies for a standalone TEST database.",
-      "An external CLI tool for executing test scripts.",
-      "A custom classloader optimized for test classes."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot starters are curated dependency descriptors. 'spring-boot-starter-test' compiles all library dependencies and autoconfigurations needed for test into one entry."
-  },
-  {
-    "id": "spring-gen-29",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What is the primary dependency provided by the 'spring-boot-starter-actuator' artifact in a Spring Boot application?",
-    "options": [
-      "Dependencies and configurations for actuator support.",
-      "Dependencies for a standalone ACTUATOR database.",
-      "An external CLI tool for executing actuator scripts.",
-      "A custom classloader optimized for actuator classes."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot starters are curated dependency descriptors. 'spring-boot-starter-actuator' compiles all library dependencies and autoconfigurations needed for actuator into one entry."
-  },
-  {
-    "id": "spring-gen-30",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you change the default HTTP port (8080) of a Spring Boot application using configuration properties?",
-    "options": [
-      "Set 'server.port=9090' in application.properties",
-      "Set 'spring.port=9090' in application.properties",
-      "Set 'http.port=9090' in application.properties",
-      "Configure a port parameter inside the main() method"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The standard property configuration to change the embedded web server's listening port is 'server.port'."
-  },
-  {
-    "id": "spring-gen-31",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you change the default HTTP port (8080) of a Spring Boot application using configuration properties?",
-    "options": [
-      "Set 'server.port=9090' in application.properties",
-      "Set 'spring.port=9090' in application.properties",
-      "Set 'http.port=9090' in application.properties",
-      "Configure a port parameter inside the main() method"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The standard property configuration to change the embedded web server's listening port is 'server.port'."
-  },
-  {
-    "id": "spring-gen-32",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you change the default HTTP port (8080) of a Spring Boot application using configuration properties?",
-    "options": [
-      "Set 'server.port=9090' in application.properties",
-      "Set 'spring.port=9090' in application.properties",
-      "Set 'http.port=9090' in application.properties",
-      "Configure a port parameter inside the main() method"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The standard property configuration to change the embedded web server's listening port is 'server.port'."
-  },
-  {
-    "id": "spring-gen-33",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you change the default HTTP port (8080) of a Spring Boot application using configuration properties?",
-    "options": [
-      "Set 'server.port=9090' in application.properties",
-      "Set 'spring.port=9090' in application.properties",
-      "Set 'http.port=9090' in application.properties",
-      "Configure a port parameter inside the main() method"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The standard property configuration to change the embedded web server's listening port is 'server.port'."
-  },
-  {
-    "id": "spring-gen-34",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you change the default HTTP port (8080) of a Spring Boot application using configuration properties?",
-    "options": [
-      "Set 'server.port=9090' in application.properties",
-      "Set 'spring.port=9090' in application.properties",
-      "Set 'http.port=9090' in application.properties",
-      "Configure a port parameter inside the main() method"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The standard property configuration to change the embedded web server's listening port is 'server.port'."
-  },
-  {
-    "id": "spring-gen-35",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you change the default HTTP port (8080) of a Spring Boot application using configuration properties?",
-    "options": [
-      "Set 'server.port=9090' in application.properties",
-      "Set 'spring.port=9090' in application.properties",
-      "Set 'http.port=9090' in application.properties",
-      "Configure a port parameter inside the main() method"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The standard property configuration to change the embedded web server's listening port is 'server.port'."
-  },
-  {
-    "id": "spring-gen-36",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you change the default HTTP port (8080) of a Spring Boot application using configuration properties?",
-    "options": [
-      "Set 'server.port=9090' in application.properties",
-      "Set 'spring.port=9090' in application.properties",
-      "Set 'http.port=9090' in application.properties",
-      "Configure a port parameter inside the main() method"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The standard property configuration to change the embedded web server's listening port is 'server.port'."
-  },
-  {
-    "id": "spring-gen-37",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you change the default HTTP port (8080) of a Spring Boot application using configuration properties?",
-    "options": [
-      "Set 'server.port=9090' in application.properties",
-      "Set 'spring.port=9090' in application.properties",
-      "Set 'http.port=9090' in application.properties",
-      "Configure a port parameter inside the main() method"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The standard property configuration to change the embedded web server's listening port is 'server.port'."
-  },
-  {
-    "id": "spring-gen-38",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you change the default HTTP port (8080) of a Spring Boot application using configuration properties?",
-    "options": [
-      "Set 'server.port=9090' in application.properties",
-      "Set 'spring.port=9090' in application.properties",
-      "Set 'http.port=9090' in application.properties",
-      "Configure a port parameter inside the main() method"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The standard property configuration to change the embedded web server's listening port is 'server.port'."
-  },
-  {
-    "id": "spring-gen-39",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you change the default HTTP port (8080) of a Spring Boot application using configuration properties?",
-    "options": [
-      "Set 'server.port=9090' in application.properties",
-      "Set 'spring.port=9090' in application.properties",
-      "Set 'http.port=9090' in application.properties",
-      "Configure a port parameter inside the main() method"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The standard property configuration to change the embedded web server's listening port is 'server.port'."
-  },
-  {
-    "id": "spring-gen-40",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you change the default HTTP port (8080) of a Spring Boot application using configuration properties?",
-    "options": [
-      "Set 'server.port=9090' in application.properties",
-      "Set 'spring.port=9090' in application.properties",
-      "Set 'http.port=9090' in application.properties",
-      "Configure a port parameter inside the main() method"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The standard property configuration to change the embedded web server's listening port is 'server.port'."
-  },
-  {
-    "id": "spring-gen-41",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you change the default HTTP port (8080) of a Spring Boot application using configuration properties?",
-    "options": [
-      "Set 'server.port=9090' in application.properties",
-      "Set 'spring.port=9090' in application.properties",
-      "Set 'http.port=9090' in application.properties",
-      "Configure a port parameter inside the main() method"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The standard property configuration to change the embedded web server's listening port is 'server.port'."
-  },
-  {
-    "id": "spring-gen-42",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you change the default HTTP port (8080) of a Spring Boot application using configuration properties?",
-    "options": [
-      "Set 'server.port=9090' in application.properties",
-      "Set 'spring.port=9090' in application.properties",
-      "Set 'http.port=9090' in application.properties",
-      "Configure a port parameter inside the main() method"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The standard property configuration to change the embedded web server's listening port is 'server.port'."
-  },
-  {
-    "id": "spring-gen-43",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you change the default HTTP port (8080) of a Spring Boot application using configuration properties?",
-    "options": [
-      "Set 'server.port=9090' in application.properties",
-      "Set 'spring.port=9090' in application.properties",
-      "Set 'http.port=9090' in application.properties",
-      "Configure a port parameter inside the main() method"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The standard property configuration to change the embedded web server's listening port is 'server.port'."
-  },
-  {
-    "id": "spring-gen-44",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you change the default HTTP port (8080) of a Spring Boot application using configuration properties?",
-    "options": [
-      "Set 'server.port=9090' in application.properties",
-      "Set 'spring.port=9090' in application.properties",
-      "Set 'http.port=9090' in application.properties",
-      "Configure a port parameter inside the main() method"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The standard property configuration to change the embedded web server's listening port is 'server.port'."
-  },
-  {
-    "id": "spring-gen-45",
-    "topic": "Spring MVC",
-    "difficulty": "easy",
-    "questionText": "What is the difference between '@Controller' and '@RestController' in Spring Web MVC?",
-    "options": [
-      "'@RestController' is meta-annotated with '@Controller' and '@ResponseBody', meaning handler methods automatically serialize return values directly to the HTTP response body.",
-      "'@RestController' is for REST services only and does not support HTTP POST methods.",
-      "'@Controller' can only return JSON, while '@RestController' can only return HTML.",
-      "There is no difference; they are aliases of each other."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "'@RestController' combines '@Controller' and '@ResponseBody' into one convenience annotation, making it ideal for API development."
-  },
-  {
-    "id": "spring-gen-46",
-    "topic": "Spring MVC",
-    "difficulty": "easy",
-    "questionText": "What is the difference between '@Controller' and '@RestController' in Spring Web MVC?",
-    "options": [
-      "'@RestController' is meta-annotated with '@Controller' and '@ResponseBody', meaning handler methods automatically serialize return values directly to the HTTP response body.",
-      "'@RestController' is for REST services only and does not support HTTP POST methods.",
-      "'@Controller' can only return JSON, while '@RestController' can only return HTML.",
-      "There is no difference; they are aliases of each other."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "'@RestController' combines '@Controller' and '@ResponseBody' into one convenience annotation, making it ideal for API development."
-  },
-  {
-    "id": "spring-gen-47",
-    "topic": "Spring MVC",
-    "difficulty": "easy",
-    "questionText": "What is the difference between '@Controller' and '@RestController' in Spring Web MVC?",
-    "options": [
-      "'@RestController' is meta-annotated with '@Controller' and '@ResponseBody', meaning handler methods automatically serialize return values directly to the HTTP response body.",
-      "'@RestController' is for REST services only and does not support HTTP POST methods.",
-      "'@Controller' can only return JSON, while '@RestController' can only return HTML.",
-      "There is no difference; they are aliases of each other."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "'@RestController' combines '@Controller' and '@ResponseBody' into one convenience annotation, making it ideal for API development."
-  },
-  {
-    "id": "spring-gen-48",
-    "topic": "Spring MVC",
-    "difficulty": "easy",
-    "questionText": "What is the difference between '@Controller' and '@RestController' in Spring Web MVC?",
-    "options": [
-      "'@RestController' is meta-annotated with '@Controller' and '@ResponseBody', meaning handler methods automatically serialize return values directly to the HTTP response body.",
-      "'@RestController' is for REST services only and does not support HTTP POST methods.",
-      "'@Controller' can only return JSON, while '@RestController' can only return HTML.",
-      "There is no difference; they are aliases of each other."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "'@RestController' combines '@Controller' and '@ResponseBody' into one convenience annotation, making it ideal for API development."
-  },
-  {
-    "id": "spring-gen-49",
-    "topic": "Spring MVC",
-    "difficulty": "easy",
-    "questionText": "What is the difference between '@Controller' and '@RestController' in Spring Web MVC?",
-    "options": [
-      "'@RestController' is meta-annotated with '@Controller' and '@ResponseBody', meaning handler methods automatically serialize return values directly to the HTTP response body.",
-      "'@RestController' is for REST services only and does not support HTTP POST methods.",
-      "'@Controller' can only return JSON, while '@RestController' can only return HTML.",
-      "There is no difference; they are aliases of each other."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "'@RestController' combines '@Controller' and '@ResponseBody' into one convenience annotation, making it ideal for API development."
-  },
-  {
-    "id": "spring-gen-50",
-    "topic": "Spring MVC",
-    "difficulty": "easy",
-    "questionText": "What is the difference between '@Controller' and '@RestController' in Spring Web MVC?",
-    "options": [
-      "'@RestController' is meta-annotated with '@Controller' and '@ResponseBody', meaning handler methods automatically serialize return values directly to the HTTP response body.",
-      "'@RestController' is for REST services only and does not support HTTP POST methods.",
-      "'@Controller' can only return JSON, while '@RestController' can only return HTML.",
-      "There is no difference; they are aliases of each other."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "'@RestController' combines '@Controller' and '@ResponseBody' into one convenience annotation, making it ideal for API development."
-  },
-  {
-    "id": "spring-gen-51",
-    "topic": "Spring MVC",
-    "difficulty": "easy",
-    "questionText": "What is the difference between '@Controller' and '@RestController' in Spring Web MVC?",
-    "options": [
-      "'@RestController' is meta-annotated with '@Controller' and '@ResponseBody', meaning handler methods automatically serialize return values directly to the HTTP response body.",
-      "'@RestController' is for REST services only and does not support HTTP POST methods.",
-      "'@Controller' can only return JSON, while '@RestController' can only return HTML.",
-      "There is no difference; they are aliases of each other."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "'@RestController' combines '@Controller' and '@ResponseBody' into one convenience annotation, making it ideal for API development."
-  },
-  {
-    "id": "spring-gen-52",
-    "topic": "Spring MVC",
-    "difficulty": "easy",
-    "questionText": "What is the difference between '@Controller' and '@RestController' in Spring Web MVC?",
-    "options": [
-      "'@RestController' is meta-annotated with '@Controller' and '@ResponseBody', meaning handler methods automatically serialize return values directly to the HTTP response body.",
-      "'@RestController' is for REST services only and does not support HTTP POST methods.",
-      "'@Controller' can only return JSON, while '@RestController' can only return HTML.",
-      "There is no difference; they are aliases of each other."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "'@RestController' combines '@Controller' and '@ResponseBody' into one convenience annotation, making it ideal for API development."
-  },
-  {
-    "id": "spring-gen-53",
-    "topic": "Spring MVC",
-    "difficulty": "easy",
-    "questionText": "What is the difference between '@Controller' and '@RestController' in Spring Web MVC?",
-    "options": [
-      "'@RestController' is meta-annotated with '@Controller' and '@ResponseBody', meaning handler methods automatically serialize return values directly to the HTTP response body.",
-      "'@RestController' is for REST services only and does not support HTTP POST methods.",
-      "'@Controller' can only return JSON, while '@RestController' can only return HTML.",
-      "There is no difference; they are aliases of each other."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "'@RestController' combines '@Controller' and '@ResponseBody' into one convenience annotation, making it ideal for API development."
-  },
-  {
-    "id": "spring-gen-54",
-    "topic": "Spring MVC",
-    "difficulty": "easy",
-    "questionText": "What is the difference between '@Controller' and '@RestController' in Spring Web MVC?",
-    "options": [
-      "'@RestController' is meta-annotated with '@Controller' and '@ResponseBody', meaning handler methods automatically serialize return values directly to the HTTP response body.",
-      "'@RestController' is for REST services only and does not support HTTP POST methods.",
-      "'@Controller' can only return JSON, while '@RestController' can only return HTML.",
-      "There is no difference; they are aliases of each other."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "'@RestController' combines '@Controller' and '@ResponseBody' into one convenience annotation, making it ideal for API development."
-  },
-  {
-    "id": "spring-gen-55",
-    "topic": "Spring MVC",
-    "difficulty": "easy",
-    "questionText": "What is the difference between '@Controller' and '@RestController' in Spring Web MVC?",
-    "options": [
-      "'@RestController' is meta-annotated with '@Controller' and '@ResponseBody', meaning handler methods automatically serialize return values directly to the HTTP response body.",
-      "'@RestController' is for REST services only and does not support HTTP POST methods.",
-      "'@Controller' can only return JSON, while '@RestController' can only return HTML.",
-      "There is no difference; they are aliases of each other."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "'@RestController' combines '@Controller' and '@ResponseBody' into one convenience annotation, making it ideal for API development."
-  },
-  {
-    "id": "spring-gen-56",
-    "topic": "Spring MVC",
-    "difficulty": "easy",
-    "questionText": "What is the difference between '@Controller' and '@RestController' in Spring Web MVC?",
-    "options": [
-      "'@RestController' is meta-annotated with '@Controller' and '@ResponseBody', meaning handler methods automatically serialize return values directly to the HTTP response body.",
-      "'@RestController' is for REST services only and does not support HTTP POST methods.",
-      "'@Controller' can only return JSON, while '@RestController' can only return HTML.",
-      "There is no difference; they are aliases of each other."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "'@RestController' combines '@Controller' and '@ResponseBody' into one convenience annotation, making it ideal for API development."
-  },
-  {
-    "id": "spring-gen-57",
-    "topic": "Spring MVC",
-    "difficulty": "easy",
-    "questionText": "What is the difference between '@Controller' and '@RestController' in Spring Web MVC?",
-    "options": [
-      "'@RestController' is meta-annotated with '@Controller' and '@ResponseBody', meaning handler methods automatically serialize return values directly to the HTTP response body.",
-      "'@RestController' is for REST services only and does not support HTTP POST methods.",
-      "'@Controller' can only return JSON, while '@RestController' can only return HTML.",
-      "There is no difference; they are aliases of each other."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "'@RestController' combines '@Controller' and '@ResponseBody' into one convenience annotation, making it ideal for API development."
-  },
-  {
-    "id": "spring-gen-58",
-    "topic": "Spring MVC",
-    "difficulty": "easy",
-    "questionText": "What is the difference between '@Controller' and '@RestController' in Spring Web MVC?",
-    "options": [
-      "'@RestController' is meta-annotated with '@Controller' and '@ResponseBody', meaning handler methods automatically serialize return values directly to the HTTP response body.",
-      "'@RestController' is for REST services only and does not support HTTP POST methods.",
-      "'@Controller' can only return JSON, while '@RestController' can only return HTML.",
-      "There is no difference; they are aliases of each other."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "'@RestController' combines '@Controller' and '@ResponseBody' into one convenience annotation, making it ideal for API development."
-  },
-  {
-    "id": "spring-gen-59",
-    "topic": "Spring MVC",
-    "difficulty": "easy",
-    "questionText": "What is the difference between '@Controller' and '@RestController' in Spring Web MVC?",
-    "options": [
-      "'@RestController' is meta-annotated with '@Controller' and '@ResponseBody', meaning handler methods automatically serialize return values directly to the HTTP response body.",
-      "'@RestController' is for REST services only and does not support HTTP POST methods.",
-      "'@Controller' can only return JSON, while '@RestController' can only return HTML.",
-      "There is no difference; they are aliases of each other."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "'@RestController' combines '@Controller' and '@ResponseBody' into one convenience annotation, making it ideal for API development."
-  },
-  {
-    "id": "spring-gen-60",
-    "topic": "Spring MVC",
-    "difficulty": "easy",
-    "questionText": "What is the difference between '@Controller' and '@RestController' in Spring Web MVC?",
-    "options": [
-      "'@RestController' is meta-annotated with '@Controller' and '@ResponseBody', meaning handler methods automatically serialize return values directly to the HTTP response body.",
-      "'@RestController' is for REST services only and does not support HTTP POST methods.",
-      "'@Controller' can only return JSON, while '@RestController' can only return HTML.",
-      "There is no difference; they are aliases of each other."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "'@RestController' combines '@Controller' and '@ResponseBody' into one convenience annotation, making it ideal for API development."
-  },
-  {
-    "id": "spring-gen-61",
-    "topic": "Spring MVC",
-    "difficulty": "easy",
-    "questionText": "What is the difference between '@Controller' and '@RestController' in Spring Web MVC?",
-    "options": [
-      "'@RestController' is meta-annotated with '@Controller' and '@ResponseBody', meaning handler methods automatically serialize return values directly to the HTTP response body.",
-      "'@RestController' is for REST services only and does not support HTTP POST methods.",
-      "'@Controller' can only return JSON, while '@RestController' can only return HTML.",
-      "There is no difference; they are aliases of each other."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "'@RestController' combines '@Controller' and '@ResponseBody' into one convenience annotation, making it ideal for API development."
-  },
-  {
-    "id": "spring-gen-62",
-    "topic": "Spring MVC",
-    "difficulty": "easy",
-    "questionText": "What is the difference between '@Controller' and '@RestController' in Spring Web MVC?",
-    "options": [
-      "'@RestController' is meta-annotated with '@Controller' and '@ResponseBody', meaning handler methods automatically serialize return values directly to the HTTP response body.",
-      "'@RestController' is for REST services only and does not support HTTP POST methods.",
-      "'@Controller' can only return JSON, while '@RestController' can only return HTML.",
-      "There is no difference; they are aliases of each other."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "'@RestController' combines '@Controller' and '@ResponseBody' into one convenience annotation, making it ideal for API development."
-  },
-  {
-    "id": "spring-gen-63",
-    "topic": "Spring MVC",
-    "difficulty": "easy",
-    "questionText": "What is the difference between '@Controller' and '@RestController' in Spring Web MVC?",
-    "options": [
-      "'@RestController' is meta-annotated with '@Controller' and '@ResponseBody', meaning handler methods automatically serialize return values directly to the HTTP response body.",
-      "'@RestController' is for REST services only and does not support HTTP POST methods.",
-      "'@Controller' can only return JSON, while '@RestController' can only return HTML.",
-      "There is no difference; they are aliases of each other."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "'@RestController' combines '@Controller' and '@ResponseBody' into one convenience annotation, making it ideal for API development."
-  },
-  {
-    "id": "spring-gen-64",
-    "topic": "Spring MVC",
-    "difficulty": "easy",
-    "questionText": "What is the difference between '@Controller' and '@RestController' in Spring Web MVC?",
-    "options": [
-      "'@RestController' is meta-annotated with '@Controller' and '@ResponseBody', meaning handler methods automatically serialize return values directly to the HTTP response body.",
-      "'@RestController' is for REST services only and does not support HTTP POST methods.",
-      "'@Controller' can only return JSON, while '@RestController' can only return HTML.",
-      "There is no difference; they are aliases of each other."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "'@RestController' combines '@Controller' and '@ResponseBody' into one convenience annotation, making it ideal for API development."
-  },
-  {
-    "id": "spring-gen-65",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you specify an active profile (e.g. 'dev') when launching a Spring Boot application from the command line?",
-    "options": [
-      "-Dspring.profiles.active=dev",
-      "--profiles=dev",
-      "-Dactive.profile=dev",
-      "--spring-profile=dev"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "You can activate specific profiles at runtime by setting the JVM system property 'spring.profiles.active=profileName'."
-  },
-  {
-    "id": "spring-gen-66",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you specify an active profile (e.g. 'dev') when launching a Spring Boot application from the command line?",
-    "options": [
-      "-Dspring.profiles.active=dev",
-      "--profiles=dev",
-      "-Dactive.profile=dev",
-      "--spring-profile=dev"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "You can activate specific profiles at runtime by setting the JVM system property 'spring.profiles.active=profileName'."
-  },
-  {
-    "id": "spring-gen-67",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you specify an active profile (e.g. 'dev') when launching a Spring Boot application from the command line?",
-    "options": [
-      "-Dspring.profiles.active=dev",
-      "--profiles=dev",
-      "-Dactive.profile=dev",
-      "--spring-profile=dev"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "You can activate specific profiles at runtime by setting the JVM system property 'spring.profiles.active=profileName'."
-  },
-  {
-    "id": "spring-gen-68",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you specify an active profile (e.g. 'dev') when launching a Spring Boot application from the command line?",
-    "options": [
-      "-Dspring.profiles.active=dev",
-      "--profiles=dev",
-      "-Dactive.profile=dev",
-      "--spring-profile=dev"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "You can activate specific profiles at runtime by setting the JVM system property 'spring.profiles.active=profileName'."
-  },
-  {
-    "id": "spring-gen-69",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you specify an active profile (e.g. 'dev') when launching a Spring Boot application from the command line?",
-    "options": [
-      "-Dspring.profiles.active=dev",
-      "--profiles=dev",
-      "-Dactive.profile=dev",
-      "--spring-profile=dev"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "You can activate specific profiles at runtime by setting the JVM system property 'spring.profiles.active=profileName'."
-  },
-  {
-    "id": "spring-gen-70",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you specify an active profile (e.g. 'dev') when launching a Spring Boot application from the command line?",
-    "options": [
-      "-Dspring.profiles.active=dev",
-      "--profiles=dev",
-      "-Dactive.profile=dev",
-      "--spring-profile=dev"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "You can activate specific profiles at runtime by setting the JVM system property 'spring.profiles.active=profileName'."
-  },
-  {
-    "id": "spring-gen-71",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you specify an active profile (e.g. 'dev') when launching a Spring Boot application from the command line?",
-    "options": [
-      "-Dspring.profiles.active=dev",
-      "--profiles=dev",
-      "-Dactive.profile=dev",
-      "--spring-profile=dev"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "You can activate specific profiles at runtime by setting the JVM system property 'spring.profiles.active=profileName'."
-  },
-  {
-    "id": "spring-gen-72",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you specify an active profile (e.g. 'dev') when launching a Spring Boot application from the command line?",
-    "options": [
-      "-Dspring.profiles.active=dev",
-      "--profiles=dev",
-      "-Dactive.profile=dev",
-      "--spring-profile=dev"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "You can activate specific profiles at runtime by setting the JVM system property 'spring.profiles.active=profileName'."
-  },
-  {
-    "id": "spring-gen-73",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you specify an active profile (e.g. 'dev') when launching a Spring Boot application from the command line?",
-    "options": [
-      "-Dspring.profiles.active=dev",
-      "--profiles=dev",
-      "-Dactive.profile=dev",
-      "--spring-profile=dev"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "You can activate specific profiles at runtime by setting the JVM system property 'spring.profiles.active=profileName'."
-  },
-  {
-    "id": "spring-gen-74",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you specify an active profile (e.g. 'dev') when launching a Spring Boot application from the command line?",
-    "options": [
-      "-Dspring.profiles.active=dev",
-      "--profiles=dev",
-      "-Dactive.profile=dev",
-      "--spring-profile=dev"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "You can activate specific profiles at runtime by setting the JVM system property 'spring.profiles.active=profileName'."
-  },
-  {
-    "id": "spring-gen-75",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you specify an active profile (e.g. 'dev') when launching a Spring Boot application from the command line?",
-    "options": [
-      "-Dspring.profiles.active=dev",
-      "--profiles=dev",
-      "-Dactive.profile=dev",
-      "--spring-profile=dev"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "You can activate specific profiles at runtime by setting the JVM system property 'spring.profiles.active=profileName'."
-  },
-  {
-    "id": "spring-gen-76",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you specify an active profile (e.g. 'dev') when launching a Spring Boot application from the command line?",
-    "options": [
-      "-Dspring.profiles.active=dev",
-      "--profiles=dev",
-      "-Dactive.profile=dev",
-      "--spring-profile=dev"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "You can activate specific profiles at runtime by setting the JVM system property 'spring.profiles.active=profileName'."
-  },
-  {
-    "id": "spring-gen-77",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you specify an active profile (e.g. 'dev') when launching a Spring Boot application from the command line?",
-    "options": [
-      "-Dspring.profiles.active=dev",
-      "--profiles=dev",
-      "-Dactive.profile=dev",
-      "--spring-profile=dev"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "You can activate specific profiles at runtime by setting the JVM system property 'spring.profiles.active=profileName'."
-  },
-  {
-    "id": "spring-gen-78",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you specify an active profile (e.g. 'dev') when launching a Spring Boot application from the command line?",
-    "options": [
-      "-Dspring.profiles.active=dev",
-      "--profiles=dev",
-      "-Dactive.profile=dev",
-      "--spring-profile=dev"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "You can activate specific profiles at runtime by setting the JVM system property 'spring.profiles.active=profileName'."
-  },
-  {
-    "id": "spring-gen-79",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you specify an active profile (e.g. 'dev') when launching a Spring Boot application from the command line?",
-    "options": [
-      "-Dspring.profiles.active=dev",
-      "--profiles=dev",
-      "-Dactive.profile=dev",
-      "--spring-profile=dev"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "You can activate specific profiles at runtime by setting the JVM system property 'spring.profiles.active=profileName'."
-  },
-  {
-    "id": "spring-gen-80",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you specify an active profile (e.g. 'dev') when launching a Spring Boot application from the command line?",
-    "options": [
-      "-Dspring.profiles.active=dev",
-      "--profiles=dev",
-      "-Dactive.profile=dev",
-      "--spring-profile=dev"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "You can activate specific profiles at runtime by setting the JVM system property 'spring.profiles.active=profileName'."
-  },
-  {
-    "id": "spring-gen-81",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you specify an active profile (e.g. 'dev') when launching a Spring Boot application from the command line?",
-    "options": [
-      "-Dspring.profiles.active=dev",
-      "--profiles=dev",
-      "-Dactive.profile=dev",
-      "--spring-profile=dev"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "You can activate specific profiles at runtime by setting the JVM system property 'spring.profiles.active=profileName'."
-  },
-  {
-    "id": "spring-gen-82",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you specify an active profile (e.g. 'dev') when launching a Spring Boot application from the command line?",
-    "options": [
-      "-Dspring.profiles.active=dev",
-      "--profiles=dev",
-      "-Dactive.profile=dev",
-      "--spring-profile=dev"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "You can activate specific profiles at runtime by setting the JVM system property 'spring.profiles.active=profileName'."
-  },
-  {
-    "id": "spring-gen-83",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you specify an active profile (e.g. 'dev') when launching a Spring Boot application from the command line?",
-    "options": [
-      "-Dspring.profiles.active=dev",
-      "--profiles=dev",
-      "-Dactive.profile=dev",
-      "--spring-profile=dev"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "You can activate specific profiles at runtime by setting the JVM system property 'spring.profiles.active=profileName'."
-  },
-  {
-    "id": "spring-gen-84",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "How do you specify an active profile (e.g. 'dev') when launching a Spring Boot application from the command line?",
-    "options": [
-      "-Dspring.profiles.active=dev",
-      "--profiles=dev",
-      "-Dactive.profile=dev",
-      "--spring-profile=dev"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "You can activate specific profiles at runtime by setting the JVM system property 'spring.profiles.active=profileName'."
-  },
-  {
-    "id": "spring-gen-85",
-    "topic": "Spring Core & AOP",
-    "difficulty": "medium",
-    "questionText": "What is the purpose of using '@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)'?",
-    "options": [
-      "To allow the session-scoped bean to be safely injected into a singleton-scoped bean using a dynamic CGLIB proxy.",
-      "To force the session-scoped bean to be created at container startup.",
-      "To enable thread-safe execution of prototype beans.",
-      "To prevent circular dependency errors in constructors."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "When a shorter-lived bean (session scope) is injected into a longer-lived bean (singleton), standard injection happens once. A scoped proxy intercepts calls to the bean and delegates them to the current session's actual bean instance dynamically."
-  },
-  {
-    "id": "spring-gen-86",
-    "topic": "Spring Core & AOP",
-    "difficulty": "medium",
-    "questionText": "What is the purpose of using '@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)'?",
-    "options": [
-      "To allow the session-scoped bean to be safely injected into a singleton-scoped bean using a dynamic CGLIB proxy.",
-      "To force the session-scoped bean to be created at container startup.",
-      "To enable thread-safe execution of prototype beans.",
-      "To prevent circular dependency errors in constructors."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "When a shorter-lived bean (session scope) is injected into a longer-lived bean (singleton), standard injection happens once. A scoped proxy intercepts calls to the bean and delegates them to the current session's actual bean instance dynamically."
-  },
-  {
-    "id": "spring-gen-87",
-    "topic": "Spring Core & AOP",
-    "difficulty": "medium",
-    "questionText": "What is the purpose of using '@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)'?",
-    "options": [
-      "To allow the session-scoped bean to be safely injected into a singleton-scoped bean using a dynamic CGLIB proxy.",
-      "To force the session-scoped bean to be created at container startup.",
-      "To enable thread-safe execution of prototype beans.",
-      "To prevent circular dependency errors in constructors."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "When a shorter-lived bean (session scope) is injected into a longer-lived bean (singleton), standard injection happens once. A scoped proxy intercepts calls to the bean and delegates them to the current session's actual bean instance dynamically."
-  },
-  {
-    "id": "spring-gen-88",
-    "topic": "Spring Core & AOP",
-    "difficulty": "medium",
-    "questionText": "What is the purpose of using '@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)'?",
-    "options": [
-      "To allow the session-scoped bean to be safely injected into a singleton-scoped bean using a dynamic CGLIB proxy.",
-      "To force the session-scoped bean to be created at container startup.",
-      "To enable thread-safe execution of prototype beans.",
-      "To prevent circular dependency errors in constructors."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "When a shorter-lived bean (session scope) is injected into a longer-lived bean (singleton), standard injection happens once. A scoped proxy intercepts calls to the bean and delegates them to the current session's actual bean instance dynamically."
-  },
-  {
-    "id": "spring-gen-89",
-    "topic": "Spring Core & AOP",
-    "difficulty": "medium",
-    "questionText": "What is the purpose of using '@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)'?",
-    "options": [
-      "To allow the session-scoped bean to be safely injected into a singleton-scoped bean using a dynamic CGLIB proxy.",
-      "To force the session-scoped bean to be created at container startup.",
-      "To enable thread-safe execution of prototype beans.",
-      "To prevent circular dependency errors in constructors."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "When a shorter-lived bean (session scope) is injected into a longer-lived bean (singleton), standard injection happens once. A scoped proxy intercepts calls to the bean and delegates them to the current session's actual bean instance dynamically."
-  },
-  {
-    "id": "spring-gen-90",
-    "topic": "Spring Core & AOP",
-    "difficulty": "medium",
-    "questionText": "What is the purpose of using '@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)'?",
-    "options": [
-      "To allow the session-scoped bean to be safely injected into a singleton-scoped bean using a dynamic CGLIB proxy.",
-      "To force the session-scoped bean to be created at container startup.",
-      "To enable thread-safe execution of prototype beans.",
-      "To prevent circular dependency errors in constructors."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "When a shorter-lived bean (session scope) is injected into a longer-lived bean (singleton), standard injection happens once. A scoped proxy intercepts calls to the bean and delegates them to the current session's actual bean instance dynamically."
-  },
-  {
-    "id": "spring-gen-91",
-    "topic": "Spring Core & AOP",
-    "difficulty": "medium",
-    "questionText": "What is the purpose of using '@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)'?",
-    "options": [
-      "To allow the session-scoped bean to be safely injected into a singleton-scoped bean using a dynamic CGLIB proxy.",
-      "To force the session-scoped bean to be created at container startup.",
-      "To enable thread-safe execution of prototype beans.",
-      "To prevent circular dependency errors in constructors."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "When a shorter-lived bean (session scope) is injected into a longer-lived bean (singleton), standard injection happens once. A scoped proxy intercepts calls to the bean and delegates them to the current session's actual bean instance dynamically."
-  },
-  {
-    "id": "spring-gen-92",
-    "topic": "Spring Core & AOP",
-    "difficulty": "medium",
-    "questionText": "What is the purpose of using '@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)'?",
-    "options": [
-      "To allow the session-scoped bean to be safely injected into a singleton-scoped bean using a dynamic CGLIB proxy.",
-      "To force the session-scoped bean to be created at container startup.",
-      "To enable thread-safe execution of prototype beans.",
-      "To prevent circular dependency errors in constructors."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "When a shorter-lived bean (session scope) is injected into a longer-lived bean (singleton), standard injection happens once. A scoped proxy intercepts calls to the bean and delegates them to the current session's actual bean instance dynamically."
-  },
-  {
-    "id": "spring-gen-93",
-    "topic": "Spring Core & AOP",
-    "difficulty": "medium",
-    "questionText": "What is the purpose of using '@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)'?",
-    "options": [
-      "To allow the session-scoped bean to be safely injected into a singleton-scoped bean using a dynamic CGLIB proxy.",
-      "To force the session-scoped bean to be created at container startup.",
-      "To enable thread-safe execution of prototype beans.",
-      "To prevent circular dependency errors in constructors."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "When a shorter-lived bean (session scope) is injected into a longer-lived bean (singleton), standard injection happens once. A scoped proxy intercepts calls to the bean and delegates them to the current session's actual bean instance dynamically."
-  },
-  {
-    "id": "spring-gen-94",
-    "topic": "Spring Core & AOP",
-    "difficulty": "medium",
-    "questionText": "What is the purpose of using '@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)'?",
-    "options": [
-      "To allow the session-scoped bean to be safely injected into a singleton-scoped bean using a dynamic CGLIB proxy.",
-      "To force the session-scoped bean to be created at container startup.",
-      "To enable thread-safe execution of prototype beans.",
-      "To prevent circular dependency errors in constructors."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "When a shorter-lived bean (session scope) is injected into a longer-lived bean (singleton), standard injection happens once. A scoped proxy intercepts calls to the bean and delegates them to the current session's actual bean instance dynamically."
-  },
-  {
-    "id": "spring-gen-95",
-    "topic": "Spring Core & AOP",
-    "difficulty": "medium",
-    "questionText": "What is the purpose of using '@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)'?",
-    "options": [
-      "To allow the session-scoped bean to be safely injected into a singleton-scoped bean using a dynamic CGLIB proxy.",
-      "To force the session-scoped bean to be created at container startup.",
-      "To enable thread-safe execution of prototype beans.",
-      "To prevent circular dependency errors in constructors."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "When a shorter-lived bean (session scope) is injected into a longer-lived bean (singleton), standard injection happens once. A scoped proxy intercepts calls to the bean and delegates them to the current session's actual bean instance dynamically."
-  },
-  {
-    "id": "spring-gen-96",
-    "topic": "Spring Core & AOP",
-    "difficulty": "medium",
-    "questionText": "What is the purpose of using '@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)'?",
-    "options": [
-      "To allow the session-scoped bean to be safely injected into a singleton-scoped bean using a dynamic CGLIB proxy.",
-      "To force the session-scoped bean to be created at container startup.",
-      "To enable thread-safe execution of prototype beans.",
-      "To prevent circular dependency errors in constructors."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "When a shorter-lived bean (session scope) is injected into a longer-lived bean (singleton), standard injection happens once. A scoped proxy intercepts calls to the bean and delegates them to the current session's actual bean instance dynamically."
-  },
-  {
-    "id": "spring-gen-97",
-    "topic": "Spring Core & AOP",
-    "difficulty": "medium",
-    "questionText": "What is the purpose of using '@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)'?",
-    "options": [
-      "To allow the session-scoped bean to be safely injected into a singleton-scoped bean using a dynamic CGLIB proxy.",
-      "To force the session-scoped bean to be created at container startup.",
-      "To enable thread-safe execution of prototype beans.",
-      "To prevent circular dependency errors in constructors."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "When a shorter-lived bean (session scope) is injected into a longer-lived bean (singleton), standard injection happens once. A scoped proxy intercepts calls to the bean and delegates them to the current session's actual bean instance dynamically."
-  },
-  {
-    "id": "spring-gen-98",
-    "topic": "Spring Core & AOP",
-    "difficulty": "medium",
-    "questionText": "What is the purpose of using '@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)'?",
-    "options": [
-      "To allow the session-scoped bean to be safely injected into a singleton-scoped bean using a dynamic CGLIB proxy.",
-      "To force the session-scoped bean to be created at container startup.",
-      "To enable thread-safe execution of prototype beans.",
-      "To prevent circular dependency errors in constructors."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "When a shorter-lived bean (session scope) is injected into a longer-lived bean (singleton), standard injection happens once. A scoped proxy intercepts calls to the bean and delegates them to the current session's actual bean instance dynamically."
-  },
-  {
-    "id": "spring-gen-99",
-    "topic": "Spring Core & AOP",
-    "difficulty": "medium",
-    "questionText": "What is the purpose of using '@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)'?",
-    "options": [
-      "To allow the session-scoped bean to be safely injected into a singleton-scoped bean using a dynamic CGLIB proxy.",
-      "To force the session-scoped bean to be created at container startup.",
-      "To enable thread-safe execution of prototype beans.",
-      "To prevent circular dependency errors in constructors."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "When a shorter-lived bean (session scope) is injected into a longer-lived bean (singleton), standard injection happens once. A scoped proxy intercepts calls to the bean and delegates them to the current session's actual bean instance dynamically."
-  },
-  {
-    "id": "spring-gen-100",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default propagation behavior of Spring's '@Transactional' annotation, and what does it do?",
-    "options": [
-      "Propagation.REQUIRED: It joins the active transaction if one exists, or creates a new transaction if none exists.",
-      "Propagation.REQUIRES_NEW: It always suspends the current transaction and creates a new one.",
-      "Propagation.NESTED: It runs inside a nested transaction with a savepoint.",
-      "Propagation.SUPPORTS: It runs in a transaction only if one already exists."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "By default, @Transactional uses Propagation.REQUIRED. It ensures that a transaction context is always active, either by joining an existing transaction or starting a new one."
-  },
-  {
-    "id": "spring-gen-101",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default propagation behavior of Spring's '@Transactional' annotation, and what does it do?",
-    "options": [
-      "Propagation.REQUIRED: It joins the active transaction if one exists, or creates a new transaction if none exists.",
-      "Propagation.REQUIRES_NEW: It always suspends the current transaction and creates a new one.",
-      "Propagation.NESTED: It runs inside a nested transaction with a savepoint.",
-      "Propagation.SUPPORTS: It runs in a transaction only if one already exists."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "By default, @Transactional uses Propagation.REQUIRED. It ensures that a transaction context is always active, either by joining an existing transaction or starting a new one."
-  },
-  {
-    "id": "spring-gen-102",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default propagation behavior of Spring's '@Transactional' annotation, and what does it do?",
-    "options": [
-      "Propagation.REQUIRED: It joins the active transaction if one exists, or creates a new transaction if none exists.",
-      "Propagation.REQUIRES_NEW: It always suspends the current transaction and creates a new one.",
-      "Propagation.NESTED: It runs inside a nested transaction with a savepoint.",
-      "Propagation.SUPPORTS: It runs in a transaction only if one already exists."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "By default, @Transactional uses Propagation.REQUIRED. It ensures that a transaction context is always active, either by joining an existing transaction or starting a new one."
-  },
-  {
-    "id": "spring-gen-103",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default propagation behavior of Spring's '@Transactional' annotation, and what does it do?",
-    "options": [
-      "Propagation.REQUIRED: It joins the active transaction if one exists, or creates a new transaction if none exists.",
-      "Propagation.REQUIRES_NEW: It always suspends the current transaction and creates a new one.",
-      "Propagation.NESTED: It runs inside a nested transaction with a savepoint.",
-      "Propagation.SUPPORTS: It runs in a transaction only if one already exists."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "By default, @Transactional uses Propagation.REQUIRED. It ensures that a transaction context is always active, either by joining an existing transaction or starting a new one."
-  },
-  {
-    "id": "spring-gen-104",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default propagation behavior of Spring's '@Transactional' annotation, and what does it do?",
-    "options": [
-      "Propagation.REQUIRED: It joins the active transaction if one exists, or creates a new transaction if none exists.",
-      "Propagation.REQUIRES_NEW: It always suspends the current transaction and creates a new one.",
-      "Propagation.NESTED: It runs inside a nested transaction with a savepoint.",
-      "Propagation.SUPPORTS: It runs in a transaction only if one already exists."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "By default, @Transactional uses Propagation.REQUIRED. It ensures that a transaction context is always active, either by joining an existing transaction or starting a new one."
-  },
-  {
-    "id": "spring-gen-105",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default propagation behavior of Spring's '@Transactional' annotation, and what does it do?",
-    "options": [
-      "Propagation.REQUIRED: It joins the active transaction if one exists, or creates a new transaction if none exists.",
-      "Propagation.REQUIRES_NEW: It always suspends the current transaction and creates a new one.",
-      "Propagation.NESTED: It runs inside a nested transaction with a savepoint.",
-      "Propagation.SUPPORTS: It runs in a transaction only if one already exists."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "By default, @Transactional uses Propagation.REQUIRED. It ensures that a transaction context is always active, either by joining an existing transaction or starting a new one."
-  },
-  {
-    "id": "spring-gen-106",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default propagation behavior of Spring's '@Transactional' annotation, and what does it do?",
-    "options": [
-      "Propagation.REQUIRED: It joins the active transaction if one exists, or creates a new transaction if none exists.",
-      "Propagation.REQUIRES_NEW: It always suspends the current transaction and creates a new one.",
-      "Propagation.NESTED: It runs inside a nested transaction with a savepoint.",
-      "Propagation.SUPPORTS: It runs in a transaction only if one already exists."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "By default, @Transactional uses Propagation.REQUIRED. It ensures that a transaction context is always active, either by joining an existing transaction or starting a new one."
-  },
-  {
-    "id": "spring-gen-107",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default propagation behavior of Spring's '@Transactional' annotation, and what does it do?",
-    "options": [
-      "Propagation.REQUIRED: It joins the active transaction if one exists, or creates a new transaction if none exists.",
-      "Propagation.REQUIRES_NEW: It always suspends the current transaction and creates a new one.",
-      "Propagation.NESTED: It runs inside a nested transaction with a savepoint.",
-      "Propagation.SUPPORTS: It runs in a transaction only if one already exists."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "By default, @Transactional uses Propagation.REQUIRED. It ensures that a transaction context is always active, either by joining an existing transaction or starting a new one."
-  },
-  {
-    "id": "spring-gen-108",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default propagation behavior of Spring's '@Transactional' annotation, and what does it do?",
-    "options": [
-      "Propagation.REQUIRED: It joins the active transaction if one exists, or creates a new transaction if none exists.",
-      "Propagation.REQUIRES_NEW: It always suspends the current transaction and creates a new one.",
-      "Propagation.NESTED: It runs inside a nested transaction with a savepoint.",
-      "Propagation.SUPPORTS: It runs in a transaction only if one already exists."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "By default, @Transactional uses Propagation.REQUIRED. It ensures that a transaction context is always active, either by joining an existing transaction or starting a new one."
-  },
-  {
-    "id": "spring-gen-109",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default propagation behavior of Spring's '@Transactional' annotation, and what does it do?",
-    "options": [
-      "Propagation.REQUIRED: It joins the active transaction if one exists, or creates a new transaction if none exists.",
-      "Propagation.REQUIRES_NEW: It always suspends the current transaction and creates a new one.",
-      "Propagation.NESTED: It runs inside a nested transaction with a savepoint.",
-      "Propagation.SUPPORTS: It runs in a transaction only if one already exists."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "By default, @Transactional uses Propagation.REQUIRED. It ensures that a transaction context is always active, either by joining an existing transaction or starting a new one."
-  },
-  {
-    "id": "spring-gen-110",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default propagation behavior of Spring's '@Transactional' annotation, and what does it do?",
-    "options": [
-      "Propagation.REQUIRED: It joins the active transaction if one exists, or creates a new transaction if none exists.",
-      "Propagation.REQUIRES_NEW: It always suspends the current transaction and creates a new one.",
-      "Propagation.NESTED: It runs inside a nested transaction with a savepoint.",
-      "Propagation.SUPPORTS: It runs in a transaction only if one already exists."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "By default, @Transactional uses Propagation.REQUIRED. It ensures that a transaction context is always active, either by joining an existing transaction or starting a new one."
-  },
-  {
-    "id": "spring-gen-111",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default propagation behavior of Spring's '@Transactional' annotation, and what does it do?",
-    "options": [
-      "Propagation.REQUIRED: It joins the active transaction if one exists, or creates a new transaction if none exists.",
-      "Propagation.REQUIRES_NEW: It always suspends the current transaction and creates a new one.",
-      "Propagation.NESTED: It runs inside a nested transaction with a savepoint.",
-      "Propagation.SUPPORTS: It runs in a transaction only if one already exists."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "By default, @Transactional uses Propagation.REQUIRED. It ensures that a transaction context is always active, either by joining an existing transaction or starting a new one."
-  },
-  {
-    "id": "spring-gen-112",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default propagation behavior of Spring's '@Transactional' annotation, and what does it do?",
-    "options": [
-      "Propagation.REQUIRED: It joins the active transaction if one exists, or creates a new transaction if none exists.",
-      "Propagation.REQUIRES_NEW: It always suspends the current transaction and creates a new one.",
-      "Propagation.NESTED: It runs inside a nested transaction with a savepoint.",
-      "Propagation.SUPPORTS: It runs in a transaction only if one already exists."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "By default, @Transactional uses Propagation.REQUIRED. It ensures that a transaction context is always active, either by joining an existing transaction or starting a new one."
-  },
-  {
-    "id": "spring-gen-113",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default propagation behavior of Spring's '@Transactional' annotation, and what does it do?",
-    "options": [
-      "Propagation.REQUIRED: It joins the active transaction if one exists, or creates a new transaction if none exists.",
-      "Propagation.REQUIRES_NEW: It always suspends the current transaction and creates a new one.",
-      "Propagation.NESTED: It runs inside a nested transaction with a savepoint.",
-      "Propagation.SUPPORTS: It runs in a transaction only if one already exists."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "By default, @Transactional uses Propagation.REQUIRED. It ensures that a transaction context is always active, either by joining an existing transaction or starting a new one."
-  },
-  {
-    "id": "spring-gen-114",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default propagation behavior of Spring's '@Transactional' annotation, and what does it do?",
-    "options": [
-      "Propagation.REQUIRED: It joins the active transaction if one exists, or creates a new transaction if none exists.",
-      "Propagation.REQUIRES_NEW: It always suspends the current transaction and creates a new one.",
-      "Propagation.NESTED: It runs inside a nested transaction with a savepoint.",
-      "Propagation.SUPPORTS: It runs in a transaction only if one already exists."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "By default, @Transactional uses Propagation.REQUIRED. It ensures that a transaction context is always active, either by joining an existing transaction or starting a new one."
-  },
-  {
-    "id": "spring-gen-115",
-    "topic": "Spring Core & AOP",
-    "difficulty": "medium",
-    "questionText": "Why does Spring's '@Cacheable' or '@Transactional' annotation fail to execute when a method within a bean calls another annotated method in the same class (self-invocation)?",
-    "options": [
-      "Because Spring AOP uses proxy objects to intercept method calls; internal calls bypass the proxy and run directly on the target object.",
-      "Because Spring does not support annotations on non-public methods.",
-      "Because the JVM forbids self-invocation of annotated methods.",
-      "Because self-invocation creates infinite recursion loops that crash the context."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring's declarative services are implemented using proxies. Calling a method on a bean from the outside goes through the proxy, enabling aspects. Internal method calls (this.method()) bypass the proxy completely, executing directly on the target object."
-  },
-  {
-    "id": "spring-gen-116",
-    "topic": "Spring Core & AOP",
-    "difficulty": "medium",
-    "questionText": "Why does Spring's '@Cacheable' or '@Transactional' annotation fail to execute when a method within a bean calls another annotated method in the same class (self-invocation)?",
-    "options": [
-      "Because Spring AOP uses proxy objects to intercept method calls; internal calls bypass the proxy and run directly on the target object.",
-      "Because Spring does not support annotations on non-public methods.",
-      "Because the JVM forbids self-invocation of annotated methods.",
-      "Because self-invocation creates infinite recursion loops that crash the context."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring's declarative services are implemented using proxies. Calling a method on a bean from the outside goes through the proxy, enabling aspects. Internal method calls (this.method()) bypass the proxy completely, executing directly on the target object."
-  },
-  {
-    "id": "spring-gen-117",
-    "topic": "Spring Core & AOP",
-    "difficulty": "medium",
-    "questionText": "Why does Spring's '@Cacheable' or '@Transactional' annotation fail to execute when a method within a bean calls another annotated method in the same class (self-invocation)?",
-    "options": [
-      "Because Spring AOP uses proxy objects to intercept method calls; internal calls bypass the proxy and run directly on the target object.",
-      "Because Spring does not support annotations on non-public methods.",
-      "Because the JVM forbids self-invocation of annotated methods.",
-      "Because self-invocation creates infinite recursion loops that crash the context."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring's declarative services are implemented using proxies. Calling a method on a bean from the outside goes through the proxy, enabling aspects. Internal method calls (this.method()) bypass the proxy completely, executing directly on the target object."
-  },
-  {
-    "id": "spring-gen-118",
-    "topic": "Spring Core & AOP",
-    "difficulty": "medium",
-    "questionText": "Why does Spring's '@Cacheable' or '@Transactional' annotation fail to execute when a method within a bean calls another annotated method in the same class (self-invocation)?",
-    "options": [
-      "Because Spring AOP uses proxy objects to intercept method calls; internal calls bypass the proxy and run directly on the target object.",
-      "Because Spring does not support annotations on non-public methods.",
-      "Because the JVM forbids self-invocation of annotated methods.",
-      "Because self-invocation creates infinite recursion loops that crash the context."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring's declarative services are implemented using proxies. Calling a method on a bean from the outside goes through the proxy, enabling aspects. Internal method calls (this.method()) bypass the proxy completely, executing directly on the target object."
-  },
-  {
-    "id": "spring-gen-119",
-    "topic": "Spring Core & AOP",
-    "difficulty": "medium",
-    "questionText": "Why does Spring's '@Cacheable' or '@Transactional' annotation fail to execute when a method within a bean calls another annotated method in the same class (self-invocation)?",
-    "options": [
-      "Because Spring AOP uses proxy objects to intercept method calls; internal calls bypass the proxy and run directly on the target object.",
-      "Because Spring does not support annotations on non-public methods.",
-      "Because the JVM forbids self-invocation of annotated methods.",
-      "Because self-invocation creates infinite recursion loops that crash the context."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring's declarative services are implemented using proxies. Calling a method on a bean from the outside goes through the proxy, enabling aspects. Internal method calls (this.method()) bypass the proxy completely, executing directly on the target object."
-  },
-  {
-    "id": "spring-gen-120",
-    "topic": "Spring Core & AOP",
-    "difficulty": "medium",
-    "questionText": "Why does Spring's '@Cacheable' or '@Transactional' annotation fail to execute when a method within a bean calls another annotated method in the same class (self-invocation)?",
-    "options": [
-      "Because Spring AOP uses proxy objects to intercept method calls; internal calls bypass the proxy and run directly on the target object.",
-      "Because Spring does not support annotations on non-public methods.",
-      "Because the JVM forbids self-invocation of annotated methods.",
-      "Because self-invocation creates infinite recursion loops that crash the context."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring's declarative services are implemented using proxies. Calling a method on a bean from the outside goes through the proxy, enabling aspects. Internal method calls (this.method()) bypass the proxy completely, executing directly on the target object."
-  },
-  {
-    "id": "spring-gen-121",
-    "topic": "Spring Core & AOP",
-    "difficulty": "medium",
-    "questionText": "Why does Spring's '@Cacheable' or '@Transactional' annotation fail to execute when a method within a bean calls another annotated method in the same class (self-invocation)?",
-    "options": [
-      "Because Spring AOP uses proxy objects to intercept method calls; internal calls bypass the proxy and run directly on the target object.",
-      "Because Spring does not support annotations on non-public methods.",
-      "Because the JVM forbids self-invocation of annotated methods.",
-      "Because self-invocation creates infinite recursion loops that crash the context."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring's declarative services are implemented using proxies. Calling a method on a bean from the outside goes through the proxy, enabling aspects. Internal method calls (this.method()) bypass the proxy completely, executing directly on the target object."
-  },
-  {
-    "id": "spring-gen-122",
-    "topic": "Spring Core & AOP",
-    "difficulty": "medium",
-    "questionText": "Why does Spring's '@Cacheable' or '@Transactional' annotation fail to execute when a method within a bean calls another annotated method in the same class (self-invocation)?",
-    "options": [
-      "Because Spring AOP uses proxy objects to intercept method calls; internal calls bypass the proxy and run directly on the target object.",
-      "Because Spring does not support annotations on non-public methods.",
-      "Because the JVM forbids self-invocation of annotated methods.",
-      "Because self-invocation creates infinite recursion loops that crash the context."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring's declarative services are implemented using proxies. Calling a method on a bean from the outside goes through the proxy, enabling aspects. Internal method calls (this.method()) bypass the proxy completely, executing directly on the target object."
-  },
-  {
-    "id": "spring-gen-123",
-    "topic": "Spring Core & AOP",
-    "difficulty": "medium",
-    "questionText": "Why does Spring's '@Cacheable' or '@Transactional' annotation fail to execute when a method within a bean calls another annotated method in the same class (self-invocation)?",
-    "options": [
-      "Because Spring AOP uses proxy objects to intercept method calls; internal calls bypass the proxy and run directly on the target object.",
-      "Because Spring does not support annotations on non-public methods.",
-      "Because the JVM forbids self-invocation of annotated methods.",
-      "Because self-invocation creates infinite recursion loops that crash the context."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring's declarative services are implemented using proxies. Calling a method on a bean from the outside goes through the proxy, enabling aspects. Internal method calls (this.method()) bypass the proxy completely, executing directly on the target object."
-  },
-  {
-    "id": "spring-gen-124",
-    "topic": "Spring Core & AOP",
-    "difficulty": "medium",
-    "questionText": "Why does Spring's '@Cacheable' or '@Transactional' annotation fail to execute when a method within a bean calls another annotated method in the same class (self-invocation)?",
-    "options": [
-      "Because Spring AOP uses proxy objects to intercept method calls; internal calls bypass the proxy and run directly on the target object.",
-      "Because Spring does not support annotations on non-public methods.",
-      "Because the JVM forbids self-invocation of annotated methods.",
-      "Because self-invocation creates infinite recursion loops that crash the context."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring's declarative services are implemented using proxies. Calling a method on a bean from the outside goes through the proxy, enabling aspects. Internal method calls (this.method()) bypass the proxy completely, executing directly on the target object."
-  },
-  {
-    "id": "spring-gen-125",
-    "topic": "Spring Core & AOP",
-    "difficulty": "medium",
-    "questionText": "Why does Spring's '@Cacheable' or '@Transactional' annotation fail to execute when a method within a bean calls another annotated method in the same class (self-invocation)?",
-    "options": [
-      "Because Spring AOP uses proxy objects to intercept method calls; internal calls bypass the proxy and run directly on the target object.",
-      "Because Spring does not support annotations on non-public methods.",
-      "Because the JVM forbids self-invocation of annotated methods.",
-      "Because self-invocation creates infinite recursion loops that crash the context."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring's declarative services are implemented using proxies. Calling a method on a bean from the outside goes through the proxy, enabling aspects. Internal method calls (this.method()) bypass the proxy completely, executing directly on the target object."
-  },
-  {
-    "id": "spring-gen-126",
-    "topic": "Spring Core & AOP",
-    "difficulty": "medium",
-    "questionText": "Why does Spring's '@Cacheable' or '@Transactional' annotation fail to execute when a method within a bean calls another annotated method in the same class (self-invocation)?",
-    "options": [
-      "Because Spring AOP uses proxy objects to intercept method calls; internal calls bypass the proxy and run directly on the target object.",
-      "Because Spring does not support annotations on non-public methods.",
-      "Because the JVM forbids self-invocation of annotated methods.",
-      "Because self-invocation creates infinite recursion loops that crash the context."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring's declarative services are implemented using proxies. Calling a method on a bean from the outside goes through the proxy, enabling aspects. Internal method calls (this.method()) bypass the proxy completely, executing directly on the target object."
-  },
-  {
-    "id": "spring-gen-127",
-    "topic": "Spring Core & AOP",
-    "difficulty": "medium",
-    "questionText": "Why does Spring's '@Cacheable' or '@Transactional' annotation fail to execute when a method within a bean calls another annotated method in the same class (self-invocation)?",
-    "options": [
-      "Because Spring AOP uses proxy objects to intercept method calls; internal calls bypass the proxy and run directly on the target object.",
-      "Because Spring does not support annotations on non-public methods.",
-      "Because the JVM forbids self-invocation of annotated methods.",
-      "Because self-invocation creates infinite recursion loops that crash the context."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring's declarative services are implemented using proxies. Calling a method on a bean from the outside goes through the proxy, enabling aspects. Internal method calls (this.method()) bypass the proxy completely, executing directly on the target object."
-  },
-  {
-    "id": "spring-gen-128",
-    "topic": "Spring Core & AOP",
-    "difficulty": "medium",
-    "questionText": "Why does Spring's '@Cacheable' or '@Transactional' annotation fail to execute when a method within a bean calls another annotated method in the same class (self-invocation)?",
-    "options": [
-      "Because Spring AOP uses proxy objects to intercept method calls; internal calls bypass the proxy and run directly on the target object.",
-      "Because Spring does not support annotations on non-public methods.",
-      "Because the JVM forbids self-invocation of annotated methods.",
-      "Because self-invocation creates infinite recursion loops that crash the context."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring's declarative services are implemented using proxies. Calling a method on a bean from the outside goes through the proxy, enabling aspects. Internal method calls (this.method()) bypass the proxy completely, executing directly on the target object."
-  },
-  {
-    "id": "spring-gen-129",
-    "topic": "Spring Core & AOP",
-    "difficulty": "medium",
-    "questionText": "Why does Spring's '@Cacheable' or '@Transactional' annotation fail to execute when a method within a bean calls another annotated method in the same class (self-invocation)?",
-    "options": [
-      "Because Spring AOP uses proxy objects to intercept method calls; internal calls bypass the proxy and run directly on the target object.",
-      "Because Spring does not support annotations on non-public methods.",
-      "Because the JVM forbids self-invocation of annotated methods.",
-      "Because self-invocation creates infinite recursion loops that crash the context."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring's declarative services are implemented using proxies. Calling a method on a bean from the outside goes through the proxy, enabling aspects. Internal method calls (this.method()) bypass the proxy completely, executing directly on the target object."
-  },
-  {
-    "id": "spring-gen-130",
-    "topic": "Spring Boot Internals",
-    "difficulty": "medium",
-    "questionText": "Which Spring Boot Actuator endpoint exposes detailed configuration information, showing all registered Beans and their dependencies?",
-    "options": [
-      "/actuator/beans",
-      "/actuator/env",
-      "/actuator/configprops",
-      "/actuator/mappings"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The '/beans' endpoint exposes a complete list of all Spring Beans in the ApplicationContext, including their scope, type, and dependency injections."
-  },
-  {
-    "id": "spring-gen-131",
-    "topic": "Spring Boot Internals",
-    "difficulty": "medium",
-    "questionText": "Which Spring Boot Actuator endpoint exposes detailed configuration information, showing all registered Beans and their dependencies?",
-    "options": [
-      "/actuator/beans",
-      "/actuator/env",
-      "/actuator/configprops",
-      "/actuator/mappings"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The '/beans' endpoint exposes a complete list of all Spring Beans in the ApplicationContext, including their scope, type, and dependency injections."
-  },
-  {
-    "id": "spring-gen-132",
-    "topic": "Spring Boot Internals",
-    "difficulty": "medium",
-    "questionText": "Which Spring Boot Actuator endpoint exposes detailed configuration information, showing all registered Beans and their dependencies?",
-    "options": [
-      "/actuator/beans",
-      "/actuator/env",
-      "/actuator/configprops",
-      "/actuator/mappings"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The '/beans' endpoint exposes a complete list of all Spring Beans in the ApplicationContext, including their scope, type, and dependency injections."
-  },
-  {
-    "id": "spring-gen-133",
-    "topic": "Spring Boot Internals",
-    "difficulty": "medium",
-    "questionText": "Which Spring Boot Actuator endpoint exposes detailed configuration information, showing all registered Beans and their dependencies?",
-    "options": [
-      "/actuator/beans",
-      "/actuator/env",
-      "/actuator/configprops",
-      "/actuator/mappings"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The '/beans' endpoint exposes a complete list of all Spring Beans in the ApplicationContext, including their scope, type, and dependency injections."
-  },
-  {
-    "id": "spring-gen-134",
-    "topic": "Spring Boot Internals",
-    "difficulty": "medium",
-    "questionText": "Which Spring Boot Actuator endpoint exposes detailed configuration information, showing all registered Beans and their dependencies?",
-    "options": [
-      "/actuator/beans",
-      "/actuator/env",
-      "/actuator/configprops",
-      "/actuator/mappings"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The '/beans' endpoint exposes a complete list of all Spring Beans in the ApplicationContext, including their scope, type, and dependency injections."
-  },
-  {
-    "id": "spring-gen-135",
-    "topic": "Spring Boot Internals",
-    "difficulty": "medium",
-    "questionText": "Which Spring Boot Actuator endpoint exposes detailed configuration information, showing all registered Beans and their dependencies?",
-    "options": [
-      "/actuator/beans",
-      "/actuator/env",
-      "/actuator/configprops",
-      "/actuator/mappings"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The '/beans' endpoint exposes a complete list of all Spring Beans in the ApplicationContext, including their scope, type, and dependency injections."
-  },
-  {
-    "id": "spring-gen-136",
-    "topic": "Spring Boot Internals",
-    "difficulty": "medium",
-    "questionText": "Which Spring Boot Actuator endpoint exposes detailed configuration information, showing all registered Beans and their dependencies?",
-    "options": [
-      "/actuator/beans",
-      "/actuator/env",
-      "/actuator/configprops",
-      "/actuator/mappings"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The '/beans' endpoint exposes a complete list of all Spring Beans in the ApplicationContext, including their scope, type, and dependency injections."
-  },
-  {
-    "id": "spring-gen-137",
-    "topic": "Spring Boot Internals",
-    "difficulty": "medium",
-    "questionText": "Which Spring Boot Actuator endpoint exposes detailed configuration information, showing all registered Beans and their dependencies?",
-    "options": [
-      "/actuator/beans",
-      "/actuator/env",
-      "/actuator/configprops",
-      "/actuator/mappings"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The '/beans' endpoint exposes a complete list of all Spring Beans in the ApplicationContext, including their scope, type, and dependency injections."
-  },
-  {
-    "id": "spring-gen-138",
-    "topic": "Spring Boot Internals",
-    "difficulty": "medium",
-    "questionText": "Which Spring Boot Actuator endpoint exposes detailed configuration information, showing all registered Beans and their dependencies?",
-    "options": [
-      "/actuator/beans",
-      "/actuator/env",
-      "/actuator/configprops",
-      "/actuator/mappings"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The '/beans' endpoint exposes a complete list of all Spring Beans in the ApplicationContext, including their scope, type, and dependency injections."
-  },
-  {
-    "id": "spring-gen-139",
-    "topic": "Spring Boot Internals",
-    "difficulty": "medium",
-    "questionText": "Which Spring Boot Actuator endpoint exposes detailed configuration information, showing all registered Beans and their dependencies?",
-    "options": [
-      "/actuator/beans",
-      "/actuator/env",
-      "/actuator/configprops",
-      "/actuator/mappings"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The '/beans' endpoint exposes a complete list of all Spring Beans in the ApplicationContext, including their scope, type, and dependency injections."
-  },
-  {
-    "id": "spring-gen-140",
-    "topic": "Spring Boot Internals",
-    "difficulty": "medium",
-    "questionText": "Which Spring Boot Actuator endpoint exposes detailed configuration information, showing all registered Beans and their dependencies?",
-    "options": [
-      "/actuator/beans",
-      "/actuator/env",
-      "/actuator/configprops",
-      "/actuator/mappings"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The '/beans' endpoint exposes a complete list of all Spring Beans in the ApplicationContext, including their scope, type, and dependency injections."
-  },
-  {
-    "id": "spring-gen-141",
-    "topic": "Spring Boot Internals",
-    "difficulty": "medium",
-    "questionText": "Which Spring Boot Actuator endpoint exposes detailed configuration information, showing all registered Beans and their dependencies?",
-    "options": [
-      "/actuator/beans",
-      "/actuator/env",
-      "/actuator/configprops",
-      "/actuator/mappings"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The '/beans' endpoint exposes a complete list of all Spring Beans in the ApplicationContext, including their scope, type, and dependency injections."
-  },
-  {
-    "id": "spring-gen-142",
-    "topic": "Spring Boot Internals",
-    "difficulty": "medium",
-    "questionText": "Which Spring Boot Actuator endpoint exposes detailed configuration information, showing all registered Beans and their dependencies?",
-    "options": [
-      "/actuator/beans",
-      "/actuator/env",
-      "/actuator/configprops",
-      "/actuator/mappings"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The '/beans' endpoint exposes a complete list of all Spring Beans in the ApplicationContext, including their scope, type, and dependency injections."
-  },
-  {
-    "id": "spring-gen-143",
-    "topic": "Spring Boot Internals",
-    "difficulty": "medium",
-    "questionText": "Which Spring Boot Actuator endpoint exposes detailed configuration information, showing all registered Beans and their dependencies?",
-    "options": [
-      "/actuator/beans",
-      "/actuator/env",
-      "/actuator/configprops",
-      "/actuator/mappings"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The '/beans' endpoint exposes a complete list of all Spring Beans in the ApplicationContext, including their scope, type, and dependency injections."
-  },
-  {
-    "id": "spring-gen-144",
-    "topic": "Spring Boot Internals",
-    "difficulty": "medium",
-    "questionText": "Which Spring Boot Actuator endpoint exposes detailed configuration information, showing all registered Beans and their dependencies?",
-    "options": [
-      "/actuator/beans",
-      "/actuator/env",
-      "/actuator/configprops",
-      "/actuator/mappings"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The '/beans' endpoint exposes a complete list of all Spring Beans in the ApplicationContext, including their scope, type, and dependency injections."
-  },
-  {
-    "id": "spring-gen-145",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default fetch type for '@OneToMany' and '@ManyToMany' associations in JPA/Hibernate?",
-    "options": [
-      "FetchType.LAZY",
-      "FetchType.EAGER",
-      "FetchType.DEFAULT (depends on primary key)",
-      "It throws an exception unless explicitly specified"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "In JPA, collection-valued associations (@OneToMany and @ManyToMany) default to FetchType.LAZY to prevent pulling large amounts of data from the database unnecessarily."
-  },
-  {
-    "id": "spring-gen-146",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default fetch type for '@OneToMany' and '@ManyToMany' associations in JPA/Hibernate?",
-    "options": [
-      "FetchType.LAZY",
-      "FetchType.EAGER",
-      "FetchType.DEFAULT (depends on primary key)",
-      "It throws an exception unless explicitly specified"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "In JPA, collection-valued associations (@OneToMany and @ManyToMany) default to FetchType.LAZY to prevent pulling large amounts of data from the database unnecessarily."
-  },
-  {
-    "id": "spring-gen-147",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default fetch type for '@OneToMany' and '@ManyToMany' associations in JPA/Hibernate?",
-    "options": [
-      "FetchType.LAZY",
-      "FetchType.EAGER",
-      "FetchType.DEFAULT (depends on primary key)",
-      "It throws an exception unless explicitly specified"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "In JPA, collection-valued associations (@OneToMany and @ManyToMany) default to FetchType.LAZY to prevent pulling large amounts of data from the database unnecessarily."
-  },
-  {
-    "id": "spring-gen-148",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default fetch type for '@OneToMany' and '@ManyToMany' associations in JPA/Hibernate?",
-    "options": [
-      "FetchType.LAZY",
-      "FetchType.EAGER",
-      "FetchType.DEFAULT (depends on primary key)",
-      "It throws an exception unless explicitly specified"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "In JPA, collection-valued associations (@OneToMany and @ManyToMany) default to FetchType.LAZY to prevent pulling large amounts of data from the database unnecessarily."
-  },
-  {
-    "id": "spring-gen-149",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default fetch type for '@OneToMany' and '@ManyToMany' associations in JPA/Hibernate?",
-    "options": [
-      "FetchType.LAZY",
-      "FetchType.EAGER",
-      "FetchType.DEFAULT (depends on primary key)",
-      "It throws an exception unless explicitly specified"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "In JPA, collection-valued associations (@OneToMany and @ManyToMany) default to FetchType.LAZY to prevent pulling large amounts of data from the database unnecessarily."
-  },
-  {
-    "id": "spring-gen-150",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default fetch type for '@OneToMany' and '@ManyToMany' associations in JPA/Hibernate?",
-    "options": [
-      "FetchType.LAZY",
-      "FetchType.EAGER",
-      "FetchType.DEFAULT (depends on primary key)",
-      "It throws an exception unless explicitly specified"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "In JPA, collection-valued associations (@OneToMany and @ManyToMany) default to FetchType.LAZY to prevent pulling large amounts of data from the database unnecessarily."
-  },
-  {
-    "id": "spring-gen-151",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default fetch type for '@OneToMany' and '@ManyToMany' associations in JPA/Hibernate?",
-    "options": [
-      "FetchType.LAZY",
-      "FetchType.EAGER",
-      "FetchType.DEFAULT (depends on primary key)",
-      "It throws an exception unless explicitly specified"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "In JPA, collection-valued associations (@OneToMany and @ManyToMany) default to FetchType.LAZY to prevent pulling large amounts of data from the database unnecessarily."
-  },
-  {
-    "id": "spring-gen-152",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default fetch type for '@OneToMany' and '@ManyToMany' associations in JPA/Hibernate?",
-    "options": [
-      "FetchType.LAZY",
-      "FetchType.EAGER",
-      "FetchType.DEFAULT (depends on primary key)",
-      "It throws an exception unless explicitly specified"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "In JPA, collection-valued associations (@OneToMany and @ManyToMany) default to FetchType.LAZY to prevent pulling large amounts of data from the database unnecessarily."
-  },
-  {
-    "id": "spring-gen-153",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default fetch type for '@OneToMany' and '@ManyToMany' associations in JPA/Hibernate?",
-    "options": [
-      "FetchType.LAZY",
-      "FetchType.EAGER",
-      "FetchType.DEFAULT (depends on primary key)",
-      "It throws an exception unless explicitly specified"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "In JPA, collection-valued associations (@OneToMany and @ManyToMany) default to FetchType.LAZY to prevent pulling large amounts of data from the database unnecessarily."
-  },
-  {
-    "id": "spring-gen-154",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default fetch type for '@OneToMany' and '@ManyToMany' associations in JPA/Hibernate?",
-    "options": [
-      "FetchType.LAZY",
-      "FetchType.EAGER",
-      "FetchType.DEFAULT (depends on primary key)",
-      "It throws an exception unless explicitly specified"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "In JPA, collection-valued associations (@OneToMany and @ManyToMany) default to FetchType.LAZY to prevent pulling large amounts of data from the database unnecessarily."
-  },
-  {
-    "id": "spring-gen-155",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default fetch type for '@OneToMany' and '@ManyToMany' associations in JPA/Hibernate?",
-    "options": [
-      "FetchType.LAZY",
-      "FetchType.EAGER",
-      "FetchType.DEFAULT (depends on primary key)",
-      "It throws an exception unless explicitly specified"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "In JPA, collection-valued associations (@OneToMany and @ManyToMany) default to FetchType.LAZY to prevent pulling large amounts of data from the database unnecessarily."
-  },
-  {
-    "id": "spring-gen-156",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default fetch type for '@OneToMany' and '@ManyToMany' associations in JPA/Hibernate?",
-    "options": [
-      "FetchType.LAZY",
-      "FetchType.EAGER",
-      "FetchType.DEFAULT (depends on primary key)",
-      "It throws an exception unless explicitly specified"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "In JPA, collection-valued associations (@OneToMany and @ManyToMany) default to FetchType.LAZY to prevent pulling large amounts of data from the database unnecessarily."
-  },
-  {
-    "id": "spring-gen-157",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default fetch type for '@OneToMany' and '@ManyToMany' associations in JPA/Hibernate?",
-    "options": [
-      "FetchType.LAZY",
-      "FetchType.EAGER",
-      "FetchType.DEFAULT (depends on primary key)",
-      "It throws an exception unless explicitly specified"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "In JPA, collection-valued associations (@OneToMany and @ManyToMany) default to FetchType.LAZY to prevent pulling large amounts of data from the database unnecessarily."
-  },
-  {
-    "id": "spring-gen-158",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default fetch type for '@OneToMany' and '@ManyToMany' associations in JPA/Hibernate?",
-    "options": [
-      "FetchType.LAZY",
-      "FetchType.EAGER",
-      "FetchType.DEFAULT (depends on primary key)",
-      "It throws an exception unless explicitly specified"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "In JPA, collection-valued associations (@OneToMany and @ManyToMany) default to FetchType.LAZY to prevent pulling large amounts of data from the database unnecessarily."
-  },
-  {
-    "id": "spring-gen-159",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default fetch type for '@OneToMany' and '@ManyToMany' associations in JPA/Hibernate?",
-    "options": [
-      "FetchType.LAZY",
-      "FetchType.EAGER",
-      "FetchType.DEFAULT (depends on primary key)",
-      "It throws an exception unless explicitly specified"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "In JPA, collection-valued associations (@OneToMany and @ManyToMany) default to FetchType.LAZY to prevent pulling large amounts of data from the database unnecessarily."
-  },
-  {
-    "id": "spring-gen-160",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default fetch type for '@OneToMany' and '@ManyToMany' associations in JPA/Hibernate?",
-    "options": [
-      "FetchType.LAZY",
-      "FetchType.EAGER",
-      "FetchType.DEFAULT (depends on primary key)",
-      "It throws an exception unless explicitly specified"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "In JPA, collection-valued associations (@OneToMany and @ManyToMany) default to FetchType.LAZY to prevent pulling large amounts of data from the database unnecessarily."
-  },
-  {
-    "id": "spring-gen-161",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default fetch type for '@OneToMany' and '@ManyToMany' associations in JPA/Hibernate?",
-    "options": [
-      "FetchType.LAZY",
-      "FetchType.EAGER",
-      "FetchType.DEFAULT (depends on primary key)",
-      "It throws an exception unless explicitly specified"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "In JPA, collection-valued associations (@OneToMany and @ManyToMany) default to FetchType.LAZY to prevent pulling large amounts of data from the database unnecessarily."
-  },
-  {
-    "id": "spring-gen-162",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default fetch type for '@OneToMany' and '@ManyToMany' associations in JPA/Hibernate?",
-    "options": [
-      "FetchType.LAZY",
-      "FetchType.EAGER",
-      "FetchType.DEFAULT (depends on primary key)",
-      "It throws an exception unless explicitly specified"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "In JPA, collection-valued associations (@OneToMany and @ManyToMany) default to FetchType.LAZY to prevent pulling large amounts of data from the database unnecessarily."
-  },
-  {
-    "id": "spring-gen-163",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default fetch type for '@OneToMany' and '@ManyToMany' associations in JPA/Hibernate?",
-    "options": [
-      "FetchType.LAZY",
-      "FetchType.EAGER",
-      "FetchType.DEFAULT (depends on primary key)",
-      "It throws an exception unless explicitly specified"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "In JPA, collection-valued associations (@OneToMany and @ManyToMany) default to FetchType.LAZY to prevent pulling large amounts of data from the database unnecessarily."
-  },
-  {
-    "id": "spring-gen-164",
-    "topic": "Spring Data JPA",
-    "difficulty": "medium",
-    "questionText": "What is the default fetch type for '@OneToMany' and '@ManyToMany' associations in JPA/Hibernate?",
-    "options": [
-      "FetchType.LAZY",
-      "FetchType.EAGER",
-      "FetchType.DEFAULT (depends on primary key)",
-      "It throws an exception unless explicitly specified"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "In JPA, collection-valued associations (@OneToMany and @ManyToMany) default to FetchType.LAZY to prevent pulling large amounts of data from the database unnecessarily."
-  },
-  {
-    "id": "spring-gen-165",
-    "topic": "Spring MVC",
-    "difficulty": "medium",
-    "questionText": "Which annotation is used inside a '@ControllerAdvice' class to handle a specific exception and return a custom response?",
-    "options": [
-      "@ExceptionHandler",
-      "@ResponseStatus",
-      "@CatchException",
-      "@ErrorMapping"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ExceptionHandler is used within controllers or global advice classes to map method handlers to specific exception classes."
-  },
-  {
-    "id": "spring-gen-166",
-    "topic": "Spring MVC",
-    "difficulty": "medium",
-    "questionText": "Which annotation is used inside a '@ControllerAdvice' class to handle a specific exception and return a custom response?",
-    "options": [
-      "@ExceptionHandler",
-      "@ResponseStatus",
-      "@CatchException",
-      "@ErrorMapping"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ExceptionHandler is used within controllers or global advice classes to map method handlers to specific exception classes."
-  },
-  {
-    "id": "spring-gen-167",
-    "topic": "Spring MVC",
-    "difficulty": "medium",
-    "questionText": "Which annotation is used inside a '@ControllerAdvice' class to handle a specific exception and return a custom response?",
-    "options": [
-      "@ExceptionHandler",
-      "@ResponseStatus",
-      "@CatchException",
-      "@ErrorMapping"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ExceptionHandler is used within controllers or global advice classes to map method handlers to specific exception classes."
-  },
-  {
-    "id": "spring-gen-168",
-    "topic": "Spring MVC",
-    "difficulty": "medium",
-    "questionText": "Which annotation is used inside a '@ControllerAdvice' class to handle a specific exception and return a custom response?",
-    "options": [
-      "@ExceptionHandler",
-      "@ResponseStatus",
-      "@CatchException",
-      "@ErrorMapping"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ExceptionHandler is used within controllers or global advice classes to map method handlers to specific exception classes."
-  },
-  {
-    "id": "spring-gen-169",
-    "topic": "Spring MVC",
-    "difficulty": "medium",
-    "questionText": "Which annotation is used inside a '@ControllerAdvice' class to handle a specific exception and return a custom response?",
-    "options": [
-      "@ExceptionHandler",
-      "@ResponseStatus",
-      "@CatchException",
-      "@ErrorMapping"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ExceptionHandler is used within controllers or global advice classes to map method handlers to specific exception classes."
-  },
-  {
-    "id": "spring-gen-170",
-    "topic": "Spring MVC",
-    "difficulty": "medium",
-    "questionText": "Which annotation is used inside a '@ControllerAdvice' class to handle a specific exception and return a custom response?",
-    "options": [
-      "@ExceptionHandler",
-      "@ResponseStatus",
-      "@CatchException",
-      "@ErrorMapping"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ExceptionHandler is used within controllers or global advice classes to map method handlers to specific exception classes."
-  },
-  {
-    "id": "spring-gen-171",
-    "topic": "Spring MVC",
-    "difficulty": "medium",
-    "questionText": "Which annotation is used inside a '@ControllerAdvice' class to handle a specific exception and return a custom response?",
-    "options": [
-      "@ExceptionHandler",
-      "@ResponseStatus",
-      "@CatchException",
-      "@ErrorMapping"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ExceptionHandler is used within controllers or global advice classes to map method handlers to specific exception classes."
-  },
-  {
-    "id": "spring-gen-172",
-    "topic": "Spring MVC",
-    "difficulty": "medium",
-    "questionText": "Which annotation is used inside a '@ControllerAdvice' class to handle a specific exception and return a custom response?",
-    "options": [
-      "@ExceptionHandler",
-      "@ResponseStatus",
-      "@CatchException",
-      "@ErrorMapping"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ExceptionHandler is used within controllers or global advice classes to map method handlers to specific exception classes."
-  },
-  {
-    "id": "spring-gen-173",
-    "topic": "Spring MVC",
-    "difficulty": "medium",
-    "questionText": "Which annotation is used inside a '@ControllerAdvice' class to handle a specific exception and return a custom response?",
-    "options": [
-      "@ExceptionHandler",
-      "@ResponseStatus",
-      "@CatchException",
-      "@ErrorMapping"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ExceptionHandler is used within controllers or global advice classes to map method handlers to specific exception classes."
-  },
-  {
-    "id": "spring-gen-174",
-    "topic": "Spring MVC",
-    "difficulty": "medium",
-    "questionText": "Which annotation is used inside a '@ControllerAdvice' class to handle a specific exception and return a custom response?",
-    "options": [
-      "@ExceptionHandler",
-      "@ResponseStatus",
-      "@CatchException",
-      "@ErrorMapping"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ExceptionHandler is used within controllers or global advice classes to map method handlers to specific exception classes."
-  },
-  {
-    "id": "spring-gen-175",
-    "topic": "Spring MVC",
-    "difficulty": "medium",
-    "questionText": "Which annotation is used inside a '@ControllerAdvice' class to handle a specific exception and return a custom response?",
-    "options": [
-      "@ExceptionHandler",
-      "@ResponseStatus",
-      "@CatchException",
-      "@ErrorMapping"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ExceptionHandler is used within controllers or global advice classes to map method handlers to specific exception classes."
-  },
-  {
-    "id": "spring-gen-176",
-    "topic": "Spring MVC",
-    "difficulty": "medium",
-    "questionText": "Which annotation is used inside a '@ControllerAdvice' class to handle a specific exception and return a custom response?",
-    "options": [
-      "@ExceptionHandler",
-      "@ResponseStatus",
-      "@CatchException",
-      "@ErrorMapping"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ExceptionHandler is used within controllers or global advice classes to map method handlers to specific exception classes."
-  },
-  {
-    "id": "spring-gen-177",
-    "topic": "Spring MVC",
-    "difficulty": "medium",
-    "questionText": "Which annotation is used inside a '@ControllerAdvice' class to handle a specific exception and return a custom response?",
-    "options": [
-      "@ExceptionHandler",
-      "@ResponseStatus",
-      "@CatchException",
-      "@ErrorMapping"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ExceptionHandler is used within controllers or global advice classes to map method handlers to specific exception classes."
-  },
-  {
-    "id": "spring-gen-178",
-    "topic": "Spring MVC",
-    "difficulty": "medium",
-    "questionText": "Which annotation is used inside a '@ControllerAdvice' class to handle a specific exception and return a custom response?",
-    "options": [
-      "@ExceptionHandler",
-      "@ResponseStatus",
-      "@CatchException",
-      "@ErrorMapping"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ExceptionHandler is used within controllers or global advice classes to map method handlers to specific exception classes."
-  },
-  {
-    "id": "spring-gen-179",
-    "topic": "Spring MVC",
-    "difficulty": "medium",
-    "questionText": "Which annotation is used inside a '@ControllerAdvice' class to handle a specific exception and return a custom response?",
-    "options": [
-      "@ExceptionHandler",
-      "@ResponseStatus",
-      "@CatchException",
-      "@ErrorMapping"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ExceptionHandler is used within controllers or global advice classes to map method handlers to specific exception classes."
-  },
-  {
-    "id": "spring-gen-180",
-    "topic": "Spring MVC",
-    "difficulty": "medium",
-    "questionText": "Which annotation is used inside a '@ControllerAdvice' class to handle a specific exception and return a custom response?",
-    "options": [
-      "@ExceptionHandler",
-      "@ResponseStatus",
-      "@CatchException",
-      "@ErrorMapping"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ExceptionHandler is used within controllers or global advice classes to map method handlers to specific exception classes."
-  },
-  {
-    "id": "spring-gen-181",
-    "topic": "Spring MVC",
-    "difficulty": "medium",
-    "questionText": "Which annotation is used inside a '@ControllerAdvice' class to handle a specific exception and return a custom response?",
-    "options": [
-      "@ExceptionHandler",
-      "@ResponseStatus",
-      "@CatchException",
-      "@ErrorMapping"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ExceptionHandler is used within controllers or global advice classes to map method handlers to specific exception classes."
-  },
-  {
-    "id": "spring-gen-182",
-    "topic": "Spring MVC",
-    "difficulty": "medium",
-    "questionText": "Which annotation is used inside a '@ControllerAdvice' class to handle a specific exception and return a custom response?",
-    "options": [
-      "@ExceptionHandler",
-      "@ResponseStatus",
-      "@CatchException",
-      "@ErrorMapping"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ExceptionHandler is used within controllers or global advice classes to map method handlers to specific exception classes."
-  },
-  {
-    "id": "spring-gen-183",
-    "topic": "Spring MVC",
-    "difficulty": "medium",
-    "questionText": "Which annotation is used inside a '@ControllerAdvice' class to handle a specific exception and return a custom response?",
-    "options": [
-      "@ExceptionHandler",
-      "@ResponseStatus",
-      "@CatchException",
-      "@ErrorMapping"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ExceptionHandler is used within controllers or global advice classes to map method handlers to specific exception classes."
-  },
-  {
-    "id": "spring-gen-184",
-    "topic": "Spring MVC",
-    "difficulty": "medium",
-    "questionText": "Which annotation is used inside a '@ControllerAdvice' class to handle a specific exception and return a custom response?",
-    "options": [
-      "@ExceptionHandler",
-      "@ResponseStatus",
-      "@CatchException",
-      "@ErrorMapping"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ExceptionHandler is used within controllers or global advice classes to map method handlers to specific exception classes."
-  },
-  {
-    "id": "spring-gen-185",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "How can you resolve the transactional self-invocation bypass problem where an internal method call in a Bean ignores '@Transactional'?",
-    "options": [
-      "By injecting the bean into itself (self-injection) via @Autowired or by fetching the proxy via AopContext.currentProxy().",
-      "By changing the method modifier to 'private'.",
-      "By changing the bean scope to prototype.",
-      "By removing the @Transactional annotation from the helper method."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "To resolve self-invocation bypass, you can inject the bean instance into itself (e.g. self-autowiring) and call the method on the injected reference, or enable AspectJ compile/load-time weaving instead of Spring's default proxy AOP."
-  },
-  {
-    "id": "spring-gen-186",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "How can you resolve the transactional self-invocation bypass problem where an internal method call in a Bean ignores '@Transactional'?",
-    "options": [
-      "By injecting the bean into itself (self-injection) via @Autowired or by fetching the proxy via AopContext.currentProxy().",
-      "By changing the method modifier to 'private'.",
-      "By changing the bean scope to prototype.",
-      "By removing the @Transactional annotation from the helper method."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "To resolve self-invocation bypass, you can inject the bean instance into itself (e.g. self-autowiring) and call the method on the injected reference, or enable AspectJ compile/load-time weaving instead of Spring's default proxy AOP."
-  },
-  {
-    "id": "spring-gen-187",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "How can you resolve the transactional self-invocation bypass problem where an internal method call in a Bean ignores '@Transactional'?",
-    "options": [
-      "By injecting the bean into itself (self-injection) via @Autowired or by fetching the proxy via AopContext.currentProxy().",
-      "By changing the method modifier to 'private'.",
-      "By changing the bean scope to prototype.",
-      "By removing the @Transactional annotation from the helper method."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "To resolve self-invocation bypass, you can inject the bean instance into itself (e.g. self-autowiring) and call the method on the injected reference, or enable AspectJ compile/load-time weaving instead of Spring's default proxy AOP."
-  },
-  {
-    "id": "spring-gen-188",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "How can you resolve the transactional self-invocation bypass problem where an internal method call in a Bean ignores '@Transactional'?",
-    "options": [
-      "By injecting the bean into itself (self-injection) via @Autowired or by fetching the proxy via AopContext.currentProxy().",
-      "By changing the method modifier to 'private'.",
-      "By changing the bean scope to prototype.",
-      "By removing the @Transactional annotation from the helper method."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "To resolve self-invocation bypass, you can inject the bean instance into itself (e.g. self-autowiring) and call the method on the injected reference, or enable AspectJ compile/load-time weaving instead of Spring's default proxy AOP."
-  },
-  {
-    "id": "spring-gen-189",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "How can you resolve the transactional self-invocation bypass problem where an internal method call in a Bean ignores '@Transactional'?",
-    "options": [
-      "By injecting the bean into itself (self-injection) via @Autowired or by fetching the proxy via AopContext.currentProxy().",
-      "By changing the method modifier to 'private'.",
-      "By changing the bean scope to prototype.",
-      "By removing the @Transactional annotation from the helper method."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "To resolve self-invocation bypass, you can inject the bean instance into itself (e.g. self-autowiring) and call the method on the injected reference, or enable AspectJ compile/load-time weaving instead of Spring's default proxy AOP."
-  },
-  {
-    "id": "spring-gen-190",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "How can you resolve the transactional self-invocation bypass problem where an internal method call in a Bean ignores '@Transactional'?",
-    "options": [
-      "By injecting the bean into itself (self-injection) via @Autowired or by fetching the proxy via AopContext.currentProxy().",
-      "By changing the method modifier to 'private'.",
-      "By changing the bean scope to prototype.",
-      "By removing the @Transactional annotation from the helper method."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "To resolve self-invocation bypass, you can inject the bean instance into itself (e.g. self-autowiring) and call the method on the injected reference, or enable AspectJ compile/load-time weaving instead of Spring's default proxy AOP."
-  },
-  {
-    "id": "spring-gen-191",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "How can you resolve the transactional self-invocation bypass problem where an internal method call in a Bean ignores '@Transactional'?",
-    "options": [
-      "By injecting the bean into itself (self-injection) via @Autowired or by fetching the proxy via AopContext.currentProxy().",
-      "By changing the method modifier to 'private'.",
-      "By changing the bean scope to prototype.",
-      "By removing the @Transactional annotation from the helper method."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "To resolve self-invocation bypass, you can inject the bean instance into itself (e.g. self-autowiring) and call the method on the injected reference, or enable AspectJ compile/load-time weaving instead of Spring's default proxy AOP."
-  },
-  {
-    "id": "spring-gen-192",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "How can you resolve the transactional self-invocation bypass problem where an internal method call in a Bean ignores '@Transactional'?",
-    "options": [
-      "By injecting the bean into itself (self-injection) via @Autowired or by fetching the proxy via AopContext.currentProxy().",
-      "By changing the method modifier to 'private'.",
-      "By changing the bean scope to prototype.",
-      "By removing the @Transactional annotation from the helper method."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "To resolve self-invocation bypass, you can inject the bean instance into itself (e.g. self-autowiring) and call the method on the injected reference, or enable AspectJ compile/load-time weaving instead of Spring's default proxy AOP."
-  },
-  {
-    "id": "spring-gen-193",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "How can you resolve the transactional self-invocation bypass problem where an internal method call in a Bean ignores '@Transactional'?",
-    "options": [
-      "By injecting the bean into itself (self-injection) via @Autowired or by fetching the proxy via AopContext.currentProxy().",
-      "By changing the method modifier to 'private'.",
-      "By changing the bean scope to prototype.",
-      "By removing the @Transactional annotation from the helper method."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "To resolve self-invocation bypass, you can inject the bean instance into itself (e.g. self-autowiring) and call the method on the injected reference, or enable AspectJ compile/load-time weaving instead of Spring's default proxy AOP."
-  },
-  {
-    "id": "spring-gen-194",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "How can you resolve the transactional self-invocation bypass problem where an internal method call in a Bean ignores '@Transactional'?",
-    "options": [
-      "By injecting the bean into itself (self-injection) via @Autowired or by fetching the proxy via AopContext.currentProxy().",
-      "By changing the method modifier to 'private'.",
-      "By changing the bean scope to prototype.",
-      "By removing the @Transactional annotation from the helper method."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "To resolve self-invocation bypass, you can inject the bean instance into itself (e.g. self-autowiring) and call the method on the injected reference, or enable AspectJ compile/load-time weaving instead of Spring's default proxy AOP."
-  },
-  {
-    "id": "spring-gen-195",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "How can you resolve the transactional self-invocation bypass problem where an internal method call in a Bean ignores '@Transactional'?",
-    "options": [
-      "By injecting the bean into itself (self-injection) via @Autowired or by fetching the proxy via AopContext.currentProxy().",
-      "By changing the method modifier to 'private'.",
-      "By changing the bean scope to prototype.",
-      "By removing the @Transactional annotation from the helper method."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "To resolve self-invocation bypass, you can inject the bean instance into itself (e.g. self-autowiring) and call the method on the injected reference, or enable AspectJ compile/load-time weaving instead of Spring's default proxy AOP."
-  },
-  {
-    "id": "spring-gen-196",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "How can you resolve the transactional self-invocation bypass problem where an internal method call in a Bean ignores '@Transactional'?",
-    "options": [
-      "By injecting the bean into itself (self-injection) via @Autowired or by fetching the proxy via AopContext.currentProxy().",
-      "By changing the method modifier to 'private'.",
-      "By changing the bean scope to prototype.",
-      "By removing the @Transactional annotation from the helper method."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "To resolve self-invocation bypass, you can inject the bean instance into itself (e.g. self-autowiring) and call the method on the injected reference, or enable AspectJ compile/load-time weaving instead of Spring's default proxy AOP."
-  },
-  {
-    "id": "spring-gen-197",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "How can you resolve the transactional self-invocation bypass problem where an internal method call in a Bean ignores '@Transactional'?",
-    "options": [
-      "By injecting the bean into itself (self-injection) via @Autowired or by fetching the proxy via AopContext.currentProxy().",
-      "By changing the method modifier to 'private'.",
-      "By changing the bean scope to prototype.",
-      "By removing the @Transactional annotation from the helper method."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "To resolve self-invocation bypass, you can inject the bean instance into itself (e.g. self-autowiring) and call the method on the injected reference, or enable AspectJ compile/load-time weaving instead of Spring's default proxy AOP."
-  },
-  {
-    "id": "spring-gen-198",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "How can you resolve the transactional self-invocation bypass problem where an internal method call in a Bean ignores '@Transactional'?",
-    "options": [
-      "By injecting the bean into itself (self-injection) via @Autowired or by fetching the proxy via AopContext.currentProxy().",
-      "By changing the method modifier to 'private'.",
-      "By changing the bean scope to prototype.",
-      "By removing the @Transactional annotation from the helper method."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "To resolve self-invocation bypass, you can inject the bean instance into itself (e.g. self-autowiring) and call the method on the injected reference, or enable AspectJ compile/load-time weaving instead of Spring's default proxy AOP."
-  },
-  {
-    "id": "spring-gen-199",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "How can you resolve the transactional self-invocation bypass problem where an internal method call in a Bean ignores '@Transactional'?",
-    "options": [
-      "By injecting the bean into itself (self-injection) via @Autowired or by fetching the proxy via AopContext.currentProxy().",
-      "By changing the method modifier to 'private'.",
-      "By changing the bean scope to prototype.",
-      "By removing the @Transactional annotation from the helper method."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "To resolve self-invocation bypass, you can inject the bean instance into itself (e.g. self-autowiring) and call the method on the injected reference, or enable AspectJ compile/load-time weaving instead of Spring's default proxy AOP."
-  },
-  {
-    "id": "spring-gen-200",
-    "topic": "Spring Boot Internals",
-    "difficulty": "hard",
-    "questionText": "How does `@ConditionalOnMissingBean` work during Spring Boot auto-configuration, and why is the order of configuration registration critical?",
-    "options": [
-      "It registers a bean only if no other bean of the same type is already defined. Ordering ensures user-defined beans are registered first.",
-      "It searches the classpath for deleted classes, making sure they are not loaded.",
-      "It deletes duplicate beans if multiple ones are created in the context.",
-      "It registers a bean only if the JVM is running in debug mode."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ConditionalOnMissingBean evaluates if a matching bean is present in the context. Spring Boot registers user-defined configurations (via @Configuration) before auto-configurations, allowing users to override auto-configured beans easily."
-  },
-  {
-    "id": "spring-gen-201",
-    "topic": "Spring Boot Internals",
-    "difficulty": "hard",
-    "questionText": "How does `@ConditionalOnMissingBean` work during Spring Boot auto-configuration, and why is the order of configuration registration critical?",
-    "options": [
-      "It registers a bean only if no other bean of the same type is already defined. Ordering ensures user-defined beans are registered first.",
-      "It searches the classpath for deleted classes, making sure they are not loaded.",
-      "It deletes duplicate beans if multiple ones are created in the context.",
-      "It registers a bean only if the JVM is running in debug mode."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ConditionalOnMissingBean evaluates if a matching bean is present in the context. Spring Boot registers user-defined configurations (via @Configuration) before auto-configurations, allowing users to override auto-configured beans easily."
-  },
-  {
-    "id": "spring-gen-202",
-    "topic": "Spring Boot Internals",
-    "difficulty": "hard",
-    "questionText": "How does `@ConditionalOnMissingBean` work during Spring Boot auto-configuration, and why is the order of configuration registration critical?",
-    "options": [
-      "It registers a bean only if no other bean of the same type is already defined. Ordering ensures user-defined beans are registered first.",
-      "It searches the classpath for deleted classes, making sure they are not loaded.",
-      "It deletes duplicate beans if multiple ones are created in the context.",
-      "It registers a bean only if the JVM is running in debug mode."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ConditionalOnMissingBean evaluates if a matching bean is present in the context. Spring Boot registers user-defined configurations (via @Configuration) before auto-configurations, allowing users to override auto-configured beans easily."
-  },
-  {
-    "id": "spring-gen-203",
-    "topic": "Spring Boot Internals",
-    "difficulty": "hard",
-    "questionText": "How does `@ConditionalOnMissingBean` work during Spring Boot auto-configuration, and why is the order of configuration registration critical?",
-    "options": [
-      "It registers a bean only if no other bean of the same type is already defined. Ordering ensures user-defined beans are registered first.",
-      "It searches the classpath for deleted classes, making sure they are not loaded.",
-      "It deletes duplicate beans if multiple ones are created in the context.",
-      "It registers a bean only if the JVM is running in debug mode."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ConditionalOnMissingBean evaluates if a matching bean is present in the context. Spring Boot registers user-defined configurations (via @Configuration) before auto-configurations, allowing users to override auto-configured beans easily."
-  },
-  {
-    "id": "spring-gen-204",
-    "topic": "Spring Boot Internals",
-    "difficulty": "hard",
-    "questionText": "How does `@ConditionalOnMissingBean` work during Spring Boot auto-configuration, and why is the order of configuration registration critical?",
-    "options": [
-      "It registers a bean only if no other bean of the same type is already defined. Ordering ensures user-defined beans are registered first.",
-      "It searches the classpath for deleted classes, making sure they are not loaded.",
-      "It deletes duplicate beans if multiple ones are created in the context.",
-      "It registers a bean only if the JVM is running in debug mode."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ConditionalOnMissingBean evaluates if a matching bean is present in the context. Spring Boot registers user-defined configurations (via @Configuration) before auto-configurations, allowing users to override auto-configured beans easily."
-  },
-  {
-    "id": "spring-gen-205",
-    "topic": "Spring Boot Internals",
-    "difficulty": "hard",
-    "questionText": "How does `@ConditionalOnMissingBean` work during Spring Boot auto-configuration, and why is the order of configuration registration critical?",
-    "options": [
-      "It registers a bean only if no other bean of the same type is already defined. Ordering ensures user-defined beans are registered first.",
-      "It searches the classpath for deleted classes, making sure they are not loaded.",
-      "It deletes duplicate beans if multiple ones are created in the context.",
-      "It registers a bean only if the JVM is running in debug mode."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ConditionalOnMissingBean evaluates if a matching bean is present in the context. Spring Boot registers user-defined configurations (via @Configuration) before auto-configurations, allowing users to override auto-configured beans easily."
-  },
-  {
-    "id": "spring-gen-206",
-    "topic": "Spring Boot Internals",
-    "difficulty": "hard",
-    "questionText": "How does `@ConditionalOnMissingBean` work during Spring Boot auto-configuration, and why is the order of configuration registration critical?",
-    "options": [
-      "It registers a bean only if no other bean of the same type is already defined. Ordering ensures user-defined beans are registered first.",
-      "It searches the classpath for deleted classes, making sure they are not loaded.",
-      "It deletes duplicate beans if multiple ones are created in the context.",
-      "It registers a bean only if the JVM is running in debug mode."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ConditionalOnMissingBean evaluates if a matching bean is present in the context. Spring Boot registers user-defined configurations (via @Configuration) before auto-configurations, allowing users to override auto-configured beans easily."
-  },
-  {
-    "id": "spring-gen-207",
-    "topic": "Spring Boot Internals",
-    "difficulty": "hard",
-    "questionText": "How does `@ConditionalOnMissingBean` work during Spring Boot auto-configuration, and why is the order of configuration registration critical?",
-    "options": [
-      "It registers a bean only if no other bean of the same type is already defined. Ordering ensures user-defined beans are registered first.",
-      "It searches the classpath for deleted classes, making sure they are not loaded.",
-      "It deletes duplicate beans if multiple ones are created in the context.",
-      "It registers a bean only if the JVM is running in debug mode."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ConditionalOnMissingBean evaluates if a matching bean is present in the context. Spring Boot registers user-defined configurations (via @Configuration) before auto-configurations, allowing users to override auto-configured beans easily."
-  },
-  {
-    "id": "spring-gen-208",
-    "topic": "Spring Boot Internals",
-    "difficulty": "hard",
-    "questionText": "How does `@ConditionalOnMissingBean` work during Spring Boot auto-configuration, and why is the order of configuration registration critical?",
-    "options": [
-      "It registers a bean only if no other bean of the same type is already defined. Ordering ensures user-defined beans are registered first.",
-      "It searches the classpath for deleted classes, making sure they are not loaded.",
-      "It deletes duplicate beans if multiple ones are created in the context.",
-      "It registers a bean only if the JVM is running in debug mode."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ConditionalOnMissingBean evaluates if a matching bean is present in the context. Spring Boot registers user-defined configurations (via @Configuration) before auto-configurations, allowing users to override auto-configured beans easily."
-  },
-  {
-    "id": "spring-gen-209",
-    "topic": "Spring Boot Internals",
-    "difficulty": "hard",
-    "questionText": "How does `@ConditionalOnMissingBean` work during Spring Boot auto-configuration, and why is the order of configuration registration critical?",
-    "options": [
-      "It registers a bean only if no other bean of the same type is already defined. Ordering ensures user-defined beans are registered first.",
-      "It searches the classpath for deleted classes, making sure they are not loaded.",
-      "It deletes duplicate beans if multiple ones are created in the context.",
-      "It registers a bean only if the JVM is running in debug mode."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ConditionalOnMissingBean evaluates if a matching bean is present in the context. Spring Boot registers user-defined configurations (via @Configuration) before auto-configurations, allowing users to override auto-configured beans easily."
-  },
-  {
-    "id": "spring-gen-210",
-    "topic": "Spring Boot Internals",
-    "difficulty": "hard",
-    "questionText": "How does `@ConditionalOnMissingBean` work during Spring Boot auto-configuration, and why is the order of configuration registration critical?",
-    "options": [
-      "It registers a bean only if no other bean of the same type is already defined. Ordering ensures user-defined beans are registered first.",
-      "It searches the classpath for deleted classes, making sure they are not loaded.",
-      "It deletes duplicate beans if multiple ones are created in the context.",
-      "It registers a bean only if the JVM is running in debug mode."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ConditionalOnMissingBean evaluates if a matching bean is present in the context. Spring Boot registers user-defined configurations (via @Configuration) before auto-configurations, allowing users to override auto-configured beans easily."
-  },
-  {
-    "id": "spring-gen-211",
-    "topic": "Spring Boot Internals",
-    "difficulty": "hard",
-    "questionText": "How does `@ConditionalOnMissingBean` work during Spring Boot auto-configuration, and why is the order of configuration registration critical?",
-    "options": [
-      "It registers a bean only if no other bean of the same type is already defined. Ordering ensures user-defined beans are registered first.",
-      "It searches the classpath for deleted classes, making sure they are not loaded.",
-      "It deletes duplicate beans if multiple ones are created in the context.",
-      "It registers a bean only if the JVM is running in debug mode."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ConditionalOnMissingBean evaluates if a matching bean is present in the context. Spring Boot registers user-defined configurations (via @Configuration) before auto-configurations, allowing users to override auto-configured beans easily."
-  },
-  {
-    "id": "spring-gen-212",
-    "topic": "Spring Boot Internals",
-    "difficulty": "hard",
-    "questionText": "How does `@ConditionalOnMissingBean` work during Spring Boot auto-configuration, and why is the order of configuration registration critical?",
-    "options": [
-      "It registers a bean only if no other bean of the same type is already defined. Ordering ensures user-defined beans are registered first.",
-      "It searches the classpath for deleted classes, making sure they are not loaded.",
-      "It deletes duplicate beans if multiple ones are created in the context.",
-      "It registers a bean only if the JVM is running in debug mode."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ConditionalOnMissingBean evaluates if a matching bean is present in the context. Spring Boot registers user-defined configurations (via @Configuration) before auto-configurations, allowing users to override auto-configured beans easily."
-  },
-  {
-    "id": "spring-gen-213",
-    "topic": "Spring Boot Internals",
-    "difficulty": "hard",
-    "questionText": "How does `@ConditionalOnMissingBean` work during Spring Boot auto-configuration, and why is the order of configuration registration critical?",
-    "options": [
-      "It registers a bean only if no other bean of the same type is already defined. Ordering ensures user-defined beans are registered first.",
-      "It searches the classpath for deleted classes, making sure they are not loaded.",
-      "It deletes duplicate beans if multiple ones are created in the context.",
-      "It registers a bean only if the JVM is running in debug mode."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ConditionalOnMissingBean evaluates if a matching bean is present in the context. Spring Boot registers user-defined configurations (via @Configuration) before auto-configurations, allowing users to override auto-configured beans easily."
-  },
-  {
-    "id": "spring-gen-214",
-    "topic": "Spring Boot Internals",
-    "difficulty": "hard",
-    "questionText": "How does `@ConditionalOnMissingBean` work during Spring Boot auto-configuration, and why is the order of configuration registration critical?",
-    "options": [
-      "It registers a bean only if no other bean of the same type is already defined. Ordering ensures user-defined beans are registered first.",
-      "It searches the classpath for deleted classes, making sure they are not loaded.",
-      "It deletes duplicate beans if multiple ones are created in the context.",
-      "It registers a bean only if the JVM is running in debug mode."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "@ConditionalOnMissingBean evaluates if a matching bean is present in the context. Spring Boot registers user-defined configurations (via @Configuration) before auto-configurations, allowing users to override auto-configured beans easily."
-  },
-  {
-    "id": "spring-gen-215",
-    "topic": "Spring Core & AOP",
-    "difficulty": "hard",
-    "questionText": "What is the role of the 'getPhase()' method in the 'SmartLifecycle' interface when starting or stopping components in the ApplicationContext?",
-    "options": [
-      "It returns an integer value representing the startup/shutdown phase. Lower phases start first and stop last.",
-      "It specifies the execution thread pool for the lifecycle operations.",
-      "It returns a string name representing the application stage (e.g. startup, runtime).",
-      "It determines the memory layout partition for the bean instances."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "SmartLifecycle components participate in container start/stop events. The getPhase() method defines the execution order: components with lower phase numbers are started first, while during shutdown, components with higher phase numbers are stopped first."
-  },
-  {
-    "id": "spring-gen-216",
-    "topic": "Spring Core & AOP",
-    "difficulty": "hard",
-    "questionText": "What is the role of the 'getPhase()' method in the 'SmartLifecycle' interface when starting or stopping components in the ApplicationContext?",
-    "options": [
-      "It returns an integer value representing the startup/shutdown phase. Lower phases start first and stop last.",
-      "It specifies the execution thread pool for the lifecycle operations.",
-      "It returns a string name representing the application stage (e.g. startup, runtime).",
-      "It determines the memory layout partition for the bean instances."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "SmartLifecycle components participate in container start/stop events. The getPhase() method defines the execution order: components with lower phase numbers are started first, while during shutdown, components with higher phase numbers are stopped first."
-  },
-  {
-    "id": "spring-gen-217",
-    "topic": "Spring Core & AOP",
-    "difficulty": "hard",
-    "questionText": "What is the role of the 'getPhase()' method in the 'SmartLifecycle' interface when starting or stopping components in the ApplicationContext?",
-    "options": [
-      "It returns an integer value representing the startup/shutdown phase. Lower phases start first and stop last.",
-      "It specifies the execution thread pool for the lifecycle operations.",
-      "It returns a string name representing the application stage (e.g. startup, runtime).",
-      "It determines the memory layout partition for the bean instances."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "SmartLifecycle components participate in container start/stop events. The getPhase() method defines the execution order: components with lower phase numbers are started first, while during shutdown, components with higher phase numbers are stopped first."
-  },
-  {
-    "id": "spring-gen-218",
-    "topic": "Spring Core & AOP",
-    "difficulty": "hard",
-    "questionText": "What is the role of the 'getPhase()' method in the 'SmartLifecycle' interface when starting or stopping components in the ApplicationContext?",
-    "options": [
-      "It returns an integer value representing the startup/shutdown phase. Lower phases start first and stop last.",
-      "It specifies the execution thread pool for the lifecycle operations.",
-      "It returns a string name representing the application stage (e.g. startup, runtime).",
-      "It determines the memory layout partition for the bean instances."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "SmartLifecycle components participate in container start/stop events. The getPhase() method defines the execution order: components with lower phase numbers are started first, while during shutdown, components with higher phase numbers are stopped first."
-  },
-  {
-    "id": "spring-gen-219",
+    "id": "spring-quiz-t1-4",
     "topic": "Spring Core & AOP",
     "difficulty": "hard",
-    "questionText": "What is the role of the 'getPhase()' method in the 'SmartLifecycle' interface when starting or stopping components in the ApplicationContext?",
+    "questionText": "In the service below, orderProcessor() is invoked from an external REST controller. What is the transactional behavior of saveOrder()?",
+    "codeSnippet": "@Service\npublic class OrderService_4 {\n    public void orderProcessor() {\n        saveOrder(); // Self-invocation\n    }\n\n    @Transactional\n    public void saveOrder() {\n        // Save database record\n    }\n}",
     "options": [
-      "It returns an integer value representing the startup/shutdown phase. Lower phases start first and stop last.",
-      "It specifies the execution thread pool for the lifecycle operations.",
-      "It returns a string name representing the application stage (e.g. startup, runtime).",
-      "It determines the memory layout partition for the bean instances."
+      "Spring starts a new transaction automatically using aspect interception.",
+      "The application throws a CircularDependencyException at startup.",
+      "A TransactionRequiredException is thrown during execution.",
+      "No transaction starts, because self-invocation bypasses the Spring AOP proxy."
     ],
-    "correctOptionIndex": 0,
-    "explanation": "SmartLifecycle components participate in container start/stop events. The getPhase() method defines the execution order: components with lower phase numbers are started first, while during shutdown, components with higher phase numbers are stopped first."
-  },
-  {
-    "id": "spring-gen-220",
-    "topic": "Spring Core & AOP",
-    "difficulty": "hard",
-    "questionText": "What is the role of the 'getPhase()' method in the 'SmartLifecycle' interface when starting or stopping components in the ApplicationContext?",
-    "options": [
-      "It returns an integer value representing the startup/shutdown phase. Lower phases start first and stop last.",
-      "It specifies the execution thread pool for the lifecycle operations.",
-      "It returns a string name representing the application stage (e.g. startup, runtime).",
-      "It determines the memory layout partition for the bean instances."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "SmartLifecycle components participate in container start/stop events. The getPhase() method defines the execution order: components with lower phase numbers are started first, while during shutdown, components with higher phase numbers are stopped first."
-  },
-  {
-    "id": "spring-gen-221",
-    "topic": "Spring Core & AOP",
-    "difficulty": "hard",
-    "questionText": "What is the role of the 'getPhase()' method in the 'SmartLifecycle' interface when starting or stopping components in the ApplicationContext?",
-    "options": [
-      "It returns an integer value representing the startup/shutdown phase. Lower phases start first and stop last.",
-      "It specifies the execution thread pool for the lifecycle operations.",
-      "It returns a string name representing the application stage (e.g. startup, runtime).",
-      "It determines the memory layout partition for the bean instances."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "SmartLifecycle components participate in container start/stop events. The getPhase() method defines the execution order: components with lower phase numbers are started first, while during shutdown, components with higher phase numbers are stopped first."
-  },
-  {
-    "id": "spring-gen-222",
-    "topic": "Spring Core & AOP",
-    "difficulty": "hard",
-    "questionText": "What is the role of the 'getPhase()' method in the 'SmartLifecycle' interface when starting or stopping components in the ApplicationContext?",
-    "options": [
-      "It returns an integer value representing the startup/shutdown phase. Lower phases start first and stop last.",
-      "It specifies the execution thread pool for the lifecycle operations.",
-      "It returns a string name representing the application stage (e.g. startup, runtime).",
-      "It determines the memory layout partition for the bean instances."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "SmartLifecycle components participate in container start/stop events. The getPhase() method defines the execution order: components with lower phase numbers are started first, while during shutdown, components with higher phase numbers are stopped first."
-  },
-  {
-    "id": "spring-gen-223",
-    "topic": "Spring Core & AOP",
-    "difficulty": "hard",
-    "questionText": "What is the role of the 'getPhase()' method in the 'SmartLifecycle' interface when starting or stopping components in the ApplicationContext?",
-    "options": [
-      "It returns an integer value representing the startup/shutdown phase. Lower phases start first and stop last.",
-      "It specifies the execution thread pool for the lifecycle operations.",
-      "It returns a string name representing the application stage (e.g. startup, runtime).",
-      "It determines the memory layout partition for the bean instances."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "SmartLifecycle components participate in container start/stop events. The getPhase() method defines the execution order: components with lower phase numbers are started first, while during shutdown, components with higher phase numbers are stopped first."
-  },
-  {
-    "id": "spring-gen-224",
-    "topic": "Spring Core & AOP",
-    "difficulty": "hard",
-    "questionText": "What is the role of the 'getPhase()' method in the 'SmartLifecycle' interface when starting or stopping components in the ApplicationContext?",
-    "options": [
-      "It returns an integer value representing the startup/shutdown phase. Lower phases start first and stop last.",
-      "It specifies the execution thread pool for the lifecycle operations.",
-      "It returns a string name representing the application stage (e.g. startup, runtime).",
-      "It determines the memory layout partition for the bean instances."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "SmartLifecycle components participate in container start/stop events. The getPhase() method defines the execution order: components with lower phase numbers are started first, while during shutdown, components with higher phase numbers are stopped first."
-  },
-  {
-    "id": "spring-gen-225",
-    "topic": "Spring Core & AOP",
-    "difficulty": "hard",
-    "questionText": "What is the role of the 'getPhase()' method in the 'SmartLifecycle' interface when starting or stopping components in the ApplicationContext?",
-    "options": [
-      "It returns an integer value representing the startup/shutdown phase. Lower phases start first and stop last.",
-      "It specifies the execution thread pool for the lifecycle operations.",
-      "It returns a string name representing the application stage (e.g. startup, runtime).",
-      "It determines the memory layout partition for the bean instances."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "SmartLifecycle components participate in container start/stop events. The getPhase() method defines the execution order: components with lower phase numbers are started first, while during shutdown, components with higher phase numbers are stopped first."
-  },
-  {
-    "id": "spring-gen-226",
-    "topic": "Spring Core & AOP",
-    "difficulty": "hard",
-    "questionText": "What is the role of the 'getPhase()' method in the 'SmartLifecycle' interface when starting or stopping components in the ApplicationContext?",
-    "options": [
-      "It returns an integer value representing the startup/shutdown phase. Lower phases start first and stop last.",
-      "It specifies the execution thread pool for the lifecycle operations.",
-      "It returns a string name representing the application stage (e.g. startup, runtime).",
-      "It determines the memory layout partition for the bean instances."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "SmartLifecycle components participate in container start/stop events. The getPhase() method defines the execution order: components with lower phase numbers are started first, while during shutdown, components with higher phase numbers are stopped first."
-  },
-  {
-    "id": "spring-gen-227",
-    "topic": "Spring Core & AOP",
-    "difficulty": "hard",
-    "questionText": "What is the role of the 'getPhase()' method in the 'SmartLifecycle' interface when starting or stopping components in the ApplicationContext?",
-    "options": [
-      "It returns an integer value representing the startup/shutdown phase. Lower phases start first and stop last.",
-      "It specifies the execution thread pool for the lifecycle operations.",
-      "It returns a string name representing the application stage (e.g. startup, runtime).",
-      "It determines the memory layout partition for the bean instances."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "SmartLifecycle components participate in container start/stop events. The getPhase() method defines the execution order: components with lower phase numbers are started first, while during shutdown, components with higher phase numbers are stopped first."
-  },
-  {
-    "id": "spring-gen-228",
-    "topic": "Spring Core & AOP",
-    "difficulty": "hard",
-    "questionText": "What is the role of the 'getPhase()' method in the 'SmartLifecycle' interface when starting or stopping components in the ApplicationContext?",
-    "options": [
-      "It returns an integer value representing the startup/shutdown phase. Lower phases start first and stop last.",
-      "It specifies the execution thread pool for the lifecycle operations.",
-      "It returns a string name representing the application stage (e.g. startup, runtime).",
-      "It determines the memory layout partition for the bean instances."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "SmartLifecycle components participate in container start/stop events. The getPhase() method defines the execution order: components with lower phase numbers are started first, while during shutdown, components with higher phase numbers are stopped first."
-  },
-  {
-    "id": "spring-gen-229",
-    "topic": "Spring Core & AOP",
-    "difficulty": "hard",
-    "questionText": "What is the role of the 'getPhase()' method in the 'SmartLifecycle' interface when starting or stopping components in the ApplicationContext?",
-    "options": [
-      "It returns an integer value representing the startup/shutdown phase. Lower phases start first and stop last.",
-      "It specifies the execution thread pool for the lifecycle operations.",
-      "It returns a string name representing the application stage (e.g. startup, runtime).",
-      "It determines the memory layout partition for the bean instances."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "SmartLifecycle components participate in container start/stop events. The getPhase() method defines the execution order: components with lower phase numbers are started first, while during shutdown, components with higher phase numbers are stopped first."
-  },
-  {
-    "id": "spring-gen-230",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "What is the N+1 select problem in JPA, and which of the following is the most efficient way to resolve it in a JPQL query?",
-    "options": [
-      "Retrieving a list of entities triggers 1 query for the list and N queries for associated entities. Resolve it using 'JOIN FETCH'.",
-      "Retrieving a list triggers N queries first, then 1 merge query. Resolve it using '@Transactional'.",
-      "A database deadlock caused by multiple write threads. Resolve it using optimistic locking.",
-      "A memory leak caused by persistent objects. Resolve it using entityManager.clear()."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The N+1 select problem occurs when fetching lazy associations in a loop. Using 'JOIN FETCH' in JPQL or EntityGraphs forces Hibernate to retrieve both the root entity and its association in a single SELECT query using SQL JOINs."
-  },
-  {
-    "id": "spring-gen-231",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "What is the N+1 select problem in JPA, and which of the following is the most efficient way to resolve it in a JPQL query?",
-    "options": [
-      "Retrieving a list of entities triggers 1 query for the list and N queries for associated entities. Resolve it using 'JOIN FETCH'.",
-      "Retrieving a list triggers N queries first, then 1 merge query. Resolve it using '@Transactional'.",
-      "A database deadlock caused by multiple write threads. Resolve it using optimistic locking.",
-      "A memory leak caused by persistent objects. Resolve it using entityManager.clear()."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The N+1 select problem occurs when fetching lazy associations in a loop. Using 'JOIN FETCH' in JPQL or EntityGraphs forces Hibernate to retrieve both the root entity and its association in a single SELECT query using SQL JOINs."
-  },
-  {
-    "id": "spring-gen-232",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "What is the N+1 select problem in JPA, and which of the following is the most efficient way to resolve it in a JPQL query?",
-    "options": [
-      "Retrieving a list of entities triggers 1 query for the list and N queries for associated entities. Resolve it using 'JOIN FETCH'.",
-      "Retrieving a list triggers N queries first, then 1 merge query. Resolve it using '@Transactional'.",
-      "A database deadlock caused by multiple write threads. Resolve it using optimistic locking.",
-      "A memory leak caused by persistent objects. Resolve it using entityManager.clear()."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The N+1 select problem occurs when fetching lazy associations in a loop. Using 'JOIN FETCH' in JPQL or EntityGraphs forces Hibernate to retrieve both the root entity and its association in a single SELECT query using SQL JOINs."
-  },
-  {
-    "id": "spring-gen-233",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "What is the N+1 select problem in JPA, and which of the following is the most efficient way to resolve it in a JPQL query?",
-    "options": [
-      "Retrieving a list of entities triggers 1 query for the list and N queries for associated entities. Resolve it using 'JOIN FETCH'.",
-      "Retrieving a list triggers N queries first, then 1 merge query. Resolve it using '@Transactional'.",
-      "A database deadlock caused by multiple write threads. Resolve it using optimistic locking.",
-      "A memory leak caused by persistent objects. Resolve it using entityManager.clear()."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The N+1 select problem occurs when fetching lazy associations in a loop. Using 'JOIN FETCH' in JPQL or EntityGraphs forces Hibernate to retrieve both the root entity and its association in a single SELECT query using SQL JOINs."
-  },
-  {
-    "id": "spring-gen-234",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "What is the N+1 select problem in JPA, and which of the following is the most efficient way to resolve it in a JPQL query?",
-    "options": [
-      "Retrieving a list of entities triggers 1 query for the list and N queries for associated entities. Resolve it using 'JOIN FETCH'.",
-      "Retrieving a list triggers N queries first, then 1 merge query. Resolve it using '@Transactional'.",
-      "A database deadlock caused by multiple write threads. Resolve it using optimistic locking.",
-      "A memory leak caused by persistent objects. Resolve it using entityManager.clear()."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The N+1 select problem occurs when fetching lazy associations in a loop. Using 'JOIN FETCH' in JPQL or EntityGraphs forces Hibernate to retrieve both the root entity and its association in a single SELECT query using SQL JOINs."
-  },
-  {
-    "id": "spring-gen-235",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "What is the N+1 select problem in JPA, and which of the following is the most efficient way to resolve it in a JPQL query?",
-    "options": [
-      "Retrieving a list of entities triggers 1 query for the list and N queries for associated entities. Resolve it using 'JOIN FETCH'.",
-      "Retrieving a list triggers N queries first, then 1 merge query. Resolve it using '@Transactional'.",
-      "A database deadlock caused by multiple write threads. Resolve it using optimistic locking.",
-      "A memory leak caused by persistent objects. Resolve it using entityManager.clear()."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The N+1 select problem occurs when fetching lazy associations in a loop. Using 'JOIN FETCH' in JPQL or EntityGraphs forces Hibernate to retrieve both the root entity and its association in a single SELECT query using SQL JOINs."
-  },
-  {
-    "id": "spring-gen-236",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "What is the N+1 select problem in JPA, and which of the following is the most efficient way to resolve it in a JPQL query?",
-    "options": [
-      "Retrieving a list of entities triggers 1 query for the list and N queries for associated entities. Resolve it using 'JOIN FETCH'.",
-      "Retrieving a list triggers N queries first, then 1 merge query. Resolve it using '@Transactional'.",
-      "A database deadlock caused by multiple write threads. Resolve it using optimistic locking.",
-      "A memory leak caused by persistent objects. Resolve it using entityManager.clear()."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The N+1 select problem occurs when fetching lazy associations in a loop. Using 'JOIN FETCH' in JPQL or EntityGraphs forces Hibernate to retrieve both the root entity and its association in a single SELECT query using SQL JOINs."
-  },
-  {
-    "id": "spring-gen-237",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "What is the N+1 select problem in JPA, and which of the following is the most efficient way to resolve it in a JPQL query?",
-    "options": [
-      "Retrieving a list of entities triggers 1 query for the list and N queries for associated entities. Resolve it using 'JOIN FETCH'.",
-      "Retrieving a list triggers N queries first, then 1 merge query. Resolve it using '@Transactional'.",
-      "A database deadlock caused by multiple write threads. Resolve it using optimistic locking.",
-      "A memory leak caused by persistent objects. Resolve it using entityManager.clear()."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The N+1 select problem occurs when fetching lazy associations in a loop. Using 'JOIN FETCH' in JPQL or EntityGraphs forces Hibernate to retrieve both the root entity and its association in a single SELECT query using SQL JOINs."
-  },
-  {
-    "id": "spring-gen-238",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "What is the N+1 select problem in JPA, and which of the following is the most efficient way to resolve it in a JPQL query?",
-    "options": [
-      "Retrieving a list of entities triggers 1 query for the list and N queries for associated entities. Resolve it using 'JOIN FETCH'.",
-      "Retrieving a list triggers N queries first, then 1 merge query. Resolve it using '@Transactional'.",
-      "A database deadlock caused by multiple write threads. Resolve it using optimistic locking.",
-      "A memory leak caused by persistent objects. Resolve it using entityManager.clear()."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The N+1 select problem occurs when fetching lazy associations in a loop. Using 'JOIN FETCH' in JPQL or EntityGraphs forces Hibernate to retrieve both the root entity and its association in a single SELECT query using SQL JOINs."
-  },
-  {
-    "id": "spring-gen-239",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "What is the N+1 select problem in JPA, and which of the following is the most efficient way to resolve it in a JPQL query?",
-    "options": [
-      "Retrieving a list of entities triggers 1 query for the list and N queries for associated entities. Resolve it using 'JOIN FETCH'.",
-      "Retrieving a list triggers N queries first, then 1 merge query. Resolve it using '@Transactional'.",
-      "A database deadlock caused by multiple write threads. Resolve it using optimistic locking.",
-      "A memory leak caused by persistent objects. Resolve it using entityManager.clear()."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The N+1 select problem occurs when fetching lazy associations in a loop. Using 'JOIN FETCH' in JPQL or EntityGraphs forces Hibernate to retrieve both the root entity and its association in a single SELECT query using SQL JOINs."
-  },
-  {
-    "id": "spring-gen-240",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "What is the N+1 select problem in JPA, and which of the following is the most efficient way to resolve it in a JPQL query?",
-    "options": [
-      "Retrieving a list of entities triggers 1 query for the list and N queries for associated entities. Resolve it using 'JOIN FETCH'.",
-      "Retrieving a list triggers N queries first, then 1 merge query. Resolve it using '@Transactional'.",
-      "A database deadlock caused by multiple write threads. Resolve it using optimistic locking.",
-      "A memory leak caused by persistent objects. Resolve it using entityManager.clear()."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The N+1 select problem occurs when fetching lazy associations in a loop. Using 'JOIN FETCH' in JPQL or EntityGraphs forces Hibernate to retrieve both the root entity and its association in a single SELECT query using SQL JOINs."
+    "correctOptionIndex": 3,
+    "explanation": "Spring's declarative annotations rely on AOP proxy wrappers. Method calls from outside go through the proxy, running transaction interceptors. Direct internal calls (self-invocation) run directly on the target object, bypassing the proxy and annotations."
   },
   {
-    "id": "spring-gen-241",
-    "topic": "Spring Data JPA",
+    "id": "spring-quiz-t2-4",
+    "topic": "Spring Core & Scopes",
     "difficulty": "hard",
-    "questionText": "What is the N+1 select problem in JPA, and which of the following is the most efficient way to resolve it in a JPQL query?",
+    "questionText": "You inject a prototype-scoped bean 'RequestTracker_4' into a singleton controller 'AnalyticsController_4'. How does 'RequestTracker_4' behave across multiple HTTP requests?",
+    "codeSnippet": "@Scope(\"prototype\")\n@Component\npublic class RequestTracker_4 {}\n\n@RestController\npublic class AnalyticsController_4 {\n    @Autowired\n    private RequestTracker_4 tracker;\n}",
     "options": [
-      "Retrieving a list of entities triggers 1 query for the list and N queries for associated entities. Resolve it using 'JOIN FETCH'.",
-      "Retrieving a list triggers N queries first, then 1 merge query. Resolve it using '@Transactional'.",
-      "A database deadlock caused by multiple write threads. Resolve it using optimistic locking.",
-      "A memory leak caused by persistent objects. Resolve it using entityManager.clear()."
+      "The controller reuses the exact same instance of 'RequestTracker_4' injected at startup, behaving as a singleton.",
+      "A new instance of 'RequestTracker_4' is created for every HTTP request.",
+      "Spring throws a ScopeMismatchException during startup.",
+      "The application fails to start because prototype beans cannot be injected into singletons."
     ],
     "correctOptionIndex": 0,
-    "explanation": "The N+1 select problem occurs when fetching lazy associations in a loop. Using 'JOIN FETCH' in JPQL or EntityGraphs forces Hibernate to retrieve both the root entity and its association in a single SELECT query using SQL JOINs."
+    "explanation": "Because the controller is a singleton, it is initialized once. Consequently, its fields are injected once. The prototype-scoped bean is instantiated during this injection, and that same instance is shared for all requests. To resolve, use scoped proxies."
   },
   {
-    "id": "spring-gen-242",
+    "id": "spring-quiz-t3-4",
     "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "What is the N+1 select problem in JPA, and which of the following is the most efficient way to resolve it in a JPQL query?",
+    "difficulty": "medium",
+    "questionText": "If a transaction method throws an Exception (checked exception) during database operations, what is the default rollback behavior?",
+    "codeSnippet": "@Transactional\npublic void process(User user) throws Exception {\n    UserRepo_4.save(user);\n    if (user.getName() == null) {\n        throw new Exception(\"Invalid User\");\n    }\n}",
     "options": [
-      "Retrieving a list of entities triggers 1 query for the list and N queries for associated entities. Resolve it using 'JOIN FETCH'.",
-      "Retrieving a list triggers N queries first, then 1 merge query. Resolve it using '@Transactional'.",
-      "A database deadlock caused by multiple write threads. Resolve it using optimistic locking.",
-      "A memory leak caused by persistent objects. Resolve it using entityManager.clear()."
+      "The transaction is automatically rolled back for all exceptions.",
+      "The compiler throws an error because Transactional cannot declare checked throws.",
+      "The transaction rolls back, but only if the database isolation is SERIALIZABLE.",
+      "The transaction is committed, and changes are saved because checked exceptions do not trigger rollback by default."
     ],
-    "correctOptionIndex": 0,
-    "explanation": "The N+1 select problem occurs when fetching lazy associations in a loop. Using 'JOIN FETCH' in JPQL or EntityGraphs forces Hibernate to retrieve both the root entity and its association in a single SELECT query using SQL JOINs."
+    "correctOptionIndex": 3,
+    "explanation": "Spring's @Transactional default configuration rolls back transactions only for unchecked exceptions (subclasses of RuntimeException and Error). Checked exceptions (like Exception, IOException) do not trigger rollback unless configured as @Transactional(rollbackFor = Exception.class)."
   },
   {
-    "id": "spring-gen-243",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "What is the N+1 select problem in JPA, and which of the following is the most efficient way to resolve it in a JPQL query?",
+    "id": "spring-quiz-t4-4",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "What occurs when Spring starts up and detects a circular constructor dependency between singleton beans 'BeanA_4' and 'BeanB_4'?",
+    "codeSnippet": "@Component\npublic class BeanA_4 {\n    public BeanA_4(BeanB_4 b) {}\n}\n@Component\npublic class BeanB_4 {\n    public BeanB_4(BeanA_4 a) {}\n}",
     "options": [
-      "Retrieving a list of entities triggers 1 query for the list and N queries for associated entities. Resolve it using 'JOIN FETCH'.",
-      "Retrieving a list triggers N queries first, then 1 merge query. Resolve it using '@Transactional'.",
-      "A database deadlock caused by multiple write threads. Resolve it using optimistic locking.",
-      "A memory leak caused by persistent objects. Resolve it using entityManager.clear()."
+      "Spring automatically resolves the cycle by injecting a dynamic proxy.",
+      "The JVM crashes with a StackOverflowError during initialization.",
+      "The application fails to start and throws a BeanCurrentlyInCreationException.",
+      "Spring instantiates both beans as null."
     ],
-    "correctOptionIndex": 0,
-    "explanation": "The N+1 select problem occurs when fetching lazy associations in a loop. Using 'JOIN FETCH' in JPQL or EntityGraphs forces Hibernate to retrieve both the root entity and its association in a single SELECT query using SQL JOINs."
+    "correctOptionIndex": 2,
+    "explanation": "Unlike setter/field injection, constructor dependencies must be resolved during object creation. Since neither 'BeanA_4' nor 'BeanB_4' can be constructed without the other, Spring cannot resolve the dependency cycle and throws a BeanCurrentlyInCreationException."
   },
   {
-    "id": "spring-gen-244",
+    "id": "spring-quiz-t5-4",
     "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "What is the N+1 select problem in JPA, and which of the following is the most efficient way to resolve it in a JPQL query?",
-    "options": [
-      "Retrieving a list of entities triggers 1 query for the list and N queries for associated entities. Resolve it using 'JOIN FETCH'.",
-      "Retrieving a list triggers N queries first, then 1 merge query. Resolve it using '@Transactional'.",
-      "A database deadlock caused by multiple write threads. Resolve it using optimistic locking.",
-      "A memory leak caused by persistent objects. Resolve it using entityManager.clear()."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "The N+1 select problem occurs when fetching lazy associations in a loop. Using 'JOIN FETCH' in JPQL or EntityGraphs forces Hibernate to retrieve both the root entity and its association in a single SELECT query using SQL JOINs."
-  },
-  {
-    "id": "spring-gen-245",
-    "topic": "Spring Core & AOP",
-    "difficulty": "hard",
-    "questionText": "What happens if you apply a declarative aspect (like `@Transactional`) to a method declared as 'final' in a class proxied by CGLIB?",
-    "options": [
-      "The aspect is bypassed silently because CGLIB creates a subclass and cannot override 'final' methods.",
-      "The application throws a ClassCastException during container startup.",
-      "Spring throws a FinalMethodAopException at startup.",
-      "The JVM JVM-crashes at runtime when calling the method."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "CGLIB generates a proxy by subclassing the target class at runtime. Since 'final' methods cannot be overridden by subclasses, the generated proxy class contains a copy of the final method that executes without AOP interception, bypassing the aspect silently."
-  },
-  {
-    "id": "spring-gen-246",
-    "topic": "Spring Core & AOP",
-    "difficulty": "hard",
-    "questionText": "What happens if you apply a declarative aspect (like `@Transactional`) to a method declared as 'final' in a class proxied by CGLIB?",
-    "options": [
-      "The aspect is bypassed silently because CGLIB creates a subclass and cannot override 'final' methods.",
-      "The application throws a ClassCastException during container startup.",
-      "Spring throws a FinalMethodAopException at startup.",
-      "The JVM JVM-crashes at runtime when calling the method."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "CGLIB generates a proxy by subclassing the target class at runtime. Since 'final' methods cannot be overridden by subclasses, the generated proxy class contains a copy of the final method that executes without AOP interception, bypassing the aspect silently."
-  },
-  {
-    "id": "spring-gen-247",
-    "topic": "Spring Core & AOP",
-    "difficulty": "hard",
-    "questionText": "What happens if you apply a declarative aspect (like `@Transactional`) to a method declared as 'final' in a class proxied by CGLIB?",
-    "options": [
-      "The aspect is bypassed silently because CGLIB creates a subclass and cannot override 'final' methods.",
-      "The application throws a ClassCastException during container startup.",
-      "Spring throws a FinalMethodAopException at startup.",
-      "The JVM JVM-crashes at runtime when calling the method."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "CGLIB generates a proxy by subclassing the target class at runtime. Since 'final' methods cannot be overridden by subclasses, the generated proxy class contains a copy of the final method that executes without AOP interception, bypassing the aspect silently."
-  },
-  {
-    "id": "spring-gen-248",
-    "topic": "Spring Core & AOP",
-    "difficulty": "hard",
-    "questionText": "What happens if you apply a declarative aspect (like `@Transactional`) to a method declared as 'final' in a class proxied by CGLIB?",
-    "options": [
-      "The aspect is bypassed silently because CGLIB creates a subclass and cannot override 'final' methods.",
-      "The application throws a ClassCastException during container startup.",
-      "Spring throws a FinalMethodAopException at startup.",
-      "The JVM JVM-crashes at runtime when calling the method."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "CGLIB generates a proxy by subclassing the target class at runtime. Since 'final' methods cannot be overridden by subclasses, the generated proxy class contains a copy of the final method that executes without AOP interception, bypassing the aspect silently."
-  },
-  {
-    "id": "spring-gen-249",
-    "topic": "Spring Core & AOP",
-    "difficulty": "hard",
-    "questionText": "What happens if you apply a declarative aspect (like `@Transactional`) to a method declared as 'final' in a class proxied by CGLIB?",
-    "options": [
-      "The aspect is bypassed silently because CGLIB creates a subclass and cannot override 'final' methods.",
-      "The application throws a ClassCastException during container startup.",
-      "Spring throws a FinalMethodAopException at startup.",
-      "The JVM JVM-crashes at runtime when calling the method."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "CGLIB generates a proxy by subclassing the target class at runtime. Since 'final' methods cannot be overridden by subclasses, the generated proxy class contains a copy of the final method that executes without AOP interception, bypassing the aspect silently."
-  },
-  {
-    "id": "spring-gen-250",
-    "topic": "Spring Core & AOP",
-    "difficulty": "hard",
-    "questionText": "What happens if you apply a declarative aspect (like `@Transactional`) to a method declared as 'final' in a class proxied by CGLIB?",
-    "options": [
-      "The aspect is bypassed silently because CGLIB creates a subclass and cannot override 'final' methods.",
-      "The application throws a ClassCastException during container startup.",
-      "Spring throws a FinalMethodAopException at startup.",
-      "The JVM JVM-crashes at runtime when calling the method."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "CGLIB generates a proxy by subclassing the target class at runtime. Since 'final' methods cannot be overridden by subclasses, the generated proxy class contains a copy of the final method that executes without AOP interception, bypassing the aspect silently."
-  },
-  {
-    "id": "spring-gen-251",
-    "topic": "Spring Core & AOP",
-    "difficulty": "hard",
-    "questionText": "What happens if you apply a declarative aspect (like `@Transactional`) to a method declared as 'final' in a class proxied by CGLIB?",
-    "options": [
-      "The aspect is bypassed silently because CGLIB creates a subclass and cannot override 'final' methods.",
-      "The application throws a ClassCastException during container startup.",
-      "Spring throws a FinalMethodAopException at startup.",
-      "The JVM JVM-crashes at runtime when calling the method."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "CGLIB generates a proxy by subclassing the target class at runtime. Since 'final' methods cannot be overridden by subclasses, the generated proxy class contains a copy of the final method that executes without AOP interception, bypassing the aspect silently."
-  },
-  {
-    "id": "spring-gen-252",
-    "topic": "Spring Core & AOP",
-    "difficulty": "hard",
-    "questionText": "What happens if you apply a declarative aspect (like `@Transactional`) to a method declared as 'final' in a class proxied by CGLIB?",
-    "options": [
-      "The aspect is bypassed silently because CGLIB creates a subclass and cannot override 'final' methods.",
-      "The application throws a ClassCastException during container startup.",
-      "Spring throws a FinalMethodAopException at startup.",
-      "The JVM JVM-crashes at runtime when calling the method."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "CGLIB generates a proxy by subclassing the target class at runtime. Since 'final' methods cannot be overridden by subclasses, the generated proxy class contains a copy of the final method that executes without AOP interception, bypassing the aspect silently."
-  },
-  {
-    "id": "spring-gen-253",
-    "topic": "Spring Core & AOP",
-    "difficulty": "hard",
-    "questionText": "What happens if you apply a declarative aspect (like `@Transactional`) to a method declared as 'final' in a class proxied by CGLIB?",
-    "options": [
-      "The aspect is bypassed silently because CGLIB creates a subclass and cannot override 'final' methods.",
-      "The application throws a ClassCastException during container startup.",
-      "Spring throws a FinalMethodAopException at startup.",
-      "The JVM JVM-crashes at runtime when calling the method."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "CGLIB generates a proxy by subclassing the target class at runtime. Since 'final' methods cannot be overridden by subclasses, the generated proxy class contains a copy of the final method that executes without AOP interception, bypassing the aspect silently."
-  },
-  {
-    "id": "spring-gen-254",
-    "topic": "Spring Core & AOP",
-    "difficulty": "hard",
-    "questionText": "What happens if you apply a declarative aspect (like `@Transactional`) to a method declared as 'final' in a class proxied by CGLIB?",
-    "options": [
-      "The aspect is bypassed silently because CGLIB creates a subclass and cannot override 'final' methods.",
-      "The application throws a ClassCastException during container startup.",
-      "Spring throws a FinalMethodAopException at startup.",
-      "The JVM JVM-crashes at runtime when calling the method."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "CGLIB generates a proxy by subclassing the target class at runtime. Since 'final' methods cannot be overridden by subclasses, the generated proxy class contains a copy of the final method that executes without AOP interception, bypassing the aspect silently."
-  },
-  {
-    "id": "spring-gen-255",
-    "topic": "Spring Core & AOP",
-    "difficulty": "hard",
-    "questionText": "What happens if you apply a declarative aspect (like `@Transactional`) to a method declared as 'final' in a class proxied by CGLIB?",
-    "options": [
-      "The aspect is bypassed silently because CGLIB creates a subclass and cannot override 'final' methods.",
-      "The application throws a ClassCastException during container startup.",
-      "Spring throws a FinalMethodAopException at startup.",
-      "The JVM JVM-crashes at runtime when calling the method."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "CGLIB generates a proxy by subclassing the target class at runtime. Since 'final' methods cannot be overridden by subclasses, the generated proxy class contains a copy of the final method that executes without AOP interception, bypassing the aspect silently."
-  },
-  {
-    "id": "spring-gen-256",
-    "topic": "Spring Core & AOP",
     "difficulty": "hard",
-    "questionText": "What happens if you apply a declarative aspect (like `@Transactional`) to a method declared as 'final' in a class proxied by CGLIB?",
+    "questionText": "An entity has a lazy-loaded collection association. If you fetch all 9 parent entities and access their associations in a loop, how many SQL queries hit the database?",
+    "codeSnippet": "List<Parent> parents = parentRepository.findAll(); // Fetches 9 parents\nfor (Parent p : parents) {\n    System.out.println(p.getChildren().size()); // Lazy load\n}",
     "options": [
-      "The aspect is bypassed silently because CGLIB creates a subclass and cannot override 'final' methods.",
-      "The application throws a ClassCastException during container startup.",
-      "Spring throws a FinalMethodAopException at startup.",
-      "The JVM JVM-crashes at runtime when calling the method."
+      "1 SQL query.",
+      "9 SQL queries.",
+      "10 SQL queries.",
+      "2 SQL queries."
     ],
-    "correctOptionIndex": 0,
-    "explanation": "CGLIB generates a proxy by subclassing the target class at runtime. Since 'final' methods cannot be overridden by subclasses, the generated proxy class contains a copy of the final method that executes without AOP interception, bypassing the aspect silently."
-  },
-  {
-    "id": "spring-gen-257",
-    "topic": "Spring Core & AOP",
-    "difficulty": "hard",
-    "questionText": "What happens if you apply a declarative aspect (like `@Transactional`) to a method declared as 'final' in a class proxied by CGLIB?",
-    "options": [
-      "The aspect is bypassed silently because CGLIB creates a subclass and cannot override 'final' methods.",
-      "The application throws a ClassCastException during container startup.",
-      "Spring throws a FinalMethodAopException at startup.",
-      "The JVM JVM-crashes at runtime when calling the method."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "CGLIB generates a proxy by subclassing the target class at runtime. Since 'final' methods cannot be overridden by subclasses, the generated proxy class contains a copy of the final method that executes without AOP interception, bypassing the aspect silently."
+    "correctOptionIndex": 2,
+    "explanation": "This is the N+1 query problem. The initial query fetches the parents (1 query). When accessing the lazy collection for each parent in the loop, Hibernate sends a separate select query per parent (9 queries), resulting in 10 queries."
   },
   {
-    "id": "spring-gen-258",
-    "topic": "Spring Core & AOP",
-    "difficulty": "hard",
-    "questionText": "What happens if you apply a declarative aspect (like `@Transactional`) to a method declared as 'final' in a class proxied by CGLIB?",
-    "options": [
-      "The aspect is bypassed silently because CGLIB creates a subclass and cannot override 'final' methods.",
-      "The application throws a ClassCastException during container startup.",
-      "Spring throws a FinalMethodAopException at startup.",
-      "The JVM JVM-crashes at runtime when calling the method."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "CGLIB generates a proxy by subclassing the target class at runtime. Since 'final' methods cannot be overridden by subclasses, the generated proxy class contains a copy of the final method that executes without AOP interception, bypassing the aspect silently."
-  },
-  {
-    "id": "spring-gen-259",
-    "topic": "Spring Core & AOP",
+    "id": "spring-quiz-t6-4",
+    "topic": "Spring WebFlux",
     "difficulty": "hard",
-    "questionText": "What happens if you apply a declarative aspect (like `@Transactional`) to a method declared as 'final' in a class proxied by CGLIB?",
+    "questionText": "What is the hazard of calling a blocking method like RestTemplate inside a Spring WebFlux controller running on Netty event loops?",
+    "codeSnippet": "@GetMapping(\"/data\")\npublic Mono<String> getData() {\n    return Mono.fromCallable(() -> restTemplate.getForObject(\"https://api.com\", String.class));\n}",
     "options": [
-      "The aspect is bypassed silently because CGLIB creates a subclass and cannot override 'final' methods.",
-      "The application throws a ClassCastException during container startup.",
-      "Spring throws a FinalMethodAopException at startup.",
-      "The JVM JVM-crashes at runtime when calling the method."
+      "WebFlux automatically shifts the call to virtual threads to avoid blocking.",
+      "The controller immediately throws a BlockedEventLoopException during compilation.",
+      "It causes a deadlock because Netty restricts HTTP requests.",
+      "It blocks the Netty EventLoop thread, reducing server capacity to process concurrent requests and causing starvation."
     ],
-    "correctOptionIndex": 0,
-    "explanation": "CGLIB generates a proxy by subclassing the target class at runtime. Since 'final' methods cannot be overridden by subclasses, the generated proxy class contains a copy of the final method that executes without AOP interception, bypassing the aspect silently."
+    "correctOptionIndex": 3,
+    "explanation": "WebFlux uses a small number of non-blocking event loop threads. Blocking operations on these threads exhaust the pool and block the server from handling other connections. Offload blocking logic using subscribeOn(Schedulers.boundedElastic())."
   },
   {
-    "id": "spring-gen-260",
+    "id": "spring-quiz-t7-4",
     "topic": "Spring Security",
-    "difficulty": "hard",
-    "questionText": "How does Spring Security enforce the order of filters in its security chain, and how do custom filters fit in?",
+    "difficulty": "medium",
+    "questionText": "How do you insert a custom filter 'CustomAuthFilter_4' in a security chain so it executes before UsernamePasswordAuthenticationFilter?",
+    "codeSnippet": "@Bean\npublic SecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n    http.addFilterBefore(new CustomAuthFilter_4(), UsernamePasswordAuthenticationFilter.class);\n    return http.build();\n}",
     "options": [
-      "Filters are ordered sequentially in a list. Custom filters are inserted at specific positions using 'addFilterBefore' or 'addFilterAfter' relative to standard filters.",
-      "Filters are executed concurrently using a ThreadPool.",
-      "Filters are resolved based on the alphabetical order of their class names.",
-      "Filters are executed randomly unless they implement Ordered."
+      "Annotate CustomAuthFilter_4 with @Order(Ordered.HIGHEST_PRECEDENCE).",
+      "Register CustomAuthFilter_4 as a Spring @Component; Spring Security loads custom beans first.",
+      "Declare CustomAuthFilter_4 inside application.properties under security.filter.order.",
+      "Use addFilterBefore(new CustomAuthFilter_4(), UsernamePasswordAuthenticationFilter.class) inside HttpSecurity config."
     ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Security uses a chain of servlet filters (SecurityFilterChain). The order is predefined (e.g. UsernamePasswordAuthenticationFilter, BasicAuthenticationFilter). When adding custom filters, one must position them relative to these standard filters using methods on the HttpSecurity configuration."
+    "correctOptionIndex": 3,
+    "explanation": "The order of filters inside a SecurityFilterChain is explicitly configured via HttpSecurity APIs. Class-level @Order annotations do not position filters within the SecurityFilterChain."
   },
   {
-    "id": "spring-gen-261",
-    "topic": "Spring Security",
-    "difficulty": "hard",
-    "questionText": "How does Spring Security enforce the order of filters in its security chain, and how do custom filters fit in?",
+    "id": "spring-quiz-t8-4",
+    "topic": "Spring Core",
+    "difficulty": "medium",
+    "questionText": "If a payment service interface has a default bean marked with @Primary, and another bean with qualifier 'customPaymentSvc_4', what is injected?",
+    "codeSnippet": "@RestController\npublic class PaymentController {\n    @Autowired\n    @Qualifier(\"customPaymentSvc_4\")\n    private PaymentService service;\n}",
     "options": [
-      "Filters are ordered sequentially in a list. Custom filters are inserted at specific positions using 'addFilterBefore' or 'addFilterAfter' relative to standard filters.",
-      "Filters are executed concurrently using a ThreadPool.",
-      "Filters are resolved based on the alphabetical order of their class names.",
-      "Filters are executed randomly unless they implement Ordered."
+      "The bean annotated with @Qualifier(\"customPaymentSvc_4\") is injected, overriding @Primary.",
+      "The @Primary bean is injected because primary beans take highest precedence.",
+      "A BeanCreationException is thrown due to injection ambiguity.",
+      "Both beans are injected inside a wrapper candidate proxy."
     ],
     "correctOptionIndex": 0,
-    "explanation": "Spring Security uses a chain of servlet filters (SecurityFilterChain). The order is predefined (e.g. UsernamePasswordAuthenticationFilter, BasicAuthenticationFilter). When adding custom filters, one must position them relative to these standard filters using methods on the HttpSecurity configuration."
+    "explanation": "While @Primary sets a default candidate, an explicit @Qualifier specifies the precise bean name requested. Explicit qualifiers take precedence over primary bean designations."
   },
   {
-    "id": "spring-gen-262",
-    "topic": "Spring Security",
-    "difficulty": "hard",
-    "questionText": "How does Spring Security enforce the order of filters in its security chain, and how do custom filters fit in?",
-    "options": [
-      "Filters are ordered sequentially in a list. Custom filters are inserted at specific positions using 'addFilterBefore' or 'addFilterAfter' relative to standard filters.",
-      "Filters are executed concurrently using a ThreadPool.",
-      "Filters are resolved based on the alphabetical order of their class names.",
-      "Filters are executed randomly unless they implement Ordered."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Security uses a chain of servlet filters (SecurityFilterChain). The order is predefined (e.g. UsernamePasswordAuthenticationFilter, BasicAuthenticationFilter). When adding custom filters, one must position them relative to these standard filters using methods on the HttpSecurity configuration."
-  },
-  {
-    "id": "spring-gen-263",
-    "topic": "Spring Security",
-    "difficulty": "hard",
-    "questionText": "How does Spring Security enforce the order of filters in its security chain, and how do custom filters fit in?",
-    "options": [
-      "Filters are ordered sequentially in a list. Custom filters are inserted at specific positions using 'addFilterBefore' or 'addFilterAfter' relative to standard filters.",
-      "Filters are executed concurrently using a ThreadPool.",
-      "Filters are resolved based on the alphabetical order of their class names.",
-      "Filters are executed randomly unless they implement Ordered."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Security uses a chain of servlet filters (SecurityFilterChain). The order is predefined (e.g. UsernamePasswordAuthenticationFilter, BasicAuthenticationFilter). When adding custom filters, one must position them relative to these standard filters using methods on the HttpSecurity configuration."
-  },
-  {
-    "id": "spring-gen-264",
-    "topic": "Spring Security",
-    "difficulty": "hard",
-    "questionText": "How does Spring Security enforce the order of filters in its security chain, and how do custom filters fit in?",
-    "options": [
-      "Filters are ordered sequentially in a list. Custom filters are inserted at specific positions using 'addFilterBefore' or 'addFilterAfter' relative to standard filters.",
-      "Filters are executed concurrently using a ThreadPool.",
-      "Filters are resolved based on the alphabetical order of their class names.",
-      "Filters are executed randomly unless they implement Ordered."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Security uses a chain of servlet filters (SecurityFilterChain). The order is predefined (e.g. UsernamePasswordAuthenticationFilter, BasicAuthenticationFilter). When adding custom filters, one must position them relative to these standard filters using methods on the HttpSecurity configuration."
-  },
-  {
-    "id": "spring-gen-265",
-    "topic": "Spring Security",
-    "difficulty": "hard",
-    "questionText": "How does Spring Security enforce the order of filters in its security chain, and how do custom filters fit in?",
-    "options": [
-      "Filters are ordered sequentially in a list. Custom filters are inserted at specific positions using 'addFilterBefore' or 'addFilterAfter' relative to standard filters.",
-      "Filters are executed concurrently using a ThreadPool.",
-      "Filters are resolved based on the alphabetical order of their class names.",
-      "Filters are executed randomly unless they implement Ordered."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Security uses a chain of servlet filters (SecurityFilterChain). The order is predefined (e.g. UsernamePasswordAuthenticationFilter, BasicAuthenticationFilter). When adding custom filters, one must position them relative to these standard filters using methods on the HttpSecurity configuration."
-  },
-  {
-    "id": "spring-gen-266",
-    "topic": "Spring Security",
-    "difficulty": "hard",
-    "questionText": "How does Spring Security enforce the order of filters in its security chain, and how do custom filters fit in?",
-    "options": [
-      "Filters are ordered sequentially in a list. Custom filters are inserted at specific positions using 'addFilterBefore' or 'addFilterAfter' relative to standard filters.",
-      "Filters are executed concurrently using a ThreadPool.",
-      "Filters are resolved based on the alphabetical order of their class names.",
-      "Filters are executed randomly unless they implement Ordered."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Security uses a chain of servlet filters (SecurityFilterChain). The order is predefined (e.g. UsernamePasswordAuthenticationFilter, BasicAuthenticationFilter). When adding custom filters, one must position them relative to these standard filters using methods on the HttpSecurity configuration."
-  },
-  {
-    "id": "spring-gen-267",
-    "topic": "Spring Security",
-    "difficulty": "hard",
-    "questionText": "How does Spring Security enforce the order of filters in its security chain, and how do custom filters fit in?",
-    "options": [
-      "Filters are ordered sequentially in a list. Custom filters are inserted at specific positions using 'addFilterBefore' or 'addFilterAfter' relative to standard filters.",
-      "Filters are executed concurrently using a ThreadPool.",
-      "Filters are resolved based on the alphabetical order of their class names.",
-      "Filters are executed randomly unless they implement Ordered."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Security uses a chain of servlet filters (SecurityFilterChain). The order is predefined (e.g. UsernamePasswordAuthenticationFilter, BasicAuthenticationFilter). When adding custom filters, one must position them relative to these standard filters using methods on the HttpSecurity configuration."
-  },
-  {
-    "id": "spring-gen-268",
-    "topic": "Spring Security",
-    "difficulty": "hard",
-    "questionText": "How does Spring Security enforce the order of filters in its security chain, and how do custom filters fit in?",
-    "options": [
-      "Filters are ordered sequentially in a list. Custom filters are inserted at specific positions using 'addFilterBefore' or 'addFilterAfter' relative to standard filters.",
-      "Filters are executed concurrently using a ThreadPool.",
-      "Filters are resolved based on the alphabetical order of their class names.",
-      "Filters are executed randomly unless they implement Ordered."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Security uses a chain of servlet filters (SecurityFilterChain). The order is predefined (e.g. UsernamePasswordAuthenticationFilter, BasicAuthenticationFilter). When adding custom filters, one must position them relative to these standard filters using methods on the HttpSecurity configuration."
-  },
-  {
-    "id": "spring-gen-269",
-    "topic": "Spring Security",
-    "difficulty": "hard",
-    "questionText": "How does Spring Security enforce the order of filters in its security chain, and how do custom filters fit in?",
-    "options": [
-      "Filters are ordered sequentially in a list. Custom filters are inserted at specific positions using 'addFilterBefore' or 'addFilterAfter' relative to standard filters.",
-      "Filters are executed concurrently using a ThreadPool.",
-      "Filters are resolved based on the alphabetical order of their class names.",
-      "Filters are executed randomly unless they implement Ordered."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Security uses a chain of servlet filters (SecurityFilterChain). The order is predefined (e.g. UsernamePasswordAuthenticationFilter, BasicAuthenticationFilter). When adding custom filters, one must position them relative to these standard filters using methods on the HttpSecurity configuration."
-  },
-  {
-    "id": "spring-gen-270",
-    "topic": "Spring Security",
-    "difficulty": "hard",
-    "questionText": "How does Spring Security enforce the order of filters in its security chain, and how do custom filters fit in?",
-    "options": [
-      "Filters are ordered sequentially in a list. Custom filters are inserted at specific positions using 'addFilterBefore' or 'addFilterAfter' relative to standard filters.",
-      "Filters are executed concurrently using a ThreadPool.",
-      "Filters are resolved based on the alphabetical order of their class names.",
-      "Filters are executed randomly unless they implement Ordered."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Security uses a chain of servlet filters (SecurityFilterChain). The order is predefined (e.g. UsernamePasswordAuthenticationFilter, BasicAuthenticationFilter). When adding custom filters, one must position them relative to these standard filters using methods on the HttpSecurity configuration."
-  },
-  {
-    "id": "spring-gen-271",
-    "topic": "Spring Security",
-    "difficulty": "hard",
-    "questionText": "How does Spring Security enforce the order of filters in its security chain, and how do custom filters fit in?",
-    "options": [
-      "Filters are ordered sequentially in a list. Custom filters are inserted at specific positions using 'addFilterBefore' or 'addFilterAfter' relative to standard filters.",
-      "Filters are executed concurrently using a ThreadPool.",
-      "Filters are resolved based on the alphabetical order of their class names.",
-      "Filters are executed randomly unless they implement Ordered."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Security uses a chain of servlet filters (SecurityFilterChain). The order is predefined (e.g. UsernamePasswordAuthenticationFilter, BasicAuthenticationFilter). When adding custom filters, one must position them relative to these standard filters using methods on the HttpSecurity configuration."
-  },
-  {
-    "id": "spring-gen-272",
-    "topic": "Spring Security",
-    "difficulty": "hard",
-    "questionText": "How does Spring Security enforce the order of filters in its security chain, and how do custom filters fit in?",
-    "options": [
-      "Filters are ordered sequentially in a list. Custom filters are inserted at specific positions using 'addFilterBefore' or 'addFilterAfter' relative to standard filters.",
-      "Filters are executed concurrently using a ThreadPool.",
-      "Filters are resolved based on the alphabetical order of their class names.",
-      "Filters are executed randomly unless they implement Ordered."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Security uses a chain of servlet filters (SecurityFilterChain). The order is predefined (e.g. UsernamePasswordAuthenticationFilter, BasicAuthenticationFilter). When adding custom filters, one must position them relative to these standard filters using methods on the HttpSecurity configuration."
-  },
-  {
-    "id": "spring-gen-273",
-    "topic": "Spring Security",
-    "difficulty": "hard",
-    "questionText": "How does Spring Security enforce the order of filters in its security chain, and how do custom filters fit in?",
-    "options": [
-      "Filters are ordered sequentially in a list. Custom filters are inserted at specific positions using 'addFilterBefore' or 'addFilterAfter' relative to standard filters.",
-      "Filters are executed concurrently using a ThreadPool.",
-      "Filters are resolved based on the alphabetical order of their class names.",
-      "Filters are executed randomly unless they implement Ordered."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Security uses a chain of servlet filters (SecurityFilterChain). The order is predefined (e.g. UsernamePasswordAuthenticationFilter, BasicAuthenticationFilter). When adding custom filters, one must position them relative to these standard filters using methods on the HttpSecurity configuration."
-  },
-  {
-    "id": "spring-gen-274",
-    "topic": "Spring Security",
-    "difficulty": "hard",
-    "questionText": "How does Spring Security enforce the order of filters in its security chain, and how do custom filters fit in?",
-    "options": [
-      "Filters are ordered sequentially in a list. Custom filters are inserted at specific positions using 'addFilterBefore' or 'addFilterAfter' relative to standard filters.",
-      "Filters are executed concurrently using a ThreadPool.",
-      "Filters are resolved based on the alphabetical order of their class names.",
-      "Filters are executed randomly unless they implement Ordered."
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Security uses a chain of servlet filters (SecurityFilterChain). The order is predefined (e.g. UsernamePasswordAuthenticationFilter, BasicAuthenticationFilter). When adding custom filters, one must position them relative to these standard filters using methods on the HttpSecurity configuration."
-  },
-  {
-    "id": "spring-gen-275",
+    "id": "spring-quiz-t9-4",
     "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "Which Isolation level prevents dirty reads and non-repeatable reads, but still allows phantom reads?",
+    "difficulty": "medium",
+    "questionText": "If you specify a derived query method using property name 'emailAddress_4' which is missing on the Entity, what happens?",
+    "codeSnippet": "public interface UserRepository extends JpaRepository<User, Long> {\n    List<User> findByemailAddress_4(String email); // Entity field is 'email'\n}",
     "options": [
-      "Isolation.REPEATABLE_READ",
-      "Isolation.READ_COMMITTED",
-      "Isolation.SERIALIZABLE",
-      "Isolation.READ_UNCOMMITTED"
+      "The query executes but returns an empty list at runtime.",
+      "Spring Data fallback parses it to a native SQL query.",
+      "Spring Boot throws a PropertyReferenceException and fails to start during application context initialization.",
+      "A compile-time error occurs on the repository interface."
     ],
-    "correctOptionIndex": 0,
-    "explanation": "Isolation.REPEATABLE_READ prevents a transaction from reading uncommitted changes (dirty reads) or seeing modifications made by other transactions to already-read rows (non-repeatable reads). However, new rows inserted by other transactions (phantom reads) can still appear."
+    "correctOptionIndex": 2,
+    "explanation": "Spring Data JPA parses derived query methods at application startup to validate them against the Entity's properties. If a method references a missing field like 'emailAddress_4', it throws a PropertyReferenceException and halts startup."
   },
   {
-    "id": "spring-gen-276",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "Which Isolation level prevents dirty reads and non-repeatable reads, but still allows phantom reads?",
-    "options": [
-      "Isolation.REPEATABLE_READ",
-      "Isolation.READ_COMMITTED",
-      "Isolation.SERIALIZABLE",
-      "Isolation.READ_UNCOMMITTED"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Isolation.REPEATABLE_READ prevents a transaction from reading uncommitted changes (dirty reads) or seeing modifications made by other transactions to already-read rows (non-repeatable reads). However, new rows inserted by other transactions (phantom reads) can still appear."
-  },
-  {
-    "id": "spring-gen-277",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "Which Isolation level prevents dirty reads and non-repeatable reads, but still allows phantom reads?",
-    "options": [
-      "Isolation.REPEATABLE_READ",
-      "Isolation.READ_COMMITTED",
-      "Isolation.SERIALIZABLE",
-      "Isolation.READ_UNCOMMITTED"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Isolation.REPEATABLE_READ prevents a transaction from reading uncommitted changes (dirty reads) or seeing modifications made by other transactions to already-read rows (non-repeatable reads). However, new rows inserted by other transactions (phantom reads) can still appear."
-  },
-  {
-    "id": "spring-gen-278",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "Which Isolation level prevents dirty reads and non-repeatable reads, but still allows phantom reads?",
-    "options": [
-      "Isolation.REPEATABLE_READ",
-      "Isolation.READ_COMMITTED",
-      "Isolation.SERIALIZABLE",
-      "Isolation.READ_UNCOMMITTED"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Isolation.REPEATABLE_READ prevents a transaction from reading uncommitted changes (dirty reads) or seeing modifications made by other transactions to already-read rows (non-repeatable reads). However, new rows inserted by other transactions (phantom reads) can still appear."
-  },
-  {
-    "id": "spring-gen-279",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "Which Isolation level prevents dirty reads and non-repeatable reads, but still allows phantom reads?",
-    "options": [
-      "Isolation.REPEATABLE_READ",
-      "Isolation.READ_COMMITTED",
-      "Isolation.SERIALIZABLE",
-      "Isolation.READ_UNCOMMITTED"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Isolation.REPEATABLE_READ prevents a transaction from reading uncommitted changes (dirty reads) or seeing modifications made by other transactions to already-read rows (non-repeatable reads). However, new rows inserted by other transactions (phantom reads) can still appear."
-  },
-  {
-    "id": "spring-gen-280",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "Which Isolation level prevents dirty reads and non-repeatable reads, but still allows phantom reads?",
-    "options": [
-      "Isolation.REPEATABLE_READ",
-      "Isolation.READ_COMMITTED",
-      "Isolation.SERIALIZABLE",
-      "Isolation.READ_UNCOMMITTED"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Isolation.REPEATABLE_READ prevents a transaction from reading uncommitted changes (dirty reads) or seeing modifications made by other transactions to already-read rows (non-repeatable reads). However, new rows inserted by other transactions (phantom reads) can still appear."
-  },
-  {
-    "id": "spring-gen-281",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "Which Isolation level prevents dirty reads and non-repeatable reads, but still allows phantom reads?",
-    "options": [
-      "Isolation.REPEATABLE_READ",
-      "Isolation.READ_COMMITTED",
-      "Isolation.SERIALIZABLE",
-      "Isolation.READ_UNCOMMITTED"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Isolation.REPEATABLE_READ prevents a transaction from reading uncommitted changes (dirty reads) or seeing modifications made by other transactions to already-read rows (non-repeatable reads). However, new rows inserted by other transactions (phantom reads) can still appear."
-  },
-  {
-    "id": "spring-gen-282",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "Which Isolation level prevents dirty reads and non-repeatable reads, but still allows phantom reads?",
-    "options": [
-      "Isolation.REPEATABLE_READ",
-      "Isolation.READ_COMMITTED",
-      "Isolation.SERIALIZABLE",
-      "Isolation.READ_UNCOMMITTED"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Isolation.REPEATABLE_READ prevents a transaction from reading uncommitted changes (dirty reads) or seeing modifications made by other transactions to already-read rows (non-repeatable reads). However, new rows inserted by other transactions (phantom reads) can still appear."
-  },
-  {
-    "id": "spring-gen-283",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "Which Isolation level prevents dirty reads and non-repeatable reads, but still allows phantom reads?",
-    "options": [
-      "Isolation.REPEATABLE_READ",
-      "Isolation.READ_COMMITTED",
-      "Isolation.SERIALIZABLE",
-      "Isolation.READ_UNCOMMITTED"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Isolation.REPEATABLE_READ prevents a transaction from reading uncommitted changes (dirty reads) or seeing modifications made by other transactions to already-read rows (non-repeatable reads). However, new rows inserted by other transactions (phantom reads) can still appear."
-  },
-  {
-    "id": "spring-gen-284",
-    "topic": "Spring Data JPA",
-    "difficulty": "hard",
-    "questionText": "Which Isolation level prevents dirty reads and non-repeatable reads, but still allows phantom reads?",
-    "options": [
-      "Isolation.REPEATABLE_READ",
-      "Isolation.READ_COMMITTED",
-      "Isolation.SERIALIZABLE",
-      "Isolation.READ_UNCOMMITTED"
-    ],
-    "correctOptionIndex": 0,
-    "explanation": "Isolation.REPEATABLE_READ prevents a transaction from reading uncommitted changes (dirty reads) or seeing modifications made by other transactions to already-read rows (non-repeatable reads). However, new rows inserted by other transactions (phantom reads) can still appear."
-  },
-  {
-    "id": "spring-gen-1",
+    "id": "spring-quiz-t10-4",
     "topic": "Spring Core & AOP",
-    "difficulty": "easy",
-    "questionText": "Which of the following best describes the primary role of the '@Component' annotation in Spring?",
+    "difficulty": "hard",
+    "questionText": "What happens if you apply @Transactional to a final method inside bean class 'DataFetcher_4' proxied by Spring AOP CGLIB subclassing?",
+    "codeSnippet": "public class DataFetcher_4 {\n    @Transactional\n    public final void loadData() {\n        // DB changes\n    }\n}",
     "options": [
-      "general-purpose stereotype annotation indicating a class is a managed Spring component",
-      "specialization of @Component for service-layer beans containing business logic",
-      "An annotation used to configure database tables",
-      "An annotation used to enable unit tests"
+      "Spring throws a FinalMethodAopException at startup.",
+      "The application throws a ClassCastException during method call.",
+      "The JVM crashes at runtime when calling the final method.",
+      "The transaction aspect is bypassed silently because CGLIB creates a subclass and cannot override final methods."
     ],
-    "correctOptionIndex": 0,
-    "explanation": "In Spring, '@Component' serves as a core stereotype annotation: general-purpose stereotype annotation indicating a class is a managed Spring component."
+    "correctOptionIndex": 3,
+    "explanation": "CGLIB creates proxies by generating a dynamic subclass at runtime. Because final methods cannot be overridden by subclasses, the generated proxy class cannot insert aspect interceptor code. The final method runs directly, bypassing the aspect."
   },
   {
-    "id": "spring-gen-2",
+    "id": "spring-quiz-t11-4",
+    "topic": "Spring Boot Configurations",
+    "difficulty": "medium",
+    "questionText": "If 'app.rate.4' is defined in application.properties as 50, in JVM properties as 100, and as an OS environment variable as 150, what value is resolved?",
+    "codeSnippet": "@Value(\"${app.rate.4}\")\nprivate int rate;",
+    "options": [
+      "150 (OS Environment variables take highest precedence)",
+      "50 (application.properties overrides all external configurations)",
+      "100 (JVM system properties override OS environment variables and properties files)",
+      "It throws a property resolution error due to conflict"
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Spring Boot property sources order: 1) Command-line args, 2) JVM System properties (-D...), 3) OS environment variables, 4) application.properties. Thus, the JVM value of 100 is selected."
+  },
+  {
+    "id": "spring-quiz-t12-4",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "How does the integer phase value 104 returned by getPhase() in SmartLifecycle affect context startup and shutdown order?",
+    "codeSnippet": "public class CustomService implements SmartLifecycle {\n    @Override\n    public int getPhase() { return 104; }\n}",
+    "options": [
+      "Beans with higher phase numbers are started first and stopped last.",
+      "The phase determines the priority thread pool, where higher phase means more threads.",
+      "SmartLifecycle beans start concurrently and ignore the phase value.",
+      "Beans with lower phase numbers are started first. During shutdown, beans with higher phase numbers are stopped first."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "SmartLifecycle defines getPhase() to resolve dependency execution order: lower phase numbers start first (e.g. databases, dependencies) and stop last. Shutdown goes in reverse, stopping higher phase numbers first."
+  },
+  {
+    "id": "spring-quiz-t13-4",
+    "topic": "Spring Caching",
+    "difficulty": "hard",
+    "questionText": "Why does the cache eviction fail under the configuration below?",
+    "codeSnippet": "@Cacheable(value = \"users_cache_4\", key = \"#id\")\npublic User getUser(Long id, Context ctx) { ... }\n\n@CacheEvict(value = \"users_cache_4\")\npublic void evictUser(Long id) { ... }",
+    "options": [
+      "Because cache names must be different.",
+      "Because evictUser() returns void.",
+      "Because evictUser() does not define a key, causing Spring to use SimpleKeyGenerator on '#id' while getUser() keys on '#id', resulting in mismatch.",
+      "Because CacheEvict requires @Transactional to run."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "By default, key generation combines all method arguments. For getUser(), the key combines id and ctx, but key='#id' overrides it to 'id'. For evictUser(), the key defaults to 'id' as well, but if arguments mismatch in key structure, we must explicitly set key='#id' in both to prevent cache desync."
+  },
+  {
+    "id": "spring-quiz-t14-4",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "hard",
+    "questionText": "What is the runtime impact of performing a blocking/long-running task inside the @PostConstruct method of 'SetupBean_4'?",
+    "codeSnippet": "@Component\npublic class SetupBean_4 {\n    @PostConstruct\n    public void init() {\n        // Blocks on network/external server call\n        loadConfiguration();\n    }\n}",
+    "options": [
+      "It blocks the main startup thread, preventing the application context from finishing initialization and starting the web server.",
+      "It triggers an asynchronous thread pool execution and continues startup.",
+      "Spring immediately throws an InitializationTimeoutException.",
+      "The JVM runs the method in the background without affecting startup."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "@PostConstruct methods are executed synchronously during bean instantiation on the main thread. If a bean blocks in @PostConstruct, application context startup halts, blocking the web server (Tomcat) from starting. Use events or Async tasks instead."
+  },
+  {
+    "id": "spring-quiz-t15-4",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "If a controller throws a 'DatabaseException_4' (which extends RuntimeException), which ExceptionHandler method inside ControllerAdvice is invoked?",
+    "codeSnippet": "@ControllerAdvice\npublic class GlobalHandler {\n    @ExceptionHandler(RuntimeException.class)\n    public String handleRuntime(RuntimeException ex) { return \"Runtime\"; }\n\n    @ExceptionHandler(DatabaseException_4.class)\n    public String handleDb(DatabaseException_4 ex) { return \"Db\"; }\n}",
+    "options": [
+      "handleRuntime(), because RuntimeException is checked first as the parent class.",
+      "Both methods run in sequence.",
+      "Spring throws an ExceptionHandlerAmbiguityException at startup.",
+      "handleDb(), because it is mapped to the most specific exception type matching the exception thrown."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring's exception resolver resolves to the exception handler that maps to the most specific exception in the type hierarchy. Since 'DatabaseException_4' matches the thrown exception exactly, handleDb() is preferred over handleRuntime()."
+  },
+  {
+    "id": "spring-quiz-t16-4",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "What is the state of entity 'Account_4' and the database result when the method process() exits?",
+    "codeSnippet": "@Transactional\npublic void process(Long id) {\n    Account_4 acc = repository.findById(id).orElseThrow();\n    entityManager.detach(acc);\n    acc.setBalance(1000);\n}",
+    "options": [
+      "The entity is in the detached state; no database updates occur.",
+      "The entity is in the persistent state; the database is updated with balance 1000.",
+      "An EntityNotFoundException is thrown during detach.",
+      "Hibernate throws a LazyInitializationException when setting the balance."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Calling entityManager.detach(entity) removes the entity from the Persistence Context. It changes from 'persistent' to 'detached' state. Hibernate no longer tracks modifications, so the balance change is not flushed to the database."
+  },
+  {
+    "id": "spring-quiz-t17-4",
+    "topic": "Spring Cloud & Resilience",
+    "difficulty": "medium",
+    "questionText": "A Resilience4j Circuit Breaker has slidingWindowSize = 14 and failureRateThreshold = 50%. If 9 requests fail within the sliding window, what is the state transition?",
+    "codeSnippet": "CircuitBreakerConfig config = CircuitBreakerConfig.custom()\n    .slidingWindowSize(14)\n    .failureRateThreshold(50)\n    .build();",
+    "options": [
+      "Remains in CLOSED state because the sliding window must exceed capacity.",
+      "Transitions to HALF_OPEN state.",
+      "Throws a CircuitBreakerOpenException immediately.",
+      "Transitions to OPEN state (failure rate is 64%, exceeding the 50% threshold)."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Once the sliding window registers 14 requests, Resilience4j calculates the failure rate. Since 9/14 (64%) is greater than or equal to 50%, the Circuit Breaker transitions to the OPEN state."
+  },
+  {
+    "id": "spring-quiz-t18-4",
+    "topic": "Spring Boot Internals",
+    "difficulty": "hard",
+    "questionText": "Inside a single configuration class, what determines the registration order of beans and the result of @ConditionalOnMissingBean?",
+    "codeSnippet": "@Configuration\npublic class AppConfig {\n    @Bean\n    public BeanVal_4 primaryBean() { return new BeanVal_4(\"A\"); }\n\n    @Bean\n    @ConditionalOnMissingBean(BeanVal_4.class)\n    public BeanVal_4 fallbackBean() { return new BeanVal_4(\"B\"); }\n}",
+    "options": [
+      "Bean methods are registered in order of definition. primaryBean() registers first, causing fallbackBean()'s conditional check to fail. Only primaryBean is registered.",
+      "fallbackBean overrides primaryBean because @ConditionalOnMissingBean forces precedence.",
+      "Both beans are registered, creating an array list injection candidate.",
+      "Spring throws a BeanDefinitionOverrideException during startup."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Within a single configuration class, beans are parsed and registered sequentially. Since primaryBean() is defined first, its bean exists when fallbackBean() is evaluated. The conditional check fails, and fallbackBean() is skipped."
+  },
+  {
+    "id": "spring-quiz-t19-4",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "A controller returns an instance of 'ResponseData_4'. If fields are private and no getters are defined, what is the HTTP response behavior?",
+    "codeSnippet": "public class ResponseData_4 {\n    private String status;\n    public ResponseData_4(String status) { this.status = status; }\n    // No getters\n}",
+    "options": [
+      "HTTP 200 with JSON payload {\"status\":null}.",
+      "HTTP 200 with JSON payload {\"status\":\"...\"} using reflection.",
+      "HTTP 500 error or exception (Jackson throws an InvalidDefinitionException: No serializer found).",
+      "The code fails to compile because classes returned from RestController require getters."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Jackson (Spring Boot's default serializer) uses public getter methods to discover properties to write to JSON. If fields are private and no getters/setters/annotations are present, Jackson throws an exception, resulting in an HTTP 500."
+  },
+  {
+    "id": "spring-quiz-t20-4",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "If outerMethod() is marked as @Transactional and invokes nestedMethod() which is marked as @Transactional(propagation = Propagation.NESTED), what happens to DB updates if nestedMethod() fails and throws an exception caught inside outerMethod()?",
+    "codeSnippet": "@Transactional\npublic void outerMethod() {\n    try {\n        innerService.nestedMethod();\n    } catch (Exception e) {\n        // Exception caught\n    }\n    // Save other data\n}",
+    "options": [
+      "The entire transaction is rolled back because the outer method was marked as Transactional.",
+      "nestedMethod()'s updates are committed because the exception was caught in the outer method.",
+      "Spring throws a NestedTransactionNotSupportedException.",
+      "Only nestedMethod()'s updates are rolled back to the savepoint; outerMethod()'s updates can still commit successfully."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Propagation.NESTED creates a nested transaction using database savepoints. If the nested transaction fails and its exception is caught and handled inside the outer transaction, only the nested transaction rolls back to its savepoint. The outer transaction remains valid."
+  },
+  {
+    "id": "spring-quiz-t1-5",
     "topic": "Spring Core & AOP",
-    "difficulty": "easy",
-    "questionText": "Which of the following best describes the primary role of the '@Service' annotation in Spring?",
+    "difficulty": "hard",
+    "questionText": "In the service below, orderProcessor() is invoked from an external REST controller. What is the transactional behavior of saveOrder()?",
+    "codeSnippet": "@Service\npublic class OrderService_5 {\n    public void orderProcessor() {\n        saveOrder(); // Self-invocation\n    }\n\n    @Transactional\n    public void saveOrder() {\n        // Save database record\n    }\n}",
     "options": [
-      "specialization of @Component for service-layer beans containing business logic",
-      "general-purpose stereotype annotation indicating a class is a managed Spring component",
-      "An annotation used to configure database tables",
-      "An annotation used to enable unit tests"
+      "Spring starts a new transaction automatically using aspect interception.",
+      "The application throws a CircularDependencyException at startup.",
+      "No transaction starts, because self-invocation bypasses the Spring AOP proxy.",
+      "A TransactionRequiredException is thrown during execution."
     ],
-    "correctOptionIndex": 0,
-    "explanation": "In Spring, '@Service' serves as a core stereotype annotation: specialization of @Component for service-layer beans containing business logic."
+    "correctOptionIndex": 2,
+    "explanation": "Spring's declarative annotations rely on AOP proxy wrappers. Method calls from outside go through the proxy, running transaction interceptors. Direct internal calls (self-invocation) run directly on the target object, bypassing the proxy and annotations."
   },
   {
-    "id": "spring-gen-3",
+    "id": "spring-quiz-t2-5",
+    "topic": "Spring Core & Scopes",
+    "difficulty": "hard",
+    "questionText": "You inject a prototype-scoped bean 'RequestTracker_5' into a singleton controller 'AnalyticsController_5'. How does 'RequestTracker_5' behave across multiple HTTP requests?",
+    "codeSnippet": "@Scope(\"prototype\")\n@Component\npublic class RequestTracker_5 {}\n\n@RestController\npublic class AnalyticsController_5 {\n    @Autowired\n    private RequestTracker_5 tracker;\n}",
+    "options": [
+      "A new instance of 'RequestTracker_5' is created for every HTTP request.",
+      "The controller reuses the exact same instance of 'RequestTracker_5' injected at startup, behaving as a singleton.",
+      "Spring throws a ScopeMismatchException during startup.",
+      "The application fails to start because prototype beans cannot be injected into singletons."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Because the controller is a singleton, it is initialized once. Consequently, its fields are injected once. The prototype-scoped bean is instantiated during this injection, and that same instance is shared for all requests. To resolve, use scoped proxies."
+  },
+  {
+    "id": "spring-quiz-t3-5",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If a transaction method throws an Exception (checked exception) during database operations, what is the default rollback behavior?",
+    "codeSnippet": "@Transactional\npublic void process(User user) throws Exception {\n    UserRepo_5.save(user);\n    if (user.getName() == null) {\n        throw new Exception(\"Invalid User\");\n    }\n}",
+    "options": [
+      "The transaction is automatically rolled back for all exceptions.",
+      "The transaction is committed, and changes are saved because checked exceptions do not trigger rollback by default.",
+      "The compiler throws an error because Transactional cannot declare checked throws.",
+      "The transaction rolls back, but only if the database isolation is SERIALIZABLE."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Spring's @Transactional default configuration rolls back transactions only for unchecked exceptions (subclasses of RuntimeException and Error). Checked exceptions (like Exception, IOException) do not trigger rollback unless configured as @Transactional(rollbackFor = Exception.class)."
+  },
+  {
+    "id": "spring-quiz-t4-5",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "What occurs when Spring starts up and detects a circular constructor dependency between singleton beans 'BeanA_5' and 'BeanB_5'?",
+    "codeSnippet": "@Component\npublic class BeanA_5 {\n    public BeanA_5(BeanB_5 b) {}\n}\n@Component\npublic class BeanB_5 {\n    public BeanB_5(BeanA_5 a) {}\n}",
+    "options": [
+      "The application fails to start and throws a BeanCurrentlyInCreationException.",
+      "Spring automatically resolves the cycle by injecting a dynamic proxy.",
+      "The JVM crashes with a StackOverflowError during initialization.",
+      "Spring instantiates both beans as null."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Unlike setter/field injection, constructor dependencies must be resolved during object creation. Since neither 'BeanA_5' nor 'BeanB_5' can be constructed without the other, Spring cannot resolve the dependency cycle and throws a BeanCurrentlyInCreationException."
+  },
+  {
+    "id": "spring-quiz-t5-5",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "An entity has a lazy-loaded collection association. If you fetch all 5 parent entities and access their associations in a loop, how many SQL queries hit the database?",
+    "codeSnippet": "List<Parent> parents = parentRepository.findAll(); // Fetches 5 parents\nfor (Parent p : parents) {\n    System.out.println(p.getChildren().size()); // Lazy load\n}",
+    "options": [
+      "6 SQL queries.",
+      "1 SQL query.",
+      "5 SQL queries.",
+      "2 SQL queries."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "This is the N+1 query problem. The initial query fetches the parents (1 query). When accessing the lazy collection for each parent in the loop, Hibernate sends a separate select query per parent (5 queries), resulting in 6 queries."
+  },
+  {
+    "id": "spring-quiz-t6-5",
+    "topic": "Spring WebFlux",
+    "difficulty": "hard",
+    "questionText": "What is the hazard of calling a blocking method like RestTemplate inside a Spring WebFlux controller running on Netty event loops?",
+    "codeSnippet": "@GetMapping(\"/data\")\npublic Mono<String> getData() {\n    return Mono.fromCallable(() -> restTemplate.getForObject(\"https://api.com\", String.class));\n}",
+    "options": [
+      "WebFlux automatically shifts the call to virtual threads to avoid blocking.",
+      "It blocks the Netty EventLoop thread, reducing server capacity to process concurrent requests and causing starvation.",
+      "The controller immediately throws a BlockedEventLoopException during compilation.",
+      "It causes a deadlock because Netty restricts HTTP requests."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "WebFlux uses a small number of non-blocking event loop threads. Blocking operations on these threads exhaust the pool and block the server from handling other connections. Offload blocking logic using subscribeOn(Schedulers.boundedElastic())."
+  },
+  {
+    "id": "spring-quiz-t7-5",
+    "topic": "Spring Security",
+    "difficulty": "medium",
+    "questionText": "How do you insert a custom filter 'CustomAuthFilter_5' in a security chain so it executes before UsernamePasswordAuthenticationFilter?",
+    "codeSnippet": "@Bean\npublic SecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n    http.addFilterBefore(new CustomAuthFilter_5(), UsernamePasswordAuthenticationFilter.class);\n    return http.build();\n}",
+    "options": [
+      "Annotate CustomAuthFilter_5 with @Order(Ordered.HIGHEST_PRECEDENCE).",
+      "Register CustomAuthFilter_5 as a Spring @Component; Spring Security loads custom beans first.",
+      "Declare CustomAuthFilter_5 inside application.properties under security.filter.order.",
+      "Use addFilterBefore(new CustomAuthFilter_5(), UsernamePasswordAuthenticationFilter.class) inside HttpSecurity config."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "The order of filters inside a SecurityFilterChain is explicitly configured via HttpSecurity APIs. Class-level @Order annotations do not position filters within the SecurityFilterChain."
+  },
+  {
+    "id": "spring-quiz-t8-5",
+    "topic": "Spring Core",
+    "difficulty": "medium",
+    "questionText": "If a payment service interface has a default bean marked with @Primary, and another bean with qualifier 'customPaymentSvc_5', what is injected?",
+    "codeSnippet": "@RestController\npublic class PaymentController {\n    @Autowired\n    @Qualifier(\"customPaymentSvc_5\")\n    private PaymentService service;\n}",
+    "options": [
+      "The @Primary bean is injected because primary beans take highest precedence.",
+      "The bean annotated with @Qualifier(\"customPaymentSvc_5\") is injected, overriding @Primary.",
+      "A BeanCreationException is thrown due to injection ambiguity.",
+      "Both beans are injected inside a wrapper candidate proxy."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "While @Primary sets a default candidate, an explicit @Qualifier specifies the precise bean name requested. Explicit qualifiers take precedence over primary bean designations."
+  },
+  {
+    "id": "spring-quiz-t9-5",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If you specify a derived query method using property name 'emailAddress_5' which is missing on the Entity, what happens?",
+    "codeSnippet": "public interface UserRepository extends JpaRepository<User, Long> {\n    List<User> findByemailAddress_5(String email); // Entity field is 'email'\n}",
+    "options": [
+      "Spring Boot throws a PropertyReferenceException and fails to start during application context initialization.",
+      "The query executes but returns an empty list at runtime.",
+      "Spring Data fallback parses it to a native SQL query.",
+      "A compile-time error occurs on the repository interface."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Spring Data JPA parses derived query methods at application startup to validate them against the Entity's properties. If a method references a missing field like 'emailAddress_5', it throws a PropertyReferenceException and halts startup."
+  },
+  {
+    "id": "spring-quiz-t10-5",
     "topic": "Spring Core & AOP",
-    "difficulty": "easy",
-    "questionText": "Which of the following best describes the primary role of the '@Repository' annotation in Spring?",
+    "difficulty": "hard",
+    "questionText": "What happens if you apply @Transactional to a final method inside bean class 'DataFetcher_5' proxied by Spring AOP CGLIB subclassing?",
+    "codeSnippet": "public class DataFetcher_5 {\n    @Transactional\n    public final void loadData() {\n        // DB changes\n    }\n}",
     "options": [
-      "specialization of @Component for data access beans, enabling automatic exception translation",
-      "general-purpose stereotype annotation indicating a class is a managed Spring component",
-      "An annotation used to configure database tables",
-      "An annotation used to enable unit tests"
+      "Spring throws a FinalMethodAopException at startup.",
+      "The transaction aspect is bypassed silently because CGLIB creates a subclass and cannot override final methods.",
+      "The application throws a ClassCastException during method call.",
+      "The JVM crashes at runtime when calling the final method."
     ],
-    "correctOptionIndex": 0,
-    "explanation": "In Spring, '@Repository' serves as a core stereotype annotation: specialization of @Component for data access beans, enabling automatic exception translation."
+    "correctOptionIndex": 1,
+    "explanation": "CGLIB creates proxies by generating a dynamic subclass at runtime. Because final methods cannot be overridden by subclasses, the generated proxy class cannot insert aspect interceptor code. The final method runs directly, bypassing the aspect."
   },
   {
-    "id": "spring-gen-4",
+    "id": "spring-quiz-t11-5",
+    "topic": "Spring Boot Configurations",
+    "difficulty": "medium",
+    "questionText": "If 'app.rate.5' is defined in application.properties as 50, in JVM properties as 100, and as an OS environment variable as 150, what value is resolved?",
+    "codeSnippet": "@Value(\"${app.rate.5}\")\nprivate int rate;",
+    "options": [
+      "150 (OS Environment variables take highest precedence)",
+      "50 (application.properties overrides all external configurations)",
+      "100 (JVM system properties override OS environment variables and properties files)",
+      "It throws a property resolution error due to conflict"
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Spring Boot property sources order: 1) Command-line args, 2) JVM System properties (-D...), 3) OS environment variables, 4) application.properties. Thus, the JVM value of 100 is selected."
+  },
+  {
+    "id": "spring-quiz-t12-5",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "How does the integer phase value 105 returned by getPhase() in SmartLifecycle affect context startup and shutdown order?",
+    "codeSnippet": "public class CustomService implements SmartLifecycle {\n    @Override\n    public int getPhase() { return 105; }\n}",
+    "options": [
+      "Beans with higher phase numbers are started first and stopped last.",
+      "The phase determines the priority thread pool, where higher phase means more threads.",
+      "Beans with lower phase numbers are started first. During shutdown, beans with higher phase numbers are stopped first.",
+      "SmartLifecycle beans start concurrently and ignore the phase value."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "SmartLifecycle defines getPhase() to resolve dependency execution order: lower phase numbers start first (e.g. databases, dependencies) and stop last. Shutdown goes in reverse, stopping higher phase numbers first."
+  },
+  {
+    "id": "spring-quiz-t13-5",
+    "topic": "Spring Caching",
+    "difficulty": "hard",
+    "questionText": "Why does the cache eviction fail under the configuration below?",
+    "codeSnippet": "@Cacheable(value = \"users_cache_5\", key = \"#id\")\npublic User getUser(Long id, Context ctx) { ... }\n\n@CacheEvict(value = \"users_cache_5\")\npublic void evictUser(Long id) { ... }",
+    "options": [
+      "Because cache names must be different.",
+      "Because evictUser() returns void.",
+      "Because evictUser() does not define a key, causing Spring to use SimpleKeyGenerator on '#id' while getUser() keys on '#id', resulting in mismatch.",
+      "Because CacheEvict requires @Transactional to run."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "By default, key generation combines all method arguments. For getUser(), the key combines id and ctx, but key='#id' overrides it to 'id'. For evictUser(), the key defaults to 'id' as well, but if arguments mismatch in key structure, we must explicitly set key='#id' in both to prevent cache desync."
+  },
+  {
+    "id": "spring-quiz-t14-5",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "hard",
+    "questionText": "What is the runtime impact of performing a blocking/long-running task inside the @PostConstruct method of 'SetupBean_5'?",
+    "codeSnippet": "@Component\npublic class SetupBean_5 {\n    @PostConstruct\n    public void init() {\n        // Blocks on network/external server call\n        loadConfiguration();\n    }\n}",
+    "options": [
+      "It triggers an asynchronous thread pool execution and continues startup.",
+      "Spring immediately throws an InitializationTimeoutException.",
+      "It blocks the main startup thread, preventing the application context from finishing initialization and starting the web server.",
+      "The JVM runs the method in the background without affecting startup."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "@PostConstruct methods are executed synchronously during bean instantiation on the main thread. If a bean blocks in @PostConstruct, application context startup halts, blocking the web server (Tomcat) from starting. Use events or Async tasks instead."
+  },
+  {
+    "id": "spring-quiz-t15-5",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "If a controller throws a 'DatabaseException_5' (which extends RuntimeException), which ExceptionHandler method inside ControllerAdvice is invoked?",
+    "codeSnippet": "@ControllerAdvice\npublic class GlobalHandler {\n    @ExceptionHandler(RuntimeException.class)\n    public String handleRuntime(RuntimeException ex) { return \"Runtime\"; }\n\n    @ExceptionHandler(DatabaseException_5.class)\n    public String handleDb(DatabaseException_5 ex) { return \"Db\"; }\n}",
+    "options": [
+      "handleRuntime(), because RuntimeException is checked first as the parent class.",
+      "handleDb(), because it is mapped to the most specific exception type matching the exception thrown.",
+      "Both methods run in sequence.",
+      "Spring throws an ExceptionHandlerAmbiguityException at startup."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Spring's exception resolver resolves to the exception handler that maps to the most specific exception in the type hierarchy. Since 'DatabaseException_5' matches the thrown exception exactly, handleDb() is preferred over handleRuntime()."
+  },
+  {
+    "id": "spring-quiz-t16-5",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "What is the state of entity 'Account_5' and the database result when the method process() exits?",
+    "codeSnippet": "@Transactional\npublic void process(Long id) {\n    Account_5 acc = repository.findById(id).orElseThrow();\n    entityManager.detach(acc);\n    acc.setBalance(1000);\n}",
+    "options": [
+      "The entity is in the persistent state; the database is updated with balance 1000.",
+      "An EntityNotFoundException is thrown during detach.",
+      "Hibernate throws a LazyInitializationException when setting the balance.",
+      "The entity is in the detached state; no database updates occur."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Calling entityManager.detach(entity) removes the entity from the Persistence Context. It changes from 'persistent' to 'detached' state. Hibernate no longer tracks modifications, so the balance change is not flushed to the database."
+  },
+  {
+    "id": "spring-quiz-t17-5",
+    "topic": "Spring Cloud & Resilience",
+    "difficulty": "medium",
+    "questionText": "A Resilience4j Circuit Breaker has slidingWindowSize = 10 and failureRateThreshold = 50%. If 6 requests fail within the sliding window, what is the state transition?",
+    "codeSnippet": "CircuitBreakerConfig config = CircuitBreakerConfig.custom()\n    .slidingWindowSize(10)\n    .failureRateThreshold(50)\n    .build();",
+    "options": [
+      "Remains in CLOSED state because the sliding window must exceed capacity.",
+      "Transitions to HALF_OPEN state.",
+      "Throws a CircuitBreakerOpenException immediately.",
+      "Transitions to OPEN state (failure rate is 60%, exceeding the 50% threshold)."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Once the sliding window registers 10 requests, Resilience4j calculates the failure rate. Since 6/10 (60%) is greater than or equal to 50%, the Circuit Breaker transitions to the OPEN state."
+  },
+  {
+    "id": "spring-quiz-t18-5",
+    "topic": "Spring Boot Internals",
+    "difficulty": "hard",
+    "questionText": "Inside a single configuration class, what determines the registration order of beans and the result of @ConditionalOnMissingBean?",
+    "codeSnippet": "@Configuration\npublic class AppConfig {\n    @Bean\n    public BeanVal_5 primaryBean() { return new BeanVal_5(\"A\"); }\n\n    @Bean\n    @ConditionalOnMissingBean(BeanVal_5.class)\n    public BeanVal_5 fallbackBean() { return new BeanVal_5(\"B\"); }\n}",
+    "options": [
+      "fallbackBean overrides primaryBean because @ConditionalOnMissingBean forces precedence.",
+      "Both beans are registered, creating an array list injection candidate.",
+      "Bean methods are registered in order of definition. primaryBean() registers first, causing fallbackBean()'s conditional check to fail. Only primaryBean is registered.",
+      "Spring throws a BeanDefinitionOverrideException during startup."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Within a single configuration class, beans are parsed and registered sequentially. Since primaryBean() is defined first, its bean exists when fallbackBean() is evaluated. The conditional check fails, and fallbackBean() is skipped."
+  },
+  {
+    "id": "spring-quiz-t19-5",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "A controller returns an instance of 'ResponseData_5'. If fields are private and no getters are defined, what is the HTTP response behavior?",
+    "codeSnippet": "public class ResponseData_5 {\n    private String status;\n    public ResponseData_5(String status) { this.status = status; }\n    // No getters\n}",
+    "options": [
+      "HTTP 200 with JSON payload {\"status\":null}.",
+      "HTTP 500 error or exception (Jackson throws an InvalidDefinitionException: No serializer found).",
+      "HTTP 200 with JSON payload {\"status\":\"...\"} using reflection.",
+      "The code fails to compile because classes returned from RestController require getters."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Jackson (Spring Boot's default serializer) uses public getter methods to discover properties to write to JSON. If fields are private and no getters/setters/annotations are present, Jackson throws an exception, resulting in an HTTP 500."
+  },
+  {
+    "id": "spring-quiz-t20-5",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "If outerMethod() is marked as @Transactional and invokes nestedMethod() which is marked as @Transactional(propagation = Propagation.NESTED), what happens to DB updates if nestedMethod() fails and throws an exception caught inside outerMethod()?",
+    "codeSnippet": "@Transactional\npublic void outerMethod() {\n    try {\n        innerService.nestedMethod();\n    } catch (Exception e) {\n        // Exception caught\n    }\n    // Save other data\n}",
+    "options": [
+      "The entire transaction is rolled back because the outer method was marked as Transactional.",
+      "nestedMethod()'s updates are committed because the exception was caught in the outer method.",
+      "Only nestedMethod()'s updates are rolled back to the savepoint; outerMethod()'s updates can still commit successfully.",
+      "Spring throws a NestedTransactionNotSupportedException."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Propagation.NESTED creates a nested transaction using database savepoints. If the nested transaction fails and its exception is caught and handled inside the outer transaction, only the nested transaction rolls back to its savepoint. The outer transaction remains valid."
+  },
+  {
+    "id": "spring-quiz-t1-6",
     "topic": "Spring Core & AOP",
-    "difficulty": "easy",
-    "questionText": "Which of the following best describes the primary role of the '@Controller' annotation in Spring?",
+    "difficulty": "hard",
+    "questionText": "In the service below, orderProcessor() is invoked from an external REST controller. What is the transactional behavior of saveOrder()?",
+    "codeSnippet": "@Service\npublic class OrderService_6 {\n    public void orderProcessor() {\n        saveOrder(); // Self-invocation\n    }\n\n    @Transactional\n    public void saveOrder() {\n        // Save database record\n    }\n}",
     "options": [
-      "specialization of @Component for web controller beans resolving MVC views",
-      "general-purpose stereotype annotation indicating a class is a managed Spring component",
-      "An annotation used to configure database tables",
-      "An annotation used to enable unit tests"
+      "Spring starts a new transaction automatically using aspect interception.",
+      "The application throws a CircularDependencyException at startup.",
+      "A TransactionRequiredException is thrown during execution.",
+      "No transaction starts, because self-invocation bypasses the Spring AOP proxy."
     ],
-    "correctOptionIndex": 0,
-    "explanation": "In Spring, '@Controller' serves as a core stereotype annotation: specialization of @Component for web controller beans resolving MVC views."
+    "correctOptionIndex": 3,
+    "explanation": "Spring's declarative annotations rely on AOP proxy wrappers. Method calls from outside go through the proxy, running transaction interceptors. Direct internal calls (self-invocation) run directly on the target object, bypassing the proxy and annotations."
   },
   {
-    "id": "spring-gen-5",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
+    "id": "spring-quiz-t2-6",
+    "topic": "Spring Core & Scopes",
+    "difficulty": "hard",
+    "questionText": "You inject a prototype-scoped bean 'RequestTracker_6' into a singleton controller 'AnalyticsController_6'. How does 'RequestTracker_6' behave across multiple HTTP requests?",
+    "codeSnippet": "@Scope(\"prototype\")\n@Component\npublic class RequestTracker_6 {}\n\n@RestController\npublic class AnalyticsController_6 {\n    @Autowired\n    private RequestTracker_6 tracker;\n}",
     "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
+      "The controller reuses the exact same instance of 'RequestTracker_6' injected at startup, behaving as a singleton.",
+      "A new instance of 'RequestTracker_6' is created for every HTTP request.",
+      "Spring throws a ScopeMismatchException during startup.",
+      "The application fails to start because prototype beans cannot be injected into singletons."
     ],
     "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
+    "explanation": "Because the controller is a singleton, it is initialized once. Consequently, its fields are injected once. The prototype-scoped bean is instantiated during this injection, and that same instance is shared for all requests. To resolve, use scoped proxies."
   },
   {
-    "id": "spring-gen-6",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
+    "id": "spring-quiz-t3-6",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If a transaction method throws an Exception (checked exception) during database operations, what is the default rollback behavior?",
+    "codeSnippet": "@Transactional\npublic void process(User user) throws Exception {\n    UserRepo_6.save(user);\n    if (user.getName() == null) {\n        throw new Exception(\"Invalid User\");\n    }\n}",
     "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
+      "The transaction is automatically rolled back for all exceptions.",
+      "The compiler throws an error because Transactional cannot declare checked throws.",
+      "The transaction rolls back, but only if the database isolation is SERIALIZABLE.",
+      "The transaction is committed, and changes are saved because checked exceptions do not trigger rollback by default."
     ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
+    "correctOptionIndex": 3,
+    "explanation": "Spring's @Transactional default configuration rolls back transactions only for unchecked exceptions (subclasses of RuntimeException and Error). Checked exceptions (like Exception, IOException) do not trigger rollback unless configured as @Transactional(rollbackFor = Exception.class)."
   },
   {
-    "id": "spring-gen-7",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
+    "id": "spring-quiz-t4-6",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "What occurs when Spring starts up and detects a circular constructor dependency between singleton beans 'BeanA_6' and 'BeanB_6'?",
+    "codeSnippet": "@Component\npublic class BeanA_6 {\n    public BeanA_6(BeanB_6 b) {}\n}\n@Component\npublic class BeanB_6 {\n    public BeanB_6(BeanA_6 a) {}\n}",
     "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
+      "Spring automatically resolves the cycle by injecting a dynamic proxy.",
+      "The application fails to start and throws a BeanCurrentlyInCreationException.",
+      "The JVM crashes with a StackOverflowError during initialization.",
+      "Spring instantiates both beans as null."
     ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
+    "correctOptionIndex": 1,
+    "explanation": "Unlike setter/field injection, constructor dependencies must be resolved during object creation. Since neither 'BeanA_6' nor 'BeanB_6' can be constructed without the other, Spring cannot resolve the dependency cycle and throws a BeanCurrentlyInCreationException."
   },
   {
-    "id": "spring-gen-8",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
+    "id": "spring-quiz-t5-6",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "An entity has a lazy-loaded collection association. If you fetch all 6 parent entities and access their associations in a loop, how many SQL queries hit the database?",
+    "codeSnippet": "List<Parent> parents = parentRepository.findAll(); // Fetches 6 parents\nfor (Parent p : parents) {\n    System.out.println(p.getChildren().size()); // Lazy load\n}",
     "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
+      "1 SQL query.",
+      "7 SQL queries.",
+      "6 SQL queries.",
+      "2 SQL queries."
     ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
+    "correctOptionIndex": 1,
+    "explanation": "This is the N+1 query problem. The initial query fetches the parents (1 query). When accessing the lazy collection for each parent in the loop, Hibernate sends a separate select query per parent (6 queries), resulting in 7 queries."
   },
   {
-    "id": "spring-gen-9",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
+    "id": "spring-quiz-t6-6",
+    "topic": "Spring WebFlux",
+    "difficulty": "hard",
+    "questionText": "What is the hazard of calling a blocking method like RestTemplate inside a Spring WebFlux controller running on Netty event loops?",
+    "codeSnippet": "@GetMapping(\"/data\")\npublic Mono<String> getData() {\n    return Mono.fromCallable(() -> restTemplate.getForObject(\"https://api.com\", String.class));\n}",
     "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
+      "It blocks the Netty EventLoop thread, reducing server capacity to process concurrent requests and causing starvation.",
+      "WebFlux automatically shifts the call to virtual threads to avoid blocking.",
+      "The controller immediately throws a BlockedEventLoopException during compilation.",
+      "It causes a deadlock because Netty restricts HTTP requests."
     ],
     "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
+    "explanation": "WebFlux uses a small number of non-blocking event loop threads. Blocking operations on these threads exhaust the pool and block the server from handling other connections. Offload blocking logic using subscribeOn(Schedulers.boundedElastic())."
   },
   {
-    "id": "spring-gen-10",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
+    "id": "spring-quiz-t7-6",
+    "topic": "Spring Security",
+    "difficulty": "medium",
+    "questionText": "How do you insert a custom filter 'CustomAuthFilter_6' in a security chain so it executes before UsernamePasswordAuthenticationFilter?",
+    "codeSnippet": "@Bean\npublic SecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n    http.addFilterBefore(new CustomAuthFilter_6(), UsernamePasswordAuthenticationFilter.class);\n    return http.build();\n}",
     "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
+      "Annotate CustomAuthFilter_6 with @Order(Ordered.HIGHEST_PRECEDENCE).",
+      "Register CustomAuthFilter_6 as a Spring @Component; Spring Security loads custom beans first.",
+      "Declare CustomAuthFilter_6 inside application.properties under security.filter.order.",
+      "Use addFilterBefore(new CustomAuthFilter_6(), UsernamePasswordAuthenticationFilter.class) inside HttpSecurity config."
     ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
+    "correctOptionIndex": 3,
+    "explanation": "The order of filters inside a SecurityFilterChain is explicitly configured via HttpSecurity APIs. Class-level @Order annotations do not position filters within the SecurityFilterChain."
   },
   {
-    "id": "spring-gen-11",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
+    "id": "spring-quiz-t8-6",
+    "topic": "Spring Core",
+    "difficulty": "medium",
+    "questionText": "If a payment service interface has a default bean marked with @Primary, and another bean with qualifier 'customPaymentSvc_6', what is injected?",
+    "codeSnippet": "@RestController\npublic class PaymentController {\n    @Autowired\n    @Qualifier(\"customPaymentSvc_6\")\n    private PaymentService service;\n}",
     "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
+      "The @Primary bean is injected because primary beans take highest precedence.",
+      "The bean annotated with @Qualifier(\"customPaymentSvc_6\") is injected, overriding @Primary.",
+      "A BeanCreationException is thrown due to injection ambiguity.",
+      "Both beans are injected inside a wrapper candidate proxy."
     ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
+    "correctOptionIndex": 1,
+    "explanation": "While @Primary sets a default candidate, an explicit @Qualifier specifies the precise bean name requested. Explicit qualifiers take precedence over primary bean designations."
   },
   {
-    "id": "spring-gen-12",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
+    "id": "spring-quiz-t9-6",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If you specify a derived query method using property name 'emailAddress_6' which is missing on the Entity, what happens?",
+    "codeSnippet": "public interface UserRepository extends JpaRepository<User, Long> {\n    List<User> findByemailAddress_6(String email); // Entity field is 'email'\n}",
     "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
+      "Spring Boot throws a PropertyReferenceException and fails to start during application context initialization.",
+      "The query executes but returns an empty list at runtime.",
+      "Spring Data fallback parses it to a native SQL query.",
+      "A compile-time error occurs on the repository interface."
     ],
     "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
+    "explanation": "Spring Data JPA parses derived query methods at application startup to validate them against the Entity's properties. If a method references a missing field like 'emailAddress_6', it throws a PropertyReferenceException and halts startup."
   },
   {
-    "id": "spring-gen-13",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
+    "id": "spring-quiz-t10-6",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "What happens if you apply @Transactional to a final method inside bean class 'DataFetcher_6' proxied by Spring AOP CGLIB subclassing?",
+    "codeSnippet": "public class DataFetcher_6 {\n    @Transactional\n    public final void loadData() {\n        // DB changes\n    }\n}",
     "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
+      "The transaction aspect is bypassed silently because CGLIB creates a subclass and cannot override final methods.",
+      "Spring throws a FinalMethodAopException at startup.",
+      "The application throws a ClassCastException during method call.",
+      "The JVM crashes at runtime when calling the final method."
     ],
     "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
+    "explanation": "CGLIB creates proxies by generating a dynamic subclass at runtime. Because final methods cannot be overridden by subclasses, the generated proxy class cannot insert aspect interceptor code. The final method runs directly, bypassing the aspect."
   },
   {
-    "id": "spring-gen-14",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
+    "id": "spring-quiz-t11-6",
+    "topic": "Spring Boot Configurations",
+    "difficulty": "medium",
+    "questionText": "If 'app.rate.6' is defined in application.properties as 50, in JVM properties as 100, and as an OS environment variable as 150, what value is resolved?",
+    "codeSnippet": "@Value(\"${app.rate.6}\")\nprivate int rate;",
     "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
+      "150 (OS Environment variables take highest precedence)",
+      "50 (application.properties overrides all external configurations)",
+      "100 (JVM system properties override OS environment variables and properties files)",
+      "It throws a property resolution error due to conflict"
     ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
+    "correctOptionIndex": 2,
+    "explanation": "Spring Boot property sources order: 1) Command-line args, 2) JVM System properties (-D...), 3) OS environment variables, 4) application.properties. Thus, the JVM value of 100 is selected."
   },
   {
-    "id": "spring-gen-15",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
+    "id": "spring-quiz-t12-6",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "How does the integer phase value 106 returned by getPhase() in SmartLifecycle affect context startup and shutdown order?",
+    "codeSnippet": "public class CustomService implements SmartLifecycle {\n    @Override\n    public int getPhase() { return 106; }\n}",
     "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
+      "Beans with higher phase numbers are started first and stopped last.",
+      "The phase determines the priority thread pool, where higher phase means more threads.",
+      "Beans with lower phase numbers are started first. During shutdown, beans with higher phase numbers are stopped first.",
+      "SmartLifecycle beans start concurrently and ignore the phase value."
     ],
-    "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
+    "correctOptionIndex": 2,
+    "explanation": "SmartLifecycle defines getPhase() to resolve dependency execution order: lower phase numbers start first (e.g. databases, dependencies) and stop last. Shutdown goes in reverse, stopping higher phase numbers first."
   },
   {
-    "id": "spring-gen-16",
-    "topic": "Spring Boot Internals",
-    "difficulty": "easy",
-    "questionText": "What are the two default file formats supported by Spring Boot for configuration properties (e.g. application properties)?",
+    "id": "spring-quiz-t13-6",
+    "topic": "Spring Caching",
+    "difficulty": "hard",
+    "questionText": "Why does the cache eviction fail under the configuration below?",
+    "codeSnippet": "@Cacheable(value = \"users_cache_6\", key = \"#id\")\npublic User getUser(Long id, Context ctx) { ... }\n\n@CacheEvict(value = \"users_cache_6\")\npublic void evictUser(Long id) { ... }",
     "options": [
-      ".properties and .yml (YAML)",
-      ".properties and .xml",
-      ".json and .xml",
-      ".yml and .json"
+      "Because cache names must be different.",
+      "Because evictUser() does not define a key, causing Spring to use SimpleKeyGenerator on '#id' while getUser() keys on '#id', resulting in mismatch.",
+      "Because evictUser() returns void.",
+      "Because CacheEvict requires @Transactional to run."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "By default, key generation combines all method arguments. For getUser(), the key combines id and ctx, but key='#id' overrides it to 'id'. For evictUser(), the key defaults to 'id' as well, but if arguments mismatch in key structure, we must explicitly set key='#id' in both to prevent cache desync."
+  },
+  {
+    "id": "spring-quiz-t14-6",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "hard",
+    "questionText": "What is the runtime impact of performing a blocking/long-running task inside the @PostConstruct method of 'SetupBean_6'?",
+    "codeSnippet": "@Component\npublic class SetupBean_6 {\n    @PostConstruct\n    public void init() {\n        // Blocks on network/external server call\n        loadConfiguration();\n    }\n}",
+    "options": [
+      "It blocks the main startup thread, preventing the application context from finishing initialization and starting the web server.",
+      "It triggers an asynchronous thread pool execution and continues startup.",
+      "Spring immediately throws an InitializationTimeoutException.",
+      "The JVM runs the method in the background without affecting startup."
     ],
     "correctOptionIndex": 0,
-    "explanation": "Spring Boot natively supports both standard Java properties file format (.properties) and YAML format (.yml / .yaml) for application settings out of the box."
+    "explanation": "@PostConstruct methods are executed synchronously during bean instantiation on the main thread. If a bean blocks in @PostConstruct, application context startup halts, blocking the web server (Tomcat) from starting. Use events or Async tasks instead."
+  },
+  {
+    "id": "spring-quiz-t15-6",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "If a controller throws a 'DatabaseException_6' (which extends RuntimeException), which ExceptionHandler method inside ControllerAdvice is invoked?",
+    "codeSnippet": "@ControllerAdvice\npublic class GlobalHandler {\n    @ExceptionHandler(RuntimeException.class)\n    public String handleRuntime(RuntimeException ex) { return \"Runtime\"; }\n\n    @ExceptionHandler(DatabaseException_6.class)\n    public String handleDb(DatabaseException_6 ex) { return \"Db\"; }\n}",
+    "options": [
+      "handleDb(), because it is mapped to the most specific exception type matching the exception thrown.",
+      "handleRuntime(), because RuntimeException is checked first as the parent class.",
+      "Both methods run in sequence.",
+      "Spring throws an ExceptionHandlerAmbiguityException at startup."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Spring's exception resolver resolves to the exception handler that maps to the most specific exception in the type hierarchy. Since 'DatabaseException_6' matches the thrown exception exactly, handleDb() is preferred over handleRuntime()."
+  },
+  {
+    "id": "spring-quiz-t16-6",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "What is the state of entity 'Account_6' and the database result when the method process() exits?",
+    "codeSnippet": "@Transactional\npublic void process(Long id) {\n    Account_6 acc = repository.findById(id).orElseThrow();\n    entityManager.detach(acc);\n    acc.setBalance(1000);\n}",
+    "options": [
+      "The entity is in the detached state; no database updates occur.",
+      "The entity is in the persistent state; the database is updated with balance 1000.",
+      "An EntityNotFoundException is thrown during detach.",
+      "Hibernate throws a LazyInitializationException when setting the balance."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Calling entityManager.detach(entity) removes the entity from the Persistence Context. It changes from 'persistent' to 'detached' state. Hibernate no longer tracks modifications, so the balance change is not flushed to the database."
+  },
+  {
+    "id": "spring-quiz-t17-6",
+    "topic": "Spring Cloud & Resilience",
+    "difficulty": "medium",
+    "questionText": "A Resilience4j Circuit Breaker has slidingWindowSize = 11 and failureRateThreshold = 50%. If 7 requests fail within the sliding window, what is the state transition?",
+    "codeSnippet": "CircuitBreakerConfig config = CircuitBreakerConfig.custom()\n    .slidingWindowSize(11)\n    .failureRateThreshold(50)\n    .build();",
+    "options": [
+      "Remains in CLOSED state because the sliding window must exceed capacity.",
+      "Transitions to HALF_OPEN state.",
+      "Throws a CircuitBreakerOpenException immediately.",
+      "Transitions to OPEN state (failure rate is 64%, exceeding the 50% threshold)."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Once the sliding window registers 11 requests, Resilience4j calculates the failure rate. Since 7/11 (64%) is greater than or equal to 50%, the Circuit Breaker transitions to the OPEN state."
+  },
+  {
+    "id": "spring-quiz-t18-6",
+    "topic": "Spring Boot Internals",
+    "difficulty": "hard",
+    "questionText": "Inside a single configuration class, what determines the registration order of beans and the result of @ConditionalOnMissingBean?",
+    "codeSnippet": "@Configuration\npublic class AppConfig {\n    @Bean\n    public BeanVal_6 primaryBean() { return new BeanVal_6(\"A\"); }\n\n    @Bean\n    @ConditionalOnMissingBean(BeanVal_6.class)\n    public BeanVal_6 fallbackBean() { return new BeanVal_6(\"B\"); }\n}",
+    "options": [
+      "Bean methods are registered in order of definition. primaryBean() registers first, causing fallbackBean()'s conditional check to fail. Only primaryBean is registered.",
+      "fallbackBean overrides primaryBean because @ConditionalOnMissingBean forces precedence.",
+      "Both beans are registered, creating an array list injection candidate.",
+      "Spring throws a BeanDefinitionOverrideException during startup."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Within a single configuration class, beans are parsed and registered sequentially. Since primaryBean() is defined first, its bean exists when fallbackBean() is evaluated. The conditional check fails, and fallbackBean() is skipped."
+  },
+  {
+    "id": "spring-quiz-t19-6",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "A controller returns an instance of 'ResponseData_6'. If fields are private and no getters are defined, what is the HTTP response behavior?",
+    "codeSnippet": "public class ResponseData_6 {\n    private String status;\n    public ResponseData_6(String status) { this.status = status; }\n    // No getters\n}",
+    "options": [
+      "HTTP 500 error or exception (Jackson throws an InvalidDefinitionException: No serializer found).",
+      "HTTP 200 with JSON payload {\"status\":null}.",
+      "HTTP 200 with JSON payload {\"status\":\"...\"} using reflection.",
+      "The code fails to compile because classes returned from RestController require getters."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Jackson (Spring Boot's default serializer) uses public getter methods to discover properties to write to JSON. If fields are private and no getters/setters/annotations are present, Jackson throws an exception, resulting in an HTTP 500."
+  },
+  {
+    "id": "spring-quiz-t20-6",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "If outerMethod() is marked as @Transactional and invokes nestedMethod() which is marked as @Transactional(propagation = Propagation.NESTED), what happens to DB updates if nestedMethod() fails and throws an exception caught inside outerMethod()?",
+    "codeSnippet": "@Transactional\npublic void outerMethod() {\n    try {\n        innerService.nestedMethod();\n    } catch (Exception e) {\n        // Exception caught\n    }\n    // Save other data\n}",
+    "options": [
+      "The entire transaction is rolled back because the outer method was marked as Transactional.",
+      "nestedMethod()'s updates are committed because the exception was caught in the outer method.",
+      "Spring throws a NestedTransactionNotSupportedException.",
+      "Only nestedMethod()'s updates are rolled back to the savepoint; outerMethod()'s updates can still commit successfully."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Propagation.NESTED creates a nested transaction using database savepoints. If the nested transaction fails and its exception is caught and handled inside the outer transaction, only the nested transaction rolls back to its savepoint. The outer transaction remains valid."
+  },
+  {
+    "id": "spring-quiz-t1-7",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "In the service below, orderProcessor() is invoked from an external REST controller. What is the transactional behavior of saveOrder()?",
+    "codeSnippet": "@Service\npublic class OrderService_7 {\n    public void orderProcessor() {\n        saveOrder(); // Self-invocation\n    }\n\n    @Transactional\n    public void saveOrder() {\n        // Save database record\n    }\n}",
+    "options": [
+      "No transaction starts, because self-invocation bypasses the Spring AOP proxy.",
+      "Spring starts a new transaction automatically using aspect interception.",
+      "The application throws a CircularDependencyException at startup.",
+      "A TransactionRequiredException is thrown during execution."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Spring's declarative annotations rely on AOP proxy wrappers. Method calls from outside go through the proxy, running transaction interceptors. Direct internal calls (self-invocation) run directly on the target object, bypassing the proxy and annotations."
+  },
+  {
+    "id": "spring-quiz-t2-7",
+    "topic": "Spring Core & Scopes",
+    "difficulty": "hard",
+    "questionText": "You inject a prototype-scoped bean 'RequestTracker_7' into a singleton controller 'AnalyticsController_7'. How does 'RequestTracker_7' behave across multiple HTTP requests?",
+    "codeSnippet": "@Scope(\"prototype\")\n@Component\npublic class RequestTracker_7 {}\n\n@RestController\npublic class AnalyticsController_7 {\n    @Autowired\n    private RequestTracker_7 tracker;\n}",
+    "options": [
+      "A new instance of 'RequestTracker_7' is created for every HTTP request.",
+      "Spring throws a ScopeMismatchException during startup.",
+      "The application fails to start because prototype beans cannot be injected into singletons.",
+      "The controller reuses the exact same instance of 'RequestTracker_7' injected at startup, behaving as a singleton."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Because the controller is a singleton, it is initialized once. Consequently, its fields are injected once. The prototype-scoped bean is instantiated during this injection, and that same instance is shared for all requests. To resolve, use scoped proxies."
+  },
+  {
+    "id": "spring-quiz-t3-7",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If a transaction method throws an Exception (checked exception) during database operations, what is the default rollback behavior?",
+    "codeSnippet": "@Transactional\npublic void process(User user) throws Exception {\n    UserRepo_7.save(user);\n    if (user.getName() == null) {\n        throw new Exception(\"Invalid User\");\n    }\n}",
+    "options": [
+      "The transaction is automatically rolled back for all exceptions.",
+      "The compiler throws an error because Transactional cannot declare checked throws.",
+      "The transaction is committed, and changes are saved because checked exceptions do not trigger rollback by default.",
+      "The transaction rolls back, but only if the database isolation is SERIALIZABLE."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Spring's @Transactional default configuration rolls back transactions only for unchecked exceptions (subclasses of RuntimeException and Error). Checked exceptions (like Exception, IOException) do not trigger rollback unless configured as @Transactional(rollbackFor = Exception.class)."
+  },
+  {
+    "id": "spring-quiz-t4-7",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "What occurs when Spring starts up and detects a circular constructor dependency between singleton beans 'BeanA_7' and 'BeanB_7'?",
+    "codeSnippet": "@Component\npublic class BeanA_7 {\n    public BeanA_7(BeanB_7 b) {}\n}\n@Component\npublic class BeanB_7 {\n    public BeanB_7(BeanA_7 a) {}\n}",
+    "options": [
+      "Spring automatically resolves the cycle by injecting a dynamic proxy.",
+      "The JVM crashes with a StackOverflowError during initialization.",
+      "Spring instantiates both beans as null.",
+      "The application fails to start and throws a BeanCurrentlyInCreationException."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Unlike setter/field injection, constructor dependencies must be resolved during object creation. Since neither 'BeanA_7' nor 'BeanB_7' can be constructed without the other, Spring cannot resolve the dependency cycle and throws a BeanCurrentlyInCreationException."
+  },
+  {
+    "id": "spring-quiz-t5-7",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "An entity has a lazy-loaded collection association. If you fetch all 7 parent entities and access their associations in a loop, how many SQL queries hit the database?",
+    "codeSnippet": "List<Parent> parents = parentRepository.findAll(); // Fetches 7 parents\nfor (Parent p : parents) {\n    System.out.println(p.getChildren().size()); // Lazy load\n}",
+    "options": [
+      "8 SQL queries.",
+      "1 SQL query.",
+      "7 SQL queries.",
+      "2 SQL queries."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "This is the N+1 query problem. The initial query fetches the parents (1 query). When accessing the lazy collection for each parent in the loop, Hibernate sends a separate select query per parent (7 queries), resulting in 8 queries."
+  },
+  {
+    "id": "spring-quiz-t6-7",
+    "topic": "Spring WebFlux",
+    "difficulty": "hard",
+    "questionText": "What is the hazard of calling a blocking method like RestTemplate inside a Spring WebFlux controller running on Netty event loops?",
+    "codeSnippet": "@GetMapping(\"/data\")\npublic Mono<String> getData() {\n    return Mono.fromCallable(() -> restTemplate.getForObject(\"https://api.com\", String.class));\n}",
+    "options": [
+      "WebFlux automatically shifts the call to virtual threads to avoid blocking.",
+      "The controller immediately throws a BlockedEventLoopException during compilation.",
+      "It causes a deadlock because Netty restricts HTTP requests.",
+      "It blocks the Netty EventLoop thread, reducing server capacity to process concurrent requests and causing starvation."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "WebFlux uses a small number of non-blocking event loop threads. Blocking operations on these threads exhaust the pool and block the server from handling other connections. Offload blocking logic using subscribeOn(Schedulers.boundedElastic())."
+  },
+  {
+    "id": "spring-quiz-t7-7",
+    "topic": "Spring Security",
+    "difficulty": "medium",
+    "questionText": "How do you insert a custom filter 'CustomAuthFilter_7' in a security chain so it executes before UsernamePasswordAuthenticationFilter?",
+    "codeSnippet": "@Bean\npublic SecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n    http.addFilterBefore(new CustomAuthFilter_7(), UsernamePasswordAuthenticationFilter.class);\n    return http.build();\n}",
+    "options": [
+      "Annotate CustomAuthFilter_7 with @Order(Ordered.HIGHEST_PRECEDENCE).",
+      "Use addFilterBefore(new CustomAuthFilter_7(), UsernamePasswordAuthenticationFilter.class) inside HttpSecurity config.",
+      "Register CustomAuthFilter_7 as a Spring @Component; Spring Security loads custom beans first.",
+      "Declare CustomAuthFilter_7 inside application.properties under security.filter.order."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "The order of filters inside a SecurityFilterChain is explicitly configured via HttpSecurity APIs. Class-level @Order annotations do not position filters within the SecurityFilterChain."
+  },
+  {
+    "id": "spring-quiz-t8-7",
+    "topic": "Spring Core",
+    "difficulty": "medium",
+    "questionText": "If a payment service interface has a default bean marked with @Primary, and another bean with qualifier 'customPaymentSvc_7', what is injected?",
+    "codeSnippet": "@RestController\npublic class PaymentController {\n    @Autowired\n    @Qualifier(\"customPaymentSvc_7\")\n    private PaymentService service;\n}",
+    "options": [
+      "The @Primary bean is injected because primary beans take highest precedence.",
+      "A BeanCreationException is thrown due to injection ambiguity.",
+      "Both beans are injected inside a wrapper candidate proxy.",
+      "The bean annotated with @Qualifier(\"customPaymentSvc_7\") is injected, overriding @Primary."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "While @Primary sets a default candidate, an explicit @Qualifier specifies the precise bean name requested. Explicit qualifiers take precedence over primary bean designations."
+  },
+  {
+    "id": "spring-quiz-t9-7",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If you specify a derived query method using property name 'emailAddress_7' which is missing on the Entity, what happens?",
+    "codeSnippet": "public interface UserRepository extends JpaRepository<User, Long> {\n    List<User> findByemailAddress_7(String email); // Entity field is 'email'\n}",
+    "options": [
+      "The query executes but returns an empty list at runtime.",
+      "Spring Boot throws a PropertyReferenceException and fails to start during application context initialization.",
+      "Spring Data fallback parses it to a native SQL query.",
+      "A compile-time error occurs on the repository interface."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Spring Data JPA parses derived query methods at application startup to validate them against the Entity's properties. If a method references a missing field like 'emailAddress_7', it throws a PropertyReferenceException and halts startup."
+  },
+  {
+    "id": "spring-quiz-t10-7",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "What happens if you apply @Transactional to a final method inside bean class 'DataFetcher_7' proxied by Spring AOP CGLIB subclassing?",
+    "codeSnippet": "public class DataFetcher_7 {\n    @Transactional\n    public final void loadData() {\n        // DB changes\n    }\n}",
+    "options": [
+      "Spring throws a FinalMethodAopException at startup.",
+      "The transaction aspect is bypassed silently because CGLIB creates a subclass and cannot override final methods.",
+      "The application throws a ClassCastException during method call.",
+      "The JVM crashes at runtime when calling the final method."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "CGLIB creates proxies by generating a dynamic subclass at runtime. Because final methods cannot be overridden by subclasses, the generated proxy class cannot insert aspect interceptor code. The final method runs directly, bypassing the aspect."
+  },
+  {
+    "id": "spring-quiz-t11-7",
+    "topic": "Spring Boot Configurations",
+    "difficulty": "medium",
+    "questionText": "If 'app.rate.7' is defined in application.properties as 50, in JVM properties as 100, and as an OS environment variable as 150, what value is resolved?",
+    "codeSnippet": "@Value(\"${app.rate.7}\")\nprivate int rate;",
+    "options": [
+      "150 (OS Environment variables take highest precedence)",
+      "100 (JVM system properties override OS environment variables and properties files)",
+      "50 (application.properties overrides all external configurations)",
+      "It throws a property resolution error due to conflict"
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Spring Boot property sources order: 1) Command-line args, 2) JVM System properties (-D...), 3) OS environment variables, 4) application.properties. Thus, the JVM value of 100 is selected."
+  },
+  {
+    "id": "spring-quiz-t12-7",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "How does the integer phase value 107 returned by getPhase() in SmartLifecycle affect context startup and shutdown order?",
+    "codeSnippet": "public class CustomService implements SmartLifecycle {\n    @Override\n    public int getPhase() { return 107; }\n}",
+    "options": [
+      "Beans with higher phase numbers are started first and stopped last.",
+      "Beans with lower phase numbers are started first. During shutdown, beans with higher phase numbers are stopped first.",
+      "The phase determines the priority thread pool, where higher phase means more threads.",
+      "SmartLifecycle beans start concurrently and ignore the phase value."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "SmartLifecycle defines getPhase() to resolve dependency execution order: lower phase numbers start first (e.g. databases, dependencies) and stop last. Shutdown goes in reverse, stopping higher phase numbers first."
+  },
+  {
+    "id": "spring-quiz-t13-7",
+    "topic": "Spring Caching",
+    "difficulty": "hard",
+    "questionText": "Why does the cache eviction fail under the configuration below?",
+    "codeSnippet": "@Cacheable(value = \"users_cache_7\", key = \"#id\")\npublic User getUser(Long id, Context ctx) { ... }\n\n@CacheEvict(value = \"users_cache_7\")\npublic void evictUser(Long id) { ... }",
+    "options": [
+      "Because cache names must be different.",
+      "Because evictUser() does not define a key, causing Spring to use SimpleKeyGenerator on '#id' while getUser() keys on '#id', resulting in mismatch.",
+      "Because evictUser() returns void.",
+      "Because CacheEvict requires @Transactional to run."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "By default, key generation combines all method arguments. For getUser(), the key combines id and ctx, but key='#id' overrides it to 'id'. For evictUser(), the key defaults to 'id' as well, but if arguments mismatch in key structure, we must explicitly set key='#id' in both to prevent cache desync."
+  },
+  {
+    "id": "spring-quiz-t14-7",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "hard",
+    "questionText": "What is the runtime impact of performing a blocking/long-running task inside the @PostConstruct method of 'SetupBean_7'?",
+    "codeSnippet": "@Component\npublic class SetupBean_7 {\n    @PostConstruct\n    public void init() {\n        // Blocks on network/external server call\n        loadConfiguration();\n    }\n}",
+    "options": [
+      "It triggers an asynchronous thread pool execution and continues startup.",
+      "Spring immediately throws an InitializationTimeoutException.",
+      "The JVM runs the method in the background without affecting startup.",
+      "It blocks the main startup thread, preventing the application context from finishing initialization and starting the web server."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "@PostConstruct methods are executed synchronously during bean instantiation on the main thread. If a bean blocks in @PostConstruct, application context startup halts, blocking the web server (Tomcat) from starting. Use events or Async tasks instead."
+  },
+  {
+    "id": "spring-quiz-t15-7",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "If a controller throws a 'DatabaseException_7' (which extends RuntimeException), which ExceptionHandler method inside ControllerAdvice is invoked?",
+    "codeSnippet": "@ControllerAdvice\npublic class GlobalHandler {\n    @ExceptionHandler(RuntimeException.class)\n    public String handleRuntime(RuntimeException ex) { return \"Runtime\"; }\n\n    @ExceptionHandler(DatabaseException_7.class)\n    public String handleDb(DatabaseException_7 ex) { return \"Db\"; }\n}",
+    "options": [
+      "handleRuntime(), because RuntimeException is checked first as the parent class.",
+      "Both methods run in sequence.",
+      "handleDb(), because it is mapped to the most specific exception type matching the exception thrown.",
+      "Spring throws an ExceptionHandlerAmbiguityException at startup."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Spring's exception resolver resolves to the exception handler that maps to the most specific exception in the type hierarchy. Since 'DatabaseException_7' matches the thrown exception exactly, handleDb() is preferred over handleRuntime()."
+  },
+  {
+    "id": "spring-quiz-t16-7",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "What is the state of entity 'Account_7' and the database result when the method process() exits?",
+    "codeSnippet": "@Transactional\npublic void process(Long id) {\n    Account_7 acc = repository.findById(id).orElseThrow();\n    entityManager.detach(acc);\n    acc.setBalance(1000);\n}",
+    "options": [
+      "The entity is in the persistent state; the database is updated with balance 1000.",
+      "The entity is in the detached state; no database updates occur.",
+      "An EntityNotFoundException is thrown during detach.",
+      "Hibernate throws a LazyInitializationException when setting the balance."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Calling entityManager.detach(entity) removes the entity from the Persistence Context. It changes from 'persistent' to 'detached' state. Hibernate no longer tracks modifications, so the balance change is not flushed to the database."
+  },
+  {
+    "id": "spring-quiz-t17-7",
+    "topic": "Spring Cloud & Resilience",
+    "difficulty": "medium",
+    "questionText": "A Resilience4j Circuit Breaker has slidingWindowSize = 12 and failureRateThreshold = 50%. If 8 requests fail within the sliding window, what is the state transition?",
+    "codeSnippet": "CircuitBreakerConfig config = CircuitBreakerConfig.custom()\n    .slidingWindowSize(12)\n    .failureRateThreshold(50)\n    .build();",
+    "options": [
+      "Remains in CLOSED state because the sliding window must exceed capacity.",
+      "Transitions to OPEN state (failure rate is 67%, exceeding the 50% threshold).",
+      "Transitions to HALF_OPEN state.",
+      "Throws a CircuitBreakerOpenException immediately."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Once the sliding window registers 12 requests, Resilience4j calculates the failure rate. Since 8/12 (67%) is greater than or equal to 50%, the Circuit Breaker transitions to the OPEN state."
+  },
+  {
+    "id": "spring-quiz-t18-7",
+    "topic": "Spring Boot Internals",
+    "difficulty": "hard",
+    "questionText": "Inside a single configuration class, what determines the registration order of beans and the result of @ConditionalOnMissingBean?",
+    "codeSnippet": "@Configuration\npublic class AppConfig {\n    @Bean\n    public BeanVal_7 primaryBean() { return new BeanVal_7(\"A\"); }\n\n    @Bean\n    @ConditionalOnMissingBean(BeanVal_7.class)\n    public BeanVal_7 fallbackBean() { return new BeanVal_7(\"B\"); }\n}",
+    "options": [
+      "fallbackBean overrides primaryBean because @ConditionalOnMissingBean forces precedence.",
+      "Both beans are registered, creating an array list injection candidate.",
+      "Spring throws a BeanDefinitionOverrideException during startup.",
+      "Bean methods are registered in order of definition. primaryBean() registers first, causing fallbackBean()'s conditional check to fail. Only primaryBean is registered."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Within a single configuration class, beans are parsed and registered sequentially. Since primaryBean() is defined first, its bean exists when fallbackBean() is evaluated. The conditional check fails, and fallbackBean() is skipped."
+  },
+  {
+    "id": "spring-quiz-t19-7",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "A controller returns an instance of 'ResponseData_7'. If fields are private and no getters are defined, what is the HTTP response behavior?",
+    "codeSnippet": "public class ResponseData_7 {\n    private String status;\n    public ResponseData_7(String status) { this.status = status; }\n    // No getters\n}",
+    "options": [
+      "HTTP 200 with JSON payload {\"status\":null}.",
+      "HTTP 200 with JSON payload {\"status\":\"...\"} using reflection.",
+      "The code fails to compile because classes returned from RestController require getters.",
+      "HTTP 500 error or exception (Jackson throws an InvalidDefinitionException: No serializer found)."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Jackson (Spring Boot's default serializer) uses public getter methods to discover properties to write to JSON. If fields are private and no getters/setters/annotations are present, Jackson throws an exception, resulting in an HTTP 500."
+  },
+  {
+    "id": "spring-quiz-t20-7",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "If outerMethod() is marked as @Transactional and invokes nestedMethod() which is marked as @Transactional(propagation = Propagation.NESTED), what happens to DB updates if nestedMethod() fails and throws an exception caught inside outerMethod()?",
+    "codeSnippet": "@Transactional\npublic void outerMethod() {\n    try {\n        innerService.nestedMethod();\n    } catch (Exception e) {\n        // Exception caught\n    }\n    // Save other data\n}",
+    "options": [
+      "The entire transaction is rolled back because the outer method was marked as Transactional.",
+      "nestedMethod()'s updates are committed because the exception was caught in the outer method.",
+      "Spring throws a NestedTransactionNotSupportedException.",
+      "Only nestedMethod()'s updates are rolled back to the savepoint; outerMethod()'s updates can still commit successfully."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Propagation.NESTED creates a nested transaction using database savepoints. If the nested transaction fails and its exception is caught and handled inside the outer transaction, only the nested transaction rolls back to its savepoint. The outer transaction remains valid."
+  },
+  {
+    "id": "spring-quiz-t1-8",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "In the service below, orderProcessor() is invoked from an external REST controller. What is the transactional behavior of saveOrder()?",
+    "codeSnippet": "@Service\npublic class OrderService_8 {\n    public void orderProcessor() {\n        saveOrder(); // Self-invocation\n    }\n\n    @Transactional\n    public void saveOrder() {\n        // Save database record\n    }\n}",
+    "options": [
+      "Spring starts a new transaction automatically using aspect interception.",
+      "The application throws a CircularDependencyException at startup.",
+      "A TransactionRequiredException is thrown during execution.",
+      "No transaction starts, because self-invocation bypasses the Spring AOP proxy."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring's declarative annotations rely on AOP proxy wrappers. Method calls from outside go through the proxy, running transaction interceptors. Direct internal calls (self-invocation) run directly on the target object, bypassing the proxy and annotations."
+  },
+  {
+    "id": "spring-quiz-t2-8",
+    "topic": "Spring Core & Scopes",
+    "difficulty": "hard",
+    "questionText": "You inject a prototype-scoped bean 'RequestTracker_8' into a singleton controller 'AnalyticsController_8'. How does 'RequestTracker_8' behave across multiple HTTP requests?",
+    "codeSnippet": "@Scope(\"prototype\")\n@Component\npublic class RequestTracker_8 {}\n\n@RestController\npublic class AnalyticsController_8 {\n    @Autowired\n    private RequestTracker_8 tracker;\n}",
+    "options": [
+      "A new instance of 'RequestTracker_8' is created for every HTTP request.",
+      "Spring throws a ScopeMismatchException during startup.",
+      "The application fails to start because prototype beans cannot be injected into singletons.",
+      "The controller reuses the exact same instance of 'RequestTracker_8' injected at startup, behaving as a singleton."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Because the controller is a singleton, it is initialized once. Consequently, its fields are injected once. The prototype-scoped bean is instantiated during this injection, and that same instance is shared for all requests. To resolve, use scoped proxies."
+  },
+  {
+    "id": "spring-quiz-t3-8",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If a transaction method throws an Exception (checked exception) during database operations, what is the default rollback behavior?",
+    "codeSnippet": "@Transactional\npublic void process(User user) throws Exception {\n    UserRepo_8.save(user);\n    if (user.getName() == null) {\n        throw new Exception(\"Invalid User\");\n    }\n}",
+    "options": [
+      "The transaction is automatically rolled back for all exceptions.",
+      "The compiler throws an error because Transactional cannot declare checked throws.",
+      "The transaction rolls back, but only if the database isolation is SERIALIZABLE.",
+      "The transaction is committed, and changes are saved because checked exceptions do not trigger rollback by default."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring's @Transactional default configuration rolls back transactions only for unchecked exceptions (subclasses of RuntimeException and Error). Checked exceptions (like Exception, IOException) do not trigger rollback unless configured as @Transactional(rollbackFor = Exception.class)."
+  },
+  {
+    "id": "spring-quiz-t4-8",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "What occurs when Spring starts up and detects a circular constructor dependency between singleton beans 'BeanA_8' and 'BeanB_8'?",
+    "codeSnippet": "@Component\npublic class BeanA_8 {\n    public BeanA_8(BeanB_8 b) {}\n}\n@Component\npublic class BeanB_8 {\n    public BeanB_8(BeanA_8 a) {}\n}",
+    "options": [
+      "Spring automatically resolves the cycle by injecting a dynamic proxy.",
+      "The JVM crashes with a StackOverflowError during initialization.",
+      "Spring instantiates both beans as null.",
+      "The application fails to start and throws a BeanCurrentlyInCreationException."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Unlike setter/field injection, constructor dependencies must be resolved during object creation. Since neither 'BeanA_8' nor 'BeanB_8' can be constructed without the other, Spring cannot resolve the dependency cycle and throws a BeanCurrentlyInCreationException."
+  },
+  {
+    "id": "spring-quiz-t5-8",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "An entity has a lazy-loaded collection association. If you fetch all 8 parent entities and access their associations in a loop, how many SQL queries hit the database?",
+    "codeSnippet": "List<Parent> parents = parentRepository.findAll(); // Fetches 8 parents\nfor (Parent p : parents) {\n    System.out.println(p.getChildren().size()); // Lazy load\n}",
+    "options": [
+      "9 SQL queries.",
+      "1 SQL query.",
+      "8 SQL queries.",
+      "2 SQL queries."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "This is the N+1 query problem. The initial query fetches the parents (1 query). When accessing the lazy collection for each parent in the loop, Hibernate sends a separate select query per parent (8 queries), resulting in 9 queries."
+  },
+  {
+    "id": "spring-quiz-t6-8",
+    "topic": "Spring WebFlux",
+    "difficulty": "hard",
+    "questionText": "What is the hazard of calling a blocking method like RestTemplate inside a Spring WebFlux controller running on Netty event loops?",
+    "codeSnippet": "@GetMapping(\"/data\")\npublic Mono<String> getData() {\n    return Mono.fromCallable(() -> restTemplate.getForObject(\"https://api.com\", String.class));\n}",
+    "options": [
+      "WebFlux automatically shifts the call to virtual threads to avoid blocking.",
+      "It blocks the Netty EventLoop thread, reducing server capacity to process concurrent requests and causing starvation.",
+      "The controller immediately throws a BlockedEventLoopException during compilation.",
+      "It causes a deadlock because Netty restricts HTTP requests."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "WebFlux uses a small number of non-blocking event loop threads. Blocking operations on these threads exhaust the pool and block the server from handling other connections. Offload blocking logic using subscribeOn(Schedulers.boundedElastic())."
+  },
+  {
+    "id": "spring-quiz-t7-8",
+    "topic": "Spring Security",
+    "difficulty": "medium",
+    "questionText": "How do you insert a custom filter 'CustomAuthFilter_8' in a security chain so it executes before UsernamePasswordAuthenticationFilter?",
+    "codeSnippet": "@Bean\npublic SecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n    http.addFilterBefore(new CustomAuthFilter_8(), UsernamePasswordAuthenticationFilter.class);\n    return http.build();\n}",
+    "options": [
+      "Annotate CustomAuthFilter_8 with @Order(Ordered.HIGHEST_PRECEDENCE).",
+      "Use addFilterBefore(new CustomAuthFilter_8(), UsernamePasswordAuthenticationFilter.class) inside HttpSecurity config.",
+      "Register CustomAuthFilter_8 as a Spring @Component; Spring Security loads custom beans first.",
+      "Declare CustomAuthFilter_8 inside application.properties under security.filter.order."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "The order of filters inside a SecurityFilterChain is explicitly configured via HttpSecurity APIs. Class-level @Order annotations do not position filters within the SecurityFilterChain."
+  },
+  {
+    "id": "spring-quiz-t8-8",
+    "topic": "Spring Core",
+    "difficulty": "medium",
+    "questionText": "If a payment service interface has a default bean marked with @Primary, and another bean with qualifier 'customPaymentSvc_8', what is injected?",
+    "codeSnippet": "@RestController\npublic class PaymentController {\n    @Autowired\n    @Qualifier(\"customPaymentSvc_8\")\n    private PaymentService service;\n}",
+    "options": [
+      "The @Primary bean is injected because primary beans take highest precedence.",
+      "The bean annotated with @Qualifier(\"customPaymentSvc_8\") is injected, overriding @Primary.",
+      "A BeanCreationException is thrown due to injection ambiguity.",
+      "Both beans are injected inside a wrapper candidate proxy."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "While @Primary sets a default candidate, an explicit @Qualifier specifies the precise bean name requested. Explicit qualifiers take precedence over primary bean designations."
+  },
+  {
+    "id": "spring-quiz-t9-8",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If you specify a derived query method using property name 'emailAddress_8' which is missing on the Entity, what happens?",
+    "codeSnippet": "public interface UserRepository extends JpaRepository<User, Long> {\n    List<User> findByemailAddress_8(String email); // Entity field is 'email'\n}",
+    "options": [
+      "The query executes but returns an empty list at runtime.",
+      "Spring Data fallback parses it to a native SQL query.",
+      "Spring Boot throws a PropertyReferenceException and fails to start during application context initialization.",
+      "A compile-time error occurs on the repository interface."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Spring Data JPA parses derived query methods at application startup to validate them against the Entity's properties. If a method references a missing field like 'emailAddress_8', it throws a PropertyReferenceException and halts startup."
+  },
+  {
+    "id": "spring-quiz-t10-8",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "What happens if you apply @Transactional to a final method inside bean class 'DataFetcher_8' proxied by Spring AOP CGLIB subclassing?",
+    "codeSnippet": "public class DataFetcher_8 {\n    @Transactional\n    public final void loadData() {\n        // DB changes\n    }\n}",
+    "options": [
+      "The transaction aspect is bypassed silently because CGLIB creates a subclass and cannot override final methods.",
+      "Spring throws a FinalMethodAopException at startup.",
+      "The application throws a ClassCastException during method call.",
+      "The JVM crashes at runtime when calling the final method."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "CGLIB creates proxies by generating a dynamic subclass at runtime. Because final methods cannot be overridden by subclasses, the generated proxy class cannot insert aspect interceptor code. The final method runs directly, bypassing the aspect."
+  },
+  {
+    "id": "spring-quiz-t11-8",
+    "topic": "Spring Boot Configurations",
+    "difficulty": "medium",
+    "questionText": "If 'app.rate.8' is defined in application.properties as 50, in JVM properties as 100, and as an OS environment variable as 150, what value is resolved?",
+    "codeSnippet": "@Value(\"${app.rate.8}\")\nprivate int rate;",
+    "options": [
+      "150 (OS Environment variables take highest precedence)",
+      "50 (application.properties overrides all external configurations)",
+      "It throws a property resolution error due to conflict",
+      "100 (JVM system properties override OS environment variables and properties files)"
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring Boot property sources order: 1) Command-line args, 2) JVM System properties (-D...), 3) OS environment variables, 4) application.properties. Thus, the JVM value of 100 is selected."
+  },
+  {
+    "id": "spring-quiz-t12-8",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "How does the integer phase value 108 returned by getPhase() in SmartLifecycle affect context startup and shutdown order?",
+    "codeSnippet": "public class CustomService implements SmartLifecycle {\n    @Override\n    public int getPhase() { return 108; }\n}",
+    "options": [
+      "Beans with lower phase numbers are started first. During shutdown, beans with higher phase numbers are stopped first.",
+      "Beans with higher phase numbers are started first and stopped last.",
+      "The phase determines the priority thread pool, where higher phase means more threads.",
+      "SmartLifecycle beans start concurrently and ignore the phase value."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "SmartLifecycle defines getPhase() to resolve dependency execution order: lower phase numbers start first (e.g. databases, dependencies) and stop last. Shutdown goes in reverse, stopping higher phase numbers first."
+  },
+  {
+    "id": "spring-quiz-t13-8",
+    "topic": "Spring Caching",
+    "difficulty": "hard",
+    "questionText": "Why does the cache eviction fail under the configuration below?",
+    "codeSnippet": "@Cacheable(value = \"users_cache_8\", key = \"#id\")\npublic User getUser(Long id, Context ctx) { ... }\n\n@CacheEvict(value = \"users_cache_8\")\npublic void evictUser(Long id) { ... }",
+    "options": [
+      "Because cache names must be different.",
+      "Because evictUser() returns void.",
+      "Because evictUser() does not define a key, causing Spring to use SimpleKeyGenerator on '#id' while getUser() keys on '#id', resulting in mismatch.",
+      "Because CacheEvict requires @Transactional to run."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "By default, key generation combines all method arguments. For getUser(), the key combines id and ctx, but key='#id' overrides it to 'id'. For evictUser(), the key defaults to 'id' as well, but if arguments mismatch in key structure, we must explicitly set key='#id' in both to prevent cache desync."
+  },
+  {
+    "id": "spring-quiz-t14-8",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "hard",
+    "questionText": "What is the runtime impact of performing a blocking/long-running task inside the @PostConstruct method of 'SetupBean_8'?",
+    "codeSnippet": "@Component\npublic class SetupBean_8 {\n    @PostConstruct\n    public void init() {\n        // Blocks on network/external server call\n        loadConfiguration();\n    }\n}",
+    "options": [
+      "It triggers an asynchronous thread pool execution and continues startup.",
+      "Spring immediately throws an InitializationTimeoutException.",
+      "It blocks the main startup thread, preventing the application context from finishing initialization and starting the web server.",
+      "The JVM runs the method in the background without affecting startup."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "@PostConstruct methods are executed synchronously during bean instantiation on the main thread. If a bean blocks in @PostConstruct, application context startup halts, blocking the web server (Tomcat) from starting. Use events or Async tasks instead."
+  },
+  {
+    "id": "spring-quiz-t15-8",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "If a controller throws a 'DatabaseException_8' (which extends RuntimeException), which ExceptionHandler method inside ControllerAdvice is invoked?",
+    "codeSnippet": "@ControllerAdvice\npublic class GlobalHandler {\n    @ExceptionHandler(RuntimeException.class)\n    public String handleRuntime(RuntimeException ex) { return \"Runtime\"; }\n\n    @ExceptionHandler(DatabaseException_8.class)\n    public String handleDb(DatabaseException_8 ex) { return \"Db\"; }\n}",
+    "options": [
+      "handleRuntime(), because RuntimeException is checked first as the parent class.",
+      "Both methods run in sequence.",
+      "Spring throws an ExceptionHandlerAmbiguityException at startup.",
+      "handleDb(), because it is mapped to the most specific exception type matching the exception thrown."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring's exception resolver resolves to the exception handler that maps to the most specific exception in the type hierarchy. Since 'DatabaseException_8' matches the thrown exception exactly, handleDb() is preferred over handleRuntime()."
+  },
+  {
+    "id": "spring-quiz-t16-8",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "What is the state of entity 'Account_8' and the database result when the method process() exits?",
+    "codeSnippet": "@Transactional\npublic void process(Long id) {\n    Account_8 acc = repository.findById(id).orElseThrow();\n    entityManager.detach(acc);\n    acc.setBalance(1000);\n}",
+    "options": [
+      "The entity is in the persistent state; the database is updated with balance 1000.",
+      "The entity is in the detached state; no database updates occur.",
+      "An EntityNotFoundException is thrown during detach.",
+      "Hibernate throws a LazyInitializationException when setting the balance."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Calling entityManager.detach(entity) removes the entity from the Persistence Context. It changes from 'persistent' to 'detached' state. Hibernate no longer tracks modifications, so the balance change is not flushed to the database."
+  },
+  {
+    "id": "spring-quiz-t17-8",
+    "topic": "Spring Cloud & Resilience",
+    "difficulty": "medium",
+    "questionText": "A Resilience4j Circuit Breaker has slidingWindowSize = 13 and failureRateThreshold = 50%. If 8 requests fail within the sliding window, what is the state transition?",
+    "codeSnippet": "CircuitBreakerConfig config = CircuitBreakerConfig.custom()\n    .slidingWindowSize(13)\n    .failureRateThreshold(50)\n    .build();",
+    "options": [
+      "Transitions to OPEN state (failure rate is 62%, exceeding the 50% threshold).",
+      "Remains in CLOSED state because the sliding window must exceed capacity.",
+      "Transitions to HALF_OPEN state.",
+      "Throws a CircuitBreakerOpenException immediately."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Once the sliding window registers 13 requests, Resilience4j calculates the failure rate. Since 8/13 (62%) is greater than or equal to 50%, the Circuit Breaker transitions to the OPEN state."
+  },
+  {
+    "id": "spring-quiz-t18-8",
+    "topic": "Spring Boot Internals",
+    "difficulty": "hard",
+    "questionText": "Inside a single configuration class, what determines the registration order of beans and the result of @ConditionalOnMissingBean?",
+    "codeSnippet": "@Configuration\npublic class AppConfig {\n    @Bean\n    public BeanVal_8 primaryBean() { return new BeanVal_8(\"A\"); }\n\n    @Bean\n    @ConditionalOnMissingBean(BeanVal_8.class)\n    public BeanVal_8 fallbackBean() { return new BeanVal_8(\"B\"); }\n}",
+    "options": [
+      "fallbackBean overrides primaryBean because @ConditionalOnMissingBean forces precedence.",
+      "Bean methods are registered in order of definition. primaryBean() registers first, causing fallbackBean()'s conditional check to fail. Only primaryBean is registered.",
+      "Both beans are registered, creating an array list injection candidate.",
+      "Spring throws a BeanDefinitionOverrideException during startup."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Within a single configuration class, beans are parsed and registered sequentially. Since primaryBean() is defined first, its bean exists when fallbackBean() is evaluated. The conditional check fails, and fallbackBean() is skipped."
+  },
+  {
+    "id": "spring-quiz-t19-8",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "A controller returns an instance of 'ResponseData_8'. If fields are private and no getters are defined, what is the HTTP response behavior?",
+    "codeSnippet": "public class ResponseData_8 {\n    private String status;\n    public ResponseData_8(String status) { this.status = status; }\n    // No getters\n}",
+    "options": [
+      "HTTP 200 with JSON payload {\"status\":null}.",
+      "HTTP 200 with JSON payload {\"status\":\"...\"} using reflection.",
+      "HTTP 500 error or exception (Jackson throws an InvalidDefinitionException: No serializer found).",
+      "The code fails to compile because classes returned from RestController require getters."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Jackson (Spring Boot's default serializer) uses public getter methods to discover properties to write to JSON. If fields are private and no getters/setters/annotations are present, Jackson throws an exception, resulting in an HTTP 500."
+  },
+  {
+    "id": "spring-quiz-t20-8",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "If outerMethod() is marked as @Transactional and invokes nestedMethod() which is marked as @Transactional(propagation = Propagation.NESTED), what happens to DB updates if nestedMethod() fails and throws an exception caught inside outerMethod()?",
+    "codeSnippet": "@Transactional\npublic void outerMethod() {\n    try {\n        innerService.nestedMethod();\n    } catch (Exception e) {\n        // Exception caught\n    }\n    // Save other data\n}",
+    "options": [
+      "The entire transaction is rolled back because the outer method was marked as Transactional.",
+      "nestedMethod()'s updates are committed because the exception was caught in the outer method.",
+      "Only nestedMethod()'s updates are rolled back to the savepoint; outerMethod()'s updates can still commit successfully.",
+      "Spring throws a NestedTransactionNotSupportedException."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Propagation.NESTED creates a nested transaction using database savepoints. If the nested transaction fails and its exception is caught and handled inside the outer transaction, only the nested transaction rolls back to its savepoint. The outer transaction remains valid."
+  },
+  {
+    "id": "spring-quiz-t1-9",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "In the service below, orderProcessor() is invoked from an external REST controller. What is the transactional behavior of saveOrder()?",
+    "codeSnippet": "@Service\npublic class OrderService_9 {\n    public void orderProcessor() {\n        saveOrder(); // Self-invocation\n    }\n\n    @Transactional\n    public void saveOrder() {\n        // Save database record\n    }\n}",
+    "options": [
+      "Spring starts a new transaction automatically using aspect interception.",
+      "No transaction starts, because self-invocation bypasses the Spring AOP proxy.",
+      "The application throws a CircularDependencyException at startup.",
+      "A TransactionRequiredException is thrown during execution."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Spring's declarative annotations rely on AOP proxy wrappers. Method calls from outside go through the proxy, running transaction interceptors. Direct internal calls (self-invocation) run directly on the target object, bypassing the proxy and annotations."
+  },
+  {
+    "id": "spring-quiz-t2-9",
+    "topic": "Spring Core & Scopes",
+    "difficulty": "hard",
+    "questionText": "You inject a prototype-scoped bean 'RequestTracker_9' into a singleton controller 'AnalyticsController_9'. How does 'RequestTracker_9' behave across multiple HTTP requests?",
+    "codeSnippet": "@Scope(\"prototype\")\n@Component\npublic class RequestTracker_9 {}\n\n@RestController\npublic class AnalyticsController_9 {\n    @Autowired\n    private RequestTracker_9 tracker;\n}",
+    "options": [
+      "A new instance of 'RequestTracker_9' is created for every HTTP request.",
+      "Spring throws a ScopeMismatchException during startup.",
+      "The controller reuses the exact same instance of 'RequestTracker_9' injected at startup, behaving as a singleton.",
+      "The application fails to start because prototype beans cannot be injected into singletons."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Because the controller is a singleton, it is initialized once. Consequently, its fields are injected once. The prototype-scoped bean is instantiated during this injection, and that same instance is shared for all requests. To resolve, use scoped proxies."
+  },
+  {
+    "id": "spring-quiz-t3-9",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If a transaction method throws an Exception (checked exception) during database operations, what is the default rollback behavior?",
+    "codeSnippet": "@Transactional\npublic void process(User user) throws Exception {\n    UserRepo_9.save(user);\n    if (user.getName() == null) {\n        throw new Exception(\"Invalid User\");\n    }\n}",
+    "options": [
+      "The transaction is automatically rolled back for all exceptions.",
+      "The transaction is committed, and changes are saved because checked exceptions do not trigger rollback by default.",
+      "The compiler throws an error because Transactional cannot declare checked throws.",
+      "The transaction rolls back, but only if the database isolation is SERIALIZABLE."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Spring's @Transactional default configuration rolls back transactions only for unchecked exceptions (subclasses of RuntimeException and Error). Checked exceptions (like Exception, IOException) do not trigger rollback unless configured as @Transactional(rollbackFor = Exception.class)."
+  },
+  {
+    "id": "spring-quiz-t4-9",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "What occurs when Spring starts up and detects a circular constructor dependency between singleton beans 'BeanA_9' and 'BeanB_9'?",
+    "codeSnippet": "@Component\npublic class BeanA_9 {\n    public BeanA_9(BeanB_9 b) {}\n}\n@Component\npublic class BeanB_9 {\n    public BeanB_9(BeanA_9 a) {}\n}",
+    "options": [
+      "Spring automatically resolves the cycle by injecting a dynamic proxy.",
+      "The JVM crashes with a StackOverflowError during initialization.",
+      "The application fails to start and throws a BeanCurrentlyInCreationException.",
+      "Spring instantiates both beans as null."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Unlike setter/field injection, constructor dependencies must be resolved during object creation. Since neither 'BeanA_9' nor 'BeanB_9' can be constructed without the other, Spring cannot resolve the dependency cycle and throws a BeanCurrentlyInCreationException."
+  },
+  {
+    "id": "spring-quiz-t5-9",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "An entity has a lazy-loaded collection association. If you fetch all 9 parent entities and access their associations in a loop, how many SQL queries hit the database?",
+    "codeSnippet": "List<Parent> parents = parentRepository.findAll(); // Fetches 9 parents\nfor (Parent p : parents) {\n    System.out.println(p.getChildren().size()); // Lazy load\n}",
+    "options": [
+      "1 SQL query.",
+      "9 SQL queries.",
+      "2 SQL queries.",
+      "10 SQL queries."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "This is the N+1 query problem. The initial query fetches the parents (1 query). When accessing the lazy collection for each parent in the loop, Hibernate sends a separate select query per parent (9 queries), resulting in 10 queries."
+  },
+  {
+    "id": "spring-quiz-t6-9",
+    "topic": "Spring WebFlux",
+    "difficulty": "hard",
+    "questionText": "What is the hazard of calling a blocking method like RestTemplate inside a Spring WebFlux controller running on Netty event loops?",
+    "codeSnippet": "@GetMapping(\"/data\")\npublic Mono<String> getData() {\n    return Mono.fromCallable(() -> restTemplate.getForObject(\"https://api.com\", String.class));\n}",
+    "options": [
+      "WebFlux automatically shifts the call to virtual threads to avoid blocking.",
+      "The controller immediately throws a BlockedEventLoopException during compilation.",
+      "It causes a deadlock because Netty restricts HTTP requests.",
+      "It blocks the Netty EventLoop thread, reducing server capacity to process concurrent requests and causing starvation."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "WebFlux uses a small number of non-blocking event loop threads. Blocking operations on these threads exhaust the pool and block the server from handling other connections. Offload blocking logic using subscribeOn(Schedulers.boundedElastic())."
+  },
+  {
+    "id": "spring-quiz-t7-9",
+    "topic": "Spring Security",
+    "difficulty": "medium",
+    "questionText": "How do you insert a custom filter 'CustomAuthFilter_9' in a security chain so it executes before UsernamePasswordAuthenticationFilter?",
+    "codeSnippet": "@Bean\npublic SecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n    http.addFilterBefore(new CustomAuthFilter_9(), UsernamePasswordAuthenticationFilter.class);\n    return http.build();\n}",
+    "options": [
+      "Annotate CustomAuthFilter_9 with @Order(Ordered.HIGHEST_PRECEDENCE).",
+      "Register CustomAuthFilter_9 as a Spring @Component; Spring Security loads custom beans first.",
+      "Use addFilterBefore(new CustomAuthFilter_9(), UsernamePasswordAuthenticationFilter.class) inside HttpSecurity config.",
+      "Declare CustomAuthFilter_9 inside application.properties under security.filter.order."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "The order of filters inside a SecurityFilterChain is explicitly configured via HttpSecurity APIs. Class-level @Order annotations do not position filters within the SecurityFilterChain."
+  },
+  {
+    "id": "spring-quiz-t8-9",
+    "topic": "Spring Core",
+    "difficulty": "medium",
+    "questionText": "If a payment service interface has a default bean marked with @Primary, and another bean with qualifier 'customPaymentSvc_9', what is injected?",
+    "codeSnippet": "@RestController\npublic class PaymentController {\n    @Autowired\n    @Qualifier(\"customPaymentSvc_9\")\n    private PaymentService service;\n}",
+    "options": [
+      "The bean annotated with @Qualifier(\"customPaymentSvc_9\") is injected, overriding @Primary.",
+      "The @Primary bean is injected because primary beans take highest precedence.",
+      "A BeanCreationException is thrown due to injection ambiguity.",
+      "Both beans are injected inside a wrapper candidate proxy."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "While @Primary sets a default candidate, an explicit @Qualifier specifies the precise bean name requested. Explicit qualifiers take precedence over primary bean designations."
+  },
+  {
+    "id": "spring-quiz-t9-9",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If you specify a derived query method using property name 'emailAddress_9' which is missing on the Entity, what happens?",
+    "codeSnippet": "public interface UserRepository extends JpaRepository<User, Long> {\n    List<User> findByemailAddress_9(String email); // Entity field is 'email'\n}",
+    "options": [
+      "The query executes but returns an empty list at runtime.",
+      "Spring Data fallback parses it to a native SQL query.",
+      "A compile-time error occurs on the repository interface.",
+      "Spring Boot throws a PropertyReferenceException and fails to start during application context initialization."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring Data JPA parses derived query methods at application startup to validate them against the Entity's properties. If a method references a missing field like 'emailAddress_9', it throws a PropertyReferenceException and halts startup."
+  },
+  {
+    "id": "spring-quiz-t10-9",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "What happens if you apply @Transactional to a final method inside bean class 'DataFetcher_9' proxied by Spring AOP CGLIB subclassing?",
+    "codeSnippet": "public class DataFetcher_9 {\n    @Transactional\n    public final void loadData() {\n        // DB changes\n    }\n}",
+    "options": [
+      "Spring throws a FinalMethodAopException at startup.",
+      "The transaction aspect is bypassed silently because CGLIB creates a subclass and cannot override final methods.",
+      "The application throws a ClassCastException during method call.",
+      "The JVM crashes at runtime when calling the final method."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "CGLIB creates proxies by generating a dynamic subclass at runtime. Because final methods cannot be overridden by subclasses, the generated proxy class cannot insert aspect interceptor code. The final method runs directly, bypassing the aspect."
+  },
+  {
+    "id": "spring-quiz-t11-9",
+    "topic": "Spring Boot Configurations",
+    "difficulty": "medium",
+    "questionText": "If 'app.rate.9' is defined in application.properties as 50, in JVM properties as 100, and as an OS environment variable as 150, what value is resolved?",
+    "codeSnippet": "@Value(\"${app.rate.9}\")\nprivate int rate;",
+    "options": [
+      "150 (OS Environment variables take highest precedence)",
+      "50 (application.properties overrides all external configurations)",
+      "100 (JVM system properties override OS environment variables and properties files)",
+      "It throws a property resolution error due to conflict"
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Spring Boot property sources order: 1) Command-line args, 2) JVM System properties (-D...), 3) OS environment variables, 4) application.properties. Thus, the JVM value of 100 is selected."
+  },
+  {
+    "id": "spring-quiz-t12-9",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "How does the integer phase value 109 returned by getPhase() in SmartLifecycle affect context startup and shutdown order?",
+    "codeSnippet": "public class CustomService implements SmartLifecycle {\n    @Override\n    public int getPhase() { return 109; }\n}",
+    "options": [
+      "Beans with higher phase numbers are started first and stopped last.",
+      "The phase determines the priority thread pool, where higher phase means more threads.",
+      "SmartLifecycle beans start concurrently and ignore the phase value.",
+      "Beans with lower phase numbers are started first. During shutdown, beans with higher phase numbers are stopped first."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "SmartLifecycle defines getPhase() to resolve dependency execution order: lower phase numbers start first (e.g. databases, dependencies) and stop last. Shutdown goes in reverse, stopping higher phase numbers first."
+  },
+  {
+    "id": "spring-quiz-t13-9",
+    "topic": "Spring Caching",
+    "difficulty": "hard",
+    "questionText": "Why does the cache eviction fail under the configuration below?",
+    "codeSnippet": "@Cacheable(value = \"users_cache_9\", key = \"#id\")\npublic User getUser(Long id, Context ctx) { ... }\n\n@CacheEvict(value = \"users_cache_9\")\npublic void evictUser(Long id) { ... }",
+    "options": [
+      "Because cache names must be different.",
+      "Because evictUser() returns void.",
+      "Because evictUser() does not define a key, causing Spring to use SimpleKeyGenerator on '#id' while getUser() keys on '#id', resulting in mismatch.",
+      "Because CacheEvict requires @Transactional to run."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "By default, key generation combines all method arguments. For getUser(), the key combines id and ctx, but key='#id' overrides it to 'id'. For evictUser(), the key defaults to 'id' as well, but if arguments mismatch in key structure, we must explicitly set key='#id' in both to prevent cache desync."
+  },
+  {
+    "id": "spring-quiz-t14-9",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "hard",
+    "questionText": "What is the runtime impact of performing a blocking/long-running task inside the @PostConstruct method of 'SetupBean_9'?",
+    "codeSnippet": "@Component\npublic class SetupBean_9 {\n    @PostConstruct\n    public void init() {\n        // Blocks on network/external server call\n        loadConfiguration();\n    }\n}",
+    "options": [
+      "It triggers an asynchronous thread pool execution and continues startup.",
+      "Spring immediately throws an InitializationTimeoutException.",
+      "It blocks the main startup thread, preventing the application context from finishing initialization and starting the web server.",
+      "The JVM runs the method in the background without affecting startup."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "@PostConstruct methods are executed synchronously during bean instantiation on the main thread. If a bean blocks in @PostConstruct, application context startup halts, blocking the web server (Tomcat) from starting. Use events or Async tasks instead."
+  },
+  {
+    "id": "spring-quiz-t15-9",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "If a controller throws a 'DatabaseException_9' (which extends RuntimeException), which ExceptionHandler method inside ControllerAdvice is invoked?",
+    "codeSnippet": "@ControllerAdvice\npublic class GlobalHandler {\n    @ExceptionHandler(RuntimeException.class)\n    public String handleRuntime(RuntimeException ex) { return \"Runtime\"; }\n\n    @ExceptionHandler(DatabaseException_9.class)\n    public String handleDb(DatabaseException_9 ex) { return \"Db\"; }\n}",
+    "options": [
+      "handleDb(), because it is mapped to the most specific exception type matching the exception thrown.",
+      "handleRuntime(), because RuntimeException is checked first as the parent class.",
+      "Both methods run in sequence.",
+      "Spring throws an ExceptionHandlerAmbiguityException at startup."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Spring's exception resolver resolves to the exception handler that maps to the most specific exception in the type hierarchy. Since 'DatabaseException_9' matches the thrown exception exactly, handleDb() is preferred over handleRuntime()."
+  },
+  {
+    "id": "spring-quiz-t16-9",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "What is the state of entity 'Account_9' and the database result when the method process() exits?",
+    "codeSnippet": "@Transactional\npublic void process(Long id) {\n    Account_9 acc = repository.findById(id).orElseThrow();\n    entityManager.detach(acc);\n    acc.setBalance(1000);\n}",
+    "options": [
+      "The entity is in the persistent state; the database is updated with balance 1000.",
+      "An EntityNotFoundException is thrown during detach.",
+      "The entity is in the detached state; no database updates occur.",
+      "Hibernate throws a LazyInitializationException when setting the balance."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Calling entityManager.detach(entity) removes the entity from the Persistence Context. It changes from 'persistent' to 'detached' state. Hibernate no longer tracks modifications, so the balance change is not flushed to the database."
+  },
+  {
+    "id": "spring-quiz-t17-9",
+    "topic": "Spring Cloud & Resilience",
+    "difficulty": "medium",
+    "questionText": "A Resilience4j Circuit Breaker has slidingWindowSize = 14 and failureRateThreshold = 50%. If 9 requests fail within the sliding window, what is the state transition?",
+    "codeSnippet": "CircuitBreakerConfig config = CircuitBreakerConfig.custom()\n    .slidingWindowSize(14)\n    .failureRateThreshold(50)\n    .build();",
+    "options": [
+      "Remains in CLOSED state because the sliding window must exceed capacity.",
+      "Transitions to HALF_OPEN state.",
+      "Transitions to OPEN state (failure rate is 64%, exceeding the 50% threshold).",
+      "Throws a CircuitBreakerOpenException immediately."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Once the sliding window registers 14 requests, Resilience4j calculates the failure rate. Since 9/14 (64%) is greater than or equal to 50%, the Circuit Breaker transitions to the OPEN state."
+  },
+  {
+    "id": "spring-quiz-t18-9",
+    "topic": "Spring Boot Internals",
+    "difficulty": "hard",
+    "questionText": "Inside a single configuration class, what determines the registration order of beans and the result of @ConditionalOnMissingBean?",
+    "codeSnippet": "@Configuration\npublic class AppConfig {\n    @Bean\n    public BeanVal_9 primaryBean() { return new BeanVal_9(\"A\"); }\n\n    @Bean\n    @ConditionalOnMissingBean(BeanVal_9.class)\n    public BeanVal_9 fallbackBean() { return new BeanVal_9(\"B\"); }\n}",
+    "options": [
+      "fallbackBean overrides primaryBean because @ConditionalOnMissingBean forces precedence.",
+      "Bean methods are registered in order of definition. primaryBean() registers first, causing fallbackBean()'s conditional check to fail. Only primaryBean is registered.",
+      "Both beans are registered, creating an array list injection candidate.",
+      "Spring throws a BeanDefinitionOverrideException during startup."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Within a single configuration class, beans are parsed and registered sequentially. Since primaryBean() is defined first, its bean exists when fallbackBean() is evaluated. The conditional check fails, and fallbackBean() is skipped."
+  },
+  {
+    "id": "spring-quiz-t19-9",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "A controller returns an instance of 'ResponseData_9'. If fields are private and no getters are defined, what is the HTTP response behavior?",
+    "codeSnippet": "public class ResponseData_9 {\n    private String status;\n    public ResponseData_9(String status) { this.status = status; }\n    // No getters\n}",
+    "options": [
+      "HTTP 200 with JSON payload {\"status\":null}.",
+      "HTTP 500 error or exception (Jackson throws an InvalidDefinitionException: No serializer found).",
+      "HTTP 200 with JSON payload {\"status\":\"...\"} using reflection.",
+      "The code fails to compile because classes returned from RestController require getters."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Jackson (Spring Boot's default serializer) uses public getter methods to discover properties to write to JSON. If fields are private and no getters/setters/annotations are present, Jackson throws an exception, resulting in an HTTP 500."
+  },
+  {
+    "id": "spring-quiz-t20-9",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "If outerMethod() is marked as @Transactional and invokes nestedMethod() which is marked as @Transactional(propagation = Propagation.NESTED), what happens to DB updates if nestedMethod() fails and throws an exception caught inside outerMethod()?",
+    "codeSnippet": "@Transactional\npublic void outerMethod() {\n    try {\n        innerService.nestedMethod();\n    } catch (Exception e) {\n        // Exception caught\n    }\n    // Save other data\n}",
+    "options": [
+      "The entire transaction is rolled back because the outer method was marked as Transactional.",
+      "nestedMethod()'s updates are committed because the exception was caught in the outer method.",
+      "Only nestedMethod()'s updates are rolled back to the savepoint; outerMethod()'s updates can still commit successfully.",
+      "Spring throws a NestedTransactionNotSupportedException."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Propagation.NESTED creates a nested transaction using database savepoints. If the nested transaction fails and its exception is caught and handled inside the outer transaction, only the nested transaction rolls back to its savepoint. The outer transaction remains valid."
+  },
+  {
+    "id": "spring-quiz-t1-10",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "In the service below, orderProcessor() is invoked from an external REST controller. What is the transactional behavior of saveOrder()?",
+    "codeSnippet": "@Service\npublic class OrderService_10 {\n    public void orderProcessor() {\n        saveOrder(); // Self-invocation\n    }\n\n    @Transactional\n    public void saveOrder() {\n        // Save database record\n    }\n}",
+    "options": [
+      "No transaction starts, because self-invocation bypasses the Spring AOP proxy.",
+      "Spring starts a new transaction automatically using aspect interception.",
+      "The application throws a CircularDependencyException at startup.",
+      "A TransactionRequiredException is thrown during execution."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Spring's declarative annotations rely on AOP proxy wrappers. Method calls from outside go through the proxy, running transaction interceptors. Direct internal calls (self-invocation) run directly on the target object, bypassing the proxy and annotations."
+  },
+  {
+    "id": "spring-quiz-t2-10",
+    "topic": "Spring Core & Scopes",
+    "difficulty": "hard",
+    "questionText": "You inject a prototype-scoped bean 'RequestTracker_10' into a singleton controller 'AnalyticsController_10'. How does 'RequestTracker_10' behave across multiple HTTP requests?",
+    "codeSnippet": "@Scope(\"prototype\")\n@Component\npublic class RequestTracker_10 {}\n\n@RestController\npublic class AnalyticsController_10 {\n    @Autowired\n    private RequestTracker_10 tracker;\n}",
+    "options": [
+      "A new instance of 'RequestTracker_10' is created for every HTTP request.",
+      "The controller reuses the exact same instance of 'RequestTracker_10' injected at startup, behaving as a singleton.",
+      "Spring throws a ScopeMismatchException during startup.",
+      "The application fails to start because prototype beans cannot be injected into singletons."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Because the controller is a singleton, it is initialized once. Consequently, its fields are injected once. The prototype-scoped bean is instantiated during this injection, and that same instance is shared for all requests. To resolve, use scoped proxies."
+  },
+  {
+    "id": "spring-quiz-t3-10",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If a transaction method throws an Exception (checked exception) during database operations, what is the default rollback behavior?",
+    "codeSnippet": "@Transactional\npublic void process(User user) throws Exception {\n    UserRepo_10.save(user);\n    if (user.getName() == null) {\n        throw new Exception(\"Invalid User\");\n    }\n}",
+    "options": [
+      "The transaction is committed, and changes are saved because checked exceptions do not trigger rollback by default.",
+      "The transaction is automatically rolled back for all exceptions.",
+      "The compiler throws an error because Transactional cannot declare checked throws.",
+      "The transaction rolls back, but only if the database isolation is SERIALIZABLE."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Spring's @Transactional default configuration rolls back transactions only for unchecked exceptions (subclasses of RuntimeException and Error). Checked exceptions (like Exception, IOException) do not trigger rollback unless configured as @Transactional(rollbackFor = Exception.class)."
+  },
+  {
+    "id": "spring-quiz-t4-10",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "What occurs when Spring starts up and detects a circular constructor dependency between singleton beans 'BeanA_10' and 'BeanB_10'?",
+    "codeSnippet": "@Component\npublic class BeanA_10 {\n    public BeanA_10(BeanB_10 b) {}\n}\n@Component\npublic class BeanB_10 {\n    public BeanB_10(BeanA_10 a) {}\n}",
+    "options": [
+      "Spring automatically resolves the cycle by injecting a dynamic proxy.",
+      "The JVM crashes with a StackOverflowError during initialization.",
+      "Spring instantiates both beans as null.",
+      "The application fails to start and throws a BeanCurrentlyInCreationException."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Unlike setter/field injection, constructor dependencies must be resolved during object creation. Since neither 'BeanA_10' nor 'BeanB_10' can be constructed without the other, Spring cannot resolve the dependency cycle and throws a BeanCurrentlyInCreationException."
+  },
+  {
+    "id": "spring-quiz-t5-10",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "An entity has a lazy-loaded collection association. If you fetch all 5 parent entities and access their associations in a loop, how many SQL queries hit the database?",
+    "codeSnippet": "List<Parent> parents = parentRepository.findAll(); // Fetches 5 parents\nfor (Parent p : parents) {\n    System.out.println(p.getChildren().size()); // Lazy load\n}",
+    "options": [
+      "1 SQL query.",
+      "5 SQL queries.",
+      "2 SQL queries.",
+      "6 SQL queries."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "This is the N+1 query problem. The initial query fetches the parents (1 query). When accessing the lazy collection for each parent in the loop, Hibernate sends a separate select query per parent (5 queries), resulting in 6 queries."
+  },
+  {
+    "id": "spring-quiz-t6-10",
+    "topic": "Spring WebFlux",
+    "difficulty": "hard",
+    "questionText": "What is the hazard of calling a blocking method like RestTemplate inside a Spring WebFlux controller running on Netty event loops?",
+    "codeSnippet": "@GetMapping(\"/data\")\npublic Mono<String> getData() {\n    return Mono.fromCallable(() -> restTemplate.getForObject(\"https://api.com\", String.class));\n}",
+    "options": [
+      "It blocks the Netty EventLoop thread, reducing server capacity to process concurrent requests and causing starvation.",
+      "WebFlux automatically shifts the call to virtual threads to avoid blocking.",
+      "The controller immediately throws a BlockedEventLoopException during compilation.",
+      "It causes a deadlock because Netty restricts HTTP requests."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "WebFlux uses a small number of non-blocking event loop threads. Blocking operations on these threads exhaust the pool and block the server from handling other connections. Offload blocking logic using subscribeOn(Schedulers.boundedElastic())."
+  },
+  {
+    "id": "spring-quiz-t7-10",
+    "topic": "Spring Security",
+    "difficulty": "medium",
+    "questionText": "How do you insert a custom filter 'CustomAuthFilter_10' in a security chain so it executes before UsernamePasswordAuthenticationFilter?",
+    "codeSnippet": "@Bean\npublic SecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n    http.addFilterBefore(new CustomAuthFilter_10(), UsernamePasswordAuthenticationFilter.class);\n    return http.build();\n}",
+    "options": [
+      "Use addFilterBefore(new CustomAuthFilter_10(), UsernamePasswordAuthenticationFilter.class) inside HttpSecurity config.",
+      "Annotate CustomAuthFilter_10 with @Order(Ordered.HIGHEST_PRECEDENCE).",
+      "Register CustomAuthFilter_10 as a Spring @Component; Spring Security loads custom beans first.",
+      "Declare CustomAuthFilter_10 inside application.properties under security.filter.order."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "The order of filters inside a SecurityFilterChain is explicitly configured via HttpSecurity APIs. Class-level @Order annotations do not position filters within the SecurityFilterChain."
+  },
+  {
+    "id": "spring-quiz-t8-10",
+    "topic": "Spring Core",
+    "difficulty": "medium",
+    "questionText": "If a payment service interface has a default bean marked with @Primary, and another bean with qualifier 'customPaymentSvc_10', what is injected?",
+    "codeSnippet": "@RestController\npublic class PaymentController {\n    @Autowired\n    @Qualifier(\"customPaymentSvc_10\")\n    private PaymentService service;\n}",
+    "options": [
+      "The @Primary bean is injected because primary beans take highest precedence.",
+      "The bean annotated with @Qualifier(\"customPaymentSvc_10\") is injected, overriding @Primary.",
+      "A BeanCreationException is thrown due to injection ambiguity.",
+      "Both beans are injected inside a wrapper candidate proxy."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "While @Primary sets a default candidate, an explicit @Qualifier specifies the precise bean name requested. Explicit qualifiers take precedence over primary bean designations."
+  },
+  {
+    "id": "spring-quiz-t9-10",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If you specify a derived query method using property name 'emailAddress_10' which is missing on the Entity, what happens?",
+    "codeSnippet": "public interface UserRepository extends JpaRepository<User, Long> {\n    List<User> findByemailAddress_10(String email); // Entity field is 'email'\n}",
+    "options": [
+      "The query executes but returns an empty list at runtime.",
+      "Spring Data fallback parses it to a native SQL query.",
+      "Spring Boot throws a PropertyReferenceException and fails to start during application context initialization.",
+      "A compile-time error occurs on the repository interface."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Spring Data JPA parses derived query methods at application startup to validate them against the Entity's properties. If a method references a missing field like 'emailAddress_10', it throws a PropertyReferenceException and halts startup."
+  },
+  {
+    "id": "spring-quiz-t10-10",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "What happens if you apply @Transactional to a final method inside bean class 'DataFetcher_10' proxied by Spring AOP CGLIB subclassing?",
+    "codeSnippet": "public class DataFetcher_10 {\n    @Transactional\n    public final void loadData() {\n        // DB changes\n    }\n}",
+    "options": [
+      "Spring throws a FinalMethodAopException at startup.",
+      "The application throws a ClassCastException during method call.",
+      "The transaction aspect is bypassed silently because CGLIB creates a subclass and cannot override final methods.",
+      "The JVM crashes at runtime when calling the final method."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "CGLIB creates proxies by generating a dynamic subclass at runtime. Because final methods cannot be overridden by subclasses, the generated proxy class cannot insert aspect interceptor code. The final method runs directly, bypassing the aspect."
+  },
+  {
+    "id": "spring-quiz-t11-10",
+    "topic": "Spring Boot Configurations",
+    "difficulty": "medium",
+    "questionText": "If 'app.rate.10' is defined in application.properties as 50, in JVM properties as 100, and as an OS environment variable as 150, what value is resolved?",
+    "codeSnippet": "@Value(\"${app.rate.10}\")\nprivate int rate;",
+    "options": [
+      "150 (OS Environment variables take highest precedence)",
+      "100 (JVM system properties override OS environment variables and properties files)",
+      "50 (application.properties overrides all external configurations)",
+      "It throws a property resolution error due to conflict"
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Spring Boot property sources order: 1) Command-line args, 2) JVM System properties (-D...), 3) OS environment variables, 4) application.properties. Thus, the JVM value of 100 is selected."
+  },
+  {
+    "id": "spring-quiz-t12-10",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "How does the integer phase value 110 returned by getPhase() in SmartLifecycle affect context startup and shutdown order?",
+    "codeSnippet": "public class CustomService implements SmartLifecycle {\n    @Override\n    public int getPhase() { return 110; }\n}",
+    "options": [
+      "Beans with higher phase numbers are started first and stopped last.",
+      "The phase determines the priority thread pool, where higher phase means more threads.",
+      "SmartLifecycle beans start concurrently and ignore the phase value.",
+      "Beans with lower phase numbers are started first. During shutdown, beans with higher phase numbers are stopped first."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "SmartLifecycle defines getPhase() to resolve dependency execution order: lower phase numbers start first (e.g. databases, dependencies) and stop last. Shutdown goes in reverse, stopping higher phase numbers first."
+  },
+  {
+    "id": "spring-quiz-t13-10",
+    "topic": "Spring Caching",
+    "difficulty": "hard",
+    "questionText": "Why does the cache eviction fail under the configuration below?",
+    "codeSnippet": "@Cacheable(value = \"users_cache_10\", key = \"#id\")\npublic User getUser(Long id, Context ctx) { ... }\n\n@CacheEvict(value = \"users_cache_10\")\npublic void evictUser(Long id) { ... }",
+    "options": [
+      "Because evictUser() does not define a key, causing Spring to use SimpleKeyGenerator on '#id' while getUser() keys on '#id', resulting in mismatch.",
+      "Because cache names must be different.",
+      "Because evictUser() returns void.",
+      "Because CacheEvict requires @Transactional to run."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "By default, key generation combines all method arguments. For getUser(), the key combines id and ctx, but key='#id' overrides it to 'id'. For evictUser(), the key defaults to 'id' as well, but if arguments mismatch in key structure, we must explicitly set key='#id' in both to prevent cache desync."
+  },
+  {
+    "id": "spring-quiz-t14-10",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "hard",
+    "questionText": "What is the runtime impact of performing a blocking/long-running task inside the @PostConstruct method of 'SetupBean_10'?",
+    "codeSnippet": "@Component\npublic class SetupBean_10 {\n    @PostConstruct\n    public void init() {\n        // Blocks on network/external server call\n        loadConfiguration();\n    }\n}",
+    "options": [
+      "It triggers an asynchronous thread pool execution and continues startup.",
+      "It blocks the main startup thread, preventing the application context from finishing initialization and starting the web server.",
+      "Spring immediately throws an InitializationTimeoutException.",
+      "The JVM runs the method in the background without affecting startup."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "@PostConstruct methods are executed synchronously during bean instantiation on the main thread. If a bean blocks in @PostConstruct, application context startup halts, blocking the web server (Tomcat) from starting. Use events or Async tasks instead."
+  },
+  {
+    "id": "spring-quiz-t15-10",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "If a controller throws a 'DatabaseException_10' (which extends RuntimeException), which ExceptionHandler method inside ControllerAdvice is invoked?",
+    "codeSnippet": "@ControllerAdvice\npublic class GlobalHandler {\n    @ExceptionHandler(RuntimeException.class)\n    public String handleRuntime(RuntimeException ex) { return \"Runtime\"; }\n\n    @ExceptionHandler(DatabaseException_10.class)\n    public String handleDb(DatabaseException_10 ex) { return \"Db\"; }\n}",
+    "options": [
+      "handleRuntime(), because RuntimeException is checked first as the parent class.",
+      "Both methods run in sequence.",
+      "handleDb(), because it is mapped to the most specific exception type matching the exception thrown.",
+      "Spring throws an ExceptionHandlerAmbiguityException at startup."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Spring's exception resolver resolves to the exception handler that maps to the most specific exception in the type hierarchy. Since 'DatabaseException_10' matches the thrown exception exactly, handleDb() is preferred over handleRuntime()."
+  },
+  {
+    "id": "spring-quiz-t16-10",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "What is the state of entity 'Account_10' and the database result when the method process() exits?",
+    "codeSnippet": "@Transactional\npublic void process(Long id) {\n    Account_10 acc = repository.findById(id).orElseThrow();\n    entityManager.detach(acc);\n    acc.setBalance(1000);\n}",
+    "options": [
+      "The entity is in the detached state; no database updates occur.",
+      "The entity is in the persistent state; the database is updated with balance 1000.",
+      "An EntityNotFoundException is thrown during detach.",
+      "Hibernate throws a LazyInitializationException when setting the balance."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Calling entityManager.detach(entity) removes the entity from the Persistence Context. It changes from 'persistent' to 'detached' state. Hibernate no longer tracks modifications, so the balance change is not flushed to the database."
+  },
+  {
+    "id": "spring-quiz-t17-10",
+    "topic": "Spring Cloud & Resilience",
+    "difficulty": "medium",
+    "questionText": "A Resilience4j Circuit Breaker has slidingWindowSize = 10 and failureRateThreshold = 50%. If 6 requests fail within the sliding window, what is the state transition?",
+    "codeSnippet": "CircuitBreakerConfig config = CircuitBreakerConfig.custom()\n    .slidingWindowSize(10)\n    .failureRateThreshold(50)\n    .build();",
+    "options": [
+      "Remains in CLOSED state because the sliding window must exceed capacity.",
+      "Transitions to HALF_OPEN state.",
+      "Throws a CircuitBreakerOpenException immediately.",
+      "Transitions to OPEN state (failure rate is 60%, exceeding the 50% threshold)."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Once the sliding window registers 10 requests, Resilience4j calculates the failure rate. Since 6/10 (60%) is greater than or equal to 50%, the Circuit Breaker transitions to the OPEN state."
+  },
+  {
+    "id": "spring-quiz-t18-10",
+    "topic": "Spring Boot Internals",
+    "difficulty": "hard",
+    "questionText": "Inside a single configuration class, what determines the registration order of beans and the result of @ConditionalOnMissingBean?",
+    "codeSnippet": "@Configuration\npublic class AppConfig {\n    @Bean\n    public BeanVal_10 primaryBean() { return new BeanVal_10(\"A\"); }\n\n    @Bean\n    @ConditionalOnMissingBean(BeanVal_10.class)\n    public BeanVal_10 fallbackBean() { return new BeanVal_10(\"B\"); }\n}",
+    "options": [
+      "fallbackBean overrides primaryBean because @ConditionalOnMissingBean forces precedence.",
+      "Bean methods are registered in order of definition. primaryBean() registers first, causing fallbackBean()'s conditional check to fail. Only primaryBean is registered.",
+      "Both beans are registered, creating an array list injection candidate.",
+      "Spring throws a BeanDefinitionOverrideException during startup."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Within a single configuration class, beans are parsed and registered sequentially. Since primaryBean() is defined first, its bean exists when fallbackBean() is evaluated. The conditional check fails, and fallbackBean() is skipped."
+  },
+  {
+    "id": "spring-quiz-t19-10",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "A controller returns an instance of 'ResponseData_10'. If fields are private and no getters are defined, what is the HTTP response behavior?",
+    "codeSnippet": "public class ResponseData_10 {\n    private String status;\n    public ResponseData_10(String status) { this.status = status; }\n    // No getters\n}",
+    "options": [
+      "HTTP 500 error or exception (Jackson throws an InvalidDefinitionException: No serializer found).",
+      "HTTP 200 with JSON payload {\"status\":null}.",
+      "HTTP 200 with JSON payload {\"status\":\"...\"} using reflection.",
+      "The code fails to compile because classes returned from RestController require getters."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Jackson (Spring Boot's default serializer) uses public getter methods to discover properties to write to JSON. If fields are private and no getters/setters/annotations are present, Jackson throws an exception, resulting in an HTTP 500."
+  },
+  {
+    "id": "spring-quiz-t20-10",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "If outerMethod() is marked as @Transactional and invokes nestedMethod() which is marked as @Transactional(propagation = Propagation.NESTED), what happens to DB updates if nestedMethod() fails and throws an exception caught inside outerMethod()?",
+    "codeSnippet": "@Transactional\npublic void outerMethod() {\n    try {\n        innerService.nestedMethod();\n    } catch (Exception e) {\n        // Exception caught\n    }\n    // Save other data\n}",
+    "options": [
+      "The entire transaction is rolled back because the outer method was marked as Transactional.",
+      "nestedMethod()'s updates are committed because the exception was caught in the outer method.",
+      "Only nestedMethod()'s updates are rolled back to the savepoint; outerMethod()'s updates can still commit successfully.",
+      "Spring throws a NestedTransactionNotSupportedException."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Propagation.NESTED creates a nested transaction using database savepoints. If the nested transaction fails and its exception is caught and handled inside the outer transaction, only the nested transaction rolls back to its savepoint. The outer transaction remains valid."
+  },
+  {
+    "id": "spring-quiz-t1-11",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "In the service below, orderProcessor() is invoked from an external REST controller. What is the transactional behavior of saveOrder()?",
+    "codeSnippet": "@Service\npublic class OrderService_11 {\n    public void orderProcessor() {\n        saveOrder(); // Self-invocation\n    }\n\n    @Transactional\n    public void saveOrder() {\n        // Save database record\n    }\n}",
+    "options": [
+      "Spring starts a new transaction automatically using aspect interception.",
+      "The application throws a CircularDependencyException at startup.",
+      "No transaction starts, because self-invocation bypasses the Spring AOP proxy.",
+      "A TransactionRequiredException is thrown during execution."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Spring's declarative annotations rely on AOP proxy wrappers. Method calls from outside go through the proxy, running transaction interceptors. Direct internal calls (self-invocation) run directly on the target object, bypassing the proxy and annotations."
+  },
+  {
+    "id": "spring-quiz-t2-11",
+    "topic": "Spring Core & Scopes",
+    "difficulty": "hard",
+    "questionText": "You inject a prototype-scoped bean 'RequestTracker_11' into a singleton controller 'AnalyticsController_11'. How does 'RequestTracker_11' behave across multiple HTTP requests?",
+    "codeSnippet": "@Scope(\"prototype\")\n@Component\npublic class RequestTracker_11 {}\n\n@RestController\npublic class AnalyticsController_11 {\n    @Autowired\n    private RequestTracker_11 tracker;\n}",
+    "options": [
+      "A new instance of 'RequestTracker_11' is created for every HTTP request.",
+      "Spring throws a ScopeMismatchException during startup.",
+      "The controller reuses the exact same instance of 'RequestTracker_11' injected at startup, behaving as a singleton.",
+      "The application fails to start because prototype beans cannot be injected into singletons."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Because the controller is a singleton, it is initialized once. Consequently, its fields are injected once. The prototype-scoped bean is instantiated during this injection, and that same instance is shared for all requests. To resolve, use scoped proxies."
+  },
+  {
+    "id": "spring-quiz-t3-11",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If a transaction method throws an Exception (checked exception) during database operations, what is the default rollback behavior?",
+    "codeSnippet": "@Transactional\npublic void process(User user) throws Exception {\n    UserRepo_11.save(user);\n    if (user.getName() == null) {\n        throw new Exception(\"Invalid User\");\n    }\n}",
+    "options": [
+      "The transaction is automatically rolled back for all exceptions.",
+      "The transaction is committed, and changes are saved because checked exceptions do not trigger rollback by default.",
+      "The compiler throws an error because Transactional cannot declare checked throws.",
+      "The transaction rolls back, but only if the database isolation is SERIALIZABLE."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Spring's @Transactional default configuration rolls back transactions only for unchecked exceptions (subclasses of RuntimeException and Error). Checked exceptions (like Exception, IOException) do not trigger rollback unless configured as @Transactional(rollbackFor = Exception.class)."
+  },
+  {
+    "id": "spring-quiz-t4-11",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "What occurs when Spring starts up and detects a circular constructor dependency between singleton beans 'BeanA_11' and 'BeanB_11'?",
+    "codeSnippet": "@Component\npublic class BeanA_11 {\n    public BeanA_11(BeanB_11 b) {}\n}\n@Component\npublic class BeanB_11 {\n    public BeanB_11(BeanA_11 a) {}\n}",
+    "options": [
+      "Spring automatically resolves the cycle by injecting a dynamic proxy.",
+      "The JVM crashes with a StackOverflowError during initialization.",
+      "The application fails to start and throws a BeanCurrentlyInCreationException.",
+      "Spring instantiates both beans as null."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Unlike setter/field injection, constructor dependencies must be resolved during object creation. Since neither 'BeanA_11' nor 'BeanB_11' can be constructed without the other, Spring cannot resolve the dependency cycle and throws a BeanCurrentlyInCreationException."
+  },
+  {
+    "id": "spring-quiz-t5-11",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "An entity has a lazy-loaded collection association. If you fetch all 6 parent entities and access their associations in a loop, how many SQL queries hit the database?",
+    "codeSnippet": "List<Parent> parents = parentRepository.findAll(); // Fetches 6 parents\nfor (Parent p : parents) {\n    System.out.println(p.getChildren().size()); // Lazy load\n}",
+    "options": [
+      "7 SQL queries.",
+      "1 SQL query.",
+      "6 SQL queries.",
+      "2 SQL queries."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "This is the N+1 query problem. The initial query fetches the parents (1 query). When accessing the lazy collection for each parent in the loop, Hibernate sends a separate select query per parent (6 queries), resulting in 7 queries."
+  },
+  {
+    "id": "spring-quiz-t6-11",
+    "topic": "Spring WebFlux",
+    "difficulty": "hard",
+    "questionText": "What is the hazard of calling a blocking method like RestTemplate inside a Spring WebFlux controller running on Netty event loops?",
+    "codeSnippet": "@GetMapping(\"/data\")\npublic Mono<String> getData() {\n    return Mono.fromCallable(() -> restTemplate.getForObject(\"https://api.com\", String.class));\n}",
+    "options": [
+      "It blocks the Netty EventLoop thread, reducing server capacity to process concurrent requests and causing starvation.",
+      "WebFlux automatically shifts the call to virtual threads to avoid blocking.",
+      "The controller immediately throws a BlockedEventLoopException during compilation.",
+      "It causes a deadlock because Netty restricts HTTP requests."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "WebFlux uses a small number of non-blocking event loop threads. Blocking operations on these threads exhaust the pool and block the server from handling other connections. Offload blocking logic using subscribeOn(Schedulers.boundedElastic())."
+  },
+  {
+    "id": "spring-quiz-t7-11",
+    "topic": "Spring Security",
+    "difficulty": "medium",
+    "questionText": "How do you insert a custom filter 'CustomAuthFilter_11' in a security chain so it executes before UsernamePasswordAuthenticationFilter?",
+    "codeSnippet": "@Bean\npublic SecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n    http.addFilterBefore(new CustomAuthFilter_11(), UsernamePasswordAuthenticationFilter.class);\n    return http.build();\n}",
+    "options": [
+      "Annotate CustomAuthFilter_11 with @Order(Ordered.HIGHEST_PRECEDENCE).",
+      "Use addFilterBefore(new CustomAuthFilter_11(), UsernamePasswordAuthenticationFilter.class) inside HttpSecurity config.",
+      "Register CustomAuthFilter_11 as a Spring @Component; Spring Security loads custom beans first.",
+      "Declare CustomAuthFilter_11 inside application.properties under security.filter.order."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "The order of filters inside a SecurityFilterChain is explicitly configured via HttpSecurity APIs. Class-level @Order annotations do not position filters within the SecurityFilterChain."
+  },
+  {
+    "id": "spring-quiz-t8-11",
+    "topic": "Spring Core",
+    "difficulty": "medium",
+    "questionText": "If a payment service interface has a default bean marked with @Primary, and another bean with qualifier 'customPaymentSvc_11', what is injected?",
+    "codeSnippet": "@RestController\npublic class PaymentController {\n    @Autowired\n    @Qualifier(\"customPaymentSvc_11\")\n    private PaymentService service;\n}",
+    "options": [
+      "The @Primary bean is injected because primary beans take highest precedence.",
+      "A BeanCreationException is thrown due to injection ambiguity.",
+      "The bean annotated with @Qualifier(\"customPaymentSvc_11\") is injected, overriding @Primary.",
+      "Both beans are injected inside a wrapper candidate proxy."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "While @Primary sets a default candidate, an explicit @Qualifier specifies the precise bean name requested. Explicit qualifiers take precedence over primary bean designations."
+  },
+  {
+    "id": "spring-quiz-t9-11",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If you specify a derived query method using property name 'emailAddress_11' which is missing on the Entity, what happens?",
+    "codeSnippet": "public interface UserRepository extends JpaRepository<User, Long> {\n    List<User> findByemailAddress_11(String email); // Entity field is 'email'\n}",
+    "options": [
+      "The query executes but returns an empty list at runtime.",
+      "Spring Boot throws a PropertyReferenceException and fails to start during application context initialization.",
+      "Spring Data fallback parses it to a native SQL query.",
+      "A compile-time error occurs on the repository interface."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Spring Data JPA parses derived query methods at application startup to validate them against the Entity's properties. If a method references a missing field like 'emailAddress_11', it throws a PropertyReferenceException and halts startup."
+  },
+  {
+    "id": "spring-quiz-t10-11",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "What happens if you apply @Transactional to a final method inside bean class 'DataFetcher_11' proxied by Spring AOP CGLIB subclassing?",
+    "codeSnippet": "public class DataFetcher_11 {\n    @Transactional\n    public final void loadData() {\n        // DB changes\n    }\n}",
+    "options": [
+      "Spring throws a FinalMethodAopException at startup.",
+      "The application throws a ClassCastException during method call.",
+      "The JVM crashes at runtime when calling the final method.",
+      "The transaction aspect is bypassed silently because CGLIB creates a subclass and cannot override final methods."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "CGLIB creates proxies by generating a dynamic subclass at runtime. Because final methods cannot be overridden by subclasses, the generated proxy class cannot insert aspect interceptor code. The final method runs directly, bypassing the aspect."
+  },
+  {
+    "id": "spring-quiz-t11-11",
+    "topic": "Spring Boot Configurations",
+    "difficulty": "medium",
+    "questionText": "If 'app.rate.11' is defined in application.properties as 50, in JVM properties as 100, and as an OS environment variable as 150, what value is resolved?",
+    "codeSnippet": "@Value(\"${app.rate.11}\")\nprivate int rate;",
+    "options": [
+      "150 (OS Environment variables take highest precedence)",
+      "100 (JVM system properties override OS environment variables and properties files)",
+      "50 (application.properties overrides all external configurations)",
+      "It throws a property resolution error due to conflict"
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Spring Boot property sources order: 1) Command-line args, 2) JVM System properties (-D...), 3) OS environment variables, 4) application.properties. Thus, the JVM value of 100 is selected."
+  },
+  {
+    "id": "spring-quiz-t12-11",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "How does the integer phase value 111 returned by getPhase() in SmartLifecycle affect context startup and shutdown order?",
+    "codeSnippet": "public class CustomService implements SmartLifecycle {\n    @Override\n    public int getPhase() { return 111; }\n}",
+    "options": [
+      "Beans with lower phase numbers are started first. During shutdown, beans with higher phase numbers are stopped first.",
+      "Beans with higher phase numbers are started first and stopped last.",
+      "The phase determines the priority thread pool, where higher phase means more threads.",
+      "SmartLifecycle beans start concurrently and ignore the phase value."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "SmartLifecycle defines getPhase() to resolve dependency execution order: lower phase numbers start first (e.g. databases, dependencies) and stop last. Shutdown goes in reverse, stopping higher phase numbers first."
+  },
+  {
+    "id": "spring-quiz-t13-11",
+    "topic": "Spring Caching",
+    "difficulty": "hard",
+    "questionText": "Why does the cache eviction fail under the configuration below?",
+    "codeSnippet": "@Cacheable(value = \"users_cache_11\", key = \"#id\")\npublic User getUser(Long id, Context ctx) { ... }\n\n@CacheEvict(value = \"users_cache_11\")\npublic void evictUser(Long id) { ... }",
+    "options": [
+      "Because cache names must be different.",
+      "Because evictUser() returns void.",
+      "Because evictUser() does not define a key, causing Spring to use SimpleKeyGenerator on '#id' while getUser() keys on '#id', resulting in mismatch.",
+      "Because CacheEvict requires @Transactional to run."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "By default, key generation combines all method arguments. For getUser(), the key combines id and ctx, but key='#id' overrides it to 'id'. For evictUser(), the key defaults to 'id' as well, but if arguments mismatch in key structure, we must explicitly set key='#id' in both to prevent cache desync."
+  },
+  {
+    "id": "spring-quiz-t14-11",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "hard",
+    "questionText": "What is the runtime impact of performing a blocking/long-running task inside the @PostConstruct method of 'SetupBean_11'?",
+    "codeSnippet": "@Component\npublic class SetupBean_11 {\n    @PostConstruct\n    public void init() {\n        // Blocks on network/external server call\n        loadConfiguration();\n    }\n}",
+    "options": [
+      "It triggers an asynchronous thread pool execution and continues startup.",
+      "It blocks the main startup thread, preventing the application context from finishing initialization and starting the web server.",
+      "Spring immediately throws an InitializationTimeoutException.",
+      "The JVM runs the method in the background without affecting startup."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "@PostConstruct methods are executed synchronously during bean instantiation on the main thread. If a bean blocks in @PostConstruct, application context startup halts, blocking the web server (Tomcat) from starting. Use events or Async tasks instead."
+  },
+  {
+    "id": "spring-quiz-t15-11",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "If a controller throws a 'DatabaseException_11' (which extends RuntimeException), which ExceptionHandler method inside ControllerAdvice is invoked?",
+    "codeSnippet": "@ControllerAdvice\npublic class GlobalHandler {\n    @ExceptionHandler(RuntimeException.class)\n    public String handleRuntime(RuntimeException ex) { return \"Runtime\"; }\n\n    @ExceptionHandler(DatabaseException_11.class)\n    public String handleDb(DatabaseException_11 ex) { return \"Db\"; }\n}",
+    "options": [
+      "handleRuntime(), because RuntimeException is checked first as the parent class.",
+      "handleDb(), because it is mapped to the most specific exception type matching the exception thrown.",
+      "Both methods run in sequence.",
+      "Spring throws an ExceptionHandlerAmbiguityException at startup."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Spring's exception resolver resolves to the exception handler that maps to the most specific exception in the type hierarchy. Since 'DatabaseException_11' matches the thrown exception exactly, handleDb() is preferred over handleRuntime()."
+  },
+  {
+    "id": "spring-quiz-t16-11",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "What is the state of entity 'Account_11' and the database result when the method process() exits?",
+    "codeSnippet": "@Transactional\npublic void process(Long id) {\n    Account_11 acc = repository.findById(id).orElseThrow();\n    entityManager.detach(acc);\n    acc.setBalance(1000);\n}",
+    "options": [
+      "The entity is in the persistent state; the database is updated with balance 1000.",
+      "The entity is in the detached state; no database updates occur.",
+      "An EntityNotFoundException is thrown during detach.",
+      "Hibernate throws a LazyInitializationException when setting the balance."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Calling entityManager.detach(entity) removes the entity from the Persistence Context. It changes from 'persistent' to 'detached' state. Hibernate no longer tracks modifications, so the balance change is not flushed to the database."
+  },
+  {
+    "id": "spring-quiz-t17-11",
+    "topic": "Spring Cloud & Resilience",
+    "difficulty": "medium",
+    "questionText": "A Resilience4j Circuit Breaker has slidingWindowSize = 11 and failureRateThreshold = 50%. If 7 requests fail within the sliding window, what is the state transition?",
+    "codeSnippet": "CircuitBreakerConfig config = CircuitBreakerConfig.custom()\n    .slidingWindowSize(11)\n    .failureRateThreshold(50)\n    .build();",
+    "options": [
+      "Remains in CLOSED state because the sliding window must exceed capacity.",
+      "Transitions to OPEN state (failure rate is 64%, exceeding the 50% threshold).",
+      "Transitions to HALF_OPEN state.",
+      "Throws a CircuitBreakerOpenException immediately."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Once the sliding window registers 11 requests, Resilience4j calculates the failure rate. Since 7/11 (64%) is greater than or equal to 50%, the Circuit Breaker transitions to the OPEN state."
+  },
+  {
+    "id": "spring-quiz-t18-11",
+    "topic": "Spring Boot Internals",
+    "difficulty": "hard",
+    "questionText": "Inside a single configuration class, what determines the registration order of beans and the result of @ConditionalOnMissingBean?",
+    "codeSnippet": "@Configuration\npublic class AppConfig {\n    @Bean\n    public BeanVal_11 primaryBean() { return new BeanVal_11(\"A\"); }\n\n    @Bean\n    @ConditionalOnMissingBean(BeanVal_11.class)\n    public BeanVal_11 fallbackBean() { return new BeanVal_11(\"B\"); }\n}",
+    "options": [
+      "Bean methods are registered in order of definition. primaryBean() registers first, causing fallbackBean()'s conditional check to fail. Only primaryBean is registered.",
+      "fallbackBean overrides primaryBean because @ConditionalOnMissingBean forces precedence.",
+      "Both beans are registered, creating an array list injection candidate.",
+      "Spring throws a BeanDefinitionOverrideException during startup."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Within a single configuration class, beans are parsed and registered sequentially. Since primaryBean() is defined first, its bean exists when fallbackBean() is evaluated. The conditional check fails, and fallbackBean() is skipped."
+  },
+  {
+    "id": "spring-quiz-t19-11",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "A controller returns an instance of 'ResponseData_11'. If fields are private and no getters are defined, what is the HTTP response behavior?",
+    "codeSnippet": "public class ResponseData_11 {\n    private String status;\n    public ResponseData_11(String status) { this.status = status; }\n    // No getters\n}",
+    "options": [
+      "HTTP 200 with JSON payload {\"status\":null}.",
+      "HTTP 500 error or exception (Jackson throws an InvalidDefinitionException: No serializer found).",
+      "HTTP 200 with JSON payload {\"status\":\"...\"} using reflection.",
+      "The code fails to compile because classes returned from RestController require getters."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Jackson (Spring Boot's default serializer) uses public getter methods to discover properties to write to JSON. If fields are private and no getters/setters/annotations are present, Jackson throws an exception, resulting in an HTTP 500."
+  },
+  {
+    "id": "spring-quiz-t20-11",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "If outerMethod() is marked as @Transactional and invokes nestedMethod() which is marked as @Transactional(propagation = Propagation.NESTED), what happens to DB updates if nestedMethod() fails and throws an exception caught inside outerMethod()?",
+    "codeSnippet": "@Transactional\npublic void outerMethod() {\n    try {\n        innerService.nestedMethod();\n    } catch (Exception e) {\n        // Exception caught\n    }\n    // Save other data\n}",
+    "options": [
+      "The entire transaction is rolled back because the outer method was marked as Transactional.",
+      "nestedMethod()'s updates are committed because the exception was caught in the outer method.",
+      "Only nestedMethod()'s updates are rolled back to the savepoint; outerMethod()'s updates can still commit successfully.",
+      "Spring throws a NestedTransactionNotSupportedException."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Propagation.NESTED creates a nested transaction using database savepoints. If the nested transaction fails and its exception is caught and handled inside the outer transaction, only the nested transaction rolls back to its savepoint. The outer transaction remains valid."
+  },
+  {
+    "id": "spring-quiz-t1-12",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "In the service below, orderProcessor() is invoked from an external REST controller. What is the transactional behavior of saveOrder()?",
+    "codeSnippet": "@Service\npublic class OrderService_12 {\n    public void orderProcessor() {\n        saveOrder(); // Self-invocation\n    }\n\n    @Transactional\n    public void saveOrder() {\n        // Save database record\n    }\n}",
+    "options": [
+      "Spring starts a new transaction automatically using aspect interception.",
+      "The application throws a CircularDependencyException at startup.",
+      "A TransactionRequiredException is thrown during execution.",
+      "No transaction starts, because self-invocation bypasses the Spring AOP proxy."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring's declarative annotations rely on AOP proxy wrappers. Method calls from outside go through the proxy, running transaction interceptors. Direct internal calls (self-invocation) run directly on the target object, bypassing the proxy and annotations."
+  },
+  {
+    "id": "spring-quiz-t2-12",
+    "topic": "Spring Core & Scopes",
+    "difficulty": "hard",
+    "questionText": "You inject a prototype-scoped bean 'RequestTracker_12' into a singleton controller 'AnalyticsController_12'. How does 'RequestTracker_12' behave across multiple HTTP requests?",
+    "codeSnippet": "@Scope(\"prototype\")\n@Component\npublic class RequestTracker_12 {}\n\n@RestController\npublic class AnalyticsController_12 {\n    @Autowired\n    private RequestTracker_12 tracker;\n}",
+    "options": [
+      "A new instance of 'RequestTracker_12' is created for every HTTP request.",
+      "Spring throws a ScopeMismatchException during startup.",
+      "The controller reuses the exact same instance of 'RequestTracker_12' injected at startup, behaving as a singleton.",
+      "The application fails to start because prototype beans cannot be injected into singletons."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Because the controller is a singleton, it is initialized once. Consequently, its fields are injected once. The prototype-scoped bean is instantiated during this injection, and that same instance is shared for all requests. To resolve, use scoped proxies."
+  },
+  {
+    "id": "spring-quiz-t3-12",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If a transaction method throws an Exception (checked exception) during database operations, what is the default rollback behavior?",
+    "codeSnippet": "@Transactional\npublic void process(User user) throws Exception {\n    UserRepo_12.save(user);\n    if (user.getName() == null) {\n        throw new Exception(\"Invalid User\");\n    }\n}",
+    "options": [
+      "The transaction is automatically rolled back for all exceptions.",
+      "The transaction is committed, and changes are saved because checked exceptions do not trigger rollback by default.",
+      "The compiler throws an error because Transactional cannot declare checked throws.",
+      "The transaction rolls back, but only if the database isolation is SERIALIZABLE."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Spring's @Transactional default configuration rolls back transactions only for unchecked exceptions (subclasses of RuntimeException and Error). Checked exceptions (like Exception, IOException) do not trigger rollback unless configured as @Transactional(rollbackFor = Exception.class)."
+  },
+  {
+    "id": "spring-quiz-t4-12",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "What occurs when Spring starts up and detects a circular constructor dependency between singleton beans 'BeanA_12' and 'BeanB_12'?",
+    "codeSnippet": "@Component\npublic class BeanA_12 {\n    public BeanA_12(BeanB_12 b) {}\n}\n@Component\npublic class BeanB_12 {\n    public BeanB_12(BeanA_12 a) {}\n}",
+    "options": [
+      "Spring automatically resolves the cycle by injecting a dynamic proxy.",
+      "The application fails to start and throws a BeanCurrentlyInCreationException.",
+      "The JVM crashes with a StackOverflowError during initialization.",
+      "Spring instantiates both beans as null."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Unlike setter/field injection, constructor dependencies must be resolved during object creation. Since neither 'BeanA_12' nor 'BeanB_12' can be constructed without the other, Spring cannot resolve the dependency cycle and throws a BeanCurrentlyInCreationException."
+  },
+  {
+    "id": "spring-quiz-t5-12",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "An entity has a lazy-loaded collection association. If you fetch all 7 parent entities and access their associations in a loop, how many SQL queries hit the database?",
+    "codeSnippet": "List<Parent> parents = parentRepository.findAll(); // Fetches 7 parents\nfor (Parent p : parents) {\n    System.out.println(p.getChildren().size()); // Lazy load\n}",
+    "options": [
+      "1 SQL query.",
+      "8 SQL queries.",
+      "7 SQL queries.",
+      "2 SQL queries."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "This is the N+1 query problem. The initial query fetches the parents (1 query). When accessing the lazy collection for each parent in the loop, Hibernate sends a separate select query per parent (7 queries), resulting in 8 queries."
+  },
+  {
+    "id": "spring-quiz-t6-12",
+    "topic": "Spring WebFlux",
+    "difficulty": "hard",
+    "questionText": "What is the hazard of calling a blocking method like RestTemplate inside a Spring WebFlux controller running on Netty event loops?",
+    "codeSnippet": "@GetMapping(\"/data\")\npublic Mono<String> getData() {\n    return Mono.fromCallable(() -> restTemplate.getForObject(\"https://api.com\", String.class));\n}",
+    "options": [
+      "WebFlux automatically shifts the call to virtual threads to avoid blocking.",
+      "The controller immediately throws a BlockedEventLoopException during compilation.",
+      "It blocks the Netty EventLoop thread, reducing server capacity to process concurrent requests and causing starvation.",
+      "It causes a deadlock because Netty restricts HTTP requests."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "WebFlux uses a small number of non-blocking event loop threads. Blocking operations on these threads exhaust the pool and block the server from handling other connections. Offload blocking logic using subscribeOn(Schedulers.boundedElastic())."
+  },
+  {
+    "id": "spring-quiz-t7-12",
+    "topic": "Spring Security",
+    "difficulty": "medium",
+    "questionText": "How do you insert a custom filter 'CustomAuthFilter_12' in a security chain so it executes before UsernamePasswordAuthenticationFilter?",
+    "codeSnippet": "@Bean\npublic SecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n    http.addFilterBefore(new CustomAuthFilter_12(), UsernamePasswordAuthenticationFilter.class);\n    return http.build();\n}",
+    "options": [
+      "Annotate CustomAuthFilter_12 with @Order(Ordered.HIGHEST_PRECEDENCE).",
+      "Use addFilterBefore(new CustomAuthFilter_12(), UsernamePasswordAuthenticationFilter.class) inside HttpSecurity config.",
+      "Register CustomAuthFilter_12 as a Spring @Component; Spring Security loads custom beans first.",
+      "Declare CustomAuthFilter_12 inside application.properties under security.filter.order."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "The order of filters inside a SecurityFilterChain is explicitly configured via HttpSecurity APIs. Class-level @Order annotations do not position filters within the SecurityFilterChain."
+  },
+  {
+    "id": "spring-quiz-t8-12",
+    "topic": "Spring Core",
+    "difficulty": "medium",
+    "questionText": "If a payment service interface has a default bean marked with @Primary, and another bean with qualifier 'customPaymentSvc_12', what is injected?",
+    "codeSnippet": "@RestController\npublic class PaymentController {\n    @Autowired\n    @Qualifier(\"customPaymentSvc_12\")\n    private PaymentService service;\n}",
+    "options": [
+      "The bean annotated with @Qualifier(\"customPaymentSvc_12\") is injected, overriding @Primary.",
+      "The @Primary bean is injected because primary beans take highest precedence.",
+      "A BeanCreationException is thrown due to injection ambiguity.",
+      "Both beans are injected inside a wrapper candidate proxy."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "While @Primary sets a default candidate, an explicit @Qualifier specifies the precise bean name requested. Explicit qualifiers take precedence over primary bean designations."
+  },
+  {
+    "id": "spring-quiz-t9-12",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If you specify a derived query method using property name 'emailAddress_12' which is missing on the Entity, what happens?",
+    "codeSnippet": "public interface UserRepository extends JpaRepository<User, Long> {\n    List<User> findByemailAddress_12(String email); // Entity field is 'email'\n}",
+    "options": [
+      "Spring Boot throws a PropertyReferenceException and fails to start during application context initialization.",
+      "The query executes but returns an empty list at runtime.",
+      "Spring Data fallback parses it to a native SQL query.",
+      "A compile-time error occurs on the repository interface."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Spring Data JPA parses derived query methods at application startup to validate them against the Entity's properties. If a method references a missing field like 'emailAddress_12', it throws a PropertyReferenceException and halts startup."
+  },
+  {
+    "id": "spring-quiz-t10-12",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "What happens if you apply @Transactional to a final method inside bean class 'DataFetcher_12' proxied by Spring AOP CGLIB subclassing?",
+    "codeSnippet": "public class DataFetcher_12 {\n    @Transactional\n    public final void loadData() {\n        // DB changes\n    }\n}",
+    "options": [
+      "Spring throws a FinalMethodAopException at startup.",
+      "The transaction aspect is bypassed silently because CGLIB creates a subclass and cannot override final methods.",
+      "The application throws a ClassCastException during method call.",
+      "The JVM crashes at runtime when calling the final method."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "CGLIB creates proxies by generating a dynamic subclass at runtime. Because final methods cannot be overridden by subclasses, the generated proxy class cannot insert aspect interceptor code. The final method runs directly, bypassing the aspect."
+  },
+  {
+    "id": "spring-quiz-t11-12",
+    "topic": "Spring Boot Configurations",
+    "difficulty": "medium",
+    "questionText": "If 'app.rate.12' is defined in application.properties as 50, in JVM properties as 100, and as an OS environment variable as 150, what value is resolved?",
+    "codeSnippet": "@Value(\"${app.rate.12}\")\nprivate int rate;",
+    "options": [
+      "150 (OS Environment variables take highest precedence)",
+      "100 (JVM system properties override OS environment variables and properties files)",
+      "50 (application.properties overrides all external configurations)",
+      "It throws a property resolution error due to conflict"
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Spring Boot property sources order: 1) Command-line args, 2) JVM System properties (-D...), 3) OS environment variables, 4) application.properties. Thus, the JVM value of 100 is selected."
+  },
+  {
+    "id": "spring-quiz-t12-12",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "How does the integer phase value 112 returned by getPhase() in SmartLifecycle affect context startup and shutdown order?",
+    "codeSnippet": "public class CustomService implements SmartLifecycle {\n    @Override\n    public int getPhase() { return 112; }\n}",
+    "options": [
+      "Beans with lower phase numbers are started first. During shutdown, beans with higher phase numbers are stopped first.",
+      "Beans with higher phase numbers are started first and stopped last.",
+      "The phase determines the priority thread pool, where higher phase means more threads.",
+      "SmartLifecycle beans start concurrently and ignore the phase value."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "SmartLifecycle defines getPhase() to resolve dependency execution order: lower phase numbers start first (e.g. databases, dependencies) and stop last. Shutdown goes in reverse, stopping higher phase numbers first."
+  },
+  {
+    "id": "spring-quiz-t13-12",
+    "topic": "Spring Caching",
+    "difficulty": "hard",
+    "questionText": "Why does the cache eviction fail under the configuration below?",
+    "codeSnippet": "@Cacheable(value = \"users_cache_12\", key = \"#id\")\npublic User getUser(Long id, Context ctx) { ... }\n\n@CacheEvict(value = \"users_cache_12\")\npublic void evictUser(Long id) { ... }",
+    "options": [
+      "Because evictUser() does not define a key, causing Spring to use SimpleKeyGenerator on '#id' while getUser() keys on '#id', resulting in mismatch.",
+      "Because cache names must be different.",
+      "Because evictUser() returns void.",
+      "Because CacheEvict requires @Transactional to run."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "By default, key generation combines all method arguments. For getUser(), the key combines id and ctx, but key='#id' overrides it to 'id'. For evictUser(), the key defaults to 'id' as well, but if arguments mismatch in key structure, we must explicitly set key='#id' in both to prevent cache desync."
+  },
+  {
+    "id": "spring-quiz-t14-12",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "hard",
+    "questionText": "What is the runtime impact of performing a blocking/long-running task inside the @PostConstruct method of 'SetupBean_12'?",
+    "codeSnippet": "@Component\npublic class SetupBean_12 {\n    @PostConstruct\n    public void init() {\n        // Blocks on network/external server call\n        loadConfiguration();\n    }\n}",
+    "options": [
+      "It blocks the main startup thread, preventing the application context from finishing initialization and starting the web server.",
+      "It triggers an asynchronous thread pool execution and continues startup.",
+      "Spring immediately throws an InitializationTimeoutException.",
+      "The JVM runs the method in the background without affecting startup."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "@PostConstruct methods are executed synchronously during bean instantiation on the main thread. If a bean blocks in @PostConstruct, application context startup halts, blocking the web server (Tomcat) from starting. Use events or Async tasks instead."
+  },
+  {
+    "id": "spring-quiz-t15-12",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "If a controller throws a 'DatabaseException_12' (which extends RuntimeException), which ExceptionHandler method inside ControllerAdvice is invoked?",
+    "codeSnippet": "@ControllerAdvice\npublic class GlobalHandler {\n    @ExceptionHandler(RuntimeException.class)\n    public String handleRuntime(RuntimeException ex) { return \"Runtime\"; }\n\n    @ExceptionHandler(DatabaseException_12.class)\n    public String handleDb(DatabaseException_12 ex) { return \"Db\"; }\n}",
+    "options": [
+      "handleRuntime(), because RuntimeException is checked first as the parent class.",
+      "handleDb(), because it is mapped to the most specific exception type matching the exception thrown.",
+      "Both methods run in sequence.",
+      "Spring throws an ExceptionHandlerAmbiguityException at startup."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Spring's exception resolver resolves to the exception handler that maps to the most specific exception in the type hierarchy. Since 'DatabaseException_12' matches the thrown exception exactly, handleDb() is preferred over handleRuntime()."
+  },
+  {
+    "id": "spring-quiz-t16-12",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "What is the state of entity 'Account_12' and the database result when the method process() exits?",
+    "codeSnippet": "@Transactional\npublic void process(Long id) {\n    Account_12 acc = repository.findById(id).orElseThrow();\n    entityManager.detach(acc);\n    acc.setBalance(1000);\n}",
+    "options": [
+      "The entity is in the detached state; no database updates occur.",
+      "The entity is in the persistent state; the database is updated with balance 1000.",
+      "An EntityNotFoundException is thrown during detach.",
+      "Hibernate throws a LazyInitializationException when setting the balance."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Calling entityManager.detach(entity) removes the entity from the Persistence Context. It changes from 'persistent' to 'detached' state. Hibernate no longer tracks modifications, so the balance change is not flushed to the database."
+  },
+  {
+    "id": "spring-quiz-t17-12",
+    "topic": "Spring Cloud & Resilience",
+    "difficulty": "medium",
+    "questionText": "A Resilience4j Circuit Breaker has slidingWindowSize = 12 and failureRateThreshold = 50%. If 8 requests fail within the sliding window, what is the state transition?",
+    "codeSnippet": "CircuitBreakerConfig config = CircuitBreakerConfig.custom()\n    .slidingWindowSize(12)\n    .failureRateThreshold(50)\n    .build();",
+    "options": [
+      "Remains in CLOSED state because the sliding window must exceed capacity.",
+      "Transitions to OPEN state (failure rate is 67%, exceeding the 50% threshold).",
+      "Transitions to HALF_OPEN state.",
+      "Throws a CircuitBreakerOpenException immediately."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Once the sliding window registers 12 requests, Resilience4j calculates the failure rate. Since 8/12 (67%) is greater than or equal to 50%, the Circuit Breaker transitions to the OPEN state."
+  },
+  {
+    "id": "spring-quiz-t18-12",
+    "topic": "Spring Boot Internals",
+    "difficulty": "hard",
+    "questionText": "Inside a single configuration class, what determines the registration order of beans and the result of @ConditionalOnMissingBean?",
+    "codeSnippet": "@Configuration\npublic class AppConfig {\n    @Bean\n    public BeanVal_12 primaryBean() { return new BeanVal_12(\"A\"); }\n\n    @Bean\n    @ConditionalOnMissingBean(BeanVal_12.class)\n    public BeanVal_12 fallbackBean() { return new BeanVal_12(\"B\"); }\n}",
+    "options": [
+      "fallbackBean overrides primaryBean because @ConditionalOnMissingBean forces precedence.",
+      "Both beans are registered, creating an array list injection candidate.",
+      "Bean methods are registered in order of definition. primaryBean() registers first, causing fallbackBean()'s conditional check to fail. Only primaryBean is registered.",
+      "Spring throws a BeanDefinitionOverrideException during startup."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Within a single configuration class, beans are parsed and registered sequentially. Since primaryBean() is defined first, its bean exists when fallbackBean() is evaluated. The conditional check fails, and fallbackBean() is skipped."
+  },
+  {
+    "id": "spring-quiz-t19-12",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "A controller returns an instance of 'ResponseData_12'. If fields are private and no getters are defined, what is the HTTP response behavior?",
+    "codeSnippet": "public class ResponseData_12 {\n    private String status;\n    public ResponseData_12(String status) { this.status = status; }\n    // No getters\n}",
+    "options": [
+      "HTTP 500 error or exception (Jackson throws an InvalidDefinitionException: No serializer found).",
+      "HTTP 200 with JSON payload {\"status\":null}.",
+      "HTTP 200 with JSON payload {\"status\":\"...\"} using reflection.",
+      "The code fails to compile because classes returned from RestController require getters."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Jackson (Spring Boot's default serializer) uses public getter methods to discover properties to write to JSON. If fields are private and no getters/setters/annotations are present, Jackson throws an exception, resulting in an HTTP 500."
+  },
+  {
+    "id": "spring-quiz-t20-12",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "If outerMethod() is marked as @Transactional and invokes nestedMethod() which is marked as @Transactional(propagation = Propagation.NESTED), what happens to DB updates if nestedMethod() fails and throws an exception caught inside outerMethod()?",
+    "codeSnippet": "@Transactional\npublic void outerMethod() {\n    try {\n        innerService.nestedMethod();\n    } catch (Exception e) {\n        // Exception caught\n    }\n    // Save other data\n}",
+    "options": [
+      "Only nestedMethod()'s updates are rolled back to the savepoint; outerMethod()'s updates can still commit successfully.",
+      "The entire transaction is rolled back because the outer method was marked as Transactional.",
+      "nestedMethod()'s updates are committed because the exception was caught in the outer method.",
+      "Spring throws a NestedTransactionNotSupportedException."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Propagation.NESTED creates a nested transaction using database savepoints. If the nested transaction fails and its exception is caught and handled inside the outer transaction, only the nested transaction rolls back to its savepoint. The outer transaction remains valid."
+  },
+  {
+    "id": "spring-quiz-t1-13",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "In the service below, orderProcessor() is invoked from an external REST controller. What is the transactional behavior of saveOrder()?",
+    "codeSnippet": "@Service\npublic class OrderService_13 {\n    public void orderProcessor() {\n        saveOrder(); // Self-invocation\n    }\n\n    @Transactional\n    public void saveOrder() {\n        // Save database record\n    }\n}",
+    "options": [
+      "Spring starts a new transaction automatically using aspect interception.",
+      "The application throws a CircularDependencyException at startup.",
+      "A TransactionRequiredException is thrown during execution.",
+      "No transaction starts, because self-invocation bypasses the Spring AOP proxy."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring's declarative annotations rely on AOP proxy wrappers. Method calls from outside go through the proxy, running transaction interceptors. Direct internal calls (self-invocation) run directly on the target object, bypassing the proxy and annotations."
+  },
+  {
+    "id": "spring-quiz-t2-13",
+    "topic": "Spring Core & Scopes",
+    "difficulty": "hard",
+    "questionText": "You inject a prototype-scoped bean 'RequestTracker_13' into a singleton controller 'AnalyticsController_13'. How does 'RequestTracker_13' behave across multiple HTTP requests?",
+    "codeSnippet": "@Scope(\"prototype\")\n@Component\npublic class RequestTracker_13 {}\n\n@RestController\npublic class AnalyticsController_13 {\n    @Autowired\n    private RequestTracker_13 tracker;\n}",
+    "options": [
+      "The controller reuses the exact same instance of 'RequestTracker_13' injected at startup, behaving as a singleton.",
+      "A new instance of 'RequestTracker_13' is created for every HTTP request.",
+      "Spring throws a ScopeMismatchException during startup.",
+      "The application fails to start because prototype beans cannot be injected into singletons."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Because the controller is a singleton, it is initialized once. Consequently, its fields are injected once. The prototype-scoped bean is instantiated during this injection, and that same instance is shared for all requests. To resolve, use scoped proxies."
+  },
+  {
+    "id": "spring-quiz-t3-13",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If a transaction method throws an Exception (checked exception) during database operations, what is the default rollback behavior?",
+    "codeSnippet": "@Transactional\npublic void process(User user) throws Exception {\n    UserRepo_13.save(user);\n    if (user.getName() == null) {\n        throw new Exception(\"Invalid User\");\n    }\n}",
+    "options": [
+      "The transaction is committed, and changes are saved because checked exceptions do not trigger rollback by default.",
+      "The transaction is automatically rolled back for all exceptions.",
+      "The compiler throws an error because Transactional cannot declare checked throws.",
+      "The transaction rolls back, but only if the database isolation is SERIALIZABLE."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Spring's @Transactional default configuration rolls back transactions only for unchecked exceptions (subclasses of RuntimeException and Error). Checked exceptions (like Exception, IOException) do not trigger rollback unless configured as @Transactional(rollbackFor = Exception.class)."
+  },
+  {
+    "id": "spring-quiz-t4-13",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "What occurs when Spring starts up and detects a circular constructor dependency between singleton beans 'BeanA_13' and 'BeanB_13'?",
+    "codeSnippet": "@Component\npublic class BeanA_13 {\n    public BeanA_13(BeanB_13 b) {}\n}\n@Component\npublic class BeanB_13 {\n    public BeanB_13(BeanA_13 a) {}\n}",
+    "options": [
+      "Spring automatically resolves the cycle by injecting a dynamic proxy.",
+      "The application fails to start and throws a BeanCurrentlyInCreationException.",
+      "The JVM crashes with a StackOverflowError during initialization.",
+      "Spring instantiates both beans as null."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Unlike setter/field injection, constructor dependencies must be resolved during object creation. Since neither 'BeanA_13' nor 'BeanB_13' can be constructed without the other, Spring cannot resolve the dependency cycle and throws a BeanCurrentlyInCreationException."
+  },
+  {
+    "id": "spring-quiz-t5-13",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "An entity has a lazy-loaded collection association. If you fetch all 8 parent entities and access their associations in a loop, how many SQL queries hit the database?",
+    "codeSnippet": "List<Parent> parents = parentRepository.findAll(); // Fetches 8 parents\nfor (Parent p : parents) {\n    System.out.println(p.getChildren().size()); // Lazy load\n}",
+    "options": [
+      "1 SQL query.",
+      "8 SQL queries.",
+      "9 SQL queries.",
+      "2 SQL queries."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "This is the N+1 query problem. The initial query fetches the parents (1 query). When accessing the lazy collection for each parent in the loop, Hibernate sends a separate select query per parent (8 queries), resulting in 9 queries."
+  },
+  {
+    "id": "spring-quiz-t6-13",
+    "topic": "Spring WebFlux",
+    "difficulty": "hard",
+    "questionText": "What is the hazard of calling a blocking method like RestTemplate inside a Spring WebFlux controller running on Netty event loops?",
+    "codeSnippet": "@GetMapping(\"/data\")\npublic Mono<String> getData() {\n    return Mono.fromCallable(() -> restTemplate.getForObject(\"https://api.com\", String.class));\n}",
+    "options": [
+      "It blocks the Netty EventLoop thread, reducing server capacity to process concurrent requests and causing starvation.",
+      "WebFlux automatically shifts the call to virtual threads to avoid blocking.",
+      "The controller immediately throws a BlockedEventLoopException during compilation.",
+      "It causes a deadlock because Netty restricts HTTP requests."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "WebFlux uses a small number of non-blocking event loop threads. Blocking operations on these threads exhaust the pool and block the server from handling other connections. Offload blocking logic using subscribeOn(Schedulers.boundedElastic())."
+  },
+  {
+    "id": "spring-quiz-t7-13",
+    "topic": "Spring Security",
+    "difficulty": "medium",
+    "questionText": "How do you insert a custom filter 'CustomAuthFilter_13' in a security chain so it executes before UsernamePasswordAuthenticationFilter?",
+    "codeSnippet": "@Bean\npublic SecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n    http.addFilterBefore(new CustomAuthFilter_13(), UsernamePasswordAuthenticationFilter.class);\n    return http.build();\n}",
+    "options": [
+      "Annotate CustomAuthFilter_13 with @Order(Ordered.HIGHEST_PRECEDENCE).",
+      "Register CustomAuthFilter_13 as a Spring @Component; Spring Security loads custom beans first.",
+      "Declare CustomAuthFilter_13 inside application.properties under security.filter.order.",
+      "Use addFilterBefore(new CustomAuthFilter_13(), UsernamePasswordAuthenticationFilter.class) inside HttpSecurity config."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "The order of filters inside a SecurityFilterChain is explicitly configured via HttpSecurity APIs. Class-level @Order annotations do not position filters within the SecurityFilterChain."
+  },
+  {
+    "id": "spring-quiz-t8-13",
+    "topic": "Spring Core",
+    "difficulty": "medium",
+    "questionText": "If a payment service interface has a default bean marked with @Primary, and another bean with qualifier 'customPaymentSvc_13', what is injected?",
+    "codeSnippet": "@RestController\npublic class PaymentController {\n    @Autowired\n    @Qualifier(\"customPaymentSvc_13\")\n    private PaymentService service;\n}",
+    "options": [
+      "The @Primary bean is injected because primary beans take highest precedence.",
+      "A BeanCreationException is thrown due to injection ambiguity.",
+      "The bean annotated with @Qualifier(\"customPaymentSvc_13\") is injected, overriding @Primary.",
+      "Both beans are injected inside a wrapper candidate proxy."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "While @Primary sets a default candidate, an explicit @Qualifier specifies the precise bean name requested. Explicit qualifiers take precedence over primary bean designations."
+  },
+  {
+    "id": "spring-quiz-t9-13",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If you specify a derived query method using property name 'emailAddress_13' which is missing on the Entity, what happens?",
+    "codeSnippet": "public interface UserRepository extends JpaRepository<User, Long> {\n    List<User> findByemailAddress_13(String email); // Entity field is 'email'\n}",
+    "options": [
+      "The query executes but returns an empty list at runtime.",
+      "Spring Data fallback parses it to a native SQL query.",
+      "A compile-time error occurs on the repository interface.",
+      "Spring Boot throws a PropertyReferenceException and fails to start during application context initialization."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring Data JPA parses derived query methods at application startup to validate them against the Entity's properties. If a method references a missing field like 'emailAddress_13', it throws a PropertyReferenceException and halts startup."
+  },
+  {
+    "id": "spring-quiz-t10-13",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "What happens if you apply @Transactional to a final method inside bean class 'DataFetcher_13' proxied by Spring AOP CGLIB subclassing?",
+    "codeSnippet": "public class DataFetcher_13 {\n    @Transactional\n    public final void loadData() {\n        // DB changes\n    }\n}",
+    "options": [
+      "The transaction aspect is bypassed silently because CGLIB creates a subclass and cannot override final methods.",
+      "Spring throws a FinalMethodAopException at startup.",
+      "The application throws a ClassCastException during method call.",
+      "The JVM crashes at runtime when calling the final method."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "CGLIB creates proxies by generating a dynamic subclass at runtime. Because final methods cannot be overridden by subclasses, the generated proxy class cannot insert aspect interceptor code. The final method runs directly, bypassing the aspect."
+  },
+  {
+    "id": "spring-quiz-t11-13",
+    "topic": "Spring Boot Configurations",
+    "difficulty": "medium",
+    "questionText": "If 'app.rate.13' is defined in application.properties as 50, in JVM properties as 100, and as an OS environment variable as 150, what value is resolved?",
+    "codeSnippet": "@Value(\"${app.rate.13}\")\nprivate int rate;",
+    "options": [
+      "100 (JVM system properties override OS environment variables and properties files)",
+      "150 (OS Environment variables take highest precedence)",
+      "50 (application.properties overrides all external configurations)",
+      "It throws a property resolution error due to conflict"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Spring Boot property sources order: 1) Command-line args, 2) JVM System properties (-D...), 3) OS environment variables, 4) application.properties. Thus, the JVM value of 100 is selected."
+  },
+  {
+    "id": "spring-quiz-t12-13",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "How does the integer phase value 113 returned by getPhase() in SmartLifecycle affect context startup and shutdown order?",
+    "codeSnippet": "public class CustomService implements SmartLifecycle {\n    @Override\n    public int getPhase() { return 113; }\n}",
+    "options": [
+      "Beans with lower phase numbers are started first. During shutdown, beans with higher phase numbers are stopped first.",
+      "Beans with higher phase numbers are started first and stopped last.",
+      "The phase determines the priority thread pool, where higher phase means more threads.",
+      "SmartLifecycle beans start concurrently and ignore the phase value."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "SmartLifecycle defines getPhase() to resolve dependency execution order: lower phase numbers start first (e.g. databases, dependencies) and stop last. Shutdown goes in reverse, stopping higher phase numbers first."
+  },
+  {
+    "id": "spring-quiz-t13-13",
+    "topic": "Spring Caching",
+    "difficulty": "hard",
+    "questionText": "Why does the cache eviction fail under the configuration below?",
+    "codeSnippet": "@Cacheable(value = \"users_cache_13\", key = \"#id\")\npublic User getUser(Long id, Context ctx) { ... }\n\n@CacheEvict(value = \"users_cache_13\")\npublic void evictUser(Long id) { ... }",
+    "options": [
+      "Because cache names must be different.",
+      "Because evictUser() does not define a key, causing Spring to use SimpleKeyGenerator on '#id' while getUser() keys on '#id', resulting in mismatch.",
+      "Because evictUser() returns void.",
+      "Because CacheEvict requires @Transactional to run."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "By default, key generation combines all method arguments. For getUser(), the key combines id and ctx, but key='#id' overrides it to 'id'. For evictUser(), the key defaults to 'id' as well, but if arguments mismatch in key structure, we must explicitly set key='#id' in both to prevent cache desync."
+  },
+  {
+    "id": "spring-quiz-t14-13",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "hard",
+    "questionText": "What is the runtime impact of performing a blocking/long-running task inside the @PostConstruct method of 'SetupBean_13'?",
+    "codeSnippet": "@Component\npublic class SetupBean_13 {\n    @PostConstruct\n    public void init() {\n        // Blocks on network/external server call\n        loadConfiguration();\n    }\n}",
+    "options": [
+      "It blocks the main startup thread, preventing the application context from finishing initialization and starting the web server.",
+      "It triggers an asynchronous thread pool execution and continues startup.",
+      "Spring immediately throws an InitializationTimeoutException.",
+      "The JVM runs the method in the background without affecting startup."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "@PostConstruct methods are executed synchronously during bean instantiation on the main thread. If a bean blocks in @PostConstruct, application context startup halts, blocking the web server (Tomcat) from starting. Use events or Async tasks instead."
+  },
+  {
+    "id": "spring-quiz-t15-13",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "If a controller throws a 'DatabaseException_13' (which extends RuntimeException), which ExceptionHandler method inside ControllerAdvice is invoked?",
+    "codeSnippet": "@ControllerAdvice\npublic class GlobalHandler {\n    @ExceptionHandler(RuntimeException.class)\n    public String handleRuntime(RuntimeException ex) { return \"Runtime\"; }\n\n    @ExceptionHandler(DatabaseException_13.class)\n    public String handleDb(DatabaseException_13 ex) { return \"Db\"; }\n}",
+    "options": [
+      "handleRuntime(), because RuntimeException is checked first as the parent class.",
+      "handleDb(), because it is mapped to the most specific exception type matching the exception thrown.",
+      "Both methods run in sequence.",
+      "Spring throws an ExceptionHandlerAmbiguityException at startup."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Spring's exception resolver resolves to the exception handler that maps to the most specific exception in the type hierarchy. Since 'DatabaseException_13' matches the thrown exception exactly, handleDb() is preferred over handleRuntime()."
+  },
+  {
+    "id": "spring-quiz-t16-13",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "What is the state of entity 'Account_13' and the database result when the method process() exits?",
+    "codeSnippet": "@Transactional\npublic void process(Long id) {\n    Account_13 acc = repository.findById(id).orElseThrow();\n    entityManager.detach(acc);\n    acc.setBalance(1000);\n}",
+    "options": [
+      "The entity is in the persistent state; the database is updated with balance 1000.",
+      "An EntityNotFoundException is thrown during detach.",
+      "Hibernate throws a LazyInitializationException when setting the balance.",
+      "The entity is in the detached state; no database updates occur."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Calling entityManager.detach(entity) removes the entity from the Persistence Context. It changes from 'persistent' to 'detached' state. Hibernate no longer tracks modifications, so the balance change is not flushed to the database."
+  },
+  {
+    "id": "spring-quiz-t17-13",
+    "topic": "Spring Cloud & Resilience",
+    "difficulty": "medium",
+    "questionText": "A Resilience4j Circuit Breaker has slidingWindowSize = 13 and failureRateThreshold = 50%. If 8 requests fail within the sliding window, what is the state transition?",
+    "codeSnippet": "CircuitBreakerConfig config = CircuitBreakerConfig.custom()\n    .slidingWindowSize(13)\n    .failureRateThreshold(50)\n    .build();",
+    "options": [
+      "Remains in CLOSED state because the sliding window must exceed capacity.",
+      "Transitions to HALF_OPEN state.",
+      "Transitions to OPEN state (failure rate is 62%, exceeding the 50% threshold).",
+      "Throws a CircuitBreakerOpenException immediately."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Once the sliding window registers 13 requests, Resilience4j calculates the failure rate. Since 8/13 (62%) is greater than or equal to 50%, the Circuit Breaker transitions to the OPEN state."
+  },
+  {
+    "id": "spring-quiz-t18-13",
+    "topic": "Spring Boot Internals",
+    "difficulty": "hard",
+    "questionText": "Inside a single configuration class, what determines the registration order of beans and the result of @ConditionalOnMissingBean?",
+    "codeSnippet": "@Configuration\npublic class AppConfig {\n    @Bean\n    public BeanVal_13 primaryBean() { return new BeanVal_13(\"A\"); }\n\n    @Bean\n    @ConditionalOnMissingBean(BeanVal_13.class)\n    public BeanVal_13 fallbackBean() { return new BeanVal_13(\"B\"); }\n}",
+    "options": [
+      "fallbackBean overrides primaryBean because @ConditionalOnMissingBean forces precedence.",
+      "Both beans are registered, creating an array list injection candidate.",
+      "Spring throws a BeanDefinitionOverrideException during startup.",
+      "Bean methods are registered in order of definition. primaryBean() registers first, causing fallbackBean()'s conditional check to fail. Only primaryBean is registered."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Within a single configuration class, beans are parsed and registered sequentially. Since primaryBean() is defined first, its bean exists when fallbackBean() is evaluated. The conditional check fails, and fallbackBean() is skipped."
+  },
+  {
+    "id": "spring-quiz-t19-13",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "A controller returns an instance of 'ResponseData_13'. If fields are private and no getters are defined, what is the HTTP response behavior?",
+    "codeSnippet": "public class ResponseData_13 {\n    private String status;\n    public ResponseData_13(String status) { this.status = status; }\n    // No getters\n}",
+    "options": [
+      "HTTP 200 with JSON payload {\"status\":null}.",
+      "HTTP 200 with JSON payload {\"status\":\"...\"} using reflection.",
+      "The code fails to compile because classes returned from RestController require getters.",
+      "HTTP 500 error or exception (Jackson throws an InvalidDefinitionException: No serializer found)."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Jackson (Spring Boot's default serializer) uses public getter methods to discover properties to write to JSON. If fields are private and no getters/setters/annotations are present, Jackson throws an exception, resulting in an HTTP 500."
+  },
+  {
+    "id": "spring-quiz-t20-13",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "If outerMethod() is marked as @Transactional and invokes nestedMethod() which is marked as @Transactional(propagation = Propagation.NESTED), what happens to DB updates if nestedMethod() fails and throws an exception caught inside outerMethod()?",
+    "codeSnippet": "@Transactional\npublic void outerMethod() {\n    try {\n        innerService.nestedMethod();\n    } catch (Exception e) {\n        // Exception caught\n    }\n    // Save other data\n}",
+    "options": [
+      "The entire transaction is rolled back because the outer method was marked as Transactional.",
+      "Only nestedMethod()'s updates are rolled back to the savepoint; outerMethod()'s updates can still commit successfully.",
+      "nestedMethod()'s updates are committed because the exception was caught in the outer method.",
+      "Spring throws a NestedTransactionNotSupportedException."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Propagation.NESTED creates a nested transaction using database savepoints. If the nested transaction fails and its exception is caught and handled inside the outer transaction, only the nested transaction rolls back to its savepoint. The outer transaction remains valid."
+  },
+  {
+    "id": "spring-quiz-t1-14",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "In the service below, orderProcessor() is invoked from an external REST controller. What is the transactional behavior of saveOrder()?",
+    "codeSnippet": "@Service\npublic class OrderService_14 {\n    public void orderProcessor() {\n        saveOrder(); // Self-invocation\n    }\n\n    @Transactional\n    public void saveOrder() {\n        // Save database record\n    }\n}",
+    "options": [
+      "No transaction starts, because self-invocation bypasses the Spring AOP proxy.",
+      "Spring starts a new transaction automatically using aspect interception.",
+      "The application throws a CircularDependencyException at startup.",
+      "A TransactionRequiredException is thrown during execution."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Spring's declarative annotations rely on AOP proxy wrappers. Method calls from outside go through the proxy, running transaction interceptors. Direct internal calls (self-invocation) run directly on the target object, bypassing the proxy and annotations."
+  },
+  {
+    "id": "spring-quiz-t2-14",
+    "topic": "Spring Core & Scopes",
+    "difficulty": "hard",
+    "questionText": "You inject a prototype-scoped bean 'RequestTracker_14' into a singleton controller 'AnalyticsController_14'. How does 'RequestTracker_14' behave across multiple HTTP requests?",
+    "codeSnippet": "@Scope(\"prototype\")\n@Component\npublic class RequestTracker_14 {}\n\n@RestController\npublic class AnalyticsController_14 {\n    @Autowired\n    private RequestTracker_14 tracker;\n}",
+    "options": [
+      "The controller reuses the exact same instance of 'RequestTracker_14' injected at startup, behaving as a singleton.",
+      "A new instance of 'RequestTracker_14' is created for every HTTP request.",
+      "Spring throws a ScopeMismatchException during startup.",
+      "The application fails to start because prototype beans cannot be injected into singletons."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Because the controller is a singleton, it is initialized once. Consequently, its fields are injected once. The prototype-scoped bean is instantiated during this injection, and that same instance is shared for all requests. To resolve, use scoped proxies."
+  },
+  {
+    "id": "spring-quiz-t3-14",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If a transaction method throws an Exception (checked exception) during database operations, what is the default rollback behavior?",
+    "codeSnippet": "@Transactional\npublic void process(User user) throws Exception {\n    UserRepo_14.save(user);\n    if (user.getName() == null) {\n        throw new Exception(\"Invalid User\");\n    }\n}",
+    "options": [
+      "The transaction is automatically rolled back for all exceptions.",
+      "The compiler throws an error because Transactional cannot declare checked throws.",
+      "The transaction is committed, and changes are saved because checked exceptions do not trigger rollback by default.",
+      "The transaction rolls back, but only if the database isolation is SERIALIZABLE."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Spring's @Transactional default configuration rolls back transactions only for unchecked exceptions (subclasses of RuntimeException and Error). Checked exceptions (like Exception, IOException) do not trigger rollback unless configured as @Transactional(rollbackFor = Exception.class)."
+  },
+  {
+    "id": "spring-quiz-t4-14",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "What occurs when Spring starts up and detects a circular constructor dependency between singleton beans 'BeanA_14' and 'BeanB_14'?",
+    "codeSnippet": "@Component\npublic class BeanA_14 {\n    public BeanA_14(BeanB_14 b) {}\n}\n@Component\npublic class BeanB_14 {\n    public BeanB_14(BeanA_14 a) {}\n}",
+    "options": [
+      "Spring automatically resolves the cycle by injecting a dynamic proxy.",
+      "The JVM crashes with a StackOverflowError during initialization.",
+      "The application fails to start and throws a BeanCurrentlyInCreationException.",
+      "Spring instantiates both beans as null."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Unlike setter/field injection, constructor dependencies must be resolved during object creation. Since neither 'BeanA_14' nor 'BeanB_14' can be constructed without the other, Spring cannot resolve the dependency cycle and throws a BeanCurrentlyInCreationException."
+  },
+  {
+    "id": "spring-quiz-t5-14",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "An entity has a lazy-loaded collection association. If you fetch all 9 parent entities and access their associations in a loop, how many SQL queries hit the database?",
+    "codeSnippet": "List<Parent> parents = parentRepository.findAll(); // Fetches 9 parents\nfor (Parent p : parents) {\n    System.out.println(p.getChildren().size()); // Lazy load\n}",
+    "options": [
+      "1 SQL query.",
+      "9 SQL queries.",
+      "10 SQL queries.",
+      "2 SQL queries."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "This is the N+1 query problem. The initial query fetches the parents (1 query). When accessing the lazy collection for each parent in the loop, Hibernate sends a separate select query per parent (9 queries), resulting in 10 queries."
+  },
+  {
+    "id": "spring-quiz-t6-14",
+    "topic": "Spring WebFlux",
+    "difficulty": "hard",
+    "questionText": "What is the hazard of calling a blocking method like RestTemplate inside a Spring WebFlux controller running on Netty event loops?",
+    "codeSnippet": "@GetMapping(\"/data\")\npublic Mono<String> getData() {\n    return Mono.fromCallable(() -> restTemplate.getForObject(\"https://api.com\", String.class));\n}",
+    "options": [
+      "WebFlux automatically shifts the call to virtual threads to avoid blocking.",
+      "The controller immediately throws a BlockedEventLoopException during compilation.",
+      "It blocks the Netty EventLoop thread, reducing server capacity to process concurrent requests and causing starvation.",
+      "It causes a deadlock because Netty restricts HTTP requests."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "WebFlux uses a small number of non-blocking event loop threads. Blocking operations on these threads exhaust the pool and block the server from handling other connections. Offload blocking logic using subscribeOn(Schedulers.boundedElastic())."
+  },
+  {
+    "id": "spring-quiz-t7-14",
+    "topic": "Spring Security",
+    "difficulty": "medium",
+    "questionText": "How do you insert a custom filter 'CustomAuthFilter_14' in a security chain so it executes before UsernamePasswordAuthenticationFilter?",
+    "codeSnippet": "@Bean\npublic SecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n    http.addFilterBefore(new CustomAuthFilter_14(), UsernamePasswordAuthenticationFilter.class);\n    return http.build();\n}",
+    "options": [
+      "Use addFilterBefore(new CustomAuthFilter_14(), UsernamePasswordAuthenticationFilter.class) inside HttpSecurity config.",
+      "Annotate CustomAuthFilter_14 with @Order(Ordered.HIGHEST_PRECEDENCE).",
+      "Register CustomAuthFilter_14 as a Spring @Component; Spring Security loads custom beans first.",
+      "Declare CustomAuthFilter_14 inside application.properties under security.filter.order."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "The order of filters inside a SecurityFilterChain is explicitly configured via HttpSecurity APIs. Class-level @Order annotations do not position filters within the SecurityFilterChain."
+  },
+  {
+    "id": "spring-quiz-t8-14",
+    "topic": "Spring Core",
+    "difficulty": "medium",
+    "questionText": "If a payment service interface has a default bean marked with @Primary, and another bean with qualifier 'customPaymentSvc_14', what is injected?",
+    "codeSnippet": "@RestController\npublic class PaymentController {\n    @Autowired\n    @Qualifier(\"customPaymentSvc_14\")\n    private PaymentService service;\n}",
+    "options": [
+      "The @Primary bean is injected because primary beans take highest precedence.",
+      "The bean annotated with @Qualifier(\"customPaymentSvc_14\") is injected, overriding @Primary.",
+      "A BeanCreationException is thrown due to injection ambiguity.",
+      "Both beans are injected inside a wrapper candidate proxy."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "While @Primary sets a default candidate, an explicit @Qualifier specifies the precise bean name requested. Explicit qualifiers take precedence over primary bean designations."
+  },
+  {
+    "id": "spring-quiz-t9-14",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If you specify a derived query method using property name 'emailAddress_14' which is missing on the Entity, what happens?",
+    "codeSnippet": "public interface UserRepository extends JpaRepository<User, Long> {\n    List<User> findByemailAddress_14(String email); // Entity field is 'email'\n}",
+    "options": [
+      "The query executes but returns an empty list at runtime.",
+      "Spring Data fallback parses it to a native SQL query.",
+      "A compile-time error occurs on the repository interface.",
+      "Spring Boot throws a PropertyReferenceException and fails to start during application context initialization."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring Data JPA parses derived query methods at application startup to validate them against the Entity's properties. If a method references a missing field like 'emailAddress_14', it throws a PropertyReferenceException and halts startup."
+  },
+  {
+    "id": "spring-quiz-t10-14",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "What happens if you apply @Transactional to a final method inside bean class 'DataFetcher_14' proxied by Spring AOP CGLIB subclassing?",
+    "codeSnippet": "public class DataFetcher_14 {\n    @Transactional\n    public final void loadData() {\n        // DB changes\n    }\n}",
+    "options": [
+      "Spring throws a FinalMethodAopException at startup.",
+      "The transaction aspect is bypassed silently because CGLIB creates a subclass and cannot override final methods.",
+      "The application throws a ClassCastException during method call.",
+      "The JVM crashes at runtime when calling the final method."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "CGLIB creates proxies by generating a dynamic subclass at runtime. Because final methods cannot be overridden by subclasses, the generated proxy class cannot insert aspect interceptor code. The final method runs directly, bypassing the aspect."
+  },
+  {
+    "id": "spring-quiz-t11-14",
+    "topic": "Spring Boot Configurations",
+    "difficulty": "medium",
+    "questionText": "If 'app.rate.14' is defined in application.properties as 50, in JVM properties as 100, and as an OS environment variable as 150, what value is resolved?",
+    "codeSnippet": "@Value(\"${app.rate.14}\")\nprivate int rate;",
+    "options": [
+      "100 (JVM system properties override OS environment variables and properties files)",
+      "150 (OS Environment variables take highest precedence)",
+      "50 (application.properties overrides all external configurations)",
+      "It throws a property resolution error due to conflict"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Spring Boot property sources order: 1) Command-line args, 2) JVM System properties (-D...), 3) OS environment variables, 4) application.properties. Thus, the JVM value of 100 is selected."
+  },
+  {
+    "id": "spring-quiz-t12-14",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "How does the integer phase value 114 returned by getPhase() in SmartLifecycle affect context startup and shutdown order?",
+    "codeSnippet": "public class CustomService implements SmartLifecycle {\n    @Override\n    public int getPhase() { return 114; }\n}",
+    "options": [
+      "Beans with higher phase numbers are started first and stopped last.",
+      "Beans with lower phase numbers are started first. During shutdown, beans with higher phase numbers are stopped first.",
+      "The phase determines the priority thread pool, where higher phase means more threads.",
+      "SmartLifecycle beans start concurrently and ignore the phase value."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "SmartLifecycle defines getPhase() to resolve dependency execution order: lower phase numbers start first (e.g. databases, dependencies) and stop last. Shutdown goes in reverse, stopping higher phase numbers first."
+  },
+  {
+    "id": "spring-quiz-t13-14",
+    "topic": "Spring Caching",
+    "difficulty": "hard",
+    "questionText": "Why does the cache eviction fail under the configuration below?",
+    "codeSnippet": "@Cacheable(value = \"users_cache_14\", key = \"#id\")\npublic User getUser(Long id, Context ctx) { ... }\n\n@CacheEvict(value = \"users_cache_14\")\npublic void evictUser(Long id) { ... }",
+    "options": [
+      "Because cache names must be different.",
+      "Because evictUser() does not define a key, causing Spring to use SimpleKeyGenerator on '#id' while getUser() keys on '#id', resulting in mismatch.",
+      "Because evictUser() returns void.",
+      "Because CacheEvict requires @Transactional to run."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "By default, key generation combines all method arguments. For getUser(), the key combines id and ctx, but key='#id' overrides it to 'id'. For evictUser(), the key defaults to 'id' as well, but if arguments mismatch in key structure, we must explicitly set key='#id' in both to prevent cache desync."
+  },
+  {
+    "id": "spring-quiz-t14-14",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "hard",
+    "questionText": "What is the runtime impact of performing a blocking/long-running task inside the @PostConstruct method of 'SetupBean_14'?",
+    "codeSnippet": "@Component\npublic class SetupBean_14 {\n    @PostConstruct\n    public void init() {\n        // Blocks on network/external server call\n        loadConfiguration();\n    }\n}",
+    "options": [
+      "It blocks the main startup thread, preventing the application context from finishing initialization and starting the web server.",
+      "It triggers an asynchronous thread pool execution and continues startup.",
+      "Spring immediately throws an InitializationTimeoutException.",
+      "The JVM runs the method in the background without affecting startup."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "@PostConstruct methods are executed synchronously during bean instantiation on the main thread. If a bean blocks in @PostConstruct, application context startup halts, blocking the web server (Tomcat) from starting. Use events or Async tasks instead."
+  },
+  {
+    "id": "spring-quiz-t15-14",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "If a controller throws a 'DatabaseException_14' (which extends RuntimeException), which ExceptionHandler method inside ControllerAdvice is invoked?",
+    "codeSnippet": "@ControllerAdvice\npublic class GlobalHandler {\n    @ExceptionHandler(RuntimeException.class)\n    public String handleRuntime(RuntimeException ex) { return \"Runtime\"; }\n\n    @ExceptionHandler(DatabaseException_14.class)\n    public String handleDb(DatabaseException_14 ex) { return \"Db\"; }\n}",
+    "options": [
+      "handleDb(), because it is mapped to the most specific exception type matching the exception thrown.",
+      "handleRuntime(), because RuntimeException is checked first as the parent class.",
+      "Both methods run in sequence.",
+      "Spring throws an ExceptionHandlerAmbiguityException at startup."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Spring's exception resolver resolves to the exception handler that maps to the most specific exception in the type hierarchy. Since 'DatabaseException_14' matches the thrown exception exactly, handleDb() is preferred over handleRuntime()."
+  },
+  {
+    "id": "spring-quiz-t16-14",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "What is the state of entity 'Account_14' and the database result when the method process() exits?",
+    "codeSnippet": "@Transactional\npublic void process(Long id) {\n    Account_14 acc = repository.findById(id).orElseThrow();\n    entityManager.detach(acc);\n    acc.setBalance(1000);\n}",
+    "options": [
+      "The entity is in the detached state; no database updates occur.",
+      "The entity is in the persistent state; the database is updated with balance 1000.",
+      "An EntityNotFoundException is thrown during detach.",
+      "Hibernate throws a LazyInitializationException when setting the balance."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Calling entityManager.detach(entity) removes the entity from the Persistence Context. It changes from 'persistent' to 'detached' state. Hibernate no longer tracks modifications, so the balance change is not flushed to the database."
+  },
+  {
+    "id": "spring-quiz-t17-14",
+    "topic": "Spring Cloud & Resilience",
+    "difficulty": "medium",
+    "questionText": "A Resilience4j Circuit Breaker has slidingWindowSize = 14 and failureRateThreshold = 50%. If 9 requests fail within the sliding window, what is the state transition?",
+    "codeSnippet": "CircuitBreakerConfig config = CircuitBreakerConfig.custom()\n    .slidingWindowSize(14)\n    .failureRateThreshold(50)\n    .build();",
+    "options": [
+      "Remains in CLOSED state because the sliding window must exceed capacity.",
+      "Transitions to OPEN state (failure rate is 64%, exceeding the 50% threshold).",
+      "Transitions to HALF_OPEN state.",
+      "Throws a CircuitBreakerOpenException immediately."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Once the sliding window registers 14 requests, Resilience4j calculates the failure rate. Since 9/14 (64%) is greater than or equal to 50%, the Circuit Breaker transitions to the OPEN state."
+  },
+  {
+    "id": "spring-quiz-t18-14",
+    "topic": "Spring Boot Internals",
+    "difficulty": "hard",
+    "questionText": "Inside a single configuration class, what determines the registration order of beans and the result of @ConditionalOnMissingBean?",
+    "codeSnippet": "@Configuration\npublic class AppConfig {\n    @Bean\n    public BeanVal_14 primaryBean() { return new BeanVal_14(\"A\"); }\n\n    @Bean\n    @ConditionalOnMissingBean(BeanVal_14.class)\n    public BeanVal_14 fallbackBean() { return new BeanVal_14(\"B\"); }\n}",
+    "options": [
+      "fallbackBean overrides primaryBean because @ConditionalOnMissingBean forces precedence.",
+      "Both beans are registered, creating an array list injection candidate.",
+      "Spring throws a BeanDefinitionOverrideException during startup.",
+      "Bean methods are registered in order of definition. primaryBean() registers first, causing fallbackBean()'s conditional check to fail. Only primaryBean is registered."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Within a single configuration class, beans are parsed and registered sequentially. Since primaryBean() is defined first, its bean exists when fallbackBean() is evaluated. The conditional check fails, and fallbackBean() is skipped."
+  },
+  {
+    "id": "spring-quiz-t19-14",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "A controller returns an instance of 'ResponseData_14'. If fields are private and no getters are defined, what is the HTTP response behavior?",
+    "codeSnippet": "public class ResponseData_14 {\n    private String status;\n    public ResponseData_14(String status) { this.status = status; }\n    // No getters\n}",
+    "options": [
+      "HTTP 200 with JSON payload {\"status\":null}.",
+      "HTTP 200 with JSON payload {\"status\":\"...\"} using reflection.",
+      "The code fails to compile because classes returned from RestController require getters.",
+      "HTTP 500 error or exception (Jackson throws an InvalidDefinitionException: No serializer found)."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Jackson (Spring Boot's default serializer) uses public getter methods to discover properties to write to JSON. If fields are private and no getters/setters/annotations are present, Jackson throws an exception, resulting in an HTTP 500."
+  },
+  {
+    "id": "spring-quiz-t20-14",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "If outerMethod() is marked as @Transactional and invokes nestedMethod() which is marked as @Transactional(propagation = Propagation.NESTED), what happens to DB updates if nestedMethod() fails and throws an exception caught inside outerMethod()?",
+    "codeSnippet": "@Transactional\npublic void outerMethod() {\n    try {\n        innerService.nestedMethod();\n    } catch (Exception e) {\n        // Exception caught\n    }\n    // Save other data\n}",
+    "options": [
+      "Only nestedMethod()'s updates are rolled back to the savepoint; outerMethod()'s updates can still commit successfully.",
+      "The entire transaction is rolled back because the outer method was marked as Transactional.",
+      "nestedMethod()'s updates are committed because the exception was caught in the outer method.",
+      "Spring throws a NestedTransactionNotSupportedException."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Propagation.NESTED creates a nested transaction using database savepoints. If the nested transaction fails and its exception is caught and handled inside the outer transaction, only the nested transaction rolls back to its savepoint. The outer transaction remains valid."
+  },
+  {
+    "id": "spring-quiz-t1-15",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "In the service below, orderProcessor() is invoked from an external REST controller. What is the transactional behavior of saveOrder()?",
+    "codeSnippet": "@Service\npublic class OrderService_15 {\n    public void orderProcessor() {\n        saveOrder(); // Self-invocation\n    }\n\n    @Transactional\n    public void saveOrder() {\n        // Save database record\n    }\n}",
+    "options": [
+      "Spring starts a new transaction automatically using aspect interception.",
+      "No transaction starts, because self-invocation bypasses the Spring AOP proxy.",
+      "The application throws a CircularDependencyException at startup.",
+      "A TransactionRequiredException is thrown during execution."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Spring's declarative annotations rely on AOP proxy wrappers. Method calls from outside go through the proxy, running transaction interceptors. Direct internal calls (self-invocation) run directly on the target object, bypassing the proxy and annotations."
+  },
+  {
+    "id": "spring-quiz-t2-15",
+    "topic": "Spring Core & Scopes",
+    "difficulty": "hard",
+    "questionText": "You inject a prototype-scoped bean 'RequestTracker_15' into a singleton controller 'AnalyticsController_15'. How does 'RequestTracker_15' behave across multiple HTTP requests?",
+    "codeSnippet": "@Scope(\"prototype\")\n@Component\npublic class RequestTracker_15 {}\n\n@RestController\npublic class AnalyticsController_15 {\n    @Autowired\n    private RequestTracker_15 tracker;\n}",
+    "options": [
+      "The controller reuses the exact same instance of 'RequestTracker_15' injected at startup, behaving as a singleton.",
+      "A new instance of 'RequestTracker_15' is created for every HTTP request.",
+      "Spring throws a ScopeMismatchException during startup.",
+      "The application fails to start because prototype beans cannot be injected into singletons."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Because the controller is a singleton, it is initialized once. Consequently, its fields are injected once. The prototype-scoped bean is instantiated during this injection, and that same instance is shared for all requests. To resolve, use scoped proxies."
+  },
+  {
+    "id": "spring-quiz-t3-15",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If a transaction method throws an Exception (checked exception) during database operations, what is the default rollback behavior?",
+    "codeSnippet": "@Transactional\npublic void process(User user) throws Exception {\n    UserRepo_15.save(user);\n    if (user.getName() == null) {\n        throw new Exception(\"Invalid User\");\n    }\n}",
+    "options": [
+      "The transaction is automatically rolled back for all exceptions.",
+      "The compiler throws an error because Transactional cannot declare checked throws.",
+      "The transaction is committed, and changes are saved because checked exceptions do not trigger rollback by default.",
+      "The transaction rolls back, but only if the database isolation is SERIALIZABLE."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Spring's @Transactional default configuration rolls back transactions only for unchecked exceptions (subclasses of RuntimeException and Error). Checked exceptions (like Exception, IOException) do not trigger rollback unless configured as @Transactional(rollbackFor = Exception.class)."
+  },
+  {
+    "id": "spring-quiz-t4-15",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "What occurs when Spring starts up and detects a circular constructor dependency between singleton beans 'BeanA_15' and 'BeanB_15'?",
+    "codeSnippet": "@Component\npublic class BeanA_15 {\n    public BeanA_15(BeanB_15 b) {}\n}\n@Component\npublic class BeanB_15 {\n    public BeanB_15(BeanA_15 a) {}\n}",
+    "options": [
+      "The application fails to start and throws a BeanCurrentlyInCreationException.",
+      "Spring automatically resolves the cycle by injecting a dynamic proxy.",
+      "The JVM crashes with a StackOverflowError during initialization.",
+      "Spring instantiates both beans as null."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Unlike setter/field injection, constructor dependencies must be resolved during object creation. Since neither 'BeanA_15' nor 'BeanB_15' can be constructed without the other, Spring cannot resolve the dependency cycle and throws a BeanCurrentlyInCreationException."
+  },
+  {
+    "id": "spring-quiz-t5-15",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "An entity has a lazy-loaded collection association. If you fetch all 5 parent entities and access their associations in a loop, how many SQL queries hit the database?",
+    "codeSnippet": "List<Parent> parents = parentRepository.findAll(); // Fetches 5 parents\nfor (Parent p : parents) {\n    System.out.println(p.getChildren().size()); // Lazy load\n}",
+    "options": [
+      "6 SQL queries.",
+      "1 SQL query.",
+      "5 SQL queries.",
+      "2 SQL queries."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "This is the N+1 query problem. The initial query fetches the parents (1 query). When accessing the lazy collection for each parent in the loop, Hibernate sends a separate select query per parent (5 queries), resulting in 6 queries."
+  },
+  {
+    "id": "spring-quiz-t6-15",
+    "topic": "Spring WebFlux",
+    "difficulty": "hard",
+    "questionText": "What is the hazard of calling a blocking method like RestTemplate inside a Spring WebFlux controller running on Netty event loops?",
+    "codeSnippet": "@GetMapping(\"/data\")\npublic Mono<String> getData() {\n    return Mono.fromCallable(() -> restTemplate.getForObject(\"https://api.com\", String.class));\n}",
+    "options": [
+      "WebFlux automatically shifts the call to virtual threads to avoid blocking.",
+      "The controller immediately throws a BlockedEventLoopException during compilation.",
+      "It causes a deadlock because Netty restricts HTTP requests.",
+      "It blocks the Netty EventLoop thread, reducing server capacity to process concurrent requests and causing starvation."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "WebFlux uses a small number of non-blocking event loop threads. Blocking operations on these threads exhaust the pool and block the server from handling other connections. Offload blocking logic using subscribeOn(Schedulers.boundedElastic())."
+  },
+  {
+    "id": "spring-quiz-t7-15",
+    "topic": "Spring Security",
+    "difficulty": "medium",
+    "questionText": "How do you insert a custom filter 'CustomAuthFilter_15' in a security chain so it executes before UsernamePasswordAuthenticationFilter?",
+    "codeSnippet": "@Bean\npublic SecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n    http.addFilterBefore(new CustomAuthFilter_15(), UsernamePasswordAuthenticationFilter.class);\n    return http.build();\n}",
+    "options": [
+      "Annotate CustomAuthFilter_15 with @Order(Ordered.HIGHEST_PRECEDENCE).",
+      "Register CustomAuthFilter_15 as a Spring @Component; Spring Security loads custom beans first.",
+      "Declare CustomAuthFilter_15 inside application.properties under security.filter.order.",
+      "Use addFilterBefore(new CustomAuthFilter_15(), UsernamePasswordAuthenticationFilter.class) inside HttpSecurity config."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "The order of filters inside a SecurityFilterChain is explicitly configured via HttpSecurity APIs. Class-level @Order annotations do not position filters within the SecurityFilterChain."
+  },
+  {
+    "id": "spring-quiz-t8-15",
+    "topic": "Spring Core",
+    "difficulty": "medium",
+    "questionText": "If a payment service interface has a default bean marked with @Primary, and another bean with qualifier 'customPaymentSvc_15', what is injected?",
+    "codeSnippet": "@RestController\npublic class PaymentController {\n    @Autowired\n    @Qualifier(\"customPaymentSvc_15\")\n    private PaymentService service;\n}",
+    "options": [
+      "The @Primary bean is injected because primary beans take highest precedence.",
+      "A BeanCreationException is thrown due to injection ambiguity.",
+      "The bean annotated with @Qualifier(\"customPaymentSvc_15\") is injected, overriding @Primary.",
+      "Both beans are injected inside a wrapper candidate proxy."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "While @Primary sets a default candidate, an explicit @Qualifier specifies the precise bean name requested. Explicit qualifiers take precedence over primary bean designations."
+  },
+  {
+    "id": "spring-quiz-t9-15",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If you specify a derived query method using property name 'emailAddress_15' which is missing on the Entity, what happens?",
+    "codeSnippet": "public interface UserRepository extends JpaRepository<User, Long> {\n    List<User> findByemailAddress_15(String email); // Entity field is 'email'\n}",
+    "options": [
+      "The query executes but returns an empty list at runtime.",
+      "Spring Data fallback parses it to a native SQL query.",
+      "A compile-time error occurs on the repository interface.",
+      "Spring Boot throws a PropertyReferenceException and fails to start during application context initialization."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring Data JPA parses derived query methods at application startup to validate them against the Entity's properties. If a method references a missing field like 'emailAddress_15', it throws a PropertyReferenceException and halts startup."
+  },
+  {
+    "id": "spring-quiz-t10-15",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "What happens if you apply @Transactional to a final method inside bean class 'DataFetcher_15' proxied by Spring AOP CGLIB subclassing?",
+    "codeSnippet": "public class DataFetcher_15 {\n    @Transactional\n    public final void loadData() {\n        // DB changes\n    }\n}",
+    "options": [
+      "Spring throws a FinalMethodAopException at startup.",
+      "The transaction aspect is bypassed silently because CGLIB creates a subclass and cannot override final methods.",
+      "The application throws a ClassCastException during method call.",
+      "The JVM crashes at runtime when calling the final method."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "CGLIB creates proxies by generating a dynamic subclass at runtime. Because final methods cannot be overridden by subclasses, the generated proxy class cannot insert aspect interceptor code. The final method runs directly, bypassing the aspect."
+  },
+  {
+    "id": "spring-quiz-t11-15",
+    "topic": "Spring Boot Configurations",
+    "difficulty": "medium",
+    "questionText": "If 'app.rate.15' is defined in application.properties as 50, in JVM properties as 100, and as an OS environment variable as 150, what value is resolved?",
+    "codeSnippet": "@Value(\"${app.rate.15}\")\nprivate int rate;",
+    "options": [
+      "100 (JVM system properties override OS environment variables and properties files)",
+      "150 (OS Environment variables take highest precedence)",
+      "50 (application.properties overrides all external configurations)",
+      "It throws a property resolution error due to conflict"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Spring Boot property sources order: 1) Command-line args, 2) JVM System properties (-D...), 3) OS environment variables, 4) application.properties. Thus, the JVM value of 100 is selected."
+  },
+  {
+    "id": "spring-quiz-t12-15",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "How does the integer phase value 115 returned by getPhase() in SmartLifecycle affect context startup and shutdown order?",
+    "codeSnippet": "public class CustomService implements SmartLifecycle {\n    @Override\n    public int getPhase() { return 115; }\n}",
+    "options": [
+      "Beans with lower phase numbers are started first. During shutdown, beans with higher phase numbers are stopped first.",
+      "Beans with higher phase numbers are started first and stopped last.",
+      "The phase determines the priority thread pool, where higher phase means more threads.",
+      "SmartLifecycle beans start concurrently and ignore the phase value."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "SmartLifecycle defines getPhase() to resolve dependency execution order: lower phase numbers start first (e.g. databases, dependencies) and stop last. Shutdown goes in reverse, stopping higher phase numbers first."
+  },
+  {
+    "id": "spring-quiz-t13-15",
+    "topic": "Spring Caching",
+    "difficulty": "hard",
+    "questionText": "Why does the cache eviction fail under the configuration below?",
+    "codeSnippet": "@Cacheable(value = \"users_cache_15\", key = \"#id\")\npublic User getUser(Long id, Context ctx) { ... }\n\n@CacheEvict(value = \"users_cache_15\")\npublic void evictUser(Long id) { ... }",
+    "options": [
+      "Because cache names must be different.",
+      "Because evictUser() does not define a key, causing Spring to use SimpleKeyGenerator on '#id' while getUser() keys on '#id', resulting in mismatch.",
+      "Because evictUser() returns void.",
+      "Because CacheEvict requires @Transactional to run."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "By default, key generation combines all method arguments. For getUser(), the key combines id and ctx, but key='#id' overrides it to 'id'. For evictUser(), the key defaults to 'id' as well, but if arguments mismatch in key structure, we must explicitly set key='#id' in both to prevent cache desync."
+  },
+  {
+    "id": "spring-quiz-t14-15",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "hard",
+    "questionText": "What is the runtime impact of performing a blocking/long-running task inside the @PostConstruct method of 'SetupBean_15'?",
+    "codeSnippet": "@Component\npublic class SetupBean_15 {\n    @PostConstruct\n    public void init() {\n        // Blocks on network/external server call\n        loadConfiguration();\n    }\n}",
+    "options": [
+      "It triggers an asynchronous thread pool execution and continues startup.",
+      "Spring immediately throws an InitializationTimeoutException.",
+      "It blocks the main startup thread, preventing the application context from finishing initialization and starting the web server.",
+      "The JVM runs the method in the background without affecting startup."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "@PostConstruct methods are executed synchronously during bean instantiation on the main thread. If a bean blocks in @PostConstruct, application context startup halts, blocking the web server (Tomcat) from starting. Use events or Async tasks instead."
+  },
+  {
+    "id": "spring-quiz-t15-15",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "If a controller throws a 'DatabaseException_15' (which extends RuntimeException), which ExceptionHandler method inside ControllerAdvice is invoked?",
+    "codeSnippet": "@ControllerAdvice\npublic class GlobalHandler {\n    @ExceptionHandler(RuntimeException.class)\n    public String handleRuntime(RuntimeException ex) { return \"Runtime\"; }\n\n    @ExceptionHandler(DatabaseException_15.class)\n    public String handleDb(DatabaseException_15 ex) { return \"Db\"; }\n}",
+    "options": [
+      "handleRuntime(), because RuntimeException is checked first as the parent class.",
+      "handleDb(), because it is mapped to the most specific exception type matching the exception thrown.",
+      "Both methods run in sequence.",
+      "Spring throws an ExceptionHandlerAmbiguityException at startup."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Spring's exception resolver resolves to the exception handler that maps to the most specific exception in the type hierarchy. Since 'DatabaseException_15' matches the thrown exception exactly, handleDb() is preferred over handleRuntime()."
+  },
+  {
+    "id": "spring-quiz-t16-15",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "What is the state of entity 'Account_15' and the database result when the method process() exits?",
+    "codeSnippet": "@Transactional\npublic void process(Long id) {\n    Account_15 acc = repository.findById(id).orElseThrow();\n    entityManager.detach(acc);\n    acc.setBalance(1000);\n}",
+    "options": [
+      "The entity is in the persistent state; the database is updated with balance 1000.",
+      "The entity is in the detached state; no database updates occur.",
+      "An EntityNotFoundException is thrown during detach.",
+      "Hibernate throws a LazyInitializationException when setting the balance."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Calling entityManager.detach(entity) removes the entity from the Persistence Context. It changes from 'persistent' to 'detached' state. Hibernate no longer tracks modifications, so the balance change is not flushed to the database."
+  },
+  {
+    "id": "spring-quiz-t17-15",
+    "topic": "Spring Cloud & Resilience",
+    "difficulty": "medium",
+    "questionText": "A Resilience4j Circuit Breaker has slidingWindowSize = 10 and failureRateThreshold = 50%. If 6 requests fail within the sliding window, what is the state transition?",
+    "codeSnippet": "CircuitBreakerConfig config = CircuitBreakerConfig.custom()\n    .slidingWindowSize(10)\n    .failureRateThreshold(50)\n    .build();",
+    "options": [
+      "Transitions to OPEN state (failure rate is 60%, exceeding the 50% threshold).",
+      "Remains in CLOSED state because the sliding window must exceed capacity.",
+      "Transitions to HALF_OPEN state.",
+      "Throws a CircuitBreakerOpenException immediately."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Once the sliding window registers 10 requests, Resilience4j calculates the failure rate. Since 6/10 (60%) is greater than or equal to 50%, the Circuit Breaker transitions to the OPEN state."
+  },
+  {
+    "id": "spring-quiz-t18-15",
+    "topic": "Spring Boot Internals",
+    "difficulty": "hard",
+    "questionText": "Inside a single configuration class, what determines the registration order of beans and the result of @ConditionalOnMissingBean?",
+    "codeSnippet": "@Configuration\npublic class AppConfig {\n    @Bean\n    public BeanVal_15 primaryBean() { return new BeanVal_15(\"A\"); }\n\n    @Bean\n    @ConditionalOnMissingBean(BeanVal_15.class)\n    public BeanVal_15 fallbackBean() { return new BeanVal_15(\"B\"); }\n}",
+    "options": [
+      "fallbackBean overrides primaryBean because @ConditionalOnMissingBean forces precedence.",
+      "Bean methods are registered in order of definition. primaryBean() registers first, causing fallbackBean()'s conditional check to fail. Only primaryBean is registered.",
+      "Both beans are registered, creating an array list injection candidate.",
+      "Spring throws a BeanDefinitionOverrideException during startup."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Within a single configuration class, beans are parsed and registered sequentially. Since primaryBean() is defined first, its bean exists when fallbackBean() is evaluated. The conditional check fails, and fallbackBean() is skipped."
+  },
+  {
+    "id": "spring-quiz-t19-15",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "A controller returns an instance of 'ResponseData_15'. If fields are private and no getters are defined, what is the HTTP response behavior?",
+    "codeSnippet": "public class ResponseData_15 {\n    private String status;\n    public ResponseData_15(String status) { this.status = status; }\n    // No getters\n}",
+    "options": [
+      "HTTP 200 with JSON payload {\"status\":null}.",
+      "HTTP 200 with JSON payload {\"status\":\"...\"} using reflection.",
+      "HTTP 500 error or exception (Jackson throws an InvalidDefinitionException: No serializer found).",
+      "The code fails to compile because classes returned from RestController require getters."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Jackson (Spring Boot's default serializer) uses public getter methods to discover properties to write to JSON. If fields are private and no getters/setters/annotations are present, Jackson throws an exception, resulting in an HTTP 500."
+  },
+  {
+    "id": "spring-quiz-t20-15",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "If outerMethod() is marked as @Transactional and invokes nestedMethod() which is marked as @Transactional(propagation = Propagation.NESTED), what happens to DB updates if nestedMethod() fails and throws an exception caught inside outerMethod()?",
+    "codeSnippet": "@Transactional\npublic void outerMethod() {\n    try {\n        innerService.nestedMethod();\n    } catch (Exception e) {\n        // Exception caught\n    }\n    // Save other data\n}",
+    "options": [
+      "The entire transaction is rolled back because the outer method was marked as Transactional.",
+      "nestedMethod()'s updates are committed because the exception was caught in the outer method.",
+      "Spring throws a NestedTransactionNotSupportedException.",
+      "Only nestedMethod()'s updates are rolled back to the savepoint; outerMethod()'s updates can still commit successfully."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Propagation.NESTED creates a nested transaction using database savepoints. If the nested transaction fails and its exception is caught and handled inside the outer transaction, only the nested transaction rolls back to its savepoint. The outer transaction remains valid."
+  },
+  {
+    "id": "spring-quiz-t1-16",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "In the service below, orderProcessor() is invoked from an external REST controller. What is the transactional behavior of saveOrder()?",
+    "codeSnippet": "@Service\npublic class OrderService_16 {\n    public void orderProcessor() {\n        saveOrder(); // Self-invocation\n    }\n\n    @Transactional\n    public void saveOrder() {\n        // Save database record\n    }\n}",
+    "options": [
+      "Spring starts a new transaction automatically using aspect interception.",
+      "No transaction starts, because self-invocation bypasses the Spring AOP proxy.",
+      "The application throws a CircularDependencyException at startup.",
+      "A TransactionRequiredException is thrown during execution."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Spring's declarative annotations rely on AOP proxy wrappers. Method calls from outside go through the proxy, running transaction interceptors. Direct internal calls (self-invocation) run directly on the target object, bypassing the proxy and annotations."
+  },
+  {
+    "id": "spring-quiz-t2-16",
+    "topic": "Spring Core & Scopes",
+    "difficulty": "hard",
+    "questionText": "You inject a prototype-scoped bean 'RequestTracker_16' into a singleton controller 'AnalyticsController_16'. How does 'RequestTracker_16' behave across multiple HTTP requests?",
+    "codeSnippet": "@Scope(\"prototype\")\n@Component\npublic class RequestTracker_16 {}\n\n@RestController\npublic class AnalyticsController_16 {\n    @Autowired\n    private RequestTracker_16 tracker;\n}",
+    "options": [
+      "A new instance of 'RequestTracker_16' is created for every HTTP request.",
+      "The controller reuses the exact same instance of 'RequestTracker_16' injected at startup, behaving as a singleton.",
+      "Spring throws a ScopeMismatchException during startup.",
+      "The application fails to start because prototype beans cannot be injected into singletons."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Because the controller is a singleton, it is initialized once. Consequently, its fields are injected once. The prototype-scoped bean is instantiated during this injection, and that same instance is shared for all requests. To resolve, use scoped proxies."
+  },
+  {
+    "id": "spring-quiz-t3-16",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If a transaction method throws an Exception (checked exception) during database operations, what is the default rollback behavior?",
+    "codeSnippet": "@Transactional\npublic void process(User user) throws Exception {\n    UserRepo_16.save(user);\n    if (user.getName() == null) {\n        throw new Exception(\"Invalid User\");\n    }\n}",
+    "options": [
+      "The transaction is committed, and changes are saved because checked exceptions do not trigger rollback by default.",
+      "The transaction is automatically rolled back for all exceptions.",
+      "The compiler throws an error because Transactional cannot declare checked throws.",
+      "The transaction rolls back, but only if the database isolation is SERIALIZABLE."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Spring's @Transactional default configuration rolls back transactions only for unchecked exceptions (subclasses of RuntimeException and Error). Checked exceptions (like Exception, IOException) do not trigger rollback unless configured as @Transactional(rollbackFor = Exception.class)."
+  },
+  {
+    "id": "spring-quiz-t4-16",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "What occurs when Spring starts up and detects a circular constructor dependency between singleton beans 'BeanA_16' and 'BeanB_16'?",
+    "codeSnippet": "@Component\npublic class BeanA_16 {\n    public BeanA_16(BeanB_16 b) {}\n}\n@Component\npublic class BeanB_16 {\n    public BeanB_16(BeanA_16 a) {}\n}",
+    "options": [
+      "Spring automatically resolves the cycle by injecting a dynamic proxy.",
+      "The JVM crashes with a StackOverflowError during initialization.",
+      "The application fails to start and throws a BeanCurrentlyInCreationException.",
+      "Spring instantiates both beans as null."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Unlike setter/field injection, constructor dependencies must be resolved during object creation. Since neither 'BeanA_16' nor 'BeanB_16' can be constructed without the other, Spring cannot resolve the dependency cycle and throws a BeanCurrentlyInCreationException."
+  },
+  {
+    "id": "spring-quiz-t5-16",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "An entity has a lazy-loaded collection association. If you fetch all 6 parent entities and access their associations in a loop, how many SQL queries hit the database?",
+    "codeSnippet": "List<Parent> parents = parentRepository.findAll(); // Fetches 6 parents\nfor (Parent p : parents) {\n    System.out.println(p.getChildren().size()); // Lazy load\n}",
+    "options": [
+      "7 SQL queries.",
+      "1 SQL query.",
+      "6 SQL queries.",
+      "2 SQL queries."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "This is the N+1 query problem. The initial query fetches the parents (1 query). When accessing the lazy collection for each parent in the loop, Hibernate sends a separate select query per parent (6 queries), resulting in 7 queries."
+  },
+  {
+    "id": "spring-quiz-t6-16",
+    "topic": "Spring WebFlux",
+    "difficulty": "hard",
+    "questionText": "What is the hazard of calling a blocking method like RestTemplate inside a Spring WebFlux controller running on Netty event loops?",
+    "codeSnippet": "@GetMapping(\"/data\")\npublic Mono<String> getData() {\n    return Mono.fromCallable(() -> restTemplate.getForObject(\"https://api.com\", String.class));\n}",
+    "options": [
+      "WebFlux automatically shifts the call to virtual threads to avoid blocking.",
+      "The controller immediately throws a BlockedEventLoopException during compilation.",
+      "It causes a deadlock because Netty restricts HTTP requests.",
+      "It blocks the Netty EventLoop thread, reducing server capacity to process concurrent requests and causing starvation."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "WebFlux uses a small number of non-blocking event loop threads. Blocking operations on these threads exhaust the pool and block the server from handling other connections. Offload blocking logic using subscribeOn(Schedulers.boundedElastic())."
+  },
+  {
+    "id": "spring-quiz-t7-16",
+    "topic": "Spring Security",
+    "difficulty": "medium",
+    "questionText": "How do you insert a custom filter 'CustomAuthFilter_16' in a security chain so it executes before UsernamePasswordAuthenticationFilter?",
+    "codeSnippet": "@Bean\npublic SecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n    http.addFilterBefore(new CustomAuthFilter_16(), UsernamePasswordAuthenticationFilter.class);\n    return http.build();\n}",
+    "options": [
+      "Annotate CustomAuthFilter_16 with @Order(Ordered.HIGHEST_PRECEDENCE).",
+      "Register CustomAuthFilter_16 as a Spring @Component; Spring Security loads custom beans first.",
+      "Use addFilterBefore(new CustomAuthFilter_16(), UsernamePasswordAuthenticationFilter.class) inside HttpSecurity config.",
+      "Declare CustomAuthFilter_16 inside application.properties under security.filter.order."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "The order of filters inside a SecurityFilterChain is explicitly configured via HttpSecurity APIs. Class-level @Order annotations do not position filters within the SecurityFilterChain."
+  },
+  {
+    "id": "spring-quiz-t8-16",
+    "topic": "Spring Core",
+    "difficulty": "medium",
+    "questionText": "If a payment service interface has a default bean marked with @Primary, and another bean with qualifier 'customPaymentSvc_16', what is injected?",
+    "codeSnippet": "@RestController\npublic class PaymentController {\n    @Autowired\n    @Qualifier(\"customPaymentSvc_16\")\n    private PaymentService service;\n}",
+    "options": [
+      "The bean annotated with @Qualifier(\"customPaymentSvc_16\") is injected, overriding @Primary.",
+      "The @Primary bean is injected because primary beans take highest precedence.",
+      "A BeanCreationException is thrown due to injection ambiguity.",
+      "Both beans are injected inside a wrapper candidate proxy."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "While @Primary sets a default candidate, an explicit @Qualifier specifies the precise bean name requested. Explicit qualifiers take precedence over primary bean designations."
+  },
+  {
+    "id": "spring-quiz-t9-16",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If you specify a derived query method using property name 'emailAddress_16' which is missing on the Entity, what happens?",
+    "codeSnippet": "public interface UserRepository extends JpaRepository<User, Long> {\n    List<User> findByemailAddress_16(String email); // Entity field is 'email'\n}",
+    "options": [
+      "The query executes but returns an empty list at runtime.",
+      "Spring Data fallback parses it to a native SQL query.",
+      "Spring Boot throws a PropertyReferenceException and fails to start during application context initialization.",
+      "A compile-time error occurs on the repository interface."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Spring Data JPA parses derived query methods at application startup to validate them against the Entity's properties. If a method references a missing field like 'emailAddress_16', it throws a PropertyReferenceException and halts startup."
+  },
+  {
+    "id": "spring-quiz-t10-16",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "What happens if you apply @Transactional to a final method inside bean class 'DataFetcher_16' proxied by Spring AOP CGLIB subclassing?",
+    "codeSnippet": "public class DataFetcher_16 {\n    @Transactional\n    public final void loadData() {\n        // DB changes\n    }\n}",
+    "options": [
+      "Spring throws a FinalMethodAopException at startup.",
+      "The transaction aspect is bypassed silently because CGLIB creates a subclass and cannot override final methods.",
+      "The application throws a ClassCastException during method call.",
+      "The JVM crashes at runtime when calling the final method."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "CGLIB creates proxies by generating a dynamic subclass at runtime. Because final methods cannot be overridden by subclasses, the generated proxy class cannot insert aspect interceptor code. The final method runs directly, bypassing the aspect."
+  },
+  {
+    "id": "spring-quiz-t11-16",
+    "topic": "Spring Boot Configurations",
+    "difficulty": "medium",
+    "questionText": "If 'app.rate.16' is defined in application.properties as 50, in JVM properties as 100, and as an OS environment variable as 150, what value is resolved?",
+    "codeSnippet": "@Value(\"${app.rate.16}\")\nprivate int rate;",
+    "options": [
+      "150 (OS Environment variables take highest precedence)",
+      "50 (application.properties overrides all external configurations)",
+      "It throws a property resolution error due to conflict",
+      "100 (JVM system properties override OS environment variables and properties files)"
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring Boot property sources order: 1) Command-line args, 2) JVM System properties (-D...), 3) OS environment variables, 4) application.properties. Thus, the JVM value of 100 is selected."
+  },
+  {
+    "id": "spring-quiz-t12-16",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "How does the integer phase value 116 returned by getPhase() in SmartLifecycle affect context startup and shutdown order?",
+    "codeSnippet": "public class CustomService implements SmartLifecycle {\n    @Override\n    public int getPhase() { return 116; }\n}",
+    "options": [
+      "Beans with higher phase numbers are started first and stopped last.",
+      "The phase determines the priority thread pool, where higher phase means more threads.",
+      "Beans with lower phase numbers are started first. During shutdown, beans with higher phase numbers are stopped first.",
+      "SmartLifecycle beans start concurrently and ignore the phase value."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "SmartLifecycle defines getPhase() to resolve dependency execution order: lower phase numbers start first (e.g. databases, dependencies) and stop last. Shutdown goes in reverse, stopping higher phase numbers first."
+  },
+  {
+    "id": "spring-quiz-t13-16",
+    "topic": "Spring Caching",
+    "difficulty": "hard",
+    "questionText": "Why does the cache eviction fail under the configuration below?",
+    "codeSnippet": "@Cacheable(value = \"users_cache_16\", key = \"#id\")\npublic User getUser(Long id, Context ctx) { ... }\n\n@CacheEvict(value = \"users_cache_16\")\npublic void evictUser(Long id) { ... }",
+    "options": [
+      "Because evictUser() does not define a key, causing Spring to use SimpleKeyGenerator on '#id' while getUser() keys on '#id', resulting in mismatch.",
+      "Because cache names must be different.",
+      "Because evictUser() returns void.",
+      "Because CacheEvict requires @Transactional to run."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "By default, key generation combines all method arguments. For getUser(), the key combines id and ctx, but key='#id' overrides it to 'id'. For evictUser(), the key defaults to 'id' as well, but if arguments mismatch in key structure, we must explicitly set key='#id' in both to prevent cache desync."
+  },
+  {
+    "id": "spring-quiz-t14-16",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "hard",
+    "questionText": "What is the runtime impact of performing a blocking/long-running task inside the @PostConstruct method of 'SetupBean_16'?",
+    "codeSnippet": "@Component\npublic class SetupBean_16 {\n    @PostConstruct\n    public void init() {\n        // Blocks on network/external server call\n        loadConfiguration();\n    }\n}",
+    "options": [
+      "It blocks the main startup thread, preventing the application context from finishing initialization and starting the web server.",
+      "It triggers an asynchronous thread pool execution and continues startup.",
+      "Spring immediately throws an InitializationTimeoutException.",
+      "The JVM runs the method in the background without affecting startup."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "@PostConstruct methods are executed synchronously during bean instantiation on the main thread. If a bean blocks in @PostConstruct, application context startup halts, blocking the web server (Tomcat) from starting. Use events or Async tasks instead."
+  },
+  {
+    "id": "spring-quiz-t15-16",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "If a controller throws a 'DatabaseException_16' (which extends RuntimeException), which ExceptionHandler method inside ControllerAdvice is invoked?",
+    "codeSnippet": "@ControllerAdvice\npublic class GlobalHandler {\n    @ExceptionHandler(RuntimeException.class)\n    public String handleRuntime(RuntimeException ex) { return \"Runtime\"; }\n\n    @ExceptionHandler(DatabaseException_16.class)\n    public String handleDb(DatabaseException_16 ex) { return \"Db\"; }\n}",
+    "options": [
+      "handleDb(), because it is mapped to the most specific exception type matching the exception thrown.",
+      "handleRuntime(), because RuntimeException is checked first as the parent class.",
+      "Both methods run in sequence.",
+      "Spring throws an ExceptionHandlerAmbiguityException at startup."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Spring's exception resolver resolves to the exception handler that maps to the most specific exception in the type hierarchy. Since 'DatabaseException_16' matches the thrown exception exactly, handleDb() is preferred over handleRuntime()."
+  },
+  {
+    "id": "spring-quiz-t16-16",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "What is the state of entity 'Account_16' and the database result when the method process() exits?",
+    "codeSnippet": "@Transactional\npublic void process(Long id) {\n    Account_16 acc = repository.findById(id).orElseThrow();\n    entityManager.detach(acc);\n    acc.setBalance(1000);\n}",
+    "options": [
+      "The entity is in the detached state; no database updates occur.",
+      "The entity is in the persistent state; the database is updated with balance 1000.",
+      "An EntityNotFoundException is thrown during detach.",
+      "Hibernate throws a LazyInitializationException when setting the balance."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Calling entityManager.detach(entity) removes the entity from the Persistence Context. It changes from 'persistent' to 'detached' state. Hibernate no longer tracks modifications, so the balance change is not flushed to the database."
+  },
+  {
+    "id": "spring-quiz-t17-16",
+    "topic": "Spring Cloud & Resilience",
+    "difficulty": "medium",
+    "questionText": "A Resilience4j Circuit Breaker has slidingWindowSize = 11 and failureRateThreshold = 50%. If 7 requests fail within the sliding window, what is the state transition?",
+    "codeSnippet": "CircuitBreakerConfig config = CircuitBreakerConfig.custom()\n    .slidingWindowSize(11)\n    .failureRateThreshold(50)\n    .build();",
+    "options": [
+      "Remains in CLOSED state because the sliding window must exceed capacity.",
+      "Transitions to OPEN state (failure rate is 64%, exceeding the 50% threshold).",
+      "Transitions to HALF_OPEN state.",
+      "Throws a CircuitBreakerOpenException immediately."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Once the sliding window registers 11 requests, Resilience4j calculates the failure rate. Since 7/11 (64%) is greater than or equal to 50%, the Circuit Breaker transitions to the OPEN state."
+  },
+  {
+    "id": "spring-quiz-t18-16",
+    "topic": "Spring Boot Internals",
+    "difficulty": "hard",
+    "questionText": "Inside a single configuration class, what determines the registration order of beans and the result of @ConditionalOnMissingBean?",
+    "codeSnippet": "@Configuration\npublic class AppConfig {\n    @Bean\n    public BeanVal_16 primaryBean() { return new BeanVal_16(\"A\"); }\n\n    @Bean\n    @ConditionalOnMissingBean(BeanVal_16.class)\n    public BeanVal_16 fallbackBean() { return new BeanVal_16(\"B\"); }\n}",
+    "options": [
+      "fallbackBean overrides primaryBean because @ConditionalOnMissingBean forces precedence.",
+      "Bean methods are registered in order of definition. primaryBean() registers first, causing fallbackBean()'s conditional check to fail. Only primaryBean is registered.",
+      "Both beans are registered, creating an array list injection candidate.",
+      "Spring throws a BeanDefinitionOverrideException during startup."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Within a single configuration class, beans are parsed and registered sequentially. Since primaryBean() is defined first, its bean exists when fallbackBean() is evaluated. The conditional check fails, and fallbackBean() is skipped."
+  },
+  {
+    "id": "spring-quiz-t19-16",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "A controller returns an instance of 'ResponseData_16'. If fields are private and no getters are defined, what is the HTTP response behavior?",
+    "codeSnippet": "public class ResponseData_16 {\n    private String status;\n    public ResponseData_16(String status) { this.status = status; }\n    // No getters\n}",
+    "options": [
+      "HTTP 200 with JSON payload {\"status\":null}.",
+      "HTTP 500 error or exception (Jackson throws an InvalidDefinitionException: No serializer found).",
+      "HTTP 200 with JSON payload {\"status\":\"...\"} using reflection.",
+      "The code fails to compile because classes returned from RestController require getters."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Jackson (Spring Boot's default serializer) uses public getter methods to discover properties to write to JSON. If fields are private and no getters/setters/annotations are present, Jackson throws an exception, resulting in an HTTP 500."
+  },
+  {
+    "id": "spring-quiz-t20-16",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "If outerMethod() is marked as @Transactional and invokes nestedMethod() which is marked as @Transactional(propagation = Propagation.NESTED), what happens to DB updates if nestedMethod() fails and throws an exception caught inside outerMethod()?",
+    "codeSnippet": "@Transactional\npublic void outerMethod() {\n    try {\n        innerService.nestedMethod();\n    } catch (Exception e) {\n        // Exception caught\n    }\n    // Save other data\n}",
+    "options": [
+      "The entire transaction is rolled back because the outer method was marked as Transactional.",
+      "nestedMethod()'s updates are committed because the exception was caught in the outer method.",
+      "Only nestedMethod()'s updates are rolled back to the savepoint; outerMethod()'s updates can still commit successfully.",
+      "Spring throws a NestedTransactionNotSupportedException."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Propagation.NESTED creates a nested transaction using database savepoints. If the nested transaction fails and its exception is caught and handled inside the outer transaction, only the nested transaction rolls back to its savepoint. The outer transaction remains valid."
+  },
+  {
+    "id": "spring-quiz-t1-17",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "In the service below, orderProcessor() is invoked from an external REST controller. What is the transactional behavior of saveOrder()?",
+    "codeSnippet": "@Service\npublic class OrderService_17 {\n    public void orderProcessor() {\n        saveOrder(); // Self-invocation\n    }\n\n    @Transactional\n    public void saveOrder() {\n        // Save database record\n    }\n}",
+    "options": [
+      "Spring starts a new transaction automatically using aspect interception.",
+      "The application throws a CircularDependencyException at startup.",
+      "No transaction starts, because self-invocation bypasses the Spring AOP proxy.",
+      "A TransactionRequiredException is thrown during execution."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Spring's declarative annotations rely on AOP proxy wrappers. Method calls from outside go through the proxy, running transaction interceptors. Direct internal calls (self-invocation) run directly on the target object, bypassing the proxy and annotations."
+  },
+  {
+    "id": "spring-quiz-t2-17",
+    "topic": "Spring Core & Scopes",
+    "difficulty": "hard",
+    "questionText": "You inject a prototype-scoped bean 'RequestTracker_17' into a singleton controller 'AnalyticsController_17'. How does 'RequestTracker_17' behave across multiple HTTP requests?",
+    "codeSnippet": "@Scope(\"prototype\")\n@Component\npublic class RequestTracker_17 {}\n\n@RestController\npublic class AnalyticsController_17 {\n    @Autowired\n    private RequestTracker_17 tracker;\n}",
+    "options": [
+      "A new instance of 'RequestTracker_17' is created for every HTTP request.",
+      "Spring throws a ScopeMismatchException during startup.",
+      "The controller reuses the exact same instance of 'RequestTracker_17' injected at startup, behaving as a singleton.",
+      "The application fails to start because prototype beans cannot be injected into singletons."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Because the controller is a singleton, it is initialized once. Consequently, its fields are injected once. The prototype-scoped bean is instantiated during this injection, and that same instance is shared for all requests. To resolve, use scoped proxies."
+  },
+  {
+    "id": "spring-quiz-t3-17",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If a transaction method throws an Exception (checked exception) during database operations, what is the default rollback behavior?",
+    "codeSnippet": "@Transactional\npublic void process(User user) throws Exception {\n    UserRepo_17.save(user);\n    if (user.getName() == null) {\n        throw new Exception(\"Invalid User\");\n    }\n}",
+    "options": [
+      "The transaction is automatically rolled back for all exceptions.",
+      "The compiler throws an error because Transactional cannot declare checked throws.",
+      "The transaction is committed, and changes are saved because checked exceptions do not trigger rollback by default.",
+      "The transaction rolls back, but only if the database isolation is SERIALIZABLE."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Spring's @Transactional default configuration rolls back transactions only for unchecked exceptions (subclasses of RuntimeException and Error). Checked exceptions (like Exception, IOException) do not trigger rollback unless configured as @Transactional(rollbackFor = Exception.class)."
+  },
+  {
+    "id": "spring-quiz-t4-17",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "What occurs when Spring starts up and detects a circular constructor dependency between singleton beans 'BeanA_17' and 'BeanB_17'?",
+    "codeSnippet": "@Component\npublic class BeanA_17 {\n    public BeanA_17(BeanB_17 b) {}\n}\n@Component\npublic class BeanB_17 {\n    public BeanB_17(BeanA_17 a) {}\n}",
+    "options": [
+      "Spring automatically resolves the cycle by injecting a dynamic proxy.",
+      "The JVM crashes with a StackOverflowError during initialization.",
+      "Spring instantiates both beans as null.",
+      "The application fails to start and throws a BeanCurrentlyInCreationException."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Unlike setter/field injection, constructor dependencies must be resolved during object creation. Since neither 'BeanA_17' nor 'BeanB_17' can be constructed without the other, Spring cannot resolve the dependency cycle and throws a BeanCurrentlyInCreationException."
+  },
+  {
+    "id": "spring-quiz-t5-17",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "An entity has a lazy-loaded collection association. If you fetch all 7 parent entities and access their associations in a loop, how many SQL queries hit the database?",
+    "codeSnippet": "List<Parent> parents = parentRepository.findAll(); // Fetches 7 parents\nfor (Parent p : parents) {\n    System.out.println(p.getChildren().size()); // Lazy load\n}",
+    "options": [
+      "1 SQL query.",
+      "7 SQL queries.",
+      "2 SQL queries.",
+      "8 SQL queries."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "This is the N+1 query problem. The initial query fetches the parents (1 query). When accessing the lazy collection for each parent in the loop, Hibernate sends a separate select query per parent (7 queries), resulting in 8 queries."
+  },
+  {
+    "id": "spring-quiz-t6-17",
+    "topic": "Spring WebFlux",
+    "difficulty": "hard",
+    "questionText": "What is the hazard of calling a blocking method like RestTemplate inside a Spring WebFlux controller running on Netty event loops?",
+    "codeSnippet": "@GetMapping(\"/data\")\npublic Mono<String> getData() {\n    return Mono.fromCallable(() -> restTemplate.getForObject(\"https://api.com\", String.class));\n}",
+    "options": [
+      "It blocks the Netty EventLoop thread, reducing server capacity to process concurrent requests and causing starvation.",
+      "WebFlux automatically shifts the call to virtual threads to avoid blocking.",
+      "The controller immediately throws a BlockedEventLoopException during compilation.",
+      "It causes a deadlock because Netty restricts HTTP requests."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "WebFlux uses a small number of non-blocking event loop threads. Blocking operations on these threads exhaust the pool and block the server from handling other connections. Offload blocking logic using subscribeOn(Schedulers.boundedElastic())."
+  },
+  {
+    "id": "spring-quiz-t7-17",
+    "topic": "Spring Security",
+    "difficulty": "medium",
+    "questionText": "How do you insert a custom filter 'CustomAuthFilter_17' in a security chain so it executes before UsernamePasswordAuthenticationFilter?",
+    "codeSnippet": "@Bean\npublic SecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n    http.addFilterBefore(new CustomAuthFilter_17(), UsernamePasswordAuthenticationFilter.class);\n    return http.build();\n}",
+    "options": [
+      "Annotate CustomAuthFilter_17 with @Order(Ordered.HIGHEST_PRECEDENCE).",
+      "Register CustomAuthFilter_17 as a Spring @Component; Spring Security loads custom beans first.",
+      "Use addFilterBefore(new CustomAuthFilter_17(), UsernamePasswordAuthenticationFilter.class) inside HttpSecurity config.",
+      "Declare CustomAuthFilter_17 inside application.properties under security.filter.order."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "The order of filters inside a SecurityFilterChain is explicitly configured via HttpSecurity APIs. Class-level @Order annotations do not position filters within the SecurityFilterChain."
+  },
+  {
+    "id": "spring-quiz-t8-17",
+    "topic": "Spring Core",
+    "difficulty": "medium",
+    "questionText": "If a payment service interface has a default bean marked with @Primary, and another bean with qualifier 'customPaymentSvc_17', what is injected?",
+    "codeSnippet": "@RestController\npublic class PaymentController {\n    @Autowired\n    @Qualifier(\"customPaymentSvc_17\")\n    private PaymentService service;\n}",
+    "options": [
+      "The @Primary bean is injected because primary beans take highest precedence.",
+      "A BeanCreationException is thrown due to injection ambiguity.",
+      "The bean annotated with @Qualifier(\"customPaymentSvc_17\") is injected, overriding @Primary.",
+      "Both beans are injected inside a wrapper candidate proxy."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "While @Primary sets a default candidate, an explicit @Qualifier specifies the precise bean name requested. Explicit qualifiers take precedence over primary bean designations."
+  },
+  {
+    "id": "spring-quiz-t9-17",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If you specify a derived query method using property name 'emailAddress_17' which is missing on the Entity, what happens?",
+    "codeSnippet": "public interface UserRepository extends JpaRepository<User, Long> {\n    List<User> findByemailAddress_17(String email); // Entity field is 'email'\n}",
+    "options": [
+      "The query executes but returns an empty list at runtime.",
+      "Spring Boot throws a PropertyReferenceException and fails to start during application context initialization.",
+      "Spring Data fallback parses it to a native SQL query.",
+      "A compile-time error occurs on the repository interface."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Spring Data JPA parses derived query methods at application startup to validate them against the Entity's properties. If a method references a missing field like 'emailAddress_17', it throws a PropertyReferenceException and halts startup."
+  },
+  {
+    "id": "spring-quiz-t10-17",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "What happens if you apply @Transactional to a final method inside bean class 'DataFetcher_17' proxied by Spring AOP CGLIB subclassing?",
+    "codeSnippet": "public class DataFetcher_17 {\n    @Transactional\n    public final void loadData() {\n        // DB changes\n    }\n}",
+    "options": [
+      "The transaction aspect is bypassed silently because CGLIB creates a subclass and cannot override final methods.",
+      "Spring throws a FinalMethodAopException at startup.",
+      "The application throws a ClassCastException during method call.",
+      "The JVM crashes at runtime when calling the final method."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "CGLIB creates proxies by generating a dynamic subclass at runtime. Because final methods cannot be overridden by subclasses, the generated proxy class cannot insert aspect interceptor code. The final method runs directly, bypassing the aspect."
+  },
+  {
+    "id": "spring-quiz-t11-17",
+    "topic": "Spring Boot Configurations",
+    "difficulty": "medium",
+    "questionText": "If 'app.rate.17' is defined in application.properties as 50, in JVM properties as 100, and as an OS environment variable as 150, what value is resolved?",
+    "codeSnippet": "@Value(\"${app.rate.17}\")\nprivate int rate;",
+    "options": [
+      "100 (JVM system properties override OS environment variables and properties files)",
+      "150 (OS Environment variables take highest precedence)",
+      "50 (application.properties overrides all external configurations)",
+      "It throws a property resolution error due to conflict"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Spring Boot property sources order: 1) Command-line args, 2) JVM System properties (-D...), 3) OS environment variables, 4) application.properties. Thus, the JVM value of 100 is selected."
+  },
+  {
+    "id": "spring-quiz-t12-17",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "How does the integer phase value 117 returned by getPhase() in SmartLifecycle affect context startup and shutdown order?",
+    "codeSnippet": "public class CustomService implements SmartLifecycle {\n    @Override\n    public int getPhase() { return 117; }\n}",
+    "options": [
+      "Beans with higher phase numbers are started first and stopped last.",
+      "The phase determines the priority thread pool, where higher phase means more threads.",
+      "Beans with lower phase numbers are started first. During shutdown, beans with higher phase numbers are stopped first.",
+      "SmartLifecycle beans start concurrently and ignore the phase value."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "SmartLifecycle defines getPhase() to resolve dependency execution order: lower phase numbers start first (e.g. databases, dependencies) and stop last. Shutdown goes in reverse, stopping higher phase numbers first."
+  },
+  {
+    "id": "spring-quiz-t13-17",
+    "topic": "Spring Caching",
+    "difficulty": "hard",
+    "questionText": "Why does the cache eviction fail under the configuration below?",
+    "codeSnippet": "@Cacheable(value = \"users_cache_17\", key = \"#id\")\npublic User getUser(Long id, Context ctx) { ... }\n\n@CacheEvict(value = \"users_cache_17\")\npublic void evictUser(Long id) { ... }",
+    "options": [
+      "Because evictUser() does not define a key, causing Spring to use SimpleKeyGenerator on '#id' while getUser() keys on '#id', resulting in mismatch.",
+      "Because cache names must be different.",
+      "Because evictUser() returns void.",
+      "Because CacheEvict requires @Transactional to run."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "By default, key generation combines all method arguments. For getUser(), the key combines id and ctx, but key='#id' overrides it to 'id'. For evictUser(), the key defaults to 'id' as well, but if arguments mismatch in key structure, we must explicitly set key='#id' in both to prevent cache desync."
+  },
+  {
+    "id": "spring-quiz-t14-17",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "hard",
+    "questionText": "What is the runtime impact of performing a blocking/long-running task inside the @PostConstruct method of 'SetupBean_17'?",
+    "codeSnippet": "@Component\npublic class SetupBean_17 {\n    @PostConstruct\n    public void init() {\n        // Blocks on network/external server call\n        loadConfiguration();\n    }\n}",
+    "options": [
+      "It blocks the main startup thread, preventing the application context from finishing initialization and starting the web server.",
+      "It triggers an asynchronous thread pool execution and continues startup.",
+      "Spring immediately throws an InitializationTimeoutException.",
+      "The JVM runs the method in the background without affecting startup."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "@PostConstruct methods are executed synchronously during bean instantiation on the main thread. If a bean blocks in @PostConstruct, application context startup halts, blocking the web server (Tomcat) from starting. Use events or Async tasks instead."
+  },
+  {
+    "id": "spring-quiz-t15-17",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "If a controller throws a 'DatabaseException_17' (which extends RuntimeException), which ExceptionHandler method inside ControllerAdvice is invoked?",
+    "codeSnippet": "@ControllerAdvice\npublic class GlobalHandler {\n    @ExceptionHandler(RuntimeException.class)\n    public String handleRuntime(RuntimeException ex) { return \"Runtime\"; }\n\n    @ExceptionHandler(DatabaseException_17.class)\n    public String handleDb(DatabaseException_17 ex) { return \"Db\"; }\n}",
+    "options": [
+      "handleRuntime(), because RuntimeException is checked first as the parent class.",
+      "Both methods run in sequence.",
+      "Spring throws an ExceptionHandlerAmbiguityException at startup.",
+      "handleDb(), because it is mapped to the most specific exception type matching the exception thrown."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring's exception resolver resolves to the exception handler that maps to the most specific exception in the type hierarchy. Since 'DatabaseException_17' matches the thrown exception exactly, handleDb() is preferred over handleRuntime()."
+  },
+  {
+    "id": "spring-quiz-t16-17",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "What is the state of entity 'Account_17' and the database result when the method process() exits?",
+    "codeSnippet": "@Transactional\npublic void process(Long id) {\n    Account_17 acc = repository.findById(id).orElseThrow();\n    entityManager.detach(acc);\n    acc.setBalance(1000);\n}",
+    "options": [
+      "The entity is in the persistent state; the database is updated with balance 1000.",
+      "The entity is in the detached state; no database updates occur.",
+      "An EntityNotFoundException is thrown during detach.",
+      "Hibernate throws a LazyInitializationException when setting the balance."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Calling entityManager.detach(entity) removes the entity from the Persistence Context. It changes from 'persistent' to 'detached' state. Hibernate no longer tracks modifications, so the balance change is not flushed to the database."
+  },
+  {
+    "id": "spring-quiz-t17-17",
+    "topic": "Spring Cloud & Resilience",
+    "difficulty": "medium",
+    "questionText": "A Resilience4j Circuit Breaker has slidingWindowSize = 12 and failureRateThreshold = 50%. If 8 requests fail within the sliding window, what is the state transition?",
+    "codeSnippet": "CircuitBreakerConfig config = CircuitBreakerConfig.custom()\n    .slidingWindowSize(12)\n    .failureRateThreshold(50)\n    .build();",
+    "options": [
+      "Remains in CLOSED state because the sliding window must exceed capacity.",
+      "Transitions to HALF_OPEN state.",
+      "Throws a CircuitBreakerOpenException immediately.",
+      "Transitions to OPEN state (failure rate is 67%, exceeding the 50% threshold)."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Once the sliding window registers 12 requests, Resilience4j calculates the failure rate. Since 8/12 (67%) is greater than or equal to 50%, the Circuit Breaker transitions to the OPEN state."
+  },
+  {
+    "id": "spring-quiz-t18-17",
+    "topic": "Spring Boot Internals",
+    "difficulty": "hard",
+    "questionText": "Inside a single configuration class, what determines the registration order of beans and the result of @ConditionalOnMissingBean?",
+    "codeSnippet": "@Configuration\npublic class AppConfig {\n    @Bean\n    public BeanVal_17 primaryBean() { return new BeanVal_17(\"A\"); }\n\n    @Bean\n    @ConditionalOnMissingBean(BeanVal_17.class)\n    public BeanVal_17 fallbackBean() { return new BeanVal_17(\"B\"); }\n}",
+    "options": [
+      "fallbackBean overrides primaryBean because @ConditionalOnMissingBean forces precedence.",
+      "Bean methods are registered in order of definition. primaryBean() registers first, causing fallbackBean()'s conditional check to fail. Only primaryBean is registered.",
+      "Both beans are registered, creating an array list injection candidate.",
+      "Spring throws a BeanDefinitionOverrideException during startup."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Within a single configuration class, beans are parsed and registered sequentially. Since primaryBean() is defined first, its bean exists when fallbackBean() is evaluated. The conditional check fails, and fallbackBean() is skipped."
+  },
+  {
+    "id": "spring-quiz-t19-17",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "A controller returns an instance of 'ResponseData_17'. If fields are private and no getters are defined, what is the HTTP response behavior?",
+    "codeSnippet": "public class ResponseData_17 {\n    private String status;\n    public ResponseData_17(String status) { this.status = status; }\n    // No getters\n}",
+    "options": [
+      "HTTP 200 with JSON payload {\"status\":null}.",
+      "HTTP 200 with JSON payload {\"status\":\"...\"} using reflection.",
+      "The code fails to compile because classes returned from RestController require getters.",
+      "HTTP 500 error or exception (Jackson throws an InvalidDefinitionException: No serializer found)."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Jackson (Spring Boot's default serializer) uses public getter methods to discover properties to write to JSON. If fields are private and no getters/setters/annotations are present, Jackson throws an exception, resulting in an HTTP 500."
+  },
+  {
+    "id": "spring-quiz-t20-17",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "If outerMethod() is marked as @Transactional and invokes nestedMethod() which is marked as @Transactional(propagation = Propagation.NESTED), what happens to DB updates if nestedMethod() fails and throws an exception caught inside outerMethod()?",
+    "codeSnippet": "@Transactional\npublic void outerMethod() {\n    try {\n        innerService.nestedMethod();\n    } catch (Exception e) {\n        // Exception caught\n    }\n    // Save other data\n}",
+    "options": [
+      "The entire transaction is rolled back because the outer method was marked as Transactional.",
+      "nestedMethod()'s updates are committed because the exception was caught in the outer method.",
+      "Spring throws a NestedTransactionNotSupportedException.",
+      "Only nestedMethod()'s updates are rolled back to the savepoint; outerMethod()'s updates can still commit successfully."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Propagation.NESTED creates a nested transaction using database savepoints. If the nested transaction fails and its exception is caught and handled inside the outer transaction, only the nested transaction rolls back to its savepoint. The outer transaction remains valid."
+  },
+  {
+    "id": "spring-quiz-t1-18",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "In the service below, orderProcessor() is invoked from an external REST controller. What is the transactional behavior of saveOrder()?",
+    "codeSnippet": "@Service\npublic class OrderService_18 {\n    public void orderProcessor() {\n        saveOrder(); // Self-invocation\n    }\n\n    @Transactional\n    public void saveOrder() {\n        // Save database record\n    }\n}",
+    "options": [
+      "No transaction starts, because self-invocation bypasses the Spring AOP proxy.",
+      "Spring starts a new transaction automatically using aspect interception.",
+      "The application throws a CircularDependencyException at startup.",
+      "A TransactionRequiredException is thrown during execution."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Spring's declarative annotations rely on AOP proxy wrappers. Method calls from outside go through the proxy, running transaction interceptors. Direct internal calls (self-invocation) run directly on the target object, bypassing the proxy and annotations."
+  },
+  {
+    "id": "spring-quiz-t2-18",
+    "topic": "Spring Core & Scopes",
+    "difficulty": "hard",
+    "questionText": "You inject a prototype-scoped bean 'RequestTracker_18' into a singleton controller 'AnalyticsController_18'. How does 'RequestTracker_18' behave across multiple HTTP requests?",
+    "codeSnippet": "@Scope(\"prototype\")\n@Component\npublic class RequestTracker_18 {}\n\n@RestController\npublic class AnalyticsController_18 {\n    @Autowired\n    private RequestTracker_18 tracker;\n}",
+    "options": [
+      "A new instance of 'RequestTracker_18' is created for every HTTP request.",
+      "Spring throws a ScopeMismatchException during startup.",
+      "The application fails to start because prototype beans cannot be injected into singletons.",
+      "The controller reuses the exact same instance of 'RequestTracker_18' injected at startup, behaving as a singleton."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Because the controller is a singleton, it is initialized once. Consequently, its fields are injected once. The prototype-scoped bean is instantiated during this injection, and that same instance is shared for all requests. To resolve, use scoped proxies."
+  },
+  {
+    "id": "spring-quiz-t3-18",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If a transaction method throws an Exception (checked exception) during database operations, what is the default rollback behavior?",
+    "codeSnippet": "@Transactional\npublic void process(User user) throws Exception {\n    UserRepo_18.save(user);\n    if (user.getName() == null) {\n        throw new Exception(\"Invalid User\");\n    }\n}",
+    "options": [
+      "The transaction is automatically rolled back for all exceptions.",
+      "The compiler throws an error because Transactional cannot declare checked throws.",
+      "The transaction is committed, and changes are saved because checked exceptions do not trigger rollback by default.",
+      "The transaction rolls back, but only if the database isolation is SERIALIZABLE."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Spring's @Transactional default configuration rolls back transactions only for unchecked exceptions (subclasses of RuntimeException and Error). Checked exceptions (like Exception, IOException) do not trigger rollback unless configured as @Transactional(rollbackFor = Exception.class)."
+  },
+  {
+    "id": "spring-quiz-t4-18",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "What occurs when Spring starts up and detects a circular constructor dependency between singleton beans 'BeanA_18' and 'BeanB_18'?",
+    "codeSnippet": "@Component\npublic class BeanA_18 {\n    public BeanA_18(BeanB_18 b) {}\n}\n@Component\npublic class BeanB_18 {\n    public BeanB_18(BeanA_18 a) {}\n}",
+    "options": [
+      "Spring automatically resolves the cycle by injecting a dynamic proxy.",
+      "The JVM crashes with a StackOverflowError during initialization.",
+      "Spring instantiates both beans as null.",
+      "The application fails to start and throws a BeanCurrentlyInCreationException."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Unlike setter/field injection, constructor dependencies must be resolved during object creation. Since neither 'BeanA_18' nor 'BeanB_18' can be constructed without the other, Spring cannot resolve the dependency cycle and throws a BeanCurrentlyInCreationException."
+  },
+  {
+    "id": "spring-quiz-t5-18",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "An entity has a lazy-loaded collection association. If you fetch all 8 parent entities and access their associations in a loop, how many SQL queries hit the database?",
+    "codeSnippet": "List<Parent> parents = parentRepository.findAll(); // Fetches 8 parents\nfor (Parent p : parents) {\n    System.out.println(p.getChildren().size()); // Lazy load\n}",
+    "options": [
+      "1 SQL query.",
+      "8 SQL queries.",
+      "2 SQL queries.",
+      "9 SQL queries."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "This is the N+1 query problem. The initial query fetches the parents (1 query). When accessing the lazy collection for each parent in the loop, Hibernate sends a separate select query per parent (8 queries), resulting in 9 queries."
+  },
+  {
+    "id": "spring-quiz-t6-18",
+    "topic": "Spring WebFlux",
+    "difficulty": "hard",
+    "questionText": "What is the hazard of calling a blocking method like RestTemplate inside a Spring WebFlux controller running on Netty event loops?",
+    "codeSnippet": "@GetMapping(\"/data\")\npublic Mono<String> getData() {\n    return Mono.fromCallable(() -> restTemplate.getForObject(\"https://api.com\", String.class));\n}",
+    "options": [
+      "WebFlux automatically shifts the call to virtual threads to avoid blocking.",
+      "It blocks the Netty EventLoop thread, reducing server capacity to process concurrent requests and causing starvation.",
+      "The controller immediately throws a BlockedEventLoopException during compilation.",
+      "It causes a deadlock because Netty restricts HTTP requests."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "WebFlux uses a small number of non-blocking event loop threads. Blocking operations on these threads exhaust the pool and block the server from handling other connections. Offload blocking logic using subscribeOn(Schedulers.boundedElastic())."
+  },
+  {
+    "id": "spring-quiz-t7-18",
+    "topic": "Spring Security",
+    "difficulty": "medium",
+    "questionText": "How do you insert a custom filter 'CustomAuthFilter_18' in a security chain so it executes before UsernamePasswordAuthenticationFilter?",
+    "codeSnippet": "@Bean\npublic SecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n    http.addFilterBefore(new CustomAuthFilter_18(), UsernamePasswordAuthenticationFilter.class);\n    return http.build();\n}",
+    "options": [
+      "Annotate CustomAuthFilter_18 with @Order(Ordered.HIGHEST_PRECEDENCE).",
+      "Use addFilterBefore(new CustomAuthFilter_18(), UsernamePasswordAuthenticationFilter.class) inside HttpSecurity config.",
+      "Register CustomAuthFilter_18 as a Spring @Component; Spring Security loads custom beans first.",
+      "Declare CustomAuthFilter_18 inside application.properties under security.filter.order."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "The order of filters inside a SecurityFilterChain is explicitly configured via HttpSecurity APIs. Class-level @Order annotations do not position filters within the SecurityFilterChain."
+  },
+  {
+    "id": "spring-quiz-t8-18",
+    "topic": "Spring Core",
+    "difficulty": "medium",
+    "questionText": "If a payment service interface has a default bean marked with @Primary, and another bean with qualifier 'customPaymentSvc_18', what is injected?",
+    "codeSnippet": "@RestController\npublic class PaymentController {\n    @Autowired\n    @Qualifier(\"customPaymentSvc_18\")\n    private PaymentService service;\n}",
+    "options": [
+      "The @Primary bean is injected because primary beans take highest precedence.",
+      "A BeanCreationException is thrown due to injection ambiguity.",
+      "Both beans are injected inside a wrapper candidate proxy.",
+      "The bean annotated with @Qualifier(\"customPaymentSvc_18\") is injected, overriding @Primary."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "While @Primary sets a default candidate, an explicit @Qualifier specifies the precise bean name requested. Explicit qualifiers take precedence over primary bean designations."
+  },
+  {
+    "id": "spring-quiz-t9-18",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If you specify a derived query method using property name 'emailAddress_18' which is missing on the Entity, what happens?",
+    "codeSnippet": "public interface UserRepository extends JpaRepository<User, Long> {\n    List<User> findByemailAddress_18(String email); // Entity field is 'email'\n}",
+    "options": [
+      "The query executes but returns an empty list at runtime.",
+      "Spring Data fallback parses it to a native SQL query.",
+      "Spring Boot throws a PropertyReferenceException and fails to start during application context initialization.",
+      "A compile-time error occurs on the repository interface."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Spring Data JPA parses derived query methods at application startup to validate them against the Entity's properties. If a method references a missing field like 'emailAddress_18', it throws a PropertyReferenceException and halts startup."
+  },
+  {
+    "id": "spring-quiz-t10-18",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "What happens if you apply @Transactional to a final method inside bean class 'DataFetcher_18' proxied by Spring AOP CGLIB subclassing?",
+    "codeSnippet": "public class DataFetcher_18 {\n    @Transactional\n    public final void loadData() {\n        // DB changes\n    }\n}",
+    "options": [
+      "Spring throws a FinalMethodAopException at startup.",
+      "The transaction aspect is bypassed silently because CGLIB creates a subclass and cannot override final methods.",
+      "The application throws a ClassCastException during method call.",
+      "The JVM crashes at runtime when calling the final method."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "CGLIB creates proxies by generating a dynamic subclass at runtime. Because final methods cannot be overridden by subclasses, the generated proxy class cannot insert aspect interceptor code. The final method runs directly, bypassing the aspect."
+  },
+  {
+    "id": "spring-quiz-t11-18",
+    "topic": "Spring Boot Configurations",
+    "difficulty": "medium",
+    "questionText": "If 'app.rate.18' is defined in application.properties as 50, in JVM properties as 100, and as an OS environment variable as 150, what value is resolved?",
+    "codeSnippet": "@Value(\"${app.rate.18}\")\nprivate int rate;",
+    "options": [
+      "150 (OS Environment variables take highest precedence)",
+      "50 (application.properties overrides all external configurations)",
+      "100 (JVM system properties override OS environment variables and properties files)",
+      "It throws a property resolution error due to conflict"
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Spring Boot property sources order: 1) Command-line args, 2) JVM System properties (-D...), 3) OS environment variables, 4) application.properties. Thus, the JVM value of 100 is selected."
+  },
+  {
+    "id": "spring-quiz-t12-18",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "How does the integer phase value 118 returned by getPhase() in SmartLifecycle affect context startup and shutdown order?",
+    "codeSnippet": "public class CustomService implements SmartLifecycle {\n    @Override\n    public int getPhase() { return 118; }\n}",
+    "options": [
+      "Beans with higher phase numbers are started first and stopped last.",
+      "Beans with lower phase numbers are started first. During shutdown, beans with higher phase numbers are stopped first.",
+      "The phase determines the priority thread pool, where higher phase means more threads.",
+      "SmartLifecycle beans start concurrently and ignore the phase value."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "SmartLifecycle defines getPhase() to resolve dependency execution order: lower phase numbers start first (e.g. databases, dependencies) and stop last. Shutdown goes in reverse, stopping higher phase numbers first."
+  },
+  {
+    "id": "spring-quiz-t13-18",
+    "topic": "Spring Caching",
+    "difficulty": "hard",
+    "questionText": "Why does the cache eviction fail under the configuration below?",
+    "codeSnippet": "@Cacheable(value = \"users_cache_18\", key = \"#id\")\npublic User getUser(Long id, Context ctx) { ... }\n\n@CacheEvict(value = \"users_cache_18\")\npublic void evictUser(Long id) { ... }",
+    "options": [
+      "Because cache names must be different.",
+      "Because evictUser() returns void.",
+      "Because CacheEvict requires @Transactional to run.",
+      "Because evictUser() does not define a key, causing Spring to use SimpleKeyGenerator on '#id' while getUser() keys on '#id', resulting in mismatch."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "By default, key generation combines all method arguments. For getUser(), the key combines id and ctx, but key='#id' overrides it to 'id'. For evictUser(), the key defaults to 'id' as well, but if arguments mismatch in key structure, we must explicitly set key='#id' in both to prevent cache desync."
+  },
+  {
+    "id": "spring-quiz-t14-18",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "hard",
+    "questionText": "What is the runtime impact of performing a blocking/long-running task inside the @PostConstruct method of 'SetupBean_18'?",
+    "codeSnippet": "@Component\npublic class SetupBean_18 {\n    @PostConstruct\n    public void init() {\n        // Blocks on network/external server call\n        loadConfiguration();\n    }\n}",
+    "options": [
+      "It triggers an asynchronous thread pool execution and continues startup.",
+      "Spring immediately throws an InitializationTimeoutException.",
+      "It blocks the main startup thread, preventing the application context from finishing initialization and starting the web server.",
+      "The JVM runs the method in the background without affecting startup."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "@PostConstruct methods are executed synchronously during bean instantiation on the main thread. If a bean blocks in @PostConstruct, application context startup halts, blocking the web server (Tomcat) from starting. Use events or Async tasks instead."
+  },
+  {
+    "id": "spring-quiz-t15-18",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "If a controller throws a 'DatabaseException_18' (which extends RuntimeException), which ExceptionHandler method inside ControllerAdvice is invoked?",
+    "codeSnippet": "@ControllerAdvice\npublic class GlobalHandler {\n    @ExceptionHandler(RuntimeException.class)\n    public String handleRuntime(RuntimeException ex) { return \"Runtime\"; }\n\n    @ExceptionHandler(DatabaseException_18.class)\n    public String handleDb(DatabaseException_18 ex) { return \"Db\"; }\n}",
+    "options": [
+      "handleRuntime(), because RuntimeException is checked first as the parent class.",
+      "Both methods run in sequence.",
+      "handleDb(), because it is mapped to the most specific exception type matching the exception thrown.",
+      "Spring throws an ExceptionHandlerAmbiguityException at startup."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Spring's exception resolver resolves to the exception handler that maps to the most specific exception in the type hierarchy. Since 'DatabaseException_18' matches the thrown exception exactly, handleDb() is preferred over handleRuntime()."
+  },
+  {
+    "id": "spring-quiz-t16-18",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "What is the state of entity 'Account_18' and the database result when the method process() exits?",
+    "codeSnippet": "@Transactional\npublic void process(Long id) {\n    Account_18 acc = repository.findById(id).orElseThrow();\n    entityManager.detach(acc);\n    acc.setBalance(1000);\n}",
+    "options": [
+      "The entity is in the persistent state; the database is updated with balance 1000.",
+      "An EntityNotFoundException is thrown during detach.",
+      "The entity is in the detached state; no database updates occur.",
+      "Hibernate throws a LazyInitializationException when setting the balance."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Calling entityManager.detach(entity) removes the entity from the Persistence Context. It changes from 'persistent' to 'detached' state. Hibernate no longer tracks modifications, so the balance change is not flushed to the database."
+  },
+  {
+    "id": "spring-quiz-t17-18",
+    "topic": "Spring Cloud & Resilience",
+    "difficulty": "medium",
+    "questionText": "A Resilience4j Circuit Breaker has slidingWindowSize = 13 and failureRateThreshold = 50%. If 8 requests fail within the sliding window, what is the state transition?",
+    "codeSnippet": "CircuitBreakerConfig config = CircuitBreakerConfig.custom()\n    .slidingWindowSize(13)\n    .failureRateThreshold(50)\n    .build();",
+    "options": [
+      "Transitions to OPEN state (failure rate is 62%, exceeding the 50% threshold).",
+      "Remains in CLOSED state because the sliding window must exceed capacity.",
+      "Transitions to HALF_OPEN state.",
+      "Throws a CircuitBreakerOpenException immediately."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Once the sliding window registers 13 requests, Resilience4j calculates the failure rate. Since 8/13 (62%) is greater than or equal to 50%, the Circuit Breaker transitions to the OPEN state."
+  },
+  {
+    "id": "spring-quiz-t18-18",
+    "topic": "Spring Boot Internals",
+    "difficulty": "hard",
+    "questionText": "Inside a single configuration class, what determines the registration order of beans and the result of @ConditionalOnMissingBean?",
+    "codeSnippet": "@Configuration\npublic class AppConfig {\n    @Bean\n    public BeanVal_18 primaryBean() { return new BeanVal_18(\"A\"); }\n\n    @Bean\n    @ConditionalOnMissingBean(BeanVal_18.class)\n    public BeanVal_18 fallbackBean() { return new BeanVal_18(\"B\"); }\n}",
+    "options": [
+      "fallbackBean overrides primaryBean because @ConditionalOnMissingBean forces precedence.",
+      "Bean methods are registered in order of definition. primaryBean() registers first, causing fallbackBean()'s conditional check to fail. Only primaryBean is registered.",
+      "Both beans are registered, creating an array list injection candidate.",
+      "Spring throws a BeanDefinitionOverrideException during startup."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Within a single configuration class, beans are parsed and registered sequentially. Since primaryBean() is defined first, its bean exists when fallbackBean() is evaluated. The conditional check fails, and fallbackBean() is skipped."
+  },
+  {
+    "id": "spring-quiz-t19-18",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "A controller returns an instance of 'ResponseData_18'. If fields are private and no getters are defined, what is the HTTP response behavior?",
+    "codeSnippet": "public class ResponseData_18 {\n    private String status;\n    public ResponseData_18(String status) { this.status = status; }\n    // No getters\n}",
+    "options": [
+      "HTTP 200 with JSON payload {\"status\":null}.",
+      "HTTP 200 with JSON payload {\"status\":\"...\"} using reflection.",
+      "The code fails to compile because classes returned from RestController require getters.",
+      "HTTP 500 error or exception (Jackson throws an InvalidDefinitionException: No serializer found)."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Jackson (Spring Boot's default serializer) uses public getter methods to discover properties to write to JSON. If fields are private and no getters/setters/annotations are present, Jackson throws an exception, resulting in an HTTP 500."
+  },
+  {
+    "id": "spring-quiz-t20-18",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "If outerMethod() is marked as @Transactional and invokes nestedMethod() which is marked as @Transactional(propagation = Propagation.NESTED), what happens to DB updates if nestedMethod() fails and throws an exception caught inside outerMethod()?",
+    "codeSnippet": "@Transactional\npublic void outerMethod() {\n    try {\n        innerService.nestedMethod();\n    } catch (Exception e) {\n        // Exception caught\n    }\n    // Save other data\n}",
+    "options": [
+      "The entire transaction is rolled back because the outer method was marked as Transactional.",
+      "nestedMethod()'s updates are committed because the exception was caught in the outer method.",
+      "Spring throws a NestedTransactionNotSupportedException.",
+      "Only nestedMethod()'s updates are rolled back to the savepoint; outerMethod()'s updates can still commit successfully."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Propagation.NESTED creates a nested transaction using database savepoints. If the nested transaction fails and its exception is caught and handled inside the outer transaction, only the nested transaction rolls back to its savepoint. The outer transaction remains valid."
+  },
+  {
+    "id": "spring-quiz-t1-19",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "In the service below, orderProcessor() is invoked from an external REST controller. What is the transactional behavior of saveOrder()?",
+    "codeSnippet": "@Service\npublic class OrderService_19 {\n    public void orderProcessor() {\n        saveOrder(); // Self-invocation\n    }\n\n    @Transactional\n    public void saveOrder() {\n        // Save database record\n    }\n}",
+    "options": [
+      "Spring starts a new transaction automatically using aspect interception.",
+      "No transaction starts, because self-invocation bypasses the Spring AOP proxy.",
+      "The application throws a CircularDependencyException at startup.",
+      "A TransactionRequiredException is thrown during execution."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Spring's declarative annotations rely on AOP proxy wrappers. Method calls from outside go through the proxy, running transaction interceptors. Direct internal calls (self-invocation) run directly on the target object, bypassing the proxy and annotations."
+  },
+  {
+    "id": "spring-quiz-t2-19",
+    "topic": "Spring Core & Scopes",
+    "difficulty": "hard",
+    "questionText": "You inject a prototype-scoped bean 'RequestTracker_19' into a singleton controller 'AnalyticsController_19'. How does 'RequestTracker_19' behave across multiple HTTP requests?",
+    "codeSnippet": "@Scope(\"prototype\")\n@Component\npublic class RequestTracker_19 {}\n\n@RestController\npublic class AnalyticsController_19 {\n    @Autowired\n    private RequestTracker_19 tracker;\n}",
+    "options": [
+      "A new instance of 'RequestTracker_19' is created for every HTTP request.",
+      "The controller reuses the exact same instance of 'RequestTracker_19' injected at startup, behaving as a singleton.",
+      "Spring throws a ScopeMismatchException during startup.",
+      "The application fails to start because prototype beans cannot be injected into singletons."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Because the controller is a singleton, it is initialized once. Consequently, its fields are injected once. The prototype-scoped bean is instantiated during this injection, and that same instance is shared for all requests. To resolve, use scoped proxies."
+  },
+  {
+    "id": "spring-quiz-t3-19",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If a transaction method throws an Exception (checked exception) during database operations, what is the default rollback behavior?",
+    "codeSnippet": "@Transactional\npublic void process(User user) throws Exception {\n    UserRepo_19.save(user);\n    if (user.getName() == null) {\n        throw new Exception(\"Invalid User\");\n    }\n}",
+    "options": [
+      "The transaction is automatically rolled back for all exceptions.",
+      "The transaction is committed, and changes are saved because checked exceptions do not trigger rollback by default.",
+      "The compiler throws an error because Transactional cannot declare checked throws.",
+      "The transaction rolls back, but only if the database isolation is SERIALIZABLE."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Spring's @Transactional default configuration rolls back transactions only for unchecked exceptions (subclasses of RuntimeException and Error). Checked exceptions (like Exception, IOException) do not trigger rollback unless configured as @Transactional(rollbackFor = Exception.class)."
+  },
+  {
+    "id": "spring-quiz-t4-19",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "What occurs when Spring starts up and detects a circular constructor dependency between singleton beans 'BeanA_19' and 'BeanB_19'?",
+    "codeSnippet": "@Component\npublic class BeanA_19 {\n    public BeanA_19(BeanB_19 b) {}\n}\n@Component\npublic class BeanB_19 {\n    public BeanB_19(BeanA_19 a) {}\n}",
+    "options": [
+      "Spring automatically resolves the cycle by injecting a dynamic proxy.",
+      "The application fails to start and throws a BeanCurrentlyInCreationException.",
+      "The JVM crashes with a StackOverflowError during initialization.",
+      "Spring instantiates both beans as null."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Unlike setter/field injection, constructor dependencies must be resolved during object creation. Since neither 'BeanA_19' nor 'BeanB_19' can be constructed without the other, Spring cannot resolve the dependency cycle and throws a BeanCurrentlyInCreationException."
+  },
+  {
+    "id": "spring-quiz-t5-19",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "An entity has a lazy-loaded collection association. If you fetch all 9 parent entities and access their associations in a loop, how many SQL queries hit the database?",
+    "codeSnippet": "List<Parent> parents = parentRepository.findAll(); // Fetches 9 parents\nfor (Parent p : parents) {\n    System.out.println(p.getChildren().size()); // Lazy load\n}",
+    "options": [
+      "10 SQL queries.",
+      "1 SQL query.",
+      "9 SQL queries.",
+      "2 SQL queries."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "This is the N+1 query problem. The initial query fetches the parents (1 query). When accessing the lazy collection for each parent in the loop, Hibernate sends a separate select query per parent (9 queries), resulting in 10 queries."
+  },
+  {
+    "id": "spring-quiz-t6-19",
+    "topic": "Spring WebFlux",
+    "difficulty": "hard",
+    "questionText": "What is the hazard of calling a blocking method like RestTemplate inside a Spring WebFlux controller running on Netty event loops?",
+    "codeSnippet": "@GetMapping(\"/data\")\npublic Mono<String> getData() {\n    return Mono.fromCallable(() -> restTemplate.getForObject(\"https://api.com\", String.class));\n}",
+    "options": [
+      "WebFlux automatically shifts the call to virtual threads to avoid blocking.",
+      "It blocks the Netty EventLoop thread, reducing server capacity to process concurrent requests and causing starvation.",
+      "The controller immediately throws a BlockedEventLoopException during compilation.",
+      "It causes a deadlock because Netty restricts HTTP requests."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "WebFlux uses a small number of non-blocking event loop threads. Blocking operations on these threads exhaust the pool and block the server from handling other connections. Offload blocking logic using subscribeOn(Schedulers.boundedElastic())."
+  },
+  {
+    "id": "spring-quiz-t7-19",
+    "topic": "Spring Security",
+    "difficulty": "medium",
+    "questionText": "How do you insert a custom filter 'CustomAuthFilter_19' in a security chain so it executes before UsernamePasswordAuthenticationFilter?",
+    "codeSnippet": "@Bean\npublic SecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n    http.addFilterBefore(new CustomAuthFilter_19(), UsernamePasswordAuthenticationFilter.class);\n    return http.build();\n}",
+    "options": [
+      "Use addFilterBefore(new CustomAuthFilter_19(), UsernamePasswordAuthenticationFilter.class) inside HttpSecurity config.",
+      "Annotate CustomAuthFilter_19 with @Order(Ordered.HIGHEST_PRECEDENCE).",
+      "Register CustomAuthFilter_19 as a Spring @Component; Spring Security loads custom beans first.",
+      "Declare CustomAuthFilter_19 inside application.properties under security.filter.order."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "The order of filters inside a SecurityFilterChain is explicitly configured via HttpSecurity APIs. Class-level @Order annotations do not position filters within the SecurityFilterChain."
+  },
+  {
+    "id": "spring-quiz-t8-19",
+    "topic": "Spring Core",
+    "difficulty": "medium",
+    "questionText": "If a payment service interface has a default bean marked with @Primary, and another bean with qualifier 'customPaymentSvc_19', what is injected?",
+    "codeSnippet": "@RestController\npublic class PaymentController {\n    @Autowired\n    @Qualifier(\"customPaymentSvc_19\")\n    private PaymentService service;\n}",
+    "options": [
+      "The @Primary bean is injected because primary beans take highest precedence.",
+      "A BeanCreationException is thrown due to injection ambiguity.",
+      "The bean annotated with @Qualifier(\"customPaymentSvc_19\") is injected, overriding @Primary.",
+      "Both beans are injected inside a wrapper candidate proxy."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "While @Primary sets a default candidate, an explicit @Qualifier specifies the precise bean name requested. Explicit qualifiers take precedence over primary bean designations."
+  },
+  {
+    "id": "spring-quiz-t9-19",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If you specify a derived query method using property name 'emailAddress_19' which is missing on the Entity, what happens?",
+    "codeSnippet": "public interface UserRepository extends JpaRepository<User, Long> {\n    List<User> findByemailAddress_19(String email); // Entity field is 'email'\n}",
+    "options": [
+      "The query executes but returns an empty list at runtime.",
+      "Spring Data fallback parses it to a native SQL query.",
+      "Spring Boot throws a PropertyReferenceException and fails to start during application context initialization.",
+      "A compile-time error occurs on the repository interface."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Spring Data JPA parses derived query methods at application startup to validate them against the Entity's properties. If a method references a missing field like 'emailAddress_19', it throws a PropertyReferenceException and halts startup."
+  },
+  {
+    "id": "spring-quiz-t10-19",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "What happens if you apply @Transactional to a final method inside bean class 'DataFetcher_19' proxied by Spring AOP CGLIB subclassing?",
+    "codeSnippet": "public class DataFetcher_19 {\n    @Transactional\n    public final void loadData() {\n        // DB changes\n    }\n}",
+    "options": [
+      "The transaction aspect is bypassed silently because CGLIB creates a subclass and cannot override final methods.",
+      "Spring throws a FinalMethodAopException at startup.",
+      "The application throws a ClassCastException during method call.",
+      "The JVM crashes at runtime when calling the final method."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "CGLIB creates proxies by generating a dynamic subclass at runtime. Because final methods cannot be overridden by subclasses, the generated proxy class cannot insert aspect interceptor code. The final method runs directly, bypassing the aspect."
+  },
+  {
+    "id": "spring-quiz-t11-19",
+    "topic": "Spring Boot Configurations",
+    "difficulty": "medium",
+    "questionText": "If 'app.rate.19' is defined in application.properties as 50, in JVM properties as 100, and as an OS environment variable as 150, what value is resolved?",
+    "codeSnippet": "@Value(\"${app.rate.19}\")\nprivate int rate;",
+    "options": [
+      "150 (OS Environment variables take highest precedence)",
+      "50 (application.properties overrides all external configurations)",
+      "It throws a property resolution error due to conflict",
+      "100 (JVM system properties override OS environment variables and properties files)"
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring Boot property sources order: 1) Command-line args, 2) JVM System properties (-D...), 3) OS environment variables, 4) application.properties. Thus, the JVM value of 100 is selected."
+  },
+  {
+    "id": "spring-quiz-t12-19",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "How does the integer phase value 119 returned by getPhase() in SmartLifecycle affect context startup and shutdown order?",
+    "codeSnippet": "public class CustomService implements SmartLifecycle {\n    @Override\n    public int getPhase() { return 119; }\n}",
+    "options": [
+      "Beans with higher phase numbers are started first and stopped last.",
+      "The phase determines the priority thread pool, where higher phase means more threads.",
+      "Beans with lower phase numbers are started first. During shutdown, beans with higher phase numbers are stopped first.",
+      "SmartLifecycle beans start concurrently and ignore the phase value."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "SmartLifecycle defines getPhase() to resolve dependency execution order: lower phase numbers start first (e.g. databases, dependencies) and stop last. Shutdown goes in reverse, stopping higher phase numbers first."
+  },
+  {
+    "id": "spring-quiz-t13-19",
+    "topic": "Spring Caching",
+    "difficulty": "hard",
+    "questionText": "Why does the cache eviction fail under the configuration below?",
+    "codeSnippet": "@Cacheable(value = \"users_cache_19\", key = \"#id\")\npublic User getUser(Long id, Context ctx) { ... }\n\n@CacheEvict(value = \"users_cache_19\")\npublic void evictUser(Long id) { ... }",
+    "options": [
+      "Because cache names must be different.",
+      "Because evictUser() returns void.",
+      "Because CacheEvict requires @Transactional to run.",
+      "Because evictUser() does not define a key, causing Spring to use SimpleKeyGenerator on '#id' while getUser() keys on '#id', resulting in mismatch."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "By default, key generation combines all method arguments. For getUser(), the key combines id and ctx, but key='#id' overrides it to 'id'. For evictUser(), the key defaults to 'id' as well, but if arguments mismatch in key structure, we must explicitly set key='#id' in both to prevent cache desync."
+  },
+  {
+    "id": "spring-quiz-t14-19",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "hard",
+    "questionText": "What is the runtime impact of performing a blocking/long-running task inside the @PostConstruct method of 'SetupBean_19'?",
+    "codeSnippet": "@Component\npublic class SetupBean_19 {\n    @PostConstruct\n    public void init() {\n        // Blocks on network/external server call\n        loadConfiguration();\n    }\n}",
+    "options": [
+      "It blocks the main startup thread, preventing the application context from finishing initialization and starting the web server.",
+      "It triggers an asynchronous thread pool execution and continues startup.",
+      "Spring immediately throws an InitializationTimeoutException.",
+      "The JVM runs the method in the background without affecting startup."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "@PostConstruct methods are executed synchronously during bean instantiation on the main thread. If a bean blocks in @PostConstruct, application context startup halts, blocking the web server (Tomcat) from starting. Use events or Async tasks instead."
+  },
+  {
+    "id": "spring-quiz-t15-19",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "If a controller throws a 'DatabaseException_19' (which extends RuntimeException), which ExceptionHandler method inside ControllerAdvice is invoked?",
+    "codeSnippet": "@ControllerAdvice\npublic class GlobalHandler {\n    @ExceptionHandler(RuntimeException.class)\n    public String handleRuntime(RuntimeException ex) { return \"Runtime\"; }\n\n    @ExceptionHandler(DatabaseException_19.class)\n    public String handleDb(DatabaseException_19 ex) { return \"Db\"; }\n}",
+    "options": [
+      "handleRuntime(), because RuntimeException is checked first as the parent class.",
+      "Both methods run in sequence.",
+      "handleDb(), because it is mapped to the most specific exception type matching the exception thrown.",
+      "Spring throws an ExceptionHandlerAmbiguityException at startup."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Spring's exception resolver resolves to the exception handler that maps to the most specific exception in the type hierarchy. Since 'DatabaseException_19' matches the thrown exception exactly, handleDb() is preferred over handleRuntime()."
+  },
+  {
+    "id": "spring-quiz-t16-19",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "What is the state of entity 'Account_19' and the database result when the method process() exits?",
+    "codeSnippet": "@Transactional\npublic void process(Long id) {\n    Account_19 acc = repository.findById(id).orElseThrow();\n    entityManager.detach(acc);\n    acc.setBalance(1000);\n}",
+    "options": [
+      "The entity is in the persistent state; the database is updated with balance 1000.",
+      "An EntityNotFoundException is thrown during detach.",
+      "Hibernate throws a LazyInitializationException when setting the balance.",
+      "The entity is in the detached state; no database updates occur."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Calling entityManager.detach(entity) removes the entity from the Persistence Context. It changes from 'persistent' to 'detached' state. Hibernate no longer tracks modifications, so the balance change is not flushed to the database."
+  },
+  {
+    "id": "spring-quiz-t17-19",
+    "topic": "Spring Cloud & Resilience",
+    "difficulty": "medium",
+    "questionText": "A Resilience4j Circuit Breaker has slidingWindowSize = 14 and failureRateThreshold = 50%. If 9 requests fail within the sliding window, what is the state transition?",
+    "codeSnippet": "CircuitBreakerConfig config = CircuitBreakerConfig.custom()\n    .slidingWindowSize(14)\n    .failureRateThreshold(50)\n    .build();",
+    "options": [
+      "Remains in CLOSED state because the sliding window must exceed capacity.",
+      "Transitions to HALF_OPEN state.",
+      "Throws a CircuitBreakerOpenException immediately.",
+      "Transitions to OPEN state (failure rate is 64%, exceeding the 50% threshold)."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Once the sliding window registers 14 requests, Resilience4j calculates the failure rate. Since 9/14 (64%) is greater than or equal to 50%, the Circuit Breaker transitions to the OPEN state."
+  },
+  {
+    "id": "spring-quiz-t18-19",
+    "topic": "Spring Boot Internals",
+    "difficulty": "hard",
+    "questionText": "Inside a single configuration class, what determines the registration order of beans and the result of @ConditionalOnMissingBean?",
+    "codeSnippet": "@Configuration\npublic class AppConfig {\n    @Bean\n    public BeanVal_19 primaryBean() { return new BeanVal_19(\"A\"); }\n\n    @Bean\n    @ConditionalOnMissingBean(BeanVal_19.class)\n    public BeanVal_19 fallbackBean() { return new BeanVal_19(\"B\"); }\n}",
+    "options": [
+      "Bean methods are registered in order of definition. primaryBean() registers first, causing fallbackBean()'s conditional check to fail. Only primaryBean is registered.",
+      "fallbackBean overrides primaryBean because @ConditionalOnMissingBean forces precedence.",
+      "Both beans are registered, creating an array list injection candidate.",
+      "Spring throws a BeanDefinitionOverrideException during startup."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Within a single configuration class, beans are parsed and registered sequentially. Since primaryBean() is defined first, its bean exists when fallbackBean() is evaluated. The conditional check fails, and fallbackBean() is skipped."
+  },
+  {
+    "id": "spring-quiz-t19-19",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "A controller returns an instance of 'ResponseData_19'. If fields are private and no getters are defined, what is the HTTP response behavior?",
+    "codeSnippet": "public class ResponseData_19 {\n    private String status;\n    public ResponseData_19(String status) { this.status = status; }\n    // No getters\n}",
+    "options": [
+      "HTTP 200 with JSON payload {\"status\":null}.",
+      "HTTP 500 error or exception (Jackson throws an InvalidDefinitionException: No serializer found).",
+      "HTTP 200 with JSON payload {\"status\":\"...\"} using reflection.",
+      "The code fails to compile because classes returned from RestController require getters."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Jackson (Spring Boot's default serializer) uses public getter methods to discover properties to write to JSON. If fields are private and no getters/setters/annotations are present, Jackson throws an exception, resulting in an HTTP 500."
+  },
+  {
+    "id": "spring-quiz-t20-19",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "If outerMethod() is marked as @Transactional and invokes nestedMethod() which is marked as @Transactional(propagation = Propagation.NESTED), what happens to DB updates if nestedMethod() fails and throws an exception caught inside outerMethod()?",
+    "codeSnippet": "@Transactional\npublic void outerMethod() {\n    try {\n        innerService.nestedMethod();\n    } catch (Exception e) {\n        // Exception caught\n    }\n    // Save other data\n}",
+    "options": [
+      "The entire transaction is rolled back because the outer method was marked as Transactional.",
+      "Only nestedMethod()'s updates are rolled back to the savepoint; outerMethod()'s updates can still commit successfully.",
+      "nestedMethod()'s updates are committed because the exception was caught in the outer method.",
+      "Spring throws a NestedTransactionNotSupportedException."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Propagation.NESTED creates a nested transaction using database savepoints. If the nested transaction fails and its exception is caught and handled inside the outer transaction, only the nested transaction rolls back to its savepoint. The outer transaction remains valid."
+  },
+  {
+    "id": "spring-quiz-t1-20",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "In the service below, orderProcessor() is invoked from an external REST controller. What is the transactional behavior of saveOrder()?",
+    "codeSnippet": "@Service\npublic class OrderService_20 {\n    public void orderProcessor() {\n        saveOrder(); // Self-invocation\n    }\n\n    @Transactional\n    public void saveOrder() {\n        // Save database record\n    }\n}",
+    "options": [
+      "Spring starts a new transaction automatically using aspect interception.",
+      "The application throws a CircularDependencyException at startup.",
+      "A TransactionRequiredException is thrown during execution.",
+      "No transaction starts, because self-invocation bypasses the Spring AOP proxy."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring's declarative annotations rely on AOP proxy wrappers. Method calls from outside go through the proxy, running transaction interceptors. Direct internal calls (self-invocation) run directly on the target object, bypassing the proxy and annotations."
+  },
+  {
+    "id": "spring-quiz-t2-20",
+    "topic": "Spring Core & Scopes",
+    "difficulty": "hard",
+    "questionText": "You inject a prototype-scoped bean 'RequestTracker_20' into a singleton controller 'AnalyticsController_20'. How does 'RequestTracker_20' behave across multiple HTTP requests?",
+    "codeSnippet": "@Scope(\"prototype\")\n@Component\npublic class RequestTracker_20 {}\n\n@RestController\npublic class AnalyticsController_20 {\n    @Autowired\n    private RequestTracker_20 tracker;\n}",
+    "options": [
+      "A new instance of 'RequestTracker_20' is created for every HTTP request.",
+      "Spring throws a ScopeMismatchException during startup.",
+      "The application fails to start because prototype beans cannot be injected into singletons.",
+      "The controller reuses the exact same instance of 'RequestTracker_20' injected at startup, behaving as a singleton."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Because the controller is a singleton, it is initialized once. Consequently, its fields are injected once. The prototype-scoped bean is instantiated during this injection, and that same instance is shared for all requests. To resolve, use scoped proxies."
+  },
+  {
+    "id": "spring-quiz-t3-20",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If a transaction method throws an Exception (checked exception) during database operations, what is the default rollback behavior?",
+    "codeSnippet": "@Transactional\npublic void process(User user) throws Exception {\n    UserRepo_20.save(user);\n    if (user.getName() == null) {\n        throw new Exception(\"Invalid User\");\n    }\n}",
+    "options": [
+      "The transaction is automatically rolled back for all exceptions.",
+      "The compiler throws an error because Transactional cannot declare checked throws.",
+      "The transaction rolls back, but only if the database isolation is SERIALIZABLE.",
+      "The transaction is committed, and changes are saved because checked exceptions do not trigger rollback by default."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring's @Transactional default configuration rolls back transactions only for unchecked exceptions (subclasses of RuntimeException and Error). Checked exceptions (like Exception, IOException) do not trigger rollback unless configured as @Transactional(rollbackFor = Exception.class)."
+  },
+  {
+    "id": "spring-quiz-t4-20",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "What occurs when Spring starts up and detects a circular constructor dependency between singleton beans 'BeanA_20' and 'BeanB_20'?",
+    "codeSnippet": "@Component\npublic class BeanA_20 {\n    public BeanA_20(BeanB_20 b) {}\n}\n@Component\npublic class BeanB_20 {\n    public BeanB_20(BeanA_20 a) {}\n}",
+    "options": [
+      "Spring automatically resolves the cycle by injecting a dynamic proxy.",
+      "The JVM crashes with a StackOverflowError during initialization.",
+      "The application fails to start and throws a BeanCurrentlyInCreationException.",
+      "Spring instantiates both beans as null."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Unlike setter/field injection, constructor dependencies must be resolved during object creation. Since neither 'BeanA_20' nor 'BeanB_20' can be constructed without the other, Spring cannot resolve the dependency cycle and throws a BeanCurrentlyInCreationException."
+  },
+  {
+    "id": "spring-quiz-t5-20",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "An entity has a lazy-loaded collection association. If you fetch all 5 parent entities and access their associations in a loop, how many SQL queries hit the database?",
+    "codeSnippet": "List<Parent> parents = parentRepository.findAll(); // Fetches 5 parents\nfor (Parent p : parents) {\n    System.out.println(p.getChildren().size()); // Lazy load\n}",
+    "options": [
+      "1 SQL query.",
+      "5 SQL queries.",
+      "6 SQL queries.",
+      "2 SQL queries."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "This is the N+1 query problem. The initial query fetches the parents (1 query). When accessing the lazy collection for each parent in the loop, Hibernate sends a separate select query per parent (5 queries), resulting in 6 queries."
+  },
+  {
+    "id": "spring-quiz-t6-20",
+    "topic": "Spring WebFlux",
+    "difficulty": "hard",
+    "questionText": "What is the hazard of calling a blocking method like RestTemplate inside a Spring WebFlux controller running on Netty event loops?",
+    "codeSnippet": "@GetMapping(\"/data\")\npublic Mono<String> getData() {\n    return Mono.fromCallable(() -> restTemplate.getForObject(\"https://api.com\", String.class));\n}",
+    "options": [
+      "WebFlux automatically shifts the call to virtual threads to avoid blocking.",
+      "The controller immediately throws a BlockedEventLoopException during compilation.",
+      "It causes a deadlock because Netty restricts HTTP requests.",
+      "It blocks the Netty EventLoop thread, reducing server capacity to process concurrent requests and causing starvation."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "WebFlux uses a small number of non-blocking event loop threads. Blocking operations on these threads exhaust the pool and block the server from handling other connections. Offload blocking logic using subscribeOn(Schedulers.boundedElastic())."
+  },
+  {
+    "id": "spring-quiz-t7-20",
+    "topic": "Spring Security",
+    "difficulty": "medium",
+    "questionText": "How do you insert a custom filter 'CustomAuthFilter_20' in a security chain so it executes before UsernamePasswordAuthenticationFilter?",
+    "codeSnippet": "@Bean\npublic SecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n    http.addFilterBefore(new CustomAuthFilter_20(), UsernamePasswordAuthenticationFilter.class);\n    return http.build();\n}",
+    "options": [
+      "Annotate CustomAuthFilter_20 with @Order(Ordered.HIGHEST_PRECEDENCE).",
+      "Register CustomAuthFilter_20 as a Spring @Component; Spring Security loads custom beans first.",
+      "Use addFilterBefore(new CustomAuthFilter_20(), UsernamePasswordAuthenticationFilter.class) inside HttpSecurity config.",
+      "Declare CustomAuthFilter_20 inside application.properties under security.filter.order."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "The order of filters inside a SecurityFilterChain is explicitly configured via HttpSecurity APIs. Class-level @Order annotations do not position filters within the SecurityFilterChain."
+  },
+  {
+    "id": "spring-quiz-t8-20",
+    "topic": "Spring Core",
+    "difficulty": "medium",
+    "questionText": "If a payment service interface has a default bean marked with @Primary, and another bean with qualifier 'customPaymentSvc_20', what is injected?",
+    "codeSnippet": "@RestController\npublic class PaymentController {\n    @Autowired\n    @Qualifier(\"customPaymentSvc_20\")\n    private PaymentService service;\n}",
+    "options": [
+      "The @Primary bean is injected because primary beans take highest precedence.",
+      "A BeanCreationException is thrown due to injection ambiguity.",
+      "Both beans are injected inside a wrapper candidate proxy.",
+      "The bean annotated with @Qualifier(\"customPaymentSvc_20\") is injected, overriding @Primary."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "While @Primary sets a default candidate, an explicit @Qualifier specifies the precise bean name requested. Explicit qualifiers take precedence over primary bean designations."
+  },
+  {
+    "id": "spring-quiz-t9-20",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If you specify a derived query method using property name 'emailAddress_20' which is missing on the Entity, what happens?",
+    "codeSnippet": "public interface UserRepository extends JpaRepository<User, Long> {\n    List<User> findByemailAddress_20(String email); // Entity field is 'email'\n}",
+    "options": [
+      "The query executes but returns an empty list at runtime.",
+      "Spring Data fallback parses it to a native SQL query.",
+      "A compile-time error occurs on the repository interface.",
+      "Spring Boot throws a PropertyReferenceException and fails to start during application context initialization."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring Data JPA parses derived query methods at application startup to validate them against the Entity's properties. If a method references a missing field like 'emailAddress_20', it throws a PropertyReferenceException and halts startup."
+  },
+  {
+    "id": "spring-quiz-t10-20",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "What happens if you apply @Transactional to a final method inside bean class 'DataFetcher_20' proxied by Spring AOP CGLIB subclassing?",
+    "codeSnippet": "public class DataFetcher_20 {\n    @Transactional\n    public final void loadData() {\n        // DB changes\n    }\n}",
+    "options": [
+      "Spring throws a FinalMethodAopException at startup.",
+      "The application throws a ClassCastException during method call.",
+      "The transaction aspect is bypassed silently because CGLIB creates a subclass and cannot override final methods.",
+      "The JVM crashes at runtime when calling the final method."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "CGLIB creates proxies by generating a dynamic subclass at runtime. Because final methods cannot be overridden by subclasses, the generated proxy class cannot insert aspect interceptor code. The final method runs directly, bypassing the aspect."
+  },
+  {
+    "id": "spring-quiz-t11-20",
+    "topic": "Spring Boot Configurations",
+    "difficulty": "medium",
+    "questionText": "If 'app.rate.20' is defined in application.properties as 50, in JVM properties as 100, and as an OS environment variable as 150, what value is resolved?",
+    "codeSnippet": "@Value(\"${app.rate.20}\")\nprivate int rate;",
+    "options": [
+      "150 (OS Environment variables take highest precedence)",
+      "50 (application.properties overrides all external configurations)",
+      "It throws a property resolution error due to conflict",
+      "100 (JVM system properties override OS environment variables and properties files)"
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring Boot property sources order: 1) Command-line args, 2) JVM System properties (-D...), 3) OS environment variables, 4) application.properties. Thus, the JVM value of 100 is selected."
+  },
+  {
+    "id": "spring-quiz-t12-20",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "How does the integer phase value 120 returned by getPhase() in SmartLifecycle affect context startup and shutdown order?",
+    "codeSnippet": "public class CustomService implements SmartLifecycle {\n    @Override\n    public int getPhase() { return 120; }\n}",
+    "options": [
+      "Beans with higher phase numbers are started first and stopped last.",
+      "Beans with lower phase numbers are started first. During shutdown, beans with higher phase numbers are stopped first.",
+      "The phase determines the priority thread pool, where higher phase means more threads.",
+      "SmartLifecycle beans start concurrently and ignore the phase value."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "SmartLifecycle defines getPhase() to resolve dependency execution order: lower phase numbers start first (e.g. databases, dependencies) and stop last. Shutdown goes in reverse, stopping higher phase numbers first."
+  },
+  {
+    "id": "spring-quiz-t13-20",
+    "topic": "Spring Caching",
+    "difficulty": "hard",
+    "questionText": "Why does the cache eviction fail under the configuration below?",
+    "codeSnippet": "@Cacheable(value = \"users_cache_20\", key = \"#id\")\npublic User getUser(Long id, Context ctx) { ... }\n\n@CacheEvict(value = \"users_cache_20\")\npublic void evictUser(Long id) { ... }",
+    "options": [
+      "Because evictUser() does not define a key, causing Spring to use SimpleKeyGenerator on '#id' while getUser() keys on '#id', resulting in mismatch.",
+      "Because cache names must be different.",
+      "Because evictUser() returns void.",
+      "Because CacheEvict requires @Transactional to run."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "By default, key generation combines all method arguments. For getUser(), the key combines id and ctx, but key='#id' overrides it to 'id'. For evictUser(), the key defaults to 'id' as well, but if arguments mismatch in key structure, we must explicitly set key='#id' in both to prevent cache desync."
+  },
+  {
+    "id": "spring-quiz-t14-20",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "hard",
+    "questionText": "What is the runtime impact of performing a blocking/long-running task inside the @PostConstruct method of 'SetupBean_20'?",
+    "codeSnippet": "@Component\npublic class SetupBean_20 {\n    @PostConstruct\n    public void init() {\n        // Blocks on network/external server call\n        loadConfiguration();\n    }\n}",
+    "options": [
+      "It triggers an asynchronous thread pool execution and continues startup.",
+      "Spring immediately throws an InitializationTimeoutException.",
+      "The JVM runs the method in the background without affecting startup.",
+      "It blocks the main startup thread, preventing the application context from finishing initialization and starting the web server."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "@PostConstruct methods are executed synchronously during bean instantiation on the main thread. If a bean blocks in @PostConstruct, application context startup halts, blocking the web server (Tomcat) from starting. Use events or Async tasks instead."
+  },
+  {
+    "id": "spring-quiz-t15-20",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "If a controller throws a 'DatabaseException_20' (which extends RuntimeException), which ExceptionHandler method inside ControllerAdvice is invoked?",
+    "codeSnippet": "@ControllerAdvice\npublic class GlobalHandler {\n    @ExceptionHandler(RuntimeException.class)\n    public String handleRuntime(RuntimeException ex) { return \"Runtime\"; }\n\n    @ExceptionHandler(DatabaseException_20.class)\n    public String handleDb(DatabaseException_20 ex) { return \"Db\"; }\n}",
+    "options": [
+      "handleRuntime(), because RuntimeException is checked first as the parent class.",
+      "Both methods run in sequence.",
+      "Spring throws an ExceptionHandlerAmbiguityException at startup.",
+      "handleDb(), because it is mapped to the most specific exception type matching the exception thrown."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring's exception resolver resolves to the exception handler that maps to the most specific exception in the type hierarchy. Since 'DatabaseException_20' matches the thrown exception exactly, handleDb() is preferred over handleRuntime()."
+  },
+  {
+    "id": "spring-quiz-t16-20",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "What is the state of entity 'Account_20' and the database result when the method process() exits?",
+    "codeSnippet": "@Transactional\npublic void process(Long id) {\n    Account_20 acc = repository.findById(id).orElseThrow();\n    entityManager.detach(acc);\n    acc.setBalance(1000);\n}",
+    "options": [
+      "The entity is in the persistent state; the database is updated with balance 1000.",
+      "An EntityNotFoundException is thrown during detach.",
+      "The entity is in the detached state; no database updates occur.",
+      "Hibernate throws a LazyInitializationException when setting the balance."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Calling entityManager.detach(entity) removes the entity from the Persistence Context. It changes from 'persistent' to 'detached' state. Hibernate no longer tracks modifications, so the balance change is not flushed to the database."
+  },
+  {
+    "id": "spring-quiz-t17-20",
+    "topic": "Spring Cloud & Resilience",
+    "difficulty": "medium",
+    "questionText": "A Resilience4j Circuit Breaker has slidingWindowSize = 10 and failureRateThreshold = 50%. If 6 requests fail within the sliding window, what is the state transition?",
+    "codeSnippet": "CircuitBreakerConfig config = CircuitBreakerConfig.custom()\n    .slidingWindowSize(10)\n    .failureRateThreshold(50)\n    .build();",
+    "options": [
+      "Remains in CLOSED state because the sliding window must exceed capacity.",
+      "Transitions to OPEN state (failure rate is 60%, exceeding the 50% threshold).",
+      "Transitions to HALF_OPEN state.",
+      "Throws a CircuitBreakerOpenException immediately."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Once the sliding window registers 10 requests, Resilience4j calculates the failure rate. Since 6/10 (60%) is greater than or equal to 50%, the Circuit Breaker transitions to the OPEN state."
+  },
+  {
+    "id": "spring-quiz-t18-20",
+    "topic": "Spring Boot Internals",
+    "difficulty": "hard",
+    "questionText": "Inside a single configuration class, what determines the registration order of beans and the result of @ConditionalOnMissingBean?",
+    "codeSnippet": "@Configuration\npublic class AppConfig {\n    @Bean\n    public BeanVal_20 primaryBean() { return new BeanVal_20(\"A\"); }\n\n    @Bean\n    @ConditionalOnMissingBean(BeanVal_20.class)\n    public BeanVal_20 fallbackBean() { return new BeanVal_20(\"B\"); }\n}",
+    "options": [
+      "fallbackBean overrides primaryBean because @ConditionalOnMissingBean forces precedence.",
+      "Both beans are registered, creating an array list injection candidate.",
+      "Bean methods are registered in order of definition. primaryBean() registers first, causing fallbackBean()'s conditional check to fail. Only primaryBean is registered.",
+      "Spring throws a BeanDefinitionOverrideException during startup."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Within a single configuration class, beans are parsed and registered sequentially. Since primaryBean() is defined first, its bean exists when fallbackBean() is evaluated. The conditional check fails, and fallbackBean() is skipped."
+  },
+  {
+    "id": "spring-quiz-t19-20",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "A controller returns an instance of 'ResponseData_20'. If fields are private and no getters are defined, what is the HTTP response behavior?",
+    "codeSnippet": "public class ResponseData_20 {\n    private String status;\n    public ResponseData_20(String status) { this.status = status; }\n    // No getters\n}",
+    "options": [
+      "HTTP 200 with JSON payload {\"status\":null}.",
+      "HTTP 200 with JSON payload {\"status\":\"...\"} using reflection.",
+      "The code fails to compile because classes returned from RestController require getters.",
+      "HTTP 500 error or exception (Jackson throws an InvalidDefinitionException: No serializer found)."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Jackson (Spring Boot's default serializer) uses public getter methods to discover properties to write to JSON. If fields are private and no getters/setters/annotations are present, Jackson throws an exception, resulting in an HTTP 500."
+  },
+  {
+    "id": "spring-quiz-t20-20",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "If outerMethod() is marked as @Transactional and invokes nestedMethod() which is marked as @Transactional(propagation = Propagation.NESTED), what happens to DB updates if nestedMethod() fails and throws an exception caught inside outerMethod()?",
+    "codeSnippet": "@Transactional\npublic void outerMethod() {\n    try {\n        innerService.nestedMethod();\n    } catch (Exception e) {\n        // Exception caught\n    }\n    // Save other data\n}",
+    "options": [
+      "The entire transaction is rolled back because the outer method was marked as Transactional.",
+      "Only nestedMethod()'s updates are rolled back to the savepoint; outerMethod()'s updates can still commit successfully.",
+      "nestedMethod()'s updates are committed because the exception was caught in the outer method.",
+      "Spring throws a NestedTransactionNotSupportedException."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Propagation.NESTED creates a nested transaction using database savepoints. If the nested transaction fails and its exception is caught and handled inside the outer transaction, only the nested transaction rolls back to its savepoint. The outer transaction remains valid."
+  },
+  {
+    "id": "spring-quiz-t1-21",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "In the service below, orderProcessor() is invoked from an external REST controller. What is the transactional behavior of saveOrder()?",
+    "codeSnippet": "@Service\npublic class OrderService_21 {\n    public void orderProcessor() {\n        saveOrder(); // Self-invocation\n    }\n\n    @Transactional\n    public void saveOrder() {\n        // Save database record\n    }\n}",
+    "options": [
+      "Spring starts a new transaction automatically using aspect interception.",
+      "The application throws a CircularDependencyException at startup.",
+      "A TransactionRequiredException is thrown during execution.",
+      "No transaction starts, because self-invocation bypasses the Spring AOP proxy."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring's declarative annotations rely on AOP proxy wrappers. Method calls from outside go through the proxy, running transaction interceptors. Direct internal calls (self-invocation) run directly on the target object, bypassing the proxy and annotations."
+  },
+  {
+    "id": "spring-quiz-t2-21",
+    "topic": "Spring Core & Scopes",
+    "difficulty": "hard",
+    "questionText": "You inject a prototype-scoped bean 'RequestTracker_21' into a singleton controller 'AnalyticsController_21'. How does 'RequestTracker_21' behave across multiple HTTP requests?",
+    "codeSnippet": "@Scope(\"prototype\")\n@Component\npublic class RequestTracker_21 {}\n\n@RestController\npublic class AnalyticsController_21 {\n    @Autowired\n    private RequestTracker_21 tracker;\n}",
+    "options": [
+      "A new instance of 'RequestTracker_21' is created for every HTTP request.",
+      "The controller reuses the exact same instance of 'RequestTracker_21' injected at startup, behaving as a singleton.",
+      "Spring throws a ScopeMismatchException during startup.",
+      "The application fails to start because prototype beans cannot be injected into singletons."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Because the controller is a singleton, it is initialized once. Consequently, its fields are injected once. The prototype-scoped bean is instantiated during this injection, and that same instance is shared for all requests. To resolve, use scoped proxies."
+  },
+  {
+    "id": "spring-quiz-t3-21",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If a transaction method throws an Exception (checked exception) during database operations, what is the default rollback behavior?",
+    "codeSnippet": "@Transactional\npublic void process(User user) throws Exception {\n    UserRepo_21.save(user);\n    if (user.getName() == null) {\n        throw new Exception(\"Invalid User\");\n    }\n}",
+    "options": [
+      "The transaction is automatically rolled back for all exceptions.",
+      "The compiler throws an error because Transactional cannot declare checked throws.",
+      "The transaction rolls back, but only if the database isolation is SERIALIZABLE.",
+      "The transaction is committed, and changes are saved because checked exceptions do not trigger rollback by default."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring's @Transactional default configuration rolls back transactions only for unchecked exceptions (subclasses of RuntimeException and Error). Checked exceptions (like Exception, IOException) do not trigger rollback unless configured as @Transactional(rollbackFor = Exception.class)."
+  },
+  {
+    "id": "spring-quiz-t4-21",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "What occurs when Spring starts up and detects a circular constructor dependency between singleton beans 'BeanA_21' and 'BeanB_21'?",
+    "codeSnippet": "@Component\npublic class BeanA_21 {\n    public BeanA_21(BeanB_21 b) {}\n}\n@Component\npublic class BeanB_21 {\n    public BeanB_21(BeanA_21 a) {}\n}",
+    "options": [
+      "The application fails to start and throws a BeanCurrentlyInCreationException.",
+      "Spring automatically resolves the cycle by injecting a dynamic proxy.",
+      "The JVM crashes with a StackOverflowError during initialization.",
+      "Spring instantiates both beans as null."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Unlike setter/field injection, constructor dependencies must be resolved during object creation. Since neither 'BeanA_21' nor 'BeanB_21' can be constructed without the other, Spring cannot resolve the dependency cycle and throws a BeanCurrentlyInCreationException."
+  },
+  {
+    "id": "spring-quiz-t5-21",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "An entity has a lazy-loaded collection association. If you fetch all 6 parent entities and access their associations in a loop, how many SQL queries hit the database?",
+    "codeSnippet": "List<Parent> parents = parentRepository.findAll(); // Fetches 6 parents\nfor (Parent p : parents) {\n    System.out.println(p.getChildren().size()); // Lazy load\n}",
+    "options": [
+      "7 SQL queries.",
+      "1 SQL query.",
+      "6 SQL queries.",
+      "2 SQL queries."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "This is the N+1 query problem. The initial query fetches the parents (1 query). When accessing the lazy collection for each parent in the loop, Hibernate sends a separate select query per parent (6 queries), resulting in 7 queries."
+  },
+  {
+    "id": "spring-quiz-t6-21",
+    "topic": "Spring WebFlux",
+    "difficulty": "hard",
+    "questionText": "What is the hazard of calling a blocking method like RestTemplate inside a Spring WebFlux controller running on Netty event loops?",
+    "codeSnippet": "@GetMapping(\"/data\")\npublic Mono<String> getData() {\n    return Mono.fromCallable(() -> restTemplate.getForObject(\"https://api.com\", String.class));\n}",
+    "options": [
+      "It blocks the Netty EventLoop thread, reducing server capacity to process concurrent requests and causing starvation.",
+      "WebFlux automatically shifts the call to virtual threads to avoid blocking.",
+      "The controller immediately throws a BlockedEventLoopException during compilation.",
+      "It causes a deadlock because Netty restricts HTTP requests."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "WebFlux uses a small number of non-blocking event loop threads. Blocking operations on these threads exhaust the pool and block the server from handling other connections. Offload blocking logic using subscribeOn(Schedulers.boundedElastic())."
+  },
+  {
+    "id": "spring-quiz-t7-21",
+    "topic": "Spring Security",
+    "difficulty": "medium",
+    "questionText": "How do you insert a custom filter 'CustomAuthFilter_21' in a security chain so it executes before UsernamePasswordAuthenticationFilter?",
+    "codeSnippet": "@Bean\npublic SecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n    http.addFilterBefore(new CustomAuthFilter_21(), UsernamePasswordAuthenticationFilter.class);\n    return http.build();\n}",
+    "options": [
+      "Annotate CustomAuthFilter_21 with @Order(Ordered.HIGHEST_PRECEDENCE).",
+      "Register CustomAuthFilter_21 as a Spring @Component; Spring Security loads custom beans first.",
+      "Declare CustomAuthFilter_21 inside application.properties under security.filter.order.",
+      "Use addFilterBefore(new CustomAuthFilter_21(), UsernamePasswordAuthenticationFilter.class) inside HttpSecurity config."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "The order of filters inside a SecurityFilterChain is explicitly configured via HttpSecurity APIs. Class-level @Order annotations do not position filters within the SecurityFilterChain."
+  },
+  {
+    "id": "spring-quiz-t8-21",
+    "topic": "Spring Core",
+    "difficulty": "medium",
+    "questionText": "If a payment service interface has a default bean marked with @Primary, and another bean with qualifier 'customPaymentSvc_21', what is injected?",
+    "codeSnippet": "@RestController\npublic class PaymentController {\n    @Autowired\n    @Qualifier(\"customPaymentSvc_21\")\n    private PaymentService service;\n}",
+    "options": [
+      "The @Primary bean is injected because primary beans take highest precedence.",
+      "A BeanCreationException is thrown due to injection ambiguity.",
+      "The bean annotated with @Qualifier(\"customPaymentSvc_21\") is injected, overriding @Primary.",
+      "Both beans are injected inside a wrapper candidate proxy."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "While @Primary sets a default candidate, an explicit @Qualifier specifies the precise bean name requested. Explicit qualifiers take precedence over primary bean designations."
+  },
+  {
+    "id": "spring-quiz-t9-21",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If you specify a derived query method using property name 'emailAddress_21' which is missing on the Entity, what happens?",
+    "codeSnippet": "public interface UserRepository extends JpaRepository<User, Long> {\n    List<User> findByemailAddress_21(String email); // Entity field is 'email'\n}",
+    "options": [
+      "The query executes but returns an empty list at runtime.",
+      "Spring Data fallback parses it to a native SQL query.",
+      "A compile-time error occurs on the repository interface.",
+      "Spring Boot throws a PropertyReferenceException and fails to start during application context initialization."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring Data JPA parses derived query methods at application startup to validate them against the Entity's properties. If a method references a missing field like 'emailAddress_21', it throws a PropertyReferenceException and halts startup."
+  },
+  {
+    "id": "spring-quiz-t10-21",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "What happens if you apply @Transactional to a final method inside bean class 'DataFetcher_21' proxied by Spring AOP CGLIB subclassing?",
+    "codeSnippet": "public class DataFetcher_21 {\n    @Transactional\n    public final void loadData() {\n        // DB changes\n    }\n}",
+    "options": [
+      "Spring throws a FinalMethodAopException at startup.",
+      "The application throws a ClassCastException during method call.",
+      "The JVM crashes at runtime when calling the final method.",
+      "The transaction aspect is bypassed silently because CGLIB creates a subclass and cannot override final methods."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "CGLIB creates proxies by generating a dynamic subclass at runtime. Because final methods cannot be overridden by subclasses, the generated proxy class cannot insert aspect interceptor code. The final method runs directly, bypassing the aspect."
+  },
+  {
+    "id": "spring-quiz-t11-21",
+    "topic": "Spring Boot Configurations",
+    "difficulty": "medium",
+    "questionText": "If 'app.rate.21' is defined in application.properties as 50, in JVM properties as 100, and as an OS environment variable as 150, what value is resolved?",
+    "codeSnippet": "@Value(\"${app.rate.21}\")\nprivate int rate;",
+    "options": [
+      "150 (OS Environment variables take highest precedence)",
+      "100 (JVM system properties override OS environment variables and properties files)",
+      "50 (application.properties overrides all external configurations)",
+      "It throws a property resolution error due to conflict"
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Spring Boot property sources order: 1) Command-line args, 2) JVM System properties (-D...), 3) OS environment variables, 4) application.properties. Thus, the JVM value of 100 is selected."
+  },
+  {
+    "id": "spring-quiz-t12-21",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "How does the integer phase value 121 returned by getPhase() in SmartLifecycle affect context startup and shutdown order?",
+    "codeSnippet": "public class CustomService implements SmartLifecycle {\n    @Override\n    public int getPhase() { return 121; }\n}",
+    "options": [
+      "Beans with higher phase numbers are started first and stopped last.",
+      "Beans with lower phase numbers are started first. During shutdown, beans with higher phase numbers are stopped first.",
+      "The phase determines the priority thread pool, where higher phase means more threads.",
+      "SmartLifecycle beans start concurrently and ignore the phase value."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "SmartLifecycle defines getPhase() to resolve dependency execution order: lower phase numbers start first (e.g. databases, dependencies) and stop last. Shutdown goes in reverse, stopping higher phase numbers first."
+  },
+  {
+    "id": "spring-quiz-t13-21",
+    "topic": "Spring Caching",
+    "difficulty": "hard",
+    "questionText": "Why does the cache eviction fail under the configuration below?",
+    "codeSnippet": "@Cacheable(value = \"users_cache_21\", key = \"#id\")\npublic User getUser(Long id, Context ctx) { ... }\n\n@CacheEvict(value = \"users_cache_21\")\npublic void evictUser(Long id) { ... }",
+    "options": [
+      "Because cache names must be different.",
+      "Because evictUser() returns void.",
+      "Because CacheEvict requires @Transactional to run.",
+      "Because evictUser() does not define a key, causing Spring to use SimpleKeyGenerator on '#id' while getUser() keys on '#id', resulting in mismatch."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "By default, key generation combines all method arguments. For getUser(), the key combines id and ctx, but key='#id' overrides it to 'id'. For evictUser(), the key defaults to 'id' as well, but if arguments mismatch in key structure, we must explicitly set key='#id' in both to prevent cache desync."
+  },
+  {
+    "id": "spring-quiz-t14-21",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "hard",
+    "questionText": "What is the runtime impact of performing a blocking/long-running task inside the @PostConstruct method of 'SetupBean_21'?",
+    "codeSnippet": "@Component\npublic class SetupBean_21 {\n    @PostConstruct\n    public void init() {\n        // Blocks on network/external server call\n        loadConfiguration();\n    }\n}",
+    "options": [
+      "It triggers an asynchronous thread pool execution and continues startup.",
+      "It blocks the main startup thread, preventing the application context from finishing initialization and starting the web server.",
+      "Spring immediately throws an InitializationTimeoutException.",
+      "The JVM runs the method in the background without affecting startup."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "@PostConstruct methods are executed synchronously during bean instantiation on the main thread. If a bean blocks in @PostConstruct, application context startup halts, blocking the web server (Tomcat) from starting. Use events or Async tasks instead."
+  },
+  {
+    "id": "spring-quiz-t15-21",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "If a controller throws a 'DatabaseException_21' (which extends RuntimeException), which ExceptionHandler method inside ControllerAdvice is invoked?",
+    "codeSnippet": "@ControllerAdvice\npublic class GlobalHandler {\n    @ExceptionHandler(RuntimeException.class)\n    public String handleRuntime(RuntimeException ex) { return \"Runtime\"; }\n\n    @ExceptionHandler(DatabaseException_21.class)\n    public String handleDb(DatabaseException_21 ex) { return \"Db\"; }\n}",
+    "options": [
+      "handleDb(), because it is mapped to the most specific exception type matching the exception thrown.",
+      "handleRuntime(), because RuntimeException is checked first as the parent class.",
+      "Both methods run in sequence.",
+      "Spring throws an ExceptionHandlerAmbiguityException at startup."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Spring's exception resolver resolves to the exception handler that maps to the most specific exception in the type hierarchy. Since 'DatabaseException_21' matches the thrown exception exactly, handleDb() is preferred over handleRuntime()."
+  },
+  {
+    "id": "spring-quiz-t16-21",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "What is the state of entity 'Account_21' and the database result when the method process() exits?",
+    "codeSnippet": "@Transactional\npublic void process(Long id) {\n    Account_21 acc = repository.findById(id).orElseThrow();\n    entityManager.detach(acc);\n    acc.setBalance(1000);\n}",
+    "options": [
+      "The entity is in the persistent state; the database is updated with balance 1000.",
+      "The entity is in the detached state; no database updates occur.",
+      "An EntityNotFoundException is thrown during detach.",
+      "Hibernate throws a LazyInitializationException when setting the balance."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Calling entityManager.detach(entity) removes the entity from the Persistence Context. It changes from 'persistent' to 'detached' state. Hibernate no longer tracks modifications, so the balance change is not flushed to the database."
+  },
+  {
+    "id": "spring-quiz-t17-21",
+    "topic": "Spring Cloud & Resilience",
+    "difficulty": "medium",
+    "questionText": "A Resilience4j Circuit Breaker has slidingWindowSize = 11 and failureRateThreshold = 50%. If 7 requests fail within the sliding window, what is the state transition?",
+    "codeSnippet": "CircuitBreakerConfig config = CircuitBreakerConfig.custom()\n    .slidingWindowSize(11)\n    .failureRateThreshold(50)\n    .build();",
+    "options": [
+      "Remains in CLOSED state because the sliding window must exceed capacity.",
+      "Transitions to HALF_OPEN state.",
+      "Throws a CircuitBreakerOpenException immediately.",
+      "Transitions to OPEN state (failure rate is 64%, exceeding the 50% threshold)."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Once the sliding window registers 11 requests, Resilience4j calculates the failure rate. Since 7/11 (64%) is greater than or equal to 50%, the Circuit Breaker transitions to the OPEN state."
+  },
+  {
+    "id": "spring-quiz-t18-21",
+    "topic": "Spring Boot Internals",
+    "difficulty": "hard",
+    "questionText": "Inside a single configuration class, what determines the registration order of beans and the result of @ConditionalOnMissingBean?",
+    "codeSnippet": "@Configuration\npublic class AppConfig {\n    @Bean\n    public BeanVal_21 primaryBean() { return new BeanVal_21(\"A\"); }\n\n    @Bean\n    @ConditionalOnMissingBean(BeanVal_21.class)\n    public BeanVal_21 fallbackBean() { return new BeanVal_21(\"B\"); }\n}",
+    "options": [
+      "fallbackBean overrides primaryBean because @ConditionalOnMissingBean forces precedence.",
+      "Bean methods are registered in order of definition. primaryBean() registers first, causing fallbackBean()'s conditional check to fail. Only primaryBean is registered.",
+      "Both beans are registered, creating an array list injection candidate.",
+      "Spring throws a BeanDefinitionOverrideException during startup."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Within a single configuration class, beans are parsed and registered sequentially. Since primaryBean() is defined first, its bean exists when fallbackBean() is evaluated. The conditional check fails, and fallbackBean() is skipped."
+  },
+  {
+    "id": "spring-quiz-t19-21",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "A controller returns an instance of 'ResponseData_21'. If fields are private and no getters are defined, what is the HTTP response behavior?",
+    "codeSnippet": "public class ResponseData_21 {\n    private String status;\n    public ResponseData_21(String status) { this.status = status; }\n    // No getters\n}",
+    "options": [
+      "HTTP 200 with JSON payload {\"status\":null}.",
+      "HTTP 200 with JSON payload {\"status\":\"...\"} using reflection.",
+      "HTTP 500 error or exception (Jackson throws an InvalidDefinitionException: No serializer found).",
+      "The code fails to compile because classes returned from RestController require getters."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Jackson (Spring Boot's default serializer) uses public getter methods to discover properties to write to JSON. If fields are private and no getters/setters/annotations are present, Jackson throws an exception, resulting in an HTTP 500."
+  },
+  {
+    "id": "spring-quiz-t20-21",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "If outerMethod() is marked as @Transactional and invokes nestedMethod() which is marked as @Transactional(propagation = Propagation.NESTED), what happens to DB updates if nestedMethod() fails and throws an exception caught inside outerMethod()?",
+    "codeSnippet": "@Transactional\npublic void outerMethod() {\n    try {\n        innerService.nestedMethod();\n    } catch (Exception e) {\n        // Exception caught\n    }\n    // Save other data\n}",
+    "options": [
+      "Only nestedMethod()'s updates are rolled back to the savepoint; outerMethod()'s updates can still commit successfully.",
+      "The entire transaction is rolled back because the outer method was marked as Transactional.",
+      "nestedMethod()'s updates are committed because the exception was caught in the outer method.",
+      "Spring throws a NestedTransactionNotSupportedException."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Propagation.NESTED creates a nested transaction using database savepoints. If the nested transaction fails and its exception is caught and handled inside the outer transaction, only the nested transaction rolls back to its savepoint. The outer transaction remains valid."
+  },
+  {
+    "id": "spring-quiz-t1-22",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "In the service below, orderProcessor() is invoked from an external REST controller. What is the transactional behavior of saveOrder()?",
+    "codeSnippet": "@Service\npublic class OrderService_22 {\n    public void orderProcessor() {\n        saveOrder(); // Self-invocation\n    }\n\n    @Transactional\n    public void saveOrder() {\n        // Save database record\n    }\n}",
+    "options": [
+      "Spring starts a new transaction automatically using aspect interception.",
+      "No transaction starts, because self-invocation bypasses the Spring AOP proxy.",
+      "The application throws a CircularDependencyException at startup.",
+      "A TransactionRequiredException is thrown during execution."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Spring's declarative annotations rely on AOP proxy wrappers. Method calls from outside go through the proxy, running transaction interceptors. Direct internal calls (self-invocation) run directly on the target object, bypassing the proxy and annotations."
+  },
+  {
+    "id": "spring-quiz-t2-22",
+    "topic": "Spring Core & Scopes",
+    "difficulty": "hard",
+    "questionText": "You inject a prototype-scoped bean 'RequestTracker_22' into a singleton controller 'AnalyticsController_22'. How does 'RequestTracker_22' behave across multiple HTTP requests?",
+    "codeSnippet": "@Scope(\"prototype\")\n@Component\npublic class RequestTracker_22 {}\n\n@RestController\npublic class AnalyticsController_22 {\n    @Autowired\n    private RequestTracker_22 tracker;\n}",
+    "options": [
+      "The controller reuses the exact same instance of 'RequestTracker_22' injected at startup, behaving as a singleton.",
+      "A new instance of 'RequestTracker_22' is created for every HTTP request.",
+      "Spring throws a ScopeMismatchException during startup.",
+      "The application fails to start because prototype beans cannot be injected into singletons."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Because the controller is a singleton, it is initialized once. Consequently, its fields are injected once. The prototype-scoped bean is instantiated during this injection, and that same instance is shared for all requests. To resolve, use scoped proxies."
+  },
+  {
+    "id": "spring-quiz-t3-22",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If a transaction method throws an Exception (checked exception) during database operations, what is the default rollback behavior?",
+    "codeSnippet": "@Transactional\npublic void process(User user) throws Exception {\n    UserRepo_22.save(user);\n    if (user.getName() == null) {\n        throw new Exception(\"Invalid User\");\n    }\n}",
+    "options": [
+      "The transaction is committed, and changes are saved because checked exceptions do not trigger rollback by default.",
+      "The transaction is automatically rolled back for all exceptions.",
+      "The compiler throws an error because Transactional cannot declare checked throws.",
+      "The transaction rolls back, but only if the database isolation is SERIALIZABLE."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Spring's @Transactional default configuration rolls back transactions only for unchecked exceptions (subclasses of RuntimeException and Error). Checked exceptions (like Exception, IOException) do not trigger rollback unless configured as @Transactional(rollbackFor = Exception.class)."
+  },
+  {
+    "id": "spring-quiz-t4-22",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "What occurs when Spring starts up and detects a circular constructor dependency between singleton beans 'BeanA_22' and 'BeanB_22'?",
+    "codeSnippet": "@Component\npublic class BeanA_22 {\n    public BeanA_22(BeanB_22 b) {}\n}\n@Component\npublic class BeanB_22 {\n    public BeanB_22(BeanA_22 a) {}\n}",
+    "options": [
+      "The application fails to start and throws a BeanCurrentlyInCreationException.",
+      "Spring automatically resolves the cycle by injecting a dynamic proxy.",
+      "The JVM crashes with a StackOverflowError during initialization.",
+      "Spring instantiates both beans as null."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Unlike setter/field injection, constructor dependencies must be resolved during object creation. Since neither 'BeanA_22' nor 'BeanB_22' can be constructed without the other, Spring cannot resolve the dependency cycle and throws a BeanCurrentlyInCreationException."
+  },
+  {
+    "id": "spring-quiz-t5-22",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "An entity has a lazy-loaded collection association. If you fetch all 7 parent entities and access their associations in a loop, how many SQL queries hit the database?",
+    "codeSnippet": "List<Parent> parents = parentRepository.findAll(); // Fetches 7 parents\nfor (Parent p : parents) {\n    System.out.println(p.getChildren().size()); // Lazy load\n}",
+    "options": [
+      "1 SQL query.",
+      "7 SQL queries.",
+      "2 SQL queries.",
+      "8 SQL queries."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "This is the N+1 query problem. The initial query fetches the parents (1 query). When accessing the lazy collection for each parent in the loop, Hibernate sends a separate select query per parent (7 queries), resulting in 8 queries."
+  },
+  {
+    "id": "spring-quiz-t6-22",
+    "topic": "Spring WebFlux",
+    "difficulty": "hard",
+    "questionText": "What is the hazard of calling a blocking method like RestTemplate inside a Spring WebFlux controller running on Netty event loops?",
+    "codeSnippet": "@GetMapping(\"/data\")\npublic Mono<String> getData() {\n    return Mono.fromCallable(() -> restTemplate.getForObject(\"https://api.com\", String.class));\n}",
+    "options": [
+      "WebFlux automatically shifts the call to virtual threads to avoid blocking.",
+      "It blocks the Netty EventLoop thread, reducing server capacity to process concurrent requests and causing starvation.",
+      "The controller immediately throws a BlockedEventLoopException during compilation.",
+      "It causes a deadlock because Netty restricts HTTP requests."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "WebFlux uses a small number of non-blocking event loop threads. Blocking operations on these threads exhaust the pool and block the server from handling other connections. Offload blocking logic using subscribeOn(Schedulers.boundedElastic())."
+  },
+  {
+    "id": "spring-quiz-t7-22",
+    "topic": "Spring Security",
+    "difficulty": "medium",
+    "questionText": "How do you insert a custom filter 'CustomAuthFilter_22' in a security chain so it executes before UsernamePasswordAuthenticationFilter?",
+    "codeSnippet": "@Bean\npublic SecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n    http.addFilterBefore(new CustomAuthFilter_22(), UsernamePasswordAuthenticationFilter.class);\n    return http.build();\n}",
+    "options": [
+      "Use addFilterBefore(new CustomAuthFilter_22(), UsernamePasswordAuthenticationFilter.class) inside HttpSecurity config.",
+      "Annotate CustomAuthFilter_22 with @Order(Ordered.HIGHEST_PRECEDENCE).",
+      "Register CustomAuthFilter_22 as a Spring @Component; Spring Security loads custom beans first.",
+      "Declare CustomAuthFilter_22 inside application.properties under security.filter.order."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "The order of filters inside a SecurityFilterChain is explicitly configured via HttpSecurity APIs. Class-level @Order annotations do not position filters within the SecurityFilterChain."
+  },
+  {
+    "id": "spring-quiz-t8-22",
+    "topic": "Spring Core",
+    "difficulty": "medium",
+    "questionText": "If a payment service interface has a default bean marked with @Primary, and another bean with qualifier 'customPaymentSvc_22', what is injected?",
+    "codeSnippet": "@RestController\npublic class PaymentController {\n    @Autowired\n    @Qualifier(\"customPaymentSvc_22\")\n    private PaymentService service;\n}",
+    "options": [
+      "The bean annotated with @Qualifier(\"customPaymentSvc_22\") is injected, overriding @Primary.",
+      "The @Primary bean is injected because primary beans take highest precedence.",
+      "A BeanCreationException is thrown due to injection ambiguity.",
+      "Both beans are injected inside a wrapper candidate proxy."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "While @Primary sets a default candidate, an explicit @Qualifier specifies the precise bean name requested. Explicit qualifiers take precedence over primary bean designations."
+  },
+  {
+    "id": "spring-quiz-t9-22",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If you specify a derived query method using property name 'emailAddress_22' which is missing on the Entity, what happens?",
+    "codeSnippet": "public interface UserRepository extends JpaRepository<User, Long> {\n    List<User> findByemailAddress_22(String email); // Entity field is 'email'\n}",
+    "options": [
+      "The query executes but returns an empty list at runtime.",
+      "Spring Data fallback parses it to a native SQL query.",
+      "Spring Boot throws a PropertyReferenceException and fails to start during application context initialization.",
+      "A compile-time error occurs on the repository interface."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Spring Data JPA parses derived query methods at application startup to validate them against the Entity's properties. If a method references a missing field like 'emailAddress_22', it throws a PropertyReferenceException and halts startup."
+  },
+  {
+    "id": "spring-quiz-t10-22",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "What happens if you apply @Transactional to a final method inside bean class 'DataFetcher_22' proxied by Spring AOP CGLIB subclassing?",
+    "codeSnippet": "public class DataFetcher_22 {\n    @Transactional\n    public final void loadData() {\n        // DB changes\n    }\n}",
+    "options": [
+      "Spring throws a FinalMethodAopException at startup.",
+      "The transaction aspect is bypassed silently because CGLIB creates a subclass and cannot override final methods.",
+      "The application throws a ClassCastException during method call.",
+      "The JVM crashes at runtime when calling the final method."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "CGLIB creates proxies by generating a dynamic subclass at runtime. Because final methods cannot be overridden by subclasses, the generated proxy class cannot insert aspect interceptor code. The final method runs directly, bypassing the aspect."
+  },
+  {
+    "id": "spring-quiz-t11-22",
+    "topic": "Spring Boot Configurations",
+    "difficulty": "medium",
+    "questionText": "If 'app.rate.22' is defined in application.properties as 50, in JVM properties as 100, and as an OS environment variable as 150, what value is resolved?",
+    "codeSnippet": "@Value(\"${app.rate.22}\")\nprivate int rate;",
+    "options": [
+      "150 (OS Environment variables take highest precedence)",
+      "50 (application.properties overrides all external configurations)",
+      "100 (JVM system properties override OS environment variables and properties files)",
+      "It throws a property resolution error due to conflict"
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Spring Boot property sources order: 1) Command-line args, 2) JVM System properties (-D...), 3) OS environment variables, 4) application.properties. Thus, the JVM value of 100 is selected."
+  },
+  {
+    "id": "spring-quiz-t12-22",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "How does the integer phase value 122 returned by getPhase() in SmartLifecycle affect context startup and shutdown order?",
+    "codeSnippet": "public class CustomService implements SmartLifecycle {\n    @Override\n    public int getPhase() { return 122; }\n}",
+    "options": [
+      "Beans with higher phase numbers are started first and stopped last.",
+      "The phase determines the priority thread pool, where higher phase means more threads.",
+      "SmartLifecycle beans start concurrently and ignore the phase value.",
+      "Beans with lower phase numbers are started first. During shutdown, beans with higher phase numbers are stopped first."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "SmartLifecycle defines getPhase() to resolve dependency execution order: lower phase numbers start first (e.g. databases, dependencies) and stop last. Shutdown goes in reverse, stopping higher phase numbers first."
+  },
+  {
+    "id": "spring-quiz-t13-22",
+    "topic": "Spring Caching",
+    "difficulty": "hard",
+    "questionText": "Why does the cache eviction fail under the configuration below?",
+    "codeSnippet": "@Cacheable(value = \"users_cache_22\", key = \"#id\")\npublic User getUser(Long id, Context ctx) { ... }\n\n@CacheEvict(value = \"users_cache_22\")\npublic void evictUser(Long id) { ... }",
+    "options": [
+      "Because cache names must be different.",
+      "Because evictUser() does not define a key, causing Spring to use SimpleKeyGenerator on '#id' while getUser() keys on '#id', resulting in mismatch.",
+      "Because evictUser() returns void.",
+      "Because CacheEvict requires @Transactional to run."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "By default, key generation combines all method arguments. For getUser(), the key combines id and ctx, but key='#id' overrides it to 'id'. For evictUser(), the key defaults to 'id' as well, but if arguments mismatch in key structure, we must explicitly set key='#id' in both to prevent cache desync."
+  },
+  {
+    "id": "spring-quiz-t14-22",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "hard",
+    "questionText": "What is the runtime impact of performing a blocking/long-running task inside the @PostConstruct method of 'SetupBean_22'?",
+    "codeSnippet": "@Component\npublic class SetupBean_22 {\n    @PostConstruct\n    public void init() {\n        // Blocks on network/external server call\n        loadConfiguration();\n    }\n}",
+    "options": [
+      "It triggers an asynchronous thread pool execution and continues startup.",
+      "Spring immediately throws an InitializationTimeoutException.",
+      "The JVM runs the method in the background without affecting startup.",
+      "It blocks the main startup thread, preventing the application context from finishing initialization and starting the web server."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "@PostConstruct methods are executed synchronously during bean instantiation on the main thread. If a bean blocks in @PostConstruct, application context startup halts, blocking the web server (Tomcat) from starting. Use events or Async tasks instead."
+  },
+  {
+    "id": "spring-quiz-t15-22",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "If a controller throws a 'DatabaseException_22' (which extends RuntimeException), which ExceptionHandler method inside ControllerAdvice is invoked?",
+    "codeSnippet": "@ControllerAdvice\npublic class GlobalHandler {\n    @ExceptionHandler(RuntimeException.class)\n    public String handleRuntime(RuntimeException ex) { return \"Runtime\"; }\n\n    @ExceptionHandler(DatabaseException_22.class)\n    public String handleDb(DatabaseException_22 ex) { return \"Db\"; }\n}",
+    "options": [
+      "handleRuntime(), because RuntimeException is checked first as the parent class.",
+      "Both methods run in sequence.",
+      "Spring throws an ExceptionHandlerAmbiguityException at startup.",
+      "handleDb(), because it is mapped to the most specific exception type matching the exception thrown."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring's exception resolver resolves to the exception handler that maps to the most specific exception in the type hierarchy. Since 'DatabaseException_22' matches the thrown exception exactly, handleDb() is preferred over handleRuntime()."
+  },
+  {
+    "id": "spring-quiz-t16-22",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "What is the state of entity 'Account_22' and the database result when the method process() exits?",
+    "codeSnippet": "@Transactional\npublic void process(Long id) {\n    Account_22 acc = repository.findById(id).orElseThrow();\n    entityManager.detach(acc);\n    acc.setBalance(1000);\n}",
+    "options": [
+      "The entity is in the detached state; no database updates occur.",
+      "The entity is in the persistent state; the database is updated with balance 1000.",
+      "An EntityNotFoundException is thrown during detach.",
+      "Hibernate throws a LazyInitializationException when setting the balance."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Calling entityManager.detach(entity) removes the entity from the Persistence Context. It changes from 'persistent' to 'detached' state. Hibernate no longer tracks modifications, so the balance change is not flushed to the database."
+  },
+  {
+    "id": "spring-quiz-t17-22",
+    "topic": "Spring Cloud & Resilience",
+    "difficulty": "medium",
+    "questionText": "A Resilience4j Circuit Breaker has slidingWindowSize = 12 and failureRateThreshold = 50%. If 8 requests fail within the sliding window, what is the state transition?",
+    "codeSnippet": "CircuitBreakerConfig config = CircuitBreakerConfig.custom()\n    .slidingWindowSize(12)\n    .failureRateThreshold(50)\n    .build();",
+    "options": [
+      "Transitions to OPEN state (failure rate is 67%, exceeding the 50% threshold).",
+      "Remains in CLOSED state because the sliding window must exceed capacity.",
+      "Transitions to HALF_OPEN state.",
+      "Throws a CircuitBreakerOpenException immediately."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Once the sliding window registers 12 requests, Resilience4j calculates the failure rate. Since 8/12 (67%) is greater than or equal to 50%, the Circuit Breaker transitions to the OPEN state."
+  },
+  {
+    "id": "spring-quiz-t18-22",
+    "topic": "Spring Boot Internals",
+    "difficulty": "hard",
+    "questionText": "Inside a single configuration class, what determines the registration order of beans and the result of @ConditionalOnMissingBean?",
+    "codeSnippet": "@Configuration\npublic class AppConfig {\n    @Bean\n    public BeanVal_22 primaryBean() { return new BeanVal_22(\"A\"); }\n\n    @Bean\n    @ConditionalOnMissingBean(BeanVal_22.class)\n    public BeanVal_22 fallbackBean() { return new BeanVal_22(\"B\"); }\n}",
+    "options": [
+      "fallbackBean overrides primaryBean because @ConditionalOnMissingBean forces precedence.",
+      "Bean methods are registered in order of definition. primaryBean() registers first, causing fallbackBean()'s conditional check to fail. Only primaryBean is registered.",
+      "Both beans are registered, creating an array list injection candidate.",
+      "Spring throws a BeanDefinitionOverrideException during startup."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Within a single configuration class, beans are parsed and registered sequentially. Since primaryBean() is defined first, its bean exists when fallbackBean() is evaluated. The conditional check fails, and fallbackBean() is skipped."
+  },
+  {
+    "id": "spring-quiz-t19-22",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "A controller returns an instance of 'ResponseData_22'. If fields are private and no getters are defined, what is the HTTP response behavior?",
+    "codeSnippet": "public class ResponseData_22 {\n    private String status;\n    public ResponseData_22(String status) { this.status = status; }\n    // No getters\n}",
+    "options": [
+      "HTTP 200 with JSON payload {\"status\":null}.",
+      "HTTP 200 with JSON payload {\"status\":\"...\"} using reflection.",
+      "The code fails to compile because classes returned from RestController require getters.",
+      "HTTP 500 error or exception (Jackson throws an InvalidDefinitionException: No serializer found)."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Jackson (Spring Boot's default serializer) uses public getter methods to discover properties to write to JSON. If fields are private and no getters/setters/annotations are present, Jackson throws an exception, resulting in an HTTP 500."
+  },
+  {
+    "id": "spring-quiz-t20-22",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "If outerMethod() is marked as @Transactional and invokes nestedMethod() which is marked as @Transactional(propagation = Propagation.NESTED), what happens to DB updates if nestedMethod() fails and throws an exception caught inside outerMethod()?",
+    "codeSnippet": "@Transactional\npublic void outerMethod() {\n    try {\n        innerService.nestedMethod();\n    } catch (Exception e) {\n        // Exception caught\n    }\n    // Save other data\n}",
+    "options": [
+      "The entire transaction is rolled back because the outer method was marked as Transactional.",
+      "Only nestedMethod()'s updates are rolled back to the savepoint; outerMethod()'s updates can still commit successfully.",
+      "nestedMethod()'s updates are committed because the exception was caught in the outer method.",
+      "Spring throws a NestedTransactionNotSupportedException."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Propagation.NESTED creates a nested transaction using database savepoints. If the nested transaction fails and its exception is caught and handled inside the outer transaction, only the nested transaction rolls back to its savepoint. The outer transaction remains valid."
+  },
+  {
+    "id": "spring-quiz-t1-23",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "In the service below, orderProcessor() is invoked from an external REST controller. What is the transactional behavior of saveOrder()?",
+    "codeSnippet": "@Service\npublic class OrderService_23 {\n    public void orderProcessor() {\n        saveOrder(); // Self-invocation\n    }\n\n    @Transactional\n    public void saveOrder() {\n        // Save database record\n    }\n}",
+    "options": [
+      "Spring starts a new transaction automatically using aspect interception.",
+      "The application throws a CircularDependencyException at startup.",
+      "A TransactionRequiredException is thrown during execution.",
+      "No transaction starts, because self-invocation bypasses the Spring AOP proxy."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring's declarative annotations rely on AOP proxy wrappers. Method calls from outside go through the proxy, running transaction interceptors. Direct internal calls (self-invocation) run directly on the target object, bypassing the proxy and annotations."
+  },
+  {
+    "id": "spring-quiz-t2-23",
+    "topic": "Spring Core & Scopes",
+    "difficulty": "hard",
+    "questionText": "You inject a prototype-scoped bean 'RequestTracker_23' into a singleton controller 'AnalyticsController_23'. How does 'RequestTracker_23' behave across multiple HTTP requests?",
+    "codeSnippet": "@Scope(\"prototype\")\n@Component\npublic class RequestTracker_23 {}\n\n@RestController\npublic class AnalyticsController_23 {\n    @Autowired\n    private RequestTracker_23 tracker;\n}",
+    "options": [
+      "A new instance of 'RequestTracker_23' is created for every HTTP request.",
+      "Spring throws a ScopeMismatchException during startup.",
+      "The application fails to start because prototype beans cannot be injected into singletons.",
+      "The controller reuses the exact same instance of 'RequestTracker_23' injected at startup, behaving as a singleton."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Because the controller is a singleton, it is initialized once. Consequently, its fields are injected once. The prototype-scoped bean is instantiated during this injection, and that same instance is shared for all requests. To resolve, use scoped proxies."
+  },
+  {
+    "id": "spring-quiz-t3-23",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If a transaction method throws an Exception (checked exception) during database operations, what is the default rollback behavior?",
+    "codeSnippet": "@Transactional\npublic void process(User user) throws Exception {\n    UserRepo_23.save(user);\n    if (user.getName() == null) {\n        throw new Exception(\"Invalid User\");\n    }\n}",
+    "options": [
+      "The transaction is automatically rolled back for all exceptions.",
+      "The compiler throws an error because Transactional cannot declare checked throws.",
+      "The transaction is committed, and changes are saved because checked exceptions do not trigger rollback by default.",
+      "The transaction rolls back, but only if the database isolation is SERIALIZABLE."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Spring's @Transactional default configuration rolls back transactions only for unchecked exceptions (subclasses of RuntimeException and Error). Checked exceptions (like Exception, IOException) do not trigger rollback unless configured as @Transactional(rollbackFor = Exception.class)."
+  },
+  {
+    "id": "spring-quiz-t4-23",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "What occurs when Spring starts up and detects a circular constructor dependency between singleton beans 'BeanA_23' and 'BeanB_23'?",
+    "codeSnippet": "@Component\npublic class BeanA_23 {\n    public BeanA_23(BeanB_23 b) {}\n}\n@Component\npublic class BeanB_23 {\n    public BeanB_23(BeanA_23 a) {}\n}",
+    "options": [
+      "The application fails to start and throws a BeanCurrentlyInCreationException.",
+      "Spring automatically resolves the cycle by injecting a dynamic proxy.",
+      "The JVM crashes with a StackOverflowError during initialization.",
+      "Spring instantiates both beans as null."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Unlike setter/field injection, constructor dependencies must be resolved during object creation. Since neither 'BeanA_23' nor 'BeanB_23' can be constructed without the other, Spring cannot resolve the dependency cycle and throws a BeanCurrentlyInCreationException."
+  },
+  {
+    "id": "spring-quiz-t5-23",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "An entity has a lazy-loaded collection association. If you fetch all 8 parent entities and access their associations in a loop, how many SQL queries hit the database?",
+    "codeSnippet": "List<Parent> parents = parentRepository.findAll(); // Fetches 8 parents\nfor (Parent p : parents) {\n    System.out.println(p.getChildren().size()); // Lazy load\n}",
+    "options": [
+      "1 SQL query.",
+      "9 SQL queries.",
+      "8 SQL queries.",
+      "2 SQL queries."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "This is the N+1 query problem. The initial query fetches the parents (1 query). When accessing the lazy collection for each parent in the loop, Hibernate sends a separate select query per parent (8 queries), resulting in 9 queries."
+  },
+  {
+    "id": "spring-quiz-t6-23",
+    "topic": "Spring WebFlux",
+    "difficulty": "hard",
+    "questionText": "What is the hazard of calling a blocking method like RestTemplate inside a Spring WebFlux controller running on Netty event loops?",
+    "codeSnippet": "@GetMapping(\"/data\")\npublic Mono<String> getData() {\n    return Mono.fromCallable(() -> restTemplate.getForObject(\"https://api.com\", String.class));\n}",
+    "options": [
+      "WebFlux automatically shifts the call to virtual threads to avoid blocking.",
+      "The controller immediately throws a BlockedEventLoopException during compilation.",
+      "It causes a deadlock because Netty restricts HTTP requests.",
+      "It blocks the Netty EventLoop thread, reducing server capacity to process concurrent requests and causing starvation."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "WebFlux uses a small number of non-blocking event loop threads. Blocking operations on these threads exhaust the pool and block the server from handling other connections. Offload blocking logic using subscribeOn(Schedulers.boundedElastic())."
+  },
+  {
+    "id": "spring-quiz-t7-23",
+    "topic": "Spring Security",
+    "difficulty": "medium",
+    "questionText": "How do you insert a custom filter 'CustomAuthFilter_23' in a security chain so it executes before UsernamePasswordAuthenticationFilter?",
+    "codeSnippet": "@Bean\npublic SecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n    http.addFilterBefore(new CustomAuthFilter_23(), UsernamePasswordAuthenticationFilter.class);\n    return http.build();\n}",
+    "options": [
+      "Annotate CustomAuthFilter_23 with @Order(Ordered.HIGHEST_PRECEDENCE).",
+      "Register CustomAuthFilter_23 as a Spring @Component; Spring Security loads custom beans first.",
+      "Use addFilterBefore(new CustomAuthFilter_23(), UsernamePasswordAuthenticationFilter.class) inside HttpSecurity config.",
+      "Declare CustomAuthFilter_23 inside application.properties under security.filter.order."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "The order of filters inside a SecurityFilterChain is explicitly configured via HttpSecurity APIs. Class-level @Order annotations do not position filters within the SecurityFilterChain."
+  },
+  {
+    "id": "spring-quiz-t8-23",
+    "topic": "Spring Core",
+    "difficulty": "medium",
+    "questionText": "If a payment service interface has a default bean marked with @Primary, and another bean with qualifier 'customPaymentSvc_23', what is injected?",
+    "codeSnippet": "@RestController\npublic class PaymentController {\n    @Autowired\n    @Qualifier(\"customPaymentSvc_23\")\n    private PaymentService service;\n}",
+    "options": [
+      "The bean annotated with @Qualifier(\"customPaymentSvc_23\") is injected, overriding @Primary.",
+      "The @Primary bean is injected because primary beans take highest precedence.",
+      "A BeanCreationException is thrown due to injection ambiguity.",
+      "Both beans are injected inside a wrapper candidate proxy."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "While @Primary sets a default candidate, an explicit @Qualifier specifies the precise bean name requested. Explicit qualifiers take precedence over primary bean designations."
+  },
+  {
+    "id": "spring-quiz-t9-23",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If you specify a derived query method using property name 'emailAddress_23' which is missing on the Entity, what happens?",
+    "codeSnippet": "public interface UserRepository extends JpaRepository<User, Long> {\n    List<User> findByemailAddress_23(String email); // Entity field is 'email'\n}",
+    "options": [
+      "The query executes but returns an empty list at runtime.",
+      "Spring Data fallback parses it to a native SQL query.",
+      "A compile-time error occurs on the repository interface.",
+      "Spring Boot throws a PropertyReferenceException and fails to start during application context initialization."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring Data JPA parses derived query methods at application startup to validate them against the Entity's properties. If a method references a missing field like 'emailAddress_23', it throws a PropertyReferenceException and halts startup."
+  },
+  {
+    "id": "spring-quiz-t10-23",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "What happens if you apply @Transactional to a final method inside bean class 'DataFetcher_23' proxied by Spring AOP CGLIB subclassing?",
+    "codeSnippet": "public class DataFetcher_23 {\n    @Transactional\n    public final void loadData() {\n        // DB changes\n    }\n}",
+    "options": [
+      "The transaction aspect is bypassed silently because CGLIB creates a subclass and cannot override final methods.",
+      "Spring throws a FinalMethodAopException at startup.",
+      "The application throws a ClassCastException during method call.",
+      "The JVM crashes at runtime when calling the final method."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "CGLIB creates proxies by generating a dynamic subclass at runtime. Because final methods cannot be overridden by subclasses, the generated proxy class cannot insert aspect interceptor code. The final method runs directly, bypassing the aspect."
+  },
+  {
+    "id": "spring-quiz-t11-23",
+    "topic": "Spring Boot Configurations",
+    "difficulty": "medium",
+    "questionText": "If 'app.rate.23' is defined in application.properties as 50, in JVM properties as 100, and as an OS environment variable as 150, what value is resolved?",
+    "codeSnippet": "@Value(\"${app.rate.23}\")\nprivate int rate;",
+    "options": [
+      "150 (OS Environment variables take highest precedence)",
+      "100 (JVM system properties override OS environment variables and properties files)",
+      "50 (application.properties overrides all external configurations)",
+      "It throws a property resolution error due to conflict"
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Spring Boot property sources order: 1) Command-line args, 2) JVM System properties (-D...), 3) OS environment variables, 4) application.properties. Thus, the JVM value of 100 is selected."
+  },
+  {
+    "id": "spring-quiz-t12-23",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "How does the integer phase value 123 returned by getPhase() in SmartLifecycle affect context startup and shutdown order?",
+    "codeSnippet": "public class CustomService implements SmartLifecycle {\n    @Override\n    public int getPhase() { return 123; }\n}",
+    "options": [
+      "Beans with lower phase numbers are started first. During shutdown, beans with higher phase numbers are stopped first.",
+      "Beans with higher phase numbers are started first and stopped last.",
+      "The phase determines the priority thread pool, where higher phase means more threads.",
+      "SmartLifecycle beans start concurrently and ignore the phase value."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "SmartLifecycle defines getPhase() to resolve dependency execution order: lower phase numbers start first (e.g. databases, dependencies) and stop last. Shutdown goes in reverse, stopping higher phase numbers first."
+  },
+  {
+    "id": "spring-quiz-t13-23",
+    "topic": "Spring Caching",
+    "difficulty": "hard",
+    "questionText": "Why does the cache eviction fail under the configuration below?",
+    "codeSnippet": "@Cacheable(value = \"users_cache_23\", key = \"#id\")\npublic User getUser(Long id, Context ctx) { ... }\n\n@CacheEvict(value = \"users_cache_23\")\npublic void evictUser(Long id) { ... }",
+    "options": [
+      "Because cache names must be different.",
+      "Because evictUser() returns void.",
+      "Because CacheEvict requires @Transactional to run.",
+      "Because evictUser() does not define a key, causing Spring to use SimpleKeyGenerator on '#id' while getUser() keys on '#id', resulting in mismatch."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "By default, key generation combines all method arguments. For getUser(), the key combines id and ctx, but key='#id' overrides it to 'id'. For evictUser(), the key defaults to 'id' as well, but if arguments mismatch in key structure, we must explicitly set key='#id' in both to prevent cache desync."
+  },
+  {
+    "id": "spring-quiz-t14-23",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "hard",
+    "questionText": "What is the runtime impact of performing a blocking/long-running task inside the @PostConstruct method of 'SetupBean_23'?",
+    "codeSnippet": "@Component\npublic class SetupBean_23 {\n    @PostConstruct\n    public void init() {\n        // Blocks on network/external server call\n        loadConfiguration();\n    }\n}",
+    "options": [
+      "It blocks the main startup thread, preventing the application context from finishing initialization and starting the web server.",
+      "It triggers an asynchronous thread pool execution and continues startup.",
+      "Spring immediately throws an InitializationTimeoutException.",
+      "The JVM runs the method in the background without affecting startup."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "@PostConstruct methods are executed synchronously during bean instantiation on the main thread. If a bean blocks in @PostConstruct, application context startup halts, blocking the web server (Tomcat) from starting. Use events or Async tasks instead."
+  },
+  {
+    "id": "spring-quiz-t15-23",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "If a controller throws a 'DatabaseException_23' (which extends RuntimeException), which ExceptionHandler method inside ControllerAdvice is invoked?",
+    "codeSnippet": "@ControllerAdvice\npublic class GlobalHandler {\n    @ExceptionHandler(RuntimeException.class)\n    public String handleRuntime(RuntimeException ex) { return \"Runtime\"; }\n\n    @ExceptionHandler(DatabaseException_23.class)\n    public String handleDb(DatabaseException_23 ex) { return \"Db\"; }\n}",
+    "options": [
+      "handleDb(), because it is mapped to the most specific exception type matching the exception thrown.",
+      "handleRuntime(), because RuntimeException is checked first as the parent class.",
+      "Both methods run in sequence.",
+      "Spring throws an ExceptionHandlerAmbiguityException at startup."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Spring's exception resolver resolves to the exception handler that maps to the most specific exception in the type hierarchy. Since 'DatabaseException_23' matches the thrown exception exactly, handleDb() is preferred over handleRuntime()."
+  },
+  {
+    "id": "spring-quiz-t16-23",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "What is the state of entity 'Account_23' and the database result when the method process() exits?",
+    "codeSnippet": "@Transactional\npublic void process(Long id) {\n    Account_23 acc = repository.findById(id).orElseThrow();\n    entityManager.detach(acc);\n    acc.setBalance(1000);\n}",
+    "options": [
+      "The entity is in the persistent state; the database is updated with balance 1000.",
+      "The entity is in the detached state; no database updates occur.",
+      "An EntityNotFoundException is thrown during detach.",
+      "Hibernate throws a LazyInitializationException when setting the balance."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Calling entityManager.detach(entity) removes the entity from the Persistence Context. It changes from 'persistent' to 'detached' state. Hibernate no longer tracks modifications, so the balance change is not flushed to the database."
+  },
+  {
+    "id": "spring-quiz-t17-23",
+    "topic": "Spring Cloud & Resilience",
+    "difficulty": "medium",
+    "questionText": "A Resilience4j Circuit Breaker has slidingWindowSize = 13 and failureRateThreshold = 50%. If 8 requests fail within the sliding window, what is the state transition?",
+    "codeSnippet": "CircuitBreakerConfig config = CircuitBreakerConfig.custom()\n    .slidingWindowSize(13)\n    .failureRateThreshold(50)\n    .build();",
+    "options": [
+      "Remains in CLOSED state because the sliding window must exceed capacity.",
+      "Transitions to OPEN state (failure rate is 62%, exceeding the 50% threshold).",
+      "Transitions to HALF_OPEN state.",
+      "Throws a CircuitBreakerOpenException immediately."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Once the sliding window registers 13 requests, Resilience4j calculates the failure rate. Since 8/13 (62%) is greater than or equal to 50%, the Circuit Breaker transitions to the OPEN state."
+  },
+  {
+    "id": "spring-quiz-t18-23",
+    "topic": "Spring Boot Internals",
+    "difficulty": "hard",
+    "questionText": "Inside a single configuration class, what determines the registration order of beans and the result of @ConditionalOnMissingBean?",
+    "codeSnippet": "@Configuration\npublic class AppConfig {\n    @Bean\n    public BeanVal_23 primaryBean() { return new BeanVal_23(\"A\"); }\n\n    @Bean\n    @ConditionalOnMissingBean(BeanVal_23.class)\n    public BeanVal_23 fallbackBean() { return new BeanVal_23(\"B\"); }\n}",
+    "options": [
+      "fallbackBean overrides primaryBean because @ConditionalOnMissingBean forces precedence.",
+      "Bean methods are registered in order of definition. primaryBean() registers first, causing fallbackBean()'s conditional check to fail. Only primaryBean is registered.",
+      "Both beans are registered, creating an array list injection candidate.",
+      "Spring throws a BeanDefinitionOverrideException during startup."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Within a single configuration class, beans are parsed and registered sequentially. Since primaryBean() is defined first, its bean exists when fallbackBean() is evaluated. The conditional check fails, and fallbackBean() is skipped."
+  },
+  {
+    "id": "spring-quiz-t19-23",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "A controller returns an instance of 'ResponseData_23'. If fields are private and no getters are defined, what is the HTTP response behavior?",
+    "codeSnippet": "public class ResponseData_23 {\n    private String status;\n    public ResponseData_23(String status) { this.status = status; }\n    // No getters\n}",
+    "options": [
+      "HTTP 200 with JSON payload {\"status\":null}.",
+      "HTTP 200 with JSON payload {\"status\":\"...\"} using reflection.",
+      "The code fails to compile because classes returned from RestController require getters.",
+      "HTTP 500 error or exception (Jackson throws an InvalidDefinitionException: No serializer found)."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Jackson (Spring Boot's default serializer) uses public getter methods to discover properties to write to JSON. If fields are private and no getters/setters/annotations are present, Jackson throws an exception, resulting in an HTTP 500."
+  },
+  {
+    "id": "spring-quiz-t20-23",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "If outerMethod() is marked as @Transactional and invokes nestedMethod() which is marked as @Transactional(propagation = Propagation.NESTED), what happens to DB updates if nestedMethod() fails and throws an exception caught inside outerMethod()?",
+    "codeSnippet": "@Transactional\npublic void outerMethod() {\n    try {\n        innerService.nestedMethod();\n    } catch (Exception e) {\n        // Exception caught\n    }\n    // Save other data\n}",
+    "options": [
+      "The entire transaction is rolled back because the outer method was marked as Transactional.",
+      "nestedMethod()'s updates are committed because the exception was caught in the outer method.",
+      "Only nestedMethod()'s updates are rolled back to the savepoint; outerMethod()'s updates can still commit successfully.",
+      "Spring throws a NestedTransactionNotSupportedException."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Propagation.NESTED creates a nested transaction using database savepoints. If the nested transaction fails and its exception is caught and handled inside the outer transaction, only the nested transaction rolls back to its savepoint. The outer transaction remains valid."
+  },
+  {
+    "id": "spring-quiz-t1-24",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "In the service below, orderProcessor() is invoked from an external REST controller. What is the transactional behavior of saveOrder()?",
+    "codeSnippet": "@Service\npublic class OrderService_24 {\n    public void orderProcessor() {\n        saveOrder(); // Self-invocation\n    }\n\n    @Transactional\n    public void saveOrder() {\n        // Save database record\n    }\n}",
+    "options": [
+      "Spring starts a new transaction automatically using aspect interception.",
+      "The application throws a CircularDependencyException at startup.",
+      "A TransactionRequiredException is thrown during execution.",
+      "No transaction starts, because self-invocation bypasses the Spring AOP proxy."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring's declarative annotations rely on AOP proxy wrappers. Method calls from outside go through the proxy, running transaction interceptors. Direct internal calls (self-invocation) run directly on the target object, bypassing the proxy and annotations."
+  },
+  {
+    "id": "spring-quiz-t2-24",
+    "topic": "Spring Core & Scopes",
+    "difficulty": "hard",
+    "questionText": "You inject a prototype-scoped bean 'RequestTracker_24' into a singleton controller 'AnalyticsController_24'. How does 'RequestTracker_24' behave across multiple HTTP requests?",
+    "codeSnippet": "@Scope(\"prototype\")\n@Component\npublic class RequestTracker_24 {}\n\n@RestController\npublic class AnalyticsController_24 {\n    @Autowired\n    private RequestTracker_24 tracker;\n}",
+    "options": [
+      "A new instance of 'RequestTracker_24' is created for every HTTP request.",
+      "The controller reuses the exact same instance of 'RequestTracker_24' injected at startup, behaving as a singleton.",
+      "Spring throws a ScopeMismatchException during startup.",
+      "The application fails to start because prototype beans cannot be injected into singletons."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Because the controller is a singleton, it is initialized once. Consequently, its fields are injected once. The prototype-scoped bean is instantiated during this injection, and that same instance is shared for all requests. To resolve, use scoped proxies."
+  },
+  {
+    "id": "spring-quiz-t3-24",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If a transaction method throws an Exception (checked exception) during database operations, what is the default rollback behavior?",
+    "codeSnippet": "@Transactional\npublic void process(User user) throws Exception {\n    UserRepo_24.save(user);\n    if (user.getName() == null) {\n        throw new Exception(\"Invalid User\");\n    }\n}",
+    "options": [
+      "The transaction is automatically rolled back for all exceptions.",
+      "The compiler throws an error because Transactional cannot declare checked throws.",
+      "The transaction is committed, and changes are saved because checked exceptions do not trigger rollback by default.",
+      "The transaction rolls back, but only if the database isolation is SERIALIZABLE."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Spring's @Transactional default configuration rolls back transactions only for unchecked exceptions (subclasses of RuntimeException and Error). Checked exceptions (like Exception, IOException) do not trigger rollback unless configured as @Transactional(rollbackFor = Exception.class)."
+  },
+  {
+    "id": "spring-quiz-t4-24",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "What occurs when Spring starts up and detects a circular constructor dependency between singleton beans 'BeanA_24' and 'BeanB_24'?",
+    "codeSnippet": "@Component\npublic class BeanA_24 {\n    public BeanA_24(BeanB_24 b) {}\n}\n@Component\npublic class BeanB_24 {\n    public BeanB_24(BeanA_24 a) {}\n}",
+    "options": [
+      "The application fails to start and throws a BeanCurrentlyInCreationException.",
+      "Spring automatically resolves the cycle by injecting a dynamic proxy.",
+      "The JVM crashes with a StackOverflowError during initialization.",
+      "Spring instantiates both beans as null."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Unlike setter/field injection, constructor dependencies must be resolved during object creation. Since neither 'BeanA_24' nor 'BeanB_24' can be constructed without the other, Spring cannot resolve the dependency cycle and throws a BeanCurrentlyInCreationException."
+  },
+  {
+    "id": "spring-quiz-t5-24",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "An entity has a lazy-loaded collection association. If you fetch all 9 parent entities and access their associations in a loop, how many SQL queries hit the database?",
+    "codeSnippet": "List<Parent> parents = parentRepository.findAll(); // Fetches 9 parents\nfor (Parent p : parents) {\n    System.out.println(p.getChildren().size()); // Lazy load\n}",
+    "options": [
+      "1 SQL query.",
+      "9 SQL queries.",
+      "10 SQL queries.",
+      "2 SQL queries."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "This is the N+1 query problem. The initial query fetches the parents (1 query). When accessing the lazy collection for each parent in the loop, Hibernate sends a separate select query per parent (9 queries), resulting in 10 queries."
+  },
+  {
+    "id": "spring-quiz-t6-24",
+    "topic": "Spring WebFlux",
+    "difficulty": "hard",
+    "questionText": "What is the hazard of calling a blocking method like RestTemplate inside a Spring WebFlux controller running on Netty event loops?",
+    "codeSnippet": "@GetMapping(\"/data\")\npublic Mono<String> getData() {\n    return Mono.fromCallable(() -> restTemplate.getForObject(\"https://api.com\", String.class));\n}",
+    "options": [
+      "WebFlux automatically shifts the call to virtual threads to avoid blocking.",
+      "The controller immediately throws a BlockedEventLoopException during compilation.",
+      "It blocks the Netty EventLoop thread, reducing server capacity to process concurrent requests and causing starvation.",
+      "It causes a deadlock because Netty restricts HTTP requests."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "WebFlux uses a small number of non-blocking event loop threads. Blocking operations on these threads exhaust the pool and block the server from handling other connections. Offload blocking logic using subscribeOn(Schedulers.boundedElastic())."
+  },
+  {
+    "id": "spring-quiz-t7-24",
+    "topic": "Spring Security",
+    "difficulty": "medium",
+    "questionText": "How do you insert a custom filter 'CustomAuthFilter_24' in a security chain so it executes before UsernamePasswordAuthenticationFilter?",
+    "codeSnippet": "@Bean\npublic SecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n    http.addFilterBefore(new CustomAuthFilter_24(), UsernamePasswordAuthenticationFilter.class);\n    return http.build();\n}",
+    "options": [
+      "Annotate CustomAuthFilter_24 with @Order(Ordered.HIGHEST_PRECEDENCE).",
+      "Register CustomAuthFilter_24 as a Spring @Component; Spring Security loads custom beans first.",
+      "Declare CustomAuthFilter_24 inside application.properties under security.filter.order.",
+      "Use addFilterBefore(new CustomAuthFilter_24(), UsernamePasswordAuthenticationFilter.class) inside HttpSecurity config."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "The order of filters inside a SecurityFilterChain is explicitly configured via HttpSecurity APIs. Class-level @Order annotations do not position filters within the SecurityFilterChain."
+  },
+  {
+    "id": "spring-quiz-t8-24",
+    "topic": "Spring Core",
+    "difficulty": "medium",
+    "questionText": "If a payment service interface has a default bean marked with @Primary, and another bean with qualifier 'customPaymentSvc_24', what is injected?",
+    "codeSnippet": "@RestController\npublic class PaymentController {\n    @Autowired\n    @Qualifier(\"customPaymentSvc_24\")\n    private PaymentService service;\n}",
+    "options": [
+      "The bean annotated with @Qualifier(\"customPaymentSvc_24\") is injected, overriding @Primary.",
+      "The @Primary bean is injected because primary beans take highest precedence.",
+      "A BeanCreationException is thrown due to injection ambiguity.",
+      "Both beans are injected inside a wrapper candidate proxy."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "While @Primary sets a default candidate, an explicit @Qualifier specifies the precise bean name requested. Explicit qualifiers take precedence over primary bean designations."
+  },
+  {
+    "id": "spring-quiz-t9-24",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If you specify a derived query method using property name 'emailAddress_24' which is missing on the Entity, what happens?",
+    "codeSnippet": "public interface UserRepository extends JpaRepository<User, Long> {\n    List<User> findByemailAddress_24(String email); // Entity field is 'email'\n}",
+    "options": [
+      "Spring Boot throws a PropertyReferenceException and fails to start during application context initialization.",
+      "The query executes but returns an empty list at runtime.",
+      "Spring Data fallback parses it to a native SQL query.",
+      "A compile-time error occurs on the repository interface."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Spring Data JPA parses derived query methods at application startup to validate them against the Entity's properties. If a method references a missing field like 'emailAddress_24', it throws a PropertyReferenceException and halts startup."
+  },
+  {
+    "id": "spring-quiz-t10-24",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "What happens if you apply @Transactional to a final method inside bean class 'DataFetcher_24' proxied by Spring AOP CGLIB subclassing?",
+    "codeSnippet": "public class DataFetcher_24 {\n    @Transactional\n    public final void loadData() {\n        // DB changes\n    }\n}",
+    "options": [
+      "Spring throws a FinalMethodAopException at startup.",
+      "The transaction aspect is bypassed silently because CGLIB creates a subclass and cannot override final methods.",
+      "The application throws a ClassCastException during method call.",
+      "The JVM crashes at runtime when calling the final method."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "CGLIB creates proxies by generating a dynamic subclass at runtime. Because final methods cannot be overridden by subclasses, the generated proxy class cannot insert aspect interceptor code. The final method runs directly, bypassing the aspect."
+  },
+  {
+    "id": "spring-quiz-t11-24",
+    "topic": "Spring Boot Configurations",
+    "difficulty": "medium",
+    "questionText": "If 'app.rate.24' is defined in application.properties as 50, in JVM properties as 100, and as an OS environment variable as 150, what value is resolved?",
+    "codeSnippet": "@Value(\"${app.rate.24}\")\nprivate int rate;",
+    "options": [
+      "150 (OS Environment variables take highest precedence)",
+      "50 (application.properties overrides all external configurations)",
+      "It throws a property resolution error due to conflict",
+      "100 (JVM system properties override OS environment variables and properties files)"
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring Boot property sources order: 1) Command-line args, 2) JVM System properties (-D...), 3) OS environment variables, 4) application.properties. Thus, the JVM value of 100 is selected."
+  },
+  {
+    "id": "spring-quiz-t12-24",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "How does the integer phase value 124 returned by getPhase() in SmartLifecycle affect context startup and shutdown order?",
+    "codeSnippet": "public class CustomService implements SmartLifecycle {\n    @Override\n    public int getPhase() { return 124; }\n}",
+    "options": [
+      "Beans with lower phase numbers are started first. During shutdown, beans with higher phase numbers are stopped first.",
+      "Beans with higher phase numbers are started first and stopped last.",
+      "The phase determines the priority thread pool, where higher phase means more threads.",
+      "SmartLifecycle beans start concurrently and ignore the phase value."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "SmartLifecycle defines getPhase() to resolve dependency execution order: lower phase numbers start first (e.g. databases, dependencies) and stop last. Shutdown goes in reverse, stopping higher phase numbers first."
+  },
+  {
+    "id": "spring-quiz-t13-24",
+    "topic": "Spring Caching",
+    "difficulty": "hard",
+    "questionText": "Why does the cache eviction fail under the configuration below?",
+    "codeSnippet": "@Cacheable(value = \"users_cache_24\", key = \"#id\")\npublic User getUser(Long id, Context ctx) { ... }\n\n@CacheEvict(value = \"users_cache_24\")\npublic void evictUser(Long id) { ... }",
+    "options": [
+      "Because cache names must be different.",
+      "Because evictUser() does not define a key, causing Spring to use SimpleKeyGenerator on '#id' while getUser() keys on '#id', resulting in mismatch.",
+      "Because evictUser() returns void.",
+      "Because CacheEvict requires @Transactional to run."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "By default, key generation combines all method arguments. For getUser(), the key combines id and ctx, but key='#id' overrides it to 'id'. For evictUser(), the key defaults to 'id' as well, but if arguments mismatch in key structure, we must explicitly set key='#id' in both to prevent cache desync."
+  },
+  {
+    "id": "spring-quiz-t14-24",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "hard",
+    "questionText": "What is the runtime impact of performing a blocking/long-running task inside the @PostConstruct method of 'SetupBean_24'?",
+    "codeSnippet": "@Component\npublic class SetupBean_24 {\n    @PostConstruct\n    public void init() {\n        // Blocks on network/external server call\n        loadConfiguration();\n    }\n}",
+    "options": [
+      "It triggers an asynchronous thread pool execution and continues startup.",
+      "Spring immediately throws an InitializationTimeoutException.",
+      "The JVM runs the method in the background without affecting startup.",
+      "It blocks the main startup thread, preventing the application context from finishing initialization and starting the web server."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "@PostConstruct methods are executed synchronously during bean instantiation on the main thread. If a bean blocks in @PostConstruct, application context startup halts, blocking the web server (Tomcat) from starting. Use events or Async tasks instead."
+  },
+  {
+    "id": "spring-quiz-t15-24",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "If a controller throws a 'DatabaseException_24' (which extends RuntimeException), which ExceptionHandler method inside ControllerAdvice is invoked?",
+    "codeSnippet": "@ControllerAdvice\npublic class GlobalHandler {\n    @ExceptionHandler(RuntimeException.class)\n    public String handleRuntime(RuntimeException ex) { return \"Runtime\"; }\n\n    @ExceptionHandler(DatabaseException_24.class)\n    public String handleDb(DatabaseException_24 ex) { return \"Db\"; }\n}",
+    "options": [
+      "handleRuntime(), because RuntimeException is checked first as the parent class.",
+      "Both methods run in sequence.",
+      "Spring throws an ExceptionHandlerAmbiguityException at startup.",
+      "handleDb(), because it is mapped to the most specific exception type matching the exception thrown."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Spring's exception resolver resolves to the exception handler that maps to the most specific exception in the type hierarchy. Since 'DatabaseException_24' matches the thrown exception exactly, handleDb() is preferred over handleRuntime()."
+  },
+  {
+    "id": "spring-quiz-t16-24",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "What is the state of entity 'Account_24' and the database result when the method process() exits?",
+    "codeSnippet": "@Transactional\npublic void process(Long id) {\n    Account_24 acc = repository.findById(id).orElseThrow();\n    entityManager.detach(acc);\n    acc.setBalance(1000);\n}",
+    "options": [
+      "The entity is in the detached state; no database updates occur.",
+      "The entity is in the persistent state; the database is updated with balance 1000.",
+      "An EntityNotFoundException is thrown during detach.",
+      "Hibernate throws a LazyInitializationException when setting the balance."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Calling entityManager.detach(entity) removes the entity from the Persistence Context. It changes from 'persistent' to 'detached' state. Hibernate no longer tracks modifications, so the balance change is not flushed to the database."
+  },
+  {
+    "id": "spring-quiz-t17-24",
+    "topic": "Spring Cloud & Resilience",
+    "difficulty": "medium",
+    "questionText": "A Resilience4j Circuit Breaker has slidingWindowSize = 14 and failureRateThreshold = 50%. If 9 requests fail within the sliding window, what is the state transition?",
+    "codeSnippet": "CircuitBreakerConfig config = CircuitBreakerConfig.custom()\n    .slidingWindowSize(14)\n    .failureRateThreshold(50)\n    .build();",
+    "options": [
+      "Transitions to OPEN state (failure rate is 64%, exceeding the 50% threshold).",
+      "Remains in CLOSED state because the sliding window must exceed capacity.",
+      "Transitions to HALF_OPEN state.",
+      "Throws a CircuitBreakerOpenException immediately."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Once the sliding window registers 14 requests, Resilience4j calculates the failure rate. Since 9/14 (64%) is greater than or equal to 50%, the Circuit Breaker transitions to the OPEN state."
+  },
+  {
+    "id": "spring-quiz-t18-24",
+    "topic": "Spring Boot Internals",
+    "difficulty": "hard",
+    "questionText": "Inside a single configuration class, what determines the registration order of beans and the result of @ConditionalOnMissingBean?",
+    "codeSnippet": "@Configuration\npublic class AppConfig {\n    @Bean\n    public BeanVal_24 primaryBean() { return new BeanVal_24(\"A\"); }\n\n    @Bean\n    @ConditionalOnMissingBean(BeanVal_24.class)\n    public BeanVal_24 fallbackBean() { return new BeanVal_24(\"B\"); }\n}",
+    "options": [
+      "fallbackBean overrides primaryBean because @ConditionalOnMissingBean forces precedence.",
+      "Both beans are registered, creating an array list injection candidate.",
+      "Bean methods are registered in order of definition. primaryBean() registers first, causing fallbackBean()'s conditional check to fail. Only primaryBean is registered.",
+      "Spring throws a BeanDefinitionOverrideException during startup."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Within a single configuration class, beans are parsed and registered sequentially. Since primaryBean() is defined first, its bean exists when fallbackBean() is evaluated. The conditional check fails, and fallbackBean() is skipped."
+  },
+  {
+    "id": "spring-quiz-t19-24",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "A controller returns an instance of 'ResponseData_24'. If fields are private and no getters are defined, what is the HTTP response behavior?",
+    "codeSnippet": "public class ResponseData_24 {\n    private String status;\n    public ResponseData_24(String status) { this.status = status; }\n    // No getters\n}",
+    "options": [
+      "HTTP 200 with JSON payload {\"status\":null}.",
+      "HTTP 500 error or exception (Jackson throws an InvalidDefinitionException: No serializer found).",
+      "HTTP 200 with JSON payload {\"status\":\"...\"} using reflection.",
+      "The code fails to compile because classes returned from RestController require getters."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Jackson (Spring Boot's default serializer) uses public getter methods to discover properties to write to JSON. If fields are private and no getters/setters/annotations are present, Jackson throws an exception, resulting in an HTTP 500."
+  },
+  {
+    "id": "spring-quiz-t20-24",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "If outerMethod() is marked as @Transactional and invokes nestedMethod() which is marked as @Transactional(propagation = Propagation.NESTED), what happens to DB updates if nestedMethod() fails and throws an exception caught inside outerMethod()?",
+    "codeSnippet": "@Transactional\npublic void outerMethod() {\n    try {\n        innerService.nestedMethod();\n    } catch (Exception e) {\n        // Exception caught\n    }\n    // Save other data\n}",
+    "options": [
+      "The entire transaction is rolled back because the outer method was marked as Transactional.",
+      "Only nestedMethod()'s updates are rolled back to the savepoint; outerMethod()'s updates can still commit successfully.",
+      "nestedMethod()'s updates are committed because the exception was caught in the outer method.",
+      "Spring throws a NestedTransactionNotSupportedException."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Propagation.NESTED creates a nested transaction using database savepoints. If the nested transaction fails and its exception is caught and handled inside the outer transaction, only the nested transaction rolls back to its savepoint. The outer transaction remains valid."
+  },
+  {
+    "id": "spring-quiz-t1-25",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "In the service below, orderProcessor() is invoked from an external REST controller. What is the transactional behavior of saveOrder()?",
+    "codeSnippet": "@Service\npublic class OrderService_25 {\n    public void orderProcessor() {\n        saveOrder(); // Self-invocation\n    }\n\n    @Transactional\n    public void saveOrder() {\n        // Save database record\n    }\n}",
+    "options": [
+      "No transaction starts, because self-invocation bypasses the Spring AOP proxy.",
+      "Spring starts a new transaction automatically using aspect interception.",
+      "The application throws a CircularDependencyException at startup.",
+      "A TransactionRequiredException is thrown during execution."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Spring's declarative annotations rely on AOP proxy wrappers. Method calls from outside go through the proxy, running transaction interceptors. Direct internal calls (self-invocation) run directly on the target object, bypassing the proxy and annotations."
+  },
+  {
+    "id": "spring-quiz-t2-25",
+    "topic": "Spring Core & Scopes",
+    "difficulty": "hard",
+    "questionText": "You inject a prototype-scoped bean 'RequestTracker_25' into a singleton controller 'AnalyticsController_25'. How does 'RequestTracker_25' behave across multiple HTTP requests?",
+    "codeSnippet": "@Scope(\"prototype\")\n@Component\npublic class RequestTracker_25 {}\n\n@RestController\npublic class AnalyticsController_25 {\n    @Autowired\n    private RequestTracker_25 tracker;\n}",
+    "options": [
+      "A new instance of 'RequestTracker_25' is created for every HTTP request.",
+      "Spring throws a ScopeMismatchException during startup.",
+      "The application fails to start because prototype beans cannot be injected into singletons.",
+      "The controller reuses the exact same instance of 'RequestTracker_25' injected at startup, behaving as a singleton."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Because the controller is a singleton, it is initialized once. Consequently, its fields are injected once. The prototype-scoped bean is instantiated during this injection, and that same instance is shared for all requests. To resolve, use scoped proxies."
+  },
+  {
+    "id": "spring-quiz-t3-25",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If a transaction method throws an Exception (checked exception) during database operations, what is the default rollback behavior?",
+    "codeSnippet": "@Transactional\npublic void process(User user) throws Exception {\n    UserRepo_25.save(user);\n    if (user.getName() == null) {\n        throw new Exception(\"Invalid User\");\n    }\n}",
+    "options": [
+      "The transaction is committed, and changes are saved because checked exceptions do not trigger rollback by default.",
+      "The transaction is automatically rolled back for all exceptions.",
+      "The compiler throws an error because Transactional cannot declare checked throws.",
+      "The transaction rolls back, but only if the database isolation is SERIALIZABLE."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Spring's @Transactional default configuration rolls back transactions only for unchecked exceptions (subclasses of RuntimeException and Error). Checked exceptions (like Exception, IOException) do not trigger rollback unless configured as @Transactional(rollbackFor = Exception.class)."
+  },
+  {
+    "id": "spring-quiz-t4-25",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "What occurs when Spring starts up and detects a circular constructor dependency between singleton beans 'BeanA_25' and 'BeanB_25'?",
+    "codeSnippet": "@Component\npublic class BeanA_25 {\n    public BeanA_25(BeanB_25 b) {}\n}\n@Component\npublic class BeanB_25 {\n    public BeanB_25(BeanA_25 a) {}\n}",
+    "options": [
+      "Spring automatically resolves the cycle by injecting a dynamic proxy.",
+      "The JVM crashes with a StackOverflowError during initialization.",
+      "Spring instantiates both beans as null.",
+      "The application fails to start and throws a BeanCurrentlyInCreationException."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Unlike setter/field injection, constructor dependencies must be resolved during object creation. Since neither 'BeanA_25' nor 'BeanB_25' can be constructed without the other, Spring cannot resolve the dependency cycle and throws a BeanCurrentlyInCreationException."
+  },
+  {
+    "id": "spring-quiz-t5-25",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "An entity has a lazy-loaded collection association. If you fetch all 5 parent entities and access their associations in a loop, how many SQL queries hit the database?",
+    "codeSnippet": "List<Parent> parents = parentRepository.findAll(); // Fetches 5 parents\nfor (Parent p : parents) {\n    System.out.println(p.getChildren().size()); // Lazy load\n}",
+    "options": [
+      "1 SQL query.",
+      "5 SQL queries.",
+      "2 SQL queries.",
+      "6 SQL queries."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "This is the N+1 query problem. The initial query fetches the parents (1 query). When accessing the lazy collection for each parent in the loop, Hibernate sends a separate select query per parent (5 queries), resulting in 6 queries."
+  },
+  {
+    "id": "spring-quiz-t6-25",
+    "topic": "Spring WebFlux",
+    "difficulty": "hard",
+    "questionText": "What is the hazard of calling a blocking method like RestTemplate inside a Spring WebFlux controller running on Netty event loops?",
+    "codeSnippet": "@GetMapping(\"/data\")\npublic Mono<String> getData() {\n    return Mono.fromCallable(() -> restTemplate.getForObject(\"https://api.com\", String.class));\n}",
+    "options": [
+      "WebFlux automatically shifts the call to virtual threads to avoid blocking.",
+      "It blocks the Netty EventLoop thread, reducing server capacity to process concurrent requests and causing starvation.",
+      "The controller immediately throws a BlockedEventLoopException during compilation.",
+      "It causes a deadlock because Netty restricts HTTP requests."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "WebFlux uses a small number of non-blocking event loop threads. Blocking operations on these threads exhaust the pool and block the server from handling other connections. Offload blocking logic using subscribeOn(Schedulers.boundedElastic())."
+  },
+  {
+    "id": "spring-quiz-t7-25",
+    "topic": "Spring Security",
+    "difficulty": "medium",
+    "questionText": "How do you insert a custom filter 'CustomAuthFilter_25' in a security chain so it executes before UsernamePasswordAuthenticationFilter?",
+    "codeSnippet": "@Bean\npublic SecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n    http.addFilterBefore(new CustomAuthFilter_25(), UsernamePasswordAuthenticationFilter.class);\n    return http.build();\n}",
+    "options": [
+      "Annotate CustomAuthFilter_25 with @Order(Ordered.HIGHEST_PRECEDENCE).",
+      "Register CustomAuthFilter_25 as a Spring @Component; Spring Security loads custom beans first.",
+      "Declare CustomAuthFilter_25 inside application.properties under security.filter.order.",
+      "Use addFilterBefore(new CustomAuthFilter_25(), UsernamePasswordAuthenticationFilter.class) inside HttpSecurity config."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "The order of filters inside a SecurityFilterChain is explicitly configured via HttpSecurity APIs. Class-level @Order annotations do not position filters within the SecurityFilterChain."
+  },
+  {
+    "id": "spring-quiz-t8-25",
+    "topic": "Spring Core",
+    "difficulty": "medium",
+    "questionText": "If a payment service interface has a default bean marked with @Primary, and another bean with qualifier 'customPaymentSvc_25', what is injected?",
+    "codeSnippet": "@RestController\npublic class PaymentController {\n    @Autowired\n    @Qualifier(\"customPaymentSvc_25\")\n    private PaymentService service;\n}",
+    "options": [
+      "The @Primary bean is injected because primary beans take highest precedence.",
+      "A BeanCreationException is thrown due to injection ambiguity.",
+      "The bean annotated with @Qualifier(\"customPaymentSvc_25\") is injected, overriding @Primary.",
+      "Both beans are injected inside a wrapper candidate proxy."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "While @Primary sets a default candidate, an explicit @Qualifier specifies the precise bean name requested. Explicit qualifiers take precedence over primary bean designations."
+  },
+  {
+    "id": "spring-quiz-t9-25",
+    "topic": "Spring Data JPA",
+    "difficulty": "medium",
+    "questionText": "If you specify a derived query method using property name 'emailAddress_25' which is missing on the Entity, what happens?",
+    "codeSnippet": "public interface UserRepository extends JpaRepository<User, Long> {\n    List<User> findByemailAddress_25(String email); // Entity field is 'email'\n}",
+    "options": [
+      "The query executes but returns an empty list at runtime.",
+      "Spring Data fallback parses it to a native SQL query.",
+      "Spring Boot throws a PropertyReferenceException and fails to start during application context initialization.",
+      "A compile-time error occurs on the repository interface."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Spring Data JPA parses derived query methods at application startup to validate them against the Entity's properties. If a method references a missing field like 'emailAddress_25', it throws a PropertyReferenceException and halts startup."
+  },
+  {
+    "id": "spring-quiz-t10-25",
+    "topic": "Spring Core & AOP",
+    "difficulty": "hard",
+    "questionText": "What happens if you apply @Transactional to a final method inside bean class 'DataFetcher_25' proxied by Spring AOP CGLIB subclassing?",
+    "codeSnippet": "public class DataFetcher_25 {\n    @Transactional\n    public final void loadData() {\n        // DB changes\n    }\n}",
+    "options": [
+      "Spring throws a FinalMethodAopException at startup.",
+      "The transaction aspect is bypassed silently because CGLIB creates a subclass and cannot override final methods.",
+      "The application throws a ClassCastException during method call.",
+      "The JVM crashes at runtime when calling the final method."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "CGLIB creates proxies by generating a dynamic subclass at runtime. Because final methods cannot be overridden by subclasses, the generated proxy class cannot insert aspect interceptor code. The final method runs directly, bypassing the aspect."
+  },
+  {
+    "id": "spring-quiz-t11-25",
+    "topic": "Spring Boot Configurations",
+    "difficulty": "medium",
+    "questionText": "If 'app.rate.25' is defined in application.properties as 50, in JVM properties as 100, and as an OS environment variable as 150, what value is resolved?",
+    "codeSnippet": "@Value(\"${app.rate.25}\")\nprivate int rate;",
+    "options": [
+      "150 (OS Environment variables take highest precedence)",
+      "100 (JVM system properties override OS environment variables and properties files)",
+      "50 (application.properties overrides all external configurations)",
+      "It throws a property resolution error due to conflict"
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Spring Boot property sources order: 1) Command-line args, 2) JVM System properties (-D...), 3) OS environment variables, 4) application.properties. Thus, the JVM value of 100 is selected."
+  },
+  {
+    "id": "spring-quiz-t12-25",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "medium",
+    "questionText": "How does the integer phase value 125 returned by getPhase() in SmartLifecycle affect context startup and shutdown order?",
+    "codeSnippet": "public class CustomService implements SmartLifecycle {\n    @Override\n    public int getPhase() { return 125; }\n}",
+    "options": [
+      "Beans with higher phase numbers are started first and stopped last.",
+      "The phase determines the priority thread pool, where higher phase means more threads.",
+      "Beans with lower phase numbers are started first. During shutdown, beans with higher phase numbers are stopped first.",
+      "SmartLifecycle beans start concurrently and ignore the phase value."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "SmartLifecycle defines getPhase() to resolve dependency execution order: lower phase numbers start first (e.g. databases, dependencies) and stop last. Shutdown goes in reverse, stopping higher phase numbers first."
+  },
+  {
+    "id": "spring-quiz-t13-25",
+    "topic": "Spring Caching",
+    "difficulty": "hard",
+    "questionText": "Why does the cache eviction fail under the configuration below?",
+    "codeSnippet": "@Cacheable(value = \"users_cache_25\", key = \"#id\")\npublic User getUser(Long id, Context ctx) { ... }\n\n@CacheEvict(value = \"users_cache_25\")\npublic void evictUser(Long id) { ... }",
+    "options": [
+      "Because cache names must be different.",
+      "Because evictUser() returns void.",
+      "Because evictUser() does not define a key, causing Spring to use SimpleKeyGenerator on '#id' while getUser() keys on '#id', resulting in mismatch.",
+      "Because CacheEvict requires @Transactional to run."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "By default, key generation combines all method arguments. For getUser(), the key combines id and ctx, but key='#id' overrides it to 'id'. For evictUser(), the key defaults to 'id' as well, but if arguments mismatch in key structure, we must explicitly set key='#id' in both to prevent cache desync."
+  },
+  {
+    "id": "spring-quiz-t14-25",
+    "topic": "Spring Core & Bean Lifecycle",
+    "difficulty": "hard",
+    "questionText": "What is the runtime impact of performing a blocking/long-running task inside the @PostConstruct method of 'SetupBean_25'?",
+    "codeSnippet": "@Component\npublic class SetupBean_25 {\n    @PostConstruct\n    public void init() {\n        // Blocks on network/external server call\n        loadConfiguration();\n    }\n}",
+    "options": [
+      "It triggers an asynchronous thread pool execution and continues startup.",
+      "Spring immediately throws an InitializationTimeoutException.",
+      "It blocks the main startup thread, preventing the application context from finishing initialization and starting the web server.",
+      "The JVM runs the method in the background without affecting startup."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "@PostConstruct methods are executed synchronously during bean instantiation on the main thread. If a bean blocks in @PostConstruct, application context startup halts, blocking the web server (Tomcat) from starting. Use events or Async tasks instead."
+  },
+  {
+    "id": "spring-quiz-t15-25",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "If a controller throws a 'DatabaseException_25' (which extends RuntimeException), which ExceptionHandler method inside ControllerAdvice is invoked?",
+    "codeSnippet": "@ControllerAdvice\npublic class GlobalHandler {\n    @ExceptionHandler(RuntimeException.class)\n    public String handleRuntime(RuntimeException ex) { return \"Runtime\"; }\n\n    @ExceptionHandler(DatabaseException_25.class)\n    public String handleDb(DatabaseException_25 ex) { return \"Db\"; }\n}",
+    "options": [
+      "handleRuntime(), because RuntimeException is checked first as the parent class.",
+      "Both methods run in sequence.",
+      "handleDb(), because it is mapped to the most specific exception type matching the exception thrown.",
+      "Spring throws an ExceptionHandlerAmbiguityException at startup."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Spring's exception resolver resolves to the exception handler that maps to the most specific exception in the type hierarchy. Since 'DatabaseException_25' matches the thrown exception exactly, handleDb() is preferred over handleRuntime()."
+  },
+  {
+    "id": "spring-quiz-t16-25",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "What is the state of entity 'Account_25' and the database result when the method process() exits?",
+    "codeSnippet": "@Transactional\npublic void process(Long id) {\n    Account_25 acc = repository.findById(id).orElseThrow();\n    entityManager.detach(acc);\n    acc.setBalance(1000);\n}",
+    "options": [
+      "The entity is in the detached state; no database updates occur.",
+      "The entity is in the persistent state; the database is updated with balance 1000.",
+      "An EntityNotFoundException is thrown during detach.",
+      "Hibernate throws a LazyInitializationException when setting the balance."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Calling entityManager.detach(entity) removes the entity from the Persistence Context. It changes from 'persistent' to 'detached' state. Hibernate no longer tracks modifications, so the balance change is not flushed to the database."
+  },
+  {
+    "id": "spring-quiz-t17-25",
+    "topic": "Spring Cloud & Resilience",
+    "difficulty": "medium",
+    "questionText": "A Resilience4j Circuit Breaker has slidingWindowSize = 10 and failureRateThreshold = 50%. If 6 requests fail within the sliding window, what is the state transition?",
+    "codeSnippet": "CircuitBreakerConfig config = CircuitBreakerConfig.custom()\n    .slidingWindowSize(10)\n    .failureRateThreshold(50)\n    .build();",
+    "options": [
+      "Remains in CLOSED state because the sliding window must exceed capacity.",
+      "Transitions to HALF_OPEN state.",
+      "Throws a CircuitBreakerOpenException immediately.",
+      "Transitions to OPEN state (failure rate is 60%, exceeding the 50% threshold)."
+    ],
+    "correctOptionIndex": 3,
+    "explanation": "Once the sliding window registers 10 requests, Resilience4j calculates the failure rate. Since 6/10 (60%) is greater than or equal to 50%, the Circuit Breaker transitions to the OPEN state."
+  },
+  {
+    "id": "spring-quiz-t18-25",
+    "topic": "Spring Boot Internals",
+    "difficulty": "hard",
+    "questionText": "Inside a single configuration class, what determines the registration order of beans and the result of @ConditionalOnMissingBean?",
+    "codeSnippet": "@Configuration\npublic class AppConfig {\n    @Bean\n    public BeanVal_25 primaryBean() { return new BeanVal_25(\"A\"); }\n\n    @Bean\n    @ConditionalOnMissingBean(BeanVal_25.class)\n    public BeanVal_25 fallbackBean() { return new BeanVal_25(\"B\"); }\n}",
+    "options": [
+      "fallbackBean overrides primaryBean because @ConditionalOnMissingBean forces precedence.",
+      "Both beans are registered, creating an array list injection candidate.",
+      "Bean methods are registered in order of definition. primaryBean() registers first, causing fallbackBean()'s conditional check to fail. Only primaryBean is registered.",
+      "Spring throws a BeanDefinitionOverrideException during startup."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Within a single configuration class, beans are parsed and registered sequentially. Since primaryBean() is defined first, its bean exists when fallbackBean() is evaluated. The conditional check fails, and fallbackBean() is skipped."
+  },
+  {
+    "id": "spring-quiz-t19-25",
+    "topic": "Spring MVC",
+    "difficulty": "medium",
+    "questionText": "A controller returns an instance of 'ResponseData_25'. If fields are private and no getters are defined, what is the HTTP response behavior?",
+    "codeSnippet": "public class ResponseData_25 {\n    private String status;\n    public ResponseData_25(String status) { this.status = status; }\n    // No getters\n}",
+    "options": [
+      "HTTP 200 with JSON payload {\"status\":null}.",
+      "HTTP 200 with JSON payload {\"status\":\"...\"} using reflection.",
+      "HTTP 500 error or exception (Jackson throws an InvalidDefinitionException: No serializer found).",
+      "The code fails to compile because classes returned from RestController require getters."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Jackson (Spring Boot's default serializer) uses public getter methods to discover properties to write to JSON. If fields are private and no getters/setters/annotations are present, Jackson throws an exception, resulting in an HTTP 500."
+  },
+  {
+    "id": "spring-quiz-t20-25",
+    "topic": "Spring Data JPA",
+    "difficulty": "hard",
+    "questionText": "If outerMethod() is marked as @Transactional and invokes nestedMethod() which is marked as @Transactional(propagation = Propagation.NESTED), what happens to DB updates if nestedMethod() fails and throws an exception caught inside outerMethod()?",
+    "codeSnippet": "@Transactional\npublic void outerMethod() {\n    try {\n        innerService.nestedMethod();\n    } catch (Exception e) {\n        // Exception caught\n    }\n    // Save other data\n}",
+    "options": [
+      "The entire transaction is rolled back because the outer method was marked as Transactional.",
+      "nestedMethod()'s updates are committed because the exception was caught in the outer method.",
+      "Only nestedMethod()'s updates are rolled back to the savepoint; outerMethod()'s updates can still commit successfully.",
+      "Spring throws a NestedTransactionNotSupportedException."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Propagation.NESTED creates a nested transaction using database savepoints. If the nested transaction fails and its exception is caught and handled inside the outer transaction, only the nested transaction rolls back to its savepoint. The outer transaction remains valid."
   }
 ];

@@ -1,6 +1,6 @@
 
 import React from "react"
-import Highlight, { defaultProps } from "prism-react-renderer"
+import { Highlight } from "prism-react-renderer"
 import theme from "../theme/prismTheme"
 
 interface Props {
@@ -11,10 +11,9 @@ interface Props {
 export default function CodeBlock({ code, language }: Props) {
   return (
     <Highlight
-      {...defaultProps}
-      theme={theme}
+      theme={theme as any}
       code={code.trim()}
-      language={language as any}
+      language={language}
     >
       {({ className, style, tokens, getLineProps, getTokenProps }) => (
         <pre className={className} style={{ ...style, padding: "20px" }}>
