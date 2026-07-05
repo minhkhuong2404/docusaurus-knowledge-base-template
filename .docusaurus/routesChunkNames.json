@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-8e1": {
+  "/-673": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-9c4": {
+  "/-05a": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -5701,7 +5701,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-d38": {
+  "/-2c2": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -10975,6 +10975,10 @@
   "/technical-knowledge/system-design/strangler-fig-pattern-ec3": {
     "__comp": "17896441",
     "content": "609055e5"
+  },
+  "/technical-knowledge/system-design/system-design-daily-quiz-199": {
+    "__comp": "17896441",
+    "content": "5171caa6"
   },
   "/technical-knowledge/system-design/two-phase-commit-bd2": {
     "__comp": "17896441",

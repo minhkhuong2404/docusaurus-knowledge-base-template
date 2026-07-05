@@ -6456,6 +6456,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/system-design-daily-quiz",
+              "path": "/technical-knowledge/system-design/system-design-daily-quiz",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/two-phase-commit",
               "path": "/technical-knowledge/system-design/two-phase-commit",
               "sidebar": "tutorialSidebar"

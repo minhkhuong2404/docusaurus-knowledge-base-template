@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '8e1'),
+    component: ComponentCreator('/', '673'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '9c4'),
+        component: ComponentCreator('/', '05a'),
         routes: [
           {
             path: '/tags',
@@ -7117,7 +7117,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'd38'),
+            component: ComponentCreator('/', '2c2'),
             routes: [
               {
                 path: '/aws',
@@ -15014,6 +15014,12 @@ export default [
               {
                 path: '/technical-knowledge/system-design/strangler-fig-pattern',
                 component: ComponentCreator('/technical-knowledge/system-design/strangler-fig-pattern', 'ec3'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/system-design-daily-quiz',
+                component: ComponentCreator('/technical-knowledge/system-design/system-design-daily-quiz', '199'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

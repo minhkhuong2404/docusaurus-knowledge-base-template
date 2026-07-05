@@ -14,7 +14,8 @@ const sidebars: SidebarsConfig = {
 			collapsed: false,
 			items: [
 				'technical-knowledge/java/java-daily-quiz',
-				'technical-knowledge/spring/spring-boot-daily-quiz'
+				'technical-knowledge/spring/spring-boot-daily-quiz',
+				'technical-knowledge/system-design/system-design-daily-quiz'
 			]
 		},
 		{

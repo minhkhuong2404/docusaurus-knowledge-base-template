@@ -114,7 +114,14 @@ export default function DailyQuiz({ questions, quizKey }: DailyQuizProps) {
 
   const handleNextQuestion = () => {
     if (shuffledQuestions.length === 0) return;
-    const nextIndex = (currentIndex + 1) % shuffledQuestions.length;
+    let nextIndex = currentIndex;
+    if (shuffledQuestions.length > 1) {
+      while (nextIndex === currentIndex) {
+        nextIndex = Math.floor(Math.random() * shuffledQuestions.length);
+      }
+    } else {
+      nextIndex = 0;
+    }
     setCurrentIndex(nextIndex);
     setSelectedOptionIndex(null);
     setIsAnswered(false);
