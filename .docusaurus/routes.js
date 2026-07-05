@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '673'),
+    component: ComponentCreator('/', 'ad0'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '05a'),
+        component: ComponentCreator('/', 'a75'),
         routes: [
           {
             path: '/tags',
@@ -408,6 +408,11 @@ export default [
           {
             path: '/tags/availability',
             component: ComponentCreator('/tags/availability', '21c'),
+            exact: true
+          },
+          {
+            path: '/tags/avro',
+            component: ComponentCreator('/tags/avro', '0a9'),
             exact: true
           },
           {
@@ -4851,6 +4856,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/poison-messages',
+            component: ComponentCreator('/tags/poison-messages', 'ae5'),
+            exact: true
+          },
+          {
             path: '/tags/poison-pills',
             component: ComponentCreator('/tags/poison-pills', 'b4e'),
             exact: true
@@ -5251,6 +5261,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/rebalance',
+            component: ComponentCreator('/tags/rebalance', '373'),
+            exact: true
+          },
+          {
             path: '/tags/rebalancing',
             component: ComponentCreator('/tags/rebalancing', '07c'),
             exact: true
@@ -5491,6 +5506,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/rocksdb',
+            component: ComponentCreator('/tags/rocksdb', '7b0'),
+            exact: true
+          },
+          {
             path: '/tags/roles',
             component: ComponentCreator('/tags/roles', '2dc'),
             exact: true
@@ -5653,6 +5673,11 @@ export default [
           {
             path: '/tags/schema-design',
             component: ComponentCreator('/tags/schema-design', 'f61'),
+            exact: true
+          },
+          {
+            path: '/tags/schema-evolution',
+            component: ComponentCreator('/tags/schema-evolution', '905'),
             exact: true
           },
           {
@@ -7117,7 +7142,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '2c2'),
+            component: ComponentCreator('/', 'e04'),
             routes: [
               {
                 path: '/aws',
@@ -15019,7 +15044,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/system-design-daily-quiz',
-                component: ComponentCreator('/technical-knowledge/system-design/system-design-daily-quiz', '199'),
+                component: ComponentCreator('/technical-knowledge/system-design/system-design-daily-quiz', '778'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

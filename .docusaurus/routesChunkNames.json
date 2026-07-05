@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-673": {
+  "/-ad0": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-05a": {
+  "/-a75": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -336,6 +336,10 @@
   "/tags/availability-21c": {
     "__comp": "df203c0f",
     "__props": "55e3cafc"
+  },
+  "/tags/avro-0a9": {
+    "__comp": "df203c0f",
+    "__props": "e50388a7"
   },
   "/tags/aws-ba5": {
     "__comp": "df203c0f",
@@ -3889,6 +3893,10 @@
     "__comp": "df203c0f",
     "__props": "37ba24b2"
   },
+  "/tags/poison-messages-ae5": {
+    "__comp": "df203c0f",
+    "__props": "4d1e39f8"
+  },
   "/tags/poison-pills-b4e": {
     "__comp": "df203c0f",
     "__props": "373fdd82"
@@ -4209,6 +4217,10 @@
     "__comp": "df203c0f",
     "__props": "dead7998"
   },
+  "/tags/rebalance-373": {
+    "__comp": "df203c0f",
+    "__props": "ec85f207"
+  },
   "/tags/rebalancing-07c": {
     "__comp": "df203c0f",
     "__props": "026768f6"
@@ -4401,6 +4413,10 @@
     "__comp": "df203c0f",
     "__props": "c1043d82"
   },
+  "/tags/rocksdb-7b0": {
+    "__comp": "df203c0f",
+    "__props": "5d8ee022"
+  },
   "/tags/roles-2dc": {
     "__comp": "df203c0f",
     "__props": "1afbabb8"
@@ -4532,6 +4548,10 @@
   "/tags/schema-design-f61": {
     "__comp": "df203c0f",
     "__props": "583a407d"
+  },
+  "/tags/schema-evolution-905": {
+    "__comp": "df203c0f",
+    "__props": "3e665dd3"
   },
   "/tags/schema-registry-73e": {
     "__comp": "df203c0f",
@@ -5701,7 +5721,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-2c2": {
+  "/-e04": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -10976,7 +10996,7 @@
     "__comp": "17896441",
     "content": "609055e5"
   },
-  "/technical-knowledge/system-design/system-design-daily-quiz-199": {
+  "/technical-knowledge/system-design/system-design-daily-quiz-778": {
     "__comp": "17896441",
     "content": "5171caa6"
   },

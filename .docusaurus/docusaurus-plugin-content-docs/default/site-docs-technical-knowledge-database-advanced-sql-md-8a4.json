@@ -1,7 +1,7 @@
 {
   "id": "technical-knowledge/database/advanced-sql",
   "title": "Advanced SQL",
-  "description": "Window functions, CTEs, subqueries, recursive queries, lateral joins, pivot/unpivot, and advanced SQL patterns.",
+  "description": "Window functions, CTEs, subqueries, recursive queries, lateral joins, pivot/unpivot, pagination patterns, EXPLAIN, and advanced SQL for senior engineers.",
   "source": "@site/docs/technical-knowledge/database/advanced-sql.md",
   "sourceDirName": "technical-knowledge/database",
   "slug": "/technical-knowledge/database/advanced-sql",
@@ -43,6 +43,16 @@
       "inline": true,
       "label": "advanced",
       "permalink": "/tags/advanced"
+    },
+    {
+      "inline": true,
+      "label": "pagination",
+      "permalink": "/tags/pagination"
+    },
+    {
+      "inline": true,
+      "label": "explain",
+      "permalink": "/tags/explain"
     }
   ],
   "version": "current",
@@ -52,7 +62,7 @@
   "frontMatter": {
     "id": "advanced-sql",
     "title": "Advanced SQL",
-    "description": "Window functions, CTEs, subqueries, recursive queries, lateral joins, pivot/unpivot, and advanced SQL patterns.",
+    "description": "Window functions, CTEs, subqueries, recursive queries, lateral joins, pivot/unpivot, pagination patterns, EXPLAIN, and advanced SQL for senior engineers.",
     "tags": [
       "database",
       "sql",
@@ -60,7 +70,9 @@
       "cte",
       "subquery",
       "recursive",
-      "advanced"
+      "advanced",
+      "pagination",
+      "explain"
     ],
     "sidebar_position": 10
   },
