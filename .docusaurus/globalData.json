@@ -6366,6 +6366,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/nginx-internals",
+              "path": "/technical-knowledge/system-design/nginx-internals",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/observability",
               "path": "/technical-knowledge/system-design/observability",
               "sidebar": "tutorialSidebar"

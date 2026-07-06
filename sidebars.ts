@@ -285,6 +285,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/system-design/circuit-breaker-pattern',
 								'technical-knowledge/system-design/bulkhead-pattern',
 								'technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway',
+								'technical-knowledge/system-design/nginx-internals',
 								'technical-knowledge/system-design/consistent-hashing-deep-dive',
 								'technical-knowledge/system-design/rate-limiting-algorithms',
 							],
