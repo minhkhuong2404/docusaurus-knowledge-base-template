@@ -45,3 +45,8 @@ The following files in `docs/technical-knowledge/interview-questions/grokking-ja
 ## Build Verification Guidelines
 - Do not run `npm run build` automatically to verify changes unless explicitly requested by the user, as the build process is very slow and compiles the entire website.
 
+## Diagram Styling & Animation Guidelines
+- Prefer custom interactive React SVG components (like [CircuitBreakerDiagram.tsx](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/src/components/CircuitBreakerDiagram.tsx)) for core system architectures, state machines, and key visual assets.
+- Standard flowchart Mermaid diagrams automatically inherit the dynamic moving arrow effect (background solid conduit + flowing dashed overlay). Ensure that custom styles do not disrupt this global flow animation.
+- Always use SVG 2 `context-fill` / `context-stroke` properties on arrowhead markers to ensure they inherit parent hover transitions.
+

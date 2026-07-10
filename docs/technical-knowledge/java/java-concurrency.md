@@ -6,6 +6,10 @@ description: Comprehensive guide to Java concurrency, covering concurrent utilit
 tags: [java, concurrency, multithreading, async, interview-prep]
 ---
 
+import CPUCacheHierarchyDiagram from '@site/src/components/CPUCacheHierarchyDiagram';
+import CompletableFuturePipelineDiagram from '@site/src/components/CompletableFuturePipelineDiagram';
+import ThreadPoolLifecycleDiagram from '@site/src/components/ThreadPoolLifecycleDiagram';
+
 # Java Concurrency & Utilities
 
 A comprehensive guide to concurrent programming in Java — from thread pools and atomic classes to advanced work-stealing algorithms like Fork/Join and modern structured concurrency.
@@ -261,24 +265,7 @@ The **Java Memory Model (JMM)** specifies the contract between the Java code, th
 
 In modern computers, processors execute instructions at gigahertz speeds, but reading from RAM takes hundreds of clock cycles (the memory wall). To bridge this latency gap, CPUs use L1, L2, and L3 hardware caches:
 
-```
-┌──────────┐      ┌──────────┐
-│  Core 0  │      │  Core 1  │
-│ ┌──────┐ │      │ ┌──────┐ │
-│ │  L1  │ │      │ │  L1  │ │
-│ └──────┘ │      │ └──────┘ │
-└────┬─────┘      └────┬─────┘
-     └─────────┬───────┘
-           ┌───▼───┐
-           │  L2   │
-           └───┬───┘
-           ┌───▼───┐
-           │  L3   │ (Shared Cache)
-           └───┬───┘
-           ┌───▼───┐
-           │  RAM  │ (Main Memory)
-           └───────┘
-```
+<CPUCacheHierarchyDiagram />
 
 When a thread modifies a variable:
 1. It writes the change to its **local processor register** or private **store buffer**.
@@ -387,8 +374,9 @@ public class ImmutableHolder {
 }
 ```
 
-> [!CAUTION]
-> **Escape during construction:** If the constructor leaks the `this` reference (e.g., registering `this` to a listener inside the constructor), final field guarantees are completely voided, and other threads can see uninitialized state.
+:::caution[Escape during construction:]
+If the constructor leaks the `this` reference (e.g., registering `this` to a listener inside the constructor), final field guarantees are completely voided, and other threads can see uninitialized state.
+:::
 
 ---
 
@@ -511,16 +499,7 @@ ThreadPoolExecutor executor = new ThreadPoolExecutor(
 
 #### Task Lifecycle
 
-```text
-Task submitted
-  → Is corePool full?
-     NO  → Create new core thread to execute task
-     YES → Is workQueue full?
-            NO  → Add task to queue
-            YES → Is maximumPoolSize reached?
-                   NO  → Create new non-core thread
-                   YES → Execute RejectionPolicy
-```
+<ThreadPoolLifecycleDiagram />
 
 > **Production rule of thumb:** Name your threads (`"order-processor-3"` instead of `"pool-1-thread-3"`) so thread dumps are readable during incidents.
 
@@ -679,15 +658,7 @@ loadDashboard("user-42").thenAccept(dashboard -> renderPage(dashboard));
 
 #### Visual Pipeline
 
-```text
-                    ┌─────────────┐
-                ┌──▶│  Fetch User  │──┐
-  supplyAsync() │   └─────────────┘  │  thenCombine()   ┌───────────────┐
-────────────────┤                    ├─────────────────▶│  Dashboard()  │
-                │   ┌──────────────┐ │                   └───────────────┘
-                └──▶│ Fetch Orders │──┘
-                    └──────────────┘
-```
+<CompletableFuturePipelineDiagram />
 
 ```java
 // Chain transformations and handle errors elegantly

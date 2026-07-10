@@ -268,9 +268,9 @@ class Child extends Parent {
 ---
 
 ### Variable Hiding (Non-Polymorphic Fields)
-> [!CAUTION]
-> **Variables (fields) are never overridden — they are only hidden.** 
-> While method calls are resolved at runtime based on the actual object type (polymorphism), variable references are resolved at compile time based on the **reference variable type**.
+:::caution[Variables (fields) are never overridden — they are only hidden.] 
+While method calls are resolved at runtime based on the actual object type (polymorphism), variable references are resolved at compile time based on the **reference variable type**.
+:::
 
 ```java
 class Parent {

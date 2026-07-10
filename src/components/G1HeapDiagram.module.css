@@ -1,0 +1,91 @@
+/* G1HeapDiagram Specific Styles */
+
+.subgraphBox {
+  fill: rgba(13, 17, 26, 0.6);
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 1.5px;
+  rx: 12px;
+  ry: 12px;
+}
+
+.subgraphTitle {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  fill: #94a3b8;
+  letter-spacing: 0.5px;
+}
+
+.node {
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.node:hover {
+  transform: translateY(-2px) scale(1.03);
+}
+
+.nodeTitle {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 800;
+  font-size: 11px;
+  fill: #ffffff;
+  text-anchor: middle;
+}
+
+.nodeDesc {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+  font-size: 8.5px;
+  fill: #cbd5e1;
+  text-anchor: middle;
+}
+
+/* Region Colors default states */
+.eden {
+  fill: rgba(20, 83, 45, 0.2);
+  stroke: rgba(74, 222, 128, 0.4);
+}
+.old {
+  fill: rgba(88, 28, 135, 0.2);
+  stroke: rgba(168, 85, 247, 0.4);
+}
+.surv {
+  fill: rgba(30, 58, 138, 0.2);
+  stroke: rgba(59, 130, 246, 0.4);
+}
+.hum {
+  fill: rgba(133, 77, 14, 0.2);
+  stroke: rgba(234, 179, 8, 0.4);
+}
+.free {
+  fill: rgba(31, 41, 55, 0.2);
+  stroke: rgba(75, 85, 99, 0.4);
+}
+
+/* Region Colors active states */
+.edenActive {
+  fill: rgba(20, 83, 45, 0.7) !important;
+  stroke: #4ade80 !important;
+  filter: drop-shadow(0 0 8px rgba(74, 222, 128, 0.6));
+}
+.oldActive {
+  fill: rgba(88, 28, 135, 0.7) !important;
+  stroke: #a855f7 !important;
+  filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.6));
+}
+.survActive {
+  fill: rgba(30, 58, 138, 0.7) !important;
+  stroke: #3b82f6 !important;
+  filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.6));
+}
+.humActive {
+  fill: rgba(133, 77, 14, 0.7) !important;
+  stroke: #eab308 !important;
+  filter: drop-shadow(0 0 8px rgba(234, 179, 8, 0.6));
+}
+.freeActive {
+  fill: rgba(31, 41, 55, 0.7) !important;
+  stroke: #9ca3af !important;
+  filter: drop-shadow(0 0 8px rgba(156, 163, 175, 0.6));
+}

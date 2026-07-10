@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-e3c": {
+  "/-a01": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-8ce": {
+  "/-b20": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -5781,7 +5781,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-45d": {
+  "/-a58": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -10336,11 +10336,11 @@
     "__comp": "17896441",
     "content": "e1e89bb9"
   },
-  "/technical-knowledge/kafka/advanced/kafka-connect-smts-111": {
+  "/technical-knowledge/kafka/advanced/kafka-connect-smts-6bd": {
     "__comp": "17896441",
     "content": "cd24d437"
   },
-  "/technical-knowledge/kafka/advanced/kafka-data-governance-8cc": {
+  "/technical-knowledge/kafka/advanced/kafka-data-governance-77c": {
     "__comp": "17896441",
     "content": "7372a84c"
   },
@@ -10348,27 +10348,27 @@
     "__comp": "17896441",
     "content": "a8e4316f"
   },
-  "/technical-knowledge/kafka/advanced/kafka-log-compaction-d22": {
+  "/technical-knowledge/kafka/advanced/kafka-log-compaction-3a9": {
     "__comp": "17896441",
     "content": "8c1cb736"
   },
-  "/technical-knowledge/kafka/advanced/kafka-mirrormaker2-9c1": {
+  "/technical-knowledge/kafka/advanced/kafka-mirrormaker2-137": {
     "__comp": "17896441",
     "content": "e8795b9d"
   },
-  "/technical-knowledge/kafka/advanced/kafka-performance-tuning-14e": {
+  "/technical-knowledge/kafka/advanced/kafka-performance-tuning-524": {
     "__comp": "17896441",
     "content": "637d90b2"
   },
-  "/technical-knowledge/kafka/advanced/kafka-security-acls-f09": {
+  "/technical-knowledge/kafka/advanced/kafka-security-acls-a63": {
     "__comp": "17896441",
     "content": "283b8b26"
   },
-  "/technical-knowledge/kafka/advanced/kafka-security-authentication-869": {
+  "/technical-knowledge/kafka/advanced/kafka-security-authentication-d19": {
     "__comp": "17896441",
     "content": "14d829e9"
   },
-  "/technical-knowledge/kafka/advanced/kafka-security-best-practices-055": {
+  "/technical-knowledge/kafka/advanced/kafka-security-best-practices-4a5": {
     "__comp": "17896441",
     "content": "fbc6c2a1"
   },
@@ -10380,7 +10380,7 @@
     "__comp": "17896441",
     "content": "92651169"
   },
-  "/technical-knowledge/kafka/advanced/monitoring-operations-f85": {
+  "/technical-knowledge/kafka/advanced/monitoring-operations-b55": {
     "__comp": "17896441",
     "content": "5cae2ae0"
   },
@@ -10424,15 +10424,15 @@
     "__comp": "17896441",
     "content": "6438a9db"
   },
-  "/technical-knowledge/kafka/core/kafka-partitioning-strategies-f89": {
+  "/technical-knowledge/kafka/core/kafka-partitioning-strategies-f23": {
     "__comp": "17896441",
     "content": "c37b5ac8"
   },
-  "/technical-knowledge/kafka/core/kafka-producers-consumers-8ae": {
+  "/technical-knowledge/kafka/core/kafka-producers-consumers-b4d": {
     "__comp": "17896441",
     "content": "16e4fe12"
   },
-  "/technical-knowledge/kafka/core/kafka-vs-rabbitmq-5c3": {
+  "/technical-knowledge/kafka/core/kafka-vs-rabbitmq-482": {
     "__comp": "17896441",
     "content": "a9f771b0"
   },
@@ -10448,7 +10448,7 @@
     "__comp": "17896441",
     "content": "4e515793"
   },
-  "/technical-knowledge/kafka/core/replication-789": {
+  "/technical-knowledge/kafka/core/replication-965": {
     "__comp": "17896441",
     "content": "55a950f5"
   },
@@ -10904,7 +10904,7 @@
     "__comp": "17896441",
     "content": "7bce8a09"
   },
-  "/technical-knowledge/system-design/api-composition-4e2": {
+  "/technical-knowledge/system-design/api-composition-f4f": {
     "__comp": "17896441",
     "content": "97b49958"
   },
@@ -10916,7 +10916,7 @@
     "__comp": "17896441",
     "content": "c0e5a9ef"
   },
-  "/technical-knowledge/system-design/backend-for-frontend-9c0": {
+  "/technical-knowledge/system-design/backend-for-frontend-b0b": {
     "__comp": "17896441",
     "content": "b02f3312"
   },
@@ -10924,7 +10924,7 @@
     "__comp": "17896441",
     "content": "ce0d883d"
   },
-  "/technical-knowledge/system-design/blue-green-deployment-dec": {
+  "/technical-knowledge/system-design/blue-green-deployment-c0f": {
     "__comp": "17896441",
     "content": "3f36d9af"
   },
@@ -11004,11 +11004,11 @@
     "__comp": "17896441",
     "content": "9ebe4bab"
   },
-  "/technical-knowledge/system-design/externalized-configuration-5aa": {
+  "/technical-knowledge/system-design/externalized-configuration-b1a": {
     "__comp": "17896441",
     "content": "e77cca97"
   },
-  "/technical-knowledge/system-design/feature-toggle-bb5": {
+  "/technical-knowledge/system-design/feature-toggle-a12": {
     "__comp": "17896441",
     "content": "d059e51a"
   },
@@ -11032,7 +11032,7 @@
     "__comp": "17896441",
     "content": "b14a4730"
   },
-  "/technical-knowledge/system-design/log-aggregation-e37": {
+  "/technical-knowledge/system-design/log-aggregation-794": {
     "__comp": "17896441",
     "content": "ee5a53d7"
   },
@@ -11044,7 +11044,7 @@
     "__comp": "17896441",
     "content": "3940c236"
   },
-  "/technical-knowledge/system-design/microservice-chassis-430": {
+  "/technical-knowledge/system-design/microservice-chassis-bbb": {
     "__comp": "17896441",
     "content": "a6472fd5"
   },
@@ -11088,7 +11088,7 @@
     "__comp": "17896441",
     "content": "36929883"
   },
-  "/technical-knowledge/system-design/saga-pattern-851": {
+  "/technical-knowledge/system-design/saga-pattern-fc7": {
     "__comp": "17896441",
     "content": "bd0308dc"
   },
@@ -11140,7 +11140,7 @@
     "__comp": "17896441",
     "content": "4c5a6247"
   },
-  "/technical-knowledge/system-design/webhook-bd9": {
+  "/technical-knowledge/system-design/webhook-b97": {
     "__comp": "17896441",
     "content": "a01d3cae"
   },

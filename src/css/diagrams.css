@@ -1,0 +1,330 @@
+/* ==========================================================================
+   Shared Interactive SVG Diagram Styles
+   ========================================================================== */
+
+/* Main Card Wrapper */
+.interactive-diagram-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: #090b14;
+  border: 1px solid rgba(74, 222, 128, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="light"] .interactive-diagram-container {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background-color: #ffffff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+}
+
+/* SVG Vector Canvas Box */
+.interactive-diagram-svg-wrapper {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #0d0f1e;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+[data-theme="light"] .interactive-diagram-svg-wrapper {
+  background-color: #f8fafc;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* SVG Element */
+.interactive-diagram-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Canvas Dot Matrix Grid */
+.interactive-diagram-grid-bg {
+  background-image: radial-gradient(
+    rgba(255, 255, 255, 0.04) 1px,
+    transparent 1px
+  );
+  background-size: 18px 18px;
+}
+
+[data-theme="light"] .interactive-diagram-grid-bg {
+  background-image: radial-gradient(
+    rgba(0, 0, 0, 0.03) 1px,
+    transparent 1px
+  );
+}
+
+/* Inspection Details Card */
+.interactive-diagram-details-card {
+  background: #0c0e17;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1.25rem;
+  min-height: 160px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="light"] .interactive-diagram-details-card {
+  background: #f1f5f9;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.interactive-diagram-details-card p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #e2e8f0;
+  margin-bottom: 0.75rem;
+}
+
+[data-theme="light"] .interactive-diagram-details-card p {
+  color: #334155;
+}
+
+.interactive-diagram-details-card ul {
+  padding-left: 1.25rem;
+  margin: 0;
+}
+
+.interactive-diagram-details-card li {
+  font-size: 0.9rem;
+  color: #cbd5e1;
+  margin-bottom: 0.4rem;
+  line-height: 1.4;
+}
+
+[data-theme="light"] .interactive-diagram-details-card li {
+  color: #475569;
+}
+
+.interactive-diagram-details-card li strong {
+  color: #ffffff;
+}
+
+[data-theme="light"] .interactive-diagram-details-card li strong {
+  color: #0f172a;
+}
+
+/* Card Header */
+.interactive-diagram-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 0.5rem;
+}
+
+[data-theme="light"] .interactive-diagram-card-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.interactive-diagram-card-header h3 {
+  margin: 0 !important;
+  margin-top: 0 !important;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  line-height: 1.2 !important;
+}
+
+/* Helper Guide Text */
+.interactive-diagram-helper-text {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  text-align: center;
+  margin: 0;
+}
+
+[data-theme="light"] .interactive-diagram-helper-text {
+  color: #64748b;
+}
+
+/* Indicator Dot Class */
+.interactive-diagram-indicator-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+  background-color: currentColor;
+}
+
+/* Core keyframe animations */
+@keyframes diagramBlink {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+@keyframes diagramPulse {
+  0% {
+    r: 3.5px;
+    opacity: 0.6;
+  }
+  100% {
+    r: 6px;
+    opacity: 1;
+    filter: brightness(1.2);
+  }
+}
+
+@keyframes diagramGlowParticle {
+  0% {
+    filter: drop-shadow(0 0 1px currentColor);
+  }
+  100% {
+    filter: drop-shadow(0 0 6px currentColor);
+  }
+}
+
+/* Shared Animated Elements */
+.interactive-diagram-pulse-dot {
+  animation: diagramPulse 1.8s infinite alternate;
+}
+
+.interactive-diagram-flowing-dot {
+  animation: diagramGlowParticle 1s infinite alternate;
+}
+
+/* Color States Definition */
+/* Green */
+.details-green h3 { color: #4ade80 !important; }
+.card-indicator-green {
+  color: #4ade80;
+  animation: diagramBlink 1.2s infinite;
+}
+.node-active-green {
+  filter: drop-shadow(0 0 12px rgba(74, 222, 128, 0.45));
+}
+[data-theme="light"] .details-green h3 { color: #16a34a !important; }
+[data-theme="light"] .card-indicator-green { color: #16a34a; }
+
+/* Yellow */
+.details-yellow h3 { color: #fbbf24 !important; }
+.card-indicator-yellow {
+  color: #fbbf24;
+  animation: diagramBlink 1.2s infinite;
+}
+.node-active-yellow {
+  filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.45));
+}
+[data-theme="light"] .details-yellow h3 { color: #d97706 !important; }
+[data-theme="light"] .card-indicator-yellow { color: #d97706; }
+
+/* Red */
+.details-red h3 { color: #f87171 !important; }
+.card-indicator-red {
+  color: #f87171;
+  animation: diagramBlink 1.2s infinite;
+}
+.node-active-red {
+  filter: drop-shadow(0 0 12px rgba(248, 113, 113, 0.45));
+}
+[data-theme="light"] .details-red h3 { color: #dc2626 !important; }
+[data-theme="light"] .card-indicator-red { color: #dc2626; }
+
+/* Purple */
+.details-purple h3 { color: #a855f7 !important; }
+.card-indicator-purple {
+  color: #a855f7;
+  animation: diagramBlink 1.2s infinite;
+}
+.node-active-purple {
+  filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.45));
+}
+[data-theme="light"] .details-purple h3 { color: #9333ea !important; }
+[data-theme="light"] .card-indicator-purple { color: #9333ea; }
+
+/* Cyan */
+.details-cyan h3 { color: #2dd4bf !important; }
+.card-indicator-cyan {
+  color: #2dd4bf;
+  animation: diagramBlink 1.2s infinite;
+}
+.node-active-cyan {
+  filter: drop-shadow(0 0 12px rgba(45, 212, 191, 0.45));
+}
+[data-theme="light"] .details-cyan h3 { color: #0d9488 !important; }
+[data-theme="light"] .card-indicator-cyan { color: #0d9488; }
+
+/* Blue */
+.details-blue h3 { color: #3b82f6 !important; }
+.card-indicator-blue {
+  color: #3b82f6;
+  animation: diagramBlink 1.2s infinite;
+}
+.node-active-blue {
+  filter: drop-shadow(0 0 12px rgba(59, 130, 246, 0.45));
+}
+[data-theme="light"] .details-blue h3 { color: #2563eb !important; }
+[data-theme="light"] .card-indicator-blue { color: #2563eb; }
+
+/* Gray */
+.details-gray h3 { color: #94a3b8 !important; }
+.card-indicator-gray {
+  color: #94a3b8;
+  animation: diagramBlink 1.2s infinite;
+}
+.node-active-gray {
+  filter: drop-shadow(0 0 12px rgba(148, 163, 184, 0.45));
+}
+[data-theme="light"] .details-gray h3 { color: #475569 !important; }
+[data-theme="light"] .card-indicator-gray { color: #475569; }
+
+/* Interactive Flowing Connection Paths */
+@keyframes interactivePathFlow {
+  from {
+    stroke-dashoffset: 24;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.interactive-diagram-flowing-path {
+  stroke-dasharray: 8 4 !important;
+  animation: interactivePathFlow 1.2s linear infinite !important;
+}
+
+.active-path-red {
+  stroke: #f87171 !important;
+  stroke-width: 3px !important;
+  stroke-dasharray: 8 4 !important;
+  animation: interactivePathFlow 1.2s linear infinite !important;
+}
+
+.active-path-yellow {
+  stroke: #fbbf24 !important;
+  stroke-width: 3px !important;
+  stroke-dasharray: 8 4 !important;
+  animation: interactivePathFlow 1.2s linear infinite !important;
+}
+
+.active-path-green {
+  stroke: #4ade80 !important;
+  stroke-width: 3px !important;
+  stroke-dasharray: 8 4 !important;
+  animation: interactivePathFlow 1.2s linear infinite !important;
+}
+
+.active-path-cyan {
+  stroke: #2dd4bf !important;
+  stroke-width: 3px !important;
+  stroke-dasharray: 8 4 !important;
+  animation: interactivePathFlow 1.2s linear infinite !important;
+}
+
+.active-path-purple {
+  stroke: #a855f7 !important;
+  stroke-width: 3px !important;
+  stroke-dasharray: 8 4 !important;
+  animation: interactivePathFlow 1.2s linear infinite !important;
+}
+

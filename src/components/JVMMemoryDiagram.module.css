@@ -1,0 +1,85 @@
+/* JVMMemoryDiagram Specific Styles */
+
+.subgraphBox {
+  fill: rgba(13, 17, 26, 0.6);
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 1.5px;
+  rx: 12px;
+  ry: 12px;
+}
+
+.onHeapBox {
+  fill: rgba(20, 83, 45, 0.15);
+  stroke: rgba(74, 222, 128, 0.3);
+  stroke-dasharray: 4 4;
+}
+
+.offHeapBox {
+  fill: rgba(30, 27, 75, 0.15);
+  stroke: rgba(129, 140, 248, 0.3);
+  stroke-dasharray: 4 4;
+}
+
+.subgraphTitle {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  fill: #94a3b8;
+  letter-spacing: 0.5px;
+}
+
+.node {
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), filter 0.2s ease;
+}
+
+.node:hover {
+  transform: translateY(-1px) scale(1.015);
+}
+
+.nodeActive {
+  filter: drop-shadow(0 0 10px rgba(45, 212, 191, 0.45));
+}
+
+.nodeTitle {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 800;
+  font-size: 11px;
+  fill: #ffffff;
+  text-anchor: middle;
+}
+
+.nodeTitleDark {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 800;
+  font-size: 11px;
+  fill: #e2e8f0;
+  text-anchor: middle;
+}
+
+.nodeDesc {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+  font-size: 8.5px;
+  fill: #cbd5e1;
+  text-anchor: middle;
+}
+
+.nodeDescDark {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+  font-size: 8.5px;
+  fill: #94a3b8;
+  text-anchor: middle;
+}
+
+.transitionPath {
+  opacity: 0.35;
+  transition: stroke 0.3s ease, stroke-width 0.3s ease, opacity 0.3s ease;
+}
+
+.activePath {
+  opacity: 1;
+  stroke: #2dd4bf !important;
+  stroke-width: 2px !important;
+}

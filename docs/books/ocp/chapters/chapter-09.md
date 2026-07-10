@@ -179,8 +179,9 @@ Defines the **natural ordering** of a class. Must implement `compareTo(T o)`.
   * Zero: `this == o`.
   * Positive: `this > o` (sorts `this` after `o`).
 
-> [!CAUTION]
-> Avoid direct subtraction in `compareTo()` for numbers as it can cause integer overflow errors. Use `Integer.compare(x, y)` instead.
+:::caution
+Avoid direct subtraction in `compareTo()` for numbers as it can cause integer overflow errors. Use `Integer.compare(x, y)` instead.
+::
 
 ```java
 public record Student(int id, String name) implements Comparable<Student> {

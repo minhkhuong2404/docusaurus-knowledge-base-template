@@ -24,11 +24,12 @@ Spring Data JPA gives you repository abstractions on top of JPA/Hibernate so you
 
 ## Repository Hierarchy (Quick View)
 
-```text
-Repository
-  -> CrudRepository
-  -> PagingAndSortingRepository
-  -> JpaRepository
+```mermaid
+classDiagram
+    direction BT
+    CrudRepository --|> Repository
+    PagingAndSortingRepository --|> CrudRepository
+    JpaRepository --|> PagingAndSortingRepository
 ```
 
 In most projects, `JpaRepository` is the default choice.

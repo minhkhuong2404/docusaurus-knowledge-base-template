@@ -299,8 +299,9 @@ NIO.2 provides modern Stream-based APIs to walk directories. **All stream-return
 * **`Files.walk(Path, int maxDepth, FileVisitOption...)`**: Recursively traverses depth-first. Does NOT follow symbolic links by default. Must pass `FileVisitOption.FOLLOW_LINKS` to enable.
 * **`Files.find(Path, int maxDepth, BiPredicate<Path, BasicFileAttributes>, FileVisitOption...)`**: Recursively walks and filters using a predicate that gets both the path and the attributes.
 
-> [!CAUTION]
-> If `FOLLOW_LINKS` is enabled and the directory tree has a circular reference (e.g., a symlink pointing to an ancestor folder), walking the tree will throw a `FileSystemLoopException` to prevent infinite recursion.
+:::caution
+If `FOLLOW_LINKS` is enabled and the directory tree has a circular reference (e.g., a symlink pointing to an ancestor folder), walking the tree will throw a `FileSystemLoopException` to prevent infinite recursion.
+:::
 
 ```java
 // Searching files using Files.find()

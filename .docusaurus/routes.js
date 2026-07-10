@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'e3c'),
+    component: ComponentCreator('/', 'a01'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '8ce'),
+        component: ComponentCreator('/', 'b20'),
         routes: [
           {
             path: '/tags',
@@ -7217,7 +7217,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '45d'),
+            component: ComponentCreator('/', 'a58'),
             routes: [
               {
                 path: '/aws',
@@ -14039,12 +14039,12 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/advanced/kafka-connect-smts',
-                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-connect-smts', '111'),
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-connect-smts', '6bd'),
                 exact: true
               },
               {
                 path: '/technical-knowledge/kafka/advanced/kafka-data-governance',
-                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-data-governance', '8cc'),
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-data-governance', '77c'),
                 exact: true
               },
               {
@@ -14055,32 +14055,32 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/advanced/kafka-log-compaction',
-                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-log-compaction', 'd22'),
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-log-compaction', '3a9'),
                 exact: true
               },
               {
                 path: '/technical-knowledge/kafka/advanced/kafka-mirrormaker2',
-                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-mirrormaker2', '9c1'),
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-mirrormaker2', '137'),
                 exact: true
               },
               {
                 path: '/technical-knowledge/kafka/advanced/kafka-performance-tuning',
-                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-performance-tuning', '14e'),
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-performance-tuning', '524'),
                 exact: true
               },
               {
                 path: '/technical-knowledge/kafka/advanced/kafka-security-acls',
-                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-security-acls', 'f09'),
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-security-acls', 'a63'),
                 exact: true
               },
               {
                 path: '/technical-knowledge/kafka/advanced/kafka-security-authentication',
-                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-security-authentication', '869'),
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-security-authentication', 'd19'),
                 exact: true
               },
               {
                 path: '/technical-knowledge/kafka/advanced/kafka-security-best-practices',
-                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-security-best-practices', '055'),
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-security-best-practices', '4a5'),
                 exact: true
               },
               {
@@ -14097,7 +14097,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/advanced/monitoring-operations',
-                component: ComponentCreator('/technical-knowledge/kafka/advanced/monitoring-operations', 'f85'),
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/monitoring-operations', 'b55'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14163,17 +14163,17 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/core/kafka-partitioning-strategies',
-                component: ComponentCreator('/technical-knowledge/kafka/core/kafka-partitioning-strategies', 'f89'),
+                component: ComponentCreator('/technical-knowledge/kafka/core/kafka-partitioning-strategies', 'f23'),
                 exact: true
               },
               {
                 path: '/technical-knowledge/kafka/core/kafka-producers-consumers',
-                component: ComponentCreator('/technical-knowledge/kafka/core/kafka-producers-consumers', '8ae'),
+                component: ComponentCreator('/technical-knowledge/kafka/core/kafka-producers-consumers', 'b4d'),
                 exact: true
               },
               {
                 path: '/technical-knowledge/kafka/core/kafka-vs-rabbitmq',
-                component: ComponentCreator('/technical-knowledge/kafka/core/kafka-vs-rabbitmq', '5c3'),
+                component: ComponentCreator('/technical-knowledge/kafka/core/kafka-vs-rabbitmq', '482'),
                 exact: true
               },
               {
@@ -14196,7 +14196,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/kafka/core/replication',
-                component: ComponentCreator('/technical-knowledge/kafka/core/replication', '789'),
+                component: ComponentCreator('/technical-knowledge/kafka/core/replication', '965'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14880,7 +14880,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/api-composition',
-                component: ComponentCreator('/technical-knowledge/system-design/api-composition', '4e2'),
+                component: ComponentCreator('/technical-knowledge/system-design/api-composition', 'f4f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14898,7 +14898,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/backend-for-frontend',
-                component: ComponentCreator('/technical-knowledge/system-design/backend-for-frontend', '9c0'),
+                component: ComponentCreator('/technical-knowledge/system-design/backend-for-frontend', 'b0b'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14910,7 +14910,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/blue-green-deployment',
-                component: ComponentCreator('/technical-knowledge/system-design/blue-green-deployment', 'dec'),
+                component: ComponentCreator('/technical-knowledge/system-design/blue-green-deployment', 'c0f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -15030,13 +15030,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/externalized-configuration',
-                component: ComponentCreator('/technical-knowledge/system-design/externalized-configuration', '5aa'),
+                component: ComponentCreator('/technical-knowledge/system-design/externalized-configuration', 'b1a'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/feature-toggle',
-                component: ComponentCreator('/technical-knowledge/system-design/feature-toggle', 'bb5'),
+                component: ComponentCreator('/technical-knowledge/system-design/feature-toggle', 'a12'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -15072,7 +15072,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/log-aggregation',
-                component: ComponentCreator('/technical-knowledge/system-design/log-aggregation', 'e37'),
+                component: ComponentCreator('/technical-knowledge/system-design/log-aggregation', '794'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -15090,7 +15090,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/microservice-chassis',
-                component: ComponentCreator('/technical-knowledge/system-design/microservice-chassis', '430'),
+                component: ComponentCreator('/technical-knowledge/system-design/microservice-chassis', 'bbb'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -15156,7 +15156,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/saga-pattern',
-                component: ComponentCreator('/technical-knowledge/system-design/saga-pattern', '851'),
+                component: ComponentCreator('/technical-knowledge/system-design/saga-pattern', 'fc7'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -15234,7 +15234,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/webhook',
-                component: ComponentCreator('/technical-knowledge/system-design/webhook', 'bd9'),
+                component: ComponentCreator('/technical-knowledge/system-design/webhook', 'b97'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

@@ -22,12 +22,12 @@ tags: [banking, pacs008, pacs-008, fi, to, customer]
 
 ## Where pacs.008 Sits in the Flow
 
-```text
-Customer initiation (pain.001 / channel API)
-  -> Debtor bank validates and debits
-  -> Debtor bank sends pacs.008 off-us
-  -> Creditor bank receives and credits
-  -> Status/notifications follow (pacs.002, camt.054)
+```mermaid
+flowchart TD
+    Init[Customer initiation<br/>pain.001 / channel API] --> Deb[Debtor bank validates and debits]
+    Deb --> Snd[Debtor bank sends pacs.008 off-us]
+    Snd --> Rcv[Creditor bank receives and credits]
+    Rcv --> Stat[Status/notifications follow<br/>pacs.002, camt.054]
 ```
 
 `pacs.008` is normally an **off-us** message. For on-us routing, banks typically do internal ledger posting and do not need FI-to-FI transfer messaging.

@@ -19,14 +19,14 @@ Typical examples:
 
 ## On-Us Payment Flow
 
-```text
-Customer Channel
-  -> Payment API / Gateway
-  -> Validation (auth, limits, sanctions, fraud)
-  -> Internal Routing (on-us detected)
-  -> Debit Posting (payer)
-  -> Credit Posting (payee)
-  -> Confirmation / Notification
+```mermaid
+flowchart TD
+    CC[Customer Channel] --> API[Payment API / Gateway]
+    API --> VAL[Validation<br/>auth, limits, sanctions, fraud]
+    VAL --> RT[Internal Routing<br/>on-us detected]
+    RT --> DP[Debit Posting<br/>payer]
+    DP --> CP[Credit Posting<br/>payee]
+    CP --> CONF[Confirmation / Notification]
 ```
 
 Key point: settlement is internal ledger movement, not interbank settlement.

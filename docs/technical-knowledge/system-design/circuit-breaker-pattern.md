@@ -6,6 +6,8 @@ description: Deep-dive into the Circuit Breaker pattern — state machine intern
 tags: [system-design, microservices, resilience, spring-boot, resilience4j, circuit-breaker, bulkhead, fallback]
 ---
 
+import CircuitBreakerDiagram from '@site/src/components/CircuitBreakerDiagram';
+
 # Circuit Breaker Pattern
 
 The **Circuit Breaker** pattern prevents a single failing downstream dependency from triggering cascading thread-exhaustion failure across an entire distributed system.
@@ -49,18 +51,7 @@ POST /payments → Circuit OPEN → Fail fast (0ms) → Fallback response
 
 ## State Machine Internals
 
-```mermaid
-stateDiagram-v2
-    [*] --> CLOSED
-
-    CLOSED --> OPEN: failure_rate >= threshold\nOR slow_call_rate >= threshold\n(after minimumNumberOfCalls)
-
-    OPEN --> HALF_OPEN: waitDurationInOpenState elapses\n(or automaticTransition = true)
-
-    HALF_OPEN --> CLOSED: all permittedNumberOfCalls\nin half-open succeed
-
-    HALF_OPEN --> OPEN: any probe call fails
-```
+<CircuitBreakerDiagram />
 
 ### CLOSED State
 

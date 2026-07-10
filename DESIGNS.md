@@ -114,8 +114,12 @@ Mermaid diagrams are rendered within a custom interactive wrapper ([Mermaid/inde
 - **Custom Theme Overrides**:
   - **Subgraphs / Cluster Boxes**: Styled with a deep translucent fill `rgba(13, 17, 26, 0.6)`, and custom borders (`rgba(74, 222, 128, 0.2)`) with rounded corners.
   - **Nodes**: Rendered with `#161f30` fill, cyan outline borders (`#2dd4bf`), and transition to glowing neon green on hover. Node text labels are styled in `#e2e8f0`.
-  - **Edges / Connections**: Colored indigo (`#818cf8`) and transition to purple (`#a855f7`) with custom thickness on hover.
-  - **Light Theme**: Automatically falls back to clean green outlines, white fills, and soft gray subgraphs with matching shadows.
+  - **Edges / Connections**: Rendered as two overlapping layers:
+    - **Background Conduit (`.path-bg`)**: A faint solid indigo line (`rgba(129, 140, 248, 0.15)`) representing the physical link.
+    - **Flowing Highlight Overlay (`.path`)**: Animated dashed arrow segments (`stroke-dasharray: 4 16`) flowing forward continuously via a linear offset keyframe animation (`mermaidFlow`), simulating active data throughput.
+    - **Hover Dynamics**: Hovering over any connection increases the line thickness, changes the stroke to a vibrant purple (`#a855f7`), adds a neon drop shadow, and doubles the flow velocity (`0.6s` duration) with longer segments (`stroke-dasharray: 6 12`).
+    - **Arrowheads**: Styled with CSS `context-fill` and `context-stroke` properties to dynamically match the edge color (e.g., turning from indigo to purple on hover).
+  - **Light Theme**: Automatically falls back to clean green outlines, white fills, soft gray subgraphs with matching shadows, and green flowing connection lines (`rgba(47, 143, 78, 0.15)` background).
 
 ---
 
@@ -198,4 +202,22 @@ For comfortable navigation across very long document pages:
 - **Data Centering**: All table data columns (checkboxes, problem links, topics, difficulty tags, and company lists) are center-aligned (`textAlign: 'center'`, `justifyContent: 'center'`) to maintain balanced visual weight.
 - **Typography Alignment**: Font weights are set consistently to `600` for all links and tags to prevent visual hierarchy conflicts.
 - **Topic Dropdown Selector**: The topic select menu (`.select`) utilizes high-contrast background and text colors mapped explicitly for both light mode (`#ffffff` bg, `#0f172a` text) and dark mode (`#1a2035` bg, `#f8fafc` text) with a minimum width safety clamp of `220px` to prevent layout collapse.
+
+---
+
+## 📐 Custom Interactive React SVG Diagrams
+
+For complex system architectures, JVM thread schedulers, and execution lifecycles, static charts are replaced with bespoke interactive React SVG components.
+
+### 1. Structure and Grid Canvas
+- **Wrapper**: Styled with the card frame and radial grid mesh backdrop `.interactive-diagram-svg-wrapper.interactive-diagram-grid-bg`.
+- **Canvas Scaling**: Set responsive viewports using `viewBox="0 0 680 HEIGHT"` to maintain aspect-ratio sizing across screen widths.
+
+### 2. Flowing Arrow Paths & Active Particles
+- **Dashed Path Flows**: Apply the `.interactive-diagram-flowing-path` class to connector paths to animate moving dashed stroke segments via keyframes (`interactivePathFlow`).
+- **Physical Particle Dots**: Append `<circle>` elements with nested `<animateMotion>` pointing to path IDs (`<mpath href="#path-id" />`) to render glowing physical particles traveling along active paths. Durations are tuned to `1s` to `1.2s` with `repeatCount="indefinite"`.
+- **Active Path States**: Connectors and particle circles are rendered conditionally based on state selectors (`activeState === 'STEP'`) to prevent animation performance overhead on inactive transitions.
+
+### 3. State Management & Code Safety
+- **Ternary Operator Safeties**: When mapping color themes or opacity variables inside helper layout functions (e.g., `getFill(key)`), write fully resolved branch cases. Avoid shorthand chains that can introduce compile-time syntax token conflicts (`x ? a : y ? b : c` rather than duplicating colons).
 

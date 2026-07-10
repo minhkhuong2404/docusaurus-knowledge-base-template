@@ -1,11 +1,11 @@
 .interactiveContainer {
   position: relative;
-  border: 1px solid var(--sidebar-border, rgba(74, 222, 128, 0.15));
-  border-radius: 12px;
-  background-color: var(--ifm-background-surface-color, #101525);
-  margin: 1.5rem 0;
+  border: 1px solid rgba(74, 222, 128, 0.12);
+  border-radius: 16px;
+  background-color: #090b14;
+  margin: 2rem 0;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
 }
 
 .viewerWrapper {
@@ -16,18 +16,28 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: #0d0f1e;
   background-image: radial-gradient(
-    rgba(255, 255, 255, 0.05) 1px,
+    rgba(255, 255, 255, 0.04) 1px,
     transparent 1px
   );
-  background-size: 16px 16px;
+  background-size: 18px 18px;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="light"] .interactiveContainer {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background-color: #ffffff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
 }
 
 [data-theme="light"] .viewerWrapper {
+  background-color: #f8fafc;
   background-image: radial-gradient(
     rgba(0, 0, 0, 0.03) 1px,
     transparent 1px
   );
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.05);
 }
 
 .mermaidSvg {

@@ -5,6 +5,8 @@ description: Complete guide to Spring Cloud, covering Service Discovery (Eureka)
 tags: [spring-cloud, java, microservices, backend]
 ---
 
+import CircuitBreakerDiagram from '@site/src/components/CircuitBreakerDiagram';
+
 # ☁️ Spring Cloud — Microservices Ecosystem
 
 As applications grow beyond single monolithic structures into distributed Microservices, managing them becomes exponentially harder. Spring Cloud provides a suite of tools built on top of Spring Boot that solves the most common distributed system challenges.
@@ -371,22 +373,7 @@ resilience4j:
 ### 🔍 How Circuit Breaker Works Internally
 
 **State Machine:**
-```mermaid
-flowchart TD
-    Closed["CLOSED (Normal Operations)"] -->|"Failure rate > threshold"| Open["OPEN (Calls trip instantly)"]
-    Open -->|"Wait duration elapsed"| HalfOpen["HALF-OPEN (Test requests)"]
-    HalfOpen -->|"Success in test"| Closed
-    HalfOpen -->|"Failure in test"| Open
-
-    %% Styles
-    classDef closedStyle fill:#14532d,stroke:#4ade80,stroke-width:1.5px,color:#e2e8f0;
-    classDef openStyle fill:#7f1d1d,stroke:#f87171,stroke-width:1.5px,color:#e2e8f0;
-    classDef halfStyle fill:#78350f,stroke:#fbbf24,stroke-width:1.5px,color:#e2e8f0;
-
-    class Closed closedStyle;
-    class Open openStyle;
-    class HalfOpen halfStyle;
-```
+<CircuitBreakerDiagram />
 
 **Metrics Collection:**
 - Resilience4j maintains a sliding window of recent calls

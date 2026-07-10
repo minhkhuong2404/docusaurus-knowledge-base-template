@@ -6,6 +6,9 @@ description: "A comprehensive deep dive into Java 21 Virtual Threads, Carrier Th
 tags: [java, concurrency, virtual-threads, loom, backend]
 ---
 
+import VirtualThreadLifecycleDiagram from '@site/src/components/VirtualThreadLifecycleDiagram';
+import VirtualThreadStackDiagram from '@site/src/components/VirtualThreadStackDiagram';
+
 # 🧵 Virtual Threads (Project Loom)
 
 Introduced as a stable feature in Java 21, **Virtual Threads** (Project Loom) completely revolutionize the Java concurrency model. They solve the fundamental physical bottleneck of Tomcat and Spring Boot servers: the "Thread-Per-Request" model.
@@ -135,43 +138,13 @@ try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
 
 ### 🔍 The Mount/Unmount Lifecycle (Visual)
 
-```
-Timeline for a single HTTP request:
-
-Virtual Thread #42:
-  ┌──mounted──┐                    ┌──mounted──┐              ┌──mounted──┐
-  │ parse     │                    │ process   │              │ serialize │
-  │ request   │                    │ result    │              │ response  │
-  └────┬──────┘                    └────┬──────┘              └────┬──────┘
-       │                                │                          │
-       ▼ DB query (blocking I/O)        ▼ HTTP call (blocking I/O) ▼ done
-  ════unmounted════════════════    ════unmounted════════════
-
-Carrier Thread (OS Thread):
-  ┌─VT#42─┐┌─VT#99─┐┌─VT#7──┐┌─VT#42─┐┌─VT#55─┐┌─VT#42─┐
-  │parse  ││process ││format ││process ││query  ││serial.│
-  └───────┘└───────┘└───────┘└───────┘└───────┘└───────┘
-
-The carrier thread is NEVER idle! While VT#42 waits for the database,
-the carrier serves VT#99, VT#7, VT#55, etc.
-```
+<VirtualThreadLifecycleDiagram />
 
 ### Stack Storage: Heap Continuations
 
 When a virtual thread unmounts, its stack frames are stored as a **continuation** on the heap:
 
-```
-Platform Thread stack:     Virtual Thread "stack":
-┌─────────────┐           ┌──────────────────────────┐
-│ Fixed 1MB   │           │ Continuation (on heap)    │
-│ OS-managed  │           │ ├── Frame 1 (~100 bytes)  │
-│ contiguous  │           │ ├── Frame 2 (~200 bytes)  │
-│ block       │           │ └── Frame 3 (~150 bytes)  │
-│             │           │ Total: ~450 bytes          │
-│ (mostly     │           │ Grows/shrinks dynamically  │
-│  unused)    │           │ Garbage-collectible!       │
-└─────────────┘           └──────────────────────────┘
-```
+<VirtualThreadStackDiagram />
 
 This is why virtual threads can exist in millions — each one is just a small object on the heap, not a 1MB OS allocation.
 

@@ -6,6 +6,9 @@ description: "A beginner-friendly guide explaining the difference between concur
 tags: [java, concurrency, parallelism, multithreading, basics]
 ---
 
+import ConcurrencyVsParallelismAnalogDiagram from '@site/src/components/ConcurrencyVsParallelismAnalogDiagram';
+import ExecutionSchedulerDiagram from '@site/src/components/ExecutionSchedulerDiagram';
+
 # Concurrency vs. Parallelism
 
 For anyone starting with multithreading or system design, **Concurrency** and **Parallelism** are two of the most commonly confused terms. They are often used as synonyms, but in computer science, they represent two completely different execution strategies.
@@ -33,14 +36,7 @@ Imagine the coffee shop gets busy and opens a **second counter** with a **second
 2. Cashier 2 *simultaneously* takes the order of Customer 2.
 *   **Analysis:** There are **two workers** (two CPU cores) performing work at the exact same instant. This is **Parallelism**.
 
-```
-CONCURRENCY (1 Cashier)
-Queue ──> [Cashier] ──> (Talk to Cust 1) ──> (Wait for Coffee) ──> (Talk to Cust 2)
-
-PARALLELISM (2 Cashiers)
-Queue 1 ──> [Cashier 1] ──> (Talk to Cust 1)
-Queue 2 ──> [Cashier 2] ──> (Talk to Cust 2)
-```
+<ConcurrencyVsParallelismAnalogDiagram />
 
 ---
 
@@ -53,12 +49,7 @@ If your computer has only a **single-core CPU**, it can *never* run code in para
 *   The CPU runs Task A for 2 milliseconds, pauses it, saves its state, loads Task B, runs it for 2 milliseconds, pauses it, and switches back to Task A.
 *   Because this context-switching happens in microseconds, it feels like both tasks are running at the same time.
 
-```text
-Time ──>
-Core 0: [Task A][Task B][Task A][Task C][Task B][Task C]...
-        └───────┴───────┴───────┴───────┴───────┴───────┘
-                     Context Switches (Microseconds)
-```
+<ExecutionSchedulerDiagram />
 
 ### 2. Parallelism (Simultaneous on Multiple CPU Cores)
 If your computer has a **multi-core CPU** (e.g., an 8-core Intel or Apple Silicon M-series chip), it can achieve true physical parallelism.
@@ -66,12 +57,7 @@ If your computer has a **multi-core CPU** (e.g., an 8-core Intel or Apple Silico
 *   Core 1 runs Task B continuously.
 *   No context-switching is required to switch between them because they have dedicated physical execution units.
 
-```text
-Time ──>
-Core 0: [Task A][Task A][Task A][Task A]... (Continuous execution)
-Core 1: [Task B][Task B][Task B][Task B]... (Continuous execution)
-Core 2: [Task C][Task C][Task C][Task C]... (Continuous execution)
-```
+
 
 ---
 

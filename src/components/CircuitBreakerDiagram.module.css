@@ -1,0 +1,69 @@
+/* CircuitBreakerDiagram Specific Styles */
+
+.node {
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), filter 0.25s ease;
+}
+
+.node:hover {
+  transform: translateY(-2px) scale(1.02);
+}
+
+.nodeTitle {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 800;
+  font-size: 16px;
+  fill: #ffffff;
+  text-anchor: middle;
+  letter-spacing: 0.5px;
+}
+
+.nodeDesc {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+  font-size: 11px;
+  fill: #cbd5e1;
+  text-anchor: middle;
+}
+
+.transitionPath {
+  opacity: 0.3;
+  transition: stroke 0.3s ease, stroke-width 0.3s ease, opacity 0.3s ease;
+}
+
+.activePathRed {
+  opacity: 1;
+  stroke: #f87171 !important;
+  stroke-width: 3px !important;
+}
+
+.activePathYellow {
+  opacity: 1;
+  stroke: #fbbf24 !important;
+  stroke-width: 3px !important;
+}
+
+.activePathGreen {
+  opacity: 1;
+  stroke: #4ade80 !important;
+  stroke-width: 3px !important;
+}
+
+.labelTextRed, .labelTextGreen, .labelTextYellow {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 600;
+  font-size: 11px;
+  text-anchor: middle;
+}
+
+.labelTextRed {
+  fill: #f87171;
+}
+
+.labelTextYellow {
+  fill: #fbbf24;
+}
+
+.labelTextGreen {
+  fill: #4ade80;
+}

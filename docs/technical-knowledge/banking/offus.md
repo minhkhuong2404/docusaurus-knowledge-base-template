@@ -19,12 +19,12 @@ Compared with on-us payments, off-us introduces more dependencies, more failure 
 
 ## End-to-End Off-Us Flow
 
-```text
-Payer Channel
-  -> Debtor Bank (validation, debit, route)
-  -> Clearing Network / Correspondent Chain
-  -> Creditor Bank (validation, credit)
-  -> Confirmation / status messages
+```mermaid
+flowchart TD
+    PC[Payer Channel] --> DB[Debtor Bank<br/>validation, debit, route]
+    DB --> CN[Clearing Network / Correspondent Chain]
+    CN --> CB[Creditor Bank<br/>validation, credit]
+    CB --> CONF[Confirmation / status messages]
 ```
 
 Message examples in ISO 20022:

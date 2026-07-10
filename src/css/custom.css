@@ -1,6 +1,7 @@
 @import "@fortawesome/fontawesome-free/css/fontawesome.min.css";
 @import "@fortawesome/fontawesome-free/css/brands.min.css";
 @import "@fortawesome/fontawesome-free/css/solid.min.css";
+@import "./diagrams.css";
 
 /* ============================================
    Code Block Styling — Catppuccin Mocha Theme
@@ -3229,24 +3230,79 @@ pre[class*="language-"]::-webkit-scrollbar {
   font-size: 13px !important;
 }
 
-/* Flowchart Edges / Paths (Lines connecting nodes) */
-[class*="mermaidSvg"] svg .edgePath .path {
-  stroke: #818cf8 !important;
+/* Background solid connection lines for Mermaid diagrams */
+[class*="mermaidSvg"] svg .path-bg {
+  stroke: rgba(129, 140, 248, 0.15) !important;
   stroke-width: 1.5px !important;
-  transition: stroke 0.2s ease;
+  fill: none !important;
 }
 
-/* Edge hover effect */
-[class*="mermaidSvg"] svg .edgePath:hover .path {
+[data-theme="light"] [class*="mermaidSvg"] svg .path-bg {
+  stroke: rgba(47, 143, 78, 0.15) !important;
+}
+
+/* Flowchart, Class, State, ER, and Sequence diagram connection paths */
+[class*="mermaidSvg"] svg .path,
+[class*="mermaidSvg"] svg .relation,
+[class*="mermaidSvg"] svg [class*="messageLine"] {
+  stroke: #818cf8 !important;
+  stroke-width: 1.5px !important;
+  transition: stroke 0.2s ease, stroke-width 0.2s ease, filter 0.2s ease, stroke-dashoffset 0.2s ease;
+  stroke-dasharray: 4 16;
+  animation: mermaidFlow 1.2s linear infinite;
+}
+
+/* Edge / Connection hover effects */
+[class*="mermaidSvg"] svg *:hover > .path,
+[class*="mermaidSvg"] svg *:hover > .relation,
+[class*="mermaidSvg"] svg *:hover > [class*="messageLine"],
+[class*="mermaidSvg"] svg .path:hover,
+[class*="mermaidSvg"] svg .relation:hover,
+[class*="mermaidSvg"] svg [class*="messageLine"]:hover {
   stroke: #a855f7 !important;
+  stroke-width: 2.5px !important;
+  stroke-dasharray: 6 12;
+  filter: drop-shadow(0 0 4px rgba(168, 85, 247, 0.7));
+  animation: mermaidFlow 0.6s linear infinite;
+}
+
+/* Background conduit glows on hover */
+[class*="mermaidSvg"] svg *:hover > .path-bg,
+[class*="mermaidSvg"] svg .path-bg:hover {
+  stroke: rgba(168, 85, 247, 0.35) !important;
   stroke-width: 2px !important;
 }
 
-/* Arrow heads */
+/* Arrow heads / markers */
 [class*="mermaidSvg"] svg .marker,
 [class*="mermaidSvg"] svg marker path {
   fill: #818cf8 !important;
+  fill: context-fill !important;
   stroke: #818cf8 !important;
+  stroke: context-stroke !important;
+  transition: fill 0.2s ease, stroke 0.2s ease;
+}
+
+@keyframes mermaidFlow {
+  from {
+    stroke-dashoffset: 24;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+[class*="mermaidSvg"] svg .flow-reverse {
+  animation-name: mermaidFlowReverse !important;
+}
+
+@keyframes mermaidFlowReverse {
+  from {
+    stroke-dashoffset: -24;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 
 /* Light mode overrides */

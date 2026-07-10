@@ -22,13 +22,13 @@ From an operations perspective, returns must be treated as a new financial event
 
 ## End-to-End Return Flow
 
-```text
-Original payment accepted
-  -> Creditor bank cannot apply/retain funds
-  -> Creditor bank creates pacs.004 return
-  -> Debtor bank receives and matches to original payment
-  -> Debtor bank credits customer or suspense
-  -> Case closed / customer informed
+```mermaid
+flowchart TD
+    Acc[Original payment accepted] --> Err[Creditor bank cannot apply/retain funds]
+    Err --> Ret[Creditor bank creates pacs.004 return]
+    Ret --> Match[Debtor bank receives and matches to original payment]
+    Match --> Cred[Debtor bank credits customer or suspense]
+    Cred --> Close[Case closed / customer informed]
 ```
 
 Key requirement: exact reference linkage (`EndToEndId`, `InstrId`, `TxId`, scheme reference).

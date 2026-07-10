@@ -59,14 +59,11 @@ Kubernetes breaks down networking into four distinct routing categories:
 
 A Kubernetes Service IP (ClusterIP) is not bound to any physical network interface. Instead, a service run by Kubernetes on every worker node called **kube-proxy** coordinates these virtual connections:
 
-```text
-Request to Service IP (10.96.0.10:80)
-                │
-                ▼
-      Kernel Space (iptables rules programmed by kube-proxy)
-                │
-                ├─ (Rule matches VIP -> DNAT to Pod 1) ────► 10.244.1.5:8080 (Pod IP)
-                └─ (Rule matches VIP -> DNAT to Pod 2) ────► 10.244.2.8:8080 (Pod IP)
+```mermaid
+flowchart TD
+    Req[Request to Service IP<br/>10.96.0.10:80] --> Kernel[Kernel Space<br/>iptables rules programmed by kube-proxy]
+    Kernel -->|DNAT to Pod 1| Pod1[Pod 1 IP<br/>10.244.1.5:8080]
+    Kernel -->|DNAT to Pod 2| Pod2[Pod 2 IP<br/>10.244.2.8:8080]
 ```
 
 - Kube-proxy watches the Kubernetes API Server for new Services and Endpoints.

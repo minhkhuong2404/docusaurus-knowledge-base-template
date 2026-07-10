@@ -199,13 +199,13 @@ Invoked by the Garbage Collector (GC) on an object when GC determines that there
 protected void finalize() throws Throwable { }
 ```
 
-> [!CAUTION]
-> **Do Not Use `finalize()`**:
-> `finalize()` was deprecated in Java 9 and is marked for removal in future Java versions. It has major design problems:
-> - **Unpredictable Execution:** The JVM does not guarantee *when* or even *if* `finalize()` will run.
-> - **Performance Overhead:** Classes overriding `finalize()` slow down garbage collection allocation and sweeping.
-> - **Security Risks:** Enables "Finalizer Attacks" where a partially constructed object can be resurrected.
-> - **Resource Leaks:** If `finalize()` throws an exception, the exception is ignored, leaving resources unclosed.
+:::caution[Do Not Use `finalize()`]
+`finalize()` was deprecated in Java 9 and is marked for removal in future Java versions. It has major design problems:
+- **Unpredictable Execution:** The JVM does not guarantee *when* or even *if* `finalize()` will run.
+- **Performance Overhead:** Classes overriding `finalize()` slow down garbage collection allocation and sweeping.
+- **Security Risks:** Enables "Finalizer Attacks" where a partially constructed object can be resurrected.
+- **Resource Leaks:** If `finalize()` throws an exception, the exception is ignored, leaving resources unclosed.
+:::
 
 #### Modern Alternatives
 - **`AutoCloseable` with Try-With-Resources:** Implement `AutoCloseable` and release resources in the `close()` method:

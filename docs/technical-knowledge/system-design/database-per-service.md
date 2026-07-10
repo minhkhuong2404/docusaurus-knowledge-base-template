@@ -43,11 +43,11 @@ Since direct SQL joins (`JOIN orders ON users.id = orders.user_id`) are impossib
 ### 1. API Composition (Query-Time Aggregation)
 The client or API Gateway requests data from each service in parallel and merges the results in code.
 
-```text
-API Gateway / Composor
-  ├──► Fetch User Profile (User Service)
-  └──► Fetch Recent Orders (Order Service)
-  * Merge profiles and orders in code -> return aggregated JSON
+```mermaid
+flowchart LR
+    GW[API Gateway / Composor] -->|Fetch User Profile| US[User Service]
+    GW -->|Fetch Recent Orders| OS[Order Service]
+    GW -.->|Merge & Return| JSON[Aggregated JSON]
 ```
 
 - **Pros**: Easy to implement. Good for simple joins.
@@ -58,11 +58,12 @@ API Gateway / Composor
 ### 2. CQRS (Command Query Responsibility Segregation)
 Builds a read-only database optimized for complex queries. The read-only service consumes events (e.g., `OrderCreated`, `CustomerUpdated`) and maintains a projection index (e.g., in Elasticsearch).
 
-```text
-Event Emitted ──► [ Message Broker ] ──► Read Projection Builder ──► [ Read-Optimized DB ]
-                                                                     (e.g., Elasticsearch)
-                                                                               ▲
-                                                                  Queries ─────┘
+```mermaid
+flowchart LR
+    EE[Event Emitted] --> Sync[Message Broker]
+    Sync --> PB[Read Projection Builder]
+    PB --> RDB[(Read-Optimized DB<br/>Elasticsearch)]
+    Queries[Queries] --> RDB
 ```
 
 - **Pros**: Fast, highly scalable queries. Avoids network join overhead.

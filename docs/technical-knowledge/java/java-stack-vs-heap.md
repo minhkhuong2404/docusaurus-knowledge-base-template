@@ -4,6 +4,11 @@ description: An in-depth guide to understanding what data is stored in stack mem
 tags: [java, jvm, memory, stack, heap, garbage-collection]
 ---
 
+import StackFrameDiagram from '@site/src/components/StackFrameDiagram';
+import HeapStructureDiagram from '@site/src/components/HeapStructureDiagram';
+import JVMMemoryDiagram from '@site/src/components/JVMMemoryDiagram';
+import HeapDumpLeakDiagram from '@site/src/components/HeapDumpLeakDiagram';
+
 # Stack vs Heap Memory in Java
 
 In Java, memory management is handled automatically by the Java Virtual Machine (JVM). While you don't manually allocate and free memory like in C or C++, understanding how the JVM divides memory is crucial for writing performant, bug-free applications. 
@@ -143,20 +148,7 @@ Stack memory stores data tied tightly to method execution. It represents the "ex
 
 When a method is called, a **stack frame** is pushed onto the thread's stack:
 
-```
-Thread Stack (growing downward)
-┌──────────────────────────────────┐
-│  main() frame                    │
-│  ├── int count = 10              │  ← primitive stored directly
-│  ├── String label = 0xABC...     │  ← reference (8 bytes, points to heap)
-│  └── Person p = 0xDEF...        │  ← reference (8 bytes, points to heap)
-├──────────────────────────────────┤
-│  p.sayHello() frame             │
-│  ├── int greetingCount = 1       │  ← primitive stored directly
-│  ├── String msg = 0x123...       │  ← reference (points to "Hi" in String Pool)
-│  └── [return address → main()]   │  ← where to resume after this method
-└──────────────────────────────────┘
-```
+<StackFrameDiagram />
 
 When `sayHello()` returns, its entire frame is **instantly popped** — no garbage collection needed. This is why stack allocation is blazing fast.
 
@@ -186,36 +178,7 @@ Heap memory is the runtime data area from which memory for all class instances (
 
 ### 🔍 Heap Generational Layout
 
-```
-Heap Memory
-┌────────────────────────────────────────────────────────┐
-│                    Young Generation                     │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐             │
-│  │  Eden    │  │Survivor 0│  │Survivor 1│             │
-│  │  Space   │  │  (From)  │  │   (To)   │             │
-│  │          │  │          │  │          │             │
-│  │ new      │  │ survived │  │          │             │
-│  │ objects  │  │ 1+ GC    │  │  (empty) │             │
-│  │ created  │  │ cycles   │  │          │             │
-│  │ here     │  │          │  │          │             │
-│  └──────────┘  └──────────┘  └──────────┘             │
-├────────────────────────────────────────────────────────┤
-│                    Old Generation                       │
-│  ┌────────────────────────────────────────────────┐    │
-│  │  Long-lived objects that survived many GC      │    │
-│  │  cycles in Young Generation                    │    │
-│  │  (e.g., cached data, singletons, Spring beans) │    │
-│  └────────────────────────────────────────────────┘    │
-└────────────────────────────────────────────────────────┘
-
-Outside Heap:
-┌────────────────────────────┐
-│  Metaspace (Java 8+)       │
-│  Class metadata, method    │
-│  bytecode, constant pool   │
-│  (in native memory)        │
-└────────────────────────────┘
-```
+<HeapStructureDiagram />
 
 **Object lifecycle:**
 1. **Born** in Eden → Minor GC runs
@@ -277,23 +240,7 @@ class Person {
 
 ### Visual Memory Map for This Example
 
-```
-        STACK (main thread)                    HEAP
-   ┌──────────────────────┐        ┌──────────────────────┐
-   │ main() frame         │        │                      │
-   │  count = 10          │        │  Person object       │
-   │  label ─────────────────────▶ │  ┌────────────────┐  │
-   │  p ─────────────────────────▶ │  │ name ──────┐   │  │
-   │                      │        │  └────────────│───┘  │
-   ├──────────────────────┤        │               ▼      │
-   │ sayHello() frame     │        │  String Pool         │
-   │  greetingCount = 1   │        │  ┌──────────────┐    │
-   │  msg ───────────────────────▶ │  │ "Java"       │    │
-   │                      │        │  │ "Ana"        │    │
-   └──────────────────────┘        │  │ "Hi"         │    │
-                                   │  └──────────────┘    │
-                                   └──────────────────────┘
-```
+<JVMMemoryDiagram />
 
 ---
 
@@ -414,26 +361,7 @@ public String buildReport(List<String> lines) {
 
 The stack and heap are just two parts of a larger picture. For a comprehensive, detailed architectural diagram illustrating the differences and relationships between On-Heap and Off-Heap (Native) memory regions, see the [JVM Memory Layout Section](./java-jvm.md#2-on-heap-vs-off-heap-memory-layout).
 
-```
-JVM Memory Layout
-├── Thread Stacks              (per thread, -Xss)
-│   ├── Stack frames
-│   ├── Local variables
-│   └── Operand stack
-├── Heap                       (shared, -Xms/-Xmx)
-│   ├── Young Generation
-│   │   ├── Eden Space
-│   │   └── Survivor Spaces (S0, S1)
-│   ├── Old Generation
-│   └── String Pool (interned strings)
-├── Metaspace                  (native memory, -XX:MaxMetaspaceSize)
-│   ├── Class metadata
-│   ├── Method bytecode
-│   └── Constant pool
-├── Code Cache                 (JIT-compiled native code, -XX:ReservedCodeCacheSize)
-├── Direct ByteBuffers         (off-heap, NIO, -XX:MaxDirectMemorySize)
-└── Native Memory              (JNI, thread stacks, GC internal structures)
-```
+<JVMMemoryDiagram />
 
 ### Escape Analysis: When Objects Skip the Heap
 
@@ -592,14 +520,7 @@ When you open a heap dump in Eclipse MAT or VisualVM:
 3. **Leak suspects** — automated analysis of likely memory leaks
 4. **GC roots** — trace why an object isn't being collected (who's holding the reference?)
 
-```
-Example leak scenario:
-GC Root → static field EventTracker.events
-  → HashMap (1.2GB)
-    → 500,000 entries
-      → each entry holds List<Event> with 100+ events
-        → Total retained: 1.2GB of events that should have been evicted
-```
+<HeapDumpLeakDiagram />
 
 ---
 

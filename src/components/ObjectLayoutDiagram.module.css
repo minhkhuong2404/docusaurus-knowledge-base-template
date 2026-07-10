@@ -1,0 +1,64 @@
+/* ObjectLayoutDiagram Specific Styles */
+
+.subgraphBox {
+  fill: rgba(13, 17, 26, 0.6);
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 1.5px;
+  rx: 12px;
+  ry: 12px;
+}
+
+.onHeapBox {
+  fill: rgba(45, 212, 191, 0.05);
+  stroke: rgba(45, 212, 191, 0.25);
+}
+
+.headerBox {
+  fill: rgba(168, 85, 247, 0.1);
+  stroke: rgba(168, 85, 247, 0.3);
+  rx: 8px;
+  ry: 8px;
+}
+
+.subgraphTitle {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  fill: #94a3b8;
+  letter-spacing: 0.5px;
+}
+
+.node {
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), filter 0.2s ease;
+}
+
+.node:hover {
+  transform: translateY(-2px) scale(1.015);
+}
+
+.nodeTitle {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 800;
+  font-size: 11.5px;
+  fill: #ffffff;
+  text-anchor: middle;
+}
+
+.nodeDesc {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+  font-size: 9px;
+  fill: #cbd5e1;
+  text-anchor: middle;
+}
+
+.transitionPath {
+  opacity: 0.35;
+  transition: stroke 0.3s ease, stroke-width 0.3s ease, opacity 0.3s ease;
+}
+
+.activePath {
+  opacity: 1;
+  stroke-width: 2.5px !important;
+}

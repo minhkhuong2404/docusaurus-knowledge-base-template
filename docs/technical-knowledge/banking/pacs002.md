@@ -23,16 +23,16 @@ It is not a funds movement message; it is a status and exception signal.
 
 ## Status Lifecycle (Typical)
 
-```text
-Sender bank sends pacs.008
-  -> Receiver validates message
-  -> Receiver returns pacs.002 status:
-       ACTC (accepted technical)
-       ACCP (accepted customer profile/process)
-       ACSP (accepted settlement in process)
-       ACSC (accepted settlement completed, where used)
-       RJCT (rejected)
-       PDNG (pending/manual review)
+```mermaid
+flowchart TD
+    Snd[Sender bank sends pacs.008] --> Val[Receiver validates message]
+    Val --> Ret[Receiver returns pacs.002 status]
+    Ret --> ACTC[ACTC<br/>accepted technical]
+    Ret --> ACCP[ACCP<br/>accepted customer profile/process]
+    Ret --> ACSP[ACSP<br/>accepted settlement in process]
+    Ret --> ACSC[ACSC<br/>accepted settlement completed]
+    Ret --> RJCT[RJCT<br/>rejected]
+    Ret --> PDNG[PDNG<br/>pending/manual review]
 ```
 
 Status usage varies by scheme. Some rails only emit subsets.

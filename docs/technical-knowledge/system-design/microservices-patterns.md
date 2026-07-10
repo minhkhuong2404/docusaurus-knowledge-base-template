@@ -6,6 +6,8 @@ description: Comprehensive guide to microservices design patterns including API 
 tags: [microservices, api-gateway, circuit-breaker, service-mesh, spring-cloud, kubernetes, resilience]
 ---
 
+import CircuitBreakerDiagram from '@site/src/components/CircuitBreakerDiagram';
+
 # Microservices Design Patterns
 
 ---
@@ -108,13 +110,7 @@ For a deep dive into circuit breaker state transitions, tuning parameters, and c
 ### How It Works
 The circuit breaker operates in three distinct states, acting as an automated electrical safeguard:
 
-```text
-CLOSED (normal) → failures exceed threshold → OPEN (reject all)
-                                                    ↓ after timeout
-                                              HALF-OPEN (test few requests)
-                                                    ↓ success → CLOSED
-                                                    ↓ failure → OPEN again
-```
+<CircuitBreakerDiagram />
 
 - **CLOSED (Normal):** Requests flow freely. The circuit breaker counts consecutive failures or timeouts.
 - **OPEN (Failing):** If the failure/slowness rate exceeds a configured threshold, the circuit "trips". All subsequent calls immediately **fail fast** (throwing a `CallNotPermittedException` or returning a fallback) *without* attempting the network call. This completely lifts the load off the struggling downstream service, giving it breathing room to recover.

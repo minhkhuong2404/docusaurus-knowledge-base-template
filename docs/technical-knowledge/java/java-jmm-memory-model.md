@@ -6,6 +6,8 @@ description: Covers the Java Memory Model (JMM), Happens-Before relationships, i
 tags: [java, concurrency, memory-model, advanced]
 ---
 
+import CPUCacheHierarchyDiagram from '@site/src/components/CPUCacheHierarchyDiagram';
+
 # Java Memory Model & Concurrency Guarantees
 
 To write correct, high-performance concurrent code in Java, developers must understand how memory is shared, modified, and synchronized across threads. The **Java Memory Model (JMM)** defines these specifications.
@@ -16,22 +18,7 @@ To write correct, high-performance concurrent code in Java, developers must unde
 
 The JMM defines how the Java Virtual Machine interacts with computer memory (CPUs, caches, and main RAM). In a multi-core processor system, threads run on different CPUs, each with its own local cache registers.
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                     Java Heap Memory                    │
-└─────────────────────────────────────────────────────────┘
-                            ▲
-     ┌──────────────────────┴──────────────────────┐
-     ▼                                             ▼
-┌──────────────┐                              ┌──────────────┐
-│  CPU Cache   │                              │  CPU Cache   │
-└──────────────┘                              └──────────────┘
-     ▲                                             ▲
-     ▼                                             ▼
-┌──────────────┐                              ┌──────────────┐
-│   Thread 1   │                              │   Thread 2   │
-└──────────────┘                              └──────────────┘
-```
+<CPUCacheHierarchyDiagram />
 
 Without synchronization, changes made by Thread 1 might only live in its CPU cache and never be flushed to main memory, leaving Thread 2 with stale values.
 
