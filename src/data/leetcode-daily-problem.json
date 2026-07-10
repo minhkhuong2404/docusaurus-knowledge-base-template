@@ -1,8 +1,8 @@
 {
-  "id": "1288",
-  "title": "Remove Covered Intervals",
-  "url": "https://leetcode.com/problems/remove-covered-intervals/",
-  "difficulty": "medium",
-  "topic": "Array, Sorting",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-07-06."
+  "id": "3534",
+  "title": "Path Existence Queries in a Graph II",
+  "url": "https://leetcode.com/problems/path-existence-queries-in-a-graph-ii/",
+  "difficulty": "hard",
+  "topic": "Array, Two Pointers, Binary Search, Dynamic Programming, Greedy, Bit Manipulation, Graph Theory, Sorting",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-07-10."
 }

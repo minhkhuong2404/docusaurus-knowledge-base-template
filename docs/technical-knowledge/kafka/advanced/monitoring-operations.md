@@ -11,39 +11,66 @@ tags:
 ---
 # Kafka Monitoring & Operations
 
+:::info[Kafka 4.0+ / KRaft Mode]
+In KRaft mode, the ZooKeeper metrics (`zookeeper.*`) are replaced by KRaft controller metrics. Monitor `kafka.controller:ActiveControllerCount` and `kafka.controller:EventQueueTimeMs` for controller health. The `__cluster_metadata` topic replaces ZooKeeper as the metadata store.
+:::
+
+## The Four Layers of Kafka Monitoring
+
+| Layer | What to Monitor | Primary Tools |
+|-------|-----------------|---------------|
+| **Infrastructure** | CPU, RAM, disk I/O, network | Prometheus node_exporter, CloudWatch |
+| **Broker** | Replication, leadership, request throughput | JMX Exporter, Kafka Exporter |
+| **Producers/Consumers** | Lag, error rates, throughput | Consumer group metrics, Micrometer |
+| **Application** | End-to-end latency, processing errors | APM (Datadog, Dynatrace), custom metrics |
+
+---
+
 ## Key Metrics to Monitor
 
-### Broker Metrics
+### Broker Health Metrics
 
-| Metric (JMX) | Target | Alert If |
-|---|---|---|
-| `kafka.server:UnderReplicatedPartitions` | 0 | > 0 |
-| `kafka.controller:ActiveControllerCount` | 1 (cluster total) | ≠ 1 |
-| `kafka.server:OfflinePartitionsCount` | 0 | > 0 |
-| `kafka.network:RequestsPerSec` | Varies | Sudden spike/drop |
-| `kafka.server:BytesInPerSec` | Varies | Throttled |
-| `kafka.server:BytesOutPerSec` | Varies | Throttled |
-| `kafka.server:RequestHandlerAvgIdlePercent` | > 0.3 | < 0.2 |
-| `kafka.log:LogFlushRateAndTimeMs` | Low | High = I/O bottleneck |
+| Metric (JMX MBean) | Healthy Value | Alert If | Severity |
+|---|---|---|---|
+| `kafka.server:UnderReplicatedPartitions` | 0 | > 0 | Warning |
+| `kafka.server:UnderMinIsrPartitionCount` | 0 | > 0 | Critical |
+| `kafka.controller:ActiveControllerCount` | 1 (cluster total) | ≠ 1 | Critical |
+| `kafka.server:OfflinePartitionsCount` | 0 | > 0 | Critical |
+| `kafka.network:RequestsPerSec` | Varies | Sudden ±50% change | Warning |
+| `kafka.server:BytesInPerSec` | Baseline | > 90% network capacity | Warning |
+| `kafka.server:BytesOutPerSec` | Baseline | > 90% network capacity | Warning |
+| `kafka.server:RequestHandlerAvgIdlePercent` | > 0.3 | < 0.2 | Warning |
+| `kafka.log:LogFlushRateAndTimeMs` | Low | p99 > 1000ms | Warning |
+
+### KRaft Controller Metrics (Kafka 4.0+)
+
+| Metric | Description | Alert If |
+|--------|-------------|----------|
+| `kafka.controller:ActiveControllerCount` | Should be exactly 1 across cluster | ≠ 1 |
+| `kafka.controller:EventQueueTimeMs` | Time events wait in controller queue | p99 > 1000ms |
+| `kafka.controller:EventQueueSize` | Backlog of controller events | > 100 |
+| `kafka.controller:MetadataErrorCount` | KRaft metadata log errors | > 0 |
 
 ### Producer Metrics
 
-| Metric | Description |
-|--------|-------------|
-| `record-error-rate` | Rate of failed sends |
-| `record-retry-rate` | Rate of retries |
-| `request-latency-avg` | Average request time |
-| `buffer-available-bytes` | Free space in RecordAccumulator |
-| `batch-size-avg` | Average batch size (tuning signal) |
+| Metric | Description | Alert If |
+|--------|-------------|----------|
+| `record-error-rate` | Rate of failed sends | > 0 |
+| `record-retry-rate` | Rate of retries | > 10/sec |
+| `request-latency-avg` | Average produce request time | > 500ms |
+| `buffer-available-bytes` | Free space in RecordAccumulator | < 10% of `buffer.memory` |
+| `batch-size-avg` | Average batch size | < 1KB (under-batching) |
+| `record-queue-time-avg` | Time records wait in accumulator | > `linger.ms` × 2 |
 
 ### Consumer Metrics
 
-| Metric | Description |
-|--------|-------------|
-| `records-lag-max` | Maximum lag across all assigned partitions |
-| `fetch-rate` | Rate of fetch requests |
-| `records-consumed-rate` | Records processed per second |
-| `commit-latency-avg` | Time to commit offsets |
+| Metric | Description | Alert If |
+|--------|-------------|----------|
+| `records-lag-max` | Maximum lag across all partitions | > 1000 (threshold varies by SLA) |
+| `records-lag` | Lag per partition | Growing trend |
+| `fetch-rate` | Rate of fetch requests | Sudden drop |
+| `records-consumed-rate` | Records processed per second | Drops unexpectedly |
+| `commit-latency-avg` | Time to commit offsets | > 500ms |
 
 ---
 
@@ -65,10 +92,35 @@ kafka-consumer-groups.sh \
 ```
 
 ### Tools for Lag Monitoring
-- **Burrow** (LinkedIn): standalone lag monitoring with alerting rules
-- **Kafka Exporter** + Prometheus + Grafana: popular open-source stack
-- **Confluent Control Center**: commercial UI with built-in lag dashboards
-- **AWS CloudWatch** / **Datadog**: cloud-native integrations
+- **Burrow** (LinkedIn): standalone lag monitoring with alerting rules per consumer group
+- **Kafka Exporter** + Prometheus + Grafana: popular open-source stack (community dashboards available)
+- **Confluent Control Center**: commercial UI with built-in lag dashboards and alerting
+- **AWS CloudWatch** / **Datadog** / **Dynatrace**: cloud-native integrations with Kafka metrics
+- **Conduktor Platform**: end-to-end monitoring, governance, and alerting
+
+### Lag Alert Example (Prometheus)
+
+```yaml
+# Alert when consumer lag grows for 5 minutes
+groups:
+- name: kafka_consumer
+  rules:
+  - alert: KafkaConsumerGroupLag
+    expr: kafka_consumergroup_lag{consumergroup="order-service"} > 10000
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Consumer group lag too high"
+      description: "Group {{ $labels.consumergroup }} lag is {{ $value }} on {{ $labels.topic }}/{{ $labels.partition }}"
+
+  - alert: KafkaConsumerGroupLagGrowing
+    expr: rate(kafka_consumergroup_lag{consumergroup="order-service"}[10m]) > 100
+    for: 10m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Consumer group lag is continuously growing — consumer cannot keep up"
 
 ---
 
@@ -243,12 +295,81 @@ kafka-consumer-perf-test.sh \
 
 ---
 
-## Recommended Grafana Dashboards
+## End-to-End Latency Monitoring
 
-- **Kafka Overview**: Bytes in/out per broker, under-replicated partitions, offline partitions
-- **Producer Dashboard**: Batch size, error rate, retry rate, request latency
-- **Consumer Dashboard**: Lag per group/partition, records consumed rate, commit latency
-- **Topic Dashboard**: Partition leader distribution, log size per partition
+Broker-level metrics alone don't tell the full story. Track **end-to-end message latency** — the time from producer `send()` to consumer processing completion:
+
+```java
+// Producer: embed timestamp as header
+long produceTime = System.currentTimeMillis();
+ProducerRecord<String, OrderEvent> record = new ProducerRecord<>("orders", key, event);
+record.headers().add("produce-time", Long.toString(produceTime).getBytes());
+producer.send(record);
+
+// Consumer: calculate end-to-end latency
+@KafkaListener(topics = "orders")
+public void consume(ConsumerRecord<String, OrderEvent> record) {
+    long produceTime = Long.parseLong(
+        new String(record.headers().lastHeader("produce-time").value())
+    );
+    long e2eLatencyMs = System.currentTimeMillis() - produceTime;
+    meterRegistry.timer("kafka.e2e.latency", "topic", record.topic())
+        .record(e2eLatencyMs, TimeUnit.MILLISECONDS);
+
+    processOrder(record.value());
+}
+```
+
+Target e2e latency thresholds (typical SLAs):
+
+| Workload | p50 | p99 | p999 |
+|---------|-----|-----|------|
+| Payment processing | < 50ms | < 200ms | < 1s |
+| Inventory updates | < 200ms | < 1s | < 5s |
+| Analytics events | < 1s | < 10s | < 30s |
+
+---
+
+## Observability Stack
+
+### Prometheus + Grafana (Open Source)
+
+```yaml
+# docker-compose.yml — Kafka monitoring stack
+services:
+  kafka-exporter:
+    image: danielqsj/kafka-exporter:latest
+    command:
+      - --kafka.server=kafka:9092
+    ports:
+      - "9308:9308"
+
+  jmx-exporter:
+    # Exposes Kafka broker JMX metrics as Prometheus
+    image: bitnami/jmx-exporter:latest
+    volumes:
+      - ./jmx-kafka-config.yml:/etc/jmx-exporter/config.yml
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana:latest
+    # Import dashboard IDs:
+    # 7589 — Kafka Overview
+    # 12483 — Kafka Consumer Groups
+    # 9628 — Kafka Broker Metrics
+```
+
+### Key Grafana Dashboards
+
+- **Kafka Overview** (ID: 7589): Bytes in/out per broker, under-replicated partitions, offline partitions, request rate
+- **Consumer Groups** (ID: 12483): Lag per group/partition, lag trend, consumer count
+- **Producer Dashboard**: Batch size avg, error rate, retry rate, request latency p99
+- **Topic Dashboard**: Partition leader distribution, log size per partition, message rate
+- **KRaft Controller** (Kafka 4.0+): Controller queue size, event queue time, metadata errors
 
 ---
 

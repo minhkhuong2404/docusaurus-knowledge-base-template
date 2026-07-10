@@ -12,6 +12,10 @@ tags:
 ---
 # Replication, ISR & Fault Tolerance
 
+:::info[Kafka 4.0+ / KRaft Mode]
+All replication mechanics described here apply identically in KRaft mode (ZooKeeper was removed in Kafka 4.0). The key difference: leader election is coordinated by the **KRaft controller** instead of ZooKeeper — making failover faster (milliseconds vs seconds) and eliminating ZooKeeper as an operational dependency.
+:::
+
 ## Replication Factor
 
 The **replication factor** defines how many copies of each partition exist across the cluster.
@@ -136,11 +140,144 @@ unclean.leader.election.enable=false
 ```
 1. Producer → writes to Leader (P0 on Broker1)
 2. Broker1 appends to local log, updates LEO
-3. Follower on Broker2 fetches from Broker1
-4. Follower on Broker3 fetches from Broker1
+3. Follower on Broker2 fetches from Broker1 (FetchRequest)
+4. Follower on Broker3 fetches from Broker1 (FetchRequest)
 5. Leader advances HW when all ISR followers have fetched up to current LEO
 6. Producer ACK sent (if acks=all, waits for HW advance)
-7. Consumers can now read up to new HW
+7. Consumers can only read up to new HW
+```
+
+### Leader Election (KRaft Mode)
+
+In Kafka 4.0+ (KRaft mode), the **KRaft controller** manages partition leadership:
+
+1. Broker fails or voluntary shutdown detected
+2. KRaft controller (active controller) detects failure via metadata heartbeat
+3. Controller selects new leader from ISR (highest priority: preferred leader)
+4. Controller writes new leader assignment to `__cluster_metadata` log
+5. All brokers apply the metadata update and route traffic to the new leader
+
+**Failover time in KRaft**: typically < 1 second for partition leader failover, compared to 5–30 seconds with ZooKeeper (due to ZK session timeout + election round-trip).
+
+---
+
+## Rack-Aware Replication
+
+In cloud deployments, brokers span multiple **Availability Zones (AZs)**. Rack-aware replication ensures replicas are placed in different AZs — so a full AZ outage doesn't take down all replicas:
+
+```properties
+# Broker config — assign each broker its AZ as a rack
+broker.rack=us-east-1a   # Broker 1 in AZ-a
+broker.rack=us-east-1b   # Broker 2 in AZ-b
+broker.rack=us-east-1c   # Broker 3 in AZ-c
+```
+
+```
+Without rack-awareness:             With rack-awareness (RF=3):
+  P0: Broker1, Broker2, Broker3      P0: Broker1(AZ-a), Broker2(AZ-b), Broker3(AZ-c)
+  (all in same AZ — one AZ down      (any single AZ can fail — partition stays up)
+   = partition unavailable)
+```
+
+Kafka's partition assignment algorithm spreads replicas across distinct racks when `broker.rack` is configured, ensuring maximum fault tolerance across AZs.
+
+---
+
+## Follower Reads (Kafka 2.4+)
+
+By default, all reads go to the partition leader. Since Kafka 2.4, consumers can optionally read from the **nearest follower replica** in the same rack/AZ:
+
+```properties
+# Consumer config — enable follower reads
+client.rack=us-east-1b  # Client declares its AZ
+```
+
+```properties
+# Broker config — enable replica fetching from followers
+replica.selector.class=org.apache.kafka.common.replica.RackAwareReplicaSelector
+```
+
+**Benefits:**
+- **Cost reduction**: Eliminates cross-AZ data transfer charges (typically $0.01/GB × millions of messages)
+- **Latency reduction**: Intra-AZ network is faster than cross-AZ
+
+**Important caveat**: Followers may serve slightly stale data (up to High Watermark). Consumers reading from followers see the same High Watermark boundary — they won't read uncommitted messages.
+
+**AWS MSK follower reads example** (significant cost savings at scale):
+```
+Without follower reads:
+  Consumer in us-east-1b reads from leader in us-east-1a
+  → Cross-AZ egress charges × every consumer fetch
+
+With follower reads:
+  Consumer in us-east-1b reads from follower in us-east-1b
+  → Zero cross-AZ charges for that consumer
+```
+
+---
+
+## Replication Health Monitoring
+
+### Critical JMX Metrics
+
+| Metric (JMX MBean) | Healthy Value | Alert If |
+|---|---|---|
+| `kafka.server:UnderReplicatedPartitions` | 0 | > 0 |
+| `kafka.server:UnderMinIsrPartitionCount` | 0 | > 0 |
+| `kafka.controller:ActiveControllerCount` | 1 (cluster total) | ≠ 1 |
+| `kafka.server:OfflinePartitionsCount` | 0 | > 0 |
+| `kafka.server:LeaderCount` | ~balanced | Skewed (imbalance > 10%) |
+| `kafka.log:LogFlushRateAndTimeMs` | Low | High = disk I/O bottleneck |
+
+### Prometheus Alerting Rules
+
+```yaml
+groups:
+- name: kafka_replication
+  rules:
+  - alert: KafkaUnderReplicatedPartitions
+    expr: kafka_server_replicamanager_underreplicatedpartitions > 0
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Kafka under-replicated partitions detected"
+      description: "{{ $value }} partitions are under-replicated on {{ $labels.instance }}"
+
+  - alert: KafkaOfflinePartitions
+    expr: kafka_controller_kafkacontroller_offlinepartitionscount > 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Kafka offline partitions detected"
+
+  - alert: KafkaNoActiveController
+    expr: kafka_controller_kafkacontroller_activecontrollercount != 1
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Kafka active controller count is not 1"
+```
+
+### Operational Checks
+
+```bash
+# View partition leader distribution (spot imbalanced leaders)
+kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic orders
+
+# Check ISR vs Replicas for all topics (find under-replicated)
+kafka-topics.sh --bootstrap-server localhost:9092 \
+  --describe --under-replicated-partitions
+
+# Trigger preferred leader election (rebalance leadership)
+kafka-leader-election.sh --bootstrap-server localhost:9092 \
+  --election-type preferred --all-topic-partitions
+
+# Verify replication lag per broker
+kafka-log-dirs.sh --bootstrap-server localhost:9092 \
+  --topic-list orders --describe
 ```
 
 ---
@@ -202,3 +339,11 @@ adminClient.incrementalAlterConfigs(ops).all().get();
 **Q: What is `replica.fetch.max.bytes` and why does it matter?**
 
 > It controls the maximum amount of data a follower fetches from the leader in a single request. If the leader is producing faster than followers can fetch, followers may fall out of the ISR. Tuning this in combination with `replica.lag.time.max.ms` helps maintain healthy replication under high load.
+
+**Q: What is rack-aware replication and why should you configure it?**
+
+> Rack-aware replication ensures that partition replicas are spread across distinct physical racks or Availability Zones (configured via `broker.rack`). Without it, Kafka places replicas without AZ awareness — an entire AZ outage could take down all replicas for a partition even if other brokers in other AZs are healthy. With `broker.rack` set, Kafka's partition assignment algorithm guarantees replicas span distinct racks, providing true multi-AZ fault tolerance.
+
+**Q: How do follower reads (Kafka 2.4+) reduce cloud infrastructure costs?**
+
+> In multi-AZ cloud deployments, reading from the partition leader in a different AZ incurs cross-AZ data transfer charges (e.g., ~$0.01/GB on AWS). Kafka 2.4+ supports follower reads via `client.rack` on consumers and `RackAwareReplicaSelector` on brokers — consumers in the same AZ as a follower replica read from that local follower instead of the cross-AZ leader. At high throughput (GB/day), this eliminates most cross-AZ egress costs. The trade-off is that followers may lag slightly behind the leader, but consumers still respect the High Watermark boundary (no uncommitted data is served).

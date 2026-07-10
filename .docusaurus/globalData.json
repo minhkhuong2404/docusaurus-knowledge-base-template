@@ -5536,9 +5536,41 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/kafka/advanced/kafka-connect-smts",
+              "path": "/technical-knowledge/kafka/advanced/kafka-connect-smts"
+            },
+            {
+              "id": "technical-knowledge/kafka/advanced/kafka-data-governance",
+              "path": "/technical-knowledge/kafka/advanced/kafka-data-governance"
+            },
+            {
               "id": "technical-knowledge/kafka/advanced/kafka-exactly-once",
               "path": "/technical-knowledge/kafka/advanced/kafka-exactly-once",
               "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/advanced/kafka-log-compaction",
+              "path": "/technical-knowledge/kafka/advanced/kafka-log-compaction"
+            },
+            {
+              "id": "technical-knowledge/kafka/advanced/kafka-mirrormaker2",
+              "path": "/technical-knowledge/kafka/advanced/kafka-mirrormaker2"
+            },
+            {
+              "id": "technical-knowledge/kafka/advanced/kafka-performance-tuning",
+              "path": "/technical-knowledge/kafka/advanced/kafka-performance-tuning"
+            },
+            {
+              "id": "technical-knowledge/kafka/advanced/kafka-security-acls",
+              "path": "/technical-knowledge/kafka/advanced/kafka-security-acls"
+            },
+            {
+              "id": "technical-knowledge/kafka/advanced/kafka-security-authentication",
+              "path": "/technical-knowledge/kafka/advanced/kafka-security-authentication"
+            },
+            {
+              "id": "technical-knowledge/kafka/advanced/kafka-security-best-practices",
+              "path": "/technical-knowledge/kafka/advanced/kafka-security-best-practices"
             },
             {
               "id": "technical-knowledge/kafka/advanced/kafka-streams-deep-dive",
@@ -5604,6 +5636,18 @@
               "id": "technical-knowledge/kafka/core/kafka-overview",
               "path": "/technical-knowledge/kafka/core/kafka-overview",
               "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/kafka/core/kafka-partitioning-strategies",
+              "path": "/technical-knowledge/kafka/core/kafka-partitioning-strategies"
+            },
+            {
+              "id": "technical-knowledge/kafka/core/kafka-producers-consumers",
+              "path": "/technical-knowledge/kafka/core/kafka-producers-consumers"
+            },
+            {
+              "id": "technical-knowledge/kafka/core/kafka-vs-rabbitmq",
+              "path": "/technical-knowledge/kafka/core/kafka-vs-rabbitmq"
             },
             {
               "id": "technical-knowledge/kafka/core/kraft-vs-zookeeper",
@@ -6206,6 +6250,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/api-composition",
+              "path": "/technical-knowledge/system-design/api-composition",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/api-design",
               "path": "/technical-knowledge/system-design/api-design",
               "sidebar": "tutorialSidebar"
@@ -6216,8 +6265,18 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/backend-for-frontend",
+              "path": "/technical-knowledge/system-design/backend-for-frontend",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/bloom-filters",
               "path": "/technical-knowledge/system-design/bloom-filters",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/blue-green-deployment",
+              "path": "/technical-knowledge/system-design/blue-green-deployment",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -6316,6 +6375,16 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/externalized-configuration",
+              "path": "/technical-knowledge/system-design/externalized-configuration",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/feature-toggle",
+              "path": "/technical-knowledge/system-design/feature-toggle",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/handling-contention",
               "path": "/technical-knowledge/system-design/handling-contention",
               "sidebar": "tutorialSidebar"
@@ -6346,6 +6415,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/log-aggregation",
+              "path": "/technical-knowledge/system-design/log-aggregation",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/long-running-tasks",
               "path": "/technical-knowledge/system-design/long-running-tasks",
               "sidebar": "tutorialSidebar"
@@ -6353,6 +6427,11 @@
             {
               "id": "technical-knowledge/system-design/message-queues",
               "path": "/technical-knowledge/system-design/message-queues",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/microservice-chassis",
+              "path": "/technical-knowledge/system-design/microservice-chassis",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -6468,6 +6547,11 @@
             {
               "id": "technical-knowledge/system-design/two-phase-commit",
               "path": "/technical-knowledge/system-design/two-phase-commit",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/webhook",
+              "path": "/technical-knowledge/system-design/webhook",
               "sidebar": "tutorialSidebar"
             },
             {

@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '32e'),
+    component: ComponentCreator('/', 'e3c'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'efb'),
+        component: ComponentCreator('/', '8ce'),
         routes: [
           {
             path: '/tags',
@@ -113,6 +113,11 @@ export default [
           {
             path: '/tags/acid',
             component: ComponentCreator('/tags/acid', 'db5'),
+            exact: true
+          },
+          {
+            path: '/tags/acl',
+            component: ComponentCreator('/tags/acl', 'df6'),
             exact: true
           },
           {
@@ -588,6 +593,11 @@ export default [
           {
             path: '/tags/best-practices',
             component: ComponentCreator('/tags/best-practices', 'f96'),
+            exact: true
+          },
+          {
+            path: '/tags/bff',
+            component: ComponentCreator('/tags/bff', '364'),
             exact: true
           },
           {
@@ -1341,6 +1351,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/comparison',
+            component: ComponentCreator('/tags/comparison', 'f01'),
+            exact: true
+          },
+          {
             path: '/tags/compliance',
             component: ComponentCreator('/tags/compliance', '1bf'),
             exact: true
@@ -1523,6 +1538,11 @@ export default [
           {
             path: '/tags/context-switching',
             component: ComponentCreator('/tags/context-switching', 'b26'),
+            exact: true
+          },
+          {
+            path: '/tags/continuous-delivery',
+            component: ComponentCreator('/tags/continuous-delivery', 'f0f'),
             exact: true
           },
           {
@@ -2216,6 +2236,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/elk',
+            component: ComponentCreator('/tags/elk', '6c8'),
+            exact: true
+          },
+          {
             path: '/tags/elk-stack',
             component: ComponentCreator('/tags/elk-stack', '5aa'),
             exact: true
@@ -2353,6 +2378,11 @@ export default [
           {
             path: '/tags/eventbridge',
             component: ComponentCreator('/tags/eventbridge', '086'),
+            exact: true
+          },
+          {
+            path: '/tags/events',
+            component: ComponentCreator('/tags/events', '254'),
             exact: true
           },
           {
@@ -2503,6 +2533,11 @@ export default [
           {
             path: '/tags/fault-tolerance',
             component: ComponentCreator('/tags/fault-tolerance', '1a5'),
+            exact: true
+          },
+          {
+            path: '/tags/feature-flags',
+            component: ComponentCreator('/tags/feature-flags', '485'),
             exact: true
           },
           {
@@ -2778,6 +2813,11 @@ export default [
           {
             path: '/tags/goto',
             component: ComponentCreator('/tags/goto', 'e19'),
+            exact: true
+          },
+          {
+            path: '/tags/governance',
+            component: ComponentCreator('/tags/governance', '345'),
             exact: true
           },
           {
@@ -3811,6 +3851,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/loki',
+            component: ComponentCreator('/tags/loki', 'ed2'),
+            exact: true
+          },
+          {
             path: '/tags/long-polling',
             component: ComponentCreator('/tags/long-polling', 'a18'),
             exact: true
@@ -3998,6 +4043,11 @@ export default [
           {
             path: '/tags/migrations',
             component: ComponentCreator('/tags/migrations', 'ebe'),
+            exact: true
+          },
+          {
+            path: '/tags/mirrormaker',
+            component: ComponentCreator('/tags/mirrormaker', '243'),
             exact: true
           },
           {
@@ -4853,6 +4903,11 @@ export default [
           {
             path: '/tags/platform',
             component: ComponentCreator('/tags/platform', '1aa'),
+            exact: true
+          },
+          {
+            path: '/tags/platform-engineering',
+            component: ComponentCreator('/tags/platform-engineering', '4b9'),
             exact: true
           },
           {
@@ -5951,6 +6006,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/smt',
+            component: ComponentCreator('/tags/smt', '8f2'),
+            exact: true
+          },
+          {
             path: '/tags/smtp',
             component: ComponentCreator('/tags/smtp', 'ea0'),
             exact: true
@@ -6721,6 +6781,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/tuning',
+            component: ComponentCreator('/tags/tuning', '4cb'),
+            exact: true
+          },
+          {
             path: '/tags/two-phase-commit',
             component: ComponentCreator('/tags/two-phase-commit', 'c64'),
             exact: true
@@ -7152,7 +7217,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '18e'),
+            component: ComponentCreator('/', '45d'),
             routes: [
               {
                 path: '/aws',
@@ -13973,10 +14038,50 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/kafka/advanced/kafka-connect-smts',
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-connect-smts', '111'),
+                exact: true
+              },
+              {
+                path: '/technical-knowledge/kafka/advanced/kafka-data-governance',
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-data-governance', '8cc'),
+                exact: true
+              },
+              {
                 path: '/technical-knowledge/kafka/advanced/kafka-exactly-once',
                 component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-exactly-once', '147'),
                 exact: true,
                 sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/kafka/advanced/kafka-log-compaction',
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-log-compaction', 'd22'),
+                exact: true
+              },
+              {
+                path: '/technical-knowledge/kafka/advanced/kafka-mirrormaker2',
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-mirrormaker2', '9c1'),
+                exact: true
+              },
+              {
+                path: '/technical-knowledge/kafka/advanced/kafka-performance-tuning',
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-performance-tuning', '14e'),
+                exact: true
+              },
+              {
+                path: '/technical-knowledge/kafka/advanced/kafka-security-acls',
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-security-acls', 'f09'),
+                exact: true
+              },
+              {
+                path: '/technical-knowledge/kafka/advanced/kafka-security-authentication',
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-security-authentication', '869'),
+                exact: true
+              },
+              {
+                path: '/technical-knowledge/kafka/advanced/kafka-security-best-practices',
+                component: ComponentCreator('/technical-knowledge/kafka/advanced/kafka-security-best-practices', '055'),
+                exact: true
               },
               {
                 path: '/technical-knowledge/kafka/advanced/kafka-streams-deep-dive',
@@ -14055,6 +14160,21 @@ export default [
                 component: ComponentCreator('/technical-knowledge/kafka/core/kafka-overview', 'f7e'),
                 exact: true,
                 sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/kafka/core/kafka-partitioning-strategies',
+                component: ComponentCreator('/technical-knowledge/kafka/core/kafka-partitioning-strategies', 'f89'),
+                exact: true
+              },
+              {
+                path: '/technical-knowledge/kafka/core/kafka-producers-consumers',
+                component: ComponentCreator('/technical-knowledge/kafka/core/kafka-producers-consumers', '8ae'),
+                exact: true
+              },
+              {
+                path: '/technical-knowledge/kafka/core/kafka-vs-rabbitmq',
+                component: ComponentCreator('/technical-knowledge/kafka/core/kafka-vs-rabbitmq', '5c3'),
+                exact: true
               },
               {
                 path: '/technical-knowledge/kafka/core/kraft-vs-zookeeper',
@@ -14759,6 +14879,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/system-design/api-composition',
+                component: ComponentCreator('/technical-knowledge/system-design/api-composition', '4e2'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/system-design/api-design',
                 component: ComponentCreator('/technical-knowledge/system-design/api-design', '1e8'),
                 exact: true,
@@ -14771,8 +14897,20 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/system-design/backend-for-frontend',
+                component: ComponentCreator('/technical-knowledge/system-design/backend-for-frontend', '9c0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/system-design/bloom-filters',
                 component: ComponentCreator('/technical-knowledge/system-design/bloom-filters', '656'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/blue-green-deployment',
+                component: ComponentCreator('/technical-knowledge/system-design/blue-green-deployment', 'dec'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14891,6 +15029,18 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/system-design/externalized-configuration',
+                component: ComponentCreator('/technical-knowledge/system-design/externalized-configuration', '5aa'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/feature-toggle',
+                component: ComponentCreator('/technical-knowledge/system-design/feature-toggle', 'bb5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/system-design/handling-contention',
                 component: ComponentCreator('/technical-knowledge/system-design/handling-contention', 'c14'),
                 exact: true,
@@ -14921,6 +15071,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/system-design/log-aggregation',
+                component: ComponentCreator('/technical-knowledge/system-design/log-aggregation', 'e37'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/system-design/long-running-tasks',
                 component: ComponentCreator('/technical-knowledge/system-design/long-running-tasks', 'b92'),
                 exact: true,
@@ -14929,6 +15085,12 @@ export default [
               {
                 path: '/technical-knowledge/system-design/message-queues',
                 component: ComponentCreator('/technical-knowledge/system-design/message-queues', '98e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/microservice-chassis',
+                component: ComponentCreator('/technical-knowledge/system-design/microservice-chassis', '430'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14946,7 +15108,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/nginx-internals',
-                component: ComponentCreator('/technical-knowledge/system-design/nginx-internals', '2c9'),
+                component: ComponentCreator('/technical-knowledge/system-design/nginx-internals', 'e99'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -15067,6 +15229,12 @@ export default [
               {
                 path: '/technical-knowledge/system-design/two-phase-commit',
                 component: ComponentCreator('/technical-knowledge/system-design/two-phase-commit', 'bd2'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/webhook',
+                component: ComponentCreator('/technical-knowledge/system-design/webhook', 'bd9'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

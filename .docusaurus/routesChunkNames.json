@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-32e": {
+  "/-e3c": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-efb": {
+  "/-8ce": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -100,6 +100,10 @@
   "/tags/acid-db5": {
     "__comp": "df203c0f",
     "__props": "c737f819"
+  },
+  "/tags/acl-df6": {
+    "__comp": "df203c0f",
+    "__props": "c2e7140d"
   },
   "/tags/adapter-153": {
     "__comp": "df203c0f",
@@ -480,6 +484,10 @@
   "/tags/best-practices-f96": {
     "__comp": "df203c0f",
     "__props": "7e82648e"
+  },
+  "/tags/bff-364": {
+    "__comp": "df203c0f",
+    "__props": "5c5b744f"
   },
   "/tags/bfs-2af": {
     "__comp": "df203c0f",
@@ -1081,6 +1089,10 @@
     "__comp": "df203c0f",
     "__props": "72da110f"
   },
+  "/tags/comparison-f01": {
+    "__comp": "df203c0f",
+    "__props": "86c160be"
+  },
   "/tags/compliance-1bf": {
     "__comp": "df203c0f",
     "__props": "26ed4e63"
@@ -1228,6 +1240,10 @@
   "/tags/context-switching-b26": {
     "__comp": "df203c0f",
     "__props": "c2fc6d3d"
+  },
+  "/tags/continuous-delivery-f0f": {
+    "__comp": "df203c0f",
+    "__props": "0d30619a"
   },
   "/tags/contract-testing-ecb": {
     "__comp": "df203c0f",
@@ -1781,6 +1797,10 @@
     "__comp": "df203c0f",
     "__props": "d6c03ee6"
   },
+  "/tags/elk-6c8": {
+    "__comp": "df203c0f",
+    "__props": "259560eb"
+  },
   "/tags/elk-stack-5aa": {
     "__comp": "df203c0f",
     "__props": "e581494f"
@@ -1892,6 +1912,10 @@
   "/tags/eventbridge-086": {
     "__comp": "df203c0f",
     "__props": "65548d81"
+  },
+  "/tags/events-254": {
+    "__comp": "df203c0f",
+    "__props": "e1a14a99"
   },
   "/tags/eventual-consistency-9c4": {
     "__comp": "df203c0f",
@@ -2012,6 +2036,10 @@
   "/tags/fault-tolerance-1a5": {
     "__comp": "df203c0f",
     "__props": "453e5c9d"
+  },
+  "/tags/feature-flags-485": {
+    "__comp": "df203c0f",
+    "__props": "f575e3aa"
   },
   "/tags/federation-555": {
     "__comp": "df203c0f",
@@ -2232,6 +2260,10 @@
   "/tags/goto-e19": {
     "__comp": "df203c0f",
     "__props": "2aabfcef"
+  },
+  "/tags/governance-345": {
+    "__comp": "df203c0f",
+    "__props": "b0015e7b"
   },
   "/tags/gpi-3d2": {
     "__comp": "df203c0f",
@@ -3057,6 +3089,10 @@
     "__comp": "df203c0f",
     "__props": "cea8b4a4"
   },
+  "/tags/loki-ed2": {
+    "__comp": "df203c0f",
+    "__props": "92eba387"
+  },
   "/tags/long-polling-a18": {
     "__comp": "df203c0f",
     "__props": "89572ede"
@@ -3208,6 +3244,10 @@
   "/tags/migrations-ebe": {
     "__comp": "df203c0f",
     "__props": "ebc50825"
+  },
+  "/tags/mirrormaker-243": {
+    "__comp": "df203c0f",
+    "__props": "c60f9478"
   },
   "/tags/missing-chapter-066": {
     "__comp": "df203c0f",
@@ -3892,6 +3932,10 @@
   "/tags/platform-1aa": {
     "__comp": "df203c0f",
     "__props": "21875f02"
+  },
+  "/tags/platform-engineering-4b9": {
+    "__comp": "df203c0f",
+    "__props": "2cd9e368"
   },
   "/tags/plugin-architecture-e28": {
     "__comp": "df203c0f",
@@ -4769,6 +4813,10 @@
     "__comp": "df203c0f",
     "__props": "dfcb95be"
   },
+  "/tags/smt-8f2": {
+    "__comp": "df203c0f",
+    "__props": "527364f1"
+  },
   "/tags/smtp-ea0": {
     "__comp": "df203c0f",
     "__props": "187558a9"
@@ -5385,6 +5433,10 @@
     "__comp": "df203c0f",
     "__props": "cc4bf5b7"
   },
+  "/tags/tuning-4cb": {
+    "__comp": "df203c0f",
+    "__props": "9b4dccd9"
+  },
   "/tags/two-phase-commit-c64": {
     "__comp": "df203c0f",
     "__props": "93f4296d"
@@ -5729,7 +5781,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-18e": {
+  "/-45d": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -10284,9 +10336,41 @@
     "__comp": "17896441",
     "content": "e1e89bb9"
   },
+  "/technical-knowledge/kafka/advanced/kafka-connect-smts-111": {
+    "__comp": "17896441",
+    "content": "cd24d437"
+  },
+  "/technical-knowledge/kafka/advanced/kafka-data-governance-8cc": {
+    "__comp": "17896441",
+    "content": "7372a84c"
+  },
   "/technical-knowledge/kafka/advanced/kafka-exactly-once-147": {
     "__comp": "17896441",
     "content": "a8e4316f"
+  },
+  "/technical-knowledge/kafka/advanced/kafka-log-compaction-d22": {
+    "__comp": "17896441",
+    "content": "8c1cb736"
+  },
+  "/technical-knowledge/kafka/advanced/kafka-mirrormaker2-9c1": {
+    "__comp": "17896441",
+    "content": "e8795b9d"
+  },
+  "/technical-knowledge/kafka/advanced/kafka-performance-tuning-14e": {
+    "__comp": "17896441",
+    "content": "637d90b2"
+  },
+  "/technical-knowledge/kafka/advanced/kafka-security-acls-f09": {
+    "__comp": "17896441",
+    "content": "283b8b26"
+  },
+  "/technical-knowledge/kafka/advanced/kafka-security-authentication-869": {
+    "__comp": "17896441",
+    "content": "14d829e9"
+  },
+  "/technical-knowledge/kafka/advanced/kafka-security-best-practices-055": {
+    "__comp": "17896441",
+    "content": "fbc6c2a1"
   },
   "/technical-knowledge/kafka/advanced/kafka-streams-deep-dive-719": {
     "__comp": "17896441",
@@ -10339,6 +10423,18 @@
   "/technical-knowledge/kafka/core/kafka-overview-f7e": {
     "__comp": "17896441",
     "content": "6438a9db"
+  },
+  "/technical-knowledge/kafka/core/kafka-partitioning-strategies-f89": {
+    "__comp": "17896441",
+    "content": "c37b5ac8"
+  },
+  "/technical-knowledge/kafka/core/kafka-producers-consumers-8ae": {
+    "__comp": "17896441",
+    "content": "16e4fe12"
+  },
+  "/technical-knowledge/kafka/core/kafka-vs-rabbitmq-5c3": {
+    "__comp": "17896441",
+    "content": "a9f771b0"
   },
   "/technical-knowledge/kafka/core/kraft-vs-zookeeper-244": {
     "__comp": "17896441",
@@ -10808,6 +10904,10 @@
     "__comp": "17896441",
     "content": "7bce8a09"
   },
+  "/technical-knowledge/system-design/api-composition-4e2": {
+    "__comp": "17896441",
+    "content": "97b49958"
+  },
   "/technical-knowledge/system-design/api-design-1e8": {
     "__comp": "17896441",
     "content": "0237d5d1"
@@ -10816,9 +10916,17 @@
     "__comp": "17896441",
     "content": "c0e5a9ef"
   },
+  "/technical-knowledge/system-design/backend-for-frontend-9c0": {
+    "__comp": "17896441",
+    "content": "b02f3312"
+  },
   "/technical-knowledge/system-design/bloom-filters-656": {
     "__comp": "17896441",
     "content": "ce0d883d"
+  },
+  "/technical-knowledge/system-design/blue-green-deployment-dec": {
+    "__comp": "17896441",
+    "content": "3f36d9af"
   },
   "/technical-knowledge/system-design/bulkhead-pattern-9a7": {
     "__comp": "17896441",
@@ -10896,6 +11004,14 @@
     "__comp": "17896441",
     "content": "9ebe4bab"
   },
+  "/technical-knowledge/system-design/externalized-configuration-5aa": {
+    "__comp": "17896441",
+    "content": "e77cca97"
+  },
+  "/technical-knowledge/system-design/feature-toggle-bb5": {
+    "__comp": "17896441",
+    "content": "d059e51a"
+  },
   "/technical-knowledge/system-design/handling-contention-c14": {
     "__comp": "17896441",
     "content": "89400898"
@@ -10916,6 +11032,10 @@
     "__comp": "17896441",
     "content": "b14a4730"
   },
+  "/technical-knowledge/system-design/log-aggregation-e37": {
+    "__comp": "17896441",
+    "content": "ee5a53d7"
+  },
   "/technical-knowledge/system-design/long-running-tasks-b92": {
     "__comp": "17896441",
     "content": "010e7447"
@@ -10923,6 +11043,10 @@
   "/technical-knowledge/system-design/message-queues-98e": {
     "__comp": "17896441",
     "content": "3940c236"
+  },
+  "/technical-knowledge/system-design/microservice-chassis-430": {
+    "__comp": "17896441",
+    "content": "a6472fd5"
   },
   "/technical-knowledge/system-design/microservices-patterns-ec8": {
     "__comp": "17896441",
@@ -10932,7 +11056,7 @@
     "__comp": "17896441",
     "content": "9aee46ea"
   },
-  "/technical-knowledge/system-design/nginx-internals-2c9": {
+  "/technical-knowledge/system-design/nginx-internals-e99": {
     "__comp": "17896441",
     "content": "22875a92"
   },
@@ -11015,6 +11139,10 @@
   "/technical-knowledge/system-design/two-phase-commit-bd2": {
     "__comp": "17896441",
     "content": "4c5a6247"
+  },
+  "/technical-knowledge/system-design/webhook-bd9": {
+    "__comp": "17896441",
+    "content": "a01d3cae"
   },
   "/technical-knowledge/test/spring-test-annotations-e89": {
     "__comp": "17896441",
