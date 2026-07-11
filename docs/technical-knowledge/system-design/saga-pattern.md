@@ -8,6 +8,15 @@ tags: [system-design, distributed-systems, transactions, saga, eventual-consiste
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import TwoPhaseCommitDiagram from '@site/src/components/TwoPhaseCommitDiagram';
+import SagaCoreFlowDiagram from '@site/src/components/SagaCoreFlowDiagram';
+import SagaCoordinationDiagram from '@site/src/components/SagaCoordinationDiagram';
+import ChoreographyComplexityDiagram from '@site/src/components/ChoreographyComplexityDiagram';
+import SagaStateMachineDiagram from '@site/src/components/SagaStateMachineDiagram';
+import KafkaAsyncOrchestrationDiagram from '@site/src/components/KafkaAsyncOrchestrationDiagram';
+import ParallelSagaStepsDiagram from '@site/src/components/ParallelSagaStepsDiagram';
+import EscalationPlaybookDiagram from '@site/src/components/EscalationPlaybookDiagram';
+import SagaDecisionGuideDiagram from '@site/src/components/SagaDecisionGuideDiagram';
 
 # Saga Pattern (Distributed Workflows)
 
@@ -35,19 +44,7 @@ In a microservices architecture, **each service owns its own database**. There i
 
 2PC is the classical solution: a coordinator asks all participants to "prepare" (lock resources), then issues a global "commit" or "abort". It provides true distributed ACID semantics.
 
-```
-2PC Protocol:
-  Phase 1 (Prepare):
-    Coordinator → Participant A: "Prepare?" → A: "Ready" (locks row)
-    Coordinator → Participant B: "Prepare?" → B: "Ready" (locks row)
-    Coordinator → Participant C: "Prepare?" → C: "Ready" (locks row)
-
-  Phase 2 (Commit):
-    Coordinator → A, B, C: "Commit" → all release locks
-
-  If any participant replies "Abort" in Phase 1:
-    Coordinator → A, B, C: "Abort" → all roll back
-```
+<TwoPhaseCommitDiagram />
 
 **Why 2PC fails at microservices scale:**
 
@@ -92,28 +89,9 @@ A Saga decomposes a distributed business transaction into a sequence of **local 
 1. Updates its own database (local ACID guarantee — only this service's data)
 2. Signals the next step (via event or command)
 
-### Happy Path
+### Happy Path & Failure Path
 
-```
-T1: Create Order (PENDING)
-    └──► T2: Reserve Stock
-              └──► T3: Process Payment
-                        └──► T4: Send Confirmation
-                                  └──► COMPLETED ✅
-```
-
-### Failure Path — Compensating Transactions Execute in Reverse
-
-```
-T1: Create Order ──► T2: Reserve Stock ──► T3: Payment FAILS ❌
-                                                    │
-                                                    ▼
-                     C2: Release Stock ◄────────────┘
-C1: Cancel Order ◄───┘
-
-Final state: Order=CANCELLED, Stock=unreserved, Payment=not charged
-System is consistent again (but via a different path than rollback)
-```
+<SagaCoreFlowDiagram />
 
 ### What Are Compensating Transactions?
 
@@ -136,17 +114,7 @@ Notice T1's compensation does NOT `DELETE` the order — it marks it `CANCELLED`
 
 Two fundamentally different patterns exist for coordinating a Saga:
 
-```
-Choreography (Event-Driven):               Orchestration (Command-Driven):
-
-  OrderService ──event──► InventoryService    Orchestrator ──command──► InventoryService
-                ◄──event──                                 ◄──reply────
-  InventoryService ──event──► PaymentService  Orchestrator ──command──► PaymentService
-                  ◄──event──                               ◄──reply────
-
-  Each service decides what to do next       Orchestrator decides everything
-  Workflow is implicit in event chains       Workflow is explicit in orchestrator code
-```
+<SagaCoordinationDiagram />
 
 | Dimension | Choreography | Orchestration |
 |:---|:---|:---|
@@ -289,22 +257,7 @@ With orchestration:
 
 ### When Choreography Becomes Unmanageable
 
-```
-Simple (2 services) — choreography is fine:
-  OrderCreated → PaymentProcessed → Done
-
-Complex (6+ services, conditional paths) — choreography degrades:
-  OrderCreated → StockReserved → FraudCheckPassed/Failed
-                                    └──► if passed → PaymentProcessed/Failed
-                                              └──► if payment failed → StockReleased
-                                                       └──► if release failed → ???
-                                    └──► if fraud detected → OrderFlagged → ManualReview
-                                              └──► if approved → resume from StockReserved
-                                              └──► if denied → OrderCancelled
-
-At this complexity, the workflow is invisible in any single place.
-Debugging requires tracing events across 6 services simultaneously.
-```
+<ChoreographyComplexityDiagram />
 
 ---
 
@@ -343,19 +296,7 @@ sequenceDiagram
 
 A production orchestrator must model the saga lifecycle as a **formal state machine** to prevent invalid transitions, enable recovery, and provide auditability.
 
-```
-                    ┌─────────────────────────────────────────────────────┐
-                    │              ORDER SAGA STATE MACHINE               │
-                    └─────────────────────────────────────────────────────┘
-
-  STARTED ──► STOCK_RESERVED ──► PAYMENT_PROCESSED ──► NOTIFIED ──► COMPLETED ✅
-     │               │                  │
-     │               └──────────────────┴──► COMPENSATING
-     │                                              │
-     └──► STOCK_RESERVATION_FAILED ──► CANCELLED ✅ │
-                                                     ├──► CANCELLED ✅
-                                                     └──► MANUAL_INTERVENTION_REQUIRED ⚠️
-```
+<SagaStateMachineDiagram />
 
 ```java
 public enum SagaStatus {
@@ -592,23 +533,7 @@ public class OrderSagaOrchestrator {
 
 The synchronous orchestrator above blocks while waiting for each downstream service. Under high load, this ties up threads and does not gracefully handle long-running downstream operations. A production-grade orchestrator uses async messaging.
 
-```
-Orchestrator ──publish command──► Kafka topic: inventory-commands
-              ◄──subscribe reply─── Kafka topic: inventory-replies
-
-This is the "Request-Reply" pattern over Kafka.
-The orchestrator is non-blocking — it processes replies when they arrive.
-```
-
-### Command and Reply Topics
-
-```
-Topic layout:
-  inventory-commands  ← Orchestrator publishes ReserveStock commands
-  inventory-replies   ← Inventory service publishes StockReserved / StockReservationFailed
-  payment-commands    ← Orchestrator publishes ProcessPayment commands
-  payment-replies     ← Payment service publishes PaymentProcessed / PaymentFailed
-```
+<KafkaAsyncOrchestrationDiagram />
 
 ### Async Orchestrator
 
@@ -724,16 +649,7 @@ public class AsyncOrderSagaOrchestrator {
 
 Not all saga steps are sequential. If two steps are independent (don't need each other's output), they can run in parallel — reducing saga completion time.
 
-```
-Sequential (slow):
-  T1 → T2 → T3 → T4
-  Time = T1 + T2 + T3 + T4
-
-Parallel (faster — independent steps run concurrently):
-  T1 → ┌── T2 (Reserve Stock)    ──┐
-       └── T3 (Fraud Check)      ──┘ → T4 (Payment) → DONE
-  Time = T1 + max(T2, T3) + T4
-```
+<ParallelSagaStepsDiagram />
 
 ```java
 // Async orchestrator: trigger T2 and T3 simultaneously
@@ -1053,33 +969,7 @@ public class SagaStepExecutor {
 
 ### Escalation Playbook
 
-```
-Level 1 — Automatic Retry (0–5 minutes, 5 attempts)
-  ├── Transient errors only
-  ├── Exponential backoff + jitter
-  └── Logged at WARN level
-
-Level 2 — Recovery Job (5–30 minutes)
-  ├── Scheduled job detects stuck sagas
-  ├── Re-drives from last persisted state
-  └── Logged at WARN level
-
-Level 3 — DLQ Routing (30 minutes)
-  ├── Saga moved to dead-letter topic / DLQ table
-  ├── Isolated from healthy saga processing
-  └── Logged at ERROR level
-
-Level 4 — MANUAL_INTERVENTION_REQUIRED (immediately on permanent failure)
-  ├── PagerDuty / alerting fires
-  ├── Saga status set to MANUAL_INTERVENTION_REQUIRED
-  ├── Admin dashboard shows full saga history
-  └── Operator can: retry specific step, skip step, force cancel, create adjustment
-
-Level 5 — Business Resolution (post-pivot failures)
-  ├── Create return request / refund record / financial adjustment
-  ├── Finance / ops team notified for out-of-band resolution
-  └── Regulatory audit trail preserved
-```
+<EscalationPlaybookDiagram />
 
 ```java
 @Service
@@ -1242,35 +1132,7 @@ record.headers()
 
 ## 13. Choreography vs Orchestration — Full Decision Guide
 
-```
-Is the saga workflow simple and linear (≤ 4 services, no branching)?
-    │
-    ├── YES → Choreography may be sufficient
-    │         Benefits: lower infra, no orchestrator to maintain
-    │         But: ensure you have distributed tracing and end-to-end tests
-    │
-    └── NO → Orchestration strongly preferred
-              (branching, parallel steps, complex compensation, many services)
-
-Does the workflow need to be auditable for compliance or finance?
-    → YES → Orchestration (centralized state in saga_state table = audit log)
-
-Do multiple teams own different saga participants?
-    → Many teams → Orchestration (explicit command API contracts are easier to version)
-    → Single team → Either
-
-Is the failure compensation complex (multiple services, ordering matters)?
-    → YES → Orchestration (compensation logic in one place)
-    → NO  → Either
-
-Do you need to support long-running sagas (minutes, hours, human approval steps)?
-    → YES → Async Orchestration over Kafka (no blocking threads)
-    → NO  → Either
-
-Is this a new system or a brownfield addition to an event-driven architecture?
-    → New system or brownfield with no Kafka → Orchestration (easier to start)
-    → Existing event-driven system → Choreography may integrate naturally
-```
+<SagaDecisionGuideDiagram />
 
 ---
 

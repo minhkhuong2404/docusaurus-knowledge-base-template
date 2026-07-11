@@ -31,8 +31,8 @@
     }
   ],
   "version": "current",
-  "lastUpdatedBy": "Lữ Minh Khương",
-  "lastUpdatedAt": 1783703647000,
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055000,
   "frontMatter": {
     "title": "Spring Data JPA Overview",
     "description": "High-level map of Spring Data JPA concepts and links to focused guides on repositories and Hibernate internals.",

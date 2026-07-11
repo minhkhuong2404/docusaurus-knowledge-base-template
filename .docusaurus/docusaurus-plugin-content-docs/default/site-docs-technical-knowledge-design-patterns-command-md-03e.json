@@ -31,8 +31,8 @@
     }
   ],
   "version": "current",
-  "lastUpdatedBy": "Lữ Minh Khương",
-  "lastUpdatedAt": 1783013700000,
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055000,
   "frontMatter": {
     "id": "command",
     "title": "Command Pattern",
