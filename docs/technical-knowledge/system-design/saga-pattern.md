@@ -17,6 +17,8 @@ import KafkaAsyncOrchestrationDiagram from '@site/src/components/KafkaAsyncOrche
 import ParallelSagaStepsDiagram from '@site/src/components/ParallelSagaStepsDiagram';
 import EscalationPlaybookDiagram from '@site/src/components/EscalationPlaybookDiagram';
 import SagaDecisionGuideDiagram from '@site/src/components/SagaDecisionGuideDiagram';
+import ChoreographySequenceDiagram from '@site/src/components/ChoreographySequenceDiagram';
+import OrchestrationSequenceDiagram from '@site/src/components/OrchestrationSequenceDiagram';
 
 # Saga Pattern (Distributed Workflows)
 
@@ -135,34 +137,7 @@ In choreography, each service subscribes to events from the previous service and
 
 ### Full Event Flow
 
-```mermaid
-sequenceDiagram
-    participant Client
-    participant OS as Order Service
-    participant IS as Inventory Service
-    participant PS as Payment Service
-    participant NS as Notification Service
-
-    Client->>OS: POST /orders
-    OS->>OS: Insert order (status=PENDING)
-    OS-->>IS: Event: OrderCreated {orderId, items, amount}
-
-    IS->>IS: Reserve stock
-    IS-->>PS: Event: StockReserved {orderId, amount}
-
-    PS->>PS: Charge customer
-    alt Payment succeeds
-        PS-->>NS: Event: PaymentProcessed {orderId}
-        PS-->>OS: Event: PaymentProcessed {orderId}
-        OS->>OS: Update order → CONFIRMED
-        NS->>NS: Send confirmation email
-    else Payment fails
-        PS-->>IS: Event: PaymentFailed {orderId}
-        PS-->>OS: Event: PaymentFailed {orderId}
-        IS->>IS: Release reserved stock (compensation)
-        OS->>OS: Update order → CANCELLED (compensation)
-    end
-```
+<ChoreographySequenceDiagram />
 
 ### Choreography Implementation — Inventory Service
 
@@ -267,30 +242,7 @@ An **Orchestrator** is a dedicated service that explicitly commands each partici
 
 ### Full Orchestration Flow
 
-```mermaid
-sequenceDiagram
-    participant O as Saga Orchestrator
-    participant IS as Inventory Service
-    participant PS as Payment Service
-    participant NS as Notification Service
-    participant OS as Order Service
-
-    Note over O: State persisted: STARTED
-    O->>IS: Command: ReserveStock {sagaId, orderId, items}
-    IS-->>O: Reply: StockReserved ✅
-    Note over O: State persisted: STOCK_RESERVED
-
-    O->>PS: Command: ProcessPayment {sagaId, orderId, amount}
-    PS-->>O: Reply: PaymentFailed ❌ — insufficient funds
-    Note over O: State persisted: COMPENSATING
-
-    O->>IS: Compensation: ReleaseStock {sagaId, orderId}
-    IS-->>O: Reply: StockReleased ✅
-
-    O->>OS: Compensation: CancelOrder {sagaId, orderId}
-    OS-->>O: Reply: OrderCancelled ✅
-    Note over O: State persisted: CANCELLED
-```
+<OrchestrationSequenceDiagram />
 
 ### Saga State Machine
 
