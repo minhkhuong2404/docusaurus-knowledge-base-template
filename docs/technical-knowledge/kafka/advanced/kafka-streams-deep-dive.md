@@ -14,6 +14,8 @@ tags:
   - advanced
 ---
 
+import KafkaStreamsTopologyDiagram from '@site/src/components/KafkaStreamsTopologyDiagram';
+
 # Kafka Streams — Complete Deep Dive
 
 > **Who this is for:** Engineers who want to truly understand how Kafka Streams works — not just use the API, but reason about it in production, design systems with it, and answer hard interview questions confidently.
@@ -145,15 +147,7 @@ A Kafka Streams application defines a **directed acyclic graph (DAG)** of proces
 - **Stream Processor** — transforms, filters, joins, or aggregates records
 - **Sink Processor** — writes to a Kafka topic
 
-```
-[Source Processor]  ← reads from "orders" topic
-        │
-[Filter Processor]  ← filters orders with amount > 100
-        │
-[MapValues Processor]  ← enriches the order
-        │
-[Sink Processor]  → writes to "high-value-orders" topic
-```
+<KafkaStreamsTopologyDiagram />
 
 ### Defining and Inspecting the Topology
 

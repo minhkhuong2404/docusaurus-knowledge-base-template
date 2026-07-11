@@ -4,6 +4,8 @@ description: Comprehensive guide to Spring Security, including authentication, a
 tags: [spring-security, spring-boot, java, authentication, authorization, filters]
 ---
 
+import SpringSecurityFilterDiagram from '@site/src/components/SpringSecurityFilterDiagram';
+
 # Spring Security — Complete Guide
 
 Spring Security is the de-facto standard for securing Spring-based applications. It provides comprehensive authentication, authorization, and protection against common exploits out of the box.
@@ -47,48 +49,11 @@ Spring Security handles both the Bouncer (Authentication Filters) and the VIP Gu
 
 Spring Security works through a **filter chain** that intercepts every HTTP request before it reaches your controllers. 
 
-```text
-HTTP Request
-    │
-    ▼
-┌───────────────────────────────────┐
-│   SecurityFilterChain             │
-│  ┌─────────────────────────────┐  │
-│  │ CorsFilter                  │  │
-│  │ CsrfFilter                  │  │
-│  │ AuthenticationFilter        │  │
-│  │ ExceptionTranslationFilter  │◄─┼── Catches Security Exceptions
-│  │ AuthorizationFilter         │◄─┼── (Replaced FilterSecurityInterceptor in Spring Sec 6)
-│  └─────────────────────────────┘  │
-└───────────────────────────────────┘
-    │
-    ▼
-DispatcherServlet (Spring MVC)
-    │
-    ▼
-Controller / Endpoint
-```
+<SpringSecurityFilterDiagram defaultMode="FILTER_CHAIN" />
 
 ### Authentication Architecture
 
-```text
-AuthenticationFilter
-    │
-    ▼
-AuthenticationManager
-    │
-    ▼
-AuthenticationProvider (can have multiple)
-    │
-    ▼
-UserDetailsService (loads user data)
-    │
-    ▼
-PasswordEncoder (verifies password)
-    │
-    ▼
-SecurityContext (stores authenticated principal)
-```
+<SpringSecurityFilterDiagram defaultMode="AUTH_FLOW" />
 
 ### End-to-End Authentication Workflow
 
@@ -160,19 +125,7 @@ The `ExceptionTranslationFilter` acts as a `try-catch` block around the remainin
 
 ### The Exception Resolution Flow
 
-```text
-ExceptionTranslationFilter catches Exception
-                │
-                ├──► Is it an AuthenticationException?
-                │    └──► YES: Clear SecurityContext → Call AuthenticationEntryPoint (Returns 401)
-                │
-                └──► Is it an AccessDeniedException?
-                     ├──► Is the user Anonymous (not logged in)?
-                     │    └──► YES: Call AuthenticationEntryPoint (Returns 401 to force login)
-                     │
-                     └──► Is the user fully Authenticated?
-                          └──► YES: Call AccessDeniedHandler (Returns 403 Forbidden)
-```
+<SpringSecurityFilterDiagram defaultMode="EXCEPTION_FLOW" />
 
 ### Customizing Security Responses (REST APIs)
 

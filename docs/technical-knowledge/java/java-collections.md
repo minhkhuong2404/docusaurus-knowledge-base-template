@@ -6,6 +6,10 @@ description: Deep dive into the Java Collections Framework, including core inter
 tags: [java, collections, data-structures, generics]
 ---
 
+import CollectionsHierarchyDiagram from '@site/src/components/CollectionsHierarchyDiagram';
+import JDK7SegmentLockingDiagram from '@site/src/components/JDK7SegmentLockingDiagram';
+import JDK8CASNodeDiagram from '@site/src/components/JDK8CASNodeDiagram';
+
 # Java Collections Framework: Deep Dive
 
 A comprehensive guide to Java's Collections Framework — data structures, common implementations, internal mechanics, and best practices.
@@ -14,34 +18,7 @@ A comprehensive guide to Java's Collections Framework — data structures, commo
 
 ## 1. Collections Hierarchy Overview
 
-```
-Iterable
-└── Collection
-    ├── List  (ordered, allows duplicates)
-    │   ├── ArrayList
-    │   ├── LinkedList
-    │   ├── Vector (legacy, synchronized)
-    │   └── CopyOnWriteArrayList (concurrent)
-    ├── Set  (no duplicates)
-    │   ├── HashSet
-    │   ├── LinkedHashSet
-    │   └── TreeSet (sorted)
-    └── Queue / Deque
-        ├── PriorityQueue
-        ├── ArrayDeque
-        ├── LinkedList
-        └── BlockingQueue (concurrent)
-            ├── ArrayBlockingQueue
-            ├── LinkedBlockingQueue
-            └── DelayQueue
-
-Map  (key-value pairs, not part of Collection)
-├── HashMap
-├── LinkedHashMap
-├── TreeMap (sorted)
-├── Hashtable (legacy, synchronized)
-└── ConcurrentHashMap (concurrent)
-```
+<CollectionsHierarchyDiagram />
 
 ---
 
@@ -307,32 +284,11 @@ public class DelayedTask implements Delayed {
 
 ### JDK 7: Segment-Based Locking
 
-ConcurrentHashMap in JDK 7 used **Segment** arrays, each containing its own `HashEntry[]` array. Locking was per-segment, allowing concurrent access to different segments.
-
-```
-ConcurrentHashMap
-├── Segment[0] (lock) → HashEntry[] → linked list
-├── Segment[1] (lock) → HashEntry[] → linked list
-├── ...
-└── Segment[15] (lock) → HashEntry[] → linked list
-```
-
-Default concurrency level: 16 segments → up to 16 concurrent writers.
+<JDK7SegmentLockingDiagram />
 
 ### JDK 8: CAS + Synchronized (Node-Based)
 
-JDK 8 replaced segments with a flat `Node[]` array, using **CAS for empty buckets** and **`synchronized` on the first node** of each bucket:
-
-```java
-// Simplified put logic
-if (bucket is empty) {
-    CAS to insert new Node  // lock-free for empty buckets
-} else {
-    synchronized (first node of bucket) {
-        // insert into linked list or red-black tree
-    }
-}
-```
+<JDK8CASNodeDiagram />
 
 **Size counting:** Uses `baseCount` + `CounterCell[]` to reduce contention when multiple threads update the size concurrently (similar to `LongAdder`).
 

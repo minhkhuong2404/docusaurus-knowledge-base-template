@@ -8,6 +8,7 @@ tags: [spring-batch, java, data-processing, backend, etl, chunk-processing, part
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import SpringBatchArchDiagram from '@site/src/components/SpringBatchArchDiagram';
 
 # Spring Batch — Complete Guide
 
@@ -73,24 +74,7 @@ Restart → resumes from row 3,451,001 ✅
 
 ### Component hierarchy
 
-```
-JobLauncher
-    │
-    ▼
-  Job  ─── JobParameters (unique run identifier)
-    │
-    ├── Step 1: Read CSV → Validate → Write to staging DB
-    │     ├── ItemReader
-    │     ├── ItemProcessor
-    │     └── ItemWriter
-    │
-    ├── Step 2: Aggregate staging data → Write to reporting DB
-    │
-    └── Step 3: Send email summary → Archive CSV file
-
-JobRepository (PostgreSQL / H2)
-    └── Stores: JobInstance, JobExecution, StepExecution metadata
-```
+<SpringBatchArchDiagram />
 
 ### Core components explained
 

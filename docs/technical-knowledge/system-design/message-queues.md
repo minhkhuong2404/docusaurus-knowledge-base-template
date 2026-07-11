@@ -6,6 +6,8 @@ description: Guide to asynchronous messaging systems including Kafka, RabbitMQ, 
 tags: [kafka, rabbitmq, sqs, messaging, event-driven, pub-sub, streaming, event-sourcing]
 ---
 
+import MessageQueueArchDiagram from '@site/src/components/MessageQueueArchDiagram';
+
 # Message Queues: Comprehensive System Design Guide
 
 Message queues are the foundational buffer of distributed systems. They sit between the services that *create* work and the services that *perform* work, ensuring that traffic spikes, hardware failures, and slow processing don't bring down your application.
@@ -115,19 +117,7 @@ If you have 10 Worker servers listening to one Queue, what stops Worker A and Wo
 **Different technologies solve this differently:**
 
 **Amazon SQS (Visibility Timeout):**
-```
-Worker A pulls message → SQS makes it invisible for 30s
-├─ Worker A finishes → Deletes message → Success!
-└─ Worker A crashes → 30s expire → Message visible again → Worker B grabs it
-```
-
-**Apache Kafka (Partition Assignment):**
-```
-Topic split into Partitions
-├─ Partition 0 → Only Consumer A can read
-├─ Partition 1 → Only Consumer B can read
-└─ Partition 2 → Only Consumer C can read
-```
+<MessageQueueArchDiagram defaultTab="PREVENTION" />
 Kafka prevents competition entirely. Since Worker A is the *only* server allowed to read Partition 1, duplicate reading is structurally impossible.
 
 ---
@@ -137,11 +127,7 @@ Kafka prevents competition entirely. Since Worker A is the *only* server allowed
 Queues do not automatically delete messages when they are read. If a worker crashes mid-processing, that data would be lost. Instead, the queue waits for the worker to send a definitive **Acknowledgement (ACK)** after the job is 100% complete.
 
 **The Danger Scenario:**
-```
-Worker processes message → Success!
-Worker crashes → 1ms before sending ACK
-Queue assumes failure → Message redelivered → Processed again!
-```
+<MessageQueueArchDiagram defaultTab="AT_LEAST_ONCE" />
 
 Because of this, you operate under an **At-Least-Once Delivery Guarantee**. Your system *will* process duplicates eventually. Therefore, your consumer logic **must be idempotent**.
 
@@ -159,25 +145,7 @@ Because of this, you operate under an **At-Least-Once Delivery Guarantee**. Your
 
 A single queue is a bottleneck. To scale throughput, you must **Partition** (shard) the queue.
 
-```
-Single Queue (Bottleneck):
-┌─────────────────────────────────┐
-│         Queue (1 partition)     │
-└─────────────────────────────────┘
-          ▲         ▲         ▲
-          │         │         │
-     Consumer  Consumer  Consumer
-     (1/3 load) (1/3 load) (1/3 load)
-
-Partitioned Queue (Scalable):
-┌─────────┐ ┌─────────┐ ┌─────────┐
-│ Part 0  │ │ Part 1  │ │ Part 2  │
-└─────────┘ └─────────┘ └─────────┘
-    ▲           ▲           ▲
-    │           │           │
- Consumer    Consumer    Consumer
- (100% load) (100% load) (100% load)
-```
+<MessageQueueArchDiagram defaultTab="SCALING" />
 
 **A Consumer Group** is a pool of workers that divides the partitions among themselves.
 

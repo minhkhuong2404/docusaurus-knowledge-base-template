@@ -21,7 +21,7 @@ export default function ConcurrencyVsParallelismAnalogDiagram(): React.JSX.Eleme
             className={`interactive-diagram-indicator-dot ${isParallel ? 'card-indicator-green' : 'card-indicator-cyan'}`} 
             style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: isParallel ? '#4ade80' : '#2dd4bf' }}
           />
-          <h3 style={{ margin: '0 !important', fontSize: '0.95rem', fontWeight: 700, color: isParallel ? '#4ade80 !important' : '#2dd4bf !important' }}>
+          <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700, color: isParallel ? '#4ade80' : '#2dd4bf' }}>
             ☕ Coffee Shop Analogy: {isParallel ? 'Parallelism (Multi-Counter)' : 'Concurrency (Single Cashier)'}
           </h3>
         </div>
@@ -64,7 +64,7 @@ export default function ConcurrencyVsParallelismAnalogDiagram(): React.JSX.Eleme
       </div>
 
       {/* Visual Canvas Area */}
-      <div className="interactive-diagram-svg-wrapper interactive-diagram-grid-bg" style={{ height: '180px' }}>
+      <div className="interactive-diagram-svg-wrapper interactive-diagram-grid-bg">
         <svg viewBox="0 0 680 180" className="interactive-diagram-svg">
           <defs>
             <marker

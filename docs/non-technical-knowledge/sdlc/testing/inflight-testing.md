@@ -10,6 +10,9 @@ tags:
 - testing
 - inflight-testing
 ---
+
+import CanaryTrafficRouterDiagram from '@site/src/components/CanaryTrafficRouterDiagram';
+
 # Inflight Testing
 
 ## What is Inflight Testing?
@@ -22,21 +25,7 @@ Unlike pre-deployment tests that validate the build, inflight tests validate the
 
 ## When Inflight Testing Occurs
 
-```
-Deployment starts
-      ↓
-New version receives 5% traffic (canary)
-      ↓
-  ┌─────────────────────────────────┐
-  │     INFLIGHT TESTS RUN NOW      │
-  │  - Synthetic API calls          │
-  │  - Health endpoint polling      │
-  │  - Business metric validation   │
-  └─────────────────────────────────┘
-      ↓
-Pass? → Increase traffic to 25% → 50% → 100%
-Fail? → Automatic rollback triggered
-```
+<CanaryTrafficRouterDiagram />
 
 ---
 

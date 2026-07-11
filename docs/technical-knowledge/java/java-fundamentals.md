@@ -6,6 +6,9 @@ description: Covers Java fundamentals, including the platform model, syntax, typ
 tags: [java, fundamentals, core-java, beginner]
 ---
 
+import StringConstantPoolDiagram from '@site/src/components/StringConstantPoolDiagram';
+import ExceptionHierarchyDiagram from '@site/src/components/ExceptionHierarchyDiagram';
+
 # Java Fundamentals: Core Language Concepts
 
 A comprehensive guide to Java's foundational concepts — from the platform architecture to core syntax, OOP principles, and essential language features every developer should know.
@@ -251,20 +254,7 @@ String s3 = new String("Hello"); // Creates a brand new object in the normal Hea
 System.out.println(s1 == s3); // false (different objects, different memory regions)
 ```
 
-```
-       Heap Memory
-┌───────────────────────────────┐
-│  Normal Heap                  │
-│  ┌─────────────────┐          │
-│  │ s3 -> "Hello"   │          │
-│  └─────────────────┘          │
-│                               │
-│  String Constant Pool (SCP)   │
-│  ┌─────────────────┐          │
-│  │ s1, s2 ->"Hello"│          │
-│  └─────────────────┘          │
-└───────────────────────────────┘
-```
+<StringConstantPoolDiagram />
 
 #### 3. String Interning (`String.intern()`)
 Calling `.intern()` on a string checks the pool for a string with the identical character sequence. If present, it returns the pool reference. If not, it adds the string to the pool and returns its reference.
@@ -355,13 +345,7 @@ public class DatabaseClient implements AutoCloseable {
 
 ### Exception Hierarchy
 
-```
-Throwable
-├── Error (unrecoverable — OutOfMemoryError, StackOverflowError)
-└── Exception
-    ├── Checked Exceptions (must handle — IOException, SQLException)
-    └── RuntimeException (unchecked — NullPointerException, IllegalArgumentException)
-```
+<ExceptionHierarchyDiagram />
 
 ### Checked vs Unchecked Exceptions
 

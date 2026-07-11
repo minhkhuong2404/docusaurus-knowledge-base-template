@@ -74,7 +74,7 @@ export default function CodeBlock(props: Props): React.JSX.Element {
             className="interactive-diagram-indicator-dot card-indicator-cyan" 
             style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#2dd4bf' }}
           />
-          <h3 style={{ margin: '0 !important', fontSize: '0.9rem', fontWeight: 700, color: '#2dd4bf !important' }}>
+          <h3 style={{ margin: 0, fontSize: '0.9rem', fontWeight: 700, color: '#2dd4bf' }}>
             📊 Monospace Schema Inspector
           </h3>
         </div>

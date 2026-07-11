@@ -6,6 +6,11 @@ description: Deep dive into Java locks and synchronization primitives — synchr
 tags: [java, concurrency, locks, synchronization, countdown-latch, semaphore, cyclic-barrier, phaser]
 ---
 
+import LockEscalationDiagram from '@site/src/components/LockEscalationDiagram';
+import ConcurrencyCoordinationDiagram from '@site/src/components/ConcurrencyCoordinationDiagram';
+import AQSArchitectureDiagram from '@site/src/components/AQSArchitectureDiagram';
+import LockDecisionTreeDiagram from '@site/src/components/LockDecisionTreeDiagram';
+
 # Java Locks & Synchronization
 
 To coordinate thread execution and protect shared mutable state, Java provides synchronization primitives and highly flexible locking structures built on top of a common framework — AQS. Understanding these tools at a mechanical level is what separates engineers who "know the APIs" from engineers who can diagnose a deadlock in production at 2am.
@@ -77,12 +82,7 @@ Naïve `synchronized` delegates to an OS-level mutex on every use — an expensi
 2. **Lightweight Locking**: A second thread requests the lock. Biased locking is revoked (costly — requires a safepoint). The new thread uses **CAS (Compare-And-Swap)** to spin-wait for the lock, burning CPU cycles rather than blocking.
 3. **Heavyweight Locking**: If spinning fails beyond a threshold (default: ~10 iterations), the JVM escalates to a kernel-level mutex. The waiting thread is **descheduled** by the OS — no CPU wasted, but context-switch overhead is significant (~1–10μs).
 
-```
- Object Header (Mark Word) transitions:
- 
- [Biased: Thread-ID]  →  [Lightweight: Lock Record Pointer]  →  [Heavyweight: Monitor Pointer]
-      (no contention)           (brief contention)                  (sustained contention)
-```
+<LockEscalationDiagram />
 
 :::warning[JDK 15+ Note]
 Biased locking was **deprecated in JDK 15** and **removed in JDK 21** because modern multi-threaded applications rarely exhibit single-thread access patterns, making the revocation overhead rarely worthwhile. If you're on JDK 21+, lock escalation starts directly at lightweight locking.
@@ -430,15 +430,7 @@ The locks above are about *protection* — preventing concurrent access to share
 
 A one-shot countdown gate: N threads decrement the latch by calling `countDown()`; one or more threads block on `await()` until the count reaches zero. **The count cannot be reset** — once a latch reaches zero, it stays zero permanently.
 
-```
-┌──────────────────────────────────────────────────────────────────────────┐
-│ CountDownLatch (count = 3)                                               │
-│                                                                          │
-│  Thread A  ──countDown()──►  count: 3 → 2                               │
-│  Thread B  ──countDown()──►  count: 2 → 1                               │
-│  Thread C  ──countDown()──►  count: 1 → 0  ──►  Waiting Thread Unblocks │
-└──────────────────────────────────────────────────────────────────────────┘
-```
+<ConcurrencyCoordinationDiagram defaultTab="LATCH" />
 
 #### Real-World Use Case: Parallel Service Initialization
 
@@ -530,14 +522,7 @@ public class StartingGunDemo {
 
 A **reusable** meeting point: N threads each call `await()` and block until all N have arrived. Then all N are released simultaneously, and the barrier resets for the next cycle. Optionally, a **barrier action** runs once when the last thread arrives, before any are released.
 
-```
-Phase 1:                         Phase 2:
-  T1 ──await()──►  ┌──────┐       T1 ──await()──►  ┌──────┐
-  T2 ──await()──►  │GATE  │       T2 ──await()──►  │GATE  │
-  T3 ──await()──►  │Reset │       T3 ──await()──►  │Reset │
-                   └──────┘                          └──────┘
-      (all 3 released together)       (all 3 released again)
-```
+<ConcurrencyCoordinationDiagram defaultTab="BARRIER" />
 
 #### Real-World Use Case: Parallel Matrix Computation
 
@@ -623,15 +608,7 @@ try {
 
 A **counting semaphore** that controls concurrent access to a **pool of resources**. The semaphore holds N permits. `acquire()` takes a permit (blocking if none available); `release()` returns a permit. Unlike locks, the thread that calls `release()` does not have to be the same thread that called `acquire()`.
 
-```
-Semaphore (permits = 3):
-
-  Thread A ──acquire()──►  permits: 3 → 2  [entering]
-  Thread B ──acquire()──►  permits: 2 → 1  [entering]
-  Thread C ──acquire()──►  permits: 1 → 0  [entering]
-  Thread D ──acquire()──►  BLOCKED (0 permits)
-  Thread A ──release()──►  permits: 0 → 1  [Thread D unblocked]
-```
+<ConcurrencyCoordinationDiagram defaultTab="SEMAPHORE" />
 
 #### Real-World Use Case: Database Connection Pool
 
@@ -707,11 +684,7 @@ Like `ReentrantLock`, `Semaphore` can be constructed in **fair mode** (`new Sema
 
 A **bidirectional synchronization point** where exactly **two threads swap a single object**. Both threads call `exchange()` and block until the other arrives. Once both are present, they atomically swap their objects and both are released.
 
-```
-Thread A  ──exchange(dataA)──►  ┌──────────┐  ──► receives dataB
-                                │ Exchanger │
-Thread B  ──exchange(dataB)──►  └──────────┘  ──► receives dataA
-```
+<ConcurrencyCoordinationDiagram defaultTab="EXCHANGER" />
 
 #### Real-World Use Case: Double-Buffered Pipeline
 
@@ -869,20 +842,7 @@ AQS is the **internal backbone** for `ReentrantLock`, `Semaphore`, `CountDownLat
 
 AQS manages a single `int state` (a volatile integer), a **CLH-variant queue** of waiting threads, and a set of protected methods that subclasses override to give the state semantic meaning:
 
-```
- AQS Internal State:
- ┌─────────────────────────────────────────────────────────────────┐
- │  volatile int state                                             │
- │  ┌─────────────────────────────────────────────────────────┐   │
- │  │   ReentrantLock: 0 = unlocked, N = lock depth           │   │
- │  │   Semaphore:     N = available permits                   │   │
- │  │   CountDownLatch: N = remaining count                    │   │
- │  └─────────────────────────────────────────────────────────┘   │
- │                                                                  │
- │  CLH Queue (linked list of waiting threads):                     │
- │  HEAD ──► [Node: T1, WAITING] ──► [Node: T2, WAITING] ──► TAIL  │
- └─────────────────────────────────────────────────────────────────┘
-```
+<AQSArchitectureDiagram />
 
 ### How a Lock Acquisition Works Internally
 
@@ -936,30 +896,7 @@ Because AQS internals (CLH queue structure, `LockSupport.park()`, `Unsafe`-based
 
 ## Choosing the Right Tool — Decision Guide
 
-```
-Is the goal to protect shared mutable state?
-├── YES → Need mutual exclusion
-│   ├── Simple critical section, no timeout needed?
-│   │   └──► synchronized
-│   ├── Need timeout / interruptible / multiple conditions?
-│   │   └──► ReentrantLock
-│   ├── Many reads, rare writes?
-│   │   ├── Writes can starve? → ReentrantReadWriteLock(fair=true)
-│   │   └── Near-zero writes, max read throughput?
-│   │       └──► StampedLock (optimistic read)
-│   └── Limit concurrent access to a pool (N > 1)?
-│       └──► Semaphore
-│
-└── NO → Need thread coordination / sequencing
-    ├── Wait for N things to complete, one-shot?
-    │   └──► CountDownLatch
-    ├── N threads rendezvous repeatedly, same count per cycle?
-    │   └──► CyclicBarrier
-    ├── Two threads swap data at a meeting point?
-    │   └──► Exchanger
-    └── Multi-phase pipeline, dynamic parties, or complex lifecycle?
-        └──► Phaser
-```
+<LockDecisionTreeDiagram />
 
 ---
 

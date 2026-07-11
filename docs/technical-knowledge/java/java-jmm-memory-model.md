@@ -7,6 +7,7 @@ tags: [java, concurrency, memory-model, advanced]
 ---
 
 import CPUCacheHierarchyDiagram from '@site/src/components/CPUCacheHierarchyDiagram';
+import ThreadLocalMapLeakDiagram from '@site/src/components/ThreadLocalMapLeakDiagram';
 
 # Java Memory Model & Concurrency Guarantees
 
@@ -130,12 +131,7 @@ public class Point {
 - The key of the map is a **`WeakReference<ThreadLocal<?>>`**.
 - The value of the map is the actual object stored.
 
-```
-Thread
-  └─ ThreadLocalMap
-       ├─ Key: WeakReference<ThreadLocal> ──► (Garbage Collected)
-       └─ Value: Strongly Reference ────────► Value Object (Stuck in memory!)
-```
+<ThreadLocalMapLeakDiagram />
 
 ### The Memory Leak Scenario
 1. In web containers (e.g., Tomcat, Spring Boot), threads are pooled and reused for many HTTP requests.

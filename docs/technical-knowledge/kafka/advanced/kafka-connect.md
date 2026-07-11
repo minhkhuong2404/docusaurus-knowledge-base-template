@@ -11,6 +11,8 @@ tags:
 - kafka-connect
 ---
 
+import KafkaConnectFlowDiagram from '@site/src/components/KafkaConnectFlowDiagram';
+
 # Kafka Connect
 
 ## What is Kafka Connect?
@@ -129,25 +131,7 @@ Understanding internals is what separates a user of Kafka Connect from someone w
 
 A **Worker** is a JVM process that hosts connectors and their tasks. In distributed mode, multiple workers form a **Connect cluster** and coordinate via Kafka's **Group Membership Protocol** (the same protocol Kafka consumer groups use).
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        Worker JVM Process                       │
-│                                                                 │
-│   ┌─────────────────┐     ┌─────────────────────────────────┐  │
-│   │ ConnectorThread  │     │         TaskThread(s)           │  │
-│   │                 │     │                                 │  │
-│   │  - Manages task │     │  Source: poll() → convert →    │  │
-│   │    lifecycle    │     │          send to Kafka          │  │
-│   │  - Reconfigures │     │                                 │  │
-│   │    on changes   │     │  Sink:   fetch from Kafka →    │  │
-│   └─────────────────┘     │          convert → put()        │  │
-│                           └─────────────────────────────────┘  │
-│   ┌──────────────────────────────────────────────────────────┐  │
-│   │                  OffsetBackingStore                      │  │
-│   │    (KafkaOffsetBackingStore in distributed mode)         │  │
-│   └──────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────┘
-```
+<KafkaConnectFlowDiagram />
 
 ### The Source Connector Execution Loop
 

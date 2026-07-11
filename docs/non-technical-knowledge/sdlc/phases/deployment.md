@@ -10,6 +10,9 @@ tags:
 - phases
 - deployment
 ---
+
+import BlueGreenDeploymentDiagram from '@site/src/components/BlueGreenDeploymentDiagram';
+
 # Phase 6 — Deployment
 
 ## Overview
@@ -46,15 +49,7 @@ Modern deployments are not single big-bang events. They use progressive delivery
 
 Two identical environments — **blue** (current live) and **green** (new version). Traffic is switched atomically from blue to green.
 
-```
-Traffic Router
-    ├── BLUE  ← 100% live traffic (current version)
-    └── GREEN ← 0% traffic (new version, ready to go live)
-
-After deployment:
-    ├── BLUE  ← 0% traffic (kept warm for rollback)
-    └── GREEN ← 100% live traffic (new version)
-```
+<BlueGreenDeploymentDiagram />
 
 **Pros:** Instant rollback, zero downtime  
 **Cons:** Requires double infrastructure

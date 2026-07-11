@@ -11,6 +11,9 @@ tags:
 - git
 - intro
 ---
+
+import GitFlowMapDiagram from '@site/src/components/GitFlowMapDiagram';
+
 # Git Knowledge Base
 
 > A comprehensive reference for everything Git — from staging your first file to rewriting history, managing complex merges, and running team-wide workflows.
@@ -42,12 +45,7 @@ Git tracks changes as a **directed acyclic graph (DAG)** of commits, where each 
 
 Understanding Git's **three trees** is the key to understanding almost every Git command:
 
-```
-Working Tree    →  git add  →   Index (Stage)   →  git commit  →   Repository
-(your files)                   (snapshot draft)                    (commit history)
-      ↑                                                                   |
-      └─────────────────── git checkout / git restore ──────────────────┘
-```
+<GitFlowMapDiagram />
 
 - `git add` moves changes from the **working tree** into the **index**
 - `git commit` moves changes from the **index** into the **repository**

@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-a01": {
+  "/-c88": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-b20": {
+  "/-1ac": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -5781,7 +5781,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-a58": {
+  "/-c99": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -6080,7 +6080,7 @@
     "__comp": "17896441",
     "content": "a7eef847"
   },
-  "/books/ocp/chapters/chapter-06-583": {
+  "/books/ocp/chapters/chapter-06-11e": {
     "__comp": "17896441",
     "content": "3a72fa79"
   },
@@ -6092,7 +6092,7 @@
     "__comp": "17896441",
     "content": "2ea272e8"
   },
-  "/books/ocp/chapters/chapter-09-b2b": {
+  "/books/ocp/chapters/chapter-09-ab1": {
     "__comp": "17896441",
     "content": "0e3665b5"
   },
@@ -6112,7 +6112,7 @@
     "__comp": "17896441",
     "content": "5a428c56"
   },
-  "/books/ocp/chapters/chapter-14-549": {
+  "/books/ocp/chapters/chapter-14-b18": {
     "__comp": "17896441",
     "content": "130edf34"
   },
@@ -6728,11 +6728,11 @@
     "__comp": "17896441",
     "content": "104bf45b"
   },
-  "/technical-knowledge/banking/offus-ec4": {
+  "/technical-knowledge/banking/offus-0cf": {
     "__comp": "17896441",
     "content": "f78de430"
   },
-  "/technical-knowledge/banking/onus-9a6": {
+  "/technical-knowledge/banking/onus-c15": {
     "__comp": "17896441",
     "content": "00e97688"
   },
@@ -6744,7 +6744,7 @@
     "__comp": "17896441",
     "content": "a5289451"
   },
-  "/technical-knowledge/banking/pacs002-839": {
+  "/technical-knowledge/banking/pacs002-3b3": {
     "__comp": "17896441",
     "content": "121ee202"
   },
@@ -6752,7 +6752,7 @@
     "__comp": "17896441",
     "content": "d9d2b623"
   },
-  "/technical-knowledge/banking/pacs008-4e7": {
+  "/technical-knowledge/banking/pacs008-2aa": {
     "__comp": "17896441",
     "content": "1dc8ca26"
   },
@@ -6780,7 +6780,7 @@
     "__comp": "17896441",
     "content": "fb4429bd"
   },
-  "/technical-knowledge/banking/payment_return-4c2": {
+  "/technical-knowledge/banking/payment_return-f11": {
     "__comp": "17896441",
     "content": "1263aa5e"
   },
@@ -10248,7 +10248,7 @@
     "__comp": "17896441",
     "content": "be1ca738"
   },
-  "/technical-knowledge/java/concurrency-vs-parallelism-7eb": {
+  "/technical-knowledge/java/concurrency-vs-parallelism-190": {
     "__comp": "17896441",
     "content": "e2052292"
   },
@@ -10260,7 +10260,7 @@
     "__comp": "17896441",
     "content": "a8d4740a"
   },
-  "/technical-knowledge/java/java-concurrency-b7b": {
+  "/technical-knowledge/java/java-concurrency-6e0": {
     "__comp": "17896441",
     "content": "f13bfd67"
   },
@@ -10284,11 +10284,11 @@
     "__comp": "17896441",
     "content": "3744858f"
   },
-  "/technical-knowledge/java/java-jmm-memory-model-116": {
+  "/technical-knowledge/java/java-jmm-memory-model-4af": {
     "__comp": "17896441",
     "content": "331d11cc"
   },
-  "/technical-knowledge/java/java-jvm-f4d": {
+  "/technical-knowledge/java/java-jvm-958": {
     "__comp": "17896441",
     "content": "2fb67458"
   },
@@ -10300,7 +10300,7 @@
     "__comp": "17896441",
     "content": "0366963e"
   },
-  "/technical-knowledge/java/java-object-class-7a4": {
+  "/technical-knowledge/java/java-object-class-c40": {
     "__comp": "17896441",
     "content": "8e1d77b1"
   },
@@ -10312,7 +10312,7 @@
     "__comp": "17896441",
     "content": "adb02301"
   },
-  "/technical-knowledge/java/java-stack-vs-heap-d02": {
+  "/technical-knowledge/java/java-stack-vs-heap-f62": {
     "__comp": "17896441",
     "content": "77dd0904"
   },
@@ -10320,7 +10320,7 @@
     "__comp": "17896441",
     "content": "190bfe65"
   },
-  "/technical-knowledge/java/java-virtual-threads-e62": {
+  "/technical-knowledge/java/java-virtual-threads-b69": {
     "__comp": "17896441",
     "content": "dd9695a1"
   },
@@ -10848,11 +10848,11 @@
     "__comp": "17896441",
     "content": "c7ff582f"
   },
-  "/technical-knowledge/spring/spring-cloud-2a6": {
+  "/technical-knowledge/spring/spring-cloud-715": {
     "__comp": "17896441",
     "content": "b0d8a005"
   },
-  "/technical-knowledge/spring/spring-data-jpa-324": {
+  "/technical-knowledge/spring/spring-data-jpa-8f1": {
     "__comp": "17896441",
     "content": "75687058"
   },
@@ -10948,7 +10948,7 @@
     "__comp": "17896441",
     "content": "8c140918"
   },
-  "/technical-knowledge/system-design/circuit-breaker-pattern-13a": {
+  "/technical-knowledge/system-design/circuit-breaker-pattern-602": {
     "__comp": "17896441",
     "content": "62899fb2"
   },
@@ -10972,7 +10972,7 @@
     "__comp": "17896441",
     "content": "0098328c"
   },
-  "/technical-knowledge/system-design/database-per-service-ed5": {
+  "/technical-knowledge/system-design/database-per-service-fff": {
     "__comp": "17896441",
     "content": "73d1f34f"
   },
@@ -11020,7 +11020,7 @@
     "__comp": "17896441",
     "content": "fb6e70f5"
   },
-  "/technical-knowledge/system-design/kubernetes-networking-90f": {
+  "/technical-knowledge/system-design/kubernetes-networking-3d1": {
     "__comp": "17896441",
     "content": "f7ca0986"
   },
@@ -11048,7 +11048,7 @@
     "__comp": "17896441",
     "content": "a6472fd5"
   },
-  "/technical-knowledge/system-design/microservices-patterns-ec8": {
+  "/technical-knowledge/system-design/microservices-patterns-f8c": {
     "__comp": "17896441",
     "content": "a912936e"
   },

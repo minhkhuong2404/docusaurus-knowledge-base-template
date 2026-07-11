@@ -8,6 +8,21 @@ tags: [java, concurrency, thread-pool, netty, tomcat, hikaricp, connection-pool,
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import TomcatArchitectureDiagram from '@site/src/components/TomcatArchitectureDiagram';
+import NettyArchitectureDiagram from '@site/src/components/NettyArchitectureDiagram';
+import RequestPipelineModelDiagram from '@site/src/components/RequestPipelineModelDiagram';
+import AppServerThreadTopologyDiagram from '@site/src/components/AppServerThreadTopologyDiagram';
+import ThreadPoolLifecycleDiagram from '@site/src/components/ThreadPoolLifecycleDiagram';
+import TomcatRequestFlowDiagram from '@site/src/components/TomcatRequestFlowDiagram';
+import TomcatDirectMemoryDiagram from '@site/src/components/TomcatDirectMemoryDiagram';
+import NettyThreadModelDiagram from '@site/src/components/NettyThreadModelDiagram';
+import ThreadPoolTimelineDiagram from '@site/src/components/ThreadPoolTimelineDiagram';
+import ThreadPoolIntroDiagram from '@site/src/components/ThreadPoolIntroDiagram';
+import NettyDirectMemoryDiagram from '@site/src/components/NettyDirectMemoryDiagram';
+import HikariCPPoolDiagram from '@site/src/components/HikariCPPoolDiagram';
+import MismatchDeadlockDiagram from '@site/src/components/MismatchDeadlockDiagram';
+import TimeoutExceptionsDiagram from '@site/src/components/TimeoutExceptionsDiagram';
+import MathFormula from '@site/src/components/MathFormula';
 
 # Thread Pools, Netty, Tomcat & HikariCP
 
@@ -29,19 +44,7 @@ Before learning how threads and connections are pooled, make sure you understand
 
 A **thread pool** is a managed collection of pre-created threads that are reused to execute tasks. Instead of creating a new OS thread for every task (expensive: ~1MB stack + kernel call), the pool maintains a fixed number of threads that pick tasks from a queue.
 
-```
-Without a pool:
-  Task 1 → create Thread → run → destroy Thread
-  Task 2 → create Thread → run → destroy Thread
-  Task 3 → create Thread → run → destroy Thread
-  Cost: 3 × (1ms create + 1ms destroy) = 6ms overhead
-
-With a pool:
-  Pool: [Thread-1] [Thread-2] [Thread-3]  ← pre-created, reused
-  Task 1 → Thread-1 picks it up → runs → Thread-1 returns to pool
-  Task 2 → Thread-2 picks it up → runs → Thread-2 returns to pool
-  Cost: 0ms overhead (threads already exist)
-```
+<ThreadPoolIntroDiagram />
 
 ### How `ThreadPoolExecutor` Works Internally
 
@@ -71,40 +74,9 @@ ThreadPoolExecutor executor = new ThreadPoolExecutor(
 
 #### Task Submission Flow (Critical for Interviews)
 
-```
-Task submitted to ThreadPoolExecutor
-│
-├── Are there idle core threads?
-│   YES → Assign task to an idle core thread
-│   NO ↓
-│
-├── Is the work queue full?
-│   NO → Add task to the queue (waits for a thread)
-│   YES ↓
-│
-├── Is maximumPoolSize reached?
-│   NO → Create a new non-core thread to handle the task
-│   YES ↓
-│
-└── Execute the RejectionPolicy
-    ├── AbortPolicy (default): throw RejectedExecutionException
-    ├── CallerRunsPolicy: run task in the caller's thread ← backpressure
-    ├── DiscardPolicy: silently drop the task
-    └── DiscardOldestPolicy: drop oldest queued task, retry
-```
+<ThreadPoolLifecycleDiagram />
 
-```
-Visual timeline:
-
-corePoolSize=2, maxPoolSize=4, queue=3
-
-Tasks:  T1  T2  T3  T4  T5  T6  T7  T8
-        │   │   │   │   │   │   │   │
-Core:  [T1][T2]                         ← Core threads handle T1, T2
-Queue:      [T3][T4][T5]                ← Queue absorbs T3–T5
-Non-core:            [T6][T7]           ← Non-core threads created for T6, T7
-Reject:                   [T8] ← RejectionPolicy triggered
-```
+<ThreadPoolTimelineDiagram />
 
 :::danger[Why `Executors` Factory Methods Are Dangerous]
 | Factory Method | Hidden Danger |
@@ -180,61 +152,11 @@ Apache Tomcat is the **default embedded servlet container** in Spring Boot. It h
 
 ### Tomcat's Internal Architecture
 
-```
-                        Internet
-                           │
-                           ▼
-┌─────────────────────────────────────────────────┐
-│                    TOMCAT                         │
-│                                                   │
-│  ┌─────────────────────────────────────────────┐ │
-│  │              Connector (HTTP/1.1)            │ │
-│  │                                              │ │
-│  │  Acceptor Thread ←── OS socket backlog       │ │
-│  │       │                                      │ │
-│  │       ▼                                      │ │
-│  │  Poller Thread(s) ←── NIO selector           │ │
-│  │       │              (epoll/kqueue)          │ │
-│  │       ▼                                      │ │
-│  │  ┌──────────────────────────────────────┐    │ │
-│  │  │        Worker Thread Pool            │    │ │
-│  │  │  [T1] [T2] [T3] ... [T200]          │    │ │
-│  │  │  max-threads=200 (default)           │    │ │
-│  │  └──────────┬───────────────────────────┘    │ │
-│  └─────────────┼────────────────────────────────┘ │
-│                ▼                                   │
-│  ┌─────────────────────────────────────────────┐ │
-│  │         DispatcherServlet (Spring)           │ │
-│  │              → Controller                    │ │
-│  │              → Service                       │ │
-│  │              → Repository (JDBC → HikariCP)  │ │
-│  └─────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────┘
-```
+<TomcatArchitectureDiagram />
 
 #### How Tomcat Processes a Request
 
-```
-1. Acceptor Thread
-   - Calls ServerSocketChannel.accept()
-   - Accepts TCP connections from the OS accept queue
-   - Registers the new socket with the Poller
-
-2. Poller Thread (NIO)
-   - Monitors all registered sockets via Selector (epoll/kqueue)
-   - Waits for data to arrive on any socket
-   - When data is ready, hands the socket to a Worker Thread
-
-3. Worker Thread (from the pool)
-   - Reads the HTTP request
-   - Invokes the servlet (DispatcherServlet → your @Controller)
-   - Writes the HTTP response
-   - Returns to the pool
-
-The worker thread is OCCUPIED for the entire request lifecycle.
-If your controller makes a 2-second DB query, the thread is
-blocked for 2 seconds doing nothing.
-```
+<TomcatRequestFlowDiagram />
 
 ### Tomcat Configuration
 
@@ -282,16 +204,14 @@ With slow requests (2s average):
 Like all Java network libraries, Tomcat relies on **Direct Memory** (off-heap memory) to transmit data between the OS socket buffers and the JVM. Because the Operating System's `read()` system call requires a static, absolute physical memory address, it cannot write directly to Java heap objects (which are constantly relocated by the Garbage Collector during compaction). A static, off-heap native buffer acts as the intermediate landing pad.
 
 Tomcat's I/O pipeline uses two copy operations:
-```
-NIC (Network Card) ──► OS Socket Buffer (Kernel) ──► Temporary Direct Buffer (Off-Heap) ──► Heap Byte Array (On-Heap) ──► Java Object
-```
+<TomcatDirectMemoryDiagram />
 
 #### The Per-Thread Cache Footprint
 Tomcat manages this direct memory using a **temporary thread-local cache** inside the JDK (`sun.nio.ch.Util`).
 - Every worker thread is assigned a single direct buffer.
 - This buffer is initially sized to Tomcat's default buffer size (configured by `appReadBufSize`, usually `8KB`).
 - When a request is read, Tomcat reuses the same 8KB direct buffer repeatedly instead of allocating new blocks or releasing it to the OS.
-- For 200 default worker threads, this consumes only $200 \times 8\text{KB} = 1.6\text{MB}$ of direct memory, which is negligible and virtually immune to out-of-memory issues.
+- For 200 default worker threads, this consumes only 200 &times; 8KB = 1.6MB of direct memory, which is negligible and virtually immune to out-of-memory issues.
 
 #### The Thread-Local Cache Trap (e.g., The Ehcache Trap)
 Although Tomcat's HTTP reading is safe, a major memory leak trap occurs if your business logic uses the same worker thread to perform a large file or socket channel operation:
@@ -325,59 +245,11 @@ Netty is the engine behind: **Spring WebFlux**, **gRPC-Java**, **Cassandra Drive
 
 ### How Netty Works Internally
 
-```
-Traditional (Tomcat): 1 Thread = 1 Connection
-  Thread-1 → [read][process][write]  ← blocked during I/O
-  Thread-2 → [read][process][write]  ← blocked during I/O
-  ...
-  Thread-200 → [read][process][write]
-  → 200 threads = 200 concurrent connections max
-
-Netty: 1 Thread = MANY Connections
-  EventLoop-1 → [read fd1][read fd5][write fd3][read fd9][write fd1]...
-  EventLoop-2 → [read fd2][read fd7][write fd4][read fd8][write fd6]...
-  ...
-  EventLoop-8 → [read fd10][write fd12][read fd15]...
-  → 8 threads = 10,000+ concurrent connections
-```
+<NettyThreadModelDiagram />
 
 ### Netty Architecture (Boss-Worker Model)
 
-```
-┌──────────────────────────────────────────────────────────────┐
-│                         NETTY                                 │
-│                                                               │
-│  Boss EventLoopGroup (1 thread typically)                     │
-│  ┌──────────────────────────────────────────────────────┐    │
-│  │ BossEventLoop                                         │    │
-│  │   Selector.select() → accept new connections          │    │
-│  │   Register accepted channels with Worker EventLoop    │    │
-│  └──────────────────────────────────────────────────────┘    │
-│       │                                                       │
-│       ▼  (hand off new channel)                              │
-│                                                               │
-│  Worker EventLoopGroup (N threads, default = 2 × CPU cores)  │
-│  ┌────────────────┐ ┌────────────────┐ ┌────────────────┐   │
-│  │ WorkerLoop-1   │ │ WorkerLoop-2   │ │ WorkerLoop-N   │   │
-│  │                │ │                │ │                │   │
-│  │ Channels:      │ │ Channels:      │ │ Channels:      │   │
-│  │ [fd1,fd5,fd9]  │ │ [fd2,fd6,fd10] │ │ [fd4,fd8,fd12] │   │
-│  │                │ │                │ │                │   │
-│  │ Event Loop:    │ │ Event Loop:    │ │ Event Loop:    │   │
-│  │ select()       │ │ select()       │ │ select()       │   │
-│  │ → read events  │ │ → read events  │ │ → read events  │   │
-│  │ → run pipeline │ │ → run pipeline │ │ → run pipeline │   │
-│  │ → write events │ │ → write events │ │ → write events │   │
-│  └────────────────┘ └────────────────┘ └────────────────┘   │
-│                                                               │
-│  Each channel has a ChannelPipeline:                          │
-│  ┌───────────┬───────────┬───────────┬───────────────────┐   │
-│  │ Decoder   │ Encoder   │ Idle      │ Business Logic    │   │
-│  │ (bytes→   │ (object→  │ Handler   │ Handler           │   │
-│  │  object)  │  bytes)   │           │                   │   │
-│  └───────────┴───────────┴───────────┴───────────────────┘   │
-└──────────────────────────────────────────────────────────────┘
-```
+<NettyArchitectureDiagram />
 
 ### Key Netty Concepts
 
@@ -443,9 +315,7 @@ ch.pipeline().addLast(blockingGroup, new MyBlockingHandler());
 ### Netty and Direct Memory: Pooled Chunks & Reference Counting
 
 Netty optimizes network performance by bypassing the secondary copy operation of Tomcat:
-```
-NIC (Network Card) ──► OS Socket Buffer (Kernel) ──► Pooled Direct Memory (Off-Heap) ──► Java Object (On-Heap)
-```
+<NettyDirectMemoryDiagram />
 By parsing packets directly on the off-heap direct buffer, Netty saves CPU cycles and prevents heap garbage accumulation, resulting in higher throughput and smoother p99 latency. However, because Netty maintains permanent residency on direct memory, it introduces critical off-heap management responsibilities.
 
 #### Netty's Pooled Allocator (`PooledByteBufAllocator`)
@@ -477,62 +347,7 @@ HikariCP is the **fastest JVM connection pool** and the **default in Spring Boot
 
 ### How HikariCP Works Internally
 
-```
-                    HikariCP Internals
-┌──────────────────────────────────────────────────────┐
-│                                                       │
-│  ConcurrentBag (lock-free data structure)             │
-│  ┌──────────────────────────────────────────────┐    │
-│  │ Thread-local list → try borrow from own list  │    │
-│  │    ↓ miss                                     │    │
-│  │ Shared list → CAS-based steal from shared     │    │
-│  │    ↓ miss                                     │    │
-│  │ Handoff queue → wait with park/unpark         │    │
-│  └──────────────────────────────────────────────┘    │
-│                                                       │
-│  HouseKeeper Thread (every 30s):                      │
-│  ├── Evict idle connections beyond minimum-idle       │
-│  ├── Retire connections older than max-lifetime       │
-│  └── Create new connections if below minimum-idle     │
-│                                                       │
-│  Connection validation:                               │
-│  ├── On borrow: Connection.isValid(timeout)           │
-│  ├── Keepalive: periodic ping (keepalive-time)        │
-│  └── Max-lifetime: recycle after age limit            │
-│                                                       │
-│  Metrics (Micrometer integration):                    │
-│  ├── hikaricp.connections.active                      │
-│  ├── hikaricp.connections.idle                        │
-│  ├── hikaricp.connections.pending                     │
-│  ├── hikaricp.connections.timeout                     │
-│  └── hikaricp.connections.usage (histogram)           │
-└──────────────────────────────────────────────────────┘
-```
-
-#### The ConcurrentBag — Why HikariCP Is So Fast
-
-HikariCP's secret weapon is `ConcurrentBag`, a lock-free data structure:
-
-```
-Step 1: Thread-Local Borrow (fastest path — no contention)
-  Thread A previously returned Connection C1
-  Thread A requests a connection
-  → ConcurrentBag checks Thread A's thread-local list
-  → C1 is there! Borrow it in ~250 nanoseconds
-  
-Step 2: Shared List Steal (fast — CAS operation)
-  Thread B requests a connection (first time, no thread-local history)
-  → Check shared connection list
-  → CAS (compare-and-swap) to claim an idle connection
-  → ~500 nanoseconds
-
-Step 3: Handoff Queue (slowest — waits for a return)
-  All connections are borrowed
-  Thread C requests a connection
-  → Parks the thread (waits up to connection-timeout)
-  → When any thread returns a connection, C is unparked
-  → If timeout expires → SQLTransientConnectionException
-```
+<HikariCPPoolDiagram />
 
 ### HikariCP Configuration & Sizing
 
@@ -548,155 +363,11 @@ For the step-by-step mathematical calculation of Tomcat thread pools vs. HikariC
 
 Understanding how thread pools, Tomcat, Netty, and HikariCP interact in a single HTTP request is the key to diagnosing performance issues.
 
-<Tabs>
-  <TabItem value="spring-mvc" label="Spring MVC (Tomcat)" default>
-
-```
-HTTP Request arrives
-│
-▼
-┌─────────────────────────────────┐
-│  TOMCAT                          │
-│  Acceptor → Poller → Worker Pool │
-│  Thread "http-nio-8080-exec-42"  │──────────────────────────────────┐
-└─────────────────────────────────┘                                   │
-│                                                                      │
-▼                                                                      │
-┌──────────────────────────────────┐                                   │
-│  Spring DispatcherServlet         │                                   │
-│  @Controller → @Service           │                                   │
-│                                    │                                   │
-│  orderService.getOrder(42)         │                                   │
-│       │                            │                                   │
-│       ▼                            │                                   │
-│  ┌──────────────────────────────┐ │                                   │
-│  │  HikariCP                     │ │  Tomcat worker thread is         │
-│  │  Borrow connection            │ │  BLOCKED during the entire       │
-│  │  → Execute SQL query          │ │  DB query + response write       │
-│  │  → Return connection          │ │                                   │
-│  └──────────────────────────────┘ │                                   │
-│                                    │                                   │
-│  Build response → return           │                                   │
-└──────────────────────────────────┘                                   │
-│                                                                      │
-▼                                                                      │
-Response sent back ← ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘
-Thread "http-nio-8080-exec-42" returns to Tomcat's pool
-```
-
-**Key insight:** The Tomcat worker thread is occupied for the **entire** request lifecycle — including time spent waiting for the DB.
-
-  </TabItem>
-  <TabItem value="webflux" label="Spring WebFlux (Netty)">
-
-```
-HTTP Request arrives
-│
-▼
-┌──────────────────────────────────┐
-│  NETTY                            │
-│  Boss EventLoop → Worker EventLoop │
-│  Thread "reactor-http-nio-3"       │──────────────────┐
-└──────────────────────────────────┘                    │
-│                                                        │
-▼                                                        │
-┌──────────────────────────────────┐                    │
-│  Spring WebFlux                    │                    │
-│  RouterFunction / @Controller      │                    │
-│                                    │                    │
-│  orderService.getOrder(42)         │                    │
-│       │                            │   EventLoop thread │
-│       ▼  returns Mono<Order>       │   is FREE here!    │
-│  ┌──────────────────────────────┐ │   It handles other  │
-│  │  R2DBC (reactive DB driver)   │ │   connections while │
-│  │  Non-blocking query           │ │   waiting for DB.   │
-│  │  → DB responds asynchronously │ │                    │
-│  └──────────────────────────────┘ │                    │
-│                                    │                    │
-│  Mono completes → write response   │←─ EventLoop picks  │
-└──────────────────────────────────┘   this up again      │
-│                                                        │
-▼                                                        │
-Response sent back ← ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘
-```
-
-**Key insight:** The Netty EventLoop thread is **never blocked**. It handles other connections while the DB query is in-flight.
-
-  </TabItem>
-  <TabItem value="virtual" label="Spring MVC + Virtual Threads">
-
-```
-HTTP Request arrives
-│
-▼
-┌─────────────────────────────────┐
-│  TOMCAT (with Virtual Threads)    │
-│  Worker = Virtual Thread           │
-│  VThread "vt-http-42"              │
-└─────────────────────────────────┘
-│
-▼
-┌──────────────────────────────────┐
-│  Spring DispatcherServlet         │
-│  @Controller → @Service           │
-│                                    │
-│  orderService.getOrder(42)         │
-│       │                            │
-│       ▼                            │
-│  ┌──────────────────────────────┐ │
-│  │  HikariCP                     │ │  Virtual thread UNMOUNTS
-│  │  Borrow connection            │ │  from carrier thread.
-│  │  (if pool full → VT parks)    │ │  Carrier is free to run
-│  │  → Execute SQL query          │ │  other virtual threads!
-│  │  (VT unmounts during I/O)     │ │
-│  │  → Return connection          │ │
-│  └──────────────────────────────┘ │
-│                                    │
-│  Build response → return           │
-└──────────────────────────────────┘
-│
-▼
-Response sent back
-Virtual thread is garbage collected (not returned to a pool)
-```
-
-**Key insight:** Virtual threads give you Tomcat's simple programming model (blocking code) with Netty-like efficiency (threads aren't wasted during I/O).
-
-  </TabItem>
-</Tabs>
+<RequestPipelineModelDiagram />
 
 ### The Relationship Diagram
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    YOUR APPLICATION                       │
-│                                                           │
-│  ┌───────────────────┐    ┌───────────────────────────┐  │
-│  │   HTTP Server       │    │   Database Access          │  │
-│  │                     │    │                             │  │
-│  │ ┌──── Tomcat ─────┐│    │  ┌─── HikariCP ──────────┐│  │
-│  │ │ Thread Pool     ││    │  │ Connection Pool        ││  │
-│  │ │ (200 workers)   ││    │  │ (20 connections)       ││  │
-│  │ └────────────────┘││    │  └────────────────────────┘│  │
-│  │ ┌──── Netty ──────┐│    │                             │  │
-│  │ │ EventLoopGroup  ││    │  ┌─── R2DBC Pool ─────────┐│  │
-│  │ │ (8 event loops) ││    │  │ Reactive connections    ││  │
-│  │ └────────────────┘││    │  └────────────────────────┘│  │
-│  └───────────────────┘    └───────────────────────────┘  │
-│                                                           │
-│  ┌──────────────────────────────────────────────────────┐│
-│  │   Application Thread Pools                            ││
-│  │   ┌────────────────┐  ┌─────────────────────────┐   ││
-│  │   │ @Async pool     │  │ @Scheduled pool          │   ││
-│  │   │ (business logic)│  │ (cron/timer tasks)       │   ││
-│  │   └────────────────┘  └─────────────────────────┘   ││
-│  │   ┌────────────────┐  ┌─────────────────────────┐   ││
-│  │   │ ForkJoinPool    │  │ Virtual Thread Executor  │   ││
-│  │   │ (parallelStream)│  │ (Java 21+)               │   ││
-│  │   └────────────────┘  └─────────────────────────┘   ││
-│  └──────────────────────────────────────────────────────┘│
-└─────────────────────────────────────────────────────────┘
-```
+<AppServerThreadTopologyDiagram />
 
 ### Concurrency Model Comparison
 
@@ -725,7 +396,7 @@ Tomcat's default pool size of `200` worker threads is often an anti-pattern when
 
 To calculate the optimal worker thread count, use the **Brian Goetz formula** (from *Java Concurrency in Practice*):
 
-$$\text{Optimal Threads} = \text{Available Cores} \times \text{Target CPU Utilization} \times \left(1 + \frac{\text{Wait Time}}{\text{Compute Time}}\right)$$
+<MathFormula id="optimal-threads" />
 
 * **Available Cores:** The CPU core limits allocated to your container (e.g. `resources.limits.cpu` in Kubernetes).
 * **Target CPU Utilization:** The desired average CPU load (typically `0.8` or 80% to leave headroom for GC, serialization, and traffic spikes).
@@ -734,19 +405,19 @@ $$\text{Optimal Threads} = \text{Available Cores} \times \text{Target CPU Utiliz
 #### Sizing Example
 Suppose a Spring Boot microservice is deployed inside a container with **2 vCPUs**. Performance profiling shows that a typical request takes **55ms** total: **50ms** waiting for the database (Wait Time) and **5ms** computing JSON serialization and business logic (Compute Time).
 
-$$\text{Tomcat Threads} = 2 \times 0.8 \times \left(1 + \frac{50}{5}\right) = 1.6 \times 11 = 17.6 \approx 18 \text{ threads}$$
+<MathFormula id="tomcat-threads-calc" />
 
 Instead of the default `200` threads, setting `server.tomcat.threads.max = 18` is the correct, mathematically derived starting point for performance testing.
 
 #### Calculating Throughput Capacity (Little's Law)
-Using **Little's Law** ($L = \lambda \times W$), we can calculate the theoretical throughput of a single instance:
-* $L$ (Number of concurrent requests in-flight) = `18` (our max threads).
-* $W$ (Latency per request) = `55ms` ($0.055\text{ seconds}$).
-* $\lambda$ (Throughput / Requests Per Second) = $\frac{L}{W}$.
+Using **Little's Law** (L = &lambda; &times; W), we can calculate the theoretical throughput of a single instance:
+* L (Number of concurrent requests in-flight) = `18` (our max threads).
+* W (Latency per request) = `55ms` (0.055 seconds).
+* &lambda; (Throughput / Requests Per Second) = L / W.
 
-$$\text{Throughput} = \frac{18}{0.055} \approx 327 \text{ RPS per instance}$$
+<MathFormula id="throughput-calc" />
 
-If your business requirement is to handle **1,600 RPS**, you will need to scale out to at least $\frac{1600}{327} \approx 5$ application instances.
+If your business requirement is to handle **1,600 RPS**, you will need to scale out to at least 5 application instances (1600 / 327).
 
 #### ⚠️ Container Core-Counting Warning
 In Java versions prior to 8u191, the JVM was unaware of container limits and read the host's physical cores (e.g. 64 cores). This caused the JVM to spawn too many internal threads (GC, JIT, ForkJoinPool), leading to massive CPU throttling. 
@@ -765,11 +436,11 @@ Once the application threads are sized, the connection pool must be sized to sup
 
 To calculate the connection pool size per instance, use the formula:
 
-$$\text{Hikari Pool Size} = \text{max-threads} \times \frac{\text{Connection Hold Time}}{\text{Total Request Time}}$$
+<MathFormula id="hikari-pool-size" />
 
 Using our 2 vCPU example (18 threads, total request 55ms, connection held for 50ms):
 
-$$\text{Hikari Pool Size} = 18 \times \frac{50}{55} = 16.3 \approx 17 \text{ connections}$$
+<MathFormula id="hikari-pool-calc" />
 
 Set `maximum-pool-size: 17` and `minimum-idle: 17` to keep the pool warm and avoid connection handshake latency during traffic spikes.
 
@@ -778,10 +449,10 @@ A common trap is assuming that more connections equal higher throughput. The dat
 
 The optimal connection limit for a database is defined by the PostgreSQL/HikariCP formula:
 
-$$\text{Optimal Executing Connections} = (\text{Database CPU Cores} \times 2) + \text{Spindle}$$
+<MathFormula id="optimal-exec-conns" />
 
 * **Spindle:** The number of physical hard disks. On modern SSDs or NVMe drives where the working set fits in cache, this is essentially `0`.
-* A **4-Core DB** running on SSDs can only run $(4 \times 2) + 0 = 8$ queries in parallel optimally.
+* A **4-Core DB** running on SSDs can only run (4 &times; 2) + 0 = 8 queries in parallel optimally.
 
 #### Resolving the Mismatch
 If 5 application instances each open 17 connections, the database has **85 total connections** open. How does this align with the DB's optimal limit of 8-9 executing queries?
@@ -790,16 +461,16 @@ The key is distinguishing between **open connections** (idle/waiting on network)
 * Out of the 50ms database phase, the database CPU might only spend **5ms** executing the query. The other 45ms is network transit, connection checkout, and client-side data buffering.
 * Out of the 85 connections open from the cluster, the concurrent active executing queries are:
 
-$$\text{Active executing queries} = 85 \times \frac{5\text{ms}}{50\text{ms}} = 8.5 \text{ queries}$$
+<MathFormula id="active-queries-calc" />
 
 This matches the 4-core database capacity perfectly! 
 
 #### Complete Sizing Chain Example
 To support **1,600 RPS** under the 55ms total latency profile:
-1. **Instances:** $\frac{1600}{327} \approx 5$ instances.
-2. **Hikari Pool size per instance:** $18 \times \frac{50}{55} \approx 17$. (Total cluster connections = $17 \times 5 = 85$).
-3. **Database execution load:** $85 \times \frac{5\text{ms}}{50\text{ms}} = 8.5$ active executing connections.
-4. **Database sizing:** $\text{Cores} = \frac{\text{Executing Connections}}{2} = \frac{8.5}{2} \approx 4.25 \approx 4$ to $8$ cores.
+1. **Instances:** 1600 / 327 &approx; 5 instances.
+2. **Hikari Pool size per instance:** 18 &times; (50 / 55) &approx; 17. (Total cluster connections = 17 &times; 5 = 85).
+3. **Database execution load:** 85 &times; (5ms / 50ms) = 8.5 active executing connections.
+4. **Database sizing:** Cores = Executing Connections / 2 = 8.5 / 2 &approx; 4.25 &approx; 4 to 8 cores.
 
 *Recommendation:* Set the database `max_connections` limit significantly higher (e.g., `150` to `200`) to provide headroom for administrator logins, indexing jobs, and monitoring metrics, even though the cluster pool only checks out 85.
 
@@ -824,26 +495,7 @@ When virtual threads are enabled (`spring.threads.virtual.enabled=true`), the To
 
 A critical failure mode when thread pool and connection pool sizes don't match:
 
-```
-Scenario:
-  Tomcat max-threads = 200
-  HikariCP maximum-pool-size = 10
-  connection-timeout = 30s (default)
-
-Step 1: 200 requests arrive simultaneously
-Step 2: Threads 1–10 borrow all 10 connections
-Step 3: Threads 11–200 queue for connections (up to 30s each)
-Step 4: Thread 1 (holding C1) makes an internal REST call to /api/helper
-Step 5: /api/helper request arrives → needs a connection too
-Step 6: All connections are held → /api/helper waits 30s
-Step 7: Thread 1 waits for /api/helper → can't release C1
-Step 8: DEADLOCK — nobody makes progress
-
-Fix:
-  1. Set connection-timeout to 3s (fail fast)
-  2. Use separate pools for internal sub-requests
-  3. Ensure pool size ≥ max threads that need concurrent connections
-```
+<MismatchDeadlockDiagram />
 
 ---
 
@@ -867,19 +519,7 @@ Fix:
 
 When connections start failing under load, clients will log network exceptions. Rather than treating them as unrelated glitches, recognize that **Connection refused, Connect timed out, Read timed out, and Connection reset** are different phases of the same congestion problem.
 
-```
-       Connect Timeout Clock (SYN)                  Read Timeout Clock (Request)
-Client ───────────────────────────► Server (Kernel) ─────────────────────────────► Tomcat Thread (max-threads: 200)
-    ▲                                    │                                                 │
-    │ SYN dropped                        │ Connection Accepted                             │ Blocked on DB
-    └─ Connect timed out /               ├─ max-connections (8192)                         └─ Read timed out
-       Connection refused                └─ accept-count (100) (Accept Queue)
-
-                                   Server-Side connection-timeout (20s)
-Client ───────────────────────────► Server (No request sent) ────────────────────► Closed unilaterally
-    ▲                                                                                      │
-    └──────────────────────────────────────────────────────────────────────────────────────┴─ Connection reset
-```
+<TimeoutExceptionsDiagram />
 
 Understanding these clocks and server settings allows you to pinpoint precisely where a request fails:
 

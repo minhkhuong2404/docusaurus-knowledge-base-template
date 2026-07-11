@@ -4,6 +4,8 @@ description: Complete guide to Spring MVC covering controllers, request handling
 tags: [spring-mvc, spring-framework, java, web]
 ---
 
+import SpringMVCFlowDiagram from '@site/src/components/SpringMVCFlowDiagram';
+
 # Spring MVC — Complete Guide
 
 Spring MVC is the web framework within Spring that implements the Model-View-Controller design pattern, providing a structured way to build web applications and RESTful services.
@@ -64,30 +66,7 @@ This separation makes applications easier to develop, test, and maintain.
 
 Understanding how a request flows through Spring MVC is essential:
 
-```
-1. Client sends HTTP request
-         │
-         ▼
-2. DispatcherServlet receives the request
-         │
-         ▼
-3. HandlerMapping finds the matching Controller method
-         │
-         ▼
-4. Controller processes the request
-   - Interacts with Service / Repository layers
-   - Populates the Model with data
-   - Returns a view name (or response body for REST)
-         │
-         ▼
-5. ViewResolver resolves the view name to an actual View
-         │
-         ▼
-6. View renders the response (HTML, JSON, XML)
-         │
-         ▼
-7. DispatcherServlet sends the response to the client
-```
+<SpringMVCFlowDiagram />
 
 ---
 
