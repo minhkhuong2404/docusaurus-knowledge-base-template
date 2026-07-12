@@ -30,16 +30,9 @@ const STATE_LABELS: Record<BucketState, string> = {
 
 export default function JDK8CASNodeDiagram(): React.JSX.Element {
   const [active, setActive] = useState<number | null>(null);
-  const [animating, setAnimating] = useState<number[]>([]);
 
-  function triggerAnimation(i: number) {
-    if (animating.includes(i)) return;
-    setActive(i);
-    setAnimating(prev => [...prev, i]);
-    setTimeout(() => {
-      setAnimating(prev => prev.filter(x => x !== i));
-      setActive(null);
-    }, 1600);
+  function handleClick(i: number) {
+    setActive(prev => (prev === i ? null : i));
   }
 
   const bucketW = 74;
@@ -74,12 +67,11 @@ export default function JDK8CASNodeDiagram(): React.JSX.Element {
           {/* Buckets */}
           {BUCKETS.map((b, i) => {
             const x = startX + i * (bucketW + bucketGap);
-            const isAnim = animating.includes(i);
-            const isSelected = active === i;
+            const isAnim = active === i;
             const stateColor = b.color;
 
             return (
-              <g key={i} onClick={() => triggerAnimation(i)} style={{ cursor: 'pointer' }}>
+              <g key={i} onClick={() => handleClick(i)} style={{ cursor: 'pointer' }}>
                 {/* Top Node[] index box */}
                 <rect
                   x={x} y={46} width={bucketW} height={24} rx={4}
