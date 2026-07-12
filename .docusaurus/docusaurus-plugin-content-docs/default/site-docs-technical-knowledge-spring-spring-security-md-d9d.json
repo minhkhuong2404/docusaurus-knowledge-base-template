@@ -41,8 +41,8 @@
     }
   ],
   "version": "current",
-  "lastUpdatedBy": "Author",
-  "lastUpdatedAt": 1539502055000,
+  "lastUpdatedBy": "Lữ Minh Khương",
+  "lastUpdatedAt": 1783744061000,
   "frontMatter": {
     "title": "Spring Security — Complete Guide",
     "description": "Comprehensive guide to Spring Security, including authentication, authorization, filter chains, exception handling, and common application security patterns.",
@@ -61,7 +61,7 @@
     "permalink": "/technical-knowledge/spring/spring-interview-questions"
   },
   "next": {
-    "title": "Spring Data JPA Overview",
+    "title": "Spring Data JPA — Complete Guide",
     "permalink": "/technical-knowledge/spring/spring-data-jpa"
   }
 }

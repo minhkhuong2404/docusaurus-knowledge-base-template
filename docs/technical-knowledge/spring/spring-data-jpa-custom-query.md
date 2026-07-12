@@ -8,6 +8,8 @@ tags: [java, spring-boot, jpa, hibernate, jpql, query, backend, performance]
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import HibernateL1CacheDiagram from '@site/src/components/HibernateL1CacheDiagram';
+import SpringDataJpaArchitectureDiagram from '@site/src/components/SpringDataJpaArchitectureDiagram';
 
 # Spring Data JPA: Custom Queries with @Query
 
@@ -22,12 +24,7 @@ import TabItem from '@theme/TabItem';
 
 Spring Data JPA is a Spring module that eliminates boilerplate data-access code. Instead of writing `EntityManager` calls manually, you declare a repository interface and Spring generates the implementation at runtime.
 
-```
-Your code                Spring Data JPA              Database
-─────────────────────────────────────────────────────────────
-UserRepository  ──→  Generated proxy (runtime)  ──→  SQL
-  .findById(1)          EntityManager.find()          SELECT * FROM users WHERE id = 1
-```
+<SpringDataJpaArchitectureDiagram />
 
 ### The building blocks
 
@@ -526,19 +523,7 @@ The sections below focus on JVM memory mechanics, Hibernate internals, and produ
 
 Every JPA transaction has a **persistence context** — Hibernate's L1 cache. It is a `Map<EntityKey, Object>` that lives for the duration of the transaction. Every entity you load is placed in this map.
 
-```
-Transaction starts
-     │
-     ├─ em.find(User.class, 1L)         → MISS  → SELECT FROM db → stores in L1 cache
-     ├─ em.find(User.class, 1L)         → HIT   → returns from cache, no SQL
-     ├─ em.find(User.class, 2L)         → MISS  → SELECT FROM db → stores in L1 cache
-     │
-     ├─ user.setName("Alice Updated")  → entity is "dirty" in the cache
-     │
-Transaction commits → Hibernate detects dirty entity → flushes UPDATE to DB
-     │
-Cache discarded
-```
+<HibernateL1CacheDiagram />
 
 **Key implications:**
 - Two calls to `findById(1L)` in the same transaction hit the DB only once — safe to call freely.

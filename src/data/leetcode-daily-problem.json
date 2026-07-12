@@ -1,8 +1,8 @@
 {
-  "id": "2685",
-  "title": "Count the Number of Complete Components",
-  "url": "https://leetcode.com/problems/count-the-number-of-complete-components/",
-  "difficulty": "medium",
-  "topic": "Depth-First Search, Breadth-First Search, Union-Find, Graph Theory",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-07-11."
+  "id": "1331",
+  "title": "Rank Transform of an Array",
+  "url": "https://leetcode.com/problems/rank-transform-of-an-array/",
+  "difficulty": "easy",
+  "topic": "Array, Hash Table, Sorting",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-07-12."
 }

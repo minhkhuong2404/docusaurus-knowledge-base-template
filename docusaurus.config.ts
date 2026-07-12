@@ -1,7 +1,6 @@
 
 import type { Config } from '@docusaurus/types'
 import prismTheme from './src/theme/prismTheme.js'
-import prismLightTheme from './src/theme/prismLightTheme.js'
 import remarkMath from 'remark-math';
 
 const config: Config = {
@@ -175,7 +174,8 @@ const config: Config = {
 		},
 		colorMode: {
 			defaultMode: 'dark',
-			respectPrefersColorScheme: true,
+			disableSwitch: true,
+			respectPrefersColorScheme: false,
 		},
 	},
 }

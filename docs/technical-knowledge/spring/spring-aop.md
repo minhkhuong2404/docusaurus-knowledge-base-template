@@ -5,6 +5,9 @@ sidebar_label: Spring AOP
 description: Comprehensive guide on Spring AOP — covering core concepts, proxy mechanics, pointcut expressions, advice types, alternatives comparison, and production deep dives for senior engineers.
 tags: [spring, aop, aspect-oriented-programming, java, cross-cutting-concerns, proxy, cglib]
 ---
+import SpringAopCoreConceptsDiagram from '@site/src/components/SpringAopCoreConceptsDiagram';
+import SpringAopProxyStrategiesDiagram from '@site/src/components/SpringAopProxyStrategiesDiagram';
+
 
 # Spring AOP (Aspect-Oriented Programming)
 
@@ -80,24 +83,7 @@ Before writing any AOP code, you must understand the five building blocks. Every
 | **Join Point** | A specific method execution that matched the Pointcut | The moment Alice walks through the door |
 | **Weaving** | The process of applying the Aspect to the target object | Installing the guard at the door |
 
-```mermaid
-graph TD
-    Client[Calling Code]
-    Proxy[Spring Proxy Bean]
-    Aspect[Aspect — cross-cutting logic]
-    Target[Target Bean — your service]
-
-    Client -->|Calls method| Proxy
-    Proxy -->|Before Advice| Aspect
-    Aspect -->|Proceed| Target
-    Target -->|Returns result| Aspect
-    Aspect -->|After Advice| Proxy
-    Proxy -->|Returns result| Client
-
-    style Proxy fill:#f0ad4e,stroke:#d68910,color:#000
-    style Aspect fill:#5dade2,stroke:#2e86c1,color:#fff
-    style Target fill:#58d68d,stroke:#27ae60,color:#000
-```
+<SpringAopCoreConceptsDiagram />
 
 ---
 
@@ -107,38 +93,7 @@ Spring AOP does **not** modify your class's bytecode directly. Instead, it wraps
 
 Spring uses two proxying strategies:
 
-### JDK Dynamic Proxy (Interface-Based)
-
-Used when the target bean **implements at least one interface**. The proxy implements the same interface(s), intercepts method calls, and delegates to the real bean.
-
-```
-Your Code → IOrderService (interface)
-                   ↑
-            JDK Proxy (implements IOrderService)
-                   ↑
-            OrderServiceImpl (actual class)
-```
-
-```java
-// Spring creates a proxy that implements IOrderService
-// Your @Autowired field receives the proxy, not OrderServiceImpl
-@Autowired
-private IOrderService orderService; // ← this is the JDK proxy
-```
-
-### CGLIB Proxy (Subclass-Based)
-
-Used when the target bean **does not implement an interface** (or when `proxyTargetClass = true` is configured). Spring generates a subclass of your class at runtime that overrides methods to add the Advice.
-
-```
-Your Code → OrderService (concrete class)
-                   ↑
-            CGLIB Subclass of OrderService (generated at runtime)
-```
-
-:::warning[CGLIB Limitations]
-CGLIB cannot proxy `final` classes or `final` methods — it cannot subclass them. If your service class or target method is `final`, AOP silently does nothing. This is one of the most common "my aspect isn't working" bugs.
-:::
+<SpringAopProxyStrategiesDiagram />
 
 ```java
 // spring.aop.proxy-target-class=true forces CGLIB even when interfaces exist

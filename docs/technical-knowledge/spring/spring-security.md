@@ -5,6 +5,8 @@ tags: [spring-security, spring-boot, java, authentication, authorization, filter
 ---
 
 import SpringSecurityFilterDiagram from '@site/src/components/SpringSecurityFilterDiagram';
+import OAuthPkceFlowDiagram from '@site/src/components/OAuthPkceFlowDiagram';
+
 
 # Spring Security — Complete Guide
 
@@ -315,28 +317,7 @@ public void generateReport(Long userId, Authentication auth) {
 
 PKCE (Proof Key for Code Exchange) prevents authorization code interception — mandatory for public clients (SPAs, mobile apps).
 
-```
- Client                           Auth Server                   Resource Server
-   │                                   │                               │
-   │── 1. Generate code_verifier ──────│                               │
-   │   code_challenge = SHA256(verifier)                               │
-   │                                   │                               │
-   │── 2. GET /authorize ─────────────►│                               │
-   │   ?response_type=code             │                               │
-   │   &code_challenge=<hash>          │                               │
-   │   &code_challenge_method=S256     │                               │
-   │                                   │                               │
-   │◄─ 3. Redirect with code ──────────│                               │
-   │                                   │                               │
-   │── 4. POST /token ────────────────►│                               │
-   │   code=<auth_code>                │                               │
-   │   code_verifier=<plain_text>      │   (Server verifies SHA256     │
-   │                                   │    matches stored challenge)  │
-   │◄─ 5. Access Token + Refresh ──────│                               │
-   │                                   │                               │
-   │── 6. GET /api/data Bearer ────────────────────────────────────────►│
-   │◄─ 7. Protected Resource ──────────────────────────────────────────│
-```
+<OAuthPkceFlowDiagram />
 
 **Spring Boot Resource Server (Spring Security 6.x):**
 

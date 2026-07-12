@@ -240,25 +240,6 @@ export default function Root({ children }: { children: React.ReactNode }) {
         {/* Dark Mode Moon */}
         <div className="moon" />
 
-        {/* Light Mode Tropical Nature */}
-        <div className="sun" />
-        <div className="nature-item leaf-1" />
-        <div className="nature-item leaf-2" />
-        <div className="nature-item leaf-3" />
-        <div className="nature-item flower-1" />
-        <div className="nature-item flower-2" />
-        <div className="nature-item flower-3" />
-        <div className="nature-item palm-1" />
-        <div className="nature-item palm-2" />
-        <div className="nature-item hibiscus-1" />
-        <div className="nature-item hibiscus-2" />
-        <div className="nature-item coconut-1" />
-        <div className="nature-item wave-1" />
-        <div className="nature-item wave-2" />
-        <div className="nature-item parrot-1" />
-        <div className="nature-item butterfly-1" />
-        <div className="nature-item butterfly-2" />
-
         {/* Dark Mode Universal Elements */}
         <div className="universal-item galaxy-1" />
         <div className="universal-item galaxy-2" />
@@ -286,17 +267,6 @@ export default function Root({ children }: { children: React.ReactNode }) {
         <div className="header-rocket h-rocket-1" />
         <div className="header-rocket h-rocket-2" />
         <div className="header-satellite h-sat" />
-
-        {/* Light Mode Header Tropical */}
-        <div className="header-sun" />
-        <div className="header-leaf h-leaf-1" />
-        <div className="header-leaf h-leaf-2" />
-        <div className="header-flower h-flower-1" />
-        <div className="header-flower h-flower-2" />
-        <div className="header-tropical h-palm" />
-        <div className="header-tropical h-hibiscus" />
-        <div className="header-tropical h-wave" />
-        <div className="header-tropical h-butterfly" />
 
         {/* Dark Mode Header Universal */}
         <div className="header-universal h-galaxy" />

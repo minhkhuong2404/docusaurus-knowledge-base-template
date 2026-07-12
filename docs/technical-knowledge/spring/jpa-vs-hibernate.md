@@ -21,26 +21,13 @@ This guide covers the full entity lifecycle, the mechanical differences between 
 
 ---
 
+import JpaEntityLifecycleDiagram from '@site/src/components/JpaEntityLifecycleDiagram';
+
 ## 1. The Entity Lifecycle
 
 Before examining any method, you must internalize the four states of a JPA entity. Every persistence operation is simply a transition between these states.
 
-```mermaid
-stateDiagram-v2
-    [*] --> Transient : new Entity()
-
-    Transient --> Managed : persist() / save()
-    Managed --> Transient : (garbage collected after context closes)
-
-    Managed --> Detached : detach() / close() / transaction ends
-    Detached --> Managed : merge() / update() / lock()
-
-    Managed --> Removed : remove()
-    Removed --> Transient : (after flush / rollback)
-    Removed --> Managed : persist() (cancel removal)
-
-    Managed --> [*] : flush() → SQL emitted to DB
-```
+<JpaEntityLifecycleDiagram />
 
 | State | Has a DB Row? | Tracked by EntityManager? | Auto-synced to DB? |
 |---|---|---|---|

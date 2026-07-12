@@ -3,6 +3,10 @@ title: Spring Boot — Internals & Architecture
 description: Deep dive into Spring Boot internals, including auto-configuration, embedded servers, conditional beans, starters, and events.
 tags: [spring-boot, java, internals, auto-configuration]
 ---
+import SpringBootStarterAnatomyDiagram from '@site/src/components/SpringBootStarterAnatomyDiagram';
+import SpringBootCustomStarterDiagram from '@site/src/components/SpringBootCustomStarterDiagram';
+import SpringBootFatJarDiagram from '@site/src/components/SpringBootFatJarDiagram';
+
 
 # Spring Boot — Internals & Architecture
 
@@ -143,16 +147,7 @@ A starter is a **dependency descriptor** — a POM with no code, only managed tr
 
 ### Anatomy of a Starter
 
-```
-spring-boot-starter-data-jpa
-├── spring-boot-starter (core)
-├── spring-boot-starter-aop
-├── spring-data-jpa
-├── hibernate-core
-├── jakarta.persistence-api
-├── spring-orm
-└── spring-aspects
-```
+<SpringBootStarterAnatomyDiagram />
 
 ### Creating a Custom Starter
 
@@ -160,17 +155,7 @@ Custom starters follow a naming convention: `{project}-spring-boot-starter`.
 
 **Structure:**
 
-```
-my-service-spring-boot-starter/
-├── src/main/java/
-│   └── com/example/autoconfigure/
-│       ├── MyServiceAutoConfiguration.java
-│       └── MyServiceProperties.java
-└── src/main/resources/
-    └── META-INF/
-        └── spring/
-            └── org.springframework.boot.autoconfigure.AutoConfiguration.imports
-```
+<SpringBootCustomStarterDiagram />
 
 **Auto-configuration class:**
 
@@ -291,18 +276,7 @@ public record CacheProperties(boolean enabled, int ttl, int maxSize) {}
 
 Spring Boot packages everything into an executable JAR:
 
-```
-my-app.jar
-├── BOOT-INF/
-│   ├── classes/          ← Your compiled code
-│   ├── lib/              ← All dependency JARs
-│   └── classpath.idx     ← JAR loading order
-├── META-INF/
-│   └── MANIFEST.MF       ← Main-Class: JarLauncher
-└── org/springframework/boot/loader/
-    ├── JarLauncher.class  ← Entry point
-    └── ...                ← Custom classloader
-```
+<SpringBootFatJarDiagram />
 
 **How it boots:**
 

@@ -5,6 +5,9 @@ slug: java-io
 description: Guide to Java I/O, including stream APIs, NIO channels and buffers, file handling, and I/O model fundamentals.
 tags: [java, io, nio, files]
 ---
+import KeyStreamClassesDiagram from '@site/src/components/KeyStreamClassesDiagram';
+import NioMultiplexingDiagram from '@site/src/components/NioMultiplexingDiagram';
+
 
 # Java I/O: Streams, NIO & I/O Models
 
@@ -24,33 +27,7 @@ A guide to Java's I/O system — from classic stream-based I/O and design patter
 
 ### Key Stream Classes
 
-```
-InputStream
-├── FileInputStream        — reads bytes from a file
-├── ByteArrayInputStream   — reads from a byte array
-├── BufferedInputStream     — adds buffering (decorator)
-├── DataInputStream        — reads Java primitives
-└── ObjectInputStream      — reads serialized objects
-
-OutputStream
-├── FileOutputStream       — writes bytes to a file
-├── ByteArrayOutputStream  — writes to a byte array
-├── BufferedOutputStream    — adds buffering (decorator)
-├── DataOutputStream       — writes Java primitives
-└── ObjectOutputStream     — writes serialized objects
-
-Reader
-├── FileReader             — reads characters from a file
-├── InputStreamReader      — bridge: byte stream → character stream
-├── BufferedReader          — adds buffering + readLine()
-└── StringReader           — reads from a string
-
-Writer
-├── FileWriter             — writes characters to a file
-├── OutputStreamWriter     — bridge: character stream → byte stream
-├── BufferedWriter          — adds buffering
-└── PrintWriter            — convenient print methods
-```
+<KeyStreamClassesDiagram />
 
 ### Buffered vs Unbuffered
 
@@ -228,12 +205,7 @@ Client 3  →  Thread 3 (blocked on read)
 
 A single thread manages multiple connections using a **selector**. Channels are non-blocking — `read()` returns immediately (with or without data).
 
-```
-Selector model:
-                    ┌──── Client 1 (Channel)
-Single Thread ──── Selector ──── Client 2 (Channel)
-                    └──── Client 3 (Channel)
-```
+<NioMultiplexingDiagram />
 
 - **Efficient** — one thread handles thousands of connections
 - **Complex** — requires event loop programming

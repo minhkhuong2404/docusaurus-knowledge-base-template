@@ -137,7 +137,6 @@ const sidebars: SidebarsConfig = {
 							items: [
 								'technical-knowledge/spring/spring-security',
 								'technical-knowledge/spring/spring-data-jpa',
-								'technical-knowledge/spring/spring-data-jpa-repositories-and-queries',
 								'technical-knowledge/spring/spring-data-jpa-query-annotation',
 								'technical-knowledge/spring/hibernate-association-best-practices',
 								'technical-knowledge/spring/spring-data-jpa-transactions',

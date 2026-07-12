@@ -9,6 +9,8 @@ tags:
 - spring-boot
 - spring-cloud
 ---
+import BootstrapContextHierarchyDiagram from '@site/src/components/BootstrapContextHierarchyDiagram';
+
 
 # Understanding bootstrap.yml in Spring Boot
 
@@ -67,16 +69,7 @@ logging:
 
 When Spring Cloud is present on the classpath, it creates a **Bootstrap Application Context** before initializing the main application context.
 
-```
-   +---------------------------------------+
-   |      Bootstrap Parent Context         |  <--- Loads bootstrap.yml
-   +---------------------------------------+
-                       |
-                       v  (Acts as parent)
-   +---------------------------------------+
-   |      Application Child Context        |  <--- Loads application.yml
-   +---------------------------------------+
-```
+<BootstrapContextHierarchyDiagram />
 
 ### The Parent-Child Context Relationship
 The Bootstrap Context acts as the **parent** of the main Application Context. 

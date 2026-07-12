@@ -2581,80 +2581,6 @@ pre[class*="language-"]::-webkit-scrollbar {
   content: "🌙";
 }
 
-/* ── Light Mode Nature Backgrounds (Sun/Leaves/Flowers) ── */
-.sun {
-  position: fixed;
-  top: 15vh;
-  left: 2.2vw;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #fdba74, #ea580c);
-  box-shadow: 0 0 25px rgba(234, 88, 12, 0.35), inset -3px -3px 6px rgba(0,0,0,0.1);
-  pointer-events: none;
-  z-index: 0;
-  animation: floatPlanet6 18s ease-in-out infinite alternate !important;
-}
-
-.nature-item {
-  position: fixed;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.28;
-  animation: swayNature 16s infinite ease-in-out alternate !important;
-}
-
-/* Tropical leaves & flowers */
-.leaf-1::before { content: "🍃"; }
-.leaf-2::before { content: "🌿"; }
-.leaf-3::before { content: "🍃"; }
-.flower-1::before { content: "🌺"; }
-.flower-2::before { content: "🌼"; }
-.flower-3::before { content: "🌷"; }
-
-/* Tropical extras */
-.palm-1::before { content: "🌴"; }
-.palm-2::before { content: "🌴"; }
-.hibiscus-1::before { content: "🌺"; }
-.hibiscus-2::before { content: "🌺"; }
-.coconut-1::before { content: "🥥"; }
-.wave-1::before { content: "🌊"; }
-.wave-2::before { content: "🌊"; }
-.parrot-1::before { content: "🦜"; }
-.butterfly-1::before { content: "🦋"; }
-.butterfly-2::before { content: "🦋"; }
-
-/* Position nature items in sidebar margins only */
-.leaf-1 { top: 32vh; left: 3vw; font-size: 1.1rem; animation-delay: 0s !important; }
-.leaf-2 { top: 58vh; right: 2.5vw; font-size: 1rem; animation-delay: 4s !important; }
-.leaf-3 { top: 78vh; left: 1.8vw; font-size: 1.15rem; animation-delay: 8s !important; }
-.flower-1 { top: 22vh; right: 1.8vw; font-size: 1rem; animation-delay: 2s !important; }
-.flower-2 { top: 48vh; left: 1.2vw; font-size: 1.1rem; animation-delay: 6s !important; }
-.flower-3 { top: 70vh; right: 2vw; font-size: 1.05rem; animation-delay: 10s !important; }
-.palm-1 { top: 15vh; left: 1vw; font-size: 1.6rem; opacity: 0.18; animation-delay: 1s !important; }
-.palm-2 { top: 65vh; right: 1vw; font-size: 1.5rem; opacity: 0.16; animation-delay: 7s !important; }
-.hibiscus-1 { top: 38vh; right: 3vw; font-size: 1.1rem; animation-delay: 3s !important; }
-.hibiscus-2 { top: 85vh; left: 2.5vw; font-size: 1rem; animation-delay: 9s !important; }
-.coconut-1 { top: 42vh; left: 2vw; font-size: 0.9rem; animation-delay: 5s !important; }
-.wave-1 { top: 90vh; left: 1.5vw; font-size: 1.2rem; opacity: 0.22; animation-delay: 2s !important; }
-.wave-2 { top: 92vh; right: 1.5vw; font-size: 1.2rem; opacity: 0.2; animation-delay: 8s !important; }
-.parrot-1 { top: 28vh; right: 2vw; font-size: 1rem; opacity: 0.2; animation-delay: 4s !important; }
-.butterfly-1 { top: 55vh; left: 2.8vw; font-size: 0.9rem; opacity: 0.25; animation: driftButterfly 20s infinite ease-in-out alternate !important; }
-.butterfly-2 { top: 35vh; right: 2.2vw; font-size: 0.85rem; opacity: 0.22; animation: driftButterfly 24s infinite ease-in-out alternate-reverse !important; }
-
-@keyframes swayNature {
-  0% { transform: translate(0, 0) rotate(0deg); }
-  50% { transform: translate(4px, -4px) rotate(8deg); }
-  100% { transform: translate(0, 0) rotate(0deg); }
-}
-
-@keyframes driftButterfly {
-  0% { transform: translate(0, 0); }
-  25% { transform: translate(6px, -8px); }
-  50% { transform: translate(-3px, -4px); }
-  75% { transform: translate(4px, 4px); }
-  100% { transform: translate(0, 0); }
-}
 
 /* ── Dark Mode Universal Background Items ──── */
 .universal-item {
@@ -2696,56 +2622,7 @@ pre[class*="language-"]::-webkit-scrollbar {
   100% { transform: translate(0, 0) rotate(0deg); opacity: 0.2; }
 }
 
-/* ── Light Mode Header Tropical ──────────────── */
-.header-sun {
-  position: absolute;
-  left: 26%;
-  top: 18px;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #fdba74, #ea580c);
-  box-shadow: 0 0 10px rgba(234, 88, 12, 0.4);
-  pointer-events: none;
-  z-index: 1002 !important;
-  animation: planetFloat 18s ease-in-out infinite alternate !important;
-}
 
-.header-leaf, .header-flower {
-  position: absolute;
-  pointer-events: none;
-  z-index: 1002 !important;
-  font-size: 0.8rem;
-  opacity: 0.35;
-  animation: swayNature 14s infinite ease-in-out alternate !important;
-}
-
-.header-tropical {
-  position: absolute;
-  pointer-events: none;
-  z-index: 1002 !important;
-  font-size: 0.75rem;
-  opacity: 0.3;
-  animation: swayNature 18s infinite ease-in-out alternate !important;
-}
-
-.h-leaf-1::before { content: "🍃"; }
-.h-leaf-2::before { content: "🌿"; }
-.h-flower-1::before { content: "🌺"; }
-.h-flower-2::before { content: "🌼"; }
-.h-palm::before { content: "🌴"; }
-.h-hibiscus::before { content: "🌺"; }
-.h-wave::before { content: "🌊"; }
-.h-butterfly::before { content: "🦋"; }
-
-.h-leaf-1 { left: 45%; top: 22px; animation-delay: 1s !important; }
-.h-leaf-2 { left: 65%; top: 16px; animation-delay: 4s !important; }
-.h-flower-1 { left: 55%; top: 25px; animation-delay: 2s !important; }
-.h-flower-2 { left: 80%; top: 26px; animation-delay: 6s !important; }
-.h-palm { left: 36%; top: 12px; font-size: 0.9rem; animation-delay: 0s !important; }
-.h-hibiscus { left: 72%; top: 20px; animation-delay: 3s !important; }
-.h-wave { left: 90%; top: 28px; animation-delay: 5s !important; }
-.h-butterfly { left: 50%; top: 14px; animation: driftButterfly 16s infinite ease-in-out alternate !important; }
 
 /* ── Dark Mode Header Universal ──────────────── */
 .header-universal {
@@ -2765,20 +2642,7 @@ pre[class*="language-"]::-webkit-scrollbar {
 .h-nebula { left: 58%; top: 22px; animation-delay: 3s !important; }
 .h-shooting { left: 75%; top: 14px; animation: shootingStar 16s infinite ease-in-out alternate !important; }
 
-/* ── Tropical Sidebar Backgrounds (Light Mode) ── */
-[data-theme="light"] .theme-doc-sidebar-container {
-  background:
-    linear-gradient(180deg, rgba(16, 185, 129, 0.04) 0%, rgba(234, 179, 8, 0.03) 50%, rgba(251, 146, 60, 0.04) 100%),
-    #ffffff !important;
-  border-right: 1px solid rgba(16, 185, 129, 0.15) !important;
-}
 
-[data-theme="light"] .table-of-contents {
-  background:
-    linear-gradient(180deg, rgba(251, 146, 60, 0.04) 0%, rgba(234, 179, 8, 0.03) 50%, rgba(16, 185, 129, 0.04) 100%),
-    #ffffff !important;
-  border: 1px solid rgba(16, 185, 129, 0.12) !important;
-}
 
 /* ── Universal Sidebar Backgrounds (Dark Mode) ── */
 [data-theme="dark"] .theme-doc-sidebar-container {
@@ -2795,43 +2659,9 @@ pre[class*="language-"]::-webkit-scrollbar {
     #0c0e17 !important;
 }
 
-/* ── Tropical Navbar (Light Mode) ────────────── */
-[data-theme="light"] .navbar {
-  background:
-    linear-gradient(90deg, rgba(16, 185, 129, 0.06) 0%, rgba(251, 191, 36, 0.04) 50%, rgba(251, 146, 60, 0.06) 100%),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='60' viewBox='0 0 160 60'%3E%3Ctext x='15' y='36' font-size='14' opacity='0.14'%3E🌴%3C/text%3E%3Ctext x='55' y='36' font-size='12' opacity='0.12'%3E🌺%3C/text%3E%3Ctext x='95' y='36' font-size='13' opacity='0.13'%3E🍃%3C/text%3E%3Ctext x='135' y='36' font-size='12' opacity='0.14'%3E🦋%3C/text%3E%3C/svg%3E") repeat-x,
-    #ffffff !important;
-  background-size: auto, 160px var(--ifm-navbar-height), auto !important;
-  background-position: left center !important;
-  border-bottom: 1px solid rgba(16, 185, 129, 0.15) !important;
-}
 
-/* ── theme-based display filters ────────────── */
-[data-theme="light"] .planet,
-[data-theme="light"] .comet,
-[data-theme="light"] .rocket-bg,
-[data-theme="light"] .satellite,
-[data-theme="light"] .moon,
-[data-theme="light"] .header-planet,
-[data-theme="light"] .header-moon-h,
-[data-theme="light"] .header-rocket,
-[data-theme="light"] .header-satellite,
-[data-theme="light"] .universal-item,
-[data-theme="light"] .header-universal,
-[data-theme="light"] .navbar::before,
-[data-theme="light"] .navbar::after,
-[data-theme="light"] .navbar__brand::after {
-  display: none !important;
-}
 
-[data-theme="dark"] .sun,
-[data-theme="dark"] .nature-item,
-[data-theme="dark"] .header-sun,
-[data-theme="dark"] .header-leaf,
-[data-theme="dark"] .header-flower,
-[data-theme="dark"] .header-tropical {
-  display: none !important;
-}
+
 
 /* ============================================================
    Override Docusaurus / Infima Search Input Defaults
@@ -3405,10 +3235,12 @@ table.dsa-dashboard-table tr:hover {
   background: rgba(47, 143, 78, 0.04) !important;
 }
 
-
-
-
-
-
-
-
+/* Explicitly hide Docusaurus native color mode toggle switches (desktop and mobile) and custom toggles if any */
+.colorModeToggle_node_modules-\@docusaurus-theme-classic-lib-theme-Navbar-Content-styles-module,
+[class*="colorModeToggle"],
+[class*="ColorModeToggle"],
+.clean-btn[class*="ColorModeToggle"],
+.navbarSidebar__class [class*="colorModeToggle"],
+.clean-btn[aria-label*="Switch between dark and light mode"] {
+  display: none !important;
+}

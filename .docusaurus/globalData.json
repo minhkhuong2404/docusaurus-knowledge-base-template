@@ -6200,11 +6200,6 @@
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/spring/spring-data-jpa-repositories-and-queries",
-              "path": "/technical-knowledge/spring/spring-data-jpa-repositories-and-queries",
-              "sidebar": "tutorialSidebar"
-            },
-            {
               "id": "technical-knowledge/spring/spring-data-jpa-transactions",
               "path": "/technical-knowledge/spring/spring-data-jpa-transactions",
               "sidebar": "tutorialSidebar"
@@ -6717,6 +6712,15 @@
         }
       ],
       "breadcrumbs": true
+    }
+  },
+  "docusaurus-plugin-google-gtag": {
+    "default": {
+      "trackingID": [
+        "G-79SQQZQMCX"
+      ],
+      "anonymizeIP": true,
+      "id": "default"
     }
   }
 }

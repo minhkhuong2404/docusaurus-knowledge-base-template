@@ -3,6 +3,14 @@ title: Spring Boot — Overview & Why It Matters
 description: Overview of Spring Boot, its core benefits, and why it is widely used for modern Java backend and microservice development.
 tags: [spring-boot, java, backend, microservices]
 ---
+import SpringBootFeaturesDiagram from '@site/src/components/SpringBootFeaturesDiagram';
+import SpringBootStartupTimelineDiagram from '@site/src/components/SpringBootStartupTimelineDiagram';
+import SpringBootLayeredArchitectureDiagram from '@site/src/components/SpringBootLayeredArchitectureDiagram';
+import SpringBootHexagonalArchitectureDiagram from '@site/src/components/SpringBootHexagonalArchitectureDiagram';
+import SpringProjectsRelationshipDiagram from '@site/src/components/SpringProjectsRelationshipDiagram';
+import SpringBootPackageStructureDiagram from '@site/src/components/SpringBootPackageStructureDiagram';
+
+
 
 # Spring Boot — Overview & Why It Matters
 
@@ -374,23 +382,7 @@ public class MyApplication {
 
 `@ComponentScan` scans the **current package and sub-packages**. If your main class is in `com.myapp`, Spring will only find beans under `com.myapp.*`.
 
-```
-✅ Correct structure:
-com.myapp/
-├── MyApplication.java         ← @SpringBootApplication here
-├── controller/
-│   └── UserController.java    ← found by component scan
-├── service/
-│   └── UserService.java       ← found by component scan
-└── repository/
-    └── UserRepository.java    ← found by component scan
-
-❌ Wrong structure:
-com.myapp.config/
-├── MyApplication.java         ← @SpringBootApplication here
-com.myapp.controller/
-│   └── UserController.java    ← NOT found! Different package tree
-```
+<SpringBootPackageStructureDiagram />
 
 ---
 
@@ -413,27 +405,7 @@ com.myapp.controller/
 
 ### What Spring Boot Adds on Top of Spring
 
-```
-Spring Framework (the foundation):
-├── IoC Container (ApplicationContext, BeanFactory)
-├── Dependency Injection (@Autowired, @Qualifier)
-├── AOP (Aspect-Oriented Programming)
-├── Spring MVC (DispatcherServlet, Controllers)
-├── Spring Data (Repository abstraction)
-├── Spring Security (Authentication, Authorization)
-├── Transaction Management (@Transactional)
-└── ... (everything Spring can do)
-
-Spring Boot (the accelerator on top):
-├── Auto-Configuration (configures all the above automatically)
-├── Starter Dependencies (curated, compatible packages)
-├── Embedded Server (no external Tomcat needed)
-├── Actuator (health, metrics, environment)
-├── DevTools (hot reload, live reload)
-├── Externalized Configuration (profiles, YAML, env vars)
-├── Spring Initializr (project scaffolding)
-└── Fat JAR packaging (single deployable artifact)
-```
+<SpringBootFeaturesDiagram />
 
 ### When to Use Plain Spring Without Boot
 
@@ -468,27 +440,7 @@ When you call `SpringApplication.run();`, Spring Boot goes through a highly orga
 
 ### Startup Timeline Visualization
 
-```
-Time →
-
-0ms      200ms     500ms      1500ms      2500ms     3000ms
-│         │          │           │           │          │
-▼         ▼          ▼           ▼           ▼          ▼
-┌─────────┬──────────┬───────────┬───────────┬──────────┐
-│ Create  │ Load     │ Auto-     │ Create    │ Start    │
-│ Spring  │ Env &    │ Configure │ User      │ Embedded │
-│ App     │ Profiles │ Beans     │ Beans     │ Server   │
-│         │          │           │           │          │
-│ Detect  │ Merge    │ Resolve   │ DI graph  │ Bind     │
-│ web     │ props,   │ conditions│ resolution│ port     │
-│ type    │ YAML,    │ Load auto │ @Post-    │ Ready!   │
-│         │ env vars │ configs   │ Construct │          │
-└─────────┴──────────┴───────────┴───────────┴──────────┘
-                                                   │
-                                        ApplicationReadyEvent
-                                        CommandLineRunner
-                                        ApplicationRunner
-```
+<SpringBootStartupTimelineDiagram />
 
 **Lifecycle hooks:**
 
@@ -537,20 +489,7 @@ spring.autoconfigure.exclude=\
 
 ### 1. Layered Architecture (Most Common)
 
-```
-┌─────────────────────────────────────────┐
-│           Controller Layer               │  @RestController
-│  (HTTP handling, request/response DTOs)  │
-├─────────────────────────────────────────┤
-│            Service Layer                 │  @Service
-│  (Business logic, orchestration)         │
-├─────────────────────────────────────────┤
-│          Repository Layer                │  @Repository
-│  (Data access, database operations)      │
-├─────────────────────────────────────────┤
-│          Database / External APIs        │
-└─────────────────────────────────────────┘
-```
+<SpringBootLayeredArchitectureDiagram />
 
 ```java
 @RestController
@@ -588,19 +527,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
 ### 2. Hexagonal / Ports & Adapters (Enterprise)
 
-```
-┌──────────────────────────────────────────────┐
-│  Driving Adapters          │  Driven Adapters │
-│  (Input)                   │  (Output)        │
-│                            │                  │
-│  REST Controller ─────┐    │  ┌──── JPA Repo  │
-│  GraphQL API ─────────┤    │  ├──── Redis     │
-│  Kafka Consumer ──────┼───▶ Domain ◀───┤      │
-│  Scheduled Job ───────┤    │  ├──── Stripe    │
-│                       │    │  └──── Email     │
-│  (Spring MVC)         │    │  (Spring Data)   │
-└──────────────────────────────────────────────┘
-```
+<SpringBootHexagonalArchitectureDiagram />
 
 ```java
 // Port (interface in domain layer)
@@ -793,16 +720,7 @@ class OrderIntegrationTest {
 
 ## 🔗 Relationship to Other Spring Projects
 
-```
-Spring Boot (this page)
-├── Built on: Spring Framework (IoC, DI, AOP, MVC)
-├── Data access: Spring Data (JPA, MongoDB, Redis)
-├── Security: Spring Security (Auth, OAuth2, JWT)
-├── Messaging: Spring AMQP (RabbitMQ), Spring Kafka
-├── Cloud: Spring Cloud (Config, Discovery, Gateway, Circuit Breaker)
-├── Batch: Spring Batch (chunk processing, job scheduling)
-└── Reactive: Spring WebFlux (non-blocking, Project Reactor)
-```
+<SpringProjectsRelationshipDiagram />
 
 | Project | What It Adds | Typical Starter |
 |---|---|---|

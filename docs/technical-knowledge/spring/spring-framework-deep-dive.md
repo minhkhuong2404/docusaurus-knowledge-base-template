@@ -3,6 +3,12 @@ title: "Spring Framework: Deep Dive"
 description: Advanced Spring Framework guide covering bean lifecycle, AOP, data access, reactive programming, and batch processing.
 tags: [spring-framework, java, backend, advanced]
 ---
+import SpringBeanLifecycleDiagram from '@site/src/components/SpringBeanLifecycleDiagram';
+import SpringAopCoreConceptsDiagram from '@site/src/components/SpringAopCoreConceptsDiagram';
+import SpringAopAspectOrderingDiagram from '@site/src/components/SpringAopAspectOrderingDiagram';
+import SpringBatchArchDiagram from '@site/src/components/SpringBatchArchDiagram';
+
+
 
 # Spring Framework: Deep Dive
 
@@ -16,18 +22,7 @@ Understanding the bean lifecycle is crucial for optimizing resource management i
 
 ### Lifecycle Phases
 
-```
-Container Start
-    → Bean Definition Loading
-        → Bean Instantiation
-            → Dependency Injection
-                → @PostConstruct / InitializingBean.afterPropertiesSet()
-                    → Custom init-method
-                        → Bean Ready for Use
-                            → @PreDestroy / DisposableBean.destroy()
-                                → Custom destroy-method
-                                    → Bean Destroyed
-```
+<SpringBeanLifecycleDiagram />
 
 ### Lifecycle Callbacks
 
@@ -328,15 +323,7 @@ AOP modularizes **cross-cutting concerns** — functionality that spans multiple
 
 ### Core Concepts
 
-| Concept | Definition | Example |
-|---------|-----------|---------|
-| **Aspect** | Module encapsulating a cross-cutting concern | `LoggingAspect`, `SecurityAspect` |
-| **Join Point** | A point in execution where advice *can* run | Method call, method execution |
-| **Pointcut** | Expression selecting which join points to intercept | `execution(* com.example.service..*(..))` |
-| **Advice** | Code that runs at a selected join point | `@Before`, `@After`, `@Around` |
-| **Target Object** | The original bean being proxied | Your `OrderService` |
-| **Proxy** | The wrapper object that intercepts calls | Spring-generated CGLIB/JDK proxy |
-| **Weaving** | Linking aspects with target objects | Spring does this at startup (proxy-based) |
+<SpringAopCoreConceptsDiagram />
 
 ### Spring AOP vs AspectJ
 
@@ -901,25 +888,7 @@ public class ApiService {
 
 When multiple framework annotations combine, the proxy chain from outermost to innermost looks like this in a typical Spring Boot service call:
 
-```
-External HTTP Request
-  → Spring Security (FilterChain, method security @PreAuthorize) [Order 1]
-    → Logging/Tracing Aspect (MDC setup) [Order 2]
-      → Metrics Aspect (@Timed) [Order 3]
-        → Retry Aspect (@Retryable) [Order 4]
-          → Cache Aspect (@Cacheable) [Order 5]
-            → Transaction Aspect (@Transactional) [Order MAX_VALUE-1]
-              → Validation Aspect (@Validated) [Order MAX_VALUE]
-                → Target Method
-              ← validation check
-            ← commit / rollback
-          ← cache write
-        ← retry on failure
-      ← stop timer
-    ← clear MDC
-  ← security check
-HTTP Response
-```
+<SpringAopAspectOrderingDiagram />
 
 Understanding this chain is critical for debugging puzzling behavior like:
 - **Why did my audit log save even though the transaction rolled back?** (Audit aspect is outside transaction)
@@ -966,15 +935,7 @@ Spring Batch is a framework for processing large volumes of data efficiently —
 
 ### Architecture
 
-```
-Job
- └── Step 1
- │    ├── ItemReader   → reads data (DB, file, API)
- │    ├── ItemProcessor → applies business logic
- │    └── ItemWriter   → writes processed data
- └── Step 2
-      └── Tasklet      → single operation step
-```
+<SpringBatchArchDiagram />
 
 ### Key Components
 

@@ -3,6 +3,9 @@ title: Spring Boot — Advanced Topics
 description: Advanced Spring Boot topics covering security, performance tuning, reactive systems, deployment, and production-ready design.
 tags: [spring-boot, java, backend, advanced]
 ---
+import SpringSecurityFilterDiagram from '@site/src/components/SpringSecurityFilterDiagram';
+import SpringBootDbMigrationDiagram from '@site/src/components/SpringBootDbMigrationDiagram';
+
 
 # Spring Boot — Advanced Topics
 
@@ -14,11 +17,7 @@ Advanced Spring Boot concepts including performance tuning, security practices, 
 
 ### Security Architecture
 
-Spring Security in Spring Boot works through a **filter chain**. Every HTTP request passes through a series of security filters before reaching your controller:
-
-```
-Request → SecurityFilterChain → Authentication → Authorization → Controller
-```
+<SpringSecurityFilterDiagram />
 
 ### Default Security Behavior
 
@@ -255,47 +254,9 @@ public ProblemDetail handleNotFound(ResourceNotFoundException ex) {
 
 ## Database Migration with Flyway / Liquibase
 
-### Flyway
+### Migration Tools Overview
 
-Spring Boot auto-configures Flyway when it's on the classpath. Migrations are SQL files in `src/main/resources/db/migration/`:
-
-```
-db/migration/
-├── V1__Create_users_table.sql
-├── V2__Add_email_column.sql
-└── V3__Create_orders_table.sql
-```
-
-```sql
--- V1__Create_users_table.sql
-CREATE TABLE users (
-    id BIGSERIAL PRIMARY KEY,
-    username VARCHAR(50) NOT NULL UNIQUE,
-    email VARCHAR(100) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-```
-
-### Liquibase
-
-Alternative to Flyway using XML/YAML/JSON changelogs:
-
-```yaml
-databaseChangeLog:
-  - changeSet:
-      id: 1
-      author: dev
-      changes:
-        - createTable:
-            tableName: users
-            columns:
-              - column:
-                  name: id
-                  type: BIGINT
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-```
+<SpringBootDbMigrationDiagram />
 
 ---
 

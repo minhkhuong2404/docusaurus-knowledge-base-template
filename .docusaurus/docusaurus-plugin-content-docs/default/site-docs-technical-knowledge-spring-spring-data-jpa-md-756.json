@@ -1,7 +1,7 @@
 {
   "id": "technical-knowledge/spring/spring-data-jpa",
-  "title": "Spring Data JPA Overview",
-  "description": "High-level map of Spring Data JPA concepts and links to focused guides on repositories and Hibernate internals.",
+  "title": "Spring Data JPA — Complete Guide",
+  "description": "Complete guide to Spring Data JPA, including repositories, entities, query methods, and persistence best practices.",
   "source": "@site/docs/technical-knowledge/spring/spring-data-jpa.md",
   "sourceDirName": "technical-knowledge/spring",
   "slug": "/technical-knowledge/spring/spring-data-jpa",
@@ -16,13 +16,13 @@
     },
     {
       "inline": true,
-      "label": "spring",
-      "permalink": "/tags/spring"
+      "label": "java",
+      "permalink": "/tags/java"
     },
     {
       "inline": true,
-      "label": "java",
-      "permalink": "/tags/java"
+      "label": "backend",
+      "permalink": "/tags/backend"
     },
     {
       "inline": true,
@@ -31,15 +31,15 @@
     }
   ],
   "version": "current",
-  "lastUpdatedBy": "Author",
-  "lastUpdatedAt": 1539502055000,
+  "lastUpdatedBy": "Lữ Minh Khương",
+  "lastUpdatedAt": 1783703647000,
   "frontMatter": {
-    "title": "Spring Data JPA Overview",
-    "description": "High-level map of Spring Data JPA concepts and links to focused guides on repositories and Hibernate internals.",
+    "title": "Spring Data JPA — Complete Guide",
+    "description": "Complete guide to Spring Data JPA, including repositories, entities, query methods, and persistence best practices.",
     "tags": [
       "spring-data-jpa",
-      "spring",
       "java",
+      "backend",
       "persistence"
     ]
   },
@@ -49,7 +49,7 @@
     "permalink": "/technical-knowledge/spring/spring-security"
   },
   "next": {
-    "title": "Spring Data JPA Repositories and Query Patterns",
-    "permalink": "/technical-knowledge/spring/spring-data-jpa-repositories-and-queries"
+    "title": "@Query Annotation",
+    "permalink": "/technical-knowledge/spring/spring-data-jpa-query-annotation"
   }
 }

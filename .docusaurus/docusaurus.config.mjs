@@ -571,8 +571,8 @@ export default {
     },
     "colorMode": {
       "defaultMode": "dark",
-      "respectPrefersColorScheme": true,
-      "disableSwitch": false
+      "disableSwitch": true,
+      "respectPrefersColorScheme": false
     },
     "blog": {
       "sidebar": {
