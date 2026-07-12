@@ -8,6 +8,13 @@ tags: [security, authentication, authorization, jwt, oauth2, oidc, rbac, abac, m
 
 # Authentication & Authorization
 
+import OAuthPkceFlowDiagram from '@site/src/components/OAuthPkceFlowDiagram';
+import PasskeysFlowDiagram from '@site/src/components/PasskeysFlowDiagram';
+import AccessTokenPatternDiagram from '@site/src/components/AccessTokenPatternDiagram';
+import OidcFlowDiagram from '@site/src/components/OidcFlowDiagram';
+
+
+
 > **Authentication (AuthN):** *Who are you?*
 > **Authorization (AuthZ):** *What are you allowed to do?*
 
@@ -155,16 +162,7 @@ public class SecurityConfig {
 
 ### Access Token + Refresh Token Pattern
 
-```
-Access Token:  Short-lived (5–15 min)  → sent on every API request
-Refresh Token: Long-lived (7–30 days)  → sent ONLY to /auth/refresh
-
-Flow:
-  Login → { access_token (15min), refresh_token (30 days) }
-  API calls use access_token
-  access_token expires → POST /auth/refresh with refresh_token → new access_token
-  refresh_token expires → user must log in again
-```
+<AccessTokenPatternDiagram />
 
 ```java
 @PostMapping("/auth/refresh")
@@ -198,31 +196,7 @@ public TokenResponse refresh(@RequestBody RefreshRequest req) {
 
 ### Authorization Code Flow + PKCE (Most Secure — Web & Mobile)
 
-```
-1. App generates: code_verifier (random) + code_challenge = SHA256(code_verifier)
-
-2. Redirect to: GET /authorize
-     ?response_type=code
-     &client_id=CLIENT_ID
-     &redirect_uri=https://app.example.com/callback
-     &scope=openid profile email
-     &state=RANDOM_CSRF_TOKEN
-     &code_challenge=BASE64URL(SHA256(code_verifier))
-     &code_challenge_method=S256
-
-3. User authenticates + consents at IdP
-
-4. IdP redirects: https://app.example.com/callback?code=AUTH_CODE&state=SAME_STATE
-
-5. App verifies state, then exchanges code:
-   POST /token
-     grant_type=authorization_code
-     &code=AUTH_CODE
-     &code_verifier=ORIGINAL_VERIFIER   ← IdP hashes and compares to challenge
-     &redirect_uri=...
-
-6. Response: { access_token, refresh_token, id_token, expires_in }
-```
+<OAuthPkceFlowDiagram />
 
 **PKCE protects against:** Authorization code interception — even if the code is stolen, attacker cannot exchange it without the `code_verifier`.
 
@@ -244,19 +218,7 @@ POST /token
 
 ## OpenID Connect (OIDC)
 
-```
-OAuth 2.0 = Authorization (can access resources)
-OIDC      = Authentication (who the user is) — built on top of OAuth 2.0
-
-OIDC adds id_token — a JWT with user identity claims:
-{
-  "sub":             "user-12345",
-  "email":           "alice@example.com",
-  "name":            "Alice Smith",
-  "email_verified":  true,
-  "iat": ..., "exp": ...
-}
-```
+<OidcFlowDiagram />
 
 **Rule:** Use `access_token` to call APIs. Use `id_token` to establish user identity in your app.
 
@@ -314,25 +276,7 @@ public class TotpService {
 
 The modern passwordless standard — phishing-resistant.
 
-```
-REGISTRATION:
-  1. Server sends challenge
-  2. Device creates public/private key pair (per origin)
-  3. Private key stays in device secure enclave — NEVER leaves the device
-  4. Server stores: public key + credential ID
-
-AUTHENTICATION:
-  1. Server sends challenge
-  2. User authenticates via biometric/PIN (unlocks secure enclave)
-  3. Device signs the challenge with private key
-  4. Server verifies signature using stored public key → identity proven
-
-Security properties:
-  ✅ Phishing-resistant (keys are origin-bound)
-  ✅ No password to steal or reuse
-  ✅ No shared secret on server side
-  ✅ Biometric stays on device
-```
+<PasskeysFlowDiagram />
 
 ---
 
@@ -425,17 +369,129 @@ public PasswordEncoder passwordEncoder() {
 
 ## Interview Questions
 
-1. What is the difference between authentication and authorization? What HTTP codes represent each failure?
-2. What are the pros and cons of JWT vs session-based authentication?
-3. Explain the OAuth 2.0 Authorization Code flow with PKCE. What does PKCE protect against?
-4. Why is `RS256` preferred over `HS256` in a microservices architecture?
-5. How do you implement token revocation with stateless JWTs?
-6. What is the difference between RBAC, ABAC, and ReBAC?
-7. How does TOTP (Google Authenticator) work?
-8. What are passkeys and how do they differ from passwords?
-9. Why should passwords be hashed with BCrypt instead of SHA-256?
-10. What cookie flags are required for secure session management?
-11. What is session fixation and how do you prevent it?
-12. How does the refresh token rotation pattern work and what attack does it detect?
-13. What is the difference between OAuth 2.0 and OIDC?
-14. What is the `kid` (Key ID) claim in a JWT header used for?
+**Q1: What is the difference between authentication and authorization? What HTTP codes represent each failure?**
+
+> **Authentication (AuthN)** is verifying *who* a user is (identity check). Examples: entering passwords, validating TOTP codes, or scanning biometrics. If AuthN fails, the server returns `401 Unauthorized` (identity not established).
+>
+> **Authorization (AuthZ)** is verifying *what* the user is allowed to do (permission check). Examples: verifying if a user has `ROLE_ADMIN` or checking if they own a resource. If AuthZ fails, the server returns `403 Forbidden` (identity is proven, but access to the resource is blocked).
+
+---
+
+**Q2: What are the pros and cons of JWT vs session-based authentication?**
+
+> **Session-Based Authentication (Stateful):**
+> * **Pros:** Instant revocation. If a user logs out or their account is compromised, the server deletes the session in Redis/DB, instantly invalidating future requests.
+> * **Cons:** Scaling bottlenecks. Requires a shared session store (like Redis) for clustered setups, introducing network latency and database lookups.
+>
+> **JWT-Based Authentication (Stateless):**
+> * **Pros:** Decoupled scalability. Downstream resource servers verify the token signature locally using the public key (e.g. via JWKS), eliminating database lookups.
+> * **Cons:** Hard to revoke. Once signed, a JWT is valid until its `exp` claim expires unless a complex JTI revocation list (like a Redis blocklist) is built, which defeats the stateless benefit.
+
+---
+
+**Q3: Explain the OAuth 2.0 Authorization Code flow with PKCE. What does PKCE protect against?**
+
+> **Flow Mechanics:**
+> 1. Client App generates a random `code_verifier` and hashes it to create a `code_challenge`.
+> 2. Client redirects the user to `/authorize` passing the `code_challenge` and `code_challenge_method=S256`.
+> 3. User authenticates on the IdP and gets redirected back with an `authorization_code`.
+> 4. Client sends the `authorization_code` and the original plain `code_verifier` to `/token`.
+> 5. The IdP hashes the verifier and validates it against the stored challenge before issuing tokens.
+>
+> **Protection:** PKCE protects against **Authorization Code Interception** attacks on public clients (SPAs, mobile apps). Without client secrets, an attacker could hijack the auth code from the redirect URL parameter. However, they cannot exchange it for tokens because they do not have the original `code_verifier` needed for validation.
+
+---
+
+**Q4: Why is `RS256` preferred over `HS256` in a microservices architecture?**
+
+> **HS256 (HMAC with SHA-256)** is a symmetric signing algorithm. Both the authentication server and the resource servers must share the *same* secret key. If a single resource server is compromised, the secret leaks, allowing an attacker to sign arbitrary tokens.
+>
+> **RS256 (RSA Signature with SHA-256)** is asymmetric. The Auth server signs the JWT using its **private key**, while resource servers verify it using the corresponding **public key** (fetched dynamically via JWKS). The private key never leaves the Auth server, limiting the blast radius of a microservice breach.
+
+---
+
+**Q5: How do you implement token revocation with stateless JWTs?**
+
+> Since JWT validation is stateless, you must choose one of these trade-offs to revoke a token:
+> 1. **Short Lifetimes:** Keep access token lifetimes extremely short (e.g., 5-15 minutes) and rely on refresh token rotation to validate status.
+> 2. **JTI Blocklisting (Redis):** Add a unique `jti` (JWT ID) claim to every token. On logout or suspension, write the `jti` and its remaining expiration time to a Redis cache. Resource servers check this cache during verification. This introduces a fast memory check but keeps database loads low.
+> 3. **API Gateway Interceptor:** Let the API Gateway act as a centralized validator, querying a fast database/cache for active user statuses while keeping downstream microservices stateless.
+
+---
+
+**Q6: What is the difference between RBAC, ABAC, and ReBAC?**
+
+> * **RBAC (Role-Based Access Control):** Permissions are assigned to roles (e.g. `ROLE_ADMIN`, `ROLE_USER`) and roles are assigned to users. Simple but lacks context (e.g., cannot check resource ownership out of the box).
+> * **ABAC (Attribute-Based Access Control):** Rules evaluate attributes of the user, resource, and environment (e.g. `Allow if user.dept == document.dept AND time < 17:00`). Highly fine-grained but complex to maintain.
+> * **ReBAC (Relationship-Based Access Control):** Access is determined by relationships between entities in a graph (e.g. Google Zanzibar). Useful for complex nesting (e.g. "User X can view document because User X is in Team Y, and Team Y owns Folder Z").
+
+---
+
+**Q7: How does TOTP (Google Authenticator) work?**
+
+> TOTP (Time-based One-Time Password, RFC 6238) computes a temporary code using a shared secret and the current time:
+> 1. The server and app share a secret key (typically scanned via QR code as Base32).
+> 2. Both calculate the current time step: `step = floor(current_unix_timestamp / 30)`.
+> 3. Compute the HMAC hash: `hash = HMAC-SHA1(secret, step)`.
+> 4. Perform dynamic truncation: extract a 4-byte segment from the hash based on the last byte's value, and compute modulo 1,000,000 to get a 6-digit PIN.
+> 5. **Skew Tolerance:** The server verifies the user input code using `step`, `step - 1`, and `step + 1` to account for clock drift.
+
+---
+
+**Q8: What are passkeys and how do they differ from passwords?**
+
+> **Passkeys (FIDO2/WebAuthn)** replace traditional passwords with asymmetric public-key cryptography:
+> * **No Shared Secrets:** Unlike passwords, the server never stores or knows a secret. It only stores the user's public key.
+> * **Biometric Activation:** The private key is generated and stored securely in the device's hardware Secure Enclave. It can only be accessed via local biometric validation (FaceID, TouchID) or a PIN.
+> * **Domain Binding:** Passkeys are cryptographically bound to the specific domain origin (e.g. `app.example.com`). This makes them completely **phishing-resistant**, as a fake website cannot request a passkey registered for the real domain.
+
+---
+
+**Q9: Why should passwords be hashed with BCrypt instead of SHA-256?**
+
+> **SHA-256** is a fast, general-purpose hashing algorithm. It is designed to process data at GB/s speeds. An attacker with a commodity GPU can compute billions of SHA-256 hashes per second, making dictionary/brute-force attacks against stolen database hashes trivial.
+>
+> **BCrypt** is an adaptive, CPU/memory-hard hashing algorithm. It features:
+> * **Built-in Salt:** Prevents rainbow table attacks and pre-computed hashes.
+> * **Work Factor (Cost):** Allows adjusting the computation time (e.g., cost factor 12 takes ~300ms). This intentional delay has a negligible impact on users logging in once but makes GPU brute-forcing computationally infeasible.
+
+---
+
+**Q10: What cookie flags are required for secure session management?**
+
+> * **`HttpOnly`:** Prevents client-side JavaScript from reading the cookie (`document.cookie`), mitigating Cross-Site Scripting (XSS) session theft.
+> * **`Secure`:** Instructs the browser to only transmit the cookie over encrypted HTTPS connections, preventing interception.
+> * **`SameSite`:** Controls cross-site cookie transmission. `SameSite=Lax` is the default (safe for standard navigations), while `SameSite=Strict` blocks the cookie from being sent on any cross-site redirect links, defending against Cross-Site Request Forgery (CSRF).
+
+---
+
+**Q11: What is session fixation and how do you prevent it?**
+
+> **Attack Scenario:** An attacker creates a valid session on the server, gets the session ID, and forces a victim's browser to use it (e.g., via a link containing `?jsessionid=123`). When the victim logs in, the server elevates that same session ID to authenticated status. The attacker can now access the system using the pre-shared session ID.
+>
+> **Prevention:** Regenerate the session ID on every authentication transition. In Spring Security, this is configured via `.sessionFixation().changeSessionId()`, which keeps the session attributes but generates a new cryptographic ID upon successful login.
+
+---
+
+**Q12: How does the refresh token rotation pattern work and what attack does it detect?**
+
+> **Flow:** Every time the client uses a `refresh_token` to get a new `access_token`, the authorization server invalidates the old `refresh_token` and returns a **new** one.
+>
+> **Detection:** If the authorization server receives a request with an *already invalidated/used* refresh token, it indicates a replay attack (the token was intercepted or stolen). The server immediately invalidates the entire refresh token family (invalidating the active session) and forces a complete re-login, protecting the user.
+
+---
+
+**Q13: What is the difference between OAuth 2.0 and OIDC?**
+
+> **OAuth 2.0** is an authorization framework. It is designed for delegated access (delegating rights to write or read resources on behalf of a user using an `access_token`). It does not define identity verification.
+>
+> **OIDC (OpenID Connect)** is an identity layer built on top of OAuth 2.0. It standardizes authentication by introducing the `id_token` (a signed JWT payload detailing who the user is) and a `/userinfo` endpoint.
+> * *OAuth 2.0:* Access token for APIs (AuthZ).
+> * *OIDC:* ID token for user profiles (AuthN).
+
+---
+
+**Q14: What is the `kid` (Key ID) claim in a JWT header used for?**
+
+> In systems where signing keys are rotated regularly, the Auth Server maintains multiple active public keys in its JWKS (JSON Web Key Set). 
+> The `kid` claim in the JWT header tells the validating resource server exactly **which public key** to retrieve from the JWKS list to verify the token signature. Without this claim, the resource server would have to try every key in the set sequentially, impacting performance and authentication latency.

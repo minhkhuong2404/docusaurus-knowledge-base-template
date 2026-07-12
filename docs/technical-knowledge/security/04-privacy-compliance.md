@@ -206,13 +206,91 @@ public static String maskCard(String card) {
 
 ## Interview Questions
 
-1. What is GDPR and what are the 6 lawful bases for processing personal data?
-2. How do you implement the Right to Erasure in a microservices system?
-3. What is PCI-DSS and what card data must never be stored?
-4. What is the difference between anonymization and pseudonymization?
-5. What data should appear in an audit log?
-6. How do you implement data retention policies at scale?
-7. What is data minimization and how do you apply it to API design?
-8. What is a Data Protection Officer (DPO) and when is one required?
-9. How do you mask PII in logs without losing debugging ability?
-10. How do you handle Subject Access Requests (SAR) in a system with 10+ microservices?
+**Q1: What is GDPR and what are the 6 lawful bases for processing personal data?**
+
+> **GDPR (General Data Protection Regulation)** is the EU's data protection and privacy regulation. To legally process personal data under GDPR, you must satisfy at least one of the 6 lawful bases:
+> 1. **Consent:** The user has given clear, explicit consent for a specific purpose.
+> 2. **Contract:** Processing is necessary to fulfill a contract with the user (e.g. shipping address for delivery).
+> 3. **Legal Obligation:** Processing is necessary to comply with the law (e.g. tax reporting, financial audit laws).
+> 4. **Vital Interests:** Processing is necessary to protect someone's life.
+> 5. **Public Task:** Necessary to perform a task in the public interest.
+> 6. **Legitimate Interests:** Necessary for your organization's business, provided it doesn't override the user's fundamental privacy rights.
+
+---
+
+**Q2: How do you implement the Right to Erasure in a microservices system?**
+
+> Implementing the Right to Erasure (Right to be Forgotten) in a distributed system requires:
+> 1. **Event-Driven Propagation:** Publish a `UserDeletedEvent` to a Kafka topic. All microservices containing copies or caches of user details must consume this event and delete corresponding local database records.
+> 2. **Hard Deletes vs. Soft Deletes:** Remove the actual PII records completely (hard delete) or overwrite PII columns with scrubbed/anonymized values (e.g., `user_123` becomes `deleted_user_xyz`), preserving transactional consistency without retaining personal details.
+> 3. **Backup Purges:** Document a backup lifecycle policy where PII is automatically removed from backups as tapes or snaps are rotated out.
+
+---
+
+**Q3: What is PCI-DSS and what card data must never be stored?**
+
+> **PCI-DSS (Payment Card Industry Data Security Standard)** is a compliance framework for securing credit card transaction data.
+> * **Never Store (even if encrypted):** Sensitive Authentication Data (SAD), which includes:
+>   * Card verification codes (CVV, CVV2, CVC).
+>   * Full magnetic stripe (track data).
+>   * PIN blocks / PINs.
+> * **May Store (with strict encryption, hashing, and masking):** Primary Account Number (PAN), cardholder name, and expiration date.
+
+---
+
+**Q4: What is the difference between anonymization and pseudonymization?**
+
+> * **Anonymization:** Irreversibly alters personal data so that the individual can **never** be re-identified by any means (e.g., stripping all user identifiers and aggregating age ranges). Anonymized data is no longer subject to GDPR.
+> * **Pseudonymization:** Replaces identifying fields with artificial identifiers or pseudonyms (e.g., mapping `user_id` to a random uuid `a98f-092c`). The data can still be linked back to the individual *if* combined with additional lookup information (held securely elsewhere). Pseudonymized data remains subject to GDPR.
+
+---
+
+**Q5: What data should appear in an audit log?**
+
+> Audit logs verify compliance and trace system breaches. They must include:
+> * **Who:** The user ID or actor initiating the event.
+> * **What:** The action performed (e.g., `READ_RECORD`, `EXPORT_REPORT`).
+> * **When:** Cryptographically accurate, synced timestamp.
+> * **Where:** IP address, client user-agent, or server instance ID.
+> * **Impact:** Success or failure status.
+> * **Never log:** Sensitive PII, passwords, session cookies, JWTs, or credit card numbers.
+
+---
+
+**Q6: How do you implement data retention policies at scale?**
+
+> 1. **Partitioning:** Partition database tables by date range (e.g. monthly partitions). Removing old logs or records becomes a fast metadata operation (`DROP PARTITION`) rather than slow, resource-intensive `DELETE` queries that lock tables.
+> 2. **TTL (Time to Live) Indexes:** In NoSQL systems (MongoDB, DynamoDB, Redis), set TTL parameters on columns to automatically delete records after expiration.
+> 3. **Object Lifecycle Rules:** In S3 or Cloud Storage, configure bucket lifecycle policies to automatically transition files to archive storage (Glacier) or permanently delete them after X days.
+
+---
+
+**Q7: What is data minimization and how do you apply it to API design?**
+
+> **Data Minimization** is the principle that personal data collected must be adequate, relevant, and limited to only what is necessary for the specified purposes.
+> * **API Application:** Design APIs that return only the fields requested by the client (using GraphQL or DTO projection templates) instead of returning entire database rows. For example, if a billing service only needs to check active status, do not return the user's phone, email, and address in the response payload.
+
+---
+
+**Q8: What is a Data Protection Officer (DPO) and when is one required?**
+
+> A DPO is a designated compliance leader responsible for monitoring GDPR compliance, advising on data protection impact assessments, and acting as a point of contact for supervisory authorities.
+> **Required When:**
+> 1. The processing is carried out by a public authority.
+> 2. The core activities consist of processing operations that require systematic, large-scale monitoring of individuals.
+> 3. The core activities consist of large-scale processing of special categories of data (e.g., health records, criminal history).
+
+---
+
+**Q9: How do you mask PII in logs without losing debugging ability?**
+
+> 1. **Structured Log Interceptors:** Implement a centralized logging layout patterns or filters (e.g., Logback/Log4j Appenders) that scan string outputs for regex matches (credit cards, emails, SSNs) and replace characters with asterisks (e.g. `****-****-****-1234`).
+> 2. **Tokenization:** Replace database record references in logs with high-level correlation IDs. Developers can look up operational histories in developer dashboards without seeing raw PII.
+
+---
+
+**Q10: How do you handle Subject Access Requests (SAR) in a system with 10+ microservices?**
+
+> 1. **Centralized Identity Mapping:** Maintain a core Identity Mapping database linking all pseudonyms/system-specific IDs back to the master User ID.
+> 2. **Orchestration Flow:** Implement a worker service that consumes a SAR request, issues async RPC calls or events (e.g., `FetchUserDataRequest`) to all microservices, aggregates JSON payloads containing user information, and formats the output into a secure ZIP/PDF package for download.
+> 3. **Data Access Governance:** Ensure the administrative portal executing the SAR extraction is strictly rate-limited and logged.

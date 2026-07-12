@@ -201,13 +201,88 @@ roleRef:
 
 ## Interview Questions
 
-1. What is Single Sign-On (SSO) and what protocols enable it?
-2. What is the difference between SAML 2.0 and OIDC for SSO?
-3. Why are long-lived service account credentials a security risk?
-4. What is IRSA (IAM Roles for Service Accounts) and how does it work?
-5. What is Just-In-Time access and why is it preferred over standing privilege?
-6. What is the principle of least privilege and how do you apply it in AWS IAM?
-7. What is HashiCorp Vault and what problems does it solve?
-8. How does Kubernetes RBAC work?
-9. How do you secure sensitive configuration (DB passwords, API keys) in a Spring Boot microservice?
-10. What is the difference between OAuth 2.0 delegation and SAML federation?
+**Q1: What is Single Sign-On (SSO) and what protocols enable it?**
+
+> **Single Sign-On (SSO)** is an authentication mechanism that allows a user to authenticate once and gain access to multiple independent applications without re-entering credentials.
+> **Protocols:**
+> 1. **OIDC (OpenID Connect):** Modern, lightweight protocol built on OAuth 2.0. Uses JSON Web Tokens (JWT) to exchange identity information. Ideal for web and mobile applications.
+> 2. **SAML 2.0 (Security Assertion Markup Language):** Legacy, XML-based enterprise protocol. Widely used for enterprise SaaS integrations.
+
+---
+
+**Q2: What is the difference between SAML 2.0 and OIDC for SSO?**
+
+> * **SAML 2.0:** Uses XML schemas for exchanging assertion data. Heavily reliant on browser redirects via POST requests containing signed XML. It is complex, verbose, and difficult to use in native mobile applications.
+> * **OIDC:** Built on JSON and HTTP REST principles. It utilizes the OAuth 2.0 flow to issue an `id_token` (JWT format), which is easily parsed by SPAs and native mobile apps. It is simpler to implement and much more resource-efficient.
+
+---
+
+**Q3: Why are long-lived service account credentials a security risk?**
+
+> Long-lived service credentials (like permanent AWS IAM Access Keys or database root credentials stored in config files):
+> 1. **No Expiry:** If leaked or committed to Git, they provide indefinite, unmonitored access to the target infrastructure until manually rotated or revoked.
+> 2. **Lack of Visibility:** Because they don't expire, organizations often lose track of who is using them, making rotation risky due to fear of breaking legacy systems.
+> **Mitigation:** Use short-lived, dynamically generated, or federated credentials (such as AWS STS, GCP Workload Identity, or HashiCorp Vault dynamic database roles).
+
+---
+
+**Q4: What is IRSA (IAM Roles for Service Accounts) and how does it work?**
+
+> **IRSA** is an AWS EKS feature that allows Kubernetes Pods to assume AWS IAM roles directly, achieving fine-grained permission control:
+> 1. EKS acts as an OIDC identity provider.
+> 2. You associate a Kubernetes ServiceAccount with an AWS IAM Role via annotations.
+> 3. EKS mounts an OIDC token into the Pod.
+> 4. The AWS SDK in the Pod automatically uses the token to call AWS STS (`AssumeRoleWithWebIdentity`), receiving temporary AWS credentials. This eliminates the need to attach broad node-level permissions or hardcode static credentials inside container images.
+
+---
+
+**Q5: What is Just-In-Time access and why is it preferred over standing privilege?**
+
+> **Just-In-Time (JIT) Access** grants elevated privileges (like database write or admin portal access) only when requested, and automatically revokes them after a set time limit (e.g., 2 hours).
+> **Why preferred:** It eliminates "standing privileges" (having admin rights permanently). This dramatically reduces the attack surface: if a developer's credentials are stolen, they only yield standard low-privilege rights unless active JIT escalation is triggered and approved, limiting potential damage.
+
+---
+
+**Q6: What is the principle of least privilege and how do you apply it in AWS IAM?**
+
+> **Least Privilege** states that a user or system process must only be granted the minimum permissions required to perform its task, and no more.
+> **Application in AWS IAM:**
+> * Avoid wildcard actions (e.g., `s3:*` on `*`). Specify precise APIs (`s3:GetObject`, `s3:PutObject`).
+> * Define tight resource scope boundaries (e.g., limit S3 actions to `arn:aws:s3:::my-app-bucket/*` instead of `*`).
+> * Use Condition blocks (e.g., restrict API execution to a specific VPC endpoint or IP CIDR range).
+
+---
+
+**Q7: What is HashiCorp Vault and what problems does it solve?**
+
+> HashiCorp Vault is a centralized secrets management system. It solves:
+> 1. **Secret Sprawl:** Keeps secrets out of application code, config files, and environment variables.
+> 2. **Static Credentials Risk:** Generates **dynamic secrets** on the fly (e.g., creating a database user that expires after 1 hour).
+> 3. **Data Encryption:** Provides encryption-as-a-service, allowing applications to encrypt data without handling raw encryption keys.
+> 4. **Detailed Audit Trails:** Logs every request to view or edit secrets.
+
+---
+
+**Q8: How does Kubernetes RBAC work?**
+
+> Kubernetes RBAC manages authorization within a cluster using four primary API resources:
+> * **Role:** Defines a set of permissions (rules) indicating what actions (verbs: `get`, `list`, `create`) can be performed on which resources (nouns: `pods`, `services`) within a **specific namespace**.
+> * **ClusterRole:** Same as Role, but applies **cluster-wide** (governing cluster nodes, namespaces, or persistent volumes).
+> * **RoleBinding:** Assigns a Role's permissions to a subject (User, Group, or ServiceAccount) within a namespace.
+> * **ClusterRoleBinding:** Binds a ClusterRole's permissions cluster-wide to a subject.
+
+---
+
+**Q9: How do you secure sensitive configuration (DB passwords, API keys) in a Spring Boot microservice?**
+
+> 1. **Externalize Secrets:** Never hardcode secrets in `application.yml`. Use placeholders like `spring.datasource.password=${DB_PASSWORD}`.
+> 2. **Config Servers:** Load configuration properties dynamically from a secure central server (e.g., Spring Cloud Config Server integrated with HashiCorp Vault or AWS Secrets Manager).
+> 3. **Kubernetes Secrets:** In Kubernetes, map secrets to environment variables or mount them as files inside the container memory.
+> 4. **Encryption:** Use Jasypt to encrypt database passwords directly inside the property files, passing the decryption key at application startup (`-Djasypt.encryptor.password=...`).
+
+---
+
+**Q10: What is the difference between OAuth 2.0 delegation and SAML federation?**
+
+> * **OAuth 2.0 Delegation:** Grants a third-party application limited access to a user's API resources (e.g. "Let this scheduling app read my Google Calendar events") using an access token, without giving the app the user's password.
+> * **SAML Federation:** Focuses on cross-domain single sign-on (SSO). It allows a user to authenticate at an Identity Provider (IdP) and access applications at a Service Provider (SP) (e.g., "Log in using corporate Okta to access Slack"). It shares identity assertions rather than API delegation tokens.

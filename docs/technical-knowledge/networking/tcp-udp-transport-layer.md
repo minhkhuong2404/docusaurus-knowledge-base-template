@@ -8,18 +8,19 @@ sidebar_position: 4
 
 # TCP, UDP & Transport Layer
 
+import TransportLayerPortsDiagram from '@site/src/components/TransportLayerPortsDiagram';
+import TcpHandshakesDiagram from '@site/src/components/TcpHandshakesDiagram';
+import TcpSegmentAnatomyDiagram from '@site/src/components/TcpSegmentAnatomyDiagram';
+import TcpFlowControlDiagram from '@site/src/components/TcpFlowControlDiagram';
+import TcpCongestionControlDiagram from '@site/src/components/TcpCongestionControlDiagram';
+import UdpAnatomyDiagram from '@site/src/components/UdpAnatomyDiagram';
+
+
 ## Transport Layer Role
 
 The transport layer provides **process-to-process** communication using **port numbers**. While IP routes packets between hosts, the transport layer routes data between specific applications on those hosts.
 
-```
-Host A (IP: 10.0.0.1)                   Host B (IP: 10.0.0.2)
-┌──────────────────────┐                 ┌──────────────────────┐
-│ Chrome   → port 54321│                 │ nginx    ← port 443  │
-│ Slack    → port 54322│ ──── TCP/UDP ──►│ postgres ← port 5432 │
-│ Zoom     → port 54323│                 │ redis    ← port 6379 │
-└──────────────────────┘                 └──────────────────────┘
-```
+<TransportLayerPortsDiagram />
 
 **Port ranges:**
 - `0–1023`: Well-known ports (HTTP: 80, HTTPS: 443, SSH: 22, DNS: 53)
@@ -44,17 +45,7 @@ TCP provides **reliable, ordered, connection-oriented** delivery.
 
 ## TCP Three-Way Handshake
 
-```
-Client                        Server
-  │                              │
-  │──── SYN (seq=x) ────────────►│  "I want to connect, my ISN is x"
-  │                              │
-  │◄─── SYN-ACK (seq=y,ack=x+1)─│  "OK, my ISN is y, I got your x"
-  │                              │
-  │──── ACK (ack=y+1) ──────────►│  "Got it, connection established"
-  │                              │
-  │════════ DATA TRANSFER ═══════│
-```
+<TcpHandshakesDiagram />
 
 **ISN (Initial Sequence Number)**: random starting point for sequence numbering — prevents old duplicate packets from being accepted.
 
@@ -74,22 +65,7 @@ Socket client = server.accept();  // blocks until client connects
 
 ## TCP Segment Structure
 
-```
- 0      7 8     15 16    23 24    31
-┌─────────────────┬─────────────────┐
-│   Source Port   │ Destination Port │  ← 32 bits
-├─────────────────┴─────────────────┤
-│           Sequence Number          │  ← byte offset of first data byte
-├───────────────────────────────────┤
-│         Acknowledgment Number      │  ← next expected byte from sender
-├──────┬──┬──┬──┬──┬──┬─────────────┤
-│ Data │  │U │A │P │R │S │F│  Window │
-│ Off  │  │R │C │S │S │Y │I│  Size   │
-│      │  │G │K │H │T │N │N│         │
-├──────┴──┴──┴──┴──┴──┴──┴──────────┤
-│     Checksum     │  Urgent Pointer  │
-└───────────────────────────────────┘
-```
+<TcpSegmentAnatomyDiagram />
 
 **Key flags:**
 - `SYN`: synchronize sequence numbers (connection request)
@@ -105,17 +81,7 @@ Socket client = server.accept();  // blocks until client connects
 
 TCP termination is **asymmetric** — each side closes independently.
 
-```
-Client                        Server
-  │                              │
-  │──── FIN (seq=u) ────────────►│  "I'm done sending"
-  │◄─── ACK (ack=u+1) ──────────│  "Got it"
-  │                              │  ← Server may still send data (half-close)
-  │◄─── FIN (seq=v) ────────────│  "I'm done sending"
-  │──── ACK (ack=v+1) ──────────►│
-  │                              │
-  │  [TIME_WAIT: 2×MSL = ~60s]  │
-```
+The TCP connection termination is initiated as follows (toggle 4-Way Teardown in the diagram above).
 
 **TIME_WAIT state**: the active closer waits `2 × MSL` (Maximum Segment Lifetime, ~30s) before closing the socket. Why?
 - Ensures the last ACK reaches the server (if lost, server retransmits FIN)
@@ -150,20 +116,7 @@ If Segment 1 lost:
 
 Prevents a **fast sender from overwhelming a slow receiver**.
 
-```
-Receiver advertises: Window Size = 65535 bytes (how much buffer space available)
-Sender must not have more than this many unacknowledged bytes in flight
-
-[  Sent & ACKed  |  Sent, not ACKed  |  Can send  |  Cannot send yet  ]
-                   ◄── in-flight ───►  ◄── window ─►
-```
-
-```
-If receiver buffer fills up:
-  → Receiver sends Window Size = 0 → "stop sending"
-  → Sender pauses, sends zero-window probes periodically
-  → Receiver sends Window Update when buffer drains
-```
+<TcpFlowControlDiagram />
 
 ---
 
@@ -173,33 +126,7 @@ Prevents a **sender from overwhelming the network** (not just the receiver).
 
 ### Phases
 
-**1. Slow Start**
-```
-cwnd = 1 MSS (congestion window starts small)
-cwnd doubles every RTT (exponential growth)
-Until: cwnd reaches ssthresh (slow start threshold) OR packet loss
-```
-
-**2. Congestion Avoidance**
-```
-After slow start threshold:
-  cwnd += 1 MSS per RTT (linear growth)
-  "Additive Increase"
-```
-
-**3. Congestion Detection & Reaction**
-```
-Packet loss (timeout):
-  ssthresh = cwnd / 2
-  cwnd = 1 MSS → restart Slow Start
-
-3 duplicate ACKs (fast retransmit):
-  ssthresh = cwnd / 2
-  cwnd = ssthresh → skip slow start, enter Congestion Avoidance
-  "Multiplicative Decrease"
-```
-
-This is **AIMD (Additive Increase, Multiplicative Decrease)**.
+<TcpCongestionControlDiagram />
 
 ### Modern Algorithms
 
@@ -250,15 +177,7 @@ UDP provides **connectionless, unreliable, fast** delivery.
 - No retransmission delays
 - Supports broadcast and multicast
 
-```
-UDP Header (8 bytes only):
-┌─────────────────┬─────────────────┐
-│   Source Port   │ Destination Port │
-├─────────────────┼─────────────────┤
-│     Length      │    Checksum     │
-└─────────────────┴─────────────────┘
-[  Data payload  ]
-```
+<UdpAnatomyDiagram />
 
 ---
 

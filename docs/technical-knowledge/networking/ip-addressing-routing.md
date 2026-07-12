@@ -8,16 +8,18 @@ sidebar_position: 3
 
 # IP Addressing & Routing
 
+import IpAddressingCidrDiagram from '@site/src/components/IpAddressingCidrDiagram';
+import RoutingTableDiagram from '@site/src/components/RoutingTableDiagram';
+import BgpDiagram from '@site/src/components/BgpDiagram';
+import DhcpDiagram from '@site/src/components/DhcpDiagram';
+import NatDiagram from '@site/src/components/NatDiagram';
+
+
 ## IPv4 Addressing
 
 An IPv4 address is a **32-bit number**, usually written as four octets in dotted-decimal notation.
 
-```
-192  .  168  .   1  .  100
-│         │       │      │
-8 bits   8 bits  8 bits  8 bits  =  32 bits total
-= 4,294,967,296 total addresses (~4.3 billion)
-```
+<IpAddressingCidrDiagram />
 
 ### IPv4 Address Classes (Historical)
 
@@ -66,14 +68,7 @@ Hosts:       2^8 - 2 = 254 usable host addresses
 
 Divide `192.168.10.0/24` into 4 equal subnets:
 
-```
-Need 4 subnets → borrow 2 bits → /26 (2² = 4 subnets, 62 hosts each)
-
-Subnet 1: 192.168.10.0/26    → hosts: .1 – .62,   broadcast: .63
-Subnet 2: 192.168.10.64/26   → hosts: .65 – .126,  broadcast: .127
-Subnet 3: 192.168.10.128/26  → hosts: .129 – .190, broadcast: .191
-Subnet 4: 192.168.10.192/26  → hosts: .193 – .254, broadcast: .255
-```
+Need 4 subnets → borrow 2 bits → /26 (2² = 4 subnets, 62 hosts each).
 
 ---
 
@@ -138,17 +133,7 @@ Routing determines the **path** an IP packet takes from source to destination.
 
 Every router and host has a routing table:
 
-```
-Destination       Gateway         Interface  Metric
-0.0.0.0/0         192.168.1.1     eth0       100    ← default route
-192.168.1.0/24    0.0.0.0         eth0       0      ← directly connected
-10.0.0.0/8        192.168.1.254   eth0       50     ← static route
-172.16.0.0/12     192.168.1.254   eth0       50
-127.0.0.0/8       127.0.0.1       lo         0      ← loopback
-```
-
-**Longest prefix match**: the most specific matching route wins.
-- Packet to `192.168.1.50` → matches both `0.0.0.0/0` and `192.168.1.0/24` → uses `/24` (more specific).
+<RoutingTableDiagram />
 
 ```bash
 # Linux routing table
@@ -194,24 +179,9 @@ Each router:
 
 The routing protocol of the **internet** — connects Autonomous Systems (AS).
 
-```
-AS65001 (ISP 1) ←── BGP ──► AS65002 (Google)
-                ←── BGP ──► AS65003 (ISP 2)
-```
+- Each AS has a unique **AS Number (ASN)**. BGP advertises **IP prefixes** with **path attributes** (AS path, MED, local pref).
 
-- Each AS has a unique **AS Number (ASN)**
-- BGP advertises **IP prefixes** with **path attributes** (AS path, MED, local pref)
-- Path selection: prefer shortest AS path, then policy attributes
-- Very slow convergence by design (stability over speed)
-- Used by: ISPs, cloud providers, large enterprises
-
-```
-BGP path: 192.0.2.0/24 via AS65001 → AS65002 → AS65003
-Path attributes:
-  AS_PATH: [65001, 65002, 65003]
-  NEXT_HOP: 203.0.113.1
-  LOCAL_PREF: 100
-```
+<BgpDiagram />
 
 ---
 
@@ -219,15 +189,9 @@ Path attributes:
 
 Automatically assigns IP addresses to hosts.
 
-```
-Client           Server
-  │──DISCOVER──────►│  broadcast: "I need an IP"
-  │◄─OFFER──────────│  "Here's 192.168.1.100/24, GW=.1, DNS=8.8.8.8"
-  │──REQUEST────────►│  "I'll take 192.168.1.100"
-  │◄─ACK────────────│  "Confirmed, lease for 24 hours"
-```
-
 DHCP provides: IP address, subnet mask, default gateway, DNS servers, lease duration.
+
+<DhcpDiagram />
 
 ```bash
 # Linux: request DHCP lease
@@ -242,19 +206,7 @@ systemctl restart NetworkManager
 
 Maps **private IP addresses** to one or more **public IP addresses**, enabling private networks to reach the internet.
 
-```
-Internal Host    NAT Router          Internet Server
-10.0.0.5:54321 ──► [NAT Table] ──► 203.0.113.1:54321
-                   private:port     public:port
-                   maps to each other
-```
-
-```
-NAT Translation Table:
-Internal IP     Internal Port  External IP    External Port  Destination
-10.0.0.5        54321         203.0.113.1    54321         142.250.80.46:443
-10.0.0.7        49152         203.0.113.1    49153         142.250.80.46:443
-```
+<NatDiagram />
 
 **Types:**
 - **SNAT (Source NAT)**: changes source IP (outbound traffic) — most common

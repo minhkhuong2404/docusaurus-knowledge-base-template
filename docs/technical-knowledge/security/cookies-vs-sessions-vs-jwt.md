@@ -15,6 +15,11 @@ tags:
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import CookieSessionStateDiagram from '@site/src/components/CookieSessionStateDiagram';
+import JwtClientStateDiagram from '@site/src/components/JwtClientStateDiagram';
+import JwtAnatomyDiagram from '@site/src/components/JwtAnatomyDiagram';
+import RefreshTokenRotationDiagram from '@site/src/components/RefreshTokenRotationDiagram';
+
 
 # Cookies vs Sessions vs JWT
 
@@ -40,28 +45,7 @@ This guide goes beyond the basics — covering internals, attack vectors, advanc
 
 ### Cookie + Session — server-side state
 
-```
-POST /login
-    │
-    ▼
-Server authenticates credentials (BCrypt verify)
-    │
-    ▼
-Server creates session object → stores in session store (memory / Redis / DB)
-Keyed by a cryptographically random session ID
-    │
-    ▼
-Response: Set-Cookie: JSESSIONID=abc123; HttpOnly; Secure; SameSite=Strict
-Only the opaque ID travels to the client — no user data
-    │
-    ▼
-Subsequent requests → browser automatically sends cookie
-Server looks up session by ID → retrieves user context
-    │
-    ▼
-Logout → server deletes session from store
-The session ID becomes orphaned → immediate revocation
-```
+<CookieSessionStateDiagram />
 
 :::info[Key insight]
 When developers say "cookie-based auth", they almost always mean session-based auth under the hood. The cookie is just a transport for the opaque session ID — the real state lives on the server.
@@ -81,31 +65,7 @@ When developers say "cookie-based auth", they almost always mean session-based a
 
 ### JWT — client-side state, server-verified
 
-```
-POST /login
-    │
-    ▼
-Server authenticates credentials
-    │
-    ▼
-Server creates signed JWT with claims (sub, roles, exp, jti)
-Signed with HS256 (shared secret) or RS256 (private key)
-No server-side storage needed
-    │
-    ▼
-JWT returned to client
-Stored in HttpOnly cookie (recommended) or memory
-Avoid localStorage — see Attack Vectors
-    │
-    ▼
-Client sends: Authorization: Bearer <token>
-Server verifies signature + expiry → no DB lookup needed
-    │
-    ▼
-Logout: client discards token
-Token remains cryptographically valid until exp
-This is the core revocation trade-off
-```
+<JwtClientStateDiagram />
 
 :::warning[Core trade-off]
 A JWT is valid until it expires, regardless of logout. You cannot "un-sign" a token without additional infrastructure (blacklist, short TTL, refresh rotation). This is the most common senior interview topic around JWTs.
@@ -128,9 +88,7 @@ A JWT is valid until it expires, regardless of logout. You cannot "un-sign" a to
 
 A JWT has three base64url-encoded parts separated by dots:
 
-```
-<Header>.<Payload>.<Signature>
-```
+<JwtAnatomyDiagram />
 
 ### Header
 
@@ -343,22 +301,7 @@ Weak secrets are vulnerable to offline brute-force once an attacker captures a t
 
 The industry-standard pattern for balancing statelessness with revocability.
 
-```
-Login
-  └─ Server issues:
-       ├─ Access token  (5–15 min TTL)  → sent with every API request
-       └─ Refresh token (7–30 day TTL)  → stored in HttpOnly cookie only
-
-Access token expires
-  └─ Client calls POST /auth/refresh with refresh token
-       ├─ Server validates refresh token
-       ├─ Issues NEW access token
-       ├─ Issues NEW refresh token (rotation)
-       └─ Invalidates old refresh token immediately
-
-If old refresh token arrives again:
-  └─ Detect reuse → revoke entire token family → force re-login
-```
+<RefreshTokenRotationDiagram />
 
 ### Token family / reuse detection (RFC 6749)
 

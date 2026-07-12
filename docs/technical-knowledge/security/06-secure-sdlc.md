@@ -8,6 +8,9 @@ tags: [devsecops, sdlc, threat-modeling, sast, dast, sca, secrets-scanning, cont
 
 # Secure SDLC & DevSecOps
 
+import DevSecOpsPipelineDiagram from '@site/src/components/DevSecOpsPipelineDiagram';
+
+
 > "Shift left" = find security issues **earlier** in development, when they are far cheaper to fix.
 
 ---
@@ -25,12 +28,7 @@ tags: [devsecops, sdlc, threat-modeling, sast, dast, sca, secrets-scanning, cont
 
 ## The DevSecOps Pipeline
 
-```
-Code → Build → Test → Security Gate → Deploy → Monitor
- │       │       │           │            │         │
-Dev    CI/CD   Unit    SAST/SCA/Secrets  Staging  DAST/
-Tools  Tools   Tests    Scanning + IaC   Tests   Runtime
-```
+<DevSecOpsPipelineDiagram />
 
 ---
 
@@ -243,13 +241,87 @@ spec:
 
 ## Interview Questions
 
-1. What is "shift left" in security and why does it matter?
-2. What is the difference between SAST and DAST?
-3. What is SCA and what does it detect?
-4. What is threat modeling? Describe the STRIDE framework.
-5. How do you prevent secrets from being committed to git?
-6. What should a secure Dockerfile look like?
-7. How do you scan Docker container images for vulnerabilities in CI?
-8. If a secret is accidentally committed to a public GitHub repo, what do you do immediately?
-9. What IaC security checks should run on every Terraform plan?
-10. What is a Security Champion and why is this role valuable?
+**Q1: What is "shift left" in security and why does it matter?**
+
+> **"Shift Left"** means introducing security processes, checks, and considerations earlier in the software development lifecycle (SDLC) (e.g., during design, threat modeling, and coding) rather than waiting until coding is finished or during deployment.
+> **Why it matters:** Fixing a security vulnerability in production or during deployment can cost up to 100x more than catching and fixing it during the initial design or writing stage.
+
+---
+
+**Q2: What is the difference between SAST and DAST?**
+
+> * **SAST (Static Application Security Testing):** Analyzes the raw application source code, configuration files, or compiled binaries at rest without executing the code. It checks for structural issues like SQLi, weak crypto, or hardcoded credentials. It is fast but can suffer from high false-positive rates.
+> * **DAST (Dynamic Application Security Testing):** Tests a running application from the outside, acting like a black-box attacker (e.g. scanning staging endpoints using OWASP ZAP). It intercepts inputs, flags issues like missing secure headers, active cross-site scripting paths, or SQL injection responses. It has a low false-positive rate but is slow and runs later in the SDLC.
+
+---
+
+**Q3: What is SCA and what does it detect?**
+
+> **SCA (Software Composition Analysis):** Scans the project's third-party open-source dependencies (e.g. Maven, NPM, Gradle packages) against databases of known public vulnerabilities (like the National Vulnerability Database - NVD). It detects:
+> 1. Outdated dependencies with known CVEs (e.g., Log4Shell).
+> 2. License compliance risks (e.g. GPL copyleft licenses).
+> 3. Transitive dependency vulnerabilities.
+
+---
+
+**Q4: What is threat modeling? Describe the STRIDE framework.**
+
+> **Threat Modeling** is a structured engineering process for identifying potential security threats, vulnerabilities, and mitigations during the application design phase.
+> **STRIDE Framework:**
+> * **S - Spoofing:** Pretending to be someone else (mitigation: strong AuthN).
+> * **T - Tampering:** Modifying data on disk or in transit (mitigation: integrity signatures, TLS).
+> * **R - Repudiation:** Denying performing an action (mitigation: non-repudiation, secure audit logging).
+> * **I - Information Disclosure:** Leaking private data (mitigation: encryption, ACLs).
+> * **D - Denial of Service:** Crashing the server (mitigation: rate limits, firewalls).
+> * **E - Elevation of Privilege:** Gaining unauthorized admin access (mitigation: strict AuthZ).
+
+---
+
+**Q5: How do you prevent secrets from being committed to git?**
+
+> 1. **Client-side Git Hooks:** Run local pre-commit hooks (using tools like `gitleaks` or `trufflehog`) to scan local code changes for API keys, private keys, or passwords before allowing commits.
+> 2. **Environment Configuration:** Enforce the use of `.env` files or environment variables; add all `.env` and credential files to the global `.gitignore`.
+> 3. **Centralized Secret Manager:** Inject secrets at runtime using AWS Secrets Manager, HashiCorp Vault, or Spring Cloud Config Server rather than hardcoding.
+> 4. **CI Secret Scanner:** Configure a blocker check in CI (e.g. GitHub secret scanning) that fails builds if secrets are pushed in commits.
+
+---
+
+**Q6: What should a secure Dockerfile look like?**
+
+> A secure Dockerfile should follow these rules:
+> 1. **Use Minimal Base Images:** Use distroless or Alpine base images to minimize the system attack surface.
+> 2. **Run as Non-Root User:** Never run applications as the `root` user inside the container. Define a custom `USER` (e.g. `USER appuser`).
+> 3. **Multi-Stage Builds:** Separate build dependencies from runtime dependencies to keep the final image size small.
+> 4. **Pin Versions:** Specify explicit tags instead of `latest` (e.g., `eclipse-temurin:21-jre-alpine`).
+> 5. **Read-only Filesystem:** Configure container runtimes to run with a read-only root filesystem where possible.
+
+---
+
+**Q7: How do you scan Docker container images for vulnerabilities in CI?**
+
+> In the CI pipeline, add a container image scanning step using tools like **Trivy**, **Grype**, or **Snyk**. These tools inspect the built image layers, examine the installed OS packages (Alpine/Debian libraries) and application dependency files, and map them against vulnerability databases. The pipeline can be configured to fail the build if any Critical or High severity vulnerabilities are detected.
+
+---
+
+**Q8: If a secret is accidentally committed to a public GitHub repo, what do you do immediately?**
+
+> 1. **Revoke Immediately:** Assume the secret is compromised instantly. Deactivate, delete, or rotate the key at the provider (AWS, Stripe, database).
+> 2. **Purge History:** Use `git-filter-repo` or BFG Repo-Cleaner to rewrite the repository history, purging the secret completely from all commits, tags, and branches. A simple `git rm` is insufficient as the secret remains accessible in Git history.
+> 3. **Audit Access Logs:** Review API and access logs for the compromised key to determine if it was exploited before revocation.
+
+---
+
+**Q9: What IaC security checks should run on every Terraform plan?**
+
+> Configure static analysis tools like **TFLint**, **Checkov**, or **tfsec** to run on every commit or pull request. These scan IaC configurations to detect:
+> * Publicly accessible S3 buckets.
+> * Security groups allowing wildcard ingress (`0.0.0.0/0` on port 22).
+> * Unencrypted database storage volumes.
+> * Missing audit log settings.
+
+---
+
+**Q10: What is a Security Champion and why is this role valuable?**
+
+> A Security Champion is a developer or engineer inside a product squad who acts as a liaison between the core Security Team and the development team.
+> **Why valuable:** They embed security practices directly into daily development cycles, guide threat modeling during feature design, and help squads resolve security vulnerabilities, removing the bottleneck of relying solely on a separate, centralized security department.

@@ -8,6 +8,16 @@ sidebar_position: 18
 
 # QUIC & Modern Transport Protocols
 
+import QuicHandshakeDiagram from '@site/src/components/QuicHandshakeDiagram';
+import QuicMultiplexingDiagram from '@site/src/components/QuicMultiplexingDiagram';
+import QuicConnectionMigrationDiagram from '@site/src/components/QuicConnectionMigrationDiagram';
+import QuicHeaderAnatomyDiagram from '@site/src/components/QuicHeaderAnatomyDiagram';
+import QuicHttp3Diagram from '@site/src/components/QuicHttp3Diagram';
+import QuicFlowCongestionLossDiagram from '@site/src/components/QuicFlowCongestionLossDiagram';
+import QuicStackDiagram from '@site/src/components/QuicStackDiagram';
+
+
+
 ## Why QUIC Was Built
 
 TCP + TLS has served the internet well but has fundamental limitations:
@@ -26,15 +36,7 @@ TCP + TLS has served the internet well but has fundamental limitations:
 
 QUIC is a **multiplexed, low-latency transport protocol** built on top of UDP, with TLS 1.3 baked in. Originally developed by Google (2012), standardized by IETF as RFC 9000 (2021).
 
-```
-HTTP/1.1, HTTP/2      HTTP/3
-      │                  │
-    TCP                QUIC  ← userspace, updatable
-      │                  │
-    IP                  UDP
-      │                  │
- Physical            Physical
-```
+<QuicStackDiagram />
 
 ---
 
@@ -42,36 +44,7 @@ HTTP/1.1, HTTP/2      HTTP/3
 
 ### First Connection — 1 RTT
 
-```
-Client                              Server
-  │                                    │
-  │  Initial (CRYPTO: ClientHello)     │
-  │ ─────────────────────────────────► │
-  │                                    │  process TLS + derive keys
-  │  ◄── Initial (CRYPTO: ServerHello) │
-  │  ◄── Handshake (TLS params)        │
-  │  ◄── Short Header (app data)       │  server can send data already!
-  │                                    │
-  │  Handshake (TLS Finished)          │
-  │  Short Header (app data)           │
-  │ ─────────────────────────────────► │
-  │                                    │
-  Total: 1 RTT before client can send app data
-```
-
-### Reconnection — 0-RTT
-
-On reconnect to a known server, the client uses a **session resumption ticket** from the previous connection to send data in the **very first packet**:
-
-```
-Client                              Server
-  │                                    │
-  │  Initial (0-RTT app data!)         │  ← sends data WITH the hello
-  │ ─────────────────────────────────► │
-  │  ◄── Short Header (response)       │
-  │                                    │
-  Total: 0 RTT for data (request is sent immediately!)
-```
+<QuicHandshakeDiagram />
 
 :::caution[0-RTT Replay Risk]
 0-RTT data can be **replayed** by an attacker who intercepts and re-sends the initial packet. Only use for **idempotent, non-sensitive** operations (e.g., GET requests). Never for payments, state-changing operations, or auth.
@@ -86,22 +59,7 @@ Client                              Server
 HTTP/2 multiplexes over a **single TCP connection** — but TCP treats the connection as a single byte stream. One lost packet stalls **all streams**:
 
 ```
-HTTP/2 over TCP:
-Stream A: [data1] [data2] [  LOST  ] [data4]  ← all streams wait!
-Stream B: [data1] [          WAIT          ]
-Stream C: [data1] [          WAIT          ]
-```
-
-### QUIC Solution
-
-Each QUIC stream is **independent**. A lost packet only stalls the stream it belongs to:
-
-```
-QUIC streams:
-Stream A: [data1] [data2] [  LOST  ] [data4]  ← only stream A waits
-Stream B: [data1] [data2] [data3] [data4]  ✓ continues unaffected
-Stream C: [data1] [data2] [data3]           ✓ continues unaffected
-```
+<QuicMultiplexingDiagram />
 
 **QUIC stream types:**
 - **Bidirectional streams** — both sides can send (like HTTP request/response)
@@ -116,26 +74,13 @@ TCP connections are identified by **4-tuple**: `(src IP, src port, dst IP, dst p
 QUIC uses a **Connection ID** — an opaque identifier exchanged during handshake. When the client's IP changes, it sends a PATH_CHALLENGE/RESPONSE to prove ownership of the new path, then **migrates** the connection:
 
 ```
-Phone on Wi-Fi:  QUIC conn-id=X over 192.168.1.10 → server
-                                ↕
-Phone on 4G:     QUIC conn-id=X over 10.0.0.55 → server   ← same connection!
-(no TCP reset, no TLS renegotiation, no request restart)
-```
+<QuicConnectionMigrationDiagram />
 
 ---
 
 ## QUIC Packet Types
 
-```
-Long Header packets (handshake):
-├── Initial         ← first packets, ClientHello/ServerHello
-├── 0-RTT           ← early data
-├── Handshake       ← TLS Finished, remaining handshake messages
-└── Retry           ← server asks client to prove IP (anti-amplification)
-
-Short Header packets (application data):
-└── 1-RTT           ← all application data after handshake
-```
+<QuicHeaderAnatomyDiagram />
 
 ---
 
@@ -143,14 +88,7 @@ Short Header packets (application data):
 
 HTTP/3 is HTTP semantics (methods, headers, status codes) over QUIC instead of TCP.
 
-```
-HTTP/3 layer:
-├── QPACK           ← header compression (replaces HPACK, avoids HOL blocking)
-├── HTTP/3 framing  ← maps HTTP semantics to QUIC streams
-└── QUIC streams    ← one stream per request/response
-
-Each HTTP request = one QUIC bidirectional stream
-```
+<QuicHttp3Diagram />
 
 ### Key Differences from HTTP/2
 
@@ -207,8 +145,7 @@ Two levels (unlike TCP's single level):
 2. **Connection-level**: total data in flight across all streams
 
 ```
-Per-stream window:  receiver controls how much sender can send per stream
-Connection window:  cap on total unacknowledged data across all streams
+Refer to the comparison dashboard below.
 ```
 
 ---
@@ -218,14 +155,7 @@ Connection window:  cap on total unacknowledged data across all streams
 QUIC uses **packet numbers** (monotonically increasing, never reused) instead of TCP's ambiguous sequence numbers. This solves the **TCP retransmission ambiguity problem**:
 
 ```
-TCP problem:
-  Send segment seq=100 → lost, retransmit seq=100 (same number)
-  ACK 100 received — was it ACK for original or retransmit? Ambiguous RTT measurement!
-
-QUIC fix:
-  Send packet #1 → lost
-  Retransmit same data in packet #5 (new number)
-  ACK #5 → unambiguously new packet, accurate RTT
+<QuicFlowCongestionLossDiagram />
 ```
 
 QUIC also uses **RACK** (Recent ACKnowledgement) for fast loss detection, and **ACK delay** reporting to improve RTT estimates.

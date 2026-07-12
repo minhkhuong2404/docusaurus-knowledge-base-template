@@ -8,6 +8,12 @@ sidebar_position: 2
 
 # OSI & TCP/IP Models
 
+import OsiModelDiagram from '@site/src/components/OsiModelDiagram';
+import DataEncapsulationDiagram from '@site/src/components/DataEncapsulationDiagram';
+import ArpProtocolDiagram from '@site/src/components/ArpProtocolDiagram';
+import TroubleshootingLayerDiagram from '@site/src/components/TroubleshootingLayerDiagram';
+
+
 ## Why Layered Models?
 
 Layered models divide the complex problem of network communication into **independent, well-defined responsibilities**. Each layer:
@@ -21,18 +27,7 @@ Benefits: modular design, interoperability, easier troubleshooting.
 
 ## The OSI Model (7 Layers)
 
-```
-Host A                                           Host B
-┌─────────────────────┐                 ┌─────────────────────┐
-│ 7 │ Application     │◄── HTTP, DNS ──►│ 7 │ Application     │
-│ 6 │ Presentation    │◄── TLS, MIME ──►│ 6 │ Presentation    │
-│ 5 │ Session         │◄── TLS session ►│ 5 │ Session         │
-│ 4 │ Transport       │◄── TCP/UDP ─────►│ 4 │ Transport       │
-│ 3 │ Network         │◄── IP, ICMP ────►│ 3 │ Network         │
-│ 2 │ Data Link       │◄── Ethernet ────►│ 2 │ Data Link       │
-│ 1 │ Physical        │◄── Bits/wire ───►│ 1 │ Physical        │
-└─────────────────────┘                 └─────────────────────┘
-```
+<OsiModelDiagram />
 
 ### Layer 1 — Physical
 
@@ -101,16 +96,7 @@ Data **translation, encryption, and compression**.
 
 ## TCP/IP Model (4 Layers)
 
-The practical model used on the actual internet:
-
-```
-TCP/IP Layer         OSI Equivalent       Protocols
-──────────────────── ──────────────────── ──────────────────────────────
-Application          5 + 6 + 7            HTTP, HTTPS, DNS, FTP, SMTP, SSH
-Transport            4                    TCP, UDP, SCTP
-Internet             3                    IP (v4/v6), ICMP, ARP
-Network Access       1 + 2                Ethernet, Wi-Fi, PPP
-```
+The practical model used on the actual internet. Toggle the view above to see the TCP/IP mapping.
 
 ---
 
@@ -118,13 +104,7 @@ Network Access       1 + 2                Ethernet, Wi-Fi, PPP
 
 As data travels **down** the stack (sending), each layer adds its own **header** (and sometimes trailer). This is called **encapsulation**.
 
-```
-Application:   [  HTTP Request Data  ]
-Transport:     [TCP Header][  HTTP Data  ]               ← segment
-Network:       [IP Header][TCP Header][  Data  ]         ← packet
-Data Link:     [ETH Header][IP][TCP][Data][ETH Trailer]  ← frame
-Physical:      010101001110...                           ← bits
-```
+<DataEncapsulationDiagram />
 
 On the **receiving** side, each layer **strips** its header and passes data up — called **de-encapsulation**.
 
@@ -146,18 +126,7 @@ On the **receiving** side, each layer **strips** its header and passes data up �
 
 ARP bridges Layer 3 (IP) and Layer 2 (MAC). When a host knows the IP address of the destination but needs its MAC address to send a frame:
 
-```
-Host A wants to reach 192.168.1.10:
-
-1. A broadcasts: "Who has 192.168.1.10? Tell 192.168.1.1"
-   Destination MAC: FF:FF:FF:FF:FF:FF (broadcast)
-
-2. Host B replies: "192.168.1.10 is at AA:BB:CC:DD:EE:FF"
-   (unicast reply)
-
-3. A caches the mapping: 192.168.1.10 → AA:BB:CC:DD:EE:FF
-   ARP cache entry (expires after ~20 minutes)
-```
+<ArpProtocolDiagram />
 
 ```bash
 # View ARP cache
@@ -206,23 +175,7 @@ tracert google.com      # Windows
 
 ## Practical Troubleshooting by Layer
 
-```
-Problem: Can't reach website
-  ↓
-Layer 1: Is cable plugged in? Is Wi-Fi connected?   → ifconfig / ip link
-  ↓
-Layer 2: Can I reach the default gateway?            → arp -a, ping gateway
-  ↓
-Layer 3: Can I ping the destination IP?              → ping 8.8.8.8
-         Is routing working?                         → traceroute 8.8.8.8
-  ↓
-Layer 4: Is the port open on the server?             → telnet host 80
-                                                       nc -zv host 80
-  ↓
-Layer 7: Is the HTTP response correct?               → curl -v http://host
-         Is DNS resolving correctly?                 → nslookup domain
-                                                       dig domain
-```
+<TroubleshootingLayerDiagram />
 
 ---
 

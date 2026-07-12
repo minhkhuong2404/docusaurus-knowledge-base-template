@@ -8,6 +8,23 @@ tags: [security, cryptography, public-key, private-key, jwks, mle, tls, signing,
 
 # Keys, Signing, JWKS & TLS
 
+import PublicKeyKeyPairDiagram from '@site/src/components/PublicKeyKeyPairDiagram';
+import DigitalSigningDiagram from '@site/src/components/DigitalSigningDiagram';
+import JwtSigningDiagram from '@site/src/components/JwtSigningDiagram';
+import JwksRotationDiagram from '@site/src/components/JwksRotationDiagram';
+import MleDiagram from '@site/src/components/MleDiagram';
+import KeyStoreTrustStoreDiagram from '@site/src/components/KeyStoreTrustStoreDiagram';
+import TlsHandshakeDiagram from '@site/src/components/TlsHandshakeDiagram';
+import EncryptVsSignChart from '@site/src/components/EncryptVsSignChart';
+import JweAnatomyDiagram from '@site/src/components/JweAnatomyDiagram';
+import MleGatewayDiagram from '@site/src/components/MleGatewayDiagram';
+import CertChainDiagram from '@site/src/components/CertChainDiagram';
+import PfsDiagram from '@site/src/components/PfsDiagram';
+import JwsAnatomyDiagram from '@site/src/components/JwsAnatomyDiagram';
+
+
+
+
 > These concepts are the foundation of modern secure communications. Understanding them deeply separates engineers who "just use HTTPS" from engineers who can design secure systems.
 
 ---
@@ -16,30 +33,7 @@ tags: [security, cryptography, public-key, private-key, jwks, mle, tls, signing,
 
 Asymmetric cryptography uses a **mathematically linked key pair**:
 
-```
-Private Key  →  kept SECRET by the owner (never shared, never transmitted)
-Public Key   →  shared FREELY with anyone
-```
-
-The magic is that operations done with one key can only be undone with the other:
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                   Two Use Cases                                  │
-├───────────────────────┬─────────────────────────────────────────┤
-│  ENCRYPTION           │  SIGNING                                 │
-│                       │                                          │
-│  Encrypt:  PUBLIC key │  Sign:   PRIVATE key                    │
-│  Decrypt: PRIVATE key │  Verify:  PUBLIC key                    │
-│                       │                                          │
-│  "Lock the box so     │  "Prove you wrote this —                │
-│   only Alice can       │   anyone can verify"                    │
-│   open it"             │                                          │
-│                       │                                          │
-│  Use: confidential    │  Use: JWT tokens, webhooks,              │
-│  messages, MLE        │  document signing, code signing          │
-└───────────────────────┴─────────────────────────────────────────┘
-```
+<PublicKeyKeyPairDiagram />
 
 ### Analogy
 
@@ -57,26 +51,7 @@ For signing, invert the analogy: you seal a document with your private seal (pri
 
 Signing proves **who created** a message and that it **hasn't been tampered with**.
 
-```
-SIGNING (done by the issuer — has private key):
-
-  Original Payload → [Hash Function SHA-256] → Digest (32 bytes)
-                                                    ↓
-                                       [Encrypt with PRIVATE key]
-                                                    ↓
-                                              Signature
-
-  Send: Payload + Signature together
-
-
-VERIFICATION (done by recipient — has public key):
-
-  Received Payload → [Hash Function SHA-256] → Digest A
-  Received Signature → [Decrypt with PUBLIC key] → Digest B
-
-  If Digest A == Digest B → ✅ Signature valid: payload not tampered, signer verified
-  If Digest A != Digest B → ❌ Reject: payload was modified or wrong signer
-```
+<DigitalSigningDiagram />
 
 ### Why Sign the Hash, Not the Payload?
 
@@ -120,13 +95,9 @@ String publicKeyPem = "-----BEGIN PUBLIC KEY-----\n"
 
 ---
 
-## JWT Signing — End to End
-
 A JWT is a signed payload. The signature is computed over `Base64Url(header) + "." + Base64Url(payload)`.
 
-```
-JWT = Base64Url(header) + "." + Base64Url(payload) + "." + Base64Url(signature)
-```
+<JwtSigningDiagram />
 
 ```java
 // ─── Issuing a signed JWT (Auth Server) ─────────────────────────
@@ -254,24 +225,7 @@ public class JwksController {
 
 ### Key Rotation with JWKS — Zero Downtime Strategy
 
-```
-BEFORE ROTATION:
-  JWKS: [key-2024-01 (active)]
-  JWTs issued with: kid=key-2024-01
-
-STEP 1 — Add new key to JWKS (both keys published):
-  JWKS: [key-2024-01 (retiring), key-2024-02 (new)]
-  Resource servers now accept tokens from EITHER key
-
-STEP 2 — Switch signing to new key:
-  New JWTs issued with: kid=key-2024-02
-  Old tokens (kid=key-2024-01) still valid until expiry
-
-STEP 3 — After all old tokens expire, remove old key:
-  JWKS: [key-2024-02 (active)]
-
-Result: Zero downtime, no coordinated deployment across services
-```
+<JwksRotationDiagram />
 
 ```java
 @Service
@@ -346,7 +300,8 @@ When working with JSON-formatted tokens (specifically **JSON Web Tokens / JWTs**
 A JWS protects the payload against tampering and guarantees its source. The data inside a standard JWS is **base64url-encoded but readable (not encrypted)**. Anyone who intercepts the token can read the claims.
 
 #### Structure of JWS (3 Parts)
-$$JWS = \text{base64url}(Header) \ . \ \text{base64url}(Payload) \ . \ \text{base64url}(Signature)$$
+
+<JwsAnatomyDiagram />
 
 * **Header:** Specifies the metadata, including the signing algorithm (e.g., `HS256` for HMAC, `RS256` for RSA signatures, `ES256` for ECDSA).
 * **Payload:** The actual JSON claim set (e.g., user profile, roles, scopes).
@@ -397,7 +352,8 @@ public class JwsService {
 A JWE encrypts the payload, ensuring that its contents are completely opaque to intermediate routers, clients, or interceptors. Only the holder of the corresponding decryption key can read it.
 
 #### Structure of JWE (5 Parts)
-$$JWE = \text{base64url}(Header) \ . \ \text{base64url}(EncryptedKey) \ . \ \text{base64url}(IV) \ . \ \text{base64url}(Ciphertext) \ . \ \text{base64url}(AuthTag)$$
+
+<JweAnatomyDiagram />
 
 1. **Protected Header:** Envelope parameters, defining the key management algorithm (`alg`) and symmetric content encryption algorithm (`enc`).
 2. **Encrypted Key:** The symmetric Content Encryption Key (CEK), encrypted using the recipient's public key (RSA-OAEP).
@@ -478,20 +434,7 @@ String nestedJwt = jweService.encryptPayload(jwsToken, recipientPublicKey);
 
 TLS protects the **transport layer** — but what happens when TLS is terminated at a proxy, load balancer, or API gateway? The payload travels in plaintext within your internal network.
 
-```
-Client → [HTTPS/TLS] → API Gateway (TLS terminated here)
-                             ↓ PLAINTEXT inside data center
-                        App Server → DB
-```
-
-**MLE encrypts the payload itself** — independent of the transport layer.
-
-```
-With MLE:
-Client → [HTTPS/TLS] → API Gateway (TLS terminated here)
-                             ↓ STILL ENCRYPTED (MLE)
-                        App Server decrypts payload
-```
+<MleGatewayDiagram />
 
 ### When to Use MLE
 
@@ -503,31 +446,7 @@ Client → [HTTPS/TLS] → API Gateway (TLS terminated here)
 
 ### MLE Request Pattern (Client Encrypts with Server's Public Key)
 
-```
-CLIENT                                    SERVER
-─────                                    ──────
-1. Fetch server's public key
-   (from JWKS or pre-shared)
-
-2. Generate random AES-256 key
-   (Content Encryption Key — CEK)
-
-3. Encrypt payload with CEK (AES-GCM)
-   → ciphertext + IV + auth_tag
-
-4. Encrypt CEK with server's RSA
-   public key (RSA-OAEP)
-   → encrypted_key
-
-5. Package as JWE:
-   Base64(header)
-   .Base64(encrypted_key)              →  Receive JWE
-   .Base64(IV)                            Decrypt encrypted_key with private key
-   .Base64(ciphertext)                    Get CEK
-   .Base64(auth_tag)                      Decrypt payload with CEK
-                                          Verify auth_tag (integrity)
-                                          Process plaintext payload ✅
-```
+<MleDiagram />
 
 ### JWE (JSON Web Encryption) — The Standard for MLE
 
@@ -641,20 +560,7 @@ public Map<String, Object> decryptJwe(String jweString, RSAPrivateKey privateKey
 
 In Java and Spring applications, private keys, public certificates, and trusted Certificate Authorities (CAs) are managed using two different storage files: the **KeyStore** and the **TrustStore**. Under the hood, both use the same binary file format (usually PKCS12), but they serve entirely opposite roles in authentication.
 
-```
-┌──────────────────────────────────────────────────────────┐
-│                   Java Key Managers                      │
-├────────────────────────────┬─────────────────────────────┤
-│  KEYSTORE                  │  TRUSTSTORE                 │
-│                            │                             │
-│  "Who you are"             │  "Who you trust"            │
-│  (Your Passport / ID)      │  (Your list of trusted CAs) │
-│                            │                             │
-│  - Stored Private Keys     │  - Stored Public Certs      │
-│  - Stored Public Certs     │  - Used to verify others    │
-│  - Used to identify self   │                             │
-└────────────────────────────┴─────────────────────────────┘
-```
+<KeyStoreTrustStoreDiagram />
 
 ### Detailed Comparison
 
@@ -780,29 +686,7 @@ TLS provides **confidentiality**, **integrity**, and **server authentication** f
 
 ### TLS 1.3 Handshake — Step by Step
 
-```
-CLIENT                                           SERVER
-──────                                           ──────
-ClientHello
-  supported cipher suites: [TLS_AES_256_GCM_SHA384, ...]
-  key_share: client's ECDH ephemeral public key
-  ───────────────────────────────────────────────────→
-
-                                      ServerHello
-                                        chosen cipher: TLS_AES_256_GCM_SHA384
-                                        key_share: server's ECDH ephemeral public key
-                                      {Certificate}    ← server's X.509 cert (encrypted)
-                                      {CertificateVerify}  ← signature over handshake
-                                      {Finished}       ← HMAC over transcript
-                                      ←───────────────────────────────────────────────
-
-[Both sides derive session keys from ECDH shared secret]
-
-{Finished}
-───────────────────────────────────────────────────→
-
-════════ Encrypted Application Data ════════════════
-```
+<TlsHandshakeDiagram />
 
 **Key insight:** In TLS 1.3, the server certificate is **encrypted** in transit. Only 1 round-trip needed (vs 2 in TLS 1.2).
 
@@ -820,39 +704,11 @@ ClientHello
 
 ### X.509 Certificate Chain of Trust
 
-```
-Root CA (self-signed, pre-installed in OS/browser trust store)
-    ↓ signs
-Intermediate CA certificate
-    ↓ signs
-Server certificate (e.g., *.example.com)
-
-Browser verification:
-  1. Read server cert → find issuer
-  2. Find intermediate CA cert (sent by server)
-  3. Verify intermediate cert signed by root CA (trusted)
-  4. Verify server cert signed by intermediate CA
-  5. Verify cert hostname matches requested domain
-  6. Verify cert not expired
-  7. Check OCSP/CRL → cert not revoked
-```
+<CertChainDiagram />
 
 ### Perfect Forward Secrecy (PFS)
 
-```
-WITHOUT PFS (old RSA key exchange):
-  Session key encrypted with server's long-term RSA private key
-  Attacker records traffic → 5 years later steals private key
-  → Decrypts ALL past sessions ❌
-
-WITH PFS (ECDHE):
-  Session key = ECDH(server_ephemeral_privkey, client_ephemeral_pubkey)
-  Both ephemeral keys discarded after session
-  Even if server's long-term private key is compromised → past sessions safe ✅
-
-TLS 1.3: PFS is MANDATORY (all cipher suites use ECDHE)
-TLS 1.2: PFS requires ECDHE or DHE cipher suites (not RSA key exchange)
-```
+<PfsDiagram />
 
 ### TLS Configuration in Spring Boot
 
@@ -931,23 +787,7 @@ Certificate pinning can cause app outages if the cert rotates without updating t
 
 ## Encryption vs Signing — Decision Chart
 
-```
-Do you need confidentiality (hide the content)?
-  YES → Encrypt
-    Symmetric (fast, large data) → AES-256-GCM
-    Asymmetric (key exchange)    → RSA-OAEP (encrypts AES key)
-    Hybrid (recommended)         → AES-GCM for data + RSA-OAEP for AES key
-
-Do you need authenticity (prove who sent it / detect tampering)?
-  YES → Sign
-    Shared secret available → HMAC-SHA256 (webhooks, internal services)
-    No shared secret        → RSA / ECDSA digital signature (JWTs, public APIs)
-
-Do you need BOTH?
-  → Encrypt THEN Sign (or use authenticated encryption like AES-GCM)
-  → JWE + JWS combined
-  → TLS (does both at transport layer)
-```
+<EncryptVsSignChart />
 
 ---
 
@@ -965,15 +805,93 @@ Do you need BOTH?
 
 ## Interview Questions
 
-1. Explain the difference between encrypting and signing a payload. When would you use each?
-2. If the server's private key is leaked, what past data is at risk? How does Perfect Forward Secrecy change this?
-3. What is JWKS and how does a resource server use it to verify a JWT?
-4. What is the `kid` (Key ID) in a JWT and why is it important for key rotation?
-5. Explain how zero-downtime JWT key rotation works using JWKS.
-6. What is JWE (JSON Web Encryption) and how does it differ from JWT (JWS)?
-7. What is Message-Level Encryption and why is it needed if you already have TLS?
-8. Walk through the TLS 1.3 handshake — what does each step accomplish?
-9. What is a certificate chain of trust? What happens if an intermediate CA is compromised?
-10. What is the difference between `RS256` and `ES256` for JWT signing?
-11. Why is it unsafe to reuse an IV/nonce when using AES-GCM?
-12. In hybrid encryption, why encrypt the AES key with RSA instead of using RSA directly?
+**Q1: Explain the difference between encrypting and signing a payload. When would you use each?**
+
+> * **Encryption** guarantees **confidentiality**. You encrypt a payload using the **recipient's public key** so that only the recipient (who owns the matching private key) can read it. Use case: sending sensitive client data to a payment gateway (Message-Level Encryption).
+> * **Signing** guarantees **authenticity and integrity**. You sign a payload using **your private key** so that any recipient can verify the signature using your public key, proving the message came from you and has not been altered. Use case: issuing JWT authorization tokens to clients.
+
+---
+
+**Q2: If the server's private key is leaked, what past data is at risk? How does Perfect Forward Secrecy change this?**
+
+> * **Without Forward Secrecy (e.g. RSA key exchange):** An attacker who recorded past encrypted network traffic can decrypt all of it retrospectively using the leaked private key.
+> * **With Perfect Forward Secrecy (PFS - e.g. Ephemeral Diffie-Hellman, ECDHE):** The server's private key is only used to *sign* (authenticate) the handshake, not to encrypt the traffic. The actual session keys are generated dynamically for each connection and deleted immediately after. Leaking the private key does not expose past session keys, meaning past recorded traffic remains safe. TLS 1.3 mandates PFS.
+
+---
+
+**Q3: What is JWKS and how does a resource server use it to verify a JWT?**
+
+> **JWKS (JSON Web Key Set)** is a JSON document published by the Authorization Server containing a list of its public keys. When a resource server receives a JWT, it:
+> 1. Decodes the JWT header and reads the `kid` (Key ID) claim.
+> 2. Fetches the JWKS endpoint (typically caching the result to avoid network round-trips).
+> 3. Finds the public key matching the `kid`.
+> 4. Verifies the cryptographic signature of the JWT using that public key.
+
+---
+
+**Q4: What is the `kid` (Key ID) in a JWT and why is it important for key rotation?**
+
+> The `kid` claim in the JWT header is an arbitrary identifier indicating which key in the key set was used to sign the token. It is critical for key rotation because it allows the authentication system to support multiple active signing keys simultaneously. Verifiers can look up the matching verification key immediately without having to guess or brute-force signature checks across all keys.
+
+---
+
+**Q5: Explain how zero-downtime JWT key rotation works using JWKS.**
+
+> To rotate JWT signing keys without causing any verification failures:
+> 1. **Publish New Key:** Generate a new key pair and add the new public key to the JWKS endpoint. The old key remains in the set.
+> 2. **Switch Signer:** Update the authorization server to start signing new JWTs using the new private key (with the new `kid`).
+> 3. **Grace Period:** Resource servers fetch the new key list when they see the new `kid`. Existing tokens signed with the old key remain valid because the old public key is still in the JWKS list.
+> 4. **Retire Old Key:** Once all old tokens have expired, safely remove the old key from the JWKS configuration.
+
+---
+
+**Q6: What is JWE (JSON Web Encryption) and how does it differ from JWT (JWS)?**
+
+> * **JWT (normally JWS - JSON Web Signature):** The payload is digitally signed. The content is merely Base64url-encoded and is fully readable by anyone who intercepts it. It provides integrity and authenticity, but not confidentiality.
+> * **JWE (JSON Web Encryption):** The payload is encrypted using a symmetric encryption key (content encryption key), which is in turn encrypted using the recipient's public key. The payload is unreadable to anyone without the recipient's private key, guaranteeing confidentiality.
+
+---
+
+**Q7: What is Message-Level Encryption and why is it needed if you already have TLS?**
+
+> **TLS** provides hop-by-hop transport security (it encrypts data in transit between the client and server). However, once the request terminates at an API gateway, load balancer, or message broker, it is decrypted.
+> **Message-Level Encryption (MLE)** encrypts the payload itself at the application layer. The data remains encrypted as it travels through intermediate proxies, databases, and logs, and is only decrypted by the final downstream application container, guaranteeing end-to-end data privacy.
+
+---
+
+**Q8: Walk through the TLS 1.3 handshake — what does each step accomplish?**
+
+> TLS 1.3 reduces the handshake to a single round-trip (1-RTT):
+> 1. **Client Hello:** The client sends cryptographic capabilities, supported cipher suites, and an ephemeral Diffie-Hellman key share (Client Share).
+> 2. **Server Hello & Handshake:** The server selects the cipher suite, generates its own key share (Server Share), computes the shared secret key, and sends its public key share. It also sends its encrypted Certificate and a digital signature (Certificate Verify) proving ownership of the private key.
+> 3. **Keys & Finished:** The client verifies the server certificate and signature, derives the shared secret key, and sends a finished message. Application data transmission starts immediately.
+
+---
+
+**Q9: What is a certificate chain of trust? What happens if an intermediate CA is compromised?**
+
+> A certificate chain of trust links an end-entity certificate (your domain cert) to a trusted Root CA certificate via one or more intermediate CA certificates:
+> `Root CA Certificate` → `Intermediate CA Certificate` → `Domain Certificate`.
+> Operating systems and browsers pre-trust Root CAs. When verifying, they walk up the chain verifying signatures.
+> **Compromise:** If an intermediate CA is compromised, all certificates issued below it become untrusted. The intermediate CA's certificate must be revoked immediately via CRL (Certificate Revocation List) or OCSP, causing browsers to reject any certificates signed by it.
+
+---
+
+**Q10: What is the difference between `RS256` and `ES256` for JWT signing?**
+
+> * **RS256 (RSA Signature with SHA-256):** Uses RSA cryptography. Requires large key sizes (minimum 2048-bit) to be secure, resulting in larger JWT header sizes and slower signature generation speeds.
+> * **ES256 (ECDSA with SHA-256 / P-256 curve):** Uses Elliptic Curve cryptography. Provides the same cryptographic strength as a 3072-bit RSA key using only a 256-bit key size. This makes ES256 tokens smaller, faster to compute, and highly efficient for mobile or high-throughput API gateways.
+
+---
+
+**Q11: Why is it unsafe to reuse an IV/nonce when using AES-GCM?**
+
+> AES-GCM converts the block cipher into a stream cipher using a counter. If the same key and Initialization Vector (IV) are used twice, it generates the exact same key stream. An attacker can XOR the two ciphertexts together, removing the key stream entirely. This reveals the XOR of the plaintexts. If one plaintext is known or easily guessed, the other is completely compromised.
+
+---
+
+**Q12: In hybrid encryption, why encrypt the AES key with RSA instead of using RSA directly?**
+
+> 1. **Performance:** RSA is an asymmetric algorithm based on modular exponentiation of large numbers, which is extremely slow. AES uses fast bitwise operations.
+> 2. **Size Constraints:** RSA can only encrypt data smaller than its key size (e.g. 2048-bit RSA can only encrypt up to 245 bytes). AES has no limit.
+> By encrypting the large payload with AES and encrypting only the small 256-bit AES key with RSA, you get the performance of symmetric encryption alongside the key distribution advantages of asymmetric encryption.

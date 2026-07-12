@@ -316,13 +316,84 @@ public Instrumentation queryComplexityInstrumentation() {
 
 ## Interview Questions
 
-1. What is the OWASP API Security Top 10? Describe API1, API4, and API5.
-2. What is mass assignment and how do you prevent it in Spring Boot?
-3. How do you validate file uploads securely? What is path traversal?
-4. Why should API keys be stored hashed, not in plaintext?
-5. What are the unique security concerns of GraphQL APIs compared to REST?
-6. How do you implement multi-tier rate limiting?
-7. How do you prevent over-fetching of sensitive data in API responses?
-8. What is request signing and when is it needed?
-9. What is the difference between BOLA (API1) and BFLA (API5)?
-10. How does nonce-based replay protection work in request signing?
+**Q1: What is the OWASP API Security Top 10? Describe API1, API4, and API5.**
+
+> The **OWASP API Security Top 10** identifies the most critical security vulnerabilities affecting web APIs:
+> * **API1: Broken Object Level Authorization (BOLA / IDOR):** An API endpoint exposes internal object IDs without validating if the current user has permission to access that specific object (e.g. accessing `/api/accounts/123` when you own account 456).
+> * **API4: Unrestricted Resource Consumption:** The API lacks limits on execution resources (e.g., rate limits, file sizes, or memory), permitting Denial of Service (DoS) attacks.
+> * **API5: Broken Function Level Authorization (BFLA):** The API fails to restrict administrative URLs or privilege functions to authorized roles (e.g. standard user accessing `/api/admin/users/delete`).
+
+---
+
+**Q2: What is mass assignment and how do you prevent it in Spring Boot?**
+
+> **Mass Assignment (API6: Unrestricted Endpoint Access / Over-posting):** Occurs when an application binds incoming client request properties (e.g., JSON fields) directly to database entity models. An attacker sends extra properties (e.g. `{"isAdmin": true}` or `{"balance": 9999}`) that get saved automatically to the database.
+> **Prevention in Spring Boot:**
+> 1. **Use distinct DTOs (Data Transfer Objects):** Never bind request parameters directly to JPA `@Entity` classes. Declare a specific record or class for inputs containing only the fields allowed to be updated.
+> 2. **Specify binding annotations:** Use `@JsonIgnore` or validation controls on sensitive entity fields.
+
+---
+
+**Q3: How do you validate file uploads securely? What is path traversal?**
+
+> **Secure File Validation:**
+> 1. **Filename Sanitization:** Remove path characters (`../` or `\`) to prevent directory traversal. Generate a random UUID for the physical storage filename.
+> 2. **MIME-Type & Magic Byte Check:** Never trust the `Content-Type` header sent by the browser. Inspect the file's first few bytes (magic numbers) to verify the file signature matches the extension.
+> 3. **Non-executable Storage:** Store files in external object storage (AWS S3) outside the application web root, and serve them with download headers (`Content-Disposition: attachment`).
+> **Path Traversal:** An attack where an attacker inserts sequence path steps (like `../../etc/passwd`) in file input parameters to access arbitrary system directories on the server.
+
+---
+
+**Q4: Why should API keys be stored hashed, not in plaintext?**
+
+> API keys are equivalent to passwords. If a database is leaked, compromised, or backed up unsafely, plaintext keys allow attackers to instantly authenticate as those clients.
+> **Secure Design:** When issuing an API key, present it to the client only once. Store only the cryptographically hashed version (using a fast hashing algorithm like SHA-256 or bcrypt) in the database. When verifying requests, hash the incoming key header and match it against the database hash.
+
+---
+
+**Q5: What are the unique security concerns of GraphQL APIs compared to REST?**
+
+> GraphQL introduces a single endpoint (typically `/graphql`) where clients request custom queries, creating specific security vulnerabilities:
+> 1. **Deep Query Nesting (DoS):** Attackers request circular relations (e.g., `user { friends { friends { friends } } }`) to exhaust server CPU/memory. (Mitigation: enforce `MaxQueryDepth`).
+> 2. **Introspection Queries:** Anyone can query `__schema` to download the entire API structure and type schema. (Mitigation: disable schema introspection in production).
+> 3. **Batching Attacks:** Attackers bundle thousands of nested requests into a single HTTP post request to bypass standard HTTP rate limits. (Mitigation: limit batch sizes).
+
+---
+
+**Q6: How do you implement multi-tier rate limiting?**
+
+> Implement rate limits at different layers of the infrastructure:
+> * **Layer 1: Edge CDN (Cloudflare):** Block brute-force IP addresses or malicious bots before they touch your cloud environment.
+> * **Layer 2: API Gateway (Spring Cloud Gateway / Kong):** Enforce token bucket algorithms based on API Keys or Client IDs (e.g., max 100 requests/minute per client).
+> * **Layer 3: Application Container (Bucket4j / Redis):** Implement granular, user-level rate limiting (e.g., limiting search actions to 10 queries/minute) to protect database resources.
+
+---
+
+**Q7: How do you prevent over-fetching of sensitive data in API responses?**
+
+> 1. **Jackson JSON Views:** Use `@JsonView` annotations to select which fields are serialized to JSON depending on the controller context.
+> 2. **DTO Projection:** Query only selected database fields using Spring Data projections, keeping unneeded entity columns out of memory.
+> 3. **API Contracts:** Establish rigorous schema contracts and write unit/integration tests verifying that sensitive internal identifiers are not present in serialized JSON payloads.
+
+---
+
+**Q8: What is request signing and when is it needed?**
+
+> **Request Signing** is a protocol where the client generates a cryptographic signature of the HTTP request payload and headers using a private secret key, and attaches it as a header (e.g. `X-Signature`).
+> **When needed:** For high-security machine-to-machine integrations (e.g., financial APIs, webhook notifications, payment processors like Stripe). It prevents tampering (requests cannot be altered in transit without invalidating the signature) and guarantees authenticity (only the owner of the private secret key could have signed it).
+
+---
+
+**Q9: What is the difference between BOLA (API1) and BFLA (API5)?**
+
+> * **BOLA (Broken Object Level Authorization):** Focuses on **data records**. The user has access to the endpoint, but accesses a record ID they don't own (e.g. standard User A accesses `/api/orders/999` which belongs to User B).
+> * **BFLA (Broken Function Level Authorization):** Focuses on **roles/actions**. A lower-privileged user executes an administrative API function they should not have access to (e.g. standard User A calls `/api/admin/users/123/suspend`).
+
+---
+
+**Q10: How does nonce-based replay protection work in request signing?**
+
+> To prevent an attacker from intercepting a signed request and replaying it later:
+> 1. The client adds a unique random value (`nonce`) and a timestamp (`timestamp`) to the signature calculation and headers.
+> 2. The server receives the request and validates the timestamp is within tolerance (e.g. last 5 minutes).
+> 3. The server checks a fast cache (Redis) to see if the `nonce` was already used in that time window. If yes, the request is rejected as a replay attack. If no, the `nonce` is cached until the timestamp window expires.

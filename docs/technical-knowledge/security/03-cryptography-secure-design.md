@@ -248,13 +248,76 @@ boolean safe = MessageDigest.isEqual(
 
 ## Interview Questions
 
-1. What is the difference between encryption and hashing? When do you use each?
-2. Why is AES-GCM preferred over AES-CBC?
-3. What is the difference between a MAC (HMAC) and a digital signature?
-4. Why must IVs be unique (even if not secret) in AES-GCM?
-5. What is hybrid encryption and why is it used instead of pure RSA?
-6. What is a timing attack and how do you prevent it in Java?
-7. What is key rotation and how do you implement it without losing access to old data?
-8. Why is MD5 broken and what should you use instead for file integrity checks?
-9. What is a rainbow table attack and why does salting prevent it?
-10. What is the purpose of the GCM authentication tag?
+**Q1: What is the difference between encryption and hashing? When do you use each?**
+
+> * **Encryption** is a two-way mathematical operation. It takes plaintext and a key, converts it to ciphertext (confidentiality), and can be decrypted back to plaintext using the correct decryption key. Use cases: storing database records at rest (AES), sending payloads over HTTPS (TLS/RSA).
+> * **Hashing** is a one-way mathematical function. It takes an input of arbitrary length and produces a fixed-size string (the digest). It is computationally infeasible to reverse a hash. Use cases: verifying file integrity (SHA-256), storing passwords safely (BCrypt/Argon2id), cache key generation.
+
+---
+
+**Q2: Why is AES-GCM preferred over AES-CBC?**
+
+> * **AES-CBC (Cipher Block Chaining)** only provides **confidentiality** (encryption). It is vulnerable to tampering attacks (like padding oracle attacks) because it does not verify message integrity.
+> * **AES-GCM (Galois/Counter Mode)** is an **AEAD (Authenticated Encryption with Associated Data)** mode. It provides both **confidentiality** AND **integrity (authenticity)** by computing an authentication tag (MAC) alongside the ciphertext. If an attacker tampers with even a single bit of the ciphertext, decryption fails automatically during tag validation, preventing decryption oracle attacks.
+
+---
+
+**Q3: What is the difference between a MAC (HMAC) and a digital signature?**
+
+> * **HMAC (Hash-based Message Authentication Code)** uses a **symmetric shared secret**. Both the sender and receiver use the *same* secret key to generate and verify the MAC. It guarantees integrity and authenticity, but does *not* provide non-repudiation (since both parties have the key, either could have generated the message).
+> * **Digital Signature** uses **asymmetric cryptography**. The sender signs with their **private key**, and anyone can verify using the sender's **public key**. It provides integrity, authenticity, AND **non-repudiation** (only the private key owner could have signed it).
+
+---
+
+**Q4: Why must IVs be unique (even if not secret) in AES-GCM?**
+
+> AES-GCM is a stream cipher mode. If the same key and Initialization Vector (IV) are used to encrypt two different plaintexts, it produces the same key stream. An attacker can XOR the two ciphertexts together, eliminating the key stream entirely and leaving `Plaintext1 XOR Plaintext2`. If the attacker knows or guesses one plaintext, they can instantly recover the other. This is known as a **forbidden attack** in cryptography and completely compromises security.
+
+---
+
+**Q5: What is hybrid encryption and why is it used instead of pure RSA?**
+
+> Asymmetric encryption (like RSA) is mathematically intensive and can only encrypt payloads smaller than the key size (e.g. a 2048-bit RSA key can only encrypt ~245 bytes of data). Symmetric encryption (like AES) is fast and handles arbitrary payload sizes, but requires a pre-shared key.
+>
+> **Hybrid Encryption** combines both:
+> 1. The sender generates a random temporary symmetric key (Session Key).
+> 2. The sender encrypts the large payload using **AES** with the Session Key.
+> 3. The sender encrypts the tiny Session Key using the recipient's public **RSA** key.
+> 4. The recipient decrypts the Session Key using their private RSA key, then decrypts the payload using AES.
+
+---
+
+**Q6: What is a timing attack and how do you prevent it in Java?**
+
+> A timing attack is a side-channel attack where an attacker measures the exact time it takes to compare strings (like API keys or hashes). Standard string comparison (`String.equals()`) returns `false` as soon as the first mismatching character is found (fail-fast). By sending variations and measuring responses, an attacker can guess a secret byte-by-byte.
+>
+> **Prevention:** Use **constant-time comparisons**. In Java, use `MessageDigest.isEqual(a, b)`, which compares all bytes of the arrays regardless of when a mismatch is found, ensuring identical execution timing.
+
+---
+
+**Q7: What is key rotation and how do you implement it without losing access to old data?**
+
+> Key rotation is the practice of replacing active cryptographic keys with new ones. To rotate keys without losing access to old data:
+> 1. **Envelope Encryption:** Wrap each data payload's encryption key (Data Encryption Key, DEK) with a master key (Key Encryption Key, KEK).
+> 2. **Key Versioning:** Store a metadata prefix alongside the ciphertext indicating which key version was used (e.g., `v2:ciphertext`).
+> 3. **Validation:** When reading data, check the version prefix, fetch the corresponding old public/secret key from the keystore, decrypt the DEK/payload, and write new data using the latest active key version.
+
+---
+
+**Q8: Why is MD5 broken and what should you use instead for file integrity checks?**
+
+> MD5 is broken because it is vulnerable to **collision attacks**. Attackers can generate two completely different files (e.g., a benign installer and a malicious trojan) that produce the exact same MD5 hash. For secure integrity checks, use **SHA-256** or **SHA-512**, where no hash collisions have been found.
+
+---
+
+**Q9: What is a rainbow table attack and why does salting prevent it?**
+
+> A rainbow table is a pre-computed database of dictionary words and their corresponding hashes. If database hashes are stolen, attackers look up hashes in the table to instantly retrieve the plaintext passwords.
+>
+> **Salting** is appending a unique, random string of bytes to each password *before* hashing. Because every user has a different salt, pre-computed rainbow tables cannot match the salted hash, forcing attackers to compute hashes individually for each user, which is computationally expensive.
+
+---
+
+**Q10: What is the purpose of the GCM authentication tag?**
+
+> The GCM authentication tag (or Galois Message Authentication Code) is a 128-bit integrity check generated during encryption. It is computed from the ciphertext, key, IV, and optional Associated Data (AAD). During decryption, the tag is recomputed and verified. If the ciphertext or IV has been tampered with or modified in transit, the tags will mismatch, causing decryption to fail instantly, blocking padding or bit-flipping attacks.

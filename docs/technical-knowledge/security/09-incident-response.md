@@ -8,20 +8,17 @@ tags: [incident-response, siem, forensics, detection, vulnerability-management, 
 
 # Incident Response & Security Operations
 
+import NistLifecycleDiagram from '@site/src/components/NistLifecycleDiagram';
+import PostIncidentTemplateDiagram from '@site/src/components/PostIncidentTemplateDiagram';
+
+
 > The question is not *whether* you'll have a security incident — it's whether you'll be **prepared** when it happens.
 
 ---
 
 ## Incident Response Lifecycle (NIST)
 
-```
-1. PREPARATION    — Build IR capability before incidents happen
-2. DETECTION      — Identify that an incident has occurred
-3. CONTAINMENT    — Stop the damage from spreading
-4. ERADICATION    — Remove the threat from environment
-5. RECOVERY       — Restore systems to normal operation
-6. POST-INCIDENT  — Learn and improve
-```
+<NistLifecycleDiagram />
 
 ---
 
@@ -116,35 +113,7 @@ aws iam delete-access-key --access-key-id AKIAIOSFODNN7EXAMPLE
 
 ## Phase 6: Post-Incident Review Template
 
-```markdown
-## Post-Incident Review — INC-2024-001
-
-**Severity:** P1 Critical
-**Duration:** 4h 23min
-
-### Timeline
-- 14:00 — Alert: anomalous S3 access pattern
-- 14:15 — On-call acknowledged
-- 14:45 — Scope: 50,000 user emails accessed
-- 15:30 — Compromised credential rotated
-- 18:23 — All-clear declared
-
-### Root Cause
-Long-lived AWS access key exposed in public GitHub repo (committed 6 months ago).
-
-### Contributing Factors
-- No secrets scanning in CI pipeline
-- Access key had overly broad S3 permissions (s3:* on all buckets)
-- No CloudTrail alert on unusual S3 GetObject patterns
-
-### Action Items
-| Action | Owner | Due |
-|---|---|---|
-| Add Gitleaks to all repos | DevOps | +7 days |
-| Audit all IAM access keys | Security | +7 days |
-| Add S3 CloudTrail alerting | Security | +14 days |
-| Implement least-privilege IAM | IAM team | +30 days |
-```
+<PostIncidentTemplateDiagram />
 
 ---
 
@@ -174,13 +143,96 @@ Long-lived AWS access key exposed in public GitHub repo (committed 6 months ago)
 
 ## Interview Questions
 
-1. Describe the 6 phases of the NIST incident response lifecycle.
-2. How do you contain a compromised user account in a microservices system?
-3. What is dwell time and why does it matter?
-4. What should a post-incident review cover?
-5. What is CVSS and how does it drive remediation SLAs?
-6. What is the difference between vulnerability assessment and penetration testing?
-7. What security events should trigger an alert in your system?
-8. How do you handle a situation where an AWS access key is committed to GitHub?
-9. What metrics would you track to measure the effectiveness of a security program?
-10. What is threat hunting and how does it differ from reactive incident response?
+**Q1: Describe the 6 phases of the NIST incident response lifecycle.**
+
+> The **NIST SP 800-61** framework defines 4 core phases (which expand to 6 logical operational phases):
+> 1. **Preparation:** Establishing tools, playbooks, communication channels, and training before an incident occurs.
+> 2. **Detection & Analysis:** Identifying signs of a compromise (alerts, anomalies) and validating if they represent a real security incident.
+> 3. **Containment:** Limiting the damage and preventing the threat from spreading (e.g. isolating networks or disabling accounts).
+> 4. **Eradication:** Removing the threat components, malware, or compromised keys from the environment.
+> 5. **Recovery:** Restoring systems to normal operation, verifying clean backups, and verifying security guards are active.
+> 6. **Post-Incident Activity (Lessons Learned):** Conducting a post-mortem to analyze the incident root cause and improve future preparation.
+
+---
+
+**Q2: How do you contain a compromised user account in a microservices system?**
+
+> 1. **Invalidate Active Sessions:** Delete the session record from the shared session store (Redis) or add the active token's `jti` to the revoked token blacklist.
+> 2. **Disable the User Account:** Update the user database status to `DISABLED` or `SUSPENDED` to reject subsequent authentication requests.
+> 3. **Trigger Token Rotation:** Force revocation of all issued refresh tokens associated with that user.
+> 4. **Terminate Network Connections:** In high-severity scenarios, temporarily terminate active WebSocket connections or force API Gateways to drop the user's IP.
+
+---
+
+**Q3: What is dwell time and why does it matter?**
+
+> **Dwell Time** is the duration between an attacker's initial breach of a system and the moment the security team detects the compromise.
+> **Why it matters:** The longer an attacker stays inside the network undetected (high dwell time), the more time they have to perform reconnaissance, escalate privileges, exfiltrate sensitive data, or install persistent backdoors, drastically increasing the financial and reputational damage of the breach.
+
+---
+
+**Q4: What should a post-incident review cover?**
+
+> A post-incident review (post-mortem) should cover:
+> 1. **Timeline of events:** Exactly when the compromise occurred, when it was detected, and when containment was achieved.
+> 2. **Root Cause Analysis (RCA):** How the attacker gained access and why initial defenses failed.
+> 3. **Incident Response Performance:** What went well, what bottlenecks delayed response, and where playbooks were missing.
+> 4. **Remediation Plan:** A list of actionable tickets with clear owners to patch the vulnerability and improve detection.
+> 5. **No Blame Culture:** Focus on systemic process improvements rather than human error.
+
+---
+
+**Q5: What is CVSS and how does it drive remediation SLAs?**
+
+> **CVSS (Common Vulnerability Scoring System)** is a standardized framework for rating the severity of software vulnerabilities on a scale from 0.0 to 10.0.
+> **Remediation SLAs:** Organizations map CVSS scores to response timelines:
+> * **Critical (9.0 - 10.0):** Patch within 24 to 48 hours.
+> * **High (7.0 - 8.9):** Patch within 14 to 30 days.
+> * **Medium (4.0 - 6.9):** Patch within 60 to 90 days.
+> * **Low (0.1 - 3.9):** Address as part of scheduled maintenance.
+
+---
+
+**Q6: What is the difference between vulnerability assessment and penetration testing?**
+
+> * **Vulnerability Assessment:** A systematic, automated scan of the environment to discover and catalog known vulnerabilities (e.g. running Nessus or Qualys). It flags potential issues but does not attempt to exploit them.
+> * **Penetration Testing:** A manual, goal-oriented security assessment where ethical hackers actively attempt to exploit vulnerabilities and chain them together to bypass security controls, simulating a real-world target breach.
+
+---
+
+**Q7: What security events should trigger an alert in your system?**
+
+> High-priority events that require security alerts:
+> 1. Multiple consecutive failed login attempts on a single account (brute-force).
+> 2. Successful login from an unexpected geographical location or new device profile.
+> 3. Creation of new administrative users or roles.
+> 4. Modification of critical security groups, firewall rules, or DNS settings.
+> 5. Large data export requests or mass database reads matching exfiltration profiles.
+> 6. Execution of unauthorized system processes or shell commands in containers.
+
+---
+
+**Q8: How do you handle a situation where an AWS access key is committed to GitHub?**
+
+> 1. **Immediate Revocation:** Delete or deactivate the key in AWS IAM Console. Do not wait to rewrite git history.
+> 2. **Scan AWS CloudTrail:** Audit the logs for the compromised key ID to verify if it was used to perform any actions (e.g. launching EC2 instances or creating new IAM profiles).
+> 3. **Purge Git History:** Run BFG Repo-Cleaner or `git-filter-repo` to delete the secret from all repository commits and push the rewritten history.
+> 4. **Eradication Check:** Terminate any unauthorized instances or resources launched during the compromise window.
+
+---
+
+**Q9: What metrics would you track to measure the effectiveness of a security program?**
+
+> Key Security Metrics:
+> * **MTTD (Mean Time to Detect):** Average time taken to discover a security incident.
+> * **MTTR (Mean Time to Respond/Contain):** Average time taken to mitigate a breach after detection.
+> * **Vulnerability Remediation Time:** Average time to patch vulnerabilities relative to SLAs.
+> * **Phishing Fail Rate:** Percentage of employees who click mock phishing links in simulations.
+> * **Coverage metrics:** Percentage of codebases covered by active SAST/SCA scanners.
+
+---
+
+**Q10: What is threat hunting and how does it differ from reactive incident response?**
+
+> * **Reactive Incident Response:** Triggered by alerts from security monitors (e.g., SIEM, antivirus, WAF). You respond only after a security tool flags an event.
+> * **Threat Hunting:** A proactive, hypothesis-driven search through logs, endpoints, and networks to identify stealthy attackers or anomalies that bypassed automated security alerts. It assumes the network has already been breached and looks for hidden footprints.

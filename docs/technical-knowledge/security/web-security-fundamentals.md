@@ -8,6 +8,15 @@ tags: [security, authentication, jwt, cookies, cors, csrf, cqrs]
 
 # Web Security & Authentication Fundamentals
 
+import AuthNvsAuthZDiagram from '@site/src/components/AuthNvsAuthZDiagram';
+import SessionAuthDiagram from '@site/src/components/SessionAuthDiagram';
+import TokenAuthDiagram from '@site/src/components/TokenAuthDiagram';
+import CorsDiagram from '@site/src/components/CorsDiagram';
+import CsrfDiagram from '@site/src/components/CsrfDiagram';
+import CqrsVsCsrfDiagram from '@site/src/components/CqrsVsCsrfDiagram';
+
+
+
 For anyone building web applications, understanding how systems authenticate users, authorize actions, and defend against web vulnerabilities is a critical foundational skill. This guide breaks down these concepts step-by-step using clear analogies, workflows, and logical explanations designed specifically for new learners.
 
 ---
@@ -16,16 +25,7 @@ For anyone building web applications, understanding how systems authenticate use
 
 Although they sound similar, **Authentication** and **Authorization** serve two completely different security goals.
 
-```
-┌──────────────────────────────────────┐
-│            Who are you?              │ ──► Authentication (AuthN)
-└──────────────────────────────────────┘
-                   │
-                   ▼
-┌──────────────────────────────────────┐
-│     What are you allowed to do?      │ ──► Authorization (AuthZ)
-└──────────────────────────────────────┘
-```
+<AuthNvsAuthZDiagram />
 
 ### The Airport Analogy
 * **Authentication (AuthN):** When you arrive at the airport, you show your **passport** to the security agent. The agent checks your photo and name to verify that **you are indeed who you claim to be**.
@@ -49,22 +49,7 @@ A cookie is a tiny text file that a server asks your web browser to store. Once 
 ### How Session-Based Auth Works
 In session-based authentication, the user's logged-in state is saved **on the server**.
 
-```
-Client (Browser)                                         Server (API)
-      │                                                       │
-      ├────── 1. POST /login (Username & Password) ──────────►│
-      │                                                       │ (Validates credentials)
-      │                                                       │ (Creates Session object in DB/Redis)
-      │                                                       │ (Generates random Session ID)
-      │◄───── 2. Response + Set-Cookie: SESSION_ID=abc123 ────┤
-      │                                                       │
-(Stores cookie)                                               │
-      │                                                       │
-      ├────── 3. GET /dashboard (Cookie: SESSION_ID=abc123) ─►│
-      │                                                       │ (Reads Cookie header)
-      │                                                       │ (Looks up "abc123" in session database)
-      │◄───── 4. Response (Dashboard data) ───────────────────┤
-```
+<SessionAuthDiagram />
 
 ### Key Characteristics
 * **State Location:** Server-side (Session database, Redis cache, or memory).
@@ -95,20 +80,7 @@ A "Bearer Token" is an access token format where the holder (the "bearer") of th
 
 `Authorization: Bearer <your_jwt_token_here>`
 
-```
-Client (Browser)                                         Server (API)
-      │                                                       │
-      ├────── 1. POST /login (Credentials) ──────────────────►│
-      │                                                       │ (Validates credentials)
-      │                                                       │ (Generates signed JWT)
-      │◄───── 2. Response (Access Token & Refresh Token) ─────┤
-(Stores token in memory)                                      │
-      │                                                       │
-      ├────── 3. GET /profile (Authorization: Bearer <jwt>) ──►│
-      │                                                       │ (Verifies Signature + Expiration)
-      │                                                       │ (No database lookup required!)
-      │◄───── 4. Response (Profile data) ─────────────────────┤
-```
+<TokenAuthDiagram />
 
 ### Access Tokens vs. Refresh Tokens
 Because JWT verification is stateless, a stolen JWT can be used by an attacker until it naturally expires. To limit this risk, we use two tokens:
@@ -148,22 +120,7 @@ Cross-Origin Example (CORS required):
 ### How CORS Works (Preflight Requests)
 When your browser makes a cross-origin request that could modify data (like a `POST`, `PUT`, or `DELETE`), it sends an initial, automated check called a **Preflight Request**:
 
-```
-Browser                                                  Server (API)
-   │                                                          │
-   ├────── 1. OPTIONS /api/data (Preflight Request) ─────────►│
-   │          Origin: http://frontend.myapp.com               │
-   │          Access-Control-Request-Method: POST             │
-   │                                                          │ (Evaluates Origin)
-   │◄───── 2. Response: 200 OK ───────────────────────────────┤
-   │          Access-Control-Allow-Origin: http://frontend... │
-   │          Access-Control-Allow-Methods: POST, GET         │
-   │                                                          │
-(Checks if Origin is approved)                                │
-   │                                                          │
-   ├────── 3. POST /api/data (Actual Request) ───────────────►│
-   │◄───── 4. Response (Success data) ────────────────────────┤
-```
+<CorsDiagram />
 
 If the server fails to return the correct `Access-Control-Allow-Origin` header, the browser blocks the response, throwing a CORS error.
 
@@ -171,7 +128,7 @@ If the server fails to return the correct `Access-Control-Allow-Origin` header, 
 
 ## 5. CSRF (Cross-Site Request Forgery)
 
-CSRF is an exploit where a malicious website tricks a victim's browser into executing an unwanted action on a trusted site where the victim is currently logged in.
+<CsrfDiagram />
 
 ### How the Attack Works
 1. You log into your banking application (`http://bank.com`).
@@ -199,17 +156,7 @@ If you must use cookies for authentication, protect your application using:
 
 Because their acronyms are similar, new learners sometimes confuse **CSRF** and **CQRS**. However, they belong to completely different disciplines in software development!
 
-```
-┌──────────────────────────────────────┐
-│                 CSRF                 │ ──► Security Vulnerability
-│    (Cross-Site Request Forgery)      │     Defends against unauthorized browser actions
-└──────────────────────────────────────┘
-
-┌──────────────────────────────────────┐
-│                 CQRS                 │ ──► Architecture / System Design Pattern
-│(Command Query Responsibility Segreg.)│     Separates read models from write models
-└──────────────────────────────────────┘
-```
+<CqrsVsCsrfDiagram />
 
 ### CSRF: A Security Concern
 * **What it is:** An attack vector where a malicious site forces browsers to run state-changing commands on another application.

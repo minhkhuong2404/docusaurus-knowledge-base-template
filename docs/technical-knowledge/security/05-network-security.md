@@ -8,34 +8,23 @@ tags: [network-security, firewall, vpn, ddos, dns, zero-trust, network-segmentat
 
 # Network Security
 
+import NetworkSegmentationDiagram from '@site/src/components/NetworkSegmentationDiagram';
+import SecurityGroupsDiagram from '@site/src/components/SecurityGroupsDiagram';
+import WafDiagram from '@site/src/components/WafDiagram';
+import DdosMitigationDiagram from '@site/src/components/DdosMitigationDiagram';
+import DnsSecurityDiagram from '@site/src/components/DnsSecurityDiagram';
+import ZeroTrustDiagram from '@site/src/components/ZeroTrustDiagram';
+import MtlsDiagram from '@site/src/components/MtlsDiagram';
+import SshHardeningDiagram from '@site/src/components/SshHardeningDiagram';
+
+
 ---
 
 ## Network Segmentation
 
 Divide network into isolated zones. Limit blast radius of a breach.
 
-```
-Internet
-    │
-   [WAF]
-    │
-  DMZ (Demilitarized Zone)
-  ├─ Load Balancers
-  ├─ API Gateway
-  │
- [Firewall]
-  │
- Application Tier (private subnet)
-  ├─ App Servers
-  ├─ Worker Services
-  │
- [Firewall]
-  │
- Data Tier (most restricted)
-  ├─ Databases (PostgreSQL, Redis)
-  ├─ Message Queues
-  ├─ Secrets Store (Vault)
-```
+<NetworkSegmentationDiagram />
 
 ### Cloud Network (AWS VPC)
 
@@ -59,21 +48,7 @@ Data Subnets (no internet route):
 
 ## Security Groups (Default Deny)
 
-```
-Application Server:
-  Inbound:
-    HTTPS (443) ← Load Balancer SG only
-    SSH   (22)  ← Bastion Host SG only
-  Outbound:
-    PostgreSQL (5432) → DB Security Group only
-    Redis (6379)      → Cache Security Group only
-    HTTPS (443)       → 0.0.0.0/0 (external API calls)
-
-Database:
-  Inbound:
-    PostgreSQL (5432) ← App Server SG only
-  Outbound: NONE
-```
+<SecurityGroupsDiagram />
 
 ---
 
@@ -109,9 +84,7 @@ Sits in front of your app. Filters malicious HTTP traffic before it reaches appl
 - Geographic IP blocking
 - Rate limiting by IP
 
-```
-Internet → CloudFront (CDN) → WAF Rules → Load Balancer → App
-```
+<WafDiagram />
 
 ```yaml
 # AWS WAF Terraform
@@ -158,13 +131,7 @@ resource "aws_wafv2_web_acl" "main" {
 
 ### Defense Layers
 
-```
-1. Upstream scrubbing (Cloudflare, AWS Shield) → absorbs volumetric attacks at edge
-2. Rate limiting per IP at CDN/WAF → HTTP flood mitigation
-3. Application-level rate limiting (Redis) → per-user, per-endpoint
-4. Auto-scaling + CDN offload → absorb traffic spikes
-5. Circuit breakers on downstream calls → prevent cascade failure
-```
+<DdosMitigationDiagram />
 
 ```yaml
 # Slowloris defense — aggressive timeouts
@@ -182,21 +149,7 @@ server:
 
 ### DNSSEC — Prevent Cache Poisoning
 
-```
-Normal DNS:  api.example.com → 1.2.3.4  (unverified)
-DNSSEC:      api.example.com → 1.2.3.4 + digital signature
-             → Client verifies signature → tampering detected
-```
-
-### DNS Rebinding Attack
-
-```
-1. Attacker controls attacker.com → resolves to 1.2.3.4
-2. Victim visits attacker.com → JavaScript loaded
-3. Attacker changes DNS TTL to 0, rebinds to 192.168.1.1 (victim's router)
-4. JavaScript makes requests to 192.168.1.1 using attacker.com origin
-→ Bypasses same-origin policy!
-```
+<DnsSecurityDiagram />
 
 **Defense:** Validate `Host` header, use HTTPS, bind services to specific IPs.
 
@@ -204,21 +157,7 @@ DNSSEC:      api.example.com → 1.2.3.4 + digital signature
 
 ## Zero Trust Networking
 
-### Traditional VPN Model
-```
-Employee → VPN → "Inside" network → Access ALL internal services
-Problem: Once inside, lateral movement is trivial
-```
-
-### Zero Trust Network Access (ZTNA)
-```
-Every access request:
-  1. Verified identity (MFA required)
-  2. Device health check (MDM compliance)
-  3. Least-privilege access to SPECIFIC app only
-  4. Continuous verification (not just at login)
-  5. All traffic encrypted — even internal
-```
+<ZeroTrustDiagram />
 
 ---
 
@@ -227,12 +166,7 @@ Every access request:
 Regular TLS: **server** proves identity to client.
 mTLS: **both sides** prove identity via certificates.
 
-```
-Service A ←─ present cert ──→ Service B
-             verify each other
-             ← encrypted session →
-No API keys needed — the certificate IS the identity
-```
+<MtlsDiagram />
 
 ```yaml
 # Istio — automatic mTLS for all pods
@@ -269,25 +203,90 @@ Protocol 2
 Ciphers aes256-gcm@openssh.com,chacha20-poly1305@openssh.com
 ```
 
-### Bastion Host
+### SSH Bastion Access
 
-```
-Developer → Internet → Bastion Host (hardened, MFA, all sessions logged)
-                             ↓
-                      Internal Servers (not directly accessible)
-```
+<SshHardeningDiagram />
 
 ---
 
 ## Interview Questions
 
-1. What is network segmentation and why is it important?
-2. What is the difference between a WAF and a firewall?
-3. How do you defend against a DDoS attack? What layers of defense exist?
-4. What is the difference between TLS and mTLS?
-5. What is DNS cache poisoning and how does DNSSEC prevent it?
-6. What is the Zero Trust security model?
-7. What is a Slowloris attack and how do you defend against it?
-8. How do security groups differ from network ACLs in AWS?
-9. What is a bastion host and when would you use one?
-10. What is DNS rebinding and what defenses exist?
+**Q1: What is network segmentation and why is it important?**
+
+> **Network Segmentation** is the practice of splitting a network into smaller, isolated subnetworks (zones) using firewalls, VLANs, and security groups.
+> **Why it is important:** It prevents lateral movement. If an attacker compromises a public-facing web server in the DMZ, network segmentation rules prevent them from directly connecting to database servers or internal active directory clusters, limiting the blast radius of a breach.
+
+---
+
+**Q2: What is the difference between a WAF and a firewall?**
+
+> * **Traditional Firewall (Network Layer):** Operates at Layers 3 and 4 of the OSI model. It filters traffic based on source/destination IP addresses, protocols, and port numbers (e.g. block port 22, allow port 443).
+> * **WAF (Web Application Firewall):** Operates at Layer 7 (Application Layer). It inspects the actual content of HTTP requests (headers, cookies, query parameters, POST bodies) to identify and block application attacks like SQL Injection, XSS, CSRF, and bot traffic.
+
+---
+
+**Q3: How do you defend against a DDoS attack? What layers of defense exist?**
+
+> A robust DDoS defense requires a multi-layered approach:
+> 1. **Edge Mitigation (Cloudflare, AWS Shield):** Absorbs high-volume Layer 3/4 flood attacks (SYN flood, UDP reflection) before they reach your network infrastructure.
+> 2. **Rate Limiting & WAF:** Mitigates Layer 7 attacks (HTTP floods) by rate-limiting client IPs or identifying malicious user-agent signatures.
+> 3. **Anycast Routing:** Spreads traffic loads across a globally distributed network of servers.
+> 4. **Auto-scaling:** Ensures application clusters automatically scale out to absorb traffic spikes without collapsing.
+
+---
+
+**Q4: What is the difference between TLS and mTLS?**
+
+> * **One-way TLS:** Only the **client verifies the server's identity**. The server presents its public certificate, the client verifies it, and an encrypted channel is established. (e.g. standard HTTPS browsing).
+> * **mTLS (Mutual TLS):** **Both parties verify each other's identity**. The server requests the client's certificate, and the client presents it. Both verify the signatures against trusted CAs. If validation fails on either side, the connection terminates. mTLS is commonly used for secure service-to-service communication in microservices and zero-trust API architectures.
+
+---
+
+**Q5: What is DNS cache poisoning and how does DNSSEC prevent it?**
+
+> **DNS Cache Poisoning:** An attacker injects fraudulent DNS records into a caching resolver's memory (e.g. mapping `bank.com` to the attacker's IP). Subsequent queries route victims to the fake site.
+> **DNSSEC Prevention:** DNSSEC adds digital signatures to DNS records using public-key cryptography. Resolvers verify the cryptographic signatures against trust chains starting at the root domain, ensuring records are authentic and have not been tampered with.
+
+---
+
+**Q6: What is the Zero Trust security model?**
+
+> Zero Trust is a security framework based on the principle: **"Never trust, always verify."**
+> Traditional models assume anything inside the network boundary is safe. Zero Trust treats all network segments as hostile. It requires:
+> 1. Strict identity validation for every user and device (MFA, health checks).
+> 2. Micro-segmentation (limiting network visibility between services).
+> 3. Continuous authorization (validating permissions on every transaction, not just at login).
+
+---
+
+**Q7: What is a Slowloris attack and how do you defend against it?**
+
+> A Slowloris attack is a Layer 7 DDoS attack where an attacker opens many connections to a web server and holds them open by sending incomplete HTTP headers at a very slow rate. This consumes the server's maximum thread/connection pool, denying service to legitimate users.
+> **Defense:**
+> 1. Use reverse proxies (Nginx, HAProxy) which buffer incoming connections and headers completely before passing them to backend app servers.
+> 2. Configure aggressive connection and read timeouts on the web server.
+> 3. Restrict the maximum connections allowed per client IP.
+
+---
+
+**Q8: How do security groups differ from network ACLs in AWS?**
+
+> * **Security Groups (Stateful):** Act as a firewall for resource instances (e.g., EC2, RDS). Rules operate at the instance level. They are stateful: if you allow inbound traffic on port 443, outbound response traffic is automatically allowed.
+> * **Network ACLs (Stateless):** Act as a firewall at the subnet level. They are stateless: if you allow inbound traffic, you must explicitly configure a rule to allow the corresponding outbound response traffic. Rules are processed in numerical order.
+
+---
+
+**Q9: What is a bastion host and when would you use one?**
+
+> A bastion host is a highly secure, public-facing server used to proxy administrative access to servers sitting inside a private subnet (no public IP).
+> **When to use:** When system administrators need to connect via SSH or RDP to internal databases or compute nodes. All traffic must go through the bastion host, which enforces MFA, restricts source IPs, and records audit logs of all sessions.
+
+---
+
+**Q10: What is DNS rebinding and what defenses exist?**
+
+> DNS rebinding is an attack where a malicious script in a victim's browser bypasses the Same-Origin Policy (SOP). The attacker registers a domain name and maps it to a malicious IP with a tiny TTL. Once the script loads, the domain is rebound to a local private IP (e.g. `127.0.0.1` or internal router). The browser script can now make requests to local network resources.
+> **Defenses:**
+> 1. Validate the `Host` header on the server side; reject requests matching arbitrary or unexpected host headers.
+> 2. Enforce authentication on all local APIs/devices.
+> 3. Configure DNS resolvers to block responses containing private IP ranges.
