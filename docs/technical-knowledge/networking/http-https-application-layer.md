@@ -8,6 +8,19 @@ sidebar_position: 5
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import HttpIntroDiagram from '@site/src/components/HttpIntroDiagram';
+import HttpWhatIsDiagram from '@site/src/components/HttpWhatIsDiagram';
+import HttpMethodDecisionDiagram from '@site/src/components/HttpMethodDecisionDiagram';
+import HttpCachingDiagram from '@site/src/components/HttpCachingDiagram';
+import HttpEvolutionDiagram from '@site/src/components/HttpEvolutionDiagram';
+import QuicStackDiagram from '@site/src/components/QuicStackDiagram';
+import TlsHandshakeDiagram from '@site/src/components/TlsHandshakeDiagram';
+import CertChainDiagram from '@site/src/components/CertChainDiagram';
+import CorsDiagram from '@site/src/components/CorsDiagram';
+import HttpStatusCodesDiagram from '@site/src/components/HttpStatusCodesDiagram';
+import HttpHeadersDiagram from '@site/src/components/HttpHeadersDiagram';
+import ProductionChecklistDiagram from '@site/src/components/ProductionChecklistDiagram';
+
 
 # HTTP, HTTPS & Application Layer
 
@@ -35,18 +48,7 @@ Imagine HTTP as the language your browser and a web server use to talk to each o
 
 **Stateless** means every request is completely independent — the server remembers nothing about previous requests. This is why we need cookies, sessions, and tokens: they're workarounds for HTTP's statelessness, added at the application layer.
 
-```
-You (Browser)                    Server
-     │                              │
-     │── GET /products HTTP/1.1 ───►│   "Give me the products page"
-     │                              │
-     │◄── 200 OK + HTML ────────────│   "Here it is"
-     │                              │
-     │── POST /cart HTTP/1.1 ──────►│   "Add item to my cart"
-     │   Cookie: session=abc123     │   (cookie = workaround for statelessness)
-     │                              │
-     │◄── 201 Created ──────────────│   "Done, item added"
-```
+<HttpWhatIsDiagram />
 
 ---
 
@@ -54,16 +56,7 @@ You (Browser)                    Server
 
 Every HTTP request has four parts:
 
-```
-POST /api/orders HTTP/1.1          ← (1) Request Line: METHOD  PATH  VERSION
-Host: api.example.com              ← (2) Headers: key-value metadata
-Content-Type: application/json         (required and optional info about the request)
-Authorization: Bearer eyJhbGci...
-Accept: application/json
-Content-Length: 85
-                                   ← (3) Blank line (signals end of headers)
-{"userId": 42, "items": [...]}     ← (4) Body (optional — only for POST, PUT, PATCH)
-```
+<HttpIntroDiagram />
 
 :::note[For Newcomers]
 Think of it like a physical letter:
@@ -408,25 +401,7 @@ Spring handles OPTIONS/CORS automatically when configured — you rarely impleme
 
 ### Flowchart
 
-```mermaid
-flowchart TD
-    A["What are you trying to do?"] --> B{Reading data?}
-    B -->|Yes, need the body| C["✅ GET\nRead a resource"]
-    B -->|Yes, only need metadata| D["✅ HEAD\nCheck existence/size without download"]
-    B -->|Discover what's allowed| E["✅ OPTIONS\nList allowed methods / CORS preflight"]
-
-    A --> F{Creating something?}
-    F -->|Server assigns the ID| G["✅ POST\nCreate resource → 201 + Location header"]
-    F -->|Client assigns the ID| H["✅ PUT\nUpsert with client-provided ID"]
-
-    A --> I{Updating something?}
-    I -->|Replacing the whole resource| J["✅ PUT\nFull replacement — client sends complete object"]
-    I -->|Changing one or two fields| K["✅ PATCH\nPartial update — send only changed fields"]
-    I -->|Triggering an action| L["✅ POST\nActions: /orders/42/cancel, /emails/send"]
-
-    A --> M{Removing something?}
-    M --> N["✅ DELETE\nRemove resource → 204 No Content"]
-```
+<HttpMethodDecisionDiagram />
 
 ### Quick-Reference Decision Matrix
 
@@ -491,81 +466,7 @@ PUT — client-assigned ID:
 
 Status codes tell the client **what happened** on the server. Choosing the correct code is part of good API design — clients use them to decide how to react (retry, redirect, display error).
 
-### 2xx — Success
-
-| Code                  | Name             | When to Use                                                  |
-| --------------------- | ---------------- | ------------------------------------------------------------ |
-| `200 OK`              | Standard success | GET, PUT, PATCH, POST (when returning existing resource)     |
-| `201 Created`         | Resource created | POST that creates a new resource — include `Location` header |
-| `202 Accepted`        | Async processing | Request accepted but not yet complete (async job queued)     |
-| `204 No Content`      | Success, no body | DELETE, POST actions that don't return data                  |
-| `206 Partial Content` | Range fulfilled  | File download with `Range` header (video streaming)          |
-
-:::tip[200 vs 204]
-Use `204` when there is genuinely nothing meaningful to return (after a DELETE, after cancelling an order). Use `200` when you're returning the updated state of the resource. Never return `200` with an empty body when `204` is more correct — it confuses clients and breaks response parsing.
-:::
-
-### 3xx — Redirection
-
-| Code                     | Name                  | When to Use                                              |
-| ------------------------ | --------------------- | -------------------------------------------------------- |
-| `301 Moved Permanently`  | Permanent redirect    | Old URL is retired; update bookmarks and links           |
-| `302 Found`              | Temporary redirect    | Temporarily moved; keep using the original URL           |
-| `304 Not Modified`       | Cached content valid  | Conditional GET — client can use its cached copy         |
-| `307 Temporary Redirect` | Redirect, keep method | Like 302 but preserves the HTTP method (POST stays POST) |
-| `308 Permanent Redirect` | Redirect, keep method | Like 301 but preserves the HTTP method                   |
-
-:::warning[301 vs 302 vs 307 vs 308]
-301 and 302 historically allowed browsers to change POST to GET on redirect. 307 and 308 guarantee the method is preserved. For API redirects involving POST or PUT, always use **307** (temp) or **308** (perm).
-:::
-
-### 4xx — Client Errors
-
-| Code                         | Name                        | When to Use                                                 |
-| ---------------------------- | --------------------------- | ----------------------------------------------------------- |
-| `400 Bad Request`            | Invalid input               | Malformed JSON, missing required fields, validation failure |
-| `401 Unauthorized`           | Not authenticated           | No token, expired token, invalid credentials                |
-| `403 Forbidden`              | Not authorized              | Authenticated but lacks permission                          |
-| `404 Not Found`              | Resource absent             | Resource doesn't exist (or you're hiding its existence)     |
-| `405 Method Not Allowed`     | Wrong method                | `DELETE /products` when only `GET` is supported             |
-| `409 Conflict`               | State conflict              | Duplicate create, version conflict (optimistic locking)     |
-| `410 Gone`                   | Permanently removed         | Resource existed but was permanently deleted                |
-| `415 Unsupported Media Type` | Wrong content type          | Sent XML when only JSON accepted                            |
-| `422 Unprocessable Entity`   | Semantic validation failure | JSON is valid but business rules violated                   |
-| `429 Too Many Requests`      | Rate limited                | Include `Retry-After` header                                |
-
-**400 vs 422 — the nuance:**
-
-```
-400 Bad Request:      Body is malformed — can't even parse it
-                      {"name": "Alice"   ← missing closing brace (invalid JSON)
-
-422 Unprocessable:    Syntactically valid but semantically wrong
-                      {"age": -5}        ← valid JSON, but age can't be negative
-                      {"startDate": "2026-01-01", "endDate": "2025-01-01"}  ← end before start
-```
-
-**401 vs 403 — the most common confusion:**
-
-```
-401 Unauthorized:  "Who are you? I don't know you."
-                   → User is not logged in, or their token is expired/invalid
-                   → Response must include: WWW-Authenticate: Bearer realm="api"
-                   → Client should: redirect to login, refresh token
-
-403 Forbidden:     "I know who you are, but you can't do this."
-                   → User is logged in but doesn't have the required role/permission
-                   → Client should: show "Access Denied" — logging in again won't help
-```
-
-### 5xx — Server Errors
-
-| Code                        | Name                    | When to Use                                     |
-| --------------------------- | ----------------------- | ----------------------------------------------- |
-| `500 Internal Server Error` | Unhandled exception     | Catch-all for unexpected errors — log and alert |
-| `502 Bad Gateway`           | Upstream failure        | Gateway received invalid response from upstream |
-| `503 Service Unavailable`   | Service overloaded/down | Maintenance mode, circuit breaker tripped       |
-| `504 Gateway Timeout`       | Upstream timed out      | Upstream didn't respond in time                 |
+<HttpStatusCodesDiagram />
 
 :::tip[503 best practices]
 Always include `Retry-After` on 503 responses. This tells load balancers and clients when to retry, preventing a thundering herd of retries that worsens the outage.
@@ -583,42 +484,7 @@ Content-Type: application/json
 
 ## Important HTTP Headers
 
-### Request Headers
-
-| Header              | Purpose                                | Example                                |
-| ------------------- | -------------------------------------- | -------------------------------------- |
-| `Host`              | Target server (required in HTTP/1.1)   | `api.example.com`                      |
-| `Authorization`     | Auth credentials                       | `Bearer <token>`                       |
-| `Content-Type`      | Request body format                    | `application/json`                     |
-| `Accept`            | Acceptable response formats            | `application/json, text/html;q=0.9`    |
-| `Accept-Encoding`   | Compression algorithms supported       | `gzip, deflate, br`                    |
-| `Accept-Language`   | Language preference                    | `en-US,en;q=0.9`                       |
-| `Cache-Control`     | Caching directives from client         | `no-cache`                             |
-| `If-None-Match`     | Conditional GET — ETag check           | `"abc123"`                             |
-| `If-Modified-Since` | Conditional GET — date check           | `Tue, 10 Mar 2026 00:00:00 GMT`        |
-| `X-Forwarded-For`   | Client IP behind a proxy/LB            | `203.0.113.5, 10.0.0.1`                |
-| `X-Request-ID`      | Correlation ID for distributed tracing | `550e8400-e29b-41d4-a716-446655440000` |
-| `Idempotency-Key`   | Makes POST safely retryable            | `550e8400-e29b-41d4-a716-446655440000` |
-| `Origin`            | CORS — request's origin                | `https://app.example.com`              |
-
-### Response Headers
-
-| Header                        | Purpose                         | Example                                |
-| ----------------------------- | ------------------------------- | -------------------------------------- |
-| `Content-Type`                | Response body format            | `application/json; charset=utf-8`      |
-| `Content-Encoding`            | Compression applied             | `gzip`                                 |
-| `Content-Length`              | Body size in bytes              | `1024`                                 |
-| `Cache-Control`               | Caching policy                  | `public, max-age=3600`                 |
-| `ETag`                        | Resource fingerprint            | `"d8e8fca2dc0f896f"`                   |
-| `Last-Modified`               | Last change timestamp           | `Mon, 14 Mar 2026 09:00:00 GMT`        |
-| `Location`                    | URL of new/redirected resource  | `/api/orders/1001`                     |
-| `Retry-After`                 | Seconds until retry allowed     | `30`                                   |
-| `Strict-Transport-Security`   | Force HTTPS (HSTS)              | `max-age=31536000; includeSubDomains`  |
-| `X-Content-Type-Options`      | Prevent MIME sniffing           | `nosniff`                              |
-| `X-Frame-Options`             | Prevent clickjacking            | `DENY`                                 |
-| `Content-Security-Policy`     | XSS / injection prevention      | `default-src 'self'`                   |
-| `Access-Control-Allow-Origin` | CORS allowlist                  | `https://app.example.com`              |
-| `X-Request-ID`                | Echo correlation ID for tracing | `550e8400-e29b-41d4-a716-446655440000` |
+<HttpHeadersDiagram />
 
 ### Security Headers — Why They Matter
 
@@ -657,28 +523,7 @@ public class SecurityHeadersConfig {
 
 HTTP caching reduces bandwidth, reduces server load, and improves perceived performance. It works by allowing clients (browsers) and intermediaries (CDNs, proxies) to store and reuse responses.
 
-```mermaid
-sequenceDiagram
-    participant B as Browser
-    participant CDN
-    participant S as Server
-
-    Note over B,S: First request — cache cold
-    B->>CDN: GET /products/42
-    CDN->>S: GET /products/42
-    S-->>CDN: 200 OK + ETag:"abc" + Cache-Control:max-age=3600
-    CDN-->>B: 200 OK (stores copy)
-
-    Note over B,S: Second request — within max-age
-    B->>B: Cache hit (no network request at all!)
-
-    Note over B,S: After max-age expires — revalidation
-    B->>CDN: GET /products/42 + If-None-Match:"abc"
-    CDN->>S: GET /products/42 + If-None-Match:"abc"
-    S-->>CDN: 304 Not Modified (no body — saves bandwidth)
-    CDN-->>B: 304 Not Modified
-    B->>B: Use cached copy (still valid)
-```
+<HttpCachingDiagram />
 
 ### Cache-Control Directives
 
@@ -744,60 +589,7 @@ Key innovation over HTTP/1.0: **persistent connections** (`Connection: keep-aliv
 
 **The problem that remained — Head-of-Line (HoL) Blocking:**
 
-```
-HTTP/1.1 with pipelining (not widely used):
-
-Connection:  [req1]──────────[resp1 (slow)]──[req2]──[resp2]──[req3]──[resp3]
-                                  ↑
-                        Slow response 1 blocks req2 and req3
-                        Even if they would have responded instantly
-```
-
-The workaround: browsers open **6 parallel TCP connections per domain** — which is wasteful (6× handshakes, 6× TLS negotiations, 6× congestion windows).
-
----
-
-### HTTP/2 — Multiplexing (2015)
-
-HTTP/2's core innovation: **multiplexing** — many request/response pairs share a single TCP connection as independent "streams".
-
-```
-HTTP/1.1:     6 parallel TCP connections, 1 request per connection
-              TCP1: [GET /js/app.js     ──────────────── 120ms ────]
-              TCP2: [GET /css/style.css ─── 40ms ─]
-              TCP3: [GET /api/user      ───── 60ms ──]
-              (3 TCP handshakes, 3 TLS negotiations)
-
-HTTP/2:       1 TCP connection, all requests multiplexed
-              Stream 1: [GET /js/app.js ──────────── 120ms ──]
-              Stream 2: [GET /css/style.css ─ 40ms ─]
-              Stream 3: [GET /api/user ──── 60ms ──]
-              (1 TCP handshake, 1 TLS negotiation)
-```
-
-**HTTP/2 features summary:**
-
-| Feature                        | Description                         | Benefit                                   |
-| ------------------------------ | ----------------------------------- | ----------------------------------------- |
-| **Multiplexing**               | Multiple streams on one connection  | No parallel connection limit              |
-| **Header Compression (HPACK)** | Compresses repeated headers         | 85-95% reduction in header size           |
-| **Server Push**                | Server sends resources preemptively | Eliminate round-trips for critical assets |
-| **Stream Prioritization**      | Weight streams by importance        | Critical resources delivered first        |
-| **Binary Framing**             | Compact binary over text            | More efficient parsing                    |
-
-**HTTP/2's remaining problem — TCP-level HoL blocking:**
-
-```
-TCP treats the connection as a single ordered byte stream.
-If one TCP packet is lost, all streams wait for retransmission,
-even streams whose packets arrived fine.
-
-Stream 1 (JS):  [pkt1]──[pkt2]──[LOST]──[pkt4]
-Stream 2 (CSS): [pkt1]──[pkt2]──[pkt3]  ← ready, but blocked waiting for Stream 1's retransmit
-Stream 3 (API): [pkt1]──[pkt2]──[pkt3]  ← same
-
-HTTP/2 eliminated application-level HoL; TCP-level HoL remains.
-```
+<HttpEvolutionDiagram />
 
 ---
 
@@ -805,20 +597,7 @@ HTTP/2 eliminated application-level HoL; TCP-level HoL remains.
 
 HTTP/3 replaces TCP with **QUIC** — a new transport protocol built on UDP that provides reliability per-stream.
 
-```mermaid
-graph LR
-    subgraph "HTTP/1.1 & HTTP/2"
-        A1["HTTP"] --> B1["TLS 1.3"]
-        B1 --> C1["TCP"]
-        C1 --> D1["IP / UDP"]
-    end
-
-    subgraph "HTTP/3"
-        A2["HTTP/3"] --> B2["QUIC\n(TLS 1.3 built-in)"]
-        B2 --> C2["UDP"]
-        C2 --> D2["IP"]
-    end
-```
+<QuicStackDiagram />
 
 **HTTP/3 / QUIC key improvements:**
 
@@ -869,18 +648,7 @@ HTTPS = HTTP + **TLS** (Transport Layer Security). TLS provides: **encryption** 
 
 ### TLS 1.3 Handshake
 
-```mermaid
-sequenceDiagram
-    participant C as Client
-    participant S as Server
-
-    C->>S: ClientHello (supported cipher suites, key share)
-    S->>C: ServerHello (chosen cipher, server key share)
-    S->>C: Certificate + CertificateVerify + Finished
-    Note over C,S: Session keys derived — encrypted from here
-    C->>S: Finished (encrypted)
-    C->>S: HTTP request (encrypted)
-```
+<TlsHandshakeDiagram />
 
 **TLS 1.3 vs 1.2:**
 
@@ -908,16 +676,7 @@ With Forward Secrecy (ECDHE — mandatory in TLS 1.3):
 
 ### Certificate Chain of Trust
 
-```
-Root CA Certificate
-(pre-installed in all browsers/OS — the "trust anchor")
-    │
-    └── Intermediate CA Certificate
-        (signed by Root CA — adds a layer of security)
-            │
-            └── Server Certificate (e.g., api.example.com)
-                (signed by Intermediate CA — what the server presents)
-```
+<CertChainDiagram />
 
 Browsers verify: *"Is this server certificate signed by an Intermediate CA that is signed by a Root CA that I trust?"*
 
@@ -993,27 +752,7 @@ http://app.example.com:80     ← different origin (different scheme + port)
 
 ### CORS Preflight Flow
 
-```mermaid
-sequenceDiagram
-    participant B as Browser
-    participant S as API Server
-
-    Note over B,S: Browser about to send POST from app.example.com to api.example.com
-
-    B->>S: OPTIONS /api/orders (preflight)
-    Note right of B: Origin: https://app.example.com
-    Note right of B: Access-Control-Request-Method: POST
-    Note right of B: Access-Control-Request-Headers: Authorization
-
-    S-->>B: 204 No Content
-    Note left of S: Access-Control-Allow-Origin: https://app.example.com
-    Note left of S: Access-Control-Allow-Methods: GET, POST, PUT, DELETE
-    Note left of S: Access-Control-Allow-Headers: Authorization, Content-Type
-    Note left of S: Access-Control-Max-Age: 86400
-
-    B->>S: POST /api/orders (actual request)
-    S-->>B: 201 Created
-```
+<CorsDiagram />
 
 :::warning[CORS is browser-only]
 CORS is enforced by browsers, not servers. Server-to-server API calls (curl, Postman, mobile apps, backend services) are **never subject to CORS**. If someone claims your API has a CORS bug but they found it with Postman — it's not a CORS bug.
@@ -1050,44 +789,7 @@ public class PublicApiController { ... }
 
 ## Production Readiness Checklist
 
-### HTTP Methods & API Design
-- [ ] GET endpoints are truly read-only and safe to cache / prefetch
-- [ ] POST returns `201 Created` + `Location` header when creating resources
-- [ ] PUT is used for full replacement (not partial updates)
-- [ ] PATCH is used for partial updates (not full replacement)
-- [ ] DELETE returns `204 No Content` (not 200 with empty body)
-- [ ] Actions use POST (`/orders/42/cancel`), not GET
-- [ ] Idempotency keys implemented for critical POST endpoints (payments, emails)
-
-### Status Codes
-- [ ] 401 returned for unauthenticated requests (with `WWW-Authenticate` header)
-- [ ] 403 returned for authenticated-but-unauthorized requests
-- [ ] 400 vs 422 used correctly (malformed vs semantically invalid)
-- [ ] 503 includes `Retry-After` header
-- [ ] 429 includes `Retry-After` header and rate limit headers
-
-### Security
-- [ ] TLS 1.3 enabled; TLS 1.0 and 1.1 disabled
-- [ ] HTTP redirects to HTTPS (301 redirect)
-- [ ] HSTS configured with `includeSubDomains` and `preload`
-- [ ] `X-Content-Type-Options: nosniff` on all responses
-- [ ] `X-Frame-Options: DENY` or CSP `frame-ancestors: 'none'`
-- [ ] Content-Security-Policy header configured
-- [ ] CORS allowlist uses explicit origins (no `*` with credentials)
-- [ ] `X-Forwarded-For` only trusted from known proxies/load balancers
-
-### Caching
-- [ ] Static assets have `Cache-Control: public, max-age=31536000, immutable`
-- [ ] Authenticated API responses have `Cache-Control: private` or `no-store`
-- [ ] Sensitive data (financial, PII) has `Cache-Control: no-store`
-- [ ] ETags implemented for expensive GET responses
-- [ ] CDN caching configured with appropriate `s-maxage`
-
-### Observability
-- [ ] `X-Request-ID` header echoed on every response (distributed tracing)
-- [ ] Request method and path included in access logs
-- [ ] 4xx and 5xx rates alerted separately (4xx = client issues, 5xx = your issues)
-- [ ] Response time p50/p95/p99 tracked per endpoint
+<ProductionChecklistDiagram />
 
 ---
 

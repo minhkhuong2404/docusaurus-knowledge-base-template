@@ -5,43 +5,89 @@ description: Design and implement custom interactive React SVG components and fl
 
 # Skill: Design Diagrams (Interactive SVG & Flowing Arrows)
 
-This skill provides the instructions for designing, implementing, and integrating interactive React SVG diagram components and global flowing connection effects in the repository.
+This skill covers the full lifecycle of creating, styling, and integrating interactive React diagram components in this Docusaurus knowledge base.
 
-## Triggering the Skill
+Read the detailed design guide at [references/DESIGNS.md](./references/DESIGNS.md) before starting work.
+
+---
+
+## When to Trigger This Skill
+
 Use this skill when:
-- Creating new state machine or architecture diagrams in the documentation.
-- Updating existing static Mermaid diagrams to custom interactive SVG components.
-- Modifying connection lines or arrowhead styles.
+- Converting a static ASCII art flow, Mermaid diagram, or markdown table into an interactive component.
+- Creating a new architecture, state machine, or protocol sequence diagram from scratch.
+- Adding hover effects, animated arrows, click-to-expand panels, tabs, or progress indicators to a section.
+- Modifying global connection line or arrowhead styles for all Mermaid diagrams.
+
+---
 
 ## Execution Steps
 
-### 1. Designing a Custom Interactive SVG Component
-When a static diagram needs custom particle-flow animations or state-specific detail overlays:
-1. Create a React component file in `src/components/` (e.g. `src/components/MyCustomDiagram.tsx`).
-2. Style container wrappers using central CSS indicators (e.g., `.interactive-diagram-svg-wrapper.interactive-diagram-grid-bg` for dark radial canvas).
-3. Define the SVG viewBox (e.g., `0 0 680 230`) to scale seamlessly across devices.
-4. Add interactive state tracking in React:
-   ```typescript
-   const [activeState, setActiveState] = useState<string>('DEFAULT');
-   ```
-5. Implement flowing dashed paths using `.interactive-diagram-flowing-path` class (from `src/css/diagrams.css`).
-6. Append `<circle>` elements containing `<animateMotion>` linked to path IDs (`<mpath href="#path-id" />`) to render physical moving particle dots:
-   ```xml
-   {activeState === 'ACTIVE' && (
-     <circle r="3" fill="#2dd4bf" className="interactive-diagram-flowing-dot">
-       <animateMotion dur="1s" repeatCount="indefinite">
-         <mpath href="#path-id" />
-       </animateMotion>
-     </circle>
-   )}
-   ```
-7. **Ternary Operator Code Safety**: Always resolve all paths in nested ternaries cleanly (e.g. `x ? a : y ? b : c` rather than compiling with duplicate color bounds) to guarantee Rspack compatibility.
+### Step 1 — Read the Design Reference
 
-### 2. Global Mermaid Flowing Arrows
-All standard flowchart Mermaid diagrams automatically inherit the background solid conduit and flowing dashed overlay. If you need to adjust or extend this globally:
-1. Open [index.tsx](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/src/theme/Mermaid/index.tsx) and inspect the `useMemo` block replicating `<path>` elements into `.path-bg` and `.path`.
-2. Update the custom classes and keyframe definitions in [custom.css](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/src/css/custom.css).
-3. Ensure arrowheads use SVG 2 `context-fill` / `context-stroke` properties to inherit parent hover styling changes dynamically:
+Before writing code, read [references/DESIGNS.md](./references/DESIGNS.md). It documents:
+- The full color palette and when to use each color.
+- All available CSS classes from `diagrams.css` and what they do.
+- The five diagram archetypes with full implementation templates.
+- Common pitfalls and how to avoid them.
+
+---
+
+### Step 2 — Choose the Right Archetype
+
+| Content Type | Recommended Archetype |
+|---|---|
+| Protocol handshake / sequence flow | **Animated Flow** (stateful arrows with play button) |
+| Architecture with hover-to-inspect nodes | **SVG Node Graph** (SVG + `<animateMotion>` particles) |
+| Comparison table / decision tree | **Tabbed Explorer** (tabs + detail panel) |
+| Reference data (headers, status codes) | **Searchable List** (search + click-to-expand) |
+| Pre-launch review / audit | **Interactive Checklist** (checkboxes + progress bar) |
+
+---
+
+### Step 3 — Create the Component
+
+1. Create `src/components/<ConceptName>Diagram.tsx`.
+2. Name it after the concept, e.g. `HttpStatusCodesDiagram`, `TlsHandshakeDiagram`.
+3. Always use `className="interactive-diagram-container"` as the outermost wrapper.
+4. Always include an `interactive-diagram-header` bar with an SVG icon and a descriptive title.
+5. Use `useState` for all interactive state (active tab, selected item, hover, etc.).
+6. See [references/DESIGNS.md](./references/DESIGNS.md) for full boilerplate templates.
+
+**Critical rules:**
+- Never use emoji characters in header titles — use inline `<svg>` icons instead.
+- Never use `inline style` for colors that appear in the color palette — use the CSS variables or the hex tokens from DESIGNS.md consistently.
+- Always resolve all ternary branches to avoid Rspack compilation failures.
+- Wrap SVG content in `.interactive-diagram-svg-wrapper.interactive-diagram-grid-bg` for the dot-matrix canvas background.
+
+---
+
+### Step 4 — Integrate into Markdown
+
+Add an import at the top of the `.md` file (after frontmatter):
+
+```markdown
+import MyDiagram from '@site/src/components/MyDiagram';
+```
+
+Replace the static block (ASCII art, code block, or table) with the JSX tag:
+
+```markdown
+<MyDiagram />
+```
+
+Multiple imports per file are fine — all existing diagrams in a file follow this pattern.
+
+---
+
+### Step 5 — Global Mermaid Flowing Arrows
+
+All standard `flowchart` Mermaid diagrams automatically inherit the animated flowing-dashed-arrow effect.
+
+To adjust the global Mermaid animation:
+1. Open [`src/theme/Mermaid/index.tsx`](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/src/theme/Mermaid/index.tsx) — inspect the `useMemo` block that duplicates `<path>` elements into `.path-bg` and `.path` classes.
+2. Edit keyframe or stroke definitions in [`src/css/custom.css`](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/src/css/custom.css).
+3. Arrowheads must use SVG 2 `context-fill` / `context-stroke` to inherit hover color transitions:
    ```css
    [class*="mermaidSvg"] svg marker path {
      fill: context-fill !important;
@@ -49,17 +95,25 @@ All standard flowchart Mermaid diagrams automatically inherit the background sol
    }
    ```
 
-### 3. Integrating the Component into Markdown
-Import and render the React component inside MD/MDX files:
-```markdown
-import MyCustomDiagram from '@site/src/components/MyCustomDiagram';
+---
 
-<MyCustomDiagram />
+### Step 6 — Verify Compilation
+
+The dev server (`npm start`) hot-reloads on every save.
+
+Check for:
+- `client (Rspack) compiled successfully` — all clear.
+- Any TypeScript or JSX error — fix before proceeding.
+- Test interactive states manually in the browser.
+
+---
+
+### Step 7 — Audit Existing Diagrams (Optional)
+
+To find files that still have un-migrated static ASCII art or Mermaid blocks:
+
+```bash
+python scratch/scan_diagrams.py
 ```
 
-### 4. Scanning the Repository for Diagrams
-To locate, analyze, or audit diagrams in the workspace:
-1. Run the scanning script `scratch/scan_diagrams.py` inside the workspace:
-   - Command: `python scratch/scan_diagrams.py`
-   - This script automatically crawls the `docs/` directory, compiles a count of both static Mermaid blocks and interactive React diagram components, and generates a structured report at `scratch/diagrams_inventory.md`.
-2. Review the resulting `scratch/diagrams_inventory.md` file to see which files contain static diagrams that can be upgraded.
+Results are written to `scratch/diagrams_inventory.md`.

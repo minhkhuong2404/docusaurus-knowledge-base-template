@@ -50,3 +50,74 @@ The following files in `docs/technical-knowledge/interview-questions/grokking-ja
 - Standard flowchart Mermaid diagrams automatically inherit the dynamic moving arrow effect (background solid conduit + flowing dashed overlay). Ensure that custom styles do not disrupt this global flow animation.
 - Always use SVG 2 `context-fill` / `context-stroke` properties on arrowhead markers to ensure they inherit parent hover transitions.
 
+## MANDATORY: Interactive Diagram Creation Rules
+
+**Before creating ANY diagram component, you MUST read the full design specification at:**
+[`.agents/skills/design-diagrams/references/DESIGNS.md`](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/.agents/skills/design-diagrams/references/DESIGNS.md)
+
+### When to create an interactive diagram
+
+Replace static content (ASCII art, ```` ```mermaid ``` ```` blocks, plain markdown tables) with a React component whenever the section covers:
+- A protocol handshake or multi-step sequence flow
+- A system architecture with interconnected nodes/services
+- A comparison table with more than 4 rows
+- A reference list users need to search or filter (headers, status codes, config options)
+- A production checklist or audit criteria
+
+### Mandatory implementation rules
+
+1. **File location**: Always create in `src/components/<ConceptName>Diagram.tsx`.
+2. **Outer wrapper**: Always use `className="interactive-diagram-container"` — never a bare `<div>`.
+3. **Header bar**: Always include a header with an `<svg>` icon (never emoji) and a descriptive title. Use the `.interactive-diagram-header` CSS class pattern from DESIGNS.md.
+4. **Color tokens**: Use only the curated hex palette from DESIGNS.md Section 3. Never use plain CSS color names (`red`, `blue`, etc.).
+5. **CSS variables for text**: Always use `var(--ifm-color-content)` and `var(--ifm-color-content-secondary)` for body text — this handles light/dark mode automatically.
+6. **No emoji in JSX headers**: Use inline `<svg>` icons from the icon library in DESIGNS.md Section 6.
+7. **Ternary safety**: Always resolve all branches in nested ternaries. Dangling ternaries cause Rspack build failures.
+8. **SVG markers**: Always set `fill="context-fill"` on `<marker>` path elements for hover-aware arrowheads.
+
+### Choose the right archetype (full templates in DESIGNS.md Section 5)
+
+| Content Type | Archetype |
+|---|---|
+| Protocol handshake / sequence / request-response flow | **A — Animated Flow** |
+| Architecture with nodes and directed edges | **B — SVG Node Graph** |
+| Feature comparison / protocol evolution / tabs | **C — Tabbed Explorer** |
+| Lookup reference (headers, status codes, options) | **D — Searchable List** |
+| Pre-launch audit / review criteria | **E — Interactive Checklist** |
+
+### Integration into markdown
+
+```markdown
+import MyDiagram from '@site/src/components/MyDiagram';
+
+<MyDiagram />
+```
+
+- Imports go immediately after the frontmatter `---` block.
+- Replace the static block (ASCII, code block, or table) entirely with the JSX tag.
+- Verify with the running dev server: look for `client (Rspack) compiled successfully`.
+
+### Existing component index
+
+Before creating a new component, check whether one already exists for the concept:
+
+| Component | What it shows |
+|---|---|
+| `HttpWhatIsDiagram` | HTTP request-response flow, stateless concept |
+| `HttpIntroDiagram` | HTTP request anatomy (method / headers / body) |
+| `HttpMethodDecisionDiagram` | Flowchart for choosing GET/POST/PUT/PATCH/DELETE |
+| `HttpStatusCodesDiagram` | Interactive 2xx/3xx/4xx/5xx explorer with confusion pairs |
+| `HttpHeadersDiagram` | Searchable request/response/security header reference |
+| `HttpCachingDiagram` | Cache-Control directives + ETag flow |
+| `HttpEvolutionDiagram` | HTTP/1.1 → HTTP/2 → HTTP/3 comparison |
+| `QuicStackDiagram` | QUIC vs TCP/TLS protocol stack |
+| `TlsHandshakeDiagram` | TLS 1.3 handshake animated sequence |
+| `CertChainDiagram` | Certificate chain of trust (Root → Intermediate → Leaf) |
+| `CorsDiagram` | CORS preflight flow (browser → server) |
+| `ProductionChecklistDiagram` | HTTP production readiness checklist with progress |
+| `CircuitBreakerDiagram` | Circuit breaker state machine (Closed/Open/Half-Open) |
+| `CollectionsHierarchyDiagram` | Java Collections Framework class hierarchy |
+| `AQSArchitectureDiagram` | AbstractQueuedSynchronizer internals |
+| `LockDecisionTreeDiagram` | Decision tree for choosing the right Java lock |
+| `ConcurrencyCoordinationDiagram` | CountDownLatch / CyclicBarrier / Semaphore visualised |
+
