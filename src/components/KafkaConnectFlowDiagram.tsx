@@ -63,9 +63,7 @@ export default function KafkaConnectFlowDiagram(): React.JSX.Element {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span className={`interactive-diagram-indicator-dot ${
-            tab === 'WORKER_INTERNAL' ? 'card-indicator-purple' : tab === 'SOURCE_LOOP' ? 'card-indicator-cyan' : 'card-indicator-green'
-          }`} />
+          
           <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
             <span>🔌</span>
             <span style={{ color: tab === 'WORKER_INTERNAL' ? '#a855f7' : tab === 'SOURCE_LOOP' ? '#2dd4bf' : '#4ade80' }}>
@@ -257,9 +255,7 @@ export default function KafkaConnectFlowDiagram(): React.JSX.Element {
         selectedData.type === 'purple' ? 'details-purple' : selectedData.type === 'cyan' ? 'details-cyan' : 'details-green'
       }`}>
         <div className="interactive-diagram-card-header">
-          <span className={`interactive-diagram-indicator-dot ${
-            selectedData.type === 'purple' ? 'card-indicator-purple' : selectedData.type === 'cyan' ? 'card-indicator-cyan' : 'card-indicator-green'
-          }`} />
+          
           <h3>{selectedData.title}</h3>
         </div>
         <p><strong>Overview:</strong> {selectedData.overview}</p>

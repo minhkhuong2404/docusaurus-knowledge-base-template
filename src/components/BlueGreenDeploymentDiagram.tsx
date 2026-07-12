@@ -61,9 +61,7 @@ export default function BlueGreenDeploymentDiagram(): React.JSX.Element {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span className={`interactive-diagram-indicator-dot ${
-            state === 'BLUE_ACTIVE' ? 'card-indicator-cyan' : state === 'GREEN_ACTIVE' ? 'card-indicator-green' : 'card-indicator-red'
-          }`} />
+          
           <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
             <span>🔵🟢</span>
             <span style={{ color: state === 'BLUE_ACTIVE' ? '#38bdf8' : state === 'GREEN_ACTIVE' ? '#4ade80' : '#f87171' }}>
@@ -131,9 +129,7 @@ export default function BlueGreenDeploymentDiagram(): React.JSX.Element {
         selectedData.type === 'blue' ? 'details-cyan' : selectedData.type === 'green' ? 'details-green' : 'details-red'
       }`}>
         <div className="interactive-diagram-card-header">
-          <span className={`interactive-diagram-indicator-dot ${
-            selectedData.type === 'blue' ? 'card-indicator-cyan' : selectedData.type === 'green' ? 'card-indicator-green' : 'card-indicator-red'
-          }`} />
+          
           <h3>{selectedData.title}</h3>
         </div>
         <p><strong>Overview:</strong> {selectedData.overview}</p>

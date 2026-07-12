@@ -69,9 +69,7 @@ export default function LockEscalationDiagram(): React.JSX.Element {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span className={`interactive-diagram-indicator-dot ${
-            state === 'BIASED' ? 'card-indicator-purple' : state === 'LIGHTWEIGHT' ? 'card-indicator-cyan' : 'card-indicator-red'
-          }`} />
+          
           <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
             <span>🔒</span>
             <span style={{ color: state === 'BIASED' ? '#a855f7' : state === 'LIGHTWEIGHT' ? '#2dd4bf' : '#f87171' }}>
@@ -216,9 +214,7 @@ export default function LockEscalationDiagram(): React.JSX.Element {
         state === 'BIASED' ? 'details-purple' : state === 'LIGHTWEIGHT' ? 'details-cyan' : 'details-red'
       }`}>
         <div className="interactive-diagram-card-header">
-          <span className={`interactive-diagram-indicator-dot ${
-            state === 'BIASED' ? 'card-indicator-purple' : state === 'LIGHTWEIGHT' ? 'card-indicator-cyan' : 'card-indicator-red'
-          }`} />
+          
           <h3>{selectedData.title}</h3>
         </div>
         <p><strong>Overhead:</strong> <span style={{ color: state === 'BIASED' ? '#a855f7' : state === 'LIGHTWEIGHT' ? '#2dd4bf' : '#f87171', fontWeight: 'bold' }}>{selectedData.overhead}</span></p>

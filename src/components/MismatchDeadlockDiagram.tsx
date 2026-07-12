@@ -70,10 +70,7 @@ export default function MismatchDeadlockDiagram(): React.JSX.Element {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span 
-            className="interactive-diagram-indicator-dot card-indicator-red" 
-            style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#f87171' }}
-          />
+          
           <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
             <span>🚫</span>
             <span style={{ color: '#f87171' }}>Deadlock Simulator: {current.title}</span>

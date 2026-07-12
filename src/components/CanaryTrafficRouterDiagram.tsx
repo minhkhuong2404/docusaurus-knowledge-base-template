@@ -71,9 +71,7 @@ export default function CanaryTrafficRouterDiagram(): React.JSX.Element {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span className={`interactive-diagram-indicator-dot ${
-            tab === 'ROUTING_SPLIT' ? 'card-indicator-purple' : tab === 'TESTS_RUNNING' ? 'card-indicator-cyan' : tab === 'PROMOTION' ? 'card-indicator-green' : 'card-indicator-red'
-          }`} />
+          
           <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
             <span>🐤</span>
             <span style={{ color: tab === 'ROUTING_SPLIT' ? '#a855f7' : tab === 'TESTS_RUNNING' ? '#2dd4bf' : tab === 'PROMOTION' ? '#4ade80' : '#f87171' }}>
@@ -161,9 +159,7 @@ export default function CanaryTrafficRouterDiagram(): React.JSX.Element {
         selectedData.type === 'purple' ? 'details-purple' : selectedData.type === 'cyan' ? 'details-cyan' : selectedData.type === 'green' ? 'details-green' : 'details-red'
       }`}>
         <div className="interactive-diagram-card-header">
-          <span className={`interactive-diagram-indicator-dot ${
-            selectedData.type === 'purple' ? 'card-indicator-purple' : selectedData.type === 'cyan' ? 'card-indicator-cyan' : selectedData.type === 'green' ? 'card-indicator-green' : 'card-indicator-red'
-          }`} />
+          
           <h3>{selectedData.title}</h3>
         </div>
         <p><strong>Overview:</strong> {selectedData.overview}</p>

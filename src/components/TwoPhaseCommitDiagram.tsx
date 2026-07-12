@@ -19,9 +19,8 @@ export default function TwoPhaseCommitDiagram(): React.JSX.Element {
     <div className="interactive-diagram-container" style={{ margin: '1.5rem 0' }}>
       <div className="interactive-diagram-card-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.6rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.08)', flexWrap: 'wrap', gap: 8 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span className="interactive-diagram-indicator-dot card-indicator-red" />
           <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700 }}>
-            🔒 <span style={{ color: '#f87171' }}>Two-Phase Commit (2PC)</span> — Why It Fails at Scale
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: 6, verticalAlign: 'middle' }}><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg><span style={{ color: '#f87171' }}>Two-Phase Commit (2PC)</span> — Why It Fails at Scale
           </h3>
         </div>
         <div style={{ display: 'flex', gap: 6 }}>

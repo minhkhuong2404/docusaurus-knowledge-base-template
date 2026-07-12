@@ -62,9 +62,7 @@ export default function AQSArchitectureDiagram({ defaultTab = 'STATE_ACQUIRE' }:
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span className={`interactive-diagram-indicator-dot ${
-            tab === 'STATE_ACQUIRE' ? 'card-indicator-purple' : tab === 'CLH_QUEUE' ? 'card-indicator-cyan' : 'card-indicator-green'
-          }`} />
+          
           <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
             <span>🛠️</span>
             <span style={{ color: tab === 'STATE_ACQUIRE' ? '#a855f7' : tab === 'CLH_QUEUE' ? '#2dd4bf' : '#4ade80' }}>
@@ -226,9 +224,7 @@ export default function AQSArchitectureDiagram({ defaultTab = 'STATE_ACQUIRE' }:
         tab === 'STATE_ACQUIRE' ? 'details-purple' : tab === 'CLH_QUEUE' ? 'details-cyan' : 'details-green'
       }`}>
         <div className="interactive-diagram-card-header">
-          <span className={`interactive-diagram-indicator-dot ${
-            tab === 'STATE_ACQUIRE' ? 'card-indicator-purple' : tab === 'CLH_QUEUE' ? 'card-indicator-cyan' : 'card-indicator-green'
-          }`} />
+          
           <h3>{selectedData.title}</h3>
         </div>
         <p><strong>Overview:</strong> {selectedData.overview}</p>

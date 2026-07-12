@@ -277,9 +277,7 @@ export default function TomcatArchitectureDiagram(): React.JSX.Element {
         selectedData.type === 'green' ? 'details-green' : selectedData.type === 'purple' ? 'details-purple' : selectedData.type === 'blue' ? 'details-blue' : 'details-cyan'
       }`}>
         <div className="interactive-diagram-card-header">
-          <span className={`interactive-diagram-indicator-dot ${
-            selectedData.type === 'green' ? 'card-indicator-green' : selectedData.type === 'purple' ? 'card-indicator-purple' : selectedData.type === 'blue' ? 'card-indicator-blue' : 'card-indicator-cyan'
-          }`} />
+          
           <h3>{selectedData.title}</h3>
         </div>
         <p><strong>Thread Context Sizing:</strong> {selectedData.threadModel}</p>

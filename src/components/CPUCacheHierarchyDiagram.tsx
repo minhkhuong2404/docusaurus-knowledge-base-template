@@ -251,9 +251,7 @@ export default function CPUCacheHierarchyDiagram(): React.JSX.Element {
         selectedData.type === 'green' ? 'details-green' : selectedData.type === 'purple' ? 'details-purple' : selectedData.type === 'red' ? 'details-red' : 'details-cyan'
       }`}>
         <div className="interactive-diagram-card-header">
-          <span className={`interactive-diagram-indicator-dot ${
-            selectedData.type === 'green' ? 'card-indicator-green' : selectedData.type === 'purple' ? 'card-indicator-purple' : selectedData.type === 'red' ? 'card-indicator-red' : 'card-indicator-cyan'
-          }`} />
+          
           <h3>{selectedData.title}</h3>
         </div>
         <p><strong>Access Latency:</strong> {selectedData.latency}</p>

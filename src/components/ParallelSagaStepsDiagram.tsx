@@ -9,9 +9,8 @@ export default function ParallelSagaStepsDiagram(): React.JSX.Element {
     <div className="interactive-diagram-container" style={{ margin: '1.5rem 0' }}>
       <div className="interactive-diagram-card-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.6rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.08)', flexWrap: 'wrap', gap: 8 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span className="interactive-diagram-indicator-dot card-indicator-cyan" />
           <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700 }}>
-            ⚡ <span style={{ color: mode === 'sequential' ? '#94a3b8' : '#4ade80' }}>Parallel Saga Steps</span> — Reducing Saga Completion Time
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={mode === 'sequential' ? '#94a3b8' : '#4ade80'} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: 6, verticalAlign: 'middle', transition: 'stroke 0.2s' }}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg><span style={{ color: mode === 'sequential' ? '#94a3b8' : '#4ade80' }}>Parallel Saga Steps</span> — Reducing Saga Completion Time
           </h3>
         </div>
         <div style={{ display: 'flex', gap: 6 }}>

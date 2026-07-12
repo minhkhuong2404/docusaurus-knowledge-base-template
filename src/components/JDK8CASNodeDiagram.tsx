@@ -51,7 +51,7 @@ export default function JDK8CASNodeDiagram(): React.JSX.Element {
   return (
     <div className="interactive-diagram-container" style={{ margin: '1.5rem 0' }}>
       <div className="interactive-diagram-card-header" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0.6rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-        <span className="interactive-diagram-indicator-dot card-indicator-green" />
+        
         <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700 }}>
           ⚡ <span style={{ color: '#4ade80' }}>JDK 8</span> — CAS + Synchronized Node-Based (ConcurrentHashMap)
         </h3>
@@ -173,7 +173,7 @@ export default function JDK8CASNodeDiagram(): React.JSX.Element {
       {sel ? (
         <div className="interactive-diagram-details-card" style={{ borderColor: `${sel.color}40`, background: `${sel.color}08` }}>
           <div className="interactive-diagram-card-header">
-            <span className="interactive-diagram-indicator-dot" style={{ background: sel.color }} />
+            
             <h3 style={{ color: sel.color }}>{sel.label} — {STATE_LABELS[sel.state]}</h3>
           </div>
           <p><strong>Scenario:</strong> {sel.detail}</p>

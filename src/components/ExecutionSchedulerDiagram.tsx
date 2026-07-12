@@ -100,10 +100,7 @@ export default function ExecutionSchedulerDiagram(): React.JSX.Element {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span 
-            className={`interactive-diagram-indicator-dot ${isParallel ? 'card-indicator-green' : 'card-indicator-cyan'}`} 
-            style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: isParallel ? '#4ade80' : '#2dd4bf' }}
-          />
+          
           <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700, color: isParallel ? '#4ade80' : '#2dd4bf' }}>
             🖥️ CPU Execution: {isParallel ? 'Multi-Core Parallelism' : 'Single-Core Concurrency'}
           </h3>
@@ -240,9 +237,7 @@ export default function ExecutionSchedulerDiagram(): React.JSX.Element {
         selectedData.type === 'green' ? 'details-green' : selectedData.type === 'purple' ? 'details-purple' : selectedData.type === 'red' ? 'details-red' : selectedData.type === 'blue' ? 'details-blue' : 'details-cyan'
       }`}>
         <div className="interactive-diagram-card-header">
-          <span className={`interactive-diagram-indicator-dot ${
-            selectedData.type === 'green' ? 'card-indicator-green' : selectedData.type === 'purple' ? 'card-indicator-purple' : selectedData.type === 'red' ? 'card-indicator-red' : selectedData.type === 'blue' ? 'card-indicator-blue' : 'card-indicator-cyan'
-          }`} />
+          
           <h3>{selectedData.title}</h3>
         </div>
         <p><strong>CPU Overhead:</strong> <span style={{ color: '#f87171', fontWeight: 'bold' }}>{selectedData.overhead}</span></p>

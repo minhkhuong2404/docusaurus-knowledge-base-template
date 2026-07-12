@@ -69,10 +69,7 @@ export default function RequestPipelineModelDiagram(): React.JSX.Element {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span 
-            className={`interactive-diagram-indicator-dot ${model === 'MVC' ? 'card-indicator-purple' : model === 'WEBFLUX' ? 'card-indicator-cyan' : 'card-indicator-green'}`} 
-            style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: model === 'MVC' ? '#a855f7' : model === 'WEBFLUX' ? '#2dd4bf' : '#4ade80' }}
-          />
+          
           <h3 style={{ margin: '0 !important', fontSize: '0.95rem', fontWeight: 700, color: model === 'MVC' ? '#a855f7 !important' : model === 'WEBFLUX' ? '#2dd4bf !important' : '#4ade80 !important' }}>
             🔄 Concurrency Model: {model === 'MVC' ? 'Spring MVC (Tomcat)' : model === 'WEBFLUX' ? 'WebFlux (Netty)' : 'Virtual Threads (Loom)'}
           </h3>
@@ -262,9 +259,7 @@ export default function RequestPipelineModelDiagram(): React.JSX.Element {
         selectedData.type === 'green' ? 'details-green' : selectedData.type === 'purple' ? 'details-purple' : 'details-cyan'
       }`}>
         <div className="interactive-diagram-card-header">
-          <span className={`interactive-diagram-indicator-dot ${
-            selectedData.type === 'green' ? 'card-indicator-green' : selectedData.type === 'purple' ? 'card-indicator-purple' : 'card-indicator-cyan'
-          }`} />
+          
           <h3>{selectedData.title}</h3>
         </div>
         <p><strong>Thread Layout Sizing:</strong> {selectedData.threading}</p>

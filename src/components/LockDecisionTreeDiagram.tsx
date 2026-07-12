@@ -165,7 +165,7 @@ export default function LockDecisionTreeDiagram(): React.JSX.Element {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span className={`interactive-diagram-indicator-dot ${isResult ? 'card-indicator-green' : 'card-indicator-purple'}`} />
+          
           <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
             <span>🗺️</span>
             <span style={{ color: isResult ? '#4ade80' : '#a855f7' }}>

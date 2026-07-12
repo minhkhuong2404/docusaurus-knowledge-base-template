@@ -243,9 +243,7 @@ export default function AppServerThreadTopologyDiagram(): React.JSX.Element {
         selectedData.type === 'green' ? 'details-green' : selectedData.type === 'purple' ? 'details-purple' : 'details-cyan'
       }`}>
         <div className="interactive-diagram-card-header">
-          <span className={`interactive-diagram-indicator-dot ${
-            selectedData.type === 'green' ? 'card-indicator-green' : selectedData.type === 'purple' ? 'card-indicator-purple' : selectedData.type === 'cyan' ? 'card-indicator-cyan' : ''
-          }`} />
+          
           <h3>{selectedData.title}</h3>
         </div>
         <p><strong>Overview:</strong> {selectedData.explanation}</p>

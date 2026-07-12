@@ -101,7 +101,7 @@ export default function CollectionsHierarchyDiagram(): React.JSX.Element {
     <div className="interactive-diagram-container" style={{ margin: '1.5rem 0' }}>
       {/* Header */}
       <div className="interactive-diagram-card-header" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0.6rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-        <span className="interactive-diagram-indicator-dot card-indicator-cyan" />
+        
         <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700 }}>
           🗂️ <span style={{ color: '#a78bfa' }}>Java Collections Framework</span> — Hierarchy Overview
         </h3>
@@ -185,7 +185,7 @@ export default function CollectionsHierarchyDiagram(): React.JSX.Element {
       {info ? (
         <div className="interactive-diagram-details-card details-purple" style={{ marginTop: 0 }}>
           <div className="interactive-diagram-card-header">
-            <span className="interactive-diagram-indicator-dot" style={{ background: NODE_INFO[selected!].color }} />
+            
             <h3 style={{ color: NODE_INFO[selected!].color }}>{info.label}</h3>
           </div>
           <p style={{ margin: '4px 0' }}>{info.description}</p>

@@ -21,9 +21,8 @@ export default function KafkaAsyncOrchestrationDiagram(): React.JSX.Element {
   return (
     <div className="interactive-diagram-container" style={{ margin: '1.5rem 0' }}>
       <div className="interactive-diagram-card-header" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0.6rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-        <span className="interactive-diagram-indicator-dot card-indicator-cyan" />
         <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700 }}>
-          📨 <span style={{ color: '#38bdf8' }}>Async Kafka Orchestration</span> — Command &amp; Reply Topics
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: 6, verticalAlign: 'middle' }}><rect x="2" y="3" width="20" height="14" rx="2" ry="2" /><line x1="22" y1="3" x2="12" y2="10" /><line x1="2" y1="3" x2="12" y2="10" /></svg><span style={{ color: '#38bdf8' }}>Async Kafka Orchestration</span> — Command &amp; Reply Topics
         </h3>
       </div>
 
@@ -95,7 +94,7 @@ export default function KafkaAsyncOrchestrationDiagram(): React.JSX.Element {
       {sel && (
         <div className="interactive-diagram-details-card" style={{ borderColor: `${sel.color}40`, background: `${sel.color}08` }}>
           <div className="interactive-diagram-card-header">
-            <span className="interactive-diagram-indicator-dot" style={{ background: sel.color }} />
+            
             <h3 style={{ color: sel.color }}>{sel.label}</h3>
           </div>
           <p>{sel.detail}</p>

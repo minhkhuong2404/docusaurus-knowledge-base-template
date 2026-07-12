@@ -107,9 +107,8 @@ export default function StringConstantPoolDiagram(): React.JSX.Element {
         style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.6rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.08)', flexWrap: 'wrap', gap: 8 }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span className="interactive-diagram-indicator-dot card-indicator-cyan" />
           <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700 }}>
-            🔤 <span style={{ color: cfg.color }}>String Immutability</span> &amp; The String Constant Pool
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={cfg.color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: 6, verticalAlign: 'middle', transition: 'stroke 0.2s' }}><polyline points="4 7 4 4 20 4 20 7" /><line x1="9" y1="20" x2="15" y2="20" /><line x1="12" y1="4" x2="12" y2="20" /></svg><span style={{ color: cfg.color }}>String Immutability</span> &amp; The String Constant Pool
           </h3>
         </div>
         <div style={{ display: 'flex', gap: 6 }}>
@@ -292,7 +291,7 @@ export default function StringConstantPoolDiagram(): React.JSX.Element {
       {/* Detail card */}
       <div className="interactive-diagram-details-card" style={{ borderColor: `${cfg.color}40`, background: `${cfg.color}08` }}>
         <div className="interactive-diagram-card-header">
-          <span className="interactive-diagram-indicator-dot" style={{ background: cfg.color }} />
+          
           <h3 style={{ color: cfg.color }}>{cfg.title}</h3>
         </div>
         <p>{cfg.description}</p>

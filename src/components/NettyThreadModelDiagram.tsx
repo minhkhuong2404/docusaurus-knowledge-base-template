@@ -57,10 +57,7 @@ export default function NettyThreadModelDiagram(): React.JSX.Element {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span 
-            className={`interactive-diagram-indicator-dot ${model === 'TOMCAT' ? 'card-indicator-purple' : 'card-indicator-cyan'}`} 
-            style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: model === 'TOMCAT' ? '#a855f7' : '#2dd4bf' }}
-          />
+          
           <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700, color: model === 'TOMCAT' ? '#a855f7' : '#2dd4bf' }}>
             🧵 Threading Layout: {model === 'TOMCAT' ? 'Tomcat (Blocking)' : 'Netty (Multiplexed)'}
           </h3>
@@ -238,9 +235,7 @@ export default function NettyThreadModelDiagram(): React.JSX.Element {
         selectedData.type === 'purple' ? 'details-purple' : 'details-cyan'
       }`}>
         <div className="interactive-diagram-card-header">
-          <span className={`interactive-diagram-indicator-dot ${
-            selectedData.type === 'purple' ? 'card-indicator-purple' : 'card-indicator-cyan'
-          }`} />
+          
           <h3>{selectedData.title}</h3>
         </div>
         <p><strong>Concurrency Model:</strong> {selectedData.mechanics}</p>

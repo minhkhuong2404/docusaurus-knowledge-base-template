@@ -119,9 +119,8 @@ export default function ExceptionHierarchyDiagram(): React.JSX.Element {
       {/* Header */}
       <div className="interactive-diagram-card-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.6rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.08)', flexWrap: 'wrap', gap: 8 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span className="interactive-diagram-indicator-dot card-indicator-cyan" />
           <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700 }}>
-            ⚠️ <span style={{ color: '#a78bfa' }}>Java Exception Hierarchy</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: 6, verticalAlign: 'middle' }}><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg><span style={{ color: '#a78bfa' }}>Java Exception Hierarchy</span>
           </h3>
         </div>
         {/* Legend */}
@@ -229,7 +228,7 @@ export default function ExceptionHierarchyDiagram(): React.JSX.Element {
           style={{ borderColor: `${CAT_COLOR[sel.category]}40`, background: `${CAT_COLOR[sel.category]}08` }}
         >
           <div className="interactive-diagram-card-header">
-            <span className="interactive-diagram-indicator-dot" style={{ background: CAT_COLOR[sel.category] }} />
+            
             <h3 style={{ color: CAT_COLOR[sel.category] }}>{sel.label}</h3>
             {sel.mustHandle !== null && (
               <span style={{

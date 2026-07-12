@@ -97,15 +97,7 @@ export default function HikariCPPoolDiagram(): React.JSX.Element {
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
                 <span style={{ fontSize: '0.8rem', fontWeight: 800, color: getNumColor(key) }}>STEP 0{idx + 1}</span>
-                <span 
-                  className="interactive-diagram-indicator-dot" 
-                  style={{
-                    backgroundColor: step.type === 'purple' ? '#a855f7' : step.type === 'cyan' ? '#2dd4bf' : '#4ade80',
-                    width: activeStep === key ? '8px' : '5px',
-                    height: activeStep === key ? '8px' : '5px',
-                    opacity: activeStep === key ? 1 : 0.4
-                  }}
-                />
+                
               </div>
               <h4 style={{ margin: 0, fontSize: '0.9rem', fontWeight: 800, color: '#ffffff' }}>
                 {key === 'THREAD_LOCAL' ? 'Thread-Local' : key === 'SHARED_LIST' ? 'Shared List Steal' : 'Handoff Queue'}
@@ -121,9 +113,7 @@ export default function HikariCPPoolDiagram(): React.JSX.Element {
         selectedData.type === 'purple' ? 'details-purple' : selectedData.type === 'cyan' ? 'details-cyan' : 'details-green'
       }`}>
         <div className="interactive-diagram-card-header">
-          <span className={`interactive-diagram-indicator-dot ${
-            selectedData.type === 'purple' ? 'card-indicator-purple' : selectedData.type === 'cyan' ? 'card-indicator-cyan' : 'card-indicator-green'
-          }`} />
+          
           <h3>ConcurrentBag: {selectedData.title}</h3>
         </div>
         <p><strong>Latency Overhead:</strong> <span style={{ color: '#fbbf24', fontWeight: 'bold' }}>{selectedData.latency}</span></p>

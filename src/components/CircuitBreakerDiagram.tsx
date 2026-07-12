@@ -224,7 +224,7 @@ export default function CircuitBreakerDiagram(): JSX.Element {
         {activeState === 'CLOSED' && (
           <div className={"details-green"}>
             <div className={"interactive-diagram-card-header"}>
-              <span className={"interactive-diagram-indicator-dot card-indicator-green"} />
+              
               <h3>CLOSED STATE (Normal operations)</h3>
             </div>
             <p><strong>Behavior:</strong> All traffic passes normally through to the downstream microservice. All response times and success/failure outcomes are monitored.</p>
@@ -237,7 +237,7 @@ export default function CircuitBreakerDiagram(): JSX.Element {
         {activeState === 'OPEN' && (
           <div className={"details-red"}>
             <div className={"interactive-diagram-card-header"}>
-              <span className={"interactive-diagram-indicator-dot card-indicator-red"} />
+              
               <h3>OPEN STATE (Calls trip instantly)</h3>
             </div>
             <p><strong>Behavior:</strong> All downstream calls fail-fast immediately without hitting the actual service, throwing a <code>CallNotPermittedException</code>.</p>
@@ -250,7 +250,7 @@ export default function CircuitBreakerDiagram(): JSX.Element {
         {activeState === 'HALF_OPEN' && (
           <div className={"details-yellow"}>
             <div className={"interactive-diagram-card-header"}>
-              <span className={"interactive-diagram-indicator-dot card-indicator-yellow"} />
+              
               <h3>HALF-OPEN STATE (Testing pipeline health)</h3>
             </div>
             <p><strong>Behavior:</strong> A configured, limited number of test requests are permitted to pass through to the downstream service to check if it has recovered.</p>

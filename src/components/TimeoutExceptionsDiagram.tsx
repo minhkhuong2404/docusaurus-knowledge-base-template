@@ -97,15 +97,7 @@ export default function TimeoutExceptionsDiagram(): React.JSX.Element {
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
                 <span style={{ fontSize: '0.8rem', fontWeight: 800, color: getNumColor(key) }}>CLOCK 0{idx + 1}</span>
-                <span 
-                  className="interactive-diagram-indicator-dot" 
-                  style={{
-                    backgroundColor: tab.type === 'purple' ? '#a855f7' : tab.type === 'cyan' ? '#2dd4bf' : '#4ade80',
-                    width: activeTab === key ? '8px' : '5px',
-                    height: activeStep === key ? '8px' : '5px',
-                    opacity: activeTab === key ? 1 : 0.4
-                  }}
-                />
+                
               </div>
               <h4 style={{ margin: 0, fontSize: '0.9rem', fontWeight: 800, color: '#ffffff' }}>
                 {key === 'CONNECT_TIMEOUT' ? 'Connect Timeout' : key === 'READ_TIMEOUT' ? 'Read Timeout' : 'Connection Reset'}
@@ -121,9 +113,7 @@ export default function TimeoutExceptionsDiagram(): React.JSX.Element {
         selectedData.type === 'purple' ? 'details-purple' : selectedData.type === 'cyan' ? 'details-cyan' : 'details-green'
       }`}>
         <div className="interactive-diagram-card-header">
-          <span className={`interactive-diagram-indicator-dot ${
-            selectedData.type === 'purple' ? 'card-indicator-purple' : selectedData.type === 'cyan' ? 'card-indicator-cyan' : 'card-indicator-green'
-          }`} />
+          
           <h3>Exception Phase: {selectedData.title}</h3>
         </div>
         <p><strong>Clock Pipeline:</strong> {selectedData.clock}</p>

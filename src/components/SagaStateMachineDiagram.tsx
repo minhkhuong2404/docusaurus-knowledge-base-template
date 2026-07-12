@@ -56,9 +56,8 @@ export default function SagaStateMachineDiagram(): React.JSX.Element {
   return (
     <div className="interactive-diagram-container" style={{ margin: '1.5rem 0' }}>
       <div className="interactive-diagram-card-header" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0.6rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-        <span className="interactive-diagram-indicator-dot card-indicator-cyan" />
         <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700 }}>
-          🤖 <span style={{ color: '#a78bfa' }}>Saga State Machine</span> — Order Saga Lifecycle
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: 6, verticalAlign: 'middle' }}><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg><span style={{ color: '#a78bfa' }}>Saga State Machine</span> — Order Saga Lifecycle
         </h3>
       </div>
 
@@ -130,7 +129,7 @@ export default function SagaStateMachineDiagram(): React.JSX.Element {
       {active && STATES[active] && (
         <div className="interactive-diagram-details-card" style={{ borderColor: `${STATES[active].color}40`, background: `${STATES[active].color}08` }}>
           <div className="interactive-diagram-card-header">
-            <span className="interactive-diagram-indicator-dot" style={{ background: STATES[active].color }} />
+            
             <h3 style={{ color: STATES[active].color }}>{STATES[active].label}</h3>
             {STATES[active].terminal && <span style={{ marginLeft: 'auto', fontSize: '0.75rem', padding: '2px 8px', borderRadius: 4, background: 'rgba(148,163,184,0.1)', color: '#94a3b8', border: '1px solid rgba(148,163,184,0.2)' }}>Terminal State</span>}
           </div>

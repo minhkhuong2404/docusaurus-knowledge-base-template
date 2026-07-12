@@ -25,9 +25,11 @@ export default function SagaCoreFlowDiagram(): React.JSX.Element {
     <div className="interactive-diagram-container" style={{ margin: '1.5rem 0' }}>
       <div className="interactive-diagram-card-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.6rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span className="interactive-diagram-indicator-dot" style={{ background: mode === 'happy' ? '#4ade80' : '#f87171' }} />
-          <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700 }}>
-            🔄 <span style={{ color: mode === 'happy' ? '#4ade80' : '#f87171' }}>Saga Core Mechanics</span> — {mode === 'happy' ? 'Happy Path' : 'Compensation Path'}
+          <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={mode === 'happy' ? '#4ade80' : '#f87171'} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: 2, verticalAlign: 'middle', transition: 'stroke 0.2s' }}>
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+            </svg>
+            <span style={{ color: mode === 'happy' ? '#4ade80' : '#f87171' }}>Saga Core Mechanics</span> — {mode === 'happy' ? 'Happy Path' : 'Compensation Path'}
           </h3>
         </div>
         <div style={{ display: 'flex', gap: 6 }}>

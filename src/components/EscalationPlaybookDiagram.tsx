@@ -39,9 +39,8 @@ export default function EscalationPlaybookDiagram(): React.JSX.Element {
   return (
     <div className="interactive-diagram-container" style={{ margin: '1.5rem 0' }}>
       <div className="interactive-diagram-card-header" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0.6rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-        <span className="interactive-diagram-indicator-dot card-indicator-red" />
         <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700 }}>
-          🚨 <span style={{ color: '#f87171' }}>Escalation Playbook</span> — Saga Failure Response Levels
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: 6, verticalAlign: 'middle' }}><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg><span style={{ color: '#f87171' }}>Escalation Playbook</span> — Saga Failure Response Levels
         </h3>
       </div>
 
@@ -100,7 +99,7 @@ export default function EscalationPlaybookDiagram(): React.JSX.Element {
       {sel ? (
         <div className="interactive-diagram-details-card" style={{ borderColor: `${sel.color}40`, background: `${sel.color}08` }}>
           <div className="interactive-diagram-card-header">
-            <span className="interactive-diagram-indicator-dot" style={{ background: sel.color }} />
+            
             <h3 style={{ color: sel.color }}>Level {sel.num}: {sel.title}</h3>
             <span style={{ marginLeft: 'auto', fontSize: '0.75rem', padding: '2px 8px', borderRadius: 4, background: `${sel.color}15`, color: sel.color, border: `1px solid ${sel.color}40` }}>{sel.time}</span>
           </div>

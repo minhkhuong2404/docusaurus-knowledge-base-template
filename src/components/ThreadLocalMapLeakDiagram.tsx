@@ -57,10 +57,7 @@ export default function ThreadLocalMapLeakDiagram(): React.JSX.Element {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span 
-            className={`interactive-diagram-indicator-dot ${mode === 'BEFORE_GC' ? 'card-indicator-purple' : 'card-indicator-red'}`} 
-            style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: mode === 'BEFORE_GC' ? '#a855f7' : '#f87171' }}
-          />
+          
           <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
             <span>🧬</span>
             <span style={{ color: mode === 'BEFORE_GC' ? '#a855f7' : '#f87171' }}>
@@ -210,9 +207,7 @@ export default function ThreadLocalMapLeakDiagram(): React.JSX.Element {
         selectedData.type === 'purple' ? 'details-purple' : 'details-cyan'
       }`}>
         <div className="interactive-diagram-card-header">
-          <span className={`interactive-diagram-indicator-dot ${
-            selectedData.type === 'purple' ? 'card-indicator-purple' : 'card-indicator-red'
-          }`} />
+          
           <h3>{selectedData.title}</h3>
         </div>
         <p><strong>WeakRef Key:</strong> {selectedData.keyState}</p>

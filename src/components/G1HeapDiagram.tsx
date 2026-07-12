@@ -178,9 +178,7 @@ export default function G1HeapDiagram(): React.JSX.Element {
         selectedData.type === 'green' ? "details-green" : selectedData.type === 'blue' ? "details-blue" : selectedData.type === 'purple' ? "details-purple" : selectedData.type === 'yellow' ? "details-yellow" : "details-gray"
       }`}>
         <div className={"interactive-diagram-card-header"}>
-          <span className={`${"interactive-diagram-indicator-dot"} ${
-            selectedData.type === 'green' ? "card-indicator-green" : selectedData.type === 'blue' ? "card-indicator-blue" : selectedData.type === 'purple' ? "card-indicator-purple" : selectedData.type === 'yellow' ? "card-indicator-yellow" : "card-indicator-gray"
-          }`} />
+          
           <h3>{selectedData.title}</h3>
         </div>
         <p><strong>Overview:</strong> {selectedData.shortDesc}</p>

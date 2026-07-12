@@ -84,9 +84,7 @@ export default function ConcurrencyCoordinationDiagram({ defaultTab = 'LATCH' }:
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span className={`interactive-diagram-indicator-dot ${
-            tab === 'LATCH' ? 'card-indicator-purple' : tab === 'BARRIER' ? 'card-indicator-cyan' : tab === 'SEMAPHORE' ? 'card-indicator-green' : 'card-indicator-yellow'
-          }`} />
+          
           <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
             <span>⚡</span>
             <span style={{ color: tab === 'LATCH' ? '#a855f7' : tab === 'BARRIER' ? '#2dd4bf' : tab === 'SEMAPHORE' ? '#4ade80' : '#fbbf24' }}>
@@ -286,9 +284,7 @@ export default function ConcurrencyCoordinationDiagram({ defaultTab = 'LATCH' }:
         tab === 'LATCH' ? 'details-purple' : tab === 'BARRIER' ? 'details-cyan' : tab === 'SEMAPHORE' ? 'details-green' : 'details-yellow'
       }`}>
         <div className="interactive-diagram-card-header">
-          <span className={`interactive-diagram-indicator-dot ${
-            tab === 'LATCH' ? 'card-indicator-purple' : tab === 'BARRIER' ? 'card-indicator-cyan' : tab === 'SEMAPHORE' ? 'card-indicator-green' : 'card-indicator-yellow'
-          }`} />
+          
           <h3>{selectedData.title}</h3>
         </div>
         <p><strong>Overview:</strong> {selectedData.overview}</p>

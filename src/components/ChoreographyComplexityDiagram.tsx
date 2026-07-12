@@ -7,9 +7,8 @@ export default function ChoreographyComplexityDiagram(): React.JSX.Element {
     <div className="interactive-diagram-container" style={{ margin: '1.5rem 0' }}>
       <div className="interactive-diagram-card-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.6rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span className="interactive-diagram-indicator-dot card-indicator-red" />
           <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700 }}>
-            🕸️ <span style={{ color: '#fb923c' }}>When Choreography Becomes Unmanageable</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fb923c" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: 6, verticalAlign: 'middle' }}><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /></svg><span style={{ color: '#fb923c' }}>When Choreography Becomes Unmanageable</span>
           </h3>
         </div>
         <button onClick={() => setExpanded(e => !e)} style={{ background: expanded ? 'rgba(251,146,60,0.15)' : 'rgba(255,255,255,0.03)', border: `1px solid ${expanded ? '#fb923c' : 'rgba(255,255,255,0.07)'}`, borderRadius: 4, color: expanded ? '#fb923c' : '#94a3b8', cursor: 'pointer', padding: '4px 12px', fontSize: '0.8rem', fontWeight: 600 }}>

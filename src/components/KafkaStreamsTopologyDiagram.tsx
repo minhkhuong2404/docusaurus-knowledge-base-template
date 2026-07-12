@@ -53,7 +53,7 @@ export default function KafkaStreamsTopologyDiagram(): React.JSX.Element {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span className={`interactive-diagram-indicator-dot ${tab === 'DSL_DAG' ? 'card-indicator-purple' : 'card-indicator-cyan'}`} />
+          
           <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
             <span>🌊</span>
             <span style={{ color: tab === 'DSL_DAG' ? '#a855f7' : '#2dd4bf' }}>
@@ -202,9 +202,7 @@ export default function KafkaStreamsTopologyDiagram(): React.JSX.Element {
         selectedData.type === 'purple' ? 'details-purple' : 'details-cyan'
       }`}>
         <div className="interactive-diagram-card-header">
-          <span className={`interactive-diagram-indicator-dot ${
-            selectedData.type === 'purple' ? 'card-indicator-purple' : 'card-indicator-cyan'
-          }`} />
+          
           <h3>{selectedData.title}</h3>
         </div>
         <p><strong>Overview:</strong> {selectedData.overview}</p>

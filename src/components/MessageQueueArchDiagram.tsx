@@ -60,9 +60,7 @@ export default function MessageQueueArchDiagram({ defaultTab = 'PREVENTION' }: {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span className={`interactive-diagram-indicator-dot ${
-            tab === 'PREVENTION' ? 'card-indicator-purple' : tab === 'AT_LEAST_ONCE' ? 'card-indicator-cyan' : 'card-indicator-green'
-          }`} />
+          
           <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
             <span>📊</span>
             <span style={{ color: tab === 'PREVENTION' ? '#a855f7' : tab === 'AT_LEAST_ONCE' ? '#2dd4bf' : '#4ade80' }}>
@@ -288,9 +286,7 @@ export default function MessageQueueArchDiagram({ defaultTab = 'PREVENTION' }: {
         selectedData.type === 'purple' ? 'details-purple' : selectedData.type === 'cyan' ? 'details-cyan' : 'details-green'
       }`}>
         <div className="interactive-diagram-card-header">
-          <span className={`interactive-diagram-indicator-dot ${
-            selectedData.type === 'purple' ? 'card-indicator-purple' : selectedData.type === 'cyan' ? 'card-indicator-cyan' : 'card-indicator-green'
-          }`} />
+          
           <h3>{selectedData.title}</h3>
         </div>
         <p><strong>Overview:</strong> {selectedData.overview}</p>

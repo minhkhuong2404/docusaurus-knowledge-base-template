@@ -65,9 +65,7 @@ export default function GitFlowMapDiagram(): React.JSX.Element {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span className={`interactive-diagram-indicator-dot ${
-            step === 'STAGE' ? 'card-indicator-purple' : step === 'COMMIT' ? 'card-indicator-cyan' : 'card-indicator-green'
-          }`} />
+          
           <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
             <span>🌴</span>
             <span style={{ color: step === 'STAGE' ? '#a855f7' : step === 'COMMIT' ? '#2dd4bf' : '#4ade80' }}>
@@ -180,9 +178,7 @@ export default function GitFlowMapDiagram(): React.JSX.Element {
         step === 'STAGE' ? 'details-purple' : step === 'COMMIT' ? 'details-cyan' : 'details-green'
       }`}>
         <div className="interactive-diagram-card-header">
-          <span className={`interactive-diagram-indicator-dot ${
-            step === 'STAGE' ? 'card-indicator-purple' : step === 'COMMIT' ? 'card-indicator-cyan' : 'card-indicator-green'
-          }`} />
+          
           <h3>{selectedData.title}</h3>
         </div>
         <p><strong>Syntax:</strong> <code style={{ color: '#ffffff', background: 'rgba(0,0,0,0.3)', padding: '2px 6px', borderRadius: '3px' }}>{selectedData.cmd}</code></p>

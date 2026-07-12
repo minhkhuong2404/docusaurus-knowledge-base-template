@@ -63,11 +63,7 @@ export default function SpringSecurityFilterDiagram({ defaultMode = 'FILTER_CHAI
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span 
-            className={`interactive-diagram-indicator-dot ${
-              mode === 'FILTER_CHAIN' ? 'card-indicator-purple' : mode === 'AUTH_FLOW' ? 'card-indicator-cyan' : 'card-indicator-green'
-            }`} 
-          />
+          
           <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
             <span>🛡️</span>
             <span style={{ color: mode === 'FILTER_CHAIN' ? '#a855f7' : mode === 'AUTH_FLOW' ? '#2dd4bf' : '#4ade80' }}>
@@ -296,9 +292,7 @@ export default function SpringSecurityFilterDiagram({ defaultMode = 'FILTER_CHAI
         selectedData.type === 'purple' ? 'details-purple' : selectedData.type === 'cyan' ? 'details-cyan' : 'details-green'
       }`}>
         <div className="interactive-diagram-card-header">
-          <span className={`interactive-diagram-indicator-dot ${
-            selectedData.type === 'purple' ? 'card-indicator-purple' : selectedData.type === 'cyan' ? 'card-indicator-cyan' : 'card-indicator-green'
-          }`} />
+          
           <h3>{selectedData.title}</h3>
         </div>
         <p><strong>Architecture Mapping:</strong> {selectedData.overview}</p>

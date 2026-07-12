@@ -24,7 +24,7 @@ export default function JDK7SegmentLockingDiagram(): React.JSX.Element {
   return (
     <div className="interactive-diagram-container" style={{ margin: '1.5rem 0' }}>
       <div className="interactive-diagram-card-header" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0.6rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-        <span className="interactive-diagram-indicator-dot card-indicator-cyan" />
+        
         <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700 }}>
           🔒 <span style={{ color: '#38bdf8' }}>JDK 7</span> — Segment-Based Locking (ConcurrentHashMap)
         </h3>
@@ -116,7 +116,7 @@ export default function JDK7SegmentLockingDiagram(): React.JSX.Element {
 
       <div className="interactive-diagram-details-card details-cyan">
         <div className="interactive-diagram-card-header">
-          <span className="interactive-diagram-indicator-dot card-indicator-cyan" />
+          
           <h3>How It Works</h3>
         </div>
         <ul>

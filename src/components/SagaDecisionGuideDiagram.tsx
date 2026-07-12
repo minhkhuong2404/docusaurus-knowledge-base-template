@@ -81,9 +81,8 @@ export default function SagaDecisionGuideDiagram(): React.JSX.Element {
     <div className="interactive-diagram-container" style={{ margin: '1.5rem 0' }}>
       <div className="interactive-diagram-card-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.6rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.08)', flexWrap: 'wrap', gap: 8 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span className="interactive-diagram-indicator-dot card-indicator-cyan" />
           <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700 }}>
-            🔀 <span style={{ color: '#a78bfa' }}>Choreography vs Orchestration</span> — Full Decision Guide
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: 6, verticalAlign: 'middle' }}><path d="M16 3h5v5" /><path d="M4 20L21 3" /><path d="M21 16v5h-5" /><path d="M15 15l6 6" /><path d="M4 4l5 5" /></svg><span style={{ color: '#a78bfa' }}>Choreography vs Orchestration</span> — Full Decision Guide
           </h3>
         </div>
         <button onClick={reset} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 4, color: '#94a3b8', cursor: 'pointer', padding: '4px 10px', fontSize: '0.8rem' }}>↩ Reset</button>
@@ -134,7 +133,7 @@ export default function SagaDecisionGuideDiagram(): React.JSX.Element {
       {result && (
         <div className="interactive-diagram-details-card" style={{ borderColor: `${result.color}40`, background: `${result.color}08`, margin: '0' }}>
           <div className="interactive-diagram-card-header">
-            <span className="interactive-diagram-indicator-dot" style={{ background: result.color }} />
+            
             <h3 style={{ color: result.color }}>Recommendation: {result.label}</h3>
           </div>
           <p>{result.desc}</p>

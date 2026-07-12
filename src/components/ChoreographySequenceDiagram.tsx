@@ -68,9 +68,8 @@ export default function ChoreographySequenceDiagram(): React.JSX.Element {
     <div className="interactive-diagram-container" style={{ margin: '1.5rem 0' }}>
       <div className="interactive-diagram-card-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.6rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.08)', flexWrap: 'wrap', gap: 8 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span className="interactive-diagram-indicator-dot" style={{ background: pathMode === 'happy' ? '#4ade80' : '#f87171' }} />
           <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700 }}>
-            🎬 <span style={{ color: pathMode === 'happy' ? '#4ade80' : '#f87171' }}>Choreography Flow Map</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={pathMode === 'happy' ? '#4ade80' : '#f87171'} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: 6, verticalAlign: 'middle', transition: 'stroke 0.2s' }}><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21" /><line x1="9" y1="3" x2="9" y2="18" /><line x1="15" y1="6" x2="15" y2="21" /></svg><span style={{ color: pathMode === 'happy' ? '#4ade80' : '#f87171' }}>Choreography Flow Map</span>
           </h3>
         </div>
         <div style={{ display: 'flex', gap: 6 }}>

@@ -284,9 +284,7 @@ export default function VirtualThreadLifecycleDiagram(): React.JSX.Element {
         selectedData.type === 'green' ? 'details-green' : selectedData.type === 'red' ? 'details-red' : 'details-purple'
       }`}>
         <div className="interactive-diagram-card-header">
-          <span className={`interactive-diagram-indicator-dot ${
-            selectedData.type === 'green' ? 'card-indicator-green' : selectedData.type === 'red' ? 'card-indicator-red' : 'card-indicator-purple'
-          }`} />
+          
           <h3>{selectedData.title}</h3>
         </div>
         <p><strong>Status:</strong> <span style={{ fontWeight: 'bold' }}>{selectedData.status}</span></p>

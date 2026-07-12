@@ -307,9 +307,7 @@ export default function HeapDumpLeakDiagram(): React.JSX.Element {
         selectedData.type === 'green' ? 'details-green' : selectedData.type === 'purple' ? 'details-purple' : selectedData.type === 'red' ? 'details-red' : 'details-yellow'
       }`}>
         <div className="interactive-diagram-card-header">
-          <span className={`interactive-diagram-indicator-dot ${
-            selectedData.type === 'green' ? 'card-indicator-green' : selectedData.type === 'purple' ? 'card-indicator-purple' : selectedData.type === 'red' ? 'card-indicator-red' : 'card-indicator-yellow'
-          }`} />
+          
           <h3>{selectedData.title}</h3>
         </div>
         <p><strong>Retained Size (Leak weight):</strong> <span style={{ color: '#f87171', fontWeight: 'bold' }}>{selectedData.retainedSize}</span></p>

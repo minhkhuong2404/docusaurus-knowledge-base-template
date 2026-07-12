@@ -97,7 +97,7 @@ export default function SpringMVCFlowDiagram(): React.JSX.Element {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span className="interactive-diagram-indicator-dot card-indicator-cyan" />
+          
           <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
             <span>🔄</span>
             <span style={{ color: '#2dd4bf' }}>Spring MVC Request Lifecycle</span>
@@ -241,9 +241,7 @@ export default function SpringMVCFlowDiagram(): React.JSX.Element {
         current.type === 'purple' ? 'details-purple' : current.type === 'cyan' ? 'details-cyan' : current.type === 'yellow' ? 'details-yellow' : 'details-green'
       }`}>
         <div className="interactive-diagram-card-header">
-          <span className={`interactive-diagram-indicator-dot ${
-            current.type === 'purple' ? 'card-indicator-purple' : current.type === 'cyan' ? 'card-indicator-cyan' : current.type === 'yellow' ? 'card-indicator-yellow' : 'card-indicator-green'
-          }`} />
+          
           <h3>{current.title}</h3>
         </div>
         <p><strong>Overview:</strong> {current.overview}</p>

@@ -20,11 +20,8 @@ export default function SagaCoordinationDiagram(): React.JSX.Element {
     <div className="interactive-diagram-container" style={{ margin: '1.5rem 0' }}>
       <div className="interactive-diagram-card-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.6rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.08)', flexWrap: 'wrap', gap: 8 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span className="interactive-diagram-indicator-dot card-indicator-cyan" />
           <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700 }}>
-            🔀 <span style={{ color: style === 'choreography' ? '#38bdf8' : '#a78bfa' }}>
-              {style === 'choreography' ? 'Choreography' : 'Orchestration'}
-            </span> — Coordination Style
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={style === 'choreography' ? '#38bdf8' : '#a78bfa'} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: 6, verticalAlign: 'middle', transition: 'stroke 0.2s' }}>{style === 'choreography' ? (<><circle cx="12" cy="5" r="3" /><circle cx="5" cy="17" r="3" /><circle cx="19" cy="17" r="3" /><path d="M9 7l-2 7" /><path d="M15 7l2 7" /><path d="M8 17h8" /></>) : (<><circle cx="12" cy="12" r="3" /><circle cx="12" cy="4" r="2" /><circle cx="4" cy="12" r="2" /><circle cx="20" cy="12" r="2" /><circle cx="12" cy="20" r="2" /><path d="M12 7v2" /><path d="M12 15v3" /><path d="M7 12H9" /><path d="M15 12h3" /></>)}</svg><span style={{ color: style === 'choreography' ? '#38bdf8' : '#a78bfa' }}>{style === 'choreography' ? 'Choreography' : 'Orchestration'}</span> — Coordination Style
           </h3>
         </div>
         <div style={{ display: 'flex', gap: 6 }}>
