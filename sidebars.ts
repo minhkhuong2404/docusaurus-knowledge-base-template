@@ -140,6 +140,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/spring/spring-data-jpa-query-annotation',
 								'technical-knowledge/spring/hibernate-association-best-practices',
 								'technical-knowledge/spring/spring-data-jpa-transactions',
+								'technical-knowledge/spring/spring-transactional-deep-dive',
 								'technical-knowledge/spring/jpa-hibernate-lifecycle-methods',
 								'technical-knowledge/spring/hibernate-transactions-performance',
 								'technical-knowledge/spring/spring-data-jpa-interview-questions'

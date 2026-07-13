@@ -32,7 +32,7 @@
   ],
   "version": "current",
   "lastUpdatedBy": "Lữ Minh Khương",
-  "lastUpdatedAt": 1779895894000,
+  "lastUpdatedAt": 1783877156000,
   "frontMatter": {
     "title": "Spring Boot — Internals & Architecture",
     "description": "Deep dive into Spring Boot internals, including auto-configuration, embedded servers, conditional beans, starters, and events.",

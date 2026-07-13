@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '690'),
+    component: ComponentCreator('/', 'ea2'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'f07'),
+        component: ComponentCreator('/', '22f'),
         routes: [
           {
             path: '/tags',
@@ -5141,6 +5141,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/propagation',
+            component: ComponentCreator('/tags/propagation', '053'),
+            exact: true
+          },
+          {
             path: '/tags/protocols',
             component: ComponentCreator('/tags/protocols', 'a9a'),
             exact: true
@@ -6621,6 +6626,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/threadlocal',
+            component: ComponentCreator('/tags/threadlocal', 'a74'),
+            exact: true
+          },
+          {
             path: '/tags/threads',
             component: ComponentCreator('/tags/threads', 'f0b'),
             exact: true
@@ -7222,7 +7232,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '8fa'),
+            component: ComponentCreator('/', 'd82'),
             routes: [
               {
                 path: '/aws',
@@ -7910,7 +7920,7 @@ export default [
               },
               {
                 path: '/java/jpa-hibernate-lifecycle-methods',
-                component: ComponentCreator('/java/jpa-hibernate-lifecycle-methods', '21a'),
+                component: ComponentCreator('/java/jpa-hibernate-lifecycle-methods', '1f9'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13960,7 +13970,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/java-io',
-                component: ComponentCreator('/technical-knowledge/java/java-io', 'b32'),
+                component: ComponentCreator('/technical-knowledge/java/java-io', 'f18'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14747,13 +14757,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/spring/hibernate-transactions-performance',
-                component: ComponentCreator('/technical-knowledge/spring/hibernate-transactions-performance', '498'),
+                component: ComponentCreator('/technical-knowledge/spring/hibernate-transactions-performance', 'a6f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/spring/spring-aop',
-                component: ComponentCreator('/technical-knowledge/spring/spring-aop', 'c6a'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-aop', '750'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14765,19 +14775,19 @@ export default [
               },
               {
                 path: '/technical-knowledge/spring/spring-boot',
-                component: ComponentCreator('/technical-knowledge/spring/spring-boot', '98f'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-boot', 'ea6'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/spring/spring-boot-advanced',
-                component: ComponentCreator('/technical-knowledge/spring/spring-boot-advanced', 'e69'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-boot-advanced', '179'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/spring/spring-boot-bootstrap-yml',
-                component: ComponentCreator('/technical-knowledge/spring/spring-boot-bootstrap-yml', '1ff'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-boot-bootstrap-yml', 'a35'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14789,7 +14799,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/spring/spring-boot-internals',
-                component: ComponentCreator('/technical-knowledge/spring/spring-boot-internals', '882'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-boot-internals', '612'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14807,19 +14817,19 @@ export default [
               },
               {
                 path: '/technical-knowledge/spring/spring-data-jpa',
-                component: ComponentCreator('/technical-knowledge/spring/spring-data-jpa', '8f1'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-data-jpa', 'e6f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/spring/spring-data-jpa-interview-questions',
-                component: ComponentCreator('/technical-knowledge/spring/spring-data-jpa-interview-questions', '251'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-data-jpa-interview-questions', '758'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/spring/spring-data-jpa-query-annotation',
-                component: ComponentCreator('/technical-knowledge/spring/spring-data-jpa-query-annotation', 'f23'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-data-jpa-query-annotation', '46d'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14843,7 +14853,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/spring/spring-framework-deep-dive',
-                component: ComponentCreator('/technical-knowledge/spring/spring-framework-deep-dive', 'bc1'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-framework-deep-dive', '82d'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14867,7 +14877,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/spring/spring-security',
-                component: ComponentCreator('/technical-knowledge/spring/spring-security', '776'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-security', 'ff4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/spring/spring-transactional-deep-dive',
+                component: ComponentCreator('/technical-knowledge/spring/spring-transactional-deep-dive', '70f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

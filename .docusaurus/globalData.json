@@ -6240,6 +6240,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/spring/spring-transactional-deep-dive",
+              "path": "/technical-knowledge/spring/spring-transactional-deep-dive",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/advanced-consensus-bft",
               "path": "/technical-knowledge/system-design/advanced-consensus-bft",
               "sidebar": "tutorialSidebar"

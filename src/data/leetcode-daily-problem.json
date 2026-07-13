@@ -1,8 +1,8 @@
 {
-  "id": "1331",
-  "title": "Rank Transform of an Array",
-  "url": "https://leetcode.com/problems/rank-transform-of-an-array/",
-  "difficulty": "easy",
-  "topic": "Array, Hash Table, Sorting",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-07-12."
+  "id": "1291",
+  "title": "Sequential Digits",
+  "url": "https://leetcode.com/problems/sequential-digits/",
+  "difficulty": "medium",
+  "topic": "Enumeration",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-07-13."
 }
