@@ -6,8 +6,8 @@ import remarkMath from 'remark-math';
 const config: Config = {
 	title: 'Engineering Knowledge Base',
 	tagline: 'Internal technical documentation',
-	url: 'https://luminhkhuong.dev',
-	baseUrl: '/',
+	url: 'https://luminhkhuong.github.io',
+	baseUrl: '/knowledge-base/',
 
 	organizationName: 'minhkhuong2404',
 	projectName: 'docusaurus-knowledge-base-template',
