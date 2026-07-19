@@ -89,7 +89,7 @@ CloudTrail → S3 (raw events) → CloudWatch Logs (via trail config)
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** A security team needs to know who deleted an important DynamoDB table last Tuesday. Which service should they use?
 

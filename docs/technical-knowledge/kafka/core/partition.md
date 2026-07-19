@@ -151,7 +151,7 @@ leader.imbalance.check.interval.seconds=300
 
 ---
 
-## Interview Questions — Partitions
+## Interview Questions
 
 **Q: What determines which partition a message goes to?**
 

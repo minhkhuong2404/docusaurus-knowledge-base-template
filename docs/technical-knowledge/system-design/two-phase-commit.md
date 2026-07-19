@@ -292,7 +292,7 @@ This is possible because PreCommit is a quorum acknowledgment — every particip
 
 ---
 
-## Senior Interview Questions
+## Interview Questions
 
 ### Q: A participant has voted YES in Phase 1. The coordinator then crashes. What happens?
 

@@ -200,7 +200,7 @@ public ConcurrentKafkaListenerContainerFactory<String, OrderEvent> kafkaListener
 
 ---
 
-## Interview Questions — Consumer
+## Interview Questions
 
 **Q: What is `max.poll.interval.ms` and what happens when it's exceeded?**
 

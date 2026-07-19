@@ -1227,7 +1227,7 @@ If rlimit too low: "too many open files" errors, connections dropped
 
 ---
 
-## 15. Interview Questions
+## Interview Questions
 
 **Q: How does Nginx handle 10,000 concurrent connections with one thread per worker?**
 

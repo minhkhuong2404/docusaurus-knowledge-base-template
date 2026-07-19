@@ -1064,7 +1064,7 @@ Pro user:  can run a batch job in a burst, then continue at 10 req/sec
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 ### Foundational
 

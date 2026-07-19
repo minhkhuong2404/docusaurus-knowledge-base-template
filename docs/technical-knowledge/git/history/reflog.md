@@ -155,7 +155,7 @@ git gc                                  # clean up dangling objects
 Every commit creates a reflog entry. Making frequent WIP commits (even messy ones) while working gives you more recovery points. You can always squash them before merging.
 :::
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. A teammate force-pushed and lost commits. How do you design a safe recovery playbook using reflog and branch recreation?
 2. When is `reflog` insufficient for recovery, and what preventative controls reduce that risk?

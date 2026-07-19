@@ -360,7 +360,7 @@ For tasks that take longer than the SSH timeout (e.g., massive database dumps).
 
 ---
 
-## Part 6: Best Practices & Interview Questions
+## Interview Questions
 
 ### Directory Layout Best Practice
 ```text

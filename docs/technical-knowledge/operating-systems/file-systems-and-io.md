@@ -358,7 +358,7 @@ try (FileChannel fc = FileChannel.open(path)) {
 
 ---
 
-## Common Interview Questions
+## Interview Questions
 
 ### Q1: What is the difference between a hard link and a symbolic link?
 

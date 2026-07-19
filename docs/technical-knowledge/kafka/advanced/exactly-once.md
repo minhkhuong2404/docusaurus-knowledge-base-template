@@ -978,7 +978,7 @@ class EosOrderProcessingTest {
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What are the three delivery guarantees in Kafka, and when do you choose each?**
 > At-most-once: producer sends once, no retry on failure — message may be lost. Use for metrics and telemetry where some loss is acceptable. At-least-once: producer retries until ACK received — message may be duplicated. Use for most business events where the consumer can handle duplicates (idempotent writes). Exactly-once: message delivered and processed precisely one time, no loss or duplicates. Use for financial transactions, inventory, and any case where duplicates cause real business harm. EOS carries ~10–20% throughput overhead so apply it selectively.

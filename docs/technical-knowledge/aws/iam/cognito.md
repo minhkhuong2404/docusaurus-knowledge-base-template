@@ -287,7 +287,7 @@ https://<your-domain>.auth.<region>.amazoncognito.com/login?
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** Mobile app uploads photos to S3. Users authenticate with Google. Which provides temporary AWS credentials?
 

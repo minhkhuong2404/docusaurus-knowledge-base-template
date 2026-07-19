@@ -301,7 +301,7 @@ With window scaling (up to 1 GB window): ≥ 1 Gbps on 100ms link ✅
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What is the difference between latency, bandwidth, and throughput?**
 > Latency: time for a packet to travel from source to destination (one-way) or round-trip (RTT). Bandwidth: maximum capacity of the channel (bits per second). Throughput: actual useful data transferred per second — always less than bandwidth due to overhead, protocol inefficiency, and latency-induced idle time. Analogy: a highway (bandwidth), travel time (latency), actual cars passing per hour (throughput).

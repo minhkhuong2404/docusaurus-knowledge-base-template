@@ -1426,7 +1426,7 @@ public class TraceIdFilter extends OncePerRequestFilter {
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What makes an API truly RESTful, and what is HATEOAS?**
 > REST satisfies six constraints: client-server separation, statelessness (no session on server), cacheability, uniform interface (resource URIs + standard HTTP methods), layered system, and optionally code-on-demand. Most "REST APIs" are actually HTTP APIs — they miss **HATEOAS** (Hypermedia as the Engine of Application State): including navigable links in responses (`"links": {"cancel": "/orders/42/cancel"}`) so clients discover capabilities dynamically rather than hardcoding URLs. HATEOAS decouples clients from API structure but adds implementation complexity — most teams consciously omit it.

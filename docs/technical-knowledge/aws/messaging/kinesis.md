@@ -201,7 +201,7 @@ Shard 2 (0-25) + Shard 3 (26-50) → Merge → Shard 4 (0-50)
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** IoT platform: 5 MB/s sensor data, multiple analytics apps need same data, replay last 7 days. Best service?
 

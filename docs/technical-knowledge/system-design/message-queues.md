@@ -676,7 +676,7 @@ Queues are inherently designed for work that can happen *later*. Introducing one
 
 ---
 
-## 📚 Interview Questions
+## Interview Questions
 
 ### Q1: What is the difference between Kafka and RabbitMQ? When would you choose each?
 > **Answer:** Kafka is a distributed log optimized for high-throughput replayable streams; RabbitMQ is a broker optimized for flexible routing and work queues. Choose Kafka for event streaming/analytics and RabbitMQ for low-latency task dispatch patterns.

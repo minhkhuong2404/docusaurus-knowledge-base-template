@@ -158,7 +158,7 @@ git pull --rebase origin main         # catch up
 This keeps your branch current and avoids large, painful merges at PR time.
 :::
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. How do you design team defaults for `pull` behavior to reduce history drift?
 2. When should engineers avoid `git pull` and prefer explicit `fetch` + inspect?

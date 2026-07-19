@@ -370,7 +370,7 @@ S3 (PutObject) → EventBridge → Rule 1: if prefix="orders/" → Lambda A
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** Company replicates S3 from us-east-1 to eu-west-1. User deletes in us-east-1. Deleted in eu-west-1?
 
@@ -447,7 +447,7 @@ D) Bucket policy with explicit Deny
 
 ---
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. How do you choose between CRR and SRR for compliance, latency, and operational recovery?
 2. When is S3 Object Lambda superior to preprocessing pipelines, and when is it a bad fit?

@@ -8,6 +8,14 @@ tags: [database, sharding, partitioning, scaling, consistent-hashing, distribute
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import VerticalPartitioningDiagram from '@site/src/components/VerticalPartitioningDiagram';
+import HorizontalPartitioningDiagram from '@site/src/components/HorizontalPartitioningDiagram';
+import ConsistentHashingBasicDiagram from '@site/src/components/ConsistentHashingBasicDiagram';
+import ConsistentHashingNodeMigrationDiagram from '@site/src/components/ConsistentHashingNodeMigrationDiagram';
+import DirectoryLookupServiceDiagram from '@site/src/components/DirectoryLookupServiceDiagram';
+import VirtualNodesDiagram from '@site/src/components/VirtualNodesDiagram';
+import ReplicationConsistentHashingDiagram from '@site/src/components/ReplicationConsistentHashingDiagram';
+import ScatterGatherCoLocatedDiagram from '@site/src/components/ScatterGatherCoLocatedDiagram';
 
 # Database Sharding & Partitioning
 
@@ -26,18 +34,7 @@ import TabItem from '@theme/TabItem';
 
 Split a table **by columns**. Move rarely-accessed or large fields into a separate table while keeping hot fields together.
 
-```
-Before (one wide table):
-┌─────────┬──────────┬───────┬─────────────────────┬──────────────┐
-│ user_id │ username │ email │ profile_bio (TEXT)  │ avatar_blob  │
-└─────────┴──────────┴───────┴─────────────────────┴──────────────┘
-
-After (vertical split):
-┌─────────┬──────────┬───────┐    ┌─────────┬──────────────────────┐
-│ user_id │ username │ email │    │ user_id │ profile_bio, avatar  │
-└─────────┴──────────┴───────┘    └─────────┴──────────────────────┘
-  Hot table (queried every login)    Cold table (queried on profile view)
-```
+<VerticalPartitioningDiagram />
 
 **When to use it:** when a small number of columns are accessed in 95% of queries and the rest inflate the row size, bloating cache and increasing I/O.
 
@@ -45,14 +42,7 @@ After (vertical split):
 
 Split a table **by rows**. Different subsets of rows live on entirely different database servers.
 
-```
-Before: one table with 100M rows on one server
-
-After (sharded by user_id):
-Shard A  ─── rows where user_id % 3 = 0   (≈33M rows)
-Shard B  ─── rows where user_id % 3 = 1   (≈33M rows)
-Shard C  ─── rows where user_id % 3 = 2   (≈33M rows)
-```
+<HorizontalPartitioningDiagram />
 
 **When we say "sharding" in system design, we almost always mean horizontal partitioning.** The rest of this guide focuses on it.
 
@@ -170,34 +160,11 @@ This is the fundamental weakness that **consistent hashing** was designed to sol
 
 Rather than modulo arithmetic, both keys and nodes are mapped onto a **virtual ring** from `0` to `2³²−1`. A key is owned by the first node clockwise from its hash position.
 
-```
-                 0
-           ┌─────┴─────┐
-     N3    │           │   N1
-   (75%)   │           │  (25%)
-           │   RING    │
-           │           │
-           └─────┬─────┘
-                 N2
-                (50%)
-
-Key hash=10%  → clockwise → N1  ✅
-Key hash=40%  → clockwise → N2  ✅
-Key hash=60%  → clockwise → N3  ✅
-```
+<ConsistentHashingBasicDiagram />
 
 **Adding a node:** only the keys between the new node and its predecessor on the ring need to move. ~1/N keys migrate instead of ~100%.
 
-```
-Before (3 nodes):
-Ring: N1(25%) ── N2(50%) ── N3(75%) ── N1...
-
-After adding N4 at position 60%:
-Ring: N1(25%) ── N2(50%) ── N4(60%) ── N3(75%) ── N1...
-
-Only keys between 50%–60% move from N3 to N4.
-Everything else stays put.
-```
+<ConsistentHashingNodeMigrationDiagram />
 
 **Removing a node (failure or decommission):** only that node's keys move to its successor. All other nodes are unaffected.
 
@@ -217,11 +184,7 @@ Everything else stays put.
 
 A central routing table (sometimes called a **shard map**) explicitly records where each key or key range lives:
 
-```
-email → user_id (mapping table)
-user_id range → shard_id
-shard_id → host:port
-```
+<DirectoryLookupServiceDiagram />
 
 **Pros:**
 - Maximum flexibility — you can manually move individual hot tenants to dedicated hardware.
@@ -255,17 +218,7 @@ Basic consistent hashing with one point per physical node produces uneven distri
 
 The solution: each physical node claims **multiple positions** on the ring (virtual nodes). A cluster with 3 servers and 150 vnodes per server has 450 points on the ring, producing near-uniform distribution.
 
-```
-Physical servers: S1, S2, S3
-Virtual nodes: S1_1, S1_2, ..., S1_150,
-               S2_1, S2_2, ..., S2_150,
-               S3_1, S3_2, ..., S3_150
-
-Ring positions (sorted):
-... S3_72 ── S1_14 ── S2_91 ── S3_4 ── S1_88 ...
-         ↑               ↑
-   (key A → S1_14)   (key B → S2_91)
-```
+<VirtualNodesDiagram />
 
 **Benefits of vnodes:**
 - Even load distribution regardless of how many nodes join or leave.
@@ -278,10 +231,7 @@ Ring positions (sorted):
 
 In production, keys are not stored on just one node. They are replicated to the next N nodes clockwise on the ring (the **replication factor**):
 
-```
-Replication factor = 3:
-Key → primary node → replica 1 (next clockwise) → replica 2 (next after that)
-```
+<ReplicationConsistentHashingDiagram />
 
 This means every piece of data survives the loss of up to N-1 nodes in its replica group.
 
@@ -546,19 +496,7 @@ This is why choosing the right initial shard count matters so much. Rule of thum
 
 Understanding when queries cross shards is essential for performance planning:
 
-```
-Co-located query (best case):
-Client → Router → Shard A   ← all data here
-                    ↓
-                  Result
-Latency: 1 network hop
-
-Scatter-gather query (worst case):
-Client → Router → Shard A ─┐
-                → Shard B ─┤→ Merge & sort → Result
-                → Shard C ─┘
-Latency: 1 hop + merge time + slowest shard's response
-```
+<ScatterGatherCoLocatedDiagram />
 
 Real latency impact: at P50 scatter-gather is ~3x slower; at P99 it's often 10–20x slower because you wait for the slowest shard (the "long tail" problem).
 
@@ -759,7 +697,7 @@ A sharded system introduces failure modes that don't exist on single-server data
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 ### For new learners
 

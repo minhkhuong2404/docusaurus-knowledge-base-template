@@ -343,7 +343,7 @@ kafka-reassign-partitions.sh --bootstrap-server localhost:9092 \
 
 ---
 
-## Interview Questions — Partitioning Strategies
+## Interview Questions
 
 **Q: What is the difference between key-based and round-robin partitioning?**
 

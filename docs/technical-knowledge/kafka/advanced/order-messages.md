@@ -209,7 +209,7 @@ consumer.resume(Set.of(new TopicPartition(record.topic(), record.partition())));
 
 ---
 
-## Interview Questions — Message Ordering
+## Interview Questions
 
 **Q: How does Kafka guarantee message ordering?**
 

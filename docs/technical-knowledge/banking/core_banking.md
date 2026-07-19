@@ -238,7 +238,7 @@ CBS is the most critical system in a bank. Availability requirements:
 - [outbound.md](./outbound.md) — CBS debit before submission
 - [reconciliation.md](./reconciliation.md) — Reconciling CBS entries against scheme
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. How do you isolate core banking availability risk from channel and payment-service failures?
 2. What migration strategy minimizes risk when modernizing legacy CBS integrations?

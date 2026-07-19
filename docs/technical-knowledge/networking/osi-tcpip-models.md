@@ -179,7 +179,7 @@ tracert google.com      # Windows
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What is the OSI model and why does it exist?**
 > The OSI (Open Systems Interconnection) model is a conceptual 7-layer framework that standardizes how different systems communicate over a network. It exists to enable interoperability between different vendors' hardware and software by defining clear interfaces between layers. Each layer has a specific responsibility, making design and troubleshooting modular.

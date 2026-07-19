@@ -765,7 +765,7 @@ public void processRequest() {
 - [JVM Internals: Memory, GC & Class Loading](./java-jvm.md)
 - [Java OOP](./java-oop.md)
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. How do you prioritize Java language feature adoption across teams with mixed service maturity and SLAs?
 2. What migration plan would you propose from Java 11 to 21 for a large microservice estate?

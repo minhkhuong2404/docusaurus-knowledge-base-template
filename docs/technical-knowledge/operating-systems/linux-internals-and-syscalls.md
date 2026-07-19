@@ -375,7 +375,7 @@ exit_group(0)                              = ?
 
 ---
 
-## Common Interview Questions
+## Interview Questions
 
 ### Q1: What is the difference between a process and a container?
 

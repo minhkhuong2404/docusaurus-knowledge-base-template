@@ -519,7 +519,7 @@ grep "Processing ACL" /var/log/kafka/server.log
 
 ---
 
-## Interview Questions — Kafka Authorization
+## Interview Questions
 
 **Q: What is the difference between authentication and authorization in Kafka?**
 

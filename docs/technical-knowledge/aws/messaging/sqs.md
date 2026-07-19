@@ -271,7 +271,7 @@ Set Lambda ESM's `MaximumConcurrency` to control processing rate.
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** Lambda takes 45s, visibility timeout is 30s. What happens?
 

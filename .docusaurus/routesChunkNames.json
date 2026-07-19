@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-3fa": {
+  "/-9f2": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-48c": {
+  "/-9d7": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -5793,7 +5793,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-707": {
+  "/-5aa": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -10948,7 +10948,7 @@
     "__comp": "17896441",
     "content": "724987fe"
   },
-  "/technical-knowledge/system-design/cap-theorem-system-design-19c": {
+  "/technical-knowledge/system-design/cap-theorem-system-design-0b6": {
     "__comp": "17896441",
     "content": "75fc6f05"
   },
@@ -10988,7 +10988,7 @@
     "__comp": "17896441",
     "content": "73d1f34f"
   },
-  "/technical-knowledge/system-design/dead-letter-queue-4f8": {
+  "/technical-knowledge/system-design/dead-letter-queue-18c": {
     "__comp": "17896441",
     "content": "8a82e430"
   },
@@ -11048,7 +11048,7 @@
     "__comp": "17896441",
     "content": "ee5a53d7"
   },
-  "/technical-knowledge/system-design/long-running-tasks-b92": {
+  "/technical-knowledge/system-design/long-running-tasks-0c4": {
     "__comp": "17896441",
     "content": "010e7447"
   },
@@ -11076,7 +11076,7 @@
     "__comp": "17896441",
     "content": "f58357ef"
   },
-  "/technical-knowledge/system-design/outbox-pattern-589": {
+  "/technical-knowledge/system-design/outbox-pattern-6af": {
     "__comp": "17896441",
     "content": "5223f567"
   },
@@ -11104,11 +11104,11 @@
     "__comp": "17896441",
     "content": "bd0308dc"
   },
-  "/technical-knowledge/system-design/scaling-reads-573": {
+  "/technical-knowledge/system-design/scaling-reads-b09": {
     "__comp": "17896441",
     "content": "382009e9"
   },
-  "/technical-knowledge/system-design/scaling-writes-70e": {
+  "/technical-knowledge/system-design/scaling-writes-237": {
     "__comp": "17896441",
     "content": "91aa5927"
   },
@@ -11148,7 +11148,7 @@
     "__comp": "17896441",
     "content": "5171caa6"
   },
-  "/technical-knowledge/system-design/two-phase-commit-bd2": {
+  "/technical-knowledge/system-design/two-phase-commit-c65": {
     "__comp": "17896441",
     "content": "4c5a6247"
   },

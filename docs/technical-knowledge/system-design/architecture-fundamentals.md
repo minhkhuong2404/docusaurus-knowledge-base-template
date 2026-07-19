@@ -635,7 +635,7 @@ Publish OrderPlaced events to Kafka. Consumers independently subscribe.
 
 ---
 
-## Interview Questions: Senior Level
+## Interview Questions
 
 ### Q: What is PACELC and how does it extend the CAP theorem?
 

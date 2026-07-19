@@ -141,7 +141,7 @@ git commit -m "chore: remove shared-proto submodule"
 Submodules are powerful but add operational complexity — especially for CI/CD pipelines and teammates unfamiliar with the workflow. For sharing Java libraries across services, consider publishing to a private Maven/Gradle repository (Nexus, GitHub Packages, Artifactory) instead. Reserve submodules for cases where you genuinely need to co-develop the shared code alongside the parent project.
 :::
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. How do you decide between submodules and package registries for shared code?
 2. What CI/CD controls are required for stable submodule workflows?

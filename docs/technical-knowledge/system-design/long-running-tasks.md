@@ -752,7 +752,7 @@ public void detectStuckJobs() {
 
 ---
 
-## Senior Interview Questions
+## Interview Questions
 
 ### Q: A worker processes a report job and writes the result to S3, but crashes before updating the job status in the database to COMPLETED. What happens when the message becomes visible again in SQS/Kafka?
 

@@ -1059,7 +1059,7 @@ Do services need to communicate SECURELY with each other INSIDE the cluster?
 		→ Service Mesh (Istio / Linkerd) — in addition to gateway, not instead of
 ```
 
-### Interview Q&A
+### Interview Questions
 
 **Q: Since an API Gateway is technically a reverse proxy, why not just call it a reverse proxy?**
 

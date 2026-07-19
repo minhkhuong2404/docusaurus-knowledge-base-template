@@ -1027,7 +1027,7 @@ public class CircuitBreakerService {
 
 ---
 
-## 🎓 9. Interview Questions {/* #9-interview-questions */}
+## Interview Questions {/* #9-interview-questions */}
 
 ### Beginner Level
 

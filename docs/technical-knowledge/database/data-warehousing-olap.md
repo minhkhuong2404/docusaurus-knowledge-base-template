@@ -299,7 +299,7 @@ GROUP BY GROUPING SETS (
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What is the difference between OLTP and OLAP?**
 > OLTP (Online Transaction Processing) handles day-to-day operations with short, targeted queries updating few rows — optimized for concurrency and write performance. OLAP (Online Analytical Processing) handles complex analytical queries scanning millions of rows across many dimensions — optimized for read throughput. They have fundamentally different access patterns and are served by different database designs.

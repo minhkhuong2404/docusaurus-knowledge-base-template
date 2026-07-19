@@ -173,7 +173,7 @@ Policies:
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** A developer is writing an AWS SAM template and wants to ensure that all AWS Lambda functions defined in the template default to a timeout of 30 seconds and use the `java21` runtime. What is the most efficient way to achieve this?
 

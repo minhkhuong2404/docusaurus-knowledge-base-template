@@ -306,7 +306,7 @@ proxy_set_header X-Forwarded-Host $host;
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What is the difference between a forward proxy and a reverse proxy?**
 > A forward proxy acts on behalf of clients — clients configure it explicitly, and external servers see the proxy's IP. Used for: anonymization, corporate filtering, caching. A reverse proxy acts on behalf of servers — clients connect to it thinking it's the server, and backends see the proxy's IP. Used for: load balancing, TLS termination, caching, path routing. The key difference is whose interests they serve.

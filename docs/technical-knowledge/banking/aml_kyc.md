@@ -319,7 +319,7 @@ A PEP is a person entrusted with a **prominent public function** — they are at
 | **Domestic PEP**                   | Prime Minister, Cabinet Ministers, Senators, Federal Court judges, senior military officers, chiefs of state-owned enterprises |
 | **Foreign PEP**                    | Heads of state, ministers, ambassadors, senior judges of foreign governments                                                   |
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. How do you balance false positives and missed detection risk in AML transaction monitoring?
 2. What governance model should own KYC refresh quality across business and compliance teams?

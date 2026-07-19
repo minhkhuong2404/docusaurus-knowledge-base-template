@@ -337,7 +337,7 @@ Each page in this knowledge base follows a consistent structure:
 5. **Java/Spring notes** — Practical implementation snippets
 6. **Related concepts** — Cross-links to related pages
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. How do you explain banking payment architecture end-to-end to new backend engineers?
 2. What boundaries should be explicit between payment orchestration and core banking systems?

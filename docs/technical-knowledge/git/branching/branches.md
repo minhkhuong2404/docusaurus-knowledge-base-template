@@ -157,7 +157,7 @@ git branch -vv
 Long-lived feature branches accumulate drift from main and lead to painful, large merges. Aim for branches that live no longer than 2–3 days. If a feature is large, break it into smaller branches and merge incrementally behind a feature flag.
 :::
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. How do you enforce short-lived branch discipline in a large team without slowing delivery?
 2. What branching model works best for trunk-based CI/CD with strict compliance approvals?

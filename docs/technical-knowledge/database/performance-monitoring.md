@@ -267,7 +267,7 @@ WHERE created_at >= '2024-01-15' AND created_at < '2024-01-16'
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. How do you identify slow queries in production?**
 > Enable slow query logs (MySQL: `slow_query_log`; PostgreSQL: `log_min_duration_statement`). For aggregated stats, use PostgreSQL's `pg_stat_statements` or MySQL's performance schema. APM tools like Datadog or New Relic trace queries at the application level. In Java/Spring, use p6spy or datasource-proxy.

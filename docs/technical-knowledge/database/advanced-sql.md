@@ -696,7 +696,7 @@ GROUP BY user_id;
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What is the difference between ROW_NUMBER, RANK, and DENSE_RANK?**
 > All assign a number based on ORDER BY. `ROW_NUMBER` always gives unique sequential numbers (no ties — even identical values get different numbers). `RANK` gives tied rows the same number but **skips** the next ranks (1, 2, 2, 4). `DENSE_RANK` gives tied rows the same number with **no gaps** (1, 2, 2, 3). Use `ROW_NUMBER` for de-duplication, `RANK` for competition standings, `DENSE_RANK` for finding the Nth distinct value.

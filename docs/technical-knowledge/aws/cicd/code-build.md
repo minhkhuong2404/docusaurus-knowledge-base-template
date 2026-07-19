@@ -176,7 +176,7 @@ Reports appear in the CodeBuild console with pass/fail trends.
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** A CodeBuild project needs to access a private RDS instance during integration tests. What configuration is required?
 
@@ -215,7 +215,7 @@ D) Use buildspec `install` phase to pre-download
 - [CodeBuild Environment Variables](https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-env-vars.html)
 - [Maven with CodeBuild](https://docs.aws.amazon.com/codebuild/latest/userguide/sample-maven-5m.html)
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. How do you optimize CodeBuild cost and throughput for large monorepos with mixed Java and container builds?
 2. When a build runs in private subnets, what networking design avoids flaky internet dependency failures?

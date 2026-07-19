@@ -160,7 +160,7 @@ You **cannot** delete a stack if another stack is currently importing its export
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** A developer needs to pass a database password to an RDS instance provisioned via CloudFormation. Security policies mandate that passwords cannot be hardcoded in templates or passed as plain-text parameters. What is the most secure way to achieve this?
 

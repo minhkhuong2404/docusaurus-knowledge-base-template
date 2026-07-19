@@ -1005,7 +1005,7 @@ public class RateLimiter {
 
 ---
 
-## Interview Questions: Senior Level
+## Interview Questions
 
 ### Q: How do you decide if something should be one service or two?
 

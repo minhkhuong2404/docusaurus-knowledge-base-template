@@ -1357,7 +1357,7 @@ class TestRAGPipeline:
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What is function calling and why do LLMs need it?**
 > LLMs are text predictors — they have no ability to execute code, call APIs, or access real-time data. Function calling (tool use) is a protocol where the developer declares available tools as JSON Schemas and the LLM, instead of generating a text answer, generates a structured JSON payload describing which function to call with which arguments. The host application intercepts this, executes the real code, and returns the result to the LLM. This turns a passive text predictor into an agent that can interact with the world.

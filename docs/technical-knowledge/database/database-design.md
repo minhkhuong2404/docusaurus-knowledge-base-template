@@ -355,7 +355,7 @@ public class Order {
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What are the three types of anomalies that normalization prevents?**
 > Insert anomaly: can't add data about an entity without adding another entity. Delete anomaly: deleting one entity unintentionally removes data about another. Update anomaly: the same fact is stored in multiple places and must be updated everywhere consistently.

@@ -114,7 +114,7 @@ This maximizes CPU utilization tremendously by avoiding the dead-air gap of Thre
 
 ---
 
-## 5. Interview Questions
+## Interview Questions
 
 ### Q: Why not use `synchronized` everywhere?
 **A:** Post-Java 6, `synchronized` uses Lock Escalation and is extremely fast. However, it lacks advanced features that AQS provides: `tryLock()` (timeout if you can't get it instantly), Fair locking, and Interruptible locks (`lockInterruptibly()`).

@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '3fa'),
+    component: ComponentCreator('/', '9f2'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '48c'),
+        component: ComponentCreator('/', '9d7'),
         routes: [
           {
             path: '/tags',
@@ -7232,7 +7232,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '707'),
+            component: ComponentCreator('/', '5aa'),
             routes: [
               {
                 path: '/aws',
@@ -14943,7 +14943,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/cap-theorem-system-design',
-                component: ComponentCreator('/technical-knowledge/system-design/cap-theorem-system-design', '19c'),
+                component: ComponentCreator('/technical-knowledge/system-design/cap-theorem-system-design', '0b6'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -15003,7 +15003,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/dead-letter-queue',
-                component: ComponentCreator('/technical-knowledge/system-design/dead-letter-queue', '4f8'),
+                component: ComponentCreator('/technical-knowledge/system-design/dead-letter-queue', '18c'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -15093,7 +15093,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/long-running-tasks',
-                component: ComponentCreator('/technical-knowledge/system-design/long-running-tasks', 'b92'),
+                component: ComponentCreator('/technical-knowledge/system-design/long-running-tasks', '0c4'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -15135,7 +15135,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/outbox-pattern',
-                component: ComponentCreator('/technical-knowledge/system-design/outbox-pattern', '589'),
+                component: ComponentCreator('/technical-knowledge/system-design/outbox-pattern', '6af'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -15177,13 +15177,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/scaling-reads',
-                component: ComponentCreator('/technical-knowledge/system-design/scaling-reads', '573'),
+                component: ComponentCreator('/technical-knowledge/system-design/scaling-reads', 'b09'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/system-design/scaling-writes',
-                component: ComponentCreator('/technical-knowledge/system-design/scaling-writes', '70e'),
+                component: ComponentCreator('/technical-knowledge/system-design/scaling-writes', '237'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -15243,7 +15243,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/two-phase-commit',
-                component: ComponentCreator('/technical-knowledge/system-design/two-phase-commit', 'bd2'),
+                component: ComponentCreator('/technical-knowledge/system-design/two-phase-commit', 'c65'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

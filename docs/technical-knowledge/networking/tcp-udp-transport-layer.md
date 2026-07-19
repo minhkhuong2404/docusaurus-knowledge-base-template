@@ -270,7 +270,7 @@ socket.setKeepAlive(true);
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. Describe the TCP three-way handshake.**
 > Client sends SYN with its Initial Sequence Number (ISN). Server responds with SYN-ACK — acknowledging the client's ISN and sending its own ISN. Client sends ACK — acknowledging the server's ISN. After this, the connection is established and both sides have synchronized sequence numbers for reliable, ordered data transfer.

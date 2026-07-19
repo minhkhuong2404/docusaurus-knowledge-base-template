@@ -206,7 +206,7 @@ Depends on the metric. Kafka achieves higher **aggregate throughput** (millions 
 
 ---
 
-## Interview Questions — Kafka vs RabbitMQ
+## Interview Questions
 
 **Q: What is the fundamental architectural difference between Kafka and RabbitMQ?**
 

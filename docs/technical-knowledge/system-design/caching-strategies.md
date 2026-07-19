@@ -8,6 +8,20 @@ tags: [caching, redis, caffeine, eviction, ttl, cache-invalidation, performance,
 
 # Caching Strategies
 
+import CacheAsideSequenceDiagram from '@site/src/components/CacheAsideSequenceDiagram';
+import WriteThroughSequenceDiagram from '@site/src/components/WriteThroughSequenceDiagram';
+import WriteBehindSequenceDiagram from '@site/src/components/WriteBehindSequenceDiagram';
+import ReadThroughSequenceDiagram from '@site/src/components/ReadThroughSequenceDiagram';
+import CacheStampedeThunderingHerdDiagram from '@site/src/components/CacheStampedeThunderingHerdDiagram';
+import HotKeySaturationDiagram from '@site/src/components/HotKeySaturationDiagram';
+import CacheHierarchiesDiagram from '@site/src/components/CacheHierarchiesDiagram';
+import LruEvictionDiagram from '@site/src/components/LruEvictionDiagram';
+import LfuEvictionDiagram from '@site/src/components/LfuEvictionDiagram';
+import TtlExpirationDiagram from '@site/src/components/TtlExpirationDiagram';
+import CacheConsistencyDiagram from '@site/src/components/CacheConsistencyDiagram';
+import CachePenetrationDiagram from '@site/src/components/CachePenetrationDiagram';
+import CacheAvalancheDiagram from '@site/src/components/CacheAvalancheDiagram';
+
 > A cache is a **fast, temporary data store** closer to the application than the source of truth. It trades a bit of storage capacity and system complexity for raw speed.
 
 To understand why this matters, consider the hardware limits: accessing data from a database on disk (like an SSD) takes about 1 millisecond. Accessing data from memory (RAM) takes about 100 nanoseconds. That makes caching roughly **10,000 times faster** than querying a database.
@@ -268,6 +282,8 @@ The application controls the cache. **This is the pattern you should default to 
 * **Pros:** Keeps the cache lean. You only cache data that users actually request. If a piece of data is never requested, it never takes up precious cache memory.
 * **Cons:** A cache miss is expensive. It adds latency because the application must wait for three steps: fail the cache check, hit the database, and write to the cache.
 
+<CacheAsideSequenceDiagram />
+
 **Implementation:**
 
 ```java
@@ -327,6 +343,8 @@ The application writes directly to the cache, and the cache synchronously writes
 * **Pros:** Ensures reads always return completely fresh data.
 * **Cons:** Slower write operations. You also risk polluting your cache with data that might never be read again. Furthermore, you face the **Dual-Write Problem**: if the cache write succeeds but the database write fails, your system enters an inconsistent state.
 
+<WriteThroughSequenceDiagram />
+
 **Implementation:**
 
 ```java
@@ -360,6 +378,8 @@ Similar to Write-Through, but the cache flushes the data to the database *asynch
 * **Pros:** Massive write throughput since the application gets an immediate response as soon as data hits the memory layer.
 * **Cons:** Data loss. If the cache instance crashes before the background flush completes, the data is gone permanently.
 * **Best For:** Analytics or metric pipelines where occasional, minor data loss is acceptable in exchange for high write speeds.
+
+<WriteBehindSequenceDiagram />
 
 **Implementation:**
 
@@ -396,6 +416,8 @@ public class AnalyticsService {
 ### Read-Through
 
 Similar to Cache-Aside, but instead of the application orchestrating the cache miss, the cache itself acts as a proxy. If a user asks the cache for data it doesn't have, the cache service fetches it from the database, stores it, and returns it. This is exactly how CDNs operate.
+
+<ReadThroughSequenceDiagram />
 
 **Implementation:**
 
@@ -450,6 +472,8 @@ Because memory is vastly more expensive and limited than disk storage, you canno
 
 ### LRU (Least Recently Used)
 
+<LruEvictionDiagram />
+
 ```java
 // LRU Cache implementation using LinkedHashMap
 public class LRUCache<K, V> extends LinkedHashMap<K, V> {
@@ -474,6 +498,8 @@ String value = cache.get("key1"); // key1 becomes most recently used
 ```
 
 ### LFU (Least Frequently Used)
+
+<LfuEvictionDiagram />
 
 ```java
 // LFU Cache implementation
@@ -565,6 +591,8 @@ public class LFUCache<K, V> {
 
 ### TTL (Time to Live)
 
+<TtlExpirationDiagram />
+
 ```java
 // TTL Cache implementation
 public class TTLCache<K, V> {
@@ -640,6 +668,8 @@ Adding a cache doesn't just speed things up; it introduces complex distributed s
 A stampede happens when a highly popular cache entry expires (via its TTL), causing a sudden flood of concurrent requests to experience a cache miss all at the exact same time.
 
 * **Example:** Imagine you cache the homepage feed of a site with a 60-second TTL. You get 100,000 requests per second. For 60 seconds, the cache absorbs the load. At exactly 61 seconds, the key expires. In that single moment, 100,000 requests miss the cache and simultaneously slam your database, likely taking it offline via cascading failure.
+
+<CacheStampedeThunderingHerdDiagram />
 
 **Solutions:**
 
@@ -722,6 +752,8 @@ Because most architectures read from the cache but write to the database, you cr
 
 * **Example:** On a social network, a user updates their profile picture from "Image 1" to "Image 2". The database updates instantly to Image 2, but the cache still holds Image 1. For the duration of the cache TTL, all other users will see the stale profile picture.
 
+<CacheConsistencyDiagram />
+
 **Solutions:**
 
 * **Invalidate on Write:** When the database update completes, the application proactively issues a `DELETE` command to the cache key. The next read request will be forced to fetch the fresh Image 2 from the DB.
@@ -754,6 +786,8 @@ public class UserService {
 A hotkey is a single cache entry that becomes overwhelmingly popular. Even if your overall cache cluster is scaled well, a hotkey creates an uneven load that can overwhelm a specific shard.
 
 * **Example:** You are building X (Twitter). Your system handles standard user profiles perfectly. Suddenly, millions of users try to view Taylor Swift's profile at the exact same moment. That single user's cache key receives millions of requests, overloading the single Redis node responsible for that partition.
+
+<HotKeySaturationDiagram />
 
 **Solutions:**
 
@@ -844,6 +878,8 @@ Cache penetration occurs when the cache is repeatedly queried for data that does
 
 * **Example:** A malicious user repeatedly queries for non-existent user IDs. Each request misses the cache and hits the database, potentially overwhelming it.
 
+<CachePenetrationDiagram />
+
 **Solutions:**
 
 * **Cache Null Values:** Cache null results for non-existent data with a short TTL.
@@ -911,6 +947,8 @@ public class UserService {
 Cache avalanche occurs when a large number of cache entries expire at the same time, causing a sudden spike in database load.
 
 * **Example:** You set all cache entries to expire at the top of every hour. At 10:00:00, thousands of entries expire simultaneously, overwhelming the database.
+
+<CacheAvalancheDiagram />
 
 **Solutions:**
 
@@ -1378,34 +1416,7 @@ public class MultiLevelCacheService {
 
 ### Cache Hierarchies
 
-```
-┌─────────────────────────────────────────┐
-│         Application Server               │
-│                                         │
-│  ┌───────────────────────────────────┐  │
-│  │         L1 Cache (Memory)        │  │
-│  │  - Fastest (nanoseconds)         │  │
-│  │  - Local to server               │  │
-│  │  - Small capacity                │  │
-│  └───────────────────────────────────┘  │
-│                  │                       │
-│                  ▼                       │
-│  ┌───────────────────────────────────┐  │
-│  │         L2 Cache (Redis)          │  │
-│  │  - Fast (microseconds)            │  │
-│  │  - Shared across servers         │  │
-│  │  - Medium capacity               │  │
-│  └───────────────────────────────────┘  │
-│                  │                       │
-│                  ▼                       │
-│  ┌───────────────────────────────────┐  │
-│  │         Database                  │  │
-│  │  - Slow (milliseconds)           │  │
-│  │  - Persistent storage             │  │
-│  │  - Large capacity               │  │
-│  └───────────────────────────────────┘  │
-└─────────────────────────────────────────┘
-```
+<CacheHierarchiesDiagram />
 
 ### Cache Coherence
 

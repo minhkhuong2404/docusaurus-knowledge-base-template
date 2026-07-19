@@ -185,7 +185,7 @@ public class ParallelCalculator {
 
 ---
 
-## 🎓 Interview Questions & Answers
+## Interview Questions
 
 ### Q1: What is the core difference between concurrency and parallelism?
 **A:** **Concurrency** is about structural design — organizing your code to handle multiple tasks in overlapping periods (interleaved execution). **Parallelism** is about physical execution — running multiple tasks simultaneously on different CPU cores. Concurrency is "dealing with" many things at once; parallelism is "doing" many things at once.

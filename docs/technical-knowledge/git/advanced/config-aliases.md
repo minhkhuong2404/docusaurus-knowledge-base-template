@@ -257,7 +257,7 @@ ln -sf ~/dotfiles/.gitconfig ~/.gitconfig
 ```
 :::
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. What Git defaults should a platform team standardize for safety and consistency?
 2. How do aliases improve productivity without obscuring critical Git behavior?

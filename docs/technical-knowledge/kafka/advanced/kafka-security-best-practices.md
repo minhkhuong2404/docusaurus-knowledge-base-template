@@ -414,7 +414,7 @@ kafka-console-producer.sh --bootstrap-server localhost:9092 \
 
 ---
 
-## Interview Questions — Kafka Security
+## Interview Questions
 
 **Q: What is the most important Kafka security configuration to set?**
 

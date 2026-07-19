@@ -354,7 +354,7 @@ echo "get -b kafka.connect:type=connector-task-metrics,connector=my-connector,ta
 
 ---
 
-## Interview Questions — Kafka Connect SMTs
+## Interview Questions
 
 **Q: What is the difference between a source SMT and a sink SMT?**
 

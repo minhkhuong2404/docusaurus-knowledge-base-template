@@ -1088,7 +1088,7 @@ record.headers()
 
 ---
 
-## 14. Senior Interview Questions
+## Interview Questions
 
 **Q: What is the difference between a Saga and a distributed transaction (2PC)?**
 

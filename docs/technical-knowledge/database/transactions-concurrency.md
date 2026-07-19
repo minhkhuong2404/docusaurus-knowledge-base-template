@@ -276,7 +276,7 @@ public class OrderService {
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. Explain ACID properties with an example.**
 > ACID stands for Atomicity, Consistency, Isolation, and Durability. A classic example is a bank transfer: Atomicity ensures both debit and credit succeed or neither does; Consistency guarantees that constraints (like non-negative balances) are not violated; Isolation ensures concurrent operations don't see intermediate states; and Durability guarantees committed results survive crashes. For a comprehensive breakdown with analogies, illustrations, and implementation details, see **[Database ACID Properties](./acid.md)**.

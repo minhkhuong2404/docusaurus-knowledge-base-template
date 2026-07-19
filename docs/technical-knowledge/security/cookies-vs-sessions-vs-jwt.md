@@ -609,7 +609,7 @@ public class JwtService {
 
 ---
 
-## Senior interview Q&A
+## Interview Questions
 
 ### How do you handle JWT revocation in a stateless system?
 

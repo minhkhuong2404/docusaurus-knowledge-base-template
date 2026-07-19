@@ -446,7 +446,7 @@ Use the **Outbox Pattern inside each Saga step** to make event publishing within
 
 ---
 
-## Senior Interview Questions
+## Interview Questions
 
 ### Q: The Transactional Outbox guarantees at-least-once delivery. How do downstream consumers handle duplicates?
 

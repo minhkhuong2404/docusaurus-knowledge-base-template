@@ -535,7 +535,7 @@ A **scoped prompt** constrains the agent's blast radius — it tells the agent e
 
 ---
 
-## 🎯 Context Engineering Interview Questions
+## Interview Questions
 
 | Question | Strong Answer |
 |:---|:---|

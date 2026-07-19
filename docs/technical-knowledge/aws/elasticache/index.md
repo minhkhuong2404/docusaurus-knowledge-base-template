@@ -155,7 +155,7 @@ redis.opsForValue().set("rate-limit:user-123", "100", Duration.ofMinutes(5));
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** An application needs a caching layer with **automatic failover** across Availability Zones. Which ElastiCache option provides this?
 

@@ -1151,7 +1151,7 @@ builder.<String, OrderEvent>stream("orders-raw")
 
 ---
 
-## 20. Interview Questions — Senior Level
+## Interview Questions
 
 ---
 

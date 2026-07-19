@@ -644,7 +644,7 @@ Traditional profiling tools like `jstack` only display platform/carrier threads.
 
 ---
 
-## 8. Interview Questions
+## Interview Questions
 
 ### Q: Explain the relationship between Tomcat's thread pool and HikariCP's connection pool.
 

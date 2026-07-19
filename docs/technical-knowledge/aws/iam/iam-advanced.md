@@ -293,7 +293,7 @@ Instead of creating separate policies per team, use **tags** as policy condition
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** IAM user has `s3:*` policy. SCP denies `s3:DeleteBucket`. User tries to delete. Result?
 

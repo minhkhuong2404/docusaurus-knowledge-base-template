@@ -153,7 +153,7 @@ Kafka uses several internal topics automatically:
 
 ---
 
-## Interview Questions — Topics
+## Interview Questions
 
 **Q: How do you choose the number of partitions for a topic?**
 

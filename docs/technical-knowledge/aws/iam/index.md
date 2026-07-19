@@ -287,7 +287,7 @@ S3Client s3 = S3Client.builder()
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** Lambda needs S3 read access. Most secure approach?
 

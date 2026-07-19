@@ -139,7 +139,7 @@ Reduces: Lambda invocations, DynamoDB reads
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** A mobile app needs real-time order status updates pushed to connected clients whenever an order is updated. Which service is BEST suited?
 

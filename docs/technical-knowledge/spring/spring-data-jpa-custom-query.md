@@ -976,7 +976,7 @@ class NativeQueryTest {
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What is the difference between JPQL and native SQL in Spring Data JPA? When do you choose each?**
 > JPQL operates on JPA entity classes and their fields — Hibernate translates it to SQL using the configured dialect. It is database-portable, integrates with the L1/L2 caches, and is refactoring-safe. Native SQL is sent directly to the database unchanged — use it only for database-specific features unavailable in JPQL: `JSONB` operations, window functions, recursive CTEs, full-text search. Default to JPQL; switch to native only when you hit its limits.

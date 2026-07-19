@@ -387,7 +387,7 @@ public class PreTrafficHook implements RequestHandler<Map<String, Object>, Void>
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** A developer updates Lambda function code at `$LATEST` and publishes version 3. API Gateway points to the `prod` alias. Will prod users see the new code immediately?
 

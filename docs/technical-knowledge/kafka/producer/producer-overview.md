@@ -207,7 +207,7 @@ public KafkaTemplate<String, OrderEvent> kafkaTemplate() {
 
 ---
 
-## Interview Questions — Producer
+## Interview Questions
 
 **Q: What is the RecordAccumulator and why does it exist?**
 

@@ -5,6 +5,14 @@ sidebar_label: Bloom Filters
 description: A comprehensive guide to Bloom filters, covering probabilistic data structures, implementation details, use cases, interview questions, and real-world applications.
 tags: [bloom-filter, data-structures, probabilistic, caching, performance, space-efficiency]
 ---
+import BloomFilterChallengeDiagram from '@site/src/components/BloomFilterChallengeDiagram';
+import BloomFilterCoreConceptDiagram from '@site/src/components/BloomFilterCoreConceptDiagram';
+import BloomFilterVisualRepresentationDiagram from '@site/src/components/BloomFilterVisualRepresentationDiagram';
+import BloomFilterTradeoffDiagram from '@site/src/components/BloomFilterTradeoffDiagram';
+import CountingBloomFilterDiagram from '@site/src/components/CountingBloomFilterDiagram';
+import ScalableBloomFilterDiagram from '@site/src/components/ScalableBloomFilterDiagram';
+import BloomFilterExpirationDiagram from '@site/src/components/BloomFilterExpirationDiagram';
+import DistributedBloomFilterDiagram from '@site/src/components/DistributedBloomFilterDiagram';
 
 # Bloom Filters
 
@@ -120,41 +128,7 @@ Lookup "user_123":
 
 ### Visual Representation
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Bloom Filter Structure                    │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  Bit Array (m bits):                                         │
-│  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐      │
-│  │ 0 │ 0 │ 1 │ 0 │ 1 │ 0 │ 1 │ 0 │ 0 │ 1 │ 0 │ 0 │ ...  │      │
-│  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘      │
-│    0   1   2   3   4   5   6   7   8   9   10  11           │
-│                                                              │
-│  Hash Functions (k = 3):                                    │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │ hash1(x) = murmur3_32(x) % m                        │   │
-│  │ hash2(x) = murmur3_32(x + seed1) % m                │   │
-│  │ hash3(x) = murmur3_32(x + seed2) % m                │   │
-│  └─────────────────────────────────────────────────────┘   │
-│                                                              │
-│  Insert "apple":                                            │
-│  hash1("apple") = 2  → set bit[2] = 1                      │
-│  hash2("apple") = 4  → set bit[4] = 1                      │
-│  hash3("apple") = 6  → set bit[6] = 1                      │
-│                                                              │
-│  Lookup "banana":                                           │
-│  hash1("banana") = 3  → bit[3] = 0 ✗                       │
-│  Result: Definitely NOT in set                             │
-│                                                              │
-│  Lookup "apple":                                            │
-│  hash1("apple") = 2  → bit[2] = 1 ✓                        │
-│  hash2("apple") = 4  → bit[4] = 1 ✓                        │
-│  hash3("apple") = 6  → bit[6] = 1 ✓                        │
-│  Result: Probably in set (may be false positive)            │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
-```
+<BloomFilterVisualRepresentationDiagram />
 
 ### Mathematical Properties
 
@@ -591,24 +565,7 @@ Example: n=1,000,000, p=0.01 (1%)
 
 ### False Positive Rate vs. Size Trade-off
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│         False Positive Rate vs. Memory Usage                │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  FP Rate │ Memory (1M elements) │ Hash Functions            │
-│  ────────┼──────────────────────┼─────────────────────┐     │
-│    10%   │      0.6 MB          │         4            │     │
-│     5%   │      0.9 MB          │         5            │     │
-│     1%   │      1.2 MB          │         7            │     │
-│    0.1%  │      1.8 MB          │        10            │     │
-│   0.01%  │      2.4 MB          │        13            │     │
-│                                                              │
-│  Trade-off: Lower FP rate requires more memory and more     │
-│  hash functions (slower lookups)                            │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
-```
+<BloomFilterTradeoffDiagram />
 
 ---
 
@@ -655,6 +612,8 @@ Example: n=1,000,000, p=0.01 (1%)
 ## 🔄 7. Variants {/* #7-variants */}
 
 ### Counting Bloom Filter (with deletions)
+
+<CountingBloomFilterDiagram />
 
 ```java
 // Supports add() and remove() operations
@@ -703,6 +662,8 @@ public class CountingBloomFilter<T> {
 
 ### Scalable Bloom Filter
 
+<ScalableBloomFilterDiagram />
+
 ```java
 // Dynamically grows without full rebuild
 public class ScalableBloomFilter<T> {
@@ -748,6 +709,8 @@ public class ScalableBloomFilter<T> {
 
 ### Bloom Filter with Expiration
 
+<BloomFilterExpirationDiagram />
+
 ```java
 // Supports time-based expiration
 public class ExpiringBloomFilter<T> {
@@ -788,6 +751,8 @@ public class ExpiringBloomFilter<T> {
 ```
 
 ### Distributed Bloom Filter
+
+<DistributedBloomFilterDiagram />
 
 ```java
 // Bloom filter across multiple nodes
@@ -1243,7 +1208,7 @@ public class SearchService {
 
 ---
 
-## 🎓 11. Interview Questions {/* #11-interview-questions */}
+## Interview Questions {/* #11-interview-questions */}
 
 ### Beginner Level
 

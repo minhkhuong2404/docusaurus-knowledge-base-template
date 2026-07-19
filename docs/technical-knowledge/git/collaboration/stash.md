@@ -160,7 +160,7 @@ git pull --rebase --autostash
 For work that spans more than an hour, prefer creating a `git commit -m "wip: [description]"` instead of leaving it in the stash. WIP commits are visible in `git log`, included in pushes (as backup), and are recoverable via `git reflog`. Stashes are easy to forget and are not pushed to remotes. Amend or squash the WIP commit later.
 :::
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. What risks do long-lived stashes create in team environments?
 2. When is stash preferable to WIP commits and worktrees?

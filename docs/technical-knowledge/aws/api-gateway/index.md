@@ -413,7 +413,7 @@ Returns `400 Bad Request` if validation fails — no Lambda invocation (saves co
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** Throttle API per customer and charge by usage tier. What feature?
 
@@ -490,7 +490,7 @@ D) Mock integration
 
 ---
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. How would you design per-tenant rate limiting and monetization while keeping a migration path from REST to HTTP API?
 2. When would you choose VPC Link private integrations over direct Lambda?

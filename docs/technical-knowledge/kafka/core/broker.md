@@ -971,7 +971,7 @@ kafka_server_requesthandlerpool_idlepercent
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What is a Kafka broker and what does it do?**
 > A Kafka broker is a single Kafka server process. It receives messages from producers and appends them to partition segment files on disk, serves messages to consumers on fetch requests, replicates data to and from other brokers to maintain the configured replication factor, and participates in cluster coordination (leader election, metadata management). A Kafka cluster is simply multiple brokers working together — each partition is assigned one leader broker (handles all reads and writes) and zero or more follower brokers (replicate the data for redundancy).

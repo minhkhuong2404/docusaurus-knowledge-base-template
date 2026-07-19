@@ -362,7 +362,7 @@ Bucket "data-lake"
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** Allow client browser to directly upload to S3 without going through your server. Best approach?
 

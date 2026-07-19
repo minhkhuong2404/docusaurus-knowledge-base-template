@@ -1155,7 +1155,7 @@ class ImportUsersJobTest {
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What is Spring Batch and how does it differ from `@Scheduled` tasks?**
 > `@Scheduled` is a trigger mechanism — it runs a method at a time interval. Spring Batch is a processing engine for large-volume data with built-in chunk transactions, restartability, skip/retry, and execution metadata. `@Scheduled` can *trigger* a Spring Batch job, but Spring Batch does the actual work. A `@Scheduled` method that loops over a million records has no transaction management, no progress tracking, and no restart capability — if it crashes at item 900,000 you start from zero.

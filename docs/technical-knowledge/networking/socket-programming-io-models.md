@@ -364,7 +364,7 @@ socket.setReceiveBufferSize(65536);  // SO_RCVBUF: receive buffer size
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What is the difference between blocking and non-blocking I/O?**
 > Blocking I/O: a read/write call blocks the calling thread until data is available or the operation completes. One thread is tied up per connection. Non-blocking I/O: calls return immediately — either with data or with `EAGAIN` (no data yet). The thread can do other work while waiting. Combined with event notification (select/poll/epoll), one thread can manage thousands of connections.

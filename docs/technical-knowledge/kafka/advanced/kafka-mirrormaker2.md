@@ -347,7 +347,7 @@ kafka_connect_mirror_checkpoint_connector_checkpoint_latency_ms > 30000
 
 ---
 
-## Interview Questions — MirrorMaker 2
+## Interview Questions
 
 **Q: What are the three connector types in MirrorMaker 2 and what does each do?**
 

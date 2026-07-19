@@ -191,7 +191,7 @@ public List<Order> getRecentOrders() { ... }
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What is the difference between replication and sharding?**
 > Replication copies the **same data** to multiple nodes — for high availability and read scaling. Sharding splits **different data** across nodes — for write scaling and handling datasets too large for one server. They're often combined: multiple shards, each with its own replicas.

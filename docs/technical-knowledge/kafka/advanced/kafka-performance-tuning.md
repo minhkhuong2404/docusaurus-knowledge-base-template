@@ -428,7 +428,7 @@ retention.ms=604800000         # Total retention: 7 days
 
 ---
 
-## Interview Questions — Performance Tuning
+## Interview Questions
 
 **Q: What is the most impactful producer tuning for throughput?**
 

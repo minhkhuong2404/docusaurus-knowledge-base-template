@@ -326,7 +326,7 @@ public void recoverDeadMessages() {
 }
 ```
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. How do you design Redis Streams retention and consumer-group strategy for at-least-once processing under failure?
 2. When should Redis Streams be replaced with Kafka in a growing event platform?

@@ -1161,7 +1161,7 @@ class UserControllerExceptionTest {
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What is the difference between `@ControllerAdvice` and `@RestControllerAdvice`?**
 > `@RestControllerAdvice` is a composed annotation — it is `@ControllerAdvice` + `@ResponseBody`. With `@ControllerAdvice` alone, each `@ExceptionHandler` method needs its own `@ResponseBody` to serialise the return value as JSON. `@RestControllerAdvice` applies `@ResponseBody` globally to all handler methods. For REST APIs, always use `@RestControllerAdvice`.

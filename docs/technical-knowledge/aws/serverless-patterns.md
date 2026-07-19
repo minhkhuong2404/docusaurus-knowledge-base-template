@@ -70,7 +70,7 @@ How do you migrate a giant legacy on-premise monolith to AWS Serverless without 
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** A company is migrating a large e-commerce monolithic application to a serverless microservices architecture. They want to ensure there is no downtime during the 6-month migration process. Which pattern should they use?
 

@@ -301,7 +301,7 @@ ON orders (user_id, status);
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What is the difference between RPO and RTO?**
 > RPO (Recovery Point Objective) is how much data loss is acceptable — the maximum age of data that must be recovered. RTO (Recovery Time Objective) is how long the system can be down before recovery must be complete. They drive backup frequency and standby architecture decisions respectively.

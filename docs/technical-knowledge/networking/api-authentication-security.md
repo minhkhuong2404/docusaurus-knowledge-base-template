@@ -496,7 +496,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What is the difference between OAuth 2.0 and OIDC?**
 > OAuth 2.0 is an authorization framework — it grants third-party apps access to resources on behalf of a user (access tokens, scopes). It doesn't define user identity. OIDC (OpenID Connect) is an identity layer built on top of OAuth 2.0 — it adds an ID Token (a JWT with user identity claims like `sub`, `email`) and a UserInfo endpoint. Use OAuth for API authorization; use OIDC for user authentication/SSO.

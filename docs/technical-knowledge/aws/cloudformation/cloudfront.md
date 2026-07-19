@@ -190,7 +190,7 @@ function handler(event) {
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** A developer hosts a React SPA in S3, served via CloudFront. The S3 bucket must remain private. How should they configure this?
 

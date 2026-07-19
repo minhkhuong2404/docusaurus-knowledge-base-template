@@ -192,7 +192,7 @@ Using `FetchType.LAZY` on collections can trigger N+1 queries. Use `JOIN FETCH` 
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What is the difference between `DELETE`, `TRUNCATE`, and `DROP`?**
 > - `DELETE`: DML, removes rows one by one, can be rolled back, fires triggers, can have WHERE clause.

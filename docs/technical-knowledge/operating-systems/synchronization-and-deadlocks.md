@@ -341,7 +341,7 @@ The Java Memory Model defines **happens-before** relationships:
 
 ---
 
-## Common Interview Questions
+## Interview Questions
 
 ### Q1: What is the difference between a mutex and a semaphore?
 

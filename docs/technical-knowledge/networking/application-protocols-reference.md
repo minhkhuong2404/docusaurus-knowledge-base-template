@@ -373,7 +373,7 @@ Data channels: SCTP over DTLS (reliable or unreliable, ordered or not)
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. How does SSH key-based authentication work?**
 > The client generates a key pair (public + private). The public key is added to `~/.ssh/authorized_keys` on the server. During login, the server sends a challenge encrypted with the client's public key. Only the client with the matching private key can decrypt it and respond correctly — proving possession of the private key without ever transmitting it. More secure than passwords (no brute force risk, no phishing).

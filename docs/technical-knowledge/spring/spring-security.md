@@ -230,7 +230,7 @@ public class OrderService {
 
 ---
 
-## Interview Questions (Backend Engineer Focus)
+## Interview Questions
 
 ### Q1: What is the ExceptionTranslationFilter and what does it do?
 It is a filter that sits just above the authorization filters. It acts as a try-catch block for the rest of the filter chain. It translates `AuthenticationException` into a call to the `AuthenticationEntryPoint` (triggering a 401), and translates `AccessDeniedException` into a call to the `AccessDeniedHandler` (triggering a 403 Forbidden).

@@ -1303,7 +1303,7 @@ class RegressionGuard:
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What is an agent harness and why is it needed?**
 > An agent harness is the middleware layer between an LLM and the execution environment. An LLM can generate text describing actions but cannot execute them — the harness interprets LLM tool call outputs, classifies their risk, routes them to sandbox execution, enforces turn and cost limits, implements human-in-the-loop approval gates, and returns results to the LLM. Without a harness, LLM-generated code runs with host OS permissions — a single injected command, bug, or hallucination can wipe data, exfiltrate secrets, or loop indefinitely until the API budget is exhausted.

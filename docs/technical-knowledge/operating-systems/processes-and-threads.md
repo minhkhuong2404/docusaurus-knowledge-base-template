@@ -1217,7 +1217,7 @@ management:
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What is the difference between a process and a thread?**
 > A process is an isolated instance of a running program with its own private memory address space — code, heap, stack, and data are all separate from other processes. A thread is a unit of execution within a process; all threads in a process share the same heap, code, and file descriptors but have their own stack, program counter, and registers. Processes communicate via IPC (pipes, sockets, shared memory) — expensive. Threads communicate via shared memory — fast but requiring synchronisation. A crash in one process doesn't affect others; a crash in one thread can kill the entire process.

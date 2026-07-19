@@ -138,7 +138,7 @@ Resources:
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** A developer is migrating a legacy application to Amazon ECS using the EC2 launch type. The application consists of multiple identical microservice containers that must run on the same EC2 instances to maximize resource utilization. Each container listens on port 8080. How can the developer expose these containers through an Application Load Balancer (ALB) without port conflicts?
 
@@ -193,7 +193,7 @@ D) Run a daily cron job inside an ECS container to execute `aws ecr batch-delete
 - [CodeDeploy for ECS (AppSpec)](https://docs.aws.amazon.com/codedeploy/latest/userguide/reference-appspec-file-structure-resources.html)
 - [ECS IAM Roles](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-iam-roles.html)
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. In ECS on Fargate, what signals tell you to split a service into multiple task definitions instead of tuning one oversized task?
 2. How do you design IAM boundaries between Task Execution Role and Task Role to pass a security review?

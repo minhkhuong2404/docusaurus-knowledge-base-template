@@ -983,7 +983,7 @@ Scale consumer or fix throughput    Is the consumer for that partition
 
 ---
 
-## Part 3 — Interview Questions
+## Interview Questions
 
 **Q: What is consumer lag and why does it matter?**
 

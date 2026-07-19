@@ -208,7 +208,7 @@ Combining `sendOffsetsToTransaction` with produce ensures exactly-once: if the t
 
 ---
 
-## Interview Questions — Producer Transactions
+## Interview Questions
 
 **Q: What is `transactional.id` and why must it be stable across restarts?**
 

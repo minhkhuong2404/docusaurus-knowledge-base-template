@@ -148,7 +148,7 @@ With `awsvpc`, you apply Security Groups directly to tasks — not to the host.
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** A Lambda function in a VPC needs to call the DynamoDB API. No NAT Gateway is configured. What is the MOST cost-effective solution?
 

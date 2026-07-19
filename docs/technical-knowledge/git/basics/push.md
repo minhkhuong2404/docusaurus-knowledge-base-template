@@ -178,7 +178,7 @@ exit 0
 `git push --force` on `main` or `develop` will rewrite the public history and corrupt every teammate's local clone. Use `--force-with-lease` on feature branches only, and **never** on protected branches.
 :::
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. How do you design branch protection around safe push behavior at scale?
 2. Why is `--force-with-lease` materially safer than `--force`?

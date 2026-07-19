@@ -247,7 +247,7 @@ Round up to 24 or 30 to leave headroom for traffic spikes.
 
 ---
 
-## Interview Questions — Scaling Partitions
+## Interview Questions
 
 **Q: Can you decrease the number of partitions in Kafka?**
 

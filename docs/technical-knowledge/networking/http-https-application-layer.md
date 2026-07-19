@@ -793,7 +793,7 @@ public class PublicApiController { ... }
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 ### Foundational
 

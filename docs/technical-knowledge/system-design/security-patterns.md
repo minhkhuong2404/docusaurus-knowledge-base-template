@@ -967,7 +967,7 @@ public class AuditService {
 
 ---
 
-## Interview Questions: Senior Level
+## Interview Questions
 
 ### Q: When would you choose opaque tokens over JWTs for a microservices system?
 

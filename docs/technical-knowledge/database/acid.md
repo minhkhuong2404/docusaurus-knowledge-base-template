@@ -691,7 +691,7 @@ public void outerMethod() {
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What is a "write skew" anomaly, and how do you prevent it?**
 > Write skew occurs when two concurrent transactions each read overlapping data, make individually valid writes, but together violate a business invariant. The classic example: two doctors both go off-call when the rule is "at least one must be on-call." Both read 2 doctors on-call, both decide it's safe to leave, both commit — now 0 doctors are on-call.

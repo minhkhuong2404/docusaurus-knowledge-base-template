@@ -131,7 +131,7 @@ You now have two IDE windows, each on a different branch, each with their own ru
 The classic hotfix workflow requires you to stash, switch, fix, push, switch back, and pop — with the risk of forgetting to pop or creating stash conflicts. Worktrees eliminate all of that: your feature work is untouched in its directory, and the hotfix lives in a separate, parallel workspace.
 :::
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. How do worktrees reduce context-switch risk in incident response workflows?
 2. What operational guardrails should teams define for temporary worktree lifecycle?
