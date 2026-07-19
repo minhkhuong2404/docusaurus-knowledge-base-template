@@ -5,6 +5,20 @@ sidebar_label: Scaling Reads
 description: Strategies for handling high read QPS including caching layers, read replicas, CDN, CQRS, and database indexing. Covers Redis patterns, cache invalidation, consistency models, fan-out strategies, and senior-level deep dives into coherence, hot keys, and tail latency.
 tags: [scaling, reads, caching, redis, cdn, cqrs, read-replicas, performance, consistency]
 ---
+import ScalingReadsStrategyHierarchyDiagram from '@site/src/components/ScalingReadsStrategyHierarchyDiagram';
+import CacheAsideSequenceDiagram from '@site/src/components/CacheAsideSequenceDiagram';
+import ReadThroughSequenceDiagram from '@site/src/components/ReadThroughSequenceDiagram';
+import WriteThroughSequenceDiagram from '@site/src/components/WriteThroughSequenceDiagram';
+import WriteBehindSequenceDiagram from '@site/src/components/WriteBehindSequenceDiagram';
+import DualDeleteSequenceDiagram from '@site/src/components/DualDeleteSequenceDiagram';
+import CdcInvalidationPipelineDiagram from '@site/src/components/CdcInvalidationPipelineDiagram';
+import CacheStampedeThunderingHerdDiagram from '@site/src/components/CacheStampedeThunderingHerdDiagram';
+import HotKeySaturationDiagram from '@site/src/components/HotKeySaturationDiagram';
+import ReadReplicasFlowDiagram from '@site/src/components/ReadReplicasFlowDiagram';
+import CdnEdgeOriginShieldDiagram from '@site/src/components/CdnEdgeOriginShieldDiagram';
+import CqrsDataFlowDiagram from '@site/src/components/CqrsDataFlowDiagram';
+import FanOutStrategiesDiagram from '@site/src/components/FanOutStrategiesDiagram';
+import CacheCoherenceCoreProblemDiagram from '@site/src/components/CacheCoherenceCoreProblemDiagram';
 
 # Scaling Reads
 
@@ -18,14 +32,7 @@ Read-heavy workloads require a fundamentally different scaling architecture than
 
 A modern read-scaling architecture relies on a multi-layer hierarchy of storage tiers, optimized to trade data consistency and capacity for low latency and high throughput. Requests fall through the hierarchy only on a miss — each layer acts as a shock absorber for the one below it.
 
-```mermaid
-graph TD
-    User([User Client]) --> L1[L1 In-Memory Cache <br/> Local JVM Heap: < 1ms]
-    L1 -->|Miss| L2[L2 Distributed Cache <br/> Redis / Memcached: 1-5ms]
-    L2 -->|Miss| CDN[CDN Edge Cache <br/> Cloudflare / CloudFront: 10-50ms]
-    CDN -->|Miss| Replica[DB Read Replica <br/> Read-Only Instances: 50-100ms]
-    Replica -->|Fallback / Lag Shield| Primary[Primary Database <br/> Write/Read Authority: > 100ms]
-```
+<ScalingReadsStrategyHierarchyDiagram />
 
 ### Latency and Throughput Comparison
 
@@ -53,27 +60,7 @@ For an in-depth breakdown of cache eviction algorithms (LRU, LFU, ARC) and speci
 
 In the Cache-Aside pattern, the application orchestrates interactions with both the cache and the database. The cache is purely passive storage — it knows nothing about where data comes from.
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor Client
-    participant App as Application
-    participant Cache as Redis Cache
-    participant DB as Database
-
-    Client->>App: Get Data (ID)
-    App->>Cache: Query cache:Key
-    alt Cache Hit
-        Cache-->>App: Return cached object
-        App-->>Client: Return Data
-    else Cache Miss
-        Cache-->>App: Null
-        App->>DB: Query primary/replica
-        DB-->>App: Return record
-        App->>Cache: Set key with TTL
-        App-->>Client: Return Data
-    end
-```
+<CacheAsideSequenceDiagram />
 
 **Why it dominates in practice**: Cache-aside is lazy — only data that is actually requested ever gets cached, which keeps memory usage proportional to real traffic patterns rather than total dataset size. It also degrades gracefully: if Redis is completely down, the cache-aside path simply falls through to the database on every request (slow, but correct), whereas read-through and write-through designs often have the cache baked into the data-access layer in ways that are harder to bypass safely.
 
@@ -154,9 +141,7 @@ public class UserService {
 
 The application treats the cache as the primary data store. On a cache miss, the cache infrastructure itself is responsible for reading from the database and populating itself before returning control to the application.
 
-```
-Client → Application → Cache Provider (intercepts miss) → Database
-```
+<ReadThroughSequenceDiagram />
 
 * **Pros**: Decouples application logic from data-fetching mechanics — the application code is simpler because it only ever talks to "the cache."
 * **Cons**: Requires custom provider extensions (e.g., implementing a `CacheLoader` in Caffeine, or a similar abstraction in your caching library); harder to optimize multi-table joins or batched fetches, since the loader typically operates on one key at a time.
@@ -167,9 +152,7 @@ Client → Application → Cache Provider (intercepts miss) → Database
 
 Every write operation passes through the cache, which updates the underlying database synchronously as part of the same logical operation.
 
-```
-Client → Application → Cache Store → (Synchronous Write) → Database
-```
+<WriteThroughSequenceDiagram />
 
 * **Pros**: The cache is never stale for keys that have been written — read-after-write within the cache is always consistent.
 * **Cons**: Adds the database write latency to every cache write (no latency benefit on the write path); caches data that may never be read again, wasting memory on cold keys.
@@ -180,11 +163,7 @@ Client → Application → Cache Store → (Synchronous Write) → Database
 
 The application writes directly to the cache, which acknowledges immediately. An asynchronous background process flushes modified ("dirty") cache entries back to the database in batches.
 
-```
-Client → Application → Cache Store (ACK immediately)
-                             ↓ (Asynchronous batch daemon)
-                          Database
-```
+<WriteBehindSequenceDiagram />
 
 * **Pros**: Highest write throughput and lowest write latency of any pattern. Naturally batches and coalesces multiple writes to the same key — if a counter is incremented 1,000 times in a second, write-behind can flush a single net delta instead of 1,000 individual database writes.
 * **Cons**: Real risk of data loss if the cache node crashes before flushing dirty writes — this pattern fundamentally weakens durability guarantees unless the cache itself is replicated/persisted (e.g., Redis with AOF + replicas).
@@ -203,18 +182,7 @@ A major challenge in caching is maintaining synchronization between the database
 
 When updating database entities, a naive "update DB then delete cache key" sequence has a race: a concurrent read can occur *between* the database write and the cache eviction, repopulating the cache with the now-stale pre-update value — which then sits there until TTL expiry. The **Dual-Delete** strategy mitigates this by bracketing the database write with two cache evictions.
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant App as Application
-    participant Cache as Redis
-    participant DB as Database
-
-    App->>Cache: 1. Delete Key
-    App->>DB: 2. Write Database Update
-    Note over App: 3. Wait (e.g., 500ms for replica synchronization)
-    App->>Cache: 4. Delete Key Again
-```
+<DualDeleteSequenceDiagram />
 
 1. **Delete Cache Key**: Evict immediately, before the write, to reduce the window during which a concurrent reader could load a value that's about to become stale.
 2. **Update Database**: Perform the SQL write.
@@ -229,9 +197,7 @@ sequenceDiagram
 
 To decouple database updates from cache evictions entirely — and eliminate the race conditions inherent to dual-delete — implement Change Data Capture (CDC).
 
-```
-Database Write → WAL → Debezium Connector → Kafka Topic → Cache Invalidation Worker → Redis Eviction
-```
+<CdcInvalidationPipelineDiagram />
 
 * **How it works**: A CDC connector (e.g., Debezium) tails the database's write-ahead log (WAL) or binlog and emits an event for every committed row change. A downstream worker consumes these events and evicts the corresponding cache keys.
 * **Advantages**:
@@ -249,16 +215,7 @@ Database Write → WAL → Debezium Connector → Kafka Topic → Cache Invalida
 
 When a highly popular cache key (e.g., homepage layout, top-seller product, a celebrity's profile) expires, thousands of concurrent requests can miss the cache within the same few milliseconds. They all attempt to query the database simultaneously, causing connection pool exhaustion and potential cascading failure.
 
-```mermaid
-graph TD
-    KeyExpired[Hot Key Expires] --> Requester1[Req 1: Cache Miss]
-    KeyExpired --> Requester2[Req 2: Cache Miss]
-    KeyExpired --> RequesterN[Req N: Cache Miss]
-    Requester1 --> DB[Database Server]
-    Requester2 --> DB
-    RequesterN --> DB
-    DB --> Collapse[Database Connection Exhaustion]
-```
+<CacheStampedeThunderingHerdDiagram />
 
 **Why "hot keys" are special**: A typical cache miss for a cold key costs one database query. A stampede on a hot key can cost *thousands* of identical, simultaneous database queries — the database does N times the work to produce N identical results. This is wasted work by definition, which is why coalescing (below) is so effective: it converts N redundant queries into 1.
 
@@ -325,13 +282,7 @@ A distinct class of failure occurs when the cache hit rate remains extremely hig
 
 Unlike a Cache Stampede (which is a storm of cache *misses* hammering the database), Hot Key Saturation is a bottleneck at the *cache tier itself* caused by cache *hits*.
 
-```mermaid
-graph TD
-    UserRequests["10,000 requests/sec for homepage:layout"] --> ShardA[Redis Shard A]
-    UserRequests --> NIC["NIC Bandwidth Saturation: Limit Exceeded (e.g., 10 Gbps)"]
-    ShardA --> SingleThreadBlocked["Single Thread Blocked on O(N) command HGETALL"]
-    SingleThreadBlocked --> LatencySpike[System-wide Latency Spike & Timeouts]
-```
+<HotKeySaturationDiagram />
 
 **Core Bottlenecks at Scale:**
 * **Network NIC Saturation:** Reading a 500 KB serialized JSON key at 10,000 QPS requires 5 GB/s ($\approx$ 40 Gbps) network throughput. This easily saturates the physical network interface cards of both the cache nodes and application servers, leading to packet loss, retransmissions, and timeouts.
@@ -351,14 +302,7 @@ For detailed design patterns, detection commands, and a defensive Java Caffeine+
 
 When read volume surpasses the memory capacity or budget of a cache layer — or when queries are too varied/ad-hoc to cache effectively (e.g., admin dashboards, reporting) — scale the storage tier itself using read replicas.
 
-```mermaid
-graph LR
-    App[Application Node] -->|Writes| Primary[(Primary DB)]
-    App -->|Read Load Balancing| Replica1[(Replica DB 1)]
-    App -->|Read Load Balancing| Replica2[(Replica DB 2)]
-    Primary -->|Replication Stream <br/> WAL Shipping| Replica1
-    Primary -->|Replication Stream <br/> WAL Shipping| Replica2
-```
+<ReadReplicasFlowDiagram />
 
 ### Replication Mechanics
 
@@ -425,9 +369,7 @@ public class ReadOnlyConnectionInterceptor {
 
 CDNs scale reads globally by caching static media (images, JS/CSS bundles, downloads) and even dynamic API JSON payloads at edge nodes located physically close to end-users — collapsing what would be a 100-300ms cross-continent round trip into a 10-50ms local one.
 
-```
-Client ──(HTTPS)──> CDN Edge Node (10ms) ──(Fast WAN)──> Origin Shield ──> Origin API Server
-```
+<CdnEdgeOriginShieldDiagram />
 
 ### Edge Caching Optimizations
 
@@ -464,21 +406,6 @@ When product `1234` is updated, the application sends a single purge command for
 
 CQRS isolates mutation logic (Commands) from lookup logic (Queries) by maintaining **separate models — and often separate physical stores — for writes versus reads.** Rather than querying a highly normalized relational schema designed for transactional integrity, reads are served from denormalized "projection" tables or documents that are pre-shaped for exactly the query patterns the application needs.
 
-```
-                  ┌──────────────┐
-                  │   Command    │
-                  └──────────────┘
-                         │
-                         ▼
-┌──────────────┐  ┌──────────────┐
-│  Controller  │  │  Write Model │───[Write DB]
-└──────────────┘  └──────────────┘      │
-       │                                │ Event/CDC
-       │          ┌──────────────┐      ▼
-       └─────────>│  Read Model  │───[Read DB (NoSQL/Elastic)]
-                  └──────────────┘
-                         ▲
-                         │
                   ┌──────────────┐
                   │    Query     │
                   └──────────────┘
@@ -544,17 +471,7 @@ LIMIT 20;
 
 Fan-out is the process of distributing a piece of content (e.g., a social media post) to the timelines of the users who should see it. This is fundamentally a **read/write trade-off problem at massive scale**: every strategy below is choosing where to spend computation — at write time (when content is published) or at read time (when a feed is requested).
 
-```mermaid
-graph TD
-    User[User posts a message] --> WriteFanOut[Write Fan-Out: Push model]
-    User --> ReadFanOut[Read Fan-Out: Pull model]
-
-    WriteFanOut --> PushDB[Appends post ID to every follower's Redis timeline]
-    ReadFanOut --> PullDB[Reads DB dynamically to merge posts from all followed users]
-
-    PushDB --> FastRead[Fast Read: Ready timeline cached in memory]
-    PullDB --> SlowRead[Slow Read: Needs dynamic multi-join merge]
-```
+<FanOutStrategiesDiagram />
 
 ### Fan-Out on Write (Push Model)
 
@@ -625,14 +542,7 @@ When running multi-node clusters where each application instance has its own loc
 
 If Node A processes a write, it can update the database and invalidate/update its *own* L1 and the shared L2 (Redis). But Node B, Node C, ... have no way of knowing this happened — their L1 caches continue to serve the pre-write value until their local TTL expires, even though L2 and the database have moved on. The system as a whole is now in a state where **different users, served by different nodes, see different data for the same key** — a correctness problem, not just a staleness problem, if those users are comparing notes (e.g., two collaborators looking at the "same" shared document).
 
-```
-Node A (Update)
-  ├──> Updates DB & Redis (L2)
-  └──> Publishes "invalidate key-1" to Redis Channel
-          │
-          ├──> Node B (Listens) ──> Invalidates local memory key-1
-          └──> Node C (Listens) ──> Invalidates local memory key-1
-```
+<CacheCoherenceCoreProblemDiagram />
 
 ### Mitigation: Redis Pub/Sub Invalidation Broadcast
 

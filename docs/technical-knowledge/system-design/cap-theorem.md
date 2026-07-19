@@ -6,6 +6,14 @@ sidebar_label: CAP Theorem
 sidebar_position: 3
 tags: [distributed-systems, architecture, cap-theorem, database]
 ---
+import CapTriangleDiagram from '@site/src/components/CapTriangleDiagram';
+import CapNetworkPartitionDiagram from '@site/src/components/CapNetworkPartitionDiagram';
+import CapDecisionMatrixDiagram from '@site/src/components/CapDecisionMatrixDiagram';
+import CapMicroservicesDiagram from '@site/src/components/CapMicroservicesDiagram';
+import CapConsistencyModelChooserDiagram from '@site/src/components/CapConsistencyModelChooserDiagram';
+import GoogleSpannerArchitectureDiagram from '@site/src/components/GoogleSpannerArchitectureDiagram';
+import ApacheCassandraArchitectureDiagram from '@site/src/components/ApacheCassandraArchitectureDiagram';
+import RaftStateTransitionDiagram from '@site/src/components/RaftStateTransitionDiagram';
 
 # CAP Theorem: A Senior Engineer's Deep Dive
 
@@ -47,94 +55,11 @@ In any distributed system deployed across a network (e.g., multi-region clouds l
 
 ### Visual Representation
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    CAP Theorem Triangle                     │
-│                                                              │
-│                        Consistency                          │
-│                           ●                                 │
-│                          / \                                │
-│                         /   \                               │
-│                        /     \                              │
-│                       /       \                             │
-│                      /         \                            │
-│                     /           \                           │
-│                    /             \                          │
-│                   /               \                         │
-│                  /                 \                        │
-│                 /                   \                       │
-│                /                     \                      │
-│               /                       \                     │
-│              /                         \                    │
-│             /                           \                   │
-│            /                             \                  │
-│           /                               \                 │
-│          /                                 \                │
-│         /                                   \               │
-│        /                                     \              │
-│       /                                       \             │
-│      /                                         \            │
-│     /                                           \           │
-│    /                                             \          │
-│   /                                               \         │
-│  ●─────────────────────────────────────────────────●      │
-│ Availability                                    Partition   │
-│ Tolerance                                                │
-│                                                              │
-│  Pick any two:                                             │
-│  - CA: Not possible in distributed systems               │
-│  - CP: Strong consistency, may be unavailable             │
-│  - AP: Always available, may serve stale data             │
-└─────────────────────────────────────────────────────────────┘
-```
+<CapTriangleDiagram />
 
 ### Network Partition Example
 
-```
-Normal Operation (No Partition):
-┌─────────────┐                    ┌─────────────┐
-│   Node A    │◄──────────────────►│   Node B    │
-│  Value: v1  │                    │  Value: v1  │
-└─────────────┘                    └─────────────┘
-     ▲                                    ▲
-     │                                    │
-     └────────────┬───────────────────────┘
-                  │
-            Client Request
-                  │
-                  ▼
-            Response: v1
-
-Network Partition (CP System):
-┌─────────────┐   ✗ NETWORK   ┌─────────────┐
-│   Node A    │     CUT       │   Node B    │
-│  Value: v1  │                │  Value: v1  │
-└─────────────┘                └─────────────┘
-     ▲                                    ▲
-     │                                    │
-     └────────────┬───────────────────────┘
-                  │
-            Client Request
-                  │
-                  ▼
-            Response: ERROR
-            (Cannot guarantee consistency)
-
-Network Partition (AP System):
-┌─────────────┐   ✗ NETWORK   ┌─────────────┐
-│   Node A    │     CUT       │   Node B    │
-│  Value: v2  │                │  Value: v1  │
-└─────────────┘                └─────────────┘
-     ▲                                    ▲
-     │                                    │
-     └────────────┬───────────────────────┘
-                  │
-            Client Request
-                  │
-                  ▼
-            Response: v1 (stale)
-            (Available but inconsistent)
-```
+<CapNetworkPartitionDiagram />
 
 ---
 
@@ -233,28 +158,7 @@ public class SocialMediaService {
 
 ### Decision Framework
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    CAP Decision Matrix                       │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  Business Impact of Stale Data                               │
-│         │                                                     │
-│    High │                    CP                              │
-│         │              (Strong Consistency)                  │
-│         │                                                     │
-│    Medium│                                                   │
-│         │         Hybrid Approach                           │
-│         │      (CP for critical, AP for rest)               │
-│         │                                                     │
-│    Low  │                    AP                              │
-│         │              (High Availability)                  │
-│         │                                                     │
-│         └───────────────────────────────────────────────────►
-│              Business Impact of Downtime                    │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
-```
+<CapDecisionMatrixDiagram />
 
 ---
 
@@ -271,31 +175,7 @@ To demonstrate seniority, break down the system:
 
 ### Microservice-Level CAP Example
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    E-commerce System                         │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │
-│  │   Product    │  │   Search     │  │  Inventory   │     │
-│  │   Catalog    │  │   Service    │  │   Service    │     │
-│  │              │  │              │  │              │     │
-│  │     AP       │  │     AP       │  │     CP       │     │
-│  │  (Stale OK)  │  │  (Stale OK)  │  │ (Must be     │     │
-│  │              │  │              │  │  accurate)   │     │
-│  └──────────────┘  └──────────────┘  └──────────────┘     │
-│                                                              │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │
-│  │   User       │  │  Checkout    │  │   Payment    │     │
-│  │   Profile    │  │   Service    │  │   Service    │     │
-│  │              │  │              │  │              │     │
-│  │     AP       │  │     CP       │  │     CP       │     │
-│  │  (Stale OK)  │  │ (Must be     │  │ (Must be     │     │
-│  │              │  │  accurate)   │  │  accurate)   │     │
-│  └──────────────┘  └──────────────┘  └──────────────┘     │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
-```
+<CapMicroservicesDiagram />
 
 ### Service Boundary Considerations
 
@@ -495,26 +375,7 @@ public class EventualConsistencyService {
 
 ### Choosing the Right Consistency Model
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│              Consistency Model Selection                     │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  Data Freshness Requirement                                  │
-│         │                                                     │
-│    High │                    Strong                          │
-│         │              (Linearizable)                        │
-│         │                                                     │
-│    Medium│                                                   │
-│         │         Causal / Read-Your-Own-Writes              │
-│         │                                                     │
-│    Low  │                    Eventual                        │
-│         │                                                     │
-│         └───────────────────────────────────────────────────►
-│              Performance Requirement                          │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
-```
+<CapConsistencyModelChooserDiagram />
 
 ---
 
@@ -781,30 +642,7 @@ public class ConflictResolver {
 - Supports distributed transactions
 
 **Architecture:**
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Google Spanner                           │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │
-│  │   Zone A     │  │   Zone B     │  │   Zone C     │     │
-│  │              │  │              │  │              │     │
-│  │  ┌────────┐  │  │  ┌────────┐  │  │  ┌────────┐  │     │
-│  │  │ Spans  │  │  │  │ Spans  │  │  │  │ Spans  │  │     │
-│  │  └────────┘  │  │  └────────┘  │  │  └────────┘  │     │
-│  │       │       │  │       │       │  │       │       │     │
-│  │       └───────┼───────┼───────┼───────┘       │     │
-│  │               │       │       │               │     │
-│  └───────────────┴───────┴───────┴───────────────┘     │
-│                          │                                  │
-│                          ▼                                  │
-│                    ┌──────────┐                            │
-│                    │ Paxos    │                            │
-│                    │ Leader   │                            │
-│                    └──────────┘                            │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
-```
+<GoogleSpannerArchitectureDiagram />
 
 **Configuration:**
 ```sql
@@ -839,28 +677,7 @@ SELECT * FROM users
 - High write throughput
 
 **Architecture:**
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Apache Cassandra                          │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │
-│  │   Node 1     │  │   Node 2     │  │   Node 3     │     │
-│  │              │  │              │  │              │     │
-│  │  Token: 0-33 │  │  Token: 34-66│  │  Token: 67-99│     │
-│  │              │  │              │  │              │     │
-│  └──────────────┘  └──────────────┘  └──────────────┘     │
-│         │                  │                  │             │
-│         └──────────────────┼──────────────────┘             │
-│                            │                                 │
-│                            ▼                                 │
-│                    ┌──────────┐                            │
-│                    │ Gossip   │                            │
-│                    │ Protocol │                            │
-│                    └──────────┘                            │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
-```
+<ApacheCassandraArchitectureDiagram />
 
 **Configuration:**
 ```cql
@@ -1322,29 +1139,7 @@ class PaxosNode:
 Raft is a consensus algorithm designed to be understandable.
 
 **Raft States:**
-```
-┌─────────────────────────────────────────────────────────────┐
-│                        Raft States                           │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  ┌──────────┐                                               │
-│  │ Follower │◄───────────────────────────────────────────┤
-│  └────┬─────┘                                            │
-│       │                                                  │
-│       │ election timeout                                 │
-│       ▼                                                  │
-│  ┌──────────┐      receives votes from majority          │
-│  │ Candidate │──────────────────────────────────────────►│
-│  └────┬─────┘                                            │
-│       │                                                  │
-│       │ receives AppendEntries from leader               │
-│       ▼                                                  │
-│  ┌──────────┐                                           │
-│  │  Leader  │───────────────────────────────────────────┤
-│  └──────────┘                                           │
-│                                                          │
-└──────────────────────────────────────────────────────────┘
-```
+<RaftStateTransitionDiagram />
 
 **Raft Implementation:**
 ```java

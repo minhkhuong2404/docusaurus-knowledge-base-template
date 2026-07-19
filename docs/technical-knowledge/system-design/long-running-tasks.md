@@ -8,6 +8,10 @@ tags: [async, job-queue, background-tasks, polling, webhooks, progress-tracking,
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import CoreAsyncJobPatternDiagram from '@site/src/components/CoreAsyncJobPatternDiagram';
+import JobQueueArchitectureDiagram from '@site/src/components/JobQueueArchitectureDiagram';
+import TaskStateMachineDiagram from '@site/src/components/TaskStateMachineDiagram';
+import WebhookDeliveryDiagram from '@site/src/components/WebhookDeliveryDiagram';
 
 # Managing Long-Running Tasks
 
@@ -40,18 +44,7 @@ Any operation expected to take more than **2 seconds** should be made asynchrono
 
 The solution is a three-step pattern:
 
-```
-Step 1: Client submits job
-Client → POST /api/reports → 202 Accepted { "job_id": "abc-123", "status_url": "/api/reports/abc-123" }
-
-Step 2: Job runs asynchronously
-API Server → Job Queue → Worker Pool → Result Store
-
-Step 3: Client polls for result
-Client → GET /api/reports/abc-123 → { "status": "RUNNING", "progress": 45 }
-Client → GET /api/reports/abc-123 → { "status": "COMPLETED", "result_url": "/api/reports/abc-123/result" }
-Client → GET /api/reports/abc-123/result → <report data>
-```
+<CoreAsyncJobPatternDiagram />
 
 ### HTTP Status Codes
 
@@ -144,33 +137,7 @@ public class ReportController {
 
 ## Job Queue Architecture
 
-```
-                   ┌──────────────────────────────────────────────────────┐
-                   │                 JOB QUEUE ARCHITECTURE               │
-                   └──────────────────────────────────────────────────────┘
-
-  Client Request
-       │
-       ▼
-  API Server ──────► Job Metadata DB ◄──────────── Admin Dashboard
-  (202 + job_id)     (PostgreSQL)                  (progress, status)
-       │
-       ▼
-  Message Queue ──────────────────────────────────────────────┐
-  (Kafka / SQS / RabbitMQ / Redis Streams)                    │
-       │                                                       │
-       ▼                                                       │
-  Worker Pool ────► Progress Store (Redis)                     │
-  (auto-scalable)         │                                    │
-       │                  └──────► SSE / WebSocket ───────────┤
-       ▼                           (real-time client)         │
-  Result Store                                                 │
-  (DB / S3 / GCS)                                             │
-       │                                                       │
-       ▼                                                       │
-  Notification ◄──────────────────────────────────────────────┘
-  (Webhook / Email / Push)
-```
+<JobQueueArchitectureDiagram />
 
 ---
 
@@ -178,12 +145,7 @@ public class ReportController {
 
 A robust job system models the job lifecycle as a **state machine** to prevent invalid state transitions and enable clear recovery logic.
 
-```
-PENDING → QUEUED → RUNNING → COMPLETED ✅
-                      │
-                      └──► FAILED ──► (retry counter < max) ──► QUEUED
-                                 └──► (retry counter >= max) ──► DEAD ☠️
-```
+<TaskStateMachineDiagram />
 
 ```java
 public enum JobStatus {
@@ -516,22 +478,7 @@ public class JobWebSocketController {
 
 Instead of the client polling, the server **pushes** a notification to a registered callback URL when the job completes.
 
-```mermaid
-sequenceDiagram
-    participant Client
-    participant API
-    participant Worker
-    participant CB as Client Callback<br/>https://client.com/webhook
-
-    Client->>API: POST /reports { webhook_url: "https://client.com/webhook" }
-    API-->>Client: 202 Accepted { job_id }
-
-    Note over Worker: ... processing ...
-
-    Worker->>API: Job complete → notify webhook
-    API->>CB: POST https://client.com/webhook<br/>{ event: "job.completed", job_id, result_url }
-    CB-->>API: 200 OK
-```
+<WebhookDeliveryDiagram />
 
 ### Reliable Webhook Delivery
 

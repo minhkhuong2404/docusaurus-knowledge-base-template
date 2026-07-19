@@ -68,12 +68,14 @@ Replace static content (ASCII art, ```` ```mermaid ``` ```` blocks, plain markdo
 
 1. **File location**: Always create in `src/components/<ConceptName>Diagram.tsx`.
 2. **Outer wrapper**: Always use `className="interactive-diagram-container"` — never a bare `<div>`.
-3. **Header bar**: Always include a header with an `<svg>` icon (never emoji) and a descriptive title. Use the `.interactive-diagram-header` CSS class pattern from DESIGNS.md.
+3. **Header bar**: Always include a header with an `<svg>` icon (never emoji) and a descriptive title. Use the `.interactive-diagram-header` CSS class pattern from DESIGNS.md. Style the icon with a distinct accent color from the palette, the title text with the primary theme color (e.g. `#34d399`), and match any action buttons to this theme scheme.
 4. **Color tokens**: Use only the curated hex palette from DESIGNS.md Section 3. Never use plain CSS color names (`red`, `blue`, etc.).
 5. **CSS variables for text**: Always use `var(--ifm-color-content)` and `var(--ifm-color-content-secondary)` for body text — this handles light/dark mode automatically.
 6. **No emoji in JSX headers**: Use inline `<svg>` icons from the icon library in DESIGNS.md Section 6.
 7. **Ternary safety**: Always resolve all branches in nested ternaries. Dangling ternaries cause Rspack build failures.
-8. **SVG markers**: Always set `fill="context-fill"` on `<marker>` path elements for hover-aware arrowheads.
+8. **SVG markers**: Always set `fill="context-fill"` on `<marker>` path elements for hover-aware arrowheads. When using colored paths, define specific colored `<marker>` elements in `<defs>` and apply them dynamically to ensure the arrowhead color matches the path body color exactly.
+9. **Responsive Grid Columns**: In multi-column (split pane) layouts, avoid flexible fractional columns like `1.2fr 1fr` which shift when text content wraps. Use fixed percentage grids (e.g., `55% 45%`, `align-items: start`) and embed an inline `<style>` media query block to wrap columns to `1fr` on screens smaller than `768px`.
+10. **Node & Lifeline Spacing**: For both sequence diagrams and state/flow charts, add gap offsets to arrow coordinates (e.g. `+6px` start, `-12px` target) so that path lines and arrowhead tips float cleanly and do not overlap or touch vertical sequence lifelines or block nodes.
 
 ### Choose the right archetype (full templates in DESIGNS.md Section 5)
 

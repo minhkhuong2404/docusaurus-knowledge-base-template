@@ -1,8 +1,8 @@
 {
-  "id": "1291",
-  "title": "Sequential Digits",
-  "url": "https://leetcode.com/problems/sequential-digits/",
+  "id": "1081",
+  "title": "Smallest Subsequence of Distinct Characters",
+  "url": "https://leetcode.com/problems/smallest-subsequence-of-distinct-characters/",
   "difficulty": "medium",
-  "topic": "Enumeration",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-07-13."
+  "topic": "String, Stack, Greedy, Monotonic Stack",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-07-19."
 }

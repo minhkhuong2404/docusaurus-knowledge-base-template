@@ -493,7 +493,9 @@ Before submitting a component, verify:
 - [ ] All hex colors are from the palette table above
 - [ ] Text uses `var(--ifm-color-content)` / `var(--ifm-color-content-secondary)`
 - [ ] Every ternary has a `false` branch (no dangling `x ? a :`)
-- [ ] `<marker>` path uses `fill="context-fill"` not a hardcoded color
+- [ ] `<marker>` path uses `fill="context-fill"` or dynamically maps color-matching definition IDs to match path stroke color. Never use grey arrowheads on colored paths.
+- [ ] Multi-column layouts use fixed percentage columns (e.g. `55% 45%`) with `align-items: start` and an inline media query style block to stack columns to `1fr` on small screens. Avoid dynamic fractional divisions like `1.2fr 1fr` that shift column widths when text changes or wraps.
+- [ ] Node & lifeline nodes are padded. Add spacing offsets to arrow coordinates (e.g. `+6px` start, `-12px` end) so path lines and arrowhead tips float cleanly and do not overlap or touch vertical sequence lifelines or block nodes.
 - [ ] SVG `<text>` has `textAnchor` set (`middle`, `start`, or `end`)
 - [ ] The markdown import is added after the frontmatter block
 - [ ] Dev server shows `compiled successfully` after saving

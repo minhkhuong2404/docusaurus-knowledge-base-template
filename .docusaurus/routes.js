@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'ea2'),
+    component: ComponentCreator('/', '3fa'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '22f'),
+        component: ComponentCreator('/', '48c'),
         routes: [
           {
             path: '/tags',
@@ -7232,7 +7232,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'd82'),
+            component: ComponentCreator('/', '707'),
             routes: [
               {
                 path: '/aws',
@@ -14883,7 +14883,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/spring/spring-transactional-deep-dive',
-                component: ComponentCreator('/technical-knowledge/spring/spring-transactional-deep-dive', '70f'),
+                component: ComponentCreator('/technical-knowledge/spring/spring-transactional-deep-dive', '8b2'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14913,7 +14913,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/system-design/backend-for-frontend',
-                component: ComponentCreator('/technical-knowledge/system-design/backend-for-frontend', 'b0b'),
+                component: ComponentCreator('/technical-knowledge/system-design/backend-for-frontend', '485'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

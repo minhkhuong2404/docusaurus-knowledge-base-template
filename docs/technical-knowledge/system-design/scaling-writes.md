@@ -6,6 +6,22 @@ description: Deep-dive into high write throughput techniques — sharding, parti
 tags: [scaling, writes, sharding, partitioning, kafka, wal, lsm, async, performance, distributed-systems]
 ---
 
+import WritePipelineDiagram from '@site/src/components/WritePipelineDiagram';
+import WriteBottleneckDiagram from '@site/src/components/WriteBottleneckDiagram';
+import AsyncWritePipelineDiagram from '@site/src/components/AsyncWritePipelineDiagram';
+import BatchingWritesDiagram from '@site/src/components/BatchingWritesDiagram';
+import WalWritePathDiagram from '@site/src/components/WalWritePathDiagram';
+import WalReplicationDiagram from '@site/src/components/WalReplicationDiagram';
+import ConsistentHashingDiagram from '@site/src/components/ConsistentHashingDiagram';
+import BTreeWritePathDiagram from '@site/src/components/BTreeWritePathDiagram';
+import LsmTreeWritePathDiagram from '@site/src/components/LsmTreeWritePathDiagram';
+import SnapshotPatternDiagram from '@site/src/components/SnapshotPatternDiagram';
+import WhyBackpressureDiagram from '@site/src/components/WhyBackpressureDiagram';
+import HikariSizingDiagram from '@site/src/components/HikariSizingDiagram';
+import TwoPhaseCommitDiagram from '@site/src/components/TwoPhaseCommitDiagram';
+import SagaCoreFlowDiagram from '@site/src/components/SagaCoreFlowDiagram';
+
+
 # Scaling Writes
 
 Write scaling is fundamentally more challenging than read scaling. Reads can be scaled almost indefinitely with caches and read replicas. **Writes mutate shared state** — which means every optimization must reason about consistency, ordering, durability, and contention simultaneously.
@@ -18,27 +34,7 @@ This guide is a deep dive into the internals, tradeoffs, and production patterns
 
 Every database write traverses multiple layers before being considered durable:
 
-```
-Application Thread
-       │
-       ▼
-  SQL/ORM Layer  ──── serialization, query planning, connection acquisition
-       │
-       ▼
-  Network Socket  ──── TCP, TLS overhead, latency to DB host
-       │
-       ▼
-  DB Process Buffer ── shared_buffers (PostgreSQL) / buffer pool (MySQL InnoDB)
-       │
-       ▼
-  WAL / Redo Log  ──── sequential disk append (the "fast" path)
-       │
-       ▼
-  fsync()         ──── OS page cache → physical disk commit (durability guarantee)
-       │
-       ▼
-  Table Pages     ──── random I/O, B-tree page splits (deferred via checkpointing)
-```
+<WritePipelineDiagram />
 
 The bottleneck is almost always at one of: **lock contention → fsync latency → network round-trips → serialization CPU**. Measure before optimizing.
 
@@ -48,15 +44,7 @@ The bottleneck is almost always at one of: **lock contention → fsync latency �
 
 Before architecting a solution, instrument and identify the actual constraint:
 
-```mermaid
-graph TD
-    Bottleneck{Write Bottleneck?}
-    Bottleneck -->|Disk I/O Bound| WAL["Optimize WAL fsync strategy<br/>Upgrade to NVMe / io_uring<br/>Consider LSM-Tree engine"]
-    Bottleneck -->|CPU Bound| Serialize["Optimize serialization codec<br/>Switch JSON → Protobuf/Avro<br/>Reduce GC pressure"]
-    Bottleneck -->|Lock Contention| Locks["Use MVCC / optimistic locking<br/>Shrink transaction scope<br/>Partition hot rows"]
-    Bottleneck -->|Network Bound| Batching["Message batching + compression<br/>Connection pooling<br/>Co-locate app + DB"]
-    Bottleneck -->|Connection Exhaustion| Pool["Tune HikariCP pool size<br/>Add PgBouncer proxy<br/>Implement async drivers (R2DBC)"]
-```
+<WriteBottleneckDiagram />
 
 ### Key Metrics to Measure
 
@@ -91,26 +79,7 @@ Target WAF < 3–5× for OLTP workloads. NVMe drives reduce the cost of high WAF
 
 The core technique: **decouple the HTTP response from the database write**. Return `202 Accepted` immediately and persist asynchronously through a durable message queue.
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor Client
-    participant API as API Gateway / Producer
-    participant MQ as Kafka Broker
-    participant Consumer as Consumer Worker
-    participant DB as Write DB
-
-    Client->>API: POST /orders (Write Request)
-    API->>MQ: Publish event (partitioned by order_id)
-    MQ-->>API: ack (ISR confirmed)
-    API-->>Client: 202 Accepted {orderId, traceId}
-    Note over Client: Client polls GET /orders/{id} or uses WebSocket
-
-    Consumer->>MQ: Poll batch (max 500 records, 100ms timeout)
-    Consumer->>DB: Batch INSERT / UPSERT
-    DB-->>Consumer: Commit
-    Consumer->>MQ: Commit offsets (at-least-once)
-```
+<AsyncWritePipelineDiagram />
 
 ### Guarantees and Failure Modes
 
@@ -215,14 +184,11 @@ public class OrderEventConsumer {
 
 ## Batching Writes
 
+<BatchingWritesDiagram />
+
 ### Why Batching Matters — The Math
 
 Every individual SQL `INSERT` has fixed overhead: TCP round-trip (~0.1–1ms), query parse + plan (~0.05ms), transaction commit + fsync (~2–10ms).
-
-```
-1,000 individual INSERTs × 5ms overhead = 5,000ms = 5 seconds
-1 batch INSERT of 1,000 rows × 5ms overhead = 5ms
-```
 
 Batch inserts deliver **3–4 orders of magnitude improvement** on commit-heavy workloads.
 
@@ -419,24 +385,7 @@ The WAL is the heart of database durability. Understanding it deeply allows you 
 
 ### WAL Write Path (PostgreSQL)
 
-```
-Client COMMIT
-      │
-      ▼
-WAL Writer Thread appends LSN record to WAL segment file (pg_wal/)
-      │
-      ├──── fsync() ──── OS flushes kernel page cache → physical disk platters
-      │         └── This is the durability guarantee. Without fsync, a crash = data loss.
-      │
-      ▼
-Client receives "COMMIT OK"
-      │
-      (background)
-      ▼
-Checkpoint Process flushes dirty buffer pool pages → heap files (table pages)
-      │
-      └── WAL segments before the checkpoint LSN are now eligible for recycling
-```
+<WalWritePathDiagram />
 
 ### Key WAL Concepts
 
@@ -485,12 +434,7 @@ synchronous_commit = remote_apply # Wait for standby to apply WAL before COMMIT 
 
 Streaming replication works by shipping WAL records from primary to standby in real-time:
 
-```
-Primary WAL Writer ──── WAL segments ────► WAL Receiver (Standby)
-                                                │
-                                                └──► WAL Applier replays records
-                                                     updating standby's buffer pool
-```
+<WalReplicationDiagram />
 
 Logical Replication (used by CDC tools like Debezium) decodes WAL records into row-level change events. This requires `wal_level = logical` — which writes additional metadata into WAL, increasing WAL volume ~20–30%.
 
@@ -551,13 +495,7 @@ public class ShardRouter {
 
 Consistent hashing places both nodes and keys on a virtual ring (0 to 2³²-1). A key is owned by the first node clockwise from its hash position.
 
-```
-Ring position:  0 ──── NodeA(100) ──── NodeB(200) ──── NodeC(300) ──── 2^32
-Key "user-42" hashes to position 150 → owned by NodeB
-Key "user-99" hashes to position 250 → owned by NodeC
-```
-
-Adding NodeD at position 250: only keys between 200–250 (previously owned by NodeC) migrate to NodeD. All other keys are unaffected.
+<ConsistentHashingDiagram />
 
 **Virtual nodes (vnodes):** Each physical node gets multiple positions on the ring (e.g., 150 vnodes per node). This distributes load more evenly when node counts are small and handles heterogeneous hardware.
 
@@ -607,16 +545,7 @@ Sharding eliminates global ACID transactions. Strategies:
 
 ### B-Tree Write Path (PostgreSQL, MySQL InnoDB)
 
-```
-INSERT INTO users VALUES (...)
-        │
-        ▼
-1. Locate target leaf page in buffer pool (or load from disk — random I/O)
-2. Write WAL record (sequential I/O — fast)
-3. Modify leaf page in-memory (buffer pool)
-4. If page is full → page split: allocate new page, redistribute keys, update parent
-5. Mark page "dirty" for background flush
-```
+<BTreeWritePathDiagram />
 
 **Write amplification sources in B-trees:**
 - Page splits cascade upward (a full leaf splits; its parent may also split)
@@ -625,25 +554,7 @@ INSERT INTO users VALUES (...)
 
 ### LSM-Tree Write Path (Cassandra, RocksDB, LevelDB)
 
-```
-INSERT/UPDATE
-      │
-      ▼
-1. Append to Write-Ahead Log (sequential I/O — durability)
-2. Write to Memtable (in-memory sorted structure — essentially a Red-Black Tree)
-3. Return "write success" to caller  ← DONE. Extremely fast.
-
-Background (async):
-4. When Memtable reaches threshold (e.g., 64MB) → flush to immutable SSTable on disk (sequential I/O)
-5. Compaction: merge overlapping SSTables, remove tombstones, sort keys
-```
-
-```
-Memtable (memory):     [k3:v3, k7:v7, k9:v9]  ← current writes
-SSTable L0:            [k1:v1, k3:v2, k8:v8]  ← older flushes (may overlap)
-SSTable L1:            [k1:v1, k2:v2, ..., k100:v100]  ← compacted, no overlap
-SSTable L2:            [k1:v1, ..., k10000:v10000]  ← further compacted
-```
+<LsmTreeWritePathDiagram />
 
 **Read amplification** is the LSM tradeoff: to read key K, check Memtable → L0 SSTables (may be many) → L1 → L2. Each level may require a disk seek. Bloom filters eliminate most false-positive disk reads.
 
@@ -714,11 +625,7 @@ public class AccountProjectionService {
 
 Snapshots solve the O(n) replay problem:
 
-```
-Events:     E1 → E2 → ... → E999 → [Snapshot: balance=5000 at E1000] → E1001 → E1002
-                                          ▲
-                              Reads start here — only replay E1001+
-```
+<SnapshotPatternDiagram />
 
 ```java
 @Entity
@@ -771,23 +678,10 @@ public class AccountProjectionService {
 ### Why Backpressure is Not Optional
 
 Without backpressure, a traffic spike causes:
-```
-Spike → DB connection pool exhaustion → Thread pool exhaustion → OOM / GC storms → Full outage
-```
 
 With backpressure:
-```
-Spike → Bounded queue fills → New requests get 429 → System remains stable
-```
 
-```mermaid
-graph TD
-    Ingest[Write Requests] --> Gateway{API Gateway / Rate Limiter}
-    Gateway -->|Rate Limit Exceeded| Reject["429 Too Many Requests<br/>Retry-After: 30"]
-    Gateway -->|Within Limits| Queue[Bounded In-Memory Queue]
-    Queue -->|Queue Buffer Full| Backpressure["TCP Backpressure /<br/>503 Service Unavailable"]
-    Queue -->|Drain Batch| DB[(Write DB)]
-```
+<WhyBackpressureDiagram />
 
 ### Token Bucket vs. Leaky Bucket
 
@@ -1009,18 +903,7 @@ public class AccountService {
 
 ### HikariCP Sizing Formula
 
-```
-Pool Size = Tn × (Cm - 1) + 1
-
-Where:
-  Tn = Number of threads doing DB work concurrently
-  Cm = Number of simultaneous queries each thread can send
-
-For typical web apps: Pool Size ≈ (CPU cores × 2) + effective_spindle_count
-
-Example: 8-core machine, SSD (no spindle seek):
-  Pool Size = (8 × 2) + 1 = 17 connections
-```
+<HikariSizingDiagram />
 
 The Hikari team's recommendation: **don't over-pool**. A 10-connection pool often outperforms a 100-connection pool on PostgreSQL because:
 - Each connection = a PostgreSQL backend process (~5MB RAM)
@@ -1066,18 +949,7 @@ Use **transaction mode** for microservices that issue short-lived write transact
 
 2PC provides atomic commit across multiple databases or services:
 
-```
-Phase 1 (Prepare):
-  Coordinator → Participant A: "Can you commit txn-123?"
-  Coordinator → Participant B: "Can you commit txn-123?"
-  Participant A → Coordinator: "Yes (PREPARED)" — locks held
-  Participant B → Coordinator: "Yes (PREPARED)" — locks held
-
-Phase 2 (Commit):
-  Coordinator → Participant A: "Commit txn-123"
-  Coordinator → Participant B: "Commit txn-123"
-  Participants commit and release locks
-```
+<TwoPhaseCommitDiagram />
 
 **2PC failure modes:**
 
@@ -1093,20 +965,7 @@ Phase 2 (Commit):
 
 A Saga replaces a distributed transaction with a sequence of local transactions + compensating actions:
 
-```mermaid
-sequenceDiagram
-    participant OS as Order Service
-    participant IS as Inventory Service
-    participant PS as Payment Service
-
-    OS->>OS: Create Order (PENDING)
-    OS->>IS: Reserve Inventory
-    IS-->>OS: Reserved OK
-    OS->>PS: Charge Payment
-    PS-->>OS: Charge Failed ← Failure!
-    OS->>IS: Release Inventory (compensate)
-    OS->>OS: Mark Order FAILED (compensate)
-```
+<SagaCoreFlowDiagram />
 
 ```java
 // Choreography-based Saga via Kafka events

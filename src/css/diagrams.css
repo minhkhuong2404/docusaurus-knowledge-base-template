@@ -378,4 +378,31 @@
   font-weight: 600;
 }
 
+/* Outermost Header Style */
+.interactive-diagram-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 0.75rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--ifm-color-content);
+}
+
+[data-theme="light"] .interactive-diagram-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.interactive-diagram-header span {
+  flex-grow: 1;
+}
+
+.interactive-diagram-header button {
+  flex-shrink: 0;
+}
+
+
 

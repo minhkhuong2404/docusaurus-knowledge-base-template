@@ -5,6 +5,13 @@ sidebar_label: Two-Phase Commit (2PC)
 description: A comprehensive guide to Two-Phase Commit (2PC) and Three-Phase Commit (3PC) — from real-world analogies for beginners to WAL internals, failure modes, and XA implementation for senior engineers.
 tags: [system-design, distributed-systems, transactions, 2pc, 3pc, consistency, xa]
 ---
+import TwoPhaseCommitSequenceDiagram from '@site/src/components/TwoPhaseCommitSequenceDiagram';
+import TwoPhaseCommitFailureModesDiagram from '@site/src/components/TwoPhaseCommitFailureModesDiagram';
+import ThreePhaseCommitDiagram from '@site/src/components/ThreePhaseCommitDiagram';
+import ParticipantPrepareWalDiagram from '@site/src/components/ParticipantPrepareWalDiagram';
+import ThreePhaseCommitPhasesDiagram from '@site/src/components/ThreePhaseCommitPhasesDiagram';
+import CoordinatorTransactionLogDiagram from '@site/src/components/CoordinatorTransactionLogDiagram';
+
 
 # Two-Phase Commit (2PC) & Three-Phase Commit (3PC)
 
@@ -56,34 +63,7 @@ The protocol relies on a central **Coordinator** and multiple **Participants**.
 
 ### Mechanics of 2PC
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant C as Coordinator
-    participant A as Participant A<br/>(Payment DB)
-    participant B as Participant B<br/>(Inventory DB)
-
-    rect rgb(224, 239, 255)
-        Note over C, B: Phase 1 — Prepare (Voting)
-        C->>A: PREPARE transaction T1
-        C->>B: PREPARE transaction T1
-        A->>A: Write undo log, acquire locks, flush WAL
-        B->>B: Write undo log, acquire locks, flush WAL
-        A-->>C: VOTE YES (ready to commit)
-        B-->>C: VOTE YES (ready to commit)
-    end
-
-    rect rgb(220, 255, 220)
-        Note over C, B: Phase 2 — Commit (Decision)
-        C->>C: Write COMMIT decision to coordinator log (durable)
-        C->>A: COMMIT
-        C->>B: COMMIT
-        A->>A: Apply changes, release locks, flush commit record
-        B->>B: Apply changes, release locks, flush commit record
-        A-->>C: ACK
-        B-->>C: ACK
-    end
-```
+<TwoPhaseCommitSequenceDiagram />
 
 #### Phase 1: Prepare (Voting Round)
 
@@ -116,19 +96,9 @@ Once a participant votes YES, it is **obligated to commit** if the coordinator l
 
 ## 2PC Internals & WAL
 
-### What happens inside a Participant during Prepare?
+### What Happens Inside a Participant During Prepare?
 
-```
-Participant WAL during Phase 1:
-┌─────────────────────────────────────────────────────────┐
-│ [LSN 1001] BEGIN  txn=T1                                │
-│ [LSN 1002] UPDATE accounts SET balance=balance-100      │
-│            WHERE id=42  (old_val=500, new_val=400)      │
-│ [LSN 1003] PREPARE txn=T1 xid=2PC-global-id            │
-│            ← WAL fsync() called here                    │
-│            ← Row locks held, transaction "in-doubt"     │
-└─────────────────────────────────────────────────────────┘
-```
+<ParticipantPrepareWalDiagram />
 
 The participant is now in an **in-doubt** state. It holds locks and has durable undo data, but hasn't committed or rolled back. It **waits** for the coordinator's Phase 2 decision.
 
@@ -136,18 +106,7 @@ The participant is now in an **in-doubt** state. It holds locks and has durable 
 
 The coordinator's log is the single most critical piece of state:
 
-```
-Coordinator Log:
-[T1] STARTED    — 2025-01-15 10:00:00.001
-[T1] PREPARED   — participants=[DB-A, DB-B, DB-C]
-[T1] ALL VOTED YES — 10:00:00.050
-[T1] DECISION: COMMIT ← durable fsync here (point of no return)
-[T1] COMMIT SENT to DB-A ← 10:00:00.055
-[T1] COMMIT SENT to DB-B ← 10:00:00.057
-[T1] ACK from DB-A        ← 10:00:00.060
-[T1] ACK from DB-B        ← 10:00:00.062
-[T1] COMPLETED
-```
+<CoordinatorTransactionLogDiagram />
 
 The `DECISION: COMMIT` log entry is the **point of no return**. Once this is written durably, the coordinator will retry sending `COMMIT` messages until all participants acknowledge — even across coordinator restarts.
 
@@ -155,63 +114,7 @@ The `DECISION: COMMIT` log entry is the **point of no return**. Once this is wri
 
 ## Failure Modes In-Depth
 
-### 1. Participant Crashes Before Voting
-
-```
-[Coordinator] -PREPARE→ [DB-A] ✓ VOTE YES
-[Coordinator] -PREPARE→ [DB-B] 💥 (DB-B crashes before responding)
-
-Coordinator action: Wait for timeout → ABORT
-DB-A action: Receives ABORT → rolls back → releases locks ✅
-DB-B action: On restart, sees no PREPARE in WAL → no-op ✅
-```
-**Result:** Clean abort. No inconsistency.
-
-### 2. Participant Crashes After Voting YES (The Blocking Problem)
-
-```
-[DB-A] sent VOTE YES → holds locks → waits...
-[DB-A] 💥 crashes mid-wait
-
-On recovery, DB-A sees its WAL:
-  [PREPARE txn=T1] ← in-doubt state
-  No COMMIT or ABORT record
-
-DB-A MUST contact the coordinator to learn the decision.
-Until it does, DB-A holds its locks — potentially blocking all readers/writers.
-```
-
-**How PostgreSQL handles this:** Uses `pg_prepared_xacts` to persist in-doubt transactions across restarts. A recovery process queries the coordinator for the decision.
-
-### 3. Coordinator Crashes After Writing COMMIT Decision
-
-```
-Coordinator log: [T1] DECISION: COMMIT ← written durably
-Coordinator 💥 crashes before sending COMMIT to participants
-
-Participants DB-A, DB-B: Still in in-doubt state, holding locks ∞
-
-On coordinator restart:
-  Recovery reads log: sees DECISION: COMMIT for T1
-  Re-sends COMMIT to all participants
-  Participants check their WAL → see PREPARE → apply COMMIT ✅
-```
-
-**Result:** Eventually consistent, but participants are blocked for the duration of the coordinator's recovery window (seconds to minutes).
-
-### 4. Network Partition Between Coordinator and Participants
-
-```
-[Coordinator] sent COMMIT to DB-A ✓
-[Coordinator]  ─── network partition ───  [DB-B]
-
-DB-A: Committed ✅
-DB-B: Still in-doubt, holding locks ∞ (can never resolve without coordinator)
-```
-
-This is the **fundamental unsolvability** of 2PC under network partitions. A participant that cannot reach the coordinator is permanently blocked — it cannot unilaterally commit or abort, because:
-- If it commits and the decision was ABORT → inconsistency.
-- If it aborts and the decision was COMMIT → inconsistency.
+<TwoPhaseCommitFailureModesDiagram />
 
 ---
 
@@ -350,11 +253,7 @@ XA transactions are **notoriously slow and operationally complex**. The `prepare
 
 Three-Phase Commit (3PC) is an evolution of 2PC that adds a **pre-commit phase** to eliminate the blocking problem under coordinator failure.
 
-```
-Phase 1          Phase 2           Phase 3
-[CanCommit] ──► [PreCommit] ──►  [DoCommit]
-(Voting)        (Lock + Promise)  (Final Apply)
-```
+<ThreePhaseCommitPhasesDiagram />
 
 ### How 3PC Eliminates Blocking
 
@@ -369,40 +268,7 @@ This is possible because PreCommit is a quorum acknowledgment — every particip
 
 ### 3PC Sequence
 
-```mermaid
-sequenceDiagram
-    participant C as Coordinator
-    participant A as Participant A
-    participant B as Participant B
-
-    rect rgb(224, 239, 255)
-        Note over C, B: Phase 1 — CanCommit
-        C->>A: CanCommit? (txn T1)
-        C->>B: CanCommit? (txn T1)
-        A-->>C: YES
-        B-->>C: YES
-    end
-
-    rect rgb(255, 243, 205)
-        Note over C, B: Phase 2 — PreCommit (new phase)
-        C->>A: PreCommit (prepare and lock)
-        C->>B: PreCommit (prepare and lock)
-        A->>A: Acquire locks, write WAL
-        B->>B: Acquire locks, write WAL
-        A-->>C: Ready
-        B-->>C: Ready
-    end
-
-    rect rgb(220, 255, 220)
-        Note over C, B: Phase 3 — DoCommit
-        C->>A: DoCommit
-        C->>B: DoCommit
-        A->>A: Commit, release locks
-        B->>B: Commit, release locks
-        A-->>C: ACK
-        B-->>C: ACK
-    end
-```
+<ThreePhaseCommitDiagram />
 
 ### Why 3PC is Not Used in Practice
 

@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-ea2": {
+  "/-3fa": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-22f": {
+  "/-48c": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -5793,7 +5793,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-d82": {
+  "/-707": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -10908,7 +10908,7 @@
     "__comp": "17896441",
     "content": "d9dc4b65"
   },
-  "/technical-knowledge/spring/spring-transactional-deep-dive-70f": {
+  "/technical-knowledge/spring/spring-transactional-deep-dive-8b2": {
     "__comp": "17896441",
     "content": "6180830a"
   },
@@ -10928,7 +10928,7 @@
     "__comp": "17896441",
     "content": "c0e5a9ef"
   },
-  "/technical-knowledge/system-design/backend-for-frontend-b0b": {
+  "/technical-knowledge/system-design/backend-for-frontend-485": {
     "__comp": "17896441",
     "content": "b02f3312"
   },
