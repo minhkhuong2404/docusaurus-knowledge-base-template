@@ -5,6 +5,14 @@ sidebar_label: Load Balancing & Reliability
 description: Load balancing algorithms, health checks, failover strategies, chaos engineering, disaster recovery, and SRE practices for building reliable distributed services.
 tags: [load-balancing, reliability, failover, chaos-engineering, disaster-recovery, sre, high-availability]
 ---
+import LoadBalancerArchitectureDiagram from '@site/src/components/LoadBalancerArchitectureDiagram';
+import FailoverStrategiesDiagram from '@site/src/components/FailoverStrategiesDiagram';
+import MultiRegionDiagram from '@site/src/components/MultiRegionDiagram';
+import DegradationLevelsDiagram from '@site/src/components/DegradationLevelsDiagram';
+import DeploymentStrategiesDiagram from '@site/src/components/DeploymentStrategiesDiagram';
+import AnycastRoutingDiagram from '@site/src/components/AnycastRoutingDiagram';
+import SessionPersistenceDiagram from '@site/src/components/SessionPersistenceDiagram';
+import GSLBDiagram from '@site/src/components/GSLBDiagram';
 
 # Load Balancing & Service Reliability
 
@@ -40,21 +48,7 @@ To understand how a Load Balancer differs from a Reverse Proxy and an API Gatewa
 
 ## Load Balancer Architecture
 
-```
-Internet
-    ↓
-DNS (Route 53) → TTL-based failover across regions
-    ↓
-Global Load Balancer (Anycast IP)
-    ↓
-Regional Load Balancer (L7)
-    ↓
-Service Instance Pool
-    ↓
-Internal Load Balancer (service mesh / k8s)
-    ↓
-Downstream Services
-```
+<LoadBalancerArchitectureDiagram />
 
 ---
 
@@ -108,40 +102,9 @@ startupProbe:        # Is the app done starting? Don't liveness-kill a slow star
 
 ## Failover Strategies
 
-### Active-Passive (Hot Standby)
-```
-Primary: handles all traffic
-Standby: idle, ready to take over
+<FailoverStrategiesDiagram />
 
-On primary failure:
-  DNS failover (1–5 min TTL) → Standby
-  OR
-  Heartbeat + VIP (Virtual IP) → Standby claims IP
-```
-
-**RPO** (Recovery Point Objective): Time since last replication  
-**RTO** (Recovery Time Objective): Time to restore service
-
-### Active-Active
-```
-Both primaries handle traffic
-Traffic split across multiple regions/AZs
-
-On failure of one:
-  Load balancer removes from pool
-  Remaining primary absorbs load
-```
-
-### Multi-Region
-```
-Region A (us-east) ←→ Region B (eu-west) [bidirectional replication]
-        ↑                    ↑
-    Users (US)           Users (EU)
-
-On Region A failure:
-  DNS → Route all traffic to Region B
-  Region B reads are slightly stale (replication lag)
-```
+<MultiRegionDiagram />
 
 ---
 
@@ -163,12 +126,8 @@ public List<Product> defaultRecommendations(Long userId, Exception ex) {
 ```
 
 ### Degradation Levels
-```
-Level 0: Full functionality (green)
-Level 1: Personalization disabled, use cached/popular content (yellow)
-Level 2: Read-only mode, no writes accepted (orange)
-Level 3: Static maintenance page (red)
-```
+
+<DegradationLevelsDiagram />
 
 ---
 
@@ -229,26 +188,7 @@ public class OrderService { ... }
 
 ## Zero-Downtime Deployments
 
-### Blue-Green
-```
-Blue (current v1) ← 100% traffic
-Green (new v2) ← Deploy + test with 0% traffic
-
-Switch LB:
-Blue (current v1) ← 0% traffic (keep for rollback)
-Green (new v2) ← 100% traffic
-```
-
-### Canary
-```
-v1: 95% traffic
-v2: 5% traffic (canary)
-
-Watch metrics for 30 min...
-
-If OK: gradually increase v2 to 100%
-If bad: route all back to v1 (instant rollback)
-```
+<DeploymentStrategiesDiagram />
 
 ```yaml
 # Kubernetes canary with Argo Rollouts
@@ -265,16 +205,6 @@ spec:
       - setWeight: 100
 ```
 
-### Rolling Update
-```
-v1: [pod1, pod2, pod3, pod4]
-Update pod1 → v2, health check passes
-Update pod2 → v2, health check passes
-Update pod3 → v2, health check passes
-Update pod4 → v2
-Done: [pod1v2, pod2v2, pod3v2, pod4v2]
-```
-
 ---
 
 
@@ -282,15 +212,7 @@ Done: [pod1v2, pod2v2, pod3v2, pod4v2]
 
 CDNs use **anycast** to route users to the nearest PoP automatically.
 
-```
-Same IP address (e.g., 104.16.0.0) announced from multiple locations
-BGP routing automatically sends packets to the nearest PoP
-
-User in Tokyo → Tokyo PoP  (same IP, different physical server)
-User in London → London PoP
-
-No DNS magic needed — routing infrastructure handles it
-```
+<AnycastRoutingDiagram />
 
 Used by: Cloudflare, Google (8.8.8.8), root DNS servers.
 
@@ -301,19 +223,7 @@ Used by: Cloudflare, Google (8.8.8.8), root DNS servers.
 
 When application state is stored in-server memory, all requests from a user must go to the same server.
 
-```
-User Alice → LB → Server A  (session stored on A)
-Next request from Alice → must go to Server A (not B or C)
-
-Methods:
-1. Cookie-based: LB injects SERVERID cookie
-   Set-Cookie: SERVERID=server-a; Path=/
-
-2. IP-based: hash source IP (breaks with NAT)
-
-3. Application-level: store session in Redis (preferred — stateless servers)
-   → Eliminates need for sticky sessions
-```
+<SessionPersistenceDiagram />
 
 :::tip[Best Practice]
 Avoid sticky sessions when possible. Store session data in a distributed cache (Redis) so any server can handle any request — true horizontal scaling.
@@ -366,19 +276,7 @@ server {
 
 Distributes traffic across **multiple data centers globally** using DNS:
 
-```
-Primary DC: us-east-1 (203.0.113.10)
-DR DC:      eu-west-1 (198.51.100.20)
-
-DNS-based GSLB:
-  Healthy: api.example.com → 203.0.113.10
-  Primary fails health check → DNS switches to 198.51.100.20
-  (with low TTL for fast failover)
-
-Latency-based GSLB (AWS Route 53):
-  US user → us-east-1
-  EU user → eu-west-1
-```
+<GSLBDiagram />
 
 ---
 

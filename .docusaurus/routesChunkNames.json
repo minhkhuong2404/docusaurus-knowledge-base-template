@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-9f2": {
+  "/-117": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-9d7": {
+  "/-a67": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -5793,14 +5793,14 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-5aa": {
+  "/-b57": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
     "__comp": "17896441",
     "content": "78559adb"
   },
-  "/banking-7cd": {
+  "/banking-949": {
     "__comp": "17896441",
     "content": "59e92e34"
   },
@@ -6452,11 +6452,11 @@
     "__comp": "17896441",
     "content": "8c495483"
   },
-  "/technical-knowledge/ai-agents/context-engineering-69a": {
+  "/technical-knowledge/ai-agents/context-engineering-4f2": {
     "__comp": "17896441",
     "content": "d3df9646"
   },
-  "/technical-knowledge/ai-agents/harness-6ae": {
+  "/technical-knowledge/ai-agents/harness-68e": {
     "__comp": "17896441",
     "content": "23da8883"
   },
@@ -6464,7 +6464,7 @@
     "__comp": "17896441",
     "content": "88b58d73"
   },
-  "/technical-knowledge/ai-agents/skills-2a9": {
+  "/technical-knowledge/ai-agents/skills-cdd": {
     "__comp": "17896441",
     "content": "db3aad75"
   },
@@ -6472,51 +6472,51 @@
     "__comp": "17896441",
     "content": "de2714d4"
   },
-  "/technical-knowledge/aws/api-gateway/-c14": {
+  "/technical-knowledge/aws/api-gateway/-dfa": {
     "__comp": "17896441",
     "content": "9b48b4ad"
   },
-  "/technical-knowledge/aws/appsync-37b": {
+  "/technical-knowledge/aws/appsync-afb": {
     "__comp": "17896441",
     "content": "80d1a9d2"
   },
-  "/technical-knowledge/aws/aws-sdk-java-4a7": {
+  "/technical-knowledge/aws/aws-sdk-java-f9c": {
     "__comp": "17896441",
     "content": "89db9c27"
   },
-  "/technical-knowledge/aws/beanstalk/-79c": {
+  "/technical-knowledge/aws/beanstalk/-0df": {
     "__comp": "17896441",
     "content": "e11cab58"
   },
-  "/technical-knowledge/aws/cicd/-a20": {
+  "/technical-knowledge/aws/cicd/-732": {
     "__comp": "17896441",
     "content": "f4746e0c"
   },
-  "/technical-knowledge/aws/cicd/code-build-b8b": {
+  "/technical-knowledge/aws/cicd/code-build-833": {
     "__comp": "17896441",
     "content": "b01845cd"
   },
-  "/technical-knowledge/aws/cicd/code-deploy-f54": {
+  "/technical-knowledge/aws/cicd/code-deploy-e0d": {
     "__comp": "17896441",
     "content": "33fee3f2"
   },
-  "/technical-knowledge/aws/cicd/code-pipeline-9c0": {
+  "/technical-knowledge/aws/cicd/code-pipeline-813": {
     "__comp": "17896441",
     "content": "0d2d99ca"
   },
-  "/technical-knowledge/aws/cloudformation/-024": {
+  "/technical-knowledge/aws/cloudformation/-b44": {
     "__comp": "17896441",
     "content": "857b188f"
   },
-  "/technical-knowledge/aws/cloudformation/cloudfront-002": {
+  "/technical-knowledge/aws/cloudformation/cloudfront-b7b": {
     "__comp": "17896441",
     "content": "bfcc8b32"
   },
-  "/technical-knowledge/aws/cloudformation/sam-173": {
+  "/technical-knowledge/aws/cloudformation/sam-bbd": {
     "__comp": "17896441",
     "content": "2c8bce91"
   },
-  "/technical-knowledge/aws/containers/ecs-ecr-5e8": {
+  "/technical-knowledge/aws/containers/ecs-ecr-de0": {
     "__comp": "17896441",
     "content": "63c5afd7"
   },
@@ -6524,103 +6524,103 @@
     "__comp": "17896441",
     "content": "deb59bdb"
   },
-  "/technical-knowledge/aws/dynamodb/-fff": {
+  "/technical-knowledge/aws/dynamodb/-538": {
     "__comp": "17896441",
     "content": "f90180fa"
   },
-  "/technical-knowledge/aws/dynamodb/advanced-b42": {
+  "/technical-knowledge/aws/dynamodb/advanced-c45": {
     "__comp": "17896441",
     "content": "3a17425a"
   },
-  "/technical-knowledge/aws/elasticache/-425": {
+  "/technical-knowledge/aws/elasticache/-4fc": {
     "__comp": "17896441",
     "content": "2f7f8341"
   },
-  "/technical-knowledge/aws/exam-tips-8ba": {
+  "/technical-knowledge/aws/exam-tips-557": {
     "__comp": "17896441",
     "content": "8a5452e1"
   },
-  "/technical-knowledge/aws/iam/-b5c": {
+  "/technical-knowledge/aws/iam/-2e5": {
     "__comp": "17896441",
     "content": "e0eddf4b"
   },
-  "/technical-knowledge/aws/iam/cognito-607": {
+  "/technical-knowledge/aws/iam/cognito-a27": {
     "__comp": "17896441",
     "content": "4eb80ea8"
   },
-  "/technical-knowledge/aws/iam/iam-advanced-7bc": {
+  "/technical-knowledge/aws/iam/iam-advanced-d5a": {
     "__comp": "17896441",
     "content": "275c2b8b"
   },
-  "/technical-knowledge/aws/lambda/-36e": {
+  "/technical-knowledge/aws/lambda/-4be": {
     "__comp": "17896441",
     "content": "afa07c8d"
   },
-  "/technical-knowledge/aws/lambda/layers-and-versions-c30": {
+  "/technical-knowledge/aws/lambda/layers-and-versions-a7e": {
     "__comp": "17896441",
     "content": "707ec2fe"
   },
-  "/technical-knowledge/aws/messaging/kinesis-394": {
+  "/technical-knowledge/aws/messaging/kinesis-ed1": {
     "__comp": "17896441",
     "content": "4ec9b254"
   },
-  "/technical-knowledge/aws/messaging/sns-0e2": {
+  "/technical-knowledge/aws/messaging/sns-600": {
     "__comp": "17896441",
     "content": "8b89c603"
   },
-  "/technical-knowledge/aws/messaging/sqs-6da": {
+  "/technical-knowledge/aws/messaging/sqs-b3c": {
     "__comp": "17896441",
     "content": "9a9ef1e0"
   },
-  "/technical-knowledge/aws/mock-exam-cef": {
+  "/technical-knowledge/aws/mock-exam-05b": {
     "__comp": "17896441",
     "content": "ff802394"
   },
-  "/technical-knowledge/aws/monitoring/cloudtrail-5b9": {
+  "/technical-knowledge/aws/monitoring/cloudtrail-e89": {
     "__comp": "17896441",
     "content": "c3b5c998"
   },
-  "/technical-knowledge/aws/monitoring/cloudwatch-1ac": {
+  "/technical-knowledge/aws/monitoring/cloudwatch-32c": {
     "__comp": "17896441",
     "content": "5753100e"
   },
-  "/technical-knowledge/aws/monitoring/x-ray-106": {
+  "/technical-knowledge/aws/monitoring/x-ray-1c8": {
     "__comp": "17896441",
     "content": "261194b7"
   },
-  "/technical-knowledge/aws/rds-aurora-a67": {
+  "/technical-knowledge/aws/rds-aurora-cf0": {
     "__comp": "17896441",
     "content": "cbbb6c17"
   },
-  "/technical-knowledge/aws/s3/-0dd": {
+  "/technical-knowledge/aws/s3/-88b": {
     "__comp": "17896441",
     "content": "4f1daaff"
   },
-  "/technical-knowledge/aws/s3/advanced-ff0": {
+  "/technical-knowledge/aws/s3/advanced-5e4": {
     "__comp": "17896441",
     "content": "ed7fe863"
   },
-  "/technical-knowledge/aws/security/kms-fc9": {
+  "/technical-knowledge/aws/security/kms-c00": {
     "__comp": "17896441",
     "content": "6bc41c2b"
   },
-  "/technical-knowledge/aws/security/secrets-manager-8d3": {
+  "/technical-knowledge/aws/security/secrets-manager-317": {
     "__comp": "17896441",
     "content": "16e34d91"
   },
-  "/technical-knowledge/aws/security/ssm-parameter-store-236": {
+  "/technical-knowledge/aws/security/ssm-parameter-store-a7a": {
     "__comp": "17896441",
     "content": "cdce4984"
   },
-  "/technical-knowledge/aws/serverless-patterns-119": {
+  "/technical-knowledge/aws/serverless-patterns-017": {
     "__comp": "17896441",
     "content": "a7a9e546"
   },
-  "/technical-knowledge/aws/step-functions/-f29": {
+  "/technical-knowledge/aws/step-functions/-a17": {
     "__comp": "17896441",
     "content": "ca993c49"
   },
-  "/technical-knowledge/aws/vpc-for-developers-a28": {
+  "/technical-knowledge/aws/vpc-for-developers-0c1": {
     "__comp": "17896441",
     "content": "78ff2832"
   },
@@ -6628,7 +6628,7 @@
     "__comp": "17896441",
     "content": "0f5b88ea"
   },
-  "/technical-knowledge/banking/aml_kyc-680": {
+  "/technical-knowledge/banking/aml_kyc-7be": {
     "__comp": "17896441",
     "content": "a7b535ea"
   },
@@ -6656,7 +6656,7 @@
     "__comp": "17896441",
     "content": "afebb541"
   },
-  "/technical-knowledge/banking/cards-8ee": {
+  "/technical-knowledge/banking/cards-cf9": {
     "__comp": "17896441",
     "content": "b973a717"
   },
@@ -6668,7 +6668,7 @@
     "__comp": "17896441",
     "content": "1fd44cf6"
   },
-  "/technical-knowledge/banking/core_banking-3d3": {
+  "/technical-knowledge/banking/core_banking-8ad": {
     "__comp": "17896441",
     "content": "af590922"
   },
@@ -6708,7 +6708,7 @@
     "__comp": "17896441",
     "content": "c13c1767"
   },
-  "/technical-knowledge/banking/fx-e2f": {
+  "/technical-knowledge/banking/fx-bbe": {
     "__comp": "17896441",
     "content": "e9f00403"
   },
@@ -6736,7 +6736,7 @@
     "__comp": "17896441",
     "content": "28c4ef33"
   },
-  "/technical-knowledge/banking/npp-bc1": {
+  "/technical-knowledge/banking/npp-8d5": {
     "__comp": "17896441",
     "content": "104bf45b"
   },
@@ -6788,7 +6788,7 @@
     "__comp": "17896441",
     "content": "6cfeb22d"
   },
-  "/technical-knowledge/banking/payment_lifecycle_101-89d": {
+  "/technical-knowledge/banking/payment_lifecycle_101-894": {
     "__comp": "17896441",
     "content": "fb4429bd"
   },
@@ -6928,79 +6928,79 @@
     "__comp": "17896441",
     "content": "d4d0b9b0"
   },
-  "/technical-knowledge/database/acid-98e": {
+  "/technical-knowledge/database/acid-152": {
     "__comp": "17896441",
     "content": "3be25515"
   },
-  "/technical-knowledge/database/advanced-sql-ccc": {
+  "/technical-knowledge/database/advanced-sql-6b3": {
     "__comp": "17896441",
     "content": "8a4ffef6"
   },
-  "/technical-knowledge/database/backup-recovery-212": {
+  "/technical-knowledge/database/backup-recovery-539": {
     "__comp": "17896441",
     "content": "1d655bfd"
   },
-  "/technical-knowledge/database/connection-pooling-d53": {
+  "/technical-knowledge/database/connection-pooling-814": {
     "__comp": "17896441",
     "content": "0dd1e07c"
   },
-  "/technical-knowledge/database/data-warehousing-olap-6b8": {
+  "/technical-knowledge/database/data-warehousing-olap-d90": {
     "__comp": "17896441",
     "content": "a404a845"
   },
-  "/technical-knowledge/database/database-design-071": {
+  "/technical-knowledge/database/database-design-86a": {
     "__comp": "17896441",
     "content": "39348cd3"
   },
-  "/technical-knowledge/database/database-patterns-microservices-74d": {
+  "/technical-knowledge/database/database-patterns-microservices-818": {
     "__comp": "17896441",
     "content": "52d464a4"
   },
-  "/technical-knowledge/database/database-security-f0c": {
+  "/technical-knowledge/database/database-security-210": {
     "__comp": "17896441",
     "content": "c8f8291e"
   },
-  "/technical-knowledge/database/full-text-search-b52": {
+  "/technical-knowledge/database/full-text-search-c46": {
     "__comp": "17896441",
     "content": "f33f2ff7"
   },
-  "/technical-knowledge/database/indexing-query-optimization-0b5": {
+  "/technical-knowledge/database/indexing-query-optimization-f1f": {
     "__comp": "17896441",
     "content": "3579e0cb"
   },
-  "/technical-knowledge/database/nosql-distributed-631": {
+  "/technical-knowledge/database/nosql-distributed-0c9": {
     "__comp": "17896441",
     "content": "025815b7"
   },
-  "/technical-knowledge/database/performance-monitoring-e9d": {
+  "/technical-knowledge/database/performance-monitoring-4e1": {
     "__comp": "17896441",
     "content": "66dfb623"
   },
-  "/technical-knowledge/database/query-planner-optimizer-c3b": {
+  "/technical-knowledge/database/query-planner-optimizer-2ce": {
     "__comp": "17896441",
     "content": "44e5f61d"
   },
-  "/technical-knowledge/database/relational-fundamentals-22a": {
+  "/technical-knowledge/database/relational-fundamentals-08d": {
     "__comp": "17896441",
     "content": "30a60d4b"
   },
-  "/technical-knowledge/database/replication-partitioning-c90": {
+  "/technical-knowledge/database/replication-partitioning-5fb": {
     "__comp": "17896441",
     "content": "353f2454"
   },
-  "/technical-knowledge/database/schema-migrations-121": {
+  "/technical-knowledge/database/schema-migrations-de7": {
     "__comp": "17896441",
     "content": "008ae538"
   },
-  "/technical-knowledge/database/storage-engines-data-structures-152": {
+  "/technical-knowledge/database/storage-engines-data-structures-718": {
     "__comp": "17896441",
     "content": "c28018e1"
   },
-  "/technical-knowledge/database/time-series-databases-7d6": {
+  "/technical-knowledge/database/time-series-databases-e90": {
     "__comp": "17896441",
     "content": "04625431"
   },
-  "/technical-knowledge/database/transactions-concurrency-4f3": {
+  "/technical-knowledge/database/transactions-concurrency-398": {
     "__comp": "17896441",
     "content": "d2fa8756"
   },
@@ -7100,7 +7100,7 @@
     "__comp": "17896441",
     "content": "228b4013"
   },
-  "/technical-knowledge/devops/ansible-e62": {
+  "/technical-knowledge/devops/ansible-878": {
     "__comp": "17896441",
     "content": "2e222ed3"
   },
@@ -7180,7 +7180,7 @@
     "__comp": "17896441",
     "content": "4ef1d832"
   },
-  "/technical-knowledge/devops/terraform-61e": {
+  "/technical-knowledge/devops/terraform-f2d": {
     "__comp": "17896441",
     "content": "c2aaa6d4"
   },
@@ -9916,43 +9916,43 @@
     "__comp": "17896441",
     "content": "a2262cff"
   },
-  "/technical-knowledge/git/advanced/bisect-5a5": {
+  "/technical-knowledge/git/advanced/bisect-34f": {
     "__comp": "17896441",
     "content": "d83a76bb"
   },
-  "/technical-knowledge/git/advanced/config-aliases-cc9": {
+  "/technical-knowledge/git/advanced/config-aliases-9d8": {
     "__comp": "17896441",
     "content": "5b7c9f14"
   },
-  "/technical-knowledge/git/advanced/hooks-037": {
+  "/technical-knowledge/git/advanced/hooks-245": {
     "__comp": "17896441",
     "content": "bf29cb48"
   },
-  "/technical-knowledge/git/advanced/worktree-f1a": {
+  "/technical-knowledge/git/advanced/worktree-24e": {
     "__comp": "17896441",
     "content": "f2cfb919"
   },
-  "/technical-knowledge/git/basics/add-39a": {
+  "/technical-knowledge/git/basics/add-f75": {
     "__comp": "17896441",
     "content": "fb49eb50"
   },
-  "/technical-knowledge/git/basics/commit-22a": {
+  "/technical-knowledge/git/basics/commit-25f": {
     "__comp": "17896441",
     "content": "14004a7d"
   },
-  "/technical-knowledge/git/basics/fetch-pull-cb3": {
+  "/technical-knowledge/git/basics/fetch-pull-4fb": {
     "__comp": "17896441",
     "content": "a2f19763"
   },
-  "/technical-knowledge/git/basics/push-3f3": {
+  "/technical-knowledge/git/basics/push-c08": {
     "__comp": "17896441",
     "content": "17cfe222"
   },
-  "/technical-knowledge/git/basics/status-diff-f13": {
+  "/technical-knowledge/git/basics/status-diff-a53": {
     "__comp": "17896441",
     "content": "ba5aaa48"
   },
-  "/technical-knowledge/git/branching/branches-14f": {
+  "/technical-knowledge/git/branching/branches-cc0": {
     "__comp": "17896441",
     "content": "bb49063c"
   },
@@ -9968,19 +9968,19 @@
     "__comp": "17896441",
     "content": "798c5731"
   },
-  "/technical-knowledge/git/collaboration/remotes-34e": {
+  "/technical-knowledge/git/collaboration/remotes-442": {
     "__comp": "17896441",
     "content": "91269428"
   },
-  "/technical-knowledge/git/collaboration/stash-5bd": {
+  "/technical-knowledge/git/collaboration/stash-882": {
     "__comp": "17896441",
     "content": "7b460c0b"
   },
-  "/technical-knowledge/git/collaboration/submodules-574": {
+  "/technical-knowledge/git/collaboration/submodules-a37": {
     "__comp": "17896441",
     "content": "81787730"
   },
-  "/technical-knowledge/git/collaboration/tags-0a7": {
+  "/technical-knowledge/git/collaboration/tags-ec8": {
     "__comp": "17896441",
     "content": "66e85b9d"
   },
@@ -9988,15 +9988,15 @@
     "__comp": "17896441",
     "content": "0daf3191"
   },
-  "/technical-knowledge/git/history/fixup-ef4": {
+  "/technical-knowledge/git/history/fixup-da8": {
     "__comp": "17896441",
     "content": "cbc62dae"
   },
-  "/technical-knowledge/git/history/log-blame-2b9": {
+  "/technical-knowledge/git/history/log-blame-8be": {
     "__comp": "17896441",
     "content": "815fb4e9"
   },
-  "/technical-knowledge/git/history/reflog-c48": {
+  "/technical-knowledge/git/history/reflog-c90": {
     "__comp": "17896441",
     "content": "855e9c0e"
   },
@@ -10004,7 +10004,7 @@
     "__comp": "17896441",
     "content": "0ea91e2d"
   },
-  "/technical-knowledge/git/history/squash-43a": {
+  "/technical-knowledge/git/history/squash-718": {
     "__comp": "17896441",
     "content": "5a6bd8bf"
   },
@@ -10260,15 +10260,15 @@
     "__comp": "17896441",
     "content": "be1ca738"
   },
-  "/technical-knowledge/java/concurrency-vs-parallelism-190": {
+  "/technical-knowledge/java/concurrency-vs-parallelism-e38": {
     "__comp": "17896441",
     "content": "e2052292"
   },
-  "/technical-knowledge/java/java-aqs-internals-49b": {
+  "/technical-knowledge/java/java-aqs-internals-63b": {
     "__comp": "17896441",
     "content": "2695042f"
   },
-  "/technical-knowledge/java/java-collections-185": {
+  "/technical-knowledge/java/java-collections-de9": {
     "__comp": "17896441",
     "content": "a8d4740a"
   },
@@ -10292,7 +10292,7 @@
     "__comp": "17896441",
     "content": "f99a0434"
   },
-  "/technical-knowledge/java/java-io-f18": {
+  "/technical-knowledge/java/java-io-bd8": {
     "__comp": "17896441",
     "content": "3744858f"
   },
@@ -10308,7 +10308,7 @@
     "__comp": "17896441",
     "content": "efefd14e"
   },
-  "/technical-knowledge/java/java-new-features-4b7": {
+  "/technical-knowledge/java/java-new-features-92e": {
     "__comp": "17896441",
     "content": "0366963e"
   },
@@ -10332,11 +10332,11 @@
     "__comp": "17896441",
     "content": "190bfe65"
   },
-  "/technical-knowledge/java/java-virtual-threads-b69": {
+  "/technical-knowledge/java/java-virtual-threads-f66": {
     "__comp": "17896441",
     "content": "dd9695a1"
   },
-  "/technical-knowledge/java/thread-pools-and-connection-pooling-2c6": {
+  "/technical-knowledge/java/thread-pools-and-connection-pooling-0e8": {
     "__comp": "17896441",
     "content": "89378099"
   },
@@ -10344,47 +10344,47 @@
     "__comp": "17896441",
     "content": "5a79051b"
   },
-  "/technical-knowledge/kafka/advanced/kafka-connect-ae4": {
+  "/technical-knowledge/kafka/advanced/kafka-connect-dd6": {
     "__comp": "17896441",
     "content": "e1e89bb9"
   },
-  "/technical-knowledge/kafka/advanced/kafka-connect-smts-6bd": {
+  "/technical-knowledge/kafka/advanced/kafka-connect-smts-37c": {
     "__comp": "17896441",
     "content": "cd24d437"
   },
-  "/technical-knowledge/kafka/advanced/kafka-data-governance-77c": {
+  "/technical-knowledge/kafka/advanced/kafka-data-governance-b31": {
     "__comp": "17896441",
     "content": "7372a84c"
   },
-  "/technical-knowledge/kafka/advanced/kafka-exactly-once-147": {
+  "/technical-knowledge/kafka/advanced/kafka-exactly-once-c22": {
     "__comp": "17896441",
     "content": "a8e4316f"
   },
-  "/technical-knowledge/kafka/advanced/kafka-log-compaction-3a9": {
+  "/technical-knowledge/kafka/advanced/kafka-log-compaction-3e5": {
     "__comp": "17896441",
     "content": "8c1cb736"
   },
-  "/technical-knowledge/kafka/advanced/kafka-mirrormaker2-137": {
+  "/technical-knowledge/kafka/advanced/kafka-mirrormaker2-12d": {
     "__comp": "17896441",
     "content": "e8795b9d"
   },
-  "/technical-knowledge/kafka/advanced/kafka-performance-tuning-524": {
+  "/technical-knowledge/kafka/advanced/kafka-performance-tuning-6e6": {
     "__comp": "17896441",
     "content": "637d90b2"
   },
-  "/technical-knowledge/kafka/advanced/kafka-security-acls-a63": {
+  "/technical-knowledge/kafka/advanced/kafka-security-acls-531": {
     "__comp": "17896441",
     "content": "283b8b26"
   },
-  "/technical-knowledge/kafka/advanced/kafka-security-authentication-d19": {
+  "/technical-knowledge/kafka/advanced/kafka-security-authentication-bde": {
     "__comp": "17896441",
     "content": "14d829e9"
   },
-  "/technical-knowledge/kafka/advanced/kafka-security-best-practices-4a5": {
+  "/technical-knowledge/kafka/advanced/kafka-security-best-practices-688": {
     "__comp": "17896441",
     "content": "fbc6c2a1"
   },
-  "/technical-knowledge/kafka/advanced/kafka-streams-deep-dive-d2c": {
+  "/technical-knowledge/kafka/advanced/kafka-streams-deep-dive-d13": {
     "__comp": "17896441",
     "content": "ce37e8db"
   },
@@ -10396,7 +10396,7 @@
     "__comp": "17896441",
     "content": "5cae2ae0"
   },
-  "/technical-knowledge/kafka/advanced/order-messages-d65": {
+  "/technical-knowledge/kafka/advanced/order-messages-584": {
     "__comp": "17896441",
     "content": "4dca4d8c"
   },
@@ -10412,15 +10412,15 @@
     "__comp": "17896441",
     "content": "b1dfa883"
   },
-  "/technical-knowledge/kafka/consumer/consumer-group-440": {
+  "/technical-knowledge/kafka/consumer/consumer-group-5c5": {
     "__comp": "17896441",
     "content": "f42e39f5"
   },
-  "/technical-knowledge/kafka/consumer/consumer-lag-4bc": {
+  "/technical-knowledge/kafka/consumer/consumer-lag-e6c": {
     "__comp": "17896441",
     "content": "26ead6e0"
   },
-  "/technical-knowledge/kafka/consumer/consumer-overview-7a5": {
+  "/technical-knowledge/kafka/consumer/consumer-overview-cc1": {
     "__comp": "17896441",
     "content": "67ecd1fe"
   },
@@ -10428,15 +10428,15 @@
     "__comp": "17896441",
     "content": "ad28df9b"
   },
-  "/technical-knowledge/kafka/core/kafka-broker-82f": {
+  "/technical-knowledge/kafka/core/kafka-broker-779": {
     "__comp": "17896441",
     "content": "820d99b7"
   },
-  "/technical-knowledge/kafka/core/kafka-overview-f7e": {
+  "/technical-knowledge/kafka/core/kafka-overview-62f": {
     "__comp": "17896441",
     "content": "6438a9db"
   },
-  "/technical-knowledge/kafka/core/kafka-partitioning-strategies-f23": {
+  "/technical-knowledge/kafka/core/kafka-partitioning-strategies-4df": {
     "__comp": "17896441",
     "content": "c37b5ac8"
   },
@@ -10444,7 +10444,7 @@
     "__comp": "17896441",
     "content": "16e4fe12"
   },
-  "/technical-knowledge/kafka/core/kafka-vs-rabbitmq-482": {
+  "/technical-knowledge/kafka/core/kafka-vs-rabbitmq-55d": {
     "__comp": "17896441",
     "content": "a9f771b0"
   },
@@ -10452,7 +10452,7 @@
     "__comp": "17896441",
     "content": "f5491934"
   },
-  "/technical-knowledge/kafka/core/partition-3ea": {
+  "/technical-knowledge/kafka/core/partition-030": {
     "__comp": "17896441",
     "content": "d9cff4fb"
   },
@@ -10464,11 +10464,11 @@
     "__comp": "17896441",
     "content": "55a950f5"
   },
-  "/technical-knowledge/kafka/core/scaling-partitions-be2": {
+  "/technical-knowledge/kafka/core/scaling-partitions-928": {
     "__comp": "17896441",
     "content": "19752490"
   },
-  "/technical-knowledge/kafka/core/topic-009": {
+  "/technical-knowledge/kafka/core/topic-115": {
     "__comp": "17896441",
     "content": "da3cc1f6"
   },
@@ -10488,23 +10488,23 @@
     "__comp": "17896441",
     "content": "4c007013"
   },
-  "/technical-knowledge/kafka/producer/hash-key-partitions-39c": {
+  "/technical-knowledge/kafka/producer/hash-key-partitions-194": {
     "__comp": "17896441",
     "content": "d306a363"
   },
-  "/technical-knowledge/kafka/producer/producer-acks-40f": {
+  "/technical-knowledge/kafka/producer/producer-acks-e76": {
     "__comp": "17896441",
     "content": "ae0ebc3c"
   },
-  "/technical-knowledge/kafka/producer/producer-idempotency-f6f": {
+  "/technical-knowledge/kafka/producer/producer-idempotency-07e": {
     "__comp": "17896441",
     "content": "542ecee1"
   },
-  "/technical-knowledge/kafka/producer/producer-overview-b81": {
+  "/technical-knowledge/kafka/producer/producer-overview-308": {
     "__comp": "17896441",
     "content": "296249fb"
   },
-  "/technical-knowledge/kafka/producer/producer-transactions-40c": {
+  "/technical-knowledge/kafka/producer/producer-transactions-61c": {
     "__comp": "17896441",
     "content": "7b527991"
   },
@@ -10580,35 +10580,35 @@
     "__comp": "17896441",
     "content": "ef1e85d0"
   },
-  "/technical-knowledge/networking/api-authentication-security-577": {
+  "/technical-knowledge/networking/api-authentication-security-ff8": {
     "__comp": "17896441",
     "content": "d1a1c7e0"
   },
-  "/technical-knowledge/networking/application-protocols-reference-d70": {
+  "/technical-knowledge/networking/application-protocols-reference-05f": {
     "__comp": "17896441",
     "content": "6120f8a6"
   },
-  "/technical-knowledge/networking/dns-resolution-fdc": {
+  "/technical-knowledge/networking/dns-resolution-8a6": {
     "__comp": "17896441",
     "content": "ee0ecb9e"
   },
-  "/technical-knowledge/networking/http-https-application-layer-4ce": {
+  "/technical-knowledge/networking/http-https-application-layer-7af": {
     "__comp": "17896441",
     "content": "cd63af30"
   },
-  "/technical-knowledge/networking/ip-addressing-routing-c75": {
+  "/technical-knowledge/networking/ip-addressing-routing-d92": {
     "__comp": "17896441",
     "content": "24411305"
   },
-  "/technical-knowledge/networking/network-performance-optimization-3b1": {
+  "/technical-knowledge/networking/network-performance-optimization-5cf": {
     "__comp": "17896441",
     "content": "194a39b9"
   },
-  "/technical-knowledge/networking/network-security-50b": {
+  "/technical-knowledge/networking/network-security-8ac": {
     "__comp": "17896441",
     "content": "fd7220cf"
   },
-  "/technical-knowledge/networking/network-troubleshooting-tools-946": {
+  "/technical-knowledge/networking/network-troubleshooting-tools-63b": {
     "__comp": "17896441",
     "content": "791d024c"
   },
@@ -10616,31 +10616,31 @@
     "__comp": "17896441",
     "content": "fe351b0c"
   },
-  "/technical-knowledge/networking/osi-tcpip-models-741": {
+  "/technical-knowledge/networking/osi-tcpip-models-d00": {
     "__comp": "17896441",
     "content": "d75cea88"
   },
-  "/technical-knowledge/networking/proxies-nat-firewalls-86f": {
+  "/technical-knowledge/networking/proxies-nat-firewalls-61f": {
     "__comp": "17896441",
     "content": "5613a0c9"
   },
-  "/technical-knowledge/networking/quic-modern-transport-a2f": {
+  "/technical-knowledge/networking/quic-modern-transport-cf5": {
     "__comp": "17896441",
     "content": "4d4f0566"
   },
-  "/technical-knowledge/networking/socket-programming-io-models-89a": {
+  "/technical-knowledge/networking/socket-programming-io-models-4bb": {
     "__comp": "17896441",
     "content": "a862eed1"
   },
-  "/technical-knowledge/networking/tcp-udp-transport-layer-733": {
+  "/technical-knowledge/networking/tcp-udp-transport-layer-9e1": {
     "__comp": "17896441",
     "content": "ea5e1317"
   },
-  "/technical-knowledge/operating-systems/cpu-scheduling-440": {
+  "/technical-knowledge/operating-systems/cpu-scheduling-fe2": {
     "__comp": "17896441",
     "content": "fb30c349"
   },
-  "/technical-knowledge/operating-systems/file-systems-and-io-835": {
+  "/technical-knowledge/operating-systems/file-systems-and-io-c87": {
     "__comp": "17896441",
     "content": "5c7d43fe"
   },
@@ -10652,23 +10652,23 @@
     "__comp": "17896441",
     "content": "f6b4f9e1"
   },
-  "/technical-knowledge/operating-systems/linux-internals-and-syscalls-a52": {
+  "/technical-knowledge/operating-systems/linux-internals-and-syscalls-221": {
     "__comp": "17896441",
     "content": "c14f6876"
   },
-  "/technical-knowledge/operating-systems/memory-management-108": {
+  "/technical-knowledge/operating-systems/memory-management-58c": {
     "__comp": "17896441",
     "content": "868fe66e"
   },
-  "/technical-knowledge/operating-systems/networking-and-ipc-32c": {
+  "/technical-knowledge/operating-systems/networking-and-ipc-4ae": {
     "__comp": "17896441",
     "content": "66ff3ddc"
   },
-  "/technical-knowledge/operating-systems/processes-and-threads-7e8": {
+  "/technical-knowledge/operating-systems/processes-and-threads-78b": {
     "__comp": "17896441",
     "content": "9dd074f3"
   },
-  "/technical-knowledge/operating-systems/synchronization-and-deadlocks-3b1": {
+  "/technical-knowledge/operating-systems/synchronization-and-deadlocks-249": {
     "__comp": "17896441",
     "content": "53d70aa9"
   },
@@ -10724,7 +10724,7 @@
     "__comp": "17896441",
     "content": "9c77e95c"
   },
-  "/technical-knowledge/redis/redis-rate-limiting-ddb": {
+  "/technical-knowledge/redis/redis-rate-limiting-ec6": {
     "__comp": "17896441",
     "content": "3d3827a7"
   },
@@ -10732,7 +10732,7 @@
     "__comp": "17896441",
     "content": "52499749"
   },
-  "/technical-knowledge/redis/redis-streams-a8a": {
+  "/technical-knowledge/redis/redis-streams-2f6": {
     "__comp": "17896441",
     "content": "c8536b5d"
   },
@@ -10748,7 +10748,7 @@
     "__comp": "17896441",
     "content": "aebb600c"
   },
-  "/technical-knowledge/security/cookies-vs-sessions-vs-jwt-831": {
+  "/technical-knowledge/security/cookies-vs-sessions-vs-jwt-12f": {
     "__comp": "17896441",
     "content": "991c719a"
   },
@@ -10824,7 +10824,7 @@
     "__comp": "17896441",
     "content": "2b6ca1be"
   },
-  "/technical-knowledge/spring/hibernate-transactions-performance-a6f": {
+  "/technical-knowledge/spring/hibernate-transactions-performance-cb3": {
     "__comp": "17896441",
     "content": "2c1c3feb"
   },
@@ -10832,7 +10832,7 @@
     "__comp": "17896441",
     "content": "690a1177"
   },
-  "/technical-knowledge/spring/spring-batch-a79": {
+  "/technical-knowledge/spring/spring-batch-4ce": {
     "__comp": "17896441",
     "content": "ca667498"
   },
@@ -10860,11 +10860,11 @@
     "__comp": "17896441",
     "content": "c7ff582f"
   },
-  "/technical-knowledge/spring/spring-cloud-715": {
+  "/technical-knowledge/spring/spring-cloud-f1c": {
     "__comp": "17896441",
     "content": "b0d8a005"
   },
-  "/technical-knowledge/spring/spring-data-jpa-e6f": {
+  "/technical-knowledge/spring/spring-data-jpa-7d1": {
     "__comp": "17896441",
     "content": "75687058"
   },
@@ -10872,7 +10872,7 @@
     "__comp": "17896441",
     "content": "3acda406"
   },
-  "/technical-knowledge/spring/spring-data-jpa-query-annotation-46d": {
+  "/technical-knowledge/spring/spring-data-jpa-query-annotation-c6a": {
     "__comp": "17896441",
     "content": "a81d3731"
   },
@@ -10880,7 +10880,7 @@
     "__comp": "17896441",
     "content": "da45351f"
   },
-  "/technical-knowledge/spring/spring-exception-handling-870": {
+  "/technical-knowledge/spring/spring-exception-handling-171": {
     "__comp": "17896441",
     "content": "5a9a573d"
   },
@@ -10904,7 +10904,7 @@
     "__comp": "17896441",
     "content": "cb5bd786"
   },
-  "/technical-knowledge/spring/spring-security-ff4": {
+  "/technical-knowledge/spring/spring-security-26e": {
     "__comp": "17896441",
     "content": "d9dc4b65"
   },
@@ -10920,11 +10920,11 @@
     "__comp": "17896441",
     "content": "97b49958"
   },
-  "/technical-knowledge/system-design/api-design-1e8": {
+  "/technical-knowledge/system-design/api-design-8d2": {
     "__comp": "17896441",
     "content": "0237d5d1"
   },
-  "/technical-knowledge/system-design/architecture-fundamentals-e59": {
+  "/technical-knowledge/system-design/architecture-fundamentals-2fa": {
     "__comp": "17896441",
     "content": "c0e5a9ef"
   },
@@ -10932,7 +10932,7 @@
     "__comp": "17896441",
     "content": "b02f3312"
   },
-  "/technical-knowledge/system-design/bloom-filters-656": {
+  "/technical-knowledge/system-design/bloom-filters-f6d": {
     "__comp": "17896441",
     "content": "ce0d883d"
   },
@@ -10944,11 +10944,11 @@
     "__comp": "17896441",
     "content": "bc804bd9"
   },
-  "/technical-knowledge/system-design/caching-strategies-f31": {
+  "/technical-knowledge/system-design/caching-strategies-ecb": {
     "__comp": "17896441",
     "content": "724987fe"
   },
-  "/technical-knowledge/system-design/cap-theorem-system-design-0b6": {
+  "/technical-knowledge/system-design/cap-theorem-system-design-2a4": {
     "__comp": "17896441",
     "content": "75fc6f05"
   },
@@ -10968,7 +10968,7 @@
     "__comp": "17896441",
     "content": "6efb14ae"
   },
-  "/technical-knowledge/system-design/consistent-hashing-deep-dive-af0": {
+  "/technical-knowledge/system-design/consistent-hashing-deep-dive-ee3": {
     "__comp": "17896441",
     "content": "65c13a58"
   },
@@ -11048,11 +11048,11 @@
     "__comp": "17896441",
     "content": "ee5a53d7"
   },
-  "/technical-knowledge/system-design/long-running-tasks-0c4": {
+  "/technical-knowledge/system-design/long-running-tasks-6c8": {
     "__comp": "17896441",
     "content": "010e7447"
   },
-  "/technical-knowledge/system-design/message-queues-035": {
+  "/technical-knowledge/system-design/message-queues-262": {
     "__comp": "17896441",
     "content": "3940c236"
   },
@@ -11060,23 +11060,23 @@
     "__comp": "17896441",
     "content": "a6472fd5"
   },
-  "/technical-knowledge/system-design/microservices-patterns-f8c": {
+  "/technical-knowledge/system-design/microservices-patterns-9ed": {
     "__comp": "17896441",
     "content": "a912936e"
   },
-  "/technical-knowledge/system-design/mongodb-deep-dive-35d": {
+  "/technical-knowledge/system-design/mongodb-deep-dive-a89": {
     "__comp": "17896441",
     "content": "9aee46ea"
   },
-  "/technical-knowledge/system-design/nginx-internals-e99": {
+  "/technical-knowledge/system-design/nginx-internals-dbd": {
     "__comp": "17896441",
     "content": "22875a92"
   },
-  "/technical-knowledge/system-design/observability-7f4": {
+  "/technical-knowledge/system-design/observability-963": {
     "__comp": "17896441",
     "content": "f58357ef"
   },
-  "/technical-knowledge/system-design/outbox-pattern-6af": {
+  "/technical-knowledge/system-design/outbox-pattern-0b0": {
     "__comp": "17896441",
     "content": "5223f567"
   },
@@ -11096,11 +11096,11 @@
     "__comp": "17896441",
     "content": "59112a05"
   },
-  "/technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway-187": {
+  "/technical-knowledge/system-design/reverse-proxy-load-balancer-api-gateway-928": {
     "__comp": "17896441",
     "content": "36929883"
   },
-  "/technical-knowledge/system-design/saga-pattern-a46": {
+  "/technical-knowledge/system-design/saga-pattern-519": {
     "__comp": "17896441",
     "content": "bd0308dc"
   },
@@ -11116,7 +11116,7 @@
     "__comp": "17896441",
     "content": "d0e1a196"
   },
-  "/technical-knowledge/system-design/security-patterns-bab": {
+  "/technical-knowledge/system-design/security-patterns-af4": {
     "__comp": "17896441",
     "content": "e8a6b3e1"
   },
@@ -11132,7 +11132,7 @@
     "__comp": "17896441",
     "content": "820ce876"
   },
-  "/technical-knowledge/system-design/sharding-partitioning-374": {
+  "/technical-knowledge/system-design/sharding-partitioning-eb1": {
     "__comp": "17896441",
     "content": "1d0030f3"
   },
@@ -11148,7 +11148,7 @@
     "__comp": "17896441",
     "content": "5171caa6"
   },
-  "/technical-knowledge/system-design/two-phase-commit-c65": {
+  "/technical-knowledge/system-design/two-phase-commit-1be": {
     "__comp": "17896441",
     "content": "4c5a6247"
   },

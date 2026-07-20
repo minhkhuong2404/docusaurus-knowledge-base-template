@@ -5,6 +5,12 @@ sidebar_label: Retry
 description: Comprehensive guide to the Retry pattern in microservices — transient vs. persistent errors, exponential backoff, jitter algorithms, idempotency, Resilience4j, distributed retry coordination, and integration with Circuit Breaker and Bulkhead.
 tags: [system-design, microservices, resilience, spring-boot, retry, circuit-breaker, resilience4j, backoff, idempotency]
 ---
+import TransientErrorClassifierDiagram from '@site/src/components/TransientErrorClassifierDiagram';
+import BackoffStrategiesDiagram from '@site/src/components/BackoffStrategiesDiagram';
+import ThunderingHerdDiagram from '@site/src/components/ThunderingHerdDiagram';
+import IdempotencyGateDiagram from '@site/src/components/IdempotencyGateDiagram';
+import RetryCircuitBreakerInteractionDiagram from '@site/src/components/RetryCircuitBreakerInteractionDiagram';
+import RetryDecisionTreeDiagram from '@site/src/components/RetryDecisionTreeDiagram';
 
 # Retry Pattern
 
@@ -18,26 +24,8 @@ The risk is equally well-defined: applied to the wrong class of error, a retry a
 
 The most important decision in retry configuration is **which errors to retry**. Retrying the wrong errors is worse than not retrying at all.
 
-```
-Error arrives
-      │
-      ▼
-Is this error transient? (Will a retry likely succeed?)
-      │
-  ┌───┴────────────────────────────────────────┐
-  │ YES — Transient                            │ NO — Persistent
-  │                                            │
-  │ • Connection timeout                       │ • HTTP 400 Bad Request
-  │ • HTTP 429 Too Many Requests               │ • HTTP 401 Unauthorized
-  │ • HTTP 503 Service Unavailable             │ • HTTP 404 Not Found
-  │ • TCP connection reset                     │ • NullPointerException
-  │ • Database lock timeout                    │ • Validation failure
-  │ • Upstream 502 Bad Gateway (brief)         │ • Business rule violation
-  │                                            │
-  ▼                                            ▼
-RETRY                                     FAIL FAST
-(with backoff + jitter)                (no retry — it will never succeed)
-```
+<TransientErrorClassifierDiagram />
+
 
 **The critical rule**: only retry errors that *could* succeed on a subsequent attempt. `HTTP 400` will return `HTTP 400` on every retry — retrying it wastes time and resources. `HTTP 503` (service temporarily unavailable) may succeed after a brief pause — retrying it is exactly the right response.
 
@@ -65,89 +53,8 @@ RETRY                                     FAIL FAST
 
 When a failure occurs and a retry is warranted, the caller must wait before retrying — both to give the downstream service time to recover, and to avoid amplifying load during an already-stressed period. The wait duration policy is the **backoff strategy**.
 
-### Constant (Fixed) Backoff
+<BackoffStrategiesDiagram />
 
-Wait a fixed duration between every retry attempt.
-
-```
-Attempt 1 (fails) → wait 500ms → Attempt 2 (fails) → wait 500ms → Attempt 3
-```
-
-Simple to reason about, but ineffective under sustained load — all callers retry at the same fixed interval, creating synchronized waves of traffic.
-
-### Linear Backoff
-
-Wait duration increases linearly with each attempt.
-
-```
-Attempt 1 (fails) → wait 200ms
-Attempt 2 (fails) → wait 400ms
-Attempt 3 (fails) → wait 600ms
-```
-
-Better than fixed, but still predictable — synchronized callers still create waves.
-
-### Exponential Backoff
-
-Wait duration doubles (or multiplies by a configurable factor) with each attempt. This is the standard strategy for distributed systems.
-
-```
-Attempt 1 (fails) → wait 100ms
-Attempt 2 (fails) → wait 200ms
-Attempt 3 (fails) → wait 400ms
-Attempt 4 (fails) → wait 800ms
-Attempt 5 (fails) → wait 1600ms
-```
-
-Formula: `wait = initialDelay × multiplier^(attemptNumber - 1)`
-
-Exponential backoff rapidly backs off from a struggling service, giving it breathing room to recover. But without jitter, all callers from the same retry wave still hit at the same exponentially-spaced intervals — creating a synchronized pulse rather than a continuous storm, but still coordinated.
-
-### Exponential Backoff with Jitter (Recommended)
-
-Adds **randomized variance** to each backoff delay, scattering retries across time and smoothing the retry traffic into a continuous distribution rather than synchronized pulses.
-
-```
-Without Jitter (synchronized pulses at t=1s, t=2s, t=4s):
-t=1.000s  ████████████████████████████  1000 requests
-t=2.000s  ████████████████████████████  1000 requests
-t=4.000s  ████████████████████████████  1000 requests
-
-With Jitter (scattered, smooth retry distribution):
-t=0.85s   ████                          ~150 requests
-t=0.93s   ██████                        ~220 requests
-t=1.04s   █████████                     ~350 requests
-t=1.17s   ██████████████                ~520 requests
-t=1.31s   ████████████████████          ~800 requests
-...
-```
-
-**Full Jitter formula** (recommended by AWS for most distributed systems):
-
-```
-wait = random(0, min(maxDelay, initialDelay × multiplier^attempt))
-```
-
-**Equal Jitter** (keeps at least half the backoff, randomizes the rest):
-
-```
-baseDelay = min(maxDelay, initialDelay × multiplier^attempt) / 2
-wait = baseDelay + random(0, baseDelay)
-```
-
-Equal Jitter prevents extremely short waits (which full jitter can occasionally produce) while still providing spread. Use full jitter for maximum retry spreading under heavy load, equal jitter when a minimum wait is important for the service's recovery time.
-
-### Decorrelated Jitter
-
-Each attempt's wait is randomly chosen from a range derived from the *previous* attempt's wait — creating independently distributed backoff per caller with no correlation to others:
-
-```
-wait[1] = random(initialDelay, initialDelay × 3)
-wait[n] = random(initialDelay, wait[n-1] × 3)
-capped at maxDelay
-```
-
-Decorrelated jitter produces the most evenly spread retry distribution across a large fleet of callers and is recommended for high-cardinality retry scenarios (thousands of simultaneous callers).
 
 ---
 
@@ -155,24 +62,8 @@ Decorrelated jitter produces the most evenly spread retry distribution across a 
 
 When a downstream service becomes unavailable and recovers, **every caller that was failing will retry simultaneously** — generating a traffic spike that can overwhelm the service the moment it comes back up, pushing it back into failure. This cycle can repeat indefinitely: service recovers → retry storm → service fails again.
 
-```
-Downstream service goes down at t=0:
-  ┌──────────────────────────────────────────────────────────────────┐
-  │  t=0s    1000 callers fail                                       │
-  │  t=1s    1000 retries hit simultaneously  → service still down   │
-  │  t=2s    1000 retries hit simultaneously  → service still down   │
-  │  t=3s    Service recovers                                        │
-  │  t=4s    1000 retries hit simultaneously  → service overloads    │
-  │          and goes back down               → back to t=0          │
-  └──────────────────────────────────────────────────────────────────┘
+<ThunderingHerdDiagram />
 
-With jitter:
-  │  t=3.1s  ~80 retries hit   → service handles it
-  │  t=3.4s  ~120 retries hit  → service handles it
-  │  t=3.8s  ~150 retries hit  → service handles it
-  │  t=4.2s  ~200 retries hit  → gradually increasing, service stays up
-  └──────────────────────────────────────────────────────────────────┘
-```
 
 Jitter is not just an optimization — it is the mechanism that allows a service to recover from an incident without being immediately overwhelmed by its own backlog.
 
@@ -184,13 +75,8 @@ Jitter is not just an optimization — it is the mechanism that allows a service
 
 An operation is **idempotent** if executing it multiple times produces the same result as executing it once. `GET`, `PUT`, and `DELETE` are idempotent by definition. `POST` is typically not — `POST /payments` called twice creates two payments.
 
-```
-POST /payments (no idempotency key):
+<IdempotencyGateDiagram />
 
-  t=0ms   Request sent → server receives, processes payment → $100 charged
-  t=5000ms Response times out (network hiccup)
-  t=5001ms Retry fires → server receives again → SECOND $100 charged ← double charge
-```
 
 ### Implementing Idempotency Keys
 
@@ -511,13 +397,8 @@ For deep call chains processing business operations (orders, payments), consider
 
 Retry and Circuit Breaker are complementary — they operate at different timescales and protect against different failure modes:
 
-```
-Request →  [Retry]  →  [Circuit Breaker]  →  Downstream Service
-               ↑                ↑
-      Short-term transient   Long-term unavailability
-      (1–3 quick attempts)   (trips open after N failures;
-                              stops retries entirely for recovery window)
-```
+<RetryCircuitBreakerInteractionDiagram />
+
 
 **Order matters**: the retry should be **inside** (closer to the call) and the circuit breaker **outside**. If you reverse the order, a tripped circuit breaker will reject the call before the retry can fire — defeating the purpose of retry for transient errors.
 
@@ -681,35 +562,8 @@ Ribbon) that re-selects an instance on each retry attempt.
 
 ## 10. Decision Guide — When to Use Retry
 
-```
-Network call fails
-      │
-      ▼
-Is the operation idempotent? (GET, PUT, DELETE, or POST with idempotency key)
-      │
-  ┌───┴──────────────────────────────────────────┐
-  │ NO                                           │ YES
-  │                                              │
-  ▼                                              ▼
-Do NOT retry.                    Is the error transient?
-Return error to caller.          (5xx, timeout, connection refused)
-Add idempotency key if                │
-retry is needed in future.        ┌───┴──────────────┐
-                                  │ NO               │ YES
-                                  │ (4xx, bug)       │
-                                  ▼                  ▼
-                            Fail fast.         How deep is this
-                            Do not retry.      call in the chain?
-                                                    │
-                                        ┌───────────┴────────────┐
-                                        │ Outer edge             │ Inner service
-                                        │ (API gateway,          │ (3+ hops deep)
-                                        │  first service)        │
-                                        ▼                        ▼
-                                   Retry with             Propagate error;
-                                   exponential            let outer service
-                                   backoff + jitter       handle retry
-```
+<RetryDecisionTreeDiagram />
+
 
 ---
 

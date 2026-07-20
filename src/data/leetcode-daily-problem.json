@@ -1,8 +1,8 @@
 {
-  "id": "1081",
-  "title": "Smallest Subsequence of Distinct Characters",
-  "url": "https://leetcode.com/problems/smallest-subsequence-of-distinct-characters/",
-  "difficulty": "medium",
-  "topic": "String, Stack, Greedy, Monotonic Stack",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-07-19."
+  "id": "1260",
+  "title": "Shift 2D Grid",
+  "url": "https://leetcode.com/problems/shift-2d-grid/",
+  "difficulty": "easy",
+  "topic": "Array, Matrix, Simulation",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-07-20."
 }
