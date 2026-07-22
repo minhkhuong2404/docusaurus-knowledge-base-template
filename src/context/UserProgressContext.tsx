@@ -1,4 +1,59 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+
+// ── Master-password verification (PBKDF2 / Web Crypto) ──────────────────────
+// Use a safe guard so that the browser bundle does not crash on `process` being
+// undefined — `process.env` is a Node.js global that Rspack does NOT polyfill
+// for arbitrary keys at runtime (only statically-replaced REACT_APP_* vars).
+const _getEnv = (key: string): string => {
+  try {
+    if (typeof process !== 'undefined' && process && process.env) {
+      return (process.env[key] as string | undefined) ?? '';
+    }
+  } catch {
+    // Swallow — running in browser without process polyfill
+  }
+  return '';
+};
+const MASTER_SALT = _getEnv('AUTH_PASSWORD_SALT');
+const MASTER_HASH = _getEnv('AUTH_PASSWORD_HASH');
+
+async function verifyMasterKey(input: string): Promise<boolean> {
+  if (!MASTER_SALT || !MASTER_HASH) {
+    // No hash configured — accept any non-empty key (dev/fallback)
+    return input.trim().length > 0;
+  }
+  try {
+    const enc = new TextEncoder();
+    const saltBytes = new Uint8Array(
+      MASTER_SALT.match(/.{1,2}/g)!.map((b) => parseInt(b, 16))
+    );
+    const keyMaterial = await crypto.subtle.importKey(
+      'raw',
+      enc.encode(input),
+      { name: 'PBKDF2' },
+      false,
+      ['deriveBits']
+    );
+    const bits = await crypto.subtle.deriveBits(
+      { name: 'PBKDF2', salt: saltBytes, iterations: 310_000, hash: 'SHA-256' },
+      keyMaterial,
+      256
+    );
+    const derived = Array.from(new Uint8Array(bits))
+      .map((b) => b.toString(16).padStart(2, '0'))
+      .join('');
+    // Constant-time comparison
+    if (derived.length !== MASTER_HASH.length) return false;
+    let diff = 0;
+    for (let i = 0; i < derived.length; i++) {
+      diff |= derived.charCodeAt(i) ^ MASTER_HASH.charCodeAt(i);
+    }
+    return diff === 0;
+  } catch {
+    return false;
+  }
+}
+// ────────────────────────────────────────────────────────────────────────────
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import {
@@ -218,6 +273,10 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const unlockPremium = async (inputKey: string): Promise<boolean> => {
     if (!inputKey || !inputKey.trim()) return false;
+
+    const valid = await verifyMasterKey(inputKey);
+    if (!valid) return false;
+
     setProgress((prev) => ({ ...prev, isPremium: true }));
 
     if (currentUser) {
