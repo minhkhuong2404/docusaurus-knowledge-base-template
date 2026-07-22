@@ -1187,8 +1187,7 @@
             },
             {
               "id": "technical-knowledge/coding-interview-prep/intro/intro",
-              "path": "/technical-knowledge/coding-interview-prep/intro/",
-              "sidebar": "tutorialSidebar"
+              "path": "/technical-knowledge/coding-interview-prep/intro/"
             },
             {
               "id": "technical-knowledge/coding-interview-prep/linked-list/linked-list",

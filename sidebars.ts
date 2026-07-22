@@ -1103,10 +1103,9 @@ const sidebars: SidebarsConfig = {
 			label: '🚀 Coding Interview Prep',
 			collapsed: true,
 			items: [
-				'technical-knowledge/coding-interview-prep/intro',
 				{
 					type: 'doc',
-					id: 'technical-knowledge/coding-interview-prep/intro/intro',
+					id: 'technical-knowledge/coding-interview-prep/intro',
 					label: '🚀 Getting Started',
 				},
 				{
