@@ -1,7 +1,13 @@
 @import "@fortawesome/fontawesome-free/css/fontawesome.min.css";
 @import "@fortawesome/fontawesome-free/css/brands.min.css";
 @import "@fortawesome/fontawesome-free/css/solid.min.css";
+@import "katex/dist/katex.min.css";
 @import "./diagrams.css";
+
+/* Prevent KaTeX MathML double rendering */
+.katex-mathml {
+  display: none !important;
+}
 
 /* ============================================
    Code Block Styling — Catppuccin Mocha Theme
@@ -301,22 +307,121 @@ div[class*="codeBlockTitle"] {
   --premium-nav-weight: 500;
 }
 
-/* Hide the default text node rendered by Docusaurus */
-.navbar__item.premium-nav-button {
-  font-size: 0 !important;
-  color: transparent !important;
+/* 100% Solid Page-Matched Login Button */
+button.login-nav-button,
+.login-nav-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 6px 18px !important;
+  margin: 0 8px !important;
+  border-radius: 20px !important;
+  opacity: 1 !important;
+  background-color: var(--page-bg, #0f1117) !important;
+  background: var(--page-bg, #0f1117) !important;
+  color: #86efac !important;
+  border: 1.5px solid #4ade80 !important;
+  font-size: 0.85rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.7), 0 0 10px rgba(74, 222, 128, 0.25) !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  cursor: pointer !important;
+  outline: none !important;
+  text-decoration: none !important;
+  z-index: 9999 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
-.navbar__item.premium-nav-button::after {
-  content: var(--premium-nav-label);
-  font-size: 15px !important;
-  color: var(--premium-nav-color);
-  font-weight: var(--premium-nav-weight);
-  transition: color 180ms ease;
+[data-theme="light"] button.login-nav-button,
+[data-theme="light"] .login-nav-button {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #166534 !important;
+  border: 1.5px solid #2f8f4e !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
 }
 
-.navbar__item.premium-nav-button:hover::after {
-  color: var(--premium-nav-hover-color);
+button.login-nav-button:hover,
+.login-nav-button:hover {
+  background-color: #1a202c !important;
+  background: #1a202c !important;
+  color: #ffffff !important;
+  border-color: #86efac !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.9), 0 0 16px rgba(74, 222, 128, 0.45) !important;
+  transform: translateY(-2px) scale(1.04) !important;
+  opacity: 1 !important;
+}
+
+[data-theme="light"] button.login-nav-button:hover,
+[data-theme="light"] .login-nav-button:hover {
+  background-color: #f8fafc !important;
+  background: #f8fafc !important;
+  color: #15803d !important;
+  border-color: #15803d !important;
+}
+
+button.login-nav-button:active,
+.login-nav-button:active {
+  transform: translateY(0) scale(0.98) !important;
+}
+
+@keyframes fadeInDropdown {
+  from {
+    opacity: 1;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 100% OPAQUE SOLID DROPDOWN MENU (Body Portal) */
+.user-account-dropdown-menu,
+div.user-account-dropdown-menu {
+  position: fixed !important;
+  width: 300px !important;
+  opacity: 1 !important;
+  background-color: #0d1117 !important;
+  background: #0d1117 !important;
+  border: 1px solid #30363d !important;
+  border-radius: 14px !important;
+  padding: 1.25rem !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.98), 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+  z-index: 9999999 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  filter: none !important;
+  isolation: isolate !important;
+}
+
+.user-account-dropdown-menu.premium-border {
+  border: 1.5px solid #f59e0b !important;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.95), 0 0 20px rgba(245, 158, 11, 0.25) !important;
+}
+
+[data-theme="light"] .user-account-dropdown-menu {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.25) !important;
+}
+
+.user-account-dropdown-menu .dropdown-stat-card {
+  background-color: #161b22 !important;
+  background: #161b22 !important;
+  opacity: 1 !important;
+  border: 1px solid #21262d !important;
+  color: #c9d1d9 !important;
+}
+
+[data-theme="light"] .user-account-dropdown-menu .dropdown-stat-card {
+  background-color: #f8fafc !important;
+  background: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+  color: #1e293b !important;
 }
 
 /* Premium indicator on sidebar doc links */
@@ -871,6 +976,143 @@ body.resizing-sidebar .theme-doc-sidebar-container {
 
 .custom-sidebar-container.collapsed .custom-sidebar-logo-text {
   display: none;
+}
+
+/* Sidebar Toolbar / Current Page Index Button */
+.custom-sidebar-toolbar {
+  padding: 12px 12px 6px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="light"] .custom-sidebar-toolbar {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.custom-sidebar-container.collapsed .custom-sidebar-toolbar {
+  padding: 10px 8px;
+  display: flex;
+  justify-content: center;
+}
+
+.custom-sidebar-index-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(74, 222, 128, 0.1) 0%, rgba(168, 85, 247, 0.06) 100%);
+  border: 1px solid rgba(74, 222, 128, 0.25);
+  color: #e2e8f0;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+}
+
+.custom-sidebar-container.collapsed .custom-sidebar-index-btn {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+[data-theme="light"] .custom-sidebar-index-btn {
+  background: linear-gradient(135deg, rgba(47, 143, 78, 0.08) 0%, rgba(124, 58, 237, 0.05) 100%);
+  border-color: rgba(47, 143, 78, 0.25);
+  color: #1e293b;
+}
+
+.custom-sidebar-index-btn:hover {
+  background: linear-gradient(135deg, rgba(74, 222, 128, 0.2) 0%, rgba(168, 85, 247, 0.15) 100%);
+  border-color: rgba(74, 222, 128, 0.5);
+  box-shadow: 0 0 16px rgba(74, 222, 128, 0.2), inset 0 0 12px rgba(74, 222, 128, 0.1);
+  transform: translateY(-1px);
+}
+
+.custom-sidebar-index-btn:active {
+  transform: translateY(0);
+}
+
+.index-btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4ade80;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+[data-theme="light"] .index-btn-icon {
+  color: #2f8f4e;
+}
+
+.custom-sidebar-index-btn:hover .index-btn-icon {
+  transform: scale(1.15) rotate(15deg);
+}
+
+.index-btn-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.index-btn-title {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+  line-height: 1.2;
+}
+
+[data-theme="light"] .index-btn-title {
+  color: #64748b;
+}
+
+.index-btn-badge {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #86efac;
+  font-family: var(--ifm-font-family-monospace, monospace);
+  line-height: 1.2;
+}
+
+[data-theme="light"] .index-btn-badge {
+  color: #21663a;
+}
+
+.index-btn-locate-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.custom-sidebar-index-btn:hover .index-btn-locate-icon {
+  color: #86efac;
+  transform: translateX(3px);
+}
+
+/* Active Link Pulse Highlight */
+@keyframes sidebarItemPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
+    border-color: #4ade80;
+  }
+  50% {
+    box-shadow: 0 0 20px 4px rgba(74, 222, 128, 0.4);
+    border-color: #86efac;
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(74, 222, 128, 0);
+  }
+}
+
+.custom-menu-link.pulse-highlight {
+  animation: sidebarItemPulse 1.8s ease-in-out infinite;
 }
 
 /* Menu Items List */

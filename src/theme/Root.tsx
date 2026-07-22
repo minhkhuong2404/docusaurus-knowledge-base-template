@@ -1,38 +1,33 @@
 import React, { useCallback, useEffect, useRef } from "react";
 import { useLocation } from "@docusaurus/router";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../config/firebase";
+import { UserProgressProvider } from "../context/UserProgressContext";
 
 const PREMIUM_STATE_KEY = "premium_session_state";
 
 type PremiumState = "logged_in" | "logged_out";
 
-function isPremiumPath(pathname: string): boolean {
-  return pathname === "/premium" || pathname.startsWith("/premium/");
+function isPremiumPath(_pathname: string): boolean {
+  return false;
 }
 
-function applyPremiumNavState(state: PremiumState) {
-  const isLoggedIn = state === "logged_in";
-  const root = document.documentElement;
-
-  root.style.setProperty(
-    "--premium-nav-label",
-    isLoggedIn ? '"💎 Premium unlocked"' : '"💎 Premium login"',
-  );
-  root.style.setProperty(
-    "--premium-nav-color",
-    isLoggedIn ? "var(--ifm-color-success)" : "var(--ifm-navbar-link-color)",
-  );
-  root.style.setProperty(
-    "--premium-nav-hover-color",
-    isLoggedIn
-      ? "var(--ifm-color-success)"
-      : "var(--ifm-navbar-link-hover-color)",
-  );
-  root.style.setProperty("--premium-nav-weight", isLoggedIn ? "600" : "500");
+function applyPremiumNavState(_state: PremiumState) {
+  // Managed by CustomUserNavbarItem React component
 }
 
 function readCachedPremiumState(): PremiumState | null {
   if (typeof window === "undefined") {
     return null;
+  }
+
+  if (auth?.currentUser) {
+    return "logged_in";
+  }
+
+  const googleUser = window.sessionStorage.getItem("google_user");
+  if (googleUser) {
+    return "logged_in";
   }
 
   const cached = window.sessionStorage.getItem(PREMIUM_STATE_KEY);
@@ -52,6 +47,18 @@ export default function Root({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     setIsClient(true);
     setAuthState(readCachedPremiumState());
+
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setAuthState("logged_in");
+        applyPremiumNavState("logged_in", user);
+        window.sessionStorage.setItem(PREMIUM_STATE_KEY, "logged_in");
+      } else {
+        applyPremiumNavState("logged_out");
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const redirectToLogin = useCallback(() => {
@@ -80,9 +87,9 @@ export default function Root({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const cachedState = readCachedPremiumState();
     if (cachedState) {
-      applyPremiumNavState(cachedState);
+      applyPremiumNavState(cachedState, auth?.currentUser);
     }
-  }, []);
+  }, [location.pathname]);
 
   useEffect(() => {
     // On each navigation, enforce quickly with cached state before async check completes.
@@ -105,6 +112,21 @@ export default function Root({ children }: { children: React.ReactNode }) {
 
   const syncPremiumSession = useCallback(async () => {
     if (typeof window === "undefined") {
+      return;
+    }
+
+    if (auth?.currentUser) {
+      setAuthState("logged_in");
+      applyPremiumNavState("logged_in");
+      enforcePremiumRouteAuth("logged_in");
+      return;
+    }
+
+    const googleUser = window.sessionStorage.getItem("google_user");
+    if (googleUser) {
+      setAuthState("logged_in");
+      applyPremiumNavState("logged_in");
+      enforcePremiumRouteAuth("logged_in");
       return;
     }
 
@@ -273,7 +295,9 @@ export default function Root({ children }: { children: React.ReactNode }) {
         <div className="header-universal h-nebula" />
         <div className="header-universal h-shooting" />
       </div>
-      {children}
+      <UserProgressProvider>
+        {children}
+      </UserProgressProvider>
     </>
   );
 }

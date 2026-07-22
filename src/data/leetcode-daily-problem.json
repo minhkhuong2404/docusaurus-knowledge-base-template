@@ -1,8 +1,8 @@
 {
-  "id": "1260",
-  "title": "Shift 2D Grid",
-  "url": "https://leetcode.com/problems/shift-2d-grid/",
-  "difficulty": "easy",
-  "topic": "Array, Matrix, Simulation",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-07-20."
+  "id": "3501",
+  "title": "Maximize Active Section with Trade II",
+  "url": "https://leetcode.com/problems/maximize-active-section-with-trade-ii/",
+  "difficulty": "hard",
+  "topic": "Array, String, Binary Search, Segment Tree",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-07-22."
 }

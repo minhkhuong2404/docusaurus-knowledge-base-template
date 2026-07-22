@@ -54,7 +54,12 @@ function fisherYatesShuffle<T>(array: T[], seed?: string): T[] {
   return shuffled;
 }
 
+import { useUserProgress } from '../../context/UserProgressContext';
+import { QuizStateItem } from '../../services/userProgressService';
+
 export default function DailyQuiz({ questions, quizKey }: DailyQuizProps) {
+  const { progress, saveQuiz, isLoading: isProgressLoading } = useUserProgress();
+
   const [shuffledQuestions, setShuffledQuestions] = useState<QuizQuestion[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [userAnswers, setUserAnswers] = useState<Record<string, number>>({});
@@ -67,81 +72,72 @@ export default function DailyQuiz({ questions, quizKey }: DailyQuizProps) {
     answers: Record<string, number>,
     skipped: string[],
     questionsList: QuizQuestion[],
-    completed: boolean = false
+    completed: boolean = false,
+    answeredDelta: number = 0,
+    correctDelta: number = 0
   ) => {
     const today = new Date().toDateString();
-    const storageKey = `quiz-state-${quizKey}`;
-    const state: LocalQuizState = {
+    const answeredQuestionIds = Object.keys(answers);
+    const stateItem: QuizStateItem = {
       date: today,
-      shuffledIds: questionsList.map(q => q.id),
-      currentIndex: idx,
+      totalQuestions: questions.length,
+      answeredQuestionIds,
       userAnswers: answers,
       skippedIds: skipped,
+      shuffledIds: questionsList.map(q => q.id),
+      currentIndex: idx,
       isCompleted: completed,
     };
-    localStorage.setItem(storageKey, JSON.stringify(state));
+    saveQuiz(quizKey, stateItem, answeredDelta, correctDelta);
   };
 
+  const savedState = progress.quizStats?.quizStates?.[quizKey];
+  const savedStateSerialized = savedState ? JSON.stringify(savedState) : '';
+
+  // Reset initialization when quizKey changes
   useEffect(() => {
-    if (!questions || questions.length === 0) return;
+    setIsInitialized(false);
+  }, [quizKey]);
 
-    const today = new Date().toDateString();
-    const storageKey = `quiz-state-${quizKey}`;
-    const savedStateStr = localStorage.getItem(storageKey);
+  useEffect(() => {
+    if (isProgressLoading || !questions || questions.length === 0) return;
+    if (isInitialized) return;
 
-    let state: LocalQuizState | null = null;
-    if (savedStateStr) {
-      try {
-        const parsed = JSON.parse(savedStateStr);
-        if (
-          parsed.date === today &&
-          Array.isArray(parsed.shuffledIds) &&
-          parsed.shuffledIds.length === questions.length
-        ) {
-          state = {
-            date: parsed.date,
-            shuffledIds: parsed.shuffledIds,
-            currentIndex: typeof parsed.currentIndex === 'number' ? parsed.currentIndex : 0,
-            userAnswers: parsed.userAnswers || (parsed.answeredOption !== undefined && parsed.shuffledIds[parsed.currentIndex] ? { [parsed.shuffledIds[parsed.currentIndex]]: parsed.answeredOption } : {}),
-            skippedIds: parsed.skippedIds || [],
-            isCompleted: parsed.isCompleted || false,
-          };
-        }
-      } catch (e) {
-        // ignore JSON errors
-      }
-    }
+    const existingAnswers = savedState?.userAnswers || {};
+    const existingSkipped = savedState?.skippedIds || [];
 
-    if (!state) {
-      const shuffled = fisherYatesShuffle(questions, `${today}-${quizKey}`);
-      state = {
-        date: today,
-        shuffledIds: shuffled.map(q => q.id),
-        currentIndex: 0,
-        userAnswers: {},
-        skippedIds: [],
-        isCompleted: false,
-      };
-      localStorage.setItem(storageKey, JSON.stringify(state));
-    }
+    // Filter out answered questions completely to ensure they are NEVER shown again
+    const unanswered = questions.filter((q) => existingAnswers[q.id] === undefined);
+    const shuffledUnanswered = fisherYatesShuffle(unanswered);
+    const completedState = unanswered.length === 0 && questions.length > 0;
 
-    const questionMap = new Map(questions.map(q => [q.id, q]));
-    const mapped = state.shuffledIds
-      .map(id => questionMap.get(id))
-      .filter((q): q is QuizQuestion => !!q);
-
-    setShuffledQuestions(mapped);
-    setCurrentIndex(Math.min(state.currentIndex, Math.max(0, mapped.length - 1)));
-    setUserAnswers(state.userAnswers);
-    setSkippedIds(state.skippedIds);
-    setIsCompleted(state.isCompleted || false);
+    setShuffledQuestions(shuffledUnanswered);
+    setCurrentIndex(0);
+    setUserAnswers(existingAnswers);
+    setSkippedIds(existingSkipped);
+    setIsCompleted(completedState);
     setIsInitialized(true);
-  }, [questions, quizKey]);
+  }, [questions, quizKey, isProgressLoading, savedStateSerialized, isInitialized]);
+
+  // Sync userAnswers when Firestore finishes loading saved progress over network
+  useEffect(() => {
+    if (!savedState?.userAnswers) return;
+    const firestoreAnswers = savedState.userAnswers;
+    const firestoreAnswerCount = Object.keys(firestoreAnswers).length;
+    const localAnswerCount = Object.keys(userAnswers).length;
+
+    if (firestoreAnswerCount > localAnswerCount) {
+      setUserAnswers(firestoreAnswers);
+      // Filter out newly fetched answered questions from active queue
+      setShuffledQuestions((prev) => prev.filter((q) => firestoreAnswers[q.id] === undefined));
+    }
+  }, [savedStateSerialized]);
 
   const handleOptionClick = (index: number) => {
     const currentQuestion = shuffledQuestions[currentIndex];
     if (!currentQuestion || userAnswers[currentQuestion.id] !== undefined) return;
 
+    const isCorrect = index === currentQuestion.correctOptionIndex;
     const updatedAnswers = {
       ...userAnswers,
       [currentQuestion.id]: index,
@@ -151,41 +147,33 @@ export default function DailyQuiz({ questions, quizKey }: DailyQuizProps) {
     setUserAnswers(updatedAnswers);
     setSkippedIds(updatedSkipped);
 
-    const allAnswered = shuffledQuestions.every(q => updatedAnswers[q.id] !== undefined);
-    saveQuizState(currentIndex, updatedAnswers, updatedSkipped, shuffledQuestions, allAnswered);
+    saveQuizState(
+      currentIndex,
+      updatedAnswers,
+      updatedSkipped,
+      shuffledQuestions,
+      false,
+      1, // answeredDelta
+      isCorrect ? 1 : 0 // correctDelta
+    );
   };
 
   const advanceToNext = (updatedSkipped: string[] = skippedIds) => {
     if (shuffledQuestions.length === 0) return;
 
-    // First check if all questions are answered
-    const answeredCount = Object.keys(userAnswers).length;
-    if (answeredCount === shuffledQuestions.length) {
+    // Filter out answered questions from remaining queue
+    const remainingUnanswered = shuffledQuestions.filter((q) => userAnswers[q.id] === undefined);
+
+    if (remainingUnanswered.length === 0) {
       setIsCompleted(true);
       saveQuizState(currentIndex, userAnswers, updatedSkipped, shuffledQuestions, true);
       return;
     }
 
-    // Try moving to the next contiguous index in shuffledQuestions
-    if (currentIndex + 1 < shuffledQuestions.length) {
-      const nextIdx = currentIndex + 1;
-      setCurrentIndex(nextIdx);
-      saveQuizState(nextIdx, userAnswers, updatedSkipped, shuffledQuestions, false);
-      return;
-    }
-
-    // At the end of queue: find the first unanswered question
-    const firstUnansweredIdx = shuffledQuestions.findIndex(
-      q => userAnswers[q.id] === undefined
-    );
-
-    if (firstUnansweredIdx !== -1) {
-      setCurrentIndex(firstUnansweredIdx);
-      saveQuizState(firstUnansweredIdx, userAnswers, updatedSkipped, shuffledQuestions, false);
-    } else {
-      setIsCompleted(true);
-      saveQuizState(currentIndex, userAnswers, updatedSkipped, shuffledQuestions, true);
-    }
+    setShuffledQuestions(remainingUnanswered);
+    const nextIdx = Math.min(currentIndex, remainingUnanswered.length - 1);
+    setCurrentIndex(nextIdx);
+    saveQuizState(nextIdx, userAnswers, updatedSkipped, remainingUnanswered, false);
   };
 
   const handleNextQuestion = () => {
@@ -216,14 +204,8 @@ export default function DailyQuiz({ questions, quizKey }: DailyQuizProps) {
   const handleRandomize = () => {
     if (!questions || questions.length === 0) return;
 
-    // Separate unanswered and answered questions
     const unanswered = questions.filter(q => userAnswers[q.id] === undefined);
-    const answered = questions.filter(q => userAnswers[q.id] !== undefined);
-
-    // Perform unbiased Fisher-Yates shuffle on unanswered questions first
-    const shuffledUnanswered = fisherYatesShuffle(unanswered);
-    const shuffledAnswered = fisherYatesShuffle(answered);
-    const newShuffled = [...shuffledUnanswered, ...shuffledAnswered];
+    const newShuffled = fisherYatesShuffle(unanswered);
 
     setShuffledQuestions(newShuffled);
     setCurrentIndex(0);
@@ -245,28 +227,29 @@ export default function DailyQuiz({ questions, quizKey }: DailyQuizProps) {
     saveQuizState(0, {}, [], newShuffled, false);
   };
 
-  if (!isInitialized || shuffledQuestions.length === 0) {
+  if (!isInitialized || (shuffledQuestions.length === 0 && !isCompleted)) {
     return <div className={styles.quizContainer}>Loading daily challenge...</div>;
   }
 
   const answeredCount = Object.keys(userAnswers).length;
-  const totalCount = shuffledQuestions.length;
-  const correctCount = shuffledQuestions.reduce(
-    (acc, q) => (userAnswers[q.id] === q.correctOptionIndex ? acc + 1 : acc),
-    0
-  );
+  const totalCapacity = Math.max(500, questions.length);
+  const remainingCount = shuffledQuestions.length;
+  const correctCount = Object.entries(userAnswers).reduce((acc, [qId, ansIdx]) => {
+    const q = questions.find(item => item.id === qId);
+    return q && ansIdx === q.correctOptionIndex ? acc + 1 : acc;
+  }, 0);
 
   // Render Completion Summary Screen when all questions are completed
   if (isCompleted) {
-    const percentage = Math.round((correctCount / totalCount) * 100);
+    const percentage = totalCapacity > 0 ? Math.round((correctCount / totalCapacity) * 100) : 0;
 
     return (
       <div className={styles.quizContainer}>
         <div className={styles.completionCard}>
           <div className={styles.completionBadge}>🏆 Daily Challenge Summary</div>
-          <h2 className={styles.completionTitle}>Great Job! You Completed the Challenge</h2>
+          <h2 className={styles.completionTitle}>Great Job! You Completed All Questions</h2>
           <div className={styles.scoreCircle}>
-            <span className={styles.scoreNumber}>{correctCount} / {totalCount}</span>
+            <span className={styles.scoreNumber}>{correctCount} / {answeredCount}</span>
             <span className={styles.scoreLabel}>Correct Answers ({percentage}%)</span>
           </div>
 
@@ -276,7 +259,7 @@ export default function DailyQuiz({ questions, quizKey }: DailyQuizProps) {
               <span className={styles.statLabel}>✅ Correct</span>
             </div>
             <div className={styles.statBox}>
-              <span className={styles.statValue}>{totalCount - correctCount}</span>
+              <span className={styles.statValue}>{answeredCount - correctCount}</span>
               <span className={styles.statLabel}>❌ Incorrect</span>
             </div>
             <div className={styles.statBox}>
@@ -287,16 +270,7 @@ export default function DailyQuiz({ questions, quizKey }: DailyQuizProps) {
 
           <div className={styles.completionActions}>
             <button className={styles.restartButton} onClick={handleRestartQuiz}>
-              🔄 Restart Quiz
-            </button>
-            <button
-              className={styles.reviewButton}
-              onClick={() => {
-                setIsCompleted(false);
-                setCurrentIndex(0);
-              }}
-            >
-              🔍 Review Answers
+              🔄 Reset & Restart Quiz
             </button>
           </div>
         </div>
@@ -305,15 +279,19 @@ export default function DailyQuiz({ questions, quizKey }: DailyQuizProps) {
   }
 
   const currentQuestion = shuffledQuestions[currentIndex];
-  const selectedOptionIndex = userAnswers[currentQuestion.id] ?? null;
+  const selectedOptionIndex = currentQuestion ? userAnswers[currentQuestion.id] ?? null : null;
   const isAnswered = selectedOptionIndex !== null;
-  const isCorrect = isAnswered && selectedOptionIndex === currentQuestion.correctOptionIndex;
+  const isCorrect = isAnswered && currentQuestion && selectedOptionIndex === currentQuestion.correctOptionIndex;
+
+  if (!currentQuestion) {
+    return null;
+  }
 
   return (
     <div className={styles.quizContainer}>
       <div className={styles.header}>
         <span className={styles.topicBadge}>
-          📅 Daily Challenge • Question {currentIndex + 1} of {totalCount} • ({answeredCount}/{totalCount} Answered)
+          📅 Daily Challenge • Question #{answeredCount + Math.min(currentIndex + 1, remainingCount)} of {totalCapacity} • ({answeredCount}/{totalCapacity} Answered)
         </span>
         <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
           <button className={styles.shuffleButton} onClick={handleRandomize} title="Reshuffle unanswered questions with Fisher-Yates algorithm">
@@ -369,9 +347,16 @@ export default function DailyQuiz({ questions, quizKey }: DailyQuizProps) {
       {isAnswered && (
         <div className={styles.explanationContainer}>
           <div className={styles.explanationTitle}>
-            {isCorrect ? '🎉 Correct!' : '💡 Explanation'}
+            {isCorrect ? '🎉 Correct!' : '💡 Explanation & Correct Answer'}
           </div>
-          <p className={styles.explanationText}>{currentQuestion.explanation}</p>
+          <p className={styles.explanationText}>
+            {!isCorrect && (
+              <strong style={{ display: 'block', color: '#4ade80', marginBottom: '0.5rem', fontSize: '0.95rem' }}>
+                ✅ Correct Answer: {currentQuestion.options[currentQuestion.correctOptionIndex]}
+              </strong>
+            )}
+            {currentQuestion.explanation}
+          </p>
         </div>
       )}
 

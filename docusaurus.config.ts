@@ -2,12 +2,21 @@
 import type { Config } from '@docusaurus/types'
 import prismTheme from './src/theme/prismTheme.js'
 import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 
 const config: Config = {
 	title: 'Engineering Knowledge Base',
 	tagline: 'Internal technical documentation',
 	url: 'https://luminhkhuong.dev',
 	baseUrl: '/',
+	stylesheets: [
+		{
+			href: 'https://cdn.jsdelivr.net/npm/katex@0.13.24/dist/katex.min.css',
+			type: 'text/css',
+			integrity: 'sha384-odtC+0UGzzFL/6PNoE8rX/SPcQDXBJ+uRepguP4QkPCm2LBxH3FA3y+fKSiJ+AmM',
+			crossorigin: 'anonymous',
+		},
+	],
 
 	organizationName: 'minhkhuong2404',
 	projectName: 'docusaurus-knowledge-base-template',
@@ -35,6 +44,7 @@ const config: Config = {
 					showLastUpdateTime: true,
 					showLastUpdateAuthor: true,
 					remarkPlugins: [remarkMath],
+					rehypePlugins: [rehypeKatex],
 				},
 				blog: false,
 				theme: {
@@ -158,7 +168,10 @@ const config: Config = {
 				srcDark: '/logo-dark.svg',
 			},
 			items: [
-				// { to: '/login', label: '💎 VIP Login', position: 'right', className: 'premium-nav-button' },
+				{
+					type: 'custom-userNavbarItem',
+					position: 'right',
+				},
 				{ type: 'search', position: 'right' }
 			],
 		},

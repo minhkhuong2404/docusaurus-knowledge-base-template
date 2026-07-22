@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Link from '@docusaurus/Link';
 import clsx from 'clsx';
 import type { Props as DesktopProps } from '@theme/DocSidebar/Desktop';
@@ -18,10 +18,64 @@ function isCategoryActive(item: SidebarItem, activePath: string): boolean {
   return false;
 }
 
+function getAllDocLinks(items: SidebarItem[]): SidebarItem[] {
+  let result: SidebarItem[] = [];
+  if (!items) return result;
+  items.forEach((item) => {
+    if (item.type === 'doc' || item.type === 'link') {
+      result.push(item);
+    } else if (item.type === 'category' && Array.isArray(item.items)) {
+      result = result.concat(getAllDocLinks(item.items));
+    }
+  });
+  return result;
+}
+
 export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidden }: CustomSidebarProps) {
   const [openCategories, setOpenCategories] = useState<Record<string, boolean>>({});
   const [isResizing, setIsResizing] = useState(false);
   const sidebarWidthRef = useRef(300);
+
+  const docLinks = useMemo(() => (sidebar ? getAllDocLinks(sidebar) : []), [sidebar]);
+
+  const activeIndex = useMemo(() => {
+    if (!path || docLinks.length === 0) return 0;
+    const idx = docLinks.findIndex((item) => item.href === path);
+    return idx !== -1 ? idx + 1 : 0;
+  }, [docLinks, path]);
+
+  const handleLocateCurrentPage = () => {
+    if (!sidebar || !path) return;
+
+    // Expand all categories that contain the active path
+    const categoriesToOpen: Record<string, boolean> = {};
+    function expandActive(items: SidebarItem[]) {
+      items.forEach((item) => {
+        if (item.type === 'category') {
+          if (isCategoryActive(item, path)) {
+            categoriesToOpen[item.label] = true;
+            expandActive(item.items);
+          }
+        }
+      });
+    }
+    expandActive(sidebar);
+    setOpenCategories((prev) => ({ ...prev, ...categoriesToOpen }));
+
+    // Scroll active link into view & trigger pulse animation
+    setTimeout(() => {
+      const activeEl = document.querySelector('.custom-sidebar-menu .custom-menu-link.active');
+      if (activeEl) {
+        activeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        activeEl.classList.remove('pulse-highlight');
+        void (activeEl as HTMLElement).offsetWidth; // trigger reflow
+        activeEl.classList.add('pulse-highlight');
+        setTimeout(() => {
+          activeEl.classList.remove('pulse-highlight');
+        }, 2000);
+      }
+    }, 100);
+  };
 
   // Load saved width on mount
   useEffect(() => {
@@ -183,6 +237,43 @@ export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidd
 
   return (
     <div className={clsx('custom-sidebar-container', isHidden && 'collapsed')}>
+
+      {/* Toolbar / Current Page Index Button */}
+      <div className="custom-sidebar-toolbar">
+        <button
+          className="custom-sidebar-index-btn"
+          onClick={handleLocateCurrentPage}
+          title={
+            activeIndex > 0
+              ? `Current Page #${activeIndex} of ${docLinks.length} — Click to locate in sidebar`
+              : 'Locate current page in sidebar'
+          }
+          aria-label="Locate current page index in sidebar"
+        >
+          <div className="index-btn-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <circle cx="12" cy="12" r="6"></circle>
+              <circle cx="12" cy="12" r="2"></circle>
+            </svg>
+          </div>
+          {!isHidden && (
+            <div className="index-btn-content">
+              <span className="index-btn-title">Current Index</span>
+              <span className="index-btn-badge">
+                {activeIndex > 0 ? `#${activeIndex} / ${docLinks.length}` : 'Not indexed'}
+              </span>
+            </div>
+          )}
+          {!isHidden && (
+            <span className="index-btn-locate-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </span>
+          )}
+        </button>
+      </div>
 
       {/* Menu Area */}
       <div className="custom-sidebar-menu">
