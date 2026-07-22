@@ -25,7 +25,7 @@ const sidebars: SidebarsConfig = {
 		},
 		{
 			type: 'category',
-			label: '🛠️ Technical Knowledge',
+			label: '🛠️Technical Knowledge',
 			collapsed: false,
 			items: [
 				{

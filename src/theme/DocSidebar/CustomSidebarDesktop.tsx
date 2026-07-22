@@ -6,7 +6,7 @@ import type { Props as DesktopProps } from '@theme/DocSidebar/Desktop';
 // Type definitions for Sidebar Items
 type SidebarItem = any;
 
-interface CustomSidebarProps extends DesktopProps {}
+interface CustomSidebarProps extends DesktopProps { }
 
 function isCategoryActive(item: SidebarItem, activePath: string): boolean {
   if (item.type === 'category') {
@@ -144,11 +144,11 @@ export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidd
   }, [sidebar, path]);
 
   const renderSidebarItem = (item: SidebarItem, depth: number, keyPrefix: string) => {
-    const labelText = item.label || '';
+    const labelText = (item.label || '').trim();
     // Match leading emoji or icon character
-    const match = labelText.match(/^(\p{Emoji_Presentation}|\p{Emoji})\s*(.*)$/u);
+    const match = labelText.match(/^(\p{Extended_Pictographic}|\p{Emoji_Presentation}|\p{Emoji})\s*(.*)$/u);
     const emoji = match ? match[1] : '';
-    const cleanLabel = match ? match[2] : labelText;
+    const cleanLabel = match ? match[2].trim() : labelText;
     const displayIcon = emoji || (cleanLabel ? cleanLabel.charAt(0) : '📄');
 
     const isActive = item.href === path;
@@ -218,7 +218,7 @@ export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidd
         );
       }
 
-      return (
+      const linkElement = (
         <Link
           key={itemKey}
           to={item.href}
@@ -230,6 +230,16 @@ export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidd
           <span className="menu-label">{cleanLabel}</span>
         </Link>
       );
+
+      if (depth === 0) {
+        return (
+          <div key={itemKey} className="custom-menu-category">
+            {linkElement}
+          </div>
+        );
+      }
+
+      return linkElement;
     }
 
     return null;
