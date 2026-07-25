@@ -54,11 +54,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '84f'),
+    component: ComponentCreator('/', '52e'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '31b'),
+        component: ComponentCreator('/', '025'),
         routes: [
           {
             path: '/tags',
@@ -186,6 +186,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/agentic-systems',
+            component: ComponentCreator('/tags/agentic-systems', 'b06'),
+            exact: true
+          },
+          {
             path: '/tags/aggregate',
             component: ComponentCreator('/tags/aggregate', '80e'),
             exact: true
@@ -198,6 +203,11 @@ export default [
           {
             path: '/tags/ai-agents',
             component: ComponentCreator('/tags/ai-agents', 'd48'),
+            exact: true
+          },
+          {
+            path: '/tags/ai-tools',
+            component: ComponentCreator('/tags/ai-tools', '82e'),
             exact: true
           },
           {
@@ -926,6 +936,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/chain-of-thought',
+            component: ComponentCreator('/tags/chain-of-thought', '22d'),
+            exact: true
+          },
+          {
             path: '/tags/change-sets',
             component: ComponentCreator('/tags/change-sets', '568'),
             exact: true
@@ -1196,6 +1211,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/claude',
+            component: ComponentCreator('/tags/claude', '9f4'),
+            exact: true
+          },
+          {
             path: '/tags/clean-architecture',
             component: ComponentCreator('/tags/clean-architecture', 'cda'),
             exact: true
@@ -1363,6 +1383,11 @@ export default [
           {
             path: '/tags/commit',
             component: ComponentCreator('/tags/commit', '503'),
+            exact: true
+          },
+          {
+            path: '/tags/common-mistakes',
+            component: ComponentCreator('/tags/common-mistakes', '6d5'),
             exact: true
           },
           {
@@ -1761,6 +1786,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/cursor',
+            component: ComponentCreator('/tags/cursor', '56f'),
+            exact: true
+          },
+          {
             path: '/tags/customer',
             component: ComponentCreator('/tags/customer', 'c46'),
             exact: true
@@ -2013,6 +2043,11 @@ export default [
           {
             path: '/tags/development',
             component: ComponentCreator('/tags/development', '3ae'),
+            exact: true
+          },
+          {
+            path: '/tags/devin',
+            component: ComponentCreator('/tags/devin', '54b'),
             exact: true
           },
           {
@@ -2586,6 +2621,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/few-shot',
+            component: ComponentCreator('/tags/few-shot', '916'),
+            exact: true
+          },
+          {
             path: '/tags/fi',
             component: ComponentCreator('/tags/fi', 'ced'),
             exact: true
@@ -2801,6 +2841,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/gemini',
+            component: ComponentCreator('/tags/gemini', '50b'),
+            exact: true
+          },
+          {
             path: '/tags/generics',
             component: ComponentCreator('/tags/generics', 'cb5'),
             exact: true
@@ -2836,6 +2881,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/github-copilot',
+            component: ComponentCreator('/tags/github-copilot', '37d'),
+            exact: true
+          },
+          {
             path: '/tags/gitops',
             component: ComponentCreator('/tags/gitops', '86f'),
             exact: true
@@ -2843,6 +2893,11 @@ export default [
           {
             path: '/tags/glossary',
             component: ComponentCreator('/tags/glossary', '42e'),
+            exact: true
+          },
+          {
+            path: '/tags/google',
+            component: ComponentCreator('/tags/google', 'ef1'),
             exact: true
           },
           {
@@ -2858,6 +2913,11 @@ export default [
           {
             path: '/tags/gpi',
             component: ComponentCreator('/tags/gpi', '3d2'),
+            exact: true
+          },
+          {
+            path: '/tags/gpt-4-o',
+            component: ComponentCreator('/tags/gpt-4-o', '558'),
             exact: true
           },
           {
@@ -4041,6 +4101,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/meta',
+            component: ComponentCreator('/tags/meta', 'ca6'),
+            exact: true
+          },
+          {
             path: '/tags/method-references',
             component: ComponentCreator('/tags/method-references', '74e'),
             exact: true
@@ -4068,6 +4133,11 @@ export default [
           {
             path: '/tags/microservices',
             component: ComponentCreator('/tags/microservices', '565'),
+            exact: true
+          },
+          {
+            path: '/tags/microsoft',
+            component: ComponentCreator('/tags/microsoft', 'd96'),
             exact: true
           },
           {
@@ -5436,6 +5506,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/refresh-token',
+            component: ComponentCreator('/tags/refresh-token', 'd02'),
+            exact: true
+          },
+          {
             path: '/tags/registry',
             component: ComponentCreator('/tags/registry', 'dcf'),
             exact: true
@@ -6391,6 +6466,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/structured-output',
+            component: ComponentCreator('/tags/structured-output', '1ea'),
+            exact: true
+          },
+          {
             path: '/tags/structured-programming',
             component: ComponentCreator('/tags/structured-programming', '8da'),
             exact: true
@@ -6503,6 +6583,11 @@ export default [
           {
             path: '/tags/system-design',
             component: ComponentCreator('/tags/system-design', '4b2'),
+            exact: true
+          },
+          {
+            path: '/tags/system-prompt',
+            component: ComponentCreator('/tags/system-prompt', 'a35'),
             exact: true
           },
           {
@@ -7176,6 +7261,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/windsurf',
+            component: ComponentCreator('/tags/windsurf', '5d1'),
+            exact: true
+          },
+          {
             path: '/tags/wipro',
             component: ComponentCreator('/tags/wipro', '270'),
             exact: true
@@ -7267,7 +7357,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'ab7'),
+            component: ComponentCreator('/', '2b0'),
             routes: [
               {
                 path: '/aws',
@@ -8248,6 +8338,18 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/ai-agents/ai-agent-interview-questions',
+                component: ComponentCreator('/technical-knowledge/ai-agents/ai-agent-interview-questions', 'b3d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/ai-agents/ai-tools-landscape',
+                component: ComponentCreator('/technical-knowledge/ai-agents/ai-tools-landscape', '3b8'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/ai-agents/context-engineering',
                 component: ComponentCreator('/technical-knowledge/ai-agents/context-engineering', '0ba'),
                 exact: true,
@@ -8262,6 +8364,12 @@ export default [
               {
                 path: '/technical-knowledge/ai-agents/overview',
                 component: ComponentCreator('/technical-knowledge/ai-agents/overview', 'df0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/ai-agents/prompt-engineering',
+                component: ComponentCreator('/technical-knowledge/ai-agents/prompt-engineering', 'cef'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13596,8 +13704,20 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/interview-questions/behavioral/behavioral-common-mistakes',
+                component: ComponentCreator('/technical-knowledge/interview-questions/behavioral/behavioral-common-mistakes', '448'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/interview-questions/behavioral/behavioral-conflict-failure',
                 component: ComponentCreator('/technical-knowledge/interview-questions/behavioral/behavioral-conflict-failure', '50d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/interview-questions/behavioral/behavioral-google-meta-microsoft',
+                component: ComponentCreator('/technical-knowledge/interview-questions/behavioral/behavioral-google-meta-microsoft', '97b'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14709,6 +14829,12 @@ export default [
               {
                 path: '/technical-knowledge/security/privacy-compliance',
                 component: ComponentCreator('/technical-knowledge/security/privacy-compliance', 'db2'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/security/refresh-token-security-invalidation',
+                component: ComponentCreator('/technical-knowledge/security/refresh-token-security-invalidation', '3eb'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

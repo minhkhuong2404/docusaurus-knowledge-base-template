@@ -122,4 +122,42 @@ Before creating a new component, check whether one already exists for the concep
 | `AQSArchitectureDiagram` | AbstractQueuedSynchronizer internals |
 | `LockDecisionTreeDiagram` | Decision tree for choosing the right Java lock |
 | `ConcurrencyCoordinationDiagram` | CountDownLatch / CyclicBarrier / Semaphore visualised |
+| `TokenInvalidationFlowDiagram` | Refresh token rotation, single-device & multi-device session invalidation |
+| `AccountHackedResponseDiagram` | Animated incident response timeline + 3 access-token revocation methods tabbed explorer |
+| `PasswordInvalidationDiagram` | Tabbed Single-Device vs Multi-Device password update invalidation with comparison table |
+
+## MANDATORY: Register Every New Page in sidebars.ts
+
+**Whenever you create a new documentation page (`.md` or `.mdx` file), you MUST also register it in [`sidebars.ts`](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/sidebars.ts).**
+
+### Rule Summary
+
+- **Location**: `sidebars.ts` at the workspace root.
+- **Registration Format**: Add the doc ID (relative path from `docs/` without the `.md` extension, with `/` separators) as a string entry under the correct category.
+- **Find the Right Category**: Match the directory of the new file to the nearest existing category in `sidebars.ts`. For example, a file at `docs/technical-knowledge/security/my-page.md` should be added under the `🔐 Core Security` category items array.
+
+### How to Find the Right Place
+
+1. Identify the folder of the new file (e.g., `docs/technical-knowledge/security/`).
+2. Grep `sidebars.ts` for any existing entry from that folder to locate the category block.
+3. Add the new doc ID immediately after the closest thematically related sibling entry.
+
+### Example
+
+New file: `docs/technical-knowledge/security/refresh-token-security-invalidation.md`
+Doc ID: `'technical-knowledge/security/refresh-token-security-invalidation'`
+
+```ts
+// In sidebars.ts, under the 🔐 Core Security category:
+items: [
+  'technical-knowledge/security/authentication-authorization',
+  'technical-knowledge/security/cookies-vs-sessions-vs-jwt',
+  'technical-knowledge/security/refresh-token-security-invalidation',  // ← Added here
+  'technical-knowledge/security/web-vulnerabilities',
+],
+```
+
+### Failure to Register = Build Warning + Page Unreachable
+
+Pages not registered in `sidebars.ts` will not appear in the left navigation and may generate Docusaurus build warnings. **Always update `sidebars.ts` as part of any page creation task.**
 

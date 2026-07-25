@@ -225,7 +225,7 @@ Payload (decoded):
 
 **Pros:** Stateless — server validates signature without a DB lookup. Works across multiple server instances.
 
-**Cons:** Cannot be invalidated before expiry (use refresh token rotation + blocklist for logout).
+**Cons:** Cannot be invalidated before expiry (see [Refresh Token Security & Multi-Device Session Invalidation](../security/refresh-token-security-invalidation.md) for rotation and invalidation patterns).
 
   </TabItem>
   <TabItem value="session" label="Session Token (stateful)">

@@ -198,11 +198,79 @@ These build rapport and get real, unfiltered perspective:
 
 ---
 
-## The "Red Flag Detector" Questions
+## Category 7: Startup-Specific Questions
 
-If you sense something is off, these questions can help surface problems diplomatically:
+If you're interviewing at a startup (Series A–C), these questions surface critical signals that don't apply at FAANG:
 
-- *"How has the team's size changed in the last year?"* (Are they growing or shrinking?)
-- *"What's the average tenure on the team?"* (High churn = bad sign)
-- *"How does the team stay connected across remote/hybrid arrangements?"* (Tests remote culture maturity)
-- *"What happened with [recent news about layoffs/pivots]?"* (Shows you research; watch for evasiveness)
+35. **"What's the company's current runway, and what milestones would trigger the next funding round?"**  
+    *Why:* Non-negotiable for joining a startup. Evasion here is a red flag.
+
+36. **"How does the founding team make major product decisions? Who has final say?"**  
+    *Why:* Tells you if engineering has a real seat at the table or just executes someone else's vision.
+
+37. **"What's the company's relationship with its largest customer? What percentage of revenue do they represent?"**  
+    *Why:* High revenue concentration (>50% in one customer) is a serious business risk.
+
+38. **"How has the team's culture changed as you've scaled from 5 to 50 people?"**  
+    *Why:* Tests how self-aware leadership is about cultural drift during growth.
+
+39. **"What does the path to profitability or the next major inflection point look like?"**  
+    *Why:* Good leaders can articulate this crisply. Vague answers signal uncertainty about direction.
+
+40. **"How does the founding team stay close to customers as the company scales?"**  
+    *Why:* Tests whether the company is customer-driven or internally-focused.
+
+---
+
+## Thank-You Email Strategy
+
+The thank-you email is not a formality — it's your final impression before the hiring decision. Use it strategically.
+
+### When to Send
+Within **24 hours** of the interview — ideally within 4 hours for same-day effect.
+
+### The Formula
+
+```
+Subject: Thank you — [Your Name] | [Role] Interview
+
+Hi [Interviewer Name],
+
+Thank you for taking the time to speak with me today. I really enjoyed 
+our conversation, especially the discussion about [something specific 
+they said — team challenge, technical problem, culture insight].
+
+Our conversation reinforced my enthusiasm for this role. [One sentence 
+connecting something you heard with why you're even more excited — 
+e.g., "Your team's approach to incident management aligns closely with 
+how I think about operational excellence."]
+
+I also wanted to briefly address something I mentioned about 
+[a story you feel you could've answered better, if applicable — 
+optional, but powerful if done well].
+
+I look forward to the next steps and am happy to provide any 
+additional information you need.
+
+Best,
+[Your Name]
+```
+
+### What Makes a Thank-You Email Stand Out
+
+| ✅ Do | ❌ Don't |
+|------|--------|
+| Reference something specific they said | Send a generic template |
+| Keep it under 150 words | Write an essay |
+| Send to each interviewer (individually, not CC'd) | Send one email to everyone |
+| Mention one thing you're even more excited about | Just say "thanks for your time" |
+| Correct a story if you felt you misspoke | Start new selling points |
+
+### Leveraging Your Interview Notes
+If you took notes during the interview (which you should), turn them into a personalized email:
+- **Team challenge they mentioned** → Reference it and how your background applies
+- **Technical problem they're solving** → Express specific excitement about it
+- **Something they asked you** → Expand on a point if you felt rushed or could be clearer
+
+> 💡 **Advanced tip:** If you interviewed with 4 people, send 4 different emails — each referencing something unique to that conversation. This is memorable and rare.
+

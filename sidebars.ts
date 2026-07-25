@@ -436,6 +436,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/security/authentication-authorization',
 								'technical-knowledge/security/web-security-fundamentals',
 								'technical-knowledge/security/cookies-vs-sessions-vs-jwt',
+								'technical-knowledge/security/refresh-token-security-invalidation',
 								'technical-knowledge/security/web-vulnerabilities',
 								'technical-knowledge/security/cryptography-secure-design',
 								'technical-knowledge/security/keys-signing-tls',
@@ -1297,7 +1298,9 @@ const sidebars: SidebarsConfig = {
 				'technical-knowledge/interview-questions/behavioral/behavioral-conflict-failure',
 				'technical-knowledge/interview-questions/behavioral/behavioral-questions-to-ask',
 				'technical-knowledge/interview-questions/behavioral/behavioral-top-50-questions',
-				'technical-knowledge/interview-questions/behavioral/behavioral-amazon-lp'
+				'technical-knowledge/interview-questions/behavioral/behavioral-amazon-lp',
+				'technical-knowledge/interview-questions/behavioral/behavioral-google-meta-microsoft',
+				'technical-knowledge/interview-questions/behavioral/behavioral-common-mistakes'
 			]
 		},
 		{
@@ -1765,9 +1768,13 @@ const sidebars: SidebarsConfig = {
 				'technical-knowledge/ai-agents/skills',
 				'technical-knowledge/ai-agents/harness',
 				'technical-knowledge/ai-agents/vibe-coding',
-				'technical-knowledge/ai-agents/context-engineering'
+				'technical-knowledge/ai-agents/prompt-engineering',
+				'technical-knowledge/ai-agents/ai-tools-landscape',
+				'technical-knowledge/ai-agents/context-engineering',
+				'technical-knowledge/ai-agents/ai-agent-interview-questions'
 			]
 		},
+
 		{
 			type: 'doc',
 			id: 'suggestions',

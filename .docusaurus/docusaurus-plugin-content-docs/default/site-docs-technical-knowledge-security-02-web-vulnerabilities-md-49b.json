@@ -84,8 +84,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Cookies, Sessions & JWT",
-    "permalink": "/technical-knowledge/security/cookies-vs-sessions-vs-jwt"
+    "title": "Refresh Token & Session Invalidation",
+    "permalink": "/technical-knowledge/security/refresh-token-security-invalidation"
   },
   "next": {
     "title": "Cryptography",

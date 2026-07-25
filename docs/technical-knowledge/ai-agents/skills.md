@@ -8,6 +8,14 @@ tags: [ai-agents, tool-use, function-calling, mcp, model-context-protocol, rag, 
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import AgentLoopMechanicsDiagram from '@site/src/components/AgentLoopMechanicsDiagram';
+import ToolCallingSequenceDiagram from '@site/src/components/ToolCallingSequenceDiagram';
+import McpArchitectureDiagram from '@site/src/components/McpArchitectureDiagram';
+import McpTransportLayersDiagram from '@site/src/components/McpTransportLayersDiagram';
+import ThreeMemoryTiersDiagram from '@site/src/components/ThreeMemoryTiersDiagram';
+import NaiveRagPipelineDiagram from '@site/src/components/NaiveRagPipelineDiagram';
+import AdvancedAgenticRagDiagram from '@site/src/components/AdvancedAgenticRagDiagram';
+
 
 # AI Agent Skills: Tools, MCP, Memory & RAG
 
@@ -45,27 +53,7 @@ With agent skills:
 
 Every agent, regardless of framework, runs the same fundamental loop:
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                        Agent Loop                           │
-│                                                             │
-│  User Input                                                 │
-│      │                                                      │
-│      ▼                                                      │
-│   LLM Thinks ──→ "I need tool X with args Y"               │
-│      │                                                      │
-│      ▼                                                      │
-│  Execute Tool ──→ Result returned to LLM                   │
-│      │                                                      │
-│      ▼                                                      │
-│   LLM Thinks ──→ "I have enough info"                      │
-│      │                                                      │
-│      ▼                                                      │
-│  Final Answer ──→ User                                      │
-└─────────────────────────────────────────────────────────────┘
-```
-
-The loop continues until the LLM decides it has enough information to give a final answer — or until a max-step limit is reached.
+<AgentLoopMechanicsDiagram />
 
 ### Types of agent skills
 
@@ -97,26 +85,10 @@ LLM output (function call) → with tools:
 
 ### Step-by-step flow
 
-```
-1. Developer declares tools (name, description, JSON Schema for parameters)
-         │
-         ▼
-2. User sends a message → LLM sees prompt + tool definitions
-         │
-         ▼
-3. LLM decides a tool is needed → returns structured tool call JSON (not text)
-         │
-         ▼
-4. Host application intercepts → executes the real function
-         │
-         ▼
-5. Result is sent back to LLM as a "tool result" message
-         │
-         ▼
-6. LLM generates the final text response using the real data
-```
+<ToolCallingSequenceDiagram />
 
 ### Declaring tools — the JSON Schema contract
+
 
 A tool declaration is a JSON Schema that tells the LLM:
 - **What** the tool does (`description` — the LLM uses this to decide when to call it)
@@ -586,22 +558,7 @@ With MCP:
 
 ### MCP architecture
 
-```
-┌──────────────────────────────────────────────────────────────────────┐
-│                         MCP Ecosystem                                │
-│                                                                      │
-│  MCP Clients (Hosts)          MCP Protocol (JSON-RPC 2.0)           │
-│  ┌────────────────┐           ┌──────────────────────┐              │
-│  │ Claude Desktop ├──────────►│                      │              │
-│  └────────────────┘  Stdio /  │   MCP Server         ├──► Files    │
-│  ┌────────────────┐  SSE      │   (GitHub, Postgres,  │             │
-│  │   Cursor IDE   ├──────────►│    Slack, Jira...)   ├──► Database │
-│  └────────────────┘           │                      │             │
-│  ┌────────────────┐           └──────────────────────┘ ├──► APIs   │
-│  │  Your Agent    ├──────────────────────────────────────────────► │
-│  └────────────────┘                                                  │
-└──────────────────────────────────────────────────────────────────────┘
-```
+<McpArchitectureDiagram />
 
 ### The three MCP primitives
 
@@ -613,7 +570,10 @@ With MCP:
 
 ### MCP transport layers
 
+<McpTransportLayersDiagram />
+
 <Tabs>
+
 <TabItem value="stdio" label="Stdio (local)">
 
 The client spawns the MCP server as a **child process** and communicates via stdin/stdout. Zero network latency, ideal for desktop tools like Cursor and Claude Desktop.
@@ -799,26 +759,10 @@ An agent without memory forgets everything the moment the conversation ends. Mem
 
 ### The three memory tiers
 
-```
-┌────────────────────────────────────────────────────────────────────┐
-│  Tier 1: In-Context (Short-term)                                   │
-│  ─ Current conversation messages                                   │
-│  ─ Fast access, limited by token window (128K–200K tokens typical) │
-│  ─ Wiped at conversation end                                       │
-├────────────────────────────────────────────────────────────────────┤
-│  Tier 2: External Storage (Long-term)                              │
-│  ─ Vector DB (semantic search by meaning)                          │
-│  ─ Key-value store (exact fact lookup)                             │
-│  ─ Survives across sessions; requires retrieval step               │
-├────────────────────────────────────────────────────────────────────┤
-│  Tier 3: Episodic (Procedural)                                     │
-│  ─ Log of past agent actions and outcomes                          │
-│  ─ "I fixed this error before by doing X"                         │
-│  ─ Retrieved by similarity to current problem                      │
-└────────────────────────────────────────────────────────────────────┘
-```
+<ThreeMemoryTiersDiagram />
 
 ### Short-term memory — managing the context window
+
 
 The context window is the agent's working memory. Problems arise as conversations grow:
 
@@ -926,15 +870,7 @@ RAG grounds LLM answers in real documents. Without it, the LLM answers from trai
 
 ### Naive RAG — the starting point
 
-```
-User query
-    │
-    ▼
-Embed query → search vector DB → return top-K chunks
-    │
-    ▼
-Inject chunks into prompt → LLM generates answer
-```
+<NaiveRagPipelineDiagram />
 
 This works for simple Q&A but breaks when:
 - The query is complex and no single chunk answers it fully.
@@ -942,6 +878,7 @@ This works for simple Q&A but breaks when:
 - The answer requires reasoning across multiple documents.
 
 ### Full RAG pipeline implementation
+
 
 ```python
 class RAGPipeline:
@@ -1005,35 +942,8 @@ Answer:"""
 
 Agentic RAG turns retrieval into a self-correcting, multi-step loop:
 
-```
-User Query
-    │
-    ▼
-Query Translation  ──→  Break complex query into sub-queries
-    │
-    ▼
-Routing  ──→  Which data source? (Vector DB / SQL / Web / LLM memory)
-    │
-    ▼
-Retrieval  ──→  Fetch candidates from chosen source(s)
-    │
-    ▼
-Grading  ──→  Are the retrieved chunks actually relevant?
-    │
-    ├── Irrelevant ──→  Rewrite query → Re-retrieve (or web search)
-    │
-    └── Relevant
-         │
-         ▼
-Generation  ──→  LLM drafts answer using grounded context
-         │
-         ▼
-Hallucination Check  ──→  Is the answer supported by the context?
-         │
-         ├── Not supported ──→  Regenerate
-         │
-         └── Supported ──→  Final Answer
-```
+<AdvancedAgenticRagDiagram />
+
 
 ### Advanced RAG techniques
 

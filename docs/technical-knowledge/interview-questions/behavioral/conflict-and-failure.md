@@ -166,7 +166,33 @@ Use this structure for any conflict question:
 
 ---
 
-## Ethical Dilemma Questions
+### Wrong Architecture Decision — Strong Answer
+
+> **Question:** *"Tell me about a time a major technical decision you made turned out to be wrong."*
+
+> *[S] I designed our session management system using a distributed in-memory cache (Redis) with custom session serialization. At the time, it seemed like the scalable choice. Nine months later, after we'd scaled to 3x our original user base, we started seeing subtle data consistency bugs — sessions were occasionally being served stale state across nodes during failover events. Debugging was nightmarish because the problem was intermittent and environment-dependent.*
+>
+> *[T] I was the original architect. I had to own the decision, diagnose it, and lead the migration to something more robust — while keeping production stable.*
+>
+> *[A] I did a full post-analysis on why my original decision failed: I had optimized for read performance without adequately stress-testing failover scenarios. Our load tests had covered steady-state load but not node failure conditions. Once I understood the root cause, I proposed migrating to JWT-based stateless sessions — eliminating the distributed cache dependency for session state entirely. I staged the migration: first deploying the new system in shadow mode alongside the old one for 2 weeks to validate session parity, then gradually routing traffic using a feature flag over 10 days. I personally ran the shadow comparison analysis every morning.*
+>
+> *[R] We completed the migration with zero user-facing incidents. Session-related errors dropped to zero. The lesson I carry: performance benchmarks are not the same as resilience benchmarks. I now require failure injection testing as part of any distributed system design review before we ship.*
+
+---
+
+### Team Morale Failure — Strong Answer
+
+> **Question:** *"Tell me about a time you led a team and it didn't go as well as you'd hoped."*
+
+> *[S] I was tech lead for a high-pressure 3-month delivery to meet a contractual milestone. I drove the team hard — long hours, aggressive sprint goals, constant context-switching. We hit the milestone. But two weeks after delivery, our strongest mid-level engineer resigned, citing burnout. I hadn't seen it coming.*
+>
+> *[T] I was the one who had set the pace. The success of the delivery was real, but I had failed to see the human cost.*
+>
+> *[A] I asked for a debrief 1:1 with the engineer who resigned, and they were honest with me: they'd felt invisible during the crunch — their concerns about scope creep had been heard but not acted on, and they'd felt their wellbeing was secondary to the delivery. I listened without defending. I also ran an anonymous team retro specifically about the delivery culture — and the feedback from the remaining team was consistent: they'd felt pressure to not flag problems because the timeline felt immovable. I took full accountability in a team meeting: I didn't frame it as "the deadline made me do it" — I said, "I set a pace that wasn't sustainable and didn't create enough safety for people to raise concerns. That's on me." I then restructured our team norms: mandatory weekly 1:1s, an explicit "health check" question in every sprint retro, and a personal commitment to explicitly inviting people to raise concerns in planning meetings.*
+>
+> *[R] The team's engagement scores, which I'd started tracking, improved measurably in the following quarter. We retained everyone else. I haven't had another burnout-related attrition since. The hardest lesson: hitting the milestone and losing the person who helped you hit it is not a success. Sustainable delivery is part of good leadership, not a nice-to-have.*
+
+
 
 These are rare but high-stakes. Treat them seriously.
 

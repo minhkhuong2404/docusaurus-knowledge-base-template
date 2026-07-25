@@ -6,6 +6,8 @@ description: Introduction to AI Agents, the core agentic formula, the evolution 
 tags: [ai-agents, llms, vibe-coding, software-engineering, introduction]
 ---
 
+import CoreAgentFormulaDiagram from '@site/src/components/CoreAgentFormulaDiagram';
+
 # AI Agents & Vibe Coding: Overview
 
 We are living through one of the most significant paradigm shifts in the history of computing. For decades, software development was defined by humans writing line-by-line code in programming languages that compilers translated into machine instructions. 
@@ -39,22 +41,8 @@ To understand AI Agents, remember this simple formula:
 
 $$\text{Agent} = \text{LLM (Brain)} + \text{Memory} + \text{Planning} + \text{Tools}$$
 
-```mermaid
-graph TD
-    subgraph Agentic System [AI Agent]
-        LLM[Large Language Model<br>Core Reasoning & Brain]
-        Mem[Memory<br>Short-term & Long-term]
-        Plan[Planning<br>Goal Decomposition & Reflection]
-        Tools[Tools<br>APIs, Terminal, File System]
-    end
-    
-    User[User Goal] -->|Input| LLM
-    LLM <--> Mem
-    LLM <--> Plan
-    LLM -->|Invokes| Tools
-    Tools -->|Returns Results| LLM
-    LLM -->|Final Deliverable| User
-```
+<CoreAgentFormulaDiagram />
+
 
 Let's break down each component:
 
@@ -138,4 +126,8 @@ If you are beginning your journey with AI Agents, focus on understanding these c
 - [ ] **Agentic Skills ([skills.md](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/docs/technical-knowledge/ai-agents/skills.md)):** Understand how function calling, Vector DBs, and the new **Model Context Protocol (MCP)** work.
 - [ ] **Agent Harnesses ([harness.md](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/docs/technical-knowledge/ai-agents/harness.md)):** Explore the runtimes that execute agents, keep them secure, and evaluate their success rates.
 - [ ] **Vibe Coding Workflows ([vibe-coding.md](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/docs/technical-knowledge/ai-agents/vibe-coding.md)):** Master the art of prompting, structuring projects, and steering agents for high-speed delivery.
-- [ ] **Context Engineering ([context-engineering.md](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/docs/technical-knowledge/ai-agents/context-engineering.md)):** The 2026 discipline — context compaction, context rot/drift, model routing, thinking budget, subagents, and AGENTS.md configuration.
+- [ ] **Prompt Engineering ([prompt-engineering.md](./prompt-engineering)):** Zero/few-shot, Chain-of-Thought reasoning, XML/JSON structured output, and production prompt templates.
+- [ ] **AI Tools & Model Landscape ([ai-tools-landscape.md](./ai-tools-landscape)):** Cursor, Windsurf, Copilot, Devin, and LLM selection matrices (Claude vs GPT-4o vs Gemini).
+- [ ] **Context Engineering ([context-engineering.md](./context-engineering)):** Context compaction, context rot/drift, model routing, thinking budget, subagents, and AGENTS.md configuration.
+- [ ] **AI Agent Interview Questions ([ai-agent-interview-questions.md](./ai-agent-interview-questions)):** 30+ senior-level interview Q&As on agent architectures, security, MCP, sandboxing, and evaluations.
+

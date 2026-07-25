@@ -153,7 +153,77 @@ If your result is *"The project launched on time"*, push further:
 
 ---
 
-## Practice Template
+## The STAR-L Variant (Google & Meta)
+
+Some companies, especially Google and Meta, implicitly look for a **STAR-L** structure — where the **L** stands for **Learning**:
+
+| Component | Description | Time |
+|-----------|-------------|------|
+| **S**ituation | Context | ~15% |
+| **T**ask | Your responsibility | ~10% |
+| **A**ction | What you specifically did | ~55% |
+| **R**esult | Measurable outcome | ~10% |
+| **L**earning | What changed in how you think or work | ~10% |
+
+### When to Use STAR-L
+- For any failure or mistake question — the learning is the whole point
+- For ambiguity/growth mindset questions at Google ("Tell me about a time you were uncertain about the right path")
+- For Meta "Move Fast" culture questions — they want to see that you extracted a repeatable lesson
+
+### STAR-L Example Add-on
+After the standard STAR result, add:
+> *"The lasting lesson for me was: I now treat any infrastructure decision as requiring a production-scale test before committing. This has become a personal rule I apply regardless of time pressure — the cost of validating is always lower than the cost of a production failure."*
+
+---
+
+## Recovering from a Derailed Story
+
+Even well-prepared candidates sometimes lose the thread mid-answer. Here's how to recover gracefully:
+
+### Recovery Phrases
+
+| Situation | What to Say |
+|-----------|-------------|
+| **Lost your place in the story** | *"Let me back up to make sure I'm being clear — the key action I took was..."* |
+| **Story is getting too long** | *"I'll cut to the most relevant part here — the outcome was..."* |
+| **Realized mid-story it's the wrong story** | *"Actually, a better example for this question would be [brief title]. Let me switch to that."* |
+| **Mind went completely blank** | *"That's a question I want to answer carefully — could I take just a moment?"* |
+| **Not sure what they're really asking** | *"Just to make sure I'm answering what you're asking — are you more interested in the technical decision or the stakeholder dynamic?"* |
+
+### The Pause Rule
+> Silence for 3–5 seconds reads as **thoughtfulness**, not confusion. Practice being comfortable with it. The instinct to fill silence with "umm" is the enemy.
+
+---
+
+## Handling Follow-Up Probes
+
+Interviewers — especially at Amazon — will probe your story with follow-up questions. Prepare for these **5 common follow-up patterns** for every story:
+
+### 1. The Depth Probe
+*"Can you tell me more about exactly what you did?"* or *"Walk me through your thought process."*
+
+**Prep:** For every Action step in your story, be ready to go one level deeper. If you said "I redesigned the database schema", know *which tables*, *which indexes*, *what the tradeoff was*.
+
+### 2. The Metric Probe
+*"What was the actual impact?"* or *"Do you have any numbers on that?"*
+
+**Prep:** For every Result, have at least one hard number. If you genuinely don't have one, say: *"We didn't measure this with a specific metric at the time, but the qualitative impact was X — and if I did it again, I would instrument Y from the start."*
+
+### 3. The Alternative Probe
+*"What would you do differently?"* or *"Was there another option you considered?"*
+
+**Prep:** For every major decision in your story, have a thoughtful "alternatively, I considered X but chose Y because..." ready.
+
+### 4. The Reaction Probe
+*"How did others react?"* or *"What did your manager think?"*
+
+**Prep:** Include at least one other stakeholder's perspective in your story, even if the interviewer doesn't ask. *"My manager later told me..."* is powerful.
+
+### 5. The Learning Probe
+*"What would you do differently?"* or *"What did you take from this experience?"*
+
+**Prep:** Every story should have a genuine learning statement — not *"I'd do it the same way"* (which reads as defensiveness) and not *"everything was perfect"* (which reads as lack of insight).
+
 
 Use this template to draft each story:
 

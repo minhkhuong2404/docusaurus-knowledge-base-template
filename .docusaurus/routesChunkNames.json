@@ -62,13 +62,13 @@
     },
     "config": "config---login-5-e-9-d49"
   },
-  "/-84f": {
+  "/-52e": {
     "__comp": "__comp---theme-docs-root-5-e-9-0b6",
     "__context": {
       "plugin": "plugin---aba-d70"
     }
   },
-  "/-31b": {
+  "/-025": {
     "__comp": "__comp---theme-doc-version-roota-7-b-5de",
     "__props": "__props---22-d-307"
   },
@@ -172,6 +172,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-agent-harness-195-9d2"
   },
+  "/tags/agentic-systems-b06": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-agentic-systems-9-bb-d28"
+  },
   "/tags/aggregate-80e": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-aggregate-9-f-1-c8e"
@@ -183,6 +187,10 @@
   "/tags/ai-agents-d48": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-ai-agents-98-a-8b1"
+  },
+  "/tags/ai-tools-82e": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-ai-tools-1-cb-288"
   },
   "/tags/alarms-786": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -764,6 +772,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-chain-of-responsibility-207-429"
   },
+  "/tags/chain-of-thought-22d": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-chain-of-thought-99-c-4af"
+  },
   "/tags/change-sets-568": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-change-sets-9-dd-48f"
@@ -980,6 +992,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-class-designee-0-774"
   },
+  "/tags/claude-9f4": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-claude-97-d-078"
+  },
   "/tags/clean-architecture-cda": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-clean-architectured-51-9f1"
@@ -1115,6 +1131,10 @@
   "/tags/commit-503": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-commitae-4-bc0"
+  },
+  "/tags/common-mistakes-6d5": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-common-mistakes-061-659"
   },
   "/tags/communication-2c1": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -1432,6 +1452,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-curl-1-f-3-038"
   },
+  "/tags/cursor-56f": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-cursord-56-c0a"
+  },
   "/tags/customer-c46": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-customer-8-cd-839"
@@ -1635,6 +1659,10 @@
   "/tags/development-3ae": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-development-8-e-9-a2a"
+  },
+  "/tags/devin-54b": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-devin-4-be-685"
   },
   "/tags/devops-408": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -2092,6 +2120,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-fetch-pulleaa-40b"
   },
+  "/tags/few-shot-916": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-few-shot-64-f-6a5"
+  },
   "/tags/fi-ced": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-fi-174-d87"
@@ -2264,6 +2296,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-gelfbd-6-6e1"
   },
+  "/tags/gemini-50b": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-gemini-7-ba-182"
+  },
   "/tags/generics-cb5": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-generics-0-aa-875"
@@ -2292,6 +2328,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-git-flowce-2-7ac"
   },
+  "/tags/github-copilot-37d": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-github-copilot-89-e-cbd"
+  },
   "/tags/gitops-86f": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-gitops-2-cd-44b"
@@ -2299,6 +2339,10 @@
   "/tags/glossary-42e": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-glossary-7-e-2-c13"
+  },
+  "/tags/google-ef1": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-googleffc-c91"
   },
   "/tags/goto-e19": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -2311,6 +2355,10 @@
   "/tags/gpi-3d2": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-gpi-73-a-fb2"
+  },
+  "/tags/gpt-4-o-558": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-gpt-4-o-4-d-4-182"
   },
   "/tags/gradle-9fe": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -3256,6 +3304,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-messagingacc-1d6"
   },
+  "/tags/meta-ca6": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-meta-9-ee-b1d"
+  },
   "/tags/method-references-74e": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-method-references-20-c-d61"
@@ -3279,6 +3331,10 @@
   "/tags/microservices-565": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-microservices-203-9ec"
+  },
+  "/tags/microsoft-d96": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-microsoft-6-dc-a5f"
   },
   "/tags/migration-ed4": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -4372,6 +4428,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-reflogf-9-c-79e"
   },
+  "/tags/refresh-token-d02": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-refresh-token-74-e-3d5"
+  },
   "/tags/registry-dcf": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-registry-4-fc-537"
@@ -5136,6 +5196,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-structure-808-ddd"
   },
+  "/tags/structured-output-1ea": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-structured-outpute-7-f-6e8"
+  },
   "/tags/structured-programming-8da": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-structured-programming-0-ae-07b"
@@ -5227,6 +5291,10 @@
   "/tags/system-design-4b2": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-system-designcfa-182"
+  },
+  "/tags/system-prompt-a35": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-system-promptbd-2-3a9"
   },
   "/tags/systematics-389": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -5764,6 +5832,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-window-functions-91-f-025"
   },
+  "/tags/windsurf-5d1": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-windsurff-7-b-cb7"
+  },
   "/tags/wipro-270": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-wipro-982-df5"
@@ -5836,7 +5908,7 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-zookeeper-51-e-f84"
   },
-  "/-ab7": {
+  "/-2b0": {
     "__comp": "__comp---theme-doc-roota-94-67a"
   },
   "/aws-bf9": {
@@ -6491,6 +6563,14 @@
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-ai-agents-agents-8-c-4-63e"
   },
+  "/technical-knowledge/ai-agents/ai-agent-interview-questions-b3d": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-ai-agents-ai-agent-interview-questionsdae-821"
+  },
+  "/technical-knowledge/ai-agents/ai-tools-landscape-3b8": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-ai-agents-ai-tools-landscape-9-f-7-17e"
+  },
   "/technical-knowledge/ai-agents/context-engineering-0ba": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-ai-agents-context-engineeringd-3-d-73a"
@@ -6502,6 +6582,10 @@
   "/technical-knowledge/ai-agents/overview-df0": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-ai-agents-overview-88-b-1db"
+  },
+  "/technical-knowledge/ai-agents/prompt-engineering-cef": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-ai-agents-prompt-engineeringe-76-9e8"
   },
   "/technical-knowledge/ai-agents/skills-d9f": {
     "__comp": "__comp---theme-doc-item-178-a40",
@@ -10063,9 +10147,17 @@
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-interview-questions-behavioral-behavioral-amazon-lp-516-54a"
   },
+  "/technical-knowledge/interview-questions/behavioral/behavioral-common-mistakes-448": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-interview-questions-behavioral-behavioral-common-mistakes-073-0f9"
+  },
   "/technical-knowledge/interview-questions/behavioral/behavioral-conflict-failure-50d": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-interview-questions-behavioral-behavioral-conflict-failure-61-a-541"
+  },
+  "/technical-knowledge/interview-questions/behavioral/behavioral-google-meta-microsoft-97b": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-interview-questions-behavioral-behavioral-google-meta-microsoftd-0-b-f49"
   },
   "/technical-knowledge/interview-questions/behavioral/behavioral-interview-overview-e4a": {
     "__comp": "__comp---theme-doc-item-178-a40",
@@ -10814,6 +10906,10 @@
   "/technical-knowledge/security/privacy-compliance-db2": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-security-privacy-compliancea-23-a96"
+  },
+  "/technical-knowledge/security/refresh-token-security-invalidation-3eb": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-security-refresh-token-security-invalidation-00-b-d1f"
   },
   "/technical-knowledge/security/secure-sdlc-7ad": {
     "__comp": "__comp---theme-doc-item-178-a40",

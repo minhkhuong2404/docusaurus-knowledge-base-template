@@ -224,6 +224,10 @@ User                Client App          Auth Server         Resource Server
  │                       │ ◄──── orders JSON ─────────────────── │
 ```
 
+:::tip[Refresh Token Security & Session Invalidation]
+For detailed patterns on managing long-lived refresh tokens, refresh token rotation (RTR), stolen token reuse detection, emergency account compromise response, and multi-device session invalidation during password updates, see [Refresh Token Security & Multi-Device Session Invalidation](../security/refresh-token-security-invalidation.md).
+:::
+
 #### PKCE (Proof Key for Code Exchange)
 
 Required for public clients (SPAs, mobile apps) that can't keep a client secret:

@@ -94,6 +94,10 @@ Because JWT verification is stateless, a stolen JWT can be used by an attacker u
    * **Lifespan:** Long-lived (e.g., 7 to 30 days).
    * **Transmission:** Kept secure (ideally in a `HttpOnly` cookie) and sent only to the `/auth/refresh` endpoint.
 
+:::tip[Advanced Security & Session Invalidation]
+To understand how to secure long-lived refresh tokens against theft, handle hacked accounts, and invalidate sessions during password updates (single vs. multi-device), read [Refresh Token Security & Multi-Device Session Invalidation](./refresh-token-security-invalidation.md).
+:::
+
 ---
 
 ## 4. CORS (Cross-Origin Resource Sharing)

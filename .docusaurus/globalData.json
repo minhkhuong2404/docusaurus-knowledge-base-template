@@ -656,6 +656,16 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/ai-agents/ai-agent-interview-questions",
+              "path": "/technical-knowledge/ai-agents/ai-agent-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/ai-agents/ai-tools-landscape",
+              "path": "/technical-knowledge/ai-agents/ai-tools-landscape",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/ai-agents/context-engineering",
               "path": "/technical-knowledge/ai-agents/context-engineering",
               "sidebar": "tutorialSidebar"
@@ -668,6 +678,11 @@
             {
               "id": "technical-knowledge/ai-agents/overview",
               "path": "/technical-knowledge/ai-agents/overview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/ai-agents/prompt-engineering",
+              "path": "/technical-knowledge/ai-agents/prompt-engineering",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -5126,8 +5141,18 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/interview-questions/behavioral/behavioral-common-mistakes",
+              "path": "/technical-knowledge/interview-questions/behavioral/behavioral-common-mistakes",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/interview-questions/behavioral/behavioral-conflict-failure",
               "path": "/technical-knowledge/interview-questions/behavioral/behavioral-conflict-failure",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/interview-questions/behavioral/behavioral-google-meta-microsoft",
+              "path": "/technical-knowledge/interview-questions/behavioral/behavioral-google-meta-microsoft",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -6057,6 +6082,11 @@
             {
               "id": "technical-knowledge/security/privacy-compliance",
               "path": "/technical-knowledge/security/privacy-compliance",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/security/refresh-token-security-invalidation",
+              "path": "/technical-knowledge/security/refresh-token-security-invalidation",
               "sidebar": "tutorialSidebar"
             },
             {
