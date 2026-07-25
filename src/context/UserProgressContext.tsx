@@ -81,6 +81,7 @@ interface UserProgressContextType {
   isPageRead: (pagePath: string) => boolean;
   togglePageRead: (pagePath: string) => Promise<void>;
   markPageAsRead: (pagePath: string) => Promise<void>;
+  isManuallyUnmarked: (pagePath: string) => boolean;
   saveQuiz: (
     quizKey: string,
     quizState: QuizStateItem,
@@ -103,6 +104,7 @@ const UserProgressContext = createContext<UserProgressContextType>({
   isPageRead: () => false,
   togglePageRead: async () => {},
   markPageAsRead: async () => {},
+  isManuallyUnmarked: () => false,
   saveQuiz: async () => {},
   saveDSA: async () => {},
   unlockPremium: async () => false,
@@ -250,12 +252,35 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
     return () => unsubscribeDoc();
   }, [currentUser]);
 
+  const [manuallyUnmarkedPages, setManuallyUnmarkedPages] = useState<Set<string>>(new Set());
+
   const isPageRead = (pagePath: string): boolean => {
     return progress.readPages.includes(pagePath);
   };
 
+  const isManuallyUnmarked = (pagePath: string): boolean => {
+    return manuallyUnmarkedPages.has(pagePath);
+  };
+
   const togglePageRead = async (pagePath: string): Promise<void> => {
-    const isReadNow = !isPageRead(pagePath);
+    const isCurrentlyRead = isPageRead(pagePath);
+    const isReadNow = !isCurrentlyRead;
+
+    if (isCurrentlyRead) {
+      // User manually unmarks as read — record in override set
+      setManuallyUnmarkedPages((prev) => {
+        const next = new Set(prev);
+        next.add(pagePath);
+        return next;
+      });
+    } else {
+      // User manually marks as read — clear override record
+      setManuallyUnmarkedPages((prev) => {
+        const next = new Set(prev);
+        next.delete(pagePath);
+        return next;
+      });
+    }
 
     // Optimistic update for instant UI feedback & localStorage cache
     setProgress((prev) => {
@@ -272,7 +297,7 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const markPageAsRead = async (pagePath: string): Promise<void> => {
-    if (isPageRead(pagePath)) return;
+    if (isPageRead(pagePath) || manuallyUnmarkedPages.has(pagePath)) return;
 
     setProgress((prev) => {
       if (prev.readPages.includes(pagePath)) return prev;
@@ -385,6 +410,7 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
         isPageRead,
         togglePageRead,
         markPageAsRead,
+        isManuallyUnmarked,
         saveQuiz,
         saveDSA,
         unlockPremium,

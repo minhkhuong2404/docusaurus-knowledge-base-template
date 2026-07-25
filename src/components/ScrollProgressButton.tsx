@@ -8,7 +8,7 @@ export default function ScrollProgressButton() {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const location = useLocation();
   const pagePath = location.pathname;
-  const { isPageRead, markPageAsRead } = useUserProgress();
+  const { isPageRead, markPageAsRead, isManuallyUnmarked } = useUserProgress();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,17 +22,17 @@ export default function ScrollProgressButton() {
         setScrollPercent(percent);
         setIsVisible(scrollTop > 40 || percent > 0);
 
-        // Auto mark as read when user reaches end of an eligible article (>= 90% or within 150px of bottom)
+        // Auto mark as read when user reaches end of an eligible article (>= 90% or within 150px of bottom), UNLESS manually unmarked
         if (percent >= 90 || (totalScrollable - scrollTop) < 150) {
-          if (isTrackableArticle(pagePath) && !isPageRead(pagePath)) {
+          if (isTrackableArticle(pagePath) && !isPageRead(pagePath) && !isManuallyUnmarked(pagePath)) {
             markPageAsRead(pagePath);
           }
         }
       } else {
         setScrollPercent(100);
         setIsVisible(false);
-        // Short page without scrollbar — auto mark as read if eligible
-        if (isTrackableArticle(pagePath) && !isPageRead(pagePath)) {
+        // Short page without scrollbar — auto mark as read if eligible and not manually unmarked
+        if (isTrackableArticle(pagePath) && !isPageRead(pagePath) && !isManuallyUnmarked(pagePath)) {
           markPageAsRead(pagePath);
         }
       }
@@ -42,7 +42,7 @@ export default function ScrollProgressButton() {
     handleScroll(); // Initial check
 
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [pagePath, isPageRead, markPageAsRead]);
+  }, [pagePath, isPageRead, markPageAsRead, isManuallyUnmarked]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
