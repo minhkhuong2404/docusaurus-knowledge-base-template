@@ -127,55 +127,7 @@ export default function Login(): React.ReactNode {
     }
   };
 
-  if (loggedInState === 'checking') {
-    return (
-      // @ts-ignore
-      <Layout title="Sign In">
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
-          <p style={{ color: 'var(--ifm-color-emphasis-600)', fontWeight: 600 }}>Verifying session...</p>
-        </div>
-      </Layout>
-    );
-  }
-
-  if (loggedInState === 'logged_in') {
-    return (
-      // @ts-ignore
-      <Layout title="Account Dashboard">
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh', padding: '1rem' }}>
-          <div style={{ padding: '2.5rem', border: '1px solid var(--ifm-color-success-dark)', borderRadius: '12px', maxWidth: '420px', width: '100%', textAlign: 'center', backgroundColor: 'var(--ifm-background-surface-color)', boxShadow: '0 4px 24px rgba(0,0,0,0.12)' }}>
-            <h2 style={{ marginBottom: '1rem' }}>Welcome Back! 👋</h2>
-            {currentUser ? (
-              <div style={{ marginBottom: '1.5rem', padding: '1rem', background: 'var(--ifm-color-emphasis-100)', borderRadius: '8px' }}>
-                {currentUser.photoURL ? (
-                  <img
-                    src={currentUser.photoURL}
-                    alt={currentUser.displayName || 'User'}
-                    style={{ width: '64px', height: '64px', borderRadius: '50%', marginBottom: '0.5rem', border: '2px solid var(--ifm-color-primary)' }}
-                  />
-                ) : (
-                  <div style={{ width: '64px', height: '64px', borderRadius: '50%', backgroundColor: 'var(--ifm-color-primary)', color: '#fff', fontSize: '1.75rem', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.5rem auto' }}>
-                    {(currentUser.displayName || currentUser.email || 'U').charAt(0).toUpperCase()}
-                  </div>
-                )}
-                <h3 style={{ margin: '0.25rem 0', fontSize: '1.1rem' }}>{currentUser.displayName || 'Learner'}</h3>
-                <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--ifm-color-emphasis-700)' }}>{currentUser.email}</p>
-                <span style={{ display: 'inline-block', marginTop: '0.5rem', fontSize: '0.75rem', padding: '2px 8px', background: '#FFCA28', color: '#000', borderRadius: '12px', fontWeight: 600 }}>
-                  Syncing Progress Active ⚡
-                </span>
-              </div>
-            ) : (
-              <p style={{ color: 'var(--ifm-color-emphasis-700)', marginBottom: '2rem' }}>Your reading progress is being synced.</p>
-            )}
-            <a href="/" className="button button--primary button--block" style={{ marginBottom: '1rem' }}>Explore Knowledge Base</a>
-            <button onClick={handleLogout} className="button button--danger button--outline button--block" disabled={loading}>
-              {loading ? 'Logging out...' : 'Sign Out'}
-            </button>
-          </div>
-        </div>
-      </Layout>
-    );
-  }
+  // Always render the login form so users can sign in via Google or Email at any time
 
   return (
     // @ts-ignore
@@ -237,6 +189,7 @@ export default function Login(): React.ReactNode {
           {/* Firebase Google Sign-In */}
           <div style={{ marginBottom: '1.25rem' }}>
             <FirebaseGoogleLoginButton
+              mode={mode}
               onSuccess={handleGoogleSuccess}
               onError={handleGoogleError}
             />

@@ -54,11 +54,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '9dd'),
+    component: ComponentCreator('/', '84f'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'dc3'),
+        component: ComponentCreator('/', '31b'),
         routes: [
           {
             path: '/tags',
@@ -7267,7 +7267,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '356'),
+            component: ComponentCreator('/', 'ab7'),
             routes: [
               {
                 path: '/aws',
@@ -8872,11 +8872,6 @@ export default [
                 component: ComponentCreator('/technical-knowledge/coding-interview-prep/intro', 'e98'),
                 exact: true,
                 sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/coding-interview-prep/intro/',
-                component: ComponentCreator('/technical-knowledge/coding-interview-prep/intro/', 'f95'),
-                exact: true
               },
               {
                 path: '/technical-knowledge/coding-interview-prep/linked-list/',

@@ -91,7 +91,7 @@ function PremiumModal() {
               border: '1px solid rgba(245, 158, 11, 0.3)',
               fontSize: '1.75rem', marginBottom: '0.85rem',
             }}>
-              💎
+              👑
             </div>
             <h2 style={{
               margin: '0 0 0.4rem 0', fontSize: '1.3rem', fontWeight: 700,

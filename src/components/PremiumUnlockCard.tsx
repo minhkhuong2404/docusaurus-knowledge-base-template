@@ -42,7 +42,7 @@ export default function PremiumUnlockCard() {
           boxShadow: '0 4px 20px rgba(234, 179, 8, 0.15)',
         }}
       >
-        <div style={{ fontSize: '2rem' }}>💎</div>
+        <div style={{ fontSize: '2rem' }}>👑</div>
         <div>
           <div style={{ fontWeight: 700, fontSize: '1.05rem', color: '#f59e0b' }}>
             Premium Access Unlocked! ✨
@@ -69,7 +69,7 @@ export default function PremiumUnlockCard() {
         textAlign: 'center',
       }}
     >
-      <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>💎</div>
+      <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>👑</div>
       <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.35rem', color: 'var(--ifm-font-color-base)' }}>
         Unlock Premium Content
       </h3>

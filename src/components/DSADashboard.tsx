@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Link from '@docusaurus/Link';
+import { useUserProgress } from '@site/src/context/UserProgressContext';
 
 interface Problem {
   id: number;
@@ -266,7 +267,10 @@ const PROBLEMS: Problem[] = [
   { id: 84, title: "Largest Rectangle", url: "https://leetcode.com/problems/largest-rectangle-review", difficulty: "Hard", week: 20, topic: "Comprehensive Review", weekSlug: "week-20-comprehensive-review-systems", companies: ["Google", "Amazon"], plans: ["250"] }
 ];
 
+export { PROBLEMS };
+
 export default function DSADashboard() {
+  const { progress, saveDSA } = useUserProgress();
   const [solved, setSolved] = useState<number[]>([]);
   const [intensity, setIntensity] = useState<'75' | '150' | '250'>('150');
   const [search, setSearch] = useState('');
@@ -275,34 +279,46 @@ export default function DSADashboard() {
   const [showUnsolvedOnly, setShowUnsolvedOnly] = useState(false);
   const [expandedWeeks, setExpandedWeeks] = useState<number[]>([1]);
 
-
-
-  // Load from localStorage on mount
+  // Sync state from localStorage and UserProgressContext (Firebase)
   useEffect(() => {
     try {
       const savedSolved = localStorage.getItem('dsa-solved-problems');
+      const localSolvedIds: number[] = savedSolved ? JSON.parse(savedSolved) : [];
+      const remoteSolvedIds: number[] = (progress.dsaProgress?.solvedProblems || []).map(Number);
+      const merged = Array.from(new Set([...localSolvedIds, ...remoteSolvedIds].filter(n => !isNaN(n))));
+      setSolved(merged);
+
       const savedIntensity = localStorage.getItem('dsa-intensity-level');
-      if (savedSolved) setSolved(JSON.parse(savedSolved));
       if (savedIntensity && (savedIntensity === '75' || savedIntensity === '150' || savedIntensity === '250')) {
         setIntensity(savedIntensity);
       }
     } catch (e) {
       console.error('Error loading DSA progress states:', e);
     }
-  }, []);
+  }, [progress.dsaProgress?.solvedProblems]);
 
-  // Sync to localStorage on update
+  // Sync to localStorage and Cloud Firestore on update
   const toggleSolved = (id: number) => {
     const updated = solved.includes(id)
       ? solved.filter(x => x !== id)
       : [...solved, id];
     setSolved(updated);
-    localStorage.setItem('dsa-solved-problems', JSON.stringify(updated));
+    try {
+      localStorage.setItem('dsa-solved-problems', JSON.stringify(updated));
+    } catch {}
+
+    const starredIds = (progress.dsaProgress?.starredProblems || []);
+    saveDSA(updated.map(String), starredIds);
   };
 
   const handleIntensityChange = (level: '75' | '150' | '250') => {
     setIntensity(level);
-    localStorage.setItem('dsa-intensity-level', level);
+    try {
+      localStorage.setItem('dsa-intensity-level', level);
+    } catch {}
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('dsa-intensity-changed'));
+    }
   };
 
   // Helper to generate company page link
@@ -522,17 +538,22 @@ export default function DSADashboard() {
             value={selectedWeek}
             onChange={(e) => setSelectedWeek(e.target.value === 'All' ? 'All' : Number(e.target.value))}
             style={{
-              padding: '0.5rem 1rem',
-              borderRadius: '8px',
-              border: '1px solid var(--ifm-color-emphasis-300, rgba(255, 255, 255, 0.12))',
-              background: 'var(--ifm-background-surface-color, #101525)',
-              color: 'var(--ifm-font-color-base, #e2e8f0)',
-              outline: 'none'
+              padding: '0.55rem 1rem',
+              borderRadius: '10px',
+              border: selectedWeek !== 'All' ? '1px solid rgba(74, 222, 128, 0.4)' : '1px solid var(--ifm-color-emphasis-300, rgba(255, 255, 255, 0.12))',
+              background: selectedWeek !== 'All' ? 'rgba(74, 222, 128, 0.08)' : 'var(--ifm-background-surface-color, #101525)',
+              color: selectedWeek !== 'All' ? '#4ade80' : 'var(--ifm-font-color-base, #e2e8f0)',
+              fontSize: '0.85rem',
+              fontWeight: 600,
+              outline: 'none',
+              cursor: 'pointer',
+              boxShadow: selectedWeek !== 'All' ? '0 0 10px rgba(74, 222, 128, 0.15)' : 'none',
+              transition: 'all 0.2s ease',
             }}
           >
-            <option value="All">📅 All Weeks</option>
+            <option value="All" style={{ background: '#101525', color: '#e2e8f0' }}>📅 All Weeks</option>
             {Array.from({ length: 20 }, (_, i) => i + 1).map(w => (
-              <option key={w} value={w}>Week {w}</option>
+              <option key={w} value={w} style={{ background: '#101525', color: '#e2e8f0' }}>Week {w}</option>
             ))}
           </select>
 
@@ -540,78 +561,105 @@ export default function DSADashboard() {
             value={selectedDifficulty}
             onChange={(e) => setSelectedDifficulty(e.target.value as any)}
             style={{
-              padding: '0.5rem 1rem',
-              borderRadius: '8px',
-              border: '1px solid var(--ifm-color-emphasis-300, rgba(255, 255, 255, 0.12))',
-              background: 'var(--ifm-background-surface-color, #101525)',
-              color: 'var(--ifm-font-color-base, #e2e8f0)',
-              outline: 'none'
+              padding: '0.55rem 1rem',
+              borderRadius: '10px',
+              border: selectedDifficulty !== 'All' ? '1px solid rgba(56, 189, 248, 0.4)' : '1px solid var(--ifm-color-emphasis-300, rgba(255, 255, 255, 0.12))',
+              background: selectedDifficulty !== 'All' ? 'rgba(56, 189, 248, 0.08)' : 'var(--ifm-background-surface-color, #101525)',
+              color: selectedDifficulty !== 'All' ? '#38bdf8' : 'var(--ifm-font-color-base, #e2e8f0)',
+              fontSize: '0.85rem',
+              fontWeight: 600,
+              outline: 'none',
+              cursor: 'pointer',
+              boxShadow: selectedDifficulty !== 'All' ? '0 0 10px rgba(56, 189, 248, 0.15)' : 'none',
+              transition: 'all 0.2s ease',
             }}
           >
-            <option value="All">⚡ All Difficulties</option>
-            <option value="Easy">Easy</option>
-            <option value="Medium">Medium</option>
-            <option value="Hard">Hard</option>
+            <option value="All" style={{ background: '#101525', color: '#e2e8f0' }}>⚡ All Difficulties</option>
+            <option value="Easy" style={{ background: '#101525', color: '#4ade80' }}>Easy</option>
+            <option value="Medium" style={{ background: '#101525', color: '#fbbf24' }}>Medium</option>
+            <option value="Hard" style={{ background: '#101525', color: '#f87171' }}>Hard</option>
           </select>
         </div>
 
         {/* Checkbox Flags & Accordion Controls */}
-        <div style={{ display: 'flex', gap: '1.2rem', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', width: '100%' }}>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', userSelect: 'none', color: 'var(--ifm-font-color-base, #e2e8f0)' }}>
-            <input
-              type="checkbox"
-              checked={showUnsolvedOnly}
-              onChange={() => setShowUnsolvedOnly(!showUnsolvedOnly)}
-              style={{ accentColor: 'var(--brand-green)', width: '16px', height: '16px' }}
-            />
-            ❌ Unsolved Only
-          </label>
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', width: '100%' }}>
+          <button
+            type="button"
+            onClick={() => setShowUnsolvedOnly(!showUnsolvedOnly)}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '0.45rem 0.9rem',
+              borderRadius: '8px',
+              fontSize: '0.82rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              backgroundColor: showUnsolvedOnly ? 'rgba(239, 68, 68, 0.15)' : 'rgba(255, 255, 255, 0.03)',
+              color: showUnsolvedOnly ? '#f87171' : 'var(--ifm-color-content-secondary, #94a3b8)',
+              border: showUnsolvedOnly ? '1px solid rgba(239, 68, 68, 0.4)' : '1px solid var(--ifm-color-emphasis-300, rgba(255, 255, 255, 0.1))',
+              boxShadow: showUnsolvedOnly ? '0 0 10px rgba(239, 68, 68, 0.15)' : 'none',
+            }}
+          >
+            <span>{showUnsolvedOnly ? '❌ Unsolved Only' : '👁️ Show All Problems'}</span>
+          </button>
 
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <div style={{ display: 'flex', gap: '0.6rem' }}>
             <button
+              type="button"
               onClick={expandAll}
               style={{
-                background: 'var(--ifm-color-emphasis-100, rgba(255, 255, 255, 0.04))',
-                border: '1px solid var(--ifm-color-emphasis-300, rgba(255, 255, 255, 0.08))',
-                borderRadius: '6px',
-                padding: '4px 10px',
-                fontSize: '0.8rem',
-                fontWeight: 600,
-                color: 'var(--ifm-color-emphasis-800, #cbd5e1)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                background: 'rgba(74, 222, 128, 0.1)',
+                border: '1px solid rgba(74, 222, 128, 0.3)',
+                borderRadius: '8px',
+                padding: '0.45rem 0.9rem',
+                fontSize: '0.82rem',
+                fontWeight: 700,
+                color: '#4ade80',
                 cursor: 'pointer',
-                transition: 'all 0.2s'
+                boxShadow: '0 2px 8px rgba(74, 222, 128, 0.1)',
+                transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(74, 222, 128, 0.08)';
-                e.currentTarget.style.borderColor = 'rgba(74, 222, 128, 0.2)';
+                e.currentTarget.style.background = 'rgba(74, 222, 128, 0.2)';
+                e.currentTarget.style.boxShadow = '0 0 12px rgba(74, 222, 128, 0.25)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'var(--ifm-color-emphasis-100, rgba(255, 255, 255, 0.04))';
-                e.currentTarget.style.borderColor = 'var(--ifm-color-emphasis-300, rgba(255, 255, 255, 0.08))';
+                e.currentTarget.style.background = 'rgba(74, 222, 128, 0.1)';
+                e.currentTarget.style.boxShadow = '0 2px 8px rgba(74, 222, 128, 0.1)';
               }}
             >
               👐 Expand All
             </button>
             <button
+              type="button"
               onClick={collapseAll}
               style={{
-                background: 'var(--ifm-color-emphasis-100, rgba(255, 255, 255, 0.04))',
-                border: '1px solid var(--ifm-color-emphasis-300, rgba(255, 255, 255, 0.08))',
-                borderRadius: '6px',
-                padding: '4px 10px',
-                fontSize: '0.8rem',
-                fontWeight: 600,
-                color: 'var(--ifm-color-emphasis-800, #cbd5e1)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                background: 'rgba(168, 85, 247, 0.1)',
+                border: '1px solid rgba(168, 85, 247, 0.3)',
+                borderRadius: '8px',
+                padding: '0.45rem 0.9rem',
+                fontSize: '0.82rem',
+                fontWeight: 700,
+                color: '#c084fc',
                 cursor: 'pointer',
-                transition: 'all 0.2s'
+                boxShadow: '0 2px 8px rgba(168, 85, 247, 0.1)',
+                transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(74, 222, 128, 0.08)';
-                e.currentTarget.style.borderColor = 'rgba(74, 222, 128, 0.2)';
+                e.currentTarget.style.background = 'rgba(168, 85, 247, 0.2)';
+                e.currentTarget.style.boxShadow = '0 0 12px rgba(168, 85, 247, 0.25)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'var(--ifm-color-emphasis-100, rgba(255, 255, 255, 0.04))';
-                e.currentTarget.style.borderColor = 'var(--ifm-color-emphasis-300, rgba(255, 255, 255, 0.08))';
+                e.currentTarget.style.background = 'rgba(168, 85, 247, 0.1)';
+                e.currentTarget.style.boxShadow = '0 2px 8px rgba(168, 85, 247, 0.1)';
               }}
             >
               🪗 Collapse All
@@ -734,7 +782,7 @@ export default function DSADashboard() {
                     >
                       <thead>
                         <tr style={{ background: 'rgba(15, 18, 29, 0.3)', borderBottom: '1px solid var(--ifm-table-border-color, rgba(255, 255, 255, 0.04))' }}>
-                          <th style={{ padding: '10px 16px', color: 'var(--brand-green)', fontWeight: 700, width: '70px', textAlign: 'center', borderBottom: '1px solid var(--ifm-table-border-color, rgba(255, 255, 255, 0.04))', fontSize: '0.85rem' }}>Solved</th>
+                          <th style={{ padding: '10px 16px', color: 'var(--brand-green)', fontWeight: 700, width: '110px', textAlign: 'center', borderBottom: '1px solid var(--ifm-table-border-color, rgba(255, 255, 255, 0.04))', fontSize: '0.85rem' }}>Status</th>
                           <th style={{ padding: '10px 16px', color: 'var(--brand-green)', fontWeight: 700, textAlign: 'center', borderBottom: '1px solid var(--ifm-table-border-color, rgba(255, 255, 255, 0.04))', fontSize: '0.85rem' }}>Problem</th>
                           <th style={{ padding: '10px 16px', color: 'var(--brand-green)', fontWeight: 700, width: '100px', textAlign: 'center', borderBottom: '1px solid var(--ifm-table-border-color, rgba(255, 255, 255, 0.04))', fontSize: '0.85rem' }}>Diff</th>
                           <th style={{ padding: '10px 16px', color: 'var(--brand-green)', fontWeight: 700, textAlign: 'center', borderBottom: '1px solid var(--ifm-table-border-color, rgba(255, 255, 255, 0.04))', fontSize: '0.85rem' }}>Target Companies</th>
@@ -753,19 +801,32 @@ export default function DSADashboard() {
                                 borderBottom: '1px solid var(--ifm-table-border-color, rgba(255, 255, 255, 0.02))'
                               }}
                             >
-                              {/* Solved check box */}
-                              <td style={{ padding: '10px 16px', verticalAlign: 'middle', textAlign: 'center', borderBottom: '1px solid var(--ifm-table-border-color, rgba(255, 255, 255, 0.02))' }}>
-                                <input
-                                  type="checkbox"
-                                  checked={isSolved}
-                                  onChange={() => toggleSolved(p.id)}
+                              {/* Solved Action Button */}
+                              <td style={{ padding: '10px 14px', verticalAlign: 'middle', textAlign: 'center', borderBottom: '1px solid var(--ifm-table-border-color, rgba(255, 255, 255, 0.02))' }}>
+                                <button
+                                  type="button"
+                                  onClick={() => toggleSolved(p.id)}
+                                  title={isSolved ? 'Mark as Unsolved' : 'Mark as Solved'}
                                   style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '4px',
+                                    padding: '4px 10px',
+                                    borderRadius: '8px',
+                                    fontSize: '0.78rem',
+                                    fontWeight: 700,
                                     cursor: 'pointer',
-                                    width: '18px',
-                                    height: '18px',
-                                    accentColor: 'var(--brand-green)'
+                                    whiteSpace: 'nowrap',
+                                    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                                    backgroundColor: isSolved ? 'rgba(74, 222, 128, 0.15)' : 'rgba(255, 255, 255, 0.03)',
+                                    color: isSolved ? '#4ade80' : 'var(--ifm-color-content-secondary, #94a3b8)',
+                                    border: isSolved ? '1px solid rgba(74, 222, 128, 0.4)' : '1px solid var(--ifm-color-emphasis-300, rgba(255, 255, 255, 0.1))',
+                                    boxShadow: isSolved ? '0 0 10px rgba(74, 222, 128, 0.15)' : 'none',
                                   }}
-                                />
+                                >
+                                  {isSolved ? '✓ Solved' : '+ Solved'}
+                                </button>
                               </td>
 
                               {/* Problem Name & link */}

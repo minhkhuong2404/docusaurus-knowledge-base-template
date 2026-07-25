@@ -290,7 +290,7 @@ div[class*="codeBlockTitle"] {
    ============================================ */
 
 :root {
-  --premium-nav-label: "💎 Premium login";
+  --premium-nav-label: "👑 Premium login";
   --premium-nav-color: var(--ifm-navbar-link-color);
   --premium-nav-hover-color: var(--ifm-navbar-link-hover-color);
   --premium-nav-weight: 500;
@@ -416,7 +416,7 @@ div.user-account-dropdown-menu {
 
 /* Premium indicator on sidebar doc links */
 .theme-doc-sidebar-container .menu__link[href^="/premium/"]::after {
-  content: " - 💎 Premium";
+  content: " - 👑 Premium";
   color: var(--ifm-color-success);
   font-size: 0.75rem;
   font-weight: 600;

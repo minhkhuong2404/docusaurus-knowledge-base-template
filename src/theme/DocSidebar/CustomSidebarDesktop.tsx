@@ -3,10 +3,13 @@ import Link from '@docusaurus/Link';
 import clsx from 'clsx';
 import type { Props as DesktopProps } from '@theme/DocSidebar/Desktop';
 
+import { useUserProgress } from '../../context/UserProgressContext';
+import { isTrackableArticle } from '@site/src/utils/trackablePages';
+
 // Type definitions for Sidebar Items
 type SidebarItem = any;
 
-interface CustomSidebarProps extends DesktopProps { }
+interface CustomSidebarProps extends DesktopProps {}
 
 function isCategoryActive(item: SidebarItem, activePath: string): boolean {
   if (item.type === 'category') {
@@ -36,7 +39,14 @@ export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidd
   const [isResizing, setIsResizing] = useState(false);
   const sidebarWidthRef = useRef(300);
 
+  const { progress, setTotalArticlesCount, isPageRead } = useUserProgress();
   const docLinks = useMemo(() => (sidebar ? getAllDocLinks(sidebar) : []), [sidebar]);
+
+  useEffect(() => {
+    if (docLinks.length > 0) {
+      setTotalArticlesCount(docLinks.length);
+    }
+  }, [docLinks.length, setTotalArticlesCount]);
 
   const activeIndex = useMemo(() => {
     if (!path || docLinks.length === 0) return 0;
@@ -205,15 +215,34 @@ export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidd
     }
 
     if (item.type === 'doc' || item.type === 'link') {
+      const isTrackable = isTrackableArticle(item.href);
+      const isRead = isTrackable && item.href ? (isPageRead(item.href) || isPageRead(item.href + '/') || (item.href.endsWith('/') && isPageRead(item.href.slice(0, -1)))) : false;
+
       if (isHidden) {
         return (
           <Link
             key={itemKey}
             to={item.href}
-            className={clsx('custom-menu-link', isActive && 'active')}
-            title={cleanLabel}
+            className={clsx('custom-menu-link', isActive && 'active', isRead && 'page-read')}
+            title={`${cleanLabel}${isRead ? ' (Completed ✓)' : ''}`}
           >
-            <span className="menu-icon">{displayIcon}</span>
+            <span className="menu-icon" style={{ position: 'relative' }}>
+              {displayIcon}
+              {isRead && (
+                <span
+                  style={{
+                    position: 'absolute',
+                    top: '-2px',
+                    right: '-2px',
+                    width: '6px',
+                    height: '6px',
+                    borderRadius: '50%',
+                    backgroundColor: '#4ade80',
+                    boxShadow: '0 0 6px #4ade80',
+                  }}
+                />
+              )}
+            </span>
           </Link>
         );
       }
@@ -222,12 +251,37 @@ export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidd
         <Link
           key={itemKey}
           to={item.href}
-          className={clsx('custom-menu-link', isActive && 'active')}
+          className={clsx('custom-menu-link', isActive && 'active', isRead && 'page-read')}
           style={depth > 0 ? { paddingLeft: '12px' } : undefined}
           title={cleanLabel}
         >
           {depth === 0 && <span className="menu-icon">{displayIcon}</span>}
           <span className="menu-label">{cleanLabel}</span>
+          {isRead && (
+            <span
+              className="menu-read-tick"
+              title="Article Completed"
+              aria-label="Completed"
+              style={{
+                marginLeft: 'auto',
+                fontSize: '0.7rem',
+                color: '#4ade80',
+                fontWeight: 800,
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '18px',
+                height: '18px',
+                borderRadius: '50%',
+                background: 'rgba(74, 222, 128, 0.15)',
+                border: '1px solid rgba(74, 222, 128, 0.35)',
+                flexShrink: 0,
+                boxShadow: '0 0 8px rgba(74, 222, 128, 0.2)',
+              }}
+            >
+              ✓
+            </span>
+          )}
         </Link>
       );
 
@@ -255,7 +309,7 @@ export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidd
           onClick={handleLocateCurrentPage}
           title={
             activeIndex > 0
-              ? `Current Page #${activeIndex} of ${docLinks.length} — Click to locate in sidebar`
+              ? `Current Page #${activeIndex} — Click to locate in sidebar`
               : 'Locate current page in sidebar'
           }
           aria-label="Locate current page index in sidebar"
@@ -269,9 +323,9 @@ export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidd
           </div>
           {!isHidden && (
             <div className="index-btn-content">
-              <span className="index-btn-title">Current Index</span>
+              <span className="index-btn-title">Current Page</span>
               <span className="index-btn-badge">
-                {activeIndex > 0 ? `#${activeIndex} / ${docLinks.length}` : 'Not indexed'}
+                {activeIndex > 0 ? `#${activeIndex}` : 'Not indexed'}
               </span>
             </div>
           )}

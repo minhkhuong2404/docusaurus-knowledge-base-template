@@ -4,6 +4,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../config/firebase";
 import { UserProgressProvider } from "../context/UserProgressContext";
 import PremiumGate from "../components/PremiumGate";
+import ScrollProgressButton from "../components/ScrollProgressButton";
 
 const PREMIUM_STATE_KEY = "premium_session_state";
 
@@ -175,6 +176,7 @@ export default function Root({ children }: { children: React.ReactNode }) {
         <div className="header-universal h-shooting" />
       </div>
       <UserProgressProvider>
+        <ScrollProgressButton />
         {isPremiumRoute ? <PremiumGate>{children}</PremiumGate> : children}
       </UserProgressProvider>
     </>

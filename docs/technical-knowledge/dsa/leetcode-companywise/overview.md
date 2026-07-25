@@ -37,10 +37,3 @@ Here are direct links to some of the most popular company-specific lists in this
 | **Microsoft** | [Microsoft LeetCode Questions](./M/microsoft.md) |
 | **Apple** | [Apple LeetCode Questions](./A/apple.md) |
 | **Uber** | [Uber LeetCode Questions](./U/uber.md) |
-
----
-
-## 🔄 Data Source & Updates
-
-- **Source**: The data is aggregated and compiled from community contributions matching premium LeetCode company-tag data.
-- **Updates**: We maintain this lists automatically using a background synchronization script pulling from the [leetcode-companywise-interview-questions](https://github.com/snehasishroy/leetcode-companywise-interview-questions) repository.

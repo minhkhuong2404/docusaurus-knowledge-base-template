@@ -8,9 +8,11 @@ import { triggerFireworks } from '@site/src/utils/fireworks';
 import { javaQuestions } from '@site/src/data/java-quiz-questions';
 import { springBootQuestions } from '@site/src/data/spring-boot-quiz-questions';
 import { systemDesignQuestions } from '@site/src/data/system-design-quiz-questions';
+import { PROBLEMS } from '@site/src/components/DSADashboard';
+import { isTrackableArticle, TOTAL_TRACKABLE_ARTICLES_DEFAULT } from '@site/src/utils/trackablePages';
 
 export default function CustomUserNavbarItem() {
-  const { currentUser, progress, isPremium, unlockPremium, revokePremium, resetQuizProgress } = useUserProgress();
+  const { currentUser, progress, isPremium, unlockPremium, revokePremium, resetQuizProgress, totalArticlesCount } = useUserProgress();
   const [isOpen, setIsOpen] = useState(false);
   const [showKeyModal, setShowKeyModal] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
@@ -21,11 +23,30 @@ export default function CustomUserNavbarItem() {
   const [isMounted, setIsMounted] = useState(false);
   const [coords, setCoords] = useState<{ top: number; right: number }>({ top: 0, right: 0 });
 
+  const [dsaIntensity, setDsaIntensity] = useState<'75' | '150' | '250'>(() => {
+    if (typeof window === 'undefined') return '150';
+    const saved = localStorage.getItem('dsa-intensity-level');
+    return (saved === '75' || saved === '150' || saved === '250') ? saved : '150';
+  });
+
   const buttonRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    const handleIntensityChange = () => {
+      const saved = localStorage.getItem('dsa-intensity-level');
+      if (saved === '75' || saved === '150' || saved === '250') {
+        setDsaIntensity(saved);
+      }
+    };
+    if (typeof window !== 'undefined') {
+      window.addEventListener('dsa-intensity-changed', handleIntensityChange);
+      return () => window.removeEventListener('dsa-intensity-changed', handleIntensityChange);
+    }
   }, []);
 
   // Calculate coordinates whenever isOpen becomes true or on scroll/resize
@@ -121,8 +142,15 @@ export default function CustomUserNavbarItem() {
   }
 
   const name = currentUser.displayName || currentUser.email?.split('@')[0] || 'Learner';
-  const readCount = progress.readPages?.length || 0;
-  const dsaCount = progress.dsaProgress?.solvedProblems?.length || 0;
+  const readCount = (progress.readPages || []).filter(isTrackableArticle).length;
+  const totalArticles = totalArticlesCount > 0 && totalArticlesCount <= 620 ? totalArticlesCount : TOTAL_TRACKABLE_ARTICLES_DEFAULT;
+  const readPercent = Math.min(100, Math.round((readCount / totalArticles) * 100));
+
+  const planProblems = PROBLEMS.filter(p => p.plans.includes(dsaIntensity));
+  const totalDsaCount = planProblems.length > 0 ? planProblems.length : 150;
+  const solvedSet = new Set((progress.dsaProgress?.solvedProblems || []).map(Number));
+  const dsaSolvedCount = planProblems.filter(p => solvedSet.has(p.id)).length;
+  const dsaPercent = totalDsaCount > 0 ? Math.min(100, Math.round((dsaSolvedCount / totalDsaCount) * 100)) : 0;
 
   const quizStates = progress.quizStats?.quizStates || {};
 
@@ -167,7 +195,7 @@ export default function CustomUserNavbarItem() {
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
       >
-        {isPremium ? '💎 ' : '👋 '}Welcome, {name} {isOpen ? '▲' : '▼'}
+        {isPremium ? '👑 ' : '👋 '}Welcome, {name} {isOpen ? '▲' : '▼'}
       </button>
 
       {isOpen && isMounted && ReactDOM.createPortal(
@@ -245,7 +273,7 @@ export default function CustomUserNavbarItem() {
                     boxShadow: '0 2px 6px rgba(245, 158, 11, 0.3)',
                   }}
                 >
-                  💎 Premium Active
+                  👑 Premium Active
                 </span>
               ) : (
                 <span
@@ -266,18 +294,51 @@ export default function CustomUserNavbarItem() {
             </div>
           </div>
 
-          {/* Progress Tracker Summary */}
-          <div style={{ marginBottom: '1.25rem' }}>
-            <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--ifm-color-emphasis-600)', marginBottom: '0.6rem' }}>
-              Your Progress Tracker ⚡
+          {/* SECTION 1: Reading & DSA Progress */}
+          <div style={{ marginBottom: '1.2rem' }}>
+            <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--ifm-color-emphasis-600)', marginBottom: '0.5rem' }}>
+              📚 Reading & DSA Progress
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <div className="dropdown-stat-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0.75rem', borderRadius: '8px', fontSize: '0.825rem' }}>
-                <span>📖 Articles Read</span>
-                <span style={{ fontWeight: 700, color: '#38bdf8' }}>{readCount}</span>
+              {/* Articles Read */}
+              <div className="dropdown-stat-card" style={{ display: 'flex', flexDirection: 'column', gap: '6px', padding: '0.6rem 0.75rem', borderRadius: '8px', fontSize: '0.825rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontWeight: 600 }}>📖 Articles Read</span>
+                  <span style={{ fontWeight: 700, color: '#38bdf8' }}>
+                    {readCount} <span style={{ fontSize: '0.75rem', opacity: 0.75 }}>/ {totalArticles} ({readPercent}%)</span>
+                  </span>
+                </div>
+                <div style={{ height: '4px', width: '100%', borderRadius: '2px', background: 'rgba(255, 255, 255, 0.08)', overflow: 'hidden' }}>
+                  <div style={{ height: '100%', width: `${readPercent}%`, borderRadius: '2px', background: 'linear-gradient(90deg, #38bdf8, #3b82f6)', transition: 'width 0.4s ease' }} />
+                </div>
               </div>
 
+              {/* DSA Solved */}
+              <div className="dropdown-stat-card" style={{ display: 'flex', flexDirection: 'column', gap: '4px', padding: '0.6rem 0.75rem', borderRadius: '8px', fontSize: '0.825rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontWeight: 600 }}>💻 DSA Solved</span>
+                  <span style={{ fontWeight: 700, color: '#ec4899' }}>
+                    {dsaSolvedCount} <span style={{ fontSize: '0.75rem', opacity: 0.75 }}>/ {totalDsaCount} ({dsaPercent}%)</span>
+                  </span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem', color: 'var(--ifm-color-content-secondary, #8f9cae)' }}>
+                  <span>Plan: {dsaIntensity === '75' ? 'Blind 75' : dsaIntensity === '150' ? 'NeetCode 150' : 'All 250+'}</span>
+                </div>
+                <div style={{ height: '4px', width: '100%', borderRadius: '2px', background: 'rgba(255, 255, 255, 0.08)', overflow: 'hidden', marginTop: '2px' }}>
+                  <div style={{ height: '100%', width: `${dsaPercent}%`, borderRadius: '2px', background: 'linear-gradient(90deg, #ec4899, #f43f5e)', transition: 'width 0.4s ease' }} />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* SECTION 2: Daily Quizzes */}
+          <div style={{ marginBottom: '1.25rem' }}>
+            <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--ifm-color-emphasis-600)', marginBottom: '0.5rem' }}>
+              🧠 Daily Quizzes
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <div className="dropdown-stat-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0.75rem', borderRadius: '8px', fontSize: '0.825rem' }}>
                 <span>☕ Java Quiz</span>
                 <span style={{ fontWeight: 700, color: '#f59e0b' }}>{javaAnswered} <span style={{ fontSize: '0.75rem', opacity: 0.75 }}>/ {javaTotal}</span></span>
@@ -293,32 +354,27 @@ export default function CustomUserNavbarItem() {
                 <span style={{ fontWeight: 700, color: '#a855f7' }}>{sysDesignAnswered} <span style={{ fontSize: '0.75rem', opacity: 0.75 }}>/ {sysDesignTotal}</span></span>
               </div>
 
-              <div className="dropdown-stat-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0.75rem', borderRadius: '8px', fontSize: '0.825rem' }}>
-                <span>💻 DSA Solved</span>
-                <span style={{ fontWeight: 700, color: '#ec4899' }}>{dsaCount}</span>
-              </div>
+              {/* Reset Quiz Progress Button */}
+              <button
+                type="button"
+                onClick={() => setShowResetModal(true)}
+                style={{
+                  marginTop: '0.2rem',
+                  width: '100%',
+                  padding: '0.45rem 0.6rem',
+                  backgroundColor: 'rgba(239, 68, 68, 0.08)',
+                  color: '#ef4444',
+                  border: '1px dashed rgba(239, 68, 68, 0.3)',
+                  borderRadius: '6px',
+                  fontWeight: 600,
+                  fontSize: '0.75rem',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                🔄 Reset Quiz Progress
+              </button>
             </div>
-
-            {/* Reset Quiz Progress Button */}
-            <button
-              type="button"
-              onClick={() => setShowResetModal(true)}
-              style={{
-                marginTop: '0.6rem',
-                width: '100%',
-                padding: '0.45rem 0.6rem',
-                backgroundColor: 'rgba(239, 68, 68, 0.08)',
-                color: '#ef4444',
-                border: '1px dashed rgba(239, 68, 68, 0.3)',
-                borderRadius: '6px',
-                fontWeight: 600,
-                fontSize: '0.75rem',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-              }}
-            >
-              🔄 Reset Quiz Progress
-            </button>
           </div>
 
           {/* Premium Unlock / Revoke Buttons */}
@@ -344,7 +400,7 @@ export default function CustomUserNavbarItem() {
                 transition: 'all 0.2s ease',
               }}
             >
-              💎 Unlock Premium Content
+              👑 Unlock Premium Content
             </button>
           ) : (
             <button
@@ -433,7 +489,7 @@ export default function CustomUserNavbarItem() {
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>💎</div>
+            <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>👑</div>
             <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.4rem', color: '#ffffff' }}>
               Activate Premium Access
             </h3>

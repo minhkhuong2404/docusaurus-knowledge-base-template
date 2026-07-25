@@ -1251,7 +1251,7 @@ const sidebars: SidebarsConfig = {
 						},
 						{
 							type: 'category',
-							label: '🏢 Company (💎 Premium)',
+							label: '🏢 Company (👑 Premium)',
 							collapsed: true,
 							items: [
 								'company/accenture-java-interview',
@@ -1337,7 +1337,7 @@ const sidebars: SidebarsConfig = {
 		},
 		{
 			type: 'category',
-			label: '🏢 LeetCode Company (💎 Premium)',
+			label: '🏢 LeetCode Company (👑 Premium)',
 			collapsed: true,
 			items: [
 				{

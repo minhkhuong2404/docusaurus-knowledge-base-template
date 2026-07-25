@@ -69,14 +69,18 @@ import {
   resetAllQuizProgressInFirestore,
   QuizStateItem,
 } from '../services/userProgressService';
+import { isTrackableArticle, TOTAL_TRACKABLE_ARTICLES_DEFAULT } from '../utils/trackablePages';
 
 interface UserProgressContextType {
   currentUser: User | null;
   progress: UserProgressData;
   isLoading: boolean;
   isPremium: boolean;
+  totalArticlesCount: number;
+  setTotalArticlesCount: (count: number) => void;
   isPageRead: (pagePath: string) => boolean;
   togglePageRead: (pagePath: string) => Promise<void>;
+  markPageAsRead: (pagePath: string) => Promise<void>;
   saveQuiz: (
     quizKey: string,
     quizState: QuizStateItem,
@@ -94,8 +98,11 @@ const UserProgressContext = createContext<UserProgressContextType>({
   progress: defaultUserProgress,
   isLoading: true,
   isPremium: false,
+  totalArticlesCount: TOTAL_TRACKABLE_ARTICLES_DEFAULT,
+  setTotalArticlesCount: () => {},
   isPageRead: () => false,
   togglePageRead: async () => {},
+  markPageAsRead: async () => {},
   saveQuiz: async () => {},
   saveDSA: async () => {},
   unlockPremium: async () => false,
@@ -163,11 +170,38 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+
   const [progress, setProgressState] = useState<UserProgressData>(() => {
     const cached = loadCachedProgress();
     return cached || defaultUserProgress;
   });
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [totalArticlesCount, setTotalArticlesCountState] = useState<number>(() => {
+    if (typeof window === 'undefined') return TOTAL_TRACKABLE_ARTICLES_DEFAULT;
+    try {
+      const saved = localStorage.getItem('total_articles_count');
+      const parsed = saved ? parseInt(saved, 10) : 0;
+      if (parsed > 0 && parsed <= 620) {
+        return parsed;
+      }
+      return TOTAL_TRACKABLE_ARTICLES_DEFAULT;
+    } catch {
+      return TOTAL_TRACKABLE_ARTICLES_DEFAULT;
+    }
+  });
+
+  const setTotalArticlesCount = (count: number) => {
+    if (count > 0 && count <= 650 && count !== totalArticlesCount) {
+      setTotalArticlesCountState(count);
+      if (typeof window !== 'undefined') {
+        try {
+          localStorage.setItem('total_articles_count', count.toString());
+        } catch {
+          // Ignore localStorage errors
+        }
+      }
+    }
+  };
 
   const setProgress = (updater: React.SetStateAction<UserProgressData>) => {
     setProgressState((prev) => {
@@ -221,17 +255,33 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const togglePageRead = async (pagePath: string): Promise<void> => {
-    if (!currentUser) {
-      // Fallback local update if not logged in
-      const exists = progress.readPages.includes(pagePath);
-      const updated = exists
-        ? progress.readPages.filter((p) => p !== pagePath)
-        : [...progress.readPages, pagePath];
-      setProgress((prev) => ({ ...prev, readPages: updated }));
-      return;
-    }
     const isReadNow = !isPageRead(pagePath);
-    await toggleDocPageRead(currentUser.uid, pagePath, isReadNow);
+
+    // Optimistic update for instant UI feedback & localStorage cache
+    setProgress((prev) => {
+      const exists = prev.readPages.includes(pagePath);
+      const updated = exists
+        ? prev.readPages.filter((p) => p !== pagePath)
+        : [...prev.readPages, pagePath];
+      return { ...prev, readPages: updated };
+    });
+
+    if (currentUser) {
+      await toggleDocPageRead(currentUser.uid, pagePath, isReadNow);
+    }
+  };
+
+  const markPageAsRead = async (pagePath: string): Promise<void> => {
+    if (isPageRead(pagePath)) return;
+
+    setProgress((prev) => {
+      if (prev.readPages.includes(pagePath)) return prev;
+      return { ...prev, readPages: [...prev.readPages, pagePath] };
+    });
+
+    if (currentUser) {
+      await toggleDocPageRead(currentUser.uid, pagePath, true);
+    }
   };
 
   const saveQuiz = async (
@@ -313,14 +363,14 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const saveDSA = async (solved: string[], starred: string[]): Promise<void> => {
-    if (!currentUser) {
-      setProgress((prev) => ({
-        ...prev,
-        dsaProgress: { solvedProblems: solved, starredProblems: starred },
-      }));
-      return;
+    setProgress((prev) => ({
+      ...prev,
+      dsaProgress: { solvedProblems: solved, starredProblems: starred },
+    }));
+
+    if (currentUser) {
+      await saveDSAProgressToFirestore(currentUser.uid, solved, starred);
     }
-    await saveDSAProgressToFirestore(currentUser.uid, solved, starred);
   };
 
   return (
@@ -330,8 +380,11 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
         progress,
         isLoading,
         isPremium: isPremiumUnlocked,
+        totalArticlesCount,
+        setTotalArticlesCount,
         isPageRead,
         togglePageRead,
+        markPageAsRead,
         saveQuiz,
         saveDSA,
         unlockPremium,
