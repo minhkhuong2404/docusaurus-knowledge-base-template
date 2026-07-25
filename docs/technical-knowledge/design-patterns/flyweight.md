@@ -43,37 +43,12 @@ In a publishing company, printing 100,000 copies of a book doesn't mean the auth
 
 ---
 
+import FlyweightDiagram from '@site/src/components/FlyweightDiagram';
+
 ## 🏗️ Structure
 
-```mermaid
-classDiagram
-    class FlyweightFactory {
-        -cache: Map
-        +getFlyweight(repeatingState) Flyweight
-    }
-    
-    class Flyweight {
-        -intrinsicState
-        +operation(extrinsicState)
-    }
-    
-    class Context {
-        -extrinsicState
-        -flyweight: Flyweight
-        +Context(intrinsicState, extrinsicState)
-        +operation()
-    }
-    
-    class Client
+<FlyweightDiagram />
 
-    Client --> Context
-    Client --> FlyweightFactory
-    FlyweightFactory o--> Flyweight
-    Context --> Flyweight
-    
-    note for FlyweightFactory "getFlyweight(state) {\n    if (flyweight doesn't exist) {\n       create new;\n       add to cache;\n    }\n    return flyweight;\n}"
-    note for Context "operation() {\n    flyweight.operation(extrinsicState);\n}"
-```
 
 ---
 

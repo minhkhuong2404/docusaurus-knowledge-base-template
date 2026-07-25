@@ -47,45 +47,12 @@ The tower doesn't need to control the whole flight. It exists only to enforce co
 
 ---
 
+import MediatorDiagram from '@site/src/components/MediatorDiagram';
+
 ## 🏗️ Structure
 
-```mermaid
-classDiagram
-    class Mediator {
-        <<interface>>
-        +notify(sender: Component, event: String)
-    }
-    
-    class ConcreteMediator {
-        -component1: Component1
-        -component2: Component2
-        +notify(sender, event)
-    }
-    
-    class BaseComponent {
-        #dialog: Mediator
-        +BaseComponent(m: Mediator)
-    }
-    
-    class Component1 {
-        +doA()
-    }
-    
-    class Component2 {
-        +doB()
-        +doC()
-    }
+<MediatorDiagram />
 
-    BaseComponent --> Mediator
-    Mediator <|.. ConcreteMediator
-    BaseComponent <|-- Component1
-    BaseComponent <|-- Component2
-    ConcreteMediator o--> Component1
-    ConcreteMediator o--> Component2
-    
-    note for ConcreteMediator "notify(sender, event) {\n    if (sender == component1 && event == 'A') {\n        component2.doC();\n    }\n}"
-    note for Component1 "doA() {\n    dialog.notify(this, 'A');\n}"
-```
 
 ---
 

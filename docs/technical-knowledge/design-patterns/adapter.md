@@ -74,33 +74,12 @@ You don't need to touch the hundreds of existing classes that use `PaymentProces
 
 ---
 
+import AdapterDiagram from '@site/src/components/AdapterDiagram';
+
 ## 🏗️ Structure
 
-```mermaid
-classDiagram
-    class Target {
-        <<interface>>
-        +request()
-    }
-    
-    class Adapter {
-        -adaptee: Adaptee
-        +Adapter(a: Adaptee)
-        +request()
-    }
-    
-    class Adaptee {
-        +specificRequest()
-    }
-    
-    class Client
+<AdapterDiagram />
 
-    Client --> Target
-    Target <|.. Adapter
-    Adapter --> Adaptee
-    
-    note for Adapter "request() {\n    adaptee.specificRequest();\n}"
-```
 
 ---
 

@@ -404,5 +404,64 @@
   flex-shrink: 0;
 }
 
+/* ==========================================================================
+   Mobile & Responsive Media Queries
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .interactive-diagram-container {
+    padding: 1rem !important;
+    margin: 1.25rem 0 !important;
+    border-radius: 12px !important;
+  }
+
+  .interactive-diagram-header {
+    font-size: 0.88rem !important;
+    gap: 0.4rem !important;
+  }
+
+  .interactive-diagram-details-card {
+    padding: 1rem !important;
+    min-height: auto !important;
+  }
+
+  /* Force multi-column split panes into single stacked column on mobile */
+  .interactive-diagram-container [style*="grid-template-columns"],
+  .interactive-diagram-container [style*="gridTemplateColumns"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Ensure pre code traces scroll horizontally on mobile without breaking layout */
+  .interactive-diagram-container pre {
+    overflow-x: auto !important;
+    max-width: 100% !important;
+    word-break: break-word !important;
+    font-size: 10px !important;
+  }
+
+  /* Ensure math formula cards scroll horizontally */
+  .math-formula-card {
+    padding: 10px 12px !important;
+    font-size: 0.9rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .interactive-diagram-container {
+    padding: 0.75rem !important;
+    margin: 1rem 0 !important;
+  }
+
+  .interactive-diagram-header {
+    font-size: 0.82rem !important;
+  }
+
+  .interactive-diagram-container button {
+    padding: 8px 10px !important;
+    font-size: 11px !important;
+  }
+}
+
+
 
 

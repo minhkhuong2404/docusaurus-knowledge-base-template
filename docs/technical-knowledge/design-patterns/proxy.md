@@ -41,34 +41,12 @@ A credit card is a proxy for a bank account, which in turn is a proxy for a bund
 
 ---
 
+import ProxyDiagram from '@site/src/components/ProxyDiagram';
+
 ## 🏗️ Structure
 
-```mermaid
-classDiagram
-    class Subject {
-        <<interface>>
-        +request()
-    }
-    
-    class RealSubject {
-        +request()
-    }
-    
-    class Proxy {
-        -realSubject: RealSubject
-        +checkAccess() boolean
-        +request()
-    }
-    
-    class Client
+<ProxyDiagram />
 
-    Client --> Subject
-    Subject <|.. RealSubject
-    Subject <|.. Proxy
-    Proxy o--> RealSubject
-    
-    note for Proxy "request() {\n    if (checkAccess()) {\n        if (realSubject == null) {\n            realSubject = new RealSubject();\n        }\n        realSubject.request();\n    }\n}"
-```
 
 ---
 

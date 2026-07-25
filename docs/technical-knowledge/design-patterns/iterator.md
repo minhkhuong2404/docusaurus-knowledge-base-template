@@ -49,42 +49,12 @@ All of these options—the random directions, the smartphone navigator, and the 
 
 ---
 
+import IteratorDiagram from '@site/src/components/IteratorDiagram';
+
 ## 🏗️ Structure
 
-```mermaid
-classDiagram
-    class Iterator {
-        <<interface>>
-        +getNext()
-        +hasMore() boolean
-    }
-    
-    class IterableCollection {
-        <<interface>>
-        +createIterator() Iterator
-    }
-    
-    class ConcreteCollection {
-        +createIterator() Iterator
-    }
-    
-    class ConcreteIterator {
-        -collection: ConcreteCollection
-        -iterationState
-        +ConcreteIterator(c: ConcreteCollection)
-        +getNext()
-        +hasMore() boolean
-    }
-    
-    class Client
+<IteratorDiagram />
 
-    Client --> Iterator
-    Client --> IterableCollection
-    Client ..> ConcreteIterator: creates via collection
-    IterableCollection <|.. ConcreteCollection
-    Iterator <|.. ConcreteIterator
-    ConcreteCollection --> ConcreteIterator : instantiates
-```
 
 ---
 

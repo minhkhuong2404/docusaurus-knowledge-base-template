@@ -80,48 +80,12 @@ The UI components (Button, Checkbox) contain the high-level logic (e.g., handlin
 
 ---
 
+import BridgeDiagram from '@site/src/components/BridgeDiagram';
+
 ## 🏗️ Structure
 
-```mermaid
-classDiagram
-    class Abstraction {
-        -implementation: Implementation
-        +Abstraction(i: Implementation)
-        +feature1()
-        +feature2()
-    }
-    
-    class RefinedAbstraction {
-        +featureN()
-    }
-    
-    class Implementation {
-        <<interface>>
-        +method1()
-        +method2()
-        +method3()
-    }
-    
-    class ConcreteImplementationA {
-        +method1()
-        +method2()
-        +method3()
-    }
-    
-    class ConcreteImplementationB {
-        +method1()
-        +method2()
-        +method3()
-    }
-    
-    class Client
+<BridgeDiagram />
 
-    Abstraction o--> Implementation
-    Abstraction <|-- RefinedAbstraction
-    Implementation <|.. ConcreteImplementationA
-    Implementation <|.. ConcreteImplementationB
-    Client --> Abstraction
-```
 
 ---
 

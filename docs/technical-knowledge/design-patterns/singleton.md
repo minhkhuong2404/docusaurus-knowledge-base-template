@@ -52,21 +52,12 @@ The government is an excellent analogy for the Singleton pattern. A country can 
 
 ---
 
+import SingletonDiagram from '@site/src/components/SingletonDiagram';
+
 ## 🏗️ Structure
 
-```mermaid
-classDiagram
-    class Singleton {
-        -static instance: Singleton
-        -Singleton()
-        +static getInstance() Singleton
-        +doSomething()
-    }
-    
-    note for Singleton "getInstance() {\n    if (instance == null) {\n        instance = new Singleton();\n    }\n    return instance;\n}"
-    
-    Client --> Singleton
-```
+<SingletonDiagram />
+
 
 ---
 

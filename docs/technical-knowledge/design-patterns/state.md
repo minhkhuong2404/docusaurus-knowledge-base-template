@@ -53,50 +53,12 @@ The buttons and switches in your smartphone behave differently depending on the 
 
 ---
 
+import StatePatternDiagram from '@site/src/components/StatePatternDiagram';
+
 ## 🏗️ Structure
 
-```mermaid
-classDiagram
-    class Context {
-        -state: State
-        +Context(initialState)
-        +changeState(state)
-        +doThis()
-        +doThat()
-    }
-    
-    class State {
-        <<interface>>
-        +doThis()
-        +doThat()
-    }
-    
-    class ConcreteStateA {
-        -context: Context
-        +setContext(c)
-        +doThis()
-        +doThat()
-    }
-    
-    class ConcreteStateB {
-        -context: Context
-        +setContext(c)
-        +doThis()
-        +doThat()
-    }
-    
-    class Client
+<StatePatternDiagram />
 
-    Client --> Context
-    Context o--> State
-    State <|.. ConcreteStateA
-    State <|.. ConcreteStateB
-    ConcreteStateA --> Context : back-reference
-    ConcreteStateB --> Context : back-reference
-    
-    note for Context "doThis() {\n    state.doThis();\n}"
-    note for ConcreteStateA "doThis() {\n    // do work\n    context.changeState(new ConcreteStateB());\n}"
-```
 
 ---
 

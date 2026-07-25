@@ -50,33 +50,12 @@ Another everyday analogy is formatting a document. Instead of creating a new doc
 
 ---
 
+import PrototypeDiagram from '@site/src/components/PrototypeDiagram';
+
 ## 🏗️ Structure
 
-```mermaid
-classDiagram
-    class Prototype {
-        <<interface>>
-        +clone() Prototype
-    }
-    
-    class ConcretePrototype {
-        -field1
-        +ConcretePrototype(source: ConcretePrototype)
-        +clone() Prototype
-    }
-    
-    class SubclassPrototype {
-        -field2
-        +SubclassPrototype(source: SubclassPrototype)
-        +clone() Prototype
-    }
-    
-    class Client
+<PrototypeDiagram />
 
-    Prototype <|.. ConcretePrototype
-    ConcretePrototype <|-- SubclassPrototype
-    Client ..> Prototype
-```
 
 ---
 

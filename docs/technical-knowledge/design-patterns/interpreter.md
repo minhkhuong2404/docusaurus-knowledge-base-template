@@ -36,9 +36,16 @@ While extremely powerful for parsing custom Domain-Specific Languages (DSLs) or 
 - The grammar of your language is simple. If it's complex, the object tree becomes unmanageably massive.
 - Efficiency is NOT a critical concern (building the object tree is slow).
 
+import InterpreterDiagram from '@site/src/components/InterpreterDiagram';
+
+## 🏗️ Structure
+
+<InterpreterDiagram />
+
 ---
 
 ## How It Works
+
 
 ### Boolean Logic Evaluator Example
 

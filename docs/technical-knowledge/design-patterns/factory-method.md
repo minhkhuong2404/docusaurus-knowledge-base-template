@@ -49,41 +49,12 @@ A `RoadLogistics` manager creates `Truck` objects for ground delivery, whereas a
 
 ---
 
+import FactoryMethodDiagram from '@site/src/components/FactoryMethodDiagram';
+
 ## 🏗️ Structure
 
-```mermaid
-classDiagram
-    class Product {
-        <<interface>>
-        +doStuff()
-    }
-    class ConcreteProductA {
-        +doStuff()
-    }
-    class ConcreteProductB {
-        +doStuff()
-    }
-    
-    class Creator {
-        <<abstract>>
-        +someOperation()
-        +createProduct()* Product
-    }
-    class ConcreteCreatorA {
-        +createProduct() Product
-    }
-    class ConcreteCreatorB {
-        +createProduct() Product
-    }
+<FactoryMethodDiagram />
 
-    Product <|.. ConcreteProductA
-    Product <|.. ConcreteProductB
-    Creator <|-- ConcreteCreatorA
-    Creator <|-- ConcreteCreatorB
-    
-    ConcreteCreatorA ..> ConcreteProductA
-    ConcreteCreatorB ..> ConcreteProductB
-```
 
 ---
 

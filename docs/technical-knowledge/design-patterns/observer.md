@@ -46,37 +46,12 @@ The publisher maintains a list of subscribers and knows which magazines they're 
 
 ---
 
+import ObserverDiagram from '@site/src/components/ObserverDiagram';
+
 ## 🏗️ Structure
 
-```mermaid
-classDiagram
-    class Publisher {
-        -subscribers: List~Subscriber~
-        -mainState
-        +subscribe(s: Subscriber)
-        +unsubscribe(s: Subscriber)
-        +notifySubscribers()
-        +mainBusinessLogic()
-    }
-    
-    class Subscriber {
-        <<interface>>
-        +update(context)
-    }
-    
-    class ConcreteSubscriber {
-        +update(context)
-    }
-    
-    class Client
+<ObserverDiagram />
 
-    Client --> Publisher
-    Client ..> ConcreteSubscriber: creates
-    Publisher o--> Subscriber
-    Subscriber <|.. ConcreteSubscriber
-    
-    note for Publisher "notifySubscribers() {\n    for (s in subscribers) {\n        s.update(this);\n    }\n}"
-```
 
 ---
 

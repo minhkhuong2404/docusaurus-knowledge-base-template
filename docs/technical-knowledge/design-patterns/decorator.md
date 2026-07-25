@@ -77,47 +77,12 @@ You can dynamically assemble the exact client you need at startup: `new LoggingH
 
 ---
 
+import DecoratorDiagram from '@site/src/components/DecoratorDiagram';
+
 ## 🏗️ Structure
 
-```mermaid
-classDiagram
-    class Component {
-        <<interface>>
-        +execute()
-    }
-    
-    class ConcreteComponent {
-        +execute()
-    }
-    
-    class BaseDecorator {
-        -wrappee: Component
-        +BaseDecorator(c: Component)
-        +execute()
-    }
-    
-    class ConcreteDecoratorA {
-        -extraState
-        +execute()
-    }
-    
-    class ConcreteDecoratorB {
-        +execute()
-        +extraBehavior()
-    }
-    
-    class Client
+<DecoratorDiagram />
 
-    Component <|.. ConcreteComponent
-    Component <|.. BaseDecorator
-    BaseDecorator o--> Component
-    BaseDecorator <|-- ConcreteDecoratorA
-    BaseDecorator <|-- ConcreteDecoratorB
-    Client --> Component
-    
-    note for BaseDecorator "execute() {\n    wrappee.execute();\n}"
-    note for ConcreteDecoratorB "execute() {\n    super.execute();\n    extraBehavior();\n}"
-```
 
 ---
 

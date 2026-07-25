@@ -46,33 +46,12 @@ When you play a video game, you usually rely on the ability to save your progres
 
 ---
 
+import MementoDiagram from '@site/src/components/MementoDiagram';
+
 ## 🏗️ Structure
 
-```mermaid
-classDiagram
-    class Originator {
-        -state
-        +save() Memento
-        +restore(m: Memento)
-    }
-    
-    class Memento {
-        -state
-        +Memento(state)
-        +getState()
-    }
-    
-    class Caretaker {
-        -history: List~Memento~
-        -originator: Originator
-        +doSomething()
-        +undo()
-    }
+<MementoDiagram />
 
-    Caretaker o--> Memento
-    Caretaker --> Originator
-    Originator ..> Memento : creates
-```
 
 ---
 
