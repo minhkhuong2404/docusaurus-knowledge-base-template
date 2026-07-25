@@ -9,6 +9,11 @@
   display: none !important;
 }
 
+/* Hide default Docusaurus Back-to-Top button to prevent overlap with custom ScrollProgressButton */
+.theme-back-to-top-button {
+  display: none !important;
+}
+
 /* ============================================
    Code Block Styling — Catppuccin Mocha Theme
    ============================================ */
