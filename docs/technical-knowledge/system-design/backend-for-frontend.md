@@ -13,6 +13,13 @@ tags:
   - graphql
 ---
 
+import BffDataFetchingDiagram from '@site/src/components/BffDataFetchingDiagram';
+import BffArchitectureDiagram from '@site/src/components/BffArchitectureDiagram';
+import BffProjectStructureDiagram from '@site/src/components/BffProjectStructureDiagram';
+import BffOAuthTokenHandlerDiagram from '@site/src/components/BffOAuthTokenHandlerDiagram';
+import BffCachingStrategyDiagram from '@site/src/components/BffCachingStrategyDiagram';
+import BffObservabilityDiagram from '@site/src/components/BffObservabilityDiagram';
+
 # Backend for Frontend (BFF)
 
 The **Backend for Frontend (BFF)** pattern creates a **dedicated backend service per client type** — mobile app, web dashboard, Smart TV, third-party API — instead of one shared, generic API layer. Each BFF speaks exactly the language of its client: it fetches from the right downstream services, aggregates the data, trims it to the exact shape the client needs, and returns a single optimized response.
@@ -25,91 +32,13 @@ The name comes from Sam Newman's microservices work. The driving insight: **clie
 
 ### Over-fetching and Under-fetching
 
-```
-Mobile app home screen needs:
-  firstName, avatarThumbnailUrl, last 3 orders (id, status, total), loyaltyPoints
-
-Web dashboard home screen needs:
-  fullProfile (20 fields), last 20 orders (40 fields each),
-  analytics (lifetime value, return rate, frequency),
-  openSupportTickets, recentActivityFeed
-
-Shared API choice A — return everything:
-  Mobile receives 15KB JSON. Needs 800 bytes. Wastes bandwidth on 3G/4G.
-  Every field is a potential data exposure risk on mobile.
-
-Shared API choice B — return minimal data:
-  Web dashboard makes 5 sequential round-trips:
-    GET /users/{id}              → 200ms
-    GET /orders?userId={id}     → 250ms (must wait for userId first)
-    GET /analytics/{id}         → 300ms
-    GET /tickets?userId={id}    → 150ms
-    GET /activity/{id}          → 200ms
-    Total: 1,100ms — and this is sequential!
-```
-
-### Change Coupling
-
-```
-Shared API:
-  Web team needs: rename "orderDate" → "createdAt" for consistency with new schema
-  Mobile team has 3 million active devices still on old app version expecting "orderDate"
-  
-  Options:
-    A. Maintain both field names forever (API bloat)
-    B. Force mobile to ship an update before web changes (team coordination tax)
-    C. Version the entire API (operational nightmare)
-
-With BFF:
-  Web BFF:    rename "orderDate" → "createdAt" in web BFF mapper. Done. Deploy.
-  Mobile BFF: keeps "orderDate" until mobile app version adoption reaches threshold.
-  Zero coordination between teams.
-```
+<BffDataFetchingDiagram />
 
 ---
 
 ## Architecture: The Full Picture
 
-```mermaid
-graph TD
-    subgraph Clients
-        Mobile["📱 Mobile App\n(iOS / Android)"]
-        Web["🖥️ Web Dashboard\n(React / Vue)"]
-        TV["📺 Smart TV App"]
-        Partner["🔌 Partner APIs\n(3rd Party B2B)"]
-    end
-
-    subgraph BFF Layer
-        MBFF["Mobile BFF\n(Node.js / lightweight)\nOwned by Mobile Team"]
-        WBFF["Web BFF\n(Spring Boot)\nOwned by Web Team"]
-        TBFF["TV BFF\n(Node.js)\nOwned by TV Team"]
-        PBFF["Partner BFF\n(Spring Boot)\nRate limits, versioning, SLAs\nOwned by Platform Team"]
-    end
-
-    subgraph "API Gateway (Cross-cutting)"
-        GW["API Gateway\nAuth, TLS termination\nRoute → BFF"]
-    end
-
-    subgraph Microservices
-        US["User Service"]
-        OS["Order Service"]
-        LS["Loyalty Service"]
-        AS["Analytics Service"]
-        SS["Support Service"]
-        PS["Product Service"]
-        IS["Inventory Service"]
-    end
-
-    Mobile --> GW --> MBFF
-    Web --> GW --> WBFF
-    TV --> GW --> TBFF
-    Partner --> GW --> PBFF
-
-    MBFF --> US & OS & LS
-    WBFF --> US & OS & AS & SS
-    TBFF --> PS
-    PBFF --> OS & IS
-```
+<BffArchitectureDiagram />
 
 **API Gateway vs. BFF responsibility split:**
 
@@ -131,32 +60,7 @@ graph TD
 
 ### Project Structure
 
-```
-web-bff/
-├── src/main/java/com/example/webbff/
-│   ├── WebBffApplication.java
-│   ├── config/
-│   │   ├── WebClientConfig.java         ← Reactive HTTP clients (non-blocking)
-│   │   ├── ResilienceConfig.java        ← Circuit breakers, timeouts
-│   │   └── CacheConfig.java
-│   ├── controller/
-│   │   ├── DashboardController.java
-│   │   └── OrderDetailController.java
-│   ├── client/
-│   │   ├── UserServiceClient.java
-│   │   ├── OrderServiceClient.java
-│   │   ├── AnalyticsServiceClient.java
-│   │   └── SupportServiceClient.java
-│   ├── composer/
-│   │   └── DashboardComposer.java       ← Fan-out + merge + transform
-│   ├── mapper/
-│   │   └── WebResponseMapper.java       ← Domain → Web DTO transformation
-│   └── dto/
-│       ├── request/
-│       └── response/
-└── src/main/resources/
-    └── application.yml
-```
+<BffProjectStructureDiagram />
 
 ### WebClient Configuration (Non-blocking HTTP)
 
@@ -668,34 +572,7 @@ query WebDashboard($userId: ID!) {
 
 The BFF is the ideal place to implement the **Token Handler Pattern**, which keeps OAuth access tokens completely out of browser JavaScript — eliminating the XSS token theft attack surface.
 
-```mermaid
-sequenceDiagram
-    participant B as Browser (React)
-    participant BFF as Web BFF
-    participant Auth as Auth Server (Keycloak)
-    participant API as Microservices
-
-    B->>BFF: GET /auth/login
-    BFF->>Auth: Redirect → Authorization Code flow (PKCE)
-    Auth-->>B: Redirect to /auth/callback?code=abc123
-    B->>BFF: GET /auth/callback?code=abc123
-    BFF->>Auth: POST /token {code, code_verifier, client_secret}
-    Auth-->>BFF: {access_token, refresh_token, expires_in}
-    BFF->>BFF: Store tokens in encrypted, server-side session
-    BFF-->>B: Set-Cookie: session=<opaque-session-id> HttpOnly; Secure; SameSite=Strict
-    Note over B: Browser holds ONLY the opaque session cookie<br>access_token is NEVER sent to browser JS
-
-    B->>BFF: GET /api/dashboard (cookie auto-attached by browser)
-    BFF->>BFF: Lookup session → retrieve access_token
-    BFF->>API: GET /internal/dashboard\nAuthorization: Bearer {access_token}
-    API-->>BFF: Dashboard data
-    BFF-->>B: Dashboard JSON (no token in response)
-
-    Note over BFF: When access_token expires:
-    BFF->>Auth: POST /token {grant_type: refresh_token, refresh_token}
-    Auth-->>BFF: New {access_token, refresh_token}
-    BFF->>BFF: Update session. Browser unaware — transparent refresh.
-```
+<BffOAuthTokenHandlerDiagram />
 
 ### Spring Boot Token Handler Implementation
 
@@ -835,6 +712,8 @@ public class TokenResolutionFilter extends OncePerRequestFilter {
 
 ## BFF Caching Strategy
 
+<BffCachingStrategyDiagram />
+
 A BFF that fetches the same data on every request wastes downstream capacity. Cache aggressively — but invalidate correctly.
 
 ```java
@@ -915,6 +794,8 @@ public class CacheEvictionListener {
 ---
 
 ## Observability
+
+<BffObservabilityDiagram />
 
 A BFF is a composition engine — without metrics, you cannot tell which downstream service is causing latency.
 

@@ -3793,3 +3793,67 @@ table.dsa-dashboard-table tr:hover {
 .clean-btn[aria-label*="Switch between dark and light mode"] {
   display: none !important;
 }
+
+/* ============================================================
+   Mobile — Remove all distracting background decorations
+   ============================================================ */
+@media (max-width: 768px) {
+  /* Hide all solar system background planets */
+  .planet,
+  .planet.mercury,
+  .planet.venus,
+  .planet.earth,
+  .planet.mars,
+  .planet.jupiter,
+  .planet.saturn,
+  .planet.uranus,
+  .planet.neptune {
+    display: none !important;
+  }
+
+  /* Hide all floating comets */
+  .comet,
+  .comet-1,
+  .comet-2,
+  .comet-3,
+  .comet-4 {
+    display: none !important;
+  }
+
+  /* Hide moon decorations */
+  .moon {
+    display: none !important;
+  }
+
+  /* Hide universal background items (galaxies, nebulae, shooting stars, constellations) */
+  .universal-item,
+  .galaxy-1,
+  .galaxy-2,
+  .nebula-1,
+  .nebula-2,
+  .shooting-star-1,
+  .shooting-star-2,
+  .constellation-1,
+  .constellation-2 {
+    display: none !important;
+  }
+
+  /* Hide header bar planet/moon/rocket/comet decorations */
+  .header-planet,
+  .header-planet.earth-h,
+  .header-planet.mars-h,
+  .header-planet.venus-h,
+  .header-moon-h,
+  .header-rocket,
+  .navbar-space-decorations .comet,
+  .header-comet-1,
+  .header-comet-2 {
+    display: none !important;
+  }
+
+  /* Hide the floating planet in the navbar logo area */
+  .navbar-planet-core,
+  .navbar-planet-ring {
+    display: none !important;
+  }
+}

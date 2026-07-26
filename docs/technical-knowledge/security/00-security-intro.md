@@ -7,6 +7,8 @@ description: A comprehensive security reference for software engineers covering 
 tags: [security, overview, authentication, cryptography, owasp, privacy, devsecops]
 ---
 
+import SecurityMentalModelDiagram from '@site/src/components/SecurityMentalModelDiagram';
+
 # Security Knowledge Base
 
 > Security is not a feature you add at the end — it's a property you design in from the start.
@@ -45,23 +47,9 @@ You don't need to be a security specialist. You need to know **enough to write s
 
 ## Security Mental Model
 
-Think of security in **layers** — every layer can fail, so you never rely on just one.
+Think of security in **layers** — every layer can fail, so you never rely on just one. Click any layer below to inspect its technologies, threats, and design principles.
 
-```
-┌─────────────────────────────────────────────────────┐
-│  PERIMETER        WAF · DDoS protection · Firewall   │
-├─────────────────────────────────────────────────────┤
-│  TRANSPORT        TLS 1.3 · mTLS · Certificate mgmt  │
-├─────────────────────────────────────────────────────┤
-│  IDENTITY         AuthN · MFA · SSO · Token rotation  │
-├─────────────────────────────────────────────────────┤
-│  APPLICATION      AuthZ · Input validation · OWASP    │
-├─────────────────────────────────────────────────────┤
-│  DATA             Encryption at rest · Masking · PII   │
-├─────────────────────────────────────────────────────┤
-│  AUDIT            Immutable logs · SIEM · Alerting     │
-└─────────────────────────────────────────────────────┘
-```
+<SecurityMentalModelDiagram />
 
 Attackers **always find the weakest layer**. Defence in depth means there is no single point of failure.
 

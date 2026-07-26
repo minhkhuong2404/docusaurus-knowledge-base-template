@@ -1,8 +1,8 @@
 {
-  "id": "3536",
-  "title": "Maximum Product of Two Digits",
-  "url": "https://leetcode.com/problems/maximum-product-of-two-digits/",
+  "id": "628",
+  "title": "Maximum Product of Three Numbers",
+  "url": "https://leetcode.com/problems/maximum-product-of-three-numbers/",
   "difficulty": "easy",
-  "topic": "Math, Sorting",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-07-25."
+  "topic": "Array, Math, Sorting",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-07-26."
 }

@@ -8,6 +8,12 @@ tags: [api, rest, grpc, graphql, versioning, pagination, rate-limiting, idempote
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import ApiWhatIsDiagram from '@site/src/components/ApiWhatIsDiagram';
+import ApiResourceDesignDiagram from '@site/src/components/ApiResourceDesignDiagram';
+import ApiTokenTypesDiagram from '@site/src/components/ApiTokenTypesDiagram';
+import GrpcCommunicationPatternsDiagram from '@site/src/components/GrpcCommunicationPatternsDiagram';
+import RateLimitingAlgorithmsDiagram from '@site/src/components/RateLimitingAlgorithmsDiagram';
+import ApiGatewayPatternsDiagram from '@site/src/components/ApiGatewayPatternsDiagram';
 
 # API Design — REST, gRPC & GraphQL
 
@@ -23,6 +29,8 @@ When designing an API in a system design interview, spend under 5 minutes on thi
 ---
 
 ## What is an API?
+
+<ApiWhatIsDiagram />
 
 An **API** (Application Programming Interface) is a contract that defines how two systems communicate. It specifies what operations are available, what inputs they accept, what outputs they return, and what errors they can produce.
 
@@ -48,27 +56,13 @@ With a well-designed API:
 | No rate limiting — one bad client DoS's everyone | Rate limiting protects the service for all consumers |
 | `user_id` in request body — attackers act as other users | Identity derived from signed JWT — unforgeable |
 
-### Choosing the right protocol
-
-```
-Is this a public-facing API consumed by browsers or third parties?
-  → REST
-
-Is this an internal service-to-service call where performance matters?
-  → gRPC
-
-Does the client need to fetch deeply nested, flexible data shapes?
-  → GraphQL
-
-Does the server need to push data to the client continuously?
-  → WebSockets (bidirectional) or SSE (server-to-client)
-```
-
 ---
 
 ## REST Fundamentals
 
 ### Resource-oriented design
+
+<ApiResourceDesignDiagram />
 
 REST (Representational State Transfer) treats everything as a **resource** (noun). HTTP methods are the **verbs**. URLs describe *what* you are operating on; methods describe *how*.
 
@@ -208,51 +202,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
 
 ### Token types
 
-<Tabs>
-  <TabItem value="jwt" label="JWT (stateless)">
-
-```
-Header.Payload.Signature
-eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjQyLCJyb2xlIjoiVVNFUiIsImV4cCI6MTcwNTMyNzgwMH0.xyz
-
-Payload (decoded):
-{
-  "userId": 42,
-  "role": "USER",
-  "exp": 1705327800   ← expiry — short-lived (15min–1hr)
-}
-```
-
-**Pros:** Stateless — server validates signature without a DB lookup. Works across multiple server instances.
-
-**Cons:** Cannot be invalidated before expiry (see [Refresh Token Security & Multi-Device Session Invalidation](../security/refresh-token-security-invalidation.md) for rotation and invalidation patterns).
-
-  </TabItem>
-  <TabItem value="session" label="Session Token (stateful)">
-
-```
-Cookie: sessionId=4bf92f3577b34da6a3ce929d0e0e4736
-```
-
-Server looks up `sessionId` in Redis/DB to get the user context.
-
-**Pros:** Immediately revocable — delete the session record to log out.
-
-**Cons:** Requires session store — adds latency; doesn't scale across stateless services without a shared store.
-
-  </TabItem>
-  <TabItem value="apikey" label="API Key (machine-to-machine)">
-
-```
-X-API-Key: sk_live_4bf92f3577b34da6a3ce929d0e0e4736
-```
-
-**Pros:** Simple for M2M integrations. Easy to scope (read-only, rate-limit by key).
-
-**Cons:** Long-lived — rotation policy required. No user identity embedded.
-
-  </TabItem>
-</Tabs>
+<ApiTokenTypesDiagram />
 
 ---
 
@@ -398,26 +348,7 @@ Protobuf uses field numbers (not names) in the binary encoding. Changing `int64 
 
 ### Four gRPC communication patterns
 
-```
-1. Unary (request-response — most common)
-   Client: GetOrder(id=42)  →  Server: OrderResponse
-
-2. Server streaming (server pushes multiple responses)
-   Client: StreamOrders(userId=7)  →  Server: order1, order2, order3... END
-
-3. Client streaming (client pushes multiple requests)
-   Client: item1, item2, item3... END  →  Server: BulkSummary
-
-4. Bidirectional streaming (both sides stream simultaneously)
-   Client: HeartBeat  ⇄  Server: OrderUpdate (like WebSockets over HTTP/2)
-```
-
-| Pattern | Use case |
-|---------|---------|
-| Unary | Standard CRUD — get, create, update, delete |
-| Server streaming | Live order updates, log tailing, large file downloads |
-| Client streaming | Bulk data upload, batch inserts, chunked file upload |
-| Bidirectional | Real-time chat, collaborative editing, live dashboards |
+<GrpcCommunicationPatternsDiagram />
 
 ### Spring Boot gRPC implementation
 
@@ -783,6 +714,8 @@ const server = new ApolloServer({
 
 ## Rate Limiting
 
+<RateLimitingAlgorithmsDiagram />
+
 Rate limiting protects your API from abuse, accidental traffic spikes, DDoS attacks, and noisy-neighbour effects.
 
 ### Algorithm comparison
@@ -1110,34 +1043,9 @@ Use SSE when:
 
 ## API Gateway Patterns
 
+<ApiGatewayPatternsDiagram />
+
 An API gateway is a reverse proxy that sits in front of all services — handling cross-cutting concerns so individual services don't have to.
-
-```
-Mobile app   ─┐
-Web browser  ─┤                           ┌─► Order Service
-3rd party   ─┘                            │
-                → API Gateway → Routes ───┼─► User Service
-                  ├─ Auth (JWT validation)│
-                  ├─ Rate limiting        └─► Payment Service
-                  ├─ Request routing
-                  ├─ SSL termination
-                  ├─ Request/response logging
-                  └─ Circuit breaking
-```
-
-### What belongs in the gateway vs. the service
-
-| Concern | Gateway | Service |
-|---------|:-------:|:-------:|
-| TLS termination | ✅ | ❌ |
-| JWT signature validation | ✅ | ❌ |
-| Rate limiting (global) | ✅ | ❌ |
-| Request routing | ✅ | ❌ |
-| CORS headers | ✅ | Optional |
-| Authorization (business rules) | ❌ | ✅ |
-| Business logic | ❌ | ✅ |
-| Data validation | ❌ | ✅ |
-| Database access | ❌ | ✅ |
 
 :::warning[Don't put business logic in the gateway]
 The gateway should be a dumb pipe for cross-cutting infrastructure concerns. Business rules ("can this user see this order?") must live in the service — they depend on business data the gateway doesn't have.
@@ -1428,29 +1336,29 @@ public class TraceIdFilter extends OncePerRequestFilter {
 
 ## Interview Questions
 
-**Q1. What makes an API truly RESTful, and what is HATEOAS?**
-> REST satisfies six constraints: client-server separation, statelessness (no session on server), cacheability, uniform interface (resource URIs + standard HTTP methods), layered system, and optionally code-on-demand. Most "REST APIs" are actually HTTP APIs — they miss **HATEOAS** (Hypermedia as the Engine of Application State): including navigable links in responses (`"links": {"cancel": "/orders/42/cancel"}`) so clients discover capabilities dynamically rather than hardcoding URLs. HATEOAS decouples clients from API structure but adds implementation complexity — most teams consciously omit it.
+### Q1. What makes an API truly RESTful, and what is HATEOAS?
+> **REST satisfies six constraints:** client-server separation, statelessness, cacheability, uniform interface, layered system, and optional code-on-demand. Most "REST APIs" are actually HTTP APIs — they omit **HATEOAS** (*Hypermedia as the Engine of Application State*): embedding navigable links inside JSON responses (`"links": {"cancel": "/orders/42/cancel"}`) so clients discover server capabilities dynamically without hardcoding endpoint URLs.
 
-**Q2. What is the difference between PUT and PATCH?**
-> `PUT` replaces the **entire** resource — you send the complete new state; omitted fields become null/default. `PUT` is always idempotent. `PATCH` partially updates — only send the fields to change; omitted fields are untouched. `PATCH` is not inherently idempotent (`{"count": "+1"}` applied twice doubles the increment). For most update operations, `PATCH` is preferred — it avoids accidental data loss from omitting fields and reduces payload size.
+### Q2. What is the difference between PUT and PATCH?
+> **`PUT` replaces the entire resource** — you send the complete new representation; omitted fields are overwritten with null or defaults. `PUT` is strictly idempotent. **`PATCH` applies a partial delta update** — only send the modified fields; omitted fields are untouched. `PATCH` is not inherently idempotent (e.g. `{"increment": 1}` applied twice increases the counter twice).
 
-**Q3. Why use cursor-based pagination over offset pagination?**
-> Offset pagination (`LIMIT N OFFSET M`) has two problems at scale: (1) the database must scan and discard M rows before returning N — at OFFSET 100,000 this is a full-table scan; (2) concurrent inserts shift rows between pages — clients see duplicates or skip items. Cursor/keyset pagination uses a `WHERE (created_at, id) < (cursor_ts, cursor_id)` clause — the index is used directly, no rows are discarded, and new inserts don't affect existing pages. The trade-off: no random page access (you can't jump to page 500) — but this is rarely needed in practice.
+### Q3. Why use cursor-based pagination over offset pagination?
+> Offset pagination (`LIMIT N OFFSET M`) requires the database to scan and discard M rows before returning N — resulting in **O(offset) performance degradation** at scale. Furthermore, concurrent row inserts cause skipped or duplicate items across pages. Cursor pagination uses index comparisons (`WHERE (created_at, id) < (cursor_ts, cursor_id)`) to jump directly to the target record with **O(1) index lookup time**.
 
-**Q4. When would you choose gRPC over REST for internal services?**
-> gRPC is preferred for internal service-to-service calls when: (1) payload size matters — Protobuf is 3–10× smaller than JSON for equivalent data; (2) strong typed contracts are needed — the `.proto` file generates type-safe clients in all languages; (3) streaming is required — native bidirectional streaming over HTTP/2 without WebSocket complexity; (4) high throughput — HTTP/2 multiplexing eliminates head-of-line blocking. REST remains standard for public APIs because browsers consume JSON natively, firewalls understand HTTP/1.1, and third-party developers don't want to set up Protobuf tooling.
+### Q4. When would you choose gRPC over REST for internal services?
+> **Choose gRPC for internal service-to-service calls when:** (1) Payload size matters — Protobuf is 3–10× smaller than JSON; (2) Strong typed contracts are required — `.proto` files generate type-safe clients across polyglot languages; (3) Streaming is required — native HTTP/2 multiplexed streaming; (4) High throughput — zero head-of-line blocking.
 
-**Q5. What is the N+1 problem in GraphQL and how does DataLoader solve it?**
-> When a GraphQL query resolves a list of N orders each with a user, the naive resolver calls the database once per user — N+1 total queries. DataLoader batches requests: instead of fetching user immediately per order, it defers and collects all user IDs requested during one event-loop tick, then issues a single `SELECT * FROM users WHERE id IN (...)`. This collapses N+1 queries into 2 — one for orders, one batched for all users. DataLoader also caches results within the request scope, deduplications duplicate IDs automatically.
+### Q5. What is the N+1 problem in GraphQL and how does DataLoader solve it?
+> The N+1 problem occurs when resolving a list of N parent items causes N separate database queries for child entities. **DataLoader solves this via batching and caching:** it defers individual resolver calls, aggregates all requested IDs within the single event-loop tick, and issues a single batched query (`WHERE id IN (...)`), collapsing N+1 database calls into 2.
 
-**Q6. What is idempotency and how do you implement it for a POST payment request?**
-> Idempotency means repeating the same operation N times produces the same result as once. Clients must safely retry on network failure — without idempotency, a payment retry charges the customer twice. Implementation: require a client-generated `Idempotency-Key` UUID header. On first call, process the payment and store `{key → response}` in Redis with a 24-hour TTL. On subsequent calls with the same key, return the cached response without reprocessing. The key must be scoped to the client ID and endpoint to prevent cross-client collisions.
+### Q6. What is idempotency and how do you implement it for a POST payment request?
+> Idempotency guarantees that executing an operation multiple times produces the exact same server state as a single execution. Implementation requires a client-generated **`Idempotency-Key` UUID header**. Upon processing, the server records `{key → response}` in Redis with a 24-hour TTL; subsequent retries with the same key immediately return the cached response without re-executing state changes.
 
-**Q7. (Senior) Compare Token Bucket and Sliding Window Counter for rate limiting.**
-> **Token Bucket** refills at a constant rate and allows controlled bursts — if a user has 100 tokens and sends 80 at once, all succeed. Simple to implement, memory-efficient (one float per client). Best for consumer APIs where bursts are acceptable. **Sliding Window Counter** estimates the request count across a rolling window using weighted interpolation between the previous and current fixed windows. Eliminates the edge-case spike of fixed-window (where clients can double their rate by straddling window boundaries) while remaining memory-efficient (two integers per client). Best for APIs where boundary accuracy matters without the memory cost of sliding window logs. In practice, the Sliding Window Counter is the industry default for high-volume APIs.
+### Q7. (Senior) Compare Token Bucket and Sliding Window Counter for rate limiting.
+> **Token Bucket** permits controlled traffic bursts up to bucket capacity and refills at a constant rate, making it simple and memory-efficient for public API gateways. **Sliding Window Counter** calculates request velocity using weighted interpolation between rolling fixed windows, eliminating boundary burst spikes while consuming minimal memory (2 integers per client).
 
-**Q8. (Senior) How would you design an API gateway for authentication, rate limiting, and routing across multiple microservices?**
-> The gateway sits in front of all services as a reverse proxy. Auth: validate JWT signature and expiry centrally — extract claims and forward as trusted headers (`X-User-Id`, `X-User-Role`) to services; services trust these without re-validating the JWT. Rate limiting: enforce per-client limits using a shared Redis store — the gateway is stateless, Redis holds the counters. Routing: match on path prefix or headers (`/api/v1/orders/*` → order-service; `/api/v1/users/*` → user-service) using service discovery (Consul, Kubernetes DNS). Keep the gateway stateless and fast — business logic, authorization decisions, and data access stay in the services. The gateway should be observable: log every request with traceId, emit rate-limit hits to metrics, and implement circuit breaking to fail fast when a downstream service is unhealthy.
+### Q8. (Senior) How would you design an API gateway for authentication, rate limiting, and routing across microservices?
+> Place the gateway as a stateless reverse proxy at the perimeter. **Auth:** Validate JWT signatures centrally at the gateway, then strip the raw token and pass verified claims via trusted headers (`X-User-Id`, `X-User-Role`) to internal services. **Rate Limiting:** Enforce per-client quotas using an external shared Redis store. **Routing:** Match URL prefixes or headers to downstream services via Kubernetes DNS. Keep the gateway stateless, high-throughput, and free of domain business logic.
 
 ---
 

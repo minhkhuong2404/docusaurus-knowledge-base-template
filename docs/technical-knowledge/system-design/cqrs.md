@@ -6,6 +6,14 @@ description: Comprehensive guide on Command Query Responsibility Segregation (CQ
 tags: [cqrs, event-sourcing, system-design, microservices, architecture, java, spring]
 ---
 
+import CqrsArchitectureDiagram from '@site/src/components/CqrsArchitectureDiagram';
+import CqrsCrudPatternDiagram from '@site/src/components/CqrsCrudPatternDiagram';
+import CqrsReadReplicasDiagram from '@site/src/components/CqrsReadReplicasDiagram';
+import CqrsPurePatternDiagram from '@site/src/components/CqrsPurePatternDiagram';
+import CqrsEventSourcingPatternDiagram from '@site/src/components/CqrsEventSourcingPatternDiagram';
+import EventDrivenNoCqrsDiagram from '@site/src/components/EventDrivenNoCqrsDiagram';
+import CqrsSagaProcessManagerDiagram from '@site/src/components/CqrsSagaProcessManagerDiagram';
+
 # CQRS & Event Sourcing
 
 > **Command Query Responsibility Segregation (CQRS)** is an architectural pattern that separates the models used to read data (Queries) from the models used to update data (Commands).
@@ -28,35 +36,7 @@ By separating the "Write Side" and "Read Side", you can scale and optimize them 
 
 ### Architecture Diagram
 
-```mermaid
-graph TD
-    UI[User Interface]
-
-    subgraph Command Side [Write Model]
-        Cmd[Command API]
-        Handler[Command Handler]
-        Domain[Domain Aggregate]
-        WriteDB[(Write DB - Normalized)]
-    end
-
-    subgraph Query Side [Read Model]
-        QueryAPI[Query API]
-        Projector[Event Projector]
-        ReadDB[(Read DB - Denormalized)]
-    end
-
-    Sync[Event Bus — Kafka / RabbitMQ]
-
-    UI -->|POST /orders| Cmd
-    Cmd --> Handler
-    Handler --> Domain
-    Domain --> WriteDB
-    Domain -.->|Domain Event Published| Sync
-    Sync -.->|Event Consumed| Projector
-    Projector -.->|Update Projection| ReadDB
-    UI -->|GET /orders| QueryAPI
-    QueryAPI --> ReadDB
-```
+<CqrsArchitectureDiagram />
 
 ---
 
@@ -108,9 +88,7 @@ Understanding CQRS and Event Sourcing means knowing the full landscape of archit
 
 The simplest architecture: one data model shared between reads and writes, typically backed by a relational database.
 
-```
-Client → Service Layer → ORM → Single Relational DB
-```
+<CqrsCrudPatternDiagram />
 
 **Strengths:**
 - Low complexity; almost every developer understands it.
@@ -132,10 +110,7 @@ Client → Service Layer → ORM → Single Relational DB
 
 Before jumping to CQRS, many teams solve read scalability by adding a read replica and a caching layer (Redis, Memcached) in front of the existing CRUD model.
 
-```
-Writes → Primary DB
-Reads  → Read Replica → Cache (Redis)
-```
+<CqrsReadReplicasDiagram />
 
 **Strengths:**
 - Dramatically easier than CQRS — no architectural paradigm shift.
@@ -157,13 +132,7 @@ Reads  → Read Replica → Cache (Redis)
 
 A separate Command and Query model backed by separate databases, synchronized via domain events. The Write DB stores current state normally; the Read DB is a denormalized projection optimized for queries.
 
-```
-Command Handler → Normalized Write DB
-                        ↓ (domain event)
-             Event Bus (Kafka/RabbitMQ)
-                        ↓
-          Projector → Denormalized Read DB (MongoDB / Elasticsearch)
-```
+<CqrsPurePatternDiagram />
 
 **Strengths:**
 - Write side enforces domain invariants on a clean, normalized model without join complexity.
@@ -185,13 +154,7 @@ Command Handler → Normalized Write DB
 
 The Write DB is replaced entirely by an **Event Store** — an append-only log of domain events. Current state is never stored directly; it is always derived by replaying events. The Query side remains the same as pure CQRS.
 
-```
-Command Handler → Aggregate (validates invariants)
-                        ↓ (appends events)
-              Event Store (e.g., EventStoreDB)
-                        ↓ (event subscription)
-          Projector → Denormalized Read DB
-```
+<CqrsEventSourcingPatternDiagram />
 
 **Strengths:**
 - All of CQRS's benefits, plus a complete, immutable, auditable event history.
@@ -213,12 +176,7 @@ Command Handler → Aggregate (validates invariants)
 
 Services communicate exclusively via events but do not separate read and write models internally. Each service consumes events from others and maintains its own local state.
 
-```
-Order Service  →  OrderPlaced event  →  Kafka
-                                              ↓
-                                  Payment Service (updates its own DB)
-                                  Shipping Service (updates its own DB)
-```
+<EventDrivenNoCqrsDiagram />
 
 **Strengths:**
 - Excellent service decoupling.
@@ -488,23 +446,7 @@ In a microservices architecture, a business process often spans multiple service
 
 CQRS naturally integrates with Sagas:
 
-```mermaid
-sequenceDiagram
-    participant UI
-    participant OrderService
-    participant PaymentService
-    participant InventoryService
-    participant Saga as OrderSaga (Process Manager)
-
-    UI->>OrderService: PlaceOrderCommand
-    OrderService->>Saga: OrderPlacedEvent
-    Saga->>PaymentService: ProcessPaymentCommand
-    PaymentService-->>Saga: PaymentProcessedEvent
-    Saga->>InventoryService: ReserveStockCommand
-    InventoryService-->>Saga: StockReservedEvent
-    Saga->>OrderService: ConfirmOrderCommand
-    OrderService-->>UI: OrderConfirmedEvent (via WebSocket)
-```
+<CqrsSagaProcessManagerDiagram />
 
 **Compensating Transactions:** If any step fails, the Saga emits compensating commands to undo previous steps (e.g., `RefundPaymentCommand` if stock reservation fails).
 

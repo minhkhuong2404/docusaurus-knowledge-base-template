@@ -7,6 +7,15 @@ tags: [microservices, api-gateway, circuit-breaker, service-mesh, spring-cloud, 
 ---
 
 import CircuitBreakerDiagram from '@site/src/components/CircuitBreakerDiagram';
+import ApiGatewayTechDiagram from '@site/src/components/ApiGatewayTechDiagram';
+import SidecarPatternDiagram from '@site/src/components/SidecarPatternDiagram';
+import ServiceMeshDiagram from '@site/src/components/ServiceMeshDiagram';
+import StranglerFigDiagram from '@site/src/components/StranglerFigDiagram';
+import DistributedTracingDiagram from '@site/src/components/DistributedTracingDiagram';
+import EnvoyProxyDiagram from '@site/src/components/EnvoyProxyDiagram';
+import BlueGreenDeploymentDiagram from '@site/src/components/BlueGreenDeploymentDiagram';
+import CanaryDeploymentDiagram from '@site/src/components/CanaryDeploymentDiagram';
+import IntegrationDbVsDatabasePerServiceDiagram from '@site/src/components/IntegrationDbVsDatabasePerServiceDiagram';
 
 # Microservices Design Patterns
 
@@ -55,16 +64,8 @@ Instead of a single monolithic API Gateway for all clients, the **BFF pattern** 
 | **Centralized Governance:** A single place to enforce authentication, rate limiting, and standard observability headers. | **Deployment Bottleneck:** A single massive gateway can become a tight coupling point where multiple teams step on each other's toes to deploy routing rules. |
 
 ### Popular API Gateway Technologies
-- **Spring Cloud Gateway:** Java/Spring-based, highly customizable, uses non-blocking Netty.
-- **Kong API Gateway:** Nginx-based, extremely fast, highly extensible via Lua plugins.
-- **AWS API Gateway:** fully managed serverless proxy, natively deeply integrated with AWS Lambda and IAM.
-- **Traefik / NGINX:** Standard highly performant reverse proxies.
 
-```text
-Mobile  ╮
-Web     ├→ API Gateway → Auth → Rate Limit → Route to Service
-Partners╯
-```
+<ApiGatewayTechDiagram />
 
 ```java
 // Spring Cloud Gateway
@@ -233,15 +234,7 @@ For sidecar proxy setups, shared lifecycles, and a complete multi-container Kube
 
 Attach a proxy container to each service for cross-cutting concerns.
 
-```
-┌──────────────────────────────┐
-│  Pod                         │
-│  ┌──────────────┐  ┌───────┐ │
-│  │ Your Service │←→│ Envoy │←──── Observability, mTLS, retries
-│  └──────────────┘  │ Proxy │ │
-│                    └───────┘ │
-└──────────────────────────────┘
-```
+<SidecarPatternDiagram />
 
 **Used by**: Istio (Envoy sidecar), Linkerd, Dapr.
 
@@ -254,6 +247,8 @@ For service mesh architectures, Istio control/data plane details, mTLS PeerAuthe
 :::
 
 Automates service-to-service communication: retries, timeouts, mTLS, load balancing, observability.
+
+<ServiceMeshDiagram />
 
 | Feature | Without Service Mesh | With Service Mesh (Istio) |
 |---|---|---|
@@ -289,14 +284,9 @@ spec:
 For step-by-step monolith migration playbooks, Anti-Corruption Layer (ACL) patterns, Nginx gateway configurations, and rollback safety rules, see the [Strangler Fig Pattern Guide](./strangler-fig-pattern.md).
 :::
 
-Incrementally migrate a monolith to microservices.
+Incrementally migrate a monolith to microservices using an edge routing layer and Anti-Corruption Layer (ACL).
 
-```
-Phase 1: Monolith handles all traffic
-Phase 2: New service handles feature X → Route /feature-x to microservice
-Phase 3: Expand — route more features to microservices
-Phase 4: Monolith retired
-```
+<StranglerFigDiagram />
 
 ### Beginner View
 The Strangler pattern avoids a risky "big-bang" rewrite. New features are built in services, and selected old endpoints are routed away from the monolith over time.
@@ -307,12 +297,6 @@ Use an explicit migration blueprint:
 2. Anti-corruption layer (ACL) shields new services from monolith schema/domain leaks
 3. Contract tests ensure old/new behavior parity
 4. Cutover metrics define when a route can be fully switched
-
-```
-Client -> Gateway
-           |- /orders/* -> New Order Service
-           |- /legacy/* -> Monolith
-```
 
 ### Migration Playbook
 - Phase 0: Identify bounded context seams and ownership
@@ -379,6 +363,8 @@ For OpenTelemetry span propagation, W3C TraceContext standards, Spring Boot 3 Mi
 :::
 
 Track requests across services.
+
+<DistributedTracingDiagram />
 
 ```java
 // Spring Boot + Micrometer + Zipkin/Jaeger
@@ -451,15 +437,7 @@ For Envoy listeners, filters, clusters setup, dynamic configurations via xDS, an
 
 Envoy is the data plane proxy used by Istio, AWS App Mesh, and many others.
 
-```
-Envoy capabilities:
-  L3/L4: TCP proxy, TLS termination/origination
-  L7:    HTTP/1.1, HTTP/2, gRPC, WebSocket
-  Observability: distributed tracing (Zipkin, Jaeger, X-Ray), stats
-  Service discovery: via xDS API from control plane
-  Load balancing: round-robin, least-request, ring hash, Maglev
-  Fault injection: inject delays and errors for testing
-```
+<EnvoyProxyDiagram />
 
 ---
 
@@ -485,8 +463,6 @@ Service types:
 Ingress:
   L7 HTTP routing → backend Services
   nginx Ingress, Traefik, AWS ALB Ingress Controller
-```
-
 ```
 
 ## Interview Questions
@@ -574,17 +550,7 @@ Building Microservices dedicates substantial coverage to deployment strategies, 
 
 ### Blue-Green Deployment
 
-```
-Blue (current production) ←── 100% traffic
-Green (new version)        ←── 0% traffic (being tested)
-
-Switch:
-Blue ←── 0% traffic
-Green←── 100% traffic
-
-Rollback: instant (just flip back)
-Requires: 2x infrastructure
-```
+<BlueGreenDeploymentDiagram />
 
 ```yaml
 # Kubernetes blue-green via service selector swap
@@ -632,17 +598,7 @@ spec:
 
 ### Canary Deployment
 
-```
-v1 stable  ←── 95% traffic
-v2 canary  ←── 5% traffic (monitor error rate, latency)
-
-If v2 healthy:
-  v1 ←── 80%, v2 ←── 20%
-  v1 ←── 0%,  v2 ←── 100%
-
-If v2 degraded:
-  v1 ←── 100% (instant rollback via weight change)
-```
+<CanaryDeploymentDiagram />
 
 ```yaml
 # Istio VirtualService: canary with header-based routing
@@ -780,24 +736,7 @@ For shared database hazards, API composition, CQRS read models, shared replica s
 
 ### The Integration Database Problem
 
-```
-Integration Database (anti-pattern):
-  Order Service   ─┐
-  Payment Service  ├──→ Single shared DB schema
-  User Service    ─┘
-
-Problems:
-  - Schema changes require coordinating all teams
-  - No service can optimize its DB technology for its workload
-  - Any service can read/write any other service's tables
-  - Tight runtime coupling — one service's query can starve others
-
-Database-per-Service (correct pattern):
-  Order Service   → Orders DB (Postgres)
-  Payment Service → Payments DB (Postgres)
-  User Service    → Users DB (Postgres + Redis cache)
-  Search Service  → Elasticsearch
-```
+<IntegrationDbVsDatabasePerServiceDiagram />
 
 ### Cross-Service Data Access Patterns
 

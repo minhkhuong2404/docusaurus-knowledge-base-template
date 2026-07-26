@@ -6,6 +6,9 @@ description: Strategic guide to microservice decomposition, applying Domain-Driv
 tags: [system-design, microservices, architecture, Domain-Driven-Design, ddd]
 ---
 
+import BoundedContextsDiagram from '@site/src/components/BoundedContextsDiagram';
+import DistributedMonolithWarningSignsDiagram from '@site/src/components/DistributedMonolithWarningSignsDiagram';
+
 # Service Decomposition
 
 **Service Decomposition** is the process of breaking a large software domain (often a monolith) down into a set of distinct, cohesive, and loosely coupled microservices. Defining the boundaries incorrectly is the most common reason microservice migrations fail, resulting in a **distributed monolith** (a system with all the operational complexity of microservices but none of the independent deployment benefits).
@@ -16,20 +19,7 @@ tags: [system-design, microservices, architecture, Domain-Driven-Design, ddd]
 
 The primary tool for establishing service boundaries is Domain-Driven Design (DDD). Instead of designing services based on database tables or technical layers, engineers map the domain into **Bounded Contexts**:
 
-```text
-                               ┌────────────────────────────────────────────────────────┐
-                               │                 E-Commerce Domain                      │
-                               │                                                        │
-                               │  ┌───────────────────────┐   ┌──────────────────────┐  │
-                               │  │   Ordering Context    │   │  Shipping Context    │  │
-                               │  │                       │   │                      │  │
-                               │  │  Entity: Order        │   │  Entity: Shipment    │  │
-                               │  │  Value: OrderLine     │   │  Value: Address      │  │
-                               │  └───────────┬───────────┘   └───────────▲──────────┘  │
-                               └──────────────┼───────────────────────────┼─────────────┘
-                                              │ (Asynchronous Event)      │
-                                              └───────► "OrderPaid" ──────┘
-```
+<BoundedContextsDiagram />
 
 A Bounded Context defines a boundary within which a specific domain model applies. Inside the Ordering Context, an "Order" represents items, pricing, and buyer identity. Inside the Shipping Context, the "Order" domain object doesn't exist; it is represented instead by a "Shipment" focusing on package dimensions, tracking numbers, and delivery addresses.
 
@@ -53,10 +43,7 @@ To decide where to split boundaries, evaluate the domain against five criteria:
 
 If you decompose incorrectly, you build a distributed monolith.
 
-```text
-Distributed Monolith (Anti-pattern):
-Service A ─────(Sync HTTP)─────► Service B ─────(Sync HTTP)─────► Service C ─────► DB
-```
+<DistributedMonolithWarningSignsDiagram />
 
 ### Warning Signs:
 1. **Synchronous Chain Calls**: If Service A calls B, which calls C, which calls D, and a failure in D breaks the whole request chain, your services are temporally coupled.
