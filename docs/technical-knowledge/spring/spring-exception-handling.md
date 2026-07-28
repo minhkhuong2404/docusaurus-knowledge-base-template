@@ -8,6 +8,7 @@ tags: [spring-boot, java, exception-handling, controlleradvice, restcontrollerad
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import JavaExceptionHierarchyDiagram from '@site/src/components/JavaExceptionHierarchyDiagram';
 
 # Exception Handling in Spring Boot
 
@@ -62,18 +63,7 @@ throw new IllegalStateException("Cannot process in this state");
 throw new UserNotFoundException("User 42 not found"); // your custom unchecked
 ```
 
-```
-Hierarchy:
-Throwable
-  └── Error                  (JVM errors — never catch these)
-  └── Exception
-        └── RuntimeException  ← unchecked (compiler doesn't enforce)
-              └── NullPointerException
-              └── IllegalArgumentException
-              └── YourCustomException  ← extend this for domain errors
-        └── IOException       ← checked (compiler enforces catch or declare)
-        └── SQLException      ← checked
-```
+<JavaExceptionHierarchyDiagram />
 
 ### Checked exceptions
 

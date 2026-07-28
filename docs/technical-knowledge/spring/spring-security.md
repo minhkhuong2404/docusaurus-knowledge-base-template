@@ -6,6 +6,7 @@ tags: [spring-security, spring-boot, java, authentication, authorization, filter
 
 import SpringSecurityFilterDiagram from '@site/src/components/SpringSecurityFilterDiagram';
 import OAuthPkceFlowDiagram from '@site/src/components/OAuthPkceFlowDiagram';
+import SpringSecurityE2EWorkflowDiagram from '@site/src/components/SpringSecurityE2EWorkflowDiagram';
 
 
 # Spring Security — Complete Guide
@@ -58,6 +59,8 @@ Spring Security works through a **filter chain** that intercepts every HTTP requ
 <SpringSecurityFilterDiagram defaultMode="AUTH_FLOW" />
 
 ### End-to-End Authentication Workflow
+
+<SpringSecurityE2EWorkflowDiagram />
 
 The complete end-to-end workflow, combining the filter chain and authentication architecture, operates as follows:
 
