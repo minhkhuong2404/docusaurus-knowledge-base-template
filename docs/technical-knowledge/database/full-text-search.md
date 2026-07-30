@@ -368,7 +368,7 @@ public class SearchService {
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. Why is `LIKE '%term%'` a bad approach for text search?**
 > Leading wildcards prevent index usage, so every row must be scanned. It has no relevance ranking, no stemming (so "run" won't match "running"), no stop words, and no fuzzy matching. Full-text search uses an inverted index for O(log n) lookups plus linguistic analysis for better result quality.

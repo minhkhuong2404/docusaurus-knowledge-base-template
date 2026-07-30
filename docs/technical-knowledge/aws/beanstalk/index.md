@@ -115,7 +115,7 @@ If your Beanstalk deployment fails (e.g., Health transitions to "Red"), you need
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** You are managing a Java Spring Boot application deployed via Elastic Beanstalk. The application processes video files, which takes several minutes per file. Currently, the Web Tier handles this, but users are experiencing HTTP timeout errors. How should you re-architect this?
 

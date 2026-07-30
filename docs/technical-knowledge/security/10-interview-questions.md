@@ -57,7 +57,8 @@ tags: [security, interview-prep, jwt, jwks, mle, tls, oauth2, owasp, cryptograph
 
 - **Access token:** short TTL (5–15 min). **Refresh token:** long TTL (7–30 days), stored server-side.
 - On each refresh: issue **new** refresh token, **invalidate** old one
-- **Detection:** if the old (already rotated) refresh token is used again → **theft indicator** → lock account
+- **Detection:** if the old (already rotated) refresh token is used again → **theft indicator** → lock account / revoke token family
+- For deep-dive scenarios (account hacked, multi-device password reset session invalidation), see [Refresh Token Security & Multi-Device Session Invalidation](./refresh-token-security-invalidation.md).
 - Without rotation: stolen refresh token gives permanent access until expiry
 
 ---

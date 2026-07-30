@@ -316,7 +316,7 @@ String queueUrl = System.getenv("SQS_QUEUE_URL");
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** A Lambda function uses `DynamoDbClient.create()` inside the `handleRequest` method. What is the impact?
 
@@ -356,7 +356,7 @@ D) From the root account
 - [Lambda with Java Best Practices](https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html)
 - [DynamoDB Enhanced Client](https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/dynamodb-enhanced-client.html)
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. How do you standardize AWS SDK client construction across microservices to avoid connection and retry anti-patterns?
 2. When would you choose async clients in Lambda, and when are sync clients simpler and safer?

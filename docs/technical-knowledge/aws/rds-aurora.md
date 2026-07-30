@@ -207,7 +207,7 @@ Parameter Group: my-postgres-params
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** A Lambda function connects to RDS PostgreSQL. Under high load (500 concurrent executions), the DB is getting `too many connections` errors. What is the MOST effective solution with the least code changes?
 

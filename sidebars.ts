@@ -25,7 +25,7 @@ const sidebars: SidebarsConfig = {
 		},
 		{
 			type: 'category',
-			label: '🛠️ Technical Knowledge',
+			label: '🛠️Technical Knowledge',
 			collapsed: false,
 			items: [
 				{
@@ -140,6 +140,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/spring/spring-data-jpa-query-annotation',
 								'technical-knowledge/spring/hibernate-association-best-practices',
 								'technical-knowledge/spring/spring-data-jpa-transactions',
+								'technical-knowledge/spring/spring-transactional-deep-dive',
 								'technical-knowledge/spring/jpa-hibernate-lifecycle-methods',
 								'technical-knowledge/spring/hibernate-transactions-performance',
 								'technical-knowledge/spring/spring-data-jpa-interview-questions'
@@ -435,6 +436,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/security/authentication-authorization',
 								'technical-knowledge/security/web-security-fundamentals',
 								'technical-knowledge/security/cookies-vs-sessions-vs-jwt',
+								'technical-knowledge/security/refresh-token-security-invalidation',
 								'technical-knowledge/security/web-vulnerabilities',
 								'technical-knowledge/security/cryptography-secure-design',
 								'technical-knowledge/security/keys-signing-tls',
@@ -1102,10 +1104,9 @@ const sidebars: SidebarsConfig = {
 			label: '🚀 Coding Interview Prep',
 			collapsed: true,
 			items: [
-				'technical-knowledge/coding-interview-prep/intro',
 				{
 					type: 'doc',
-					id: 'technical-knowledge/coding-interview-prep/intro/intro',
+					id: 'technical-knowledge/coding-interview-prep/intro',
 					label: '🚀 Getting Started',
 				},
 				{
@@ -1251,36 +1252,35 @@ const sidebars: SidebarsConfig = {
 						},
 						{
 							type: 'category',
-							label: '🏢 Company (💎 Premium)',
+							label: '🏢 Company (👑 Premium)',
 							collapsed: true,
 							items: [
-								'premium/intro',
-								'premium/company/accenture-java-interview',
-								'premium/company/accenture-java-developer-interview-questions',
-								'premium/company/accenture-java-developer-interview-16lpa',
-								'premium/company/airtel-java-developer-interview-questions',
-								'premium/company/capgemini-java-developer-interview-questions',
-								'premium/company/coforge-java-developer-interview-22lpa',
-								'premium/company/cognizant-fresher-java-developer-interview',
-								'premium/company/deloitte-java-developer-interview-questions',
-								'premium/company/deloitte-java-developer-interview-17lpa',
-								'premium/company/epam-java-developer-interview-22lpa',
-								'premium/company/hashedin-java-developer-interview-questions',
-								'premium/company/hcl-java-fullstack-developer-interview',
-								'premium/company/ibm-java-developer-interview-experience',
-								'premium/company/infosys-java-developer-interview-17lpa',
-								'premium/company/java-developer-interview-iris',
-								'premium/company/ltimindtree-java-developer-interview-questions',
-								'premium/company/nagarro-java-developer-interview-questions',
-								'premium/company/ntt-data-java-developer-interview',
-								'premium/company/oracle-java-developer-interview-questions',
-								'premium/company/paytm-java-developer-interview-questions',
-								'premium/company/pwc-java-developer-interview-questions',
-								'premium/company/tcs-java-developer-interview-13lpa',
-								'premium/company/tech-mahindra-java-developer-interview',
-								'premium/company/walmart-java-developer-interview-30lpa',
-								'premium/company/wipro-fullstack-java-developer-interview',
-								'premium/company/wipro-java-developer-interview-questions'
+								'company/accenture-java-interview',
+								'company/accenture-java-developer-interview-questions',
+								'company/accenture-java-developer-interview-16lpa',
+								'company/airtel-java-developer-interview-questions',
+								'company/capgemini-java-developer-interview-questions',
+								'company/coforge-java-developer-interview-22lpa',
+								'company/cognizant-fresher-java-developer-interview',
+								'company/deloitte-java-developer-interview-questions',
+								'company/deloitte-java-developer-interview-17lpa',
+								'company/epam-java-developer-interview-22lpa',
+								'company/hashedin-java-developer-interview-questions',
+								'company/hcl-java-fullstack-developer-interview',
+								'company/ibm-java-developer-interview-experience',
+								'company/infosys-java-developer-interview-17lpa',
+								'company/java-developer-interview-iris',
+								'company/ltimindtree-java-developer-interview-questions',
+								'company/nagarro-java-developer-interview-questions',
+								'company/ntt-data-java-developer-interview',
+								'company/oracle-java-developer-interview-questions',
+								'company/paytm-java-developer-interview-questions',
+								'company/pwc-java-developer-interview-questions',
+								'company/tcs-java-developer-interview-13lpa',
+								'company/tech-mahindra-java-developer-interview',
+								'company/walmart-java-developer-interview-30lpa',
+								'company/wipro-fullstack-java-developer-interview',
+								'company/wipro-java-developer-interview-questions'
 							]
 						},
 					]
@@ -1298,7 +1298,9 @@ const sidebars: SidebarsConfig = {
 				'technical-knowledge/interview-questions/behavioral/behavioral-conflict-failure',
 				'technical-knowledge/interview-questions/behavioral/behavioral-questions-to-ask',
 				'technical-knowledge/interview-questions/behavioral/behavioral-top-50-questions',
-				'technical-knowledge/interview-questions/behavioral/behavioral-amazon-lp'
+				'technical-knowledge/interview-questions/behavioral/behavioral-amazon-lp',
+				'technical-knowledge/interview-questions/behavioral/behavioral-google-meta-microsoft',
+				'technical-knowledge/interview-questions/behavioral/behavioral-common-mistakes'
 			]
 		},
 		{
@@ -1338,7 +1340,7 @@ const sidebars: SidebarsConfig = {
 		},
 		{
 			type: 'category',
-			label: '🏢 LeetCode Company',
+			label: '🏢 LeetCode Company (👑 Premium)',
 			collapsed: true,
 			items: [
 				{
@@ -1766,9 +1768,13 @@ const sidebars: SidebarsConfig = {
 				'technical-knowledge/ai-agents/skills',
 				'technical-knowledge/ai-agents/harness',
 				'technical-knowledge/ai-agents/vibe-coding',
-				'technical-knowledge/ai-agents/context-engineering'
+				'technical-knowledge/ai-agents/prompt-engineering',
+				'technical-knowledge/ai-agents/ai-tools-landscape',
+				'technical-knowledge/ai-agents/context-engineering',
+				'technical-knowledge/ai-agents/ai-agent-interview-questions'
 			]
 		},
+
 		{
 			type: 'doc',
 			id: 'suggestions',

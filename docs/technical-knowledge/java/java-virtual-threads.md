@@ -648,7 +648,7 @@ void benchmarkVirtualVsPlatform() throws InterruptedException {
 
 ---
 
-## 8. Interview Questions
+## Interview Questions
 
 ### Q: Does a Virtual Thread make my CPU-bound loop execute faster?
 **A:** No! Virtual threads provide zero value for CPU-bound tasks (like parsing massive JSON or mining crypto). The thread *cannot unmount* if it doesn't do I/O. For CPU bounds, you still use a traditional `ForkJoinPool` sized to CPU cores.

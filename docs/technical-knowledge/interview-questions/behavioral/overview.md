@@ -95,7 +95,96 @@ Microsoft assesses for **growth mindset** — the belief that abilities can be d
 
 ---
 
-## Quick Scoring Rubric
+## Virtual Interview Logistics
+
+Most behavioral interviews are now conducted via video call. Technical setup can quietly tank your impression before you say a word.
+
+### Pre-Interview Checklist
+
+| Item | What to Do |
+|------|------------|
+| **Camera** | Position at eye level — laptop on a stand or books if needed. Webcam slightly above, angled down. |
+| **Lighting** | Face a window or ring light. Never have a bright window behind you — it silhouettes your face. |
+| **Audio** | Test with a recording. Use headphones with a mic or a dedicated headset. Built-in laptop mics often echo. |
+| **Background** | Neutral or minimal. Real bookshelf is fine. Avoid virtual backgrounds — they blur when you move. |
+| **Internet** | Use ethernet if possible. Close all non-essential tabs and applications. |
+| **Backup** | Have your phone on standby with the video app installed in case of technical failure. |
+| **Notifications** | Silence all notifications: Slack, email, phone. Set "Do Not Disturb" mode. |
+
+### The 10-Minute Tech Check
+Do this the day before — not 2 minutes before:
+1. Join the meeting link in the actual app (Zoom/Google Meet/Teams) — not just the browser
+2. Test camera, audio, and screen share
+3. Check your background in the camera preview
+4. Verify lighting looks clean
+5. Confirm the interviewer's name, title, and time zone
+
+---
+
+## Day-of Prep Routine
+
+What you do in the hours before the interview matters as much as weeks of preparation.
+
+```
+The Night Before:
+✅ Review your 3–4 strongest stories — just the outline, not memorize
+✅ Confirm the interview time (especially if different time zones)
+✅ Research the interviewer on LinkedIn if you know their name
+✅ Print or pull up your story notes for quick reference
+✅ Prepare your interview space: clean background, water glass, notepad
+
+Morning Of:
+✅ Eat and hydrate — a hungry, dehydrated brain interviews poorly
+✅ Brief light exercise or a walk — reduces cortisol, improves clarity
+✅ Read the company's recent news (TechCrunch, Crunchbase, company blog)
+✅ Review the job description one more time — connect your stories to the role
+
+1 Hour Before:
+✅ Join a quiet space with no interruptions
+✅ Open your story notes for a final review — read, don't memorize
+✅ Log in to the video platform early and test audio/video
+✅ Take 3 slow deep breaths before joining — it literally reduces anxiety
+
+During the Interview:
+✅ Have a glass of water nearby — it's acceptable to take a sip before answering
+✅ Keep a notepad for jotting the question if it's multi-part
+✅ It's okay to say: "That's a great question — give me just a moment to think."
+```
+
+---
+
+## Body Language \& Delivery Tips
+
+### Video Call Body Language
+
+| Behavior | Impact |
+|----------|--------|
+| **Look at the camera**, not your screen | Creates eye contact — the most important video signal |
+| **Slightly lean forward** | Projects engagement and confidence |
+| **Nod while listening** | Shows active listening — critical in video where silence reads as disconnection |
+| **Don't read from notes** | Occasional glance is fine; reading verbatim is a red flag |
+| **Smile naturally** | Warmth matters — interviewers want teammates, not robots |
+
+### Pacing & Delivery
+
+- **Speak at 70% of your natural speed** — nervousness makes people rush; slow down
+- **Pause before answering** — a 2-second pause looks confident, not confused
+- **Use deliberate pauses mid-answer** — they signal structure and give the interviewer time to take notes
+- **Volume check** — slightly louder than conversational is better on video; mics compress dynamics
+
+### Filler Words to Eliminate
+
+| Filler | Better Alternative |
+|--------|-------------------|
+| "Um, uh" | Pause in silence |
+| "Like" | Nothing — just remove it |
+| "You know what I mean?" | Don't check for validation |
+| "That's a really good question" | Pause, then answer directly |
+| "Basically" | The thing itself |
+
+> 🎯 **Practice tip:** Record yourself answering one question on your phone. Watch it back once. You'll immediately identify your filler word patterns and pacing issues.
+
+---
 
 Interviewers often score you on:
 
@@ -112,9 +201,11 @@ Interviewers often score you on:
 
 | File | What's Inside |
 |------|--------------|
-| [STAR Method Deep Dive](./star-method) | Detailed STAR templates, before/after examples |
+| [STAR Method Deep Dive](./star-method) | Detailed STAR templates, before/after examples, STAR-L variant |
 | [Story Bank Builder](./story-bank) | How to build and organize your personal story bank |
-| [Top 50 Questions](./top-50-questions) | The most frequently asked behavioral questions with answers |
+| [Top 50 Questions](./top-50-questions) | All 50 questions with full STAR sample answers |
 | [Amazon LP Guide](./amazon-leadership-principles) | Amazon-specific LP deep dive with sample stories |
+| [Google/Meta/Microsoft Guide](./google-meta-microsoft-guide) | Behavioral frameworks for Google, Meta, and Microsoft |
 | [Conflict & Failure Stories](./conflict-and-failure) | How to handle tough stories: failure, conflict, mistakes |
+| [Common Mistakes](./common-mistakes) | The 10 most interview-killing mistakes and how to avoid them |
 | [Questions to Ask Interviewer](./questions-to-ask) | Smart questions that impress every interviewer |

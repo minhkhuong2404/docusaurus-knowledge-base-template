@@ -322,7 +322,7 @@ server.accept(null, new CompletionHandler<AsynchronousSocketChannel, Void>() {
 
 ---
 
-## Common Interview Questions
+## Interview Questions
 
 ### Q1: What is the difference between TCP and UDP?
 

@@ -5,6 +5,11 @@ sidebar_label: Dead Letter Queue
 description: A comprehensive guide to the Dead Letter Queue (DLQ) pattern — covering poison pill handling, retry strategies, alternatives comparison, AWS SQS / Kafka / RabbitMQ implementations, and production deep dives for senior engineers.
 tags: [dead-letter-queue, dlq, poison-pills, system-design, retry-policies, messaging, reliability, kafka, rabbitmq, sqs, spring, java]
 ---
+import DlqLifecycleSequenceDiagram from '@site/src/components/DlqLifecycleSequenceDiagram';
+import DlqTimeoutRetryDiagram from '@site/src/components/DlqTimeoutRetryDiagram';
+import DlqOrderingThroughputDiagram from '@site/src/components/DlqOrderingThroughputDiagram';
+import SchemaEvolutionDlqSpikeDiagram from '@site/src/components/SchemaEvolutionDlqSpikeDiagram';
+import DlqIncidentRunbookDiagram from '@site/src/components/DlqIncidentRunbookDiagram';
 
 # Dead Letter Queue (DLQ) Pattern
 
@@ -39,36 +44,7 @@ The conveyor belt is your **message queue**. The sorting machine is your **consu
 
 ## How It Works: The Full Lifecycle
 
-```mermaid
-sequenceDiagram
-    participant P as Producer
-    participant Q as Main Queue
-    participant C as Consumer
-    participant DLQ as Dead Letter Queue
-    participant Ops as Engineer / Redrive
-
-    P->>Q: Publish message (OrderPlaced)
-
-    loop Retry loop (maxAttempts = 3)
-        Q->>C: Deliver message (attempt 1)
-        C-->>Q: ❌ NACK / Exception thrown
-        Note over Q: Message hidden for backoff period
-        Q->>C: Deliver message (attempt 2)
-        C-->>Q: ❌ NACK
-        Q->>C: Deliver message (attempt 3 — final)
-        C-->>Q: ❌ NACK
-    end
-
-    Note over Q,DLQ: maxAttempts exceeded
-    Q->>DLQ: Route message to DLQ
-    DLQ-->>Ops: 🚨 Alert: DLQ depth > 0
-
-    Note over Ops: Diagnose root cause\nDeploy fix
-    Ops->>DLQ: Redrive: move back to main queue
-    DLQ->>Q: Message re-queued
-    Q->>C: Deliver message (attempt 1 with fixed consumer)
-    C-->>Q: ✅ ACK — processed successfully
-```
+<DlqLifecycleSequenceDiagram />
 
 ### Step-by-Step
 
@@ -129,44 +105,7 @@ public void processOrder(Order order) {
 
 When a consumer takes a message, the broker hides it from other consumers for a **visibility timeout** period. This gives the consumer time to process and acknowledge it.
 
-```
-Message dequeued by Consumer A
-    → Message hidden for visibility_timeout = 30s
-    → Consumer A processing...
-
-IF Consumer A ACKs within 30s:
-    → Message deleted from queue ✅
-
-IF Consumer A crashes or takes > 30s:
-    → Visibility timeout expires
-    → Message becomes visible again → delivered to Consumer B
-    → receiveCount incremented
-    → If receiveCount > maxReceiveCount → routed to DLQ
-```
-
-**The visibility timeout saturation trap:**
-
-```
-Processing time average: 25 seconds
-Visibility timeout configured: 30 seconds
-
-→ Under heavy load, Consumer A takes 28 seconds (GC pause, slow DB)
-→ At second 30: message becomes visible — Consumer B picks it up
-→ Consumer A finishes at second 32 — also tries to ACK
-→ Both consumers process the same message → DUPLICATE PROCESSING
-
-Fix: Set visibility timeout ≥ 6× average processing time
-     Average = 25s → set visibility timeout = 150s
-```
-
-### Max Receive Count / Max Attempts
-
-```
-maxReceiveCount = 3 means:
-    Attempt 1: fails → receiveCount = 1
-    Attempt 2: fails → receiveCount = 2
-    Attempt 3: fails → receiveCount = 3 → route to DLQ
-```
+<DlqTimeoutRetryDiagram />
 
 **Choosing the right maxReceiveCount:**
 - **Too low (1–2):** Transient failures (brief network blip, momentary DB unavailability) send messages to DLQ prematurely — these would have succeeded on attempt 3.
@@ -770,18 +709,7 @@ public class SqsRedriveService {
 
 Routing a failed message to the DLQ breaks the processing order for messages that follow it. For most systems this is acceptable. For some, it is catastrophic.
 
-```
-Main queue: [TXN-100 balance=1000] → [TXN-101 withdraw=500] → [TXN-102 withdraw=700]
-
-Scenario: TXN-101 fails and routes to DLQ
-          TXN-102 is processed: balance=1000, withdraw=700 → balance=300
-
-Later: TXN-101 is redriven and processed: balance=300, withdraw=500 → balance=-200 ❌
-       This would be APPROVED — but should have been REJECTED (balance was only 300 at the time)
-       The correct final balance should be 1000 - 500 - 700 = -200 REJECTED
-
-Result: Data corruption from out-of-order replay
-```
+<DlqOrderingThroughputDiagram />
 
 **Decision framework:**
 
@@ -851,17 +779,7 @@ public void process(ConsumerRecord<String, Order> record) {
 
 One of the most common causes of mass DLQ spikes in production: a schema change that breaks existing consumers.
 
-```
-Deploy new Order schema — OrderV2 adds a required field: `currency`
-    ↓
-Legacy consumers still receive OrderV1 messages (in-flight, not yet drained)
-    ↓
-Deserialization fails for every OrderV1 message
-    ↓
-DLQ depth spikes from 0 to 100,000 in minutes
-    ↓
-Alert fires — engineers investigate
-```
+<SchemaEvolutionDlqSpikeDiagram />
 
 **Defense in layers:**
 
@@ -1044,44 +962,7 @@ public void retryAfter1s(ConsumerRecord<String, Order> record) {
 
 A structured decision tree for diagnosing and resolving DLQ incidents.
 
-```
-🚨 ALERT: DLQ depth > 0 for topic "orders"
-
-Step 1: Triage (< 5 minutes)
-    ┌─ Single message?  → Likely a bad payload from a specific producer
-    │                     Inspect message, find the producer, fix input
-    │
-    ├─ Batch of messages? → Check deployment history
-    │   ├─ Recent consumer deploy? → Schema change? Roll back consumer and check
-    │   └─ Recent producer deploy? → New field? Missing field? Check schema compatibility
-    │
-    └─ Continuous stream? → Consumer bug or downstream service outage
-        ├─ Check consumer error logs for exception class
-        ├─ Check downstream service health (DB, payment API, etc.)
-        └─ If downstream outage → circuit breaker open?
-
-Step 2: Contain (< 15 minutes)
-    ├─ If consumer crashing on all messages → pause consumer, stop the bleeding
-    ├─ If downstream outage → let retry backoff absorb; check circuit breaker
-    └─ If schema mismatch → deploy schema-tolerant consumer version immediately
-
-Step 3: Fix root cause (varies)
-    ├─ Code bug → deploy fix
-    ├─ Schema mismatch → update schema with backward compatibility
-    ├─ Bad producer data → fix producer, backfill correct data
-    └─ Downstream outage → wait for recovery or implement fallback
-
-Step 4: Redrive (after fix is confirmed)
-    ├─ Inspect a sample DLQ message — confirm it would now process successfully
-    ├─ Redrive at throttled rate (10 msg/sec) — watch error rate on main consumer
-    ├─ Increase rate if error rate stays low → full bulk redrive
-    └─ Monitor DLQ depth → should return to 0
-
-Step 5: Post-mortem
-    ├─ Why did this message fail? (root cause)
-    ├─ Why did we not catch this in testing? (process gap)
-    └─ What will prevent this class of failure? (prevention)
-```
+<DlqIncidentRunbookDiagram />
 
 ---
 

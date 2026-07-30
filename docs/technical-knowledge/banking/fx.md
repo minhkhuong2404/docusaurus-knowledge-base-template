@@ -257,7 +257,7 @@ public class FxConversionService {
 - [outbound.md](/technical-knowledge/banking/outbound) — FX on outbound payments
 - [fis.md](/technical-knowledge/banking/fis) — Nostro accounts per currency
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. How do you manage FX rate integrity and auditability across pricing, booking, and settlement?
 2. What controls prevent margin leakage and customer-disclosure issues in cross-currency payments?

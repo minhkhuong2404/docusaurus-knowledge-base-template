@@ -368,7 +368,7 @@ class MigrationTest {
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What is a database migration tool and why is it needed?**
 > Migration tools version database schema changes as code files that are tracked and applied in order. Without them, environments drift apart (dev ≠ prod), there's no audit trail, and onboarding new developers requires manual setup. Tools like Flyway and Liquibase ensure repeatable, consistent schema evolution across all environments.

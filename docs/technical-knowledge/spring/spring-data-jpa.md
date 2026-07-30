@@ -1301,7 +1301,7 @@ public interface UserRepository extends JpaRepository<User, Long>,
 
 ---
 
-## 18. Interview Questions
+## Interview Questions
 
 **Q: What is the N+1 query problem in JPA and how do you fix it?**
 

@@ -1491,7 +1491,7 @@ curl -X DELETE http://localhost:8083/connectors/mysql-orders-source
 
 ---
 
-## Interview Questions — Kafka Connect
+## Interview Questions
 
 **Q: What is the difference between a Source and Sink connector?**
 

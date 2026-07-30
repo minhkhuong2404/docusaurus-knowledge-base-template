@@ -271,7 +271,7 @@ WebClient client = WebClient.builder()
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. Describe the full DNS resolution process for `api.example.com`.**
 > Client checks browser cache → OS cache → if miss, asks local resolver. Resolver checks its cache → if miss, queries root NS for `.com` TLD NS → queries TLD NS for `example.com` authoritative NS → queries authoritative NS for `api.example.com` → gets A record (IP + TTL). Resolver caches result and returns to client. Full chain: ~4 queries, 50–200ms. Cached: < 1ms.

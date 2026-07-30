@@ -80,9 +80,14 @@ const H1 = makeHeading("h1");
 const H2 = makeHeading("h2");
 const H3 = makeHeading("h3");
 
+import MarkAsReadButton from "@site/src/components/MarkAsReadButton";
+import PremiumUnlockCard from "@site/src/components/PremiumUnlockCard";
+
 export default {
   ...MDXComponents,
   h1: H1,
   h2: H2,
   h3: H3,
+  MarkAsReadButton,
+  PremiumUnlockCard,
 };

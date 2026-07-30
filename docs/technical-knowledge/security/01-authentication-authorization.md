@@ -164,6 +164,10 @@ public class SecurityConfig {
 
 <AccessTokenPatternDiagram />
 
+:::tip[Deep-Dive Guide]
+For an in-depth breakdown of securing long-lived refresh tokens, handling account compromise incident response, closing access token revocation gaps, and managing single vs multi-device password reset session invalidation, see the [Refresh Token Security & Multi-Device Session Invalidation](./refresh-token-security-invalidation.md) guide.
+:::
+
 ```java
 @PostMapping("/auth/refresh")
 public TokenResponse refresh(@RequestBody RefreshRequest req) {

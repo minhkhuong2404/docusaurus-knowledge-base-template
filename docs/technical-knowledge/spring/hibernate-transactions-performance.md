@@ -1131,7 +1131,7 @@ At 200 concurrent requests → 180 requests waiting for a connection → timeout
 
 ---
 
-## 14. Interview Questions
+## Interview Questions
 
 **Q: What is the Hibernate persistence context and why does it matter for performance?**
 

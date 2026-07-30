@@ -196,7 +196,7 @@ With the SDK and instrumentation:
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** A developer needs to search X-Ray traces for all requests where `userId = "user-123"`. What should they use to make this possible?
 
@@ -250,7 +250,7 @@ D) 1%
 - [X-Ray Spring Boot Integration](https://docs.aws.amazon.com/xray/latest/devguide/xray-sdk-java-filters.html)
 - [X-Ray Sampling Rules](https://docs.aws.amazon.com/xray/latest/devguide/xray-console-sampling.html)
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. How do you define sampling strategy across low-traffic critical paths and high-volume commodity endpoints?
 2. What annotation taxonomy would you standardize to support incident debugging without exploding cardinality?

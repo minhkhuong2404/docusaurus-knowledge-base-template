@@ -73,43 +73,12 @@ The Web Server (Invoker) is completely decoupled from the Worker Servers (Receiv
 
 ---
 
+import CommandDiagram from '@site/src/components/CommandDiagram';
+
 ## 🏗️ Structure
 
-```mermaid
-classDiagram
-    class Invoker {
-        -command: Command
-        +setCommand(c: Command)
-        +executeCommand()
-    }
-    
-    class Command {
-        <<interface>>
-        +execute()
-    }
-    
-    class ConcreteCommand {
-        -receiver: Receiver
-        -params
-        +ConcreteCommand(r: Receiver, params)
-        +execute()
-    }
-    
-    class Receiver {
-        +action(params)
-    }
-    
-    class Client
+<CommandDiagram />
 
-    Client --> Invoker
-    Client --> Receiver
-    Client ..> ConcreteCommand: creates
-    Invoker o--> Command
-    Command <|.. ConcreteCommand
-    ConcreteCommand --> Receiver : delegates
-    
-    note for ConcreteCommand "execute() {\n    receiver.action(params);\n}"
-```
 
 ---
 

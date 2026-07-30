@@ -154,7 +154,7 @@ See [Fixup](./fixup) for the `--fixup` / `--autosquash` workflow.
 A good habit: keep whatever commits you need locally while working (safety nets), then squash before requesting review. Reviewers see clean history, and `git log` on main stays meaningful.
 :::
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. How do you decide whether to squash all commits vs preserve a few logical commits before merge?
 2. What are the organizational risks of aggressive squashing in regulated environments?

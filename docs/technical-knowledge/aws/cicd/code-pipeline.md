@@ -106,7 +106,7 @@ React to pipeline state changes:
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** A pipeline needs to deploy to staging automatically, then wait for a human to approve before deploying to production. Which CodePipeline action provides this?
 
@@ -144,7 +144,7 @@ D) In-memory within the pipeline
 - [CodePipeline Action Reference](https://docs.aws.amazon.com/codepipeline/latest/userguide/reference-pipeline-structure.html)
 - [Cross-Account Pipelines](https://docs.aws.amazon.com/codepipeline/latest/userguide/pipelines-create-cross-account.html)
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. How would you structure a multi-account pipeline to deploy the same artifact to dev, staging, and prod with least privilege?
 2. What is your strategy to make manual approvals meaningful instead of a rubber-stamp bottleneck?

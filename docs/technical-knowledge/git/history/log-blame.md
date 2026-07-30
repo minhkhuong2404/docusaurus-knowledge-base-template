@@ -200,7 +200,7 @@ Repeat this to walk a line's full history backward through time.
 In IntelliJ IDEA, right-click any line → **Git → Annotate with Git Blame** for an inline blame view with full commit details on hover. For VS Code, the **GitLens** extension provides the same. Use these for day-to-day blame — use the CLI for scripting and custom queries.
 :::
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. How do you investigate a production regression quickly using `git log`, `-S/-G`, and `blame` without chasing noise?
 2. What are the limits of `git blame` in heavily refactored codebases, and how do you mitigate false ownership conclusions?

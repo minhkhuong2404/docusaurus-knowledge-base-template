@@ -224,6 +224,10 @@ User                Client App          Auth Server         Resource Server
  │                       │ ◄──── orders JSON ─────────────────── │
 ```
 
+:::tip[Refresh Token Security & Session Invalidation]
+For detailed patterns on managing long-lived refresh tokens, refresh token rotation (RTR), stolen token reuse detection, emergency account compromise response, and multi-device session invalidation during password updates, see [Refresh Token Security & Multi-Device Session Invalidation](../security/refresh-token-security-invalidation.md).
+:::
+
 #### PKCE (Proof Key for Code Exchange)
 
 Required for public clients (SPAs, mobile apps) that can't keep a client secret:
@@ -496,7 +500,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What is the difference between OAuth 2.0 and OIDC?**
 > OAuth 2.0 is an authorization framework — it grants third-party apps access to resources on behalf of a user (access tokens, scopes). It doesn't define user identity. OIDC (OpenID Connect) is an identity layer built on top of OAuth 2.0 — it adds an ID Token (a JWT with user identity claims like `sub`, `email`) and a UserInfo endpoint. Use OAuth for API authorization; use OIDC for user authentication/SSO.

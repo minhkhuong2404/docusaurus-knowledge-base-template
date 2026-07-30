@@ -7,6 +7,11 @@ sidebar_position: 2
 tags: [distributed-systems, database, backend, scaling, algorithms]
 ---
 
+import NaiveModuloCascadeDiagram from '@site/src/components/NaiveModuloCascadeDiagram';
+import HashRingMechanicsDiagram from '@site/src/components/HashRingMechanicsDiagram';
+import GracefulScalingDiagram from '@site/src/components/GracefulScalingDiagram';
+import RingReplicationDiagram from '@site/src/components/RingReplicationDiagram';
+
 # Consistent Hashing: An Advanced Architectural Guide
 
 In distributed systems, managing the deterministic placement of state across multiple transient nodes is a foundational challenge. Whether you are designing a distributed cache, a partitioned database, or a message queue, the routing topology directly dictates the system's elasticity and resilience.
@@ -38,7 +43,9 @@ When horizontally scaling a stateful tier (e.g., moving from 1 cache node to 3),
 
 1. Pass the routing key (e.g., `user_id` or `session_token`) through a hashing algorithm (like MD5 or MurmurHash).
 2. Apply the modulo operator against the current total number of servers $N$.
-3. Route the data to the resulting index: $Index = hash(key) \bmod N$
+3. Route the data to the resulting index:
+
+$$\text{Index} = \text{hash}(\text{key}) \pmod N$$
 
 ### Code Example
 
@@ -55,32 +62,20 @@ server = get_server_naive("user_12345", 3)  # Returns 0, 1, or 2
 
 This deterministic approach works flawlessly in a static environment but fails catastrophically during scaling events. If traffic spikes and a 4th server is added, the denominator $N$ in the modulo function changes from $3$ to $4$.
 
-Because the modulo base has changed, the mathematical output for almost *every single existing key* changes. For example, a hash value of $67211 \bmod 3$ routes to Server $2$. But $67211 \bmod 4$ routes to Server $3$.
+Because the modulo base has changed, the mathematical output for almost *every single existing key* changes. For example, a hash value of $67211 \pmod 3$ routes to Server $2$. But $67211 \pmod 4$ routes to Server $3$.
 
 :::danger[The Math of Failure]
-When the number of nodes changes from $N$ to $N+1$, the probability that a key must be remapped is $N/(N+1)$. In a 10-node cluster, adding one node forces **90%** of the existing data to move. This triggers a massive "thundering herd" of network I/O, cache misses, and database thrashing, often causing cascading failures across the entire backend architecture.
+When the number of nodes changes from $N$ to $N+1$, the probability $P$ that a key must be remapped is:
+
+$$P(\text{remap}) = \frac{N}{N+1}$$
+
+In a 10-node cluster ($N=10$), adding one node forces **90%** ($\frac{10}{11} \approx 90.9\%$) of the existing data to move. This triggers a massive "thundering herd" of network I/O, cache misses, and database thrashing, often causing cascading failures across the entire backend architecture.
 :::
 
 ### Visual Example
 
-```
-Initial State (3 servers):
-┌─────────────────────────────────────────────────────────────┐
-│ Key: user_1  → hash: 12345  → 12345 % 3 = 0  → Server A     │
-│ Key: user_2  → hash: 67890  → 67890 % 3 = 0  → Server A     │
-│ Key: user_3  → hash: 11111  → 11111 % 3 = 1  → Server B     │
-│ Key: user_4  → hash: 22222  → 22222 % 3 = 2  → Server C     │
-└─────────────────────────────────────────────────────────────┘
+<NaiveModuloCascadeDiagram />
 
-After Adding Server D (4 servers):
-┌─────────────────────────────────────────────────────────────┐
-│ Key: user_1  → hash: 12345  → 12345 % 4 = 1  → Server B ❌  │
-│ Key: user_2  → hash: 67890  → 67890 % 4 = 2  → Server C ❌  │
-│ Key: user_3  → hash: 11111  → 11111 % 4 = 3  → Server D ❌  │
-│ Key: user_4  → hash: 22222  → 22222 % 4 = 2  → Server C ❌  │
-└─────────────────────────────────────────────────────────────┘
-Result: ALL keys moved to different servers!
-```
 
 ### Impact on Production Systems
 
@@ -112,33 +107,8 @@ To safely scale without catastrophic data movement, we must decouple the data ma
 
 #### Visual Representation
 
-```
-                    0
-                  ┌───┐
-              255 │   │ 1
-          ┌────────┤   ├────────┐
-          │        └───┘        │
-      192 │                   │ 64
-          │                   │
-          │                   │
-      128 │                   │ 128
-          │                   │
-          │        ┌───┐      │
-          └────────┤   ├──────┘
-              65  │   │ 192
-                  └───┘
-                    255
+<HashRingMechanicsDiagram />
 
-Hash Ring (0-255 for simplicity)
-
-Server A: hash("10.0.0.1") = 42
-Server B: hash("10.0.0.2") = 150
-Server C: hash("10.0.0.3") = 210
-
-Key "user_1": hash("user_1") = 100 → Route to Server B (first clockwise)
-Key "user_2": hash("user_2") = 200 → Route to Server C (first clockwise)
-Key "user_3": hash("user_3") = 300 → Wrap to 0, route to Server A
-```
 
 ### 2.2 Time Complexity and Implementation
 
@@ -230,111 +200,8 @@ public class ConsistentHash<T> {
 
 Because mapping is determined by clockwise proximity rather than a rigid modulo base, scaling isolates data movement:
 
-#### Adding a Node
+<GracefulScalingDiagram />
 
-If a new Server $X$ is added between Server $A$ and Server $B$, it only intercepts data hashed between $A$ and $X$. Only this specific, localized subset of data migrates from $B$ to $X$. The rest of the cluster is completely undisturbed.
-
-**Example:**
-```
-Before adding Server D:
-┌─────────────────────────────────────────────────────────────┐
-│ Ring: A(42) ── B(150) ── C(210) ── (wrap to A)              │
-│                                                              │
-│ Keys in range [42, 150):  → Server A                        │
-│ Keys in range [150, 210): → Server B                        │
-│ Keys in range [210, 42):  → Server C                        │
-└─────────────────────────────────────────────────────────────┘
-
-After adding Server D at position 100:
-┌─────────────────────────────────────────────────────────────┐
-│ Ring: A(42) ── D(100) ── B(150) ── C(210) ── (wrap to A)   │
-│                                                              │
-│ Keys in range [42, 100):  → Server A (unchanged) ✓          │
-│ Keys in range [100, 150): → Server D (NEW!)                 │
-│ Keys in range [150, 210): → Server B (unchanged) ✓          │
-│ Keys in range [210, 42):  → Server C (unchanged) ✓          │
-└─────────────────────────────────────────────────────────────┘
-
-Result: Only keys in [100, 150) moved from B to D (~25% of data)
-```
-
-#### Removing a Node
-
-If Server $B$ goes offline, its assigned data simply "falls forward" clockwise to Server $C$.
-
-**Example:**
-```
-Before removing Server B:
-┌─────────────────────────────────────────────────────────────┐
-│ Ring: A(42) ── B(150) ── C(210) ── (wrap to A)              │
-│                                                              │
-│ Keys in range [150, 210): → Server B                        │
-└─────────────────────────────────────────────────────────────┘
-
-After removing Server B:
-┌─────────────────────────────────────────────────────────────┐
-│ Ring: A(42) ── C(210) ── (wrap to A)                        │
-│                                                              │
-│ Keys in range [150, 210): → Server C (inherited from B)     │
-└─────────────────────────────────────────────────────────────┘
-
-Result: Only keys in [150, 210) moved from B to C
-```
-
-### 2.4 Mathematical Properties
-
-#### Consistency Property
-
-Consistent hashing satisfies the consistency property: if the hash function is consistent, then adding or removing a server only affects keys that hash to positions near that server.
-
-**Formal Definition:**
-For any key $k$ and set of servers $S$, let $f(k, S)$ be the server that stores key $k$. Consistent hashing ensures that for any two sets of servers $S_1$ and $S_2$ that differ by only one server, the set of keys that are assigned to different servers is bounded.
-
-#### Load Distribution
-
-With $N$ servers and $K$ keys, the expected number of keys per server is $K/N$. The variance depends on the hash function quality and the number of virtual nodes.
-
----
-
-## ⚖️ 3. Resolving Data Skew: Virtual Nodes {/* #3-resolving-data-skew-virtual-nodes */}
-
-While the standard ring solves mass redistribution, it suffers from severe data skew. Hashing a small number of physical servers (e.g., 5 nodes) onto a massive ring almost never results in an even distribution. Furthermore, if a node crashes, its clockwise neighbor inherits 100% of its load, instantly doubling its capacity and risking a cascading failure.
-
-### The Problem with Physical Nodes Only
-
-**Example of Skew:**
-```
-Ring with 3 physical nodes:
-┌─────────────────────────────────────────────────────────────┐
-│ Server A: hash = 42 (13% of ring space)                     │
-│ Server B: hash = 150 (42% of ring space) ❌                  │
-│ Server C: hash = 210 (45% of ring space) ❌                  │
-│                                                              │
-│ Result: Server B and C handle 87% of traffic!               │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### The Virtual Nodes (V-Nodes) Pattern
-
-To balance the load and handle heterogeneous hardware (servers with different capacities), we introduce **Virtual Nodes**.
-
-Instead of mapping a physical server to a single point on the ring, we map it to *multiple* points. We achieve this by appending a sequence to the server's identifier before hashing:
-* `hash("10.0.0.1#v1")`
-* `hash("10.0.0.1#v2")`
-* `hash("10.0.0.1#v3")`
-
-### How Virtual Nodes Work
-
-```
-Physical Server A with 3 virtual nodes:
-┌─────────────────────────────────────────────────────────────┐
-│ Virtual Node A#1: hash("10.0.0.1#v1") = 42                  │
-│ Virtual Node A#2: hash("10.0.0.1#v2") = 120                 │
-│ Virtual Node A#3: hash("10.0.0.1#v3") = 200                 │
-│                                                              │
-│ All three virtual nodes route to the same physical server A │
-└─────────────────────────────────────────────────────────────┘
-```
 
 ### Benefits of Virtual Nodes
 
@@ -415,20 +282,8 @@ When a write request arrives, the coordinator node finds the primary owner by wa
 
 ### Visual Example
 
-```
-Ring with replication factor 3:
-┌─────────────────────────────────────────────────────────────┐
-│ Physical Servers: A, B, C, D, E                              │
-│                                                              │
-│ Key "user_1" hashes to position 100                          │
-│                                                              │
-│ Primary: Server A (first clockwise from 100)                │
-│ Replica 1: Server B (next distinct physical server)          │
-│ Replica 2: Server C (next distinct physical server)          │
-│                                                              │
-│ Data stored on: A, B, C                                      │
-└─────────────────────────────────────────────────────────────┘
-```
+<RingReplicationDiagram />
+
 
 ### Replication Strategies
 
@@ -485,7 +340,7 @@ Different consistency levels trade off between availability and consistency:
 | Consistency Level | Description | Latency | Availability |
 |-------------------|-------------|---------|--------------|
 | **ONE** | Acknowledged by 1 replica | Lowest | Highest |
-| **QUORUM** | Acknowledged by majority (R/2 + 1) | Medium | Medium |
+| **QUORUM** | Acknowledged by majority ($\lfloor R/2 \rfloor + 1$) | Medium | Medium |
 | **ALL** | Acknowledged by all replicas | Highest | Lowest |
 
 **Example:**
@@ -1046,58 +901,95 @@ class HotspotAwareRing:
 
 ---
 
-## 🎓 9. Interview Questions {/* #9-interview-questions */}
+## Interview Questions {/* #9-interview-questions */}
 
-### Beginner Level
+### Q1: What is the problem with using modulo hashing for distributed systems?
 
-**Q1: What is the problem with using modulo hashing for distributed systems?**
-A: Modulo hashing causes massive data redistribution when the number of nodes changes. When adding or removing a node, almost all keys need to be remapped, causing cache misses, database overload, and potential system failure.
+Modulo hashing causes massive data redistribution when the number of nodes changes. When adding or removing a node, almost all keys need to be remapped, causing cache misses, database overload, and potential system failure.
 
-**Q2: What is consistent hashing?**
-A: Consistent hashing is a technique that maps data to nodes in a way that minimizes data movement when nodes are added or removed. It uses a circular hash ring where both nodes and data keys are placed, and data is assigned to the first node encountered when moving clockwise from the key's position.
+---
 
-**Q3: How does consistent hashing solve the data redistribution problem?**
-A: In consistent hashing, adding or removing a node only affects keys that hash to positions near that node. Most keys remain assigned to their original nodes, minimizing data movement and system disruption.
+### Q2: What is consistent hashing?
 
-**Q4: What is a hash ring?**
-A: A hash ring is a circular data structure representing the hash space. Both server nodes and data keys are mapped to positions on this ring using a hash function. Data is assigned to the first server encountered when moving clockwise from the key's position.
+Consistent hashing is a technique that maps data to nodes in a way that minimizes data movement when nodes are added or removed. It uses a circular hash ring where both nodes and data keys are placed, and data is assigned to the first node encountered when moving clockwise from the key's position.
 
-**Q5: What is the time complexity of looking up a node in consistent hashing?**
-A: The time complexity is $O(\log N)$ where $N$ is the number of nodes, assuming the ring is implemented as a balanced binary search tree or sorted array with binary search.
+---
 
-### Intermediate Level
+### Q3: How does consistent hashing solve the data redistribution problem?
 
-**Q6: What are virtual nodes and why are they needed?**
-A: Virtual nodes are multiple representations of a single physical node on the hash ring. They're needed to ensure even load distribution, handle heterogeneous hardware (different server capacities), and prevent hotspots. Without virtual nodes, a small number of physical nodes would result in uneven data distribution.
+In consistent hashing, adding or removing a node only affects keys that hash to positions near that node. Most keys remain assigned to their original nodes, minimizing data movement and system disruption.
 
-**Q7: How do you choose the number of virtual nodes per physical node?**
-A: The number depends on the cluster size and desired load balancing. For small clusters (< 10 nodes), use 100-200 virtual nodes per physical node. For medium clusters (10-100 nodes), use 50-100. For large clusters (> 100 nodes), use 10-50. More virtual nodes provide better distribution but increase memory usage and lookup time.
+---
 
-**Q8: How does replication work with consistent hashing?**
-A: To replicate data, the system finds the primary node by walking clockwise from the key's position. It then continues walking to find the next $R-1$ distinct physical nodes, where $R$ is the replication factor. This ensures replicas are distributed across different physical machines.
+### Q4: What is a hash ring?
 
-**Q9: What happens when a node fails in a consistent hashing system?**
-A: When a node fails, its assigned data "falls forward" to the next node clockwise on the ring. The system detects the failure through health checks or gossip protocol, redirects traffic to the next available node, and uses read repair or anti-entropy to restore replication.
+A hash ring is a circular data structure representing the hash space. Both server nodes and data keys are mapped to positions on this ring using a hash function. Data is assigned to the first server encountered when moving clockwise from the key's position.
 
-**Q10: How do you implement weighted load balancing with consistent hashing?**
-A: Assign different numbers of virtual nodes to each physical server based on their capacity. A more powerful server might have 500 virtual nodes while a smaller server has 100. This ensures that more powerful servers handle proportionally more traffic.
+---
 
-### Advanced Level
+### Q5: What is the time complexity of looking up a node in consistent hashing?
 
-**Q11: Compare different hash functions for consistent hashing.**
-A: MD5 and SHA-1 provide good distribution but are slower. MurmurHash and xxHash are very fast with excellent distribution, making them ideal for performance-critical applications. The choice depends on the specific requirements: speed vs. cryptographic security.
+The time complexity is $O(\log N)$ where $N$ is the number of nodes, assuming the ring is implemented as a balanced binary search tree or sorted array with binary search.
 
-**Q12: How do you handle network partitions in consistent hashing?**
-A: During network partitions, different parts of the cluster may have different views of the ring. Use gossip protocols to eventually converge on a consistent view. Implement quorum-based operations to ensure consistency. Use version vectors or vector clocks to detect and resolve conflicts.
+---
 
-**Q13: What is Jump Consistent Hash and how does it differ from traditional consistent hashing?**
-A: Jump Consistent Hash is a newer algorithm that provides $O(1)$ lookup time without maintaining a ring structure. It uses a mathematical formula to determine the bucket for a given key. It's faster and uses less memory but doesn't support weighted nodes or complex replication strategies.
+### Q6: What are virtual nodes and why are they needed?
 
-**Q14: How do you implement hot spot detection and mitigation in consistent hashing?**
-A: Monitor request rates and latency for each node. Detect hotspots when a node's load exceeds a threshold. Mitigate by temporarily redirecting traffic to less loaded nodes, adding more virtual nodes for overloaded servers, or implementing adaptive load balancing algorithms.
+Virtual nodes are multiple representations of a single physical node on the hash ring. They're needed to ensure even load distribution, handle heterogeneous hardware (different server capacities), and prevent hotspots. Without virtual nodes, a small number of physical nodes would result in uneven data distribution.
 
-**Q15: How do you integrate consistent hashing with service discovery?**
-A: Combine consistent hashing with service discovery by dynamically updating the ring when services are registered or deregistered. Use a service discovery system like Eureka or Consul to get the current list of available services, then update the consistent hash ring accordingly. Implement periodic synchronization to handle network partitions.
+---
+
+### Q7: How do you choose the number of virtual nodes per physical node?
+
+The number depends on the cluster size and desired load balancing. For small clusters (< 10 nodes), use 100-200 virtual nodes per physical node. For medium clusters (10-100 nodes), use 50-100. For large clusters (> 100 nodes), use 10-50. More virtual nodes provide better distribution but increase memory usage and lookup time.
+
+---
+
+### Q8: How does replication work with consistent hashing?
+
+To replicate data, the system finds the primary node by walking clockwise from the key's position. It then continues walking to find the next $R-1$ distinct physical nodes, where $R$ is the replication factor. This ensures replicas are distributed across different physical machines.
+
+---
+
+### Q9: What happens when a node fails in a consistent hashing system?
+
+When a node fails, its assigned data "falls forward" to the next node clockwise on the ring. The system detects the failure through health checks or gossip protocol, redirects traffic to the next available node, and uses read repair or anti-entropy to restore replication.
+
+---
+
+### Q10: How do you implement weighted load balancing with consistent hashing?
+
+Assign different numbers of virtual nodes to each physical server based on their capacity. A more powerful server might have 500 virtual nodes while a smaller server has 100. This ensures that more powerful servers handle proportionally more traffic.
+
+---
+
+### Q11: Compare different hash functions for consistent hashing.
+
+MD5 and SHA-1 provide good distribution but are slower. MurmurHash and xxHash are very fast with excellent distribution, making them ideal for performance-critical applications. The choice depends on the specific requirements: speed vs. cryptographic security.
+
+---
+
+### Q12: How do you handle network partitions in consistent hashing?
+
+During network partitions, different parts of the cluster may have different views of the ring. Use gossip protocols to eventually converge on a consistent view. Implement quorum-based operations to ensure consistency. Use version vectors or vector clocks to detect and resolve conflicts.
+
+---
+
+### Q13: What is Jump Consistent Hash and how does it differ from traditional consistent hashing?
+
+Jump Consistent Hash is a newer algorithm that provides $O(1)$ lookup time without maintaining a ring structure. It uses a mathematical formula to determine the bucket for a given key. It's faster and uses less memory but doesn't support weighted nodes or complex replication strategies.
+
+---
+
+### Q14: How do you implement hot spot detection and mitigation in consistent hashing?
+
+Monitor request rates and latency for each node. Detect hotspots when a node's load exceeds a threshold. Mitigate by temporarily redirecting traffic to less loaded nodes, adding more virtual nodes for overloaded servers, or implementing adaptive load balancing algorithms.
+
+---
+
+### Q15: How do you integrate consistent hashing with service discovery?
+
+Combine consistent hashing with service discovery by dynamically updating the ring when services are registered or deregistered. Use a service discovery system like Eureka or Consul to get the current list of available services, then update the consistent hash ring accordingly. Implement periodic synchronization to handle network partitions.
 
 ### Senior Level
 

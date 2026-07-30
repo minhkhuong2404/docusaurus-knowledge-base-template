@@ -229,7 +229,7 @@ try {
 
 ---
 
-## Interview Questions — Kafka Data Governance
+## Interview Questions
 
 **Q: What is the difference between Kafka security and Kafka data governance?**
 

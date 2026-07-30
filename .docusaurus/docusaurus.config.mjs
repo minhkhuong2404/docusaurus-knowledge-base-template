@@ -8,6 +8,14 @@ export default {
   "tagline": "Internal technical documentation",
   "url": "https://luminhkhuong.dev",
   "baseUrl": "/",
+  "stylesheets": [
+    {
+      "href": "https://cdn.jsdelivr.net/npm/katex@0.13.24/dist/katex.min.css",
+      "type": "text/css",
+      "integrity": "sha384-odtC+0UGzzFL/6PNoE8rX/SPcQDXBJ+uRepguP4QkPCm2LBxH3FA3y+fKSiJ+AmM",
+      "crossorigin": "anonymous"
+    }
+  ],
   "organizationName": "minhkhuong2404",
   "projectName": "docusaurus-knowledge-base-template",
   "onBrokenLinks": "warn",
@@ -43,6 +51,9 @@ export default {
           "showLastUpdateTime": true,
           "showLastUpdateAuthor": true,
           "remarkPlugins": [
+            null
+          ],
+          "rehypePlugins": [
             null
           ]
         },
@@ -212,6 +223,10 @@ export default {
         "srcDark": "/logo-dark.svg"
       },
       "items": [
+        {
+          "type": "custom-userNavbarItem",
+          "position": "right"
+        },
         {
           "type": "search",
           "position": "right"
@@ -612,7 +627,6 @@ export default {
   "customFields": {},
   "scripts": [],
   "headTags": [],
-  "stylesheets": [],
   "clientModules": [],
   "titleDelimiter": "|",
   "noIndex": false

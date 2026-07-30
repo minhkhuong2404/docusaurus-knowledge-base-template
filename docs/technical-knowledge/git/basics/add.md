@@ -206,7 +206,7 @@ git add -f src/main/resources/application-template.yml
 Use `git add -p` to keep commits small and focused. A commit titled `"fix: resolve NPE in TransactionService"` should only contain the fix — not an unrelated refactor you happened to do in the same session. Patch staging makes that easy.
 :::
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. How do you use patch staging to keep commits reviewable in high-change files?
 2. What policy prevents accidental staging of secrets or generated artifacts?

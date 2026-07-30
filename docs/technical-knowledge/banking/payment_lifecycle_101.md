@@ -281,7 +281,7 @@ Based on your role:
 2. [NPP & PayTo](./npp.md) — modern AU payments
 3. [Open Banking / CDR](./open_banking.md) — future of payments
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. Which lifecycle stages are highest risk for production payment failures, and why?
 2. How do you design idempotency so retries do not create duplicate financial outcomes?

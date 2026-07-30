@@ -51,47 +51,12 @@ Imagine a seasoned insurance agent who is eager to get new customers. He can vis
 
 ---
 
+import VisitorDiagram from '@site/src/components/VisitorDiagram';
+
 ## 🏗️ Structure
 
-```mermaid
-classDiagram
-    class Visitor {
-        <<interface>>
-        +visitElementA(e: ElementA)
-        +visitElementB(e: ElementB)
-    }
-    
-    class ConcreteVisitor {
-        +visitElementA(e: ElementA)
-        +visitElementB(e: ElementB)
-    }
-    
-    class Element {
-        <<interface>>
-        +accept(v: Visitor)
-    }
-    
-    class ElementA {
-        +accept(v: Visitor)
-        +featureA()
-    }
-    
-    class ElementB {
-        +accept(v: Visitor)
-        +featureB()
-    }
-    
-    class Client
+<VisitorDiagram />
 
-    Client --> Visitor
-    Client --> Element
-    Visitor <|.. ConcreteVisitor
-    Element <|.. ElementA
-    Element <|.. ElementB
-    
-    note for ElementA "accept(v) {\n    v.visitElementA(this);\n}"
-    note for ElementB "accept(v) {\n    v.visitElementB(this);\n}"
-```
 
 ---
 

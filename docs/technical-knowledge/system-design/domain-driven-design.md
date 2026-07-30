@@ -6,6 +6,16 @@ description: Practical DDD for system design interviews and production architect
 tags: [ddd, bounded-context, aggregate, ubiquitous-language, context-mapping, domain-modeling, microservices]
 ---
 
+import DddBoundedContextsDiagram from '@site/src/components/DddBoundedContextsDiagram';
+import DddContextMappingDiagram from '@site/src/components/DddContextMappingDiagram';
+import DddDomainLayersDiagram from '@site/src/components/DddDomainLayersDiagram';
+import DddArchitecturePatternsDiagram from '@site/src/components/DddArchitecturePatternsDiagram';
+import DddMicroservicesMappingDiagram from '@site/src/components/DddMicroservicesMappingDiagram';
+import LayeredArchitectureDiagram from '@site/src/components/LayeredArchitectureDiagram';
+import HexagonalArchitectureDiagram from '@site/src/components/HexagonalArchitectureDiagram';
+import OnionArchitectureDiagram from '@site/src/components/OnionArchitectureDiagram';
+import CleanArchitectureDiagram from '@site/src/components/CleanArchitectureDiagram';
+
 # Domain-Driven Design (DDD)
 
 > DDD helps teams model complex business domains with shared language and clear boundaries.
@@ -537,29 +547,7 @@ public class OrderFactory {
 
 ### Bounded Contexts
 
-A bounded context is a distinct part of the domain model with its own ubiquitous language.
-
-```
-E-Commerce System Bounded Contexts:
-
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Catalog       │    │   Checkout       │    │   Inventory     │
-│                 │    │                 │    │                 │
-│ - Product       │    │ - Order          │    │ - StockItem     │
-│ - Category      │    │ - Cart           │    │ - Warehouse     │
-│ - Price         │    │ - Payment        │    │ - Location      │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                      │                      │
-         └──────────────────────┼──────────────────────┘
-                                │
-                    ┌─────────────────┐
-                    │   Shipping      │
-                    │                 │
-                    │ - Shipment     │
-                    │ - Tracking     │
-                    │ - Carrier      │
-                    └─────────────────┘
-```
+<DddBoundedContextsDiagram />
 
 ### Ubiquitous Language
 
@@ -576,39 +564,11 @@ Ubiquitous language is a shared vocabulary used by both domain experts and devel
 
 ### Context Mapping
 
-Context mapping defines relationships between bounded contexts.
-
-```
-Context Mapping Patterns:
-
-Catalog (Upstream) ──[Published Language]──> Checkout (Downstream)
-Checkout (Upstream) ──[ACL]──> Payment (Downstream)
-Inventory (Upstream) ──[OHS]──> Shipping (Downstream)
-```
+<DddContextMappingDiagram />
 
 ### Domain Layers
 
-```
-┌─────────────────────────────────────────┐
-│           User Interface               │
-│         (Controllers, DTOs)             │
-└─────────────────────────────────────────┘
-                    │
-┌─────────────────────────────────────────┐
-│         Application Layer               │
-│      (Services, Use Cases)              │
-└─────────────────────────────────────────┘
-                    │
-┌─────────────────────────────────────────┐
-│           Domain Layer                  │
-│  (Entities, Value Objects, Events)      │
-└─────────────────────────────────────────┘
-                    │
-┌─────────────────────────────────────────┐
-│        Infrastructure Layer             │
-│    (Repositories, External Services)    │
-└─────────────────────────────────────────┘
-```
+<DddDomainLayersDiagram />
 
 ---
 
@@ -900,17 +860,7 @@ public class Payment {
 
 Do not map one entity to one service. Map one **bounded context** to one service boundary when team ownership and change cadence align.
 
-```
-DDD + Microservices Mapping:
-
-Bounded Context          Microservice
-─────────────────────────────────────
-Catalog Context      →  Catalog Service
-Checkout Context     →  Order Service
-Inventory Context    →  Inventory Service
-Shipping Context     →  Shipping Service
-Payment Context      →  Payment Service
-```
+<DddMicroservicesMappingDiagram />
 
 ### DDD and Event-Driven Architecture
 
@@ -1104,108 +1054,23 @@ public class OrderServiceWithLogging implements OrderService {
 
 ## DDD Architecture Patterns
 
+<DddArchitecturePatternsDiagram />
+
 ### Layered Architecture
 
-```
-┌─────────────────────────────────────────┐
-│           Presentation Layer            │
-│  (Controllers, Views, DTOs)             │
-└─────────────────────────────────────────┘
-                    │
-┌─────────────────────────────────────────┐
-│          Application Layer               │
-│  (Application Services, Use Cases)       │
-└─────────────────────────────────────────┘
-                    │
-┌─────────────────────────────────────────┐
-│            Domain Layer                  │
-│  (Entities, Value Objects, Domain       │
-│   Services, Events)                      │
-└─────────────────────────────────────────┘
-                    │
-┌─────────────────────────────────────────┐
-│         Infrastructure Layer             │
-│  (Repositories, External Services,      │
-│   Persistence, Messaging)               │
-└─────────────────────────────────────────┘
-```
+<LayeredArchitectureDiagram />
 
 ### Hexagonal Architecture
 
-```
-                    ┌─────────────────┐
-                    │   Application   │
-                    │      Core       │
-                    │                 │
-                    │  ┌───────────┐  │
-                    │  │  Domain   │  │
-                    │  │  Model    │  │
-                    │  └───────────┘  │
-                    │                 │
-                    │  ┌───────────┐  │
-                    │  │  Ports    │  │
-                    │  │ (Interfaces) │ │
-                    │  └───────────┘  │
-                    └─────────────────┘
-                            │
-            ┌───────────────┼───────────────┐
-            │               │               │
-    ┌───────▼──────┐ ┌──────▼──────┐ ┌─────▼──────┐
-    │   Primary    │ │   Primary   │ │  Secondary │
-    │   Adapters   │ │   Adapters  │ │  Adapters  │
-    │  (REST, CLI) │ │ (Database,  │ │ (Message   │
-    │              │ │  File)      │ │  Queue)    │
-    └──────────────┘ └─────────────┘ └────────────┘
-```
+<HexagonalArchitectureDiagram />
 
 ### Onion Architecture
 
-```
-┌─────────────────────────────────────────┐
-│         Infrastructure Layer            │
-│  (Frameworks, Database, UI)             │
-└─────────────────────────────────────────┘
-                    │
-┌─────────────────────────────────────────┐
-│         Application Layer                │
-│  (Use Cases, Application Services)      │
-└─────────────────────────────────────────┘
-                    │
-┌─────────────────────────────────────────┐
-│           Domain Layer                   │
-│  (Entities, Value Objects, Domain       │
-│   Services, Events)                      │
-└─────────────────────────────────────────┘
-                    │
-┌─────────────────────────────────────────┐
-│          Domain Core                     │
-│  (Core Business Logic)                   │
-└─────────────────────────────────────────┘
-```
+<OnionArchitectureDiagram />
 
 ### Clean Architecture
 
-```
-┌─────────────────────────────────────────┐
-│         Frameworks & Drivers             │
-│  (Web, Database, Devices, UI)            │
-└─────────────────────────────────────────┘
-                    │
-┌─────────────────────────────────────────┐
-│         Interface Adapters              │
-│  (Controllers, Presenters, Gateways)     │
-└─────────────────────────────────────────┘
-                    │
-┌─────────────────────────────────────────┐
-│         Use Cases                        │
-│  (Application Business Rules)            │
-└─────────────────────────────────────────┘
-                    │
-┌─────────────────────────────────────────┐
-│         Entities                        │
-│  (Enterprise Business Rules)            │
-└─────────────────────────────────────────┘
-```
+<CleanArchitectureDiagram />
 
 ---
 

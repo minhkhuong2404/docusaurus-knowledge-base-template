@@ -1056,7 +1056,7 @@ spring:
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What is connection pooling and why is it needed?**
 > Opening a new database connection requires a TCP handshake, TLS negotiation, database authentication, and backend process allocation — typically 10–100ms. A connection pool maintains a cache of pre-opened, pre-authenticated connections. Threads borrow a connection (< 1ms), run their query, and return it. This eliminates the per-request setup cost, enables connection reuse, and caps the total number of connections the database must serve — preventing resource exhaustion.

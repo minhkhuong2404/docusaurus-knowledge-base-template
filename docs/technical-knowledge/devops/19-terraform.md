@@ -430,7 +430,7 @@ Run `cdktf deploy` to provision.
 
 ---
 
-## Part 7: Real-World Use Cases & Interview Questions
+## Interview Questions
 
 ### Use Case: Zero-Downtime Database Migration
 You need to change the instance class of an RDS database. Terraform will try to do it in-place, which causes downtime.

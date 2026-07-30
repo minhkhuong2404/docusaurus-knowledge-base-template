@@ -170,7 +170,7 @@ gfix 9f3e2d1
 Combined with `git config --global rebase.autoSquash true`, this becomes the fastest way to maintain clean branch history.
 :::
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. How does a `fixup`-first workflow improve review velocity compared with ad hoc amend/rebase usage?
 2. What branch protection rules should accompany frequent `--autosquash` rewrites?

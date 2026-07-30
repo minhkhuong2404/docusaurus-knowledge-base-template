@@ -234,7 +234,7 @@ Used by: **Redshift, BigQuery, ClickHouse, Parquet, Apache ORC**
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What is the difference between InnoDB and MyISAM?**
 > InnoDB supports transactions (ACID), row-level locking, foreign keys, and uses MVCC for concurrency. MyISAM has none of these — only table-level locking and no transactions. InnoDB stores data in a clustered B+ tree; MyISAM uses a heap file. InnoDB is the right choice for virtually all modern applications.

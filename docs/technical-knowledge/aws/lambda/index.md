@@ -561,7 +561,7 @@ public class StreamHandler implements RequestStreamHandler {
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** A Lambda function is triggered by an S3 `PutObject` event. The function fails. How many times will Lambda retry?
 

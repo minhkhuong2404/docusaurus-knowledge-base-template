@@ -8,6 +8,9 @@ tags: [system-design, distributed-systems, outbox-pattern, cdc, database, transa
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import TransactionalOutboxDiagram from '@site/src/components/TransactionalOutboxDiagram';
+import DebeziumCdcDiagram from '@site/src/components/DebeziumCdcDiagram';
+import CdcVsPollingDiagram from '@site/src/components/CdcVsPollingDiagram';
 
 # Transactional Outbox Pattern
 
@@ -60,27 +63,7 @@ The key insight: **the ticket (outbox record) and the order (business record) ar
 
 The Transactional Outbox Pattern solves the Dual-Write Problem by writing the event payload **to the same database as the business data**, in the same local ACID transaction. A separate relay process then reads the outbox and publishes events to the message broker.
 
-```mermaid
-sequenceDiagram
-    participant App as Application
-    participant DB as Database<br/>(orders + outbox_events)
-    participant Relay as Relay Process<br/>(Polling or CDC)
-    participant Kafka as Kafka Broker
-
-    App->>DB: BEGIN TRANSACTION
-    App->>DB: INSERT INTO orders (id, status='PENDING', ...)
-    App->>DB: INSERT INTO outbox_events (payload=OrderPlaced, status=PENDING)
-    App->>DB: COMMIT
-    Note over App, DB: ✅ Atomically durable — both or neither
-
-    loop Relay engine (async)
-        Relay->>DB: SELECT unprocessed outbox events
-        Relay->>Kafka: Publish event
-        Relay->>DB: Mark event as PUBLISHED
-    end
-
-    Note over Relay, Kafka: At-least-once delivery guaranteed
-```
+<TransactionalOutboxDiagram />
 
 **Guarantee:** If the database transaction commits, the event **will eventually** be published to Kafka. If the transaction rolls back, no event is published. There is no window where the order exists but the event is missing.
 
@@ -264,18 +247,7 @@ public interface OutboxRepository extends JpaRepository<OutboxEvent, UUID> {
 
 Debezium reads the PostgreSQL **Write-Ahead Log (WAL)** directly — the same internal mechanism PostgreSQL uses for replication. When a row is inserted into `outbox_events`, Debezium reads the WAL entry and streams it to Kafka Connect immediately — typically in **< 50ms**.
 
-```
-PostgreSQL WAL Stream:
-┌──────────────────────────────────────────────────────┐
-│ LSN 00001/A1B2C3: INSERT outbox_events               │
-│   id=uuid-123, event_type=OrderPlaced,               │
-│   aggregate_id=order-456, status=PENDING             │
-└──────────────────────────────────────────────────────┘
-                         ↓ Debezium reads WAL
-                    Kafka Connect
-                         ↓ publishes to Kafka topic
-                 order-events (Kafka partition 3)
-```
+<DebeziumCdcDiagram />
 
 ```json
 {
@@ -333,29 +305,7 @@ CREATE PUBLICATION debezium_publication FOR TABLE outbox_events;
 ---
 
 ## CDC vs Polling Publisher Deep Dive
-
-```
-┌────────────────────────────────────────────────────────────────┐
-│                    COMPARISON                                  │
-├─────────────────────┬──────────────────┬───────────────────────┤
-│ Dimension           │ Polling          │ CDC (Debezium)        │
-├─────────────────────┼──────────────────┼───────────────────────┤
-│ Latency             │ 0–500ms          │ < 50ms                │
-│ DB Load             │ Queries every    │ WAL stream (low CPU)  │
-│                     │ 500ms            │                       │
-│ Infrastructure      │ Just app code    │ Kafka Connect +       │
-│                     │                  │ Debezium + WAL config │
-│ Scaling             │ Horizontal       │ Single reader per     │
-│                     │ (SKIP LOCKED)    │ connector (Kafka      │
-│                     │                  │ Connect partitioning) │
-│ Ordering            │ Per poll-batch   │ Exact WAL order       │
-│ Failure recovery    │ Restart relay    │ Debezium resumes from │
-│                     │                  │ last LSN in slot      │
-│ Exactly-once?       │ No (at-least-    │ No (at-least-once)    │
-│                     │ once)            │                       │
-│ Best TPS ceiling    │ ~1,000/sec       │ ~50,000/sec           │
-└─────────────────────┴──────────────────┴───────────────────────┘
-```
+<CdcVsPollingDiagram />
 
 :::note[Both strategies deliver at-least-once]
 Neither polling nor CDC guarantees exactly-once delivery to Kafka. Your consumers must handle duplicates using idempotency keys. See the [Deduplication Guide](../kafka/advanced/exactly-once-vs-dedup.md) for implementation patterns.
@@ -496,7 +446,7 @@ Use the **Outbox Pattern inside each Saga step** to make event publishing within
 
 ---
 
-## Senior Interview Questions
+## Interview Questions
 
 ### Q: The Transactional Outbox guarantees at-least-once delivery. How do downstream consumers handle duplicates?
 

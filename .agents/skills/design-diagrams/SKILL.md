@@ -117,3 +117,13 @@ python scratch/scan_diagrams.py
 ```
 
 Results are written to `scratch/diagrams_inventory.md`.
+
+---
+
+### Step 8 — MANDATORY: Register Any New Page in sidebars.ts
+
+If this skill results in creating a **new markdown documentation page** (not just a new component), you **MUST** add it to `sidebars.ts`:
+
+1. Find the right category by grepping `sidebars.ts` for any existing sibling doc ID from the same folder.
+2. Insert the new doc ID (path from `docs/` without `.md`) immediately after the closest thematically related sibling.
+3. See the full sidebar registration rule in [AGENTS.md](../../AGENTS.md#mandatory-register-every-new-page-in-sidebarsts).

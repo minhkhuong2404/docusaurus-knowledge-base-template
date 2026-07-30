@@ -1028,7 +1028,7 @@ ps aux --sort=-%mem | head -20
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What is virtual memory and why does every modern OS use it?**
 > Virtual memory gives each process the illusion of a private, contiguous address space much larger than physical RAM. The OS (via the MMU) maps each process's virtual addresses to physical RAM frames through page tables. Benefits: (1) isolation — processes cannot access each other's memory; (2) overcommit — processes can allocate more memory than physically available (demand paging loads pages on first access); (3) sharing — multiple processes can map the same physical page (shared libraries, copy-on-write after fork); (4) protection — page table entries carry read/write/execute permission bits, enforced in hardware.

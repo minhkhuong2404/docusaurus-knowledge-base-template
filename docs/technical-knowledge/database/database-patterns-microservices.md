@@ -158,7 +158,7 @@ Solutions:
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What is the database-per-service pattern and why is it used in microservices?**
 > Each service owns its own database with no shared schema. This enables independent deployment (schema changes are local), technology diversity (each service uses the best DB for its needs), fault isolation, and independent scaling. The trade-off is that cross-service consistency requires patterns like Saga and Outbox instead of distributed transactions.

@@ -168,7 +168,7 @@ git difftool HEAD~1
 ```
 :::
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. How do you establish a diff-review routine that catches risky changes early?
 2. When should reviewers insist on split commits based on `status`/`diff` output?

@@ -336,7 +336,7 @@ public class SecurityConfig {
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What is a man-in-the-middle attack and how does TLS prevent it?**
 > MitM: attacker positions themselves between client and server, intercepting and potentially modifying traffic. TLS prevents it by: (1) authenticating the server via a certificate signed by a trusted CA — attacker can't forge a valid cert for a domain they don't control; (2) using ECDHE key exchange — even if the private key is later compromised, past sessions can't be decrypted (forward secrecy); (3) message authentication codes (MAC) detect tampering.

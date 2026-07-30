@@ -210,7 +210,7 @@ In **Kafka 4.0+ with KRaft mode** (ZooKeeper is removed):
 
 ---
 
-## Interview Questions — Kafka Authentication
+## Interview Questions
 
 **Q: What's the difference between SASL/PLAIN and SASL/SCRAM?**
 

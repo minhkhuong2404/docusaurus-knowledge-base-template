@@ -45,38 +45,12 @@ Each building step, such as laying the foundation, framing, building walls, inst
 
 ---
 
+import TemplateMethodDiagram from '@site/src/components/TemplateMethodDiagram';
+
 ## 🏗️ Structure
 
-```mermaid
-classDiagram
-    class AbstractClass {
-        +templateMethod()
-        +step1()
-        +step2()
-        +step3()
-        +step4()
-    }
-    
-    class ConcreteClass1 {
-        +step3()
-        +step4()
-    }
-    
-    class ConcreteClass2 {
-        +step1()
-        +step2()
-        +step3()
-        +step4()
-    }
-    
-    class Client
+<TemplateMethodDiagram />
 
-    Client --> AbstractClass
-    AbstractClass <|-- ConcreteClass1
-    AbstractClass <|-- ConcreteClass2
-    
-    note for AbstractClass "templateMethod() {\n    step1();\n    step2();\n    step3();\n    step4();\n}"
-```
 
 ---
 

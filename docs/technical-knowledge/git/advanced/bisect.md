@@ -165,7 +165,7 @@ git bisect replay bisect-session.log
 On a repo with 500 commits between the last known-good release and `HEAD`, manually checking each commit would take all day. `git bisect run` with an automated test finds the exact culprit in under 10 steps — usually in a few minutes. Write the test first.
 :::
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. How do you prepare deterministic bisect scripts for flaky test environments?
 2. When should commits be skipped with exit code `125`, and why?

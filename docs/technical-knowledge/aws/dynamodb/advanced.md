@@ -557,7 +557,7 @@ Access Patterns via GSI1:
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** A Lambda ESM processes DynamoDB Stream records in batches of 100. One record causes an exception. What happens to the other 99 by default?
 

@@ -100,36 +100,12 @@ The CEO wants to know the total payroll. Instead of writing complex, recursive S
 
 ## How It Works
 
+import CompositeDiagram from '@site/src/components/CompositeDiagram';
+
 ### 🏗️ Structure
 
-```mermaid
-classDiagram
-    class Component {
-        <<interface>>
-        +execute()
-    }
-    
-    class Leaf {
-        +execute()
-    }
-    
-    class Composite {
-        -children: List~Component~
-        +add(c: Component)
-        +remove(c: Component)
-        +getChildren() List~Component~
-        +execute()
-    }
-    
-    class Client
+<CompositeDiagram />
 
-    Component <|.. Leaf
-    Component <|.. Composite
-    Composite o--> Component
-    Client --> Component
-    
-    note for Composite "execute() {\n    for (child in children) {\n        child.execute();\n    }\n}"
-```
 
 ### File System Example
 

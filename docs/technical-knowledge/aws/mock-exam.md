@@ -20,7 +20,7 @@ tags:
 > 
 > ⏱️ Time yourself: **130 minutes** (2 min/question average)
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. How should a senior engineer use mock exams differently from a junior candidate?
 2. What post-mock review method best converts mistakes into durable architectural judgment?

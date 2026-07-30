@@ -165,7 +165,7 @@ cat ~/.ssh/id_ed25519.pub   # add this to GitHub/GitLab SSH settings
 ```
 :::
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. How do you design remote strategy for fork-based OSS contribution plus internal mirror compliance?
 2. What controls prevent pushing sensitive commits to the wrong remote in multi-remote setups?

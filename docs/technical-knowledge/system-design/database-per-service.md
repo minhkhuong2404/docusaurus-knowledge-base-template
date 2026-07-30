@@ -6,6 +6,11 @@ description: Technical guide to the Database-per-Service pattern, comparing data
 tags: [system-design, microservices, databases, cqrs, data-consistency]
 ---
 
+import SharedDbFailureDiagram from '@site/src/components/SharedDbFailureDiagram';
+import ApiCompositionDiagram from '@site/src/components/ApiCompositionDiagram';
+import CqrsPatternDiagram from '@site/src/components/CqrsPatternDiagram';
+import SharedReadReplicasDiagram from '@site/src/components/SharedReadReplicasDiagram';
+
 # Database per Service
 
 The **Database per Service** pattern requires that each microservice owns its private database. Other services cannot access this database directly. Instead, they must query or update data strictly via the owner service's public APIs (HTTP, gRPC, or events).
@@ -18,17 +23,7 @@ This is a fundamental pattern for achieving loose coupling in a microservices ar
 
 In a monolithic application, different modules join tables freely. Exposing this database to multiple microservices creates a severe architectural bottleneck:
 
-```text
-Integration Database (Anti-pattern):
-Order Service   ─┐
-Payment Service  ├───► [ Single SQL Database ] ───► Tight schema coupling & lock contention
-User Service    ─┘
-
-Database per Service (Correct):
-Order Service   ──► [ Orders DB ]   (Postgres - relational transactions)
-Payment Service ──► [ Payments DB ] (Postgres - high security vault)
-Search Service  ──► [ Search DB ]   (Elasticsearch - search indexes)
-```
+<SharedDbFailureDiagram />
 
 - **Schema Locking**: A simple table change (e.g., renaming a column in `users`) requires coordinated deployments across all services.
 - **Resource Starvation**: A slow query written by the Order Service can consume all CPU threads on the database host, slowing down the completely unrelated User Service.
@@ -43,12 +38,7 @@ Since direct SQL joins (`JOIN orders ON users.id = orders.user_id`) are impossib
 ### 1. API Composition (Query-Time Aggregation)
 The client or API Gateway requests data from each service in parallel and merges the results in code.
 
-```mermaid
-flowchart LR
-    GW[API Gateway / Composor] -->|Fetch User Profile| US[User Service]
-    GW -->|Fetch Recent Orders| OS[Order Service]
-    GW -.->|Merge & Return| JSON[Aggregated JSON]
-```
+<ApiCompositionDiagram />
 
 - **Pros**: Easy to implement. Good for simple joins.
 - **Cons**: Adds latency (multiple network calls) and memory overhead.
@@ -58,13 +48,7 @@ flowchart LR
 ### 2. CQRS (Command Query Responsibility Segregation)
 Builds a read-only database optimized for complex queries. The read-only service consumes events (e.g., `OrderCreated`, `CustomerUpdated`) and maintains a projection index (e.g., in Elasticsearch).
 
-```mermaid
-flowchart LR
-    EE[Event Emitted] --> Sync[Message Broker]
-    Sync --> PB[Read Projection Builder]
-    PB --> RDB[(Read-Optimized DB<br/>Elasticsearch)]
-    Queries[Queries] --> RDB
-```
+<CqrsPatternDiagram />
 
 - **Pros**: Fast, highly scalable queries. Avoids network join overhead.
 - **Cons**: High complexity; read-model suffers from eventual consistency lag.
@@ -72,6 +56,8 @@ flowchart LR
 ---
 
 ### 3. Shared Read Replicas (Read Only DB access)
+
+<SharedReadReplicasDiagram />
 The owner service writes to its primary database and replays transactions to a replica database. Selected caller services are permitted to read (but never write) from this replica.
 - **Pros**: Simplifies complex reporting queries.
 - **Cons**: Couples services to the database schema of the replica.

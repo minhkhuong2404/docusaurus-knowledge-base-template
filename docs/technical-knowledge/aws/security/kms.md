@@ -275,7 +275,7 @@ If Lambda invoked 10,000 times/sec, each calling `kms:Decrypt`:
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** Lambda needs to encrypt a 50MB file. Which approach?
 

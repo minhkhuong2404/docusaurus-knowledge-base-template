@@ -301,6 +301,10 @@ Weak secrets are vulnerable to offline brute-force once an attacker captures a t
 
 The industry-standard pattern for balancing statelessness with revocability.
 
+:::tip[Deep-Dive Guide]
+For a full deep-dive into long-lived refresh token security, account compromise incident response, and single-device vs multi-device password reset invalidation strategies, see the [Refresh Token Security & Multi-Device Session Invalidation](./refresh-token-security-invalidation.md) guide.
+:::
+
 <RefreshTokenRotationDiagram />
 
 ### Token family / reuse detection (RFC 6749)
@@ -609,7 +613,7 @@ public class JwtService {
 
 ---
 
-## Senior interview Q&A
+## Interview Questions
 
 ### How do you handle JWT revocation in a stateless system?
 

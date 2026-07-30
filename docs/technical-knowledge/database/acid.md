@@ -5,10 +5,20 @@ description: A deep-dive guide to ACID properties — Atomicity, Consistency, Is
 tags: [database, transactions, acid, isolation, mvcc, wal, 2pl, concurrency, deep-dive]
 sidebar_position: 5
 ---
+import AcidIsolationAnomaliesDiagram from '@site/src/components/AcidIsolationAnomaliesDiagram';
 
 # 🛡️ Database ACID Properties
 
 In database systems, a **transaction** is a sequence of read and write operations treated as a single logical unit of work. To guarantee data integrity under concurrency and failures, relational databases enforce the **ACID** properties: **Atomicity**, **Consistency**, **Isolation**, and **Durability**.
+
+:::tip[The four letters are not equally weighted]
+ACID was named in a 1983 ACM Computing Surveys paper by Theo Härder and Andreas Reuter — for memorability, not symmetry. In practice:
+- **Atomicity & Durability** — the database handles these almost entirely. You barely need to think about them.
+- **Consistency** — half is the DB's job (constraints), half is yours (business rules). The half that's yours is the one that gets forgotten.
+- **Isolation** — the only one with a tuning dial. Every real production incident involving data corruption traces back here.
+
+If you ranked by "worth your time to deeply understand": **I → C → D → A**.
+:::
 
 This guide covers ACID from the ground up — simple analogies first, then low-level implementation mechanics, isolation anomalies, and senior-level interview traps.
 
@@ -56,6 +66,10 @@ The moment your screen shows *"Transfer Successful,"* the database has written t
 
 ## 🔍 Deep Dive: Atomicity
 
+"All-or-nothing" sounds simple until you ask: *how?* The key mechanic: before modifying a row, the database saves the old value somewhere. If the transaction must be undone, it restores from that saved copy. If the transaction commits successfully, the saved copy is no longer needed and gets cleaned up in the background.
+
+This "save the old value" approach is called an **undo log**.
+
 ### Undo Log (Rollback Segment)
 
 Every row modification writes the **before-image** (old value) to an **undo log** before changing the actual data.
@@ -75,6 +89,24 @@ On `ROLLBACK` (or crash before `COMMIT`), the engine reads the undo log in rever
 
 - **InnoDB (MySQL)**: dedicated undo log segments in the system tablespace
 - **PostgreSQL**: uses its MVCC tuple versioning (old tuple becomes the "undo" implicitly)
+
+### Atomicity Is Not Just a Database Concept
+
+The same "don't let anyone see a half-done state" problem appears everywhere concurrency exists.
+
+**Java `AtomicInteger`** solves it with **Compare-And-Swap (CAS)** at the CPU level:
+```java
+// Under the hood — pseudo-code for AtomicInteger.incrementAndGet()
+do {
+    int current = get();           // read current value
+    int next = current + 1;        // compute new value
+} while (!compareAndSet(current, next)); // write ONLY if value hasn't changed since read
+// If another thread changed it in between → retry. No locks needed.
+```
+
+**Redis** takes a completely different approach: even though recent versions added I/O threads for networking, command *execution* is single-threaded. So `INCR` is naturally atomic — there's no other thread that could observe the in-between state.
+
+Three totally different mechanisms — **undo log**, **CAS**, **single-threaded execution** — solving the same problem: *no one sees a half-done state.*
 
 ### Shadow Paging
 
@@ -139,33 +171,53 @@ Business rules the DB can't enforce alone:
 - "Total items shipped cannot exceed total items ordered"
 - "A meeting cannot be double-booked"
 - "A user cannot transfer more than their daily limit across all transactions"
+- "Total money across all accounts must remain constant after a transfer"
 
-:::important[The "C" in ACID]
-The "C" in ACID is technically the **application developer's responsibility**. The DB guarantees atomicity/isolation/durability mechanically, but **consistency** is only as good as the constraints and business logic you write. This is why the "C" is sometimes called the "odd one out" in ACID.
+:::important[The "C" in ACID — the half that's yours]
+The "C" in ACID is technically the **application developer's responsibility**. The database only enforces constraints you explicitly declare. If you forget to write `CHECK (balance >= 0)`, the database has no idea balances shouldn't go negative. The database handles *execution*; you handle *definition*. The half that's yours is the half that gets forgotten.
+:::
+
+:::note[Consistency happens mid-transaction too]
+During a transaction, data can temporarily be in an "invalid" state — money deducted from account A but not yet credited to B. That's fine. The consistency guarantee applies at transaction boundaries: when the transaction *commits*, all invariants must hold again.
 :::
 
 ### ACID Consistency vs CAP Consistency
 
-A classic interview trap:
+One of the most common interview traps — two completely different concepts sharing the same word:
 
 | | ACID Consistency | CAP Consistency (Linearizability) |
 |---|---|---|
-| **Meaning** | DB transitions between valid states according to rules/invariants | Every read reflects the most recent write across all nodes |
-| **Scope** | Single node / single transaction | Distributed system across multiple nodes |
-| **Example** | Balance cannot go negative | After a write to node A, node B immediately reflects it |
+| **Meaning** | DB transitions between valid states according to declared rules/invariants | Every read reflects the most recent write across all nodes |
+| **Scope** | Single node / single transaction | Distributed system across multiple replicas |
+| **Example** | Balance cannot go negative | After a write to node A, node B immediately sees the same value |
+| **Who enforces it** | Your constraints + your app logic | The distributed consensus protocol |
+
+> ACID Consistency has nothing to do with replicas. CAP Consistency has nothing to do with constraints. Same word, two worlds.
 
 ---
 
 ## 🔍 Deep Dive: Isolation
 
-Isolation is the **most complex** ACID property because strict isolation is expensive. Databases offer a spectrum of **isolation levels**, each allowing different trade-offs between consistency and concurrency.
+Isolation answers exactly one question: *when does a change made by one transaction become visible to other concurrent transactions?*
+
+See it immediately (even before commit) → **dirty read**. See it only after commit, but the same row can look different on two reads in the same transaction → **non-repeatable read**. Don't lock the range, so someone inserts a new row between your two queries → **phantom read**.
+
+Isolation is the **most complex** ACID property because strict isolation is expensive. Databases offer a spectrum of **isolation levels**, each trading consistency for concurrency.
+
+<AcidIsolationAnomaliesDiagram />
+
+:::warning[Don't default to Serializable "for safety"]
+A ticket-booking system set all transactions to `SERIALIZABLE` to be safe. At peak load, transactions queued waiting for locks, timeouts cascaded, and the monitoring dashboard turned red like a summer downpour. The fix: drop to `READ COMMITTED` and handle inventory contention separately at the application layer with targeted `SELECT FOR UPDATE`.
+
+ACID isolation is not an on/off switch — it's a dial. Higher isolation = more locks = more deadlocks = lower throughput. Choose deliberately per use case.
+:::
 
 ### Isolation Anomalies
 
-Before understanding isolation levels, you must understand the anomalies they prevent:
+The ANSI SQL 1992 standard listed exactly three anomalies (dirty read, non-repeatable read, phantom read) and defined the four isolation levels around them. In 1995, a landmark paper **"A Critique of ANSI SQL Isolation Levels"** showed the standard was too vague and had missed an entire family of anomalies. The two most important additions from that paper are **lost update** and **write skew** — both can silently corrupt data without a single exception in your logs.
 
 #### 1. Dirty Read
-A transaction reads data written by a **concurrent uncommitted transaction**.
+Transaction A modifies a row but hasn't committed. Transaction B reads that uncommitted value. Then A rolls back. B just acted on data that never officially existed — like overhearing a decision your manager hadn't finalized yet, acting on it, then being told "I was just thinking out loud."
 
 ```
 T1: UPDATE accounts SET balance = 0 WHERE id = 1;  -- not yet committed
@@ -174,7 +226,7 @@ T1: ROLLBACK;  -- T2 read data that never officially existed
 ```
 
 #### 2. Non-Repeatable Read
-A transaction reads the **same row twice** and gets different values because another transaction modified and committed it in between.
+In the same transaction, B reads a row and gets 100. Later B reads the same row and gets 200 — because another transaction committed a change in between. Same query, same row, two different results. It cannot repeat the read consistently, hence "non-repeatable."
 
 ```
 T1: SELECT balance FROM accounts WHERE id = 1;  -- returns 500
@@ -183,7 +235,7 @@ T1: SELECT balance FROM accounts WHERE id = 1;  -- returns 300  ← different!
 ```
 
 #### 3. Phantom Read
-A transaction re-executes a **range query** and sees **new rows** inserted by another committed transaction.
+Like non-repeatable but at the set level. In the same transaction, B counts users over 30 and gets 10. Later the same query returns 11 — someone inserted a qualifying row in between. No existing row changed value; a new "ghost" appeared in the result.
 
 ```
 T1: SELECT COUNT(*) FROM accounts WHERE balance > 100;  -- returns 5
@@ -191,43 +243,52 @@ T2:     INSERT INTO accounts (balance) VALUES (200); COMMIT;
 T1: SELECT COUNT(*) FROM accounts WHERE balance > 100;  -- returns 6 ← phantom!
 ```
 
-#### 4. Write Skew
-Two transactions read overlapping data, each make decisions based on it, and their **combined writes violate an invariant** — even though each individual write is valid.
-
-```sql
--- Rule: At least 1 doctor must be on call at all times
--- Current state: Doctor A and Doctor B are both on-call
-
-T1 (Doctor A goes off-call):
-    SELECT COUNT(*) FROM doctors WHERE on_call = true;  -- sees 2, OK to proceed
-    UPDATE doctors SET on_call = false WHERE id = 1;
-
-T2 (Doctor B goes off-call, concurrent):
-    SELECT COUNT(*) FROM doctors WHERE on_call = true;  -- also sees 2, OK to proceed
-    UPDATE doctors SET on_call = false WHERE id = 2;
-
--- Both COMMIT. Now 0 doctors on call. Invariant BROKEN.
-```
-
-Write skew is the most subtle anomaly — allowed under **Snapshot Isolation** and only prevented by **Serializable**.
-
-#### 5. Lost Update
-Two transactions both read a value, compute a new value, and write back — the second write **overwrites** the first's update.
+#### 4. Lost Update
+The e-wallet bug from the intro. Two transactions both read balance = 500k, both decide "enough funds," both write their result — the second write overwrites the first's deduction. One withdrawal is silently lost.
 
 ```
 T1: balance = SELECT balance FROM accounts WHERE id=1;  -- 500
 T2: balance = SELECT balance WHERE id=1;                -- 500
-T1: UPDATE accounts SET balance = 500 + 100 = 600 WHERE id=1;
-T2: UPDATE accounts SET balance = 500 + 50  = 550 WHERE id=1; ← T1's +100 is lost!
+T1: UPDATE accounts SET balance = 500 - 100 = 400 WHERE id=1;
+T2: UPDATE accounts SET balance = 500 - 200 = 300 WHERE id=1; ← T1's deduction is lost!
+-- Final balance = 300. But it should be 200. 100 vanished.
 ```
 
-Prevention: `SELECT FOR UPDATE`, optimistic locking (version column), or atomic `UPDATE accounts SET balance = balance + 100`.
+#### 5. Write Skew
+More subtle than lost update. Two transactions each read overlapping data, make individually valid decisions, write to **different rows**, and their combined result violates an invariant.
+
+```sql
+-- Rule: at least 1 doctor must be on call at all times
+-- Current state: An and Binh are both on-call
+
+T1 (An requests leave):
+    SELECT COUNT(*) FROM doctors WHERE on_call = true;  -- sees 2, ok to proceed
+    UPDATE doctors SET on_call = false WHERE id = 1;
+
+T2 (Binh requests leave, concurrent):
+    SELECT COUNT(*) FROM doctors WHERE on_call = true;  -- also sees 2, ok to proceed
+    UPDATE doctors SET on_call = false WHERE id = 2;
+
+-- Both COMMIT. No 0 doctors on call. Invariant BROKEN.
+```
+
+**Why write skew is harder than lost update:** Lost update has two transactions writing the *same row* — there's a direct collision the database can detect and block. Write skew has each transaction writing a *different row* — no direct collision exists. The database has nothing to detect unless you tell it what invariant to enforce.
+
+:::note[The 1995 anomaly map]
+| Anomaly | Root cause | Prevented by |
+|---|---|---|
+| Dirty Read | Reading uncommitted data | Read Committed+ |
+| Non-Repeatable Read | Same row, different values across reads | Repeatable Read+ |
+| Phantom Read | Range query sees new rows | Serializable (or PG Repeatable Read) |
+| Lost Update | Read-modify-write conflict on same row | Repeatable Read+ (PG); `SELECT FOR UPDATE`; atomic UPDATE |
+| Write Skew | Concurrent decisions violating a shared invariant | Serializable (SSI); `SELECT FOR UPDATE` on a materialized conflict row |
+:::
 
 ---
 
-### Isolation Levels
+### Isolation Levels: The Standard Table
 
-SQL standard defines four isolation levels. Each prevents progressively more anomalies:
+SQL standard defines four isolation levels. Each level is a dial — higher = safer, but more lock contention and lower throughput:
 
 | Isolation Level | Dirty Read | Non-Repeatable Read | Phantom Read | Write Skew |
 |---|:---:|:---:|:---:|:---:|
@@ -236,42 +297,140 @@ SQL standard defines four isolation levels. Each prevents progressively more ano
 | **REPEATABLE READ** | ❌ Prevented | ❌ Prevented | ✅ Possible* | ✅ Possible |
 | **SERIALIZABLE** | ❌ Prevented | ❌ Prevented | ❌ Prevented | ❌ Prevented |
 
-> *In PostgreSQL, `REPEATABLE READ` uses snapshot isolation which also prevents phantoms in practice — but write skew is still possible.
+This table describes the **spec** — what anomalies each level *must* prevent. It says nothing about *how* the database achieves it. That distinction matters enormously once you look at real implementations.
 
-#### Setting Isolation Level
+### PostgreSQL's Actual Behaviour (Spec ≠ Implementation)
+
+:::important[Every database implements isolation levels differently]
+The same level name can have completely different behaviour across databases. The spec defines what anomalies to prevent; each database chooses how. Trusting a level name without verifying the implementation is how subtle bugs get into production.
+:::
+
+**PostgreSQL has no real READ UNCOMMITTED.** You can write the name, but PostgreSQL silently runs it as READ COMMITTED. Dirty reads are impossible in PostgreSQL regardless of what you declare.
+
+| Level | PostgreSQL snapshot scope | Key differences from SQL standard |
+|---|---|---|
+| **READ COMMITTED** *(default)* | **Per-statement** — each SQL statement takes a fresh snapshot at execution time | Two SELECTs in the same transaction 3 seconds apart can see different data |
+| **REPEATABLE READ** | **Per-transaction** — one snapshot taken at the first statement, held until commit | Prevents phantoms too (not just standard guarantee); aborts on lost update conflict |
+| **SERIALIZABLE** | Per-transaction + SSI tracking of read-write dependencies | Aborts transactions that would produce non-serializable results; prevents write skew |
+
+**PostgreSQL REPEATABLE READ prevents more than the standard requires:**
+- **Phantom reads** — because the whole transaction sees a single frozen snapshot
+- **Lost updates** — if two transactions both try to update the same row, the second one gets aborted with a `serialization failure` error and must retry. It doesn't silently overwrite — it loudly fails so you can handle it.
+
+**PostgreSQL REPEATABLE READ still allows write skew** — each doctor's transaction reads 2 on-call, writes a different row, no direct conflict. The database sees nothing to abort.
+
+**PostgreSQL SERIALIZABLE uses SSI** (Serializable Snapshot Isolation): tracks read-write dependency edges between concurrent transactions. If it detects a cycle that would produce a non-serializable outcome, it aborts one transaction. This is how it catches the doctor write skew — the two transactions form a cycle that SSI breaks.
+
+**Oracle's "Serializable" is actually Snapshot Isolation** — it prevents phantoms but still allows write skew. Same label, fundamentally different guarantee. This is why knowing the spec name is not enough; you need to know what your specific database actually does underneath.
 
 ```sql
--- Per-transaction
+-- Per-transaction (set for a specific operation only, not the whole system)
 BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+-- ... your statements ...
+COMMIT;
 
--- Session level
-SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
-
--- PostgreSQL: check current level
+-- Check current PostgreSQL session level
 SHOW transaction_isolation;
 ```
 
-#### In Java / Spring Boot
-
 ```java
-@Transactional(isolation = Isolation.SERIALIZABLE)  // strictest
-@Transactional(isolation = Isolation.READ_COMMITTED) // PostgreSQL default
+// In Spring — set per transaction method, not globally
+@Transactional(isolation = Isolation.SERIALIZABLE)   // strictest
+@Transactional(isolation = Isolation.READ_COMMITTED)  // PG default
 @Transactional(isolation = Isolation.REPEATABLE_READ)
-@Transactional(isolation = Isolation.READ_UNCOMMITTED) // almost never use
 ```
 
+:::tip[Isolation is per-transaction, not a global toggle]
+Setting a higher isolation level applies only to the transaction that declares it. Other transactions in your system keep running at their own level. This means you can safely use `SERIALIZABLE` for one critical operation without impacting system-wide throughput. Changing the *default* isolation level for the entire database has a much wider blast radius — reserve that for carefully considered infrastructure decisions.
+:::
+
 :::tip[Real-World Defaults]
-- **PostgreSQL**: `READ COMMITTED` by default
-- **MySQL InnoDB**: `REPEATABLE READ` by default
+- **PostgreSQL**: `READ COMMITTED` by default (per-statement snapshot)
+- **MySQL InnoDB**: `REPEATABLE READ` by default (per-transaction snapshot, gap locks for phantoms)
 - **Oracle**: `READ COMMITTED` by default
 - **SQL Server**: `READ COMMITTED` by default
 :::
+
+### Practical Strategies: Handle Anomalies Without Raising Isolation
+
+In practice, most teams keep the database default and handle specific anomalies at the query or application layer. Raising isolation level system-wide trades one problem for another: you fix data correctness but add lock contention, deadlock risk, and retry loops.
+
+#### Handling Lost Update
+
+**Option 1 — Atomic UPDATE (cleanest, no extra lock):**
+```sql
+-- Instead of: read balance, compute, write
+-- Do this: fold the business logic into one statement
+UPDATE accounts
+SET balance = balance - 70
+WHERE id = ? AND balance >= 70;
+-- Check affected rows: 0 means insufficient funds OR lost race → handle accordingly
+```
+The database locks exactly this row for the duration of this statement. The race condition can't happen because there's no gap between read and write.
+
+**Option 2 — Optimistic Locking (for low-contention data):**
+```sql
+-- Add a version column
+UPDATE accounts
+SET balance = ?, version = version + 1
+WHERE id = ? AND version = ?;  -- 0 rows updated = someone else changed it first → retry
+```
+```java
+@Entity
+public class Account {
+    @Version  // JPA handles optimistic locking automatically
+    private Long version;
+}
+```
+Best when conflicts are rare. Under heavy contention (flash-sale inventory), retries pile up exactly when you need throughput most.
+
+**Option 3 — Pessimistic Locking (for hot rows):**
+```sql
+BEGIN;
+SELECT balance FROM accounts WHERE id = ? FOR UPDATE;  -- locks the row immediately
+-- ... compute ...
+UPDATE accounts SET balance = ? WHERE id = ?;
+COMMIT;
+```
+Other transactions trying to `SELECT FOR UPDATE` the same row block until this one commits. No retries needed, but lock duration directly impacts concurrency.
+
+#### Handling Write Skew
+
+The cleanest fix: **materialize the hidden constraint into a real lockable row.** Write skew happens because the invariant lives in an aggregate ("count of on-call doctors") that no transaction locks. Make a concrete row represent that invariant and lock it:
+
+```sql
+BEGIN;
+-- Lock the on-call slot for this shift — makes the invisible invariant visible to the lock manager
+SELECT * FROM on_call_slots WHERE shift_id = ? FOR UPDATE;
+
+SELECT COUNT(*) FROM doctors WHERE on_call = true AND shift_id = ?;
+-- IF count > 1 THEN
+UPDATE doctors SET on_call = false WHERE id = ?;
+-- ELSE raise exception
+COMMIT;
+```
+
+By locking `on_call_slots`, both transactions are forced to queue — the second one sees the real post-first-commit state and correctly rejects the request.
+
+As a last resort, `SERIALIZABLE` isolation (PostgreSQL SSI) catches write skew automatically — but at the cost of a retry loop everywhere, and abort rate climbs fast under high load. Use it when the invariant is genuinely complex and can't be materialized.
+
+#### The Question to Answer First
+
+> *"In this business operation, what invariant must always hold — and what data do I **read** to make the decision but **not write**?"*
+
+That read-but-not-written data is your write skew risk surface. Once you identify it, you can choose: lock it explicitly, materialize it into a lockable row, or reach for a higher isolation level as a last resort. The isolation level you need is the consequence of this analysis — not a setting you pick upfront.
 
 ---
 
 ### Concurrency Control: MVCC
 
-**Multi-Version Concurrency Control** solves the "readers block writers" problem by maintaining **multiple historical versions** of each row.
+**Multi-Version Concurrency Control** solves the "readers block writers" problem by maintaining **multiple historical versions** of each row. When you run `UPDATE`, the database doesn't overwrite the old value — it creates a new version and keeps the old one around for any transactions that started before this change.
+
+Think of it like photocopying the morning newspaper before boarding a train. Outside, news keeps updating. But the copy in your hand stays consistent from start to finish — you're not reading a mix of yesterday's and today's articles. MVCC gives every transaction that same "frozen copy" of the world at the moment it began.
+
+This is why readers never block writers and writers never block readers: each transaction is reading its own snapshot, and a new writer just creates a new version rather than overwriting what anyone is currently reading.
+
+When you *do* need to enforce ordering — like `SELECT ... FOR UPDATE` — PostgreSQL steps out of MVCC mode and places an actual row lock, forcing other transactions to queue. MVCC covers the "read without blocking" case; explicit locks cover the "I need exclusive access to this row before writing" case.
 
 #### PostgreSQL MVCC Internals
 
@@ -410,6 +569,19 @@ SSI prevents write skew without explicit `SELECT FOR UPDATE` locking.
 
 ## 🔍 Deep Dive: Durability
 
+Durability sounds like the simplest guarantee: *commit means it's permanent*. But the database doesn't write directly to the data file on every commit — data files are scattered across disk, and random writes are slow. Instead it writes to a **Write-Ahead Log** first: a file that only ever appends sequentially (fast), then calls `fsync` to ensure the log is on physical disk, then acknowledges the commit. The actual data file is updated later, asynchronously.
+
+:::note[Undo log vs WAL — easy to confuse]
+| Log | Purpose | Serves |
+|---|---|---|
+| **Undo log** | Stores *old values* (before-images) to reverse a transaction | Atomicity |
+| **Write-Ahead Log (WAL / Redo log)** | Stores *new changes* to replay after a crash | Durability |
+
+Undo log = "forget what was done." WAL = "remember what was promised."
+
+Durability does not guarantee that data is *already in the right place on disk* — it guarantees there is *enough information to reconstruct it after restart*.
+:::
+
 ### Write-Ahead Logging (WAL)
 
 The core mechanism for durability. **The log must be written before the data pages.**
@@ -493,6 +665,12 @@ PostgreSQL does this automatically. It significantly increases throughput under 
 ---
 
 ## 🌐 Distributed ACID
+
+### Why You Need to Understand This Even Without Microservices
+
+Once a system grows beyond a single database — microservices with separate DBs, event-driven pipelines, cross-service workflows — single-node ACID no longer applies. A transaction that touches two separate databases cannot use the same `BEGIN`/`COMMIT`. People move to Saga patterns, outbox patterns, eventual consistency.
+
+But here's the catch: **you can only design a good Saga if you understand what ACID was protecting you from.** You need to know which steps need compensating transactions (undo actions if a later step fails), which intermediate states are acceptable, and where data can be temporarily inconsistent. Abandoning something you don't understand is not an engineering trade-off — it's data loss waiting to happen.
 
 ### The Scaling Problem
 
@@ -691,7 +869,7 @@ public void outerMethod() {
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What is a "write skew" anomaly, and how do you prevent it?**
 > Write skew occurs when two concurrent transactions each read overlapping data, make individually valid writes, but together violate a business invariant. The classic example: two doctors both go off-call when the rule is "at least one must be on-call." Both read 2 doctors on-call, both decide it's safe to leave, both commit — now 0 doctors are on-call.

@@ -5,6 +5,9 @@ description: A complete guide covering all stages of software engineering interv
 tags: [interview-prep, code-assessment, technical-interview, behavioral-interview, career]
 ---
 
+import InterviewPipelineDiagram from '@site/src/components/InterviewPipelineDiagram';
+import StarMethodDiagram from '@site/src/components/StarMethodDiagram';
+
 # Comprehensive Engineering Interview Framework
 
 To successfully land a software engineering role, you must navigate a multi-stage evaluation process designed to test technical depth, system-level thinking, execution speed, and behavioral alignment. This guide provides a structured breakdown of each stage, what interviewers are looking for, and concrete strategies to pass them.
@@ -15,22 +18,7 @@ To successfully land a software engineering role, you must navigate a multi-stag
 
 The typical interview loop consists of five key phases. Understanding where you are and what signals are evaluated at each step is critical for targeted preparation.
 
-```mermaid
-graph TD
-    A["📞 Recruit Screen (30m)"] -->|Pass| B["💻 Code Assessment / OA (60-90m)"]
-    B -->|Pass| C["👥 Technical Rounds (1-3 sessions)"]
-    C -->|Algorithms and DSA| D["🧠 System and Low-Level Design (60m)"]
-    C -->|System Design| D
-    D -->|Pass| E["🎭 Behavioral and Culture Fit (45-60m)"]
-    E -->|Pass| F["🎉 Offer / Negotiation"]
-    
-    style A fill:#bfdbfe,stroke:#2563eb,stroke-width:2px,color:#1e3a8a
-    style B fill:#fed7aa,stroke:#ea580c,stroke-width:2px,color:#7c2d12
-    style C fill:#bbf7d0,stroke:#16a34a,stroke-width:2px,color:#14532d
-    style D fill:#c084fc,stroke:#9333ea,stroke-width:2px,color:#581c87
-    style E fill:#fbcfe8,stroke:#db2777,stroke-width:2px,color:#831843
-    style F fill:#fef08a,stroke:#ca8a04,stroke-width:2px,color:#713f12
-```
+<InterviewPipelineDiagram />
 
 ---
 
@@ -111,14 +99,7 @@ Evaluating how you work in teams, handle conflicts, recover from failures, and a
 ### The STAR Method
 Always structure your behavioral responses using the STAR method:
 
-```
-┌───────────────────────────────────────────────────────────────────────────┐
-│  S - SITUATION  : Set the context (Company, role, project timeline)       │
-│  T - TASK       : Define the challenge or problem you faced               │
-│  A - ACTION     : Explain exactly what *you* did (decisions, technical)   │
-│  R - RESULT     : Share the metrics-driven outcome (e.g., +30% throughput)│
-└───────────────────────────────────────────────────────────────────────────┘
-```
+<StarMethodDiagram />
 
 ### Story Bank Creation
 Prepare 6 to 8 stories from your past experience that you can adapt to different questions:

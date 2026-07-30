@@ -89,6 +89,10 @@ public boolean isRevoked(String jti) {
 }
 ```
 
+:::tip[Advanced Session Invalidation & Hacked Account Strategy]
+For comprehensive strategies on handling account compromise, closing the access token revocation gap, and managing single-device vs multi-device session invalidation during password updates, see [Refresh Token Security & Multi-Device Session Invalidation](../security/refresh-token-security-invalidation.md).
+:::
+
 ---
 
 ## OAuth 2.0 / OIDC
@@ -967,7 +971,7 @@ public class AuditService {
 
 ---
 
-## Interview Questions: Senior Level
+## Interview Questions
 
 ### Q: When would you choose opaque tokens over JWTs for a microservices system?
 

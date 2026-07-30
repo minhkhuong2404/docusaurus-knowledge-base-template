@@ -126,7 +126,7 @@ auto.offset.reset=earliest
 
 ---
 
-## Interview Questions — Kafka Overview
+## Interview Questions
 
 **Q: What makes Kafka different from a traditional message queue?**
 

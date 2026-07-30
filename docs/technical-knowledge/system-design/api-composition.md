@@ -6,6 +6,8 @@ description: Deep dive into the API Composition pattern — parallel fan-out wit
 tags: [system-design, microservices, api, aggregation, java, spring-boot, virtual-threads]
 ---
 
+import ApiCompositionArchitectureDiagram from '@site/src/components/ApiCompositionArchitectureDiagram';
+
 # API Composition
 
 **API Composition** is a pattern where a composing service fulfills a query by calling multiple microservice APIs in parallel, waiting for their responses, and merging the results into a single response — replacing the SQL `JOIN` operations that are impossible when each service owns its own database.
@@ -42,31 +44,7 @@ API Composition replaces the SQL JOIN with programmatic stitching.
 
 ## 🏗️ Architecture
 
-```mermaid
-sequenceDiagram
-    participant Client as Client<br>(Mobile/Web)
-    participant Composer as API Composer<br>(BFF or dedicated service)
-    participant UserSvc as User Service
-    participant OrderSvc as Order Service
-    participant LoyaltySvc as Loyalty Service
-
-    Client->>Composer: GET /users/123/dashboard
-
-    par Parallel Fan-Out (fired simultaneously)
-        Composer->>UserSvc: GET /users/123
-        Composer->>OrderSvc: GET /orders?userId=123&limit=10
-        Composer->>LoyaltySvc: GET /loyalty/123
-    end
-
-    UserSvc-->>Composer: UserProfileDto (50ms)
-    OrderSvc-->>Composer: List<OrderDto> (80ms)
-    LoyaltySvc-->>Composer: LoyaltyDto (30ms)
-
-    Note over Composer: Total wait = max(50, 80, 30) = 80ms<br>NOT 50+80+30=160ms
-
-    Composer->>Composer: Merge results
-    Composer-->>Client: DashboardResponse (single JSON)
-```
+<ApiCompositionArchitectureDiagram />
 
 ---
 

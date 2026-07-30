@@ -156,7 +156,7 @@ public ProducerFactory<String, OrderEvent> idempotentProducerFactory() {
 
 ---
 
-## Interview Questions — Idempotency
+## Interview Questions
 
 **Q: What does idempotence mean in the context of Kafka producers?**
 

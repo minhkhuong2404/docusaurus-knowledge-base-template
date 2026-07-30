@@ -228,6 +228,10 @@ InitiateAuthResponse refreshResult = client.initiateAuth(InitiateAuthRequest.bui
 String newAccessToken = refreshResult.authenticationResult().accessToken();
 ```
 
+:::tip[Token Invalidation & Compromise Recovery]
+For architectural strategies on revoking refresh tokens, recovering from hacked accounts, and enforcing session invalidation across multiple devices, see [Refresh Token Security & Multi-Device Session Invalidation](../../security/refresh-token-security-invalidation.md).
+:::
+
 ### Sign Up User
 
 ```java
@@ -287,7 +291,7 @@ https://<your-domain>.auth.<region>.amazoncognito.com/login?
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** Mobile app uploads photos to S3. Users authenticate with Google. Which provides temporary AWS credentials?
 

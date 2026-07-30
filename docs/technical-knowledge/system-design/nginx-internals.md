@@ -6,6 +6,22 @@ description: Comprehensive deep dive into Nginx internals — Master-Worker arch
 tags: [system-design, networking, proxy, nginx, event-loop, load-balancing, ssl, http2, caching, rate-limiting, reverse-proxy]
 ---
 
+import NginxArchitectureDiagram from '@site/src/components/NginxArchitectureDiagram';
+import NginxEventLoopDiagram from '@site/src/components/NginxEventLoopDiagram';
+import NginxThreadPoolDiagram from '@site/src/components/NginxThreadPoolDiagram';
+import NginxUpstreamProxyDiagram from '@site/src/components/NginxUpstreamProxyDiagram';
+import NginxLoadBalancingDiagram from '@site/src/components/NginxLoadBalancingDiagram';
+import NginxTlsInternalsDiagram from '@site/src/components/NginxTlsInternalsDiagram';
+import NginxHttp2Http3Diagram from '@site/src/components/NginxHttp2Http3Diagram';
+import NginxCacheRateLimitDiagram from '@site/src/components/NginxCacheRateLimitDiagram';
+import Http2MultiplexingDiagram from '@site/src/components/Http2MultiplexingDiagram';
+import Http3QuicDiagram from '@site/src/components/Http3QuicDiagram';
+import NginxPerformanceTuningDiagram from '@site/src/components/NginxPerformanceTuningDiagram';
+import NginxGotchasChecklistDiagram from '@site/src/components/NginxGotchasChecklistDiagram';
+import NginxProsConsDiagram from '@site/src/components/NginxProsConsDiagram';
+import NginxConnectionLifecycleDiagram from '@site/src/components/NginxConnectionLifecycleDiagram';
+import EpollTriggerModeDiagram from '@site/src/components/EpollTriggerModeDiagram';
+
 # Nginx Internals & Architecture
 
 **Nginx** (pronounced "engine-x") is an open-source, high-performance HTTP server, reverse proxy, load balancer, and TCP/UDP proxy. Originally designed by Igor Sysoev in 2004 to solve the **C10K problem** — handling 10,000 concurrent client connections on a single server — Nginx achieved this through an asynchronous, event-driven architecture that avoids the thread-per-connection model entirely.
@@ -16,74 +32,8 @@ Today Nginx powers over 30% of the world's busiest websites and is the de-facto 
 
 ## 1. The C10K Problem — Why Nginx Exists
 
-### The Thread-Per-Connection Model (Apache Prefork MPM)
+<NginxArchitectureDiagram />
 
-Traditional web servers assign one thread or process per client connection:
-
-```
-Client connections:   10,000 concurrent users
-Threads spawned:      10,000 OS threads
-
-Memory consumed:      10,000 × 8MB stack = 80GB RAM
-Context switches:     Thousands per second — CPU wasted on scheduling
-Idle thread waste:    9,900 threads waiting for I/O (network round-trips)
-                      while only ~100 threads are actively computing
-```
-
-At thousands of concurrent connections, the thread-per-connection model collapses under its own weight — not because the CPU can't handle the work, but because maintaining thousands of OS threads is itself the bottleneck.
-
-### Nginx's Solution: Event-Driven Architecture
-
-```
-Client connections:   10,000 concurrent users
-Worker processes:     4 (one per CPU core)
-Threads per worker:   1 (single-threaded event loop)
-
-Memory consumed:      4 × 4MB ≈ 16MB RAM for processes
-                      + ~256 bytes per connection = ~2.5MB for 10,000 connections
-                      Total: ~19MB (vs 80GB for thread-per-connection)
-
-CPU cycles:           Spent only on actual I/O events — no idle thread overhead
-```
-
-The key insight: **most network connections spend 99% of their time waiting** (for the client to send data, for an upstream response, for a disk read). The event-driven model uses one thread to manage thousands of waiting connections, waking up only when actual work is ready.
-
----
-
-## 2. Master-Worker Process Model
-
-Nginx runs using a strict multi-process architecture: one privileged **Master** process and N unprivileged **Worker** processes (typically one per CPU core).
-
-```
-                    ┌─────────────────────────────┐
-                    │       Master Process         │
-                    │  (runs as root)              │
-                    │                              │
-                    │  • Reads nginx.conf          │
-                    │  • Binds ports 80/443        │
-                    │  • Spawns workers            │
-                    │  • Handles reload/signals    │
-                    │  • Never handles connections │
-                    └──────────────┬──────────────┘
-                                   │  fork()
-               ┌───────────────────┼───────────────────┐
-               │                   │                   │
-    ┌──────────▼────────┐ ┌────────▼──────────┐ ┌─────▼────────────┐
-    │   Worker 1         │ │   Worker 2         │ │   Worker 3        │
-    │  (CPU core 0)      │ │  (CPU core 1)      │ │  (CPU core 2)     │
-    │                    │ │                    │ │                   │
-    │  Single-threaded   │ │  Single-threaded   │ │  Single-threaded  │
-    │  Event Loop        │ │  Event Loop        │ │  Event Loop       │
-    │                    │ │                    │ │                   │
-    │  Handles:          │ │  Handles:          │ │  Handles:         │
-    │  ~3,333 conns      │ │  ~3,333 conns      │ │  ~3,333 conns     │
-    └────────┬───────────┘ └────────┬───────────┘ └────────┬──────────┘
-             │                      │                      │
-             └──────────────────────┼──────────────────────┘
-                                    │
-                         Shared Listening Socket
-                         (Port 80 / 443)
-```
 
 ### The Master Process
 
@@ -175,18 +125,8 @@ events {
 
 ### The Impedance Mismatch: Network vs. Disk I/O
 
-```
-Network sockets (TCP):
-    → File descriptors that support non-blocking I/O naturally
-    → epoll/kqueue can monitor thousands simultaneously
-    → read() returns immediately with available data, or EAGAIN if none ready
+<NginxEventLoopDiagram />
 
-Regular disk files:
-    → Do NOT support non-blocking I/O on standard filesystems (ext4, xfs)
-    → read() always blocks until data is returned from disk
-    → Cannot be registered with epoll in a useful way
-    → A single slow disk read (e.g., 10ms for a cache miss) blocks the entire event loop
-```
 
 This distinction is why Nginx needs both an event loop AND a thread pool — they solve different I/O problems.
 
@@ -239,70 +179,13 @@ while (running) {
 
 ### The Complete Connection Lifecycle
 
-```
-New TCP connection arrives on port 80:
+<NginxConnectionLifecycleDiagram />
 
-1. TCP 3-way handshake (handled by OS kernel)
-   Client SYN → Kernel → SYN-ACK → Client → ACK
-
-2. Kernel places completed connection in accept queue
-   epoll notifies the worker's event loop: "listen_fd is readable"
-
-3. Worker calls accept() — gets client file descriptor (fd=47)
-   Sets fd 47 to non-blocking mode
-   Registers fd 47 with epoll: EPOLLIN | EPOLLOUT | EPOLLET
-
-4. Request parsing
-   Client sends HTTP request bytes
-   epoll fires: "fd 47 has data to read"
-   Worker calls read(fd=47) — reads available bytes (non-blocking)
-   Parser processes headers, detects request method, URI, Host header
-
-5. Request routing
-   Worker matches URI against location blocks in nginx.conf
-   Selects handler: proxy_pass, static file, return, rewrite, etc.
-
-6a. If static file (in page cache):
-    Worker calls sendfile(fd=47, file_fd, ...)
-    Kernel copies directly: page cache → socket buffer (zero-copy)
-    Connection stays open (keepalive) or closes
-
-6b. If static file (NOT in page cache — disk read required):
-    Worker creates task, pushes to thread pool queue
-    Worker returns to event loop immediately (not blocked)
-    Thread pool thread: blocking read() from disk
-    Thread notifies event loop via eventfd when done
-    Event loop picks up: sendfile to client
-
-6c. If upstream proxy:
-    Worker opens connection to upstream server (non-blocking connect)
-    Registers upstream fd with epoll
-    When upstream fd readable: read response, buffer it
-    When client fd writable: write buffered response to client
-    Both FDs managed concurrently by the same event loop
-
-7. Connection close or keepalive
-   If keepalive: fd remains registered in epoll, waiting for next request
-   If close: epoll_ctl remove fd, close(fd), free connection struct
-```
 
 ### Edge-Triggered vs Level-Triggered epoll
 
-```nginx
-# Nginx uses Edge-Triggered (EPOLLET) mode by default on Linux
+<EpollTriggerModeDiagram />
 
-Level-Triggered (default epoll):
-    epoll_wait returns as long as data is available in the buffer
-    If you read 100 bytes from a 500-byte buffer, epoll fires again next iteration
-    Simpler to implement correctly; slightly higher syscall overhead
-
-Edge-Triggered (EPOLLET):
-    epoll_wait fires ONCE when new data arrives — does NOT re-fire if data remains
-    Consumer MUST read all available data in one handler call (loop until EAGAIN)
-    Requires non-blocking FDs (EAGAIN signals "no more data right now")
-    Higher performance: fewer spurious epoll_wait wakeups
-    More complex: partial reads must be tracked carefully
-```
 
 ---
 
@@ -310,65 +193,8 @@ Edge-Triggered (EPOLLET):
 
 Standard filesystem read operations (`read()`, `pread()`) block the calling thread until data is available from disk. On an SSD with a cache miss, this is ~100µs. On an HDD, it can be 10ms+. A single blocking call freezes the entire event loop and all thousands of connections it manages.
 
-```
-Without thread pool:
-  Event loop handling 5,000 connections
-  Worker reads a file NOT in page cache
-  → read() blocks for 10ms (HDD seek time)
-  → Event loop frozen for 10ms
-  → All 5,000 connections see 10ms added latency minimum
-  → At 100 requests/second: 10ms block happens multiple times per second
+<NginxThreadPoolDiagram />
 
-With thread pool:
-  Event loop handling 5,000 connections
-  Worker detects file read required → creates task → pushes to thread pool
-  → Worker immediately returns to event loop (< 1µs)
-  → Thread pool thread performs blocking read() (10ms, isolated)
-  → Thread signals event loop via eventfd when done
-  → Event loop handles the notification, sends data to client
-  → All 5,000 other connections saw zero impact
-```
-
-### Thread Pool Architecture
-
-```
-Worker Process:
-┌────────────────────────────────────────────────────────────────┐
-│                        Event Loop (Main Thread)                │
-│                                                                │
-│  1. Receives request for /static/large-video.mp4               │
-│  2. Detects file not in page cache (or aio threads enabled)    │
-│  3. Creates ngx_thread_task_t:                                 │
-│     { handler: disk_read_handler, ctx: connection_data }       │
-│  4. Pushes task to thread pool queue (mutex-protected)          │
-│  5. Returns to event loop — continues handling other events     │
-└────────────────────────────────────────┬───────────────────────┘
-                                         │
-              ┌──────────────────────────▼──────────────────────────┐
-              │              Thread Pool Queue                        │
-              │  [task_A] [task_B] [task_C] ...                       │
-              └──────────┬───────────────┬──────────────────────────┘
-                         │               │
-             ┌───────────▼──┐    ┌───────▼──────────┐
-             │  Thread 1     │    │  Thread 2         │  ... (32 threads)
-             │               │    │                   │
-             │  pread(fd,    │    │  pread(fd,        │
-             │   buf, 4096,  │    │   buf, 4096,      │
-             │   offset)     │    │   offset)         │
-             │  [BLOCKED]    │    │  [BLOCKED]        │
-             │  10ms...      │    │  10ms...          │
-             └───────┬───────┘    └─────────┬─────────┘
-                     │                      │
-                     └──────────┬───────────┘
-                                │
-                    write(eventfd, 1)  ← notify event loop
-                                │
-              ┌─────────────────▼──────────────────────────────────┐
-              │  Event Loop wakes on eventfd event                  │
-              │  6. Retrieves result from task struct               │
-              │  7. Calls sendfile() or write() to client socket   │
-              └─────────────────────────────────────────────────────┘
-```
 
 ### Thread Pool Configuration
 
@@ -432,30 +258,8 @@ DO NOT USE thread pools when:
 
 Nginx as a reverse proxy manages two separate event-loop state machines simultaneously: one for the **downstream** connection (client ↔ Nginx) and one for the **upstream** connection (Nginx ↔ backend server). Both are managed by the same single-threaded event loop using non-blocking I/O.
 
-```
-Client ←──────────────────────────────────────────────────────── Backend
-        ←── downstream ──→          ←─── upstream ───→
+<NginxUpstreamProxyDiagram />
 
-[Client FD: 47]   [Nginx Event Loop]   [Upstream FD: 89]
-
-Event loop manages:
-  fd 47: watching EPOLLIN (client sends data) / EPOLLOUT (ready to write to client)
-  fd 89: watching EPOLLIN (upstream sends response) / EPOLLOUT (ready to send request)
-
-Data flow (proxying GET /api/orders):
-  1. fd 47 EPOLLIN: client sent request headers
-  2. Nginx parses request, selects upstream from pool
-  3. Non-blocking connect() to upstream (e.g., 10.0.1.5:8080)
-     connect() returns EINPROGRESS immediately (not blocking)
-     fd 89 registered with epoll EPOLLOUT (writable = connect succeeded)
-  4. fd 89 EPOLLOUT: connection established
-     Nginx writes proxied request headers to fd 89
-  5. fd 89 EPOLLIN: upstream response arrives
-     Nginx reads response headers and body into buffers
-  6. fd 47 EPOLLOUT: client socket ready to receive
-     Nginx writes buffered response to client
-  7. Both FDs closed or returned to connection pool
-```
 
 ### Upstream Connection Pooling (`keepalive`)
 
@@ -519,7 +323,8 @@ proxy_buffering off:
 
 ## 6. Load Balancing Algorithms
 
-Nginx distributes requests across upstream servers using configurable algorithms:
+<NginxLoadBalancingDiagram />
+
 
 ### Round Robin (Default)
 
@@ -606,7 +411,8 @@ upstream backend {
 
 ## 7. SSL/TLS Termination Internals
 
-Nginx handles TLS termination at the worker level — each worker independently manages TLS handshakes and encryption/decryption without inter-process coordination.
+<NginxTlsInternalsDiagram />
+
 
 ### TLS Handshake Overhead and Session Resumption
 
@@ -677,22 +483,13 @@ server {
 
 ## 8. HTTP/2 and HTTP/3
 
+<NginxHttp2Http3Diagram />
+
+
 ### HTTP/2 Multiplexing
 
-HTTP/1.1 sends one request per TCP connection at a time (or uses pipelining which has head-of-line blocking issues). HTTP/2 multiplexes multiple request-response pairs over a single TCP connection using binary-framed streams:
+<Http2MultiplexingDiagram />
 
-```
-HTTP/1.1 (3 requests, 3 connections or pipelined with HOL blocking):
-  Connection 1: [Request A][──── Response A ────]
-  Connection 2: [Request B][──── Response B ────]
-  Connection 3: [Request C][──── Response C ────]
-
-HTTP/2 (3 requests, 1 connection, multiplexed streams):
-  Connection 1: [Stream 1: Req A][Stream 2: Req B][Stream 3: Req C]
-                [Stream 2: Res B (small, fast)]
-                [Stream 1: Res A (large)]
-                [Stream 3: Res C (medium)]
-```
 
 ```nginx
 server {
@@ -719,19 +516,8 @@ server {
 
 ### HTTP/3 and QUIC
 
-HTTP/3 replaces TCP with QUIC (a UDP-based protocol) to eliminate TCP's head-of-line blocking at the transport layer:
+<Http3QuicDiagram />
 
-```
-HTTP/2 over TCP — Transport-level HOL blocking:
-  Single TCP connection. If one packet is lost, ALL streams stall
-  until the lost packet is retransmitted.
-  Stream 1 is waiting for Stream 2's lost packet — even though they're independent.
-
-HTTP/3 over QUIC — Per-stream reliability:
-  QUIC handles each stream independently.
-  Packet loss on Stream 2 does not stall Stream 1.
-  Zero-RTT connection establishment on reconnect.
-```
 
 ```nginx
 # HTTP/3 support (requires Nginx built with QUIC support — Nginx 1.25+)
@@ -753,17 +539,8 @@ server {
 
 ## 9. Caching
 
-Nginx can cache upstream responses, dramatically reducing backend load for repeated requests.
+<NginxCacheRateLimitDiagram />
 
-### Proxy Cache Architecture
-
-```
-First request (cache miss):
-  Client → Nginx → Backend → Nginx caches response → Client
-
-Subsequent requests (cache hit):
-  Client → Nginx (serves from cache) → Client  ← Backend NOT contacted
-```
 
 ```nginx
 # Cache zone definition (must be in http {} block)
@@ -923,6 +700,9 @@ Omit nodelay when: you want to smooth out bursts to protect the upstream
 ---
 
 ## 11. Performance Tuning Reference
+
+<NginxPerformanceTuningDiagram />
+
 
 ### Worker and Connection Tuning
 
@@ -1094,6 +874,9 @@ http {
 
 ## 13. Common Gotchas & Anti-Patterns
 
+<NginxGotchasChecklistDiagram />
+
+
 ### 1. Blocking the Event Loop with Synchronous Code
 
 ```nginx
@@ -1216,6 +999,9 @@ If rlimit too low: "too many open files" errors, connections dropped
 
 ## 14. Pros vs. Cons
 
+<NginxProsConsDiagram />
+
+
 | Pros | Cons |
 |:---|:---|
 | **Minimal memory footprint** — ~4MB per worker, ~256 bytes per connection, scales to hundreds of thousands of concurrent connections | **Single-threaded per worker** — CPU-bound work (heavy Lua, complex regex, gzip) blocks the event loop for that worker |
@@ -1227,28 +1013,38 @@ If rlimit too low: "too many open files" errors, connections dropped
 
 ---
 
-## 15. Interview Questions
+## Interview Questions
 
-**Q: How does Nginx handle 10,000 concurrent connections with one thread per worker?**
+### Q1: How does Nginx handle 10,000 concurrent connections with one thread per worker?
 
-> Nginx uses an event-driven, asynchronous architecture. Instead of allocating a thread per connection, each worker registers all connection sockets with the OS kernel via epoll (Linux) or kqueue (BSD). The kernel notifies the worker only when I/O is ready — data arrived, buffer cleared, connection established. The worker's single thread processes ready events sequentially in microseconds each, then returns to `epoll_wait()`. Because there's no thread context switching and no idle threads, 10,000 connections consume only ~4MB of worker memory plus ~256 bytes per connection, with CPU used only for actual work.
+Nginx uses an event-driven, asynchronous architecture. Instead of allocating a thread per connection, each worker registers all connection sockets with the OS kernel via epoll (Linux) or kqueue (BSD). The kernel notifies the worker only when I/O is ready — data arrived, buffer cleared, connection established. The worker's single thread processes ready events sequentially in microseconds each, then returns to `epoll_wait()`. Because there's no thread context switching and no idle threads, 10,000 connections consume only ~4MB of worker memory plus ~256 bytes per connection, with CPU used only for actual work.
 
-**Q: Why does Nginx need a thread pool if it's event-driven?**
+---
 
-> The epoll/kqueue event loop works perfectly for network sockets, which support non-blocking I/O. Regular filesystem files on standard filesystems (ext4, xfs) do not — `read()` on a file always blocks the calling thread until data is available. A single 10ms disk read (HDD cache miss) would freeze the entire event loop and all thousands of connections it manages. The thread pool offloads these blocking disk reads to separate threads, keeping the event loop free to handle network events while the thread blocks on disk.
+### Q2: Why does Nginx need a thread pool if it's event-driven?
 
-**Q: What is zero-copy sendfile and why does it matter?**
+The epoll/kqueue event loop works perfectly for network sockets, which support non-blocking I/O. Regular filesystem files on standard filesystems (ext4, xfs) do not — `read()` on a file always blocks the calling thread until data is available. A single 10ms disk read (HDD cache miss) would freeze the entire event loop and all thousands of connections it manages. The thread pool offloads these blocking disk reads to separate threads, keeping the event loop free to handle network events while the thread blocks on disk.
 
-> Without sendfile, serving a static file requires four memory copies: disk → kernel page cache, page cache → userspace buffer, userspace buffer → socket buffer, socket buffer → NIC. With `sendfile on`, Nginx asks the kernel to copy directly from the page cache to the socket buffer, bypassing userspace entirely. This eliminates two memory copies and two context switches per file served — critical for static asset serving at high concurrency.
+---
 
-**Q: How does Nginx achieve zero-downtime config reloads?**
+### Q3: What is zero-copy sendfile and why does it matter?
 
-> When `nginx -s reload` (SIGHUP) is sent, the master process forks new worker processes with the new configuration. New connections are accepted only by the new workers. The old workers receive a graceful shutdown signal — they stop accepting new connections but finish serving all active in-flight requests. Once the last active request on an old worker completes, that old worker exits. From the client's perspective, there are zero dropped connections.
+Without sendfile, serving a static file requires four memory copies: disk → kernel page cache, page cache → userspace buffer, userspace buffer → socket buffer, socket buffer → NIC. With `sendfile on`, Nginx asks the kernel to copy directly from the page cache to the socket buffer, bypassing userspace entirely. This eliminates two memory copies and two context switches per file served — critical for static asset serving at high concurrency.
 
-**Q: What is the difference between `proxy_buffering on` and off?**
+---
 
-> With `proxy_buffering on` (default), Nginx reads the complete upstream response into memory buffers before sending anything to the client. This frees the upstream connection as soon as the response is buffered, regardless of how slowly the client reads. With `proxy_buffering off`, data flows directly from upstream to client — the upstream connection is held open until the client finishes reading. `off` is required for streaming responses (SSE, chunked streaming, long polling) but risks holding upstream connections open indefinitely for slow clients.
+### Q4: How does Nginx achieve zero-downtime config reloads?
 
-**Q: How does Nginx rate limiting work internally?**
+When `nginx -s reload` (SIGHUP) is sent, the master process forks new worker processes with the new configuration. New connections are accepted only by the new workers. The old workers receive a graceful shutdown signal — they stop accepting new connections but finish serving all active in-flight requests. Once the last active request on an old worker completes, that old worker exits. From the client's perspective, there are zero dropped connections.
 
-> Nginx rate limiting uses the leaky bucket algorithm. A shared memory zone tracks request timestamps per key (usually client IP). Requests fill the bucket; the bucket drains at the configured rate. `limit_req zone=X rate=100r/s burst=200 nodelay` means: allow up to 200 requests immediately in a burst (filled bucket), then allow up to 100r/s continuously. Requests beyond burst capacity while the bucket is full are rejected with 429. The `nodelay` flag serves burst requests immediately rather than spreading them over the rate period.
+---
+
+### Q5: What is the difference between `proxy_buffering on` and off?
+
+With `proxy_buffering on` (default), Nginx reads the complete upstream response into memory buffers before sending anything to the client. This frees the upstream connection as soon as the response is buffered, regardless of how slowly the client reads. With `proxy_buffering off`, data flows directly from upstream to client — the upstream connection is held open until the client finishes reading. `off` is required for streaming responses (SSE, chunked streaming, long polling) but risks holding upstream connections open indefinitely for slow clients.
+
+---
+
+### Q6: How does Nginx rate limiting work internally?
+
+Nginx rate limiting uses the leaky bucket algorithm. A shared memory zone tracks request timestamps per key (usually client IP). Requests fill the bucket; the bucket drains at the configured rate. `limit_req zone=X rate=100r/s burst=200 nodelay` means: allow up to 200 requests immediately in a burst (filled bucket), then allow up to 100r/s continuously. Requests beyond burst capacity while the bucket is full are rejected with 429. The `nodelay` flag serves burst requests immediately rather than spreading them over the rate period.

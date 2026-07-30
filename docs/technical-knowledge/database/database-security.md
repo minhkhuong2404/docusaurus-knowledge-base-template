@@ -307,7 +307,7 @@ Monitoring:
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What is SQL injection and how do you prevent it?**
 > SQL injection is when an attacker inserts SQL code into a query through user input, manipulating the query's logic. Prevention: always use parameterized queries / prepared statements — never concatenate user input into SQL strings. Use an ORM (Hibernate/JPA) which parameterizes automatically. For dynamic identifiers, use a whitelist.

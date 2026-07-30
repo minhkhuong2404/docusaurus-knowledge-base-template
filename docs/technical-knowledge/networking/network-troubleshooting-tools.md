@@ -567,7 +567,7 @@ ss -tan | awk 'NR>1{print $1}' | sort | uniq -c
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. How would you diagnose why a microservice can't reach another microservice?**
 > Step by step: (1) Confirm DNS resolves correctly: `dig service-b.namespace.svc.cluster.local`. (2) Confirm IP is reachable: `ping` or `curl --connect-timeout 3`. (3) Confirm port is open: `nc -zv host 8080`. (4) Check for TLS issues: `openssl s_client -connect host:443`. (5) Make actual HTTP request: `curl -v http://service-b:8080/health`. (6) Check network policies, firewalls, security groups. (7) If all OK at network layer, check app logs.

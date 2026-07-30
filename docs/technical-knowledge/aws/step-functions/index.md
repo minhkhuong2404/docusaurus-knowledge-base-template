@@ -484,7 +484,7 @@ Original Input → InputPath → Parameters → TASK → ResultSelector → Resu
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** A workflow needs to process each item in a list in parallel, up to 5 items at a time. Which state type achieves this?
 

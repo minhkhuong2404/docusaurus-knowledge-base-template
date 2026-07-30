@@ -415,7 +415,7 @@ try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_
 - [JVM Internals: Memory, GC & Class Loading](./java-jvm.md)
 - [Java New Features: Java 8 through Java 21+](./java-new-features.md)
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. How do you choose between BIO, NIO, and AIO for a high-concurrency service with strict tail-latency targets?
 2. What signs indicate buffer sizing and copy behavior are the real bottlenecks, not CPU?

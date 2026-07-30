@@ -83,50 +83,12 @@ Without a Builder, every time a new field is added to the `User` class, hundreds
 
 ---
 
+import BuilderDiagram from '@site/src/components/BuilderDiagram';
+
 ## 🏗️ Structure
 
-```mermaid
-classDiagram
-    class Builder {
-        <<interface>>
-        +buildStepA()
-        +buildStepB()
-        +buildStepZ()
-    }
-    
-    class ConcreteBuilder1 {
-        -result: Product1
-        +reset()
-        +buildStepA()
-        +buildStepB()
-        +buildStepZ()
-        +getResult() Product1
-    }
-    
-    class ConcreteBuilder2 {
-        -result: Product2
-        +reset()
-        +buildStepA()
-        +buildStepB()
-        +buildStepZ()
-        +getResult() Product2
-    }
-    
-    class Director {
-        -builder: Builder
-        +Director(Builder)
-        +changeBuilder(Builder)
-        +make(type)
-    }
-    
-    class Client
+<BuilderDiagram />
 
-    Builder <|.. ConcreteBuilder1
-    Builder <|.. ConcreteBuilder2
-    Director o--> Builder
-    Client --> Director
-    Client ..> ConcreteBuilder1
-```
 
 ---
 

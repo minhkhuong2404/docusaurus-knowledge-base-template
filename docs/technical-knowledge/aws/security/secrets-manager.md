@@ -257,7 +257,7 @@ You CANNOT use `AWS::SSM::Parameter::Value<String>` parameter type for SecureStr
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** RDS password with automatic 30-day rotation. Best service?
 

@@ -6,6 +6,9 @@ description: Actionable guidelines, workflow frameworks, best practices, and ant
 tags: [ai-agents, vibe-coding, software-engineering, workflows, prompt-engineering, developer-productivity, context-engineering, context-compaction]
 ---
 
+import VibeCodingWorkflowDiagram from '@site/src/components/VibeCodingWorkflowDiagram';
+import VibeCodingStrategiesDiagram from '@site/src/components/VibeCodingStrategiesDiagram';
+
 # The Vibe Coding Handbook
 
 As AI coding agents become more powerful, the primary bottleneck in software engineering shifts from **syntax generation** (how to write code) to **system orchestration** (what to build, how to structure it, and how to verify it). 
@@ -18,16 +21,7 @@ This is the paradigm of **Vibe Coding**. This handbook details the core workflow
 
 Vibe coding is not "lazy coding." It is a disciplined feedback loop where the developer acts as the **director** and the AI agent acts as the **operator**. The workflow has three distinct phases:
 
-```mermaid
-graph LR
-    subgraph Vibe Coding Lifecycle
-        Plan[1. Plan & Specify<br>Architectural Blueprint] --> Guide[2. Guide & Implement<br>Iterative Agent Execution]
-        Guide --> Verify[3. Verify & Review<br>Diffs, Linters, Tests]
-        Verify -->|Bugs found| Guide
-        Verify -->|Done| Success[Production Ready]
-    end
-end
-```
+<VibeCodingWorkflowDiagram />
 
 ### Phase 1: Plan & Specify (The Architect)
 Before you type a single prompt, you must know what you are building. 
@@ -75,6 +69,64 @@ Make it incredibly easy for the agent to check its own work:
 
 ### 4. Maintain an Active Project Map
 When working on large codebases, agents can lose track of overall architecture. Keep a `docs/` folder or a README file describing the system architecture and guidelines. Always feed this file to the agent as a reference when starting new features.
+
+### ❌ Pitfall 5: Library Version Hallucination
+*   **The Symptom:** The agent generates code referencing non-existent library methods or deprecated syntax (e.g., using Spring Boot 2.x `@Autowired` setter injection when working in Spring Boot 3.3).
+*   **The Risk:** Infinite compiler errors and broken dependencies.
+*   **The Fix:** Explicitly state modern library versions in your system prompt or `AGENTS.md` file (e.g., *"Java 21, Spring Boot 3.3.x, JUnit 5. Use records for DTOs"*).
+
+### ❌ Pitfall 6: Dependency Inflation ("Package Bloat")
+*   **The Symptom:** For every minor helper task (e.g., parsing a string or formatting dates), the agent adds a new npm package or Maven dependency.
+*   **The Risk:** Bloated build artifacts, supply chain security risks, and version conflicts.
+*   **The Fix:** Add a strict rule: *"Do NOT introduce new third-party dependencies without explicit user confirmation. Use language standard libraries first."*
+
+### ❌ Pitfall 7: Over-refactoring Unrelated Files
+*   **The Symptom:** You ask the agent to add one field to `UserDTO.java`, and it refactors 12 controllers, renames 4 services, and reformats the entire project's indentation.
+*   **The Risk:** Mass merge conflicts, broken regression tests, and unreviewable git diffs.
+*   **The Fix:** Use **Scoped Prompting**: *"Modify ONLY `UserDTO.java` and `UserRepository.java`. Do not touch any other files."*
+
+### ❌ Pitfall 8: Ignoring Test Suite Warnings
+*   **The Symptom:** The agent declares *"Feature complete!"* after writing code, but when you run tests, 3 existing regression tests fail silently.
+*   **The Risk:** Pushing broken features to staging or production.
+*   **The Fix:** Direct the agent to execute the full test suite (`npm run test` or `./gradlew test`) and confirm 100% pass before accepting diffs.
+
+### ❌ Pitfall 9: Architectural Coupling ("Spaghetti Abstraction")
+*   **The Symptom:** The agent bypasses service or repository layers, making raw DB queries inside UI components or API controllers to "get it working faster."
+*   **The Risk:** Severe architectural debt and broken separation of concerns.
+*   **The Fix:** Define your layer architecture in `AGENTS.md` and review diffs to ensure logic resides in the correct architectural layer.
+
+### ❌ Pitfall 10: Secret Leakage in Prompts
+*   **The Symptom:** Pasting real API keys, database credentials, or private user data into chat prompts or code files created by the agent.
+*   **The Risk:** Security breaches, credential leaks in git history or third-party LLM logs.
+*   **The Fix:** Use environment variables (`.env` or OS env) and never paste production secrets into LLM prompts.
+
+---
+
+## 🎯 Vibe Coding Strategies by Project Type
+
+<VibeCodingStrategiesDiagram />
+
+
+### 1. Greenfield (0-to-1) Projects
+- **Goal:** Rapid prototype to working architecture without accumulating early tech debt.
+- **Workflow:**
+  1. Generate an explicit `ARCHITECTURE.md` and database schema outline first.
+  2. Implement backend data layer -> API service layer -> Frontend components sequentially.
+  3. Create an initial `AGENTS.md` defining stack constraints before writing application code.
+
+### 2. Legacy Codebases & Major Refactors
+- **Goal:** Safely modify code without breaking existing production behavior.
+- **Workflow:**
+  1. **Lock down regression tests first:** Ensure high test coverage exists on the legacy module before modifying it.
+  2. **Scoped execution:** Edit one isolated file at a time.
+  3. Provide exact interfaces and docstrings to the agent rather than loading the whole codebase into context.
+
+### 3. Production Bug Fixing & Triage
+- **Goal:** Surgical diagnostic and remediation with zero side effects.
+- **Workflow:**
+  1. Feed the exact stacktrace and environment details into context.
+  2. Ask the agent to write a **failing regression test** reproducing the issue *before* touching application code.
+  3. Apply the fix and verify that the new test passes alongside all existing tests.
 
 ---
 

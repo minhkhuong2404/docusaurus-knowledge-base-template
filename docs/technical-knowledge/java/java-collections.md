@@ -543,7 +543,7 @@ The iterator traverses the live hash buckets directly.
 - [Java I/O: Streams, NIO & I/O Models](./java-io.md)
 - [Java Fundamentals: Core Language Concepts](./java-fundamentals.md)
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. How do you select collection types for latency-critical code paths where both throughput and GC pressure matter?
 2. When does `ConcurrentHashMap` become a bottleneck, and what mitigation patterns do you apply?

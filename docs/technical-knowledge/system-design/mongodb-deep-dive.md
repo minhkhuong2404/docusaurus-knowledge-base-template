@@ -884,7 +884,7 @@ public interface UserRepository extends MongoRepository<User, String> {
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What is MongoDB and how does it differ from a relational database?**
 > MongoDB is a document-oriented NoSQL database that stores data as BSON documents in collections rather than rows in tables. Key differences: schema is flexible (documents in a collection can have different fields), relationships are handled by embedding or referencing rather than JOINs, it scales horizontally via sharding while SQL scales vertically, and hierarchical data maps 1:1 to documents. The trade-off is giving up some relational guarantees for flexibility and scalability.

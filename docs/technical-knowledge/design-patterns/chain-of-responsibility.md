@@ -73,40 +73,12 @@ The fraud detection rules change constantly. With this pattern, your data scienc
 
 ---
 
+import ChainOfResponsibilityDiagram from '@site/src/components/ChainOfResponsibilityDiagram';
+
 ## 🏗️ Structure
 
-```mermaid
-classDiagram
-    class Handler {
-        <<interface>>
-        +setNext(h: Handler)
-        +handle(request)
-    }
-    
-    class BaseHandler {
-        -next: Handler
-        +setNext(h: Handler)
-        +handle(request)
-    }
-    
-    class ConcreteHandler1 {
-        +handle(request)
-    }
-    
-    class ConcreteHandler2 {
-        +handle(request)
-    }
-    
-    class Client
+<ChainOfResponsibilityDiagram />
 
-    Client --> Handler
-    Handler <|.. BaseHandler
-    BaseHandler o--> Handler : next
-    BaseHandler <|-- ConcreteHandler1
-    BaseHandler <|-- ConcreteHandler2
-    
-    note for BaseHandler "handle(request) {\n    if (next != null) {\n        next.handle(request);\n    }\n}"
-```
 
 ---
 

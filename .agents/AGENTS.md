@@ -68,12 +68,14 @@ Replace static content (ASCII art, ```` ```mermaid ``` ```` blocks, plain markdo
 
 1. **File location**: Always create in `src/components/<ConceptName>Diagram.tsx`.
 2. **Outer wrapper**: Always use `className="interactive-diagram-container"` — never a bare `<div>`.
-3. **Header bar**: Always include a header with an `<svg>` icon (never emoji) and a descriptive title. Use the `.interactive-diagram-header` CSS class pattern from DESIGNS.md.
+3. **Header bar**: Always include a header with an `<svg>` icon (never emoji) and a descriptive title. Use the `.interactive-diagram-header` CSS class pattern from DESIGNS.md. Style the icon with a distinct accent color from the palette, the title text with the primary theme color (e.g. `#34d399`), and match any action buttons to this theme scheme.
 4. **Color tokens**: Use only the curated hex palette from DESIGNS.md Section 3. Never use plain CSS color names (`red`, `blue`, etc.).
 5. **CSS variables for text**: Always use `var(--ifm-color-content)` and `var(--ifm-color-content-secondary)` for body text — this handles light/dark mode automatically.
 6. **No emoji in JSX headers**: Use inline `<svg>` icons from the icon library in DESIGNS.md Section 6.
 7. **Ternary safety**: Always resolve all branches in nested ternaries. Dangling ternaries cause Rspack build failures.
-8. **SVG markers**: Always set `fill="context-fill"` on `<marker>` path elements for hover-aware arrowheads.
+8. **SVG markers**: Always set `fill="context-fill"` on `<marker>` path elements for hover-aware arrowheads. When using colored paths, define specific colored `<marker>` elements in `<defs>` and apply them dynamically to ensure the arrowhead color matches the path body color exactly.
+9. **Responsive Grid Columns**: In multi-column (split pane) layouts, avoid flexible fractional columns like `1.2fr 1fr` which shift when text content wraps. Use fixed percentage grids (e.g., `55% 45%`, `align-items: start`) and embed an inline `<style>` media query block to wrap columns to `1fr` on screens smaller than `768px`.
+10. **Node & Lifeline Spacing**: For both sequence diagrams and state/flow charts, add gap offsets to arrow coordinates (e.g. `+6px` start, `-12px` target) so that path lines and arrowhead tips float cleanly and do not overlap or touch vertical sequence lifelines or block nodes.
 
 ### Choose the right archetype (full templates in DESIGNS.md Section 5)
 
@@ -120,4 +122,42 @@ Before creating a new component, check whether one already exists for the concep
 | `AQSArchitectureDiagram` | AbstractQueuedSynchronizer internals |
 | `LockDecisionTreeDiagram` | Decision tree for choosing the right Java lock |
 | `ConcurrencyCoordinationDiagram` | CountDownLatch / CyclicBarrier / Semaphore visualised |
+| `TokenInvalidationFlowDiagram` | Refresh token rotation, single-device & multi-device session invalidation |
+| `AccountHackedResponseDiagram` | Animated incident response timeline + 3 access-token revocation methods tabbed explorer |
+| `PasswordInvalidationDiagram` | Tabbed Single-Device vs Multi-Device password update invalidation with comparison table |
+
+## MANDATORY: Register Every New Page in sidebars.ts
+
+**Whenever you create a new documentation page (`.md` or `.mdx` file), you MUST also register it in [`sidebars.ts`](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/sidebars.ts).**
+
+### Rule Summary
+
+- **Location**: `sidebars.ts` at the workspace root.
+- **Registration Format**: Add the doc ID (relative path from `docs/` without the `.md` extension, with `/` separators) as a string entry under the correct category.
+- **Find the Right Category**: Match the directory of the new file to the nearest existing category in `sidebars.ts`. For example, a file at `docs/technical-knowledge/security/my-page.md` should be added under the `🔐 Core Security` category items array.
+
+### How to Find the Right Place
+
+1. Identify the folder of the new file (e.g., `docs/technical-knowledge/security/`).
+2. Grep `sidebars.ts` for any existing entry from that folder to locate the category block.
+3. Add the new doc ID immediately after the closest thematically related sibling entry.
+
+### Example
+
+New file: `docs/technical-knowledge/security/refresh-token-security-invalidation.md`
+Doc ID: `'technical-knowledge/security/refresh-token-security-invalidation'`
+
+```ts
+// In sidebars.ts, under the 🔐 Core Security category:
+items: [
+  'technical-knowledge/security/authentication-authorization',
+  'technical-knowledge/security/cookies-vs-sessions-vs-jwt',
+  'technical-knowledge/security/refresh-token-security-invalidation',  // ← Added here
+  'technical-knowledge/security/web-vulnerabilities',
+],
+```
+
+### Failure to Register = Build Warning + Page Unreachable
+
+Pages not registered in `sidebars.ts` will not appear in the left navigation and may generate Docusaurus build warnings. **Always update `sidebars.ts` as part of any page creation task.**
 

@@ -215,7 +215,7 @@ Maps **private IP addresses** to one or more **public IP addresses**, enabling p
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What is CIDR and why was it introduced?**
 > CIDR (Classless Inter-Domain Routing) replaces the rigid class-based system with flexible prefix lengths (e.g., /24, /22). It was introduced to: (1) slow IPv4 exhaustion by allowing networks of any size; (2) reduce routing table size through route aggregation (supernetting) — multiple subnets summarized as one prefix.

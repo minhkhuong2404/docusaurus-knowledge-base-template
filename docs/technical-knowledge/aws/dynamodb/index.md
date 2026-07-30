@@ -395,7 +395,7 @@ dynamoDbClient.updateItem(UpdateItemRequest.builder()
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** Find all orders for customer "C-100" sorted by date. Table: PK=customerId, SK=orderId. Best approach?
 

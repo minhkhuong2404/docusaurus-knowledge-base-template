@@ -239,7 +239,7 @@ CodeCommit  →  CodeBuild  →  CodeBuild  →  CodeDeploy
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** A team wants to deploy a new Lambda version gradually — send 10% of traffic to the new version for 5 minutes, then promote to 100% if healthy. Which CodeDeploy configuration should they use?
 

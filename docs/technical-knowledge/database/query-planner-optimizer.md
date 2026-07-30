@@ -331,7 +331,7 @@ EXPLAIN SELECT COUNT(*) FROM large_table WHERE value > 100;
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What is the difference between a cost-based and rule-based optimizer?**
 > A rule-based optimizer (RBO) applies a fixed set of rules to transform queries (e.g., "always use an index if available"). A cost-based optimizer (CBO) estimates the cost of multiple candidate plans using table statistics and picks the cheapest. Modern DBs all use CBO — it makes better decisions for diverse data distributions.

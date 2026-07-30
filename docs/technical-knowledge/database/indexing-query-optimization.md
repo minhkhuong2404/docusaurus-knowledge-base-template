@@ -1576,7 +1576,7 @@ In a system design interview, your choice of index explicitly dictates the perfo
 ---
 
 
-## 🎯 Interview Questions
+## Interview Questions
 
 ### Database & Query Execution Questions
 

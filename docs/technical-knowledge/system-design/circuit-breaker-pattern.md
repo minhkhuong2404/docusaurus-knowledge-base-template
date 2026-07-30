@@ -7,6 +7,10 @@ tags: [system-design, microservices, resilience, spring-boot, resilience4j, circ
 ---
 
 import CircuitBreakerDiagram from '@site/src/components/CircuitBreakerDiagram';
+import CascadingFailureDiagram from '@site/src/components/CascadingFailureDiagram';
+import CountBasedSlidingWindowDiagram from '@site/src/components/CountBasedSlidingWindowDiagram';
+import TimeBasedSlidingWindowDiagram from '@site/src/components/TimeBasedSlidingWindowDiagram';
+import DecorationOrderDiagram from '@site/src/components/DecorationOrderDiagram';
 
 # Circuit Breaker Pattern
 
@@ -18,34 +22,8 @@ Named after the electrical component: just as a household circuit breaker cuts p
 
 ## The Problem It Solves: Cascading Failure
 
-Without a circuit breaker, a slow downstream service causes thread exhaustion in the caller:
+<CascadingFailureDiagram />
 
-```
-User Request
-    │
-    ▼
-Order Service
-    │
-    ├── GET /users/{id}  ──────────────────────────────► User Service (200ms — OK)
-    │
-    └── POST /payments   ──────────── [User Service is slow: 30s timeout]
-                              │
-                              ├── Thread 1 blocked (30s)
-                              ├── Thread 2 blocked (30s)
-                              ├── Thread 3 blocked (30s)
-                              ├── ...
-                              └── Thread pool exhausted → Order Service starts rejecting ALL requests
-                                                          including unrelated endpoints
-```
-
-The failure propagates **upward** through the call graph. Every service that calls Order Service now also degrades. This is a **cascading failure**.
-
-The circuit breaker short-circuits this:
-
-```
-POST /payments → Circuit OPEN → Fail fast (0ms) → Fallback response
-                                No thread blocked. Thread pool healthy.
-```
 
 ---
 
@@ -86,20 +64,8 @@ The sliding window is how the circuit breaker computes failure and slow-call rat
 
 Tracks the last `N` calls as a circular array of call outcomes. Each new call overwrites the oldest entry.
 
-```
-slidingWindowSize = 5, calls so far:
+<CountBasedSlidingWindowDiagram />
 
-[SUCCESS, SUCCESS, FAILURE, SUCCESS, FAILURE]
-                                    ↑ newest
-
-Failure rate = 2/5 = 40%
-
-Next call arrives (FAILURE):
-[SUCCESS, FAILURE, SUCCESS, FAILURE, FAILURE]
- ↑ oldest evicted
-
-Failure rate = 3/5 = 60% → threshold breached → OPEN
-```
 
 **Use when:** Call rate is steady and predictable. The window represents a meaningful number of operations.
 
@@ -107,14 +73,8 @@ Failure rate = 3/5 = 60% → threshold breached → OPEN
 
 Tracks all calls within the last `N` seconds using a circular array of per-second aggregation buckets.
 
-```
-slidingWindowSize = 10 (seconds), current second = T
+<TimeBasedSlidingWindowDiagram />
 
-Buckets: [T-9][T-8][T-7][T-6][T-5][T-4][T-3][T-2][T-1][T]
-           2f   0f   1f   0f   3f   0f   0f   1f   0f   2f
-
-Total failures in window = 9 / total calls = ... → compute rate
-```
 
 **Use when:** Call rate varies significantly (e.g., bursty traffic). Time-based windows prevent a burst of failures from staying in the window indefinitely.
 
@@ -340,17 +300,8 @@ public class PaymentProcessor {
 
 When combining multiple Resilience4j decorators, the **order of decoration determines behavior**:
 
-```
-Correct order (outer → inner):
-  Bulkhead → CircuitBreaker → Retry → TimeLimiter → RateLimiter → actual call
+<DecorationOrderDiagram />
 
-What this means at runtime:
-  1. Bulkhead: reject if too many concurrent calls (fast, no downstream impact)
-  2. CircuitBreaker: reject if circuit is OPEN (fast, no downstream impact)
-  3. Retry: on failure, retry up to N times
-  4. TimeLimiter: each retry attempt has a hard timeout
-  5. RateLimiter: throttle call rate to downstream
-```
 
 With annotations, the order is controlled by `@Order` on the aspect beans or via the `spring.cloud.circuitbreaker.resilience4j.aspect-order` property:
 

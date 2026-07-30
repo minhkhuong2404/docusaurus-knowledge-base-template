@@ -315,7 +315,7 @@ public class CardAuthorizationService {
 - [outbound.md](./outbound.md) — Card debit is an outbound from customer's perspective
 - [aml_kyc.md](./aml_kyc.md) — KYC required for card issuance
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. How do you reduce card fraud while preserving checkout conversion rates?
 2. What trade-offs drive scheme routing decisions between domestic and international rails?

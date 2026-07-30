@@ -220,7 +220,7 @@ Ideal for Kubernetes deployments with stable pod names.
 
 ---
 
-## Interview Questions — Consumer Groups
+## Interview Questions
 
 **Q: Can two consumers in the same group read from the same partition?**
 

@@ -189,7 +189,7 @@ git config --global core.editor "vim"
 Make small, frequent commits while working (even messy ones). Before opening a PR, use interactive rebase (`git rebase -i`) to squash and rewrite them into clean, logical commits. You get the safety of frequent saves and the clarity of clean history. See [Squash](../history/squash) and [Fixup](../history/fixup).
 :::
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. What makes a commit history “operationally useful” during incidents?
 2. How do you balance frequent WIP commits with clean merge history?

@@ -1014,7 +1014,7 @@ Start here: What is the primary access pattern?
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 ### For New Learners
 

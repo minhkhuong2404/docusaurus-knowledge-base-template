@@ -185,7 +185,7 @@ snsClient.publish(PublishRequest.builder()
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** OrderPlaced event needs to go to inventory, billing, and shipping services. Best architecture?
 

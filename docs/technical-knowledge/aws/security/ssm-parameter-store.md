@@ -250,7 +250,7 @@ Reading a SecureString requires **TWO** permissions:
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** CloudFormation template needs SecureString from SSM. How?
 

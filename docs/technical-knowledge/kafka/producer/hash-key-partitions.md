@@ -223,7 +223,7 @@ partitioner.class=com.example.VipAwarePartitioner
 
 ---
 
-## Interview Questions — Hash Key Partitions
+## Interview Questions
 
 **Q: How does Kafka decide which partition a keyed message goes to?**
 

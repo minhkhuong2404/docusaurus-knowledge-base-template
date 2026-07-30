@@ -1141,7 +1141,7 @@ logging:
 
 ---
 
-## Interview Questions: Senior Level
+## Interview Questions
 
 ### Q: Explain multi-window burn rate alerting. Why is it better than simple threshold alerts?
 

@@ -5,6 +5,21 @@ description: "A comprehensive guide comparing reverse proxies, load balancers, a
 sidebar_label: "Proxy vs. Balancer vs. Gateway"
 tags: [system-design, networking, reverse-proxy, load-balancer, api-gateway, architecture, nginx, envoy, kong, spring-cloud-gateway]
 ---
+import ProxyComparisonDiagram from '@site/src/components/ProxyComparisonDiagram';
+import LoadBalancerTypesDiagram from '@site/src/components/LoadBalancerTypesDiagram';
+import ApiGatewayPipelineDiagram from '@site/src/components/ApiGatewayPipelineDiagram';
+import CapabilitiesSpectrumDiagram from '@site/src/components/CapabilitiesSpectrumDiagram';
+import ProductionCoexistenceDiagram from '@site/src/components/ProductionCoexistenceDiagram';
+import SeniorArchitectureDeepDiveDiagram from '@site/src/components/SeniorArchitectureDeepDiveDiagram';
+import ApiGatewayOverviewDiagram from '@site/src/components/ApiGatewayOverviewDiagram';
+import RateLimitingTokenBucketDiagram from '@site/src/components/RateLimitingTokenBucketDiagram';
+import ServiceDiscoveryDiagram from '@site/src/components/ServiceDiscoveryDiagram';
+import ReverseProxyOnlyDiagram from '@site/src/components/ReverseProxyOnlyDiagram';
+import L4LoadBalancerDiagram from '@site/src/components/L4LoadBalancerDiagram';
+import L7PathRoutingDiagram from '@site/src/components/L7PathRoutingDiagram';
+import FullStackGatewayDiagram from '@site/src/components/FullStackGatewayDiagram';
+import ServiceMeshDiagram from '@site/src/components/ServiceMeshDiagram';
+import GatewayCircuitBreakerDiagram from '@site/src/components/GatewayCircuitBreakerDiagram';
 
 # Reverse Proxy vs. Load Balancer vs. API Gateway
 
@@ -44,63 +59,8 @@ In a real airport, all three exist simultaneously in a chain. So do they in prod
 
 A **Reverse Proxy** is an intermediary server positioned in front of one or more backend servers. Clients connect to it as if it were the destination — they never know the backend's real address. The proxy forwards the request, receives the backend's response, and returns it to the client.
 
-```
-Client (Internet)
-				│  HTTPS → api.company.com
-				▼
-[ Reverse Proxy — Nginx / Caddy / HAProxy ]
-				│  HTTP → 10.0.1.15:8080 (internal, private subnet)
-				▼
-[ Backend Server — Spring Boot / Node.js ]
-```
+<ProxyComparisonDiagram />
 
-The client sees only `api.company.com`. The backend's actual IP, port, and technology stack are completely hidden.
-
-### Forward Proxy vs. Reverse Proxy
-
-To understand a reverse proxy, it helps to contrast it with a **Forward Proxy** (the type of proxy most people are familiar with, like VPNs or IP masking tools):
-
-* **Forward Proxy (Client-Side):** Acts on behalf of the **client**. It sits between the client and the public internet, masking the client's identity. The destination server thinks the request originated from the proxy, not the actual client.
-* **Reverse Proxy (Server-Side):** Acts on behalf of the **server**. It sits between the public internet and your backend infrastructure, masking the servers' identities. The client thinks they are talking directly to the destination server, but they are actually talking to the reverse proxy.
-
-```mermaid
-graph TD
-    subgraph ClientSpace [Client Side]
-        Client[💻 Client] -->|Private Request| FP[🛡️ Forward Proxy\ne.g., Corporate VPN]
-    end
-    FP -->|Masked Request| Internet((🌐 Public Internet))
-    
-    Internet -->|Public Request| RP[🚪 Reverse Proxy\ne.g., Nginx / Caddy]
-    
-    subgraph ServerSpace [Backend Subnet]
-        RP -->|Internal HTTP| Backend[⚙️ Application Server]
-    end
-    
-    classDef client fill:#d6eaf8,stroke:#2980b9,stroke-width:2px;
-    classDef server fill:#d5f5e3,stroke:#27ae60,stroke-width:2px;
-    classDef proxy fill:#fdebd0,stroke:#e67e22,stroke-width:2px;
-    
-    class Client client;
-    class Backend server;
-    class FP,RP proxy;
-```
-
-### How It Works Internally
-
-```mermaid
-sequenceDiagram
-		participant Client
-		participant Proxy as Reverse Proxy
-		participant Backend as Backend Server
-
-		Client->>Proxy: HTTPS GET /api/users (TLS encrypted)
-		Note over Proxy: TLS Termination — decrypt using cert
-		Proxy->>Proxy: Apply: cache check, compression, headers
-		Proxy->>Backend: HTTP GET /api/users (plain, internal network)
-		Backend->>Proxy: HTTP 200 { users: [...] }
-		Note over Proxy: Compress response (gzip), add headers
-		Proxy->>Client: HTTPS 200 { users: [...] } (TLS re-encrypted)
-```
 
 **Step-by-step:**
 
@@ -208,148 +168,8 @@ Because a reverse proxy alone cannot solve these application-level challenges, s
 
 A **Load Balancer** is a specialized component designed to distribute incoming traffic across a pool of identical backend servers. Its singular concern is **availability and capacity** — ensuring no single server becomes a bottleneck or single point of failure.
 
-```
-												 ┌──► Backend Server A (healthy — 40 connections)
-												 │
-Client ──► [ Load    ] ──┼──► Backend Server B (healthy — 38 connections)
-					 [ Balancer]   │
-												 └──► Backend Server C (unhealthy — removed from rotation)
-```
+<LoadBalancerTypesDiagram />
 
-### L4 vs. L7: The Most Important Distinction
-
-Load balancers operate at one of two layers, with fundamentally different capabilities and performance characteristics:
-
-```mermaid
-graph LR
-		subgraph L4 [Layer 4 — Transport Layer]
-				direction TB
-				L4IN[Client TCP/UDP Packet] --> L4LB[L4 Load Balancer]
-				L4LB -->|Route by IP + Port only| L4B1[Backend A]
-				L4LB -->|No HTTP inspection| L4B2[Backend B]
-				Note1["⚡ Extremely fast\nNo content inspection\nCannot route by URL or headers"]
-		end
-
-		subgraph L7 [Layer 7 — Application Layer]
-				direction TB
-				L7IN[Client HTTP Request] --> L7LB[L7 Load Balancer]
-				L7LB -->|Route by URL path| L7B1[/api/users → User Service]
-				L7LB -->|Route by header| L7B2[/api/orders → Order Service]
-				Note2["🧠 Content-aware\nCan inspect headers, URL, cookies\nHigher latency, much richer routing"]
-		end
-```
-
-| Dimension | L4 (Transport Layer) | L7 (Application Layer) |
-|---|---|---|
-| **Inspects** | IP address + TCP/UDP port only | HTTP headers, URL path, cookies, request body |
-| **Routing basis** | IP + port tuples | URL pattern, header value, HTTP method |
-| **TLS handling** | Passthrough (cannot decrypt) or terminate | Terminates TLS, inspects decrypted content |
-| **Performance** | Extremely high (hardware-speed) | Lower (must parse HTTP) |
-| **Use cases** | Raw TCP services, databases, non-HTTP protocols | HTTP APIs, microservices, path-based routing |
-| **AWS equivalent** | NLB (Network Load Balancer) | ALB (Application Load Balancer) |
-| **Examples** | AWS NLB, HAProxy TCP mode | AWS ALB, Nginx upstream, HAProxy HTTP mode |
-
-### How It Works Internally — Health Checking
-
-The most critical function of a load balancer that is often overlooked: **active health checking**. A load balancer that cannot detect failed backends is useless.
-
-```mermaid
-sequenceDiagram
-		participant LB as Load Balancer
-		participant A as Backend A (healthy)
-		participant B as Backend B (failing)
-		participant C as Backend C (recovering)
-
-		loop Every 10 seconds
-				LB->>A: GET /actuator/health
-				A-->>LB: 200 OK {"status":"UP"}
-				LB->>B: GET /actuator/health
-				B-->>LB: 503 Service Unavailable
-				Note over LB,B: Backend B marked UNHEALTHY — removed from pool
-				LB->>C: GET /actuator/health
-				C-->>LB: 200 OK {"status":"UP"}
-				Note over LB,C: Backend C marked healthy — returned to pool
-		end
-
-		Note over LB: All traffic routes to A and C only
-```
-
-**Health check configuration (AWS ALB example):**
-
-```hcl
-# Terraform — ALB target group with health checks
-resource "aws_lb_target_group" "api" {
-	name     = "api-target-group"
-	port     = 8080
-	protocol = "HTTP"
-	vpc_id   = aws_vpc.main.id
-
-	health_check {
-		enabled             = true
-		path                = "/actuator/health"  # Spring Boot Actuator endpoint
-		port                = "traffic-port"
-		healthy_threshold   = 2    # 2 consecutive successes → mark healthy
-		unhealthy_threshold = 3    # 3 consecutive failures → mark unhealthy
-		timeout             = 5    # Seconds to wait for response
-		interval            = 10   # Check every 10 seconds
-		matcher             = "200" # Only HTTP 200 counts as healthy
-	}
-}
-```
-
-**Spring Boot health endpoint (what the load balancer calls):**
-
-```java
-// spring-boot-starter-actuator exposes /actuator/health automatically
-// Returns 200 when healthy, 503 when degraded/down
-
-// Custom health indicator — add domain-specific checks
-@Component
-public class DatabaseHealthIndicator implements HealthIndicator {
-
-		private final DataSource dataSource;
-
-		@Override
-		public Health health() {
-				try (Connection conn = dataSource.getConnection()) {
-						conn.isValid(1);
-						return Health.up()
-										.withDetail("database", "reachable")
-										.build();
-				} catch (SQLException e) {
-						// Returning DOWN causes the load balancer to remove this instance
-						return Health.down()
-										.withDetail("database", "unreachable")
-										.withException(e)
-										.build();
-				}
-		}
-}
-```
-
-### Load Balancing Algorithms
-
-```mermaid
-graph TD
-		subgraph RR[Round Robin]
-				RR1[Request 1 → Server A]
-				RR2[Request 2 → Server B]
-				RR3[Request 3 → Server C]
-				RR4[Request 4 → Server A]
-		end
-
-		subgraph LC[Least Connections]
-				LC1[Server A: 10 connections]
-				LC2[Server B: 3 connections ← new request goes here]
-				LC3[Server C: 8 connections]
-		end
-
-		subgraph WRR[Weighted Round Robin]
-				WRR1[Server A weight=3 → gets 50% of requests]
-				WRR2[Server B weight=2 → gets 33% of requests]
-				WRR3[Server C weight=1 → gets 17% of requests]
-		end
-```
 
 | Algorithm | How it works | Best for |
 |---|---|---|
@@ -400,21 +220,8 @@ Sticky sessions mean you cannot freely scale down, restart, or replace backend i
 
 An **API Gateway** is a specialized L7 reverse proxy purpose-built for microservices ecosystems. It acts as the single, smart, policy-enforcing entry point for all client API requests. Unlike a basic reverse proxy (which routes traffic) or a load balancer (which distributes it), the API Gateway understands API semantics and enforces cross-cutting policies: authentication, authorization, rate limiting, quota management, protocol translation, and response aggregation.
 
-```
-Mobile App / Browser / Partner API
-				│
-				▼
-[ API Gateway — Kong / Spring Cloud Gateway / AWS API Gateway ]
-	 ├── Authenticate: validate JWT / API key
-	 ├── Authorize: check user scopes
-	 ├── Rate limit: 1000 req/min per client
-	 ├── Route: /v1/orders → Order Service
-	 └── Transform: REST/HTTP → gRPC (internal)
-				│
-				├──► User Service     (internal gRPC)
-				├──► Order Service    (internal gRPC)
-				└──► Payment Service  (internal gRPC)
-```
+<ApiGatewayOverviewDiagram />
+
 
 ### The Microservice Perimeter Problem
 
@@ -428,30 +235,8 @@ The API Gateway solves this by acting as the **single "front door" or perimeter 
 
 An API gateway processes each request through an ordered **plugin/filter pipeline** — each stage can inspect, modify, reject, or short-circuit the request.
 
-```mermaid
-graph TD
-		IN[Incoming Request] --> TLS[TLS Termination]
-		TLS --> SD[Service Discovery\nResolve backend hostname from registry]
-		SD --> AUTH[Authentication\nValidate JWT / API Key / OAuth2]
-		AUTH --> AUTHZ[Authorization\nCheck scopes / RBAC]
-		AUTHZ --> RL[Rate Limiting\nToken bucket check per client/IP]
-		RL --> TR[Request Transformation\nRewrite headers, URL, body]
-		TR --> ROUTE[Routing\nMatch path pattern → backend service]
-		ROUTE --> LB[Client-Side Load Balancing\nPick healthy instance]
-		LB --> BACKEND[Backend Service Call]
-		BACKEND --> RESP[Response Transformation\nAdd CORS headers, strip internal headers]
-		RESP --> LOG[Logging + Metrics\nEmit traces to Jaeger / Datadog]
-		LOG --> OUT[Return Response to Client]
+<ApiGatewayPipelineDiagram />
 
-		AUTH -->|Invalid token| R1[401 Unauthorized]
-		AUTHZ -->|Insufficient scope| R2[403 Forbidden]
-		RL -->|Limit exceeded| R3[429 Too Many Requests]
-
-		style AUTH fill:#e74c3c,color:#fff
-		style AUTHZ fill:#e67e22,color:#fff
-		style RL fill:#f39c12,color:#000
-		style ROUTE fill:#27ae60,color:#fff
-```
 
 ### Core Responsibilities In Depth
 
@@ -515,15 +300,8 @@ The gateway enforces per-client request quotas using algorithms stored in Redis 
 For a comprehensive architectural breakdown of rate-limiting algorithms, implementation code, and decision trade-offs, see the **[Rate Limiting Algorithms Guide](./rate-limiting-algorithms.md)**.
 :::
 
-**Token Bucket algorithm (conceptual):**
+<RateLimitingTokenBucketDiagram />
 
-
-```
-Each client gets a "bucket" that holds N tokens.
-Each request consumes 1 token.
-Tokens refill at a fixed rate (e.g., 100 tokens/minute).
-If bucket is empty → reject with HTTP 429.
-```
 
 ```java
 // Spring Cloud Gateway — Redis rate limiter
@@ -566,13 +344,8 @@ public KeyResolver userKeyResolver() {
 
 Unlike a reverse proxy with hardcoded backend IPs, an API gateway integrates with a service registry to dynamically resolve which instances are currently healthy and where they are running.
 
-```mermaid
-graph LR
-		Gateway[API Gateway] -->|1. GET /order-service instances| Registry[Service Registry\nEureka / Consul / K8s DNS]
-		Registry -->|2. Returns: 10.0.1.5:8080, 10.0.1.6:8080| Gateway
-		Gateway -->|3. Load balance between instances| B1[Order Service\n10.0.1.5:8080]
-		Gateway -->|3. Load balance between instances| B2[Order Service\n10.0.1.6:8080]
-```
+<ServiceDiscoveryDiagram />
+
 
 ```yaml
 # Spring Cloud Gateway application.yml
@@ -670,17 +443,8 @@ Internal Service:  OrderService.CreateOrder(CreateOrderRequest)  (Protobuf over 
 
 To design scalable systems, it is vital to realize that **Reverse Proxies, Load Balancers, and API Gateways are not competing, isolated technologies — they represent an evolutionary spectrum of network capabilities.**
 
-```mermaid
-graph LR
-    subgraph Spectrum [The Capability Spectrum]
-        RP[🛡️ Reverse Proxy\nGeneral Traffic Concerns] --> LB[⚖️ Load Balancer\nIntelligent Traffic Distribution]
-        LB --> GW[🚪 API Gateway\nAPI-Aware Policy Enforcement]
-    end
-    
-    style RP fill:#f5f7f8,stroke:#95a5a6,stroke-width:2px;
-    style LB fill:#eaf2f8,stroke:#2980b9,stroke-width:2px;
-    style GW fill:#fef9e7,stroke:#f1c40f,stroke-width:2px;
-```
+<CapabilitiesSpectrumDiagram />
+
 
 Each stage builds upon the foundation of the previous one:
 1. **Reverse Proxy (Foundational Layer):** Focuses on raw connection handling, TLS termination, caching, compression, and basic IP hiding.
@@ -724,9 +488,7 @@ Before picking a component, understand the full landscape including the emerging
 
 ### 1. Reverse Proxy Only (Monolith / Simple Services)
 
-```
-Internet → [ Nginx ] → Single App Server
-```
+<ReverseProxyOnlyDiagram />
 
 **Choose when:** One application, one server, TLS needed, static assets to serve. Adding a load balancer or gateway would be over-engineering.
 
@@ -734,9 +496,7 @@ Internet → [ Nginx ] → Single App Server
 
 ### 2. Reverse Proxy + L4 Load Balancer (Scaling Without Smart Routing)
 
-```
-Internet → [ AWS NLB ] → [ Nginx cluster ] → App Servers
-```
+<L4LoadBalancerDiagram />
 
 **Choose when:** High raw throughput of TCP connections (millions/sec), no need for HTTP-level routing. NLB handles TCP distribution; Nginx handles TLS and static assets.
 
@@ -744,10 +504,7 @@ Internet → [ AWS NLB ] → [ Nginx cluster ] → App Servers
 
 ### 3. L7 Load Balancer with Path Routing (Simple Microservices)
 
-```
-Internet → [ AWS ALB ] → /api/users → User Service
-											 → /api/orders → Order Service
-```
+<L7PathRoutingDiagram />
 
 **Choose when:** Small number of microservices, no complex auth needs, cost-sensitive (no gateway license needed). AWS ALB's listener rules cover simple path-based routing without a dedicated gateway.
 
@@ -755,9 +512,7 @@ Internet → [ AWS ALB ] → /api/users → User Service
 
 ### 4. Full Stack: L4 LB + API Gateway + Services (Production Microservices)
 
-```
-Internet → [ NLB ] → [ API Gateway ] → [ Services ]
-```
+<FullStackGatewayDiagram />
 
 **Choose when:** Production microservices with auth, rate limiting, versioning, and dynamic service discovery. This is the gold standard for most enterprise systems.
 
@@ -767,14 +522,8 @@ Internet → [ NLB ] → [ API Gateway ] → [ Services ]
 
 A **Service Mesh** (Istio, Linkerd, Consul Connect) solves a different problem than the other three: **east-west traffic** (service-to-service inside the cluster), not north-south (client-to-cluster).
 
-```
-Without Service Mesh:
-Service A → Service B  (plain HTTP, no auth, no retry, no circuit breaker)
+<ServiceMeshDiagram />
 
-With Service Mesh:
-Service A → [Sidecar Proxy] → [Sidecar Proxy] → Service B
-								(mTLS, retries, circuit breaking, distributed tracing — automatic)
-```
 
 **Service Mesh vs. API Gateway:**
 
@@ -795,84 +544,8 @@ They are **complementary, not alternatives.** A production Kubernetes cluster of
 
 ### Standard Enterprise Architecture
 
-```mermaid
-graph TD
-		Client[📱 Client App\nMobile / Browser / Partner]
-		DNS[🌐 DNS / Route 53\napi.company.com]
-		WAF[🛡️ WAF\nAWS WAF / Cloudflare]
-		CDN[⚡ CDN\nCloudFront / Fastly\nStatic assets cached at edge]
-		NLB[⚖️ L4 Load Balancer\nAWS NLB\nTCP distribution, cross-AZ]
-		GW[🚪 API Gateway Cluster\nKong / Spring Cloud Gateway\nAuth, Rate Limit, Routing]
+<ProductionCoexistenceDiagram />
 
-		subgraph VPC [Private VPC]
-				US[👤 User Service\n:8080]
-				OS[🛒 Order Service\n:8081]
-				PS[💳 Payment Service\n:8082]
-		end
-
-		Client -->|HTTPS| DNS
-		DNS --> WAF
-		WAF -->|Static assets| CDN
-		WAF -->|API requests| NLB
-		NLB -->|TCP passthrough| GW
-		GW -->|JWT validated + routed| US
-		GW --> OS
-		GW --> PS
-
-		style VPC fill:#ebf5fb,stroke:#2980b9
-		style GW fill:#fdebd0,stroke:#e67e22
-		style NLB fill:#d5f5e3,stroke:#27ae60
-```
-
-### The Request Lifecycle (Every Layer Explained)
-
-**1. DNS Resolution:**
-`api.company.com` resolves to the public IP of the WAF or CDN edge node. Route 53 can also apply geographic routing — directing Asia-Pacific users to the Singapore region, EU users to Frankfurt.
-
-**2. WAF (Web Application Firewall):**
-Sits in front of everything. Inspects raw HTTP for SQL injection patterns, XSS payloads, known CVE exploit patterns, and blocks malicious IPs. This is not a proxy, load balancer, or gateway — it is a security appliance. But it belongs in this request lifecycle.
-
-**3. CDN Edge (A Global Network of Reverse Proxies):**
-A CDN (like Cloudflare, CloudFront, or Fastly) is essentially a massive, globally distributed network of reverse proxies. By placing edge servers geographically closer to users, the CDN terminates TLS at the edge, serves static assets (JS, CSS, images) and cached API responses instantly, and absorbs massive traffic spikes before they ever reach your origin network.
-
-**4. L4 Load Balancer (AWS NLB):**
-Handles raw TCP connection distribution across multiple API Gateway instances. Does not inspect HTTP. Does not terminate TLS (or optionally does). Operates at wire speed — millions of connections per second. Provides cross-AZ redundancy for the API Gateway cluster itself.
-
-**5. API Gateway Cluster:**
-Terminates TLS (if not done at NLB). Validates JWT tokens. Checks rate limits per user/IP in Redis. Routes based on URL path to the appropriate microservice. Injects authenticated user context as headers. Emits distributed trace spans.
-
-**6. Microservices (Private Subnet):**
-Never exposed to the public internet. Accept only connections from the API Gateway's CIDR range via security group rules. Trust `X-User-Id` and `X-User-Roles` headers injected by the gateway (they do not re-validate JWTs). Communicate with each other via service mesh mTLS.
-
-### Zero-Downtime Deployment Flow
-
-```mermaid
-sequenceDiagram
-		participant LB as Load Balancer
-		participant OLD as Old Instances (v1)
-		participant NEW as New Instances (v2)
-
-		Note over LB,OLD: Normal traffic — all going to v1
-		LB->>OLD: 100% traffic
-
-		Note over NEW: Deploy v2 instances
-		NEW->>LB: Register with health check endpoint
-		LB->>NEW: Health check: GET /actuator/health
-		NEW-->>LB: 200 OK — marked healthy
-
-		Note over LB: Gradually shift traffic
-		LB->>OLD: 90% traffic
-		LB->>NEW: 10% traffic (canary)
-
-		Note over LB: Monitor error rate on v2
-		LB->>OLD: 50% traffic
-		LB->>NEW: 50% traffic
-
-		Note over LB: Full cutover
-		LB->>NEW: 100% traffic
-		LB->>OLD: Drain connections (connection_draining_timeout = 30s)
-		Note over OLD: Decommission after drain
-```
 
 ---
 
@@ -947,139 +620,43 @@ public class FallbackController {
 
 **Circuit breaker states:**
 
-```
-CLOSED (normal):     Requests pass through. Failure rate monitored.
-												 ↓ (failure rate > threshold)
-OPEN (failing fast): All requests immediately return 503. Backend gets no load.
-												 ↓ (after timeout)
-HALF-OPEN (probing): Small % of requests pass through to test recovery.
-												 ↓ (probe succeeds)
-CLOSED (recovered):  Full traffic resumes.
-```
+<GatewayCircuitBreakerDiagram />
+
 
 ---
 
-### 3. TLS Termination Strategy: Where to Decrypt?
+<SeniorArchitectureDeepDiveDiagram />
 
-TLS can be terminated at different layers, each with different security and performance implications.
 
-```
-Option A — Terminate at L4 Load Balancer (NLB):
-		Client → [NLB: TLS terminate] → [API Gateway: HTTP] → [Services: HTTP]
-		✅ Offloads crypto from gateway
-		❌ Traffic between NLB and gateway is plain HTTP — only safe within a trusted VPC
+### Interview Questions
 
-Option B — TLS Passthrough at L4, terminate at API Gateway:
-		Client → [NLB: TCP passthrough] → [API Gateway: TLS terminate] → [Services: HTTP]
-		✅ Gateway can inspect SNI-based routing, perform full TLS policy enforcement
-		✅ NLB never sees decrypted traffic
-		✅ Most common production pattern
+### Q1: Since an API Gateway is technically a reverse proxy, why not just call it a reverse proxy?
 
-Option C — End-to-end TLS (mTLS to services):
-		Client → [NLB: TCP passthrough] → [Gateway: TLS terminate] → [Services: mTLS]
-		✅ Encrypted all the way to the service — zero trust
-		✅ Required in regulated industries (PCI DSS, HIPAA)
-		❌ Each service needs certificate management (service mesh handles this automatically)
-```
+While an API Gateway uses reverse-proxying mechanics, its semantic purpose is categorically different. A reverse proxy is a general-purpose network utility — it routes traffic, terminates TLS, and caches content. An API Gateway is an application architecture component that understands APIs: it validates tokens, enforces per-client rate limits, routes by business rules, aggregates responses, and translates protocols.
 
 ---
 
-### 4. Observability: What to Instrument at Each Layer
+### Q2: Can Nginx replace Kong as an API Gateway?
 
-Each component should emit its own signals. Correlate them with a shared **Trace ID** (W3C `traceparent` header or `X-B3-TraceId`).
-
-```java
-// API Gateway — emit spans for every route decision and downstream call
-@Component
-public class TracingFilter implements GatewayFilter {
-
-		private final Tracer tracer;
-
-		@Override
-		public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-				Span span = tracer.nextSpan()
-								.name("api-gateway.route")
-								.tag("http.method", exchange.getRequest().getMethod().name())
-								.tag("http.path", exchange.getRequest().getPath().value())
-								.tag("gateway.route", resolveRouteId(exchange))
-								.start();
-
-				return chain.filter(exchange)
-								.doOnSuccess(v -> span.tag("http.status",
-												String.valueOf(exchange.getResponse().getStatusCode().value())))
-								.doOnError(e -> span.tag("error", e.getMessage()))
-								.doFinally(s -> span.end());
-		}
-}
-```
-
-**Key metrics per layer:**
-
-| Layer | Key Metrics | Alerts |
-|---|---|---|
-| **L4 Load Balancer** | Active connections, new connections/sec, unhealthy target count | Unhealthy targets > 0, connection errors spike |
-| **API Gateway** | Request rate, error rate (4xx/5xx), p99 latency, auth failures, rate limit hits | Error rate > 1%, p99 latency > 2s, rate limit hit rate growing |
-| **Reverse Proxy** | Cache hit ratio, upstream response time, TLS handshake errors | Cache hit ratio drops, upstream 5xx rate increases |
-| **Backend Services** | JVM heap, GC pause, DB pool utilization, business error rates | Health check failures — propagate to LB immediately |
+Nginx can approximate some API gateway behaviors via Lua scripts (`lua-resty-*` modules) or the OpenResty distribution. For simple use cases — basic JWT validation, rate limiting with `limit_req` — this is viable. But it does not scale to production API gateway requirements: per-client rate limit tracking across pods (requires distributed Redis state), dynamic service discovery without config reloads, rich plugin ecosystems with upgrade management, or zero-downtime route configuration changes. Kong is itself built on Nginx/OpenResty — it adds the plugin architecture, admin API, and operational tooling that raw Nginx lacks.
 
 ---
 
-### 5. Choosing Between Kong, AWS API Gateway, and Spring Cloud Gateway
+### Q3: What is the risk of putting too much logic into the API Gateway?
 
-| Criterion | Kong Gateway | AWS API Gateway | Spring Cloud Gateway |
-|---|---|---|---|
-| **Deployment model** | Self-hosted (K8s / VM) or Kong Cloud | Fully managed AWS service | Embedded in Spring Boot app |
-| **Protocol support** | HTTP, gRPC, WebSocket, TCP | HTTP, WebSocket | HTTP, WebSocket, gRPC (via filter) |
-| **Plugin ecosystem** | 100+ plugins (OSS + Enterprise) | Lambda integrations | Spring ecosystem (Spring Security, Resilience4j, etc.) |
-| **Service discovery** | Consul, Kubernetes, custom | AWS service integrations only | Eureka, Consul, Kubernetes |
-| **Rate limiting** | Built-in (Redis/Postgres backed) | Built-in (usage plans) | Custom (Redis RateLimiter) |
-| **Auth** | JWT, OAuth2, LDAP, OIDC plugins | IAM, Cognito, Lambda authorizer | Spring Security + custom filters |
-| **Operational overhead** | Medium (K8s deployment) | Zero | Low (embedded in app) |
-| **Cost** | Open source (self-hosted) | Per-call pricing ($3.50/million requests) | Free (Spring OSS) |
-| **Best for** | Polyglot microservices on K8s | AWS-native serverless architectures | Spring Boot microservices teams |
+The gateway becoming a logical monolith. When domain-specific business logic (discount calculation, loyalty point checks, order validation) migrates into gateway plugins, the gateway becomes tightly coupled to every service's domain model. Changes to any service's logic now require gateway deployments. The correct boundary: the gateway handles generic, domain-agnostic perimeter concerns (auth, rate limiting, routing, TLS). Any logic that could be described as belonging to a specific service's domain must stay in that service.
 
 ---
 
-## 🎯 Interview Decision Matrix
+### Q4: How does service discovery work in dynamic environments like Kubernetes?
 
-### Decision Flow
+Instead of hardcoded backend IPs in static config files (which would require gateway redeployments for every pod scaling event), the API gateway integrates with the service registry. In Kubernetes, this is typically CoreDNS — the gateway routes to `order-service.default.svc.cluster.local`, and Kubernetes DNS + kube-proxy transparently distributes connections across healthy pod IPs. In non-Kubernetes environments, it integrates with Consul or Eureka, querying the registry per-request (with caching). The gateway never needs to know a specific IP — only the logical service name.
 
-```
-Is it ONE server / monolith that needs TLS and static serving?
-		→ Reverse Proxy (Nginx)
+---
 
-Does it need to scale HORIZONTALLY across IDENTICAL instances?
-		→ L4 Load Balancer (AWS NLB) for TCP
-		→ L7 Load Balancer (AWS ALB) for HTTP with path routing
+### Q5: When would you use a Service Mesh instead of (or in addition to) an API Gateway?
 
-Does it serve a MICROSERVICES ecosystem needing auth + rate limiting + routing?
-		→ API Gateway (Kong / Spring Cloud Gateway / AWS API Gateway)
-
-Do services need to communicate SECURELY with each other INSIDE the cluster?
-		→ Service Mesh (Istio / Linkerd) — in addition to gateway, not instead of
-```
-
-### Interview Q&A
-
-**Q: Since an API Gateway is technically a reverse proxy, why not just call it a reverse proxy?**
-
-> **A:** While an API Gateway uses reverse-proxying mechanics, its semantic purpose is categorically different. A reverse proxy is a general-purpose network utility — it routes traffic, terminates TLS, and caches content. An API Gateway is an application architecture component that understands APIs: it validates tokens, enforces per-client rate limits, routes by business rules, aggregates responses, and translates protocols. Calling an API Gateway a "reverse proxy" is like calling a hospital's triage nurse a "receptionist" because they both stand at the front desk.
-
-**Q: Can Nginx replace Kong as an API Gateway?**
-
-> **A:** Nginx can approximate some API gateway behaviors via Lua scripts (`lua-resty-*` modules) or the OpenResty distribution. For simple use cases — basic JWT validation, rate limiting with `limit_req` — this is viable. But it does not scale to production API gateway requirements: per-client rate limit tracking across pods (requires distributed Redis state), dynamic service discovery without config reloads, rich plugin ecosystems with upgrade management, or zero-downtime route configuration changes. Kong is itself built on Nginx/OpenResty — it adds the plugin architecture, admin API, and operational tooling that raw Nginx lacks.
-
-**Q: What is the risk of putting too much logic into the API Gateway?**
-
-> **A:** The gateway becoming a logical monolith. When domain-specific business logic (discount calculation, loyalty point checks, order validation) migrates into gateway plugins, the gateway becomes tightly coupled to every service's domain model. Changes to any service's logic now require gateway deployments. The correct boundary: the gateway handles generic, domain-agnostic perimeter concerns (auth, rate limiting, routing, TLS). Any logic that could be described as belonging to a specific service's domain must stay in that service.
-
-**Q: How does service discovery work in dynamic environments like Kubernetes?**
-
-> **A:** Instead of hardcoded backend IPs in static config files (which would require gateway redeployments for every pod scaling event), the API gateway integrates with the service registry. In Kubernetes, this is typically CoreDNS — the gateway routes to `order-service.default.svc.cluster.local`, and Kubernetes DNS + kube-proxy transparently distributes connections across healthy pod IPs. In non-Kubernetes environments, it integrates with Consul or Eureka, querying the registry per-request (with caching). The gateway never needs to know a specific IP — only the logical service name.
-
-**Q: When would you use a Service Mesh instead of (or in addition to) an API Gateway?**
-
-> **A:** They solve orthogonal problems. An API Gateway manages **north-south traffic**: external clients calling into your cluster. It enforces external-facing policies (API keys, OAuth2, rate limits, public URL structure). A Service Mesh manages **east-west traffic**: services calling each other inside the cluster. It enforces internal policies (mTLS between services, internal retries, circuit breaking, distributed tracing without code changes). In Kubernetes production systems, you typically deploy both: the API Gateway as the external perimeter, and Istio or Linkerd as the internal service-to-service security and observability layer.
+They solve orthogonal problems. An API Gateway manages **north-south traffic**: external clients calling into your cluster. It enforces external-facing policies (API keys, OAuth2, rate limits, public URL structure). A Service Mesh manages **east-west traffic**: services calling each other inside the cluster. It enforces internal policies (mTLS between services, internal retries, circuit breaking, distributed tracing without code changes). In Kubernetes production systems, you typically deploy both: the API Gateway as the external perimeter, and Istio or Linkerd as the internal service-to-service security and observability layer.
 
 :::tip[Interview Phrasing — Choosing the Stack]
 *"For a production microservices platform, I would layer these components: an AWS NLB at L4 for raw TCP connection distribution and cross-AZ resilience, Kong or Spring Cloud Gateway as the API Gateway for JWT validation, rate limiting, and service routing, and each microservice exposing a Spring Actuator health endpoint so the load balancer can pull unhealthy instances from rotation automatically. For service-to-service communication inside the cluster on Kubernetes, I'd add Istio for mTLS and automatic distributed tracing, keeping the gateway focused purely on the external perimeter and not leaking internal service topology or business logic into it."*

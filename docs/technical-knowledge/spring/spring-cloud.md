@@ -749,7 +749,7 @@ For Java code implementations of both Orchestration and Choreography sagas, comp
 
 ---
 
-## 🎓 10. Interview Questions {/* #10-interview-questions */}
+## Interview Questions {/* #10-interview-questions */}
 
 ### Beginner Level
 

@@ -175,7 +175,7 @@ props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true); // upgrade to exactly
 
 ---
 
-## Interview Questions — Producer Acks
+## Interview Questions
 
 **Q: What is the risk of `acks=1`?**
 

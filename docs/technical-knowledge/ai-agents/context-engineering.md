@@ -6,6 +6,12 @@ description: A deep-dive into Context Engineering, Context Compaction, Context R
 tags: [ai-agents, context-engineering, context-compaction, mcp, vibe-coding, model-routing, thinking-budget, prompt-engineering, subagents]
 ---
 
+import ContextEngineeringStrategiesDiagram from '@site/src/components/ContextEngineeringStrategiesDiagram';
+import ContextCompactionDiagram from '@site/src/components/ContextCompactionDiagram';
+import ModelRoutingArchitectureDiagram from '@site/src/components/ModelRoutingArchitectureDiagram';
+import ThinkingBudgetDiagram from '@site/src/components/ThinkingBudgetDiagram';
+import SubagentIsolationDiagram from '@site/src/components/SubagentIsolationDiagram';
+
 # Context Engineering, Compaction & Advanced Vibe Coding
 
 > **The shift is complete.** In 2024, developers learned _prompt engineering_ — how to phrase a question. In 2025–2026, the field moved to **context engineering** — the discipline of managing _what_ the agent sees, _when_ it sees it, and _how much_ of it fits in working memory.
@@ -50,18 +56,8 @@ Context Engineering (2026):
 
 ### The four strategies of Context Engineering
 
-```mermaid
-graph TD
-    CE[Context Engineering] --> Retrieval
-    CE --> Offloading
-    CE --> Isolation
-    CE --> Compression
+<ContextEngineeringStrategiesDiagram />
 
-    Retrieval["🔍 Retrieval\nDynamically load only\nrelevant information"]
-    Offloading["📦 Offloading\nMove data to external\nstores - Vector DB, state"]
-    Isolation["🔒 Isolation\nKeep subtask contexts\nseparate via subagents"]
-    Compression["🗜️ Compression\nSummarize old history\nto reclaim token budget"]
-```
 
 | Strategy | What it does | When to use |
 |:---|:---|:---|
@@ -139,34 +135,10 @@ This is called the **token tax** — the compounding overhead of re-sending hist
 
 **Context compaction** (also called **context compression**) is the process of reducing the token footprint of an agent's working memory without losing task-critical information.
 
-There are two distinct approaches:
+<ContextCompactionDiagram />
 
-```
-┌──────────────────────────────────────────────────────────────┐
-│  Compaction Strategy 1: SUMMARIZATION                        │
-│                                                              │
-│  Original history (30,000 tokens):                          │
-│   Turn 1-15: Setup, file reading, planning discussions       │
-│   Turn 16-25: Implementation + bug fixes                     │
-│   Turn 26-30: Test failures + corrections                    │
-│                    │                                         │
-│                    ▼ LLM Summarizer                          │
-│  Summary (1,200 tokens):                                     │
-│   "Built PaymentService with idempotency. Fixed NPE on       │
-│   line 42. Tests pass for happy path; edge case for          │
-│   concurrent requests still open."                           │
-└──────────────────────────────────────────────────────────────┘
+---
 
-┌──────────────────────────────────────────────────────────────┐
-│  Compaction Strategy 2: VERBATIM DELETION (Strict)           │
-│                                                              │
-│  Remove: Old tool results, redundant file reads,             │
-│          resolved debug messages, stale intermediate values  │
-│                                                              │
-│  Keep:   System prompt, current task, key decisions,         │
-│          current code state, open errors                     │
-└──────────────────────────────────────────────────────────────┘
-```
 
 ### When to compact
 
@@ -311,24 +283,10 @@ With AGENTS.md:
 
 Using a frontier model (e.g., Claude Opus, GPT-4o) for every step is like using a Formula 1 car to pick up groceries — capable, but unnecessarily expensive.
 
-```mermaid
-graph LR
-    Task[Incoming Task] --> Router{Task Router}
-    Router -->|Complex Planning| Frontier["🧠 Frontier\nclaude-opus-4\nHigh capability, high cost"]
-    Router -->|Code Generation| Mid["⚡ Mid-Tier\nclaude-sonnet-4\nBalanced"]
-    Router -->|Simple Formatting| Fast["🏃 Fast\nclaude-haiku-4\nLow cost, high speed"]
-    Router -->|Classification| Embed["📊 Embedding\ntext-embedding-3\nTask-optimized"]
-```
+<ModelRoutingArchitectureDiagram />
 
-**Routing decision matrix:**
+---
 
-| Task Type | Recommended Tier | Rationale |
-|:---|:---|:---|
-| Architectural planning, multi-step reasoning | Frontier (Opus, o1) | Maximum reasoning depth needed |
-| Feature implementation, code generation | Mid-tier (Sonnet, GPT-4o) | Balance of quality and cost |
-| Tool call formatting, structured output | Fast (Haiku, GPT-4o-mini) | Low reasoning, high frequency |
-| Routing, classification, triage | Fast or embedding | Binary decisions |
-| Document similarity, semantic search | Embedding model | Task-specialized, cheapest |
 
 **Implementation:**
 
@@ -386,12 +344,7 @@ for block in response.content:
 
 **Thinking budget strategy:**
 
-| Task Complexity | Budget | Rationale |
-|:---|:---|:---|
-| Trivial (format, classify) | 0 — disabled | No reasoning needed; saves cost |
-| Moderate (implement feature) | 2,000–5,000 tokens | Enough for step planning |
-| Complex (architecture, debugging) | 8,000–16,000 tokens | Deep multi-path reasoning |
-| Research-grade (novel design) | Max (32K+) | Unrestricted exploration |
+<ThinkingBudgetDiagram />
 
 > **Cost alert:** A 10,000-token thinking budget adds ~$0.75 to every call at Opus pricing. Use sparingly — only for genuinely complex reasoning tasks.
 
@@ -403,20 +356,10 @@ for block in response.content:
 
 A single agentic session accumulates context pollution from every step it takes. Subagents solve this by **isolating subtasks into fresh context windows**, preventing one task's output from contaminating another's reasoning.
 
-```mermaid
-graph TD
-    Parent["🎯 Parent Agent\nOrchestrator\nContext: Goal + Plan"]
-
-    Parent -->|Task 1: Research| Sub1["🔍 Subagent 1\nFresh context\nOnly gets: topic + tools"]
-    Parent -->|Task 2: Code| Sub2["💻 Subagent 2\nFresh context\nOnly gets: spec + codebase"]
-    Parent -->|Task 3: Review| Sub3["📋 Subagent 3\nFresh context\nOnly gets: code to review"]
-
-    Sub1 -->|"Result only"| Parent
-    Sub2 -->|"Result only"| Parent
-    Sub3 -->|"Result only"| Parent
-```
+<SubagentIsolationDiagram />
 
 **Key principle:** The parent receives only the _final result_ of each subagent, not its internal reasoning chain or accumulated tool history. This keeps the orchestrator's context lean.
+
 
 ### Subagent communication pattern
 
@@ -535,7 +478,7 @@ A **scoped prompt** constrains the agent's blast radius — it tells the agent e
 
 ---
 
-## 🎯 Context Engineering Interview Questions
+## Interview Questions
 
 | Question | Strong Answer |
 |:---|:---|

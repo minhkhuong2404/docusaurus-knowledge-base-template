@@ -210,7 +210,7 @@ In Non-Uniform Memory Access systems, accessing local memory is faster. The sche
 
 ---
 
-## Common Interview Questions
+## Interview Questions
 
 ### Q1: What is the difference between preemptive and non-preemptive scheduling?
 

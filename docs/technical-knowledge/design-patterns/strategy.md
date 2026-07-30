@@ -47,39 +47,12 @@ Imagine that you have to get to the airport. You can catch a bus, order a cab, o
 
 ---
 
+import StrategyDiagram from '@site/src/components/StrategyDiagram';
+
 ## 🏗️ Structure
 
-```mermaid
-classDiagram
-    class Context {
-        -strategy: Strategy
-        +setStrategy(s: Strategy)
-        +executeStrategy()
-    }
-    
-    class Strategy {
-        <<interface>>
-        +execute(data)
-    }
-    
-    class ConcreteStrategyA {
-        +execute(data)
-    }
-    
-    class ConcreteStrategyB {
-        +execute(data)
-    }
-    
-    class Client
+<StrategyDiagram />
 
-    Client --> Context
-    Client ..> ConcreteStrategyA: creates
-    Context o--> Strategy
-    Strategy <|.. ConcreteStrategyA
-    Strategy <|.. ConcreteStrategyB
-    
-    note for Context "executeStrategy() {\n    strategy.execute(data);\n}"
-```
 
 ---
 

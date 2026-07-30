@@ -6,6 +6,14 @@ description: A comprehensive guide to rate-limiting algorithms, including Token 
 tags: [system-design, rate-limiting, algorithms, scaling, performance]
 ---
 
+import RateLimiterDecisionTreeDiagram from '@site/src/components/RateLimiterDecisionTreeDiagram';
+import TokenBucketDiagram from '@site/src/components/TokenBucketDiagram';
+import LeakyBucketDiagram from '@site/src/components/LeakyBucketDiagram';
+import FixedWindowCounterDiagram from '@site/src/components/FixedWindowCounterDiagram';
+import FixedWindowSpikeDiagram from '@site/src/components/FixedWindowSpikeDiagram';
+import SlidingWindowLogDiagram from '@site/src/components/SlidingWindowLogDiagram';
+import SlidingWindowCounterDiagram from '@site/src/components/SlidingWindowCounterDiagram';
+
 # Rate Limiting Algorithms
 
 In high-scale distributed systems, **rate limiting** is a critical defensive pattern. It restricts the volume of requests a client can make within a given timeframe. Rate limiting prevents resource starvation, mitigates Denial of Service (DoS) attacks, manages API monetization tiers, and protects downstream databases and microservices from traffic spikes.
@@ -30,18 +38,8 @@ This guide provides a comprehensive breakdown of the core rate-limiting algorith
 
 Use this decision tree to match your workload characteristics to the appropriate rate-limiting algorithm:
 
-```mermaid
-graph TD
-    Burst{Do you need to allow bursts of traffic?}
-    Burst -->|Yes| Token[Token Bucket]
-    Burst -->|No| Strict{Is strict execution ordering and rate smoothing required?}
-    Strict -->|Yes| Leaky[Leaky Bucket]
-    Strict -->|No| MemLimit{Is memory consumption per-client a hard constraint?}
-    MemLimit -->|Yes| Window{Is slight inaccuracy at boundaries acceptable?}
-    Window -->|Yes| SlideCounter[Sliding Window Counter]
-    Window -->|No| SlideLog[Sliding Window Log]
-    MemLimit -->|No| Fixed[Fixed Window Counter]
-```
+<RateLimiterDecisionTreeDiagram />
+
 
 ---
 
@@ -49,14 +47,8 @@ graph TD
 
 The **Token Bucket** algorithm is the most widely adopted general-purpose rate-limiting algorithm. It maintains a centralized bucket of capacity $C$ that is continuously refilled with tokens at a constant rate $r$ per second.
 
-```mermaid
-graph TD
-    Refiller[Refiller: Adds 'r' tokens/sec] -->|Up to Capacity 'C'| Bucket[Token Bucket]
-    Request[Incoming Request] --> Check{Are tokens available?}
-    Check -->|Yes| Consume[Consume 1 Token & Forward Request]
-    Check -->|No| Block[Reject Request / 429 Too Many Requests]
-    Bucket -.-> Check
-```
+<TokenBucketDiagram />
+
 
 ### Working Mechanics
 Instead of running a background thread to add tokens (which is highly inefficient at scale), the refill logic is calculated **lazily** upon each request arrival:
@@ -112,12 +104,8 @@ public class TokenBucket {
 
 The **Leaky Bucket** algorithm smooths out traffic surges by queuing incoming requests in a First-In-First-Out (FIFO) buffer and processing them at a constant, stable rate.
 
-```mermaid
-graph LR
-    Bursty[Bursty Input Requests] --> Bucket[Queue / Bucket Container]
-    Bucket -->|Outflow constant rate 'r'| Process[System Processing Engine]
-    Bucket -->|Buffer full| Drop[Reject / Drop Request]
-```
+<LeakyBucketDiagram />
+
 
 ### Working Mechanics
 1. Incoming requests enter a bounded queue of size $Q$.
@@ -164,24 +152,14 @@ public class LeakyBucket {
 
 The **Fixed Window Counter** partition time into static windows (e.g., 1-minute blocks). A simple counter is incremented for each request within a window.
 
-```
-Window A: [00:00 - 01:00] (Max Limit: 100) -> Counter = 82 (Passed)
-Window B: [01:00 - 02:00] (Max Limit: 100) -> Counter resets to 0
-```
+<FixedWindowCounterDiagram />
+
 
 ### The Boundary Spike (2x Limit) Problem
 The main weakness of Fixed Window is that it can allow up to **twice the defined limit** at window boundaries:
 
-```
-Window 1: [00:00 - 01:00]              Window 2: [01:00 - 02:00]
-                     ┌────── 100 requests at 00:59
-                     │
-                     │                 ┌────── 100 requests at 01:01
-                     ▼                 ▼
-             [..............|..............]
-                     00:59    01:00    01:01
-```
-Between `00:59` and `01:01` (a 2-second span), the server processes **200 requests**, violating the 100-request-per-minute threshold.
+<FixedWindowSpikeDiagram />
+
 
 ### Java Implementation
 
@@ -227,12 +205,8 @@ public class FixedWindowCounter {
 
 The **Sliding Window Log** algorithm prevents boundary spikes by maintaining a sorted timeline log of all request timestamps for each client.
 
-```
-Timestamp Log: [ 10:00:02, 10:00:15, 10:00:44 ] (Current Time: 10:01:00, Limit Window: 60s)
-1. Delete all timestamps older than 10:00:00
-2. Append current timestamp 10:01:00
-3. Check size of Log. If size <= Limit: Approved.
-```
+<SlidingWindowLogDiagram />
+
 
 ### Working Mechanics
 1. Upon a new request, delete all logged timestamps older than $(\text{now} - \text{window size})$.
@@ -291,13 +265,8 @@ public class RedisSlidingWindowLog {
 
 The **Sliding Window Counter** combines Fixed Window's memory efficiency with Sliding Log's accuracy. Instead of storing every timestamp, it aggregates request rates by dynamically interpolating counts from the **previous window** and the **current window**.
 
-```
-Previous Window (Limit: 100): Counter = 80       Current Window (Limit: 100): Counter = 30
-           [  Window A (80)  ]                 [  Window B (30)  ]
-                             ├─────────────────┤
-                              Sliding Window (60s span) - overlaps 70% of A and 30% of B
-Estimate count = (80 * 0.7) + 30 = 86 -> Under limit (Approved)
-```
+<SlidingWindowCounterDiagram />
+
 
 ### Mathematical Model
 For a window size of 1 minute, the estimated count is calculated as:

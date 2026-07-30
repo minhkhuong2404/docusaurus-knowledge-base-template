@@ -236,7 +236,7 @@ SCTP is used in telecom (Diameter, S1-AP in LTE), WebRTC's data channel (via DTL
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What problem does QUIC solve that HTTP/2 over TCP couldn't?**
 > HTTP/2 multiplexes streams over a single TCP connection, but TCP provides one ordered byte stream. A single lost packet stalls ALL HTTP/2 streams until TCP retransmits it — head-of-line (HOL) blocking at the transport layer. QUIC implements multiplexed streams in userspace where each stream is independent: a lost UDP packet only stalls the stream it belongs to. QUIC also reduces connection setup latency (1 RTT vs 2–3 RTT for TCP+TLS) and enables connection migration.

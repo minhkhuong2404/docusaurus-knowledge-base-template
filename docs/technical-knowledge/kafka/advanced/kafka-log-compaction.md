@@ -207,7 +207,7 @@ kafka-log-dirs.sh --bootstrap-server localhost:9092 \
 
 ---
 
-## Interview Questions — Log Compaction
+## Interview Questions
 
 **Q: What is the difference between `cleanup.policy=delete` and `cleanup.policy=compact`?**
 

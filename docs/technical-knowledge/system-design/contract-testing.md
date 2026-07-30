@@ -6,6 +6,8 @@ description: Complete guide to Consumer-Driven Contract Testing in microservices
 tags: [system-design, microservices, testing, pact, ci-cd]
 ---
 
+import ContractTestingPactFlowDiagram from '@site/src/components/ContractTestingPactFlowDiagram';
+
 # Contract Testing
 
 In a microservices architecture, services change constantly. If Service B changes its API structure (e.g., changing a variable type or deleting a field), Service A will crash when it attempts to call B in production. **Contract Testing** catches these integration bugs in the build pipeline without requiring heavy, brittle, and slow End-to-End (E2E) integration test environments.
@@ -14,21 +16,7 @@ In a microservices architecture, services change constantly. If Service B change
 
 ## Consumer-Driven Contract Testing (Pact Flow)
 
-The standard framework for contract testing is **Pact**. The testing cycle operates under a "Consumer-Driven" flow:
-
-```text
-Build Cycle:
-1. Consumer (Order Service) writes a unit test defining its expectations of Provider.
-2. Running this test generates a JSON file (the "Contract").
-3. The Contract JSON is uploaded to a shared database called the "Pact Broker".
-4. Provider (Payment Service) pulls the Contract from the Pact Broker during its CI build.
-5. Provider runs tests to verify its current API responses match the Consumer's expectations.
-
-Deployment Safety (can-i-deploy):
-Pact Broker CLI checks: "Has Provider verified Consumer's contract v3.2?"
-   ├── Yes ──► Deploy to Production
-   └── No  ──► Block CI Pipeline (Fail build)
-```
+<ContractTestingPactFlowDiagram />
 
 ---
 

@@ -329,7 +329,7 @@ SELECT add_retention_policy('metrics_5min', INTERVAL '30 days');
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What makes time-series data different from regular relational data?**
 > Time-series data is append-only (rarely updated), arrives in strict time order, is queried by time ranges rather than individual row lookups, has predictable growth patterns, and benefits from time-based compression. The temporal dimension is the primary access key, and aggregation over time windows is the dominant query pattern.

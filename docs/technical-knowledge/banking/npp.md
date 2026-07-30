@@ -248,7 +248,7 @@ public class NppPaymentService {
 - [On-Us Transactions](./onus) — Internal routing alternative
 - [Off-Us Transactions](./offus) — Default NPP interbank routing model
 
-## Interview Questions (Senior Level)
+## Interview Questions
 
 1. How do you design NPP payment flows for strict idempotency and sub-15-second SLAs?
 2. What operational controls are critical for PayID resolution and misdirection prevention?

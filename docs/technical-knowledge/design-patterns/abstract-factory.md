@@ -106,51 +106,12 @@ If a developer tries to execute a PostgreSQL command on a MySQL connection, the 
 
 ## How It Works
 
+import AbstractFactoryDiagram from '@site/src/components/AbstractFactoryDiagram';
+
 ### 🏗️ Structure
 
-```mermaid
-classDiagram
-    class AbstractFactory {
-        <<interface>>
-        +createProductA() AbstractProductA
-        +createProductB() AbstractProductB
-    }
-    class ConcreteFactory1 {
-        +createProductA() AbstractProductA
-        +createProductB() AbstractProductB
-    }
-    class ConcreteFactory2 {
-        +createProductA() AbstractProductA
-        +createProductB() AbstractProductB
-    }
+<AbstractFactoryDiagram />
 
-    class AbstractProductA { <<interface>> }
-    class ConcreteProductA1
-    class ConcreteProductA2
-    
-    class AbstractProductB { <<interface>> }
-    class ConcreteProductB1
-    class ConcreteProductB2
-    
-    class Client
-
-    Client --> AbstractFactory
-    Client --> AbstractProductA
-    Client --> AbstractProductB
-    
-    AbstractFactory <|.. ConcreteFactory1
-    AbstractFactory <|.. ConcreteFactory2
-    
-    AbstractProductA <|.. ConcreteProductA1
-    AbstractProductA <|.. ConcreteProductA2
-    AbstractProductB <|.. ConcreteProductB1
-    AbstractProductB <|.. ConcreteProductB2
-    
-    ConcreteFactory1 ..> ConcreteProductA1
-    ConcreteFactory1 ..> ConcreteProductB1
-    ConcreteFactory2 ..> ConcreteProductA2
-    ConcreteFactory2 ..> ConcreteProductB2
-```
 
 ### Example: Cross-Platform UI Components
 

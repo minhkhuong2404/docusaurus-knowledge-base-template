@@ -8,6 +8,9 @@ tags: [ai-agents, agent-harness, runtime, sandboxing, security, evaluations, swe
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import HarnessCoreComponentsDiagram from '@site/src/components/HarnessCoreComponentsDiagram';
+import InfiniteLoopMitigationDiagram from '@site/src/components/InfiniteLoopMitigationDiagram';
+
 
 # The Agent Harness: Runtimes, Safety & Evaluations
 
@@ -99,27 +102,10 @@ A harness is to an agent what a **factory safety system** is to assembly line ro
 
 ## Core Components
 
-```
-┌──────────────────────────────────────────────────────────────────────┐
-│                          Agent Harness                               │
-│                                                                      │
-│  ┌─────────────┐  ┌──────────────┐  ┌──────────────────────────┐   │
-│  │  Tool Router │  │  Risk Engine │  │  State & Context Manager  │   │
-│  │ (dispatches  │  │ (classifies  │  │  (persists across turns)  │   │
-│  │  tool calls) │  │  each action)│  │                           │   │
-│  └─────────────┘  └──────────────┘  └──────────────────────────┘   │
-│                                                                      │
-│  ┌─────────────┐  ┌──────────────┐  ┌──────────────────────────┐   │
-│  │  Sandbox     │  │  HITL Gate   │  │  Budget & Loop Guard      │   │
-│  │  (executes   │  │  (pauses for │  │  (max turns, cost cap,    │   │
-│  │  code safely)│  │  human OK)   │  │   timeout enforcement)    │   │
-│  └─────────────┘  └──────────────┘  └──────────────────────────┘   │
-│                                                                      │
-│  ┌─────────────────────────────────────────────────────────────┐    │
-│  │  Observability (structured logging, tracing, metrics)        │    │
-│  └─────────────────────────────────────────────────────────────┘    │
-└──────────────────────────────────────────────────────────────────────┘
-```
+<HarnessCoreComponentsDiagram />
+
+---
+
 
 ### Minimal harness implementation
 
@@ -680,15 +666,8 @@ Not all deployments need human approval. Define **trust levels** per deployment 
 
 ### The infinite loop problem
 
-```python
-# A common agent failure mode:
-# Turn 1: agent writes code with a syntax error
-# Turn 2: runs tests → failure
-# Turn 3: fixes wrong part of the code
-# Turn 4: runs tests → still failing
-# Turn 5–200: repeats variations of the wrong fix
-# Result: $40 in API costs, no progress
-```
+<InfiniteLoopMitigationDiagram />
+
 
 ### Multi-layered guard system
 
@@ -1303,7 +1282,7 @@ class RegressionGuard:
 
 ---
 
-## 🎯 Interview Questions
+## Interview Questions
 
 **Q1. What is an agent harness and why is it needed?**
 > An agent harness is the middleware layer between an LLM and the execution environment. An LLM can generate text describing actions but cannot execute them — the harness interprets LLM tool call outputs, classifies their risk, routes them to sandbox execution, enforces turn and cost limits, implements human-in-the-loop approval gates, and returns results to the LLM. Without a harness, LLM-generated code runs with host OS permissions — a single injected command, bug, or hallucination can wipe data, exfiltrate secrets, or loop indefinitely until the API budget is exhausted.

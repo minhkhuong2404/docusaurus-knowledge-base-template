@@ -79,33 +79,12 @@ The rest of your application just calls `converter.convert("holiday.avi", "mp4")
 
 ---
 
+import FacadeDiagram from '@site/src/components/FacadeDiagram';
+
 ## 🏗️ Structure
 
-```mermaid
-classDiagram
-    class Facade {
-        -subsystem1
-        -subsystem2
-        +subsystemOperation()
-    }
-    
-    class Subsystem1 {
-        +operation1()
-        +operation2()
-    }
-    
-    class Subsystem2 {
-        +operationZ()
-    }
-    
-    class Client
+<FacadeDiagram />
 
-    Client --> Facade
-    Facade --> Subsystem1
-    Facade --> Subsystem2
-    
-    note for Facade "subsystemOperation() {\n    subsystem1.operation1();\n    subsystem2.operationZ();\n}"
-```
 
 ---
 

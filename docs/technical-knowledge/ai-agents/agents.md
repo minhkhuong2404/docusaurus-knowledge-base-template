@@ -6,6 +6,17 @@ description: A comprehensive guide to AI agent architectures — covering the Re
 tags: [ai-agents, architectures, patterns, react-loop, multi-agent, langgraph, crewai, autogen, llm, tool-use]
 ---
 
+import Eli5ReactLoopDiagram from '@site/src/components/Eli5ReactLoopDiagram';
+import WhyReactVsSinglePromptDiagram from '@site/src/components/WhyReactVsSinglePromptDiagram';
+import FourAgenticPatternsDiagram from '@site/src/components/FourAgenticPatternsDiagram';
+import GraphBasedStateDiagram from '@site/src/components/GraphBasedStateDiagram';
+import AgentMemoryArchitectureDiagram from '@site/src/components/AgentMemoryArchitectureDiagram';
+import FourMemoryTypesDiagram from '@site/src/components/FourMemoryTypesDiagram';
+import ContextWindowBudgetDiagram from '@site/src/components/ContextWindowBudgetDiagram';
+import MultiAgentCoordinationPatternsDiagram from '@site/src/components/MultiAgentCoordinationPatternsDiagram';
+import SoftwareDevCrewDiagram from '@site/src/components/SoftwareDevCrewDiagram';
+import IdeCodingAgentMechanicsDiagram from '@site/src/components/IdeCodingAgentMechanicsDiagram';
+
 # AI Agent Architectures & Patterns
 
 > An **AI Agent** is an autonomous system that perceives its environment, reasons about it using a Large Language Model (LLM), takes actions via tools, and iterates until a goal is achieved — without requiring a human to specify every step. Unlike a simple LLM call (question → answer), an agent runs a loop: it decides *what* to do next, does it, observes the result, and decides again.
@@ -35,54 +46,24 @@ The defining characteristic of an agent is the **loop with tools and observation
 
 ## 👶 ELI5: The ReAct Loop (How Agents Think) {/* #eli5-the-react-loop-how-agents-think */}
 
-Imagine you are a detective solving a mystery.
+Imagine you are a detective solving a mystery. Instead of guessing the answer instantly, you use a loop of three steps: **Thought → Action → Observation**.
 
-Instead of guessing the answer instantly, you use a **loop** of three steps:
-
-1. **Thought:** You analyze what you know and what you need. *"I need to know what time the suspect left the bank. I should check the security logs."*
-2. **Action:** You execute a task. You open the file cabinet labeled "Bank Security Logs."
-3. **Observation:** You read the result. *"The log says John Doe left at 2:15 PM."*
-
-Now you repeat:
-
-1. **Thought:** *"John left at 2:15 PM. Did he have a car? I need DMV records."*
-2. **Action:** You call the DMV API.
-3. **Observation:** *"He drives a red sedan, plate XYZ-123."*
-
-You continue this **Thought → Action → Observation** loop until you have enough information to write your final report.
-
-In AI, this pattern is called **ReAct** (Reason + Act). It is the foundational loop of almost every single-agent system.
-
-```mermaid
-graph TD
-    Start[User Goal / Task] --> Thought
-    Thought[🧠 Thought: What should I do next?] --> Action
-    Action[⚡ Action: Call a tool] --> Observation
-    Observation[👁️ Observation: Read tool output] --> Check{Goal achieved?}
-    Check -->|No — loop| Thought
-    Check -->|Yes| Finish[✅ Final Answer]
-    Check -->|Stuck / Max steps| Fail[❌ Fail / Ask Human]
-
-    style Thought fill:#5dade2,color:#fff
-    style Action fill:#f0ad4e,color:#000
-    style Observation fill:#58d68d,color:#000
-    style Finish fill:#27ae60,color:#fff
-    style Fail fill:#e74c3c,color:#fff
-```
+<Eli5ReactLoopDiagram />
 
 ### Why ReAct Works Better Than a Single Prompt
 
 A naive approach to "research and write a report on topic X" is to ask the LLM in one shot. The LLM hallucinates facts, cannot access real-time data, and cannot verify its own output. ReAct fixes all three:
 
-- **Hallucination:** The agent uses tools (web search, database) to retrieve real facts rather than generating them.
-- **Real-time data:** Tools provide live information the LLM was not trained on.
-- **Self-verification:** The agent can run code, check outputs, and loop back to fix errors before delivering the result.
+<WhyReactVsSinglePromptDiagram />
+
 
 ---
 
 ## 🏗️ The 4 Agentic Design Patterns {/* #the-4-agentic-design-patterns */}
 
 Dr. Andrew Ng popularized four patterns that consistently improve agent performance beyond simple prompting. These are composable — production agents typically combine all four.
+
+<FourAgenticPatternsDiagram />
 
 ```mermaid
 mindmap
@@ -273,17 +254,8 @@ A single LLM context window is finite, a single agent is a single point of failu
 
 **Example: Software development crew**
 
-```
-User: "Build a REST API for inventory management"
+<SoftwareDevCrewDiagram />
 
-Orchestrator Agent
-    ├── Architecture Agent → "Design the system: PostgreSQL + Spring Boot + Redis cache"
-    ├── (parallel)
-    │   ├── Backend Coder Agent → "Implement the API endpoints"
-    │   └── Database Agent → "Write migrations and queries"
-    ├── Code Reviewer Agent → "Review all code for bugs and security"
-    └── Tester Agent → "Write and execute test suite → report results"
-```
 
 ---
 
@@ -291,61 +263,7 @@ Orchestrator Agent
 
 As agents grow more complex, a simple ReAct loop is insufficient. You need explicit state management, conditional branching, cycles, and human checkpoints. This is where **graph-based architectures** emerge.
 
-An agent is modeled as a **Directed Graph**:
-
-- **Nodes:** Individual units of work — LLM calls, tool calls, Python functions, or human checkpoints.
-- **Edges:** Define how execution flows between nodes.
-- **Conditional Edges:** Inspect the current state and route to different nodes based on the result (e.g., "if tests pass → deploy; if tests fail → debug").
-- **State:** A typed, immutable-style object passed through the graph — every node reads from it and returns updates to it.
-- **Cycles:** Allowed — the graph can loop back to a previous node (retry, refine, debug).
-
-```mermaid
-stateDiagram-v2
-    [*] --> Planner : Receive Task
-    Planner --> Coder : Create structured plan
-    Coder --> Tester : Write code
-
-    state test_decision <<choice>>
-    Tester --> test_decision : Run tests
-
-    test_decision --> Coder : ❌ Tests fail → send trace back
-    test_decision --> Reviewer : ✅ Tests pass
-
-    state review_decision <<choice>>
-    Reviewer --> review_decision : Review code quality
-
-    review_decision --> Coder : ❌ Issues found
-    review_decision --> HumanCheckpoint : ✅ Approved
-
-    HumanCheckpoint --> Publisher : 👤 Human approves
-    HumanCheckpoint --> Coder : 👤 Human requests changes
-    Publisher --> [*] : Done
-```
-
-**State schema example (LangGraph-style):**
-
-```python
-from typing import TypedDict, Annotated, List
-from langgraph.graph.message import add_messages
-
-class AgentState(TypedDict):
-    # The goal the agent is working toward
-    goal: str
-    # Accumulated messages / conversation history
-    messages: Annotated[list, add_messages]
-    # The plan generated by the planner node
-    plan: List[str]
-    # Code artifacts produced
-    code: str
-    # Test results from the last test run
-    test_results: str
-    # How many times we've retried the coding step
-    retry_count: int
-    # Whether a human has approved the output
-    human_approved: bool
-```
-
-**The power of explicit state:** Unlike a free-form ReAct loop where context is implicit (buried in the message history), graph state makes every variable inspectable, debuggable, and resumable. If the agent crashes at step 7 of 12, you can resume from step 7 with the saved state — no re-running the first 6 steps.
+<GraphBasedStateDiagram />
 
 ---
 
@@ -353,25 +271,12 @@ class AgentState(TypedDict):
 
 Memory is one of the most misunderstood aspects of agent design. LLMs are stateless — they have no memory between calls. Every memory an agent has must be explicitly managed and injected into the context.
 
+<AgentMemoryArchitectureDiagram />
+
+
 There are four distinct types of memory, each with different scope and storage mechanisms:
 
-```mermaid
-graph LR
-    subgraph InContext [In-Context Memory — Ephemeral]
-        WM[Working Memory\nCurrent messages + tool results]
-    end
-
-    subgraph External [External Memory — Persistent]
-        EM[Episodic Memory\nPast conversation summaries]
-        SM[Semantic Memory\nFacts / knowledge base — Vector DB]
-        PM[Procedural Memory\nHow to do things — Few-shot examples]
-    end
-
-    Agent -->|Reads + Writes| WM
-    Agent -->|Retrieves summaries| EM
-    Agent -->|Semantic search| SM
-    Agent -->|Retrieves examples| PM
-```
+<FourMemoryTypesDiagram />
 
 ### 1. Working Memory (In-Context)
 
@@ -379,18 +284,10 @@ The agent's active scratch pad — the current message thread, tool outputs, and
 
 **The context window budget problem:**
 
-```
-Total context window: 128,000 tokens
-    System prompt + instructions:  2,000 tokens
-    Tool definitions (20 tools):   4,000 tokens
-    Conversation history:          30,000 tokens (grows with every step)
-    Retrieved documents (RAG):     20,000 tokens
-    Current task context:          5,000 tokens
-    ──────────────────────────────────────────
-    Remaining for LLM to reason:  67,000 tokens (shrinks per step)
-```
+<ContextWindowBudgetDiagram />
 
 As the agent runs more steps, the context window fills up. Without management, the agent eventually hits the limit and crashes or loses early context.
+
 
 **Management strategies:**
 
@@ -577,21 +474,11 @@ def sanitize_tool_output(output: str) -> str:
 
 Multi-agent systems have their own architectural patterns, analogous to distributed systems design.
 
+<MultiAgentCoordinationPatternsDiagram />
+
 ### Pattern A: Orchestrator-Worker (Hierarchical)
 
 A central orchestrator breaks down the task and delegates sub-tasks to specialized workers. The orchestrator aggregates results.
-
-```mermaid
-graph TD
-    User -->|Complex task| Orchestrator
-    Orchestrator -->|Subtask 1| ResearchAgent
-    Orchestrator -->|Subtask 2| CodingAgent
-    Orchestrator -->|Subtask 3| WritingAgent
-    ResearchAgent -->|Results| Orchestrator
-    CodingAgent -->|Results| Orchestrator
-    WritingAgent -->|Results| Orchestrator
-    Orchestrator -->|Final answer| User
-```
 
 **Best for:** Tasks with clearly separable subtasks that can run in parallel. The orchestrator needs to be a capable model (e.g., GPT-4o, Claude Opus) since it does the meta-reasoning.
 
@@ -603,16 +490,6 @@ graph TD
 
 Agents are chained — the output of one becomes the input of the next. Each agent specializes in one transformation.
 
-```
-Raw Requirements
-    → Requirements Analyst Agent (structured spec)
-    → Architecture Agent (system design doc)
-    → Coder Agent (implementation)
-    → Code Reviewer Agent (review comments + revised code)
-    → Tester Agent (test suite + results)
-    → Documentation Agent (README + API docs)
-    → Final Deliverable
-```
 
 **Best for:** Creative/editorial workflows (research → outline → draft → edit → publish), well-defined assembly processes where each step is deterministic.
 
@@ -771,29 +648,8 @@ result = app.invoke({"query": "What are the latest trends in AI agents?"})
 
 When you use AI coding assistants like Cursor, Windsurf, or GitHub Copilot Workspace, they run a structured coding agent harness under the hood. Understanding this helps you prompt them more effectively and understand their limitations.
 
-```mermaid
-sequenceDiagram
-    participant User
-    participant Agent as Coding Agent
-    participant Index as Semantic Index (Vector DB)
-    participant FS as File System
-    participant Terminal as Terminal / LSP
+<IdeCodingAgentMechanicsDiagram />
 
-    User->>Agent: "Add authentication to the API"
-    Agent->>Index: semantic_search("authentication", "middleware", "JWT")
-    Index-->>Agent: Relevant files: [auth.py, middleware.py, config.py]
-    Agent->>FS: read_file("auth.py"), read_file("config.py")
-    FS-->>Agent: File contents
-    Agent->>Agent: Plan: [1. Add JWT library, 2. Create auth middleware, 3. Protect routes]
-    Agent->>FS: write_file("middleware/auth.py", new_code)
-    Agent->>FS: edit_file("routes/user.py", diff_patch)
-    Agent->>Terminal: run_command("python -m pytest tests/test_auth.py")
-    Terminal-->>Agent: "2 tests passed, 1 failed: test_expired_token"
-    Agent->>FS: edit_file("middleware/auth.py", fix_expired_token)
-    Agent->>Terminal: run_command("python -m pytest tests/test_auth.py")
-    Terminal-->>Agent: "3 tests passed"
-    Agent->>User: "Done. Added JWT authentication. All tests pass."
-```
 
 **The key loops running inside a coding agent:**
 

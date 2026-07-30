@@ -6,6 +6,8 @@ description: Deep dive into Webhooks — event-driven HTTP callbacks, HMAC-SHA25
 tags: [system-design, microservices, integration, api, events, security, java, spring-boot]
 ---
 
+import WebhookArchitectureDiagram from '@site/src/components/WebhookArchitectureDiagram';
+
 # Webhooks
 
 A **Webhook** is an event-driven HTTP callback mechanism where a system (the **provider**) calls a pre-registered URL on your system (the **receiver**) in real time, the moment an event occurs — rather than requiring you to poll for changes repeatedly.
@@ -43,23 +45,7 @@ Your App: Processes in < 100ms. Order confirmed. Email sent.
 
 ## 🏗️ Architecture: Receiving Webhooks at Scale
 
-```mermaid
-graph TD
-    Provider["Event Provider<br>(Stripe / GitHub / Shopify / Internal)"]
-    
-    Provider -->|POST /webhooks/stripe<br>Payload + HMAC Signature| Receiver
-
-    subgraph "Your Infrastructure"
-        Receiver["Webhook Receiver<br>(Spring Boot Controller)"]
-        Receiver -->|1. Verify HMAC| Verify{Valid?}
-        Verify -->|No| Reject[Return 401]
-        Verify -->|Yes| Queue["Enqueue to Kafka/SQS<br>(Return 200 immediately)"]
-        Queue --> Worker["Background Workers<br>(Process asynchronously)"]
-        Worker --> DB[(Order DB)]
-        Worker --> Email[Email Service]
-        Worker --> Dedup[(Processed Events<br>Deduplication Store)]
-    end
-```
+<WebhookArchitectureDiagram />
 
 **The critical constraint:** Most providers (Stripe, GitHub, Shopify) expect an HTTP 2xx response **within 5–30 seconds**. If your endpoint is slow or returns 5xx, providers will retry — and if you're not idempotent, you'll process the event multiple times.
 

@@ -259,7 +259,7 @@ CodeDeploy "rollback" = **redeploy the previous revision**. It doesn't reverse c
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** ValidateService hook fails. What happens?
 

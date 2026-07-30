@@ -6,6 +6,12 @@ description: Deep dive into the Microservice Chassis pattern — building a Spri
 tags: [system-design, microservices, architecture, spring-boot, platform-engineering, java]
 ---
 
+import CopyPasteProblemDiagram from '@site/src/components/CopyPasteProblemDiagram';
+import ChassisArchitectureDiagram from '@site/src/components/ChassisArchitectureDiagram';
+import ChassisAutoConfigDiagram from '@site/src/components/ChassisAutoConfigDiagram';
+import ChassisProjectLayoutDiagram from '@site/src/components/ChassisProjectLayoutDiagram';
+import ChassisVersioningDiagram from '@site/src/components/ChassisVersioningDiagram';
+
 # Microservice Chassis
 
 The **Microservice Chassis** is a pre-built framework or shared library that handles all **cross-cutting concerns** — the boilerplate infrastructure code every microservice needs — so that development teams focus exclusively on writing business logic.
@@ -28,14 +34,7 @@ Team B builds `payment-service`. They start fresh, copy some code from Team A, b
 - Their security headers are missing — `X-Frame-Options` not set
 - They never added Resilience4j — calls to Stripe have no circuit breaker or timeout
 
-```text
-30 services × "every team wires their own infrastructure" =
-  ├── 8 different log formats (all in Kibana — impossible to query consistently)
-  ├── 5 different error response schemas (clients need special handling per service)
-  ├── 12 services missing distributed tracing (broken trace chains everywhere)
-  ├── 20 services missing security headers (security audit fails)
-  └── 3 weeks onboarding time for every new service
-```
+<CopyPasteProblemDiagram />
 
 The chassis fixes this by making good infrastructure the default — teams get it for free by adding one dependency.
 
@@ -43,23 +42,7 @@ The chassis fixes this by making good infrastructure the default — teams get i
 
 ## 🏗️ What Goes Into a Chassis
 
-```mermaid
-graph TD
-    Chassis[🏗️ Microservice Chassis<br>shared-service-chassis.jar]
-
-    Chassis --> Log[📋 Structured Logging<br>Logback JSON + MDC filter]
-    Chassis --> Trace[🔍 Distributed Tracing<br>Micrometer + OpenTelemetry]
-    Chassis --> Metrics[📊 Metrics<br>Micrometer + Prometheus endpoint]
-    Chassis --> Health[❤️ Health Checks<br>/actuator/health with custom indicators]
-    Chassis --> Error[⚠️ Error Handling<br>Standard error response format]
-    Chassis --> Security[🔒 Security Headers<br>HSTS, CSP, X-Frame-Options, CORS]
-    Chassis --> Config[⚙️ Config Bootstrap<br>Spring Cloud Config connection]
-    Chassis --> Resilience[🛡️ Resilience Defaults<br>Timeout, Retry, CB via Resilience4j]
-    Chassis --> Doc[📖 API Documentation<br>SpringDoc OpenAPI setup]
-
-    NewService[🆕 New Microservice] -->|depends on| Chassis
-    NewService -->|only writes| BusinessLogic[Business Logic Only]
-```
+<ChassisArchitectureDiagram />
 
 ---
 
@@ -67,33 +50,11 @@ graph TD
 
 A chassis is implemented as a **Spring Boot Starter** — a JAR that auto-configures itself when added to a service's classpath.
 
+<ChassisAutoConfigDiagram />
+
 ### Project Layout
 
-```
-shared-service-chassis/
-├── pom.xml
-└── src/main/
-    ├── java/com/company/chassis/
-    │   ├── ChassisAutoConfiguration.java         ← Root auto-config
-    │   ├── logging/
-    │   │   ├── MdcRequestContextFilter.java       ← Injects traceId/userId into MDC
-    │   │   └── LoggingProperties.java             ← Config properties
-    │   ├── error/
-    │   │   ├── GlobalExceptionHandler.java        ← Standard error response
-    │   │   ├── ErrorResponse.java                 ← Canonical error DTO
-    │   │   └── ChassisExceptions.java             ← Base exception hierarchy
-    │   ├── security/
-    │   │   └── SecurityHeadersFilter.java         ← HSTS, CSP, X-Frame-Options
-    │   ├── observability/
-    │   │   ├── TracingConfiguration.java          ← OTel + Micrometer wiring
-    │   │   └── ServiceHealthIndicator.java        ← Custom health check
-    │   └── resilience/
-    │       └── ResilienceDefaultsConfiguration.java
-    └── resources/
-        ├── META-INF/spring/
-        │   └── org.springframework.boot.autoconfigure.AutoConfiguration.imports  ← Spring Boot 3 registration
-        └── logback-spring.xml                     ← Standard JSON logging config
-```
+<ChassisProjectLayoutDiagram />
 
 ### Root Auto-Configuration
 
@@ -381,29 +342,7 @@ The new service automatically receives:
 
 ## 📐 Chassis Versioning & Governance
 
-### Semantic Versioning Contract
-
-```
-chassis 2.x.x (major: breaking changes)
-  2.0.0: Upgraded to Spring Boot 3.x — requires Java 17+
-  
-chassis x.3.x (minor: backward-compatible additions)
-  2.3.0: Added PermissionsPolicy header
-  2.3.1: Bug fix — MDC cleared in async threads
-  
-chassis x.x.1 (patch: bug fixes only)
-  2.3.1: Fixed MDC thread leak in WebFlux contexts
-```
-
-### Upgrade Path for Teams
-
-```text
-Chassis upgrade strategy:
-  Week 1: Release chassis 2.4.0, update changelog, announce deprecations
-  Week 2: Run chassis-version-report to identify services on < 2.3.x
-  Weeks 2-4: Services upgrade in their own sprint — no forced deadline
-  Week 8: Chassis 2.2.x reaches EOL — teams must upgrade or own the risk
-```
+<ChassisVersioningDiagram />
 
 ---
 

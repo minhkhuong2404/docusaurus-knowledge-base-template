@@ -212,7 +212,7 @@ MyScheduledFunction:
 
 ---
 
-## 🧪 Practice Questions
+## Practice Questions
 
 **Q1.** A developer notices that Lambda is being throttled in production. They want to be alerted when throttles exceed 10 per minute. What should they set up?
 

@@ -1,7 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Link from '@docusaurus/Link';
 import clsx from 'clsx';
 import type { Props as DesktopProps } from '@theme/DocSidebar/Desktop';
+
+import { useUserProgress } from '../../context/UserProgressContext';
+import { isTrackableArticle } from '@site/src/utils/trackablePages';
 
 // Type definitions for Sidebar Items
 type SidebarItem = any;
@@ -18,10 +21,71 @@ function isCategoryActive(item: SidebarItem, activePath: string): boolean {
   return false;
 }
 
+function getAllDocLinks(items: SidebarItem[]): SidebarItem[] {
+  let result: SidebarItem[] = [];
+  if (!items) return result;
+  items.forEach((item) => {
+    if (item.type === 'doc' || item.type === 'link') {
+      result.push(item);
+    } else if (item.type === 'category' && Array.isArray(item.items)) {
+      result = result.concat(getAllDocLinks(item.items));
+    }
+  });
+  return result;
+}
+
 export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidden }: CustomSidebarProps) {
   const [openCategories, setOpenCategories] = useState<Record<string, boolean>>({});
   const [isResizing, setIsResizing] = useState(false);
   const sidebarWidthRef = useRef(300);
+
+  const { progress, setTotalArticlesCount, isPageRead } = useUserProgress();
+  const docLinks = useMemo(() => (sidebar ? getAllDocLinks(sidebar) : []), [sidebar]);
+
+  useEffect(() => {
+    if (docLinks.length > 0) {
+      setTotalArticlesCount(docLinks.length);
+    }
+  }, [docLinks.length, setTotalArticlesCount]);
+
+  const activeIndex = useMemo(() => {
+    if (!path || docLinks.length === 0) return 0;
+    const idx = docLinks.findIndex((item) => item.href === path);
+    return idx !== -1 ? idx + 1 : 0;
+  }, [docLinks, path]);
+
+  const handleLocateCurrentPage = () => {
+    if (!sidebar || !path) return;
+
+    // Expand all categories that contain the active path
+    const categoriesToOpen: Record<string, boolean> = {};
+    function expandActive(items: SidebarItem[]) {
+      items.forEach((item) => {
+        if (item.type === 'category') {
+          if (isCategoryActive(item, path)) {
+            categoriesToOpen[item.label] = true;
+            expandActive(item.items);
+          }
+        }
+      });
+    }
+    expandActive(sidebar);
+    setOpenCategories((prev) => ({ ...prev, ...categoriesToOpen }));
+
+    // Scroll active link into view & trigger pulse animation
+    setTimeout(() => {
+      const activeEl = document.querySelector('.custom-sidebar-menu .custom-menu-link.active');
+      if (activeEl) {
+        activeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        activeEl.classList.remove('pulse-highlight');
+        void (activeEl as HTMLElement).offsetWidth; // trigger reflow
+        activeEl.classList.add('pulse-highlight');
+        setTimeout(() => {
+          activeEl.classList.remove('pulse-highlight');
+        }, 2000);
+      }
+    }, 100);
+  };
 
   // Load saved width on mount
   useEffect(() => {
@@ -90,11 +154,11 @@ export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidd
   }, [sidebar, path]);
 
   const renderSidebarItem = (item: SidebarItem, depth: number, keyPrefix: string) => {
-    const labelText = item.label || '';
+    const labelText = (item.label || '').trim();
     // Match leading emoji or icon character
-    const match = labelText.match(/^(\p{Emoji_Presentation}|\p{Emoji})\s*(.*)$/u);
+    const match = labelText.match(/^(\p{Extended_Pictographic}|\p{Emoji_Presentation}|\p{Emoji})\s*(.*)$/u);
     const emoji = match ? match[1] : '';
-    const cleanLabel = match ? match[2] : labelText;
+    const cleanLabel = match ? match[2].trim() : labelText;
     const displayIcon = emoji || (cleanLabel ? cleanLabel.charAt(0) : '📄');
 
     const isActive = item.href === path;
@@ -151,31 +215,85 @@ export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidd
     }
 
     if (item.type === 'doc' || item.type === 'link') {
+      const isTrackable = isTrackableArticle(item.href);
+      const isRead = isTrackable && item.href ? (isPageRead(item.href) || isPageRead(item.href + '/') || (item.href.endsWith('/') && isPageRead(item.href.slice(0, -1)))) : false;
+
       if (isHidden) {
         return (
           <Link
             key={itemKey}
             to={item.href}
-            className={clsx('custom-menu-link', isActive && 'active')}
-            title={cleanLabel}
+            className={clsx('custom-menu-link', isActive && 'active', isRead && 'page-read')}
+            title={`${cleanLabel}${isRead ? ' (Completed ✓)' : ''}`}
           >
-            <span className="menu-icon">{displayIcon}</span>
+            <span className="menu-icon" style={{ position: 'relative' }}>
+              {displayIcon}
+              {isRead && (
+                <span
+                  style={{
+                    position: 'absolute',
+                    top: '-2px',
+                    right: '-2px',
+                    width: '6px',
+                    height: '6px',
+                    borderRadius: '50%',
+                    backgroundColor: '#4ade80',
+                    boxShadow: '0 0 6px #4ade80',
+                  }}
+                />
+              )}
+            </span>
           </Link>
         );
       }
 
-      return (
+      const linkElement = (
         <Link
           key={itemKey}
           to={item.href}
-          className={clsx('custom-menu-link', isActive && 'active')}
+          className={clsx('custom-menu-link', isActive && 'active', isRead && 'page-read')}
           style={depth > 0 ? { paddingLeft: '12px' } : undefined}
           title={cleanLabel}
         >
           {depth === 0 && <span className="menu-icon">{displayIcon}</span>}
           <span className="menu-label">{cleanLabel}</span>
+          {isRead && (
+            <span
+              className="menu-read-tick"
+              title="Article Completed"
+              aria-label="Completed"
+              style={{
+                marginLeft: 'auto',
+                fontSize: '0.7rem',
+                color: '#4ade80',
+                fontWeight: 800,
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '18px',
+                height: '18px',
+                borderRadius: '50%',
+                background: 'rgba(74, 222, 128, 0.15)',
+                border: '1px solid rgba(74, 222, 128, 0.35)',
+                flexShrink: 0,
+                boxShadow: '0 0 8px rgba(74, 222, 128, 0.2)',
+              }}
+            >
+              ✓
+            </span>
+          )}
         </Link>
       );
+
+      if (depth === 0) {
+        return (
+          <div key={itemKey} className="custom-menu-category">
+            {linkElement}
+          </div>
+        );
+      }
+
+      return linkElement;
     }
 
     return null;
@@ -183,6 +301,43 @@ export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidd
 
   return (
     <div className={clsx('custom-sidebar-container', isHidden && 'collapsed')}>
+
+      {/* Toolbar / Current Page Index Button */}
+      <div className="custom-sidebar-toolbar">
+        <button
+          className="custom-sidebar-index-btn"
+          onClick={handleLocateCurrentPage}
+          title={
+            activeIndex > 0
+              ? `Current Page #${activeIndex} — Click to locate in sidebar`
+              : 'Locate current page in sidebar'
+          }
+          aria-label="Locate current page index in sidebar"
+        >
+          <div className="index-btn-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <circle cx="12" cy="12" r="6"></circle>
+              <circle cx="12" cy="12" r="2"></circle>
+            </svg>
+          </div>
+          {!isHidden && (
+            <div className="index-btn-content">
+              <span className="index-btn-title">Current Page</span>
+              <span className="index-btn-badge">
+                {activeIndex > 0 ? `#${activeIndex}` : 'Not indexed'}
+              </span>
+            </div>
+          )}
+          {!isHidden && (
+            <span className="index-btn-locate-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </span>
+          )}
+        </button>
+      </div>
 
       {/* Menu Area */}
       <div className="custom-sidebar-menu">
