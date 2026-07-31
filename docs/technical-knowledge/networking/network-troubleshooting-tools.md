@@ -6,7 +6,19 @@ tags: [networking, troubleshooting, tcpdump, wireshark, netstat, nmap, curl, ope
 sidebar_position: 16
 ---
 
+import NetworkTroubleshootingToolsDiagram from '@site/src/components/NetworkTroubleshootingToolsDiagram';
+import TcpdumpPacketAnalysisDiagram from '@site/src/components/TcpdumpPacketAnalysisDiagram';
+
+
+
 # Network Troubleshooting & Diagnostic Tools
+
+<NetworkTroubleshootingToolsDiagram />
+
+<TcpdumpPacketAnalysisDiagram />
+
+---
+
 
 ## The Diagnostic Mindset
 

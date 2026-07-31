@@ -10,7 +10,12 @@ tags:
 - workflows
 - conventional-commits
 ---
+
+import GitConventionalCommitsDiagram from '@site/src/components/GitConventionalCommitsDiagram';
+
 # Conventional Commits — Structured Commit Messages
+
+<GitConventionalCommitsDiagram />
 
 ## What is the Conventional Commits Specification?
 

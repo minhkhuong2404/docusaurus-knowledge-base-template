@@ -6,7 +6,13 @@ tags: [database, security, sql-injection, encryption, authentication, authorizat
 sidebar_position: 13
 ---
 
+import DatabaseSecurityRbacDiagram from '@site/src/components/DatabaseSecurityRbacDiagram';
+
 # Database Security
+
+<DatabaseSecurityRbacDiagram />
+
+---
 
 ## Authentication
 

@@ -10,7 +10,12 @@ tags:
 - collaboration
 - stash
 ---
+
+import GitStashStackDiagram from '@site/src/components/GitStashStackDiagram';
+
 # `git stash` — Shelving Work in Progress
+
+<GitStashStackDiagram />
 
 ## What It Does
 

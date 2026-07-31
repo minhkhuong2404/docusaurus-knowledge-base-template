@@ -10,7 +10,12 @@ tags:
 - history
 - log-blame
 ---
+
+import GitLogBlameExplorerDiagram from '@site/src/components/GitLogBlameExplorerDiagram';
+
 # `git log` & `git blame` — Exploring History
+
+<GitLogBlameExplorerDiagram />
 
 ## git log
 

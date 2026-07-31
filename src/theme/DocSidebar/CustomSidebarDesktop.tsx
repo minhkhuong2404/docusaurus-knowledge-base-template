@@ -59,12 +59,16 @@ export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidd
 
     // Expand all categories that contain the active path
     const categoriesToOpen: Record<string, boolean> = {};
-    function expandActive(items: SidebarItem[]) {
-      items.forEach((item) => {
+    function expandActive(items: SidebarItem[], keyPrefix: string = 'item') {
+      items.forEach((item, idx) => {
+        const itemKey = `${keyPrefix}-${item.label || item.href || idx}`;
         if (item.type === 'category') {
           if (isCategoryActive(item, path)) {
             categoriesToOpen[item.label] = true;
-            expandActive(item.items);
+            categoriesToOpen[itemKey] = true;
+            if (Array.isArray(item.items)) {
+              expandActive(item.items, itemKey);
+            }
           }
         }
       });
@@ -137,13 +141,17 @@ export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidd
   // Auto-open active categories on load/path change
   useEffect(() => {
     const initialOpen: Record<string, boolean> = {};
-    function traverse(items: SidebarItem[]) {
-      items.forEach((item) => {
+    function traverse(items: SidebarItem[], keyPrefix: string = 'item') {
+      items.forEach((item, idx) => {
+        const itemKey = `${keyPrefix}-${item.label || item.href || idx}`;
         if (item.type === 'category') {
           if (isCategoryActive(item, path)) {
             initialOpen[item.label] = true;
+            initialOpen[itemKey] = true;
           }
-          traverse(item.items);
+          if (Array.isArray(item.items)) {
+            traverse(item.items, itemKey);
+          }
         }
       });
     }
@@ -165,14 +173,18 @@ export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidd
     const itemKey = `${keyPrefix}-${item.label || item.href || 'item'}`;
 
     if (item.type === 'category') {
-      const isOpen = openCategories[item.label];
+      const isOpen = openCategories[itemKey] ?? openCategories[item.label] ?? false;
       const hasActiveChild = isCategoryActive(item, path);
 
       const toggleOpen = () => {
-        setOpenCategories((prev) => ({
-          ...prev,
-          [item.label]: !prev[item.label],
-        }));
+        setOpenCategories((prev) => {
+          const nextState = !isOpen;
+          return {
+            ...prev,
+            [itemKey]: nextState,
+            [item.label]: nextState,
+          };
+        });
       };
 
       if (isHidden) {

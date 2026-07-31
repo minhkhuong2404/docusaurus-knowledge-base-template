@@ -1184,8 +1184,13 @@ body.resizing-sidebar .theme-doc-sidebar-container {
   align-items: center;
 }
 
-.custom-menu-category.open .custom-menu-category-header .menu-caret {
+.custom-menu-category-header[aria-expanded="true"] .menu-caret,
+.custom-menu-category.open > .custom-menu-category-header .menu-caret {
   transform: rotate(180deg);
+}
+
+.custom-menu-category-header[aria-expanded="false"] .menu-caret {
+  transform: rotate(0deg);
 }
 
 .custom-menu-category-header.active-child {

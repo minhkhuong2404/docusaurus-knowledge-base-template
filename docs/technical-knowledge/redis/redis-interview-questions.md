@@ -6,9 +6,13 @@ description: Senior-level Redis interview questions covering data structures, pe
 tags: [redis, interview-questions, backend, cache, distributed-systems]
 ---
 
+import RedisInterviewScenariosDiagram from '@site/src/components/RedisInterviewScenariosDiagram';
+
 # Redis Interview Questions & Answers
 
 Senior-level Redis interview questions spanning architecture, data structures, persistence, distributed systems, and production failure scenarios.
+
+<RedisInterviewScenariosDiagram />
 
 ---
 

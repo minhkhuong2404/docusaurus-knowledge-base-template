@@ -6,7 +6,13 @@ tags: [database, full-text-search, elasticsearch, inverted-index, tsvector, rele
 sidebar_position: 16
 ---
 
+import FullTextSearchEngineDiagram from '@site/src/components/FullTextSearchEngineDiagram';
+
 # Full-Text Search
+
+<FullTextSearchEngineDiagram />
+
+---
 
 ## Why Full-Text Search?
 

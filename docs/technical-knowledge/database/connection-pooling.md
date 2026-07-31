@@ -8,8 +8,15 @@ tags: [system-design, connection-pooling, database, spring, performance, hikaric
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import HikariCPPoolDiagram from '@site/src/components/HikariCPPoolDiagram';
+import HikariSizingDiagram from '@site/src/components/HikariSizingDiagram';
 
 # Database Connection Pooling
+
+<HikariCPPoolDiagram />
+<HikariSizingDiagram />
+
+---
 
 :::info[Who this guide is for]
 - **New learners** — start at [What is a Database Connection?](#what-is-a-database-connection) and [What is a Connection Pool?](#what-is-a-connection-pool) to understand why this problem exists and how pools solve it.

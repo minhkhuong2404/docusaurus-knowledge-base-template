@@ -6,7 +6,15 @@ tags: [database, transactions, acid, isolation, locking, mvcc, concurrency, dead
 sidebar_position: 4
 ---
 
+import TwoPhaseLockingMechanismDiagram from '@site/src/components/TwoPhaseLockingMechanismDiagram';
+import TwoPhaseCommitDiagram from '@site/src/components/TwoPhaseCommitDiagram';
+
 # Transactions & Concurrency Control
+
+<TwoPhaseLockingMechanismDiagram />
+<TwoPhaseCommitDiagram />
+
+---
 
 ## What is a Transaction?
 

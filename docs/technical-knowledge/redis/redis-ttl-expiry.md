@@ -6,7 +6,13 @@ description: Redis TTL mechanics, expiry policies (lazy vs active), memory evict
 tags: [redis, ttl, expiry, memory, eviction, backend]
 ---
 
+import RedisTtlExpiryMechanicsDiagram from '@site/src/components/RedisTtlExpiryMechanicsDiagram';
+
 # Redis TTL, Key Expiry & Memory Management
+
+<RedisTtlExpiryMechanicsDiagram />
+
+---
 
 Understanding how Redis expires keys and manages memory under pressure is essential for designing reliable, cost-effective Redis deployments.
 

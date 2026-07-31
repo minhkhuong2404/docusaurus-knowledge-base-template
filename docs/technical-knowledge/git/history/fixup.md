@@ -10,7 +10,12 @@ tags:
 - history
 - fixup
 ---
+
+import GitSquashFixupDiagram from '@site/src/components/GitSquashFixupDiagram';
+
 # `git fixup` — Amending Previous Commits
+
+<GitSquashFixupDiagram />
 
 ## What is a Fixup?
 

@@ -6,7 +6,11 @@ description: Redis replication mechanics, Sentinel for HA failover, Redis Cluste
 tags: [redis, cluster, replication, sentinel, high-availability, backend]
 ---
 
+import RedisClusterReplicationDiagram from '@site/src/components/RedisClusterReplicationDiagram';
+
 # Redis Clustering, Replication & High Availability
+
+<RedisClusterReplicationDiagram />
 
 ---
 
@@ -19,124 +23,9 @@ Imagine you own a famous pizza franchise.
 - **The Master (Headquarters):** This is the only place allowed to *write* new recipes (WRITE operations). When the Master creates a new pizza, it instantly sends a fax (asynchronous background stream) with the new recipe to all its franchise stores.
 - **The Replicas (Franchise Stores):** These stores are strictly read-only. Customers can walk into any branch to order (READ operations), and they will get the exact same pizza. If a branch burns down, the Master doesn't care; it just builds a new one and faxes ALL the recipes to it from scratch (Full Sync). If the Master burns down, one of the branches must be officially promoted to Headquarters to accept new recipes.
 
-```
-Master (read + write)
-  ├── Replica 1 (read-only)  ← async replication stream
-  ├── Replica 2 (read-only)
-  └── Replica 3 (read-only)
-```
-
 ### How Replication Works
 
-```
-1. Replica connects to master
-2. Master sends RDB snapshot (FULLRESYNC)
-3. While snapshot is being transferred, master buffers new write commands
-4. Replica loads RDB, then applies buffered commands
-5. Ongoing: master streams commands to replica via replication backlog
-```
-
-```bash
-# redis.conf on replica
-replicaof master-host 6379
-replica-read-only yes
-
-# Monitor replication lag
-INFO replication
-# replica_lag: seconds behind master
-# master_repl_offset vs replica_repl_offset
-```
-
-### Replication Lag and Consistency
-
-Redis replication is **asynchronous** by default — replicas may be behind the master. A failover during lag causes data loss.
-
-```bash
-# Semi-synchronous: master waits for at least N replicas to acknowledge writes
-# (Best effort — not true synchronous)
-min-replicas-to-write 1        # Must have 1 replica acknowledge before ACKing client
-min-replicas-max-lag 10        # Replica must respond within 10 seconds
-# If condition not met → master refuses writes (protects consistency)
-```
-
-**Read replicas for read scaling:**
-```java
-// Lettuce (Spring) read from replicas for read-heavy workloads
-LettuceClientConfiguration config = LettuceClientConfiguration.builder()
-    .readFrom(ReadFrom.REPLICA_PREFERRED)  // Prefer replica, fallback to master
-    .build();
-```
-
----
-
-## Redis Sentinel — High Availability
-
-Sentinel provides automatic failover for Redis without sharding. Consists of 3+ Sentinel processes (odd number for quorum).
-
-```
-                    ┌──────────────────────────────┐
-                    │  Sentinel Cluster (quorum)   │
-                    │  Sentinel 1                  │
-                    │  Sentinel 2  ← majority vote │
-                    │  Sentinel 3                  │
-                    └──────────────────────────────┘
-                              │ monitors
-                              ↓
-                         [ Master ]
-                        /          \
-               [Replica 1]      [Replica 2]
-```
-
 ### Failover Process
-
-```
-1. Sentinel detects master is unreachable (subjective down)
-2. If quorum Sentinels agree → objective down (ODOWN)
-3. Sentinels elect a leader Sentinel
-4. Leader promotes the most up-to-date replica to master
-5. Other replicas reconfigure to follow new master
-6. Old master (if it recovers) becomes a replica
-```
-
-```bash
-# sentinel.conf
-sentinel monitor mymaster 127.0.0.1 6379 2   # Quorum = 2
-sentinel down-after-milliseconds mymaster 5000  # Unreachable for 5s = SDOWN
-sentinel failover-timeout mymaster 10000        # Failover must complete in 10s
-sentinel parallel-syncs mymaster 1             # 1 replica syncs at a time during failover
-```
-
-**Failover time:** Typically 15–30 seconds (detection + election + promotion). During this time: no writes (old master is down, new not yet promoted).
-
-```java
-// Spring Boot Sentinel configuration
-@Bean
-public RedisConnectionFactory redisConnectionFactory() {
-    RedisSentinelConfiguration sentinelConfig = new RedisSentinelConfiguration()
-        .master("mymaster")
-        .sentinel("sentinel1", 26379)
-        .sentinel("sentinel2", 26379)
-        .sentinel("sentinel3", 26379);
-    return new LettuceConnectionFactory(sentinelConfig);
-}
-```
-
----
-
-## 🧠 Senior Deep Dive: Redis Cluster & Hash Slots
-
-When your dataset exceeds the RAM of a single physical server (e.g., 500GB of cache), Sentinel is useless because Sentinel still copies 100% of the data to every node. You need **Horizontal Sharding**.
-
-Redis Cluster shards data across multiple master nodes using exactly **16,384 Hash Slots**.
-
-```text
-16,384 slots distributed across 3 masters:
-┌────────────────┬────────────────┬────────────────┐
-│ Master A       │ Master B       │ Master C       │
-│ Slots 0–5460   │ Slots 5461–10922│ Slots 10923–16383│
-│ └── Replica A  │ └── Replica B  │ └── Replica C  │
-└────────────────┴────────────────┴────────────────┘
-```
 
 ### Why Exactly 16,384 Slots?
 Every node in a Redis Cluster constantly pings every other node (the **Gossip Protocol**) to share its state. The payload of this ping includes a bitmap of which Hash Slots the node currently owns.

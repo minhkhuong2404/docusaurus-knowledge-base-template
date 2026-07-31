@@ -6,17 +6,20 @@ tags: [networking, proxy, reverse-proxy, nat, firewall, iptables, vpn, nginx]
 sidebar_position: 9
 ---
 
+import ProxiesNatFirewallsDiagram from '@site/src/components/ProxiesNatFirewallsDiagram';
+import NatTraversalDiagram from '@site/src/components/NatTraversalDiagram';
+
 # Proxies, NAT & Firewalls
+
+<ProxiesNatFirewallsDiagram />
+
+<NatTraversalDiagram />
+
+---
 
 ## Forward Proxy
 
 A forward proxy sits between **clients and the internet**, acting on behalf of clients.
-
-```
-Clients ──► [Forward Proxy] ──► Internet (servers)
-
-The server sees the proxy's IP, not the client's IP
-```
 
 **Use cases:**
 - Corporate networks: enforce web filtering, cache content, log requests
@@ -24,25 +27,6 @@ The server sees the proxy's IP, not the client's IP
 - Content filtering: block prohibited sites
 - Caching: reduce bandwidth (Squid proxy)
 - Bypassing geo-restrictions: clients appear to be in the proxy's location
-
-```
-Client request:
-  GET http://external-site.com/path HTTP/1.1    ← full URL in request line
-  Host: external-site.com
-  Proxy-Authorization: Basic ...
-```
-
-### CONNECT Method (Tunneling)
-
-For HTTPS through a forward proxy:
-
-```
-Client ──► Proxy: CONNECT api.example.com:443 HTTP/1.1
-Proxy ──► Server: TCP connection
-Proxy ◄── 200 Connection Established
-Client ──► [Proxy passes through] ──► Server: TLS handshake
-         (proxy can't decrypt — just tunnels TCP)
-```
 
 ---
 
@@ -54,12 +38,6 @@ To see how a reverse proxy differs from a load balancer and an API gateway, and 
 
 A reverse proxy sits between **the internet and backend servers**, acting on behalf of servers.
 
-```
-Internet (clients) ──► [Reverse Proxy] ──► Backend Servers
-
-The client sees the proxy's IP; backend servers see the proxy's IP
-```
-
 **Use cases:**
 - Load balancing (distribute to multiple backends)
 - TLS termination (proxy handles HTTPS, backends get HTTP)
@@ -69,160 +47,7 @@ The client sees the proxy's IP; backend servers see the proxy's IP
 - Path-based routing (nginx routes `/api` to one service, `/static` to another)
 - Authentication gateway
 
-```nginx
-# nginx as reverse proxy
-server {
-    listen 443 ssl;
-    ssl_certificate /etc/nginx/certs/cert.pem;
-    ssl_certificate_key /etc/nginx/certs/key.pem;
-
-    location /api/ {
-        proxy_pass http://api-service:8080;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto https;
-    }
-
-    location /static/ {
-        root /var/www/html;
-        gzip_static on;
-        expires 1y;
-        add_header Cache-Control "public, immutable";
-    }
-}
-```
-
-### Forward vs Reverse Proxy
-
-| | Forward Proxy | Reverse Proxy |
-|--|--------------|--------------|
-| Serves | Clients | Servers |
-| Client awareness | Explicitly configured | Transparent |
-| Server awareness | Transparent | Explicitly routes to |
-| Use case | Client anonymity, filtering | Load balancing, TLS termination |
-| Examples | Squid, corporate proxy | nginx, HAProxy, AWS ALB |
-
----
-
-## NAT Deep Dive
-
-NAT (Network Address Translation) modifies IP headers as packets pass through a router.
-
-### SNAT — Source NAT (Masquerading)
-
-```
-Internal: 10.0.0.5:54321 → internet
-NAT router rewrites: src=10.0.0.5:54321 → src=203.0.113.1:54321
-
-Maintains NAT table:
-  internal_ip:port    external_ip:port    destination       protocol
-  10.0.0.5:54321  →  203.0.113.1:54321  → 142.250.80.1:443  TCP
-
-Return traffic:
-  203.0.113.1:54321 ← reverse lookup → 10.0.0.5:54321
-```
-
-### DNAT — Destination NAT (Port Forwarding)
-
-```
-External request: → 203.0.113.1:80
-DNAT rule: dst=203.0.113.1:80 → dst=10.0.0.10:8080
-
-Used for: exposing internal servers, load balancing (pre-routing)
-```
-
-```bash
-# iptables DNAT (port forward)
-iptables -t nat -A PREROUTING \
-  -p tcp --dport 80 \
-  -j DNAT --to-destination 10.0.0.10:8080
-
-# SNAT / masquerade (outbound NAT)
-iptables -t nat -A POSTROUTING \
-  -o eth0 \
-  -j MASQUERADE
-```
-
-### NAT Traversal
-
-Peer-to-peer apps (VoIP, video calls, gaming) need to connect through NATs.
-
-**Techniques:**
-- **STUN** (Session Traversal Utilities for NAT): discovers public IP:port
-- **TURN** (Traversal Using Relays around NAT): relays traffic if direct P2P fails
-- **ICE** (Interactive Connectivity Establishment): tries multiple paths, picks best
-- **Hole punching**: both peers send simultaneously to open firewall holes
-
-Used by: WebRTC, Zoom, Discord, online games.
-
----
-
-## Stateful Firewalls
-
-A stateful firewall tracks the **state of network connections** and allows return traffic automatically.
-
-```
-Stateless (packet filter):
-  Must explicitly allow BOTH directions:
-    ACCEPT: src=internal → dst=external:443 (outbound)
-    ACCEPT: src=external:443 → dst=internal (inbound) ← required!
-
-Stateful:
-  ACCEPT: src=internal → dst=external:443 (outbound)
-  → connection tracked in state table
-  → return traffic (established) automatically allowed
-  → no explicit inbound rule needed
-```
-
-### Connection States (iptables/netfilter)
-
-| State | Meaning |
-|-------|---------|
-| `NEW` | First packet of a new connection |
-| `ESTABLISHED` | Part of an existing bidirectional connection |
-| `RELATED` | Related to existing connection (FTP data channel, ICMP error) |
-| `INVALID` | Doesn't match any connection |
-
-```bash
-# Stateful iptables rules
-# Allow established and related (return traffic)
-iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
-
-# Allow new outbound connections from internal
-iptables -A OUTPUT -m state --state NEW,ESTABLISHED -j ACCEPT
-
-# Drop invalid
-iptables -A INPUT -m state --state INVALID -j DROP
-```
-
----
-
-## VPN — Virtual Private Network
-
-A VPN creates an **encrypted tunnel** that makes remote traffic appear to come from the VPN server's network.
-
-### Site-to-Site VPN
-
-```
-Office A Network ──[VPN tunnel]──► Office B Network
-10.0.0.0/24        encrypted       10.1.0.0/24
-
-Both networks treat each other as local (internal routing)
-Used for: connecting branch offices, cloud to on-premises
-```
-
 ### Remote Access VPN
-
-```
-User laptop (anywhere) ──[VPN]──► Corporate Network
-Laptop gets: 10.100.0.5 (VPN IP)
-Can access: internal servers, databases, SSH hosts
-
-Options:
-  Full tunnel: ALL traffic through VPN (secure but slow)
-  Split tunnel: only corporate traffic through VPN (efficient)
-```
 
 ### VPN Protocols
 

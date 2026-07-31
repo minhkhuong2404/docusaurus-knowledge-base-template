@@ -10,7 +10,12 @@ tags:
 - basics
 - status-diff
 ---
+
+import GitStatusDiffDiagram from '@site/src/components/GitStatusDiffDiagram';
+
 # `git status` & `git diff` — Inspecting Changes
+
+<GitStatusDiffDiagram />
 
 ## git status
 

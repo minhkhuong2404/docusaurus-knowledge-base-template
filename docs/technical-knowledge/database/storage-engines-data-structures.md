@@ -6,7 +6,15 @@ tags: [database, storage-engines, b-tree, lsm-tree, innodb, wal, buffer-pool, da
 sidebar_position: 5
 ---
 
+import BTreeWritePathDiagram from '@site/src/components/BTreeWritePathDiagram';
+import LsmTreeWritePathDiagram from '@site/src/components/LsmTreeWritePathDiagram';
+
 # Storage Engines & Data Structures
+
+<BTreeWritePathDiagram />
+<LsmTreeWritePathDiagram />
+
+---
 
 ## How Databases Store Data
 

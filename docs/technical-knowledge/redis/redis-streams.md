@@ -6,24 +6,19 @@ description: Complete guide to Redis Streams — append-only logs, consumer grou
 tags: [redis, streams, messaging, backend, event-driven]
 ---
 
+import RedisPubSubVsStreamsDiagram from '@site/src/components/RedisPubSubVsStreamsDiagram';
+
 # Redis Streams
 
 Introduced in Redis 5.0, Streams are a log-like data structure providing persistent, ordered, multi-consumer message delivery. Think of it as a lightweight alternative to Kafka built into Redis.
 
+<RedisPubSubVsStreamsDiagram />
+
+---
+
 ---
 
 ## Core Concepts
-
-```
-Stream: user-events
-────────────────────────────────────────────────────────────────
-ID              | Fields
-────────────────────────────────────────────────────────────────
-1700000001000-0 | event=login, userId=123, ip=192.168.1.1
-1700000002000-0 | event=purchase, userId=456, amount=29.99
-1700000003000-0 | event=login, userId=789, ip=10.0.0.1
-────────────────────────────────────────────────────────────────
-```
 
 Each entry has:
 - **Stream ID:** `{milliseconds}-{sequence}` — auto-generated or custom
@@ -32,78 +27,6 @@ Each entry has:
 ---
 
 ## Writing to a Stream
-
-```bash
-# XADD: append entry, auto-generate ID with *
-XADD user-events * event login userId 123 ip 192.168.1.1
-# Returns: "1700000001000-0"
-
-# XADD with explicit ID (for replication or idempotency)
-XADD user-events 1700000001000-0 event login userId 123
-
-# Cap stream at 1000 entries (trimming)
-XADD user-events MAXLEN 1000 * event purchase userId 456 amount 29.99
-XADD user-events MAXLEN ~ 1000 * ...  # ~ means approximate trim (more efficient)
-
-# XLEN — stream length
-XLEN user-events
-```
-
----
-
-## Reading from a Stream
-
-```bash
-# XREAD — read new messages (fan-out broadcast — all readers get all messages)
-XREAD COUNT 10 STREAMS user-events 0         # Read from beginning
-XREAD COUNT 10 STREAMS user-events $         # Read only NEW messages from now
-XREAD COUNT 10 BLOCK 0 STREAMS user-events $ # Block forever until new message
-
-# XRANGE — read a range by ID
-XRANGE user-events - +                       # All entries
-XRANGE user-events 1700000001000-0 +         # From ID to end
-XRANGE user-events - + COUNT 10             # First 10 entries
-
-# XREVRANGE — reverse order
-XREVRANGE user-events + - COUNT 10          # Last 10 entries
-```
-
----
-
-## Consumer Groups — Coordinated Message Processing
-
-Consumer groups enable **work distribution**: multiple consumers in a group collaborate, with each message delivered to exactly one consumer in the group (like a queue).
-
-```bash
-# Create consumer group starting from the beginning
-XGROUP CREATE user-events payment-processors 0
-# or from "now" (ignore historical messages)
-XGROUP CREATE user-events payment-processors $ MKSTREAM
-
-# Consumer reads from group — ">" means "give me undelivered messages"
-XREADGROUP GROUP payment-processors worker-1 COUNT 10 STREAMS user-events >
-
-# Acknowledge message processed successfully
-XACK user-events payment-processors 1700000001000-0
-
-# Check pending messages (delivered but not ACKed)
-XPENDING user-events payment-processors - + 10
-```
-
-### Consumer Group Architecture
-
-```
-Stream: user-events
-│
-├── Consumer Group: payment-processors
-│   ├── worker-1 (processing 1700000001-0)
-│   ├── worker-2 (processing 1700000002-0)
-│   └── worker-3 (idle — waiting)
-│
-└── Consumer Group: analytics-pipeline   (gets ALL messages independently)
-    ├── analytics-1 (at 1700000001-0)
-    └── analytics-2 (at 1700000002-0)
-```
 
 **Key semantics:**
 - Within a group: each message → one consumer (load distribution)

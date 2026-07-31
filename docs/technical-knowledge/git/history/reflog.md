@@ -10,7 +10,12 @@ tags:
 - history
 - reflog
 ---
+
+import GitReflogSafetyDiagram from '@site/src/components/GitReflogSafetyDiagram';
+
 # `git reflog` — The Safety Net
+
+<GitReflogSafetyDiagram />
 
 ## What is the Reflog?
 

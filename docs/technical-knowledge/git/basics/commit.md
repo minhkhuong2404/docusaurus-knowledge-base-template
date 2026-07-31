@@ -10,7 +10,12 @@ tags:
 - basics
 - commit
 ---
+
+import GitCommitInternalsDiagram from '@site/src/components/GitCommitInternalsDiagram';
+
 # `git commit` — Recording Changes
+
+<GitCommitInternalsDiagram />
 
 ## What It Does
 

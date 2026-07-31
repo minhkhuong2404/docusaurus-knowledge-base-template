@@ -6,7 +6,13 @@ tags: [database, migrations, flyway, liquibase, schema, zero-downtime, versionin
 sidebar_position: 15
 ---
 
+import SchemaMigrationLifecycleDiagram from '@site/src/components/SchemaMigrationLifecycleDiagram';
+
 # Schema Migrations
+
+<SchemaMigrationLifecycleDiagram />
+
+---
 
 ## Why Managed Migrations?
 

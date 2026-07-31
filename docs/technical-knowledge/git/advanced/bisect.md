@@ -11,7 +11,12 @@ tags:
 - advanced
 - bisect
 ---
+
+import GitBisectDiagram from '@site/src/components/GitBisectDiagram';
+
 # `git bisect` — Finding the Broken Commit
+
+<GitBisectDiagram />
 
 ## What It Does
 

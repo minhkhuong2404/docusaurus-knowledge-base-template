@@ -6,7 +6,13 @@ tags: [database, performance, monitoring, slow-query, connection-pooling, metric
 sidebar_position: 11
 ---
 
+import DatabasePerformanceMonitoringDiagram from '@site/src/components/DatabasePerformanceMonitoringDiagram';
+
 # Performance & Monitoring
+
+<DatabasePerformanceMonitoringDiagram />
+
+---
 
 ## Key Performance Metrics
 

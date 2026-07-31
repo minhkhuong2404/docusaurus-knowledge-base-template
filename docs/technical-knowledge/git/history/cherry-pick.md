@@ -10,7 +10,12 @@ tags:
 - history
 - cherry-pick
 ---
+
+import GitCherryPickDiagram from '@site/src/components/GitCherryPickDiagram';
+
 # `git cherry-pick` — Applying Specific Commits
+
+<GitCherryPickDiagram />
 
 ## What It Does
 

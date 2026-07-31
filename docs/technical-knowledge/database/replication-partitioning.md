@@ -6,7 +6,19 @@ tags: [database, replication, sharding, partitioning, cap-theorem, scaling, lead
 sidebar_position: 6
 ---
 
+import DatabaseReplicationQuorumDiagram from '@site/src/components/DatabaseReplicationQuorumDiagram';
+import ReadReplicasFlowDiagram from '@site/src/components/ReadReplicasFlowDiagram';
+import HorizontalPartitioningDiagram from '@site/src/components/HorizontalPartitioningDiagram';
+import VerticalPartitioningDiagram from '@site/src/components/VerticalPartitioningDiagram';
+
 # Replication & Partitioning
+
+<DatabaseReplicationQuorumDiagram />
+<ReadReplicasFlowDiagram />
+<HorizontalPartitioningDiagram />
+<VerticalPartitioningDiagram />
+
+---
 
 ## Why Replicate?
 

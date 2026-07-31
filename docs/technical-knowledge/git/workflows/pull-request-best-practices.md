@@ -10,7 +10,12 @@ tags:
 - workflows
 - pull-request-best-practices
 ---
+
+import GitPullRequestBestPracticesDiagram from '@site/src/components/GitPullRequestBestPracticesDiagram';
+
 # Pull Request Best Practices
+
+<GitPullRequestBestPracticesDiagram />
 
 ## What Makes a Good Pull Request?
 

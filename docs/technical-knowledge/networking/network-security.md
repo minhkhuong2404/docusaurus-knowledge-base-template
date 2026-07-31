@@ -6,106 +6,26 @@ tags: [networking, security, tls, ddos, zero-trust, attack, firewall, mitm, csrf
 sidebar_position: 8
 ---
 
+import NetworkSecurityProtocolsDiagram from '@site/src/components/NetworkSecurityProtocolsDiagram';
+import DdosMitigationDiagram from '@site/src/components/DdosMitigationDiagram';
+
 # Network Security
+
+<NetworkSecurityProtocolsDiagram />
+
+<DdosMitigationDiagram />
+
+---
 
 ## TLS Certificate Management
 
 ### Certificate Lifecycle
-
-```
-1. Generate private key + CSR (Certificate Signing Request)
-2. Submit CSR to CA (Certificate Authority)
-3. CA validates domain ownership (DNS or HTTP challenge)
-4. CA signs certificate → contains public key + domain + expiry
-5. Install cert + private key on server
-6. Renew before expiry (typically 90 days for Let's Encrypt, 1-2 years for commercial)
-```
-
-```bash
-# Generate self-signed cert (dev only)
-openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
-
-# Generate CSR for production
-openssl genrsa -out private.key 2048
-openssl req -new -key private.key -out request.csr
-
-# Inspect certificate
-openssl x509 -in cert.pem -text -noout
-openssl s_client -connect api.example.com:443 -servername api.example.com
-
-# Let's Encrypt (automated)
-certbot certonly --dns-cloudflare -d api.example.com -d "*.example.com"
-```
-
-### Mutual TLS (mTLS)
-
-Standard TLS: only server presents a certificate (client authenticates via application credentials).
-
-mTLS: **both** client and server present certificates.
-
-```
-Client Certificate  ←──── Client Auth ────►  Server Certificate
-                         (both verified)
-
-Use cases:
-- Service-to-service auth in microservices (zero trust)
-- API access for automated clients / IoT devices
-- Internal network segments
-```
-
-```java
-// Spring Boot mTLS server config
-server:
-  ssl:
-    client-auth: need         # require client cert
-    trust-store: classpath:truststore.p12
-    trust-store-password: ${TRUST_STORE_PASSWORD}
-    trust-store-type: PKCS12
-
-// Spring WebClient mTLS client
-SslContext sslContext = SslContextBuilder.forClient()
-    .keyManager(privateKey, clientCert)       // client cert
-    .trustManager(caCert)                     // trust server cert
-    .build();
-```
-
----
-
-## Common Network Attacks
-
-### Man-in-the-Middle (MitM)
-
-Attacker intercepts communication between client and server.
-
-```
-Client ──► [Attacker] ──► Server
-           Reads, modifies, relays traffic
-```
 
 **Mitigations:**
 - TLS with certificate validation (never skip cert verification!)
 - HSTS (prevents SSL stripping)
 - Certificate Pinning (app hardcodes expected cert)
 - mTLS (both sides authenticated)
-
-```java
-// ❌ NEVER in production — disables cert validation
-.trustManager(InsecureTrustManagerFactory.INSTANCE)
-
-// ✅ Validate server cert
-SslContext ssl = SslContextBuilder.forClient()
-    .trustManager(caCertPath.toFile())  // specific CA
-    .build();
-```
-
-### SSL Stripping
-
-Attacker downgrades HTTPS to HTTP by intercepting the initial HTTP request.
-
-```
-Client ──HTTP──► [Attacker] ──HTTPS──► Server
-                 Reads plaintext HTTP
-```
 
 **Mitigation**: HSTS (`Strict-Transport-Security: max-age=31536000`) — browser always uses HTTPS. HSTS preload list for maximum protection.
 

@@ -6,9 +6,15 @@ description: Redis as a primary in-memory database — persistence mechanisms (R
 tags: [redis, database, in-memory, persistence, rdb, aof, backend]
 ---
 
+import RedisPersistenceMechanicsDiagram from '@site/src/components/RedisPersistenceMechanicsDiagram';
+
 # Redis as In-Memory Database
 
 While commonly used as a cache, Redis can serve as a **primary database** for workloads where speed matters more than ACID guarantees and where the dataset fits in RAM. Understanding its persistence and durability characteristics is essential for senior engineers.
+
+<RedisPersistenceMechanicsDiagram />
+
+---
 
 ---
 

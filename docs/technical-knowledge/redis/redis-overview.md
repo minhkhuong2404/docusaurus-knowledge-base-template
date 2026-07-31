@@ -6,6 +6,9 @@ description: Redis architecture internals, single-threaded model, I/O multiplexi
 tags: [redis, in-memory, cache, backend, architecture]
 ---
 
+import RedisReactorPatternDiagram from '@site/src/components/RedisReactorPatternDiagram';
+import RedisClusterReplicationDiagram from '@site/src/components/RedisClusterReplicationDiagram';
+
 # Redis: Overview & Architecture
 
 Redis (Remote Dictionary Server) is an open-source, in-memory data structure store used as a database, cache, message broker, and streaming engine. Its combination of simplicity, speed, and rich data structures makes it ubiquitous in production systems.
@@ -23,94 +26,13 @@ The tradeoff? When the librarian leaves work (the server reboots), her short-ter
 
 Redis is often described as "single-threaded" — but this requires nuance:
 
-```
-Single-threaded event loop (command processing)
-         ↓
-    Epoll/Kqueue (I/O multiplexing — handles thousands of connections)
-         ↓
-    Background threads (AOF fsync, object eviction, lazy delete)
-```
-
-### Single-Threaded Command Execution
-
-All Redis commands execute **sequentially in a single thread**. This design:
-- Eliminates locking overhead (no mutexes needed for data structures)
-- Makes all operations **atomic by default**
-- Simplifies reasoning about state consistency
-- Avoids context-switching overhead between threads
-
-**Redis 6.0+:** Added **I/O threading** — network reads/writes are parallelized while command *execution* remains single-threaded. This removes the I/O bottleneck for high-connection workloads.
-
-### 🧠 Senior Deep Dive: I/O Multiplexing with Epoll
-
-How can a single-threaded server handle 100,000 concurrent client connections without crashing? Through Linux `epoll` (or macOS `kqueue`).
-
-In a classic blocking server (like older Tomcat), every connected client consumes one entire OS thread. If 10,000 clients connect, the Linux Kernel has to instantly spawn 10,000 heavy threads and continuously rapidly switch between them (Context Switching). The CPU chokes to death just managing threads.
-
-Redis reverses this using the **Reactor Pattern**:
-```text
-[100,000 Connected Clients] 
-         │ (Network Sockets)
-         ▼
-[ epoll() Syscall Kernel Space ] ── "Only these 4 sockets actually sent HTTP bytes in the last microsecond"
-         │
-         ▼
-[ Event Loop Queue ]
-         │
-         ▼
-[ Single Main Thread ] ── Pops the 4 commands, processes them sequentially instantly, and loops.
-```
-Redis relies on the fact that reading from RAM takes nanoseconds. Because command execution is so incredibly fast, running them one-by-one in a single queue is actually exponentially faster than dealing with the massive CPU overhead of thread synchronization, Locking, and Context Switching.
-
-## Memory Architecture
-
-Redis stores all data in RAM (optionally persisted to disk):
-
-```
-Memory Layout:
-┌─────────────────────────────────────┐
-│  Redis Object (robj)                │
-│  ├── type  (string, list, hash...)  │
-│  ├── encoding (ziplist, hashtable)  │
-│  └── ptr → actual data              │
-└─────────────────────────────────────┘
-```
-
-### Memory Encoding Optimization
-
-Redis automatically uses **compact encodings** for small collections to save memory:
-
-| Data Type | Small Encoding | Large Encoding | Threshold |
-|-----------|---------------|----------------|-----------|
-| Hash | `ziplist`/`listpack` | `hashtable` | >128 fields or field >64 bytes |
-| List | `listpack`/`quicklist` | `quicklist` | >128 elements or element >64 bytes |
-| Set | `listpack`/`intset` | `hashtable` | >128 elements |
-| Sorted Set | `listpack` | `skiplist` + `hashtable` | >128 elements |
-| String | `int` (raw int) | `embstr`/`raw` | >20 chars |
-
-**Why this matters:** A Redis hash with &lt;64 fields uses a flat array (`ziplist`) instead of a full hash table — dramatically reducing memory overhead. Designing your key structure to stay within these thresholds is a key performance optimization.
+<RedisReactorPatternDiagram />
 
 ---
 
-## Redis Data Persistence
+## Redis Architecture Patterns
 
-| Mode | Mechanism | Recovery Point | Use Case |
-|------|-----------|----------------|----------|
-| **RDB** (Snapshot) | Fork + binary dump at intervals | At last snapshot | Fast recovery, small files |
-| **AOF** (Append-Only File) | Log every write command | Near real-time | Durability, audit trail |
-| **No persistence** | Pure in-memory | Data lost on restart | Cache-only deployments |
-| **RDB + AOF** | Both modes combined | AOF granularity | Production recommended |
-
-```bash
-# RDB: save snapshot every 60s if ≥1000 changes
-save 60 1000
-
-# AOF: sync every second (compromise between durability and performance)
-appendfsync everysec
-# Options: always (safest), everysec (default), no (fastest, risky)
-```
-
-**RDB fork() latency:** When Redis forks to create a snapshot, the kernel must copy page tables. On a 10 GB instance, this fork can cause a **50–100ms latency spike**. Use `latency monitor` to detect this.
+<RedisClusterReplicationDiagram />() latency:** When Redis forks to create a snapshot, the kernel must copy page tables. On a 10 GB instance, this fork can cause a **50–100ms latency spike**. Use `latency monitor` to detect this.
 
 ---
 
@@ -120,11 +42,7 @@ appendfsync everysec
 Single Redis instance — simple but single point of failure.
 
 ### Sentinel (High Availability)
-```
-Master ──→ Replica 1
-       ──→ Replica 2
-Sentinel 1 / Sentinel 2 / Sentinel 3  (quorum-based monitoring)
-```
+
 - Sentinels vote to promote a replica if master fails
 - Client libraries use Sentinel to discover the current master
 - **Failover time:** typically 10–30 seconds

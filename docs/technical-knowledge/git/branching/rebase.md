@@ -11,7 +11,12 @@ tags:
 - branching
 - rebase
 ---
+
+import GitRebaseInternalsDiagram from '@site/src/components/GitRebaseInternalsDiagram';
+
 # `git rebase` — Replaying Commits
+
+<GitRebaseInternalsDiagram />
 
 ## What It Does
 

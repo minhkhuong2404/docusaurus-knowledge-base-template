@@ -6,9 +6,15 @@ description: Distributed caching patterns with Redis — cache-aside, write-thro
 tags: [redis, cache, distributed-cache, backend, spring, performance]
 ---
 
+import RedisCachePatternsDiagram from '@site/src/components/RedisCachePatternsDiagram';
+
 # Redis as Distributed Cache
 
 Redis is the most widely used distributed cache because of its speed, rich data structures, and built-in TTL. Understanding caching patterns and their failure modes is one of the most common senior interview topics.
+
+<RedisCachePatternsDiagram />
+
+---
 
 #### 👶 Beginner Concept: The "Fast Lane Desk"
 Imagine you run an extremely popular DMV. 

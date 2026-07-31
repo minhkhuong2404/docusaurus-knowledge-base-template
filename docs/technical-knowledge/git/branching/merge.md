@@ -11,7 +11,12 @@ tags:
 - branching
 - merge
 ---
+
+import GitMergeMechanicsDiagram from '@site/src/components/GitMergeMechanicsDiagram';
+
 # `git merge` — Combining Branches
+
+<GitMergeMechanicsDiagram />
 
 ## What It Does
 

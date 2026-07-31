@@ -6,7 +6,16 @@ tags: [networking, interview, questions, preparation, system-design]
 sidebar_position: 19
 ---
 
+import NetworkingInterviewScenariosDiagram from '@site/src/components/NetworkingInterviewScenariosDiagram';
+import TcpStateTransitionDiagram from '@site/src/components/TcpStateTransitionDiagram';
+
 # Networking Interview Questions — Master List
+
+<NetworkingInterviewScenariosDiagram />
+
+<TcpStateTransitionDiagram />
+
+---
 
 A curated compilation of the most common and important networking questions in software engineering interviews — from junior to senior/staff level. Each answer is concise and interview-ready.
 

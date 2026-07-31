@@ -6,189 +6,22 @@ tags: [networking, ssh, smtp, ftp, mqtt, amqp, protocols, reference, application
 sidebar_position: 15
 ---
 
+import ApplicationProtocolsDiagram from '@site/src/components/ApplicationProtocolsDiagram';
+import GrpcVsRestDiagram from '@site/src/components/GrpcVsRestDiagram';
+
 # Application Protocols Reference
+
+<ApplicationProtocolsDiagram />
+
+<GrpcVsRestDiagram />
+
+---
 
 ## SSH — Secure Shell (Port 22)
 
 SSH provides **encrypted remote shell access**, file transfer, and tunneling.
 
 ### How SSH Works
-
-```
-Client → Server:
-  1. TCP connection on port 22
-  2. Protocol version exchange
-  3. Key exchange (Diffie-Hellman): establish session keys
-  4. Server authenticates itself (host key — prevents MitM on first connect)
-  5. Client authenticates: password or public key
-
-Key-based authentication:
-  Client has: private key (~/.ssh/id_rsa)
-  Server has: public key (~/.ssh/authorized_keys)
-  Client proves it has the private key → no password needed
-```
-
-### SSH Features
-
-```bash
-# Remote shell
-ssh user@server.com
-ssh -p 2222 user@server.com   # custom port
-ssh -i ~/.ssh/mykey user@server.com  # specify key
-
-# Copy files
-scp file.txt user@server.com:/home/user/
-scp -r dir/ user@server.com:/home/user/
-sftp user@server.com          # interactive file transfer
-
-# Port forwarding (tunneling)
-# Local: forward local port to remote service
-ssh -L 5432:localhost:5432 user@server.com  # access remote PostgreSQL locally
-# → connect to localhost:5432, traffic tunneled to remote server's port 5432
-
-# Remote: expose local service via remote server
-ssh -R 8080:localhost:8080 user@server.com
-# → requests to server:8080 forward to your localhost:8080
-
-# Dynamic: SOCKS proxy
-ssh -D 1080 user@server.com
-# → configure browser to use SOCKS5 localhost:1080 → browse from server's perspective
-
-# Jump host / ProxyJump
-ssh -J bastion.example.com internal-server.internal
-```
-
-### SSH Configuration
-
-```
-# ~/.ssh/config
-Host bastion
-    HostName bastion.example.com
-    User ec2-user
-    IdentityFile ~/.ssh/mykey.pem
-
-Host internal
-    HostName 10.0.0.100
-    User ubuntu
-    ProxyJump bastion
-    IdentityFile ~/.ssh/mykey.pem
-    StrictHostKeyChecking yes
-    ServerAliveInterval 60
-    ServerAliveCountMax 3
-```
-
----
-
-## SMTP — Simple Mail Transfer Protocol (Port 25 / 587 / 465)
-
-Used for **sending email** between mail servers and from clients to servers.
-
-```
-Port 25:  SMTP server-to-server (MTA relay)
-Port 587: Submission (client to server, STARTTLS required)
-Port 465: SMTPS (SMTP over TLS, deprecated but widely used)
-
-SMTP Session:
-Client → EHLO myserver.com              (introduce myself)
-Server → 250 Hello, capabilities list
-Client → AUTH LOGIN or PLAIN ...        (authenticate)
-Client → MAIL FROM:<sender@example.com>
-Client → RCPT TO:<recipient@example.com>
-Client → DATA
-Client → Subject: Hello
-         From: sender@example.com
-         To: recipient@example.com
-         
-         Message body here
-         .                              (single dot = end of message)
-Server → 250 OK: queued as abc123
-Client → QUIT
-```
-
-### Email Delivery Verification (Anti-Spam)
-
-| Record | Purpose | Example |
-|--------|---------|---------|
-| **SPF** | Authorized sending servers | `v=spf1 include:sendgrid.net -all` |
-| **DKIM** | Cryptographic signature on emails | Key in DNS TXT record |
-| **DMARC** | Policy for SPF/DKIM failures | `v=DMARC1; p=reject; rua=...` |
-
-```java
-// Spring Boot email with JavaMailSender
-@Service
-public class EmailService {
-    @Autowired
-    private JavaMailSender mailSender;
-
-    public void sendEmail(String to, String subject, String body) {
-        MimeMessage msg = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(msg, true, "UTF-8");
-
-        helper.setTo(to);
-        helper.setFrom("noreply@example.com");
-        helper.setSubject(subject);
-        helper.setText(body, true);   // true = HTML
-
-        mailSender.send(msg);
-    }
-}
-```
-
-```yaml
-spring:
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: ${GMAIL_USER}
-    password: ${GMAIL_APP_PASSWORD}
-    properties:
-      mail.smtp.auth: true
-      mail.smtp.starttls.enable: true
-```
-
----
-
-## FTP / SFTP / FTPS (Port 21)
-
-FTP transfers files but has major problems:
-- ❌ No encryption (credentials in plaintext)
-- ❌ Active mode requires server to initiate connections back to client (NAT/firewall issues)
-- ❌ Separate control (21) and data (20 or ephemeral) connections
-
-```
-FTP Modes:
-  Active:  client sends PORT command → server connects back to client
-           → blocked by most firewalls/NAT
-  Passive: client sends PASV → server opens a data port → client connects
-           → works through NAT (client initiates both connections)
-```
-
-**Use instead:**
-- **SFTP** (SSH File Transfer Protocol over SSH port 22) — not FTP with TLS
-- **FTPS** (FTP over TLS) — FTP with encryption (still has NAT issues)
-- **rsync over SSH** for synchronization
-- **HTTPS** upload for web-based file transfer
-
----
-
-## MQTT — Message Queue Telemetry Transport (Port 1883 / 8883 TLS)
-
-Lightweight pub/sub protocol designed for **IoT and constrained devices**.
-
-```
-Architecture:
-  Publisher ──message──► [Broker] ──message──► Subscriber(s)
-  Device publishes to topic; subscribers receive if interested
-
-Publish:
-  topic: "sensors/room1/temperature"
-  payload: {"value": 23.5, "unit": "celsius", "timestamp": 1710000000}
-  QoS: 1 (at least once)
-
-Subscribe:
-  "sensors/+/temperature"   → + wildcard matches one level
-  "sensors/#"               → # wildcard matches multiple levels
-```
 
 ### Quality of Service (QoS)
 
@@ -212,70 +45,6 @@ Used by: AWS IoT, Azure IoT Hub, Facebook Messenger, home automation (Home Assis
 ## AMQP — Advanced Message Queuing Protocol (Port 5672 / 5671 TLS)
 
 Enterprise messaging protocol. Implemented by **RabbitMQ**.
-
-```
-Concepts:
-  Exchange  → routing (direct, fanout, topic, headers)
-  Queue     → message buffer
-  Binding   → exchange → queue routing rules
-
-Message flow:
-  Producer → Exchange → [routing] → Queue → Consumer
-
-Exchange types:
-  Direct:  route by exact routing key
-  Fanout:  broadcast to all bound queues (pub/sub)
-  Topic:   route by routing key pattern (*.error, logs.#)
-  Headers: route by message header attributes
-```
-
-```java
-// Spring AMQP (RabbitMQ)
-@Configuration
-public class RabbitConfig {
-    @Bean
-    TopicExchange ordersExchange() { return new TopicExchange("orders"); }
-
-    @Bean
-    Queue orderCreatedQueue() { return QueueBuilder.durable("order.created").build(); }
-
-    @Bean
-    Binding binding(Queue q, TopicExchange ex) {
-        return BindingBuilder.bind(q).to(ex).with("order.created.*");
-    }
-}
-
-// Publisher
-rabbitTemplate.convertAndSend("orders", "order.created.US", orderEvent);
-
-// Consumer
-@RabbitListener(queues = "order.created")
-public void handleOrderCreated(OrderCreatedEvent event) {
-    inventoryService.reserve(event.getItems());
-}
-```
-
----
-
-## LDAP — Lightweight Directory Access Protocol (Port 389 / 636 TLS)
-
-Protocol for accessing **directory services** (user accounts, groups, permissions).
-
-```
-LDAP Directory Tree:
-dc=example,dc=com
-  └── ou=users
-        ├── cn=alice,ou=users,dc=example,dc=com
-        └── cn=bob,ou=users,dc=example,dc=com
-  └── ou=groups
-        └── cn=developers,ou=groups,dc=example,dc=com
-
-Operations:
-  Bind:    authenticate
-  Search:  query directory (most common)
-  Modify:  update entry
-  Add/Del: create/delete entries
-```
 
 Used for: Active Directory (Microsoft), OpenLDAP, SSO (single sign-on).
 

@@ -10,7 +10,12 @@ tags:
 - history
 - reset-revert
 ---
+
+import GitResetVsRevertDiagram from '@site/src/components/GitResetVsRevertDiagram';
+
 # `git reset` & `git revert` — Undoing Changes
+
+<GitResetVsRevertDiagram />
 
 ## The Core Difference
 

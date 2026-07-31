@@ -11,7 +11,12 @@ tags:
 - workflows
 - trunk-based
 ---
+
+import GitTrunkBasedDiagram from '@site/src/components/GitTrunkBasedDiagram';
+
 # Trunk-Based Development — High-Frequency Delivery
+
+<GitTrunkBasedDiagram />
 
 ## What is Trunk-Based Development?
 

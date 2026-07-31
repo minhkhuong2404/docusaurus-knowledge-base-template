@@ -6,7 +6,16 @@ tags: [networking, authentication, oauth2, jwt, oidc, api-security, spring-secur
 sidebar_position: 17
 ---
 
+import ApiAuthSecurityDiagram from '@site/src/components/ApiAuthSecurityDiagram';
+import CorsProtocolDiagram from '@site/src/components/CorsProtocolDiagram';
+
 # API Authentication & Authorization
+
+<ApiAuthSecurityDiagram />
+
+<CorsProtocolDiagram />
+
+---
 
 ## Authentication vs Authorization
 
@@ -21,209 +30,6 @@ sidebar_position: 17
 
 The simplest mechanism — a secret token passed with each request.
 
-```http
-GET /api/orders HTTP/1.1
-Host: api.example.com
-X-API-Key: sk_live_abc123xyz789
-```
-
-```java
-// Spring: API key filter
-@Component
-public class ApiKeyFilter extends OncePerRequestFilter {
-    private final String API_KEY_HEADER = "X-API-Key";
-
-    @Override
-    protected void doFilterInternal(HttpServletRequest req,
-            HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
-        String key = req.getHeader(API_KEY_HEADER);
-        if (!apiKeyService.isValid(key)) {
-            res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid API Key");
-            return;
-        }
-        chain.doFilter(req, res);
-    }
-}
-```
-
-**Pros:** Simple, stateless, easy to revoke per client.
-**Cons:** No user identity, no fine-grained scope, must be stored securely (treat as password).
-
----
-
-## JWT — JSON Web Token
-
-A self-contained, signed token that carries claims about the subject.
-
-### JWT Structure
-
-```
-eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9   ← Header (Base64url)
-.
-eyJzdWIiOiJ1c2VyXzEyMyIsImVtYWlsIjoiYW  ← Payload (Base64url)
-xpY2VAZXhhbXBsZS5jb20iLCJyb2xlcyI6WyJV
-U0VSIl0sImlhdCI6MTcwMDAwMDAwMCwiZXhwIj
-oxNzAwMDAzNjAwfQ
-.
-SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQ  ← Signature
-```
-
-### Decoded Header
-
-```json
-{
-  "alg": "RS256",   // RSA with SHA-256 — asymmetric (preferred)
-  "typ": "JWT"
-}
-```
-
-### Decoded Payload (Claims)
-
-```json
-{
-  "sub": "user_123",                     // Subject (user ID)
-  "iss": "https://auth.example.com",     // Issuer
-  "aud": "https://api.example.com",      // Audience
-  "email": "alice@example.com",
-  "roles": ["USER", "ADMIN"],
-  "scope": "read:orders write:orders",
-  "iat": 1700000000,                     // Issued At (Unix timestamp)
-  "exp": 1700003600,                     // Expiry (1 hour)
-  "jti": "unique-token-id-abc123"        // JWT ID (for revocation)
-}
-```
-
-### Signing Algorithms
-
-| Algorithm | Type | Key | Use Case |
-|-----------|------|-----|---------|
-| `HS256` | Symmetric | Shared secret | Single-service (auth + API = same party) |
-| `RS256` | Asymmetric | RSA private/public key | Auth server signs, APIs verify with public key |
-| `ES256` | Asymmetric | ECDSA | Smaller signatures, same security as RS256 |
-| `RS512` | Asymmetric | RSA (stronger) | Highest security requirement |
-
-**Best practice:** Use `RS256` or `ES256` — the auth server holds the private key, all APIs validate with the public key (no shared secret).
-
-### JWT Validation Steps
-
-```
-1. Parse header → extract algorithm
-2. Verify signature (public key / shared secret)
-3. Check `exp` → not expired
-4. Check `iss` → matches expected issuer
-5. Check `aud` → contains this API's identifier
-6. Check `nbf` → "not before" time if present
-7. Check `jti` → not in revocation list (if blacklisting)
-```
-
-### Spring Security JWT Validation
-
-```java
-// application.yml
-spring:
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: https://auth.example.com      # fetches JWKS automatically
-          # OR: provide public key directly
-          public-key-location: classpath:public.pem
-
-// Security config
-@Configuration
-@EnableWebSecurity
-public class SecurityConfig {
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf(AbstractHttpConfigurer::disable)
-            .sessionManagement(s -> s.sessionCreationPolicy(STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/actuator/health").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/orders").hasAuthority("SCOPE_read:orders")
-                .requestMatchers(HttpMethod.POST, "/api/orders").hasAuthority("SCOPE_write:orders")
-                .anyRequest().authenticated()
-            )
-            .oauth2ResourceServer(oauth2 -> oauth2
-                .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtConverter()))
-            );
-        return http.build();
-    }
-
-    @Bean
-    public JwtAuthenticationConverter jwtConverter() {
-        JwtGrantedAuthoritiesConverter converter = new JwtGrantedAuthoritiesConverter();
-        converter.setAuthoritiesClaimName("roles");
-        converter.setAuthorityPrefix("ROLE_");
-
-        JwtAuthenticationConverter jwtConverter = new JwtAuthenticationConverter();
-        jwtConverter.setJwtGrantedAuthoritiesConverter(converter);
-        return jwtConverter;
-    }
-}
-
-// Access claims in controller
-@GetMapping("/api/profile")
-public ProfileDto getProfile(@AuthenticationPrincipal Jwt jwt) {
-    String userId = jwt.getSubject();
-    String email = jwt.getClaimAsString("email");
-    List<String> roles = jwt.getClaimAsStringList("roles");
-    return new ProfileDto(userId, email, roles);
-}
-```
-
----
-
-## OAuth 2.0
-
-An **authorization framework** allowing a third-party application to obtain limited access to a service on behalf of a user — without sharing credentials.
-
-### Core Roles
-
-```
-Resource Owner   = User (Alice)
-Client           = Your application (mobile app, SPA)
-Authorization Server = Auth service (Keycloak, Auth0, Okta)
-Resource Server  = API server (your Spring Boot app)
-```
-
-### Grant Types (Flows)
-
-#### Authorization Code Flow (Web Apps, Mobile)
-
-The most secure flow. Used when a user logs in via browser.
-
-```
-User                Client App          Auth Server         Resource Server
- │                      │                    │                    │
- │  Click "Login"        │                    │                    │
- │ ────────────────────► │                    │                    │
- │                       │  redirect to /authorize?               │
- │                       │  client_id=X&                          │
- │                       │  redirect_uri=https://app/callback&    │
- │                       │  scope=read:orders&                    │
- │                       │  state=csrf_token&                     │
- │                       │  code_challenge=PKCE_hash              │
- │ ◄──────────────────── │ ─────────────────►│                    │
- │  Show login page       │                  │                    │
- │  Enter credentials     │                  │                    │
- │ ────────────────────────────────────────► │                    │
- │  Redirect to:          │                  │                    │
- │  app/callback?code=AUTHCODE               │                    │
- │ ◄──────────────────────────────────────── │                    │
- │                       │ POST /token       │                    │
- │                       │ code=AUTHCODE     │                    │
- │                       │ code_verifier=PKCEver                  │
- │                       │ ────────────────►│                    │
- │                       │ ◄── access_token, refresh_token        │
- │                       │                  │                    │
- │                       │ GET /orders                            │
- │                       │ Authorization: Bearer <access_token>   │
- │                       │ ─────────────────────────────────────► │
- │                       │ ◄──── orders JSON ─────────────────── │
-```
-
 :::tip[Refresh Token Security & Session Invalidation]
 For detailed patterns on managing long-lived refresh tokens, refresh token rotation (RTR), stolen token reuse detection, emergency account compromise response, and multi-device session invalidation during password updates, see [Refresh Token Security & Multi-Device Session Invalidation](../security/refresh-token-security-invalidation.md).
 :::
@@ -231,34 +37,6 @@ For detailed patterns on managing long-lived refresh tokens, refresh token rotat
 #### PKCE (Proof Key for Code Exchange)
 
 Required for public clients (SPAs, mobile apps) that can't keep a client secret:
-
-```
-1. Client generates: code_verifier = random 43-128 char string
-2. Client computes: code_challenge = BASE64URL(SHA256(code_verifier))
-3. Include code_challenge in /authorize request
-4. Include code_verifier in /token request
-5. Auth server verifies: SHA256(code_verifier) == code_challenge
-```
-
-#### Client Credentials Flow (Machine-to-Machine)
-
-For service-to-service calls — no user involved:
-
-```
-Service A                    Auth Server              Service B
-    │                             │                       │
-    │  POST /token                │                       │
-    │  grant_type=client_credentials                      │
-    │  client_id=svc-a            │                       │
-    │  client_secret=secret       │                       │
-    │ ─────────────────────────► │                       │
-    │ ◄── access_token ────────── │                       │
-    │                             │                       │
-    │  GET /api/data              │                       │
-    │  Authorization: Bearer <token>                      │
-    │ ──────────────────────────────────────────────────► │
-    │ ◄── data ─────────────────────────────────────────  │
-```
 
 ```java
 // Spring Boot: client credentials with WebClient

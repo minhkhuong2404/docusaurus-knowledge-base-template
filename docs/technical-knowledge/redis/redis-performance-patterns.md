@@ -6,7 +6,11 @@ description: Advanced Redis patterns — distributed locking, rate limiting, ses
 tags: [redis, performance, patterns, distributed-lock, rate-limiting, backend]
 ---
 
+import RedisDistributedLockDiagram from '@site/src/components/RedisDistributedLockDiagram';
+
 # Redis Performance, Patterns & Production Design
+
+<RedisDistributedLockDiagram />
 
 ---
 

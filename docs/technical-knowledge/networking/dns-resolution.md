@@ -6,7 +6,19 @@ tags: [networking, dns, resolution, records, caching, dnssec, nameserver]
 sidebar_position: 6
 ---
 
+import DnsResolutionFlowDiagram from '@site/src/components/DnsResolutionFlowDiagram';
+import DnsRecordTypesDiagram from '@site/src/components/DnsRecordTypesDiagram';
+
+
+
 # DNS Resolution
+
+<DnsResolutionFlowDiagram />
+
+<DnsRecordTypesDiagram />
+
+---
+
 
 ## What is DNS?
 

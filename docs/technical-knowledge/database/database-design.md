@@ -7,7 +7,13 @@ tags: [database, design, normalization, erd, 1nf, 2nf, 3nf, bcnf, schema]
 sidebar_position: 9
 ---
 
+import DatabaseDesignNormalizationDiagram from '@site/src/components/DatabaseDesignNormalizationDiagram';
+
 # Database Design & Normalization
+
+<DatabaseDesignNormalizationDiagram />
+
+---
 
 ## SQL vs NoSQL Decision Guide
 

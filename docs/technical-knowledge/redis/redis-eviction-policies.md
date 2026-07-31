@@ -6,11 +6,17 @@ description: Comprehensive guide to Redis maxmemory algorithms (LRU, LFU, Random
 tags: [redis, eviction, lru, lfu, cache, backend]
 ---
 
+import RedisEvictionPoliciesDiagram from '@site/src/components/RedisEvictionPoliciesDiagram';
+
 # 🗑️ Redis Eviction Policies & Maxmemory
 
 What happens when Redis runs exactly out of its assigned RAM? If you don't configure this correctly, your entire caching infrastructure will crash with `OOM command not allowed` exceptions.
 
 Redis utilizes **Eviction Policies** to mathematically determine which keys should be sacrificed to make room for new data.
+
+<RedisEvictionPoliciesDiagram />
+
+---
 
 ---
 

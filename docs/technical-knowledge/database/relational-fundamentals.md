@@ -6,7 +6,13 @@ tags: [database, sql, relational, fundamentals, joins, keys]
 sidebar_position: 2
 ---
 
+import DatabaseDesignNormalizationDiagram from '@site/src/components/DatabaseDesignNormalizationDiagram';
+
 # Relational Fundamentals
+
+<DatabaseDesignNormalizationDiagram />
+
+---
 
 ## The Relational Model
 

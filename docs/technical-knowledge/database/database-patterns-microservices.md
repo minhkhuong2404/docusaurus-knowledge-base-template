@@ -6,7 +6,15 @@ tags: [database, microservices, outbox, saga, cqrs, event-sourcing, distributed,
 sidebar_position: 18
 ---
 
+import TransactionalOutboxDiagram from '@site/src/components/TransactionalOutboxDiagram';
+import SagaCoordinationDiagram from '@site/src/components/SagaCoordinationDiagram';
+
 # Database Patterns for Microservices
+
+<TransactionalOutboxDiagram />
+<SagaCoordinationDiagram />
+
+---
 
 ## Database-Per-Service Pattern
 

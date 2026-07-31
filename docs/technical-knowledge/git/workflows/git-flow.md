@@ -10,7 +10,12 @@ tags:
 - workflows
 - git-flow
 ---
+
+import GitFlowWorkflowDiagram from '@site/src/components/GitFlowWorkflowDiagram';
+
 # Git Flow — Branch Strategy for Scheduled Releases
+
+<GitFlowWorkflowDiagram />
 
 ## What is Git Flow?
 
@@ -21,106 +26,6 @@ It is well-suited for: libraries, enterprise software, mobile apps, and any proj
 ---
 
 ## Branch Structure
-
-```
-main         ← Production-ready code only. Tagged at every release.
-develop      ← Integration branch. All features merge here.
-feature/*    ← One branch per feature/story. Branch from develop.
-release/*    ← Release preparation. Branch from develop, merge to main + develop.
-hotfix/*     ← Critical production fixes. Branch from main, merge to main + develop.
-```
-
----
-
-## Branch Lifecycle
-
-### Feature Branches
-
-```bash
-# Start a feature
-git switch develop
-git pull --rebase origin develop
-git switch -c feature/JIRA-123-add-export
-
-# ... develop, commit, push ...
-
-# Finish: merge back to develop
-git switch develop
-git pull --rebase origin develop
-git merge --no-ff feature/JIRA-123-add-export \
-  -m "feat(transactions): merge export feature (JIRA-113)"
-git push origin develop
-
-# Delete the feature branch
-git branch -d feature/JIRA-123-add-export
-git push origin --delete feature/JIRA-123-add-export
-```
-
-### Release Branches
-
-```bash
-# Start a release branch from develop when ready to ship
-git switch develop
-git switch -c release/1.2.0
-
-# Bump version, update changelog, final QA fixes only
-mvn versions:set -DnewVersion=1.2.0
-
-git commit -am "chore: bump version to 1.2.0"
-
-# Fix any bugs found in release testing on this branch
-git commit -m "fix: last-minute edge case in export"
-
-# Finish: merge to main AND back to develop
-git switch main
-git merge --no-ff release/1.2.0 -m "chore: release v1.2.0"
-git tag -a v1.2.0 -m "Release 1.2.0"
-git push origin main --tags
-
-git switch develop
-git merge --no-ff release/1.2.0 -m "chore: back-merge release v1.2.0 into develop"
-git push origin develop
-
-git branch -d release/1.2.0
-git push origin --delete release/1.2.0
-```
-
-### Hotfix Branches
-
-```bash
-# Critical bug in production — branch from main (not develop)
-git switch main
-git switch -c hotfix/JIRA-999-fix-npe
-
-git commit -m "fix(transactions): resolve NPE on null description"
-
-# Merge to main
-git switch main
-git merge --no-ff hotfix/JIRA-999-fix-npe -m "fix: NPE on null description (JIRA-999)"
-git tag -a v1.2.1 -m "Hotfix v1.2.1"
-git push origin main --tags
-
-# Merge to develop (keep develop in sync)
-git switch develop
-git merge --no-ff hotfix/JIRA-999-fix-npe -m "fix: back-merge hotfix v1.2.1 to develop"
-git push origin develop
-
-git branch -d hotfix/JIRA-999-fix-npe
-```
-
----
-
-## Full Workflow Diagram
-
-```
-main:     ──●───────────────────●──────●──────────────●
-            v1.0.0          v1.2.0   v1.2.1        v1.3.0
-             │                 ↑  ↑     ↑  ↑           ↑
-             │                /  /     /  /           /
-develop:  ───●──●──●──●──●──●  /  ────●  /──●──●──●──●
-              \      \      release    hotfix  \
-feature-A:    ●──●──●┘       1.2.0     1.2.1  feature-B
-```
 
 ---
 

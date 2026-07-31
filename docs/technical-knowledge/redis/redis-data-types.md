@@ -6,9 +6,15 @@ description: Complete guide to Redis data types — Strings, Hashes, Lists, Sets
 tags: [redis, data-types, backend, cache]
 ---
 
+import RedisDataTypesDiagram from '@site/src/components/RedisDataTypesDiagram';
+
 # Redis Data Types & Value Types
 
 Redis supports 10 distinct data types, each with specific encoding strategies and use cases. Understanding which type to use — and how Redis encodes it internally — is critical for performance and memory optimization.
+
+<RedisDataTypesDiagram />
+
+---
 
 ---
 

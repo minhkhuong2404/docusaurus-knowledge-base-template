@@ -11,7 +11,12 @@ tags:
 - collaboration
 - remotes
 ---
+
+import GitRemotesDiagram from '@site/src/components/GitRemotesDiagram';
+
 # Remotes — Managing Remote Repositories
+
+<GitRemotesDiagram />
 
 ## What is a Remote?
 

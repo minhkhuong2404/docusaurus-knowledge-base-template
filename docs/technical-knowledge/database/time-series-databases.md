@@ -6,7 +6,13 @@ tags: [database, time-series, influxdb, timescaledb, prometheus, iot, metrics, m
 sidebar_position: 19
 ---
 
+import TimeSeriesDatabaseEngineDiagram from '@site/src/components/TimeSeriesDatabaseEngineDiagram';
+
 # Time-Series Databases
+
+<TimeSeriesDatabaseEngineDiagram />
+
+---
 
 ## What Is Time-Series Data?
 

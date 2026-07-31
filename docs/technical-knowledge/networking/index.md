@@ -6,7 +6,19 @@ tags: [networking, overview]
 sidebar_position: 1
 ---
 
+import NetworkIndexOverviewDiagram from '@site/src/components/NetworkIndexOverviewDiagram';
+import NetworkPacketEncapsulationDiagram from '@site/src/components/NetworkPacketEncapsulationDiagram';
+
+
+
 # 🌐 Networking Knowledge Base
+
+<NetworkIndexOverviewDiagram />
+
+<NetworkPacketEncapsulationDiagram />
+
+---
+
 
 A structured guide covering everything you need to know about computer networking — from low-level protocols to distributed API design — with Java/Spring examples and interview questions throughout.
 

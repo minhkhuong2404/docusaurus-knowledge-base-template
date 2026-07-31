@@ -6,7 +6,15 @@ tags: [database, query-planner, optimizer, cost-based, statistics, execution-pla
 sidebar_position: 14
 ---
 
+import QueryPlannerPipelineDiagram from '@site/src/components/QueryPlannerPipelineDiagram';
+import DatabaseJoinAlgorithmsDiagram from '@site/src/components/DatabaseJoinAlgorithmsDiagram';
+
 # Query Planner & Optimizer
+
+<QueryPlannerPipelineDiagram />
+<DatabaseJoinAlgorithmsDiagram />
+
+---
 
 ## The Query Lifecycle
 

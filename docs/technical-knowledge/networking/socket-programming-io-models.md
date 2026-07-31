@@ -6,148 +6,20 @@ tags: [networking, sockets, nio, epoll, netty, async, blocking, non-blocking, re
 sidebar_position: 10
 ---
 
+import SocketIoModelsDiagram from '@site/src/components/SocketIoModelsDiagram';
+import SocketLifecycleDiagram from '@site/src/components/SocketLifecycleDiagram';
+
 # Socket Programming & I/O Models
+
+<SocketIoModelsDiagram />
+
+<SocketLifecycleDiagram />
+
+---
 
 ## Sockets
 
 A **socket** is a software abstraction for a bidirectional network endpoint — identified by `(IP address, port, protocol)`.
-
-```
-Socket = endpoint of a two-way communication link between processes
-
-Identified by 5-tuple:
-  (protocol, local_ip, local_port, remote_ip, remote_port)
-  (TCP,      10.0.0.1, 54321,     10.0.0.2,  8080)
-```
-
-### Socket File Descriptor
-
-In Unix-like systems, sockets are file descriptors (everything is a file):
-
-```c
-int fd = socket(AF_INET, SOCK_STREAM, 0);  // TCP socket
-bind(fd, &addr, sizeof(addr));              // bind to local address
-listen(fd, backlog);                        // listen for connections
-int client_fd = accept(fd, &client, &len); // accept a connection
-read(client_fd, buf, sizeof(buf));          // read data
-write(client_fd, response, len);            // write data
-close(client_fd);                           // close
-```
-
----
-
-## I/O Models
-
-### 1. Blocking I/O (BIO)
-
-```
-Thread calls read() → blocks until data arrives → processes → repeats
-
-Thread 1: [──accept──][──read──blocking──][process][──write──]
-Thread 2: [──accept──][──read──blocking──][process][──write──]
-Thread N: [──accept──][──read──blocking──][process][──write──]
-
-→ Need one thread per connection
-→ At 10,000 connections: 10,000 threads!
-→ Each thread: ~1MB stack → 10GB RAM just for stacks
-→ Context switching overhead becomes severe
-```
-
-```java
-// Java blocking I/O
-ServerSocket server = new ServerSocket(8080);
-while (true) {
-    Socket client = server.accept();  // blocks
-    new Thread(() -> {               // new thread per connection
-        try (client) {
-            byte[] buf = client.getInputStream().readAllBytes(); // blocks
-            client.getOutputStream().write(response);
-        }
-    }).start();
-}
-```
-
-### 2. Non-Blocking I/O
-
-```
-Socket set to non-blocking mode
-read() returns immediately:
-  - with data (if available)
-  - with EAGAIN/EWOULDBLOCK (if no data yet)
-
-Problem: busy polling
-while (true) {
-    for each socket:
-        ret = read(fd, buf, len);   // returns immediately
-        if (ret > 0) process(buf);
-        // else: no data, try again
-}
-→ Burns CPU checking thousands of sockets
-```
-
-### 3. I/O Multiplexing — select/poll
-
-```
-select()/poll() monitors multiple FDs at once:
-  - Block until any FD is ready
-  - Process only ready FDs
-
-select(max_fd, read_fds, write_fds, except_fds, timeout):
-  → Returns when any fd in the set has data
-
-Limitation (select):
-  - max 1024 file descriptors (FD_SETSIZE)
-  - O(n) scan of all FDs even if only 1 ready
-  - FD set rebuilt and passed to kernel each call
-```
-
-### 4. epoll (Linux) / kqueue (macOS/BSD)
-
-The solution to the **C10K problem** — handling 10,000+ concurrent connections efficiently.
-
-```
-epoll: O(1) per active event (not O(n) per fd)
-  - Register interest once, kernel notifies on events
-  - Returns only ready FDs (no scanning all FDs)
-  - Can handle millions of concurrent connections
-
-Flow:
-1. epoll_create() → create epoll instance
-2. epoll_ctl(ADD) → register socket FDs with epoll
-3. epoll_wait() → block until events, returns ready FDs only
-4. Process ready FDs
-5. Go to 3
-```
-
-```
-Comparison:
-  select:  O(n) per call, 1024 fd limit
-  poll:    O(n) per call, no fd limit
-  epoll:   O(1) per event, no fd limit, kernel-maintained ready list
-```
-
----
-
-## Reactor Pattern
-
-epoll + event loop = **Reactor pattern**:
-
-```
-        ┌────────────────────────────────────┐
-        │           Event Loop               │
-        │                                    │
-Events  │  epoll_wait() → [fd1, fd3, fd7]   │
-───────►│       ↓                            │
-        │  Dispatch to handlers:             │
-        │    fd1 → onRead() → process        │
-        │    fd3 → onAccept() → register new │
-        │    fd7 → onWrite() → flush buffer  │
-        └────────────────────────────────────┘
-
-One thread handles ALL connections
-No context switching per connection
-Very low memory overhead
-```
 
 **Used by**: Node.js, Nginx, Redis, Netty (Java), Vert.x.
 

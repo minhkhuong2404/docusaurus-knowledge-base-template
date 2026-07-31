@@ -6,7 +6,13 @@ tags: [database, backup, recovery, rpo, rto, pitr, disaster-recovery, mysql, pos
 sidebar_position: 12
 ---
 
+import DatabasePitrRecoveryDiagram from '@site/src/components/DatabasePitrRecoveryDiagram';
+
 # Backup & Recovery
+
+<DatabasePitrRecoveryDiagram />
+
+---
 
 ## Core Concepts
 

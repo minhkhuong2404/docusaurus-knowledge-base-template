@@ -11,7 +11,12 @@ tags:
 - basics
 - fetch-pull
 ---
+
+import GitFetchVsPullDiagram from '@site/src/components/GitFetchVsPullDiagram';
+
 # `git fetch` & `git pull` — Getting Remote Changes
+
+<GitFetchVsPullDiagram />
 
 ## The Difference
 

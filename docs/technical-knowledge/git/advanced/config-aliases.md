@@ -10,7 +10,12 @@ tags:
 - advanced
 - config-aliases
 ---
+
+import GitConfigAliasesDiagram from '@site/src/components/GitConfigAliasesDiagram';
+
 # `git config` & Aliases — Customising Git
+
+<GitConfigAliasesDiagram />
 
 ## The Three Config Levels
 

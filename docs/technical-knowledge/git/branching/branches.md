@@ -10,7 +10,12 @@ tags:
 - branching
 - branches
 ---
+
+import GitBranchesInternalsDiagram from '@site/src/components/GitBranchesInternalsDiagram';
+
 # Branches — Creating & Managing
+
+<GitBranchesInternalsDiagram />
 
 ## What is a Branch?
 
