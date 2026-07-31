@@ -21,7 +21,6 @@ import HttpStatusCodesDiagram from '@site/src/components/HttpStatusCodesDiagram'
 import HttpHeadersDiagram from '@site/src/components/HttpHeadersDiagram';
 import ProductionChecklistDiagram from '@site/src/components/ProductionChecklistDiagram';
 
-
 # HTTP, HTTPS & Application Layer
 
 A complete guide covering HTTP fundamentals for newcomers, a practical decision framework for choosing the right method and status code, and senior-level deep dives into protocol evolution, TLS internals, and production design patterns.
@@ -599,8 +598,7 @@ HTTP/3 replaces TCP with **QUIC** — a new transport protocol built on UDP that
 
 <QuicStackDiagram />
 
-**HTTP/3 / QUIC key improvements:**
-
+HTTP/3 / QUIC key improvements:
 | Feature                  | HTTP/2 (TCP)                  | HTTP/3 (QUIC)                                       |
 | ------------------------ | ----------------------------- | --------------------------------------------------- |
 | **HoL Blocking**         | TCP-level HoL blocking        | Per-stream — lost packet only blocks its own stream |
@@ -650,8 +648,7 @@ HTTPS = HTTP + **TLS** (Transport Layer Security). TLS provides: **encryption** 
 
 <TlsHandshakeDiagram />
 
-**TLS 1.3 vs 1.2:**
-
+TLS 1.3 vs 1.2:
 | Aspect                | TLS 1.2                          | TLS 1.3                                |
 | --------------------- | -------------------------------- | -------------------------------------- |
 | Handshake RTTs        | 2 RTT                            | 1 RTT (0-RTT for resumption)           |
@@ -797,45 +794,45 @@ public class PublicApiController { ... }
 
 ### Foundational
 
-**Q: What is the difference between GET and POST?**
+### Q: What is the difference between GET and POST?
 > GET retrieves a resource — it is safe (no side effects), idempotent, and the parameters go in the URL. It should never modify state. POST submits data to the server to create a resource or trigger an action — it is neither safe nor idempotent, and data goes in the request body. GET responses are cacheable; POST responses generally are not. The key distinction: GET reads, POST writes.
 
-**Q: What does idempotent mean, and which HTTP methods are idempotent?**
+### Q: What does idempotent mean, and which HTTP methods are idempotent?
 > An operation is idempotent if calling it N times produces the same server state as calling it once. GET, HEAD, OPTIONS, PUT, and DELETE are idempotent. POST and PATCH are not (by default). Idempotency matters for retry logic: if a network request fails, you can safely retry an idempotent method without risk of duplicating side effects. For example, a client can safely retry `DELETE /orders/42` — if the order is already deleted, the state remains "order deleted".
 
-**Q: When would you use PUT vs PATCH?**
+### Q: When would you use PUT vs PATCH?
 > Use PUT for full replacement — the client must send the entire resource representation, and any fields omitted are cleared. Use PATCH for partial updates — the client sends only the fields to change. PATCH is more efficient (less bandwidth) and avoids race conditions where a concurrent write to an unrelated field gets overwritten. Use PUT when the full replacement behavior is intentional — such as a settings reset.
 
-**Q: What is the difference between 401 and 403?**
+### Q: What is the difference between 401 and 403?
 > 401 Unauthorized means the request lacks valid authentication — the user is not identified (expired token, no credentials). The response should include `WWW-Authenticate` to tell the client how to authenticate. The fix is for the client to log in or refresh their token. 403 Forbidden means the user is identified but doesn't have permission to perform the action. Logging in again will not help. The most common mistake is returning 403 when the user is simply not logged in — that should be 401.
 
 ---
 
 ### Intermediate
 
-**Q: What is the difference between HTTP/1.1, HTTP/2, and HTTP/3?**
+### Q: What is the difference between HTTP/1.1, HTTP/2, and HTTP/3?
 > HTTP/1.1 uses persistent connections (keep-alive) but suffers from application-level head-of-line blocking — one slow response blocks subsequent ones on the connection, so browsers work around this by opening 6 parallel TCP connections per domain. HTTP/2 introduces multiplexing — many concurrent request/response streams over one TCP connection — along with header compression (HPACK) and server push. However, it still suffers TCP-level HoL blocking: a single lost TCP packet stalls all streams. HTTP/3 uses QUIC over UDP, eliminating TCP-level HoL blocking (each stream has independent reliability), and provides 0-RTT connection resumption and connection migration (helpful on mobile).
 
-**Q: What is the difference between `Cache-Control: no-cache` and `no-store`?**
+### Q: What is the difference between `Cache-Control: no-cache` and `no-store`?
 > `no-cache` means: you may store a cached copy, but you must revalidate with the server before using it (sends `If-None-Match` / `If-Modified-Since`). If the server responds with `304 Not Modified`, the cached copy is used — saving bandwidth. `no-store` means: never store a copy anywhere — not in the browser cache, not in CDNs, not in proxies. Use `no-store` for genuinely sensitive data (financial transactions, authentication responses) where even having a cached copy on disk is unacceptable.
 
-**Q: What is an ETag and how does it enable conditional caching?**
+### Q: What is an ETag and how does it enable conditional caching?
 > An ETag is a fingerprint of a resource's content (a hash or version number). The server returns `ETag: "abc123"` with a response. On the next request, the client sends `If-None-Match: "abc123"`. If the content hasn't changed, the server returns `304 Not Modified` with no body — the client uses its cached copy, saving the full response body transfer. ETags enable bandwidth-efficient cache validation without relying on timestamps (which can be unreliable due to clock skew and second-level precision).
 
 ---
 
 ### Senior / System Design
 
-**Q: How does TLS 1.3 improve upon TLS 1.2, and what is forward secrecy?**
+### Q: How does TLS 1.3 improve upon TLS 1.2, and what is forward secrecy?
 > TLS 1.3 reduces handshake RTTs from 2 to 1 (with 0-RTT resumption), removes all weak cipher suites (RSA key exchange, RC4, MD5, SHA-1), and mandates ECDHE key exchange for every session, which provides forward secrecy. Forward secrecy means each session uses an ephemeral key pair that is discarded after the session ends. Even if an attacker records all TLS traffic today and later obtains the server's private key (via breach or subpoena), they cannot retroactively decrypt past sessions — because the ephemeral session keys no longer exist.
 
-**Q: Why is CORS only a browser concern, and what are the security implications?**
+### Q: Why is CORS only a browser concern, and what are the security implications?
 > CORS is enforced by browsers as part of the Same-Origin Policy — a browser security feature to prevent malicious websites from making authenticated cross-origin requests on behalf of users. Non-browser HTTP clients (curl, Postman, backend services, mobile apps) do not enforce CORS. This has two implications: (1) A CORS misconfiguration is only exploitable via a browser context — typically CSRF-style attacks where a malicious page makes requests using the victim's cookies. (2) Testing CORS with Postman does not accurately represent browser behavior — you must test with an actual browser or a tool that sends proper preflight requests.
 
-**Q: How would you design an API to make POST requests safely retryable?**
+### Q: How would you design an API to make POST requests safely retryable?
 > POST is not idempotent by default, but you can make it idempotent using the **Idempotency Key** pattern: the client generates a unique UUID for each logical operation and sends it as `Idempotency-Key: <uuid>` in the request. The server stores the key and the result in a short-lived store (Redis with TTL). On retry, if the server sees a key it has already processed, it returns the original response without re-executing the operation. This pattern is essential for payment processing, email sending, and any operation where duplicate execution causes real-world harm. Stripe, Adyen, and most payment APIs require idempotency keys on all write operations.
 
-**Q: Explain HTTP/2 server push and why it fell out of favor.**
+### Q: Explain HTTP/2 server push and why it fell out of favor.
 > Server push lets the server proactively send resources (CSS, JS, fonts) to the client before it requests them — reducing round-trips for critical assets. In theory, when a browser requests `index.html`, the server can simultaneously push `app.js` and `style.css` before the browser even parses the HTML. In practice, server push had significant problems: it bypassed the browser cache (the server couldn't know if the browser already had the resource cached), it competed with other streams for bandwidth, and it was difficult to implement correctly without over-pushing. HTTP/3 / the HTTP Working Group has effectively deprecated server push in favor of the `103 Early Hints` response code and the `Link: rel=preload` header, which let the browser decide whether to fetch the resource based on its own cache state.
 
 ---

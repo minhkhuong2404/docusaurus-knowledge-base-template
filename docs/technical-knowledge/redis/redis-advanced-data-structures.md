@@ -83,18 +83,18 @@ Redis Streams (`XADD`, `XREAD`, `XREADGROUP`) implement an **append-only log** �
 
 ## Interview Questions
 
-**Q: Why is HyperLogLog always 12 KB regardless of how many unique items you add?**
+### Q: Why is HyperLogLog always 12 KB regardless of how many unique items you add?
 
 > HLL doesn't store the actual items — it stores only the maximum number of leading zeros seen in each of its 16,384 registers (buckets). Each register needs at most 6 bits (to store a value 0–63). Total: 16,384 × 6 bits = 98,304 bits = 12 KB. Adding a new item updates at most one register (if the new leading-zero count exceeds the current maximum for that register). The estimate is derived from these 16,384 running maxima via a harmonic mean calculation — independent of how many items have been added.
 
-**Q: When would you use a Bitmap over a Set for tracking user activity?**
+### Q: When would you use a Bitmap over a Set for tracking user activity?
 
 > Bitmaps are the right choice when user IDs are dense integers and the population is large. For 100M users, a Set storing user IDs as strings costs ~6 GB, while a Bitmap costs a fixed 12.5 MB (based on max user ID, not active user count). The crossover point is roughly when the SET would cost more memory than the Bitmap — for sparse user IDs or small populations, a SET may be comparable or simpler. The additional advantage of Bitmaps is the ability to compute set operations (AND for retention, OR for weekly active users, NOT for churn) using BITOP in a single command — these would require multiple SINTERSTORE/SUNIONSTORE operations with Sets.
 
-**Q: What is the difference between Redis Streams and Pub/Sub?**
+### Q: What is the difference between Redis Streams and Pub/Sub?
 
 > Redis Pub/Sub is fire-and-forget: if no subscriber is connected when a message is published, the message is permanently lost. There is no persistence, no replay, and no acknowledgment. Redis Streams are an append-only log — messages persist until explicitly trimmed, consumers can replay from any offset, and consumer groups provide at-least-once delivery via the Pending Entries List (PEL) and XCLAIM for crashed consumer recovery. Streams are the correct choice when message delivery guarantees matter; Pub/Sub is appropriate only for truly ephemeral real-time notifications where loss is acceptable.
 
-**Q: A Bloom Filter says an item "probably exists." How do you handle that false positive?**
+### Q: A Bloom Filter says an item "probably exists." How do you handle that false positive?
 
 > The standard pattern is a two-layer check: use the Bloom Filter as a fast pre-filter, and fall back to the authoritative source (database) only when the filter returns a positive result. If the filter says "definitely does not exist" (all hash positions are 0), skip the DB query entirely — this is the common case and the source of the performance benefit. If the filter says "probably exists," execute the DB query to confirm. The false positive rate is configurable at creation time (e.g., 0.1%) — choose it based on the cost of a false positive (one unnecessary DB query) vs. the memory cost of a lower error rate. Bloom Filters cannot have false negatives, so if the filter says "no," you can trust it completely.

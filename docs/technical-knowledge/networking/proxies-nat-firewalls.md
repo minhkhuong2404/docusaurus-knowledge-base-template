@@ -133,26 +133,26 @@ proxy_set_header X-Forwarded-Host $host;
 
 ## Interview Questions
 
-**Q1. What is the difference between a forward proxy and a reverse proxy?**
+### Q1. What is the difference between a forward proxy and a reverse proxy?
 > A forward proxy acts on behalf of clients — clients configure it explicitly, and external servers see the proxy's IP. Used for: anonymization, corporate filtering, caching. A reverse proxy acts on behalf of servers — clients connect to it thinking it's the server, and backends see the proxy's IP. Used for: load balancing, TLS termination, caching, path routing. The key difference is whose interests they serve.
 
-**Q2. What is TLS termination at a reverse proxy and what are the trade-offs?**
+### Q2. What is TLS termination at a reverse proxy and what are the trade-offs?
 > TLS termination decrypts HTTPS at the proxy; backends receive plain HTTP. Advantages: backends don't need TLS configuration, proxy handles cert management, can inspect/modify HTTP content, single cert renewal point. Disadvantages: traffic between proxy and backends is unencrypted (mitigated by private network or re-encryption). Re-encryption (proxy terminates client TLS, establishes new TLS to backend) adds overhead but maintains encryption throughout.
 
-**Q3. Explain SNAT and DNAT.**
+### Q3. Explain SNAT and DNAT.
 > SNAT (Source NAT) modifies the source IP of outgoing packets — used to masquerade private IP addresses as a public IP for internet access. DNAT (Destination NAT) modifies the destination IP of incoming packets — used for port forwarding (redirect external port to internal server) and load balancing. Both modify IP headers and maintain state tables to reverse-translate return traffic.
 
-**Q4. What is a stateful firewall and how does it differ from a packet filter?**
+### Q4. What is a stateful firewall and how does it differ from a packet filter?
 > A packet filter (stateless) inspects each packet independently by IP, port, and protocol. It requires explicit rules for both directions of communication. A stateful firewall tracks connection state (TCP handshakes, established sessions) and automatically allows return traffic for established connections. This is more secure (blocks unexpected inbound packets that aren't part of an established connection) and requires fewer rules.
 
-**Q5. What is NAT traversal and why is it needed for P2P applications?**
+### Q5. What is NAT traversal and why is it needed for P2P applications?
 > P2P applications (VoIP, video calls, gaming) need direct connections between peers, but NAT hides the real internal IPs and only allows connections initiated from inside. NAT traversal techniques (STUN to discover public IP:port, ICE to test connectivity paths, hole punching to open ports simultaneously, TURN as fallback relay) let peers behind NAT establish direct connections. WebRTC uses ICE/STUN/TURN for browser-to-browser calls.
 
-**Q6. What is split tunneling in a VPN?**
+### Q6. What is split tunneling in a VPN?
 > Split tunneling routes only specific traffic (corporate destinations) through the VPN tunnel, while other traffic (internet browsing) goes directly through the user's ISP. Benefits: faster internet for non-corporate traffic, reduces VPN bandwidth load, lower latency for non-corporate sites. Risks: corporate devices can be infected by malware that bypasses VPN security policies. Full tunneling sends all traffic through VPN — more secure, more restrictive.
 
-**Q7. Why must Spring Boot be configured to trust X-Forwarded headers behind a proxy?**
+### Q7. Why must Spring Boot be configured to trust X-Forwarded headers behind a proxy?
 > When behind a reverse proxy, the application sees the proxy's IP as the client IP, not the real client. The proxy sends `X-Forwarded-For`, `X-Forwarded-Proto`, `X-Forwarded-Host` headers with the original values. Without trusting these, Spring Security generates HTTP redirect URIs instead of HTTPS, rate limiting targets the proxy IP (blocking all users), and client IP logging shows the proxy instead of the real client. Use `forward-headers-strategy: NATIVE` — but only trust the immediately upstream proxy.
 
-**Q8. What is the `X-Forwarded-For` header and what are its security considerations?**
+### Q8. What is the `X-Forwarded-For` header and what are its security considerations?
 > `X-Forwarded-For` contains the chain of IPs a request passed through: `X-Forwarded-For: client, proxy1, proxy2`. Each proxy appends the previous IP. The leftmost IP is the "real" client IP. Security concern: clients can forge this header (`X-Forwarded-For: 127.0.0.1`). Only trust it if your reverse proxy controls it — configure the proxy to replace (not append) the header, or only read the rightmost trusted IP added by your own infrastructure.

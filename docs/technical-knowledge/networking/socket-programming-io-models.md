@@ -238,26 +238,26 @@ socket.setReceiveBufferSize(65536);  // SO_RCVBUF: receive buffer size
 
 ## Interview Questions
 
-**Q1. What is the difference between blocking and non-blocking I/O?**
+### Q1. What is the difference between blocking and non-blocking I/O?
 > Blocking I/O: a read/write call blocks the calling thread until data is available or the operation completes. One thread is tied up per connection. Non-blocking I/O: calls return immediately — either with data or with `EAGAIN` (no data yet). The thread can do other work while waiting. Combined with event notification (select/poll/epoll), one thread can manage thousands of connections.
 
-**Q2. What is epoll and why is it better than select?**
+### Q2. What is epoll and why is it better than select?
 > epoll is a Linux kernel mechanism for scalable I/O event notification. Unlike `select` (O(n) scan of all FDs per call, 1024 FD limit), epoll: maintains a kernel-side ready list, returns only ready FDs in O(1), has no practical FD limit. `epoll_ctl` registers interest once; `epoll_wait` returns only events that fired. Used by Nginx, Redis, Node.js to handle millions of connections efficiently.
 
-**Q3. What is the Reactor pattern?**
+### Q3. What is the Reactor pattern?
 > The Reactor pattern uses a single (or small pool of) thread(s) with an event loop. An event demultiplexer (epoll) waits for I/O events on many channels. When an event fires (new connection, data ready, write complete), it's dispatched to the appropriate handler — which must not block. The same thread handles all connections without context switching. Used by: Nginx, Redis, Node.js, Netty, Spring WebFlux.
 
-**Q4. What is the C10K problem and how is it solved?**
+### Q4. What is the C10K problem and how is it solved?
 > The C10K problem: handling 10,000 concurrent connections with the traditional thread-per-connection model requires ~10,000 threads consuming ~10 GB of stack memory and enormous context-switching overhead. Solutions: I/O multiplexing with epoll (one thread handles all FDs via event notification), coroutines (lightweight green threads, like Go goroutines), or async/reactive programming (Spring WebFlux, Vert.x). Modern servers routinely handle millions of concurrent connections.
 
-**Q5. What is Netty and why would you use it instead of Java's built-in sockets?**
+### Q5. What is Netty and why would you use it instead of Java's built-in sockets?
 > Netty is an async, event-driven network framework built on Java NIO. Use Netty instead of raw NIO because: NIO has a notoriously complex, error-prone API; Netty handles buffer management (pooled ByteBufs), codec pipeline (HTTP, WebSocket, Protobuf), zero-copy transfers, connection pooling, and graceful shutdown correctly and efficiently. Used by: gRPC-Java, Cassandra driver, Elasticsearch client, Spring WebFlux/Reactor Netty.
 
-**Q6. What is Nagle's algorithm and when should you disable it?**
+### Q6. What is Nagle's algorithm and when should you disable it?
 > Nagle's algorithm batches small writes: if there's unacknowledged data in flight, buffer new small writes and send them together. Reduces packet count for bulk transfers. Disable it (`TCP_NODELAY=true`) for latency-sensitive protocols: Redis client, database drivers, game servers, any request-response protocol where you send a small request and wait for a response — Nagle adds up to 200ms delay in the worst case.
 
-**Q7. What is the backlog parameter in `ServerSocket` and what happens when it's full?**
+### Q7. What is the backlog parameter in `ServerSocket` and what happens when it's full?
 > The backlog is the maximum number of pending connections in the **SYN queue** (half-open) and **accept queue** (completed 3-way handshake, not yet accepted by application). When the backlog is full, new SYNs are silently dropped (with SYN cookies, the kernel may still respond). The client retransmits the SYN. Set backlog high enough for your traffic spike; call `accept()` fast enough to drain the queue.
 
-**Q8. What is the difference between Spring MVC and Spring WebFlux from an I/O perspective?**
+### Q8. What is the difference between Spring MVC and Spring WebFlux from an I/O perspective?
 > Spring MVC uses blocking I/O: one thread-per-request from a thread pool (default: Tomcat, 200 threads). When a request blocks (DB query, HTTP call), the thread waits — limiting throughput to ~200 concurrent long-running requests. Spring WebFlux uses non-blocking I/O via Netty: a small event-loop thread pool handles all I/O; blocking never occurs on those threads. Better for high-concurrency, I/O-bound workloads. WebFlux is more complex — avoid blocking calls (JDBC, synchronous libs) or they'll starve the event loop.

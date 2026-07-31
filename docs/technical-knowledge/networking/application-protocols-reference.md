@@ -144,26 +144,26 @@ Data channels: SCTP over DTLS (reliable or unreliable, ordered or not)
 
 ## Interview Questions
 
-**Q1. How does SSH key-based authentication work?**
+### Q1. How does SSH key-based authentication work?
 > The client generates a key pair (public + private). The public key is added to `~/.ssh/authorized_keys` on the server. During login, the server sends a challenge encrypted with the client's public key. Only the client with the matching private key can decrypt it and respond correctly — proving possession of the private key without ever transmitting it. More secure than passwords (no brute force risk, no phishing).
 
-**Q2. What is MQTT and why is it suited for IoT?**
+### Q2. What is MQTT and why is it suited for IoT?
 > MQTT is a lightweight pub/sub protocol with a 2-byte header. Suited for IoT because: tiny overhead (critical for constrained devices with limited power/bandwidth), works over unstable connections (QoS levels, persistent sessions for offline devices), last will messages detect device disconnection. The broker handles routing — devices publish to topics and subscribers receive — decoupling publishers from subscribers.
 
-**Q3. What is the difference between SFTP and FTPS?**
+### Q3. What is the difference between SFTP and FTPS?
 > SFTP (SSH File Transfer Protocol) runs over SSH (port 22) — entirely different protocol from FTP, just named similarly. Secure, works through NAT, uses SSH authentication. FTPS (FTP Secure) is original FTP with TLS added. Still has FTP's NAT problems (active/passive modes). SFTP is generally preferred — simpler firewall rules (only port 22) and uses existing SSH infrastructure.
 
-**Q4. What is SPF, DKIM, and DMARC?**
+### Q4. What is SPF, DKIM, and DMARC?
 > SPF (Sender Policy Framework): DNS TXT record listing authorized mail servers for a domain — receiving servers reject mail claiming to be from your domain if it didn't come from an authorized server. DKIM (DomainKeys Identified Mail): cryptographic signature added to email headers — receiving server verifies signature against public key in DNS. DMARC: policy that specifies what to do when SPF/DKIM fail (none, quarantine, reject) and where to send reports.
 
-**Q5. Why does NTP matter for distributed systems?**
+### Q5. Why does NTP matter for distributed systems?
 > Many distributed system assumptions rely on clock synchronization: JWT token expiry (iat/exp), distributed transaction ordering (event timestamps), TLS certificate validity (cert expired checks), log correlation across services, and database replication (some use timestamps for conflict resolution). Without NTP, clocks drift apart — a 1-second drift can cause valid tokens to appear expired or events to appear out of order. Use NTP + `ntpd`/`chrony` on all servers.
 
-**Q6. What is the difference between AMQP and MQTT?**
+### Q6. What is the difference between AMQP and MQTT?
 > MQTT is lightweight pub/sub for IoT — minimal overhead, designed for constrained devices and unreliable networks. AMQP is enterprise messaging — rich routing (exchanges, queues, bindings), message acknowledgment, transactions, dead letter queues, intended for reliable enterprise integration. RabbitMQ implements AMQP (and also supports MQTT via plugin). Use MQTT for IoT/embedded; AMQP/RabbitMQ for service-to-service messaging in backend systems.
 
-**Q7. What is SSH tunneling and give a practical use case?**
+### Q7. What is SSH tunneling and give a practical use case?
 > SSH tunneling (port forwarding) creates an encrypted tunnel through SSH to reach otherwise inaccessible hosts. Local forwarding: `ssh -L 5432:db.internal:5432 bastion.example.com` — your local port 5432 tunnels through the bastion to an internal database. Use case: a DBA needs to run database tools from their laptop against a production DB that's only accessible from within the VPC. The bastion server is the only externally accessible SSH endpoint.
 
-**Q8. What are LDAP and Active Directory, and how do they relate to application authentication?**
+### Q8. What are LDAP and Active Directory, and how do they relate to application authentication?
 > LDAP is a protocol for querying and modifying directory services. Active Directory (AD) is Microsoft's directory service that implements LDAP (and Kerberos). Applications use LDAP/AD for: centralized authentication (users log in with corporate credentials), group-based authorization (is user in `developers` group?), single sign-on (users authenticate once for all corporate apps). Spring Security supports LDAP authentication natively. Many enterprises require AD integration for internal tools.

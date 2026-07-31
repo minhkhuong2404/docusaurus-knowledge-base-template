@@ -515,3 +515,22 @@ import MyDiagram from '@site/src/components/MyDiagram';
 - Imports go **immediately after** the closing `---` of the frontmatter.
 - Multiple imports are fine; keep them grouped together.
 - The static content (ASCII block, mermaid block, table) is **fully replaced** — do not keep both.
+
+---
+
+## Interview Questions Section Styling Specification
+
+To maintain 100% aesthetic and structural consistency across all documentation pages (e.g. `redis`, `git`, `networking`, `java`, `database`), all interview questions sections must follow these strict rules:
+
+### 1. Section Header Format
+- Always use `## Interview Questions` for topic-embedded interview sections.
+- Always use `# [Topic] Interview Questions & Answers` for dedicated master list pages (e.g., `redis-interview-questions.md`, `networking-interview-questions.md`).
+- Do not use emoji prefixes in section headers (e.g., avoid `## ❓ Interview Questions`).
+
+### 2. Question & Answer Structure
+- **Question (Q)**: Must use the **primary theme color** (`var(--ifm-color-primary)`, e.g. `#34d399` / `#38bdf8`) in bold text. Format as `### Q1. [Question Text]` or `### Q: [Question Text]` (H3 headers automatically use the primary theme color) or `<span style={{ color: 'var(--ifm-color-primary)' }}>**Q1. [Question Text]**</span>`.
+- **Answer (A)**: Must be **non-bold regular text** (white / default body text in dark mode). Format the answer using blockquotes `> [Answer text...]` or clean structured paragraphs without wrapping the answer body in bold text.
+- **Deep Dive Details**: Follow the answer text with structured bullet points, code snippets, or gotchas where applicable.
+- **Interactive Component Placement**: Embed interactive React SVG components immediately under the main section header to visualize key scenario answers.
+- **Clean Dividers**: Separate distinct Q&A blocks with a single horizontal rule (`---`). Never use duplicate consecutive dividers (`---\n---`).
+

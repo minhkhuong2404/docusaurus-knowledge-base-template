@@ -200,26 +200,26 @@ With window scaling (up to 1 GB window): ≥ 1 Gbps on 100ms link ✅
 
 ## Interview Questions
 
-**Q1. What is the difference between latency, bandwidth, and throughput?**
+### Q1. What is the difference between latency, bandwidth, and throughput?
 > Latency: time for a packet to travel from source to destination (one-way) or round-trip (RTT). Bandwidth: maximum capacity of the channel (bits per second). Throughput: actual useful data transferred per second — always less than bandwidth due to overhead, protocol inefficiency, and latency-induced idle time. Analogy: a highway (bandwidth), travel time (latency), actual cars passing per hour (throughput).
 
-**Q2. Why does connection establishment add significant overhead, and how is it minimized?**
+### Q2. Why does connection establishment add significant overhead, and how is it minimized?
 > TCP 3-way handshake + TLS 1.3 = 2 RTTs before the first byte of HTTP data. On a 100ms RTT link, this is 200ms just for setup. Minimized by: HTTP keep-alive (reuse connections for many requests), connection pooling (pre-established pool of connections), HTTP/2 multiplexing (one connection, many concurrent requests), QUIC 0-RTT (resume previous sessions with zero handshake latency).
 
-**Q3. What is head-of-line blocking and how does HTTP/3 solve it?**
+### Q3. What is head-of-line blocking and how does HTTP/3 solve it?
 > TCP delivers data in order — if one packet is lost, all subsequent packets queue up waiting for the retransmission (even if they belong to unrelated HTTP/2 streams). HTTP/3 uses QUIC over UDP, where each stream's byte sequence is independent. A lost packet for stream 3 only blocks stream 3, not streams 1, 2, 4. This is critical for lossy networks where HTTP/2's TCP HoL blocking degrades performance significantly.
 
-**Q4. What is the Bandwidth-Delay Product and why does it matter for TCP?**
+### Q4. What is the Bandwidth-Delay Product and why does it matter for TCP?
 > BDP = bandwidth × RTT = the maximum amount of data "in flight" needed to fully utilize the link. The TCP receive window must be at least as large as the BDP for optimal throughput. Default TCP windows (64KB) limit throughput to ~5 Mbps on a 100ms RTT link regardless of bandwidth. TCP window scaling (enabled by default on modern OSes) allows windows up to 1 GB, enabling full utilization of high-BDP paths.
 
-**Q5. How does HTTP/2 header compression (HPACK) work?**
+### Q5. How does HTTP/2 header compression (HPACK) work?
 > HPACK maintains a static table of common header name-value pairs (`:method GET`, `:status 200`, etc.) and a dynamic table of previously sent headers. Instead of sending full header strings, HPACK sends table indices. Headers not in the table are Huffman-encoded. This eliminates redundant headers (User-Agent, Authorization are the same on every request) — typically 85%+ header size reduction, critical for mobile where headers can exceed body size.
 
-**Q6. What is QUIC 0-RTT resumption and what are its security implications?**
+### Q6. What is QUIC 0-RTT resumption and what are its security implications?
 > 0-RTT: on the first connection, the server sends a session ticket. On reconnect, the client sends data alongside the session ticket in the first packet — no handshake RTT. Security concern: 0-RTT data can be replayed by an attacker who captures the initial packet and retransmits it. Mitigation: only use 0-RTT for idempotent requests (GET), not for state-changing operations (POST payments). gRPC over HTTP/3 and browsers enforce this.
 
-**Q7. What tools would you use to diagnose poor network performance in production?**
+### Q7. What tools would you use to diagnose poor network performance in production?
 > `ping`/`mtr` for latency and packet loss. `traceroute` to identify slow hops. `curl -w` timing for TTFB breakdown (DNS, connect, TLS, first byte). `iperf3` for raw bandwidth measurement. `ss -s` or `netstat` for connection states (TIME_WAIT accumulation, SYN queues). `tcpdump`/Wireshark for deep packet inspection. APM tools (Datadog, New Relic) for application-level latency breakdown. `dmesg` for kernel errors (TCP buffer overruns).
 
-**Q8. What is TCP slow start and how does it affect first-request performance?**
+### Q8. What is TCP slow start and how does it affect first-request performance?
 > TCP slow start begins every new connection with a small congestion window (typically 10 MSS = ~14KB initial window in modern Linux). It doubles each RTT until a threshold. For a 1 MB response on a 50ms RTT link, slow start means: RTT 1: 14KB, RTT 2: 28KB, RTT 3: 56KB... taking 4-5 RTTs (200-250ms) to reach full throughput. Mitigation: keep-alive (avoids new connections), smaller responses, CDN edge caching (shorter RTT), increase initial congestion window (`ip route change ... initcwnd 100`).

@@ -280,26 +280,26 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
 ## Interview Questions
 
-**Q1. What is the difference between OAuth 2.0 and OIDC?**
+### Q1. What is the difference between OAuth 2.0 and OIDC?
 > OAuth 2.0 is an authorization framework — it grants third-party apps access to resources on behalf of a user (access tokens, scopes). It doesn't define user identity. OIDC (OpenID Connect) is an identity layer built on top of OAuth 2.0 — it adds an ID Token (a JWT with user identity claims like `sub`, `email`) and a UserInfo endpoint. Use OAuth for API authorization; use OIDC for user authentication/SSO.
 
-**Q2. What are the JWT claims `iss`, `sub`, `aud`, `exp`, `iat`?**
+### Q2. What are the JWT claims `iss`, `sub`, `aud`, `exp`, `iat`?
 > `iss` (Issuer): who created and signed the token (auth server URL). `sub` (Subject): who the token is about (user ID). `aud` (Audience): intended recipient(s) — validate that your API is in this list. `exp` (Expiration): Unix timestamp after which the token is invalid. `iat` (Issued At): when the token was created. Always validate `exp` and `aud` in addition to the signature.
 
-**Q3. Why is RS256 preferred over HS256 for JWTs in microservices?**
+### Q3. Why is RS256 preferred over HS256 for JWTs in microservices?
 > HS256 uses a shared secret — every service that validates tokens must know the same secret, which becomes a security risk as you scale. RS256 uses asymmetric RSA keys: the auth server signs with its private key; all services validate with the public key. Compromising a resource server doesn't expose the signing key. The public key can be distributed via JWKS endpoint (`/.well-known/jwks.json`).
 
-**Q4. How do you securely handle token revocation with JWTs?**
+### Q4. How do you securely handle token revocation with JWTs?
 > JWTs are stateless, so traditional revocation requires: (1) Short expiry (5–15 min) + refresh tokens. (2) A revocation blacklist in Redis keyed by `jti` claim — check on every request (adds latency). (3) Token introspection — ask the auth server on each request (most accurate, most overhead). (4) Rotating refresh tokens — detect theft when old refresh token is reused. Strategy depends on security requirements vs latency tolerance.
 
-**Q5. What is PKCE and why is it required for public clients?**
+### Q5. What is PKCE and why is it required for public clients?
 > PKCE (Proof Key for Code Exchange) prevents authorization code interception attacks for public clients (SPAs, mobile apps) that can't securely store a client secret. The client generates a random `code_verifier`, computes `code_challenge = SHA256(code_verifier)`, includes the challenge in the auth request, and the verifier in the token request. The auth server verifies they match — an attacker who intercepts the auth code can't exchange it without the verifier.
 
-**Q6. What is the Client Credentials flow and when is it used?**
+### Q6. What is the Client Credentials flow and when is it used?
 > Client Credentials is used for machine-to-machine (M2M) communication with no user involvement. Service A authenticates itself with `client_id` + `client_secret` directly to the auth server, receives an access token, and uses it to call Service B. Used for internal microservice-to-service calls, batch jobs, background workers. Spring Boot auto-handles token refresh with the OAuth2 client configured with `authorization-grant-type: client_credentials`.
 
-**Q7. What is mTLS and how does it differ from regular TLS?**
+### Q7. What is mTLS and how does it differ from regular TLS?
 > Regular TLS: only the client verifies the server's certificate (one-way authentication). mTLS (Mutual TLS): both sides present and verify certificates — the server also verifies the client's cert. This provides cryptographic proof of identity for both parties, making it ideal for zero-trust service-to-service communication. It's the strongest form of service authentication; in service meshes like Istio, mTLS is often applied automatically via sidecars.
 
-**Q8. What is token introspection and when would you use it over local JWT validation?**
+### Q8. What is token introspection and when would you use it over local JWT validation?
 > Token introspection (RFC 7662) involves calling the auth server's `/introspect` endpoint on every request to check if a token is still valid and active. Unlike local validation (check signature + expiry), introspection can detect revoked tokens immediately. Trade-off: adds a network call to every request (~5–20ms). Use local JWT validation with short expiry for most cases; use introspection for high-security scenarios (banking, healthcare) where immediate revocation is critical.

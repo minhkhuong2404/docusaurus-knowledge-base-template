@@ -15,14 +15,13 @@ import TcpFlowControlDiagram from '@site/src/components/TcpFlowControlDiagram';
 import TcpCongestionControlDiagram from '@site/src/components/TcpCongestionControlDiagram';
 import UdpAnatomyDiagram from '@site/src/components/UdpAnatomyDiagram';
 
-
 ## Transport Layer Role
 
 The transport layer provides **process-to-process** communication using **port numbers**. While IP routes packets between hosts, the transport layer routes data between specific applications on those hosts.
 
 <TransportLayerPortsDiagram />
 
-**Port ranges:**
+Port ranges:
 - `0–1023`: Well-known ports (HTTP: 80, HTTPS: 443, SSH: 22, DNS: 53)
 - `1024–49151`: Registered ports (PostgreSQL: 5432, MySQL: 3306)
 - `49152–65535`: Ephemeral (dynamic) — assigned by OS for outgoing connections
@@ -67,7 +66,7 @@ Socket client = server.accept();  // blocks until client connects
 
 <TcpSegmentAnatomyDiagram />
 
-**Key flags:**
+Key flags:
 - `SYN`: synchronize sequence numbers (connection request)
 - `ACK`: acknowledgment field is valid
 - `FIN`: sender finished sending
@@ -272,26 +271,26 @@ socket.setKeepAlive(true);
 
 ## Interview Questions
 
-**Q1. Describe the TCP three-way handshake.**
+### Q1. Describe the TCP three-way handshake.
 > Client sends SYN with its Initial Sequence Number (ISN). Server responds with SYN-ACK — acknowledging the client's ISN and sending its own ISN. Client sends ACK — acknowledging the server's ISN. After this, the connection is established and both sides have synchronized sequence numbers for reliable, ordered data transfer.
 
-**Q2. What is the purpose of sequence numbers in TCP?**
+### Q2. What is the purpose of sequence numbers in TCP?
 > Sequence numbers serve three purposes: (1) ordering — the receiver can reorder out-of-order segments; (2) duplicate detection — old or retransmitted segments with already-ACKed sequence numbers are discarded; (3) reliable delivery — the sender knows which data has been received via ACK numbers, and retransmits unacknowledged data.
 
-**Q3. What is TCP flow control vs congestion control?**
+### Q3. What is TCP flow control vs congestion control?
 > Flow control prevents the sender from overwhelming the **receiver**'s buffer — the receiver advertises its available window size in each ACK, and the sender limits in-flight data accordingly. Congestion control prevents the sender from overwhelming the **network** — it uses algorithms (slow start, AIMD) to probe for available bandwidth without causing queue overflow at routers.
 
-**Q4. Why does TCP have a TIME_WAIT state and what problems can it cause?**
+### Q4. Why does TCP have a TIME_WAIT state and what problems can it cause?
 > TIME_WAIT ensures: (1) the final ACK reaches the server (if lost, server retransmits FIN within the wait window); (2) duplicate packets from the old connection expire before a new connection on the same port pair is allowed. Problem: high-throughput servers with many short-lived connections can exhaust ephemeral ports and see `address already in use` errors. Solutions: `SO_REUSEADDR`, connection pooling, or `tcp_tw_reuse`.
 
-**Q5. When would you choose UDP over TCP?**
+### Q5. When would you choose UDP over TCP?
 > Choose UDP when: low latency is more important than perfect reliability (VoIP, gaming, real-time video); the application handles its own reliability (QUIC, DNS); data is time-sensitive and retransmission would be useless (live streaming — a retransmitted old frame arrives after newer frames); or multicast/broadcast is needed (DHCP, mDNS).
 
-**Q6. What is TCP slow start and why does it exist?**
+### Q6. What is TCP slow start and why does it exist?
 > Slow start is TCP's initial congestion probing phase. It starts with a small congestion window (1 MSS) and doubles it each RTT until a threshold or loss is detected. This prevents a new connection from immediately blasting traffic onto a congested network. Despite the name, exponential growth is actually fast — a 10 Gbps link can be fully utilized within a few RTTs.
 
-**Q7. What is a SYN flood attack and how is it mitigated?**
+### Q7. What is a SYN flood attack and how is it mitigated?
 > A SYN flood sends many SYN packets without completing the handshake, filling the server's SYN queue (half-open connections). The server allocates state for each SYN, exhausting resources. Mitigation: SYN cookies — the server encodes connection state in the ISN instead of allocating resources; validates the client with the ACK's sequence number. Also: firewall rate limiting on SYNs, shorter SYN timeout.
 
-**Q8. What is the difference between a TCP RST and FIN?**
+### Q8. What is the difference between a TCP RST and FIN?
 > FIN is a graceful close — the sender has finished sending data but the connection stays half-open; the other side can still send. RST is an abrupt abort — the connection is immediately terminated, all buffered data is discarded. RST occurs when: connecting to a closed port, a firewall drops the connection, or the application calls `socket.close()` with pending data (as opposed to `socket.shutdownOutput()` for graceful close).

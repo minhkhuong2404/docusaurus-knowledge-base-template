@@ -6,13 +6,12 @@ tags: [networking, osi, tcpip, layers, encapsulation, protocols]
 sidebar_position: 2
 ---
 
-# OSI & TCP/IP Models
-
 import OsiModelDiagram from '@site/src/components/OsiModelDiagram';
 import DataEncapsulationDiagram from '@site/src/components/DataEncapsulationDiagram';
 import ArpProtocolDiagram from '@site/src/components/ArpProtocolDiagram';
 import TroubleshootingLayerDiagram from '@site/src/components/TroubleshootingLayerDiagram';
 
+# OSI & TCP/IP Models
 
 ## Why Layered Models?
 
@@ -181,26 +180,40 @@ tracert google.com      # Windows
 
 ## Interview Questions
 
-**Q1. What is the OSI model and why does it exist?**
+### Q1. What is the OSI model and why does it exist?
 > The OSI (Open Systems Interconnection) model is a conceptual 7-layer framework that standardizes how different systems communicate over a network. It exists to enable interoperability between different vendors' hardware and software by defining clear interfaces between layers. Each layer has a specific responsibility, making design and troubleshooting modular.
 
-**Q2. What is the difference between the OSI model and the TCP/IP model?**
+---
+
+### Q2. What is the difference between the OSI model and the TCP/IP model?
 > OSI has 7 layers (Physical, Data Link, Network, Transport, Session, Presentation, Application) and is a theoretical reference model. TCP/IP has 4 layers (Network Access, Internet, Transport, Application) and is the practical model the internet actually uses — it merges OSI's top 3 layers into Application and bottom 2 into Network Access.
 
-**Q3. What happens at each layer when you type `https://google.com` in a browser?**
+---
+
+### Q3. What happens at each layer when you type `https://google.com` in a browser?
 > Application: browser constructs HTTP GET request, DNS resolves domain to IP. Transport: TCP connection established (3-way handshake), TLS handshake, request sent in segments. Network: IP packets routed from your machine to Google's servers through multiple routers. Data Link: at each hop, Ethernet frames carry the IP packet with new source/destination MACs. Physical: bits are transmitted over the wire/radio at each hop.
 
-**Q4. What is ARP and why is it needed?**
+---
+
+### Q4. What is ARP and why is it needed?
 > ARP (Address Resolution Protocol) maps a known IP address to an unknown MAC address on the same LAN. Ethernet frames need a destination MAC address; routers use IP to route between networks but need MAC for the final hop. ARP broadcasts "who has IP X?" on the local segment and the target responds with its MAC. Results are cached in the ARP table.
 
-**Q5. What is the difference between a hub, switch, and router?**
+---
+
+### Q5. What is the difference between a hub, switch, and router?
 > Hub (Layer 1): dumb repeater — broadcasts every frame to all ports; creates one large collision domain. Switch (Layer 2): learns MAC-to-port mappings and forwards frames only to the correct port; each port is its own collision domain. Router (Layer 3): forwards packets between different IP networks using a routing table; connects LANs to WANs.
 
-**Q6. What is encapsulation in networking?**
+---
+
+### Q6. What is encapsulation in networking?
 > Encapsulation is the process of adding protocol headers (and sometimes trailers) as data passes down the layers of the network stack. At each layer, the current layer's header is prepended, wrapping the upper layer's data. The resulting PDU at each layer has a different name: data → segment → packet → frame → bits. The receiver reverses this by stripping headers as data moves up.
 
-**Q7. What is TTL and what would happen if it didn't exist?**
+---
+
+### Q7. What is TTL and what would happen if it didn't exist?
 > TTL (Time To Live) is a field in the IP header decremented by 1 at each router hop. When it reaches 0, the packet is dropped and an ICMP "Time Exceeded" is sent back. Without TTL, misrouted or loops-causing packets would circulate indefinitely, consuming network bandwidth forever. `traceroute` exploits TTL by sending packets with increasing TTL (1, 2, 3...) to map each hop.
 
-**Q8. At which OSI layer do TLS/SSL operate?**
+---
+
+### Q8. At which OSI layer do TLS/SSL operate?
 > TLS operates primarily at OSI Layer 6 (Presentation) in terms of its function (encryption/decryption and format translation), but in the TCP/IP model it's considered part of the Application layer and sits between the Application and Transport layers. TLS uses TCP (Layer 4) as its transport and wraps application-layer protocols like HTTP to create HTTPS.

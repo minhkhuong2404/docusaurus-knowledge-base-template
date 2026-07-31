@@ -9,8 +9,6 @@ sidebar_position: 6
 import DnsResolutionFlowDiagram from '@site/src/components/DnsResolutionFlowDiagram';
 import DnsRecordTypesDiagram from '@site/src/components/DnsRecordTypesDiagram';
 
-
-
 # DNS Resolution
 
 <DnsResolutionFlowDiagram />
@@ -18,7 +16,6 @@ import DnsRecordTypesDiagram from '@site/src/components/DnsRecordTypesDiagram';
 <DnsRecordTypesDiagram />
 
 ---
-
 
 ## What is DNS?
 
@@ -285,26 +282,26 @@ WebClient client = WebClient.builder()
 
 ## Interview Questions
 
-**Q1. Describe the full DNS resolution process for `api.example.com`.**
+### Q1. Describe the full DNS resolution process for `api.example.com`.
 > Client checks browser cache → OS cache → if miss, asks local resolver. Resolver checks its cache → if miss, queries root NS for `.com` TLD NS → queries TLD NS for `example.com` authoritative NS → queries authoritative NS for `api.example.com` → gets A record (IP + TTL). Resolver caches result and returns to client. Full chain: ~4 queries, 50–200ms. Cached: < 1ms.
 
-**Q2. What is a CNAME record and when can't you use it?**
+### Q2. What is a CNAME record and when can't you use it?
 > A CNAME aliases one hostname to another (the canonical name). The resolver follows the CNAME and looks up the final A/AAAA record. You cannot use CNAME at the zone apex (naked domain: `example.com`) because RFC 1034 forbids other records coexisting with a CNAME, and zones must have SOA/NS records. Use ALIAS or ANAME (Route 53, Cloudflare) for apex aliases — they resolve to A records.
 
-**Q3. What is DNS TTL and how does it affect deployments?**
+### Q3. What is DNS TTL and how does it affect deployments?
 > TTL is how long resolvers and clients cache a DNS answer. Low TTL (60s) allows fast IP changes but increases query load. Before changing IPs (failover, deployment), lower TTL to 60s and wait for the current TTL to expire globally. Then make the change. After traffic shifts, raise TTL again. Ignoring TTL is why "DNS propagation takes 24-48 hours" — high TTLs of existing records.
 
-**Q4. What is DNS cache poisoning and how does DNSSEC prevent it?**
+### Q4. What is DNS cache poisoning and how does DNSSEC prevent it?
 > Cache poisoning: an attacker convinces a resolver to cache a fraudulent DNS mapping (e.g., `bank.com → attacker's IP`). Classically exploited via Kaminsky attack by guessing the transaction ID. DNSSEC prevents this by signing zone data with cryptographic keys — the resolver validates the signature chain from the root. A tampered response has an invalid signature and is rejected.
 
-**Q5. What is the difference between a recursive resolver and an authoritative nameserver?**
+### Q5. What is the difference between a recursive resolver and an authoritative nameserver?
 > Recursive resolver (e.g., 8.8.8.8): accepts DNS queries from clients, does the work of traversing the hierarchy, caches results. It knows how to find answers but doesn't own any zones. Authoritative nameserver: owns the actual DNS records for a zone (`example.com`). It is the final source of truth and doesn't recurse — it just answers questions about its own zones.
 
-**Q6. What are SRV records and when are they used?**
+### Q6. What are SRV records and when are they used?
 > SRV (Service) records specify the hostname and port for a service: `_service._proto.name TTL class SRV priority weight port target`. Used by gRPC (for load balancing and discovery), SIP/VoIP, XMPP, and Kubernetes internal DNS. Example: `_grpc._tcp.api.example.com SRV 10 20 443 api-grpc.example.com`. Allows clients to discover service endpoints from DNS.
 
-**Q7. What is split-horizon DNS?**
+### Q7. What is split-horizon DNS?
 > Split-horizon DNS returns different answers based on the requester's source IP. Internal clients get private IP addresses (routing traffic over the internal network), external clients get public IPs. Uses: keeping internal topology hidden, routing internal traffic without external NAT traversal, geographic load balancing. Implemented via DNS views in BIND or separate internal/external zones in cloud DNS.
 
-**Q8. Why might a Java application not respect a DNS TTL change immediately?**
+### Q8. Why might a Java application not respect a DNS TTL change immediately?
 > Java's JVM has its own DNS cache separate from the OS. By default it caches successful lookups indefinitely (`networkaddress.cache.ttl=-1` in some older versions) or for 30 seconds. When DNS TTL expires, the OS and resolver update, but the JVM still serves the old cached IP. Fix: set `networkaddress.cache.ttl` in `java.security` or via `Security.setProperty()`. HTTP connection pools may also cache connections to specific IPs beyond the DNS TTL.
