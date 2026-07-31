@@ -112,9 +112,9 @@ Operations team investigates:
 
 | Priority | SLA | Action on Breach |
 |----------|-----|-----------------|
-| > $100,000 | 24 hours | Escalate to senior ops manager |
-| $10,000–$100,000 | 3 business days | Team lead review |
-| < $10,000 | 5 business days | Standard ops handling |
+| > \$100,000 | 24 hours | Escalate to senior ops manager |
+| \$10,000–\$100,000 | 3 business days | Team lead review |
+| < \$10,000 | 5 business days | Standard ops handling |
 | Any amount after 10 days | Mandatory return | Regulatory obligation |
 
 ---

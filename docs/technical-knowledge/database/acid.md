@@ -37,10 +37,10 @@ This guide covers ACID from the ground up — simple analogies first, then low-l
 
 ## 🐣 ACID for Beginners
 
-Consider a **bank transfer of $100 from Alice to Bob**. Two operations must both succeed:
+Consider a **bank transfer of \$100 from Alice to Bob**. Two operations must both succeed:
 
-1. **Deduct $100** from Alice's account.
-2. **Add $100** to Bob's account.
+1. **Deduct \$100** from Alice's account.
+2. **Add \$100** to Bob's account.
 
 ```
 [ Alice: $500 ]  ──( -$100 )──►  [ Deducted: $100 ]  ──( +$100 )──►  [ Bob: $200 ]
@@ -48,11 +48,11 @@ Consider a **bank transfer of $100 from Alice to Bob**. Two operations must both
 
 ### 1. Atomicity — All or Nothing
 
-If the server crashes **after** deducting from Alice but **before** crediting Bob, the $100 would vanish. Atomicity guarantees this never happens — the database rolls back Alice's deduction, restoring her $500.
+If the server crashes **after** deducting from Alice but **before** crediting Bob, the \$100 would vanish. Atomicity guarantees this never happens — the database rolls back Alice's deduction, restoring her \$500.
 
 ### 2. Consistency — Rules Are Never Broken
 
-The bank enforces: *"Balance cannot go negative."* If Alice has $50 and tries to send $100, the database rejects the whole transaction before it starts. The database always moves between valid states.
+The bank enforces: *"Balance cannot go negative."* If Alice has \$50 and tries to send \$100, the database rejects the whole transaction before it starts. The database always moves between valid states.
 
 ### 3. Isolation — Transactions are Private
 
