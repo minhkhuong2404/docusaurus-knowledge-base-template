@@ -44,6 +44,7 @@ The following files in `docs/technical-knowledge/interview-questions/grokking-ja
 
 ## Build Verification Guidelines
 - Do not run `npm run build` automatically to verify changes unless explicitly requested by the user, as the build process is very slow and compiles the entire website.
+- Use `npx tsc --noEmit` to verify TypeScript type correctness for React diagram components quickly.
 
 ## Diagram Styling & Animation Guidelines
 - Prefer custom interactive React SVG components (like [CircuitBreakerDiagram.tsx](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/src/components/CircuitBreakerDiagram.tsx)) for core system architectures, state machines, and key visual assets.
@@ -57,25 +58,27 @@ The following files in `docs/technical-knowledge/interview-questions/grokking-ja
 
 ### When to create an interactive diagram
 
-Replace static content (ASCII art, ```` ```mermaid ``` ```` blocks, plain markdown tables) with a React component whenever the section covers:
+Replace static content (ASCII art, ```` ```mermaid ``` ```` blocks, plain markdown tables, or text-only stub containers) with a functional React component whenever the section covers:
 - A protocol handshake or multi-step sequence flow
 - A system architecture with interconnected nodes/services
 - A comparison table with more than 4 rows
-- A reference list users need to search or filter (headers, status codes, config options)
+- A reference list users need to search or filter (headers, status codes, config options, troubleshooting tools)
 - A production checklist or audit criteria
 
 ### Mandatory implementation rules
 
 1. **File location**: Always create in `src/components/<ConceptName>Diagram.tsx`.
 2. **Outer wrapper**: Always use `className="interactive-diagram-container"` — never a bare `<div>`.
-3. **Header bar**: Always include a header with an `<svg>` icon (never emoji) and a descriptive title. Use the `.interactive-diagram-header` CSS class pattern from DESIGNS.md. Style the icon with a distinct accent color from the palette, the title text with the primary theme color (e.g. `#34d399`), and match any action buttons to this theme scheme.
-4. **Color tokens**: Use only the curated hex palette from DESIGNS.md Section 3. Never use plain CSS color names (`red`, `blue`, etc.).
-5. **CSS variables for text**: Always use `var(--ifm-color-content)` and `var(--ifm-color-content-secondary)` for body text — this handles light/dark mode automatically.
-6. **No emoji in JSX headers**: Use inline `<svg>` icons from the icon library in DESIGNS.md Section 6.
-7. **Ternary safety**: Always resolve all branches in nested ternaries. Dangling ternaries cause Rspack build failures.
-8. **SVG markers**: Always set `fill="context-fill"` on `<marker>` path elements for hover-aware arrowheads. When using colored paths, define specific colored `<marker>` elements in `<defs>` and apply them dynamically to ensure the arrowhead color matches the path body color exactly.
-9. **Responsive Grid Columns**: In multi-column (split pane) layouts, avoid flexible fractional columns like `1.2fr 1fr` which shift when text content wraps. Use fixed percentage grids (e.g., `55% 45%`, `align-items: start`) and embed an inline `<style>` media query block to wrap columns to `1fr` on screens smaller than `768px`.
-10. **Node & Lifeline Spacing**: For both sequence diagrams and state/flow charts, add gap offsets to arrow coordinates (e.g. `+6px` start, `-12px` target) so that path lines and arrowhead tips float cleanly and do not overlap or touch vertical sequence lifelines or block nodes.
+3. **Header bar**: Always include a header with an `<svg>` icon (never emoji) and a descriptive title. Use the `.interactive-diagram-header` CSS class pattern from DESIGNS.md. Style the icon with a distinct accent color from the palette, the title text with the primary theme color (e.g. `#34d399` or `#38bdf8`), and match any action buttons to this theme scheme.
+4. **No Superficial Stubs**: Components must contain genuine visual representations (SVG node graphs with directed edges, stateful sequence flows with directional arrows/timers, rich tabbed card panels, or live filtering lists). Text-only single-line tab placeholders are forbidden.
+5. **Color tokens**: Use only the curated hex palette from DESIGNS.md Section 3 (`#38bdf8`, `#34d399`, `#fbbf24`, `#f97316`, `#f87171`, `#a78bfa`, `#8b5cf6`, `#2dd4bf`, `#f472b6`). Never use plain CSS color names (`red`, `blue`, etc.).
+6. **CSS variables for text**: Always use `var(--ifm-color-content)` and `var(--ifm-color-content-secondary)` for body text — this handles light/dark mode automatically.
+7. **No emoji in JSX headers**: Use inline `<svg>` icons from the icon library in DESIGNS.md Section 6.
+8. **Ternary safety**: Always resolve all branches in nested ternaries. Dangling ternaries cause Rspack build failures.
+9. **SVG markers**: Always set `fill="context-fill"` on `<marker>` path elements for hover-aware arrowheads. When using colored paths, define specific colored `<marker>` elements in `<defs>` and apply them dynamically to ensure the arrowhead color matches the path body color exactly.
+10. **Responsive Grid Columns**: In multi-column (split pane) layouts, avoid flexible fractional columns like `1.2fr 1fr` which shift when text content wraps. Use fixed percentage grids (e.g., `55% 45%`, `58% 42%`, `50% 50%`, `align-items: start`) and embed an inline `<style>` media query block to wrap columns to `1fr` on screens smaller than `768px` (`@media (max-width: 768px)`).
+11. **Node & Lifeline Spacing**: For both sequence diagrams and state/flow charts, add gap offsets to arrow coordinates (e.g. `+6px` start, `-12px` target) so that path lines and arrowhead tips float cleanly and do not overlap or touch vertical sequence lifelines or block nodes.
+12. **TypeScript Validation**: Always verify new components with `npx tsc --noEmit` before declaring completion.
 
 ### Choose the right archetype (full templates in DESIGNS.md Section 5)
 
@@ -84,7 +87,7 @@ Replace static content (ASCII art, ```` ```mermaid ``` ```` blocks, plain markdo
 | Protocol handshake / sequence / request-response flow | **A — Animated Flow** |
 | Architecture with nodes and directed edges | **B — SVG Node Graph** |
 | Feature comparison / protocol evolution / tabs | **C — Tabbed Explorer** |
-| Lookup reference (headers, status codes, options) | **D — Searchable List** |
+| Lookup reference (headers, status codes, options, tools) | **D — Searchable List** |
 | Pre-launch audit / review criteria | **E — Interactive Checklist** |
 
 ### Integration into markdown
@@ -97,7 +100,7 @@ import MyDiagram from '@site/src/components/MyDiagram';
 
 - Imports go immediately after the frontmatter `---` block.
 - Replace the static block (ASCII, code block, or table) entirely with the JSX tag.
-- Verify with the running dev server: look for `client (Rspack) compiled successfully`.
+- Verify with `npx tsc --noEmit` and check dev server logs for `client (Rspack) compiled successfully`.
 
 ### Existing component index
 
@@ -125,6 +128,37 @@ Before creating a new component, check whether one already exists for the concep
 | `TokenInvalidationFlowDiagram` | Refresh token rotation, single-device & multi-device session invalidation |
 | `AccountHackedResponseDiagram` | Animated incident response timeline + 3 access-token revocation methods tabbed explorer |
 | `PasswordInvalidationDiagram` | Tabbed Single-Device vs Multi-Device password update invalidation with comparison table |
+| `KafkaArchitectureOverviewDiagram` | Kafka cluster topology (producers, brokers, partitions, consumer groups) |
+| `KafkaTopicPartitionDiagram` | Topic partition allocation, segment files, append-only log structure |
+| `KafkaPartitionOffsetDiagram` | Offset committing, high watermark, log end offset (LEO) visualization |
+| `KafkaBrokerStorageDiagram` | Broker log segment files (.log, .index, .timeindex), zero-copy sendfile |
+| `KraftVsZookeeperDiagram` | KRaft metadata quorum vs legacy ZooKeeper architecture comparison |
+| `KafkaProducerInternalsDiagram` | Producer record pipeline: Serializer → Partitioner → RecordAccumulator → Sender thread |
+| `KafkaProducerAcksDiagram` | Interactive comparison of acks=0, acks=1, acks=all (all in-sync replicas) |
+| `KafkaProducerIdempotencyDiagram` | Idempotent producer sequence numbers, Producer ID (PID), deduplication |
+| `KafkaProducerTransactionsDiagram` | Multi-topic atomic transactions, Transaction Coordinator, 2PC commit markers |
+| `KafkaHashKeyPartitioningDiagram` | Key hash murmur2 partitioning calculation and target partition routing |
+| `KafkaConsumerOverviewDiagram` | Consumer pull loop, poll() execution, and heartbeat background thread |
+| `KafkaConsumerGroupRebalanceDiagram` | 5-phase rebalance protocol sequence animation |
+| `KafkaConsumerLagPoisonDiagram` | Consumer lag monitor dashboard with poison pill alert states |
+| `KafkaParallelConsumerDiagram` | Parallel consumer threading model comparison |
+| `NetworkIndexOverviewDiagram` | TCP/IP 5-layer protocol stack explorer with interactive layer inspection |
+| `NetworkPacketEncapsulationDiagram` | 4-stage packet encapsulation visualizer (+TCP, +IP, +Ethernet frame) |
+| `NetworkPerformanceOptimizationDiagram` | Latency hierarchy, TCP kernel tuning, HTTP/2 multiplexing, bandwidth optimization |
+| `NetworkSecurityProtocolsDiagram` | Security protocol deep dive (TLS 1.3, mTLS, OAuth2/JWT, WAF/Firewall) |
+| `NetworkSegmentationDiagram` | Defense-in-depth SVG network security zones (DMZ, App, DB, Firewalls) |
+| `NetworkTroubleshootingToolsDiagram` | Searchable diagnostic tools reference (ping, traceroute, dig, curl, ss, tcpdump, openssl, nmap) |
+| `NetworkingInterviewScenariosDiagram` | 4 scenario deep-dives (URL typing flow, TCP vs UDP, HTTPS handshake, API debugging) |
+| `OsOverviewDiagram` | Ring 3 to Ring 0 Linux kernel subsystem architecture node graph |
+| `OsProcessesThreadsDiagram` | Virtual memory address space layout + 1:1 vs M:N (Virtual Threads) thread models |
+| `OsCpuSchedulingDiagram` | Interactive Gantt chart for Linux CFS, Round Robin, and SJF scheduling |
+| `OsMemoryManagementDiagram` | 7-step virtual address translation, TLB lookup, page fault handler, page replacement |
+| `OsVirtualMemoryDiagram` | Demand paging, Copy-on-Write (fork), swap eviction, transparent huge pages |
+| `OsSyncDeadlockDiagram` | Animated Deadlock and Race Condition sequence flows + sync primitives |
+| `OsFileSystemsIoDiagram` | VFS layer, file descriptor table, and buffered vs O_DIRECT vs mmap I/O modes |
+| `OsLinuxSyscallsDiagram` | 6-step SYSCALL/SYSRET lifecycle animation + filterable syscalls reference |
+| `OsIpcNetworkingDiagram` | Tabbed IPC explorer (Pipes, Shared Memory, UDS, Signals, POSIX Message Queues) |
+| `OsInterviewScenariosDiagram` | Senior OS interview scenarios (Process vs Thread, Page Fault, Mutex vs Semaphore, fork()) |
 
 ## MANDATORY: Register Every New Page in sidebars.ts
 
@@ -160,4 +194,3 @@ items: [
 ### Failure to Register = Build Warning + Page Unreachable
 
 Pages not registered in `sidebars.ts` will not appear in the left navigation and may generate Docusaurus build warnings. **Always update `sidebars.ts` as part of any page creation task.**
-

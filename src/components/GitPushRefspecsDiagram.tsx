@@ -1,53 +1,41 @@
 import React, { useState } from 'react';
 
+const MODES = [
+  { id: 'standard', label: 'git push origin main', color: '#38bdf8', desc: 'Standard push. Sends local commits to origin/main. Fails if remote contains commits not present locally (non-fast-forward rejected).' },
+  { id: 'refspec', label: 'git push origin feat:main', color: '#34d399', desc: 'Explicit Refspec syntax: <src>:<dst>. Pushes local branch feat to remote branch main on origin.' },
+  { id: 'force', label: 'git push --force-with-lease', color: '#fbbf24', desc: 'Safe force push. Overwrites remote history ONLY if remote refs match local origin/main tracker. Prevents overwriting work pushed by teammates.' },
+  { id: 'upstream', label: 'git push -u origin main', color: '#a78bfa', desc: 'Sets upstream tracking (-u / --set-upstream). Links local main to origin/main so future calls require only git push / git pull.' },
+];
+
 export default function GitPushRefspecsDiagram(): React.JSX.Element {
-  const [flag, setFlag] = useState<'normal' | 'lease' | 'force'>('lease');
+  const [active, setActive] = useState<string>('standard');
+  const mode = MODES.find(m => m.id === active)!;
 
   return (
     <div className="interactive-diagram-container" style={{ fontFamily: 'var(--ifm-font-family-base)' }}>
       <div className="interactive-diagram-header">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <polyline points="16 16 12 12 8 16"/>
-          <line x1="12" y1="12" x2="12" y2="21"/>
-          <path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"/>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34d399" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="12 19 12 5 19 12"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
         </svg>
         <span style={{ color: 'var(--ifm-color-content)', fontWeight: 700 }}>
-          Git Push Mechanics & Force Guard (`--force-with-lease` vs `--force`)
+          Git Push &amp; Refspecs Explorer
         </span>
       </div>
 
       <div style={{ padding: '16px' }}>
-        <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
-          <button onClick={() => setFlag('normal')} style={{ flex: 1, padding: '8px', borderRadius: '6px', border: flag === 'normal' ? '1px solid #38bdf8' : '1px solid rgba(255,255,255,0.1)', backgroundColor: flag === 'normal' ? 'rgba(56, 189, 248, 0.15)' : '#0c0e17', color: '#fff', fontSize: '12px', cursor: 'pointer' }}>
-            `git push` (Fast-Forward Only)
-          </button>
-          <button onClick={() => setFlag('lease')} style={{ flex: 1, padding: '8px', borderRadius: '6px', border: flag === 'lease' ? '1px solid #34d399' : '1px solid rgba(255,255,255,0.1)', backgroundColor: flag === 'lease' ? 'rgba(52, 211, 153, 0.15)' : '#0c0e17', color: '#fff', fontSize: '12px', cursor: 'pointer' }}>
-            `--force-with-lease` (Safe Force)
-          </button>
-          <button onClick={() => setFlag('force')} style={{ flex: 1, padding: '8px', borderRadius: '6px', border: flag === 'force' ? '1px solid #f87171' : '1px solid rgba(255,255,255,0.1)', backgroundColor: flag === 'force' ? 'rgba(248, 113, 113, 0.15)' : '#0c0e17', color: '#fff', fontSize: '12px', cursor: 'pointer' }}>
-            `--force` (Dangerous Overwrite)
-          </button>
+        <div style={{ display: 'flex', gap: '8px', marginBottom: '14px', flexWrap: 'wrap' }}>
+          {MODES.map(m => (
+            <button key={m.id} onClick={() => setActive(m.id)}
+              style={{ flex: 1, padding: '8px 10px', borderRadius: '8px', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '11px', background: active === m.id ? `${m.color}18` : 'rgba(255,255,255,0.04)', color: active === m.id ? m.color : 'var(--ifm-color-content-secondary)', boxShadow: active === m.id ? `0 0 0 1.5px ${m.color}50` : '0 0 0 1px rgba(255,255,255,0.08)', transition: 'all 0.2s ease' }}>
+              {m.label}
+            </button>
+          ))}
         </div>
 
-        <div style={{ backgroundColor: '#0c0e17', padding: '14px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.08)' }}>
-          {flag === 'normal' && (
-            <div>
-              <div style={{ fontSize: '13px', fontWeight: 700, color: '#38bdf8', marginBottom: '4px' }}>Standard Push</div>
-              <p style={{ fontSize: '12px', color: 'var(--ifm-color-content)', margin: 0 }}>Pushes commits only if remote branch can be fast-forwarded. If remote has new commits, push is rejected with <code>[rejected - non-fast-forward]</code>.</p>
-            </div>
-          )}
-          {flag === 'lease' && (
-            <div>
-              <div style={{ fontSize: '13px', fontWeight: 700, color: '#34d399', marginBottom: '4px' }}>`--force-with-lease` (Recommended)</div>
-              <p style={{ fontSize: '12px', color: 'var(--ifm-color-content)', margin: 0 }}>Checks if remote ref matches your local `origin/main` tracking pointer. Refuses force-push if a teammate pushed new commits you haven't fetched yet!</p>
-            </div>
-          )}
-          {flag === 'force' && (
-            <div>
-              <div style={{ fontSize: '13px', fontWeight: 700, color: '#f87171', marginBottom: '4px' }}>`--force` (Dangerous)</div>
-              <p style={{ fontSize: '12px', color: 'var(--ifm-color-content)', margin: 0 }}>Blindly overwrites remote branch pointer regardless of teammate commits. Can cause irreversible loss of remote commit history for your team!</p>
-            </div>
-          )}
+        <div style={{ background: `${mode.color}0d`, border: `1px solid ${mode.color}30`, borderRadius: '10px', padding: '14px' }}>
+          <code style={{ fontSize: '13px', fontWeight: 700, color: mode.color, display: 'block', marginBottom: '6px' }}>{mode.label}</code>
+          <p style={{ fontSize: '12px', color: 'var(--ifm-color-content-secondary)', margin: 0, lineHeight: 1.6 }}>{mode.desc}</p>
         </div>
       </div>
     </div>

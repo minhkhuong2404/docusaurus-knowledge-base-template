@@ -1,45 +1,62 @@
 import React, { useState } from 'react';
 
+const TABS = [
+  { id: 'markers', label: 'Conflict Markers', color: '#f87171', code: `<<<<<<< HEAD
+const API_URL = "https://api.v1.example.com";
+=======
+const API_URL = "https://api.v2.example.com";
+>>>>>>> feature/api-v2`, detail: 'Conflict markers inserted by Git into files where 3-way merge cannot resolve automatically. HEAD contains current branch code, feature/api-v2 contains incoming code.' },
+  { id: 'diff3', label: 'diff3 Style', color: '#fbbf24', code: `<<<<<<< HEAD
+const API_URL = "https://api.v1.example.com";
+||||||| ancestor
+const API_URL = "http://localhost:8080";
+=======
+const API_URL = "https://api.v2.example.com";
+>>>>>>> feature/api-v2`, detail: 'Configured via git config merge.conflictStyle diff3. Shows common ancestor baseline between current branch and incoming branch.' },
+  { id: 'resolve', label: 'Resolution Commands', color: '#34d399', code: `# Accept current branch version
+git checkout --ours file.js
+
+# Accept incoming branch version
+git checkout --theirs file.js
+
+# Mark as resolved & complete merge
+git add file.js
+git merge --continue`, detail: 'Use git checkout --ours / --theirs for wholesale file acceptance, or edit file markers manually and stage.' },
+];
+
 export default function GitConflictResolutionDiagram(): React.JSX.Element {
-  const [resolution, setResolution] = useState<'conflict' | 'ours' | 'theirs' | 'both'>('conflict');
+  const [active, setActive] = useState<string>('markers');
+  const tab = TABS.find(t => t.id === active)!;
 
   return (
     <div className="interactive-diagram-container" style={{ fontFamily: 'var(--ifm-font-family-base)' }}>
       <div className="interactive-diagram-header">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-          <line x1="12" y1="9" x2="12" y2="13"/>
-          <line x1="12" y1="17" x2="12.01" y2="17"/>
+          <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
         </svg>
         <span style={{ color: 'var(--ifm-color-content)', fontWeight: 700 }}>
-          Interactive Merge Conflict Marker Inspector & Resolution Strategy
+          Git Conflict Resolution Inspector
         </span>
       </div>
 
       <div style={{ padding: '16px' }}>
-        <div style={{ display: 'flex', gap: '6px', marginBottom: '16px' }}>
-          <button onClick={() => setResolution('conflict')} style={{ flex: 1, padding: '6px 8px', borderRadius: '4px', border: '1px solid #f87171', backgroundColor: resolution === 'conflict' ? 'rgba(248, 113, 113, 0.15)' : '#0c0e17', color: '#fff', fontSize: '11.5px', cursor: 'pointer' }}>
-            Raw Conflict Markers
-          </button>
-          <button onClick={() => setResolution('ours')} style={{ flex: 1, padding: '6px 8px', borderRadius: '4px', border: '1px solid #38bdf8', backgroundColor: resolution === 'ours' ? 'rgba(56, 189, 248, 0.15)' : '#0c0e17', color: '#fff', fontSize: '11.5px', cursor: 'pointer' }}>
-            Accept Current (Ours)
-          </button>
-          <button onClick={() => setResolution('theirs')} style={{ flex: 1, padding: '6px 8px', borderRadius: '4px', border: '1px solid #fbbf24', backgroundColor: resolution === 'theirs' ? 'rgba(251, 191, 36, 0.15)' : '#0c0e17', color: '#fff', fontSize: '11.5px', cursor: 'pointer' }}>
-            Accept Incoming (Theirs)
-          </button>
-          <button onClick={() => setResolution('both')} style={{ flex: 1, padding: '6px 8px', borderRadius: '4px', border: '1px solid #34d399', backgroundColor: resolution === 'both' ? 'rgba(52, 211, 153, 0.15)' : '#0c0e17', color: '#fff', fontSize: '11.5px', cursor: 'pointer' }}>
-            Combine Both
-          </button>
+        <div style={{ display: 'flex', gap: '8px', marginBottom: '14px' }}>
+          {TABS.map(t => (
+            <button key={t.id} onClick={() => setActive(t.id)}
+              style={{ flex: 1, padding: '8px 12px', borderRadius: '8px', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '11.5px', background: active === t.id ? `${t.color}18` : 'rgba(255,255,255,0.04)', color: active === t.id ? t.color : 'var(--ifm-color-content-secondary)', boxShadow: active === t.id ? `0 0 0 1.5px ${t.color}50` : '0 0 0 1px rgba(255,255,255,0.08)', transition: 'all 0.2s ease' }}>
+              {t.label}
+            </button>
+          ))}
         </div>
 
-        <pre style={{ margin: 0, padding: '12px', backgroundColor: '#05070e', borderRadius: '6px', fontSize: '12px', fontFamily: 'monospace', color: '#e2e8f0', border: '1px solid rgba(255,255,255,0.05)' }}>
-          <code>
-            {resolution === 'conflict' && `<<<<<<< HEAD (Current Change)\nconst timeout = 5000;\n=======\nconst timeout = 10000; // Updated for heavy queries\n>>>>>>> feature/timeout (Incoming Change)`}
-            {resolution === 'ours' && `const timeout = 5000;`}
-            {resolution === 'theirs' && `const timeout = 10000; // Updated for heavy queries`}
-            {resolution === 'both' && `const DEFAULT_TIMEOUT = 5000;\nconst HEAVY_QUERY_TIMEOUT = 10000;`}
-          </code>
+        <pre style={{ margin: '0 0 12px 0', background: 'rgba(0,0,0,0.4)', border: `1px solid ${tab.color}40`, borderRadius: '8px', padding: '12px', fontSize: '11px', color: tab.color, fontFamily: 'monospace', whiteSpace: 'pre-wrap', lineHeight: 1.55 }}>
+          {tab.code}
         </pre>
+
+        <div style={{ background: `${tab.color}0d`, border: `1px solid ${tab.color}30`, borderRadius: '10px', padding: '12px' }}>
+          <p style={{ fontSize: '12px', color: 'var(--ifm-color-content-secondary)', margin: 0, lineHeight: 1.6 }}>{tab.detail}</p>
+        </div>
       </div>
     </div>
   );

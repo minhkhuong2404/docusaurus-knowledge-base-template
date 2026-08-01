@@ -8,11 +8,11 @@
 ## Quick-Start Decision Tree
 
 ```
-Is there a static ASCII block, code block, or table to replace?
+Is there a static ASCII block, code block, table, or text-only stub to replace?
 ├─ YES → Is it a sequence/handshake/flow?             → Archetype A (Animated Flow)
-│         Is it nodes + directed edges?               → Archetype B (SVG Node Graph)
+│         Is it nodes + directed edges/architecture?  → Archetype B (SVG Node Graph)
 │         Is it comparison/tabs/protocol evolution?   → Archetype C (Tabbed Explorer)
-│         Is it a lookup reference (headers/codes)?   → Archetype D (Searchable List)
+│         Is it a lookup reference (headers/tools)?   → Archetype D (Searchable List)
 │         Is it a checklist/audit criteria?           → Archetype E (Interactive Checklist)
 └─ NO  → Do not create a component.
 ```
@@ -36,9 +36,9 @@ src/components/<ConceptName>Diagram.tsx
 ```tsx
 import React, { useState } from 'react';
 
-export default function MyConcept Diagram() {
-  // 1. All interactive state declared here
-  const [activeItem, setActiveItem] = useState<string | null>(null);
+export default function MyConceptDiagram(): React.JSX.Element {
+  // 1. Interactive state
+  const [selected, setSelected] = useState<string | null>(null);
 
   return (
     // 2. Outermost wrapper — ALWAYS this class
@@ -47,14 +47,19 @@ export default function MyConcept Diagram() {
       {/* 3. Header bar — ALWAYS present */}
       <div className="interactive-diagram-header">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          {/* icon paths — see Section 6 for common icons */}
+             stroke="#34d399" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          {/* icon paths — see Section 6 */}
         </svg>
-        <span>Descriptive Title (no emoji)</span>
-        {/* Optional: action button with marginLeft:'auto' */}
+        <span style={{ color: 'var(--ifm-color-content)', fontWeight: 700 }}>
+          Descriptive Title (no emoji)
+        </span>
+        {/* Optional: action button with marginLeft: 'auto' */}
       </div>
 
       {/* 4. Component body — choose an archetype below */}
+      <div style={{ padding: '16px' }}>
+        {/* Archetype JSX content */}
+      </div>
 
     </div>
   );
@@ -72,11 +77,12 @@ All classes are in [`src/css/diagrams.css`](file:///Users/lukhuong/Desktop/docus
 | Class | Use for |
 |---|---|
 | `.interactive-diagram-container` | **Required outermost wrapper.** Dark card `#090b14`, 16px rounded, shadow. |
+| `.interactive-diagram-header` | Standard header bar with border, flex alignment, and icon spacing. |
 | `.interactive-diagram-svg-wrapper` | Wrapper around `<svg>` canvas. Dark `#0d0f1e`, inner shadow. |
 | `.interactive-diagram-grid-bg` | Dot-matrix grid texture. Add alongside `.interactive-diagram-svg-wrapper`. |
 | `.interactive-diagram-details-card` | Hover/click detail side panel. Dark `#0c0e17`. |
 | `.interactive-diagram-card-header` | Flex row with icon + title inside a details card. |
-| `.interactive-diagram-helper-text` | Small muted hint text ("click a node to inspect"). |
+| `.interactive-diagram-helper-text` | Muted hint text ("Click a node to inspect"). |
 
 ### Animation
 
@@ -107,15 +113,15 @@ All classes are in [`src/css/diagrams.css`](file:///Users/lukhuong/Desktop/docus
 
 | Name | Hex | Semantic role |
 |---|---|---|
-| Sky blue | `#38bdf8` | HTTP requests, neutral info flows |
-| Emerald | `#34d399` | Success, server responses, healthy |
-| Amber | `#fbbf24` | Warnings, redirects, intermediate |
-| Orange | `#f97316` | Client errors (4xx), caution |
-| Red | `#f87171` | Server errors (5xx), critical |
-| Purple | `#a78bfa` | Encryption, advanced/special |
-| Violet | `#8b5cf6` | OS/kernel, AQS internals |
-| Teal | `#2dd4bf` | Streaming, data flow |
-| Pink | `#f472b6` | Security attacks, anomalies |
+| Sky blue | `#38bdf8` | HTTP requests, neutral info flows, client side |
+| Emerald | `#34d399` | Success, server responses, healthy, completed |
+| Amber | `#fbbf24` | Warnings, redirects, intermediate states, storage/VFS |
+| Orange | `#f97316` | Client errors (4xx), caution, hardware layer |
+| Red | `#f87171` | Server errors (5xx), critical, deadlock, untrusted |
+| Purple | `#a78bfa` | Encryption, kernel/OS, advanced concepts |
+| Violet | `#8b5cf6` | AQS internals, execution context |
+| Teal | `#2dd4bf` | Streaming, data flow, IPC channels |
+| Pink | `#f472b6` | Security attacks, anomalies, signal handlers |
 
 **Alpha overlay formula** (append to hex):
 
@@ -130,25 +136,23 @@ All classes are in [`src/css/diagrams.css`](file:///Users/lukhuong/Desktop/docus
 
 ## Archetype A — Animated Flow
 
-**Use when:** The content is a sequence: request → response, handshake steps, multi-actor message flow.
+**Use when:** Sequence flows, multi-step handshakes, or protocol execution steps.
 
-**Structure:**
-- Three-column grid: `[Actor A box] [arrows column] [Actor B box]`
-- Each step is a row in the arrows column with a direction (left or right arrow)
-- Steps dim to `opacity: 0.3` when not active
-- Optional **Animate** button steps through with `useEffect` + `setTimeout`
-
-**Full template:**
+**Key features:**
+- Steps array with directional indicators (`left` or `right`), labels, and detail notes.
+- Step playback control (`playing`, `animStep`, `useEffect` with `setTimeout`).
+- Click-to-inspect step functionality.
 
 ```tsx
 import React, { useState, useEffect } from 'react';
 
 const STEPS = [
-  { id: 1, direction: 'right' as const, label: 'GET /resource', color: '#38bdf8', note: 'Client requests' },
-  { id: 2, direction: 'left'  as const, label: '200 OK + Body', color: '#34d399', note: 'Server responds' },
+  { id: 1, direction: 'right' as const, label: 'SYN', color: '#38bdf8', note: 'Client initiates TCP handshake' },
+  { id: 2, direction: 'left'  as const, label: 'SYN-ACK', color: '#34d399', note: 'Server responds with ACK + SYN' },
+  { id: 3, direction: 'right' as const, label: 'ACK', color: '#38bdf8', note: 'Connection established' },
 ];
 
-export default function MyFlowDiagram() {
+export default function TcpHandshakeDiagram(): React.JSX.Element {
   const [activeStep, setActiveStep] = useState<number | null>(null);
   const [animStep, setAnimStep]     = useState(0);
   const [playing, setPlaying]       = useState(false);
@@ -164,70 +168,44 @@ export default function MyFlowDiagram() {
   return (
     <div className="interactive-diagram-container" style={{ fontFamily: 'var(--ifm-font-family-base)' }}>
       <div className="interactive-diagram-header">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
         </svg>
-        <span>My Flow Title</span>
+        <span style={{ color: 'var(--ifm-color-content)', fontWeight: 700 }}>TCP 3-Way Handshake</span>
         <button onClick={handlePlay} disabled={playing}
-                style={{ marginLeft: 'auto', padding: '6px 14px', borderRadius: '8px',
-                         border: 'none', cursor: playing ? 'not-allowed' : 'pointer',
-                         fontWeight: 600, fontSize: '12px',
-                         background: playing ? 'rgba(255,255,255,0.06)' : 'rgba(56,189,248,0.15)',
-                         color: playing ? 'var(--ifm-color-content-secondary)' : '#38bdf8',
-                         boxShadow: playing ? 'none' : '0 0 0 1.5px rgba(56,189,248,0.4)',
-                         transition: 'all 0.2s ease' }}>
-          {playing ? 'Playing…' : 'Animate'}
+          style={{ marginLeft: 'auto', padding: '6px 14px', borderRadius: '8px', border: 'none', cursor: playing ? 'not-allowed' : 'pointer', fontWeight: 600, fontSize: '12px', background: playing ? 'rgba(255,255,255,0.06)' : 'rgba(56,189,248,0.15)', color: playing ? 'var(--ifm-color-content-secondary)' : '#38bdf8', boxShadow: playing ? 'none' : '0 0 0 1.5px rgba(56,189,248,0.4)', transition: 'all 0.2s ease' }}>
+          {playing ? 'Playing…' : '▶ Animate'}
         </button>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '130px 1fr 130px', gap: '12px', alignItems: 'center' }}>
-        {/* Actor A */}
-        <div style={{ background: 'rgba(56,189,248,0.10)', border: '1.5px solid rgba(56,189,248,0.35)',
-                      borderRadius: '12px', padding: '14px 10px', textAlign: 'center' }}>
-          <div style={{ fontSize: '12px', fontWeight: 700, color: '#38bdf8' }}>Client</div>
-        </div>
+      <div style={{ padding: '16px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr 120px', gap: '12px', alignItems: 'center' }}>
+          <div style={{ background: 'rgba(56,189,248,0.10)', border: '1.5px solid rgba(56,189,248,0.35)', borderRadius: '12px', padding: '14px 10px', textAlign: 'center' }}>
+            <div style={{ fontSize: '12px', fontWeight: 700, color: '#38bdf8' }}>Client</div>
+          </div>
 
-        {/* Steps column */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          {STEPS.map((step, i) => {
-            const isActive = activeStep !== null && i <= activeStep;
-            const isRight  = step.direction === 'right';
-            return (
-              <div key={step.id} onClick={() => setActiveStep(activeStep === i ? null : i)}
-                   style={{ display: 'flex', flexDirection: isRight ? 'row' : 'row-reverse',
-                            alignItems: 'center', gap: '8px', cursor: 'pointer',
-                            opacity: isActive ? 1 : 0.3,
-                            transition: 'opacity 0.5s ease, transform 0.3s ease',
-                            transform: isActive ? 'translateY(0)' : 'translateY(4px)' }}>
-                {/* Arrow line */}
-                <div style={{ flex: 1, height: '2px',
-                              background: `linear-gradient(${isRight ? '90deg' : '270deg'}, ${step.color}00, ${step.color})`,
-                              position: 'relative' }}>
-                  <div style={{ position: 'absolute',
-                                [isRight ? 'right' : 'left']: '-1px', top: '-4px',
-                                width: 0, height: 0,
-                                borderTop: '5px solid transparent', borderBottom: '5px solid transparent',
-                                [isRight ? 'borderLeft' : 'borderRight']: `8px solid ${step.color}` }} />
-                </div>
-                {/* Label */}
-                <div style={{ padding: '5px 10px', borderRadius: '7px', flexShrink: 0,
-                              background: `${step.color}18`, border: `1px solid ${step.color}40` }}>
-                  <div style={{ fontFamily: 'monospace', fontSize: '11.5px', color: step.color, fontWeight: 700 }}>
-                    {step.label}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {STEPS.map((step, i) => {
+              const isActive = activeStep !== null && i <= activeStep;
+              const isRight  = step.direction === 'right';
+              return (
+                <div key={step.id} onClick={() => setActiveStep(activeStep === i ? null : i)}
+                  style={{ display: 'flex', flexDirection: isRight ? 'row' : 'row-reverse', alignItems: 'center', gap: '8px', cursor: 'pointer', opacity: isActive ? 1 : 0.3, transition: 'opacity 0.5s ease' }}>
+                  <div style={{ flex: 1, height: '2px', background: `linear-gradient(${isRight ? '90deg' : '270deg'}, ${step.color}00, ${step.color})`, position: 'relative' }}>
+                    <div style={{ position: 'absolute', [isRight ? 'right' : 'left']: '-1px', top: '-4px', width: 0, height: 0, borderTop: '5px solid transparent', borderBottom: '5px solid transparent', [isRight ? 'borderLeft' : 'borderRight']: `8px solid ${step.color}` }} />
                   </div>
-                  <div style={{ fontSize: '10px', color: 'var(--ifm-color-content-secondary)', marginTop: '1px' }}>
-                    {step.note}
+                  <div style={{ padding: '5px 10px', borderRadius: '7px', flexShrink: 0, background: `${step.color}18`, border: `1px solid ${step.color}40` }}>
+                    <div style={{ fontFamily: 'monospace', fontSize: '11.5px', color: step.color, fontWeight: 700 }}>{step.label}</div>
+                    <div style={{ fontSize: '10px', color: 'var(--ifm-color-content-secondary)', marginTop: '1px' }}>{step.note}</div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
 
-        {/* Actor B */}
-        <div style={{ background: 'rgba(52,211,153,0.10)', border: '1.5px solid rgba(52,211,153,0.35)',
-                      borderRadius: '12px', padding: '14px 10px', textAlign: 'center' }}>
-          <div style={{ fontSize: '12px', fontWeight: 700, color: '#34d399' }}>Server</div>
+          <div style={{ background: 'rgba(52,211,153,0.10)', border: '1.5px solid rgba(52,211,153,0.35)', borderRadius: '12px', padding: '14px 10px', textAlign: 'center' }}>
+            <div style={{ fontSize: '12px', fontWeight: 700, color: '#34d399' }}>Server</div>
+          </div>
         </div>
       </div>
     </div>
@@ -235,251 +213,245 @@ export default function MyFlowDiagram() {
 }
 ```
 
-**Real examples:** `HttpWhatIsDiagram.tsx`, `TlsHandshakeDiagram.tsx`, `CorsDiagram.tsx`
-
 ---
 
 ## Archetype B — SVG Node Graph
 
-**Use when:** The content is an architecture — nodes (services, components, layers) connected by directed edges.
+**Use when:** Architecture flows, system node topologies, or subsystem layered diagrams.
 
-**Structure:**
-- `<svg viewBox="0 0 W H">` inside `.interactive-diagram-svg-wrapper.interactive-diagram-grid-bg`
-- Nodes: `<g onClick>` containing `<rect>` + `<text>`
-- Edges: `<path id="e1">` with `markerEnd="url(#arr)"`
-- Particles: `<circle><animateMotion><mpath href="#e1"/></animateMotion></circle>` (conditional on hover)
-- Details panel below SVG shows on `hoveredNode !== null`
-
-**Arrowhead marker (always use `context-fill`):**
+**Key features:**
+- SVG canvas wrapped in `.interactive-diagram-svg-wrapper.interactive-diagram-grid-bg`.
+- SVG nodes with hover/click selection.
+- Split-pane layout using fixed percentage grid (`55% 45%` or `58% 42%`) with inline `@media (max-width: 768px)` block.
+- Side details card powered by `.interactive-diagram-details-card`.
 
 ```tsx
-<defs>
-  <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-    <path d="M0,0 L0,6 L8,3 z" fill="context-fill" />
-  </marker>
-</defs>
+import React, { useState } from 'react';
+
+const NODES = [
+  { id: 'client', label: 'Client', subtitle: 'Browser / App', x: 30, y: 50, w: 110, h: 60, color: '#38bdf8', detail: { title: 'Client Component', body: 'Sends HTTP requests to the backend.', tags: ['HTTP/2', 'TLS 1.3'] } },
+  { id: 'lb', label: 'Load Balancer', subtitle: 'NGINX / ALB', x: 220, y: 50, w: 120, h: 60, color: '#fbbf24', detail: { title: 'Load Balancer', body: 'Terminates TLS and routes traffic.', tags: ['Round Robin', 'Health check'] } },
+];
+
+export default function ArchNodeGraphDiagram(): React.JSX.Element {
+  const [selected, setSelected] = useState<string | null>(null);
+  const selNode = NODES.find(n => n.id === selected) ?? null;
+
+  return (
+    <div className="interactive-diagram-container" style={{ fontFamily: 'var(--ifm-font-family-base)' }}>
+      <style>{`@media (max-width: 768px) { .arch-grid { grid-template-columns: 1fr !important; } }`}</style>
+      <div className="interactive-diagram-header">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/>
+        </svg>
+        <span style={{ color: 'var(--ifm-color-content)', fontWeight: 700 }}>System Architecture Topology</span>
+      </div>
+
+      <div style={{ padding: '16px' }}>
+        <div className="arch-grid" style={{ display: 'grid', gridTemplateColumns: '55% 45%', gap: '16px', alignItems: 'start' }}>
+          <div className="interactive-diagram-svg-wrapper interactive-diagram-grid-bg" style={{ borderRadius: '10px', overflow: 'hidden' }}>
+            <svg viewBox="0 0 370 160" style={{ width: '100%', height: 'auto' }}>
+              <defs>
+                <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L8,3 z" fill="#38bdf8" />
+                </marker>
+              </defs>
+              <line x1="140" y1="80" x2="215" y2="80" stroke="#38bdf8" strokeWidth="2" markerEnd="url(#arr-blue)" />
+
+              {NODES.map(n => {
+                const isActive = selected === n.id;
+                return (
+                  <g key={n.id} onClick={() => setSelected(selected === n.id ? null : n.id)} style={{ cursor: 'pointer' }}>
+                    <rect x={n.x} y={n.y} width={n.w} height={n.h} rx="8" fill={isActive ? `${n.color}25` : `${n.color}10`} stroke={n.color} strokeWidth={isActive ? 2 : 1.5} />
+                    <text x={n.x + n.w / 2} y={n.y + 26} textAnchor="middle" fill={n.color} fontSize="12" fontWeight="700">{n.label}</text>
+                    <text x={n.x + n.w / 2} y={n.y + 44} textAnchor="middle" fill={n.color} fontSize="9" opacity={0.7}>{n.subtitle}</text>
+                  </g>
+                );
+              })}
+            </svg>
+          </div>
+
+          <div className={`interactive-diagram-details-card ${selNode ? 'details-blue' : 'details-gray'}`} style={{ minHeight: '160px', display: 'flex', flexDirection: 'column', justifyContent: selNode ? 'flex-start' : 'center' }}>
+            {selNode ? (
+              <div>
+                <div style={{ fontWeight: 700, fontSize: '13px', color: selNode.color, marginBottom: '8px' }}>{selNode.detail.title}</div>
+                <p style={{ fontSize: '12px', color: 'var(--ifm-color-content-secondary)', margin: '0 0 10px', lineHeight: 1.6 }}>{selNode.detail.body}</p>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
+                  {selNode.detail.tags.map(t => (
+                    <code key={t} style={{ fontSize: '10px', background: `${selNode.color}18`, color: selNode.color, border: `1px solid ${selNode.color}30`, borderRadius: '4px', padding: '2px 6px' }}>{t}</code>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="interactive-diagram-helper-text" style={{ textAlign: 'center' }}>Click any node to inspect details</div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 ```
-
-**Node pattern:**
-
-```tsx
-<g key={node.id}
-   onClick={() => setHovered(hovered === node.id ? null : node.id)}
-   style={{ cursor: 'pointer' }}
-   className={hovered === node.id ? 'node-active-green' : ''}>
-  <rect x={node.x} y={node.y} width={node.w} height={node.h} rx="8"
-        fill={`${node.color}18`} stroke={node.color} strokeWidth="1.5" />
-  <text x={node.x + node.w / 2} y={node.y + node.h / 2 + 5}
-        textAnchor="middle" fill={node.color} fontSize="13" fontWeight="700">
-    {node.label}
-  </text>
-</g>
-```
-
-**Edge + particle pattern:**
-
-```tsx
-<path id="e-client-server" d="M 140 120 L 540 120"
-      fill="none" stroke="#38bdf8" strokeWidth="2" markerEnd="url(#arr)"
-      className={hovered === 'client' ? 'interactive-diagram-flowing-path' : ''} />
-{hovered === 'client' && (
-  <circle r="3" fill="#38bdf8" className="interactive-diagram-flowing-dot">
-    <animateMotion dur="1.2s" repeatCount="indefinite">
-      <mpath href="#e-client-server" />
-    </animateMotion>
-  </circle>
-)}
-```
-
-**Real examples:** `CircuitBreakerDiagram.tsx`, `AQSArchitectureDiagram.tsx`, `CollectionsHierarchyDiagram.tsx`
 
 ---
 
 ## Archetype C — Tabbed Explorer
 
-**Use when:** Multiple distinct views of the same concept (HTTP version comparison, phase-by-phase breakdown, protocol features).
-
-**Tab button pattern:**
+**Use when:** Multiple distinct tabs comparing features, mechanisms, or modes.
 
 ```tsx
-{TABS.map(t => (
-  <button key={t.id} onClick={() => setActiveTab(t.id)} style={{
-    padding: '8px 16px', borderRadius: '8px', border: 'none', cursor: 'pointer',
-    fontWeight: 600, fontSize: '13px',
-    background: activeTab === t.id ? `${t.color}18` : 'rgba(255,255,255,0.04)',
-    color:      activeTab === t.id ? t.color : 'var(--ifm-color-content-secondary)',
-    boxShadow:  activeTab === t.id ? `0 0 0 1.5px ${t.color}50` : '0 0 0 1px rgba(255,255,255,0.08)',
-    transition: 'all 0.2s ease',
-  }}>
-    {t.label}
-  </button>
-))}
-```
+import React, { useState } from 'react';
 
-**Real examples:** `HttpStatusCodesDiagram.tsx`, `HttpEvolutionDiagram.tsx`, `QuicFlowCongestionLossDiagram.tsx`
+const TABS = [
+  { id: 'mode1', label: 'Mode A', color: '#38bdf8', text: 'Detailed description of Mode A.' },
+  { id: 'mode2', label: 'Mode B', color: '#34d399', text: 'Detailed description of Mode B.' },
+];
+
+export default function TabbedExplorerDiagram(): React.JSX.Element {
+  const [activeTab, setActiveTab] = useState('mode1');
+  const tab = TABS.find(t => t.id === activeTab)!;
+
+  return (
+    <div className="interactive-diagram-container" style={{ fontFamily: 'var(--ifm-font-family-base)' }}>
+      <div className="interactive-diagram-header">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+        </svg>
+        <span style={{ color: 'var(--ifm-color-content)', fontWeight: 700 }}>Tabbed Mode Comparison</span>
+      </div>
+
+      <div style={{ padding: '16px' }}>
+        <div style={{ display: 'flex', gap: '8px', marginBottom: '14px' }}>
+          {TABS.map(t => (
+            <button key={t.id} onClick={() => setActiveTab(t.id)}
+              style={{ flex: 1, padding: '8px 12px', borderRadius: '8px', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '12px', background: activeTab === t.id ? `${t.color}18` : 'rgba(255,255,255,0.04)', color: activeTab === t.id ? t.color : 'var(--ifm-color-content-secondary)', boxShadow: activeTab === t.id ? `0 0 0 1.5px ${t.color}50` : '0 0 0 1px rgba(255,255,255,0.08)', transition: 'all 0.2s ease' }}>
+              {t.label}
+            </button>
+          ))}
+        </div>
+
+        <div style={{ background: `${tab.color}0d`, border: `1px solid ${tab.color}30`, borderRadius: '10px', padding: '14px' }}>
+          <p style={{ fontSize: '12.5px', color: 'var(--ifm-color-content-secondary)', margin: 0, lineHeight: 1.6 }}>{tab.text}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
 
 ---
 
 ## Archetype D — Searchable List + Detail Panel
 
-**Use when:** A large reference list that users need to filter and look up (headers, status codes, config keys).
-
-**Two-column grid layout:**
+**Use when:** Filterable lists of tools, headers, status codes, or options.
 
 ```tsx
-<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-  {/* LEFT: scrollable list */}
-  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px',
-                maxHeight: '340px', overflowY: 'auto', paddingRight: '4px' }}>
-    {filtered.map(item => (
-      <button key={item.name} onClick={() => setSelected(selected === item.name ? null : item.name)} style={{
-        display: 'flex', alignItems: 'flex-start', gap: '10px',
-        padding: '9px 12px', borderRadius: '7px', border: 'none',
-        cursor: 'pointer', textAlign: 'left',
-        background: selected === item.name ? `${color}15` : 'rgba(255,255,255,0.03)',
-        boxShadow: selected === item.name ? `0 0 0 1.5px ${color}50` : '0 0 0 1px rgba(255,255,255,0.06)',
-        transition: 'all 0.2s ease',
-      }}>
-        <code style={{ fontSize: '11.5px', fontWeight: 700, color,
-                       background: `${color}15`, borderRadius: '4px', padding: '1px 5px' }}>
-          {item.name}
-        </code>
-        <span style={{ fontSize: '12px', color: 'var(--ifm-color-content-secondary)' }}>
-          {item.purpose}
-        </span>
-      </button>
-    ))}
-  </div>
+import React, { useState } from 'react';
 
-  {/* RIGHT: detail panel */}
-  <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '12px',
-                border: '1px solid rgba(255,255,255,0.08)', padding: '20px',
-                display: 'flex', flexDirection: 'column',
-                justifyContent: selectedItem ? 'flex-start' : 'center' }}>
-    {selectedItem ? (
-      <div>{/* detail content */}</div>
-    ) : (
-      <div style={{ textAlign: 'center', color: 'var(--ifm-color-content-secondary)', fontSize: '13px' }}>
-        Select an item to see details
+const ITEMS = [
+  { name: 'ping', layer: 'L3 Network', color: '#38bdf8', desc: 'Test IP reachability using ICMP Echo Requests.' },
+  { name: 'curl', layer: 'L5 Application', color: '#34d399', desc: 'Transfer data over HTTP/HTTPS with full header control.' },
+];
+
+export default function SearchableListDiagram(): React.JSX.Element {
+  const [search, setSearch] = useState('');
+  const [selected, setSelected] = useState<string | null>('ping');
+
+  const filtered = ITEMS.filter(i => i.name.includes(search.toLowerCase()) || i.desc.toLowerCase().includes(search.toLowerCase()));
+  const sel = ITEMS.find(i => i.name === selected) ?? null;
+
+  return (
+    <div className="interactive-diagram-container" style={{ fontFamily: 'var(--ifm-font-family-base)' }}>
+      <div className="interactive-diagram-header">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <span style={{ color: 'var(--ifm-color-content)', fontWeight: 700 }}>Tools Reference</span>
+        <input type="text" placeholder="Search…" value={search} onChange={e => { setSearch(e.target.value); setSelected(null); }}
+          style={{ marginLeft: 'auto', padding: '6px 10px', borderRadius: '7px', border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.05)', color: 'var(--ifm-color-content)', fontSize: '12px', outline: 'none', width: '140px' }} />
       </div>
-    )}
-  </div>
-</div>
+
+      <div style={{ padding: '16px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+            {filtered.map(item => (
+              <button key={item.name} onClick={() => setSelected(item.name === selected ? null : item.name)}
+                style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 10px', borderRadius: '7px', border: 'none', cursor: 'pointer', textAlign: 'left', background: selected === item.name ? `${item.color}15` : 'rgba(255,255,255,0.03)', boxShadow: selected === item.name ? `0 0 0 1.5px ${item.color}50` : '0 0 0 1px rgba(255,255,255,0.06)' }}>
+                <code style={{ fontSize: '11.5px', color: item.color, fontWeight: 700 }}>{item.name}</code>
+                <span style={{ fontSize: '11px', color: 'var(--ifm-color-content-secondary)' }}>{item.layer}</span>
+              </button>
+            ))}
+          </div>
+
+          <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.08)', padding: '14px' }}>
+            {sel ? (
+              <div>
+                <div style={{ fontSize: '13px', fontWeight: 700, color: sel.color, marginBottom: '6px' }}>{sel.name}</div>
+                <p style={{ fontSize: '12px', color: 'var(--ifm-color-content-secondary)', margin: 0, lineHeight: 1.6 }}>{sel.desc}</p>
+              </div>
+            ) : (
+              <div style={{ fontSize: '12px', color: 'var(--ifm-color-content-secondary)', textAlign: 'center' }}>Select an item</div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 ```
-
-**Search box pattern (place in header with `marginLeft: 'auto'`):**
-
-```tsx
-<input type="text" placeholder="Search…" value={search}
-       onChange={e => { setSearch(e.target.value); setSelected(null); }}
-       style={{ marginLeft: 'auto', padding: '7px 12px', borderRadius: '8px',
-                border: '1px solid rgba(255,255,255,0.12)',
-                background: 'rgba(255,255,255,0.05)',
-                color: 'var(--ifm-color-content)', fontSize: '12.5px',
-                outline: 'none', width: '160px' }} />
-```
-
-**Real examples:** `HttpHeadersDiagram.tsx`, `HttpStatusCodesDiagram.tsx`
 
 ---
 
 ## Archetype E — Interactive Checklist
 
-**Use when:** A pre-launch checklist or review criteria with categories.
-
-**Checkbox pattern:**
+**Use when:** Pre-launch review or production audit checklists.
 
 ```tsx
-<div onClick={() => toggle(key)} style={{
-  display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px',
-  borderRadius: '8px', cursor: 'pointer',
-  background: isChecked ? `${color}0e` : 'rgba(255,255,255,0.03)',
-  border: `1px solid ${isChecked ? color + '35' : 'rgba(255,255,255,0.07)'}`,
-  transition: 'all 0.2s ease',
-}}>
-  {/* Visual checkbox */}
-  <div style={{ width: '18px', height: '18px', borderRadius: '4px', flexShrink: 0,
-                border: `2px solid ${isChecked ? color : 'rgba(255,255,255,0.2)'}`,
-                background: isChecked ? color : 'transparent',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                transition: 'all 0.2s ease' }}>
-    {isChecked && (
-      <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-        <polyline points="1.5,5 4,7.5 8.5,2.5" stroke="white" strokeWidth="1.8"
-                  strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    )}
-  </div>
-  <span style={{ fontSize: '13px', color: 'var(--ifm-color-content)',
-                 textDecoration: isChecked ? 'line-through' : 'none',
-                 transition: 'all 0.2s ease' }}>
-    {item.text}
-  </span>
-</div>
-```
+import React, { useState } from 'react';
 
-**Progress bar pattern:**
+const ITEMS = [
+  { id: 't1', text: 'TLS 1.3 enabled' },
+  { id: 't2', text: 'Connection pool configured' },
+];
 
-```tsx
-<div style={{ height: '6px', borderRadius: '3px', background: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
-  <div style={{ height: '100%', borderRadius: '3px', width: `${progress}%`,
-                background: progress === 100 ? '#34d399' : `linear-gradient(90deg, ${color}99, ${color})`,
-                transition: 'width 0.4s ease' }} />
-</div>
-```
+export default function ProductionChecklistDiagram(): React.JSX.Element {
+  const [checked, setChecked] = useState<Record<string, boolean>>({});
 
-**Real example:** `ProductionChecklistDiagram.tsx`
+  const toggle = (id: string) => setChecked(c => ({ ...c, [id]: !c[id] }));
+  const count = Object.values(checked).filter(Boolean).length;
+  const pct = Math.round((count / ITEMS.length) * 100);
 
----
+  return (
+    <div className="interactive-diagram-container" style={{ fontFamily: 'var(--ifm-font-family-base)' }}>
+      <div className="interactive-diagram-header">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34d399" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+        </svg>
+        <span style={{ color: 'var(--ifm-color-content)', fontWeight: 700 }}>Production Checklist ({pct}%)</span>
+      </div>
 
-## Header Icon Library
+      <div style={{ padding: '16px' }}>
+        <div style={{ height: '6px', borderRadius: '3px', background: 'rgba(255,255,255,0.08)', overflow: 'hidden', marginBottom: '14px' }}>
+          <div style={{ height: '100%', width: `${pct}%`, background: '#34d399', transition: 'width 0.4s ease' }} />
+        </div>
 
-Use these inline SVG icons. All use `viewBox="0 0 24 24"`, `fill="none"`, `stroke="currentColor"`, `strokeWidth="2"`, `strokeLinecap="round"`, `strokeLinejoin="round"`.
-
-```tsx
-{/* Globe — HTTP, networking, web */}
-<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
-<path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-
-{/* Lock — security, TLS, auth */}
-<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-<path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-
-{/* Layers — protocol stack, OSI model */}
-<polygon points="12 2 2 7 12 12 22 7 12 2"/>
-<polyline points="2 17 12 22 22 17"/>
-<polyline points="2 12 12 17 22 12"/>
-
-{/* Arrow right — request flow, sequence */}
-<line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-
-{/* Server/database — backend, services */}
-<rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/>
-<line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/>
-
-{/* Monitor — client, browser */}
-<rect x="2" y="3" width="20" height="14" rx="2"/>
-<line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
-
-{/* Check-square — checklist */}
-<path d="M9 11l3 3L22 4"/>
-<path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
-
-{/* Search — searchable reference */}
-<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-
-{/* Activity — data flow, streaming */}
-<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-
-{/* Code — programming, methods */}
-<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
-
-{/* Shield — security headers, firewall */}
-<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-
-{/* Grid — collections, framework */}
-<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
-<rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          {ITEMS.map(item => {
+            const isDone = !!checked[item.id];
+            return (
+              <div key={item.id} onClick={() => toggle(item.id)}
+                style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 12px', borderRadius: '7px', cursor: 'pointer', background: isDone ? 'rgba(52,211,153,0.08)' : 'rgba(255,255,255,0.03)', border: `1px solid ${isDone ? 'rgba(52,211,153,0.3)' : 'rgba(255,255,255,0.07)'}` }}>
+                <span style={{ fontSize: '12px', color: isDone ? '#34d399' : 'var(--ifm-color-content-secondary)' }}>{isDone ? '✓' : '○'}</span>
+                <span style={{ fontSize: '12px', color: 'var(--ifm-color-content)', textDecoration: isDone ? 'line-through' : 'none' }}>{item.text}</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
 ```
 
 ---
@@ -493,44 +465,7 @@ Before submitting a component, verify:
 - [ ] All hex colors are from the palette table above
 - [ ] Text uses `var(--ifm-color-content)` / `var(--ifm-color-content-secondary)`
 - [ ] Every ternary has a `false` branch (no dangling `x ? a :`)
-- [ ] `<marker>` path uses `fill="context-fill"` or dynamically maps color-matching definition IDs to match path stroke color. Never use grey arrowheads on colored paths.
-- [ ] Multi-column layouts use fixed percentage columns (e.g. `55% 45%`) with `align-items: start` and an inline media query style block to stack columns to `1fr` on small screens. Avoid dynamic fractional divisions like `1.2fr 1fr` that shift column widths when text changes or wraps.
-- [ ] Node & lifeline nodes are padded. Add spacing offsets to arrow coordinates (e.g. `+6px` start, `-12px` end) so path lines and arrowhead tips float cleanly and do not overlap or touch vertical sequence lifelines or block nodes.
-- [ ] SVG `<text>` has `textAnchor` set (`middle`, `start`, or `end`)
-- [ ] The markdown import is added after the frontmatter block
-- [ ] Dev server shows `compiled successfully` after saving
-
----
-
-## Integration Checklist
-
-```markdown
-{/* Step 1: Add import after frontmatter */}
-import MyDiagram from '@site/src/components/MyDiagram';
-
-{/* Step 2: Replace static content in the section */}
-<MyDiagram />
-```
-
-- Imports go **immediately after** the closing `---` of the frontmatter.
-- Multiple imports are fine; keep them grouped together.
-- The static content (ASCII block, mermaid block, table) is **fully replaced** — do not keep both.
-
----
-
-## Interview Questions Section Styling Specification
-
-To maintain 100% aesthetic and structural consistency across all documentation pages (e.g. `redis`, `git`, `networking`, `java`, `database`), all interview questions sections must follow these strict rules:
-
-### 1. Section Header Format
-- Always use `## Interview Questions` for topic-embedded interview sections.
-- Always use `# [Topic] Interview Questions & Answers` for dedicated master list pages (e.g., `redis-interview-questions.md`, `networking-interview-questions.md`).
-- Do not use emoji prefixes in section headers (e.g., avoid `## ❓ Interview Questions`).
-
-### 2. Question & Answer Structure
-- **Question (Q)**: Must use the **primary theme color** (`var(--ifm-color-primary)`, e.g. `#34d399` / `#38bdf8`) in bold text. Format as `### Q1. [Question Text]` or `### Q: [Question Text]` (H3 headers automatically use the primary theme color) or `<span style={{ color: 'var(--ifm-color-primary)' }}>**Q1. [Question Text]**</span>`.
-- **Answer (A)**: Must be **non-bold regular text** (white / default body text in dark mode). Format the answer using blockquotes `> [Answer text...]` or clean structured paragraphs without wrapping the answer body in bold text.
-- **Deep Dive Details**: Follow the answer text with structured bullet points, code snippets, or gotchas where applicable.
-- **Interactive Component Placement**: Embed interactive React SVG components immediately under the main section header to visualize key scenario answers.
-- **Clean Dividers**: Separate distinct Q&A blocks with a single horizontal rule (`---`). Never use duplicate consecutive dividers (`---\n---`).
-
+- [ ] `<marker>` path uses `fill="context-fill"` or dynamically maps color-matching definition IDs to match path stroke color.
+- [ ] Multi-column layouts use fixed percentage columns (`55% 45%`, `58% 42%`, `50% 50%`) with `align-items: start` and inline media query style block to stack columns to `1fr` on small screens (`@media (max-width: 768px)`).
+- [ ] Node & lifeline nodes are padded. Add spacing offsets to arrow coordinates (e.g. `+6px` start, `-12px` end) so path lines and arrowhead tips float cleanly.
+- [ ] Component compiles cleanly with `npx tsc --noEmit`.
