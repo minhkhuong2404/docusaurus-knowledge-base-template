@@ -69,24 +69,6 @@ Security is a **subset** of governance.
 
 Most teams pass through four stages:
 
-```
-1. Ad hoc
-   └─ ACLs added during incidents. No Schema Registry. No central audit.
-      One platform engineer knows where everything is.
-
-2. Discoverable
-   └─ Schema Registry deployed. Topic naming conventions written down
-      (if not enforced). Brokers shipping audit to a SIEM.
-
-3. Owned
-   └─ Topics registered against applications and teams. Access requests
-      go through a workflow. Schema breaking changes blocked at produce time.
-
-4. Programmable
-   └─ Governance expressed as code (Terraform, GitOps). Policies enforced
-      declaratively. Audit and quality rules versioned alongside app code.
-```
-
 Stages 3 and 4 are where governance stops being its own workstream and becomes **how the platform behaves**.
 
 ---
@@ -231,15 +213,15 @@ try {
 
 ## Interview Questions
 
-**Q: What is the difference between Kafka security and Kafka data governance?**
+### Q: What is the difference between Kafka security and Kafka data governance?
 
 > Security answers "Can the wrong person reach the data?" — covering authentication (who you are), authorization (what you can do), and encryption (protecting data in transit and at rest). Governance answers "Can the right person reach the right data with the right shape?" — it extends security to include schema contracts, topic ownership, data quality rules, and audit/lineage tracking. Governance is a superset of security.
 
-**Q: Why doesn't the Kafka broker provide data governance?**
+### Q: Why doesn't the Kafka broker provide data governance?
 
 > Kafka is designed as a high-throughput, low-latency distributed log. The broker intentionally has no concept of team ownership, schema contracts, sensitive fields, or audit history — these concerns are kept out of the core broker to maintain simplicity and performance. Governance is built as a separate layer using Schema Registry for schemas, ACLs/RBAC for access control, key management systems for encryption, and SIEM pipelines for audit.
 
-**Q: What are the four maturity stages of Kafka data governance?**
+### Q: What are the four maturity stages of Kafka data governance?
 
 > (1) **Ad hoc**: ACLs added reactively during incidents, no Schema Registry, no central audit. (2) **Discoverable**: Schema Registry deployed, naming conventions documented, brokers shipping audit to SIEM. (3) **Owned**: Topics registered to teams in a catalog, access requests go through a workflow, schema breaking changes blocked at produce time. (4) **Programmable**: Governance expressed as code (Terraform/GitOps), policies enforced declaratively, audit and quality rules versioned alongside application code.
 

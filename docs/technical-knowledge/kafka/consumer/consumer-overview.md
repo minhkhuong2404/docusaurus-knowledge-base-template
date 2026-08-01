@@ -10,7 +10,14 @@ tags:
 - consumer
 - consumer-overview
 ---
+
+import KafkaConsumerOverviewDiagram from '@site/src/components/KafkaConsumerOverviewDiagram';
+
 # Kafka Consumer
+
+<KafkaConsumerOverviewDiagram />
+
+---
 
 ## What is a Consumer?
 
@@ -19,23 +26,6 @@ A **consumer** reads messages from Kafka topics. Unlike traditional queues (push
 ---
 
 ## Consumer Internals
-
-```
-Kafka Broker (leader partition)
-        │
-        │  FetchRequest (poll)
-        ▼
-  Consumer Client
-        │
-        ▼
-  ConsumerRecords<K, V>
-        │
-        ▼
-  Application processes records
-        │
-        ▼
-  commitOffset (manual or auto)
-```
 
 The consumer maintains an **offset** per assigned partition, tracking the last processed record.
 
@@ -202,22 +192,22 @@ public ConcurrentKafkaListenerContainerFactory<String, OrderEvent> kafkaListener
 
 ## Interview Questions
 
-**Q: What is `max.poll.interval.ms` and what happens when it's exceeded?**
+### Q: What is `max.poll.interval.ms` and what happens when it's exceeded?
 
 > `max.poll.interval.ms` (default 5 minutes) is the maximum time between two consecutive `poll()` calls. If processing takes longer, the broker considers the consumer dead and triggers a group rebalance, revoking its partitions. In Spring Kafka, this usually means your `@KafkaListener` processing is too slow — increase this value or reduce `max.poll.records`.
 
-**Q: What is the difference between `session.timeout.ms` and `max.poll.interval.ms`?**
+### Q: What is the difference between `session.timeout.ms` and `max.poll.interval.ms`?
 
 > `session.timeout.ms` controls heartbeat-based liveness detection — if no heartbeat arrives within this window, the broker considers the consumer dead. `max.poll.interval.ms` controls processing liveness — if the consumer doesn't call `poll()` within this time, it's removed from the group. Since Kafka 0.10.1, these are separate: `session.timeout.ms` handles network failures; `max.poll.interval.ms` handles slow processing.
 
-**Q: What is at-least-once vs at-most-once delivery?**
+### Q: What is at-least-once vs at-most-once delivery?
 
 > **At-most-once**: Offset committed before processing. If the consumer crashes after commit, the message is lost (never reprocessed). **At-least-once**: Offset committed after successful processing. If the consumer crashes after processing but before commit, the message is reprocessed (possible duplicate). Most production systems prefer at-least-once with idempotent processing logic.
 
-**Q: What is `auto.offset.reset=none`?**
+### Q: What is `auto.offset.reset=none`?
 
 > It causes the consumer to throw `NoOffsetForPartitionException` if no committed offset is found for the assigned partition. This is a defensive setting that forces developers to handle the case explicitly — useful when you absolutely cannot tolerate starting from an unintended offset.
 
-**Q: How do you implement a consumer that reads from the beginning every time?**
+### Q: How do you implement a consumer that reads from the beginning every time?
 
 > Assign (not subscribe) to specific partitions and call `consumer.seekToBeginning(partitions)` before polling. In Spring Kafka, you can use `ConsumerRebalanceListener` to `seekToBeginning` during `onPartitionsAssigned`. This is useful for batch reprocessing jobs.

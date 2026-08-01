@@ -11,153 +11,107 @@ import RedisClusterReplicationDiagram from '@site/src/components/RedisClusterRep
 
 # Redis: Overview & Architecture
 
-Redis (Remote Dictionary Server) is an open-source, in-memory data structure store used as a database, cache, message broker, and streaming engine. Its combination of simplicity, speed, and rich data structures makes it ubiquitous in production systems.
-
-#### 👶 Beginner Concept: The "Librarian's Memory" Analogy
-Imagine you ask a massive library for a specific book on 18th Century Rome.
-- **Traditional Database (Disk):** The librarian takes your request, physically walks 5 floors down into the basement (the Hard Drive), pulls out a ledger, finds the row, writes it down, and walks back up. It takes SECONDS.
-- **Redis (In-Memory):** The librarian instantly snaps her fingers and recites the exact paragraph you asked for strictly from her own Short-Term Memory (RAM). It takes MILLISECONDS.
-
-The tradeoff? When the librarian leaves work (the server reboots), her short-term memory is wiped. That's why Redis is perfect for *caching* and active sessions, but dangerous as the sole source of truth for critical long-term billing data.
+Redis (Remote Dictionary Server) is an open-source, in-memory key-value data store optimized for sub-millisecond data retrieval. It acts as an in-memory database, cache, message broker, and streaming engine.
 
 ---
 
-## Why Redis is Fast
+## Why Redis is Fast: The Single-Threaded Event Loop
 
-Redis is often described as "single-threaded" — but this requires nuance:
+Redis processes data commands sequentially using a single-threaded **Reactor Event Loop** (`ae.c`) backed by OS I/O multiplexing (`epoll` on Linux, `kqueue` on macOS):
 
 <RedisReactorPatternDiagram />
 
----
+### Why Single-Threaded Command Execution Works
+1. **Eliminates Thread Lock Contention**: No mutex locks, spinlocks, or context-switching overhead across commands.
+2. **CPU Cache Locality**: Operations execute in RAM; CPU cache line invalidations are minimized.
+3. **RAM Speed Execution**: Operations access RAM frames directly ($\approx 50\text{--}100\text{ ns}$ access times vs $\approx 10\text{ ms}$ disk seeks).
 
-## Redis Architecture Patterns
-
-<RedisClusterReplicationDiagram />() latency:** When Redis forks to create a snapshot, the kernel must copy page tables. On a 10 GB instance, this fork can cause a **50–100ms latency spike**. Use `latency monitor` to detect this.
-
----
-
-## Redis Architecture Patterns
-
-### Standalone
-Single Redis instance — simple but single point of failure.
-
-### Sentinel (High Availability)
-
-- Sentinels vote to promote a replica if master fails
-- Client libraries use Sentinel to discover the current master
-- **Failover time:** typically 10–30 seconds
-
-### Cluster (Horizontal Scaling)
-```
-   Slot 0–5460        Slot 5461–10922     Slot 10923–16383
-   [Master A]          [Master B]          [Master C]
-   [Replica A]         [Replica B]         [Replica C]
-```
-- Hash slots (0–16383) sharded across masters
-- `CLUSTER KEYSLOT mykey` → tells you which slot a key maps to
-- Keys in different slots cannot be used in multi-key operations
-- Use **hash tags** `{user}.orders` and `{user}.profile` to force co-location on same slot
+:::note[Redis 6.0+ Multi-Threaded I/O]
+Since Redis 6.0, socket reading, network protocol parsing, and response serialization are delegated to background I/O threads (`io-threads = 4`). However, **command execution on in-memory data structures remains strictly single-threaded**.
+:::
 
 ---
 
-## Quick Start with Docker
+<details>
+<summary>🔬 Senior deep-dive: Memory Allocator (`jemalloc`) & `redisObject` Header</summary>
 
-```bash
-# Run Redis locally
-docker run --name redis -p 6379:6379 -d redis:latest
+### 1. `redisObject` Memory Header Layout
+Every key-value entry in Redis is wrapped in a 16-byte `redisObject` structure:
 
-# Connect via CLI
-docker exec -it redis redis-cli
+```c
+typedef struct redisObject {
+    unsigned type:4;       // 4 bits: OBJ_STRING, OBJ_LIST, OBJ_SET, OBJ_ZSET, OBJ_HASH
+    unsigned encoding:4;   // 4 bits: OBJ_ENCODING_RAW, OBJ_ENCODING_INT, OBJ_ENCODING_ZIPLIST/LISTPACK
+    unsigned lru:24;       // 24 bits: LRU clock timestamp or LFU logarithmic counter
+    int refcount;          // 4 bytes: Reference count for shared integer objects (0..9999)
+    void *ptr;             // 8 bytes: Pointer to actual underlying data structure payload
+} robj;
 ```
 
-## Spring Boot Integration
+### 2. `jemalloc` Memory Allocation & Fragmentation Ratio
+Redis defaults to `jemalloc` for memory allocation. `jemalloc` allocates memory in power-of-two bins ($8\text{ B}, 16\text{ B}, 32\text{ B}, 64\text{ B}, \dots$).
 
-Add the dependency to your `pom.xml`:
+- **Memory Fragmentation Ratio**:
+  $$\text{Fragmentation Ratio} = \frac{\text{used\_memory\_rss}}{\text{used\_memory}}$$
+- **Ratio $> 1.5$**: High fragmentation (RAM wasted due to `jemalloc` bin padding or un-purged allocation holes). Execute `MEMORY PURGE` or enable active defragmentation (`activedefrag yes`).
+- **Ratio $< 1.0$**: The system is swapping Redis RAM pages to disk! Expect catastrophic latency spikes.
 
-```xml
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-data-redis</artifactId>
-</dependency>
-```
-
-Configure in `application.yml`:
-
-```yaml
-spring:
-  data:
-    redis:
-      host: localhost
-      port: 6379
-      password: your_password  # if set
-      timeout: 2000ms
-```
+</details>
 
 ---
 
-## Common Use Cases
+## Redis Cluster Architecture & Hash Slots
 
-| Use Case | Redis Features Used | Senior Consideration |
-|----------|--------------------|--------------------|
-| Session store | Strings + TTL | Sticky sessions vs distributed session |
-| Rate limiting | INCR + EXPIRE or Sorted Sets | Token bucket vs sliding window |
-| Distributed locks | SET NX EX (Redlock) | Clock drift, lock renewal, fencing tokens |
-| Leaderboards | Sorted Sets | ZRANGEBYSCORE vs ZRANGEBYRANK |
-| Real-time feeds | Streams or Pub/Sub | At-most-once vs at-least-once delivery |
-| Cache | Strings/Hashes + TTL + eviction | Stampede, dogpile, warm-up strategy |
-| Queue | Lists (BLPOP/RPUSH) or Streams | Visibility timeout, dead-letter queue |
-| Geospatial | GEO commands | GEORADIUS for proximity queries |
+Redis Cluster scales writes horizontally across multiple master nodes using **16,384 Hash Slots**:
+
+<RedisClusterReplicationDiagram />
+
+### Hash Slot Allocation Mechanics
+Every key is assigned to one of the 16,384 slots via CRC16:
+
+$$\text{Slot Index} = \text{CRC16}(\text{key}) \pmod{16384}$$
+
+- **Hash Tags (`{...}`)**: Placing `{...}` inside a key name forces Redis to hash *only* the contents of the braces.
+  - Keys `{user:1001}:profile` and `{user:1001}:orders` hash to the exact same slot index, enabling multi-key operations (MGET, Lua scripts, transactions) across co-located keys in a cluster.
+
+---
+
+## Redis Deployment Patterns
+
+| Pattern | High Availability | Read/Write Scale | Failover Mechanism |
+|---|---|---|---|
+| **Standalone** | ❌ None | Single node limit | Manual restart. |
+| **Sentinel** | ✅ High | Read scale via replicas; Single Master write | Sentinels monitor nodes, run quorum election, and promote replica ($10\text{--}30\text{ s}$). |
+| **Redis Cluster** | ✅ High | Horizontal Write & Read scaling | Sharded across 16,384 slots; master failure triggers automatic replica promotion by peers. |
 
 ---
 
 ## Redis vs Memcached
 
-| | Redis | Memcached |
+| Dimension | Redis | Memcached |
 |---|---|---|
-| Data types | Rich (12+ types) | Strings only |
-| Persistence | RDB + AOF | None |
-| Replication | Built-in | None (requires client) |
-| Pub/Sub | Yes | No |
-| Lua scripting | Yes | No |
-| Cluster | Native cluster | Consistent hash (client-side) |
-| Threading | Single-threaded exec + I/O threads | Multi-threaded |
-| Memory efficiency | Slightly higher overhead | Lower overhead for simple strings |
-
-**Choose Redis** for almost all new projects. **Choose Memcached** only for pure string caching at extreme throughput where Redis Cluster latency is measurable.
+| **Data Structures** | Rich (Strings, Hashes, Lists, Sets, Sorted Sets, Bitmaps, HyperLogLog, Streams). | Simple Strings / Raw Bytes only. |
+| **Persistence** | RDB Snapshots & AOF Logs. | Volatile memory only (cleared on reboot). |
+| **Replication & Sharding** | Native Primary-Replica & Redis Cluster (16,384 slots). | Client-side Consistent Hashing only. |
+| **Pub/Sub & Scripting** | Built-in Pub/Sub, Streams, Lua Scripting, Redis Functions. | None. |
 
 ---
 
-## Redis Command Complexity Reference
+## Interview Questions
 
-| Command | Complexity | Notes |
-|---------|-----------|-------|
-| GET, SET, INCR | O(1) | Hash table lookup |
-| HGETALL | O(n) | n = number of fields |
-| LRANGE | O(S+N) | S = offset from head, N = elements returned |
-| ZADD | O(log N) | Skip list insertion |
-| SMEMBERS | O(n) | Returns all members |
-| SORT | O(N+M*log(M)) | N = elements, M = returned elements — **dangerous on large sets** |
-| KEYS pattern | O(n) | **Never use in production** — use SCAN instead |
+### Q1. Why is Redis described as single-threaded, and how does it handle thousands of concurrent client connections?
+> Command execution on Redis data structures is strictly single-threaded to eliminate lock contention, race conditions, and thread context switching. High concurrency is achieved through an OS **I/O Multiplexing Reactor Event Loop** (`epoll` / `kqueue`). A single thread monitors thousands of client sockets, processing readiness events and executing in-memory operations in sub-microsecond bursts. In Redis 6.0+, multi-threading is used only for socket network parsing and response writes.
 
-> **Production rule:** Never run `KEYS *` in production — it blocks the single-threaded event loop and causes latency spikes. Use `SCAN` with a cursor instead.
+### Q2. What are Redis Hash Slots and Hash Tags, and why are they important for cluster operations?
+> Redis Cluster partitions data across **16,384 Hash Slots** using $\text{CRC16}(key) \pmod{16384}$. Multi-key commands (e.g., `MGET`, `SUNION`, Lua scripts) require all target keys to reside on the same cluster node. **Hash Tags** (braces `{...}`) force Redis to compute the CRC16 hash *only* on the text inside the braces. For example, `{user:1001}:profile` and `{user:1001}:orders` yield the exact same slot, enabling atomic multi-key operations in a sharded cluster.
+
+### Q3. What latency risk occurs when Redis forks a child process during RDB persistence (`BGSAVE`)?
+> When Redis invokes `BGSAVE` or `BGREWRITEAOF`, it executes a `fork()` system call to spawn a child process. The child relies on Linux **Copy-on-Write (CoW)** to snapshot memory. If the Redis instance has a large RSS memory footprint (e.g., 15 GB) and high write volume, allocation of parent page tables during `fork()` can freeze the single-threaded event loop for $50\text{--}200\text{ ms}$, causing latency spikes.
 
 ---
 
-## Key Naming Conventions
+## See Also
 
-```bash
-# Pattern: object-type:id:field
-user:1234:profile
-user:1234:sessions
-
-# Hash tag for cluster slot co-location
-{user:1234}:profile
-{user:1234}:orders   # same slot as above
-{user:1234}:sessions
-
-# Versioned keys for safe migrations
-user:v2:1234:profile
-
-# Avoid: key names longer than 100 bytes waste memory
-# Avoid: key names with spaces or special chars (use : and _ as delimiters)
-```
+- [Redis Eviction Policies & Memory Management](./redis-eviction-policies.md)
+- [Redis Clustering & Replication](./redis-clustering-replication.md)
+- [Redis Distributed Cache Patterns](./redis-distributed-cache.md)

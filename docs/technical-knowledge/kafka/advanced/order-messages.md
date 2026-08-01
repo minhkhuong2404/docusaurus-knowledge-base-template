@@ -211,22 +211,22 @@ consumer.resume(Set.of(new TopicPartition(record.topic(), record.partition())));
 
 ## Interview Questions
 
-**Q: How does Kafka guarantee message ordering?**
+### Q: How does Kafka guarantee message ordering?
 
 > Kafka guarantees **total ordering within a single partition**. The partition is an append-only log, and consumers read it sequentially. As long as you use a consistent partition key, all messages for that key land on the same partition and are consumed in the order they were produced.
 
-**Q: What is a hot partition and how do you avoid it?**
+### Q: What is a hot partition and how do you avoid it?
 
 > A hot partition receives significantly more traffic than others, creating a bottleneck. It's caused by low-cardinality or highly skewed partition keys. Solutions: use high-cardinality keys (UUIDs), use key salting to spread hot keys, create a custom partitioner for VIP entities, or create a dedicated topic for high-volume entities.
 
-**Q: How can retries break message ordering, and how do you fix it?**
+### Q: How can retries break message ordering, and how do you fix it?
 
 > If message A fails and message B succeeds, then A is retried — A will be processed after B, violating ordering. Solutions: (1) Use a dead letter queue with manual replay ensuring ordered reprocessing. (2) Pause the partition on failure and resume only after the issue is resolved. (3) Use idempotent producers with `max.in.flight.requests.per.connection=1` to prevent out-of-order retries (at the cost of throughput).
 
-**Q: Does `concurrency > 1` on a `@KafkaListener` break ordering?**
+### Q: Does `concurrency > 1` on a `@KafkaListener` break ordering?
 
 > No. Each concurrent thread is assigned non-overlapping partitions. A partition is only handled by one thread at a time, so per-partition ordering is preserved. Ordering is only guaranteed per-partition — events in different partitions may be processed in any interleaved order.
 
-**Q: What happens to ordering when you add more partitions to a topic?**
+### Q: What happens to ordering when you add more partitions to a topic?
 
 > Adding partitions changes the `key → partition` mapping for future messages. Some keys that previously mapped to partition X will now map to partition Y. This means: (1) historical messages for a key are on the old partition, (2) new messages for the same key go to the new partition. Consumers must handle this temporal split, which can break ordering semantics during the transition.

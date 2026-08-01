@@ -11,36 +11,24 @@ tags:
 - consumer
 - consumer-group
 ---
+
+import KafkaConsumerGroupRebalanceDiagram from '@site/src/components/KafkaConsumerGroupRebalanceDiagram';
+
 # Consumer Groups
+
+<KafkaConsumerGroupRebalanceDiagram />
+
+---
 
 ## What is a Consumer Group?
 
 A **consumer group** is a set of consumers that collectively consume a topic's partitions. Each partition is assigned to exactly one consumer within the group at a time — enabling parallel, load-balanced consumption.
-
-```
-Topic: "orders" (6 partitions)
-
-Consumer Group: "order-service"
-┌────────────────────────────────────────────────┐
-│  Consumer-1: P0, P1                            │
-│  Consumer-2: P2, P3                            │
-│  Consumer-3: P4, P5                            │
-└────────────────────────────────────────────────┘
-```
 
 ---
 
 ## Fan-Out with Multiple Groups
 
 Different groups consume the same topic **independently**, each maintaining their own offsets:
-
-```
-Topic: "orders"
-  │
-  ├──► Group "order-service"    → processes orders
-  ├──► Group "analytics-service" → aggregates metrics
-  └──► Group "audit-logger"     → writes to audit store
-```
 
 This is one of Kafka's most powerful features — no message is "consumed" from the topic; all groups see all messages.
 
@@ -222,22 +210,22 @@ Ideal for Kubernetes deployments with stable pod names.
 
 ## Interview Questions
 
-**Q: Can two consumers in the same group read from the same partition?**
+### Q: Can two consumers in the same group read from the same partition?
 
 > No. At any given time, a partition is assigned to exactly one consumer within a group. This is the fundamental guarantee that prevents double-processing within the group. Multiple groups can read the same partition independently.
 
-**Q: What triggers a consumer group rebalance?**
+### Q: What triggers a consumer group rebalance?
 
 > Any change in group membership: a new consumer joins, an existing consumer leaves (graceful or via timeout), a consumer's `session.timeout.ms` expires, or the topic's partition count changes. Some partition assignment strategies (like range assignor) also rebalance when the group subscription changes.
 
-**Q: What is consumer lag?**
+### Q: What is consumer lag?
 
 > Consumer lag is the difference between the Log End Offset (LEO) and the consumer's committed offset for a partition: `lag = LEO - committed_offset`. High lag means the consumer is falling behind the producer. It's a critical metric monitored in production (via Kafka metrics or Burrow/Cruise Control).
 
-**Q: What is the difference between `subscribe()` and `assign()`?**
+### Q: What is the difference between `subscribe()` and `assign()`?
 
 > `subscribe(topics)` registers with a consumer group — the group coordinator assigns partitions dynamically and handles rebalancing. `assign(partitions)` manually assigns specific partitions, bypassing the group mechanism entirely (no rebalancing, no group coordinator, no shared offset management). Use `assign` for batch reprocessing jobs; use `subscribe` for live consumers.
 
-**Q: What is static group membership and when should you use it?**
+### Q: What is static group membership and when should you use it?
 
 > Static membership (`group.instance.id`) gives a consumer a persistent identity. When a statically-membered consumer restarts, it reclaims its previous partition assignments without triggering a group-wide rebalance — as long as it comes back within `session.timeout.ms`. This is valuable in Kubernetes where pod restarts are frequent and rebalances are expensive.

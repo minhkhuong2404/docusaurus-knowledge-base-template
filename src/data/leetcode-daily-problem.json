@@ -1,8 +1,8 @@
 {
-  "id": "3016",
-  "title": "Minimum Number of Pushes to Type Word II",
-  "url": "https://leetcode.com/problems/minimum-number-of-pushes-to-type-word-ii/",
+  "id": "486",
+  "title": "Predict the Winner",
+  "url": "https://leetcode.com/problems/predict-the-winner/",
   "difficulty": "medium",
-  "topic": "Hash Table, String, Greedy, Sorting, Counting",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-07-31."
+  "topic": "Array, Math, Dynamic Programming, Recursion, Game Theory",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-08-01."
 }

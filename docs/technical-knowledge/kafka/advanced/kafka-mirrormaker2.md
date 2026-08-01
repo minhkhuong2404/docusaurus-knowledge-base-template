@@ -37,31 +37,6 @@ All three run as standard Kafka Connect connectors in standalone or distributed 
 ### Topic Naming Convention
 
 By default, topics are prefixed with the source cluster alias:
-```
-Source cluster "us-west", topic "orders" → target topic "us-west.orders"
-```
-
-This prevents conflicts and makes data lineage clear. Use `IdentityReplicationPolicy` to disable the prefix (useful for transparent failover where consumer code doesn't need to change).
-
----
-
-## Offset Translation
-
-Understanding offset translation is critical for successful failover. When MM2 replicates messages, the target cluster assigns new offsets starting from 0 — the source and target offsets don't match.
-
-The **MirrorCheckpointConnector** maintains a mapping between source offsets and target offsets in the `*.checkpoints.internal` topic on the target cluster. During failover, consumers query this mapping to determine where to start reading in the target cluster, ensuring continuity without loss or duplication.
-
----
-
-## Replication Patterns
-
-### Active-Passive (Disaster Recovery)
-
-Most common pattern. A primary cluster handles all production traffic; MM2 continuously replicates to a standby in another region. On failure, applications fail over to the standby.
-
-```
-us-east (primary) ──MM2──► us-west (standby)
-```
 
 The checkpoint connector ensures consumers resume from the correct translated offset post-failover.
 
@@ -70,10 +45,6 @@ The checkpoint connector ensures consumers resume from the correct translated of
 ### Active-Active (Bidirectional)
 
 Both clusters produce and consume, with data mirrored bidirectionally. Enables multi-region writes with low local latency.
-
-```
-us-east ◄──MM2──► eu-west
-```
 
 **Cycle detection**: MM2 adds headers indicating the source cluster. Before replicating, it checks headers to skip messages that originated from the target cluster — preventing infinite bounce loops.
 
@@ -87,21 +58,9 @@ us-east ◄──MM2──► eu-west
 
 Multiple regional clusters replicate into a central analytics hub:
 
-```
-eu-cluster ──►
-us-cluster ──► central-hub (analytics/reporting)
-ap-cluster ──►
-```
-
 ### Fan-Out Distribution
 
 A central cluster distributes to regional clusters:
-
-```
-config-central ──► eu-cluster
-                ──► us-cluster
-                ──► ap-cluster
-```
 
 ---
 
@@ -349,19 +308,19 @@ kafka_connect_mirror_checkpoint_connector_checkpoint_latency_ms > 30000
 
 ## Interview Questions
 
-**Q: What are the three connector types in MirrorMaker 2 and what does each do?**
+### Q: What are the three connector types in MirrorMaker 2 and what does each do?
 
 > MirrorSourceConnector copies messages from source topics to target topics, preserving keys, values, headers, and timestamps. MirrorCheckpointConnector tracks consumer group offsets and maps source offsets to target offsets, enabling consumers to resume at the correct position after a failover. MirrorHeartbeatConnector emits periodic heartbeat messages to track replication health and connectivity between clusters.
 
-**Q: How does MM2 prevent replication loops in active-active topologies?**
+### Q: How does MM2 prevent replication loops in active-active topologies?
 
 > When MM2 replicates a message, the MirrorSourceConnector adds a header identifying the source cluster. Before replicating any message, MM2 checks if the message header shows it originated from the target cluster — if so, the message is skipped. This header-based cycle detection breaks the infinite loop where messages would otherwise bounce back and forth between clusters indefinitely.
 
-**Q: What is offset translation and why is it critical for failover?**
+### Q: What is offset translation and why is it critical for failover?
 
 > When messages are replicated from source to target, the target cluster assigns new, different offsets starting from 0. This means a consumer's source offset of 1000 might correspond to target offset 998 (if 2 messages failed replication). The MirrorCheckpointConnector maintains this source-to-target offset mapping in the `*.checkpoints.internal` topic. During failover, consumers query this mapping to find their equivalent starting position in the target cluster — without this translation, consumers would start from the wrong offset, causing data loss or duplication.
 
-**Q: What is the difference between MirrorMaker 1 and MirrorMaker 2?**
+### Q: What is the difference between MirrorMaker 1 and MirrorMaker 2?
 
 > MM1 was a simple consumer-producer pair with no automatic topic creation, no consumer group offset synchronization, and no ACL replication. MM2 (Kafka 2.4+, KIP-382) addresses all these gaps: automatic topic and partition creation, offset checkpoint synchronization for failover, ACL and topic config replication, bidirectional replication with cycle detection, exactly-once semantics support, and Connect-based fault tolerance and horizontal scaling.
 

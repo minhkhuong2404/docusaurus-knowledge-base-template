@@ -23,26 +23,6 @@ This guide walks through every layer of the Kafka stack — producer, broker, co
 
 Performance problems in Kafka fall into four root causes:
 
-```
-┌─────────────────────────────────────────────────────┐
-│              Kafka Performance Bottlenecks           │
-├─────────────┬──────────────────────────────────────-┤
-│ Layer       │ Typical Root Cause                     │
-├─────────────┼────────────────────────────────────────┤
-│ Producer    │ Small batches, no compression,         │
-│             │ synchronous sends, wrong acks setting  │
-├─────────────┼────────────────────────────────────────┤
-│ Network     │ Insufficient bandwidth, no compression,│
-│             │ too many TCP connections               │
-├─────────────┼────────────────────────────────────────┤
-│ Broker      │ Disk I/O saturation, GC pauses,        │
-│             │ too many partitions, page cache misses │
-├─────────────┼────────────────────────────────────────┤
-│ Consumer    │ Slow processing, single-threaded,      │
-│             │ too-frequent commits, DLQ overhead     │
-└─────────────┴────────────────────────────────────────┘
-```
-
 Identify your bottleneck first using metrics (broker JMX, producer/consumer metrics), then tune the right layer.
 
 ---
@@ -430,19 +410,19 @@ retention.ms=604800000         # Total retention: 7 days
 
 ## Interview Questions
 
-**Q: What is the most impactful producer tuning for throughput?**
+### Q: What is the most impactful producer tuning for throughput?
 
 > Batching and compression together have the highest impact. Setting `linger.ms=10–20` and `batch.size=64KB` allows the producer to accumulate more messages per batch, dramatically reducing per-message overhead. Adding `compression.type=lz4` or `zstd` then multiplies effective throughput by 2–5× by reducing network bandwidth and disk I/O. The `buffer.memory` should also be increased to match — if the buffer fills up, the producer blocks.
 
-**Q: Why should Kafka broker JVM heap be kept small?**
+### Q: Why should Kafka broker JVM heap be kept small?
 
 > Kafka's read path for consumers that are nearly caught up is served from the OS page cache — recently written segments are already in RAM. The larger the page cache, the more consumer reads are served from memory instead of disk. If the JVM heap consumes most of a broker's RAM (e.g., 24 GB on a 32 GB machine), the page cache shrinks, causing consumer reads to hit disk, significantly increasing latency. The recommended pattern is 6–8 GB JVM heap and leaving the rest for the OS page cache.
 
-**Q: What causes `max.poll.interval.ms` timeouts and how do you fix them?**
+### Q: What causes `max.poll.interval.ms` timeouts and how do you fix them?
 
 > When a consumer's message processing takes longer than `max.poll.interval.ms` (default 5 minutes), the group coordinator assumes the consumer has died and triggers a rebalance. This typically happens when: processing is slow (external DB calls, heavy computation), `max.poll.records` is set too high (processing 500 records takes > 5 min), or a poison message causes indefinite retry loops. Fixes: increase `max.poll.interval.ms` for slow-but-correct processors; reduce `max.poll.records` so each batch completes faster; or process records asynchronously within the poll loop and commit only after completion.
 
-**Q: How does compression affect Kafka performance end-to-end?**
+### Q: How does compression affect Kafka performance end-to-end?
 
 > Compression is applied at the producer, sent compressed to the broker (the broker stores it compressed), and decompressed at the consumer. This reduces: network bandwidth between producer and broker (2–5× less data), broker disk usage (2–5× smaller logs), network bandwidth between broker and consumer, and consequently page cache efficiency (more compressed segments fit in cache). The CPU cost is modest on modern hardware: `lz4` and `snappy` have negligible overhead; `zstd` has slightly higher CPU usage but achieves the best compression ratios.
 

@@ -6,8 +6,6 @@ tags: [networking, tcp, udp, transport, handshake, flow-control, congestion, soc
 sidebar_position: 4
 ---
 
-# TCP, UDP & Transport Layer
-
 import TransportLayerPortsDiagram from '@site/src/components/TransportLayerPortsDiagram';
 import TcpHandshakesDiagram from '@site/src/components/TcpHandshakesDiagram';
 import TcpSegmentAnatomyDiagram from '@site/src/components/TcpSegmentAnatomyDiagram';
@@ -15,282 +13,86 @@ import TcpFlowControlDiagram from '@site/src/components/TcpFlowControlDiagram';
 import TcpCongestionControlDiagram from '@site/src/components/TcpCongestionControlDiagram';
 import UdpAnatomyDiagram from '@site/src/components/UdpAnatomyDiagram';
 
+# TCP, UDP & Transport Layer
+
 ## Transport Layer Role
 
-The transport layer provides **process-to-process** communication using **port numbers**. While IP routes packets between hosts, the transport layer routes data between specific applications on those hosts.
+The Transport Layer provides **process-to-process** communication across network hosts using **Port Numbers** (16-bit integers ranging from 0 to 65535). While Layer 3 (IP) routes packets between host IP addresses, Layer 4 (TCP/UDP) multiplexes traffic between specific application processes executing on those hosts.
 
 <TransportLayerPortsDiagram />
 
-Port ranges:
-- `0–1023`: Well-known ports (HTTP: 80, HTTPS: 443, SSH: 22, DNS: 53)
-- `1024–49151`: Registered ports (PostgreSQL: 5432, MySQL: 3306)
-- `49152–65535`: Ephemeral (dynamic) — assigned by OS for outgoing connections
+### Port Number Allocations
+- **Well-Known Ports (0–1023)**: Reserved for core system services (HTTP: 80, HTTPS: 443, SSH: 22, DNS: 53).
+- **Registered Ports (1024–49151)**: Reserved for application databases and services (PostgreSQL: 5432, MySQL: 3306, Redis: 6379, Kafka: 9092).
+- **Ephemeral / Dynamic Ports (49152–65535)**: Assigned temporarily by the OS kernel for client-initiated outgoing connections.
 
 ---
 
 ## TCP — Transmission Control Protocol
 
-TCP provides **reliable, ordered, connection-oriented** delivery.
-
-**Key features:**
-- Connection establishment / teardown (stateful)
-- Guaranteed delivery (acknowledgments + retransmission)
-- Ordered delivery (sequence numbers)
-- Error detection (checksum)
-- Flow control (receiver window)
-- Congestion control (sender limits)
-
----
-
-## TCP Three-Way Handshake
-
-<TcpHandshakesDiagram />
-
-**ISN (Initial Sequence Number)**: random starting point for sequence numbering — prevents old duplicate packets from being accepted.
-
-**States involved**: `CLOSED → SYN_SENT → ESTABLISHED` (client); `LISTEN → SYN_RECEIVED → ESTABLISHED` (server)
-
-```java
-// Java: TCP connection is implicit in socket creation
-Socket socket = new Socket("google.com", 443);
-// → triggers 3-way handshake automatically
-
-// Server side
-ServerSocket server = new ServerSocket(8080);
-Socket client = server.accept();  // blocks until client connects
-```
-
----
-
-## TCP Segment Structure
+TCP provides **reliable, ordered, stateful, connection-oriented** byte-stream delivery.
 
 <TcpSegmentAnatomyDiagram />
 
-Key flags:
-- `SYN`: synchronize sequence numbers (connection request)
-- `ACK`: acknowledgment field is valid
-- `FIN`: sender finished sending
-- `RST`: reset / abort connection
-- `PSH`: push buffered data to application immediately
-- `URG`: urgent data present
+### Key Features
+- **3-Way Handshake Connection Establishment** (`SYN` $\to$ `SYN-ACK` $\to$ `ACK`).
+- **Guaranteed Ordered Delivery**: Sequence Numbers (`seq`) and Acknowledgement Numbers (`ack`).
+- **Flow Control**: Sliding Receive Window (`win`) preventing receiver buffer overrun.
+- **Congestion Control**: Sender Congestion Window (`cwnd`) preventing network intermediate router queue drops.
 
 ---
 
-## TCP Connection Termination — 4-Way Handshake
+## TCP 3-Way Handshake & Connection Teardown
 
-TCP termination is **asymmetric** — each side closes independently.
+<TcpHandshakesDiagram />
 
-The TCP connection termination is initiated as follows (toggle 4-Way Teardown in the diagram above).
-
-**TIME_WAIT state**: the active closer waits `2 × MSL` (Maximum Segment Lifetime, ~30s) before closing the socket. Why?
-- Ensures the last ACK reaches the server (if lost, server retransmits FIN)
-- Lets duplicate packets from the old connection expire
-
-:::tip[Java/Spring Note]
-`TIME_WAIT` on a server with many short connections causes port exhaustion. Solutions: enable `SO_REUSEADDR`, use connection pools (HikariCP), use `keep-alive`, or tune `tcp_tw_reuse` on Linux.
-:::
+### 3-Way Handshake Sequence
+1. **Client $\to$ Server (`SYN`)**: Client selects a random Initial Sequence Number (ISN $= x$) and sends a `SYN` segment (`seq=x`). Client enters `SYN_SENT`.
+2. **Server $\to$ Client (`SYN-ACK`)**: Server allocates TCB (Transmission Control Block), selects its own ISN ($y$), and responds with `SYN-ACK` (`seq=y, ack=x+1`). Server enters `SYN_RECEIVED`.
+3. **Client $\to$ Server (`ACK`)**: Client acknowledges with `ACK` (`seq=x+1, ack=y+1`). Both sides enter `ESTABLISHED`.
 
 ---
 
-## TCP Sequence Numbers & Acknowledgments
-
-```
-Sender sends bytes 1–1000 (MSS=500):
-
-Segment 1: seq=1,   data=[1..500]
-Segment 2: seq=501, data=[501..1000]
-
-Receiver:
-  → ACK 501  (got bytes 1-500, expecting 501 next)
-  → ACK 1001 (got bytes 501-1000, expecting 1001 next)
-
-If Segment 1 lost:
-  → Receiver gets seq=501, buffers it, but still sends ACK 1
-  → Sender sees duplicate ACKs or timeout → retransmits seq=1
-```
-
----
-
-## TCP Flow Control — Sliding Window
-
-Prevents a **fast sender from overwhelming a slow receiver**.
+## TCP Flow Control (Sliding Window) vs Congestion Control
 
 <TcpFlowControlDiagram />
 
----
-
-## TCP Congestion Control
-
-Prevents a **sender from overwhelming the network** (not just the receiver).
-
-### Phases
-
 <TcpCongestionControlDiagram />
 
-### Modern Algorithms
-
-| Algorithm | Key Innovation | Use Case |
-|-----------|---------------|----------|
-| **Reno** | Classic AIMD | Legacy |
-| **CUBIC** | Cubic growth function | Linux default (LAN/WAN) |
-| **BBR** | Bandwidth + RTT based (not loss-based) | High-BDP paths, satellite |
-| **QUIC** | UDP-based, built into HTTP/3 | Modern web |
-
----
-
-## TCP Options & Tuning
-
-```
-# Linux TCP tuning
-# Increase socket buffer sizes for high-bandwidth links
-sysctl -w net.core.rmem_max=134217728
-sysctl -w net.core.wmem_max=134217728
-sysctl -w net.ipv4.tcp_rmem="4096 87380 134217728"
-sysctl -w net.ipv4.tcp_wmem="4096 65536 134217728"
-
-# Enable TCP window scaling (default on modern kernels)
-sysctl -w net.ipv4.tcp_window_scaling=1
-
-# Selective Acknowledgment (SACK) — retransmit only lost segments
-sysctl -w net.ipv4.tcp_sack=1
-
-# Enable BBR congestion control
-sysctl -w net.ipv4.tcp_congestion_control=bbr
-```
+- **Flow Control**: Governed by the receiver's **Advertised Window Size** (`rwnd`), preventing a fast sender from flooding a slow receiver's socket buffer.
+- **Congestion Control**: Governed by the sender's **Congestion Window** (`cwnd`), probing network link capacity using algorithms like **Slow Start**, **Congestion Avoidance (AIMD)**, **CUBIC**, and **Google BBR**.
 
 ---
 
 ## UDP — User Datagram Protocol
 
-UDP provides **connectionless, unreliable, fast** delivery.
-
-**What UDP doesn't have (vs TCP):**
-- No connection setup/teardown
-- No guaranteed delivery
-- No ordering
-- No congestion control or flow control
-
-**What UDP has:**
-- Very low overhead (8-byte header vs 20+ for TCP)
-- No round trips before sending
-- No retransmission delays
-- Supports broadcast and multicast
-
 <UdpAnatomyDiagram />
 
----
+UDP provides **connectionless, unreliable, low-latency, datagram** delivery.
 
-## TCP vs UDP Comparison
-
-| Feature | TCP | UDP |
-|---------|-----|-----|
-| Connection | Stateful (3-way handshake) | Connectionless |
-| Reliability | Guaranteed delivery | Best-effort |
-| Ordering | Guaranteed | Not guaranteed |
-| Speed | Slower (overhead) | Faster |
-| Header size | 20–60 bytes | 8 bytes |
-| Flow control | Yes | No |
-| Congestion control | Yes | No |
-| Broadcast/Multicast | No | Yes |
-| Use cases | HTTP, SSH, DB, email | DNS, video, VoIP, games |
-
----
-
-## When to Use UDP
-
-| Use Case | Why UDP |
-|----------|---------|
-| **DNS queries** | Single request/response; retransmit at app layer if needed |
-| **Video/audio streaming** | Slightly stale frame better than delayed one |
-| **VoIP / Video calls** | Real-time; packet loss tolerable, latency is not |
-| **Online gaming** | Low latency critical; game state syncs frequently |
-| **DHCP** | Bootstrapping; no existing connection |
-| **SNMP** | Simple polling; app handles reliability |
-| **QUIC / HTTP/3** | Reliability implemented in QUIC above UDP |
-
----
-
-## Java Socket Programming
-
-```java
-// TCP Client
-try (Socket socket = new Socket("localhost", 8080)) {
-    PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-    BufferedReader in = new BufferedReader(
-        new InputStreamReader(socket.getInputStream()));
-
-    out.println("Hello, server!");
-    String response = in.readLine();
-    System.out.println("Server: " + response);
-}
-
-// TCP Server
-try (ServerSocket server = new ServerSocket(8080)) {
-    System.out.println("Listening on port 8080");
-    while (true) {
-        Socket client = server.accept();
-        new Thread(() -> handleClient(client)).start();
-    }
-}
-
-// UDP Client
-try (DatagramSocket socket = new DatagramSocket()) {
-    byte[] data = "Hello UDP".getBytes();
-    InetAddress addr = InetAddress.getByName("localhost");
-    DatagramPacket packet = new DatagramPacket(data, data.length, addr, 9090);
-    socket.send(packet);
-
-    byte[] buf = new byte[1024];
-    DatagramPacket response = new DatagramPacket(buf, buf.length);
-    socket.receive(response);
-}
-```
-
----
-
-## TCP Keep-Alive
-
-Detects broken connections when no data flows.
-
-```bash
-# Linux kernel keep-alive settings
-net.ipv4.tcp_keepalive_time    = 7200   # idle before probes (seconds)
-net.ipv4.tcp_keepalive_intvl   = 75     # probe interval
-net.ipv4.tcp_keepalive_probes  = 9      # probes before declaring dead
-```
-
-```java
-// Java socket keep-alive
-socket.setKeepAlive(true);
-
-// Spring WebClient / RestTemplate connection pool keep-alive
-// (handled by HttpClient connection pool settings)
-```
+- **8-Byte Fixed Header**: Contains Source Port, Destination Port, Length, and Checksum.
+- **No Handshake / No Retransmissions**: Minimal overhead, supporting broadcast and multicast.
 
 ---
 
 ## Interview Questions
 
-### Q1. Describe the TCP three-way handshake.
-> Client sends SYN with its Initial Sequence Number (ISN). Server responds with SYN-ACK — acknowledging the client's ISN and sending its own ISN. Client sends ACK — acknowledging the server's ISN. After this, the connection is established and both sides have synchronized sequence numbers for reliable, ordered data transfer.
+### Q1. Describe the step-by-step mechanics of the TCP 3-Way Handshake.
+> The client sends a `SYN` segment containing a random Initial Sequence Number (ISN $= x$). The server receives the `SYN`, allocates connection state buffers, and responds with `SYN-ACK` containing its own ISN ($y$) and acknowledgement number $x+1$. The client finishes by sending an `ACK` segment with acknowledgement number $y+1$. Both sides enter the `ESTABLISHED` state, synchronizing sequence numbers for ordered, reliable byte-stream transmission.
 
-### Q2. What is the purpose of sequence numbers in TCP?
-> Sequence numbers serve three purposes: (1) ordering — the receiver can reorder out-of-order segments; (2) duplicate detection — old or retransmitted segments with already-ACKed sequence numbers are discarded; (3) reliable delivery — the sender knows which data has been received via ACK numbers, and retransmits unacknowledged data.
+### Q2. What is the fundamental difference between TCP Flow Control and TCP Congestion Control?
+> **Flow Control** prevents a fast sender from overwhelming a slow **receiver's application buffer**. The receiver advertises its remaining free buffer capacity (Receive Window `rwnd`) in every ACK header. **Congestion Control** prevents a sender from overwhelming the **intermediate network infrastructure** (routers, switches). The sender dynamically adjusts its Congestion Window (`cwnd`) based on network loss or RTT latency feedback.
 
-### Q3. What is TCP flow control vs congestion control?
-> Flow control prevents the sender from overwhelming the **receiver**'s buffer — the receiver advertises its available window size in each ACK, and the sender limits in-flight data accordingly. Congestion control prevents the sender from overwhelming the **network** — it uses algorithms (slow start, AIMD) to probe for available bandwidth without causing queue overflow at routers.
+### Q3. Why does TCP require a `TIME_WAIT` state during connection termination?
+> When a TCP connection is closed gracefully by initiating a `FIN`, the closer enters `TIME_WAIT` for $2 \times \text{MSL}$ (Maximum Segment Lifetime, typically $60\text{ seconds}$). This guarantees that: (1) The final `ACK` sent to the peer is delivered (or re-sent if lost); (2) Any lingering duplicate packets from the old connection expire in the network before a new connection reuses the same 4-tuple (`Source IP`, `Source Port`, `Dest IP`, `Dest Port`).
 
-### Q4. Why does TCP have a TIME_WAIT state and what problems can it cause?
-> TIME_WAIT ensures: (1) the final ACK reaches the server (if lost, server retransmits FIN within the wait window); (2) duplicate packets from the old connection expire before a new connection on the same port pair is allowed. Problem: high-throughput servers with many short-lived connections can exhaust ephemeral ports and see `address already in use` errors. Solutions: `SO_REUSEADDR`, connection pooling, or `tcp_tw_reuse`.
+### Q4. What is a SYN Flood attack and how do SYN Cookies mitigate it?
+> A SYN Flood is a Denial-of-Service attack where an attacker sends thousands of `SYN` requests with spoofed IP addresses without completing the final `ACK`. This exhausts the server's SYN Backlog Queue. **SYN Cookies** eliminate the attack by removing server-side memory allocations for half-open connections: the server encodes state into the initial sequence number (`seq=y`) returned in the `SYN-ACK`. Memory is allocated only when the client returns a valid `ACK`.
 
-### Q5. When would you choose UDP over TCP?
-> Choose UDP when: low latency is more important than perfect reliability (VoIP, gaming, real-time video); the application handles its own reliability (QUIC, DNS); data is time-sensitive and retransmission would be useless (live streaming — a retransmitted old frame arrives after newer frames); or multicast/broadcast is needed (DHCP, mDNS).
+---
 
-### Q6. What is TCP slow start and why does it exist?
-> Slow start is TCP's initial congestion probing phase. It starts with a small congestion window (1 MSS) and doubles it each RTT until a threshold or loss is detected. This prevents a new connection from immediately blasting traffic onto a congested network. Despite the name, exponential growth is actually fast — a 10 Gbps link can be fully utilized within a few RTTs.
+## See Also
 
-### Q7. What is a SYN flood attack and how is it mitigated?
-> A SYN flood sends many SYN packets without completing the handshake, filling the server's SYN queue (half-open connections). The server allocates state for each SYN, exhausting resources. Mitigation: SYN cookies — the server encodes connection state in the ISN instead of allocating resources; validates the client with the ACK's sequence number. Also: firewall rate limiting on SYNs, shorter SYN timeout.
-
-### Q8. What is the difference between a TCP RST and FIN?
-> FIN is a graceful close — the sender has finished sending data but the connection stays half-open; the other side can still send. RST is an abrupt abort — the connection is immediately terminated, all buffered data is discarded. RST occurs when: connecting to a closed port, a firewall drops the connection, or the application calls `socket.close()` with pending data (as opposed to `socket.shutdownOutput()` for graceful close).
+- [HTTP & HTTPS Application Layer](./http-https-application-layer.md)
+- [QUIC & Modern Transport Protocols](./quic-modern-transport.md)
+- [OSI & TCP/IP Reference Models](./osi-tcpip-models.md)

@@ -11,31 +11,19 @@ tags:
 - best-practices
 ---
 
+import KafkaPartitioningStrategiesDiagram from '@site/src/components/KafkaPartitioningStrategiesDiagram';
+
 # Kafka Partitioning Strategies & Best Practices
+
+<KafkaPartitioningStrategiesDiagram />
+
+---
 
 Partitions are the fundamental unit of parallelism, ordering, and throughput in Kafka. Choosing the right partitioning strategy is one of the most consequential design decisions in a Kafka-based system — the wrong choice leads to hot spots, ordering violations, or insufficient parallelism that cannot easily be fixed after data is flowing.
 
 ---
 
 ## Why Partitioning Matters
-
-```
-Topic: "orders" (6 partitions, RF=3)
-
-Producer                  Broker Cluster
-  │                    ┌─────────────────────────┐
-  │  key="user-1"      │  P0 ──► Broker 1        │
-  ├──────────────────► │  P1 ──► Broker 2        │
-  │  key="user-2"      │  P2 ──► Broker 3        │
-  └──────────────────► │  P3 ──► Broker 1        │
-                        │  P4 ──► Broker 2        │
-                        │  P5 ──► Broker 3        │
-                        └─────────────────────────┘
-                               │ each partition consumed by
-                               ▼ exactly one consumer
-                       Consumer Group
-                       C1:P0,P1 | C2:P2,P3 | C3:P4,P5
-```
 
 The partition key determines:
 1. **Which broker** stores the data (leader for that partition)
@@ -345,19 +333,19 @@ kafka-reassign-partitions.sh --bootstrap-server localhost:9092 \
 
 ## Interview Questions
 
-**Q: What is the difference between key-based and round-robin partitioning?**
+### Q: What is the difference between key-based and round-robin partitioning?
 
 > Key-based partitioning hashes the message key (`murmur2(key) % numPartitions`) and routes all messages with the same key to the same partition — guaranteeing ordering per key. Round-robin distributes keyless messages evenly across all partitions on a per-message basis, sacrificing ordering for even distribution. Since Kafka 2.4, keyless messages use the Sticky Partitioner instead of pure round-robin, which improves batching by directing keyless messages to the same partition until a batch fills.
 
-**Q: What is the hot key problem and how do you solve it?**
+### Q: What is the hot key problem and how do you solve it?
 
 > A hot key is one key that generates far more messages than average, causing a single partition to receive disproportionate load — overloading one broker and one consumer while others sit idle. Solutions: (1) Key salting — append a random suffix (e.g., `user-123-0` through `user-123-9`) to spread across partitions, then aggregate by original key downstream. (2) Dedicated hot topic — route the hot key to a separate topic with more partitions. (3) Application sharding — divide the hot entity into logical sub-entities with distinct keys.
 
-**Q: Why can't you decrease the partition count of a Kafka topic?**
+### Q: Why can't you decrease the partition count of a Kafka topic?
 
 > Decreasing partitions would require deciding which data to move (or discard) from the removed partitions. More critically, it would invalidate the key-to-partition hash mapping — existing consumers reading historical data from old partitions would find their committed offsets pointing to now-nonexistent partitions, causing data loss or corruption. Kafka's solution is to allow only increases. If you need fewer partitions, create a new topic and migrate.
 
-**Q: How do you choose the right partition count?**
+### Q: How do you choose the right partition count?
 
 > Use the formula `partitions = max(T/Tp, T/Tc)` where T is target throughput, Tp is single-partition producer throughput (measured with perf tests), and Tc is your consumer processing capacity per partition. As a rule of thumb: start at 2× your broker count, set it to at least your expected peak consumer count × 2, and never go below 3 for production topics. Err on the side of more partitions — it's harder to increase later (breaks key mapping) than to have extra partitions initially.
 

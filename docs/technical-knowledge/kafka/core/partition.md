@@ -2,173 +2,116 @@
 id: partition
 title: Partitions
 sidebar_label: Partition
-description: A **partition** is an ordered, immutable sequence of records (a log)
-  within a topic. Each partition lives on exactly one broker at a time (as leader)
-  and.
+description: A partition is an ordered, immutable sequence of records within a topic — the fundamental unit of parallelism, replication, and storage scaling in Kafka.
 tags:
-- technical-knowledge
-- kafka
-- core
-- partition
+  - technical-knowledge
+  - kafka
+  - core
+  - partition
 ---
+
+import KafkaPartitionOffsetDiagram from '@site/src/components/KafkaPartitionOffsetDiagram';
+
 # Partitions
+
+<KafkaPartitionOffsetDiagram />
+
+---
 
 ## What is a Partition?
 
-A **partition** is an ordered, immutable sequence of records (a log) within a topic. Each partition lives on exactly one broker at a time (as leader) and optionally on multiple others (as followers for replication).
+A **Partition** is the fundamental unit of storage, parallelism, and replication in Apache Kafka. Each topic is divided into one or more partitions, where each partition is an append-only, ordered, immutable sequence of `RecordBatch` structures on disk.
+
+Every message written to a partition is assigned a monotonically increasing 64-bit integer ID called an **Offset**.
 
 ```
-Topic: "orders" (3 partitions, RF=3)
-
-Broker 1: P0-Leader | P1-Follower | P2-Follower
-Broker 2: P1-Leader | P2-Follower | P0-Follower
-Broker 3: P2-Leader | P0-Follower | P1-Follower
+Partition 0 Log Segment:
++----------+----------+----------+----------+----------+
+| Offset 0 | Offset 1 | Offset 2 | Offset 3 | Offset 4 | ... (Append-only >)
++----------+----------+----------+----------+----------+
 ```
 
 ---
 
-## Partition Structure
+## Partitioning Strategies
 
-```
-Partition 0
-┌──────────────────────────────────────────────┐
-│ Offset: 0   1   2   3   4   5   6   7  ...   │
-│         [m][m][m][m][m][m][m][m] ←─ append   │
-└──────────────────────────────────────────────┘
-                ▲               ▲
-           Log Start          Log End
-           Offset (LSO)       Offset (LEO)
-```
+When a producer publishes a record, the **Producer Partitioner** determines which partition index receives the message:
 
-Each record has:
-- **Offset** — sequential ID within the partition
-- **Timestamp** — creation or ingestion time
-- **Key** (optional) — used for partitioning
-- **Value** — the message payload
-- **Headers** (optional) — metadata key-value pairs
+### 1. Key-Based Hashing (`DefaultPartitioner`)
+When a non-null key is present, Kafka computes the partition index using MurmurHash2:
 
----
+$$\text{Partition Index} = \left( \text{toPositive}(\text{Utils.murmur2}(\text{key})) \right) \pmod N$$
 
-## Partitioner Strategy
+Guarantees strict **per-key ordering**: all records with identical keys (e.g., `account_id = "ACC-9921"`) land on the exact same partition.
 
-When a producer sends a message, the **partitioner** decides which partition to use:
+### 2. Sticky Partitioner (Keyless Messages, Kafka 2.4+)
+When no key is specified (`key == null`), the **Sticky Partitioner** batches records targeted for a single partition until `batch.size` or `linger.ms` is reached, before switching to the next partition. This maximizes batch compression efficiency compared to round-robin.
 
-### 1. Key-Based Partitioning (default when key is present)
-```java
-partition = murmur2(key) % numPartitions
-```
-All messages with the same key go to the same partition → **ordering guarantee per key**.
+### 3. Custom Partitioner Implementation
 
-```java
-// Same orderId always → same partition
-kafkaTemplate.send("orders", orderId, orderJson);
-```
-
-### 2. Round-Robin (when key is null, Kafka < 2.4)
-Messages distributed evenly across partitions. No ordering guarantee.
-
-### 3. Sticky Partitioner (default when key is null, Kafka ≥ 2.4)
-Batches all keyless messages to the **same partition** until the batch is full or `linger.ms` expires, then switches. Better throughput than pure round-robin.
-
-### 4. Custom Partitioner
 ```java
 public class RegionPartitioner implements Partitioner {
 
     @Override
     public int partition(String topic, Object key, byte[] keyBytes,
                          Object value, byte[] valueBytes, Cluster cluster) {
-        String region = extractRegion((String) key);
         int numPartitions = cluster.partitionCountForTopic(topic);
-        return switch (region) {
-            case "US" -> 0 % numPartitions;
-            case "EU" -> 1 % numPartitions;
-            default   -> Math.abs(key.hashCode()) % numPartitions;
+        String regionKey = (String) key;
+        
+        return switch (regionKey) {
+            case "US-EAST" -> 0;
+            case "US-WEST" -> 1;
+            case "EU-CENTRAL" -> 2;
+            default -> Math.abs(Utils.murmur2(keyBytes)) % numPartitions;
         };
     }
-    // ...
+
+    @Override
+    public void close() {}
+
+    @Override
+    public void configure(Map<String, ?> configs) {}
 }
 ```
 
-```properties
-partitioner.class=com.example.RegionPartitioner
-```
-
 ---
 
-## Partition Leadership
+## Consumer Group Partition Assignment Strategies
 
-Every partition has exactly one **leader** and zero or more **followers**:
+The **Consumer Group Leader** assigns partition partitions to group instances using one of four assignment algorithms:
 
-- **All reads and writes go through the leader**
-- Followers fetch from the leader to stay in sync
-- If the leader fails, the Controller elects a new leader from the ISR
-
-```
-Producer → writes to P0-Leader on Broker1
-                         ↓ replicates
-              P0-Follower on Broker2
-              P0-Follower on Broker3
-```
-
-:::note[Since Kafka 2.4, **follower fetching** is supported — consumers can optionally read from the nearest follower replica (rack-aware) to reduce cross-AZ traffic.]
-:::
-
----
-
-## Partition Assignment & Rebalancing
-
-When a new consumer joins a consumer group, partitions are **rebalanced**. The **Group Coordinator** assigns partitions to consumers via an **assignor strategy**:
-
-| Assignor | Behavior |
-|---|---|
-| `RangeAssignor` | Default; assigns contiguous ranges per topic |
-| `RoundRobinAssignor` | Distributes evenly across all partitions and consumers |
-| `StickyAssignor` | Minimizes partition movement on rebalance |
-| `CooperativeStickyAssignor` | Incremental rebalance — consumers keep current partitions while new ones are assigned |
+| Strategy | Algorithm | Behavior |
+|---|---|---|
+| `RangeAssignor` | Topic-by-Topic | Groups partitions per topic and assigns contiguous ranges to consumers. Can cause assignment imbalance. |
+| `RoundRobinAssignor` | Global Interleaving | Interleaves all partitions across all subscribed topics evenly among consumers. |
+| `StickyAssignor` | Minimal Displacement | Preserves current partition assignments during rebalance while distributing unassigned partitions evenly. |
+| `CooperativeStickyAssignor` | Incremental Rebalance | Uses two-phase cooperative protocol; non-affected consumers continue processing without STW pauses. |
 
 ```yaml
 spring:
   kafka:
     consumer:
-      partition-assignment-strategy: org.apache.kafka.clients.consumer.CooperativeStickyAssignor
-```
-
----
-
-## Key Partition Configs
-
-```properties
-# Number of partitions (topic-level)
-num.partitions=6
-
-# Max bytes Kafka will fetch per partition per request
-max.partition.fetch.bytes=1048576
-
-# Preferred replica election: balance leadership
-auto.leader.rebalance.enable=true
-leader.imbalance.check.interval.seconds=300
+      properties:
+        partition.assignment.strategy: org.apache.kafka.clients.consumer.CooperativeStickyAssignor
 ```
 
 ---
 
 ## Interview Questions
 
-**Q: What determines which partition a message goes to?**
+### Q1. Does Apache Kafka guarantee global message ordering across an entire topic?
+> No. Kafka guarantees message ordering strictly **within a single partition**, not across different partitions of the same topic. For strict per-entity ordering (e.g., e-commerce order state transitions), use the entity ID as the message key so all related events route to the same partition. To achieve global ordering for an entire topic, set partition count to 1 (which sacrifices multi-worker consumer scaling).
 
-> If the message has a key, the default partitioner hashes the key (`murmur2`) and takes modulo of the partition count. Messages with the same key always land on the same partition. If there is no key, the sticky partitioner (Kafka ≥ 2.4) fills a batch for one partition before switching. A custom partitioner can implement any logic.
+### Q2. What is Partition Skew and how do you mitigate hot keys in production?
+> Partition Skew occurs when a minority of partitions receive a disproportionately massive volume of traffic due to non-uniform key distribution (hot keys). Remedies include: (1) **Salting Keys**: Appending a random integer suffix (`order_id + "_" + random(1..4)`) to spread hot key writes across 4 sub-partitions; (2) **Custom Partitioner**: Routing high-traffic accounts to dedicated isolated partitions; (3) **Keyless Sticky Publishing**: Publishing non-keyed events to allow uniform batching.
 
-**Q: Why can't you decrease the number of partitions?**
+### Q3. How does `CooperativeStickyAssignor` eliminate Stop-The-World rebalance pauses?
+> The legacy Eager rebalance protocol forces all consumers in a group to revoke all assigned partitions and stop fetching during a rebalance. The `CooperativeStickyAssignor` uses an incremental protocol: consumers retain their existing partition assignments during the first rebalance phase, only revoking partitions that need to be reassigned. Active processing continues uninterrupted for unaffected partitions.
 
-> Decreasing partitions would break the key → partition mapping: the same key would hash to a different partition number, violating ordering guarantees. Existing data on deleted partitions would be lost. The only safe option is to create a new topic and migrate.
+---
 
-**Q: What is partition skew and how do you fix it?**
+## See Also
 
-> Partition skew occurs when some partitions receive far more messages than others — usually because certain keys are "hot" (high frequency). Fix options: (1) add a random suffix to hot keys and aggregate downstream, (2) use a custom partitioner with explicit key-to-partition routing, (3) route hot keys to a dedicated topic with more partitions.
-
-**Q: Does Kafka guarantee ordering across partitions?**
-
-> No. Kafka only guarantees ordering within a single partition. For use cases requiring total ordering, you must use a single partition — sacrificing parallelism. For per-entity ordering (e.g., all events for a given `orderId`), use the entity ID as the partition key.
-
-**Q: What is a preferred leader election?**
-
-> When a broker restarts, its partitions may have been reassigned to other brokers. Kafka can automatically trigger a **preferred leader election** to restore leadership back to the originally-assigned "preferred" broker, ensuring even load distribution. Controlled by `auto.leader.rebalance.enable=true`.
+- [Kafka Topic Architecture](./topic.md)
+- [Kafka Partition Scaling Mechanics](./scaling-partitions.md)
+- [Consumer Group Lag & Rebalancing](../consumer/consumer-lag.md)

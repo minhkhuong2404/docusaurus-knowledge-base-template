@@ -10,7 +10,14 @@ tags:
 - producer
 - producer-transactions
 ---
+
+import KafkaProducerTransactionsDiagram from '@site/src/components/KafkaProducerTransactionsDiagram';
+
 # Producer Transactions
+
+<KafkaProducerTransactionsDiagram />
+
+---
 
 ## Why Transactions?
 
@@ -210,22 +217,22 @@ Combining `sendOffsetsToTransaction` with produce ensures exactly-once: if the t
 
 ## Interview Questions
 
-**Q: What is `transactional.id` and why must it be stable across restarts?**
+### Q: What is `transactional.id` and why must it be stable across restarts?
 
 > `transactional.id` is a user-supplied string that uniquely identifies a producer across sessions. When the producer restarts with the same `transactional.id`, the Transaction Coordinator increments its epoch. This allows the new session to fence out any zombie instance of the old session that might still be running. Without a stable ID, you lose cross-restart guarantees and zombie fencing.
 
-**Q: What is zombie fencing?**
+### Q: What is zombie fencing?
 
 > Zombie fencing prevents an old (crashed-but-still-running) producer instance from committing a stale transaction after the application has restarted. The coordinator tracks an epoch per `transactional.id`. When a new producer registers the same `transactional.id`, the epoch is bumped. Any subsequent request from the old producer with a lower epoch is rejected with `ProducerFencedException`.
 
-**Q: What happens to an uncommitted transaction if the producer crashes?**
+### Q: What happens to an uncommitted transaction if the producer crashes?
 
 > The Transaction Coordinator holds the transaction in OPEN state. After `transaction.timeout.ms` elapses, the coordinator automatically aborts the transaction by writing ABORT markers to all partitions. Consumers with `read_committed` will never see those messages.
 
-**Q: What is `sendOffsetsToTransaction`?**
+### Q: What is `sendOffsetsToTransaction`?
 
 > It's the mechanism for atomic consume-process-produce: you include consumer offset commits within the transaction. If the transaction commits, both the output records and the offset commit are made visible. If it aborts, neither is visible. This provides exactly-once semantics in a stream-processing pipeline.
 
-**Q: How does `isolation.level=read_committed` affect consumer performance?**
+### Q: How does `isolation.level=read_committed` affect consumer performance?
 
 > The consumer must buffer and skip records from open transactions (records written but not yet committed). This increases memory usage and introduces latency proportional to the longest open transaction. A producer that takes a long time to commit will delay how far a `read_committed` consumer can advance.

@@ -144,23 +144,6 @@ tags:
 
 **Q18: How would you design a Kafka-based event-driven order processing system?**
 
-> ```
-> OrderService → "order.created" (key: orderId)
->                     │
->              ┌──────┴──────┐
->              ▼             ▼
->     PaymentService    InventoryService
->     → "payment.processed"  → "inventory.reserved"
->              │                     │
->              └──────┬──────────────┘
->                     ▼
->             FulfillmentService
->             (joins payment + inventory events)
->             → "order.fulfilled"
->                     │
->                     ▼
->             NotificationService
->             → sends email/push
-> ```
+> 
 >
 > Key design decisions: (1) Use `orderId` as partition key for all events — ensures per-order ordering. (2) Each service has its own consumer group — independent scaling. (3) Use Schema Registry with FULL_TRANSITIVE for schema safety. (4) Each service publishes to its own topic with `acks=all` + idempotence. (5) Use DLT (Dead Letter Topic) for failed processing. (6) Consider Kafka Streams for the join between payment and inventory events.

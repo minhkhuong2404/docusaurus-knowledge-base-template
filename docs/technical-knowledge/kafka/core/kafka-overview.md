@@ -10,17 +10,16 @@ tags:
 - core
 - kafka-overview
 ---
+
+import KafkaArchitectureOverviewDiagram from '@site/src/components/KafkaArchitectureOverviewDiagram';
+
 # Kafka Architecture Overview
 
-## High-Level Architecture
+<KafkaArchitectureOverviewDiagram />
 
-```
-Producers  ──►  [ Broker Cluster ]  ──►  Consumers
-                  │  │  │
-                  B1 B2 B3
-                  │
-                ZooKeeper / KRaft
-```
+---
+
+## High-Level Architecture
 
 Kafka's architecture revolves around five fundamental components:
 
@@ -37,12 +36,6 @@ Kafka's architecture revolves around five fundamental components:
 ## The Kafka Log
 
 Kafka's core abstraction is the **append-only, immutable log**. Every message written to Kafka is appended to a partition log and assigned an **offset** — a monotonically increasing integer.
-
-```
-Partition 0: [0][1][2][3][4][5] ← new messages appended here
-                         ▲
-                    consumer offset
-```
 
 Key properties:
 - **Immutable**: Messages are never modified after write.
@@ -128,19 +121,19 @@ auto.offset.reset=earliest
 
 ## Interview Questions
 
-**Q: What makes Kafka different from a traditional message queue?**
+### Q: What makes Kafka different from a traditional message queue?
 
 > Kafka is a distributed log, not a queue. Messages are retained after consumption, enabling replay, multiple consumer groups reading the same data independently, and time-travel debugging. Traditional queues delete messages once consumed.
 
-**Q: What is an offset in Kafka?**
+### Q: What is an offset in Kafka?
 
 > An offset is a monotonically increasing integer that uniquely identifies each message within a partition. Offsets are per-partition — offset 5 in partition 0 is a different message than offset 5 in partition 1.
 
-**Q: How does KRaft improve over ZooKeeper?**
+### Q: How does KRaft improve over ZooKeeper?
 
 > KRaft removes the external ZooKeeper dependency, simplifying cluster operations. Controller failover drops from tens of seconds to milliseconds, and the system can scale to millions of partitions. Metadata is now stored in a Kafka topic itself, managed by a Raft consensus quorum.
 
-**Q: Can Kafka guarantee global message ordering?**
+### Q: Can Kafka guarantee global message ordering?
 
 > No. Kafka only guarantees ordering within a single partition. For global ordering, you'd need a single partition — which eliminates parallelism. The common pattern is to use a partition key to route related messages to the same partition, ensuring per-entity ordering.
 

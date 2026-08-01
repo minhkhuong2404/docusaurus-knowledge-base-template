@@ -2,197 +2,84 @@
 id: producer-acks
 title: Producer Acknowledgements (acks)
 sidebar_label: Producer Acks
-description: The `acks` configuration controls **how many broker acknowledgements
-  the producer requires before considering a send successful**. It directly trades
-  off.
+description: The `acks` configuration controls how many broker acknowledgements the producer requires before considering a send successful, trading off throughput, latency, and durability.
 tags:
-- technical-knowledge
-- kafka
-- producer
-- producer-acks
+  - technical-knowledge
+  - kafka
+  - producer
+  - producer-acks
 ---
-# Producer Acknowledgements (acks)
+
+import KafkaProducerAcksDiagram from '@site/src/components/KafkaProducerAcksDiagram';
+
+# Producer Acknowledgements (`acks`)
+
+<KafkaProducerAcksDiagram />
+
+---
 
 ## What are Producer Acks?
 
-The `acks` configuration controls **how many broker acknowledgements the producer requires before considering a send successful**. It directly trades off between throughput, latency, and durability.
+The `acks` parameter dictates **how many cluster replicas must write a record to their local log segments before the broker returns a success response to the producer**.
 
 ---
 
-## The Three Modes
+## The Three Acknowledgement Modes
 
-### `acks=0` — Fire and Forget
+### 1. `acks=0` — Fire and Forget
+- **Mechanism**: The producer transmits records over the network socket and immediately considers the write successful without waiting for a broker response.
+- **Latency & Throughput**: Maximum throughput, lowest latency.
+- **Data Loss Risk**: **Extremely High**. If the leader broker is offline, socket buffers drop, or network partitions occur, data is lost silently without errors.
+- **Use Cases**: High-volume telemetry, metrics gathering, clickstream logging where occasional data loss is acceptable.
 
-```
-Producer ──► Broker
-             (no ack)
-```
+### 2. `acks=1` — Leader Acknowledgement (Historical Default)
+- **Mechanism**: The producer waits for the partition leader broker to append the record to its local `.log` file before returning success.
+- **Latency & Throughput**: High throughput, low latency ($\approx 1\text{--}3\text{ ms}$).
+- **Data Loss Risk**: **Moderate**. If the leader acknowledges the write and crashes *before* follower replicas fetch the record, the newly elected leader will be missing the record, causing silent data loss.
+- **Use Cases**: Standard application logging and non-financial event streams.
 
-- Producer does **not wait** for any acknowledgement
-- Highest throughput, lowest latency
-- **No durability guarantee** — if the broker is down, message is lost silently
-- Useful for: log aggregation, metrics, cases where occasional loss is acceptable
-
-```java
-props.put(ProducerConfig.ACKS_CONFIG, "0");
-```
-
-### `acks=1` — Leader ACK Only
-
-```
-Producer ──► Leader Broker
-             (appended to leader log)
-                  │
-                  ▼
-Producer ◄── ACK from Leader
-```
-
-- Wait for the leader to write to its local log
-- **Leader may ACK and then crash before replication** → message lost
-- Good middle ground for moderate durability requirements
-- Default for most Kafka clients prior to 3.x
-
-```java
-props.put(ProducerConfig.ACKS_CONFIG, "1");
-```
-
-### `acks=all` (or `-1`) — Full ISR ACK
-
-```
-Producer ──► Leader Broker
-             appended to leader
-                  ↓ replicated to ISR followers
-             ACK after all ISR members confirm
-                  │
-                  ▼
-Producer ◄── ACK from Leader
-```
-
-- Wait for **all in-sync replicas** to acknowledge
-- No data loss as long as at least one ISR member survives
-- Highest latency (waits for slowest ISR member)
-- **Required for exactly-once and zero data-loss scenarios**
-
-```java
-props.put(ProducerConfig.ACKS_CONFIG, "all");
-```
+### 3. `acks=all` (or `acks=-1`) — Full ISR Acknowledgement
+- **Mechanism**: The producer waits until the record has been written to the local log of the partition leader AND replicated to **all active members of the In-Sync Replicas (ISR) set**.
+- **Latency & Throughput**: Slightly higher latency (governed by the slowest follower in the ISR set).
+- **Data Loss Risk**: **Zero Data Loss** (when paired with `min.insync.replicas >= 2`).
+- **Use Cases**: Financial transactions, order processing, stateful CDC, core business events.
 
 ---
 
-## Acks Comparison Table
+## The Zero-Data-Loss Safety Formula
 
-| Setting | Throughput | Latency | Durability | Use Case |
-|---------|-----------|---------|------------|----------|
-| `0` | Highest | Lowest | None | Metrics, non-critical logs |
-| `1` | High | Low | Moderate | General use (loss possible) |
-| `all` | Moderate | Higher | **Strongest** | Financial, critical events |
-
----
-
-## Acks and `min.insync.replicas` Interaction
-
-`acks=all` alone is not sufficient — the durability depends on how many replicas are in the ISR at write time:
-
-```
-acks=all  +  min.insync.replicas=1  →  Only leader must ack (same as acks=1 effectively)
-acks=all  +  min.insync.replicas=2  →  At least 2 ISR replicas must ack (recommended)
-acks=all  +  min.insync.replicas=3  →  All 3 replicas must ack (strictest)
-```
-
-**Recommended production configuration:**
+Setting `acks=all` alone is insufficient if `min.insync.replicas` is set to `1` (because an ISR set of size 1 reduces `acks=all` to `acks=1`).
 
 ```properties
-# Producer
+# Producer Configuration (Producer Client)
 acks=all
+enable.idempotence=true
+retries=2147483647
+delivery.timeout.ms=120000
 
-# Topic or Broker
-min.insync.replicas=2
+# Topic / Broker Configuration (Cluster)
 replication.factor=3
-```
-
-This tolerates 1 broker failure while maintaining write availability.
-
----
-
-## Acks Topology Diagram
-
-```
-acks=0:
-  Producer → [Leader] → done (no ACK)
-
-acks=1:
-  Producer → [Leader ✓] → ACK
-                ↓ (async, no wait)
-           [Follower1] [Follower2]
-
-acks=all:
-  Producer → [Leader ✓] → waits...
-                ↓ replicates
-           [Follower1 ✓] [Follower2 ✓]
-                          → ACK to Producer
-```
-
----
-
-## Spring Boot Configuration
-
-```java
-@Bean
-public ProducerFactory<String, String> producerFactory() {
-    Map<String, Object> props = new HashMap<>();
-    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-    props.put(ProducerConfig.ACKS_CONFIG, "all");
-    props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-    props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-    return new DefaultKafkaProducerFactory<>(props);
-}
-```
-
-Or via `application.yml`:
-```yaml
-spring:
-  kafka:
-    producer:
-      acks: all
-      retries: 2147483647
-      properties:
-        enable.idempotence: true
-```
-
----
-
-## The Safe Delivery Combination
-
-For **at-least-once with no data loss**:
-
-```java
-props.put(ProducerConfig.ACKS_CONFIG, "all");
-props.put(ProducerConfig.RETRIES_CONFIG, Integer.MAX_VALUE);
-props.put(ProducerConfig.DELIVERY_TIMEOUT_MS_CONFIG, 120_000);
-props.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, 5);
-props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true); // upgrade to exactly-once
+min.insync.replicas=2
+unclean.leader.election.enable=false
 ```
 
 ---
 
 ## Interview Questions
 
-**Q: What is the risk of `acks=1`?**
+### Q1. What is the risk of using `acks=1` in production?
+> With `acks=1`, the partition leader acknowledges the producer write as soon as it appends the record to its local Page Cache/log file, *before* follower replicas fetch the byte batch. If the leader crashes immediately after acknowledging, the follower elected as the new leader will not possess that record, resulting in silent data loss despite the producer receiving a success acknowledgement.
 
-> With `acks=1`, the leader sends the ACK as soon as it writes to its local log, before replication. If the leader crashes immediately after, the message was acknowledged to the producer but not replicated — resulting in **data loss**. The new leader (elected from followers) will not have that message.
+### Q2. Does `acks=all` alone guarantee zero data loss?
+> No. If `min.insync.replicas=1` and two followers fall out of the ISR set due to network lag, the ISR set shrinks to 1 member (the leader). `acks=all` will return success as soon as the leader writes locally. If that single broker crashes, data is lost. Zero data loss requires: `acks=all` + `min.insync.replicas=2` + `replication.factor=3` + `unclean.leader.election.enable=false`.
 
-**Q: Does `acks=all` guarantee no data loss?**
+### Q3. What error does a producer receive when the ISR size drops below `min.insync.replicas`?
+> When the active ISR set size is less than `min.insync.replicas` and a producer sends a record with `acks=all`, the broker rejects the request with a `NotEnoughReplicasException` (or `NotEnoughReplicasAfterAppendException`). This is a retriable exception — the producer retries until `delivery.timeout.ms` expires.
 
-> Nearly, but not entirely on its own. If `min.insync.replicas=1` and the topic has only one ISR member (the leader), then `acks=all` behaves like `acks=1`. For true no-data-loss, combine: `acks=all`, `min.insync.replicas=2`, `replication.factor=3`, `unclean.leader.election.enable=false`.
+---
 
-**Q: What happens to throughput with `acks=all`?**
+## See Also
 
-> Throughput decreases slightly because the producer must wait for the slowest ISR member to replicate. However, with a healthy cluster (fast followers) and batching (`linger.ms`, `batch.size`), the throughput difference is often acceptable. Compression also helps offset this.
-
-**Q: With `acks=0`, can retries help?**
-
-> No. If the producer doesn't receive an ACK, it has no way to know whether the message was received or not — it simply moves on. `retries` config has no effect with `acks=0` because retries are triggered by failed ACKs, and no ACK is expected.
-
-**Q: What error does a producer receive when the ISR drops below `min.insync.replicas`?**
-
-> The producer receives `NotEnoughReplicasException` (or `NotEnoughReplicasAfterAppendException`). This is a retriable error — the producer will retry according to its retry configuration. If the ISR doesn't recover within `delivery.timeout.ms`, the produce call fails.
+- [Producer Idempotency & Transactions](./producer-idempotency.md)
+- [Kafka Replication & ISR Mechanics](../core/replication.md)
+- [Kafka Producer Internals](./producer-overview.md)

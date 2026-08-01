@@ -10,7 +10,14 @@ tags:
 - producer
 - producer-overview
 ---
+
+import KafkaProducerInternalsDiagram from '@site/src/components/KafkaProducerInternalsDiagram';
+
 # Kafka Producer
+
+<KafkaProducerInternalsDiagram />
+
+---
 
 ## What is a Producer?
 
@@ -25,25 +32,6 @@ A **producer** is a client application that publishes (writes) messages to Kafka
 ---
 
 ## Producer Internals
-
-```
-Application Code
-       │ send(ProducerRecord)
-       ▼
-  Serializer (key + value)
-       │
-       ▼
-  Partitioner (selects partition)
-       │
-       ▼
-  RecordAccumulator (batches per partition)
-       │  [linger.ms / batch.size threshold]
-       ▼
-  Sender Thread ──► Kafka Broker
-       │
-       ▼
-  Callback / Future (success/failure)
-```
 
 The `send()` call is **asynchronous** by default — it adds the record to an in-memory buffer and returns immediately. A background **Sender thread** drains the buffer and sends batches to brokers.
 
@@ -209,22 +197,22 @@ public KafkaTemplate<String, OrderEvent> kafkaTemplate() {
 
 ## Interview Questions
 
-**Q: What is the RecordAccumulator and why does it exist?**
+### Q: What is the RecordAccumulator and why does it exist?
 
 > The RecordAccumulator is an in-memory buffer that groups records into batches per partition. It exists to improve throughput: instead of sending one message at a time (high overhead), the producer accumulates messages and sends them in bulk. `batch.size` and `linger.ms` control when a batch is flushed.
 
-**Q: What is the difference between `linger.ms=0` and `linger.ms=10`?**
+### Q: What is the difference between `linger.ms=0` and `linger.ms=10`?
 
 > With `linger.ms=0`, the producer sends messages as soon as they're added to the buffer, maximizing latency responsiveness. With `linger.ms=10`, the producer waits up to 10ms to accumulate more records into the same batch, improving throughput at the cost of slightly higher latency.
 
-**Q: How does the producer choose a partition when no key is provided?**
+### Q: How does the producer choose a partition when no key is provided?
 
 > Since Kafka 2.4, the **sticky partitioner** is used: the producer sends all keyless messages to the same partition until the batch is full or `linger.ms` expires, then moves to the next. Before 2.4, pure round-robin was used. You can also implement a custom `Partitioner` interface.
 
-**Q: What is `max.in.flight.requests.per.connection`?**
+### Q: What is `max.in.flight.requests.per.connection`?
 
 > It controls how many unacknowledged batches can be in-flight to a single broker at once. Higher values increase throughput. When set above 1 with retries enabled (and idempotence disabled), message reordering is possible: a failed batch retried after a successful later batch can result in out-of-order writes. With `enable.idempotence=true`, Kafka handles this safely up to 5 in-flight requests.
 
-**Q: What is `delivery.timeout.ms`?**
+### Q: What is `delivery.timeout.ms`?
 
 > It is the total time budget for a produce operation, including retries. If the message hasn't been delivered within this time, the producer fails the send with a `TimeoutException`. It must satisfy: `delivery.timeout.ms >= linger.ms + request.timeout.ms`. Default is 120 seconds.

@@ -2,14 +2,12 @@
 id: rebase
 title: git rebase — Replaying Commits
 sidebar_label: rebase
-description: '`git rebase` moves or replays a sequence of commits onto a new base.
-  It rewrites commit history by creating **new commits** with the same changes but
-  different.'
+description: git rebase moves or replays a sequence of commits onto a new base, rewriting history to produce a clean linear commit graph.
 tags:
-- technical-knowledge
-- git
-- branching
-- rebase
+  - technical-knowledge
+  - git
+  - branching
+  - rebase
 ---
 
 import GitRebaseInternalsDiagram from '@site/src/components/GitRebaseInternalsDiagram';
@@ -18,211 +16,86 @@ import GitRebaseInternalsDiagram from '@site/src/components/GitRebaseInternalsDi
 
 <GitRebaseInternalsDiagram />
 
-## What It Does
+---
 
-`git rebase` moves or replays a sequence of commits onto a new base. It rewrites commit history by creating **new commits** with the same changes but different parent commits (and therefore new SHA hashes).
+## What Is `git rebase`?
 
-The fundamental difference from merge:
+`git rebase` replays a sequence of commits from your current branch onto a new upstream base commit. Rather than creating a multi-parent merge commit (as `git merge` does), rebase sequentially applies each commit's patch diff onto the target tip, creating **brand-new commit objects** with new SHA-1/SHA-256 hashes and updated parent pointers.
 
 ```
-BEFORE (both start from C):
-  main:    A -- B -- C -- D -- E
-                      \
-  feature:             F -- G -- H
+BEFORE REBASE (Branch feature diverges from main at commit C):
+  main:    A --- B --- C --- D --- E  (origin/main)
+                        \
+  feature:               F --- G --- H  (HEAD)
 
-AFTER git merge main (creates a merge commit):
-  feature: A -- B -- C -- F -- G -- H -- M
-                      \               /
-                       D -- E --------
-
-AFTER git rebase main (replays F, G, H on top of E):
-  feature: A -- B -- C -- D -- E -- F' -- G' -- H'
-                                    (new SHA hashes)
+AFTER `git rebase main` (Replays F, G, H onto tip of main E):
+  main:    A --- B --- C --- D --- E
+                                    \
+  feature:                           F' --- G' --- H'  (HEAD)
 ```
-
-Rebasing produces **linear history** — as if the feature branch was started from the latest point on main.
 
 ---
 
-## Standard Rebase (Update a Branch)
+## Standard Rebase vs Interactive Rebase (`-i`)
 
-The most common use: bring your feature branch up-to-date with main before opening a PR.
+### Standard Rebase Flow
+Used to pull the latest upstream changes into your feature branch before opening a Pull Request:
 
 ```bash
-git switch feature/JIRA-123
+# Switch to your feature branch and fetch latest remotes
+git switch feature/payment-gateway
 git fetch origin
+
+# Replay local commits on top of current origin/main
 git rebase origin/main
 ```
 
-If there are conflicts during replay, Git pauses on the conflicting commit:
+### Interactive Rebase Commands (`git rebase -i HEAD~N`)
+
+| Action | Command | Purpose |
+|---|---|---|
+| **`pick`** | `p` | Retain commit as-is. |
+| **`reword`** | `r` | Retain commit patch changes, but pause to edit the commit message. |
+| **`edit`** | `e` | Pause execution at this commit to amend code changes via `git commit --amend`. |
+| **`squash`** | `s` | Combine commit patch into previous commit and concatenate log messages. |
+| **`fixup`** | `f` | Combine commit patch into previous commit, discarding this commit's message. |
+| **`drop`** | `d` | Delete commit patch entirely from history. |
+
+---
+
+## Conflict Resolution During Rebase
+
+When Git encounters a merge conflict while replaying a commit patch:
 
 ```bash
-# 1. Resolve conflicts in your editor
-# 2. Stage the resolved files
-git add src/main/java/com/example/TransactionService.java
+# 1. Resolve conflict in modified files
+# 2. Stage resolved paths
+git add src/main/java/com/example/PaymentService.java
 
-# 3. Continue replaying the remaining commits
+# 3. Continue replaying remaining commits
 git rebase --continue
 
-# Or abort and return to the state before rebase started
+# Abort rebase and restore original pre-rebase HEAD pointer
 git rebase --abort
-
-# Or skip the problematic commit (use only if you're certain it's safe)
-git rebase --skip
 ```
-
----
-
-## Interactive Rebase (`-i`)
-
-Interactive rebase is one of Git's most powerful features. It lets you edit, reorder, squash, split, drop, or rename commits before they are pushed or merged.
-
-```bash
-# Rebase the last 5 commits interactively
-git rebase -i HEAD~5
-
-# Rebase all commits since branching from main
-git rebase -i origin/main
-```
-
-Git opens your editor with a list of commits, oldest at the top:
-
-```
-pick a3f9bc2 feat(transactions): add repository method
-pick 7d1e4f0 wip: controller scaffolding
-pick 2c8a1b3 fix typo
-pick 9f3e2d1 feat(transactions): add service logic
-pick 1a4b5c6 feat(transactions): add controller endpoint
-
-# Commands:
-# p, pick   = use commit as-is
-# r, reword = use commit but edit the message
-# e, edit   = use commit but pause to amend
-# s, squash = meld into previous commit (combine messages)
-# f, fixup  = meld into previous commit (discard this message)
-# d, drop   = remove the commit entirely
-# b, break  = pause here (useful for splitting commits)
-```
-
-### Common patterns
-
-**Squash WIP commits into a clean feature commit:**
-```
-pick a3f9bc2 feat(transactions): add repository method
-squash 7d1e4f0 wip: controller scaffolding
-squash 2c8a1b3 fix typo
-squash 9f3e2d1 feat(transactions): add service logic
-squash 1a4b5c6 feat(transactions): add controller endpoint
-```
-
-**Reorder commits (change lines order):**
-```
-pick a3f9bc2 feat: add domain model
-pick 9f3e2d1 feat: add service logic
-pick 7d1e4f0 wip: controller scaffolding    ← move this down
-pick 1a4b5c6 feat: add controller
-```
-
-**Drop a commit entirely:**
-```
-pick a3f9bc2 feat: add domain model
-drop 7d1e4f0 wip: debug logging I don't want
-pick 9f3e2d1 feat: add service logic
-```
-
-**Reword a commit message:**
-```
-reword a3f9bc2 feat: add transaction filter   ← Git will pause to edit this message
-pick   9f3e2d1 feat: add service logic
-```
-
----
-
-## Rebase onto Another Branch
-
-Move a branch from one base onto a completely different branch:
-
-```bash
-# Scenario: feature-b was accidentally branched from feature-a,
-# but should have been branched from main
-
-git rebase --onto main feature-a feature-b
-```
-
-```
-Before:
-  main:      A -- B -- C
-                        \
-  feature-a:             D -- E
-                               \
-  feature-b:                    F -- G
-
-After: git rebase --onto main feature-a feature-b
-  main:      A -- B -- C -- F' -- G'
-```
-
----
-
-## Autosquash
-
-When combined with `--fixup` commits, `--autosquash` automatically rearranges the rebase todo list:
-
-```bash
-# Create a fixup commit targeting an earlier commit
-git commit --fixup a3f9bc2
-
-# During interactive rebase, autosquash arranges it automatically
-git rebase -i --autosquash origin/main
-```
-
-See [Fixup](../history/fixup) for the full workflow.
-
----
-
-## When NOT to Rebase
-
-:::danger[Never rebase shared branches]
-Do not rebase any branch that other team members have pulled and based work on. Rebase rewrites SHA hashes — anyone who has the old SHAs will have a diverged history that is painful to reconcile.
-
-**Safe to rebase:** your own local feature branch before pushing  
-**Safe to rebase:** a pushed feature branch only you are working on (use `--force-with-lease`)  
-**NEVER rebase:** `main`, `develop`, `release/**`, or any branch shared with others
-:::
-
----
-
-## Useful Flags Summary
-
-| Flag | Meaning |
-|---|---|
-| `-i` / `--interactive` | Open interactive editor |
-| `--onto <newbase>` | Rebase onto a different base |
-| `--continue` | Continue after resolving conflicts |
-| `--abort` | Cancel rebase and restore original state |
-| `--skip` | Skip the current conflicting commit |
-| `--autosquash` | Auto-arrange fixup/squash commits |
-| `--autostash` | Stash dirty working tree before rebase, pop after |
-| `--no-ff` | Create a merge commit instead of fast-forward at the end |
-| `-x "cmd"` | Run a shell command after each replayed commit |
 
 ---
 
 ## Interview Questions
 
-### Q: Why is rebasing shared branches dangerous?
-**A:** It rewrites commit SHAs and invalidates other developers' branch ancestry, creating painful divergence.
+### Q1. Why is rebasing shared public branches considered dangerous in Git workflows?
+> Rebasing creates brand-new commit objects with distinct SHA hashes, rewriting branch history. If you rebase a shared public branch (like `main` or `develop`) that other developers have pulled, their local repositories retain the old commit hashes. Subsequent pulls or merges force Git to reconcile diverged histories, creating duplicated commits and painful merge conflicts across the entire engineering team.
 
-### Q: When do you prefer rebase over merge in day-to-day work?
-**A:** Use rebase to keep feature branch history linear before review; use merge to integrate completed work into shared branches.
+### Q2. What is the difference between `git push --force` and `git push --force-with-lease`?
+> `git push --force` (`-f`) overwrites the remote branch pointer unconditionally, ignoring any new commits pushed by teammates to the remote server. `git push --force-with-lease` checks if the remote ref matches your local remote-tracking ref (`origin/branch`). If someone else pushed new commits to the remote branch in the interim, `--force-with-lease` rejects the push, preventing accidental overwrites of teammates' work.
 
-### Q: How does interactive rebase improve code review quality?
-**A:** It groups commits into logical units, removes noise, and clarifies narrative intent for reviewers.
+### Q3. How do you recover a feature branch if an interactive rebase goes wrong?
+> Use `git reflog` to locate the `HEAD` pointer position prior to executing the rebase (e.g., `HEAD@{2}`). Execute `git reset --hard HEAD@{2}` (or `git reset --hard <pre-rebase-sha>`) to instantly restore the branch pointer, working tree, and index back to its exact pre-rebase state.
 
-### Q: What is a safe force-push policy after rebase?
-**A:** Use --force-with-lease only on branches you own, after confirming no one else based work on old SHAs.
+---
 
-### Q: How do you recover if a rebase went wrong?
-**A:** Use git reflog to locate pre-rebase HEAD and reset back to it.
+## See Also
 
-### Q: What indicates a team is overusing rebase?
-**A:** Frequent history rewrites on collaborative branches and recurring confusion about missing/duplicated commits.
+- [Git Merge Mechanics](./merge.md)
+- [Git Conflict Resolution](./conflict-resolution.md)
+- [Git Reflog Recovery](../history/reflog.md)

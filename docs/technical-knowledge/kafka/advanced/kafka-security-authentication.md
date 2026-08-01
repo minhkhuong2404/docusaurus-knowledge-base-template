@@ -39,126 +39,6 @@ SASL (Simple Authentication and Security Layer) is a framework that separates au
 
 The simplest mechanism — transmits username and password in cleartext. Always combine with SSL/TLS encryption.
 
-```properties
-# Client (producer/consumer)
-security.protocol=SASL_SSL
-sasl.mechanism=PLAIN
-sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required \
-  username="producer-app" \
-  password="secure-password";
-```
-
-✅ Good for: development, testing, or when integrated with external secret rotation systems.  
-❌ Never use without TLS in production.
-
----
-
-### SASL/SCRAM (SHA-256 / SHA-512)
-
-SCRAM (Salted Challenge Response Authentication Mechanism) avoids transmitting passwords over the network. Instead, it uses a cryptographic challenge-response protocol — the client proves knowledge of the password without revealing it.
-
-**Kafka 4.0+ / KRaft mode**: SCRAM credentials are stored in the cluster's `__cluster_metadata` log (previously ZooKeeper, which was removed in Kafka 4.0). This centralized management makes SCRAM ideal for multi-tenant environments.
-
-```properties
-# Broker configuration
-sasl.enabled.mechanisms=SCRAM-SHA-512
-sasl.mechanism.inter.broker.protocol=SCRAM-SHA-512
-# In KRaft mode, credentials are stored in metadata log automatically
-```
-
-Create credentials in KRaft mode:
-
-```bash
-kafka-configs --bootstrap-server localhost:9092 \
-  --alter --add-config 'SCRAM-SHA-512=[password=secure-password]' \
-  --entity-type users --entity-name producer-app
-```
-
-✅ **Recommended for most production deployments** — strong security with manageable operations.
-
----
-
-### SASL/GSSAPI (Kerberos)
-
-For enterprise environments with existing Active Directory or Kerberos infrastructure. Clients authenticate using Kerberos tickets rather than passwords, enabling single sign-on (SSO).
-
-Requires: Key Distribution Center (KDC), proper DNS configuration, synchronized clocks. High complexity — best suited for large organizations with dedicated identity teams.
-
----
-
-### SASL/OAUTHBEARER
-
-Enables Kafka to validate **OAuth 2.0 bearer tokens (JWTs)**, bridging traditional Kafka auth with modern cloud-native identity providers (Keycloak, Okta, Azure AD, AWS Cognito).
-
-```properties
-# Client configuration
-security.protocol=SASL_SSL
-sasl.mechanism=OAUTHBEARER
-sasl.jaas.config=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required \
-  clientId="kafka-client" \
-  clientSecret="client-secret" \
-  scope="kafka.cluster" \
-  tokenEndpointUri="https://identity-provider.com/oauth2/token";
-
-# Broker token validation
-sasl.enabled.mechanisms=OAUTHBEARER
-listener.name.sasl_ssl.oauthbearer.sasl.server.callback.handler.class=\
-  org.apache.kafka.common.security.oauthbearer.secured.OAuthBearerValidatorCallbackHandler
-listener.name.sasl_ssl.oauthbearer.sasl.jwks.endpoint.url=\
-  https://identity-provider.com/.well-known/jwks.json
-```
-
----
-
-## SSL/TLS Certificate-Based Authentication (mTLS)
-
-SSL/TLS serves dual purposes in Kafka:
-1. **Encrypting network traffic**
-2. **Authenticating clients** through mutual TLS (mTLS)
-
-With mTLS, both the broker and client present certificates to verify their identities — eliminating password management entirely.
-
-### How mTLS Works
-
-1. Broker presents its certificate → client validates against its trust store
-2. Client presents its certificate → broker validates and extracts the principal (identity)
-3. Encrypted connection is established if both sides pass validation
-
-```properties
-# Client mTLS configuration
-security.protocol=SSL
-ssl.keystore.location=/var/private/ssl/client.keystore.jks
-ssl.keystore.password=keystore-password
-ssl.key.password=key-password
-ssl.truststore.location=/var/private/ssl/client.truststore.jks
-ssl.truststore.password=truststore-password
-```
-
-Modern automation tools — **cert-manager** (Kubernetes), **HashiCorp Vault**, **AWS Certificate Manager** — dramatically reduce the operational burden of mTLS at scale.
-
-✅ Excellent for: Kubernetes, container platforms, zero-trust architectures.
-
----
-
-## OAuth 2.0 Flow in Kafka
-
-When a producer or consumer connects to Kafka with OAuth:
-
-```
-Client                 Identity Provider          Kafka Broker
-  │                          │                        │
-  │── Request token ─────────►│                        │
-  │◄── JWT access token ──────│                        │
-  │                          │                        │
-  │── Connect with JWT ───────────────────────────────►│
-  │                          │                        │
-  │                          │  Validate JWT signature │
-  │                          │  (via JWKS endpoint)    │
-  │                          │  Check expiry/audience  │
-  │                          │  Extract principal      │
-  │◄── Authorized ────────────────────────────────────│
-```
-
 1. **Token Acquisition** — Client authenticates with IdP using client credentials, gets a JWT
 2. **Connection with Token** — JWT sent to broker via SASL/OAUTHBEARER handshake
 3. **Token Validation** — Broker verifies signature (JWKS), checks expiry, validates audience/issuer/scopes
@@ -212,23 +92,23 @@ In **Kafka 4.0+ with KRaft mode** (ZooKeeper is removed):
 
 ## Interview Questions
 
-**Q: What's the difference between SASL/PLAIN and SASL/SCRAM?**
+### Q: What's the difference between SASL/PLAIN and SASL/SCRAM?
 
 > SASL/PLAIN transmits credentials in cleartext (requires TLS to be safe). SASL/SCRAM uses a cryptographic challenge-response — the client proves knowledge of the password without sending it over the network. SCRAM is significantly more secure because even with network interception, the password cannot be extracted.
 
-**Q: How are SCRAM credentials stored in Kafka 4.0+ (KRaft mode)?**
+### Q: How are SCRAM credentials stored in Kafka 4.0+ (KRaft mode)?
 
 > In KRaft mode, SCRAM credentials are stored directly in the cluster's metadata log (`__cluster_metadata` topic), managed by the KRaft controller quorum. Previously in ZooKeeper-based clusters, they were stored in ZooKeeper znodes. KRaft mode simplifies this by eliminating the external ZooKeeper dependency.
 
-**Q: How does mTLS authentication work in Kafka?**
+### Q: How does mTLS authentication work in Kafka?
 
 > mTLS (mutual TLS) requires both broker and client to present X.509 certificates. The broker validates the client certificate against its trust store and extracts the principal identity from the certificate's CN (Common Name) or DN (Distinguished Name). The `ssl.principal.mapping.rules` configuration controls how the DN is mapped to a Kafka principal for ACL evaluation.
 
-**Q: What is the OAuth flow in Kafka?**
+### Q: What is the OAuth flow in Kafka?
 
 > The client first obtains a JWT access token from the identity provider (e.g., Okta, Keycloak) using client credentials. It then presents this token to the Kafka broker via SASL/OAUTHBEARER. The broker validates the token's cryptographic signature against the IdP's public keys (fetched from the JWKS endpoint), checks expiry, validates audience/issuer claims, and extracts the principal identity from the `sub` claim. Standard ACLs then control what the authenticated principal can do.
 
-**Q: When would you use SASL/GSSAPI over other mechanisms?**
+### Q: When would you use SASL/GSSAPI over other mechanisms?
 
 > SASL/GSSAPI (Kerberos) is chosen when an organization already has an Active Directory or Kerberos KDC infrastructure. It provides single sign-on capabilities — users authenticate once to the Kerberos realm and get Kerberos tickets used across all systems including Kafka. The tradeoff is high operational complexity: synchronized clocks, proper DNS, and KDC maintenance. New cloud-native deployments prefer OAuth 2.0 instead.
 
