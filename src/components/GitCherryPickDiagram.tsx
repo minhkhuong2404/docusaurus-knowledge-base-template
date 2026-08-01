@@ -26,7 +26,7 @@ export default function GitCherryPickDiagram(): React.JSX.Element {
           <circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/>
         </svg>
         <span style={{ color: 'var(--ifm-color-content)', fontWeight: 700 }}>
-          Git Cherry-Pick Patch Copy Protocol (`git cherry-pick <sha>`)
+          Git Cherry-Pick Patch Copy Protocol (git cherry-pick SHA)
         </span>
         <button onClick={handlePlay} disabled={playing}
           style={{ marginLeft: 'auto', padding: '6px 14px', borderRadius: '8px', border: 'none', cursor: playing ? 'not-allowed' : 'pointer', fontWeight: 600, fontSize: '12px', background: playing ? 'rgba(255,255,255,0.06)' : 'rgba(244,114,182,0.15)', color: playing ? 'var(--ifm-color-content-secondary)' : '#f472b6', boxShadow: playing ? 'none' : '0 0 0 1.5px rgba(244,114,182,0.4)', transition: 'all 0.2s ease' }}>
