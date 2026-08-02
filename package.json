@@ -7,8 +7,8 @@
     "npm": ">=10.0.0"
   },
   "scripts": {
-    "start": "python scratch/fetch_leetcode_daily.py && docusaurus start",
-    "build": "python scratch/fetch_leetcode_daily.py && DOCUSAURUS_IGNORE_SSG_WARNINGS=true docusaurus build",
+    "start": "python scratch/fetch_leetcode_daily.py && python scratch/sync_google_sheet_quiz.py && docusaurus start",
+    "build": "python scratch/fetch_leetcode_daily.py && python scratch/sync_google_sheet_quiz.py && DOCUSAURUS_IGNORE_SSG_WARNINGS=true docusaurus build",
     "build:analyze": "docusaurus build --bundle-analyzer",
     "build:debug-search": "DEBUG=search-local:* docusaurus build",
     "serve": "docusaurus serve",

@@ -1,0 +1,38 @@
+{
+  "spreadsheetId": "17dxDS1dHnQ-dRe8H8N4Kztmy6pqK0KSMI6WFuN67spU",
+  "tabs": {
+    "Java": {
+      "targetFile": "src/data/java-quiz-questions.ts",
+      "exportVarName": "javaQuestions",
+      "sheetNameNames": [
+        "Java",
+        "java",
+        "JAVA"
+      ],
+      "csvUrl": ""
+    },
+    "SpringBoot": {
+      "targetFile": "src/data/spring-boot-quiz-questions.ts",
+      "exportVarName": "springBootQuestions",
+      "sheetNameNames": [
+        "Spring Boot",
+        "SpringBoot",
+        "spring-boot",
+        "SPRING_BOOT"
+      ],
+      "csvUrl": ""
+    },
+    "SystemDesign": {
+      "targetFile": "src/data/system-design-quiz-questions.ts",
+      "exportVarName": "systemDesignQuestions",
+      "sheetNameNames": [
+        "System Design",
+        "SystemDesign",
+        "system-design",
+        "SYSTEM_DESIGN"
+      ],
+      "csvUrl": ""
+    }
+  },
+  "webAppUrl": "https://script.google.com/macros/s/AKfycbwnvPSs-KVnC5E6g-JnXeYr1XND9oBJrz2ZMzLT8w14LwW2xDiGRxlckLk2pQq09vsG/exec"
+}
