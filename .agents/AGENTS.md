@@ -159,6 +159,36 @@ Before creating a new component, check whether one already exists for the concep
 | `OsLinuxSyscallsDiagram` | 6-step SYSCALL/SYSRET lifecycle animation + filterable syscalls reference |
 | `OsIpcNetworkingDiagram` | Tabbed IPC explorer (Pipes, Shared Memory, UDS, Signals, POSIX Message Queues) |
 | `OsInterviewScenariosDiagram` | Senior OS interview scenarios (Process vs Thread, Page Fault, Mutex vs Semaphore, fork()) |
+| `BehavioralOverviewDiagram` | Big 8 behavioral themes, company evaluation frameworks, and interview scoring rubric |
+| `StarMethodDiagram` | Animated 4-step STAR sequence flow with timing percentages, power words panel, and STAR-L variant toggle |
+| `StoryBankDiagram` | Story portfolio checklist with 10 story types, theme coverage matrix, and practice schedule tracker |
+| `BehavioralQuestionsDiagram` | Searchable reference of 50 behavioral questions by category with expandable signal and tips |
+| `AmazonLPDiagram` | Searchable explorer of all 16 Amazon Leadership Principles with definition, questions, and story strategy |
+| `CompanyBehavioralDiagram` | 3-tab company comparison (Google Googleyness / Meta Impact / Microsoft Growth Mindset) |
+| `ConflictFailureDiagram` | Animated safe storytelling flow for conflict/failure questions with 5 golden rules |
+| `CommonMistakesDiagram` | 10 interview-killing mistakes as tabbed cards with diagnosis, bad examples, and fixes |
+| `QuestionsToAskDiagram` | Searchable reference of smart questions to ask filterable by interviewer type and category |
+| `BankingPaymentLifecycleDiagram` | Interactive 10-step payment lifecycle, ISO 20022 message inspector, failure simulator |
+| `Iso20022MigrationDiagram` | SWIFT MT103 vs pacs.008 mapping, truncation risk calculator, migration timeline |
+| `BankingClearingSettlementDiagram` | DNS vs RTGS settlement engine & multilateral netting calculator |
+| `BankingSanctionsScreeningDiagram` | Real-time Jaro-Winkler fuzzy match simulator & compliance disposition workflow |
+| `BankingCardPaymentFlowDiagram` | 4-Party Model topology, Auth vs Settlement, MDR fee calculator & Chargeback lifecycle |
+| `BankingOpenBankingCdrDiagram` | CDR FAPI / OAuth 2.0 PKCE consent flow, state machine & payload inspector |
+| `BankingRolesGovernanceDiagram` | Three Lines of Defence (3LoD APRA CPS 230) & Agile Payment Pod NFRs |
+| `Iso20022MonospaceSchemaInspector` | Monospace XML schema inspector for pain.001, pacs.008, pacs.002, camt.054 |
+| `BankingFraudExceptionsDiagram` | Real-time payment fraud scoring matrix & exception handling state machine |
+| `BankingBatchReconciliationDiagram` | BECS ABA file 120-byte monospace inspector, 3-way reconciliation & intraday liquidity |
+| `BankingReversalRecallDiagram` | Return (pacs.004) vs Reversal (pain.007/pacs.007) vs Recall (camt.056) sequence & reason codes |
+| `BankingRailsNppRtgsSwiftDiagram` | Global payment rails switcher (NPP vs SWIFT gpi vs RTGS vs BPAY) & MT/MX mapping |
+| `BankingCorePostingAccountingDiagram` | Core Banking Ledger posting simulator (Booked vs Available) & Double-Entry matrix |
+| `BankingHubRoutingProcessingDiagram` | Enterprise Payment Hub 6-stage pipeline & Confirmation of Payee (CoP) engine |
+| `BankingAmlRegulatoryTestingDiagram` | AML/CTF transaction monitoring, KYC risk rating & synthetic test suite |
+| `VmDockerK8sComparisonDiagram` | VMs vs Docker vs Kubernetes stack switcher, CPU protection rings & cgroups sandbox |
+| `DockerArchitectureDiagram` | Docker Engine pipeline (CLI ➔ dockerd ➔ containerd ➔ runc), Multi-stage layer builder |
+| `KubernetesArchitectureDiagram` | Control Plane & Worker Node topology graph + Pod Lifecycle & Probe state machine |
+| `KubernetesWorkloadsNetworkingDiagram` | Workload controllers (Deployment, StatefulSet), K8s Service router & CSI storage |
+| `GitOpsArgoCdPipelineDiagram` | GitOps Pull vs Push CI/CD, ArgoCD reconciliation loop, Canary rollouts & CRD operator |
+| `DevOpsObservabilityIacDiagram` | 3 Pillars of Observability, Terraform State DAG engine & Declarative vs Procedural IaC |
 
 ## MANDATORY: Register Every New Page in sidebars.ts
 

@@ -55,6 +55,7 @@ Before writing code, inspect [references/DESIGNS.md](./references/DESIGNS.md). I
 | Feature comparison / protocol evolution / topic tabs | **C — Tabbed Explorer** | Custom tab buttons with colored highlight borders, structured details grid, gotchas/pro-con tags, optional sub-step accordion |
 | Lookup reference (headers, status codes, commands, tools) | **D — Searchable List** | Live search `<input>`, filterable list buttons with colored badges, split-pane detail inspection card |
 | Pre-launch audit / review criteria / checklists | **E — Interactive Checklist** | Category tabs, clickable custom checkboxes, dynamic progress bar, summary metrics |
+| Code payload / XML/JSON message schemas / API specs | **F — Monospace Schema Inspector** | Monospace code block, XML/JSON tree payload preview, field cardinality badges, click-to-inspect schema field details panel |
 
 ---
 

@@ -7,6 +7,8 @@ description: Overview of Payment Exceptions & Investigations.
 tags: [banking, payment, exceptions, investigations]
 ---
 
+import BankingFraudExceptionsDiagram from '@site/src/components/BankingFraudExceptionsDiagram';
+
 # Payment Exceptions & Investigations
 
 ## Overview
@@ -14,6 +16,8 @@ tags: [banking, payment, exceptions, investigations]
 **Payment exceptions** are transactions that cannot be processed automatically and require **manual intervention** by operations staff. They arise from technical errors, data quality issues, unmatched payments, compliance holds, or network failures.
 
 Effective exception management is critical — unresolved exceptions represent **financial risk**, **regulatory exposure**, and **customer dissatisfaction**.
+
+<BankingFraudExceptionsDiagram />
 
 ---
 

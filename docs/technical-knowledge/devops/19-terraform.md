@@ -6,9 +6,13 @@ description: An exhaustive, 1000-line deep dive into Terraform with extensive pr
 tags: [devops, iac, terraform, infrastructure, beginner, advanced, deep-dive]
 ---
 
+import DevOpsObservabilityIacDiagram from '@site/src/components/DevOpsObservabilityIacDiagram';
+
 # Terraform: The Exhaustive Guide & Cookbook
 
 Welcome to the definitive, most comprehensive guide on HashiCorp Terraform. This document serves not only as theoretical knowledge but as a practical cookbook filled with hundreds of lines of code examples, real-world use cases, and command-line execution examples.
+
+<DevOpsObservabilityIacDiagram />
 
 ---
 

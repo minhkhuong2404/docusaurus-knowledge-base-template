@@ -6,11 +6,15 @@ description: The Three Pillars of Observability in Kubernetes — Metrics (Prome
 tags: [kubernetes, observability, prometheus, opentelemetry, fluentd, intermediate]
 ---
 
+import DevOpsObservabilityIacDiagram from '@site/src/components/DevOpsObservabilityIacDiagram';
+
 # The Observability Stack
 
 In a monolithic architecture, a single error log provides a complete stack trace of a failure. In a microservices architecture running on Kubernetes, an HTTP request might traverse an Ingress, an API Gateway, an Auth microservice, a Billing microservice, and a PostgreSQL database. 
 
 If this request fails or is slow, answering *"Why?"* requires robust **Observability**. Observability is defined by three pillars: **Metrics**, **Logs**, **Traces**.
+
+<DevOpsObservabilityIacDiagram />
 
 ---
 
@@ -22,23 +26,7 @@ Metrics are numerical representations of data measured over intervals of time. T
 * **Standard Stack:** Prometheus (storage and scraping) + Grafana (visualization).
 
 ### Prometheus Architecture
-
-Prometheus uses a **pull-based** model. Instead of applications sending metrics to a database, Prometheus reaches out to application endpoints (e.g. `/metrics`) and scrapes the data periodically.
-
-```
-                    ┌───────────────┐
-                    │  Prometheus   │
-                    │ (Time-Series) │
-                    └──────▲────────┘
-                           │ HTTP GET /metrics every 15s
-        ┌──────────────────┼──────────────────┐
-        │                  │                  │
-┌───────▼──────┐   ┌───────▼──────┐   ┌───────▼──────┐
-│ Spring Boot  │   │ Node Exporter│   │ Kube-State   │
-│  /actuator/  │   │   (CPU/RAM)  │   │   Metrics    │
-│  prometheus  │   │              │   │(Pod Status)  │
-└──────────────┘   └──────────────┘   └──────────────┘
-```
+Prometheus uses a **pull-based** model. Instead of applications pushing metrics to a database, Prometheus reaches out to application endpoints (e.g. `/actuator/prometheus`, `/metrics`) and scrapes time-series data periodically over HTTP.
 
 **Key Advantages:**
 1. Applications don't need to know where Prometheus is—they just expose an HTTP port. If Prometheus goes down, the application isn't impacted.

@@ -10,8 +10,11 @@ tags:
   - Career
   - Interview Prep
 ---
+import QuestionsToAskDiagram from '@site/src/components/QuestionsToAskDiagram';
 
 # Smart Questions to Ask Your Interviewer
+
+<QuestionsToAskDiagram />
 
 *"Do you have any questions for me?"* — This is not a formality. It's a critical part of the interview. Asking thoughtful questions signals intellectual curiosity, genuine interest in the role, and cultural fit. It's also your chance to evaluate if **you** want to work there.
 

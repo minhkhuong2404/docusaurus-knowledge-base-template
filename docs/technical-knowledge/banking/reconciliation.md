@@ -7,11 +7,15 @@ description: Overview of Reconciliation.
 tags: [banking, reconciliation]
 ---
 
+import BankingBatchReconciliationDiagram from '@site/src/components/BankingBatchReconciliationDiagram';
+
 # Reconciliation
 
 ## Overview
 
 **Reconciliation** in payments is the process of **matching internal payment records against external confirmations** (bank statements, network confirmations, settlement reports) to ensure every transaction is correctly accounted for, with no gaps, duplicates, or errors.
+
+<BankingBatchReconciliationDiagram />
 
 ---
 

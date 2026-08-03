@@ -3,47 +3,52 @@ id: banking_roles
 title: Banking Roles & Teams
 sidebar_label: Roles & Teams
 sidebar_position: 2
-description: A bank is made up of many specialised teams. Understanding who does what
-  helps you collaborate effectively, know who to escalate to, and understand where
-  you.
+description: A bank is made up of many specialised teams. Understanding who does what helps you collaborate effectively, know who to escalate to, and understand where you fit in the payments ecosystem.
 tags:
 - technical-knowledge
 - banking
 - banking_roles
 ---
+
+import BankingRolesGovernanceDiagram from '@site/src/components/BankingRolesGovernanceDiagram';
+
 # Banking Roles & Teams
 
 ## Overview
 
 A bank is made up of many specialised teams. Understanding who does what helps you collaborate effectively, know who to escalate to, and understand where you fit in the payments ecosystem.
 
+<BankingRolesGovernanceDiagram />
+
 ---
 
-## Three Lines of Defence
+## Three Lines of Defence (3LoD Governance Framework)
 
-Banks are organised around the **Three Lines of Defence** model — a governance framework that defines accountability for risk:
+Banks operate under the **Three Lines of Defence (3LoD)** risk governance framework — mandated by global regulators (APRA CPS 220 / CPS 230 in Australia, Basel III globally). This model establishes clear boundaries between business execution, independent policy oversight, and objective audit assurance.
 
-```
-┌───────────────────────────────────────────────────────────────────┐
-│  1st LINE: Business & Operations                                  │
-│  (They own and manage risk day-to-day)                            │
-│  ├── Payments Operations                                          │
-│  ├── Retail Banking                                               │
-│  ├── Transaction Banking                                          │
-│  └── Technology / Product teams                                   │
-├───────────────────────────────────────────────────────────────────┤
-│  2nd LINE: Risk & Compliance                                      │
-│  (They set the rules and independently oversee 1st line)          │
-│  ├── Compliance (AML, sanctions, regulatory)                      │
-│  ├── Financial Crime                                              │
-│  ├── Operational Risk                                             │
-│  └── Legal                                                        │
-├───────────────────────────────────────────────────────────────────┤
-│  3rd LINE: Internal Audit                                         │
-│  (Independent assurance — audits 1st and 2nd lines)               │
-│  └── Internal Audit                                               │
-└───────────────────────────────────────────────────────────────────┘
-```
+### 1st Line of Defence: Business & Operations (Risk Owners)
+- **Who**: Payments Engineering, Payments Operations, Core Banking, Retail/Corporate Business Units, Product Owners.
+- **Responsibilities**:
+  - Own and manage operational, credit, and compliance risks day-to-day.
+  - Implement automated inline controls within application code (e.g. duplicate payment checks, balance reservations, input validation).
+  - Execute Business-As-Usual (BAU) payment processing, exception resolution, and initial incident response.
+  - Establish Key Risk Indicators (KRIs) and operate within the Risk Appetite Statement (RAS) defined by 2nd Line.
+
+### 2nd Line of Defence: Risk & Compliance (Independent Oversight & Policy)
+- **Who**: Compliance, Financial Crime (AML/CTF & Sanctions), Operational Risk, Cyber Security (CISO), Legal.
+- **Responsibilities**:
+  - Set risk management frameworks, policies, and mandatory control standards.
+  - Provide independent oversight and **active challenge** to 1st Line business decisions.
+  - Review and approve production release risk assessments, new payment product launches, and sanctions screening threshold changes.
+  - Has independent veto authority over production deployments or business operations that exceed risk appetite.
+  - Direct reporting line to the Chief Risk Officer (CRO) and Board Risk Committee.
+
+### 3rd Line of Defence: Internal Audit (Independent Assurance)
+- **Who**: Internal Audit Function, External Independent Auditors.
+- **Responsibilities**:
+  - Provide independent, objective assurance on the design and operational effectiveness of 1st and 2nd Line controls.
+  - Conduct periodic audits of payment engines, key management, HSM controls, and regulatory reporting accuracy (SMR/IFTI).
+  - Direct, unfettered reporting line to the **Board Audit Committee** (completely independent of executive management).
 
 ---
 
@@ -179,23 +184,24 @@ Know who to contact for common situations:
 
 ---
 
-## Working in an Agile Payment Team
+## Working in an Agile Payment Team (Engineering Pod Mechanics)
 
-Most payment technology teams operate with:
+Payment engineering teams operate in multi-disciplinary **Agile Pods** designed for high reliability, strict compliance, and 24/7 mission-critical execution.
 
-```
-2-week sprints
-├── Sprint Planning  — Team selects work from backlog
-├── Daily Standup    — 15-min sync (what did I do, what will I do, blockers)
-├── Sprint Review    — Demo completed work to stakeholders
-└── Retrospective    — What went well, what to improve
+### Pod Composition & Specialised Roles
+- **Payment Tech Lead / Senior Engineers**: Architects non-blocking event-driven microservices, guarantees idempotency keys, and enforces zero-downtime database migrations.
+- **Product Owner (Payments)**: Translates scheme mandates (NPPA, SWIFT, AusPayNet) into prioritized epics and user stories.
+- **Payments Operations SME**: Embedded in pod to define real-time exception resolution flows, manual repair screens, and operational SLAs.
+- **Compliance Champion (2nd Line Liaison)**: Embedded to review data privacy, audit logging, and AML/sanctions screening hook designs during sprint grooming.
+- **QA & Synthetic Test Engineer**: Builds automated ISO 20022 schema validation suites and executes synthetic payment simulation against scheme test harnesses.
 
-Common artefacts:
-├── User Story       — "As a payments operator, I want to see exception details..."
-├── Acceptance Criteria — "Given X, When Y, Then Z"
-├── Definition of Done — Code reviewed, tested, deployed to staging
-└── Epic             — Group of related stories (e.g., "NPP PayTo Integration")
-```
+### Non-Functional Requirements (NFRs) in Payment Sprints
+Unlike standard web apps, payment user stories must satisfy non-negotiable NFRs before passing Definition of Done (DoD):
+1. **Sub-Second Latency**: NPP payments must complete end-to-end processing in under 500ms.
+2. **Strict Idempotency**: System must safely absorb duplicate network retries without generating double-debits.
+3. **99.999% Availability**: Zero planned downtime; deployments use Blue/Green or Canary strategies with automated rollback.
+4. **Immutable Audit Trail**: Every payment state change must emit structured audit events tagged with global trace IDs (`UETR`, `EndToEndId`).
+5. **Dual-Control Release Approval**: Production deployment requires independent sign-off from both 1st Line Tech Lead and 2nd Line Risk/Compliance.
 
 ---
 

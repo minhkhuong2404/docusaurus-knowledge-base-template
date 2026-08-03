@@ -215,7 +215,7 @@ export default function SpringMVCFlowDiagram(): React.JSX.Element {
 
             {/* Step 3 Flow: DS -> HandlerMapping */}
             <path id="flow-2" d="M 260 50 Q 290 28 324 28" fill="none" stroke={step === 2 || step === 3 ? '#fbbf24' : '#2e354f'} strokeWidth="1.5" markerEnd={step === 2 || step === 3 ? 'url(#arrow-cyan)' : 'url(#arrow-gray)'} className={step === 2 || step === 3 ? 'interactive-diagram-flowing-path' : ''} />
-            {(step === 2 || step === 3) && <circle r="2.5" fill="#fbbf24"><animateMotion dur="0.8s" repeatCount="indefinite"><mpath href="#flow-2" /></mpath></circle>}
+            {(step === 2 || step === 3) && <circle r="2.5" fill="#fbbf24"><animateMotion dur="0.8s" repeatCount="indefinite"><mpath href="#flow-2" /></animateMotion></circle>}
 
             {/* Step 4 Flow: DS -> Controller */}
             <path id="flow-3" d="M 290 70 L 484 70" fill="none" stroke={step === 4 ? '#4ade80' : '#2e354f'} strokeWidth="1.5" markerEnd={step === 4 ? 'url(#arrow-cyan)' : 'url(#arrow-gray)'} className={step === 4 ? 'interactive-diagram-flowing-path' : ''} />

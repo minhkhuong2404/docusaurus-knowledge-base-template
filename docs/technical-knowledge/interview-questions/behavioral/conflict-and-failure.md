@@ -11,8 +11,11 @@ tags:
   - Interview Prep
   - STAR Method
 ---
+import ConflictFailureDiagram from '@site/src/components/ConflictFailureDiagram';
 
 # Mastering Conflict & Failure Stories
+
+<ConflictFailureDiagram />
 
 Conflict and failure questions are where most candidates stumble. They're deliberately uncomfortable — designed to see how you handle adversity, ownership, and growth. This guide gives you the tactical playbook to turn these "dangerous" questions into your strongest answers.
 

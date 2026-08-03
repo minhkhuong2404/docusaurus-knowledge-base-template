@@ -8,6 +8,8 @@ description: Overview of Banking Domain Knowledge Base.
 tags: [banking, overview, domain]
 ---
 
+import BankingPaymentLifecycleDiagram from '@site/src/components/BankingPaymentLifecycleDiagram';
+
 # 🏦 Banking Domain Knowledge Base
 
 A comprehensive, engineer-focused reference for payment systems, ISO 20022 messaging, core banking concepts, and Australian payment infrastructure. Built for Java/Spring developers working in the payments domain.
@@ -28,6 +30,14 @@ A comprehensive, engineer-focused reference for payment systems, ISO 20022 messa
 | **Operations** | Reconciliation, Exceptions & Investigations, FX, Error Codes |
 | **Architecture** | Payment Hub, Idempotency, FIS Integration |
 | **Modern Banking** | Open Banking/CDR, ISO 20022 Migration, Account Types |
+
+---
+
+## Interactive End-to-End Payment Lifecycle Engine
+
+The interactive engine below illustrates a complete outbound off-us NPP credit transfer — the most common domestic payment type in Australia.
+
+<BankingPaymentLifecycleDiagram />
 
 ---
 
@@ -156,49 +166,16 @@ If you need a fast refresh before interviews or design discussions:
 
 ---
 
-## End-to-End Payment Lifecycle
+## ISO 20022 Message Chain Reference
 
-The diagram below shows a complete outbound off-us NPP credit transfer — the most common domestic payment type in Australia.
+The standard execution chain for credit transfers involves:
+1. `pain.001`: Customer Payment Initiation
+2. `pacs.008`: Interbank Credit Transfer
+3. `pacs.002`: Payment Status Report
+4. `camt.054`: Bank-to-Customer Debit/Credit Notification
+5. `pacs.004`: Payment Return (Exception Path)
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                           PAYMENT LIFECYCLE                                  │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                              │
-│  ORIGINATION           DEBTOR BANK                  CREDITOR BANK           │
-│                                                                              │
-│  Customer              Receive pain.001             Receive pacs.008        │
-│  submits    ──────►    Validate & Auth   ──────►    Validate Schema         │
-│  pain.001              Balance Check                Duplicate Check         │
-│                        Sanctions Screen             Sanctions Screen        │
-│                        Fraud Assessment             Fraud Assessment        │
-│                        Debit Posting                Account Lookup          │
-│                        Build pacs.008               Credit Posting          │
-│                        Submit to NPP    ◄──────     Send camt.054 ──► Cdtr  │
-│                        Receive pacs.002             (CRDT notification)     │
-│                        Send camt.054    ──────►                             │
-│                        (DBIT notification) Dbtr                             │
-│                        Send pain.002    ──────►                             │
-│                        (status report)  Customer                            │
-│                                                                              │
-│  SETTLEMENT:  RBA Fast Settlement Service (FSS) — real-time gross           │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## ISO 20022 Message Chain
-
-```
-Customer ──[pain.001]──► Debtor Bank ──[pacs.008]──► Network ──[pacs.008]──► Creditor Bank
-         ◄─[pain.002]───              ◄─[pacs.002]───                                │
-                                                                              [camt.054]
-                                      [camt.054]──► Debtor Customer           │
-                                                                         Creditor Customer
-              If undeliverable:
-Debtor Bank ◄─[pacs.004]────────────────────────────────────── Creditor Bank
-            ──[camt.054 return]──► Debtor Customer
-```
+For full interactive lifecycle simulation and message payload details, see the interactive engine at the top of this guide or [Payment Lifecycle 101](./payment_lifecycle_101.md).
 
 ---
 

@@ -7,11 +7,15 @@ description: Overview of AML, CTF and KYC controls in banking.
 tags: [banking, aml, ctf, kyc, compliance]
 ---
 
+import BankingAmlRegulatoryTestingDiagram from '@site/src/components/BankingAmlRegulatoryTestingDiagram';
+
 # AML, CTF & KYC
 
 ## Overview
 
 **AML (Anti-Money Laundering)**, **CTF (Counter-Terrorism Financing)**, and **KYC (Know Your Customer)** are the core pillars of financial crime compliance. Together they form a bank's first line of defence against criminals using the financial system to launder money, fund terrorism, or commit financial crime.
+
+<BankingAmlRegulatoryTestingDiagram />
 
 | Pillar  | Purpose                                                                 |
 | ------- | ----------------------------------------------------------------------- |

@@ -10,6 +10,9 @@ tags:
 - banking
 - payment_lifecycle_101
 ---
+
+import BankingPaymentLifecycleDiagram from '@site/src/components/BankingPaymentLifecycleDiagram';
+
 # Payment Lifecycle 101 — New Learner Guide
 
 ## Welcome to Payments
@@ -22,23 +25,7 @@ If you're new to banking, the payment ecosystem can feel overwhelming. This page
 
 You open your banking app, type $500 and your friend's BSB + account number, and hit "Send". Simple, right? Under the hood, a surprisingly complex sequence of events occurs in **under 15 seconds**.
 
-```
-YOU                     YOUR BANK               YOUR FRIEND'S BANK      YOUR FRIEND
-
-Tap "Send" ────────────►│                               │                     │
-                         │  1. Is this really you?       │                     │
-                         │  2. Do you have $500?         │                     │
-                         │  3. Is this payment risky?    │                     │
-                         │  4. Debit your account $500   │                     │
-                         │────── Send payment ──────────►│                     │
-                         │                               │  5. Is this legit?  │
-                         │                               │  6. Find account    │
-                         │                               │  7. Credit $500     │
-                         │◄──── Confirmed ───────────────│────── Notify ──────►│
-                         │                               │                "You received $500"
-                         │
-                    "Payment sent"
-```
+<BankingPaymentLifecycleDiagram />
 
 Every single one of those numbered steps is a system, a rule, or a protocol. This guide explains each one.
 

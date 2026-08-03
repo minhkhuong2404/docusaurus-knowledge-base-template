@@ -7,6 +7,8 @@ description: Overview of pain.001 — Customer Credit Transfer Initiation.
 tags: [banking, pain001, pain-001, customer, credit, transfer]
 ---
 
+import Iso20022MonospaceSchemaInspector from '@site/src/components/Iso20022MonospaceSchemaInspector';
+
 # pain.001 — CustomerCreditTransferInitiation
 
 ## Overview
@@ -20,7 +22,11 @@ tags: [banking, pain001, pain-001, customer, credit, transfer]
 
 ---
 
-## Message Structure
+## Message Structure & Schema Inspector
+
+<Iso20022MonospaceSchemaInspector initialMsg="pain001" />
+
+---
 
 ```
 pain.001

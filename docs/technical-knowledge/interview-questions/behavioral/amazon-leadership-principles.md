@@ -11,8 +11,11 @@ tags:
   - Interview Prep
   - FAANG
 ---
+import AmazonLPDiagram from '@site/src/components/AmazonLPDiagram';
 
 # Amazon Leadership Principles — Behavioral Interview Guide
+
+<AmazonLPDiagram />
 
 Amazon's behavioral interviews are unique in the tech industry: every question maps explicitly to one of their **16 Leadership Principles (LPs)**. Bar Raisers and interviewers take structured notes on which LPs you demonstrated. This guide covers each LP with what it really means, example questions, and story strategies.
 

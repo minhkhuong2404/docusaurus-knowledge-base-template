@@ -7,11 +7,15 @@ description: Overview of NPP — New Payments Platform.
 tags: [banking, npp, new, payments, platform]
 ---
 
+import BankingRailsNppRtgsSwiftDiagram from '@site/src/components/BankingRailsNppRtgsSwiftDiagram';
+
 # NPP — New Payments Platform
 
 ## Overview
 
 The **New Payments Platform (NPP)** is Australia's **real-time, data-rich payment infrastructure** launched in February 2018. It enables near-instant payments 24/7/365 between accounts at participating Australian financial institutions.
+
+<BankingRailsNppRtgsSwiftDiagram />
 
 - **Operator:** NPP Australia Limited (NPPA)
 - **Settlement:** RBA Fast Settlement Service (FSS)

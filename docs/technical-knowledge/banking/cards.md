@@ -11,11 +11,16 @@ tags:
 - banking
 - cards
 ---
+
+import BankingCardPaymentFlowDiagram from '@site/src/components/BankingCardPaymentFlowDiagram';
+
 # Cards & Card Schemes
 
 ## Overview
 
 **Payment cards** (debit and credit) are one of the most widely used payment methods globally. They operate on **card schemes** — networks that define rules, standards, and infrastructure for card transactions. Understanding card payments is fundamental for any banking professional.
+
+<BankingCardPaymentFlowDiagram />
 
 ---
 
@@ -47,30 +52,10 @@ tags:
 ## 4-Party vs 3-Party (Closed Loop) Models
 
 ### 4-Party (Open Loop) — Visa / Mastercard
-
-```
-Cardholder ──────────────────────────────────► Merchant
-    │                                              │
-    │                                              │
-Issuing Bank                               Acquiring Bank
-(Customer's bank,                          (Merchant's bank,
- issues the card)                           processes transactions)
-    │                                              │
-    └─────────── Card Scheme Network ─────────────┘
-                  (Visa / Mastercard)
-                  Sets rules, routes, settles
-```
+Operates with distinct Issuing Banks (Customer) and Acquiring Banks (Merchant) connected via global scheme networks.
 
 ### 3-Party (Closed Loop) — Amex / eftpos (domestic)
-
-```
-Cardholder ─────────────────────────────────► Merchant
-    │                                              │
-    └──────────── Single Network ─────────────────┘
-                (Amex / eftpos)
-                Acts as issuer AND acquirer
-                Controls full chain
-```
+Single network acts as both Issuer and Acquirer, controlling the entire payment lifecycle end-to-end.
 
 ---
 

@@ -14,6 +14,7 @@ Is there a static ASCII block, code block, table, or text-only stub to replace?
 │         Is it comparison/tabs/protocol evolution?   → Archetype C (Tabbed Explorer)
 │         Is it a lookup reference (headers/tools)?   → Archetype D (Searchable List)
 │         Is it a checklist/audit criteria?           → Archetype E (Interactive Checklist)
+│         Is it code, XML/JSON payloads, or schemas?   → Archetype F (Monospace Schema & Payload Inspector)
 └─ NO  → Do not create a component.
 ```
 

@@ -6,9 +6,13 @@ description: Complete guide to Kubernetes workload resources — Deployments, Re
 tags: [kubernetes, deployment, statefulset, daemonset, job, cronjob, hpa, rolling-update, intermediate]
 ---
 
+import KubernetesWorkloadsNetworkingDiagram from '@site/src/components/KubernetesWorkloadsNetworkingDiagram';
+
 # Workloads — Deployments, StatefulSets, DaemonSets & Jobs
 
 > You almost never create Pods directly. You create a **workload resource** that manages Pods for you.
+
+<KubernetesWorkloadsNetworkingDiagram />
 
 ---
 

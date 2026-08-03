@@ -7,11 +7,15 @@ description: How clearing works in Australian and global payment systems — DNS
 tags: [banking, clearing, dns, rtgs, becs, netting, ausPayNet]
 ---
 
+import BankingClearingSettlementDiagram from '@site/src/components/BankingClearingSettlementDiagram';
+
 # 🔄 Clearing — Payment Netting & Interbank Settlement Preparation
 
 Clearing is the process of **reconciling and netting payment obligations between financial institutions** before final settlement occurs. It sits between a payment being authorised and money actually moving between bank accounts at the central bank.
 
 > **Key distinction:** Clearing = calculating who owes whom. Settlement = the actual money movement.
+
+<BankingClearingSettlementDiagram />
 
 ---
 

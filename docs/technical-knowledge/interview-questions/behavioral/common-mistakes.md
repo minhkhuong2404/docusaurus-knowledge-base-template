@@ -11,8 +11,11 @@ tags:
   - STAR Method
   - Career
 ---
+import CommonMistakesDiagram from '@site/src/components/CommonMistakesDiagram';
 
 # The 10 Most Common Behavioral Interview Mistakes
+
+<CommonMistakesDiagram />
 
 Most behavioral interview failures don't come from lack of preparation — they come from preparation that targets the wrong things. This guide covers the 10 most common mistakes that kill offers, with a diagnosis and exact fix for each.
 

@@ -3,14 +3,15 @@ id: pain007_pacs007
 title: pain.007 & pacs.007 — Payment Reversal & Recall
 sidebar_label: pain.007 / pacs.007 — Reversal
 sidebar_position: 8
-description: Payment reversals allow **the sending side** (debtor bank or originating
-  customer) to request that a previously submitted payment be reversed — cancelling
-  the.
+description: Payment reversals allow **the sending side** (debtor bank or originating customer) to request that a previously submitted payment be reversed — cancelling the.
 tags:
 - technical-knowledge
 - banking
 - pain007_pacs007
 ---
+
+import BankingReversalRecallDiagram from '@site/src/components/BankingReversalRecallDiagram';
+
 # pain.007 & pacs.007 — Payment Reversal & Recall
 
 ## Overview
@@ -28,20 +29,7 @@ Payment reversals allow **the sending side** (debtor bank or originating custome
 
 ## When to Use Each Message
 
-```
-SCENARIO 1 — Customer discovers an error (wrong amount, wrong account):
-  Customer ──[pain.007]──► Debtor Bank
-  Debtor Bank ──[pacs.007]──► Creditor Bank   (if already sent)
-  Creditor Bank ──[pacs.004]──► Debtor Bank   (if creditor agrees)
-
-SCENARIO 2 — Bank discovers a processing error after submission:
-  Debtor Bank ──[pacs.007]──► Creditor Bank   (directly, no pain.007)
-  Creditor Bank ──[pacs.004]──► Debtor Bank   (return of funds)
-
-SCENARIO 3 — Payment not yet settled (still in queue):
-  Internal cancellation — no ISO message needed
-  Just dequeue and release the hold
-```
+<BankingReversalRecallDiagram />
 
 ---
 

@@ -7,6 +7,8 @@ description: Overview of pacs.008 — FI-to-FI Customer Credit Transfer.
 tags: [banking, pacs008, pacs-008, fi, to, customer]
 ---
 
+import Iso20022MonospaceSchemaInspector from '@site/src/components/Iso20022MonospaceSchemaInspector';
+
 # pacs.008 — FIToFICustomerCreditTransfer
 
 ## Overview
@@ -20,7 +22,11 @@ tags: [banking, pacs008, pacs-008, fi, to, customer]
 
 ---
 
-## Where pacs.008 Sits in the Flow
+## Where pacs.008 Sits in the Flow & Schema Inspector
+
+<Iso20022MonospaceSchemaInspector initialMsg="pacs008" />
+
+---
 
 ```mermaid
 flowchart TD

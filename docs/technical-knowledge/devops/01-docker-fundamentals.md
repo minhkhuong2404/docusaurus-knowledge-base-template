@@ -6,23 +6,15 @@ description: Core Docker concepts for beginners — containers vs virtual machin
 tags: [docker, containers, images, registry, beginner, fundamentals]
 ---
 
+import DockerArchitectureDiagram from '@site/src/components/DockerArchitectureDiagram';
+
 # Docker Fundamentals
 
 ## What is a Container?
 
 A container is a **lightweight, isolated process** that packages an application with everything it needs to run — code, runtime, libraries, and config — so it behaves identically everywhere.
 
-```
-Without containers:                 With containers:
-  Your App                            ┌─────────────────┐
-  ↓ depends on                        │  Your App        │
-  Java 17                             │  Java 17         │ ← All bundled
-  Spring Boot 3.x                     │  Spring Boot 3.x │   inside image
-  libssl 1.1                          │  libssl 1.1      │
-  ↓ must match                        └─────────────────┘
-  The host OS                         Runs on any host
-  ← often it doesn't
-```
+<DockerArchitectureDiagram />
 
 ---
 
