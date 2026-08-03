@@ -7,6 +7,7 @@ tags: [docker, containers, images, registry, beginner, fundamentals]
 ---
 
 import DockerArchitectureDiagram from '@site/src/components/DockerArchitectureDiagram';
+import DevOpsMonospaceSchemaInspector from '@site/src/components/DevOpsMonospaceSchemaInspector';
 
 # Docker Fundamentals
 
@@ -14,7 +15,13 @@ import DockerArchitectureDiagram from '@site/src/components/DockerArchitectureDi
 
 A container is a **lightweight, isolated process** that packages an application with everything it needs to run — code, runtime, libraries, and config — so it behaves identically everywhere.
 
-<DockerArchitectureDiagram />
+<DockerArchitectureDiagram initialTab="engine" />
+
+---
+
+## Monospace Schema Inspector: Docker Image Manifest & Kubernetes Spec
+
+<DevOpsMonospaceSchemaInspector initialSchemaIdx={0} />
 
 ---
 

@@ -18,10 +18,6 @@ import KafkaConsumerLagPoisonDiagram from '@site/src/components/KafkaConsumerLag
 
 # Consumer Lag & Poison Messages in Kafka
 
-<KafkaConsumerLagPoisonDiagram />
-
----
-
 Consumer lag and poison messages represent the two most common operational degradation modes in Kafka consumer groups:
 
 1. **Consumer Lag**: Indicates that consumer execution processing throughput is insufficient to keep pace with the producer write rate.
@@ -31,17 +27,11 @@ Consumer lag and poison messages represent the two most common operational degra
 
 ## Part 1: Consumer Lag Mechanics
 
+<KafkaConsumerLagPoisonDiagram initialScenario="normal" />
+
 ### Lag Calculation Formula
 
 $$\text{Partition Lag} = \text{Log End Offset (LEO)} - \text{Committed Offset}$$
-
-```
-Partition 0 Log:
-[ Offset 0 | Offset 1 | Offset 2 | Offset 3 | Offset 4 | Offset 5 ] -> LEO = 6
-                                              ^
-                                    Committed Offset = 4
-                                    (Lag = 6 - 4 = 2 records unread)
-```
 
 - **Log End Offset (LEO)**: Maintained by the partition leader broker. Represents the offset of the next record to be written.
 - **Committed Offset**: Maintained by the consumer group in the `__consumer_offsets` system topic. Represents the next record offset the consumer will fetch upon restart.
@@ -52,23 +42,9 @@ Partition 0 Log:
 
 A **Poison Message** is a record payload that triggers non-retryable runtime exceptions (e.g., `NullPointerException`, `JsonParseException`, schema corruption) whenever a consumer thread attempts to process it.
 
-```
-Consumer Loop:
-1. Poll batch containing Offset 104 (Poison Message).
-2. Deserialization or Business Logic throws exception.
-3. Exception Handler catches failure -> Consumer restarts or retries Offset 104.
-4. Loop repeats endlessly: Committed Offset stays at 104; Partition 0 Lag grows infinitely!
-```
+<KafkaConsumerLagPoisonDiagram initialScenario="poison" />
 
 ### Production Poison Message Architecture (DLQ Pattern)
-
-```
-[ Incoming Topic ] ----> [ Consumer Listener ] --(Exception)--> [ Spring ErrorHandler ]
-                                                                       |
-                                                                       +---> [ DLQ Topic (.DLT) ]
-                                                                       |
-                                                                       +---> [ Commit Offset 104 ]
-```
 
 ```java
 // Spring Boot DLQ & Exponential Backoff Retry Configuration

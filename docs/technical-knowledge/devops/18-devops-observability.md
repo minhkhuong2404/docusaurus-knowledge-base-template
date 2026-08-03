@@ -14,11 +14,11 @@ In a monolithic architecture, a single error log provides a complete stack trace
 
 If this request fails or is slow, answering *"Why?"* requires robust **Observability**. Observability is defined by three pillars: **Metrics**, **Logs**, **Traces**.
 
-<DevOpsObservabilityIacDiagram />
-
 ---
 
 ## 1. Metrics (Prometheus & Grafana)
+
+<DevOpsObservabilityIacDiagram initialTab="observability" />
 
 Metrics are numerical representations of data measured over intervals of time. They are lightweight, highly compressible, and perfect for triggering alerts or viewing long-term trends.
 

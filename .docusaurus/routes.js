@@ -19,11 +19,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'bf6'),
+    component: ComponentCreator('/', '9a0'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'd38'),
+        component: ComponentCreator('/', 'f0a'),
         routes: [
           {
             path: '/tags',
@@ -7327,7 +7327,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'c91'),
+            component: ComponentCreator('/', '0d0'),
             routes: [
               {
                 path: '/aws',
@@ -7337,7 +7337,7 @@ export default [
               },
               {
                 path: '/banking',
-                component: ComponentCreator('/banking', '949'),
+                component: ComponentCreator('/banking', '989'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -8591,19 +8591,19 @@ export default [
               },
               {
                 path: '/technical-knowledge/banking/aml_kyc',
-                component: ComponentCreator('/technical-knowledge/banking/aml_kyc', '7be'),
+                component: ComponentCreator('/technical-knowledge/banking/aml_kyc', 'e18'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/banking/banking_roles',
-                component: ComponentCreator('/technical-knowledge/banking/banking_roles', 'bdc'),
+                component: ComponentCreator('/technical-knowledge/banking/banking_roles', '559'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/banking/becs',
-                component: ComponentCreator('/technical-knowledge/banking/becs', 'f1f'),
+                component: ComponentCreator('/technical-knowledge/banking/becs', '699'),
                 exact: true
               },
               {
@@ -8632,13 +8632,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/banking/cards',
-                component: ComponentCreator('/technical-knowledge/banking/cards', 'cf9'),
+                component: ComponentCreator('/technical-knowledge/banking/cards', 'f1c'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/banking/clearing',
-                component: ComponentCreator('/technical-knowledge/banking/clearing', 'e07'),
+                component: ComponentCreator('/technical-knowledge/banking/clearing', '6f1'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -8649,7 +8649,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/banking/core_banking',
-                component: ComponentCreator('/technical-knowledge/banking/core_banking', '8ad'),
+                component: ComponentCreator('/technical-knowledge/banking/core_banking', 'f0b'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -8701,7 +8701,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/banking/fraud',
-                component: ComponentCreator('/technical-knowledge/banking/fraud', '39a'),
+                component: ComponentCreator('/technical-knowledge/banking/fraud', 'cd4'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -8736,7 +8736,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/banking/iso20022_migration',
-                component: ComponentCreator('/technical-knowledge/banking/iso20022_migration', '3f6'),
+                component: ComponentCreator('/technical-knowledge/banking/iso20022_migration', '476'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -8747,7 +8747,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/banking/npp',
-                component: ComponentCreator('/technical-knowledge/banking/npp', '8d5'),
+                component: ComponentCreator('/technical-knowledge/banking/npp', '24d'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -8765,7 +8765,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/banking/open_banking',
-                component: ComponentCreator('/technical-knowledge/banking/open_banking', '7da'),
+                component: ComponentCreator('/technical-knowledge/banking/open_banking', 'ffd'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -8789,42 +8789,42 @@ export default [
               },
               {
                 path: '/technical-knowledge/banking/pacs008',
-                component: ComponentCreator('/technical-knowledge/banking/pacs008', '2aa'),
+                component: ComponentCreator('/technical-knowledge/banking/pacs008', 'f37'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/banking/pain001',
-                component: ComponentCreator('/technical-knowledge/banking/pain001', 'c96'),
+                component: ComponentCreator('/technical-knowledge/banking/pain001', '9e8'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/banking/pain004',
-                component: ComponentCreator('/technical-knowledge/banking/pain004', 'd93'),
+                component: ComponentCreator('/technical-knowledge/banking/pain004', '046'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/banking/pain007_pacs007',
-                component: ComponentCreator('/technical-knowledge/banking/pain007_pacs007', 'f3c'),
+                component: ComponentCreator('/technical-knowledge/banking/pain007_pacs007', '44a'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/banking/payment_exceptions',
-                component: ComponentCreator('/technical-knowledge/banking/payment_exceptions', '9aa'),
+                component: ComponentCreator('/technical-knowledge/banking/payment_exceptions', '4d8'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/banking/payment_hub',
-                component: ComponentCreator('/technical-knowledge/banking/payment_hub', '980'),
+                component: ComponentCreator('/technical-knowledge/banking/payment_hub', 'ed2'),
                 exact: true
               },
               {
                 path: '/technical-knowledge/banking/payment_lifecycle_101',
-                component: ComponentCreator('/technical-knowledge/banking/payment_lifecycle_101', '894'),
+                component: ComponentCreator('/technical-knowledge/banking/payment_lifecycle_101', 'c1e'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -8841,7 +8841,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/banking/reconciliation',
-                component: ComponentCreator('/technical-knowledge/banking/reconciliation', '0f5'),
+                component: ComponentCreator('/technical-knowledge/banking/reconciliation', '037'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -8857,7 +8857,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/banking/sanction',
-                component: ComponentCreator('/technical-knowledge/banking/sanction', 'dbd'),
+                component: ComponentCreator('/technical-knowledge/banking/sanction', 'bbb'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -8869,7 +8869,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/banking/swift',
-                component: ComponentCreator('/technical-knowledge/banking/swift', 'b6c'),
+                component: ComponentCreator('/technical-knowledge/banking/swift', 'edb'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -9295,7 +9295,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/devops/devops-observability',
-                component: ComponentCreator('/technical-knowledge/devops/devops-observability', '70b'),
+                component: ComponentCreator('/technical-knowledge/devops/devops-observability', 'a0d'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -9313,7 +9313,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/devops/docker-fundamentals',
-                component: ComponentCreator('/technical-knowledge/devops/docker-fundamentals', '6e3'),
+                component: ComponentCreator('/technical-knowledge/devops/docker-fundamentals', '302'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -9337,7 +9337,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/devops/gitops-argocd',
-                component: ComponentCreator('/technical-knowledge/devops/gitops-argocd', '631'),
+                component: ComponentCreator('/technical-knowledge/devops/gitops-argocd', '0db'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -9361,7 +9361,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/devops/kubernetes-fundamentals',
-                component: ComponentCreator('/technical-knowledge/devops/kubernetes-fundamentals', '994'),
+                component: ComponentCreator('/technical-knowledge/devops/kubernetes-fundamentals', '428'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -9391,7 +9391,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/devops/kubernetes-workloads',
-                component: ComponentCreator('/technical-knowledge/devops/kubernetes-workloads', 'e06'),
+                component: ComponentCreator('/technical-knowledge/devops/kubernetes-workloads', '3d9'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -9403,13 +9403,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/devops/terraform',
-                component: ComponentCreator('/technical-knowledge/devops/terraform', 'f2d'),
+                component: ComponentCreator('/technical-knowledge/devops/terraform', '97b'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/devops/vm-docker-k8s-explained',
-                component: ComponentCreator('/technical-knowledge/devops/vm-docker-k8s-explained', '28d'),
+                component: ComponentCreator('/technical-knowledge/devops/vm-docker-k8s-explained', '792'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -13669,55 +13669,55 @@ export default [
               },
               {
                 path: '/technical-knowledge/interview-questions/behavioral/behavioral-amazon-lp',
-                component: ComponentCreator('/technical-knowledge/interview-questions/behavioral/behavioral-amazon-lp', '347'),
+                component: ComponentCreator('/technical-knowledge/interview-questions/behavioral/behavioral-amazon-lp', '972'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/interview-questions/behavioral/behavioral-common-mistakes',
-                component: ComponentCreator('/technical-knowledge/interview-questions/behavioral/behavioral-common-mistakes', 'd15'),
+                component: ComponentCreator('/technical-knowledge/interview-questions/behavioral/behavioral-common-mistakes', '67b'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/interview-questions/behavioral/behavioral-conflict-failure',
-                component: ComponentCreator('/technical-knowledge/interview-questions/behavioral/behavioral-conflict-failure', 'e6e'),
+                component: ComponentCreator('/technical-knowledge/interview-questions/behavioral/behavioral-conflict-failure', '56a'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/interview-questions/behavioral/behavioral-google-meta-microsoft',
-                component: ComponentCreator('/technical-knowledge/interview-questions/behavioral/behavioral-google-meta-microsoft', 'c24'),
+                component: ComponentCreator('/technical-knowledge/interview-questions/behavioral/behavioral-google-meta-microsoft', 'a99'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/interview-questions/behavioral/behavioral-interview-overview',
-                component: ComponentCreator('/technical-knowledge/interview-questions/behavioral/behavioral-interview-overview', '79b'),
+                component: ComponentCreator('/technical-knowledge/interview-questions/behavioral/behavioral-interview-overview', '4bd'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/interview-questions/behavioral/behavioral-questions-to-ask',
-                component: ComponentCreator('/technical-knowledge/interview-questions/behavioral/behavioral-questions-to-ask', 'e9f'),
+                component: ComponentCreator('/technical-knowledge/interview-questions/behavioral/behavioral-questions-to-ask', '4de'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/interview-questions/behavioral/behavioral-star-method',
-                component: ComponentCreator('/technical-knowledge/interview-questions/behavioral/behavioral-star-method', '69f'),
+                component: ComponentCreator('/technical-knowledge/interview-questions/behavioral/behavioral-star-method', 'a42'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/interview-questions/behavioral/behavioral-story-bank',
-                component: ComponentCreator('/technical-knowledge/interview-questions/behavioral/behavioral-story-bank', 'e92'),
+                component: ComponentCreator('/technical-knowledge/interview-questions/behavioral/behavioral-story-bank', '049'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/interview-questions/behavioral/behavioral-top-50-questions',
-                component: ComponentCreator('/technical-knowledge/interview-questions/behavioral/behavioral-top-50-questions', '248'),
+                component: ComponentCreator('/technical-knowledge/interview-questions/behavioral/behavioral-top-50-questions', '3db'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

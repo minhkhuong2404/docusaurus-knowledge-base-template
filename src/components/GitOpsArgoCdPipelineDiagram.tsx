@@ -9,8 +9,8 @@ const GITOPS_STEPS = [
   { step: '6. Cluster State Synced', actor: 'K8s Cluster State', desc: 'Live cluster state matches Git repository state perfectly. Application status = Synced & Healthy.' }
 ];
 
-export default function GitOpsArgoCdPipelineDiagram(): React.JSX.Element {
-  const [activeTab, setActiveTab] = useState<'pipeline' | 'rollout' | 'operator'>('pipeline');
+export default function GitOpsArgoCdPipelineDiagram({ initialTab = 'pipeline' }: { initialTab?: 'pipeline' | 'rollout' | 'operator' }): React.JSX.Element {
+  const [activeTab, setActiveTab] = useState<'pipeline' | 'rollout' | 'operator'>(initialTab);
   const [activeStep, setActiveStep] = useState<number>(0);
   const [rolloutMode, setRolloutMode] = useState<'canary' | 'bluegreen'>('canary');
 

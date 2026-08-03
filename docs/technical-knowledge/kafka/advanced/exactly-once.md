@@ -13,10 +13,6 @@ import TabItem from '@theme/TabItem';
 
 # Kafka Exactly-Once Semantics (EOS)
 
-<KafkaExactlyOnceDiagram />
-
----
-
 :::info[Who this guide is for]
 - **New learners** — start at [The Delivery Guarantee Problem](#the-delivery-guarantee-problem) to understand the three messaging models.
 - **Senior engineers** — jump to [Transaction Coordinator Mechanics](#how-the-transaction-coordinator-works), [Zombie Producer Fencing](#zombie-producer-fencing), [Kafka Streams EOS](#kafka-streams-eos), or [Failure Scenarios](#failure-scenarios).
@@ -40,14 +36,7 @@ In distributed stream processing, network failures, timeouts, and broker restart
 
 Kafka implements Exactly-Once Semantics across the **Consume-Transform-Produce** loop using a **Two-Phase Commit (2PC)** protocol managed by the **Transaction Coordinator**:
 
-```
-[ Input Topic ] ---> (1. Poll) ---> [ Stream App / Producer ] ---> (2. Write) ---> [ Output Topic ]
-                                           |
-                                 (3. sendOffsetsToTxn)
-                                           v
-                             [ Transaction Coordinator ]
-                            (Manages __transaction_state)
-```
+<KafkaExactlyOnceDiagram initialTab="steps" />
 
 1. **Transaction State Topic (`__transaction_state`)**: An internal, highly-replicated Kafka topic (default 50 partitions) storing transaction state logs (`Empty`, `Ongoing`, `PrepareCommit`, `CompleteCommit`, `PrepareAbort`, `CompleteAbort`).
 2. **Transaction Coordinator**: A dedicated broker thread leading the assigned `__transaction_state` partition determined by:
@@ -60,15 +49,7 @@ Kafka implements Exactly-Once Semantics across the **Consume-Transform-Produce**
 
 A **Zombie Producer** is an old producer process instance that was presumed dead (e.g., due to a network partition or a 60-second G1GC pause) but recovers and attempts to publish writes to a topic while a newly spawned replacement producer instance is already active.
 
-```
-Producer Instance 1 (Old Zombie): Transactional ID = "payment-app-prod-1", Epoch = 0
-Producer Instance 2 (New Active): Transactional ID = "payment-app-prod-1", Epoch = 1
-
-Zombie Execution Attempt:
-Producer Instance 1 calls commitTransaction() with Epoch = 0
---> Transaction Coordinator checks current epoch (1)
---> Rejects Producer 1 write with ProducerFencedException!
-```
+<KafkaExactlyOnceDiagram initialTab="zombie" />
 
 - When Producer Instance 2 initializes via `initTransactions()`, the Transaction Coordinator increments the producer **Epoch Number** for `"payment-app-prod-1"`.
 - Any subsequent write requests from Producer Instance 1 holding `Epoch = 0` are immediately fenced with an unrecoverable `ProducerFencedException`.

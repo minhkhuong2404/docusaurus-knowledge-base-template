@@ -40,17 +40,7 @@ Running containers in production at scale requires:
 ## Control Plane Components
 
 ### kube-apiserver
-The **front door** to Kubernetes. Every action (CLI, UI, controller) goes through the API server.
-
-```
-kubectl apply -f deployment.yaml
-       ↓
-kube-apiserver (REST API)
-       ↓ validates + persists
-     etcd
-       ↓ notifies watchers
-  Scheduler, Controllers, kubelets
-```
+The **front door** to Kubernetes. Every action (CLI, UI, controller) goes through the API server, which validates inputs and persists cluster state to `etcd`.
 
 - All state changes go through the API server
 - Authenticates and authorises every request

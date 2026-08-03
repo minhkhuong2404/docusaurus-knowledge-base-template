@@ -79,6 +79,8 @@ Replace static content (ASCII art, ```` ```mermaid ``` ```` blocks, plain markdo
 10. **Responsive Grid Columns**: In multi-column (split pane) layouts, avoid flexible fractional columns like `1.2fr 1fr` which shift when text content wraps. Use fixed percentage grids (e.g., `55% 45%`, `58% 42%`, `50% 50%`, `align-items: start`) and embed an inline `<style>` media query block to wrap columns to `1fr` on screens smaller than `768px` (`@media (max-width: 768px)`).
 11. **Node & Lifeline Spacing**: For both sequence diagrams and state/flow charts, add gap offsets to arrow coordinates (e.g. `+6px` start, `-12px` target) so that path lines and arrowhead tips float cleanly and do not overlap or touch vertical sequence lifelines or block nodes.
 12. **TypeScript Validation**: Always verify new components with `npx tsc --noEmit` before declaring completion.
+13. **Descendant Heading Placement**: Always place interactive diagram component tags directly under the specific descendant section heading (`## ...` or `### ...`) that describes the topic, NOT loosely under the main top-level H1 page title (`# ...`). Remove old static ASCII blocks under that descendant section.
+    - *Example*: In `kafka-exactly-once.md` (`docs/technical-knowledge/kafka/advanced/exactly-once.md`), place `<KafkaExactlyOnceDiagram initialTab="steps" />` under `## How the Transaction Coordinator Works` and `<KafkaExactlyOnceDiagram initialTab="zombie" />` under `## Zombie Producer Fencing`. In `consumer-lag.md`, place `<KafkaConsumerLagPoisonDiagram initialScenario="normal" />` under `## Part 1: Consumer Lag Mechanics` and `<KafkaConsumerLagPoisonDiagram initialScenario="poison" />` under `## Part 2: Poison Messages & Dead Letter Queues (DLQ)`.
 
 ### Choose the right archetype (full templates in DESIGNS.md Section 5)
 
@@ -189,6 +191,13 @@ Before creating a new component, check whether one already exists for the concep
 | `KubernetesWorkloadsNetworkingDiagram` | Workload controllers (Deployment, StatefulSet), K8s Service router & CSI storage |
 | `GitOpsArgoCdPipelineDiagram` | GitOps Pull vs Push CI/CD, ArgoCD reconciliation loop, Canary rollouts & CRD operator |
 | `DevOpsObservabilityIacDiagram` | 3 Pillars of Observability, Terraform State DAG engine & Declarative vs Procedural IaC |
+| `TestingPyramidDoublesDiagram` | Test Pyramid (Unit vs Integration vs E2E) & Test Doubles taxonomy (Stub vs Mock vs Spy) |
+| `SpringTestAnnotationsDiagram` | 3-Layer Testing Architecture (JUnit ➔ Mockito ➔ Spring) & Sliced Context decision guide |
+| `WireMockResilienceDiagram` | Real HTTP server stubbing, Mockito vs WireMock comparison & fault injection simulator |
+| `KafkaMonospaceSchemaInspector` | Monospace RecordBatch v2 & Index File schema inspector |
+| `DevOpsMonospaceSchemaInspector` | Monospace OCI Docker image manifest & K8s spec schema inspector |
+| `NetworkMonospaceSchemaInspector` | Monospace bitwise TCP & IPv4 packet header schema inspector |
+| `OsMonospaceSchemaInspector` | Monospace Linux Inode struct & SYSCALL register frame schema inspector |
 
 ## MANDATORY: Register Every New Page in sidebars.ts
 

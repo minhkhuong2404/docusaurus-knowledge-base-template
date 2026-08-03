@@ -8,8 +8,8 @@ const BUILD_STAGES = [
   { stage: 'Stage 5: Final Copy', cmd: 'COPY --from=builder /app/target/app.jar /app.jar', size: '225 MB Total', desc: 'Copy compiled artifact into distroless runtime layer.' }
 ];
 
-export default function DockerArchitectureDiagram(): React.JSX.Element {
-  const [activeTab, setActiveTab] = useState<'engine' | 'multistage' | 'network'>('engine');
+export default function DockerArchitectureDiagram({ initialTab = 'engine' }: { initialTab?: 'engine' | 'multistage' | 'network' }): React.JSX.Element {
+  const [activeTab, setActiveTab] = useState<'engine' | 'multistage' | 'network'>(initialTab);
   const [activeStep, setActiveStep] = useState<number>(0);
   const [selectedNetwork, setSelectedNetwork] = useState<'bridge' | 'host' | 'overlay' | 'macvlan'>('bridge');
 

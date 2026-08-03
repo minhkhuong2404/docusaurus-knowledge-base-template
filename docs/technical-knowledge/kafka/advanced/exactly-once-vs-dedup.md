@@ -10,10 +10,6 @@ import KafkaDedupComparisonDiagram from '@site/src/components/KafkaDedupComparis
 
 # Deduplication in Distributed Messaging
 
-<KafkaDedupComparisonDiagram />
-
----
-
 > **The core problem of distributed messaging in one sentence:** Any reliable system uses retries; any system with retries delivers messages more than once; any system that delivers messages more than once must handle duplicates — or it will corrupt business state.
 
 There are two complementary and independent layers of defense:
@@ -21,6 +17,8 @@ There are two complementary and independent layers of defense:
 - **Idempotent Consumers / Application Deduplication** — an application-level guarantee that processing the same message twice produces the same observable result, protecting everything *outside* the broker boundary.
 
 Real production systems almost always need both. This guide explains how each works mechanically, how to implement them, and — most importantly — provides a deep analysis of the two dominant deduplication storage backends: **Kafka Streams State Store (RocksDB)** and **Redis**, covering their internals, trade-offs, failure modes, and when each is the right choice.
+
+<KafkaDedupComparisonDiagram />
 
 :::info[Who this guide is for]
 - **New learners** — start at [Why Duplicates Happen](#1-why-duplicates-happen) and [The Three Delivery Guarantees](#2-the-three-delivery-guarantees).

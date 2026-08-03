@@ -87,9 +87,16 @@ Ensure output returns 0 errors for the target component.
    ```markdown
    import ConceptNameDiagram from '@site/src/components/ConceptNameDiagram';
    ```
-2. Replace static ASCII, code block, or table with the JSX tag:
+2. Place the component tag directly under the specific **descendant section heading** (`## ...` or `### ...`) that describes the topic, NOT loosely under the main top-level H1 page title (`# ...`).
+3. Replace/remove any old static ASCII, code block, or table under that descendant section:
    ```markdown
-   <ConceptNameDiagram />
+   ## How the Transaction Coordinator Works
+   
+   <KafkaExactlyOnceDiagram initialTab="steps" />
+   
+   ## Zombie Producer Fencing
+   
+   <KafkaExactlyOnceDiagram initialTab="zombie" />
    ```
 
 ---

@@ -6,6 +6,8 @@ description: Deep dive into Kubernetes Pods — Pod lifecycle, init containers, 
 tags: [kubernetes, pods, containers, init-containers, sidecar, probes, resources, lifecycle, beginner]
 ---
 
+import KubernetesArchitectureDiagram from '@site/src/components/KubernetesArchitectureDiagram';
+
 # Pods & Containers
 
 > A **Pod** is the smallest deployable unit in Kubernetes. It wraps one or more containers that share a network and storage.
@@ -14,15 +16,7 @@ tags: [kubernetes, pods, containers, init-containers, sidecar, probes, resources
 
 ## What is a Pod?
 
-```
-Pod
-  ├─ Shared network namespace (same IP, same ports)
-  ├─ Shared storage volumes
-  └─ One or more containers
-       ├─ Container 1: your app
-       ├─ Container 2: sidecar (logging agent)
-       └─ Init Container: runs before app starts
-```
+<KubernetesArchitectureDiagram initialTab="pod" />
 
 **Key rules:**
 - All containers in a Pod share the same IP address

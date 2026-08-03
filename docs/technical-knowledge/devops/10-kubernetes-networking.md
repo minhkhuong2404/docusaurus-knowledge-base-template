@@ -6,6 +6,8 @@ description: Kubernetes networking guide — Service types (ClusterIP, NodePort,
 tags: [kubernetes, services, networking, ingress, clusterip, loadbalancer, dns, networkpolicy, intermediate]
 ---
 
+import KubernetesWorkloadsNetworkingDiagram from '@site/src/components/KubernetesWorkloadsNetworkingDiagram';
+
 # Services & Networking
 
 > Pods are ephemeral — they come and go with new IPs each time. A **Service** gives you a stable endpoint to reach them.
@@ -14,17 +16,7 @@ tags: [kubernetes, services, networking, ingress, clusterip, loadbalancer, dns, 
 
 ## Why Services Exist
 
-```
-Before Service:
-  Pod A → connects to Pod B at 10.244.1.5
-  Pod B crashes → recreated at 10.244.2.7
-  Pod A → ??? (IP changed, connection broken)
-
-With Service:
-  Service "my-api" → stable ClusterIP: 10.96.0.42
-  Pod A → connects to 10.96.0.42 (always works)
-  Service load-balances to healthy backing Pods automatically
-```
+<KubernetesWorkloadsNetworkingDiagram initialTab="services" />
 
 ---
 

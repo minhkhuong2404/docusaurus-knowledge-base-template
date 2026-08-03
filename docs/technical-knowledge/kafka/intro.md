@@ -13,10 +13,6 @@ import KafkaIntroOverviewDiagram from '@site/src/components/KafkaIntroOverviewDi
 
 # Apache Kafka Knowledge Base
 
-<KafkaIntroOverviewDiagram />
-
----
-
 > A comprehensive reference guide covering Apache Kafka architecture, producer/consumer internal mechanics, stream processing, Exactly-Once Semantics (EOS), and production performance tuning with Java and Spring Boot.
 
 ---
@@ -24,6 +20,8 @@ import KafkaIntroOverviewDiagram from '@site/src/components/KafkaIntroOverviewDi
 ## What is Apache Kafka?
 
 Apache Kafka is a **distributed commit log** and event streaming platform designed for high-throughput, fault-tolerant, and horizontally scalable real-time data streaming.
+
+<KafkaIntroOverviewDiagram />
 
 Originally built at LinkedIn to replace monolithic message brokers, Kafka is designed around an append-only commit log stored on disk. Rather than destroying messages upon delivery, Kafka retains ordered records in partition log segments for configurable retention periods (`log.retention.hours`), allowing consumers to replay historical event streams at arbitrary offsets.
 

@@ -7,8 +7,8 @@ const TERRAFORM_STAGES = [
   { step: '4. Apply & State Locking', cmd: 'terraform apply', desc: 'Acquires DynamoDB state lock, executes API calls concurrently along DAG nodes, and persists final state.' }
 ];
 
-export default function DevOpsObservabilityIacDiagram(): React.JSX.Element {
-  const [activeTab, setActiveTab] = useState<'observability' | 'terraform' | 'iac'>('observability');
+export default function DevOpsObservabilityIacDiagram({ initialTab = 'observability' }: { initialTab?: 'observability' | 'terraform' | 'iac' }): React.JSX.Element {
+  const [activeTab, setActiveTab] = useState<'observability' | 'terraform' | 'iac'>(initialTab);
   const [activeTfStep, setActiveTfStep] = useState<number>(0);
   const [selectedPillar, setSelectedPillar] = useState<'metrics' | 'logs' | 'traces'>('metrics');
 

@@ -12,8 +12,6 @@ import DevOpsObservabilityIacDiagram from '@site/src/components/DevOpsObservabil
 
 Welcome to the definitive, most comprehensive guide on HashiCorp Terraform. This document serves not only as theoretical knowledge but as a practical cookbook filled with hundreds of lines of code examples, real-world use cases, and command-line execution examples.
 
-<DevOpsObservabilityIacDiagram />
-
 ---
 
 ## Part 1: The Fundamentals (Beginner)
@@ -22,6 +20,9 @@ Welcome to the definitive, most comprehensive guide on HashiCorp Terraform. This
 **Infrastructure as Code (IaC)** replaces manual click-ops in the cloud console with version-controlled text files.
 
 ### 2. The Core Workflow in Action
+
+<DevOpsObservabilityIacDiagram initialTab="terraform" />
+
 Let's see the four main commands in action.
 
 **1. Initialize (`terraform init`)**

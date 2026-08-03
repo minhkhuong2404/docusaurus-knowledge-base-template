@@ -15,8 +15,6 @@ import KafkaProducerTransactionsDiagram from '@site/src/components/KafkaProducer
 
 # Producer Transactions
 
-<KafkaProducerTransactionsDiagram />
-
 ---
 
 ## Why Transactions?
@@ -43,16 +41,7 @@ Kafka Transactions solve this with **atomic multi-partition writes**.
 
 ### Transaction Lifecycle
 
-```
-1. initTransactions()           → Register PID + transactional.id with coordinator
-2. beginTransaction()           → Mark start (local state only)
-3. send(record to topic A)      → Writes buffered under transaction
-4. send(record to topic B)      → Same transaction
-5. commitTransaction()          → Coordinator writes PREPARE_COMMIT
-                                  Transaction markers (COMMIT) written to all partitions
-                                  Consumers with isolation.level=read_committed see messages
-6. abortTransaction() (on error) → ABORT markers written, records invisible to consumers
-```
+<KafkaProducerTransactionsDiagram />
 
 ---
 

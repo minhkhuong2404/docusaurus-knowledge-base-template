@@ -15,15 +15,13 @@ import KafkaSchemaRegistryDiagram from '@site/src/components/KafkaSchemaRegistry
 
 # Schema Registry
 
-<KafkaSchemaRegistryDiagram />
-
----
-
 **Schema Registry** is a centralized repository for managing, versioning, and validating schemas for Kafka messages. It ensures producers and consumers agree on the data contract, preventing silent data corruption and pipeline failures when schemas evolve.
 
 ---
 
 ## The Problem Without Schema Registry
+
+<KafkaSchemaRegistryDiagram />
 
 In a Kafka-based system without schema governance, schema drift is invisible until it breaks production:
 

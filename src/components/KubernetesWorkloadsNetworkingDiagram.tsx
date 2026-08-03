@@ -14,8 +14,8 @@ const SERVICE_TYPES = [
   { id: 'ingress', name: 'Ingress Controller (L7 HTTP Router)', desc: 'Manages external L7 HTTP/HTTPS routing rules, TLS termination, and path-based routing (/api ➔ service-a, /app ➔ service-b).' }
 ];
 
-export default function KubernetesWorkloadsNetworkingDiagram(): React.JSX.Element {
-  const [activeTab, setActiveTab] = useState<'workloads' | 'services' | 'storage'>('workloads');
+export default function KubernetesWorkloadsNetworkingDiagram({ initialTab = 'workloads' }: { initialTab?: 'workloads' | 'services' | 'storage' }): React.JSX.Element {
+  const [activeTab, setActiveTab] = useState<'workloads' | 'services' | 'storage'>(initialTab);
   const [selectedWorkload, setSelectedWorkload] = useState<string>('deploy');
   const [selectedService, setSelectedService] = useState<string>('ingress');
 

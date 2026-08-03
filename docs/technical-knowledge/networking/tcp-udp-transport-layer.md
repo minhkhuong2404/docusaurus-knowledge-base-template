@@ -12,6 +12,7 @@ import TcpSegmentAnatomyDiagram from '@site/src/components/TcpSegmentAnatomyDiag
 import TcpFlowControlDiagram from '@site/src/components/TcpFlowControlDiagram';
 import TcpCongestionControlDiagram from '@site/src/components/TcpCongestionControlDiagram';
 import UdpAnatomyDiagram from '@site/src/components/UdpAnatomyDiagram';
+import NetworkMonospaceSchemaInspector from '@site/src/components/NetworkMonospaceSchemaInspector';
 
 # TCP, UDP & Transport Layer
 
@@ -20,6 +21,14 @@ import UdpAnatomyDiagram from '@site/src/components/UdpAnatomyDiagram';
 The Transport Layer provides **process-to-process** communication across network hosts using **Port Numbers** (16-bit integers ranging from 0 to 65535). While Layer 3 (IP) routes packets between host IP addresses, Layer 4 (TCP/UDP) multiplexes traffic between specific application processes executing on those hosts.
 
 <TransportLayerPortsDiagram />
+
+---
+
+## Monospace Schema Inspector: TCP & IPv4 Bitwise Packet Header
+
+<NetworkMonospaceSchemaInspector />
+
+---
 
 ### Port Number Allocations
 - **Well-Known Ports (0–1023)**: Reserved for core system services (HTTP: 80, HTTPS: 443, SSH: 22, DNS: 53).

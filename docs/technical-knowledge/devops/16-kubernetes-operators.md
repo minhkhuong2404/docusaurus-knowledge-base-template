@@ -6,6 +6,8 @@ description: Deep dive into Kubernetes Custom Resource Definitions (CRDs) and th
 tags: [kubernetes, crd, operators, controllers, intermediate]
 ---
 
+import GitOpsArgoCdPipelineDiagram from '@site/src/components/GitOpsArgoCdPipelineDiagram';
+
 # Operators & CRDs
 
 The fundamental design pattern of Kubernetes is the **Controller Pattern**: a continuous reconciliation loop that observes the *actual* state of a system, compares it to the *desired* state, and takes actions to make them match.
@@ -15,6 +17,8 @@ Kubernetes natively understands Pods, Deployments, and Services. But what if you
 ---
 
 ## 1. Custom Resource Definitions (CRDs)
+
+<GitOpsArgoCdPipelineDiagram initialTab="operator" />
 
 A CRD allows you to extend the Kubernetes API with your own custom objects.
 

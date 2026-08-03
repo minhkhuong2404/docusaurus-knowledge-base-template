@@ -15,13 +15,15 @@ import KafkaArchitectureOverviewDiagram from '@site/src/components/KafkaArchitec
 
 # Kafka Architecture Overview
 
-<KafkaArchitectureOverviewDiagram />
-
 ---
 
 ## High-Level Architecture
 
 Kafka's architecture revolves around five fundamental components:
+
+<KafkaArchitectureOverviewDiagram />
+
+---
 
 | Component | Role |
 |---|---|

@@ -15,13 +15,19 @@ import KafkaConsumerOverviewDiagram from '@site/src/components/KafkaConsumerOver
 
 # Kafka Consumer
 
-<KafkaConsumerOverviewDiagram />
-
 ---
 
 ## What is a Consumer?
 
 A **consumer** reads messages from Kafka topics. Unlike traditional queues (push-based), Kafka consumers **pull** messages at their own pace. This gives consumers full control over throughput, backpressure, and replay.
+
+---
+
+## Consumer Internals
+
+<KafkaConsumerOverviewDiagram />
+
+---
 
 ---
 

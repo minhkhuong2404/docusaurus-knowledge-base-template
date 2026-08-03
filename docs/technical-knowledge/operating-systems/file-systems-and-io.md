@@ -13,10 +13,17 @@ sidebar_position: 5
 ---
 
 import OsFileSystemsIoDiagram from '@site/src/components/OsFileSystemsIoDiagram';
+import OsMonospaceSchemaInspector from '@site/src/components/OsMonospaceSchemaInspector';
 
 # File Systems & I/O
 
 <OsFileSystemsIoDiagram />
+
+---
+
+## Monospace Schema Inspector: Linux Inode Struct & SYSCALL Register Frame
+
+<OsMonospaceSchemaInspector />
 
 ---
 

@@ -6,6 +6,8 @@ description: Complete Helm guide — charts, templates, values, release manageme
 tags: [helm, kubernetes, charts, templates, values, package-manager, advanced]
 ---
 
+import GitOpsArgoCdPipelineDiagram from '@site/src/components/GitOpsArgoCdPipelineDiagram';
+
 # Helm — Package Manager for Kubernetes
 
 > Helm is the Kubernetes equivalent of `apt`, `brew`, or `maven` — it packages, versions, and deploys Kubernetes applications.
@@ -13,6 +15,8 @@ tags: [helm, kubernetes, charts, templates, values, package-manager, advanced]
 ---
 
 ## Why Helm?
+
+<GitOpsArgoCdPipelineDiagram initialTab="pipeline" />
 
 Without Helm, deploying an application means maintaining dozens of individual YAML files.  
 With Helm, it's a versioned, parameterised **chart** with a single command to install.

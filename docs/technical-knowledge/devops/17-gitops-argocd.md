@@ -12,11 +12,11 @@ import GitOpsArgoCdPipelineDiagram from '@site/src/components/GitOpsArgoCdPipeli
 
 GitOps is an operational framework that takes DevOps best practices used for application development (version control, collaboration, compliance, and CI/CD) and applies them to infrastructure automation.
 
-<GitOpsArgoCdPipelineDiagram />
-
 ---
 
 ## 1. Push-based vs Pull-based Deployments
+
+<GitOpsArgoCdPipelineDiagram initialTab="pipeline" />
 
 ### Push-Based CD (The Old Way)
 

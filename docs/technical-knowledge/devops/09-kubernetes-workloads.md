@@ -12,11 +12,11 @@ import KubernetesWorkloadsNetworkingDiagram from '@site/src/components/Kubernete
 
 > You almost never create Pods directly. You create a **workload resource** that manages Pods for you.
 
-<KubernetesWorkloadsNetworkingDiagram />
-
 ---
 
 ## Workload Types Overview
+
+<KubernetesWorkloadsNetworkingDiagram initialTab="workloads" />
 
 | Resource | Pods | Pod Identity | Use Case |
 |---|---|---|---|

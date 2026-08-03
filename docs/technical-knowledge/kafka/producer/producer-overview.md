@@ -15,13 +15,15 @@ import KafkaProducerInternalsDiagram from '@site/src/components/KafkaProducerInt
 
 # Kafka Producer
 
-<KafkaProducerInternalsDiagram />
-
 ---
 
 ## What is a Producer?
 
 A **producer** is a client application that publishes (writes) messages to Kafka topics. It is responsible for:
+
+<KafkaProducerInternalsDiagram />
+
+---
 
 1. Serializing the message key and value
 2. Choosing the target partition

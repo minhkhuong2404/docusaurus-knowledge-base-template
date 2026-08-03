@@ -7,6 +7,8 @@ description: A complete beginner-to-advanced guide to Docker and Kubernetes — 
 tags: [docker, kubernetes, devops, containers, overview]
 ---
 
+import DevOpsObservabilityIacDiagram from '@site/src/components/DevOpsObservabilityIacDiagram';
+
 # Docker & Kubernetes Knowledge Base
 
 > Containers changed how we build, ship, and run software. This guide takes you from zero to production — step by step.
@@ -14,6 +16,8 @@ tags: [docker, kubernetes, devops, containers, overview]
 ---
 
 ## The Problem Containers Solve
+
+<DevOpsObservabilityIacDiagram initialTab="observability" />
 
 Before containers, deploying software meant:
 

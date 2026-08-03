@@ -6,6 +6,8 @@ description: WireMock creates a real HTTP server for stubbing and mocking extern
 tags: [testing, wiremock, integration-test, mocking, http, api, spring-boot, testcontainers, contract-testing]
 ---
 
+import WireMockResilienceDiagram from '@site/src/components/WireMockResilienceDiagram';
+
 # WireMock — Mocking External HTTP APIs
 
 :::info[Who this guide is for]
@@ -26,15 +28,9 @@ Imagine your application calls an external Payment API. In production, you hit `
 
 **WireMock solves this.** It starts a real HTTP server locally that pretends to be Stripe. Your application talks to `http://localhost:8089` instead, and WireMock responds with whatever you configure.
 
-```
-Production:
-  Your App ──HTTP──► Stripe API (real)
+<WireMockResilienceDiagram />
 
-Tests with WireMock:
-  Your App ──HTTP──► WireMock (localhost:8089)
-                     ↓ returns pre-configured responses
-                     {"status": "SUCCESS", "chargeId": "ch_123"}
-```
+---
 
 ### WireMock vs Mockito — When to Use Which?
 

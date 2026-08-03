@@ -14,10 +14,6 @@ import KafkaLogCompactionDiagram from '@site/src/components/KafkaLogCompactionDi
 
 # Kafka Log Compaction Explained
 
-<KafkaLogCompactionDiagram />
-
----
-
 Kafka is widely known for time-based retention — messages older than `retention.ms` are deleted. But there is a second retention mode that serves an entirely different purpose: **log compaction**.
 
 Log compaction preserves at least the **latest value for each message key** within a partition, transforming a Kafka topic from an append-only event log into something closer to a table of current states.
@@ -28,13 +24,7 @@ Log compaction preserves at least the **latest value for each message key** with
 
 Log compaction is a retention policy (enabled via `cleanup.policy=compact`) that ensures a partition retains, indefinitely, the most recent update for every key. Unlike deletion-based retention (which removes old data after a time or size limit), compaction keeps the most recent record per key regardless of age.
 
-```
-Before compaction (raw partition):
-  [K1:v1] [K2:v1] [K1:v2] [K3:v1] [K2:v2] [K1:v3]
-
-After compaction:
-  [K2:v2] [K3:v1] [K1:v3]
-```
+<KafkaLogCompactionDiagram />
 
 Key properties:
 - **Immutable offsets**: Offsets are never renumbered. Consumers can still track their position reliably.

@@ -43,9 +43,9 @@ const SCENARIOS = [
   },
 ];
 
-export default function KafkaConsumerLagPoisonDiagram(): React.JSX.Element {
-  const [selected, setSelected] = useState<string>('normal');
-  const scenario = SCENARIOS.find(s => s.id === selected)!;
+export default function KafkaConsumerLagPoisonDiagram({ initialScenario = 'normal' }: { initialScenario?: string }): React.JSX.Element {
+  const [selected, setSelected] = useState<string>(initialScenario);
+  const scenario = SCENARIOS.find(s => s.id === selected) || SCENARIOS[0];
 
   const lagPct = Math.round((scenario.lag / scenario.leo) * 100);
   const committedPct = Math.round((scenario.committed / scenario.leo) * 100);

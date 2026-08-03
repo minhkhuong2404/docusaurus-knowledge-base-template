@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-bf6": {
+  "/-9a0": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-d38": {
+  "/-f0a": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -5869,14 +5869,14 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-c91": {
+  "/-0d0": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
     "__comp": "17896441",
     "content": "78559adb"
   },
-  "/banking-949": {
+  "/banking-989": {
     "__comp": "17896441",
     "content": "59e92e34"
   },
@@ -6712,15 +6712,15 @@
     "__comp": "17896441",
     "content": "0f5b88ea"
   },
-  "/technical-knowledge/banking/aml_kyc-7be": {
+  "/technical-knowledge/banking/aml_kyc-e18": {
     "__comp": "17896441",
     "content": "a7b535ea"
   },
-  "/technical-knowledge/banking/banking_roles-bdc": {
+  "/technical-knowledge/banking/banking_roles-559": {
     "__comp": "17896441",
     "content": "801aaef3"
   },
-  "/technical-knowledge/banking/becs-f1f": {
+  "/technical-knowledge/banking/becs-699": {
     "__comp": "17896441",
     "content": "7b98edbc"
   },
@@ -6740,11 +6740,11 @@
     "__comp": "17896441",
     "content": "afebb541"
   },
-  "/technical-knowledge/banking/cards-cf9": {
+  "/technical-knowledge/banking/cards-f1c": {
     "__comp": "17896441",
     "content": "b973a717"
   },
-  "/technical-knowledge/banking/clearing-e07": {
+  "/technical-knowledge/banking/clearing-6f1": {
     "__comp": "17896441",
     "content": "34d102cb"
   },
@@ -6752,7 +6752,7 @@
     "__comp": "17896441",
     "content": "1fd44cf6"
   },
-  "/technical-knowledge/banking/core_banking-8ad": {
+  "/technical-knowledge/banking/core_banking-f0b": {
     "__comp": "17896441",
     "content": "af590922"
   },
@@ -6788,7 +6788,7 @@
     "__comp": "17896441",
     "content": "d16b33c3"
   },
-  "/technical-knowledge/banking/fraud-39a": {
+  "/technical-knowledge/banking/fraud-cd4": {
     "__comp": "17896441",
     "content": "c13c1767"
   },
@@ -6812,7 +6812,7 @@
     "__comp": "17896441",
     "content": "7efb0b3b"
   },
-  "/technical-knowledge/banking/iso20022_migration-3f6": {
+  "/technical-knowledge/banking/iso20022_migration-476": {
     "__comp": "17896441",
     "content": "9a31efff"
   },
@@ -6820,7 +6820,7 @@
     "__comp": "17896441",
     "content": "28c4ef33"
   },
-  "/technical-knowledge/banking/npp-8d5": {
+  "/technical-knowledge/banking/npp-24d": {
     "__comp": "17896441",
     "content": "104bf45b"
   },
@@ -6832,7 +6832,7 @@
     "__comp": "17896441",
     "content": "00e97688"
   },
-  "/technical-knowledge/banking/open_banking-7da": {
+  "/technical-knowledge/banking/open_banking-ffd": {
     "__comp": "17896441",
     "content": "ecdb5fa9"
   },
@@ -6848,31 +6848,31 @@
     "__comp": "17896441",
     "content": "d9d2b623"
   },
-  "/technical-knowledge/banking/pacs008-2aa": {
+  "/technical-knowledge/banking/pacs008-f37": {
     "__comp": "17896441",
     "content": "1dc8ca26"
   },
-  "/technical-knowledge/banking/pain001-c96": {
+  "/technical-knowledge/banking/pain001-9e8": {
     "__comp": "17896441",
     "content": "38f2bef9"
   },
-  "/technical-knowledge/banking/pain004-d93": {
+  "/technical-knowledge/banking/pain004-046": {
     "__comp": "17896441",
     "content": "428c31fd"
   },
-  "/technical-knowledge/banking/pain007_pacs007-f3c": {
+  "/technical-knowledge/banking/pain007_pacs007-44a": {
     "__comp": "17896441",
     "content": "21512b8e"
   },
-  "/technical-knowledge/banking/payment_exceptions-9aa": {
+  "/technical-knowledge/banking/payment_exceptions-4d8": {
     "__comp": "17896441",
     "content": "0b441d44"
   },
-  "/technical-knowledge/banking/payment_hub-980": {
+  "/technical-knowledge/banking/payment_hub-ed2": {
     "__comp": "17896441",
     "content": "6cfeb22d"
   },
-  "/technical-knowledge/banking/payment_lifecycle_101-894": {
+  "/technical-knowledge/banking/payment_lifecycle_101-c1e": {
     "__comp": "17896441",
     "content": "fb4429bd"
   },
@@ -6884,7 +6884,7 @@
     "__comp": "17896441",
     "content": "bc7ae5b1"
   },
-  "/technical-knowledge/banking/reconciliation-0f5": {
+  "/technical-knowledge/banking/reconciliation-037": {
     "__comp": "17896441",
     "content": "7ea59ac7"
   },
@@ -6896,7 +6896,7 @@
     "__comp": "17896441",
     "content": "bd6ea3de"
   },
-  "/technical-knowledge/banking/sanction-dbd": {
+  "/technical-knowledge/banking/sanction-bbb": {
     "__comp": "17896441",
     "content": "20f47e51"
   },
@@ -6904,7 +6904,7 @@
     "__comp": "17896441",
     "content": "5be4d20d"
   },
-  "/technical-knowledge/banking/swift-b6c": {
+  "/technical-knowledge/banking/swift-edb": {
     "__comp": "17896441",
     "content": "14308b2b"
   },
@@ -7188,7 +7188,7 @@
     "__comp": "17896441",
     "content": "5ab7a520"
   },
-  "/technical-knowledge/devops/devops-observability-70b": {
+  "/technical-knowledge/devops/devops-observability-a0d": {
     "__comp": "17896441",
     "content": "e9c5c9f2"
   },
@@ -7200,7 +7200,7 @@
     "__comp": "17896441",
     "content": "2d9f555e"
   },
-  "/technical-knowledge/devops/docker-fundamentals-6e3": {
+  "/technical-knowledge/devops/docker-fundamentals-302": {
     "__comp": "17896441",
     "content": "7c76fc84"
   },
@@ -7216,7 +7216,7 @@
     "__comp": "17896441",
     "content": "da18171d"
   },
-  "/technical-knowledge/devops/gitops-argocd-631": {
+  "/technical-knowledge/devops/gitops-argocd-0db": {
     "__comp": "17896441",
     "content": "70449668"
   },
@@ -7232,7 +7232,7 @@
     "__comp": "17896441",
     "content": "064a72bb"
   },
-  "/technical-knowledge/devops/kubernetes-fundamentals-994": {
+  "/technical-knowledge/devops/kubernetes-fundamentals-428": {
     "__comp": "17896441",
     "content": "7f8362fa"
   },
@@ -7252,7 +7252,7 @@
     "__comp": "17896441",
     "content": "f037e452"
   },
-  "/technical-knowledge/devops/kubernetes-workloads-e06": {
+  "/technical-knowledge/devops/kubernetes-workloads-3d9": {
     "__comp": "17896441",
     "content": "e775c6ed"
   },
@@ -7260,11 +7260,11 @@
     "__comp": "17896441",
     "content": "4ef1d832"
   },
-  "/technical-knowledge/devops/terraform-f2d": {
+  "/technical-knowledge/devops/terraform-97b": {
     "__comp": "17896441",
     "content": "c2aaa6d4"
   },
-  "/technical-knowledge/devops/vm-docker-k8s-explained-28d": {
+  "/technical-knowledge/devops/vm-docker-k8s-explained-792": {
     "__comp": "17896441",
     "content": "c6215eaf"
   },
@@ -10104,39 +10104,39 @@
     "__comp": "17896441",
     "content": "592203a7"
   },
-  "/technical-knowledge/interview-questions/behavioral/behavioral-amazon-lp-347": {
+  "/technical-knowledge/interview-questions/behavioral/behavioral-amazon-lp-972": {
     "__comp": "17896441",
     "content": "516143c1"
   },
-  "/technical-knowledge/interview-questions/behavioral/behavioral-common-mistakes-d15": {
+  "/technical-knowledge/interview-questions/behavioral/behavioral-common-mistakes-67b": {
     "__comp": "17896441",
     "content": "073f4bda"
   },
-  "/technical-knowledge/interview-questions/behavioral/behavioral-conflict-failure-e6e": {
+  "/technical-knowledge/interview-questions/behavioral/behavioral-conflict-failure-56a": {
     "__comp": "17896441",
     "content": "61a11ceb"
   },
-  "/technical-knowledge/interview-questions/behavioral/behavioral-google-meta-microsoft-c24": {
+  "/technical-knowledge/interview-questions/behavioral/behavioral-google-meta-microsoft-a99": {
     "__comp": "17896441",
     "content": "d0b437fb"
   },
-  "/technical-knowledge/interview-questions/behavioral/behavioral-interview-overview-79b": {
+  "/technical-knowledge/interview-questions/behavioral/behavioral-interview-overview-4bd": {
     "__comp": "17896441",
     "content": "b2faf5e6"
   },
-  "/technical-knowledge/interview-questions/behavioral/behavioral-questions-to-ask-e9f": {
+  "/technical-knowledge/interview-questions/behavioral/behavioral-questions-to-ask-4de": {
     "__comp": "17896441",
     "content": "30df29cd"
   },
-  "/technical-knowledge/interview-questions/behavioral/behavioral-star-method-69f": {
+  "/technical-knowledge/interview-questions/behavioral/behavioral-star-method-a42": {
     "__comp": "17896441",
     "content": "b188569a"
   },
-  "/technical-knowledge/interview-questions/behavioral/behavioral-story-bank-e92": {
+  "/technical-knowledge/interview-questions/behavioral/behavioral-story-bank-049": {
     "__comp": "17896441",
     "content": "58153ba8"
   },
-  "/technical-knowledge/interview-questions/behavioral/behavioral-top-50-questions-248": {
+  "/technical-knowledge/interview-questions/behavioral/behavioral-top-50-questions-3db": {
     "__comp": "17896441",
     "content": "711f8a55"
   },
