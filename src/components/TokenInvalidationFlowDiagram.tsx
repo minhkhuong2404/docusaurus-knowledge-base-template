@@ -206,16 +206,16 @@ export default function TokenInvalidationFlowDiagram(): React.JSX.Element {
           {activeMode === 'rotation' && (
             <>
               {/* Device A -> Gateway */}
-              <path id="flow-a" d="M 190 75 L 320 120" fill="none" stroke="#34d399" strokeWidth="2" markerEnd="url(#arrow-blue)" fillOpacity="1" contextFill="#34d399" />
+              <path id="flow-a" d="M 190 75 L 320 120" fill="none" stroke="#34d399" strokeWidth="2" markerEnd="url(#arrow-blue)" fillOpacity="1" />
               <text x="245" y="88" fill="#34d399" fontSize="8.5" fontWeight="600" textAnchor="middle">POST /refresh (v1)</text>
               <circle r="3.5" fill="#34d399"><animateMotion dur="2s" repeatCount="indefinite"><mpath href="#flow-a" /></animateMotion></circle>
 
               {/* Gateway -> DB */}
-              <path id="flow-db" d="M 480 125 L 590 75" fill="none" stroke="#38bdf8" strokeWidth="1.8" markerEnd="url(#arrow-blue)" contextFill="#38bdf8" />
+              <path id="flow-db" d="M 480 125 L 590 75" fill="none" stroke="#38bdf8" strokeWidth="1.8" markerEnd="url(#arrow-blue)" />
               <text x="545" y="92" fill="#38bdf8" fontSize="8" textAnchor="middle">Rotate v1→v2 & Set Used</text>
 
               {/* Device B Theft Attempt -> Gateway */}
-              <path id="flow-b" d="M 190 200 L 320 160" fill="none" stroke="#f43f5e" strokeWidth="1.8" strokeDasharray="4,2" markerEnd="url(#arrow-blue)" contextFill="#f43f5e" />
+              <path id="flow-b" d="M 190 200 L 320 160" fill="none" stroke="#f43f5e" strokeWidth="1.8" strokeDasharray="4,2" markerEnd="url(#arrow-blue)" />
               <text x="245" y="195" fill="#f43f5e" fontSize="8.5" fontWeight="600" textAnchor="middle">Replay Stale v1 🚨</text>
               <circle r="3.5" fill="#f43f5e"><animateMotion dur="1.5s" repeatCount="indefinite"><mpath href="#flow-b" /></animateMotion></circle>
             </>
@@ -224,16 +224,16 @@ export default function TokenInvalidationFlowDiagram(): React.JSX.Element {
           {activeMode === 'single_device' && (
             <>
               {/* Device A Update Password -> Gateway */}
-              <path id="flow-pass-a" d="M 190 75 L 320 120" fill="none" stroke="#34d399" strokeWidth="2" markerEnd="url(#arrow-blue)" contextFill="#34d399" />
+              <path id="flow-pass-a" d="M 190 75 L 320 120" fill="none" stroke="#34d399" strokeWidth="2" markerEnd="url(#arrow-blue)" />
               <text x="240" y="88" fill="#34d399" fontSize="8.5" fontWeight="600" textAnchor="middle">Update Password (Keep Current)</text>
               <circle r="3.5" fill="#34d399"><animateMotion dur="2s" repeatCount="indefinite"><mpath href="#flow-pass-a" /></animateMotion></circle>
 
               {/* Gateway -> DB Selective Delete */}
-              <path id="flow-pass-db" d="M 480 125 L 590 75" fill="none" stroke="#34d399" strokeWidth="1.8" markerEnd="url(#arrow-blue)" contextFill="#34d399" />
+              <path id="flow-pass-db" d="M 480 125 L 590 75" fill="none" stroke="#34d399" strokeWidth="1.8" markerEnd="url(#arrow-blue)" />
               <text x="540" y="92" fill="#34d399" fontSize="8" textAnchor="middle">DELETE session_id != sess_101</text>
 
               {/* Device B Attempted Access -> Gateway REJECTED */}
-              <path id="flow-b-rej" d="M 190 200 L 320 160" fill="none" stroke="#f43f5e" strokeWidth="2" strokeDasharray="3,3" markerEnd="url(#arrow-blue)" contextFill="#f43f5e" />
+              <path id="flow-b-rej" d="M 190 200 L 320 160" fill="none" stroke="#f43f5e" strokeWidth="2" strokeDasharray="3,3" markerEnd="url(#arrow-blue)" />
               <text x="250" y="198" fill="#f43f5e" fontSize="8.5" fontWeight="600" textAnchor="middle">401 Session Deleted ❌</text>
             </>
           )}
@@ -241,16 +241,16 @@ export default function TokenInvalidationFlowDiagram(): React.JSX.Element {
           {activeMode === 'account_hacked' && (
             <>
               {/* Emergency Trigger -> Gateway */}
-              <path id="flow-hack-trigger" d="M 190 75 L 320 120" fill="none" stroke="#f43f5e" strokeWidth="2" markerEnd="url(#arrow-blue)" contextFill="#f43f5e" />
+              <path id="flow-hack-trigger" d="M 190 75 L 320 120" fill="none" stroke="#f43f5e" strokeWidth="2" markerEnd="url(#arrow-blue)" />
               <text x="235" y="85" fill="#f43f5e" fontSize="8.5" fontWeight="700" textAnchor="middle">Account Hacked! Wipe All</text>
               <circle r="3.5" fill="#f43f5e"><animateMotion dur="1.2s" repeatCount="indefinite"><mpath href="#flow-hack-trigger" /></animateMotion></circle>
 
               {/* Gateway -> DB Wipes All Refresh Tokens */}
-              <path id="flow-hack-db" d="M 480 125 L 590 75" fill="none" stroke="#f43f5e" strokeWidth="2" markerEnd="url(#arrow-blue)" contextFill="#f43f5e" />
+              <path id="flow-hack-db" d="M 480 125 L 590 75" fill="none" stroke="#f43f5e" strokeWidth="2" markerEnd="url(#arrow-blue)" />
               <text x="540" y="90" fill="#f43f5e" fontSize="8" textAnchor="middle">token_version++ & Wipe Tokens</text>
 
               {/* Gateway -> Redis Cache Push */}
-              <path id="flow-hack-redis" d="M 480 145 L 590 195" fill="none" stroke="#f59e0b" strokeWidth="2" markerEnd="url(#arrow-blue)" contextFill="#f59e0b" />
+              <path id="flow-hack-redis" d="M 480 145 L 590 195" fill="none" stroke="#f59e0b" strokeWidth="2" markerEnd="url(#arrow-blue)" />
               <text x="540" y="180" fill="#f59e0b" fontSize="8" textAnchor="middle">SET user:revoked_before = NOW()</text>
               <circle r="3.5" fill="#f59e0b"><animateMotion dur="1.2s" repeatCount="indefinite"><mpath href="#flow-hack-redis" /></animateMotion></circle>
             </>

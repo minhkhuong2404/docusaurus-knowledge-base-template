@@ -10,8 +10,6 @@ import DatabasePitrRecoveryDiagram from '@site/src/components/DatabasePitrRecove
 
 # Backup & Recovery
 
-<DatabasePitrRecoveryDiagram />
-
 ---
 
 ## Core Concepts
@@ -151,6 +149,8 @@ aws ec2 create-snapshot \
 ---
 
 ## Point-In-Time Recovery (PITR)
+
+<DatabasePitrRecoveryDiagram />
 
 Restore to any point in time using a **base backup** + **transaction logs (WAL/binlog)**.
 

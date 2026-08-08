@@ -9,7 +9,7 @@ interface ChecklistCategory {
   id: string;
   label: string;
   color: string;
-  icon: JSX.Element;
+  icon: React.JSX.Element;
   items: CheckItem[];
 }
 

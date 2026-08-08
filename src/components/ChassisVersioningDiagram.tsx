@@ -47,7 +47,7 @@ export default function ChassisVersioningDiagram() {
             <button
               onClick={() => setSelectedSemver('major')}
               style={{
-                flex: 1, padding: '10px', borderRadius: '8px', border: 'none', cursor: 'pointer',
+                flex: 1, padding: '10px', borderRadius: '8px', cursor: 'pointer',
                 background: selectedSemver === 'major' ? 'rgba(248,113,113,0.2)' : 'rgba(255,255,255,0.03)',
                 color: selectedSemver === 'major' ? '#f87171' : 'var(--ifm-color-content-secondary)',
                 border: `1px solid ${selectedSemver === 'major' ? '#f87171' : 'rgba(255,255,255,0.08)'}`,
@@ -59,7 +59,7 @@ export default function ChassisVersioningDiagram() {
             <button
               onClick={() => setSelectedSemver('minor')}
               style={{
-                flex: 1, padding: '10px', borderRadius: '8px', border: 'none', cursor: 'pointer',
+                flex: 1, padding: '10px', borderRadius: '8px', cursor: 'pointer',
                 background: selectedSemver === 'minor' ? 'rgba(56,189,248,0.2)' : 'rgba(255,255,255,0.03)',
                 color: selectedSemver === 'minor' ? '#38bdf8' : 'var(--ifm-color-content-secondary)',
                 border: `1px solid ${selectedSemver === 'minor' ? '#38bdf8' : 'rgba(255,255,255,0.08)'}`,
@@ -71,7 +71,7 @@ export default function ChassisVersioningDiagram() {
             <button
               onClick={() => setSelectedSemver('patch')}
               style={{
-                flex: 1, padding: '10px', borderRadius: '8px', border: 'none', cursor: 'pointer',
+                flex: 1, padding: '10px', borderRadius: '8px', cursor: 'pointer',
                 background: selectedSemver === 'patch' ? 'rgba(52,211,153,0.2)' : 'rgba(255,255,255,0.03)',
                 color: selectedSemver === 'patch' ? '#34d399' : 'var(--ifm-color-content-secondary)',
                 border: `1px solid ${selectedSemver === 'patch' ? '#34d399' : 'rgba(255,255,255,0.08)'}`,

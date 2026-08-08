@@ -143,7 +143,7 @@ Before an incoming request ever reaches a physical storage drive (NVMe/SSD/HDD),
 1. **Browser HTTP Cache**: Client-side storage managed by the browser. Zero network hop when hit.
 2. **CDN / Edge Network**: Distributed PoPs (Cloudflare, AWS CloudFront) caching static media and public API responses close to the user (~10-30 ms).
 3. **Reverse Proxy Gateway**: Perimeter cache (NGINX, Varnish, Envoy) serving full HTML pages, static bundles, or micro-cached responses (~1-5 ms).
-4. **In-Process App Cache (L1)**: Process-local heap memory (Caffeine, Guava) providing sub-microsecond access (<100 ns). High speed, but isolated per server instance.
+4. **In-Process App Cache (L1)**: Process-local heap memory (Caffeine, Guava) providing sub-microsecond access (`<100 ns`). High speed, but isolated per server instance.
 5. **Distributed Cache (L2)**: External shared cache (Redis Cluster, Memcached) accessible by all application instances over network TCP (~0.5-2 ms).
 6. **Database Buffer Pool**: DBMS shared memory (InnoDB Buffer Pool) caching database data pages and index pages in RAM (~100-500 µs).
 7. **OS Page Cache**: Linux VFS page cache using unallocated system RAM to store filesystem disk blocks (~1-10 µs).
@@ -546,7 +546,7 @@ public class OrderService {
 Writes update the Cache instantly and return success immediately. A background worker process flushes queued updates down to the database asynchronously in batches.
 
 * **Who Writes & When**: Background async workers batch and flush cached updates to the database on a scheduled timer or queue size threshold.
-* **Flow**: App writes to Cache (<1 ms response) &rarr; Write event pushed to Queue/Stream &rarr; Background worker aggregates writes &rarr; Worker executes bulk batch SQL update to DB.
+* **Flow**: App writes to Cache (`<1 ms` response) &rarr; Write event pushed to Queue/Stream &rarr; Background worker aggregates writes &rarr; Worker executes bulk batch SQL update to DB.
 * **Pros**:
   * Unrivaled Write Performance: Sub-millisecond write response times.
   * DB Load Smoothing: Batches 1,000 individual counter increments into a single bulk `UPDATE` statement, protecting databases from IOPS saturation.

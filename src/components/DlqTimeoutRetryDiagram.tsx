@@ -68,7 +68,7 @@ export default function DlqTimeoutRetryDiagram(): React.JSX.Element {
             key={concept.id}
             onClick={() => setActiveTab(concept.id)}
             style={{
-              padding: '6px 12px', borderRadius: '8px', border: 'none',
+              padding: '6px 12px', borderRadius: '8px',
               cursor: 'pointer', fontWeight: 700, fontSize: '11px',
               background: activeTab === concept.id ? 'rgba(56,189,248,0.15)' : 'transparent',
               color: activeTab === concept.id ? '#38bdf8' : 'var(--ifm-color-content-secondary)',

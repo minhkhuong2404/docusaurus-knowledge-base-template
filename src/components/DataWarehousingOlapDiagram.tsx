@@ -5,6 +5,7 @@ interface ArchitectureMode {
   name: string;
   badge: string;
   color: string;
+  description: string;
   storageLayout: string;
   queryPattern: string;
   ioCharacteristics: string;

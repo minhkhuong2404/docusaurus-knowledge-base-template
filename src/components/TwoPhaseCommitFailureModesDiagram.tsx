@@ -58,9 +58,9 @@ export default function TwoPhaseCommitFailureModesDiagram(): React.JSX.Element {
     <div className="interactive-diagram-container" style={{ fontFamily: 'var(--ifm-font-family-base)' }}>
       <div className="interactive-diagram-header">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-          <line x1="12" y1="9" x2="12" y2="13"/>
-          <line x1="12" y1="17" x2="12.01" y2="17"/>
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+          <line x1="12" y1="9" x2="12" y2="13" />
+          <line x1="12" y1="17" x2="12.01" y2="17" />
         </svg>
         <span style={{ color: '#34d399' }}>2PC Distributed Failure Modes Explorer</span>
       </div>
@@ -72,7 +72,7 @@ export default function TwoPhaseCommitFailureModesDiagram(): React.JSX.Element {
             key={mode.id}
             onClick={() => setActiveMode(mode.id)}
             style={{
-              padding: '6px 12px', borderRadius: '8px', border: 'none',
+              padding: '6px 12px', borderRadius: '8px',
               cursor: 'pointer', fontWeight: 700, fontSize: '11px',
               background: activeMode === mode.id ? 'rgba(248,113,113,0.15)' : 'transparent',
               color: activeMode === mode.id ? '#f87171' : 'var(--ifm-color-content-secondary)',
@@ -100,7 +100,7 @@ export default function TwoPhaseCommitFailureModesDiagram(): React.JSX.Element {
       `}</style>
 
       <div className="fail-grid">
-        
+
         {/* SVG Visualization */}
         <div className="interactive-diagram-svg-wrapper interactive-diagram-grid-bg">
           <svg viewBox="0 0 350 220" className="interactive-diagram-svg">
@@ -116,8 +116,8 @@ export default function TwoPhaseCommitFailureModesDiagram(): React.JSX.Element {
             {/* Lines from Coordinator to nodes */}
             {/* Link to Node A */}
             <path d="M 175 40 L 95 120" fill="none" stroke={activeMode === 'PARTITION' ? '#34d399' : 'rgba(148,163,184,0.3)'} strokeWidth="1.5"
-                  className={activeMode === 'PARTITION' ? 'interactive-diagram-flowing-path active-path-green' : ''}
-                  markerEnd={activeMode === 'PARTITION' ? 'url(#fail-arr-color)' : 'url(#fail-arr-default)'} />
+              className={activeMode === 'PARTITION' ? 'interactive-diagram-flowing-path active-path-green' : ''}
+              markerEnd={activeMode === 'PARTITION' ? 'url(#fail-arr-color)' : 'url(#fail-arr-default)'} />
 
             {/* Link to Node B */}
             {activeMode === 'PARTITION' ? (
@@ -135,8 +135,8 @@ export default function TwoPhaseCommitFailureModesDiagram(): React.JSX.Element {
             {/* Coordinator Node */}
             <g>
               <rect x="125" y="15" width="100" height="30" rx="5"
-                    fill={activeMode === 'COORD_CRASH' ? 'rgba(239,68,68,0.15)' : 'rgba(56,189,248,0.1)'}
-                    stroke={activeMode === 'COORD_CRASH' ? '#ef4444' : '#38bdf8'} strokeWidth="1.5" />
+                fill={activeMode === 'COORD_CRASH' ? 'rgba(239,68,68,0.15)' : 'rgba(56,189,248,0.1)'}
+                stroke={activeMode === 'COORD_CRASH' ? '#ef4444' : '#38bdf8'} strokeWidth="1.5" />
               <text x="175" y="30" textAnchor="middle" fill={activeMode === 'COORD_CRASH' ? '#ef4444' : '#38bdf8'} fontSize="9" fontWeight="800">
                 {activeMode === 'COORD_CRASH' ? 'Coordinator 💥' : 'Coordinator'}
               </text>
@@ -148,7 +148,7 @@ export default function TwoPhaseCommitFailureModesDiagram(): React.JSX.Element {
             {/* Participant A Node */}
             <g>
               <rect x="45" y="120" width="100" height="40" rx="5"
-                    fill="rgba(52,211,153,0.1)" stroke="#34d399" strokeWidth="1.5" />
+                fill="rgba(52,211,153,0.1)" stroke="#34d399" strokeWidth="1.5" />
               <text x="95" y="138" textAnchor="middle" fill="#34d399" fontSize="9" fontWeight="800">Node A (Payment)</text>
               <text x="95" y="150" textAnchor="middle" fill="#94a3b8" fontSize="7">
                 {activeMode === 'PARTITION' ? '✅ COMMITTED' : '🔒 LOCKS ACTIVE'}
@@ -158,8 +158,8 @@ export default function TwoPhaseCommitFailureModesDiagram(): React.JSX.Element {
             {/* Participant B Node */}
             <g>
               <rect x="205" y="120" width="100" height="40" rx="5"
-                    fill={activeMode === 'CRASH_BEFORE' || activeMode === 'CRASH_AFTER' ? 'rgba(239,68,68,0.15)' : 'rgba(251,191,36,0.1)'}
-                    stroke={activeMode === 'CRASH_BEFORE' || activeMode === 'CRASH_AFTER' ? '#ef4444' : '#fbbf24'} strokeWidth="1.5" />
+                fill={activeMode === 'CRASH_BEFORE' || activeMode === 'CRASH_AFTER' ? 'rgba(239,68,68,0.15)' : 'rgba(251,191,36,0.1)'}
+                stroke={activeMode === 'CRASH_BEFORE' || activeMode === 'CRASH_AFTER' ? '#ef4444' : '#fbbf24'} strokeWidth="1.5" />
               <text x="255" y="138" textAnchor="middle" fill={activeMode === 'CRASH_BEFORE' || activeMode === 'CRASH_AFTER' ? '#ef4444' : '#fbbf24'} fontSize="9" fontWeight="800">
                 {activeMode === 'CRASH_BEFORE' || activeMode === 'CRASH_AFTER' ? 'Node B 💥' : 'Node B (Inventory)'}
               </text>
@@ -172,7 +172,7 @@ export default function TwoPhaseCommitFailureModesDiagram(): React.JSX.Element {
 
         {/* Info detail block */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          
+
           <div style={{ borderLeft: `3px solid ${current.color}`, paddingLeft: '10px' }}>
             <h4 style={{ margin: '0 0 4px', fontSize: '12px', color: current.color }}>{current.title}</h4>
             <p style={{ fontSize: '11px', color: 'var(--ifm-color-content)', margin: 0, lineHeight: 1.45 }}>

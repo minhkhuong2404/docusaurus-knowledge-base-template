@@ -22,7 +22,7 @@ export default function CapNetworkPartitionDiagram(): React.JSX.Element {
             key={s}
             onClick={() => setState(s)}
             style={{
-              padding: '6px 12px', borderRadius: '8px', border: 'none',
+              padding: '6px 12px', borderRadius: '8px',
               cursor: 'pointer', fontWeight: 700, fontSize: '11px',
               background: state === s ? 'rgba(56,189,248,0.15)' : 'transparent',
               color: state === s ? '#38bdf8' : 'var(--ifm-color-content-secondary)',

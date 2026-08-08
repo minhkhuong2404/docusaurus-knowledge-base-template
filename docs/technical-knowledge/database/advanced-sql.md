@@ -10,6 +10,10 @@ import SqlExecutionOrderDiagram from '@site/src/components/SqlExecutionOrderDiag
 
 # Advanced SQL
 
+---
+
+## Logical Execution Order of SQL Queries
+
 <SqlExecutionOrderDiagram />
 
 ---

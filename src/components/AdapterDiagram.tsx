@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 
 interface AdapterStep {
   step: number;
-  title: string;
+  name: string;
+  title?: string;
   badge: string;
   color: string;
   description: string;

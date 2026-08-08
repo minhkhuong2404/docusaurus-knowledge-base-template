@@ -72,7 +72,7 @@ export default function BankingCardPaymentFlowDiagram(): React.JSX.Element {
         {/* Tab 1: 4-Party Model */}
         {activeTab === 'auth' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div className="card-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr', gap: '10px', textAlignment: 'center' }}>
+            <div className="card-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr', gap: '10px', textAlign: 'center' }}>
               {[
                 { title: '1. Cardholder', sub: 'Payer / Customer', color: '#38bdf8' },
                 { title: '2. Merchant', sub: 'POS / Online Store', color: '#fbbf24' },

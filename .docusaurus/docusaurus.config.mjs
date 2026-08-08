@@ -19,6 +19,9 @@ export default {
   "organizationName": "minhkhuong2404",
   "projectName": "docusaurus-knowledge-base-template",
   "onBrokenLinks": "warn",
+  "clientModules": [
+    "./src/clientModules/gtagFix.ts"
+  ],
   "future": {
     "v4": {
       "removeLegacyPostBuildHeadAttribute": true,
@@ -627,7 +630,6 @@ export default {
   "customFields": {},
   "scripts": [],
   "headTags": [],
-  "clientModules": [],
   "titleDelimiter": "|",
   "noIndex": false
 };

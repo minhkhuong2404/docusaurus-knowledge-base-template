@@ -8,11 +8,9 @@ sidebar_position: 4
 
 import TwoPhaseLockingMechanismDiagram from '@site/src/components/TwoPhaseLockingMechanismDiagram';
 import TwoPhaseCommitDiagram from '@site/src/components/TwoPhaseCommitDiagram';
+import SerializabilityLinearizabilityDiagram from '@site/src/components/SerializabilityLinearizabilityDiagram';
 
 # Transactions & Concurrency Control
-
-<TwoPhaseLockingMechanismDiagram />
-<TwoPhaseCommitDiagram />
 
 ---
 
@@ -54,6 +52,8 @@ For an in-depth explanation of these properties, including real-world analogies 
 
 ## Isolation Levels
 
+<SerializabilityLinearizabilityDiagram />
+
 Defined by SQL standard, each level prevents different anomalies:
 
 | Isolation Level | Dirty Read | Non-Repeatable | Phantom | Notes |
@@ -78,6 +78,8 @@ BEGIN ISOLATION LEVEL SERIALIZABLE;
 ---
 
 ## Locking
+
+<TwoPhaseLockingMechanismDiagram />
 
 ### Shared vs Exclusive Locks
 

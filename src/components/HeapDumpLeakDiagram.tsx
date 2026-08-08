@@ -240,9 +240,8 @@ export default function HeapDumpLeakDiagram(): React.JSX.Element {
               stroke={activeEl === 'GC_ROOT' || activeEl === 'HASH_MAP' ? '#f87171' : '#2e354f'}
               strokeWidth={activeEl === 'GC_ROOT' || activeEl === 'HASH_MAP' ? '2.5' : '1.5'}
               markerEnd={activeEl === 'GC_ROOT' || activeEl === 'HASH_MAP' ? 'url(#arrow-red)' : 'url(#arrow-gray)'}
-              className={`interactive-diagram-transition-path ${
-                activeEl === 'GC_ROOT' || activeEl === 'HASH_MAP' ? 'interactive-diagram-flowing-path' : ''
-              }`}
+              className={`interactive-diagram-transition-path ${activeEl === 'GC_ROOT' || activeEl === 'HASH_MAP' ? 'interactive-diagram-flowing-path' : ''
+                }`}
               style={{ transition: 'all 0.3s ease' }}
             />
             {(activeEl === 'GC_ROOT' || activeEl === 'HASH_MAP') && (
@@ -263,9 +262,8 @@ export default function HeapDumpLeakDiagram(): React.JSX.Element {
               stroke={activeEl === 'HASH_MAP' || activeEl === 'ENTRIES' ? '#fbbf24' : '#2e354f'}
               strokeWidth={activeEl === 'HASH_MAP' || activeEl === 'ENTRIES' ? '2.5' : '1.5'}
               markerEnd={activeEl === 'HASH_MAP' || activeEl === 'ENTRIES' ? 'url(#arrow-yellow)' : 'url(#arrow-gray)'}
-              className={`interactive-diagram-transition-path ${
-                activeEl === 'HASH_MAP' || activeEl === 'ENTRIES' ? 'interactive-diagram-flowing-path' : ''
-              }`}
+              className={`interactive-diagram-transition-path ${activeEl === 'HASH_MAP' || activeEl === 'ENTRIES' ? 'interactive-diagram-flowing-path' : ''
+                }`}
               style={{ transition: 'all 0.3s ease' }}
             />
             {(activeEl === 'HASH_MAP' || activeEl === 'ENTRIES') && (
@@ -286,9 +284,8 @@ export default function HeapDumpLeakDiagram(): React.JSX.Element {
               stroke={activeEl === 'ENTRIES' || activeEl === 'EVENT_LIST' ? '#2dd4bf' : '#2e354f'}
               strokeWidth={activeEl === 'ENTRIES' || activeEl === 'EVENT_LIST' ? '2.5' : '1.5'}
               markerEnd={activeEl === 'ENTRIES' || activeEl === 'EVENT_LIST' ? 'url(#arrow-cyan)' : 'url(#arrow-gray)'}
-              className={`interactive-diagram-transition-path ${
-                activeEl === 'ENTRIES' || activeEl === 'EVENT_LIST' ? 'interactive-diagram-flowing-path' : ''
-              }`}
+              className={`interactive-diagram-transition-path ${activeEl === 'ENTRIES' || activeEl === 'EVENT_LIST' ? 'interactive-diagram-flowing-path' : ''
+                }`}
               style={{ transition: 'all 0.3s ease' }}
             />
             {(activeEl === 'ENTRIES' || activeEl === 'EVENT_LIST') && (
@@ -303,17 +300,16 @@ export default function HeapDumpLeakDiagram(): React.JSX.Element {
       </div>
 
       {/* Details Card */}
-      <div className={`interactive-diagram-details-card ${
-        selectedData.type === 'green' ? 'details-green' : selectedData.type === 'purple' ? 'details-purple' : selectedData.type === 'red' ? 'details-red' : 'details-yellow'
-      }`}>
+      <div className={`interactive-diagram-details-card ${selectedData.type === 'green' ? 'details-green' : selectedData.type === 'cyan' ? 'details-cyan' : selectedData.type === 'red' ? 'details-red' : 'details-yellow'
+        }`}>
         <div className="interactive-diagram-card-header">
-          
+
           <h3>{selectedData.title}</h3>
         </div>
         <p><strong>Retained Size (Leak weight):</strong> <span style={{ color: '#f87171', fontWeight: 'bold' }}>{selectedData.retainedSize}</span></p>
         <p><strong>Shallow Size (Object footprint):</strong> {selectedData.shallowSize}</p>
         <p><strong>Overview:</strong> {selectedData.explanation}</p>
-        
+
         <ul>
           <li><strong>Memory Profiler Details:</strong>
             <ul>

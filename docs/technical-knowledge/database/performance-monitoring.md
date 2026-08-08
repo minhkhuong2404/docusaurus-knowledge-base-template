@@ -10,11 +10,11 @@ import DatabasePerformanceMonitoringDiagram from '@site/src/components/DatabaseP
 
 # Performance & Monitoring
 
-<DatabasePerformanceMonitoringDiagram />
-
 ---
 
 ## Key Performance Metrics
+
+<DatabasePerformanceMonitoringDiagram />
 
 | Metric | Target / Watch For |
 |--------|-------------------|

@@ -11,14 +11,13 @@ import LsmTreeWritePathDiagram from '@site/src/components/LsmTreeWritePathDiagra
 
 # 🗄️ Database Knowledge Base
 
-<BTreeWritePathDiagram />
-<LsmTreeWritePathDiagram />
-
 ---
 
 A structured guide covering everything you need to know about databases — from foundational SQL concepts to distributed NoSQL systems — with interview questions for each topic.
 
 ## Topics Covered
+
+<BTreeWritePathDiagram />
 
 | # | Topic | Description |
 |---|-------|-------------|

@@ -36,10 +36,10 @@ export default function SerializabilityLinearizabilityDiagram({
   const [trapRevealed, setTrapRevealed] = useState(false);
 
   const TABS = [
-    { id: 'compare',   label: '1. Two Worlds' },
-    { id: 'strict',    label: '2. Strict Serializability' },
-    { id: 'truetime',  label: '3. TrueTime & Commit-Wait' },
-    { id: 'trap',      label: '4. The Single-Node Trap' },
+    { id: 'compare', label: '1. Two Worlds' },
+    { id: 'strict', label: '2. Strict Serializability' },
+    { id: 'truetime', label: '3. TrueTime & Commit-Wait' },
+    { id: 'trap', label: '4. The Single-Node Trap' },
     { id: 'checklist', label: '5. Decision Checklist' },
   ] as const;
 
@@ -49,10 +49,10 @@ export default function SerializabilityLinearizabilityDiagram({
       {/* Header */}
       <div className="interactive-diagram-header">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-             stroke="#f97316" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="2" y1="12" x2="22" y2="12"/>
-          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          stroke="#f97316" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="2" y1="12" x2="22" y2="12" />
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
         </svg>
         <span>Serializability vs Linearizability — Two Strongest, Two Different Worlds</span>
       </div>
@@ -74,7 +74,8 @@ export default function SerializabilityLinearizabilityDiagram({
         })}
       </div>
 
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         .srl-grid { display: grid; gap: 14px; }
         @media (max-width: 768px) {
           .srl-grid-2 { grid-template-columns: 1fr !important; }
@@ -228,7 +229,7 @@ export default function SerializabilityLinearizabilityDiagram({
                 <div style={{ fontSize: '13px', fontWeight: 800, color: '#38bdf8' }}>Linearizability</div>
                 <div style={{ fontSize: '10px', color: 'var(--ifm-color-content-secondary)' }}>Real-time ordering constraint</div>
               </div>
-              <div style={{ fontSize: '20px', color: '#fbbf24', fontWeight: 800' }}>→</div>
+              <div style={{ fontSize: '20px', color: '#fbbf24', fontWeight: 800 }}>→</div>
               <div style={{ background: 'rgba(52,211,153,0.15)', border: '2px solid #34d399', borderRadius: '8px', padding: '10px 18px' }}>
                 <div style={{ fontSize: '13px', fontWeight: 800, color: '#34d399' }}>Strict Serializability</div>
                 <div style={{ fontSize: '10px', color: 'var(--ifm-color-content-secondary)' }}>Google: "external consistency"</div>
@@ -497,8 +498,8 @@ export default function SerializabilityLinearizabilityDiagram({
             }}>
               🎫 Support ticket #47291:<br />
               "The manager approved the credit limit increase and called us.<br />
-               We opened the system 2 seconds later and it still showed the old limit.<br />
-               We refreshed and it was fixed. Is this a bug?"<br /><br />
+              We opened the system 2 seconds later and it still showed the old limit.<br />
+              We refreshed and it was fixed. Is this a bug?"<br /><br />
               📋 Resolution: "Could not reproduce. Closed. Possible network glitch."
             </div>
             <div style={{ marginTop: '10px', fontSize: '11px', color: 'var(--ifm-color-content-secondary)', fontStyle: 'italic' }}>

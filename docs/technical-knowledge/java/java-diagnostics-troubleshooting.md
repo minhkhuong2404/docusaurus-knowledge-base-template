@@ -272,7 +272,7 @@ OutOfMemoryError: Java heap space
     Could be a genuine leak, or simply undersized heap (-Xmx too low).
 
 OutOfMemoryError: GC overhead limit exceeded
-  → JVM spent >98% of CPU time in GC but recovered <2% of heap in the last 5 attempts.
+  → JVM spent >98% of CPU time in GC but recovered `<2%` of heap in the last 5 attempts.
     The JVM is choosing to fail fast rather than continue thrashing. Nearly always a leak.
 
 OutOfMemoryError: Metaspace

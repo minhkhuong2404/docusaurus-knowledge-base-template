@@ -10,11 +10,11 @@ import TimeSeriesDatabaseEngineDiagram from '@site/src/components/TimeSeriesData
 
 # Time-Series Databases
 
-<TimeSeriesDatabaseEngineDiagram />
-
 ---
 
 ## What Is Time-Series Data?
+
+<TimeSeriesDatabaseEngineDiagram />
 
 Time-series data is a sequence of data points **indexed by time**, typically collected at regular intervals.
 

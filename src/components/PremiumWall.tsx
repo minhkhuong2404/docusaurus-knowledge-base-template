@@ -5,7 +5,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-export default function PremiumWall({ children }: Props): JSX.Element {
+export default function PremiumWall({ children }: Props): React.JSX.Element {
   return (
     <BrowserOnly fallback={<div>Checking secure access credentials...</div>}>
       {() => {

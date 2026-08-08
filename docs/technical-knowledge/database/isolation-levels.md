@@ -7,6 +7,7 @@ sidebar_position: 6
 ---
 import IsolationLevelDiagram from '@site/src/components/IsolationLevelDiagram';
 import AcidIsolationAnomaliesDiagram from '@site/src/components/AcidIsolationAnomaliesDiagram';
+import TwoPhaseLockingMechanismDiagram from '@site/src/components/TwoPhaseLockingMechanismDiagram';
 
 # Database Isolation Levels — How to Get It Right
 
@@ -218,6 +219,8 @@ COMMIT;
 ---
 
 ## Two Layers: What You Set vs What Database Does
+
+<TwoPhaseLockingMechanismDiagram />
 
 | Layer | What it is | Example |
 |---|---|---|

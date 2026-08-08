@@ -6,6 +6,18 @@ tags: [database, transactions, acid, isolation, mvcc, wal, 2pl, concurrency, dee
 sidebar_position: 5
 ---
 import AcidIsolationAnomaliesDiagram from '@site/src/components/AcidIsolationAnomaliesDiagram';
+import AcidBeginnersDiagram from '@site/src/components/AcidBeginnersDiagram';
+import AcidUndoRecordStructureDiagram from '@site/src/components/AcidUndoRecordStructureDiagram';
+import AcidUndoStoragePurgeDiagram from '@site/src/components/AcidUndoStoragePurgeDiagram';
+import AcidPgSnapshotVisibilityDiagram from '@site/src/components/AcidPgSnapshotVisibilityDiagram';
+import AcidInnodbClusteredFieldsDiagram from '@site/src/components/AcidInnodbClusteredFieldsDiagram';
+import AcidInnodbReconstructionDiagram from '@site/src/components/AcidInnodbReconstructionDiagram';
+import AcidWalRecordAnatomyDiagram from '@site/src/components/AcidWalRecordAnatomyDiagram';
+import AcidWalWritePathLifecycleDiagram from '@site/src/components/AcidWalWritePathLifecycleDiagram';
+import AcidOsStorageStackDiagram from '@site/src/components/AcidOsStorageStackDiagram';
+import AcidGroupCommitPipelineDiagram from '@site/src/components/AcidGroupCommitPipelineDiagram';
+import Acid2PcSequenceStateMachineDiagram from '@site/src/components/Acid2PcSequenceStateMachineDiagram';
+import AcidIsolationFlowchartDiagram from '@site/src/components/AcidIsolationFlowchartDiagram';
 
 # 🛡️ Database ACID Properties
 
@@ -56,58 +68,93 @@ This guide covers ACID from the ground up — simple analogies first, then low-l
 
 ## 🐣 ACID for Beginners
 
-Consider a **bank transfer of \$100 from Alice to Bob**. Two operations must both succeed:
+<AcidBeginnersDiagram />
 
-1. **Deduct \$100** from Alice's account.
-2. **Add \$100** to Bob's account.
+Consider a **bank transfer of \$100 from Alice (\$500) to Bob (\$200)**. This single business action requires two physical SQL operations:
 
-```
-[ Alice: $500 ]  ──( -$100 )──►  [ Deducted: $100 ]  ──( +$100 )──►  [ Bob: $200 ]
-```
+1. **Deduct \$100** from Alice (`balance = balance - 100`).
+2. **Add \$100** to Bob (`balance = balance + 100`).
 
-### 1. Atomicity — All or Nothing
+### The 4 Guarantees in Action
 
-If the server crashes **after** deducting from Alice but **before** crediting Bob, the \$100 would vanish. Atomicity guarantees this never happens — the database rolls back Alice's deduction, restoring her \$500.
+#### 1. Atomicity — All or Nothing
+If power fails **after** deducting from Alice but **before** crediting Bob, the \$100 is not lost in limbo. During recovery, the database reads the **Undo Log**, reverses Alice's deduction, and restores her balance to \$500.
 
-### 2. Consistency — Rules Are Never Broken
+#### 2. Consistency — Invariants Are Preserved
+The bank declares: `CONSTRAINT balance_non_negative CHECK (balance >= 0)`. If Alice has \$50 and attempts to transfer \$100, the database aborts the transaction before committing. The system transitions strictly from one valid invariant state to another.
 
-The bank enforces: *"Balance cannot go negative."* If Alice has \$50 and tries to send \$100, the database rejects the whole transaction before it starts. The database always moves between valid states.
+#### 3. Isolation — Concurrent Operations Are Private
+While Alice's transaction is executing, an automated utility bill payment or ATM withdrawal occurring on Bob's account sees either Bob's original \$200 balance or his final \$300 balance — never an intermediate state.
 
-### 3. Isolation — Transactions are Private
+#### 4. Durability — Committed Means Permanent
+Once `COMMIT` receives acknowledgement, the transaction changes are persisted to non-volatile storage via the **Write-Ahead Log (WAL)** and `fsync()`. A system power outage a millisecond later will not erase the transfer.
 
-While Alice's transfer is in-flight, Bob shouldn't see a fluctuating balance. Isolation ensures that concurrent transactions (e.g., Alice's husband simultaneously withdrawing at an ATM) see either the pre-transfer or post-transfer state — never a half-done state.
+---
 
-### 4. Durability — Committed = Permanent
+### ⚙️ Engine Mechanics Mapping
 
-The moment your screen shows *"Transfer Successful,"* the database has written that change to persistent storage. A power failure a second later doesn't undo it — when the system restarts, Bob still has his $100.
+Under the hood, database engines implement each letter of ACID using distinct physical subsystems:
+
+| ACID Property | Core Responsibility | Engine Subsystem | Storage Structure |
+| :--- | :--- | :--- | :--- |
+| **Atomicity** | Reverses half-completed work on failure | **Undo Subsystem** | Undo Tablespace / Rollback Segments (`.ibu` files in InnoDB) |
+| **Consistency** | Enforces constraints & business rules | **Constraint Engine + App Logic** | Schema Metadata, Catalog Tables, Index Invariants |
+| **Isolation** | Controls concurrent transaction visibility | **Lock Manager & MVCC Engine** | 2PL Row/Table Locks, Read Views, Undo Chain / Heap Tuples |
+| **Durability** | Guarantees survival after sudden crash | **WAL & Buffer Subsystem** | Sequential Log Files (`pg_wal` / `ib_logfile`), `fsync()` system calls |
+
+---
+
+### ⚠️ Common Beginner Traps & Misconceptions
+
+:::caution[Trap 1: "Single UPDATE statements do not need transactions"]
+Auto-commit mode automatically wraps a single statement in an implicit transaction. However, multi-statement business flows (e.g. debit account A, credit account B) **require an explicit transaction boundary** (`BEGIN` / `COMMIT` or `@Transactional`). Without explicit boundaries, a failure between statements leaves the database in a partially updated state.
+:::
+
+:::danger[Trap 2: "ACID guarantees 100% data correctness automatically"]
+The database only enforces constraints you explicitly declare (`NOT NULL`, `FOREIGN KEY`, `CHECK`). Higher-level business invariants — such as *"Total rewards points issued must equal total dollars spent"* — must be enforced by application logic. Consistency is a shared 50/50 contract between database schemas and application code.
+:::
 
 ---
 
 ## 🔍 Deep Dive: Atomicity
 
-"All-or-nothing" sounds simple until you ask: *how?* The key mechanic: before modifying a row, the database saves the old value somewhere. If the transaction must be undone, it restores from that saved copy. If the transaction commits successfully, the saved copy is no longer needed and gets cleaned up in the background.
-
-This "save the old value" approach is called an **undo log**.
+"All-or-nothing" execution requires a mechanism to restore original data if a transaction aborts. Before mutating any data page in memory, the storage engine records the original state — the **before-image** — to an **Undo Log**.
 
 ### Undo Log (Rollback Segment)
 
-Every row modification writes the **before-image** (old value) to an **undo log** before changing the actual data.
+#### Undo Record Physical Structure
 
-```
-Transaction T1: UPDATE accounts SET balance = 400 WHERE id = 1;
+<AcidUndoRecordStructureDiagram />
 
-Undo Log entry:
-  ┌──────────┬────────────────────────────────────┐
-  │ Txn ID   │ Before-Image                       │
-  ├──────────┼────────────────────────────────────┤
-  │ T1       │ accounts: id=1, balance=500        │
-  └──────────┴────────────────────────────────────┘
-```
+Every row mutation (`INSERT`, `UPDATE`, `DELETE`) constructs an undo record containing transaction metadata and data before-images:
 
-On `ROLLBACK` (or crash before `COMMIT`), the engine reads the undo log in reverse and restores original values.
+- **`trx_id`**: Transaction ID that modified this row.
+- **`roll_ptr`**: 7-byte pointer referencing the previous undo record in the rollback segment, creating a reverse linked chain.
+- **`rec_type`**: Type of mutation (e.g., `TRX_UNDO_INSERT_REC`, `TRX_UNDO_UPD_EXIST_REC`).
+- **Before-Image Payload**: Delta of modified columns required to reverse the change.
 
-- **InnoDB (MySQL)**: dedicated undo log segments in the system tablespace
-- **PostgreSQL**: uses its MVCC tuple versioning (old tuple becomes the "undo" implicitly)
+#### Storage Architecture & Purge Subsystem
+
+<AcidUndoStoragePurgeDiagram />
+
+1. **InnoDB (MySQL)**: Allocates undo log segments within dedicated undo tablespaces (`undo001`, `undo002`). Undo slots are managed inside rollback segments (`trx_rseg_t`).
+2. **PostgreSQL**: Implements MVCC via Heap Tuple Versioning. The old tuple version remains in the main heap page, serving implicitly as the "undo" image until cleaned up by `VACUUM`.
+
+#### Dual-Duty of the Undo Log
+
+Undo logs serve two critical functions:
+1. **Atomicity**: During `ROLLBACK` or crash recovery, the rollback engine traverses `roll_ptr` chains backward to undo changes.
+2. **MVCC Snapshot Construction**: When concurrent transactions read older snapshots, InnoDB uses undo logs to reconstruct historical row versions without copying entire table pages.
+
+#### Production Gotcha: Undo Log Bloat & History List Length (HLL)
+
+:::danger[Performance Trap: Long-Running Transactions Block Undo Purge]
+If a long-running reporting query or batch job keeps an active snapshot open for hours, the **Purge Daemon** cannot free undo log records created after that snapshot started.
+
+- **Symptom**: Undo tablespaces expand rapidly, consuming disk space.
+- **Impact**: The Undo History List Length (`trx_sys->rseg_history_len`) spikes into millions. Point-in-time queries must traverse thousands of `roll_ptr` links to reconstruct old versions, causing severe CPU spikes and query degradation.
+- **Remediation**: Set `idle_in_transaction_session_timeout` (PostgreSQL) or monitor `innodb_undo_directory` and terminate stale long-running transactions.
+:::
 
 ### Atomicity Is Not Just a Database Concept
 
@@ -453,43 +500,110 @@ When you *do* need to enforce ordering — like `SELECT ... FOR UPDATE` — Post
 
 #### PostgreSQL MVCC Internals
 
-Every tuple (row version) has two hidden system columns:
+PostgreSQL implements MVCC via **Heap Tuple Versioning**. Every table row update creates a brand new tuple on the heap rather than overwriting existing bytes.
+
+##### Tuple Header Physical Metadata (`HeapTupleHeaderData`)
+
+Every physical tuple on disk contains a 23-byte header preceding the user columns:
 
 ```
-┌──────────┬──────────┬─────────────────────────────────┐
-│  xmin    │  xmax    │  user columns (id, balance, ...) │
-├──────────┼──────────┼─────────────────────────────────┤
-│ 100      │  0       │  id=1, balance=500               │  ← visible to txns >= 100
-│ 102      │  0       │  id=1, balance=400               │  ← visible to txns >= 102
-└──────────┴──────────┴─────────────────────────────────┘
-
-xmin: transaction ID that CREATED this version
-xmax: transaction ID that DELETED/UPDATED this version (0 = still live)
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                               HeapTupleHeaderData (23 Bytes)                           │
+├───────────────┬───────────────┬────────────────┬─────────────┬─────────────────────────┤
+│ xmin          │ xmax          │ cmin / cmax    │ t_ctid      │ t_infomask              │
+│ (4 Bytes)     │ (4 Bytes)     │ (4 Bytes)      │ (6 Bytes)   │ (2 Bytes Flags)         │
+└───────────────┴───────────────┴────────────────┴─────────────┴─────────────────────────┘
 ```
 
-When a transaction reads, it uses its **snapshot** (a list of all active txn IDs at start time) to determine which row version is visible:
-- A version is visible if `xmin` committed before the snapshot AND `xmax` is either 0 (not deleted) or committed after the snapshot
+- **`xmin`**: Transaction ID that inserted/created this tuple version.
+- **`xmax`**: Transaction ID that deleted or updated this tuple version (set to `0` if live and un-deleted).
+- **`cmin / cmax`**: Intra-transaction Command ID counter distinguishing statement execution order within a single transaction.
+- **`t_ctid`**: Physical `(page_number, tuple_index)` tuple ID. When updated, `t_ctid` in the old tuple points directly to the new tuple version.
+- **`t_infomask`**: Bitmask flags caching tuple status (`HEAP_XMIN_COMMITTED`, `HEAP_XMAX_INVALID`, `HEAP_HOT_UPDATED`).
 
-```sql
--- Two transactions running concurrently:
-T1 (txn_id=200): UPDATE accounts SET balance=400 WHERE id=1;  -- creates new version xmin=200
-T2 (txn_id=201): SELECT balance FROM accounts WHERE id=1;
-  -- T2's snapshot was taken before T1 committed
-  -- T2 sees the OLD version (xmin=100, balance=500) ← non-blocking!
-```
+##### HOT Updates (Heap-Only Tuples)
 
-**Key benefit**: Readers never block writers; writers never block readers. Each transaction sees a **consistent point-in-time snapshot**.
+Normally, updating a row requires inserting new entries in all associated table indexes. **HOT updates** eliminate index update overhead:
+- If an `UPDATE` does not alter any indexed column AND the new tuple fits on the **same 8KB heap page**, PostgreSQL writes the new tuple without creating new index pointers.
+- Index lookup lands on the original tuple, checks `HEAP_HOT_UPDATED` in `t_infomask`, and follows `t_ctid` directly to the newest tuple version on the page.
+
+##### Snapshot Structure & Visibility Rule Evaluation
+
+<AcidPgSnapshotVisibilityDiagram />
+
+A PostgreSQL snapshot (`SnapshotData`) captures active transaction state at execution time, formatted as `xmin:xmax:xip_list` (e.g. `100:108:102,105`):
+
+- **`xmin`**: Lowest transaction ID still active. All `txns < xmin` are committed and visible.
+- **`xmax`**: First unassigned transaction ID. All `txns >= xmax` started after snapshot creation and are invisible.
+- **`xip_list`**: Array of in-progress transaction IDs between `xmin` and `xmax`.
+
+##### Transaction ID (TXID) Wraparound Hazard
+
+PostgreSQL uses 32-bit transaction IDs ($2^{32} \approx 4.29 \text{ billion}$). Epoch space uses modulo arithmetic: half the space ($2^{31} \approx 2.14 \text{ billion}$) is in the past, half in the future.
+
+:::danger[Production Outage Trap: TXID Wraparound Freeze]
+If a database runs $2.14 \text{ billion}$ transactions without running `VACUUM FREEZE`, past transaction IDs wrap into the future, causing catastrophic data corruption (old tuples suddenly appear uncommitted).
+
+To prevent data corruption, PostgreSQL turns read-only and refuses all write transactions when TXID age reaches `autovacuum_freeze_max_age` (default 200 million transactions).
+
+- **Monitoring Alert**: `SELECT max(age(datfrozenxid)) FROM pg_database;`
+- **Mitigation**: Ensure autovacuum parameters (`autovacuum_vacuum_cost_limit`, `autovacuum_max_workers`) are aggressive enough to keep pace with write throughput.
+:::
+
+---
 
 #### MySQL InnoDB MVCC
 
-InnoDB doesn't keep multiple tuple versions in the main table — it reconstructs them from the **undo log**:
+Unlike PostgreSQL, MySQL InnoDB updates clustered index pages in-place and reconstructs historical versions dynamically using the **Undo Log**.
 
-```
-Current row:  id=1, balance=400, txn_id=200
-Undo log ptr ──► id=1, balance=500, txn_id=100  (the old version)
-```
+##### Clustered Index Hidden Fields
 
-When a reader needs the old version, InnoDB applies undo log records backward until it finds the version visible to its snapshot.
+<AcidInnodbClusteredFieldsDiagram />
+
+Every InnoDB index record contains three hidden system fields:
+
+- **`DB_TRX_ID`**: ID of the last transaction that inserted or updated this row.
+- **`DB_ROLL_PTR`**: Pointer to the undo log record containing the before-image.
+- **`DB_ROW_ID`**: Auto-increment row ID generated when a table lacks an explicit Primary Key.
+
+##### InnoDB `ReadView` Data Structure
+
+When a transaction executes a query under `READ COMMITTED` or `REPEATABLE READ`, InnoDB generates a `ReadView` (`storage/innobase/include/read0read.h`):
+
+- **`m_ids`**: List of active (uncommitted) transaction IDs at snapshot creation time.
+- **`m_low_limit_id`**: Highest transaction ID allocated + 1. Any `trx_id >= m_low_limit_id` is invisible.
+- **`m_high_limit_id`**: Smallest transaction ID in `m_ids`. Any `trx_id < m_high_limit_id` is visible.
+- **`m_creator_trx_id`**: Transaction ID of the transaction that created the ReadView.
+
+##### Historical Version Reconstruction Algorithm
+
+<AcidInnodbReconstructionDiagram />
+
+1. InnoDB reads the latest tuple from the buffer pool clustered index page.
+2. Checks `DB_TRX_ID` against `ReadView`:
+   - If `DB_TRX_ID < m_high_limit_id` (or equals `m_creator_trx_id`), the row is visible.
+   - If `DB_TRX_ID >= m_low_limit_id` or present in `m_ids`, the row is invisible.
+3. If invisible, InnoDB follows `DB_ROLL_PTR` to the Undo Log, applies the undo delta in memory to reconstruct the older row version, and evaluates visibility again.
+4. Traversal repeats down the undo chain until a visible version is found.
+
+1. InnoDB reads the latest tuple from the buffer pool clustered index page.
+2. Checks `DB_TRX_ID` against `ReadView`:
+   - If `DB_TRX_ID < m_high_limit_id` (or equals `m_creator_trx_id`), the row is visible.
+   - If `DB_TRX_ID >= m_low_limit_id` or present in `m_ids`, the row is invisible.
+3. If invisible, InnoDB follows `DB_ROLL_PTR` to the Undo Log, applies the undo delta in memory to reconstruct the older row version, and evaluates visibility again.
+4. Traversal repeats down the undo chain until a visible version is found.
+
+---
+
+##### Architectural Comparison: PostgreSQL vs MySQL InnoDB MVCC
+
+| Dimension | PostgreSQL MVCC | MySQL InnoDB MVCC |
+| :--- | :--- | :--- |
+| **Tuple Storage** | Multiple physical versions stored directly in main Heap pages | Single latest version in Clustered Index page; old versions in Undo Log |
+| **Read Overhead** | Reads latest or older physical tuples directly from Heap | Reconstructs old tuple versions by applying Undo deltas in memory |
+| **Write Overhead** | Every update inserts a new physical tuple (unless HOT optimization applies) | In-place page update + append undo record to rollback segment |
+| **Garbage Collection** | `VACUUM` daemon scans Heap pages to reclaim dead tuples | Purge Threads free undo log segments once old snapshots complete |
+| **Bloat Location** | Main Table and Index Heap pages (Table Bloat) | System / Undo Tablespaces (`.ibu` files & History List Length) |
 
 #### MVCC and VACUUM (PostgreSQL)
 
@@ -603,132 +717,163 @@ Durability does not guarantee that data is *already in the right place on disk* 
 
 ### Write-Ahead Logging (WAL)
 
-The core mechanism for durability. **The log must be written before the data pages.**
+Write-Ahead Logging dictates that **no data page may be written to non-volatile storage until the log record describing the change has been flushed to disk**.
 
-```
-Write Operation:
-  1. Write change to WAL buffer (in memory)      → fast
-  2. Flush WAL buffer to WAL file on disk         → sequential write, fast
-  3. Mark data page "dirty" in buffer pool        → in memory only
-  4. COMMIT acknowledged to client                → durable at this point
-  5. (Later) Checkpoint flushes dirty pages       → async, to data files
+#### Physical WAL Record Anatomy
 
-Crash & Recovery:
-  1. Replay WAL from last checkpoint (Redo phase) → restore committed changes
-  2. Undo uncommitted transactions                → rollback using undo log
-```
+<AcidWalRecordAnatomyDiagram />
 
-```
-                    ┌─────────────┐
-Write Op ──────────►│ WAL Buffer  │
-                    └──────┬──────┘
-                           │ sequential fsync
-                           ▼
-                    ┌─────────────┐         ┌──────────────────┐
-                    │ WAL on Disk │         │  Data Files on   │
-                    │ (Redo Log)  │         │  Disk            │
-                    └─────────────┘    ▲    └──────────────────┘
-                                       │ async checkpoint
-                    ┌─────────────┐    │
-                    │ Buffer Pool │────┘
-                    │ (dirty pgs) │
-                    └─────────────┘
-```
+Every change generates a binary WAL record (`XLogRecord` in PostgreSQL / Redo Log Block in InnoDB):
 
-#### WAL Configuration (PostgreSQL)
+- **`LSN` (Log Sequence Number)**: A 64-bit monotonically increasing byte offset in the WAL log stream.
+- **`rmid` (Resource Manager ID)**: Identifies subsystem target (e.g. `RM_HEAP_ID`, `RM_BTREE_ID`, `RM_TRANSACT_ID`).
+- **`xl_tot_len`**: Total byte length of record including headers and alignment padding.
+- **Payload**: Page offset, tuple delta bytes, and CRC32 checksum.
+
+#### 5-Step End-to-End Write Path Lifecycle
+
+<AcidWalWritePathLifecycleDiagram />
+
+1. **WAL Generation**: The transaction writes modification log records to the in-memory WAL Buffer (`wal_buffers` / `innodb_log_buffer_size`).
+2. **Sequential Log Sync**: On `COMMIT`, the database issues `fsync()` to flush WAL buffer contents sequentially to disk.
+3. **Dirty Page Tagging**: Data pages in the Buffer Pool are updated in memory and marked "dirty," tagged with `page_lsn`.
+4. **Client Acknowledgement**: The engine returns `COMMIT SUCCESS` to the application client as soon as WAL reaches disk.
+5. **Asynchronous Checkpointing**: Background Checkpointer daemon periodically flushes dirty pages (`page_lsn <= flushed_wal_lsn`) to physical data files, freeing WAL log space.
+
+#### ARIES Crash Recovery Protocol
+
+Upon restarting after an unclean shutdown, the engine executes the **ARIES (Algorithms for Recovery and Isolation Exploiting Semantics)** recovery protocol:
+
+1. **Analysis Phase**: Scans WAL from the last valid checkpoint forward to reconstruct the dirty page table and identify active uncommitted transactions at crash time.
+2. **Redo Phase (Repeating History)**: Replays all WAL records from the checkpoint forward, restoring the Buffer Pool to the exact state immediately preceding the crash.
+3. **Undo Phase**: Traverses undo chains backward to roll back all transactions that were active (uncommitted) at the instant of crash.
+
+#### Production Configuration & Tuning Parameters
 
 ```sql
--- Check WAL settings
-SHOW wal_level;              -- minimal | replica | logical
-SHOW synchronous_commit;     -- on | off | local | remote_apply
+-- PostgreSQL WAL Tuning
+SHOW wal_level;                   -- replica (default) | logical (for CDC/Debezium)
+SHOW synchronous_commit;        -- on (full durability) | off (async ~600ms risk) | remote_apply
+SHOW wal_buffers;               -- Shared memory allocated for unwritten WAL (default 16MB)
+SHOW max_wal_size;              -- Soft limit triggering automatic checkpoint (e.g. 16GB)
+SHOW checkpoint_completion_target; -- Target completion time between checkpoints (default 0.9)
 
--- synchronous_commit = off: WAL written async (up to ~600ms data loss on crash)
--- synchronous_commit = on:  WAL flushed to disk before COMMIT returns (default)
+-- MySQL InnoDB Redo Log Tuning
+SHOW VARIABLES LIKE 'innodb_log_buffer_size';     -- In-memory log buffer (e.g. 64MB)
+SHOW VARIABLES LIKE 'innodb_redo_log_capacity';   -- Total disk capacity for redo logs (8.0.30+)
 ```
+
+---
 
 ### The `fsync()` System Call
 
-OSes buffer disk writes in memory. `fsync()` forces the OS to flush write buffers to the physical disk:
+Standard file `write()` system calls transfer data from application memory into the **OS Page Cache** (kernel RAM). Power failure while data resides solely in Page Cache results in permanent data loss. The `fsync()` system call forces the operating system kernel to flush dirty page cache buffers down to non-volatile disk hardware.
 
-```
-Database ──► OS Write Buffer (RAM) ──( fsync() )──► Physical Disk / Flash
-                   ↑
-         Without fsync, a power loss here = data loss
-         even if the DB thinks it committed
-```
+#### OS Kernel Storage Stack Layering
 
-| Config | Safety | Performance |
-|--------|--------|-------------|
-| `fsync = on` (default) | ✅ Full durability | Slower (disk sync on every commit) |
-| `fsync = off` | ❌ Data loss on OS crash | Much faster (dangerous for production) |
-| `synchronous_commit = off` | ⚠️ ~600ms window of data loss | 3-5x faster writes |
+<AcidOsStorageStackDiagram />
 
-:::caution[fsync = off is dangerous]
-Never turn off `fsync` in production. A power failure or OS crash can corrupt the entire database — not just lose recent writes, but cause full data corruption because WAL and data files are out of sync.
+#### System Call Comparison
+
+| System Call | Behavior | Performance | Durability Guarantee |
+| :--- | :--- | :--- | :--- |
+| `write(fd, buf, count)` | Copies buffer to OS Page Cache. Does NOT sync disk. | Fast (~1 μs) | ❌ None (lost on power crash) |
+| `fdatasync(fd)` | Flushes file data pages to storage media; omits non-essential metadata updates (e.g. `mtime`). | Moderate (~0.5-2 ms) | ✅ Full data durability |
+| `fsync(fd)` | Flushes file data pages AND inode metadata (file size, access timestamps). | Slower (~1-3 ms) | ✅ Full data + metadata durability |
+| `open(..., O_DIRECT \| O_DSYNC)` | Bypasses OS Page Cache entirely; performs direct synchronous I/O. | Variable | ✅ Direct-to-hardware durability |
+
+#### Hardware & Virtualization Gotchas
+
+:::danger[Hardware Trap: Consumer SSDs & Virtualized Disk Caches]
+1. **Consumer SSDs Ignoring Flush**: Cheap consumer SSDs often report `fsync` completion immediately while data is still in volatile onboard DRAM without Power Loss Protection (PLP). Sudden loss of power causes silent corruption.
+2. **VM Disk Cache Modes**: Virtual machine storage configured with `cache=writeback` buffers writes in hypervisor RAM. Ensure production VMs use `cache=writethrough` or `cache=directsync` with enterprise SSDs featuring PLP supercapacitors.
 :::
+
+:::warning[Historical Linux Kernel Bug: Silent Page Cache Drop]
+Prior to Linux Kernel 4.13/4.16, if an I/O error (`EIO`) occurred during background page cache writeback, the Linux kernel cleared dirty flags and dropped the page from memory. Subsequent calls to `fsync()` returned `0` (Success), misleading databases into believing data was safe on disk. Always run modern kernel versions (>= 5.4 LTS) in production.
+:::
+
+#### Production Flush Mode Trade-Off Matrix
+
+```sql
+-- PostgreSQL synchronous_commit levels:
+SET LOCAL synchronous_commit = 'off';          -- 3-5x faster write throughput; ~600ms data loss on crash
+SET LOCAL synchronous_commit = 'local';        -- Guaranteed local fsync; does not wait for replicas
+SET LOCAL synchronous_commit = 'on';           -- Local fsync + wait for WAL write on synchronous standby
+SET LOCAL synchronous_commit = 'remote_apply'; -- Waits until WAL is applied on standby (zero loss)
+```
+
+```ini
+# MySQL InnoDB innodb_flush_log_at_trx_commit modes:
+innodb_flush_log_at_trx_commit = 1   # (Default) Write + fsync every commit. Full ACID durability.
+innodb_flush_log_at_trx_commit = 2   # Write to OS cache every commit; fsync once per second. High speed, ~1s OS crash risk.
+innodb_flush_log_at_trx_commit = 0   # Write + fsync once per second. Maximum speed, ~1s app/OS crash risk.
+```
+
+---
 
 ### Group Commit
 
-To amortize the cost of `fsync()`, databases batch multiple transactions' WAL writes into a single disk flush:
+Issuing an `fsync()` system call for every individual `COMMIT` caps database throughput to the physical disk IOPS limit ($1 / 0.001\text{s} = 1,000 \text{ commits/sec}$). **Group Commit** amortizes disk sync overhead by batching multiple concurrent transaction commit requests into a single `fsync()` invocation.
 
+#### Throughput Math: Individual vs Group Commit
+
+$$\text{Throughput}_{\text{Single}} = \frac{1}{\text{Latency}_{\text{fsync}}} = \frac{1}{0.001\text{s}} = 1,000 \text{ TPS}$$
+
+$$\text{Throughput}_{\text{Group}} = \frac{\text{Batch Size} \times 1}{\text{Latency}_{\text{fsync}} + \text{Queue Delay}} = \frac{50}{0.001\text{s} + 0.0001\text{s}} \approx 45,454 \text{ TPS}$$
+
+#### Group Commit Lock-Free Pipeline Mechanism
+
+<AcidGroupCommitPipelineDiagram />
+
+1. **Flush Phase**: The first thread initiating commit becomes the **Group Leader**. Concurrent follower threads register their WAL commit requests in a lock-free queue.
+2. **Sync Phase**: The Leader thread issues a single `fsync()` system call covering the combined WAL log sequence range of all queued transactions.
+3. **Commit Phase**: Upon `fsync()` completion, the Leader marks all queued transactions committed and releases waiting follower threads.
+
+#### Database Tuning Parameters
+
+```sql
+-- PostgreSQL Group Commit Tuning
+SHOW commit_delay;     -- Microsecond sleep delay before flushing WAL (e.g. 100μs)
+SHOW commit_siblings;  -- Minimum active concurrent transactions required before commit_delay applies (default 5)
+
+-- MySQL InnoDB Binlog Group Commit Tuning (8.0+)
+SHOW VARIABLES LIKE 'binlog_group_commit_sync_delay';       -- Delay in microseconds before flushing binlog (e.g. 100)
+SHOW VARIABLES LIKE 'binlog_group_commit_sync_no_delay_count'; -- Max transactions to queue before overriding delay
 ```
-T1 commits ─────────────────┐
-T2 commits ──────────────── ┼──► Single fsync() ──► disk
-T3 commits ─────────────────┘
-
-Instead of 3 separate fsyncs, only 1 is needed.
-```
-
-PostgreSQL does this automatically. It significantly increases throughput under concurrent write load.
 
 ---
 
 ## 🌐 Distributed ACID
 
-### Why You Need to Understand This Even Without Microservices
-
-Once a system grows beyond a single database — microservices with separate DBs, event-driven pipelines, cross-service workflows — single-node ACID no longer applies. A transaction that touches two separate databases cannot use the same `BEGIN`/`COMMIT`. People move to Saga patterns, outbox patterns, eventual consistency.
-
-But here's the catch: **you can only design a good Saga if you understand what ACID was protecting you from.** You need to know which steps need compensating transactions (undo actions if a later step fails), which intermediate states are acceptable, and where data can be temporarily inconsistent. Abandoning something you don't understand is not an engineering trade-off — it's data loss waiting to happen.
-
-### The Scaling Problem
-
-Single-node ACID is well-understood. Across multiple nodes:
-- Nodes can fail independently
-- Network partitions can occur
-- Clock skew makes ordering events difficult
-
 ### Two-Phase Commit (2PC)
 
-The standard protocol for atomic commits across multiple nodes:
+Two-Phase Commit (2PC) is an atomic commitment protocol rendering all participating database nodes in a distributed transaction to either commit or roll back changes together.
 
-```
-Phase 1 — Prepare:
-  Coordinator ──► Node A: "Can you commit?"
-  Coordinator ──► Node B: "Can you commit?"
-  Node A ──────► Coordinator: "YES" (locks resources, writes prepare log)
-  Node B ──────► Coordinator: "YES"
+#### Detailed Protocol State Machine & Sequence
 
-Phase 2 — Commit:
-  Coordinator ──► Node A: "COMMIT"
-  Coordinator ──► Node B: "COMMIT"
-  (or ROLLBACK if any node said NO or timed out)
-```
+<Acid2PcSequenceStateMachineDiagram />
 
-```sql
--- PostgreSQL distributed example using PREPARE TRANSACTION
-BEGIN;
-UPDATE accounts SET balance = balance - 100 WHERE id = 1;
-PREPARE TRANSACTION 'txn_transfer_001';   -- durable prepare point
+#### 2PC WAL Logging Steps
 
--- Later (from coordinator):
-COMMIT PREPARED 'txn_transfer_001';       -- or ROLLBACK PREPARED
-```
+1. **Phase 1 Prepare**: Participant node acquires necessary locks, writes a `PREPARE TRANSACTION` record to its local WAL, and responds `YES` to Coordinator.
+2. **Coordinator Commit Log**: Once all participants respond `YES`, Coordinator writes a durable `COMMIT` record to its transaction log. The decision is now legally binding.
+3. **Phase 2 Execution**: Coordinator sends `COMMIT` to participants. Participants execute commit, release locks, write `COMMIT` to local WAL, and return `ACK`.
 
-:::warning[2PC Failure Modes]
-- **Coordinator crashes after Phase 1**: Participant nodes hold locks **indefinitely** — they can't decide without the coordinator's Phase 2 message
-- **Network partition during Phase 2**: Some nodes commit, others don't — data inconsistency until coordinator recovers
-- 2PC is a **blocking protocol** — it has a Single Point of Failure
+---
+
+#### 5-Scenario Failure & Recovery Matrix
+
+| Failure Scenario | Timing / Location | System Behavior & Recovery Procedure |
+| :--- | :--- | :--- |
+| **1. Participant Abort** | Phase 1 (Participant returns `NO` or times out) | Coordinator aborts transaction; sends `ROLLBACK` to all participants. No partial writes occur. |
+| **2. Participant Crash (Pre-Prepare)** | Phase 1 (Node crashes before writing `PREPARE` WAL) | Coordinator times out waiting for response, issues global `ROLLBACK`. |
+| **3. Participant Crash (Post-Prepare)** | Phase 1 (Node crashes after writing `PREPARE` WAL) | **In-Doubt Transaction**: On restart, node reads `PREPARE` WAL, sees it is in `PREPARED` state, queries Coordinator for final decision (`COMMIT` or `ROLLBACK`). Holds locks until resolved. |
+| **4. Coordinator Crash (Mid-Phase 1)** | Phase 1 (Coordinator crashes before logging decision) | Participants wait in `PREPARED` state. **Blocking Protocol Hazard**: Participants cannot decide independently because one node may have returned `NO`. Re-elected coordinator reads log, finds no decision, and issues `ROLLBACK`. |
+| **5. Coordinator Crash (Post-Commit Log)** | Phase 2 (Coordinator logged `COMMIT` then crashed) | On restart, Coordinator re-reads its transaction log, detects un-acknowledged `COMMIT` state, and re-sends Phase 2 `COMMIT` commands to participants (Indoubt Recovery). |
+
+:::warning[Why 2PC is a Coordinated Blocking Protocol]
+If the Coordinator crashes after participants enter the `PREPARED` state (Scenario 4), participants **must hold resource locks indefinitely**. Unilateral commit by a participant risks split-brain inconsistency if another node voted `NO`. Unilateral abort risks inconsistency if the coordinator had logged `COMMIT`. This blocking vulnerability makes raw 2PC unsuitable for high-availability cloud-native microservices.
 :::
 
 ### 3-Phase Commit (3PC)
@@ -935,21 +1080,88 @@ public void outerMethod() {
 
 ## 📊 Isolation Level Decision Guide
 
+Choosing the right isolation level requires balancing **data correctness guarantees** against **throughput, concurrency, and deadlock risks**.
+
+### Workload Decision Flowchart
+
+<AcidIsolationFlowchartDiagram />
+
+---
+
+### Workload Trade-Off Evaluation Matrix
+
+| Isolation Level | Throughput (TPS) | Latency Overhead | Lock Contention Risk | Serialization Failure / Retries | Key Anomaly Prevented |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **READ UNCOMMITTED** | Maximum | Lowest (~0 ms) | None | None | None (Allows Dirty Reads) |
+| **READ COMMITTED** | High | Very Low (< 1 ms) | Low (Short statement locks) | None | Dirty Reads |
+| **REPEATABLE READ** | Moderate | Low (1 - 5 ms) | Moderate (Gap locks in MySQL) | Low (Aborts on concurrent row update in PG) | Non-Repeatable Reads & Phantoms (PG) |
+| **SERIALIZABLE** | Low to Moderate | High (10 - 100+ ms) | High (SSI Lock predicate tracking / 2PL) | High (Requires App Retry Loop) | All Anomalies (including Write Skew) |
+
+---
+
+### Production Implementation Recipes
+
+#### Recipe 1: Standard OLTP — Atomic UPDATE (`READ COMMITTED`)
+
+```java
+// Spring Boot Service — Default Read Committed
+@Transactional(isolation = Isolation.READ_COMMITTED)
+public boolean processPayment(Long userId, BigDecimal amount) {
+    // Atomic update prevents lost update without explicit locks
+    int rowsUpdated = userRepository.deductBalance(userId, amount);
+    if (rowsUpdated == 0) {
+        throw new InsufficientBalanceException("Insufficient funds or account inactive");
+    }
+    return true;
+}
 ```
-What anomalies can you tolerate?
-│
-├─ Can tolerate dirty reads (dangerous, almost never) → READ UNCOMMITTED
-│
-├─ Need to avoid dirty reads only → READ COMMITTED
-│    └─ Most OLTP workloads, default for PostgreSQL/Oracle
-│
-├─ Need stable reads within a transaction → REPEATABLE READ
-│    └─ Reports that read the same data multiple times
-│    └─ MySQL InnoDB default
-│
-└─ Need complete isolation (no anomalies at all) → SERIALIZABLE
-     └─ Financial transactions, inventory allocation
-     └─ Use PostgreSQL SSI for performance; MySQL uses 2PL (slower)
+
+```sql
+-- Repository SQL
+UPDATE users
+SET balance = balance - :amount
+WHERE id = :userId AND balance >= :amount;
+```
+
+#### Recipe 2: Hot Inventory / High Contention — Pessimistic Lock (`READ COMMITTED`)
+
+```java
+@Transactional(isolation = Isolation.READ_COMMITTED)
+public void reserveTicket(Long eventId, Long userId) {
+    // Lock event inventory row pessimistically
+    Event event = eventRepository.findByIdForUpdate(eventId)
+        .orElseThrow(() -> new EventNotFoundException(eventId));
+
+    if (event.getAvailableSeats() <= 0) {
+        throw new SoldOutException("No seats remaining");
+    }
+
+    event.setAvailableSeats(event.getAvailableSeats() - 1);
+    eventRepository.save(event);
+}
+```
+
+#### Recipe 3: Complex Business Invariant — PostgreSQL SSI (`SERIALIZABLE` + Retry Loop)
+
+```java
+@Transactional(isolation = Isolation.SERIALIZABLE)
+public void requestDoctorLeave(Long doctorId, Long shiftId) {
+    int maxRetries = 3;
+    while (true) {
+        try {
+            long onCallCount = doctorRepository.countOnCallDoctorsForShift(shiftId);
+            if (onCallCount <= 1) {
+                throw new IllegalStateException("Cannot take leave: at least 1 doctor must remain on-call");
+            }
+            doctorRepository.setDoctorOffCall(doctorId, shiftId);
+            break; // Success
+        } catch (ObjectOptimisticLockingFailureException | CannotSerializeTransactionException e) {
+            if (--maxRetries == 0) throw e;
+            // Short backoff delay before retrying serialization failure (SQLSTATE 40001)
+            LockSupport.parkNanos(TimeUnit.MILLISECONDS.toNanos(50));
+        }
+    }
+}
 ```
 
 ---
