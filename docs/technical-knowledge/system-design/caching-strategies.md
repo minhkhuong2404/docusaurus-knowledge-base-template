@@ -21,6 +21,8 @@ import TtlExpirationDiagram from '@site/src/components/TtlExpirationDiagram';
 import CacheConsistencyDiagram from '@site/src/components/CacheConsistencyDiagram';
 import CachePenetrationDiagram from '@site/src/components/CachePenetrationDiagram';
 import CacheAvalancheDiagram from '@site/src/components/CacheAvalancheDiagram';
+import CacheStack8LayersDiagram from '@site/src/components/CacheStack8LayersDiagram';
+import RedisCachePatternsDiagram from '@site/src/components/RedisCachePatternsDiagram';
 
 > A cache is a **fast, temporary data store** closer to the application than the source of truth. It trades a bit of storage capacity and system complexity for raw speed.
 
@@ -28,16 +30,27 @@ To understand why this matters, consider the hardware limits: accessing data fro
 
 ## Table of Contents
 
+- [The 8-Layer Cache Stack (From CPU L1 to CDN)](#the-8-layer-cache-stack-from-cpu-l1-to-cdn)
+  - [The 4 "Invisible" Cache Layers](#the-4-invisible-cache-layers)
+  - [The 8 Layers Architectural Breakdown](#the-8-layers-architectural-breakdown)
+  - [Execution Boundaries](#execution-boundaries)
+- [Jeff Dean's Latency Hierarchy & Memory vs Network Myth](#jeff-deans-latency-hierarchy--memory-vs-network-myth)
+- [The Invalidation Paradox & Browser Cache Busting](#the-invalidation-paradox--browser-cache-busting)
+  - [The Invalidation Paradox](#the-invalidation-paradox)
+  - [The Content Hashing & URL Immutability Solution](#the-content-hashing--url-immutability-solution)
+- [Cache Placement Safety Rules & Decision Matrix](#cache-placement-safety-rules--decision-matrix)
 - [Cache Locations & Levels](#cache-locations--levels)
   - [Client-Side Caching](#client-side-caching)
   - [CDN (Content Delivery Network)](#cdn-content-delivery-network)
   - [In-Process Caching (L1)](#in-process-caching-l1)
   - [External Caching (L2)](#external-caching-l2)
 - [Caching Patterns (Architectures)](#caching-patterns-architectures)
-  - [Cache-Aside (Lazy Population)](#cache-aside-lazy-population)
-  - [Write-Through](#write-through)
-  - [Write-Behind (Write-Back)](#write-behind-write-back)
-  - [Read-Through](#read-through)
+  - [1. Cache-Aside (Lazy Population)](#1-cache-aside-lazy-population)
+  - [2. Read-Through](#2-read-through)
+  - [3. Write-Through](#3-write-through)
+  - [4. Write-Behind (Write-Back)](#4-write-behind-write-back)
+  - [5. Write-Around](#5-write-around)
+  - [6. Refresh-Ahead](#6-refresh-ahead)
 - [Eviction Policies](#eviction-policies)
   - [LRU (Least Recently Used)](#lru-least-recently-used)
   - [LFU (Least Frequently Used)](#lfu-least-frequently-used)
@@ -106,6 +119,127 @@ To understand why this matters, consider the hardware limits: accessing data fro
   - [Cache Performance Optimization](#cache-performance-optimization)
 - [Additional Resources](#additional-resources)
 - [Best Practices](#best-practices)
+
+---
+
+## The 8-Layer Cache Stack (From CPU L1 to CDN)
+
+When engineers say "we added Redis to cache queries," they often overlook the fact that an incoming HTTP request has already navigated **up to seven other caching layers** before hitting the database disk. Caching is not a single tool—it is a continuous 8-tier stack stretching from hardware silicon up to the user's web browser.
+
+<CacheStack8LayersDiagram initialTab="stack" />
+
+### The 4 "Invisible" Cache Layers
+
+Before an incoming request ever reaches a physical storage drive (NVMe/SSD/HDD), four distinct memory stores can answer it:
+1. **Browser HTTP Cache** (User local disk/RAM memory)
+2. **CDN Edge Server** (Geographically distributed PoP)
+3. **In-Process Application Cache** (JVM / Node.js Process Heap)
+4. **Database Buffer Pool** (InnoDB Buffer Pool / Postgres Shared Buffers)
+
+> **The Return-Path Principle**: When a request experiences a cache miss across all layers and hits physical storage, the returning response writes a fresh copy back into **every single layer on its way out**. Subsequent reads will short-circuit earlier in the pipeline.
+
+### The 8 Layers Architectural Breakdown
+
+1. **Browser HTTP Cache**: Client-side storage managed by the browser. Zero network hop when hit.
+2. **CDN / Edge Network**: Distributed PoPs (Cloudflare, AWS CloudFront) caching static media and public API responses close to the user (~10-30 ms).
+3. **Reverse Proxy Gateway**: Perimeter cache (NGINX, Varnish, Envoy) serving full HTML pages, static bundles, or micro-cached responses (~1-5 ms).
+4. **In-Process App Cache (L1)**: Process-local heap memory (Caffeine, Guava) providing sub-microsecond access (<100 ns). High speed, but isolated per server instance.
+5. **Distributed Cache (L2)**: External shared cache (Redis Cluster, Memcached) accessible by all application instances over network TCP (~0.5-2 ms).
+6. **Database Buffer Pool**: DBMS shared memory (InnoDB Buffer Pool) caching database data pages and index pages in RAM (~100-500 µs).
+7. **OS Page Cache**: Linux VFS page cache using unallocated system RAM to store filesystem disk blocks (~1-10 µs).
+8. **CPU L1 / L2 / L3 Caches**: Hardware SRAM integrated directly into CPU dies (L1 ~0.5 ns, L2 ~7 ns, L3 ~15 ns) running cache coherence protocols (MESI/MOESI).
+
+### Execution Boundaries
+
+The 8 layers are demarcated by three distinct operational zones:
+* **Before Application Code Runs (Layers 1-3)**: Browser, CDN, and Reverse Proxy answer requests before your application process receives a single packet.
+* **Controlled directly by Application Code (Layers 4-5)**: In-Process Caffeine and Distributed Redis are the **only two layers** application developers write explicit code to read and write.
+* **Below Application Code (Layers 6-8)**: DB Buffer Pool, OS Page Cache, and CPU SRAM operate autonomously in kernel and hardware space.
+
+---
+
+## Jeff Dean's Latency Hierarchy & Memory vs Network Myth
+
+Understanding the orders of magnitude of hardware and network latency is essential for system design decisions. Below are Jeff Dean's classic numbers (circa 2012) scaled to modern hardware:
+
+<CacheStack8LayersDiagram initialTab="latency" />
+
+### The Classic Latency Numbers
+
+| Operation | Typical Latency | Scale Ratio |
+|---|---|---|
+| **CPU L1 Cache Reference** | `0.5 ns` | `1x (Baseline)` |
+| **CPU L2 Cache Reference** | `7 ns` | `14x` |
+| **Main System RAM Memory Read** | `100 ns` | `200x` |
+| **NVMe SSD Random 4KB Read** | `20 – 70 µs` | `40,000x – 140,000x` |
+| **Redis Network Round-Trip (Same DC)** | `500 µs (0.5 ms)` | `1,000,000x` |
+| **Rotational Hard Disk Seek** | `10 ms` | `20,000,000x` |
+| **Transatlantic Packet (CA ↔ NL ↔ CA)** | `150 ms` | `300,000,000x` |
+
+### The "Redis is RAM Speed" Misconception
+
+> **WARNING**: A common pitfall in system design interviews is assuming Redis runs at "RAM memory speed" (~100 ns). Redis stores data in RAM, but accessing it requires a **Network Round-Trip Time (RTT)**.
+>
+> * **In-Process RAM (Caffeine)**: ~100 ns (Direct pointer dereference)
+> * **Distributed Cache (Redis)**: ~500,000 ns (0.5 ms network socket RTT)
+>
+> Redis is **5,000 times slower** than in-process heap RAM! While Redis is significantly faster than database queries, calling Redis inside a loop of 100 items introduces 50ms of network latency. For ultra-hot data, combine In-Process L1 (Caffeine) with Distributed L2 (Redis).
+
+---
+
+## The Invalidation Paradox & Browser Cache Busting
+
+<CacheStack8LayersDiagram initialTab="busting" />
+
+### The Invalidation Paradox
+
+Managing invalidation across the cache stack presents asymmetric control challenges:
+* **Redis Key Eviction**: Instant. Execute `DEL key` or `EVAL` script in 1 ms.
+* **CDN Purge**: Fast API call, but takes 2–5 seconds to invalidate edge PoPs globally.
+* **Browser Cache**: **Zero remote control!** There is no API channel or webhook to forcibly purge a file stored in a user's browser cache.
+
+If you serve a JavaScript or CSS file with `Cache-Control: max-age=86400` (24 hours), you relinquish control over that asset for 24 hours. Deploying a hotfix will **not reach users** whose browsers are serving the cached file.
+
+### The Content Hashing & URL Immutability Solution
+
+Instead of attempting to "evict" browser cache, **change the resource URL**:
+
+1. **Build Time**: Append a cryptographic content hash to the output asset filename:
+   ```text
+   app.9f3c2b.js   (Hash of asset binary content)
+   ```
+2. **Server Headers**: Serve hashed assets with aggressive immutability headers:
+   ```http
+   Cache-Control: public, max-age=31536000, immutable
+   ```
+3. **The Essential Prerequisite**: Set `index.html` (the root document) to **`no-cache`**:
+   ```http
+   Cache-Control: no-cache
+   ```
+   `index.html` acts as the single source of truth containing updated script tags. Because `index.html` forces revalidation, any application deployment generates new asset hashes (`app.7d81e4.js`), causing all 4 caching layers to miss **exactly once** and cleanly load the new code.
+
+---
+
+## Cache Placement Safety Rules & Decision Matrix
+
+Caching data at the wrong layer causes severe vulnerabilities, such as **Cross-User Session Leaks** (e.g., User A receiving User B's profile page cached on a shared CDN).
+
+<CacheStack8LayersDiagram initialTab="matrix" />
+
+### Golden Question Before Caching
+
+Before introducing a cache at any layer, do not merely ask *"How fast will this be?"*. Always ask:
+
+> **"Which layer will answer this request, and can I invalidate or revoke it if the data changes?"**
+
+### Placement Safety Decision Matrix
+
+| Data Category | Target Cache Layer | TTL & Cache Policy | Invalidation Strategy & Safety Rule |
+|---|---|---|---|
+| **Static Assets** (JS, CSS, Images, Fonts) | CDN + Browser HTTP Cache | `1 Year` (`max-age=31536000, immutable`) | URL Content Hashing (`app.hash.js`). `index.html` must be `no-cache`. |
+| **Public HTML & Shared Feeds** | Reverse Proxy (NGINX/Varnish) / CDN | `30 – 60s` (`stale-while-revalidate`) | Micro-caching. **Must NOT** contain session cookies, auth headers, or user PII. |
+| **User Private Profile & Auth Sessions** | Distributed Redis / App Session Store | Short TTL (`5–15m`) or sliding window | **CRITICAL**: Use `Cache-Control: private`. Never allow public CDNs to store per-user data. |
+| **Config & Feature Flags** | In-Process App Cache (L1 Caffeine) | `1 – 5m` with background refresh | Use Redis Pub/Sub or Webhooks to broadcast instant invalidation across node clusters. |
 
 ---
 
@@ -269,22 +403,30 @@ public class RedisCacheService {
 
 ## Caching Patterns (Architectures)
 
-Cache architectures define the specific order in which reads and writes happen between your application, the cache, and the database.
+> **The Core Axiom**: Adding a cache does not magically make a system simpler or faster. It trades data freshness and memory for speed, **shifting architectural complexity somewhere else**.
+>
+> All six major caching patterns differ based on a single fundamental question:
+> **Who is responsible for populating/writing data into the cache, and WHEN does that write happen?**
 
-### Cache-Aside (Lazy Population)
+<RedisCachePatternsDiagram />
 
-The application controls the cache. **This is the pattern you should default to in system design interviews.**
+### 1. Cache-Aside (Lazy Population)
 
-1. The application checks the cache.
-2. If it's a *hit*, data is returned immediately.
-3. If it's a *miss*, the application queries the database, writes the result to the cache, and returns the data.
+The application directly manages both the cache and the database. This is the **most widely deployed pattern** in production engineering.
 
-* **Pros:** Keeps the cache lean. You only cache data that users actually request. If a piece of data is never requested, it never takes up precious cache memory.
-* **Cons:** A cache miss is expensive. It adds latency because the application must wait for three steps: fail the cache check, hit the database, and write to the cache.
+* **Who Writes & When**: The application process lazily populates the cache *only after a read request misses*.
+* **Flow**: Check Cache &rarr; HIT: Return data. MISS: Query Database &rarr; Write result to Cache (with TTL) &rarr; Return data to caller.
+* **Pros**: 
+  * High Resilience: If the cache crashes, the application automatically falls back to querying the database directly (degraded, but operational).
+  * Lean Memory: Only requested data occupies cache RAM.
+* **Cons**: 
+  * Cache Miss Penalty: A cache miss requires 3 network hops (Cache read fail &rarr; DB query &rarr; Cache write).
+  * Cold Start Latency: First access to any record is always slow.
+* **Best For**: Read-heavy, write-light workloads (e.g., user profile lookups, article content).
 
 <CacheAsideSequenceDiagram />
 
-**Implementation:**
+**Implementation**:
 
 ```java
 @Service
@@ -301,7 +443,7 @@ public class ProductService {
             product = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException(productId));
 
-            // Populate cache
+            // Populate cache lazily
             cache.put(productId, product);
         }
 
@@ -311,149 +453,193 @@ public class ProductService {
     public void updateProduct(Product product) {
         productRepository.save(product);
 
-        // Invalidate cache
+        // Invalidate cache key
         Cache cache = cacheManager.getCache("products");
         cache.evict(product.getId());
     }
 }
+```
 
-// Spring Cache annotation approach
-@Service
-public class ProductService {
-    private final ProductRepository productRepository;
+---
 
-    @Cacheable(value = "products", key = "#productId")
-    public Product getProduct(String productId) {
-        return productRepository.findById(productId)
-            .orElseThrow(() -> new ProductNotFoundException(productId));
+### 2. Read-Through
+
+The application communicates exclusively with the Cache Abstraction Layer. The cache provider acts as a proxy that transparently loads missing data from the database.
+
+* **Who Writes & When**: The Cache Provider/Loader automatically fetches missing data from the database on behalf of the application during a cache miss.
+* **Flow**: App asks Cache Provider &rarr; Provider checks Cache &rarr; MISS: Provider queries DB &rarr; Provider populates Cache &rarr; Provider returns data to App.
+* **Pros**:
+  * Clean Application Code: Database fallback and loading logic are isolated inside the cache provider.
+  * Request Coalescing: Sophisticated cache loaders (e.g., Caffeine `LoadingCache`) coalesce concurrent requests to prevent thundering herd DB stampedes.
+* **Cons**:
+  * Infrastructure Lock-In: Requires cache framework support (e.g., Spring `@Cacheable`, Caffeine, Guava).
+  * Single Point of Failure: If the cache provider crashes or its DB connection pool exhausts, application reads fail.
+* **Best For**: Microservices with centralized data access layers or CDN edge caching.
+
+<ReadThroughSequenceDiagram />
+
+**Implementation**:
+
+```java
+// Read-Through using Caffeine LoadingCache
+public class ReadThroughProductService {
+    private final LoadingCache<String, Product> cache;
+
+    public ReadThroughProductService(ProductRepository productRepository) {
+        this.cache = Caffeine.newBuilder()
+            .maximumSize(10_000)
+            .expireAfterWrite(10, TimeUnit.MINUTES)
+            .build(productId -> productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException(productId)));
     }
 
-    @CacheEvict(value = "products", key = "#product.id")
-    public void updateProduct(Product product) {
-        productRepository.save(product);
+    public Product getProduct(String productId) {
+        // App never calls database directly; Caffeine handles DB fetches on miss
+        return cache.get(productId);
     }
 }
 ```
 
-### Write-Through
+---
 
-The application writes directly to the cache, and the cache synchronously writes the data to the database before acknowledging the write to the user.
+### 3. Write-Through
 
-* **Implementation:** Redis and Memcached do not natively support this out of the box. You generally need specialized caching libraries (like Spring Cache or Hazelcast) to handle the proxying, or you must handle dual-writing in your application code.
-* **Pros:** Ensures reads always return completely fresh data.
-* **Cons:** Slower write operations. You also risk polluting your cache with data that might never be read again. Furthermore, you face the **Dual-Write Problem**: if the cache write succeeds but the database write fails, your system enters an inconsistent state.
+Every mutation updates BOTH the Cache and the Database synchronously before returning a success status to the client.
+
+* **Who Writes & When**: The Application/Cache layer synchronously writes updated entities to BOTH the Cache and Database on every write operation.
+* **Flow**: App sends Write Request &rarr; Synchronously write to Cache &rarr; Synchronously write to SQL Database &rarr; Return success to Client.
+* **Pros**:
+  * Zero Stale Data: Cache and Database are strictly synchronized at all times. No cache invalidation logic needed.
+  * No Cache Miss Latency: Subsequent reads immediately hit updated data in memory.
+* **Cons**:
+  * High Write Latency: Every write must wait for double round-trips (Cache write + DB transaction commit).
+  * Cache Pollution: Stores written entities that may never be read again, wasting memory.
+  * Dual-Write Fragility: If the cache write succeeds but the database transaction rolls back, data inconsistency occurs without two-phase commit (2PC) or compensating transactions.
 
 <WriteThroughSequenceDiagram />
 
-**Implementation:**
+**Implementation**:
 
 ```java
 @Service
 public class OrderService {
     private final OrderRepository orderRepository;
-    private final CacheManager cacheManager;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Transactional
     public Order createOrder(Order order) {
-        // Write to cache first
-        Cache cache = cacheManager.getCache("orders");
-        cache.put(order.getId(), order);
+        // Write to database
+        Order savedOrder = orderRepository.save(order);
 
-        try {
-            // Write to database
-            return orderRepository.save(order);
-        } catch (Exception e) {
-            // Rollback cache on database failure
-            cache.evict(order.getId());
-            throw e;
-        }
+        // Synchronously update cache before returning
+        redisTemplate.opsForValue().set("order:" + savedOrder.getId(), savedOrder, Duration.ofHours(1));
+
+        return savedOrder;
     }
 }
 ```
 
-### Write-Behind (Write-Back)
+---
 
-Similar to Write-Through, but the cache flushes the data to the database *asynchronously* in the background (usually in batches).
+### 4. Write-Behind (Write-Back)
 
-* **Pros:** Massive write throughput since the application gets an immediate response as soon as data hits the memory layer.
-* **Cons:** Data loss. If the cache instance crashes before the background flush completes, the data is gone permanently.
-* **Best For:** Analytics or metric pipelines where occasional, minor data loss is acceptable in exchange for high write speeds.
+Writes update the Cache instantly and return success immediately. A background worker process flushes queued updates down to the database asynchronously in batches.
+
+* **Who Writes & When**: Background async workers batch and flush cached updates to the database on a scheduled timer or queue size threshold.
+* **Flow**: App writes to Cache (<1 ms response) &rarr; Write event pushed to Queue/Stream &rarr; Background worker aggregates writes &rarr; Worker executes bulk batch SQL update to DB.
+* **Pros**:
+  * Unrivaled Write Performance: Sub-millisecond write response times.
+  * DB Load Smoothing: Batches 1,000 individual counter increments into a single bulk `UPDATE` statement, protecting databases from IOPS saturation.
+* **Cons**:
+  * **CRITICAL DATA LOSS RISK**: If the cache node crashes or power fails before the background worker flushes queued writes, **data is lost permanently**. This is the **ONLY** pattern where data loss can occur.
+  * Eventual Consistency: Database reads will lag behind cache state until flush completes.
+
+> **WARNING**: Use Write-Behind ONLY for non-critical, high-throughput metrics (e.g., page view counts, video watch position, telemetry). **NEVER use Write-Behind for financial balances, user credentials, or order checkouts!**
 
 <WriteBehindSequenceDiagram />
 
-**Implementation:**
+**Implementation**:
 
 ```java
 @Service
-public class AnalyticsService {
-    private final CacheManager cacheManager;
-    private final AnalyticsRepository analyticsRepository;
-    private final ScheduledExecutorService scheduler;
+public class PageViewCounterService {
+    private final RedisTemplate<String, String> redisTemplate;
 
-    @PostConstruct
-    public void init() {
-        // Schedule periodic flush to database
-        scheduler.scheduleAtFixedRate(
-            this::flushToDatabase,
-            1, 1, TimeUnit.MINUTES
-        );
+    public void incrementPageView(String pageId) {
+        // Instant write to Redis memory (<1ms response time)
+        redisTemplate.opsForValue().increment("page:views:" + pageId);
     }
 
-    public void recordEvent(AnalyticsEvent event) {
-        // Write to cache immediately
-        Cache cache = cacheManager.getCache("analytics");
-        cache.put(event.getId(), event);
-    }
+    // Scheduled background worker flushes aggregated totals to MySQL every 10 seconds
+    @Scheduled(fixedRate = 10000)
+    public void flushPageViewsToDatabase() {
+        Set<String> keys = redisTemplate.keys("page:views:*");
+        if (keys == null || keys.isEmpty()) return;
 
-    private void flushToDatabase() {
-        Cache cache = cacheManager.getCache("analytics");
-        // Flush all cached events to database
-        // ...
+        for (String key : keys) {
+            String pageId = key.replace("page:views:", "");
+            String viewsStr = redisTemplate.opsForValue().getAndDelete(key);
+            if (viewsStr != null) {
+                long count = Long.parseLong(viewsStr);
+                // Bulk batch SQL update: UPDATE pages SET views = views + ? WHERE id = ?
+                pageRepository.incrementViews(pageId, count);
+            }
+        }
     }
 }
 ```
 
-### Read-Through
+---
 
-Similar to Cache-Aside, but instead of the application orchestrating the cache miss, the cache itself acts as a proxy. If a user asks the cache for data it doesn't have, the cache service fetches it from the database, stores it, and returns it. This is exactly how CDNs operate.
+### 5. Write-Around
 
-<ReadThroughSequenceDiagram />
+Writes go directly to the Database, completely bypassing the Cache. Data is loaded into the cache only when a subsequent read request is made.
 
-**Implementation:**
+* **Who Writes & When**: The cache is NOT updated during writes. It is populated lazily on subsequent reads via Cache-Aside.
+* **Flow**: App writes update directly to Database &rarr; Cache is untouched &rarr; Next read request triggers Cache Miss &rarr; Cache-Aside populates Cache for future reads.
+* **Pros**:
+  * Eliminates Cache RAM Waste: Prevents populating cache memory with write-once-never-read data (e.g., raw log files, archived reports).
+  * Simple Write Logic: Writes do not need to coordinate with or invalidate cache entities.
+* **Cons**:
+  * Guaranteed First-Read Cache Miss: The first read immediately following an update will always miss the cache and hit the database.
+
+> **Real-World Combo Pattern**: **Write-Around + Cache-Aside** is the most widely implemented production pattern in enterprise web systems. Writes update SQL directly (bypassing cache), and reads lazily load missing keys into Redis.
+
+---
+
+### 6. Refresh-Ahead
+
+Background worker processes predict which hot keys are about to expire and proactively refresh them from the database before their TTL reaches zero.
+
+* **Who Writes & When**: Background analytics workers refresh hot cache entries before TTL expiration based on access frequency algorithms.
+* **Flow**: Worker monitors key TTL & access probability &rarr; Before TTL expires (e.g., at 85% TTL mark), worker queries DB &rarr; Silent update to Cache &rarr; End users experience 100% cache hit rate.
+* **Pros**:
+  * Eliminates Cold-Start Misses: Users never experience cache miss latency for popular items.
+  * Prevents Cache Stampedes: Eliminates thundering herd spikes on key expiration because keys never technically expire while active.
+* **Cons**:
+  * Wasted System Resources: If the access prediction algorithm miscalculates, unnecessary database queries are executed for keys no one reads.
+  * Complex Implementation: Requires background job monitoring, predictive metrics, and queue coordination.
+* **Best For**: Highly predictable hot keys (e.g., homepage feeds, trending news, top 100 leaderboards, flash sale items).
+
+**Implementation**:
 
 ```java
-public class ReadThroughCache<K, V> {
-    private final Cache<K, V> cache;
-    private final Function<K, V> loader;
+@Service
+public class TrendingFeedCacheWarmer {
+    private final FeedRepository feedRepository;
+    private final RedisTemplate<String, Object> redisTemplate;
 
-    public ReadThroughCache(Cache<K, V> cache, Function<K, V> loader) {
-        this.cache = cache;
-        this.loader = loader;
-    }
-
-    public V get(K key) {
-        V value = cache.getIfPresent(key);
-
-        if (value == null) {
-            // Cache miss - load from source
-            value = loader.apply(key);
-            cache.put(key, value);
-        }
-
-        return value;
+    // Refresh hot feed every 55 seconds (for a key configured with a 60-second TTL)
+    @Scheduled(fixedRate = 55000)
+    public void refreshTrendingFeedProactively() {
+        List<FeedItem> trending = feedRepository.getTopTrendingItems();
+        // Silent proactive update before key expires
+        redisTemplate.opsForValue().set("feed:trending", trending, Duration.ofSeconds(60));
     }
 }
-
-// Usage
-ReadThroughCache<String, Product> productCache = new ReadThroughCache<>(
-    Caffeine.newBuilder()
-        .maximumSize(10_000)
-        .expireAfterWrite(10, TimeUnit.MINUTES)
-        .build(),
-    productId -> productRepository.findById(productId)
-        .orElseThrow(() -> new ProductNotFoundException(productId))
-);
 ```
+
+---
 
 ---
 

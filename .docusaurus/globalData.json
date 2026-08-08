@@ -1311,6 +1311,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/database/isolation-levels",
+              "path": "/technical-knowledge/database/isolation-levels",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/database/nosql-distributed",
               "path": "/technical-knowledge/database/nosql-distributed",
               "sidebar": "tutorialSidebar"
@@ -6737,15 +6742,6 @@
         }
       ],
       "breadcrumbs": true
-    }
-  },
-  "docusaurus-plugin-google-gtag": {
-    "default": {
-      "trackingID": [
-        "G-79SQQZQMCX"
-      ],
-      "anonymizeIP": true,
-      "id": "default"
     }
   }
 }

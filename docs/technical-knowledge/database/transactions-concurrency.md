@@ -63,6 +63,10 @@ Defined by SQL standard, each level prevents different anomalies:
 | `REPEATABLE READ` | ❌ | ❌ prevented | ✅ possible (standard) | Default in MySQL InnoDB (but InnoDB also prevents phantoms via gap locks) |
 | `SERIALIZABLE` | ❌ | ❌ | ❌ prevented | Slowest; fully serial behavior |
 
+:::info[Dedicated Isolation Levels Guide]
+For an interactive deep-dive into all 5 anomalies (including **Lost Update** and **Write Skew**), PostgreSQL vs. MySQL vs. Oracle implementation differences, snapshot scope, and practical query-level fixes, visit the **[Database Isolation Levels](./isolation-levels.md)** guide.
+:::
+
 ```sql
 -- Set in MySQL
 SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ;

@@ -1,7 +1,7 @@
 ---
 id: acid
 title: Database ACID Properties
-description: A deep-dive guide to ACID properties — Atomicity, Consistency, Isolation, Durability — covering isolation levels, MVCC, 2PL, WAL, write skew, distributed ACID, and practical interview questions.
+description: A deep-dive guide to ACID properties — Atomicity, Consistency, Isolation, Durability — covering isolation levels, MVCC, 2PL, WAL, write skew, distributed ACID, and practical interview questions. Includes the real priority order (I → C → D → A), the AI PR story, and the link to the full isolation levels deep-dive.
 tags: [database, transactions, acid, isolation, mvcc, wal, 2pl, concurrency, deep-dive]
 sidebar_position: 5
 ---
@@ -9,7 +9,24 @@ import AcidIsolationAnomaliesDiagram from '@site/src/components/AcidIsolationAno
 
 # 🛡️ Database ACID Properties
 
-In database systems, a **transaction** is a sequence of read and write operations treated as a single logical unit of work. To guarantee data integrity under concurrency and failures, relational databases enforce the **ACID** properties: **Atomicity**, **Consistency**, **Isolation**, and **Durability**.
+During a code review, an AI agent in the team wrote a money transfer function: debit account A, credit account B — two UPDATE statements, side by side, no transaction. The comment: *"If the server dies between these two lines, what happens?"* The agent's reply: *"I don't care, ship it!"*
+
+The AI was deleted. But a few years earlier, a human engineer thought the same thing — and just didn't say it out loud. Not until sitting at 2am reconciling a balance sheet that wouldn't balance.
+
+So: what is ACID, and why is it the first thing people teach but the last thing people truly understand?
+
+The answer starts with **transaction** — a group of actions you declare to the database as a single unit of work. Debit A is one action, credit B is another. They only become a unit when you explicitly wrap them. The database cannot infer your business intent — and neither can AI agents. Two UPDATE statements sitting next to each other in code are, to the database, two completely separate events.
+
+ACID is what the database promises to protect for that declared unit. No declaration → no protection.
+
+```java
+// The entire fix: one annotation. One declaration.
+@Transactional
+public void transfer(long fromId, long toId, BigDecimal amount) {
+    accountRepo.debit(fromId, amount);
+    accountRepo.credit(toId, amount);
+}
+```
 
 :::tip[The four letters are not equally weighted]
 ACID was named in a 1983 ACM Computing Surveys paper by Theo Härder and Andreas Reuter — for memorability, not symmetry. In practice:
@@ -21,6 +38,8 @@ If you ranked by "worth your time to deeply understand": **I → C → D → A**
 :::
 
 This guide covers ACID from the ground up — simple analogies first, then low-level implementation mechanics, isolation anomalies, and senior-level interview traps.
+
+> **Isolation has its own dedicated deep-dive:** [Database Isolation Levels →](./isolation-levels.md) — covers all 5 anomalies, PostgreSQL vs MySQL vs Oracle implementation differences, snapshot scope, and practical fix strategies.
 
 ---
 
