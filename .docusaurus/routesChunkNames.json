@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-e91": {
+  "/-7c4": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-649": {
+  "/-2ad": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -5905,7 +5905,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-e5d": {
+  "/-47b": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -7040,87 +7040,87 @@
     "__comp": "17896441",
     "content": "46793316"
   },
-  "/technical-knowledge/database/-1c8": {
+  "/technical-knowledge/database/-78d": {
     "__comp": "17896441",
     "content": "d4d0b9b0"
   },
-  "/technical-knowledge/database/acid-6b0": {
+  "/technical-knowledge/database/acid-276": {
     "__comp": "17896441",
     "content": "3be25515"
   },
-  "/technical-knowledge/database/advanced-sql-acc": {
+  "/technical-knowledge/database/advanced-sql-607": {
     "__comp": "17896441",
     "content": "8a4ffef6"
   },
-  "/technical-knowledge/database/backup-recovery-15d": {
+  "/technical-knowledge/database/backup-recovery-846": {
     "__comp": "17896441",
     "content": "1d655bfd"
   },
-  "/technical-knowledge/database/connection-pooling-a63": {
+  "/technical-knowledge/database/connection-pooling-eac": {
     "__comp": "17896441",
     "content": "0dd1e07c"
   },
-  "/technical-knowledge/database/data-warehousing-olap-a37": {
+  "/technical-knowledge/database/data-warehousing-olap-ed2": {
     "__comp": "17896441",
     "content": "a404a845"
   },
-  "/technical-knowledge/database/database-design-26a": {
+  "/technical-knowledge/database/database-design-b98": {
     "__comp": "17896441",
     "content": "39348cd3"
   },
-  "/technical-knowledge/database/database-patterns-microservices-ae6": {
+  "/technical-knowledge/database/database-patterns-microservices-9e8": {
     "__comp": "17896441",
     "content": "52d464a4"
   },
-  "/technical-knowledge/database/database-security-9f5": {
+  "/technical-knowledge/database/database-security-d7a": {
     "__comp": "17896441",
     "content": "c8f8291e"
   },
-  "/technical-knowledge/database/full-text-search-a44": {
+  "/technical-knowledge/database/full-text-search-503": {
     "__comp": "17896441",
     "content": "f33f2ff7"
   },
-  "/technical-knowledge/database/indexing-query-optimization-627": {
+  "/technical-knowledge/database/indexing-query-optimization-ba8": {
     "__comp": "17896441",
     "content": "3579e0cb"
   },
-  "/technical-knowledge/database/isolation-levels-787": {
+  "/technical-knowledge/database/isolation-levels-4ea": {
     "__comp": "17896441",
     "content": "30b10c44"
   },
-  "/technical-knowledge/database/nosql-distributed-88d": {
+  "/technical-knowledge/database/nosql-distributed-e9e": {
     "__comp": "17896441",
     "content": "025815b7"
   },
-  "/technical-knowledge/database/performance-monitoring-021": {
+  "/technical-knowledge/database/performance-monitoring-34f": {
     "__comp": "17896441",
     "content": "66dfb623"
   },
-  "/technical-knowledge/database/query-planner-optimizer-d92": {
+  "/technical-knowledge/database/query-planner-optimizer-fcc": {
     "__comp": "17896441",
     "content": "44e5f61d"
   },
-  "/technical-knowledge/database/relational-fundamentals-5c5": {
+  "/technical-knowledge/database/relational-fundamentals-c7e": {
     "__comp": "17896441",
     "content": "30a60d4b"
   },
-  "/technical-knowledge/database/replication-partitioning-81f": {
+  "/technical-knowledge/database/replication-partitioning-077": {
     "__comp": "17896441",
     "content": "353f2454"
   },
-  "/technical-knowledge/database/schema-migrations-5e8": {
+  "/technical-knowledge/database/schema-migrations-aae": {
     "__comp": "17896441",
     "content": "008ae538"
   },
-  "/technical-knowledge/database/storage-engines-data-structures-ac3": {
+  "/technical-knowledge/database/storage-engines-data-structures-3b9": {
     "__comp": "17896441",
     "content": "c28018e1"
   },
-  "/technical-knowledge/database/time-series-databases-f83": {
+  "/technical-knowledge/database/time-series-databases-de9": {
     "__comp": "17896441",
     "content": "04625431"
   },
-  "/technical-knowledge/database/transactions-concurrency-2df": {
+  "/technical-knowledge/database/transactions-concurrency-9ea": {
     "__comp": "17896441",
     "content": "d2fa8756"
   },
@@ -10408,7 +10408,7 @@
     "__comp": "17896441",
     "content": "ee229027"
   },
-  "/technical-knowledge/java/java-diagnostics-troubleshooting-edd": {
+  "/technical-knowledge/java/java-diagnostics-troubleshooting-f23": {
     "__comp": "17896441",
     "content": "e89fd18d"
   },
@@ -11076,7 +11076,7 @@
     "__comp": "17896441",
     "content": "bc804bd9"
   },
-  "/technical-knowledge/system-design/caching-strategies-4a2": {
+  "/technical-knowledge/system-design/caching-strategies-6ba": {
     "__comp": "17896441",
     "content": "724987fe"
   },
