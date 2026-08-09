@@ -1,8 +1,8 @@
 {
-  "id": "628",
-  "title": "Maximum Product of Three Numbers",
-  "url": "https://leetcode.com/problems/maximum-product-of-three-numbers/",
-  "difficulty": "easy",
-  "topic": "Array, Math, Sorting",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-07-26."
+  "id": "3302",
+  "title": "Find the Lexicographically Smallest Valid Sequence",
+  "url": "https://leetcode.com/problems/find-the-lexicographically-smallest-valid-sequence/",
+  "difficulty": "medium",
+  "topic": "Two Pointers, String, Dynamic Programming, Greedy",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-08-08."
 }

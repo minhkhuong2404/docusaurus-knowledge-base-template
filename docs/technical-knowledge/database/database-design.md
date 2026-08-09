@@ -7,7 +7,11 @@ tags: [database, design, normalization, erd, 1nf, 2nf, 3nf, bcnf, schema]
 sidebar_position: 9
 ---
 
+import DatabaseDesignNormalizationDiagram from '@site/src/components/DatabaseDesignNormalizationDiagram';
+
 # Database Design & Normalization
+
+---
 
 ## SQL vs NoSQL Decision Guide
 
@@ -62,6 +66,8 @@ CREATE TABLE order_items (
 ---
 
 ## Normal Forms
+
+<DatabaseDesignNormalizationDiagram />
 
 Normalization reduces **data redundancy** and prevents **update anomalies**.
 

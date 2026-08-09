@@ -11,8 +11,11 @@ tags:
   - Career
   - STAR Method
 ---
+import BehavioralOverviewDiagram from '@site/src/components/BehavioralOverviewDiagram';
 
 # How to Pass the Behavioral Interview Round
+
+<BehavioralOverviewDiagram />
 
 The behavioral interview round is often underestimated — but it can make or break your offer, even if you aced the coding rounds. Companies like Amazon, Google, Meta, and Microsoft use behavioral interviews to assess **cultural fit**, **leadership potential**, and **how you handle real-world challenges**.
 

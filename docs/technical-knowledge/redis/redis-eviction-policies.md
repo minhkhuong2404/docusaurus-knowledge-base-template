@@ -6,74 +6,72 @@ description: Comprehensive guide to Redis maxmemory algorithms (LRU, LFU, Random
 tags: [redis, eviction, lru, lfu, cache, backend]
 ---
 
-# 🗑️ Redis Eviction Policies & Maxmemory
+import RedisEvictionPoliciesDiagram from '@site/src/components/RedisEvictionPoliciesDiagram';
 
-What happens when Redis runs exactly out of its assigned RAM? If you don't configure this correctly, your entire caching infrastructure will crash with `OOM command not allowed` exceptions.
+# Redis Eviction Policies & Maxmemory
 
-Redis utilizes **Eviction Policies** to mathematically determine which keys should be sacrificed to make room for new data.
+What happens when a Redis instance reaches its configured memory capacity (`maxmemory`)? Without explicit eviction policies, Redis rejects writes with `OOM command not allowed` errors.
+
+<RedisEvictionPoliciesDiagram />
 
 ---
 
-## 🏗️ 1. The Maxmemory Threshold
+## 1. The `maxmemory` Threshold
 
-By default, a 64-bit Redis instance has **no memory limit**. It will continuously consume RAM until the Linux kernel panic-invokes the OOM Killer and brutally murders the Redis process.
-
-You must *always* set `maxmemory` in production.
+By default, 64-bit Redis instances have no memory limit (`maxmemory 0`). In containerized Linux environments (Docker, Kubernetes), unconstrained memory growth causes the host kernel OOM Killer to send a `SIGKILL` to the Redis process.
 
 ```bash
 # redis.conf
-maxmemory 2gb
+maxmemory 4gb
 maxmemory-policy allkeys-lru
+maxmemory-samples 5
 ```
 
 ---
 
-## 🧹 2. The Policies
+## 2. Summary of 8 Eviction Policies
 
-Redis 4.0+ offers 8 distinct eviction policies. They fall into two main categories: `volatile` (only evicts keys that have an explicit TTL set) and `allkeys` (evicts any key regardless of TTL).
-
-### 👶 Beginner Concept: The "Nightclub Line" Analogy
-Imagine a crowded nightclub with exactly 100 maximum capacity (Maxmemory).
-- **`noeviction`:** The bouncer just says "No". Nobody new can enter.
-- **`allkeys-random`:** The bouncer runs inside, blindfolds himself, tackles a random person, throws them out, and lets the new guy in. Fast, but dangerous.
-- **`volatile-lru`:** The bouncer looks at everyone wearing a "Guest Pass" (TTL set). He asks: *“Who has been standing still the longest?”* (Least Recently Used), and kicks them out. He ignores the VIPS (no TTL).
-
-### The 8 Policies
 | Policy Name | Target Keys | Selection Algorithm | Best Use Case |
-|-------------|------------|---------------------|---------------|
-| `noeviction` | None | Returns error if out of memory | When using Redis purely as a strict Database, not a cache. |
-| `allkeys-lru` | ALL keys | Least Recently Used | **Default for caching.** Safest fallback when all keys are caching data. |
-| `volatile-lru` | TTL keys only | Least Recently Used | You mix permanent data and temp cache in the exact same database. |
-| `allkeys-lfu` | ALL keys | Least Frequently Used | You have strict hot/cold data sets (e.g. viral tweets vs old news). |
-| `volatile-lfu` | TTL keys only | Least Frequently Used | Viral data mixed with permanent session data. |
-| `allkeys-random` | ALL keys | Pure Random | You want absolute maximum write speed and don't care what you lose. |
-| `volatile-random` | TTL keys only | Pure Random | Same, but protecting VIP permanent keys. |
-| `volatile-ttl` | TTL keys only | Shortest TTL remaining | Evicting the keys that were about to naturally die anyway. |
+|---|---|---|---|
+| **`noeviction`** | None | Returns `OOM` error on writes when maxmemory is reached. | Redis used as a primary database (zero data loss permitted). |
+| **`allkeys-lru`** | ALL keys | Approximated Least Recently Used. | **Default for general-purpose application caching.** |
+| **`volatile-lru`** | TTL keys only | Approximated Least Recently Used. | Mixed DB: permanent session records + temporary caches. |
+| **`allkeys-lfu`** | ALL keys | Approximated Least Frequently Used (8-bit log counter). | Power-law traffic distributions (viral posts vs cold data). |
+| **`volatile-lfu`** | TTL keys only | Approximated Least Frequently Used. | Frequency-based eviction for ephemeral cache keys. |
+| **`allkeys-random`** | ALL keys | Uniform Random. | Uniform access patterns where key age is irrelevant. |
+| **`volatile-random`** | TTL keys only | Uniform Random. | Random eviction scoped strictly to ephemeral keys. |
+| **`volatile-ttl`** | TTL keys only | Evicts key with nearest remaining TTL expire timestamp. | Prioritizes purging keys about to expire naturally. |
 
 ---
 
-## 🧠 3. Senior Deep Dive: LRU/LFU Approximations
+## 3. Under the Hood: Approximated LRU/LFU
 
-Senior engineers must know this: **Redis does not use a true LRU algorithm.**
+True LRU requires maintaining a globally synchronized Doubly-Linked List across millions of keys, incurring significant memory pointer overhead ($\approx 16\text{--}24\text{ bytes}$ per key) and CPU locking penalties on every read operation.
 
-### Why Not True LRU?
-A true LRU requires a massive Doubly-Linked List connecting every single key in the database. Every time someone reads a key, Redis would need to update the pointers to move that key to the "head" of the list. That pointer arithmetic costs too much CPU and RAM overhead for a system designed to be the fastest in the world.
+### Probabilistic Sampled LRU
+Redis uses a **probabilistic sampled LRU algorithm**:
+1. When a write requires memory eviction, Redis randomly samples $N$ keys (default `maxmemory-samples 5`).
+2. It inspects the 24-bit LRU timestamp clock stored inside each key's `redisObject` header.
+3. It evicts the single key with the oldest idle time from the sample pool.
+4. Setting `maxmemory-samples 10` achieves $99\%$ mathematical equivalence to true LRU at a minimal CPU cost.
 
-### The Redis Approximation Algorithm
-Instead, Redis uses a highly optimized **Probabilistic/Approximated LRU**:
-1. When Redis needs to evict, it grabs a random sample of `N` keys (default is 5).
-2. It looks at the 24-bit LRU clock embedded strictly in the header of those 5 specific keys.
-3. It finds the oldest key out of those 5 and evicts it.
-4. Next time, it adds new random keys to an eviction pool and repeats.
+---
 
-**Tuning the Sample Size:**
-```bash
-maxmemory-samples 5   # Great performance, okay accuracy
-maxmemory-samples 10  # Very close to true LRU, costs more CPU 
-```
+## Interview Questions
 
-### LFU (Least Frequently Used) vs LRU
-- **LRU (Recent):** If I read a useless key 1 second ago, it is safe from eviction, even if I never read it again.
-- **LFU (Frequent):** Tracks an 8-bit logarithmic counter. If I read the "Homepage" key 10,000 times an hour ago, and the "Boring Page" key 1 time five seconds ago, LFU correctly identifies that "Homepage" is fundamentally more valuable and evicts the "Boring Page" instead.
+### Q1. What is the difference between `allkeys-lru` and `volatile-lru` eviction policies?
+> `allkeys-lru` evaluates and evicts the least recently used keys across the **entire keyspace**, regardless of whether keys have an explicit TTL expiration set. `volatile-lru` limits eviction candidate sampling strictly to keys configured with an explicit TTL (`EXPIRE`). If all keys with a TTL are evicted and memory remains full, `volatile-lru` falls back to throwing `OOM command not allowed` errors on new writes.
 
-**Senior Heuristic:** Move from `allkeys-lru` to `allkeys-lfu` when migrating from a generic cache to a heavily optimized CDN-style power-law distribution cache.
+### Q2. Why does Redis use an Approximated LRU algorithm instead of a True LRU doubly-linked list?
+> A true LRU algorithm requires allocating a global Doubly-Linked List connecting every stored key object. Every read operation (`GET`) would require executing $O(1)$ node detach and head-reattachment pointer arithmetic, introducing lock overhead and consuming $16\text{--}24\text{ bytes}$ of additional RAM per key for pointers. Redis's sampled LRU (sampling 5–10 random keys) provides nearly identical eviction precision with zero memory pointer overhead.
+
+### Q3. How does `allkeys-lfu` differ from `allkeys-lru` in high-throughput caching environments?
+> `allkeys-lru` (Least Recently Used) evicts keys based strictly on idle time since the last access. A key read once 1 second ago will be retained over a key read 1,000 times 10 seconds ago. `allkeys-lfu` (Least Frequently Used) maintains an 8-bit logarithmic access frequency counter alongside a decay timer, accurately identifying and retaining true "hot" keys even if they were not accessed in the last few seconds.
+
+---
+
+## See Also
+
+- [Redis TTL & Key Expiration Mechanics](./redis-ttl-expiry.md)
+- [Redis Architecture Overview](./redis-overview.md)
+- [Redis Distributed Cache Patterns](./redis-distributed-cache.md)

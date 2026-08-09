@@ -11,7 +11,13 @@ tags:
   - system-design
 ---
 
+import KafkaRaftConsensusDiagram from '@site/src/components/KafkaRaftConsensusDiagram';
+
 # Raft Consensus Algorithm
+
+<KafkaRaftConsensusDiagram />
+
+---
 
 > A distributed consensus protocol designed at Stanford University in 2013 to be understandable and easy to implement. Raft guarantees safety, liveness, and fault tolerance across a cluster of machines. It forms the foundational consensus backbone of modern state stores like `etcd` (used by Kubernetes) and Apache Kafka's modern metadata layer, **KRaft**.
 
@@ -36,21 +42,6 @@ This is the **Distributed Consensus** problem.
 
 To understand the stakes, consider a cluster of three database servers processing bank account updates. A customer initiates a withdrawal of **10,000,000 VND**.
 
-```mermaid
-graph TD
-    Client[Client] -->|Withdraw 10M VND| ServerA[Server A]
-    Client -.->|Withdraw 10M VND| ServerB[Server B]
-    Client -.->|Withdraw 10M VND| ServerC[Server C]
-
-    ServerA -.- ServerB
-    ServerB -.- ServerC
-    ServerC -.- ServerA
-
-    style ServerA fill:#f8d7da,stroke:#dc3545
-    style ServerB fill:#fff3cd,stroke:#ffc107
-    style ServerC fill:#d1ecf1,stroke:#17a2b8
-```
-
 - **Scenario 1 (No Coordination):** If all three servers accept the request independently, the client is charged 30,000,000 VND instead of 10,000,000 VND.
 - **Scenario 2 (Naive Master-Slave):** If Server A acts as the leader but experiences a network partition separating it from Server B and Server C:
   - Server B and Server C might assume Server A is dead and elect Server B as a new leader.
@@ -72,28 +63,6 @@ In 2013, Stanford researchers Diego Ongaro and John Ousterhout set out to design
 ## The Coffee Shop Analogy
 
 To grasp Raft's mechanics before diving into its mathematical invariants, imagine a coffee shop operated by **five employees** working the evening shift:
-
-```mermaid
-graph TD
-    subgraph Quorum [Coffee Shop Quorum — 5 Employees]
-        Leader[Shift Leader]
-        E1[Employee 1]
-        E2[Employee 2]
-        E3[Employee 3]
-        E4[Employee 4]
-    end
-
-    Customer[Customer] -->|1. Places Order| Leader
-    Leader -->|2. Replicates Order| E1
-    Leader -->|2. Replicates Order| E2
-    E1 -->|3. Acknowledged| Leader
-    E2 -->|3. Acknowledged| Leader
-    Leader -->|4. Commits to Kitchen| Kitchen[Kitchen Prep]
-    Leader -->|5. Confirms Order| Customer
-
-    style Leader fill:#d4edda,stroke:#28a745,stroke-width:2px
-    style Quorum fill:#f8f9fa,stroke:#6c757d
-```
 
 1. **The Role of the Leader:** The employees elect one **Shift Leader** (Leader). All customer orders (client write requests) must go through this Shift Leader.
 2. **Order Replication:** When a customer places an order for a *Phin Sữa Đá*:
@@ -124,16 +93,6 @@ A Raft cluster typically consists of an odd number of nodes (e.g., 3, 5, or 7) t
 
 The lifecycle of a node flows dynamically through these states based on heartbeats, timeouts, and vote outcomes:
 
-```mermaid
-stateDiagram-v2
-    [*] --> Follower : Node Starts
-    Follower --> Candidate : Times out without receiving Heartbeat / AppendEntries
-    Candidate --> Candidate : Times out (Split Vote), Start New Term
-    Candidate --> Leader : Wins majority of votes in Election
-    Candidate --> Follower : Discovers Leader of current or higher Term
-    Leader --> Follower : Discovers node with a higher Term (during communication)
-```
-
 ---
 
 ## The Three Pillars of Raft
@@ -158,26 +117,6 @@ Each term begins with an election. If a candidate wins, it serves as the leader 
 - **Heartbeat Interval:** The Leader periodically sends empty `AppendEntries` RPCs to all followers (typically every **50ms - 100ms**) to assert its authority.
 - **Election Timeout:** Followers expect heartbeats within a specific window (typically **150ms - 300ms**). If this timeout expires without a heartbeat, the follower assumes the leader has failed, increments its term, transitions to **Candidate**, votes for itself, and broadcasts a `RequestVote` RPC.
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant Follower A
-    participant Follower B
-    participant Candidate (C)
-
-    Note over Follower A, Follower B: Leader crashes. Heartbeats stop.
-    Note over Candidate (C): Election Timeout Expires!
-    Candidate (C)->>Candidate (C): Increment Term, State -> Candidate, Vote for Self
-    Candidate (C)->>Follower A: RequestVote(Term T, CandidateId, LastLogIndex, LastLogTerm)
-    Candidate (C)->>Follower B: RequestVote(Term T, CandidateId, LastLogIndex, LastLogTerm)
-    Follower A-->>Candidate (C): Vote Granted (Term T)
-    Follower B-->>Candidate (C): Vote Granted (Term T)
-    Note over Candidate (C): Receives Quorum of Votes (3/3)
-    Candidate (C)->>Candidate (C): State -> Leader
-    Candidate (C)->>Follower A: AppendEntries Heartbeat (Term T)
-    Candidate (C)->>Follower B: AppendEntries Heartbeat (Term T)
-```
-
 :::tip[Mitigating Split Votes via Randomized Timeouts]
 If multiple followers time out simultaneously, they will all vote for themselves, causing a **Split Vote** where no one gains a majority. Raft solves this by **randomizing election timeouts** (e.g., Node 1 has 180ms, Node 2 has 250ms, Node 3 has 150ms). The node with the shortest timeout will transition to candidate first and secure the majority of votes before others time out.
 :::
@@ -187,36 +126,6 @@ If multiple followers time out simultaneously, they will all vote for themselves
 ### 2. Log Replication
 
 Once a Leader is elected, it begins accepting writes from clients. Each write is structured as an entry in the replicated log.
-
-```mermaid
-sequenceDiagram
-    autonumber
-    actor Client
-    participant Leader
-    participant Follower 1
-    participant Follower 2
-
-    Client->>Leader: Write Command (e.g., Set X=5)
-    Leader->>Leader: Append entry to local log (Uncommitted)
-    
-    rect rgb(240, 248, 255)
-        Note over Leader, Follower 2: Phase 1: Replicating to Quorum
-        Leader->>Follower 1: AppendEntries(Entry, PrevLogIndex, PrevLogTerm, CommitIndex)
-        Leader->>Follower 2: AppendEntries(Entry, PrevLogIndex, PrevLogTerm, CommitIndex)
-        Follower 1-->>Leader: Success (Appended locally)
-        Follower 2-->>Leader: Success (Appended locally)
-    end
-
-    rect rgb(240, 255, 240)
-        Note over Leader, Follower 2: Phase 2: Committing and Applying
-        Leader->>Leader: Commit Entry (Majority Acknowledged)
-        Leader->>Client: Return Success
-        Leader->>Follower 1: AppendEntries Heartbeat (Updates CommitIndex)
-        Leader->>Follower 2: AppendEntries Heartbeat (Updates CommitIndex)
-        Follower 1->>Follower 1: Apply to State Machine
-        Follower 2->>Follower 2: Apply to State Machine
-    end
-```
 
 1. **Client Request:** The client sends a state change command to the Leader.
 2. **Local Append:** The Leader appends the command to its local log as an **Uncommitted** entry.
@@ -265,28 +174,6 @@ Result: Voter rejects vote. Candidate is missing committed entry at Index 3.
 Apache Kafka historically relied on **Apache ZooKeeper** to coordinate cluster state (managing broker configurations, topic partitions, leader elections, and ACLs). Starting with KIP-500, Kafka introduced **KRaft (Kafka Raft)**, replacing ZooKeeper entirely and bringing metadata management directly into Kafka brokers.
 
 While KRaft is based on the Raft algorithm, it deviates in several architectural ways to optimize metadata storage for high-throughput distributed logs.
-
-```mermaid
-graph LR
-    subgraph Standard_Raft [Standard Raft (Push-Based)]
-        Leader_Std[Leader Node]
-        Follower_Std1[Follower 1]
-        Follower_Std2[Follower 2]
-        Leader_Std -->|AppendEntries RPC\nPush Data| Follower_Std1
-        Leader_Std -->|AppendEntries RPC\nPush Data| Follower_Std2
-    end
-
-    subgraph KRaft [KRaft (Pull-Based)]
-        Leader_KR[Active Controller]
-        Follower_KR1[Standby Controller 1]
-        Follower_KR2[Standby Controller 2]
-        Follower_KR1 -->|Fetch Request\nPull Data| Leader_KR
-        Follower_KR2 -->|Fetch Request\nPull Data| Leader_KR
-    end
-
-    style Standard_Raft fill:#f5f5f5,stroke:#9e9e9e
-    style KRaft fill:#e8f5e9,stroke:#4caf50
-```
 
 ### Key Architectural Differences
 

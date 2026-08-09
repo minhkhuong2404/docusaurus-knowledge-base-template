@@ -13,7 +13,7 @@ export default function BlueGreenDeploymentDiagram() {
         <button
           onClick={() => setActiveEnv(activeEnv === 'blue' ? 'green' : 'blue')}
           style={{
-            marginLeft: 'auto', padding: '5px 12px', borderRadius: '6px', border: 'none', cursor: 'pointer',
+            marginLeft: 'auto', padding: '5px 12px', borderRadius: '6px', cursor: 'pointer',
             fontWeight: 700, fontSize: '11.5px',
             background: activeEnv === 'blue' ? 'rgba(52,211,153,0.2)' : 'rgba(56,189,248,0.2)',
             color: activeEnv === 'blue' ? '#34d399' : '#38bdf8',

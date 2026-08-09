@@ -9,6 +9,9 @@ tags:
 - banking
 - pain004
 ---
+
+import BankingReversalRecallDiagram from '@site/src/components/BankingReversalRecallDiagram';
+
 # pain.004 — Clarification
 
 ## Does pain.004 Exist in ISO 20022?
@@ -19,56 +22,11 @@ This is a common source of confusion for new learners. The ISO 20022 `pain` (Pay
 
 ---
 
-## The pain.00x Message Family
-
-| Message | Name | Status |
-|---------|------|--------|
-| `pain.001` | CustomerCreditTransferInitiation | ✅ Defined and widely used |
-| `pain.002` | CustomerPaymentStatusReport | ✅ Defined and widely used |
-| `pain.003` | — | ❌ Not defined |
-| `pain.004` | — | ❌ Not defined |
-| `pain.005` | — | ❌ Not defined |
-| `pain.006` | — | ❌ Not defined |
-| `pain.007` | CustomerPaymentReversal | ✅ Defined |
-| `pain.008` | CustomerDirectDebitInitiation | ✅ Defined and widely used |
-| `pain.009` | MandateInitiationRequest | ✅ Defined (direct debit mandates) |
-| `pain.010` | MandateAmendmentRequest | ✅ Defined |
-| `pain.011` | MandateCancellationRequest | ✅ Defined |
-| `pain.012` | MandateAcceptanceReport | ✅ Defined |
-| `pain.013` | CreditorPaymentActivationRequest | ✅ Defined (Request to Pay) |
-| `pain.014` | CreditorPaymentActivationRequestStatusReport | ✅ Defined |
-
----
-
-## What You Are Probably Looking For
-
-If you searched for `pain.004`, you likely mean one of:
-
-| What you want | Correct message | Description |
-|---------------|----------------|-------------|
-| **Payment return** (creditor bank returns funds) | [`pacs.004`](./pacs004.md) | Interbank payment return message |
-| **Payment reversal** (bank reverses a payment) | [`pain.007`](./pain007_pacs007.md) + [`pacs.007`](./pain007_pacs007.md) | Customer and interbank reversal |
-| **Recall / cancellation request** | [`camt.055`](./camt055_camt056.md) / [`camt.056`](./camt055_camt056.md) | Request to cancel a sent payment |
-| **Debit reversal** (undo a debit posting) | [Debit Reversal](./debit_reversal.md) | Internal accounting reversal |
-
----
-
 ## Quick Reference: Return vs Reversal vs Recall
 
-```
-WHO initiates?    WHAT message?     WHY?
-─────────────────────────────────────────────────────
-Creditor Bank  →  pacs.004        Cannot apply to account
-                                   (account closed, wrong account)
+<BankingReversalRecallDiagram />
 
-Debtor Bank    →  pain.007        Customer requests reversal
-               →  pacs.007        Interbank reversal instruction
-               →  camt.056        Formal cancellation/recall request
-
-Internal       →  (no ISO msg)    Technical error / debit reversal
-               →  camt.054        Notification of internal reversal
-                  (RvslInd=true)
-```
+---
 
 ---
 

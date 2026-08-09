@@ -6,6 +6,8 @@ description: Complete guide to Docker networking — bridge, host, overlay, and 
 tags: [docker, networking, bridge, overlay, dns, port-mapping, docker-compose, intermediate]
 ---
 
+import DockerArchitectureDiagram from '@site/src/components/DockerArchitectureDiagram';
+
 # Docker Networking
 
 > Containers are isolated by default. Networking is how they talk to each other and the outside world.
@@ -13,6 +15,8 @@ tags: [docker, networking, bridge, overlay, dns, port-mapping, docker-compose, i
 ---
 
 ## Network Drivers Overview
+
+<DockerArchitectureDiagram initialTab="network" />
 
 | Driver | Scope | Use Case |
 |---|---|---|

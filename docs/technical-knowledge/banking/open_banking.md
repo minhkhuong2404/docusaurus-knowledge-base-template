@@ -7,6 +7,8 @@ description: Overview of Open Banking & Consumer Data Right (CDR).
 tags: [banking, open, consumer, data, right, cdr]
 ---
 
+import BankingOpenBankingCdrDiagram from '@site/src/components/BankingOpenBankingCdrDiagram';
+
 # Open Banking & Consumer Data Right (CDR)
 
 ## Overview
@@ -18,6 +20,8 @@ tags: [banking, open, consumer, data, right, cdr]
 - **Standards body:** Data Standards Body (DSB), managed by Treasury
 - **API standard:** CDR API (based on OpenID Connect / OAuth 2.0 + REST/JSON)
 - **Banking go-live:** July 2020 (major banks); expanded to all ADIs
+
+<BankingOpenBankingCdrDiagram />
 
 ---
 
@@ -65,40 +69,8 @@ With consumer consent, ADRs can access:
 
 ---
 
-## CDR Consent Flow
-
-```
-Consumer uses Third-Party App (ADR)
-        │
-        ▼
-App requests consent:
-  "Share your CBA transaction history for 90 days?"
-        │
-        ▼
-Consumer redirected to their bank (Data Holder)
-  (OAuth 2.0 Authorization Code flow)
-        │
-        ▼
-Consumer authenticates at bank (existing credentials)
-        │
-        ▼
-Consumer reviews and approves consent
-  ├── Which accounts to share
-  ├── What data to share
-  ├── Duration of access
-  └── One-time or ongoing
-        │
-        ▼
-Bank issues access token to ADR
-        │
-        ▼
-ADR calls CDR APIs with token
-  GET /cdr-au/v1/banking/accounts
-  GET /cdr-au/v1/banking/accounts/{id}/transactions
-        │
-        ▼
-Bank returns data in CDR standard format (JSON)
-```
+## CDR Consent Flow Overview
+Consent authentication relies on FAPI 1.0 Advanced and OAuth 2.0 PKCE Code authorization flows between the Consumer, Accredited Data Recipient (ADR), ACCC Register, and Data Holder Bank.
 
 ---
 

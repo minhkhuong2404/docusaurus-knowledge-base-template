@@ -6,21 +6,15 @@ description: Kubernetes storage guide — PersistentVolumes, PersistentVolumeCla
 tags: [kubernetes, storage, persistentvolume, pvc, storageclass, configmap, secrets, intermediate]
 ---
 
+import KubernetesWorkloadsNetworkingDiagram from '@site/src/components/KubernetesWorkloadsNetworkingDiagram';
+
 # Storage — PV, PVC, ConfigMaps & Secrets
 
 ---
 
 ## Kubernetes Storage Concepts
 
-```
-StorageClass    ← Defines HOW to provision storage (AWS EBS, NFS, etc.)
-     ↓
-PersistentVolume (PV)   ← Actual storage resource (manually or dynamically created)
-     ↓
-PersistentVolumeClaim (PVC)  ← Pod's REQUEST for storage
-     ↓
-Pod                     ← Mounts the PVC as a volume
-```
+<KubernetesWorkloadsNetworkingDiagram initialTab="storage" />
 
 ---
 

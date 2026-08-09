@@ -6,9 +6,16 @@ tags: [database, query-planner, optimizer, cost-based, statistics, execution-pla
 sidebar_position: 14
 ---
 
+import QueryPlannerPipelineDiagram from '@site/src/components/QueryPlannerPipelineDiagram';
+import DatabaseJoinAlgorithmsDiagram from '@site/src/components/DatabaseJoinAlgorithmsDiagram';
+
 # Query Planner & Optimizer
 
+---
+
 ## The Query Lifecycle
+
+<QueryPlannerPipelineDiagram />
 
 Every SQL statement goes through a pipeline before data is returned:
 
@@ -128,6 +135,8 @@ ANALYZE orders;
 ---
 
 ## Join Algorithms
+
+<DatabaseJoinAlgorithmsDiagram />
 
 The optimizer chooses between join algorithms based on table sizes, indexes, and available memory:
 

@@ -7,11 +7,15 @@ description: Overview of Fraud Detection & Prevention.
 tags: [banking, fraud, detection, prevention]
 ---
 
+import BankingFraudExceptionsDiagram from '@site/src/components/BankingFraudExceptionsDiagram';
+
 # Fraud Detection & Prevention
 
 ## Overview
 
 Fraud in banking payments refers to **unauthorised or deceptive financial transactions** that cause monetary loss to customers or the institution. Fraud controls are applied at multiple points in the payment lifecycle for both inbound and outbound payments.
+
+<BankingFraudExceptionsDiagram />
 
 ---
 

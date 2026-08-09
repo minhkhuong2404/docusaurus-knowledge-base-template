@@ -14,7 +14,6 @@ import BgpDiagram from '@site/src/components/BgpDiagram';
 import DhcpDiagram from '@site/src/components/DhcpDiagram';
 import NatDiagram from '@site/src/components/NatDiagram';
 
-
 ## IPv4 Addressing
 
 An IPv4 address is a **32-bit number**, usually written as four octets in dotted-decimal notation.
@@ -208,7 +207,7 @@ Maps **private IP addresses** to one or more **public IP addresses**, enabling p
 
 <NatDiagram />
 
-**Types:**
+Types:
 - **SNAT (Source NAT)**: changes source IP (outbound traffic) — most common
 - **DNAT (Destination NAT)**: changes destination IP (port forwarding, load balancing)
 - **PAT (Port Address Translation)**: SNAT with port remapping — allows many hosts on one public IP
@@ -217,26 +216,26 @@ Maps **private IP addresses** to one or more **public IP addresses**, enabling p
 
 ## Interview Questions
 
-**Q1. What is CIDR and why was it introduced?**
+### Q1. What is CIDR and why was it introduced?
 > CIDR (Classless Inter-Domain Routing) replaces the rigid class-based system with flexible prefix lengths (e.g., /24, /22). It was introduced to: (1) slow IPv4 exhaustion by allowing networks of any size; (2) reduce routing table size through route aggregation (supernetting) — multiple subnets summarized as one prefix.
 
-**Q2. How does a router determine the next hop for a packet?**
+### Q2. How does a router determine the next hop for a packet?
 > The router looks up the packet's destination IP in its routing table using **longest prefix match** — the most specific matching route wins. If a packet matches both `10.0.0.0/8` and `10.1.0.0/16`, the `/16` is used. If no specific route matches, the default route (`0.0.0.0/0`) is used. If no default route, the packet is dropped and ICMP unreachable is sent.
 
-**Q3. What is the difference between OSPF and BGP?**
+### Q3. What is the difference between OSPF and BGP?
 > OSPF is an interior gateway protocol (IGP) used within a single organization's network. It uses link-state flooding and Dijkstra's algorithm for fast convergence and cost-based path selection. BGP is an exterior gateway protocol (EGP) used between autonomous systems on the internet. It uses path-vector routing with rich policy attributes, prioritizing stability over speed.
 
-**Q4. What is a private IP address and why is it not routable on the internet?**
+### Q4. What is a private IP address and why is it not routable on the internet?
 > Private IP ranges (10/8, 172.16/12, 192.168/16) are defined in RFC 1918 for use within private networks. Internet routers are configured to drop packets destined for these addresses because they're not globally unique — millions of networks use the same 192.168.1.x ranges. NAT translates private IPs to a public IP before packets reach the internet.
 
-**Q5. Explain NAT and its trade-offs.**
+### Q5. Explain NAT and its trade-offs.
 > NAT translates private IP:port pairs to public IP:port pairs, allowing multiple devices to share one public IP. Trade-offs: breaks end-to-end connectivity (peers can't initiate connections inward without port forwarding), complicates protocols that embed IP addresses (FTP, SIP), requires stateful tracking, adds latency. IPv6 eliminates the need for NAT by providing sufficient addresses.
 
-**Q6. What is a subnet mask and how does it work?**
+### Q6. What is a subnet mask and how does it work?
 > A subnet mask is a 32-bit number where network bits are 1s and host bits are 0s. ANDing an IP address with its subnet mask extracts the network address. Example: `192.168.1.100` AND `255.255.255.0` = `192.168.1.0` (network). All hosts in the same subnet share this network address and can communicate without a router.
 
-**Q7. What is the difference between unicast, broadcast, and multicast?**
+### Q7. What is the difference between unicast, broadcast, and multicast?
 > Unicast: one sender, one receiver (one-to-one) — most internet traffic. Broadcast: one sender, all devices on a LAN segment receive (one-to-all) — e.g., DHCP Discover, ARP. Multicast: one sender, multiple subscribed receivers (one-to-many) — e.g., IPTV, routing protocols; more efficient than broadcast because non-subscribers ignore the traffic.
 
-**Q8. What happens when your computer gets a 169.254.x.x IP address?**
+### Q8. What happens when your computer gets a 169.254.x.x IP address?
 > This is an APIPA (Automatic Private IP Addressing) / link-local address, assigned when DHCP fails. The OS sends DHCP Discover broadcasts and if no DHCP server responds, it auto-assigns an address from `169.254.0.0/16`. These are only valid on the local link — no internet access, no routing. It indicates a DHCP configuration problem.

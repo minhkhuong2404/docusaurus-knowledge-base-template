@@ -8,11 +8,15 @@ sidebar_label: "Sanctions"
 sidebar_position: 2
 ---
 
+import BankingSanctionsScreeningDiagram from '@site/src/components/BankingSanctionsScreeningDiagram';
+
 # Sanctions Screening
 
 ## Overview
 
 **Sanctions screening** is the mandatory compliance process of checking all payment parties — individuals, entities, and financial institutions — against government-issued and international **watchlists**. If a match is found, the payment must be blocked, the account may need to be frozen, and the incident reported to the regulator.
+
+<BankingSanctionsScreeningDiagram />
 
 Sanctions are **geopolitical tools**. Governments use them to restrict economic activity with certain countries, regimes, terrorist organisations, weapons proliferators, and corrupt individuals. For banks, processing a sanctioned transaction — even unknowingly — can result in catastrophic penalties.
 
@@ -192,52 +196,9 @@ When OFAC/UN/DFAT publish a new list version, every existing customer in the ban
 
 ## Sanctions Screening Architecture
 
-```
-Payment Instruction
-        │
-        ▼
-┌───────────────────────────────────────────────────────┐
-│              SANCTIONS SCREENING ENGINE                │
-│                                                        │
-│  1. DATA EXTRACTION                                    │
-│     Parse all party fields from ISO 20022 message     │
-│                                                        │
-│  2. NORMALISATION                                      │
-│     ├── Remove punctuation: "AL-RASHID" → "AL RASHID" │
-│     ├── Expand abbreviations: "Co." → "Company"       │
-│     ├── Transliterate: Arabic/Cyrillic → Latin        │
-│     ├── Lowercase + trim                              │
-│     └── Split compound names                          │
-│                                                        │
-│  3. MATCHING ENGINE                                    │
-│     ├── Exact match (account numbers, BICs, LEIs)     │
-│     ├── Fuzzy name match (Jaro-Winkler, Levenshtein)  │
-│     ├── Phonetic match (Soundex, Double Metaphone)    │
-│     ├── Token / n-gram match                          │
-│     ├── Alias expansion (check all known aliases)     │
-│     └── Country code match (for embargoed countries)  │
-│                                                        │
-│  4. SCORING & THRESHOLDING                             │
-│     ├── Score 0–100 per candidate match               │
-│     ├── < threshold → CLEAR                           │
-│     └── ≥ threshold → ALERT                          │
-└────────────────────────┬──────────────────────────────┘
-                         │
-              ┌──────────┴──────────┐
-              │                     │
-           CLEAR               POTENTIAL MATCH
-              │                     │
-         Process               Auto-Hold Payment
-         Payment               Notify Compliance
-                                    │
-                          ┌─────────┴──────────┐
-                          │                    │
-                    FALSE POSITIVE        TRUE MATCH
-                          │                    │
-                    Document            BLOCK permanently
-                    Release             Freeze account
-                    Tune rule           File with AUSTRAC/OFAC
-```
+The screening pipeline parses incoming party fields, normalises characters, runs exact and fuzzy matching algorithms (Jaro-Winkler, Levenshtein, Double Metaphone), and scores candidate matches against configured thresholds.
+
+> Use the **interactive screening simulator** at the top of this page to test fuzzy matching scores, thresholds, and analyst disposition workflows in real-time.
 
 ---
 

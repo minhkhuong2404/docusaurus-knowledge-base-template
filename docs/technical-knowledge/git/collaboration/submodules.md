@@ -10,7 +10,12 @@ tags:
 - collaboration
 - submodules
 ---
+
+import GitSubmodulesDiagram from '@site/src/components/GitSubmodulesDiagram';
+
 # `git submodule` — Embedding Repositories
+
+<GitSubmodulesDiagram />
 
 ## What is a Submodule?
 

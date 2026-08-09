@@ -13,7 +13,13 @@ tags:
   - spring-boot
 ---
 
+import KafkaParallelConsumerDiagram from '@site/src/components/KafkaParallelConsumerDiagram';
+
 # Parallel Consumer & Alternatives
+
+<KafkaParallelConsumerDiagram />
+
+---
 
 :::danger[Project No Longer Maintained]
 The Confluent Parallel Consumer library (`io.confluent.parallelconsumer`) is **no longer maintained**. Confluent's own documentation now points to [Apache Kafka Share Groups (KIP-932)](https://cwiki.apache.org/confluence/display/KAFKA/KIP-932%3A+Queues+for+Kafka) as the successor for similar functionality. An unofficial fork by one of the original authors is available at [github.com/astubbs/parallel-consumer](https://github.com/astubbs/parallel-consumer) but carries the same risks of an unmaintained dependency.
@@ -30,12 +36,6 @@ This page retains the library's internals as a reference — the architecture an
 ### Sequential Partition Processing
 
 In a standard Kafka consumer, a single thread is responsible for polling and processing all records from its assigned partitions **sequentially**:
-
-```
-Partition 0: [msg1] ──► process(msg1) ──► [msg2] ──► process(msg2) ──► [msg3]
-                           ▲
-              (Blocks next poll until completed — I/O wait time wasted)
-```
 
 This creates two compounding problems:
 
@@ -63,24 +63,6 @@ The Parallel Consumer solves this by decoupling **thread concurrency from partit
 
 The library wraps a standard `KafkaConsumer` and adds an asynchronous dispatch layer between polling and processing:
 
-```mermaid
-graph TD
-    Brokers[(Kafka Brokers)]
-    Poller["Poller Thread\n(KafkaConsumer.poll())"]
-    Queue["Work Queue\n(In-memory buffer)"]
-    Offset["Offset Manager\n(Completion bitmap)"]
-    Pool["Worker Thread Pool\n(maxConcurrency threads)"]
-    Business["Business Logic\n(HTTP / DB / etc.)"]
-
-    Brokers -->|"poll()"| Poller
-    Poller -->|Submit records| Queue
-    Queue -->|Backpressure signal| Poller
-    Queue -->|Dispatch tasks| Pool
-    Pool -->|Execute| Business
-    Pool -->|Report completion| Offset
-    Offset -->|"commitSync(offset + bitmap)"| Brokers
-```
-
 ### Key Components
 
 **Poller Thread:** Runs a tight loop calling native `KafkaConsumer.poll()`. It submits records to the work queue immediately and returns — it never executes business logic. Its only job is ingestion rate.
@@ -96,18 +78,6 @@ graph TD
 ## 3. Ordering Modes
 
 The library's key design decision is how to balance ordering guarantees against throughput.
-
-```
-                    ┌──────────────────────────────────┐
-                    │         Ordering Modes           │
-                    └────────────────┬─────────────────┘
-         ┌──────────────────────────┼──────────────────────────┐
-         ▼                          ▼                          ▼
-   [ UNORDERED ]                 [ KEY ]               [ PARTITION ]
-All records dispatched        Sequential per key,     Sequential per
-to pool immediately.          parallel across keys.   partition.
-Max throughput.               High throughput.        Matches standard consumer.
-```
 
 ### UNORDERED
 

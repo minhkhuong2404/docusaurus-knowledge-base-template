@@ -6,7 +6,20 @@ tags: [database, nosql, mongodb, cassandra, redis, dynamodb, graph, distributed,
 sidebar_position: 7
 ---
 
+import NosqlDatabaseTypesDiagram from '@site/src/components/NosqlDatabaseTypesDiagram';
+import CapTriangleDiagram from '@site/src/components/CapTriangleDiagram';
+import CapDecisionMatrixDiagram from '@site/src/components/CapDecisionMatrixDiagram';
+import ConsistentHashingDiagram from '@site/src/components/ConsistentHashingDiagram';
+import ApacheCassandraArchitectureDiagram from '@site/src/components/ApacheCassandraArchitectureDiagram';
+
 # NoSQL & Distributed Databases
+
+<NosqlDatabaseTypesDiagram />
+<CapTriangleDiagram />
+<CapDecisionMatrixDiagram />
+<ConsistentHashingDiagram />
+
+---
 
 :::info[Who this guide is for]
 - **New learners** — start at [Why NoSQL?](#why-nosql) and read top-to-bottom. Every concept is explained from scratch before code appears.
@@ -46,6 +59,8 @@ NoSQL databases emerged to solve these specific problems. They are not "better" 
 ---
 
 ## NoSQL Categories at a Glance
+
+<NosqlDatabaseTypesDiagram />
 
 | Category | Think of it as... | Examples | Best For |
 |----------|------------------|----------|----------|
@@ -454,6 +469,8 @@ private Instant expiresAt;   // document deleted after this time + 1hr
 ---
 
 ## Wide-Column Stores (Cassandra)
+
+<ApacheCassandraArchitectureDiagram />
 
 ### What is it?
 

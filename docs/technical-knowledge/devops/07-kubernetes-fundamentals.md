@@ -6,6 +6,8 @@ description: Kubernetes architecture for beginners — control plane components,
 tags: [kubernetes, k8s, architecture, control-plane, worker-node, api-server, etcd, beginner]
 ---
 
+import KubernetesArchitectureDiagram from '@site/src/components/KubernetesArchitectureDiagram';
+
 # Kubernetes Fundamentals
 
 > Kubernetes (K8s) automates the deployment, scaling, and management of containerised applications across a cluster of machines.
@@ -31,52 +33,14 @@ Running containers in production at scale requires:
 
 ## Kubernetes Cluster Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│  CONTROL PLANE (Master Node)                                         │
-│                                                                      │
-│  ┌─────────────┐  ┌──────────────┐  ┌──────────────┐  ┌─────────┐  │
-│  │ API Server  │  │  Scheduler   │  │ Controller   │  │  etcd   │  │
-│  │ (kube-api)  │  │              │  │  Manager     │  │         │  │
-│  └──────┬──────┘  └──────────────┘  └──────────────┘  └─────────┘  │
-│         │ (all components talk through API server)                   │
-└─────────┼───────────────────────────────────────────────────────────┘
-          │
-          │ kubelet watches for work
-┌─────────▼───────────────────────────────────────────────────────────┐
-│  WORKER NODE 1                                                       │
-│  ┌──────────────┐  ┌──────────────┐  ┌─────────────────────────┐   │
-│  │   kubelet    │  │  kube-proxy  │  │  Container Runtime      │   │
-│  │              │  │              │  │  (containerd)           │   │
-│  └──────────────┘  └──────────────┘  └─────────────────────────┘   │
-│                                                                      │
-│  ┌─────────────────────────────────────────────────────────────┐    │
-│  │  Pod A  (container-1 + container-2)                         │    │
-│  └─────────────────────────────────────────────────────────────┘    │
-│  ┌─────────────┐  ┌─────────────┐                                   │
-│  │  Pod B      │  │  Pod C      │                                   │
-│  └─────────────┘  └─────────────┘                                   │
-└──────────────────────────────────────────────────────────────────────┘
-
-WORKER NODE 2 ... WORKER NODE N  (same structure)
-```
+<KubernetesArchitectureDiagram />
 
 ---
 
 ## Control Plane Components
 
 ### kube-apiserver
-The **front door** to Kubernetes. Every action (CLI, UI, controller) goes through the API server.
-
-```
-kubectl apply -f deployment.yaml
-       ↓
-kube-apiserver (REST API)
-       ↓ validates + persists
-     etcd
-       ↓ notifies watchers
-  Scheduler, Controllers, kubelets
-```
+The **front door** to Kubernetes. Every action (CLI, UI, controller) goes through the API server, which validates inputs and persists cluster state to `etcd`.
 
 - All state changes go through the API server
 - Authenticates and authorises every request

@@ -11,8 +11,11 @@ tags:
   - Interview Prep
   - Career
 ---
+import BehavioralQuestionsDiagram from '@site/src/components/BehavioralQuestionsDiagram';
 
 # Top 50 Behavioral Interview Questions & Answers
+
+<BehavioralQuestionsDiagram />
 
 These questions cover the 8 core behavioral themes tested at top tech companies. For each, you'll find the **signal being tested**, **key points to cover**, and a **sample STAR answer**.
 

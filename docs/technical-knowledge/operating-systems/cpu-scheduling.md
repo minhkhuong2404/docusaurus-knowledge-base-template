@@ -11,261 +11,185 @@ tags:
 sidebar_position: 2
 ---
 
+import OsCpuSchedulingDiagram from '@site/src/components/OsCpuSchedulingDiagram';
+
 # CPU Scheduling
 
-CPU scheduling decides which process/thread runs on the CPU at any given time. The **scheduler** is the OS component responsible for this.
+<OsCpuSchedulingDiagram />
+
+---
+
+CPU scheduling decides which process or thread runs on an active CPU core at any given microsecond. The **CPU Scheduler** (or dispatcher) is the OS kernel component responsible for allocating processor execution time to processes in the ready queue while maximizing throughput and minimizing tail latency.
+
+---
 
 ## Scheduling Concepts
 
 ### CPU–I/O Burst Cycle
 
-Processes alternate between:
-- **CPU burst**: Actively executing instructions.
-- **I/O burst**: Waiting for I/O to complete.
+Processes alternate between two primary execution phases:
+- **CPU burst**: Actively executing CPU machine instructions (ALU math, memory access, register operations).
+- **I/O burst**: Waiting for an external input/output device operation to complete (disk block read, network packet receive, user input).
 
-**CPU-bound** processes: Long CPU bursts, infrequent I/O (e.g., video encoding).  
-**I/O-bound** processes: Short CPU bursts, frequent I/O (e.g., web server, database).
+- **CPU-bound processes**: Characterized by long CPU bursts and infrequent I/O operations (e.g., video rendering, matrix multiplication, machine learning training).
+- **I/O-bound processes**: Characterized by short CPU bursts and frequent I/O operations (e.g., NGINX web server, PostgreSQL database, microservice REST APIs).
 
 ### Preemptive vs Non-Preemptive
 
-| | Non-Preemptive | Preemptive |
+| Property | Non-Preemptive Scheduling | Preemptive Scheduling |
 |---|---|---|
-| Description | Process runs until it voluntarily yields or blocks | OS can forcibly remove a running process |
-| Latency | Unpredictable | Bounded |
-| Complexity | Simple | Complex (need synchronization) |
-| Examples | FCFS, SJF (non-preemptive) | Round Robin, SRTF, Linux CFS |
+| **Mechanism** | Process holds CPU until it voluntarily yields (`sched_yield()`), terminates, or blocks on I/O. | OS kernel forcibly interrupts running process via hardware timer interrupts (e.g., 1000 Hz APIC timer). |
+| **Latency & Control** | Unpredictable — a long CPU-bound task starves all waiting tasks. | Bounded response time — guarantees fair distribution of CPU time slices. |
+| **Kernel Complexity** | Simple — no race conditions in scheduler data structures. | High — requires kernel synchronization (locks, spinlocks) for safe ready-queue access. |
+| **Algorithms** | FCFS, Non-Preemptive SJF | Round Robin, SRTF, Multilevel Feedback Queue (MLFQ), Linux CFS |
 
 ---
 
 ## Scheduling Metrics
 
-| Metric | Definition |
-|---|---|
-| **CPU Utilization** | % of time CPU is busy (target: 40–90%) |
-| **Throughput** | Processes completed per unit time |
-| **Turnaround Time** | Completion time − Arrival time |
-| **Waiting Time** | Time spent in ready queue |
-| **Response Time** | First response − Arrival time |
+When evaluating CPU scheduling performance, system engineers measure five core metrics:
+
+1. **CPU Utilization**: Percentage of time the CPU is actively performing useful work (target: 40% to 90%).
+2. **Throughput**: Number of processes or tasks completed per unit of time (e.g., transactions per second).
+3. **Turnaround Time**: Total time elapsed from task submission to completion ($T_{\text{turnaround}} = T_{\text{completion}} - T_{\text{arrival}}$).
+4. **Waiting Time**: Total cumulative time a process spends waiting in the ready queue ($T_{\text{wait}} = T_{\text{turnaround}} - T_{\text{burst}}$).
+5. **Response Time**: Time elapsed from task submission until the first response or execution burst begins ($T_{\text{response}} = T_{\text{first\_exec}} - T_{\text{arrival}}$).
 
 ---
 
-## Scheduling Algorithms
+## The 7 Core Scheduling Algorithms
 
 ### 1. First-Come, First-Served (FCFS)
-
-- **Type**: Non-preemptive
-- Processes scheduled in arrival order.
-- **Convoy Effect**: Short processes stuck behind a long one.
-
-```
-Process: P1(24ms) P2(3ms) P3(3ms), all arrive at t=0
-Order:   P1 → P2 → P3
-Avg Wait: (0 + 24 + 27) / 3 = 17ms  ← poor
-```
+- **Type**: Non-preemptive.
+- **Mechanism**: Tasks are scheduled in exact order of arrival in the ready queue (FIFO).
+- **Flaw (Convoy Effect)**: If a long CPU-bound task arrives first, all subsequent short I/O-bound tasks are blocked behind it, severely reducing I/O throughput and responsiveness.
 
 ### 2. Shortest Job First (SJF)
-
-- **Type**: Non-preemptive (or preemptive → SRTF)
-- Selects process with shortest next CPU burst.
-- **Optimal average waiting time** (non-preemptive: among non-preemptive algorithms).
-- **Problem**: Cannot know burst length in advance → estimate using **exponential averaging**:
-
-```
-τ(n+1) = α * t(n) + (1 − α) * τ(n)
-```
-
-Where `t(n)` = actual nth burst, `τ(n)` = predicted nth burst, `α ∈ [0, 1]`.
+- **Type**: Non-preemptive.
+- **Mechanism**: Assigns CPU to the process with the shortest predicted next CPU burst length.
+- **Optimality**: Provably yields the minimum average waiting time for a static set of processes.
+- **Flaw**: Requires knowing the future CPU burst duration in advance. Can cause **starvation** for long tasks if short tasks continually arrive.
 
 ### 3. Shortest Remaining Time First (SRTF)
-
 - **Type**: Preemptive version of SJF.
-- When a new process arrives, if its burst < remaining time of current process → preempt.
-- **Optimal** average waiting time overall.
-- **Starvation** risk for long processes.
+- **Mechanism**: If a newly arrived process has a remaining CPU burst shorter than the currently running process's remaining time, the running process is immediately preempted.
 
 ### 4. Round Robin (RR)
-
-- **Type**: Preemptive
-- Each process gets a fixed **time quantum** (typically 10–100 ms).
-- After quantum expires, process goes to end of ready queue.
-
-```
-Quantum = 4ms
-P1(24ms) P2(3ms) P3(3ms)
-
-P1(4)→P2(3)→P3(3)→P1(4)→...→P1(4)→P1(4)→P1(4)→P1(4)
-Avg wait = (6 + 4 + 7) / 3 ≈ 5.67ms
-```
-
-**Quantum size matters**:
-- Too large → degenerates to FCFS.
-- Too small → too many context switches (overhead).
-- Rule of thumb: 80% of CPU bursts should be shorter than the quantum.
+- **Type**: Preemptive.
+- **Mechanism**: Each process is assigned a small unit of CPU time called a **time quantum** (typically 10ms–100ms). The scheduler cycles through the ready queue in FIFO order. If a process does not complete within its quantum, it is preempted and returned to the tail of the ready queue.
+- **Quantum Sizing**:
+  - *Too Large*: Degenerates into FCFS (long wait times for short jobs).
+  - *Too Small*: Excessive context-switching overhead evicts CPU cache lines, degrading overall throughput.
 
 ### 5. Priority Scheduling
+- **Type**: Preemptive or Non-Preemptive.
+- **Mechanism**: Each process is assigned a priority integer. The CPU is allocated to the process with the highest priority.
+- **Starvation Mitigation (Aging)**: Long-waiting lower-priority processes periodically have their priority incremented (aged) until they execute.
 
-- Each process has a priority; highest priority runs first.
-- **Preemptive** or non-preemptive.
-- **Starvation**: Low-priority processes may never run.
-- **Solution**: **Aging** — gradually increase priority of waiting processes.
-
-### 6. Multilevel Queue Scheduling
-
-Ready queue is divided into separate queues (e.g., foreground/background). Each queue has its own scheduling algorithm.
-
-```
-┌─────────────────────────────┐ ← Interactive (RR, high priority)
-├─────────────────────────────┤ ← System processes
-├─────────────────────────────┤ ← Batch (FCFS, low priority)
-└─────────────────────────────┘
-```
+### 6. Multilevel Queue (MLQ)
+- **Type**: Preemptive / Non-Preemptive.
+- **Mechanism**: Partitions the ready queue into separate sub-queues based on task type (e.g., System Processes, Interactive Foreground, Batch Background). Each queue has its own scheduling algorithm and static priority hierarchy.
 
 ### 7. Multilevel Feedback Queue (MLFQ)
-
-Processes can **move between queues** based on behavior:
-- Use a lot of CPU → demoted to lower queue (longer quantum).
-- Wait too long → promoted (aging).
-
-This is used in many real OS schedulers.
+- **Type**: Preemptive.
+- **Mechanism**: Allows processes to move dynamically between queues based on past CPU usage history:
+  - New tasks enter the highest-priority queue with a short time quantum.
+  - If a task uses its entire quantum without blocking, it is demoted to a lower-priority queue (longer quantum).
+  - If a task yields for I/O, it remains in or is promoted to a higher-priority queue.
+  - Periodic **Aging Boost**: Moves all processes to the top queue to prevent starvation.
 
 ---
 
 ## Linux Completely Fair Scheduler (CFS)
 
-Linux uses **CFS** (since kernel 2.6.23) for normal processes (`SCHED_NORMAL`).
+Since Linux kernel 2.6.23, the standard scheduler for non-real-time processes (`SCHED_NORMAL`) is the **Completely Fair Scheduler (CFS)**.
 
-### Core Idea
+### Core Architecture & Virtual Runtime (`vruntime`)
 
-Each process maintains a **virtual runtime (vruntime)** — how much CPU time it has used, weighted by priority (nice value). The scheduler always picks the process with the **lowest vruntime**.
+CFS models an "ideal, precise multi-tasking CPU" on hardware. Rather than using fixed time slices, CFS tracks the cumulative virtual execution time of each task via `vruntime`:
+
+$$\text{vruntime}_{\text{new}} = \text{vruntime}_{\text{old}} + \text{actual\_exec\_time} \times \left( \frac{\text{NICE\_0\_LOAD}}{\text{task\_weight}} \right)$$
+
+- **`nice` values**: Range from **$-20$** (highest priority, weight $= 88761$) to **$+19$** (lowest priority, weight $= 15$). Default `nice 0` has weight $1024$.
+- Tasks with higher priority (lower nice) have larger weights, causing their `vruntime` to increase at a much slower rate. Consequently, CFS selects them for execution more frequently.
+
+### Red-Black Tree Data Structure
+
+CFS maintains all runnable tasks in a self-balancing **Red-Black Tree** sorted by `vruntime` ($O(\log N)$ insertion and deletion):
+- The leftmost node (`rb_leftmost`) represents the runnable process with the absolute smallest `vruntime`.
+- The scheduler always picks `rb_leftmost` to execute next ($O(1)$ selection lookup).
 
 ```
-vruntime += actual_runtime * (NICE_0_LOAD / weight)
+                      ( Root: vruntime = 45ms )
+                             /          \
+                            /            \
+          ( vruntime = 20ms )            ( vruntime = 80ms )
+                 /
+                /
+    [ Leftmost: vruntime = 5ms ] <--- Next process selected by CFS
 ```
 
-Higher-priority (lower nice) processes have higher weight → vruntime grows slower → they get more CPU.
+### Linux Scheduling Classes (Priority Order)
 
-### Data Structure
-
-CFS uses a **red-black tree** (sorted by vruntime) for O(log n) process selection. The leftmost node is always the next process to run.
-
-### Nice Values
-
-- Range: **−20** (highest priority) to **+19** (lowest priority).
-- Each step ≈ 10% more/less CPU time.
-
-```bash
-nice -n 10 ./my_program     # start with nice=10
-renice -n -5 -p 1234        # change running process
-```
-
-### Scheduling Classes (Priority Order)
-
-1. `SCHED_DEADLINE` — EDF (Earliest Deadline First), real-time.
-2. `SCHED_FIFO` / `SCHED_RR` — Real-time, fixed priority 1–99.
-3. `SCHED_NORMAL` / `SCHED_BATCH` / `SCHED_IDLE` — CFS.
+1. `SCHED_DEADLINE`: Earliest Deadline First (EDF) real-time tasks.
+2. `SCHED_FIFO` / `SCHED_RR`: POSIX real-time tasks with fixed priorities $1\text{--}99$.
+3. `SCHED_NORMAL` (other) / `SCHED_BATCH` / `SCHED_IDLE`: Standard CFS tasks.
 
 ---
 
-## Real-Time Scheduling
+## Multiprocessor & NUMA Scheduling
 
-### Hard vs Soft Real-Time
+### Symmetric Multiprocessing (SMP)
+In SMP systems, each CPU core runs its own instance of the scheduler on a per-core ready queue. To balance load across cores, the kernel uses:
+- **Push Migration**: Overloaded cores push idle tasks to underutilized cores.
+- **Pull Migration**: Idle cores actively pull tasks from busy cores' run-queues.
 
-| | Hard Real-Time | Soft Real-Time |
+### Processor Affinity & Cache Warmth
+Processor affinity binds a process to specific CPU cores to maintain **CPU L1/L2 cache warmth**:
+- **Soft Affinity**: The scheduler prefers keeping a task on the same core.
+- **Hard Affinity**: Pins a process to explicit CPU cores via `sched_setaffinity()`.
+
+```bash
+# Pin process to CPU cores 0 and 1
+taskset -c 0,1 java -jar app.jar
+```
+
+### NUMA (Non-Uniform Memory Access)
+In multi-socket servers, accessing RAM connected to a local CPU socket is significantly faster than accessing remote RAM connected to another socket over QPI/UPI interconnects. Linux **NUMA-aware scheduling** allocates memory pages from local RAM nodes and schedules processes on CPUs local to those memory nodes.
+
+---
+
+## Common Mistakes
+
+| Mistake | Consequence | Mitigation |
 |---|---|---|
-| Deadline miss | Catastrophic (safety-critical) | Degraded quality |
-| Examples | Airbags, pacemakers | Video streaming, audio |
-
-### Algorithms
-
-- **Rate Monotonic (RM)**: Static priority; shorter period → higher priority. Optimal for static-priority preemptive scheduling.
-- **Earliest Deadline First (EDF)**: Dynamic priority; closest deadline → highest priority. Optimal for preemptive scheduling (can achieve 100% utilization).
-
----
-
-## Multiprocessor Scheduling
-
-### Asymmetric vs Symmetric
-
-- **AMP** (Asymmetric): One master CPU handles scheduling, others run user code.
-- **SMP** (Symmetric): Each CPU self-schedules from a shared ready queue.
-
-### Processor Affinity
-
-The tendency to keep a process on the same CPU to exploit **warm cache**:
-- **Soft affinity**: OS tries but does not guarantee same CPU.
-- **Hard affinity**: Process is pinned to specific CPU(s).
-
-```bash
-taskset -c 0,1 ./program   # Pin to CPU 0 and 1
-```
-
-### Load Balancing
-
-- **Push migration**: Overloaded CPU pushes tasks to idle CPUs.
-- **Pull migration**: Idle CPU pulls tasks from busy CPUs.
-
-### NUMA-Aware Scheduling
-
-In Non-Uniform Memory Access systems, accessing local memory is faster. The scheduler tries to keep processes on CPUs near their memory.
+| Setting aggressive CPU quotas in Kubernetes containers | CFS throttles container threads (`cpu.cfs_quota_us`), causing p99 tail latency spikes even when overall CPU usage is below 50%. | Prefer CPU requests over tight CPU limits for latency-critical microservices; monitor `container_cpu_cfs_throttled_periods_total`. |
+| Running heavy CPU-bound background jobs at `nice 0` | Competes equally with user-facing web requests, causing HTTP request queueing. | Run background workers with `nice -n 19` or `ionice -c 3`. |
+| Excessive process pinning (`taskset`) on shared hosts | Destroys OS scheduler load balancing, causing CPU core starvation on pinned cores while adjacent cores sit idle. | Use soft affinity / cgroups instead of hard affinity unless running dedicated HFT/real-time runtimes. |
 
 ---
 
 ## Interview Questions
 
-### Q1: What is the difference between preemptive and non-preemptive scheduling?
+### Q1. What is the fundamental difference between preemptive and non-preemptive CPU scheduling?
+> Preemptive scheduling allows the kernel to forcibly suspend a running task via hardware timer interrupts when its time slice expires or a higher-priority task wakes up. Non-preemptive scheduling requires the running task to voluntarily yield control (`sched_yield()`), execute a blocking I/O call, or terminate. Preemptive scheduling guarantees predictable response times for interactive applications but incurs context-switching overhead and requires kernel lock synchronization.
 
-Preemptive: OS can interrupt a running process (e.g., timer interrupt). Non-preemptive: Process runs until it voluntarily yields, completes, or blocks. Preemptive provides better responsiveness but requires synchronization mechanisms.
+### Q2. Why is Shortest Job First (SJF) optimal in theory but difficult to implement in real operating systems?
+> SJF is provably optimal because it minimizes the average waiting time across a set of tasks. However, it requires exact advance knowledge of each process's next CPU burst length, which is impossible to predict accurately in non-deterministic operating environments. Production OS schedulers approximate SJF using exponential moving averages of past CPU bursts or dynamic MLFQ priority demotions.
 
-### Q2: Why is SJF optimal but rarely used in practice?
+### Q3. How does the Linux Completely Fair Scheduler (CFS) use virtual runtime (`vruntime`) and Red-Black trees?
+> CFS tracks each runnable task's cumulative execution time weighted by its `nice` priority value in a variable called `vruntime`. Lower priority tasks (higher nice value) accrue `vruntime` faster than high priority tasks. CFS stores all runnable tasks in a self-balancing Red-Black tree sorted by `vruntime`. The scheduler always picks the leftmost node (`vruntime` minimum) to run next in $O(1)$ time, guaranteeing that all tasks receive a fair proportional share of CPU bandwidth without starvation.
 
-SJF minimizes average waiting time but requires knowing the next CPU burst length in advance, which is impossible. It can be approximated using exponential averaging of past bursts.
+### Q4. What is the Convoy Effect in CPU scheduling and which algorithm suffers from it?
+> The Convoy Effect occurs in First-Come, First-Served (FCFS) scheduling when a single CPU-bound process with a massive burst time occupies the CPU head, forcing dozens of short I/O-bound processes to wait behind it. This degrades system performance because I/O devices sit idle while waiting for short processes to execute their tiny CPU bursts.
 
-### Q3: What is the convoy effect?
-
-In FCFS, a CPU-bound process with a long burst holds the CPU while many short I/O-bound processes wait. This leads to poor CPU and I/O device utilization.
-
-### Q4: How does Linux CFS prevent starvation?
-
-CFS tracks `vruntime` for all processes. A sleeping process's `vruntime` is set to `min_vruntime` of the tree when it wakes, so it gets scheduled quickly but doesn't completely skip ahead. No process is ever fully starved.
-
-### Q5: What is the difference between `SCHED_FIFO` and `SCHED_RR` in Linux?
-
-Both are real-time. `SCHED_FIFO`: process runs until it blocks or yields — no time quantum. `SCHED_RR`: like FIFO but with a time quantum; when it expires, the process goes to the back of its priority queue.
-
-### Q6: What is processor affinity and why does it matter?
-
-Affinity keeps a process on the same CPU to benefit from hot cache data. Cache misses on migration are expensive (100s of ns). Linux provides `sched_setaffinity()` syscall.
-
-### Q7: How does the time quantum in Round Robin affect performance?
-
-- Large quantum → behaves like FCFS, high turnaround for short jobs.
-- Small quantum → more responsive but high context-switch overhead.
-- Ideal: quantum just larger than a typical interaction burst.
-
-### Q8: What is aging in scheduling?
-
-Aging incrementally increases the priority of a process that has been waiting a long time, preventing starvation. For example, increase priority by 1 every 15 minutes of waiting.
+### Q5. What is CPU throttling in containerized environments (Docker/Kubernetes) and what causes it?
+> Container CPU throttling occurs when a containerized application exceeds its allocated Linux cgroups CFS quota (`cpu.cfs_quota_us`) within a tracking period (`cpu.cfs_period_us`, default 100ms). When a multi-threaded application bursts and consumes its quota early in the 100ms period, the kernel suspends all threads in the cgroup for the remainder of the period, causing severe tail-latency spikes even if overall CPU utilization appears low.
 
 ---
 
-## Advanced Editorial Pass: CPU Scheduling, Fairness, and Tail Latency
+## See Also
 
-### Senior Engineering Focus
-- Reason about p99 latency through scheduler behavior, not average CPU utilization.
-- Account for cgroup quotas and NUMA effects in containerized deployments.
-- Align workload priority policy with business-critical paths.
-
-### Failure Modes to Anticipate
-- CPU starvation due to noisy-neighbor effects.
-- Misleading utilization metrics masking run-queue congestion.
-- Latency regressions after container CPU limit changes.
-
-### Practical Heuristics
-1. Track run-queue length and throttling metrics with request latency.
-2. Pin high-priority workloads carefully; validate with load tests.
-3. Re-check scheduler assumptions after kernel/runtime upgrades.
-
-### Compare Next
 - [Processes & Threads](./processes-and-threads.md)
-- [Virtual Memory Deep Dive](./virtual-memory-deep-dive.md)
 - [Linux Internals & Syscalls](./linux-internals-and-syscalls.md)
+- [Virtual Memory Deep Dive](./virtual-memory-deep-dive.md)

@@ -7,9 +7,13 @@ description: Payment Hub vs Payment Gateway vs Payment Factory — architecture 
 tags: [banking, payment-hub, architecture, orchestration, microservices, spring, payments]
 ---
 
+import BankingHubRoutingProcessingDiagram from '@site/src/components/BankingHubRoutingProcessingDiagram';
+
 # 🏗️ Payment Hub Architecture
 
 A **Payment Hub** is a centralised platform that orchestrates all payment processing across multiple rails, channels, and schemes through a unified, rule-driven engine. It is the evolution from bank-specific per-channel silos to a single payment intelligence layer.
+
+<BankingHubRoutingProcessingDiagram />
 
 ---
 

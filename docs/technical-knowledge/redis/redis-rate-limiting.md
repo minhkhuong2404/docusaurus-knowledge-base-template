@@ -9,6 +9,16 @@ sidebar_position: 9
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import RateLimitGranularityDiagram from '@site/src/components/RateLimitGranularityDiagram';
+import FixedWindowCounterDiagram from '@site/src/components/FixedWindowCounterDiagram';
+import SlidingWindowLogDiagram from '@site/src/components/SlidingWindowLogDiagram';
+import SlidingWindowCounterDiagram from '@site/src/components/SlidingWindowCounterDiagram';
+import TokenBucketDiagram from '@site/src/components/TokenBucketDiagram';
+import LeakyBucketDiagram from '@site/src/components/LeakyBucketDiagram';
+import RateLimiterDecisionTreeDiagram from '@site/src/components/RateLimiterDecisionTreeDiagram';
+import DistributedRateLimitingCoreProblemDiagram from '@site/src/components/DistributedRateLimitingCoreProblemDiagram';
+import MultiRegionRateLimitingDiagram from '@site/src/components/MultiRegionRateLimitingDiagram';
+import TieredBurstAllowanceDiagram from '@site/src/components/TieredBurstAllowanceDiagram';
 
 # Rate Limiting
 
@@ -48,21 +58,7 @@ Rate limiting answers the question: **"Should I allow this request right now?"**
 
 Rate limits can be applied at multiple granularities — often stacked:
 
-```
-Incoming request
-    ↓
-[IP-level limit]          ← 1,000 req/min per IP (DDoS protection)
-    ↓
-[API Key-level limit]     ← 100 req/min per API key (quota enforcement)
-    ↓
-[User-level limit]        ← 10 req/min per authenticated user
-    ↓
-[Endpoint-level limit]    ← /search: 20 req/min (expensive endpoint)
-    ↓
-[Global service limit]    ← 50,000 req/min total (protect downstream DBs)
-    ↓
-Handler / business logic
-```
+<RateLimitGranularityDiagram />
 
 ---
 
@@ -79,29 +75,9 @@ Each algorithm is a different strategy for how to *count* requests. They differ 
 
 Divide time into fixed buckets (e.g., each minute). Count requests per bucket. Reset at the start of each new window.
 
-```mermaid
-gantt
-    title Fixed Window — 5 req/min limit
-    dateFormat  s
-    axisFormat %S
+<FixedWindowCounterDiagram />
 
-    section Window 1 (0-60s)
-    req 1 :done, 0, 1s
-    req 2 :done, 10, 1s
-    req 3 :done, 20, 1s
-    req 4 :done, 30, 1s
-    req 5 :done, 40, 1s
-
-    section Window 2 (60-120s)
-    req 6 :active, 60, 1s
-    req 7 :active, 61, 1s
-    req 8 :active, 62, 1s
-    req 9 :active, 63, 1s
-    req 10 :active, 64, 1s
-```
-
-**The boundary burst problem:**
-
+The boundary burst problem:
 ```
 Limit: 100 req/min
 Window resets at :00 of every minute
@@ -157,6 +133,8 @@ public class FixedWindowRateLimiter {
 ### Algorithm 2: Sliding Window Log
 
 Track the exact **timestamp of every request** in a sorted set. On each request, remove entries older than the window, then count what remains.
+
+<SlidingWindowLogDiagram />
 
 ```
 Limit: 5 req/min (sliding)
@@ -242,6 +220,8 @@ public class SlidingWindowLogRateLimiter {
 
 A memory-efficient approximation of the sliding window. Uses two fixed window counters (current + previous) and weights them based on how far into the current window you are.
 
+<SlidingWindowCounterDiagram />
+
 ```
 Limit: 100 req/min
 Previous window: 80 requests
@@ -312,23 +292,7 @@ public class SlidingWindowCounterRateLimiter {
 
 A bucket holds tokens. Tokens are refilled at a constant rate. Each request consumes tokens. If the bucket is empty, the request is denied. Allows controlled **bursting** up to bucket capacity.
 
-```
-Capacity: 10 tokens
-Refill: 2 tokens/second
-Starts: full (10 tokens)
-
-t=0s:  Burst of 10 requests → consumes all 10 tokens → bucket empty
-t=0s:  11th request → DENIED (0 tokens)
-t=1s:  2 tokens refilled → 2 requests allowed
-t=5s:  10 tokens refilled (capped at capacity) → full burst available again
-```
-
-```mermaid
-graph LR
-    A["Token Source\n(2 tokens/sec)"] -->|refill| B["Token Bucket\n(capacity: 10)"]
-    B -->|consume 1 token| C["✅ Request Allowed"]
-    B -->|bucket empty| D["❌ Request Denied"]
-```
+<TokenBucketDiagram />
 
 ```java
 @Component
@@ -426,6 +390,8 @@ rateLimiter.consume(userId, capacity=100, refillPerSec=10, requested=5);   // PO
 
 Requests enter a queue (the "bucket"). They are processed at a **fixed, constant rate** regardless of how fast they arrive. Excess requests that overflow the bucket are dropped.
 
+<LeakyBucketDiagram />
+
 ```
 Bucket size: 10
 Outflow: 1 req/sec
@@ -452,26 +418,7 @@ Traffic is "smoothed" to exactly 1 req/sec regardless of input
 
 ## 🧭 Decision Framework: Which Algorithm to Use?
 
-### Flowchart
-
-```mermaid
-flowchart TD
-    A["What do you need to protect?"] --> B{End-user facing API\nor internal service?}
-
-    B -->|End-user API| C{Do clients have\nlegitimate traffic spikes?}
-    C -->|Yes, bursty but fair| D["✅ Token Bucket\nBest default for public APIs"]
-    C -->|No, should be smooth| E{Need exact accuracy\nor approximate OK?}
-    E -->|Approximate OK| F["✅ Sliding Window Counter\nMemory-efficient, ~95% accurate"]
-    E -->|Must be exact| G["✅ Sliding Window Log\nPerfect accuracy, higher memory"]
-
-    B -->|Simple quota enforcement| H{Acceptable if\nboundary burst occurs?}
-    H -->|Yes| I["✅ Fixed Window\nSimplest, lowest overhead"]
-    H -->|No| F
-
-    B -->|Protecting downstream service| J["✅ Leaky Bucket\nSmooths output to constant rate"]
-
-    B -->|Compliance / financial| G
-```
+<RateLimiterDecisionTreeDiagram />
 
 ### Quick-Reference Decision Matrix
 
@@ -735,6 +682,8 @@ public RateLimitResult consumeWithMetadata(String id, int capacity, int refillPe
 
 When you have multiple app instances, each instance has no knowledge of the others' counts. Naive in-process counting wildly under-counts:
 
+<DistributedRateLimitingCoreProblemDiagram />
+
 ```
 Limit: 100 req/min
 Instances: 10 pods
@@ -836,6 +785,8 @@ public boolean isAllowed(String identifier, int capacity, int refillPerSec) {
 ### Challenge 3: Multi-Region Rate Limiting
 
 In a multi-region deployment, centralized Redis means cross-region latency for every request.
+
+<MultiRegionRateLimitingDiagram />
 
 ```
 Region: US-EAST        Region: EU-WEST
@@ -1023,6 +974,8 @@ public CompletableFuture<Response> handle(Request req, String tier) {
 
 Token bucket is ideal for expressing tier differences not just in rate, but in *burst behavior*:
 
+<TieredBurstAllowanceDiagram />
+
 ```
 Free tier:       capacity=60,  refill=1/sec   → max 60 req burst, then 1/sec steady
 Pro tier:        capacity=600, refill=10/sec  → max 600 req burst, then 10/sec steady
@@ -1068,42 +1021,42 @@ Pro user:  can run a batch job in a burst, then continue at 10 req/sec
 
 ### Foundational
 
-**Q: What is rate limiting and why is it needed?**
+### Q: What is rate limiting and why is it needed?
 > Rate limiting controls how many requests a client can make in a given time window. It's needed to protect service availability (prevent one client from exhausting resources), improve fairness (shared resources across users), enforce business quotas (SaaS tiers), and improve security (brute-force prevention on auth endpoints).
 
-**Q: What's the difference between the Fixed Window and Sliding Window algorithms?**
+### Q: What's the difference between the Fixed Window and Sliding Window algorithms?
 > Fixed Window divides time into discrete buckets and counts requests per bucket. Simple, but allows a 2× burst at window boundaries — 100 requests at the end of window 1 and 100 at the start of window 2 = 200 requests in 2 seconds for a 100 req/min limit. Sliding Window tracks requests relative to a rolling time window ending at "now", so the count always reflects the true last N seconds. More accurate but requires more memory (log variant) or more computation (counter variant).
 
-**Q: Why is Redis used for rate limiting instead of an in-process counter?**
+### Q: Why is Redis used for rate limiting instead of an in-process counter?
 > In-process counters are not shared across application instances. With 10 pods, each pod has its own counter and a user could be allowed 10× the intended limit. Redis provides a shared, atomic counter with `INCR` that all instances use. Redis is also fast (~0.5ms), supports TTL for automatic key expiry, and Lua scripts for multi-step atomic operations.
 
 ---
 
 ### Intermediate
 
-**Q: Why use Lua scripts for rate limiting in Redis?**
+### Q: Why use Lua scripts for rate limiting in Redis?
 > Rate limiting requires multiple Redis operations that must be atomic: check count, compare to limit, increment, set TTL. Without atomicity, two concurrent requests can both read count=99 (limit=100), both pass the check, and both increment — allowing 101 requests. A Lua script runs as a single atomic unit in Redis — no other command can interleave between its steps. This eliminates the race condition entirely.
 
-**Q: How do you implement Token Bucket without a background refill process?**
+### Q: How do you implement Token Bucket without a background refill process?
 > Tokens are computed lazily on each request using the formula: `new_tokens = elapsed_seconds × refill_rate`. Store only `{tokens, lastRefillTimestamp}` in Redis. On each request, compute how many tokens have accumulated since `lastRefillTimestamp`, cap at capacity, then attempt to consume. No background worker needed — the math is done inline in the Lua script when the request arrives.
 
-**Q: A client sends 429 Too Many Requests. What headers should the response include?**
+### Q: A client sends 429 Too Many Requests. What headers should the response include?
 > At minimum: `Retry-After` (seconds until they can retry), `X-RateLimit-Limit` (total limit), `X-RateLimit-Remaining` (always 0 on 429), and `X-RateLimit-Reset` (epoch seconds when the window resets). Including these headers is critical — without them, clients must use random backoff, which creates thundering herd behavior as all rate-limited clients retry at the same time after guessing the wait period.
 
 ---
 
 ### Senior / System Design
 
-**Q: How would you implement rate limiting in a microservices architecture with 10 regions?**
+### Q: How would you implement rate limiting in a microservices architecture with 10 regions?
 > This is a distributed systems trade-off question. Options: (1) Regional quotas — split global quota across regions; fast but a user can exceed limits by routing through multiple regions. (2) Global Redis with cross-region calls — exact but adds 80–150ms cross-region latency to every request. (3) Consistent hashing — each user is assigned to one region's Redis; exact per-user, no cross-region calls, but requires client routing awareness. (4) Async sync — local limits with periodic global sync; allows brief over-serving but maintains low latency. In practice, option 3 (consistent hashing) or option 1 with small over-allowance is the right answer for most systems.
 
-**Q: How would you design rate limiting for a free-tier API that you want to monetize?**
+### Q: How would you design rate limiting for a free-tier API that you want to monetize?
 > Design decisions: (1) Use Token Bucket per tier — the burst capacity becomes a key differentiator (free: 10 burst, pro: 1000 burst). (2) Apply limits at the user level (not IP) so shared IPs (offices, universities) are treated fairly. (3) Return quota headers on every response so clients can build dashboards and know when to upgrade. (4) Implement a "soft limit" warning at 80% quota used (log a warning but still serve) vs a hard block at 100%. (5) Make the 429 response actionable — include a link to upgrade. Rate limiting UX is part of your monetization funnel.
 
-**Q: How do you prevent rate limit bypass via IP rotation?**
+### Q: How do you prevent rate limit bypass via IP rotation?
 > Pure IP-based limiting is easily bypassed with a botnet or rotating proxy. Defense-in-depth: (1) Require API key authentication — limit by key, not IP. (2) Combine IP + user-agent fingerprint + API key for multi-dimensional limiting. (3) Apply IP limits at the load balancer/CDN level (Cloudflare, AWS WAF) where IP reputation data is available. (4) Use behavioral analysis — rate limit on suspicious patterns (many unique endpoints, sequential IDs, non-human timing) not just raw count. (5) CAPTCHA challenges after repeated 429s on unauthenticated endpoints. No single technique is sufficient; defense in depth is the answer.
 
-**Q: What is the difference between rate limiting and circuit breaking?**
+### Q: What is the difference between rate limiting and circuit breaking?
 > Rate limiting is **client-side protection** — it limits how much any single client can consume, protecting fairness and preventing abuse. Circuit breaking is **server-side protection** — it detects when a downstream service (DB, external API) is failing and stops sending it requests to let it recover. They are complementary: rate limiting prevents overload from clients; circuit breaking prevents cascading failure to dependencies. In production you need both: rate limit inbound traffic AND circuit-break outbound calls.
 
 ---

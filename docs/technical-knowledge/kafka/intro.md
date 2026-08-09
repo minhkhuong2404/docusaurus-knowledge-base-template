@@ -1,54 +1,46 @@
 ---
 id: intro
-title: Kafka Knowledge Base
+title: Apache Kafka Knowledge Base
 sidebar_label: Introduction
-description: Apache Kafka is a **distributed event streaming platform** designed for
-  high-throughput, fault-tolerant, and scalable real-time data pipelines and streaming.
+description: Apache Kafka is a distributed event streaming platform designed for high-throughput, fault-tolerant, and scalable real-time data pipelines and streaming applications.
 tags:
-- technical-knowledge
-- kafka
-- intro
+  - technical-knowledge
+  - kafka
+  - intro
 ---
+
+import KafkaIntroOverviewDiagram from '@site/src/components/KafkaIntroOverviewDiagram';
+
 # Apache Kafka Knowledge Base
 
-> A comprehensive guide to mastering Apache Kafka — from core concepts to production-grade patterns, with Java/Spring Boot examples and interview prep.
+> A comprehensive reference guide covering Apache Kafka architecture, producer/consumer internal mechanics, stream processing, Exactly-Once Semantics (EOS), and production performance tuning with Java and Spring Boot.
+
+---
 
 ## What is Apache Kafka?
 
-Apache Kafka is a **distributed event streaming platform** designed for high-throughput, fault-tolerant, and scalable real-time data pipelines and streaming applications.
+Apache Kafka is a **distributed commit log** and event streaming platform designed for high-throughput, fault-tolerant, and horizontally scalable real-time data streaming.
 
-Originally developed at LinkedIn and open-sourced in 2011, Kafka is now maintained by the Apache Software Foundation and is the backbone of event-driven architectures at thousands of companies worldwide.
+<KafkaIntroOverviewDiagram />
 
----
-
-## Why Kafka?
-
-| Feature | Description |
-|---|---|
-| **High Throughput** | Millions of messages/sec per broker |
-| **Low Latency** | Sub-millisecond to single-digit ms |
-| **Durability** | Persisted to disk, replicated across brokers |
-| **Scalability** | Horizontally scalable via partitions |
-| **Fault Tolerance** | Leader election, ISR replication |
-| **Replayability** | Consumers can re-read past messages |
+Originally built at LinkedIn to replace monolithic message brokers, Kafka is designed around an append-only commit log stored on disk. Rather than destroying messages upon delivery, Kafka retains ordered records in partition log segments for configurable retention periods (`log.retention.hours`), allowing consumers to replay historical event streams at arbitrary offsets.
 
 ---
 
-## How to Use This Knowledge Base
+## Key Pillars of Kafka Architecture
 
-```
-Core Concepts       → Start here if you're new to Kafka
-Producer            → Deep dive into producing messages
-Consumer            → Deep dive into consuming messages
-Advanced Topics     → Streams, Connect, EOS, ordering
-Interview Prep      → Curated Q&A to ace Kafka interviews
-```
+| Pillar | Mechanism | Senior Engineering Advantage |
+|---|---|---|
+| **Append-Only Disk I/O** | Sequential writes to log segments (`.log`). | Achieves $100\text{--}500\text{ MB/sec}$ disk write bandwidth by eliminating random disk head seeks. |
+| **Zero-Copy Transfers** | Linux `sendfile()` syscall. | DMA transfers bytes from OS Page Cache directly to NIC hardware without JVM heap memory allocation. |
+| **Log Partitioning** | Parallel topics partitioned across broker nodes. | Scales read and write throughput linearly across clusters. |
+| **ISR Replication** | In-Sync Replicas quorum tracking. | Provides tunable zero-data-loss durability (`acks=all` + `min.insync.replicas`). |
 
 ---
 
 ## Quick-Start with Spring Boot
 
-Add the dependency:
+### Dependency (`pom.xml`)
 
 ```xml
 <dependency>
@@ -57,7 +49,7 @@ Add the dependency:
 </dependency>
 ```
 
-Minimal `application.yml`:
+### Application Configuration (`application.yml`)
 
 ```yaml
 spring:
@@ -66,73 +58,70 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all
+      properties:
+        enable.idempotence: true
     consumer:
-      group-id: my-group
+      group-id: payment-processing-group
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       auto-offset-reset: earliest
+      enable-auto-commit: false
 ```
 
-Send a message:
+### Producer Service
 
 ```java
 @Service
 @RequiredArgsConstructor
-public class OrderService {
+public class OrderEventPublisher {
 
     private final KafkaTemplate<String, String> kafkaTemplate;
 
-    public void publishOrder(String orderId, String payload) {
-        kafkaTemplate.send("orders", orderId, payload);
+    public CompletableFuture<SendResult<String, String>> publishOrderEvent(String orderId, String payload) {
+        // Publishes asynchronously with key-based partition routing
+        return kafkaTemplate.send("order-events", orderId, payload);
     }
 }
 ```
 
-Consume a message:
+### Consumer Listener
 
 ```java
 @Component
-public class OrderConsumer {
+public class OrderEventConsumer {
 
-    @KafkaListener(topics = "orders", groupId = "order-group")
-    public void consume(String message, @Header(KafkaHeaders.RECEIVED_PARTITION) int partition) {
-        System.out.printf("Received from partition %d: %s%n", partition, message);
+    @KafkaListener(topics = "order-events", groupId = "order-processor-group")
+    public void handleOrderEvent(
+            @Payload String payload,
+            @Header(KafkaHeaders.RECEIVED_PARTITION) int partition,
+            @Header(KafkaHeaders.OFFSET) long offset) {
+        
+        log.info("Processing order event from partition={} offset={}: {}", partition, offset, payload);
     }
 }
 ```
-
----
-
-## Prerequisites
-
-- Java 17+
-- Docker (for local Kafka via `docker-compose`)
-- Basic understanding of publish-subscribe messaging
-
----
-
-:::tip[Get started]
-Head to [Core Concepts → Kafka Overview](./core/kafka-overview) to begin your journey.
-:::
 
 ---
 
 ## Interview Questions
 
-### Q: When should Kafka be chosen over a traditional message queue?
-**A:** Choose Kafka for high-throughput event streams, replayability, and long retention; use classic queues for simpler point-to-point workflows.
+### Q1. When should Kafka be chosen over a traditional message queue like RabbitMQ?
+> Choose Kafka when building high-throughput event-driven systems requiring long-term message retention, replayability (consumers seeking back to past offsets), event sourcing, or stream processing. Choose RabbitMQ for complex message routing (AMQP topic exchanges, headers), flexible per-message queueing, or immediate message deletion upon consumption.
 
-### Q: What is the most important production trade-off in Kafka design?
-**A:** Balancing durability and latency via replication factor, acks, and batching settings.
+### Q2. What is the fundamental production trade-off in Kafka cluster tuning?
+> The core trade-off is **Latency vs Durability vs Throughput**. Setting `acks=all`, `min.insync.replicas=2`, and `enable.idempotence=true` guarantees maximum durability and zero data loss, but increases producer write latency. Increasing `linger.ms=20` and `batch.size=65536` maximizes network throughput, but adds intentional micro-latency delays.
 
-### Q: How do you avoid hot partitions?
-**A:** Use balanced partition keys and validate key cardinality against traffic distribution.
+### Q3. How do you prevent hot partition bottlenecks in a production Kafka topic?
+> Ensure partition key cardinality is high and uniformly distributed (e.g., UUID or account ID using MurmurHash2). Avoid low-cardinality keys like enum states ("PENDING", "COMPLETED") which route millions of records into a single partition while other partitions sit idle. If key skew is unavoidable, use custom partitioners with salt suffixes.
 
-### Q: Why does consumer group design matter for scaling?
-**A:** Throughput scales by partition count and consumer parallelism constraints; misalignment causes idle consumers or lag.
+### Q4. What happens when a consumer group has more consumers than topic partitions?
+> The max parallelism for a consumer group is strictly capped by the partition count of the subscribed topic. Excess consumers beyond the partition count will sit completely idle in the consumer group, receiving zero partition assignments until an active consumer crashes or unsubscribes.
 
-### Q: What reliability controls should be discussed in a senior interview answer?
-**A:** Idempotent producers, retries with backoff, dead-letter handling, and observability of lag and rebalance behavior.
+---
 
-### Q: How do you explain eventual consistency with Kafka to product stakeholders?
-**A:** Events are processed asynchronously with bounded delay; systems converge to correctness while gaining resilience and scale.
+## See Also
+
+- [Kafka Architecture Overview](./core/kafka-overview.md)
+- [Broker Storage Mechanics](./core/broker.md)
+- [KRaft Consensus vs ZooKeeper](./core/kraft-vs-zookeeper.md)

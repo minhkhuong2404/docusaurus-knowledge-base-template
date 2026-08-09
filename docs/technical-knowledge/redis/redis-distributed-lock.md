@@ -6,9 +6,15 @@ description: "Implementation of Distributed Locks using Redis, Redisson, and the
 tags: [redis, distributed-lock, pattern, backend]
 ---
 
+import RedisDistributedLockDiagram from '@site/src/components/RedisDistributedLockDiagram';
+
 # Distributed Lock with Redis
 
 A **distributed lock** ensures that only one process (across multiple nodes) can execute a critical section at a time. Redis is a popular choice for implementing distributed locks due to its atomic commands and TTL support.
+
+<RedisDistributedLockDiagram />
+
+---
 
 #### 👶 Beginner Concept: The "Single Bathroom Key"
 Imagine 5 roommates sharing 1 bathroom. 

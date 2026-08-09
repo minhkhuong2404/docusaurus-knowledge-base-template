@@ -6,7 +6,16 @@ tags: [networking, performance, latency, bandwidth, quic, http2, compression, ke
 sidebar_position: 13
 ---
 
+import NetworkPerformanceOptimizationDiagram from '@site/src/components/NetworkPerformanceOptimizationDiagram';
+import CdnEdgeArchitectureDiagram from '@site/src/components/CdnEdgeArchitectureDiagram';
+
 # Network Performance & Optimization
+
+<NetworkPerformanceOptimizationDiagram />
+
+<CdnEdgeArchitectureDiagram />
+
+---
 
 ## Key Metrics
 
@@ -22,118 +31,6 @@ sidebar_position: 13
 ---
 
 ## The Latency Hierarchy
-
-```
-Intra-CPU cache:    < 1 ns
-RAM access:           100 ns
-SSD read:           0.1 ms
-Same datacenter:    0.5–1 ms   ← optimize heavily here
-Same city (LAN):     5–10 ms
-Same country:       20–50 ms
-Cross-continent:   100–200 ms
-Satellite (LEO):   20–40 ms   (Starlink)
-Satellite (GEO):   600+ ms
-
-Speed of light in fiber ≈ 200,000 km/s (⅔ of c)
-NY → London = 5,600 km → minimum one-way: 28ms → RTT ≥ 56ms
-```
-
----
-
-## Connection Overhead
-
-Every new TCP+TLS connection requires:
-```
-TCP handshake:     1 RTT   (SYN → SYN-ACK → ACK)
-TLS 1.3:           1 RTT   (combined in QUIC)
-TLS 1.2:           2 RTT
-
-Total for HTTPS (TCP + TLS 1.3): 2 RTT before first byte of HTTP
-On a 100ms RTT link: 200ms just to establish connection!
-
-Solution: connection reuse (keep-alive, connection pooling)
-```
-
----
-
-## HTTP Keep-Alive & Connection Reuse
-
-```
-Without Keep-Alive:
-  [TCP handshake][TLS][HTTP req/resp][TCP close]  ← every request!
-  [TCP handshake][TLS][HTTP req/resp][TCP close]
-
-With Keep-Alive:
-  [TCP handshake][TLS][HTTP req/resp][HTTP req/resp][HTTP req/resp][close]
-  One connection, many requests!
-```
-
-```http
-# HTTP/1.1: keep-alive is default
-Connection: keep-alive
-Keep-Alive: timeout=5, max=1000
-
-# HTTP/2: multiplexing makes this even better
-# Multiple requests on one connection simultaneously
-```
-
-```java
-// Spring RestTemplate connection pooling
-@Bean
-public RestTemplate restTemplate() {
-    PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
-    cm.setMaxTotal(200);            // max total connections
-    cm.setDefaultMaxPerRoute(20);   // max per host
-
-    CloseableHttpClient client = HttpClients.custom()
-        .setConnectionManager(cm)
-        .setKeepAliveStrategy((response, context) -> 30_000)  // 30s keep-alive
-        .setDefaultRequestConfig(RequestConfig.custom()
-            .setConnectTimeout(Timeout.ofSeconds(5))
-            .setResponseTimeout(Timeout.ofSeconds(30))
-            .build())
-        .build();
-
-    return new RestTemplate(new HttpComponentsClientHttpRequestFactory(client));
-}
-
-// Spring WebClient (preferred for reactive)
-@Bean
-public WebClient webClient() {
-    ConnectionProvider provider = ConnectionProvider.builder("http-pool")
-        .maxConnections(200)
-        .pendingAcquireMaxCount(500)
-        .maxIdleTime(Duration.ofSeconds(20))
-        .build();
-
-    return WebClient.builder()
-        .clientConnector(new ReactorClientHttpConnector(
-            HttpClient.create(provider)
-                .responseTimeout(Duration.ofSeconds(30))))
-        .baseUrl("https://api.example.com")
-        .build();
-}
-```
-
----
-
-## HTTP/2 Multiplexing
-
-```
-HTTP/1.1: max 6 connections per origin (browser limit)
-          1 request per connection at a time = 6 concurrent requests
-
-HTTP/2: 1 connection, unlimited concurrent streams
-        100 requests fly in parallel over 1 TCP connection
-
-Key HTTP/2 performance features:
-  ┌─────────────────────────────────────────────┐
-  │ HPACK header compression: ~85% header reduction  │
-  │ Multiplexing: concurrent requests, 1 connection  │
-  │ Server push: proactively send CSS/JS with HTML   │
-  │ Stream prioritization: critical resources first  │
-  └─────────────────────────────────────────────┘
-```
 
 ---
 
@@ -303,26 +200,26 @@ With window scaling (up to 1 GB window): ≥ 1 Gbps on 100ms link ✅
 
 ## Interview Questions
 
-**Q1. What is the difference between latency, bandwidth, and throughput?**
+### Q1. What is the difference between latency, bandwidth, and throughput?
 > Latency: time for a packet to travel from source to destination (one-way) or round-trip (RTT). Bandwidth: maximum capacity of the channel (bits per second). Throughput: actual useful data transferred per second — always less than bandwidth due to overhead, protocol inefficiency, and latency-induced idle time. Analogy: a highway (bandwidth), travel time (latency), actual cars passing per hour (throughput).
 
-**Q2. Why does connection establishment add significant overhead, and how is it minimized?**
+### Q2. Why does connection establishment add significant overhead, and how is it minimized?
 > TCP 3-way handshake + TLS 1.3 = 2 RTTs before the first byte of HTTP data. On a 100ms RTT link, this is 200ms just for setup. Minimized by: HTTP keep-alive (reuse connections for many requests), connection pooling (pre-established pool of connections), HTTP/2 multiplexing (one connection, many concurrent requests), QUIC 0-RTT (resume previous sessions with zero handshake latency).
 
-**Q3. What is head-of-line blocking and how does HTTP/3 solve it?**
+### Q3. What is head-of-line blocking and how does HTTP/3 solve it?
 > TCP delivers data in order — if one packet is lost, all subsequent packets queue up waiting for the retransmission (even if they belong to unrelated HTTP/2 streams). HTTP/3 uses QUIC over UDP, where each stream's byte sequence is independent. A lost packet for stream 3 only blocks stream 3, not streams 1, 2, 4. This is critical for lossy networks where HTTP/2's TCP HoL blocking degrades performance significantly.
 
-**Q4. What is the Bandwidth-Delay Product and why does it matter for TCP?**
+### Q4. What is the Bandwidth-Delay Product and why does it matter for TCP?
 > BDP = bandwidth × RTT = the maximum amount of data "in flight" needed to fully utilize the link. The TCP receive window must be at least as large as the BDP for optimal throughput. Default TCP windows (64KB) limit throughput to ~5 Mbps on a 100ms RTT link regardless of bandwidth. TCP window scaling (enabled by default on modern OSes) allows windows up to 1 GB, enabling full utilization of high-BDP paths.
 
-**Q5. How does HTTP/2 header compression (HPACK) work?**
+### Q5. How does HTTP/2 header compression (HPACK) work?
 > HPACK maintains a static table of common header name-value pairs (`:method GET`, `:status 200`, etc.) and a dynamic table of previously sent headers. Instead of sending full header strings, HPACK sends table indices. Headers not in the table are Huffman-encoded. This eliminates redundant headers (User-Agent, Authorization are the same on every request) — typically 85%+ header size reduction, critical for mobile where headers can exceed body size.
 
-**Q6. What is QUIC 0-RTT resumption and what are its security implications?**
+### Q6. What is QUIC 0-RTT resumption and what are its security implications?
 > 0-RTT: on the first connection, the server sends a session ticket. On reconnect, the client sends data alongside the session ticket in the first packet — no handshake RTT. Security concern: 0-RTT data can be replayed by an attacker who captures the initial packet and retransmits it. Mitigation: only use 0-RTT for idempotent requests (GET), not for state-changing operations (POST payments). gRPC over HTTP/3 and browsers enforce this.
 
-**Q7. What tools would you use to diagnose poor network performance in production?**
+### Q7. What tools would you use to diagnose poor network performance in production?
 > `ping`/`mtr` for latency and packet loss. `traceroute` to identify slow hops. `curl -w` timing for TTFB breakdown (DNS, connect, TLS, first byte). `iperf3` for raw bandwidth measurement. `ss -s` or `netstat` for connection states (TIME_WAIT accumulation, SYN queues). `tcpdump`/Wireshark for deep packet inspection. APM tools (Datadog, New Relic) for application-level latency breakdown. `dmesg` for kernel errors (TCP buffer overruns).
 
-**Q8. What is TCP slow start and how does it affect first-request performance?**
+### Q8. What is TCP slow start and how does it affect first-request performance?
 > TCP slow start begins every new connection with a small congestion window (typically 10 MSS = ~14KB initial window in modern Linux). It doubles each RTT until a threshold. For a 1 MB response on a 50ms RTT link, slow start means: RTT 1: 14KB, RTT 2: 28KB, RTT 3: 56KB... taking 4-5 RTTs (200-250ms) to reach full throughput. Mitigation: keep-alive (avoids new connections), smaller responses, CDN edge caching (shorter RTT), increase initial congestion window (`ip route change ... initcwnd 100`).

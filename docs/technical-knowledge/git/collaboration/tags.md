@@ -11,7 +11,12 @@ tags:
 - collaboration
 - tags
 ---
+
+import GitTagsDiagram from '@site/src/components/GitTagsDiagram';
+
 # Tags — Marking Releases
+
+<GitTagsDiagram />
 
 ## What is a Tag?
 

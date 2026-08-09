@@ -6,9 +6,15 @@ description: Deep dive into Redis pipelining for throughput optimization, MULTI/
 tags: [redis, pipeline, transactions, lua, backend, performance]
 ---
 
+import RedisPipelineTransactionsDiagram from '@site/src/components/RedisPipelineTransactionsDiagram';
+
 # Redis Pipeline, Transactions & Lua Scripts
 
 Understanding the differences and constraints of Redis's three batching mechanisms is critical for senior-level design and debugging.
+
+<RedisPipelineTransactionsDiagram />
+
+---
 
 ---
 

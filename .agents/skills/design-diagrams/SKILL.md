@@ -14,116 +14,93 @@ Read the detailed design guide at [references/DESIGNS.md](./references/DESIGNS.m
 ## When to Trigger This Skill
 
 Use this skill when:
-- Converting a static ASCII art flow, Mermaid diagram, or markdown table into an interactive component.
-- Creating a new architecture, state machine, or protocol sequence diagram from scratch.
-- Adding hover effects, animated arrows, click-to-expand panels, tabs, or progress indicators to a section.
-- Modifying global connection line or arrowhead styles for all Mermaid diagrams.
+- Converting a static ASCII art flow, Mermaid diagram, markdown table, or text-only stub container into a fully functional interactive component.
+- Creating a new architecture diagram, state machine, protocol sequence, interactive lookup reference, or checklist from scratch.
+- Adding hover effects, animated arrows, step-by-step playback, tabbed panels, or filterable lists to technical documentation.
+- Auditing existing diagram components across topic directories (`kafka`, `networking`, `operating-systems`, `redis`, `java`, `database`).
 
 ---
 
-## Execution Steps
+## Execution Workflow
 
-### Step 1 — Read the Design Reference
+### Step 1 — Audit Existing Components & Stubs
 
-Before writing code, read [references/DESIGNS.md](./references/DESIGNS.md). It documents:
-- The full color palette and when to use each color.
-- All available CSS classes from `diagrams.css` and what they do.
-- The five diagram archetypes with full implementation templates.
-- Common pitfalls and how to avoid them.
+Check whether a component file already exists in `src/components/<ConceptName>Diagram.tsx`.
+Identify if it is a **text-only stub** (short shell with simple text tabs and no visual representations) vs a **real visual component** (SVG node graphs, animated directional flow sequences, rich interactive tabs with gotchas/metrics, or filterable references).
 
----
-
-### Step 2 — Choose the Right Archetype
-
-| Content Type | Recommended Archetype |
-|---|---|
-| Protocol handshake / sequence flow | **Animated Flow** (stateful arrows with play button) |
-| Architecture with hover-to-inspect nodes | **SVG Node Graph** (SVG + `<animateMotion>` particles) |
-| Comparison table / decision tree | **Tabbed Explorer** (tabs + detail panel) |
-| Reference data (headers, status codes) | **Searchable List** (search + click-to-expand) |
-| Pre-launch review / audit | **Interactive Checklist** (checkboxes + progress bar) |
-
----
-
-### Step 3 — Create the Component
-
-1. Create `src/components/<ConceptName>Diagram.tsx`.
-2. Name it after the concept, e.g. `HttpStatusCodesDiagram`, `TlsHandshakeDiagram`.
-3. Always use `className="interactive-diagram-container"` as the outermost wrapper.
-4. Always include an `interactive-diagram-header` bar with an SVG icon and a descriptive title.
-5. Use `useState` for all interactive state (active tab, selected item, hover, etc.).
-6. See [references/DESIGNS.md](./references/DESIGNS.md) for full boilerplate templates.
-
-**Critical rules:**
-- Never use emoji characters in header titles — use inline `<svg>` icons instead.
-- Never use `inline style` for colors that appear in the color palette — use the CSS variables or the hex tokens from DESIGNS.md consistently.
-- Always resolve all ternary branches to avoid Rspack compilation failures.
-- Wrap SVG content in `.interactive-diagram-svg-wrapper.interactive-diagram-grid-bg` for the dot-matrix canvas background.
-
----
-
-### Step 4 — Integrate into Markdown
-
-Add an import at the top of the `.md` file (after frontmatter):
-
-```markdown
-import MyDiagram from '@site/src/components/MyDiagram';
+Commands to check component status:
+```bash
+# Check line count & stub signatures in components
+wc -l src/components/<ConceptName>Diagram.tsx
 ```
 
-Replace the static block (ASCII art, code block, or table) with the JSX tag:
+---
 
-```markdown
-<MyDiagram />
-```
+### Step 2 — Read the Design Specification
 
-Multiple imports per file are fine — all existing diagrams in a file follow this pattern.
+Before writing code, inspect [references/DESIGNS.md](./references/DESIGNS.md). It documents:
+- The curated 9-color hex palette and exact semantic roles.
+- CSS classes from `src/css/diagrams.css`.
+- Five battle-tested archetype templates (Animated Flow, SVG Node Graph, Tabbed Explorer, Searchable List, Interactive Checklist).
+- Responsive layout guidelines and TypeScript compile checks.
 
 ---
 
-### Step 5 — Global Mermaid Flowing Arrows
+### Step 3 — Choose the Right Archetype
 
-All standard `flowchart` Mermaid diagrams automatically inherit the animated flowing-dashed-arrow effect.
+| Content Type | Archetype | Signature Visual Elements |
+|---|---|---|
+| Protocol handshake / sequence / request-response flow | **A — Animated Flow** | Actor boxes, directional step arrows with `opacity` fade, Play/Animate button with `useEffect` playback timer |
+| System architecture / kernel & cluster nodes | **B — SVG Node Graph** | `<svg viewBox>` canvas with dot-matrix background, SVG nodes (`<rect>` + `<text>`), directed `<path>` edges with marker arrowheads, click/hover details panel |
+| Feature comparison / protocol evolution / topic tabs | **C — Tabbed Explorer** | Custom tab buttons with colored highlight borders, structured details grid, gotchas/pro-con tags, optional sub-step accordion |
+| Lookup reference (headers, status codes, commands, tools) | **D — Searchable List** | Live search `<input>`, filterable list buttons with colored badges, split-pane detail inspection card |
+| Pre-launch audit / review criteria / checklists | **E — Interactive Checklist** | Category tabs, clickable custom checkboxes, dynamic progress bar, summary metrics |
+| Code payload / XML/JSON message schemas / API specs | **F — Monospace Schema Inspector** | Monospace code block, XML/JSON tree payload preview, field cardinality badges, click-to-inspect schema field details panel |
 
-To adjust the global Mermaid animation:
-1. Open [`src/theme/Mermaid/index.tsx`](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/src/theme/Mermaid/index.tsx) — inspect the `useMemo` block that duplicates `<path>` elements into `.path-bg` and `.path` classes.
-2. Edit keyframe or stroke definitions in [`src/css/custom.css`](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/src/css/custom.css).
-3. Arrowheads must use SVG 2 `context-fill` / `context-stroke` to inherit hover color transitions:
-   ```css
-   [class*="mermaidSvg"] svg marker path {
-     fill: context-fill !important;
-     stroke: context-stroke !important;
-   }
+---
+
+### Step 4 — Implement the Component
+
+1. File path: `src/components/<ConceptName>Diagram.tsx`.
+2. Outermost wrapper: `<div className="interactive-diagram-container" style={{ fontFamily: 'var(--ifm-font-family-base)' }}>`.
+3. Header bar: `<div className="interactive-diagram-header">` containing inline `<svg>` icon (never emoji), primary title, and optional action buttons.
+4. Color palette: Use exact hex tokens (`#38bdf8`, `#34d399`, `#fbbf24`, `#f97316`, `#f87171`, `#a78bfa`, `#8b5cf6`, `#2dd4bf`, `#f472b6`).
+5. Text styling: Use `var(--ifm-color-content)` and `var(--ifm-color-content-secondary)` for theme compatibility.
+6. Grid responsiveness: Use fixed percentage columns (e.g. `55% 45%`, `58% 42%`, `50% 50%`, `align-items: start`) and embed an inline `<style>` media query block (`@media (max-width: 768px)`) to collapse columns to `1fr` on small screens.
+
+---
+
+### Step 5 — Verify Compilation & Type Safety
+
+Run TypeScript validation to catch syntax or type errors:
+```bash
+npx tsc --noEmit
+```
+
+Ensure output returns 0 errors for the target component.
+
+---
+
+### Step 6 — Integrate into Documentation Markdown
+
+1. Add import after frontmatter in `docs/.../<page>.md`:
+   ```markdown
+   import ConceptNameDiagram from '@site/src/components/ConceptNameDiagram';
+   ```
+2. Place the component tag directly under the specific **descendant section heading** (`## ...` or `### ...`) that describes the topic, NOT loosely under the main top-level H1 page title (`# ...`).
+3. Replace/remove any old static ASCII, code block, or table under that descendant section:
+   ```markdown
+   ## How the Transaction Coordinator Works
+   
+   <KafkaExactlyOnceDiagram initialTab="steps" />
+   
+   ## Zombie Producer Fencing
+   
+   <KafkaExactlyOnceDiagram initialTab="zombie" />
    ```
 
 ---
 
-### Step 6 — Verify Compilation
+### Step 7 — MANDATORY: Register Any New Markdown Page in sidebars.ts
 
-The dev server (`npm start`) hot-reloads on every save.
-
-Check for:
-- `client (Rspack) compiled successfully` — all clear.
-- Any TypeScript or JSX error — fix before proceeding.
-- Test interactive states manually in the browser.
-
----
-
-### Step 7 — Audit Existing Diagrams (Optional)
-
-To find files that still have un-migrated static ASCII art or Mermaid blocks:
-
-```bash
-python scratch/scan_diagrams.py
-```
-
-Results are written to `scratch/diagrams_inventory.md`.
-
----
-
-### Step 8 — MANDATORY: Register Any New Page in sidebars.ts
-
-If this skill results in creating a **new markdown documentation page** (not just a new component), you **MUST** add it to `sidebars.ts`:
-
-1. Find the right category by grepping `sidebars.ts` for any existing sibling doc ID from the same folder.
-2. Insert the new doc ID (path from `docs/` without `.md`) immediately after the closest thematically related sibling.
-3. See the full sidebar registration rule in [AGENTS.md](../../AGENTS.md#mandatory-register-every-new-page-in-sidebarsts).
+If your task created a new `.md` page (not just a React component), register its doc ID in `sidebars.ts` under the matching category. See [AGENTS.md](../../AGENTS.md#mandatory-register-every-new-page-in-sidebarsts) for details.

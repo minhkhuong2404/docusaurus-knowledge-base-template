@@ -21,6 +21,7 @@ const config: Config = {
 	organizationName: 'minhkhuong2404',
 	projectName: 'docusaurus-knowledge-base-template',
 	onBrokenLinks: 'warn',
+	clientModules: ['./src/clientModules/gtagFix.ts'],
 	future: {
 		v4: true,
 		faster: {

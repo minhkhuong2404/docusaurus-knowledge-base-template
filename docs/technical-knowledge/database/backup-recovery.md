@@ -6,7 +6,11 @@ tags: [database, backup, recovery, rpo, rto, pitr, disaster-recovery, mysql, pos
 sidebar_position: 12
 ---
 
+import DatabasePitrRecoveryDiagram from '@site/src/components/DatabasePitrRecoveryDiagram';
+
 # Backup & Recovery
+
+---
 
 ## Core Concepts
 
@@ -145,6 +149,8 @@ aws ec2 create-snapshot \
 ---
 
 ## Point-In-Time Recovery (PITR)
+
+<DatabasePitrRecoveryDiagram />
 
 Restore to any point in time using a **base backup** + **transaction logs (WAL/binlog)**.
 

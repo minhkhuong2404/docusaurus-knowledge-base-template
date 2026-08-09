@@ -6,9 +6,15 @@ tags: [database, data-warehouse, olap, oltp, star-schema, dimensional-modeling, 
 sidebar_position: 17
 ---
 
+import DataWarehousingOlapDiagram from '@site/src/components/DataWarehousingOlapDiagram';
+
 # Data Warehousing & OLAP
 
+---
+
 ## OLTP vs OLAP
+
+<DataWarehousingOlapDiagram />
 
 | | OLTP (Transactional) | OLAP (Analytical) |
 |--|---------------------|------------------|

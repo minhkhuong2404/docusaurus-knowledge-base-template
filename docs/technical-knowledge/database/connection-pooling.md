@@ -8,8 +8,12 @@ tags: [system-design, connection-pooling, database, spring, performance, hikaric
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import HikariCPPoolDiagram from '@site/src/components/HikariCPPoolDiagram';
+import HikariSizingDiagram from '@site/src/components/HikariSizingDiagram';
 
 # Database Connection Pooling
+
+---
 
 :::info[Who this guide is for]
 - **New learners** — start at [What is a Database Connection?](#what-is-a-database-connection) and [What is a Connection Pool?](#what-is-a-connection-pool) to understand why this problem exists and how pools solve it.
@@ -132,6 +136,8 @@ This is called POOL STARVATION — the most common connection pool failure.
 
 ## HikariCP Spring Boot Default Pool
 
+<HikariCPPoolDiagram />
+
 HikariCP is the fastest JVM connection pool. It is the default in Spring Boot since 2.x and is chosen for its extremely low overhead (single-digit microsecond borrow time) and robust failure detection.
 
 ### Core parameters explained
@@ -223,6 +229,8 @@ Fixed-size pool (minimum-idle = maximum-pool-size):
 ---
 
 ## Pool Sizing
+
+<HikariSizingDiagram />
 
 ### The common beginner mistake
 

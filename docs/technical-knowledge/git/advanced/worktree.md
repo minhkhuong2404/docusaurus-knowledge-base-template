@@ -11,7 +11,12 @@ tags:
 - advanced
 - worktree
 ---
+
+import GitWorktreeDiagram from '@site/src/components/GitWorktreeDiagram';
+
 # `git worktree` — Multiple Working Trees
+
+<GitWorktreeDiagram />
 
 ## What It Does
 

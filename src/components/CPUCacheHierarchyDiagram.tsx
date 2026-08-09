@@ -43,7 +43,7 @@ const COMPONENT_DATA: Record<ComponentKey, ComponentDetails> = {
   },
   RAM_MAIN: {
     title: 'Main Memory (Physical RAM)',
-    type: 'blue',
+    type: 'cyan',
     latency: 'Slow (~200-300 clock cycles, ~50-80ns)',
     explanation: 'The physical system memory where the global JVM Heap space resides.',
     keyPoints: [

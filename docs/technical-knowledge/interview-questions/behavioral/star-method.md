@@ -10,8 +10,11 @@ tags:
   - Interview Prep
   - Communication
 ---
+import StarMethodDiagram from '@site/src/components/StarMethodDiagram';
 
 # STAR Method Deep Dive
+
+<StarMethodDiagram />
 
 The STAR method is the universal language of behavioral interviews. Mastering it transforms vague anecdotes into compelling, structured narratives that interviewers can easily score.
 

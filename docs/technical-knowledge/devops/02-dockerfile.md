@@ -6,6 +6,8 @@ description: Complete guide to writing Dockerfiles — all instructions explaine
 tags: [docker, dockerfile, multi-stage-build, layer-cache, best-practices, spring-boot, beginner]
 ---
 
+import DockerArchitectureDiagram from '@site/src/components/DockerArchitectureDiagram';
+
 # Writing Dockerfiles
 
 A **Dockerfile** is a plain-text script of instructions that Docker executes top-to-bottom to build an image. Each instruction creates a new layer.
@@ -196,6 +198,8 @@ LABEL maintainer="team@example.com" \
 ---
 
 ## Multi-Stage Builds
+
+<DockerArchitectureDiagram initialTab="multistage" />
 
 Build in one stage, copy only the result to the final image. Drastically reduces image size.
 

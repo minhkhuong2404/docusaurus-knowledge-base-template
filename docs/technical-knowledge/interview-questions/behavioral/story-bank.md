@@ -10,8 +10,11 @@ tags:
   - Interview Prep
   - Career
 ---
+import StoryBankDiagram from '@site/src/components/StoryBankDiagram';
 
 # Story Bank Builder
+
+<StoryBankDiagram />
 
 A **Story Bank** is your personal library of 8–12 real experiences that you can deploy to answer virtually any behavioral question. Building it before interviews means you're never caught off-guard — you just pull the right story and adapt the framing.
 

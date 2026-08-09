@@ -6,7 +6,11 @@ tags: [database, sql, relational, fundamentals, joins, keys]
 sidebar_position: 2
 ---
 
+import DatabaseJoinAlgorithmsDiagram from '@site/src/components/DatabaseJoinAlgorithmsDiagram';
+
 # Relational Fundamentals
+
+---
 
 ## The Relational Model
 
@@ -75,6 +79,8 @@ LIMIT 10;
 ---
 
 ## Joins
+
+<DatabaseJoinAlgorithmsDiagram />
 
 ```
 Table A         Table B

@@ -16,8 +16,6 @@ import QuicHttp3Diagram from '@site/src/components/QuicHttp3Diagram';
 import QuicFlowCongestionLossDiagram from '@site/src/components/QuicFlowCongestionLossDiagram';
 import QuicStackDiagram from '@site/src/components/QuicStackDiagram';
 
-
-
 ## Why QUIC Was Built
 
 TCP + TLS has served the internet well but has fundamental limitations:
@@ -238,26 +236,26 @@ SCTP is used in telecom (Diameter, S1-AP in LTE), WebRTC's data channel (via DTL
 
 ## Interview Questions
 
-**Q1. What problem does QUIC solve that HTTP/2 over TCP couldn't?**
+### Q1. What problem does QUIC solve that HTTP/2 over TCP couldn't?
 > HTTP/2 multiplexes streams over a single TCP connection, but TCP provides one ordered byte stream. A single lost packet stalls ALL HTTP/2 streams until TCP retransmits it — head-of-line (HOL) blocking at the transport layer. QUIC implements multiplexed streams in userspace where each stream is independent: a lost UDP packet only stalls the stream it belongs to. QUIC also reduces connection setup latency (1 RTT vs 2–3 RTT for TCP+TLS) and enables connection migration.
 
-**Q2. How does QUIC achieve 0-RTT connection establishment?**
+### Q2. How does QUIC achieve 0-RTT connection establishment?
 > On the first connection, QUIC requires 1 RTT. The server sends a session ticket (like TLS session resumption). On reconnect, the client uses the cached ticket to send application data in the very first packet — 0 RTT before data flies. The trade-off: 0-RTT data is replay-vulnerable (an attacker can re-send it). It should only be used for idempotent operations (GET requests), never for mutations, payments, or auth.
 
-**Q3. Why is QUIC built on UDP instead of TCP?**
+### Q3. Why is QUIC built on UDP instead of TCP?
 > QUIC needs to implement its own reliability and ordering per-stream, which conflicts with TCP's single-stream reliability model. UDP provides minimal framing without interfering — QUIC builds what it needs on top. Crucially, UDP runs in userspace applications, so QUIC can be updated rapidly without kernel changes or OS upgrades — solving TCP ossification (NATs and middleboxes blocking TCP extensions for 15+ years).
 
-**Q4. What is connection migration in QUIC and why does TCP not support it?**
+### Q4. What is connection migration in QUIC and why does TCP not support it?
 > Connection migration allows a QUIC connection to survive a change in the client's IP address or port (e.g., switching from Wi-Fi to 4G). QUIC uses Connection IDs rather than the IP:port 4-tuple to identify connections. When the IP changes, the client proves ownership of the new path via PATH_CHALLENGE/RESPONSE and the connection seamlessly continues. TCP connections are fundamentally tied to their 4-tuple — any IP change breaks the connection.
 
-**Q5. What is head-of-line blocking and at which levels does it occur?**
+### Q5. What is head-of-line blocking and at which levels does it occur?
 > HOL blocking: a later message in a queue is blocked waiting for an earlier one. It occurs at: (1) HTTP/1.1: only one request can be in flight per connection (pipelining is broken in practice). (2) HTTP/2 over TCP: one lost TCP segment stalls all HTTP/2 streams. (3) HTTP/3 over QUIC: no HOL blocking — each QUIC stream is independent. HOL blocking is a fundamental limitation of ordering constraints.
 
-**Q6. How does QUIC's loss detection differ from TCP's?**
+### Q6. How does QUIC's loss detection differ from TCP's?
 > TCP uses sequence numbers that are reused on retransmission, creating ambiguity — an ACK could be for the original or the retransmit, making RTT measurement inaccurate (the "retransmission ambiguity" problem). QUIC uses monotonically increasing packet numbers that are never reused — retransmitted data gets a new packet number, so ACKs are unambiguous. This gives QUIC more accurate RTT estimates and faster loss detection.
 
-**Q7. What is the Alt-Svc header and how does HTTP/3 upgrade work?**
+### Q7. What is the Alt-Svc header and how does HTTP/3 upgrade work?
 > `Alt-Svc` (Alternative Services) tells clients that the same content is available via a different protocol/port. A server sends `Alt-Svc: h3=":443"; ma=86400` in an HTTP/1.1 or HTTP/2 response, advertising HTTP/3 support. The browser caches this for 24 hours. On the next request, the browser attempts QUIC/HTTP/3 to port 443. Since QUIC runs over UDP, the upgrade is transparent — no TCP connection needed. Browsers also race TCP and QUIC connections (Happy Eyeballs for QUIC).
 
-**Q8. What is BBR congestion control and how does it differ from CUBIC?**
+### Q8. What is BBR congestion control and how does it differ from CUBIC?
 > CUBIC (default in Linux TCP) is loss-based: it grows the congestion window aggressively until packet loss occurs, then backs off. It can cause bufferbloat and works poorly on lossy or very high-BDP links. BBR (Bottleneck Bandwidth and RTT) by Google is model-based: it estimates the link's true bottleneck bandwidth and RTT, then operates at the optimal point — sending at the bottleneck rate without overflowing buffers. BBR achieves higher throughput on long-distance and satellite links. Because QUIC is userspace, it can ship BBR or newer algorithms without OS kernel upgrades.

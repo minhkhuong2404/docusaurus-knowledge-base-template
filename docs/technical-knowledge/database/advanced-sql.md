@@ -6,7 +6,17 @@ tags: [database, sql, window-functions, cte, subquery, recursive, advanced, pagi
 sidebar_position: 10
 ---
 
+import SqlExecutionOrderDiagram from '@site/src/components/SqlExecutionOrderDiagram';
+
 # Advanced SQL
+
+---
+
+## Logical Execution Order of SQL Queries
+
+<SqlExecutionOrderDiagram />
+
+---
 
 ## Window Functions
 

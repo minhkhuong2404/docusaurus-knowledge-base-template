@@ -6,6 +6,8 @@ description: Introduction to Push vs Pull deployments, GitOps principles, and an
 tags: [kubernetes, gitops, argocd, ci-cd, intermediate]
 ---
 
+import GitOpsArgoCdPipelineDiagram from '@site/src/components/GitOpsArgoCdPipelineDiagram';
+
 # GitOps & Continuous Delivery
 
 GitOps is an operational framework that takes DevOps best practices used for application development (version control, collaboration, compliance, and CI/CD) and applies them to infrastructure automation.
@@ -13,6 +15,8 @@ GitOps is an operational framework that takes DevOps best practices used for app
 ---
 
 ## 1. Push-based vs Pull-based Deployments
+
+<GitOpsArgoCdPipelineDiagram initialTab="pipeline" />
 
 ### Push-Based CD (The Old Way)
 

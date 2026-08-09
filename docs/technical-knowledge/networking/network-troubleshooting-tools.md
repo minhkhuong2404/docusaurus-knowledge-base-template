@@ -6,7 +6,16 @@ tags: [networking, troubleshooting, tcpdump, wireshark, netstat, nmap, curl, ope
 sidebar_position: 16
 ---
 
+import NetworkTroubleshootingToolsDiagram from '@site/src/components/NetworkTroubleshootingToolsDiagram';
+import TcpdumpPacketAnalysisDiagram from '@site/src/components/TcpdumpPacketAnalysisDiagram';
+
 # Network Troubleshooting & Diagnostic Tools
+
+<NetworkTroubleshootingToolsDiagram />
+
+<TcpdumpPacketAnalysisDiagram />
+
+---
 
 ## The Diagnostic Mindset
 
@@ -569,26 +578,26 @@ ss -tan | awk 'NR>1{print $1}' | sort | uniq -c
 
 ## Interview Questions
 
-**Q1. How would you diagnose why a microservice can't reach another microservice?**
+### Q1. How would you diagnose why a microservice can't reach another microservice?
 > Step by step: (1) Confirm DNS resolves correctly: `dig service-b.namespace.svc.cluster.local`. (2) Confirm IP is reachable: `ping` or `curl --connect-timeout 3`. (3) Confirm port is open: `nc -zv host 8080`. (4) Check for TLS issues: `openssl s_client -connect host:443`. (5) Make actual HTTP request: `curl -v http://service-b:8080/health`. (6) Check network policies, firewalls, security groups. (7) If all OK at network layer, check app logs.
 
-**Q2. What is the difference between `netstat` and `ss`? Which is preferred?**
+### Q2. What is the difference between `netstat` and `ss`? Which is preferred?
 > Both show socket/connection state, but `ss` is the modern replacement for `netstat`. `ss` reads directly from the kernel's socket tables via netlink (faster, more accurate), while `netstat` reads from `/proc/net`. `ss` handles millions of connections without significant slowdown. `netstat` is part of the deprecated `net-tools` package on Linux. Use `ss -tlnp` instead of `netstat -tlnp`.
 
-**Q3. You see thousands of TIME_WAIT connections on your server. Is this a problem?**
+### Q3. You see thousands of TIME_WAIT connections on your server. Is this a problem?
 > TIME_WAIT is a normal TCP state after connection close — it persists for 2×MSL (Maximum Segment Lifetime, ~60s on Linux) to ensure delayed packets don't confuse new connections on the same 4-tuple. Large counts indicate many short-lived connections (HTTP/1.0 style or poor keep-alive config). Solutions: enable HTTP keep-alive to reuse connections; enable `SO_REUSEADDR`; tune `net.ipv4.tcp_tw_reuse`; increase ephemeral port range. It's rarely an actual problem unless you're exhausting ports.
 
-**Q4. How do you capture and inspect HTTPS traffic with tcpdump?**
+### Q4. How do you capture and inspect HTTPS traffic with tcpdump?
 > HTTPS is TLS-encrypted, so tcpdump captures the encrypted packets but can't read the payload directly. To decrypt: (1) Configure the application to log TLS session keys to an SSLKEYLOGFILE (Java: use `-Djavax.net.debug=ssl` or Wireshark's SSLKEYLOGFILE). (2) Capture with `tcpdump -w capture.pcap`. (3) Load in Wireshark, configure the key log file under TLS preferences — Wireshark decrypts in real time. For services you control, use a reverse proxy like Envoy with access logging as an alternative.
 
-**Q5. What does `curl -w "%{time_total}"` tell you and how do you interpret it?**
+### Q5. What does `curl -w "%{time_total}"` tell you and how do you interpret it?
 > The `-w` flag with timing variables breaks down a request: `time_namelookup` (DNS), `time_connect` (TCP handshake), `time_appconnect` (TLS handshake), `time_pretransfer` (protocol setup), `time_starttransfer` (TTFB — Time To First Byte), `time_total` (complete request). High `time_namelookup` = DNS slow. High `time_connect` = network latency. High `time_appconnect` = TLS slow. High `time_starttransfer` minus `time_appconnect` = server processing time.
 
-**Q6. How do you check if a firewall is blocking traffic vs the server not listening?**
+### Q6. How do you check if a firewall is blocking traffic vs the server not listening?
 > Three behaviors: (1) `Connection refused` (RST) = server is reachable but nothing listening on that port (or server explicitly rejects). (2) `Connection timed out` = firewall is silently dropping packets (no RST, no ICMP unreachable). (3) `ICMP Port Unreachable` = router/firewall explicitly rejecting. Use `nc -zv -w 3 host port` — timeout suggests firewall drop, immediate refusal suggests no listener. `traceroute -T -p 80` can show which hop is blocking.
 
-**Q7. What is MTU, and how do you diagnose MTU-related issues?**
+### Q7. What is MTU, and how do you diagnose MTU-related issues?
 > MTU (Maximum Transmission Unit) is the largest frame size a link can carry — typically 1500 bytes for Ethernet. Mismatched MTU causes fragmentation or silent packet drops (especially with VPNs adding headers). Symptoms: large requests/responses fail while small ones succeed; TCP handshake works but data transfer hangs. Diagnose: `ping -M do -s 1472 host` — if 1472+28=1500 fails but 1400 works, MTU issue. Fix: set MTU consistently, or configure TCP MSS clamping on the network.
 
-**Q8. How would you identify which process is using a specific port?**
+### Q8. How would you identify which process is using a specific port?
 > `ss -tlnp 'sport = :8080'` — shows the process name and PID. Or `lsof -i :8080` — lists open files including network sockets with PID and process name. On macOS: `lsof -i TCP:8080`. Then `ps -p <PID>` for full command. In containers: `ss` inside the container, or on the host `nsenter -t <container_pid> -n ss -tlnp`. For Docker: `docker inspect <container>` to see port bindings.

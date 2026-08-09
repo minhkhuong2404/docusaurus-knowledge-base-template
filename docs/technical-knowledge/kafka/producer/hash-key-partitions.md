@@ -9,30 +9,18 @@ tags:
 - producer
 - hash-key-partitions
 ---
+
+import KafkaHashKeyPartitioningDiagram from '@site/src/components/KafkaHashKeyPartitioningDiagram';
+
 # Hash Key Partitions in Kafka
+
+<KafkaHashKeyPartitioningDiagram />
+
+---
 
 ## What Is a Partition Key?
 
 When producing a message, you can provide an optional **Key**. Kafka uses this key to deterministically route the message to a specific partition. This is the foundation of Kafka's per-entity ordering guarantee.
-
-```
-Producer sends 6 messages with keys:
-
-  Key="A"  Key="B"  Key="A"  Key="C"  Key="B"  Key="A"
-    │        │        │        │        │        │
-    ▼        ▼        ▼        ▼        ▼        ▼
- ┌──────────────────────────────────────────────────────┐
- │              DefaultPartitioner                       │
- │   hash(key) % numPartitions → target partition        │
- └──────────────────────────────────────────────────────┘
-    │        │        │        │        │        │
-    ▼        ▼        ▼        ▼        ▼        ▼
-  ┌─P0─┐  ┌─P1─┐  ┌─P0─┐  ┌─P2─┐  ┌─P1─┐  ┌─P0─┐
-
-Result: All "A" messages → P0 (ordered)
-        All "B" messages → P1 (ordered)
-        All "C" messages → P2 (ordered)
-```
 
 ---
 
@@ -225,22 +213,22 @@ partitioner.class=com.example.VipAwarePartitioner
 
 ## Interview Questions
 
-**Q: How does Kafka decide which partition a keyed message goes to?**
+### Q: How does Kafka decide which partition a keyed message goes to?
 
 > The producer serializes the key to bytes, hashes it with MurmurHash2, then takes the result modulo the number of partitions: `toPositive(murmur2(keyBytes)) % numPartitions`. This is deterministic — the same key always maps to the same partition as long as partition count is constant.
 
-**Q: What is the Sticky Partitioner and why was it introduced?**
+### Q: What is the Sticky Partitioner and why was it introduced?
 
 > Before Kafka 2.4, null-key messages used pure round-robin, producing many tiny batches (one per partition per batch interval). The Sticky Partitioner instead fills one partition's batch completely before switching. This improves batching, compression, and throughput — up to 50% latency reduction in benchmarks.
 
-**Q: What is a hot partition and how do you detect it?**
+### Q: What is a hot partition and how do you detect it?
 
 > A hot partition receives disproportionately more traffic than others, caused by a low-cardinality or skewed key. Detect it by monitoring per-partition metrics (`BytesInPerSec`, `MessagesInPerSec`) or by observing uneven consumer lag. Solutions: choose high-cardinality keys, salt hot keys, use a custom partitioner, or route hot keys to a dedicated topic.
 
-**Q: What happens to key→partition mapping when you add partitions?**
+### Q: What happens to key→partition mapping when you add partitions?
 
 > The modulo math changes. `hash % 5` and `hash % 10` yield different results for many keys. New messages for an affected key will go to a different partition than where historical messages reside, permanently breaking per-key ordering. The safe alternative is topic migration.
 
-**Q: Why does Kafka use MurmurHash2 instead of Java's `hashCode()`?**
+### Q: Why does Kafka use MurmurHash2 instead of Java's `hashCode()`?
 
 > MurmurHash2 provides better distribution uniformity and is consistent across languages (the same bytes produce the same hash in Java, Python, Go, etc.). Java's `String.hashCode()` has known clustering patterns and its implementation is not guaranteed across JVM versions.

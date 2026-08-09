@@ -6,7 +6,12 @@ tags: [database, storage-engines, b-tree, lsm-tree, innodb, wal, buffer-pool, da
 sidebar_position: 5
 ---
 
+import BTreeWritePathDiagram from '@site/src/components/BTreeWritePathDiagram';
+import LsmTreeWritePathDiagram from '@site/src/components/LsmTreeWritePathDiagram';
+
 # Storage Engines & Data Structures
+
+---
 
 ## How Databases Store Data
 
@@ -22,6 +27,8 @@ Databases ultimately store data in **files on disk**. The storage engine is the 
 
 ### B+ Tree (Row-Oriented Stores)
 
+<BTreeWritePathDiagram />
+
 The dominant structure for relational DBs (InnoDB, PostgreSQL heap + B-tree indexes).
 
 ```
@@ -31,18 +38,17 @@ Leaf nodes linked → efficient sequential/range scans
 
          [10 | 30]
         /    |    \
-    [5,7] [15,20] [35,40,50]
-       ↔     ↔       ↔        (doubly linked)
+     [5|7] [15|20] [35|40]
 ```
 
-**Characteristics:**
-- Read-optimized: great for random reads and range scans
-- Write amplification: a single insert may cause page splits and propagate up
-- Works well on **HDD and SSD**
+- **Read**: $O(\log N)$ point lookups, very fast range scans
+- **Write**: $O(\log N)$, but random I/O if pages split or dirty pages flushed
 
 ---
 
 ### LSM Tree — Log-Structured Merge Tree (Write-Optimized)
+
+<LsmTreeWritePathDiagram />
 
 Used by: **Cassandra, HBase, RocksDB, LevelDB, ClickHouse**
 

@@ -7,19 +7,19 @@
     "npm": ">=10.0.0"
   },
   "scripts": {
-    "start": "python scratch/fetch_leetcode_daily.py && docusaurus start",
-    "build": "python scratch/fetch_leetcode_daily.py && DOCUSAURUS_IGNORE_SSG_WARNINGS=true docusaurus build",
+    "start": "python scratch/fetch_leetcode_daily.py && python scratch/sync_google_sheet_quiz.py && docusaurus start",
+    "build": "python scratch/fetch_leetcode_daily.py && python scratch/sync_google_sheet_quiz.py && DOCUSAURUS_IGNORE_SSG_WARNINGS=true docusaurus build",
     "build:analyze": "docusaurus build --bundle-analyzer",
     "build:debug-search": "DEBUG=search-local:* docusaurus build",
     "serve": "docusaurus serve",
     "deploy": "docusaurus deploy"
   },
   "dependencies": {
-    "@docusaurus/core": "^3.10.1",
-    "@docusaurus/faster": "^3.10.1",
-    "@docusaurus/plugin-google-gtag": "^3.10.1",
-    "@docusaurus/preset-classic": "^3.10.1",
-    "@docusaurus/theme-mermaid": "^3.10.1",
+    "@docusaurus/core": "^3.10.2",
+    "@docusaurus/faster": "^3.10.2",
+    "@docusaurus/plugin-google-gtag": "^3.10.2",
+    "@docusaurus/preset-classic": "^3.10.2",
+    "@docusaurus/theme-mermaid": "^3.10.2",
     "@easyops-cn/docusaurus-search-local": "^0.55.2",
     "@fortawesome/fontawesome-free": "^7.3.0",
     "firebase": "^12.16.0",

@@ -373,24 +373,24 @@ services:
 
 ---
 
-## Interview Questions — Monitoring & Operations
+## Interview Questions
 
-**Q: What metrics indicate a Kafka cluster is unhealthy?**
+### Q: What metrics indicate a Kafka cluster is unhealthy?
 
 > Critical health signals: `UnderReplicatedPartitions > 0` (replication lagging), `OfflinePartitionsCount > 0` (partitions unavailable), `ActiveControllerCount ≠ 1` (split-brain or no controller), high `RequestHandlerAvgIdlePercent` below 0.2 (broker under heavy load), and growing consumer lag without a corresponding increase in producer throughput.
 
-**Q: How do you reset a consumer group offset to replay messages?**
+### Q: How do you reset a consumer group offset to replay messages?
 
 > Stop all consumers in the group first. Then use `kafka-consumer-groups.sh --reset-offsets` with options like `--to-earliest`, `--to-offset`, `--to-datetime`, or `--shift-by`. After resetting, restart consumers — they'll read from the new offset.
 
-**Q: What happens if you delete a topic that has active consumers?**
+### Q: What happens if you delete a topic that has active consumers?
 
 > Consumers will encounter `UnknownTopicOrPartitionException` on their next poll. Most consumer frameworks handle this gracefully by logging an error, but the consumers effectively stop processing. If the topic is recreated, consumers with `auto.offset.reset=earliest` will start from the beginning of the new topic.
 
-**Q: How do you handle a partition that becomes under-replicated?**
+### Q: How do you handle a partition that becomes under-replicated?
 
 > First check which broker is the lagging replica — use `kafka-topics.sh --describe` to see ISR vs replica list. Investigate that broker's performance (GC pauses, disk I/O, network). If the broker has recovered, it will automatically catch up and rejoin the ISR. If it's permanently dead, reassign the partition replica to a healthy broker using `kafka-reassign-partitions.sh`.
 
-**Q: What is preferred leader election?**
+### Q: What is preferred leader election?
 
 > When Kafka reassigns partition leaders due to broker failures, the load may become unbalanced — some brokers end up with more leaders than others. Preferred leader election (`auto.leader.rebalance.enable=true`) periodically checks if the originally-assigned (preferred) broker for each partition can reclaim leadership, and triggers an election if leader imbalance exceeds `leader.imbalance.per.broker.percentage` (default 10%).

@@ -11,7 +11,13 @@ tags:
 - core
 ---
 
+import KafkaProducerConsumerFlowDiagram from '@site/src/components/KafkaProducerConsumerFlowDiagram';
+
 # Kafka Producers & Consumers
+
+<KafkaProducerConsumerFlowDiagram />
+
+---
 
 Producers and consumers are the two ends of every Kafka data pipeline. Understanding how they work internally — not just their API — is essential for tuning throughput, ensuring delivery guarantees, and debugging production issues.
 
@@ -29,32 +35,6 @@ A **Kafka producer** is any application that writes records to Kafka topics. It 
 
 ### Producer Internal Architecture
 
-```
-Application Code: producer.send(record)
-         │
-         ▼
-   ┌─────────────────────────────────────────────┐
-   │              KafkaProducer                  │
-   │                                             │
-   │  1. Serializer (key + value → bytes)        │
-   │  2. Partitioner (record → partition index)  │
-   │  3. RecordAccumulator                       │
-   │     ┌───────────────────────────────┐       │
-   │     │ P0: [batch1][batch2]          │       │
-   │     │ P1: [batch1]                  │       │
-   │     │ P3: [batch1][batch2][batch3]  │       │
-   │     └───────────────────────────────┘       │
-   │             ▲ linger.ms / batch.size        │
-   │  4. Sender Thread (background)              │
-   └──────────────┬──────────────────────────────┘
-                  │ ProduceRequest (batches)
-                  ▼
-            Kafka Broker
-                  │
-                  ▼
-         Callback / Future (success/failure)
-```
-
 The `send()` call is **always asynchronous** — it adds the record to an in-memory `RecordAccumulator` buffer and returns immediately. A background `Sender` thread drains the buffer and sends batches to brokers. Callbacks fire on the Sender thread when the broker responds.
 
 ### Delivery Semantics
@@ -69,162 +49,12 @@ The `send()` call is **always asynchronous** — it adds the record to an in-mem
 
 Since Kafka 3.0, idempotence is **enabled by default** (`enable.idempotence=true`). The producer assigns a unique **Producer ID (PID)** and a **sequence number** to each batch. If the broker receives a duplicate (retry), it deduplicates using these identifiers.
 
-```java
-// Idempotent producer (default since Kafka 3.0)
-Properties props = new Properties();
-props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);      // default since 3.0
-props.put(ProducerConfig.ACKS_CONFIG, "all");                    // required for idempotence
-props.put(ProducerConfig.RETRIES_CONFIG, Integer.MAX_VALUE);     // required for idempotence
-props.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, 5); // safe with idempotence
-```
-
-### Sending Patterns
-
-```java
-// 1. Fire-and-forget (no callback, no result check)
-producer.send(new ProducerRecord<>("orders", key, value));
-
-// 2. Synchronous (blocks until broker confirms or fails)
-try {
-    RecordMetadata metadata = producer.send(record).get(5, TimeUnit.SECONDS);
-    log.info("Delivered: partition={} offset={}", metadata.partition(), metadata.offset());
-} catch (TimeoutException | ExecutionException e) {
-    log.error("Delivery failed", e);
-}
-
-// 3. Asynchronous with callback (recommended — non-blocking, handles errors)
-producer.send(record, (metadata, exception) -> {
-    if (exception != null) {
-        log.error("Send failed for key={}: {}", key, exception.getMessage());
-        dlqProducer.send(new ProducerRecord<>("orders.dlq", key, value));
-    } else {
-        log.debug("Sent to partition={} offset={}", metadata.partition(), metadata.offset());
-    }
-});
-```
-
-### Key Producer Configurations
-
-```properties
-# Reliability
-acks=all                          # Wait for full ISR replication
-enable.idempotence=true           # Prevent duplicates on retry (default since 3.0)
-retries=2147483647                # Retry indefinitely (bounded by delivery.timeout.ms)
-delivery.timeout.ms=120000        # Total budget for a single send() including retries
-
-# Throughput
-linger.ms=5                       # Wait 5ms to accumulate batch
-batch.size=32768                  # 32 KB batch size (64 KB for high-throughput)
-compression.type=lz4              # Network + disk efficient
-
-# Safety
-max.in.flight.requests.per.connection=5  # Pipeline depth (safe with idempotence)
-```
-
-### Retriable vs Non-Retriable Errors
-
-| Error | Type | Producer Action |
-|-------|------|----------------|
-| `NetworkException` | Retriable | Auto-retry |
-| `LeaderNotAvailableException` | Retriable | Auto-retry |
-| `TimeoutException` | Retriable | Auto-retry until `delivery.timeout.ms` |
-| `MessageTooLargeException` | Non-retriable | Fail immediately |
-| `SerializationException` | Non-retriable | Fail immediately |
-| `AuthorizationException` | Non-retriable | Fail immediately |
-
----
-
-## The Consumer
-
-### What Is a Consumer?
-
-A **Kafka consumer** is any application that reads records from Kafka topics. Unlike traditional message queues where the broker pushes messages, Kafka consumers **pull** from the broker at their own pace.
-
-### Consumer Internal Architecture
-
-```
-Consumer Application
-         │
-         │ poll(Duration)  ← called in a loop
-         ▼
-   ┌─────────────────────────────────────────────┐
-   │              KafkaConsumer                  │
-   │                                             │
-   │  1. Heartbeat Thread (background)           │
-   │     → sends heartbeats to Group Coordinator │
-   │                                             │
-   │  2. Fetch Manager                           │
-   │     → sends FetchRequest to partition       │
-   │       leaders for assigned partitions       │
-   │                                             │
-   │  3. Offset Manager                          │
-   │     → tracks committed offsets per partition│
-   │                                             │
-   │  4. Deserializer (bytes → key + value)      │
-   └──────────────────────────────────────────────┘
-         │
-         ▼
-   ConsumerRecords → application processing loop
-         │
-         ▼
-   consumer.commitSync() / commitAsync()
-```
-
 ### The Consumer Poll Loop
 
 The poll loop is the core of every Kafka consumer. It must be called regularly to:
 1. Fetch records from the broker
 2. Send heartbeats to the Group Coordinator (keeps the consumer "alive")
 3. Trigger partition rebalances when group membership changes
-
-```java
-KafkaConsumer<String, OrderEvent> consumer = new KafkaConsumer<>(props);
-consumer.subscribe(List.of("orders"));
-
-try {
-    while (running.get()) {
-        ConsumerRecords<String, OrderEvent> records = consumer.poll(Duration.ofMillis(100));
-
-        for (ConsumerRecord<String, OrderEvent> record : records) {
-            log.info("partition={} offset={} key={}", record.partition(), record.offset(), record.key());
-
-            try {
-                processOrder(record.value());
-            } catch (RetriableException e) {
-                // Don't commit — will re-fetch on next poll
-                continue;
-            } catch (FatalException e) {
-                // Route to DLQ and continue
-                sendToDlq(record);
-            }
-        }
-
-        // Commit after full batch processed (manual commit mode)
-        consumer.commitAsync((offsets, exception) -> {
-            if (exception != null) {
-                log.error("Commit failed for offsets {}: {}", offsets, exception.getMessage());
-            }
-        });
-    }
-} finally {
-    consumer.close(); // Graceful close — commits pending offsets, notifies coordinator
-}
-```
-
-### Offset Management
-
-Kafka tracks consumer progress using **offsets** — the position of the next record to be read.
-
-```
-Partition 0:
-  [m0][m1][m2][m3][m4][m5][m6][m7][m8][m9]
-    0    1    2    3    4    5    6    7    8    9   ← offsets
-                              ▲                  ▲
-                      Committed Offset=5    Log End Offset=10
-                      (consumer's position)  (latest broker write)
-                              ←── Lag = 5 ────►
-```
 
 **Offset reset behavior** (`auto.offset.reset`):
 - `earliest` — start from the very beginning of the topic
@@ -421,25 +251,25 @@ public class OrderConsumer {
 
 ---
 
-## Interview Questions — Producers & Consumers
+## Interview Questions
 
-**Q: What is the RecordAccumulator and why does it exist?**
+### Q: What is the RecordAccumulator and why does it exist?
 
 > The RecordAccumulator is an in-memory buffer organized by partition. Records accumulate in partition-specific batches until either `batch.size` is reached or `linger.ms` expires. The background Sender thread then drains these batches into ProduceRequests sent to brokers. It exists to improve throughput — sending messages individually (one network round-trip per message) is inefficient at scale. The RecordAccumulator amortizes network overhead across many messages per request.
 
-**Q: What is the difference between `commitSync()` and `commitAsync()`?**
+### Q: What is the difference between `commitSync()` and `commitAsync()`?
 
 > `commitSync()` blocks until the broker acknowledges the commit, retrying on retriable errors — it's safe but adds latency to the poll loop. `commitAsync()` is non-blocking but does not retry on failure (retrying could commit a stale offset after a newer one already succeeded). In practice, use `commitAsync()` for normal commits (performance) and `commitSync()` in the `finally` block on shutdown to ensure the last offset is committed before the consumer exits.
 
-**Q: Why does Kafka use a pull model instead of a push model?**
+### Q: Why does Kafka use a pull model instead of a push model?
 
 > Pull lets consumers read at their own pace — a slow consumer isn't overwhelmed by broker pushes. Consumers can process batches efficiently, re-read messages by resetting offsets, and pause/resume without coordination. The broker doesn't need to track consumer state or buffer-per-consumer — complexity moves to the consumer's offset management. The trade-off is slightly higher latency for small volumes (consumers must poll even when there's nothing new), mitigated by `fetch.max.wait.ms`.
 
-**Q: What happens if a consumer crashes without committing its offset?**
+### Q: What happens if a consumer crashes without committing its offset?
 
 > When the consumer restarts and rejoins the group, it reads the last **committed** offset from `__consumer_offsets` and starts consuming from there. Any messages processed between the last commit and the crash will be reprocessed — this is **at-least-once** delivery semantics. To minimize this window, commit frequently (but not on every record — that kills throughput) and design message processing to be idempotent.
 
-**Q: What is `enable.idempotence` and why was it made the default in Kafka 3.0?**
+### Q: What is `enable.idempotence` and why was it made the default in Kafka 3.0?
 
 > An idempotent producer assigns a Producer ID (PID) and a monotonically increasing sequence number to each batch sent to a partition. If a network failure causes the broker to receive a duplicate batch (because the producer retried), the broker deduplicates using the PID + sequence number. This prevents duplicate writes from retries. It was made the default in Kafka 3.0 because the performance overhead is negligible (< 3% throughput impact) and the safety benefit — preventing duplicates from standard producer retries — applies universally.
 

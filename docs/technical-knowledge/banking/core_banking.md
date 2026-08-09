@@ -10,11 +10,16 @@ tags:
 - banking
 - core_banking
 ---
+
+import BankingCorePostingAccountingDiagram from '@site/src/components/BankingCorePostingAccountingDiagram';
+
 # Core Banking System (CBS)
 
 ## Overview
 
 The **Core Banking System (CBS)** is the central software platform that manages a bank's **primary banking operations** — account management, transaction processing, product configuration, and customer records. Every payment, deposit, withdrawal, and account event ultimately flows through or is recorded in the core banking system.
+
+<BankingCorePostingAccountingDiagram />
 
 Think of it as the **single source of truth** for:
 - What accounts exist

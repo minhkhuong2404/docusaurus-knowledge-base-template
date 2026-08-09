@@ -11,7 +11,12 @@ tags:
 - history
 - squash
 ---
+
+import GitSquashFixupDiagram from '@site/src/components/GitSquashFixupDiagram';
+
 # Squashing Commits
+
+<GitSquashFixupDiagram />
 
 ## What is Squashing?
 

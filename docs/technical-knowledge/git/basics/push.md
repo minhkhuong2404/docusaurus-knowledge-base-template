@@ -10,7 +10,12 @@ tags:
 - basics
 - push
 ---
+
+import GitPushRefspecsDiagram from '@site/src/components/GitPushRefspecsDiagram';
+
 # `git push` — Uploading to a Remote
+
+<GitPushRefspecsDiagram />
 
 ## What It Does
 

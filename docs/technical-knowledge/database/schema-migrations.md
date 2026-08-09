@@ -6,7 +6,11 @@ tags: [database, migrations, flyway, liquibase, schema, zero-downtime, versionin
 sidebar_position: 15
 ---
 
+import SchemaMigrationLifecycleDiagram from '@site/src/components/SchemaMigrationLifecycleDiagram';
+
 # Schema Migrations
+
+---
 
 ## Why Managed Migrations?
 
@@ -198,6 +202,8 @@ databaseChangeLog:
 ---
 
 ## Zero-Downtime Migration Patterns
+
+<SchemaMigrationLifecycleDiagram />
 
 The hardest part of schema changes is doing them without taking the app down.
 

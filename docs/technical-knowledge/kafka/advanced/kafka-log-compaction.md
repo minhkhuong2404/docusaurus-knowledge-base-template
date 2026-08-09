@@ -10,6 +10,8 @@ tags:
 - log-compaction
 ---
 
+import KafkaLogCompactionDiagram from '@site/src/components/KafkaLogCompactionDiagram';
+
 # Kafka Log Compaction Explained
 
 Kafka is widely known for time-based retention — messages older than `retention.ms` are deleted. But there is a second retention mode that serves an entirely different purpose: **log compaction**.
@@ -22,13 +24,7 @@ Log compaction preserves at least the **latest value for each message key** with
 
 Log compaction is a retention policy (enabled via `cleanup.policy=compact`) that ensures a partition retains, indefinitely, the most recent update for every key. Unlike deletion-based retention (which removes old data after a time or size limit), compaction keeps the most recent record per key regardless of age.
 
-```
-Before compaction (raw partition):
-  [K1:v1] [K2:v1] [K1:v2] [K3:v1] [K2:v2] [K1:v3]
-
-After compaction:
-  [K2:v2] [K3:v1] [K1:v3]
-```
+<KafkaLogCompactionDiagram />
 
 Key properties:
 - **Immutable offsets**: Offsets are never renumbered. Consumers can still track their position reliably.
@@ -209,19 +205,19 @@ kafka-log-dirs.sh --bootstrap-server localhost:9092 \
 
 ## Interview Questions
 
-**Q: What is the difference between `cleanup.policy=delete` and `cleanup.policy=compact`?**
+### Q: What is the difference between `cleanup.policy=delete` and `cleanup.policy=compact`?
 
 > `delete` removes messages after `retention.ms` or `retention.bytes` — all messages regardless of key. `compact` retains the latest value for each unique key indefinitely, deleting older duplicates. `compact` is appropriate when you need "current state" semantics (e.g., CDC changelogs, state stores); `delete` is appropriate when you need bounded time-window storage (event streams, logs). You can combine both with `cleanup.policy=compact,delete`.
 
-**Q: What is a tombstone record and how does it affect compaction?**
+### Q: What is a tombstone record and how does it affect compaction?
 
 > A tombstone is a record with a **null value**. When a producer writes a null-value message for a key to a compacted topic, it signals that the key should be deleted. The compaction cleaner will eventually remove both the tombstone and all prior records for that key. Tombstones are retained for `delete.retention.ms` (default 24 hours) to give downstream consumers time to observe the deletion before it's purged.
 
-**Q: How does Kafka Streams use compacted topics for state stores?**
+### Q: How does Kafka Streams use compacted topics for state stores?
 
 > Kafka Streams backs each state store (used for aggregations, joins, windowing) with a compacted changelog topic. Every update to the state store is written as a keyed message to this changelog. If the application crashes or a partition rebalances to a new consumer, the state store is rebuilt by replaying the compacted topic from the beginning — only the latest value per key is needed, so restoration is efficient. This is how Kafka Streams achieves fault-tolerant stateful processing without an external database.
 
-**Q: Will compaction happen immediately after enabling it on a topic?**
+### Q: Will compaction happen immediately after enabling it on a topic?
 
 > No. Compaction runs asynchronously in a background cleaner thread and only triggers when the dirty ratio exceeds `min.cleanable.dirty.ratio` (default 0.5 = 50%). Additionally, the **active segment** (the one currently being written to) is never compacted. Depending on write volume and cleaner thread workload, there can be a significant delay between enabling compaction and the first cleanup pass running.
 

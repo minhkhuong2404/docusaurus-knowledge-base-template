@@ -7,9 +7,13 @@ description: Comprehensive guide to SWIFT messaging, MT vs MX formats, SWIFT gpi
 tags: [banking, swift, cross-border, iso20022, gpi, mt103]
 ---
 
+import BankingRailsNppRtgsSwiftDiagram from '@site/src/components/BankingRailsNppRtgsSwiftDiagram';
+
 # 🌐 SWIFT — Cross-Border Payment Messaging
 
 SWIFT (Society for Worldwide Interbank Financial Telecommunication) is the global standard messaging network used by 11,000+ financial institutions in 200+ countries to communicate payment instructions, confirmations, and statements for cross-border transactions.
+
+<BankingRailsNppRtgsSwiftDiagram />
 
 > SWIFT does **not** move money. It transmits **messages** that instruct banks to debit and credit accounts.
 

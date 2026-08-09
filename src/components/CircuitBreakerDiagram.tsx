@@ -3,7 +3,7 @@ import styles from './CircuitBreakerDiagram.module.css';
 
 type BreakerState = 'CLOSED' | 'OPEN' | 'HALF_OPEN';
 
-export default function CircuitBreakerDiagram(): JSX.Element {
+export default function CircuitBreakerDiagram(): React.JSX.Element {
   const [activeState, setActiveState] = useState<BreakerState>('CLOSED');
 
   return (

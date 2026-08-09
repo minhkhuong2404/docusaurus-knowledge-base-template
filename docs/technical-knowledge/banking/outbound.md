@@ -115,10 +115,10 @@ High-value corporate payments often require **dual approval** (four-eyes princip
 
 | Amount | Approval Required |
 |--------|-----------------|
-| < $10,000 | Single user (initiator) |
-| $10,000 – $100,000 | Secondary approver |
-| > $100,000 | Senior approver or management |
-| > $1,000,000 | Treasury / C-suite |
+| < \$10,000 | Single user (initiator) |
+| \$10,000 – \$100,000 | Secondary approver |
+| > \$100,000 | Senior approver or management |
+| > \$1,000,000 | Treasury / C-suite |
 
 Implementation:
 

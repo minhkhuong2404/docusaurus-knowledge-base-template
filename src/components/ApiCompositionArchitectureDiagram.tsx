@@ -89,7 +89,7 @@ export default function ApiCompositionArchitectureDiagram() {
                 key={s.id}
                 onClick={() => setActiveStep(s.id)}
                 style={{
-                  display: 'flex', alignItems: 'center', justifyBetween: 'space-between', gap: '12px',
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px',
                   padding: '10px 14px', borderRadius: '8px', cursor: 'pointer',
                   background: isActive ? `${s.color}15` : 'rgba(255,255,255,0.03)',
                   border: `1.5px solid ${isActive ? s.color : 'rgba(255,255,255,0.08)'}`,

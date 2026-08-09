@@ -4,4 +4,6 @@ export default [
   require("/Users/lukhuong/Desktop/docusaurus-knowledge-base-template/node_modules/@docusaurus/theme-classic/lib/prism-include-languages"),
   require("/Users/lukhuong/Desktop/docusaurus-knowledge-base-template/node_modules/@docusaurus/theme-classic/lib/nprogress"),
   require("/Users/lukhuong/Desktop/docusaurus-knowledge-base-template/src/css/custom.css"),
+  require("/Users/lukhuong/Desktop/docusaurus-knowledge-base-template/node_modules/@docusaurus/plugin-google-gtag/lib/gtag"),
+  require("/Users/lukhuong/Desktop/docusaurus-knowledge-base-template/src/clientModules/gtagFix.ts"),
 ];

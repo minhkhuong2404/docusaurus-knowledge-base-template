@@ -356,19 +356,19 @@ echo "get -b kafka.connect:type=connector-task-metrics,connector=my-connector,ta
 
 ## Interview Questions
 
-**Q: What is the difference between a source SMT and a sink SMT?**
+### Q: What is the difference between a source SMT and a sink SMT?
 
 > Source SMTs execute after data is read from the external source but before writing to Kafka, enabling transformations before data enters the streaming platform. Sink SMTs execute after reading from Kafka but before writing to the external destination, enabling transformations at delivery time. The SMT class is the same — the timing of execution differs based on connector type.
 
-**Q: When should you use SMTs instead of Kafka Streams?**
+### Q: When should you use SMTs instead of Kafka Streams?
 
 > Use SMTs for simple, stateless, per-record transformations like field masking, renaming, type conversion, or topic routing. Use Kafka Streams when you need aggregations, stream joins, windowed operations, complex error handling, or any processing that requires knowledge of multiple records. The key distinction is: SMTs cannot maintain state, cannot access external systems, and have no retry/DLQ mechanisms — they stop the entire connector on failure.
 
-**Q: How do predicates work with SMTs?**
+### Q: How do predicates work with SMTs?
 
 > Predicates are conditions evaluated per record before applying an SMT. If the predicate matches (or with `negate=true`, if it doesn't match), the transformation is applied; otherwise the record passes through unchanged. This enables conditional logic like "only mask SSN fields if the record has a certain header" or "only add region field for topics matching a pattern." Predicates avoid creating multiple connectors for slight variations in transformation logic.
 
-**Q: What are the thread-safety requirements for custom SMTs?**
+### Q: What are the thread-safety requirements for custom SMTs?
 
 > The Connect framework may call the `apply()` method from multiple threads concurrently (one per task). Custom SMTs must therefore be thread-safe: avoid shared mutable state, use local variables within `apply()`, and if external resources are needed, ensure they're thread-safe or use thread-local storage. The `configure()` method is called once during initialization and is not thread-safe with `apply()`.
 

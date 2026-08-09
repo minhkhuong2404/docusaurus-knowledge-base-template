@@ -11,7 +11,12 @@ tags:
 - advanced
 - hooks
 ---
+
+import GitHooksPipelineDiagram from '@site/src/components/GitHooksPipelineDiagram';
+
 # Git Hooks — Automating Quality Checks
+
+<GitHooksPipelineDiagram />
 
 ## What are Git Hooks?
 

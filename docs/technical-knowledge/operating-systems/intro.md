@@ -10,7 +10,13 @@ tags:
 sidebar_position: 0
 ---
 
+import OsOverviewDiagram from '@site/src/components/OsOverviewDiagram';
+
 # Operating Systems Knowledge Base
+
+<OsOverviewDiagram />
+
+---
 
 A comprehensive reference covering OS fundamentals from first principles through to Linux internals, with a Java/JVM lens throughout.
 

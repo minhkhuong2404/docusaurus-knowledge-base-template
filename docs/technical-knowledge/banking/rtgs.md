@@ -40,7 +40,7 @@ RITS is the RBA's core high-value settlement system for Australia:
 | Currency | AUD only |
 | Participants | ADIs with ESA accounts at RBA |
 | Operating hours | 7:30 AM – 8:30 PM AEST (business days) |
-| Payment minimum | No formal minimum; convention is high-value (>$10K–$250K+) |
+| Payment minimum | No formal minimum; convention is high-value (>\$10K–\$250K+) |
 | Access method | SWIFT connectivity to RBA |
 | Settlement mechanism | RTGS with LSM (Liquidity Saving Mechanism) |
 | Messages | SWIFT MT202 / ISO 20022 pacs.009 |

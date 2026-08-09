@@ -6,6 +6,8 @@ description: From first principles to production — unit testing, integration t
 tags: [testing, unit-test, integration-test, tdd, mocking, mockito, test-pyramid, best-practices]
 ---
 
+import TestingPyramidDoublesDiagram from '@site/src/components/TestingPyramidDoublesDiagram';
+
 # Testing Concepts & Best Practices
 
 :::info[Who this guide is for]
@@ -37,21 +39,11 @@ With tests:
 
 ## Types of Tests
 
-### The Test Pyramid
+### The Test Pyramid & Test Doubles Explorer
 
-```
-                    ┌───────────┐
-                    │   E2E     │  ← Few: slow, expensive, fragile
-                    │  Tests    │     (Selenium, Cypress, Playwright)
-                    ├───────────┤
-                  ┌─┤Integration├─┐  ← Some: test wiring between components
-                  │ │  Tests    │ │     (DB, HTTP, Kafka, Spring context)
-                  │ ├───────────┤ │
-              ┌───┤ │   Unit    │ ├───┐  ← Many: fast, focused, isolated
-              │   │ │  Tests    │ │   │     (Mockito, plain JUnit)
-              │   │ └───────────┘ │   │
-              └───┴───────────────┴───┘
-```
+<TestingPyramidDoublesDiagram />
+
+---
 
 | Level | What It Tests | Speed | Dependencies | Confidence |
 |-------|--------------|-------|-------------|------------|

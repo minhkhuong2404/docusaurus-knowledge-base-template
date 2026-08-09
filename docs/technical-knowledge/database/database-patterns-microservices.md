@@ -6,9 +6,17 @@ tags: [database, microservices, outbox, saga, cqrs, event-sourcing, distributed,
 sidebar_position: 18
 ---
 
+import TransactionalOutboxDiagram from '@site/src/components/TransactionalOutboxDiagram';
+import SagaCoordinationDiagram from '@site/src/components/SagaCoordinationDiagram';
+import IntegrationDbVsDatabasePerServiceDiagram from '@site/src/components/IntegrationDbVsDatabasePerServiceDiagram';
+
 # Database Patterns for Microservices
 
+---
+
 ## Database-Per-Service Pattern
+
+<IntegrationDbVsDatabasePerServiceDiagram />
 
 Each microservice owns its own database — **no shared schema**.
 
@@ -33,6 +41,8 @@ Each microservice owns its own database — **no shared schema**.
 
 ## Transactional Outbox Pattern
 
+<TransactionalOutboxDiagram />
+
 **Problem**: Atomically update the DB *and* publish an event to a message broker.
 
 **Naive approach (broken):**
@@ -50,6 +60,8 @@ For a complete guide with code examples, polling vs CDC (Debezium) trade-offs, a
 ---
 
 ## Saga Pattern
+
+<SagaCoordinationDiagram />
 
 To coordinate multi-step workflows across microservice boundaries without blocking database resources or relying on fragile distributed transactions (like 2PC), use the Saga Pattern (via Choreography or Orchestration).
 

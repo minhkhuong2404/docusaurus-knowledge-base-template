@@ -7,6 +7,8 @@ description: Overview of ISO 20022 Migration.
 tags: [banking, iso20022, migration, iso]
 ---
 
+import Iso20022MigrationDiagram from '@site/src/components/Iso20022MigrationDiagram';
+
 # ISO 20022 Migration
 
 ## Overview
@@ -17,6 +19,8 @@ tags: [banking, iso20022, migration, iso]
 - **Scope:** Payments, securities, FX, trade finance
 - **Timeline:** 2022–2025 (cross-border); ongoing for domestic systems
 - **Key driver:** Richer data, better reconciliation, improved compliance
+
+<Iso20022MigrationDiagram />
 
 ---
 

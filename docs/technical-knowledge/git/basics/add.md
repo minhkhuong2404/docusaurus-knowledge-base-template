@@ -11,7 +11,12 @@ tags:
 - basics
 - add
 ---
+
+import GitAddStagingDiagram from '@site/src/components/GitAddStagingDiagram';
+
 # `git add` — Staging Changes
+
+<GitAddStagingDiagram />
 
 ## What It Does
 

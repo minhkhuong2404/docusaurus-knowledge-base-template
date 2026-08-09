@@ -43,9 +43,9 @@ export default function SchemaEvolutionDlqSpikeDiagram(): React.JSX.Element {
     <div className="interactive-diagram-container" style={{ fontFamily: 'var(--ifm-font-family-base)' }}>
       <div className="interactive-diagram-header">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M2 20h20"/>
-          <path d="M5 17l5-5 5 5 5-10"/>
-          <circle cx="20" cy="7" r="2"/>
+          <path d="M2 20h20" />
+          <path d="M5 17l5-5 5 5 5-10" />
+          <circle cx="20" cy="7" r="2" />
         </svg>
         <span style={{ color: '#34d399' }}>Schema Evolution &amp; DLQ Spike Pattern</span>
       </div>
@@ -57,7 +57,7 @@ export default function SchemaEvolutionDlqSpikeDiagram(): React.JSX.Element {
             key={setup.id}
             onClick={() => setActiveSetup(setup.id)}
             style={{
-              padding: '6px 12px', borderRadius: '8px', border: 'none',
+              padding: '6px 12px', borderRadius: '8px',
               cursor: 'pointer', fontWeight: 700, fontSize: '11px',
               background: activeSetup === setup.id ? 'rgba(52,211,153,0.15)' : 'transparent',
               color: activeSetup === setup.id ? '#34d399' : 'var(--ifm-color-content-secondary)',
@@ -85,7 +85,7 @@ export default function SchemaEvolutionDlqSpikeDiagram(): React.JSX.Element {
       `}</style>
 
       <div className="spike-grid">
-        
+
         {/* SVG Pipeline */}
         <div className="interactive-diagram-svg-wrapper interactive-diagram-grid-bg">
           <svg viewBox="0 0 350 200" className="interactive-diagram-svg">
@@ -130,7 +130,7 @@ export default function SchemaEvolutionDlqSpikeDiagram(): React.JSX.Element {
                 <path d="M 215 60 L 247 60" fill="none" stroke="rgba(148,163,184,0.3)" strokeWidth="1.2" markerEnd="url(#spk-arr)" />
                 {/* Consumer -> DLQ */}
                 <path d="M 295 80 L 295 110 L 223 140" fill="none" stroke="#ef4444" strokeWidth="1.5" strokeDasharray="3 3"
-                      className="interactive-diagram-flowing-path" markerEnd="url(#spk-arr-color)" />
+                  className="interactive-diagram-flowing-path" markerEnd="url(#spk-arr-color)" />
               </g>
             ) : (
               // Registry Guard
@@ -149,7 +149,7 @@ export default function SchemaEvolutionDlqSpikeDiagram(): React.JSX.Element {
                 {/* Paths */}
                 {/* Producer -> Registry check */}
                 <path d="M 95 60 L 127 60" fill="none" stroke="#34d399" strokeWidth="1.5"
-                      className="interactive-diagram-flowing-path active-path-green" markerEnd="url(#spk-arr-color)" />
+                  className="interactive-diagram-flowing-path active-path-green" markerEnd="url(#spk-arr-color)" />
                 {/* Registry -> CI/CD Block */}
                 <path d="M 215 60 L 247 60" fill="none" stroke="#ef4444" strokeWidth="1.2" strokeDasharray="3 3" markerEnd="url(#spk-arr)" />
               </g>
@@ -159,7 +159,7 @@ export default function SchemaEvolutionDlqSpikeDiagram(): React.JSX.Element {
 
         {/* Info panel */}
         <div className="interactive-diagram-details-card" style={{ borderLeft: `4px solid ${current.color}`, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          
+
           <div>
             <h3 style={{ color: current.color }}>{current.title}</h3>
           </div>

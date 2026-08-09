@@ -6,11 +6,18 @@ tags: [database, overview]
 sidebar_position: 1
 ---
 
+import BTreeWritePathDiagram from '@site/src/components/BTreeWritePathDiagram';
+import LsmTreeWritePathDiagram from '@site/src/components/LsmTreeWritePathDiagram';
+
 # 🗄️ Database Knowledge Base
+
+---
 
 A structured guide covering everything you need to know about databases — from foundational SQL concepts to distributed NoSQL systems — with interview questions for each topic.
 
 ## Topics Covered
+
+<BTreeWritePathDiagram />
 
 | # | Topic | Description |
 |---|-------|-------------|

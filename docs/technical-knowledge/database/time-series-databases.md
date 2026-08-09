@@ -6,9 +6,15 @@ tags: [database, time-series, influxdb, timescaledb, prometheus, iot, metrics, m
 sidebar_position: 19
 ---
 
+import TimeSeriesDatabaseEngineDiagram from '@site/src/components/TimeSeriesDatabaseEngineDiagram';
+
 # Time-Series Databases
 
+---
+
 ## What Is Time-Series Data?
+
+<TimeSeriesDatabaseEngineDiagram />
 
 Time-series data is a sequence of data points **indexed by time**, typically collected at regular intervals.
 

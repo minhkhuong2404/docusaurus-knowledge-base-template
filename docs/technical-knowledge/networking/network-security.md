@@ -6,106 +6,26 @@ tags: [networking, security, tls, ddos, zero-trust, attack, firewall, mitm, csrf
 sidebar_position: 8
 ---
 
+import NetworkSecurityProtocolsDiagram from '@site/src/components/NetworkSecurityProtocolsDiagram';
+import DdosMitigationDiagram from '@site/src/components/DdosMitigationDiagram';
+
 # Network Security
+
+<NetworkSecurityProtocolsDiagram />
+
+<DdosMitigationDiagram />
+
+---
 
 ## TLS Certificate Management
 
 ### Certificate Lifecycle
-
-```
-1. Generate private key + CSR (Certificate Signing Request)
-2. Submit CSR to CA (Certificate Authority)
-3. CA validates domain ownership (DNS or HTTP challenge)
-4. CA signs certificate → contains public key + domain + expiry
-5. Install cert + private key on server
-6. Renew before expiry (typically 90 days for Let's Encrypt, 1-2 years for commercial)
-```
-
-```bash
-# Generate self-signed cert (dev only)
-openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
-
-# Generate CSR for production
-openssl genrsa -out private.key 2048
-openssl req -new -key private.key -out request.csr
-
-# Inspect certificate
-openssl x509 -in cert.pem -text -noout
-openssl s_client -connect api.example.com:443 -servername api.example.com
-
-# Let's Encrypt (automated)
-certbot certonly --dns-cloudflare -d api.example.com -d "*.example.com"
-```
-
-### Mutual TLS (mTLS)
-
-Standard TLS: only server presents a certificate (client authenticates via application credentials).
-
-mTLS: **both** client and server present certificates.
-
-```
-Client Certificate  ←──── Client Auth ────►  Server Certificate
-                         (both verified)
-
-Use cases:
-- Service-to-service auth in microservices (zero trust)
-- API access for automated clients / IoT devices
-- Internal network segments
-```
-
-```java
-// Spring Boot mTLS server config
-server:
-  ssl:
-    client-auth: need         # require client cert
-    trust-store: classpath:truststore.p12
-    trust-store-password: ${TRUST_STORE_PASSWORD}
-    trust-store-type: PKCS12
-
-// Spring WebClient mTLS client
-SslContext sslContext = SslContextBuilder.forClient()
-    .keyManager(privateKey, clientCert)       // client cert
-    .trustManager(caCert)                     // trust server cert
-    .build();
-```
-
----
-
-## Common Network Attacks
-
-### Man-in-the-Middle (MitM)
-
-Attacker intercepts communication between client and server.
-
-```
-Client ──► [Attacker] ──► Server
-           Reads, modifies, relays traffic
-```
 
 **Mitigations:**
 - TLS with certificate validation (never skip cert verification!)
 - HSTS (prevents SSL stripping)
 - Certificate Pinning (app hardcodes expected cert)
 - mTLS (both sides authenticated)
-
-```java
-// ❌ NEVER in production — disables cert validation
-.trustManager(InsecureTrustManagerFactory.INSTANCE)
-
-// ✅ Validate server cert
-SslContext ssl = SslContextBuilder.forClient()
-    .trustManager(caCertPath.toFile())  // specific CA
-    .build();
-```
-
-### SSL Stripping
-
-Attacker downgrades HTTPS to HTTP by intercepting the initial HTTP request.
-
-```
-Client ──HTTP──► [Attacker] ──HTTPS──► Server
-                 Reads plaintext HTTP
-```
 
 **Mitigation**: HSTS (`Strict-Transport-Security: max-age=31536000`) — browser always uses HTTPS. HSTS preload list for maximum protection.
 
@@ -338,26 +258,26 @@ public class SecurityConfig {
 
 ## Interview Questions
 
-**Q1. What is a man-in-the-middle attack and how does TLS prevent it?**
+### Q1. What is a man-in-the-middle attack and how does TLS prevent it?
 > MitM: attacker positions themselves between client and server, intercepting and potentially modifying traffic. TLS prevents it by: (1) authenticating the server via a certificate signed by a trusted CA — attacker can't forge a valid cert for a domain they don't control; (2) using ECDHE key exchange — even if the private key is later compromised, past sessions can't be decrypted (forward secrecy); (3) message authentication codes (MAC) detect tampering.
 
-**Q2. What is a DDoS amplification attack and how does it work?**
+### Q2. What is a DDoS amplification attack and how does it work?
 > The attacker spoofs the victim's IP as the source and sends small requests to servers that generate large responses (DNS, NTP, memcached). The large responses flood the victim. Amplification factor can be 100x+. Mitigation: BCP38 (ISPs filter spoofed source IPs), rate-limit DNS ANY queries, disable open resolvers, use scrubbing centers to absorb traffic.
 
-**Q3. What is Zero Trust and how does it differ from perimeter security?**
+### Q3. What is Zero Trust and how does it differ from perimeter security?
 > Perimeter security trusts everything inside the network (after VPN). Zero Trust trusts nothing by default — every request must be authenticated and authorized regardless of network location. Key principles: verify explicitly (identity + device + context), least privilege, assume breach. Implemented via identity providers, mTLS service meshes, per-resource authorization policies, and short-lived credentials.
 
-**Q4. What is the difference between a WAF and a traditional firewall?**
+### Q4. What is the difference between a WAF and a traditional firewall?
 > A traditional firewall operates at L3/L4 — filtering by IP address, port, and protocol. A WAF (Web Application Firewall) operates at L7, understanding HTTP content. It can detect and block SQL injection, XSS, CSRF, path traversal, OWASP Top 10 attacks by inspecting request/response bodies, headers, and URLs. WAFs are complementary — both are typically deployed together.
 
-**Q5. What is SSL stripping and how does HSTS prevent it?**
+### Q5. What is SSL stripping and how does HSTS prevent it?
 > SSL stripping: attacker intercepts the user's initial HTTP request (before the HTTPS redirect), serving HTTP to the user while maintaining HTTPS to the server — the user sees HTTP content unknowingly. HSTS prevents this by instructing browsers to always connect via HTTPS for a domain, even if the user types `http://`. The first visit is still vulnerable — HSTS preload lists (built into browsers) eliminate even the first-visit risk.
 
-**Q6. Explain mTLS and when you would use it.**
+### Q6. Explain mTLS and when you would use it.
 > In standard TLS, only the server is authenticated via certificate. mTLS requires both parties to present certificates. Use cases: service-to-service authentication in microservices (proves service identity without API keys); IoT device authentication; API access for automated clients. In a service mesh (Istio), mTLS is automatically provisioned for all inter-service calls — no code changes needed.
 
-**Q7. What is BGP hijacking and why is it hard to prevent?**
+### Q7. What is BGP hijacking and why is it hard to prevent?
 > BGP hijacking occurs when an AS announces more-specific routes for IP prefixes it doesn't own, causing traffic to be misrouted through the attacker. The internet's BGP trust model is based on mutual agreement — routers accept route announcements without cryptographic verification. Hard to prevent because BGP was designed for trust between cooperative peers. RPKI (Resource Public Key Infrastructure) allows route origin validation cryptographically, but adoption is incomplete.
 
-**Q8. What HTTP security headers should every API set?**
+### Q8. What HTTP security headers should every API set?
 > HSTS (always use HTTPS), `X-Content-Type-Options: nosniff` (prevent MIME sniffing), `X-Frame-Options: DENY` (prevent clickjacking), `Content-Security-Policy` (restrict resource origins), `Referrer-Policy: strict-origin-when-cross-origin` (don't leak URLs to external sites). For APIs: `Cache-Control: no-store` on sensitive responses, `X-Request-ID` for tracing. Validate with securityheaders.com.

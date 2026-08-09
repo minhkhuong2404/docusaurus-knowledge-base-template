@@ -12,8 +12,11 @@ tags:
   - Interview Prep
   - FAANG
 ---
+import CompanyBehavioralDiagram from '@site/src/components/CompanyBehavioralDiagram';
 
 # Google, Meta & Microsoft — Behavioral Interview Guide
+
+<CompanyBehavioralDiagram />
 
 While Amazon's behavioral framework is the most explicit (16 named LPs), Google, Meta, and Microsoft each have their own distinct frameworks. This guide breaks down what each company is actually evaluating, with the questions they ask and story strategies that resonate.
 

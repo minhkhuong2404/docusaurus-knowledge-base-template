@@ -47,41 +47,6 @@ In **Kafka 4.0+ with KRaft**, ACLs are stored in the `__cluster_metadata` topic 
 
 ### Enabling Authorization
 
-```properties
-# Broker configuration (server.properties)
-authorizer.class.name=org.apache.kafka.metadata.authorizer.StandardAuthorizer
-
-# Deny access by default if no ACL found (CRITICAL for security)
-allow.everyone.if.no.acl.found=false
-
-# Superusers bypass all ACL checks
-super.users=User:admin;User:kafka-operator
-```
-
-The **StandardAuthorizer** (Kafka 3.0+, replacing older AclAuthorizer) implements a **deny-by-default** model — access is denied unless an explicit Allow rule exists.
-
----
-
-## Authorization Flow
-
-When a producer attempts to write to a topic:
-
-```
-Client authenticates (SASL, mTLS, etc.)
-        │
-        ▼
-Principal extracted → e.g., User:order-service
-        │
-        ▼
-Client attempts Write operation on Topic:orders
-        │
-        ▼
-StandardAuthorizer queries stored ACLs
-        │
-        ├── Allow ACL found? → PERMIT operation
-        └── No matching ACL? → DENY (AuthorizationException)
-```
-
 :::warning[Common Mistake: Missing Describe Permission]
 Almost all operations require **Describe** *in addition* to the primary operation. Missing Describe is the #1 ACL mistake.
 
@@ -521,23 +486,23 @@ grep "Processing ACL" /var/log/kafka/server.log
 
 ## Interview Questions
 
-**Q: What is the difference between authentication and authorization in Kafka?**
+### Q: What is the difference between authentication and authorization in Kafka?
 
 > Authentication answers "Who are you?" — verifying identity via SASL, mTLS, or OAuth. Authorization answers "What can you do?" — ACLs determine which operations authenticated principals can perform on which resources. Both are required for production security.
 
-**Q: Why does a Kafka consumer need ACLs on both the topic AND the consumer group?**
+### Q: Why does a Kafka consumer need ACLs on both the topic AND the consumer group?
 
 > Consuming requires two separate operations: reading from the topic (requires `Read` + `Describe` on the topic) and joining a consumer group (requires `Read` on the consumer group resource). The consumer group ACL controls who can join the group and commit offsets. Missing either causes `TopicAuthorizationException` or `GroupAuthorizationException`.
 
-**Q: What is the deny-by-default model in Kafka ACLs?**
+### Q: What is the deny-by-default model in Kafka ACLs?
 
 > When `allow.everyone.if.no.acl.found=false`, Kafka denies any operation that does not have an explicit Allow ACL. This is the secure default — if you forget to create an ACL, access is blocked rather than accidentally allowed. The StandardAuthorizer also evaluates Deny ACLs before Allow ACLs, so explicit Deny rules take precedence.
 
-**Q: How do prefixed ACLs work and why are they useful?**
+### Q: How do prefixed ACLs work and why are they useful?
 
 > Prefixed ACLs use `--resource-pattern-type prefixed` to match all resources that start with a specified string. For example, a prefixed ACL for `team-a.` matches `team-a.orders`, `team-a.payments`, and any future topics with that prefix — without needing to create individual ACLs. This eliminates ACL sprawl in multi-tenant environments and ensures new topics automatically inherit permissions if they follow the naming convention.
 
-**Q: What is a Kafka superuser?**
+### Q: What is a Kafka superuser?
 
 > A superuser is a principal configured in `super.users` in broker config (e.g., `super.users=User:admin;User:kafka-operator`). Superusers bypass all ACL checks and can perform any operation on any resource. They are used for administrative automation — but should be strictly limited to avoid security risks.
 

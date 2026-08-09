@@ -6,9 +6,15 @@ description: "Managing distributed sessions with Redis and Spring Session, inclu
 tags: [redis, session-management, pattern, spring-boot, backend]
 ---
 
+import RedisSessionManagementDiagram from '@site/src/components/RedisSessionManagementDiagram';
+
 # Session Management with Redis
 
 Redis is the most popular choice for distributed session storage in horizontally-scaled web applications. Spring Session provides first-class integration.
+
+<RedisSessionManagementDiagram />
+
+---
 
 ## The Problem with Sticky Sessions
 

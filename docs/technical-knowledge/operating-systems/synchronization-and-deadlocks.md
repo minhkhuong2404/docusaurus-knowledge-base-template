@@ -12,7 +12,13 @@ tags:
 sidebar_position: 4
 ---
 
+import OsSyncDeadlockDiagram from '@site/src/components/OsSyncDeadlockDiagram';
+
 # Synchronization & Deadlocks
+
+<OsSyncDeadlockDiagram />
+
+---
 
 ## The Critical Section Problem
 
@@ -50,17 +56,17 @@ Modern CPUs provide atomic instructions:
 
 ### Test-And-Set
 
-```
+```c
 boolean TestAndSet(boolean *target) {
     boolean rv = *target;
     *target = true;
-    return rv;  // atomically
+    return rv;  // atomically executed by CPU bus locking
 }
 ```
 
 ### Compare-And-Swap (CAS)
 
-```
+```c
 int CAS(int *value, int expected, int new_value) {
     if (*value == expected) {
         *value = new_value;
@@ -185,10 +191,6 @@ signal(full)           signal(empty)
 
 Multiple readers can read simultaneously; writers need exclusive access.
 
-- **First variation**: Readers have priority (writers may starve).
-- **Second variation**: Writers have priority (readers may starve).
-- **Fair variation**: Use a queue to alternate.
-
 ```java
 // Java ReadWriteLock
 ReadWriteLock rwLock = new ReentrantReadWriteLock();
@@ -225,14 +227,14 @@ A **deadlock** is a state where a set of processes are each waiting for an event
 All four must hold simultaneously for deadlock:
 
 1. **Mutual Exclusion**: Resources cannot be shared.
-2. **Hold and Wait**: Process holds ≥1 resource while waiting for others.
+2. **Hold and Wait**: Process holds $\ge 1$ resource while waiting for others.
 3. **No Preemption**: Resources cannot be forcibly taken away.
 4. **Circular Wait**: P1 waits for P2, P2 waits for P3, ..., Pn waits for P1.
 
 ### Resource Allocation Graph (RAG)
 
-- **Request Edge**: Process → Resource (P wants R).
-- **Assignment Edge**: Resource → Process (R held by P).
+- **Request Edge**: Process $\to$ Resource (P wants R).
+- **Assignment Edge**: Resource $\to$ Process (R held by P).
 - **Deadlock**: Cycle in graph (with single-instance resources; for multi-instance, need further analysis).
 
 ---
@@ -245,10 +247,10 @@ Eliminate one of the four conditions:
 
 | Condition | Prevention Strategy |
 |---|---|
-| Mutual Exclusion | Make resources sharable (e.g., read-only files) |
-| Hold and Wait | Request all resources at once; or release before new request |
-| No Preemption | Preempt resources (practical for CPU, memory; not for printers) |
-| Circular Wait | Impose total ordering on resources; always request in order |
+| Mutual Exclusion | Make resources sharable (e.g., read-only files). |
+| Hold and Wait | Request all resources at once; or release before new request. |
+| No Preemption | Preempt resources (practical for CPU, memory; not for write streams). |
+| Circular Wait | Impose total ordering on resources; always request in order. |
 
 ### 2. Avoidance (Banker's Algorithm)
 
@@ -260,143 +262,52 @@ needs can be satisfied by current resources + resources held
 by all Pj (j < i).
 ```
 
-**Banker's Algorithm** (Dijkstra):
-
-```
-Need[i][j] = Max[i][j] - Allocation[i][j]
-
-Safety Algorithm:
-1. Work = Available
-2. Find Pi where Finish[i]=false AND Need[i] ≤ Work
-3. Work += Allocation[i]; Finish[i] = true
-4. If all Finish[i] = true → Safe State
-```
-
 ### 3. Detection & Recovery
 
-Let deadlocks occur; detect and recover.
-
-**Detection**: Run resource allocation graph cycle detection periodically.
-
-**Recovery Options**:
-- **Process termination**: Kill all deadlocked processes; or kill one at a time (by cost: priority, runtime, resources held).
-- **Resource preemption**: Take resources away; roll back process to safe state; may cause starvation (use aging to prevent).
-
-### 4. Ignore (Ostrich Algorithm)
-
-Pretend deadlocks don't happen. If deadlocks are rare and recovery is expensive, let the user restart. Used in many general-purpose OS (Linux, Windows). Pragmatic.
+Let deadlocks occur; detect and recover via periodic cycle detection on resource graphs.
 
 ---
 
-## Java Concurrency Utilities
-
-### java.util.concurrent (JUC)
+## Java Concurrency Utilities (JUC)
 
 ```java
 // CountDownLatch: wait for N events
 CountDownLatch latch = new CountDownLatch(3);
-// Workers: latch.countDown();
-// Main: latch.await();
 
 // CyclicBarrier: all-or-nothing sync point
 CyclicBarrier barrier = new CyclicBarrier(3, () -> System.out.println("All arrived"));
-// Each thread: barrier.await();
-
-// Phaser: flexible multi-phase barrier
-Phaser phaser = new Phaser(3);
-phaser.arriveAndAwaitAdvance();
 
 // BlockingQueue: thread-safe producer-consumer
 BlockingQueue<Task> queue = new LinkedBlockingQueue<>(100);
-queue.put(task);    // blocks if full
-queue.take();       // blocks if empty
 
 // AtomicInteger (lock-free)
 AtomicInteger counter = new AtomicInteger(0);
 counter.incrementAndGet();
-counter.compareAndSet(expected, newValue);
 ```
-
-### Volatile
-
-`volatile` ensures **visibility** (write is flushed to main memory; read comes from main memory) and **ordering** (no instruction reordering across volatile access), but **not atomicity**.
-
-```java
-volatile boolean running = true;
-
-// Thread 1:
-running = false;  // guaranteed visible to Thread 2
-
-// Thread 2:
-while (running) { /* do work */ }
-```
-
-### Memory Model (JMM) — Happens-Before
-
-The Java Memory Model defines **happens-before** relationships:
-- `synchronized` block exit happens-before entry by another thread.
-- `volatile` write happens-before a subsequent volatile read.
-- `Thread.start()` happens-before first action in the started thread.
-- `Thread.join()` — all actions in joined thread happen-before return of `join()`.
 
 ---
 
 ## Interview Questions
 
-### Q1: What is the difference between a mutex and a semaphore?
+### Q1. What is the fundamental difference between a mutex and a semaphore?
+> A mutex (mutual exclusion lock) enforces strict ownership — only the thread that acquired the mutex can release it. It is used to protect a critical section. A counting semaphore has no ownership concept; any thread can release a permit (`signal()`). Semaphores are used for signaling and managing bounded resource pools (e.g., connection pools).
 
-A mutex (binary semaphore) is for mutual exclusion — only the thread that locked it can unlock it (ownership). A counting semaphore has no ownership; any thread can signal. Semaphores are used for signaling and resource counting; mutexes for protecting critical sections.
+### Q2. What is the difference between a deadlock, a livelock, and starvation?
+> **Deadlock**: Processes are permanently blocked waiting for resources held by each other; zero CPU is consumed and no progress is made. **Livelock**: Processes actively change state in response to each other (consuming CPU) but fail to make meaningful progress (e.g., two people in a hallway stepping side-to-side in sync). **Starvation**: A runnable process is perpetually denied access to a resource because higher-priority processes keep preempting it.
 
-### Q2: What is a deadlock vs. livelock vs. starvation?
+### Q3. How does `synchronized` work internally in the HotSpot JVM?
+> `synchronized` relies on object monitor locks (`markWord` header in Java objects). The JVM uses `monitorenter` and `monitorexit` bytecode instructions. Since Java 6, lock acquisition is optimized through three states: (1) **Biased Locking** (zero CAS overhead for single-threaded access); (2) **Lightweight Locking** (CAS spin-locking for low contention); (3) **Heavyweight Locking** (inflates to OS mutex/futex when contention occurs).
 
-- **Deadlock**: Processes are blocked waiting for each other — no progress.
-- **Livelock**: Processes keep changing state in response to each other but make no progress (e.g., two people in a corridor both stepping aside in the same direction).
-- **Starvation**: A process is perpetually denied resources, though other processes make progress.
+### Q4. What is the difference between `notify()` and `notifyAll()` in Java?
+> `notify()` wakes up a single arbitrary thread waiting on the object's monitor. If the woken thread cannot proceed (e.g., condition evaluates to false) and sleeps again, the signal is lost, causing a deadlock. `notifyAll()` wakes up all waiting threads. Although `notifyAll()` incurs a thundering herd context-switch overhead, it guarantees that any thread eligible to proceed will be woken.
 
-### Q3: How does `synchronized` work in Java internally?
-
-`synchronized` uses a **monitor** (intrinsic lock). Each object has one. The JVM uses `monitorenter`/`monitorexit` bytecodes. Since Java 6, locks are optimized: biased locking (no CAS for uncontested), thin locks (CAS-based), and fat locks (OS mutex). JVM can also do **lock elision** and **lock coarsening**.
-
-### Q4: What is the difference between `notify()` and `notifyAll()`?
-
-`notify()` wakes one arbitrary waiting thread — if the wrong thread wakes up, it may wait again and deadlock. `notifyAll()` wakes all — safer but may cause a thundering herd. Prefer `notifyAll()` unless you have a specific reason and all waiting threads are identical.
-
-### Q5: What is a reentrant lock and when is it needed?
-
-A reentrant lock allows the same thread to acquire the lock it already holds (without deadlocking). Java's `synchronized` is reentrant. Needed when a synchronized method calls another synchronized method on the same object.
-
-### Q6: How do you detect a deadlock in Java?
-
-Use `ThreadMXBean`: `findDeadlockedThreads()` or `findMonitorDeadlockedThreads()`. In production, take a thread dump: `kill -3 <pid>` on Linux or `jstack <pid>`. Thread dumps show "Found one Java-level deadlock" sections.
-
-### Q7: What is the ABA problem in lock-free programming?
-
-CAS checks that value is still `A` before swapping. But if value changed A→B→A, CAS succeeds even though state changed. Solution: **stamped references** — include a version counter. In Java: `AtomicStampedReference` or `AtomicMarkableReference`.
-
-### Q8: What is false sharing and how do you avoid it?
-
-Multiple threads access different variables that happen to be in the same CPU cache line (typically 64 bytes). When one thread modifies its variable, the cache line is invalidated for all CPUs — causing unnecessary cache misses. Solution: pad variables to separate cache lines, or use `@Contended` annotation (Java 8+).
+### Q5. What is the ABA problem in lock-free CAS operations and how is it solved?
+> The ABA problem occurs in lock-free algorithms when a thread reads value `A`, gets preempted, another thread changes `A -> B -> A`, and the first thread's `compareAndSet(A, C)` succeeds because the memory location reads `A` again, ignoring the intermediate state mutation. Solution: attach a version stamp or transaction sequence counter to the reference. In Java, use `AtomicStampedReference` or `AtomicMarkableReference`.
 
 ---
 
-## Advanced Editorial Pass: Synchronization Strategy for Correctness at Scale
+## See Also
 
-### Senior Engineering Focus
-- Choose synchronization model by contention pattern and failure recovery needs.
-- Minimize lock scope and cross-component lock ordering complexity.
-- Prefer explicit back-pressure over unbounded waiting.
-
-### Failure Modes to Anticipate
-- Deadlocks that appear only under rare interleavings.
-- Lock convoy effects creating throughput collapse.
-- Priority inversion under mixed workload classes.
-
-### Practical Heuristics
-1. Define lock ordering policies and enforce in code review.
-2. Instrument lock wait time and contention hotspots.
-3. Use timeouts and cancellation paths for all blocking coordination.
-
-### Compare Next
 - [Processes & Threads](./processes-and-threads.md)
 - [CPU Scheduling](./cpu-scheduling.md)
-- [Interview Questions](./interview-questions.md)
+- [Linux Internals & Syscalls](./linux-internals-and-syscalls.md)

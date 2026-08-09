@@ -7,6 +7,8 @@ description: Complete guide to Australia's BECS Direct Entry (DE) system — fil
 tags: [banking, becs, direct-entry, batch, bulk-payments, ausPayNet, clearing]
 ---
 
+import BankingBatchReconciliationDiagram from '@site/src/components/BankingBatchReconciliationDiagram';
+
 # 📦 BECS — Bulk Electronic Clearing System
 
 BECS (Bulk Electronic Clearing System) is Australia's primary **batch payment rail** for high-volume, low-urgency domestic credit transfers and direct debits. It is operated by **AusPayNet** and processes billions of dollars daily for payroll, direct debits, government benefits, and bulk supplier payments.
@@ -27,7 +29,11 @@ BECS does NOT handle:
 
 ---
 
-## File Format — Direct Entry (DE) File
+## File Format — Direct Entry (DE) File & Monospace Inspector
+
+<BankingBatchReconciliationDiagram />
+
+---
 
 BECS uses a **120-character fixed-width ASCII** file format. Every line is exactly 120 characters. Files are submitted electronically to the bank/clearing house before the submission cut-off.
 

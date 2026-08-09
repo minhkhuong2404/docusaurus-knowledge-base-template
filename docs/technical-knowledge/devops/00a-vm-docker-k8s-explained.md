@@ -6,6 +6,8 @@ description: A comprehensive guide comparing Virtual Machines, Docker, and Kuber
 tags: [devops, virtualization, docker, kubernetes, architecture, beginners, senior]
 ---
 
+import VmDockerK8sComparisonDiagram from '@site/src/components/VmDockerK8sComparisonDiagram';
+
 # 🐳 Virtual Machines vs. Docker vs. Kubernetes
 
 Whether you're just starting out in DevOps or you're a Senior Engineer optimizing microservice orchestrations, understanding the evolutionary leap from Virtual Machines to Docker and finally to Kubernetes is fundamental. 
@@ -15,6 +17,8 @@ This guide breaks down the progression. We'll start with simple, intuitive analo
 ---
 
 ## 🏗️ 1. The ELI5 Analogy (Beginners)
+
+<VmDockerK8sComparisonDiagram />
 
 Before we look at hypervisors and namespaces, let's look at housing and logistics.
 

@@ -6,6 +6,8 @@ description: Complete reference for JUnit 5, Mockito, and Spring Boot testing an
 tags: [testing, junit5, mockito, spring-boot-test, annotations, webmvctest, datajpatest, sliced-test]
 ---
 
+import SpringTestAnnotationsDiagram from '@site/src/components/SpringTestAnnotationsDiagram';
+
 # Testing Annotations in Spring & JUnit
 
 :::info[Who this guide is for]
@@ -15,25 +17,13 @@ tags: [testing, junit5, mockito, spring-boot-test, annotations, webmvctest, data
 
 ---
 
-## The Big Picture
+## The Big Picture & Annotation Explorer
 
 When writing tests in a Spring Boot project, you deal with **three layers** of annotations:
 
-```
-┌────────────────────────────────────────────────────────────┐
-│  Layer 1: JUnit 5 (Test Runner)                            │
-│  @Test, @ParameterizedTest, @BeforeEach, @DisplayName      │
-│  → Controls WHAT runs, WHEN, and HOW                       │
-├────────────────────────────────────────────────────────────┤
-│  Layer 2: Mockito (Test Doubles)                           │
-│  @Mock, @Spy, @InjectMocks, @Captor                        │
-│  → Controls DEPENDENCIES — replace real objects with fakes │
-├────────────────────────────────────────────────────────────┤
-│  Layer 3: Spring Boot Test (Application Context)           │
-│  @SpringBootTest, @WebMvcTest, @DataJpaTest, @MockitoBean  │
-│  → Controls SPRING CONTEXT — how much of the app loads     │
-└────────────────────────────────────────────────────────────┘
-```
+<SpringTestAnnotationsDiagram />
+
+---
 
 :::tip[Rule of Thumb]
 - **Unit tests** → Layer 1 + Layer 2 only (no Spring context → fast ⚡)

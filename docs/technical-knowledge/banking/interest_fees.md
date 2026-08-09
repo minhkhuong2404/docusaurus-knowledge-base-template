@@ -34,7 +34,7 @@ Interest and fees are the primary ways banks **generate revenue** from accounts 
 | **Fixed Rate** | Rate locked for a term | 5.00% p.a. for 12 months |
 | **Variable Rate** | Can change at bank's discretion (follows RBA cash rate) | RBA rate + 2.50% |
 | **Introductory Rate** | Promotional rate for new customers (limited period) | 5.50% for 4 months, then 3.00% |
-| **Tiered Rate** | Different rates for different balance bands | 0–$10K: 2%, $10K+: 4% |
+| **Tiered Rate** | Different rates for different balance bands | 0–\$10K: 2%, \$10K+: 4% |
 | **Bonus Rate** | Extra interest if conditions met (e.g., deposit each month) | Base 2% + Bonus 3% = 5% |
 
 ---
@@ -108,27 +108,27 @@ CAPITALISATION: Accrued interest is added to the principal balance
 
 | Fee | Description | Typical Amount |
 |-----|-------------|---------------|
-| **Monthly account fee** | Charged for maintaining account | $5–$15/month |
-| **Excess transaction fee** | Fee per transaction over monthly limit | $0.50–$2 each |
-| **Paper statement fee** | Fee for receiving paper statements | $2–$5/month |
-| **Account closure fee** | Sometimes charged on term deposits if broken early | $0–$50 |
+| **Monthly account fee** | Charged for maintaining account | \$5–\$15/month |
+| **Excess transaction fee** | Fee per transaction over monthly limit | \$0.50–\$2 each |
+| **Paper statement fee** | Fee for receiving paper statements | \$2–\$5/month |
+| **Account closure fee** | Sometimes charged on term deposits if broken early | \$0–\$50 |
 
 ### Payment Fees
 
 | Fee | Description | Typical Amount |
 |-----|-------------|---------------|
-| **International transfer fee** | SWIFT outbound payment | $15–$30 per payment |
+| **International transfer fee** | SWIFT outbound payment | \$15–\$30 per payment |
 | **Currency conversion margin** | Spread on FX rate | 1%–3% |
-| **BPAY fee** | Usually nil (absorbed by bank) | $0 (retail) |
-| **Real-time payment fee** | NPP — usually nil for consumers | $0 |
+| **BPAY fee** | Usually nil (absorbed by bank) | \$0 (retail) |
+| **Real-time payment fee** | NPP — usually nil for consumers | \$0 |
 
 ### Penalty / Event Fees
 
 | Fee | Description |
 |-----|-------------|
-| **Dishonour fee** | Direct debit or cheque bounced due to insufficient funds — $10–$15 |
-| **Overdrawn fee** | Account went negative without approved overdraft — $10–$20 |
-| **Late payment fee** | Credit card or loan payment overdue — $20–$30 |
+| **Dishonour fee** | Direct debit or cheque bounced due to insufficient funds — \$10–\$15 |
+| **Overdrawn fee** | Account went negative without approved overdraft — \$10–\$20 |
+| **Late payment fee** | Credit card or loan payment overdue — \$20–\$30 |
 | **Break fee** | Exiting a fixed-rate product early (e.g., fixed home loan) — can be thousands |
 
 ---

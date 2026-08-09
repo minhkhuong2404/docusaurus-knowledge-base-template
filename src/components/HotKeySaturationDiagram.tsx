@@ -9,9 +9,9 @@ export default function HotKeySaturationDiagram(): React.JSX.Element {
     <div className="interactive-diagram-container" style={{ fontFamily: 'var(--ifm-font-family-base)' }}>
       <div className="interactive-diagram-header">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="12" y1="16" x2="12" y2="12"/>
-          <line x1="12" y1="8" x2="12.01" y2="8"/>
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="16" x2="12" y2="12" />
+          <line x1="12" y1="8" x2="12.01" y2="8" />
         </svg>
         <span style={{ color: '#34d399' }}>Hot Key Saturation &amp; L1 Near Cache Mitigation</span>
       </div>
@@ -23,7 +23,7 @@ export default function HotKeySaturationDiagram(): React.JSX.Element {
             key={m}
             onClick={() => setMode(m)}
             style={{
-              padding: '6px 12px', borderRadius: '8px', border: 'none',
+              padding: '6px 12px', borderRadius: '8px',
               cursor: 'pointer', fontWeight: 700, fontSize: '11px',
               background: mode === m ? 'rgba(56,189,248,0.15)' : 'transparent',
               color: mode === m ? '#38bdf8' : 'var(--ifm-color-content-secondary)',
@@ -51,7 +51,7 @@ export default function HotKeySaturationDiagram(): React.JSX.Element {
       `}</style>
 
       <div className="hotkey-grid">
-        
+
         {/* SVG Viewport */}
         <div className="interactive-diagram-svg-wrapper interactive-diagram-grid-bg">
           <svg viewBox="0 0 350 200" className="interactive-diagram-svg">
@@ -120,7 +120,7 @@ export default function HotKeySaturationDiagram(): React.JSX.Element {
           borderLeft: `4px solid ${mode === 'SATURATED' ? '#ef4444' : '#34d399'}`,
           display: 'flex', flexDirection: 'column', gap: '8px'
         }}>
-          
+
           <div>
             <h4 style={{ margin: 0, fontSize: '12px', color: mode === 'SATURATED' ? '#ef4444' : '#34d399' }}>
               {mode === 'SATURATED' ? 'Cache Shard Bottleneck' : 'L1 Near Cache + Hash Ring Replication'}

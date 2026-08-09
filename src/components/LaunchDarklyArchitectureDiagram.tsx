@@ -8,7 +8,7 @@ export default function LaunchDarklyArchitectureDiagram() {
     <div className="interactive-diagram-container" style={{ fontFamily: 'var(--ifm-font-family-base)' }}>
       <div className="interactive-diagram-header">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
         </svg>
         <span>LaunchDarkly Enterprise Architecture &amp; Flag Evaluation Simulator</span>
       </div>
@@ -92,7 +92,7 @@ export default function LaunchDarklyArchitectureDiagram() {
             <button
               onClick={() => setUserTier('beta')}
               style={{
-                padding: '6px 12px', borderRadius: '6px', border: 'none', cursor: 'pointer', fontSize: '11.5px', fontWeight: 700,
+                padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '11.5px', fontWeight: 700,
                 background: userTier === 'beta' ? 'rgba(52,211,153,0.25)' : 'rgba(255,255,255,0.04)',
                 color: userTier === 'beta' ? '#34d399' : 'var(--ifm-color-content-secondary)',
                 border: userTier === 'beta' ? '1px solid #34d399' : '1px solid rgba(255,255,255,0.08)',
@@ -103,7 +103,7 @@ export default function LaunchDarklyArchitectureDiagram() {
             <button
               onClick={() => setUserTier('vip')}
               style={{
-                padding: '6px 12px', borderRadius: '6px', border: 'none', cursor: 'pointer', fontSize: '11.5px', fontWeight: 700,
+                padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '11.5px', fontWeight: 700,
                 background: userTier === 'vip' ? 'rgba(56,189,248,0.25)' : 'rgba(255,255,255,0.04)',
                 color: userTier === 'vip' ? '#38bdf8' : 'var(--ifm-color-content-secondary)',
                 border: userTier === 'vip' ? '1px solid #38bdf8' : '1px solid rgba(255,255,255,0.08)',
@@ -114,7 +114,7 @@ export default function LaunchDarklyArchitectureDiagram() {
             <button
               onClick={() => setUserTier('regular')}
               style={{
-                padding: '6px 12px', borderRadius: '6px', border: 'none', cursor: 'pointer', fontSize: '11.5px', fontWeight: 700,
+                padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '11.5px', fontWeight: 700,
                 background: userTier === 'regular' ? 'rgba(248,113,113,0.25)' : 'rgba(255,255,255,0.04)',
                 color: userTier === 'regular' ? '#f87171' : 'var(--ifm-color-content-secondary)',
                 border: userTier === 'regular' ? '1px solid #f87171' : '1px solid rgba(255,255,255,0.08)',

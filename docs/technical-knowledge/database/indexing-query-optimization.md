@@ -6,7 +6,13 @@ tags: [database, indexing, query-optimization, b-tree, explain, performance, sys
 sidebar_position: 3
 ---
 
+import DatabaseIndexScanTypesDiagram from '@site/src/components/DatabaseIndexScanTypesDiagram';
+import DatabaseJoinAlgorithmsDiagram from '@site/src/components/DatabaseJoinAlgorithmsDiagram';
+import BTreeWritePathDiagram from '@site/src/components/BTreeWritePathDiagram';
+
 # Indexing & Query Optimization
+
+---
 
 In large-scale database systems and system design interviews, "just add an index" is not a complete answer. Engineers must understand how data is physically structured on disk, how different data structures interact with memory hierarchies, how to analyze query paths using `EXPLAIN`, and the precise trade-offs of various indexing algorithms.
 
@@ -123,6 +129,8 @@ With Index (B-Tree Lookup):
 
 
 ## B-Trees (B+ Trees): The Industry Workhorse
+
+<BTreeWritePathDiagram />
 
 By far the most common index implementation across modern databases (PostgreSQL, MySQL, InnoDB) is the **B-Tree** (specifically the B+ Tree).
 
@@ -872,6 +880,8 @@ def phrase_search(index, phrase):
 
 
 ## Analyzing Queries with EXPLAIN
+
+<DatabaseIndexScanTypesDiagram />
 
 ```sql
 EXPLAIN SELECT * FROM orders WHERE user_id = 5 AND status = 'pending';

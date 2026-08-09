@@ -11,7 +11,12 @@ tags:
 - branching
 - conflict-resolution
 ---
+
+import GitConflictResolutionDiagram from '@site/src/components/GitConflictResolutionDiagram';
+
 # Conflict Resolution
+
+<GitConflictResolutionDiagram />
 
 ## What is a Merge Conflict?
 
