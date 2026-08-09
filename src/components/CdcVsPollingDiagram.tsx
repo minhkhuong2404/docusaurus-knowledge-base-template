@@ -103,7 +103,7 @@ export default function CdcVsPollingDiagram(): React.JSX.Element {
             key={tab}
             onClick={() => setActiveTab(tab)}
             style={{
-              padding: '6px 14px', borderRadius: '8px', border: 'none',
+              padding: '6px 14px', borderRadius: '8px',
               cursor: 'pointer', fontWeight: 700, fontSize: '11.5px',
               background: activeTab === tab ? 'rgba(56,189,248,0.15)' : 'transparent',
               color: activeTab === tab ? '#38bdf8' : 'var(--ifm-color-content-secondary)',

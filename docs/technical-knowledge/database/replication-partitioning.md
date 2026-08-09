@@ -13,11 +13,6 @@ import VerticalPartitioningDiagram from '@site/src/components/VerticalPartitioni
 
 # Replication & Partitioning
 
-<DatabaseReplicationQuorumDiagram />
-<ReadReplicasFlowDiagram />
-<HorizontalPartitioningDiagram />
-<VerticalPartitioningDiagram />
-
 ---
 
 ## Why Replicate?
@@ -77,25 +72,15 @@ SHOW SLAVE STATUS\G
 Multiple nodes accept writes. Used for:
 - Multi-datacenter deployments (each DC has a leader)
 - Offline-capable apps (each client is a "leader")
+Multiple nodes accept writes. Each leader replicates its changes to all other leaders.
 
-**Challenge: write conflicts** — two leaders can accept conflicting writes.
-
-Conflict resolution strategies:
-- **Last-write-wins (LWW)**: by timestamp (risk of data loss)
-- **Merge**: application-level merging (CRDTs)
-- **Custom logic**: application decides which wins
+- **Best for:** Multi-datacenter setups (local writes in EU, US, Asia without cross-continental latency).
+- **Hard problem:** **Conflict resolution** — what if User A updates row X in US and User B updates row X in EU at the same millisecond? (Last-Write-Wins, CRDTs, or custom merge logic required).
 
 ---
 
 ### Leaderless (Dynamo-style)
 
-Any node accepts reads and writes. Used by: **Cassandra, DynamoDB, Riak**.
-
-```
-Client writes to W nodes
-Client reads from R nodes
-Quorum: W + R > N → at least one response has latest write
-```
 
 - No single point of failure
 - **Eventual consistency** by default
@@ -107,6 +92,9 @@ Quorum: W + R > N → at least one response has latest write
 
 :::info[Deep Dive: Sharding & Partitioning]
 The detailed guide on Horizontal Partitioning, Sharding Strategies (Hash, Range, Consistent Hashing), and Cross-Shard complexity has been moved to its own centralized page. 
+<HorizontalPartitioningDiagram />
+<VerticalPartitioningDiagram />
+
 Please see the **[Database Sharding & Partitioning](../system-design/sharding-partitioning.md)** guide.
 :::
 

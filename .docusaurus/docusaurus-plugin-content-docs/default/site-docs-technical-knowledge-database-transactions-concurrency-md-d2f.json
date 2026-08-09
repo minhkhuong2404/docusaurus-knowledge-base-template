@@ -52,7 +52,7 @@
   ],
   "version": "current",
   "lastUpdatedBy": "Lữ Minh Khương",
-  "lastUpdatedAt": 1785517793000,
+  "lastUpdatedAt": 1786209232000,
   "sidebarPosition": 4,
   "frontMatter": {
     "id": "transactions-concurrency",
@@ -72,8 +72,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Database ACID Properties",
-    "permalink": "/technical-knowledge/database/acid"
+    "title": "Database Isolation Levels — How to Get It Right",
+    "permalink": "/technical-knowledge/database/isolation-levels"
   },
   "next": {
     "title": "Storage Engines & Data Structures",

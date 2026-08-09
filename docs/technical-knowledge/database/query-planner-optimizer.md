@@ -11,12 +11,11 @@ import DatabaseJoinAlgorithmsDiagram from '@site/src/components/DatabaseJoinAlgo
 
 # Query Planner & Optimizer
 
-<QueryPlannerPipelineDiagram />
-<DatabaseJoinAlgorithmsDiagram />
-
 ---
 
 ## The Query Lifecycle
+
+<QueryPlannerPipelineDiagram />
 
 Every SQL statement goes through a pipeline before data is returned:
 
@@ -136,6 +135,8 @@ ANALYZE orders;
 ---
 
 ## Join Algorithms
+
+<DatabaseJoinAlgorithmsDiagram />
 
 The optimizer chooses between join algorithms based on table sizes, indexes, and available memory:
 

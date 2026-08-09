@@ -10,8 +10,6 @@ import FullTextSearchEngineDiagram from '@site/src/components/FullTextSearchEngi
 
 # Full-Text Search
 
-<FullTextSearchEngineDiagram />
-
 ---
 
 ## Why Full-Text Search?
@@ -28,6 +26,8 @@ Full-text search engines solve all of these with an **inverted index**.
 ---
 
 ## The Inverted Index
+
+<FullTextSearchEngineDiagram />
 
 An inverted index maps **each word** to all documents containing it:
 

@@ -11,8 +11,6 @@ import DatabaseDesignNormalizationDiagram from '@site/src/components/DatabaseDes
 
 # Database Design & Normalization
 
-<DatabaseDesignNormalizationDiagram />
-
 ---
 
 ## SQL vs NoSQL Decision Guide
@@ -68,6 +66,8 @@ CREATE TABLE order_items (
 ---
 
 ## Normal Forms
+
+<DatabaseDesignNormalizationDiagram />
 
 Normalization reduces **data redundancy** and prevents **update anomalies**.
 

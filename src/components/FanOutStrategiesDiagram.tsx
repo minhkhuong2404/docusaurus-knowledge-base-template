@@ -71,7 +71,7 @@ export default function FanOutStrategiesDiagram(): React.JSX.Element {
             key={s.id}
             onClick={() => setActiveMode(s.id)}
             style={{
-              padding: '6px 12px', borderRadius: '8px', border: 'none',
+              padding: '6px 12px', borderRadius: '8px',
               cursor: 'pointer', fontWeight: 700, fontSize: '11px',
               background: activeMode === s.id ? 'rgba(56,189,248,0.15)' : 'transparent',
               color: activeMode === s.id ? '#38bdf8' : 'var(--ifm-color-content-secondary)',

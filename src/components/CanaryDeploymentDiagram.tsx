@@ -13,7 +13,7 @@ export default function CanaryDeploymentDiagram() {
         <button
           onClick={() => setCanaryPct(0)}
           style={{
-            marginLeft: 'auto', padding: '4px 10px', borderRadius: '6px', border: 'none', cursor: 'pointer',
+            marginLeft: 'auto', padding: '4px 10px', borderRadius: '6px', cursor: 'pointer',
             fontWeight: 700, fontSize: '11px', background: 'rgba(248,113,113,0.2)', color: '#f87171', border: '1px solid #f87171',
           }}
         >
@@ -42,7 +42,7 @@ export default function CanaryDeploymentDiagram() {
               key={val}
               onClick={() => setCanaryPct(val)}
               style={{
-                padding: '4px 10px', borderRadius: '6px', border: 'none', cursor: 'pointer',
+                padding: '4px 10px', borderRadius: '6px', cursor: 'pointer',
                 fontSize: '11px', fontWeight: 700,
                 background: canaryPct === val ? 'rgba(251,191,36,0.25)' : 'rgba(255,255,255,0.04)',
                 color: canaryPct === val ? '#fbbf24' : 'var(--ifm-color-content-secondary)',

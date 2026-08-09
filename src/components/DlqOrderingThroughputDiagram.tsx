@@ -43,7 +43,7 @@ export default function DlqOrderingThroughputDiagram(): React.JSX.Element {
     <div className="interactive-diagram-container" style={{ fontFamily: 'var(--ifm-font-family-base)' }}>
       <div className="interactive-diagram-header">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
         </svg>
         <span style={{ color: '#34d399' }}>Ordering vs. Throughput Trade-off Layout</span>
       </div>
@@ -55,7 +55,7 @@ export default function DlqOrderingThroughputDiagram(): React.JSX.Element {
             key={strat.id}
             onClick={() => setActiveStrategy(strat.id)}
             style={{
-              padding: '6px 12px', borderRadius: '8px', border: 'none',
+              padding: '6px 12px', borderRadius: '8px',
               cursor: 'pointer', fontWeight: 700, fontSize: '11px',
               background: activeStrategy === strat.id ? 'rgba(52,211,153,0.15)' : 'transparent',
               color: activeStrategy === strat.id ? '#34d399' : 'var(--ifm-color-content-secondary)',
@@ -83,7 +83,7 @@ export default function DlqOrderingThroughputDiagram(): React.JSX.Element {
       `}</style>
 
       <div className="ordering-grid">
-        
+
         {/* SVG Viewport */}
         <div className="interactive-diagram-svg-wrapper interactive-diagram-grid-bg">
           <svg viewBox="0 0 350 200" className="interactive-diagram-svg">
@@ -113,14 +113,14 @@ export default function DlqOrderingThroughputDiagram(): React.JSX.Element {
                 {/* Standard DLQ: routes to DLQ below */}
                 <rect x="150" y="45" width="55" height="30" rx="4" fill="rgba(239,68,68,0.15)" stroke="#ef4444" strokeWidth="1.2" />
                 <text x="177.5" y="63" textAnchor="middle" fill="#ef4444" fontSize="7.5" fontWeight="bold">TXN-101 💥</text>
-                
+
                 {/* DLQ below */}
                 <rect x="150" y="130" width="55" height="30" rx="4" fill="rgba(244,114,182,0.1)" stroke="#f472b6" strokeWidth="1.2" />
                 <text x="177.5" y="148" textAnchor="middle" fill="#f472b6" fontSize="7" fontWeight="bold">DLQ</text>
-                
+
                 {/* Ingress to DLQ */}
                 <path d="M 177.5 75 L 177.5 122" fill="none" stroke="#ef4444" strokeWidth="1.5" strokeDasharray="3 3"
-                      className="interactive-diagram-flowing-path" markerEnd="url(#ord-arr-color)" />
+                  className="interactive-diagram-flowing-path" markerEnd="url(#ord-arr-color)" />
               </g>
             ) : (
               <g>
@@ -137,10 +137,10 @@ export default function DlqOrderingThroughputDiagram(): React.JSX.Element {
                 {/* Standard DLQ: TXN-102 bypasses and processes next */}
                 <rect x="65" y="45" width="55" height="30" rx="4" fill="rgba(56,189,248,0.1)" stroke="#38bdf8" strokeWidth="1.2" />
                 <text x="92.5" y="63" textAnchor="middle" fill="#38bdf8" fontSize="7.5" fontWeight="bold">TXN-102</text>
-                
+
                 {/* Flow line bypassing 101 */}
                 <path d="M 120 60 C 135 30, 210 30, 230 50" fill="none" stroke="#38bdf8" strokeWidth="1.2" strokeDasharray="2 2"
-                      className="interactive-diagram-flowing-path" markerEnd="url(#ord-arr)" />
+                  className="interactive-diagram-flowing-path" markerEnd="url(#ord-arr)" />
                 <text x="165" y="24" textAnchor="middle" fill="#38bdf8" fontSize="6.5">Bypasses failed txn</text>
               </g>
             ) : (
@@ -155,7 +155,7 @@ export default function DlqOrderingThroughputDiagram(): React.JSX.Element {
             {/* Consumer box */}
             <rect x="235" y="125" width="85" height="40" rx="5" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.1)" strokeWidth="1.5" />
             <text x="277.5" y="142" textAnchor="middle" fill="#94a3b8" fontSize="8" fontWeight="bold">Consumer</text>
-            
+
             {activeStrategy === 'STANDARD_DLQ' ? (
               <text x="277.5" y="154" textAnchor="middle" fill="#38bdf8" fontSize="6.5">Processing TXN-102</text>
             ) : (
@@ -166,7 +166,7 @@ export default function DlqOrderingThroughputDiagram(): React.JSX.Element {
 
         {/* Info panel */}
         <div className="interactive-diagram-details-card" style={{ borderLeft: `4px solid ${current.color}`, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          
+
           <div>
             <h3 style={{ color: current.color }}>{current.title}</h3>
           </div>

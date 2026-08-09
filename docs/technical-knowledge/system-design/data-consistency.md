@@ -2,16 +2,34 @@
 id: data-consistency
 title: Data Consistency & Transactions
 sidebar_label: Data Consistency
-description: Patterns for maintaining data consistency in distributed systems including database transactions, eventual consistency, the outbox pattern, idempotency, and conflict resolution.
-tags: [consistency, transactions, acid, eventual-consistency, outbox-pattern, idempotency, conflict-resolution]
+description: Full-spectrum guide to distributed consistency models — from Linearizability to Eventual Consistency, Session Guarantees (Read-Your-Writes, Monotonic Reads), causal vs data-centric lenses, consistency anomalies with real production bugs, S3 case study, and per-operation decision matrix. Covers ACID, BASE, CAP, PACELC, and advanced internals.
+tags: [consistency, linearizability, causal-consistency, session-guarantees, eventual-consistency, read-your-writes, bounded-staleness, transactions, acid, outbox-pattern, cap-theorem, pacelc]
 ---
+
+import ConsistencyModelsDiagram from '@site/src/components/ConsistencyModelsDiagram';
 
 # Data Consistency & Transactions
 
-> Ensuring data remains correct and coherent across distributed systems is one of the hardest challenges in system design.
+> Consistency is not an on/off switch between "strong" and "eventual". Between those two poles lies an entire spectrum — read-your-writes, causal ordering, bounded staleness, consistent prefix... The real engineering skill is knowing which level to apply to which operation.
 
 ## Table of Contents
 
+- [The Consistency Contract — What It Really Means](#the-consistency-contract--what-it-really-means)
+- [The Full Consistency Spectrum (7 Levels)](#the-full-consistency-spectrum-7-levels)
+  - [Data-Centric Models](#data-centric-models)
+  - [Intermediate Named Tiers](#intermediate-named-tiers)
+  - [Client-Centric Session Models](#client-centric-session-models)
+- [The Two Lenses: Data-Centric vs Client-Centric](#the-two-lenses-data-centric-vs-client-centric)
+- [Session Guarantees (Bayou Project, 1994)](#session-guarantees-bayou-project-1994)
+  - [Read-Your-Writes](#read-your-writes)
+  - [Monotonic Reads](#monotonic-reads)
+  - [Monotonic Writes](#monotonic-writes)
+  - [Writes-Follow-Reads](#writes-follow-reads)
+- [Invisible Consistency Bugs & Why F5 Is the Worst Workaround](#invisible-consistency-bugs--why-f5-is-the-worst-workaround)
+- [Per-Operation Consistency Selection](#per-operation-consistency-selection)
+- [Real-World Database Consistency Tiers](#real-world-database-consistency-tiers)
+  - [Azure Cosmos DB 5-Tier Model](#azure-cosmos-db-5-tier-model)
+  - [The S3 Case Study — 14 Years of Eventual then One Day Free](#the-s3-case-study--14-years-of-eventual-then-one-day-free)
 - [Beginner View](#beginner-view)
   - [ACID Properties](#acid-properties)
   - [Spring Transaction Management](#spring-transaction-management)
@@ -19,9 +37,6 @@ tags: [consistency, transactions, acid, eventual-consistency, outbox-pattern, id
   - [Consistency Anomalies](#consistency-anomalies)
   - [Write Skew](#write-skew)
 - [Distributed Consistency Patterns](#distributed-consistency-patterns)
-  - [Eventual Consistency](#eventual-consistency)
-  - [Read-Your-Writes Consistency](#read-your-writes-consistency)
-  - [Causal Consistency](#causal-consistency)
 - [Conflict Resolution (Multi-Master)](#conflict-resolution-multi-master)
   - [Last-Write-Wins (LWW)](#last-write-wins-lww)
   - [CRDT (Conflict-free Replicated Data Types)](#crdt-conflict-free-replicated-data-types)
@@ -181,6 +196,226 @@ Result: Nobody on call! Constraint violated.
 ```
 
 Fix: SERIALIZABLE isolation or explicit SELECT FOR UPDATE on the check.
+
+---
+
+## The Consistency Contract — What It Really Means
+
+A consistency model is a **contract between the distributed system and the application developer**. It does not describe the internal implementation (Paxos, Raft, gossip protocol) — it only specifies: given a set of read and write operations issued concurrently from multiple clients, which outcomes are considered *valid* and which are *bugs*.
+
+> **The Model Strength Trade-off**: A stronger model narrows the set of valid outcomes — making behaviour more predictable and code easier to write, but at the cost of higher latency and infrastructure expense. A weaker model widens the set of valid outcomes — making the system faster and more available, but **shifting the complexity burden to the application developer**. The complexity doesn't disappear; it only changes location.
+
+---
+
+## The Full Consistency Spectrum (7 Levels)
+
+<ConsistencyModelsDiagram initialTab="spectrum" />
+
+### Data-Centric Models
+
+These models define global system-wide ordering properties across all nodes and replicas:
+
+**1. Linearizability** *(Herlihy & Wing, 1990)*
+- Every operation appears to execute atomically at exactly one point in real-time between invocation and response.
+- After a write completes, **any** client anywhere **immediately** reads the new value.
+- This is the **C in CAP theorem**. Selecting it means accepting reduced availability under network partition.
+- **Production examples**: Google Spanner (TrueTime), etcd leader reads, ZooKeeper writes, CockroachDB serializable.
+
+**2. Sequential Consistency** *(Lamport, 1979)*
+- All nodes agree on a single total ordering of all operations, and per-process ordering is preserved.
+- The global order need **not** match wall-clock time — the system may be uniformly slow compared to reality.
+- In practice: Java `volatile` variables provide sequential consistency across threads (JMM). Rarely offered as a named DB tier since achieving it already requires consensus, at which point systems push to full linearizability.
+
+**3. Causal Consistency** *(Mahajan, Alvisi & Dahlin, 2011)*
+- Operations with a **cause-effect relationship** (causal dependency) must be observed in causal order by all nodes.
+- Concurrent (unrelated) operations may appear in any order.
+- **Theoretically proven to be the strongest model achievable while maintaining Availability under network Partition** — the ceiling of the "A" side of CAP.
+- Classic example: Alice hides her manager from her friend list, *then* posts a beach photo during work hours. The hide must reach the manager's node **before** the post does.
+- **Production examples**: MongoDB causally consistent sessions (v3.6+), COPS/Eiger (research), Cosmos DB session consistency (approximation).
+
+**7. Eventual Consistency** *(Werner Vogels, "Eventually Consistent", 2008)*
+- The system promises **one thing only**: if writes stop long enough, all replicas will converge to the same value.
+- Makes **zero guarantees** about the convergence path — you may read new-then-old on successive reads, or see a write without its predecessor.
+- **Production examples**: Amazon S3 (pre-Dec 2020), Apache Cassandra (default), DynamoDB eventually consistent reads (half the cost of strong reads), CouchDB, Riak.
+
+### Intermediate Named Tiers
+
+These are practical commercial tiers offered by cloud databases, sitting between the extremes:
+
+**4. Bounded Staleness**
+- Staleness is capped by a declared maximum: either **K versions** or **T seconds**. Once a replica exceeds the bound, reads block until it catches up.
+- Transforms the vague "eventually" into a contractual SLA you can write down.
+- **Production examples**: Azure Cosmos DB "Bounded Staleness" tier, MySQL replica with `max_allowed_replication_lag`.
+
+**6. Consistent Prefix**
+- Reads always observe a **valid prefix** of the write history — never a future event without its past.
+- The world may be stale, but it is never internally contradictory. Like watching a TV series 2 episodes behind: you see them in order, never Episode 8 before Episode 5.
+- **Production examples**: Azure Cosmos DB "Consistent Prefix" tier, Kafka consumer reads within a partition, CDC event replay streams.
+
+### Client-Centric Session Models
+
+**5. Session / Client-Centric Consistency**
+- Within a single client session, a bundle of four guarantees applies (see [Session Guarantees](#session-guarantees-bayou-project-1994) below).
+- Other sessions may see the world differently — this is explicitly a **per-user-view** contract, not a global one.
+- Azure Cosmos DB's **default tier**. According to Microsoft, the vast majority of customers never change it — it resolves ~80% of real user-visible pain at moderate cost.
+
+---
+
+## The Two Lenses: Data-Centric vs Client-Centric
+
+<ConsistencyModelsDiagram initialTab="two-lenses" />
+
+Most consistency debates involve two people using different mental models without realising it:
+
+| Lens | Question | Models |
+|---|---|---|
+| **Data-Centric** | "Do all the replicas, taken together, tell a consistent story?" | Linearizability, Sequential, Causal, Eventual |
+| **Client-Centric** | "Does THIS specific user, within THEIR session, see a logically coherent world?" | Read-Your-Writes, Monotonic Reads, Monotonic Writes, Writes-Follow-Reads |
+
+These two lenses measure **different dimensions** and cannot be directly compared on the same scale. A system can offer weak data-centric consistency (eventual) but still enforce strong client-centric guarantees (session), and vice versa.
+
+---
+
+## Session Guarantees (Bayou Project, 1994)
+
+<ConsistencyModelsDiagram initialTab="session-guarantees" />
+
+The four session guarantees were defined by Terry, Theimer, Petersen, Demers, Spreitzer & Hauser in the **Bayou distributed database project at Xerox PARC (1994)**. Together they form what commercial databases label "Session Consistency".
+
+### Read-Your-Writes
+
+A write by a process is always reflected in subsequent reads by the **same process**.
+
+```java
+// After write, route subsequent reads to primary for the session
+public User updatePhoneNumber(Long userId, String newPhone) {
+    User user = userRepo.save(userId, newPhone);
+
+    // Tag session: next N seconds of reads must hit primary or check replica lag
+    sessionStore.set("write_token:" + userId, user.getVersion(), Duration.ofSeconds(5));
+    return user;
+}
+
+public User getUser(Long userId) {
+    Long requiredVersion = sessionStore.getLong("write_token:" + userId);
+    if (requiredVersion != null) {
+        // Only serve from a replica that has reached at least this version
+        return replicaRepo.findByIdMinVersion(userId, requiredVersion)
+            .orElseGet(() -> primaryRepo.findById(userId)); // fallback to primary
+    }
+    return replicaRepo.findById(userId);
+}
+```
+
+> **Production Bug This Prevents**: User updates phone number → sees old phone number on return. Ticket: "system lost my change." No exception, no log — the write succeeded. The read just hit a lagging replica.
+
+**Caveat — Session Fragility**: Sticky routing to primary breaks when users switch devices, switch WiFi to 4G, or when the replica restarts. The more robust approach: **logical timestamp tokens**. The server returns a monotonic version token after each write; the client attaches it to all subsequent requests; replicas check the token and block or forward if they lag behind. This is how **MongoDB causally consistent sessions (v3.6+)** and **Cosmos DB Session Token** work. The guarantee lives in the data, not in the network path.
+
+### Monotonic Reads
+
+Successive reads by the same process always return the **same or more recent** values — a process never reads older data than it previously read.
+
+```java
+// Monotonic reads via version-aware replica selection
+public Product getProduct(String productId, ClientSession session) {
+    // Session carries the highest version token seen so far
+    long minVersion = session.getMinReadVersion();
+    return replicaRouter.findByIdAfterVersion(productId, minVersion)
+        .orElseGet(() -> primaryRepo.findById(productId));
+}
+```
+
+> **Production Bug This Prevents**: User refreshes a count: sees 1,423 → 1,419 → 1,425 → 1,418. Count appears to oscillate backwards. Root cause: load balancer round-robins across two replicas with different replication lag. Support resolution: "please refresh" (which randomly fixes nothing).
+
+### Monotonic Writes
+
+Writes by a single process are applied **in the order they were issued**.
+
+> **Production Bug This Prevents**: User renames a document, then adds a paragraph. Readers see the paragraph under the OLD document name, then later the rename propagates. Root cause: two writes dispatched to different replica nodes at different replication speeds.
+
+### Writes-Follow-Reads
+
+If a process reads a value X and then writes Y, Y is stored at a version ≥ the version from which X was read. Any reader who sees Y must also be able to see the X that Y was based on.
+
+> **Production Bug This Prevents**: User reads a forum post, writes a reply. Some readers see the reply but the original post is missing (orphaned reply). Root cause: the reply was written to a node that had not yet received the original post.
+
+---
+
+## Invisible Consistency Bugs & Why F5 Is the Worst Workaround
+
+<ConsistencyModelsDiagram initialTab="anomalies" />
+
+Consistency violations **do not throw exceptions**. They do not increment error counters. They do not appear in application logs. The system's write path is correct. The read path is correct. The database is behaving exactly according to its contract. And yet:
+
+- The user sees old data immediately after saving.
+- The count goes backwards on refresh.
+- A reply appears with no parent post.
+- The feature flag toggles mid-request.
+
+The **only** reliable detection mechanism is user reports, arriving as sparse support tickets with titles like "system lost my change" or "the page is showing wrong information." The support team's answer — **"please try refreshing the page"** — is simultaneously the most effective consistency-bug cover-up and the most accurate description of what's happening: a refresh re-routes the request, which may hit a different replica that has since caught up.
+
+> **Replication lag dashboards show the shadow of the problem, not the problem itself.** A 200ms lag only causes visible bugs under specific access patterns (write then immediately read by same user, or cross-replica round-robin). Lag going to 0ms doesn't guarantee the bug won't recur under different traffic distribution.
+
+---
+
+## Per-Operation Consistency Selection
+
+<ConsistencyModelsDiagram initialTab="decision" />
+
+> The expert approach is NOT "pick one consistency level for the entire system." It is to **scope the consistency requirement to each individual business operation**. Over-specifying wastes money and latency. Under-specifying destroys user trust — and some operations destroy user finances.
+
+### The Golden Question
+
+Before specifying consistency for any operation, ask:
+
+> **"Who reads this data immediately after it is written, and what happens to them if they see the old value?"**
+
+### Operation-Level Guidance
+
+| Business Operation | Required Model | Why |
+|---|---|---|
+| **Inventory deduction / bank debit** | Linearizability | Concurrent debits must see each other to prevent oversell / overdraft |
+| **User profile, personal settings** | Session (Read-Your-Writes) | User expects to see their own change; no other user needs real-time |
+| **Comment thread ordering** | Causal Consistency | Reply must never precede its parent comment |
+| **Like/share counters** | Eventual / Consistent Prefix | 3-second staleness unnoticeable; ordering still matters |
+| **Activity feed / notifications** | Consistent Prefix | New items in creation order; delay acceptable; no time-travel |
+| **Feature flag / config** | Session / Bounded Staleness | Consistent within request; 1–5 min staleness acceptable |
+| **Global leaderboard** | Eventual / Bounded Staleness | Top-10 rank delay of 5s is fine for fun/social; not for cash prizes |
+
+---
+
+## Real-World Database Consistency Tiers
+
+### Azure Cosmos DB 5-Tier Model
+
+Cosmos DB is the clearest commercial example of collapsing both the data-centric and client-centric lenses into a single product dial:
+
+| Tier | Underlying Model | Read Cost | Default? |
+|---|---|---|---|
+| **Strong** | Linearizability | 2× read units | |
+| **Bounded Staleness** | Bounded Staleness | 2× read units | |
+| **Session** | Session (4 guarantees) | 1× read units | ✅ Default |
+| **Consistent Prefix** | Consistent Prefix | 1× read units | |
+| **Eventual** | Eventual Consistency | 0.5× read units | |
+
+The **default is Session** — not the cheapest, not the most strict. According to Microsoft, the majority of customers never change this default. It covers the most common user-visible pain points (read-your-writes, monotonic reads) at a moderate cost.
+
+**DynamoDB takes the opposite philosophy**: eventually consistent reads cost **half** a strongly consistent read, making the eventual default an economic incentive, not just a technical one.
+
+### The S3 Case Study — 14 Years of Eventual, then One Day Free
+
+Amazon S3 launched in 2006 with **eventual consistency** for `GET` and `LIST` operations. A file written to S3 might not appear in a `LIST` response for several seconds. For 14 years, data pipelines built on S3 fought this guarantee:
+
+- **Hadoop S3Guard** — a DynamoDB-backed consistency layer for S3 paths
+- **Amazon EMR EMRFS Consistent View** — an entire auxiliary DynamoDB table recording "this file was just written, list operations must acknowledge it"
+
+> One missing line in S3's consistency contract required an entire external database to compensate.
+
+On **December 1, 2020**, AWS announced **strong read-after-write consistency** for all `GET`, `PUT`, and `LIST` operations on S3 — all objects, all regions, no extra cost, no performance penalty, no opt-in required.
+
+An entire class of infrastructure workarounds became obsolete in a single blog post.
+
+**The lesson**: Consistency guarantees that cost a full satellite system today may cost nothing tomorrow as storage and consensus technology advances. But understanding the model — and the gap it creates — always matters, regardless of what any vendor's current implementation provides.
 
 ---
 
@@ -1231,15 +1466,27 @@ public class SnapshotCoordinator {
 ### Consistency Models Hierarchy
 
 ```
-Strong Consistency
-├── Linearizability
-├── Sequential Consistency
-└── Causal Consistency
-    └── Read-Your-Writes
-        └── Monotonic Reads
-            └── Monotonic Writes
-                └── Eventual Consistency
+Strongest ──────────────────────────────────────────────────── Weakest
+
+[Data-Centric Models]
+Linearizability (Herlihy & Wing, 1990)
+  ↓  Relaxes real-time ordering requirement
+Sequential Consistency (Lamport, 1979)
+  ↓  Relaxes global total order; only causal chains required
+Causal Consistency (Mahajan et al., 2011)  ← MAX for AP systems (CAP ceiling)
+  ↓  Relaxes causal tracking; allows bounded lag
+Bounded Staleness (Named tier: Cosmos DB)
+  ↓  Relaxes lag bound; only prefix ordering guaranteed
+Consistent Prefix (Named tier: Cosmos DB / Kafka partition)
+  ↓  Relaxes even prefix guarantee; only eventual convergence
+Eventual Consistency (Vogels, 2008)
+
+[Orthogonal Client-Centric Axis — Session Guarantees (Bayou, 1994)]
+Read-Your-Writes  +  Monotonic Reads  +  Monotonic Writes  +  Writes-Follow-Reads
+  → Together = "Session Consistency" (Cosmos DB default tier)
 ```
+
+> **The Key Insight**: Causal consistency is the theoretical ceiling for the AP side of CAP. Any model stronger than causal (sequential, linearizable) sacrifices availability during partition. Any model weaker (bounded staleness, eventual) relaxes global ordering guarantees. Session guarantees exist on an orthogonal axis — they are per-client promises, not global data ordering promises.
 
 ### CAP Theorem Revisited
 

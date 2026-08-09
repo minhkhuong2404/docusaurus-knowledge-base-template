@@ -69,6 +69,10 @@ Many NoSQL databases lack multi-object transactions, forcing application develop
 
 ## ⚠️ Weak Isolation Levels
 
+:::info[Detailed Guide & Interactive Tool]
+For a complete breakdown of SQL standard vs. actual database implementations (PostgreSQL, MySQL, Oracle), snapshot scope differences, and query-level fix strategies, see the dedicated **[Database Isolation Levels](../../../technical-knowledge/database/isolation-levels.md)** guide.
+:::
+
 **Serializable isolation** (the gold standard) is expensive. Most databases use weaker levels for performance. Here are the isolation levels from weakest to strongest and the concurrency bugs they expose:
 
 ### Read Committed

@@ -654,6 +654,7 @@ const sidebars: SidebarsConfig = {
 							collapsed: true,
 							items: [
 								'technical-knowledge/database/acid',
+								'technical-knowledge/database/isolation-levels',
 								'technical-knowledge/database/transactions-concurrency',
 								'technical-knowledge/database/storage-engines-data-structures',
 							],

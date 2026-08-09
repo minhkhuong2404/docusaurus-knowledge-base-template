@@ -13,7 +13,7 @@ export default function BffCachingStrategyDiagram() {
         <button
           onClick={() => setCached(!cached)}
           style={{
-            marginLeft: 'auto', padding: '4px 10px', borderRadius: '6px', border: 'none', cursor: 'pointer',
+            marginLeft: 'auto', padding: '4px 10px', borderRadius: '6px', cursor: 'pointer',
             fontWeight: 700, fontSize: '11px',
             background: cached ? 'rgba(52,211,153,0.2)' : 'rgba(251,191,36,0.2)',
             color: cached ? '#34d399' : '#fbbf24',

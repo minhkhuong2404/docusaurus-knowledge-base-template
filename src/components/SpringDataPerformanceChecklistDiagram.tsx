@@ -152,7 +152,7 @@ export default function SpringDataPerformanceChecklistDiagram(): React.JSX.Eleme
             key={cat}
             onClick={() => setActiveCategory(cat)}
             style={{
-              padding: '6px 12px', borderRadius: '20px', border: 'none',
+              padding: '6px 12px', borderRadius: '20px',
               cursor: 'pointer', fontWeight: 600, fontSize: '11px',
               background: activeCategory === cat ? 'rgba(56,189,248,0.15)' : 'rgba(255,255,255,0.03)',
               color: activeCategory === cat ? '#38bdf8' : 'var(--ifm-color-content-secondary)',

@@ -8,11 +8,9 @@ sidebar_position: 4
 
 import TwoPhaseLockingMechanismDiagram from '@site/src/components/TwoPhaseLockingMechanismDiagram';
 import TwoPhaseCommitDiagram from '@site/src/components/TwoPhaseCommitDiagram';
+import SerializabilityLinearizabilityDiagram from '@site/src/components/SerializabilityLinearizabilityDiagram';
 
 # Transactions & Concurrency Control
-
-<TwoPhaseLockingMechanismDiagram />
-<TwoPhaseCommitDiagram />
 
 ---
 
@@ -54,6 +52,8 @@ For an in-depth explanation of these properties, including real-world analogies 
 
 ## Isolation Levels
 
+<SerializabilityLinearizabilityDiagram />
+
 Defined by SQL standard, each level prevents different anomalies:
 
 | Isolation Level | Dirty Read | Non-Repeatable | Phantom | Notes |
@@ -62,6 +62,10 @@ Defined by SQL standard, each level prevents different anomalies:
 | `READ COMMITTED` | ❌ prevented | ✅ possible | ✅ possible | Default in PostgreSQL, Oracle |
 | `REPEATABLE READ` | ❌ | ❌ prevented | ✅ possible (standard) | Default in MySQL InnoDB (but InnoDB also prevents phantoms via gap locks) |
 | `SERIALIZABLE` | ❌ | ❌ | ❌ prevented | Slowest; fully serial behavior |
+
+:::info[Dedicated Isolation Levels Guide]
+For an interactive deep-dive into all 5 anomalies (including **Lost Update** and **Write Skew**), PostgreSQL vs. MySQL vs. Oracle implementation differences, snapshot scope, and practical query-level fixes, visit the **[Database Isolation Levels](./isolation-levels.md)** guide.
+:::
 
 ```sql
 -- Set in MySQL
@@ -74,6 +78,8 @@ BEGIN ISOLATION LEVEL SERIALIZABLE;
 ---
 
 ## Locking
+
+<TwoPhaseLockingMechanismDiagram />
 
 ### Shared vs Exclusive Locks
 

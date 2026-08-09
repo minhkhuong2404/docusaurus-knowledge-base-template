@@ -10,8 +10,6 @@ import SchemaMigrationLifecycleDiagram from '@site/src/components/SchemaMigratio
 
 # Schema Migrations
 
-<SchemaMigrationLifecycleDiagram />
-
 ---
 
 ## Why Managed Migrations?
@@ -204,6 +202,8 @@ databaseChangeLog:
 ---
 
 ## Zero-Downtime Migration Patterns
+
+<SchemaMigrationLifecycleDiagram />
 
 The hardest part of schema changes is doing them without taking the app down.
 

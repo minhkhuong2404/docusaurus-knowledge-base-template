@@ -10,8 +10,6 @@ import DatabaseSecurityRbacDiagram from '@site/src/components/DatabaseSecurityRb
 
 # Database Security
 
-<DatabaseSecurityRbacDiagram />
-
 ---
 
 ## Authentication
@@ -55,6 +53,8 @@ SELECT rolname, rolcanlogin, rolsuper FROM pg_roles;
 ---
 
 ## Authorization — Principle of Least Privilege
+
+<DatabaseSecurityRbacDiagram />
 
 Grant only the permissions required for the task.
 

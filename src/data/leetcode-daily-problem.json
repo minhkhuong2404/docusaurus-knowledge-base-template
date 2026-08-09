@@ -1,8 +1,8 @@
 {
-  "id": "1406",
-  "title": "Stone Game III",
-  "url": "https://leetcode.com/problems/stone-game-iii/",
-  "difficulty": "hard",
-  "topic": "Array, Math, Dynamic Programming, Minimax, Game Theory, Zero-Sum Game",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-08-03."
+  "id": "3302",
+  "title": "Find the Lexicographically Smallest Valid Sequence",
+  "url": "https://leetcode.com/problems/find-the-lexicographically-smallest-valid-sequence/",
+  "difficulty": "medium",
+  "topic": "Two Pointers, String, Dynamic Programming, Greedy",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-08-08."
 }

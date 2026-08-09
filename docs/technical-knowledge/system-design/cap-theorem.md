@@ -1,10 +1,10 @@
 ---
 id: cap-theorem-system-design
-title: "CAP Theorem: A Senior Engineer's Deep Dive"
-description: "A comprehensive guide to the CAP theorem in distributed systems, covering network partitions, consistency models, microservice-level trade-offs, interview questions, and real-world implementations."
-sidebar_label: CAP Theorem
+title: "CAP Theorem & PACELC: A Senior Engineer's Deep Dive"
+description: "Full-depth guide to CAP theorem and PACELC — the GitHub 2018 incident, why 'choose 2 of 3' is misleading, PACELC's EL trade-off (latency vs consistency during normal operation), database classification matrix, conflict resolution costs, and Brewer's 12-year correction."
+sidebar_label: CAP Theorem & PACELC
 sidebar_position: 3
-tags: [distributed-systems, architecture, cap-theorem, database]
+tags: [distributed-systems, architecture, cap-theorem, pacelc, database, consistency, availability]
 ---
 import CapTriangleDiagram from '@site/src/components/CapTriangleDiagram';
 import CapNetworkPartitionDiagram from '@site/src/components/CapNetworkPartitionDiagram';
@@ -14,12 +14,17 @@ import CapConsistencyModelChooserDiagram from '@site/src/components/CapConsisten
 import GoogleSpannerArchitectureDiagram from '@site/src/components/GoogleSpannerArchitectureDiagram';
 import ApacheCassandraArchitectureDiagram from '@site/src/components/ApacheCassandraArchitectureDiagram';
 import RaftStateTransitionDiagram from '@site/src/components/RaftStateTransitionDiagram';
+import PacelcDiagram from '@site/src/components/PacelcDiagram';
 
-# CAP Theorem: A Senior Engineer's Deep Dive
+# CAP Theorem & PACELC: A Senior Engineer's Deep Dive
 
-In system design interviews and real-world distributed architectures, discussing the CAP theorem is often a prerequisite for defining the non-functional requirements of a system. However, for senior engineers, quoting the basic definition is insufficient. You must demonstrate how the CAP theorem dictates database selection, dictates replication strategies, and varies across microservice boundaries.
+On the evening of October 21, 2018, a GitHub engineer replaced a 100G optical transceiver at the US East Coast datacenter — routine maintenance, done hundreds of times before. During the swap, the link between East and West Coast dropped. For exactly **43 seconds**.
 
-This guide moves beyond the theoretical definition and explores the pragmatic implications of CAP in modern distributed systems.
+That was enough. The automated failover tool concluded East Coast was dead and promoted the West Coast replica to primary. When the link came back, both coasts believed they were the write authority. Two sources of truth. Six MySQL clusters with diverged data. GitHub chose Consistency over Availability — halted new writes, and began manual reconciliation. The price: **24 hours and 11 minutes of service degradation** from 43 seconds of network loss.
+
+This guide answers the two questions that story leaves open:
+1. **Why couldn't GitHub have both consistency and availability during those 43 seconds?** → That's where CAP theorem enters.
+2. **During the other 99.99% of the time when the network is fine — what is the system silently trading off?** → That's where PACELC answers what CAP leaves unsaid.
 
 ---
 
@@ -34,7 +39,13 @@ This guide moves beyond the theoretical definition and explores the pragmatic im
 7. [Integration Patterns](#7-integration-patterns)
 8. [Pros and Cons](#8-pros-and-cons)
 9. [Interview Questions](#9-interview-questions)
-10. [Senior Deep Dive: Advanced Topics](#10-senior-deep-dive-advanced-topics)
+10. [PACELC — What Happens When the Network is Fine](#10-pacelc--what-happens-when-the-network-is-fine)
+    - [The PACELC Formula](#the-pacelc-formula)
+    - [Latency vs Consistency (the EL trade-off)](#latency-vs-consistency-the-el-trade-off)
+    - [Database Classification Matrix](#database-classification-matrix)
+    - [The GitHub Incident Revisited](#the-github-incident-revisited)
+    - [The AP Invoice — Conflict Resolution](#the-ap-invoice--conflict-resolution)
+11. [Senior Deep Dive: Advanced Topics](#11-senior-deep-dive-advanced-topics)
 
 ---
 
@@ -52,6 +63,8 @@ In any distributed system deployed across a network (e.g., multi-region clouds l
 
 1. **Cancel the operation** (decreasing availability) to ensure data remains completely in sync. **(CP)**
 2. **Proceed with the operation** (decreasing consistency) and risk serving stale data to the user. **(AP)**
+
+> **The correct reading of CAP:** "Choose 2 of 3" is the most common — and most misleading — framing. Partition tolerance is not a design choice; it is a physical reality. A network partition can happen because a shark bites a submarine cable, a technician pulls the wrong fiber, a switch reboots at 2am, or a Java GC pause makes a node look dead for 40 seconds. The real question is: *when the partition happens, what does the system do — and how does it recover after?* Brewer himself published a 12-year correction paper (2012) clarifying exactly this point.
 
 ### Visual Representation
 
@@ -1099,7 +1112,83 @@ A: Evaluate the business impact of stale data vs. downtime. Consider regulatory 
 
 ---
 
-## 🧠 10. Senior Deep Dive: Advanced Topics {/* #10-senior-deep-dive-advanced-topics */}
+## 🌐 10. PACELC — What Happens When the Network is Fine {/* #10-pacelc--what-happens-when-the-network-is-fine */}
+
+<PacelcDiagram initialTab="formula" />
+
+CAP only models trade-offs during network partitions. But partitions are rare — most systems experience seconds to minutes of partition per year. During the other **99.99% of the time**, the system is still making trade-offs — and CAP says nothing about them.
+
+Daniel Abadi proposed PACELC in 2010 to fill exactly this gap:
+
+> **If there is a Partition (P)**, the system trades off between **Availability (A)** and **Consistency (C)** — same as CAP.  
+> **Else (E)** (when the network is healthy), the system trades off between **Latency (L)** and **Consistency (C)**.
+
+The key insight of the E→LC side: **consistency requires coordination, coordination requires round-trips, and round-trips add latency**. Every strongly consistent write must wait for replica acknowledgement before returning success. That wait is measurable, unavoidable, and cumulative across millions of requests.
+
+### The PACELC Formula
+
+<PacelcDiagram initialTab="formula" />
+
+The three Cs across ACID, CAP, and PACELC are **not** the same letter:
+
+| Context | What "C" Means |
+|---|---|
+| **C in ACID** | Database moves to a valid state — no business rule is violated (e.g. balance ≥ 0). Correctness relative to your constraints. |
+| **C in CAP** | Linearizability — every read returns the most recent successful write, everywhere, immediately. |
+| **C in PACELC (ELC)** | Same as CAP's C. During normal operation, how much synchronous consistency does the system maintain — and how much latency does that cost? |
+
+### Latency vs Consistency (the EL trade-off)
+
+<PacelcDiagram initialTab="el-tradeoff" />
+
+The latency cost of strong consistency is not abstract — it is geographic:
+
+- Replicas in the same AZ: **< 1ms** round-trip — negligible
+- Cross-region (Singapore → Tokyo): **~70ms** per write
+- Vietnam → us-east-1: **200ms+** per write
+
+Amazon's internal study (2006): **+100ms latency → −1% revenue**. DynamoDB makes this literal in its pricing: a **strongly consistent read costs 2× a eventually consistent read**. Consistency is not only an architectural concept — it is a line item on your cloud bill.
+
+### Database Classification Matrix
+
+<PacelcDiagram initialTab="database-matrix" />
+
+Key patterns in the matrix:
+
+- **PA/EL systems** (Cassandra, Riak): Prioritize availability and low latency in both scenarios. Accept eventual consistency as the price.
+- **PC/EC systems** (Spanner, CockroachDB, ZooKeeper): Consistency in both scenarios. Pay latency and accept reduced availability during partition.
+- **Per-request systems** (DynamoDB, MongoDB): The label changes depending on how you call the API — the same database can be PA/EL or PC/EC.
+
+> **Abadi's core insight**: The PACELC label is often not a fixed property of a database — it is a property of an individual operation. Engineers who choose a database's consistency profile are actually choosing a default that can be overridden per-request. Applying a single system-wide label is as imprecise as applying a single CAP label to an entire microservice architecture.
+
+### The GitHub Incident Revisited
+
+<PacelcDiagram initialTab="github-incident" />
+
+The GitHub 2018 incident illustrates three separate CAP/PACELC lessons in one event:
+
+1. **Partitions are not chosen** — they are caused by sharks, technicians, GC pauses, and switches.
+2. **Timeout cannot distinguish partition from slowness from death** — the detection problem is unsolvable with a single threshold.
+3. **Recovery is the real cost** — 43 seconds of partition, 24+ hours of reconciliation. CAP and PACELC describe the partition window; they are silent on recovery cost.
+
+### The AP Invoice — Conflict Resolution
+
+<PacelcDiagram initialTab="conflict-cost" />
+
+Choosing AP (availability during partition) defers — but does not cancel — the cost. When the network reconnects and two diverged nodes meet, one of these strategies must resolve the conflict:
+
+| Strategy | Auto-resolves? | Data Loss Risk | Complexity |
+|---|---|---|---|
+| **Last-Write-Wins (LWW)** | ✅ Yes | ⚠️ Silent data loss on clock skew | Low |
+| **Vector Clocks** | ❌ Detects only | ✅ No loss — surfaces conflict | Medium |
+| **CRDTs** | ✅ Yes (specific shapes) | ✅ No loss | High (limited applicability) |
+| **Saga / Compensating Txn** | ✅ Yes (business logic) | Domain-specific | High (irreversibility risk) |
+
+> **The key design question before choosing AP**: What is the reconciliation process? If the answer is "LWW and hope clocks are close", you have accepted silent data loss as a feature. If the answer is "manual reconciliation by engineers", you have accepted a GitHub-scale incident as a plausible event. Neither is wrong — they must be explicit, intentional choices.
+
+---
+
+## 🧠 11. Senior Deep Dive: Advanced Topics {/* #10-senior-deep-dive-advanced-topics */}
 
 ### Topic 1: Consensus Algorithms
 

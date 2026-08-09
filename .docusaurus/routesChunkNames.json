@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-9a0": {
+  "/-e91": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-f0a": {
+  "/-649": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -569,6 +569,10 @@
     "__comp": "df203c0f",
     "__props": "0682b2eb"
   },
+  "/tags/bounded-staleness-3fe": {
+    "__comp": "df203c0f",
+    "__props": "500c3543"
+  },
   "/tags/bpay-cf7": {
     "__comp": "df203c0f",
     "__props": "84532f86"
@@ -692,6 +696,10 @@
   "/tags/cassandra-2ad": {
     "__comp": "df203c0f",
     "__props": "9d9a673a"
+  },
+  "/tags/causal-consistency-ecd": {
+    "__comp": "df203c0f",
+    "__props": "7199fe2a"
   },
   "/tags/ccp-f89": {
     "__comp": "df203c0f",
@@ -3045,6 +3053,10 @@
     "__comp": "df203c0f",
     "__props": "8176e007"
   },
+  "/tags/linearizability-405": {
+    "__comp": "df203c0f",
+    "__props": "6ca34efd"
+  },
   "/tags/linked-lists-a7f": {
     "__comp": "df203c0f",
     "__props": "f34da777"
@@ -3152,6 +3164,10 @@
   "/tags/loops-163": {
     "__comp": "df203c0f",
     "__props": "31fa36bf"
+  },
+  "/tags/lost-update-7a8": {
+    "__comp": "df203c0f",
+    "__props": "f471a0cd"
   },
   "/tags/lru-53c": {
     "__comp": "df203c0f",
@@ -3761,6 +3777,10 @@
     "__comp": "df203c0f",
     "__props": "2fd253bd"
   },
+  "/tags/pacelc-863": {
+    "__comp": "df203c0f",
+    "__props": "645b6648"
+  },
   "/tags/package-by-component-3bd": {
     "__comp": "df203c0f",
     "__props": "6eda4b97"
@@ -4325,6 +4345,10 @@
     "__comp": "df203c0f",
     "__props": "397194d4"
   },
+  "/tags/read-your-writes-1e2": {
+    "__comp": "df203c0f",
+    "__props": "033d82bf"
+  },
   "/tags/reads-caa": {
     "__comp": "df203c0f",
     "__props": "6cc909d8"
@@ -4753,6 +4777,10 @@
     "__comp": "df203c0f",
     "__props": "b7a30253"
   },
+  "/tags/serializable-77f": {
+    "__comp": "df203c0f",
+    "__props": "cbf8fb78"
+  },
   "/tags/serialization-38d": {
     "__comp": "df203c0f",
     "__props": "94f44a09"
@@ -4784,6 +4812,10 @@
   "/tags/session-3c3": {
     "__comp": "df203c0f",
     "__props": "8ded4feb"
+  },
+  "/tags/session-guarantees-0b1": {
+    "__comp": "df203c0f",
+    "__props": "f55a8a77"
   },
   "/tags/session-management-056": {
     "__comp": "df203c0f",
@@ -5829,6 +5861,10 @@
     "__comp": "df203c0f",
     "__props": "5570e6fa"
   },
+  "/tags/write-skew-dad": {
+    "__comp": "df203c0f",
+    "__props": "2d6fa926"
+  },
   "/tags/writes-d0b": {
     "__comp": "df203c0f",
     "__props": "349da4f3"
@@ -5869,7 +5905,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-0d0": {
+  "/-e5d": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -6068,7 +6104,7 @@
     "__comp": "17896441",
     "content": "14976deb"
   },
-  "/books/ddia/part2-distributed-data/chapter-07-0d8": {
+  "/books/ddia/part2-distributed-data/chapter-07-495": {
     "__comp": "17896441",
     "content": "0b712ecb"
   },
@@ -6420,7 +6456,7 @@
     "__comp": "17896441",
     "content": "2fab1263"
   },
-  "/devops-396": {
+  "/devops-505": {
     "__comp": "17896441",
     "content": "3f8eb35f"
   },
@@ -7008,7 +7044,7 @@
     "__comp": "17896441",
     "content": "d4d0b9b0"
   },
-  "/technical-knowledge/database/acid-d1c": {
+  "/technical-knowledge/database/acid-6b0": {
     "__comp": "17896441",
     "content": "3be25515"
   },
@@ -7048,6 +7084,10 @@
     "__comp": "17896441",
     "content": "3579e0cb"
   },
+  "/technical-knowledge/database/isolation-levels-787": {
+    "__comp": "17896441",
+    "content": "30b10c44"
+  },
   "/technical-knowledge/database/nosql-distributed-88d": {
     "__comp": "17896441",
     "content": "025815b7"
@@ -7080,7 +7120,7 @@
     "__comp": "17896441",
     "content": "04625431"
   },
-  "/technical-knowledge/database/transactions-concurrency-c06": {
+  "/technical-knowledge/database/transactions-concurrency-2df": {
     "__comp": "17896441",
     "content": "d2fa8756"
   },
@@ -7188,7 +7228,7 @@
     "__comp": "17896441",
     "content": "5ab7a520"
   },
-  "/technical-knowledge/devops/devops-observability-a0d": {
+  "/technical-knowledge/devops/devops-observability-057": {
     "__comp": "17896441",
     "content": "e9c5c9f2"
   },
@@ -7200,11 +7240,11 @@
     "__comp": "17896441",
     "content": "2d9f555e"
   },
-  "/technical-knowledge/devops/docker-fundamentals-302": {
+  "/technical-knowledge/devops/docker-fundamentals-19f": {
     "__comp": "17896441",
     "content": "7c76fc84"
   },
-  "/technical-knowledge/devops/docker-networking-924": {
+  "/technical-knowledge/devops/docker-networking-6f7": {
     "__comp": "17896441",
     "content": "7cebdcf3"
   },
@@ -7212,15 +7252,15 @@
     "__comp": "17896441",
     "content": "6041348f"
   },
-  "/technical-knowledge/devops/dockerfile-850": {
+  "/technical-knowledge/devops/dockerfile-1d2": {
     "__comp": "17896441",
     "content": "da18171d"
   },
-  "/technical-knowledge/devops/gitops-argocd-0db": {
+  "/technical-knowledge/devops/gitops-argocd-3fc": {
     "__comp": "17896441",
     "content": "70449668"
   },
-  "/technical-knowledge/devops/helm-9f9": {
+  "/technical-knowledge/devops/helm-180": {
     "__comp": "17896441",
     "content": "2bda8bde"
   },
@@ -7232,27 +7272,27 @@
     "__comp": "17896441",
     "content": "064a72bb"
   },
-  "/technical-knowledge/devops/kubernetes-fundamentals-428": {
+  "/technical-knowledge/devops/kubernetes-fundamentals-325": {
     "__comp": "17896441",
     "content": "7f8362fa"
   },
-  "/technical-knowledge/devops/kubernetes-networking-403": {
+  "/technical-knowledge/devops/kubernetes-networking-f17": {
     "__comp": "17896441",
     "content": "6a4a3fd0"
   },
-  "/technical-knowledge/devops/kubernetes-operators-402": {
+  "/technical-knowledge/devops/kubernetes-operators-f1f": {
     "__comp": "17896441",
     "content": "c4409ab2"
   },
-  "/technical-knowledge/devops/kubernetes-pods-0d2": {
+  "/technical-knowledge/devops/kubernetes-pods-415": {
     "__comp": "17896441",
     "content": "e02b32ce"
   },
-  "/technical-knowledge/devops/kubernetes-storage-19f": {
+  "/technical-knowledge/devops/kubernetes-storage-cd5": {
     "__comp": "17896441",
     "content": "f037e452"
   },
-  "/technical-knowledge/devops/kubernetes-workloads-3d9": {
+  "/technical-knowledge/devops/kubernetes-workloads-6ec": {
     "__comp": "17896441",
     "content": "e775c6ed"
   },
@@ -7260,7 +7300,7 @@
     "__comp": "17896441",
     "content": "4ef1d832"
   },
-  "/technical-knowledge/devops/terraform-97b": {
+  "/technical-knowledge/devops/terraform-bf2": {
     "__comp": "17896441",
     "content": "c2aaa6d4"
   },
@@ -10428,7 +10468,7 @@
     "__comp": "17896441",
     "content": "89378099"
   },
-  "/technical-knowledge/kafka/advanced/exactly-once-vs-dedup-ae7": {
+  "/technical-knowledge/kafka/advanced/exactly-once-vs-dedup-eea": {
     "__comp": "17896441",
     "content": "5a79051b"
   },
@@ -10444,11 +10484,11 @@
     "__comp": "17896441",
     "content": "7372a84c"
   },
-  "/technical-knowledge/kafka/advanced/kafka-exactly-once-a6a": {
+  "/technical-knowledge/kafka/advanced/kafka-exactly-once-5e7": {
     "__comp": "17896441",
     "content": "a8e4316f"
   },
-  "/technical-knowledge/kafka/advanced/kafka-log-compaction-fb1": {
+  "/technical-knowledge/kafka/advanced/kafka-log-compaction-cd3": {
     "__comp": "17896441",
     "content": "8c1cb736"
   },
@@ -10496,7 +10536,7 @@
     "__comp": "17896441",
     "content": "4276a506"
   },
-  "/technical-knowledge/kafka/advanced/schema-registry-c8f": {
+  "/technical-knowledge/kafka/advanced/schema-registry-36c": {
     "__comp": "17896441",
     "content": "b1dfa883"
   },
@@ -10504,11 +10544,11 @@
     "__comp": "17896441",
     "content": "f42e39f5"
   },
-  "/technical-knowledge/kafka/consumer/consumer-lag-40e": {
+  "/technical-knowledge/kafka/consumer/consumer-lag-ee4": {
     "__comp": "17896441",
     "content": "26ead6e0"
   },
-  "/technical-knowledge/kafka/consumer/consumer-overview-289": {
+  "/technical-knowledge/kafka/consumer/consumer-overview-e9d": {
     "__comp": "17896441",
     "content": "67ecd1fe"
   },
@@ -10516,11 +10556,11 @@
     "__comp": "17896441",
     "content": "ad28df9b"
   },
-  "/technical-knowledge/kafka/core/kafka-broker-f92": {
+  "/technical-knowledge/kafka/core/kafka-broker-c5a": {
     "__comp": "17896441",
     "content": "820d99b7"
   },
-  "/technical-knowledge/kafka/core/kafka-overview-edd": {
+  "/technical-knowledge/kafka/core/kafka-overview-d9f": {
     "__comp": "17896441",
     "content": "6438a9db"
   },
@@ -10572,7 +10612,7 @@
     "__comp": "17896441",
     "content": "1cb248e8"
   },
-  "/technical-knowledge/kafka/intro-6f0": {
+  "/technical-knowledge/kafka/intro-dbd": {
     "__comp": "17896441",
     "content": "4c007013"
   },
@@ -10588,11 +10628,11 @@
     "__comp": "17896441",
     "content": "542ecee1"
   },
-  "/technical-knowledge/kafka/producer/producer-overview-691": {
+  "/technical-knowledge/kafka/producer/producer-overview-ce8": {
     "__comp": "17896441",
     "content": "296249fb"
   },
-  "/technical-knowledge/kafka/producer/producer-transactions-a0f": {
+  "/technical-knowledge/kafka/producer/producer-transactions-1df": {
     "__comp": "17896441",
     "content": "7b527991"
   },
@@ -10720,7 +10760,7 @@
     "__comp": "17896441",
     "content": "a862eed1"
   },
-  "/technical-knowledge/networking/tcp-udp-transport-layer-fdb": {
+  "/technical-knowledge/networking/tcp-udp-transport-layer-055": {
     "__comp": "17896441",
     "content": "ea5e1317"
   },
@@ -10728,7 +10768,7 @@
     "__comp": "17896441",
     "content": "fb30c349"
   },
-  "/technical-knowledge/operating-systems/file-systems-and-io-888": {
+  "/technical-knowledge/operating-systems/file-systems-and-io-c00": {
     "__comp": "17896441",
     "content": "5c7d43fe"
   },
@@ -11036,11 +11076,11 @@
     "__comp": "17896441",
     "content": "bc804bd9"
   },
-  "/technical-knowledge/system-design/caching-strategies-ecb": {
+  "/technical-knowledge/system-design/caching-strategies-4a2": {
     "__comp": "17896441",
     "content": "724987fe"
   },
-  "/technical-knowledge/system-design/cap-theorem-system-design-2a4": {
+  "/technical-knowledge/system-design/cap-theorem-system-design-772": {
     "__comp": "17896441",
     "content": "75fc6f05"
   },
@@ -11072,7 +11112,7 @@
     "__comp": "17896441",
     "content": "e6611cec"
   },
-  "/technical-knowledge/system-design/data-consistency-d9b": {
+  "/technical-knowledge/system-design/data-consistency-e64": {
     "__comp": "17896441",
     "content": "0098328c"
   },
@@ -11248,15 +11288,15 @@
     "__comp": "17896441",
     "content": "a01d3cae"
   },
-  "/technical-knowledge/test/spring-test-annotations-e89": {
+  "/technical-knowledge/test/spring-test-annotations-1f0": {
     "__comp": "17896441",
     "content": "8425f1aa"
   },
-  "/technical-knowledge/test/testing-concepts-364": {
+  "/technical-knowledge/test/testing-concepts-d50": {
     "__comp": "17896441",
     "content": "0a22b1b1"
   },
-  "/technical-knowledge/test/wiremock-7fc": {
+  "/technical-knowledge/test/wiremock-088": {
     "__comp": "17896441",
     "content": "86ad2214"
   }

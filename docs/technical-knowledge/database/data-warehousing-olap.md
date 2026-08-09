@@ -10,11 +10,11 @@ import DataWarehousingOlapDiagram from '@site/src/components/DataWarehousingOlap
 
 # Data Warehousing & OLAP
 
-<DataWarehousingOlapDiagram />
-
 ---
 
 ## OLTP vs OLAP
+
+<DataWarehousingOlapDiagram />
 
 | | OLTP (Transactional) | OLAP (Analytical) |
 |--|---------------------|------------------|
