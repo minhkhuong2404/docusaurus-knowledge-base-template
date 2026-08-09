@@ -1,8 +1,8 @@
 {
-  "id": "3302",
-  "title": "Find the Lexicographically Smallest Valid Sequence",
-  "url": "https://leetcode.com/problems/find-the-lexicographically-smallest-valid-sequence/",
+  "id": "1140",
+  "title": "Stone Game II",
+  "url": "https://leetcode.com/problems/stone-game-ii/",
   "difficulty": "medium",
-  "topic": "Two Pointers, String, Dynamic Programming, Greedy",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-08-08."
+  "topic": "Array, Math, Dynamic Programming, Minimax, Prefix Sum, Game Theory, Zero-Sum Game",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-08-09."
 }

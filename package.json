@@ -4,7 +4,7 @@
   "private": true,
   "engines": {
     "node": ">=20.0.0",
-    "npm": ">=10.0.0"
+    "yarn": ">=1.22.0"
   },
   "scripts": {
     "start": "python scratch/fetch_leetcode_daily.py && python scratch/sync_google_sheet_quiz.py && docusaurus start",
