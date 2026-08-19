@@ -1048,7 +1048,7 @@ spring:
 <summary>🔬 Senior deep-dive: connection hold time vs query execution time & per-caller attribution (ProxySQL tagging)</summary>
 
 #### The Deceptive Symptom: Connection Starvation with Low Database CPU
-In large-scale high-throughput architectures (e.g. Shopify handling Black Friday checkout spikes), systems often hit a catastrophic throughput ceiling where connections are exhausted, threads queue, and HTTP 500s spike — yet **database CPU stays below 50% and query latencies (P90) remain fast (<2ms)**.
+In large-scale high-throughput architectures (e.g. Shopify handling Black Friday checkout spikes), systems often hit a catastrophic throughput ceiling where connections are exhausted, threads queue, and HTTP 500s spike — yet **database CPU stays below 50% and query latencies (P90) remain fast (`< 2ms`)**.
 
 The reason: **Engineers measure Query Execution Time, but the connection pool is bottlenecked by Connection Hold Time.**
 

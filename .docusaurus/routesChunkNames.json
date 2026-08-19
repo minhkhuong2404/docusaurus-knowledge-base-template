@@ -19,13 +19,13 @@
     },
     "config": "5e9f5e1a"
   },
-  "/-7c4": {
+  "/-279": {
     "__comp": "5e95c892",
     "__context": {
       "plugin": "aba21aa0"
     }
   },
-  "/-2ad": {
+  "/-a3b": {
     "__comp": "a7bd4aaa",
     "__props": "22dd74f7"
   },
@@ -5905,7 +5905,7 @@
     "__comp": "df203c0f",
     "__props": "51ea02ab"
   },
-  "/-47b": {
+  "/-ab5": {
     "__comp": "a94703ab"
   },
   "/aws-d86": {
@@ -7056,7 +7056,7 @@
     "__comp": "17896441",
     "content": "1d655bfd"
   },
-  "/technical-knowledge/database/connection-pooling-eac": {
+  "/technical-knowledge/database/connection-pooling-356": {
     "__comp": "17896441",
     "content": "0dd1e07c"
   },
@@ -7068,7 +7068,7 @@
     "__comp": "17896441",
     "content": "39348cd3"
   },
-  "/technical-knowledge/database/database-patterns-microservices-9e8": {
+  "/technical-knowledge/database/database-patterns-microservices-ddc": {
     "__comp": "17896441",
     "content": "52d464a4"
   },
@@ -7084,7 +7084,7 @@
     "__comp": "17896441",
     "content": "3579e0cb"
   },
-  "/technical-knowledge/database/isolation-levels-4ea": {
+  "/technical-knowledge/database/isolation-levels-c93": {
     "__comp": "17896441",
     "content": "30b10c44"
   },
@@ -7120,7 +7120,7 @@
     "__comp": "17896441",
     "content": "04625431"
   },
-  "/technical-knowledge/database/transactions-concurrency-9ea": {
+  "/technical-knowledge/database/transactions-concurrency-fe1": {
     "__comp": "17896441",
     "content": "d2fa8756"
   },
@@ -10304,7 +10304,7 @@
     "__comp": "17896441",
     "content": "6835911e"
   },
-  "/technical-knowledge/interview-questions/java/exception-handling-advanced-59d": {
+  "/technical-knowledge/interview-questions/java/exception-handling-advanced-cbf": {
     "__comp": "17896441",
     "content": "95a5837e"
   },
@@ -10316,7 +10316,7 @@
     "__comp": "17896441",
     "content": "f41bb2e4"
   },
-  "/technical-knowledge/interview-questions/java/java-8-tricky-interview-questions-9d7": {
+  "/technical-knowledge/interview-questions/java/java-8-tricky-interview-questions-990": {
     "__comp": "17896441",
     "content": "8614bac8"
   },
@@ -10344,7 +10344,7 @@
     "__comp": "17896441",
     "content": "39204042"
   },
-  "/technical-knowledge/interview-questions/java/java-interview-questions-d44": {
+  "/technical-knowledge/interview-questions/java/java-interview-questions-d3c": {
     "__comp": "17896441",
     "content": "ce75ad85"
   },
@@ -10352,7 +10352,7 @@
     "__comp": "17896441",
     "content": "6c0fe219"
   },
-  "/technical-knowledge/interview-questions/java/java-multithreading-interview-adc": {
+  "/technical-knowledge/interview-questions/java/java-multithreading-interview-412": {
     "__comp": "17896441",
     "content": "3ecdd328"
   },
@@ -10372,7 +10372,7 @@
     "__comp": "17896441",
     "content": "e7946e9d"
   },
-  "/technical-knowledge/interview-questions/java/spring-boot-interview-242": {
+  "/technical-knowledge/interview-questions/java/spring-boot-interview-6b8": {
     "__comp": "17896441",
     "content": "c45457bd"
   },
@@ -10828,7 +10828,7 @@
     "__comp": "17896441",
     "content": "588595cf"
   },
-  "/technical-knowledge/redis/redis-eviction-policies-63a": {
+  "/technical-knowledge/redis/redis-eviction-policies-cf0": {
     "__comp": "17896441",
     "content": "d92134ba"
   },
@@ -11076,7 +11076,7 @@
     "__comp": "17896441",
     "content": "bc804bd9"
   },
-  "/technical-knowledge/system-design/caching-strategies-6ba": {
+  "/technical-knowledge/system-design/caching-strategies-0ea": {
     "__comp": "17896441",
     "content": "724987fe"
   },
@@ -11236,7 +11236,7 @@
     "__comp": "17896441",
     "content": "bd0308dc"
   },
-  "/technical-knowledge/system-design/scaling-reads-b09": {
+  "/technical-knowledge/system-design/scaling-reads-38a": {
     "__comp": "17896441",
     "content": "382009e9"
   },
