@@ -64,6 +64,10 @@ In the Cache-Aside pattern, the application orchestrates interactions with both 
 
 **Why it dominates in practice**: Cache-aside is lazy — only data that is actually requested ever gets cached, which keeps memory usage proportional to real traffic patterns rather than total dataset size. It also degrades gracefully: if Redis is completely down, the cache-aside path simply falls through to the database on every request (slow, but correct), whereas read-through and write-through designs often have the cache baked into the data-access layer in ways that are harder to bypass safely.
 
+**The latency economics senior engineers must evaluate**: Cache-aside is not free speed. Every cache miss incurs a **$+2\text{ms}$ network RTT penalty** (1ms read check + 1ms sync write back to cache) compared to querying the DB directly. Per the **AMAT (Average Memory Access Time)** model, the minimum hit ratio to achieve lower latency is:
+$$\mathbf{H_{\text{break-even}} = \frac{2}{T_{\text{db}} + 1}}$$
+For heavy queries ($T_{\text{db}} = 50\text{ms}$), break-even requires only $H \ge 3.9\%$; but for fast queries ($T_{\text{db}} = 2\text{ms}$), you need $H \ge 66.7\%$ just to break even! For the complete mathematical proof, Zipf's law RAM sizing, and observability traps, see the **[Mathematical Economics of Caching](./caching-strategies.md#the-mathematical-economics-of-caching-amat--break-even-hit-ratio)** guide.
+
 **The trade-off senior engineers must own**: because the cache is a separate write target from the database, there is always a window — however small — where the two disagree. Cache-aside pushes the responsibility for managing that window entirely onto the application.
 
 #### Spring Boot Implementations (Caffeine & Redis)
