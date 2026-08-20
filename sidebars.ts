@@ -300,6 +300,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/system-design/real-time-updates',
 								'technical-knowledge/system-design/handling-contention',
 								'technical-knowledge/system-design/data-consistency',
+								'technical-knowledge/system-design/distributed-transactions',
 								'technical-knowledge/system-design/two-phase-commit',
 								'technical-knowledge/system-design/saga-pattern',
 								'technical-knowledge/system-design/outbox-pattern',

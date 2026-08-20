@@ -6390,6 +6390,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/distributed-transactions",
+              "path": "/technical-knowledge/system-design/distributed-transactions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/domain-driven-design",
               "path": "/technical-knowledge/system-design/domain-driven-design",
               "sidebar": "tutorialSidebar"
@@ -6747,6 +6752,15 @@
         }
       ],
       "breadcrumbs": true
+    }
+  },
+  "docusaurus-plugin-google-gtag": {
+    "default": {
+      "trackingID": [
+        "G-79SQQZQMCX"
+      ],
+      "anonymizeIP": true,
+      "id": "default"
     }
   }
 }
