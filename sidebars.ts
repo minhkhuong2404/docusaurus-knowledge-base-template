@@ -657,6 +657,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/database/isolation-levels',
 								'technical-knowledge/database/transactions-concurrency',
 								'technical-knowledge/database/storage-engines-data-structures',
+								'technical-knowledge/database/postgresql-heap-storage-architecture',
 							],
 						},
 						{

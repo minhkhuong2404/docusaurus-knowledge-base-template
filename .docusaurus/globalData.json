@@ -1326,6 +1326,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/database/postgresql-heap-storage-architecture",
+              "path": "/technical-knowledge/database/postgresql-heap-storage-architecture",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/database/query-planner-optimizer",
               "path": "/technical-knowledge/database/query-planner-optimizer",
               "sidebar": "tutorialSidebar"
@@ -6742,15 +6747,6 @@
         }
       ],
       "breadcrumbs": true
-    }
-  },
-  "docusaurus-plugin-google-gtag": {
-    "default": {
-      "trackingID": [
-        "G-79SQQZQMCX"
-      ],
-      "anonymizeIP": true,
-      "id": "default"
     }
   }
 }

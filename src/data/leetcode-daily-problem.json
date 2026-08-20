@@ -1,8 +1,8 @@
 {
-  "id": "1386",
-  "title": "Cinema Seat Allocation",
-  "url": "https://leetcode.com/problems/cinema-seat-allocation/",
-  "difficulty": "medium",
-  "topic": "Array, Hash Table, Greedy, Bit Manipulation",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-08-19."
+  "id": "3069",
+  "title": "Distribute Elements Into Two Arrays I",
+  "url": "https://leetcode.com/problems/distribute-elements-into-two-arrays-i/",
+  "difficulty": "easy",
+  "topic": "Array, Simulation",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-08-20."
 }

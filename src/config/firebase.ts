@@ -14,12 +14,12 @@ const getEnv = (key: string): string | undefined => {
 };
 
 export const firebaseConfig = {
-  apiKey: getEnv('FIREBASE_API_KEY') || "AIzaSyDHmbQUMhIQGteRWeoIjY6jNJFBvx2M91U",
-  authDomain: getEnv('FIREBASE_AUTH_DOMAIN') || "khuong-tjfxef.firebaseapp.com",
-  projectId: getEnv('FIREBASE_PROJECT_ID') || "khuong-tjfxef",
-  storageBucket: getEnv('FIREBASE_STORAGE_BUCKET') || "khuong-tjfxef.firebasestorage.app",
-  messagingSenderId: getEnv('FIREBASE_MESSAGING_SENDER_ID') || "14737596078",
-  appId: getEnv('FIREBASE_APP_ID') || "1:14737596078:web:ece78d5b899bb2ad05573f",
+  apiKey: getEnv('FIREBASE_API_KEY') || "[GCP_API_KEY]",
+  authDomain: getEnv('FIREBASE_AUTH_DOMAIN') || "minhkhuong-knowledge-base.firebaseapp.com",
+  projectId: getEnv('FIREBASE_PROJECT_ID') || "minhkhuong-knowledge-base",
+  storageBucket: getEnv('FIREBASE_STORAGE_BUCKET') || "minhkhuong-knowledge-base.firebasestorage.app",
+  messagingSenderId: getEnv('FIREBASE_MESSAGING_SENDER_ID') || "885266811837",
+  appId: getEnv('FIREBASE_APP_ID') || "1:885266811837:web:783d0d4de9f8331575cefd",
 };
 
 // Initialize Firebase App

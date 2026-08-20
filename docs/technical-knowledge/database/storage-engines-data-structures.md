@@ -96,6 +96,8 @@ Page 2: [row5] [row8]               ← free space tracked
 
 Inserts go to any page with free space. Updates create new row versions (PostgreSQL MVCC). Dead rows accumulate → `VACUUM` needed.
 
+> 📖 **Deep Dive**: See the dedicated [PostgreSQL Heap Storage Architecture & Internals](./postgresql-heap-storage-architecture.md) for 8KB slotted page anatomy, HeapTupleHeader (`xmin`/`xmax`/`ctid`), HOT (Heap-Only Tuples) optimization, and vacuum mechanics.
+
 ---
 
 ### Clustered vs Heap Storage
