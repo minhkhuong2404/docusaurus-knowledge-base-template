@@ -500,13 +500,14 @@ def write_to_csv(filepath, questions):
 
 def main():
     print("=" * 75)
-    print("Generating 1,000 Questions Each for Java, Spring Boot & System Design")
-    print("Total: 3,000 Bloom's Taxonomy Level 3 Questions")
+    print("Generating 1,024 Questions Each for Java, Spring Boot & System Design")
+    print("Total: 3,072 Bloom's Taxonomy Level 3 Questions")
     print("=" * 75)
 
-    java_qs = generate_questions_for_topic("Java 17/21 & Core", JAVA_SUBTOPICS, 1000, "java")
-    spring_qs = generate_questions_for_topic("Spring Boot 3", SPRING_SUBTOPICS, 1000, "spring")
-    sys_qs = generate_questions_for_topic("System Design", SYSTEM_DESIGN_SUBTOPICS, 1000, "sys")
+    TARGET = 1024
+    java_qs = generate_questions_for_topic("Java 17/21 & Core", JAVA_SUBTOPICS, TARGET, "java")
+    spring_qs = generate_questions_for_topic("Spring Boot 3", SPRING_SUBTOPICS, TARGET, "spring")
+    sys_qs = generate_questions_for_topic("System Design", SYSTEM_DESIGN_SUBTOPICS, TARGET, "sys")
 
     print(f"✓ Generated {len(java_qs)} Java questions (Sealed Classes, Record Patterns, Loom, Scoped Values, JPMS, Streams)")
     print(f"✓ Generated {len(spring_qs)} Spring Boot questions (AOT, RestClient, AOP Proxies, Security 6, Tracing)")
@@ -551,7 +552,7 @@ def main():
 
     opener = urllib.request.build_opener(NoRedirectHandler)
 
-    print("\nPushing 1,000 questions per tab to Google Sheet via unified payload...")
+    print(f"\nPushing {TARGET} questions per tab to Google Sheet via unified payload...")
     full_payload = {
         "Java": format_rows(java_qs),
         "Spring Boot": format_rows(spring_qs),
@@ -576,7 +577,7 @@ def main():
         print(f"  [Notice] Push notice: {e}")
 
     print("\n" + "=" * 75)
-    print("✓ COMPLETED! 3,000 Bloom L3 Questions generated and synchronized!")
+    print(f"✓ COMPLETED! {TARGET * 3} Bloom L3 Questions generated and synchronized!")
     print("=" * 75)
 
 if __name__ == "__main__":

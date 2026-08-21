@@ -9,10 +9,25 @@ import { PROBLEMS } from '@site/src/components/DSADashboard';
 import { isTrackableArticle, TOTAL_TRACKABLE_ARTICLES_DEFAULT } from '@site/src/utils/trackablePages';
 
 export default function CustomUserNavbarItem() {
-  const { currentUser, progress, isPremium, unlockPremium, revokePremium, resetQuizProgress, totalArticlesCount } = useUserProgress();
+  const {
+    currentUser,
+    progress,
+    isPremium,
+    isAdmin,
+    adminEmails,
+    addAdminEmail,
+    removeAdminEmail,
+    unlockPremium,
+    revokePremium,
+    resetQuizProgress,
+    totalArticlesCount,
+  } = useUserProgress();
   const [isOpen, setIsOpen] = useState(false);
   const [showKeyModal, setShowKeyModal] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
+  const [showAdminModal, setShowAdminModal] = useState(false);
+  const [newAdminInput, setNewAdminInput] = useState('');
+  const [adminMsg, setAdminMsg] = useState('');
   const [keyInput, setKeyInput] = useState('');
   const [keyError, setKeyError] = useState('');
   const [keyLoading, setKeyLoading] = useState(false);
@@ -191,14 +206,44 @@ export default function CustomUserNavbarItem() {
         className="login-nav-button"
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '6px',
+        }}
       >
-        {isPremium ? '👑 ' : '👋 '}Welcome, {name} {isOpen ? '▲' : '▼'}
+        {isAdmin ? (
+          <span
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px',
+              padding: '2px 7px',
+              borderRadius: '6px',
+              background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.28) 0%, rgba(217, 119, 6, 0.28) 100%)',
+              color: '#fbbf24',
+              border: '1px solid rgba(245, 158, 11, 0.55)',
+              fontWeight: 800,
+              fontSize: '11px',
+              letterSpacing: '0.03em',
+              boxShadow: '0 0 10px rgba(245, 158, 11, 0.3)',
+            }}
+          >
+            🛡️ Admin
+          </span>
+        ) : isPremium ? (
+          <span>👑</span>
+        ) : (
+          <span>👋</span>
+        )}
+        <span>{name}</span>
+        <span style={{ fontSize: '10px', opacity: 0.75 }}>{isOpen ? '▲' : '▼'}</span>
       </button>
 
       {isOpen && isMounted && ReactDOM.createPortal(
         <div
           ref={dropdownRef}
-          className={`user-account-dropdown-menu ${isPremium ? 'premium-border' : ''}`}
+          className={`user-account-dropdown-menu ${isAdmin ? 'admin-border' : isPremium ? 'premium-border' : ''}`}
           style={{
             position: 'fixed',
             top: `${coords.top}px`,
@@ -223,8 +268,8 @@ export default function CustomUserNavbarItem() {
                   width: '44px',
                   height: '44px',
                   borderRadius: '50%',
-                  border: isPremium ? '2px solid #f59e0b' : '2px solid #4ade80',
-                  boxShadow: isPremium ? '0 0 10px rgba(245, 158, 11, 0.4)' : 'none',
+                  border: isAdmin ? '2px solid #fbbf24' : isPremium ? '2px solid #f59e0b' : '2px solid #4ade80',
+                  boxShadow: isAdmin ? '0 0 14px rgba(251, 191, 36, 0.55)' : isPremium ? '0 0 10px rgba(245, 158, 11, 0.4)' : 'none',
                   objectFit: 'cover',
                 }}
               />
@@ -234,14 +279,14 @@ export default function CustomUserNavbarItem() {
                   width: '44px',
                   height: '44px',
                   borderRadius: '50%',
-                  backgroundColor: isPremium ? '#d97706' : 'var(--ifm-color-primary)',
+                  backgroundColor: isAdmin ? '#b45309' : isPremium ? '#d97706' : 'var(--ifm-color-primary)',
                   color: '#fff',
                   fontSize: '1.25rem',
                   fontWeight: 700,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: isPremium ? '0 0 10px rgba(245, 158, 11, 0.4)' : 'none',
+                  boxShadow: isAdmin ? '0 0 14px rgba(251, 191, 36, 0.55)' : isPremium ? '0 0 10px rgba(245, 158, 11, 0.4)' : 'none',
                 }}
               >
                 {name.charAt(0).toUpperCase()}
@@ -254,40 +299,58 @@ export default function CustomUserNavbarItem() {
               <div style={{ fontSize: '0.75rem', color: 'var(--ifm-color-emphasis-600)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {currentUser.email}
               </div>
-              {isPremium ? (
-                <span
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '4px',
-                    marginTop: '4px',
-                    fontSize: '0.7rem',
-                    padding: '2px 8px',
-                    background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
-                    color: '#ffffff',
-                    borderRadius: '10px',
-                    fontWeight: 700,
-                    boxShadow: '0 2px 6px rgba(245, 158, 11, 0.3)',
-                  }}
-                >
-                  👑 Premium Active
-                </span>
-              ) : (
-                <span
-                  style={{
-                    display: 'inline-block',
-                    marginTop: '4px',
-                    fontSize: '0.7rem',
-                    padding: '2px 8px',
-                    background: 'rgba(74, 222, 128, 0.15)',
-                    color: '#4ade80',
-                    borderRadius: '10px',
-                    fontWeight: 600,
-                  }}
-                >
-                  ⚡ Progress Sync Active
-                </span>
-              )}
+              <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', marginTop: '4px' }}>
+                {isAdmin && (
+                  <span
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      fontSize: '0.7rem',
+                      padding: '2px 8px',
+                      background: 'linear-gradient(135deg, #f59e0b 0%, #b45309 100%)',
+                      color: '#ffffff',
+                      borderRadius: '10px',
+                      fontWeight: 800,
+                      boxShadow: '0 2px 6px rgba(245, 158, 11, 0.4)',
+                    }}
+                  >
+                    🛡️ Admin
+                  </span>
+                )}
+                {isPremium ? (
+                  <span
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      fontSize: '0.7rem',
+                      padding: '2px 8px',
+                      background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                      color: '#ffffff',
+                      borderRadius: '10px',
+                      fontWeight: 700,
+                      boxShadow: '0 2px 6px rgba(245, 158, 11, 0.3)',
+                    }}
+                  >
+                    👑 Premium Active
+                  </span>
+                ) : (
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      fontSize: '0.7rem',
+                      padding: '2px 8px',
+                      background: 'rgba(74, 222, 128, 0.15)',
+                      color: '#4ade80',
+                      borderRadius: '10px',
+                      fontWeight: 600,
+                    }}
+                  >
+                    ⚡ Progress Sync Active
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 
@@ -420,6 +483,36 @@ export default function CustomUserNavbarItem() {
               }}
             >
               🔒 Revoke Premium Access
+            </button>
+          )}
+
+          {/* Admin Management Panel Button */}
+          {isAdmin && (
+            <button
+              type="button"
+              onClick={() => {
+                setShowAdminModal(true);
+                setAdminMsg('');
+              }}
+              style={{
+                width: '100%',
+                padding: '0.65rem',
+                marginBottom: '0.6rem',
+                background: 'rgba(245, 158, 11, 0.12)',
+                color: '#f59e0b',
+                border: '1px solid rgba(245, 158, 11, 0.4)',
+                borderRadius: '8px',
+                fontWeight: 700,
+                fontSize: '0.825rem',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '6px',
+              }}
+            >
+              🛡️ Manage Admin Permissions ({adminEmails.length})
             </button>
           )}
 
@@ -640,6 +733,181 @@ export default function CustomUserNavbarItem() {
               >
                 Confirm Reset 🗑️
               </button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
+      {/* Admin Management Modal Dialog */}
+      {showAdminModal && isMounted && ReactDOM.createPortal(
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.85)',
+            backdropFilter: 'blur(6px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999999,
+          }}
+          onClick={() => setShowAdminModal(false)}
+        >
+          <div
+            style={{
+              backgroundColor: '#0d1117',
+              border: '1.5px solid #f59e0b',
+              borderRadius: '16px',
+              padding: '2rem',
+              maxWidth: '480px',
+              width: '90%',
+              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.95), 0 0 30px rgba(245, 158, 11, 0.3)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '1.5rem' }}>🛡️</span>
+                <h3 style={{ margin: 0, fontSize: '1.25rem', color: '#ffffff' }}>Admin Permissions</h3>
+              </div>
+              <button
+                onClick={() => setShowAdminModal(false)}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#94a3b8',
+                  fontSize: '1.2rem',
+                  cursor: 'pointer',
+                }}
+              >
+                ✕
+              </button>
+            </div>
+
+            <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginBottom: '1.25rem', lineHeight: 1.5 }}>
+              Admins have elevated permissions to trigger Google Sheet live question synchronization and access administrative control links.
+            </p>
+
+            {/* Add New Admin Form */}
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (!newAdminInput.trim() || !newAdminInput.includes('@')) {
+                  setAdminMsg('Please enter a valid email address.');
+                  return;
+                }
+                addAdminEmail(newAdminInput.trim());
+                setAdminMsg(`Added ${newAdminInput.trim()} as Admin!`);
+                setNewAdminInput('');
+              }}
+              style={{ display: 'flex', gap: '8px', marginBottom: '1rem' }}
+            >
+              <input
+                type="email"
+                value={newAdminInput}
+                onChange={(e) => setNewAdminInput(e.target.value)}
+                placeholder="new.admin@example.com"
+                style={{
+                  flex: 1,
+                  padding: '0.65rem 0.85rem',
+                  borderRadius: '8px',
+                  border: '1px solid #30363d',
+                  backgroundColor: '#161b22',
+                  color: '#ffffff',
+                  fontSize: '0.9rem',
+                  outline: 'none',
+                }}
+              />
+              <button
+                type="submit"
+                style={{
+                  padding: '0.65rem 1.2rem',
+                  borderRadius: '8px',
+                  border: 'none',
+                  background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                  color: '#ffffff',
+                  fontWeight: 700,
+                  fontSize: '0.85rem',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                + Add Admin
+              </button>
+            </form>
+
+            {adminMsg && (
+              <div
+                style={{
+                  fontSize: '0.8rem',
+                  color: adminMsg.includes('Added') ? '#34d399' : '#ef4444',
+                  marginBottom: '1rem',
+                  fontWeight: 600,
+                }}
+              >
+                {adminMsg}
+              </div>
+            )}
+
+            {/* Current Admins List */}
+            <div style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', color: '#94a3b8', marginBottom: '0.5rem' }}>
+              Authorized Admin Emails ({adminEmails.length})
+            </div>
+            <div
+              style={{
+                maxHeight: '180px',
+                overflowY: 'auto',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '8px',
+                padding: '4px',
+                backgroundColor: 'rgba(0, 0, 0, 0.3)',
+              }}
+            >
+              {adminEmails.map((email) => {
+                const isCurrent = currentUser?.email?.toLowerCase() === email.toLowerCase();
+                return (
+                  <div
+                    key={email}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '8px 10px',
+                      borderRadius: '6px',
+                      fontSize: '0.85rem',
+                      color: isCurrent ? '#f59e0b' : '#e2e8f0',
+                      background: isCurrent ? 'rgba(245, 158, 11, 0.08)' : 'transparent',
+                    }}
+                  >
+                    <span>
+                      {email} {isCurrent && <strong style={{ fontSize: '0.75rem' }}>(You)</strong>}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        removeAdminEmail(email);
+                        setAdminMsg(`Removed ${email}`);
+                      }}
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: '#ef4444',
+                        cursor: 'pointer',
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                        padding: '2px 6px',
+                        borderRadius: '4px',
+                      }}
+                      title="Revoke admin access"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>,

@@ -32,7 +32,7 @@ function shuffleArray<T>(array: T[]): T[] {
 export default function DailyQuizGallery({
   initialCategory = 'java',
 }: DailyQuizGalleryProps): React.JSX.Element {
-  const { progress, saveQuiz } = useUserProgress();
+  const { progress, saveQuiz, isAdmin } = useUserProgress();
 
   // State
   const [activeCategory, setActiveCategory] = useState<QuizCategoryKey>(initialCategory);
@@ -262,81 +262,82 @@ export default function DailyQuizGallery({
           Interactive Practice Challenge
         </span>
 
-        <span
-          style={{
-            fontSize: '11px',
-            fontWeight: 600,
-            padding: '2px 8px',
-            borderRadius: '9999px',
-            background: 'rgba(52, 211, 153, 0.12)',
-            color: '#34d399',
-            border: '1px solid rgba(52, 211, 153, 0.3)',
-            marginLeft: '6px',
-          }}
-        >
-          Live Google Sheets Source
-        </span>
-
-        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <button
-            onClick={() => loadQuestions(true)}
-            disabled={isRefreshing}
-            style={{
-              padding: '5px 12px',
-              borderRadius: '7px',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
-              cursor: isRefreshing ? 'not-allowed' : 'pointer',
-              fontWeight: 600,
-              fontSize: '11.5px',
-              background: 'rgba(255, 255, 255, 0.05)',
-              color: 'var(--ifm-color-content)',
-              transition: 'all 0.2s ease',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '5px',
-            }}
-            title="Re-sync questions directly from Google Sheet"
-          >
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className={isRefreshing ? styles.syncSpin : ''}
+        {isAdmin ? (
+          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span
+              style={{
+                fontSize: '10.5px',
+                fontWeight: 700,
+                padding: '2px 7px',
+                borderRadius: '5px',
+                background: 'rgba(245, 158, 11, 0.15)',
+                color: '#f59e0b',
+                border: '1px solid rgba(245, 158, 11, 0.35)',
+              }}
             >
-              <polyline points="23 4 23 10 17 10" />
-              <polyline points="1 20 1 14 7 14" />
-              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
-            </svg>
-            {isRefreshing ? 'Syncing…' : 'Sync Sheet'}
-          </button>
+              🛡️ Admin
+            </span>
 
-          <a
-            href={SPREADSHEET_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              padding: '5px 12px',
-              borderRadius: '7px',
-              border: '1px solid rgba(56, 189, 248, 0.35)',
-              fontWeight: 600,
-              fontSize: '11.5px',
-              background: 'rgba(56, 189, 248, 0.12)',
-              color: '#38bdf8',
-              textDecoration: 'none',
-              transition: 'all 0.2s ease',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '5px',
-            }}
-          >
-            Google Sheet ↗
-          </a>
-        </div>
+            <button
+              onClick={() => loadQuestions(true)}
+              disabled={isRefreshing}
+              style={{
+                padding: '5px 12px',
+                borderRadius: '7px',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                cursor: isRefreshing ? 'not-allowed' : 'pointer',
+                fontWeight: 600,
+                fontSize: '11.5px',
+                background: 'rgba(255, 255, 255, 0.05)',
+                color: 'var(--ifm-color-content)',
+                transition: 'all 0.2s ease',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+              }}
+              title="Re-sync questions directly from Google Sheet"
+            >
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className={isRefreshing ? styles.syncSpin : ''}
+              >
+                <polyline points="23 4 23 10 17 10" />
+                <polyline points="1 20 1 14 7 14" />
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+              </svg>
+              {isRefreshing ? 'Syncing…' : 'Sync Sheet'}
+            </button>
+
+            <a
+              href={SPREADSHEET_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                padding: '5px 12px',
+                borderRadius: '7px',
+                border: '1px solid rgba(56, 189, 248, 0.35)',
+                fontWeight: 600,
+                fontSize: '11.5px',
+                background: 'rgba(56, 189, 248, 0.12)',
+                color: '#38bdf8',
+                textDecoration: 'none',
+                transition: 'all 0.2s ease',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+              }}
+            >
+              Google Sheet ↗
+            </a>
+          </div>
+        ) : null}
       </div>
 
       {/* ── 2. Category Switcher Tabs (Archetype C compliant) ── */}
@@ -345,10 +346,10 @@ export default function DailyQuizGallery({
           const isActive = activeCategory === cat.id;
           const count =
             cat.id === 'all'
-              ? (questionsMap.java?.length || 508) +
-                (questionsMap['spring-boot']?.length || 508) +
-                (questionsMap['system-design']?.length || 508)
-              : questionsMap[cat.id]?.length || 508;
+              ? (questionsMap.java?.length || 1024) +
+                (questionsMap['spring-boot']?.length || 1024) +
+                (questionsMap['system-design']?.length || 1024)
+              : questionsMap[cat.id]?.length || 1024;
 
           return (
             <button

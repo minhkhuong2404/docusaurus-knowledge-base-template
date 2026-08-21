@@ -5124,3 +5124,126 @@ spring-1k-1000,Spring WebFlux & Reactive Streams,medium,What is the purpose of d
     .subscribe(new BaseSubscriber<Integer>() {
         protected void hookOnSubscribe(Subscription s) { request(10); }
     });","It allows the consumer to pull only the number of items it has capacity to process, preventing producer fast-push memory overflow.",It forces the publisher to run in a single thread.,It converts asynchronous streams into blocking JDBC queries.,It pauses the OS CPU clock until data arrives.,A,"Backpressure in Reactive Streams (Project Reactor) allows subscribers to regulate data flow by demanding specific batch sizes via request(n), preventing buffer overflows. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+spring-1k-1001,Spring Boot 3 Core & Starters,easy,Why is RestClient preferred over RestTemplate in Spring Boot 3.2+ for synchronous HTTP communications?,"@Bean
+public RestClient inventoryClient(RestClient.Builder builder) {
+    return builder.baseUrl(""https://inventory.api"").build();
+}","RestClient offers a modern, fluent API matching WebClient while working with synchronous HttpMessageConverters without requiring reactive WebFlux dependencies.",RestTemplate throws UnsupportedOperationException in Spring Boot 3.,RestClient only communicates using binary gRPC protocols.,RestClient requires an external Netty server.,A,"RestClient is Spring's modern synchronous HTTP client offering a fluent builder-style API, replacing RestTemplate for new development without requiring Project Reactor. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+spring-1k-1002,Spring AOP & Proxy Internals,hard,Why does internalSave() execute without transactional management when called from placeOrder()?,"@Service
+public class OrderService {
+    public void placeOrder() { internalSave(); }
+    @Transactional
+    public void internalSave() { repo.save(new Order()); }
+}","Direct this.internalSave() invokes the method on the target instance directly, bypassing the Spring AOP dynamic proxy interceptor chain.",@Transactional is ignored on methods named internalSave.,Spring Boot disables transactions inside Service classes by default.,The transaction is rolled back before entering the method.,A,"Spring AOP advice is applied through proxy objects. Internal this.method() calls bypass the proxy wrapper. To fix: inject the proxy self-reference, use AspectJ compile-time weaving, or refactor to another bean. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+spring-1k-1003,Spring Transaction Management,medium,"Under default Spring @Transactional configuration, why does throwing a checked exception NOT trigger a transaction rollback?","@Transactional
+public void processPayment() throws InsufficientBalanceException {
+    accountRepo.debit(amount);
+    throw new InsufficientBalanceException(""No balance"");
+}",Spring Declarative Transactions roll back on unchecked exceptions (RuntimeException and Error) by default unless rollbackFor is configured.,Checked exceptions are silently committed by database drivers.,Spring Boot transactions only roll back on OutOfMemoryError.,The database automatically catches custom checked exceptions.,A,"By default, Spring transactions roll back only on unchecked exceptions. To roll back on checked exceptions, declare @Transactional(rollbackFor = Exception.class). (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+spring-1k-1004,Spring Data JPA & Hibernate 6,easy,How does @EntityGraph prevent N+1 queries when loading Department entities with lazy-loaded employees?,"@Entity
+public class Department {
+    @OneToMany(mappedBy = ""department"")
+    private List<Employee> employees;
+}
+
+@EntityGraph(attributePaths = {""employees""})
+List<Department> findAll();",It generates a single SQL query with an INNER/LEFT JOIN to eagerly fetch the specified associated employees in a single round-trip.,It stores all Department records in Redis cache.,It disables lazy loading across all entities in the entire JVM.,It forces the database to execute background stored procedures.,A,"@EntityGraph allows overriding default fetch plans on a per-query basis, instructing JPA/Hibernate to use a SQL JOIN to fetch child relationships in a single query. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+spring-1k-1005,Spring Security 6 & OAuth2,hard,What is the core function of customJwtConverter in this Spring Security configuration?,"@Bean
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http.oauth2ResourceServer(oauth -> oauth
+        .jwt(jwt -> jwt.jwtAuthenticationConverter(customJwtConverter()))
+    );
+    return http.build();
+}",It extracts customized claims (such as realm_access.roles) from the validated JWT token and maps them into GrantedAuthority objects in the SecurityContext.,It decrypts the incoming TLS TCP socket traffic.,It generates asymmetric RSA keys for every HTTP request.,It stores the user password in plaintext in session memory.,A,"JwtAuthenticationConverter transforms JWT payload claims into Spring Security GrantedAuthority instances (e.g. ROLE_ADMIN), enabling method security annotations like @PreAuthorize. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+spring-1k-1006,Observability & Micrometer Tracing,medium,How does Micrometer Tracing maintain end-to-end trace correlation across downstream microservices?,"@Observed(name = ""user.fetch"")
+public User getUser(String id) {
+    return restClient.get().uri(""/users/{id}"", id).retrieve().body(User.class);
+}",By automatically injecting W3C Trace Context headers ('traceparent' and 'tracestate') into outgoing HTTP request headers via client interceptors.,By writing trace IDs to a central database on every HTTP request.,By broadcasting UDP heartbeat packets to all network switches.,By attaching trace IDs to the TCP handshake SYN packet.,A,"Micrometer Tracing injects standard W3C Trace Context HTTP headers (traceparent) into downstream requests, enabling distributed tracing across microservices. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+spring-1k-1007,Resilience4j & Circuit Breakers,easy,"When 6 out of 10 requests fail in the sliding window, what immediate behavior change occurs for the 11th request?","resilience4j.circuitbreaker.instances.paymentService.sliding-window-size=10
+resilience4j.circuitbreaker.instances.paymentService.failure-rate-threshold=50","The circuit transitions to OPEN, immediately short-circuiting the 11th request with CallNotPermittedException without calling the downstream service.",The 11th request is queued indefinitely in memory until the service recovers.,The application server restarts the Tomcat container.,The 11th request is executed 100 times concurrently.,A,"When the failure rate breaches the configured threshold, the Circuit Breaker transitions to OPEN, failing fast with CallNotPermittedException to protect downstream services. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+spring-1k-1008,Spring WebFlux & Reactive Streams,hard,What is the purpose of dynamic request(n) signaling in Reactive Streams backpressure?,"Flux.range(1, 1000)
+    .publishOn(Schedulers.boundedElastic())
+    .subscribe(new BaseSubscriber<Integer>() {
+        protected void hookOnSubscribe(Subscription s) { request(10); }
+    });","It allows the consumer to pull only the number of items it has capacity to process, preventing producer fast-push memory overflow.",It forces the publisher to run in a single thread.,It converts asynchronous streams into blocking JDBC queries.,It pauses the OS CPU clock until data arrives.,A,"Backpressure in Reactive Streams (Project Reactor) allows subscribers to regulate data flow by demanding specific batch sizes via request(n), preventing buffer overflows. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+spring-1k-1009,Spring Boot 3 Core & Starters,medium,Why is RestClient preferred over RestTemplate in Spring Boot 3.2+ for synchronous HTTP communications?,"@Bean
+public RestClient inventoryClient(RestClient.Builder builder) {
+    return builder.baseUrl(""https://inventory.api"").build();
+}","RestClient offers a modern, fluent API matching WebClient while working with synchronous HttpMessageConverters without requiring reactive WebFlux dependencies.",RestTemplate throws UnsupportedOperationException in Spring Boot 3.,RestClient only communicates using binary gRPC protocols.,RestClient requires an external Netty server.,A,"RestClient is Spring's modern synchronous HTTP client offering a fluent builder-style API, replacing RestTemplate for new development without requiring Project Reactor. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+spring-1k-1010,Spring AOP & Proxy Internals,easy,Why does internalSave() execute without transactional management when called from placeOrder()?,"@Service
+public class OrderService {
+    public void placeOrder() { internalSave(); }
+    @Transactional
+    public void internalSave() { repo.save(new Order()); }
+}","Direct this.internalSave() invokes the method on the target instance directly, bypassing the Spring AOP dynamic proxy interceptor chain.",@Transactional is ignored on methods named internalSave.,Spring Boot disables transactions inside Service classes by default.,The transaction is rolled back before entering the method.,A,"Spring AOP advice is applied through proxy objects. Internal this.method() calls bypass the proxy wrapper. To fix: inject the proxy self-reference, use AspectJ compile-time weaving, or refactor to another bean. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+spring-1k-1011,Spring Transaction Management,hard,"Under default Spring @Transactional configuration, why does throwing a checked exception NOT trigger a transaction rollback?","@Transactional
+public void processPayment() throws InsufficientBalanceException {
+    accountRepo.debit(amount);
+    throw new InsufficientBalanceException(""No balance"");
+}",Spring Declarative Transactions roll back on unchecked exceptions (RuntimeException and Error) by default unless rollbackFor is configured.,Checked exceptions are silently committed by database drivers.,Spring Boot transactions only roll back on OutOfMemoryError.,The database automatically catches custom checked exceptions.,A,"By default, Spring transactions roll back only on unchecked exceptions. To roll back on checked exceptions, declare @Transactional(rollbackFor = Exception.class). (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+spring-1k-1012,Spring Data JPA & Hibernate 6,medium,How does @EntityGraph prevent N+1 queries when loading Department entities with lazy-loaded employees?,"@Entity
+public class Department {
+    @OneToMany(mappedBy = ""department"")
+    private List<Employee> employees;
+}
+
+@EntityGraph(attributePaths = {""employees""})
+List<Department> findAll();",It generates a single SQL query with an INNER/LEFT JOIN to eagerly fetch the specified associated employees in a single round-trip.,It stores all Department records in Redis cache.,It disables lazy loading across all entities in the entire JVM.,It forces the database to execute background stored procedures.,A,"@EntityGraph allows overriding default fetch plans on a per-query basis, instructing JPA/Hibernate to use a SQL JOIN to fetch child relationships in a single query. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+spring-1k-1013,Spring Security 6 & OAuth2,easy,What is the core function of customJwtConverter in this Spring Security configuration?,"@Bean
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http.oauth2ResourceServer(oauth -> oauth
+        .jwt(jwt -> jwt.jwtAuthenticationConverter(customJwtConverter()))
+    );
+    return http.build();
+}",It extracts customized claims (such as realm_access.roles) from the validated JWT token and maps them into GrantedAuthority objects in the SecurityContext.,It decrypts the incoming TLS TCP socket traffic.,It generates asymmetric RSA keys for every HTTP request.,It stores the user password in plaintext in session memory.,A,"JwtAuthenticationConverter transforms JWT payload claims into Spring Security GrantedAuthority instances (e.g. ROLE_ADMIN), enabling method security annotations like @PreAuthorize. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+spring-1k-1014,Observability & Micrometer Tracing,hard,How does Micrometer Tracing maintain end-to-end trace correlation across downstream microservices?,"@Observed(name = ""user.fetch"")
+public User getUser(String id) {
+    return restClient.get().uri(""/users/{id}"", id).retrieve().body(User.class);
+}",By automatically injecting W3C Trace Context headers ('traceparent' and 'tracestate') into outgoing HTTP request headers via client interceptors.,By writing trace IDs to a central database on every HTTP request.,By broadcasting UDP heartbeat packets to all network switches.,By attaching trace IDs to the TCP handshake SYN packet.,A,"Micrometer Tracing injects standard W3C Trace Context HTTP headers (traceparent) into downstream requests, enabling distributed tracing across microservices. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+spring-1k-1015,Resilience4j & Circuit Breakers,medium,"When 6 out of 10 requests fail in the sliding window, what immediate behavior change occurs for the 11th request?","resilience4j.circuitbreaker.instances.paymentService.sliding-window-size=10
+resilience4j.circuitbreaker.instances.paymentService.failure-rate-threshold=50","The circuit transitions to OPEN, immediately short-circuiting the 11th request with CallNotPermittedException without calling the downstream service.",The 11th request is queued indefinitely in memory until the service recovers.,The application server restarts the Tomcat container.,The 11th request is executed 100 times concurrently.,A,"When the failure rate breaches the configured threshold, the Circuit Breaker transitions to OPEN, failing fast with CallNotPermittedException to protect downstream services. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+spring-1k-1016,Spring WebFlux & Reactive Streams,easy,What is the purpose of dynamic request(n) signaling in Reactive Streams backpressure?,"Flux.range(1, 1000)
+    .publishOn(Schedulers.boundedElastic())
+    .subscribe(new BaseSubscriber<Integer>() {
+        protected void hookOnSubscribe(Subscription s) { request(10); }
+    });","It allows the consumer to pull only the number of items it has capacity to process, preventing producer fast-push memory overflow.",It forces the publisher to run in a single thread.,It converts asynchronous streams into blocking JDBC queries.,It pauses the OS CPU clock until data arrives.,A,"Backpressure in Reactive Streams (Project Reactor) allows subscribers to regulate data flow by demanding specific batch sizes via request(n), preventing buffer overflows. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+spring-1k-1017,Spring Boot 3 Core & Starters,hard,Why is RestClient preferred over RestTemplate in Spring Boot 3.2+ for synchronous HTTP communications?,"@Bean
+public RestClient inventoryClient(RestClient.Builder builder) {
+    return builder.baseUrl(""https://inventory.api"").build();
+}","RestClient offers a modern, fluent API matching WebClient while working with synchronous HttpMessageConverters without requiring reactive WebFlux dependencies.",RestTemplate throws UnsupportedOperationException in Spring Boot 3.,RestClient only communicates using binary gRPC protocols.,RestClient requires an external Netty server.,A,"RestClient is Spring's modern synchronous HTTP client offering a fluent builder-style API, replacing RestTemplate for new development without requiring Project Reactor. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+spring-1k-1018,Spring AOP & Proxy Internals,medium,Why does internalSave() execute without transactional management when called from placeOrder()?,"@Service
+public class OrderService {
+    public void placeOrder() { internalSave(); }
+    @Transactional
+    public void internalSave() { repo.save(new Order()); }
+}","Direct this.internalSave() invokes the method on the target instance directly, bypassing the Spring AOP dynamic proxy interceptor chain.",@Transactional is ignored on methods named internalSave.,Spring Boot disables transactions inside Service classes by default.,The transaction is rolled back before entering the method.,A,"Spring AOP advice is applied through proxy objects. Internal this.method() calls bypass the proxy wrapper. To fix: inject the proxy self-reference, use AspectJ compile-time weaving, or refactor to another bean. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+spring-1k-1019,Spring Transaction Management,easy,"Under default Spring @Transactional configuration, why does throwing a checked exception NOT trigger a transaction rollback?","@Transactional
+public void processPayment() throws InsufficientBalanceException {
+    accountRepo.debit(amount);
+    throw new InsufficientBalanceException(""No balance"");
+}",Spring Declarative Transactions roll back on unchecked exceptions (RuntimeException and Error) by default unless rollbackFor is configured.,Checked exceptions are silently committed by database drivers.,Spring Boot transactions only roll back on OutOfMemoryError.,The database automatically catches custom checked exceptions.,A,"By default, Spring transactions roll back only on unchecked exceptions. To roll back on checked exceptions, declare @Transactional(rollbackFor = Exception.class). (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+spring-1k-1020,Spring Data JPA & Hibernate 6,hard,How does @EntityGraph prevent N+1 queries when loading Department entities with lazy-loaded employees?,"@Entity
+public class Department {
+    @OneToMany(mappedBy = ""department"")
+    private List<Employee> employees;
+}
+
+@EntityGraph(attributePaths = {""employees""})
+List<Department> findAll();",It generates a single SQL query with an INNER/LEFT JOIN to eagerly fetch the specified associated employees in a single round-trip.,It stores all Department records in Redis cache.,It disables lazy loading across all entities in the entire JVM.,It forces the database to execute background stored procedures.,A,"@EntityGraph allows overriding default fetch plans on a per-query basis, instructing JPA/Hibernate to use a SQL JOIN to fetch child relationships in a single query. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+spring-1k-1021,Spring Security 6 & OAuth2,medium,What is the core function of customJwtConverter in this Spring Security configuration?,"@Bean
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http.oauth2ResourceServer(oauth -> oauth
+        .jwt(jwt -> jwt.jwtAuthenticationConverter(customJwtConverter()))
+    );
+    return http.build();
+}",It extracts customized claims (such as realm_access.roles) from the validated JWT token and maps them into GrantedAuthority objects in the SecurityContext.,It decrypts the incoming TLS TCP socket traffic.,It generates asymmetric RSA keys for every HTTP request.,It stores the user password in plaintext in session memory.,A,"JwtAuthenticationConverter transforms JWT payload claims into Spring Security GrantedAuthority instances (e.g. ROLE_ADMIN), enabling method security annotations like @PreAuthorize. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+spring-1k-1022,Observability & Micrometer Tracing,easy,How does Micrometer Tracing maintain end-to-end trace correlation across downstream microservices?,"@Observed(name = ""user.fetch"")
+public User getUser(String id) {
+    return restClient.get().uri(""/users/{id}"", id).retrieve().body(User.class);
+}",By automatically injecting W3C Trace Context headers ('traceparent' and 'tracestate') into outgoing HTTP request headers via client interceptors.,By writing trace IDs to a central database on every HTTP request.,By broadcasting UDP heartbeat packets to all network switches.,By attaching trace IDs to the TCP handshake SYN packet.,A,"Micrometer Tracing injects standard W3C Trace Context HTTP headers (traceparent) into downstream requests, enabling distributed tracing across microservices. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+spring-1k-1023,Resilience4j & Circuit Breakers,hard,"When 6 out of 10 requests fail in the sliding window, what immediate behavior change occurs for the 11th request?","resilience4j.circuitbreaker.instances.paymentService.sliding-window-size=10
+resilience4j.circuitbreaker.instances.paymentService.failure-rate-threshold=50","The circuit transitions to OPEN, immediately short-circuiting the 11th request with CallNotPermittedException without calling the downstream service.",The 11th request is queued indefinitely in memory until the service recovers.,The application server restarts the Tomcat container.,The 11th request is executed 100 times concurrently.,A,"When the failure rate breaches the configured threshold, the Circuit Breaker transitions to OPEN, failing fast with CallNotPermittedException to protect downstream services. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+spring-1k-1024,Spring WebFlux & Reactive Streams,medium,What is the purpose of dynamic request(n) signaling in Reactive Streams backpressure?,"Flux.range(1, 1000)
+    .publishOn(Schedulers.boundedElastic())
+    .subscribe(new BaseSubscriber<Integer>() {
+        protected void hookOnSubscribe(Subscription s) { request(10); }
+    });","It allows the consumer to pull only the number of items it has capacity to process, preventing producer fast-push memory overflow.",It forces the publisher to run in a single thread.,It converts asynchronous streams into blocking JDBC queries.,It pauses the OS CPU clock until data arrives.,A,"Backpressure in Reactive Streams (Project Reactor) allows subscribers to regulate data flow by demanding specific batch sizes via request(n), preventing buffer overflows. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."

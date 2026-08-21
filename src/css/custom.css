@@ -397,6 +397,11 @@ div.user-account-dropdown-menu {
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.95), 0 0 20px rgba(245, 158, 11, 0.25) !important;
 }
 
+.user-account-dropdown-menu.admin-border {
+  border: 1.5px solid #fbbf24 !important;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.95), 0 0 25px rgba(251, 191, 36, 0.35) !important;
+}
+
 [data-theme="light"] .user-account-dropdown-menu {
   background-color: #ffffff !important;
   background: #ffffff !important;

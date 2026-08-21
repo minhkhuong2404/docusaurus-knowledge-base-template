@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useMemo } from 'react';
 
 // ── Master-password verification (PBKDF2 / Web Crypto) ──────────────────────
 // Use a safe guard so that the browser bundle does not crash on `process` being
@@ -70,12 +70,22 @@ import {
   QuizStateItem,
 } from '../services/userProgressService';
 import { isTrackableArticle, TOTAL_TRACKABLE_ARTICLES_DEFAULT } from '../utils/trackablePages';
+import {
+  getAdminEmails,
+  saveAdminEmail,
+  removeAdminEmail as deleteAdminEmail,
+  checkIsAdmin,
+} from '../config/adminConfig';
 
 interface UserProgressContextType {
   currentUser: User | null;
   progress: UserProgressData;
   isLoading: boolean;
   isPremium: boolean;
+  isAdmin: boolean;
+  adminEmails: string[];
+  addAdminEmail: (email: string) => void;
+  removeAdminEmail: (email: string) => void;
   totalArticlesCount: number;
   setTotalArticlesCount: (count: number) => void;
   isPageRead: (pagePath: string) => boolean;
@@ -99,6 +109,10 @@ const UserProgressContext = createContext<UserProgressContextType>({
   progress: defaultUserProgress,
   isLoading: true,
   isPremium: false,
+  isAdmin: false,
+  adminEmails: [],
+  addAdminEmail: () => {},
+  removeAdminEmail: () => {},
   totalArticlesCount: TOTAL_TRACKABLE_ARTICLES_DEFAULT,
   setTotalArticlesCount: () => {},
   isPageRead: () => false,
@@ -172,6 +186,22 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [adminEmails, setAdminEmails] = useState<string[]>(() => getAdminEmails());
+
+  const isAdmin = useMemo(() => {
+    if (!currentUser?.email) return false;
+    return checkIsAdmin(currentUser.email);
+  }, [currentUser, adminEmails]);
+
+  const addAdminEmail = (email: string) => {
+    const updated = saveAdminEmail(email);
+    setAdminEmails(updated);
+  };
+
+  const removeAdminEmail = (email: string) => {
+    const updated = deleteAdminEmail(email);
+    setAdminEmails(updated);
+  };
 
   const [progress, setProgressState] = useState<UserProgressData>(() => {
     const cached = loadCachedProgress();
@@ -405,6 +435,10 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
         progress,
         isLoading,
         isPremium: isPremiumUnlocked,
+        isAdmin,
+        adminEmails,
+        addAdminEmail,
+        removeAdminEmail,
         totalArticlesCount,
         setTotalArticlesCount,
         isPageRead,

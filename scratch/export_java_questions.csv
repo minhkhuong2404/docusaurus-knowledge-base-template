@@ -5941,3 +5941,134 @@ void handle() {
         }
     });
 }","java.util.concurrent locks are implemented in Java using AQS parking, allowing the virtual thread scheduler to unmount the virtual thread cleanly during waits.",ReentrantLock disables all OS thread synchronization.,ReentrantLock allocates carrier threads dynamically in C++.,ReentrantLock executes all I/O operations in memory without blocking.,A,"ReentrantLock relies on LockSupport.park(), which integrates directly with the Virtual Thread scheduler to unmount the virtual thread and yield the carrier thread back to the ForkJoinPool. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+java-1k-1001,Scoped Values,easy,Why are Scoped Values superior to ThreadLocal when handling high volumes of virtual threads?,"public final static ScopedValue<SecurityContext> CTX = ScopedValue.newInstance();
+
+void serve(SecurityContext userCtx) {
+    ScopedValue.where(CTX, userCtx).run(() -> {
+        orderService.processOrder();
+    });
+}","Scoped Values are immutable, bound to a specific execution scope, and shared by reference across subtasks without memory bloat or risk of thread-local memory leaks.",Scoped Values store data in CPU hardware registers.,ThreadLocal requires external native libraries on virtual threads.,Scoped Values permit global mutable updates from any thread.,A,"ThreadLocal creates mutable copies across threads, leading to unbounded memory consumption and leak risks when inheriting across millions of virtual threads. ScopedValue is immutable and lexically bounded. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+java-1k-1002,Structured Concurrency,hard,"If fetchAccount(id) fails with a RuntimeException, what does ShutdownOnFailure do with the sibling fetchOrders task?","try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+    Supplier<Account> acc = scope.fork(() -> fetchAccount(id));
+    Supplier<Orders> ord = scope.fork(() -> fetchOrders(id));
+    scope.join().throwIfFailed();
+    return new Summary(acc.get(), ord.get());
+}","It cancels the remaining unfinished subtask by interrupting its thread, ensuring no orphan threads leak or waste compute.",It allows fetchOrders to run indefinitely in the background.,It restarts fetchAccount 3 times automatically.,It forces the entire JVM to crash.,A,"Structured Concurrency treats concurrent subtasks as a single unit of work. ShutdownOnFailure cancels remaining running tasks as soon as one subtask fails, preventing orphan threads. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+java-1k-1003,Sequenced Collections (JEP 431),medium,What is the performance characteristic of the reversed() method on a SequencedCollection?,"SequencedCollection<String> list = new ArrayList<>();
+list.addFirst(""Alpha"");
+list.addLast(""Omega"");
+String first = list.getFirst();
+SequencedCollection<String> rev = list.reversed();","It returns a lightweight, reverse-ordered view of the underlying collection in O(1) time without copying elements.",It creates an entirely new deep copy of the collection taking O(N) time and memory.,It reverses the elements in-place modifying the original list.,It takes O(N log N) by sorting elements in descending order.,A,"JEP 431 introduces SequencedCollection, SequencedSet, and SequencedMap. The reversed() method provides an O(1) reverse-ordered view on top of the original collection. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+java-1k-1004,Functional Programming & Streams,easy,"When executing this collector on a parallel stream, which characteristic flag allows multiple sub-threads to accumulate into a single shared concurrent map?","Collector<String, ?, Map<Integer, List<String>>> customCollector =
+    Collectors.groupingBy(String::length, Collectors.toList());",Collector.Characteristics.CONCURRENT combined with UNORDERED.,Collector.Characteristics.IDENTITY_FINISH only.,Parallel streams cannot execute custom collectors.,Collector.Characteristics.SERIAL_ONLY.,A,"When a Collector has CONCURRENT and UNORDERED characteristics, the parallel stream pipeline accumulates results concurrently into a single shared container without intermediate merge steps. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+java-1k-1005,Functional Programming & Streams,hard,What transformation is applied by flatMap(Collection::stream) on the stream elements?,"List<List<String>> nested = List.of(List.of(""A"", ""B""), List.of(""C"", ""D""));
+List<String> result = nested.stream().flatMap(Collection::stream).toList();",It transforms each inner list into an individual stream of elements and flattens all resulting streams into a single unified stream.,It filters out null elements and sorts the list alphabetically.,It wraps each list into an unmodifiable collection view.,It converts the nested list into an array of strings in O(1) time.,A,flatMap maps each element to a stream of new values and then flattens all streams into a single output stream. (Bloom's Taxonomy Level 3: Application & Troubleshooting).
+java-1k-1006,Java Modules (JPMS),medium,What capability does 'opens ... to spring.core' grant compared to 'exports'?,"// module-info.java
+module com.example.service {
+    requires com.example.core;
+    exports com.example.service.api;
+    opens com.example.service.internal to spring.core;
+}","It permits deep reflective access at runtime (private fields/methods) specifically to spring.core, while keeping the package inaccessible for compile-time references.",It makes all internal classes public to every module at compile-time.,It compiles the internal package into native assembly code.,It bypasses all JVM type checks entirely.,A,"In JPMS, 'exports' exposes public types at compile-time and runtime. 'opens' permits runtime deep reflection (e.g. for Spring/Hibernate dependency injection) without compile-time visibility. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+java-1k-1007,Java IO & NIO.2,easy,What underlying OS mechanism allows MappedByteBuffer to achieve high I/O throughput on multi-gigabyte files?,"try (FileChannel channel = FileChannel.open(path, StandardOpenOption.READ)) {
+    MappedByteBuffer buffer = channel.map(FileChannel.MapMode.READ_ONLY, 0, channel.size());
+    byte b = buffer.get(1024);
+}","It maps a region of the file directly into process virtual memory, leveraging the OS page cache and demand paging without JVM heap copying.",It copies the entire file into the JVM Young Generation heap.,It disables the operating system disk cache.,It executes file reads inside CPU L1 cache.,A,"FileChannel.map() uses the OS mmap() system call to map file contents directly to virtual memory addresses, allowing direct access via OS page cache with zero JVM user-space copying. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+java-1k-1008,JVM Internals & Garbage Collection,hard,How does Generational ZGC track references from old generation objects to young generation objects during young-only collections?,"// -XX:+UseZGC -XX:+ZGenerational
+// 32GB Heap with high allocation churn",It maintains remembered sets updated by JIT-compiled store/load barriers to identify cross-generational roots without scanning the entire old generation.,It performs a full Stop-The-World heap scan on every GC cycle.,It moves all old generation objects into off-heap memory.,It relies entirely on reference counting.,A,"Generational ZGC (JEP 439 in Java 21) separates young and old generations, maintaining store barriers to record old-to-young pointers so young collections run independently with sub-millisecond pauses. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+java-1k-1009,Sealed Classes & Permits,medium,What occurs if a new class PaypalPayment attempts to implement PaymentMethod without being listed in the permits clause?,"public sealed interface PaymentMethod permits CreditCard, BankTransfer, CryptoPayment {}
+public final class CreditCard implements PaymentMethod {}
+public non-sealed class BankTransfer implements PaymentMethod {}
+public final class CryptoPayment implements PaymentMethod {}",The code fails to compile because only classes explicitly listed in the permits clause are permitted to extend/implement a sealed type.,PaypalPayment will automatically compile as a non-sealed subclass.,The JVM throws a RuntimeException at class loading time.,PaypalPayment compiles but requires reflection to instantiate.,A,"Sealed classes (JEP 409 in Java 17) restrict which other classes or interfaces may extend or implement them. Subclasses must be declared in the permits clause in the same module or package and explicitly marked final, sealed, or non-sealed. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+java-1k-1010,Sealed Classes & Permits,easy,Why is a default branch not required in this switch expression?,"public sealed interface Shape permits Circle, Rectangle {}
+public record Circle(double r) implements Shape {}
+public record Rectangle(double w, double h) implements Shape {}
+
+double getArea(Shape shape) {
+    return switch (shape) {
+        case Circle c -> Math.PI * c.r() * c.r();
+        case Rectangle r -> r.w() * r.h();
+    };
+}",Because the compiler knows all permitted subtypes of the sealed interface Shape and verifies that every possible subtype is exhaustively covered.,Because switch expressions in Java 21 never require default branches.,Because records automatically implement a fallback default case.,Because the JVM generates a synthetic default branch at runtime.,A,"With sealed classes and pattern matching for switch, the compiler checks for exhaustiveness across all permitted subtypes. If all subtypes are handled, no default branch is needed. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+java-1k-1011,Pattern Matching & Record Patterns,hard,How does nested record pattern matching deconstruct the Window instance?,"public record Point(int x, int y) {}
+public record Window(Point topLeft, Point bottomRight) {}
+
+void printTopLeftX(Object obj) {
+    if (obj instanceof Window(Point(int x, int y), Point br)) {
+        System.out.println(""Top-Left X: "" + x);
+    }
+}","It matches the Window record, recursively extracts the topLeft Point record component, binds x and y, and binds br to bottomRight in a single step.",It uses reflection to read private fields of Point.,It creates deep copies of both Point and Window objects on the heap.,It throws NullPointerException if bottomRight is null.,A,Java 21 Record Patterns (JEP 440) enable nested deconstruction patterns that test whether a target is an instance of a record and extract its component values directly into local pattern variables. (Bloom's Taxonomy Level 3: Application & Troubleshooting).
+java-1k-1012,Pattern Matching & Record Patterns,medium,What is the execution order evaluated when evaluating a switch case with a 'when' guard?,"static String evaluate(Object obj) {
+    return switch (obj) {
+        case Integer i when i > 0 -> ""Positive int: "" + i;
+        case Integer i when i < 0 -> ""Negative int: "" + i;
+        case Integer i -> ""Zero"";
+        case String s when !s.isBlank() -> ""Non-empty string: "" + s;
+        case null, default -> ""Other / Null"";
+    };
+}","The pattern type is checked first; if matched, the boolean expression in the 'when' clause is evaluated before executing the branch.",The 'when' expression is evaluated first before checking the object type.,All 'when' expressions across all cases are evaluated concurrently.,The compiler requires all 'when' guards to be pure compile-time constants.,A,"Java 21 Pattern Matching for switch (JEP 441) allows 'when' clauses (guarded patterns). The runtime tests the type pattern first, and only if it matches does it evaluate the conditional guard. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+java-1k-1013,Virtual Threads (Project Loom),easy,What adverse performance impact occurs during the blocking query inside the synchronized block?,"Thread.ofVirtual().start(() -> {
+    synchronized (monitorLock) {
+        // Blocking JDBC database query
+        resultSet = preparedStatement.executeQuery();
+    }
+});",The virtual thread cannot be unmounted from its underlying carrier platform thread because synchronized blocks currently pin the carrier thread.,The JVM terminates the virtual thread with an IllegalMonitorStateException.,The database driver automatically upgrades the connection to non-blocking I/O.,The carrier thread is duplicated by the OS scheduler.,A,"In Java 21, when a virtual thread performs a blocking operation while holding a synchronized monitor lock or executing a JNI native frame, it is 'pinned' to its carrier thread, preventing other virtual threads from using that carrier. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+java-1k-1014,Virtual Threads (Project Loom),hard,Why does switching from synchronized to ReentrantLock prevent carrier thread pinning?,"private final ReentrantLock lock = new ReentrantLock();
+
+void handle() {
+    Thread.ofVirtual().start(() -> {
+        lock.lock();
+        try {
+            socket.getInputStream().read();
+        } finally {
+            lock.unlock();
+        }
+    });
+}","java.util.concurrent locks are implemented in Java using AQS parking, allowing the virtual thread scheduler to unmount the virtual thread cleanly during waits.",ReentrantLock disables all OS thread synchronization.,ReentrantLock allocates carrier threads dynamically in C++.,ReentrantLock executes all I/O operations in memory without blocking.,A,"ReentrantLock relies on LockSupport.park(), which integrates directly with the Virtual Thread scheduler to unmount the virtual thread and yield the carrier thread back to the ForkJoinPool. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+java-1k-1015,Scoped Values,medium,Why are Scoped Values superior to ThreadLocal when handling high volumes of virtual threads?,"public final static ScopedValue<SecurityContext> CTX = ScopedValue.newInstance();
+
+void serve(SecurityContext userCtx) {
+    ScopedValue.where(CTX, userCtx).run(() -> {
+        orderService.processOrder();
+    });
+}","Scoped Values are immutable, bound to a specific execution scope, and shared by reference across subtasks without memory bloat or risk of thread-local memory leaks.",Scoped Values store data in CPU hardware registers.,ThreadLocal requires external native libraries on virtual threads.,Scoped Values permit global mutable updates from any thread.,A,"ThreadLocal creates mutable copies across threads, leading to unbounded memory consumption and leak risks when inheriting across millions of virtual threads. ScopedValue is immutable and lexically bounded. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+java-1k-1016,Structured Concurrency,easy,"If fetchAccount(id) fails with a RuntimeException, what does ShutdownOnFailure do with the sibling fetchOrders task?","try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+    Supplier<Account> acc = scope.fork(() -> fetchAccount(id));
+    Supplier<Orders> ord = scope.fork(() -> fetchOrders(id));
+    scope.join().throwIfFailed();
+    return new Summary(acc.get(), ord.get());
+}","It cancels the remaining unfinished subtask by interrupting its thread, ensuring no orphan threads leak or waste compute.",It allows fetchOrders to run indefinitely in the background.,It restarts fetchAccount 3 times automatically.,It forces the entire JVM to crash.,A,"Structured Concurrency treats concurrent subtasks as a single unit of work. ShutdownOnFailure cancels remaining running tasks as soon as one subtask fails, preventing orphan threads. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+java-1k-1017,Sequenced Collections (JEP 431),hard,What is the performance characteristic of the reversed() method on a SequencedCollection?,"SequencedCollection<String> list = new ArrayList<>();
+list.addFirst(""Alpha"");
+list.addLast(""Omega"");
+String first = list.getFirst();
+SequencedCollection<String> rev = list.reversed();","It returns a lightweight, reverse-ordered view of the underlying collection in O(1) time without copying elements.",It creates an entirely new deep copy of the collection taking O(N) time and memory.,It reverses the elements in-place modifying the original list.,It takes O(N log N) by sorting elements in descending order.,A,"JEP 431 introduces SequencedCollection, SequencedSet, and SequencedMap. The reversed() method provides an O(1) reverse-ordered view on top of the original collection. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+java-1k-1018,Functional Programming & Streams,medium,"When executing this collector on a parallel stream, which characteristic flag allows multiple sub-threads to accumulate into a single shared concurrent map?","Collector<String, ?, Map<Integer, List<String>>> customCollector =
+    Collectors.groupingBy(String::length, Collectors.toList());",Collector.Characteristics.CONCURRENT combined with UNORDERED.,Collector.Characteristics.IDENTITY_FINISH only.,Parallel streams cannot execute custom collectors.,Collector.Characteristics.SERIAL_ONLY.,A,"When a Collector has CONCURRENT and UNORDERED characteristics, the parallel stream pipeline accumulates results concurrently into a single shared container without intermediate merge steps. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+java-1k-1019,Functional Programming & Streams,easy,What transformation is applied by flatMap(Collection::stream) on the stream elements?,"List<List<String>> nested = List.of(List.of(""A"", ""B""), List.of(""C"", ""D""));
+List<String> result = nested.stream().flatMap(Collection::stream).toList();",It transforms each inner list into an individual stream of elements and flattens all resulting streams into a single unified stream.,It filters out null elements and sorts the list alphabetically.,It wraps each list into an unmodifiable collection view.,It converts the nested list into an array of strings in O(1) time.,A,flatMap maps each element to a stream of new values and then flattens all streams into a single output stream. (Bloom's Taxonomy Level 3: Application & Troubleshooting).
+java-1k-1020,Java Modules (JPMS),hard,What capability does 'opens ... to spring.core' grant compared to 'exports'?,"// module-info.java
+module com.example.service {
+    requires com.example.core;
+    exports com.example.service.api;
+    opens com.example.service.internal to spring.core;
+}","It permits deep reflective access at runtime (private fields/methods) specifically to spring.core, while keeping the package inaccessible for compile-time references.",It makes all internal classes public to every module at compile-time.,It compiles the internal package into native assembly code.,It bypasses all JVM type checks entirely.,A,"In JPMS, 'exports' exposes public types at compile-time and runtime. 'opens' permits runtime deep reflection (e.g. for Spring/Hibernate dependency injection) without compile-time visibility. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+java-1k-1021,Java IO & NIO.2,medium,What underlying OS mechanism allows MappedByteBuffer to achieve high I/O throughput on multi-gigabyte files?,"try (FileChannel channel = FileChannel.open(path, StandardOpenOption.READ)) {
+    MappedByteBuffer buffer = channel.map(FileChannel.MapMode.READ_ONLY, 0, channel.size());
+    byte b = buffer.get(1024);
+}","It maps a region of the file directly into process virtual memory, leveraging the OS page cache and demand paging without JVM heap copying.",It copies the entire file into the JVM Young Generation heap.,It disables the operating system disk cache.,It executes file reads inside CPU L1 cache.,A,"FileChannel.map() uses the OS mmap() system call to map file contents directly to virtual memory addresses, allowing direct access via OS page cache with zero JVM user-space copying. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+java-1k-1022,JVM Internals & Garbage Collection,easy,How does Generational ZGC track references from old generation objects to young generation objects during young-only collections?,"// -XX:+UseZGC -XX:+ZGenerational
+// 32GB Heap with high allocation churn",It maintains remembered sets updated by JIT-compiled store/load barriers to identify cross-generational roots without scanning the entire old generation.,It performs a full Stop-The-World heap scan on every GC cycle.,It moves all old generation objects into off-heap memory.,It relies entirely on reference counting.,A,"Generational ZGC (JEP 439 in Java 21) separates young and old generations, maintaining store barriers to record old-to-young pointers so young collections run independently with sub-millisecond pauses. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+java-1k-1023,Sealed Classes & Permits,hard,What occurs if a new class PaypalPayment attempts to implement PaymentMethod without being listed in the permits clause?,"public sealed interface PaymentMethod permits CreditCard, BankTransfer, CryptoPayment {}
+public final class CreditCard implements PaymentMethod {}
+public non-sealed class BankTransfer implements PaymentMethod {}
+public final class CryptoPayment implements PaymentMethod {}",The code fails to compile because only classes explicitly listed in the permits clause are permitted to extend/implement a sealed type.,PaypalPayment will automatically compile as a non-sealed subclass.,The JVM throws a RuntimeException at class loading time.,PaypalPayment compiles but requires reflection to instantiate.,A,"Sealed classes (JEP 409 in Java 17) restrict which other classes or interfaces may extend or implement them. Subclasses must be declared in the permits clause in the same module or package and explicitly marked final, sealed, or non-sealed. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
+java-1k-1024,Sealed Classes & Permits,medium,Why is a default branch not required in this switch expression?,"public sealed interface Shape permits Circle, Rectangle {}
+public record Circle(double r) implements Shape {}
+public record Rectangle(double w, double h) implements Shape {}
+
+double getArea(Shape shape) {
+    return switch (shape) {
+        case Circle c -> Math.PI * c.r() * c.r();
+        case Rectangle r -> r.w() * r.h();
+    };
+}",Because the compiler knows all permitted subtypes of the sealed interface Shape and verifies that every possible subtype is exhaustively covered.,Because switch expressions in Java 21 never require default branches.,Because records automatically implement a fallback default case.,Because the JVM generates a synthetic default branch at runtime.,A,"With sealed classes and pattern matching for switch, the compiler checks for exhaustiveness across all permitted subtypes. If all subtypes are handled, no default branch is needed. (Bloom's Taxonomy Level 3: Application & Troubleshooting)."
