@@ -2,8 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Layout from "@theme/Layout";
 import Link from "@docusaurus/Link";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
-import DailyJavaQuiz from '../components/DailyJavaQuiz';
-import DailySpringBootQuiz from '../components/DailySpringBootQuiz';
+import DailyQuizGallery from '../components/DailyQuizGallery';
 import LeetCodeDaily from '../components/LeetCodeDaily';
 import DSADashboard from '../components/DSADashboard';
 
@@ -2318,57 +2317,8 @@ export default function Home(): React.ReactNode {
                 {activeHubTab === 'leetcode' ? (
                   <LeetCodeDaily />
                 ) : (
-                  <div style={{ maxWidth: 800, margin: "0 auto" }}>
-                    {/* Quiz Type Selector */}
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        gap: "1rem",
-                        marginBottom: "2rem",
-                      }}
-                    >
-                      <button
-                        onClick={() => setActiveQuiz('java')}
-                        style={{
-                          padding: "0.5rem 1.25rem",
-                          fontSize: "0.9rem",
-                          fontWeight: 700,
-                          borderRadius: "8px",
-                          cursor: "pointer",
-                          border: activeQuiz === 'java' ? "2px solid var(--ifm-color-primary)" : "2px solid var(--ifm-color-emphasis-350)",
-                          background: activeQuiz === 'java' ? "rgba(74,222,128,0.12)" : "transparent",
-                          color: activeQuiz === 'java' ? "var(--ifm-color-primary)" : "var(--ifm-font-color-base)",
-                          transition: "all 0.2s ease",
-                        }}
-                      >
-                        ☕ Java Challenge
-                      </button>
-                      <button
-                        onClick={() => setActiveQuiz('springboot')}
-                        style={{
-                          padding: "0.5rem 1.25rem",
-                          fontSize: "0.9rem",
-                          fontWeight: 700,
-                          borderRadius: "8px",
-                          cursor: "pointer",
-                          border: activeQuiz === 'springboot' ? "2px solid var(--ifm-color-primary)" : "2px solid var(--ifm-color-emphasis-350)",
-                          background: activeQuiz === 'springboot' ? "rgba(74,222,128,0.12)" : "transparent",
-                          color: activeQuiz === 'springboot' ? "var(--ifm-color-primary)" : "var(--ifm-font-color-base)",
-                          transition: "all 0.2s ease",
-                        }}
-                      >
-                        🍃 Spring Boot Challenge
-                      </button>
-                    </div>
-
-                    <div style={{ minHeight: "350px" }}>
-                      {activeQuiz === 'java' ? (
-                        <DailyJavaQuiz />
-                      ) : (
-                        <DailySpringBootQuiz />
-                      )}
-                    </div>
+                  <div style={{ width: "100%", margin: "0 auto" }}>
+                    <DailyQuizGallery />
                   </div>
                 )}
               </div>

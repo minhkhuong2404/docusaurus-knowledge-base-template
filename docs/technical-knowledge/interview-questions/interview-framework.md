@@ -53,8 +53,9 @@ Most tech companies use automated platforms (HackerRank, CodeSignal, LeetCode) t
 | **Failing hidden edge cases** | Manually test inputs like empty arrays, negative numbers, extremely large values, and duplicates before submitting. |
 | **Incorrect time/space complexity** | Ensure your nested loops do not exceed time limits (typically `O(N^2)` fails for inputs where `N > 10^4`). |
 
-> [!TIP]
-> Always check the constraints of the inputs. If `N <= 20`, an `O(2^N)` backtracking solution is fine. If `N <= 10^5`, you need `O(N)` or `O(N log N)` (e.g., sorting, heap, or two pointers).
+:::info
+Always check the constraints of the inputs. If `N <= 20`, an `O(2^N)` backtracking solution is fine. If `N <= 10^5`, you need `O(N)` or `O(N log N)` (e.g., sorting, heap, or two pointers).
+:::
 
 ---
 

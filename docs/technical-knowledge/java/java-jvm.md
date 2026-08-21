@@ -257,8 +257,9 @@ To resolve circular references, Java uses **Reachability Analysis** based on tra
   - Active JVM internal system classes.
 - **The Algorithm:** The GC starts at the roots and traverses all references. Any object that can be reached from a GC Root is marked "alive" (reachable). Any object that is unreachable (even if they form a closed loop of references among themselves) is identified as garbage and reclaimed.
 
-> [!TIP]
-> **The Dock Analogy:** Imagine GC Roots as secure docks on a riverbank. Boats that are tied directly to the docks, or tied to other boats that eventually lead back to a dock, are safe. A cluster of boats floating freely in the middle of the river, even if tied tightly to one another, will be swept away by the current (garbage collected) because they have no line connecting them to a dock.
+:::info
+**The Dock Analogy:** Imagine GC Roots as secure docks on a riverbank. Boats that are tied directly to the docks, or tied to other boats that eventually lead back to a dock, are safe. A cluster of boats floating freely in the middle of the river, even if tied tightly to one another, will be swept away by the current (garbage collected) because they have no line connecting them to a dock.
+:::
 
 ---
 

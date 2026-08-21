@@ -1256,6 +1256,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/daily-quiz",
+              "path": "/technical-knowledge/daily-quiz",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/database/acid",
               "path": "/technical-knowledge/database/acid",
               "sidebar": "tutorialSidebar"
@@ -5471,11 +5476,6 @@
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/java/java-daily-quiz",
-              "path": "/technical-knowledge/java/java-daily-quiz",
-              "sidebar": "tutorialSidebar"
-            },
-            {
               "id": "technical-knowledge/java/java-diagnostics-troubleshooting",
               "path": "/technical-knowledge/java/java-diagnostics-troubleshooting",
               "sidebar": "tutorialSidebar"
@@ -6200,11 +6200,6 @@
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/spring/spring-boot-daily-quiz",
-              "path": "/technical-knowledge/spring/spring-boot-daily-quiz",
-              "sidebar": "tutorialSidebar"
-            },
-            {
               "id": "technical-knowledge/spring/spring-boot-internals",
               "path": "/technical-knowledge/spring/spring-boot-internals",
               "sidebar": "tutorialSidebar"
@@ -6577,11 +6572,6 @@
             {
               "id": "technical-knowledge/system-design/strangler-fig-pattern",
               "path": "/technical-knowledge/system-design/strangler-fig-pattern",
-              "sidebar": "tutorialSidebar"
-            },
-            {
-              "id": "technical-knowledge/system-design/system-design-daily-quiz",
-              "path": "/technical-knowledge/system-design/system-design-daily-quiz",
               "sidebar": "tutorialSidebar"
             },
             {

@@ -1,5 +1,10 @@
 # Workspace Guidelines
 
+## Google Sheets Quiz Update Policy (MANDATORY)
+- **Append Only**: When adding or updating quiz questions in the Google Sheet (via Google Apps Script, Python scripts, or API endpoints), **ONLY APPEND** new questions.
+- **No Overwriting**: Never clear, truncate, or overwrite existing questions or rows in the Google Sheet.
+- **Deduplication**: Filter out existing Question IDs and only append genuinely new questions to the end of the respective tab.
+
 ## LeetCode Company-Wise Questions Update
 To update the LeetCode companywise questions in this repository based on the Desktop cloned repository:
 1. Ensure the cloned repository exists at `/Users/lukhuong/Desktop/leetcode-companywise-interview-questions`.

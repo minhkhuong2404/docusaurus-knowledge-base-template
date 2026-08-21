@@ -288,8 +288,9 @@ The outbox guarantees the event is published at least once — it does not guara
 
 When your application genuinely requires **strong distributed ACID guarantees** across shards or regions:
 
-> [!TIP]
-> **Do not implement manual 2PC across microservices.** Instead, use a distributed NewSQL database (e.g. **Google Spanner**, **CockroachDB**, **TiDB**) that encapsulates 2PC and Raft/Paxos consensus internally beneath the storage engine layer.
+:::info
+**Do not implement manual 2PC across microservices.** Instead, use a distributed NewSQL database (e.g. **Google Spanner**, **CockroachDB**, **TiDB**) that encapsulates 2PC and Raft/Paxos consensus internally beneath the storage engine layer.
+:::
 
 - **Google Spanner**: Uses **TrueTime API** (atomic clocks + GPS receivers) and internal Paxos groups to provide globally consistent, serializable transactions without manual application coordinators.
 - **CockroachDB**: Uses **Hybrid Logical Clocks (HLC)** and multi-raft consensus to achieve distributed ACID across geo-distributed nodes.

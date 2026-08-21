@@ -62,13 +62,13 @@
     },
     "config": "config---login-5-e-9-d49"
   },
-  "/-76f": {
+  "/-855": {
     "__comp": "__comp---theme-docs-root-5-e-9-0b6",
     "__context": {
       "plugin": "plugin---aba-d70"
     }
   },
-  "/-e54": {
+  "/-27b": {
     "__comp": "__comp---theme-doc-version-roota-7-b-5de",
     "__props": "__props---22-d-307"
   },
@@ -5988,7 +5988,7 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-zookeeper-51-e-f84"
   },
-  "/-4a6": {
+  "/-4e5": {
     "__comp": "__comp---theme-doc-roota-94-67a"
   },
   "/aws-bf9": {
@@ -7122,6 +7122,10 @@
   "/technical-knowledge/coding-interview-prep/union-find/-4e1": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-coding-interview-prep-union-find-467-0e2"
+  },
+  "/technical-knowledge/daily-quiz-eaf": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-daily-quiz-580-397"
   },
   "/technical-knowledge/database/-8d1": {
     "__comp": "__comp---theme-doc-item-178-a40",
@@ -10491,10 +10495,6 @@
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-java-java-concurrencyf-13-6f1"
   },
-  "/technical-knowledge/java/java-daily-quiz-376": {
-    "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---technical-knowledge-java-java-daily-quizee-2-525"
-  },
   "/technical-knowledge/java/java-diagnostics-troubleshooting-ddf": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-java-java-diagnostics-troubleshootinge-89-444"
@@ -11071,10 +11071,6 @@
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-spring-spring-boot-bootstrap-yml-575-af5"
   },
-  "/technical-knowledge/spring/spring-boot-daily-quiz-f57": {
-    "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---technical-knowledge-spring-spring-boot-daily-quizfac-6dd"
-  },
   "/technical-knowledge/spring/spring-boot-internals-eba": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-spring-spring-boot-internals-317-82e"
@@ -11370,10 +11366,6 @@
   "/technical-knowledge/system-design/strangler-fig-pattern-337": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-system-design-strangler-fig-pattern-609-346"
-  },
-  "/technical-knowledge/system-design/system-design-daily-quiz-f38": {
-    "__comp": "__comp---theme-doc-item-178-a40",
-    "content": "content---technical-knowledge-system-design-system-design-daily-quiz-517-e9a"
   },
   "/technical-knowledge/system-design/two-phase-commit-d53": {
     "__comp": "__comp---theme-doc-item-178-a40",

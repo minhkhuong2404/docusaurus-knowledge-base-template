@@ -5,9 +5,6 @@ import { signOut } from 'firebase/auth';
 import { auth } from '@site/src/config/firebase';
 import { triggerFireworks } from '@site/src/utils/fireworks';
 
-import { javaQuestions } from '@site/src/data/java-quiz-questions';
-import { springBootQuestions } from '@site/src/data/spring-boot-quiz-questions';
-import { systemDesignQuestions } from '@site/src/data/system-design-quiz-questions';
 import { PROBLEMS } from '@site/src/components/DSADashboard';
 import { isTrackableArticle, TOTAL_TRACKABLE_ARTICLES_DEFAULT } from '@site/src/utils/trackablePages';
 
@@ -158,9 +155,9 @@ export default function CustomUserNavbarItem() {
   let springAnswered = 0;
   let sysDesignAnswered = 0;
 
-  let javaTotal = javaQuestions.length;
-  let springTotal = springBootQuestions.length;
-  let sysDesignTotal = systemDesignQuestions.length;
+  let javaTotal = 508;
+  let springTotal = 508;
+  let sysDesignTotal = 508;
 
   Object.entries(quizStates).forEach(([key, state]) => {
     const count = state.answeredQuestionIds?.length ?? Object.keys(state.userAnswers || {}).length;

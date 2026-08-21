@@ -59,8 +59,9 @@ Containers completely eliminate the Hypervisor and the Guest OS. Instead, the Do
 - **Core Principle:** Containers aren't "machines". They are just isolated *processes* running directly on the Host's OS kernel. 
 - **Resource Tax:** Minimal. A container uses only the RAM required by your specific application. You can comfortably run 50 containers on a server that could only handle 3 VMs.
 
-> [!TIP]
-> This is why Docker says "Build once, run anywhere". The container packages your application, its runtime (e.g., JRE), and dependencies into a single immutable artifact (`.tar` layer archive) that executes identical syscalls on any machine.
+:::info
+This is why Docker says "Build once, run anywhere". The container packages your application, its runtime (e.g., JRE), and dependencies into a single immutable artifact (`.tar` layer archive) that executes identical syscalls on any machine.
+:::
 
 ---
 

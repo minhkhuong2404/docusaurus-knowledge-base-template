@@ -421,8 +421,9 @@ FROM pg_stat_user_tables
 ORDER BY n_tup_upd DESC;
 ```
 
-> [!TIP]
-> If `hot_ratio_pct` is below 70% on update-heavy tables, consider lowering `fillfactor` to 80-85 or dropping unused secondary indexes on frequently updated columns.
+:::info
+If `hot_ratio_pct` is below 70% on update-heavy tables, consider lowering `fillfactor` to 80-85 or dropping unused secondary indexes on frequently updated columns.
+:::
 
 ### 10.3 Detect Dead Tuple Bloat & Long-Running Transactions
 

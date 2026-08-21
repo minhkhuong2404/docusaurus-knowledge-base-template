@@ -54,11 +54,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '76f'),
+    component: ComponentCreator('/', '855'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'e54'),
+        component: ComponentCreator('/', '27b'),
         routes: [
           {
             path: '/tags',
@@ -7457,7 +7457,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '4a6'),
+            component: ComponentCreator('/', '4e5'),
             routes: [
               {
                 path: '/aws',
@@ -9144,6 +9144,12 @@ export default [
               {
                 path: '/technical-knowledge/coding-interview-prep/union-find/',
                 component: ComponentCreator('/technical-knowledge/coding-interview-prep/union-find/', '4e1'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/daily-quiz',
+                component: ComponentCreator('/technical-knowledge/daily-quiz', 'eaf'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14200,12 +14206,6 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/java/java-daily-quiz',
-                component: ComponentCreator('/technical-knowledge/java/java-daily-quiz', '376'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
                 path: '/technical-knowledge/java/java-diagnostics-troubleshooting',
                 component: ComponentCreator('/technical-knowledge/java/java-diagnostics-troubleshooting', 'ddf'),
                 exact: true,
@@ -15059,12 +15059,6 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
-                path: '/technical-knowledge/spring/spring-boot-daily-quiz',
-                component: ComponentCreator('/technical-knowledge/spring/spring-boot-daily-quiz', 'f57'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
                 path: '/technical-knowledge/spring/spring-boot-internals',
                 component: ComponentCreator('/technical-knowledge/spring/spring-boot-internals', 'eba'),
                 exact: true,
@@ -15505,12 +15499,6 @@ export default [
               {
                 path: '/technical-knowledge/system-design/strangler-fig-pattern',
                 component: ComponentCreator('/technical-knowledge/system-design/strangler-fig-pattern', '337'),
-                exact: true,
-                sidebar: "tutorialSidebar"
-              },
-              {
-                path: '/technical-knowledge/system-design/system-design-daily-quiz',
-                component: ComponentCreator('/technical-knowledge/system-design/system-design-daily-quiz', 'f38'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
