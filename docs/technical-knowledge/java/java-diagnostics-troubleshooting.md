@@ -6,6 +6,11 @@ description: A practical guide to JVM monitoring and diagnostics — jcmd, jstac
 tags: [java, jvm, troubleshooting, diagnostics, heap-dump, gc, profiling, ops]
 ---
 
+import JvmThreadStatesDumpDiagram from '@site/src/components/JvmThreadStatesDumpDiagram';
+import JvmDominatorTreeDiagram from '@site/src/components/JvmDominatorTreeDiagram';
+import JvmFlameGraphViewerDiagram from '@site/src/components/JvmFlameGraphViewerDiagram';
+import JvmIncidentRunbookDecisionDiagram from '@site/src/components/JvmIncidentRunbookDecisionDiagram';
+
 # JVM Diagnostics & Troubleshooting in Production
 
 When backend systems degrade in production — CPU pinned at 100%, heap growing without bound, threads frozen, containers killed by the OS — you need a systematic diagnostic process, not trial-and-error restarts. This guide covers every layer: thread contention, CPU spikes, heap leaks, off-heap leaks, GC pathology, and continuous profiling with JFR and async-profiler.
@@ -161,15 +166,7 @@ This means threads are contended on a lock — CPU usage per thread won't be ext
 
 ### Understanding Thread States in a Dump
 
-```text
-Thread State   Meaning
-─────────────────────────────────────────────────────────────
-RUNNABLE       Executing on CPU, or ready to execute (includes syscalls)
-BLOCKED        Waiting to acquire a monitor (synchronized block)
-WAITING        Parked indefinitely — waiting for notify/signal
-TIMED_WAITING  Parked with a timeout — sleep(), wait(timeout), join(timeout)
-TERMINATED     Thread has exited
-```
+<JvmThreadStatesDumpDiagram />
 
 A thread dump is a **snapshot** — one dump is rarely enough. Take 3–5 dumps at 5-second intervals to distinguish:
 - **Consistently BLOCKED**: real contention or deadlock
@@ -380,14 +377,7 @@ A single `LocalCache` holding 78% of your heap is your leak. It's holding onto a
 
 Lists every object in the heap sorted by **retained heap** — the total bytes that would be freed if this object were garbage collected (itself plus everything it exclusively keeps alive). The dominator tree is the fastest way to identify the top memory consumers.
 
-```
-Dominator Tree (sorted by Retained Heap):
-  Class                            Shallow Heap    Retained Heap
-  LocalCache                            48 B       1,847,293,440 B  ← 78% of heap
-  └── HashMap                          48 B       1,847,293,392 B
-      └── HashMap$Node[]           16,777,232 B   1,847,293,344 B
-          └── SessionData (×2.1M)  [multiple]       950,000,000 B
-```
+<JvmDominatorTreeDiagram />
 
 #### Path to GC Roots
 
@@ -603,17 +593,7 @@ Open the generated `.html` directly in a browser — it renders as an interactiv
 
 #### Reading a Flame Graph
 
-```
- ┌────────────────────────────────────────────────────────────┐
- │                    main()                                  │  ← bottom = bottom of call stack
- │      processOrder()     │    handleRequest()               │
- │   computePrice()  │ ...  │  serialize()  │  ...            │
- │  regex.match()           │  ObjectMapper.writeValue()      │  ← narrow = less time
- └────────────────────────────────────────────────────────────┘
-   wider = more samples = more CPU time spent in this frame
-   flat top = this frame itself is hot (not its callees)
-   tall narrow spike = deep call chain, hot at a leaf
-```
+<JvmFlameGraphViewerDiagram />
 
 A **wide plateau at the top** of the flame means that function itself (not its children) is where CPU time is being spent — that's your optimization target.
 
@@ -696,37 +676,7 @@ A systematic process to follow when a JVM instance is misbehaving in production.
 
 ### Decision Tree
 
-```
-JVM incident reported
-│
-├── Is the container being killed by the OS (no OutOfMemoryError in logs)?
-│   └──► Native/Off-heap memory leak → Section 5 (NMT, direct buffer analysis)
-│
-├── OutOfMemoryError in logs?
-│   ├── "Java heap space" / "GC overhead limit exceeded"
-│   │   └──► Heap leak → Sections 3 & 4 (jstat, histogram, heap dump, MAT)
-│   ├── "Metaspace"
-│   │   └──► Classloader leak → Section 5 (MAT classloader OQL)
-│   ├── "Unable to create new native thread"
-│   │   └──► Thread leak → Section 3 (thread dump, count by state)
-│   └── "Direct buffer memory"
-│       └──► DirectByteBuffer leak → Section 5 (NMT diff, BufferPool MBean)
-│
-├── CPU at 100%?
-│   ├── Single thread high?
-│   │   └──► Hot code path → Section 2 (top -H, nid correlation, jstack)
-│   ├── Many GC threads high?
-│   │   └──► GC storm → Section 7 (jstat, GC logs, tune or increase heap)
-│   └── Many worker threads blocked/spinning?
-│       └──► Lock contention → Section 3 (thread dump analysis)
-│
-├── Latency high but CPU normal?
-│   └──► Likely: I/O blocking, lock contention, or thread starvation
-│       → async-profiler wall-clock mode (Section 6)
-│
-└── Need continuous profiling without production impact?
-    └──► JFR continuous recording + JMC (Section 6)
-```
+<JvmIncidentRunbookDecisionDiagram />
 
 ### Quick Command Cheatsheet
 
