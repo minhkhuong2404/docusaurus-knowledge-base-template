@@ -8,6 +8,7 @@ tags: [java, fundamentals, core-java, beginner]
 
 import StringConstantPoolDiagram from '@site/src/components/StringConstantPoolDiagram';
 import ExceptionHierarchyDiagram from '@site/src/components/ExceptionHierarchyDiagram';
+import JavaExecutionPipelineDiagram from '@site/src/components/JavaExecutionPipelineDiagram';
 
 # Java Fundamentals: Core Language Concepts
 
@@ -31,9 +32,9 @@ A comprehensive guide to Java's foundational concepts — from the platform arch
 
 Java source code (`.java`) is compiled by `javac` into **bytecode** (`.class` files), which is platform-independent. The JVM interprets or JIT-compiles bytecode into native machine code at runtime.
 
-```
-Source.java  →  javac  →  Source.class (bytecode)  →  JVM  →  Native execution
-```
+<JavaExecutionPipelineDiagram />
+
+For Load → Link → Init, HotSpot C1/C2, and the full runtime map (**Heap**, **Stack**, **PC**, Method Area, Native Stack), see [JVM Internals](./java-jvm).
 
 This two-stage approach gives Java its portability: the same `.class` files run on any platform with a compatible JVM.
 

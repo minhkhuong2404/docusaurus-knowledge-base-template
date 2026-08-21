@@ -85,6 +85,14 @@ const sidebars: SidebarsConfig = {
 						},
 						{
 							type: 'category',
+							label: '♻️ Garbage Collection',
+							collapsed: true,
+							items: [
+								'technical-knowledge/java/java-gc'
+							]
+						},
+						{
+							type: 'category',
 							label: '⚡ I/O & Modern Java',
 							collapsed: true,
 							items: [
