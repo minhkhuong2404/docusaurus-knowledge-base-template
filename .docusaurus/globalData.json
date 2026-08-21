@@ -5486,6 +5486,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/java/java-gc",
+              "path": "/technical-knowledge/java/java-gc",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/java/java-interview-questions",
               "path": "/technical-knowledge/java/java-interview-questions",
               "sidebar": "tutorialSidebar"
@@ -6752,15 +6757,6 @@
         }
       ],
       "breadcrumbs": true
-    }
-  },
-  "docusaurus-plugin-google-gtag": {
-    "default": {
-      "trackingID": [
-        "G-79SQQZQMCX"
-      ],
-      "anonymizeIP": true,
-      "id": "default"
     }
   }
 }

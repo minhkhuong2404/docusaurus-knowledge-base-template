@@ -3,12 +3,23 @@ import type { Config } from '@docusaurus/types'
 import prismTheme from './src/theme/prismTheme.js'
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const config: Config = {
 	title: 'Engineering Knowledge Base',
 	tagline: 'Internal technical documentation',
 	url: 'https://luminhkhuong.dev',
 	baseUrl: '/',
+	customFields: {
+		firebaseApiKey: process.env.FIREBASE_API_KEY,
+		firebaseAuthDomain: process.env.FIREBASE_AUTH_DOMAIN,
+		firebaseProjectId: process.env.FIREBASE_PROJECT_ID,
+		firebaseStorageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+		firebaseMessagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+		firebaseAppId: process.env.FIREBASE_APP_ID,
+	},
 	stylesheets: [
 		{
 			href: 'https://cdn.jsdelivr.net/npm/katex@0.13.24/dist/katex.min.css',

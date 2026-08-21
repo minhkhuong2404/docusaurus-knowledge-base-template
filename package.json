@@ -22,6 +22,7 @@
     "@docusaurus/theme-mermaid": "^3.10.2",
     "@easyops-cn/docusaurus-search-local": "^0.55.2",
     "@fortawesome/fontawesome-free": "^7.3.0",
+    "dotenv": "^17.4.2",
     "firebase": "^12.16.0",
     "katex": "^0.18.1",
     "prism-react-renderer": "^2.4.1",

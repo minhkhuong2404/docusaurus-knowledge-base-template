@@ -8,6 +8,14 @@ export default {
   "tagline": "Internal technical documentation",
   "url": "https://luminhkhuong.dev",
   "baseUrl": "/",
+  "customFields": {
+    "firebaseApiKey": "AIzaSyDHmbQUMhIQGteRWeoIjY6jNJFBvx2M91U",
+    "firebaseAuthDomain": "khuong-tjfxef.firebaseapp.com",
+    "firebaseProjectId": "khuong-tjfxef",
+    "firebaseStorageBucket": "khuong-tjfxef.firebasestorage.app",
+    "firebaseMessagingSenderId": "14737596078",
+    "firebaseAppId": "1:14737596078:web:ece78d5b899bb2ad05573f"
+  },
   "stylesheets": [
     {
       "href": "https://cdn.jsdelivr.net/npm/katex@0.13.24/dist/katex.min.css",
@@ -627,7 +635,6 @@ export default {
   "staticDirectories": [
     "static"
   ],
-  "customFields": {},
   "scripts": [],
   "headTags": [],
   "titleDelimiter": "|",
