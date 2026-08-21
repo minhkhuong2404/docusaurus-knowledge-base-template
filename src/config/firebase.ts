@@ -6,12 +6,12 @@ import siteConfig from '@generated/docusaurus.config';
 const customFields = (siteConfig.customFields || {}) as Record<string, string | undefined>;
 
 export const firebaseConfig = {
-  apiKey: customFields.firebaseApiKey || "AIzaSyDHmbQUMhIQGteRWeoIjY6jNJFBvx2M91U",
-  authDomain: customFields.firebaseAuthDomain || "khuong-tjfxef.firebaseapp.com",
-  projectId: customFields.firebaseProjectId || "khuong-tjfxef",
-  storageBucket: customFields.firebaseStorageBucket || "khuong-tjfxef.firebasestorage.app",
-  messagingSenderId: customFields.firebaseMessagingSenderId || "14737596078",
-  appId: customFields.firebaseAppId || "1:14737596078:web:ece78d5b899bb2ad05573f",
+  apiKey: customFields.firebaseApiKey || "",
+  authDomain: customFields.firebaseAuthDomain || "",
+  projectId: customFields.firebaseProjectId || "",
+  storageBucket: customFields.firebaseStorageBucket || "",
+  messagingSenderId: customFields.firebaseMessagingSenderId || "",
+  appId: customFields.firebaseAppId || "",
 };
 
 // Initialize Firebase App
