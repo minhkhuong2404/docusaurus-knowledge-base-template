@@ -14,6 +14,7 @@ export default function CustomUserNavbarItem() {
     progress,
     isPremium,
     isAdmin,
+    isSuperAdmin,
     adminEmails,
     addAdminEmail,
     removeAdminEmail,
@@ -212,7 +213,26 @@ export default function CustomUserNavbarItem() {
           gap: '6px',
         }}
       >
-        {isAdmin ? (
+        {isSuperAdmin ? (
+          <span
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px',
+              padding: '2px 7px',
+              borderRadius: '6px',
+              background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.28) 0%, rgba(245, 158, 11, 0.28) 100%)',
+              color: '#fbbf24',
+              border: '1px solid rgba(245, 158, 11, 0.65)',
+              fontWeight: 800,
+              fontSize: '11px',
+              letterSpacing: '0.03em',
+              boxShadow: '0 0 12px rgba(245, 158, 11, 0.35)',
+            }}
+          >
+            👑 Super Admin
+          </span>
+        ) : isAdmin ? (
           <span
             style={{
               display: 'inline-flex',
@@ -268,8 +288,8 @@ export default function CustomUserNavbarItem() {
                   width: '44px',
                   height: '44px',
                   borderRadius: '50%',
-                  border: isAdmin ? '2px solid #fbbf24' : isPremium ? '2px solid #f59e0b' : '2px solid #4ade80',
-                  boxShadow: isAdmin ? '0 0 14px rgba(251, 191, 36, 0.55)' : isPremium ? '0 0 10px rgba(245, 158, 11, 0.4)' : 'none',
+                  border: isSuperAdmin ? '2px solid #ef4444' : isAdmin ? '2px solid #fbbf24' : isPremium ? '2px solid #f59e0b' : '2px solid #4ade80',
+                  boxShadow: isSuperAdmin ? '0 0 14px rgba(239, 68, 68, 0.55)' : isAdmin ? '0 0 14px rgba(251, 191, 36, 0.55)' : isPremium ? '0 0 10px rgba(245, 158, 11, 0.4)' : 'none',
                   objectFit: 'cover',
                 }}
               />
@@ -279,14 +299,14 @@ export default function CustomUserNavbarItem() {
                   width: '44px',
                   height: '44px',
                   borderRadius: '50%',
-                  backgroundColor: isAdmin ? '#b45309' : isPremium ? '#d97706' : 'var(--ifm-color-primary)',
+                  backgroundColor: isSuperAdmin ? '#dc2626' : isAdmin ? '#b45309' : isPremium ? '#d97706' : 'var(--ifm-color-primary)',
                   color: '#fff',
                   fontSize: '1.25rem',
                   fontWeight: 700,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: isAdmin ? '0 0 14px rgba(251, 191, 36, 0.55)' : isPremium ? '0 0 10px rgba(245, 158, 11, 0.4)' : 'none',
+                  boxShadow: isSuperAdmin ? '0 0 14px rgba(239, 68, 68, 0.55)' : isAdmin ? '0 0 14px rgba(251, 191, 36, 0.55)' : isPremium ? '0 0 10px rgba(245, 158, 11, 0.4)' : 'none',
                 }}
               >
                 {name.charAt(0).toUpperCase()}
@@ -300,7 +320,24 @@ export default function CustomUserNavbarItem() {
                 {currentUser.email}
               </div>
               <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', marginTop: '4px' }}>
-                {isAdmin && (
+                {isSuperAdmin ? (
+                  <span
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      fontSize: '0.7rem',
+                      padding: '2px 8px',
+                      background: 'linear-gradient(135deg, #ef4444 0%, #d97706 100%)',
+                      color: '#ffffff',
+                      borderRadius: '10px',
+                      fontWeight: 850,
+                      boxShadow: '0 2px 6px rgba(245, 158, 11, 0.4)',
+                    }}
+                  >
+                    👑 Super Admin
+                  </span>
+                ) : isAdmin ? (
                   <span
                     style={{
                       display: 'inline-flex',
@@ -317,7 +354,7 @@ export default function CustomUserNavbarItem() {
                   >
                     🛡️ Admin
                   </span>
-                )}
+                ) : null}
                 {isPremium ? (
                   <span
                     style={{
@@ -770,8 +807,15 @@ export default function CustomUserNavbarItem() {
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '1.5rem' }}>🛡️</span>
-                <h3 style={{ margin: 0, fontSize: '1.25rem', color: '#ffffff' }}>Admin Permissions</h3>
+                <span style={{ fontSize: '1.5rem' }}>{isSuperAdmin ? '👑' : '🛡️'}</span>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '1.25rem', color: '#ffffff' }}>
+                    {isSuperAdmin ? 'Super Admin Permissions' : 'Admin Directory'}
+                  </h3>
+                  <span style={{ fontSize: '10.5px', color: '#34d399', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                    ⚡ Cloud Firestore Live Sync Active
+                  </span>
+                </div>
               </div>
               <button
                 onClick={() => setShowAdminModal(false)}
@@ -788,62 +832,85 @@ export default function CustomUserNavbarItem() {
             </div>
 
             <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginBottom: '1.25rem', lineHeight: 1.5 }}>
-              Admins have elevated permissions to trigger Google Sheet live question synchronization and access administrative control links.
+              {isSuperAdmin
+                ? 'As Super Admin (khuonglu1999@gmail.com), you have exclusive authority to grant or revoke administrator privileges. Changes are synchronized live to Firebase Firestore.'
+                : 'You are logged in as an Administrator with permissions to trigger Google Sheet sync and inspect quiz configurations. Only Super Admin (khuonglu1999@gmail.com) can add or remove admins.'}
             </p>
 
-            {/* Add New Admin Form */}
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                if (!newAdminInput.trim() || !newAdminInput.includes('@')) {
-                  setAdminMsg('Please enter a valid email address.');
-                  return;
-                }
-                addAdminEmail(newAdminInput.trim());
-                setAdminMsg(`Added ${newAdminInput.trim()} as Admin!`);
-                setNewAdminInput('');
-              }}
-              style={{ display: 'flex', gap: '8px', marginBottom: '1rem' }}
-            >
-              <input
-                type="email"
-                value={newAdminInput}
-                onChange={(e) => setNewAdminInput(e.target.value)}
-                placeholder="new.admin@example.com"
-                style={{
-                  flex: 1,
-                  padding: '0.65rem 0.85rem',
-                  borderRadius: '8px',
-                  border: '1px solid #30363d',
-                  backgroundColor: '#161b22',
-                  color: '#ffffff',
-                  fontSize: '0.9rem',
-                  outline: 'none',
+            {/* Add New Admin Form — STRICTLY RESTRICTED TO SUPER ADMIN */}
+            {isSuperAdmin ? (
+              <form
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  if (!newAdminInput.trim() || !newAdminInput.includes('@')) {
+                    setAdminMsg('Please enter a valid email address.');
+                    return;
+                  }
+                  const res = await addAdminEmail(newAdminInput.trim());
+                  setAdminMsg(res.message);
+                  if (res.success) {
+                    setNewAdminInput('');
+                  }
                 }}
-              />
-              <button
-                type="submit"
+                style={{ display: 'flex', gap: '8px', marginBottom: '1rem' }}
+              >
+                <input
+                  type="email"
+                  value={newAdminInput}
+                  onChange={(e) => setNewAdminInput(e.target.value)}
+                  placeholder="new.admin@example.com"
+                  style={{
+                    flex: 1,
+                    padding: '0.65rem 0.85rem',
+                    borderRadius: '8px',
+                    border: '1px solid #30363d',
+                    backgroundColor: '#161b22',
+                    color: '#ffffff',
+                    fontSize: '0.9rem',
+                    outline: 'none',
+                  }}
+                />
+                <button
+                  type="submit"
+                  style={{
+                    padding: '0.65rem 1.2rem',
+                    borderRadius: '8px',
+                    border: 'none',
+                    background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                    color: '#ffffff',
+                    fontWeight: 700,
+                    fontSize: '0.85rem',
+                    cursor: 'pointer',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  + Add Admin
+                </button>
+              </form>
+            ) : (
+              <div
                 style={{
-                  padding: '0.65rem 1.2rem',
+                  padding: '8px 12px',
                   borderRadius: '8px',
-                  border: 'none',
-                  background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
-                  color: '#ffffff',
-                  fontWeight: 700,
-                  fontSize: '0.85rem',
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap',
+                  background: 'rgba(56, 189, 248, 0.08)',
+                  border: '1px solid rgba(56, 189, 248, 0.25)',
+                  fontSize: '0.8rem',
+                  color: '#38bdf8',
+                  marginBottom: '1rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
                 }}
               >
-                + Add Admin
-              </button>
-            </form>
+                🔒 Read-Only Directory Mode: Contact <strong>khuonglu1999@gmail.com</strong> to add or modify admin accounts.
+              </div>
+            )}
 
             {adminMsg && (
               <div
                 style={{
                   fontSize: '0.8rem',
-                  color: adminMsg.includes('Added') ? '#34d399' : '#ef4444',
+                  color: adminMsg.includes('Added') || adminMsg.includes('Removed') ? '#34d399' : '#ef4444',
                   marginBottom: '1rem',
                   fontWeight: 600,
                 }}
@@ -868,6 +935,7 @@ export default function CustomUserNavbarItem() {
             >
               {adminEmails.map((email) => {
                 const isCurrent = currentUser?.email?.toLowerCase() === email.toLowerCase();
+                const isSuper = email.toLowerCase() === 'khuonglu1999@gmail.com';
                 return (
                   <div
                     key={email}
@@ -878,33 +946,39 @@ export default function CustomUserNavbarItem() {
                       padding: '8px 10px',
                       borderRadius: '6px',
                       fontSize: '0.85rem',
-                      color: isCurrent ? '#f59e0b' : '#e2e8f0',
-                      background: isCurrent ? 'rgba(245, 158, 11, 0.08)' : 'transparent',
+                      color: isSuper ? '#fbbf24' : isCurrent ? '#38bdf8' : '#e2e8f0',
+                      background: isSuper ? 'rgba(245, 158, 11, 0.12)' : isCurrent ? 'rgba(56, 189, 248, 0.08)' : 'transparent',
                     }}
                   >
                     <span>
-                      {email} {isCurrent && <strong style={{ fontSize: '0.75rem' }}>(You)</strong>}
+                      {email}{' '}
+                      {isSuper && <strong style={{ fontSize: '0.75rem', color: '#f59e0b' }}>(Super Admin)</strong>}
+                      {isCurrent && !isSuper && <strong style={{ fontSize: '0.75rem' }}>(You)</strong>}
                     </span>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        removeAdminEmail(email);
-                        setAdminMsg(`Removed ${email}`);
-                      }}
-                      style={{
-                        background: 'transparent',
-                        border: 'none',
-                        color: '#ef4444',
-                        cursor: 'pointer',
-                        fontSize: '0.75rem',
-                        fontWeight: 600,
-                        padding: '2px 6px',
-                        borderRadius: '4px',
-                      }}
-                      title="Revoke admin access"
-                    >
-                      Remove
-                    </button>
+
+                    {/* Remove button ONLY if caller is Super Admin AND target is NOT Super Admin */}
+                    {isSuperAdmin && !isSuper && (
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          const res = await removeAdminEmail(email);
+                          setAdminMsg(res.message);
+                        }}
+                        style={{
+                          background: 'transparent',
+                          border: 'none',
+                          color: '#ef4444',
+                          cursor: 'pointer',
+                          fontSize: '0.75rem',
+                          fontWeight: 600,
+                          padding: '2px 6px',
+                          borderRadius: '4px',
+                        }}
+                        title="Revoke admin access in Firebase"
+                      >
+                        Remove
+                      </button>
+                    )}
                   </div>
                 );
               })}

@@ -75,6 +75,8 @@ import {
   saveAdminEmail,
   removeAdminEmail as deleteAdminEmail,
   checkIsAdmin,
+  isSuperAdminUser,
+  subscribeToAdminEmails,
 } from '../config/adminConfig';
 
 interface UserProgressContextType {
@@ -83,9 +85,10 @@ interface UserProgressContextType {
   isLoading: boolean;
   isPremium: boolean;
   isAdmin: boolean;
+  isSuperAdmin: boolean;
   adminEmails: string[];
-  addAdminEmail: (email: string) => void;
-  removeAdminEmail: (email: string) => void;
+  addAdminEmail: (email: string) => Promise<{ success: boolean; message: string }>;
+  removeAdminEmail: (email: string) => Promise<{ success: boolean; message: string }>;
   totalArticlesCount: number;
   setTotalArticlesCount: (count: number) => void;
   isPageRead: (pagePath: string) => boolean;
@@ -110,9 +113,10 @@ const UserProgressContext = createContext<UserProgressContextType>({
   isLoading: true,
   isPremium: false,
   isAdmin: false,
+  isSuperAdmin: false,
   adminEmails: [],
-  addAdminEmail: () => {},
-  removeAdminEmail: () => {},
+  addAdminEmail: async () => ({ success: false, message: '' }),
+  removeAdminEmail: async () => ({ success: false, message: '' }),
   totalArticlesCount: TOTAL_TRACKABLE_ARTICLES_DEFAULT,
   setTotalArticlesCount: () => {},
   isPageRead: () => false,
@@ -188,19 +192,37 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [adminEmails, setAdminEmails] = useState<string[]>(() => getAdminEmails());
 
+  const isSuperAdmin = useMemo(() => {
+    if (!currentUser?.email) return false;
+    return isSuperAdminUser(currentUser.email);
+  }, [currentUser]);
+
   const isAdmin = useMemo(() => {
     if (!currentUser?.email) return false;
-    return checkIsAdmin(currentUser.email);
+    return checkIsAdmin(currentUser.email, adminEmails);
   }, [currentUser, adminEmails]);
 
-  const addAdminEmail = (email: string) => {
-    const updated = saveAdminEmail(email);
-    setAdminEmails(updated);
+  useEffect(() => {
+    const unsubscribe = subscribeToAdminEmails((latestEmails) => {
+      setAdminEmails(latestEmails);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const addAdminEmail = async (email: string) => {
+    const res = await saveAdminEmail(email, currentUser?.email);
+    if (res.success) {
+      setAdminEmails(res.updatedList);
+    }
+    return res;
   };
 
-  const removeAdminEmail = (email: string) => {
-    const updated = deleteAdminEmail(email);
-    setAdminEmails(updated);
+  const removeAdminEmail = async (email: string) => {
+    const res = await deleteAdminEmail(email, currentUser?.email);
+    if (res.success) {
+      setAdminEmails(res.updatedList);
+    }
+    return res;
   };
 
   const [progress, setProgressState] = useState<UserProgressData>(() => {
@@ -436,6 +458,7 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
         isLoading,
         isPremium: isPremiumUnlocked,
         isAdmin,
+        isSuperAdmin,
         adminEmails,
         addAdminEmail,
         removeAdminEmail,
