@@ -6,6 +6,8 @@ tags: [dsa, java, binary-search, algorithms, optimization, week-9]
 sidebar_position: 9
 ---
 
+import DsaWeek9BinarySearchDiagram from '@site/src/components/DsaWeek9BinarySearchDiagram';
+
 # Week 9: Binary Search & The Answer Space
 
 ## 1. Overview
@@ -43,6 +45,9 @@ Binary search on 1 billion items takes **30 operations**. This is why it's used 
 ---
 
 ## 2. The Core Mental Models
+
+<DsaWeek9BinarySearchDiagram />
+
 
 ### 2.1 What Is Binary Search? — The "Encyclopedia" Model
 

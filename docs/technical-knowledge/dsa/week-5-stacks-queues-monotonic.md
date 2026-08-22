@@ -6,6 +6,8 @@ tags: [dsa, java, stacks, queues, monotonic-stack, algorithms, week-5]
 sidebar_position: 5
 ---
 
+import DsaWeek5MonotonicStackDiagram from '@site/src/components/DsaWeek5MonotonicStackDiagram';
+
 # Week 5: Stacks, Queues & Monotonic Stack
 
 ## 1. Overview
@@ -40,6 +42,9 @@ In interviews, stacks appear in roughly 15–20% of problems, and the **Monotoni
 ---
 
 ## 2. The Core Mental Models
+
+<DsaWeek5MonotonicStackDiagram />
+
 
 ### 2.1 Stack (LIFO) — The "Plate Stack"
 

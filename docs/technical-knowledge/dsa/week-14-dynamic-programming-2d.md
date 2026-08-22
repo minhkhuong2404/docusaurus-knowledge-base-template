@@ -6,6 +6,8 @@ tags: [dsa, java, dynamic-programming, 2d-dp, algorithms, week-14, optimization]
 sidebar_position: 14
 ---
 
+import DsaWeek14Dp2dDiagram from '@site/src/components/DsaWeek14Dp2dDiagram';
+
 # Week 14: Dynamic Programming II (2D)
 
 ## 1. Overview
@@ -41,6 +43,9 @@ In 1D DP, your decision at step `i` only depended on previous steps in a **singl
 ---
 
 ## 2. The Core Mental Models
+
+<DsaWeek14Dp2dDiagram />
+
 
 ### 2.1 The 2D DP Table — "The Spreadsheet"
 

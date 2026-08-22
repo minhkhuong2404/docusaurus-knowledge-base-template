@@ -6,6 +6,8 @@ tags: [dsa, java, bit-manipulation, math, algorithms, week-19]
 sidebar_position: 19
 ---
 
+import DsaWeek19BitManipulationDiagram from '@site/src/components/DsaWeek19BitManipulationDiagram';
+
 # Week 19: Bit Manipulation & Math
 
 ## 1. Overview
@@ -40,6 +42,9 @@ Bit manipulation appears in:
 ---
 
 ## 2. The Core Mental Models
+
+<DsaWeek19BitManipulationDiagram />
+
 
 ### 2.1 Two's Complement — Java's Integer Representation
 

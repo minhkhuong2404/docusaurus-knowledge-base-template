@@ -6,6 +6,8 @@ tags: [dsa, java, disjoint-set, union-find, graphs, algorithms, week-18]
 sidebar_position: 18
 ---
 
+import DsaWeek18DsuDiagram from '@site/src/components/DsaWeek18DsuDiagram';
+
 # Week 18: Disjoint Set Union (Union-Find)
 
 ## 1. Overview
@@ -39,6 +41,9 @@ DSU powers some of the most fundamental infrastructure algorithms:
 ---
 
 ## 2. The Core Mental Models
+
+<DsaWeek18DsuDiagram />
+
 
 ### 2.1 The "Political Parties" Model
 

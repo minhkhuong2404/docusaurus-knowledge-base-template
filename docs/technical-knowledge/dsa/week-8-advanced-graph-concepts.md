@@ -6,6 +6,8 @@ tags: [dsa, java, graphs, topological-sort, algorithms, week-8]
 sidebar_position: 8
 ---
 
+import DsaWeek8TopologicalSortDiagram from '@site/src/components/DsaWeek8TopologicalSortDiagram';
+
 # Week 8: Advanced Graph Concepts
 
 ## 1. Overview
@@ -30,6 +32,9 @@ You will focus heavily on **Directed Acyclic Graphs (DAGs)**. These structures a
 ---
 
 ## 2. Theory & Fundamentals
+
+<DsaWeek8TopologicalSortDiagram />
+
 
 ### 2.1 Mental Model: Why Directed Graphs?
 

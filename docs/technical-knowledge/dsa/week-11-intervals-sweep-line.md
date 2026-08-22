@@ -6,6 +6,8 @@ tags: [dsa, java, intervals, sweep-line, sorting, algorithms, week-11]
 sidebar_position: 11
 ---
 
+import DsaWeek11IntervalsDiagram from '@site/src/components/DsaWeek11IntervalsDiagram';
+
 # Week 11: Intervals & Sweep Line Algorithms
 
 ## 1. Overview
@@ -41,6 +43,9 @@ The jump from brute-force $O(N^2)$ to sweep line $O(N \log N)$ is what separates
 ---
 
 ## 2. The Core Mental Models
+
+<DsaWeek11IntervalsDiagram />
+
 
 ### 2.1 Intervals on a Number Line
 

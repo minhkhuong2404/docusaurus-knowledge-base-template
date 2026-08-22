@@ -1,8 +1,8 @@
 {
-  "id": "3069",
-  "title": "Distribute Elements Into Two Arrays I",
-  "url": "https://leetcode.com/problems/distribute-elements-into-two-arrays-i/",
-  "difficulty": "easy",
-  "topic": "Array, Simulation",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-08-20."
+  "id": "3116",
+  "title": "Kth Smallest Amount With Single Denomination Combination",
+  "url": "https://leetcode.com/problems/kth-smallest-amount-with-single-denomination-combination/",
+  "difficulty": "hard",
+  "topic": "Array, Math, Binary Search, Bit Manipulation, Combinatorics, Number Theory",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-08-21."
 }

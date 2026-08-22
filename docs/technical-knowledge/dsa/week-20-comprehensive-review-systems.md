@@ -6,6 +6,8 @@ tags: [dsa, java, system-design, review, algorithms, week-20]
 sidebar_position: 20
 ---
 
+import DsaWeek20LruCacheDiagram from '@site/src/components/DsaWeek20LruCacheDiagram';
+
 # Week 20: Comprehensive Review & System Design Mappings
 
 ## 1. Overview
@@ -31,6 +33,9 @@ This final week is not about learning new algorithms. It is about **Synthesis**.
 ---
 
 ## 2. DSA → Real-World System Mappings
+
+<DsaWeek20LruCacheDiagram />
+
 
 Understanding *why* these structures exist makes them easier to remember, and dramatically boosts your signal in system design interviews when you can connect the dots out loud.
 
