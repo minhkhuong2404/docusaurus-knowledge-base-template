@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import Layout from '@theme/Layout';
+import BrowserOnly from '@docusaurus/BrowserOnly';
 import { useUserProgress } from '../../context/UserProgressContext';
 import OutageBossBattleGame from '../../components/gamification/games/OutageBossBattleGame';
 import ArchitecturePuzzleGame from '../../components/gamification/games/ArchitecturePuzzleGame';
 import SpotTheBugDuelGame from '../../components/gamification/games/SpotTheBugDuelGame';
 import FlashcardArenaGame from '../../components/gamification/games/FlashcardArenaGame';
-import LevelUpToast from '../../components/gamification/LevelUpToast';
 
 export default function ArcadePage(): React.JSX.Element {
   const { gamification } = useUserProgress();
@@ -18,7 +18,6 @@ export default function ArcadePage(): React.JSX.Element {
       title="Galactic Arcade - Gamified Engineering Arena"
       description="Learn distributed systems, Java concurrency, and system design by playing interactive educational games."
     >
-      <LevelUpToast />
       <div
         style={{
           minHeight: '100vh',
@@ -162,10 +161,16 @@ export default function ArcadePage(): React.JSX.Element {
 
           {/* Active Game Arena */}
           <div>
-            {activeGame === 'boss' && <OutageBossBattleGame />}
-            {activeGame === 'puzzle' && <ArchitecturePuzzleGame />}
-            {activeGame === 'bug' && <SpotTheBugDuelGame />}
-            {activeGame === 'flashcards' && <FlashcardArenaGame />}
+            <BrowserOnly fallback={<div style={{ padding: '40px', textAlign: 'center', color: 'rgba(255, 255, 255, 0.6)' }}>Loading Educational Arena...</div>}>
+              {() => (
+                <>
+                  {activeGame === 'boss' && <OutageBossBattleGame />}
+                  {activeGame === 'puzzle' && <ArchitecturePuzzleGame />}
+                  {activeGame === 'bug' && <SpotTheBugDuelGame />}
+                  {activeGame === 'flashcards' && <FlashcardArenaGame />}
+                </>
+              )}
+            </BrowserOnly>
           </div>
         </div>
       </div>
