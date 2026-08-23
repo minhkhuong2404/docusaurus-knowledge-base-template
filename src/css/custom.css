@@ -2451,59 +2451,6 @@ pre[class*="language-"]::-webkit-scrollbar {
   background-color: #ffffff !important;
 }
 
-/* Floating Planet Core in Navbar */
-[data-theme="dark"] .navbar::before {
-  content: "" !important;
-  position: absolute !important;
-  top: 18px !important;
-  left: 26% !important;
-  width: 14px !important;
-  height: 14px !important;
-  border-radius: 50% !important;
-  background: radial-gradient(circle at 30% 30%, #4ade80, #1b5e20) !important;
-  box-shadow: 0 0 10px rgba(74, 222, 128, 0.4), inset -2px -2px 4px rgba(0, 0, 0, 0.6) !important;
-  opacity: 0.85 !important;
-  pointer-events: none !important;
-  animation: planetFloat 18s ease-in-out infinite alternate !important;
-  z-index: 1 !important;
-}
-
-/* Floating Planet Ring in Navbar */
-[data-theme="dark"] .navbar::after {
-  content: "" !important;
-  position: absolute !important;
-  top: 24px !important;
-  left: calc(26% - 5px) !important;
-  width: 24px !important;
-  height: 3px !important;
-  background: rgba(74, 222, 128, 0.4) !important;
-  border-radius: 50% !important;
-  transform: rotate(-15deg) !important;
-  box-shadow: 0 0 4px rgba(74, 222, 128, 0.2) !important;
-  pointer-events: none !important;
-  animation: ringFloat 18s ease-in-out infinite alternate !important;
-  z-index: 2 !important;
-}
-
-@keyframes planetFloat {
-  0% {
-    transform: translateY(-2px) rotate(0deg);
-  }
-
-  100% {
-    transform: translateY(2px) rotate(15deg);
-  }
-}
-
-@keyframes ringFloat {
-  0% {
-    transform: translateY(-2px) rotate(-15deg) scaleY(0.9);
-  }
-
-  100% {
-    transform: translateY(2px) rotate(-18deg) scaleY(1.1);
-  }
-}
 
 /* ── Glory Nebulae Background ───────────────── */
 [data-theme="dark"] .main-wrapper {
