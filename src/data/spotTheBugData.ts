@@ -1,7 +1,7 @@
 export interface BugSnippetsChallenge {
   id: string;
   title: string;
-  category: 'concurrency' | 'spring' | 'memory' | 'database' | 'async';
+  category: 'concurrency' | 'spring' | 'kafka' | 'devops' | 'system-design' | 'database' | 'security' | 'memory' | 'async';
   categoryLabel: string;
   difficulty: 'Junior' | 'Mid' | 'Senior' | 'Staff';
   difficultyColor: string;

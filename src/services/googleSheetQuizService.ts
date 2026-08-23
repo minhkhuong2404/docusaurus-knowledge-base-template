@@ -68,7 +68,7 @@ export const QUIZ_TABS: Record<'java' | 'spring-boot' | 'system-design' | 'spot-
   },
 };
 
-const CACHE_PREFIX = 'gsheet_quiz_cache_v2_';
+const CACHE_PREFIX = 'gsheet_quiz_cache_v5_';
 const CACHE_TTL_MS = 1000 * 60 * 60 * 6; // 6 hours cache
 
 /**
@@ -189,7 +189,9 @@ export function convertCsvRowsToQuestions(
 
     const topic = (topicIdx !== -1 && row[topicIdx]) ? row[topicIdx].trim() : categoryName;
     const difficulty = parseDifficulty((diffIdx !== -1 && row[diffIdx]) ? row[diffIdx] : (row[2] || 'medium'));
-    const codeSnippet = (codeIdx !== -1 && row[codeIdx] && row[codeIdx].trim().length > 0) ? row[codeIdx].trim() : undefined;
+    const codeSnippet = (codeIdx !== -1 && row[codeIdx] && row[codeIdx].trim().length > 0)
+      ? row[codeIdx].trim().replace(/\\n/g, '\n')
+      : undefined;
     const rawBugLine = (bugLineIdx !== -1 && row[bugLineIdx]) ? parseInt(row[bugLineIdx].trim(), 10) : undefined;
     const buggyLineNumber = (rawBugLine && !isNaN(rawBugLine)) ? rawBugLine : undefined;
 
@@ -202,7 +204,9 @@ export function convertCsvRowsToQuestions(
 
     const correctOptionIndex = parseCorrectOption((correctIdx !== -1 && row[correctIdx]) ? row[correctIdx] : '0');
     const explanation = (explIdx !== -1 && row[explIdx]) ? row[explIdx].trim() : 'No explanation provided.';
-    const fixSnippet = (fixIdx !== -1 && row[fixIdx] && row[fixIdx].trim().length > 0) ? row[fixIdx].trim() : undefined;
+    const fixSnippet = (fixIdx !== -1 && row[fixIdx] && row[fixIdx].trim().length > 0)
+      ? row[fixIdx].trim().replace(/\\n/g, '\n')
+      : undefined;
     const interviewTip = (tipIdx !== -1 && row[tipIdx] && row[tipIdx].trim().length > 0) ? row[tipIdx].trim() : undefined;
 
     questions.push({
@@ -514,31 +518,37 @@ export interface ConceptFlashcardItem {
 }
 
 export async function fetchConceptFlashcards(forceRefresh = false): Promise<ConceptFlashcardItem[]> {
-  const cacheKey = `${CACHE_PREFIX}concept_flashcards_v1`;
+  const cacheKey = `${CACHE_PREFIX}concept_flashcards_v3`;
 
   // 1. Memory / IndexedDB Cache
   if (!forceRefresh) {
     const cached = await getIndexedDBCache<ConceptFlashcardItem[]>(cacheKey);
-    if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS && cached.data.length > 0) {
+    if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS && Array.isArray(cached.data) && cached.data.length > 0) {
       return cached.data;
     }
   }
 
   // 2. Try static pre-bundled snapshot (/data/concept_flashcards.json)
   if (typeof window !== 'undefined') {
-    try {
-      const baseUrl = (window as any).__docusaurus_base_url || '/';
-      const cleanBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
-      const res = await fetch(`${cleanBase}data/concept_flashcards.json`);
-      if (res.ok) {
-        const json: ConceptFlashcardItem[] = await res.json();
-        if (Array.isArray(json) && json.length > 0) {
-          setIndexedDBCache(cacheKey, json);
-          return json;
+    const candidateUrls = [
+      '/data/concept_flashcards.json',
+      `${(window as any).__docusaurus_base_url || '/'}data/concept_flashcards.json`.replace(/\/\//g, '/'),
+      './data/concept_flashcards.json',
+    ];
+
+    for (const url of candidateUrls) {
+      try {
+        const res = await fetch(url);
+        if (res.ok) {
+          const json: ConceptFlashcardItem[] = await res.json();
+          if (Array.isArray(json) && json.length > 0) {
+            setIndexedDBCache(cacheKey, json);
+            return json;
+          }
         }
+      } catch {
+        // try next URL
       }
-    } catch {
-      // ignore
     }
   }
 

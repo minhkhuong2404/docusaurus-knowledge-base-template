@@ -4,16 +4,28 @@ import { triggerFireworks } from '../../../utils/fireworks';
 import { BUG_CHALLENGES, BugSnippetsChallenge } from '../../../data/spotTheBugData';
 import { fetchSpotTheBugQuestions, QuizQuestion } from '../../../services/googleSheetQuizService';
 
-type CategoryKey = 'all' | 'concurrency' | 'spring' | 'memory' | 'database' | 'async';
+type CategoryKey =
+  | 'all'
+  | 'concurrency'
+  | 'spring'
+  | 'kafka'
+  | 'devops'
+  | 'system-design'
+  | 'database'
+  | 'security'
+  | 'async';
 type GameMode = 'sprint' | 'zen' | 'hardcore';
 
 const CATEGORY_TABS: { id: CategoryKey; label: string; icon: string; color: string }[] = [
   { id: 'all', label: 'All Arenas', icon: '⚡', color: '#a855f7' },
-  { id: 'concurrency', label: 'Java Concurrency & OCP 21', icon: '☕', color: '#f59e0b' },
+  { id: 'concurrency', label: 'Java & Concurrency', icon: '☕', color: '#f59e0b' },
   { id: 'spring', label: 'Spring Boot Pitfalls', icon: '🍃', color: '#34d399' },
-  { id: 'memory', label: 'JVM Memory & GC', icon: '🧠', color: '#ef4444' },
-  { id: 'database', label: 'Database & Pools', icon: '🗄️', color: '#38bdf8' },
-  { id: 'async', label: 'Async & Reactive', icon: '🔄', color: '#ec4899' },
+  { id: 'kafka', label: 'Kafka & Streaming', icon: '🌊', color: '#06b6d4' },
+  { id: 'devops', label: 'DevOps & K8s/Docker', icon: '🐳', color: '#38bdf8' },
+  { id: 'system-design', label: 'System Design & Redis', icon: '🏗️', color: '#ec4899' },
+  { id: 'database', label: 'SQL & Databases', icon: '🗄️', color: '#eab308' },
+  { id: 'security', label: 'Security & Web Auth', icon: '🔐', color: '#f43f5e' },
+  { id: 'async', label: 'Async & Reactive', icon: '🔄', color: '#8b5cf6' },
 ];
 
 const GAME_MODES: { id: GameMode; label: string; icon: string; timerSecs: number | null; expMultiplier: number; description: string }[] = [
@@ -37,7 +49,8 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
   const [gameMode, setGameMode] = useState<GameMode>('sprint');
   const [challenges, setChallenges] = useState<BugSnippetsChallenge[]>(BUG_CHALLENGES);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [currentIdx, setCurrentIdx] = useState<number>(0);
+  // Per-category index map so switching arenas always starts at q#0 of that category
+  const [categoryIndexMap, setCategoryIndexMap] = useState<Record<string, number>>({ all: 0 });
   const [gameState, setGameState] = useState<'playing' | 'revealed'>('playing');
   const [revealedStudyMode, setRevealedStudyMode] = useState<boolean>(false);
   const [chosenOptionId, setChosenOptionId] = useState<string | null>(null);
@@ -84,15 +97,22 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
     async function loadSheetData() {
       try {
         setIsLoading(true);
-        const questions = await fetchSpotTheBugQuestions();
+        let questions = await fetchSpotTheBugQuestions();
+        // If cached questions in IndexedDB had old single-line snippets matching questionText, force fresh fetch from Google Sheet
+        if (Array.isArray(questions) && questions.length > 0 && questions[0].codeSnippet === questions[0].questionText) {
+          questions = await fetchSpotTheBugQuestions(true);
+        }
         if (isMounted && Array.isArray(questions) && questions.length > 0) {
           const mapped: BugSnippetsChallenge[] = questions.map((q) => {
             const topicLower = (q.topic || '').toLowerCase();
             const category: CategoryKey =
-              topicLower.includes('spring') ? 'spring'
-              : topicLower.includes('memory') || topicLower.includes('gc') || topicLower.includes('nio') || topicLower.includes('sequenced') ? 'memory'
-              : topicLower.includes('database') || topicLower.includes('pool') || topicLower.includes('hikari') || topicLower.includes('jpa') ? 'database'
-              : topicLower.includes('async') || topicLower.includes('reactive') || topicLower.includes('completable') ? 'async'
+              topicLower.includes('kafka') || (topicLower.includes('stream') && !topicLower.includes('reactive')) ? 'kafka'
+              : topicLower.includes('docker') || topicLower.includes('k8s') || topicLower.includes('kubernetes') || topicLower.includes('devops') ? 'devops'
+              : topicLower.includes('redis') || topicLower.includes('cache') || topicLower.includes('system design') || topicLower.includes('distributed lock') ? 'system-design'
+              : topicLower.includes('security') || topicLower.includes('jwt') || topicLower.includes('cors') || topicLower.includes('auth') || topicLower.includes('vulnerability') ? 'security'
+              : topicLower.includes('spring') ? 'spring'
+              : topicLower.includes('database') || topicLower.includes('sql') || topicLower.includes('hikari') || topicLower.includes('jpa') || topicLower.includes('query') ? 'database'
+              : topicLower.includes('async') || topicLower.includes('reactive') || topicLower.includes('completable') || topicLower.includes('webflux') ? 'async'
               : 'concurrency';
 
             const options = (q.options || []).map((optText, idx) => ({
@@ -105,6 +125,10 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
             const diff = q.difficulty === 'Junior' ? 'Junior' : q.difficulty === 'Mid' ? 'Mid' : q.difficulty === 'Staff' ? 'Staff' : 'Senior';
             const diffColor = diff === 'Junior' ? '#38bdf8' : diff === 'Mid' ? '#34d399' : diff === 'Staff' ? '#a855f7' : '#f59e0b';
 
+            const codeContent = (q.codeSnippet && q.codeSnippet.trim().length > 0)
+              ? q.codeSnippet.replace(/\\n/g, '\n')
+              : '// No source snippet provided';
+
             return {
               id: q.id,
               title: q.topic || 'Production Defect',
@@ -113,13 +137,13 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
               difficulty: diff,
               difficultyColor: diffColor,
               scenario: q.questionText,
-              code: q.codeSnippet || '// No source snippet provided',
+              code: codeContent,
               buggyLineNumber: q.buggyLineNumber || 1,
               bugType: q.topic,
               symptom: q.questionText,
               options,
               rootCause: q.explanation,
-              fixSnippet: q.fixSnippet || '// See senior architectural best practice',
+              fixSnippet: q.fixSnippet ? q.fixSnippet.replace(/\\n/g, '\n') : '// See senior architectural best practice',
               interviewTip: q.interviewTip || 'Master Java 21 specification and concurrency invariants.',
             };
           });
@@ -144,7 +168,10 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
     return challenges.filter((c) => c.category === selectedCategory);
   }, [selectedCategory, challenges]);
 
-  const currentChallenge = filteredChallenges[currentIdx % (filteredChallenges.length || 1)] || BUG_CHALLENGES[0];
+  // Current index for this category (defaults to 0)
+  const currentIdx = categoryIndexMap[selectedCategory] ?? 0;
+  const safeIdx = filteredChallenges.length > 0 ? currentIdx % filteredChallenges.length : 0;
+  const currentChallenge = filteredChallenges[safeIdx] || BUG_CHALLENGES[0];
 
   // Shuffled options per challenge
   const shuffledOptions = useMemo(() => {
@@ -249,7 +276,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
     setActiveTab('diagnosis');
   };
 
-  const handleNextChallenge = () => {
+  const resetRoundState = () => {
     setGameState('playing');
     setRevealedStudyMode(false);
     setChosenOptionId(null);
@@ -261,7 +288,24 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
     setTimeWarpUsed(false);
     setTimeLeft(activeModeConfig.timerSecs || 30);
     setActiveTab('diagnosis');
-    setCurrentIdx((prev) => (prev + 1) % filteredChallenges.length);
+  };
+
+  const handleNextChallenge = () => {
+    const len = filteredChallenges.length || 1;
+    const nextIdx = (currentIdx + 1) % len;
+    setCategoryIndexMap((prev) => ({ ...prev, [selectedCategory]: nextIdx }));
+    resetRoundState();
+  };
+
+  const handleSkipChallenge = () => {
+    setCombo(0);
+    handleNextChallenge();
+  };
+
+  const handleSelectCategory = (catId: CategoryKey) => {
+    // Preserve per-category position — start at 0 if never visited
+    setSelectedCategory(catId);
+    resetRoundState();
   };
 
   const handleCopyFix = () => {
@@ -358,7 +402,7 @@ ${currentChallenge.interviewTip}
             }}
           >
             <span>🏆</span>
-            <span>Mastery: {solvedBugIds.length} / {challenges.length}</span>
+            <span>Mastery: {solvedBugIds.length} / {filteredChallenges.length || 1024}</span>
           </div>
 
           {/* Rules Toggle */}
@@ -579,6 +623,27 @@ ${currentChallenge.interviewTip}
               >
                 👁️ Show Answer
               </button>
+
+              <button
+                type="button"
+                onClick={handleSkipChallenge}
+                style={{
+                  padding: '6px 12px',
+                  borderRadius: '8px',
+                  border: '1px solid rgba(56, 189, 248, 0.4)',
+                  background: 'rgba(56, 189, 248, 0.08)',
+                  color: '#38bdf8',
+                  fontSize: '0.76rem',
+                  fontWeight: 750,
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                }}
+                title="Skip to next code defect question"
+              >
+                ⏭️ Skip
+              </button>
             </>
           )}
         </div>
@@ -592,13 +657,7 @@ ${currentChallenge.interviewTip}
             <button
               key={tab.id}
               type="button"
-              onClick={() => {
-                setSelectedCategory(tab.id);
-                setCurrentIdx(0);
-                setGameState('playing');
-                setTimeLeft(activeModeConfig.timerSecs || 30);
-                setChosenOptionId(null);
-              }}
+              onClick={() => handleSelectCategory(tab.id)}
               style={{
                 padding: '6px 14px',
                 borderRadius: '10px',

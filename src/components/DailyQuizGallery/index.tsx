@@ -706,11 +706,11 @@ export default function DailyQuizGallery({
                 padding: '12px 14px',
                 fontFamily: 'var(--ifm-font-family-monospace, monospace)',
                 fontSize: '12.5px',
-                lineHeight: 1.5,
+                lineHeight: 1.55,
                 color: '#e2e8f0',
                 overflowX: 'auto',
                 whiteSpace: 'pre',
-                maxHeight: '260px',
+                boxShadow: 'inset 0 2px 8px rgba(0, 0, 0, 0.5)',
               }}
             >
               <code>{currentQuestion.codeSnippet}</code>

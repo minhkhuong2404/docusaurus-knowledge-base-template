@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useUserProgress } from '../../../context/UserProgressContext';
 import { triggerFireworks } from '../../../utils/fireworks';
 import { fetchConceptFlashcards, ConceptFlashcardItem } from '../../../services/googleSheetQuizService';
+import { INITIAL_CONCEPT_FLASHCARDS } from '../../../data/conceptFlashcardsData';
 
 type CategoryKey = 'all' | 'java' | 'spring-boot' | 'system-design' | 'database';
 
@@ -27,15 +28,15 @@ export default function FlashcardArenaGame(): React.JSX.Element {
   const [selectedCategory, setSelectedCategory] = useState<CategoryKey>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [deckFilter, setDeckFilter] = useState<'all' | 'starred' | 'mastered'>('all');
-  const [allCards, setAllCards] = useState<ConceptFlashcardItem[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [allCards, setAllCards] = useState<ConceptFlashcardItem[]>(INITIAL_CONCEPT_FLASHCARDS);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [combo, setCombo] = useState(0);
   const [score, setScore] = useState(0);
   const [cardsCompleted, setCardsCompleted] = useState(0);
-  const [shuffledDeck, setShuffledDeck] = useState<ConceptFlashcardItem[]>([]);
+  const [shuffledDeck, setShuffledDeck] = useState<ConceptFlashcardItem[]>(INITIAL_CONCEPT_FLASHCARDS);
   const [showRules, setShowRules] = useState<boolean>(false);
   const [copiedCard, setCopiedCard] = useState<boolean>(false);
 
@@ -137,19 +138,7 @@ export default function FlashcardArenaGame(): React.JSX.Element {
 
   const activeDeck = filteredDeck.length > 0 ? filteredDeck : shuffledDeck;
   const currentSafeIndex = currentIndex % (activeDeck.length || 1);
-  const card = activeDeck[currentSafeIndex] || {
-    id: 'placeholder',
-    topic: 'Loading Concept Flashcards...',
-    category: 'java',
-    categoryLabel: 'Engineering Knowledge',
-    difficulty: 'Senior',
-    whatItIs: 'Fetching 5,120 architectural concepts from the single source of truth...',
-    whenToUse: 'Loading production architectural scenarios...',
-    pros: ['Decoupled mental model', 'Ultra-high scalability'],
-    cons: ['Requires architectural discipline'],
-    howToUseProperly: 'Review best practices and key invariants.',
-    keyTakeaway: 'Syncing live repository.',
-  };
+  const card = activeDeck[currentSafeIndex] || INITIAL_CONCEPT_FLASHCARDS[0];
 
   const isCurrentBookmarked = bookmarkedIds.includes(card.id);
   const isCurrentMastered = masteredIds.includes(card.id);
