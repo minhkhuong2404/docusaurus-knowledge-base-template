@@ -39,14 +39,14 @@ function readCachedPremiumState(): PremiumState | null {
     return "logged_in";
   }
 
-  const googleUser = window.sessionStorage.getItem("google_user");
+  const googleUser = window.localStorage.getItem("google_user") || window.sessionStorage.getItem("google_user");
   if (googleUser) {
     return "logged_in";
   }
 
-  const cached = window.sessionStorage.getItem(PREMIUM_STATE_KEY);
+  const cached = window.localStorage.getItem(PREMIUM_STATE_KEY) || window.sessionStorage.getItem(PREMIUM_STATE_KEY);
   if (cached === "logged_in" || cached === "logged_out") {
-    return cached;
+    return cached as PremiumState;
   }
 
   return null;
@@ -56,15 +56,18 @@ export default function Root({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const isCheckingRef = useRef(false);
 
-  // Track Firebase auth state → update sessionStorage so the navbar item
+  // Track Firebase auth state → update localStorage & sessionStorage so the navbar item
   // can read it synchronously on mount (avoids flash of wrong state).
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         applyPremiumNavState("logged_in");
+        window.localStorage.setItem(PREMIUM_STATE_KEY, "logged_in");
         window.sessionStorage.setItem(PREMIUM_STATE_KEY, "logged_in");
       } else {
         applyPremiumNavState("logged_out");
+        window.localStorage.removeItem(PREMIUM_STATE_KEY);
+        window.sessionStorage.removeItem(PREMIUM_STATE_KEY);
       }
     });
     return () => unsubscribe();

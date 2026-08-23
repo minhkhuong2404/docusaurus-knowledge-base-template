@@ -73,10 +73,11 @@ export default function Login(): React.ReactNode {
       if (user) {
         setCurrentUser(user);
         setLoggedInState('logged_in');
+        localStorage.setItem('premium_session_state', 'logged_in');
         sessionStorage.setItem('premium_session_state', 'logged_in');
       } else {
-        const localSession = sessionStorage.getItem('premium_session_state');
-        if (localSession === 'logged_in') {
+        const localSession = localStorage.getItem('premium_session_state') || sessionStorage.getItem('premium_session_state');
+        if (localSession === 'logged_in' && auth.currentUser) {
           setLoggedInState('logged_in');
         } else {
           setLoggedInState('logged_out');
