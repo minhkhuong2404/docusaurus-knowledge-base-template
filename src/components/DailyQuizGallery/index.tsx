@@ -5,6 +5,7 @@ import {
   QuizCategoryKey,
   SPREADSHEET_URL,
   fetchAllTabQuestions,
+  fetchAllTabQuestionsWithRevalidate,
 } from '../../services/googleSheetQuizService';
 import { useUserProgress } from '../../context/UserProgressContext';
 import { QuizStateItem } from '../../services/userProgressService';
@@ -51,19 +52,30 @@ export default function DailyQuizGallery({
   const [skippedIds, setSkippedIds] = useState<string[]>([]);
   const [copied, setCopied] = useState<boolean>(false);
 
-  // Fetch from Google Sheet (Single Source of Truth)
+  // Fetch from Google Sheet (Single Source of Truth with Stale-While-Revalidate)
   const loadQuestions = async (forceRefresh = false) => {
-    if (forceRefresh) setIsRefreshing(true);
-    else setIsLoading(true);
-
-    try {
-      const data = await fetchAllTabQuestions(forceRefresh);
-      setQuestionsMap(data);
-    } catch (err) {
-      console.error('Failed to load quiz questions from Google Sheet:', err);
-    } finally {
-      setIsLoading(false);
-      setIsRefreshing(false);
+    if (forceRefresh) {
+      setIsRefreshing(true);
+      try {
+        const data = await fetchAllTabQuestions(true);
+        setQuestionsMap(data);
+      } catch (err) {
+        console.error('Failed to load quiz questions from Google Sheet:', err);
+      } finally {
+        setIsRefreshing(false);
+      }
+    } else {
+      setIsLoading(true);
+      try {
+        const data = await fetchAllTabQuestionsWithRevalidate((freshData) => {
+          setQuestionsMap(freshData);
+        });
+        setQuestionsMap(data);
+      } catch (err) {
+        console.error('Failed to load quiz questions from Google Sheet:', err);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -262,7 +274,7 @@ export default function DailyQuizGallery({
           Interactive Practice Challenge
         </span>
 
-        {isAdmin ? (
+        {isAdmin && (
           <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span
               style={{
@@ -295,7 +307,7 @@ export default function DailyQuizGallery({
                 alignItems: 'center',
                 gap: '5px',
               }}
-              title="Re-sync questions directly from Google Sheet"
+              title="Admin: Pull live updates directly from Google Sheet"
             >
               <svg
                 width="13"
@@ -337,7 +349,7 @@ export default function DailyQuizGallery({
               Google Sheet ↗
             </a>
           </div>
-        ) : null}
+        )}
       </div>
 
       {/* ── 2. Category Switcher Tabs (Archetype C compliant) ── */}

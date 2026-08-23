@@ -8,9 +8,9 @@ interface DailyQuizProps {
   initialViewMode?: 'gallery' | 'practice' | 'sheet';
 }
 
-export default function DailyQuiz({ quizKey = 'java', category, initialViewMode = 'gallery' }: DailyQuizProps) {
+export default function DailyQuiz({ quizKey = 'java', category }: DailyQuizProps) {
   const resolvedCategory = category || (quizKey === 'spring-boot' || quizKey === 'system-design' || quizKey === 'all' ? quizKey : 'java');
-  return <DailyQuizGallery initialCategory={resolvedCategory} initialViewMode={initialViewMode} />;
+  return <DailyQuizGallery initialCategory={resolvedCategory} />;
 }
 
 export { default as DailyQuizGallery } from '../DailyQuizGallery';

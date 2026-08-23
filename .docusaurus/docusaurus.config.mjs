@@ -235,6 +235,22 @@ export default {
       },
       "items": [
         {
+          "type": "docSidebar",
+          "sidebarId": "tutorialSidebar",
+          "position": "left",
+          "label": "Docs"
+        },
+        {
+          "to": "/arcade",
+          "label": "Arcade",
+          "position": "left"
+        },
+        {
+          "to": "/stats",
+          "label": "Stats",
+          "position": "left"
+        },
+        {
           "type": "custom-userNavbarItem",
           "position": "right"
         },
@@ -600,13 +616,6 @@ export default {
       "disableSwitch": true,
       "respectPrefersColorScheme": false
     },
-    "mermaid": {
-      "theme": {
-        "dark": "dark",
-        "light": "default"
-      },
-      "options": {}
-    },
     "blog": {
       "sidebar": {
         "groupByYear": true
@@ -615,6 +624,13 @@ export default {
     "tableOfContents": {
       "minHeadingLevel": 2,
       "maxHeadingLevel": 3
+    },
+    "mermaid": {
+      "theme": {
+        "dark": "dark",
+        "light": "default"
+      },
+      "options": {}
     }
   },
   "baseUrlIssueBanner": true,

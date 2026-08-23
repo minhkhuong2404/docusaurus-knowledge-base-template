@@ -6,16 +6,15 @@ import { isTrackableArticle, TOTAL_TRACKABLE_ARTICLES_DEFAULT } from '../utils/t
 export default function MarkAsReadButton() {
   const location = useLocation();
   const pagePath = location.pathname;
+  const { isPageRead, togglePageRead, progress, totalArticlesCount } = useUserProgress();
 
   if (!isTrackableArticle(pagePath)) {
     return null;
   }
 
-  const { isPageRead, togglePageRead, progress, totalArticlesCount } = useUserProgress();
-
   const isRead = isPageRead(pagePath);
   const totalRead = (progress.readPages || []).filter(isTrackableArticle).length;
-  const totalArticles = totalArticlesCount > 0 && totalArticlesCount <= 620 ? totalArticlesCount : TOTAL_TRACKABLE_ARTICLES_DEFAULT;
+  const totalArticles = totalArticlesCount > 0 && totalArticlesCount <= 2000 ? totalArticlesCount : TOTAL_TRACKABLE_ARTICLES_DEFAULT;
   const percent = Math.min(100, Math.round((totalRead / totalArticles) * 100));
 
   return (

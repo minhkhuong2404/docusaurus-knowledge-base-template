@@ -23,6 +23,12 @@ import CachePenetrationDiagram from '@site/src/components/CachePenetrationDiagra
 import CacheAvalancheDiagram from '@site/src/components/CacheAvalancheDiagram';
 import CacheStack8LayersDiagram from '@site/src/components/CacheStack8LayersDiagram';
 import RedisCachePatternsDiagram from '@site/src/components/RedisCachePatternsDiagram';
+import CacheAmatEconomicsDiagram from '@site/src/components/CacheAmatEconomicsDiagram';
+import CacheWorkingSetZipfDiagram from '@site/src/components/CacheWorkingSetZipfDiagram';
+import CacheTwoMemoryGatesDiagram from '@site/src/components/CacheTwoMemoryGatesDiagram';
+import WTinyLfuArchitectureDiagram from '@site/src/components/WTinyLfuArchitectureDiagram';
+import CacheExpirationMechanismsDiagram from '@site/src/components/CacheExpirationMechanismsDiagram';
+import CacheObservabilityPitfallsDiagram from '@site/src/components/CacheObservabilityPitfallsDiagram';
 
 > A cache is a **fast, temporary data store** closer to the application than the source of truth. It trades a bit of storage capacity and system complexity for raw speed.
 
@@ -201,20 +207,7 @@ A common knee-jerk reaction among backend engineers when facing slow API respons
 
 However, **cache is never free**. In a standard Cache-Aside architecture, reading from a remote cache server (e.g. Redis) requires a network Round Trip Time (RTT, typically ~1ms). If a cache miss occurs, the application must query the database and perform a synchronous write back to the cache (+1ms RTT). Consequently, **every cache miss incurs an additional +2ms network RTT penalty compared to having no cache at all**.
 
-```
-Request Lifecycle Comparison:
-
-1. No Cache:
-   Client ──► App (5ms) ──► DB (T_db) ──► Total: T_db + 5ms
-
-2. Cache Hit:
-   Client ──► App (5ms) ──► Cache Read RTT (1ms) ──► Total: 6ms
-   (Saves: T_db - 1ms)
-
-3. Cache Miss (Sync Write):
-   Client ──► App (5ms) ──► Cache Read (1ms) ──► DB (T_db) ──► Cache Write (1ms) ──► Total: T_db + 7ms
-   (Penalty: +2ms Network RTT overhead vs No Cache!)
-```
+<CacheAmatEconomicsDiagram />
 
 ---
 
@@ -277,18 +270,7 @@ $$H_{\text{break-even}} = \frac{R_{\text{read}} + R_{\text{write}}}{T_{\text{db}
 
 ### Case Studies: Heavy vs. Ultra-Fast Query Scenarios
 
-```
-Break-Even Hit Ratio vs Database Query Latency:
-
-   100% ┼─────────────────────────────────────────────
-        │   ┌─── 66.7% (Fast Query: T_db = 2ms)
-    80% │   │
-    60% │   │
-    40% │   │
-    20% │   │               ┌─── 3.9% (Heavy Query: T_db = 50ms)
-     0% ┴───┴───────────────┴─────────────────────────
-           2ms             50ms                T_db
-```
+<CacheAmatEconomicsDiagram initialTab="scenarios" />
 
 #### Scenario A: Expensive Database Query ($T_{\text{db}} = 50\text{ms}$)
 - **No Cache**: $5\text{ms} + 50\text{ms} = 55\text{ms}$.
@@ -318,19 +300,7 @@ When planning cache capacity, engineers frequently ask: *"How many gigabytes of 
 
 In real-world web applications (e-commerce, social media, content platforms), request distributions follow **Zipf's Law** (power-law distribution where access probability $P(k) \propto 1/k^\alpha$, with $\alpha \approx 1$).
 
-```
-Total Dataset: 2,000,000 Products (10GB)
-Active Peak Working Set: 200,000 Products (1GB)
-
-Hit Ratio Curve under Zipf Distribution (Harmonic CDF):
-100% ┼──────────────────────────────┬─────────────── [Efficiency Wall]
-     │                       ┌──────┘ 100% Hit Ratio
- 95% │                ┌──────┘ 94.6% (500MB)
- 90% │         ┌──────┘ 89.2% (250MB)
- 85% │  ┌──────┘ 83.7% (125MB)
-     ┴──┴──────────────┴──────────────┴──────────────┴──────────────► RAM Size
-       125MB         250MB          500MB           1GB            2GB
-```
+<CacheWorkingSetZipfDiagram initialTab="zipf" />
 
 #### The Zipf Capacity-to-Hit-Ratio Progression:
 Suppose a catalog has 2,000,000 products ($10\text{GB}$ total dataset), but peak traffic concentrates heavily on the top 200,000 hot items (**$1\text{GB}$ Working Set**):
@@ -817,22 +787,7 @@ When memory capacity reaches its limit, a cache must discard entries to accommod
 
 To design effective caching capacity, engineers must distinguish between the total dataset and the active working set:
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                       DATABASE TOTAL DATASET (e.g. 500 GB)                  │
-│  (Grows continuously over time with every historical write)                 │
-│                                                                             │
-│         ┌─────────────────────────────────────────────────────────┐         │
-│         │          ACTIVE WORKING SET (e.g. 8 GB)                 │         │
-│         │  (Subset accessed by 95% of active peak users)          │         │
-│         │                                                         │         │
-│         │     ┌─────────────────────────────────────────────┐     │         │
-│         │     │         CACHE MEMORY CAPACITY (e.g. 10 GB)  │     │         │
-│         │     │    [ Working Set fits cleanly in RAM! ]     │     │         │
-│         │     └─────────────────────────────────────────────┘     │         │
-│         └─────────────────────────────────────────────────────────┘         │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
+<CacheWorkingSetZipfDiagram initialTab="rings" />
 
 - **Dataset**: The complete volume of data stored in the authoritative database (e.g. 500 GB). This grows monotonically over time with writes.
 - **Working Set**: The active subset of data queried by concurrent users within a given operational window (e.g. 8 GB during peak hours). The working set expands or contracts primarily based on active user concurrency.
@@ -855,32 +810,7 @@ If your cache exhibits a poor Hit Ratio while **memory capacity is NOT full**, t
 
 Standard cache tutorials focus exclusively on *Eviction* (the exit gate). However, modern production architectures govern memory through **Two Distinct Gates**:
 
-```
-                  ┌────────────────────────┐
-                  │    INCOMING REQUEST    │
-                  └───────────┬────────────┘
-                              │
-                              ▼
-           ╔══════════════════════════════════════╗
-           ║    GATE 1: ADMISSION POLICY (IN)     ║
-           ║ "Does this key deserve to enter RAM?"║
-           ╚══════════════════┬═══════════════════╝
-                      ┌───────┴───────┐
-             Qualified│               │Rejected (Drop)
-                      ▼               ▼
-          ┌──────────────────────┐  ┌───────────────────┐
-          │   CACHE MEMORY RAM   │  │ Bypass / No-Store │
-          └───────────┬──────────┘  └───────────────────┘
-                      │ (If Memory Full)
-                      ▼
-           ╔══════════════════════════════════════╗
-           ║    GATE 2: EVICTION POLICY (OUT)     ║
-           ║ "Who is the victim to kick out?"     ║
-           ╚══════════════════┬═══════════════════╝
-                              │
-                              ▼
-                      [ EVICTED VICTIM ]
-```
+<CacheTwoMemoryGatesDiagram />
 
 1. **Admission Policy (The Entrance Gate)**: When new data arrives, evaluates whether the incoming candidate possesses sufficient long-term value to occupy valuable RAM.
 2. **Eviction Policy (The Exit Gate)**: When memory is saturated, selects the optimal "victim" entry to expel to make room.
@@ -905,17 +835,6 @@ In systems with **No Admission Policy** (such as standard Redis where the entran
 ### 3. The 3 Families of Eviction Policies & Engineering Trade-Offs
 
 Every eviction policy attempts to solve one predictive question: *Based on past behavior, which key is least likely to be accessed again in the future?*
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    3 Families of Eviction Algorithms                        │
-├─────────────────────────────────────────────────────────────────────────────┤
-│ 1. Recency-Based (LRU)        ──► Temporal Locality (Blind to frequency)    │
-│ 2. Frequency-Based (LFU)      ──► Long-term Popularity (Historical bias)    │
-│ 3. Hybrid / Multi-Tier (SLRU) ──► Multi-segment Scan Resistance             │
-│    └─► W-TinyLFU (Caffeine)   ──► Window LRU + TinyLFU Admission Duel       │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
 
 #### 1️⃣ Recency-Based: LRU (Least Recently Used)
 - **Philosophy**: If an item was accessed recently, it will be accessed again soon (**Temporal Locality**). Adapts very rapidly to sudden shifts in user traffic.
@@ -1018,33 +937,7 @@ public class LFUCache<K, V> {
 
 The most advanced cache architecture available today is **Window TinyLFU (W-TinyLFU)**, designed by Ben Manes and implemented in Java's industry-standard **Caffeine Cache**:
 
-```
-                               W-TinyLFU ARCHITECTURE
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                                                                             │
-│   New Key ──► ┌───────────────────┐                                         │
-│               │    WINDOW LRU     │ (Allows new keys to prove utility)      │
-│               │ (e.g. 1% Capacity)│                                         │
-│               └─────────┬─────────┘                                         │
-│                         │ Candidate dropped from Window                     │
-│                         ▼                                                   │
-│             ╔═══════════════════════╗                                       │
-│             ║    ADMISSION DUEL     ║ ◄── Count-Min Sketch (4-bit counter)  │
-│             ║ Candidate vs. Victim  ║                                       │
-│             ╚═══════════┬═══════════╝                                       │
-│                Wins     │     Loses (Rejected)                              │
-│         ┌───────────────┴───────────────┐                                   │
-│         ▼                               ▼                                   │
-│  ┌──────────────────────────────┐  [ DISCARD ]                              │
-│  │     MAIN CACHE (SLRU)        │                                           │
-│  │ ┌──────────────┬───────────┐ │                                           │
-│  │ │  Probation   │ Protected │ │                                           │
-│  │ │    (20%)     │   (80%)   │ │                                           │
-│  │ └──────────────┴───────────┘ │                                           │
-│  └──────────────────────────────┘                                           │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
+<WTinyLfuArchitectureDiagram />
 
 #### Core Components of W-TinyLFU:
 1. **Window LRU (1% Cache Size)**: New keys enter an initial admission window unconditionally. This gives brand-new hot keys time to build up frequency before facing admission scrutiny.
@@ -1071,17 +964,6 @@ While Cache Eviction is driven by **memory capacity pressure**, **Cache Expirati
 
 ### The Core Architectural Triad: Expiration vs. Eviction vs. Invalidation
 
-```
-┌─────────────────────────┬─────────────────────────┬─────────────────────────┐
-│    Cache Expiration     │      Cache Eviction     │    Cache Invalidation   │
-├─────────────────────────┼─────────────────────────┼─────────────────────────┤
-│ Driven by: CLOCK (Time) │ Driven by: RAM (Memory) │ Driven by: SOURCE DATA  │
-│ TTL period has elapsed  │ Memory limit is reached │ Source of Truth mutated │
-│ Marks data as Stale     │ Reclaims memory space   │ Explicit purge / update │
-│ Passive/Active cleanup  │ LRU, LFU, FIFO, ARC     │ Event / CDC / Mutation  │
-└─────────────────────────┴─────────────────────────┴─────────────────────────┘
-```
-
 | Dimension | Cache Expiration | Cache Eviction | Cache Invalidation |
 |---|---|---|---|
 | **Primary Trigger** | **Time (Clock-driven)** | **Memory Pressure (RAM-driven)** | **Data Mutation (State-driven)** |
@@ -1103,46 +985,11 @@ High-performance cache engines (such as Redis, Memcached, and Caffeine) **never 
 
 Instead, cache engines combine **two complementary cleanup mechanisms**:
 
-```
-1. Passive / Lazy Expiration (Triggered on Client Read):
-   Client ──► GET user:100 ──► Engine checks key metadata
-                               ├─ Expired? ──► DELETE from RAM ──► Return Cache Miss (nil)
-                               └─ Valid?   ──► Return Value
-
-2. Active / Periodic Expiration (Triggered by Background Daemon):
-   Background Thread (e.g. 10Hz) ──► Randomly sample 20 keys with TTL
-                                     ├─ Scan & delete expired keys
-                                     └─ If >25% expired ──► Repeat immediately!
-```
-
-#### 1. Passive / Lazy Expiration (On-Access)
-- When a client issues a read (`GET key`), the engine inspects the expiration timestamp metadata stored in the key's header.
-- If the current time exceeds the expiration timestamp, the engine synchronously deletes the key from memory and returns a **Cache Miss** (`nil` / `null`).
-- *Limitation*: Cold, orphaned keys that are never read again would linger in RAM indefinitely if this were the only cleanup path.
-
-#### 2. Active / Periodic Expiration (Probabilistic Sampling)
-- A background worker runs periodically (e.g., Redis executes `activeExpireCycle()` 10 times per second, every 100ms).
-- In each cycle, it randomly tests **20 keys** with an active TTL from the expiration dictionary.
-- All expired keys in the sample are immediately purged from RAM.
-- If **more than 25% (5 keys)** of the sample were expired, the engine immediately repeats the sampling cycle to aggressively free memory without blocking the primary event loop.
-
----
+<CacheExpirationMechanismsDiagram />
 
 ### Taxonomy: The 5 Cache Expiration Policies
 
 Depending on the business domain, access patterns, and failure tolerance, systems must select the appropriate expiration policy:
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                       5 Cache Expiration Policies                           │
-├─────────────────────────────────────────────────────────────────────────────┤
-│ 1. Absolute Expiration (Expire-After-Write)  ──► Fixed TTL from write time  │
-│ 2. Sliding Expiration (Expire-After-Access) ──► TTL resets on every read   │
-│ 3. Absolute Point-in-Time (Expire-At)       ──► Target Epoch timestamp      │
-│ 4. Variable / Jittered (Entropy-based TTL)  ──► TTL ± Random(Jitter)        │
-│ 5. Dynamic / Contextual (Adaptive SLA)      ──► Runtime computed by load/SLA│
-└─────────────────────────────────────────────────────────────────────────────┘
-```
 
 #### ① Absolute Expiration (Expire-After-Write / Fixed TTL)
 - **Mechanism**: TTL is fixed at the moment the entry is written (`PUT`/`SET`). Read operations (`GET`) have **zero effect** on the expiration timestamp. The key expires exactly after duration $T$.
@@ -2323,21 +2170,12 @@ groups:
 
 ### Observability Pitfalls: Measuring Cache Health Accurately
 
+<CacheObservabilityPitfallsDiagram />
+
 #### Trap 1: Request Hit Ratio vs. Key Hit Ratio (The P99 Latency Deception)
 Suppose you allocate $250\text{MB}$ RAM for a catalog with 200,000 active products.
 - **Request Hit Ratio**: **$89.2\%$** (looks great on high-level executive dashboards!).
 - **Key Hit Ratio**: $250\text{MB}$ only holds 50,000 items $\rightarrow$ **only $25\%$ of unique product keys are cached**.
-
-```
-Request Stream:
-┌───────────────────────────────────────────────────────────┐
-│ 89.2% of Requests (Hot 25% Keys) ──► Hit Cache (6ms)      │
-│ 10.8% of Requests (Cold 75% Keys) ──► Miss Cache (57ms!)  │
-└───────────────────────────────────────────────────────────┘
-Average Latency: ~11.5ms  (Looks acceptable)
-P90 Latency:     ~6ms     (Looks fast)
-P99 / P99.9 Latency: 57ms (Catastrophic tail latency degradation!)
-```
 **Consequence**: The $75\%$ of less popular, long-tail products continuously miss the cache. Users browsing niche or long-tail items consistently suffer $57\text{ms}$ latency ($+2\text{ms}$ RTT overhead on top of the DB query), causing severe **P99 tail latency degradation**. Always monitor P95, P99, and P99.9 latencies alongside average hit ratio.
 
 ---

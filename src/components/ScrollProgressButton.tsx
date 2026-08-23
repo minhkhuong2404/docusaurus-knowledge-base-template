@@ -11,6 +11,10 @@ export default function ScrollProgressButton() {
   const { isPageRead, markPageAsRead, isManuallyUnmarked } = useUserProgress();
 
   useEffect(() => {
+    if (pagePath.startsWith('/arcade') || pagePath.startsWith('/stats') || pagePath === '/stats') {
+      return;
+    }
+
     const handleScroll = () => {
       const scrollTop = window.scrollY || document.documentElement.scrollTop;
       const scrollHeight = document.documentElement.scrollHeight;
@@ -22,17 +26,17 @@ export default function ScrollProgressButton() {
         setScrollPercent(percent);
         setIsVisible(scrollTop > 40 || percent > 0);
 
-        // Auto mark as read when user reaches end of an eligible article (>= 90% or within 150px of bottom), UNLESS manually unmarked
+        // Auto mark as read or credit daily re-read when user reaches end of an eligible article (>= 90% or within 150px of bottom)
         if (percent >= 90 || (totalScrollable - scrollTop) < 150) {
-          if (isTrackableArticle(pagePath) && !isPageRead(pagePath) && !isManuallyUnmarked(pagePath)) {
+          if (isTrackableArticle(pagePath) && !isManuallyUnmarked(pagePath)) {
             markPageAsRead(pagePath);
           }
         }
       } else {
         setScrollPercent(100);
         setIsVisible(false);
-        // Short page without scrollbar — auto mark as read if eligible and not manually unmarked
-        if (isTrackableArticle(pagePath) && !isPageRead(pagePath) && !isManuallyUnmarked(pagePath)) {
+        // Short page without scrollbar
+        if (isTrackableArticle(pagePath) && !isManuallyUnmarked(pagePath)) {
           markPageAsRead(pagePath);
         }
       }
@@ -43,6 +47,10 @@ export default function ScrollProgressButton() {
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, [pagePath, isPageRead, markPageAsRead, isManuallyUnmarked]);
+
+  if (pagePath.startsWith('/arcade') || pagePath.startsWith('/stats') || pagePath === '/stats') {
+    return null;
+  }
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });

@@ -8,7 +8,8 @@
   },
   "scripts": {
     "start": "python scratch/fetch_leetcode_daily.py && docusaurus start",
-    "build": "python scratch/fetch_leetcode_daily.py && DOCUSAURUS_IGNORE_SSG_WARNINGS=true docusaurus build",
+    "sync-quizzes": "node scripts/sync_quiz_snapshot.js",
+    "build": "python scratch/fetch_leetcode_daily.py && node scripts/sync_quiz_snapshot.js && DOCUSAURUS_IGNORE_SSG_WARNINGS=true docusaurus build",
     "build:analyze": "docusaurus build --bundle-analyzer",
     "build:debug-search": "DEBUG=search-local:* docusaurus build",
     "serve": "docusaurus serve",

@@ -181,6 +181,22 @@ const config: Config = {
 			},
 			items: [
 				{
+					type: 'docSidebar',
+					sidebarId: 'tutorialSidebar',
+					position: 'left',
+					label: 'Docs',
+				},
+				{
+					to: '/arcade',
+					label: 'Arcade',
+					position: 'left',
+				},
+				{
+					to: '/stats',
+					label: 'Stats',
+					position: 'left',
+				},
+				{
 					type: 'custom-userNavbarItem',
 					position: 'right',
 				},

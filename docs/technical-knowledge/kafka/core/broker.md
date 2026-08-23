@@ -8,7 +8,7 @@ sidebar_position: 2
 ---
 
 import KafkaBrokerStorageDiagram from '@site/src/components/KafkaBrokerStorageDiagram';
-import KafkaMonospaceSchemaInspector from '@site/src/components/KafkaMonospaceSchemaInspector';
+import KafkaRecordBatchIndexDiagram from '@site/src/components/KafkaRecordBatchIndexDiagram';
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
@@ -19,9 +19,9 @@ import TabItem from '@theme/TabItem';
 
 ---
 
-## Monospace Schema Inspector: Kafka RecordBatch & Offset Index
+## Kafka Binary RecordBatch Structure & Segment Index Layout
 
-<KafkaMonospaceSchemaInspector />
+<KafkaRecordBatchIndexDiagram />
 
 ---
 

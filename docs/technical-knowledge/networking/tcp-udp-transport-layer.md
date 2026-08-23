@@ -12,7 +12,7 @@ import TcpSegmentAnatomyDiagram from '@site/src/components/TcpSegmentAnatomyDiag
 import TcpFlowControlDiagram from '@site/src/components/TcpFlowControlDiagram';
 import TcpCongestionControlDiagram from '@site/src/components/TcpCongestionControlDiagram';
 import UdpAnatomyDiagram from '@site/src/components/UdpAnatomyDiagram';
-import NetworkMonospaceSchemaInspector from '@site/src/components/NetworkMonospaceSchemaInspector';
+import NetworkPacketHeaderVisualizerDiagram from '@site/src/components/NetworkPacketHeaderVisualizerDiagram';
 
 # TCP, UDP & Transport Layer
 
@@ -24,9 +24,9 @@ The Transport Layer provides **process-to-process** communication across network
 
 ---
 
-## Monospace Schema Inspector: TCP & IPv4 Bitwise Packet Header
+## Bitwise TCP & IPv4 Header Architecture
 
-<NetworkMonospaceSchemaInspector />
+<NetworkPacketHeaderVisualizerDiagram />
 
 ---
 

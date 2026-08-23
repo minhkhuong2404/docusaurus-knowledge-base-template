@@ -5,6 +5,7 @@ import { auth } from "../config/firebase";
 import { UserProgressProvider } from "../context/UserProgressContext";
 import PremiumGate from "../components/PremiumGate";
 import ScrollProgressButton from "../components/ScrollProgressButton";
+import LevelUpToast from "../components/gamification/LevelUpToast";
 
 const PREMIUM_STATE_KEY = "premium_session_state";
 
@@ -60,7 +61,7 @@ export default function Root({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        applyPremiumNavState("logged_in", user);
+        applyPremiumNavState("logged_in");
         window.sessionStorage.setItem(PREMIUM_STATE_KEY, "logged_in");
       } else {
         applyPremiumNavState("logged_out");
@@ -72,7 +73,7 @@ export default function Root({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const cachedState = readCachedPremiumState();
     if (cachedState) {
-      applyPremiumNavState(cachedState, auth?.currentUser);
+      applyPremiumNavState(cachedState);
     }
   }, [location.pathname]);
 
@@ -152,30 +153,8 @@ export default function Root({ children }: { children: React.ReactNode }) {
         <div className="universal-item constellation-1" />
         <div className="universal-item constellation-2" />
       </div>
-      <div className="navbar-space-decorations">
-        {/* Header Planets */}
-        <div className="header-planet earth-h" />
-        <div className="header-planet mars-h" />
-        <div className="header-planet venus-h" />
-
-        {/* Header Moon */}
-        <div className="header-moon-h" />
-
-        {/* Header Comets */}
-        <div className="comet header-comet-1" />
-        <div className="comet header-comet-2" />
-
-        {/* Header Rockets & Satellites */}
-        <div className="header-rocket h-rocket-1" />
-        <div className="header-rocket h-rocket-2" />
-        <div className="header-satellite h-sat" />
-
-        {/* Dark Mode Header Universal */}
-        <div className="header-universal h-galaxy" />
-        <div className="header-universal h-nebula" />
-        <div className="header-universal h-shooting" />
-      </div>
       <UserProgressProvider>
+        <LevelUpToast />
         <ScrollProgressButton />
         {isPremiumRoute ? <PremiumGate>{children}</PremiumGate> : children}
       </UserProgressProvider>
