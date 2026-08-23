@@ -22,3 +22,32 @@
     transform: rotate(360deg);
   }
 }
+
+/* Interactive Option Button with Premium Hover Effect */
+.optionButton {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 11px 16px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  line-height: 1.45;
+  text-align: left;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+}
+
+.optionButton:not(:disabled):hover {
+  background: rgba(56, 189, 248, 0.14) !important;
+  border-color: #38bdf8 !important;
+  transform: translateX(6px);
+  box-shadow: 0 4px 18px rgba(56, 189, 248, 0.2), inset 0 0 0 1px rgba(56, 189, 248, 0.35);
+  color: #38bdf8 !important;
+}
+
+.optionButton:not(:disabled):active {
+  transform: translateX(3px) scale(0.99);
+}

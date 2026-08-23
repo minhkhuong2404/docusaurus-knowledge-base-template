@@ -744,27 +744,18 @@ export default function DailyQuizGallery({
                   key={oIdx}
                   onClick={() => handleOptionClick(oIdx)}
                   disabled={isAnswered}
+                  className={styles.optionButton}
                   style={{
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    justifyContent: 'space-between',
-                    gap: '10px',
-                    padding: '10px 14px',
-                    borderRadius: '8px',
                     border,
                     background: bg,
                     color,
-                    fontSize: '13px',
-                    lineHeight: 1.45,
-                    textAlign: 'left',
                     cursor: isAnswered ? 'default' : 'pointer',
-                    transition: 'all 0.15s ease',
                   }}
                 >
                   <span>
                     <strong style={{ opacity: 0.9 }}>{String.fromCharCode(65 + oIdx)}.</strong> {opt}
                   </span>
-                  {icon && <span style={{ fontSize: '13px' }}>{icon}</span>}
+                  {icon && <span style={{ fontSize: '14px' }}>{icon}</span>}
                 </button>
               );
             })}
