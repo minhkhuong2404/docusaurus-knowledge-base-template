@@ -493,3 +493,54 @@ export async function fetchAllTabQuestionsWithRevalidate(
 
   return cached;
 }
+
+/**
+ * Fetch Concept Flashcards (5,120 deep-dive architectural concept cards)
+ */
+export interface ConceptFlashcardItem {
+  id: string;
+  topic: string;
+  category: 'java' | 'spring-boot' | 'system-design' | 'database';
+  categoryLabel: string;
+  difficulty: 'Junior' | 'Mid' | 'Senior' | 'Staff';
+  whatItIs: string;
+  whenToUse: string;
+  pros: string[];
+  cons: string[];
+  howToUseProperly: string;
+  codeExample?: string;
+  keyTakeaway: string;
+  docLink?: string;
+}
+
+export async function fetchConceptFlashcards(forceRefresh = false): Promise<ConceptFlashcardItem[]> {
+  const cacheKey = `${CACHE_PREFIX}concept_flashcards_v1`;
+
+  // 1. Memory / IndexedDB Cache
+  if (!forceRefresh) {
+    const cached = await getIndexedDBCache<ConceptFlashcardItem[]>(cacheKey);
+    if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS && cached.data.length > 0) {
+      return cached.data;
+    }
+  }
+
+  // 2. Try static pre-bundled snapshot (/data/concept_flashcards.json)
+  if (typeof window !== 'undefined') {
+    try {
+      const baseUrl = (window as any).__docusaurus_base_url || '/';
+      const cleanBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+      const res = await fetch(`${cleanBase}data/concept_flashcards.json`);
+      if (res.ok) {
+        const json: ConceptFlashcardItem[] = await res.json();
+        if (Array.isArray(json) && json.length > 0) {
+          setIndexedDBCache(cacheKey, json);
+          return json;
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  return [];
+}

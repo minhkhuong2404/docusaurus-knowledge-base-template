@@ -5,9 +5,10 @@ import { BUG_CHALLENGES, BugSnippetsChallenge } from '../../../data/spotTheBugDa
 import { fetchSpotTheBugQuestions, QuizQuestion } from '../../../services/googleSheetQuizService';
 
 type CategoryKey = 'all' | 'concurrency' | 'spring' | 'memory' | 'database' | 'async';
+type GameMode = 'sprint' | 'zen' | 'hardcore';
 
 const CATEGORY_TABS: { id: CategoryKey; label: string; icon: string; color: string }[] = [
-  { id: 'all', label: 'All Code Arenas (1,024 Qs)', icon: '⚡', color: '#a855f7' },
+  { id: 'all', label: 'All Arenas', icon: '⚡', color: '#a855f7' },
   { id: 'concurrency', label: 'Java Concurrency & OCP 21', icon: '☕', color: '#f59e0b' },
   { id: 'spring', label: 'Spring Boot Pitfalls', icon: '🍃', color: '#34d399' },
   { id: 'memory', label: 'JVM Memory & GC', icon: '🧠', color: '#ef4444' },
@@ -15,11 +16,17 @@ const CATEGORY_TABS: { id: CategoryKey; label: string; icon: string; color: stri
   { id: 'async', label: 'Async & Reactive', icon: '🔄', color: '#ec4899' },
 ];
 
+const GAME_MODES: { id: GameMode; label: string; icon: string; timerSecs: number | null; expMultiplier: number; description: string }[] = [
+  { id: 'sprint', label: 'Sprint Duel', icon: '⚡', timerSecs: 30, expMultiplier: 1.0, description: '30s Clock • Time speed bonus • Standard EXP' },
+  { id: 'zen', label: 'Zen Study', icon: '🧘', timerSecs: null, expMultiplier: 0.8, description: 'Untimed • Deep dive into Java 21 & Spring internals' },
+  { id: 'hardcore', label: 'Hardcore', icon: '🔥', timerSecs: 15, expMultiplier: 2.0, description: '15s Blitz • 2x EXP payout • High streak stakes' },
+];
+
 function shuffle<T>(array: T[]): T[] {
   const arr = [...array];
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [arr[j], arr[i]] = [arr[i], arr[j]];
+    [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr;
 }
@@ -27,19 +34,51 @@ function shuffle<T>(array: T[]): T[] {
 export default function SpotTheBugDuelGame(): React.JSX.Element {
   const { addExp, saveMiniGameScore, unlockAchievement } = useUserProgress();
   const [selectedCategory, setSelectedCategory] = useState<CategoryKey>('all');
+  const [gameMode, setGameMode] = useState<GameMode>('sprint');
   const [challenges, setChallenges] = useState<BugSnippetsChallenge[]>(BUG_CHALLENGES);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [currentIdx, setCurrentIdx] = useState<number>(0);
   const [gameState, setGameState] = useState<'playing' | 'revealed'>('playing');
+  const [revealedStudyMode, setRevealedStudyMode] = useState<boolean>(false);
   const [chosenOptionId, setChosenOptionId] = useState<string | null>(null);
   const [clickedLineNumber, setClickedLineNumber] = useState<number | null>(null);
+  const [lineIdentifiedBonus, setLineIdentifiedBonus] = useState<boolean>(false);
   const [timeLeft, setTimeLeft] = useState<number>(30);
   const [score, setScore] = useState<number>(0);
   const [combo, setCombo] = useState<number>(0);
   const [showRules, setShowRules] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<'diagnosis' | 'fix'>('diagnosis');
 
-  // Fetch 1,024 questions live from Google Sheet tab 'Spot The Bug' (with snapshot fallback)
+  // Tactical Debugger Lifelines
+  const [analyzerUsed, setAnalyzerUsed] = useState<boolean>(false);
+  const [eliminatedOptionIds, setEliminatedOptionIds] = useState<string[]>([]);
+  const [breakpointHintUsed, setBreakpointHintUsed] = useState<boolean>(false);
+  const [timeWarpUsed, setTimeWarpUsed] = useState<boolean>(false);
+  const [copiedText, setCopiedText] = useState<string | null>(null);
+
+  // Solved challenges tracking in localStorage
+  const [solvedBugIds, setSolvedBugIds] = useState<string[]>(() => {
+    if (typeof window === 'undefined') return [];
+    try {
+      const saved = localStorage.getItem('spot_bug_solved_challenges');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const markBugSolved = (bugId: string) => {
+    setSolvedBugIds((prev) => {
+      if (prev.includes(bugId)) return prev;
+      const updated = [...prev, bugId];
+      try {
+        localStorage.setItem('spot_bug_solved_challenges', JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+  };
+
+  // Fetch questions from Google Sheet tab 'Spot The Bug'
   useEffect(() => {
     let isMounted = true;
     async function loadSheetData() {
@@ -105,7 +144,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
     return challenges.filter((c) => c.category === selectedCategory);
   }, [selectedCategory, challenges]);
 
-  const currentChallenge = filteredChallenges[currentIdx % filteredChallenges.length];
+  const currentChallenge = filteredChallenges[currentIdx % (filteredChallenges.length || 1)] || BUG_CHALLENGES[0];
 
   // Shuffled options per challenge
   const shuffledOptions = useMemo(() => {
@@ -113,9 +152,12 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
     return shuffle(currentChallenge.options);
   }, [currentChallenge]);
 
+  // Mode config
+  const activeModeConfig = GAME_MODES.find((m) => m.id === gameMode) || GAME_MODES[0];
+
   // Timer countdown
   useEffect(() => {
-    if (gameState !== 'playing') return;
+    if (gameState !== 'playing' || activeModeConfig.timerSecs === null) return;
 
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
@@ -130,18 +172,56 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [gameState, currentIdx]);
+  }, [gameState, currentIdx, activeModeConfig.timerSecs]);
+
+  // ── Power-Up 1: Static Code Analyzer (50/50) ──
+  const handleUseAnalyzer = () => {
+    if (analyzerUsed || gameState !== 'playing' || !currentChallenge) return;
+    const incorrectIds = currentChallenge.options
+      .filter((o) => !o.isCorrect)
+      .map((o) => o.id);
+
+    const eliminated = shuffle(incorrectIds).slice(0, 2);
+    setEliminatedOptionIds(eliminated);
+    setAnalyzerUsed(true);
+  };
+
+  // ── Power-Up 2: JDB Breakpoint (Line Hint) ──
+  const handleUseBreakpoint = () => {
+    if (breakpointHintUsed || gameState !== 'playing' || !currentChallenge) return;
+    setClickedLineNumber(currentChallenge.buggyLineNumber);
+    setBreakpointHintUsed(true);
+  };
+
+  // ── Power-Up 3: Time Warp (+15s) ──
+  const handleUseTimeWarp = () => {
+    if (timeWarpUsed || gameState !== 'playing' || activeModeConfig.timerSecs === null) return;
+    setTimeLeft((prev) => prev + 15);
+    setTimeWarpUsed(true);
+  };
+
+  // ── Click-to-Verify Line ──
+  const handleLineClick = (lineNum: number) => {
+    setClickedLineNumber(lineNum);
+    if (gameState === 'playing' && currentChallenge && lineNum === currentChallenge.buggyLineNumber && !lineIdentifiedBonus) {
+      setLineIdentifiedBonus(true);
+      setScore((prev) => prev + 50);
+    }
+  };
 
   const handleSelectOption = (option: { id: string; isCorrect: boolean }) => {
     if (gameState !== 'playing') return;
 
     setChosenOptionId(option.id);
     setGameState('revealed');
+    setRevealedStudyMode(false);
 
     if (option.isCorrect) {
-      const timeBonus = Math.round(timeLeft * 10);
+      markBugSolved(currentChallenge.id);
+      const timeBonus = activeModeConfig.timerSecs !== null ? Math.round(timeLeft * 10) : 50;
+      const lineBonus = lineIdentifiedBonus ? 50 : 0;
       const comboMultiplier = 1 + combo * 0.25;
-      const pointsEarned = Math.round((100 + timeBonus) * comboMultiplier);
+      const pointsEarned = Math.round((100 + timeBonus + lineBonus) * comboMultiplier * activeModeConfig.expMultiplier);
 
       const newScore = score + pointsEarned;
       const newCombo = combo + 1;
@@ -149,11 +229,11 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
       setCombo(newCombo);
       saveMiniGameScore('spot_bug', newScore);
 
-      // Reward EXP
-      addExp(25 + newCombo * 5, `Spot The Bug Defect Caught (+${newCombo}x combo)`);
+      const earnedExp = Math.round((25 + newCombo * 5) * activeModeConfig.expMultiplier);
+      addExp(earnedExp, `Spot The Bug Defect Caught [${gameMode.toUpperCase()}] (+${newCombo}x combo)`);
 
       if (newCombo >= 3) {
-        triggerFireworks();
+        triggerFireworks(3500);
         unlockAchievement('bug_hunter_streak');
       }
     } else {
@@ -161,13 +241,56 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
     }
   };
 
+  const handleShowAnswer = () => {
+    if (gameState !== 'playing') return;
+    setGameState('revealed');
+    setRevealedStudyMode(true);
+    setClickedLineNumber(currentChallenge.buggyLineNumber);
+    setActiveTab('diagnosis');
+  };
+
   const handleNextChallenge = () => {
     setGameState('playing');
+    setRevealedStudyMode(false);
     setChosenOptionId(null);
     setClickedLineNumber(null);
-    setTimeLeft(30);
+    setLineIdentifiedBonus(false);
+    setAnalyzerUsed(false);
+    setEliminatedOptionIds([]);
+    setBreakpointHintUsed(false);
+    setTimeWarpUsed(false);
+    setTimeLeft(activeModeConfig.timerSecs || 30);
     setActiveTab('diagnosis');
     setCurrentIdx((prev) => (prev + 1) % filteredChallenges.length);
+  };
+
+  const handleCopyFix = () => {
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(currentChallenge.fixSnippet).then(() => {
+      setCopiedText('fix');
+      setTimeout(() => setCopiedText(null), 2000);
+    });
+  };
+
+  const handleCopyRca = () => {
+    if (!navigator.clipboard) return;
+    const rcaText = `### Defect RCA: ${currentChallenge.title} (${currentChallenge.difficulty} Level)
+**Scenario**: ${currentChallenge.scenario}
+**Defect Line**: Line #${currentChallenge.buggyLineNumber}
+**Root Cause**: ${currentChallenge.rootCause}
+
+#### Recommended Fix:
+\`\`\`java
+${currentChallenge.fixSnippet}
+\`\`\`
+
+#### Senior Interview Insight:
+${currentChallenge.interviewTip}
+`;
+    navigator.clipboard.writeText(rcaText).then(() => {
+      setCopiedText('rca');
+      setTimeout(() => setCopiedText(null), 2000);
+    });
   };
 
   if (!currentChallenge) {
@@ -175,44 +298,69 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
   }
 
   const codeLines = currentChallenge.code.split('\n');
+  const isCurrentSolved = solvedBugIds.includes(currentChallenge.id);
 
   return (
     <div
       style={{
         background: 'linear-gradient(180deg, #090d16 0%, #0d121f 100%)',
-        borderRadius: '20px',
+        borderRadius: '24px',
         border: '1px solid rgba(245, 158, 11, 0.3)',
         boxShadow: '0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(245, 158, 11, 0.15)',
-        padding: '24px',
+        padding: '28px',
         color: '#f8fafc',
       }}
     >
-      {/* 1. Header Bar with Score, Timer & Rules Toggle */}
+      {/* ── 1. Header Bar with Score, Timer & Rules Toggle ── */}
       <div
         style={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
           flexWrap: 'wrap',
-          gap: '12px',
+          gap: '14px',
           paddingBottom: '18px',
           borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
           marginBottom: '20px',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <span style={{ fontSize: '1.6rem' }}>🔍</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <span style={{ fontSize: '1.8rem' }}>🔍</span>
           <div>
-            <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#f59e0b' }}>
-              Spot The Bug Duel Arena
+            <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#f59e0b', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+              <span>Spot The Bug Duel Arena</span>
+              {isCurrentSolved && (
+                <span style={{ fontSize: '0.72rem', padding: '2px 8px', borderRadius: '6px', background: 'rgba(52, 211, 153, 0.2)', color: '#34d399', border: '1px solid #34d399' }}>
+                  ✓ Defect Mastered
+                </span>
+              )}
             </div>
-            <div style={{ fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.6)' }}>
-              Real production code race • Identify concurrency, memory leaks & proxy hazards
+            <div style={{ fontSize: '0.8rem', color: 'rgba(255, 255, 255, 0.65)' }}>
+              Real production code race • Concurrency, thread safety, memory leaks & Spring AOP hazards
             </div>
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+          {/* Solved Mastery Pill */}
+          <div
+            style={{
+              padding: '6px 12px',
+              borderRadius: '8px',
+              background: 'rgba(52, 211, 153, 0.12)',
+              border: '1px solid rgba(52, 211, 153, 0.3)',
+              color: '#34d399',
+              fontSize: '0.8rem',
+              fontWeight: 800,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+            }}
+          >
+            <span>🏆</span>
+            <span>Mastery: {solvedBugIds.length} / {challenges.length}</span>
+          </div>
+
           {/* Rules Toggle */}
           <button
             type="button"
@@ -239,7 +387,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
           {combo > 1 && (
             <span
               style={{
-                padding: '4px 10px',
+                padding: '5px 12px',
                 borderRadius: '8px',
                 background: 'linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)',
                 color: '#ffffff',
@@ -252,24 +400,26 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
             </span>
           )}
 
-          {/* Countdown Sprint Timer */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '6px 12px',
-              borderRadius: '10px',
-              background: timeLeft <= 5 ? 'rgba(239, 68, 68, 0.25)' : 'rgba(255, 255, 255, 0.06)',
-              border: `1px solid ${timeLeft <= 5 ? '#ef4444' : 'rgba(255, 255, 255, 0.12)'}`,
-              color: timeLeft <= 5 ? '#ef4444' : '#ffffff',
-              fontWeight: 800,
-              fontSize: '0.9rem',
-            }}
-          >
-            <span>⏱️</span>
-            <span>{timeLeft}s</span>
-          </div>
+          {/* Countdown Sprint Timer (hidden in Zen mode) */}
+          {activeModeConfig.timerSecs !== null && (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '6px 12px',
+                borderRadius: '10px',
+                background: timeLeft <= 5 ? 'rgba(239, 68, 68, 0.25)' : 'rgba(255, 255, 255, 0.06)',
+                border: `1px solid ${timeLeft <= 5 ? '#ef4444' : 'rgba(255, 255, 255, 0.12)'}`,
+                color: timeLeft <= 5 ? '#ef4444' : '#ffffff',
+                fontWeight: 800,
+                fontSize: '0.9rem',
+              }}
+            >
+              <span>⏱️</span>
+              <span>{timeLeft}s</span>
+            </div>
+          )}
 
           {/* Score Counter */}
           <div
@@ -288,11 +438,11 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
         </div>
       </div>
 
-      {/* Rules Explanation Panel */}
+      {/* ── Rules Explanation Panel ── */}
       {showRules && (
         <div
           style={{
-            padding: '16px 18px',
+            padding: '16px 20px',
             borderRadius: '14px',
             background: 'rgba(15, 23, 42, 0.95)',
             border: '1px solid rgba(245, 158, 11, 0.3)',
@@ -301,18 +451,140 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
             lineHeight: 1.5,
           }}
         >
-          <div style={{ fontWeight: 800, color: '#f59e0b', marginBottom: '6px' }}>
-            🎯 Bug Duel Rules & Scoring:
+          <div style={{ fontWeight: 800, color: '#f59e0b', marginBottom: '8px' }}>
+            🎯 Spot The Bug Duel Rules & Scoring:
           </div>
-          <ul style={{ margin: 0, paddingLeft: '20px', color: 'rgba(255, 255, 255, 0.8)' }}>
-            <li>Inspect the actual production code snippet and click on any line or pick the architectural root cause.</li>
-            <li>Identify subtle concurrency hazards (DCL, volatile), memory leaks (ThreadLocal), and Spring AOP self-invocation traps.</li>
-            <li>Earn base points + speed bonus for fast diagnoses. Maintain continuous streaks for up to 3x EXP multipliers!</li>
-          </ul>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '10px', color: 'rgba(255, 255, 255, 0.85)' }}>
+            <div>1. <strong>Code Inspection</strong>: Click any source code line to highlight the suspect bug location (+50 Line Precision bonus).</div>
+            <div>2. <strong>Root Cause Selection</strong>: Pick the correct architectural explanation to trigger critical fixes.</div>
+            <div>3. <strong>Debugger Lifelines</strong>: Use Static Analyzer (50/50), JDB Breakpoint hint, and Time Warp to assist tough snippets.</div>
+          </div>
         </div>
       )}
 
-      {/* 2. Category Switcher */}
+      {/* ── 2. Mode Selector & Category Switcher ── */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', marginBottom: '16px' }}>
+        {/* Game Mode Tabs */}
+        <div style={{ display: 'flex', gap: '6px' }}>
+          {GAME_MODES.map((mode) => {
+            const isSelected = gameMode === mode.id;
+            return (
+              <button
+                key={mode.id}
+                type="button"
+                onClick={() => {
+                  setGameMode(mode.id);
+                  setTimeLeft(mode.timerSecs || 30);
+                  setGameState('playing');
+                }}
+                style={{
+                  padding: '6px 12px',
+                  borderRadius: '8px',
+                  border: isSelected ? '1.5px solid #f59e0b' : '1px solid rgba(255, 255, 255, 0.1)',
+                  background: isSelected ? 'rgba(245, 158, 11, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                  color: isSelected ? '#f59e0b' : 'rgba(255, 255, 255, 0.7)',
+                  fontSize: '0.78rem',
+                  fontWeight: 750,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                }}
+                title={mode.description}
+              >
+                <span>{mode.icon}</span>
+                <span>{mode.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Action Toolbar (Show Answer / Lifelines) */}
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          {gameState === 'playing' && (
+            <>
+              <button
+                type="button"
+                disabled={analyzerUsed}
+                onClick={handleUseAnalyzer}
+                style={{
+                  padding: '6px 12px',
+                  borderRadius: '8px',
+                  border: '1px solid rgba(192, 132, 252, 0.4)',
+                  background: analyzerUsed ? 'rgba(255, 255, 255, 0.02)' : 'rgba(192, 132, 252, 0.12)',
+                  color: analyzerUsed ? 'rgba(255, 255, 255, 0.3)' : '#c084fc',
+                  fontSize: '0.76rem',
+                  fontWeight: 750,
+                  cursor: analyzerUsed ? 'not-allowed' : 'pointer',
+                }}
+                title="Eliminates 2 incorrect options"
+              >
+                🔍 {analyzerUsed ? 'Analyzer Used' : 'Static Analyzer (50/50)'}
+              </button>
+
+              <button
+                type="button"
+                disabled={breakpointHintUsed}
+                onClick={handleUseBreakpoint}
+                style={{
+                  padding: '6px 12px',
+                  borderRadius: '8px',
+                  border: '1px solid rgba(56, 189, 248, 0.4)',
+                  background: breakpointHintUsed ? 'rgba(255, 255, 255, 0.02)' : 'rgba(56, 189, 248, 0.12)',
+                  color: breakpointHintUsed ? 'rgba(255, 255, 255, 0.3)' : '#38bdf8',
+                  fontSize: '0.76rem',
+                  fontWeight: 750,
+                  cursor: breakpointHintUsed ? 'not-allowed' : 'pointer',
+                }}
+                title="Highlights the exact buggy line number"
+              >
+                ⚡ {breakpointHintUsed ? 'Line Marked' : 'JDB Line Hint'}
+              </button>
+
+              {activeModeConfig.timerSecs !== null && (
+                <button
+                  type="button"
+                  disabled={timeWarpUsed}
+                  onClick={handleUseTimeWarp}
+                  style={{
+                    padding: '6px 12px',
+                    borderRadius: '8px',
+                    border: '1px solid rgba(52, 211, 153, 0.4)',
+                    background: timeWarpUsed ? 'rgba(255, 255, 255, 0.02)' : 'rgba(52, 211, 153, 0.12)',
+                    color: timeWarpUsed ? 'rgba(255, 255, 255, 0.3)' : '#34d399',
+                    fontSize: '0.76rem',
+                    fontWeight: 750,
+                    cursor: timeWarpUsed ? 'not-allowed' : 'pointer',
+                  }}
+                  title="Adds +15s to timer"
+                >
+                  ⏱️ {timeWarpUsed ? '+15s Used' : '+15s Warp'}
+                </button>
+              )}
+
+              <button
+                type="button"
+                onClick={handleShowAnswer}
+                style={{
+                  padding: '6px 12px',
+                  borderRadius: '8px',
+                  border: '1px solid rgba(251, 191, 36, 0.4)',
+                  background: 'rgba(251, 191, 36, 0.08)',
+                  color: '#fbbf24',
+                  fontSize: '0.76rem',
+                  fontWeight: 750,
+                  cursor: 'pointer',
+                }}
+                title="Reveal explanation and fix without gaining EXP"
+              >
+                👁️ Show Answer
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Category Tabs */}
       <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '12px', marginBottom: '18px' }}>
         {CATEGORY_TABS.map((tab) => {
           const isSelected = selectedCategory === tab.id;
@@ -324,7 +596,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
                 setSelectedCategory(tab.id);
                 setCurrentIdx(0);
                 setGameState('playing');
-                setTimeLeft(30);
+                setTimeLeft(activeModeConfig.timerSecs || 30);
                 setChosenOptionId(null);
               }}
               style={{
@@ -350,7 +622,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
         })}
       </div>
 
-      {/* 3. Challenge Scenario & Difficulty */}
+      {/* ── 3. Challenge Scenario & Difficulty ── */}
       <div
         style={{
           padding: '14px 18px',
@@ -364,26 +636,33 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
           <span style={{ fontSize: '1.05rem', fontWeight: 900, color: '#ffffff' }}>
             {currentChallenge.title}
           </span>
-          <span
-            style={{
-              fontSize: '0.74rem',
-              fontWeight: 800,
-              padding: '2px 8px',
-              borderRadius: '6px',
-              background: `${currentChallenge.difficultyColor}22`,
-              color: currentChallenge.difficultyColor,
-              border: `1px solid ${currentChallenge.difficultyColor}55`,
-            }}
-          >
-            {currentChallenge.difficulty} Level
-          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {lineIdentifiedBonus && (
+              <span style={{ fontSize: '0.74rem', fontWeight: 800, padding: '2px 8px', borderRadius: '6px', background: 'rgba(52, 211, 153, 0.2)', color: '#34d399', border: '1px solid #34d399' }}>
+                🎯 Line Precision +50 pts
+              </span>
+            )}
+            <span
+              style={{
+                fontSize: '0.74rem',
+                fontWeight: 800,
+                padding: '2px 8px',
+                borderRadius: '6px',
+                background: `${currentChallenge.difficultyColor}22`,
+                color: currentChallenge.difficultyColor,
+                border: `1px solid ${currentChallenge.difficultyColor}55`,
+              }}
+            >
+              {currentChallenge.difficulty} Level
+            </span>
+          </div>
         </div>
         <div style={{ fontSize: '0.84rem', color: 'rgba(255, 255, 255, 0.75)', lineHeight: 1.4 }}>
           🚨 <strong>Incident Scenario:</strong> {currentChallenge.scenario}
         </div>
       </div>
 
-      {/* 4. Interactive Monospace Code Box with Clickable Lines */}
+      {/* ── 4. Interactive Monospace Code Box with Clickable Lines ── */}
       <div
         style={{
           background: '#07090e',
@@ -398,13 +677,18 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
           boxShadow: 'inset 0 2px 10px rgba(0, 0, 0, 0.6)',
         }}
       >
-        <div style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: '0.72rem', textTransform: 'uppercase', marginBottom: '8px' }}>
-          📄 Production Source Snippet (Click any line to highlight bug):
+        <div style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: '0.72rem', textTransform: 'uppercase', marginBottom: '8px', display: 'flex', justifyContent: 'space-between' }}>
+          <span>📄 Source Snippet (Click suspect line to verify defect location):</span>
+          {clickedLineNumber && (
+            <span style={{ color: clickedLineNumber === currentChallenge.buggyLineNumber ? '#34d399' : '#fbbf24' }}>
+              Selected: Line #{clickedLineNumber} {clickedLineNumber === currentChallenge.buggyLineNumber ? '✓ (Match!)' : ''}
+            </span>
+          )}
         </div>
 
         {codeLines.map((line, idx) => {
           const lineNum = idx + 1;
-          const isBuggy = gameState === 'revealed' && lineNum === currentChallenge.buggyLineNumber;
+          const isBuggy = (gameState === 'revealed' || breakpointHintUsed) && lineNum === currentChallenge.buggyLineNumber;
           const isClicked = clickedLineNumber === lineNum;
 
           let bg = 'transparent';
@@ -414,7 +698,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
           return (
             <div
               key={lineNum}
-              onClick={() => setClickedLineNumber(lineNum)}
+              onClick={() => handleLineClick(lineNum)}
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -460,7 +744,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
         })}
       </div>
 
-      {/* 5. Diagnostic Choices or Revealed Solution */}
+      {/* ── 5. Diagnostic Choices or Revealed Solution ── */}
       {gameState === 'playing' ? (
         <div>
           <div style={{ fontSize: '0.86rem', fontWeight: 800, color: 'rgba(255, 255, 255, 0.8)', marginBottom: '10px' }}>
@@ -468,55 +752,64 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '10px' }}>
-            {shuffledOptions.map((opt, idx) => (
-              <button
-                key={opt.id}
-                type="button"
-                onClick={() => handleSelectOption(opt)}
-                style={{
-                  padding: '14px 18px',
-                  borderRadius: '12px',
-                  background: 'rgba(30, 41, 59, 0.6)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  color: '#ffffff',
-                  fontSize: '0.88rem',
-                  fontWeight: 600,
-                  textAlign: 'left',
-                  cursor: 'pointer',
-                  transition: 'all 0.15s ease',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'rgba(245, 158, 11, 0.15)';
-                  e.currentTarget.style.borderColor = '#f59e0b';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'rgba(30, 41, 59, 0.6)';
-                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-                }}
-              >
-                <span
+            {shuffledOptions.map((opt, idx) => {
+              const isEliminated = eliminatedOptionIds.includes(opt.id);
+              return (
+                <button
+                  key={opt.id}
+                  type="button"
+                  disabled={isEliminated}
+                  onClick={() => handleSelectOption(opt)}
                   style={{
-                    width: '24px',
-                    height: '24px',
-                    borderRadius: '6px',
-                    background: 'rgba(255, 255, 255, 0.08)',
+                    padding: '14px 18px',
+                    borderRadius: '12px',
+                    background: isEliminated ? 'rgba(255, 255, 255, 0.02)' : 'rgba(30, 41, 59, 0.6)',
+                    border: isEliminated ? '1px dashed rgba(255, 255, 255, 0.08)' : '1px solid rgba(255, 255, 255, 0.1)',
+                    color: isEliminated ? 'rgba(255, 255, 255, 0.25)' : '#ffffff',
+                    fontSize: '0.88rem',
+                    fontWeight: 600,
+                    textAlign: 'left',
+                    cursor: isEliminated ? 'not-allowed' : 'pointer',
+                    transition: 'all 0.15s ease',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '0.75rem',
-                    fontWeight: 800,
-                    color: '#f59e0b',
-                    flexShrink: 0,
+                    gap: '12px',
+                    textDecoration: isEliminated ? 'line-through' : 'none',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isEliminated) {
+                      e.currentTarget.style.background = 'rgba(245, 158, 11, 0.15)';
+                      e.currentTarget.style.borderColor = '#f59e0b';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isEliminated) {
+                      e.currentTarget.style.background = 'rgba(30, 41, 59, 0.6)';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                    }
                   }}
                 >
-                  {String.fromCharCode(65 + idx)}
-                </span>
-                <span>{opt.text}</span>
-              </button>
-            ))}
+                  <span
+                    style={{
+                      width: '24px',
+                      height: '24px',
+                      borderRadius: '6px',
+                      background: 'rgba(255, 255, 255, 0.08)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '0.75rem',
+                      fontWeight: 800,
+                      color: '#f59e0b',
+                      flexShrink: 0,
+                    }}
+                  >
+                    {String.fromCharCode(65 + idx)}
+                  </span>
+                  <span>{opt.text}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
       ) : (
@@ -530,47 +823,99 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
             boxShadow: '0 10px 30px rgba(0, 0, 0, 0.5)',
           }}
         >
-          {/* Tabs: Diagnostic vs Code Fix */}
-          <div style={{ display: 'flex', gap: '8px', marginBottom: '14px' }}>
-            <button
-              type="button"
-              onClick={() => setActiveTab('diagnosis')}
-              style={{
-                padding: '6px 14px',
-                borderRadius: '8px',
-                background: activeTab === 'diagnosis' ? '#f59e0b25' : 'transparent',
-                border: `1px solid ${activeTab === 'diagnosis' ? '#f59e0b' : 'rgba(255, 255, 255, 0.1)'}`,
-                color: activeTab === 'diagnosis' ? '#f59e0b' : 'rgba(255, 255, 255, 0.6)',
-                fontWeight: 700,
-                fontSize: '0.8rem',
-                cursor: 'pointer',
-              }}
-            >
-              🧠 Root Cause Analysis
-            </button>
+          {revealedStudyMode && (
+            <div style={{ padding: '8px 12px', borderRadius: '8px', background: 'rgba(251, 191, 36, 0.12)', border: '1px solid #fbbf24', color: '#fbbf24', fontSize: '0.82rem', fontWeight: 800, marginBottom: '14px' }}>
+              👁️ SOLUTION REVEALED (Study Mode — No EXP Awarded)
+            </div>
+          )}
 
-            <button
-              type="button"
-              onClick={() => setActiveTab('fix')}
-              style={{
-                padding: '6px 14px',
-                borderRadius: '8px',
-                background: activeTab === 'fix' ? '#34d39925' : 'transparent',
-                border: `1px solid ${activeTab === 'fix' ? '#34d399' : 'rgba(255, 255, 255, 0.1)'}`,
-                color: activeTab === 'fix' ? '#34d399' : 'rgba(255, 255, 255, 0.6)',
-                fontWeight: 700,
-                fontSize: '0.8rem',
-                cursor: 'pointer',
-              }}
-            >
-              🛠️ Code Patch & Fix
-            </button>
+          {/* Tabs: Diagnostic vs Code Fix & Copy Buttons */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginBottom: '14px' }}>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button
+                type="button"
+                onClick={() => setActiveTab('diagnosis')}
+                style={{
+                  padding: '6px 14px',
+                  borderRadius: '8px',
+                  background: activeTab === 'diagnosis' ? '#f59e0b25' : 'transparent',
+                  border: `1px solid ${activeTab === 'diagnosis' ? '#f59e0b' : 'rgba(255, 255, 255, 0.1)'}`,
+                  color: activeTab === 'diagnosis' ? '#f59e0b' : 'rgba(255, 255, 255, 0.6)',
+                  fontWeight: 700,
+                  fontSize: '0.8rem',
+                  cursor: 'pointer',
+                }}
+              >
+                🧠 Root Cause Analysis
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('fix')}
+                style={{
+                  padding: '6px 14px',
+                  borderRadius: '8px',
+                  background: activeTab === 'fix' ? '#34d39925' : 'transparent',
+                  border: `1px solid ${activeTab === 'fix' ? '#34d399' : 'rgba(255, 255, 255, 0.1)'}`,
+                  color: activeTab === 'fix' ? '#34d399' : 'rgba(255, 255, 255, 0.6)',
+                  fontWeight: 700,
+                  fontSize: '0.8rem',
+                  cursor: 'pointer',
+                }}
+              >
+                🛠️ Code Patch & Fix
+              </button>
+            </div>
+
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button
+                type="button"
+                onClick={handleCopyFix}
+                style={{
+                  padding: '5px 10px',
+                  borderRadius: '6px',
+                  background: 'rgba(52, 211, 153, 0.12)',
+                  border: '1px solid rgba(52, 211, 153, 0.3)',
+                  color: '#34d399',
+                  fontSize: '0.74rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                }}
+              >
+                <span>{copiedText === 'fix' ? '✓' : '📋'}</span>
+                <span>{copiedText === 'fix' ? 'Patch Copied!' : 'Copy Patch'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleCopyRca}
+                style={{
+                  padding: '5px 10px',
+                  borderRadius: '6px',
+                  background: 'rgba(56, 189, 248, 0.12)',
+                  border: '1px solid rgba(56, 189, 248, 0.3)',
+                  color: '#38bdf8',
+                  fontSize: '0.74rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                }}
+              >
+                <span>{copiedText === 'rca' ? '✓' : '📋'}</span>
+                <span>{copiedText === 'rca' ? 'RCA Copied!' : 'Copy RCA'}</span>
+              </button>
+            </div>
           </div>
 
           {activeTab === 'diagnosis' ? (
             <div>
               <div style={{ fontSize: '0.92rem', fontWeight: 800, color: '#f59e0b', marginBottom: '6px' }}>
-                ⚡ Defect: {currentChallenge.bugType}
+                ⚡ Defect: {currentChallenge.bugType} (Line #{currentChallenge.buggyLineNumber})
               </div>
               <div style={{ fontSize: '0.84rem', color: 'rgba(255, 255, 255, 0.85)', lineHeight: 1.5, marginBottom: '12px' }}>
                 {currentChallenge.rootCause}

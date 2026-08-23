@@ -35,13 +35,23 @@ export default function ArcadePage(): React.JSX.Element {
                 margin: '0 0 8px 0',
                 fontSize: '2.2rem',
                 fontWeight: 900,
-                background: 'linear-gradient(135deg, #a855f7 0%, #ec4899 50%, #38bdf8 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
                 letterSpacing: '-0.02em',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '12px',
               }}
             >
-              🕹️ Galactic Engineering Arcade
+              <span style={{ WebkitTextFillColor: 'initial', filter: 'none' }}>🕹️</span>
+              <span
+                style={{
+                  background: 'linear-gradient(135deg, #a855f7 0%, #ec4899 50%, #38bdf8 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                }}
+              >
+                Galactic Engineering Arcade
+              </span>
             </h1>
             <p style={{ margin: 0, fontSize: '0.95rem', color: 'rgba(255, 255, 255, 0.7)', maxWidth: '680px', marginInline: 'auto' }}>
               Sharpen your distributed systems instincts, debug concurrency race conditions, and battle production outages through interactive simulations.
