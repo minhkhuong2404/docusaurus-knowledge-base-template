@@ -148,7 +148,7 @@ export default function CustomUserNavbarItem() {
 
   if (!currentUser) {
     return (
-      <div style={{ display: 'inline-flex', alignItems: 'center' }}>
+      <div className="custom-user-nav-wrapper" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
         <NavbarGamificationHUD />
         <button
           type="button"
@@ -244,7 +244,7 @@ export default function CustomUserNavbarItem() {
   const roleClass = isSuperAdmin ? 'super-admin' : isAdmin ? 'admin' : isPremium ? 'premium' : '';
 
   return (
-    <div style={{ display: 'inline-flex', alignItems: 'center' }}>
+    <div className="custom-user-nav-wrapper" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
       <NavbarGamificationHUD />
       <button
         ref={buttonRef}
@@ -258,7 +258,7 @@ export default function CustomUserNavbarItem() {
           gap: '6px',
         }}
       >
-        <span>{name}</span>
+        <span className="user-nav-name-label">{name}</span>
         <span style={{ fontSize: '10px', opacity: 0.75 }}>{isOpen ? '▲' : '▼'}</span>
       </button>
 
@@ -269,8 +269,9 @@ export default function CustomUserNavbarItem() {
           style={{
             position: 'fixed',
             top: `${coords.top}px`,
-            right: `${coords.right}px`,
-            width: '300px',
+            right: `${Math.max(8, coords.right)}px`,
+            width: 'min(300px, calc(100vw - 16px))',
+            maxWidth: 'calc(100vw - 16px)',
             backgroundColor: '#0d1117',
             background: '#0d1117',
             opacity: 1,

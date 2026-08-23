@@ -9,7 +9,7 @@ export default {
   "url": "https://luminhkhuong.dev",
   "baseUrl": "/",
   "customFields": {
-    "firebaseApiKey": "AIzaSyDHmbQUMhIQGteRWeoIjY6jNJFBvx2M91U",
+    "firebaseApiKey": "AIzaSyCfKNL2b9lwvZjOA916DoYDR5B5-Xz7NNE",
     "firebaseAuthDomain": "khuong-tjfxef.firebaseapp.com",
     "firebaseProjectId": "khuong-tjfxef",
     "firebaseStorageBucket": "khuong-tjfxef.firebasestorage.app",
@@ -616,6 +616,13 @@ export default {
       "disableSwitch": true,
       "respectPrefersColorScheme": false
     },
+    "mermaid": {
+      "theme": {
+        "dark": "dark",
+        "light": "default"
+      },
+      "options": {}
+    },
     "blog": {
       "sidebar": {
         "groupByYear": true
@@ -624,13 +631,6 @@ export default {
     "tableOfContents": {
       "minHeadingLevel": 2,
       "maxHeadingLevel": 3
-    },
-    "mermaid": {
-      "theme": {
-        "dark": "dark",
-        "light": "default"
-      },
-      "options": {}
     }
   },
   "baseUrlIssueBanner": true,

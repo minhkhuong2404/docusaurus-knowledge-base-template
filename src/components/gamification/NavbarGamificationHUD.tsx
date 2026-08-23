@@ -22,15 +22,16 @@ export default function NavbarGamificationHUD() {
   return (
     <>
       <div
+        className="gamification-hud-container"
         style={{
           display: 'inline-flex',
           alignItems: 'center',
-          marginRight: '8px',
         }}
       >
         {/* Consolidated Single Gamification Pill */}
         <button
           type="button"
+          className="gamification-hud-pill"
           onClick={() => handleOpen('quests')}
           title={`Active Streak: ${streak}d • Level ${currentLevel} ${rank.title} (${expInLevel}/${neededInLevel} EXP). Click for Mission Control.`}
           style={{
@@ -52,16 +53,16 @@ export default function NavbarGamificationHUD() {
         >
           {streak > 0 && (
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px', color: '#fb923c', fontWeight: 800 }}>
-              <span>{streak}</span>
+              <span className="gamification-hud-num">{streak}</span>
               <span>🔥</span>
             </span>
           )}
 
-          {streak > 0 && <span style={{ opacity: 0.35, fontSize: '10px' }}>•</span>}
+          {streak > 0 && <span className="gamification-hud-dot" style={{ opacity: 0.35, fontSize: '10px' }}>•</span>}
 
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
             <CosmicRankBadge level={currentLevel} rank={rank} size="xs" showLevelPill={false} hideOrbitRing={true} disableFloat={true} />
-            <span style={{ color: rank.color, fontWeight: 800 }}>{currentLevel}</span>
+            <span className="gamification-hud-num" style={{ color: rank.color, fontWeight: 800 }}>{currentLevel}</span>
           </div>
         </button>
       </div>
