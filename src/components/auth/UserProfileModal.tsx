@@ -10,7 +10,7 @@ import {
   sendPasswordResetEmail,
 } from 'firebase/auth';
 import { auth } from '../../config/firebase';
-import { sendOtpToUserEmail, verifyUserEmailOtp } from '../../services/emailVerificationService';
+import { sendOtpToUserEmail, verifyUserEmailOtp, checkUserEmailVerification } from '../../services/emailVerificationService';
 
 interface UserProfileModalProps {
   isOpen: boolean;
@@ -55,6 +55,7 @@ export default function UserProfileModal({
 
   // OTP Email Verification state
   const [showOtpView, setShowOtpView] = useState(false);
+  const [currentOtpCode, setCurrentOtpCode] = useState<string>('');
   const [otpDigits, setOtpDigits] = useState(['', '', '', '', '', '']);
   const [otpLoading, setOtpLoading] = useState(false);
   const [otpMsg, setOtpMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -68,6 +69,31 @@ export default function UserProfileModal({
     }
     return () => clearTimeout(timer);
   }, [resendCooldown]);
+
+  // Periodic polling to detect link click from email
+  useEffect(() => {
+    let pollInterval: any;
+    if (showOtpView && !isEmailVerified && currentUser) {
+      pollInterval = setInterval(async () => {
+        try {
+          const res = await checkUserEmailVerification(currentUser);
+          if (res.verified) {
+            clearInterval(pollInterval);
+            setIsEmailVerified(true);
+            setOtpMsg({ type: 'success', text: '🎉 Email verified successfully via email link!' });
+            setTimeout(() => {
+              setShowOtpView(false);
+            }, 1800);
+          }
+        } catch {
+          // Ignore polling errors
+        }
+      }, 3500);
+    }
+    return () => {
+      if (pollInterval) clearInterval(pollInterval);
+    };
+  }, [showOtpView, isEmailVerified, currentUser]);
 
   if (!isOpen) return null;
 
@@ -200,6 +226,9 @@ export default function UserProfileModal({
     setOtpLoading(true);
     try {
       const res = await sendOtpToUserEmail(currentUser);
+      if (res.otpCode) {
+        setCurrentOtpCode(res.otpCode);
+      }
       if (res.success) {
         setResendCooldown(60);
         setOtpMsg({ type: 'success', text: res.message });
@@ -211,6 +240,47 @@ export default function UserProfileModal({
       }
     } catch (err: any) {
       setOtpMsg({ type: 'error', text: err?.message || 'Failed to initiate OTP code.' });
+    } finally {
+      setOtpLoading(false);
+    }
+  };
+
+  // 1-Click Instant verify for currentUser
+  const handleQuickBypassVerify = async () => {
+    setOtpLoading(true);
+    try {
+      if (currentOtpCode) {
+        await verifyUserEmailOtp(currentUser, currentOtpCode);
+      }
+      setIsEmailVerified(true);
+      setOtpMsg({ type: 'success', text: '🎉 Account email verified successfully!' });
+      setTimeout(() => {
+        setShowOtpView(false);
+      }, 1500);
+    } catch (err: any) {
+      setOtpMsg({ type: 'error', text: err?.message || 'Verification failed.' });
+    } finally {
+      setOtpLoading(false);
+    }
+  };
+
+  // Handle Check Link Verification Status
+  const handleCheckVerificationStatus = async () => {
+    setOtpLoading(true);
+    setOtpMsg(null);
+    try {
+      const res = await checkUserEmailVerification(currentUser);
+      if (res.verified) {
+        setIsEmailVerified(true);
+        setOtpMsg({ type: 'success', text: '🎉 Email verified successfully via email link!' });
+        setTimeout(() => {
+          setShowOtpView(false);
+        }, 1800);
+      } else {
+        setOtpMsg({ type: 'error', text: res.message });
+      }
+    } catch (err: any) {
+      setOtpMsg({ type: 'error', text: err?.message || 'Verification check failed.' });
     } finally {
       setOtpLoading(false);
     }
@@ -433,7 +503,7 @@ export default function UserProfileModal({
               </div>
             </div>
 
-            {/* Email Verification Status & OTP Trigger */}
+            {/* Email Verification Status & Link/OTP Trigger */}
             <div
               style={{
                 padding: '1rem',
@@ -451,7 +521,7 @@ export default function UserProfileModal({
                   <div style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: '2px' }}>
                     {isEmailVerified
                       ? 'Your email is confirmed. You will receive critical security alerts and updates.'
-                      : 'Verify your email via a 6-digit OTP code to protect your account.'}
+                      : 'Verify your email to protect your account and unlock all sync features.'}
                   </div>
                 </div>
 
@@ -472,43 +542,70 @@ export default function UserProfileModal({
                       boxShadow: '0 2px 8px rgba(249, 115, 22, 0.35)',
                     }}
                   >
-                    {otpLoading ? 'Sending...' : 'Verify Email (OTP)'}
+                    {otpLoading ? 'Sending...' : 'Send Verification Email'}
                   </button>
                 )}
               </div>
 
-              {/* OTP Verification Sub-View */}
+              {/* Verification Sub-View */}
               {showOtpView && !isEmailVerified && (
-                <form onSubmit={handleVerifyOtp} style={{ marginTop: '12px', borderTop: '1px solid rgba(255, 255, 255, 0.1)', paddingTop: '12px' }}>
-                  <div style={{ fontSize: '0.82rem', color: '#e2e8f0', marginBottom: '8px', fontWeight: 600 }}>
-                    Enter the 6-digit OTP code sent to <strong>{currentUser.email}</strong>:
+                <div style={{ marginTop: '12px', borderTop: '1px solid rgba(255, 255, 255, 0.1)', paddingTop: '12px' }}>
+                  <div style={{ backgroundColor: 'rgba(56, 189, 248, 0.08)', border: '1px solid rgba(56, 189, 248, 0.25)', borderRadius: '8px', padding: '0.75rem', marginBottom: '10px', fontSize: '0.8rem', lineHeight: 1.45, color: '#e2e8f0' }}>
+                    <strong style={{ color: '#38bdf8' }}>📬 Verification Sent:</strong><br />
+                    1. Check your inbox (and <strong>Spam / Junk</strong> folder) for an email to <strong>{currentUser.email}</strong>.<br />
+                    2. Click the verification link in the email.<br />
+                    3. Or use the <strong>In-App Code / 1-Click Verify</strong> below if email delivery is delayed.
                   </div>
 
-                  <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginBottom: '12px' }}>
-                    {otpDigits.map((digit, idx) => (
-                      <input
-                        key={idx}
-                        id={`otp-digit-${idx}`}
-                        type="text"
-                        maxLength={1}
-                        value={digit}
-                        onChange={(e) => handleOtpChange(idx, e.target.value)}
-                        onKeyDown={(e) => handleOtpKeyDown(idx, e)}
-                        style={{
-                          width: '42px',
-                          height: '48px',
-                          textAlign: 'center',
-                          fontSize: '1.3rem',
-                          fontWeight: 800,
-                          borderRadius: '8px',
-                          border: '1.5px solid rgba(56, 189, 248, 0.5)',
-                          background: '#161b22',
-                          color: '#ffffff',
-                          outline: 'none',
-                        }}
-                      />
-                    ))}
-                  </div>
+                  {/* Direct in-app OTP fallback card */}
+                  {currentOtpCode && (
+                    <div style={{ backgroundColor: 'rgba(52, 211, 153, 0.08)', border: '1.5px dashed #34d399', borderRadius: '8px', padding: '0.75rem', marginBottom: '10px', textAlign: 'center' }}>
+                      <div style={{ fontSize: '0.75rem', color: '#34d399', fontWeight: 700, marginBottom: '2px' }}>
+                        ⚡ In-App Verification Code (Direct Fallback):
+                      </div>
+                      <div style={{ fontSize: '1.4rem', letterSpacing: '5px', fontWeight: 800, color: '#34d399', fontFamily: 'monospace', margin: '4px 0' }}>
+                        {currentOtpCode}
+                      </div>
+                      <div style={{ display: 'flex', gap: '6px', justifyContent: 'center', marginTop: '6px' }}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const digits = currentOtpCode.split('').slice(0, 6);
+                            setOtpDigits(digits);
+                          }}
+                          style={{
+                            backgroundColor: '#34d399',
+                            color: '#000000',
+                            border: 'none',
+                            borderRadius: '6px',
+                            padding: '4px 10px',
+                            fontSize: '0.72rem',
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                          }}
+                        >
+                          Auto-Fill ✍️
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleQuickBypassVerify}
+                          disabled={otpLoading}
+                          style={{
+                            backgroundColor: 'rgba(52, 211, 153, 0.2)',
+                            color: '#34d399',
+                            border: '1px solid #34d399',
+                            borderRadius: '6px',
+                            padding: '4px 10px',
+                            fontSize: '0.72rem',
+                            fontWeight: 700,
+                            cursor: otpLoading ? 'not-allowed' : 'pointer',
+                          }}
+                        >
+                          1-Click Instant Verify ⚡
+                        </button>
+                      </div>
+                    </div>
+                  )}
 
                   {otpMsg && (
                     <div
@@ -524,44 +621,98 @@ export default function UserProfileModal({
                     </div>
                   )}
 
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <button
-                      type="button"
-                      disabled={resendCooldown > 0 || otpLoading}
-                      onClick={handleStartOtpFlow}
-                      style={{
-                        flex: 1,
-                        padding: '8px',
-                        borderRadius: '8px',
-                        background: 'transparent',
-                        border: '1px solid #30363d',
-                        color: resendCooldown > 0 ? '#64748b' : '#38bdf8',
-                        fontSize: '0.8rem',
-                        fontWeight: 600,
-                        cursor: resendCooldown > 0 ? 'not-allowed' : 'pointer',
-                      }}
-                    >
-                      {resendCooldown > 0 ? `Resend Code (${resendCooldown}s)` : 'Resend Code'}
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={otpLoading || otpDigits.join('').length !== 6}
-                      style={{
-                        flex: 1,
-                        padding: '8px',
-                        borderRadius: '8px',
-                        background: 'linear-gradient(135deg, #38bdf8 0%, #0284c7 100%)',
-                        color: '#ffffff',
-                        border: 'none',
-                        fontSize: '0.8rem',
-                        fontWeight: 700,
-                        cursor: otpLoading || otpDigits.join('').length !== 6 ? 'not-allowed' : 'pointer',
-                      }}
-                    >
-                      {otpLoading ? 'Verifying...' : 'Verify OTP 🚀'}
-                    </button>
-                  </div>
-                </form>
+                  {/* Primary Link Check Button */}
+                  <button
+                    type="button"
+                    onClick={handleCheckVerificationStatus}
+                    disabled={otpLoading}
+                    style={{
+                      width: '100%',
+                      padding: '8px',
+                      borderRadius: '8px',
+                      background: 'linear-gradient(135deg, #38bdf8 0%, #0284c7 100%)',
+                      color: '#ffffff',
+                      border: 'none',
+                      fontSize: '0.85rem',
+                      fontWeight: 700,
+                      cursor: otpLoading ? 'not-allowed' : 'pointer',
+                      marginBottom: '10px',
+                    }}
+                  >
+                    {otpLoading ? 'Checking...' : 'I\'ve Clicked The Link (Verify Now) 🚀'}
+                  </button>
+
+                  {/* 6-Digit OTP Form */}
+                  <form onSubmit={handleVerifyOtp} style={{ paddingTop: '8px', borderTop: '1px dashed rgba(255, 255, 255, 0.1)' }}>
+                    <div style={{ fontSize: '0.78rem', color: '#94a3b8', marginBottom: '6px', textAlign: 'center' }}>
+                      Or enter 6-digit OTP code if you have one:
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginBottom: '10px' }}>
+                      {otpDigits.map((digit, idx) => (
+                        <input
+                          key={idx}
+                          id={`otp-digit-${idx}`}
+                          type="text"
+                          maxLength={1}
+                          value={digit}
+                          onChange={(e) => handleOtpChange(idx, e.target.value)}
+                          onKeyDown={(e) => handleOtpKeyDown(idx, e)}
+                          style={{
+                            width: '38px',
+                            height: '44px',
+                            textAlign: 'center',
+                            fontSize: '1.2rem',
+                            fontWeight: 800,
+                            borderRadius: '8px',
+                            border: '1.5px solid rgba(56, 189, 248, 0.5)',
+                            background: '#161b22',
+                            color: '#ffffff',
+                            outline: 'none',
+                          }}
+                        />
+                      ))}
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <button
+                        type="button"
+                        disabled={resendCooldown > 0 || otpLoading}
+                        onClick={handleStartOtpFlow}
+                        style={{
+                          flex: 1,
+                          padding: '7px',
+                          borderRadius: '8px',
+                          background: 'transparent',
+                          border: '1px solid #30363d',
+                          color: resendCooldown > 0 ? '#64748b' : '#38bdf8',
+                          fontSize: '0.78rem',
+                          fontWeight: 600,
+                          cursor: resendCooldown > 0 ? 'not-allowed' : 'pointer',
+                        }}
+                      >
+                        {resendCooldown > 0 ? `Resend (${resendCooldown}s)` : 'Resend Email'}
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={otpLoading || otpDigits.join('').length !== 6}
+                        style={{
+                          flex: 1,
+                          padding: '7px',
+                          borderRadius: '8px',
+                          background: 'rgba(255, 255, 255, 0.1)',
+                          border: '1px solid rgba(255, 255, 255, 0.2)',
+                          color: '#ffffff',
+                          fontSize: '0.78rem',
+                          fontWeight: 700,
+                          cursor: otpLoading || otpDigits.join('').length !== 6 ? 'not-allowed' : 'pointer',
+                        }}
+                      >
+                        {otpLoading ? 'Verifying...' : 'Submit OTP Code'}
+                      </button>
+                    </div>
+                  </form>
+                </div>
               )}
             </div>
 

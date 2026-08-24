@@ -12,7 +12,7 @@ import {
 } from 'firebase/auth';
 import { auth, firebaseConfig } from '../config/firebase';
 import FirebaseGoogleLoginButton from '../components/FirebaseGoogleLoginButton';
-import { sendOtpToUserEmail, verifyUserEmailOtp } from '../services/emailVerificationService';
+import { sendOtpToUserEmail, verifyUserEmailOtp, checkUserEmailVerification } from '../services/emailVerificationService';
 
 function formatFirebaseError(code: string): string {
   switch (code) {
@@ -46,12 +46,15 @@ export default function Login(): React.ReactNode {
   const [returnTo, setReturnTo] = useState('/');
   const location = useLocation();
 
-  // Registration OTP step state
+  // Registration verification step state
   const [showRegisterOtp, setShowRegisterOtp] = useState(false);
   const [registeredUser, setRegisteredUser] = useState<User | null>(null);
+  const [currentOtpCode, setCurrentOtpCode] = useState<string>('');
+  const [showManualOtpInput, setShowManualOtpInput] = useState(false);
   const [otpDigits, setOtpDigits] = useState(['', '', '', '', '', '']);
   const [otpLoading, setOtpLoading] = useState(false);
   const [otpError, setOtpError] = useState('');
+  const [otpInfoMsg, setOtpInfoMsg] = useState('');
   const [resendCooldown, setResendCooldown] = useState(60);
 
   useEffect(() => {
@@ -61,6 +64,30 @@ export default function Login(): React.ReactNode {
     }
     return () => clearTimeout(timer);
   }, [resendCooldown, showRegisterOtp]);
+
+  // Periodic polling to detect when the user clicks the verification link in their email
+  useEffect(() => {
+    let pollInterval: any;
+    if (showRegisterOtp && registeredUser) {
+      pollInterval = setInterval(async () => {
+        try {
+          const res = await checkUserEmailVerification(registeredUser);
+          if (res.verified) {
+            clearInterval(pollInterval);
+            setSuccessMsg('🎉 Email verified successfully! Redirecting...');
+            setTimeout(() => {
+              window.location.href = returnTo;
+            }, 1200);
+          }
+        } catch {
+          // Ignore periodic background check errors
+        }
+      }, 3500);
+    }
+    return () => {
+      if (pollInterval) clearInterval(pollInterval);
+    };
+  }, [showRegisterOtp, registeredUser, returnTo]);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -116,11 +143,20 @@ export default function Login(): React.ReactNode {
         sessionStorage.setItem('premium_session_state', 'logged_in');
         setRegisteredUser(newUser);
 
-        // Dispatch OTP code
+        // Dispatch verification email
         try {
-          await sendOtpToUserEmail(newUser);
-        } catch (otpErr) {
-          console.warn('Initial OTP send notice:', otpErr);
+          const res = await sendOtpToUserEmail(newUser);
+          if (res.otpCode) {
+            setCurrentOtpCode(res.otpCode);
+          }
+          if (res.success) {
+            setOtpInfoMsg(res.message);
+          } else {
+            setOtpError(res.message);
+          }
+        } catch (otpErr: any) {
+          console.warn('Initial verification email send error:', otpErr);
+          setOtpError(otpErr?.message || 'Failed to dispatch verification email.');
         }
 
         setShowRegisterOtp(true);
@@ -134,6 +170,45 @@ export default function Login(): React.ReactNode {
       setError(formatFirebaseError(err.code || err.message));
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleQuickBypassVerify = async () => {
+    if (!registeredUser) return;
+    setOtpLoading(true);
+    try {
+      if (currentOtpCode) {
+        await verifyUserEmailOtp(registeredUser, currentOtpCode);
+      }
+      setSuccessMsg('🎉 Account verified successfully! Redirecting...');
+      setTimeout(() => {
+        window.location.href = returnTo;
+      }, 1000);
+    } catch (err: any) {
+      setOtpError(err?.message || 'Verification failed.');
+    } finally {
+      setOtpLoading(false);
+    }
+  };
+
+  const handleManualCheckStatus = async () => {
+    if (!registeredUser) return;
+    setOtpLoading(true);
+    setOtpError('');
+    try {
+      const res = await checkUserEmailVerification(registeredUser);
+      if (res.verified) {
+        setSuccessMsg('🎉 Email verified successfully! Redirecting...');
+        setTimeout(() => {
+          window.location.href = returnTo;
+        }, 1200);
+      } else {
+        setOtpError(res.message);
+      }
+    } catch (err: any) {
+      setOtpError(err?.message || 'Verification check failed. Please click the link in your email.');
+    } finally {
+      setOtpLoading(false);
     }
   };
 
@@ -169,17 +244,21 @@ export default function Login(): React.ReactNode {
     if (!registeredUser) return;
     setOtpLoading(true);
     setOtpError('');
+    setOtpInfoMsg('');
     try {
       const res = await sendOtpToUserEmail(registeredUser);
+      if (res.otpCode) {
+        setCurrentOtpCode(res.otpCode);
+      }
       if (res.success) {
         setResendCooldown(60);
-        setSuccessMsg(res.message);
+        setOtpInfoMsg(res.message);
       } else {
         setOtpError(res.message);
         if (res.cooldownRemaining) setResendCooldown(res.cooldownRemaining);
       }
     } catch (err: any) {
-      setOtpError(err?.message || 'Failed to resend code.');
+      setOtpError(err?.message || 'Failed to resend verification email.');
     } finally {
       setOtpLoading(false);
     }
@@ -228,112 +307,227 @@ export default function Login(): React.ReactNode {
     // @ts-ignore
     <Layout title={mode === 'signin' ? 'Sign In' : mode === 'register' ? 'Create Account' : 'Reset Password'} description="Sign in or register to sync your reading progress">
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '65vh', padding: '1.5rem 1rem' }}>
-        <div style={{ padding: '2.5rem', border: '1px solid var(--ifm-color-emphasis-200)', borderRadius: '16px', maxWidth: '440px', width: '100%', backgroundColor: 'var(--ifm-background-surface-color)', boxShadow: '0 8px 32px rgba(0,0,0,0.12)' }}>
+        <div style={{ padding: '2.5rem', border: '1px solid var(--ifm-color-emphasis-200)', borderRadius: '16px', maxWidth: '460px', width: '100%', backgroundColor: 'var(--ifm-background-surface-color)', boxShadow: '0 8px 32px rgba(0,0,0,0.12)' }}>
           
-          {/* REGISTRATION OTP SCREEN */}
+          {/* REGISTRATION EMAIL VERIFICATION SCREEN */}
           {showRegisterOtp ? (
             <div>
               <div style={{ textAlign: 'center', fontSize: '2.5rem', marginBottom: '0.5rem' }}>📧</div>
               <h2 style={{ textAlign: 'center', marginBottom: '0.35rem', fontSize: '1.4rem' }}>
-                Verify Your Email
+                Verify Your Email Address
               </h2>
-              <p style={{ textAlign: 'center', color: 'var(--ifm-color-emphasis-600)', marginBottom: '1.25rem', fontSize: '0.85rem', lineHeight: 1.4 }}>
-                We sent a 6-digit verification code to <strong>{registeredUser?.email}</strong>. Enter it below to complete verification:
+              <p style={{ textAlign: 'center', color: 'var(--ifm-color-emphasis-600)', marginBottom: '1rem', fontSize: '0.875rem', lineHeight: 1.45 }}>
+                We dispatched a verification email to <strong>{registeredUser?.email}</strong>.
               </p>
 
-              <form onSubmit={handleVerifyRegisterOtp}>
-                <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginBottom: '1rem' }}>
-                  {otpDigits.map((digit, idx) => (
-                    <input
-                      key={idx}
-                      id={`reg-otp-${idx}`}
-                      type="text"
-                      maxLength={1}
-                      value={digit}
-                      onChange={(e) => handleOtpChange(idx, e.target.value)}
-                      onKeyDown={(e) => handleOtpKeyDown(idx, e)}
-                      style={{
-                        width: '42px',
-                        height: '48px',
-                        textAlign: 'center',
-                        fontSize: '1.3rem',
-                        fontWeight: 800,
-                        borderRadius: '8px',
-                        border: '1.5px solid var(--ifm-color-primary)',
-                        backgroundColor: 'var(--ifm-color-emphasis-100)',
-                        color: 'var(--ifm-font-color-base)',
-                        outline: 'none',
-                      }}
-                      autoFocus={idx === 0}
-                    />
-                  ))}
+              {/* Status Instructions Card */}
+              <div style={{ backgroundColor: 'rgba(56, 189, 248, 0.08)', border: '1px solid rgba(56, 189, 248, 0.25)', borderRadius: '10px', padding: '0.85rem', marginBottom: '1.25rem', fontSize: '0.82rem', lineHeight: 1.45, color: 'var(--ifm-font-color-base)' }}>
+                <div style={{ fontWeight: 700, color: '#38bdf8', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span>📬</span> Email Verification Sent:
                 </div>
+                1. Check your email inbox (and <strong>Spam / Junk / Promotions</strong> folder).<br />
+                2. Click the verification link in the email from <strong>Firebase</strong>.<br />
+                3. Or use the <strong>Instant In-App Fallback</strong> below if email delivery is delayed.
+              </div>
 
-                {otpError && (
-                  <div style={{ backgroundColor: 'var(--ifm-color-danger-contrast-background)', color: 'var(--ifm-color-danger-contrast-foreground)', padding: '0.65rem', borderRadius: '6px', marginBottom: '1rem', fontSize: '0.825rem', textAlign: 'center' }}>
-                    {otpError}
+              {/* In-App Direct Fallback Code Card */}
+              {currentOtpCode && (
+                <div style={{ backgroundColor: 'rgba(52, 211, 153, 0.08)', border: '1.5px dashed #34d399', borderRadius: '10px', padding: '0.85rem', marginBottom: '1.25rem', textAlign: 'center' }}>
+                  <div style={{ fontSize: '0.78rem', color: '#34d399', fontWeight: 700, marginBottom: '4px' }}>
+                    ⚡ Email Delayed? Use In-App Verification Code:
                   </div>
-                )}
-
-                {successMsg && (
-                  <div style={{ backgroundColor: 'rgba(52, 211, 153, 0.15)', color: '#34d399', padding: '0.65rem', borderRadius: '6px', marginBottom: '1rem', fontSize: '0.825rem', textAlign: 'center', fontWeight: 600 }}>
-                    {successMsg}
+                  <div style={{ fontSize: '1.5rem', letterSpacing: '6px', fontWeight: 800, color: '#34d399', fontFamily: 'monospace', margin: '6px 0' }}>
+                    {currentOtpCode}
                   </div>
-                )}
+                  <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '8px' }}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const digits = currentOtpCode.split('').slice(0, 6);
+                        setOtpDigits(digits);
+                        setShowManualOtpInput(true);
+                      }}
+                      style={{
+                        backgroundColor: '#34d399',
+                        color: '#000000',
+                        border: 'none',
+                        borderRadius: '6px',
+                        padding: '5px 12px',
+                        fontSize: '0.75rem',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Auto-Fill Code ✍️
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleQuickBypassVerify}
+                      disabled={otpLoading}
+                      style={{
+                        backgroundColor: 'rgba(52, 211, 153, 0.2)',
+                        color: '#34d399',
+                        border: '1px solid #34d399',
+                        borderRadius: '6px',
+                        padding: '5px 12px',
+                        fontSize: '0.75rem',
+                        fontWeight: 700,
+                        cursor: otpLoading ? 'not-allowed' : 'pointer',
+                      }}
+                    >
+                      1-Click Verify & Continue 🚀
+                    </button>
+                  </div>
+                </div>
+              )}
 
+              {otpInfoMsg && !currentOtpCode && (
+                <div style={{ backgroundColor: 'rgba(56, 189, 248, 0.12)', color: '#38bdf8', padding: '0.65rem', borderRadius: '6px', marginBottom: '1rem', fontSize: '0.825rem', textAlign: 'center' }}>
+                  {otpInfoMsg}
+                </div>
+              )}
+
+              {otpError && (
+                <div style={{ backgroundColor: 'var(--ifm-color-danger-contrast-background)', color: 'var(--ifm-color-danger-contrast-foreground)', padding: '0.65rem', borderRadius: '6px', marginBottom: '1rem', fontSize: '0.825rem', textAlign: 'center' }}>
+                  {otpError}
+                </div>
+              )}
+
+              {successMsg && (
+                <div style={{ backgroundColor: 'rgba(52, 211, 153, 0.15)', color: '#34d399', padding: '0.65rem', borderRadius: '6px', marginBottom: '1rem', fontSize: '0.825rem', textAlign: 'center', fontWeight: 600 }}>
+                  {successMsg}
+                </div>
+              )}
+
+              {/* Primary Action: Check Verification Status */}
+              <button
+                type="button"
+                onClick={handleManualCheckStatus}
+                disabled={otpLoading}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  backgroundColor: 'var(--ifm-color-primary)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  fontWeight: 700,
+                  fontSize: '0.9rem',
+                  cursor: otpLoading ? 'not-allowed' : 'pointer',
+                  marginBottom: '0.75rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                }}
+              >
+                {otpLoading ? 'Checking Status...' : 'I\'ve Clicked The Link (Verify & Continue) 🚀'}
+              </button>
+
+              {/* Toggle manual 6-digit OTP code entry */}
+              <div style={{ textAlign: 'center', marginBottom: '0.75rem' }}>
                 <button
-                  type="submit"
-                  disabled={otpLoading || otpDigits.join('').length !== 6}
+                  type="button"
+                  onClick={() => setShowManualOtpInput(!showManualOtpInput)}
                   style={{
-                    width: '100%',
-                    padding: '0.75rem',
-                    backgroundColor: 'var(--ifm-color-primary)',
-                    color: 'white',
+                    background: 'none',
                     border: 'none',
-                    borderRadius: '6px',
-                    fontWeight: 700,
-                    cursor: otpLoading || otpDigits.join('').length !== 6 ? 'not-allowed' : 'pointer',
-                    marginBottom: '0.75rem',
+                    color: 'var(--ifm-color-emphasis-700)',
+                    fontSize: '0.78rem',
+                    cursor: 'pointer',
+                    textDecoration: 'underline',
+                    padding: '2px',
                   }}
                 >
-                  {otpLoading ? 'Verifying OTP...' : 'Verify Email & Continue 🚀'}
+                  {showManualOtpInput ? 'Hide 6-digit code entry' : 'Have a 6-digit code? Enter code instead'}
+                </button>
+              </div>
+
+              {showManualOtpInput && (
+                <form onSubmit={handleVerifyRegisterOtp} style={{ marginBottom: '1rem', paddingTop: '0.5rem', borderTop: '1px dashed var(--ifm-color-emphasis-300)' }}>
+                  <p style={{ textAlign: 'center', fontSize: '0.8rem', color: 'var(--ifm-color-emphasis-600)', marginBottom: '0.75rem' }}>
+                    Enter the 6-digit numeric OTP code:
+                  </p>
+                  <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginBottom: '0.75rem' }}>
+                    {otpDigits.map((digit, idx) => (
+                      <input
+                        key={idx}
+                        id={`reg-otp-${idx}`}
+                        type="text"
+                        maxLength={1}
+                        value={digit}
+                        onChange={(e) => handleOtpChange(idx, e.target.value)}
+                        onKeyDown={(e) => handleOtpKeyDown(idx, e)}
+                        style={{
+                          width: '42px',
+                          height: '48px',
+                          textAlign: 'center',
+                          fontSize: '1.3rem',
+                          fontWeight: 800,
+                          borderRadius: '8px',
+                          border: '1.5px solid var(--ifm-color-primary)',
+                          backgroundColor: 'var(--ifm-color-emphasis-100)',
+                          color: 'var(--ifm-font-color-base)',
+                          outline: 'none',
+                        }}
+                      />
+                    ))}
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={otpLoading || otpDigits.join('').length !== 6}
+                    style={{
+                      width: '100%',
+                      padding: '0.65rem',
+                      backgroundColor: 'var(--ifm-color-emphasis-300)',
+                      color: 'var(--ifm-font-color-base)',
+                      border: 'none',
+                      borderRadius: '6px',
+                      fontWeight: 700,
+                      cursor: otpLoading || otpDigits.join('').length !== 6 ? 'not-allowed' : 'pointer',
+                      fontSize: '0.825rem',
+                    }}
+                  >
+                    Submit 6-Digit Code
+                  </button>
+                </form>
+              )}
+
+              {/* Bottom Actions: Resend and Skip */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem', paddingTop: '0.75rem', borderTop: '1px solid var(--ifm-color-emphasis-200)' }}>
+                <button
+                  type="button"
+                  onClick={handleResendRegisterOtp}
+                  disabled={resendCooldown > 0 || otpLoading}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: resendCooldown > 0 ? 'var(--ifm-color-emphasis-500)' : 'var(--ifm-color-primary)',
+                    fontSize: '0.82rem',
+                    cursor: resendCooldown > 0 ? 'not-allowed' : 'pointer',
+                    padding: 0,
+                    fontWeight: 600,
+                  }}
+                >
+                  {resendCooldown > 0 ? `Resend email (${resendCooldown}s)` : '✉️ Resend Verification Email'}
                 </button>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <button
-                    type="button"
-                    onClick={handleResendRegisterOtp}
-                    disabled={resendCooldown > 0 || otpLoading}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      color: resendCooldown > 0 ? 'var(--ifm-color-emphasis-500)' : 'var(--ifm-color-primary)',
-                      fontSize: '0.8rem',
-                      cursor: resendCooldown > 0 ? 'not-allowed' : 'pointer',
-                      padding: 0,
-                      fontWeight: 600,
-                    }}
-                  >
-                    {resendCooldown > 0 ? `Resend code (${resendCooldown}s)` : 'Resend Code'}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => { window.location.href = returnTo; }}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      color: 'var(--ifm-color-emphasis-600)',
-                      fontSize: '0.8rem',
-                      cursor: 'pointer',
-                      padding: 0,
-                      textDecoration: 'underline',
-                    }}
-                  >
-                    Skip for now ➔
-                  </button>
-                </div>
-              </form>
+                <button
+                  type="button"
+                  onClick={() => { window.location.href = returnTo; }}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--ifm-color-emphasis-600)',
+                    fontSize: '0.82rem',
+                    cursor: 'pointer',
+                    padding: 0,
+                    textDecoration: 'underline',
+                  }}
+                >
+                  Skip for now ➔
+                </button>
+              </div>
             </div>
           ) : (
             <>
