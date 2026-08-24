@@ -34,6 +34,7 @@ export interface GamificationState {
     activeDates: string[]; // Set of YYYY-MM-DD
   };
   unlockedAchievements: string[];
+  claimedPeriodRewards?: string[]; // e.g. ['weekly_2026-W34', 'monthly_2026-07']
   dailyQuests: {
     date: string;
     completedQuestIds: string[];

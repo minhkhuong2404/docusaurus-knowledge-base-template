@@ -265,6 +265,9 @@ function mergeQuizProgress(localData: UserProgressData, remoteData: UserProgress
   };
 }
 
+import { startPresenceTracker } from '../services/presenceService';
+import { evaluateLeaderboardStandings } from '../services/leaderboardRewardService';
+
 export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
@@ -792,6 +795,66 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
 
     return () => unsubscribeDoc();
   }, [currentUser]);
+
+  // Start Real-Time Presence Heartbeat for Active User
+  useEffect(() => {
+    if (!currentUser) return;
+    const unsubPresence = startPresenceTracker(currentUser, progress.gamification?.exp || 0);
+    return () => unsubPresence();
+  }, [currentUser, progress.gamification?.exp]);
+
+  // Evaluate & Grant Concluded Weekly & Monthly Leaderboard Standings Rewards
+  useEffect(() => {
+    if (!currentUser || isLoading) return;
+
+    const claimed = progress.gamification?.claimedPeriodRewards || [];
+    evaluateLeaderboardStandings(currentUser.uid, currentUser.email, claimed).then((rewards) => {
+      if (rewards.length === 0) return;
+
+      let totalBonusExp = 0;
+      const newClaimedKeys = [...claimed];
+      const newAchievements = new Set(progress.gamification?.unlockedAchievements || []);
+
+      rewards.forEach((r) => {
+        totalBonusExp += r.expReward;
+        newClaimedKeys.push(r.periodKey);
+        newAchievements.add(r.achievementId);
+
+        showToast({
+          type: 'achievement',
+          title: `🏆 ${r.title} (Rank #${r.rankPosition})`,
+          subtitle: `Concluded ${r.periodType} in the top tier! +${r.expReward} EXP granted.`,
+          icon: r.icon,
+          exp: r.expReward,
+        });
+      });
+
+      triggerFireworks(5000);
+
+      setProgress((prev) => {
+        const game = prev.gamification || defaultGamificationState;
+        const nextExp = (game.exp || 0) + totalBonusExp;
+        const nextLevel = getLevelFromExp(nextExp);
+
+        const updatedGame: GamificationState = {
+          ...game,
+          exp: nextExp,
+          level: nextLevel,
+          unlockedAchievements: Array.from(newAchievements),
+          claimedPeriodRewards: Array.from(new Set(newClaimedKeys)),
+        };
+
+        if (currentUser) {
+          saveGamificationToFirestore(currentUser.uid, updatedGame).catch(console.error);
+        }
+
+        return {
+          ...prev,
+          gamification: updatedGame,
+        };
+      });
+    }).catch(console.error);
+  }, [currentUser, isLoading]);
 
   const [manuallyUnmarkedPages, setManuallyUnmarkedPages] = useState<Set<string>>(new Set());
 

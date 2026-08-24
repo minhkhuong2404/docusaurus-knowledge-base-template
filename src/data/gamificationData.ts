@@ -178,7 +178,7 @@ export function getExpProgressInCurrentLevel(exp: number): {
   };
 }
 
-export type AchievementCategory = 'knowledge' | 'java_spring' | 'architecture' | 'dsa' | 'quiz' | 'streak' | 'arcade' | 'topics';
+export type AchievementCategory = 'knowledge' | 'java_spring' | 'architecture' | 'dsa' | 'quiz' | 'streak' | 'arcade' | 'topics' | 'leaderboard';
 export type AchievementRarity = 'common' | 'rare' | 'epic' | 'legendary';
 
 export interface AchievementDef {
@@ -190,7 +190,7 @@ export interface AchievementDef {
   icon: string;
   expReward: number;
   targetCount: number;
-  metric: 'read_pages' | 'quiz_answered' | 'quiz_correct' | 'dsa_solved' | 'streak_days' | 'arcade_games' | 'arcade_score' | 'special' | 'topic_completed';
+  metric: 'read_pages' | 'quiz_answered' | 'quiz_correct' | 'dsa_solved' | 'streak_days' | 'arcade_games' | 'arcade_score' | 'special' | 'topic_completed' | 'leaderboard_rank';
   topicPrefix?: string;
 }
 
@@ -1015,6 +1015,121 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     targetCount: 3,
     metric: 'topic_completed',
     topicPrefix: 'books',
+  },
+
+  // 🏆 Leaderboard Champions & Period Standings
+  // ⚡ Weekly Leaderboard Milestones
+  {
+    id: 'weekly_rank_1',
+    title: 'Weekly Apex Champion',
+    description: 'Finish in 1st place (#1) on the global engineering weekly leaderboard. Undisputed peer leader!',
+    category: 'leaderboard',
+    rarity: 'legendary',
+    icon: '🥇',
+    expReward: 600,
+    targetCount: 1,
+    metric: 'leaderboard_rank',
+  },
+  {
+    id: 'weekly_rank_2',
+    title: 'Weekly Silver Vanguard',
+    description: 'Finish in 2nd place (#2) on the global engineering weekly leaderboard.',
+    category: 'leaderboard',
+    rarity: 'epic',
+    icon: '🥈',
+    expReward: 400,
+    targetCount: 2,
+    metric: 'leaderboard_rank',
+  },
+  {
+    id: 'weekly_rank_3',
+    title: 'Weekly Bronze Voyager',
+    description: 'Finish in 3rd place (#3) on the global engineering weekly leaderboard.',
+    category: 'leaderboard',
+    rarity: 'epic',
+    icon: '🥉',
+    expReward: 300,
+    targetCount: 3,
+    metric: 'leaderboard_rank',
+  },
+  {
+    id: 'weekly_rank_5',
+    title: 'Weekly Top 5 Pioneer',
+    description: 'Finish in the Top 5 on the global engineering weekly leaderboard.',
+    category: 'leaderboard',
+    rarity: 'rare',
+    icon: '🌟',
+    expReward: 200,
+    targetCount: 5,
+    metric: 'leaderboard_rank',
+  },
+  {
+    id: 'weekly_rank_10',
+    title: 'Weekly Top 10 Contender',
+    description: 'Finish in the Top 10 on the global engineering weekly leaderboard.',
+    category: 'leaderboard',
+    rarity: 'common',
+    icon: '⚡',
+    expReward: 120,
+    targetCount: 10,
+    metric: 'leaderboard_rank',
+  },
+
+  // 📅 Monthly Leaderboard Milestones
+  {
+    id: 'monthly_rank_1',
+    title: 'Monthly Grand Archon',
+    description: 'Finish in 1st place (#1) on the monthly engineering leaderboard. Supreme monthly sovereign!',
+    category: 'leaderboard',
+    rarity: 'legendary',
+    icon: '👑',
+    expReward: 1800,
+    targetCount: 1,
+    metric: 'leaderboard_rank',
+  },
+  {
+    id: 'monthly_rank_2',
+    title: 'Monthly Master Vanguard',
+    description: 'Finish in 2nd place (#2) on the monthly engineering leaderboard.',
+    category: 'leaderboard',
+    rarity: 'epic',
+    icon: '🌌',
+    expReward: 1200,
+    targetCount: 2,
+    metric: 'leaderboard_rank',
+  },
+  {
+    id: 'monthly_rank_3',
+    title: 'Monthly Stellar Voyager',
+    description: 'Finish in 3rd place (#3) on the monthly engineering leaderboard.',
+    category: 'leaderboard',
+    rarity: 'epic',
+    icon: '🌠',
+    expReward: 800,
+    targetCount: 3,
+    metric: 'leaderboard_rank',
+  },
+  {
+    id: 'monthly_rank_5',
+    title: 'Monthly Top 5 Sovereign',
+    description: 'Finish in the Top 5 on the monthly engineering leaderboard.',
+    category: 'leaderboard',
+    rarity: 'rare',
+    icon: '✨',
+    expReward: 500,
+    targetCount: 5,
+    metric: 'leaderboard_rank',
+  },
+  {
+    id: 'monthly_rank_10',
+    title: 'Monthly Top 10 Elite',
+    description: 'Finish in the Top 10 on the monthly engineering leaderboard.',
+    category: 'leaderboard',
+    rarity: 'rare',
+    icon: '🚀',
+    expReward: 300,
+    targetCount: 10,
+    metric: 'leaderboard_rank',
   },
 ];
 

@@ -561,6 +561,7 @@ export default function GamificationModal({ isOpen, onClose, initialTab = 'quest
               <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '18px' }}>
                 {[
                   { id: 'all', label: 'All' },
+                  { id: 'leaderboard', label: '🏆 Leaderboard' },
                   { id: 'topics', label: '📜 Topics Codex' },
                   { id: 'knowledge', label: '📚 Knowledge' },
                   { id: 'quiz', label: '🎯 Quizzes' },
@@ -603,7 +604,7 @@ export default function GamificationModal({ isOpen, onClose, initialTab = 'quest
                   if (ach.metric === 'quiz_correct') userCount = quizCorrect;
                   if (ach.metric === 'dsa_solved') userCount = dsaSolved;
                   if (ach.metric === 'streak_days') userCount = streakDays;
-                  if (ach.metric === 'special') userCount = isUnlocked ? 1 : 0;
+                  if (ach.metric === 'special' || ach.metric === 'leaderboard_rank') userCount = isUnlocked ? ach.targetCount : 0;
                   if (ach.metric === 'topic_completed' && ach.topicPrefix) {
                     userCount = (progress.readPages || []).filter((p) =>
                       p.toLowerCase().includes(ach.topicPrefix!.toLowerCase())

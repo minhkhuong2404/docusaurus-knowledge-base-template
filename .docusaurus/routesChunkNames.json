@@ -49,6 +49,13 @@
     },
     "config": "config---arcade-5-e-9-6a3"
   },
+  "/leaderboard/-dec": {
+    "__comp": "__comp---site-src-pages-leaderboard-index-tsx-5-b-3-5e4",
+    "__context": {
+      "plugin": "plugin---arcade-a-74-d23"
+    },
+    "config": "config---arcade-5-e-9-6a3"
+  },
   "/login-f43": {
     "__comp": "__comp---site-src-pages-login-tsx-34-b-c7d",
     "__context": {

@@ -43,6 +43,11 @@ export default [
     exact: true
   },
   {
+    path: '/leaderboard/',
+    component: ComponentCreator('/leaderboard/', 'dec'),
+    exact: true
+  },
+  {
     path: '/login',
     component: ComponentCreator('/login', 'f43'),
     exact: true

@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Link from '@docusaurus/Link';
 import { useUserProgress } from '../../context/UserProgressContext';
 import { getRankForLevel, getExpProgressInCurrentLevel } from '../../data/gamificationData';
+import { subscribeToOnlineUsers } from '../../services/presenceService';
 import CosmicRankBadge from './CosmicRankBadge';
 import GamificationModal from './GamificationModal';
 
@@ -8,11 +10,20 @@ export default function NavbarGamificationHUD() {
   const { gamification } = useUserProgress();
   const [showModal, setShowModal] = useState(false);
   const [modalTab, setModalTab] = useState<'quests' | 'trophies' | 'ranks'>('quests');
+  const [onlineCount, setOnlineCount] = useState<number>(1);
 
-  const exp = gamification.exp || 0;
-  const { currentLevel, expInLevel, neededInLevel, percent } = getExpProgressInCurrentLevel(exp);
+  const exp = gamification?.exp || 0;
+  const { currentLevel, expInLevel, neededInLevel } = getExpProgressInCurrentLevel(exp);
   const rank = getRankForLevel(currentLevel);
-  const streak = gamification.streak?.currentStreak || 0;
+  const streak = gamification?.streak?.currentStreak || 0;
+
+  // Real-time listener for total online count (no individual details exposed)
+  useEffect(() => {
+    const unsub = subscribeToOnlineUsers((users) => {
+      setOnlineCount(users.length || 1);
+    });
+    return () => unsub();
+  }, []);
 
   const handleOpen = (tab: 'quests' | 'trophies' | 'ranks' = 'quests') => {
     setModalTab(tab);
@@ -26,9 +37,10 @@ export default function NavbarGamificationHUD() {
         style={{
           display: 'inline-flex',
           alignItems: 'center',
+          gap: '6px',
         }}
       >
-        {/* Consolidated Single Gamification Pill */}
+        {/* Consolidated Gamification Level/Streak Pill */}
         <button
           type="button"
           className="gamification-hud-pill"
@@ -65,6 +77,60 @@ export default function NavbarGamificationHUD() {
             <span className="gamification-hud-num" style={{ color: rank.color, fontWeight: 800 }}>{currentLevel}</span>
           </div>
         </button>
+
+        {/* Real-time Total Online Users Counter (Count Only) */}
+        <div
+          title={`${onlineCount} user${onlineCount === 1 ? '' : 's'} currently active`}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            padding: '3px 9px',
+            height: '30px',
+            borderRadius: '10px',
+            backgroundColor: 'rgba(52, 211, 153, 0.12)',
+            border: '1px solid rgba(52, 211, 153, 0.3)',
+            color: '#34d399',
+            fontSize: '11.5px',
+            fontWeight: 700,
+            userSelect: 'none',
+          }}
+        >
+          <div
+            style={{
+              width: '8px',
+              height: '8px',
+              borderRadius: '50%',
+              backgroundColor: '#34d399',
+              boxShadow: '0 0 6px #34d399',
+              animation: 'pulse 1.8s infinite',
+            }}
+          />
+          <span>{onlineCount} Online</span>
+        </div>
+
+        {/* Global Leaderboard Launcher Icon Button */}
+        <Link
+          to="/leaderboard"
+          title="Global Architect Leaderboard & Rankings"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '30px',
+            height: '30px',
+            borderRadius: '10px',
+            backgroundColor: 'rgba(251, 191, 36, 0.12)',
+            border: '1px solid rgba(251, 191, 36, 0.35)',
+            color: '#fbbf24',
+            fontSize: '13px',
+            textDecoration: 'none',
+            boxShadow: '0 2px 8px rgba(251, 191, 36, 0.15)',
+            transition: 'transform 0.15s ease, background-color 0.15s ease',
+          }}
+        >
+          🏆
+        </Link>
       </div>
 
       {showModal && (
@@ -77,3 +143,4 @@ export default function NavbarGamificationHUD() {
     </>
   );
 }
+

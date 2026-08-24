@@ -504,6 +504,31 @@ export default function CustomUserNavbarItem() {
               <span>Statistics and Telemetry</span>
             </Link>
 
+            <Link
+              to="/leaderboard"
+              onClick={() => setIsOpen(false)}
+              style={{
+                width: '100%',
+                padding: '0.65rem',
+                background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.14) 0%, rgba(245, 158, 11, 0.14) 100%)',
+                border: '1px solid rgba(251, 191, 36, 0.35)',
+                color: '#fbbf24',
+                borderRadius: '8px',
+                fontWeight: 750,
+                fontSize: '0.82rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                textDecoration: 'none',
+                boxShadow: '0 2px 10px rgba(251, 191, 36, 0.12)',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              <span>🏆</span>
+              <span>Global Architect Leaderboard</span>
+            </Link>
+
             <button
               type="button"
               onClick={() => {

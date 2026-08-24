@@ -1,6 +1,7 @@
 export default {
   "__comp---site-src-pages-arcade-index-tsx-22-f-a80": [() => import(/* webpackChunkName: "__comp---site-src-pages-arcade-index-tsx-22-f-a80" */ "@site/src/pages/arcade/index.tsx"), "@site/src/pages/arcade/index.tsx", require.resolveWeak("@site/src/pages/arcade/index.tsx")],
   "__comp---site-src-pages-index-tsx-1-df-d3e": [() => import(/* webpackChunkName: "__comp---site-src-pages-index-tsx-1-df-d3e" */ "@site/src/pages/index.tsx"), "@site/src/pages/index.tsx", require.resolveWeak("@site/src/pages/index.tsx")],
+  "__comp---site-src-pages-leaderboard-index-tsx-5-b-3-5e4": [() => import(/* webpackChunkName: "__comp---site-src-pages-leaderboard-index-tsx-5-b-3-5e4" */ "@site/src/pages/leaderboard/index.tsx"), "@site/src/pages/leaderboard/index.tsx", require.resolveWeak("@site/src/pages/leaderboard/index.tsx")],
   "__comp---site-src-pages-login-tsx-34-b-c7d": [() => import(/* webpackChunkName: "__comp---site-src-pages-login-tsx-34-b-c7d" */ "@site/src/pages/login.tsx"), "@site/src/pages/login.tsx", require.resolveWeak("@site/src/pages/login.tsx")],
   "__comp---site-src-pages-stats-index-tsx-6-d-7-fec": [() => import(/* webpackChunkName: "__comp---site-src-pages-stats-index-tsx-6-d-7-fec" */ "@site/src/pages/stats/index.tsx"), "@site/src/pages/stats/index.tsx", require.resolveWeak("@site/src/pages/stats/index.tsx")],
   "__comp---theme-debug-config-23-a-2ff": [() => import(/* webpackChunkName: "__comp---theme-debug-config-23-a-2ff" */ "@theme/DebugConfig"), "@theme/DebugConfig", require.resolveWeak("@theme/DebugConfig")],
