@@ -79,6 +79,7 @@ export interface UserProgressData {
   displayName?: string;
   photoURL?: string;
   isPremium?: boolean;
+  emailVerified?: boolean;
   readPages: string[];
   quizStats: {
     totalQuestionsAnswered: number;
@@ -96,6 +97,7 @@ export interface UserProgressData {
 export const defaultUserProgress: UserProgressData = {
   uid: '',
   isPremium: false,
+  emailVerified: false,
   readPages: [],
   quizStats: {
     totalQuestionsAnswered: 0,
@@ -124,12 +126,17 @@ export function subscribeToUserProgress(
     (snapshot) => {
       if (snapshot.exists()) {
         const raw = snapshot.data() as Partial<UserProgressData>;
+        if (raw.emailVerified && typeof window !== 'undefined') {
+          if (raw.email) localStorage.setItem(`verified_email_${raw.email.toLowerCase()}`, 'true');
+          localStorage.setItem(`verified_uid_${uid}`, 'true');
+        }
         onUpdate({
           uid,
           email: raw.email || '',
           displayName: raw.displayName || '',
           photoURL: raw.photoURL || '',
           isPremium: !!raw.isPremium,
+          emailVerified: !!raw.emailVerified,
           readPages: Array.isArray(raw.readPages) ? raw.readPages : [],
           quizStats: {
             totalQuestionsAnswered: raw.quizStats?.totalQuestionsAnswered || 0,

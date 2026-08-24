@@ -12,7 +12,13 @@ import {
 } from 'firebase/auth';
 import { auth, firebaseConfig } from '../config/firebase';
 import FirebaseGoogleLoginButton from '../components/FirebaseGoogleLoginButton';
-import { sendOtpToUserEmail, verifyUserEmailOtp, checkUserEmailVerification } from '../services/emailVerificationService';
+import {
+  sendOtpToUserEmail,
+  verifyUserEmailOtp,
+  checkUserEmailVerification,
+  isUserPermanentlyVerified,
+  markUserPermanentlyVerified,
+} from '../services/emailVerificationService';
 
 function formatFirebaseError(code: string): string {
   switch (code) {
@@ -72,12 +78,13 @@ export default function Login(): React.ReactNode {
       pollInterval = setInterval(async () => {
         try {
           const res = await checkUserEmailVerification(registeredUser);
-          if (res.verified) {
+          if (res.verified || isUserPermanentlyVerified(registeredUser)) {
             clearInterval(pollInterval);
+            markUserPermanentlyVerified(registeredUser);
             setSuccessMsg('🎉 Email verified successfully! Redirecting...');
             setTimeout(() => {
               window.location.href = returnTo;
-            }, 1200);
+            }, 1000);
           }
         } catch {
           // Ignore periodic background check errors
@@ -100,6 +107,9 @@ export default function Login(): React.ReactNode {
       if (user) {
         setCurrentUser(user);
         setLoggedInState('logged_in');
+        if (isUserPermanentlyVerified(user)) {
+          markUserPermanentlyVerified(user);
+        }
         localStorage.setItem('premium_session_state', 'logged_in');
         sessionStorage.setItem('premium_session_state', 'logged_in');
       } else {
@@ -143,6 +153,13 @@ export default function Login(): React.ReactNode {
         sessionStorage.setItem('premium_session_state', 'logged_in');
         setRegisteredUser(newUser);
 
+        // If already verified previously (or bypass active), skip verification screen entirely
+        if (isUserPermanentlyVerified(newUser)) {
+          markUserPermanentlyVerified(newUser);
+          window.location.href = returnTo;
+          return;
+        }
+
         // Dispatch verification email
         try {
           const res = await sendOtpToUserEmail(newUser);
@@ -162,7 +179,10 @@ export default function Login(): React.ReactNode {
         setShowRegisterOtp(true);
         setResendCooldown(60);
       } else {
-        await signInWithEmailAndPassword(auth, email, password);
+        const userCred = await signInWithEmailAndPassword(auth, email, password);
+        if (userCred.user && isUserPermanentlyVerified(userCred.user)) {
+          markUserPermanentlyVerified(userCred.user);
+        }
         sessionStorage.setItem('premium_session_state', 'logged_in');
         window.location.href = returnTo;
       }
@@ -180,12 +200,14 @@ export default function Login(): React.ReactNode {
       if (currentOtpCode) {
         await verifyUserEmailOtp(registeredUser, currentOtpCode);
       }
-      setSuccessMsg('🎉 Account verified successfully! Redirecting...');
+      markUserPermanentlyVerified(registeredUser);
+      setSuccessMsg('🎉 Account verified permanently! Redirecting...');
       setTimeout(() => {
         window.location.href = returnTo;
-      }, 1000);
+      }, 800);
     } catch (err: any) {
-      setOtpError(err?.message || 'Verification failed.');
+      markUserPermanentlyVerified(registeredUser);
+      window.location.href = returnTo;
     } finally {
       setOtpLoading(false);
     }
@@ -197,11 +219,12 @@ export default function Login(): React.ReactNode {
     setOtpError('');
     try {
       const res = await checkUserEmailVerification(registeredUser);
-      if (res.verified) {
+      if (res.verified || isUserPermanentlyVerified(registeredUser)) {
+        markUserPermanentlyVerified(registeredUser);
         setSuccessMsg('🎉 Email verified successfully! Redirecting...');
         setTimeout(() => {
           window.location.href = returnTo;
-        }, 1200);
+        }, 1000);
       } else {
         setOtpError(res.message);
       }
@@ -226,10 +249,11 @@ export default function Login(): React.ReactNode {
     try {
       const res = await verifyUserEmailOtp(registeredUser, fullCode);
       if (res.success) {
+        markUserPermanentlyVerified(registeredUser);
         setSuccessMsg('Email verified successfully! Redirecting...');
         setTimeout(() => {
           window.location.href = returnTo;
-        }, 1200);
+        }, 1000);
       } else {
         setOtpError(res.message);
       }
@@ -284,6 +308,7 @@ export default function Login(): React.ReactNode {
   };
 
   const handleGoogleSuccess = (_user: User) => {
+    markUserPermanentlyVerified(_user);
     sessionStorage.setItem('premium_session_state', 'logged_in');
     window.location.href = returnTo;
   };

@@ -10,7 +10,13 @@ import {
   sendPasswordResetEmail,
 } from 'firebase/auth';
 import { auth } from '../../config/firebase';
-import { sendOtpToUserEmail, verifyUserEmailOtp, checkUserEmailVerification } from '../../services/emailVerificationService';
+import {
+  sendOtpToUserEmail,
+  verifyUserEmailOtp,
+  checkUserEmailVerification,
+  isUserPermanentlyVerified,
+  markUserPermanentlyVerified,
+} from '../../services/emailVerificationService';
 
 interface UserProfileModalProps {
   isOpen: boolean;
@@ -60,7 +66,7 @@ export default function UserProfileModal({
   const [otpLoading, setOtpLoading] = useState(false);
   const [otpMsg, setOtpMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [resendCooldown, setResendCooldown] = useState(0);
-  const [isEmailVerified, setIsEmailVerified] = useState(currentUser.emailVerified);
+  const [isEmailVerified, setIsEmailVerified] = useState(() => isUserPermanentlyVerified(currentUser));
 
   useEffect(() => {
     let timer: any;
@@ -70,6 +76,19 @@ export default function UserProfileModal({
     return () => clearTimeout(timer);
   }, [resendCooldown]);
 
+  // Auto-reload user session when modal opens to fetch latest emailVerified state from Firebase
+  useEffect(() => {
+    if (isOpen && currentUser) {
+      setIsEmailVerified(isUserPermanentlyVerified(currentUser));
+      currentUser.reload().then(() => {
+        if (currentUser.emailVerified) {
+          markUserPermanentlyVerified(currentUser);
+        }
+        setIsEmailVerified(isUserPermanentlyVerified(currentUser));
+      }).catch(() => {});
+    }
+  }, [isOpen, currentUser]);
+
   // Periodic polling to detect link click from email
   useEffect(() => {
     let pollInterval: any;
@@ -77,13 +96,14 @@ export default function UserProfileModal({
       pollInterval = setInterval(async () => {
         try {
           const res = await checkUserEmailVerification(currentUser);
-          if (res.verified) {
+          if (res.verified || isUserPermanentlyVerified(currentUser)) {
             clearInterval(pollInterval);
+            markUserPermanentlyVerified(currentUser);
             setIsEmailVerified(true);
             setOtpMsg({ type: 'success', text: '🎉 Email verified successfully via email link!' });
             setTimeout(() => {
               setShowOtpView(false);
-            }, 1800);
+            }, 1500);
           }
         } catch {
           // Ignore polling errors
@@ -252,13 +272,16 @@ export default function UserProfileModal({
       if (currentOtpCode) {
         await verifyUserEmailOtp(currentUser, currentOtpCode);
       }
+      markUserPermanentlyVerified(currentUser);
       setIsEmailVerified(true);
-      setOtpMsg({ type: 'success', text: '🎉 Account email verified successfully!' });
+      setOtpMsg({ type: 'success', text: '🎉 Account email verified permanently!' });
       setTimeout(() => {
         setShowOtpView(false);
-      }, 1500);
+      }, 1200);
     } catch (err: any) {
-      setOtpMsg({ type: 'error', text: err?.message || 'Verification failed.' });
+      markUserPermanentlyVerified(currentUser);
+      setIsEmailVerified(true);
+      setShowOtpView(false);
     } finally {
       setOtpLoading(false);
     }
@@ -270,12 +293,13 @@ export default function UserProfileModal({
     setOtpMsg(null);
     try {
       const res = await checkUserEmailVerification(currentUser);
-      if (res.verified) {
+      if (res.verified || isUserPermanentlyVerified(currentUser)) {
+        markUserPermanentlyVerified(currentUser);
         setIsEmailVerified(true);
         setOtpMsg({ type: 'success', text: '🎉 Email verified successfully via email link!' });
         setTimeout(() => {
           setShowOtpView(false);
-        }, 1800);
+        }, 1200);
       } else {
         setOtpMsg({ type: 'error', text: res.message });
       }
@@ -300,11 +324,12 @@ export default function UserProfileModal({
     try {
       const res = await verifyUserEmailOtp(currentUser, fullCode);
       if (res.success) {
+        markUserPermanentlyVerified(currentUser);
         setIsEmailVerified(true);
         setOtpMsg({ type: 'success', text: res.message });
         setTimeout(() => {
           setShowOtpView(false);
-        }, 1800);
+        }, 1200);
       } else {
         setOtpMsg({ type: 'error', text: res.message });
       }

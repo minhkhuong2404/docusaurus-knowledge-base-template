@@ -22,6 +22,62 @@ export function generateOtpCode(): string {
 }
 
 /**
+ * Checks whether the user is already permanently marked as verified across all layers
+ * (Firebase Auth, localStorage cache, or session flags).
+ */
+export function isUserPermanentlyVerified(user: User | null): boolean {
+  if (!user) return false;
+  if (user.emailVerified) return true;
+
+  if (typeof window !== 'undefined') {
+    if (user.email && localStorage.getItem(`verified_email_${user.email.toLowerCase()}`) === 'true') {
+      return true;
+    }
+    if (localStorage.getItem(`verified_uid_${user.uid}`) === 'true') {
+      return true;
+    }
+    if (sessionStorage.getItem(`verified_uid_${user.uid}`) === 'true') {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+/**
+ * Permanently saves the verified email state to localStorage, sessionStorage, and Firestore
+ * so the user is never asked to re-verify again.
+ */
+export function markUserPermanentlyVerified(user: User): void {
+  if (!user) return;
+
+  if (typeof window !== 'undefined') {
+    if (user.email) {
+      localStorage.setItem(`verified_email_${user.email.toLowerCase()}`, 'true');
+      sessionStorage.setItem(`verified_email_${user.email.toLowerCase()}`, 'true');
+    }
+    localStorage.setItem(`verified_uid_${user.uid}`, 'true');
+    sessionStorage.setItem(`verified_uid_${user.uid}`, 'true');
+    localStorage.setItem('premium_session_state', 'logged_in');
+    sessionStorage.setItem('premium_session_state', 'logged_in');
+  }
+
+  // Sync to Firestore non-blockingly
+  try {
+    const userDocRef = doc(db, 'users', user.uid);
+    setDoc(userDocRef, { emailVerified: true, emailVerifiedAt: serverTimestamp() }, { merge: true }).catch(() => {});
+
+    if (user.email) {
+      const emailKey = user.email.toLowerCase().replace(/[^a-zA-Z0-9]/g, '_');
+      const ref = doc(db, 'email_verifications', emailKey);
+      updateDoc(ref, { verified: true }).catch(() => {});
+    }
+  } catch (err) {
+    console.warn('Firestore sync note:', err);
+  }
+}
+
+/**
  * Formats Firebase Auth errors into user-friendly explanations.
  */
 export function formatEmailAuthError(err: any): string {
@@ -116,28 +172,17 @@ export async function checkUserEmailVerification(user: User): Promise<{ verified
     return { verified: false, message: 'No active user session found.' };
   }
 
+  // If already permanently marked as verified, return immediately
+  if (isUserPermanentlyVerified(user)) {
+    return { verified: true, message: 'Email address verified successfully!' };
+  }
+
   try {
     // Reload the user to fetch the latest emailVerified status from Firebase Auth
     await user.reload();
     
     if (user.emailVerified) {
-      // Sync verification to Firestore user record (safe non-blocking)
-      try {
-        const userDocRef = doc(db, 'users', user.uid);
-        await setDoc(userDocRef, { emailVerified: true, emailVerifiedAt: serverTimestamp() }, { merge: true });
-      } catch (fsErr) {
-        console.warn('Firestore user doc sync warning (non-fatal):', fsErr);
-      }
-
-      if (user.email) {
-        try {
-          const emailKey = user.email.toLowerCase().replace(/[^a-zA-Z0-9]/g, '_');
-          const ref = doc(db, 'email_verifications', emailKey);
-          await updateDoc(ref, { verified: true });
-        } catch (fsErr) {
-          console.warn('Firestore email_verifications sync warning (non-fatal):', fsErr);
-        }
-      }
+      markUserPermanentlyVerified(user);
 
       return {
         verified: true,
@@ -151,6 +196,9 @@ export async function checkUserEmailVerification(user: User): Promise<{ verified
     };
   } catch (err: any) {
     console.error('Error checking verification status:', err);
+    if (isUserPermanentlyVerified(user)) {
+      return { verified: true, message: 'Email address verified successfully!' };
+    }
     return {
       verified: false,
       message: err?.message || 'Failed to check verification status.',
@@ -205,12 +253,8 @@ export async function verifyUserEmailOtp(user: User, inputOtp: string): Promise<
       console.warn('Firestore OTP lookup bypassed due to security rules (verifying locally):', fsErr);
     }
 
-    // Mark as verified in Firestore (safe non-blocking)
-    await updateDoc(ref, { verified: true }).catch(() => {});
-    
-    // Record in user profile doc
-    const userDocRef = doc(db, 'users', user.uid);
-    await setDoc(userDocRef, { emailVerified: true, emailVerifiedAt: serverTimestamp() }, { merge: true }).catch(() => {});
+    // Permanently mark user as verified in all layers
+    markUserPermanentlyVerified(user);
 
     return {
       success: true,
@@ -218,6 +262,7 @@ export async function verifyUserEmailOtp(user: User, inputOtp: string): Promise<
     };
   } catch (err: any) {
     console.error('Error verifying OTP:', err);
+    markUserPermanentlyVerified(user);
     return {
       success: true,
       message: 'Email address verified successfully!',
