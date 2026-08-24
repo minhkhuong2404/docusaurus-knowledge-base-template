@@ -10,7 +10,7 @@ export default {
   "baseUrl": "/",
   "customFields": {
     "firebaseApiKey": "AIzaSyCfKNL2b9lwvZjOA916DoYDR5B5-Xz7NNE",
-    "firebaseAuthDomain": "auth.luminhkhuong.dev",
+    "firebaseAuthDomain": "khuong-tjfxef.firebaseapp.com",
     "firebaseProjectId": "khuong-tjfxef",
     "firebaseStorageBucket": "khuong-tjfxef.firebasestorage.app",
     "firebaseMessagingSenderId": "14737596078",

@@ -330,12 +330,68 @@ export default function Login(): React.ReactNode {
 
   return (
     // @ts-ignore
-    <Layout title={mode === 'signin' ? 'Sign In' : mode === 'register' ? 'Create Account' : 'Reset Password'} description="Sign in or register to sync your reading progress">
+    <Layout title={loggedInState === 'logged_in' && currentUser ? 'My Account' : mode === 'signin' ? 'Sign In' : mode === 'register' ? 'Create Account' : 'Reset Password'} description="Sign in or register to sync your reading progress">
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '65vh', padding: '1.5rem 1rem' }}>
         <div style={{ padding: '2.5rem', border: '1px solid var(--ifm-color-emphasis-200)', borderRadius: '16px', maxWidth: '460px', width: '100%', backgroundColor: 'var(--ifm-background-surface-color)', boxShadow: '0 8px 32px rgba(0,0,0,0.12)' }}>
           
-          {/* REGISTRATION EMAIL VERIFICATION SCREEN */}
-          {showRegisterOtp ? (
+          {/* 1. ALREADY LOGGED IN VIEW (Hidden when user is not logged in) */}
+          {loggedInState === 'logged_in' && currentUser ? (
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>👋</div>
+              <h2 style={{ fontSize: '1.4rem', marginBottom: '0.4rem' }}>
+                You're Already Signed In!
+              </h2>
+              <p style={{ color: 'var(--ifm-color-emphasis-600)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+                Signed in as <strong>{currentUser.email || currentUser.displayName || 'Knowledge Base User'}</strong>
+              </p>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                <button
+                  type="button"
+                  onClick={() => { window.location.href = returnTo; }}
+                  style={{
+                    width: '100%',
+                    padding: '0.8rem',
+                    backgroundColor: 'var(--ifm-color-primary)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '8px',
+                    fontWeight: 700,
+                    fontSize: '0.95rem',
+                    cursor: 'pointer',
+                    transition: 'opacity 0.2s',
+                  }}
+                >
+                  Continue to Knowledge Base 🚀
+                </button>
+
+                <button
+                  type="button"
+                  onClick={async () => {
+                    await auth.signOut();
+                    localStorage.removeItem('premium_session_state');
+                    sessionStorage.removeItem('premium_session_state');
+                    setLoggedInState('logged_out');
+                    setCurrentUser(null);
+                  }}
+                  style={{
+                    width: '100%',
+                    padding: '0.7rem',
+                    background: 'transparent',
+                    border: '1px solid var(--ifm-color-emphasis-300)',
+                    color: 'var(--ifm-font-color-base)',
+                    borderRadius: '8px',
+                    fontWeight: 600,
+                    fontSize: '0.85rem',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Sign Out & Switch Account
+                </button>
+              </div>
+            </div>
+          ) : showRegisterOtp ? (
+            /* 2. REGISTRATION EMAIL VERIFICATION SCREEN */
             <div>
               <div style={{ textAlign: 'center', fontSize: '2.5rem', marginBottom: '0.5rem' }}>📧</div>
               <h2 style={{ textAlign: 'center', marginBottom: '0.35rem', fontSize: '1.4rem' }}>
@@ -555,48 +611,72 @@ export default function Login(): React.ReactNode {
               </div>
             </div>
           ) : (
+            /* 3. SIGN IN / CREATE ACCOUNT / FORGOT PASSWORD FORM */
             <>
               {/* Segmented Mode Selector */}
-              <div style={{ display: 'flex', background: 'var(--ifm-color-emphasis-100)', borderRadius: '8px', padding: '4px', marginBottom: '1.5rem' }}>
-                <button
-                  type="button"
-                  onClick={() => { setMode('signin'); setError(''); setSuccessMsg(''); }}
-                  style={{
-                    flex: 1,
-                    padding: '0.5rem',
-                    border: 'none',
-                    borderRadius: '6px',
-                    fontWeight: 600,
-                    fontSize: '0.85rem',
-                    cursor: 'pointer',
-                    backgroundColor: mode === 'signin' ? 'var(--ifm-background-surface-color)' : 'transparent',
-                    color: mode === 'signin' ? 'var(--ifm-color-primary)' : 'var(--ifm-color-emphasis-700)',
-                    boxShadow: mode === 'signin' ? '0 2px 6px rgba(0,0,0,0.08)' : 'none',
-                    transition: 'all 0.2s ease',
-                  }}
-                >
-                  Sign In
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { setMode('register'); setError(''); setSuccessMsg(''); }}
-                  style={{
-                    flex: 1,
-                    padding: '0.5rem',
-                    border: 'none',
-                    borderRadius: '6px',
-                    fontWeight: 600,
-                    fontSize: '0.85rem',
-                    cursor: 'pointer',
-                    backgroundColor: mode === 'register' ? 'var(--ifm-background-surface-color)' : 'transparent',
-                    color: mode === 'register' ? 'var(--ifm-color-primary)' : 'var(--ifm-color-emphasis-700)',
-                    boxShadow: mode === 'register' ? '0 2px 6px rgba(0,0,0,0.08)' : 'none',
-                    transition: 'all 0.2s ease',
-                  }}
-                >
-                  Create Account
-                </button>
-              </div>
+              {mode !== 'forgot' ? (
+                <div style={{ display: 'flex', background: 'var(--ifm-color-emphasis-100)', borderRadius: '8px', padding: '4px', marginBottom: '1.5rem' }}>
+                  <button
+                    type="button"
+                    onClick={() => { setMode('signin'); setError(''); setSuccessMsg(''); }}
+                    style={{
+                      flex: 1,
+                      padding: '0.5rem',
+                      border: 'none',
+                      borderRadius: '6px',
+                      fontWeight: 600,
+                      fontSize: '0.85rem',
+                      cursor: 'pointer',
+                      backgroundColor: mode === 'signin' ? 'var(--ifm-background-surface-color)' : 'transparent',
+                      color: mode === 'signin' ? 'var(--ifm-color-primary)' : 'var(--ifm-color-emphasis-700)',
+                      boxShadow: mode === 'signin' ? '0 2px 6px rgba(0,0,0,0.08)' : 'none',
+                      transition: 'all 0.2s ease',
+                    }}
+                  >
+                    Sign In
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setMode('register'); setError(''); setSuccessMsg(''); }}
+                    style={{
+                      flex: 1,
+                      padding: '0.5rem',
+                      border: 'none',
+                      borderRadius: '6px',
+                      fontWeight: 600,
+                      fontSize: '0.85rem',
+                      cursor: 'pointer',
+                      backgroundColor: mode === 'register' ? 'var(--ifm-background-surface-color)' : 'transparent',
+                      color: mode === 'register' ? 'var(--ifm-color-primary)' : 'var(--ifm-color-emphasis-700)',
+                      boxShadow: mode === 'register' ? '0 2px 6px rgba(0,0,0,0.08)' : 'none',
+                      transition: 'all 0.2s ease',
+                    }}
+                  >
+                    Create Account
+                  </button>
+                </div>
+              ) : (
+                <div style={{ marginBottom: '1rem' }}>
+                  <button
+                    type="button"
+                    onClick={() => { setMode('signin'); setError(''); setSuccessMsg(''); }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: 'var(--ifm-color-primary)',
+                      fontSize: '0.82rem',
+                      cursor: 'pointer',
+                      padding: 0,
+                      fontWeight: 600,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                    }}
+                  >
+                    ← Back to Sign In
+                  </button>
+                </div>
+              )}
 
               <h1 style={{ textAlign: 'center', marginBottom: '0.35rem', fontSize: '1.5rem' }}>
                 {mode === 'signin'
@@ -610,7 +690,7 @@ export default function Login(): React.ReactNode {
                   ? 'Sign in to sync your progress, scores, and mission rank.'
                   : mode === 'register'
                   ? 'Create an account with email verification and streak sync.'
-                  : 'Enter your email to receive a password reset link.'}
+                  : 'Enter your email address and we will send you a link to reset your password.'}
               </p>
 
               {/* Google Sign-In button for signin / register */}
@@ -748,14 +828,35 @@ export default function Login(): React.ReactNode {
                     ? mode === 'register'
                       ? 'Creating Account...'
                       : mode === 'forgot'
-                      ? 'Sending Link...'
+                      ? 'Sending Reset Link...'
                       : 'Signing In...'
                     : mode === 'register'
                     ? 'Create Account & Verify'
                     : mode === 'forgot'
-                    ? 'Send Password Reset Link'
+                    ? 'Send Password Reset Link ✉️'
                     : 'Sign In'}
                 </button>
+
+                {mode === 'signin' && (
+                  <div style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.82rem', color: 'var(--ifm-color-emphasis-600)' }}>
+                    Forgot your password?{' '}
+                    <button
+                      type="button"
+                      onClick={() => { setMode('forgot'); setError(''); setSuccessMsg(''); }}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: 'var(--ifm-color-primary)',
+                        cursor: 'pointer',
+                        padding: 0,
+                        fontWeight: 600,
+                        textDecoration: 'underline',
+                      }}
+                    >
+                      Reset it here
+                    </button>
+                  </div>
+                )}
 
                 {mode === 'forgot' && (
                   <button
