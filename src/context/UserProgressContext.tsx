@@ -694,7 +694,12 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
   const claimQuestBonus = useCallback(() => {
     const today = getTodayDateString();
     const game = progress.gamification || defaultGamificationState;
-    if (game.dailyQuests?.date === today && !game.dailyQuests.claimedBonus && game.dailyQuests.completedQuestIds?.length >= 3) {
+    const quests = game.dailyQuests;
+    const dailyQuests = getQuestsForDate(today);
+    const completedSet = new Set(quests?.completedQuestIds || []);
+    const isAllQuestsCompleted = dailyQuests.every((q) => completedSet.has(q.id)) || (completedSet.size >= dailyQuests.length && dailyQuests.length > 0);
+
+    if (quests?.date === today && !quests.claimedBonus && isAllQuestsCompleted) {
       const bonusExp = 150;
       addExp(bonusExp, 'Daily Mission Control 3/3 Bounty Box');
       showToast({
@@ -711,6 +716,9 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
           ...(prev.gamification || defaultGamificationState),
           dailyQuests: {
             ...((prev.gamification || defaultGamificationState).dailyQuests),
+            date: today,
+            completedQuestIds: Array.from(completedSet),
+            dailyCounts: quests.dailyCounts,
             claimedBonus: true,
           },
         };
@@ -1041,6 +1049,8 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
     if (newSolvedCount > 0) {
       addExp(newSolvedCount * 50, 'DSA Problem Solved');
       recordActivity('solve_dsa', newSolvedCount);
+    } else if (solved.length > 0 && solved.length >= prevSolved.length) {
+      recordActivity('solve_dsa', 1);
     }
 
     if (currentUser) {
