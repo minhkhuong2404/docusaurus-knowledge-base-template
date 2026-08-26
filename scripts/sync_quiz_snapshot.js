@@ -109,6 +109,7 @@ function convertCsvRowsToQuestions(rows, categoryName) {
   const explIdx = header.indexOf('explanation') !== -1 ? header.indexOf('explanation') : 10;
 
   const questions = [];
+  const seenTexts = new Set();
 
   for (let i = 1; i < rows.length; i++) {
     const row = rows[i];
@@ -117,6 +118,10 @@ function convertCsvRowsToQuestions(rows, categoryName) {
     const id = (idIdx !== -1 && row[idIdx]) ? row[idIdx].trim() : `${categoryName.toLowerCase()}-q-${i}`;
     const questionText = (qTextIdx !== -1 && row[qTextIdx]) ? row[qTextIdx].trim() : (row[3] ? row[3].trim() : '');
     if (!questionText) continue;
+
+    const normText = questionText.toLowerCase().replace(/\s+/g, ' ');
+    if (seenTexts.has(normText)) continue;
+    seenTexts.add(normText);
 
     const topic = (topicIdx !== -1 && row[topicIdx]) ? row[topicIdx].trim() : categoryName;
     const difficulty = parseDifficulty((diffIdx !== -1 && row[diffIdx]) ? row[diffIdx] : (row[2] || 'medium'));

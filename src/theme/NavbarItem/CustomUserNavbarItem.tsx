@@ -6,14 +6,14 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../../config/firebase';
 import { triggerFireworks } from '../../utils/fireworks';
 
-import { PROBLEMS } from '../../components/DSADashboard';
 import { isTrackableArticle, TOTAL_TRACKABLE_ARTICLES_DEFAULT } from '../../utils/trackablePages';
 import NavbarGamificationHUD from '../../components/gamification/NavbarGamificationHUD';
 import CosmicRankBadge from '../../components/gamification/CosmicRankBadge';
-import GamificationModal from '../../components/gamification/GamificationModal';
-import UserProfileModal from '../../components/auth/UserProfileModal';
 import { getRankForLevel, getExpProgressInCurrentLevel, ACHIEVEMENTS } from '../../data/gamificationData';
 import { defaultGamificationState } from '../../services/userProgressService';
+
+const GamificationModal = React.lazy(() => import('../../components/gamification/GamificationModal'));
+const UserProfileModal = React.lazy(() => import('../../components/auth/UserProfileModal'));
 
 export default function CustomUserNavbarItem() {
   const {
@@ -75,6 +75,8 @@ export default function CustomUserNavbarItem() {
   useEffect(() => {
     if (!isOpen) return;
 
+    let rafId: number | null = null;
+
     function updateCoords() {
       if (buttonRef.current) {
         const rect = buttonRef.current.getBoundingClientRect();
@@ -85,9 +87,17 @@ export default function CustomUserNavbarItem() {
       }
     }
 
+    function handleThrottledUpdate() {
+      if (rafId !== null) return;
+      rafId = requestAnimationFrame(() => {
+        updateCoords();
+        rafId = null;
+      });
+    }
+
     updateCoords();
-    window.addEventListener('resize', updateCoords);
-    window.addEventListener('scroll', updateCoords, true);
+    window.addEventListener('resize', handleThrottledUpdate);
+    window.addEventListener('scroll', handleThrottledUpdate, true);
 
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -103,8 +113,9 @@ export default function CustomUserNavbarItem() {
     document.addEventListener('mousedown', handleClickOutside);
 
     return () => {
-      window.removeEventListener('resize', updateCoords);
-      window.removeEventListener('scroll', updateCoords, true);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      window.removeEventListener('resize', handleThrottledUpdate);
+      window.removeEventListener('scroll', handleThrottledUpdate, true);
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isOpen]);
@@ -170,46 +181,6 @@ export default function CustomUserNavbarItem() {
   const readCount = (progress.readPages || []).filter(isTrackableArticle).length;
   const totalArticles = totalArticlesCount > 0 && totalArticlesCount <= 2000 ? totalArticlesCount : TOTAL_TRACKABLE_ARTICLES_DEFAULT;
   const readPercent = Math.min(100, Math.round((readCount / totalArticles) * 100));
-
-  const planProblems = PROBLEMS.filter(p => p.plans.includes(dsaIntensity));
-  const totalDsaCount = planProblems.length > 0 ? planProblems.length : 150;
-  const solvedSet = new Set((progress.dsaProgress?.solvedProblems || []).map(Number));
-  const dsaSolvedCount = planProblems.filter(p => solvedSet.has(p.id)).length;
-  const dsaPercent = totalDsaCount > 0 ? Math.min(100, Math.round((dsaSolvedCount / totalDsaCount) * 100)) : 0;
-
-  const quizStates = progress.quizStats?.quizStates || {};
-
-  let javaAnswered = 0;
-  let springAnswered = 0;
-  let sysDesignAnswered = 0;
-
-  let javaTotal = 508;
-  let springTotal = 508;
-  let sysDesignTotal = 508;
-
-  Object.entries(quizStates).forEach(([key, state]: [string, any]) => {
-    const count = state.answeredQuestionIds?.length ?? Object.keys(state.userAnswers || {}).length;
-    const totalFromState = state.totalQuestions;
-    const lowerKey = key.toLowerCase();
-
-    if (lowerKey.includes('spring')) {
-      springAnswered += count;
-      if (totalFromState) springTotal = totalFromState;
-    } else if (
-      lowerKey.includes('system') ||
-      lowerKey.includes('design') ||
-      lowerKey.includes('kafka') ||
-      lowerKey.includes('backend') ||
-      lowerKey.includes('sql') ||
-      lowerKey.includes('microservices')
-    ) {
-      sysDesignAnswered += count;
-      if (totalFromState) sysDesignTotal = totalFromState;
-    } else {
-      javaAnswered += count;
-      if (totalFromState) javaTotal = totalFromState;
-    }
-  });
 
   const gamification = progress.gamification || defaultGamificationState;
   const exp = gamification.exp || 0;
@@ -1099,22 +1070,26 @@ export default function CustomUserNavbarItem() {
       )}
 
       {showGamificationModal && (
-        <GamificationModal
-          isOpen={showGamificationModal}
-          onClose={() => setShowGamificationModal(false)}
-          initialTab="ranks"
-        />
+        <React.Suspense fallback={null}>
+          <GamificationModal
+            isOpen={showGamificationModal}
+            onClose={() => setShowGamificationModal(false)}
+            initialTab="ranks"
+          />
+        </React.Suspense>
       )}
 
       {showProfileModal && currentUser && (
-        <UserProfileModal
-          isOpen={showProfileModal}
-          onClose={() => setShowProfileModal(false)}
-          currentUser={currentUser}
-          isSuperAdmin={isSuperAdmin}
-          isAdmin={isAdmin}
-          isPremium={isPremium}
-        />
+        <React.Suspense fallback={null}>
+          <UserProfileModal
+            isOpen={showProfileModal}
+            onClose={() => setShowProfileModal(false)}
+            currentUser={currentUser}
+            isSuperAdmin={isSuperAdmin}
+            isAdmin={isAdmin}
+            isPremium={isPremium}
+          />
+        </React.Suspense>
       )}
     </div>
   );

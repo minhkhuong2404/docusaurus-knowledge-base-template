@@ -4,7 +4,8 @@ import { useUserProgress } from '../../context/UserProgressContext';
 import { getRankForLevel, getExpProgressInCurrentLevel } from '../../data/gamificationData';
 import { subscribeToOnlineUsers } from '../../services/presenceService';
 import CosmicRankBadge from './CosmicRankBadge';
-import GamificationModal from './GamificationModal';
+
+const GamificationModal = React.lazy(() => import('./GamificationModal'));
 
 export default function NavbarGamificationHUD() {
   const { gamification } = useUserProgress();
@@ -134,11 +135,13 @@ export default function NavbarGamificationHUD() {
       </div>
 
       {showModal && (
-        <GamificationModal
-          isOpen={showModal}
-          onClose={() => setShowModal(false)}
-          initialTab={modalTab}
-        />
+        <React.Suspense fallback={null}>
+          <GamificationModal
+            isOpen={showModal}
+            onClose={() => setShowModal(false)}
+            initialTab={modalTab}
+          />
+        </React.Suspense>
       )}
     </>
   );

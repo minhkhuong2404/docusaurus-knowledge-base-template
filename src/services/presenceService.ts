@@ -116,26 +116,28 @@ export function subscribeToOnlineUsers(
  */
 export function startPresenceTracker(
   user: User | null,
-  exp: number = 0
+  getExp: number | (() => number) = 0
 ): () => void {
   if (!user || typeof window === 'undefined') {
     return () => {};
   }
 
+  const resolveExp = () => (typeof getExp === 'function' ? getExp() : getExp);
+
   // Initial heartbeat
-  updateUserHeartbeat(user, exp, window.location.pathname);
+  updateUserHeartbeat(user, resolveExp(), window.location.pathname);
 
   // Periodic heartbeat
   const intervalId = setInterval(() => {
     if (document.visibilityState === 'visible') {
-      updateUserHeartbeat(user, exp, window.location.pathname);
+      updateUserHeartbeat(user, resolveExp(), window.location.pathname);
     }
   }, HEARTBEAT_INTERVAL_MS);
 
   // Tab visibility listener
   const handleVisibilityChange = () => {
     if (document.visibilityState === 'visible') {
-      updateUserHeartbeat(user, exp, window.location.pathname);
+      updateUserHeartbeat(user, resolveExp(), window.location.pathname);
     }
   };
 
@@ -144,12 +146,12 @@ export function startPresenceTracker(
     setUserOffline(user);
   };
 
-  window.addEventListener('visibilitychange', handleVisibilityChange);
+  document.addEventListener('visibilitychange', handleVisibilityChange);
   window.addEventListener('beforeunload', handleUnload);
 
   return () => {
     clearInterval(intervalId);
-    window.removeEventListener('visibilitychange', handleVisibilityChange);
+    document.removeEventListener('visibilitychange', handleVisibilityChange);
     window.removeEventListener('beforeunload', handleUnload);
   };
 }

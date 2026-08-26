@@ -8,6 +8,9 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
   sendPasswordResetEmail,
+  applyActionCode,
+  verifyPasswordResetCode,
+  confirmPasswordReset,
   User,
 } from 'firebase/auth';
 import { auth, firebaseConfig } from '../config/firebase';
@@ -63,6 +66,16 @@ export default function Login(): React.ReactNode {
   const [otpInfoMsg, setOtpInfoMsg] = useState('');
   const [resendCooldown, setResendCooldown] = useState(60);
 
+  // Action code handler states (for in-app email verification and password reset via custom action URL)
+  const [actionCodeStatus, setActionCodeStatus] = useState<
+    null | 'verifying_email' | 'verify_email_success' | 'verify_email_error' | 'reset_password_prompt' | 'reset_password_success' | 'reset_password_error'
+  >(null);
+  const [actionCodeOob, setActionCodeOob] = useState('');
+  const [resetEmailTarget, setResetEmailTarget] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [resetSubmitting, setResetSubmitting] = useState(false);
+
   useEffect(() => {
     let timer: any;
     if (resendCooldown > 0 && showRegisterOtp) {
@@ -103,6 +116,37 @@ export default function Login(): React.ReactNode {
       setReturnTo(redirectUrl);
     }
 
+    const urlMode = params.get('mode');
+    const oobCode = params.get('oobCode');
+
+    if (urlMode === 'verifyEmail' && oobCode) {
+      setActionCodeStatus('verifying_email');
+      setActionCodeOob(oobCode);
+      applyActionCode(auth, oobCode)
+        .then(() => {
+          setActionCodeStatus('verify_email_success');
+          setSuccessMsg('🎉 Email verified successfully! Your account is active.');
+          if (auth.currentUser) {
+            markUserPermanentlyVerified(auth.currentUser);
+          }
+        })
+        .catch((err: any) => {
+          setActionCodeStatus('verify_email_error');
+          setError(err?.message || 'This verification link is invalid or has expired.');
+        });
+    } else if (urlMode === 'resetPassword' && oobCode) {
+      setActionCodeStatus('reset_password_prompt');
+      setActionCodeOob(oobCode);
+      verifyPasswordResetCode(auth, oobCode)
+        .then((emailFound) => {
+          setResetEmailTarget(emailFound);
+        })
+        .catch((err: any) => {
+          setActionCodeStatus('reset_password_error');
+          setError(err?.message || 'This password reset link is invalid or has expired.');
+        });
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setCurrentUser(user);
@@ -138,7 +182,15 @@ export default function Login(): React.ReactNode {
           setLoading(false);
           return;
         }
-        await sendPasswordResetEmail(auth, email.trim());
+        const actionCodeSettings = {
+          url: typeof window !== 'undefined' ? `${window.location.origin}/login` : 'https://luminhkhuong.dev/login',
+          handleCodeInApp: false,
+        };
+        try {
+          await sendPasswordResetEmail(auth, email.trim(), actionCodeSettings);
+        } catch {
+          await sendPasswordResetEmail(auth, email.trim());
+        }
         setSuccessMsg(`Password reset email sent to ${email}. Check your inbox!`);
         setLoading(false);
         return;
@@ -328,14 +380,209 @@ export default function Login(): React.ReactNode {
     }
   };
 
+  const handleResetPasswordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newPassword || newPassword.length < 6) {
+      setError('Password must be at least 6 characters long.');
+      return;
+    }
+    if (newPassword !== confirmNewPassword) {
+      setError('Passwords do not match.');
+      return;
+    }
+
+    setResetSubmitting(true);
+    setError('');
+    setSuccessMsg('');
+
+    try {
+      await confirmPasswordReset(auth, actionCodeOob, newPassword);
+      setActionCodeStatus('reset_password_success');
+      setSuccessMsg('🎉 Your password has been reset successfully! You can now sign in.');
+    } catch (err: any) {
+      setError(err?.message || 'Failed to reset password. The link may have expired.');
+    } finally {
+      setResetSubmitting(false);
+    }
+  };
+
   return (
     // @ts-ignore
     <Layout title={loggedInState === 'logged_in' && currentUser ? 'My Account' : mode === 'signin' ? 'Sign In' : mode === 'register' ? 'Create Account' : 'Reset Password'} description="Sign in or register to sync your reading progress">
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '65vh', padding: '1.5rem 1rem' }}>
         <div style={{ padding: '2.5rem', border: '1px solid var(--ifm-color-emphasis-200)', borderRadius: '16px', maxWidth: '460px', width: '100%', backgroundColor: 'var(--ifm-background-surface-color)', boxShadow: '0 8px 32px rgba(0,0,0,0.12)' }}>
           
-          {/* 1. ALREADY LOGGED IN VIEW (Hidden when user is not logged in) */}
-          {loggedInState === 'logged_in' && currentUser ? (
+          {/* ACTION CODE: INCOMING EMAIL ACTION HANDLER SCREENS */}
+          {actionCodeStatus === 'verifying_email' ? (
+            <div style={{ textAlign: 'center', padding: '1rem 0' }}>
+              <div style={{ fontSize: '3rem', marginBottom: '1rem', animation: 'spin 1.5s linear infinite' }}>⏳</div>
+              <h2 style={{ fontSize: '1.35rem', marginBottom: '0.5rem' }}>Verifying Your Email Address...</h2>
+              <p style={{ color: 'var(--ifm-color-emphasis-600)', fontSize: '0.9rem' }}>Please wait a moment while we activate your account.</p>
+            </div>
+          ) : actionCodeStatus === 'verify_email_success' ? (
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>🎉</div>
+              <h2 style={{ fontSize: '1.4rem', color: '#34d399', marginBottom: '0.5rem' }}>Email Verified Successfully!</h2>
+              <p style={{ color: 'var(--ifm-color-emphasis-600)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+                Your account is fully verified. You now have complete access to the Engineering Knowledge Base!
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setActionCodeStatus(null);
+                  window.location.href = returnTo;
+                }}
+                style={{
+                  width: '100%',
+                  padding: '0.8rem',
+                  backgroundColor: 'var(--ifm-color-primary)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  fontWeight: 700,
+                  fontSize: '0.95rem',
+                  cursor: 'pointer',
+                }}
+              >
+                Continue to Knowledge Base 🚀
+              </button>
+            </div>
+          ) : actionCodeStatus === 'verify_email_error' ? (
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>⚠️</div>
+              <h2 style={{ fontSize: '1.35rem', color: '#f87171', marginBottom: '0.5rem' }}>Verification Link Expired</h2>
+              <p style={{ color: 'var(--ifm-color-emphasis-600)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+                {error || 'This verification link is invalid or has already been used.'}
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setActionCodeStatus(null);
+                  setMode('signin');
+                }}
+                style={{
+                  width: '100%',
+                  padding: '0.8rem',
+                  backgroundColor: 'var(--ifm-color-primary)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  fontWeight: 700,
+                  fontSize: '0.95rem',
+                  cursor: 'pointer',
+                }}
+              >
+                Go to Sign In
+              </button>
+            </div>
+          ) : actionCodeStatus === 'reset_password_prompt' ? (
+            <div>
+              <div style={{ textAlign: 'center', fontSize: '2.5rem', marginBottom: '0.5rem' }}>🔑</div>
+              <h2 style={{ textAlign: 'center', fontSize: '1.35rem', marginBottom: '0.35rem' }}>Set New Password</h2>
+              {resetEmailTarget && (
+                <p style={{ textAlign: 'center', color: 'var(--ifm-color-emphasis-600)', fontSize: '0.88rem', marginBottom: '1.25rem' }}>
+                  Resetting password for <strong>{resetEmailTarget}</strong>
+                </p>
+              )}
+
+              {error && (
+                <div style={{ padding: '0.75rem', borderRadius: '8px', backgroundColor: 'rgba(239, 68, 68, 0.1)', border: '1px solid var(--ifm-color-danger)', color: 'var(--ifm-color-danger)', fontSize: '0.85rem', marginBottom: '1rem' }}>
+                  {error}
+                </div>
+              )}
+
+              <form onSubmit={handleResetPasswordSubmit}>
+                <div style={{ marginBottom: '1rem' }}>
+                  <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', fontWeight: 600 }}>New Password</label>
+                  <input
+                    type="password"
+                    placeholder="At least 6 characters"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    required
+                    style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--ifm-color-emphasis-300)', backgroundColor: 'var(--ifm-color-emphasis-100)', color: 'var(--ifm-font-color-base)', outline: 'none' }}
+                  />
+                </div>
+
+                <div style={{ marginBottom: '1.5rem' }}>
+                  <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', fontWeight: 600 }}>Confirm New Password</label>
+                  <input
+                    type="password"
+                    placeholder="Re-type your new password"
+                    value={confirmNewPassword}
+                    onChange={(e) => setConfirmNewPassword(e.target.value)}
+                    required
+                    style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--ifm-color-emphasis-300)', backgroundColor: 'var(--ifm-color-emphasis-100)', color: 'var(--ifm-font-color-base)', outline: 'none' }}
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={resetSubmitting}
+                  style={{ width: '100%', padding: '0.8rem', backgroundColor: 'var(--ifm-color-primary)', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 700, fontSize: '0.95rem', cursor: resetSubmitting ? 'not-allowed' : 'pointer', opacity: resetSubmitting ? 0.7 : 1 }}
+                >
+                  {resetSubmitting ? 'Updating Password...' : 'Save New Password 🔒'}
+                </button>
+              </form>
+            </div>
+          ) : actionCodeStatus === 'reset_password_success' ? (
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>🎉</div>
+              <h2 style={{ fontSize: '1.4rem', color: '#34d399', marginBottom: '0.5rem' }}>Password Reset Complete!</h2>
+              <p style={{ color: 'var(--ifm-color-emphasis-600)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+                Your password has been securely updated. You can now sign in with your new credentials.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setActionCodeStatus(null);
+                  setMode('signin');
+                }}
+                style={{
+                  width: '100%',
+                  padding: '0.8rem',
+                  backgroundColor: 'var(--ifm-color-primary)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  fontWeight: 700,
+                  fontSize: '0.95rem',
+                  cursor: 'pointer',
+                }}
+              >
+                Sign In Now 🔑
+              </button>
+            </div>
+          ) : actionCodeStatus === 'reset_password_error' ? (
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>⚠️</div>
+              <h2 style={{ fontSize: '1.35rem', color: '#f87171', marginBottom: '0.5rem' }}>Reset Link Expired</h2>
+              <p style={{ color: 'var(--ifm-color-emphasis-600)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+                {error || 'This password reset link is invalid or has already been used.'}
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setActionCodeStatus(null);
+                  setMode('forgot');
+                }}
+                style={{
+                  width: '100%',
+                  padding: '0.8rem',
+                  backgroundColor: 'var(--ifm-color-primary)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  fontWeight: 700,
+                  fontSize: '0.95rem',
+                  cursor: 'pointer',
+                }}
+              >
+                Request a New Reset Link 🔄
+              </button>
+            </div>
+          ) : loggedInState === 'logged_in' && currentUser ? (
+            /* 1. ALREADY LOGGED IN VIEW */
             <div style={{ textAlign: 'center' }}>
               <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>👋</div>
               <h2 style={{ fontSize: '1.4rem', marginBottom: '0.4rem' }}>

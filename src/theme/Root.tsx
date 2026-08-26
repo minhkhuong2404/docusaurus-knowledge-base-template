@@ -85,38 +85,6 @@ export default function Root({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      {/* Hidden SVG filter — squiggly distortion for search bar border */}
-      <svg
-        aria-hidden="true"
-        style={{ position: "absolute", width: 0, height: 0, overflow: "hidden" }}
-      >
-        <defs>
-          <filter id="search-squiggle" x="-20%" y="-20%" width="140%" height="140%">
-            <feTurbulence
-              type="fractalNoise"
-              baseFrequency="0.018 0.025"
-              numOctaves="3"
-              seed="4"
-              result="noise"
-            >
-              <animate
-                attributeName="baseFrequency"
-                values="0.018 0.025;0.025 0.018;0.018 0.025"
-                dur="8s"
-                repeatCount="indefinite"
-              />
-            </feTurbulence>
-            <feDisplacementMap
-              in="SourceGraphic"
-              in2="noise"
-              scale="4"
-              xChannelSelector="R"
-              yChannelSelector="G"
-            />
-          </filter>
-        </defs>
-      </svg>
-
       <div className="space-decorations">
         {/* Planets */}
         <div className="planet mercury" />

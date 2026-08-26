@@ -15,7 +15,9 @@ export default function ScrollProgressButton() {
       return;
     }
 
-    const handleScroll = () => {
+    let rafId: number | null = null;
+
+    const computeScroll = () => {
       const scrollTop = window.scrollY || document.documentElement.scrollTop;
       const scrollHeight = document.documentElement.scrollHeight;
       const clientHeight = document.documentElement.clientHeight;
@@ -42,10 +44,21 @@ export default function ScrollProgressButton() {
       }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Initial check
+    const handleScroll = () => {
+      if (rafId !== null) return;
+      rafId = requestAnimationFrame(() => {
+        computeScroll();
+        rafId = null;
+      });
+    };
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    computeScroll(); // Initial check
+
+    return () => {
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, [pagePath, isPageRead, markPageAsRead, isManuallyUnmarked]);
 
   if (pagePath.startsWith('/arcade') || pagePath.startsWith('/stats') || pagePath === '/stats') {

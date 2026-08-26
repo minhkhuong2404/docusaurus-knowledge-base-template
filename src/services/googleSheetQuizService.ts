@@ -228,11 +228,24 @@ export function convertCsvRowsToQuestions(
   return questions;
 }
 
-const DB_NAME = 'QuizKnowledgeBaseDB_v1';
+const DB_NAME = 'QuizKnowledgeBaseDB_v2';
 const DB_VERSION = 1;
 const STORE_NAME = 'quiz_tabs';
 
 const memoryCache: Record<string, { timestamp: number; data: QuizQuestion[] }> = {};
+
+// Clean up legacy bloated v1 database if present
+if (typeof window !== 'undefined' && window.indexedDB) {
+  try {
+    const legacyKey = 'QuizKnowledgeBaseDB_v1_cleaned';
+    if (!localStorage.getItem(legacyKey)) {
+      window.indexedDB.deleteDatabase('QuizKnowledgeBaseDB_v1');
+      localStorage.setItem(legacyKey, 'true');
+    }
+  } catch {
+    // ignore
+  }
+}
 
 function openQuizDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {

@@ -2,9 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import Layout from "@theme/Layout";
 import Link from "@docusaurus/Link";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
-import DailyQuizGallery from '../components/DailyQuizGallery';
-import LeetCodeDaily from '../components/LeetCodeDaily';
-import DSADashboard from '../components/DSADashboard';
+
+const DailyQuizGallery = React.lazy(() => import('../components/DailyQuizGallery'));
+const LeetCodeDaily = React.lazy(() => import('../components/LeetCodeDaily'));
+const DSADashboard = React.lazy(() => import('../components/DSADashboard'));
 
 /* ─────────────────────────────────────────────────────────────────────────────
    Global CSS injected into <head> via <style> — only active on this page
@@ -2314,13 +2315,15 @@ export default function Home(): React.ReactNode {
 
               {/* Render selected Hub Tab */}
               <div>
-                {activeHubTab === 'leetcode' ? (
-                  <LeetCodeDaily />
-                ) : (
-                  <div style={{ width: "100%", margin: "0 auto" }}>
-                    <DailyQuizGallery />
-                  </div>
-                )}
+                <React.Suspense fallback={<div style={{ minHeight: '180px', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.6 }}>Loading Hub...</div>}>
+                  {activeHubTab === 'leetcode' ? (
+                    <LeetCodeDaily />
+                  ) : (
+                    <div style={{ width: "100%", margin: "0 auto" }}>
+                      <DailyQuizGallery />
+                    </div>
+                  )}
+                </React.Suspense>
               </div>
             </section>
           </div>
@@ -2354,7 +2357,9 @@ export default function Home(): React.ReactNode {
               dynamic programming. Each week targets one core pattern with
               progressive difficulty.
             </p>
-            <DSADashboard />
+            <React.Suspense fallback={<div style={{ minHeight: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.6 }}>Loading DSA Roadmap...</div>}>
+              <DSADashboard />
+            </React.Suspense>
 
             <h3 style={{ color: "var(--brand-purple)", fontWeight: 800, marginTop: "3.5rem", marginBottom: "1.5rem", fontSize: "1.3rem" }}>
               🗺️ 20-Week Lesson Navigation Blueprint

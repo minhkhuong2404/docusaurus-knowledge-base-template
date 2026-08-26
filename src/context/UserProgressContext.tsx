@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, useMemo, useCallback } from 'react';
+import React, { createContext, useContext, useEffect, useState, useMemo, useCallback, useRef } from 'react';
 
 // ── Master-password verification (PBKDF2 / Web Crypto) ──────────────────────
 // Use a safe guard so that the browser bundle does not crash on `process` being
@@ -194,6 +194,16 @@ function saveCachedProgress(data: UserProgressData) {
   }
 }
 
+export function normalizePagePath(rawPath?: string | null): string {
+  if (!rawPath) return '';
+  let p = rawPath.trim();
+  p = p.split('?')[0].split('#')[0];
+  if (p.length > 1 && p.endsWith('/')) {
+    p = p.replace(/\/+$/, '');
+  }
+  return p;
+}
+
 function mergeQuizProgress(localData: UserProgressData, remoteData: UserProgressData): UserProgressData {
   const mergedQuizStates = { ...localData.quizStats?.quizStates, ...remoteData.quizStats?.quizStates };
 
@@ -239,10 +249,14 @@ function mergeQuizProgress(localData: UserProgressData, remoteData: UserProgress
     mergedMiniGameScores[k] = Math.max(localGame.miniGameScores?.[k] || 0, remoteGame.miniGameScores?.[k] || 0);
   });
 
+  const combinedPages = [...(localData.readPages || []), ...(remoteData.readPages || [])]
+    .map(normalizePagePath)
+    .filter(Boolean);
+
   return {
     ...remoteData,
     isPremium: remoteData.isPremium || localData.isPremium,
-    readPages: Array.from(new Set([...(localData.readPages || []), ...(remoteData.readPages || [])])),
+    readPages: Array.from(new Set(combinedPages)),
     quizStats: {
       totalQuestionsAnswered: Math.max(totalAnswered, remoteData.quizStats?.totalQuestionsAnswered || 0),
       totalCorrectAnswers: Math.max(localData.quizStats?.totalCorrectAnswers || 0, remoteData.quizStats?.totalCorrectAnswers || 0),
@@ -327,18 +341,21 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   });
 
-  const setTotalArticlesCount = (count: number) => {
-    if (count > 0 && count <= 2000 && count !== totalArticlesCount) {
-      setTotalArticlesCountState(count);
-      if (typeof window !== 'undefined') {
-        try {
-          localStorage.setItem('total_articles_count', count.toString());
-        } catch {
-          // Ignore localStorage errors
+  const setTotalArticlesCount = useCallback((count: number) => {
+    if (count > 0 && count <= 2000) {
+      setTotalArticlesCountState((prev) => {
+        if (prev === count) return prev;
+        if (typeof window !== 'undefined') {
+          try {
+            localStorage.setItem('total_articles_count', count.toString());
+          } catch {
+            // Ignore localStorage errors
+          }
         }
-      }
+        return count;
+      });
     }
-  };
+  }, []);
 
   const setProgress = useCallback((updater: React.SetStateAction<UserProgressData>) => {
     setProgressState((prev) => {
@@ -804,12 +821,16 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
     return () => unsubscribeDoc();
   }, [currentUser]);
 
+  // Keep EXP ref updated for heartbeat without restarting interval on every exp change
+  const expRef = useRef(progress.gamification?.exp || 0);
+  expRef.current = progress.gamification?.exp || 0;
+
   // Start Real-Time Presence Heartbeat for Active User
   useEffect(() => {
     if (!currentUser) return;
-    const unsubPresence = startPresenceTracker(currentUser, progress.gamification?.exp || 0);
+    const unsubPresence = startPresenceTracker(currentUser, () => expRef.current);
     return () => unsubPresence();
-  }, [currentUser, progress.gamification?.exp]);
+  }, [currentUser?.uid]);
 
   // Evaluate & Grant Concluded Weekly & Monthly Leaderboard Standings Rewards
   useEffect(() => {
@@ -869,7 +890,8 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
   // Track articles read today in current session to allow re-reading to count for daily quests
   const recordArticleReadSession = (pagePath: string): boolean => {
     const today = getTodayDateString();
-    const sessionKey = `docusaurus_read_today_${today}_${pagePath}`;
+    const norm = normalizePagePath(pagePath);
+    const sessionKey = `docusaurus_read_today_${today}_${norm}`;
     try {
       if (typeof window !== 'undefined' && window.sessionStorage) {
         if (sessionStorage.getItem(sessionKey)) {
@@ -883,68 +905,72 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
     return true;
   };
 
-  const isPageRead = (pagePath: string): boolean => {
-    return progress.readPages.includes(pagePath);
-  };
+  const isPageRead = useCallback((pagePath: string): boolean => {
+    if (!pagePath) return false;
+    const norm = normalizePagePath(pagePath);
+    return (progress.readPages || []).some((p) => normalizePagePath(p) === norm);
+  }, [progress.readPages]);
 
-  const isManuallyUnmarked = (pagePath: string): boolean => {
-    return manuallyUnmarkedPages.has(pagePath);
-  };
+  const isManuallyUnmarked = useCallback((pagePath: string): boolean => {
+    if (!pagePath) return false;
+    const norm = normalizePagePath(pagePath);
+    return manuallyUnmarkedPages.has(norm);
+  }, [manuallyUnmarkedPages]);
 
-  const togglePageRead = async (pagePath: string): Promise<void> => {
-    const isCurrentlyRead = isPageRead(pagePath);
+  const togglePageRead = useCallback(async (pagePath: string): Promise<void> => {
+    if (!pagePath) return;
+    const norm = normalizePagePath(pagePath);
+    const isCurrentlyRead = (progress.readPages || []).some((p) => normalizePagePath(p) === norm);
     const isReadNow = !isCurrentlyRead;
 
-    if (isCurrentlyRead) {
-      setManuallyUnmarkedPages((prev) => {
-        const next = new Set(prev);
-        next.add(pagePath);
-        return next;
-      });
-    } else {
-      setManuallyUnmarkedPages((prev) => {
-        const next = new Set(prev);
-        next.delete(pagePath);
-        return next;
-      });
-    }
+    setManuallyUnmarkedPages((prev) => {
+      const next = new Set(prev);
+      if (isCurrentlyRead) {
+        next.add(norm);
+      } else {
+        next.delete(norm);
+      }
+      return next;
+    });
 
     setProgress((prev) => {
-      const exists = prev.readPages.includes(pagePath);
+      const exists = (prev.readPages || []).some((p) => normalizePagePath(p) === norm);
       const updated = exists
-        ? prev.readPages.filter((p) => p !== pagePath)
-        : [...prev.readPages, pagePath];
+        ? (prev.readPages || []).filter((p) => normalizePagePath(p) !== norm)
+        : [...(prev.readPages || []).filter((p) => normalizePagePath(p) !== norm), norm];
       return { ...prev, readPages: updated };
     });
 
     if (isReadNow) {
       addExp(25, 'Completed Article');
-      recordArticleReadSession(pagePath);
+      recordArticleReadSession(norm);
       recordActivity('read_article', 1);
     }
 
     if (currentUser) {
-      await toggleDocPageRead(currentUser.uid, pagePath, isReadNow);
+      await toggleDocPageRead(currentUser.uid, norm, isReadNow);
     }
-  };
+  }, [progress.readPages, setProgress, addExp, recordActivity, currentUser]);
 
-  const markPageAsRead = async (pagePath: string): Promise<void> => {
-    if (manuallyUnmarkedPages.has(pagePath)) return;
+  const markPageAsRead = useCallback(async (pagePath: string): Promise<void> => {
+    if (!pagePath) return;
+    const norm = normalizePagePath(pagePath);
+    if (manuallyUnmarkedPages.has(norm)) return;
 
-    const isAlreadyRead = isPageRead(pagePath);
-    const isNewToday = recordArticleReadSession(pagePath);
+    const isAlreadyRead = (progress.readPages || []).some((p) => normalizePagePath(p) === norm);
+    const isNewToday = recordArticleReadSession(norm);
 
     if (!isAlreadyRead) {
       setProgress((prev) => {
-        if (prev.readPages.includes(pagePath)) return prev;
-        return { ...prev, readPages: [...prev.readPages, pagePath] };
+        if ((prev.readPages || []).some((p) => normalizePagePath(p) === norm)) return prev;
+        return { ...prev, readPages: [...(prev.readPages || []).filter((p) => normalizePagePath(p) !== norm), norm] };
       });
 
       addExp(25, 'Completed Article');
       recordActivity('read_article', 1);
 
       if (currentUser) {
-        await toggleDocPageRead(currentUser.uid, pagePath, true);
+        await toggleDocPageRead(currentUser.uid, norm, true);
       }
     } else if (isNewToday) {
       // Re-reading an already completed article today!
@@ -952,9 +978,9 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
       recordActivity('read_article', 1);
       addExp(10, 'Re-read Technical Article');
     }
-  };
+  }, [manuallyUnmarkedPages, progress.readPages, setProgress, addExp, recordActivity, currentUser]);
 
-  const saveQuiz = async (
+  const saveQuiz = useCallback(async (
     quizKey: string,
     quizState: QuizStateItem,
     answeredDelta: number = 0,
@@ -993,11 +1019,11 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
         console.error('Background Firestore quiz save error:', err);
       });
     }
-  };
+  }, [setProgress, recordActivity, addExp, currentUser]);
 
   const isPremiumUnlocked = !!progress.isPremium;
 
-  const unlockPremium = async (inputKey: string): Promise<boolean> => {
+  const unlockPremium = useCallback(async (inputKey: string): Promise<boolean> => {
     if (!inputKey || !inputKey.trim()) return false;
 
     const valid = await verifyMasterKey(inputKey);
@@ -1011,16 +1037,16 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
       });
     }
     return true;
-  };
+  }, [currentUser, setProgress]);
 
-  const revokePremium = async (): Promise<void> => {
+  const revokePremium = useCallback(async (): Promise<void> => {
     setProgress((prev) => ({ ...prev, isPremium: false }));
     if (currentUser) {
       await revokePremiumInFirestore(currentUser.uid);
     }
-  };
+  }, [currentUser, setProgress]);
 
-  const resetQuizProgress = async (): Promise<void> => {
+  const resetQuizProgress = useCallback(async (): Promise<void> => {
     setProgress((prev) => ({
       ...prev,
       quizStats: {
@@ -1035,9 +1061,9 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
         console.error('Background Firestore reset error:', err);
       });
     }
-  };
+  }, [currentUser, setProgress]);
 
-  const saveDSA = async (solved: string[], starred: string[]): Promise<void> => {
+  const saveDSA = useCallback(async (solved: string[], starred: string[]): Promise<void> => {
     const prevSolved = progress.dsaProgress?.solvedProblems || [];
     const newSolvedCount = Math.max(0, solved.length - prevSolved.length);
 
@@ -1056,45 +1082,75 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
     if (currentUser) {
       await saveDSAProgressToFirestore(currentUser.uid, solved, starred);
     }
-  };
+  }, [progress.dsaProgress?.solvedProblems, setProgress, addExp, recordActivity, currentUser]);
 
   const gamification = progress.gamification || defaultGamificationState;
 
-  return (
-    <UserProgressContext.Provider
-      value={{
-        currentUser,
-        progress,
-        isLoading,
-        isPremium: isPremiumUnlocked,
-        isAdmin,
-        isSuperAdmin,
-        adminEmails,
-        addAdminEmail,
-        removeAdminEmail,
-        totalArticlesCount,
-        setTotalArticlesCount,
-        isPageRead,
-        togglePageRead,
-        markPageAsRead,
-        isManuallyUnmarked,
-        saveQuiz,
-        saveDSA,
-        unlockPremium,
-        revokePremium,
-        resetQuizProgress,
+  const contextValue = useMemo(() => ({
+    currentUser,
+    progress,
+    isLoading,
+    isPremium: isPremiumUnlocked,
+    isAdmin,
+    isSuperAdmin,
+    adminEmails,
+    addAdminEmail,
+    removeAdminEmail,
+    totalArticlesCount,
+    setTotalArticlesCount,
+    isPageRead,
+    togglePageRead,
+    markPageAsRead,
+    isManuallyUnmarked,
+    saveQuiz,
+    saveDSA,
+    unlockPremium,
+    revokePremium,
+    resetQuizProgress,
 
-        gamification,
-        addExp,
-        boostToGodLevel,
-        recordActivity,
-        unlockAchievement,
-        claimQuestBonus,
-        saveMiniGameScore,
-        toast,
-        dismissToast,
-      }}
-    >
+    gamification,
+    addExp,
+    boostToGodLevel,
+    recordActivity,
+    unlockAchievement,
+    claimQuestBonus,
+    saveMiniGameScore,
+    toast,
+    dismissToast,
+  }), [
+    currentUser,
+    progress,
+    isLoading,
+    isPremiumUnlocked,
+    isAdmin,
+    isSuperAdmin,
+    adminEmails,
+    addAdminEmail,
+    removeAdminEmail,
+    totalArticlesCount,
+    setTotalArticlesCount,
+    isPageRead,
+    togglePageRead,
+    markPageAsRead,
+    isManuallyUnmarked,
+    saveQuiz,
+    saveDSA,
+    unlockPremium,
+    revokePremium,
+    resetQuizProgress,
+    gamification,
+    addExp,
+    boostToGodLevel,
+    recordActivity,
+    unlockAchievement,
+    claimQuestBonus,
+    saveMiniGameScore,
+    toast,
+    dismissToast,
+  ]);
+
+  return (
+    <UserProgressContext.Provider value={contextValue}>
       {children}
     </UserProgressContext.Provider>
   );

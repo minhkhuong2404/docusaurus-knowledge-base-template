@@ -1,7 +1,6 @@
 @import "@fortawesome/fontawesome-free/css/fontawesome.min.css";
 @import "@fortawesome/fontawesome-free/css/brands.min.css";
 @import "@fortawesome/fontawesome-free/css/solid.min.css";
-@import "katex/dist/katex.min.css";
 @import "./diagrams.css";
 
 /* Prevent KaTeX MathML double rendering */
@@ -2465,6 +2464,8 @@ pre[class*="language-"]::-webkit-scrollbar {
   inset: 0;
   pointer-events: none;
   z-index: 1 !important;
+  contain: strict;
+  transform: translateZ(0);
 }
 
 [data-theme="light"] .space-decorations {
@@ -2477,6 +2478,8 @@ pre[class*="language-"]::-webkit-scrollbar {
   border-radius: 50%;
   pointer-events: none;
   z-index: 0;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 /* Mercury (left margin) */
@@ -2762,6 +2765,8 @@ pre[class*="language-"]::-webkit-scrollbar {
   opacity: 0.12 !important;
   pointer-events: none;
   z-index: 0;
+  will-change: transform;
+  transform: translateZ(0);
   animation: hoverRocket 14s infinite ease-in-out alternate !important;
 }
 
@@ -2995,6 +3000,8 @@ pre[class*="language-"]::-webkit-scrollbar {
   pointer-events: none;
   z-index: 0;
   opacity: 0.15;
+  will-change: transform;
+  transform: translateZ(0);
   animation: driftUniversal 22s infinite ease-in-out alternate !important;
 }
 

@@ -95,6 +95,22 @@ export async function evaluateLeaderboardStandings(
   const weeklyClaimKey = `weekly_${prevWeekKey}`;
   const monthlyClaimKey = `monthly_${prevMonthKey}`;
 
+  // Early return if user has already claimed both weekly and monthly rewards
+  const needsWeekly = !claimedRewards.includes(weeklyClaimKey);
+  const needsMonthly = !claimedRewards.includes(monthlyClaimKey);
+  if (!needsWeekly && !needsMonthly) {
+    return [];
+  }
+
+  // Session-level de-duplication: avoid querying all users repeatedly in the same browser session
+  const sessionCheckKey = `lb_eval_${userId}_${prevWeekKey}_${prevMonthKey}`;
+  if (typeof window !== 'undefined' && window.sessionStorage) {
+    if (sessionStorage.getItem(sessionCheckKey)) {
+      return [];
+    }
+    sessionStorage.setItem(sessionCheckKey, '1');
+  }
+
   // Fetch all users to determine rank standings
   try {
     const usersSnap = await getDocs(collection(db, 'users'));

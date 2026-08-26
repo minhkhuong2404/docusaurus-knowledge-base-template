@@ -147,7 +147,15 @@ export async function sendOtpToUserEmail(user: User): Promise<{ success: boolean
 
   // Trigger Firebase Auth native verification email dispatch
   try {
-    await sendEmailVerification(user);
+    const actionCodeSettings = {
+      url: typeof window !== 'undefined' ? `${window.location.origin}/login?verified=true` : 'https://luminhkhuong.dev/login?verified=true',
+      handleCodeInApp: false,
+    };
+    try {
+      await sendEmailVerification(user, actionCodeSettings);
+    } catch {
+      await sendEmailVerification(user);
+    }
   } catch (authErr: any) {
     console.warn('Firebase sendEmailVerification notice:', authErr);
     return {

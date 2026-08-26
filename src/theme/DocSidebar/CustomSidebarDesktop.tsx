@@ -105,16 +105,26 @@ export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidd
 
   // Handle resizing mouse events
   useEffect(() => {
+    let rafId: number | null = null;
+
     const handleMouseMove = (e: MouseEvent) => {
       if (!isResizing) return;
-      // Docusaurus sidebar has a 16px margin on the left
-      const newWidth = Math.max(200, Math.min(480, e.clientX - 16));
-      sidebarWidthRef.current = newWidth;
-      document.documentElement.style.setProperty('--doc-sidebar-width', `${newWidth}px`);
+      if (rafId !== null) return;
+      rafId = requestAnimationFrame(() => {
+        // Docusaurus sidebar has a 16px margin on the left
+        const newWidth = Math.max(200, Math.min(480, e.clientX - 16));
+        sidebarWidthRef.current = newWidth;
+        document.documentElement.style.setProperty('--doc-sidebar-width', `${newWidth}px`);
+        rafId = null;
+      });
     };
 
     const handleMouseUp = () => {
       if (isResizing) {
+        if (rafId !== null) {
+          cancelAnimationFrame(rafId);
+          rafId = null;
+        }
         setIsResizing(false);
         document.body.classList.remove('resizing-sidebar');
         localStorage.setItem('sidebar-width', `${sidebarWidthRef.current}px`);
@@ -127,6 +137,7 @@ export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidd
     }
 
     return () => {
+      if (rafId !== null) cancelAnimationFrame(rafId);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
     };
@@ -228,7 +239,7 @@ export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidd
 
     if (item.type === 'doc' || item.type === 'link') {
       const isTrackable = isTrackableArticle(item.href);
-      const isRead = isTrackable && item.href ? (isPageRead(item.href) || isPageRead(item.href + '/') || (item.href.endsWith('/') && isPageRead(item.href.slice(0, -1)))) : false;
+      const isRead = isTrackable && item.href ? isPageRead(item.href) : false;
 
       if (isHidden) {
         return (

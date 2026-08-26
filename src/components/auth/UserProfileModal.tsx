@@ -225,7 +225,15 @@ export default function UserProfileModal({
     setResetLoading(true);
     setPasswordMsg(null);
     try {
-      await sendPasswordResetEmail(auth, currentUser.email);
+      const actionCodeSettings = {
+        url: typeof window !== 'undefined' ? `${window.location.origin}/login` : 'https://luminhkhuong.dev/login',
+        handleCodeInApp: false,
+      };
+      try {
+        await sendPasswordResetEmail(auth, currentUser.email, actionCodeSettings);
+      } catch {
+        await sendPasswordResetEmail(auth, currentUser.email);
+      }
       setResetEmailSent(true);
       setPasswordMsg({
         type: 'success',
