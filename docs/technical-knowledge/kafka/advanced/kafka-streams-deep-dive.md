@@ -16,6 +16,14 @@ tags:
   - advanced
 ---
 
+import KafkaStreamsAbstractionsDiagram from '@site/src/components/KafkaStreamsAbstractionsDiagram';
+import KafkaStreamsTopologyDiagram from '@site/src/components/KafkaStreamsTopologyDiagram';
+import KafkaStreamsExecutionModelDiagram from '@site/src/components/KafkaStreamsExecutionModelDiagram';
+import KafkaStreamsStateStoreDiagram from '@site/src/components/KafkaStreamsStateStoreDiagram';
+import KafkaStreamsWindowJoinDiagram from '@site/src/components/KafkaStreamsWindowJoinDiagram';
+import KafkaStreamsTopologyMigrationRunbookDiagram from '@site/src/components/KafkaStreamsTopologyMigrationRunbookDiagram';
+import KafkaStreamsRebalanceStormDurationDiagram from '@site/src/components/KafkaStreamsRebalanceStormDurationDiagram';
+
 # Kafka Streams — Complete Deep Dive
 
 > **Who this is for:** Engineers who want to truly understand how Kafka Streams works — not just use the API, but reason about it in production, design systems with it, and answer hard senior interview questions confidently.
@@ -109,6 +117,8 @@ KTable (partitioned):                GlobalKTable (replicated):
 
 ### KStream vs KTable vs GlobalKTable — Decision Guide
 
+<KafkaStreamsAbstractionsDiagram initialTab="kstream" />
+
 | Question | KStream | KTable | GlobalKTable |
 |:---|:---|:---|:---|
 | Each record is an independent event? | ✅ | ❌ | ❌ |
@@ -130,6 +140,8 @@ Source Nodes    →    Processor Nodes (transforms)    →    Sink Nodes
 ```
 
 ### Topology Visualization
+
+<KafkaStreamsTopologyDiagram initialTab="DSL_DAG" />
 
 ```
 [orders-raw topic]        [product-catalog topic]
@@ -196,6 +208,8 @@ System.out.println(topology.describe());  // Always inspect in development
 
 ### Why Topology Naming Is Critical for Production
 
+<KafkaStreamsTopologyDiagram initialTab="NAMING_TRAP" />
+
 Auto-generated internal names for operators, state stores, and repartition topics look like: `KSTREAM-FILTER-0000000002`. These names are used as:
 - Kafka internal topic names: `app-id-KSTREAM-FILTER-0000000002-repartition`
 - RocksDB state directory names: `/tmp/kafka-streams/KSTREAM-MAPVALUES-0000000003`
@@ -241,11 +255,179 @@ rawOrders
     );
 ```
 
+### The Sub-Topology Reordering Disaster (Rebalance Storms & Zero Processing)
+
+<KafkaStreamsTopologyDiagram initialTab="SUBTOPOLOGY_STORM" />
+
+A **Sub-topology** is an independent connected component of processors in your topology. If your application defines multiple independent pipelines in the same `StreamsBuilder` (e.g. consuming from `orders-raw` and `payments-raw` independently), Kafka Streams compiles them into separate sub-topologies numbered sequentially (`0, 1, 2, ...`):
+
+#### Why Reordering Causes an Infinite Rebalance Storm During Rolling Updates
+
+When rolling out `v2` across a cluster of pods:
+
+1. **The Incompatible Assignment**:
+   - The cluster is in a mixed state where Pod 1 runs `v2` and Pod 2 runs `v1`.
+   - Both pods join the same Consumer Group (`application.id`).
+   - If the group leader elected by the broker is running `v2`, it computes partition assignments according to `v2`'s topology map: **Task `0_0` is assigned `payments-raw-0`**.
+2. **Topology Semantic Validation Collision**:
+   - The leader sends this assignment to Pod 2 (running `v1`).
+   - In Pod 2's local topology, **Task `0_0` is hardwired to process `orders-raw-0`**.
+   - Pod 2 receives partitions for `payments-raw-0`, detects a fatal metadata mismatch, and throws `TaskAssignmentException: Task 0_0 assigned unexpected topic-partition` (or crashes).
+3. **The Infinite Rebalance Loop (Zero Records Processed)**:
+   - The crashing or rejecting pod leaves the group or requests immediate reassignment (`requestTaskReassignment`).
+   - The group coordinator broker stops stream processing and triggers a cluster-wide rebalance.
+   - All stream threads are forced into the `REBALANCING` state. Partitions are revoked across all pods.
+   - The assignor runs again, creates another incompatible assignment for mixed instances, and triggers another rebalance immediately.
+   - **Result**: Streams threads never reach the `RUNNING` state. No consumer offsets advance, and throughput drops to absolute zero.
+
+#### How Long Does the Rebalance Storm Last?
+
+<KafkaStreamsRebalanceStormDurationDiagram />
+
+The rebalance storm lasts **for the ENTIRE duration of the rolling deployment** — from the moment the **first `v2` pod starts** until the **very last `v1` pod is fully terminated and deregistered from the consumer group**:
+
+$$\text{Rebalance Storm Duration} = T_{\text{rolling\_update}} \approx \left(\frac{N_{\text{pods}}}{\text{maxUnavailable}}\right) \times (T_{\text{start}} + T_{\text{readiness}} + T_{\text{termination\_grace}})$$
+
+- **Does it depend on the number of pods?** **Yes, directly.** 20 pods take $4\times$ longer to roll than 5 pods. If `maxUnavailable: 1` replaces pods one by one at 30s per pod, a 20-pod cluster experiences **10 full minutes of zero message processing**.
+- **What happens when ALL old pods are terminated?**
+  1. **Rebalance Storm STOPS**: Once 100% of active group members run `v2`, all pods agree on `v2` task assignments. No member throws `TaskAssignmentException` or leaves the group.
+  2. **State Restoration Wall BEGINS**: Because local `/0_0/` disk directories contain old state, `v2` tasks must replay the new changelog topics from Kafka brokers. Stream threads enter `RESTORING` state for another **5–20 minutes** before real-time processing resumes.
+
+#### Secondary Disaster: Local Disk & RocksDB State Store Corruption
+
+Even if you execute a cold restart (shutting down all pods before launching `v2`):
+- Local RocksDB state directories are keyed by `/<subTopologyId>_<partitionId>/<storeName>` (e.g. `/0_0/order-store/`).
+- If sub-topologies are reordered without clearing disk volumes, Task `0_0` (now Payments) opens the old Orders RocksDB SSTables, resulting in deserialization crashes or state corruption.
+- Auto-generated changelog topics (`KSTREAM-AGGREGATE-STATE-STORE-000000000X-changelog`) shift their index counter, causing tasks to restore from the wrong topic.
+
+:::danger[Production Deployment Rule]
+- **Never change sub-topology declaration order or insert new sub-topologies during a rolling update.**
+- If sub-topologies must be reordered or restructured: perform an offline migration (scale old deployment to 0, wipe local state or change `application.id`, then deploy the new version).
+:::
+
+#### Safe Runbook: How to Clean Up, Remove, or Reorder Topologies in Production
+
+<KafkaStreamsTopologyMigrationRunbookDiagram initialStrategy="blue_green" />
+
+When business requirements demand deleting an obsolete sub-topology, cleaning up deprecated state stores, or restructuring your pipeline, use one of the following four proven production strategies:
+
+---
+
+##### Strategy 1: Blue-Green / Application ID Versioning (Zero Downtime — Gold Standard)
+
+The safest, zero-downtime way to clean up or reorder sub-topologies is to treat the change as a new versioned stream application:
+
+1. **Increment `application.id`**:
+   ```java
+   // v1 was "order-enrichment-service-v1"
+   props.put(StreamsConfig.APPLICATION_ID_CONFIG, "order-enrichment-service-v2");
+   ```
+2. **Deploy `v2` Alongside `v1`**:
+   - `v2` creates a brand-new consumer group and provisions its own independent RocksDB state stores and changelog topics (e.g. `order-enrichment-service-v2-agg-store-changelog`).
+   - `v1` continues serving live production traffic without interruption.
+3. **Wait for State Catch-Up**:
+   - Monitor consumer lag on `v2` until it catches up to real-time (`lag ≈ 0`).
+4. **Switch Traffic & Decommission `v1`**:
+   - Switch downstream consumers or API routing to read from `v2`'s output topics.
+   - Scale `v1` instances to `0`.
+5. **Purge Orphaned `v1` Kafka Topics**:
+   ```bash
+   # List and delete obsolete internal topics created by v1
+   kafka-topics.sh --bootstrap-server localhost:9092 --list | grep "order-enrichment-service-v1"
+   kafka-topics.sh --bootstrap-server localhost:9092 --delete --topic "order-enrichment-service-v1-*-changelog"
+   kafka-topics.sh --bootstrap-server localhost:9092 --delete --topic "order-enrichment-service-v1-*-repartition"
+   ```
+
+---
+
+##### Strategy 2: Cold Maintenance Window & Application Reset (Same `application.id`)
+
+If you must reuse the same `application.id` and can take a brief maintenance window:
+
+1. **Step 1: Stop All Instances Completely (Scale to 0)**:
+   ```bash
+   kubectl scale deployment order-enrichment-service --replicas=0
+   # Verify that all pods are terminated and consumer group state is DEAD or EMPTY
+   kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group order-enrichment-service
+   ```
+2. **Step 2: Run the Kafka Streams Application Reset Tool**:
+   ```bash
+   kafka-streams-application-reset \
+     --bootstrap-servers localhost:9092 \
+     --application-id order-enrichment-service \
+     --input-topics orders-raw,payments-raw \
+     --intermediate-topics order-enrichment-service-repartition-topic
+   ```
+   *What this does*: Cleans up internal repartition topics and resets input topic offsets to prevent rebalance conflicts.
+3. **Step 3: Delete Obsolete / Deleted Changelog Topics**:
+   ```bash
+   # Delete changelogs corresponding to removed state stores
+   kafka-topics.sh --bootstrap-server localhost:9092 --delete \
+     --topic order-enrichment-service-deprecated-store-changelog
+   ```
+4. **Step 4: Wipe Local RocksDB Disk State on All Nodes**:
+   ```bash
+   # If using Kubernetes with PersistentVolumeClaims (PVCs) or HostPaths:
+   # Delete the PVCs or clear the local state directory before restarting
+   rm -rf /var/data/kafka-streams/order-enrichment-service/*
+   ```
+5. **Step 5: Deploy and Start `v2`**:
+   ```bash
+   kubectl scale deployment order-enrichment-service --replicas=3
+   ```
+   *Result*: Clean sub-topology mapping is initialized, Task `0_0` maps cleanly, and state is restored from scratch without metadata collisions.
+
+---
+
+##### Strategy 3: Architectural Decoupling (Split Independent Pipelines into Separate Apps)
+
+If sub-topologies are conceptually independent (e.g. an **Orders Pipeline** and a **Payments Pipeline**), keeping them in the same `StreamsBuilder` is an architectural anti-pattern. They share the same consumer group and force rebalance storms on each other.
+
+**Best Practice**: Separate them into two distinct microservices with their own `application.id`:
+
+```java
+// Microservice A: OrderEnrichmentApp.java
+props.put(StreamsConfig.APPLICATION_ID_CONFIG, "order-enrichment-app");
+StreamsBuilder ordersBuilder = new StreamsBuilder();
+// Only defines orders sub-topology...
+
+// Microservice B: PaymentEnrichmentApp.java
+props.put(StreamsConfig.APPLICATION_ID_CONFIG, "payment-enrichment-app");
+StreamsBuilder paymentsBuilder = new StreamsBuilder();
+// Only defines payments sub-topology...
+```
+
+*Benefits*:
+- Independent scaling (scale payments pods without scaling orders pods).
+- Independent deployments (reordering or refactoring orders topology never affects payments).
+- Isolated failure domains.
+
+---
+
+##### Strategy 4: Append-Only Topology Evolution (For Safe Rolling Updates)
+
+If you must deploy via rolling updates without downtime or `application.id` changes:
+
+- **Rule 1: Never delete or reorder sub-topologies at indices `0..N-1`**: Always keep existing sub-topologies in their exact original declaration order in `StreamsBuilder`.
+- **Rule 2: Append new pipelines only at the bottom**: Always add newly introduced sub-topologies at the very end of your `StreamsBuilder` method (index `N`), so existing sub-topology indices `0, 1, ...` remain completely untouched.
+- **Rule 3: Replace Decommissioned Pipelines with a Dummy No-Op Stub**:
+  If you want to retire Sub-topology 0 while keeping Sub-topology 1 in place:
+  ```java
+  // ⚠️ Retain Sub-topology 0 slot to prevent index shift for Sub-topology 1
+  builder.stream("deprecated-orders-topic", Consumed.with(Serdes.String(), Serdes.String()))
+      .filter((k, v) -> false); // No-op discard stub
+  
+  // Sub-topology 1 remains stable at index 1!
+  builder.stream("payments-raw", ...);
+  ```
+
 ---
 
 ## 4. Internal Execution Model
 
 ### Tasks — The Unit of Parallelism
+
+<KafkaStreamsExecutionModelDiagram initialMode="task_mapping" />
 
 Kafka Streams divides a topology into **tasks**, one per source partition. Each task is an independent, isolated processing unit with its own:
 - Consumer offset tracking
@@ -291,6 +473,8 @@ Total tasks per instance = NUM_STREAM_THREADS × (partitions / instances)
 ```
 
 ### The Record Processing Loop
+
+<KafkaStreamsExecutionModelDiagram initialMode="event_loop" />
 
 ```
 For each stream thread, the event loop runs continuously:
@@ -452,6 +636,8 @@ State stores are the local key-value databases that hold aggregation state, join
 
 ### Internal Architecture
 
+<KafkaStreamsStateStoreDiagram initialTab="layers" />
+
 ```
 State Store (per task):
 
@@ -479,6 +665,8 @@ State Store (per task):
 ```
 
 ### RocksDB — Why It's Used
+
+<KafkaStreamsStateStoreDiagram initialTab="rocksdb_io" />
 
 RocksDB is a log-structured merge-tree (LSM-tree) embedded key-value database, optimized for write-heavy workloads on SSD:
 
@@ -678,6 +866,8 @@ Example (no checkpoint, cold restore):
 ```
 
 ### The Checkpoint File
+
+<KafkaStreamsStateStoreDiagram initialTab="checkpoint" />
 
 Kafka Streams writes a `.checkpoint` file in the state directory periodically. It records the Kafka offset in the changelog topic up to which RocksDB state is guaranteed durable.
 
@@ -908,6 +1098,8 @@ groupBy((key, order) -> order.getProductCategory()):
 
 ## 12. Windowing
 
+<KafkaStreamsWindowJoinDiagram initialMode="tumbling" />
+
 Windowing divides an infinite stream into finite time-bounded subsets for aggregation. Without windowing, an aggregation would accumulate state forever.
 
 ### Tumbling Windows — Fixed, Non-Overlapping
@@ -1029,6 +1221,8 @@ KTable<Windowed<String>, Long> finalCounts = stream
 ---
 
 ## 13. Joins
+
+<KafkaStreamsWindowJoinDiagram initialMode="tumbling" />
 
 ### Stream-Stream Join
 
@@ -1505,6 +1699,10 @@ KTable<String, OrderReadModel> readModel = events
 **Q: How would you design exactly-once end-to-end when writes go to an external database?**
 
 > `EXACTLY_ONCE_V2` covers atomicity within Kafka only. For external DB writes, use the Transactional Outbox Pattern: the consuming service writes both its business state and an outbox record in a single local DB transaction (atomic). A CDC tool like Debezium reads the WAL and publishes the outbox record to Kafka. Downstream consumers process the outbox event with idempotency guards (unique constraint on event ID). This chains: Kafka EOS (Kafka → consumer) + local ACID (consumer DB write) + CDC + idempotency (consumer → downstream) = effectively exactly-once end-to-end, without any distributed transaction manager.
+
+**Q: Why does changing the order of sub-topologies in code cause an infinite rebalance storm during a rolling deployment?**
+
+> Kafka Streams assigns sequential integer IDs to sub-topologies (`0, 1, ...`) based on their declaration order in `StreamsBuilder`. Physical tasks are identified by `TaskId(subTopologyId, partitionId)` (e.g. `0_0`). If you swap the declaration order of two sub-topologies, Task `0_0` changes from consuming Topic A to Topic B. During a rolling update, a `v2` leader assigns Task `0_0` (Topic B) to a `v1` instance, whose local topology expects Task `0_0` to process Topic A. The instance rejects the assignment with a topology mismatch, crashes or leaves the group, triggering another cluster-wide rebalance. Because instances endlessly clash over task definitions, threads never reach the `RUNNING` state and zero records are processed. Furthermore, local RocksDB directories on disk (`/0_0/`) and auto-generated changelog topic names become misaligned with the new task duties.
 
 ---
 

@@ -46,16 +46,24 @@ Before writing code, inspect [references/DESIGNS.md](./references/DESIGNS.md). I
 
 ---
 
+## MANDATORY PRINCIPLE: ALWAYS GENERATE INTERACTIVE DIAGRAMS WITH MOVING ARROWS ONLY
+
+> 🚨 **ABSOLUTE RULE**:
+> - **NEVER** generate Monospace Schema Inspector diagrams, static code block viewers, or text-only card lists.
+> - **ALWAYS** generate genuine visual SVG interactive diagrams with **moving/flowing arrows** (`.interactive-diagram-flowing-path`, animated step-by-step directional arrows, or SVG conduits with moving arrowheads).
+> - Every diagram generated MUST feature an SVG canvas or visual animated flow with moving arrows that visually conveys the data movement, state transition, network packet flow, or lifecycle.
+
+---
+
 ### Step 3 — Choose the Right Archetype
 
 | Content Type | Archetype | Signature Visual Elements |
 |---|---|---|
-| Protocol handshake / sequence / request-response flow | **A — Animated Flow** | Actor boxes, directional step arrows with `opacity` fade, Play/Animate button with `useEffect` playback timer |
-| System architecture / kernel & cluster nodes | **B — SVG Node Graph** | `<svg viewBox>` canvas with dot-matrix background, SVG nodes (`<rect>` + `<text>`), directed `<path>` edges with marker arrowheads, click/hover details panel |
-| Feature comparison / protocol evolution / topic tabs | **C — Tabbed Explorer** | Custom tab buttons with colored highlight borders, structured details grid, gotchas/pro-con tags, optional sub-step accordion |
-| Lookup reference (headers, status codes, commands, tools) | **D — Searchable List** | Live search `<input>`, filterable list buttons with colored badges, split-pane detail inspection card |
+| Protocol handshake / sequence / request-response / payload flow | **A — Animated Flow (Moving Arrows)** | Actor boxes, directional step arrows with moving arrow animations and `opacity` fade, Play/Animate button with `useEffect` playback timer |
+| System architecture / kernel & cluster nodes / message topologies / runbooks | **B — SVG Node Graph (Flowing Arrows)** | `<svg viewBox>` canvas with dot-matrix background, SVG nodes (`<rect>` + `<text>`), directed `<path>` / `<line>` edges with moving flowing dashed arrows (`.interactive-diagram-flowing-path`), click/hover details panel |
+| Feature comparison / protocol evolution / topic tabs | **C — Tabbed Explorer with Flowing SVG** | Custom tab buttons with colored highlight borders, paired with visual SVG topology showing moving data paths per tab |
+| Lookup reference (headers, status codes, commands, tools) | **D — Searchable List** | Live search `<input>`, filterable list buttons with colored badges, split-pane detail inspection card with SVG flow |
 | Pre-launch audit / review criteria / checklists | **E — Interactive Checklist** | Category tabs, clickable custom checkboxes, dynamic progress bar, summary metrics |
-| Code payload / XML/JSON message schemas / API specs | **F — Monospace Schema Inspector** | Monospace code block, XML/JSON tree payload preview, field cardinality badges, click-to-inspect schema field details panel |
 
 ---
 

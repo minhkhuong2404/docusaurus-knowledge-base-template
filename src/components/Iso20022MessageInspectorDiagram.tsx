@@ -99,34 +99,35 @@ export default function Iso20022MessageInspectorDiagram({ initialMsg = 'pacs008'
         txInf: {
           tag: '<TxInfAndSts>',
           fields: [
-            { name: 'TxSts', value: 'ACCP (Accepted) / RJCT (Rejected)', desc: 'Final clearing disposition status.' },
-            { name: 'StsRsnInf / Cd', value: 'AC01 / AG01 / AM04', desc: 'Standard ISO reason code (e.g. Incorrect Account / Transaction Forbidden).' }
+            { name: 'OrgnlEndToEndId', value: 'E2E-INV-2026-8849', desc: 'Reference linking back to original pacs.008 transfer.' },
+            { name: 'TxSts', value: 'ACTC (Accepted Technical) / ACSC (Settled)', desc: 'Clearing status disposition.' }
           ]
         },
         parties: {
-          tag: '<InstgAgt>',
+          tag: '<InstgAgt> & <InstdAgt>',
           fields: [
-            { name: 'InstgAgt', value: 'NPP Clearing Hub (RBA)', desc: 'Issuing settlement authority.' }
+            { name: 'InstgAgt', value: 'NPP Clearing Hub (AU.NPP)', desc: 'Reporting infrastructure agent.' },
+            { name: 'InstdAgt', value: 'BICFI: ANZBAU3MXXX', desc: 'Target recipient of settlement status.' }
           ]
         },
         rmtInf: {
-          tag: '<OrgnlTxRef>',
+          tag: '<StsRsnInf>',
           fields: [
-            { name: 'OrgnlEndToEndId', value: 'E2E-INV-2026-8849', desc: 'Matches original transaction EndToEndId.' }
+            { name: 'Rsn / Cd', value: 'NARR (Settlement Successful)', desc: 'Standardized clearing reason code.' }
           ]
         }
       }
     },
     camt054: {
       name: 'camt.054.001.08',
-      title: 'Bank-to-Customer Debit/Credit Notification',
-      sender: 'Bank',
-      receiver: 'Corporate Customer ERP',
+      title: 'Bank-to-Customer Debit/Credit Notification (Real-Time Push)',
+      sender: 'Creditor Bank (Bank B)',
+      receiver: 'Beneficiary Customer (Creditor ERP / App)',
       elements: {
         grpHdr: {
           tag: '<GrpHdr>',
           fields: [
-            { name: 'MsgId', value: 'NOTIF-20260823-4412', desc: 'Real-time ledger posting confirmation.' }
+            { name: 'MsgId', value: 'CAMT054-20260823-771', desc: 'Unique push advice message ID.' }
           ]
         },
         txInf: {
@@ -164,7 +165,7 @@ export default function Iso20022MessageInspectorDiagram({ initialMsg = 'pacs008'
           <polyline points="8 6 2 12 8 18" />
         </svg>
         <span style={{ color: 'var(--ifm-color-content)', fontWeight: 700, fontSize: '15px' }}>
-          ISO 20022 Universal Message Inspector: {curr.name}
+          ISO 20022 Message Flow & Schema Explorer: {curr.name}
         </span>
         <div style={{ marginLeft: 'auto', display: 'flex', gap: '6px' }}>
           {(['pacs008', 'pain001', 'pacs002', 'camt054'] as const).map((msgKey) => (
@@ -194,6 +195,51 @@ export default function Iso20022MessageInspectorDiagram({ initialMsg = 'pacs008'
           <div style={{ fontSize: '11px', color: 'var(--ifm-color-content-secondary)' }}>
             <strong>Sender:</strong> {curr.sender} &rarr; <strong>Receiver:</strong> {curr.receiver}
           </div>
+        </div>
+
+        {/* SVG Flow Canvas with Moving Arrows */}
+        <div className="interactive-diagram-svg-wrapper interactive-diagram-grid-bg" style={{ borderRadius: '10px', marginBottom: '14px', overflow: 'hidden' }}>
+          <svg viewBox="0 0 680 140" style={{ width: '100%', height: 'auto', display: 'block' }}>
+            <defs>
+              <marker id="iso-arr-amber" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L8,3 z" fill="#fbbf24" />
+              </marker>
+              <marker id="iso-arr-green" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L8,3 z" fill="#34d399" />
+              </marker>
+              <marker id="iso-arr-blue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L8,3 z" fill="#38bdf8" />
+              </marker>
+            </defs>
+
+            {/* Left Box: Sender Node */}
+            <rect x="25" y="40" width="160" height="60" rx="8" fill="rgba(56,189,248,0.12)" stroke="#38bdf8" strokeWidth="1.5" />
+            <text x="105" y="65" textAnchor="middle" fill="#38bdf8" fontSize="11" fontWeight="700">Originator / Sender</text>
+            <text x="105" y="82" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="9">
+              {selectedMsg === 'pain001' ? 'Corporate ERP' : selectedMsg === 'pacs008' ? 'Debtor Bank (Bank A)' : selectedMsg === 'pacs002' ? 'Clearing / Creditor' : 'Creditor Bank (Bank B)'}
+            </text>
+
+            {/* Moving Arrow Conduit */}
+            <line x1="185" y1="70" x2="265" y2="70" stroke="rgba(251,191,36,0.3)" strokeWidth="2" />
+            <line x1="185" y1="70" x2="265" y2="70" stroke="#fbbf24" strokeWidth="2" strokeDasharray="6 4" className="interactive-diagram-flowing-path" markerEnd="url(#iso-arr-amber)" />
+
+            {/* Center Box: ISO Message Package */}
+            <rect x="270" y="30" width="140" height="80" rx="10" fill="rgba(251,191,36,0.12)" stroke="#fbbf24" strokeWidth="2" />
+            <text x="340" y="55" textAnchor="middle" fill="#fbbf24" fontSize="12" fontWeight="800">{curr.name}</text>
+            <text x="340" y="73" textAnchor="middle" fill="#34d399" fontSize="9.5" fontWeight="700">ISO 20022 XML</text>
+            <text x="340" y="91" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="8.5">Rich Remittance & LEI</text>
+
+            {/* Moving Arrow Conduit 2 */}
+            <line x1="410" y1="70" x2="490" y2="70" stroke="rgba(52,211,153,0.3)" strokeWidth="2" />
+            <line x1="410" y1="70" x2="490" y2="70" stroke="#34d399" strokeWidth="2" strokeDasharray="6 4" className="interactive-diagram-flowing-path" markerEnd="url(#iso-arr-green)" />
+
+            {/* Right Box: Receiver Node */}
+            <rect x="495" y="40" width="160" height="60" rx="8" fill="rgba(52,211,153,0.12)" stroke="#34d399" strokeWidth="1.5" />
+            <text x="575" y="65" textAnchor="middle" fill="#34d399" fontSize="11" fontWeight="700">Recipient / Clearing</text>
+            <text x="575" y="82" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="9">
+              {selectedMsg === 'pain001' ? 'Originating Bank' : selectedMsg === 'pacs008' ? 'Creditor Bank (Bank B)' : selectedMsg === 'pacs002' ? 'Debtor Bank (ACK/NACK)' : 'Corporate Beneficiary'}
+            </text>
+          </svg>
         </div>
 
         {/* Section Selector Tabs */}

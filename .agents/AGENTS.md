@@ -86,13 +86,14 @@ Replace static content (ASCII art, ```` ```mermaid ``` ```` blocks, plain markdo
 12. **TypeScript Validation**: Always verify new components with `npx tsc --noEmit` before declaring completion.
 13. **Descendant Heading Placement**: Always place interactive diagram component tags directly under the specific descendant section heading (`## ...` or `### ...`) that describes the topic, NOT loosely under the main top-level H1 page title (`# ...`). Remove old static ASCII blocks under that descendant section.
     - *Example*: In `kafka-exactly-once.md` (`docs/technical-knowledge/kafka/advanced/exactly-once.md`), place `<KafkaExactlyOnceDiagram initialTab="steps" />` under `## How the Transaction Coordinator Works` and `<KafkaExactlyOnceDiagram initialTab="zombie" />` under `## Zombie Producer Fencing`. In `consumer-lag.md`, place `<KafkaConsumerLagPoisonDiagram initialScenario="normal" />` under `## Part 1: Consumer Lag Mechanics` and `<KafkaConsumerLagPoisonDiagram initialScenario="poison" />` under `## Part 2: Poison Messages & Dead Letter Queues (DLQ)`.
+14. **No Monospace Schema Inspectors**: **NEVER** generate Monospace Schema Inspector diagrams. All schemas, wire protocols, byte layouts, message formats, and system flows must be rendered as genuine visual interactive diagrams with moving/flowing arrows (`.interactive-diagram-flowing-path` or animated step-by-step directional arrows).
 
 ### Choose the right archetype (full templates in DESIGNS.md Section 5)
 
 | Content Type | Archetype |
 |---|---|
-| Protocol handshake / sequence / request-response flow | **A — Animated Flow** |
-| Architecture with nodes and directed edges | **B — SVG Node Graph** |
+| Protocol handshake / sequence / request-response / payload flow | **A — Animated Flow (with Moving Arrows)** |
+| Architecture with nodes and directed edges / message topologies | **B — SVG Node Graph (with Flowing Arrows)** |
 | Feature comparison / protocol evolution / tabs | **C — Tabbed Explorer** |
 | Lookup reference (headers, status codes, options, tools) | **D — Searchable List** |
 | Pre-launch audit / review criteria | **E — Interactive Checklist** |
@@ -182,9 +183,8 @@ Before creating a new component, check whether one already exists for the concep
 | `BankingCardPaymentFlowDiagram` | 4-Party Model topology, Auth vs Settlement, MDR fee calculator & Chargeback lifecycle |
 | `BankingOpenBankingCdrDiagram` | CDR FAPI / OAuth 2.0 PKCE consent flow, state machine & payload inspector |
 | `BankingRolesGovernanceDiagram` | Three Lines of Defence (3LoD APRA CPS 230) & Agile Payment Pod NFRs |
-| `Iso20022MonospaceSchemaInspector` | Monospace XML schema inspector for pain.001, pacs.008, pacs.002, camt.054 |
 | `BankingFraudExceptionsDiagram` | Real-time payment fraud scoring matrix & exception handling state machine |
-| `BankingBatchReconciliationDiagram` | BECS ABA file 120-byte monospace inspector, 3-way reconciliation & intraday liquidity |
+| `BankingBatchReconciliationDiagram` | BECS ABA file format breakdown, 3-way reconciliation & intraday liquidity |
 | `BankingReversalRecallDiagram` | Return (pacs.004) vs Reversal (pain.007/pacs.007) vs Recall (camt.056) sequence & reason codes |
 | `BankingRailsNppRtgsSwiftDiagram` | Global payment rails switcher (NPP vs SWIFT gpi vs RTGS vs BPAY) & MT/MX mapping |
 | `BankingCorePostingAccountingDiagram` | Core Banking Ledger posting simulator (Booked vs Available) & Double-Entry matrix |
@@ -199,10 +199,6 @@ Before creating a new component, check whether one already exists for the concep
 | `TestingPyramidDoublesDiagram` | Test Pyramid (Unit vs Integration vs E2E) & Test Doubles taxonomy (Stub vs Mock vs Spy) |
 | `SpringTestAnnotationsDiagram` | 3-Layer Testing Architecture (JUnit ➔ Mockito ➔ Spring) & Sliced Context decision guide |
 | `WireMockResilienceDiagram` | Real HTTP server stubbing, Mockito vs WireMock comparison & fault injection simulator |
-| `KafkaMonospaceSchemaInspector` | Monospace RecordBatch v2 & Index File schema inspector |
-| `DevOpsMonospaceSchemaInspector` | Monospace OCI Docker image manifest & K8s spec schema inspector |
-| `NetworkMonospaceSchemaInspector` | Monospace bitwise TCP & IPv4 packet header schema inspector |
-| `OsMonospaceSchemaInspector` | Monospace Linux Inode struct & SYSCALL register frame schema inspector |
 
 ## MANDATORY: Register Every New Page in sidebars.ts
 
