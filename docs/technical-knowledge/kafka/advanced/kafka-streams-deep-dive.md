@@ -638,51 +638,11 @@ State stores are the local key-value databases that hold aggregation state, join
 
 <KafkaStreamsStateStoreDiagram initialTab="layers" />
 
-```
-State Store (per task):
-
-┌──────────────────────────────────────────────────────────────────┐
-│  In-Memory Write Cache (configurable size, e.g. 10MB per store) │
-│  Buffers writes, batches them, deduplicates by key               │
-│  → Reduces RocksDB write amplification                           │
-│  → Delays downstream record emission (tunable)                   │
-└───────────────────────────┬──────────────────────────────────────┘
-                            │ flush() on commit
-                            ▼
-┌──────────────────────────────────────────────────────────────────┐
-│  RocksDB (LSM-Tree key-value engine, embedded on local disk)     │
-│  Sorted key-value storage, range queries supported               │
-│  Write path: MemTable → WAL → SSTable files                      │
-│  Read path: MemTable → Block Cache → SSTable (bloom filter)      │
-└───────────────────────────┬──────────────────────────────────────┘
-                            │ every write also sent to changelog
-                            ▼
-┌──────────────────────────────────────────────────────────────────┐
-│  Changelog Topic (Kafka topic — one per state store)             │
-│  Mirrors every state store write with at-least-once delivery     │
-│  Used for: state recovery after crash, standby replica sync      │
-└──────────────────────────────────────────────────────────────────┘
-```
-
 ### RocksDB — Why It's Used
 
 <KafkaStreamsStateStoreDiagram initialTab="rocksdb_io" />
 
-RocksDB is a log-structured merge-tree (LSM-tree) embedded key-value database, optimized for write-heavy workloads on SSD:
-
-```
-Write path (fast):
-  1. Key-value written to in-memory MemTable (instant)
-  2. Simultaneously appended to Write-Ahead Log (WAL) on disk (durability)
-  3. When MemTable fills: flushed to immutable SSTable file on disk
-  4. Background compaction: merges SSTable files, purges deleted keys
-
-Read path:
-  1. Check MemTable (in-memory — instant)
-  2. Check Block Cache (in-memory LRU — fast)
-  3. Check SSTable files in order from newest to oldest
-     (Bloom filters skip SSTables that don't contain the key)
-```
+RocksDB is a log-structured merge-tree (LSM-tree) embedded key-value database, optimized for write-heavy workloads on SSD.
 
 **Why RocksDB over a hash map?**
 - Dataset can exceed available RAM — RocksDB spills to disk transparently

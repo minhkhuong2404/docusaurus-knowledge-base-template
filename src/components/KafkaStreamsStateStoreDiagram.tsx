@@ -66,6 +66,144 @@ export default function KafkaStreamsStateStoreDiagram({ initialTab = 'layers' }:
           ))}
         </div>
 
+        {/* Top Interactive SVG Flow with Moving Arrows */}
+        <div className="interactive-diagram-svg-wrapper interactive-diagram-grid-bg" style={{ borderRadius: '10px', marginBottom: '14px', overflow: 'hidden' }}>
+          <svg viewBox="0 0 680 150" style={{ width: '100%', height: 'auto', display: 'block' }}>
+            <defs>
+              <marker id="store-arr-blue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L8,3 z" fill="#38bdf8" />
+              </marker>
+              <marker id="store-arr-green" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L8,3 z" fill="#34d399" />
+              </marker>
+              <marker id="store-arr-amber" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L8,3 z" fill="#fbbf24" />
+              </marker>
+              <marker id="store-arr-purple" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L8,3 z" fill="#a78bfa" />
+              </marker>
+            </defs>
+
+            {tab === 'layers' && (
+              <g>
+                {/* Input Stream */}
+                <rect x="20" y="45" width="110" height="60" rx="8" fill="rgba(56,189,248,0.12)" stroke="#38bdf8" strokeWidth="1.5" />
+                <text x="75" y="70" textAnchor="middle" fill="#38bdf8" fontSize="11" fontWeight="700">Stream Updates</text>
+                <text x="75" y="88" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="9.5">put(K, V)</text>
+
+                {/* Moving Arrow 1 -> 2 */}
+                <line x1="130" y1="75" x2="180" y2="75" stroke="rgba(56,189,248,0.3)" strokeWidth="2" />
+                <line x1="130" y1="75" x2="180" y2="75" stroke="#38bdf8" strokeWidth="2" strokeDasharray="6 4" className="interactive-diagram-flowing-path" markerEnd="url(#store-arr-blue)" />
+
+                {/* Tier 1: Write Cache */}
+                <rect x="185" y="45" width="135" height="60" rx="8" fill="rgba(56,189,248,0.12)" stroke="#38bdf8" strokeWidth="1.5" />
+                <text x="252" y="70" textAnchor="middle" fill="#38bdf8" fontSize="11" fontWeight="700">1. RAM Write Cache</text>
+                <text x="252" y="88" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="9">Dedup & Buffer (10MB)</text>
+
+                {/* Moving Arrow 2 -> 3 */}
+                <line x1="320" y1="75" x2="365" y2="75" stroke="rgba(52,211,153,0.3)" strokeWidth="2" />
+                <line x1="320" y1="75" x2="365" y2="75" stroke="#34d399" strokeWidth="2" strokeDasharray="6 4" className="interactive-diagram-flowing-path" markerEnd="url(#store-arr-green)" />
+
+                {/* Tier 2: RocksDB */}
+                <rect x="370" y="45" width="140" height="60" rx="8" fill="rgba(52,211,153,0.12)" stroke="#34d399" strokeWidth="1.5" />
+                <text x="440" y="70" textAnchor="middle" fill="#34d399" fontSize="11" fontWeight="700">2. Embedded RocksDB</text>
+                <text x="440" y="88" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="9">Local SSD / LSM-Tree</text>
+
+                {/* Moving Arrow 3 -> 4 */}
+                <line x1="510" y1="75" x2="545" y2="75" stroke="rgba(251,191,36,0.3)" strokeWidth="2" />
+                <line x1="510" y1="75" x2="545" y2="75" stroke="#fbbf24" strokeWidth="2" strokeDasharray="6 4" className="interactive-diagram-flowing-path" markerEnd="url(#store-arr-amber)" />
+
+                {/* Tier 3: Changelog Topic */}
+                <rect x="550" y="45" width="115" height="60" rx="8" fill="rgba(251,191,36,0.12)" stroke="#fbbf24" strokeWidth="1.5" />
+                <text x="607" y="70" textAnchor="middle" fill="#fbbf24" fontSize="10.5" fontWeight="700">3. Changelog Topic</text>
+                <text x="607" y="88" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="9">Compacted Kafka Log</text>
+              </g>
+            )}
+
+            {tab === 'rocksdb_io' && (
+              <g>
+                {activeIoPath === 'write' ? (
+                  <>
+                    <rect x="25" y="45" width="125" height="60" rx="8" fill="rgba(56,189,248,0.12)" stroke="#38bdf8" strokeWidth="1.5" />
+                    <text x="87" y="70" textAnchor="middle" fill="#38bdf8" fontSize="11" fontWeight="700">1. MemTable</text>
+                    <text x="87" y="88" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="9">In-memory Skiplist</text>
+
+                    <line x1="150" y1="75" x2="200" y2="75" stroke="rgba(56,189,248,0.3)" strokeWidth="2" />
+                    <line x1="150" y1="75" x2="200" y2="75" stroke="#38bdf8" strokeWidth="2" strokeDasharray="6 4" className="interactive-diagram-flowing-path" markerEnd="url(#store-arr-blue)" />
+
+                    <rect x="205" y="45" width="130" height="60" rx="8" fill="rgba(56,189,248,0.12)" stroke="#38bdf8" strokeWidth="1.5" />
+                    <text x="270" y="70" textAnchor="middle" fill="#38bdf8" fontSize="11" fontWeight="700">2. Append WAL</text>
+                    <text x="270" y="88" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="9">Sequential Disk Log</text>
+
+                    <line x1="335" y1="75" x2="385" y2="75" stroke="rgba(56,189,248,0.3)" strokeWidth="2" />
+                    <line x1="335" y1="75" x2="385" y2="75" stroke="#38bdf8" strokeWidth="2" strokeDasharray="6 4" className="interactive-diagram-flowing-path" markerEnd="url(#store-arr-blue)" />
+
+                    <rect x="390" y="45" width="130" height="60" rx="8" fill="rgba(56,189,248,0.12)" stroke="#38bdf8" strokeWidth="1.5" />
+                    <text x="455" y="70" textAnchor="middle" fill="#38bdf8" fontSize="11" fontWeight="700">3. Flush SSTable</text>
+                    <text x="455" y="88" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="9">Level 0 Immutable</text>
+
+                    <line x1="520" y1="75" x2="555" y2="75" stroke="rgba(56,189,248,0.3)" strokeWidth="2" />
+                    <line x1="520" y1="75" x2="555" y2="75" stroke="#38bdf8" strokeWidth="2" strokeDasharray="6 4" className="interactive-diagram-flowing-path" markerEnd="url(#store-arr-blue)" />
+
+                    <rect x="560" y="45" width="105" height="60" rx="8" fill="rgba(167,139,250,0.12)" stroke="#a78bfa" strokeWidth="1.5" />
+                    <text x="612" y="70" textAnchor="middle" fill="#a78bfa" fontSize="10" fontWeight="700">4. Compaction</text>
+                    <text x="612" y="88" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="9">Leveled Merge</text>
+                  </>
+                ) : (
+                  <>
+                    <rect x="25" y="45" width="130" height="60" rx="8" fill="rgba(52,211,153,0.12)" stroke="#34d399" strokeWidth="1.5" />
+                    <text x="90" y="70" textAnchor="middle" fill="#34d399" fontSize="11" fontWeight="700">1. MemTable</text>
+                    <text x="90" y="88" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="9">RAM Hit? (Fastest)</text>
+
+                    <line x1="155" y1="75" x2="205" y2="75" stroke="rgba(52,211,153,0.3)" strokeWidth="2" />
+                    <line x1="155" y1="75" x2="205" y2="75" stroke="#34d399" strokeWidth="2" strokeDasharray="6 4" className="interactive-diagram-flowing-path" markerEnd="url(#store-arr-green)" />
+
+                    <rect x="210" y="45" width="135" height="60" rx="8" fill="rgba(52,211,153,0.12)" stroke="#34d399" strokeWidth="1.5" />
+                    <text x="277" y="70" textAnchor="middle" fill="#34d399" fontSize="11" fontWeight="700">2. Block Cache</text>
+                    <text x="277" y="88" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="9">LRU RAM Blocks</text>
+
+                    <line x1="345" y1="75" x2="395" y2="75" stroke="rgba(52,211,153,0.3)" strokeWidth="2" />
+                    <line x1="345" y1="75" x2="395" y2="75" stroke="#34d399" strokeWidth="2" strokeDasharray="6 4" className="interactive-diagram-flowing-path" markerEnd="url(#store-arr-green)" />
+
+                    <rect x="400" y="45" width="135" height="60" rx="8" fill="rgba(251,191,36,0.12)" stroke="#fbbf24" strokeWidth="1.5" />
+                    <text x="467" y="70" textAnchor="middle" fill="#fbbf24" fontSize="11" fontWeight="700">3. Bloom Filter</text>
+                    <text x="467" y="88" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="9">Skip Missing SSTs</text>
+
+                    <line x1="535" y1="75" x2="570" y2="75" stroke="rgba(52,211,153,0.3)" strokeWidth="2" />
+                    <line x1="535" y1="75" x2="570" y2="75" stroke="#34d399" strokeWidth="2" strokeDasharray="6 4" className="interactive-diagram-flowing-path" markerEnd="url(#store-arr-green)" />
+
+                    <rect x="575" y="45" width="90" height="60" rx="8" fill="rgba(52,211,153,0.12)" stroke="#34d399" strokeWidth="1.5" />
+                    <text x="620" y="70" textAnchor="middle" fill="#34d399" fontSize="10.5" fontWeight="700">4. SST Seek</text>
+                    <text x="620" y="88" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="9">SSD Read</text>
+                  </>
+                )}
+              </g>
+            )}
+
+            {tab === 'checkpoint' && (
+              <g>
+                <rect x="30" y="45" width="160" height="60" rx="8" fill="rgba(251,191,36,0.12)" stroke="#fbbf24" strokeWidth="1.5" />
+                <text x="110" y="70" textAnchor="middle" fill="#fbbf24" fontSize="11" fontWeight="700">Task State Flush</text>
+                <text x="110" y="88" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="9">RocksDB.flush() on sync</text>
+
+                <line x1="190" y1="75" x2="280" y2="75" stroke="rgba(251,191,36,0.3)" strokeWidth="2" />
+                <line x1="190" y1="75" x2="280" y2="75" stroke="#fbbf24" strokeWidth="2" strokeDasharray="6 4" className="interactive-diagram-flowing-path" markerEnd="url(#store-arr-amber)" />
+
+                <rect x="285" y="45" width="180" height="60" rx="8" fill="rgba(52,211,153,0.12)" stroke="#34d399" strokeWidth="1.5" />
+                <text x="375" y="70" textAnchor="middle" fill="#34d399" fontSize="11" fontWeight="700">Write .checkpoint File</text>
+                <text x="375" y="88" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="9">Persist Changelog Offsets</text>
+
+                <line x1="465" y1="75" x2="545" y2="75" stroke="rgba(52,211,153,0.3)" strokeWidth="2" />
+                <line x1="465" y1="75" x2="545" y2="75" stroke="#34d399" strokeWidth="2" strokeDasharray="6 4" className="interactive-diagram-flowing-path" markerEnd="url(#store-arr-green)" />
+
+                <rect x="550" y="45" width="110" height="60" rx="8" fill="rgba(52,211,153,0.12)" stroke="#34d399" strokeWidth="1.5" />
+                <text x="605" y="70" textAnchor="middle" fill="#34d399" fontSize="11" fontWeight="700">Fast Restart</text>
+                <text x="605" y="88" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="9">Skip Replay</text>
+              </g>
+            )}
+          </svg>
+        </div>
+
         {tab === 'layers' && (
           <div className="kstreams-store-grid" style={{ display: 'grid', gridTemplateColumns: '55% 45%', gap: '14px', alignItems: 'start' }}>
             {/* Visual 3-Tier Canvas */}
