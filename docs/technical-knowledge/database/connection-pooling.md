@@ -1042,6 +1042,61 @@ spring:
 ```
 
 **Kubernetes readiness probe:** set the pod to `NotReady` first (so no new traffic is routed), then wait for in-flight requests to drain, then close the pool. The pool's `close()` call blocks until all connections are returned.
+</details>
+
+<details>
+<summary>🔬 Senior deep-dive: connection hold time vs query execution time & per-caller attribution (ProxySQL tagging)</summary>
+
+#### The Deceptive Symptom: Connection Starvation with Low Database CPU
+In large-scale high-throughput architectures (e.g. Shopify handling Black Friday checkout spikes), systems often hit a catastrophic throughput ceiling where connections are exhausted, threads queue, and HTTP 500s spike — yet **database CPU stays below 50% and query latencies (P90) remain fast (`< 2ms`)**.
+
+The reason: **Engineers measure Query Execution Time, but the connection pool is bottlenecked by Connection Hold Time.**
+
+```
+Query Execution Time: ~2ms (actual work inside MySQL engine)
+┌───────────┐
+│ SQL Query │
+└───────────┘
+
+Connection Hold Time: ~45ms (physical socket borrowed from pool)
+┌────────────────────────────────────────────────────────────────────────┐
+│ App BEGIN ──► Calc Cart ──► JSON parse ──► SQL 1 ──► Transform ──► COMMIT │
+└────────────────────────────────────────────────────────────────────────┘
+  ▲                                                                    ▲
+  │ Borrowed from Pool                                                 │ Returned to Pool
+```
+
+A connection is borrowed the moment `BEGIN` / `@Transactional` starts and remains locked to that thread until `COMMIT` or `ROLLBACK` finishes. Even if no external network calls occur, unnecessary application serialization, intermediate business calculations, or multi-statement transactions hold connections idle, starving adjacent high-throughput workloads.
+
+#### The Architecture Solution: Per-Caller Connection Attribution
+When connection limits are saturated, standard database metrics (`Threads_connected`, `Max_used_connections`) cannot tell you *which* application endpoint is hogging connections.
+
+**Step 1: Application-Layer SQL Comment Tagging**
+Annotate every query with a business process identifier:
+```java
+// Spring / Hibernate comment query hint
+@Query(value = "/* conn_tag:checkout_completion */ SELECT * FROM orders WHERE id = :id", nativeQuery = true)
+Order findOrderWithTag(@Param("id") Long id);
+```
+
+**Step 2: Proxy Layer Aggregation (ProxySQL / PgBouncer / OpenTelemetry)**
+Configure your database proxy (such as ProxySQL or an eBPF proxy) to parse the `/* conn_tag:... */` prefix and measure the total duration from transaction start to commit per tag:
+```
+ProxySQL Aggregated Metrics:
+┌───────────────────────────────────┬───────────────────┬──────────────────────┐
+│ Business Process Tag              │ Avg Query Latency │ Total Conn Hold Time │
+├───────────────────────────────────┼───────────────────┼──────────────────────┤
+│ conn_tag:inventory_reservation    │ 1.8 ms            │ 3.2 ms               │
+│ conn_tag:checkout_completion      │ 2.1 ms            │ 58.4 ms  ◄── BOTTLENECK!│
+│ conn_tag:cart_enrichment          │ 0.9 ms            │ 24.1 ms              │
+└───────────────────────────────────┴───────────────────┴──────────────────────┘
+```
+*Discovery*: Inventory reservations were not the bottleneck; legacy checkout completion logic held connections 18x longer than reservations. Trimming the transaction boundaries and eliminating redundant reads on the primary database reclaimed 50% of reads and 33% of primary transactions.
+
+#### Step 3: Re-evaluating Database Thread Concurrency (`innodb_thread_concurrency`)
+When connection pools are scaled up, ensure database internal concurrency limits aren't causing artificial thread queuing:
+- In MySQL InnoDB, `innodb_thread_concurrency` caps the number of concurrent active threads inside the storage engine (default is often conservative, e.g. 0 or 64).
+- If connection pool size exceeds engine concurrency limits while CPU headroom exists, incoming queries stall in the InnoDB FIFO queue (`innodb_thread_sleep_delay`). Tune thread concurrency based on current hardware core count and load profiles.
 
 </details>
 

@@ -14,6 +14,13 @@ What happens when a Redis instance reaches its configured memory capacity (`maxm
 
 <RedisEvictionPoliciesDiagram />
 
+:::info[Architectural Clarification: Eviction vs. Expiration vs. Invalidation]
+- **Cache Eviction**: Driven by **RAM capacity limits** (`maxmemory`). Removes keys (even valid ones) using LRU/LFU/FIFO algorithms to free memory space.
+- **Cache Expiration**: Driven by the **Clock** (TTL elapsed). Marks keys as stale and deletes them via passive read checks or active periodic background sampling.
+- **Cache Invalidation**: Driven by **Source-of-Truth mutations**. Explicitly deletes or overwrites keys when database data changes.
+For an in-depth breakdown of the 5 TTL expiration policies, see **[Cache Expiration & TTL Policies](../system-design/caching-strategies.md#cache-expiration--ttl-policies)**.
+:::
+
 ---
 
 ## 1. The `maxmemory` Threshold

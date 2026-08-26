@@ -254,4 +254,27 @@ try (
 }
 ```
 
+## 7. Tricky Exception Handling Interview Questions
+
+* **Can we write a `try` block without `catch` or `finally`?**
+  - **Before Java 7:** **No.** A `try` block required at least one `catch` block or a `finally` block.
+  - **Since Java 7:** **Yes**, using **Try-with-Resources** (`try (AutoCloseable res = ...) { ... }`). The compiler automatically synthesizes an implicit `finally` block to call `res.close()`.
+
+* **What happens if a `return` statement is present in both `try` and `finally` blocks?**
+  The `finally` block's `return` statement **overrides and suppresses** the `return` value (or any thrown exception!) from the `try` or `catch` block.
+  
+  ```java
+  public int test() {
+      try {
+          return 10;
+      } finally {
+          return 20; // Overrides 10! Returns 20!
+      }
+  }
+  ```
+  **Production warning:** Never place a `return` or `throw` statement inside a `finally` block because it swallows unhandled exceptions silently, making debugging impossible.
+
+* **Can an `Error` (like `OutOfMemoryError` or `StackOverflowError`) be thrown or caught explicitly?**
+  Yes, `Error` extends `Throwable`, so you can write `throw new OutOfMemoryError()` or `catch (Error e)`. However, **catching `Error` is considered an anti-pattern** because errors represent fatal JVM infrastructure failures from which the application cannot safely recover.
+
 ---

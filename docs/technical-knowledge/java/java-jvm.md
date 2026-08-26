@@ -23,6 +23,10 @@ A guide to the Java Virtual Machine — runtime memory areas, garbage collection
 
 ## 1. JVM Architecture Overview
 
+The HotSpot JVM splits work across **runtime data areas** and an **execution engine**. Shared across all threads: the **Heap** (objects and arrays, GC-managed) and the **Method Area** (class metadata / bytecode — Metaspace since Java 8). Private per thread: the **JVM Stack** (frames, locals, operand stack), the **PC Register** (address of the current bytecode instruction), and the **Native Method Stack** (JNI / C frames). The execution engine runs bytecode via the **interpreter** and promotes hot methods with the **JIT** (C1/C2) into the Code Cache; the **GC** reclaims unreachable heap objects.
+
+Click a block in the diagram for responsibilities, tuning flags, and common failure modes.
+
 <JVMArchitectureDiagram />
 
 ---
@@ -253,8 +257,9 @@ To resolve circular references, Java uses **Reachability Analysis** based on tra
   - Active JVM internal system classes.
 - **The Algorithm:** The GC starts at the roots and traverses all references. Any object that can be reached from a GC Root is marked "alive" (reachable). Any object that is unreachable (even if they form a closed loop of references among themselves) is identified as garbage and reclaimed.
 
-> [!TIP]
-> **The Dock Analogy:** Imagine GC Roots as secure docks on a riverbank. Boats that are tied directly to the docks, or tied to other boats that eventually lead back to a dock, are safe. A cluster of boats floating freely in the middle of the river, even if tied tightly to one another, will be swept away by the current (garbage collected) because they have no line connecting them to a dock.
+:::info
+**The Dock Analogy:** Imagine GC Roots as secure docks on a riverbank. Boats that are tied directly to the docks, or tied to other boats that eventually lead back to a dock, are safe. A cluster of boats floating freely in the middle of the river, even if tied tightly to one another, will be swept away by the current (garbage collected) because they have no line connecting them to a dock.
+:::
 
 ---
 
@@ -294,6 +299,8 @@ To exploit this, the JVM splits the heap into two main generations:
 2. **First GC:** Eden fills up, triggering a **Minor GC**. The GC copies surviving objects from Eden into `Survivor 0 (S0 / From)`, then wipes Eden entirely.
 3. **Subsequent GCs:** In the next Minor GC, survivors from Eden and `S0` are copied into `Survivor 1 (S1 / To)`. Eden and `S0` are wiped. The survivor spaces swap roles.
 4. **Aging & Promotion:** Each copy increment's an object's age. When an object's age exceeds the threshold (configured by `-XX:MaxTenuringThreshold`, default is `15`), it is promoted (copied) into the **Old Generation**.
+
+Interactive object lifecycle (Eden → S0/S1 → Old → reclaimed), algorithms, and STW evolution: [Garbage Collection Deep Dive](./java-gc).
 
 ---
 

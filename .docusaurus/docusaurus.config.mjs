@@ -8,6 +8,14 @@ export default {
   "tagline": "Internal technical documentation",
   "url": "https://luminhkhuong.dev",
   "baseUrl": "/",
+  "customFields": {
+    "firebaseApiKey": "AIzaSyCfKNL2b9lwvZjOA916DoYDR5B5-Xz7NNE",
+    "firebaseAuthDomain": "khuong-tjfxef.firebaseapp.com",
+    "firebaseProjectId": "khuong-tjfxef",
+    "firebaseStorageBucket": "khuong-tjfxef.firebasestorage.app",
+    "firebaseMessagingSenderId": "14737596078",
+    "firebaseAppId": "1:14737596078:web:ece78d5b899bb2ad05573f"
+  },
   "stylesheets": [
     {
       "href": "https://cdn.jsdelivr.net/npm/katex@0.13.24/dist/katex.min.css",
@@ -226,6 +234,22 @@ export default {
         "srcDark": "/logo-dark.svg"
       },
       "items": [
+        {
+          "type": "docSidebar",
+          "sidebarId": "tutorialSidebar",
+          "position": "left",
+          "label": "Docs"
+        },
+        {
+          "to": "/arcade",
+          "label": "Arcade",
+          "position": "left"
+        },
+        {
+          "to": "/stats",
+          "label": "Stats",
+          "position": "left"
+        },
         {
           "type": "custom-userNavbarItem",
           "position": "right"
@@ -627,7 +651,6 @@ export default {
   "staticDirectories": [
     "static"
   ],
-  "customFields": {},
   "scripts": [],
   "headTags": [],
   "titleDelimiter": "|",

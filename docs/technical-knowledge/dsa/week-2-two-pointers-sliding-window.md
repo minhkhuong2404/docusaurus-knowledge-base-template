@@ -6,6 +6,8 @@ tags: [dsa, java, two-pointers, sliding-window, algorithms, week-2, optimization
 sidebar_position: 2
 ---
 
+import DsaWeek2TwoPointersDiagram from '@site/src/components/DsaWeek2TwoPointersDiagram';
+
 # Week 2: Two Pointers & Basic Sliding Window
 
 ## 1. Overview
@@ -32,6 +34,9 @@ Consider a naive approach: checking every pair of elements in an array of 100,00
 ---
 
 ## 2. The Core Mental Model: What Is a "Pointer"?
+
+<DsaWeek2TwoPointersDiagram />
+
 
 A **pointer** in this context is simply an **integer variable holding an index**. It "points" to a position in the array or string. Nothing more. When we say "move the pointer right," we mean `pointer++`.
 

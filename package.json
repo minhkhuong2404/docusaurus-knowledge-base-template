@@ -7,8 +7,9 @@
     "yarn": ">=1.22.0"
   },
   "scripts": {
-    "start": "python scratch/fetch_leetcode_daily.py && python scratch/sync_google_sheet_quiz.py && docusaurus start",
-    "build": "python scratch/fetch_leetcode_daily.py && python scratch/sync_google_sheet_quiz.py && DOCUSAURUS_IGNORE_SSG_WARNINGS=true docusaurus build",
+    "start": "python scratch/fetch_leetcode_daily.py && docusaurus start",
+    "sync-quizzes": "node scripts/sync_quiz_snapshot.js",
+    "build": "python scratch/fetch_leetcode_daily.py && node scripts/sync_quiz_snapshot.js && DOCUSAURUS_IGNORE_SSG_WARNINGS=true docusaurus build",
     "build:analyze": "docusaurus build --bundle-analyzer",
     "build:debug-search": "DEBUG=search-local:* docusaurus build",
     "serve": "docusaurus serve",
@@ -22,6 +23,7 @@
     "@docusaurus/theme-mermaid": "^3.10.2",
     "@easyops-cn/docusaurus-search-local": "^0.55.2",
     "@fortawesome/fontawesome-free": "^7.3.0",
+    "dotenv": "^17.4.2",
     "firebase": "^12.16.0",
     "katex": "^0.18.1",
     "prism-react-renderer": "^2.4.1",

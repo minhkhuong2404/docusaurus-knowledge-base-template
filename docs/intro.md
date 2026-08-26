@@ -1,269 +1,172 @@
 ---
 title: Welcome
 slug: /docs
-description: Engineering knowledge base for practical learning, interview preparation, real-world system design, DSA training, and cloud certification.
-tags: [engineering, documentation, knowledge-base, onboarding, interview]
+description: Engineering knowledge base for practical learning, interview preparation, real-world system design, DSA training, banking systems, and cloud certification.
+tags: [engineering, documentation, knowledge-base, onboarding, interview, dsa, system-design]
 ---
 
-# Engineering Knowledge Base
+import KnowledgeBaseHubDiagram from '@site/src/components/KnowledgeBaseHubDiagram';
 
-A practical, continuously growing knowledge base for software engineers — built for faster learning, better technical decisions, and focused interview preparation.
+# 🚀 Engineering Knowledge Base
 
-> **How to use this site:** Pick a learning path below, follow the sections in order, and connect each concept to a real implementation or design scenario. Use the sidebar to navigate between topics.
+A practical, production-grade engineering knowledge base and interactive practice platform — designed for accelerated learning, architectural decision-making, and high-impact interview preparation.
 
----
-
-## 🗺️ Learning Paths Overview
-
-| Path | What It Covers | Best For |
-|------|---------------|----------|
-| [💼 Interview Preparation](#-interview-preparation-roadmap) | System design, Java, behavioral, patterns | Upcoming interviews |
-| [📊 DSA Coding Training](#-dsa-coding-training-20-week-roadmap) | 20-week structured algorithm training | LeetCode & coding rounds |
-| [🏦 Banking & Finance](#-banking--finance) | Payment lifecycles, ISO 20022 messages, clearing & settlement | Fintech & banking developers |
-| [🤖 AI Agents & Vibe Coding](#-ai-agents--vibe-coding) | Agents, skills, harnesses, vibe coding, context engineering | AI-assisted software engineering |
-| [📚 Engineering Books](#-engineering-books) | Key takeaways from essential books | Deep, long-term growth |
-| [☁️ Cloud Certifications](#️-cloud-certifications-aws-dva-c02) | AWS DVA-C02 exam prep | Cloud developer cert |
-
----
-
-## 💼 Interview Preparation Roadmap
-
-A structured path for engineers targeting backend, system design, and Java/Spring interviews.
-
-### Phase 1 — Foundations
-
-| # | Topic | Key Concepts | Link |
-|---|-------|-------------|------|
-| 1 | Java Fundamentals | Types, OOP, generics, exceptions, memory model | [→ Java Overview](/technical-knowledge/java/java-overview) |
-| 2 | OOP Principles | Encapsulation, inheritance, polymorphism, interfaces | [→ Java OOP](/technical-knowledge/java/java-oop) |
-| 3 | Java Collections | List, Map, Set, Queue, complexity trade-offs | [→ Collections](/technical-knowledge/java/java-collections) |
-| 4 | Concurrency | Threads, locks, executors, CompletableFuture | [→ Concurrency](/technical-knowledge/java/java-concurrency) |
-| 5 | JVM Internals | Memory areas, GC, class loading, JIT | [→ JVM](/technical-knowledge/java/java-jvm) |
-| 6 | SOLID Principles | Single responsibility through dependency inversion | [→ SOLID](/technical-knowledge/solid/) |
-| 7 | Design Patterns | Creational, structural, behavioral patterns | [→ Design Patterns](/technical-knowledge/design-patterns/design-patterns-overview) |
-
-### Phase 2 — System Design
-
-| # | Topic | Key Concepts | Link |
-|---|-------|-------------|------|
-| 1 | Interview Framework | How to approach a system design question | [→ Framework](/technical-knowledge/system-design/interview-framework) |
-| 2 | Architecture Fundamentals | Monolith vs microservices, trade-off model | [→ Architecture](/technical-knowledge/system-design/architecture-fundamentals) |
-| 3 | Distributed Systems | CAP theorem, consistency, partitioning | [→ Distributed Systems](/technical-knowledge/system-design/distributed-systems) |
-| 4 | Consistent Hashing | Rings, virtual nodes, replication | [→ Consistent Hashing](/technical-knowledge/system-design/consistent-hashing-deep-dive) |
-| 5 | Caching Strategies | Cache-aside, write-through, eviction policies | [→ Caching](/technical-knowledge/system-design/caching-strategies) |
-| 6 | Message Queues | Kafka, SQS, async patterns, ordering guarantees | [→ Message Queues](/technical-knowledge/system-design/message-queues) |
-| 7 | API Design | REST, versioning, rate limiting, idempotency | [→ API Design](/technical-knowledge/system-design/api-design) |
-| 8 | Load Balancing | Strategies, health checks, failover | [→ Load Balancing](/technical-knowledge/system-design/load-balancing-reliability) |
-| 9 | Scaling Reads | Read replicas, CDN, sharding patterns | [→ Scaling Reads](/technical-knowledge/system-design/scaling-reads) |
-| 10 | Scaling Writes | CQRS, event sourcing, write-behind | [→ Scaling Writes](/technical-knowledge/system-design/scaling-writes) |
-| 11 | Observability | Metrics, tracing, logging, alerting | [→ Observability](/technical-knowledge/system-design/observability) |
-| 12 | Security Patterns | Auth, zero trust, secrets management | [→ Security Patterns](/technical-knowledge/system-design/security-patterns) |
-| 13 | Microservices Patterns | Saga, circuit breaker, service mesh | [→ Microservices](/technical-knowledge/system-design/microservices-patterns) |
-| 14 | Common Interview Questions | URL shortener, Twitter, payment system | [→ Interview Questions](/technical-knowledge/system-design/common-interview-questions) |
-
-### Phase 3 — Domain Depth
-
-| Domain | Key Topics | Link |
-|--------|-----------|------|
-| **Database** | ACID, indexes, transactions, replication, NoSQL vs SQL | [→ Database](/technical-knowledge/database/) |
-| **Kafka** | Topics, partitions, consumer groups, Kafka Streams | [→ Kafka](/technical-knowledge/kafka/intro) |
-| **Redis** | Data structures, pub/sub, caching, Lua scripting | [→ Redis](/technical-knowledge/redis/redis-overview) |
-| **Networking** | TCP/IP, DNS, TLS, HTTP/2, gRPC | [→ Networking](/technical-knowledge/networking/) |
-| **Security** | Auth flows, JWT, OAuth2, encryption, OWASP | [→ Security](/security) |
-| **Elasticsearch** | Inverted index, tokenizers, search queries, cluster state | [→ Elasticsearch](/technical-knowledge/elasticsearch/elasticsearch-overview) |
-| **Operating Systems** | Processes, threads, memory management, syscalls, scheduling | [→ OS](/technical-knowledge/operating-systems/intro) |
-| **LLD & OOD** | Class diagrams, SOLID principles, design problems | [→ LLD](/intro) |
-| **Testing & Mocking** | Unit testing, Spring annotations, Wiremock | [→ Testing](/technical-knowledge/test/testing-concepts) |
-| **DevOps** | Docker, Kubernetes, CI/CD pipelines | [→ DevOps](/devops) |
-| **Git** | Branching, rebase, cherry-pick, worktrees | [→ Git](/technical-knowledge/git/) |
-
-### Interview Self-Check
-
-Before your interview, confirm you can answer:
-
-1. Explain your design with at least one alternative considered
-2. What breaks first at 10× traffic?
-3. How do you detect and recover from failures?
-4. How does your solution behave under partial failure or network partition?
-
-:::tip[Interview Success Formula]
-Good answers connect three layers: **Concept** (what it is) → **Design choice** (when to use it, trade-offs) → **Operations** (how it behaves at scale or under failure).
-:::
-
-:::caution[Common Interview Traps]
-- Definition-only answers without trade-off reasoning
-- Ignoring scale assumptions (QPS, payload size, latency targets)
-- Treating consistency, reliability, and cost as independent concerns
-- Forgetting operational details: monitoring, alerting, rollback strategy
+:::tip[How to Navigate This Platform]
+- **Interactive Practice:** Access the [📝 Daily Quizzes](/technical-knowledge/daily-quiz) and [🧩 LeetCode Daily](/technical-knowledge/dsa/leetcode-daily) to build daily consistency with instant feedback and cloud progress syncing.
+- **Visual Learning:** Explore 60+ interactive SVG diagrams and animated protocol visualizers embedded across topics.
+- **Structured Roadmaps:** Follow sequential paths from Foundations to Domain Specialization using the sidebar navigation.
 :::
 
 ---
 
-## 📊 DSA Coding Training 20-Week Roadmap
+## ⚡ Interactive Features & Practice Hubs
 
-A structured 20-week curriculum for mastering coding interview patterns. Each week focuses on one core pattern with progressive difficulty.
+| Feature | Description | Access |
+|---------|-------------|--------|
+| **📝 Daily Concept Quizzes** | Live interactive practice canvas synchronized with our central Google Sheets question bank (**☕ Java [508 Qs]**, **🍃 Spring Boot [508 Qs]**, **🏗️ System Design [508 Qs]**, **🌐 All [1,524 Qs]**). Supports topic/difficulty filtering, instant solution rationales, and accuracy tracking. | [→ Open Daily Quizzes](/technical-knowledge/daily-quiz) |
+| **🧩 LeetCode Daily Challenge** | Daily featured algorithmic problem, random global challenge picker, and topic explorer covering curated high-yield interview problems. | [→ Open LeetCode Daily](/technical-knowledge/dsa/leetcode-daily) |
+| **📊 20-Week DSA Roadmap** | Comprehensive 20-week pattern-based algorithmic training curriculum from Two Pointers to Dynamic Programming and Advanced Graphs. | [→ 20-Week DSA Guide](/technical-knowledge/dsa/20-week-dsa-roadmap-intro) |
+| **🏢 LeetCode Company-Wise** | Frequently asked interview questions tagged by top tech companies (Google, Meta, Amazon, Microsoft, Apple, Uber, etc.). | [→ Company-Wise Questions](/technical-knowledge/dsa/leetcode-companywise/) |
+| **🎨 Interactive Visualizers** | 60+ custom React SVG diagrams for distributed consensus (Raft), TLS 1.3 handshakes, Kafka internal pipelines, Linux kernel subsystems, and ISO 20022 payment flows. | *Embedded throughout docs* |
+| **👤 Cloud Progress & Sync** | Sign in with Google to sync your reading completion, quiz scores, accuracy metrics, and custom study plans in real time via Cloud Firestore. | [→ Account Login](/login) |
 
-| Week | Pattern | Key Topics | Weekly Guide |
-|------|---------|-----------|-------------|
-| 1 | Arrays & Prefix Sums | Two-sum, subarray sums, running totals | [→ Week 1](/technical-knowledge/dsa/week-1-arrays-strings-prefix-sums) |
-| 2 | Two Pointers & Sliding Window | Container with most water, substring problems | [→ Week 2](/technical-knowledge/dsa/week-2-two-pointers-sliding-window) |
-| 3 | Linked Lists & Pointers | Reversal, cycle detection, merge | [→ Week 3](/technical-knowledge/dsa/week-3-linked-lists-pointers) |
-| 4 | Hash Tables & Sets | Frequency counting, anagrams, grouping | [→ Week 4](/technical-knowledge/dsa/week-4-hash-tables-sets) |
-| 5 | Stacks, Queues & Monotonic | Valid parentheses, next greater element | [→ Week 5](/technical-knowledge/dsa/week-5-stacks-queues-monotonic) |
-| 6 | Binary Trees & BST | DFS/BFS traversal, LCA, BST operations | [→ Week 6](/technical-knowledge/dsa/week-6-binary-trees-bst) |
-| 7 | Graph Foundations | BFS, DFS, adjacency list, connected components | [→ Week 7](/technical-knowledge/dsa/week-7-graph-foundations) |
-| 8 | Advanced Graphs | Topological sort, cycle detection, Dijkstra | [→ Week 8](/technical-knowledge/dsa/week-8-advanced-graph-concepts) |
-| 9 | Binary Search | Search space reduction, rotated arrays | [→ Week 9](/technical-knowledge/dsa/week-9-binary-search) |
-| 10 | Recursion & Backtracking | Permutations, combinations, N-Queens | [→ Week 10](/technical-knowledge/dsa/week-10-recursion-backtracking) |
-| 11 | Intervals & Sweep Line | Merge intervals, meeting rooms | [→ Week 11](/technical-knowledge/dsa/week-11-intervals-sweep-line) |
-| 12 | Heaps & Greedy | K-largest elements, task scheduling | [→ Week 12](/technical-knowledge/dsa/week-12-heaps-greedy) |
-| 13 | Dynamic Programming 1D | Fibonacci variants, house robber, DP on strings | [→ Week 13](/technical-knowledge/dsa/week-13-dynamic-programming-1d) |
-| 14 | Dynamic Programming 2D | Grid DP, edit distance, LCS | [→ Week 14](/technical-knowledge/dsa/week-14-dynamic-programming-2d) |
-| 15 | Advanced Sliding Window | Variable-size windows, multi-condition problems | [→ Week 15](/technical-knowledge/dsa/week-15-advanced-sliding-windows) |
-| 16 | Tries & Prefix Trees | Word search, autocomplete, prefix matching | [→ Week 16](/technical-knowledge/dsa/week-16-tries-prefix-trees) |
-| 17 | Shortest Paths & MST | Dijkstra, Bellman-Ford, Prim, Kruskal | [→ Week 17](/technical-knowledge/dsa/week-17-shortest-paths-mst) |
-| 18 | Disjoint Set Union | Union-find, Kruskal, dynamic connectivity | [→ Week 18](/technical-knowledge/dsa/week-18-disjoint-set-union) |
-| 19 | Bit Manipulation & Math | XOR tricks, power of two, prime sieve | [→ Week 19](/technical-knowledge/dsa/week-19-bit-manipulation-math) |
-| 20 | Comprehensive Review | Mock interviews, system + coding integration | [→ Week 20](/technical-knowledge/dsa/week-20-comprehensive-review-systems) |
+---
 
-:::info[Start Here]
-New to DSA training? Read the [20-Week Roadmap Introduction](/technical-knowledge/dsa/20-week-dsa-roadmap-intro) for the full curriculum structure, weekly study plan, and tips for maximizing retention.
+## 🗺️ Learning Paths & Knowledge Domains
+
+<KnowledgeBaseHubDiagram />
+
+---
+
+## 💼 1. Interview Preparation Track
+
+A structured path for software engineers targeting Senior Backend, Distributed Systems, and Java/Spring roles.
+
+### Phase 1 — Foundations & Core Engineering
+
+| # | Topic | Key Concepts Covered | Direct Link |
+|---|-------|----------------------|-------------|
+| 1 | **Java Fundamentals & 21+** | Virtual Threads (Loom), Sequenced Collections (JEP 431), Scoped Values, Pattern Matching, JMM | [→ Java Overview](/technical-knowledge/java/java-overview) |
+| 2 | **OOP & SOLID Principles** | Encapsulation, Covariant returns, Diamond problem resolution, Liskov Substitution Principle | [→ Java OOP](/technical-knowledge/java/java-oop) |
+| 3 | **Collections & Data Structures**| HashMap bitwise bucket hashing, ConcurrentHashMap CAS node locking, ArrayList resizing formula | [→ Collections](/technical-knowledge/java/java-collections) |
+| 4 | **Multithreading & Concurrency**| AbstractQueuedSynchronizer (AQS), ReentrantLock, StampedLock, False Sharing `@Contended`, Memory Barriers | [→ Concurrency](/technical-knowledge/java/java-concurrency) |
+| 5 | **JVM Internals & GC** | Generational ZGC colored pointers, G1 GC regions, Tiered Compilation (C1/C2 JIT), Metaspace | [→ JVM Internals](/technical-knowledge/java/java-jvm) |
+| 6 | **Design Patterns & Architecture**| Creational, Structural (Decorator, Proxy), Behavioral (Saga, Strategy, Observer) patterns | [→ Design Patterns](/technical-knowledge/design-patterns/design-patterns-overview) |
+
+### Phase 2 — System Design & Distributed Systems
+
+| # | System Design Topic | Core Architectural Focus | Direct Link |
+|---|---------------------|--------------------------|-------------|
+| 1 | **Interview Framework** | 4-step structured system design interview blueprint & trade-off scoring | [→ Framework](/technical-knowledge/system-design/interview-framework) |
+| 2 | **Distributed Transactions** | Two-Phase Commit (2PC), Saga Pattern (Orchestration vs Choreography), Transactional Outbox + Debezium CDC | [→ Distributed Transactions](/technical-knowledge/system-design/distributed-transactions) |
+| 3 | **Distributed Consensus & Replication** | Raft majority quorum calculations, Multi-Paxos, Google Spanner TrueTime API vs CockroachDB HLC | [→ Distributed Systems](/technical-knowledge/system-design/distributed-systems) |
+| 4 | **Consistent Hashing & Partitioning**| Hash ring topology, virtual nodes (vnodes), replication factors, data migration | [→ Consistent Hashing](/technical-knowledge/system-design/consistent-hashing-deep-dive) |
+| 5 | **Distributed Caching & Stampede Defense**| Cache-Aside vs Write-Behind, Redis Cluster 16384 hash slots, XFetch probabilistic early expiration | [→ Caching Strategies](/technical-knowledge/system-design/caching-strategies) |
+| 6 | **Message Queues & Streaming** | Apache Kafka partition allocations, zero-copy sendfile, Idempotent Producer PID deduplication | [→ Message Queues](/technical-knowledge/system-design/message-queues) |
+| 7 | **API Design & Rate Limiting** | RESTful idempotency keys, Distributed Token Bucket with Redis Lua scripts, gRPC vs REST | [→ API Design](/technical-knowledge/system-design/api-design) |
+| 8 | **Database Scaling & Storage Engines** | B-Trees vs Log-Structured Merge-Trees (LSM-Trees write amplification), Sharding, Read Replicas | [→ Database Scaling](/technical-knowledge/system-design/scaling-writes) |
+| 9 | **Microservices Resilience** | Resilience4j Circuit Breakers, Bulkheads, Rate Limiters, Service Mesh mTLS | [→ Microservices](/technical-knowledge/system-design/microservices-patterns) |
+| 10 | **Observability & Telemetry** | Distributed Tracing (OpenTelemetry), Metrics (Prometheus), Log Aggregation, SLI/SLO/SLA | [→ Observability](/technical-knowledge/system-design/observability) |
+
+### Phase 3 — Behavioral & Leadership Strategy
+
+| Topic | Focus | Direct Link |
+|-------|-------|-------------|
+| **Big 8 Behavioral Themes** | Conflict resolution, leadership, failure recovery, ambiguity, customer obsession | [→ Behavioral Guide](/technical-knowledge/interview-questions/behavioral/intro) |
+| **STAR / STAR-L Framework** | Animated 4-step STAR timing rubric, action verbs, and lessons learned structure | [→ STAR Method](/technical-knowledge/interview-questions/behavioral/star-method) |
+| **Amazon 16 Leadership Principles**| Comprehensive breakdown of all 16 Amazon LPs with story strategies and questions | [→ Amazon LP Guide](/technical-knowledge/interview-questions/behavioral/amazon-lp) |
+| **Questions to Ask Interviewers** | Curated questions to evaluate engineering culture, architecture maturity, and growth | [→ Questions to Ask](/technical-knowledge/interview-questions/behavioral/questions-to-ask) |
+
+---
+
+## 📊 2. DSA Coding Training (20-Week Master Curriculum)
+
+A structured 20-week curriculum designed for algorithmic pattern recognition and mastery:
+
+| Week | Algorithmic Pattern | Key Problem Types | Guide Link |
+|------|--------------------|-------------------|------------|
+| **W1** | **Arrays & Prefix Sums** | Subarray sums, running totals, difference arrays | [→ Week 1](/technical-knowledge/dsa/week-1-arrays-strings-prefix-sums) |
+| **W2** | **Two Pointers & Sliding Window** | Container with most water, longest substring without repeats | [→ Week 2](/technical-knowledge/dsa/week-2-two-pointers-sliding-window) |
+| **W3** | **Linked Lists & Pointers** | Fast/slow pointers, cycle detection, reverse linked lists | [→ Week 3](/technical-knowledge/dsa/week-3-linked-lists-pointers) |
+| **W4** | **Hash Tables & Sets** | Group anagrams, frequency counting, LRU cache foundations | [→ Week 4](/technical-knowledge/dsa/week-4-hash-tables-sets) |
+| **W5** | **Monotonic Stacks & Queues** | Next greater element, daily temperatures, sliding window maximum | [→ Week 5](/technical-knowledge/dsa/week-5-stacks-queues-monotonic) |
+| **W6** | **Binary Trees & BST** | Lowest Common Ancestor, level-order BFS, tree serialization | [→ Week 6](/technical-knowledge/dsa/week-6-binary-trees-bst) |
+| **W7** | **Graph Foundations** | Connected components, flood fill, topological sort (Kahn's) | [→ Week 7](/technical-knowledge/dsa/week-7-graph-foundations) |
+| **W8** | **Advanced Graph Algorithms** | Dijkstra's shortest path, Bellman-Ford, cycle detection | [→ Week 8](/technical-knowledge/dsa/week-8-advanced-graph-concepts) |
+| **W9** | **Binary Search Patterns** | Search in rotated sorted array, search space reduction | [→ Week 9](/technical-knowledge/dsa/week-9-binary-search) |
+| **W10** | **Recursion & Backtracking** | Subsets, permutations, combination sum, N-Queens | [→ Week 10](/technical-knowledge/dsa/week-10-recursion-backtracking) |
+| **W11** | **Intervals & Sweep Line** | Merge intervals, meeting rooms, insert intervals | [→ Week 11](/technical-knowledge/dsa/week-11-intervals-sweep-line) |
+| **W12** | **Heaps & Greedy Algorithms** | Top K frequent elements, task scheduler, merge K sorted lists | [→ Week 12](/technical-knowledge/dsa/week-12-heaps-greedy) |
+| **W13** | **Dynamic Programming (1D)** | House robber, coin change, longest increasing subsequence | [→ Week 13](/technical-knowledge/dsa/week-13-dynamic-programming-1d) |
+| **W14** | **Dynamic Programming (2D & Strings)** | Unique paths, edit distance, longest common subsequence | [→ Week 14](/technical-knowledge/dsa/week-14-dynamic-programming-2d) |
+| **W15** | **Advanced Sliding Window** | Minimum window substring, sliding window with multi-constraints | [→ Week 15](/technical-knowledge/dsa/week-15-advanced-sliding-windows) |
+| **W16** | **Tries & Prefix Trees** | Prefix matching, autocomplete, word search II | [→ Week 16](/technical-knowledge/dsa/week-16-tries-prefix-trees) |
+| **W17** | **Shortest Paths & MST** | Kruskal, Prim, minimum spanning trees | [→ Week 17](/technical-knowledge/dsa/week-17-shortest-paths-mst) |
+| **W18** | **Disjoint Set Union (DSU)** | Union-Find with path compression & rank optimization | [→ Week 18](/technical-knowledge/dsa/week-18-disjoint-set-union) |
+| **W19** | **Bit Manipulation & Math** | Single number, bitwise arithmetic, power sets | [→ Week 19](/technical-knowledge/dsa/week-19-bit-manipulation-math) |
+| **W20** | **Comprehensive Review & Mocks**| Complex multi-pattern problems & mock interview simulations | [→ Week 20](/technical-knowledge/dsa/week-20-comprehensive-review-systems) |
+
+---
+
+## 🏦 3. Banking & Financial Core Architecture
+
+In-depth technical reference for fintech, payment hub, and banking system developers:
+
+| Area | Core Topics Covered | Direct Link |
+|------|---------------------|-------------|
+| **Payment Fundamentals** | 10-step payment lifecycle, On-Us vs Off-Us routing, settlement types | [→ Banking Guide](/technical-knowledge/banking/overview) |
+| **ISO 20022 Standards** | XML schema definitions for `pain.001`, `pacs.008`, `pacs.002`, `pacs.004`, `camt.054` | [→ ISO 20022 Specs](/technical-knowledge/banking/pain001) |
+| **Global Payment Rails** | NPP (New Payments Platform), SWIFT gpi / ISO MX, BECS Direct Debit, BPAY, RTGS | [→ Payment Rails](/technical-knowledge/banking/npp) |
+| **Core Banking Ledger (CBS)** | Double-entry accounting invariants, Booked vs Available balance posting, End of Day (EOD) | [→ Core Banking](/technical-knowledge/banking/core_banking) |
+| **Clearing & Settlement** | Deferred Net Settlement (DNS) vs Real-Time Gross Settlement (RTGS), Multilateral netting | [→ Settlement Engine](/technical-knowledge/banking/clearing) |
+| **Sanctions & AML Compliance**| Real-time fuzzy sanctions screening (Jaro-Winkler), AML/CTF transaction monitoring | [→ Compliance & Fraud](/technical-knowledge/banking/fraud) |
+| **Open Banking & FAPI** | Consumer Data Right (CDR), OAuth 2.0 PKCE, FAPI 1.0 Advanced Security Profiles | [→ Open Banking](/technical-knowledge/banking/overview) |
+
+---
+
+## 🤖 4. AI Agents & Vibe Coding
+
+Modern paradigms for agentic software engineering and LLM application design:
+
+| Module | Core Topics | Direct Link |
+|--------|-------------|-------------|
+| **AI Agents Architecture** | ReAct loops, planning agents, tool calling protocols, execution traces | [→ Agent Overview](/technical-knowledge/ai-agents/overview) |
+| **Custom Skill Systems** | Sandboxed skill registries, CLI harnesses, YAML schemas, MCP configs | [→ Skill Systems](/technical-knowledge/ai-agents/skills) |
+| **Evaluation & Testing Harness**| E2E agent validation, prompt regression suites, simulation sandboxes | [→ Harness Testing](/technical-knowledge/ai-agents/harness) |
+| **Vibe Coding Workflows** | Natural language coding loops, dynamic context iteration, prompt orchestration | [→ Vibe Coding](/technical-knowledge/ai-agents/vibe-coding) |
+| **Context Engineering** | RAG architectures, sliding context window budgeting, instruction pruning | [→ Context Engineering](/technical-knowledge/ai-agents/context-engineering) |
+
+---
+
+## 🛠️ 5. DevOps, Cloud & Infrastructure
+
+Production engineering practices for scalable, resilient deployments:
+
+| Domain | Key Technologies & Concepts | Direct Link |
+|--------|----------------------------|-------------|
+| **Containerization** | Docker Engine internals (dockerd, containerd, runc), Multi-stage OCI layer builds | [→ Docker Architecture](/devops) |
+| **Kubernetes** | Control Plane & Worker topologies, Workload controllers, Service routing, CSI storage | [→ Kubernetes Architecture](/devops) |
+| **GitOps CI/CD** | ArgoCD reconciliation loops, declarative Canary deployments, Custom Resource Definitions | [→ GitOps Pipelines](/devops) |
+| **Infrastructure as Code (IaC)**| Terraform State DAG execution engine, declarative vs procedural drift detection | [→ IaC & Observability](/devops) |
+| **AWS DVA-C02 Certification**| 17-module complete preparation path (Lambda, DynamoDB, SQS/SNS, IAM, CloudFormation) | [→ AWS Certification Guide](/technical-knowledge/aws/dva-c02-roadmap) |
+
+---
+
+## 📚 6. Engineering Books Knowledge Repository
+
+Condensed key takeaways, architectural principles, and mental models from cornerstone literature:
+
+| Book | Author | Core Focus | Notes Link |
+|------|--------|------------|------------|
+| **Effective Java** | Joshua Bloch | 90 best practices: Generics, Lambdas, Concurrency, Serialization, Records | [→ Effective Java Notes](/books/effective-java/introduction) |
+| **Designing Data-Intensive Applications (DDIA)** | Martin Kleppmann | Storage engines, Replication logs, Partitioning, Distributed Transactions, Consensus | [→ DDIA Notes](/books/ddia/intro) |
+| **Clean Code** | Robert C. Martin | Functions, naming conventions, error handling, clean unit testing | [→ Clean Code Notes](/books/clean-code/intro) |
+| **Clean Architecture** | Robert C. Martin | Hexagonal architecture, dependency inversion rule, boundaries | [→ Clean Architecture Notes](/books/clean-architecture/intro) |
+| **Cracking the Coding Interview** | Gayle Laakmann McDowell | Data structures, technical interview mental frameworks, complexity trade-offs | [→ CTCI Notes](/books/clean-code/intro) |
+| **System Design Interview (Vol. 1 & 2)** | Alex Xu & Sahn Lam | Large-scale production architectures (URL Shortener, Distributed Message Queue, Payments) | [→ SDI Notes](/books/ddia/intro) |
+
+---
+
+:::tip[Ready to Start?]
+Jump straight into the [📝 Daily Quizzes](/technical-knowledge/daily-quiz) or pick a topic from the left sidebar navigation to begin learning!
 :::
-
-### DSA Pattern Quick Reference
-
-| Pattern | Use When | Typical Complexity |
-|---------|----------|-------------------|
-| **Sliding Window** | Fixed/variable window over array/string | O(n) |
-| **Two Pointers** | Sorted array, in-place manipulation | O(n) |
-| **Binary Search** | Sorted/monotonic search space | O(log n) |
-| **BFS** | Shortest path in unweighted graph, level traversal | O(V+E) |
-| **DFS + Backtrack** | Permutations, combinations, constraint satisfaction | O(n!) |
-| **DP 1D** | Overlapping subproblems, 1D state | O(n) |
-| **DP 2D** | Grid problems, string comparison | O(m×n) |
-| **Heap** | K-th element, streaming median | O(n log k) |
-| **Union-Find** | Dynamic connectivity, cycle detection in graphs | O(α(n)) ≈ O(1) |
-| **Trie** | Prefix matching, word search | O(L) per operation |
-
----
-
-## 🏦 Banking & Finance
-
-A comprehensive guide to financial core systems, transaction lifecycles, global payment networks, and compliance frameworks.
-
-### Core Modules
-
-| Module | Key Topics | Link |
-|--------|------------|------|
-| **Payment Fundamentals** | Payment lifecycles, banking roles, A-Z banking glossary | [→ Learner Guide](/technical-knowledge/banking/overview) |
-| **ISO 20022 Standards** | MX messages: pain (initiation), pacs (clearing), camt (statement) | [→ ISO 20022 Messages](/technical-knowledge/banking/pain001) |
-| **Payment Flows** | Inbound, outbound, On-Us, and Off-Us transaction clearing | [→ Payment Flows](/technical-knowledge/banking/inbound) |
-| **Payment Rails** | NPP (instant), SWIFT (cross-border), BECS (debit), BPAY | [→ Payment Rails](/technical-knowledge/banking/npp) |
-| **CBS & Posting** | Core Banking Systems, debit/credit posting, reversals, interest | [→ CBS & Posting](/technical-knowledge/banking/core_banking) |
-| **Clearing & Settlement**| Direct, bilateral, multilateral clearing and RTGS settlement | [→ Settlement](/technical-knowledge/banking/clearing) |
-| **Compliance & Risk** | Fraud detection, sanctions screening, AML/CTF & KYC | [→ Compliance](/technical-knowledge/banking/fraud) |
-| **Operations & Testing** | Reconciliation, investigation workflows, end-to-end payment testing | [→ Operations](/technical-knowledge/banking/reconciliation) |
-
----
-
-## 🤖 AI Agents & Vibe Coding
-
-Understanding modern agentic AI development, harness testing, prompts, and context engineering patterns.
-
-| Topic | Focus | Link |
-|-------|-------|------|
-| **AI Agents Overview** | Introduction to agentic design loops, tool calling, and planning | [→ Overview](/technical-knowledge/ai-agents/overview) |
-| **Agent Design** | Agent architecture, memory, state machines, and decision patterns | [→ Agent Design](/technical-knowledge/ai-agents/agents) |
-| **Skill Systems** | Extensibility, tool registries, custom skills, and sandbox runs | [→ Skill Systems](/technical-knowledge/ai-agents/skills) |
-| **Testing Harness** | Evaluating agents, test harnesses, simulation environments, and validation | [→ Harness](/technical-knowledge/ai-agents/harness) |
-| **Vibe Coding** | Natural language coding paradigms, prompt orchestration, and iteration loops | [→ Vibe Coding](/technical-knowledge/ai-agents/vibe-coding) |
-| **Context Engineering**| Context window optimization, RAG patterns, and instruction tuning | [→ Context Engineering](/technical-knowledge/ai-agents/context-engineering) |
-
----
-
-## 📚 Engineering Books
-
-Distilled notes and key takeaways from essential software engineering books.
-
-### Interview Preparation Track
-
-| Book | Author | Focus | Notes |
-|------|--------|-------|-------|
-| **Cracking the Coding Interview** | Gayle McDowell | Data structures, algorithms, system design, OOP, concurrency | [→ Notes](/books/clean-code/intro) |
-| **System Design Interview Vol.1** | Alex Xu | 4-step framework + 10 real system designs (URL shortener, Twitter, etc.) | [→ Notes](/books/ddia/intro) |
-| **System Design Interview Vol.2** | Alex Xu & Sahn Lam | Advanced designs: payments, maps, stock exchange | [→ Notes](/books/ddia/intro) |
-
-### Software Craft Track
-
-| Book | Author | Focus | Notes |
-|------|--------|-------|-------|
-| **Effective Java** | Joshua Bloch | 90 best practices: generics, lambdas, APIs, concurrency, serialization | [→ Notes](/books/effective-java/introduction) |
-| **Clean Code** | Robert C. Martin | Naming, functions, comments, formatting, error handling | [→ Notes](/books/clean-code/intro) |
-| **Building Microservices** | Sam Newman | Service decomposition, resilience, integration, deployment | *Coming soon* |
-
-### Deep Foundations Track
-
-| Book | Author | Focus | Notes |
-|------|--------|-------|-------|
-| **Designing Data-Intensive Applications (DDIA)** | Martin Kleppmann | Storage, replication, partitioning, transactions, distributed systems | [→ Notes](/books/ddia/intro) |
-| **Clean Architecture** | Robert C. Martin | Architecture principles, dependency rules, component isolation | [→ Notes](/books/clean-architecture/intro) |
-
-:::tip[Reading Order]
-**For interviews:** Cracking the Coding Interview → System Design Interview Vol.1 → Vol.2
-
-**For engineering depth:** Effective Java → Clean Code → Building Microservices → DDIA
-:::
-
----
-
-## ☁️ Cloud Certifications AWS DVA-C02
-
-Targeted preparation for the **AWS Certified Developer – Associate (DVA-C02)** exam.
-
-### Exam Overview
-
-| Domain | Weight | Key Services |
-|--------|--------|-------------|
-| **Domain 1:** Development with AWS Services | **32%** | Lambda, DynamoDB, S3, API Gateway, SQS/SNS |
-| **Domain 2:** Security | **26%** | IAM, Cognito, Secrets Manager, KMS, STS |
-| **Domain 3:** Deployment | **24%** | CodePipeline, CodeDeploy, Elastic Beanstalk, CloudFormation |
-| **Domain 4:** Troubleshooting & Optimization | **18%** | CloudWatch, X-Ray, performance tuning |
-
-### Study Path
-
-| # | Topic | Key Concepts | Link |
-|---|-------|-------------|------|
-| 1 | DVA-C02 Roadmap | Full exam roadmap and study strategy | [→ Roadmap](/technical-knowledge/aws/dva-c02-roadmap) |
-| 2 | AWS Overview | Core services, regions, shared responsibility | [→ Overview](/aws) |
-| 3 | Lambda | Invocation models, cold start, layers, destinations, DLQ | [→ Lambda](/technical-knowledge/aws/lambda/) |
-| 4 | DynamoDB | Keys, GSI/LSI, streams, DAX, single-table design | [→ DynamoDB](/technical-knowledge/aws/dynamodb/) |
-| 5 | API Gateway | REST vs HTTP API, authorizers, throttling, caching | [→ API Gateway](/technical-knowledge/aws/api-gateway/) |
-| 6 | S3 | Storage classes, lifecycle, encryption, presigned URLs | [→ S3](/technical-knowledge/aws/s3/) |
-| 7 | IAM | Roles, policies, STS, least privilege patterns | [→ IAM](/technical-knowledge/aws/iam/) |
-| 8 | Messaging | SQS, SNS, EventBridge, Kinesis — choosing the right service | [→ Messaging](/technical-knowledge/aws/messaging/sqs) |
-| 9 | CloudFormation & SAM | IaC, stack management, SAM for serverless | [→ CloudFormation](/technical-knowledge/aws/cloudformation/) |
-| 10 | Containers | ECS, ECR, Fargate, App Runner | [→ Containers](/technical-knowledge/aws/containers/ecs-ecr) |
-| 11 | RDS & Aurora | Multi-AZ, read replicas, Aurora Serverless | [→ RDS & Aurora](/technical-knowledge/aws/rds-aurora) |
-| 12 | ElastiCache | Redis vs Memcached, cache strategies | [→ ElastiCache](/technical-knowledge/aws/elasticache/) |
-| 13 | Monitoring | CloudWatch, CloudTrail, X-Ray, Logs Insights | [→ Monitoring](/technical-knowledge/aws/monitoring/cloudwatch) |
-| 14 | Security | KMS, Secrets Manager, WAF, Shield | [→ Security](/technical-knowledge/aws/security/kms) |
-| 15 | Serverless Patterns | Event-driven, fan-out, saga patterns | [→ Patterns](/technical-knowledge/aws/serverless-patterns) |
-| 16 | Exam Tips & Traps | Last-minute key facts and common traps | [→ Exam Tips](/technical-knowledge/aws/exam-tips) |
-| 17 | Mock Exam | Full practice exam with explanations | [→ Mock Exam](/technical-knowledge/aws/mock-exam) |
-
-:::caution[DVA-C02 High-Priority Topics]
-- **Lambda** — invocation types, cold start optimization, reserved concurrency
-- **DynamoDB** — single-table design, GSI/LSI trade-offs, strongly vs eventually consistent reads
-- **SQS** — visibility timeout, DLQ, long polling, FIFO vs Standard
-- **IAM** — policy evaluation order, role assumption, resource-based vs identity-based policies
-- **CloudFormation** — rollback triggers, change sets, stack drift, cross-stack references
-:::
-
----
-
-## Who This Is For
-
-- **Backend engineers** preparing for system design and coding interviews
-- **Developers** studying for the AWS DVA-C02 certification
-- **Engineers** onboarding to new backend or distributed systems domains
-- **Anyone** building a structured, long-term engineering knowledge base

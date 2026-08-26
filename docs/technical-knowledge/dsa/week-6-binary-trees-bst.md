@@ -6,6 +6,8 @@ tags: [dsa, java, binary-tree, bst, dfs, bfs, algorithms, week-6]
 sidebar_position: 6
 ---
 
+import DsaWeek6BinaryTreeDiagram from '@site/src/components/DsaWeek6BinaryTreeDiagram';
+
 # Week 6: Binary Trees & BSTs
 
 ## 1. Overview
@@ -30,6 +32,9 @@ Trees are the underlying architecture for databases (B-Trees), file systems, DOM
 ---
 
 ## 2. Theory & Fundamentals
+
+<DsaWeek6BinaryTreeDiagram />
+
 
 ### 2.1 Mental Model: Why Trees Exist
 

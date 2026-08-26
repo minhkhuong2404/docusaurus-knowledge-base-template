@@ -1,7 +1,6 @@
 import React from 'react';
-import DailyQuiz from '../DailyQuiz';
-import { javaQuestions } from '../../data/java-quiz-questions';
+import DailyQuizGallery from '../DailyQuizGallery';
 
 export default function DailyJavaQuiz() {
-  return <DailyQuiz questions={javaQuestions} quizKey="java" />;
+  return <DailyQuizGallery initialCategory="java" />;
 }

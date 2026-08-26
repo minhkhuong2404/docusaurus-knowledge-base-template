@@ -6,6 +6,8 @@ tags: [dsa, java, dynamic-programming, memoization, tabulation, week-13, backend
 sidebar_position: 13
 ---
 
+import DsaWeek13Dp1dDiagram from '@site/src/components/DsaWeek13Dp1dDiagram';
+
 # Week 13: Dynamic Programming I (1D)
 
 ## 1. Overview
@@ -30,6 +32,9 @@ In backend engineering, when a distributed system performs a heavy database quer
 ---
 
 ## 2. Theory & Fundamentals
+
+<DsaWeek13Dp1dDiagram />
+
 
 ### 2.1 Mental Model: DP as a Smart Cache
 

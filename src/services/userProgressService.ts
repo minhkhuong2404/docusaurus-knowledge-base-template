@@ -23,12 +23,64 @@ export interface QuizStateItem {
   isCompleted?: boolean;
 }
 
+export interface GamificationState {
+  exp: number;
+  level: number;
+  streak: {
+    currentStreak: number;
+    longestStreak: number;
+    lastActiveDate: string; // YYYY-MM-DD
+    shieldsRemaining: number;
+    activeDates: string[]; // Set of YYYY-MM-DD
+  };
+  unlockedAchievements: string[];
+  claimedPeriodRewards?: string[]; // e.g. ['weekly_2026-W34', 'monthly_2026-07']
+  dailyQuests: {
+    date: string;
+    completedQuestIds: string[];
+    claimedBonus: boolean;
+    dailyCounts: {
+      readPagesCount: number;
+      quizAnsweredCount: number;
+      dsaSolvedCount: number;
+      gamesPlayedCount: number;
+    };
+  };
+  miniGameScores?: Record<string, number>;
+}
+
+export const defaultGamificationState: GamificationState = {
+  exp: 0,
+  level: 1,
+  streak: {
+    currentStreak: 0,
+    longestStreak: 0,
+    lastActiveDate: '',
+    shieldsRemaining: 3,
+    activeDates: [],
+  },
+  unlockedAchievements: [],
+  dailyQuests: {
+    date: '',
+    completedQuestIds: [],
+    claimedBonus: false,
+    dailyCounts: {
+      readPagesCount: 0,
+      quizAnsweredCount: 0,
+      dsaSolvedCount: 0,
+      gamesPlayedCount: 0,
+    },
+  },
+  miniGameScores: {},
+};
+
 export interface UserProgressData {
   uid: string;
   email?: string;
   displayName?: string;
   photoURL?: string;
   isPremium?: boolean;
+  emailVerified?: boolean;
   readPages: string[];
   quizStats: {
     totalQuestionsAnswered: number;
@@ -39,12 +91,14 @@ export interface UserProgressData {
     solvedProblems: string[];
     starredProblems: string[];
   };
+  gamification?: GamificationState;
   updatedAt?: any;
 }
 
 export const defaultUserProgress: UserProgressData = {
   uid: '',
   isPremium: false,
+  emailVerified: false,
   readPages: [],
   quizStats: {
     totalQuestionsAnswered: 0,
@@ -55,6 +109,7 @@ export const defaultUserProgress: UserProgressData = {
     solvedProblems: [],
     starredProblems: [],
   },
+  gamification: defaultGamificationState,
 };
 
 /**
@@ -72,12 +127,17 @@ export function subscribeToUserProgress(
     (snapshot) => {
       if (snapshot.exists()) {
         const raw = snapshot.data() as Partial<UserProgressData>;
+        if (raw.emailVerified && typeof window !== 'undefined') {
+          if (raw.email) localStorage.setItem(`verified_email_${raw.email.toLowerCase()}`, 'true');
+          localStorage.setItem(`verified_uid_${uid}`, 'true');
+        }
         onUpdate({
           uid,
           email: raw.email || '',
           displayName: raw.displayName || '',
           photoURL: raw.photoURL || '',
           isPremium: !!raw.isPremium,
+          emailVerified: !!raw.emailVerified,
           readPages: Array.isArray(raw.readPages) ? raw.readPages : [],
           quizStats: {
             totalQuestionsAnswered: raw.quizStats?.totalQuestionsAnswered || 0,
@@ -91,6 +151,30 @@ export function subscribeToUserProgress(
             starredProblems: Array.isArray(raw.dsaProgress?.starredProblems)
               ? raw.dsaProgress!.starredProblems
               : [],
+          },
+          gamification: {
+            exp: raw.gamification?.exp || 0,
+            level: raw.gamification?.level || 1,
+            streak: {
+              currentStreak: raw.gamification?.streak?.currentStreak || 0,
+              longestStreak: raw.gamification?.streak?.longestStreak || 0,
+              lastActiveDate: raw.gamification?.streak?.lastActiveDate || '',
+              shieldsRemaining: raw.gamification?.streak?.shieldsRemaining ?? 1,
+              activeDates: Array.isArray(raw.gamification?.streak?.activeDates) ? raw.gamification!.streak.activeDates : [],
+            },
+            unlockedAchievements: Array.isArray(raw.gamification?.unlockedAchievements) ? raw.gamification!.unlockedAchievements : [],
+            dailyQuests: {
+              date: raw.gamification?.dailyQuests?.date || '',
+              completedQuestIds: Array.isArray(raw.gamification?.dailyQuests?.completedQuestIds) ? raw.gamification!.dailyQuests.completedQuestIds : [],
+              claimedBonus: !!raw.gamification?.dailyQuests?.claimedBonus,
+              dailyCounts: {
+                readPagesCount: raw.gamification?.dailyQuests?.dailyCounts?.readPagesCount || 0,
+                quizAnsweredCount: raw.gamification?.dailyQuests?.dailyCounts?.quizAnsweredCount || 0,
+                dsaSolvedCount: raw.gamification?.dailyQuests?.dailyCounts?.dsaSolvedCount || 0,
+                gamesPlayedCount: raw.gamification?.dailyQuests?.dailyCounts?.gamesPlayedCount || 0,
+              },
+            },
+            miniGameScores: raw.gamification?.miniGameScores || {},
           },
         });
       } else {
@@ -325,5 +409,28 @@ export async function resetAllQuizProgressInFirestore(uid: string) {
     );
   } catch (err) {
     console.error('Failed to reset quiz progress in Firestore:', err);
+  }
+}
+
+/**
+ * Save Gamification state to Firestore
+ */
+export async function saveGamificationToFirestore(
+  uid: string,
+  gamification: GamificationState
+) {
+  if (!uid) return;
+  const userDocRef = doc(db, 'users', uid);
+  try {
+    await setDoc(
+      userDocRef,
+      {
+        gamification,
+        updatedAt: serverTimestamp(),
+      },
+      { merge: true }
+    );
+  } catch (err) {
+    console.error('Failed to save gamification to Firestore:', err);
   }
 }

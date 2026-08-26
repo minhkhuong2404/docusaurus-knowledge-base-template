@@ -5,6 +5,7 @@ import { auth } from "../config/firebase";
 import { UserProgressProvider } from "../context/UserProgressContext";
 import PremiumGate from "../components/PremiumGate";
 import ScrollProgressButton from "../components/ScrollProgressButton";
+import LevelUpToast from "../components/gamification/LevelUpToast";
 
 const PREMIUM_STATE_KEY = "premium_session_state";
 
@@ -38,14 +39,14 @@ function readCachedPremiumState(): PremiumState | null {
     return "logged_in";
   }
 
-  const googleUser = window.sessionStorage.getItem("google_user");
+  const googleUser = window.localStorage.getItem("google_user") || window.sessionStorage.getItem("google_user");
   if (googleUser) {
     return "logged_in";
   }
 
-  const cached = window.sessionStorage.getItem(PREMIUM_STATE_KEY);
+  const cached = window.localStorage.getItem(PREMIUM_STATE_KEY) || window.sessionStorage.getItem(PREMIUM_STATE_KEY);
   if (cached === "logged_in" || cached === "logged_out") {
-    return cached;
+    return cached as PremiumState;
   }
 
   return null;
@@ -55,15 +56,18 @@ export default function Root({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const isCheckingRef = useRef(false);
 
-  // Track Firebase auth state → update sessionStorage so the navbar item
+  // Track Firebase auth state → update localStorage & sessionStorage so the navbar item
   // can read it synchronously on mount (avoids flash of wrong state).
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        applyPremiumNavState("logged_in", user);
+        applyPremiumNavState("logged_in");
+        window.localStorage.setItem(PREMIUM_STATE_KEY, "logged_in");
         window.sessionStorage.setItem(PREMIUM_STATE_KEY, "logged_in");
       } else {
         applyPremiumNavState("logged_out");
+        window.localStorage.removeItem(PREMIUM_STATE_KEY);
+        window.sessionStorage.removeItem(PREMIUM_STATE_KEY);
       }
     });
     return () => unsubscribe();
@@ -72,7 +76,7 @@ export default function Root({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const cachedState = readCachedPremiumState();
     if (cachedState) {
-      applyPremiumNavState(cachedState, auth?.currentUser);
+      applyPremiumNavState(cachedState);
     }
   }, [location.pathname]);
 
@@ -81,38 +85,6 @@ export default function Root({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      {/* Hidden SVG filter — squiggly distortion for search bar border */}
-      <svg
-        aria-hidden="true"
-        style={{ position: "absolute", width: 0, height: 0, overflow: "hidden" }}
-      >
-        <defs>
-          <filter id="search-squiggle" x="-20%" y="-20%" width="140%" height="140%">
-            <feTurbulence
-              type="fractalNoise"
-              baseFrequency="0.018 0.025"
-              numOctaves="3"
-              seed="4"
-              result="noise"
-            >
-              <animate
-                attributeName="baseFrequency"
-                values="0.018 0.025;0.025 0.018;0.018 0.025"
-                dur="8s"
-                repeatCount="indefinite"
-              />
-            </feTurbulence>
-            <feDisplacementMap
-              in="SourceGraphic"
-              in2="noise"
-              scale="4"
-              xChannelSelector="R"
-              yChannelSelector="G"
-            />
-          </filter>
-        </defs>
-      </svg>
-
       <div className="space-decorations">
         {/* Planets */}
         <div className="planet mercury" />
@@ -152,30 +124,8 @@ export default function Root({ children }: { children: React.ReactNode }) {
         <div className="universal-item constellation-1" />
         <div className="universal-item constellation-2" />
       </div>
-      <div className="navbar-space-decorations">
-        {/* Header Planets */}
-        <div className="header-planet earth-h" />
-        <div className="header-planet mars-h" />
-        <div className="header-planet venus-h" />
-
-        {/* Header Moon */}
-        <div className="header-moon-h" />
-
-        {/* Header Comets */}
-        <div className="comet header-comet-1" />
-        <div className="comet header-comet-2" />
-
-        {/* Header Rockets & Satellites */}
-        <div className="header-rocket h-rocket-1" />
-        <div className="header-rocket h-rocket-2" />
-        <div className="header-satellite h-sat" />
-
-        {/* Dark Mode Header Universal */}
-        <div className="header-universal h-galaxy" />
-        <div className="header-universal h-nebula" />
-        <div className="header-universal h-shooting" />
-      </div>
       <UserProgressProvider>
+        <LevelUpToast />
         <ScrollProgressButton />
         {isPremiumRoute ? <PremiumGate>{children}</PremiumGate> : children}
       </UserProgressProvider>

@@ -2,10 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import Layout from "@theme/Layout";
 import Link from "@docusaurus/Link";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
-import DailyJavaQuiz from '../components/DailyJavaQuiz';
-import DailySpringBootQuiz from '../components/DailySpringBootQuiz';
-import LeetCodeDaily from '../components/LeetCodeDaily';
-import DSADashboard from '../components/DSADashboard';
+
+const DailyQuizGallery = React.lazy(() => import('../components/DailyQuizGallery'));
+const LeetCodeDaily = React.lazy(() => import('../components/LeetCodeDaily'));
+const DSADashboard = React.lazy(() => import('../components/DSADashboard'));
 
 /* ─────────────────────────────────────────────────────────────────────────────
    Global CSS injected into <head> via <style> — only active on this page
@@ -2315,62 +2315,15 @@ export default function Home(): React.ReactNode {
 
               {/* Render selected Hub Tab */}
               <div>
-                {activeHubTab === 'leetcode' ? (
-                  <LeetCodeDaily />
-                ) : (
-                  <div style={{ maxWidth: 800, margin: "0 auto" }}>
-                    {/* Quiz Type Selector */}
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        gap: "1rem",
-                        marginBottom: "2rem",
-                      }}
-                    >
-                      <button
-                        onClick={() => setActiveQuiz('java')}
-                        style={{
-                          padding: "0.5rem 1.25rem",
-                          fontSize: "0.9rem",
-                          fontWeight: 700,
-                          borderRadius: "8px",
-                          cursor: "pointer",
-                          border: activeQuiz === 'java' ? "2px solid var(--ifm-color-primary)" : "2px solid var(--ifm-color-emphasis-350)",
-                          background: activeQuiz === 'java' ? "rgba(74,222,128,0.12)" : "transparent",
-                          color: activeQuiz === 'java' ? "var(--ifm-color-primary)" : "var(--ifm-font-color-base)",
-                          transition: "all 0.2s ease",
-                        }}
-                      >
-                        ☕ Java Challenge
-                      </button>
-                      <button
-                        onClick={() => setActiveQuiz('springboot')}
-                        style={{
-                          padding: "0.5rem 1.25rem",
-                          fontSize: "0.9rem",
-                          fontWeight: 700,
-                          borderRadius: "8px",
-                          cursor: "pointer",
-                          border: activeQuiz === 'springboot' ? "2px solid var(--ifm-color-primary)" : "2px solid var(--ifm-color-emphasis-350)",
-                          background: activeQuiz === 'springboot' ? "rgba(74,222,128,0.12)" : "transparent",
-                          color: activeQuiz === 'springboot' ? "var(--ifm-color-primary)" : "var(--ifm-font-color-base)",
-                          transition: "all 0.2s ease",
-                        }}
-                      >
-                        🍃 Spring Boot Challenge
-                      </button>
+                <React.Suspense fallback={<div style={{ minHeight: '180px', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.6 }}>Loading Hub...</div>}>
+                  {activeHubTab === 'leetcode' ? (
+                    <LeetCodeDaily />
+                  ) : (
+                    <div style={{ width: "100%", margin: "0 auto" }}>
+                      <DailyQuizGallery />
                     </div>
-
-                    <div style={{ minHeight: "350px" }}>
-                      {activeQuiz === 'java' ? (
-                        <DailyJavaQuiz />
-                      ) : (
-                        <DailySpringBootQuiz />
-                      )}
-                    </div>
-                  </div>
-                )}
+                  )}
+                </React.Suspense>
               </div>
             </section>
           </div>
@@ -2404,7 +2357,9 @@ export default function Home(): React.ReactNode {
               dynamic programming. Each week targets one core pattern with
               progressive difficulty.
             </p>
-            <DSADashboard />
+            <React.Suspense fallback={<div style={{ minHeight: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.6 }}>Loading DSA Roadmap...</div>}>
+              <DSADashboard />
+            </React.Suspense>
 
             <h3 style={{ color: "var(--brand-purple)", fontWeight: 800, marginTop: "3.5rem", marginBottom: "1.5rem", fontSize: "1.3rem" }}>
               🗺️ 20-Week Lesson Navigation Blueprint

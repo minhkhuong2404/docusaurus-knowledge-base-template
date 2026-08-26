@@ -7,33 +7,46 @@
  * - Coding Interview Prep (/technical-knowledge/coding-interview-prep/...)
  * - Behavioral Interview (/technical-knowledge/interview-questions/behavioral/...)
  * - Books (/books/...)
- * - Intro & General Interview Framework (/intro, /interview-framework)
+ * - Introduction (/intro)
  *
  * Excluded:
- * - All Daily Quiz pages (*daily-quiz*, *quiz*)
+ * - Daily Quizzes (*daily-quiz*, *quiz*)
+ * - LeetCode Daily (*leetcode-daily*)
+ * - General Interview Framework (*interview-framework*)
  * - Company Interview Experiences (/company/...)
  * - LeetCode Company-Wise (/technical-knowledge/dsa/leetcode-companywise/...)
  */
-export const TOTAL_TRACKABLE_ARTICLES_DEFAULT = 601;
+export const TOTAL_TRACKABLE_ARTICLES_DEFAULT = 635;
 
 export function isTrackableArticle(href?: string | null): boolean {
   if (!href) return false;
   const path = href.toLowerCase().trim();
 
-  // 1. EXCLUDE all Daily Quiz related pages
-  if (path.includes('quiz')) return false;
+  // 1. EXCLUDE Daily Quizzes, Arcade, Stats, LeetCode Daily, and General Interview Framework
+  if (
+    path.includes('quiz') ||
+    path.includes('arcade') ||
+    path.startsWith('/arcade') ||
+    path.includes('stats') ||
+    path.startsWith('/stats') ||
+    path.includes('leetcode-daily') ||
+    path.includes('interview-framework')
+  ) {
+    return false;
+  }
 
   // 2. EXCLUDE Company Interview Experiences & LeetCode Company-Wise
-  if (path.startsWith('/company') || path.includes('leetcode-companywise')) return false;
+  if (path.startsWith('/company') || path.includes('leetcode-companywise')) {
+    return false;
+  }
 
-  // 3. INCLUDE eligible sections
+  // 3. INCLUDE eligible content sections
   if (
     path.includes('/technical-knowledge/') ||
     path.includes('/non-technical-knowledge/') ||
     path.includes('/books/') ||
     path === '/intro' ||
-    path.endsWith('/intro') ||
-    path.includes('/interview-framework')
+    path.endsWith('/intro')
   ) {
     return true;
   }

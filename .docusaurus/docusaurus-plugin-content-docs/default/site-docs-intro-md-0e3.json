@@ -1,7 +1,7 @@
 {
   "id": "intro",
   "title": "Welcome",
-  "description": "Engineering knowledge base for practical learning, interview preparation, real-world system design, DSA training, and cloud certification.",
+  "description": "Engineering knowledge base for practical learning, interview preparation, real-world system design, DSA training, banking systems, and cloud certification.",
   "source": "@site/docs/intro.md",
   "sourceDirName": ".",
   "slug": "/docs",
@@ -33,26 +33,38 @@
       "inline": true,
       "label": "interview",
       "permalink": "/tags/interview"
+    },
+    {
+      "inline": true,
+      "label": "dsa",
+      "permalink": "/tags/dsa"
+    },
+    {
+      "inline": true,
+      "label": "system-design",
+      "permalink": "/tags/system-design"
     }
   ],
   "version": "current",
-  "lastUpdatedBy": "Lữ Minh Khương",
-  "lastUpdatedAt": 1783014695000,
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055000,
   "frontMatter": {
     "title": "Welcome",
     "slug": "/docs",
-    "description": "Engineering knowledge base for practical learning, interview preparation, real-world system design, DSA training, and cloud certification.",
+    "description": "Engineering knowledge base for practical learning, interview preparation, real-world system design, DSA training, banking systems, and cloud certification.",
     "tags": [
       "engineering",
       "documentation",
       "knowledge-base",
       "onboarding",
-      "interview"
+      "interview",
+      "dsa",
+      "system-design"
     ]
   },
   "sidebar": "tutorialSidebar",
   "next": {
-    "title": "📅 Java Daily Quiz",
-    "permalink": "/technical-knowledge/java/java-daily-quiz"
+    "title": "📝 Daily Quizzes",
+    "permalink": "/technical-knowledge/daily-quiz"
   }
 }

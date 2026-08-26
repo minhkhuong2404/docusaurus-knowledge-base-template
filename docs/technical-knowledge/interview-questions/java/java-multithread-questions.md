@@ -35,6 +35,33 @@ tags: [java, interview, multithreading, concurrency]
 ### Q7. Can a terminated Java thread be restarted by calling `start()` again?
 > No. Once a Java thread reaches the `TERMINATED` state, its underlying native OS thread is destroyed. Calling `start()` a second time on the same `Thread` instance throws an `IllegalThreadStateException`. To re-execute tasks, reuse threads via an `ExecutorService` thread pool.
 
+### Q8. What is the difference between `Runnable` and `Callable` in Java?
+> - **`Runnable`:** Defines a task with `void run()`. It cannot return a result to the caller and cannot throw checked exceptions.
+> - **`Callable<V>`:** Introduced in Java 5 (`java.util.concurrent`), defines a task with `V call() throws Exception`. It returns a parameterized result `V` and can throw checked exceptions. When submitted to an `ExecutorService`, it returns a `Future<V>` representing the asynchronous result.
+
+### Q9. How does `Thread.join()` work internally?
+> `Thread.join()` causes the current executing thread to pause (`WAITING` state) until the target thread on which `join()` was called completes execution.
+> - **Under the hood:** `join()` is implemented using a `while(isAlive()) { wait(0); }` synchronized loop on the target `Thread` object instance.
+> - **JVM Termination Signal:** When a native thread completes its execution, the HotSpot JVM automatically calls `notifyAll()` on that `Thread` object, waking up all threads waiting on its join lock.
+
+### Q10. What is Thread Interruption and how do `isInterrupted()` vs `Thread.interrupted()` differ?
+> Thread interruption is a cooperative mechanism: calling `t.interrupt()` sets an internal boolean interrupt status flag on thread `t`. If `t` is currently in a sleeping/waiting state (`sleep()`, `wait()`, `join()`), it clears the flag and throws `InterruptedException`.
+> - **`t.isInterrupted()` (Instance Method):** Returns `true` if thread `t` is interrupted. **Does NOT clear** the interrupt status flag.
+> - **`Thread.interrupted()` (Static Method):** Checks if the **current thread** is interrupted AND **clears the interrupt flag** (resets it to `false`).
+
+### Q11. What is Deadlock and how can it be diagnosed and prevented?
+> Deadlock occurs when two or more threads are blocked forever, each waiting for a lock held by the other (circular dependency).
+> - **Diagnosis:** Generate a thread dump via `jcmd <pid> Thread.print`, `jstack <pid>`, or programmatically via `ManagementFactory.getThreadMXBean().findDeadlockedThreads()`.
+> - **Prevention Strategies:**
+>   1. **Strict Lock Ordering:** Always acquire multiple locks in the exact same predefined global order.
+>   2. **Lock Timeouts:** Use `ReentrantLock.tryLock(timeout, unit)` instead of intrinsic `synchronized` blocks.
+
+### Q12. How does the `volatile` keyword work in Java?
+> The `volatile` modifier ensures two main memory guarantees:
+> 1. **Visibility:** Writes to a `volatile` variable are immediately flushed to main memory, and subsequent reads bypass CPU L1/L2 caches to read directly from main memory.
+> 2. **Instruction Reordering Prevention:** The compiler and CPU hardware are forbidden from reordering reads/writes across a volatile access. HotSpot achieves this by inserting **CPU Memory Barriers** (such as `StoreLoad` fences).
+> - **Limitation:** `volatile` does NOT guarantee atomicity for compound operations (e.g. `count++` requires read-modify-write, which is NOT atomic and needs `AtomicInteger` or `synchronized`).
+
 ---
 
 ## Native HotSpot JVM Execution Flow
@@ -54,3 +81,4 @@ Thread.start()
 - [Java Locks & Synchronization Primitives](../java/java-locks.md)
 - [AbstractQueuedSynchronizer (AQS) Deep Dive](../java/java-aqs-internals.md)
 - [Java Concurrent Collections](../interview-questions/java/concurrent-collection-interview.md)
+

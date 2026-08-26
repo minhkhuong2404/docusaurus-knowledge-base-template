@@ -1,8 +1,8 @@
 {
-  "id": "1140",
-  "title": "Stone Game II",
-  "url": "https://leetcode.com/problems/stone-game-ii/",
-  "difficulty": "medium",
+  "id": "1872",
+  "title": "Stone Game VIII",
+  "url": "https://leetcode.com/problems/stone-game-viii/",
+  "difficulty": "hard",
   "topic": "Array, Math, Dynamic Programming, Minimax, Prefix Sum, Game Theory, Zero-Sum Game",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-08-09."
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-08-24."
 }

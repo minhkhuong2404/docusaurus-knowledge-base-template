@@ -170,6 +170,65 @@ Solutions:
 
 ---
 
+## Unified ACID Consolidation (Replacing Distributed Cache with RDBMS)
+
+A common architectural trap in high-scale systems is splitting state across an **In-Memory Cache for fast operations** (e.g. Redis for inventory holds/reservations) and an **RDBMS for permanent records** (e.g. MySQL ledger for payments and completed orders).
+
+```
+Split Architecture (Fragile Cross-System Coordination):
+┌─────────────────────────┐          ┌─────────────────────────┐
+│       Redis Cluster     │          │       MySQL Ledger      │
+│  (Reservations: DECR)   │          │   (Authoritative Stock) │
+└─────────────────────────┘          └─────────────────────────┘
+            ▲                                     ▲
+            │ (Step 1: Hold)                      │ (Step 2: Permanent Claim)
+            └─────────────── Application ─────────┘
+                 ❌ Non-Atomic Cross-System Window:
+                 • Payment succeeds but DB write fails ──► Overselling!
+                 • DB write succeeds but Redis rollback fails ──► Underselling!
+```
+
+### Why Consolidate Back to RDBMS?
+1. **Eliminate Non-Atomic Split-Brain**: When reserve and claim share the same database instance, they execute within standard **ACID transactions**. A failed payment cleanly rolls back the reservation with zero orphaned holds or phantom stock deductions.
+2. **Multi-Dimension Consistency**: Redis simple key-value structures struggle with multi-location inventory, warehouse routing rules, and multi-currency constraints. Relational engines enforce relational integrity and multi-column constraints natively.
+3. **Operational Simplicity**: Replaces an entire distributed Redis cluster (plus synchronization daemons and reconciliation jobs) with optimized table structures inside existing database clusters.
+
+---
+
+## Zero-Downtime Migration Pattern: Shadow Mode (Dual-Write Cutover)
+
+When replacing critical storage infrastructure (such as moving reservations from Redis to MySQL), migrating active in-flight transactions with zero downtime and zero risk of overselling is paramount.
+
+```
+Phase 1: Shadow Mode (Dual-Write)
+┌─────────────┐  Write to Both   ┌─────────────┐ (Active Source of Truth)
+│ Application │ ───────────────► │    Redis    │ ──► Controls Business Logic
+└─────────────┘                  └─────────────┘
+       │ (Async / Shadow Write)
+       ▼
+┌─────────────┐
+│    MySQL    │ ──► Validates latency, correctness, and lock behavior under real load
+└─────────────┘
+
+Phase 2: Cutover (Kill-Switch Switchover)
+┌─────────────┐  Write to Both   ┌─────────────┐
+│ Application │ ───────────────► │    MySQL    │ ──► NEW Active Source of Truth
+└─────────────┘                  └─────────────┘
+       │ (Shadow Write / Backup)
+       ▼
+┌─────────────┐
+│    Redis    │ ──► Immediate rollback target if anomaly occurs
+└─────────────┘
+```
+
+### Execution Strategy:
+1. **Dual-Write in Shadow Mode**: Write every reservation to both Redis and MySQL, with Redis remaining the authoritative source of truth.
+2. **Real-World Load & Correctness Validation**: Verify that MySQL handles peak Black Friday production throughput with zero correctness drift or lock contention while serving real buyer traffic.
+3. **Zero In-Flight Data Migration**: Because both databases are continuously updated, no complex batch data migration or downtime window is needed.
+4. **Gradual Pod-by-Pod Cutover with Kill Switch**: Flip the source of truth to MySQL gradually (e.g. low-traffic merchant pods first, scaling to highest-volume merchants). Keep Redis dual-write active during initial days as an instant fallback kill switch.
+
+---
+
 ## Interview Questions
 
 **Q1. What is the database-per-service pattern and why is it used in microservices?**

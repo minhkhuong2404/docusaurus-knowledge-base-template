@@ -1,399 +1,405 @@
 ---
 id: refresh-token-security-invalidation
-title: "Refresh Token Security & Multi-Device Session Invalidation"
-sidebar_label: "Refresh Token & Session Invalidation"
+title: "JWT Multi-Device Session Management, Invalidation & Security"
+sidebar_label: "JWT Multi-Device & Session Invalidation"
 sidebar_position: 2
-description: "Comprehensive guide to securing long-lived refresh tokens, handling account compromise incident response, closing access token revocation gaps, and managing single vs multi-device password reset session invalidation."
+description: "Master guide to multi-device JWT authentication, isolated single-device logout, global session eviction, password updates, account locking, and token theft containment."
 tags:
   - security
   - authentication
   - jwt
   - refresh-token
+  - multi-device
   - session-management
   - incident-response
   - redis
   - spring-boot
+  - nodejs
 ---
 
+import JwtMultiDeviceSessionDiagram from '@site/src/components/JwtMultiDeviceSessionDiagram';
+import JwtCoreDilemmaDiagram from '@site/src/components/JwtCoreDilemmaDiagram';
+import MultiDeviceRegistryPatternDiagram from '@site/src/components/MultiDeviceRegistryPatternDiagram';
+import SingleDeviceLogoutFlowDiagram from '@site/src/components/SingleDeviceLogoutFlowDiagram';
+import AccountLockedLifecycleDiagram from '@site/src/components/AccountLockedLifecycleDiagram';
+import TokenTheftContainmentDiagram from '@site/src/components/TokenTheftContainmentDiagram';
 import TokenInvalidationFlowDiagram from '@site/src/components/TokenInvalidationFlowDiagram';
 import RefreshTokenRotationDiagram from '@site/src/components/RefreshTokenRotationDiagram';
 import AccountHackedResponseDiagram from '@site/src/components/AccountHackedResponseDiagram';
 import PasswordInvalidationDiagram from '@site/src/components/PasswordInvalidationDiagram';
 
-# Refresh Token Security & Multi-Device Session Invalidation
+# JWT Multi-Device Session Management, Invalidation & Security
 
-In modern distributed architectures, authentication relies on a two-token system: **short-lived Access Tokens** (stateless, 5–15 minute TTL) and **long-lived Refresh Tokens** (stateful/rotatable, 7–30 day TTL). 
+In modern distributed web and mobile applications, users stay logged in concurrently across multiple devices (e.g. iPhone, MacBook, iPad, work desktop). While stateless **JWT Access Tokens** (5–15 minute TTL) provide zero-database-lookup performance, managing multi-device lifecycles introduces complex architectural challenges:
 
-While short-lived access tokens limit exposure if intercepted, long-lived refresh tokens present a major security surface: **if a refresh token is stolen, an attacker can maintain unauthorized access to a victim's account for weeks or months.**
-
-This guide covers:
-- **Securing long-lived refresh tokens** via Rotation (RTR), Reuse Detection, Token Families, and Token Binding (DPoP/mTLS).
-- **Account compromise incident response** when a user account is hacked.
-- **Closing the ~15-minute Access Token Revocation Gap** without introducing database bottlenecks.
-- **Single-device vs. Multi-device session invalidation** during password updates.
-- **Production schemas, Spring Boot filters, and Redis revocation patterns.**
+- **Isolated Single-Device Logout**: How do you log a user out of their mobile phone without terminating their active desktop or tablet sessions?
+- **Global Multi-Device Logout ("Sign Out Everywhere")**: How do you terminate all active devices simultaneously without leaving a 15-minute access token window?
+- **Password Updates**: How do you allow a user to update their password while selectively choosing to remain logged in on the current device?
+- **Account Locked / Suspended**: How do admins or anti-fraud systems lock an account and achieve **0-millisecond revocation** across all microservices?
+- **Token Theft & Account Compromise**: How do you detect when a hacker replays a stolen refresh token and automatically quarantine the account?
 
 ---
 
-## Interactive Architecture & Invalidation Flows
+## Interactive Multi-Device Lifecycle Simulator
 
-The diagram below illustrates how Refresh Token Rotation, Selective Single-Device Invalidation, and Emergency Global Account Invalidation operate across clients, API gateways, databases, and distributed Redis caches.
+The simulator below demonstrates how session states, Redis caches, token versions, and database records react across multiple devices during **Single-Device Logout**, **Global Logout**, **Account Lock**, and **Token Theft Detection**:
 
-<TokenInvalidationFlowDiagram />
-
----
-
-## Part 1: How Refresh Tokens Work & Securing Long-Lived Tokens
-
-### Access Token vs Refresh Token Lifecycles
-
-| Dimension | Access Token (JWT) | Refresh Token |
-| --- | --- | --- |
-| **Purpose** | Authorizes specific API requests | Issues new Access & Refresh tokens |
-| **Lifespan** | Short (5–15 minutes) | Long (7 to 30 days) |
-| **Verification** | Stateless (cryptographic signature check) | Stateful / Verified against DB or Redis |
-| **Storage Location** | In-memory / JS runtime state | `HttpOnly`, `Secure` Cookie or Mobile OS Keychain |
-| **Exposure Impact** | Low (expires quickly) | Critical (enables long-term account takeover) |
+<JwtMultiDeviceSessionDiagram />
 
 ---
 
-### Threat Vectors of Long-Lived Refresh Tokens
+## 1. The Core Dilemma: Stateless JWT vs Multi-Device Control
 
-1. **XSS Exfiltration**: Storing tokens in `localStorage` or `sessionStorage` leaves them vulnerable to malicious JavaScript scripts.
-2. **Stolen Devices**: Unlocked phones or laptops retain long-lived tokens in disk cache.
-3. **Database Leaks**: Plaintext refresh tokens stored in database tables expose all active user sessions if the DB is dumped.
-4. **Token Replay / Man-in-the-Middle**: Stolen tokens used from unauthorized IP addresses or networks.
+A purely stateless JWT is self-contained: any microservice holding the public key can verify its cryptographic signature and extract user claims (`sub`, `roles`, `exp`) with **zero database calls**.
+
+<JwtCoreDilemmaDiagram />
+
+### The Solution: Device-Scoped Hybrid Architecture
+To achieve isolated device management without sacrificing API performance:
+1. **Short-Lived Access Tokens (5–15m)**: Include `sub` (User ID), `device_id` (or `session_id`), and `ver` (Token Version).
+2. **Stateful Refresh Tokens / KeyStores (7–30d)**: Stored per device in a **Session Registry** (Database + Redis cache).
+3. **Selective Invalidation**: Single-device actions modify only that device's session record. Global actions bump the user's root `token_version` or set a Redis `revoked_before` watermark.
 
 ---
 
-### Core Security Controls for Long-Lived Tokens
+## 2. Multi-Device Architecture & Session Registry Patterns
 
-#### 1. Refresh Token Rotation (RTR) & Token Families (OAuth 2.0 BCP / RFC 6749)
+<MultiDeviceRegistryPatternDiagram />
 
-Under **Refresh Token Rotation (RTR)**, every time a client requests a new access token, the auth server **invalidates the submitted refresh token** and returns a **brand-new token pair**.
-
-To detect theft, tokens are grouped into a **Token Family** (`family_id`):
-
-```
-Initial Login:
-  [Refresh Token v1 (Family: fam_100, Parent: NULL, Used: FALSE)]
-
-First Refresh (Legitimate Client):
-  [Refresh Token v1] → Marked USED
-  [Refresh Token v2 (Family: fam_100, Parent: v1, Used: FALSE)] Issued to Client
-
-Replay Attack (Attacker uses stolen v1):
-  Auth server sees Refresh Token v1 is ALREADY MARKED USED!
-  🚨 REUSE DETECTED! Auth server immediately revokes ALL tokens in Family fam_100!
-```
+### Pattern A: Relational Session Registry (PostgreSQL / MySQL)
 
 ```sql
--- Schema for Refresh Token Family Tracking
-CREATE TABLE refresh_tokens (
-    id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    token_hash    VARCHAR(64) NOT NULL UNIQUE, -- SHA-256 hash of token
-    family_id     UUID NOT NULL,
-    parent_id     UUID REFERENCES refresh_tokens(id),
-    user_id       UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    session_id    VARCHAR(64) NOT NULL,        -- Device / Browser Session ID
-    is_used       BOOLEAN DEFAULT FALSE,
-    is_revoked    BOOLEAN DEFAULT FALSE,
-    expires_at    TIMESTAMP WITH TIME ZONE NOT NULL,
-    created_at    TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+-- Refresh Token & Device Session Table
+CREATE TABLE user_sessions (
+    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id         UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    device_id       VARCHAR(64) NOT NULL,        -- Client hardware/browser fingerprint
+    device_name     VARCHAR(100),                -- "iPhone 15 Pro", "MacBook Pro Chrome"
+    session_id      VARCHAR(64) NOT NULL UNIQUE, -- Unique per login instance
+    family_id       UUID NOT NULL,               -- Token Family for RTR theft detection
+    token_hash      VARCHAR(64) NOT NULL UNIQUE, -- SHA-256 hash of refresh token
+    parent_token_id UUID REFERENCES user_sessions(id),
+    ip_address      VARCHAR(45),
+    user_agent      TEXT,
+    is_used         BOOLEAN DEFAULT FALSE,
+    is_revoked      BOOLEAN DEFAULT FALSE,
+    expires_at      TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    last_active_at  TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
-CREATE INDEX idx_refresh_tokens_hash ON refresh_tokens(token_hash);
-CREATE INDEX idx_refresh_tokens_family ON refresh_tokens(family_id);
-CREATE INDEX idx_refresh_tokens_user ON refresh_tokens(user_id);
+CREATE INDEX idx_user_sessions_lookup ON user_sessions(user_id, device_id);
+CREATE INDEX idx_user_sessions_token_hash ON user_sessions(token_hash);
+CREATE INDEX idx_user_sessions_family ON user_sessions(family_id);
 ```
 
-#### 2. Secure Storage Guidelines
+### Pattern B: Redis Hash Device Map (High-Throughput Caching)
 
-- **Web Applications**: Always store Refresh Tokens in **`HttpOnly`**, **`Secure`**, **`SameSite=Strict`** (or `SameSite=Lax`) HTTP cookies with path limited to `/api/v1/auth/refresh`. Never expose refresh tokens to client-side JavaScript.
-- **Mobile Applications (iOS/Android)**: Store in OS-provided secure hardware keystores (**Keychain** on iOS, **EncryptedSharedPreferences / Android KeyStore** on Android).
-- **Database Hashing**: Never store raw refresh token strings in DB/Redis. Store only the `SHA-256` digest (`token_hash`), protecting session stores against SQL injection or DB dump leaks.
-
-#### 3. Sender-Constrained Tokens & Token Binding
-
-To prevent stolen tokens from being replayed on different machines, bind the token to the client's identity:
-
-- **DPoP (Demonstrating Proof-of-Possession - RFC 9449)**: The client generates an asymmetric key pair and signs a DPoP proof header (`DPoP: <jwt_proof>`) on every token request. The auth server binds the access/refresh token to the client's public key (`cnf` claim). Even if an attacker steals the token, they cannot sign requests without the client's private key.
-- **mTLS (Mutual TLS Token Binding)**: Binds tokens to the client's TLS certificate.
-- **IP & User-Agent Fingerprinting**: Binding refresh tokens to subnet (`192.168.1.0/24`) and User-Agent. If the refresh request originates from a drastically different GEO-location or OS, trigger step-up MFA re-authentication.
-
----
-
-## Part 2: Incident Response — What to Do When a User Account is Hacked
-
-When an account compromise is flagged (via user report *"I've been hacked"*, automated anomaly detection, credential stuffing alert, or stolen phone notification), the security system must execute **Emergency Account Containment**.
-
-<AccountHackedResponseDiagram />
-
-### The Access Token Revocation Gap Problem
-
-Stateless JWT access tokens are validated cryptographically by microservices without hitting the database. If an access token has 10 minutes remaining on its `exp` claim, **deleting the user's refresh token from the database DOES NOT invalidate the existing access token!** For the next 10 minutes, the hacker can still access protected APIs.
-
----
-
-### 3 Methods to Invalidate Stateless Access Tokens Immediately
-
-#### Method 1: `token_version` Column (Database + JWT Claim)
-
-Add a `token_version` integer column to the `users` table and include `"ver"` in the JWT payload.
-
-```json
-// Access Token Payload
-{
-  "sub": "usr_9988",
-  "ver": 3,
-  "iat": 1700000000,
-  "exp": 1700000900
-}
-```
-
-- **Normal Flow**: API Gateway checks JWT signature and verifies `jwt.ver == cached_user_version`.
-- **On Account Compromise**: 
-  ```sql
-  UPDATE users SET token_version = token_version + 1 WHERE id = :user_id;
-  ```
-  Updating `token_version` invalidates **all** active access tokens bearing version `3`. Version `4` is required for future requests.
-
-#### Method 2: `pwd_updated_at` / `revoked_before` Timestamp Validation
-
-Embed `iat` (Issued At timestamp) in every JWT. When an account is compromised or password is reset, set `pwd_updated_at = NOW()`.
-
-```java
-// Spring Security Filter / API Gateway Check
-long jwtIssuedAt = claims.getIssuedAt().getTime() / 1000;
-long revokedBefore = redisService.getRevokedBeforeTimestamp(userId); // cached in Redis
-
-if (jwtIssuedAt < revokedBefore) {
-    throw new JwtAuthenticationException("Token has been revoked due to security event");
-}
-```
-
-- **Redis Key Structure**: `user:revoked_before:<user_id> = <timestamp>`
-- **TTL**: Set key TTL equal to max access token lifespan (e.g. 15 minutes). After 15 minutes, all old access tokens have naturally expired, so Redis auto-evicts the key, freeing memory.
-
-#### Method 3: Centralized Redis JWT Blacklist (`jti` Revocation)
-
-Every JWT access token includes a unique identifier `jti` (`JWT ID`). When revoking specific tokens:
+In high-write environments, active sessions are stored in Redis Hashes for sub-millisecond lookups:
 
 ```bash
-# Push jti to Redis Blacklist with TTL equal to remaining token lifetime
-SETEX blacklist:jti:8a3f91b2 600 "revoked_hacked_account"
+# Store active session for Device A
+HSET user:usr_404:sessions sess_mob_101 '{"deviceId":"mob_1","familyId":"fam_A","tokenHash":"sha256...","issuedAt":1700000000}'
+EXPIRE user:usr_404:sessions 2592000 # 30 days TTL
+
+# Query all active devices for a user profile UI
+HGETALL user:usr_404:sessions
+
+# Invalidate single device (Mobile)
+HDEL user:usr_404:sessions sess_mob_101
+
+# Invalidate ALL devices (Logout Everywhere)
+DEL user:usr_404:sessions
 ```
 
-Gateway or Security Filter checks `EXISTS blacklist:jti:<jti>`.
+### Pattern C: The KeyStore / Key-Token Pattern (Anonystick Model)
+
+In this pattern, each device login generates a dedicated **KeyStore** record containing:
+- `publicKey` & `privateKey` (or asymmetric key pair) specific to that device's session.
+- `refreshToken`: The current active refresh token hash.
+- `refreshTokensUsed`: An array tracking all historical rotated tokens in the current token family.
+
+```typescript
+// KeyStore Structure per Device Login:
+interface DeviceKeyStore {
+  userId: string;
+  deviceId: string;
+  publicKey: string;
+  refreshToken: string;
+  refreshTokensUsed: string[];
+  updatedAt: Date;
+}
+```
 
 ---
 
-## Part 3: Password Update Invalidation — Single Device vs Multi-Device
+## 3. Deep-Dive: The 5 Invalidation Workflows
 
-When a user changes their password, application UX typically offers two options:
-1. **Single Device ("Update password and stay logged in on this device")**
-2. **Multi-Device ("Update password and log out of all devices / emergency reset")**
+### 3.1 Scenario 1: Single-Device Logout (Isolated Device Invalidation)
+
+When a user taps **"Logout"** on their mobile phone, only that device's session is terminated:
+
+<SingleDeviceLogoutFlowDiagram />
+
+#### Why Other Devices Are Unaffected:
+1. The Laptop (`sess_lap_202`) and Tablet (`sess_tab_303`) records in `user_sessions` or Redis remain **untouched**.
+2. The user's root `token_version` is **not modified**.
+3. When the Laptop makes API calls, its Access Token is validated normally. When it calls `/auth/refresh`, its session record exists and rotates cleanly.
+
+---
+
+### 3.2 Scenario 2: Global Logout ("Sign Out of All Devices")
+
+When a user clicks **"Log out of all devices"**:
+
+```sql
+-- 1. Invalidate all refresh tokens in DB
+UPDATE user_sessions 
+SET is_revoked = TRUE 
+WHERE user_id = :userId;
+
+-- 2. Increment user token version
+UPDATE users 
+SET token_version = token_version + 1 
+WHERE id = :userId;
+```
+
+```bash
+# 3. Wipe all sessions in Redis
+DEL user:usr_404:sessions
+
+# 4. Set revocation timestamp to immediately invalidate all in-flight access tokens
+SET user:usr_404:revoked_before 1700000000 EX 900
+```
+
+#### The Access Token Revocation Check:
+Every API Gateway or Security Filter checks:
+$$\text{if } (\text{jwt.iat} < \text{redis.get("user:revoked\_before:" + userId)}) \implies \text{HTTP 401 Unauthorized}$$
+
+---
+
+### 3.3 Scenario 3: Password Update & Password Reset
+
+Applications offer two distinct UX choices when a user updates their password:
 
 <PasswordInvalidationDiagram />
 
+#### SQL Implementation:
+```sql
+-- Option A: Retain current device (sess_current), revoke all others
+UPDATE user_sessions
+SET is_revoked = TRUE
+WHERE user_id = :userId
+  AND session_id != :currentSessionId;
+```
+
 ---
 
-## Part 4: Production Implementation (Spring Boot & Redis)
+### 3.4 Scenario 4: Account Locked / Suspended (Admin / Anti-Fraud)
 
-### 1. Spring Security JWT Authentication Filter with Redis Revocation Check
+When an account is flagged for fraud, billing default, or security violation, access must be revoked **immediately across all microservices**:
 
-```java
-package com.example.security;
+<AccountLockedLifecycleDiagram />
 
-import io.jsonwebtoken.Claims;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.filter.OncePerRequestFilter;
+:::warning
+The Redis lock check takes **< 1 millisecond** and intercepts requests at the API Gateway before any downstream microservice, database, or business logic executes.
+:::
 
-import java.io.IOException;
-import java.util.Collections;
+---
 
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+### 3.5 Scenario 5: Token Theft & Automatic Compromise Containment
 
-    private final JwtTokenProvider jwtTokenProvider;
-    private final StringRedisTemplate redisTemplate;
+Under **Refresh Token Rotation (RTR)**, refresh tokens can only be used **once**. If an attacker steals an already-rotated token ($RT_1$) and attempts to exchange it:
 
-    public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider, StringRedisTemplate redisTemplate) {
-        this.jwtTokenProvider = jwtTokenProvider;
-        this.redisTemplate = redisTemplate;
+<TokenTheftContainmentDiagram />
+
+---
+
+## 4. Production Code Implementations
+
+### 4.1 Node.js / Express KeyStore & Multi-Device Service
+
+```typescript
+// auth.service.ts
+import crypto from 'crypto';
+import jwt from 'jsonwebtoken';
+import { db } from './db';
+import { redisClient } from './redis';
+
+export class MultiDeviceAuthService {
+  // 1. Login on a specific device
+  static async login(userId: string, deviceId: string, deviceName: string) {
+    const sessionId = `sess_${crypto.randomBytes(16).toString('hex')}`;
+    const familyId = crypto.randomUUID();
+    const rawRefreshToken = crypto.randomBytes(32).toString('hex');
+    const tokenHash = crypto.createHash('sha256').update(rawRefreshToken).digest('hex');
+
+    // Store session in PostgreSQL
+    await db.query(
+      `INSERT INTO user_sessions (user_id, device_id, device_name, session_id, family_id, token_hash, expires_at)
+       VALUES ($1, $2, $3, $4, $5, $6, NOW() + INTERVAL '30 days')`,
+      [userId, deviceId, deviceName, sessionId, familyId, tokenHash]
+    );
+
+    // Cache active session in Redis Hash
+    await redisClient.hSet(`user:${userId}:sessions`, sessionId, JSON.stringify({
+      deviceId,
+      familyId,
+      tokenHash,
+      createdAt: Date.now()
+    }));
+
+    // Mint short-lived access token scoped to device & session
+    const accessToken = jwt.sign(
+      { sub: userId, deviceId, sessionId, ver: 1 },
+      process.env.JWT_SECRET!,
+      { expiresIn: '15m' }
+    );
+
+    return { accessToken, refreshToken: rawRefreshToken, sessionId };
+  }
+
+  // 2. Single-Device Logout (Isolated)
+  static async logoutSingleDevice(userId: string, sessionId: string, accessTokenJti?: string) {
+    // Revoke only this session in DB
+    await db.query(
+      `UPDATE user_sessions SET is_revoked = TRUE WHERE user_id = $1 AND session_id = $2`,
+      [userId, sessionId]
+    );
+
+    // Remove from Redis device registry
+    await redisClient.hDel(`user:${userId}:sessions`, sessionId);
+
+    // Optional: Blacklist access token JTI for remaining 15 minutes
+    if (accessTokenJti) {
+      await redisClient.setEx(`blacklist:jti:${accessTokenJti}`, 900, 'logged_out');
     }
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, 
-                                    HttpServletResponse response, 
-                                    FilterChain filterChain) throws ServletException, IOException {
-        
-        String token = extractBearerToken(request);
+    return { success: true, message: 'Logged out of this device successfully' };
+  }
 
-        if (token != null && jwtTokenProvider.validateToken(token)) {
-            Claims claims = jwtTokenProvider.getClaims(token);
-            String userId = claims.getSubject();
-            long issuedAtEpoch = claims.getIssuedAt().getTime() / 1000;
+  // 3. Global Logout ("Sign out of all devices")
+  static async logoutAllDevices(userId: string) {
+    // Revoke all sessions in DB
+    await db.query(`UPDATE user_sessions SET is_revoked = TRUE WHERE user_id = $1`, [userId]);
 
-            // 1. Check Redis for Instant Revocation (Password Reset / Account Hacked)
-            String revokedBeforeStr = redisTemplate.opsForValue().get("user:revoked_before:" + userId);
-            if (revokedBeforeStr != null) {
-                long revokedBeforeEpoch = Long.parseLong(revokedBeforeStr);
-                if (issuedAtEpoch < revokedBeforeEpoch) {
-                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token revoked due to password update or security reset.");
-                    return;
-                }
-            }
+    // Increment user token version
+    await db.query(`UPDATE users SET token_version = token_version + 1 WHERE id = $1`, [userId]);
 
-            // 2. Check token_version claim against user context if needed
-            Integer tokenVersion = claims.get("ver", Integer.class);
-            // ... Optional DB/Redis version match check ...
+    // Wipe Redis session map
+    await redisClient.del(`user:${userId}:sessions`);
 
-            UsernamePasswordAuthenticationToken auth = 
-                new UsernamePasswordAuthenticationToken(userId, null, Collections.emptyList());
-            SecurityContextHolder.getContext().setAuthentication(auth);
-        }
+    // Set revoked_before watermark to kill all in-flight access tokens
+    const nowEpoch = Math.floor(Date.now() / 1000);
+    await redisClient.setEx(`user:${userId}:revoked_before`, 900, String(nowEpoch));
 
-        filterChain.doFilter(request, response);
+    return { success: true, message: 'All devices logged out' };
+  }
+}
+```
+
+### 4.2 API Gateway Verification Middleware (Express / Fastify)
+
+```typescript
+// auth.middleware.ts
+import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
+import { redisClient } from './redis';
+
+export async function verifyJwtAndDeviceState(req: Request, res: Response, next: NextFunction) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader?.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Missing Bearer token' });
+  }
+
+  const token = authHeader.substring(7);
+
+  try {
+    const payload = jwt.verify(token, process.env.JWT_SECRET!) as {
+      sub: string;
+      deviceId: string;
+      sessionId: string;
+      iat: number;
+      jti?: string;
+    };
+
+    const userId = payload.sub;
+
+    // Fast-Check 1: Is Account Locked / Suspended?
+    const isLocked = await redisClient.get(`user:${userId}:is_locked`);
+    if (isLocked) {
+      return res.status(403).json({ error: 'Account is locked. Contact support.' });
     }
 
-    private String extractBearerToken(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            return authHeader.substring(7);
-        }
-        return null;
+    // Fast-Check 2: Was a Global Logout / Password Reset triggered after token iat?
+    const revokedBefore = await redisClient.get(`user:${userId}:revoked_before`);
+    if (revokedBefore && payload.iat < parseInt(revokedBefore, 10)) {
+      return res.status(401).json({ error: 'Session expired due to security reset. Re-login required.' });
     }
+
+    // Fast-Check 3: Is this specific Access Token JTI blacklisted?
+    if (payload.jti) {
+      const isBlacklisted = await redisClient.get(`blacklist:jti:${payload.jti}`);
+      if (isBlacklisted) {
+        return res.status(401).json({ error: 'Token has been logged out.' });
+      }
+    }
+
+    req.user = payload;
+    next();
+  } catch (err) {
+    return res.status(401).json({ error: 'Invalid or expired token' });
+  }
 }
 ```
 
 ---
 
-### 2. Service Layer: Refresh Token Rotation & Theft Detection
+## 5. Architectural Decision & Comparison Matrix
 
-```java
-package com.example.service;
-
-import com.example.exception.TokenReuseException;
-import com.example.model.RefreshToken;
-
-import org.apache.commons.codec.digest.DigestUtils;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Instant;
-import java.util.UUID;
-
-@Service
-public class RefreshTokenService {
-
-    private final RefreshTokenRepository repo;
-    private final JwtTokenProvider jwtProvider;
-
-    public RefreshTokenService(RefreshTokenRepository repo, JwtTokenProvider jwtProvider) {
-        this.repo = repo;
-        this.jwtProvider = jwtProvider;
-    }
-
-    @Transactional
-    public TokenPairResponse rotateToken(String incomingRawRefreshToken, String sessionId) {
-        String hash = DigestUtils.sha256Hex(incomingRawRefreshToken);
-
-        RefreshToken token = repo.findByTokenHash(hash)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid Refresh Token"));
-
-        // 🚨 REUSE DETECTION TRIGGERED!
-        if (token.isUsed() || token.isRevoked()) {
-            // Revoke ENTIRE family to protect user against theft
-            repo.revokeTokenFamily(token.getFamilyId());
-            throw new TokenReuseException("Security Alert: Refresh token reuse detected! All family sessions revoked.");
-        }
-
-        if (token.getExpiresAt().isBefore(Instant.now())) {
-            throw new IllegalArgumentException("Refresh token expired");
-        }
-
-        // Mark current token as USED
-        token.setUsed(true);
-        repo.save(token);
-
-        // Generate brand new Rotated Refresh Token under SAME family_id
-        String newRawRefresh = UUID.randomUUID().toString();
-        String newHash = DigestUtils.sha256Hex(newRawRefresh);
-
-        RefreshToken newToken = RefreshToken.builder()
-                .tokenHash(newHash)
-                .familyId(token.getFamilyId())
-                .parentId(token.getId())
-                .userId(token.getUserId())
-                .sessionId(sessionId)
-                .isUsed(false)
-                .isRevoked(false)
-                .expiresAt(Instant.now().plusSeconds(30 * 24 * 3600)) // 30 days
-                .build();
-
-        repo.save(newToken);
-
-        String newAccessToken = jwtProvider.createAccessToken(token.getUserId());
-        return new TokenPairResponse(newAccessToken, newRawRefresh);
-    }
-}
-```
+| Mechanism | Scope | Latency | Redis Memory | Cross-Device Impact | Best For |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **`device_id` / `session_id` DB Deletion** | Single Device | 0 ms (at next refresh) | Zero | 🟢 None (Other devices stay active) | Routine app logout |
+| **Redis `jti` Blacklist** | Single Token | < 1 ms | Small (~50B per active logout) | 🟢 None | High-security instant single-token revocation |
+| **Redis `revoked_before` Timestamp** | Global User | < 1 ms | Minimal (1 key per user, 15m TTL) | 🔴 All devices logged out | Password reset, "Logout all" |
+| **Redis `user:locked` Flag** | Global User | < 1 ms | Minimal (1 key per user) | 🔴 All requests blocked (403) | Anti-fraud freeze, Admin ban |
+| **RTR Token Family Invalidation** | Token Family | < 1 ms | Zero | 🔴 Specific device + stolen token revoked | Refresh token theft containment |
 
 ---
 
-## Part 5: Decision Matrix & Architectural Trade-offs
+## 6. Senior Engineering Interview Questions & Answers
 
-| Strategy | Speed / Latency | Revocation Delay | Infrastructure Overhead | Best For |
-| --- | --- | --- | --- | --- |
-| **Short TTL Access Token Only** | High (0 ms) | 5–15 minutes (TTL window) | Zero extra storage | Standard web apps with low security sensitivity |
-| **`token_version` in DB / Redis** | High (Cached in Redis) | Instant (0 ms) | Small Redis key per user | SaaS platforms, Banking, E-commerce |
-| **Redis Blacklist (`jti`)** | High (0–1 ms) | Instant (0 ms) | Redis memory for revoked tokens | High-security APIs requiring targeted token revocation |
-| **DPoP (Proof of Possession)** | High (0 ms DB lookup) | Cryptographically bound to client key | Key management complexity on client | Mobile banking apps, Open Banking OAuth |
-
----
-
-## Part 6: Senior Engineering Interview Q&A
-
-### Q1: How do you handle JWT revocation in a fully stateless microservice architecture when an account is reported hacked?
-
+### Q1: If JWTs are stateless, how can you implement single-device logout without affecting the user's other logged-in devices?
 **Answer:**
-In a purely stateless JWT architecture, access tokens cannot be revoked server-side without adding a verification lookup. To achieve instant revocation without creating a relational database bottleneck:
-1. Revoke all stateful refresh tokens in DB/Redis so no new access tokens can be minted.
-2. Publish an **Account Security Event** via Redis Pub/Sub or Kafka containing `(user_id, revocation_timestamp)`.
-3. API Gateways and Edge Routers store `revoked_before` timestamps in local Redis caches.
-4. On every API request, the Gateway verifies if `jwt.iat < revoked_before`. If true, the request is rejected with `401 Unauthorized` in under 1ms without hitting downstream microservices or databases.
+You adopt a **device-scoped hybrid model**:
+1. Assign a unique `device_id` and `session_id` during login and embed them into the Access Token claims.
+2. Maintain individual session records (or KeyStores) in the database/Redis keyed by `(user_id, session_id)`.
+3. When the user logs out on Device A, delete **only** Device A's session record from Redis/DB and optionally blacklist Device A's `jti`.
+4. Do not modify the user's root `token_version`. Device B and Device C's sessions remain valid and continue refreshing independently.
 
 ---
 
-### Q2: What is Refresh Token Rotation (RTR) and how does it detect token theft?
-
+### Q2: An admin locks a malicious user's account. How do you prevent their active 15-minute JWT access tokens from accessing microservices for the next 15 minutes?
 **Answer:**
-Refresh Token Rotation invalidates the refresh token on every single refresh request and returns a new rotated token pair. 
-
-The auth server tracks token lineage using a `family_id`. If an attacker steals `RefreshToken_v1` and the legitimate client has already used `v1` to rotate to `v2`, `v1` is marked `used = true` in the DB. When the attacker attempts to exchange `v1`, the server detects that a used token was replayed. The server triggers **Automatic Family Revocation**, marking all tokens linked to `family_id` as revoked. This terminates both the attacker's and victim's sessions, forcing a full re-login and neutralizing the breach.
+Relying on database updates alone leaves a 15-minute vulnerability gap because stateless microservices do not query the DB on every request.
+To solve this with zero latency:
+1. When locking the account, write a fast Redis key: `SET user:locked:<userId> 1 EX 86400`.
+2. The API Gateway / Security Filter inspects `EXISTS user:locked:<userId>` in Redis on every incoming request.
+3. If the key exists, the Gateway returns `403 Forbidden` in < 1ms, terminating access across all microservices immediately.
 
 ---
 
-### Q3: During a password reset, how do you allow a user to stay logged in on their current device while invalidating all other sessions?
-
+### Q3: What happens when a user changes their password and selects "Stay logged in on this device"?
 **Answer:**
-Pass the current session ID (`current_session_id`) alongside the password update request.
-1. Update the password hash in the `users` table.
-2. Perform a targeted deletion on the refresh tokens table:
-   `DELETE FROM refresh_tokens WHERE user_id = :uid AND session_id != :current_session_id;`
-3. Issue a fresh rotated access + refresh token pair for `:current_session_id` reflecting the updated credentials.
-4. Other devices (bearing different `session_id` values) will fail when attempting their next refresh call.
+1. Update the password hash in the database.
+2. Execute a scoped session cleanup: `DELETE FROM user_sessions WHERE user_id = :uid AND session_id != :currentSessionId;`.
+3. Rotate and issue a fresh access + refresh token pair for `:currentSessionId`.
+4. Other devices (bearing older session IDs) will fail on their next refresh attempt and be forced to re-authenticate with the new password.
 
 ---
 
 ## Related References & Guides
 
-- [Cookies vs Sessions vs JWT](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/docs/technical-knowledge/security/cookies-vs-sessions-vs-jwt.md) — Deep dive into client vs server state, cookie security flags, and JWT structure.
-- [Authentication & Authorization](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/docs/technical-knowledge/security/01-authentication-authorization.md) — OAuth 2.0, PKCE, OpenID Connect, and Spring Security setup.
-- [API Authentication & Security](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/docs/technical-knowledge/networking/api-authentication-security.md) — HMAC, API keys, rate limiting, and gateway authentication patterns.
+- [Cookies vs Sessions vs JWT](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/docs/technical-knowledge/security/cookies-vs-sessions-vs-jwt.md) — Fundamental tradeoffs between cookie session state and stateless JWTs.
+- [Authentication & Authorization](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/docs/technical-knowledge/security/01-authentication-authorization.md) — OAuth 2.0, OpenID Connect, and Spring Security.
+- [PostgreSQL Heap Storage & Internals](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/docs/technical-knowledge/database/postgresql-heap-storage-architecture.md) — How PostgreSQL stores and indexes session and token tables.

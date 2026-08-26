@@ -261,4 +261,186 @@ public class Singleton {
 ```
 This leverages the JVM's class-loading guarantee: the inner class `Holder` is loaded (and `INSTANCE` initialized) only when `getInstance()` is first called. Thread-safe without synchronized blocks.
 
+## 10. Is Java Pass-by-Value or Pass-by-Reference?
+
+Java is **strictly 100% Pass-by-Value**. There is no pass-by-reference in Java.
+
+### The Source of Confusion
+
+When an object is passed into a method, what is passed is the **value of the reference variable** (a copy of the memory address pointing to the heap object), NOT the reference itself.
+
+```java
+public class PassByValueDemo {
+    public static void modify(Point p) {
+        p.x = 100;                 // Mutates object on heap (visible caller side)
+        p = new Point(500, 500);   // Reassigns local copy of pointer (NOT visible to caller!)
+    }
+
+    public static void main(String[] args) {
+        Point pt = new Point(10, 20);
+        modify(pt);
+        System.out.println(pt.x); // Outputs 100 (state mutated)
+        System.out.println(pt.y); // Outputs 20  (reassignment did not affect pt)
+    }
+}
+```
+
+### Stack Frame Execution Model
+- When `modify(pt)` is called, a new stack frame is pushed.
+- A **copy** of `pt` pointer is passed to parameter `p`.
+- Modifying `p.x` follows the pointer to the heap object and mutates its field.
+- Reassigning `p = new Point(...)` only changes the local pointer in `modify()` stack frame. When the method pops off the stack, `pt` in `main()` still points to the original object.
+
+## 11. `Comparable` vs `Comparator` in Java
+
+Both interfaces are used for ordering objects, but they serve different design purposes:
+
+| Feature | `Comparable<T>` | `Comparator<T>` |
+|:---|:---|:---|
+| **Package** | `java.lang` | `java.util` |
+| **Method** | `int compareTo(T o)` | `int compare(T o1, T o2)` |
+| **Purpose** | Defines **Natural Ordering** for a class | Defines **Custom / Multiple Orderings** |
+| **Class Modification** | Must modify the original domain class | No modification needed (external comparator) |
+| **Usage** | `Collections.sort(list)` or `Arrays.sort(arr)` | `Collections.sort(list, comparator)` |
+
+### Modern Java 8+ Comparator Chaining
+```java
+List<Employee> employees = getEmployees();
+
+// Multi-field sorting using method references & lambda chaining
+employees.sort(
+    Comparator.comparing(Employee::getDepartment)
+              .thenComparing(Employee::getSalary, Comparator.reverseOrder())
+              .thenComparing(Employee::getName)
+);
+```
+
+## 12. Can we restrict the access visibility of an Overridden Method?
+
+**No.** An overriding method in a subclass **cannot decrease the visibility** of the parent class method. It can only maintain or increase visibility.
+
+### Rules of Visibility in Overriding:
+- Parent `protected` → Child can be `protected` or `public` (Cannot be default package-private or `private`).
+- Parent `public` → Child **MUST** be `public`.
+
+### Why? (Liskov Substitution Principle)
+If subclass allowed restricting visibility (e.g. parent `public` → child `private`), dynamic polymorphism would break runtime safety:
+```java
+Parent p = new Child();
+p.publicMethod(); // Compiler checks Parent (public OK), but at runtime calls Child (private FAIL!)
+```
+To preserve OOP polymorphism guarantees, Java enforces that overridden methods must be as accessible as the superclass method.
+
+## 13. What is Variable Shadowing vs. Field Hiding vs. Method Overriding?
+
+- **Variable Shadowing:** A local variable inside a method has the same name as an instance variable of the class. The local variable shadows the instance variable within that scope (accessed via `this.varName`).
+- **Field Hiding:** A subclass declares a field with the exact same name as a field in its superclass. The subclass field hides the superclass field.
+- **Method Overriding:** A subclass provides a specific implementation for an instance method defined in the superclass.
+
+```java
+class Parent {
+    String name = "Parent Field";
+}
+
+class Child extends Parent {
+    String name = "Child Field"; // Hiding superclass field
+    
+    void printNames(String name) { // Shadowing instance variable with parameter
+        System.out.println(name);        // Local parameter
+        System.out.println(this.name);   // Child field ("Child Field")
+        System.out.println(super.name);  // Parent field ("Parent Field")
+    }
+}
+```
+
+## 14. Can Dynamic Polymorphism be achieved with Instance Variables (Data Members)?
+
+**No.** In Java, **only instance methods are polymorphic (dynamically bound)**. Fields (instance variables) are resolved at **compile-time** based on the declared **reference type**, not the actual runtime object type.
+
+```java
+class Parent {
+    int value = 10;
+}
+class Child extends Parent {
+    int value = 20;
+}
+
+Parent ref = new Child();
+System.out.println(ref.value); // Outputs 10 (Parent value), NOT 20!
+```
+**Why?** Method resolution uses the JVM `vtable` (Virtual Method Table) for dynamic dispatch. Fields are stored at fixed byte offsets in memory layout resolved at compile time.
+
+## 15. Association vs. Aggregation vs. Composition
+
+These three terms define `HAS-A` relationships between classes:
+
+1. **Association:** General binary relationship between two separate classes (e.g. `Teacher` and `Student`). Both objects have independent lifecycles.
+2. **Aggregation (Weak HAS-A):** Special form of association representing a whole-part relationship where parts can exist independently of the container.
+   - *Example:* `Department` and `Professor`. If the `Department` is deleted, `Professor` objects continue to exist.
+3. **Composition (Strong HAS-A):** Strict whole-part relationship where the child object's lifecycle is completely owned and managed by the parent. If the parent is destroyed, the child objects are also destroyed.
+   - *Example:* `Car` and `Engine` (or `House` and `Room`). A `Room` cannot exist without a `House`.
+
+```java
+// Composition: Car owns Engine lifecycle
+public class Car {
+    private final Engine engine;
+    public Car() {
+        this.engine = new Engine(); // Engine created & owned inside Car
+    }
+}
+```
+
+## 16. What are Covariant Return Types in Java?
+
+Introduced in Java 5, **Covariant Return Type** allows an overriding method in a subclass to return a **subtype** of the return type declared in the superclass method.
+
+```java
+class Producer {
+    public Number produce() { return Integer.valueOf(10); }
+}
+
+class IntegerProducer extends Producer {
+    @Override
+    public Integer produce() { // Allowed because Integer IS-A Number
+        return Integer.valueOf(42);
+    }
+}
+```
+**Benefits:** Eliminates explicit downcasting on client code calling the specialized subclass method directly.
+
+## 17. How does Method Overloading handle Type Promotion?
+
+When calling an overloaded method, Java compiler selects the best match using the following order of precedence:
+1. **Exact primitive match**
+2. **Widening primitive conversion** (`byte` → `short` → `int` → `long` → `float` → `double`)
+3. **Autoboxing** (`int` → `Integer`)
+4. **Varargs** (`int...`)
+
+```java
+public class OverloadDemo {
+    static void show(long a)    { System.out.println("Widened to long"); }
+    static void show(Integer a) { System.out.println("Autoboxed to Integer"); }
+    static void show(int... a)  { System.out.println("Varargs"); }
+
+    public static void main(String[] args) {
+        int val = 10;
+        show(val); // Outputs "Widened to long" (Widening beats Autoboxing!)
+    }
+}
+```
+
+## 18. `Serializable` vs `Externalizable` in Java
+
+| Feature | `Serializable` | `Externalizable` |
+|:---|:---|:---|
+| **Interface Type** | Marker Interface (0 methods) | Standard Interface (`writeExternal`, `readExternal`) |
+| **Control** | JVM automatic default serialization | Developer full manual control |
+| **Performance** | Slower (uses reflection to inspect fields) | Faster (direct manual streaming) |
+| **Constructor** | No special constructor required | Requires `public` no-arg constructor |
+| **`transient` Keyword** | Respected (`transient` fields skipped) | Ignored (`writeExternal()` controls serialization) |
+
+### Security & Vulnerability Warning
+Standard Java Serialization (`ObjectInputStream.readObject()`) is a major security vulnerability vector (Arbitrary Code Execution via gadget chains). Modern microservices prefer **JSON (Jackson)**, **Protocol Buffers**, or **Avro** over native Java serialization.
+
 ---
+

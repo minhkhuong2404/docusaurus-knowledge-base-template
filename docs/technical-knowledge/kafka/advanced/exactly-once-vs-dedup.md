@@ -31,31 +31,183 @@ Real production systems almost always need both. This guide explains how each wo
 
 ### The Fundamental Trade-off
 
-In any distributed system, you face an unavoidable dilemma:
+In any distributed system, when a producer sends a message and doesn't hear back in time, it faces an unavoidable dilemma:
 
-**The key property**: messages from partition 0 always go to Instance A. RocksDB for partition 0 is always on Instance A. Lookups are always local — no network hop required.
+```
+Producer sends message ──► [Network / Broker] ──► ??? (did it arrive?)
 
-### What Happens During a State Store Lookup
+Case A: Message arrived, but the ACK was lost on the way back.
+        Producer sees a timeout → assumes failure → retries.
+        Result: broker received the message TWICE.
 
-### What Happens During a Redis Deduplication Check
+Case B: Message never arrived (dropped, broker was down).
+        Producer sees a timeout → retries.
+        Result: broker received it ONCE, correctly, on retry.
+```
 
-### Consistency Model — The Critical Difference
+From the producer's point of view, Case A and Case B are **indistinguishable** — both look like "no ACK received in time." A producer that wants to guarantee delivery *must* retry on timeout, and retrying on timeout unavoidably risks re-sending a message that already arrived. This single fact is the root cause of essentially every duplicate in distributed messaging: brokers, consumers, and downstream systems all inherit this ambiguity from the network itself.
+
+Concrete sources of duplicates in a typical Kafka-based system:
+
+- **Producer retries**: `retries > 0` (the default) means a producer that doesn't receive a broker ACK in time re-sends — potentially after the original write already succeeded.
+- **Consumer rebalances**: if a consumer commits an offset *after* processing but crashes before the commit lands, the next owner of that partition re-reads and re-processes the already-handled message.
+- **At-least-once redelivery**: SQS, RabbitMQ, and Kafka's default consumer semantics all promise "you will get every message at least once" — which explicitly allows more than once.
+- **DLQ redrives**: an operator manually replaying a dead-letter queue days later can reintroduce a message that was, in fact, already successfully processed before it was (incorrectly) routed to the DLQ.
+- **Client-side retry logic**: an HTTP client wrapping a Kafka producer, or an upstream service retrying a failed call to your ingestion API, reintroduces the same logical event with a new transport-level identity.
+
+---
+
+## 2. The Three Delivery Guarantees
+
+Every messaging system picks one of three delivery guarantees. It's important to understand precisely what each one promises — and does not promise:
+
+| Guarantee | Promise | Failure Mode | Typical Default |
+| :--- | :--- | :--- | :--- |
+| **At-most-once** | Message delivered zero or one times | Silent message loss on failure — no retry | Fire-and-forget producers (`acks=0`), Redis Pub/Sub |
+| **At-least-once** | Message delivered one or more times | Duplicates on retry — never silent loss | Kafka default consumer, SQS standard queues, RabbitMQ with manual ACK |
+| **Exactly-once** | Message has the *effect* of being delivered precisely once | Requires coordination between producer, broker, and consumer state | Kafka `EXACTLY_ONCE_V2` (within Kafka's boundary only) |
+
+:::tip For newcomers
+Think of these as three answers to "what happens if I don't hear back after mailing a letter?" **At-most-once** is "I won't resend it — if it got lost, it's lost." **At-least-once** is "I'll keep resending copies until someone confirms receipt" — which means the recipient might get several copies of the same letter. **Exactly-once** is "the recipient's mailbox is built so that even if they receive five copies, they only *act on* it once" — the guarantee isn't that only one copy is delivered, it's that duplicates don't change the outcome.
+:::
+
+The critical insight for the rest of this guide: **true exactly-once delivery across an arbitrary network is provably impossible** (this follows from the [Two Generals' Problem](https://en.wikipedia.org/wiki/Two_Generals%27_Problem)). What Kafka's "exactly-once semantics" actually delivers is exactly-once *processing effects* — achieved not by preventing duplicate delivery, but by combining at-least-once delivery with idempotent, transactional processing so duplicates are absorbed without changing the result. This reframing — "exactly-once is at-least-once delivery plus idempotent processing," not "duplicates never happen" — is the single most important mental model in this entire guide.
+
+---
+
+## 3. Kafka's Exactly-Once Semantics (EOS): How It Actually Works
+
+Kafka achieves EOS through two independent mechanisms that are often conflated:
+
+### 3.1 Idempotent Producer
+
+Setting `enable.idempotence=true` (default since Kafka 3.0 when `acks=all`) assigns each producer a unique **Producer ID (PID)** and a **sequence number** per partition. The broker tracks the last sequence number it accepted per `(PID, partition)` pair and silently discards a retried write whose sequence number it has already seen — turning "producer retry causes duplicate" into "producer retry is a safe no-op." This solves *only* the producer-retry source of duplicates from Section 1 — it does nothing for consumer-side duplicates or duplicates introduced downstream of Kafka.
+
+### 3.2 Transactions (`EXACTLY_ONCE_V2`)
+
+Transactions extend idempotence to cover "read-process-write" cycles (the Kafka Streams / consume-transform-produce pattern):
+
+```
+Kafka Transaction (EXACTLY_ONCE_V2):
+┌─────────────────────────────────────────────────────────────┐
+│ 1. beginTransaction()                                        │
+│ 2. Consume input offset (not yet committed)                  │
+│ 3. Process → produce output record(s) to output topic        │
+│ 4. Update internal state store (if Kafka Streams)             │
+│ 5. sendOffsetsToTransaction() — offset commit joins the txn  │
+│ 6. commitTransaction() — ATOMIC: output + state + offset      │
+│    all become visible together, or none do                    │
+└─────────────────────────────────────────────────────────────┘
+```
+
+Consumers reading the output topic with `isolation.level=read_committed` never see the output of an aborted transaction — so a crash mid-processing either produces the complete, correct output or produces nothing, never a partial/duplicated result. This is what makes the Kafka Streams State Store deep dive in Section 7 possible: the state store update and the output write are part of the *same* atomic unit.
+
+**What EOS does not cover**: anything outside the Kafka transaction boundary. A database write, a REST call to Stripe, or an email send cannot be enlisted in a Kafka transaction — those require application-level idempotency, covered from Section 4 onward.
+
+---
+
+## 4. Idempotent Consumer Pattern — The Baseline
+
+For any consumer that has a side effect outside Kafka (the overwhelmingly common case), the baseline pattern is: check-then-act against a durable dedup record, guarded by a uniqueness constraint so concurrent attempts can't both "win" the check.
+
+```java
+// Minimal idempotent consumer using a relational dedup table
+@KafkaListener(topics = "orders")
+@Transactional
+public void consume(OrderEvent event) {
+    try {
+        // INSERT with a PRIMARY/UNIQUE KEY on event_id — a genuine duplicate throws here
+        processedEventRepository.save(new ProcessedEvent(event.getId()));
+    } catch (DataIntegrityViolationException e) {
+        log.debug("Duplicate suppressed: {}", event.getId());
+        return; // safe no-op; Kafka offset still advances normally
+    }
+    orderService.applyOrderCreated(event); // only the winner of the INSERT reaches here
+}
+```
+
+This is the pattern every later section builds on. The two storage backends covered in depth below — Kafka Streams State Store and Redis — are two different answers to "where does the dedup record live, and what consistency guarantee does it have with the rest of the pipeline."
+
+---
+
+## 5. RabbitMQ and SQS: No Native Cross-Delivery Dedup
+
+Unlike Kafka's idempotent producer, RabbitMQ has no broker-level deduplication at all — every redelivery (due to a NACK, consumer crash before ACK, or connection loss) is a fresh, indistinguishable message from the consumer's point of view. Deduplication is entirely the application's responsibility, using the same idempotent-consumer pattern as Section 4, keyed on a message ID the *producer* sets deliberately (never the RabbitMQ delivery tag, which is connection-scoped and meaningless across redeliveries).
+
+SQS standard queues provide **best-effort** at-least-once delivery with no dedup guarantee. **SQS FIFO queues** provide a narrow, time-boxed exception: a 5-minute deduplication window keyed on `MessageDeduplicationId` (or a content hash if not set) — messages with the same ID within that 5-minute window are deduplicated by the broker. This is useful but easy to over-trust: a DLQ redrive that happens hours or days later falls completely outside the window and needs the same application-level defense as everything else in this guide.
+
+---
+
+## 6. Choosing Where Dedup State Lives
+
+Once you accept that most consumers need application-level dedup (Section 4), the remaining architectural question is *where the dedup record lives* — because that choice determines your consistency guarantees, latency, and operational footprint. Three realistic options:
+
+1. **The same database you're already writing to** (a `UNIQUE` constraint + `ON CONFLICT DO NOTHING` / catch-and-ignore) — simplest, no new infrastructure, but only works when your side effect *is* a write to that database.
+2. **Kafka Streams' embedded State Store (RocksDB)** — the right answer when your pipeline is entirely Kafka-to-Kafka.
+3. **Redis** — the right answer when the side effect is external (a REST call, an email, a write to a different service's database) or when multiple services need to agree on dedup state.
+
+Sections 7 onward focus on the State Store vs. Redis decision in depth, since it's the one senior engineers most often get wrong by defaulting to whichever one they used last.
+
+---
+
+## 7. Kafka Streams State Store vs Redis Deep Dive
+
+### 7.1 Architecture: Partition-Local vs Shared
+
+A Kafka Streams **State Store** is an embedded RocksDB instance colocated with each Streams task, one per assigned partition. The key property: **messages from partition 0 always go to Instance A**, and RocksDB for partition 0 is always on Instance A — lookups are always local, with no network hop required. The state is also backed by a **changelog topic** in Kafka, so it can be rebuilt from scratch (or from a standby replica) if the instance is lost.
+
+Redis, by contrast, is an external, shared service. Every instance of every consumer — regardless of which partitions it owns, or even which application it belongs to — talks to the same Redis cluster over the network. There is no locality: a dedup check is always a network round trip.
+
+### 7.2 What Happens During a State Store Lookup
+
+```
+1. Kafka Streams task receives a record for partition 0 (owned locally).
+2. Processor calls stateStore.get(key) — this is an in-process method call.
+3. RocksDB checks its in-memory block cache first (sub-millisecond hit).
+4. On a cache miss, RocksDB reads from the local SST files on disk
+   (still local — typically < 1ms on SSD, no network involved).
+5. If the record is part of an EXACTLY_ONCE_V2 transaction, the store
+   write (stateStore.put()) is buffered and committed atomically
+   with the output record and the offset — see Section 3.2.
+```
+
+### 7.3 What Happens During a Redis Deduplication Check
+
+```
+1. Consumer receives a record — could be any partition, any instance.
+2. Consumer calls redis.setIfAbsent(key, value, ttl) — a network call.
+3. Request traverses: app → network → Redis cluster → command processed
+   → response → network → app. Typically 1–5ms even in the same
+   datacenter; more across availability zones.
+4. This operation is NOT part of any Kafka transaction. It commits
+   (or doesn't) independently of the Kafka offset commit — see 7.4.
+```
+
+### 7.4 Consistency Model — The Critical Difference
 
 This is the most important architectural distinction between the two approaches.
 
-#### Kafka Streams State Store: Transactionally Consistent
+**Kafka Streams State Store: Transactionally Consistent.** With `EXACTLY_ONCE_V2`, the state store update, output record write, and offset commit are all part of one atomic Kafka transaction (Section 3.2). There is no dual-write hazard — the state store and the offset are always consistent with each other because they commit together. A crash at any point either leaves both uncommitted (safe replay) or both committed (correct, no gap).
 
-With `EXACTLY_ONCE_V2`, the state store update, output record write, and offset commit are **all part of one atomic Kafka transaction**:
+**Redis: Eventual Consistency with Dual-Write Hazard.** Redis is an external system. The Redis write and the Kafka offset commit are two separate network operations with no shared coordinator:
 
-There is no dual-write hazard. The state store and the offset are always consistent with each other because they commit together.
+```
+Failure window 1: Redis SETNX succeeds → consumer crashes before ack.acknowledge()
+                  → Kafka redelivers the message → Redis sees the key as taken
+                  → event is (incorrectly) treated as a duplicate and DROPPED,
+                    even though it was never actually processed.
 
-#### Redis: Eventual Consistency with Dual-Write Hazard
+Failure window 2: Redis SETNX succeeds → external API call succeeds
+                  → consumer crashes before setting status to COMPLETED
+                  → offset never commits → redelivery → Redis key exists but
+                    status is still PROCESSING → ambiguous: did it finish or not?
+```
 
-Redis is an external system. The Redis write and the Kafka offset commit are two separate network operations with no coordinator:
+This is exactly why the combined implementation in Section 9 uses an explicit `PROCESSING` → `COMPLETED` status rather than a bare boolean key — it turns an ambiguous dual-write race into a recoverable state machine, though it still can't reach the atomicity that a single Kafka transaction gives you for free.
 
-**Mitigations for rebuild latency:**
+**Mitigations for rebuild latency (State Store side):** `num.standby.replicas=1` keeps a hot-standby copy of state on another instance so failover doesn't require a full changelog replay; keeping `state.dir` on fast NVMe disk and bounding state size (Section 11.3) further reduces the rebuild window.
 
-### Use Kafka Streams State Store (RocksDB) When
+### 7.5 Use Kafka Streams State Store (RocksDB) When
 
 1. **Your pipeline is Kafka → processing → Kafka** (no external side effects). State store is the only option that provides transactional atomicity with the offset commit and output record — Redis cannot participate in a Kafka transaction.
 
@@ -69,7 +221,7 @@ Redis is an external system. The Redis write and the Kafka offset commit are two
 
 6. **State is strictly partition-local** (no cross-partition or cross-service dedup needed).
 
-### Use Redis When
+### 7.6 Use Redis When
 
 1. **Your consumer writes to an external system** (database, REST API, email). Kafka EOS does not cover external writes. Redis provides a fast, shared dedup gate that works across any technology.
 
@@ -83,7 +235,7 @@ Redis is an external system. The Redis write and the Kafka offset commit are two
 
 6. **Your deployment model does not support local persistent storage**. Ephemeral containers without persistent volumes cannot host a reliable RocksDB state store.
 
-### Side-by-Side Summary Table
+### 7.7 Side-by-Side Summary Table
 
 | Dimension | Kafka Streams State Store | Redis | Winner |
 |:---|:---|:---|:---|
@@ -99,6 +251,25 @@ Redis is an external system. The Redis write and the Kafka offset commit are two
 | **Memory efficiency** | ✅ Disk-backed; large datasets OK | ❌ All in RAM; expensive at scale | State Store |
 | **Bloom filter support** | ❌ | ✅ RedisBloom module | Redis |
 | **Operational simplicity** | ✅ No extra infra | ❌ Redis ops (cluster, backups, alerts) | State Store |
+
+---
+
+## 8. Choosing a Dedup Window and Storage Budget
+
+Before implementing either backend, size the dedup window deliberately — this single number drives storage cost, TTL configuration, and which backend is even viable:
+
+```
+Window sizing rule of thumb:
+  window >= max plausible redelivery delay in your system
+
+Inputs to consider:
+  - Consumer rebalance / restart recovery time     (usually seconds-minutes)
+  - Kafka Streams state rebuild time under failure  (minutes, see Section 11.3)
+  - DLQ retention before an operator might redrive  (SQS max 14 days; team policy for Kafka DLQs)
+  - Manual incident-response replay windows          (hours-days, ad hoc)
+```
+
+A window sized only for "normal" redelivery (seconds) will silently under-protect against the DLQ-redrive case (Section 11.2) — this is the single most common under-sizing mistake, and it's why Section 11.2's mitigation always pairs a short-TTL fast path with a permanent DB uniqueness constraint as backstop.
 
 ---
 
@@ -412,6 +583,43 @@ public class DeduplicationMetrics {
 | `processed_events` table rows > 50M | Any | Cleanup job not running |
 | Redis `dedup:*` key count > expected | Any | TTL misconfiguration |
 | Kafka Streams `rocksdb.bytes-written-rate` | Sudden spike | Compaction storm or large rebalance |
+
+### 6. Testing Dedup Logic — Don't Trust It Untested
+
+Dedup bugs are notoriously invisible in the happy-path test suite (send one event, assert one write) — they only show up under concurrency or replay, which is exactly why the TOCTOU bug in 11.1 survives code review so often. Test the failure paths explicitly:
+
+```java
+@Test
+void concurrentDeliveryOfSameEventShouldOnlyChargeOnce() throws InterruptedException {
+    PaymentEvent event = new PaymentEvent("evt-1", BigDecimal.TEN);
+    ExecutorService pool = Executors.newFixedThreadPool(2);
+    CountDownLatch ready = new CountDownLatch(2);
+    CountDownLatch go = new CountDownLatch(1);
+
+    Runnable attempt = () -> {
+        ready.countDown();
+        awaitUninterruptibly(go);
+        paymentConsumer.process(event); // both threads race to process the SAME event
+    };
+    pool.submit(attempt);
+    pool.submit(attempt);
+    ready.await();
+    go.countDown();
+    pool.shutdown();
+    pool.awaitTermination(5, TimeUnit.SECONDS);
+
+    verify(paymentGateway, times(1)).charge(any()); // only one charge, regardless of race outcome
+}
+
+@Test
+void replayAfterTtlExpiryShouldBeCaughtByDbConstraint() {
+    orderConsumer.process(orderPlacedEvent("ord-1"));
+    redisTemplate.delete("dedup:ord-1"); // simulate TTL expiry
+    orderConsumer.process(orderPlacedEvent("ord-1")); // late DLQ redrive after "expiry"
+
+    assertThat(orderRepository.findAllByOrderId("ord-1")).hasSize(1); // DB constraint caught it
+}
+```
 
 ---
 

@@ -29,7 +29,7 @@ BECS does NOT handle:
 
 ---
 
-## File Format — Direct Entry (DE) File & Monospace Inspector
+## File Format — Direct Entry (DE) File & 120-Byte Batch Architecture
 
 <BankingBatchReconciliationDiagram />
 

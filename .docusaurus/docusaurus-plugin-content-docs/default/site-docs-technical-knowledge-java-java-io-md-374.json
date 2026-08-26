@@ -31,8 +31,8 @@
     }
   ],
   "version": "current",
-  "lastUpdatedBy": "Lữ Minh Khương",
-  "lastUpdatedAt": 1784478762000,
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055000,
   "frontMatter": {
     "id": "java-io",
     "title": "Java I/O: Streams, NIO & I/O Models",
@@ -47,8 +47,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "JVM Diagnostics & Troubleshooting in Production",
-    "permalink": "/technical-knowledge/java/java-diagnostics-troubleshooting"
+    "title": "Garbage Collection: Lifecycle, Algorithms & STW",
+    "permalink": "/technical-knowledge/java/java-gc"
   },
   "next": {
     "title": "Java New Features: Java 8 through Java 21+",

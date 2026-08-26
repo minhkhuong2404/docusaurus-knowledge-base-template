@@ -6,6 +6,8 @@ tags: [dsa, java, arrays, strings, prefix-sums, algorithms, week-1]
 sidebar_position: 1
 ---
 
+import DsaWeek1ArraysDiagram from '@site/src/components/DsaWeek1ArraysDiagram';
+
 # Week 1: Arrays, Strings & Prefix Sums
 
 ## 1. Overview
@@ -27,6 +29,9 @@ Welcome to Week 1! This week lays the foundation for everything to come. We are 
 ---
 
 ## 2. Theory & Fundamentals
+
+<DsaWeek1ArraysDiagram />
+
 
 ### 2.1 Arrays
 

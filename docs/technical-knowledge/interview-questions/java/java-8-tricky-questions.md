@@ -1,12 +1,12 @@
 ---
 id: java-8-tricky-interview-questions
-title: "50+ Real & Tricky Java 8 Interview Questions"
+title: "Real & Tricky Java 8 Interview Questions"
 description: "A comprehensive summary of conceptual and scenario-based Java 8+ interview questions."
 sidebar_position: 1
 tags: [java, interview, java-8, streams, functional-interfaces, optionals]
 ---
 
-# 50+ Real & Tricky Java 8 Interview Questions
+# Real & Tricky Java 8 Interview Questions
 
 This guide focuses on conceptual, tricky, and scenario-based questions commonly asked in Java 8+ interviews for developers with 2–7 years of experience.
 
@@ -137,6 +137,80 @@ When you call `.collect(Collector)`, the stream uses a collector to reduce eleme
 
 ---
 
+### Advanced Stream Operations & Collectors
+
+* **How do you solve the Diamond / Ambiguity problem with Interface Default Methods in Java 8?**
+  When a class implements two interfaces that both provide a default method with the exact same signature, the compiler throws an error: `class C inherits meunrelated defaults for method() from types A and B`.
+  
+  **Resolution:** The implementing class MUST override the default method and explicitly specify which interface method to call using `InterfaceName.super.methodName()`, or provide a brand new implementation:
+  ```java
+  interface InterfaceA {
+      default void log() { System.out.println("Interface A Log"); }
+  }
+  interface InterfaceB {
+      default void log() { System.out.println("Interface B Log"); }
+  }
+  
+  class Service implements InterfaceA, InterfaceB {
+      @Override
+      public void log() {
+          InterfaceA.super.log(); // Explicitly resolve ambiguity
+      }
+  }
+  ```
+
+* **Why can Static Methods in Interfaces NOT be overridden?**
+  Static methods belong to the interface class namespace, not the implementing instance. They are not inherited by implementing classes and cannot be called on class instances. They must be invoked using the interface name (`InterfaceName.staticMethod()`). This prevents utility methods from being modified or corrupted in subclasses.
+
+* **How do Function Chaining (`andThen` vs `compose`) work in Java 8?**
+  - `f1.andThen(f2)` executes `f1` first, and passes the result to `f2` ($f2(f1(x))$).
+  - `f1.compose(f2)` executes `f2` first, and passes the result to `f1` ($f1(f2(x))$).
+
+  ```java
+  Function<Integer, Integer> multiplyBy2 = x -> x * 2;
+  Function<Integer, Integer> add3 = x -> x + 3;
+
+  System.out.println(multiplyBy2.andThen(add3).apply(5)); // (5 * 2) + 3 = 13
+  System.out.println(multiplyBy2.compose(add3).apply(5)); // (5 + 3) * 2 = 16
+  ```
+
+* **How to group elements and calculate metrics using `Collectors.groupingBy()`?**
+  `Collectors.groupingBy` supports downstream collectors to perform aggregation operations (counting, averaging, mapping):
+  ```java
+  Map<Department, Double> avgSalaryByDept = employees.stream()
+      .collect(Collectors.groupingBy(
+          Employee::getDepartment,
+          Collectors.averagingDouble(Employee::getSalary)
+      ));
+  ```
+
+* **How do you find duplicate elements in a List using Java 8 Streams?**
+  There are two main idiomatic ways:
+  ```java
+  List<Integer> list = List.of(1, 2, 3, 2, 4, 3, 5);
+
+  // Method 1: Using Set.add() inside filter
+  Set<Integer> seen = new HashSet<>();
+  List<Integer> duplicates = list.stream()
+      .filter(n -> !seen.add(n))
+      .collect(Collectors.toList()); // [2, 3]
+
+  // Method 2: Using Collectors.groupingBy & counting
+  List<Integer> dupesByGrouping = list.stream()
+      .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+      .entrySet().stream()
+      .filter(entry -> entry.getValue() > 1)
+      .map(Map.Entry::getKey)
+      .collect(Collectors.toList()); // [2, 3]
+  ```
+
+* **What are Stream Short-Circuit Operations?**
+  Short-circuit operations stop processing the remaining elements as soon as a condition is satisfied (avoiding full stream evaluation):
+  - **Intermediate:** `limit(n)`, `takeWhile(predicate)`
+  - **Terminal:** `anyMatch()`, `allMatch()`, `noneMatch()`, `findFirst()`, `findAny()`
+
+---
+
 ## 🚀 Virtual Threads (Java 21+)
 
 Virtual threads are lightweight threads managed by the JVM instead of the OS.
@@ -149,3 +223,4 @@ Virtual threads are lightweight threads managed by the JVM instead of the OS.
   When a virtual thread executes inside a `synchronized` block/method, or performs a native call, the virtual thread becomes **pinned** to its carrier platform thread. This means the carrier thread is blocked and cannot execute other virtual threads, negating the scaling benefit.
   
   **Solution:** Replace `synchronized` blocks with `ReentrantLock` in virtual thread-heavy applications.
+

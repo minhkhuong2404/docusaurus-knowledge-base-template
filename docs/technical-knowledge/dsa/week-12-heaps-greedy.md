@@ -6,6 +6,8 @@ tags: [dsa, java, heaps, priority-queue, greedy, algorithms, week-12]
 sidebar_position: 12
 ---
 
+import DsaWeek12HeapGreedyDiagram from '@site/src/components/DsaWeek12HeapGreedyDiagram';
+
 # Week 12: Heaps (Priority Queues) & Greedy Algorithms
 
 ## 1. Overview
@@ -30,6 +32,9 @@ A Heap is the ultimate data structure for dynamically tracking the "best", "larg
 ---
 
 ## 2. Theory & Fundamentals
+
+<DsaWeek12HeapGreedyDiagram />
+
 
 ### 2.1 Mental Model: What Problem Does a Heap Solve?
 

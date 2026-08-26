@@ -6,6 +6,8 @@ tags: [dsa, java, recursion, backtracking, algorithms, week-10]
 sidebar_position: 10
 ---
 
+import DsaWeek10BacktrackingDiagram from '@site/src/components/DsaWeek10BacktrackingDiagram';
+
 # Week 10: Recursion & Backtracking
 
 ## 1. Overview
@@ -30,6 +32,9 @@ Recursion is a method where the solution to a problem depends on solutions to sm
 ---
 
 ## 2. Theory & Fundamentals
+
+<DsaWeek10BacktrackingDiagram />
+
 
 ### 2.1 Mental Model: Recursion as Delegation
 

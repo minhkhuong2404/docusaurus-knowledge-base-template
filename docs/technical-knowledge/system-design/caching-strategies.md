@@ -23,6 +23,12 @@ import CachePenetrationDiagram from '@site/src/components/CachePenetrationDiagra
 import CacheAvalancheDiagram from '@site/src/components/CacheAvalancheDiagram';
 import CacheStack8LayersDiagram from '@site/src/components/CacheStack8LayersDiagram';
 import RedisCachePatternsDiagram from '@site/src/components/RedisCachePatternsDiagram';
+import CacheAmatEconomicsDiagram from '@site/src/components/CacheAmatEconomicsDiagram';
+import CacheWorkingSetZipfDiagram from '@site/src/components/CacheWorkingSetZipfDiagram';
+import CacheTwoMemoryGatesDiagram from '@site/src/components/CacheTwoMemoryGatesDiagram';
+import WTinyLfuArchitectureDiagram from '@site/src/components/WTinyLfuArchitectureDiagram';
+import CacheExpirationMechanismsDiagram from '@site/src/components/CacheExpirationMechanismsDiagram';
+import CacheObservabilityPitfallsDiagram from '@site/src/components/CacheObservabilityPitfallsDiagram';
 
 > A cache is a **fast, temporary data store** closer to the application than the source of truth. It trades a bit of storage capacity and system complexity for raw speed.
 
@@ -35,6 +41,12 @@ To understand why this matters, consider the hardware limits: accessing data fro
   - [The 8 Layers Architectural Breakdown](#the-8-layers-architectural-breakdown)
   - [Execution Boundaries](#execution-boundaries)
 - [Jeff Dean's Latency Hierarchy & Memory vs Network Myth](#jeff-deans-latency-hierarchy--memory-vs-network-myth)
+- [The Mathematical Economics of Caching: AMAT & Break-Even Hit Ratio](#the-mathematical-economics-of-caching-amat--break-even-hit-ratio)
+  - [Baseline Request Parameters & Network RTT Overhead](#baseline-request-parameters--network-rtt-overhead)
+  - [AMAT (Average Memory Access Time) Formula](#amat-average-memory-access-time-formula)
+  - [Deriving the Break-Even Hit Ratio](#deriving-the-break-even-hit-ratio)
+  - [Case Studies: Heavy vs. Ultra-Fast Query Scenarios](#case-studies-heavy-vs-ultra-fast-query-scenarios)
+  - [RAM Sizing Trap & Zipf's Law (Working Set vs. Dataset)](#ram-sizing-trap--zipfs-law-working-set-vs-dataset)
 - [The Invalidation Paradox & Browser Cache Busting](#the-invalidation-paradox--browser-cache-busting)
   - [The Invalidation Paradox](#the-invalidation-paradox)
   - [The Content Hashing & URL Immutability Solution](#the-content-hashing--url-immutability-solution)
@@ -51,13 +63,15 @@ To understand why this matters, consider the hardware limits: accessing data fro
   - [4. Write-Behind (Write-Back)](#4-write-behind-write-back)
   - [5. Write-Around](#5-write-around)
   - [6. Refresh-Ahead](#6-refresh-ahead)
-- [Eviction Policies](#eviction-policies)
-  - [LRU (Least Recently Used)](#lru-least-recently-used)
-  - [LFU (Least Frequently Used)](#lfu-least-frequently-used)
-  - [FIFO (First In, First Out)](#eviction-policies)
-  - [TTL (Time to Live)](#ttl-time-to-live)
-  - [Random Eviction](#eviction-policies)
-  - [ARC (Adaptive Replacement Cache)](#eviction-policies)
+- [Cache Eviction & Admission Policies](#cache-eviction--admission-policies)
+  - [The Core of Cache Eviction: Working Set vs. Dataset](#the-core-of-cache-eviction-working-set-vs-dataset)
+  - [The Two Memory Gates: Admission Policy vs. Eviction Policy](#the-two-memory-gates-admission-policy-vs-eviction-policy)
+  - [The 3 Families of Eviction Policies & Engineering Trade-Offs](#the-3-families-of-eviction-policies--engineering-trade-offs)
+  - [W-TinyLFU: State-of-the-Art Architecture (Caffeine Cache)](#w-tinylfu-state-of-the-art-architecture-caffeine-cache)
+- [Cache Expiration & TTL Policies](#cache-expiration--ttl-policies)
+  - [The Core Architectural Triad: Expiration vs. Eviction vs. Invalidation](#the-core-architectural-triad-expiration-vs-eviction-vs-invalidation)
+  - [How Cache Engines Clean Up Expired Keys (Dual-Mechanism)](#how-cache-engines-clean-up-expired-keys-dual-mechanism)
+  - [Taxonomy: The 5 Cache Expiration Policies](#taxonomy-the-5-cache-expiration-policies)
 - [The "Hard" Problems in Caching](#the-hard-problems-in-caching)
   - [Cache Stampede (Thundering Herd)](#1-cache-stampede-thundering-herd)
   - [Cache Consistency (Stale Data)](#2-cache-consistency-stale-data)
@@ -184,6 +198,124 @@ Understanding the orders of magnitude of hardware and network latency is essenti
 > * **Distributed Cache (Redis)**: ~500,000 ns (0.5 ms network socket RTT)
 >
 > Redis is **5,000 times slower** than in-process heap RAM! While Redis is significantly faster than database queries, calling Redis inside a loop of 100 items introduces 50ms of network latency. For ultra-hot data, combine In-Process L1 (Caffeine) with Distributed L2 (Redis).
+
+---
+
+## The Mathematical Economics of Caching: AMAT & Break-Even Hit Ratio
+
+A common knee-jerk reaction among backend engineers when facing slow API responses is: *"Let's just put a cache in front of it!"*. 
+
+However, **cache is never free**. In a standard Cache-Aside architecture, reading from a remote cache server (e.g. Redis) requires a network Round Trip Time (RTT, typically ~1ms). If a cache miss occurs, the application must query the database and perform a synchronous write back to the cache (+1ms RTT). Consequently, **every cache miss incurs an additional +2ms network RTT penalty compared to having no cache at all**.
+
+<CacheAmatEconomicsDiagram />
+
+---
+
+### Baseline Request Parameters & Network RTT Overhead
+
+To analyze the performance mathematically, we establish standard baseline parameters for a single backend request:
+- **$\text{App Overhead}$**: `5ms` (HTTP routing, authentication, validation, JSON serialization/deserialization).
+- **$\text{Cache Latency}$**: `1ms` Network RTT for Read, `1ms` Network RTT for Write.
+- **$T_{\text{db}}$**: Database execution time + DB network latency.
+
+| Execution Path | Composition | Total Latency | Latency Delta vs. No Cache |
+|---|---|---|---|
+| **No Cache** | $\text{App}(5\text{ms}) + T_{\text{db}}$ | $T_{\text{db}} + 5\text{ms}$ | Baseline ($0\text{ms}$) |
+| **Cache Hit** | $\text{App}(5\text{ms}) + \text{Cache Read}(1\text{ms})$ | $6\text{ms}$ | **Saved: $T_{\text{db}} - 1\text{ms}$** |
+| **Cache Miss** | $\text{App}(5\text{ms}) + \text{Cache Read}(1\text{ms}) + T_{\text{db}} + \text{Cache Write}(1\text{ms})$ | $T_{\text{db}} + 7\text{ms}$ | **Penalized: $+2\text{ms}$** |
+
+---
+
+### AMAT (Average Memory Access Time) Formula
+
+In computer architecture (Hennessy & Patterson), the average access latency of a hierarchical memory system is governed by the **AMAT formula**:
+
+$$\mathbf{\text{AMAT} = \text{Time}_{\text{Hit}} + (\text{Miss Rate} \times \text{Miss Penalty})}$$
+
+Where:
+- **$\text{Time}_{\text{Hit}}$**: Latency when data is cached = $\text{App}(5\text{ms}) + \text{Cache Read RTT}(1\text{ms}) = \mathbf{6\text{ms}}$.
+- **$\text{Miss Rate}$**: $1 - H$ (where $H$ is the **Hit Ratio**, $0 \le H \le 1$).
+- **$\text{Miss Penalty}$**: Difference between Miss Latency and Hit Latency:
+  $$\text{Miss Penalty} = (T_{\text{db}} + 7\text{ms}) - 6\text{ms} = \mathbf{T_{\text{db}} + 1\text{ms}}$$
+
+Thus, the average request latency with caching is:
+$$\text{AMAT} = 6 + (1 - H) \cdot (T_{\text{db}} + 1)$$
+
+---
+
+### Deriving the Break-Even Hit Ratio
+
+For caching to be mathematically viable (reducing latency rather than degrading it), the average response time with cache must be strictly less than or equal to the response time without cache:
+
+$$\text{AMAT} \le T_{\text{No-Cache}}$$
+
+$$6 + (1 - H) \cdot (T_{\text{db}} + 1) \le T_{\text{db}} + 5$$
+
+$$(1 - H) \cdot (T_{\text{db}} + 1) \le T_{\text{db}} - 1$$
+
+$$1 - H \le \frac{T_{\text{db}} - 1}{T_{\text{db}} + 1}$$
+
+$$H \ge 1 - \frac{T_{\text{db}} - 1}{T_{\text{db}} + 1}$$
+
+$$H \ge \frac{(T_{\text{db}} + 1) - (T_{\text{db}} - 1)}{T_{\text{db}} + 1}$$
+
+$$\mathbf{H_{\text{break-even}} = \frac{2}{T_{\text{db}} + 1}}$$
+
+:::tip[Generalized Break-Even Formula]
+If cache read RTT is $R_{\text{read}}$ and sync write RTT is $R_{\text{write}}$, the generalized break-even hit ratio is:
+$$H_{\text{break-even}} = \frac{R_{\text{read}} + R_{\text{write}}}{T_{\text{db}} + R_{\text{write}}}$$
+:::
+
+---
+
+### Case Studies: Heavy vs. Ultra-Fast Query Scenarios
+
+<CacheAmatEconomicsDiagram initialTab="scenarios" />
+
+#### Scenario A: Expensive Database Query ($T_{\text{db}} = 50\text{ms}$)
+- **No Cache**: $5\text{ms} + 50\text{ms} = 55\text{ms}$.
+- **Cache Hit**: $6\text{ms}$ (Saves $49\text{ms}$).
+- **Cache Miss**: $57\text{ms}$ (Penalty: $+2\text{ms}$).
+- **Break-Even Hit Ratio**:
+  $$H \ge \frac{2}{50 + 1} = \frac{2}{51} \approx \mathbf{3.9\%}$$
+- **Takeaway**: Because the database query is slow ($50\text{ms}$), only **1 hit out of 25 requests (3.9%)** is needed to overcome the $2\text{ms}$ penalty of the other 24 misses ($1 \times 49\text{ms} \text{ saved} > 24 \times 2\text{ms} = 48\text{ms} \text{ lost}$). Caching heavy queries is virtually always profitable.
+
+#### Scenario B: Ultra-Fast Indexed Query ($T_{\text{db}} = 2\text{ms}$)
+- **No Cache**: $5\text{ms} + 2\text{ms} = 7\text{ms}$.
+- **Cache Hit**: $6\text{ms}$ (Saves only $1\text{ms}$).
+- **Cache Miss**: $9\text{ms}$ (Penalty: $+2\text{ms}$).
+- **Break-Even Hit Ratio**:
+  $$H \ge \frac{2}{2 + 1} = \frac{2}{3} \approx \mathbf{66.7\%}$$
+- **Takeaway**: If your query is already indexed and returns in $2\text{ms}$, you must achieve **at least 66.7% Hit Ratio** just to break even! If your cache hits only 50% of the time, **adding a cache makes your API slower on average** while unnecessarily burning expensive RAM.
+
+:::important[Golden Architecture Rule #1]
+**Only cache heavy, computationally expensive, or I/O-bound queries**. Avoid caching queries that already execute in under $2\text{ms}$ unless the primary goal is protecting the database from extreme concurrent QPS spikes.
+:::
+
+---
+
+### RAM Sizing Trap & Zipf's Law (Working Set vs. Dataset)
+
+When planning cache capacity, engineers frequently ask: *"How many gigabytes of RAM do we need to provision?"*
+
+In real-world web applications (e-commerce, social media, content platforms), request distributions follow **Zipf's Law** (power-law distribution where access probability $P(k) \propto 1/k^\alpha$, with $\alpha \approx 1$).
+
+<CacheWorkingSetZipfDiagram initialTab="zipf" />
+
+#### The Zipf Capacity-to-Hit-Ratio Progression:
+Suppose a catalog has 2,000,000 products ($10\text{GB}$ total dataset), but peak traffic concentrates heavily on the top 200,000 hot items (**$1\text{GB}$ Working Set**):
+
+| Provisioned RAM | Cached Hot Items | Theoretical Hit Ratio (Zipf $\alpha=1$) | Marginal Gain |
+|---|---|---|---|
+| **125 MB** | 25,000 items | **83.7%** | Base |
+| **250 MB** | 50,000 items | **89.2%** | $+5.5\%$ |
+| **500 MB** | 100,000 items | **94.6%** | $+5.4\%$ |
+| **1 GB** | 200,000 items *(Working Set)* | **~100%** | $+5.4\%$ |
+| **2 GB** | 400,000 items | **~100%** | **$0.0\%$ (Zero Marginal Return!)** |
+
+:::caution[The Diminishing Returns Wall]
+Once provisioned RAM covers the active **Working Set** ($1\text{GB}$), allocating additional RAM (e.g. scaling from $1\text{GB}$ to $2\text{GB}$ or $10\text{GB}$) yields **virtually zero increase in Hit Ratio**. Always profile and calculate the working set size before scaling cache cluster hardware.
+:::
 
 ---
 
@@ -643,112 +775,132 @@ public class TrendingFeedCacheWarmer {
 
 ---
 
-## Eviction Policies
+---
 
-Because memory is vastly more expensive and limited than disk storage, you cannot fit your entire dataset into a cache. Eviction policies define what gets removed when the cache fills up.
+## Cache Eviction & Admission Policies
 
-| Policy                          | Description & Use Case                                                                                                                                                                                                                  |
-| ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **LRU** (Least Recently Used)   | Evicts items that haven't been accessed recently. Often implemented under the hood with a linked list or priority queue. This is the standard default for most general-purpose caching.                                                 |
-| **LFU** (Least Frequently Used) | Evicts items based on total access count. Best for highly skewed access patterns (e.g., a Pareto distribution). Even if an item was accessed 1 second ago, if its overall frequency is low, it gets dropped.                            |
-| **FIFO** (First In, First Out)  | The oldest item gets removed to make space for the newest, regardless of access patterns. Rarely the right choice in a production environment.                                                                                          |
-| **TTL** (Time to Live)          | Every cached item is given an explicit expiration clock (e.g., 5 minutes). Once time passes, it is automatically purged. Perfect for data where freshness strictly overrides frequency or recency (e.g., user sessions, API responses). |
-| **Random Eviction**             | Randomly selects items to evict. Simple to implement but can lead to poor cache hit rates.                                                                                                                                              |
-| **ARC** (Adaptive Replacement Cache) | Dynamically adapts between recency and frequency based on workload patterns. More complex but can provide better hit rates for mixed workloads.                                                                                      |
+When memory capacity reaches its limit, a cache must discard entries to accommodate incoming data. However, modern high-scale cache architecture is not merely about "kicking out old keys"—it is a coordinated interplay between **The Working Set**, **The Entrance Gate (Admission Policy)**, and **The Exit Gate (Eviction Policy)**.
 
-### LRU (Least Recently Used)
+---
+
+### 1. The Core of Cache Eviction: Working Set vs. Dataset
+
+To design effective caching capacity, engineers must distinguish between the total dataset and the active working set:
+
+<CacheWorkingSetZipfDiagram initialTab="rings" />
+
+- **Dataset**: The complete volume of data stored in the authoritative database (e.g. 500 GB). This grows monotonically over time with writes.
+- **Working Set**: The active subset of data queried by concurrent users within a given operational window (e.g. 8 GB during peak hours). The working set expands or contracts primarily based on active user concurrency.
+
+#### The Fundamental Objective of Eviction
+Memory (RAM) is finite and expensive; attempting to hold the entire dataset in RAM is impossible and wasteful. **The ultimate goal of cache eviction is to retain the active Working Set in memory by identifying and expelling items with the least future utility**, maximizing the Cache Hit Ratio while minimizing CPU, memory, and lock contention overhead.
+
+| Capacity Sizing Dynamic | Eviction Behavior | Hit Ratio Impact |
+|---|---|---|
+| **`Cache Size > Working Set Size`** | Eviction **rarely occurs**. | Any eviction policy (LRU, LFU, FIFO) achieves nearly identical hit ratios. |
+| **`Cache Size < Working Set Size`** | Eviction **occurs continuously**. | The choice of **Eviction Policy & Admission Policy** directly determines system survival and hit ratio. |
+
+:::tip[Diagnosing Low Hit Ratios]
+If your cache exhibits a poor Hit Ratio while **memory capacity is NOT full**, the root cause is **TTL/Expiration** or **Premature Invalidation**, never Eviction!
+:::
+
+---
+
+### 2. The Two Memory Gates: Admission Policy vs. Eviction Policy
+
+Standard cache tutorials focus exclusively on *Eviction* (the exit gate). However, modern production architectures govern memory through **Two Distinct Gates**:
+
+<CacheTwoMemoryGatesDiagram />
+
+1. **Admission Policy (The Entrance Gate)**: When new data arrives, evaluates whether the incoming candidate possesses sufficient long-term value to occupy valuable RAM.
+2. **Eviction Policy (The Exit Gate)**: When memory is saturated, selects the optimal "victim" entry to expel to make room.
+
+#### The Problem of Cache Pollution & One-Hit Wonders
+In systems with **No Admission Policy** (such as standard Redis where the entrance gate is wide open):
+1. At midnight, a background batch job or analytical query executes a **Full Table Scan**, reading millions of rows exactly once (*One-Hit Wonders*).
+2. Naive LRU treats every freshly read row as "most recently used", populating the head of the cache.
+3. **The Disaster (Cache Pollution)**: The entire genuine hot **Working Set** is completely evicted from memory.
+4. The next morning, when active users return, the Cache Hit Ratio collapses to near 0%, slamming the primary database with an unmitigated traffic spike.
+
+**Scan Resistance** is the benchmark of whether a caching algorithm can withstand full table scans without evicting its active working set.
+
+#### 4 Common Admission Policies:
+1. **No Admission**: Default for most distributed caches (open entrance gate).
+2. **N-Hit Admission**: A key is only admitted to cache if it experiences $\ge N$ misses within a time window (tracked via a compact Bloom Filter).
+3. **Size-Aware Admission**: Rejects oversized payloads whose memory footprint exceeds their marginal hit ratio value (standard in CDNs).
+4. **Frequency-Based Admission (TinyLFU)**: Compares the historical access frequency of the incoming candidate against the eviction victim using a compressed Count-Min Sketch. If the candidate is weaker, it is rejected at the gate.
+
+---
+
+### 3. The 3 Families of Eviction Policies & Engineering Trade-Offs
+
+Every eviction policy attempts to solve one predictive question: *Based on past behavior, which key is least likely to be accessed again in the future?*
+
+#### 1️⃣ Recency-Based: LRU (Least Recently Used)
+- **Philosophy**: If an item was accessed recently, it will be accessed again soon (**Temporal Locality**). Adapts very rapidly to sudden shifts in user traffic.
+- **Blind Spot**: Highly vulnerable to **Cache Pollution** during table scans or one-hit wonders.
+- **Code Implementation**:
+  ```java
+  public class LRUCache<K, V> extends LinkedHashMap<K, V> {
+      private final int maxSize;
+      public LRUCache(int maxSize) {
+          super(maxSize, 0.75f, true); // true = access-order mode
+          this.maxSize = maxSize;
+      }
+      @Override
+      protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
+          return size() > maxSize;
+      }
+  }
+  ```
 
 <LruEvictionDiagram />
 
-```java
-// LRU Cache implementation using LinkedHashMap
-public class LRUCache<K, V> extends LinkedHashMap<K, V> {
-    private final int maxSize;
+---
 
-    public LRUCache(int maxSize) {
-        super(maxSize, 0.75f, true); // access-order mode
-        this.maxSize = maxSize;
-    }
-
-    @Override
-    protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
-        return size() > maxSize;
-    }
-}
-
-// Usage
-LRUCache<String, String> cache = new LRUCache<>(100);
-cache.put("key1", "value1");
-cache.put("key2", "value2");
-String value = cache.get("key1"); // key1 becomes most recently used
-```
-
-### LFU (Least Frequently Used)
+#### 2️⃣ Frequency-Based: LFU (Least Frequently Used)
+- **Philosophy**: Items accessed frequently in the past will continue to be popular. Excellent for retaining persistent hot data.
+- **Blind Spot**: **Historical Bias & Lack of Decay (Aging)**. An item that went viral during last week's promotional campaign retains an artificially massive counter and sits permanently in memory, preventing new emerging hot items from entering.
+- **Code Implementation**:
 
 <LfuEvictionDiagram />
 
 ```java
-// LFU Cache implementation
 public class LFUCache<K, V> {
     private final int capacity;
-    private final Map<K, CacheNode<K, V>> cache;
-    private final TreeMap<Integer, LinkedHashSet<CacheNode<K, V>>> frequencyMap;
-    private int minFrequency;
+    private final Map<K, CacheNode<K, V>> cache = new HashMap<>();
+    private final TreeMap<Integer, LinkedHashSet<CacheNode<K, V>>> frequencyMap = new TreeMap<>();
+    private int minFrequency = 1;
 
     private static class CacheNode<K, V> {
-        K key;
-        V value;
-        int frequency;
-
-        CacheNode(K key, V value) {
-            this.key = key;
-            this.value = value;
-            this.frequency = 1;
-        }
+        K key; V value; int frequency = 1;
+        CacheNode(K key, V value) { this.key = key; this.value = value; }
     }
 
-    public LFUCache(int capacity) {
-        this.capacity = capacity;
-        this.cache = new HashMap<>();
-        this.frequencyMap = new TreeMap<>();
-        this.minFrequency = 1;
-    }
+    public LFUCache(int capacity) { this.capacity = capacity; }
 
     public V get(K key) {
         CacheNode<K, V> node = cache.get(key);
-        if (node == null) {
-            return null;
-        }
-
-        // Update frequency
+        if (node == null) return null;
         updateFrequency(node);
         return node.value;
     }
 
     public void put(K key, V value) {
-        if (capacity == 0) {
+        if (capacity == 0) return;
+        CacheNode<K, V> node = cache.get(key);
+        if (node != null) {
+            node.value = value;
+            updateFrequency(node);
             return;
         }
-
-        CacheNode<K, V> existingNode = cache.get(key);
-        if (existingNode != null) {
-            existingNode.value = value;
-            updateFrequency(existingNode);
-            return;
-        }
-
         if (cache.size() >= capacity) {
-            // Evict least frequently used item
-            LinkedHashSet<CacheNode<K, V>> nodes = frequencyMap.get(minFrequency);
-            CacheNode<K, V> toRemove = nodes.iterator().next();
-            nodes.remove(toRemove);
-            cache.remove(toRemove.key);
-
-            if (nodes.isEmpty()) {
-                frequencyMap.remove(minFrequency);
-            }
+            LinkedHashSet<CacheNode<K, V>> minNodes = frequencyMap.get(minFrequency);
+            CacheNode<K, V> victim = minNodes.iterator().next();
+            minNodes.remove(victim);
+            if (minNodes.isEmpty()) frequencyMap.remove(minFrequency);
+            cache.remove(victim.key);
         }
-
         CacheNode<K, V> newNode = new CacheNode<>(key, value);
         cache.put(key, newNode);
         frequencyMap.computeIfAbsent(1, k -> new LinkedHashSet<>()).add(newNode);
@@ -756,92 +908,171 @@ public class LFUCache<K, V> {
     }
 
     private void updateFrequency(CacheNode<K, V> node) {
-        int oldFreq = node.frequency;
-        int newFreq = oldFreq + 1;
-
-        LinkedHashSet<CacheNode<K, V>> oldSet = frequencyMap.get(oldFreq);
-        oldSet.remove(node);
-
-        if (oldSet.isEmpty()) {
-            frequencyMap.remove(oldFreq);
-            if (minFrequency == oldFreq) {
-                minFrequency++;
-            }
+        int freq = node.frequency;
+        LinkedHashSet<CacheNode<K, V>> nodes = frequencyMap.get(freq);
+        nodes.remove(node);
+        if (nodes.isEmpty()) {
+            frequencyMap.remove(freq);
+            if (minFrequency == freq) minFrequency++;
         }
-
-        node.frequency = newFreq;
-        frequencyMap.computeIfAbsent(newFreq, k -> new LinkedHashSet<>()).add(node);
+        node.frequency++;
+        frequencyMap.computeIfAbsent(node.frequency, k -> new LinkedHashSet<>()).add(node);
     }
 }
 ```
 
-### TTL (Time to Live)
+---
+
+#### 3️⃣ Hybrid & Multi-Tier Architectures (Scan-Resistant Designs)
+
+| Algorithm | Architecture & Mechanism | Real-World Production Implementations |
+|---|---|---|
+| **SLRU** *(Segmented LRU)* | Divides cache into **Probation (Trial)** and **Protected (Official)** segments. New keys enter Probation; only promoted to Protected on a 2nd hit. | **Memcached** (3-tier: HOT, WARM, COLD); **MySQL InnoDB Buffer Pool** (3/8 Midpoint Insertion Rule). |
+| **ARC** *(Adaptive Replacement Cache)* | Maintains 4 lists (including 2 Ghost Lists that track evicted keys without payload) to dynamically tune the balance between Recency and Frequency in real-time. | **ZFS File System**, IBM Enterprise Storage Subsystems. |
+| **CLOCK / Second-Chance** | Approximates LRU via a circular buffer and 1-bit usage flags, eliminating lock contention and pointer overhead. | **PostgreSQL Shared Buffer Pool**, **Linux OS Kernel Page Replacement**. |
+
+---
+
+### 4. W-TinyLFU: State-of-the-Art Architecture (Caffeine Cache)
+
+The most advanced cache architecture available today is **Window TinyLFU (W-TinyLFU)**, designed by Ben Manes and implemented in Java's industry-standard **Caffeine Cache**:
+
+<WTinyLfuArchitectureDiagram />
+
+#### Core Components of W-TinyLFU:
+1. **Window LRU (1% Cache Size)**: New keys enter an initial admission window unconditionally. This gives brand-new hot keys time to build up frequency before facing admission scrutiny.
+2. **Admission Duel via TinyLFU**: When a key falls out of the Window LRU, it challenges the weakest victim at the bottom of the Main Cache (SLRU Probation). Frequencies are estimated using a 4-bit **Count-Min Sketch** with periodic aging reset. If the candidate has higher frequency, it replaces the victim in Main Cache; otherwise, it is immediately discarded.
+3. **Adaptive Window (Hill Climbing)**: The size of the Window LRU is not static; Caffeine dynamically resizes the window in real-time using a **Hill Climbing algorithm** to optimize the measured Hit Ratio based on shifting workload characteristics.
+
+```java
+// Production Caffeine Configuration (W-TinyLFU)
+Cache<String, Product> productCache = Caffeine.newBuilder()
+    .maximumSize(50_000)                // Enforces W-TinyLFU eviction
+    .recordStats()                      // Observability metrics
+    .build();
+```
+
+---
+
+---
+
+## Cache Expiration & TTL Policies
 
 <TtlExpirationDiagram />
 
-```java
-// TTL Cache implementation
-public class TTLCache<K, V> {
-    private final ConcurrentHashMap<K, CacheEntry<V>> cache;
-    private final long ttlMillis;
-    private final ScheduledExecutorService cleanupExecutor;
+While Cache Eviction is driven by **memory capacity pressure**, **Cache Expiration** determines the temporal lifecycle of cached data. To design robust architectures, engineers must first establish a clear distinction across the three core cache lifecycle mechanisms:
 
-    private static class CacheEntry<V> {
-        final V value;
-        final long expiryTime;
+### The Core Architectural Triad: Expiration vs. Eviction vs. Invalidation
 
-        CacheEntry(V value, long ttlMillis) {
-            this.value = value;
-            this.expiryTime = System.currentTimeMillis() + ttlMillis;
-        }
+| Dimension | Cache Expiration | Cache Eviction | Cache Invalidation |
+|---|---|---|---|
+| **Primary Trigger** | **Time (Clock-driven)** | **Memory Pressure (RAM-driven)** | **Data Mutation (State-driven)** |
+| **Why It Happens** | Key's Time-To-Live (TTL) duration or target timestamp has expired. | Cache storage hits `maxmemory` threshold. | Authoritative database record was updated, deleted, or inserted. |
+| **Data State** | Data becomes **Stale / Obsolete**. | Data may still be **Fresh and Valid**, but sacrificed to free RAM. | Data becomes **Inconsistent**. |
+| **Mechanism / Algorithm** | Passive (Lazy on `GET`) & Active (Periodic Sampling). | LRU, LFU, FIFO, Random, ARC replacement algorithms. | Event-driven pub/sub, CDC pipelines (Debezium), Dual-Delete. |
 
-        boolean isExpired() {
-            return System.currentTimeMillis() > expiryTime;
-        }
-    }
+:::important[The Core Heuristic]
+- **Expiration** is governed by the **Clock** (Time).
+- **Eviction** is governed by **RAM Capacity** (Memory).
+- **Invalidation** is governed by **Source-of-Truth Mutations** (Events).
+:::
 
-    public TTLCache(long ttlMillis) {
-        this.cache = new ConcurrentHashMap<>();
-        this.ttlMillis = ttlMillis;
-        this.cleanupExecutor = Executors.newSingleThreadScheduledExecutor();
+---
 
-        // Schedule periodic cleanup
-        cleanupExecutor.scheduleAtFixedRate(
-            this::cleanup,
-            ttlMillis / 2,
-            ttlMillis / 2,
-            TimeUnit.MILLISECONDS
-        );
-    }
+### How Cache Engines Clean Up Expired Keys (Dual-Mechanism)
 
-    public void put(K key, V value) {
-        cache.put(key, new CacheEntry<>(value, ttlMillis));
-    }
+High-performance cache engines (such as Redis, Memcached, and Caffeine) **never attach an individual hardware/software timer to each key**. Managing millions of concurrent active timers would cause massive CPU scheduling thrashing and memory heap overhead. 
 
-    public V get(K key) {
-        CacheEntry<V> entry = cache.get(key);
-        if (entry == null || entry.isExpired()) {
-            cache.remove(key);
-            return null;
-        }
-        return entry.value;
-    }
+Instead, cache engines combine **two complementary cleanup mechanisms**:
 
-    private void cleanup() {
-        Iterator<Map.Entry<K, CacheEntry<V>>> it = cache.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<K, CacheEntry<V>> entry = it.next();
-            if (entry.getValue().isExpired()) {
-                it.remove();
-            }
-        }
-    }
+<CacheExpirationMechanismsDiagram />
 
-    public void shutdown() {
-        cleanupExecutor.shutdown();
-    }
-}
-```
+### Taxonomy: The 5 Cache Expiration Policies
+
+Depending on the business domain, access patterns, and failure tolerance, systems must select the appropriate expiration policy:
+
+#### ① Absolute Expiration (Expire-After-Write / Fixed TTL)
+- **Mechanism**: TTL is fixed at the moment the entry is written (`PUT`/`SET`). Read operations (`GET`) have **zero effect** on the expiration timestamp. The key expires exactly after duration $T$.
+- **Best Use Cases**: Data that changes on a predictable schedule (e.g. daily exchange rates, catalog pricing, public leaderboards refreshed every 10 minutes).
+- **Code Example**:
+  ```bash
+  # Redis: Expire 600 seconds after write
+  SET product:450 '{"name":"Laptop"}' EX 600
+  ```
+  ```java
+  // Caffeine: Expire 10 minutes after creation
+  Cache<String, Product> cache = Caffeine.newBuilder()
+      .expireAfterWrite(10, TimeUnit.MINUTES)
+      .build();
+  ```
+
+---
+
+#### ② Sliding Expiration (Expire-After-Access / Inactivity Timeout)
+- **Mechanism**: The expiration countdown resets back to the full TTL on **every read or write access**. The key remains in cache as long as it is actively used, and only expires after a continuous idle period equal to the sliding window.
+- **Best Use Cases**: User authentication sessions, active shopping carts, user presence/activity tracking.
+- **Code Example**:
+  ```bash
+  # Redis 6.2+: Get and atomically reset TTL to 1800s (30 mins)
+  GETEX session:token_abc EX 1800
+  ```
+  ```java
+  // Caffeine: Expire 30 minutes after last read or write
+  Cache<String, UserSession> sessionCache = Caffeine.newBuilder()
+      .expireAfterAccess(30, TimeUnit.MINUTES)
+      .build();
+  ```
+
+---
+
+#### ③ Absolute Point-in-Time Expiration (Expire-At / Target Timestamp)
+- **Mechanism**: Rather than counting down a relative duration, the entry is assigned an explicit **absolute Unix Epoch timestamp** or calendar cutoff.
+- **Best Use Cases**: Business deadlines and daily resets (e.g. Daily API rate limits resetting exactly at `23:59:59 UTC`, flash sale promotional pricing ending precisely at `12:00:00`).
+- **Code Example**:
+  ```bash
+  # Redis: Expire exactly at Unix timestamp 1735689599 (23:59:59 UTC)
+  SET quota:user_123 "500" EXAT 1735689599
+  # Or update existing key:
+  EXPIREAT quota:user_123 1735689599
+  ```
+
+---
+
+#### ④ Variable / Jittered Expiration (Entropy-Based TTL)
+- **Mechanism**: Adds randomized numerical entropy to the base TTL to desynchronize expiration timestamps across keys:
+  $$\mathbf{\text{TTL}_{\text{actual}} = \text{TTL}_{\text{base}} \pm \text{Random}(\text{Jitter})}$$
+- **Best Use Cases**: Essential when **batch-loading or pre-warming thousands of keys** simultaneously. Prevents **Cache Avalanche / Cache Stampede** where thousands of keys expire in the same second, overwhelming the primary database.
+- **Code Example**:
+  ```java
+  public void cacheBatchProducts(List<Product> products) {
+      int baseTtlSeconds = 3600; // 1 hour base
+      for (Product p : products) {
+          // Add ± 10 minutes (600s) random jitter
+          int jitter = ThreadLocalRandom.current().nextInt(-600, 601);
+          int actualTtl = baseTtlSeconds + jitter;
+          redisTemplate.opsForValue().set("product:" + p.getId(), p, actualTtl, TimeUnit.SECONDS);
+      }
+  }
+  ```
+
+---
+
+#### ⑤ Dynamic / Contextual Expiration (Adaptive SLA)
+- **Mechanism**: TTL is computed at runtime via a business function based on external context, such as current database CPU load, payload size, or customer subscription tier.
+- **Best Use Cases**:
+  - **Adaptive Load Shedding**: When database CPU load exceeds 80%, dynamically double cache TTLs to reduce database read pressure.
+  - **Tiered SLAs**: VIP / Enterprise users receive longer session cache lifetimes than free-tier users.
+- **Code Example**:
+  ```java
+  public long calculateDynamicTtl(UserTier tier, double currentDbCpuUsage) {
+      long baseTtl = (tier == UserTier.VIP) ? 7200 : 1800; // 2h vs 30m
+      if (currentDbCpuUsage > 0.80) {
+          // Double cache TTL during high database load to protect DB
+          return baseTtl * 2;
+      }
+      return baseTtl;
+  }
+  ```
 
 ---
 
@@ -1911,15 +2142,15 @@ groups:
   - name: cache_alerts
     rules:
       - alert: LowCacheHitRate
-        expr: cache_hit_rate < 0.8
+        expr: (sum(rate(cache_gets_total{result="hit"}[5m])) / sum(rate(cache_gets_total[5m]))) < 0.8
         for: 5m
         labels:
           severity: warning
         annotations:
-          summary: Low cache hit rate for {{ $labels.cache }}
+          summary: Low cache hit rate (< 80%) for {{ $labels.cache }}
 
       - alert: HighCacheMissRate
-        expr: rate(cache_misses[5m]) > 1000
+        expr: rate(cache_gets_total{result="miss"}[5m]) > 1000
         for: 5m
         labels:
           severity: warning
@@ -1927,12 +2158,65 @@ groups:
           summary: High cache miss rate for {{ $labels.cache }}
 
       - alert: HighCacheEvictionRate
-        expr: rate_cache_evictions[5m] > 100
+        expr: rate(cache_evictions_total[5m]) > 100
         for: 5m
         labels:
           severity: warning
         annotations:
           summary: High cache eviction rate for {{ $labels.cache }}
+```
+
+---
+
+### Observability Pitfalls: Measuring Cache Health Accurately
+
+<CacheObservabilityPitfallsDiagram />
+
+#### Trap 1: Request Hit Ratio vs. Key Hit Ratio (The P99 Latency Deception)
+Suppose you allocate $250\text{MB}$ RAM for a catalog with 200,000 active products.
+- **Request Hit Ratio**: **$89.2\%$** (looks great on high-level executive dashboards!).
+- **Key Hit Ratio**: $250\text{MB}$ only holds 50,000 items $\rightarrow$ **only $25\%$ of unique product keys are cached**.
+**Consequence**: The $75\%$ of less popular, long-tail products continuously miss the cache. Users browsing niche or long-tail items consistently suffer $57\text{ms}$ latency ($+2\text{ms}$ RTT overhead on top of the DB query), causing severe **P99 tail latency degradation**. Always monitor P95, P99, and P99.9 latencies alongside average hit ratio.
+
+---
+
+#### Trap 2: The Redis `INFO stats` Cumulative Counter Trap
+Many operations teams monitor cache health by querying `keyspace_hits` and `keyspace_misses` from Redis `INFO stats`:
+
+```bash
+# Redis CLI
+127.0.0.1:6379> INFO stats
+keyspace_hits:84920194
+keyspace_misses:4102910
+# Calculated Hit Ratio = 84920194 / (84920194 + 4102910) = 95.3%
+```
+
+**Why this is dangerously misleading:**
+1. **Cumulative Lifetime Bias**: `INFO stats` counters accumulate continuously from the moment the Redis process started (weeks or months). A 95.3% multi-week average completely **masks a catastrophic localized hit ratio collapse (e.g. down to 20%)** during a high-traffic flash sale.
+2. **Cross-Domain Cache Obfuscation**: `INFO stats` aggregates all keys across the entire Redis instance. If you have 10 distinct application caches in the same Redis cluster, a hot, high-volume cache (e.g. session tokens with 99% hit rate) will completely hide a broken or misconfigured secondary cache (e.g. product catalog with 0% hit rate).
+
+#### The Production Solution: Application-Level Tagged Metrics via Micrometer
+Always measure cache telemetry at the **application layer** per cache region, evaluated over a sliding time window (e.g. `rate(...[1m])` or `rate(...[5m])`):
+
+```java
+// Spring Boot with Micrometer & Redis / Caffeine
+@Service
+public class ProductService {
+
+    @Cacheable(value = "products", key = "#id")
+    public ProductDto getProduct(String id) {
+        // Micrometer automatically records cache.gets with tags:
+        // name="products", result="hit" | "miss"
+        return productRepository.findById(id).map(this::toDto).orElse(null);
+    }
+}
+```
+
+```promql
+# Prometheus Query for Real-Time 5-minute Sliding Window Hit Rate per Cache:
+sum(rate(cache_gets_total{name="products", result="hit"}[5m]))
+/
+sum(rate(cache_gets_total{name="products"}[5m]))
 ```
 
 ---
@@ -2324,9 +2608,37 @@ public class EhcacheConfig {
 
 **A:** CDN caching stores content at edge locations close to users for low latency, while application caching stores data closer to the application for faster access. CDN is best for static content, while application caching is better for dynamic data.
 
-### Q: How do you optimize cache performance?
+### Q: How do you mathematically determine whether adding a cache will improve API latency using AMAT?
 
-**A:** Choose appropriate eviction policies, optimize cache size, use efficient data structures, implement cache warming, monitor performance metrics, and tune configuration based on access patterns.
+**A:** Use the Average Memory Access Time formula: $\text{AMAT} = \text{Time}_{\text{Hit}} + (\text{Miss Rate} \times \text{Miss Penalty})$. Because every cache miss incurs an extra network round-trip overhead (typically $+2\text{ms}$ in Cache-Aside for read check + sync write) compared to running directly against the DB, caching only reduces average latency if $\text{AMAT} \le T_{\text{No-Cache}}$. This derives the **Break-Even Hit Ratio** formula: $H_{\text{break-even}} = \frac{2}{T_{\text{db}} + 1}$.
+
+### Q: Why can adding a cache to an ultra-fast query (1–2ms) degrade overall system performance?
+
+**A:** If an indexed database query already executes in $2\text{ms}$, the break-even hit ratio is $H \ge \frac{2}{2+1} = 66.7\%$. If the hit ratio is below $66.7\%$ (e.g. $50\%$), the $+2\text{ms}$ network RTT penalty on every miss outweighs the minor $1\text{ms}$ saved on hits, making the average API latency **slower** than querying the database directly while wasting expensive RAM. Caching should only be applied to expensive queries or to protect DB capacity under massive QPS.
+
+### Q: How does Zipf's Law impact cache RAM sizing and capacity planning?
+
+**A:** Internet traffic follows a power-law Zipf distribution ($\alpha \approx 1$), where the vast majority of requests hit a small fraction of items (the **Working Set**). Sizing RAM to hold the active Working Set (e.g. 200,000 hot items / 1GB in a 10GB catalog) yields near 100% theoretical hit ratio. Scaling RAM beyond the working set (e.g. 2GB or 10GB) hits an "efficiency wall" with **zero marginal return** because the long tail of items receives virtually no repeat traffic before eviction/TTL expiration.
+
+### Q: Why can an application with an 89% cache hit ratio still suffer from poor P99 tail latency?
+
+**A:** Because of the discrepancy between **Request Hit Ratio** and **Key Hit Ratio**. An 89% request hit ratio might only cover 25% of unique product keys. The remaining 75% of long-tail product keys continuously experience cache misses, incurring full database execution plus network cache-write penalties ($57\text{ms}$ vs $6\text{ms}$). While average and P50/P90 latencies look fast, the $11\%$ of users requesting long-tail items suffer degraded **P99 and P99.9 tail latencies**.
+
+### Q: Why are Redis `INFO stats` counters dangerous for measuring cache hit rates in production?
+
+**A:** `INFO stats` counters (`keyspace_hits`, `keyspace_misses`) are cumulative across the lifetime of the Redis instance and aggregate all cache keys globally. Multi-week cumulative counters completely hide transient hit ratio collapses during peak traffic hours, and high-traffic hot caches (like session tokens) mask failing secondary caches. Production telemetry must measure application-level metrics (e.g. Spring Boot Micrometer `cache.gets` tagged by cache name and result) over short sliding windows (1m/5m rate).
+
+### Q: What is the difference between Cache Dataset and Working Set, and how does that dictate eviction behavior?
+
+**A:** The **Dataset** is the total volume of data in the persistent database (e.g. 500GB, growing over time with writes). The **Working Set** is the active subset queried by concurrent users within a given window (e.g. 8GB at peak hours). When $\text{Cache Size} > \text{Working Set}$, evictions rarely occur and policy choices have negligible impact. When $\text{Cache Size} < \text{Working Set}$, evictions occur continuously, and algorithm choice directly determines hit ratio and database protection.
+
+### Q: What are the Two Memory Gates (Admission vs. Eviction) and how does Scan Resistance prevent Cache Pollution?
+
+**A:** Caching architectures govern memory via two gates: **Admission Policy (Entrance Gate)** decides if a new key qualifies to enter RAM; **Eviction Policy (Exit Gate)** decides which victim to drop when memory is full. Without an admission policy (e.g. standard Redis), a midnight full table scan / batch job reads millions of "one-hit wonders", flooding LRU cache and evicting the genuine hot working set (**Cache Pollution**). **Scan Resistance** (achieved via N-Hit admission, SLRU probation segments, or TinyLFU admission duels) blocks transient scan keys from polluting the main cache.
+
+### Q: How does W-TinyLFU (Caffeine Cache) combine Admission and Eviction to outperform classical LRU/LFU?
+
+**A:** W-TinyLFU divides cache into a small **Window LRU (1%)** and a **Main SLRU Cache (99%)**. New keys enter the Window LRU unconditionally to prove their utility. When evicted from the Window, the candidate enters an **Admission Duel** against the weakest victim in the Main Cache using a 4-bit Count-Min Sketch frequency estimator. If the candidate has higher frequency, it enters the Main Cache; otherwise, it is discarded. Furthermore, an adaptive **Hill Climbing** algorithm continuously tunes the Window size in real-time based on observed hit ratio.
 
 ---
 

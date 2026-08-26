@@ -6,6 +6,8 @@ tags: [dsa, java, graphs, dijkstra, mst, algorithms, week-17]
 sidebar_position: 17
 ---
 
+import DsaWeek17ShortestPathMstDiagram from '@site/src/components/DsaWeek17ShortestPathMstDiagram';
+
 # Week 17: Shortest Paths & MST
 
 ## 1. Overview
@@ -32,6 +34,9 @@ This week introduces **Weighted Graphs**. You will master two of the most famous
 ---
 
 ## 2. Theory & Fundamentals
+
+<DsaWeek17ShortestPathMstDiagram />
+
 
 ### 2.1 Mental Model: Why BFS Breaks on Weighted Graphs
 

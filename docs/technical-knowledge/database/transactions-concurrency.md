@@ -229,6 +229,130 @@ public class Order {
 
 ---
 
+## High-Throughput Row Locking & Reservation Patterns
+
+Under massive write concurrency (e.g. Black Friday flash sales with thousands of concurrent checkouts competing for the same SKU), standard single-row pessimistic locking (`UPDATE inventory SET qty = qty - 1 WHERE id = 1`) forms a severe bottleneck: **all concurrent transactions serialize on that single row's exclusive lock**, cascading into connection pool exhaustion and lock wait timeouts.
+
+### 1. `SELECT ... FOR UPDATE SKIP LOCKED` vs `NOWAIT`
+
+Introduced in MySQL 8.0+, PostgreSQL 9.5+, and Oracle:
+
+| Locking Mode | Behavior when Target Row is Already Locked | Use Case |
+|---|---|---|
+| `FOR UPDATE` *(Standard)* | **Blocks** until the holding transaction commits/rollbacks, creating a FIFO queue. | Strict sequential processing. |
+| `FOR UPDATE NOWAIT` | **Fails immediately** with a lock conflict error (`ERROR 3572` in MySQL / `55P03` in PG) instead of waiting. | Fast-fail paths, preventing connection hold queues. |
+| `FOR UPDATE SKIP LOCKED` | **Non-blocking skip**: Skips all locked rows and locks the next available unlocked matching row(s). | Queue workers, high-throughput item reservations, job dispatch. |
+
+```sql
+-- Worker 1 grabs the first available pending job:
+SELECT * FROM job_queue WHERE status = 'PENDING' LIMIT 1 FOR UPDATE SKIP LOCKED;
+
+-- Worker 2 runs the exact same query concurrently:
+-- Worker 2 does NOT wait for Worker 1; it skips Worker 1's locked row and grabs the next row immediately!
+```
+
+---
+
+### 2. Case Study: Scaling Inventory Reservations (The 1-Row-Per-Unit Pattern)
+
+*Production Pattern (Shopify Engineering)*: How high-throughput e-commerce handles flash sales without Redis dual-write anomalies or single-row database lock serialization.
+
+```
+Traditional Counter (Single Row Bottleneck):
+┌─────────────────────────────────────────────────────────┐
+│ Item 101 | Quantity: 50                                 │
+└─────────────────────────────────────────────────────────┘
+  ▲         ▲         ▲
+  │ Lock    │ Waits   │ Waits
+  Tx 1      Tx 2      Tx 3   ──► High Contention & Serialization!
+
+Unit-Based Bounded Pool (Zero-Contention via SKIP LOCKED):
+┌───────────┐ ┌───────────┐ ┌───────────┐ ┌───────────┐
+│ Unit #1   │ │ Unit #2   │ │ Unit #3   │ │ Unit #4   │
+└───────────┘ └───────────┘ └───────────┘ └───────────┘
+  ▲             ▲             ▲
+  │ Locked      │ Locked      │ Locked
+  Tx 1          Tx 2          Tx 3   ──► Concurrent & Non-Blocking!
+```
+
+#### Step 1: Replace Quantity Counter with Unit Rows
+Instead of a single row with a `quantity` integer column, represent sellable stock as individual rows in a dedicated table (`reservation_units`). Reserving $N$ units executes:
+
+```sql
+-- Reserve 2 units for item 456
+SELECT id 
+FROM reservation_units 
+WHERE shop_id = 12 AND inventory_item_id = 456 
+LIMIT 2 
+FOR UPDATE SKIP LOCKED;
+```
+Because of `SKIP LOCKED`, concurrent buyers reserve different unit rows simultaneously without blocking or waiting on each other.
+
+#### Step 2: Maintain a Bounded Buffer Pool (e.g. 1,000 Units)
+If an item has 500,000 units, creating 500,000 physical rows causes table bloat and slow index scans.
+- **Solution**: Keep a bounded pool (e.g. max 1,000 unit rows per SKU/location) in `reservation_units`.
+- Reservations consume rows (`DELETE` or transition state) from the pool.
+- A background or inline replenishment process refills rows from the persistent inventory ledger.
+
+#### Step 3: Thundering Herd Mitigation on Pool Exhaustion
+When a sudden surge exhausts the 1,000-unit pool:
+1. The reserve transaction detects 0 rows returned.
+2. It acquires a dedicated replenishment lock/mutex (e.g., per SKU).
+3. **Only one transaction** refills the pool from the inventory ledger; all other concurrent reserves wait for that single replenishment to finish, rather than hundreds of threads racing to insert duplicate rows.
+
+#### Step 4: Multi-Item Cart Batching (`UNION ALL`)
+When a buyer purchases multiple distinct SKUs in a single cart, avoid multiple round trips by batching queries into a single database execution:
+
+```sql
+(SELECT id, inventory_item_id FROM reservation_units 
+ WHERE shop_id = 12 AND inventory_item_id = 101 LIMIT 1 FOR UPDATE SKIP LOCKED)
+UNION ALL
+(SELECT id, inventory_item_id FROM reservation_units 
+ WHERE shop_id = 12 AND inventory_item_id = 202 LIMIT 2 FOR UPDATE SKIP LOCKED);
+```
+
+---
+
+### 3. Lock Manager Overhead: Clustered vs Secondary Index Locking
+
+Under intense concurrency, **how your primary key is structured determines the number of internal row locks InnoDB must acquire**.
+
+```
+Auto-Increment PK with Secondary Index Lookup:
+Query: WHERE shop_id = 12 AND inventory_item_id = 456
+  1. Acquire lock on Secondary Index entry (shop_id, inventory_item_id)
+  2. Acquire lock on Clustered Index (Primary Key id)
+  Total: 2 Locks per row!
+
+Composite Primary Key (shop_id, inventory_item_id, id):
+Query: WHERE shop_id = 12 AND inventory_item_id = 456
+  1. Acquire lock directly on Clustered Index
+  Total: 1 Lock per row (50% reduction in lock manager overhead!)
+```
+
+:::tip[Index Optimization for High-Concurrency Locks]
+When querying rows with `SELECT ... FOR UPDATE`, always ensure the filter predicates match the **leading columns of the clustered index (Composite Primary Key)**. This eliminates the secondary index lookup phase and halves the row lock count inside the storage engine.
+:::
+
+---
+
+### 4. Deadlock Elimination via Strict Lock Ordering
+
+Deadlocks frequently happen in state transitions when different business workflows touch the same tables in reverse order.
+
+**The Bug (Circular Wait):**
+- **Reserve Flow**: `INSERT` into `reserved_quantities` $\rightarrow$ `DELETE` from `reservation_units`.
+- **Claim Flow**: `DELETE` from `reservation_units` $\rightarrow$ `UPDATE` `reserved_quantities`.
+- Concurrent reserve and claim transactions lock tables in opposite directions $\rightarrow$ **Deadlock!**
+
+**The Production Fix (Deterministic Ordering Protocol):**
+1. Standardize the exact sequence in which tables are locked across every code path:
+   - **Reserve**: Always modifies `reservation_units` first, then `reserved_quantities`.
+   - **Claim**: Only modifies `reserved_quantities` (never touches `reservation_units`).
+2. When locking multiple rows in the same table, always sort by Primary Key in ascending order (`ORDER BY id ASC FOR UPDATE`).
+
+---
+
 ## Savepoints
 
 ```sql
@@ -315,6 +439,12 @@ public class OrderService {
 
 **Q8. What is a write skew anomaly?**
 > Write skew: two transactions read overlapping data and make writes that individually are valid but together violate an invariant. Example: two doctors both check "at least one doctor on call" is true, then both take off — now zero doctors on call. Prevented only by SERIALIZABLE isolation.
+
+**Q9. How does `SELECT ... FOR UPDATE SKIP LOCKED` solve high-concurrency queue/inventory contention?**
+> Standard `FOR UPDATE` serializes concurrent transactions on the same locked row, causing lock wait timeouts and thread pool exhaustion. `SKIP LOCKED` skips rows that are currently locked by other in-flight transactions and immediately acquires the next available unlocked row(s). This turns a blocking lock queue into an asynchronous, non-blocking parallel worker pipeline without application-level distributed locks.
+
+**Q10. Why does single-row inventory counter (`UPDATE item SET qty = qty - 1`) fail during flash sales, and what is the unit-based bounded pool pattern?**
+> A single quantity column serializes all concurrent purchases on one row lock. The unit-based bounded pool pattern (used by Shopify) models sellable inventory as individual unit rows in a buffer table (e.g., max 1,000 unit rows per SKU/location) reserved via `SELECT id FROM reservation_units WHERE sku = ? LIMIT N FOR UPDATE SKIP LOCKED`. Because each transaction locks separate unit rows, reservations execute concurrently. A background/inline replenishment process with mutex coordination refills the buffer pool from the authoritative ledger, eliminating thundering herds.
 
 ---
 

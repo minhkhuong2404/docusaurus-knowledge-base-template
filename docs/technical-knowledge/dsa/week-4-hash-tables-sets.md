@@ -6,6 +6,8 @@ tags: [dsa, java, hash-tables, hash-sets, algorithms, week-4]
 sidebar_position: 4
 ---
 
+import DsaWeek4HashTablesDiagram from '@site/src/components/DsaWeek4HashTablesDiagram';
+
 # Week 4: Hash Tables & Sets
 
 ## 1. Overview
@@ -35,6 +37,9 @@ Without a hash table, finding whether a number exists in an unsorted list takes 
 ---
 
 ## 2. The Core Mental Model: How Does a Hash Table Actually Work?
+
+<DsaWeek4HashTablesDiagram />
+
 
 Before memorizing templates, you need to understand **what is happening under the hood**. This will help you reason about edge cases and explain your choices in interviews.
 

@@ -212,7 +212,41 @@ COMMIT;
 
 ## MySQL and Oracle Differences
 
-**MySQL InnoDB** defaults to REPEATABLE READ — higher than PostgreSQL's default. It uses gap locks alongside MVCC to prevent phantoms in some cases. The mechanism differs from PostgreSQL's pure-snapshot approach.
+### MySQL InnoDB: REPEATABLE READ & The Supremum Gap Lock Pitfall
+
+**MySQL InnoDB** defaults to `REPEATABLE READ` — higher than PostgreSQL's default. Unlike PostgreSQL (which relies purely on per-transaction MVCC snapshots to prevent phantoms), MySQL InnoDB uses **Next-Key Locks (Record Lock + Gap Lock)**:
+
+- When an existing row is locked, InnoDB locks the record *plus* the gap preceding it.
+- When an empty table or range with no matching rows is queried via `SELECT ... FOR UPDATE`, InnoDB places a **Gap Lock on the `supremum` pseudo-record** (a virtual boundary representing all values greater than the highest existing key).
+
+#### The Production Trap: Replenishment Deadlocks
+In high-throughput queue or unit-reservation systems (such as Shopify's inventory reservation engine), worker transactions execute:
+```sql
+SELECT id FROM reservation_units WHERE shop_id = 12 AND item_id = 456 LIMIT 10 FOR UPDATE SKIP LOCKED;
+```
+If the table or SKU range is currently **empty** (depleted pool needing refill):
+1. Under `REPEATABLE READ`, the query acquires a gap lock covering the `supremum` pseudo-record.
+2. An inline or background replenishment worker attempts to `INSERT INTO reservation_units VALUES (...)`.
+3. The `INSERT` attempts to acquire an *Insert Intention Lock* on that exact same gap.
+4. **Result**: The `INSERT` blocks on the reader's supremum gap lock. When multiple concurrent readers do this, mutual gap lock dependencies trigger immediate **deadlocks** (`ERROR 1213: Deadlock found when trying to get lock; try restarting transaction`).
+
+#### The Production Solution: Drop to `READ COMMITTED`
+By switching the isolation level to `READ COMMITTED` specifically for reservation/queue transactions:
+- InnoDB **disables gap locking** for search and index scans (gap locks are only retained for foreign key constraint checks and duplicate key checks).
+- Concurrent replenishment `INSERT` statements execute immediately without waiting on reader locks.
+
+```sql
+-- Set per transaction in MySQL
+SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+BEGIN;
+SELECT id FROM reservation_units WHERE shop_id = 12 AND item_id = 456 LIMIT 10 FOR UPDATE SKIP LOCKED;
+-- ...
+COMMIT;
+```
+
+---
+
+### Oracle: "SERIALIZABLE" is Actually Snapshot Isolation
 
 **Oracle's "SERIALIZABLE"** is actually Snapshot Isolation under the hood — it prevents phantoms but still allows write skew. Same label, fundamentally weaker guarantee than PostgreSQL's SERIALIZABLE. A team that relied on the name without reading Oracle's documentation could ship broken invariant enforcement.
 

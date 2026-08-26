@@ -6,6 +6,8 @@ tags: [dsa, java, linked-lists, fast-slow-pointers, algorithms, week-3]
 sidebar_position: 3
 ---
 
+import DsaWeek3LinkedListDiagram from '@site/src/components/DsaWeek3LinkedListDiagram';
+
 # Week 3: Linked Lists & Fast/Slow Pointers
 
 ## 1. Overview
@@ -27,6 +29,9 @@ Welcome to Week 3! After spending two weeks mastering arrays and strings (contig
 ---
 
 ## 2. Theory & Fundamentals
+
+<DsaWeek3LinkedListDiagram />
+
 
 ### 2.1 Mental Model: Arrays vs. Linked Lists in Memory
 

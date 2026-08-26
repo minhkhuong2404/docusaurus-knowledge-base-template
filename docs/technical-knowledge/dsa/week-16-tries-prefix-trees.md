@@ -6,6 +6,8 @@ tags: [dsa, java, tries, prefix-trees, strings, algorithms, week-16]
 sidebar_position: 16
 ---
 
+import DsaWeek16TrieDiagram from '@site/src/components/DsaWeek16TrieDiagram';
+
 # Week 16: Tries (Prefix Trees)
 
 ## 1. Overview
@@ -30,6 +32,9 @@ A Trie, or Prefix Tree, is an $N$-ary tree designed specifically for string stor
 ---
 
 ## 2. Theory & Fundamentals
+
+<DsaWeek16TrieDiagram />
+
 
 ### 2.1 Mental Model: Why Tries Exist
 

@@ -12,18 +12,76 @@ import OAuthPkceFlowDiagram from '@site/src/components/OAuthPkceFlowDiagram';
 import PasskeysFlowDiagram from '@site/src/components/PasskeysFlowDiagram';
 import AccessTokenPatternDiagram from '@site/src/components/AccessTokenPatternDiagram';
 import OidcFlowDiagram from '@site/src/components/OidcFlowDiagram';
+import AuthConceptsSevenPillarsDiagram from '@site/src/components/AuthConceptsSevenPillarsDiagram';
 
+> **Authentication (AuthN):** *Who are you?* (Identity Verification)
+> **Authorization (AuthZ):** *What are you allowed to do?* (Permission & Scope Enforcement)
 
+These are **separate concerns**. A user can be authenticated (valid identity) but not authorized (insufficient role).
 
-> **Authentication (AuthN):** *Who are you?*
-> **Authorization (AuthZ):** *What are you allowed to do?*
+<AuthConceptsSevenPillarsDiagram />
 
-These are **separate concerns**. A user can be authenticated (valid JWT) but not authorized (403 on a specific resource).
+---
 
-| HTTP Status | Meaning |
-|---|---|
-| `401 Unauthorized` | Not authenticated — identity not established |
-| `403 Forbidden` | Authenticated but not authorized for this resource |
+## The 7 Authentication Concepts Every Developer Should Know
+
+Software engineering interviews frequently test subtle architectural distinctions in security. Below are the 7 core pillars:
+
+### 1. Authentication (AuthN) vs. Authorization (AuthZ)
+- **AuthN (401 Unauthorized)**: Answers *"Who is making this request?"*. Verifies credentials (passwords, biometrics, TOTP, hardware tokens). If invalid, the server responds with `401 Unauthorized` (`WWW-Authenticate` header).
+- **AuthZ (403 Forbidden)**: Answers *"Does this identified user have permission to perform this action?"*. Evaluates roles, scopes, or attributes (RBAC, ABAC). If forbidden, the server responds with `403 Forbidden`.
+
+> ⚠️ **Common Trap**: Many developers think `OAuth 2.0` is an authentication protocol because "Log in with Google" uses it. **OAuth 2.0 is an authorization framework for delegated API access.** The authentication layer is **OpenID Connect (OIDC)**, which sits on top of OAuth 2.0.
+
+---
+
+### 2. Basic Auth, Digest Auth & API Keys
+- **Basic Authentication (RFC 7617)**: Sends credentials on *every* request encoded in Base64 (`Authorization: Basic base64(user:pass)`). Plaintext unless sent over TLS. Has no native logout or session invalidation mechanism.
+- **Digest Authentication**: Challenge-response mechanism using MD5 hashes; largely superseded by modern token-based auth.
+- **API Keys**: Static, high-entropy tokens used for **Machine-to-Machine (M2M)** and Project/Tenant identification (e.g. Stripe, AWS, OpenAI). API keys identify the calling application/service, NOT the end-user. Passed via `Authorization: Bearer <key>` or `X-API-Key` headers.
+
+---
+
+### 3. Session-Based (Stateful) vs. Token-Based (Stateless)
+- **Session-Based (Stateful)**: Server stores session objects in Redis or relational databases. Client holds an opaque session ID in an `HttpOnly`, `Secure`, `SameSite` cookie.
+  - *Advantage*: Instant, effortless revocation (deleting the key in Redis immediately revokes access).
+  - *Tradeoff*: Requires shared distributed session memory across microservice replicas.
+- **Token-Based (Stateless JWT)**: Server signs a JSON payload with a private key. Any microservice with the public key can verify identity with **zero database calls**.
+  - *Advantage*: Massive horizontal scalability across independent services.
+  - *Tradeoff*: Hard to revoke before expiration unless backed by a Redis blocklist or token versioning.
+
+---
+
+### 4. Bearer Token vs. JWT (Scheme vs. Format)
+- **Bearer Token (RFC 6750)**: An HTTP authentication scheme where the caller presents a token in the `Authorization: Bearer <token>` header. "Bearer" simply means *"Grant access to whoever bears/holds this token"*.
+- **JWT (JSON Web Token - RFC 7519)**: A structured token format comprising `Header.Payload.Signature`.
+- **The Distinction**: A Bearer token is **NOT necessarily a JWT**. A Bearer token can be an opaque UUID, a random hex string, or a structured JWT. JWT is merely the container format.
+
+---
+
+### 5. Access Token & Refresh Token Lifecycle (The 2-Token Pattern)
+- **Access Token**: Short-lived (5–15 minutes), stateless JWT used by clients to call resource APIs.
+- **Refresh Token**: Long-lived (7–30 days), stateful/rotatable token stored securely in `HttpOnly` cookies or mobile hardware keychains. Used exclusively to request new access tokens.
+- **Refresh Token Rotation (RTR)**: The authorization server issues a brand-new refresh token on every exchange and marks the previous token as used. Replaying an already-used refresh token flags **Token Theft** and immediately locks down the entire token family.
+
+---
+
+### 6. OAuth 2.0 vs. OpenID Connect (OIDC) vs. Single Sign-On (SSO)
+- **OAuth 2.0**: Framework for **Delegated Authorization** (e.g. granting a photo-printing app permission to read your Google Drive files). Issues an `access_token` with specific `scope` permissions.
+- **OpenID Connect (OIDC)**: **Identity Layer** built on top of OAuth 2.0. Standardizes authentication and returns an `id_token` (JWT containing user profile claims: `sub`, `email`, `name`).
+- **Single Sign-On (SSO)**: A **User Experience (UX) Pattern**, NOT a standalone protocol. SSO allows a user to authenticate once with an Identity Provider (IdP like Okta or Azure AD) and automatically access multiple applications (Slack, Jira, GitHub). SSO is *implemented using* OIDC or SAML 2.0.
+
+---
+
+### 7. Architectural Decision Matrix
+
+| Application Architecture | Recommended Auth Mechanism | Token / Session Storage |
+|---|---|---|
+| **Monolithic Server-Side App** (Spring MVC, Rails, Django) | Session-Based Authentication | `HttpOnly`, `Secure`, `SameSite=Lax` Cookie |
+| **SPA + Microservices** (React, Vue + Node, Spring) | Access Token (JWT) + Refresh Token Rotation | Memory (Access Token) + `HttpOnly` Cookie (Refresh Token) |
+| **Native Mobile App** (iOS / Android) | OAuth 2.0 PKCE + Passkeys / Biometrics | Secure Enclave / iOS Keychain / Android KeyStore |
+| **Public / Developer APIs** | Scoped API Keys + Rate Limiting | Request Header (`X-API-Key` or `Bearer <key>`) |
+| **Enterprise / B2B SaaS** | OIDC / SAML 2.0 Federated SSO | IdP-Managed Session (Okta, Azure AD, Ping) |
 
 ---
 

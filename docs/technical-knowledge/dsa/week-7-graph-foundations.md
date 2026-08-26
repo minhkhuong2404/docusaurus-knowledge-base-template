@@ -6,6 +6,8 @@ tags: [dsa, java, graphs, dfs, bfs, algorithms, week-7]
 sidebar_position: 7
 ---
 
+import DsaWeek7GraphFoundationsDiagram from '@site/src/components/DsaWeek7GraphFoundationsDiagram';
+
 # Week 7: Graph Foundations
 
 ## 1. Overview
@@ -39,6 +41,9 @@ Graph problems test whether you can **model a problem correctly** (translating r
 ---
 
 ## 2. The Core Mental Models
+
+<DsaWeek7GraphFoundationsDiagram />
+
 
 ### 2.1 What Is a Graph? — From Tree to Graph
 

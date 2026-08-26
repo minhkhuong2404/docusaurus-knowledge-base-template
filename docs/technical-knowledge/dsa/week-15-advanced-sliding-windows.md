@@ -6,6 +6,8 @@ tags: [dsa, java, sliding-window, two-pointers, algorithms, week-15]
 sidebar_position: 15
 ---
 
+import DsaWeek15AdvancedSlidingWindowDiagram from '@site/src/components/DsaWeek15AdvancedSlidingWindowDiagram';
+
 # Week 15: Advanced Sliding Windows
 
 ## 1. Overview
@@ -45,6 +47,9 @@ Best for: max sum of k elements    Best for: longest/shortest substring
 ---
 
 ## 2. The Core Mental Models
+
+<DsaWeek15AdvancedSlidingWindowDiagram />
+
 
 ### 2.1 The "Elastic Band" Model
 

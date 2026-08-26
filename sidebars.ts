@@ -9,14 +9,14 @@ const sidebars: SidebarsConfig = {
 			label: '🏠 Introduction'
 		},
 		{
-			type: 'category',
-			label: '📝 Daily Quizzes',
-			collapsed: false,
-			items: [
-				'technical-knowledge/java/java-daily-quiz',
-				'technical-knowledge/spring/spring-boot-daily-quiz',
-				'technical-knowledge/system-design/system-design-daily-quiz'
-			]
+			type: 'doc',
+			id: 'technical-knowledge/daily-quiz',
+			label: '📝 Daily Quizzes'
+		},
+		{
+			type: 'doc',
+			id: 'technical-knowledge/dsa/leetcode-daily',
+			label: '🧩 LeetCode Daily'
 		},
 		{
 			type: 'doc',
@@ -81,6 +81,14 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/java/java-stack-vs-heap',
 								'technical-knowledge/java/java-virtual-threads',
 								'technical-knowledge/java/java-diagnostics-troubleshooting'
+							]
+						},
+						{
+							type: 'category',
+							label: '♻️ Garbage Collection',
+							collapsed: true,
+							items: [
+								'technical-knowledge/java/java-gc'
 							]
 						},
 						{
@@ -300,6 +308,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/system-design/real-time-updates',
 								'technical-knowledge/system-design/handling-contention',
 								'technical-knowledge/system-design/data-consistency',
+								'technical-knowledge/system-design/distributed-transactions',
 								'technical-knowledge/system-design/two-phase-commit',
 								'technical-knowledge/system-design/saga-pattern',
 								'technical-knowledge/system-design/outbox-pattern',
@@ -657,6 +666,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/database/isolation-levels',
 								'technical-knowledge/database/transactions-concurrency',
 								'technical-knowledge/database/storage-engines-data-structures',
+								'technical-knowledge/database/postgresql-heap-storage-architecture',
 							],
 						},
 						{
@@ -1314,7 +1324,6 @@ const sidebars: SidebarsConfig = {
 					label: '🧠 DSA Roadmap (20 Weeks)',
 					items: [
 						'technical-knowledge/dsa/20-week-dsa-roadmap-intro',
-						'technical-knowledge/dsa/leetcode-daily',
 						'technical-knowledge/dsa/week-1-arrays-strings-prefix-sums',
 						'technical-knowledge/dsa/week-2-two-pointers-sliding-window',
 						'technical-knowledge/dsa/week-3-linked-lists-pointers',

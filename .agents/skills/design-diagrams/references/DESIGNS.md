@@ -5,17 +5,28 @@
 
 ---
 
+## 🚨 MANDATORY REQUIREMENT: ALWAYS GENERATE INTERACTIVE DIAGRAMS WITH MOVING ARROWS ONLY
+
+- **NO MONOSPACE SCHEMA INSPECTORS**: Never generate static code block inspectors, text-heavy card lists, or monospace trees.
+- **MOVING ARROWS ON ALL DIAGRAMS**: Every generated diagram MUST feature interactive visual elements with **moving/flowing arrows** (e.g. `.interactive-diagram-flowing-path`, animated step-by-step directional arrows, or SVG conduits with moving arrow markers).
+- **GENUINE VISUAL CANVASES**: Use SVG vector canvases (`<svg viewBox>`) with grid backgrounds (`.interactive-diagram-grid-bg`) or step-by-step playback sequencers.
+
+---
+
 ## Quick-Start Decision Tree
 
 ```
 Is there a static ASCII block, code block, table, or text-only stub to replace?
-├─ YES → Is it a sequence/handshake/flow?             → Archetype A (Animated Flow)
-│         Is it nodes + directed edges/architecture?  → Archetype B (SVG Node Graph)
-│         Is it comparison/tabs/protocol evolution?   → Archetype C (Tabbed Explorer)
-│         Is it a lookup reference (headers/tools)?   → Archetype D (Searchable List)
-│         Is it a checklist/audit criteria?           → Archetype E (Interactive Checklist)
-│         Is it code, XML/JSON payloads, or schemas?   → Archetype F (Monospace Schema & Payload Inspector)
+├─ YES → Is it a sequence/handshake/flow/payload transit?   → Archetype A (Animated Flow with Moving Arrows)
+│         Is it nodes + directed edges/architecture/data?  → Archetype B (SVG Node Graph with Flowing Arrows)
+│         Is it comparison/tabs/protocol evolution?         → Archetype C (Tabbed Explorer with SVG Flow)
+│         Is it a lookup reference (headers/tools)?         → Archetype D (Searchable List)
+│         Is it a checklist/audit criteria?                 → Archetype E (Interactive Checklist)
 └─ NO  → Do not create a component.
+
+⚠️ MANDATORY RULE: NEVER generate Monospace Schema Inspector diagrams.
+Wire formats, packet headers, schemas, runbooks, and payload transformations must ALWAYS be visualized
+as interactive diagrams featuring moving/flowing directional arrows and animated step playback.
 ```
 
 ---
@@ -257,7 +268,9 @@ export default function ArchNodeGraphDiagram(): React.JSX.Element {
                   <path d="M0,0 L0,6 L8,3 z" fill="#38bdf8" />
                 </marker>
               </defs>
-              <line x1="140" y1="80" x2="215" y2="80" stroke="#38bdf8" strokeWidth="2" markerEnd="url(#arr-blue)" />
+              {/* Conduit base line + moving flowing dashed overlay with arrowhead */}
+              <line x1="140" y1="80" x2="212" y2="80" stroke="rgba(56,189,248,0.25)" strokeWidth="2" />
+              <line x1="140" y1="80" x2="212" y2="80" stroke="#38bdf8" strokeWidth="2" strokeDasharray="6 4" className="interactive-diagram-flowing-path" markerEnd="url(#arr-blue)" />
 
               {NODES.map(n => {
                 const isActive = selected === n.id;

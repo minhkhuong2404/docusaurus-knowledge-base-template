@@ -1,7 +1,6 @@
 import React from 'react';
-import DailyQuiz from '../DailyQuiz';
-import { systemDesignQuestions } from '../../data/system-design-quiz-questions';
+import DailyQuizGallery from '../DailyQuizGallery';
 
 export default function DailySystemDesignQuiz() {
-  return <DailyQuiz questions={systemDesignQuestions} quizKey="system-design" />;
+  return <DailyQuizGallery initialCategory="system-design" />;
 }

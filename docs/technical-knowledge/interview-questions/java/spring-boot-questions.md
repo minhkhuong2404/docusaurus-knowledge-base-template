@@ -45,6 +45,79 @@ Read AutoConfiguration.imports ---> Filter @Conditional Annotations ---> Registe
 ### Q5. What is the difference between `@Controller` and `@RestController` in Spring MVC?
 > `@Controller` is the traditional Spring MVC stereotype annotation used to handle requests and return view template names (e.g., Thymeleaf/JSP). To return raw JSON/XML data, handler methods must be explicitly annotated with `@ResponseBody`. `@RestController` is a composite annotation that combines `@Controller` and `@ResponseBody`, automatically serializing all handler method return values into HTTP response body bytes via `HttpMessageConverter` (e.g., Jackson `ObjectMapper`).
 
+### Q6. What are the common Lombok traps in Spring Boot domain models and JPA Entities?
+> While Project Lombok (`@Data`, `@Getter`, `@Setter`, `@Builder`) eliminates boilerplate code, using it carelessly on JPA entities introduces serious production bugs:
+> 1. **`@Data` / `@EqualsAndHashCode` on JPA Entities:** `@Data` generates `equals()` and `hashCode()` using all non-static fields. In JPA, loading lazy-loaded collections inside `hashCode()` triggers unexpected database queries (N+1 problem) or throws `LazyInitializationException`. For JPA entities, `equals()` and `hashCode()` should rely strictly on a stable business key or database Primary Key (`id`).
+> 2. **`@Builder` Field Initialization:** Fields initialized at inline declaration (e.g., `private List<Item> items = new ArrayList<>();`) are ignored when constructed via `@Builder`, resulting in `null` pointers unless annotated with `@Builder.Default`.
+
+### Q7. How does Global Custom Exception Handling work in Spring Boot?
+> Spring Boot provides centralized exception handling using `@RestControllerAdvice` (or `@ControllerAdvice`) and `@ExceptionHandler`.
+> 1. `@RestControllerAdvice` intercepts exceptions thrown by any `@RestController` across the application.
+> 2. `@ExceptionHandler(SpecificException.class)` handles matching exception types and formats a standardized JSON response body (e.g., `ErrorResponse(timestamp, status, message, path)`).
+
+```java
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFound(ResourceNotFoundException ex, WebRequest req) {
+        ErrorResponse error = new ErrorResponse(
+            LocalDateTime.now(),
+            HttpStatus.NOT_FOUND.value(),
+            ex.getMessage(),
+            req.getDescription(false)
+        );
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+}
+```
+
+### Q8. How do you implement the Strategy Design Pattern in Spring Boot using Dependency Injection?
+> Spring automatically injects all implementations of an interface into a `Map<String, PaymentStrategy>` or `List<PaymentStrategy>`.
+> - When injecting `Map<String, PaymentStrategy>`, Spring uses the **Spring bean name** as the Map key.
+> - This eliminates manual `switch-case` or `if-else` blocks for dynamic strategy selection.
+
+```java
+public interface PaymentStrategy {
+    void processPayment(double amount);
+}
+
+@Service("CREDIT_CARD")
+public class CreditCardStrategy implements PaymentStrategy { ... }
+
+@Service("PAYPAL")
+public class PayPalStrategy implements PaymentStrategy { ... }
+
+@Service
+public class PaymentContext {
+    // Spring automatically populates map key = bean name ("CREDIT_CARD", "PAYPAL")
+    private final Map<String, PaymentStrategy> strategies;
+
+    @Autowired
+    public PaymentContext(Map<String, PaymentStrategy> strategies) {
+        this.strategies = strategies;
+    }
+
+    public void execute(String type, double amount) {
+        PaymentStrategy strategy = strategies.get(type);
+        if (strategy == null) throw new IllegalArgumentException("Invalid strategy: " + type);
+        strategy.processPayment(amount);
+    }
+}
+```
+
+### Q9. What are the key Spring REST Annotations and how do `@PathVariable` vs `@RequestParam` differ?
+> - **`@PathVariable`:** Extracts dynamic values directly embedded in the URI path template (e.g., `/api/users/{id}` → `@PathVariable Long id`). Used to identify a specific resource.
+> - **`@RequestParam`:** Extracts query parameters appended after `?` in the URL (e.g., `/api/users?page=1&size=10` → `@RequestParam int page`). Used for filtering, sorting, or pagination.
+> - **`@RequestBody`:** Deserializes incoming HTTP POST/PUT JSON payload into a Java DTO via Jackson `ObjectMapper`. Paired with `@Valid` to trigger Bean Validation.
+
+### Q10. What is the difference between `@Component`, `@Service`, `@Repository`, and `@Configuration`?
+> All four are sub-stereotypes of `@Component`, making them candidates for Spring auto-detection and component scanning:
+> - **`@Component`:** Generic archetype for any Spring-managed component.
+> - **`@Service`:** Denotes service-layer business logic. Carries semantic intent.
+> - **`@Repository`:** Denotes data access objects (DAOs). Automatically enables Spring's **`PersistenceExceptionTranslationPostProcessor`**, translating native DB driver exceptions (e.g., SQLException, HibernateException) into Spring's unified `DataAccessException` hierarchy.
+> - **`@Configuration`:** Denotes bean definition source containing `@Bean` methods. Spring proxies `@Configuration` classes via **CGLIB** to ensure inter-bean method calls reuse existing singleton instances (Full `@Configuration` mode).
+
 ---
 
 ## See Also
@@ -52,3 +125,4 @@ Read AutoConfiguration.imports ---> Filter @Conditional Annotations ---> Registe
 - [Spring Boot Real-Time Interview Questions](./spring-boot-real-time-questions.md)
 - [Spring Data JPA & Hibernate Internals](../../interview-questions/java/spring-boot-questions.md)
 - [Microservices Design Patterns](../../system-design/microservices-patterns.md)
+

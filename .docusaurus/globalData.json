@@ -1256,6 +1256,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/daily-quiz",
+              "path": "/technical-knowledge/daily-quiz",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/database/acid",
               "path": "/technical-knowledge/database/acid",
               "sidebar": "tutorialSidebar"
@@ -1323,6 +1328,11 @@
             {
               "id": "technical-knowledge/database/performance-monitoring",
               "path": "/technical-knowledge/database/performance-monitoring",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/postgresql-heap-storage-architecture",
+              "path": "/technical-knowledge/database/postgresql-heap-storage-architecture",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -5466,11 +5476,6 @@
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/java/java-daily-quiz",
-              "path": "/technical-knowledge/java/java-daily-quiz",
-              "sidebar": "tutorialSidebar"
-            },
-            {
               "id": "technical-knowledge/java/java-diagnostics-troubleshooting",
               "path": "/technical-knowledge/java/java-diagnostics-troubleshooting",
               "sidebar": "tutorialSidebar"
@@ -5478,6 +5483,11 @@
             {
               "id": "technical-knowledge/java/java-fundamentals",
               "path": "/technical-knowledge/java/java-fundamentals",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/java/java-gc",
+              "path": "/technical-knowledge/java/java-gc",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -6190,11 +6200,6 @@
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/spring/spring-boot-daily-quiz",
-              "path": "/technical-knowledge/spring/spring-boot-daily-quiz",
-              "sidebar": "tutorialSidebar"
-            },
-            {
               "id": "technical-knowledge/spring/spring-boot-internals",
               "path": "/technical-knowledge/spring/spring-boot-internals",
               "sidebar": "tutorialSidebar"
@@ -6385,6 +6390,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/distributed-transactions",
+              "path": "/technical-knowledge/system-design/distributed-transactions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/domain-driven-design",
               "path": "/technical-knowledge/system-design/domain-driven-design",
               "sidebar": "tutorialSidebar"
@@ -6565,11 +6575,6 @@
               "sidebar": "tutorialSidebar"
             },
             {
-              "id": "technical-knowledge/system-design/system-design-daily-quiz",
-              "path": "/technical-knowledge/system-design/system-design-daily-quiz",
-              "sidebar": "tutorialSidebar"
-            },
-            {
               "id": "technical-knowledge/system-design/two-phase-commit",
               "path": "/technical-knowledge/system-design/two-phase-commit",
               "sidebar": "tutorialSidebar"
@@ -6742,15 +6747,6 @@
         }
       ],
       "breadcrumbs": true
-    }
-  },
-  "docusaurus-plugin-google-gtag": {
-    "default": {
-      "trackingID": [
-        "G-79SQQZQMCX"
-      ],
-      "anonymizeIP": true,
-      "id": "default"
     }
   }
 }

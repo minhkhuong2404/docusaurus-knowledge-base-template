@@ -13,7 +13,7 @@ sidebar_position: 5
 ---
 
 import OsFileSystemsIoDiagram from '@site/src/components/OsFileSystemsIoDiagram';
-import OsMonospaceSchemaInspector from '@site/src/components/OsMonospaceSchemaInspector';
+import OsInodeSyscallFrameDiagram from '@site/src/components/OsInodeSyscallFrameDiagram';
 
 # File Systems & I/O
 
@@ -21,9 +21,9 @@ import OsMonospaceSchemaInspector from '@site/src/components/OsMonospaceSchemaIn
 
 ---
 
-## Monospace Schema Inspector: Linux Inode Struct & SYSCALL Register Frame
+## Linux Inode Layout & SYSCALL Execution Frame
 
-<OsMonospaceSchemaInspector />
+<OsInodeSyscallFrameDiagram />
 
 ---
 
