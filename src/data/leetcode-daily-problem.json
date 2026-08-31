@@ -1,8 +1,8 @@
 {
-  "id": "1872",
-  "title": "Stone Game VIII",
-  "url": "https://leetcode.com/problems/stone-game-viii/",
-  "difficulty": "hard",
-  "topic": "Array, Math, Dynamic Programming, Minimax, Prefix Sum, Game Theory, Zero-Sum Game",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-08-24."
+  "id": "2091",
+  "title": "Removing Minimum and Maximum From Array",
+  "url": "https://leetcode.com/problems/removing-minimum-and-maximum-from-array/",
+  "difficulty": "medium",
+  "topic": "Array, Greedy",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-08-30."
 }

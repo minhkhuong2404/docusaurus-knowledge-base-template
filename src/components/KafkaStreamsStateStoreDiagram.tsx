@@ -8,9 +8,9 @@ export default function KafkaStreamsStateStoreDiagram({ initialTab = 'layers' }:
   const [selectedCheckpointEntry, setSelectedCheckpointEntry] = useState<number>(0);
 
   const checkpointEntries = [
-    { topic: 'order-enrichment-agg-store-changelog', partition: 0, offset: 1420580, desc: 'Committed changelog offset safely written to local disk.' },
-    { topic: 'order-enrichment-agg-store-changelog', partition: 1, offset: 1398210, desc: 'On restart, task skips changelog replay up to offset 1398210.' },
-    { topic: 'order-enrichment-agg-store-changelog', partition: 2, offset: 1450012, desc: 'Clean shutdown flushes write cache and persists exact offset.' }
+    { topic: 'order-enrichment-agg-store-changelog', partition: 0, offset: 1420580, diskSize: '1.2 GB', desc: 'Committed changelog offset safely written to local disk. Skips replay of 1.42M records.' },
+    { topic: 'order-enrichment-agg-store-changelog', partition: 1, offset: 1398210, diskSize: '1.1 GB', desc: 'On restart, task skips changelog replay up to offset 1398210 and catches up only remaining uncommitted records.' },
+    { topic: 'order-enrichment-agg-store-changelog', partition: 2, offset: 1450012, diskSize: '1.4 GB', desc: 'Clean shutdown flushes write cache and persists exact offset to .checkpoint file.' }
   ];
 
   return (
@@ -362,42 +362,39 @@ export default function KafkaStreamsStateStoreDiagram({ initialTab = 'layers' }:
         )}
 
         {tab === 'checkpoint' && (
-          <div className="kstreams-store-grid" style={{ display: 'grid', gridTemplateColumns: '55% 45%', gap: '14px', alignItems: 'start' }}>
-            {/* Checkpoint Inspector */}
+          <div className="kstreams-store-grid" style={{ display: 'grid', gridTemplateColumns: '52% 48%', gap: '14px', alignItems: 'start' }}>
+            {/* Visual Checkpoint Sync Inspector */}
             <div style={{ background: '#090b14', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '14px' }}>
-              <div style={{ fontSize: '10.5px', fontWeight: 800, color: '#fbbf24', textTransform: 'uppercase', marginBottom: '8px' }}>
-                LOCAL .checkpoint FILE INSPECTOR (MONOSPACE)
+              <div style={{ fontSize: '10.5px', fontWeight: 800, color: '#fbbf24', textTransform: 'uppercase', marginBottom: '10px' }}>
+                PERSISTED .checkpoint PARTITION OFFSETS
               </div>
-              <pre style={{ fontFamily: 'Consolas, Monaco, monospace', fontSize: '11px', color: '#e2e8f0', background: 'rgba(255,255,255,0.03)', padding: '10px', borderRadius: '6px', margin: '0 0 10px 0' }}>
-{`0
-3
-order-enrichment-agg-store-changelog 0 1420580
-order-enrichment-agg-store-changelog 1 1398210
-order-enrichment-agg-store-changelog 2 1450012`}
-              </pre>
 
-              <div style={{ fontSize: '10.5px', fontWeight: 700, color: '#94a3b8', marginBottom: '6px' }}>
-                CLICK ENTRY TO INSPECT RESTORE BOUNDARY:
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {checkpointEntries.map((e, idx) => (
-                  <button
+                  <div
                     key={idx}
                     onClick={() => setSelectedCheckpointEntry(idx)}
                     style={{
-                      padding: '6px 10px',
-                      borderRadius: '4px',
-                      border: 'none',
+                      padding: '10px 12px',
+                      borderRadius: '6px',
                       cursor: 'pointer',
-                      fontSize: '11px',
-                      fontWeight: 700,
-                      textAlign: 'left',
-                      background: selectedCheckpointEntry === idx ? '#fbbf24' : 'rgba(255,255,255,0.04)',
-                      color: selectedCheckpointEntry === idx ? '#090b14' : 'var(--ifm-color-content)'
+                      background: selectedCheckpointEntry === idx ? '#fbbf2418' : 'rgba(255,255,255,0.03)',
+                      border: selectedCheckpointEntry === idx ? '1.5px solid #fbbf24' : '1px solid rgba(255,255,255,0.08)',
+                      transition: 'all 0.15s ease'
                     }}
                   >
-                    Partition {e.partition} ➔ Offset {e.offset}
-                  </button>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontWeight: 800, color: selectedCheckpointEntry === idx ? '#fbbf24' : 'var(--ifm-color-content)', fontSize: '12px' }}>
+                        Partition {e.partition}
+                      </span>
+                      <span style={{ fontSize: '10px', fontWeight: 700, padding: '2px 6px', borderRadius: '4px', background: '#38bdf822', color: '#38bdf8' }}>
+                        Offset {e.offset.toLocaleString()}
+                      </span>
+                    </div>
+                    <div style={{ fontSize: '10px', color: '#94a3b8', marginTop: '4px' }}>
+                      Topic: <code>{e.topic}</code> • Local SST: {e.diskSize}
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
@@ -408,14 +405,14 @@ order-enrichment-agg-store-changelog 2 1450012`}
                 CRASH RECOVERY LIFECYCLE
               </div>
               <h4 style={{ margin: '0 0 6px 0', fontSize: '14px', color: 'var(--ifm-color-content)' }}>
-                Clean vs Unclean Recovery
+                Partition {checkpointEntries[selectedCheckpointEntry].partition} Restore Boundary
               </h4>
               <p style={{ fontSize: '11.5px', color: 'var(--ifm-color-content-secondary)', lineHeight: 1.4, margin: '0 0 8px 0' }}>
                 {checkpointEntries[selectedCheckpointEntry].desc}
               </p>
               <div style={{ fontSize: '11px', color: 'var(--ifm-color-content)', lineHeight: 1.5 }}>
-                • <strong>Clean Shutdown:</strong> Writes `.checkpoint` file. On restart, RocksDB is up to date; task resumes immediately.<br />
-                • <strong>Crash (OOM / Kill -9):</strong> `.checkpoint` is deleted or stale. Task replays changelog from offset 0 or last checkpoint to guarantee zero loss.
+                • <strong>Clean Shutdown:</strong> Writes <code>.checkpoint</code> file with offset <code>{checkpointEntries[selectedCheckpointEntry].offset}</code>. On restart, RocksDB is 100% warm; 0 changelog replay required.<br />
+                • <strong>Crash (OOM / Kill -9):</strong> <code>.checkpoint</code> file is absent or stale. Task replays changelog starting from last persistent commit boundary.
               </div>
             </div>
           </div>

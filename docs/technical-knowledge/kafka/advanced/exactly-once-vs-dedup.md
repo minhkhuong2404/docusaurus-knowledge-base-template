@@ -7,6 +7,7 @@ tags: [kafka, exactly-once, deduplication, idempotency, event-driven, kafka-stre
 ---
 
 import KafkaDedupComparisonDiagram from '@site/src/components/KafkaDedupComparisonDiagram';
+import KafkaStreamsExactlyOnceDiagram from '@site/src/components/KafkaStreamsExactlyOnceDiagram';
 
 # Deduplication in Distributed Messaging
 
@@ -85,20 +86,9 @@ Setting `enable.idempotence=true` (default since Kafka 3.0 when `acks=all`) assi
 
 ### 3.2 Transactions (`EXACTLY_ONCE_V2`)
 
-Transactions extend idempotence to cover "read-process-write" cycles (the Kafka Streams / consume-transform-produce pattern):
+<KafkaStreamsExactlyOnceDiagram />
 
-```
-Kafka Transaction (EXACTLY_ONCE_V2):
-┌─────────────────────────────────────────────────────────────┐
-│ 1. beginTransaction()                                        │
-│ 2. Consume input offset (not yet committed)                  │
-│ 3. Process → produce output record(s) to output topic        │
-│ 4. Update internal state store (if Kafka Streams)             │
-│ 5. sendOffsetsToTransaction() — offset commit joins the txn  │
-│ 6. commitTransaction() — ATOMIC: output + state + offset      │
-│    all become visible together, or none do                    │
-└─────────────────────────────────────────────────────────────┘
-```
+Transactions extend idempotence to cover "read-process-write" cycles (the Kafka Streams / consume-transform-produce pattern):
 
 Consumers reading the output topic with `isolation.level=read_committed` never see the output of an aborted transaction — so a crash mid-processing either produces the complete, correct output or produces nothing, never a partial/duplicated result. This is what makes the Kafka Streams State Store deep dive in Section 7 possible: the state store update and the output write are part of the *same* atomic unit.
 
