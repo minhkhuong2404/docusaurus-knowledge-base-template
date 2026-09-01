@@ -7,6 +7,7 @@ tags: [kafka, rabbitmq, sqs, messaging, event-driven, pub-sub, streaming, event-
 ---
 
 import MessageQueueArchDiagram from '@site/src/components/MessageQueueArchDiagram';
+import KafkaVsRabbitMqVsSqsDiagram from '@site/src/components/KafkaVsRabbitMqVsSqsDiagram';
 
 # Message Queues: Comprehensive System Design Guide
 
@@ -371,38 +372,44 @@ public ConcurrentKafkaListenerContainerFactory<String, HeavyJob> throttledListen
 
 ---
 
-## 📊 Kafka vs RabbitMQ: Detailed Comparison
+## 📊 Kafka vs RabbitMQ vs AWS SQS: The Definitive Architectural Decision Guide
 
-### Core Philosophies
+Choosing between **Apache Kafka**, **RabbitMQ**, and **AWS SQS** is one of the most consequential decisions in backend system design. While all three decouple producers from consumers, they are built on fundamentally different philosophies.
 
-**RabbitMQ: The Smart Broker with Simple Consumers**
-- **How it works:** A producer sends a message, and the broker looks at routing rules to place it in the correct queue. The consumer pulls it, processes it, and acknowledges it.
-- **The Catch:** Once a message is consumed and acknowledged, RabbitMQ **deletes it**.
-- **The Benefit:** The broker does all the heavy lifting. It tracks deliveries, manages routing, and automatically moves repeatedly failing messages to a Dead Letter Queue (DLQ) for debugging.
+<KafkaVsRabbitMqVsSqsDiagram />
 
-**Kafka: The Simple Broker with Smart Consumers**
-- **How it works:** Producers append messages to a topic. Messages **do not disappear** when read; they sit in the log based on your retention configuration (hours, days, or forever).
-- **The Catch:** Consumers must track their own position in the log, called an **offset**. If a consumer crashes, it looks up its last offset to resume.
-- **The Benefit:** Because messages persist, they are **durable and replayable**. Multiple different services can read the exact same event stream independently.
+### 1. The Core Mental Models
 
----
+```
+Apache Kafka (Dumb Broker, Smart Consumer):
+Producers append events to an immutable partitioned log.
+Messages PERSIST indefinitely.
+Consumers manage their own offsets, allowing independent replay and stream processing.
 
-### Detailed Comparison Table
+RabbitMQ (Smart Broker, Dumb Consumer):
+Producers publish to Exchanges (Direct, Topic, Fanout, Headers).
+Broker routes messages into Queues and pushes them to workers.
+Messages are DELETED immediately once acknowledged (ACK).
 
-| Feature | RabbitMQ | Kafka |
-| :--- | :--- | :--- |
-| **Architecture** | Smart broker, simple consumers | Simple broker, smart consumers |
-| **Message Retention** | Deleted after ACK | Configurable retention (hours to forever) |
-| **Ordering** | Per queue (strict) | Per partition (strict within partition) |
-| **Parallelism** | Competing consumers | Consumer groups with partition assignment |
-| **Throughput** | 4K–10K msg/s | 1M+ msg/s |
-| **Latency** | 1–5ms | 5–50ms |
-| **Replay** | Not supported | Yes (seek to offset) |
-| **Delivery Guarantees** | At-most-once, At-least-once | At-most-once, At-least-once, Exactly-once* |
-| **Fan-out** | Exchange → Multiple queues | Topics + Consumer groups |
-| **Persistence** | Disk or memory | Disk (append-only log) |
-| **Management** | Built-in UI | External tools (Confluent Control Center) |
-| **Complexity** | Low | High |
+AWS SQS (Serverless Cloud Queue):
+Fully managed, auto-scaling AWS queue.
+Pull-based with Visibility Timeout (hiding in-flight messages).
+Zero server maintenance, native AWS Lambda triggers.
+```
+
+### 2. Detailed Architectural Comparison Table
+
+| Feature | Apache Kafka | RabbitMQ | AWS SQS |
+| :--- | :--- | :--- | :--- |
+| **Architectural Model** | Append-only sequential commit log | Smart message broker (AMQP exchanges/queues) | Serverless managed cloud queue |
+| **Consumer Pattern** | Pull (batch `poll()`) | Push (`basic.deliver`) + Pull | Pull (`ReceiveMessage`) |
+| **Message Retention** | Persistent (hours to forever, replayable) | Transient (deleted on consumer ACK) | Buffered (up to 14 days, deleted on delete) |
+| **Throughput Capacity** | 1,000,000+ msgs/sec (sequential I/O) | 20,000–50,000 msgs/sec | Unlimited (Standard) / 3,000 (FIFO) |
+| **Ordering Model** | Strict per partition key | Strict per single queue (single consumer) | Strict in FIFO queue (`MessageGroupId`) |
+| **Routing Complexity** | Basic (partition key hash to partition) | Highly advanced (topic wildcards, headers, fanout) | Basic (single queue or SNS fan-out) |
+| **Replayability** | ✅ Yes (seek back consumer offset) | ❌ No (deleted once processed) | ❌ No (deleted on worker completion) |
+| **Dead Letter Handling** | Custom DLQ topic pattern | Native Dead-Letter Exchanges (DLX) | Native SQS Redrive Policy to DLQ |
+| **Operational Overhead** | High (KRaft cluster, partition sizing) | Medium (Erlang nodes, cluster management) | Zero (100% Serverless AWS managed) |
 
 \* Exactly-once only works when both input and output are Kafka topics in the same cluster.
 

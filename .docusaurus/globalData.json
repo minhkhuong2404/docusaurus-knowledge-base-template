@@ -676,6 +676,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/ai-agents/mcp-and-agentic-ai",
+              "path": "/technical-knowledge/ai-agents/mcp-and-agentic-ai",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/ai-agents/overview",
               "path": "/technical-knowledge/ai-agents/overview",
               "sidebar": "tutorialSidebar"
@@ -683,6 +688,11 @@
             {
               "id": "technical-knowledge/ai-agents/prompt-engineering",
               "path": "/technical-knowledge/ai-agents/prompt-engineering",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/ai-agents/rag-fundamentals",
+              "path": "/technical-knowledge/ai-agents/rag-fundamentals",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -753,6 +763,11 @@
             {
               "id": "technical-knowledge/aws/containers/ecs-ecr",
               "path": "/technical-knowledge/aws/containers/ecs-ecr",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/aws/core-infrastructure-architecture",
+              "path": "/technical-knowledge/aws/core-infrastructure-architecture",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -1493,6 +1508,11 @@
             {
               "id": "technical-knowledge/devops/ansible",
               "path": "/technical-knowledge/devops/ansible",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/devops/cicd-github-actions",
+              "path": "/technical-knowledge/devops/cicd-github-actions",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -5011,6 +5031,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/engineering-practices/how-to-become-senior-developer",
+              "path": "/technical-knowledge/engineering-practices/how-to-become-senior-developer",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/git/advanced/bisect",
               "path": "/technical-knowledge/git/advanced/bisect",
               "sidebar": "tutorialSidebar"
@@ -6747,6 +6772,15 @@
         }
       ],
       "breadcrumbs": true
+    }
+  },
+  "docusaurus-plugin-google-gtag": {
+    "default": {
+      "trackingID": [
+        "G-79SQQZQMCX"
+      ],
+      "anonymizeIP": true,
+      "id": "default"
     }
   }
 }

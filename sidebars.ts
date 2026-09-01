@@ -24,6 +24,11 @@ const sidebars: SidebarsConfig = {
 			label: '💼 General Interview Framework'
 		},
 		{
+			type: 'doc',
+			id: 'technical-knowledge/engineering-practices/how-to-become-senior-developer',
+			label: '🏆 7 Senior Coding Laws'
+		},
+		{
 			type: 'category',
 			label: '🛠️Technical Knowledge',
 			collapsed: false,
@@ -926,11 +931,19 @@ const sidebars: SidebarsConfig = {
 						},
 						{
 							type: 'category',
+							label: '🚀 CI/CD & Automation',
+							collapsed: true,
+							items: [
+								'technical-knowledge/devops/cicd-github-actions',
+								'technical-knowledge/devops/gitops-argocd',
+							],
+						},
+						{
+							type: 'category',
 							label: '🏗️ Advanced Architecture',
 							collapsed: true,
 							items: [
 								'technical-knowledge/devops/kubernetes-operators',
-								'technical-knowledge/devops/gitops-argocd',
 								'technical-knowledge/devops/devops-observability',
 							],
 						},
@@ -949,6 +962,7 @@ const sidebars: SidebarsConfig = {
 					label: '☁️ AWS',
 					items: [
 						'technical-knowledge/aws/overview',
+						'technical-knowledge/aws/core-infrastructure-architecture',
 						{
 							type: 'category',
 							label: '🔐 Identity & Access',
@@ -1774,6 +1788,8 @@ const sidebars: SidebarsConfig = {
 			collapsed: true,
 			items: [
 				'technical-knowledge/ai-agents/overview',
+				'technical-knowledge/ai-agents/mcp-and-agentic-ai',
+				'technical-knowledge/ai-agents/rag-fundamentals',
 				'technical-knowledge/ai-agents/agents',
 				'technical-knowledge/ai-agents/skills',
 				'technical-knowledge/ai-agents/harness',

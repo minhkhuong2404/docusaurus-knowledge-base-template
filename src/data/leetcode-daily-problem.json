@@ -1,8 +1,8 @@
 {
-  "id": "2058",
-  "title": "Find the Minimum and Maximum Number of Nodes Between Critical Points",
-  "url": "https://leetcode.com/problems/find-the-minimum-and-maximum-number-of-nodes-between-critical-points/",
+  "id": "3568",
+  "title": "Minimum Moves to Clean the Classroom",
+  "url": "https://leetcode.com/problems/minimum-moves-to-clean-the-classroom/",
   "difficulty": "medium",
-  "topic": "Linked List",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-08-31."
+  "topic": "Array, Hash Table, Bit Manipulation, Breadth-First Search, Matrix",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-09-01."
 }

@@ -6,7 +6,35 @@ description: Core principles of distributed systems architecture including CAP t
 tags: [architecture, cap-theorem, consistency, availability, distributed-systems, fundamentals]
 ---
 
+import SystemDesignEvolutionDiagram from '@site/src/components/SystemDesignEvolutionDiagram';
+
 # Architecture Fundamentals
+
+## 🚀 Evolutionary System Design: From a $10 Single Server to 10M Users
+
+A common mistake in system design is over-engineering a complex microservices architecture on Day 1. Real-world systems evolve incrementally: **you only introduce new infrastructure components when an existing tier hits a measurable physical bottleneck (CPU, Memory, Disk I/O, or Network bandwidth).**
+
+<SystemDesignEvolutionDiagram />
+
+---
+
+### The 6 Evolutionary Stages of Scalability
+
+```
+Stage 1 (1–1K Users):      [Single $10 VPS (Monolith + DB on localhost)]
+                                    │ (App CPU competing with DB I/O)
+Stage 2 (1K–10K Users):     [App Server] ──▶ [Dedicated Managed DB (RDS)]
+                                    │ (Single App server crashes on spikes)
+Stage 3 (10K–100K Users):   [Load Balancer] ──▶ [Stateless App Fleet] ──▶ [Redis Sessions]
+                                    │ (Database reads hitting 100% CPU)
+Stage 4 (100K–1M Users):    [CloudFront CDN] + [Redis Cache-Aside] ──▶ [Database (10% reads)]
+                                    │ (Single primary DB bottlenecked on writes)
+Stage 5 (1M–5M Users):      [Database Read Replicas (80% reads)] + [Horizontal Sharding]
+                                    │ (Synchronous HTTP timeouts on heavy processing)
+Stage 6 (5M–10M+ Users):    [Async Message Queues (Kafka/SQS)] + [Microservices Decomposition]
+```
+
+---
 
 ## CAP Theorem
 

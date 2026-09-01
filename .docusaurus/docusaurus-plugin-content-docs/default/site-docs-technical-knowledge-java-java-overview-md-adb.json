@@ -21,8 +21,8 @@
     }
   ],
   "version": "current",
-  "lastUpdatedBy": "Author",
-  "lastUpdatedAt": 1539502055000,
+  "lastUpdatedBy": "Lữ Minh Khương",
+  "lastUpdatedAt": 1780069752000,
   "sidebarPosition": 1,
   "frontMatter": {
     "id": "java-overview",
@@ -36,8 +36,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "General Interview Framework",
-    "permalink": "/technical-knowledge/interview-questions/interview-framework"
+    "title": "7 Senior Coding Laws",
+    "permalink": "/technical-knowledge/engineering-practices/how-to-become-senior-developer"
   },
   "next": {
     "title": "Java Fundamentals: Core Language Concepts",

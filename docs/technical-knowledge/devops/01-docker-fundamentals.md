@@ -11,11 +11,43 @@ import DevOpsManifestSpecDiagram from '@site/src/components/DevOpsManifestSpecDi
 
 # Docker Fundamentals
 
-## What is a Container?
+## What is a Container? (Demystified)
 
-A container is a **lightweight, isolated process** that packages an application with everything it needs to run — code, runtime, libraries, and config — so it behaves identically everywhere.
+> **The Core Mental Model:** A container is **not a mini-virtual machine**. There is no guest operating system kernel or hypervisor. **A container is simply a standard Linux process isolated by the host kernel.**
 
-<DockerArchitectureDiagram initialTab="engine" />
+When you run `docker run -d -p 80:80 nginx`, the Linux host starts a regular process called `nginx`. However, the Docker daemon wraps that process inside three Linux kernel isolation primitives:
+1. **Linux Namespaces:** Controls what the process can **SEE** (its own private process tree, network interfaces, and filesystem).
+2. **Control Groups (cgroups):** Controls what the process can **CONSUME** (maximum CPU percentage, memory limits, and I/O rates).
+3. **OverlayFS Union Filesystem:** Layers read-only image layers under a thin read-write scratch layer.
+
+<DockerArchitectureDiagram initialTab="internals" />
+
+---
+
+## The 3 Foundations of Linux Container Isolation
+
+### 1. Linux Namespaces (Visibility & Scoping)
+Namespaces provide process-level virtualization by creating independent partitions for system resources:
+
+| Namespace | Linux Flag | What It Isolates | Container Behavior |
+|---|---|---|---|
+| **PID** | `CLONE_NEWPID` | Process IDs | The container process sees itself as `PID 1`. It cannot see any other process running on the host or other containers. |
+| **NET** | `CLONE_NEWNET` | Network stack | Container gets its own private `lo` loopback (127.0.0.1), IP routing table, and virtual ethernet pair (`veth`) attached to `docker0` bridge. |
+| **MNT** | `CLONE_NEWNS` | Filesystem mount points | Roots the container into its private filesystem, hiding `/home`, `/etc`, and `/var` of the host. |
+| **IPC** | `CLONE_NEWIPC` | Inter-process communication | Prevents container processes from accessing shared memory segments, semaphores, or message queues of the host. |
+| **UTS** | `CLONE_NEWUTS` | Hostname and domain | Allows setting a container-specific hostname (`--hostname web-01`) without modifying the host machine's name. |
+| **USER** | `CLONE_NEWUSER` | User and group IDs | Maps container `root` (UID 0) to an unprivileged UID (e.g. UID 10001) on the host, preventing host root escalation. |
+
+### 2. Control Groups (cgroups) (Resource Guardrails)
+While namespaces prevent a container from snooping on the host, **cgroups** prevent a "noisy neighbor" container from crashing the host:
+- `docker run -m 512m --cpus="1.5"` creates a cgroup directory in `/sys/fs/cgroup/memory/docker/<container_id>`.
+- If memory usage exceeds 512MB, the Linux kernel's Out-Of-Memory (OOM) killer terminates that container process without affecting the host or other containers.
+
+### 3. OverlayFS (Layered Union Mount)
+Docker images are built as immutable, stacked layers using a union filesystem:
+- **LowerDir (Read-Only):** The immutable base OS (e.g., Alpine/Debian) and installed runtime packages.
+- **UpperDir (Read/Write):** A thin ephemeral layer created when the container starts. Any new files or edits are written here (Copy-on-Write).
+- **MergedDir:** The unified filesystem view that the container process actually sees.
 
 ---
 
