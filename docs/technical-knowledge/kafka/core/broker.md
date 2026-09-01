@@ -9,6 +9,7 @@ sidebar_position: 2
 
 import KafkaBrokerStorageDiagram from '@site/src/components/KafkaBrokerStorageDiagram';
 import KafkaRecordBatchIndexDiagram from '@site/src/components/KafkaRecordBatchIndexDiagram';
+import KafkaZeroCopyDiagram from '@site/src/components/KafkaZeroCopyDiagram';
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
@@ -95,27 +96,21 @@ Legacy ZooKeeper Mode:                    Modern KRaft Mode (Kafka 3.3+):
 
 ## Performance Mechanics: Why Kafka is Fast
 
-<details>
-<summary>🔬 Senior deep-dive: Page Cache and Zero-Copy System Calls</summary>
+### 1. Sequential Disk I/O vs Random Access
+Kafka performs append-only sequential writes to log segments. While random disk access on spinning disks or NVMe drives incurs heavy seek latency and IOPS limits, sequential disk throughput ($300\text{--}600\text{ MB/sec}$ on SATA SSDs, $3\text{--}7\text{ GB/sec}$ on NVMe) approaches raw hardware bus throughput.
 
-### 1. Sequential Disk I/O
-Kafka performs append-only sequential writes to log segments. Sequential disk throughput ($100\text{--}500\text{ MB/sec}$) approaches raw disk hardware limits because physical disk heads eliminate seek times.
+### 2. OS Page Cache vs In-JVM Caching
+Kafka does **not** cache message data in the JVM heap. Storing objects in JVM memory causes double caching (once in the OS Page Cache and once in the JVM), high GC pause overhead, and 2-4x memory bloat due to Java object headers. Instead, all disk reads and writes flow directly through the Linux OS **Page Cache** in kernel RAM. Recent records are read directly from RAM by consumers at memory bus speeds without touching physical disk platters or flash cells.
 
-### 2. OS Page Cache Utilization
-Kafka does not cache messages inside the JVM heap. Instead, writes go directly into the Linux OS **Page Cache** in kernel RAM. Recent records are read directly from RAM by consumers without touching physical disk.
+### 3. Zero-Copy `sendfile()` Syscall & Scatter-Gather DMA
 
-### 3. Zero-Copy `sendfile()` Syscall
-When a consumer requests data, the broker executes `FileChannel.transferTo()`, invoking the Linux `sendfile()` syscall. The OS kernel transfers data bytes directly from the Page Cache to the NIC buffer via DMA (Direct Memory Access), eliminating JVM heap memory copying and user/kernel context switches.
+<KafkaZeroCopyDiagram />
 
-```
-Traditional I/O (4 Copies, 4 Context Switches):
-Disk -> Page Cache -> JVM Heap Buffer -> Socket Buffer -> NIC
+When a consumer sends a `FetchRequest`, the broker executes Java's `FileChannel.transferTo()`, which maps directly to the Linux `sendfile()` system call:
 
-Zero-Copy sendfile() (0 User Copies, 2 Context Switches):
-Disk -> Page Cache ======================================> NIC
-```
-
-</details>
+- **Traditional I/O (4 Copies, 4 Context Switches)**: Data moves from Disk $\to$ OS Page Cache (DMA) $\to$ JVM Heap Buffer (CPU copy + context switch) $\to$ Kernel Socket Buffer (CPU copy + context switch) $\to$ NIC Buffer (DMA). Copying 10 Gbps of traffic requires significant CPU saturation solely moving memory bytes.
+- **Linux Zero-Copy `sendfile()` (0 CPU Copies, 2 Context Switches)**: The broker passes only socket descriptor metadata (offset + length) to the kernel socket buffer. The network interface card (NIC) uses **Scatter-Gather DMA** to gather payload bytes directly from the OS Page Cache RAM and stream them across the network cable.
+- **TLS / SSL Impact & Kernel TLS (kTLS)**: Standard user-space TLS encryption (Java `SSLEngine`) breaks pure `sendfile()` zero-copy because data must pass through the JVM to be encrypted. High-throughput clusters leverage **Kernel TLS (kTLS)** (Linux 4.17+) or TLS hardware offload to restore zero-copy throughput under encryption.
 
 ---
 

@@ -1,8 +1,8 @@
 {
-  "id": "2091",
-  "title": "Removing Minimum and Maximum From Array",
-  "url": "https://leetcode.com/problems/removing-minimum-and-maximum-from-array/",
+  "id": "2058",
+  "title": "Find the Minimum and Maximum Number of Nodes Between Critical Points",
+  "url": "https://leetcode.com/problems/find-the-minimum-and-maximum-number-of-nodes-between-critical-points/",
   "difficulty": "medium",
-  "topic": "Array, Greedy",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-08-30."
+  "topic": "Linked List",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-08-31."
 }

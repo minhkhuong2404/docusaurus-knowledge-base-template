@@ -150,6 +150,14 @@ Before creating a new component, check whether one already exists for the concep
 | `KafkaConsumerGroupRebalanceDiagram` | 5-phase rebalance protocol sequence animation |
 | `KafkaConsumerLagPoisonDiagram` | Consumer lag monitor dashboard with poison pill alert states |
 | `KafkaParallelConsumerDiagram` | Parallel consumer threading model comparison |
+| `KafkaZeroCopyDiagram` | Linux sendfile() vs Traditional I/O, Scatter-Gather DMA, OS Page Cache, and kTLS |
+| `KafkaStreamsTopologyDiagram` | DSL DAG flow, Naming shift trap, and sub-topology reorder storm |
+| `KafkaStreamsStateStoreDiagram` | 3-tier storage architecture, RocksDB LSM write/read paths, and .checkpoint file |
+| `KafkaStreamsFailoverRecoveryDiagram` | Crash failover timeline, standby replica warm promotion vs cold changelog restore |
+| `KafkaStreamsExactlyOnceDiagram` | Exactly-Once V2 transactional loop, 2PC commit marker vs abort flow, zombie epoch fencing |
+| `KafkaStreamsTopologyMigrationRunbookDiagram` | 4 production migration strategies (Blue-Green, Cold Reset, Microservices, Dummy Stub) |
+| `KafkaStreamsRebalanceStormDurationDiagram` | Live storm outage and MTTR calculation simulator |
+| `KafkaStreamsTopologyResilienceDiagram` | K8s liveness/readiness probe decoupling, StreamsUncaughtExceptionHandler, multi-client isolation |
 | `NetworkIndexOverviewDiagram` | TCP/IP 5-layer protocol stack explorer with interactive layer inspection |
 | `NetworkPacketEncapsulationDiagram` | 4-stage packet encapsulation visualizer (+TCP, +IP, +Ethernet frame) |
 | `NetworkPerformanceOptimizationDiagram` | Latency hierarchy, TCP kernel tuning, HTTP/2 multiplexing, bandwidth optimization |
