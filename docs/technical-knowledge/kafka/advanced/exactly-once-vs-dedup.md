@@ -658,3 +658,4 @@ void replayAfterTtlExpiryShouldBeCaughtByDbConstraint() {
 - [Redis Performance Patterns](../../redis/redis-performance-patterns.md) — High-throughput cache design patterns, handling cache stampede, hot keys, and single-flight lock caching.
 - [The Retry Pattern](../../system-design/retry-pattern.md) — Design principles for retries, exponential backoff, jitter, and circuit-breaking to prevent cascading failures.
 - [The Outbox Pattern](../../system-design/outbox-pattern.md) — Companion pattern for reliable event publishing, which is a prerequisite for deduplication to be the only concern at the consumer.
+- [Event-Driven Microservices](../../system-design/event-driven-microservices.md) — Asynchronous choreography, domain events, anti-corruption boundaries, and consumer group scaling.
