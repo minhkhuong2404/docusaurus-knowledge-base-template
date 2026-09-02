@@ -34,23 +34,23 @@ const PYRAMID_LEVELS = [
 ];
 
 const DOUBLES_TYPES = [
-  { type: 'Dummy', desc: 'Passed around but never actually used. Satisfies constructor/method parameter contracts.', example: 'new Customer("dummy@test.com") passed to a logger' },
-  { type: 'Stub', desc: 'Provides hardcoded, pre-programmed answers to method calls. No interaction verification.', example: 'when(repo.findById(1L)).thenReturn(Optional.of(user))' },
-  { type: 'Mock', desc: 'Pre-programmed with expectations. Enables verification of method call counts and arguments.', example: 'verify(emailService, times(1)).sendWelcomeEmail("user@test.com")' },
-  { type: 'Spy', desc: 'Wraps a real object. Real methods run by default unless explicitly stubbed.', example: '@Spy List<String> list = new ArrayList<>(); // real add() called' },
-  { type: 'Fake', desc: 'Has a working software implementation, but takes shortcuts not suitable for production.', example: 'InMemoryUserRepository using a HashMap instead of PostgreSQL' }
+  { type: 'Dummy', color: '#94a3b8', desc: 'Passed around but never actually used. Satisfies constructor/method parameter contracts.', example: 'new Customer("dummy@test.com") passed to a logger' },
+  { type: 'Stub', color: '#38bdf8', desc: 'Provides hardcoded, pre-programmed answers to method calls. No interaction verification.', example: 'when(repo.findById(1L)).thenReturn(Optional.of(user))' },
+  { type: 'Mock', color: '#34d399', desc: 'Pre-programmed with expectations. Enables verification of method call counts and arguments.', example: 'verify(emailService, times(1)).sendWelcomeEmail("user@test.com")' },
+  { type: 'Spy', color: '#a78bfa', desc: 'Wraps a real object. Real methods run by default unless explicitly stubbed.', example: '@Spy List<String> list = new ArrayList<>(); // real add() called' },
+  { type: 'Fake', color: '#fbbf24', desc: 'Has a working software implementation, but takes shortcuts not suitable for production.', example: 'InMemoryUserRepository using a ConcurrentHashMap instead of PostgreSQL' }
 ];
 
-export default function TestingPyramidDoublesDiagram(): React.JSX.Element {
-  const [activeTab, setActiveTab] = useState<'pyramid' | 'doubles' | 'first'>('pyramid');
+export default function TestingPyramidDoublesDiagram({ initialTab = 'pyramid' }: { initialTab?: 'pyramid' | 'doubles' | 'first' }): React.JSX.Element {
+  const [activeTab, setActiveTab] = useState<'pyramid' | 'doubles' | 'first'>(initialTab);
   const [selectedLevelId, setSelectedLevelId] = useState<string>('unit');
-  const [selectedDoubleIdx, setSelectedDoubleIdx] = useState<number>(1);
+  const [selectedDoubleIdx, setSelectedDoubleIdx] = useState<number>(2); // Default Mock
 
   const currLevel = PYRAMID_LEVELS.find(l => l.id === selectedLevelId)!;
   const currDouble = DOUBLES_TYPES[selectedDoubleIdx];
 
   return (
-    <div className="interactive-diagram-container" style={{ fontFamily: 'var(--ifm-font-family-base)' }}>
+    <div className="interactive-diagram-container" style={{ fontFamily: 'var(--ifm-font-family-base)', margin: '1.5rem 0' }}>
       <style>{`
         @media (max-width: 768px) {
           .test-pyramid-grid {
@@ -62,36 +62,29 @@ export default function TestingPyramidDoublesDiagram(): React.JSX.Element {
       {/* Header Bar */}
       <div className="interactive-diagram-header">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34d399" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <polygon points="12 2 2 22 22 22 12 2" />
+          <polygon points="12 2 2 22 22 22" />
         </svg>
-        <span style={{ color: 'var(--ifm-color-content)', fontWeight: 700 }}>
-          Test Pyramid Architecture & Test Doubles Spectrum (Dummy, Stub, Mock, Spy, Fake)
+        <span style={{ color: 'var(--ifm-color-content)', fontWeight: 700, fontSize: '15px' }}>
+          Test Pyramid Architecture & Test Doubles Taxonomy
         </span>
-      </div>
-
-      <div style={{ padding: '16px' }}>
-        {/* Navigation Tabs */}
-        <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', flexWrap: 'wrap' }}>
+        <div style={{ marginLeft: 'auto', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
           {[
-            { id: 'pyramid', label: '🔺 The Test Pyramid (Unit vs Integration vs E2E)', color: '#34d399' },
-            { id: 'doubles', label: '🎭 Test Doubles Taxonomy (Stub vs Mock vs Spy)', color: '#38bdf8' },
-            { id: 'first', label: '⚡ F.I.R.S.T. Principles & Arrange-Act-Assert (AAA)', color: '#fbbf24' }
+            { id: 'pyramid', label: '🔺 Test Pyramid (70/20/10)', color: '#34d399' },
+            { id: 'doubles', label: '🎭 Test Doubles Taxonomy', color: '#38bdf8' },
+            { id: 'first', label: '⭐ FIRST Principles', color: '#fbbf24' }
           ].map(t => (
             <button
               key={t.id}
               onClick={() => setActiveTab(t.id as any)}
               style={{
-                flex: 1,
-                minWidth: '150px',
-                padding: '8px 12px',
-                borderRadius: '8px',
-                border: 'none',
-                cursor: 'pointer',
-                fontWeight: 700,
-                fontSize: '12px',
+                padding: '4px 10px',
+                borderRadius: '6px',
+                border: `1px solid ${activeTab === t.id ? t.color : 'rgba(255,255,255,0.1)'}`,
                 background: activeTab === t.id ? `${t.color}20` : 'rgba(255,255,255,0.04)',
                 color: activeTab === t.id ? t.color : 'var(--ifm-color-content-secondary)',
-                boxShadow: activeTab === t.id ? `0 0 0 1.5px ${t.color}50` : '0 0 0 1px rgba(255,255,255,0.08)',
+                fontWeight: activeTab === t.id ? 700 : 500,
+                fontSize: '11.5px',
+                cursor: 'pointer',
                 transition: 'all 0.2s ease'
               }}
             >
@@ -99,125 +92,179 @@ export default function TestingPyramidDoublesDiagram(): React.JSX.Element {
             </button>
           ))}
         </div>
+      </div>
 
-        {/* Tab 1: Test Pyramid */}
+      <div style={{ padding: '16px' }}>
+        {/* TAB 1: TEST PYRAMID SVG VISUAL */}
         {activeTab === 'pyramid' && (
-          <div className="test-pyramid-grid" style={{ display: 'grid', gridTemplateColumns: '50% 50%', gap: '16px', alignItems: 'start' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--ifm-color-content-secondary)', marginBottom: '4px' }}>
-                SELECT PYRAMID LEVEL:
-              </div>
+          <div>
+            <div className="interactive-diagram-svg-wrapper interactive-diagram-grid-bg" style={{ borderRadius: '10px', overflow: 'hidden', marginBottom: '16px' }}>
+              <svg viewBox="0 0 820 200" style={{ width: '100%', height: 'auto', display: 'block' }}>
+                <defs>
+                  <marker id="pyr-arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                    <path d="M 0 0 L 8 4 L 0 8 Z" fill="#38bdf8" />
+                  </marker>
+                </defs>
 
-              {PYRAMID_LEVELS.map(l => {
-                const isSel = l.id === selectedLevelId;
-                return (
+                {/* Left: Interactive SVG Pyramid */}
+                <g transform="translate(60, 20)">
+                  {/* Top Layer: E2E */}
+                  <polygon
+                    points="150,10 90,65 210,65"
+                    fill={selectedLevelId === 'e2e' ? 'rgba(251, 191, 36, 0.4)' : 'rgba(251, 191, 36, 0.15)'}
+                    stroke="#fbbf24"
+                    strokeWidth={selectedLevelId === 'e2e' ? '2.5' : '1.5'}
+                    style={{ cursor: 'pointer', transition: 'all 0.2s ease' }}
+                    onClick={() => setSelectedLevelId('e2e')}
+                  />
+                  <text x="150" y="52" fill="#fbbf24" fontSize="10" fontWeight="800" textAnchor="middle" style={{ pointerEvents: 'none' }}>
+                    E2E (10%)
+                  </text>
+
+                  {/* Mid Layer: Integration */}
+                  <polygon
+                    points="85,72 215,72 260,115 40,115"
+                    fill={selectedLevelId === 'integration' ? 'rgba(56, 189, 248, 0.4)' : 'rgba(56, 189, 248, 0.15)'}
+                    stroke="#38bdf8"
+                    strokeWidth={selectedLevelId === 'integration' ? '2.5' : '1.5'}
+                    style={{ cursor: 'pointer', transition: 'all 0.2s ease' }}
+                    onClick={() => setSelectedLevelId('integration')}
+                  />
+                  <text x="150" y="100" fill="#38bdf8" fontSize="11" fontWeight="800" textAnchor="middle" style={{ pointerEvents: 'none' }}>
+                    INTEGRATION (20%)
+                  </text>
+
+                  {/* Base Layer: Unit */}
+                  <polygon
+                    points="35,122 265,122 300,165 0,165"
+                    fill={selectedLevelId === 'unit' ? 'rgba(52, 211, 153, 0.4)' : 'rgba(52, 211, 153, 0.15)'}
+                    stroke="#34d399"
+                    strokeWidth={selectedLevelId === 'unit' ? '2.5' : '1.5'}
+                    style={{ cursor: 'pointer', transition: 'all 0.2s ease' }}
+                    onClick={() => setSelectedLevelId('unit')}
+                  />
+                  <text x="150" y="150" fill="#34d399" fontSize="12" fontWeight="800" textAnchor="middle" style={{ pointerEvents: 'none' }}>
+                    UNIT TESTS (70% - FAST ⚡)
+                  </text>
+                </g>
+
+                {/* Right: Dimension Indicators with Animated Conduits */}
+                <g transform="translate(420, 25)">
+                  <rect x="0" y="0" width="370" height="150" rx="8" fill="rgba(15, 23, 42, 0.85)" stroke="rgba(255,255,255,0.1)" />
+                  <text x="15" y="25" fill="#ffffff" fontSize="11" fontWeight="700">Pyramid Trade-off Hierarchy</text>
+
+                  <path d="M 20 50 L 340 50" fill="none" stroke="#fbbf24" strokeWidth="1.5" markerEnd="url(#pyr-arrow)" className="interactive-diagram-flowing-path" />
+                  <text x="25" y="44" fill="#fbbf24" fontSize="8.5" fontWeight="700">▲ Higher Cost, Slower Speed, Higher Flakiness (E2E)</text>
+
+                  <path d="M 340 100 L 20 100" fill="none" stroke="#34d399" strokeWidth="1.5" markerEnd="url(#pyr-arrow)" className="interactive-diagram-flowing-path" />
+                  <text x="25" y="94" fill="#34d399" fontSize="8.5" fontWeight="700">▼ Maximum Speed (~ms), Low Cost, Pure Isolation (Unit)</text>
+
+                  <text x="20" y="132" fill="#94a3b8" fontSize="9">
+                    💡 Click any pyramid tier on the left to inspect its scope and frameworks.
+                  </text>
+                </g>
+              </svg>
+            </div>
+
+            {/* Level Detail Card */}
+            <div className="test-pyramid-grid" style={{ display: 'grid', gridTemplateColumns: '40% 60%', gap: '14px', alignItems: 'start' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                {PYRAMID_LEVELS.map(lvl => (
                   <div
-                    key={l.id}
-                    onClick={() => setSelectedLevelId(l.id)}
+                    key={lvl.id}
+                    onClick={() => setSelectedLevelId(lvl.id)}
                     style={{
                       padding: '12px',
                       borderRadius: '8px',
-                      background: isSel ? `${l.color}20` : 'rgba(255,255,255,0.03)',
-                      border: `1px solid ${isSel ? l.color : 'rgba(255,255,255,0.08)'}`,
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease'
+                      background: selectedLevelId === lvl.id ? `${lvl.color}20` : 'rgba(255,255,255,0.03)',
+                      border: `1px solid ${selectedLevelId === lvl.id ? lvl.color : 'rgba(255,255,255,0.08)'}`,
+                      cursor: 'pointer'
                     }}
                   >
-                    <div style={{ fontSize: '12.5px', fontWeight: 800, color: isSel ? l.color : 'var(--ifm-color-content)' }}>
-                      {l.name}
+                    <div style={{ fontSize: '12.5px', fontWeight: 800, color: selectedLevelId === lvl.id ? lvl.color : 'var(--ifm-color-content)' }}>
+                      {lvl.name}
                     </div>
-                    <div style={{ fontSize: '10.5px', color: 'var(--ifm-color-content-secondary)', marginTop: '2px' }}>
-                      Execution Speed: {l.speed}
-                    </div>
+                    <div style={{ fontSize: '11px', color: 'var(--ifm-color-content-secondary)' }}>{lvl.speed}</div>
                   </div>
-                );
-              })}
-            </div>
+                ))}
+              </div>
 
-            {/* Pyramid Level Detail Card */}
-            <div className="interactive-diagram-details-card details-green" style={{ minHeight: '260px' }}>
-              <div style={{ fontSize: '11px', fontWeight: 700, color: currLevel.color, textTransform: 'uppercase', marginBottom: '6px' }}>
-                Level Specifications & Scope
-              </div>
-              <div style={{ fontSize: '14px', fontWeight: 800, color: 'var(--ifm-color-content)', marginBottom: '8px' }}>
-                {currLevel.name}
-              </div>
-              <p style={{ fontSize: '12px', color: 'var(--ifm-color-content-secondary)', lineHeight: 1.6, margin: '0 0 10px' }}>
-                {currLevel.desc}
-              </p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '11px', color: 'var(--ifm-color-content-secondary)' }}>
-                <div><strong>Testing Scope:</strong> {currLevel.scope}</div>
-                <div><strong>Dependencies:</strong> {currLevel.dependencies}</div>
-                <div><strong>Standard Tools:</strong> <code style={{ color: currLevel.color }}>{currLevel.frameworks}</code></div>
+              <div className="interactive-diagram-details-card details-cyan" style={{ minHeight: '160px' }}>
+                <div style={{ fontSize: '11px', fontWeight: 700, color: currLevel.color, textTransform: 'uppercase', marginBottom: '4px' }}>
+                  Tier Inspection
+                </div>
+                <div style={{ fontSize: '14px', fontWeight: 800, color: 'var(--ifm-color-content)', marginBottom: '8px' }}>
+                  {currLevel.name}
+                </div>
+                <p style={{ fontSize: '12px', color: 'var(--ifm-color-content-secondary)', lineHeight: 1.5, margin: '0 0 10px' }}>
+                  {currLevel.desc}
+                </p>
+                <div style={{ fontSize: '11px', color: 'var(--ifm-color-content-secondary)', marginBottom: '4px' }}>
+                  <strong>Dependencies:</strong> {currLevel.dependencies}
+                </div>
+                <div style={{ fontSize: '11px', color: 'var(--ifm-color-content-secondary)' }}>
+                  <strong>Frameworks:</strong> <code style={{ color: currLevel.color }}>{currLevel.frameworks}</code>
+                </div>
               </div>
             </div>
           </div>
         )}
 
-        {/* Tab 2: Test Doubles */}
+        {/* TAB 2: TEST DOUBLES TAXONOMY */}
         {activeTab === 'doubles' && (
-          <div className="test-pyramid-grid" style={{ display: 'grid', gridTemplateColumns: '50% 50%', gap: '16px', alignItems: 'start' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--ifm-color-content-secondary)', marginBottom: '4px' }}>
-                SELECT TEST DOUBLE TYPE:
-              </div>
-
-              {DOUBLES_TYPES.map((d, idx) => {
-                const isSel = idx === selectedDoubleIdx;
-                return (
-                  <div
-                    key={d.type}
-                    onClick={() => setSelectedDoubleIdx(idx)}
-                    style={{
-                      padding: '10px 12px',
-                      borderRadius: '8px',
-                      background: isSel ? 'rgba(56,189,248,0.18)' : 'rgba(255,255,255,0.03)',
-                      border: `1px solid ${isSel ? '#38bdf8' : 'rgba(255,255,255,0.08)'}`,
-                      cursor: 'pointer',
-                      fontSize: '12px',
-                      fontWeight: 700,
-                      color: isSel ? '#38bdf8' : 'var(--ifm-color-content)',
-                      transition: 'all 0.2s ease'
-                    }}
-                  >
-                    {d.type}
-                  </div>
-                );
-              })}
+          <div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '8px', marginBottom: '14px' }}>
+              {DOUBLES_TYPES.map((d, idx) => (
+                <button
+                  key={d.type}
+                  onClick={() => setSelectedDoubleIdx(idx)}
+                  style={{
+                    padding: '8px',
+                    borderRadius: '6px',
+                    border: `1px solid ${selectedDoubleIdx === idx ? d.color : 'rgba(255,255,255,0.08)'}`,
+                    background: selectedDoubleIdx === idx ? `${d.color}20` : 'rgba(255,255,255,0.02)',
+                    color: selectedDoubleIdx === idx ? d.color : 'var(--ifm-color-content-secondary)',
+                    fontWeight: selectedDoubleIdx === idx ? 800 : 500,
+                    fontSize: '12px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  {d.type}
+                </button>
+              ))}
             </div>
 
-            {/* Test Double Details Card */}
-            <div className="interactive-diagram-details-card details-blue" style={{ minHeight: '260px' }}>
-              <div style={{ fontSize: '11px', fontWeight: 700, color: '#38bdf8', textTransform: 'uppercase', marginBottom: '6px' }}>
-                Test Double Taxonomy Inspection
+            <div style={{ padding: '16px', background: `${currDouble.color}08`, border: `1px solid ${currDouble.color}30`, borderRadius: '8px' }}>
+              <div style={{ fontSize: '15px', fontWeight: 800, color: currDouble.color, marginBottom: '6px' }}>
+                🎭 Test Double: {currDouble.type}
               </div>
-              <div style={{ fontSize: '14px', fontWeight: 800, color: 'var(--ifm-color-content)', marginBottom: '8px' }}>
-                {currDouble.type}
-              </div>
-              <p style={{ fontSize: '12px', color: 'var(--ifm-color-content-secondary)', lineHeight: 1.6, margin: '0 0 10px' }}>
+              <p style={{ fontSize: '12.5px', color: 'var(--ifm-color-content)', lineHeight: 1.5, marginBottom: '12px' }}>
                 {currDouble.desc}
               </p>
-              <pre style={{ background: '#090b14', padding: '10px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.1)', color: '#38bdf8', fontSize: '11px', overflowX: 'auto', margin: 0 }}>
-                {currDouble.example}
-              </pre>
+              <div style={{ background: '#090b14', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '6px', padding: '12px' }}>
+                <div style={{ fontSize: '10.5px', color: '#94a3b8', fontWeight: 700, marginBottom: '4px' }}>CODE EXAMPLE:</div>
+                <code style={{ fontSize: '11.5px', color: '#86efac', fontFamily: 'monospace' }}>{currDouble.example}</code>
+              </div>
             </div>
           </div>
         )}
 
-        {/* Tab 3: FIRST Principles */}
+        {/* TAB 3: FIRST PRINCIPLES */}
         {activeTab === 'first' && (
-          <div className="test-pyramid-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr', gap: '8px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '10px' }}>
             {[
-              { letter: 'F', title: 'Fast', desc: 'Unit tests run in milliseconds so developers run them continuously.' },
-              { letter: 'I', title: 'Isolated', desc: 'Tests do not depend on each other or external state. Can run in parallel.' },
-              { letter: 'R', title: 'Repeatable', desc: 'Produces identical results in any environment (Local, CI, Docker).' },
-              { letter: 'S', title: 'Self-Validating', desc: 'Passes or fails automatically without human log inspection.' },
-              { letter: 'T', title: 'Timely', desc: 'Written concurrently or prior to production code (TDD).' }
-            ].map(item => (
-              <div key={item.letter} style={{ background: 'rgba(251,191,36,0.1)', border: '1px solid rgba(251,191,36,0.3)', padding: '10px', borderRadius: '8px', textAlign: 'center' }}>
-                <div style={{ fontSize: '18px', fontWeight: 900, color: '#fbbf24' }}>{item.letter}</div>
-                <div style={{ fontSize: '11px', fontWeight: 800, color: 'var(--ifm-color-content)', margin: '2px 0' }}>{item.title}</div>
-                <div style={{ fontSize: '10px', color: 'var(--ifm-color-content-secondary)', lineHeight: 1.3 }}>{item.desc}</div>
+              { letter: 'F', title: 'Fast', desc: 'Tests must run in milliseconds so developers run them continuously on every file save.', color: '#34d399' },
+              { letter: 'I', title: 'Independent', desc: 'Tests must never depend on the execution order or side effects of other tests.', color: '#38bdf8' },
+              { letter: 'R', title: 'Repeatable', desc: 'Tests must produce identical results in any environment (local, CI, production replica).', color: '#fbbf24' },
+              { letter: 'S', title: 'Self-Validating', desc: 'Tests must pass or fail with a boolean outcome — no manual log inspection.', color: '#a78bfa' },
+              { letter: 'T', title: 'Timely', desc: 'Tests should be written just before or concurrently with production code (TDD mindset).', color: '#f472b6' }
+            ].map(p => (
+              <div key={p.letter} style={{ padding: '12px', background: `${p.color}08`, border: `1px solid ${p.color}30`, borderRadius: '6px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
+                  <span style={{ background: p.color, color: '#000', fontWeight: 800, borderRadius: '4px', padding: '2px 6px', fontSize: '11px' }}>{p.letter}</span>
+                  <strong style={{ color: p.color, fontSize: '12.5px' }}>{p.title}</strong>
+                </div>
+                <div style={{ fontSize: '11.5px', color: 'var(--ifm-color-content)', lineHeight: 1.4 }}>{p.desc}</div>
               </div>
             ))}
           </div>

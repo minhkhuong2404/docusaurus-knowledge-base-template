@@ -9,10 +9,14 @@ tags:
 - solid
 - dependency-inversion
 ---
+import SolidPrinciplesDiagram from '@site/src/components/SolidPrinciplesDiagram';
+
 # D — Dependency Inversion Principle
 
 > **"High-level modules should not depend on low-level modules. Both should depend on abstractions."**
 > — Robert C. Martin
+
+<SolidPrinciplesDiagram initialPrinciple="DIP" />
 
 ---
 

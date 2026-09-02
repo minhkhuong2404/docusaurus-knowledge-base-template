@@ -182,19 +182,7 @@ class OrderControllerIntegrationTest {
 
 Understanding the difference is critical for writing effective tests.
 
-```
-┌────────────────────────────────────────────────────────────┐
-│                    Test Doubles                             │
-├──────────┬────────────────────────────────────────────────┤
-│ Dummy    │ Passed around but never used. Satisfies params. │
-│ Stub     │ Returns pre-programmed answers. No verification.│
-│ Mock     │ Records calls. You VERIFY interactions.         │
-│ Spy      │ Wraps real object. Real methods run unless      │
-│          │ explicitly stubbed.                              │
-│ Fake     │ Working implementation with shortcuts            │
-│          │ (e.g., in-memory DB instead of PostgreSQL).      │
-└──────────┴────────────────────────────────────────────────┘
-```
+<TestingPyramidDoublesDiagram initialTab="doubles" />
 
 ### Side-by-Side Comparison
 

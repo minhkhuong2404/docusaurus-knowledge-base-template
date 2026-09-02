@@ -9,10 +9,14 @@ tags:
 - solid
 - interface-segregation
 ---
+import SolidPrinciplesDiagram from '@site/src/components/SolidPrinciplesDiagram';
+
 # I — Interface Segregation Principle
 
 > **"No client should be forced to depend on methods it does not use."**
 > — Robert C. Martin
+
+<SolidPrinciplesDiagram initialPrinciple="ISP" />
 
 ---
 

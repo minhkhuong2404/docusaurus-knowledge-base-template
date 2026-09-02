@@ -10,10 +10,14 @@ tags:
 - solid
 - single-responsibility
 ---
+import SolidPrinciplesDiagram from '@site/src/components/SolidPrinciplesDiagram';
+
 # S — Single Responsibility Principle
 
 > **"A class should have only one reason to change."**
 > — Robert C. Martin
+
+<SolidPrinciplesDiagram initialPrinciple="SRP" />
 
 ---
 

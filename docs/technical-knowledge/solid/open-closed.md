@@ -9,10 +9,14 @@ tags:
 - solid
 - open-closed
 ---
+import SolidPrinciplesDiagram from '@site/src/components/SolidPrinciplesDiagram';
+
 # O — Open/Closed Principle
 
 > **"Software entities should be open for extension, but closed for modification."**
 > — Bertrand Meyer, popularized by Robert C. Martin
+
+<SolidPrinciplesDiagram initialPrinciple="OCP" />
 
 ---
 
