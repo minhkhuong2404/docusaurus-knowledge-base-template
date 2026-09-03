@@ -737,12 +737,55 @@ SELECT * FROM orders WHERE id > 100000 ORDER BY id LIMIT 20;
 
 ### 5. SELECT only needed columns
 ```sql
--- ❌ Bad: fetches all columns
+-- ❌ Bad: fetches all columns, forcing heap reads
 SELECT * FROM users;
 
--- ✅ Good: allows covering index
+-- ✅ Good: allows index-only covering scans
 SELECT id, email FROM users WHERE active = true;
 ```
+
+### 6. Prefer UNION ALL over UNION
+```sql
+-- ❌ Bad: UNION forces sort/hash deduplication & temp disk spill
+SELECT id, email, 'TIER1' FROM active_users
+UNION
+SELECT id, email, 'TIER2' FROM partner_users;
+
+-- ✅ Good: UNION ALL streams results with O(1) memory
+SELECT id, email, 'TIER1' FROM active_users
+UNION ALL
+SELECT id, email, 'TIER2' FROM partner_users;
+```
+
+### 7. Avoid DISTINCT to fix 1:N JOIN duplicates (Use EXISTS)
+```sql
+-- ❌ Bad: DISTINCT hashes 250,000 inflated rows to collapse duplicates
+SELECT DISTINCT c.id, c.name FROM customers c
+JOIN orders o ON o.customer_id = c.id WHERE o.total > 500;
+
+-- ✅ Good: Semi-join stops on first match without row multiplication
+SELECT c.id, c.name FROM customers c
+WHERE EXISTS (SELECT 1 FROM orders o WHERE o.customer_id = c.id AND o.total > 500);
+```
+
+### 8. Structure with CTEs instead of correlated scalar subqueries
+```sql
+-- ❌ Bad: Correlated subquery in SELECT executes once per outer row (N+1 query loops)
+SELECT e.id, e.name, (SELECT COUNT(*) FROM tasks t WHERE t.emp_id = e.id) FROM employees e;
+
+-- ✅ Good: CTE aggregates once in a single scan and joins via Hash Join
+WITH task_counts AS (
+    SELECT emp_id, COUNT(*) AS total_tasks FROM tasks GROUP BY emp_id
+)
+SELECT e.id, e.name, COALESCE(tc.total_tasks, 0)
+FROM employees e
+LEFT JOIN task_counts tc ON tc.emp_id = e.id;
+```
+
+### 9. Deploy Summary Tables & Materialized Views for OLAP Aggregations
+For large-scale analytical rollups scanning tens of millions of rows, hardware I/O limits prevent instant response times regardless of indexes. Pre-aggregate data into Materialized Views (`REFRESH MATERIALIZED VIEW CONCURRENTLY`) or background summary tables.
+
+> 🚀 **Deep Dive**: For full execution plans, engine-specific diagnostic commands, and interactive plan simulations, see **[The 7 Rules for High-Performance SQL in Performance & Monitoring](./performance-monitoring.md#the-7-rules-for-writing-high-performance-sql--slow-query-tuning)**.
 
 ---
 
