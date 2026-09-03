@@ -49,18 +49,12 @@ This means the concurrency level is equal to the **number of buckets**, not a fi
 
 ### Memory Layout
 
-```
-┌────────────────── Heap ──────────────────┐
-│                                          │
-│  ┌──── String Constant Pool ────┐        │
-│  │  "hello" (0x100)             │        │
-│  └──────────────────────────────┘        │
-│                                          │
-│  new String("hello") (0x200) ──────┐     │
-│    value[] ────────────────────────┼──→ (copy of "hello" bytes)
-│                                          │
-└──────────────────────────────────────────┘
-```
+| Declaration Syntax | Heap Memory Location | Reference Address Example | Pool Reusability (`==`) |
+|---|---|---|---|
+| `String a = "hello";` | **String Constant Pool (SCP)** | Pointer `0x100` | Reuses existing pool instance. `a == b` returns `true`. |
+| `String b = "hello";` | **String Constant Pool (SCP)** | Pointer `0x100` | Shared identical memory reference. |
+| `String c = new String("hello");` | **Regular Heap Space** (outside SCP) | Pointer `0x200` (wraps `char[]/byte[]`) | Bypasses pool reuse. `a == c` returns `false`, `a.equals(c)` returns `true`. |
+| `String d = c.intern();` | **String Constant Pool (SCP)** | Pointer `0x100` | Pulls existing pool reference. `a == d` returns `true`. |
 
 **Key difference:**
 ```java

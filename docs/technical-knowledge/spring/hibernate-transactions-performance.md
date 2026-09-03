@@ -1,10 +1,11 @@
----
+    ---
 id: hibernate-transactions-performance
 title: "Hibernate Transactions & Performance in Spring Apps"
 sidebar_label: Hibernate Transactions & Performance
 description: Deep dive into Hibernate transaction semantics, persistence context lifecycle, flush modes, propagation, locking strategies, N+1 diagnostics, second-level cache, batch processing, and production performance tuning in Spring applications.
 tags: [hibernate, spring, transactions, performance, jpa, persistence-context, n-plus-one, caching, locking]
 ---
+import JpaEntityLifecycleDiagram from '@site/src/components/JpaEntityLifecycleDiagram';
 
 # Hibernate Transactions & Performance in Spring Apps
 
@@ -20,43 +21,24 @@ Before understanding transactions, you must understand the **persistence context
 
 The persistence context is an **in-memory map** of all entities that Hibernate is currently tracking within a unit of work. Every entity you load, save, or query within a transaction is registered in this map.
 
-```
-Persistence Context (Session-scoped):
-
-  ┌──────────────────────────────────────────────────────────────────┐
-  │  Entity Map: {                                                   │
-  │    User(id=1) → {id:1, name:"Alice", email:"alice@example.com"} │
-  │    Order(id=10) → {id:10, status:PENDING, total:99.99}          │
-  │    Product(id=5) → {id:5, price:29.99, stock:100}               │
-  │  }                                                               │
-  │                                                                  │
-  │  Snapshot Map (original values for dirty checking):             │
-  │    User(id=1) → {id:1, name:"Alice", email:"alice@example.com"} │
-  │    Order(id=10) → {id:10, status:PENDING, total:99.99}          │
-  │    Product(id=5) → {id:5, price:29.99, stock:100}               │
-  └──────────────────────────────────────────────────────────────────┘
-```
+<JpaEntityLifecycleDiagram initialTab="dirty_checking" />
 
 ### Entity States
 
 Every entity object exists in one of four states:
 
-```
-NEW (Transient)          MANAGED (Persistent)        DETACHED         REMOVED
-─────────────────        ────────────────────        ────────         ───────
-Just created with        In the persistence           Was managed,     Scheduled
-new keyword — not        context — tracked,           now outside      for DELETE
-tracked by Hibernate.    dirty checked.               the session.     on flush.
-No DB row yet.           Changes auto-flushed.
-                         findById() result.
-                         save() result.
+| State | Lifecycle Scope | Dirty Checking? | Database Synchronization |
+|---|---|---|---|
+| **NEW (Transient)** | Instantiated with `new` | ❌ No | No row in DB yet. Lost if GC runs. |
+| **MANAGED (Persistent)** | In active Persistence Context | ✅ Yes | Auto-flushed on commit/flush via dirty checking. |
+| **DETACHED** | Session closed or `clear()` called | ❌ No | Has DB ID, but modifications ignored until `merge()`. |
+| **REMOVED** | `em.remove()` called on managed entity | ❌ No | Scheduled for SQL `DELETE` on flush/commit. |
 
-Transitions:
-  new Entity() ──save()──► MANAGED
-  MANAGED ──session closes──► DETACHED
-  DETACHED ──merge()──► MANAGED (new or existing snapshot updated)
-  MANAGED ──delete()──► REMOVED ──flush()──► deleted from DB
-```
+**Key State Transitions:**
+- `new Entity()` ➔ `save()` / `persist()` ➔ **MANAGED**
+- **MANAGED** ➔ Session closes / `detach()` ➔ **DETACHED**
+- **DETACHED** ➔ `merge()` ➔ **MANAGED** *(new managed reference returned)*
+- **MANAGED** ➔ `delete()` / `remove()` ➔ **REMOVED** ➔ `flush()` ➔ Deleted from DB
 
 ```java
 @Transactional

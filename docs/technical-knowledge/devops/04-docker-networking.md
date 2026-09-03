@@ -33,77 +33,10 @@ import DockerArchitectureDiagram from '@site/src/components/DockerArchitectureDi
 
 When you run `docker run myapp`, Docker attaches it to the default `bridge` network.
 
-```
-Host Machine
-  ├─ eth0 (172.31.0.1) — real network interface
-  └─ docker0 (172.17.0.1) — virtual bridge
-       ├─ container-A (172.17.0.2)
-       ├─ container-B (172.17.0.3)
-       └─ container-C (172.17.0.4)
-```
-
-```bash
-# Inspect the default bridge
-docker network inspect bridge
-
-# Containers on default bridge can reach each other by IP
-# but NOT by name — name-based DNS only works on user-defined bridges
-
-# Test connectivity between containers
-docker run -d --name container-a nginx
-docker run --rm -it ubuntu bash
-  $ ping 172.17.0.2   # Works (by IP)
-  $ ping container-a  # FAILS on default bridge — no DNS
-```
-
-### User-Defined Bridge Networks (Recommended)
-
-```bash
-# Create custom network
-docker network create --driver bridge my-network
-
-# Attach containers at run time
-docker run -d --name api    --network my-network myapp:1.0.0
-docker run -d --name db     --network my-network postgres:16
-docker run -d --name cache  --network my-network redis:7-alpine
-
-# Now containers can communicate by SERVICE NAME
-docker exec -it api bash
-  $ ping db      # ✅ Works — DNS resolves "db" to db's IP
-  $ ping cache   # ✅ Works
-  $ curl http://api:8080/health  # ✅ Works
-```
-
-**User-defined bridge vs default bridge:**
-| Feature | Default bridge | User-defined bridge |
-|---|---|---|
-| DNS (by name) | ❌ | ✅ |
-| Automatic DNS | ❌ | ✅ |
-| Network isolation | ❌ (all containers share) | ✅ (only connected containers) |
-| Configurable CIDR | ❌ | ✅ |
-
----
-
-## Host Network
-
-Container shares the host's network namespace. No NAT. Best performance.
-
-```bash
-docker run --network host nginx
-# nginx listens on port 80 of the HOST directly
-# No -p flag needed (or possible)
-```
-
-```
-Host Network Mode:
-  ┌──────────────────────────────────────┐
-  │  Host OS                              │
-  │  eth0: 192.168.1.100                  │
-  │                                       │
-  │  Container (--network host)           │
-  │  Shares:  192.168.1.100 — same IP!    │
-  └──────────────────────────────────────┘
-```
+| Network Level | Interface & IP Allocation | Port Binding Mechanism | Security & Performance Profile |
+|---|---|---|---|
+| **Host Operating System** | Physical interface `eth0` (`192.168.1.100`) | Native Linux TCP/UDP sockets | Zero NAT overhead, maximum throughput. |
+| **Container (`--network host`)** | Inherits host network namespace | Binds directly to host port (e.g. `:80`) | Bypasses `docker0` bridge; port collisions possible if host port is in use. |
 
 **Use cases:** High-performance networking, where NAT overhead matters (monitoring agents, network tools).  
 **Limitation:** Only available on Linux hosts. Not available on Docker Desktop (macOS/Windows).

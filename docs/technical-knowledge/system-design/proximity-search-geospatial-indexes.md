@@ -5,6 +5,7 @@ sidebar_label: Geospatial Indexes
 description: A comprehensive guide to proximity search and geospatial indexing — covering spatial trees, encoded key indexes, production Java/Spring implementation, and senior deep dives on trade-offs and failure modes.
 tags: [geospatial, proximity-search, quadtree, r-tree, geohash, s2, h3, system-design, redis, postgis, java, spring]
 ---
+import GeospatialIndexingDiagram from '@site/src/components/GeospatialIndexingDiagram';
 
 # Proximity Search & Geospatial Indexes
 
@@ -259,18 +260,7 @@ Instead of building custom tree structures, this approach mathematically transfo
 
 The mathematical magic is the **Space-Filling Curve** — a path that visits every point in a 2D grid exactly once while maximizing spatial locality (nearby 2D points map to nearby 1D values).
 
-```
-2D Grid:                     1D Hilbert Curve traversal:
-┌───┬───┬───┬───┐
-│ 0 │ 1 │ 14│ 15│            0 → 1 → 2 → 3 → 4 → 5 → ...
-├───┼───┼───┼───┤
-│ 3 │ 2 │ 13│ 12│            Points close in 2D tend to be
-├───┼───┼───┼───┤            close in the 1D sequence too
-│ 4 │ 7 │ 8 │ 11│            (not perfectly, but far better than
-├───┼───┼───┼───┤            a simple row-major scan)
-│ 5 │ 6 │ 9 │ 10│
-└───┴───┴───┴───┘
-```
+<GeospatialIndexingDiagram initialTab="hilbert" />
 
 ---
 
@@ -400,24 +390,7 @@ H3 tiles the globe using a hierarchical system of **hexagons** with 15 resolutio
 
 **Why hexagons instead of squares?**
 
-```
-Square grid:                  Hexagonal grid:
-┌───┬───┬───┐                /───\ /───\ /───\
-│   │   │   │               /     X     X     \
-├───┼───┼───┤               \     │     │     /
-│   │ ✦ │   │                \───/ \───/ \───/
-├───┼───┼───┤               /     X     X     \
-│   │   │   │              / ✦   / \   / \     \
-└───┴───┴───┘              \───/ \───/ \───/
-
-Square center to:            Hexagon center to:
-  Edge neighbor: 1.0           All 6 neighbors: 1.0 (equal!)
-  Corner neighbor: 1.414
-
-→ Corner square neighbors are 41% farther away
-→ Asymmetric distance math for radius expansion
-→ All 6 hexagon neighbors are equidistant → clean ring expansion
-```
+<GeospatialIndexingDiagram initialTab="h3_hexagons" />
 
 **Expanding radius by one ring:**
 

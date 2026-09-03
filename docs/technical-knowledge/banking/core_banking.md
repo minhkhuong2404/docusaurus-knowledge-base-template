@@ -31,26 +31,14 @@ Think of it as the **single source of truth** for:
 
 ## What CBS Does
 
-```
-                    ┌────────────────────────────────────────┐
-                    │         CORE BANKING SYSTEM            │
-                    │                                        │
-  Channels          │  ┌──────────┐    ┌──────────────────┐  │
-  ├── Mobile App    │  │ Account  │    │  Ledger /        │  │
-  ├── Internet      │  │ Mgmt     │    │  Accounting      │  │
-  ├── Branch        │  │ Module   │    │  Engine          │  │
-  ├── ATM           │  └──────────┘    └──────────────────┘  │
-  └── API           │  ┌──────────┐    ┌──────────────────┐  │
-         │          │  │ Product  │    │  Customer /      │  │
-         └─────────►│  │ Config   │    │  CIF Module      │  │
-                    │  └──────────┘    └──────────────────┘  │
-  Payments          │  ┌──────────┐    ┌──────────────────┐  │
-  ├── NPP           │  │ Interest │    │  Reporting &     │  │
-  ├── BECS          │  │ & Fees   │    │  Statements      │  │
-  ├── SWIFT    ────►│  └──────────┘    └──────────────────┘  │
-  └── RTGS          │                                        │
-                    └────────────────────────────────────────┘
-```
+| Ingress Source | Core CBS Subsystem Module | Functional Capabilities & Ledger Role | Integration Model |
+|---|---|---|---|
+| **Channels**<br />(Mobile App, Web, Branch, ATM, API) | **Account Management Module** | Creates/updates accounts, manages status (Active/Dormant/Frozen), offset linkages, and permission flags. | Synchronous REST / gRPC API |
+| **Channels**<br />(Onboarding, CRM) | **Customer / CIF Module** | Customer Information File (CIF): single source of truth for KYC identity, beneficial owners, and risk scores. | Event-Driven &amp; CDC Kafka sync |
+| **Product Engine** | **Product Configuration** | Defines interest calculation schedules, tier thresholds, loan amortization rules, and overdraft limits. | Internal CBS Rules Engine |
+| **Financial Engine** | **Ledger / Accounting Engine** | Real-time double-entry general ledger posting (Assets, Liabilities, Equity, Revenue, Expense). | Zero-loss transactional ACID writes |
+| **Billing Engine** | **Interest &amp; Fees Engine** | Daily accrual calculations and monthly capitalisation of debit/credit interest and fee schedules. | Automated overnight batch job |
+| **Payments Rails**<br />(NPP, BECS, SWIFT, RTGS) | **Reporting &amp; Statements** | Generates regulatory APRA returns, tax reporting, and periodic customer PDF/e-statements. | Enterprise Message Bus |
 
 ---
 

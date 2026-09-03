@@ -334,13 +334,10 @@ Most enterprise applications use **runtime extension** via dependency injection 
 
 Frameworks like VS Code, IntelliJ, and WordPress are built entirely around OCP:
 
-```
-Core Application (closed for modification)
-    ├── Plugin Interface (the extension point)
-    ├── Plugin A (community-built)
-    ├── Plugin B (community-built)
-    └── Plugin C (your custom plugin — no core changes needed!)
-```
+- **Core Application** *(Closed for modification)*
+  - 🔌 **Plugin Interface** *(The extension contract)*
+  - 🧩 **Plugin A / Plugin B** *(Community-built extensions)*
+  - 🧩 **Plugin C** *(Your custom plugin — 0 core code changes required)*
 
 In Java, this maps to the **Service Provider Interface (SPI)** mechanism or Spring's auto-discovered `@Component` beans.
 

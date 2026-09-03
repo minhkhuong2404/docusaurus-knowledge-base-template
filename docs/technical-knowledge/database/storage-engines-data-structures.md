@@ -173,16 +173,11 @@ PostgreSQL WAL is also used for **logical/physical replication**.
 
 The database's **memory cache** for disk pages.
 
-```
-Buffer Pool (e.g. 8 GB in RAM)
-┌────────────────────────────┐
-│  Page (orders, 0-100)      │  ← hot page, pinned
-│  Page (users, 0-100)       │
-│  Page (orders, 100-200)    │
-│  ...                       │
-└────────────────────────────┘
-  LRU eviction when full
-```
+| Buffer Pool Segment | In-Memory Page Type | Eviction & Lifecycle Policy |
+|---|---|---|
+| **Hot Pinned Pages** | Active B-Tree root/internal nodes & frequent rows (e.g. `orders[0-100]`) | Pinned in RAM; immune to immediate eviction. |
+| **Warm Cached Pages** | Read-cached data pages (e.g. `users[0-100]`, `orders[100-200]`) | Managed via midpoint-insertion LRU (e.g. 5/8 new, 3/8 old). |
+| **Dirty Pages** | Modified pages with unwritten disk changes | Flushed asynchronously to disk by background page cleaner threads. |
 
 - **Hit rate** = pages served from memory / total pages requested
 - Target: >99% hit rate for OLTP
@@ -202,18 +197,15 @@ WHERE Variable_name IN ('Innodb_buffer_pool_reads', 'Innodb_buffer_pool_read_req
 
 Data is read/written in **pages** (typically 4KB, 8KB, or 16KB).
 
-```
-InnoDB Page (16KB default):
-┌─────────────────────────┐
-│ File Header (38B)        │ page no, checksum, LSN
-│ Page Header (56B)        │ free space, record count
-│ Infimum + Supremum (26B) │ virtual min/max records
-│ User Records             │ actual row data
-│ Free Space               │
-│ Page Directory           │ slot offsets for binary search
-│ File Trailer (8B)        │ checksum
-└─────────────────────────┘
-```
+| InnoDB Page Component | Size | Function & Internal Contents |
+|---|---|---|
+| **File Header** | 38 Bytes | Page offset/number, previous/next page pointers (doubly linked list), Page LSN, checksum. |
+| **Page Header** | 56 Bytes | Number of directory slots, heap top pointer, free space pointer, number of records. |
+| **Infimum + Supremum** | 26 Bytes | Virtual boundary records representing minimum and maximum possible keys on the page. |
+| **User Records** | Variable | Actual clustered or secondary index rows (variable-length headers, null bitmask, column payloads). |
+| **Free Space** | Variable | Unallocated gap for incoming inserts and in-place row length expansions. |
+| **Page Directory** | Variable | Sparse array of 2-byte slot offsets pointing to record headers, enabling $O(\log K)$ binary search. |
+| **File Trailer** | 8 Bytes | Old-style checksum and low 4 bytes of Page LSN (validated against File Header for torn-page detection). |
 
 **Page fill factor**: InnoDB leaves ~1/16 of each page free for future updates to avoid immediate page splits.
 

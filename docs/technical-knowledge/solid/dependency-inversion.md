@@ -8,8 +8,8 @@ tags:
 - technical-knowledge
 - solid
 - dependency-inversion
----
 import SolidPrinciplesDiagram from '@site/src/components/SolidPrinciplesDiagram';
+import HexagonalArchitectureDiagram from '@site/src/components/HexagonalArchitectureDiagram';
 
 # D — Dependency Inversion Principle
 
@@ -393,21 +393,7 @@ New recommendation algorithms are deployed **without touching the product page s
 
 DIP is the **foundation** of Hexagonal Architecture, one of the most important architectural patterns for enterprise applications:
 
-```
-                    ┌─────────────────────────┐
-   Driving Adapters │                         │  Driven Adapters
-                    │                         │
-  [REST Controller] │    ┌─────────────┐      │  [MySQL Repository]
-  [GraphQL API]     │───▶│   DOMAIN    │◀─────│  [Redis Cache]
-  [CLI Command]     │    │   (Core     │      │  [Stripe Gateway]
-  [Event Listener]  │    │   Business  │      │  [S3 File Storage]
-                    │    │   Logic)    │      │  [Kafka Producer]
-                    │    └─────────────┘      │
-                    │     ▲           ▲       │
-                    │   Ports       Ports     │
-                    │  (Input)    (Output)    │
-                    └─────────────────────────┘
-```
+<HexagonalArchitectureDiagram />
 
 **Key rules:**
 1. The **domain** (center) defines interfaces (ports) — it has ZERO external dependencies
@@ -490,24 +476,14 @@ module com.app.application {
 
 Robert C. Martin's Clean Architecture is built entirely on DIP:
 
-```
-┌──────────────────────────────────────────────┐
-│              Frameworks & Drivers             │  ← Spring, MySQL, S3
-│  ┌────────────────────────────────────────┐   │
-│  │         Interface Adapters             │   │  ← Controllers, Gateways
-│  │  ┌──────────────────────────────────┐  │   │
-│  │  │       Application Business       │  │   │  ← Use Cases
-│  │  │  ┌────────────────────────────┐  │  │   │
-│  │  │  │  Enterprise Business Rules │  │  │   │  ← Entities, Domain
-│  │  │  └────────────────────────────┘  │  │   │
-│  │  └──────────────────────────────────┘  │   │
-│  └────────────────────────────────────────┘   │
-└──────────────────────────────────────────────┘
+| Layer | Responsibility | DIP Contract |
+|---|---|---|
+| **1. Frameworks & Drivers (Outer)** | Spring Boot, MySQL, S3, Web | Glue code; depends on inner Interface Adapters |
+| **2. Interface Adapters** | Controllers, Gateways, Presenters | Converts external formats to Use Case models |
+| **3. Application Business Rules** | Use Cases, Application Services | Orchestrates domain entities; independent of UI/DB |
+| **4. Enterprise Business Rules (Core)** | Entities, Domain Logic | Pure business rules; ZERO external dependencies |
 
-Dependency Rule: Dependencies ALWAYS point inward.
-Inner layers NEVER know about outer layers.
-This is DIP applied at every boundary.
-```
+> **The Dependency Rule:** Source code dependencies ALWAYS point inward. Inner layers NEVER know about outer layers. *(Switch to the **Clean Architecture Onion** tab in the interactive diagram above to inspect each layer)*.
 
 ### IoC Containers Beyond Spring
 
@@ -598,20 +574,14 @@ public class UserService {
 
 Apply DIP at **architectural boundaries** where the cost of coupling is highest:
 
-```
-Apply DIP here (high-value boundaries):
-├── Database access       → Repository interfaces
-├── External APIs         → Gateway/Client interfaces
-├── File storage          → Storage interfaces
-├── Message queues        → Publisher/Subscriber interfaces
-└── Third-party services  → Adapter interfaces
-
-Skip DIP here (low-value, internal):
-├── Utility classes       → Use directly
-├── DTOs and value objects → Use directly
-├── Framework config      → Use directly
-└── Internal helpers      → Use directly
-```
+| Boundary Category | Architectural Pattern | Target Abstraction |
+|---|---|---|
+| **Database Access** | High-Value Boundary | Repository interfaces (`OrderRepository`) |
+| **External APIs** | High-Value Boundary | Gateway / Client interfaces (`PaymentGateway`) |
+| **File Storage** | High-Value Boundary | Storage interfaces (`DocumentStorage`) |
+| **Message Queues** | High-Value Boundary | Publisher / Subscriber interfaces (`EventPublisher`) |
+| **Third-Party Services** | High-Value Boundary | Adapter interfaces (`TaxCalculatorPort`) |
+| **Utility / DTOs / Helpers** | Internal (Skip DIP) | Use directly without ceremonial interfaces |
 
 ---
 

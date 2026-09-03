@@ -46,12 +46,7 @@ In a **synchronous** architecture, the Web Server handles the upload and does al
 
 By introducing a Message Queue, we separate the "Upload" from the "Processing."
 
-```
-┌─────────────┐      ┌─────────────┐      ┌─────────────┐
-│   Producer  │ ───▶ │    Queue    │ ───▶ │   Consumer  │
-│  (Web App)  │      │   (Buffer)  │      │  (Worker)   │
-└─────────────┘      └─────────────┘      └─────────────┘
-```
+<MessageQueueArchDiagram defaultTab="DECOUPLING" />
 
 **How it works:**
 1. **The Producer (Web Server):** The user uploads the photo. The Web Server saves the raw file to a database, writes a tiny text message to the Queue ("Photo 456 needs processing"), and *immediately* returns a "Success!" screen to the user (takes 0.1 seconds).

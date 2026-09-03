@@ -28,25 +28,14 @@ Explore the interactive visualizer below to inspect the Multi-AZ VPC topology, t
 
 The foundation of every secure AWS workload is a properly structured **Multi-AZ VPC** (e.g. `10.0.0.0/16`) spanning at least two Availability Zones (AZ-a and AZ-b):
 
-```
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│ AWS Region: us-east-1 (VPC 10.0.0.0/16)                                                │
-│                                                                                        │
-│ ┌──────────────────────────────────────┐    ┌──────────────────────────────────────┐   │
-│ │ Availability Zone A (us-east-1a)     │    │ Availability Zone B (us-east-1b)     │   │
-│ │                                      │    │                                      │   │
-│ │ 1. Public Subnet (10.0.1.0/24)       │    │ 1. Public Subnet (10.0.2.0/24)       │   │
-│ │    • ALB Node A                      │    │    • ALB Node B                      │   │
-│ │    • NAT Gateway A                   │    │    • NAT Gateway B                   │   │
-│ │                                      │    │                                      │   │
-│ │ 2. Private App Subnet (10.0.10.0/24) │    │ 2. Private App Subnet (10.0.20.0/24) │   │
-│ │    • EC2 Instance 1 (Spring/Node)    │    │    • EC2 Instance 2 (ASG)            │   │
-│ │                                      │    │                                      │   │
-│ │ 3. Isolated DB Subnet (10.0.100.0/24)│    │ 3. Isolated DB Subnet (10.0.200.0/24)│   │
-│ │    • Primary RDS PostgreSQL          │───▶│    • Synchronous Standby Replica     │   │
-│ └──────────────────────────────────────┘    └──────────────────────────────────────┘   │
-└────────────────────────────────────────────────────────────────────────────────────────┘
-```
+| Availability Zone | Subnet Tier | CIDR Block | Hosted Infrastructure | Route Table Egress Target |
+|---|---|---|---|---|
+| **us-east-1a** | Public Subnet | `10.0.1.0/24` | ALB Node A, NAT Gateway A | Internet Gateway (`0.0.0.0/0 ➔ igw-xxx`) |
+| **us-east-1a** | Private App Subnet | `10.0.10.0/24` | EC2 ASG Instance 1 (Spring Boot) | NAT Gateway A (`0.0.0.0/0 ➔ nat-xxx-a`) |
+| **us-east-1a** | Isolated DB Subnet | `10.0.100.0/24` | Primary RDS PostgreSQL Instance | Local VPC only (No internet route) |
+| **us-east-1b** | Public Subnet | `10.0.2.0/24` | ALB Node B, NAT Gateway B | Internet Gateway (`0.0.0.0/0 ➔ igw-xxx`) |
+| **us-east-1b** | Private App Subnet | `10.0.20.0/24` | EC2 ASG Instance 2 (ASG Node) | NAT Gateway B (`0.0.0.0/0 ➔ nat-xxx-b`) |
+| **us-east-1b** | Isolated DB Subnet | `10.0.200.0/24` | Synchronous Standby RDS Replica | Local VPC only (Synchronous disk replication) |
 
 ### Subnet Segmentation & Route Table Rules:
 1. **Public Subnets (`10.0.1.0/24`, `10.0.2.0/24`):**
@@ -65,24 +54,11 @@ The foundation of every secure AWS workload is a properly structured **Multi-AZ 
 
 Security groups act as stateful firewalls directly attached to Elastic Network Interfaces (ENIs). In production, never open ports to raw CIDR blocks when communicating between internal tiers:
 
-```
-[Internet: 0.0.0.0/0]
-         │ HTTPS (Port 443)
-         ▼
-┌─────────────────────────┐
-│     ALB Security Group  │ ➔ ALLOW: Inbound 443 from 0.0.0.0/0
-└───────────┬─────────────┘
-            │ HTTP (Port 8080) - Source: sg-alb-12345
-            ▼
-┌─────────────────────────┐
-│     EC2 Security Group  │ ➔ ALLOW: Inbound 8080 ONLY from `sg-alb-12345`
-└───────────┬─────────────┘
-            │ PostgreSQL (Port 5432) - Source: sg-ec2-67890
-            ▼
-┌─────────────────────────┐
-│     RDS Security Group  │ ➔ ALLOW: Inbound 5432 ONLY from `sg-ec2-67890`
-└─────────────────────────┘
-```
+| Tier / ENI Layer | Security Group Name | Inbound Protocol & Port | Allowed Source | Security Rationale |
+|---|---|---|---|---|
+| **Edge Load Balancer** | `sg-alb` | HTTPS (TCP 443) | `0.0.0.0/0` (Public Internet) | Public entry point terminating client TLS. |
+| **Application Tier** | `sg-app-ec2` | HTTP (TCP 8080) | **Source Security Group: `sg-alb`** | Rejects direct internet traffic; only ALB can forward requests. |
+| **Database Tier** | `sg-rds` | PostgreSQL (TCP 5432) | **Source Security Group: `sg-app-ec2`** | Only application instances can query the database. |
 
 ---
 

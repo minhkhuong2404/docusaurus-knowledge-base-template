@@ -14,41 +14,12 @@ tags: [docker, volumes, storage, bind-mount, tmpfs, persistence, intermediate]
 
 ## The Problem
 
-```bash
-docker run -d --name postgres postgres:16
-docker exec -it postgres psql -U postgres -c "CREATE TABLE users (id serial, name text);"
-docker exec -it postgres psql -U postgres -c "INSERT INTO users VALUES (1, 'Alice');"
-
-docker rm -f postgres          # Remove container
-
-docker run -d --name postgres postgres:16
-docker exec -it postgres psql -U postgres -c "SELECT * FROM users;"
-# ERROR: relation "users" does not exist  ← Data is gone!
-```
-
----
-
-## Three Types of Storage
-
-```
-┌─────────────────────────────────────────────────────┐
-│  Host Filesystem                                     │
-│                                                      │
-│  /var/lib/docker/volumes/   ← Named volumes          │
-│  /any/path/on/host/         ← Bind mount source      │
-│                                                      │
-│  Container                                           │
-│  /app/data    ← volume or bind mount target          │
-│  /tmp         ← tmpfs (memory only)                  │
-│  /app         ← container writable layer (ephemeral) │
-└─────────────────────────────────────────────────────┘
-```
-
-| Type | Managed by | Persists after rm? | Use Case |
-|---|---|---|---|
-| **Named Volume** | Docker | ✅ Yes | Databases, app data |
-| **Bind Mount** | Host OS | ✅ Yes (it's a host dir) | Dev: hot reload source code |
-| **tmpfs Mount** | Memory | ❌ No | Sensitive temp data, performance |
+| Storage Type | Host Path Location | Container Target Mount | Managed By | Persists After Container Removal? | Primary Production Use Case |
+|---|---|---|---|---|---|
+| **Named Volume** | `/var/lib/docker/volumes/<vol-name>/_data` | `/app/data` (e.g. Postgres DB data) | Docker Engine | ✅ **Yes** (isolated lifecycle) | Databases, persistent storage, high I/O |
+| **Bind Mount** | `/any/path/on/host` (e.g. `$(pwd)/src`) | `/app/src` | Host OS Filesystem | ✅ **Yes** (host file/dir) | Local development with live source code hot reloading |
+| **tmpfs Mount** | RAM (Virtual Memory paging) | `/tmp` or `/app/cache` | Host Kernel Memory | ❌ **No** (cleared on restart) | High-speed temporary files, sensitive tokens/keys |
+| **Container Layer** | Thin read-write layer | `/` (rootfs) | OverlayFS driver | ❌ **No** (deleted with container) | Ephemeral scratch writes, runtime logs |
 
 ---
 

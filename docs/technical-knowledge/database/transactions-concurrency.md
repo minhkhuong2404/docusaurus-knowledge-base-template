@@ -9,6 +9,7 @@ sidebar_position: 4
 import TwoPhaseLockingMechanismDiagram from '@site/src/components/TwoPhaseLockingMechanismDiagram';
 import TwoPhaseCommitDiagram from '@site/src/components/TwoPhaseCommitDiagram';
 import SerializabilityLinearizabilityDiagram from '@site/src/components/SerializabilityLinearizabilityDiagram';
+import InventoryLockContentionDiagram from '@site/src/components/InventoryLockContentionDiagram';
 
 # Transactions & Concurrency Control
 
@@ -257,23 +258,7 @@ SELECT * FROM job_queue WHERE status = 'PENDING' LIMIT 1 FOR UPDATE SKIP LOCKED;
 
 *Production Pattern (Shopify Engineering)*: How high-throughput e-commerce handles flash sales without Redis dual-write anomalies or single-row database lock serialization.
 
-```
-Traditional Counter (Single Row Bottleneck):
-┌─────────────────────────────────────────────────────────┐
-│ Item 101 | Quantity: 50                                 │
-└─────────────────────────────────────────────────────────┘
-  ▲         ▲         ▲
-  │ Lock    │ Waits   │ Waits
-  Tx 1      Tx 2      Tx 3   ──► High Contention & Serialization!
-
-Unit-Based Bounded Pool (Zero-Contention via SKIP LOCKED):
-┌───────────┐ ┌───────────┐ ┌───────────┐ ┌───────────┐
-│ Unit #1   │ │ Unit #2   │ │ Unit #3   │ │ Unit #4   │
-└───────────┘ └───────────┘ └───────────┘ └───────────┘
-  ▲             ▲             ▲
-  │ Locked      │ Locked      │ Locked
-  Tx 1          Tx 2          Tx 3   ──► Concurrent & Non-Blocking!
-```
+<InventoryLockContentionDiagram />
 
 #### Step 1: Replace Quantity Counter with Unit Rows
 Instead of a single row with a `quantity` integer column, represent sellable stock as individual rows in a dedicated table (`reservation_units`). Reserving $N$ units executes:

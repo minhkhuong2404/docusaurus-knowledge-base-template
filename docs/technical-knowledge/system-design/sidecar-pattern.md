@@ -5,6 +5,7 @@ sidebar_label: Sidecar
 description: Deep-dive into the Sidecar pattern — Linux namespace internals, Kubernetes native sidecar lifecycle, PgBouncer connection pooling, Vault secrets injection, config hot-reload, Spring Boot integration, and production failure modes for senior engineers.
 tags: [system-design, microservices, containerization, kubernetes, sidecar, reliability, spring-boot]
 ---
+import SidecarPatternDiagram from '@site/src/components/SidecarPatternDiagram';
 
 # Sidecar Pattern
 
@@ -43,30 +44,16 @@ With Sidecar:
 
 A Kubernetes Pod is not a VM boundary — it is a **group of Linux containers sharing specific kernel namespaces**. Understanding which namespaces are shared, and which are isolated, explains exactly how sidecars communicate with zero overhead.
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ Kubernetes Pod (Shared Namespace Sandbox)                                   │
-│                                                                             │
-│  ┌─────────── Shared Across All Containers ──────────────────────────────┐  │
-│  │  net namespace  → same IP, same loopback (127.0.0.1), same eth0       │  │
-│  │  ipc namespace  → shared memory segments, POSIX message queues        │  │
-│  │  uts namespace  → same hostname                                        │  │
-│  │  Volumes        → emptyDir / configMap / secret mounts (if declared)  │  │
-│  └────────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│  ┌──────────────────────────┐     ┌──────────────────────────────────────┐  │
-│  │  Spring Boot App         │     │  Sidecar Container                   │  │
-│  │  (Primary Container)     │     │  (Envoy / Vault / PgBouncer)         │  │
-│  │                          │     │                                      │  │
-│  │  pid namespace: isolated │     │  pid namespace: isolated             │  │
-│  │  mnt namespace: isolated │     │  mnt namespace: isolated             │  │
-│  │                          │     │                                      │  │
-│  │  Binds: 0.0.0.0:8080    │     │  Connects: 127.0.0.1:8080           │  │
-│  │  Talks to DB via:        │     │  Listens:  127.0.0.1:6432           │  │
-│  │    127.0.0.1:6432        │◄────│  Holds:    real DB connection pool   │  │
-│  └──────────────────────────┘     └──────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
+<SidecarPatternDiagram />
+
+| Linux Kernel Namespace | Pod Sharing Status | Sidecar Mechanics & Inter-Process Comm |
+|---|---|---|
+| **`net` (Network)** | 🌐 **Shared** | Same IP, same loopback (`127.0.0.1`), same port table. Near zero socket latency. |
+| **`ipc` (Inter-Process)** | ⚡ **Shared** | Direct POSIX message queues and shared memory segments. |
+| **`uts` (Hostname)** | 🏷️ **Shared** | Identical hostname seen across all containers in the pod. |
+| **Volumes / Mounts** | 📂 **Shared Mounts** | `emptyDir`, secrets, and configMaps shared via file descriptor pointers. |
+| **`pid` (Process IDs)** | 🛡️ **Isolated (default)** | Each container cannot see other container PIDs (unless `shareProcessNamespace: true`). |
+| **`mnt` (Filesystem Root)** | 🛡️ **Isolated** | Completely separate container root filesystems (`/var`, `/etc`, etc.). |
 
 ### Namespace-by-Namespace Breakdown
 

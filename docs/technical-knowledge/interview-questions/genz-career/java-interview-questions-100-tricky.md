@@ -57,31 +57,15 @@ tags:
 **Q: What are the memory storage available with the JVM?**
 **A:** JVM memory is divided into **five runtime data areas** plus non-heap memory:
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                     PER-THREAD                          │
-│  ┌──────────┐  ┌──────────────┐  ┌────────────────┐   │
-│  │ PC Register│  │  JVM Stack   │  │ Native Method  │   │
-│  │ (per thread)│  │ (per thread) │  │    Stack       │   │
-│  └──────────┘  └──────────────┘  └────────────────┘   │
-├─────────────────────────────────────────────────────────┤
-│                     SHARED                              │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │              HEAP (-Xms / -Xmx)                  │  │
-│  │  ┌────────────────────┐  ┌───────────────────┐   │  │
-│  │  │  Young Generation  │  │  Old Generation   │   │  │
-│  │  │  [Eden] [S0] [S1]  │  │   (Tenured)       │   │  │
-│  │  └────────────────────┘  └───────────────────┘   │  │
-│  └──────────────────────────────────────────────────┘  │
-│  ┌────────────────┐  ┌─────────────┐                   │
-│  │   Metaspace     │  │ Code Cache  │                   │
-│  │  (native memory)│  │ (JIT code)  │                   │
-│  └────────────────┘  └─────────────┘                   │
-│  ┌──────────────────┐                                   │
-│  │  Direct Memory    │ (off-heap, ByteBuffer.allocateDirect())│
-│  └──────────────────┘                                   │
-└─────────────────────────────────────────────────────────┘
-```
+| Scope | Memory Region | Flags & Configuration | What It Stores |
+|---|---|---|---|
+| **Per-Thread** | **JVM Stack** | `-Xss` (e.g. `1m`) | Local variables array, method activation stack frames, operand stack. |
+| **Per-Thread** | **Program Counter (PC) Register** | Native CPU pointer | Memory address of current executing JVM bytecode instruction. |
+| **Per-Thread** | **Native Method Stack** | Native C/C++ stack | C call frames for Java Native Interface (JNI) invocations. |
+| **Shared** | **Heap (Young & Tenured)** | `-Xms`, `-Xmx` | All instantiated Java objects, strings, arrays. Managed by Generational Garbage Collector. |
+| **Shared** | **Metaspace** | `-XX:MaxMetaspaceSize` | Class structures, bytecode methods, runtime constant pool (stored in native OS memory). |
+| **Shared** | **Code Cache** | `-XX:ReservedCodeCacheSize` | Machine code compiled by JIT (Tier 1 C1 and Tier 2 C2 compilers). |
+| **Shared (Off-Heap)** | **Direct Memory** | `-XX:MaxDirectMemorySize` | Zero-copy off-heap buffers allocated via `ByteBuffer.allocateDirect()` (used heavily by Netty). |
 
 **Q: How does garbage collection work in Java?**
 **A:** The GC reclaims memory occupied by **unreachable objects** — objects that have no path from any GC root (thread stacks, static fields, JNI references). The process:

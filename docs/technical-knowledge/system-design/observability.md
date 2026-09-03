@@ -5,6 +5,7 @@ sidebar_label: Observability & Monitoring
 description: Comprehensive guide to observability in distributed systems covering the three pillars (metrics, logs, traces), SLOs, alerting strategies, and Spring Boot Actuator + Micrometer setup.
 tags: [observability, monitoring, metrics, logging, tracing, slo, sla, prometheus, grafana, jaeger]
 ---
+import DistributedTracingDiagram from '@site/src/components/DistributedTracingDiagram';
 
 # Observability & Monitoring
 
@@ -412,27 +413,7 @@ OpenTelemetry (OTel) is the CNCF project that unifies the three pillars under a 
 
 ### OTel Architecture
 
-```
-┌────────────────────────────────────────────────────────────┐
-│  Application Code                                          │
-│  ┌─────────────────────────────────────────────────────┐  │
-│  │ OTel SDK (Traces + Metrics + Logs)                  │  │
-│  │  - Auto-instrumentation (HTTP, DB, gRPC, Kafka)     │  │
-│  │  - Manual spans via Tracer API                      │  │
-│  └───────────────────────┬─────────────────────────────┘  │
-└──────────────────────────│─────────────────────────────────┘
-                           │ OTLP (gRPC or HTTP)
-                           ▼
-              ┌────────────────────────┐
-              │  OTel Collector        │
-              │  (Receiver → Processor │
-              │   → Exporter)          │
-              └──────┬─────────────────┘
-          ┌──────────┼──────────┐
-          ▼          ▼          ▼
-       Jaeger    Prometheus    Loki
-     (Traces)   (Metrics)    (Logs)
-```
+<DistributedTracingDiagram initialTab="pipeline" />
 
 ### OTel Collector Configuration
 

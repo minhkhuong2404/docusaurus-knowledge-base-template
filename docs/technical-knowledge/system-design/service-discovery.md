@@ -5,6 +5,7 @@ sidebar_label: Service Discovery
 description: Detailed guide to Service Discovery in microservices, comparing Client-side vs Server-side discovery, Spring Cloud Eureka vs Kubernetes CoreDNS/Kube-proxy.
 tags: [system-design, microservices, service-discovery, spring-cloud, kubernetes]
 ---
+import ServiceDiscoveryDiagram from '@site/src/components/ServiceDiscoveryDiagram';
 
 # Service Discovery
 
@@ -16,19 +17,7 @@ In a microservices architecture, application instances scale up/down and run on 
 
 Service discovery requires a registry database storing service names and active IP addresses:
 
-```text
-┌─────────────────┐
-│ Service Registry│ ◄─────────── Register (IP: 10.0.1.5)
-│  (Eureka/Consul)│ ◄─────────── Heartbeat / Health Check
-└────────┬────────┘
-         ▲
-         │ Query Location of "order-service"
-         ▼
-┌─────────────────┐             ┌─────────────────┐
-│  Client Service │ ───────────►│  order-service  │
-│ (e.g. Gateway)  │  Route call │   (10.0.1.5)    │
-└─────────────────┘             └─────────────────┘
-```
+<ServiceDiscoveryDiagram />
 
 ---
 

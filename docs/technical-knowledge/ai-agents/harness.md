@@ -717,30 +717,15 @@ class ProgressDetector:
 
 A production harness running at scale (multiple concurrent agent sessions) needs distributed state, async execution, and structured observability:
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                     Production Agent Harness                        │
-│                                                                      │
-│  API Gateway (FastAPI / Kong)                                       │
-│      │                                                               │
-│      ▼                                                               │
-│  Session Manager (Redis — stores message history, session state)    │
-│      │                                                               │
-│      ▼                                                               │
-│  Agent Worker Pool (Celery / Ray — concurrent session execution)    │
-│      │                            │                                  │
-│      ▼                            ▼                                  │
-│  LLM Gateway                 Tool Dispatcher                        │
-│  (rate limit, retry,          (routes tool calls,                   │
-│   model fallback)              manages sandbox pool)                │
-│      │                            │                                  │
-│      ▼                            ▼                                  │
-│  Observability Stack         Sandbox Pool                           │
-│  (OpenTelemetry traces,       (pre-warmed Docker/E2B               │
-│   Prometheus metrics,          containers)                          │
-│   structured JSON logs)                                             │
-└─────────────────────────────────────────────────────────────────────┘
-```
+| Harness Subsystem | Implementation Technologies | Core Responsibility | Scalability & Resilience Feature |
+|---|---|---|---|
+| **API Gateway** | FastAPI / Kong / Envoy | Ingress routing, client authentication, rate limiting, and request schema validation. | Horizontal auto-scaling with JWT validation |
+| **Session Manager** | Redis Cluster / PostgreSQL | Ephemeral conversational state, scratchpad memories, and message history persistence. | TTL auto-eviction & sub-millisecond lookups |
+| **Agent Worker Pool** | Celery / Ray / Temporal | Executes long-running agent reasoning loops and async multi-step workflow graphs. | Distributed work queues & task preemption |
+| **LLM Gateway** | LiteLLM / Portkey | Intelligent model fallback (e.g. Claude 3.5 ➔ GPT-4o), rate limit backoff, token budgeting. | Circuit breakers & provider retry loops |
+| **Tool Dispatcher** | gRPC / REST worker pool | Dispatches code execution, web search, database querying, and external API requests. | Strict timeout fencing & parameter validation |
+| **Sandbox Pool** | Pre-warmed Docker / E2B containers | Secure, isolated execution environment for untrusted LLM-generated code. | MicroVM isolation & zero-state recycling |
+| **Observability Stack** | OpenTelemetry / Prometheus / Grafana | Distributed tracing across LLM calls, step latency metrics, token consumption cost tracking. | Structured span attributes & trace correlation |
 
 ```python
 # Distributed session state with Redis

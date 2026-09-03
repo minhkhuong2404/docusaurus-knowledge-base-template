@@ -42,16 +42,10 @@ Pure immutability is impractical — you eventually write to databases, accept i
 - Isolate mutation at the **boundaries**
 - Data crossing boundaries travels as immutable structures
 
-```
-┌─────────────────────────────────────┐
-│        Pure Functional Core         │  ← No mutable state
-│  (transforms inputs → outputs)      │
-└─────────────────────────────────────┘
-                   ↕
-┌─────────────────────────────────────┐
-│       Mutable State Boundary        │  ← DB writes, I/O
-└─────────────────────────────────────┘
-```
+| Architectural Zone | Mutability State | Operational Behavior | Examples & Boundaries |
+|---|---|---|---|
+| **Pure Functional Core** | Strictly **Immutable** | Pure transformation functions ($f(input) 	o output$), deterministic, zero side-effects. | Domain entities, business calculations, rule validators. |
+| **Mutable Boundary** | Controlled **Mutable** | Handles side-effects, manages I/O, persists state, interacts with external network sockets. | Repository writes, REST controllers, Kafka consumers, DB connections. |
 
 ### Event Sourcing
 

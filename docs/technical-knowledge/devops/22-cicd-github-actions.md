@@ -27,69 +27,11 @@ Before CI/CD, teams relied on manual steps:
 **With CI/CD:**
 Every single `git push` or Pull Request triggers an automated, isolated cloud pipeline that builds, tests, lints, scans, and packages the software in minutes.
 
-```
-Developer Git Push ➔ Automated CI Pipeline ➔ Test Suite & Security Scan ➔ Container Registry ➔ Staging / Prod
-       ^                                                                                         |
-       └──────────────────────── Fast Automated Feedback (5 mins) ───────────────────────────────┘
-```
-
----
-
-## Interactive CI/CD Pipeline Visualizer & Simulator
-
-Explore the 5 stages of a production pipeline below, inspect real GitHub Actions YAML configurations, and simulate how pipelines handle test failures and security CVE gates.
-
-<CiCdPipelineDiagram />
-
----
-
-## The Mental Model: The Automated Car Wash Analogy
-
-Think of a CI/CD pipeline like a modern drive-through automated car wash:
-
-```
-[1. Car Enters Track] ➔ [2. Soap & Scrub Jets] ➔ [3. Wax, Buff & Dry] ➔ [4. Safety Inspection] ➔ [5. Drive on Highway]
-     (Git Push)             (Compile & Tests)      (Docker Image Build)    (Security Scan)        (Production Deploy)
-```
-
-1. **The Entry Track (Git Trigger):** Your car pulls onto the conveyor belt (`push` or `pull_request` event). The system registers the VIN (`commit SHA`).
-2. **High-Pressure Scrub (Continuous Integration):** Automated water jets scrub off grime (compiler checks, unit tests, code linters). If an open window is detected (broken test), the wash immediately stops to prevent flooding the interior.
-3. **Wax & Polish (Packaging):** The car receives a protective wax coat and sealant (Docker container image build and optimization).
-4. **Safety Inspection (Security & CVE Scan):** Automated scanners verify tire pressure and fluid levels (vulnerability scans for dependencies and base images).
-5. **Highway Ready (Deployment):** The clean, verified vehicle rolls smoothly onto the road (production release).
-
----
-
-## CI vs CD vs CD: Understanding the Spectrum
-
-| Phase | Acronym | Trigger | Core Responsibility | Outcome |
-|---|---|---|---|---|
-| **Continuous Integration** | **CI** | Every Commit / PR | Code checkout, dependency resolution, compilation, unit & integration tests, linter checks. | Verified build artifact & test report. |
-| **Continuous Delivery** | **CD** | Merge to `main` | Automatic deployment to staging/pre-prod environments; production release artifact staged and ready. | 1-click manual trigger or approval gate for production. |
-| **Continuous Deployment** | **CD** | Merge to `main` | Fully automated deployment directly to production without manual gates (paired with automated canary tests). | Direct zero-touch production release. |
-
----
-
-## GitHub Actions Architecture Deep-Dive
-
-GitHub Actions is the premier cloud-native CI/CD automation engine built directly into GitHub repositories.
-
-```
-┌────────────────────────────────────────────────────────────────────────┐
-│ WORKFLOW (.github/workflows/ci.yml)                                    │
-│ Trigger: on: [push, pull_request]                                      │
-│                                                                        │
-│ ┌───────────────────────────┐         ┌──────────────────────────────┐ │
-│ │ Job 1: Test & Lint        │         │ Job 2: Build & Push Image    │ │
-│ │ Runner: ubuntu-latest     │         │ Runner: ubuntu-latest        │ │
-│ │ (needs: none)             │ ──────> │ (needs: test)                │ │
-│ │                           │         │                              │ │
-│ │ ├─ Step 1: actions/check..│         │ ├─ Step 1: actions/check..   │ │
-│ │ ├─ Step 2: setup-java@v4  │         │ ├─ Step 2: docker build      │ │
-│ │ └─ Step 3: run: mvn test  │         │ └─ Step 3: docker push       │ │
-│ └───────────────────────────┘         └──────────────────────────────┘ │
-└────────────────────────────────────────────────────────────────────────┘
-```
+| Hierarchy Level | YAML Construct | Runner & Isolation Scope | Execution Dynamics & Ordering |
+|---|---|---|---|
+| **Workflow** | `name:` in `.github/workflows/*.yml` | Repository level | Triggered by events (`push`, `pull_request`, `schedule`, `workflow_dispatch`). |
+| **Job** | `jobs.<job_id>` (e.g. `test`, `build`) | Fresh ephemeral VM / Container (`ubuntu-latest`) | Jobs run **in parallel** by default; sequential dependencies enforced via `needs: [test]`. |
+| **Step** | `steps:` list within each job | Shared filesystem on the same VM runner | Executes sequentially. Steps run action plugins (`uses: actions/checkout@v4`) or shell commands (`run: mvn test`). |
 
 ### 1. Events & Triggers (`on:`)
 Workflows execute in response to repository events:

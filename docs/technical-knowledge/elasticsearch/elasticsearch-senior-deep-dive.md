@@ -6,6 +6,8 @@ description: Senior-level guide to Elasticsearch cluster engineering — coverin
 tags: [elasticsearch, system-design, jvm, heap-tuning, clustering, scaling, performance-optimization, indexing-speed]
 ---
 
+import ElasticsearchIlmPipelineDiagram from '@site/src/components/ElasticsearchIlmPipelineDiagram';
+
 # Elasticsearch Senior Deep Dive: Performance & Scaling
 
 Operating an Elasticsearch cluster at scale (terabytes of data, thousands of requests per second) requires careful management of JVM internals, cluster coordination mechanisms, and caching hierarchies. This guide addresses the design patterns and configuration details necessary for senior engineers.
@@ -16,16 +18,10 @@ Operating an Elasticsearch cluster at scale (terabytes of data, thousands of req
 
 Elasticsearch runs on the Java Virtual Machine. Correct memory sizing is the most critical factor for cluster stability.
 
-```
-Total Node RAM (e.g., 64 GB)
-┌───────────────────────────────────────┬───────────────────────────────────────┐
-│              JVM HEAP                 │            OS PAGE CACHE              │
-│               (31 GB)                 │               (33 GB)                 │
-│  - Object allocations                 │  - Caches raw segment files           │
-│  - Query parsing & coordinate merges  │  - Fills empty memory automatically   │
-│  - Fielddata & Circuit breakers       │  - Critical for Lucene search speed   │
-└───────────────────────────────────────┴───────────────────────────────────────┘
-```
+| Memory Tier (e.g. 64 GB Host) | Allocated RAM | Primary Responsibilities & Internal Storage | Critical Operational Guideline |
+|---|---|---|---|
+| **JVM Heap (`-Xmx`)** | **31 GB** | Object allocations, query parsing, aggregation coordinator merges, fielddata, circuit breakers | **Do not exceed 32GB threshold** to preserve Compressed Ordinary Object Pointers (Compressed OOPs). |
+| **OS Page Cache** | **33 GB** | Caches raw Lucene segment files, inverted index posting lists, and doc values directly in RAM | **Never starve OS page cache**; Lucene searches run in microseconds when reading cached segment pages. |
 
 ### 1. The 50% RAM Rule
 **Never allocate more than 50% of physical RAM to the JVM heap.**
@@ -129,13 +125,7 @@ Increase the memory allocated to buffer indexed documents before they are writte
 
 Storing data indefinitely on expensive, high-IO data nodes is cost-prohibitive. Index Lifecycle Management automates moving index segments across different hardware tiers as the data ages.
 
-```
-┌──────────────┐     ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│  HOT PHASE   │ ──► │  WARM PHASE  │ ──► │  COLD PHASE  │ ──► │ DELETE PHASE │
-│  (Write/Read)│     │ (Searchable) │     │ (Read-Only)  │     │  (Purged)    │
-│  Fast SSDs   │     │ Balanced HDDs│     │ Cheap Storage│     │              │
-└──────────────┘     └──────────────┘     └──────────────┘     └──────────────┘
-```
+<ElasticsearchIlmPipelineDiagram />
 
 1.  **Hot Phase**:
     *   Index is actively receiving writes and is searched frequently.

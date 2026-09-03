@@ -6,6 +6,8 @@ description: A deep dive into Elasticsearch internals — covering the inverted 
 tags: [elasticsearch, inverted-index, lucene, sharding, replication, cluster-architecture, index-lifecycle]
 ---
 
+import ElasticsearchRefreshFlushDiagram from '@site/src/components/ElasticsearchRefreshFlushDiagram';
+
 # Elasticsearch Internals: Inverted Index & Cluster Architecture
 
 To design high-performance search systems, engineers must understand how Elasticsearch stores, retrieves, and maintains data. Under the hood, Elasticsearch uses **Apache Lucene** segments to manage text indexes and implements a sophisticated distributed consensus layer to orchestrate cluster state.
@@ -192,26 +194,7 @@ Client
 ### Writing to Lucene Segments (Near-Real-Time)
 A document is not immediately searchable upon landing on the data node. Lucene indexes data using immutable file chunks called **Segments**. The process unfolds in two critical phases:
 
-```
-                  ┌──────────────────────┐
-                  │ Memory Index Buffer  │
-                  └──────────┬───────────┘
-                             │
-                      Refresh (every 1s)
-                             │
-                             ▼
-                  ┌──────────────────────┐
-                  │ OS Page Cache        │  ◄── Document now SEARCHABLE
-                  │ (Lucene Segment)     │
-                  └──────────┬───────────┘
-                             │
-                        Flush (30m/full)
-                             │
-                             ▼
-                  ┌──────────────────────┐
-                  │ Physical Disk        │  ◄── Fsync'd to disk (durable)
-                  └──────────────────────┘
-```
+<ElasticsearchRefreshFlushDiagram />
 
 1.  **Refresh (Searchability)**:
     *   By default, every 1 second, the **Memory Index Buffer** is written into a new Lucene segment inside the **OS Page Cache**.

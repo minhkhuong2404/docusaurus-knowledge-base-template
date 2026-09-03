@@ -5,6 +5,7 @@ sidebar_label: "@Transactional Deep Dive"
 description: "A senior-level breakdown of how @Transactional really works: AOP proxy mechanics, CGLIB vs JDK proxy, ThreadLocal transaction binding, flush/commit timing, propagation internals, isolation levels, and the production traps that cause silent data corruption, connection pool exhaustion, and 2 AM alerts."
 tags: [spring, spring-boot, transactions, aop, proxy, jpa, hibernate, java, advanced, cglib, threadlocal, propagation, isolation]
 ---
+import SpringTransactionMechanicsDiagram from '@site/src/components/SpringTransactionMechanicsDiagram';
 
 # `@Transactional` Deep Dive: Proxy, ThreadLocal & Production Traps
 
@@ -49,15 +50,7 @@ During the Spring application context startup, `BeanFactory` creates your beans.
 
 If yes, instead of returning the original bean, it returns an **AOP proxy** wrapping it:
 
-```
-[ Calling Bean / HTTP Request ]
-           │
-           ▼
-[ AOP Proxy (CGLIB or JDK) ]  ← TransactionInterceptor runs HERE
-           │
-           ▼
-[ Your Real Bean (UserService, OrderService, etc.) ]
-```
+<SpringTransactionMechanicsDiagram />
 
 Every other bean that `@Autowires` your service gets this proxy, not the real object. From the type system's perspective, the proxy *is* a `UserService` (it either implements the same interfaces or extends the same class). Internally it holds a reference to the real bean and delegates every call to it after the interceptor's setup work completes.
 
@@ -157,18 +150,14 @@ Method call enters proxy:
 
 `TransactionSynchronizationManager` is backed by `ThreadLocal` variables. Think of it as a gym locker room: each thread has its own locker, keyed to the thread identity. No other thread can read it.
 
-```
-Thread-1 ThreadLocal locker:
-┌──────────────────────────────────────────────────┐
-│  Connection (autoCommit=false)                   │
-│  TransactionStatus (active, rollbackOnly=false)  │
-│  EntityManager (bound to this transaction)       │
-│  Synchronizations list (callbacks for commit)    │
-└──────────────────────────────────────────────────┘
-         ▲               ▲                 ▲
-   OrderService    InventoryRepo     PaymentRepo
-   (all on Thread-1, all share the same locker)
-```
+| Resource Bound in ThreadLocal | Responsibility & Scope |
+|---|---|
+| **`Connection` (`autoCommit=false`)** | Active physical JDBC connection obtained from HikariCP pool. |
+| **`TransactionStatus`** | Tracks transaction state (`active`, `rollbackOnly`, savepoints). |
+| **`EntityManager`** | Active JPA Session instance bound to current thread transaction. |
+| **`Synchronizations` List** | Callbacks fired during phases (`beforeCommit`, `afterCommit`, `afterCompletion`). |
+
+> **Shared Execution Context:** When `OrderService` calls `InventoryRepo` and `PaymentRepo` within the same thread, both repositories automatically reuse the exact same ThreadLocal connection without needing to pass database handles as parameters!
 
 When a Spring Data JPA repository executes a query, it does not go directly to `DataSource`. Spring calls `DataSourceUtils.getConnection()` (plain JDBC) or resolves the proxy `EntityManager` (JPA) — both check the ThreadLocal locker first: *"Is there already a connection bound here?"* If yes, reuse it. This is how `Service → RepositoryA → RepositoryB` all share a single connection and a single transaction without passing any parameters.
 

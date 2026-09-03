@@ -7,6 +7,7 @@ sidebar_position: 17
 ---
 
 import DataWarehousingOlapDiagram from '@site/src/components/DataWarehousingOlapDiagram';
+import StarVsSnowflakeSchemaDiagram from '@site/src/components/StarVsSnowflakeSchemaDiagram';
 
 # Data Warehousing & OLAP
 
@@ -42,32 +43,7 @@ Proposed by Ralph Kimball. Data is organized into:
 
 The simplest and most widely used DW schema.
 
-```
-                ┌─────────────┐
-                │ dim_date    │
-                │ date_key PK │
-                │ year        │
-                │ quarter     │
-                │ month       │
-                └──────┬──────┘
-                       │
-┌──────────────┐        │        ┌───────────────┐
-│ dim_customer │        │        │ dim_product   │
-│ customer_key │──────┐ │ ┌──────│ product_key   │
-│ name         │      │ │ │      │ name          │
-│ region       │      ▼ ▼ ▼      │ category      │
-└──────────────┘  ┌─────────────┐│ price         │
-                  │ fact_sales  │└───────────────┘
-                  │ sale_id PK  │
-                  │ date_key FK │ ┌───────────────┐
-                  │ customer_key│ │ dim_store     │
-                  │ product_key │─│ store_key     │
-                  │ store_key FK│ │ city          │
-                  │ quantity    │ │ country       │
-                  │ revenue     │ └───────────────┘
-                  │ discount    │
-                  └─────────────┘
-```
+<StarVsSnowflakeSchemaDiagram />
 
 **Characteristics:**
 - One central fact table

@@ -147,21 +147,12 @@ public PaymentApprovalResult submitForApproval(PaymentInstruction payment) {
 
 A **Payment Factory** centralises all payment initiation from multiple channels into a single orchestration layer:
 
-```
-                    ┌─────────────────────────────────┐
-Internet Banking    │                                 │
-Mobile Banking  ───►│     PAYMENT FACTORY             │
-Corporate Portal    │     (Centralised Orchestrator)  │
-API / Open Banking  │                                 │
-Batch Files         │  - Normalises all inputs        │
-                    │  - Applies consistent rules     │
-                    └──────────────┬──────────────────┘
-                                   │
-               ┌───────────────────┼───────────────────┐
-               ▼                   ▼                   ▼
-            NPP Gateway       BECS Batch           SWIFT Gateway
-         (real-time)           (daily batch)       (cross-border)
-```
+| Initiating Channels | Payment Factory Central Orchestrator | Target Payment Rails Gateway | Processing SLA & Model |
+|---|---|---|---|
+| **Internet &amp; Mobile Banking** | Normalises input to IMF canonical model; executes duplicate detection and real-time fraud scoring. | **NPP Gateway (BI / PAG)** | Real-time immediate clearing (&lt;1s) |
+| **Corporate Portal &amp; ERP** | Validates dual-authorisation workflow; checks corporate account daily limits and delegation authority. | **BECS Direct Entry Engine** | Same-day / next business day batch clearing |
+| **Open Banking / CDR APIs** | Evaluates FAPI OAuth 2.0 consent tokens and PayTo payment agreement mandate status. | **NPP / PayTo Engine** | Near-instant real-time clearing |
+| **Core Batch Files (ABA/CSV)** | High-throughput batch streaming with bulk payroll and direct debit validation. | **SWIFT Alliance Gateway** | High-value cross-border RTGS / ISO 20022 |
 
 Benefits:
 - Single compliance/fraud/sanctions policy

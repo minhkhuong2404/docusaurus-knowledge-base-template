@@ -21,12 +21,12 @@ The **ELK Stack** is a collection of three open-source products — **Elasticsea
 
 The stack divides the responsibilities of data shipping, parsing, storage, and visualization among four specialized components:
 
-```
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│    Beats    │ ──► │  Logstash   │ ──► │Elasticsearch│ ──► │   Kibana    │
-│  (Collect)  │     │  (Process)  │     │   (Store)   │     │ (Visualize) │
-└─────────────┘     └─────────────┘     └─────────────┘     └─────────────┘
-```
+| Pipeline Stage | Component | Language / Runtime | Core Role & Responsibilities | Upstream ➔ Downstream Flow |
+|---|---|---|---|---|
+| **1. Collect** | **Beats** (Filebeat, Metricbeat) | Go (Ultra-lightweight) | Host-level daemon harvesting logs and metrics with negligible CPU footprint. | Source Server ➔ Logstash / Kafka |
+| **2. Process** | **Logstash** | Java / JRuby | Centralized ETL engine running Grok regex, field mutation, GeoIP enrichment, and queue buffering. | Beats ➔ Logstash ➔ Elasticsearch |
+| **3. Store & Search** | **Elasticsearch** | Java / Lucene | Distributed JSON document store indexing text into inverted indexes with sharding and replication. | Logstash ➔ Lucene Index Storage |
+| **4. Visualize** | **Kibana** | Node.js / React | Web portal for analytics dashboards, aggregations, Discover search, and cluster management. | Elasticsearch ➔ Browser Endpoints |
 
 ### 1. Beats (Lightweight Data Shippers)
 Beats are single-purpose, lightweight agents installed directly on host servers. Written in Go, they consume minimal CPU and memory, ensuring they do not steal resources from the primary application. 

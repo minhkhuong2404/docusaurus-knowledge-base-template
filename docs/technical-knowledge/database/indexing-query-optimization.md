@@ -9,6 +9,7 @@ sidebar_position: 3
 import DatabaseIndexScanTypesDiagram from '@site/src/components/DatabaseIndexScanTypesDiagram';
 import DatabaseJoinAlgorithmsDiagram from '@site/src/components/DatabaseJoinAlgorithmsDiagram';
 import BTreeWritePathDiagram from '@site/src/components/BTreeWritePathDiagram';
+import GeospatialIndexingDiagram from '@site/src/components/GeospatialIndexingDiagram';
 
 # Indexing & Query Optimization
 
@@ -35,49 +36,15 @@ Data in a relational database is continuously serialized onto persistent storage
 
 ### The Memory Hierarchy
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Memory Hierarchy                         │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  CPU Registers                                              │
-│  ┌──────────────┐                                           │
-│  │  < 1 KB      │  Speed: ~0.5 ns                           │
-│  │  Direct CPU  │  Access: Instant                          │
-│  └──────────────┘                                           │
-│         │                                                    │
-│         ▼                                                    │
-│  CPU Cache (L1/L2/L3)                                       │
-│  ┌──────────────┐                                           │
-│  │  32 KB - 12 MB│ Speed: 1-10 ns                           │
-│  │  Very Fast   │  Access: Very Fast                        │
-│  └──────────────┘                                           │
-│         │                                                    │
-│         ▼                                                    │
-│  Main Memory (RAM)                                          │
-│  ┌──────────────┐                                           │
-│  │  8 - 64 GB   │  Speed: 100 ns                            │
-│  │  Fast        │  Access: Fast                            │
-│  └──────────────┘                                           │
-│         │                                                    │
-│         ▼                                                    │
-│  SSD Storage                                                │
-│  ┌──────────────┐                                           │
-│  │  256 GB - 4 TB│ Speed: 100 μs                            │
-│  │  Medium      │  Access: Medium                          │
-│  └──────────────┘                                           │
-│         │                                                    │
-│         ▼                                                    │
-│  HDD Storage                                                │
-│  ┌──────────────┐                                           │
-│  │  1 - 10 TB   │  Speed: 10 ms                            │
-│  │  Slow        │  Access: Slow                            │
-│  └──────────────┘                                           │
-│                                                              │
-│  Key Insight: Disk I/O is 100,000x slower than RAM!         │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
-```
+| Memory Layer | Typical Capacity | Access Latency | Relative Latency Factor | Volatility & Role |
+|---|---|---|---|---|
+| **CPU Registers** | &lt; 1 KB | ~0.5 ns | 1x | Volatile; immediate processor instructions. |
+| **CPU Cache (L1/L2/L3)** | 32 KB – 12 MB | 1 – 10 ns | 2x – 20x | Volatile; frequently accessed variables and cache lines. |
+| **Main Memory (RAM)** | 8 – 64 GB | ~100 ns | 200x | Volatile; Database Buffer Pool / Shared Buffers. |
+| **NVMe SSD Storage** | 256 GB – 4 TB | ~100 μs | **200,000x** | Non-volatile; random/sequential page reads and WAL appends. |
+| **HDD Magnetic Storage** | 1 – 10 TB | ~10 ms | **20,000,000x** | Non-volatile; mechanical platter seek time bottleneck. |
+
+> 💡 **Key Insight:** Disk I/O is **100,000x to 1,000,000x slower** than CPU and RAM! Every index optimization is fundamentally an effort to minimize random physical page fetches from disk.
 
 ### The Sequential Scan Bottleneck
 
@@ -96,34 +63,10 @@ At approximately **100 microseconds** per SSD-to-RAM round trip, scanning 1 mill
 
 ### Visual Example
 
-```
-Without Index (Full Table Scan):
-┌─────────────────────────────────────────────────────────────┐
-│  Query: SELECT * FROM users WHERE id = 999999               │
-│                                                              │
-│  Page 1: [1-100]      → Scan → Not found                    │
-│  Page 2: [101-200]    → Scan → Not found                    │
-│  Page 3: [201-300]    → Scan → Not found                    │
-│  ...                                                        │
-│  Page 10000: [999901-1000000] → Scan → Found! ✓            │
-│                                                              │
-│  Result: 10,000 disk I/O operations (~1 second)              │
-└─────────────────────────────────────────────────────────────┘
-
-With Index (B-Tree Lookup):
-┌─────────────────────────────────────────────────────────────┐
-│  Query: SELECT * FROM users WHERE id = 999999               │
-│                                                              │
-│  Index Page 1: [1-1000000] → Navigate to right child        │
-│  Index Page 2: [500001-1000000] → Navigate to right child   │
-│  Index Page 3: [750001-1000000] → Navigate to right child   │
-│  Data Page: [999901-1000000] → Found! ✓                     │
-│                                                              │
-│  Result: 4 disk I/O operations (~0.4 ms)                    │
-│                                                              │
-│  Speedup: 2,500x faster!                                    │
-└─────────────────────────────────────────────────────────────┘
-```
+| Scan Strategy | Query Execution Path | Disk I/O Pages Fetched | Execution Latency |
+|---|---|---|---|
+| **Without Index (Full Table Scan)** | Sequential scan: Page 1 ➔ Page 2 ➔ Page 3 ... ➔ Page 10,000 until key `999,999` is located. | **10,000 pages** (~80 MB read from disk) | ~1,000 ms (1 second) |
+| **With Index (B-Tree Logarithmic Search)** | Tree traversal: Root page ➔ Level 1 internal node ➔ Leaf page ➔ Data page pointer. | **4 pages** (32 KB read from cache/disk) | **~0.4 ms (2,500x speedup!)** |
 
 ---
 
@@ -145,41 +88,16 @@ Because a node is specifically designed to fit within a single disk page (e.g., 
 
 ### B-Tree Structure
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    B-Tree Structure                          │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│                        Root Node                             │
-│                    ┌───────────────┐                         │
-│                    │  50 | 100    │                         │
-│                    └───────┬───────┘                         │
-│                            │                                 │
-│              ┌─────────────┼─────────────┐                   │
-│              │             │             │                   │
-│              ▼             ▼             ▼                   │
-│        ┌──────────┐ ┌──────────┐ ┌──────────┐              │
-│        │  25      │ │  75      │ │  150     │              │
-│        └────┬─────┘ └────┬─────┘ └────┬─────┘              │
-│             │            │            │                     │
-│      ┌──────┴──────┐ ┌──┴──┐ ┌──────┴──────┐              │
-│      │             │ │     │ │             │              │
-│      ▼             ▼ ▼     ▼ ▼             ▼              │
-│   ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐        │
-│   │ 10  │ │ 40  │ │ 60  │ │ 90  │ │ 125 │ │ 175 │        │
-│   └─────┘ └─────┘ └─────┘ └─────┘ └─────┘ └─────┘        │
-│     │       │       │       │       │       │             │
-│     ▼       ▼       ▼       ▼       ▼       ▼             │
-│  [Data]  [Data]  [Data]  [Data]  [Data]  [Data]           │
-│                                                              │
-│  Key Properties:                                            │
-│  - Balanced tree (all leaves at same depth)                │
-│  - Sorted keys for range queries                            │
-│  - High fan-out (100+ children per node)                   │
-│  - Shallow depth (3-4 levels for billions of records)      │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
-```
+| Tree Level | Node Type | Disk Storage & Contents | Purpose & Routing |
+|---|---|---|---|
+| **Level 0 (Top)** | Root Node (e.g. `[50 \| 100]`) | 1 Page in Buffer Pool | Root entry point; routes search to left (`<50`), middle (`50-100`), or right (`>100`). |
+| **Level 1** | Internal Nodes (e.g. `[25]`, `[75]`, `[150]`) | 8KB Pages | Pure navigation keys and child page pointers. No table data stored here. |
+| **Level 2 (Bottom)** | Leaf Nodes (e.g. `[10]`, `[40]`, `[60]`, ...) | 8KB Pages linked via doubly-linked pointers (`prev` / `next`) | Contains actual row keys + physical pointers / clustered row payloads. |
+
+**Key Properties of Production B+ Trees:**
+- **Balanced Depth**: All leaf nodes reside at the exact same depth ($O(\log_B N)$).
+- **High Fan-Out ($B \approx 100-500$)**: Fitting hundreds of keys per 8KB page keeps depth to only 3–4 levels even for billions of records.
+- **Sequential Leaf Chains**: Leaf pages are linked horizontally, enabling $O(1)$ consecutive page reads during range scans (`BETWEEN`, `>`, `<`).
 
 ### B+ Tree vs B-Tree
 
@@ -262,21 +180,12 @@ def search(btree, key):
 - Extra I/O to fetch data
 - More flexible
 
-```
-Clustered Index:
-┌─────────────────────────────────────────────────────────────┐
-│  Leaf Node: [10, data] [20, data] [30, data]               │
-│  Data stored directly in index                              │
-│  One I/O to get both index and data                         │
-└─────────────────────────────────────────────────────────────┘
-
-Non-Clustered Index:
-┌─────────────────────────────────────────────────────────────┐
-│  Leaf Node: [10, ptr] [20, ptr] [30, ptr]                  │
-│  Pointers to data pages                                     │
-│  Two I/Os: one for index, one for data                      │
-└─────────────────────────────────────────────────────────────┘
-```
+| Dimension | Clustered Index (e.g. MySQL InnoDB Primary Key) | Non-Clustered / Secondary Index (e.g. Postgres Heap B-Tree) |
+|---|---|---|
+| **Leaf Node Content** | Stores **complete row data** directly inside the B+ tree leaf page (`[10, data]`, `[20, data]`). | Stores **search key + tuple pointer** (`[10, TID/PK]`, `[20, TID/PK]`). |
+| **Data Organization** | Table rows are physically ordered on disk by this key (max 1 clustered index per table). | Auxiliary index; physical table order remains independent (heap or primary key order). |
+| **Disk I/O Cost** | **Single I/O**: Leaf page fetch immediately yields row columns. | **Double I/O**: Index leaf lookup requires secondary hop to fetch heap tuple data. |
+| **Write Amplification** | Inserting out-of-order keys causes page splits and reorganization of complete row payloads. | Lightweight key inserts; only index leaf splits without moving physical heap rows. |
 
 ---
 
@@ -326,27 +235,17 @@ A Hash Index uses a standard hash map stored on disk. The search key is passed t
 
 ### Hash Index Structure
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Hash Index Structure                      │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  Hash Function: hash(key) % bucket_count                   │
-│                                                              │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │ Bucket 0: [key1, ptr1] [key2, ptr2]                │   │
-│  │ Bucket 1: [key3, ptr3]                               │   │
-│  │ Bucket 2: [key4, ptr4] [key5, ptr5] [key6, ptr6]    │   │
-│  │ Bucket 3: []                                         │   │
-│  │ ...                                                  │   │
-│  └─────────────────────────────────────────────────────┘   │
-│                                                              │
-│  Lookup: O(1) average case                                 │
-│  Insert: O(1) average case                                 │
-│  Delete: O(1) average case                                 │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
-```
+| Hash Bucket Index | Stored Entry Pairs `[Key, Pointer]` | Collision Resolution Strategy | Complexity |
+|---|---|---|---|
+| **Bucket 0** | `[key1, ptr1]`, `[key2, ptr2]` | Chained linked list / overflow page | $O(1)$ avg, $O(K)$ worst |
+| **Bucket 1** | `[key3, ptr3]` | Single entry (direct match) | $O(1)$ avg |
+| **Bucket 2** | `[key4, ptr4]`, `[key5, ptr5]`, `[key6, ptr6]` | Multiple hash collision overflow list | $O(1)$ avg, $O(K)$ worst |
+| **Bucket 3** | `[]` (Empty) | No entries mapped | $O(1)$ avg |
+
+**Operational Characteristics:**
+- **Point Lookups**: $O(1)$ average time complexity for exact equality (`WHERE id = 42`).
+- **No Range Queries**: Cannot serve `BETWEEN`, `>`, `<`, or `ORDER BY` because hash buckets do not preserve ordering.
+- **Used by**: Memory storage engine (MySQL MEMORY tables) and PostgreSQL Hash indexes (crash-safe since PG 10).
 
 ### Hash Index Operations
 
@@ -408,36 +307,7 @@ To solve this, we use specialized algorithms that reduce 2D space into 1D space,
 
 ### The Problem with 2D Data
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    2D Space Problem                          │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  Latitude                                                   │
-│    ▲                                                         │
-│    │                                                         │
-│  400│     ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ●    │
-│    │     ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ●    │
-│  300│     ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ●    │
-│    │     ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ●    │
-│  200│     ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ●    │
-│    │     ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ●    │
-│  100│     ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ●    │
-│    │     ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ● ●    │
-│    └─────────────────────────────────────────────────────►  │
-│      20   40   60   80  100  120  140  160  180  200       │
-│                         Longitude                           │
-│                                                              │
-│  Query: Find points in rectangle [100-400, 20-200]         │
-│                                                              │
-│  B-Tree approach:                                           │
-│  - Fetch all points with lat in [100-400]                   │
-│  - Fetch all points with long in [20-200]                   │
-│  - Intersect results in memory                              │
-│  - Result: Massive I/O and memory usage                     │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
-```
+<GeospatialIndexingDiagram initialTab="hilbert" />
 
 ### 4.1 Geohashing (Z-Order Curves)
 
@@ -449,37 +319,7 @@ Geohashing recursively subdivides the map into four quadrants (`0, 1, 2, 3`), co
 
 ### Geohashing Example
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Geohashing Process                        │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  Level 1:                                                   │
-│  ┌───────────────┐                                          │
-│  │  0  │  1     │                                          │
-│  ├─────┼─────┤  │                                          │
-│  │  2  │  3     │                                          │
-│  └───────────────┘                                          │
-│                                                              │
-│  Level 2 (for quadrant 3):                                  │
-│  ┌───────────────┐                                          │
-│  │ 30 │ 31      │                                          │
-│  ├─────┼─────┤  │                                          │
-│  │ 32 │ 33      │                                          │
-│  └───────────────┘                                          │
-│                                                              │
-│  Level 3 (for quadrant 31):                                 │
-│  ┌───────────────┐                                          │
-│  │ 310 │ 311    │                                          │
-│  ├─────┼─────┤  │                                          │
-│  │ 312 │ 313    │                                          │
-│  └───────────────┘                                          │
-│                                                              │
-│  Result: "313" represents a specific geographic region       │
-│  Nearby regions share prefixes: "310", "311", "312"        │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
-```
+<GeospatialIndexingDiagram initialTab="h3_hexagons" />
 
 ### Geohashing Implementation
 
@@ -536,34 +376,14 @@ Quad trees split the world recursively similar to Geohashes, but they map the sp
 
 ### Quad Tree Structure
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Quad Tree Structure                        │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  Root (entire map)                                          │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │                                                     │    │
-│  │  ┌──────────┐  ┌──────────┐                        │    │
-│  │  │  NW      │  │  NE      │                        │    │
-│  │  │  ● ●     │  │  ● ● ●   │                        │    │
-│  │  │  ● ●     │  │  ● ● ●   │                        │    │
-│  │  └──────────┘  └──────────┘                        │    │
-│  │                                                     │    │
-│  │  ┌──────────┐  ┌──────────┐                        │    │
-│  │  │  SW      │  │  SE      │                        │    │
-│  │  │  ●       │  │  ● ● ● ● │                        │    │
-│  │  │  ●       │  │  ● ● ● ● │                        │    │
-│  │  └──────────┘  └──────────┘                        │    │
-│  │                                                     │    │
-│  └─────────────────────────────────────────────────────┘    │
-│                                                              │
-│  Adaptive subdivision based on point density                │
-│  Empty areas not subdivided                                │
-│  Dense areas subdivided more deeply                        │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
-```
+| Quad Tree Quadrant | Bounding Coordinates Range | Contained Points Density | Adaptive Subdivision Policy |
+|---|---|---|---|
+| **NW (North-West)** | `[x_min..x_mid, y_mid..y_max]` | Low (4 points) | Below capacity threshold $k$: kept as leaf node. |
+| **NE (North-East)** | `[x_mid..x_max, y_mid..y_max]` | High (15 points) | Exceeds $k$: recursively split into 4 child quadrants. |
+| **SW (South-West)** | `[x_min..x_mid, y_min..y_mid]` | Sparse (2 points) | Below capacity threshold $k$: kept as leaf node. |
+| **SE (South-East)** | `[x_mid..x_max, y_min..y_mid]` | Very High (45 points) | Exceeds $k$: recursively split into deep hierarchy. |
+
+**Key Advantage:** Memory is never wasted subdividing empty oceans or deserts; tree depth automatically concentrates in dense metropolitan regions.
 
 ### Quad Tree Implementation
 
@@ -624,37 +444,15 @@ R-trees (predecessors derived from Quad Trees) represent the modern standard for
 
 ### R-Tree Structure
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    R-Tree Structure                          │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  Root Node                                                  │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │                                                     │    │
-│  │  ┌──────────────┐  ┌──────────────┐               │    │
-│  │  │  MBR A       │  │  MBR B       │               │    │
-│  │  │  ┌────────┐  │  │  ┌────────┐  │               │    │
-│  │  │  │ ● ● ●  │  │  │  │ ● ●    │  │               │    │
-│  │  │  │ ● ● ●  │  │  │  │ ● ●    │  │               │    │
-│  │  │  └────────┘  │  │  └────────┘  │               │    │
-│  │  └──────────────┘  └──────────────┘               │    │
-│  │                                                     │    │
-│  │  ┌──────────────┐  ┌──────────────┐               │    │
-│  │  │  MBR C       │  │  MBR D       │               │    │
-│  │  │  ┌────────┐  │  │  ┌────────┐  │               │    │
-│  │  │  │ ● ●    │  │  │  │ ● ● ●  │  │               │    │
-│  │  │  │ ● ●    │  │  │  │ ● ● ●  │  │               │    │
-│  │  │  └────────┘  │  │  └────────┘  │               │    │
-│  │  └──────────────┘  └──────────────┘               │    │
-│  │                                                     │    │
-│  └─────────────────────────────────────────────────────┘    │
-│                                                              │
-│  Overlapping MBRs for efficient spatial queries              │
-│  Dynamic clustering based on data distribution               │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
-```
+| MBR Hierarchy Level | Bounding Box Identifier | Bounding Coordinates $(x_1, y_1, x_2, y_2)$ | Spatial Clustering Strategy |
+|---|---|---|---|
+| **Root MBR** | Global Map Bounding Box | `[0.0, 0.0, 100.0, 100.0]` | Outer bounding box enclosing all child nodes. |
+| **Child Node MBR A** | Commercial District | `[10.0, 20.0, 35.0, 45.0]` | Encloses 6 dense points; overlaps slightly with MBR B. |
+| **Child Node MBR B** | Harbor & Port Zone | `[30.0, 18.0, 55.0, 40.0]` | Dynamically expanded to minimize bounding box area penalty. |
+| **Child Node MBR C** | Residential Suburb | `[5.0, 5.0, 25.0, 18.0]` | Clustered based on minimum bounding rectangle growth algorithm. |
+| **Child Node MBR D** | Industrial Hub | `[28.0, 2.0, 50.0, 16.0]` | Contains warehouse locations with balanced leaf fan-out. |
+
+**Key Advantage:** Unlike rigid grid quadrant partitions, R-Trees support arbitrary polygon geometries, multi-dimensional shapes, and dynamic rebalancing, making them the standard engine in **PostGIS** and spatial RDBMS.
 
 ### R-Tree Implementation
 
@@ -735,43 +533,26 @@ When a user searches for "fast", the engine simply looks up the token `fast` in 
 
 ### Inverted Index Structure
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Inverted Index Structure                  │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  Documents:                                                  │
-│  Doc 1: "The quick brown fox jumps over the lazy dog"       │
-│  Doc 2: "A fast brown fox runs quickly"                     │
-│  Doc 3: "The lazy dog sleeps"                               │
-│                                                              │
-│  Inverted Index:                                             │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │ Token         │ Posting List                        │    │
-│  ├───────────────┼─────────────────────────────────────┤    │
-│  │ "the"         │ [1, 3]                              │    │
-│  │ "quick"       │ [1]                                 │    │
-│  │ "brown"       │ [1, 2]                              │    │
-│  │ "fox"         │ [1, 2]                              │    │
-│  │ "jumps"       │ [1]                                 │    │
-│  │ "over"        │ [1]                                 │    │
-│  │ "lazy"        │ [1, 3]                              │    │
-│  │ "dog"         │ [1, 3]                              │    │
-│  │ "a"           │ [2]                                 │    │
-│  │ "fast"        │ [2]                                 │    │
-│  │ "runs"        │ [2]                                 │    │
-│  │ "quickly"     │ [2]                                 │    │
-│  │ "sleeps"      │ [3]                                 │    │
-│  └─────────────────────────────────────────────────────┘    │
-│                                                              │
-│  Query: "brown fox"                                          │
-│  - Lookup "brown": [1, 2]                                    │
-│  - Lookup "fox": [1, 2]                                     │
-│  - Intersect: [1, 2]                                        │
-│  - Result: Doc 1, Doc 2                                     │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
-```
+| Analyzed Token (Term) | Term Frequency ($TF$) | Inverted Posting List `[DocID, Positions]` |
+|---|---|---|
+| `"a"` | 1 | `[Doc 2: pos 1]` |
+| `"brown"` | 2 | `[Doc 1: pos 3]`, `[Doc 2: pos 3]` |
+| `"dog"` | 2 | `[Doc 1: pos 9]`, `[Doc 3: pos 3]` |
+| `"fast"` | 1 | `[Doc 2: pos 2]` |
+| `"fox"` | 2 | `[Doc 1: pos 4]`, `[Doc 2: pos 4]` |
+| `"jumps"` | 1 | `[Doc 1: pos 5]` |
+| `"lazy"` | 2 | `[Doc 1: pos 8]`, `[Doc 3: pos 2]` |
+| `"over"` | 1 | `[Doc 1: pos 6]` |
+| `"quick"` | 1 | `[Doc 1: pos 2]` |
+| `"quickly"` | 1 | `[Doc 2: pos 6]` |
+| `"runs"` | 1 | `[Doc 2: pos 5]` |
+| `"sleeps"` | 1 | `[Doc 3: pos 4]` |
+| `"the"` | 3 | `[Doc 1: pos 1, 7]`, `[Doc 3: pos 1]` |
+
+**Query Resolution (`"brown fox"`):**
+1. Look up term `"brown"` ➔ `[Doc 1, Doc 2]`
+2. Look up term `"fox"` ➔ `[Doc 1, Doc 2]`
+3. Fast two-pointer list intersection ($O(M+N)$) ➔ **Match: `[Doc 1, Doc 2]`**.
 
 ### Inverted Index Implementation
 
@@ -1018,41 +799,14 @@ public class Order { ... }
 ### Index Storage
 
 **On-Disk Storage:**
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Index Storage on Disk                     │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  Disk Layout:                                               │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │ Index Header                                          │    │
-│  │ - Root page pointer                                  │    │
-│  │ - Index metadata                                     │    │
-│  ├─────────────────────────────────────────────────────┤    │
-│  │ Index Pages (8KB each)                               │    │
-│  │ - Internal nodes                                     │    │
-│  │ - Leaf nodes                                         │    │
-│  ├─────────────────────────────────────────────────────┤    │
-│  │ Data Pages (8KB each)                                │    │
-│  │ - Actual table data                                  │    │
-│  └─────────────────────────────────────────────────────┘    │
-│                                                              │
-│  Page Structure:                                            │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │ Page Header (96 bytes)                               │    │
-│  │ - Page number                                        │    │
-│  │ - Page type (index/data)                             │    │
-│  │ - Free space offset                                  │    │
-│  ├─────────────────────────────────────────────────────┤    │
-│  │ Index Entries                                         │    │
-│  │ - Key value                                          │    │
-│  │ - Row ID / Page pointer                              │    │
-│  ├─────────────────────────────────────────────────────┤    │
-│  │ Free Space                                            │    │
-│  └─────────────────────────────────────────────────────┘    │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
-```
+| On-Disk Component | Allocated Size | Internal Layout & Contents | Engine Purpose |
+|---|---|---|---|
+| **Index Header Page** | 8 KB Page | Root page pointer, tree depth, index metadata | Entry point for index scan navigation. |
+| **Internal B-Tree Pages** | 8 KB Pages | Delimiter key values + child Page pointers | Navigational routing across tree levels. |
+| **Leaf B-Tree Pages** | 8 KB Pages | Indexed key values + physical row pointers (`ctid` / PK) | Final search tier linked via horizontal pointers. |
+| **Page Header** | 96 Bytes | Page ID, page type, free space lower/upper offsets | Consistency checking and WAL recovery. |
+| **Index Line Pointers** | 4 Bytes / entry | Byte offsets into page payload | In-page binary search table. |
+| **Free Space Hole** | Dynamic | Unallocated contiguous bytes between pointers & data | Absorbs in-page insertions before triggering page split. |
 
 ### Index Creation Process
 

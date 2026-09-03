@@ -69,11 +69,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'b52'),
+    component: ComponentCreator('/', 'dfd'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'f0f'),
+        component: ComponentCreator('/', '9aa'),
         routes: [
           {
             path: '/tags',
@@ -3276,11 +3276,6 @@ export default [
             exact: true
           },
           {
-            path: '/tags/images',
-            component: ComponentCreator('/tags/images', '9e3'),
-            exact: true
-          },
-          {
             path: '/tags/immutability',
             component: ComponentCreator('/tags/immutability', 'e9f'),
             exact: true
@@ -4421,11 +4416,6 @@ export default [
             exact: true
           },
           {
-            path: '/tags/n-plus-one',
-            component: ComponentCreator('/tags/n-plus-one', '476'),
-            exact: true
-          },
-          {
             path: '/tags/nacl',
             component: ComponentCreator('/tags/nacl', 'b62'),
             exact: true
@@ -5101,11 +5091,6 @@ export default [
             exact: true
           },
           {
-            path: '/tags/persistence-context',
-            component: ComponentCreator('/tags/persistence-context', 'db5'),
-            exact: true
-          },
-          {
             path: '/tags/persistentvolume',
             component: ComponentCreator('/tags/persistentvolume', '4ac'),
             exact: true
@@ -5653,11 +5638,6 @@ export default [
           {
             path: '/tags/refresh-token',
             component: ComponentCreator('/tags/refresh-token', 'd02'),
-            exact: true
-          },
-          {
-            path: '/tags/registry',
-            component: ComponentCreator('/tags/registry', 'dcf'),
             exact: true
           },
           {

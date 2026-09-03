@@ -74,46 +74,13 @@ All Channels → [Payment Hub] → All Rails
 
 ## Payment Hub Architecture Layers
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    INTAKE / API LAYER                           │
-│  REST API  │  ISO 20022  │  BECS File  │  SWIFT  │  Internal   │
-└─────────────────────────────────────────────────────────────────┘
-                               │
-┌─────────────────────────────────────────────────────────────────┐
-│                  NORMALISATION LAYER                            │
-│  Convert all inputs to canonical payment model                 │
-│  (Internal Message Format — IMF)                               │
-└─────────────────────────────────────────────────────────────────┘
-                               │
-┌─────────────────────────────────────────────────────────────────┐
-│               ORCHESTRATION ENGINE                              │
-│                                                                 │
-│  1. Duplicate Detection                                         │
-│  2. Schema / Business Rule Validation                          │
-│  3. Compliance (Sanctions → Fraud → AML)                       │
-│  4. Channel Selection & Routing                                 │
-│  5. Approval Workflow (dual approval)                           │
-│  6. Pre-settlement checks (balance, limits)                    │
-│  7. Debit Hold                                                  │
-│  8. Message Transformation (IMF → pacs.008/MT103/DE)          │
-│  9. Network Submission                                          │
-│  10. Status Management & Tracking                              │
-│  11. Credit / Debit Posting Confirmation                       │
-│  12. Customer Notification                                      │
-└─────────────────────────────────────────────────────────────────┘
-                               │
-┌─────────────────────────────────────────────────────────────────┐
-│                  CONNECTOR LAYER                                │
-│  NPP       │  BECS      │  SWIFT     │  BPAY     │  RTGS       │
-│  Connector │  Connector │  Connector │  Connector│  Connector  │
-└─────────────────────────────────────────────────────────────────┘
-                               │
-┌─────────────────────────────────────────────────────────────────┐
-│                  CORE BANKING / LEDGER                          │
-│  Account balances  │  Posting journals  │  Settlement accounts  │
-└─────────────────────────────────────────────────────────────────┘
-```
+| Hub Architecture Layer | Ingress / Egress Protocols | Key Responsibilities & Functions | Integration Characteristics |
+|---|---|---|---|
+| **1. Intake / API Layer** | REST, gRPC, ISO 20022, BECS 18-byte ABA, SWIFT MT/MX | Accepts payments from mobile apps, online banking, corporate portals, and third-party APIs. | TLS 1.3, OAuth 2.0 / mTLS validation |
+| **2. Normalisation Layer** | Canonical Model Transformation | Converts diverse incoming schemas into an **Internal Message Format (IMF)** canonical Java model. | Schema validation & enrichments |
+| **3. Orchestration Engine** | State Machine & Workflow Pipeline | 12-step processing: duplicate check, sanctions/AML screening, fraud score, route selection, debit hold, network submission. | Sagas with compensations & event streaming |
+| **4. Connector Layer** | Rail-Specific Adapters | Outbound protocol translation: NPP PAG adapter, BECS file generator, SWIFT Alliance gateway, BPAY, RTGS. | High-resilience circuit breakers & retry queues |
+| **5. Core Banking / Ledger** | Double-Entry Posting System | Synchronizes customer account balances, reservation holds, and interbank settlement journals. | ACID transaction locks & event CDC |
 
 ---
 

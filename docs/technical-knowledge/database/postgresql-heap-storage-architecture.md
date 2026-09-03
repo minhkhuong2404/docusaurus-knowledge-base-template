@@ -20,21 +20,12 @@ Understanding how PostgreSQL physically stores, indexes, and updates data on dis
 
 Relational database storage engines generally adopt one of two foundational architectures for storing table rows on disk:
 
-```
-┌────────────────────────────────────────────────────────────────────────┐
-│                   PRIMARY STORAGE ARCHITECTURE COMPARISON               │
-├───────────────────────────────────┬────────────────────────────────────┤
-│   PostgreSQL (Heap Table Engine)  │   MySQL InnoDB (Clustered Index)   │
-├───────────────────────────────────┼────────────────────────────────────┤
-│ • Unordered Heap storage files.   │ • Clustered B+Tree storage.        │
-│ • Rows placed in any page with    │ • Table data is physically stored  │
-│   free space.                     │   inside Primary Key leaf nodes.   │
-│ • Secondary indexes store CTID    │ • Secondary indexes store Primary  │
-│   (physical block# + offset#).    │   Key values (requires PK lookup). │
-│ • Append-only MVCC updates        │ • In-place updates with Undo Log   │
-│   (INSERT new tuple + mark old).  │   rollback segments for MVCC.      │
-└───────────────────────────────────┴────────────────────────────────────┘
-```
+| Architecture Dimension | PostgreSQL (Heap Table Engine) | MySQL InnoDB (Clustered Index) |
+|---|---|---|
+| **Primary Storage Format** | Unordered Heap storage files. Rows placed in any page with sufficient free space. | Clustered B+Tree storage. Table data physically resides in Primary Key leaf nodes. |
+| **Secondary Index Addressing** | Stores physical tuple pointers: `CTID (block#, offset#)`. | Stores Primary Key values (requires second B+Tree lookup to fetch non-indexed columns). |
+| **MVCC Tuple Updates** | Append-only: `INSERT` new tuple version + mark old tuple dead with `xmax`. | In-place updates with Undo Log rollback segments for historical snapshots. |
+| **Index Maintenance on Update** | Modifying any column forces updating all secondary indexes (unless HOT applies). | Updating non-indexed columns touches zero secondary indexes. |
 
 In PostgreSQL, tables are stored in **Heap Files** (an unordered collection of 8KB pages). Secondary indexes (B-Tree, GIN, GiST, BRIN) do not contain table data; they store key values paired with physical pointers called **CTIDs** pointing to the heap.
 
@@ -66,37 +57,13 @@ $PGDATA/
 
 PostgreSQL implements a classic **Slotted Page** architecture. The 8192 bytes of a heap page are partitioned into distinct zones:
 
-```
-┌──────────────────────────────────────────────────────────────────────┐
-│                  POSTGRESQL 8KB HEAP PAGE ANATOMY                    │
-├──────────────────────────────────────────────────────────────────────┤
-│  PageHeaderData (24 Bytes)                                           │
-│  [ pd_lsn (8B) | pd_checksum (2B) | pd_flags (2B) | pd_lower (2B)  ] │
-│  [ pd_upper (2B) | pd_special (2B) | pd_pagesize_version (2B)      ] │
-│  [ pd_prune_xid (4B)                                               ] │
-├──────────────────────────────────────────────────────────────────────┤
-│  Line Pointers Array (ItemIdData - 4 Bytes each)                     │
-│  ┌──────────────┬──────────────┬──────────────┬───────────────────┐  │
-│  │ ItemId[1] ↓  │ ItemId[2] ↓  │ ItemId[3] ↓  │ (grows downward)  │  │
-│  └──────────────┴──────────────┴──────────────┴───────────────────┘  │
-├──────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│                       FREE SPACE GAP (HOLE)                          │
-│               (between pd_lower and pd_upper)                        │
-│                                                                      │
-├──────────────────────────────────────────────────────────────────────┤
-│  Heap Tuples (Data Rows)                                             │
-│  ┌────────────────────────────────────────────────────────────────┐  │
-│  │ Tuple #3 (grows upward)                                        │  │
-│  ├────────────────────────────────────────────────────────────────┤  │
-│  │ Tuple #2                                                       │  │
-│  ├────────────────────────────────────────────────────────────────┤  │
-│  │ Tuple #1                                                       │  │
-│  └────────────────────────────────────────────────────────────────┘  │
-├──────────────────────────────────────────────────────────────────────┤
-│  Special Space (Index metadata; 0 bytes for heap tables)             │
-└──────────────────────────────────────────────────────────────────────┘
-```
+| Page Zone | Byte Boundaries | Growth Direction | Internal Contents & Purpose |
+|---|---|---|---|
+| **PageHeaderData** | Byte 0 to Byte 24 | Fixed (24 Bytes) | `pd_lsn` (8B), `pd_checksum` (2B), `pd_flags` (2B), `pd_lower` (2B), `pd_upper` (2B), `pd_special` (2B), `pd_prune_xid` (4B). |
+| **Line Pointers (`ItemIdData`)** | Starts at Byte 24 | Grows **downward** (↓) | Array of 4-byte pointers (`lp_off`, `lp_flags`, `lp_len`). Indirection layer decoupling index CTIDs from physical byte offsets. |
+| **Free Space Gap** | Between `pd_lower` and `pd_upper` | Dynamic shrinking | Contiguous unallocated bytes available for new line pointers or incoming tuple payloads. Tracked by FSM. |
+| **Heap Tuples** | Starts at Byte 8192 | Grows **upward** (↑) | Physical row versions containing 23-byte `HeapTupleHeaderData` (`t_xmin`, `t_xmax`, `t_ctid`, `t_infomask`) + user column data. |
+| **Special Space** | End of Page (Byte 8192) | Fixed (0 Bytes in Heap) | Reserved for access method metadata (used in B-Tree/GiST index pages; 0 bytes for heap tables). |
 
 ### 3.1 Page Header (`PageHeaderData` - 24 Bytes)
 
@@ -181,27 +148,11 @@ SELECT ctid, xmin, xmax, id, email, balance FROM accounts LIMIT 3;
 
 When a query executes `SELECT * FROM accounts WHERE email = 'alice@domain.com'`, PostgreSQL performs two distinct operations:
 
-```
-┌────────────────────────┐
-│  B-Tree Index Leaf     │
-│  Key: "alice@..."      │
-│  Payload: CTID (0, 1)  │
-└───────────┬────────────┘
-            │
-            ▼ (Hop 1: Shared Buffer Cache Lookup)
-┌───────────────────────────────────────────────────────────┐
-│  Heap Page 0 in Memory                                    │
-│  Line Pointer Array:                                      │
-│  ItemId[1] ───► lp_off: 8100, lp_flags: LP_NORMAL         │
-└───────────────────┬───────────────────────────────────────┘
-                    │
-                    ▼ (Hop 2: Line Pointer to Byte Offset)
-┌───────────────────────────────────────────────────────────┐
-│  HeapTuple @ Byte 8100                                    │
-│  [xmin: 1001, xmax: 0, ctid: (0,1)]                       │
-│  [id: 1, email: "alice@domain.com", balance: 1500.00]     │
-└───────────────────────────────────────────────────────────┘
-```
+| Hop Phase | Storage Subsystem | Lookup Data & Action |
+|---|---|---|
+| **Hop 1** | B-Tree Index Leaf | Matches Key (`"alice@domain.com"`), extracts physical payload `CTID = (0, 1)`. |
+| **Hop 2** | Heap Page 0 Shared Buffer | Accesses Line Pointer `ItemId[1]` ➔ reads `lp_off = 8100`, `lp_flags = LP_NORMAL`. |
+| **Data Fetch** | HeapTuple @ Byte 8100 | Evaluates MVCC visibility (`xmin`, `xmax`) and deserializes columns (`balance = 1500.00`). |
 
 ### Why Line Pointer Indirection is Critical
 Why doesn't the B-Tree index point directly to byte offset `8100` on disk?
@@ -224,20 +175,11 @@ Suppose a table has 5 indexes (`idx_id`, `idx_email`, `idx_status`, `idx_created
 UPDATE users SET status = 'ACTIVE' WHERE id = 42;
 ```
 
-```
-┌────────────────────────────────────────────────────────────────────────┐
-│             STANDARD UPDATE WRITE AMPLIFICATION (WITHOUT HOT)          │
-├────────────────────────────────────────────────────────────────────────┤
-│ 1. Heap Page 0: Old tuple (0, 1) updated with xmax = 2001 (DEAD).      │
-│ 2. Heap Page 0 (or Page 1): New tuple inserted at CTID (0, 2).         │
-│ 3. All 5 Secondary Indexes MUST be updated with new pointers to (0, 2):│
-│    • idx_id:          Insert key (42 ──► (0, 2))                       │
-│    • idx_email:       Insert key ("alice@..." ──► (0, 2))              │
-│    • idx_status:      Insert key ("ACTIVE" ──► (0, 2))                 │
-│    • idx_created_at:  Insert key ("2026-01-01" ──► (0, 2))             │
-│    • idx_org_id:      Insert key (99 ──► (0, 2))                       │
-└────────────────────────────────────────────────────────────────────────┘
-```
+| Physical Layer | Write Action | Amplification Overhead |
+|---|---|---|
+| **Heap Storage (Page 0)** | Marks old tuple `(0, 1)` with `xmax = 2001` (DEAD); appends new tuple at `(0, 2)`. | 2 tuple row versions written to heap. |
+| **Secondary Indexes (5x)** | `idx_id`, `idx_email`, `idx_status`, `idx_created_at`, `idx_org_id` | **5 separate B-Tree page modifications**, inserting new key ➔ `(0, 2)` pointers. |
+| **WAL Stream** | Generates Write-Ahead Log records for Heap Page + all 5 B-Tree index pages. | Massive write amplification and disk I/O churn. |
 
 **Consequences in High-Write Systems:**
 - **Severe Write Amplification**: 1 row update produces 1 heap write + 5 random B-Tree index page writes + WAL records for all modified pages.
@@ -256,22 +198,13 @@ A row update qualifies for HOT optimization if and only if:
 
 ### 6.2 How HOT Works Under the Hood
 
-```
-┌───────────────────────────────────────────────────────────────────────┐
-│                    HOT (HEAP-ONLY TUPLES) MECHANISM                   │
-├───────────────────────────────────────────────────────────────────────┤
-│  Line Pointer Array:                                                  │
-│  ItemId[1] ───► lp_flags: LP_REDIRECT ──► ItemId[2]                   │
-│  ItemId[2] ───► lp_flags: LP_NORMAL   ──► Byte 8000 (Tuple #2)        │
-│                                                                       │
-│  Heap Tuples:                                                         │
-│  Tuple #1 (Old): xmax: 2001, flags: HEAP_HOT_UPDATED                  │
-│  Tuple #2 (New): xmin: 2001, flags: HEAP_ONLY_TUPLE (CTID: 0, 2)     │
-│                                                                       │
-│  Secondary Indexes (idx_id, idx_email, idx_created_at):               │
-│  All indexes continue pointing to CTID (0, 1)! ZERO INDEX WRITES!    │
-└───────────────────────────────────────────────────────────────────────┘
-```
+| Component | In-Page State | HOT Optimization Mechanism |
+|---|---|---|
+| **Line Pointer `ItemId[1]`** | `lp_flags: LP_REDIRECT ➔ ItemId[2]` | Redirection pointer. B-Tree indexes continue pointing to `(0, 1)` without modifications. |
+| **Line Pointer `ItemId[2]`** | `lp_flags: LP_NORMAL ➔ Byte 8000` | Points to the new tuple payload version on the same page. |
+| **Old Tuple #1** | `xmax: 2001, HEAP_HOT_UPDATED` | Marked dead, preserved until transactions older than snapshot commit. |
+| **New Tuple #2** | `xmin: 2001, HEAP_ONLY_TUPLE (0, 2)` | Valid new version. No index entry points to `(0, 2)` directly (heap-only). |
+| **Secondary Indexes** | Point to `CTID (0, 1)` | **Zero index page writes**. Index traversals follow `LP_REDIRECT` in memory. |
 
 ### 6.3 HOT Execution Lifecycle
 1. **Insert New Tuple**: The new tuple is written to the same page with `HEAP_ONLY_TUPLE` flag set.
@@ -354,23 +287,14 @@ $$\text{B-Tree Index Scan} \xrightarrow{\text{VM Bit = 1}} \text{Return Data Dir
 
 ## 9. Maintenance: VACUUM vs VACUUM FULL vs pg_repack
 
-```
-┌────────────────────────────────────────────────────────────────────────┐
-│                     VACUUM STRATEGY COMPARISON                         │
-├──────────────────┬─────────────────┬─────────────────┬─────────────────┤
-│ Feature          │ Standard VACUUM │ VACUUM FULL     │ pg_repack       │
-├──────────────────┼─────────────────┼─────────────────┼─────────────────┤
-│ Lock Required    │ SHARE UPDATE    │ ACCESS          │ ACCESS SHARE    │
-│                  │ EXCLUSIVE       │ EXCLUSIVE       │ (Concurrent)    │
-│ Concurrent Reads │ ✅ Yes          │ ❌ Blocked      │ ✅ Yes          │
-│ Concurrent Writes│ ✅ Yes          │ ❌ Blocked      │ ✅ Yes          │
-│ Reclaims OS Disk │ ❌ No (stays in │ ✅ Yes (file    │ ✅ Yes (file    │
-│ Space            │ table file)     │ rewritten)      │ rewritten)      │
-│ Updates FSM & VM │ ✅ Yes          │ ✅ Yes          │ ✅ Yes          │
-│ Production Safe  │ ✅ Always       │ ⚠️ Maintenance  │ ✅ Zero-downtime│
-│                  │ (Autovacuum)    │ window only     │ migration       │
-└──────────────────┴─────────────────┴─────────────────┴─────────────────┘
-```
+| Feature Dimension | Standard VACUUM | VACUUM FULL | pg_repack |
+|---|---|---|---|
+| **Lock Required** | `SHARE UPDATE EXCLUSIVE` | `ACCESS EXCLUSIVE` (Exclusive table lock) | `ACCESS SHARE` (Concurrent table access) |
+| **Concurrent Reads** | ✅ Yes (Unblocked) | ❌ Blocked | ✅ Yes (Unblocked) |
+| **Concurrent Writes** | ✅ Yes (Unblocked) | ❌ Blocked | ✅ Yes (Unblocked) |
+| **Reclaims OS Disk Space** | ❌ No (Space returned to page FSM for future inserts) | ✅ Yes (Physical table file completely rewritten) | ✅ Yes (Table file rebuilt in shadow table) |
+| **Updates FSM & VM** | ✅ Yes | ✅ Yes | ✅ Yes |
+| **Production Safety** | ✅ Always safe (Autovacuum engine) | ⚠️ Requires dedicated maintenance window | ✅ Safe for zero-downtime online bloat compaction |
 
 ### 9.1 Autovacuum Tuning Parameters
 To prevent table bloat in write-heavy production systems:

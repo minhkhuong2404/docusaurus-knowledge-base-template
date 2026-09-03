@@ -70,58 +70,11 @@ Money laundering is the process by which proceeds of crime are made to appear le
 
 ### The Three Stages
 
-```
-┌──────────────────────────────────────────────────────────────────────┐
-│                    MONEY LAUNDERING LIFECYCLE                         │
-├──────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│  STAGE 1: PLACEMENT                                                  │
-│  ──────────────────                                                  │
-│  Dirty cash enters the financial system                              │
-│                                                                      │
-│  Methods:                                                            │
-│  • Cash deposits (splitting to avoid reporting thresholds)           │
-│  • Smurfing (using multiple people to deposit smaller amounts)       │
-│  • Cash-intensive businesses (restaurants, carwashes, casinos)       │
-│  • Gambling winnings                                                 │
-│  • Trade-based laundering (over/under-invoice goods)                │
-│                                                                      │
-│  Bank's exposure: HIGHEST — cash enters the system here             │
-│                                                                      │
-├──────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│  STAGE 2: LAYERING                                                   │
-│  ────────────────                                                    │
-│  Multiple transactions obscure the audit trail                       │
-│                                                                      │
-│  Methods:                                                            │
-│  • Rapid wire transfers between multiple accounts/countries          │
-│  • Shell company chains (Company A → B → C → D)                     │
-│  • Cryptocurrency mixing                                             │
-│  • Trade-based layering (false invoices across borders)             │
-│  • Loan-back schemes (laundered money "loaned" to criminal)          │
-│  • Foreign exchange conversions                                      │
-│  • Real estate purchases and sales                                   │
-│                                                                      │
-│  Bank's exposure: HIGH — payment systems used to layer               │
-│                                                                      │
-├──────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│  STAGE 3: INTEGRATION                                                │
-│  ─────────────────────                                               │
-│  Funds re-enter the legitimate economy                               │
-│                                                                      │
-│  Methods:                                                            │
-│  • Luxury goods (watches, jewellery, art)                            │
-│  • Real estate (buy property with laundered funds)                   │
-│  • Business investment                                               │
-│  • Stock market investment                                           │
-│  • Professional fees (overpay lawyers/accountants)                   │
-│                                                                      │
-│  Bank's exposure: MODERATE — funds appear legitimate by this point   │
-│                                                                      │
-└──────────────────────────────────────────────────────────────────────┘
-```
+| Stage | Core Definition & Goal | Common Criminal Typologies & Methods | Bank Vulnerability & Exposure |
+|---|---|---|---|
+| **1. Placement** | Dirty physical cash enters the financial system for the first time. | Cash structuring below $10K, smurfing via multiple agents, cash-intensive front businesses (restaurants, carwashes, casinos), gambling chips, trade over-invoicing. | **HIGHEST**: Front-line teller and branch ATM cash deposits. |
+| **2. Layering** | Complex layers of financial transactions obscure the audit trail and source of funds. | Rapid international wire transfers, multi-hop shell companies (Co A ➔ Co B ➔ Co C), crypto coin-mixing, cross-border false trade invoices, back-to-back loan schemes. | **HIGH**: Real-time payment rails and correspondent banking networks. |
+| **3. Integration** | Laundered funds re-enter the legitimate economy, appearing completely clean. | Purchasing commercial/residential real estate, high-end luxury goods (art, watches), legitimate business acquisitions, stock market securities, legal retainer overpayments. | **MODERATE**: Funds appear fully documented and legitimate. |
 
 ### Common Money Laundering Typologies
 
@@ -809,48 +762,11 @@ Current status at: www.fatf-gafi.org (updated regularly)
 
 ## AML in the Payment Processing Pipeline
 
-```
-Payment Instruction Received
-          │
-          ▼
-┌─────────────────────────────────────────────────────────┐
-│  STEP 1: CUSTOMER RISK CHECK                            │
-│  ├── KYC status: VERIFIED? EXPIRED? PENDING?            │
-│  ├── Customer risk rating: LOW / MEDIUM / HIGH?         │
-│  ├── Is customer a PEP? → EDD monitoring active?        │
-│  ├── Customer on internal watchlist?                    │
-│  └── AML/CTF program hold on account?                   │
-└────────────────────────┬────────────────────────────────┘
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────┐
-│  STEP 2: TRANSACTION MONITORING RULES                   │
-│  ├── Structuring rule                                   │
-│  ├── Money mule (rapid pass-through) rule               │
-│  ├── Velocity anomaly rule                              │
-│  ├── Round-trip / circular transaction rule             │
-│  ├── High-risk jurisdiction rule                        │
-│  ├── Dormant account sudden activity rule               │
-│  └── Custom bank-specific rules                         │
-└────────────────────────┬────────────────────────────────┘
-                         │
-              ┌──────────┴──────────┐
-              │                     │
-           CLEAR               ALERT RAISED
-              │                     │
-              ▼                     ▼
-         Continue            Hold Payment
-         Processing          Queue to AML Analyst
-                                    │
-                          ┌─────────┴──────────┐
-                          │                    │
-                    FALSE POSITIVE         TRUE SUSPICIOUS
-                          │                    │
-                    Document            Continue Investigation
-                    Release             File SMR with AUSTRAC
-                    Tune Rule           Possible account closure
-                                        Report to AFP if terrorism
-```
+| Evaluation Stage | Inbound/Outbound Checks | Trigger Criteria | Action & SLA Response |
+|---|---|---|---|
+| **Step 1: Customer Risk Check** | KYC Status, PEP status, Customer Risk Rating (Low/Med/High), Watchlist match | Expired KYC, PEP flag, or active compliance block. | Hold payment immediately; require Enhanced Due Diligence (EDD). |
+| **Step 2: Transaction Monitoring** | Structuring rule, money mule pass-through (&lt;4h turnover), velocity burst, circular funds, sanctions jurisdiction | Rules-based thresholds or ML behavioral anomaly score &gt; threshold. | **CLEAR**: Continues straight-through-processing (STP).<br />**ALERT RAISED**: Payment suspended; queued to L1 AML Analyst queue. |
+| **Step 3: Analyst Disposition** | Investigation of transaction counterparties, source of wealth, and historical transaction profile | Document review: is transaction legitimate commercial activity? | **FALSE POSITIVE**: Document rationale, release payment, tune rule thresholds.<br />**TRUE SUSPICIOUS**: File Suspicious Matter Report (SMR) with AUSTRAC within 24h (terrorism) or 3 days. |
 
 ---
 

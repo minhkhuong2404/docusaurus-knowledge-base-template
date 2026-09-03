@@ -57,10 +57,12 @@ export default function StranglerFigDiagram() {
   return (
     <div className="interactive-diagram-container" style={{ fontFamily: 'var(--ifm-font-family-base)' }}>
       <div className="interactive-diagram-header">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34d399" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
         </svg>
-        <span>Strangler Fig Pattern — Incremental Monolith Migration</span>
+        <span style={{ color: 'var(--ifm-color-content)', fontWeight: 700 }}>
+          Strangler Fig Pattern — Incremental Monolith Migration
+        </span>
       </div>
 
       {/* Interactive Phase Stepper */}

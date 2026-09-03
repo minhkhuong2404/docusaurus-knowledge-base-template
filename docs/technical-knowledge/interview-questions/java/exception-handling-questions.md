@@ -95,20 +95,12 @@ public record ErrorResponse(
 ```
 
 ### Exception Hierarchy Design
-```
-                  Exception
-                     │
-          ┌──────────┼──────────────┐
-    Checked          │         RuntimeException
-  (must catch)       │         (unchecked)
-                     │              │
-              IOException     ┌─────┼──────────────┐
-                              │     │              │
-                    BusinessException  │    IllegalArgumentException
-                         │            │
-              ┌──────────┼──────┐    │
-    OrderNotFoundException  InsufficientBalanceException
-```
+| Hierarchy Level | Base Class | Classification | Compiler Contract | Example Implementations |
+|---|---|---|---|---|
+| **Root Throwable** | `Throwable` ➔ `Exception` | All application errors | Checked / Root base | Base parent for checked & unchecked errors |
+| **Checked Branch** | `Exception` | Checked Exception | **Must handle or declare**: Compiler enforces `try-catch` or `throws` signature. | `IOException`, `SQLException`, `ClassNotFoundException` |
+| **Unchecked Branch** | `RuntimeException` | Unchecked Exception | Optional handling: indicates programming bugs or operational exceptions. | `NullPointerException`, `IllegalArgumentException` |
+| **Domain Hierarchy** | `BusinessException` (`extends RuntimeException`) | Custom Domain Exceptions | Best practice for microservice business logic with error codes. | `OrderNotFoundException` (404), `InsufficientBalanceException` (400) |
 
 ## 3. What are Chained Exceptions?
 

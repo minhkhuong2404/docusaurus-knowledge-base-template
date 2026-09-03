@@ -63,32 +63,14 @@ Mandate:
 
 ### Mandate Lifecycle
 
-```
-Payee initiates mandate via PayTo API
-         │
-         ▼
-MMS creates mandate in CREATED state
-         │
-         ▼
-Payer's bank notifies customer (push notification / internet banking)
-         │
-    ┌────┴────┐
-    │         │
-  Approved  Rejected ──► Mandate REJECTED (terminal)
-    │
-    ▼
-Mandate ACTIVE
-    │
-    ├── Payee initiates payments against mandate
-    │
-    ├── Payer can PAUSE (temporarily stop debits)
-    │
-    ├── Payer can CANCEL (permanently revoke)
-    │
-    ├── Payer can AMEND (change caps, end date)
-    │
-    └── Mandate EXPIRED (end date reached)
-```
+| Mandate State | Actor & Trigger Event | Operational Rules & Constraints | Next Possible Transitions |
+|---|---|---|---|
+| **`CREATED`** | Payee initiates payment agreement via PayTo API | Mandate Management Service (MMS) logs mandate; Payer bank sends push notification for customer approval. | ➔ `ACTIVE` (Payer approves)<br />➔ `REJECTED` (Payer rejects or 5-day timeout) |
+| **`REJECTED`** | Payer explicitly denies consent | Mandate terminated permanently; no debits may ever be initiated. | *Terminal state* |
+| **`ACTIVE`** | Payer approves mandate | Payee can initiate automated real-time `pacs.008` debits against mandate limits. | ➔ `PAUSED`<br />➔ `CANCELLED`<br />➔ `SUSPENDED`<br />➔ `EXPIRED` |
+| **`PAUSED`** | Payer temporarily freezes debits | Any incoming debit attempts during pause are automatically rejected with reason code `NURP`. | ➔ `ACTIVE` (Payer unpauses)<br />➔ `CANCELLED` |
+| **`CANCELLED`** | Payer or Payee revokes agreement | MMS broadcasts cancellation event across participating banks. | *Terminal state* |
+| **`EXPIRED`** | Calendar end date reached | Mandate validity window lapses naturally. | *Terminal state* |
 
 ---
 

@@ -50,19 +50,11 @@ Decomposing a monolith requires planning to prevent creating a "distributed mono
 
 ### The Migration Blueprint (Strangler Fig Pattern)
 
-```
-[ Clients / Mobile / SPA ]
-           │
-           ▼
-┌──────────────────────────────────────┐
-│        API Gateway / Reverse Proxy   │
-└──────────────────┬───────────────────┘
-                   ├──────────────────┐ (New routes)
-                   ▼                  ▼
-        ┌──────────────────┐  ┌──────────────────┐
-        │ Legacy Monolith  │  │   New Service    │
-        └──────────────────┘  └──────────────────┘
-```
+| Migration Component | Role in Strangler Fig | Traffic Allocation | Cutover Strategy |
+|---|---|---|---|
+| **API Gateway / Reverse Proxy** | Single ingress interceptor | 100% of external traffic | Intercepts all URI routes; dynamically rewires specific endpoints (e.g. `/api/v1/orders/*`) away from legacy monolith. |
+| **Legacy Monolith** | Core business logic host | Decreases over time ($100\% \to 0\%$) | Unchanged non-migrated endpoints; code is incrementally deprecated as microservices come online. |
+| **New Microservice** | Extracted bounded context | Increases per release ($0\% \to 100\%$) | Deployed independently with isolated database; receives traffic once green smoke tests pass. |
 
 1. **API Gateway Interception:** Introduce an API Gateway (e.g., Spring Cloud Gateway) in front of the monolith. Initially, 100% of traffic is routed to the legacy monolith.
 2. **Identify Bounded Contexts:** Apply Domain-Driven Design (DDD) to identify bounded contexts. Look for domains with different rate-of-change or resource demands (e.g., separating the catalog from the checkout engine).
@@ -86,28 +78,12 @@ Traditional two-phase commit (2PC) does not scale in microservice environments. 
 * **The Saga Pattern:** Orchestrates a sequence of local transactions. Each transaction updates database state within a single service and publishes an event. If a step fails, the Saga runner executes **compensating transactions** to reverse the preceding steps.
 * **Transactional Outbox Pattern:** Guarantees **at-least-once delivery** of events. Instead of writing to a database and publishing a message to Kafka in the same block (which can fail half-way), write the message to an `OUTBOX` table in the *same* database transaction. A separate process (Debezium, or a polling publisher) polls the table and publishes to the broker.
 
-```
-┌──────────────────────────────────────────────┐
-│  Business Service                            │
-│  1. Update Entity Table                      │
-│  2. Insert Event into OUTBOX Table (Same Tx)  │
-└──────────────────────┬───────────────────────┘
-                       │ (Atomically Committed)
-                       ▼
-┌──────────────────────────────────────────────┐
-│  Database (Tables: Orders, Outbox)           │
-└──────────────────────┬───────────────────────┘
-                       │
-                       ▼ (Transaction Log Tailing / Polling)
-┌──────────────────────────────────────────────┐
-│  Message Publisher (e.g., Debezium)          │
-└──────────────────────┬───────────────────────┘
-                       │
-                       ▼ (Guaranteed Delivery)
-┌──────────────────────────────────────────────┐
-│  Message Broker (e.g., Apache Kafka)         │
-└──────────────────────────────────────────────┘
-```
+| Pipeline Stage | Acting Component | Atomic Operation | Reliability & Delivery Guarantee |
+|---|---|---|---|
+| **1. Business Write** | Application Service | Single ACID Database Transaction | Updates business entity (`orders`) AND inserts event into `outbox` table in the same local transaction. **Zero distributed 2PC required**. |
+| **2. Storage** | Relational Database (PostgreSQL / MySQL) | Write-Ahead Log (WAL) | Outbox event committed durably to disk. |
+| **3. Log Mining (CDC)** | Debezium / Poller Agent | Non-blocking transaction log tailing | Reads new records from WAL without adding query load to primary business tables. |
+| **4. Broker Publish** | Apache Kafka | Producer `acks=all` delivery | Guaranteed **at-least-once** event publishing; idempotent consumers handle deduplication via unique event ID. |
 
 ---
 

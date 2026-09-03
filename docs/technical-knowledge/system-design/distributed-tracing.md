@@ -5,6 +5,7 @@ sidebar_label: Distributed Tracing
 description: Deep dive into Distributed Tracing for microservices using OpenTelemetry, W3C TraceContext, Spring Boot 3 Micrometer, and Jaeger.
 tags: [system-design, microservices, observability, tracing, open-telemetry]
 ---
+import DistributedTracingDiagram from '@site/src/components/DistributedTracingDiagram';
 
 # Distributed Tracing
 
@@ -35,15 +36,7 @@ Trace (Global Request Journey - Trace ID: abc123xyz)
 
 A production tracing pipeline is rarely "app → Jaeger" directly. The standard pattern uses the **OpenTelemetry Collector** as an intermediary:
 
-```text
-┌──────────────┐     OTLP/gRPC      ┌──────────────────────┐     OTLP     ┌─────────────┐
-│ Spring Boot  │ ─────────────────► │  OTel Collector       │ ───────────► │   Jaeger /  │
-│ (Micrometer) │   (batched spans)  │  (batch, sample,       │              │   Tempo     │
-└──────────────┘                    │   redact PII, route)   │              └─────────────┘
-                                     └──────────────────────┘
-                                              │
-                                              └──► metrics backend (span metrics connector)
-```
+<DistributedTracingDiagram initialTab="pipeline" />
 
 Sending spans directly from every pod to the backend couples your app's uptime to the tracing backend's uptime and makes it hard to change sampling policy without redeploying services. The Collector decouples this: it buffers, retries, redacts sensitive attributes, and can fan out to multiple backends (e.g., Jaeger for exploration + a span-metrics connector for RED metrics) without touching application code.
 

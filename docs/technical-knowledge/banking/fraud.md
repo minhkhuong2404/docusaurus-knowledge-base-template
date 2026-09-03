@@ -35,35 +35,11 @@ Fraud in banking payments refers to **unauthorised or deceptive financial transa
 
 ## Fraud Risk Assessment Points
 
-```
-Pain.001 / Payment Instruction
-        │
-        ▼
-┌─────────────────────────────────┐
-│   PRE-AUTHORISATION CHECKS      │
-│  • Device fingerprint           │
-│  • IP/Geolocation anomaly       │
-│  • Behavioural biometrics       │
-│  • Session risk score           │
-└────────────────┬────────────────┘
-                 │
-                 ▼
-┌─────────────────────────────────┐
-│   PAYMENT-TIME FRAUD SCORING    │
-│  • Rule-based engine            │
-│  • ML model score               │
-│  • Velocity checks              │
-│  • Counterparty reputation      │
-│  • Amount anomaly               │
-└────────────────┬────────────────┘
-                 │
-        ┌────────┴────────┐
-        │                 │
-    ALLOW             CHALLENGE / BLOCK
-    payment           • Step-up auth (OTP/biometric)
-                      • Call customer
-                      • Block and alert
-```
+| Pipeline Stage | Evaluation Focus & Signals | Check Mechanisms | Outcome Policy |
+|---|---|---|---|
+| **1. Pre-Authorisation** | Device fingerprint, IP/Geolocation anomaly, behavioural biometrics, session trust score | Compares device hash, VPN exit nodes, and keystroke dynamics against historical baseline. | High risk signals require immediate Step-Up Auth. |
+| **2. Payment-Time Scoring** | Transaction velocity, amount anomaly, counterparty account reputation, Mule account heuristics | Rule-based engine (e.g. &gt;5 tx/hr) + ML gradient-boosted decision tree ensemble score (0–1000). | Scores &lt; 200: Auto-Allow.<br />Scores 200–700: Step-Up Challenge.<br />Scores &gt; 700: Block &amp; Fraud Alert. |
+| **3. Decision Routing** | **ALLOW**: Releases payment to rails.<br />**CHALLENGE**: Triggers SMS OTP / in-app biometric.<br />**BLOCK**: Freezes payment and opens fraud investigation case. | Direct integration with Payment Hub routing engine. | Real-time SLA &lt; 50ms decision latency. |
 
 ---
 

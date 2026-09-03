@@ -32,21 +32,11 @@ Inspect the interactive visualizer below to see how MCP bridges LLMs to real-wor
 
 A common misconception is that the **Model Context Protocol (MCP)** makes APIs obsolete. In reality:
 
-```
-┌────────────────────────┐
-│  AI Client / Host LLM  │ (Claude Desktop, Antigravity IDE, Cursor)
-└───────────┬────────────┘
-            │  Standard JSON-RPC (stdio / SSE)
-            ▼
-┌────────────────────────┐
-│       MCP Server       │ (Exposes tools/list, tools/call, resources)
-└───────────┬────────────┘
-            │  Native API Protocol (HTTP REST, SQL, gRPC, Shell)
-            ▼
-┌────────────────────────┐
-│ Real-World Backend API │ (Stripe, GitHub, PostgreSQL, Jira)
-└────────────────────────┘
-```
+| Architecture Tier | Example Implementations | Protocol Interface | Responsibilities & Data Contract |
+|---|---|---|---|
+| **AI Client / Host LLM** | Claude Desktop, Antigravity IDE, Cursor | JSON-RPC 2.0 (stdio / SSE) | Dispatches prompts, evaluates model intent, routes user permissions. |
+| **MCP Server** | GitHub MCP, Postgres MCP, Filesystem MCP | Standardized MCP Specification | Discovers tools (`tools/list`), validates parameters, provides runtime context schemas. |
+| **Real-World Backend API** | GitHub REST/GraphQL, PostgreSQL DB, Stripe | Native Transport (HTTPS, TCP, SQL, gRPC) | Executes real-world transactions, enforces access tokens, returns business responses. |
 
 * **APIs** are the **underlying business engines** (machine-to-machine contracts) providing authentication, business validation, database storage, and service logic.
 * **MCP** is the **universal translation and discovery protocol** built specifically for AI. It allows an LLM to dynamically inspect what actions are available and execute them without human developers writing custom hardcoded integration glue.
@@ -59,17 +49,10 @@ A fundamental reality of Large Language Models is that **LLMs are strictly next-
 
 Therefore, between the LLM and the physical API, there **must always exist an Execution Layer**:
 
-```
-[User Prompt] ➔ [LLM Predicts Tool Call JSON] ➔ ⚡ [EXECUTION LAYER] ➔ [Real API / Database]
-                                                        │
-                         ┌──────────────────────────────┴──────────────────────────────┐
-                         ▼                                                             ▼
-             [Custom API Orchestrator]                                      [Standard MCP Server]
-       • Custom Python/Node loop                                      • Standard JSON-RPC protocol
-       • Hardcoded OpenAI function schemas                            • Dynamic tool discovery (`tools/list`)
-       • Bespoke `fetch()` calls per tool                             • Reusable across all AI clients
-       • Tightly coupled to one app                                   • Local credential isolation
-```
+| Execution Architecture | Implementation Pattern | Discovery & Schema Contract | Ecosystem Interoperability |
+|---|---|---|---|
+| **Custom Direct API Orchestrator** | Bespoke Python/Node loop calling proprietary `fetch()` functions | Hardcoded OpenAI / Anthropic function JSON schemas | Tightly coupled to a single host application; high maintenance overhead. |
+| **Standardized MCP Server** | Sandboxed local process communicating via JSON-RPC over `stdio` | Dynamic self-describing discovery via `tools/list` and `resources/list` | Universal plug-and-play across Claude, Cursor, Antigravity, and Zed with zero code rewrite. |
 
 ---
 
@@ -183,22 +166,11 @@ await server.connect(transport);
 
 Many people use "Generative AI", "Agentic AI", and "AI Agents" interchangeably, but they represent three distinct layers of a technology stack:
 
-```
-┌────────────────────────────────────────────────────────────────────────┐
-│ 3. AI AGENT (The Complete Autonomous Worker)                           │
-│    Packages Brain + Cognitive Loop + Memory + Tools (MCP / APIs)       │
-│                                                                        │
-│    ┌──────────────────────────────────────────────────────────────┐    │
-│    │ 2. AGENTIC AI (The Thinking Process / Cognitive Loop)        │    │
-│    │    Goal Planning ➔ Tool Execution ➔ Reflection ➔ Recovery    │    │
-│    │                                                              │    │
-│    │    ┌────────────────────────────────────────────────────┐    │    │
-│    │    │ 1. GENERATIVE AI (The Brain / Raw Intelligence)    │    │    │
-│    │    │    Pre-trained Foundation LLM (Next-Token Pred)    │    │    │
-│    │    └────────────────────────────────────────────────────┘    │    │
-│    └──────────────────────────────────────────────────────────────┘    │
-└────────────────────────────────────────────────────────────────────────┘
-```
+| Stack Layer | Architectural Scope | Metaphor | Core Capability & Loop |
+|---|---|---|---|
+| **Layer 1: Generative AI** | Foundation LLM (GPT-4o, Claude 3.5 Sonnet) | The **Brain** | Next-token prediction, zero-shot reasoning, semantic text and code synthesis. Single forward pass. |
+| **Layer 2: Agentic AI** | Cognitive Orchestration & Patterns | The **Mind** (Thinking Process) | Goal decomposition, multi-step ReAct loops, self-reflection, automated error recovery, planning. |
+| **Layer 3: AI Agent** | Full Autonomous Worker System | The **Worker** (Hands & Eyes) | Bundles Foundation Brain + Cognitive Loop + Vector/Episodic Memory + Real-world Tools (MCP/APIs). |
 
 ---
 

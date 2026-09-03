@@ -5,6 +5,7 @@ sidebar_label: Deployment Strategies
 description: Comprehensive guide to zero-downtime deployment strategies — Rolling, Blue-Green, Canary, Shadow, Feature Flags, and A/B Testing — with Kubernetes configs, database migration patterns, observability, and rollback runbooks.
 tags: [system-design, devops, deployment-strategies, ci-cd, blue-green, canary, kubernetes, istio, argo-rollouts]
 ---
+import DeploymentStrategiesDiagram from '@site/src/components/DeploymentStrategiesDiagram';
 
 # Deployment Strategies
 
@@ -271,20 +272,7 @@ DNS changes are not instant. Clients cache DNS responses for the duration of the
 
 Exposes the new version to a **small, controlled subset of real production traffic** — the canary — while the stable version serves the majority. The canary is monitored closely; if metrics remain healthy, traffic is gradually increased. If not, the canary is killed and traffic returns entirely to stable.
 
-```
-                   ┌─────────────────────┐
- All Traffic ────► │    Load Balancer    │
-                   └──┬──────────────┬──┘
-                      │              │
-               95% ───┘              └─── 5%
-                      ▼              ▼
-               ┌────────────┐  ┌───────────┐
-               │ v1 Stable  │  │ v2 Canary │
-               │ (4 pods)   │  │  (1 pod)  │
-               └────────────┘  └───────────┘
-                      │              │
-               Healthy metrics   Monitored closely
-```
+<DeploymentStrategiesDiagram initialStrategy="canary" />
 
 ### Istio VirtualService Traffic Splitting
 
@@ -424,24 +412,7 @@ A canary is only as safe as the metrics you watch. Monitor these in parallel for
 
 Mirrors **a copy of all real production requests** to the new version, running in parallel. The shadow version processes each request fully but **its responses are discarded** — users only receive responses from the stable version. The shadow cannot write to shared production databases or call external APIs.
 
-```
-              ┌─────────────────────────────────────────────────────┐
-              │                  Ingress / Service Mesh             │
-              └───────────────┬──────────────────┬──────────────────┘
-                              │                  │ (mirrored copy)
-                         100% │                  │ 100% (shadowed)
-                              ▼                  ▼
-                     ┌──────────────┐    ┌──────────────────┐
-                     │  v1 Stable   │    │   v2 Shadow      │
-                     │              │    │                  │
-                     │  Reads DB    │    │  Reads DB (safe) │
-                     │  Writes DB   │    │  Discards writes │
-                     │  Calls APIs  │    │  Stubs ext APIs  │
-                     └──────┬───────┘    └──────────────────┘
-                            │                  ↑
-                    Response returned    Response discarded
-                       to user           (metrics captured)
-```
+<DeploymentStrategiesDiagram initialStrategy="shadow" />
 
 ### Istio Traffic Mirroring Configuration
 

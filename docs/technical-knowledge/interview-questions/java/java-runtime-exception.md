@@ -39,29 +39,11 @@ Every `.class` file starts with the magic number `0xCAFEBABE` and contains:
 
 The JVM manages memory in several distinct runtime data areas:
 
-```
-┌─────────────────────── JVM Process Memory ──────────────────────┐
-│                                                                  │
-│  ┌─── Per-Thread (private) ───────────────────────────────────┐ │
-│  │  JVM Stack         — method frames, local variables        │ │
-│  │  PC Register       — address of current bytecode instruction│ │
-│  │  Native Method Stack — for JNI (C/C++) calls               │ │
-│  └────────────────────────────────────────────────────────────┘ │
-│                                                                  │
-│  ┌─── Shared (all threads) ───────────────────────────────────┐ │
-│  │  Heap              — ALL object instances (GC managed)     │ │
-│  │  Metaspace          — class metadata, method bytecode      │ │
-│  │  String Pool        — interned strings (in Heap since Java 7)│ │
-│  │  Code Cache         — JIT-compiled native code             │ │
-│  └────────────────────────────────────────────────────────────┘ │
-│                                                                  │
-│  ┌─── Native / Off-Heap ──────────────────────────────────────┐ │
-│  │  Direct Buffers     — NIO ByteBuffers, Netty               │ │
-│  │  Thread Stacks      — native OS thread memory (~1MB each)  │ │
-│  │  JNI / Native libs  — loaded C/C++ libraries               │ │
-│  └────────────────────────────────────────────────────────────┘ │
-└──────────────────────────────────────────────────────────────────┘
-```
+| Memory Category | Sub-Area Components | Thread Access Model | Contents & Management Model |
+|---|---|---|---|
+| **Per-Thread (Private)** | **JVM Stack** (`-Xss`)<br />**PC Register**<br />**Native Method Stack** | Isolated to owning thread | Stack frames (local variables array, operand stack, frame data); lifecycle tied directly to method invocation. |
+| **Shared (All Threads)** | **Heap** (`-Xmx` / `-Xms`)<br />**Metaspace** (`-XX:MaxMetaspaceSize`)<br />**String Pool**<br />**Code Cache** | Shared across entire JVM process | All Java object instances, class metadata, interned string literals, and JIT-compiled C2 native machine code. Managed by GC. |
+| **Native / Off-Heap** | **Direct Buffers** (NIO / Netty)<br />**OS Thread Memory**<br />**JNI Libraries** | Kernel & Native runtime | Bypasses JVM garbage collection; allocates raw off-heap memory via `sun.misc.Unsafe` / native C wrappers. |
 
 ### Per-Thread Memory Areas
 

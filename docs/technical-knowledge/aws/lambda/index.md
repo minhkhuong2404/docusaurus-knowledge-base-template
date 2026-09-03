@@ -18,6 +18,8 @@ tags:
   - domain-1
 ---
 
+import AwsLambdaLifecycleDiagram from '@site/src/components/AwsLambdaLifecycleDiagram';
+
 # AWS Lambda
 
 > **Exam Weight**: Domain 1 (Development) — Lambda is the **#1 most tested service** in DVA-C02.
@@ -68,28 +70,7 @@ Lambda allocates CPU power **proportional to memory**. At 1,769 MB you get 1 ful
 
 Understanding the lifecycle is critical for performance optimization:
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    COLD START                            │
-│  1. Download code/container image                       │
-│  2. Create execution environment (microVM)              │
-│  3. Initialize runtime (JVM, Node.js, Python)           │
-│  4. Run INIT code (static blocks, global scope)         │
-│  ← This is the "init" phase (up to 10s for init)  →    │
-├─────────────────────────────────────────────────────────┤
-│                    INVOKE (handler)                      │
-│  5. Execute handler function                            │
-│  ← Billed duration starts here →                        │
-├─────────────────────────────────────────────────────────┤
-│                    WARM INVOCATION                       │
-│  6. Reuse existing environment → skip steps 1-4         │
-│  ← Much faster! →                                       │
-├─────────────────────────────────────────────────────────┤
-│                    SHUTDOWN                              │
-│  7. After ~5-15 min of inactivity, environment frozen   │
-│  8. Eventually destroyed                                │
-└─────────────────────────────────────────────────────────┘
-```
+<AwsLambdaLifecycleDiagram />
 
 :::tip[Senior Insight]
 The INIT phase has its own **10-second timeout** separate from the function timeout. If your static initializers (DB connections, SDK clients) take longer than 10s, the function fails before the handler even runs.

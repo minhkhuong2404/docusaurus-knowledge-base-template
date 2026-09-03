@@ -1,4 +1,9 @@
----
+| Layer Level | Layer Content & Command | Access Mode | Persistence & Lifecycle |
+|---|---|---|---|
+| **Top Layer** | Container Scratch Space (`/tmp`, modified configs, logs) | **Read-Write** | Ephemeral: destroyed automatically when container is removed. |
+| **Layer 3** | `COPY app.jar /app/app.jar` | **Read-Only** | Cached immutable layer shared across all instances running this image. |
+| **Layer 2** | `RUN apk add curl` | **Read-Only** | System dependencies cached by layer checksum. |
+| **Layer 1** | `FROM eclipse-temurin:21-jre-alpine` | **Read-Only** | Base OS Alpine kernel userspace + JRE binary footprint. |---
 id: docker-fundamentals
 title: Docker Fundamentals
 sidebar_label: Docker Fundamentals
@@ -8,6 +13,7 @@ tags: [docker, containers, images, registry, beginner, fundamentals]
 
 import DockerArchitectureDiagram from '@site/src/components/DockerArchitectureDiagram';
 import DevOpsManifestSpecDiagram from '@site/src/components/DevOpsManifestSpecDiagram';
+import VmDockerK8sComparisonDiagram from '@site/src/components/VmDockerK8sComparisonDiagram';
 
 # Docker Fundamentals
 
@@ -59,103 +65,12 @@ Docker images are built as immutable, stacked layers using a union filesystem:
 
 ## Containers vs Virtual Machines
 
-```
-Virtual Machine                     Container
-┌──────────────────────┐            ┌──────────────────────┐
-│  App A               │            │  App A   │  App B     │
-├──────────────────────┤            ├──────────┼────────────┤
-│  Guest OS (Linux)    │            │  Libs    │  Libs      │
-├──────────────────────┤            ├──────────┴────────────┤
-│  Hypervisor          │            │  Container Runtime    │
-├──────────────────────┤            │  (Docker Engine)      │
-│  Host OS             │            ├───────────────────────┤
-├──────────────────────┤            │  Host OS (Linux)      │
-│  Hardware            │            ├───────────────────────┤
-└──────────────────────┘            │  Hardware             │
-                                    └───────────────────────┘
-Size:   GBs                         Size:   MBs
-Boot:   Minutes                     Boot:   Milliseconds
-Isolation: Full OS boundary         Isolation: Linux namespaces + cgroups
-```
-
-| Feature | VM | Container |
-|---|---|---|
-| OS | Full guest OS | Shares host kernel |
-| Boot time | 1–2 minutes | < 1 second |
-| Image size | GB range | MB range |
-| Isolation | Strongest (hypervisor) | Strong (namespaces) |
-| Performance overhead | Higher | Near-native |
-| Use case | Different OS needs, strong isolation | Microservices, fast scaling |
-
-> Containers use **Linux namespaces** (isolate processes, filesystem, network) and **cgroups** (limit CPU, memory) — not a separate OS kernel.
-
----
-
-## Docker Architecture
-
-```
-┌──────────────────────────────────────────────────────────┐
-│  Docker Client (CLI)                                      │
-│  docker build · docker run · docker push                  │
-└────────────────────┬─────────────────────────────────────┘
-                     │ REST API (unix socket / TCP)
-┌────────────────────▼─────────────────────────────────────┐
-│  Docker Daemon (dockerd)                                   │
-│  ┌────────────┐  ┌─────────────┐  ┌────────────────────┐  │
-│  │  Images    │  │  Containers │  │  Networks/Volumes  │  │
-│  └────────────┘  └─────────────┘  └────────────────────┘  │
-│           Uses: containerd → runc (OCI runtime)            │
-└──────────────────────────────────────────────────────────┘
-                     │ pull/push
-┌────────────────────▼─────────────────────────────────────┐
-│  Registry (Docker Hub / ECR / GCR / Nexus)                │
-└──────────────────────────────────────────────────────────┘
-```
-
-### Components
-| Component | Role |
-|---|---|
-| **Docker CLI** | Command-line tool you type commands into |
-| **Docker Daemon** | Background service that manages containers |
-| **containerd** | Container lifecycle manager (lower level than Docker) |
-| **runc** | OCI-compliant container runtime (actually runs processes) |
-| **Registry** | Remote store for Docker images |
-
----
-
-## Images and Layers
-
-An image is built from **read-only layers** stacked on top of each other.
-
-```dockerfile
-FROM eclipse-temurin:21-jre-alpine   ← Layer 1: Base OS + JRE
-RUN apk add curl                      ← Layer 2: Add curl package
-COPY app.jar /app/app.jar             ← Layer 3: Your application JAR
-```
-
-```
-Layer 3: app.jar         ← changes most often (yours)
-Layer 2: curl installed  ← changes occasionally
-Layer 1: JRE Alpine      ← changes rarely (base)
-```
-
-### Why Layers Matter
-- **Caching:** If Layer 1 and 2 haven't changed, Docker reuses them from cache — only Layer 3 is rebuilt. Dramatically speeds up builds.
-- **Sharing:** Multiple images sharing the same base layer only store it once on disk.
-- **Immutability:** Layers are read-only. Running a container adds a thin **writable layer** on top — the image itself is never modified.
-
-```
-Running container:
-  ┌─────────────────────────────┐
-  │  Writable layer (container) │ ← temporary, lost when container removed
-  ├─────────────────────────────┤
-  │  Layer 3: app.jar           │ read-only
-  ├─────────────────────────────┤
-  │  Layer 2: curl              │ read-only
-  ├─────────────────────────────┤
-  │  Layer 1: JRE Alpine        │ read-only
-  └─────────────────────────────┘
-```
+<VmDockerK8sComparisonDiagram />| Layer Level | Layer Content & Command | Access Mode | Persistence & Lifecycle |
+|---|---|---|---|
+| **Top Layer** | Container Scratch Space (`/tmp`, modified configs, logs) | **Read-Write** | Ephemeral: destroyed automatically when container is removed. |
+| **Layer 3** | `COPY app.jar /app/app.jar` | **Read-Only** | Cached immutable layer shared across all instances running this image. |
+| **Layer 2** | `RUN apk add curl` | **Read-Only** | System dependencies cached by layer checksum. |
+| **Layer 1** | `FROM eclipse-temurin:21-jre-alpine` | **Read-Only** | Base OS Alpine kernel userspace + JRE binary footprint. |
 
 ---
 

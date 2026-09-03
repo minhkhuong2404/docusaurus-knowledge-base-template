@@ -321,21 +321,19 @@ Junior developers bundle database migrations, backend business logic, frontend U
 ```
 
 ### The Senior Solution: Stacked PRs & Vertical Slicing
+
 Senior engineers break large features into a series of **Stacked Diff PRs**, each under 200 lines:
 
-```
-┌────────────────────────────────────────────────────────┐
-│ PR 1: Database Migration (Liquibase / Flyway)          │ ➔ 40 lines (Reviewed in 3m)
-├────────────────────────────────────────────────────────┤
-│ PR 2: Domain Model & Pure Validation Engine + Unit Test│ ➔ 110 lines (Reviewed in 5m)
-├────────────────────────────────────────────────────────┤
-│ PR 3: Boundary Adapter (StripePaymentAdapter)          │ ➔ 85 lines (Reviewed in 4m)
-├────────────────────────────────────────────────────────┤
-│ PR 4: REST Controller Endpoint & Integration Test      │ ➔ 90 lines (Reviewed in 5m)
-└────────────────────────────────────────────────────────┘
-```
+<SeniorDevCodingLawsDiagram initialLawId="law-7" />
 
-> **Senior Advantage:** Each PR has a single responsibility, merges cleanly without merge conflicts, and allows precise 1-click git reverts if an issue is discovered in production.
+| Stacked PR | Scope & Artifacts | Diff Size | Review Time |
+|---|---|---|---|
+| **PR 1: Schema Migration** | Liquibase / Flyway incremental SQL change | ~40 lines | ⚡ ~3 mins |
+| **PR 2: Domain Model & Engine** | Pure business entities + unit tests (0 I/O) | ~110 lines | ⚡ ~5 mins |
+| **PR 3: Boundary Adapter** | Infrastructure adapter (`StripePaymentAdapter`) | ~85 lines | ⚡ ~4 mins |
+| **PR 4: API Endpoint** | Spring `@RestController` + integration test slice | ~90 lines | ⚡ ~5 mins |
+
+> **Senior Advantage:** Each PR has a single clear responsibility, merges without merge conflicts, produces thoughtful review comments, and allows precise 1-click git reverts if an issue is discovered in production.
 
 ---
 

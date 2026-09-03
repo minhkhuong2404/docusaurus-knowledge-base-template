@@ -9,6 +9,8 @@ sidebar_position: 18
 import TransactionalOutboxDiagram from '@site/src/components/TransactionalOutboxDiagram';
 import SagaCoordinationDiagram from '@site/src/components/SagaCoordinationDiagram';
 import IntegrationDbVsDatabasePerServiceDiagram from '@site/src/components/IntegrationDbVsDatabasePerServiceDiagram';
+import CqrsEventSourcingPatternDiagram from '@site/src/components/CqrsEventSourcingPatternDiagram';
+import DualWriteMigrationDiagram from '@site/src/components/DualWriteMigrationDiagram';
 
 # Database Patterns for Microservices
 
@@ -20,14 +22,11 @@ import IntegrationDbVsDatabasePerServiceDiagram from '@site/src/components/Integ
 
 Each microservice owns its own database — **no shared schema**.
 
-```
-┌─────────────────┐   ┌─────────────────┐   ┌─────────────────┐
-│  Order Service  │   │  Inventory Svc  │   │  Payment Svc    │
-│  ┌───────────┐  │   │  ┌───────────┐  │   │  ┌───────────┐  │
-│  │ orders DB │  │   │  │  inv DB   │  │   │  │  pay DB   │  │
-│  └───────────┘  │   │  └───────────┘  │   │  └───────────┘  │
-└─────────────────┘   └─────────────────┘   └─────────────────┘
-```
+| Microservice Bounded Context | Database Engine | Isolation Scope |
+|---|---|---|
+| **Order Service** | PostgreSQL (Relational) | Orders, Line Items, Checkouts |
+| **Inventory Service** | PostgreSQL / Redis | Stock counts, Location reservations |
+| **Payment Service** | MySQL (Strict ACID) | Ledgers, Transactions, Settlement |
 
 **Why:**
 - Independent deployability (schema changes don't affect other services)
@@ -81,22 +80,12 @@ For a comprehensive guide on separating read and write models, synchronization v
 
 Instead of storing current state, store the **sequence of events** that led to it.
 
-```
-Traditional: store current state
-┌──────────────────────────────────┐
-│ Order: id=1, status=shipped,    │
-│ total=99.90, items=[...]        │
-└──────────────────────────────────┘
+<CqrsEventSourcingPatternDiagram />
 
-Event Sourcing: store events
-┌──────────────────────────────────────────────────────┐
-│ OrderCreated   {id:1, user:42, items:[...]}           │
-│ PaymentApplied {amount:99.90, method:card}            │
-│ ItemsShipped   {tracking:XYZ123, date:2024-01-15}     │
-└──────────────────────────────────────────────────────┘
-
-Current state = replay all events (or from last snapshot)
-```
+| Storage Strategy | Record Structure | Auditability & Historical Reconstruction |
+|---|---|---|
+| **Traditional CRUD (Current State)** | `Order: { id: 1, status: SHIPPED, total: 99.90 }` | Overwrites previous values. Loss of historical intermediate actions. |
+| **Event Sourcing (Append-Only Log)** | `OrderCreated ➔ PaymentApplied ➔ ItemsShipped` | 100% immutable audit log. Full time-travel replay and projection rebuild. |
 
 ```java
 @Entity
@@ -174,19 +163,7 @@ Solutions:
 
 A common architectural trap in high-scale systems is splitting state across an **In-Memory Cache for fast operations** (e.g. Redis for inventory holds/reservations) and an **RDBMS for permanent records** (e.g. MySQL ledger for payments and completed orders).
 
-```
-Split Architecture (Fragile Cross-System Coordination):
-┌─────────────────────────┐          ┌─────────────────────────┐
-│       Redis Cluster     │          │       MySQL Ledger      │
-│  (Reservations: DECR)   │          │   (Authoritative Stock) │
-└─────────────────────────┘          └─────────────────────────┘
-            ▲                                     ▲
-            │ (Step 1: Hold)                      │ (Step 2: Permanent Claim)
-            └─────────────── Application ─────────┘
-                 ❌ Non-Atomic Cross-System Window:
-                 • Payment succeeds but DB write fails ──► Overselling!
-                 • DB write succeeds but Redis rollback fails ──► Underselling!
-```
+<DualWriteMigrationDiagram initialTab="consolidation" />
 
 ### Why Consolidate Back to RDBMS?
 1. **Eliminate Non-Atomic Split-Brain**: When reserve and claim share the same database instance, they execute within standard **ACID transactions**. A failed payment cleanly rolls back the reservation with zero orphaned holds or phantom stock deductions.
@@ -199,27 +176,7 @@ Split Architecture (Fragile Cross-System Coordination):
 
 When replacing critical storage infrastructure (such as moving reservations from Redis to MySQL), migrating active in-flight transactions with zero downtime and zero risk of overselling is paramount.
 
-```
-Phase 1: Shadow Mode (Dual-Write)
-┌─────────────┐  Write to Both   ┌─────────────┐ (Active Source of Truth)
-│ Application │ ───────────────► │    Redis    │ ──► Controls Business Logic
-└─────────────┘                  └─────────────┘
-       │ (Async / Shadow Write)
-       ▼
-┌─────────────┐
-│    MySQL    │ ──► Validates latency, correctness, and lock behavior under real load
-└─────────────┘
-
-Phase 2: Cutover (Kill-Switch Switchover)
-┌─────────────┐  Write to Both   ┌─────────────┐
-│ Application │ ───────────────► │    MySQL    │ ──► NEW Active Source of Truth
-└─────────────┘                  └─────────────┘
-       │ (Shadow Write / Backup)
-       ▼
-┌─────────────┐
-│    Redis    │ ──► Immediate rollback target if anomaly occurs
-└─────────────┘
-```
+<DualWriteMigrationDiagram initialTab="shadow_cutover" />
 
 ### Execution Strategy:
 1. **Dual-Write in Shadow Mode**: Write every reservation to both Redis and MySQL, with Redis remaining the authoritative source of truth.

@@ -3,6 +3,7 @@ title: Spring Data JPA Interview Questions
 description: Curated senior-level Spring Data JPA and Hibernate interview questions with deep architectural explanations and performance gotchas.
 tags: [spring-data-jpa, interview, hibernate, spring]
 ---
+import JpaEntityLifecycleDiagram from '@site/src/components/JpaEntityLifecycleDiagram';
 
 # Spring Data JPA Interview Questions & Answers
 
@@ -56,22 +57,7 @@ Calling **`saveAndFlush()`** instead of **`save()`** forces Hibernate to immedia
 #### The Four Entity States
 Hibernate manages entities inside a `PersistenceContext` (the first-level cache), tracking their states:
 
-```
-              [ Transient ] 
-                    │
-          persist() │ merge()
-                    ▼
- ┌─────────────────[ Managed ]◄───────────────┐
- │                    │     ▲                 │
- │           detach() │     │ merge()         │ find() / query
- │            clear() │     │                 │
- │            close() ▼     │                 │
- │               [ Detached ]                 │
- │                                            │
- │ remove()                                   │
- ▼                                            │
-[ Removed ] ──────────────────────────────────┴
-```
+<JpaEntityLifecycleDiagram initialTab="lifecycle" />
 
 1.  **Transient**: The entity is instantiated via `new`, has no primary key (database identity), and is not associated with an active `Session`.
 2.  **Managed (Persistent)**: The entity has a database identity and is associated with the `Session`. Hibernate tracks all modifications to this entity.

@@ -90,26 +90,11 @@ List<Product> products = session.createQuery("FROM Product WHERE active = true")
 
 JVM Heap memory is divided into generations based on object lifetime, enabling optimized GC strategies:
 
-```
-┌──────────────────── Heap ────────────────────────┐
-│                                                   │
-│  ┌──────── Young Generation (~1/3 of heap) ────┐ │
-│  │  Eden Space    │ Survivor S0 │ Survivor S1   │ │
-│  │  (new objects) │  (from)     │  (to)         │ │
-│  └──────────────────────────────────────────────┘ │
-│                                                   │
-│  ┌──────── Old (Tenured) Generation (~2/3) ────┐ │
-│  │  Long-lived objects that survived multiple   │ │
-│  │  Young GC cycles                             │ │
-│  └──────────────────────────────────────────────┘ │
-│                                                   │
-└───────────────────────────────────────────────────┘
-
-┌──────── Metaspace (Native Memory, NOT Heap) ─────┐
-│  Class metadata, method bytecode, constant pool   │
-│  (Replaced PermGen in Java 8)                     │
-└───────────────────────────────────────────────────┘
-```
+| Memory Space | Allocation Proportion | Sub-Areas & Internal Layout | Purpose & GC Behavior |
+|---|---|---|---|
+| **Young Generation** | ~1/3 of Heap | **Eden Space** (new object allocations)<br />**Survivor S0 / S1** (from/to spaces) | Minor GC executes frequently (10–50ms); live objects alternate between S0/S1 until tenure age threshold (default 15). |
+| **Old (Tenured) Generation** | ~2/3 of Heap | Long-lived objects promoted from Young Gen, direct large arrays | Major / Concurrent Mark Sweep / G1 mixed collections. Slower compaction. |
+| **Metaspace (Native RAM)** | OS Virtual Memory (Off-Heap) | Loaded class metadata, method bytecode, constant pool, annotations | Replaced PermGen in Java 8; auto-expands until host RAM limits unless bounded by `-XX:MaxMetaspaceSize`. |
 
 ### GC Types
 

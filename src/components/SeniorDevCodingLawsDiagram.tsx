@@ -288,8 +288,9 @@ throw new InsufficientFundsException(
   }
 ];
 
-export default function SeniorDevCodingLawsDiagram(): React.JSX.Element {
-  const [selectedLawIndex, setSelectedLawIndex] = useState<number>(0);
+export default function SeniorDevCodingLawsDiagram({ initialLawId }: { initialLawId?: string }): React.JSX.Element {
+  const initialIndex = initialLawId ? Math.max(0, LAWS.findIndex(l => l.id === initialLawId)) : 0;
+  const [selectedLawIndex, setSelectedLawIndex] = useState<number>(initialIndex);
   const [codeView, setCodeView] = useState<'senior' | 'junior'>('senior');
 
   const law = LAWS[selectedLawIndex];

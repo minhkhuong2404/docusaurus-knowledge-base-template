@@ -76,13 +76,6 @@ A production RAG system is divided into two distinct asynchronous pipelines:
 
 ## The Evolution of RAG: Naive ➔ Advanced ➔ Agentic
 
-```
-┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
-│   Naive RAG     │  ──▶  │  Advanced RAG   │  ──▶  │   Agentic RAG   │
-│ Embed ➔ Top-K   │       │ Pre/Post Rerank │       │ Multi-Hop Loops │
-└─────────────────┘       └─────────────────┘       └─────────────────┘
-```
-
 | Phase | Architecture | Key Techniques | Drawbacks Solved |
 |---|---|---|---|
 | **1. Naive RAG** | Direct Top-$K$ semantic search | Fixed chunking + Cosine Top-K | Baseline setup, but low precision on domain jargon |

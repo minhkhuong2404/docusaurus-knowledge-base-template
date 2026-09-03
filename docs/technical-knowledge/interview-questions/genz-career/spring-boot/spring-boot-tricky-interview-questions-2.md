@@ -235,18 +235,11 @@ public class SecurityConfig {
 ### Q: Describe how to implement security in a Microservices architecture using Spring Boot.
 **A:** The **API Gateway pattern** centralizes security:
 
-```
-                        ┌─────────────────┐
-  Client ──JWT──────►   │   API Gateway   │ ──── Auth Service (issues JWT)
-                        │  (validates JWT) │
-                        └────┬────┬────┬──┘
-                             │    │    │
-                    ┌────────┤    │    ├────────┐
-                    ▼        ▼    ▼    ▼        ▼
-               Service A  Service B  Service C  Service D
-               (trusts     (trusts   (trusts    (trusts
-                gateway)    gateway)  gateway)   gateway)
-```
+| Architecture Component | Role in Security Model | Validation Responsibility | Inter-Service Protocol |
+|---|---|---|---|
+| **Identity Provider (Auth Service)** | OAuth 2.0 / OIDC Provider | Authenticates users, validates credentials/MFA, signs JWT tokens with private key. | Public key JWKS endpoint |
+| **API Gateway (Edge Router)** | Single public ingress | Validates JWT signature, checks expiration, extracts roles, rate limits. Unauthenticated requests rejected with HTTP 401. | TLS termination |
+| **Downstream Microservices (A, B, C, D)** | Protected business logic | Trusts Gateway claims (`X-User-Id`, `X-User-Roles`) passed via headers; verifies fine-grained method authorization (`@PreAuthorize`). | Internal **mTLS** mesh |
 
 1. **Auth Service** authenticates users and issues signed JWT tokens.
 2. **API Gateway** (Spring Cloud Gateway) validates JWT signature on every request. Invalid tokens → `401`.
@@ -393,16 +386,11 @@ In practice, you configure **both**: size-based eviction (prevent OOM) + time-ba
 ### Q: How would you manage externalized configuration in a microservice architecture?
 **A:** **Spring Cloud Config Server** provides centralized config:
 
-```
-┌─────────────────────────────────┐
-│   Spring Cloud Config Server    │ ← backed by Git repo
-└───────┬─────────┬───────────┬──┘
-        │         │           │
-   ┌────▼──┐  ┌──▼────┐  ┌──▼────┐
-   │User   │  │Order  │  │Payment│  ← fetch config at startup
-   │Service│  │Service│  │Service│
-   └───────┘  └───────┘  └───────┘
-```
+| Subsystem Component | Role in Centralized Config | Storage / Backing Backend | Dynamic Refresh Mechanism |
+|---|---|---|---|
+| **Spring Cloud Config Server** | Centralized configuration authority | Version-controlled Git repository or HashiCorp Vault. | Serves `{app}-{profile}.yml` via REST APIs. |
+| **Microservices (User, Order, Payment)** | Configuration consumers | Fetches bootstrap configuration on application startup. | Spring Cloud Bus / Kafka webhook triggers `@RefreshScope` reload. |
+| **Secrets Engine (Vault / AWS Secrets)** | Secret encryption & key rotation | Hardware security module / KMS encryption. | Config server `/encrypt` and `/decrypt` endpoints. |
 
 - Each service has `bootstrap.yml` pointing to Config Server.
 - Config Server serves `{application-name}-{profile}.yml` from Git.

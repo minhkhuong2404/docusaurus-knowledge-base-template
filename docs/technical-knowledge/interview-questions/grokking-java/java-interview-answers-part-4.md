@@ -88,16 +88,10 @@ class Square extends Rectangle {
 
 Modern JVMs use **Generational Garbage Collection** based on the empirical observation that **most objects die young**. The heap is split into:
 
-```
-┌───────────────────────────────── Heap Memory ─────────────────────────────────┐
-│                                                                               │
-│  ┌───────── Young Generation ──────────┐   ┌───────── Old Generation ──────┐  │
-│  │   Eden Space   │  S0 (From) │  S1 (To)  │   │  Stores long-lived objects.   │  │
-│  │  (Allocations) │  (Active)  │ (Empty)   │   │  Promoted after surviving     │  │
-│  └─────────────────────────────────────────┘   │  15 Minor GC cycles           │  │
-│                                                └───────────────────────────────┘  │
-└───────────────────────────────────────────────────────────────────────────────┘
-```
+| Generation Partition | Sub-Region Spaces | Purpose & Allocation Model | Promotion & Tenuring Dynamics |
+|---|---|---|---|
+| **Young Generation** | **Eden Space** (allocations)<br />**S0 (From)** active survivor<br />**S1 (To)** empty survivor | Receives all newly instantiated objects via `new`. Low survival rate (~90% die in Eden). | Surviving objects copied between S0/S1; tenuring age increments with each Minor GC cycle. |
+| **Old (Tenured) Generation** | Single continuous or region-based pool | Houses persistent domain entities, singleton services, long-lived caches. | Promoted after surviving 15 Minor GC cycles (`-XX:MaxTenuringThreshold=15`). Major/Mixed GC collects. |
 
 #### The Minor GC Promotion Flow
 1. **Allocation:** All new objects are allocated in the **Eden** space.
