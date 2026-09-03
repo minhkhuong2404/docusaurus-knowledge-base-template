@@ -66,6 +66,14 @@ In any distributed system deployed across a network (e.g., multi-region clouds l
 
 > **The correct reading of CAP:** "Choose 2 of 3" is the most common — and most misleading — framing. Partition tolerance is not a design choice; it is a physical reality. A network partition can happen because a shark bites a submarine cable, a technician pulls the wrong fiber, a switch reboots at 2am, or a Java GC pause makes a node look dead for 40 seconds. The real question is: *when the partition happens, what does the system do — and how does it recover after?* Brewer himself published a 12-year correction paper (2012) clarifying exactly this point.
 
+### The Senior Mental Model: 5 Grounding Principles
+
+1. **Consistency is a hierarchy, not a binary**: Systems do not merely choose between "Strong" and "Eventual". The spectrum progresses from Linearizability (strict external real-time order) ➔ Sequential (consistent execution interleaving) ➔ Causal (dependency-ordered) ➔ Read-Your-Writes / Monotonic (session consistency) ➔ Eventual. Stronger models add cross-client coordination at the expense of latency.
+2. **CAP applies ONLY during a partition**: During normal operation (99.99% of time), the trade-off is governed by **PACELC**: If Partition: Availability (A) vs Consistency (C); Else: Latency (L) vs Consistency (C).
+3. **CAP "Availability" is an absolute mathematical definition**: Gilbert & Lynch proved that CAP Availability requires *every non-failing node to return a non-error response*. Returning an HTTP 500, a timeout, or a degraded fallback violates CAP Availability.
+4. **"CP vs AP" is not a system-wide religion**: Production architectures pick guarantees **per operation**. In an e-commerce platform, user inventory reserve is CP (rejecting write if quorum is lost), while review counts and product recommendation feeds are AP.
+5. **The AP invoice is paid later**: AP systems do not avoid consistency costs; they simply defer reconciliation to conflict resolution mechanisms (CRDTs, vector clocks, or Last-Write-Wins data loss).
+
 ### Visual Representation
 
 <CapTriangleDiagram />

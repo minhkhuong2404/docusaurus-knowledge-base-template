@@ -184,6 +184,7 @@ const sidebars: SidebarsConfig = {
 					label: '🧪 Testing & Mocking',
 					items: [
 						'technical-knowledge/test/testing-concepts',
+						'technical-knowledge/test/blackbox-and-system-testing',
 						'technical-knowledge/test/spring-test-annotations',
 						'technical-knowledge/test/wiremock'
 					]
@@ -279,6 +280,7 @@ const sidebars: SidebarsConfig = {
 							items: [
 								'technical-knowledge/system-design/architecture-fundamentals',
 								'technical-knowledge/system-design/capacity-planning',
+								'technical-knowledge/system-design/time-and-ordering-and-unique-ids',
 								'technical-knowledge/system-design/interview-framework',
 								'technical-knowledge/system-design/cap-theorem-system-design',
 							],
@@ -291,6 +293,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/system-design/scaling-reads',
 								'technical-knowledge/system-design/scaling-writes',
 								'technical-knowledge/system-design/sharding-partitioning',
+								'technical-knowledge/system-design/sharded-counters-and-leaderboards',
 								'technical-knowledge/system-design/caching-strategies',
 								'technical-knowledge/system-design/bloom-filters',
 								'technical-knowledge/system-design/load-balancing-reliability',
@@ -310,6 +313,7 @@ const sidebars: SidebarsConfig = {
 							collapsed: true,
 							items: [
 								'technical-knowledge/system-design/distributed-systems',
+								'technical-knowledge/system-design/crdt-collaborative-systems',
 								'technical-knowledge/system-design/real-time-updates',
 								'technical-knowledge/system-design/handling-contention',
 								'technical-knowledge/system-design/data-consistency',
@@ -373,6 +377,18 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/system-design/observability',
 								'technical-knowledge/system-design/log-aggregation',
 								'technical-knowledge/system-design/distributed-tracing',
+							],
+						},
+						{
+							type: 'category',
+							label: '🏢 Real-World Case Studies',
+							collapsed: true,
+							items: [
+								'technical-knowledge/system-design/case-studies-outages-reliability',
+								'technical-knowledge/system-design/case-studies-architecture-scaling',
+								'technical-knowledge/system-design/case-studies-data-migrations',
+								'technical-knowledge/system-design/platform-delivery-reliability',
+								'technical-knowledge/system-design/media-systems-and-testing',
 							],
 						},
 						{
