@@ -1,8 +1,8 @@
 {
-  "id": "3875",
-  "title": "Construct Uniform Parity Array I",
-  "url": "https://leetcode.com/problems/construct-uniform-parity-array-i/",
-  "difficulty": "easy",
+  "id": "3876",
+  "title": "Construct Uniform Parity Array II",
+  "url": "https://leetcode.com/problems/construct-uniform-parity-array-ii/",
+  "difficulty": "medium",
   "topic": "Array, Math",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-09-02."
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-09-03."
 }

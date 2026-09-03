@@ -8,6 +8,7 @@ tags:
 - technical-knowledge
 - solid
 - dependency-inversion
+---
 import SolidPrinciplesDiagram from '@site/src/components/SolidPrinciplesDiagram';
 import HexagonalArchitectureDiagram from '@site/src/components/HexagonalArchitectureDiagram';
 
