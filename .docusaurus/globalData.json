@@ -1346,6 +1346,16 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/database/postgresql-brin-index-guide",
+              "path": "/technical-knowledge/database/postgresql-brin-index-guide",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/postgresql-checkpoint-wal-tuning",
+              "path": "/technical-knowledge/database/postgresql-checkpoint-wal-tuning",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/database/postgresql-heap-storage-architecture",
               "path": "/technical-knowledge/database/postgresql-heap-storage-architecture",
               "sidebar": "tutorialSidebar"
@@ -1573,6 +1583,11 @@
             {
               "id": "technical-knowledge/devops/kubectl-commands",
               "path": "/technical-knowledge/devops/kubectl-commands",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/devops/kubernetes-admission-webhooks",
+              "path": "/technical-knowledge/devops/kubernetes-admission-webhooks",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -5551,6 +5566,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/java/java-off-heap-ffm-api",
+              "path": "/technical-knowledge/java/java-off-heap-ffm-api",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/java/java-oop",
               "path": "/technical-knowledge/java/java-oop",
               "sidebar": "tutorialSidebar"
@@ -6200,6 +6220,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/spring/kubernetes-graceful-shutdown-zero-downtime",
+              "path": "/technical-knowledge/spring/kubernetes-graceful-shutdown-zero-downtime",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/spring/spring-aop",
               "path": "/technical-knowledge/spring/spring-aop",
               "sidebar": "tutorialSidebar"
@@ -6537,6 +6562,11 @@
             {
               "id": "technical-knowledge/system-design/observability",
               "path": "/technical-knowledge/system-design/observability",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/opentelemetry-sampling-strategies",
+              "path": "/technical-knowledge/system-design/opentelemetry-sampling-strategies",
               "sidebar": "tutorialSidebar"
             },
             {

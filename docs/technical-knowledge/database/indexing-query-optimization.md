@@ -1114,6 +1114,8 @@ CREATE INDEX idx_orders_created_at ON orders USING BRIN(created_at);
 -- Good for time-series data
 ```
 
+*Deep-dive guide & interactive simulator:* [PostgreSQL BRIN Index (Block Range Index): 99% Smaller Than B-Tree](./postgresql-brin-index-guide.md).
+
 ### MySQL Indexes
 
 **B-Tree Index:**

@@ -750,6 +750,7 @@ Advanced Spring Boot development requires understanding:
 3. Keep advanced defaults documented with rationale and rollback plans.
 
 ### Compare Next
+- [Zero-Downtime Graceful Shutdown in Kubernetes](./kubernetes-graceful-shutdown-zero-downtime.md)
 - [Spring Boot - Internals & Architecture](./spring-boot-internals.md)
 - [Spring Data JPA - Complete Guide](./spring-data-jpa.md)
 - [Spring Security - Complete Guide](./spring-security.md)

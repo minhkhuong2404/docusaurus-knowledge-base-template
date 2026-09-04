@@ -69,11 +69,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '8b6'),
+    component: ComponentCreator('/', '333'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '970'),
+        component: ComponentCreator('/', '4e3'),
         routes: [
           {
             path: '/tags',
@@ -183,6 +183,11 @@ export default [
           {
             path: '/tags/add',
             component: ComponentCreator('/tags/add', '00a'),
+            exact: true
+          },
+          {
+            path: '/tags/admission-controllers',
+            component: ComponentCreator('/tags/admission-controllers', 'f48'),
             exact: true
           },
           {
@@ -696,6 +701,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/big-data',
+            component: ComponentCreator('/tags/big-data', '7af'),
+            exact: true
+          },
+          {
             path: '/tags/bill',
             component: ComponentCreator('/tags/bill', 'e71'),
             exact: true
@@ -803,6 +813,11 @@ export default [
           {
             path: '/tags/bridge',
             component: ComponentCreator('/tags/bridge', '60f'),
+            exact: true
+          },
+          {
+            path: '/tags/brin-index',
+            component: ComponentCreator('/tags/brin-index', '42a'),
             exact: true
           },
           {
@@ -1223,6 +1238,11 @@ export default [
           {
             path: '/tags/checked-exceptions',
             component: ComponentCreator('/tags/checked-exceptions', '481'),
+            exact: true
+          },
+          {
+            path: '/tags/checkpoint',
+            component: ComponentCreator('/tags/checkpoint', 'ea8'),
             exact: true
           },
           {
@@ -1773,6 +1793,11 @@ export default [
           {
             path: '/tags/cqrs',
             component: ComponentCreator('/tags/cqrs', 'c4e'),
+            exact: true
+          },
+          {
+            path: '/tags/crash-recovery',
+            component: ComponentCreator('/tags/crash-recovery', '336'),
             exact: true
           },
           {
@@ -2771,6 +2796,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/ffm-api',
+            component: ComponentCreator('/tags/ffm-api', '20f'),
+            exact: true
+          },
+          {
             path: '/tags/fi',
             component: ComponentCreator('/tags/fi', 'ced'),
             exact: true
@@ -3088,6 +3118,11 @@ export default [
           {
             path: '/tags/gpt-4-o',
             component: ComponentCreator('/tags/gpt-4-o', '558'),
+            exact: true
+          },
+          {
+            path: '/tags/graceful-shutdown',
+            component: ComponentCreator('/tags/graceful-shutdown', '636'),
             exact: true
           },
           {
@@ -4581,6 +4616,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/native-memory',
+            component: ComponentCreator('/tags/native-memory', '85f'),
+            exact: true
+          },
+          {
             path: '/tags/nested-classes',
             component: ComponentCreator('/tags/nested-classes', 'da0'),
             exact: true
@@ -5236,6 +5276,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/performance-tuning',
+            component: ComponentCreator('/tags/performance-tuning', 'c06'),
+            exact: true
+          },
+          {
             path: '/tags/period-duration',
             component: ComponentCreator('/tags/period-duration', 'fc7'),
             exact: true
@@ -5328,6 +5373,11 @@ export default [
           {
             path: '/tags/policy',
             component: ComponentCreator('/tags/policy', 'c1d'),
+            exact: true
+          },
+          {
+            path: '/tags/policy-as-code',
+            component: ComponentCreator('/tags/policy-as-code', '30e'),
             exact: true
           },
           {
@@ -7802,7 +7852,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'f54'),
+            component: ComponentCreator('/', '75d'),
             routes: [
               {
                 path: '/aws',
@@ -9601,6 +9651,18 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/database/postgresql-brin-index-guide',
+                component: ComponentCreator('/technical-knowledge/database/postgresql-brin-index-guide', '1e5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/database/postgresql-checkpoint-wal-tuning',
+                component: ComponentCreator('/technical-knowledge/database/postgresql-checkpoint-wal-tuning', 'a97'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/database/postgresql-heap-storage-architecture',
                 component: ComponentCreator('/technical-knowledge/database/postgresql-heap-storage-architecture', '387'),
                 exact: true,
@@ -9867,6 +9929,12 @@ export default [
               {
                 path: '/technical-knowledge/devops/kubectl-commands',
                 component: ComponentCreator('/technical-knowledge/devops/kubectl-commands', '4ba'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/devops/kubernetes-admission-webhooks',
+                component: ComponentCreator('/technical-knowledge/devops/kubernetes-admission-webhooks', 'c3d'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -14641,6 +14709,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/java/java-off-heap-ffm-api',
+                component: ComponentCreator('/technical-knowledge/java/java-off-heap-ffm-api', '593'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/java/java-oop',
                 component: ComponentCreator('/technical-knowledge/java/java-oop', 'bdb'),
                 exact: true,
@@ -15404,6 +15478,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/spring/kubernetes-graceful-shutdown-zero-downtime',
+                component: ComponentCreator('/technical-knowledge/spring/kubernetes-graceful-shutdown-zero-downtime', 'a82'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/spring/spring-aop',
                 component: ComponentCreator('/technical-knowledge/spring/spring-aop', 'c9a'),
                 exact: true,
@@ -15802,6 +15882,12 @@ export default [
               {
                 path: '/technical-knowledge/system-design/observability',
                 component: ComponentCreator('/technical-knowledge/system-design/observability', 'c9c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/opentelemetry-sampling-strategies',
+                component: ComponentCreator('/technical-knowledge/system-design/opentelemetry-sampling-strategies', '4b5'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

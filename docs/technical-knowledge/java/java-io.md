@@ -411,6 +411,7 @@ try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_
 3. Track socket, file descriptor, and direct-memory pressure explicitly.
 
 ### Compare Next
+- [Off-Heap Memory & FFM API (Java 22+)](./java-off-heap-ffm-api.md)
 - [Java Concurrency: Threads, Locks & Concurrent Utilities](./java-concurrency.md)
 - [JVM Internals: Memory, GC & Class Loading](./java-jvm.md)
 - [Java New Features: Java 8 through Java 21+](./java-new-features.md)

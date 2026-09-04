@@ -373,3 +373,10 @@ ORDER BY duration DESC;
 3. **HOT Optimization**: Requires unindexed column updates + free space in the same 8KB page. Uses `LP_REDIRECT` to eliminate secondary index writes.
 4. **MVCC Isolation**: Managed via `xmin`, `xmax`, and snapshot watermarks. Unclosed transactions pin `oldestxmin` and create dead tuple bloat.
 5. **Visibility Map**: Powers **Index-Only Scans** by verifying page-level visibility without requiring heap reads.
+
+---
+
+### Compare Next
+- [PostgreSQL Checkpoint Tuning & WAL Buffers](./postgresql-checkpoint-wal-tuning.md)
+- [Storage Engines & Data Structures](./storage-engines-data-structures.md)
+- [Indexing & Query Optimization](./indexing-query-optimization.md)

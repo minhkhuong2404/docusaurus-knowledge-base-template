@@ -669,34 +669,49 @@ public class OrderProjection {
 
 ### Q29: How do you handle zero-downtime deployments with Spring Boot?
 
-**Strategies:**
+**Deployment Strategies:**
 
-1. **Rolling deployment** — Replace instances one at a time behind a load balancer
-2. **Blue-green deployment** — Run two environments, switch traffic atomically
-3. **Canary deployment** — Route small percentage of traffic to new version
+1. **Rolling Update** — Replace Pods incrementally (`maxUnavailable: 0`, `maxSurge: 25%`) behind a Service/Ingress.
+2. **Blue-Green Deployment** — Spin up an identical green cluster and swap router/DNS atomically.
+3. **Canary Deployment** — Route $5\% \to 20\% \to 100\%$ traffic to the new version based on automated metric analysis.
 
-**Spring Boot requirements:**
+**The Distributed Race Condition (Root Cause of 502/504 Errors):**
+During rolling updates or HPA scale-in, two independent paths run asynchronously:
+- **Distributed Network Plane:** API Server removes Pod IP from `EndpointSlice` $\to$ Ingress (Nginx/Envoy) & `kube-proxy` update iptables/IPVS across worker nodes (takes $2 - 5\text{ seconds}$).
+- **Pod Container Plane:** Kubelet sends `SIGTERM` $\to$ Embedded Tomcat shuts down listening socket in $<300\text{ms}$.
+- **The Gap:** For $2 - 5\text{s}$, Ingress still forwards incoming traffic to the closed socket, generating intermittent `HTTP 502 Bad Gateway` or `Connection Reset by Peer`.
+
+**The Two-Layer Production Solution:**
 
 ```yaml
-# Graceful shutdown
+# Layer 1: Spring Boot application.yml
 server:
-  shutdown: graceful
+  shutdown: graceful # Closes socket, permits in-flight requests to complete
 spring:
   lifecycle:
-    timeout-per-shutdown-phase: 30s
-
-# Health check for readiness
-management:
-  endpoint:
-    health:
-      probes:
-        enabled: true
-  health:
-    livenessstate:
-      enabled: true
-    readinessstate:
-      enabled: true
+    timeout-per-shutdown-phase: 30s # Max wait time for active transactions/queries
 ```
+
+```yaml
+# Layer 2: Kubernetes Deployment Pod Spec
+spec:
+  # Formula: terminationGracePeriodSeconds > preStop sleep + timeout-per-shutdown-phase + buffer
+  terminationGracePeriodSeconds: 45
+  containers:
+    - name: app
+      lifecycle:
+        preStop:
+          exec:
+            # Deliberate 10s sleep gives Ingress/iptables ample time to drain Pod IP
+            command: ["/bin/sh", "-c", "sleep 10"]
+```
+
+**Senior Operational Traps to Avoid:**
+1. **Docker PID 1 Signal Drop:** Never use Shell Form (`ENTRYPOINT java -jar app.jar`), which starts `/bin/sh` as PID 1 (which drops `SIGTERM`). Always use Exec Form (`ENTRYPOINT ["java", "-jar", "app.jar"]`).
+2. **Grace Period Under-Sizing:** If `terminationGracePeriodSeconds` is less than `preStop sleep + timeout-per-shutdown-phase`, K8s forcibly kills the JVM with `SIGKILL` (`kill -9`) before database transactions finish.
+3. **Async & Kafka Pools:** Configure `ThreadPoolTaskExecutor.setWaitForTasksToCompleteOnShutdown(true)` and Kafka listener `setShutdownTimeout(15000)` to prevent message corruption or consumer group rebalance storms.
+
+*Detailed architectural breakdown and interactive simulation:* [Zero-Downtime Graceful Shutdown: Kubernetes & Spring Boot 3.x](./kubernetes-graceful-shutdown-zero-downtime.md).
 
 **Database migration compatibility:**
 - Migrations must be **backward-compatible** (old code runs with new schema)

@@ -31,8 +31,8 @@
     }
   ],
   "version": "current",
-  "lastUpdatedBy": "Lữ Minh Khương",
-  "lastUpdatedAt": 1781111418000,
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055000,
   "frontMatter": {
     "title": "Spring Boot: Interview Questions",
     "description": "Curated Spring Boot interview questions and answers spanning fundamentals, advanced topics, and real-world production scenarios.",
@@ -45,8 +45,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Spring Boot — Advanced Topics",
-    "permalink": "/technical-knowledge/spring/spring-boot-advanced"
+    "title": "Kubernetes & Spring Boot 3.x — Zero-Downtime Graceful Shutdown",
+    "permalink": "/technical-knowledge/spring/kubernetes-graceful-shutdown-zero-downtime"
   },
   "next": {
     "title": "Spring Framework: Overview",

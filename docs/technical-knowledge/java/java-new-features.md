@@ -761,6 +761,7 @@ public void processRequest() {
 3. Pair language upgrades with targeted knowledge-sharing and incident drills.
 
 ### Compare Next
+- [Off-Heap Memory & FFM API (Java 22+)](./java-off-heap-ffm-api.md)
 - [Java Fundamentals: Core Language Concepts](./java-fundamentals.md)
 - [JVM Internals: Memory, GC & Class Loading](./java-jvm.md)
 - [Java OOP](./java-oop.md)

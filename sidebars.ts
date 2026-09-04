@@ -102,6 +102,7 @@ const sidebars: SidebarsConfig = {
 							collapsed: true,
 							items: [
 								'technical-knowledge/java/java-io',
+								'technical-knowledge/java/java-off-heap-ffm-api',
 								'technical-knowledge/java/java-new-features'
 							]
 						},
@@ -129,6 +130,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/spring/spring-boot-internals',
 								'technical-knowledge/spring/spring-boot-bootstrap-yml',
 								'technical-knowledge/spring/spring-boot-advanced',
+								'technical-knowledge/spring/kubernetes-graceful-shutdown-zero-downtime',
 								'technical-knowledge/spring/spring-boot-interview-questions'
 							]
 						},
@@ -377,6 +379,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/system-design/observability',
 								'technical-knowledge/system-design/log-aggregation',
 								'technical-knowledge/system-design/distributed-tracing',
+								'technical-knowledge/system-design/opentelemetry-sampling-strategies',
 							],
 						},
 						{
@@ -674,6 +677,7 @@ const sidebars: SidebarsConfig = {
 							collapsed: true,
 							items: [
 								'technical-knowledge/database/indexing-query-optimization',
+								'technical-knowledge/database/postgresql-brin-index-guide',
 								'technical-knowledge/database/query-planner-optimizer',
 								'technical-knowledge/database/performance-monitoring',
 							],
@@ -688,6 +692,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/database/transactions-concurrency',
 								'technical-knowledge/database/storage-engines-data-structures',
 								'technical-knowledge/database/postgresql-heap-storage-architecture',
+								'technical-knowledge/database/postgresql-checkpoint-wal-tuning',
 							],
 						},
 						{
@@ -960,6 +965,7 @@ const sidebars: SidebarsConfig = {
 							collapsed: true,
 							items: [
 								'technical-knowledge/devops/kubernetes-operators',
+								'technical-knowledge/devops/kubernetes-admission-webhooks',
 								'technical-knowledge/devops/devops-observability',
 							],
 						},

@@ -83,13 +83,13 @@
     },
     "config": "config---arcade-5-e-9-6a3"
   },
-  "/-8b6": {
+  "/-333": {
     "__comp": "__comp---theme-docs-root-5-e-9-0b6",
     "__context": {
       "plugin": "plugin---aba-d70"
     }
   },
-  "/-970": {
+  "/-4e3": {
     "__comp": "__comp---theme-doc-version-roota-7-b-5de",
     "__props": "__props---22-d-307"
   },
@@ -180,6 +180,10 @@
   "/tags/add-00a": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-add-2-ab-3d3"
+  },
+  "/tags/admission-controllers-f48": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-admission-controllerscba-001"
   },
   "/tags/adp-c3b": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -589,6 +593,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-bgpc-23-71b"
   },
+  "/tags/big-data-7af": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-big-dataca-5-03b"
+  },
   "/tags/bill-e71": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-bill-2-d-4-94d"
@@ -676,6 +684,10 @@
   "/tags/bridge-60f": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-bridge-6-bc-b57"
+  },
+  "/tags/brin-index-42a": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-brin-indexe-05-261"
   },
   "/tags/broker-8c5": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -1012,6 +1024,10 @@
   "/tags/checked-exceptions-481": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-checked-exceptions-39-e-597"
+  },
+  "/tags/checkpoint-ea8": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-checkpoint-752-16c"
   },
   "/tags/cherry-pick-9c2": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -1452,6 +1468,10 @@
   "/tags/cqrs-c4e": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-cqrsf-4-d-105"
+  },
+  "/tags/crash-recovery-336": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-crash-recoveryc-4-e-dc7"
   },
   "/tags/crd-fb4": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -2249,6 +2269,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-few-shot-64-f-6a5"
   },
+  "/tags/ffm-api-20f": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-ffm-apib-75-a09"
+  },
   "/tags/fi-ced": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-fi-174-d87"
@@ -2504,6 +2528,10 @@
   "/tags/gpt-4-o-558": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-gpt-4-o-4-d-4-182"
+  },
+  "/tags/graceful-shutdown-636": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-graceful-shutdown-75-d-99c"
   },
   "/tags/gradle-9fe": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -3697,6 +3725,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-nat-gateway-2-c-8-b82"
   },
+  "/tags/native-memory-85f": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-native-memory-213-a80"
+  },
   "/tags/nested-classes-da0": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-nested-classes-359-db9"
@@ -4221,6 +4253,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-performance-optimizationa-97-b28"
   },
+  "/tags/performance-tuning-c06": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-performance-tuningc-86-293"
+  },
   "/tags/period-duration-fc7": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-period-durationec-9-975"
@@ -4296,6 +4332,10 @@
   "/tags/policy-c1d": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-policyf-9-e-1dc"
+  },
+  "/tags/policy-as-code-30e": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-policy-as-code-799-9a4"
   },
   "/tags/polling-d26": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -6273,7 +6313,7 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-zsete-05-17c"
   },
-  "/-f54": {
+  "/-75d": {
     "__comp": "__comp---theme-doc-roota-94-67a"
   },
   "/aws-bf9": {
@@ -7480,6 +7520,14 @@
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-database-performance-monitoring-66-d-2bf"
   },
+  "/technical-knowledge/database/postgresql-brin-index-guide-1e5": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-database-postgresql-brin-index-guide-585-b41"
+  },
+  "/technical-knowledge/database/postgresql-checkpoint-wal-tuning-a97": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-database-postgresql-checkpoint-wal-tuning-0-ab-a6a"
+  },
   "/technical-knowledge/database/postgresql-heap-storage-architecture-387": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-database-postgresql-heap-storage-architecture-50-a-700"
@@ -7659,6 +7707,10 @@
   "/technical-knowledge/devops/kubectl-commands-4ba": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-devops-kubectl-commandse-0-f-7fb"
+  },
+  "/technical-knowledge/devops/kubernetes-admission-webhooks-c3d": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-devops-kubernetes-admission-webhooks-473-4c7"
   },
   "/technical-knowledge/devops/kubernetes-configuration-c6a": {
     "__comp": "__comp---theme-doc-item-178-a40",
@@ -10840,6 +10892,10 @@
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-java-java-object-class-8-e-1-102"
   },
+  "/technical-knowledge/java/java-off-heap-ffm-api-593": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-java-java-off-heap-ffm-api-3-f-6-c7b"
+  },
   "/technical-knowledge/java/java-oop-bdb": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-java-java-oop-530-fd1"
@@ -11356,6 +11412,10 @@
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-spring-hibernate-transactions-performance-2-c-1-074"
   },
+  "/technical-knowledge/spring/kubernetes-graceful-shutdown-zero-downtime-a82": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-spring-kubernetes-graceful-shutdown-zero-downtime-283-c72"
+  },
   "/technical-knowledge/spring/spring-aop-c9a": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-spring-spring-aop-690-7ce"
@@ -11623,6 +11683,10 @@
   "/technical-knowledge/system-design/observability-c9c": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-system-design-observabilityf-58-0ad"
+  },
+  "/technical-knowledge/system-design/opentelemetry-sampling-strategies-4b5": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-opentelemetry-sampling-strategies-96-e-3fb"
   },
   "/technical-knowledge/system-design/outbox-pattern-fd6": {
     "__comp": "__comp---theme-doc-item-178-a40",

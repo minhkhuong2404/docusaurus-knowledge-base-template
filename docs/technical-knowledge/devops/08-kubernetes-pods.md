@@ -7,6 +7,7 @@ tags: [kubernetes, pods, containers, init-containers, sidecar, probes, resources
 ---
 
 import KubernetesArchitectureDiagram from '@site/src/components/KubernetesArchitectureDiagram';
+import KubernetesGracefulShutdownDiagram from '@site/src/components/KubernetesGracefulShutdownDiagram';
 
 # Pods & Containers
 
@@ -300,6 +301,39 @@ management:
     readinessstate:
       enabled: true
 ```
+
+---
+
+## Pod Termination Lifecycle & Zero-Downtime Graceful Shutdown
+
+When Kubernetes deletes a Pod (during rolling updates, node drains, or HPA scale-in), two independent workflows execute concurrently:
+1. **Network Control Plane (2–5s):** The EndpointSlice controller removes the Pod IP. `kube-proxy` updates iptables/IPVS, and Ingress controllers (Nginx, Envoy, ALB) purge upstream endpoints.
+2. **Kubelet & Container Process (<300ms):** Kubelet sends `SIGTERM` directly to the container process. Web servers without delay close their listening sockets immediately.
+
+If the application stops accepting connections before the network data plane completes endpoint removal, the Ingress router forwards live client requests to a dead socket, generating **HTTP 502 Bad Gateway** or **Connection Reset by Peer**.
+
+<KubernetesGracefulShutdownDiagram initialTab="lifecycle" />
+
+### The 2-Layer Zero-Downtime Solution
+
+```yaml
+spec:
+  # Formula: terminationGracePeriodSeconds > preStop sleep + shutdown-timeout + buffer
+  terminationGracePeriodSeconds: 45
+  containers:
+    - name: app
+      image: my-app:v1.0.0
+      lifecycle:
+        preStop:
+          exec:
+            # Delay SIGTERM by 10s: allows Ingress & iptables to drain traffic first
+            command: ["/bin/sh", "-c", "sleep 10"]
+```
+
+### Production Best Practices:
+- **Exec Form in Dockerfile:** Always declare `ENTRYPOINT ["java", "-jar", "app.jar"]`. Shell form (`ENTRYPOINT java -jar app.jar`) executes `/bin/sh` as PID 1, which ignores `SIGTERM` and causes Kubelet to forcibly kill the application with `SIGKILL` (`kill -9`).
+- **Grace Period Math:** Ensure `terminationGracePeriodSeconds` exceeds `preStop sleep` plus the application's graceful draining timeout (`timeout-per-shutdown-phase`).
+- **Deep-dive guide:** See [Zero-Downtime Graceful Shutdown: Kubernetes & Spring Boot 3.x](../spring/kubernetes-graceful-shutdown-zero-downtime.md) for full architecture and async worker configuration.
 
 ---
 

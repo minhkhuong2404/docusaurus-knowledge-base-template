@@ -222,6 +222,10 @@ Sampling is the difference between an affordable tracing system and a storage bi
 
 A common production setup: head-based sampling at 5–10% for baseline visibility, combined with tail-based sampling rules in the OTel Collector that always keep traces containing an error span or exceeding a latency threshold — so you get statistical coverage plus guaranteed capture of the traces that actually matter for debugging.
 
+:::tip Deep Dive Guide
+For a comprehensive architectural breakdown of **Tail-based Sampling with OpenTelemetry Collector**, Two-Tier Routing with `loadbalancing` exporter, RAM/OOM protection, and real-world failure case studies, see the dedicated guide: [OpenTelemetry Sampling Strategies (Tail-based vs Head-based)](./opentelemetry-sampling-strategies.md).
+:::
+
 ---
 
 ## Correlating Traces with Metrics and Logs

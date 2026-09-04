@@ -46,8 +46,8 @@
     }
   ],
   "version": "current",
-  "lastUpdatedBy": "Lữ Minh Khương",
-  "lastUpdatedAt": 1788440179000,
+  "lastUpdatedBy": "Author",
+  "lastUpdatedAt": 1539502055000,
   "sidebarPosition": 3,
   "frontMatter": {
     "id": "indexing-query-optimization",
@@ -70,7 +70,7 @@
     "permalink": "/technical-knowledge/database/schema-migrations"
   },
   "next": {
-    "title": "Query Planner & Optimizer",
-    "permalink": "/technical-knowledge/database/query-planner-optimizer"
+    "title": "PostgreSQL BRIN Index (Block Range Index): 99% Smaller Than B-Tree",
+    "permalink": "/technical-knowledge/database/postgresql-brin-index-guide"
   }
 }
