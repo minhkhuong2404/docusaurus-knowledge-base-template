@@ -308,7 +308,7 @@ management:
 
 When Kubernetes deletes a Pod (during rolling updates, node drains, or HPA scale-in), two independent workflows execute concurrently:
 1. **Network Control Plane (2–5s):** The EndpointSlice controller removes the Pod IP. `kube-proxy` updates iptables/IPVS, and Ingress controllers (Nginx, Envoy, ALB) purge upstream endpoints.
-2. **Kubelet & Container Process (<300ms):** Kubelet sends `SIGTERM` directly to the container process. Web servers without delay close their listening sockets immediately.
+2. **Kubelet & Container Process (under 300ms):** Kubelet sends `SIGTERM` directly to the container process. Web servers without delay close their listening sockets immediately.
 
 If the application stops accepting connections before the network data plane completes endpoint removal, the Ingress router forwards live client requests to a dead socket, generating **HTTP 502 Bad Gateway** or **Connection Reset by Peer**.
 

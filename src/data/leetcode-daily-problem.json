@@ -1,8 +1,8 @@
 {
-  "id": "3876",
-  "title": "Construct Uniform Parity Array II",
-  "url": "https://leetcode.com/problems/construct-uniform-parity-array-ii/",
-  "difficulty": "medium",
-  "topic": "Array, Math",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-09-03."
+  "id": "3903",
+  "title": "Smallest Stable Index I",
+  "url": "https://leetcode.com/problems/smallest-stable-index-i/",
+  "difficulty": "easy",
+  "topic": "Array, Prefix Sum",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-09-04."
 }
