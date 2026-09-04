@@ -201,3 +201,9 @@ public class ParallelCalculator {
 
 ### Q4: How do virtual threads in Java 21 relate to concurrency and parallelism?
 **A:** Virtual threads are a **concurrency** feature, not a parallelism feature. They allow you to write simple blocking code and spawn millions of virtual threads, which are extremely cheap. When a virtual thread blocks on I/O, the JVM unmounts it from the physical carrier thread, allowing another virtual thread to run. While the virtual threads manage concurrency at the application level, the JVM still runs the underlying carrier threads in **parallel** across physical CPU cores using a `ForkJoinPool`.
+
+---
+
+:::tip Master Architecture Guide
+For the complete 4-dimensional breakdown covering **Sync vs Async**, **Blocking vs Non-blocking (the 2×2 Matrix)**, and **Async vs Multi-threading Models (Single-threaded Event Loop vs Thread Pools)** with an interactive visualizer, see: [Concurrency, Asynchrony, Blocking & Threading Models](../system-design/concurrency-async-threading-models.md).
+:::

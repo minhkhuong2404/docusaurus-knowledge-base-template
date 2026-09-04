@@ -69,11 +69,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '333'),
+    component: ComponentCreator('/', '179'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '4e3'),
+        component: ComponentCreator('/', '116'),
         routes: [
           {
             path: '/tags',
@@ -5756,6 +5756,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/reactive',
+            component: ComponentCreator('/tags/reactive', '20e'),
+            exact: true
+          },
+          {
             path: '/tags/reactor',
             component: ComponentCreator('/tags/reactor', '4c4'),
             exact: true
@@ -7852,7 +7857,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '75d'),
+            component: ComponentCreator('/', '62e'),
             routes: [
               {
                 path: '/aws',
@@ -15702,6 +15707,12 @@ export default [
               {
                 path: '/technical-knowledge/system-design/common-interview-questions',
                 component: ComponentCreator('/technical-knowledge/system-design/common-interview-questions', 'c29'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/concurrency-async-threading-models',
+                component: ComponentCreator('/technical-knowledge/system-design/concurrency-async-threading-models', '04c'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
