@@ -1144,7 +1144,25 @@ const sidebars: SidebarsConfig = {
 							],
 						},
 					]
-				}
+				},
+				{
+					type: 'category',
+					label: '🏃 Agile & Scrum Framework',
+					collapsed: false,
+					items: [
+						'non-technical-knowledge/agile-scrum/intro',
+						'non-technical-knowledge/agile-scrum/scrum-framework',
+						'non-technical-knowledge/agile-scrum/estimation-metrics',
+					],
+				},
+				{
+					type: 'category',
+					label: '🏢 Modern Way of Working (WoW)',
+					collapsed: false,
+					items: [
+						'non-technical-knowledge/agile-scrum/ways-of-working',
+					],
+				},
 			]
 		},
 		{
