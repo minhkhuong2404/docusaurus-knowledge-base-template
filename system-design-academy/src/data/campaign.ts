@@ -1,6 +1,12 @@
-import { PLAYABLE_SCENARIOS } from './scenarios/playable'
+import { PLAYABLE_SCENARIOS as PLAYABLE_BATCH1 } from './scenarios/playable'
+import { PLAYABLE_BATCH2 } from './scenarios/playable-batch2'
 import { SKELETON_SCENARIOS } from './scenarios/skeleton'
 import type { Scenario } from '../types/game'
+
+export const PLAYABLE_SCENARIOS: Scenario[] = [
+  ...PLAYABLE_BATCH1,
+  ...PLAYABLE_BATCH2,
+]
 
 export const ALL_SCENARIOS: Scenario[] = [
   ...PLAYABLE_SCENARIOS,

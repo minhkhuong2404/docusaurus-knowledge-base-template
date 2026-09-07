@@ -141,9 +141,10 @@ export function simulate(
 
     if (e.connectionPool) {
       hasPool = true
-      apiCapacity *= 1.35
-      dbCapacity *= 1.4
-      latencyMul *= 0.75
+      apiCapacity *= 1.6
+      dbCapacity *= 1.75
+      latencyMul *= 0.55
+      throughputMul *= 1.35
     }
     if (e.queryBatching) {
       hasBatch = true
@@ -219,7 +220,9 @@ export function simulate(
     if (e.bulkhead) {
       hasBulkhead = true
       reliability += 0.12
-      apiCapacity *= 1.3
+      apiCapacity *= 1.85
+      throughputMul *= 1.4
+      latencyMul *= 0.75
     }
     if (e.apiGateway) {
       hasGateway = true
@@ -426,6 +429,8 @@ export function simulate(
       explanations.push('Without pool limits, connections stampede the database.')
     } else if (wl.poolExhaustion && hasPool) {
       errorRate = Math.min(errorRate, 0.015)
+      p95 = Math.min(p95, 180)
+      rpsCapable = Math.max(rpsCapable, demand * 1.2)
       explanations.push('Connection pooling and backpressure stopped the stampede.')
     }
 
@@ -507,6 +512,8 @@ export function simulate(
       explanations.push('One saturated pool blocks unrelated traffic.')
     } else if (wl.bulkheadSat && hasBulkhead) {
       errorRate = Math.min(errorRate, 0.015)
+      p95 = Math.min(p95, 200)
+      rpsCapable = Math.max(rpsCapable, demand * 1.2)
     }
 
     if (wl.fanOutTimeout && !(hasTimeoutBudget && (hasBff || hasGateway))) {

@@ -855,7 +855,7 @@ export const PLAYABLE_SCENARIOS: Scenario[] = [
       ifOverengineered:
         'You built a platform. The launch needed a few sharp levers, not every logo on the CNCF landscape.',
     },
-    unlockNext: null,
+    unlockNext: 'L21',
     status: 'playable',
     xpReward: 200,
   },

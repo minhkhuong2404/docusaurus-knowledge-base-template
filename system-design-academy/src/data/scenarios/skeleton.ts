@@ -107,14 +107,10 @@ const TOPICS: { title: string; concepts: string[]; hint: string }[] = [
   { title: 'Read-Your-Writes Session', concepts: ['Session consistency'], hint: 'ryw' },
 ]
 
-function pad(n: number): string {
-  return String(n).padStart(3, '0')
-}
-
-export const SKELETON_SCENARIOS: Scenario[] = TOPICS.slice(0, 100).map((topic, i) => {
-  const order = 21 + i
-  const id = `L${pad(order)}`
-  const next = order < 120 ? `L${pad(order + 1)}` : null
+export const SKELETON_SCENARIOS: Scenario[] = TOPICS.slice(20, 100).map((topic, i) => {
+  const order = 41 + i
+  const id = `L${order}`
+  const next = order < 120 ? `L${order + 1}` : null
   return {
     id,
     order,

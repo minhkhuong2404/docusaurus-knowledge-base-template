@@ -75,7 +75,7 @@ export function CampaignMap() {
       </section>
 
       <section>
-        <h2 className="display mb-2 text-2xl">Catalog spine (L021–L120)</h2>
+        <h2 className="display mb-2 text-2xl">Catalog spine (L41–L120)</h2>
         <p className="mb-3 text-sm text-[var(--muted)]">
           {skeletons.length} skeleton incidents reserved — titles locked as Coming soon.
         </p>

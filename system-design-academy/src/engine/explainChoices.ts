@@ -123,7 +123,7 @@ function scenarioDistractorLine(id: string, name: string): string {
 }
 
 function sideEffectLine(name: string, pros: string[], cons: string[]): string {
-  const pro = pros[0] ?? 'Changes capacity or latency on some paths'
+  const pro = pros[0] ?? `${name} changes capacity or latency on some paths`
   const con = cons[0] ?? 'Adds cost and operational surface'
   return `${pro}. Trade-off: ${con.toLowerCase()}.`
 }
