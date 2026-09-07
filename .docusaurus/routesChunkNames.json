@@ -62,13 +62,13 @@
     },
     "config": "config---login-5-e-9-d49"
   },
-  "/-76f": {
+  "/-e49": {
     "__comp": "__comp---theme-docs-root-5-e-9-0b6",
     "__context": {
       "plugin": "plugin---aba-d70"
     }
   },
-  "/-e54": {
+  "/-f39": {
     "__comp": "__comp---theme-doc-version-roota-7-b-5de",
     "__props": "__props---22-d-307"
   },
@@ -5988,7 +5988,7 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-zookeeper-51-e-f84"
   },
-  "/-4a6": {
+  "/-c59": {
     "__comp": "__comp---theme-doc-roota-94-67a"
   },
   "/aws-bf9": {
@@ -6326,6 +6326,22 @@
   "/books/ocp/exam-tips-216": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---books-ocp-exam-tips-993-f7f"
+  },
+  "/books/ocp/journey-bda": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---books-ocp-journey-25-d-f89"
+  },
+  "/books/ocp/practice/chapter-01-35a": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---books-ocp-practice-chapter-013-f-6-dee"
+  },
+  "/books/ocp/practice/chapter-02-cd8": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---books-ocp-practice-chapter-02725-b6b"
+  },
+  "/books/ocp/practice/chapter-03-304": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---books-ocp-practice-chapter-03-f-4-e-19f"
   },
   "/category/0-9-59f": {
     "__comp": "__comp---theme-doc-category-generated-index-page-14-e-640",

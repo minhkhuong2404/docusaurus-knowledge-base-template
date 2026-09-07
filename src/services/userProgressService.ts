@@ -64,7 +64,7 @@ export function subscribeToUserProgress(
   uid: string,
   onUpdate: (data: UserProgressData) => void
 ) {
-  if (!uid) return () => {};
+  if (!uid || !db) return () => {};
 
   const userDocRef = doc(db, 'users', uid);
   return onSnapshot(
@@ -119,7 +119,7 @@ export function subscribeToUserProgress(
  * Toggle doc page read status in Firestore
  */
 export async function toggleDocPageRead(uid: string, pagePath: string, isReadNow: boolean) {
-  if (!uid || !pagePath) return;
+  if (!uid || !pagePath || !db) return;
 
   const userDocRef = doc(db, 'users', uid);
   try {
@@ -153,7 +153,7 @@ export async function saveQuizStateToFirestore(
   answeredDelta: number = 0,
   correctDelta: number = 0
 ) {
-  if (!uid || !quizKey) return;
+  if (!uid || !quizKey || !db) return;
 
   const userDocRef = doc(db, 'users', uid);
   try {
@@ -198,7 +198,7 @@ export async function saveDSAProgressToFirestore(
   solvedProblems: string[],
   starredProblems: string[]
 ) {
-  if (!uid) return;
+  if (!uid || !db) return;
 
   const userDocRef = doc(db, 'users', uid);
   try {
@@ -226,7 +226,7 @@ export async function unlockPremiumInFirestore(
   email?: string | null,
   displayName?: string | null
 ) {
-  if (!uid) return;
+  if (!uid || !db) return;
   const userDocRef = doc(db, 'users', uid);
   try {
     const payload: Record<string, any> = {
@@ -246,7 +246,7 @@ export async function unlockPremiumInFirestore(
  * Revoke Premium status for user in Firestore
  */
 export async function revokePremiumInFirestore(uid: string) {
-  if (!uid) return;
+  if (!uid || !db) return;
   const userDocRef = doc(db, 'users', uid);
   try {
     await setDoc(
@@ -263,7 +263,7 @@ export async function revokePremiumInFirestore(uid: string) {
  * Ensure user metadata is saved to Cloud Firestore when first logged in
  */
 export async function ensureUserDocExists(user: User) {
-  if (!user || !user.uid) return;
+  if (!user || !user.uid || !db) return;
   const userDocRef = doc(db, 'users', user.uid);
   try {
     const snap = await getDoc(userDocRef);
@@ -308,7 +308,7 @@ export async function ensureUserDocExists(user: User) {
  * Reset all quiz progress for a user in Cloud Firestore
  */
 export async function resetAllQuizProgressInFirestore(uid: string) {
-  if (!uid) return;
+  if (!uid || !db) return;
   const userDocRef = doc(db, 'users', uid);
   try {
     await setDoc(

@@ -1,0 +1,253 @@
+.widget {
+  margin: 0 0 1.75rem;
+  padding: 1.25rem 1.35rem;
+  border-radius: 16px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.1) 0%,
+    rgba(15, 23, 42, 0.03) 50%,
+    transparent 100%
+  );
+}
+
+.widgetTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.widgetEyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #38bdf8;
+}
+
+.widgetTitle {
+  margin: 0.25rem 0 0;
+  font-size: 1.35rem;
+}
+
+.widgetMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.badgeChip {
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(34, 197, 94, 0.18);
+  color: #16a34a;
+  font-size: 0.75rem;
+}
+
+.badgeChipMuted {
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.2);
+  color: var(--ifm-color-emphasis-600);
+  font-size: 0.75rem;
+}
+
+.pillRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-bottom: 0.85rem;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.65rem;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-decoration: none !important;
+}
+
+.pillDone {
+  background: rgba(34, 197, 94, 0.18);
+  color: #16a34a;
+}
+
+.pillOpen {
+  background: rgba(59, 130, 246, 0.16);
+  color: #2563eb;
+}
+
+.pillLocked {
+  background: rgba(148, 163, 184, 0.15);
+  color: var(--ifm-color-emphasis-600);
+}
+
+.hint {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--ifm-color-emphasis-700);
+  line-height: 1.45;
+}
+
+.cta {
+  margin: 0.75rem 0 0;
+  font-size: 0.92rem;
+}
+
+.map {
+  margin: 1rem 0 2rem;
+  padding: 1.25rem;
+  border-radius: 16px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  background: radial-gradient(ellipse at top, rgba(56, 189, 248, 0.08), transparent 55%),
+    var(--ifm-background-surface);
+  overflow-x: auto;
+}
+
+.mapHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.mapTitle {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.mapStats {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.nodes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.75rem;
+}
+
+.node {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.85rem 0.75rem;
+  border-radius: 12px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  text-decoration: none !important;
+  color: inherit !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  min-height: 110px;
+}
+
+.node:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.nodeLit {
+  border-color: rgba(34, 197, 94, 0.55);
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.nodePartial {
+  border-color: rgba(59, 130, 246, 0.45);
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.nodeIdle {
+  opacity: 0.85;
+}
+
+.nodeNum {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.nodeName {
+  font-weight: 700;
+  font-size: 0.92rem;
+  line-height: 1.25;
+}
+
+.nodeBadge {
+  margin-top: auto;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.trophy {
+  margin-top: 1.25rem;
+  padding: 1.1rem 1.2rem;
+  border-radius: 14px;
+  border: 1px solid rgba(234, 179, 8, 0.45);
+  background: linear-gradient(135deg, rgba(250, 204, 21, 0.18), rgba(56, 189, 248, 0.08));
+  animation: trophyIn 0.6s ease;
+}
+
+.trophyLocked {
+  margin-top: 1.25rem;
+  padding: 1.1rem 1.2rem;
+  border-radius: 14px;
+  border: 1px dashed var(--ifm-color-emphasis-300);
+  color: var(--ifm-color-emphasis-600);
+}
+
+@keyframes trophyIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.skillsList {
+  margin: 0.65rem 0 0;
+  padding-left: 1.15rem;
+  line-height: 1.45;
+}
+
+.unlockOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  background: rgba(2, 6, 23, 0.55);
+  padding: 1rem;
+}
+
+.unlockCard {
+  max-width: 420px;
+  width: 100%;
+  padding: 1.5rem;
+  border-radius: 18px;
+  background: var(--ifm-background-surface);
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+  animation: trophyIn 0.45s ease;
+}
+
+.unlockIcon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}

@@ -33,7 +33,9 @@ Each chapter page is split into these two sections so you can read at your level
 
 ### Study resources
 
-- **Chapter deep dives** — Use the numbered chapters below for explanations, **Exam Quick Reference** tables, and chapter-specific traps.
+- **[Journey Map](./journey.mdx)** — gamified roadmap: flashcards, badges, book skill.
+- **Chapter deep dives** — Use the numbered chapters (Read section) for explanations, **Exam Quick Reference** tables, and chapter-specific traps.
+- **[Practice](./practice/chapter-01.mdx)** — Flashcards → Summary → optional Review → Final Exam (chapters 1–3 ready).
 - **[Exam Tips & Quick Reference](./exam-tips.md)** — Use this page for a **single cram sheet**: mnemonics, cross-chapter traps, stream/collections matrices, and a last-minute checklist before exam day.
 
 ---

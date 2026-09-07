@@ -18,6 +18,10 @@ export default function FirebaseGoogleLoginButton({
   const [loading, setLoading] = useState(false);
 
   const handleGoogleSignIn = async () => {
+    if (!auth || !googleProvider) {
+      onError?.(new Error('Firebase is not configured. Add FIREBASE_* to a local .env file.'));
+      return;
+    }
     setLoading(true);
     try {
       const result = await signInWithPopup(auth, googleProvider);

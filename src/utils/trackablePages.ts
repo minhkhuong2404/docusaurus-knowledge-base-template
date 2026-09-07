@@ -23,6 +23,12 @@ export function isTrackableArticle(href?: string | null): boolean {
   // 1. EXCLUDE all Daily Quiz related pages
   if (path.includes('quiz')) return false;
 
+  // Journey practice / map pages are gamified shells, not reading articles
+  if (path.includes('/practice/') || path.includes('/books/ocp/journey')) return false;
+
+  // Synthetic journey keys (e.g. journey:ocp:ch01:reflect) are never articles
+  if (path.startsWith('journey:')) return false;
+
   // 2. EXCLUDE Company Interview Experiences & LeetCode Company-Wise
   if (path.startsWith('/company') || path.includes('leetcode-companywise')) return false;
 

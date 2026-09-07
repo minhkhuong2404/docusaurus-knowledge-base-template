@@ -8,14 +8,7 @@ export default {
   "tagline": "Internal technical documentation",
   "url": "https://luminhkhuong.dev",
   "baseUrl": "/",
-  "customFields": {
-    "firebaseApiKey": "AIzaSyDHmbQUMhIQGteRWeoIjY6jNJFBvx2M91U",
-    "firebaseAuthDomain": "khuong-tjfxef.firebaseapp.com",
-    "firebaseProjectId": "khuong-tjfxef",
-    "firebaseStorageBucket": "khuong-tjfxef.firebasestorage.app",
-    "firebaseMessagingSenderId": "14737596078",
-    "firebaseAppId": "1:14737596078:web:ece78d5b899bb2ad05573f"
-  },
+  "customFields": {},
   "stylesheets": [
     {
       "href": "https://cdn.jsdelivr.net/npm/katex@0.13.24/dist/katex.min.css",
@@ -77,7 +70,7 @@ export default {
   ],
   "plugins": [
     [
-      "/Users/lukhuong/Desktop/docusaurus-knowledge-base-template/node_modules/@docusaurus/plugin-google-gtag/lib/index.js",
+      "/Users/hophanminh/Desktop/projects/docusaurus-knowledge-base-template/node_modules/@docusaurus/plugin-google-gtag/lib/index.js",
       {
         "trackingID": "G-79SQQZQMCX",
         "anonymizeIP": true
@@ -103,7 +96,7 @@ export default {
   },
   "themes": [
     [
-      "/Users/lukhuong/Desktop/docusaurus-knowledge-base-template/node_modules/@easyops-cn/docusaurus-search-local/dist/server/server/index.js",
+      "/Users/hophanminh/Desktop/projects/docusaurus-knowledge-base-template/node_modules/@easyops-cn/docusaurus-search-local/dist/server/server/index.js",
       {
         "indexDocs": true,
         "indexBlog": false,

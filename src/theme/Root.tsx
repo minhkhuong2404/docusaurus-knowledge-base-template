@@ -58,9 +58,10 @@ export default function Root({ children }: { children: React.ReactNode }) {
   // Track Firebase auth state → update sessionStorage so the navbar item
   // can read it synchronously on mount (avoids flash of wrong state).
   useEffect(() => {
+    if (!auth) return;
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        applyPremiumNavState("logged_in", user);
+        applyPremiumNavState("logged_in");
         window.sessionStorage.setItem(PREMIUM_STATE_KEY, "logged_in");
       } else {
         applyPremiumNavState("logged_out");
@@ -72,7 +73,7 @@ export default function Root({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const cachedState = readCachedPremiumState();
     if (cachedState) {
-      applyPremiumNavState(cachedState, auth?.currentUser);
+      applyPremiumNavState(cachedState);
     }
   }, [location.pathname]);
 

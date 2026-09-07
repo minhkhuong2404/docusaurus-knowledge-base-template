@@ -54,11 +54,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '76f'),
+    component: ComponentCreator('/', 'e49'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'e54'),
+        component: ComponentCreator('/', 'f39'),
         routes: [
           {
             path: '/tags',
@@ -7457,7 +7457,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '4a6'),
+            component: ComponentCreator('/', 'c59'),
             routes: [
               {
                 path: '/aws',
@@ -7960,6 +7960,30 @@ export default [
               {
                 path: '/books/ocp/exam-tips',
                 component: ComponentCreator('/books/ocp/exam-tips', '216'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/ocp/journey',
+                component: ComponentCreator('/books/ocp/journey', 'bda'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/ocp/practice/chapter-01',
+                component: ComponentCreator('/books/ocp/practice/chapter-01', '35a'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/ocp/practice/chapter-02',
+                component: ComponentCreator('/books/ocp/practice/chapter-02', 'cd8'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/books/ocp/practice/chapter-03',
+                component: ComponentCreator('/books/ocp/practice/chapter-03', '304'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

@@ -421,6 +421,26 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "books/ocp/journey",
+              "path": "/books/ocp/journey",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/ocp/practice/chapter-01",
+              "path": "/books/ocp/practice/chapter-01",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/ocp/practice/chapter-02",
+              "path": "/books/ocp/practice/chapter-02",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "books/ocp/practice/chapter-03",
+              "path": "/books/ocp/practice/chapter-03",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "company/accenture-java-developer-interview-16lpa",
               "path": "/company/accenture-java-developer-interview-16lpa",
               "sidebar": "tutorialSidebar"

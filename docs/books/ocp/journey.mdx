@@ -1,0 +1,30 @@
+---
+id: journey
+title: OCP Journey Map
+sidebar_label: Journey Map
+description: Gamified roadmap for OCP Java SE 21 — flashcards, summary, review, final exam, badges.
+---
+
+import { BookJourneyMap } from '@site/src/components/BookJourney';
+import { ocpJourney } from '@site/src/data/journeys/ocp/journey';
+
+# OCP Journey Map
+
+Per chapter: **Flashcards** (Pareto core + take notes) → **Summary** → optional **Review** → mandatory **Final Exam** (≥80%). Earn a **chapter badge**, then collect every badge for the **book skill**.
+
+<BookJourneyMap
+  book={ocpJourney}
+  practiceLinks={{
+    ch01: '/books/ocp/practice/chapter-01',
+    ch02: '/books/ocp/practice/chapter-02',
+    ch03: '/books/ocp/practice/chapter-03',
+  }}
+/>
+
+:::tip How sections work
+This book has three sidebar sections:
+
+1. **Journey** — this map and your badges  
+2. **Read** — full chapter deep-dives (optional while practicing)  
+3. **Practice** — flashcards → summary → review → final (chapters 1–3 ready)
+:::

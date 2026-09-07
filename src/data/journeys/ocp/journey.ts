@@ -1,0 +1,210 @@
+import type { BookJourney, ChapterJourneyDef } from '../types';
+import {
+  chapter01Easy,
+  chapter01Medium,
+  chapter01Hard,
+  chapter01Final,
+  chapter01Flashcards,
+} from './chapter-01';
+import {
+  chapter02Easy,
+  chapter02Medium,
+  chapter02Hard,
+  chapter02Final,
+  chapter02Flashcards,
+} from './chapter-02';
+import {
+  chapter03Easy,
+  chapter03Medium,
+  chapter03Hard,
+  chapter03Final,
+  chapter03Flashcards,
+} from './chapter-03';
+
+function ch(
+  partial: Omit<ChapterJourneyDef, 'easy' | 'medium' | 'hard' | 'finalExam' | 'flashcards'> &
+    Partial<Pick<ChapterJourneyDef, 'easy' | 'medium' | 'hard' | 'finalExam' | 'flashcards'>>
+): ChapterJourneyDef {
+  return {
+    flashcards: [],
+    easy: [],
+    medium: [],
+    hard: [],
+    finalExam: [],
+    ...partial,
+  };
+}
+
+export const ocpJourney: BookJourney = {
+  id: 'ocp',
+  title: 'OCP Java SE 21 Developer Study Guide',
+  shortTitle: 'OCP Java 21',
+  bookIcon: '☕',
+  skillsTrophyTitle: 'OCP Java SE 21 — Book Mastered',
+  skillsTrophyBlurb:
+    'You cleared every chapter badge. You can reason about Java 21 language foundations through I/O — the skills this study guide targets for exam 1Z0-830.',
+  chapters: [
+    ch({
+      id: 'ch01',
+      number: 1,
+      title: 'Building Blocks',
+      docPath: 'books/ocp/chapters/chapter-01',
+      badgeName: 'Building Blocks',
+      badgeIcon: '🧱',
+      skillBlurb: 'Primitives, var, text blocks, initialization order, GC eligibility',
+      reflectionSummary:
+        'Chapter 1 expands across the full building-block surface: JDK tools and single-file launch; PIC source order and comment nesting; packages, wildcards, and Date conflicts; classpath compile/run; constructors vs same-named methods; static→instance→constructor init and forward-reference bans; eight primitives plus underscore/literal rules; wrappers (parse vs valueOf, Boolean.valueOf); var limits; text-block indent/escapes; scope levels; GC reachability and System.gc hints; stack/heap/Metaspace/string pool; Integer cache −128..127; numeric promotion to int; final vs effectively final for lambdas; strong/soft/weak/phantom references.',
+      flashcards: chapter01Flashcards,
+      easy: chapter01Easy,
+      medium: chapter01Medium,
+      hard: chapter01Hard,
+      finalExam: chapter01Final,
+    }),
+    ch({
+      id: 'ch02',
+      number: 2,
+      title: 'Operators',
+      docPath: 'books/ocp/chapters/chapter-02',
+      badgeName: 'Operators',
+      badgeIcon: '➕',
+      skillBlurb: 'Unary/binary ops, short-circuit logic, casting, compound assignment',
+      reflectionSummary:
+        'Chapter 2 covers the full operator stack: unary/binary/ternary terminology; precedence from post-unary through assignment; !, ~, -, and pre/post ++/-- type mismatches; int division, modulus sign, and parentheses-only grouping; numeric promotion (byte/short/char→int); widening/narrowing, compound-assignment casts, and assignment expressions; ==/relational/instanceof (null false, incompatible compile fail); &|^ vs &&|| side effects; ternary unperformed branches and assignment compatibility; bitwise &|^ with ~; << >> >>>; float/double Infinity/NaN (NaN ≠ NaN).',
+      flashcards: chapter02Flashcards,
+      easy: chapter02Easy,
+      medium: chapter02Medium,
+      hard: chapter02Hard,
+      finalExam: chapter02Final,
+    }),
+    ch({
+      id: 'ch03',
+      number: 3,
+      title: 'Making Decisions',
+      docPath: 'books/ocp/chapters/chapter-03',
+      badgeName: 'Control Flow',
+      badgeIcon: '🔀',
+      skillBlurb: 'if/else, loops, classic vs expression switch, labels, pattern instanceof',
+      reflectionSummary:
+        'Chapter 3 walks control flow end to end: statements/blocks and brace-less if traps; boolean-only if; pattern instanceof (final patterns, null-safe); classic switch types/constants and arrow vs colon (no mixing); switch expressions with yield; while/do-while/for/for-each pitfalls; labeled break/continue; flow scoping with &&/|| and early return; Java 21 pattern switch, when guards, and case null; exhaustiveness for expressions/pattern switches; dominance ordering of broad vs narrow/guarded cases.',
+      flashcards: chapter03Flashcards,
+      easy: chapter03Easy,
+      medium: chapter03Medium,
+      hard: chapter03Hard,
+      finalExam: chapter03Final,
+    }),
+    ch({
+      id: 'ch04',
+      number: 4,
+      title: 'Core APIs',
+      docPath: 'books/ocp/chapters/chapter-04',
+      badgeName: 'Core APIs',
+      badgeIcon: '📚',
+      skillBlurb: 'String, StringBuilder, arrays, Math, and core library APIs',
+      reflectionSummary: 'Core APIs cover strings, builders, arrays, and everyday library types.',
+    }),
+    ch({
+      id: 'ch05',
+      number: 5,
+      title: 'Methods',
+      docPath: 'books/ocp/chapters/chapter-05',
+      badgeName: 'Methods',
+      badgeIcon: '🧩',
+      skillBlurb: 'Overloading, varargs, access modifiers, pass-by-value',
+      reflectionSummary: 'Methods: overloading rules, varargs, and Java’s pass-by-value semantics.',
+    }),
+    ch({
+      id: 'ch06',
+      number: 6,
+      title: 'Class Design',
+      docPath: 'books/ocp/chapters/chapter-06',
+      badgeName: 'Class Design',
+      badgeIcon: '🏗️',
+      skillBlurb: 'Inheritance, constructors, abstract classes, immutable design',
+      reflectionSummary: 'Class design: inheritance chains, constructor chaining, abstract types.',
+    }),
+    ch({
+      id: 'ch07',
+      number: 7,
+      title: 'Beyond Classes',
+      docPath: 'books/ocp/chapters/chapter-07',
+      badgeName: 'Beyond Classes',
+      badgeIcon: '🧬',
+      skillBlurb: 'Interfaces, enums, sealed types, records',
+      reflectionSummary: 'Modern type shapes: interfaces, enums, sealed hierarchies, records.',
+    }),
+    ch({
+      id: 'ch08',
+      number: 8,
+      title: 'Lambdas & Functional Interfaces',
+      docPath: 'books/ocp/chapters/chapter-08',
+      badgeName: 'Lambdas',
+      badgeIcon: 'λ',
+      skillBlurb: 'Lambda syntax, functional interfaces, method references',
+      reflectionSummary: 'Lambdas and functional interfaces power Streams and modern APIs.',
+    }),
+    ch({
+      id: 'ch09',
+      number: 9,
+      title: 'Collections & Generics',
+      docPath: 'books/ocp/chapters/chapter-09',
+      badgeName: 'Collections',
+      badgeIcon: '📦',
+      skillBlurb: 'List/Set/Map, generics, PECS, diamond operator',
+      reflectionSummary: 'Collections + generics: choosing structures and writing type-safe APIs.',
+    }),
+    ch({
+      id: 'ch10',
+      number: 10,
+      title: 'Streams',
+      docPath: 'books/ocp/chapters/chapter-10',
+      badgeName: 'Streams',
+      badgeIcon: '🌊',
+      skillBlurb: 'Stream pipeline, intermediate vs terminal, collectors',
+      reflectionSummary: 'Streams: lazy pipelines, terminals, and collectors.',
+    }),
+    ch({
+      id: 'ch11',
+      number: 11,
+      title: 'Exceptions & Localization',
+      docPath: 'books/ocp/chapters/chapter-11',
+      badgeName: 'Exceptions',
+      badgeIcon: '⚠️',
+      skillBlurb: 'try/catch/finally, try-with-resources, localization basics',
+      reflectionSummary: 'Checked vs unchecked, resource management, localization hooks.',
+    }),
+    ch({
+      id: 'ch12',
+      number: 12,
+      title: 'Modules',
+      docPath: 'books/ocp/chapters/chapter-12',
+      badgeName: 'Modules',
+      badgeIcon: '🧱',
+      skillBlurb: 'module-info, exports/requires, services',
+      reflectionSummary: 'JPMS: module descriptors, readability, and encapsulation.',
+    }),
+    ch({
+      id: 'ch13',
+      number: 13,
+      title: 'Concurrency',
+      docPath: 'books/ocp/chapters/chapter-13',
+      badgeName: 'Concurrency',
+      badgeIcon: '🧵',
+      skillBlurb: 'Threads, executors, concurrent collections, locking',
+      reflectionSummary: 'Concurrency models, executors, and safe shared-state patterns.',
+    }),
+    ch({
+      id: 'ch14',
+      number: 14,
+      title: 'I/O',
+      docPath: 'books/ocp/chapters/chapter-14',
+      badgeName: 'I/O',
+      badgeIcon: '💾',
+      skillBlurb: 'I/O and NIO.2 paths, files, serialization basics',
+      reflectionSummary: 'File I/O and NIO.2 Path/Files APIs for the exam.',
+    }),
+  ],
+};
+
+export function getOcpChapter(chapterId: string): ChapterJourneyDef | undefined {
+  return ocpJourney.chapters.find((c) => c.id === chapterId);
+}

@@ -89,7 +89,7 @@ export default function CustomUserNavbarItem() {
 
   const handleLogout = async () => {
     try {
-      await signOut(auth);
+      if (auth) await signOut(auth);
       setIsOpen(false);
       window.location.reload();
     } catch (err) {

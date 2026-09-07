@@ -1,0 +1,229 @@
+.wrap {
+  margin: 1.25rem 0 2rem;
+  padding: 1.25rem 1.35rem;
+  border-radius: 14px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  background: linear-gradient(
+    160deg,
+    rgba(56, 189, 248, 0.06) 0%,
+    rgba(15, 23, 42, 0.02) 55%,
+    transparent 100%
+  );
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.tierBadge {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.7rem;
+  border-radius: 8px;
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+}
+
+.progress {
+  font-size: 0.85rem;
+  color: var(--ifm-color-emphasis-600);
+  font-weight: 600;
+}
+
+.question {
+  font-size: 1.15rem;
+  font-weight: 650;
+  line-height: 1.45;
+  margin: 0 0 1rem;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.option {
+  text-align: left;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  border: 2px solid var(--ifm-color-emphasis-300);
+  background: var(--ifm-background-surface);
+  color: var(--ifm-font-color-base);
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease, transform 0.15s ease;
+}
+
+.option:hover:not(:disabled) {
+  border-color: var(--ifm-color-primary);
+  transform: translateY(-1px);
+}
+
+.option:disabled {
+  cursor: default;
+}
+
+.correct {
+  border-color: #22c55e !important;
+  background: rgba(34, 197, 94, 0.12);
+}
+
+.incorrect {
+  border-color: #ef4444 !important;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.explain {
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 10px;
+  background: rgba(56, 189, 248, 0.08);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.1rem;
+}
+
+.nextBtn,
+.primaryBtn {
+  border: none;
+  border-radius: 10px;
+  padding: 0.55rem 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  background: #3b82f6;
+  color: #fff;
+}
+
+.primaryBtn:hover,
+.nextBtn:hover {
+  filter: brightness(1.05);
+}
+
+.results {
+  text-align: center;
+  padding: 1.5rem 0.5rem;
+}
+
+.scoreRing {
+  width: 110px;
+  height: 110px;
+  margin: 0.75rem auto 1rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 1.35rem;
+  font-weight: 800;
+  border: 4px solid rgba(56, 189, 248, 0.35);
+}
+
+.pass {
+  border-color: #22c55e;
+  box-shadow: 0 0 24px rgba(34, 197, 94, 0.35);
+  animation: pulseReward 0.7s ease;
+}
+
+.fail {
+  border-color: #f59e0b;
+}
+
+.pulse {
+  animation: pulseReward 0.7s ease;
+}
+
+@keyframes pulseReward {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.6;
+  }
+  60% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.lockedNote {
+  padding: 1rem;
+  border-radius: 10px;
+  background: rgba(148, 163, 184, 0.12);
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.95rem;
+}
+
+.emptyNote {
+  padding: 1rem;
+  color: var(--ifm-color-emphasis-600);
+  font-style: italic;
+}
+
+.answerReview {
+  margin-top: 1.5rem;
+  text-align: left;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+  padding-top: 1.25rem;
+}
+
+.answerReviewTitle {
+  margin: 0 0 1rem;
+  font-size: 1.05rem;
+}
+
+.reviewItem {
+  margin-bottom: 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  background: var(--ifm-background-surface);
+}
+
+.reviewOk {
+  border-color: rgba(34, 197, 94, 0.4);
+}
+
+.reviewBad {
+  border-color: rgba(239, 68, 68, 0.35);
+}
+
+.reviewQ {
+  font-size: 0.95rem;
+  line-height: 1.45;
+  margin-bottom: 0.45rem;
+}
+
+.reviewAns {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.88rem;
+  margin-bottom: 0.5rem;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.reviewCorrect {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.reviewExplain {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  padding-top: 0.5rem;
+  border-top: 1px dashed var(--ifm-color-emphasis-200);
+}
+
