@@ -56,7 +56,7 @@ const config: Config = {
 					showLastUpdateTime: true,
 					showLastUpdateAuthor: true,
 					remarkPlugins: [remarkMath],
-					rehypePlugins: [rehypeKatex],
+					rehypePlugins: [[rehypeKatex, { strict: false }]],
 				},
 				blog: false,
 				theme: {
@@ -185,6 +185,11 @@ const config: Config = {
 					sidebarId: 'tutorialSidebar',
 					position: 'left',
 					label: 'Docs',
+				},
+				{
+					to: '/hub',
+					label: 'Career Hub',
+					position: 'left',
 				},
 				{
 					to: '/arcade',

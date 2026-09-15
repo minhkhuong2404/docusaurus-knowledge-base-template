@@ -65,7 +65,12 @@ export default {
             null
           ],
           "rehypePlugins": [
-            null
+            [
+              null,
+              {
+                "strict": false
+              }
+            ]
           ]
         },
         "blog": false,
@@ -239,6 +244,11 @@ export default {
           "sidebarId": "tutorialSidebar",
           "position": "left",
           "label": "Docs"
+        },
+        {
+          "to": "/hub",
+          "label": "Career Hub",
+          "position": "left"
         },
         {
           "to": "/arcade",

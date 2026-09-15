@@ -770,10 +770,10 @@ Is the service stateless?
 
 ## 🔗 Related Concepts
 
-- [CI/CD Pipeline Design](./cicd-pipeline.md)
-- [Kubernetes Health Probes](./kubernetes-probes.md)
-- [Database Migration Patterns](./database-migrations.md)
-- [Service Mesh with Istio](./istio.md)
-- [Argo Rollouts Progressive Delivery](./argo-rollouts.md)
-- [Feature Flag Management](./feature-flags.md)
-- [Incident Response & Rollback Runbooks](./incident-response.md)
+- [CI/CD with GitHub Actions](../devops/22-cicd-github-actions.md)
+- [Kubernetes Pods & Health Probes](../devops/08-kubernetes-pods.md)
+- [Database Schema Migrations](../database/schema-migrations.md)
+- [Service Mesh Architecture](./service-mesh.md)
+- [GitOps & ArgoCD](../devops/17-gitops-argocd.md)
+- [Feature Toggle](./feature-toggle.md)
+- [Case Studies: Outages & Reliability](./case-studies-outages-reliability.md)

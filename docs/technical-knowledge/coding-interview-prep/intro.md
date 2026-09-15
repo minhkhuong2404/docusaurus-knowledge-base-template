@@ -15,6 +15,10 @@ tags:
 
 > A systematic, structured guide to mastering coding interviews — from foundational data structures to advanced algorithmic patterns, with all code examples written in **Java**.
 
+:::tip ⚡ Looking for Quick Interview Review?
+Check out the **[📘 Quick Handbook (20+ Patterns)](./dsa-patterns-handbook)** for the complete 16-pattern taxonomy mindmap and 20+ canonical LeetCode templates (Two Sum, Kadane's, LRU Cache, Top-K, Dijkstra, Trie, etc.) with code and complexity cards!
+:::
+
 ---
 
 ## 📚 What This Guide Covers

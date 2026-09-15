@@ -1166,6 +1166,6 @@ Any future framework that solves concurrency differently (Kotlin coroutines, Loo
 
 - [Hibernate Transactions & Performance](./hibernate-transactions-performance.md)
 - [Spring Data JPA: Repositories & Queries](./spring-data-jpa.md)
-- [Saga Pattern](./saga-pattern.md)
-- [Transactional Outbox Pattern](./outbox-pattern.md)
-- [Retry Pattern](./retry-pattern.md)
+- [Saga Pattern](../system-design/saga-pattern.md)
+- [Transactional Outbox Pattern](../system-design/outbox-pattern.md)
+- [Retry Pattern](../system-design/retry-pattern.md)

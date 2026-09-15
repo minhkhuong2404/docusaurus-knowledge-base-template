@@ -73,11 +73,20 @@ public int removeDuplicates(int[] nums) {
     }
     return slow + 1; // new length
 }
+
+// ---- Type 3: Expanding Around Center (Palindromes) ----
+private int expandAroundCenter(String s, int left, int right) {
+    while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
+        left--;
+        right++;
+    }
+    return right - left - 1; // length of the palindrome
+}
 ```
 
 ---
 
-## Worked Example: 3Sum
+## Worked Example 1: 3Sum
 
 **Problem**: Find all unique triplets in an unsorted array that sum to zero.
 
@@ -138,6 +147,45 @@ Result: [[-1,-1,2], [-1,0,1]]
 ```
 
 **Time**: O(n²) | **Space**: O(1) (ignoring output)
+
+---
+
+## Worked Example 2: Longest Palindromic Substring (Expand Around Center)
+
+**Problem**: Find the longest contiguous palindromic substring in `s`.
+
+**Approach**:
+1. Every palindrome mirrors around its center. A string of length $n$ has $2n - 1$ centers (single characters for odd lengths, gaps between characters for even lengths).
+2. For each center, expand outward as long as characters match.
+
+```java
+public String longestPalindrome(String s) {
+    if (s == null || s.isEmpty()) return "";
+    int start = 0, maxLen = 1;
+
+    for (int i = 0; i < s.length(); i++) {
+        int len1 = expand(s, i, i);     // odd length palindrome (center: i)
+        int len2 = expand(s, i, i + 1); // even length palindrome (center: i, i+1)
+        int len = Math.max(len1, len2);
+
+        if (len > maxLen) {
+            maxLen = len;
+            start = i - (len - 1) / 2;
+        }
+    }
+    return s.substring(start, start + maxLen);
+}
+
+private int expand(String s, int l, int r) {
+    while (l >= 0 && r < s.length() && s.charAt(l) == s.charAt(r)) {
+        l--;
+        r++;
+    }
+    return r - l - 1;
+}
+```
+
+**Time**: O(n²) | **Space**: O(1)
 
 ---
 

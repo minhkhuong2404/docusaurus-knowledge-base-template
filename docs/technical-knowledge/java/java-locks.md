@@ -204,4 +204,4 @@ AQS maintains a single volatile integer `state` and a FIFO variant of a **CLH Qu
 
 - [AbstractQueuedSynchronizer (AQS) Deep Dive](./java-aqs-internals.md)
 - [Java Concurrent Collections](../interview-questions/java/concurrent-collection-interview.md)
-- [Java Virtual Threads & Concurrency](./virtual-threads.md)
+- [Java Virtual Threads & Concurrency](./java-virtual-threads.md)

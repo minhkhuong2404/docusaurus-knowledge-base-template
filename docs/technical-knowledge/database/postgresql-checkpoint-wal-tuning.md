@@ -86,7 +86,7 @@ wal_buffers = 16MB                  # Tránh nghẽn lock khi nhiều worker cù
 
 * Nếu `checkpoint_timeout = 15min` và `checkpoint_completion_target = 0.9`, Checkpointer sẽ **chia nhỏ và ghi từ từ** các Dirty Pages trong vòng:
 
-$$\text{Thời gian xả đĩa} = 15 \text{ phút} \times 0.9 = 13.5 \text{ phút}$$
+$$\text{Spread Checkpoint Duration} = 15 \text{ min} \times 0.9 = 13.5 \text{ min}$$
 
 * Thay vì dồn $100\%$ lượng dirty pages xả ồ ạt trong 1 phút gây tê liệt ổ đĩa, Checkpointer sẽ điều tiết tốc độ ghi (I/O throttling) trải đều suốt $13.5\text{ phút}$. 
 * Điều này giúp **làm phẳng hoàn toàn đồ thị I/O**, giữ cho ổ đĩa NVMe/SSD luôn có dư thừa băng thông phục vụ các truy vấn đọc/ghi bình thường của ứng dụng.

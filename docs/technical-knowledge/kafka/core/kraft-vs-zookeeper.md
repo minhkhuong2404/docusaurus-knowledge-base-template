@@ -186,7 +186,7 @@ Kafka cho phép một node vừa đóng vai trò `broker` vừa làm `controller
 ### Bẫy 2: Quy tắc Quorum $2F + 1$ và Bẫy Số chẵn Node
 Nhóm Controller trong KRaft hoạt động theo nguyên lý biểu quyết đa số (Majority Vote):
 
-$$\text{Tổng số Controllers} = 2F + 1 \quad \Longrightarrow \quad F = \left\lfloor \frac{N - 1}{2} \right\rfloor$$
+$$\text{Total Controllers } (N) = 2F + 1 \quad \Longrightarrow \quad F = \left\lfloor \frac{N - 1}{2} \right\rfloor$$
 
 * **Cụm 3 Controllers:** Chịu được $F = 1$ node sập. Đa số cần: $2$ phiếu.
 * **Cụm 5 Controllers:** Chịu được $F = 2$ node sập. Đa số cần: $3$ phiếu.

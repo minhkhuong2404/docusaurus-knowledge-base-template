@@ -1147,5 +1147,5 @@ At 200 concurrent requests → 180 requests waiting for a connection → timeout
 - [Spring Data JPA Interview Questions](./spring-data-jpa-interview-questions.md)
 - [Database Connection Pooling](../database/connection-pooling.md)
 - [Database Indexing & Query Optimization](../database/indexing-query-optimization.md)
-- [Saga Pattern](./saga-pattern.md)
-- [Transactional Outbox Pattern](./outbox-pattern.md)
+- [Saga Pattern](../system-design/saga-pattern.md)
+- [Transactional Outbox Pattern](../system-design/outbox-pattern.md)

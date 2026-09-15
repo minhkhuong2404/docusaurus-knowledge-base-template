@@ -400,6 +400,7 @@ const sidebars: SidebarsConfig = {
 							label: '🎯 Interview Prep',
 							collapsed: true,
 							items: [
+								'technical-knowledge/system-design/60-days-of-system-design',
 								'technical-knowledge/system-design/common-interview-questions',
 							],
 						},
@@ -1176,6 +1177,11 @@ const sidebars: SidebarsConfig = {
 					label: '🚀 Getting Started',
 				},
 				{
+					type: 'doc',
+					id: 'technical-knowledge/coding-interview-prep/dsa-patterns-handbook',
+					label: '📘 Quick Handbook (20+ Patterns)',
+				},
+				{
 					type: 'category',
 					label: '📦 Fundamentals',
 					collapsed: false,
@@ -1836,8 +1842,10 @@ const sidebars: SidebarsConfig = {
 				'technical-knowledge/ai-agents/harness',
 				'technical-knowledge/ai-agents/vibe-coding',
 				'technical-knowledge/ai-agents/prompt-engineering',
+				'technical-knowledge/ai-agents/prompt-caching',
 				'technical-knowledge/ai-agents/ai-tools-landscape',
 				'technical-knowledge/ai-agents/context-engineering',
+				'technical-knowledge/ai-agents/loop-engineering',
 				'technical-knowledge/ai-agents/ai-agent-interview-questions'
 			]
 		},

@@ -1,8 +1,8 @@
 {
-  "id": "3903",
-  "title": "Smallest Stable Index I",
-  "url": "https://leetcode.com/problems/smallest-stable-index-i/",
-  "difficulty": "easy",
-  "topic": "Array, Prefix Sum",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-09-04."
+  "id": "2472",
+  "title": "Maximum Number of Non-overlapping Palindrome Substrings",
+  "url": "https://leetcode.com/problems/maximum-number-of-non-overlapping-palindrome-substrings/",
+  "difficulty": "hard",
+  "topic": "Two Pointers, String, Dynamic Programming, Greedy",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-09-15."
 }

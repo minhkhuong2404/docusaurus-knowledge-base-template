@@ -23,7 +23,7 @@ A practical, production-grade engineering knowledge base and interactive practic
 
 | Feature | Description | Access |
 |---------|-------------|--------|
-| **📝 Daily Concept Quizzes** | Live interactive practice canvas synchronized with our central Google Sheets question bank (**☕ Java [508 Qs]**, **🍃 Spring Boot [508 Qs]**, **🏗️ System Design [508 Qs]**, **🌐 All [1,524 Qs]**). Supports topic/difficulty filtering, instant solution rationales, and accuracy tracking. | [→ Open Daily Quizzes](/technical-knowledge/daily-quiz) |
+| **📝 Daily Concept Quizzes** | Live interactive practice canvas synchronized with our central Google Sheets question bank (**☕ Java [1,000 Qs]**, **🍃 Spring Boot [5,120 Qs]**, **🏗️ System Design [5,120 Qs]**, **🌐 All [11,240 Qs]**). Supports topic/difficulty filtering, instant solution rationales, and accuracy tracking. | [→ Open Daily Quizzes](/technical-knowledge/daily-quiz) |
 | **🧩 LeetCode Daily Challenge** | Daily featured algorithmic problem, random global challenge picker, and topic explorer covering curated high-yield interview problems. | [→ Open LeetCode Daily](/technical-knowledge/dsa/leetcode-daily) |
 | **📊 20-Week DSA Roadmap** | Comprehensive 20-week pattern-based algorithmic training curriculum from Two Pointers to Dynamic Programming and Advanced Graphs. | [→ 20-Week DSA Guide](/technical-knowledge/dsa/20-week-dsa-roadmap-intro) |
 | **🏢 LeetCode Company-Wise** | Frequently asked interview questions tagged by top tech companies (Google, Meta, Amazon, Microsoft, Apple, Uber, etc.). | [→ Company-Wise Questions](/technical-knowledge/dsa/leetcode-companywise/) |

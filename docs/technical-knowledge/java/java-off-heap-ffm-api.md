@@ -58,7 +58,7 @@ Trước Java 22, để cấp phát và thao tác Off-Heap hiệu năng cao, cá
 
 ### Nguy cơ chết người của `sun.misc.Unsafe`
 `Unsafe` không có bất kỳ cơ chế kiểm tra ranh giới nào. Nếu lập trình viên tính sai offset chỉ $1\text{ byte}$ hoặc đọc vào vùng nhớ đã giải phóng (Use-after-free):
-$$\text{Lỗi Out-of-Bounds với Unsafe} \longrightarrow \mathbf{Segmentation\ Fault\ (SIGSEGV)} \longrightarrow \text{Crash ngay lập tức toàn bộ JVM}$$
+$$\text{Out-of-Bounds (Unsafe)} \longrightarrow \mathbf{Segmentation\ Fault\ (SIGSEGV)} \longrightarrow \text{Immediate JVM Crash}$$
 Lỗi này không ném ra Exception, không ghi log được trong `try-catch`, làm sập toàn bộ dịch vụ backend trên Production.
 
 ### Sự xuất hiện của FFM API (Foreign Function & Memory API)

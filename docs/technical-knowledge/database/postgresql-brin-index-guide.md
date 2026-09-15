@@ -39,7 +39,7 @@ Khác biệt cốt lõi giữa B-Tree và BRIN:
 BRIN chia toàn bộ bảng dữ liệu thành các khối trang đĩa liên tiếp (gọi là **Block Range**, mặc định là $128$ disk pages $\approx 1\text{MB}$ dữ liệu).
 
 Với mỗi Block Range, BRIN **chỉ lưu đúng hai giá trị duy nhất**:
-$$\text{Min Value (Giá trị nhỏ nhất)} \quad \text{và} \quad \text{Max Value (Giá trị lớn nhất)}$$
+$$\text{Min Value} \quad \text{and} \quad \text{Max Value}$$
 
 ```text
 [ Disk Pages 0 -> 127 ]   ──> BRIN Summary: [ Min: 2026-08-01 00:00:00 | Max: 2026-08-01 04:30:00 ]

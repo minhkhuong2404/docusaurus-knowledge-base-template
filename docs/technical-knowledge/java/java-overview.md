@@ -8,7 +8,10 @@ sidebar_position: 1
 
 # ☕ Java Knowledge Base
 
-A structured guide covering Java from core language foundations to JVM internals and modern features, with interview-oriented guidance.
+:::info[🚀 Career Hub Cho Fresher / Junior Đi Làm]
+Dành riêng cho Intern, Fresher và Junior học Java thực chiến để ứng tuyển và đi làm tự tin trong môi trường doanh nghiệp: 
+👉 **[Truy cập ngay: Career Hub](/hub)** — Lộ trình 6 giai đoạn, ngân hàng câu hỏi phỏng vấn trúng tủ, chiến trường code thực tế và checklist 60 ngày thử việc!
+:::
 
 ## Topics Covered
 

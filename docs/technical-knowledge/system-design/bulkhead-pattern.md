@@ -700,9 +700,7 @@ They protect against different failure dimensions:
 
 ## See Also
 
-- [Circuit Breaker Pattern](./circuit-breaker.md)
+- [Circuit Breaker Pattern](./circuit-breaker-pattern.md)
 - [Retry Pattern](./retry-pattern.md)
-- [Timeout Pattern](./timeout.md)
-- [Rate Limiting](./rate-limiting.md)
-- [Resilience4j Reference](./resilience4j.md)
+- [Rate Limiting Algorithms](./rate-limiting-algorithms.md)
 - [Database Connection Pooling](../database/connection-pooling.md)

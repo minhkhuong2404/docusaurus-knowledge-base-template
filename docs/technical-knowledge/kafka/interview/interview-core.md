@@ -186,7 +186,7 @@ import KafkaInterviewScenarioDiagram from '@site/src/components/KafkaInterviewSc
 ---
 
 ## Related Pages
-- [Kafka Exactly-Once Semantics Deep Dive](../advanced/kafka-exactly-once.md)
+- [Kafka Exactly-Once Semantics Deep Dive](../advanced/exactly-once.md)
 - [Deduplication in Distributed Messaging (State Store vs Redis)](../advanced/exactly-once-vs-dedup.md)
 - [Event-Driven Microservices Architecture](../../system-design/event-driven-microservices.md)
 - [Kafka Producer & Consumer Internals Q&A](./interview-producer-consumer.md)

@@ -49,6 +49,13 @@
     },
     "config": "config---arcade-5-e-9-6a3"
   },
+  "/hub/-e40": {
+    "__comp": "__comp---site-src-pages-hub-index-tsx-606-978",
+    "__context": {
+      "plugin": "plugin---arcade-a-74-d23"
+    },
+    "config": "config---arcade-5-e-9-6a3"
+  },
   "/leaderboard/-dec": {
     "__comp": "__comp---site-src-pages-leaderboard-index-tsx-5-b-3-5e4",
     "__context": {
@@ -83,13 +90,13 @@
     },
     "config": "config---arcade-5-e-9-6a3"
   },
-  "/-179": {
+  "/-722": {
     "__comp": "__comp---theme-docs-root-5-e-9-0b6",
     "__context": {
       "plugin": "plugin---aba-d70"
     }
   },
-  "/-116": {
+  "/-844": {
     "__comp": "__comp---theme-doc-version-roota-7-b-5de",
     "__props": "__props---22-d-307"
   },
@@ -216,6 +223,10 @@
   "/tags/aggregation-aff": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-aggregationc-96-de8"
+  },
+  "/tags/agile-fd7": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-agilec-29-b92"
   },
   "/tags/ai-144": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -357,6 +368,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-arrays-1-c-8-352"
   },
+  "/tags/artifacts-13a": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-artifactsc-46-e5b"
+  },
   "/tags/aspect-oriented-programming-893": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-aspect-oriented-programminga-3-a-7f7"
@@ -376,6 +391,10 @@
   "/tags/attack-bf5": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-attackcc-8-0a2"
+  },
+  "/tags/attention-fcf": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-attentionf-08-142"
   },
   "/tags/audit-253": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -432,6 +451,10 @@
   "/tags/automation-b06": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-automationd-38-b3b"
+  },
+  "/tags/autoresearch-7bd": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-autoresearchf-6-c-7a5"
   },
   "/tags/availability-21c": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -820,6 +843,10 @@
   "/tags/cdr-558": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-cdra-41-006"
+  },
+  "/tags/ceremonies-8e7": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-ceremoniescd-1-931"
   },
   "/tags/certification-c2a": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -2013,6 +2040,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-embeddings-1-c-0-cda"
   },
+  "/tags/empiricism-348": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-empiricismd-06-83e"
+  },
   "/tags/encapsulation-56c": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-encapsulation-010-b21"
@@ -2028,6 +2059,10 @@
   "/tags/engineering-869": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-engineeringb-07-a50"
+  },
+  "/tags/engineering-practices-ccb": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-engineering-practices-802-f94"
   },
   "/tags/enhanced-client-4cc": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -2100,6 +2135,10 @@
   "/tags/etl-27c": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-etl-5-e-9-898"
+  },
+  "/tags/evals-3c5": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-evals-4-b-4-cf8"
   },
   "/tags/evaluations-76b": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -3193,6 +3232,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-kubernetes-rbacfaa-b85"
   },
+  "/tags/kv-cache-19e": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-kv-cachea-12-f9b"
+  },
   "/tags/kyc-b59": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-kyc-8-f-8-88e"
@@ -3221,6 +3264,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-langchain-0-ee-dfa"
   },
+  "/tags/langchain-4-j-60a": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-langchain-4-j-22-f-373"
+  },
   "/tags/langgraph-9ff": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-langgraph-2-ef-c80"
@@ -3232,6 +3279,10 @@
   "/tags/latency-21f": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-latencye-62-bf7"
+  },
+  "/tags/latency-optimization-9b4": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-latency-optimizationac-8-5a4"
   },
   "/tags/layer-cache-06e": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -3276,6 +3327,10 @@
   "/tags/ledger-bd9": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-ledgerf-5-e-be3"
+  },
+  "/tags/leetcode-b0d": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-leetcodec-29-5ff"
   },
   "/tags/lfu-2e6": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -3324,6 +3379,10 @@
   "/tags/llm-916": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-llm-4-d-7-3ff"
+  },
+  "/tags/llm-economics-537": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-llm-economics-6-ee-21b"
   },
   "/tags/llms-001": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -3400,6 +3459,10 @@
   "/tags/loom-af9": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-loom-06-e-9f1"
+  },
+  "/tags/loop-engineering-fb7": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-loop-engineeringdb-7-cf5"
   },
   "/tags/loops-163": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -4485,6 +4548,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-prometheusf-38-094"
   },
+  "/tags/prompt-caching-042": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-prompt-caching-1-a-5-377"
+  },
   "/tags/prompt-engineering-c02": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-prompt-engineeringb-14-5b8"
@@ -4608,6 +4675,10 @@
   "/tags/rag-d35": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-rag-43-e-c89"
+  },
+  "/tags/ralph-loop-960": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-ralph-loop-9-e-2-0ee"
   },
   "/tags/rate-limiting-ca6": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -4977,6 +5048,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-sca-213-3ac"
   },
+  "/tags/scalability-555": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-scalability-5-ea-601"
+  },
   "/tags/scaling-37a": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-scalingc-27-d22"
@@ -5020,6 +5095,10 @@
   "/tags/screaming-architecture-245": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-screaming-architecturec-27-db9"
+  },
+  "/tags/scrum-75f": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-scrum-033-036"
   },
   "/tags/sdlc-5bf": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -5285,6 +5364,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-software-engineeringc-7-a-919"
   },
+  "/tags/software-factory-749": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-software-factoryebc-878"
+  },
   "/tags/solid-f87": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-solid-0-a-5-456"
@@ -5308,6 +5391,10 @@
   "/tags/spring-7a5": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-spring-262-1d8"
+  },
+  "/tags/spring-ai-1bf": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-spring-ai-732-32a"
   },
   "/tags/spring-batch-050": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -5681,6 +5768,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-tddcc-9-b3e"
   },
+  "/tags/team-topologies-06d": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-team-topologies-338-3f5"
+  },
   "/tags/tech-mahindra-574": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-tech-mahindra-26-e-97c"
@@ -6017,6 +6108,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-vector-database-34-e-2a4"
   },
+  "/tags/velocity-a48": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-velocitya-9-f-bd8"
+  },
   "/tags/versioning-cef": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-versioninga-60-893"
@@ -6100,6 +6195,14 @@
   "/tags/wasm-892": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-wasmb-05-332"
+  },
+  "/tags/way-of-working-6ee": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-way-of-working-84-e-b2e"
+  },
+  "/tags/ways-of-working-c0a": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-ways-of-workingbbf-64a"
   },
   "/tags/web-4aa": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -6317,7 +6420,7 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-zsete-05-17c"
   },
-  "/-62e": {
+  "/-6d7": {
     "__comp": "__comp---theme-doc-roota-94-67a"
   },
   "/aws-bf9": {
@@ -6884,6 +6987,22 @@
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---java-jpa-hibernate-lifecycle-methods-3-da-e4d"
   },
+  "/non-technical-knowledge/agile-scrum/-7e4": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---non-technical-knowledge-agile-scrum-8-e-6-c57"
+  },
+  "/non-technical-knowledge/agile-scrum/estimation-metrics-82d": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---non-technical-knowledge-agile-scrum-estimation-metrics-102-807"
+  },
+  "/non-technical-knowledge/agile-scrum/scrum-framework-9cd": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---non-technical-knowledge-agile-scrum-scrum-framework-82-e-73b"
+  },
+  "/non-technical-knowledge/agile-scrum/ways-of-working-0ad": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---non-technical-knowledge-agile-scrum-ways-of-working-79-c-928"
+  },
   "/non-technical-knowledge/sdlc/-dd6": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---non-technical-knowledge-sdlc-6-dd-c41"
@@ -6988,6 +7107,10 @@
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-ai-agents-harness-23-d-9ec"
   },
+  "/technical-knowledge/ai-agents/loop-engineering-79d": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-ai-agents-loop-engineering-8-ec-f35"
+  },
   "/technical-knowledge/ai-agents/mcp-and-agentic-ai-f2f": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-ai-agents-mcp-and-agentic-ai-3-ad-f6e"
@@ -6995,6 +7118,10 @@
   "/technical-knowledge/ai-agents/overview-df0": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-ai-agents-overview-88-b-1db"
+  },
+  "/technical-knowledge/ai-agents/prompt-caching-45e": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-ai-agents-prompt-caching-8-be-be6"
   },
   "/technical-knowledge/ai-agents/prompt-engineering-cef": {
     "__comp": "__comp---theme-doc-item-178-a40",
@@ -7395,6 +7522,10 @@
   "/technical-knowledge/coding-interview-prep/dfs/-e74": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-coding-interview-prep-dfs-510-317"
+  },
+  "/technical-knowledge/coding-interview-prep/dsa-patterns-handbook-cdd": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-coding-interview-prep-dsa-patterns-handbook-062-269"
   },
   "/technical-knowledge/coding-interview-prep/dynamic-programming/-ee9": {
     "__comp": "__comp---theme-doc-item-178-a40",
@@ -11499,6 +11630,10 @@
   "/technical-knowledge/spring/spring-transactional-deep-dive-e79": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-spring-spring-transactional-deep-dive-618-10e"
+  },
+  "/technical-knowledge/system-design/60-days-of-system-design-054": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-60-days-of-system-design-7-eb-161"
   },
   "/technical-knowledge/system-design/advanced-consensus-bft-312": {
     "__comp": "__comp---theme-doc-item-178-a40",

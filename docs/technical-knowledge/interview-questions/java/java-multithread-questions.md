@@ -78,7 +78,7 @@ Thread.start()
 
 ## See Also
 
-- [Java Locks & Synchronization Primitives](../java/java-locks.md)
-- [AbstractQueuedSynchronizer (AQS) Deep Dive](../java/java-aqs-internals.md)
-- [Java Concurrent Collections](../interview-questions/java/concurrent-collection-interview.md)
+- [Java Locks & Synchronization Primitives](../../java/java-locks.md)
+- [AbstractQueuedSynchronizer (AQS) Deep Dive](../../java/java-aqs-internals.md)
+- [Java Concurrent Collections](./concurrent-collection-interview.md)
 

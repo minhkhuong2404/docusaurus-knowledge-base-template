@@ -1,9 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import { useUserProgress } from '../../../context/UserProgressContext';
 import { triggerFireworks } from '../../../utils/fireworks';
-import { SYSTEM_DESIGN_PUZZLES, PuzzleScenario } from '../../../data/systemDesignPuzzlesData';
+import { SYSTEM_DESIGN_PUZZLES } from '../../../data/systemDesignPuzzlesData';
+import type { PuzzleScenario } from '../../../data/systemDesignPuzzlesData';
 
-export { PuzzleScenario, SYSTEM_DESIGN_PUZZLES };
+export type { PuzzleScenario };
+export { SYSTEM_DESIGN_PUZZLES };
 
 export default function ArchitecturePuzzleGame() {
   const { addExp, saveMiniGameScore, unlockAchievement } = useUserProgress();

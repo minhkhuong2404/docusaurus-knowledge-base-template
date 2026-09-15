@@ -244,6 +244,6 @@ Once a request becomes an asynchronous chain of events across several services, 
 - [Transactional Outbox Pattern](./outbox-pattern.md)
 - [Saga Pattern (Choreography vs Orchestration)](./saga-pattern.md)
 - [Distributed Tracing](./distributed-tracing.md)
-- [Kafka Exactly-Once Semantics](../kafka/advanced/kafka-exactly-once.md)
+- [Kafka Exactly-Once Semantics](../kafka/advanced/exactly-once.md)
 - [Kafka Consumer Lag & DLQ Patterns](../kafka/consumer/consumer-lag.md)
 - [Deployment Configuration & Infrastructure Verification](../../non-technical-knowledge/sdlc/deployment/deployment-configuration-verification.md)

@@ -43,6 +43,11 @@ export default [
     exact: true
   },
   {
+    path: '/hub/',
+    component: ComponentCreator('/hub/', 'e40'),
+    exact: true
+  },
+  {
     path: '/leaderboard/',
     component: ComponentCreator('/leaderboard/', 'dec'),
     exact: true
@@ -69,11 +74,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '179'),
+    component: ComponentCreator('/', '722'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '116'),
+        component: ComponentCreator('/', '844'),
         routes: [
           {
             path: '/tags',
@@ -228,6 +233,11 @@ export default [
           {
             path: '/tags/aggregation',
             component: ComponentCreator('/tags/aggregation', 'aff'),
+            exact: true
+          },
+          {
+            path: '/tags/agile',
+            component: ComponentCreator('/tags/agile', 'fd7'),
             exact: true
           },
           {
@@ -406,6 +416,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/artifacts',
+            component: ComponentCreator('/tags/artifacts', '13a'),
+            exact: true
+          },
+          {
             path: '/tags/aspect-oriented-programming',
             component: ComponentCreator('/tags/aspect-oriented-programming', '893'),
             exact: true
@@ -428,6 +443,11 @@ export default [
           {
             path: '/tags/attack',
             component: ComponentCreator('/tags/attack', 'bf5'),
+            exact: true
+          },
+          {
+            path: '/tags/attention',
+            component: ComponentCreator('/tags/attention', 'fcf'),
             exact: true
           },
           {
@@ -498,6 +518,11 @@ export default [
           {
             path: '/tags/automation',
             component: ComponentCreator('/tags/automation', 'b06'),
+            exact: true
+          },
+          {
+            path: '/tags/autoresearch',
+            component: ComponentCreator('/tags/autoresearch', '7bd'),
             exact: true
           },
           {
@@ -983,6 +1008,11 @@ export default [
           {
             path: '/tags/cdr',
             component: ComponentCreator('/tags/cdr', '558'),
+            exact: true
+          },
+          {
+            path: '/tags/ceremonies',
+            component: ComponentCreator('/tags/ceremonies', '8e7'),
             exact: true
           },
           {
@@ -2476,6 +2506,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/empiricism',
+            component: ComponentCreator('/tags/empiricism', '348'),
+            exact: true
+          },
+          {
             path: '/tags/encapsulation',
             component: ComponentCreator('/tags/encapsulation', '56c'),
             exact: true
@@ -2493,6 +2528,11 @@ export default [
           {
             path: '/tags/engineering',
             component: ComponentCreator('/tags/engineering', '869'),
+            exact: true
+          },
+          {
+            path: '/tags/engineering-practices',
+            component: ComponentCreator('/tags/engineering-practices', 'ccb'),
             exact: true
           },
           {
@@ -2583,6 +2623,11 @@ export default [
           {
             path: '/tags/etl',
             component: ComponentCreator('/tags/etl', '27c'),
+            exact: true
+          },
+          {
+            path: '/tags/evals',
+            component: ComponentCreator('/tags/evals', '3c5'),
             exact: true
           },
           {
@@ -3951,6 +3996,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/kv-cache',
+            component: ComponentCreator('/tags/kv-cache', '19e'),
+            exact: true
+          },
+          {
             path: '/tags/kyc',
             component: ComponentCreator('/tags/kyc', 'b59'),
             exact: true
@@ -3986,6 +4036,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/langchain-4-j',
+            component: ComponentCreator('/tags/langchain-4-j', '60a'),
+            exact: true
+          },
+          {
             path: '/tags/langgraph',
             component: ComponentCreator('/tags/langgraph', '9ff'),
             exact: true
@@ -3998,6 +4053,11 @@ export default [
           {
             path: '/tags/latency',
             component: ComponentCreator('/tags/latency', '21f'),
+            exact: true
+          },
+          {
+            path: '/tags/latency-optimization',
+            component: ComponentCreator('/tags/latency-optimization', '9b4'),
             exact: true
           },
           {
@@ -4053,6 +4113,11 @@ export default [
           {
             path: '/tags/ledger',
             component: ComponentCreator('/tags/ledger', 'bd9'),
+            exact: true
+          },
+          {
+            path: '/tags/leetcode',
+            component: ComponentCreator('/tags/leetcode', 'b0d'),
             exact: true
           },
           {
@@ -4113,6 +4178,11 @@ export default [
           {
             path: '/tags/llm',
             component: ComponentCreator('/tags/llm', '916'),
+            exact: true
+          },
+          {
+            path: '/tags/llm-economics',
+            component: ComponentCreator('/tags/llm-economics', '537'),
             exact: true
           },
           {
@@ -4208,6 +4278,11 @@ export default [
           {
             path: '/tags/loom',
             component: ComponentCreator('/tags/loom', 'af9'),
+            exact: true
+          },
+          {
+            path: '/tags/loop-engineering',
+            component: ComponentCreator('/tags/loop-engineering', 'fb7'),
             exact: true
           },
           {
@@ -5566,6 +5641,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/prompt-caching',
+            component: ComponentCreator('/tags/prompt-caching', '042'),
+            exact: true
+          },
+          {
             path: '/tags/prompt-engineering',
             component: ComponentCreator('/tags/prompt-engineering', 'c02'),
             exact: true
@@ -5718,6 +5798,11 @@ export default [
           {
             path: '/tags/rag',
             component: ComponentCreator('/tags/rag', 'd35'),
+            exact: true
+          },
+          {
+            path: '/tags/ralph-loop',
+            component: ComponentCreator('/tags/ralph-loop', '960'),
             exact: true
           },
           {
@@ -6181,6 +6266,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/scalability',
+            component: ComponentCreator('/tags/scalability', '555'),
+            exact: true
+          },
+          {
             path: '/tags/scaling',
             component: ComponentCreator('/tags/scaling', '37a'),
             exact: true
@@ -6233,6 +6323,11 @@ export default [
           {
             path: '/tags/screaming-architecture',
             component: ComponentCreator('/tags/screaming-architecture', '245'),
+            exact: true
+          },
+          {
+            path: '/tags/scrum',
+            component: ComponentCreator('/tags/scrum', '75f'),
             exact: true
           },
           {
@@ -6566,6 +6661,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/software-factory',
+            component: ComponentCreator('/tags/software-factory', '749'),
+            exact: true
+          },
+          {
             path: '/tags/solid',
             component: ComponentCreator('/tags/solid', 'f87'),
             exact: true
@@ -6593,6 +6693,11 @@ export default [
           {
             path: '/tags/spring',
             component: ComponentCreator('/tags/spring', '7a5'),
+            exact: true
+          },
+          {
+            path: '/tags/spring-ai',
+            component: ComponentCreator('/tags/spring-ai', '1bf'),
             exact: true
           },
           {
@@ -7061,6 +7166,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/team-topologies',
+            component: ComponentCreator('/tags/team-topologies', '06d'),
+            exact: true
+          },
+          {
             path: '/tags/tech-mahindra',
             component: ComponentCreator('/tags/tech-mahindra', '574'),
             exact: true
@@ -7481,6 +7591,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/velocity',
+            component: ComponentCreator('/tags/velocity', 'a48'),
+            exact: true
+          },
+          {
             path: '/tags/versioning',
             component: ComponentCreator('/tags/versioning', 'cef'),
             exact: true
@@ -7583,6 +7698,16 @@ export default [
           {
             path: '/tags/wasm',
             component: ComponentCreator('/tags/wasm', '892'),
+            exact: true
+          },
+          {
+            path: '/tags/way-of-working',
+            component: ComponentCreator('/tags/way-of-working', '6ee'),
+            exact: true
+          },
+          {
+            path: '/tags/ways-of-working',
+            component: ComponentCreator('/tags/ways-of-working', 'c0a'),
             exact: true
           },
           {
@@ -7857,7 +7982,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '62e'),
+            component: ComponentCreator('/', '6d7'),
             routes: [
               {
                 path: '/aws',
@@ -8706,6 +8831,30 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/non-technical-knowledge/agile-scrum/',
+                component: ComponentCreator('/non-technical-knowledge/agile-scrum/', '7e4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/non-technical-knowledge/agile-scrum/estimation-metrics',
+                component: ComponentCreator('/non-technical-knowledge/agile-scrum/estimation-metrics', '82d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/non-technical-knowledge/agile-scrum/scrum-framework',
+                component: ComponentCreator('/non-technical-knowledge/agile-scrum/scrum-framework', '9cd'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/non-technical-knowledge/agile-scrum/ways-of-working',
+                component: ComponentCreator('/non-technical-knowledge/agile-scrum/ways-of-working', '0ad'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/non-technical-knowledge/sdlc/',
                 component: ComponentCreator('/non-technical-knowledge/sdlc/', 'dd6'),
                 exact: true,
@@ -8862,6 +9011,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/ai-agents/loop-engineering',
+                component: ComponentCreator('/technical-knowledge/ai-agents/loop-engineering', '79d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/ai-agents/mcp-and-agentic-ai',
                 component: ComponentCreator('/technical-knowledge/ai-agents/mcp-and-agentic-ai', 'f2f'),
                 exact: true,
@@ -8870,6 +9025,12 @@ export default [
               {
                 path: '/technical-knowledge/ai-agents/overview',
                 component: ComponentCreator('/technical-knowledge/ai-agents/overview', 'df0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/ai-agents/prompt-caching',
+                component: ComponentCreator('/technical-knowledge/ai-agents/prompt-caching', '45e'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -9460,6 +9621,12 @@ export default [
               {
                 path: '/technical-knowledge/coding-interview-prep/dfs/',
                 component: ComponentCreator('/technical-knowledge/coding-interview-prep/dfs/', 'e74'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/coding-interview-prep/dsa-patterns-handbook',
+                component: ComponentCreator('/technical-knowledge/coding-interview-prep/dsa-patterns-handbook', 'cdd'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -15605,6 +15772,12 @@ export default [
               {
                 path: '/technical-knowledge/spring/spring-transactional-deep-dive',
                 component: ComponentCreator('/technical-knowledge/spring/spring-transactional-deep-dive', 'e79'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/60-days-of-system-design',
+                component: ComponentCreator('/technical-knowledge/system-design/60-days-of-system-design', '054'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

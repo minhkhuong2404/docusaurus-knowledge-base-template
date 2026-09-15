@@ -462,6 +462,53 @@
   }
 }
 
+/* =========================================================
+   60 Days of System Design: Question & Answer Highlights
+   ========================================================= */
 
+.sd-winner-highlight {
+  display: inline-block;
+  background: rgba(52, 211, 153, 0.16) !important;
+  border: 1.5px solid #34d399 !important;
+  color: #34d399 !important;
+  border-radius: 6px;
+  padding: 3px 10px;
+  box-shadow: 0 0 12px rgba(52, 211, 153, 0.28);
+  font-weight: 700;
+  margin: 2px 0;
+  transition: all 0.2s ease;
+}
 
+.sd-winner-highlight:hover {
+  background: rgba(52, 211, 153, 0.24) !important;
+  box-shadow: 0 0 18px rgba(52, 211, 153, 0.45);
+}
 
+[data-theme="light"] .sd-winner-highlight {
+  background: rgba(16, 185, 129, 0.12) !important;
+  border: 1.5px solid #059669 !important;
+  color: #065f46 !important;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.2);
+}
+
+.sd-question-glow-card {
+  position: relative;
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.09) 0%, rgba(99, 102, 241, 0.06) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-left: 4px solid #38bdf8;
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin: 14px 0 16px 0;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2), 0 0 12px rgba(56, 189, 248, 0.15);
+}
+
+.sd-answer-glow-card {
+  position: relative;
+  background: linear-gradient(135deg, rgba(52, 211, 153, 0.12) 0%, rgba(16, 185, 129, 0.05) 100%);
+  border: 1px solid rgba(52, 211, 153, 0.4);
+  border-left: 4px solid #34d399;
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin: 16px 0;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2), 0 0 15px rgba(52, 211, 153, 0.2);
+}

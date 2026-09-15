@@ -109,7 +109,7 @@ function convertCsvRowsToQuestions(rows, categoryName) {
   const explIdx = header.indexOf('explanation') !== -1 ? header.indexOf('explanation') : 10;
 
   const questions = [];
-  const seenTexts = new Set();
+  const seenIds = new Set();
 
   for (let i = 1; i < rows.length; i++) {
     const row = rows[i];
@@ -119,9 +119,8 @@ function convertCsvRowsToQuestions(rows, categoryName) {
     const questionText = (qTextIdx !== -1 && row[qTextIdx]) ? row[qTextIdx].trim() : (row[3] ? row[3].trim() : '');
     if (!questionText) continue;
 
-    const normText = questionText.toLowerCase().replace(/\s+/g, ' ');
-    if (seenTexts.has(normText)) continue;
-    seenTexts.add(normText);
+    if (seenIds.has(id)) continue;
+    seenIds.add(id);
 
     const topic = (topicIdx !== -1 && row[topicIdx]) ? row[topicIdx].trim() : categoryName;
     const difficulty = parseDifficulty((diffIdx !== -1 && row[diffIdx]) ? row[diffIdx] : (row[2] || 'medium'));
@@ -155,7 +154,7 @@ function convertCsvRowsToQuestions(rows, categoryName) {
 
 async function fetchTab(tab) {
   const encoded = encodeURIComponent(tab.sheetName);
-  const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encoded}`;
+  const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&headers=1&sheet=${encoded}`;
   console.log(`⏳ Fetching tab "${tab.sheetName}" from Google Sheet...`);
 
   const resp = await fetch(url, { headers: { Accept: 'text/csv, text/plain, */*' } });

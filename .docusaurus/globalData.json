@@ -556,6 +556,26 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "non-technical-knowledge/agile-scrum/estimation-metrics",
+              "path": "/non-technical-knowledge/agile-scrum/estimation-metrics",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "non-technical-knowledge/agile-scrum/intro",
+              "path": "/non-technical-knowledge/agile-scrum/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "non-technical-knowledge/agile-scrum/scrum-framework",
+              "path": "/non-technical-knowledge/agile-scrum/scrum-framework",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "non-technical-knowledge/agile-scrum/ways-of-working",
+              "path": "/non-technical-knowledge/agile-scrum/ways-of-working",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "non-technical-knowledge/sdlc/deployment/deployment-configuration-verification",
               "path": "/non-technical-knowledge/sdlc/deployment/deployment-configuration-verification",
               "sidebar": "tutorialSidebar"
@@ -676,6 +696,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/ai-agents/loop-engineering",
+              "path": "/technical-knowledge/ai-agents/loop-engineering",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/ai-agents/mcp-and-agentic-ai",
               "path": "/technical-knowledge/ai-agents/mcp-and-agentic-ai",
               "sidebar": "tutorialSidebar"
@@ -683,6 +708,11 @@
             {
               "id": "technical-knowledge/ai-agents/overview",
               "path": "/technical-knowledge/ai-agents/overview",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/ai-agents/prompt-caching",
+              "path": "/technical-knowledge/ai-agents/prompt-caching",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -1183,6 +1213,11 @@
             {
               "id": "technical-knowledge/coding-interview-prep/dfs/dfs",
               "path": "/technical-knowledge/coding-interview-prep/dfs/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/coding-interview-prep/dsa-patterns-handbook",
+              "path": "/technical-knowledge/coding-interview-prep/dsa-patterns-handbook",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -6322,6 +6357,11 @@
             {
               "id": "technical-knowledge/spring/spring-transactional-deep-dive",
               "path": "/technical-knowledge/spring/spring-transactional-deep-dive",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/60-days-of-system-design",
+              "path": "/technical-knowledge/system-design/60-days-of-system-design",
               "sidebar": "tutorialSidebar"
             },
             {
