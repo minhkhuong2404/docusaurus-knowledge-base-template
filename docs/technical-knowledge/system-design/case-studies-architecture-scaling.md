@@ -46,6 +46,13 @@ Incoming Request (kylie.myshopify.com) ──► NGINX / Lua Router ──┬─
 - **Align Cells with Natural Domain Boundaries**: E-commerce has a clean tenancy boundary (the merchant). Sharding by tenant allows 100% shared-nothing isolation.
 - **Deterministic Edge Routing**: Use lightweight proxy routers at the edge to inspect tenancy headers and forward to isolated cells without database lookups.
 
+### 1.1 Beyond Cells: Moving Inventory Reservations from Redis to MySQL 8
+While Pods solved multi-tenant blast-radius isolation, single viral flash sales inside a Pod still caused severe **row contention** on inventory counters. For years, Shopify used Redis to hold temporary checkout reservations and MySQL as the authoritative ledger. 
+
+However, the distributed "seam" between Redis and MySQL caused edge-case overselling and underselling. In a landmark architecture migration, Shopify eliminated Redis from the reservation path and migrated reservations entirely to MySQL 8 using **`SELECT ... FOR UPDATE SKIP LOCKED`**, scaling to **$5.1M GMV/minute** with zero dual-write inconsistencies.
+
+*Deep dive & interactive simulator:* [**Inventory Reservations at Scale: Why Shopify Moved from Redis to MySQL**](./inventory-reservation-system.md).
+
 ---
 
 ## 2. Twitter (X) Timeline: The Hybrid Fan-Out Architecture

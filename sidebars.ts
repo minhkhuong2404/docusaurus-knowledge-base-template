@@ -281,6 +281,7 @@ const sidebars: SidebarsConfig = {
 							collapsed: true,
 							items: [
 								'technical-knowledge/system-design/architecture-fundamentals',
+								'technical-knowledge/system-design/what-breaks-at-scale',
 								'technical-knowledge/system-design/capacity-planning',
 								'technical-knowledge/system-design/time-and-ordering-and-unique-ids',
 								'technical-knowledge/system-design/interview-framework',
@@ -319,6 +320,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/system-design/crdt-collaborative-systems',
 								'technical-knowledge/system-design/real-time-updates',
 								'technical-knowledge/system-design/handling-contention',
+								'technical-knowledge/system-design/inventory-reservation-system',
 								'technical-knowledge/system-design/data-consistency',
 								'technical-knowledge/system-design/distributed-transactions',
 								'technical-knowledge/system-design/two-phase-commit',
@@ -786,6 +788,15 @@ const sidebars: SidebarsConfig = {
 						'technical-knowledge/elasticsearch/elasticsearch-internals',
 						'technical-knowledge/elasticsearch/logstash-kibana-integration',
 						'technical-knowledge/elasticsearch/elasticsearch-senior-deep-dive'
+					]
+				},
+				{
+					type: 'category',
+					label: '⚡ Splunk & SPL',
+					items: [
+						'technical-knowledge/splunk/splunk-fundamentals',
+						'technical-knowledge/splunk/splunk-eval-and-time-bucketing',
+						'technical-knowledge/splunk/splunk-advanced-spl-recipes'
 					]
 				},
 				{

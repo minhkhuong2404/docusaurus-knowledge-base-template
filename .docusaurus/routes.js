@@ -74,11 +74,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '722'),
+    component: ComponentCreator('/', 'd25'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '844'),
+        component: ComponentCreator('/', '914'),
         routes: [
           {
             path: '/tags',
@@ -2426,6 +2426,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/e-commerce',
+            component: ComponentCreator('/tags/e-commerce', '64b'),
+            exact: true
+          },
+          {
             path: '/tags/ec-2',
             component: ComponentCreator('/tags/ec-2', '154'),
             exact: true
@@ -2791,6 +2796,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/failure-modes',
+            component: ComponentCreator('/tags/failure-modes', 'a94'),
+            exact: true
+          },
+          {
             path: '/tags/fallback',
             component: ComponentCreator('/tags/fallback', '603'),
             exact: true
@@ -2913,6 +2923,11 @@ export default [
           {
             path: '/tags/fixup',
             component: ComponentCreator('/tags/fixup', '2bb'),
+            exact: true
+          },
+          {
+            path: '/tags/flash-sales',
+            component: ComponentCreator('/tags/flash-sales', '79e'),
             exact: true
           },
           {
@@ -3681,6 +3696,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/inventory-reservation',
+            component: ComponentCreator('/tags/inventory-reservation', 'd10'),
+            exact: true
+          },
+          {
             path: '/tags/inverted-index',
             component: ComponentCreator('/tags/inverted-index', 'cf7'),
             exact: true
@@ -3813,6 +3833,11 @@ export default [
           {
             path: '/tags/java-se-21',
             component: ComponentCreator('/tags/java-se-21', '8d9'),
+            exact: true
+          },
+          {
+            path: '/tags/javascript-mastery',
+            component: ComponentCreator('/tags/javascript-mastery', 'd71'),
             exact: true
           },
           {
@@ -5986,6 +6011,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/replication-lag',
+            component: ComponentCreator('/tags/replication-lag', '360'),
+            exact: true
+          },
+          {
             path: '/tags/reporting',
             component: ComponentCreator('/tags/reporting', '9bd'),
             exact: true
@@ -6563,6 +6593,11 @@ export default [
           {
             path: '/tags/singleton',
             component: ComponentCreator('/tags/singleton', '93b'),
+            exact: true
+          },
+          {
+            path: '/tags/skip-locked',
+            component: ComponentCreator('/tags/skip-locked', '748'),
             exact: true
           },
           {
@@ -7591,6 +7626,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/vector-search',
+            component: ComponentCreator('/tags/vector-search', 'e86'),
+            exact: true
+          },
+          {
             path: '/tags/velocity',
             component: ComponentCreator('/tags/velocity', 'a48'),
             exact: true
@@ -7982,7 +8022,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '6d7'),
+            component: ComponentCreator('/', 'ded'),
             routes: [
               {
                 path: '/aws',
@@ -15998,6 +16038,12 @@ export default [
                 sidebar: "tutorialSidebar"
               },
               {
+                path: '/technical-knowledge/system-design/inventory-reservation-system',
+                component: ComponentCreator('/technical-knowledge/system-design/inventory-reservation-system', 'b00'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
                 path: '/technical-knowledge/system-design/kubernetes-networking',
                 component: ComponentCreator('/technical-knowledge/system-design/kubernetes-networking', '120'),
                 exact: true,
@@ -16204,6 +16250,12 @@ export default [
               {
                 path: '/technical-knowledge/system-design/webhook',
                 component: ComponentCreator('/technical-knowledge/system-design/webhook', '5c4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/what-breaks-at-scale',
+                component: ComponentCreator('/technical-knowledge/system-design/what-breaks-at-scale', '63f'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

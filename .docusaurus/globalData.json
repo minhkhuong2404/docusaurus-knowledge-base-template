@@ -6550,6 +6550,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/inventory-reservation-system",
+              "path": "/technical-knowledge/system-design/inventory-reservation-system",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/kubernetes-networking",
               "path": "/technical-knowledge/system-design/kubernetes-networking",
               "sidebar": "tutorialSidebar"
@@ -6722,6 +6727,11 @@
             {
               "id": "technical-knowledge/system-design/webhook",
               "path": "/technical-knowledge/system-design/webhook",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/what-breaks-at-scale",
+              "path": "/technical-knowledge/system-design/what-breaks-at-scale",
               "sidebar": "tutorialSidebar"
             },
             {

@@ -90,13 +90,13 @@
     },
     "config": "config---arcade-5-e-9-6a3"
   },
-  "/-722": {
+  "/-d25": {
     "__comp": "__comp---theme-docs-root-5-e-9-0b6",
     "__context": {
       "plugin": "plugin---aba-d70"
     }
   },
-  "/-844": {
+  "/-914": {
     "__comp": "__comp---theme-doc-version-roota-7-b-5de",
     "__props": "__props---22-d-307"
   },
@@ -1976,6 +1976,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-e-2-eba-5-6da"
   },
+  "/tags/e-commerce-64b": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-e-commerce-428-3df"
+  },
   "/tags/ec-2-154": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-ec-241-e-2da"
@@ -2268,6 +2272,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-failure-914-2f5"
   },
+  "/tags/failure-modes-a94": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-failure-modes-471-2cf"
+  },
   "/tags/fallback-603": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-fallback-4-cc-a0a"
@@ -2367,6 +2375,10 @@
   "/tags/fixup-2bb": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-fixup-850-c90"
+  },
+  "/tags/flash-sales-79e": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-flash-sales-9-de-89f"
   },
   "/tags/flatmap-d5e": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -2980,6 +2992,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-introduction-8-fb-ab4"
   },
+  "/tags/inventory-reservation-d10": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-inventory-reservation-7-ff-dc0"
+  },
   "/tags/inverted-index-cf7": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-inverted-index-7-b-8-291"
@@ -3087,6 +3103,10 @@
   "/tags/java-se-21-8d9": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-java-se-21-b-09-010"
+  },
+  "/tags/javascript-mastery-d71": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-javascript-mastery-214-5c7"
   },
   "/tags/jdbc-e39": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -4824,6 +4844,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-replication-68-d-ec4"
   },
+  "/tags/replication-lag-360": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-replication-lag-4-f-3-a18"
+  },
   "/tags/reporting-9bd": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-reporting-88-a-9f8"
@@ -5287,6 +5311,10 @@
   "/tags/singleton-93b": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-singleton-9-d-0-3a4"
+  },
+  "/tags/skip-locked-748": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-skip-lockedf-87-790"
   },
   "/tags/skiplist-699": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -6108,6 +6136,10 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-vector-database-34-e-2a4"
   },
+  "/tags/vector-search-e86": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-vector-search-8-f-2-4db"
+  },
   "/tags/velocity-a48": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-velocitya-9-f-bd8"
@@ -6420,7 +6452,7 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-zsete-05-17c"
   },
-  "/-6d7": {
+  "/-ded": {
     "__comp": "__comp---theme-doc-roota-94-67a"
   },
   "/aws-bf9": {
@@ -11779,6 +11811,10 @@
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-system-design-interview-frameworkfb-6-a3f"
   },
+  "/technical-knowledge/system-design/inventory-reservation-system-b00": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-inventory-reservation-systemf-01-13c"
+  },
   "/technical-knowledge/system-design/kubernetes-networking-120": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-system-design-kubernetes-networkingf-7-c-9bc"
@@ -11918,6 +11954,10 @@
   "/technical-knowledge/system-design/webhook-5c4": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-system-design-webhooka-01-99f"
+  },
+  "/technical-knowledge/system-design/what-breaks-at-scale-63f": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-what-breaks-at-scale-565-785"
   },
   "/technical-knowledge/test/blackbox-and-system-testing-c38": {
     "__comp": "__comp---theme-doc-item-178-a40",
