@@ -121,7 +121,7 @@ Cache<String, String> cache = Caffeine.newBuilder().maximumSize(10_000).build();
 }`
   },
   {
-    id: '8',
+    id: 8,
     category: 'Core Java & JVM',
     priority: 'Bắt Buộc',
     title: 'Luôn dùng try-with-resources cho tất cả I/O, File và JDBC Connection',
@@ -767,5 +767,431 @@ git rebase develop // ✅ Lịch sử commit thẳng hàng, phẳng phiu`
     detail: 'Khi Senior để lại comment bắt sửa: Không bao giờ phản bác "Nhưng em thấy code em vẫn chạy được mà". Hãy cảm ơn, sửa triệt để và hỏi lại nhẹ nhàng nếu chưa hiểu lý do kiến trúc đằng sau. Thái độ cầu thị chính là yếu tố số 1 giúp bạn pass thử việc xuất sắc!',
     codeBad: `Bỏ qua comment của reviewer hoặc cãi cố: "Code em test trên máy chạy ngon rồi mà anh"`,
     codeGood: `"Em cảm ơn anh đã góp ý. Em đã sửa lại theo hướng dùng Constructor Injection tại commit abcxyz, nhờ anh xem lại giúp em nhé ạ!"`
+  },
+  {
+    id: 51,
+    category: 'Git & Tác Phong',
+    priority: 'Bắt Buộc',
+    title: 'CẤM gõ `git push --force` lên branch chung (main, develop, staging)',
+    summary: 'Lệnh force push sẽ ghi đè và xóa sổ toàn bộ commit của đồng nghiệp trong nhóm, làm gãy toàn bộ pipeline CI/CD.',
+    detail: 'Trên branch tính năng cá nhân nếu rebase thì dùng git push --force-with-lease để đảm bảo không ghi đè nếu remote có commit mới. Nhưng trên các branch chung, force push là hành động bị coi là "tội đồ". Hãy liên hệ DevOps cài đặt Branch Protection Rule để khóa vĩnh viễn quyền force push.',
+    codeBad: `git push origin develop --force // ❌ XÓA SỔ toàn bộ commit mới của các đồng nghiệp khác!`,
+    codeGood: `// Trên branch tính năng cá nhân:
+git push origin feature/my-task --force-with-lease // ✅ An toàn, chỉ ghi đè nếu chưa ai push lên`
+  },
+  {
+    id: 52,
+    category: 'Git & Tác Phong',
+    priority: 'Tác Phong',
+    title: 'Quy tắc Estimate Task: Luôn nhân hệ số Buffer 1.5x đến 2.0x',
+    summary: 'Lập trình viên mới đi làm thường estimate thời gian viết code thuần túy, bỏ quên 70% thời gian cho test, debug và deploy.',
+    detail: 'Nếu bạn nghĩ code tính năng này mất 1 ngày, hãy báo cáo estimate là 1.5 đến 2 ngày. 0.5 - 1 ngày dự phòng (Buffer) dành cho: viết Unit & Integration Tests, giải quyết merge conflict, fix comment review của Senior, cấu hình Docker/DB trên staging và test với QA. Bàn giao sớm hơn dự kiến luôn được đánh giá cao hơn là hứa 1 ngày nhưng 3 ngày mới xong.',
+    codeBad: `// Nghĩ: "Code này viết 3 tiếng xong" -> Báo cáo Daily: "Chiều nay em nộp PR nhé anh!"
+// Thực tế: Dính bug DB, conflict git, mất 2 ngày -> Bị đánh giá thiếu chuyên nghiệp!`,
+    codeGood: `// Dự tính code 1 ngày -> Estimate: 1.5 ngày hoặc 2 ngày
+// "Em ước tính task này mất khoảng 2 ngày: 1 ngày hoàn thiện logic chính, nửa ngày viết Unit Test và nửa ngày kiểm thử tích hợp môi trường Staging."`
+  },
+  {
+    id: 53,
+    category: 'Git & Tác Phong',
+    priority: 'Tác Phong',
+    title: 'Báo cáo Daily Standup ngắn gọn: 3 gạch đầu dòng cốt lõi',
+    summary: 'Đừng kể lể dài dòng về việc bạn đã gặp khó khăn ra sao. Hãy nói: Đã hoàn thành gì, Hôm nay làm gì, và Có Blocker nào không.',
+    detail: 'Standup chỉ kéo dài 1-2 phút mỗi người. Cấu trúc chuẩn: "Hôm qua em đã xong API thanh toán và viết 5 unit tests. Hôm nay em tiếp tục tích hợp với bên thứ ba VNPay. Hiện tại em đang bị block do chưa có sandbox API key từ Tech Lead, nhờ anh hỗ trợ cấp giúp em." Nói rõ người cần hỗ trợ để buổi họp đạt hiệu quả cao.',
+    codeBad: `"Hôm qua em ngồi đọc code module order thấy khó hiểu quá, em google mãi không ra, rồi em thử cách này cách kia cả buổi chiều..." (Kéo dài họp, gây sốt ruột cho team)`,
+    codeGood: `"Hôm qua em đã hoàn thành xong CRUD cho Product. Hôm nay em làm tiếp phần tính phí ship. Em không có blocker nào cả ạ."`
+  },
+  {
+    id: 54,
+    category: 'Clean Code & Logging',
+    priority: 'Kiến Trúc',
+    title: 'Gắn Correlation ID (X-Request-ID) vào MDC để trace log xuyên suốt hệ thống',
+    summary: 'Khi hệ thống phục vụ hàng ngàn người dùng, một mã UUID duy nhất gắn vào MDC sẽ gom tất cả log của một request lại một chỗ.',
+    detail: 'Trong OncePerRequestFilter, tạo hoặc lấy header X-Request-ID, nạp vào SLF4J MDC.put("traceId", traceId). Tất cả log được ghi từ Controller, Service đến DB đều tự động in kèm traceId này. Khi khách hàng báo lỗi kèm traceId, bạn chỉ cần search 1 giây trên Kibana/Datadog là ra toàn bộ hành trình của request đó.',
+    codeBad: `log.error("Có lỗi xảy ra khi tạo đơn hàng: {}", e.getMessage()); 
+// Không ai biết lỗi này thuộc về người dùng nào giữa 500,000 dòng log!`,
+    codeGood: `// Trong Filter:
+MDC.put("traceId", UUID.randomUUID().toString());
+// Pattern Logback: %d{ISO8601} [%thread] [%X{traceId}] %-5level %logger{36} - %msg%n
+// Khi ghi log: Tự động có traceId đi kèm mọi method`
+  },
+  {
+    id: 55,
+    category: 'Clean Code & Logging',
+    priority: 'Bắt Buộc',
+    title: 'Che giấu thông tin nhạy cảm (PII & Secret Masking) trong file Log',
+    summary: 'Ghi mật khẩu, số căn cước, token hoặc số thẻ tín dụng ra log là vi phạm luật an toàn thông tin (GDPR, PCI-DSS).',
+    detail: 'Không bao giờ log nguyên log.info("Request: {}", req) nếu đối tượng chứa mật khẩu hoặc mã OTP. Hãy dùng custom toString, Jackson @JsonIgnore hoặc Logback Masking Pattern để thay thế các trường nhạy cảm thành ****** hoặc ****1234.',
+    codeBad: `log.info("Login request payload: {}", userDto); // ❌ LỘ RÕ password_plain trong file log server!`,
+    codeGood: `// Dùng toString loại trừ mật khẩu hoặc record ẩn trường nhạy cảm:
+log.info("Yêu cầu đăng nhập | email={} | ip={}", userDto.email(), clientIp);`
+  },
+  {
+    id: 56,
+    category: 'Database & JPA',
+    priority: 'Hiệu Năng',
+    title: 'Công thức vàng cấu hình Connection Pool HikariCP: (CPU Cores * 2) + Disk Spindles',
+    summary: 'Đừng set đại maximum-pool-size: 100. Quá nhiều connection chỉ làm CPU Database kiệt quệ vì Context Switching.',
+    detail: 'Một server Database 4 cores chỉ nên duy trì khoảng 10-15 connection đồng thời. Khi đặt pool quá lớn (ví dụ 100-200), các luồng phải tranh chấp tài nguyên CPU của DB, khiến thời gian phản hồi tăng vọt. Thay vì tăng pool, hãy tối ưu index và rút ngắn thời gian giữ transaction.',
+    codeBad: `spring.datasource.hikari.maximum-pool-size: 200 # ❌ Gây quá tải CPU của Database Server!`,
+    codeGood: `spring.datasource.hikari.maximum-pool-size: 10 # ✅ Chuẩn cho máy chủ DB 4 cores SSD
+spring.datasource.hikari.connection-timeout: 20000 # 20s ném ngoại lệ nếu hết pool`
+  },
+  {
+    id: 57,
+    category: 'Database & JPA',
+    priority: 'Hiệu Năng',
+    title: 'Nguyên tắc Tiền Tố Bên Trái (Left-Prefix Rule) khi đánh Composite Index',
+    summary: 'Nếu đánh index trên (status, created_at, user_id), câu query WHERE chỉ chạy nhanh nếu có chứa cột status đầu tiên.',
+    detail: 'Database B+Tree composite index hoạt động như cuốn từ điển được sắp xếp theo Họ trước, rồi đến Tên đệm, rồi đến Tên. Nếu bạn tìm kiếm chỉ theo created_at mà không có status, DB buộc phải Full Table Scan. Thứ tự các cột trong index phải đi từ cột có tính phân loại cao nhất hoặc hay được lọc nhất.',
+    codeBad: `CREATE INDEX idx_order ON orders(status, created_at, user_id);
+-- Câu query sau KHÔNG TẬN DỤNG ĐƯỢC INDEX:
+SELECT * FROM orders WHERE created_at > '2026-01-01' AND user_id = 5; -- ❌ Full scan!`,
+    codeGood: `-- Query chứa tiền tố bên trái tận dụng index tối đa:
+SELECT * FROM orders WHERE status = 'COMPLETED' AND created_at > '2026-01-01'; -- ✅ Index Range Scan cực nhanh!`
+  },
+  {
+    id: 58,
+    category: 'Spring Boot & REST',
+    priority: 'Bắt Buộc',
+    title: 'Luôn cài đặt Connect Timeout và Read Timeout cho mọi HTTP Client',
+    summary: 'HTTP Client mặc định (như RestTemplate hay Feign) không có timeout hoặc timeout vô hạn; đối tác bị treo sẽ kéo sập toàn bộ ứng dụng của bạn.',
+    detail: 'Nếu bạn gọi API bên thứ ba mà họ bị nghẽn mạng, luồng của bạn sẽ bị treo vĩnh viễn. Càng nhiều request tới, các thread trong Tomcat pool (mặc định 200 threads) sẽ bị chiếm dụng hết sạch và sập server (Cascading Failure). Luôn cấu hình: connectTimeout = 3s, readTimeout = 5s.',
+    codeBad: `RestTemplate restTemplate = new RestTemplate(); // ❌ Mặc định timeout vô hạn!`,
+    codeGood: `RestTemplate restTemplate = new RestTemplateBuilder()
+    .setConnectTimeout(Duration.ofSeconds(3))
+    .setReadTimeout(Duration.ofSeconds(5))
+    .build(); // ✅ Trả về lỗi nhanh chóng nếu đối tác treo`
+  },
+  {
+    id: 59,
+    category: 'Spring Boot & REST',
+    priority: 'Kiến Trúc',
+    title: 'Sử dụng Rate Limiting để bảo vệ API khỏi bị spam hoặc brute-force',
+    summary: 'Các endpoint nhạy cảm như Đăng nhập, Gửi OTP, Quên mật khẩu bắt buộc phải có giới hạn tần suất gọi request.',
+    detail: 'Dùng thuật toán Token Bucket (Resilience4j RateLimiter hoặc Bucket4j kết hợp Redis) để giới hạn ví dụ tối đa 5 request/phút cho 1 địa chỉ IP/User. Khi vượt ngưỡng, trả về ngay HTTP 429 Too Many Requests kèm header Retry-After.',
+    codeBad: `@PostMapping("/api/auth/send-otp")
+public void sendOtp(@RequestParam String phone) {
+    // Không có rate limit -> Hacker viết script gọi 10,000 lần đốt sạch ngân sách SMS!
+}`,
+    codeGood: `@RateLimiter(name = "otpLimiter", fallbackMethod = "otpRateLimitFallback")
+@PostMapping("/api/auth/send-otp")
+public ResponseEntity<?> sendOtp(@RequestParam String phone) {
+    // Tối đa 3 lần / phút cho mỗi số điện thoại
+    return ResponseEntity.ok(otpService.generateAndSend(phone));
+}`
+  },
+  {
+    id: 60,
+    category: 'Core Java & JVM',
+    priority: 'Bắt Buộc',
+    title: 'Rò rỉ bộ nhớ kinh điển với ThreadLocal: Luôn gọi remove() trong khối finally',
+    summary: 'Tomcat tái sử dụng Thread trong Thread Pool. Quên remove ThreadLocal sẽ làm dữ liệu của user trước rò rỉ sang user sau.',
+    detail: 'Khi lưu thông tin UserContext vào ThreadLocal trong Filter, nếu request kết thúc mà bạn quên gọi userThreadLocal.remove(), Thread đó khi quay trở lại Pool vẫn giữ object cũ trong bộ nhớ. Request tiếp theo rơi vào Thread này sẽ đọc nhầm dữ liệu của người khác, gây lỗi bảo mật cực kỳ quái đản!',
+    codeBad: `public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) {
+    UserContextHolder.set(extractUser(req));
+    chain.doFilter(req, res); // ❌ QUÊN remove(): Dữ liệu lưu vĩnh viễn trên Thread Pool!
+}`,
+    codeGood: `public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) {
+    try {
+        UserContextHolder.set(extractUser(req));
+        chain.doFilter(req, res);
+    } finally {
+        UserContextHolder.clear(); // ✅ BẮT BUỘC gọi trong finally để dọn sạch ThreadLocal!
+    }
+}`
+  },
+  {
+    id: 61,
+    category: 'Core Java & JVM',
+    priority: 'Kiến Trúc',
+    title: 'Bảo vệ tính đóng gói với Collections.unmodifiableList() và List.copyOf()',
+    summary: 'Trả về List nội bộ của Entity hoặc Service cho phép bên ngoài tự ý thêm/xóa phần tử làm sai lệch trạng thái.',
+    detail: 'Khi trả về một danh sách từ Getter hoặc DTO, hãy bọc trong Collections.unmodifiableList(items) (Java 8) hoặc List.copyOf(items) (Java 10+). Nếu code bên ngoài cố tình gọi .add() hoặc .clear(), JVM sẽ ném ngay UnsupportedOperationException, đảm bảo an toàn bất biến.',
+    codeBad: `public class Cart {
+    private List<Item> items = new ArrayList<>();
+    public List<Item> getItems() { return this.items; } // ❌ Caller có thể gọi cart.getItems().clear()!
+}`,
+    codeGood: `public class Cart {
+    private final List<Item> items = new ArrayList<>();
+    public List<Item> getItems() {
+        return Collections.unmodifiableList(this.items); // ✅ Tránh mọi can thiệp ngoài ý muốn
+    }
+}`
+  },
+  {
+    id: 62,
+    category: 'Testing & QA',
+    priority: 'Kiến Trúc',
+    title: 'Dùng Testcontainers thay cho H2 Database khi chạy Integration Test',
+    summary: 'H2 không hỗ trợ các tính năng đặc thù của PostgreSQL/MySQL như JSONB, CTE, Triggers, dẫn đến test pass ở local nhưng tèo trên Production.',
+    detail: 'H2 có cú pháp và kiểu dữ liệu khác biệt so với DB thật. Testcontainers tự động bật một Docker container chứa đúng phiên bản PostgreSQL/MySQL thật trong lúc chạy test và tắt đi khi test xong. Test chạy trên môi trường giống 100% Production giúp bạn hoàn toàn an tâm.',
+    codeBad: `# Dùng H2 in-memory:
+spring.datasource.url: jdbc:h2:mem:testdb # ❌ Các hàm JSON và syntax đặc thù của Postgres không chạy được!`,
+    codeGood: `@Testcontainers
+@SpringBootTest
+class OrderRepositoryTest {
+    @Container
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine");
+    // ✅ Chạy trực tiếp trên Postgres thật 100% bằng Docker!
+}`
+  },
+  {
+    id: 63,
+    category: 'Testing & QA',
+    priority: 'Tác Phong',
+    title: 'Nguyên tắc F.I.R.S.T: Đảm bảo các bài Unit Test hoàn toàn độc lập',
+    summary: 'Unit test không bao giờ được phụ thuộc vào thứ tự chạy hoặc dữ liệu do bài test trước để lại.',
+    detail: 'Fast (nhanh dưới vài giây), Independent (không phụ thuộc bài test khác), Repeatable (chạy 1,000 lần trên máy nào cũng ra cùng kết quả), Self-validating (tự pass/fail qua assert, không nhìn bằng mắt), Timely (viết song song với code). Dùng @BeforeEach để làm sạch dữ liệu trước mỗi bài test.',
+    codeBad: `static int orderCounter = 0; // ❌ Test sau phụ thuộc vào biến static của test trước`,
+    codeGood: `@BeforeEach
+void setUp() {
+    // ✅ Luôn khởi tạo lại trạng thái trắng (Clean Slate) cho mỗi method test
+    orderRepo.deleteAll();
+}`
+  },
+  {
+    id: 64,
+    category: 'Git & Tác Phong',
+    priority: 'Tác Phong',
+    title: 'Xử lý sự cố Production: Quy tắc "Rollback First, Debug Later"',
+    summary: 'Khi deploy phiên bản mới làm sập Production hoặc tăng vọt tỉ lệ lỗi 500, ưu tiên số 1 là hồi phục hệ thống ngay lập tức.',
+    detail: 'Nhiều bạn mới đi làm khi thấy bug trên Production liền cuống cuồng ngồi debug và thử commit bản vá nóng (hotfix). Đúng chuẩn: 1. Thông báo ngay trên kênh incident ➔ 2. Rollback về phiên bản ổn định trước đó trong vòng 2 phút để cứu khách hàng ➔ 3. Sau khi hệ thống xanh trở lại, mới từ tốn kéo log về điều tra nguyên nhân gốc rễ (Root Cause Analysis).',
+    codeBad: `Production báo đỏ -> Ngồi loay hoay sửa code trên máy và commit hotfix trực tiếp -> Lỗi chồng lỗi!`,
+    codeGood: `Production báo đỏ -> Bấm nút Revert / Rollback về image Docker cũ ngay -> Hệ thống hồi phục -> Họp Post-mortem tìm nguyên nhân`
+  },
+  {
+    id: 65,
+    category: 'Git & Tác Phong',
+    priority: 'Tác Phong',
+    title: 'Vượt qua Hội chứng Kẻ giả mạo (Imposter Syndrome): Ai cũng từng là người không biết gì',
+    summary: 'Cảm giác mình kém cỏi so với các anh Senior trong team là hoàn toàn bình thường; điều quan trọng là tốc độ học hỏi mỗi ngày.',
+    detail: 'Công nghệ phần mềm quá rộng lớn, ngay cả Principal Engineer 15 năm kinh nghiệm cũng phải tra cứu Google hàng ngày. Thay vì so sánh kết quả hiện tại của bạn với đỉnh cao của người khác, hãy so sánh bản thân hôm nay với chính mình của 3 tháng trước: Bạn đã hiểu sâu hơn về JVM, viết code sạch hơn và giải quyết được vấn đề thực tế hơn!',
+    codeBad: `Tự ti, không dám hỏi, giấu dốt vì sợ bị đánh giá là "dở" -> Dẫn tới trễ hạn và trầm cảm công sở`,
+    codeGood: `Chấp nhận bản thân đang trong giai đoạn học hỏi, ghi chú lại mọi kiến thức mới vào sổ tay/Notion mỗi ngày`
+  },
+  {
+    id: 66,
+    category: 'Spring Boot & REST',
+    priority: 'Bắt Buộc',
+    title: 'Bật Graceful Shutdown cho Spring Boot: server.shutdown = graceful',
+    summary: 'Khi deploy phiên bản mới trên Kubernetes, tắt đột ngột làm đứt ngang các transaction thanh toán của khách hàng.',
+    detail: 'Mặc định Spring Boot tắt ứng dụng ngay lập tức khi nhận tín hiệu SIGTERM. Cấu hình server.shutdown: graceful kết hợp spring.lifecycle.timeout-per-shutdown-phase: 30s sẽ thông báo cho Tomcat ngừng nhận request mới, nhưng cho phép các request đang xử lý dở dang có tối đa 30 giây để hoàn thành trọn vẹn.',
+    codeBad: `# Mặc định server.shutdown = immediate:
+# K8s gửi SIGTERM -> Server ngắt kết nối ngay lập tức -> Client bị lỗi 502 Bad Gateway!`,
+    codeGood: `server:
+  shutdown: graceful # Cho phép request đang dở dang hoàn tất
+spring:
+  lifecycle:
+    timeout-per-shutdown-phase: 30s # Tối đa 30s trước khi cưỡng chế dừng`
+  },
+  {
+    id: 67,
+    category: 'Database & JPA',
+    priority: 'Bắt Buộc',
+    title: 'Tắt Open-In-View (OSIV): spring.jpa.open-in-view = false',
+    summary: 'Mặc định OSIV giữ Database Connection mở từ tận Filter/Controller cho tới khi render xong JSON, làm cạn kiệt Connection Pool.',
+    detail: 'Spring Boot mặc định bật OSIV để tránh lỗi LazyInitializationException cho người mới học. Nhưng đi làm, việc giữ connection DB ở tầng Controller/View khiến connection bị chiếm dụng suốt thời gian render JSON hoặc mạng client trễ. Tắt OSIV buộc bạn phải nạp đầy đủ dữ liệu ở tầng Service bằng DTO / JOIN FETCH, bảo vệ Connection Pool.',
+    codeBad: `# Mặc định:
+spring.jpa.open-in-view: true # ❌ Giữ kết nối DB suốt toàn bộ chu kỳ HTTP request!`,
+    codeGood: `spring:
+  jpa:
+    open-in-view: false # ✅ Giải phóng kết nối DB ngay khi rời tầng Service!
+# Dùng JOIN FETCH hoặc DTO Projection để nạp sẵn dữ liệu quan hệ`
+  },
+  {
+    id: 68,
+    category: 'Clean Code & Logging',
+    priority: 'Bắt Buộc',
+    title: 'CẤM tuyệt đối việc bắt ngoại lệ rồi "nuốt lỗi" (Swallow Exception)',
+    summary: 'Khối catch (Exception e) {} rỗng hoặc chỉ in e.getMessage() là nguyên nhân của những bug ma quái không thể truy vết.',
+    detail: 'Nuốt ngoại lệ khiến hệ thống tiếp tục chạy sai trạng thái mà không có bất kỳ cảnh báo nào. Nếu bạn bắt ngoại lệ, bạn PHẢI làm 1 trong 3 việc: 1. Ghi log error đầy đủ kèm stack trace (log.error("Lỗi xử lý | id={}", id, e)), 2. Thực hiện phương án dự phòng (fallback) hợp lý, hoặc 3. Bọc vào Custom Runtime Exception và ném tiếp ra ngoài.',
+    codeBad: `try {
+    paymentService.charge(user, amount);
+} catch (Exception e) {
+    // ❌ NUỐT LỖI HOÀN TOÀN: Tiền không trừ nhưng đơn hàng vẫn giao!
+}`,
+    codeGood: `try {
+    paymentService.charge(user, amount);
+} catch (PaymentException e) {
+    log.error("Thanh toán thất bại | userId={} | amount={}", user.getId(), amount, e);
+    throw new OrderProcessingException("Không thể xử lý giao dịch thanh toán", e);
+}`
+  },
+  {
+    id: 69,
+    category: 'Core Java & JVM',
+    priority: 'Kiến Trúc',
+    title: 'Tránh Deadlock đa luồng: Luôn tuân thủ thứ tự lấy Lock cố định (Lock Ordering)',
+    summary: 'Deadlock xảy ra khi Thread 1 giữ Lock A chờ Lock B, trong khi Thread 2 giữ Lock B chờ Lock A.',
+    detail: 'Khi cần đồng bộ hóa nhiều tài nguyên (ví dụ: chuyển tiền giữa 2 tài khoản A và B), hãy sắp xếp các tài khoản theo một tiêu chí cố định (như so sánh ID: fromId.compareTo(toId)). Luôn khóa tài khoản có ID nhỏ hơn trước, rồi mới khóa tài khoản có ID lớn hơn sau. Cả 2 luồng sẽ luôn lấy lock theo cùng một thứ tự, loại trừ hoàn toàn nguy cơ Deadlock.',
+    codeBad: `public void transfer(Account from, Account to, BigDecimal amount) {
+    synchronized (from) { // Luồng 1 khóa A chờ B
+        synchronized (to) { // Luồng 2 khóa B chờ A -> DEADLOCK ĐỨNG HÌNH SERVER!
+            from.debit(amount);
+            to.credit(amount);
+        }
+    }
+}`,
+    codeGood: `public void transfer(Account from, Account to, BigDecimal amount) {
+    Account firstLock = from.getId() < to.getId() ? from : to;
+    Account secondLock = from.getId() < to.getId() ? to : from;
+    synchronized (firstLock) {
+        synchronized (secondLock) { // ✅ Luôn khóa theo thứ tự ID tăng dần -> Không bao giờ Deadlock!
+            from.debit(amount);
+            to.credit(amount);
+        }
+    }
+}`
+  },
+  {
+    id: 70,
+    category: 'Spring Boot & REST',
+    priority: 'Bắt Buộc',
+    title: 'Khai báo Security Headers chuẩn: HSTS, Content-Security-Policy & X-Frame-Options',
+    summary: 'Thiếu các HTTP Security Header khiến trang web dễ bị tấn công Clickjacking, Man-in-the-middle hoặc MIME Sniffing.',
+    detail: 'Trong cấu hình SecurityFilterChain, luôn kích hoạt các header bảo vệ. HSTS ép buộc trình duyệt chỉ kết nối qua HTTPS; X-Frame-Options: DENY chặn hacker nhúng trang web của bạn vào <iframe> độc hại để lừa click.',
+    codeBad: `// Bỏ qua cấu hình headers trong Spring Security -> Dính cảnh báo đỏ trong đợt Pentest bảo mật!`,
+    codeGood: `http.headers(headers -> headers
+    .frameOptions(frame -> frame.deny()) // Chống Clickjacking
+    .xssProtection(Customizer.withDefaults())
+    .httpStrictTransportSecurity(hsts -> hsts.includeSubDomains(true).maxAgeInSeconds(31536000))
+);`
+  },
+  {
+    id: 71,
+    category: 'Git & Tác Phong',
+    priority: 'Tác Phong',
+    title: 'Viết PR Description theo cấu trúc chuẩn: Why - What - How to test',
+    summary: 'Mô tả PR rõ ràng giúp người review nắm bắt ngữ cảnh ngay lập tức và tăng tốc độ merge gấp 3 lần.',
+    detail: 'Cấu trúc PR mẫu: 1. [Why]: Liên kết tới Jira Ticket và lý do kinh doanh cần sửa/thêm; 2. [What]: Tóm tắt 3-4 thay đổi kỹ thuật chính; 3. [How to test]: Hướng dẫn các bước cURL / Postman để reviewer tự chạy kiểm thử trên local; 4. [Screenshots]: Đính kèm ảnh chụp Swagger test hoặc UI nếu có.',
+    codeBad: `PR Description: "fix bug and update code" (Reviewer không biết test kiểu gì, bắt đầu từ đâu)`,
+    codeGood: `### [JIRA-302] Tích hợp cổng thanh toán VNPay QR
+- **Why**: Hỗ trợ khách hàng thanh toán nhanh qua ứng dụng ngân hàng.
+- **What**: Thêm VNPayClient, cài đặt webhook IPN checksum verification, xử lý callback.
+- **How to test**: Chạy \`mvn test\` hoặc import Postman collection trong /docs/postman.`
+  },
+  {
+    id: 72,
+    category: 'Git & Tác Phong',
+    priority: 'Tác Phong',
+    title: 'Chủ động chuẩn bị cho buổi 1-on-1 định kỳ với Engineering Manager / Tech Lead',
+    summary: 'Đừng đợi đến đợt Review tăng lương cuối năm mới chia sẻ khó khăn hoặc nguyện vọng phát triển.',
+    detail: 'Buổi 1-on-1 (2-4 tuần/lần) là không gian riêng để nói về con đường sự nghiệp chứ không phải báo cáo task hàng ngày. Hãy chuẩn bị: 1. Điều bạn cảm thấy tự hào trong tháng qua; 2. Những kỹ năng mới bạn muốn được thử sức (Docker, Kafka, System Design); 3. Khó khăn về quy trình làm việc và xin lời khuyên của Lead để thăng tiến.',
+    codeBad: `Vào họp 1-on-1 ngồi im: "Dạ em bình thường, không có gì để nói ạ..." (Bỏ lỡ cơ hội thăng tiến)`,
+    codeGood: `"Tháng qua em đã pass thử việc và làm chủ module Order. Mục tiêu tháng tới của em là học sâu hơn về Kafka để hỗ trợ anh Nam trong dự án Event-Driven tới ạ."`
+  },
+  {
+    id: 73,
+    category: 'Core Java & JVM',
+    priority: 'Hiệu Năng',
+    title: 'Tránh dùng String.matches() trong vòng lặp - Biên dịch trước Pattern.compile()',
+    summary: 'Mỗi lần gọi "abc".matches(regex) là một lần Java biên dịch lại cây Regex từ đầu, làm chậm hiệu năng gấp 20 lần.',
+    detail: 'Phương thức String.matches(regex) nội bộ luôn gọi Pattern.compile(regex) mới toanh cho mỗi lần thực thi. Khi cần validate định dạng email hoặc số điện thoại cho 100,000 dòng dữ liệu, hãy khai báo biến hằng số: private static final Pattern EMAIL_PATTERN = Pattern.compile("..."); và gọi EMAIL_PATTERN.matcher(input).matches().',
+    codeBad: `for (String email : emailList) {
+    if (email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) { // ❌ Biên dịch lại Regex 100,000 lần!
+        validList.add(email);
+    }
+}`,
+    codeGood: `private static final Pattern EMAIL_REGEX = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$");
+// ...
+for (String email : emailList) {
+    if (EMAIL_REGEX.matcher(email).matches()) { // ✅ Cực nhanh, tái sử dụng Automaton đã biên dịch
+        validList.add(email);
+    }
+}`
+  },
+  {
+    id: 74,
+    category: 'Database & JPA',
+    priority: 'Hiệu Năng',
+    title: 'Dùng Keyset Pagination (Seek Method) thay cho OFFSET lớn khi phân trang triệu dòng',
+    summary: 'OFFSET 1,000,000 buộc Database phải quét qua 1,000,020 dòng rồi vứt bỏ 1,000,000 dòng đầu, cực kỳ lãng phí I/O.',
+    detail: 'Với bảng hàng triệu bản ghi, thay vì dùng LIMIT 20 OFFSET 1000000, hãy dùng Keyset Pagination: WHERE id > :lastSeenId ORDER BY id ASC LIMIT 20. Database nhảy trực tiếp tới vị trí của lastSeenId thông qua B+Tree Index trong 1 phần nghìn giây, bất kể trang thứ 1 hay trang thứ 100,000!',
+    codeBad: `SELECT * FROM audit_logs ORDER BY id LIMIT 20 OFFSET 500000; 
+-- ❌ DB đọc 500,020 dòng rồi vứt bỏ 500,000 dòng đầu, mất 4.5 giây!`,
+    codeGood: `SELECT * FROM audit_logs WHERE id > 500000 ORDER BY id LIMIT 20;
+-- ✅ B+Tree Index Seek trực tiếp tới Node 500000, mất đúng 2 mili-giây!`
+  },
+  {
+    id: 75,
+    category: 'Testing & QA',
+    priority: 'Kiến Trúc',
+    title: 'Dùng WireMock để giả lập API bên thứ 3 trong Integration Test',
+    summary: 'Không bao giờ gọi cổng thanh toán sandbox thật trong lúc chạy Unit/Integration Test trên CI/CD.',
+    detail: 'Sandbox của đối tác có thể chập chờn hoặc không có mạng khi CI/CD chạy trong container kín. WireMock khởi tạo một HTTP Mock Server cục bộ, cho phép bạn giả lập chính xác các kịch bản: HTTP 200 thành công, HTTP 500 lỗi, hoặc giả lập trễ mạng (delayed response) để kiểm thử cơ chế Circuit Breaker.',
+    codeBad: `// Gọi trực tiếp https://sandbox.vnpayment.vn trong test CI/CD:
+// Khi mất mạng hoặc đối tác bảo trì -> Toàn bộ build CI/CD bị gãy đỏ lòm!`,
+    codeGood: `WireMock.stubFor(post(urlEqualTo("/vnpay/charge"))
+    .willReturn(aResponse()
+        .withStatus(200)
+        .withHeader("Content-Type", "application/json")
+        .withBody("{\\"status\\": \\"00\\", \\"message\\": \\"Success\\"}")));`
+  },
+  {
+    id: 76,
+    category: 'Spring Boot & REST',
+    priority: 'Bắt Buộc',
+    title: 'Luôn kết hợp @Valid trên Controller và @NotNull, @Size trên DTO Request',
+    summary: 'Tin tưởng dữ liệu đầu vào của client là nguồn gốc của 90% lỗi NullPointerException và tấn công SQL Injection.',
+    detail: 'Khai báo annotation kiểm tra tính hợp lệ trên từng trường của DTO: @NotBlank, @Size(min = 8, max = 32), @Email, @Min(1). Thêm @Valid trước @RequestBody trong Controller. Spring sẽ tự động chặn request sai ngay tại cửa ngõ và ném MethodArgumentNotValidException.',
+    codeBad: `public ResponseEntity<?> createProduct(@RequestBody ProductDto dto) {
+    // Không @Valid -> dto.getName() bị null gây lỗi nổ Database ở tầng Service!
+}`,
+    codeGood: `public record CreateProductRequest(
+    @NotBlank(message = "Tên sản phẩm không được để trống") String name,
+    @DecimalMin(value = "0.01", message = "Giá phải lớn hơn 0") BigDecimal price
+) {}
+
+@PostMapping
+public ResponseEntity<?> createProduct(@Valid @RequestBody CreateProductRequest req) { ... }`
+  },
+  {
+    id: 77,
+    category: 'Hạ Tầng & Security',
+    priority: 'Kiến Trúc',
+    title: 'Triển khai Refresh Token Rotation (RTR) để phát hiện token bị trộm',
+    summary: 'Mỗi lần đổi Access Token mới, hủy luôn Refresh Token cũ và cấp một Refresh Token mới toanh.',
+    detail: 'Nếu một Refresh Token cũ đã bị sử dụng lại một lần nữa, hệ thống lập tức phát hiện token đó đã bị kẻ xấu đánh cắp (Replay Attack) và lập tức thu hồi toàn bộ phiên đăng nhập của người dùng trên mọi thiết bị, bảo vệ an toàn tài khoản tuyệt đối.',
+    codeBad: `// Dùng 1 Refresh Token vĩnh viễn trong 30 ngày không bao giờ đổi -> Bị trộm là mất quyền kiểm soát!`,
+    codeGood: `// Khi đổi token:
+// 1. Kiểm tra refreshToken cũ có trong blacklist/used_tokens không
+// 2. Nếu đã từng dùng -> THU HỒI TOÀN BỘ SESSIONS CỦA USER NGAY LẬP TỨC
+// 3. Nếu hợp lệ -> Thu hồi token cũ và phát hành refreshToken mới`
+  },
+  {
+    id: 78,
+    category: 'Clean Code & Logging',
+    priority: 'Kiến Trúc',
+    title: 'Tránh Anti-pattern "God Service" - Tách nhỏ Service theo Single Responsibility',
+    summary: 'Một file UserService.java phình to 2,000 dòng vừa xử lý đăng ký, thanh toán, gửi email, sinh báo cáo là ác mộng bảo trì.',
+    detail: 'Một Service chuyên nghiệp chỉ nên dài tối đa 200-300 dòng và chỉ phục vụ một nhóm nghiệp vụ duy nhất. Hãy phân rã thành: UserRegistrationService, UserCredentialService, UserQueryService. Code ngắn gọn giúp việc đọc hiểu, viết unit test và giải quyết merge conflict trở nên nhẹ nhàng.',
+    codeBad: `public class UserService {
+    // 45 dependencies, 2,500 dòng code, 60 methods gom đủ mọi thứ trên đời!
+}`,
+    codeGood: `// Tách thành các service chuyên biệt, phụ thuộc tối đa 3-5 dependencies:
+public class UserRegistrationService { ... }
+public class UserPasswordResetService { ... }
+public class UserProfileQueryService { ... }`
+  },
+  {
+    id: 79,
+    category: 'Git & Tác Phong',
+    priority: 'Tác Phong',
+    title: 'Viết Technical Design Doc (RFC) cho tính năng lớn trước khi gõ code',
+    summary: 'Dành 1 ngày viết tài liệu thiết kế và thống nhất kiến trúc giúp bạn tiết kiệm 2 tuần đập đi xây lại code bẩn.',
+    detail: 'Trước khi bắt tay vào một bài toán phức tạp (như đổi cổng thanh toán, tích hợp Kafka), hãy phác thảo tài liệu RFC (Request for Comments): 1. Mục tiêu bài toán; 2. Sơ đồ dữ liệu / Entity quan hệ; 3. Hợp đồng API Request/Response; 4. Các giải pháp thay thế đã cân nhắc. Mời Tech Lead và Senior review trước khi code.',
+    codeBad: `Nhận task lớn là mở IDE code hùng hục ngay -> Sau 1 tuần Senior review bắt đập đi viết lại từ đầu vì sai kiến trúc!`,
+    codeGood: `Dành 1-2 ngày phác thảo RFC Google Doc -> Thống nhất với Tech Lead và QA -> Code chuẩn xác 100% đúng tiến độ`
+  },
+  {
+    id: 80,
+    category: 'Git & Tác Phong',
+    priority: 'Tác Phong',
+    title: 'Quy tắc Hướng Đạo Sinh (Boy Scout Rule): Luôn để lại codebase sạch sẽ hơn lúc bạn nhận',
+    summary: 'Không cần đập đi xây lại cả dự án, chỉ cần mỗi lần chạm vào một class, hãy dọn sạch 1 đoạn code thừa.',
+    detail: 'Khi bạn vào sửa một bug trong module cũ, nếu thấy một biến đặt tên khó hiểu hoặc một đoạn System.out.println cũ, hãy tiện tay đổi tên biến rõ ràng hơn và thay bằng log.debug(). Từng cải tiến nhỏ bé tích lũy mỗi ngày sẽ biến một dự án "nợ kỹ thuật chồng chất" trở thành một hệ thống vững chãi và thanh thoát.',
+    codeBad: `"Code cũ người ta viết xấu thế nào thì em cứ kệ, em chỉ viết thêm code của em vào thôi"`,
+    codeGood: `Tiện tay xóa import thừa, đổi tên biến khó hiểu thành tên có nghĩa, bổ sung 1 bài unit test cho đoạn code vừa sửa`
   }
 ];

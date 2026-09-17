@@ -373,6 +373,69 @@ export const INTERVIEW_QUESTIONS: InterviewQuestion[] = [
     shortAnswer: 'Intermediate Operation (filter, map, sorted, limit): Trả về một Stream mới và KHÔNG thực thi ngay lập tức (Lazy). Terminal Operation (collect, count, forEach, findFirst, reduce): Kích hoạt toàn bộ luồng xử lý và kết thúc Stream, trả về kết quả cuối cùng hoặc void.',
     seniorDeepDive: 'Nhờ Lazy Evaluation, Stream tối ưu hóa hiệu năng bằng Short-Circuiting và Loop Fusion: ví dụ stream.filter(...).map(...).findFirst(), Stream chỉ duyệt từng phần tử qua cả filter và map, khi tìm thấy phần tử thỏa mãn đầu tiên thì DỪNG NGAY LẬP TỨC chứ không duyệt hết toàn bộ danh sách 1 triệu phần tử như vòng lặp for truyền thống.',
     trapWarning: 'Stream trong Java có thể dùng lại (reuse) lần thứ 2 được không? ➔ Tuyệt đối KHÔNG! Khi một Terminal Operation đã chạy xong, Stream đã bị đóng (consumed). Nếu cố tình gọi tiếp thao tác khác trên Stream đó, JVM sẽ ném ra IllegalStateException: "stream has already been operated upon or closed".'
+  },
+  {
+    id: 'q-39',
+    category: 'Concurrency & JVM',
+    level: 'Junior',
+    question: 'Virtual Threads (Project Loom trong Java 21) hoạt động như thế nào và khác Platform Threads (OS Threads) ra sao?',
+    shortAnswer: 'Platform Thread ánh xạ 1:1 với kernel thread của OS, tốn ~1MB bộ nhớ stack và đắt đỏ khi context switch. Virtual Thread là các green thread do JVM quản lý trên user-space, cực kỳ nhẹ (~vài KB), cho phép tạo hàng triệu luồng đồng thời mà không nghẽn OS.',
+    seniorDeepDive: 'Khi một Virtual Thread gặp I/O chặn (như đọc DB, gọi HTTP), JVM "unmount" (tháo rời) nó khỏi Carrier Thread (ForkJoinPool worker) và chuyển Carrier Thread đó sang phục vụ Virtual Thread khác. Khi I/O hoàn tất, Virtual Thread được "mount" trở lại. Nhờ đó giữ được mô hình đồng bộ dễ đọc (thread-per-request) mà vẫn đạt thông lượng (throughput) ngang ngửa WebFlux phản ứng!',
+    trapWarning: 'Có nên dùng Thread Pool (Executors.newFixedThreadPool) cho Virtual Threads không? ➔ Tuyệt đối KHÔNG! Virtual Threads sinh ra để tạo và vứt đi (ephemeral), pool hóa chúng là anti-pattern. Dùng Executors.newVirtualThreadPerTaskExecutor(). Cẩn trọng với hiện tượng Pinning Thread khi dùng synchronized block cũ (hãy đổi sang ReentrantLock).'
+  },
+  {
+    id: 'q-40',
+    category: 'Database / JPA',
+    level: 'Junior',
+    question: 'Phân biệt Optimistic Locking (Khóa lạc quan) và Pessimistic Locking (Khóa bi quan)? Khi nào dùng loại nào?',
+    shortAnswer: 'Optimistic Locking: Giả định ít khi xảy ra xung đột, dùng cột version số nguyên để kiểm tra lúc commit; nếu version bị thay đổi bởi luồng khác thì ném OptimisticLockException. Pessimistic Locking: Khóa chặt dòng dữ liệu ngay từ lúc đọc (SELECT ... FOR UPDATE), bắt các luồng khác phải xếp hàng chờ.',
+    seniorDeepDive: 'Optimistic Locking không khóa database nên thông lượng cực cao, phù hợp cho hệ thống có tần suất đọc nhiều hơn ghi (tỉ lệ 9:1 như cập nhật thông tin user, sửa bài viết). Pessimistic Locking bắt buộc dùng khi tần suất tranh chấp cực cao và hậu quả sai sót rất nghiêm trọng (như giật vé xem phim, flash-sale trừ tồn kho còn đúng 1 sản phẩm cuối cùng, giao dịch trừ số dư ví điện tử).',
+    trapWarning: 'Làm thế nào để xử lý khi dính OptimisticLockException? ➔ Bắt exception này và cấu hình cơ chế tự động thử lại (Retry Pattern với Spring Retry @Retryable) tối đa 3-5 lần trước khi báo lỗi cho người dùng.'
+  },
+  {
+    id: 'q-41',
+    category: 'Spring Boot',
+    level: 'Junior',
+    question: 'Vòng đời (Lifecycle) của một Spring Bean diễn ra như thế nào? PostConstruct và PreDestroy chạy lúc nào?',
+    shortAnswer: '1. Đọc BeanDefinition ➔ 2. Gọi Constructor khởi tạo instance ➔ 3. Inject dependencies (Setter/Field/Constructor) ➔ 4. Các BeanPostProcessor (beforeInit) ➔ 5. @PostConstruct / afterPropertiesSet() ➔ 6. Các BeanPostProcessor (afterInit - tạo Dynamic Proxy cho @Transactional) ➔ 7. Bean sẵn sàng hoạt động ➔ 8. Khi ứng dụng tắt: @PreDestroy / destroy().',
+    seniorDeepDive: 'Cực kỳ lưu ý ở bước BeanPostProcessor afterInitialization: Đây là nơi Spring tạo ra CGLIB hoặc JDK Dynamic Proxy bao quanh bean của bạn để xử lý AOP (@Transactional, @Async, @Cacheable). Nếu bạn gọi một method @Transactional từ bên trong chính hàm @PostConstruct, transaction sẽ KHÔNG hoạt động vì lúc đó proxy chưa hoàn tất thiết lập!',
+    trapWarning: 'Hỏi về Bean Scopes: "Singleton bean inject vào Prototype bean thì có vấn đề gì?" ➔ Ngược lại: Prototype bean inject vào Singleton bean chỉ được khởi tạo DUY NHẤT 1 lần lúc startup (mất tính chất prototype)! Muốn mỗi lần gọi sinh instance mới, phải dùng @Lookup method injection hoặc ObjectProvider<T>.'
+  },
+  {
+    id: 'q-42',
+    category: 'Hạ Tầng & Security',
+    level: 'Junior',
+    question: 'Lỗ hổng CSRF (Cross-Site Request Forgery) và XSS (Cross-Site Scripting) khác nhau thế nào? Cách phòng chống chuẩn Production?',
+    shortAnswer: 'XSS: Kẻ tấn công tiêm mã JavaScript độc hại vào trang web để đánh cắp token hoặc dữ liệu người dùng. CSRF: Kẻ tấn công lừa trình duyệt của người dùng gửi một request hợp lệ kèm Cookie đã đăng nhập tới server mà người dùng không hề hay biết.',
+    seniorDeepDive: 'Chống XSS: Luôn escape HTML ở output, dùng Content Security Policy (CSP) header, và lưu JWT vào Cookie HttpOnly (chặn JS đọc). Chống CSRF: Khi dùng Cookie auth, bắt buộc set cờ SameSite=Strict/Lax trên Cookie, kết hợp CSRF Token (Synchronizer Token Pattern) hoặc chuyển sang dùng Bearer Token trong header Authorization (CSRF không thể tự động gắn custom header).',
+    trapWarning: 'Tại sao API RESTful thuần túy dùng JWT trong header Authorization lại có thể tắt csrf().disable()? ➔ Vì kẻ tấn công trên trang web độc hại của họ không thể ép trình duyệt tự động gửi header Authorization: Bearer <token> của domain khác sang server của bạn (khác với Cookie tự động bị đính kèm).'
+  },
+  {
+    id: 'q-43',
+    category: 'Core Java',
+    level: 'Fresher',
+    question: 'Từ khóa volatile trong Java có tác dụng gì? Nó có đảm bảo tính Thread-Safe cho phép toán cộng dồn (count++) không?',
+    shortAnswer: 'volatile đảm bảo tính nhìn thấy (Visibility) giữa các luồng: biến luôn được đọc và ghi trực tiếp từ RAM chính chứ không lưu trong CPU Cache riêng của từng core, đồng thời ngăn chặn trình biên dịch đổi thứ tự lệnh (Instruction Reordering). Tuy nhiên, volatile KHÔNG đảm bảo tính nguyên tử (Atomicity), do đó count++ VẪN BỊ RACE CONDITION!',
+    seniorDeepDive: 'Phép toán count++ thực chất bao gồm 3 thao tác bytecode riêng biệt: 1. Đọc count từ RAM vào thanh ghi CPU ➔ 2. Tăng giá trị lên 1 ➔ 3. Ghi giá trị mới trở lại RAM. Nếu 2 luồng cùng đọc giá trị 10 cùng lúc, cả 2 sẽ cùng tính ra 11 và ghi đè nhau, kết quả bị mất mát dữ liệu. Để an toàn tính đếm, phải dùng AtomicInteger (sử dụng lệnh phần cứng CAS - Compare-And-Swap) hoặc synchronized.',
+    trapWarning: 'Volatile thường được áp dụng trong bài toán thực tế nào? ➔ Dùng cho cờ dừng luồng (boolean running flag) hoặc trong Double-Checked Locking khi cài đặt mẫu Singleton an toàn đa luồng.'
+  },
+  {
+    id: 'q-44',
+    category: 'Hạ Tầng & Security',
+    level: 'Junior',
+    question: 'Outbox Pattern trong Microservices giải quyết bài toán gì? Tại sao không nên vừa ghi DB vừa gửi Kafka trong cùng một hàm?',
+    shortAnswer: 'Giải quyết bài toán "Dual Write" (Ghi kép): Đảm bảo tính nhất quán dữ liệu giữa việc lưu bản ghi vào Database và bắn thông điệp sang Kafka/RabbitMQ mà không thể dùng 2PC (Two-Phase Commit) chậm chạp.',
+    seniorDeepDive: 'Nếu bạn ghi DB thành công nhưng server bị sập điện ngay trước khi kịp gửi Kafka ➔ Dữ liệu DB có nhưng bên ngoài không nhận được event. Ngược lại, nếu gửi Kafka trước rồi ghi DB sau, nhưng DB bị lỗi rollback ➔ Event đã bắn đi trong khi DB không có dữ liệu (Ghost Event). Outbox Pattern: Lưu event vào một bảng outbox_events nằm trong CÙNG TRANSACTION với bảng nghiệp vụ (ACID bảo toàn 100%). Một tiến trình Debezium (CDC - Change Data Capture) hoặc Worker quét bảng outbox này và gửi sang Kafka an toàn.',
+    trapWarning: 'Làm thế nào để đảm bảo Worker outbox không bắn tin nhắn trùng lặp? ➔ Hệ thống phân tán luôn tuân thủ nguyên tắc "At-least-once delivery" (giao tin nhắn ít nhất 1 lần). Do đó Consumer phía nhận bắt buộc phải thiết kế tính Bất Khả Biến (Idempotent Consumer).'
+  },
+  {
+    id: 'q-45',
+    category: 'Testing & QA',
+    level: 'Junior',
+    question: 'Tại sao không nên dùng Mockito để mock toàn bộ mọi thứ trong Integration Test? Khi nào dùng MockMvc vs TestRestTemplate vs WebTestClient?',
+    shortAnswer: 'Mock quá nhiều biến bài test thành "tự biên tự diễn": Code của bạn pass vì bạn tự định nghĩa hành vi giả, nhưng khi ghép nối thật với DB hoặc mạng thì toang. MockMvc kiểm tra Controller trong Spring Context không bật port mạng; TestRestTemplate mở port mạng thật kiểm tra toàn bộ server Tomcat; WebTestClient dùng cho WebFlux non-blocking.',
+    seniorDeepDive: 'Quy tắc kim tự tháp kiểm thử: Mockito chỉ nên dùng cho Unit Test ở tầng Service để cô lập logic nghiệp vụ. Ở tầng Integration Test, hãy dùng Testcontainers để nạp Database PostgreSQL/MySQL và Redis thật, chỉ mock các dịch vụ thanh toán bên ngoài (bằng WireMock) mà ta không thể kiểm soát sandbox.',
+    trapWarning: 'Sự khác biệt giữa @Mock và @MockBean trong Spring Test? ➔ @Mock là của Mockito thuần túy, khởi tạo bù nhìn cực nhanh; @MockBean là của Spring Boot Test, nó thay thế bean thật trong ApplicationContext của Spring bằng một con mock và làm ApplicationContext bị bẩn (Dirty Context), khiến việc chạy test suite bị chậm đi nếu lạm dụng.'
   }
 ];
 
