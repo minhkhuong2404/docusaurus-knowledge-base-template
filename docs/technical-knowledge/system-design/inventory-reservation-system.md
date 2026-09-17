@@ -16,21 +16,13 @@ Designing an inventory system for this scale presents one of the most demanding 
 
 For years, standard industry wisdom recommended holding reservations in **Redis** and recording the authoritative ledger in **MySQL**. However, in a landmark engineering shift, Shopify migrated their entire inventory reservation system back to **MySQL 8**, using `SELECT ... FOR UPDATE SKIP LOCKED` to handle peaks of **$5.1 million in sales per minute**.
 
-<InventoryReservationDiagram />
-
 ---
 
 ## 1. The Core E-Commerce Problem: Overselling vs Underselling
 
 When 10,000 customers race to purchase the last 5 items, any race condition creates severe business failures:
 
-```
-                                  ┌──► Overselling: Sold 105 units when stock was 100
-                                  │    - Angry customers, refunds, brand damage, support storm
-10,000 Concurrent Checkouts ──────┤
-                                  └──► Underselling: Item shows "Out of Stock" with 15 units in warehouse
-                                       - Lost revenue, phantom reservations, abandoned carts
-```
+<InventoryReservationDiagram initialTab="tradeoff-matrix" />
 
 | Failure Mode | Physical Cause | Real-World Consequence |
 |---|---|---|
@@ -73,34 +65,13 @@ UPDATE inventory SET quantity = quantity - 1 WHERE item_id = 42;
 
 To avoid database row contention, the standard industry pattern introduced **Redis as an in-memory reservation cache**:
 
-```
-Checkout Flow with Redis + MySQL:
-1. Client clicks "Checkout" ──► Redis: DECRBY stock:42 1
-                                       │ (Success in 1ms)
-                                       ▼
-2. Client enters credit card ──► Payment Gateway (Stripe / PayPal) [Takes 3-10s]
-                                       │ (Payment Confirmed)
-                                       ▼
-3. Finalize Order ─────────────► MySQL: INSERT INTO orders + UPDATE inventory
-```
+
 
 ### The Fatal Flaw: The "Seam" Between Two Independent Datastores
 
 Because Redis and MySQL are physically independent databases, **there is no distributed atomic transaction spanning both systems**. This boundary creates an architectural "seam" where edge-case failures inevitably corrupt inventory state:
 
-```
-┌────────────────────────────────────────────────────────┐
-│ The Seam Problem:                                      │
-│                                                        │
-│  [Step 1: Redis] ────(THE SEAM)────► [Step 2: MySQL]   │
-│   Fast in-memory                       Authoritative   │
-│   temporary hold                       database ledger │
-│                                                        │
-│  ❌ Network Partition                                  │
-│  ❌ App Worker Crash                                   │
-│  ❌ Payment Latency > Redis TTL                        │
-└────────────────────────────────────────────────────────┘
-```
+<InventoryReservationDiagram initialTab="dual-write-seam" />
 
 ### 3 Catastrophic Failure Scenarios of Redis + MySQL
 
@@ -128,18 +99,7 @@ To combat drift between Redis and MySQL, engineering teams deploy background "re
 
 To eliminate the dual-write seam permanently, Shopify moved reservations directly into **MySQL 8**. They solved the row contention problem through two key innovations: **Inventory Disaggregation** and **`SELECT ... FOR UPDATE SKIP LOCKED`**.
 
-```
-Single-Seam Architecture:
-┌────────────────────────────────────────────────────────────────────────┐
-│ MySQL 8 (Single ACID Boundary)                                         │
-│                                                                        │
-│  [Step 1: Reserve] ──► [Step 2: Authorize] ──► [Step 3: Commit / Sell] │
-│                                                                        │
-│  ✅ All 3 steps occur inside the same relational database engine       │
-│  ✅ Zero distributed 2-phase commit overhead                          │
-│  ✅ Zero phantom inventory drift                                       │
-└────────────────────────────────────────────────────────────────────────┘
-```
+<InventoryReservationDiagram initialTab="mysql-skip-locked" />
 
 ### Innovation 1: Disaggregating Inventory into Unit-Level Rows
 
@@ -194,20 +154,7 @@ COMMIT;
 
 Every unit in the warehouse transitions through a deterministic state machine:
 
-```
-               [ 1. AVAILABLE ]
-                      │
-           (Checkout starts: SKIP LOCKED)
-                      ▼
-               [ 2. RESERVED ] 
-              (10-Minute Window)
-                      │
-         ┌────────────┴────────────┐
-         │ (Payment Success)       │ (Payment Failure / Timeout)
-         ▼                         ▼
-   [ 3. SOLD ]             [ Revert to AVAILABLE ]
-(Committed Order)        (Released for other shoppers)
-```
+<InventoryReservationDiagram initialTab="lifecycle-flow" />
 
 ### Step 1: Claiming a Reservation (Hold)
 ```sql

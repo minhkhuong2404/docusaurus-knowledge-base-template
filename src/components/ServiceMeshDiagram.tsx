@@ -48,7 +48,7 @@ export default function ServiceMeshDiagram() {
           <text x="200" y="214" textAnchor="middle" fill="#34d399" fontSize="9">Sidecar</text>
 
           {/* Inter-Pod Data Flow */}
-          <path d="M 245 200 L 375 200" stroke="#34d399" strokeWidth="2.5" markerEnd="url(#mesh-arrow)" />
+          <path d="M 245 200 L 375 200" stroke="#34d399" strokeWidth="2.5" markerEnd="url(#mesh-arrow)" className="interactive-diagram-flowing-path" />
           <text x="310" y="192" textAnchor="middle" fill="#34d399" fontSize="10" fontWeight="800">mTLS Tunnel</text>
           <text x="310" y="216" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="9">Zero-Trust Encrypted</text>
 

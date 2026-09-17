@@ -31,7 +31,7 @@ export const BUG_CHALLENGES: BugSnippetsChallenge[] = [
     difficultyColor: '#f59e0b',
     scenario: 'High-throughput payment gateway crashes intermittently with NullPointerException on singleton instance access.',
     code: `public class PaymentGatewayManager {
-    private static PaymentGatewayManager instance; // Line 2
+    private static PaymentGatewayManager instance;
 
     private PaymentGatewayManager() {
         // Heavy configuration initialization
@@ -41,7 +41,7 @@ export const BUG_CHALLENGES: BugSnippetsChallenge[] = [
         if (instance == null) {
             synchronized (PaymentGatewayManager.class) {
                 if (instance == null) {
-                    instance = new PaymentGatewayManager(); // Line 11: Instruction reordering hazard
+                    instance = new PaymentGatewayManager();
                 }
             }
         }
@@ -96,11 +96,10 @@ export const BUG_CHALLENGES: BugSnippetsChallenge[] = [
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
             throws IOException, ServletException {
         UserSession session = authenticate(req);
-        userCtx.set(session); // Line 8: Set context for thread
+        userCtx.set(session);
 
-        chain.doFilter(req, res); // Line 10: Process request
+        chain.doFilter(req, res);
 
-        // Filter finishes without clean up
     }
 }`,
     buggyLineNumber: 10,
@@ -153,8 +152,8 @@ export const BUG_CHALLENGES: BugSnippetsChallenge[] = [
 
     public void processOrder(OrderDto dto) {
         validateOrder(dto);
-        // Self-invocation: Calls method on 'this' directly!
-        executePaymentAndFulfill(dto); // Line 6
+
+        executePaymentAndFulfill(dto);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
@@ -217,10 +216,10 @@ public class OrderService {
     scenario: 'High-volume REST API produces corrupted dates (e.g. year 2099 or 1970) and random NumberFormatExceptions.',
     code: `public class DateUtil {
     // Shared static instance across all incoming threads
-    private static final SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // Line 3
+    private static final SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public static String formatTimestamp(Date date) {
-        return FORMATTER.format(date); // Line 6: Concurrent race on internal calendar buffer
+        return FORMATTER.format(date);
     }
 
     public static Date parseTimestamp(String str) throws ParseException {
@@ -279,13 +278,11 @@ public static String formatTimestamp(Instant instant) {
     CompletableFuture<List<Order>> ordersFuture = CompletableFuture.supplyAsync(() -> orderService.get(userId));
     CompletableFuture<CreditScore> scoreFuture = CompletableFuture.supplyAsync(() -> creditService.get(userId));
 
-    // Wait for all futures
-    CompletableFuture.allOf(userFuture, ordersFuture, scoreFuture); // Line 7: Returns new Void future!
+    CompletableFuture.allOf(userFuture, ordersFuture, scoreFuture);
 
-    // Attempting to read values immediately without waiting:
     return new UserProfile(
-        userFuture.getNow(null),   // Line 11: Returns null!
-        ordersFuture.getNow(null), // Line 12: Returns null!
+        userFuture.getNow(null),
+        ordersFuture.getNow(null),
         scoreFuture.getNow(null)
     );
 }`,
@@ -337,9 +334,9 @@ return new UserProfile(
     difficultyColor: '#38bdf8',
     scenario: 'Batch processor crashes with ConcurrentModificationException when purging expired orders.',
     code: `public void purgeExpiredOrders(List<Order> orders) {
-    for (Order order : orders) { // Line 2: Iterator created behind the scenes
+    for (Order order : orders) {
         if (order.isExpired()) {
-            orders.remove(order); // Line 4: Mutates list directly, invalidating iterator modCount!
+            orders.remove(order);
         }
     }
 }`,
@@ -394,16 +391,16 @@ while (it.hasNext()) {
     difficultyColor: '#34d399',
     scenario: 'HikariCP connection pool exhausts all 30 connections in 10 minutes: HikariPool-1 - Connection is not available, request timed out after 30000ms.',
     code: `public User getUserById(DataSource dataSource, long id) throws SQLException {
-    Connection conn = dataSource.getConnection(); // Line 2
+    Connection conn = dataSource.getConnection();
     PreparedStatement ps = conn.prepareStatement("SELECT * FROM users WHERE id = ?");
     ps.setLong(1, id);
 
     ResultSet rs = ps.executeQuery();
     if (rs.next()) {
-        return mapRowToUser(rs); // Line 8: If mapping throws RuntimeException, connection is never returned!
+        return mapRowToUser(rs);
     }
 
-    conn.close(); // Line 11: Never reached if rs.next() is false or exception occurs
+    conn.close();
     return null;
 }`,
     buggyLineNumber: 11,
@@ -458,9 +455,8 @@ try (Connection conn = dataSource.getConnection();
     private final AtomicInteger stock = new AtomicInteger(100);
 
     public boolean purchaseItem() {
-        // Line 5: Check-then-act race condition!
-        if (stock.get() > 0) { // Thread A and B both see stock = 1
-            stock.decrementAndGet(); // Both threads decrement -> stock becomes -1!
+        if (stock.get() > 0) {
+            stock.decrementAndGet();
             return true;
         }
         return false;

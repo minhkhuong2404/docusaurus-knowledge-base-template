@@ -7,6 +7,8 @@ sidebar_position: 2
 tags: [System Design, Storage, Blob, S3, CDN, Chunking, Multipart, File Upload]
 ---
 
+import ObjectStorageArchitectureDiagram from '@site/src/components/ObjectStorageArchitectureDiagram';
+
 # Handling Large Blobs
 
 > **The Golden Rule:** Never store large binary files in your relational database. Use purpose-built object storage.
@@ -55,12 +57,17 @@ Having a client upload a 1GB video to your backend API server, only for your ser
 * **The Pattern:** The client requests a **Pre-Signed URL** from your backend. Your backend validates the user's session, checks permissions, and generates a time-bound URL (e.g., valid for 30 minutes) using IAM credentials. The client then performs an HTTP `PUT` directly to the Object Store, completely bypassing your application servers.
 
 ### 3. Multipart Uploads
+
+<ObjectStorageArchitectureDiagram initialTab="multipart" />
+
 Transferring large files over unreliable networks (like mobile connections) via a single stream is prone to failure. Furthermore, many load balancers and APIs have strict HTTP payload limits.
 * **The Pattern:** Use **Multipart Upload**. The client chunks a massive file into smaller, fixed-size pieces (e.g., 5MB chunks). These chunks can be uploaded sequentially, or even in parallel to maximize throughput. Once all chunks are received, the object store stitches them back together into the contiguous file. *Senior Context:* If a chunk upload fails due to network partition, only that specific 5MB chunk needs to be retried, not the entire 10GB file.
 
 ---
 
 ## 1. Storage Options
+
+<ObjectStorageArchitectureDiagram initialTab="comparison" />
 
 | Storage Type       | Examples                 | Use For                             | Characteristics                                             |
 | ------------------ | ------------------------ | ----------------------------------- | ----------------------------------------------------------- |
@@ -89,17 +96,9 @@ It might seem convenient to store a profile picture next to a user's record, but
 
 ## 3. The Core Architecture: Separation of Concerns
 
-Always separate your **Metadata** from your **Blob Data**.
+<ObjectStorageArchitectureDiagram initialTab="presigned" />
 
-```text
-Client → API Server 
-           ↓
-    Relational DB (Stores: id, s3_key, user_id, size, created_at)
-           ↓
-Client → Object Store (Stores: actual bytes via S3)
-           ↓
-          CDN (Caches reads at edge locations)
-```
+Always separate your **Metadata** from your **Blob Data**.
 
 ---
 

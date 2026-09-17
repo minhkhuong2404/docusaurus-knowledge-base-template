@@ -174,8 +174,8 @@ export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidd
 
   const renderSidebarItem = (item: SidebarItem, depth: number, keyPrefix: string) => {
     const labelText = (item.label || '').trim();
-    // Match leading emoji or icon character
-    const match = labelText.match(/^(\p{Extended_Pictographic}|\p{Emoji_Presentation}|\p{Emoji})\s*(.*)$/u);
+    // Match leading emoji or icon character (avoid bare \p{Emoji} which matches standard digits 0-9)
+    const match = labelText.match(/^((?:\p{Extended_Pictographic}|\p{Emoji_Presentation}|[0-9#*]\uFE0F?\u20E3)(?:\uFE0F|\u20E3)?(?:\u200D(?:\p{Extended_Pictographic}|\p{Emoji_Presentation})(?:\uFE0F|\u20E3)?)*)\s*(.*)$/u);
     const emoji = match ? match[1] : '';
     const cleanLabel = match ? match[2].trim() : labelText;
     const displayIcon = emoji || (cleanLabel ? cleanLabel.charAt(0) : '📄');

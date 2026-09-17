@@ -3,6 +3,92 @@ import { useUserProgress } from '../../../context/UserProgressContext';
 import { triggerFireworks } from '../../../utils/fireworks';
 import { BUG_CHALLENGES, BugSnippetsChallenge } from '../../../data/spotTheBugData';
 import { fetchSpotTheBugQuestions, QuizQuestion } from '../../../services/googleSheetQuizService';
+import { Highlight, Prism } from 'prism-react-renderer';
+import prismTheme from '../../../theme/prismTheme';
+
+// Ensure Java support is registered in Prism if available
+if (typeof globalThis !== 'undefined') {
+  (globalThis as any).Prism = Prism;
+} else if (typeof window !== 'undefined') {
+  (window as any).Prism = Prism;
+}
+try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  require('prismjs/components/prism-java');
+} catch {
+  // fallback if already loaded or in browser bundle
+}
+
+function findCommentIndex(line: string): number {
+  let inSingle = false;
+  let inDouble = false;
+  let inBacktick = false;
+
+  for (let i = 0; i < line.length - 1; i++) {
+    const ch = line[i];
+    const prev = i > 0 ? line[i - 1] : '';
+
+    if (ch === "'" && !inDouble && !inBacktick && prev !== '\\') {
+      inSingle = !inSingle;
+    } else if (ch === '"' && !inSingle && !inBacktick && prev !== '\\') {
+      inDouble = !inDouble;
+    } else if (ch === '`' && !inSingle && !inDouble && prev !== '\\') {
+      inBacktick = !inBacktick;
+    } else if (!inSingle && !inDouble && !inBacktick) {
+      if (ch === '/' && line[i + 1] === '/') {
+        return i;
+      }
+    }
+  }
+  return -1;
+}
+
+const ERROR_COMMENT_REGEX = /(line\s*\d+|missing|hazard|leak|vulnerabilit|bypass|defect|bug|crash|fail|race|deadlock|starvation|overflow|slow|lost update|swallow|never reached|throws|pins|corrupt|reorder|wildcard|untrusted|rce|self-invocation|clean\s*up|decrement|stampede|simultaneous|attacker|null|ttl|exceed|subsequent|enforce|signing key|unvalidated|gadget|cold publisher|nothing happens|auto-commit|without|attempting to read|check-then-act|mutates list|connection is never returned)/i;
+
+export function sanitizeBugCode(code: string): string {
+  if (!code) return '';
+  const lines = code.split('\n');
+
+  const cleaned = lines.map((line) => {
+    const commentIdx = findCommentIndex(line);
+    if (commentIdx === -1) {
+      return line;
+    }
+
+    const before = line.slice(0, commentIdx);
+    const commentPart = line.slice(commentIdx);
+
+    // Standalone comment line (only whitespace before //)
+    if (before.trim().length === 0) {
+      if (ERROR_COMMENT_REGEX.test(commentPart) || /^\/\/\s*Line\s*\d+/i.test(commentPart.trim())) {
+        return ''; // Blank line preserves line numbering
+      }
+      return line;
+    }
+
+    // Trailing inline comment on a line of code: strip it so errors are not spoiled
+    return before.trimEnd();
+  });
+
+  return cleaned.join('\n');
+}
+
+function detectCodeLanguage(code: string, category: string): string {
+  const trimmed = code.trim();
+  if (category === 'database' || trimmed.startsWith('SELECT') || trimmed.startsWith('CREATE') || trimmed.startsWith('INSERT') || trimmed.startsWith('UPDATE') || trimmed.startsWith('DELETE') || trimmed.startsWith('ALTER')) {
+    return 'sql';
+  }
+  if (category === 'devops' && (trimmed.startsWith('apiVersion:') || trimmed.startsWith('services:') || trimmed.startsWith('version:'))) {
+    return 'yaml';
+  }
+  if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+    return 'json';
+  }
+  if (trimmed.startsWith('#!/bin/bash') || trimmed.startsWith('kubectl ') || trimmed.startsWith('docker ')) {
+    return 'bash';
+  }
+  return 'java';
+}
 
 type CategoryKey =
   | 'all'
@@ -128,9 +214,10 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
 
             const diff = q.difficulty === 'Junior' ? 'Junior' : q.difficulty === 'Mid' ? 'Mid' : q.difficulty === 'Staff' ? 'Staff' : 'Senior';
             const diffColor = diff === 'Junior' ? '#38bdf8' : diff === 'Mid' ? '#34d399' : diff === 'Staff' ? '#a855f7' : '#f59e0b';
-            const codeContent = (q.codeSnippet && q.codeSnippet.trim().length > 0)
+            const rawCode = (q.codeSnippet && q.codeSnippet.trim().length > 0)
               ? q.codeSnippet.replace(/\\n/g, '\n')
               : '// No source snippet provided';
+            const codeContent = sanitizeBugCode(rawCode);
 
             return {
               id: q.id,
@@ -295,9 +382,14 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
     setLineIdentifiedBonus(true);
   };
 
-  const codeLines = useMemo(() => {
-    return currentChallenge.code.split('\n');
-  }, [currentChallenge.code]);
+  const cleanedCode = useMemo(() => {
+    return sanitizeBugCode(currentChallenge?.code || '');
+  }, [currentChallenge?.code]);
+
+  const targetLanguage = useMemo(() => {
+    const detected = detectCodeLanguage(cleanedCode, currentChallenge?.category || 'concurrency');
+    return Prism.languages[detected] ? detected : (Prism.languages.java ? 'java' : 'clike');
+  }, [cleanedCode, currentChallenge?.category]);
 
   const activeCategoryTab = CATEGORY_TABS.find((c) => c.id === selectedCategory) || CATEGORY_TABS[0];
 
@@ -637,68 +729,127 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
             </div>
           </div>
 
-          {/* Monospace Code Box */}
-          <div
-            style={{
-              background: '#07090e',
-              borderRadius: '10px',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              padding: '12px 14px',
-              fontFamily: 'SFMono-Regular, Menlo, Monaco, Consolas, monospace',
-              fontSize: '0.82rem',
-              lineHeight: 1.5,
-              overflowX: 'auto',
-              marginBottom: '14px',
-            }}
+          {/* Highlighted Code Editor Box */}
+          <Highlight
+            theme={prismTheme}
+            code={cleanedCode}
+            language={targetLanguage}
+            prism={Prism}
           >
-            <div style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: '0.7rem', textTransform: 'uppercase', marginBottom: '6px', display: 'flex', justifyContent: 'space-between' }}>
-              <span>Source Code (Click suspect line to verify defect):</span>
-              {clickedLineNumber && (
-                <span style={{ color: clickedLineNumber === currentChallenge.buggyLineNumber ? '#34d399' : '#fbbf24' }}>
-                  Line #{clickedLineNumber} {clickedLineNumber === currentChallenge.buggyLineNumber ? '✓ Match' : ''}
-                </span>
-              )}
-            </div>
-
-            {codeLines.map((line, idx) => {
-              const lineNum = idx + 1;
-              const isBuggy = (gameState === 'revealed' || breakpointHintUsed) && lineNum === currentChallenge.buggyLineNumber;
-              const isClicked = clickedLineNumber === lineNum;
-
-              let bg = 'transparent';
-              if (isBuggy) bg = 'rgba(239, 68, 68, 0.2)';
-              else if (isClicked) bg = 'rgba(245, 158, 11, 0.12)';
-
-              return (
+            {({ className, style, tokens, getLineProps, getTokenProps }) => (
+              <div
+                className={className}
+                style={{
+                  ...style,
+                  background: '#0a0d16',
+                  borderRadius: '10px',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  padding: '12px 14px',
+                  fontFamily: 'SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+                  fontSize: '0.82rem',
+                  lineHeight: 1.5,
+                  overflowX: 'auto',
+                  marginBottom: '14px',
+                  boxShadow: 'inset 0 2px 8px rgba(0, 0, 0, 0.5)',
+                }}
+              >
+                {/* Editor Header */}
                 <div
-                  key={idx}
-                  onClick={() => handleLineClick(lineNum)}
                   style={{
+                    color: 'rgba(255, 255, 255, 0.45)',
+                    fontSize: '0.7rem',
+                    textTransform: 'uppercase',
+                    marginBottom: '8px',
                     display: 'flex',
-                    background: bg,
-                    borderRadius: '4px',
-                    padding: '1px 4px',
-                    cursor: gameState === 'playing' ? 'pointer' : 'default',
-                    transition: 'background 0.15s ease',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.07)',
+                    paddingBottom: '6px',
                   }}
                 >
-                  <span
-                    style={{
-                      width: '32px',
-                      userSelect: 'none',
-                      color: isBuggy ? '#ef4444' : isClicked ? '#f59e0b' : 'rgba(255, 255, 255, 0.3)',
-                      fontWeight: isBuggy || isClicked ? 800 : 400,
-                    }}
-                  >
-                    {lineNum}
-                  </span>
-                  <span style={{ color: isBuggy ? '#fca5a5' : '#e2e8f0', whiteSpace: 'pre' }}>
-                    {line}
-                  </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: '#ef4444', display: 'inline-block' }} />
+                    <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: '#f59e0b', display: 'inline-block' }} />
+                    <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: '#10b981', display: 'inline-block' }} />
+                    <span style={{ marginLeft: '4px', fontWeight: 700, letterSpacing: '0.5px' }}>
+                      Source Editor ({targetLanguage.toUpperCase()}) — Click line to isolate bug:
+                    </span>
+                  </div>
+                  {clickedLineNumber && (
+                    <span
+                      style={{
+                        padding: '2px 8px',
+                        borderRadius: '4px',
+                        fontSize: '0.72rem',
+                        fontWeight: 800,
+                        background: clickedLineNumber === currentChallenge.buggyLineNumber ? 'rgba(52, 211, 153, 0.2)' : 'rgba(245, 158, 11, 0.2)',
+                        color: clickedLineNumber === currentChallenge.buggyLineNumber ? '#34d399' : '#fbbf24',
+                        border: `1px solid ${clickedLineNumber === currentChallenge.buggyLineNumber ? 'rgba(52, 211, 153, 0.4)' : 'rgba(245, 158, 11, 0.4)'}`,
+                      }}
+                    >
+                      Line #{clickedLineNumber} {clickedLineNumber === currentChallenge.buggyLineNumber ? '✓ Match (+50 pts)' : 'Marked'}
+                    </span>
+                  )}
                 </div>
-              );
-            })}
-          </div>
+
+                {tokens.map((lineTokens, idx) => {
+                  const lineNum = idx + 1;
+                  const isBuggy = (gameState === 'revealed' || breakpointHintUsed) && lineNum === currentChallenge.buggyLineNumber;
+                  const isClicked = clickedLineNumber === lineNum;
+
+                  let bg = 'transparent';
+                  let borderLeft = '3px solid transparent';
+                  if (isBuggy) {
+                    bg = 'rgba(239, 68, 68, 0.22)';
+                    borderLeft = '3px solid #ef4444';
+                  } else if (isClicked) {
+                    bg = 'rgba(245, 158, 11, 0.15)';
+                    borderLeft = '3px solid #f59e0b';
+                  }
+
+                  const lineProps = getLineProps({ line: lineTokens, key: idx });
+
+                  return (
+                    <div
+                      {...lineProps}
+                      key={idx}
+                      onClick={() => handleLineClick(lineNum)}
+                      style={{
+                        ...lineProps.style,
+                        display: 'flex',
+                        alignItems: 'center',
+                        background: bg,
+                        borderLeft,
+                        borderRadius: '4px',
+                        padding: '1.5px 6px',
+                        cursor: gameState === 'playing' ? 'pointer' : 'default',
+                        transition: 'background 0.15s ease',
+                        minHeight: '22px',
+                      }}
+                    >
+                      <span
+                        style={{
+                          width: '34px',
+                          userSelect: 'none',
+                          color: isBuggy ? '#ef4444' : isClicked ? '#f59e0b' : 'rgba(255, 255, 255, 0.3)',
+                          fontWeight: isBuggy || isClicked ? 800 : 400,
+                          fontSize: '0.78rem',
+                          flexShrink: 0,
+                        }}
+                      >
+                        {lineNum}
+                      </span>
+                      <span style={{ whiteSpace: 'pre', flex: 1, fontFamily: 'inherit' }}>
+                        {lineTokens.map((token, key) => (
+                          <span {...getTokenProps({ token, key })} key={key} />
+                        ))}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </Highlight>
 
           {/* Option Cards: 1 Option per Line */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '14px' }}>
@@ -810,6 +961,46 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
               <div style={{ fontSize: '0.8rem', color: 'rgba(255, 255, 255, 0.85)', lineHeight: 1.45, marginBottom: '12px' }}>
                 {currentChallenge.rootCause}
               </div>
+
+              {currentChallenge.fixSnippet && (
+                <div style={{ marginBottom: '14px' }}>
+                  <div style={{ fontSize: '0.74rem', fontWeight: 800, color: '#34d399', textTransform: 'uppercase', marginBottom: '6px', letterSpacing: '0.5px' }}>
+                    💡 Verified Senior Solution:
+                  </div>
+                  <Highlight
+                    theme={prismTheme}
+                    code={currentChallenge.fixSnippet.trim()}
+                    language={targetLanguage}
+                    prism={Prism}
+                  >
+                    {({ className, style, tokens, getLineProps, getTokenProps }) => (
+                      <pre
+                        className={className}
+                        style={{
+                          ...style,
+                          background: '#07090e',
+                          borderRadius: '8px',
+                          border: '1px solid rgba(52, 211, 153, 0.25)',
+                          padding: '10px 12px',
+                          fontFamily: 'SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+                          fontSize: '0.8rem',
+                          lineHeight: 1.45,
+                          margin: 0,
+                          overflowX: 'auto',
+                        }}
+                      >
+                        {tokens.map((line, i) => (
+                          <div {...getLineProps({ line, key: i })} key={i}>
+                            {line.map((token, key) => (
+                              <span {...getTokenProps({ token, key })} key={key} />
+                            ))}
+                          </div>
+                        ))}
+                      </pre>
+                    )}
+                  </Highlight>
+                </div>
+              )}
               <button
                 type="button"
                 onClick={handleNextChallenge}

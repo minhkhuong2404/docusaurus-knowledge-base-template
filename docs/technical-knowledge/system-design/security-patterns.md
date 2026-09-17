@@ -6,11 +6,17 @@ description: Security design patterns for distributed systems including authenti
 tags: [security, authentication, authorization, jwt, oauth2, rate-limiting, zero-trust, secrets, owasp]
 ---
 
+import AuthNvsAuthZDiagram from '@site/src/components/AuthNvsAuthZDiagram';
+import TokenAuthDiagram from '@site/src/components/TokenAuthDiagram';
+import TokenInvalidationFlowDiagram from '@site/src/components/TokenInvalidationFlowDiagram';
+
 # Security Patterns
 
 ---
 
 ## Authentication vs Authorization
+
+<AuthNvsAuthZDiagram />
 
 | | Authentication (AuthN) | Authorization (AuthZ) |
 |---|---|---|
@@ -21,6 +27,8 @@ tags: [security, authentication, authorization, jwt, oauth2, rate-limiting, zero
 ---
 
 ## JWT (JSON Web Token)
+
+<TokenAuthDiagram />
 
 ```
 Header.Payload.Signature
@@ -76,6 +84,8 @@ public class SecurityConfig {
 | Cross-service verification | Must use short expiry + refresh tokens |
 
 ### Token Revocation
+
+<TokenInvalidationFlowDiagram />
 ```java
 // Blocklist with Redis (for logout/revocation)
 public void revokeToken(String jti, Instant expiry) {

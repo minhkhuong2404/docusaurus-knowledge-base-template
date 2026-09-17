@@ -74,11 +74,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'd25'),
+    component: ComponentCreator('/', '58b'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '914'),
+        component: ComponentCreator('/', '161'),
         routes: [
           {
             path: '/tags',
@@ -733,6 +733,11 @@ export default [
           {
             path: '/tags/bill',
             component: ComponentCreator('/tags/bill', 'e71'),
+            exact: true
+          },
+          {
+            path: '/tags/bin',
+            component: ComponentCreator('/tags/bin', 'f13'),
             exact: true
           },
           {
@@ -2631,6 +2636,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/eval',
+            component: ComponentCreator('/tags/eval', '50f'),
+            exact: true
+          },
+          {
             path: '/tags/evals',
             component: ComponentCreator('/tags/evals', '3c5'),
             exact: true
@@ -2668,6 +2678,11 @@ export default [
           {
             path: '/tags/events',
             component: ComponentCreator('/tags/events', '254'),
+            exact: true
+          },
+          {
+            path: '/tags/eventstats',
+            component: ComponentCreator('/tags/eventstats', '380'),
             exact: true
           },
           {
@@ -6131,6 +6146,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/rex',
+            component: ComponentCreator('/tags/rex', '0d7'),
+            exact: true
+          },
+          {
             path: '/tags/right',
             component: ComponentCreator('/tags/right', '5a6'),
             exact: true
@@ -6378,6 +6398,11 @@ export default [
           {
             path: '/tags/search',
             component: ComponentCreator('/tags/search', '8a3'),
+            exact: true
+          },
+          {
+            path: '/tags/search-processing-language',
+            component: ComponentCreator('/tags/search-processing-language', 'e98'),
             exact: true
           },
           {
@@ -6726,6 +6751,21 @@ export default [
             exact: true
           },
           {
+            path: '/tags/spath',
+            component: ComponentCreator('/tags/spath', '068'),
+            exact: true
+          },
+          {
+            path: '/tags/spl',
+            component: ComponentCreator('/tags/spl', '292'),
+            exact: true
+          },
+          {
+            path: '/tags/splunk',
+            component: ComponentCreator('/tags/splunk', '29c'),
+            exact: true
+          },
+          {
             path: '/tags/spring',
             component: ComponentCreator('/tags/spring', '7a5'),
             exact: true
@@ -6998,6 +7038,11 @@ export default [
           {
             path: '/tags/streams',
             component: ComponentCreator('/tags/streams', '236'),
+            exact: true
+          },
+          {
+            path: '/tags/streamstats',
+            component: ComponentCreator('/tags/streamstats', '064'),
             exact: true
           },
           {
@@ -7346,6 +7391,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/timechart',
+            component: ComponentCreator('/tags/timechart', 'c46'),
+            exact: true
+          },
+          {
             path: '/tags/timeline',
             component: ComponentCreator('/tags/timeline', 'e2f'),
             exact: true
@@ -7353,6 +7403,11 @@ export default [
           {
             path: '/tags/timescaledb',
             component: ComponentCreator('/tags/timescaledb', '9a7'),
+            exact: true
+          },
+          {
+            path: '/tags/timespan',
+            component: ComponentCreator('/tags/timespan', '758'),
             exact: true
           },
           {
@@ -7418,6 +7473,11 @@ export default [
           {
             path: '/tags/traffic-management',
             component: ComponentCreator('/tags/traffic-management', '599'),
+            exact: true
+          },
+          {
+            path: '/tags/transaction',
+            component: ComponentCreator('/tags/transaction', '3ba'),
             exact: true
           },
           {
@@ -8022,7 +8082,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'ded'),
+            component: ComponentCreator('/', 'b8a'),
             routes: [
               {
                 path: '/aws',
@@ -15674,6 +15734,24 @@ export default [
               {
                 path: '/technical-knowledge/solid/summary',
                 component: ComponentCreator('/technical-knowledge/solid/summary', '2a6'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/splunk/splunk-advanced-spl-recipes',
+                component: ComponentCreator('/technical-knowledge/splunk/splunk-advanced-spl-recipes', '5af'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/splunk/splunk-eval-and-time-bucketing',
+                component: ComponentCreator('/technical-knowledge/splunk/splunk-eval-and-time-bucketing', 'cf1'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/splunk/splunk-fundamentals',
+                component: ComponentCreator('/technical-knowledge/splunk/splunk-fundamentals', '83c'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

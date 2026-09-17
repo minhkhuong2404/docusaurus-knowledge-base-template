@@ -6240,6 +6240,21 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/splunk/splunk-advanced-spl-recipes",
+              "path": "/technical-knowledge/splunk/splunk-advanced-spl-recipes",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/splunk/splunk-eval-and-time-bucketing",
+              "path": "/technical-knowledge/splunk/splunk-eval-and-time-bucketing",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/splunk/splunk-fundamentals",
+              "path": "/technical-knowledge/splunk/splunk-fundamentals",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/spring/hibernate-association-best-practices",
               "path": "/technical-knowledge/spring/hibernate-association-best-practices",
               "sidebar": "tutorialSidebar"

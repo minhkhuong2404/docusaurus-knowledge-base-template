@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 
 type ArchTab = 'dual-write-seam' | 'mysql-skip-locked' | 'lifecycle-flow' | 'tradeoff-matrix';
 
-export default function InventoryReservationDiagram() {
-  const [activeTab, setActiveTab] = useState<ArchTab>('mysql-skip-locked');
+export default function InventoryReservationDiagram({ initialTab = 'mysql-skip-locked' }: { initialTab?: ArchTab }) {
+  const [activeTab, setActiveTab] = useState<ArchTab>(initialTab);
   const [lockedUnits, setLockedUnits] = useState<number[]>([1, 2]);
   const [activeCheckoutThread, setActiveCheckoutThread] = useState<number>(3);
 

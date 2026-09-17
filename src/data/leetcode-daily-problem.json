@@ -1,8 +1,8 @@
 {
-  "id": "2472",
-  "title": "Maximum Number of Non-overlapping Palindrome Substrings",
-  "url": "https://leetcode.com/problems/maximum-number-of-non-overlapping-palindrome-substrings/",
-  "difficulty": "hard",
-  "topic": "Two Pointers, String, Dynamic Programming, Greedy",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-09-15."
+  "id": "1477",
+  "title": "Find Two Non-overlapping Sub-arrays Each With Target Sum",
+  "url": "https://leetcode.com/problems/find-two-non-overlapping-sub-arrays-each-with-target-sum/",
+  "difficulty": "medium",
+  "topic": "Array, Hash Table, Binary Search, Dynamic Programming, Sliding Window",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-09-17."
 }

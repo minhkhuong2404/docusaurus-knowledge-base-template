@@ -35,7 +35,7 @@ CATEGORIES = [
         "templates": [
             {
                 "title": "Virtual Thread Carrier Pinning inside Synchronized Block",
-                "code": "public class OrderProcessor {\n    public synchronized void processPayment(Order order) { // Line 2: Synchronized block pins carrier thread\n        try {\n            // Blocking network call to payment gateway\n            HttpResponse response = httpClient.send(request, BodyHandlers.ofString()); // Line 5\n            recordMetric(response);\n        } catch (Exception e) {\n            throw new RuntimeException(e);\n        }\n    }\n}",
+                "code": "public class OrderProcessor {\n    public synchronized void processPayment(Order order) {\n        try {\n            // Blocking network call to payment gateway\n            HttpResponse response = httpClient.send(request, BodyHandlers.ofString());\n            recordMetric(response);\n        } catch (Exception e) {\n            throw new RuntimeException(e);\n        }\n    }\n}",
                 "bugLine": 2,
                 "bugType": "Performance Bottleneck: Virtual Thread Carrier Pinning (synchronized block)",
                 "rootCause": "In Java 21, when a Virtual Thread executes a blocking operation inside a `synchronized` block/method, it is 'pinned' to its underlying OS carrier thread. This prevents the carrier from unmounting, starving the ForkJoinPool scheduler.",
@@ -48,7 +48,7 @@ CATEGORIES = [
             },
             {
                 "title": "Broken Double-Checked Locking Missing Volatile",
-                "code": "public class CacheManager {\n    private static CacheManager instance; // Line 2: Missing volatile modifier!\n\n    public static CacheManager getInstance() {\n        if (instance == null) {\n            synchronized (CacheManager.class) {\n                if (instance == null) {\n                    instance = new CacheManager(); // Line 7: Instruction reordering publish hazard\n                }\n            }\n        }\n        return instance;\n    }\n}",
+                "code": "public class CacheManager {\n    private static CacheManager instance;\n\n    public static CacheManager getInstance() {\n        if (instance == null) {\n            synchronized (CacheManager.class) {\n                if (instance == null) {\n                    instance = new CacheManager();\n                }\n            }\n        }\n        return instance;\n    }\n}",
                 "bugLine": 2,
                 "bugType": "Thread Safety Bug: Partially constructed object published without volatile",
                 "rootCause": "Without `volatile`, the JVM/JIT can reorder instruction 2 (constructor execution) and instruction 3 (assigning memory address to `instance`). Another thread may observe `instance != null` before fields are initialized.",
@@ -61,7 +61,7 @@ CATEGORIES = [
             },
             {
                 "title": "StructuredTaskScope Subtask Accessed Before Join",
-                "code": "public Response aggregateData(String userId) throws Exception {\n    try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {\n        Supplier<User> userTask = scope.fork(() -> userService.getUser(userId)); // Line 3\n        Supplier<Order> orderTask = scope.fork(() -> orderService.getOrder(userId)); // Line 4\n\n        // Missing scope.join() and scope.throwIfFailed()!\n        return new Response(userTask.get(), orderTask.get()); // Line 7: Throws IllegalStateException\n    }\n}",
+                "code": "public Response aggregateData(String userId) throws Exception {\n    try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {\n        Supplier<User> userTask = scope.fork(() -> userService.getUser(userId));\n        Supplier<Order> orderTask = scope.fork(() -> orderService.getOrder(userId));\n\n\n        return new Response(userTask.get(), orderTask.get());\n    }\n}",
                 "bugLine": 7,
                 "bugType": "Runtime Exception: IllegalStateException (Subtask result accessed before scope.join())",
                 "rootCause": "In Java 21 StructuredTaskScope, calling `.get()` on a Subtask supplier before calling `scope.join()` throws IllegalStateException.",
@@ -74,7 +74,7 @@ CATEGORIES = [
             },
             {
                 "title": "ThreadLocal Memory Leak in Pooled Worker Threads",
-                "code": "public class SecurityContextFilter implements Filter {\n    private static final ThreadLocal<UserSession> userCtx = new ThreadLocal<>();\n\n    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws Exception {\n        UserSession session = authenticate(req);\n        userCtx.set(session); // Line 5: Set context for thread\n        chain.doFilter(req, res);\n        // Missing userCtx.remove() in finally block!\n    }\n}",
+                "code": "public class SecurityContextFilter implements Filter {\n    private static final ThreadLocal<UserSession> userCtx = new ThreadLocal<>();\n\n    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws Exception {\n        UserSession session = authenticate(req);\n        userCtx.set(session);\n        chain.doFilter(req, res);\n\n    }\n}",
                 "bugLine": 5,
                 "bugType": "Memory Leak: ThreadLocalMap retains strong reference to value in pooled thread",
                 "rootCause": "ThreadLocalMap in Thread holds Entry with weak key (ThreadLocal) but STRONG value (UserSession). In pooled threads (Tomcat, Netty) that never terminate, the value leaks memory forever.",
@@ -96,7 +96,7 @@ CATEGORIES = [
         "templates": [
             {
                 "title": "Spring @Transactional Self-Invocation Proxy Bypass",
-                "code": "@Service\npublic class OrderService {\n    public void processOrder(OrderDto dto) {\n        validateOrder(dto);\n        executePaymentAndFulfill(dto); // Line 5: Direct 'this' invocation bypasses Spring AOP proxy!\n    }\n\n    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)\n    public void executePaymentAndFulfill(OrderDto dto) {\n        paymentRepo.debit(dto.getAmount());\n        inventoryRepo.reserve(dto.getItems());\n    }\n}",
+                "code": "@Service\npublic class OrderService {\n    public void processOrder(OrderDto dto) {\n        validateOrder(dto);\n        executePaymentAndFulfill(dto);\n    }\n\n    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)\n    public void executePaymentAndFulfill(OrderDto dto) {\n        paymentRepo.debit(dto.getAmount());\n        inventoryRepo.reserve(dto.getItems());\n    }\n}",
                 "bugLine": 5,
                 "bugType": "AOP Proxy Bypass: Direct internal method call ignores @Transactional",
                 "rootCause": "Spring creates dynamic AOP proxies to intercept `@Transactional`. Calling `this.executePaymentAndFulfill()` directly on the target object bypasses the TransactionInterceptor.",
@@ -109,7 +109,7 @@ CATEGORIES = [
             },
             {
                 "title": "Prototype Bean Injected into Singleton Bean Scope Trap",
-                "code": "@Service // Singleton scope by default\npublic class ReportService {\n    @Autowired\n    private ReportGenerator reportGenerator; // Line 4: Injected once at startup, stays same instance!\n\n    public void generate(User user) {\n        reportGenerator.setUser(user); // Line 7: Mutates shared instance across concurrent users!\n        reportGenerator.render();\n    }\n}",
+                "code": "@Service\npublic class ReportService {\n    @Autowired\n    private ReportGenerator reportGenerator;\n\n    public void generate(User user) {\n        reportGenerator.setUser(user);\n        reportGenerator.render();\n    }\n}",
                 "bugLine": 4,
                 "bugType": "Spring Scope Hazard: Prototype bean inside Singleton is instantiated only once",
                 "rootCause": "When a `@Scope(\"prototype\")` bean is autowired into a `@Scope(\"singleton\")` bean, Spring injects it ONCE during container initialization. Every subsequent call reuses the same instance.",
@@ -122,7 +122,7 @@ CATEGORIES = [
             },
             {
                 "title": "@Transactional on Private Method Silently Ignored",
-                "code": "@Service\npublic class UserService {\n    @Transactional // Line 3: Spring AOP cannot proxy private methods!\n    private void updateBalance(Long userId, BigDecimal amount) {\n        userRepo.adjustBalance(userId, amount);\n    }\n}",
+                "code": "@Service\npublic class UserService {\n    @Transactional\n    private void updateBalance(Long userId, BigDecimal amount) {\n        userRepo.adjustBalance(userId, amount);\n    }\n}",
                 "bugLine": 3,
                 "bugType": "AOP Ignored: @Transactional has no effect on private methods",
                 "rootCause": "Spring AOP proxies override public methods. CGLIB and JDK dynamic proxies cannot override or intercept `private` methods. The annotation is silently ignored.",
@@ -135,7 +135,7 @@ CATEGORIES = [
             },
             {
                 "title": "Swallowing Exception Inside @Transactional Swallows Rollback",
-                "code": "@Transactional\npublic void placeOrder(Order order) {\n    try {\n        orderRepo.save(order);\n        paymentService.charge(order); // Line 5: Throws PaymentException\n    } catch (Exception e) {\n        logger.error(\"Payment failed\", e); // Line 7: Swallows exception, transaction commits successfully!\n    }\n}",
+                "code": "@Transactional\npublic void placeOrder(Order order) {\n    try {\n        orderRepo.save(order);\n        paymentService.charge(order);\n    } catch (Exception e) {\n        logger.error(\"Payment failed\", e); // Line 7: Swallows exception, transaction commits successfully!\n    }\n}",
                 "bugLine": 7,
                 "bugType": "Transactional Bug: Exception caught and swallowed prevents rollback",
                 "rootCause": "Spring's `TransactionInterceptor` only initiates rollback when an unhandled exception escapes the method boundary. Catching `Exception` on Line 7 without rethrowing causes the transaction to commit.",
@@ -170,7 +170,7 @@ CATEGORIES = [
             },
             {
                 "title": "Kafka Heavy Blocking Inside poll() Causing Rebalance Storm",
-                "code": "while (true) {\n    ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(1000)); // max.poll.interval.ms = 300000 (5m)\n    for (ConsumerRecord<String, String> record : records) {\n        // Heavy synchronous external REST call taking 10s per record\n        restClient.callThirdPartyVendor(record.value()); // Line 5: 50 records * 10s = 500s > max.poll.interval.ms!\n    }\n}",
+                "code": "while (true) {\n    ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(1000));\n    for (ConsumerRecord<String, String> record : records) {\n        // Heavy synchronous external REST call taking 10s per record\n        restClient.callThirdPartyVendor(record.value());\n    }\n}",
                 "bugLine": 5,
                 "bugType": "Kafka Consumer Failure: max.poll.interval.ms exceeded, kicking consumer out of group",
                 "rootCause": "If processing the batch takes longer than `max.poll.interval.ms` (e.g. 500s > 300s), the Kafka coordinator considers the consumer dead, triggers a partition rebalance, and reassigns partitions, causing endless duplicate processing.",
@@ -292,7 +292,7 @@ CATEGORIES = [
             },
             {
                 "title": "Cache Stampede / Dogpiling on Hot Key Expiration",
-                "code": "public ProductDto getProduct(String productId) {\n    ProductDto product = cache.get(productId);\n    if (product == null) {\n        // Line 4: 10,000 concurrent requests all miss cache simultaneously!\n        product = database.loadProduct(productId); // Line 5: DB crashes under 10k simultaneous heavy queries\n        cache.put(productId, product, 60, TimeUnit.SECONDS);\n    }\n    return product;\n}",
+                "code": "public ProductDto getProduct(String productId) {\n    ProductDto product = cache.get(productId);\n    if (product == null) {\n\n        product = database.loadProduct(productId);\n        cache.put(productId, product, 60, TimeUnit.SECONDS);\n    }\n    return product;\n}",
                 "bugLine": 4,
                 "bugType": "System Design Flaw: Cache Stampede / Thundering Herd on TTL expiration",
                 "rootCause": "When a high-traffic hot key expires from the cache, thousands of concurrent threads experience a cache miss simultaneously on Line 4 and all query the database at once, causing database CPU saturation and outage (Cache Stampede).",
@@ -305,7 +305,7 @@ CATEGORIES = [
             },
             {
                 "title": "Cache Avalanche Due to Identical TTL on All Keys",
-                "code": "public void warmupCategoryProducts(List<Product> products) {\n    for (Product product : products) {\n        // All 100,000 products cached with exact same 3600-second TTL!\n        cache.put(\"prod:\" + product.getId(), product, 3600, TimeUnit.SECONDS); // Line 4\n    }\n}",
+                "code": "public void warmupCategoryProducts(List<Product> products) {\n    for (Product product : products) {\n\n        cache.put(\"prod:\" + product.getId(), product, 3600, TimeUnit.SECONDS); // Line 4\n    }\n}",
                 "bugLine": 4,
                 "bugType": "System Design Flaw: Cache Avalanche caused by synchronized TTL expiration",
                 "rootCause": "When hundreds of thousands of keys are written with the exact same TTL (3600s), all keys expire at the exact same second. The entire database is suddenly flooded with 100,000 misses at `T+3600s` (Cache Avalanche).",
@@ -318,7 +318,7 @@ CATEGORIES = [
             },
             {
                 "title": "Cache Penetration with Non-Existent Keys",
-                "code": "public UserDto getUserProfile(String userId) {\n    UserDto cached = redis.get(userId);\n    if (cached != null) return cached;\n\n    UserDto dbUser = userRepo.findById(userId); // Line 5: Attacker queries non-existent IDs (e.g. -999)\n    if (dbUser != null) {\n        redis.set(userId, dbUser, 600, TimeUnit.SECONDS);\n    }\n    return dbUser; // Line 9: Null is never cached, every subsequent query hits DB!\n}",
+                "code": "public UserDto getUserProfile(String userId) {\n    UserDto cached = redis.get(userId);\n    if (cached != null) return cached;\n\n    UserDto dbUser = userRepo.findById(userId);\n    if (dbUser != null) {\n        redis.set(userId, dbUser, 600, TimeUnit.SECONDS);\n    }\n    return dbUser;\n}",
                 "bugLine": 9,
                 "bugType": "System Design Flaw: Cache Penetration allows attackers to bypass cache completely",
                 "rootCause": "If a queried ID does not exist in DB, `dbUser` is null and nothing is written to Redis. An attacker sending requests for random non-existent IDs bypasses the cache 100% of the time, directly overwhelming the database.",
@@ -353,7 +353,7 @@ CATEGORIES = [
             },
             {
                 "title": "Holding Open Database Transaction Across Slow External HTTP Call",
-                "code": "@Transactional\npublic void processCheckout(OrderRequest req) {\n    Order order = orderRepo.createOrder(req); // Borrows JDBC connection\n    \n    // Slow third-party payment gateway call (takes 3-5 seconds)\n    PaymentResult result = paymentGatewayClient.charge(req.getCard()); // Line 6: Holds DB lock & connection!\n    \n    order.setStatus(result.isSuccess() ? \"PAID\" : \"FAILED\");\n    orderRepo.save(order);\n}",
+                "code": "@Transactional\npublic void processCheckout(OrderRequest req) {\n    Order order = orderRepo.createOrder(req);\n    \n\n    PaymentResult result = paymentGatewayClient.charge(req.getCard());\n    \n    order.setStatus(result.isSuccess() ? \"PAID\" : \"FAILED\");\n    orderRepo.save(order);\n}",
                 "bugLine": 6,
                 "bugType": "Database Antipattern: Holding DB transaction and connection open across network I/O",
                 "rootCause": "Placing slow remote HTTP calls inside `@Transactional` holds the database connection and row locks open for seconds, quickly exhausting the HikariCP connection pool and causing database connection starvation.",
@@ -379,7 +379,7 @@ CATEGORIES = [
             },
             {
                 "title": "Non-Repeatable Read Lost Update Under READ COMMITTED Isolation",
-                "code": "@Transactional(isolation = Isolation.READ_COMMITTED)\npublic void deductInventory(Long productId, int quantity) {\n    Product p = productRepo.findById(productId); // Line 3: Reads stock = 10\n    if (p.getStock() >= quantity) {\n        // Concurrent transaction also reads stock=10 and deducts!\n        p.setStock(p.getStock() - quantity); // Line 6: Lost update overwrites concurrent deduction!\n        productRepo.save(p);\n    }\n}",
+                "code": "@Transactional(isolation = Isolation.READ_COMMITTED)\npublic void deductInventory(Long productId, int quantity) {\n    Product p = productRepo.findById(productId);\n    if (p.getStock() >= quantity) {\n        \n        p.setStock(p.getStock() - quantity);\n        productRepo.save(p);\n    }\n}",
                 "bugLine": 6,
                 "bugType": "Concurrency Race Condition: Lost Update anomaly under READ COMMITTED isolation",
                 "rootCause": "Under standard `READ COMMITTED` isolation, `findById` does not lock the row. Two concurrent transactions read the same stock (10), and both write back (10 - 5 = 5), causing one customer's deduction to be lost (inventory overselling).",
@@ -401,7 +401,7 @@ CATEGORIES = [
         "templates": [
             {
                 "title": "JWT Algorithm 'none' Signature Verification Bypass",
-                "code": "public Claims parseAndValidateToken(String jwtToken) {\n    // Parsing token without enforcing HMAC/RSA signing key verification!\n    JwtParser parser = Jwts.parserBuilder().build(); // Line 3: Missing .setSigningKey(secretKey)!\n    return parser.parseClaimsJwt(jwtToken).getBody(); // Line 4: Accepts unsigned alg=none tokens!\n}",
+                "code": "public Claims parseAndValidateToken(String jwtToken) {\n\n    JwtParser parser = Jwts.parserBuilder().build();\n    return parser.parseClaimsJwt(jwtToken).getBody();\n}",
                 "bugLine": 3,
                 "bugType": "Critical Security Vulnerability: JWT alg='none' Authentication Bypass",
                 "rootCause": "If a JWT parser does not require a cryptographic signing key, an attacker can forge a JWT with `\"alg\": \"none\"` and arbitrary payload claims (`\"role\": \"ADMIN\"`), bypassing authentication completely.",
@@ -427,7 +427,7 @@ CATEGORIES = [
             },
             {
                 "title": "Server-Side Request Forgery (SSRF) via Unvalidated Webhook URL",
-                "code": "public void sendWebhook(String targetUrl, String payload) throws Exception {\n    // Target URL is supplied directly by user input without IP validation!\n    URI uri = URI.create(targetUrl); // Line 3: Attacker inputs http://169.254.169.254/latest/meta-data/\n    HttpRequest req = HttpRequest.newBuilder().uri(uri).POST(BodyPublishers.ofString(payload)).build();\n    httpClient.send(req, BodyHandlers.ofString()); // Line 5: Leaks cloud IAM credentials!\n}",
+                "code": "public void sendWebhook(String targetUrl, String payload) throws Exception {\n\n    URI uri = URI.create(targetUrl);\n    HttpRequest req = HttpRequest.newBuilder().uri(uri).POST(BodyPublishers.ofString(payload)).build();\n    httpClient.send(req, BodyHandlers.ofString());\n}",
                 "bugLine": 3,
                 "bugType": "Security Vulnerability: Server-Side Request Forgery (SSRF - OWASP Top 10 A10:2021)",
                 "rootCause": "Allowing users to specify arbitrary HTTP webhook destinations without validating IP addresses allows attackers to target internal cloud metadata endpoints (`169.254.169.254`) or loopback interfaces (`127.0.0.1`), extracting AWS/GCP IAM credentials.",
@@ -440,7 +440,7 @@ CATEGORIES = [
             },
             {
                 "title": "Java Insecure Deserialization via ObjectInputStream",
-                "code": "public Object deserializePayload(byte[] rawData) throws Exception {\n    try (ByteArrayInputStream bais = new ByteArrayInputStream(rawData);\n         ObjectInputStream ois = new ObjectInputStream(bais)) { // Line 3: Deserializes untrusted byte stream!\n        return ois.readObject(); // Line 4: Executes gadget chains (RCE) during readObject()!\n    }\n}",
+                "code": "public Object deserializePayload(byte[] rawData) throws Exception {\n    try (ByteArrayInputStream bais = new ByteArrayInputStream(rawData);\n         ObjectInputStream ois = new ObjectInputStream(bais)) {\n        return ois.readObject();\n    }\n}",
                 "bugLine": 4,
                 "bugType": "Critical Security Vulnerability: Insecure Java Deserialization (Remote Code Execution)",
                 "rootCause": "`ObjectInputStream.readObject()` reconstructs objects and automatically invokes custom `readObject()` hooks. Attackers craft malicious gadget chains (e.g. Apache Commons Collections) that trigger arbitrary code execution upon deserialization.",
@@ -462,7 +462,7 @@ CATEGORIES = [
         "templates": [
             {
                 "title": "CompletableFuture.allOf() Result Extraction Hazard",
-                "code": "public UserProfile fetchUserProfile(String userId) {\n    CompletableFuture<User> userFuture = CompletableFuture.supplyAsync(() -> userService.get(userId));\n    CompletableFuture<List<Order>> ordersFuture = CompletableFuture.supplyAsync(() -> orderService.get(userId));\n    CompletableFuture<CreditScore> scoreFuture = CompletableFuture.supplyAsync(() -> creditService.get(userId));\n\n    // Wait for all futures\n    CompletableFuture.allOf(userFuture, ordersFuture, scoreFuture); // Line 7: Returns new Void future without waiting!\n\n    return new UserProfile(\n        userFuture.getNow(null),   // Line 10: Returns null!\n        ordersFuture.getNow(null), // Line 11: Returns null!\n        scoreFuture.getNow(null)\n    );\n}",
+                "code": "public UserProfile fetchUserProfile(String userId) {\n    CompletableFuture<User> userFuture = CompletableFuture.supplyAsync(() -> userService.get(userId));\n    CompletableFuture<List<Order>> ordersFuture = CompletableFuture.supplyAsync(() -> orderService.get(userId));\n    CompletableFuture<CreditScore> scoreFuture = CompletableFuture.supplyAsync(() -> creditService.get(userId));\n\n    \n    CompletableFuture.allOf(userFuture, ordersFuture, scoreFuture);\n\n    return new UserProfile(\n        userFuture.getNow(null),\n        ordersFuture.getNow(null),\n        scoreFuture.getNow(null)\n    );\n}",
                 "bugLine": 7,
                 "bugType": "Missing .join() / .get() on CompletableFuture.allOf()",
                 "rootCause": "CompletableFuture.allOf() is non-blocking and returns a new CompletableFuture<Void>. Without calling .join() on Line 7, the main thread continues immediately, and getNow(null) extracts null values before background threads finish.",

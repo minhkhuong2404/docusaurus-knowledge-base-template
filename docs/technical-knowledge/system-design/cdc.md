@@ -6,6 +6,8 @@ description: Comprehensive guide on Change Data Capture (CDC), detailing how it 
 tags: [cdc, system-design, database, kafka, debezium, data-consistency, java, spring]
 ---
 
+import CdcArchitectureDiagram from '@site/src/components/CdcArchitectureDiagram';
+
 # Change Data Capture (CDC)
 
 > **Change Data Capture (CDC)** is a set of software design patterns used to determine and track the data that has changed so that action can be taken using the changed data. Instead of periodically querying a database for changes, CDC captures every `INSERT`, `UPDATE`, and `DELETE` at the **transaction log level** and streams them as events to downstream consumers.
@@ -32,17 +34,7 @@ CDC turns your static database into a **real-time streaming event source** witho
 4. **Event emission:** The raw binary log entry is transformed into a structured event (JSON or Avro) containing the operation type (`c`=create, `u`=update, `d`=delete), the **before** state, and the **after** state of the row.
 5. **Streaming to consumers:** The event is published to Kafka. Any number of consumers (search index, cache, analytics, another microservice) independently process it at their own pace.
 
-```mermaid
-graph LR
-    App[Application] -->|Standard SQL| DB[(Primary DB<br>PostgreSQL / MySQL)]
-    DB -.->|Writes change first| WAL[Transaction Log<br>WAL / Binlog]
-    WAL -->|Debezium tails log| CDC[CDC Connector<br>Debezium]
-    CDC -->|Structured event| Kafka[Kafka Topic<br>db.public.users]
-    Kafka --> ES[Search Service<br>Elasticsearch]
-    Kafka --> Cache[Cache Invalidation<br>Redis]
-    Kafka --> DW[Data Warehouse<br>BigQuery / Snowflake]
-    Kafka --> Svc[Downstream Service<br>Microservice]
-```
+<CdcArchitectureDiagram initialTab="pipeline" />
 
 ### What a CDC Event Looks Like
 
@@ -80,6 +72,8 @@ The `before` / `after` fields are unique to CDC — no other integration pattern
 CDC is one of several approaches for propagating data changes to downstream systems. Choosing the wrong approach is a common architectural mistake.
 
 ### Pattern Comparison Matrix
+
+<CdcArchitectureDiagram initialTab="matrix" />
 
 | Criterion | Polling | Dual Write | Transactional Outbox | CDC (Log Tailing) |
 |---|---|---|---|---|
@@ -122,6 +116,8 @@ ORDER BY updated_at ASC;
 ---
 
 ### 2. Dual Write (Application-Level Publishing)
+
+<CdcArchitectureDiagram initialTab="dualwrite" />
 
 The application code writes to the database *and* publishes an event to the message broker in the same business operation.
 

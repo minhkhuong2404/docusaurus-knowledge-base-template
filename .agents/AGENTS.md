@@ -56,9 +56,9 @@ The following files in `docs/technical-knowledge/interview-questions/grokking-ja
 - Standard flowchart Mermaid diagrams automatically inherit the dynamic moving arrow effect (background solid conduit + flowing dashed overlay). Ensure that custom styles do not disrupt this global flow animation.
 - Always use SVG 2 `context-fill` / `context-stroke` properties on arrowhead markers to ensure they inherit parent hover transitions.
 
-## MANDATORY: Interactive Diagram Creation Rules
+## MANDATORY: Always Apply design-diagrams Skill for Interactive Diagrams
 
-**Before creating ANY diagram component, you MUST read the full design specification at:**
+**Whenever creating, modifying, or auditing ANY interactive diagram in this knowledge base, you MUST ALWAYS apply the `design-diagrams` skill (`.agents/skills/design-diagrams/SKILL.md`) and adhere strictly to the full design specification at:**
 [`.agents/skills/design-diagrams/references/DESIGNS.md`](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/.agents/skills/design-diagrams/references/DESIGNS.md)
 
 ### When to create an interactive diagram

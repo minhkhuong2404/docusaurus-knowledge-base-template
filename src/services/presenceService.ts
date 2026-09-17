@@ -90,18 +90,37 @@ export function subscribeToOnlineUsers(
     presenceCol,
     (snapshot) => {
       const now = Date.now();
-      const onlineUsers: UserPresence[] = [];
+      const userMap = new Map<string, UserPresence>();
 
       snapshot.forEach((docSnap) => {
         const data = docSnap.data() as UserPresence;
         // Check if user was active recently (within active threshold)
         if (data && (now - (data.lastActiveAt || 0) < ACTIVE_THRESHOLD_MS) && data.isOnline !== false) {
-          onlineUsers.push(data);
+          // Normalize identity key by email (if present) or UID/document ID
+          const identityKey = data.email ? data.email.trim().toLowerCase() : (data.uid || docSnap.id);
+          const existing = userMap.get(identityKey);
+          // If multiple sessions exist for the same user identity, keep the freshest heartbeat
+          if (!existing || (data.lastActiveAt || 0) > (existing.lastActiveAt || 0)) {
+            userMap.set(identityKey, data);
+          }
         }
       });
 
+      const onlineUsers = Array.from(userMap.values());
       // Sort by EXP descending
       onlineUsers.sort((a, b) => (b.exp || 0) - (a.exp || 0));
+
+      // Debug logging to inspect who is online (enabled in dev or via window.__debugPresence)
+      if (typeof window !== 'undefined' && (process.env.NODE_ENV !== 'production' || (window as any).__debugPresence)) {
+        console.log(`[Presence] ${onlineUsers.length} online user(s):`, onlineUsers.map((u) => ({
+          name: u.displayName,
+          email: u.email,
+          uid: u.uid,
+          lastActiveSecAgo: Math.round((now - (u.lastActiveAt || 0)) / 1000),
+          currentRoute: u.currentRoute,
+        })));
+      }
+
       onUpdate(onlineUsers);
     },
     (err) => {
