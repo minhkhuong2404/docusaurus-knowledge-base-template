@@ -1,6 +1,6 @@
 export interface PracticalTip {
   id: number;
-  category: 'Core Java & JVM' | 'Spring Boot & REST' | 'Database & JPA' | 'Testing & QA' | 'Clean Code & Logging' | 'Git & Tác Phong';
+  category: 'Core Java & JVM' | 'Spring Boot & REST' | 'Database & JPA' | 'Testing & QA' | 'Clean Code & Logging' | 'Git & Tác Phong' | 'Hạ Tầng & Security' | 'Hệ Thống & Tải Cao';
   priority: 'Bắt Buộc' | 'Hiệu Năng' | 'Kiến Trúc' | 'Tác Phong';
   title: string;
   summary: string;
@@ -1193,5 +1193,400 @@ public class UserProfileQueryService { ... }`
     detail: 'Khi bạn vào sửa một bug trong module cũ, nếu thấy một biến đặt tên khó hiểu hoặc một đoạn System.out.println cũ, hãy tiện tay đổi tên biến rõ ràng hơn và thay bằng log.debug(). Từng cải tiến nhỏ bé tích lũy mỗi ngày sẽ biến một dự án "nợ kỹ thuật chồng chất" trở thành một hệ thống vững chãi và thanh thoát.',
     codeBad: `"Code cũ người ta viết xấu thế nào thì em cứ kệ, em chỉ viết thêm code của em vào thôi"`,
     codeGood: `Tiện tay xóa import thừa, đổi tên biến khó hiểu thành tên có nghĩa, bổ sung 1 bài unit test cho đoạn code vừa sửa`
+  },
+  // ==========================================
+  // PHẦN BỔ SUNG: BÍ QUYẾT HỆ THỐNG & CHỊU TẢI CAO THỰC CHIẾN (MẸO 81 - 110)
+  // ==========================================
+  {
+    id: 81,
+    category: 'Hệ Thống & Tải Cao',
+    priority: 'Bắt Buộc',
+    title: 'Luôn dùng Consistent Lock Ordering khi thao tác 2 tài nguyên trở lên để tránh Deadlock',
+    summary: 'Chuyển tiền hoặc đổi chỗ giữa 2 entity: Khóa ID nhỏ trước, ID lớn sau (min/max) để bẻ gãy hoàn toàn vòng tròn Circular Wait.',
+    detail: 'Nếu luồng 1 chuyển từ A sang B (khóa A rồi chờ B), cùng lúc luồng 2 chuyển từ B sang A (khóa B rồi chờ A) ➔ Hệ thống dính Deadlock lập tức. Bằng cách so sánh accountId và luôn khóa min(A, B) trước rồi mới khóa max(A, B), cả 2 luồng sẽ tranh chấp cùng 1 lock đầu tiên, xóa sổ 100% Deadlock.',
+    codeBad: `// ❌ Dễ dính Deadlock:
+Account from = lock(fromId);
+Account to = lock(toId);`,
+    codeGood: `// ✅ Triệt tiêu Deadlock bằng Consistent Ordering:
+Long first = Math.min(fromId, toId);
+Long second = Math.max(fromId, toId);
+Account lock1 = lock(first);
+Account lock2 = lock(second);`
+  },
+  {
+    id: 82,
+    category: 'Hệ Thống & Tải Cao',
+    priority: 'Hiệu Năng',
+    title: 'Dùng Redis Lua Script thay cho MULTI/EXEC khi cần logic rẽ nhánh (IF-THEN) nguyên tử',
+    summary: 'MULTI/EXEC trong Redis không hỗ trợ lấy kết quả lệnh trước làm điều kiện cho lệnh sau. Chỉ có Lua Script mới đảm bảo Atomic 100%.',
+    detail: 'Khi trừ tồn kho trong Flash Sale: Cần kiểm tra "nếu stock >= qty thì trừ, ngược lại trả về 0". Nếu viết rời trong Java (GET rồi DECRBY) sẽ bị Race Condition. Gói toàn bộ logic vào Redis Lua Script, Redis sẽ chạy atomic trên single-thread, không một lệnh nào khác xen vào được.',
+    codeBad: `// ❌ Không nguyên tử giữa 2 lệnh:
+int stock = redis.get("stock");
+if (stock >= qty) redis.decrBy("stock", qty);`,
+    codeGood: `// ✅ Atomic 100% bằng Lua Script:
+redis.eval("if tonumber(redis.call('get', KEYS[1])) >= tonumber(ARGV[1]) then return redis.call('decrby', KEYS[1], ARGV[1]) else return 0 end", 1, "stock", qty);`
+  },
+  {
+    id: 83,
+    category: 'Hệ Thống & Tải Cao',
+    priority: 'Bắt Buộc',
+    title: 'Chống Replay Attack bằng HMAC-SHA256 kết hợp Timestamp và Redis Nonce',
+    summary: 'Open API thanh toán bắt buộc phải có x-timestamp (lệch tối đa 5 phút) và x-nonce (UUID lưu Redis TTL 5p) để chống hacker bắt gói tin phát lại.',
+    detail: 'Hacker có thể nghe lén gói tin HTTP hợp lệ và phát lại (curl lặp lại) 1,000 lần. Server dùng Redis SETNX nonce 1 EX 300: Nếu key đã tồn tại tức là gói tin bị phát lại ➔ Chặn ngay! Timestamp lệch quá 300s ➔ Từ chối ngay. HMAC băm với Secret Key không truyền trên mạng để đảm bảo toàn vẹn dữ liệu.',
+    codeBad: `// ❌ Chỉ check token tĩnh:
+if (!token.equals("secret_key")) return 401; // Hacker bắt được token là curl thoải mái!`,
+    codeGood: `// ✅ Bộ tứ vệ thần:
+checkTimestamp(req.getTimestamp(), 300); // Lệch <= 5p
+if (!redis.setNx("nonce:" + req.getNonce(), 1, 300)) throw new ReplayAttackException();
+verifyHmac(req.getSignature(), secretKey, req.getBody());`
+  },
+  {
+    id: 84,
+    category: 'Hệ Thống & Tải Cao',
+    priority: 'Kiến Trúc',
+    title: 'Thay thế Cron Job quét Database bằng RabbitMQ DLX hoặc Redis ZSET cho Delay Tasks',
+    summary: 'Tự động hủy đơn hàng sau 15 phút: Tuyệt đối không dùng Cron Job SELECT full table. Dùng RabbitMQ Dead Letter Exchange (DLX) với Message TTL.',
+    detail: 'Cron Job quét SELECT * FROM orders WHERE status = PENDING AND created_at < NOW() - 15m sẽ quét hàng triệu dòng, lock bảng và tốn CPU. Với RabbitMQ DLX: Bắn message có TTL 15m vào queue không listener. Khi hết hạn 15m, message tự trôi sang DLX để Cancel Worker xử lý với độ trễ 0s và Zero Polling CPU.',
+    codeBad: `// ❌ Quét full table mỗi phút:
+@Scheduled(cron = "0 * * * * *")
+public void scanOrders() { orderRepo.findPendingExpired(); }`,
+    codeGood: `// ✅ RabbitMQ Message TTL 15m trôi sang DLX:
+rabbitTemplate.convertAndSend("order.delay.queue", orderId, m -> {
+    m.getMessageProperties().setExpiration("900000"); // 15 phút
+    return m;
+});`
+  },
+  {
+    id: 85,
+    category: 'Hệ Thống & Tải Cao',
+    priority: 'Bắt Buộc',
+    title: 'Áp dụng Idempotency Key cho toàn bộ POST/PATCH API thanh toán và tạo đơn hàng',
+    summary: 'Header x-idempotency-key kết hợp Redis SETNX khóa tạm và Result Cache giúp chống trừ tiền kép khi người dùng click đúp hoặc mạng bị timeout.',
+    detail: 'Khi client gọi API, server kiểm tra xem idempotency key này đã có kết quả trong Redis chưa: Nếu có ➔ Trả ngay kết quả cũ (kèm header X-Idempotent-Replayed: true). Nếu đang xử lý ➔ Trả HTTP 409 Conflict. Nếu lần đầu ➔ Chiếm lock, chạy nghiệp vụ, lưu cache kết quả trong 24h và nhả lock an toàn.',
+    codeBad: `// ❌ Không có idempotency:
+@PostMapping("/pay") public Order pay(@RequestBody PayReq req) { return charge(req); }`,
+    codeGood: `// ✅ Idempotency bảo vệ thanh toán:
+if (hasCachedResponse(idemKey)) return getCachedResponse(idemKey);
+if (!acquireLock(idemKey, 120)) return status(409).body("Đang xử lý");`
+  },
+  {
+    id: 86,
+    category: 'Hệ Thống & Tải Cao',
+    priority: 'Kiến Trúc',
+    title: 'Mô hình MPTT (Nested Sets) cho cây bình luận đa tầng giúp truy vấn 1 lần duy nhất',
+    summary: 'Bình luận lồng nhau: Thay vì dùng parent_id đệ quy N+1, dùng comment_left và comment_right để lấy trọn cây con trong 1 câu SELECT O(1).',
+    detail: 'Mỗi comment có 2 số left và right được đánh dấu theo Preorder Traversal. Tất cả comment con cháu của một node đều thỏa mãn: left > parent.left AND right < parent.right. Truy vấn toàn bộ cây con chỉ mất 1 câu query duy nhất mà không tốn CPU đệ quy hay CTE.',
+    codeBad: `// ❌ Đệ quy N+1 truy vấn DB:
+List<Comment> children = getChildren(parent.getId()); // Gọi N lần query!`,
+    codeGood: `// ✅ 1 câu SQL lấy sạch cây con:
+SELECT * FROM comments WHERE left > ? AND right < ? ORDER BY left ASC;`
+  },
+  {
+    id: 87,
+    category: 'Hệ Thống & Tải Cao',
+    priority: 'Bắt Buộc',
+    title: 'Cảnh báo không dùng Redis Keyspace Notifications cho các tác vụ tài chính nhạy cảm',
+    summary: 'Redis xóa key theo cơ chế Lazy & Periodic nên sự kiện expired có thể bị trễ hàng chục phút, đồng thời Pub/Sub là fire-and-forget không có ACK.',
+    detail: 'Nếu bạn chờ sự kiện __keyevent@0__:expired để hủy đơn hoặc hoàn tiền: Khi Redis chưa rảnh quét key hoặc server bị restart, sự kiện sẽ bị trễ cả tiếng đồng hồ hoặc mất vĩnh viễn. Thay vào đó hãy dùng Redisson RDelayedQueue hoặc RabbitMQ DLX bền bỉ.',
+    codeBad: `// ❌ Nhận event trễ và dễ mất tin:
+@EventListener public void onKeyExpired(KeyExpirationEvent e) { cancelOrder(e); }`,
+    codeGood: `// ✅ Dùng Redisson RDelayedQueue bền vững trong ZSET:
+RDelayedQueue<Long> delayQueue = redisson.getDelayedQueue(blockingQueue);
+delayQueue.offer(orderId, 15, TimeUnit.MINUTES);`
+  },
+  {
+    id: 88,
+    category: 'Hệ Thống & Tải Cao',
+    priority: 'Kiến Trúc',
+    title: 'Sử dụng Transactional Outbox kết hợp CDC (Debezium) để loại bỏ hoàn toàn Dual-Write Trap',
+    summary: 'Không vừa ghi DB vừa gửi Kafka trong 1 hàm. Lưu event vào bảng outbox_events cùng transaction với nghiệp vụ, để Debezium binlog đọc bắn Kafka.',
+    detail: 'Dual-write trap: Ghi DB thành công nhưng gửi Kafka bị đứt cáp làm mất event. Bằng cách lưu event vào bảng outbox trong cùng 1 local ACID transaction, tính toàn vẹn đạt 100%. Debezium đọc transaction log (Binlog/WAL) tự động chuyển event lên Kafka với cam kết At-Least-Once Delivery.',
+    codeBad: `// ❌ Gặp sự cố mạng giữa chừng là mất event:
+orderRepo.save(order);
+kafkaTemplate.send("orders", order); // Mạng rớt -> Mất event!`,
+    codeGood: `// ✅ Cùng 1 Transaction:
+orderRepo.save(order);
+outboxRepo.save(new OutboxEvent("OrderCreated", order.getId(), json));`
+  },
+  {
+    id: 89,
+    category: 'Hệ Thống & Tải Cao',
+    priority: 'Kiến Trúc',
+    title: 'Phân tách chiến lược Hybrid: Push cho User thường và Pull cho Celebrity/KOL',
+    summary: 'Hệ thống thông báo: Fan-out on Write cho người dưới 5k follower, Fan-out on Read cho người trên 1 triệu follower để tránh sập hệ thống.',
+    detail: 'Nếu một ca sĩ 10 triệu follower đăng bài mà dùng Push model, hệ thống phải INSERT 10 triệu bản ghi trong 1 giây gây ngập lụt toàn bộ DB. Với Celebrity: Chỉ lưu 1 bản duy nhất vào timeline của họ. Khi follower mở app mới kéo (Pull) bài của Celebrity về trộn với feed bạn bè.',
+    codeBad: `// ❌ Loop 10 triệu follower:
+for (Long fid : 10_000_000_followers) { feedRepo.save(new Feed(fid, post)); }`,
+    codeGood: `// ✅ Phân luồng Hybrid:
+if (followers > 5000) saveToCelebrityTimelineOnly(post);
+else fanoutToWriteToFollowersQueue(post);`
+  },
+  {
+    id: 90,
+    category: 'Hệ Thống & Tải Cao',
+    priority: 'Bắt Buộc',
+    title: 'Luôn kết hợp Rate Limiting ở tầng Nginx/Gateway trước khi request chạm Application',
+    summary: 'Chặn đứng 90% bot cào dữ liệu và request spam ở tầng Gateway để bảo vệ CPU và Thread Pool của Spring Boot.',
+    detail: 'Một request đi qua Spring Security tốn rất nhiều tài nguyên (parse HTTP, nạp Thread, giải mã JWT). Đặt Nginx limit_req_zone hoặc Cloudflare WAF ở phía trước: từ chối ngay các IP vượt quá 20 req/s với mã HTTP 429 mà không tốn 1 byte RAM nào của Java backend.',
+    codeBad: `// ❌ Để toàn bộ request rác dội thẳng vào Spring Boot Controller`,
+    codeGood: `// ✅ Nginx Gateway bảo vệ phía trước:
+limit_req_zone $binary_remote_addr zone=api_limit:10m rate=10r/s;
+limit_req zone=api_limit burst=20 nodelay;`
+  },
+  {
+    id: 91,
+    category: 'Hệ Thống & Tải Cao',
+    priority: 'Hiệu Năng',
+    title: 'Caching Null Object kèm Short TTL hoặc dùng Bloom Filter để chặn đứng Cache Penetration',
+    summary: 'Hacker gửi query ID không tồn tại (id = -999999) làm cache luôn miss và đập DB liên tục: Cache giá trị rỗng NULL_MARKER trong 60 giây.',
+    detail: 'Khi truy vấn DB không thấy kết quả, thay vì để mặc kệ khiến request tiếp theo lại tiếp tục đập vào DB, hãy lưu giá trị đặc biệt "NULL_OBJ" vào Redis với TTL ngắn (60-120s). Hoặc tốt hơn, dùng Guava / Redis Bloom Filter để kiểm tra trước xem ID có khả năng tồn tại không.',
+    codeBad: `// ❌ Không cache khi null -> Hacker đập DB liên tục:
+User u = db.find(id); if (u != null) redis.set(id, u);`,
+    codeGood: `// ✅ Cache Null Marker:
+User u = db.find(id);
+if (u != null) redis.set(id, u, 30m);
+else redis.set(id, "NULL_MARKER", 60s);`
+  },
+  {
+    id: 92,
+    category: 'Hệ Thống & Tải Cao',
+    priority: 'Hiệu Năng',
+    title: 'Thêm Random Jitter vào TTL của Redis Cache để triệt tiêu hoàn toàn Cache Avalanche',
+    summary: 'Hàng chục ngàn key cache cùng hết hạn vào đúng lúc 00:00:00 làm hàng triệu request đập sập Database: TTL = Base_TTL + Random(0, 300s).',
+    detail: 'Hiện tượng Tuyết lở (Cache Avalanche): Khi batch job ban đêm nạp cache cho 50,000 sản phẩm với cùng TTL = 3600s, đúng 1 tiếng sau toàn bộ 50,000 key cùng biến mất trong 1 tích tắc. Thêm số giây ngẫu nhiên ngẫu nhiên (Jitter) phân tán thời điểm hết hạn rải rác trong 5-10 phút.',
+    codeBad: `// ❌ Cùng hết hạn sau đúng 3600s:
+redis.set(key, val, 3600);`,
+    codeGood: `// ✅ Thêm Random Jitter 0-300s:
+long jitter = ThreadLocalRandom.current().nextLong(0, 300);
+redis.set(key, val, 3600 + jitter);`
+  },
+  {
+    id: 93,
+    category: 'Hệ Thống & Tải Cao',
+    priority: 'Hiệu Năng',
+    title: 'Dùng Mutex Lock (Singleflight) chống Cache Breakdown khi một Hot Key hết hạn',
+    summary: 'Một sản phẩm cực hot (iPhone 16) hết hạn cache: Chỉ cho request ĐẦU TIÊN được query DB và nạp cache, các request khác chờ 50ms.',
+    detail: 'Hiện tượng Hot Key sụp đổ (Cache Breakdown): 1 key duy nhất có 50,000 req/s vừa hết hạn, 50,000 request cùng lúc thấy miss và cùng chạy câu query phức tạp xuống DB. Dùng Redis Distributed Lock tạm thời: Chỉ ai chiếm được lock mới được đọc DB, các request còn lại ngủ 50ms rồi thử đọc lại từ Redis.',
+    codeBad: `// ❌ 50,000 luồng cùng query DB khi cache miss:
+if (cached == null) { return db.queryExpensive(); }`,
+    codeGood: `// ✅ Mutex Lock bảo vệ Hot Key:
+if (cached == null) {
+    if (acquireLock("lock:" + key, 10s)) {
+        val = db.queryExpensive(); redis.set(key, val, 10m); releaseLock();
+    } else { Thread.sleep(50); return get(key); }
+}`
+  },
+  {
+    id: 94,
+    category: 'Hệ Thống & Tải Cao',
+    priority: 'Bắt Buộc',
+    title: 'Atomic Release Redis Distributed Lock bằng Lua Script kiểm tra UUID, cấm dùng DEL trực tiếp',
+    summary: 'Nếu task chạy quá thời gian lock TTL, lock hết hạn và luồng khác chiếm lock. Lệnh DEL ngây thơ sẽ xóa nhầm lock của luồng khác!',
+    detail: 'Khi chiếm lock: SET lock_key my_uuid NX EX 30. Khi nhả lock: Phải dùng Lua Script kiểm tra if redis.call("get", KEYS[1]) == ARGV[1] then return redis.call("del", KEYS[1]) else return 0 end. Đảm bảo bạn chỉ giải phóng khóa nếu chính bạn đang sở hữu nó.',
+    codeBad: `// ❌ Xóa nhầm lock của luồng khác nếu task chạy quá 30s:
+redis.delete("lock:order:123");`,
+    codeGood: `// ✅ Nhả lock an toàn bằng Lua Script:
+String LUA = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
+redis.execute(script, List.of("lock:order:123"), myUuid);`
+  },
+  {
+    id: 95,
+    category: 'Hệ Thống & Tải Cao',
+    priority: 'Kiến Trúc',
+    title: 'Phân biệt SAGA Orchestrator vs Choreography: Chọn đúng mô hình theo quy mô nghiệp vụ',
+    summary: 'Choreography phù hợp hệ thống 2-4 service giao tiếp qua event. Orchestration phù hợp quy trình 5+ service phức tạp cần rollback rõ ràng.',
+    detail: 'Choreography không có điểm nghẽn tập trung nhưng dễ rơi vào bẫy phụ thuộc vòng tròn (Cyclic Dependency) và khó trace luồng lỗi. Orchestrator (dùng Temporal, Camunda hoặc custom service) quản lý state machine tập trung, biết chính xác đơn hàng đang dừng ở bước nào và kích hoạt transaction bù trừ tuần tự.',
+    codeBad: `Quy trình đặt vé máy bay 6 bước (Vé -> Khách sạn -> Xe đưa đón -> Thanh toán -> Bảo hiểm -> Xuất hóa đơn) mà dùng Choreography làm code rối như mạng nhện!`,
+    codeGood: `Quy trình dài 5+ bước: Sử dụng Saga Orchestrator quản lý State Machine rõ ràng từng bước commit và compensate`
+  },
+  {
+    id: 96,
+    category: 'Hệ Thống & Tải Cao',
+    priority: 'Hiệu Năng',
+    title: 'Tối ưu phân trang sâu (Deep Pagination) bằng Deferred Join thay cho LIMIT OFFSET',
+    summary: 'LIMIT 1000000, 20 nạp 1 triệu dòng từ đĩa vào RAM rồi vứt bỏ: Dùng Subquery quét ID trên Covering Index rồi INNER JOIN.',
+    detail: 'Khi trang phân trang vượt quá 10,000, MySQL đọc đĩa ngẫu nhiên cực chậm. Kỹ thuật Deferred Join: SELECT o.* FROM orders o INNER JOIN (SELECT id FROM orders ORDER BY id LIMIT 1000000, 20) sub ON o.id = sub.id giúp tốc độ phản hồi giảm từ 7.5 giây xuống chỉ còn 0.25 giây!',
+    codeBad: `// ❌ Chậm 8 giây khi phân trang lớn:
+SELECT * FROM orders ORDER BY id LIMIT 1000000, 20;`,
+    codeGood: `// ✅ Deferred Join chạy 0.25s trên bảng 10 triệu dòng:
+SELECT o.* FROM orders o 
+INNER JOIN (SELECT id FROM orders ORDER BY id LIMIT 1000000, 20) sub 
+ON o.id = sub.id;`
+  },
+  {
+    id: 97,
+    category: 'Hệ Thống & Tải Cao',
+    priority: 'Bắt Buộc',
+    title: 'Định tuyến request đọc ngay sau khi ghi về Master DB để triệt tiêu lỗi Replication Lag',
+    summary: 'Khách vừa tạo bài viết nhấn F5 không thấy bài vì Slave DB bị trễ đồng bộ: Gán cờ Redis ưu tiên đọc Master trong 5 giây đầu.',
+    detail: 'Mô hình Read-Write Splitting có độ trễ sao chép 100ms - 2s giữa Master và Slave. Khi user thực hiện request ghi (POST/PUT), lưu write_flag:userId vào Redis với TTL 5s. Tất cả request đọc của user này trong 5s sẽ được Dynamic Routing DataSource trỏ thẳng về Master.',
+    codeBad: `// ❌ Vừa ghi xong đọc từ Slave ngay -> Dính 404 Not Found:
+orderRepo.save(order); // Ghi Master
+Order o = orderRepo.findById(order.getId()); // Đọc Slave (chưa kịp sync!)`,
+    codeGood: `// ✅ Gán cờ Master Routing 5s:
+redis.set("write_flag:" + userId, "1", 5, TimeUnit.SECONDS);
+// DataSource tự động đọc từ Master nếu có cờ write_flag`
+  },
+  {
+    id: 98,
+    category: 'Hệ Thống & Tải Cao',
+    priority: 'Bắt Buộc',
+    title: 'Thay thế synchronized bằng ReentrantLock khi dùng Java 21 Virtual Threads',
+    summary: 'synchronized block ghim chặt Virtual Thread vào Carrier Thread (Pinning Issue) làm đóng băng toàn bộ server khi gặp I/O blocking.',
+    detail: 'Trong Java 21 Project Loom, khi Virtual Thread gặp I/O nó sẽ tự động Unmount nhường CPU cho thread khác. Nhưng nếu nằm trong synchronized block, JVM không thể unmount được. Chỉ cần 8 Virtual Threads bị ghim là cả 8 CPU cores bị chiếm sạch. Bắt buộc dùng ReentrantLock.',
+    codeBad: `// ❌ Pinning Carrier Thread trong Java 21:
+public synchronized String callHttpService() {
+    return restTemplate.getForObject(url, String.class);
+}`,
+    codeGood: `// ✅ ReentrantLock cho phép Virtual Thread unmount an toàn:
+private final ReentrantLock lock = new ReentrantLock();
+public String callHttpServiceSafe() {
+    lock.lock();
+    try { return restTemplate.getForObject(url, String.class); }
+    finally { lock.unlock(); }
+}`
+  },
+  {
+    id: 99,
+    category: 'Hệ Thống & Tải Cao',
+    priority: 'Kiến Trúc',
+    title: 'Luôn dùng Semaphore để bảo vệ Database Connection Pool khi chạy Virtual Threads',
+    summary: 'Mở 100,000 Virtual Threads cùng lúc đòi 100,000 kết nối MySQL sẽ làm sập HikariCP: Dùng Semaphore(30) để throttle.',
+    detail: 'Virtual Threads không tự giới hạn số lượng như Thread Pool cũ của Tomcat (200 threads). Nếu 50,000 requests cùng ùa vào gọi DB, 50,000 Virtual Threads sẽ cạnh tranh 30 connections của HikariCP và ném lỗi ConnectionTimeoutException hàng loạt. Bọc lời gọi DB trong Semaphore.',
+    codeBad: `// ❌ 50,000 Virtual Threads cùng lao vào HikariCP:
+virtualThreadExecutor.submit(() -> userRepo.findById(id));`,
+    codeGood: `// ✅ Semaphore giới hạn đúng 30 luồng truy cập DB đồng thời:
+private final Semaphore dbLimiter = new Semaphore(30);
+dbLimiter.acquire();
+try { return userRepo.findById(id); } finally { dbLimiter.release(); }`
+  },
+  {
+    id: 100,
+    category: 'Hệ Thống & Tải Cao',
+    priority: 'Hiệu Năng',
+    title: 'Cấu hình Cooperative Sticky Assignor cho Kafka Consumer để loại bỏ Stop-The-World',
+    summary: 'Giao thức Eager cũ thu hồi toàn bộ Partitions làm đơ ứng dụng. Cooperative Sticky chỉ chuyển giao đúng Partition bị thay đổi.',
+    detail: 'Khi một Pod Consumer trong nhóm bị restart hoặc scale up/down, Eager Rebalance sẽ bắt tất cả Consumer buông hết partition để chia lại từ đầu (Stop-The-World). Cấu hình CooperativeStickyAssignor (Kafka 2.4+) cho phép các Pod khác tiếp tục đọc bình thường, giảm 99% thời gian gián đoạn.',
+    codeBad: `// ❌ Mặc định RangeAssignor gây Stop-The-World khi Rebalance:
+props.put(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, RangeAssignor.class.getName());`,
+    codeGood: `// ✅ Cooperative Sticky Assignor không gián đoạn:
+props.put(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG,
+    List.of(CooperativeStickyAssignor.class.getName()));`
+  },
+  {
+    id: 101,
+    category: 'Hệ Thống & Tải Cao',
+    priority: 'Bắt Buộc',
+    title: 'Dùng UNLINK thay cho DEL khi xóa key lớn (BigKey) trong Redis để không làm đơ server',
+    summary: 'Lệnh DEL một Set/Hash chứa 1 triệu phần tử sẽ block single-thread của Redis 2-5 giây: Dùng UNLINK để giải phóng bộ nhớ bất đồng bộ.',
+    detail: 'Vì Redis xử lý lệnh đơn luồng, lệnh DEL phải giải phóng toàn bộ các ô nhớ RAM của BigKey đồng bộ ngay trên luồng chính. Lệnh UNLINK chỉ ngắt kết nối con trỏ key ở luồng chính trong vài micro-giây (O(1)), sau đó bàn giao việc thu hồi RAM cho background thread thực hiện ngầm.',
+    codeBad: `// ❌ Làm đơ máy chủ Redis 3 giây nếu key chứa 500,000 items:
+redisTemplate.delete("large:user:set");`,
+    codeGood: `// ✅ Xóa bất đồng bộ không block single-thread:
+redisTemplate.unlink("large:user:set");`
+  },
+  {
+    id: 102,
+    category: 'Hệ Thống & Tải Cao',
+    priority: 'Hiệu Năng',
+    title: 'Áp dụng Cuckoo Filter thay cho Bloom Filter khi nghiệp vụ có nhu cầu xóa bỏ phần tử',
+    summary: 'Bloom Filter chỉ cho phép Thêm chứ không thể Xóa. Cuckoo Filter hỗ trợ cả Thêm và Xóa (CF.DEL) và tiết kiệm RAM hơn khi False Positive thấp.',
+    detail: 'Trong bài toán danh sách đen (Blacklist tài khoản gian lận, IP bị cấm) hoặc kiểm tra sản phẩm đã bán: Khi một tài khoản được mở khóa, Bloom Filter không thể xóa tài khoản đó ra khỏi bộ lọc mà phải rebuild toàn bộ. Cuckoo Filter cho phép xóa trực tiếp từng phần tử.',
+    codeBad: `// ❌ Dùng Bloom Filter nhưng sau đó cần xóa phần tử -> Buộc phải build lại từ đầu!`,
+    codeGood: `// ✅ Cuckoo Filter cho phép xóa mượt mà:
+redis.execute("CF.DEL", "blacklist_filter", userId);`
+  },
+  {
+    id: 103,
+    category: 'Hệ Thống & Tải Cao',
+    priority: 'Hiệu Năng',
+    title: 'Công thức HikariCP: Không đặt pool size quá lớn, đặt bằng (Core * 2) + Spindle',
+    summary: 'Đặt pool size = 1000 chỉ gây bão Context Switching trên CPU của Database. Server 8 cores chỉ cần pool size 17-20 là đạt throughput tối đa.',
+    detail: 'Một CPU Core vật lý chỉ có thể xử lý 1 câu query tại 1 thời điểm. Hàng ngàn kết nối cùng tranh chấp khiến OS của Database lãng phí toàn bộ tài nguyên cho việc chuyển đổi ngữ cảnh (Context Switching). Giữ connection pool nhỏ gọn giúp Database luôn chạy 100% công suất tính toán thực sự.',
+    codeBad: `// ❌ Lầm tưởng connection pool càng to thì càng nhanh:
+spring.datasource.hikari.maximum-pool-size=1000`,
+    codeGood: `// ✅ Công thức vàng của tác giả HikariCP (Server 8 Cores):
+// connections = (8 * 2) + 1 = 17 kết nối:
+spring.datasource.hikari.maximum-pool-size=20`
+  },
+  {
+    id: 104,
+    category: 'Hệ Thống & Tải Cao',
+    priority: 'Kiến Trúc',
+    title: 'Dùng Redis Streams cho các luồng tin nhắn microservices vừa và nhỏ để tiết kiệm chi phí',
+    summary: 'Quy mô dưới 50k msg/s: Dùng Redis Streams (hỗ trợ Consumer Group, ACK, PEL) gọn nhẹ, không cần dựng cụm Kafka cồng kềnh tốn kém.',
+    detail: 'Redis Streams từ bản 5.0 cung cấp đầy đủ tính năng của một Message Queue phân tán: XADD để gửi tin, XREADGROUP để đọc theo nhóm, XACK để xác nhận. Lệnh XADD key MAXLEN ~ 100000 * tự động dọn rác tin cũ trên RAM. Tận dụng hạ tầng Redis sẵn có, tiết kiệm hàng triệu đồng tiền server.',
+    codeBad: `// ❌ Dựng cụm Kafka 3 node chỉ để gửi vài ngàn notification mỗi ngày!`,
+    codeGood: `// ✅ Redis Streams nhẹ nhàng, triển khai trong 10 phút:
+redisTemplate.opsForStream().add(StreamRecords.newRecord().ofObject(json).withStreamKey("orders"));`
+  },
+  {
+    id: 105,
+    category: 'Hệ Thống & Tải Cao',
+    priority: 'Bắt Buộc',
+    title: 'Áp dụng Bulkhead Pattern để cô lập tài nguyên: Một dịch vụ bên ngoài chậm không kéo sập app',
+    summary: 'Phân chia khoang kín nước (Thread Pool riêng biệt cho từng đối tác): Nếu cổng thanh toán bị treo 30s, các tính năng khác vẫn chạy 100%.',
+    detail: 'Nếu dùng chung Thread Pool: Khi đối tác bên thứ 3 (SMS, Payment) bị treo mạng, toàn bộ worker thread của Tomcat sẽ bị kẹt lại chờ đợi, khiến trang chủ và chức năng đăng nhập bị sập theo (Cascading Failure). Bulkhead của Resilience4j giới hạn tối đa 10-20 threads cho mỗi dịch vụ ngoài.',
+    codeBad: `// ❌ Dùng chung thread pool cho tất cả lời gọi API bên thứ 3:
+PaymentRes res = restTemplate.postForObject(slowUrl, req, PaymentRes.class);`,
+    codeGood: `// ✅ Bulkhead cô lập tối đa 15 threads cho riêng dịch vụ thanh toán:
+@Bulkhead(name = "paymentService", fallbackMethod = "paymentFallback")
+public PaymentRes callPaymentService(PayReq req) { ... }`
+  },
+  {
+    id: 106,
+    category: 'Hệ Thống & Tải Cao',
+    priority: 'Hiệu Năng',
+    title: 'Luôn thêm Full Jitter vào thuật toán Exponential Backoff khi retry để chống Thundering Herd',
+    summary: 'Retry sau đúng 1s, 2s, 4s (cố định) làm hàng ngàn client cùng đập vào server sau sự cố: Jitter thêm số mili-giây ngẫu nhiên để rải đều tải.',
+    detail: 'Nếu không có Jitter, 10,000 request retry sẽ tạo ra các đợt sóng xung kích đồng thanh dội vào server đúng các mốc thời gian, khiến server vừa hồi phục lại bị đánh sập tiếp. Công thức Full Jitter của Amazon: sleep = ThreadLocalRandom.current().nextLong(0, min(cap, base * 2^attempt)).',
+    codeBad: `// ❌ Retry đồng thanh cùng một thời điểm:
+long sleep = 1000 * (1 << attempt); // 1s, 2s, 4s cố định!`,
+    codeGood: `// ✅ Full Jitter phân tán đều đặn:
+long maxSleep = 1000 * (1 << attempt);
+long sleep = ThreadLocalRandom.current().nextLong(0, maxSleep);`
+  },
+  {
+    id: 107,
+    category: 'Hệ Thống & Tải Cao',
+    priority: 'Bắt Buộc',
+    title: 'Kiểm tra Undo Log Tablespace khi chạy các Transaction dài (Long-running transactions)',
+    summary: 'Transaction mở ra không commit sẽ cản trở Purge Threads dọn rác Undo Log, làm phình to đĩa cứng hàng chục GB và làm chậm toàn bộ MySQL.',
+    detail: 'Cơ chế MVCC của InnoDB cần giữ lại chuỗi Version Chain cho transaction cũ nhất đọc. Nếu có transaction treo quên đóng, InnoDB không thể xóa các bản ghi Undo Log cũ. Luôn đặt innodb_undo_log_truncate = ON và giám sát chỉ số History List Length (HLL) trong SHOW ENGINE INNODB STATUS.',
+    codeBad: `// ❌ Mở @Transactional rồi gọi vòng lặp xử lý file kéo dài 2 tiếng!`,
+    codeGood: `// ✅ Tách Transaction thành các mẻ nhỏ (Batching 500 rows) và commit dứt khoát`
+  },
+  {
+    id: 108,
+    category: 'Hệ Thống & Tải Cao',
+    priority: 'Kiến Trúc',
+    title: 'Lưu giỏ hàng tạm thời bằng Redis Hash kèm TTL 30 ngày, chỉ đồng bộ DB khi Checkout',
+    summary: 'Khách thêm/bớt hàng liên tục: Lưu vào Redis Hash cart:userId (O(1)), không INSERT/UPDATE DB liên tục làm nghẽn I/O.',
+    detail: 'Mỗi thao tác sửa số lượng hàng chỉ cần gọi HINCRBY cart:userId productId 1 trực tiếp trên RAM Redis (0.2ms). Cài đặt TTL 30 ngày tự động gia hạn khi có thao tác. Khi khách nhấn "Đặt hàng", một Worker mới đọc toàn bộ giỏ hàng và ghi xuống MySQL bền vững.',
+    codeBad: `// ❌ Mỗi lần khách bấm nút "+" số lượng là 1 lần chạy UPDATE cart_items trong MySQL!`,
+    codeGood: `// ✅ Redis Hash xử lý sub-millisecond:
+redisTemplate.opsForHash().increment("cart:" + userId, productId, 1);
+redisTemplate.expire("cart:" + userId, Duration.ofDays(30));`
+  },
+  {
+    id: 109,
+    category: 'Hệ Thống & Tải Cao',
+    priority: 'Hiệu Năng',
+    title: 'Chuyển Kafka sendfile Zero-Copy sang socket trực tiếp bằng cách tối ưu SSL nội bộ',
+    summary: 'Bật SSL/TLS buộc CPU phải kéo dữ liệu vào JVM User Space để mã hóa, làm mất ưu thế Zero-Copy. Tận dụng mạng VPC riêng để giữ sendfile.',
+    detail: 'Nếu đường truyền giữa Broker và Consumer nằm trong cùng một mạng Private Subnet/VPC an toàn, hãy cân nhắc cấu hình PLAINTEXT cho luồng đọc tin nhắn lớn để Kafka tận dụng 100% sức mạnh của hàm Linux sendfile() truyền thẳng từ OS Page Cache sang Card mạng NIC.',
+    codeBad: `Bật TLS trên đường truyền nội bộ tốc độ cao làm tăng 40% CPU load của Kafka Broker do mất Zero-Copy`,
+    codeGood: `Tách biệt Listener: Dùng SSL cho Client bên ngoài và PLAINTEXT cho các Worker nội bộ trong cùng cụm Private Cloud`
+  },
+  {
+    id: 110,
+    category: 'Hệ Thống & Tải Cao',
+    priority: 'Bắt Buộc',
+    title: 'Giảm max.poll.records hoặc tăng max.poll.interval.ms để Consumer không bị hiểu nhầm là đã chết',
+    summary: 'Nếu 1 batch xử lý mất quá 5 phút, Kafka Broker tự động kick Consumer ra và gây bão Rebalance: Luôn đo thời gian p99 của 1 message.',
+    detail: 'Nếu 1 message tốn 100ms, batch 500 messages tốn 50s (vẫn an toàn). Nhưng nếu có lỗi mạng khiến 1 message tốn 1s, cả batch tốn 500s (> 300s mặc định) ➔ Bão Rebalance kích hoạt! Luôn đặt max.poll.records = 50 và max.poll.interval.ms = 600,000 (10 phút).',
+    codeBad: `max.poll.records=500 nhưng trong listener gọi API bên thứ 3 chậm 1 giây / message`,
+    codeGood: `max.poll.records=50 kết hợp max.poll.interval.ms=600000 đảm bảo luôn xử lý xong trước hạn`
   }
 ];
+

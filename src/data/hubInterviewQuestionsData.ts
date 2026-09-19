@@ -1,6 +1,6 @@
 export interface InterviewQuestion {
   id: string;
-  category: 'Core Java' | 'Spring Boot' | 'Database / JPA' | 'Concurrency & JVM' | 'Testing & QA' | 'Hạ Tầng & Security' | 'Kỹ Năng & Live Coding';
+  category: 'Core Java' | 'Spring Boot' | 'Database / JPA' | 'Concurrency & JVM' | 'Testing & QA' | 'Hạ Tầng & Security' | 'Hệ Thống & Tải Cao' | 'Kỹ Năng & Live Coding';
   level: 'Intern' | 'Fresher' | 'Junior';
   question: string;
   shortAnswer: string;
@@ -436,6 +436,279 @@ export const INTERVIEW_QUESTIONS: InterviewQuestion[] = [
     shortAnswer: 'Mock quá nhiều biến bài test thành "tự biên tự diễn": Code của bạn pass vì bạn tự định nghĩa hành vi giả, nhưng khi ghép nối thật với DB hoặc mạng thì toang. MockMvc kiểm tra Controller trong Spring Context không bật port mạng; TestRestTemplate mở port mạng thật kiểm tra toàn bộ server Tomcat; WebTestClient dùng cho WebFlux non-blocking.',
     seniorDeepDive: 'Quy tắc kim tự tháp kiểm thử: Mockito chỉ nên dùng cho Unit Test ở tầng Service để cô lập logic nghiệp vụ. Ở tầng Integration Test, hãy dùng Testcontainers để nạp Database PostgreSQL/MySQL và Redis thật, chỉ mock các dịch vụ thanh toán bên ngoài (bằng WireMock) mà ta không thể kiểm soát sandbox.',
     trapWarning: 'Sự khác biệt giữa @Mock và @MockBean trong Spring Test? ➔ @Mock là của Mockito thuần túy, khởi tạo bù nhìn cực nhanh; @MockBean là của Spring Boot Test, nó thay thế bean thật trong ApplicationContext của Spring bằng một con mock và làm ApplicationContext bị bẩn (Dirty Context), khiến việc chạy test suite bị chậm đi nếu lạm dụng.'
+  },
+  // ========================================================
+  // PHẦN 8: HỆ THỐNG CHỊU TẢI CAO & SYSTEM DESIGN THỰC CHIẾN (CÂU 46 - 75)
+  // ========================================================
+  {
+    id: 'q-46',
+    category: 'Hệ Thống & Tải Cao',
+    level: 'Junior',
+    question: 'Tại sao tuyệt đối không dùng Cron Job để quét và hủy đơn hàng quá hạn thanh toán trong hệ thống thương mại điện tử lớn?',
+    shortAnswer: 'Cron Job quét DB (SELECT * FROM orders WHERE status = "PENDING" AND created_at < NOW() - 15 MIN) gây Full Table Scan làm nghẽn I/O Database, độ trễ không chính xác theo thời gian thực và dễ bị chạy trùng lặp giữa các Pod. Thay vào đó, phải dùng RabbitMQ Dead Letter Exchange (DLX) với Message TTL hoặc Redis ZSET Delayed Queue.',
+    seniorDeepDive: 'Với bảng orders có hàng triệu bản ghi, cron job chạy mỗi phút sẽ gây lock tranh chấp tài nguyên với các transaction thanh toán của khách thật. Với RabbitMQ DLX: Khi tạo đơn, gửi message có TTL = 15 phút vào queue không có consumer. Đúng 15 phút sau, broker tự động chuyển message sang DLX để Worker hủy đơn và nhả tồn kho. Cơ chế này đạt Zero CPU Polling, chính xác từng giây và phân tán tải đều đặn.',
+    trapWarning: 'Nếu khách thanh toán đúng vào phút thứ 14 giây 59 thì sao? ➔ Trả lời: Khi message rơi vào Cancel Worker ở phút thứ 15, worker kiểm tra status trong DB/Redis: nếu status đã là PAID thì đơn giản là ACK bỏ qua message, không làm gì cả (Idempotency).'
+  },
+  {
+    id: 'q-47',
+    category: 'Hệ Thống & Tải Cao',
+    level: 'Junior',
+    question: 'Giải quyết bài toán Overselling (bán quá số lượng tồn kho) trong sự kiện Flash Sale chịu tải 100,000 req/s như thế nào?',
+    shortAnswer: 'Áp dụng kiến trúc phòng vệ 4 tầng từ kênh: Tầng 1 (Nginx Rate Limit chặn bot/spam) ➔ Tầng 2 (Nạp tồn kho lên Redis Cluster và trừ kho nguyên tử bằng Redis Lua Script) ➔ Tầng 3 (Đẩy các đơn trừ kho thành công vào Kafka Topic để đệm tải) ➔ Tầng 4 (Order Worker lưu DB bền vững theo mẻ - Micro-batching).',
+    seniorDeepDive: 'MySQL khi gặp 100,000 req/s cùng UPDATE 1 hàng sẽ bị nghẽn Lock Contention và crash connection pool ngay lập tức. Redis Lua script chạy nguyên tử trên Single-Thread RAM, chỉ mất 0.5ms để kiểm tra stock >= qty và decrby, loại bỏ 100% Race Condition. Chỉ những ai trừ thành công trên Redis mới được tạo đơn, 99.9% request còn lại bị chặn ngay tại Redis trong 1 mili-giây.',
+    trapWarning: 'Người phỏng vấn hỏi: "Nếu kho Redis trừ thành công nhưng máy chủ Order Worker sập thì mất đơn hàng sao?". ➔ Trả lời: "Message đã nằm an toàn trong Kafka với cam kết Replication Factor >= 3 và acks=all. Khi Pod mới khởi động lại, nó tiếp tục đọc từ offset đã lưu và ghi DB bình thường, không thể mất đơn".'
+  },
+  {
+    id: 'q-48',
+    category: 'Hệ Thống & Tải Cao',
+    level: 'Junior',
+    question: 'Cơ chế Idempotency-Key hoạt động ra sao và xử lý các trạng thái PENDING, SUCCESS, FAILED thế nào?',
+    shortAnswer: 'Client gửi x-idempotency-key (UUIDv4) qua Header. Server dùng Redis SET lock:key 1 NX EX 120 để chiếm khóa tạm. Nếu đã có kết quả cached (SUCCESS) ➔ trả về ngay kết quả cũ kèm header X-Idempotent-Replayed: true. Nếu đang PENDING ➔ trả về HTTP 409 Conflict. Nếu FAILED do nghiệp vụ ➔ trả về lỗi cũ. Nếu FAILED do sập mạng hệ thống ➔ giải phóng lock để cho phép retry.',
+    seniorDeepDive: 'Idempotency đảm bảo việc client retry request do timeout mạng không làm trừ tiền thẻ hoặc nhân bản đơn hàng. Bộ nhớ kết quả (Result Cache) được lưu trữ 24-48 giờ trong Redis hoặc Database Idempotency Table. Khi xử lý xong transaction nghiệp vụ, phải ghi cache kết quả trước khi nhả khóa SETNX.',
+    trapWarning: 'Tránh sai lầm: Đừng cache kết quả khi server bị lỗi 500 Internal Error (như DB timeout tạm thời), vì request retry hợp lệ cần được phép chạy lại sau khi DB hồi phục.'
+  },
+  {
+    id: 'q-49',
+    category: 'Hệ Thống & Tải Cao',
+    level: 'Junior',
+    question: 'Tại sao hai giao dịch chuyển tiền A ➔ B và B ➔ A cùng lúc lại gây Deadlock, và cách khắc phục bằng Consistent Lock Ordering?',
+    shortAnswer: 'Giao dịch 1 khóa Acc A rồi chờ khóa Acc B; cùng lúc Giao dịch 2 khóa Acc B rồi chờ khóa Acc A. Hai giao dịch chờ chéo nhau tạo thành vòng tròn Circular Wait dẫn đến Deadlock. Khắc phục triệt để bằng quy tắc Consistent Lock Ordering: Luôn khóa tài khoản có ID nhỏ hơn trước (min(A, B)), sau đó mới khóa ID lớn hơn (max(A, B)).',
+    seniorDeepDive: 'Deadlock cần 4 điều kiện Coffman để xuất hiện. Bằng cách luôn sắp xếp ID tài khoản trước khi gọi SELECT ... FOR UPDATE (hoặc ReentrantLock), cả 2 luồng đều sẽ cùng tranh chấp tài khoản có ID nhỏ trước. Luồng nào chiếm được sẽ đi tiếp, luồng còn lại phải chờ ở ngay vạch xuất phát, triệt tiêu 100% khả năng chờ chéo.',
+    trapWarning: 'Nếu fromId == toId thì sao? ➔ Phải chặn ngay từ tầng Controller/Validator (Guard Clause): throw new BadRequestException("Không thể chuyển tiền cho chính mình").'
+  },
+  {
+    id: 'q-50',
+    category: 'Hệ Thống & Tải Cao',
+    level: 'Junior',
+    question: 'So sánh Push Model (Fan-out on Write) và Pull Model (Fan-out on Read) trong hệ thống thông báo/bảng tin. Tại sao Big Tech dùng Hybrid?',
+    shortAnswer: 'Push Model (Fan-out on Write): Ghi bài viết vào feed của tất cả follower khi đăng bài, đọc cực nhanh O(1) nhưng gặp thảm họa Write Amplification khi người nổi tiếng (Celebrity triệu followers) đăng bài. Pull Model (Fan-out on Read): Chỉ ghi vào trang cá nhân, khi mở app mới kéo bài về trộn, ghi O(1) nhưng đọc chậm O(N). Big Tech kết hợp Hybrid: User thường dùng Push, Celebrity dùng Pull.',
+    seniorDeepDive: 'Với user có dưới 5,000 followers, worker đẩy bài viết vào Redis Timeline của từng follower. Với user trên 5,000 followers (KOL), hệ thống không phân phát mà chỉ lưu 1 bản duy nhất. Khi user thường mở app, hệ thống lấy feed cá nhân từ Redis Cache và chủ động kéo thêm các bài mới nhất từ các KOL họ theo dõi rồi merge lại trên BFF/Client.',
+    trapWarning: 'Phỏng vấn hỏi: "Tại sao không dùng Push cho tất cả mọi người?". Trả lời: Nếu một ca sĩ có 20 triệu followers đăng bài, hệ thống phải thực hiện 20 triệu lượt INSERT vào DB/Redis trong 1 giây, queue sẽ nghẽn cứng hàng tiếng đồng hồ!'
+  },
+  {
+    id: 'q-51',
+    category: 'Hệ Thống & Tải Cao',
+    level: 'Junior',
+    question: 'Transactional Outbox Pattern giải quyết bài toán Dual-Write trong Microservices như thế nào?',
+    shortAnswer: 'Dual-Write Trap xảy ra khi một service vừa ghi DB vừa gửi Kafka: nếu DB commit nhưng gửi Kafka lỗi (hoặc server crash) thì mất event; nếu gửi Kafka trước rồi DB rollback thì sinh ra Ghost Event. Outbox Pattern lưu Event vào bảng outbox_events nằm trong CÙNG 1 ACID TRANSACTION với bảng nghiệp vụ, sau đó một worker (hoặc Debezium CDC) đọc bảng này để publish sang Kafka đảm bảo At-least-once delivery.',
+    seniorDeepDive: 'Debezium CDC (Change Data Capture) là giải pháp tối ưu nhất cho Outbox Pattern vì nó đọc trực tiếp transaction log (WAL của Postgres hoặc Binlog của MySQL) mà không cần chạy câu lệnh SELECT polling làm phiền Database. Event được chuyển sang Kafka ngay khi commit với độ trễ chỉ vài mili-giây.',
+    trapWarning: 'Vì Kafka cam kết At-least-once, phía Consumer bắt buộc phải thiết kế Idempotent (Idempotent Consumer) để tránh xử lý trùng khi Outbox Worker gửi lại event.'
+  },
+  {
+    id: 'q-52',
+    category: 'Hệ Thống & Tải Cao',
+    level: 'Junior',
+    question: 'Tại sao bảng bình luận phân cấp đa tầng (Nested Comments) không nên dùng Adjacency List (parent_id) mà nên dùng MPTT?',
+    shortAnswer: 'Dùng parent_id (Adjacency List) buộc phải đệ quy nhiều câu truy vấn SQL (N+1 Query) hoặc dùng Recursive CTE tiêu tốn CPU của DB khi cây bình luận sâu. Modified Preorder Tree Traversal (MPTT) gán mỗi comment 2 chỉ số left và right, cho phép lấy toàn bộ cây con của bất kỳ comment nào chỉ bằng 1 CÂU SELECT DUY NHẤT (WHERE left > parent.left AND right < parent.right).',
+    seniorDeepDive: 'Ngoài việc lấy trọn cây trong 1 câu query O(1), MPTT còn cho phép tính ngay số lượng câu trả lời con cháu bằng công thức (right - left - 1) / 2 mà không cần COUNT(). Tuy nhiên, nhược điểm của MPTT là thao tác chèn comment mới phải UPDATE tăng +2 cho các node bên phải, nên phù hợp nhất cho hệ thống Đọc nhiều - Ghi ít (tỷ lệ 95/5).',
+    trapWarning: 'Khi nào không nên dùng MPTT? ➔ Khi làm ứng dụng chat realtime hoặc hệ thống có tần suất ghi liên tục hàng ngàn comment/giây, vì việc UPDATE dịch chuyển left/right sẽ gây lock tranh chấp hàng loạt dòng.'
+  },
+  {
+    id: 'q-53',
+    category: 'Hệ Thống & Tải Cao',
+    level: 'Junior',
+    question: 'Làm thế nào để chống Replay Attack và giả mạo API bằng HMAC Signature và Redis Nonce?',
+    shortAnswer: 'Bảo vệ bằng bộ tứ header: 1. x-api-key (định danh đối tác); 2. x-timestamp (từ chối nếu lệch quá 5 phút so với server); 3. x-nonce (UUID ngẫu nhiên, lưu Redis SETNX TTL 5 phút để phát hiện gói tin bị phát lại); 4. x-signature (băm HMAC-SHA256 toàn bộ payload với Secret Key bí mật không bao giờ gửi qua mạng).',
+    seniorDeepDive: 'Hacker có thể bắt gói tin HTTP nhưng không thể biết Secret Key. Nếu hacker sửa body thì signature bị sai. Nếu hacker giữ nguyên gói tin và gửi lại lần 2 (Replay Attack), Redis sẽ phát hiện x-nonce đã tồn tại và trả về HTTP 409 ngay lập tức. Sau 5 phút, gói tin tự động bị vô hiệu hóa bởi x-timestamp.',
+    trapWarning: 'Khi so sánh 2 chuỗi chữ ký số, luôn dùng MessageDigest.isEqual() để so sánh với thời gian hằng số (Constant Time), chống lại tấn công dò thời gian (Timing Attack).'
+  },
+  {
+    id: 'q-54',
+    category: 'Hệ Thống & Tải Cao',
+    level: 'Junior',
+    question: 'Sự khác biệt giữa Redlock và Single-instance Redis Lock với Lua script là gì?',
+    shortAnswer: 'Single-instance Redis Lock dùng SET key uuid NX EX 30 và nhả lock bằng Lua script, an toàn và nhanh nhưng có điểm yếu Single Point of Failure (nếu Redis Master crash trước khi replicate sang Slave thì Slave lên làm Master mới có thể cấp lock trùng). Redlock (do tác giả Redis sáng chế) chạy trên N cụm máy chủ Redis độc lập hoàn toàn (thường là 5 nodes), chỉ cấp lock thành công khi chiếm được đa số (N/2 + 1 = 3 nodes), loại bỏ lỗi mất lock do failover.',
+    seniorDeepDive: 'Redlock phức tạp hơn và gây tranh cãi nổi tiếng giữa Martin Kleppmann và Antirez về vấn đề đồng hồ hệ thống (Clock Drift) và GC Pause kéo dài. Trong thực tế 90% dự án, dùng Single-Instance hoặc Redisson với Watchdog gia hạn lock tự động đã đủ đáp ứng nhu cầu sản xuất an toàn.',
+    trapWarning: 'Tuyệt đối không giải phóng lock bằng lệnh DEL thông thường! Phải dùng Lua Script kiểm tra đúng UUID của thread mình đang sở hữu mới được DEL, tránh xóa nhầm lock của thread khác.'
+  },
+  {
+    id: 'q-55',
+    category: 'Hệ Thống & Tải Cao',
+    level: 'Junior',
+    question: 'Thuật toán Sliding Window Rate Limiter bằng Redis ZSET giải quyết nhược điểm gì của Fixed Window?',
+    shortAnswer: 'Fixed Window bị lỗ hổng biên giới (Boundary Trap): kẻ tấn công gửi 100 req ở giây 59 và 100 req ở giây 60 ➔ 200 requests dội vào server trong 2 giây (gấp đôi giới hạn). Sliding Window Log bằng Redis ZSET lưu timestamp của từng request làm score, xóa các phần tử quá hạn và đếm ZCARD trong cửa sổ trượt 60 giây liên tục, đảm bảo không bao giờ bị vượt ngưỡng trong bất kỳ khoảng thời gian 60s nào.',
+    seniorDeepDive: 'Mỗi request đến, thực hiện pipeline: 1. ZREMRANGEBYSCORE key 0 (now - 60,000) ➔ 2. ZCARD key ➔ 3. Nếu count < limit thì ZADD key now uuid và EXPIRE key 60 ➔ 4. Cho phép request. Nhược điểm: Tốn RAM hơn Fixed Window vì mỗi request là một member trong ZSET.',
+    trapWarning: 'Nếu hệ thống có hàng chục triệu request/s thì ZSET tốn quá nhiều RAM, khi đó nên dùng Token Bucket (qua Redis-Cell hoặc Lua Script) hoặc Sliding Window Counter để tối ưu bộ nhớ.'
+  },
+  {
+    id: 'q-56',
+    category: 'Hệ Thống & Tải Cao',
+    level: 'Fresher',
+    question: 'Tại sao Redis là Single-threaded nhưng vẫn xử lý được hơn 100,000 request/giây?',
+    shortAnswer: '1. Dữ liệu nằm hoàn toàn trên RAM (đọc ghi nano-giây); 2. Mô hình I/O Multiplexing (epoll/kqueue) non-blocking giúp 1 thread quản lý hàng chục ngàn socket; 3. Cấu trúc dữ liệu C tối ưu cực hạn (sds, skiplist, dict, ziplist); 4. Không tốn chi phí Thread Context Switching và CPU Lock Contention.',
+    seniorDeepDive: 'Kể từ Redis 6.0, Redis đã hỗ trợ Multi-threaded I/O, nhưng luồng thực thi lệnh logic cốt lõi (Command Execution) vẫn hoàn toàn là Single-threaded để đảm bảo tính tuần tự và đơn giản, đa luồng chỉ dùng để đọc/ghi socket mạng (Network I/O) giải phóng băng thông.',
+    trapWarning: 'Vì Single-threaded nên một lệnh chậm (như KEYS *, FLUSHALL, hoặc Lua script chạy vòng lặp vô tận) sẽ làm đơ toàn bộ máy chủ Redis, khiến hàng ngàn client khác bị timeout.'
+  },
+  {
+    id: 'q-57',
+    category: 'Hệ Thống & Tải Cao',
+    level: 'Junior',
+    question: 'Kỹ thuật Debezium CDC (Change Data Capture) kết hợp Kafka hoạt động thế nào để đồng bộ Cache và Elasticsearch?',
+    shortAnswer: 'Debezium là một Kafka Connect plugin đọc trực tiếp file nhật ký giao dịch mức thấp (Binlog của MySQL hoặc Write-Ahead Log WAL của PostgreSQL). Bất kỳ thao tác INSERT/UPDATE/DELETE nào trên DB đều được bắt tức thì và chuyển thành Event trên Kafka, từ đó các consumer tự động xóa Redis Cache hoặc nạp lại Elasticsearch Index mà không cần can thiệp vào mã nguồn nghiệp vụ.',
+    seniorDeepDive: 'Ưu điểm vượt trội của CDC: Hoàn toàn phi tập trung (Decoupled), không làm chậm Database chính, không làm bẩn code backend với hàng loạt lệnh gọi xóa cache, và không bao giờ bị bỏ sót sự kiện kể cả khi thao tác được thực hiện trực tiếp bằng công cụ GUI (DBeaver, DataGrip) trên DB.',
+    trapWarning: 'Lưu ý thứ tự message khi dùng CDC: Phải dùng Khóa chính (Primary Key) của bảng làm Kafka Partition Key để các sự kiện của cùng 1 dòng dữ liệu luôn được xử lý theo đúng tuần tự thời gian.'
+  },
+  {
+    id: 'q-58',
+    category: 'Hệ Thống & Tải Cao',
+    level: 'Junior',
+    question: 'Khi nào nên dùng SAGA Choreography và khi nào nên dùng SAGA Orchestration?',
+    shortAnswer: 'SAGA Choreography (hướng sự kiện phi tập trung): Các service tự lắng nghe và phản ứng với event của nhau, phù hợp quy trình ngắn (2-4 bước) vì dễ cài đặt, không cần service trung tâm. SAGA Orchestration (bộ chỉ huy tập trung): Có một Orchestrator Service điều phối toàn bộ các bước và kích hoạt transaction bù trừ, phù hợp quy trình phức tạp (5+ bước như đặt tour du lịch / vé máy bay) để dễ giám sát và tránh rối như mạng nhện.',
+    seniorDeepDive: 'Nhược điểm của Choreography khi hệ thống lớn: Hiện tượng "Cyclic Dependency" (Service A gọi B, B gọi C, C lại gọi A) và cực kỳ khó debug luồng khi có lỗi xảy ra. Orchestration sử dụng máy trạng thái (State Machine như Temporal hoặc Camunda) giúp nhìn thấy toàn bộ tiến trình đơn hàng đang ở bước nào trực quan.',
+    trapWarning: 'Compensating Transaction trong SAGA có thể bị thất bại không? ➔ Có thể! Do đó transaction bù trừ phải được retry vô hạn hoặc đẩy vào Dead Letter Queue kèm cảnh báo để đội ngũ Ops can thiệp thủ công.'
+  },
+  {
+    id: 'q-59',
+    category: 'Hệ Thống & Tải Cao',
+    level: 'Junior',
+    question: 'Làm thế nào để thiết kế hệ thống Voucher/Coupon giảm giá giới hạn lượt dùng chịu tải 50,000 req/s?',
+    shortAnswer: '1. Nạp số lượng voucher lên Redis In-Memory; 2. Dùng Redis Hash/Set lưu danh sách user đã nhận voucher (kiểm tra mỗi user chỉ nhận 1 lần); 3. Thực thi kiểm tra điều kiện và trừ lượt dùng bằng một Lua Script duy nhất; 4. Bắn event qua Kafka để worker lưu lịch sử nhận voucher xuống MySQL/Postgres.',
+    seniorDeepDive: 'Lua Script thực hiện: SISMEMBER user_claimed_set userId (nếu có ➔ return -1: Đã nhận); Lấy current_quota: nếu quota > 0 ➔ DECRBY quota 1 và SADD user_claimed_set userId ➔ return 1 (Thành công). Toàn bộ diễn ra trong 0.5ms trên RAM, ngăn chặn tuyệt đối việc phát quá số lượng voucher hoặc 1 người lách luật nhận 2 lần.',
+    trapWarning: 'Nếu voucher bị hủy đơn (khách hoàn hàng) thì làm sao? ➔ Lua script hoàn voucher: SREM user_claimed_set userId và INCRBY quota 1.'
+  },
+  {
+    id: 'q-60',
+    category: 'Hệ Thống & Tải Cao',
+    level: 'Junior',
+    question: 'Kinh nghiệm phỏng vấn Tech Lead: Làm sao trình bày một bài toán System Design thuyết phục từ 0 đến triệu user?',
+    shortAnswer: 'Áp dụng khung 4 bước chuẩn Big Tech: 1. Làm rõ yêu cầu (Functional & Non-Functional: DAU, QPS, Latency, SLA); 2. Ước lượng tài nguyên (Back-of-the-envelope estimation: QPS đọc/ghi, Dung lượng lưu trữ 5 năm); 3. Thiết kế kiến trúc mức cao (High-Level Design: API Gateway, Microservices, DB, Cache, MQ); 4. Đào sâu giải quyết điểm nghẽn (Deep Dive: Phân vùng DB, Caching, SPOF, Sharding và Giám sát).',
+    seniorDeepDive: 'Đừng vội vàng vẽ Microservices hay Kafka ngay từ câu đầu tiên! Hãy bắt đầu từ Monolith đơn giản với 1 Server + 1 DB, sau đó phân tích các điểm nghẽn (Bottlenecks) theo quy mô: Khi nào cần thêm Read-Replica DB? Khi nào cần Redis Cache-Aside? Khi nào cần Message Queue? Khi nào cần Sharding DB? Thể hiện tư duy "Dùng đúng công nghệ giải quyết đúng vấn đề", không dùng công nghệ để phô trương.',
+    trapWarning: 'Sai lầm chết người của ứng viên: Im lặng tự vẽ sơ đồ mà không tương tác với phỏng vấn viên. Hãy biến buổi phỏng vấn thành buổi thảo luận kỹ thuật (Collaborative session), chủ động đặt câu hỏi làm rõ các trường hợp biên (Edge Cases).'
+  },
+  {
+    id: 'q-61',
+    category: 'Hệ Thống & Tải Cao',
+    level: 'Junior',
+    question: 'Tại sao câu lệnh phân trang "LIMIT 1000000, 20" trong MySQL lại cực kỳ chậm, và kỹ thuật Deferred Join giải quyết thế nào?',
+    shortAnswer: 'MySQL phải nạp toàn bộ 1,000,020 dòng dữ liệu đầy đủ từ ổ đĩa vào RAM, sau đó vứt bỏ 1,000,000 dòng đầu và chỉ giữ lại 20 dòng. Kỹ thuật Deferred Join dùng Subquery quét cột ID trên B-Tree Index (Covering Index) siêu nhẹ, sau đó mới INNER JOIN lại với bảng chính để đọc đúng 20 dòng đầy đủ, giảm thời gian từ 7s xuống 0.2s.',
+    seniorDeepDive: 'Subquery: (SELECT id FROM orders ORDER BY id LIMIT 1000000, 20) sub. Vì chỉ truy cập vào index tree mà không cần đọc cluster index data pages, MySQL thực thi cực kỳ nhanh trên RAM. Sau khi lấy được 20 ID, lệnh JOIN chỉ tốn đúng 20 phép tìm kiếm điểm (Point Lookups) O(log N) trên đĩa cứng.',
+    trapWarning: 'Nếu có điều kiện WHERE (ví dụ status = 1), bạn bắt buộc phải tạo Composite Index (status, id) để subquery vẫn là Covering Index 100% không bị rơi vào Table Scan.'
+  },
+  {
+    id: 'q-62',
+    category: 'Hệ Thống & Tải Cao',
+    level: 'Junior',
+    question: 'Hiện tượng trễ đồng bộ Master-Slave (Replication Lag) gây ra lỗi gì cho người dùng và cách giải quyết?',
+    shortAnswer: 'Lỗi: User vừa tạo bài viết hoặc thanh toán xong, F5 lại màn hình thấy dữ liệu biến mất (do request đọc bị định tuyến vào Slave DB chưa kịp nhận binlog từ Master). Giải pháp: Sticky Master Routing: Gán cờ Redis/Cookie trong 3-5 giây sau khi có thao tác ghi để ưu tiên đọc thẳng từ Master; hoặc dùng mã GTID chờ Slave đồng bộ kịp.',
+    seniorDeepDive: 'MySQL Master-Slave replication mặc định là bất đồng bộ (Async). Khi mạng lag hoặc Slave đang bận chạy báo cáo nặng, độ trễ có thể lên tới vài giây. Cơ chế Sticky Master Routing: Khi Controller phát hiện request ghi thành công, lưu write_flag:userId vào Redis TTL 5s. Tất cả request đọc của user này trong 5s sẽ bỏ qua Read-Replica mà trỏ thẳng về Master.',
+    trapWarning: 'Đừng lạm dụng đọc từ Master cho tất cả mọi người! Chỉ định tuyến cho chính người dùng vừa thực hiện hành vi ghi (User-specific stickiness), các người dùng khác vẫn đọc từ Slave để bảo vệ Master.'
+  },
+  {
+    id: 'q-63',
+    category: 'Hệ Thống & Tải Cao',
+    level: 'Junior',
+    question: 'Virtual Threads trong Java 21 có gì khác Platform Threads và tại sao mở 100,000 Virtual Threads lại có thể làm sập HikariCP?',
+    shortAnswer: 'Platform Thread ánh xạ 1-1 với OS Kernel Thread, tốn 1MB stack bộ nhớ; Virtual Thread do JVM quản lý trên Heap, chỉ tốn vài trăm bytes và tự unmount khi gặp I/O blocking. Tuy nhiên, nếu 100,000 Virtual Threads cùng lúc gọi getConnection() vào Database, chúng sẽ tranh chấp 30 kết nối của HikariCP và gây nghẽn ConnectionTimeoutException hàng loạt.',
+    seniorDeepDive: 'Trước đây số request đồng thời bị giới hạn bởi Tomcat Thread Pool (200 threads) nên HikariCP pool size 30-50 chạy êm. Với Virtual Threads, số luồng đồng thời tăng vọt 1,000 lần nhưng Database vật lý không thể mở 100,000 connections (sẽ làm MySQL sập RAM ngay). Giải pháp: Dùng Semaphore(30) để giới hạn số Virtual Thread được phép chạm vào DB cùng một lúc.',
+    trapWarning: 'Virtual Threads chỉ tối ưu cho các tác vụ I/O-bound (gọi HTTP, gọi DB, đọc file). Với các tác vụ CPU-bound (tính toán mã hóa, xử lý video, ML), Virtual Threads không mang lại lợi ích gì mà còn tốn chi phí quản lý của JVM!'
+  },
+  {
+    id: 'q-64',
+    category: 'Hệ Thống & Tải Cao',
+    level: 'Junior',
+    question: 'Vấn đề Pinning Issue trong Java 21 Virtual Threads là gì và tại sao cấm dùng từ khóa synchronized?',
+    shortAnswer: 'Khi Virtual Thread chạy bên trong một khối synchronized block hoặc gọi Native JNI method mà gặp thao tác I/O blocking, JVM không thể tháo gỡ (Unmount) nó ra khỏi Carrier Thread (ForkJoinPool). Virtual Thread bị ghim chặt (Pinned) vào CPU Core. Nếu tất cả Carrier Threads đều bị ghim, toàn bộ ứng dụng Java sẽ bị đóng băng hoàn toàn!',
+    seniorDeepDive: 'Carrier Threads có số lượng bằng số CPU cores (ví dụ 8 cores). Chỉ cần 8 Virtual Threads dính synchronized block lúc gọi HTTP chậm là 8 cores bị chiếm trọn, hàng chục ngàn Virtual Threads khác sẽ bị treo cứng không có carrier để chạy. Khắc phục: Thay thế toàn bộ synchronized bằng java.util.concurrent.locks.ReentrantLock.',
+    trapWarning: 'Làm sao kiểm tra mã nguồn hoặc thư viện bên thứ 3 có bị Pinning không? ➔ Thêm tham số JVM: -Djdk.tracePinnedThreads=full, JVM sẽ in stack trace cảnh báo mỗi khi có thread bị ghim.'
+  },
+  {
+    id: 'q-65',
+    category: 'Hệ Thống & Tải Cao',
+    level: 'Junior',
+    question: 'Consumer Rebalance Storm trong Kafka xảy ra khi nào và cách phòng tránh bằng max.poll.interval.ms?',
+    shortAnswer: 'Khi một Consumer mất quá nhiều thời gian để xử lý một mẻ tin nhắn vượt quá max.poll.interval.ms (mặc định 5 phút), Coordinator coi Consumer đó đã chết và kích hoạt Rebalance toàn bộ Consumer Group. Tất cả Consumer ngừng đọc (Stop-The-World) để chia lại partition. Khắc phục: Giảm max.poll.records (xuống 50), tăng max.poll.interval.ms, và chuyển sang CooperativeStickyAssignor.',
+    seniorDeepDive: 'Eager Rebalance Protocol cũ yêu cầu tất cả consumer buông hết partition để nhận lại từ đầu. Cooperative Sticky Assignor (từ Kafka 2.4+) chỉ thu hồi và chuyển giao đúng partition bị thay đổi, các consumer khác vẫn tiếp tục xử lý bình thường mà không bị dừng hình, giảm 99% thời gian gián đoạn.',
+    trapWarning: 'Phân biệt: session.timeout.ms (kiểm tra luồng heartbeat nền) vs max.poll.interval.ms (kiểm tra luồng chính xử lý logic). Heartbeat vẫn gửi nhưng poll() không được gọi thì consumer vẫn bị đá!'
+  },
+  {
+    id: 'q-66',
+    category: 'Hệ Thống & Tải Cao',
+    level: 'Junior',
+    question: 'Cơ chế Zero-Copy "sendfile()" của Linux kernel giúp Kafka tiết kiệm bao nhiêu lần copy bộ nhớ CPU?',
+    shortAnswer: 'Mô hình truyền thống tốn 4 lần Copy (Disk -> OS Page Cache -> Java Heap Buffer -> Socket Buffer -> NIC Card) và 4 lần Context Switch. Linux sendfile() với DMA Scatter-Gather chuyển dữ liệu trực tiếp từ OS Page Cache sang Card mạng NIC, đạt ZERO copy của CPU và dữ liệu không bao giờ bị nạp vào Java Heap RAM.',
+    seniorDeepDive: 'Nhờ Zero-Copy, Kafka giải phóng hoàn toàn CPU khỏi việc sao chép từng byte dữ liệu, đồng thời không tạo ra rác đối tượng trên JVM Heap ➔ Không bao giờ bị GC Pause đơ hệ thống vì dung lượng message lớn. Dữ liệu khi đọc realtime nằm sẵn trên Linux Page Cache của RAM nên tốc độ đạt hàng triệu message/s.',
+    trapWarning: 'Zero-Copy sẽ bị vô hiệu hóa nếu Broker bật mã hóa SSL/TLS hoặc can thiệp sửa đổi nội dung message, vì khi đó CPU buộc phải kéo dữ liệu vào User Space để xử lý mã hóa.'
+  },
+  {
+    id: 'q-67',
+    category: 'Hệ Thống & Tải Cao',
+    level: 'Junior',
+    question: 'Khi nào nên chọn Redis Streams thay vì Apache Kafka cho hệ thống Microservices?',
+    shortAnswer: 'Chọn Redis Streams khi: Hệ thống quy mô vừa và nhỏ (dưới 50,000 - 100,000 msg/s), muốn tiết kiệm chi phí hạ tầng (tận dụng cụm Redis sẵn có), không cần lưu trữ lịch sử hàng tháng trên đĩa, và đội ngũ không có chuyên gia vận hành Kafka cluster phức tạp. Chọn Kafka khi: Lưu lượng hàng triệu msg/s, cần lưu trữ đĩa hàng Terabyte và replay dữ liệu sau 1 năm.',
+    seniorDeepDive: 'Redis Streams từ phiên bản 5.0+ hỗ trợ đầy đủ Consumer Groups, XADD, XREADGROUP, XACK và Pending Entries List (PEL) tương đương Kafka. Lệnh XADD mystream MAXLEN ~ 100000 * tự động cắt tỉa các tin cũ để giữ bộ nhớ RAM luôn trong tầm kiểm soát.',
+    trapWarning: 'Redis Streams lưu trữ trên RAM nên chi phí lưu trữ dài hạn đắt hơn nhiều so với đĩa cứng của Kafka. Không dùng Redis Streams làm kho lưu trữ log vĩnh viễn (Cold Storage).'
+  },
+  {
+    id: 'q-68',
+    category: 'Hệ Thống & Tải Cao',
+    level: 'Junior',
+    question: 'Lệnh DEL một BigKey trong Redis có thể gây thảm họa gì và tại sao phải dùng UNLINK?',
+    shortAnswer: 'Một BigKey (ví dụ Set hoặc Hash chứa 1,000,000 phần tử) khi bị xóa bằng lệnh DEL sẽ khiến luồng chính của Redis phải giải phóng hàng triệu ô nhớ đồng bộ (Synchronous Freeing), làm đơ máy chủ Redis từ 2 đến 5 giây. Toàn bộ các request khác bị timeout! Lệnh UNLINK chỉ tách con trỏ key ở luồng chính (O(1) trong vài micro-giây), sau đó đưa việc giải phóng RAM cho một background thread thực thi ngầm.',
+    seniorDeepDive: 'Kể từ Redis 4.0, tính năng Lazy Freeing được giới thiệu. Có thể cấu hình: lazyfree-lazy-eviction yes, lazyfree-lazy-expire yes, lazyfree-lazy-server-del yes để Redis tự động xóa ngầm các key lớn khi hết hạn TTL hoặc khi đầy bộ nhớ.',
+    trapWarning: 'Làm sao phát hiện BigKey trên Production? ➔ Chạy lệnh: redis-cli -p 6379 --bigkeys (quét bằng SCAN không block server) hoặc dùng công cụ Redis RDB Tools phân tích file backup .rdb.'
+  },
+  {
+    id: 'q-69',
+    category: 'Hệ Thống & Tải Cao',
+    level: 'Junior',
+    question: 'So sánh Cuckoo Filter và Bloom Filter: Tại sao Cuckoo Filter được ưu tiên khi cần xóa phần tử?',
+    shortAnswer: 'Bloom Filter dùng mảng bit và nhiều hàm băm, CHỈ HỖ TRỢ THÊM (ADD) mà KHÔNG THỂ XÓA (DELETE) phần tử vì xóa 1 bit sẽ làm ảnh hưởng đến các phần tử khác. Cuckoo Filter dùng bảng băm tổ chim cúc cu (Cuckoo Hashing) lưu fingerprint, HỖ TRỢ CẢ THÊM VÀ XÓA PHẦN TỬ, đồng thời tiết kiệm RAM hơn khi yêu cầu tỷ lệ False Positive cực thấp (< 3%).',
+    seniorDeepDive: 'Trong bài toán Blacklist người dùng hoặc thu hồi Token (Token Revocation): Khi một tài khoản bị khóa rồi được mở khóa lại, Bloom Filter không thể bỏ tài khoản đó ra khỏi bộ lọc (phải rebuild lại cả bộ lọc). Cuckoo Filter cho phép xóa trực tiếp: CF.DEL blacklist userId một cách thanh thoát.',
+    trapWarning: 'Cuckoo Filter có nhược điểm là khi độ đầy (Load Factor) đạt trên 95%, thao tác chèn mới có thể bị thất bại do vòng lặp đá chim cúc cu (Cuckoo Kick-out loop) không tìm được tổ trống.'
+  },
+  {
+    id: 'q-70',
+    category: 'Hệ Thống & Tải Cao',
+    level: 'Junior',
+    question: 'Cơ chế MVCC (Multi-Version Concurrency Control) trong MySQL InnoDB hoạt động thế nào với Undo Log?',
+    shortAnswer: 'Mỗi hàng trong InnoDB có 2 cột ẩn: DB_TRX_ID (ID transaction cuối cùng sửa đổi) và DB_ROLL_PTR (con trỏ trỏ tới bản ghi cũ trong Undo Log tạo thành Version Chain). Khi SELECT chạy, nó tạo ra một Read View. Nếu bản ghi hiện tại có DB_TRX_ID chưa commit, InnoDB tự động lùi theo con trỏ DB_ROLL_PTR đọc phiên bản cũ đã commit trong Undo Log mà không hề bị khóa bởi lệnh UPDATE.',
+    seniorDeepDive: 'Nhờ MVCC, "Đọc không chặn Ghi, Ghi không chặn Đọc". Tuy nhiên, nếu có một Transaction mở ra chạy quá lâu (Long-running transaction) mà không commit, InnoDB không thể dọn dẹp các bản ghi Undo Log lịch sử ➔ Dung lượng Undo Log tablespace phình to hàng chục Gigabytes và làm chậm toàn bộ DB.',
+    trapWarning: 'MVCC chỉ áp dụng cho câu lệnh SELECT thông thường (Consistent Read). Nếu bạn dùng SELECT ... FOR UPDATE hoặc SELECT ... LOCK IN SHARE MODE, MySQL sẽ chuyển sang Locking Read và phải đợi khóa của các transaction khác!'
+  },
+  {
+    id: 'q-71',
+    category: 'Hệ Thống & Tải Cao',
+    level: 'Junior',
+    question: 'Công thức vàng tính toán kích thước Connection Pool cho HikariCP là gì? Tại sao pool size = 1000 là phản tác dụng?',
+    shortAnswer: 'Công thức khuyến nghị từ tác giả HikariCP và PostgreSQL: pool_size = (core_count * 2) + effective_spindle_count (ví dụ server 8 cores chỉ cần pool_size = 17 - 20!). Đặt pool size = 1000 sẽ khiến hàng ngàn kết nối cùng tranh chấp CPU cores của Database, gây bão Context Switching, nghẽn I/O đĩa và làm giảm 80% thông lượng tổng thể.',
+    seniorDeepDive: 'Một CPU core tại một thời điểm vật lý chỉ có thể thực thi 1 câu lệnh SQL. Nếu 1000 luồng cùng gửi query xuống DB 8 cores, hệ điều hành của DB phải liên tục hoán đổi CPU Context giữa 1000 tiến trình, lãng phí gần hết chu kỳ CPU cho việc chuyển đổi thay vì xử lý dữ liệu. Giữ pool size nhỏ giúp CPU luôn chạy 100% công suất thực tế.',
+    trapWarning: 'Nếu thấy ứng dụng báo Connection Timeout, sai lầm lớn nhất là tăng pool size! Hãy điều tra nguyên nhân gốc: Có câu Slow Query nào đang giữ connection quá lâu, hoặc quên đóng Connection/ResultSet trong code hay không.'
+  },
+  {
+    id: 'q-72',
+    category: 'Hệ Thống & Tải Cao',
+    level: 'Junior',
+    question: 'Thiết kế hệ thống Giỏ hàng (Shopping Cart) hàng triệu user trên Redis như thế nào trong giờ cao điểm?',
+    shortAnswer: 'Dùng Redis HASH: Key là cart:userId, Field là productId, Value là số lượng và thông tin SKU ngắn gọn. Thao tác thêm/sửa/xóa sản phẩm là HSET, HINCRBY, HDEL đạt O(1) trực tiếp trên RAM. Cài đặt TTL 30 ngày cho mỗi giỏ hàng (tự động gia hạn khi có thao tác). Chỉ đồng bộ giỏ hàng xuống Database khi user thực sự bấm nút Checkout (Write-Behind).',
+    seniorDeepDive: 'Nếu lưu giỏ hàng vào MySQL: Mỗi lần khách tăng/giảm số lượng hoặc lướt web thêm đồ sẽ dội hàng chục ngàn câu UPDATE/INSERT xuống DB làm nghẽn cổ chai. Với Redis Hash, toàn bộ diễn ra trong 0.2ms. Khi user thanh toán hoặc đăng xuất, một Worker bất đồng bộ mới sao lưu trạng thái cuối cùng xuống DB.',
+    trapWarning: 'Tránh lưu giỏ hàng thành một chuỗi JSON String khổng lồ! Dùng Hash cho phép bạn sửa số lượng của 1 món hàng bằng HINCRBY cart:1001 item_88 1 mà không cần kéo toàn bộ 50 món hàng về để parse JSON rồi ghi đè lại.'
+  },
+  {
+    id: 'q-73',
+    category: 'Hệ Thống & Tải Cao',
+    level: 'Junior',
+    question: 'Mô hình Bulkhead Pattern trong Resilience4j bảo vệ ứng dụng khỏi sập dây chuyền (Cascading Failure) ra sao?',
+    shortAnswer: 'Lấy cảm hứng từ các vách ngăn kín nước của thân tàu thủy (nếu 1 khoang bị thủng, nước chỉ ngập khoang đó chứ không làm chìm tàu). Bulkhead phân chia tài nguyên Thread Pool hoặc Semaphore riêng biệt cho từng dịch vụ bên ngoài. Nếu Payment Gateway của bên thứ 3 bị chậm 30s, nó chỉ làm đầy 20 threads của khoang Payment, toàn bộ các tính năng khác (Xem sản phẩm, Đăng nhập) vẫn hoạt động 100% bình thường.',
+    seniorDeepDive: 'Nếu không có Bulkhead: Toàn bộ 200 worker threads của Tomcat sẽ bị kẹt cứng ở các request gọi Payment Gateway bị treo. Khi có khách khác vào xem trang chủ, Tomcat không còn luồng rảnh để phục vụ ➔ Toàn bộ website bị sập trắng trang (Cascading Failure). Resilience4j hỗ trợ 2 loại: SemaphoreBulkhead và ThreadPoolBulkhead.',
+    trapWarning: 'Kết hợp Bulkhead với Circuit Breaker: Khi Bulkhead bị đầy hàng đợi, Circuit Breaker sẽ kích hoạt Fallback Response (ví dụ: "Cổng thanh toán đang bảo trì, vui lòng chọn phương thức COD") ngay lập tức mà không để khách phải chờ.'
+  },
+  {
+    id: 'q-74',
+    category: 'Hệ Thống & Tải Cao',
+    level: 'Junior',
+    question: 'Tối ưu hóa Database Index: Khi nào một câu query có "ORDER BY" và "LIMIT" không dùng được Index?',
+    shortAnswer: '1. Khi cột ORDER BY không nằm trong Index hoặc ngược hướng thứ tự của Composite Index; 2. Khi có điều kiện WHERE dạng dải (Range: created_at > ...) trước cột ORDER BY trong Composite Index; 3. Khi ORDER BY trên 2 bảng khác nhau trong câu lệnh JOIN; 4. Khi dùng hàm trên cột: ORDER BY YEAR(created_at). Khi đó MySQL buộc phải dùng Filesort quét toàn bộ vào RAM/Đĩa để sắp xếp.',
+    seniorDeepDive: 'Để loại bỏ Filesort hoàn toàn: Áp dụng quy tắc Composite Index theo thứ tự: (Cột lọc bằng = trước) ➔ (Cột sắp xếp ORDER BY) ➔ (Cột lọc khoảng dải > <). Ví dụ query: WHERE status = "ACTIVE" ORDER BY created_at DESC LIMIT 10 thì Index tối ưu phải là (status, created_at DESC).',
+    trapWarning: 'Dùng EXPLAIN để kiểm tra: Nếu trường Extra hiển thị "Using filesort" hoặc "Using temporary" trên bảng hàng triệu dòng thì đó là quả bom nổ chậm về hiệu năng cần tối ưu lại Index ngay.'
+  },
+  {
+    id: 'q-75',
+    category: 'Hệ Thống & Tải Cao',
+    level: 'Junior',
+    question: 'Chiến lược Retry với Exponential Backoff kết hợp Jitter trong hệ thống phân tán chống thảm họa gì?',
+    shortAnswer: 'Chống thảm họa Thundering Herd (Đàn bò giẫm đạp): Khi một dịch vụ gặp sự cố và hồi phục, nếu 10,000 client cùng retry sau đúng 1s, 2s, 4s (cố định), chúng sẽ tạo ra các đợt sóng xung kích đồng loạt đánh sập dịch vụ đó một lần nữa. Jitter thêm số mili-giây ngẫu nhiên ngẫu nhiên vào khoảng thời gian chờ (sleep = min(cap, base * 2^attempt) + random_jitter) để phân tán tải đều đặn.',
+    seniorDeepDive: 'Nghiên cứu của Amazon AWS Architecture chỉ ra rằng: "Exponential Backoff mà không có Jitter chỉ làm dời thời điểm sập hệ thống sang các mốc lũy thừa chứ không giải quyết được xung đột". Áp dụng Full Jitter: sleep = ThreadLocalRandom.current().nextLong(0, min(cap, base * (1 << attempt))) giúp giãn cách các request retry mịn như dòng nước.',
+    trapWarning: 'Luôn đặt giới hạn số lần thử lại tối đa (Max Retries = 3 - 5 lần) và thời gian chờ tối đa (Max Backoff = 30s), kết hợp Dead Letter Queue nếu sau 5 lần vẫn thất bại, tuyệt đối không retry vô tận!'
   }
 ];
 

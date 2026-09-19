@@ -1,8 +1,8 @@
 {
-  "id": "1477",
-  "title": "Find Two Non-overlapping Sub-arrays Each With Target Sum",
-  "url": "https://leetcode.com/problems/find-two-non-overlapping-sub-arrays-each-with-target-sum/",
+  "id": "1401",
+  "title": "Circle and Rectangle Overlapping",
+  "url": "https://leetcode.com/problems/circle-and-rectangle-overlapping/",
   "difficulty": "medium",
-  "topic": "Array, Hash Table, Binary Search, Dynamic Programming, Sliding Window",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-09-17."
+  "topic": "Math, Geometry",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-09-19."
 }
