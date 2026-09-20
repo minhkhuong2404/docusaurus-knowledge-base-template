@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useUserProgress } from '../../../context/UserProgressContext';
 import { triggerFireworks } from '../../../utils/fireworks';
+import { arcadeAudio } from '../../../utils/arcadeAudio';
 import { BUG_CHALLENGES, BugSnippetsChallenge } from '../../../data/spotTheBugData';
 import { fetchSpotTheBugQuestions, QuizQuestion } from '../../../services/googleSheetQuizService';
 import { Highlight, Prism } from 'prism-react-renderer';
@@ -298,6 +299,10 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
     return () => clearInterval(timer);
   }, [gameState, activeModeConfig.timerSecs]);
 
+  // Inspection tabs & Thread stepper
+  const [activeInspectorTab, setActiveInspectorTab] = useState<'code' | 'threads' | 'diff'>('code');
+  const [threadStep, setThreadStep] = useState<number>(0);
+
   const resetRoundState = () => {
     setChosenOptionId(null);
     setClickedLineNumber(null);
@@ -307,14 +312,18 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
     setBreakpointHintUsed(false);
     setTimeWarpUsed(false);
     setTimeLeft(activeModeConfig.timerSecs || 30);
+    setActiveInspectorTab('code');
+    setThreadStep(0);
   };
 
   const handleStartGame = () => {
+    arcadeAudio.playLaser();
     setGameState('playing');
     resetRoundState();
   };
 
   const handleNextChallenge = () => {
+    arcadeAudio.playFlip();
     setCategoryIndexMap((prev) => ({
       ...prev,
       [selectedCategory]: (prev[selectedCategory] ?? 0) + 1,
@@ -324,6 +333,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
   };
 
   const handleSkipChallenge = () => {
+    arcadeAudio.playBlip();
     handleNextChallenge();
   };
 
@@ -334,6 +344,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
     setGameState('revealed');
 
     if (option.isCorrect) {
+      arcadeAudio.playCorrect();
       const lineBonus = lineIdentifiedBonus ? 50 : 0;
       const speedBonus = activeModeConfig.timerSecs ? Math.max(0, timeLeft * 2) : 10;
       const earnedScore = 100 + lineBonus + speedBonus;
@@ -353,6 +364,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
       }
       triggerFireworks(2000);
     } else {
+      arcadeAudio.playError();
       setCombo(0);
     }
   };
@@ -361,14 +373,17 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
     if (gameState === 'revealed') return;
     setClickedLineNumber(lineNum);
     if (lineNum === currentChallenge.buggyLineNumber) {
+      arcadeAudio.playCorrect();
       setLineIdentifiedBonus(true);
     } else {
+      arcadeAudio.playBlip();
       setLineIdentifiedBonus(false);
     }
   };
 
   const handleUseAnalyzer = () => {
     if (analyzerUsed || gameState === 'revealed') return;
+    arcadeAudio.playBlip();
     setAnalyzerUsed(true);
     const incorrectOptions = shuffledOptions.filter((o) => !o.isCorrect);
     const toEliminate = shuffle(incorrectOptions).slice(0, 2).map((o) => o.id);
@@ -377,6 +392,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
 
   const handleUseBreakpoint = () => {
     if (breakpointHintUsed || gameState === 'revealed') return;
+    arcadeAudio.playLaser();
     setBreakpointHintUsed(true);
     setClickedLineNumber(currentChallenge.buggyLineNumber);
     setLineIdentifiedBonus(true);
@@ -690,6 +706,24 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
                 </div>
               )}
 
+              {/* Combo Streak */}
+              {combo >= 2 && (
+                <div
+                  style={{
+                    padding: '3px 8px',
+                    borderRadius: '6px',
+                    background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(245, 158, 11, 0.25) 100%)',
+                    border: '1px solid #f59e0b',
+                    color: '#fde68a',
+                    fontWeight: 900,
+                    fontSize: '0.8rem',
+                    boxShadow: '0 0 10px rgba(245, 158, 11, 0.4)',
+                  }}
+                >
+                  🔥 {combo}x Streak
+                </div>
+              )}
+
               {/* Score */}
               <div
                 style={{
@@ -729,127 +763,283 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
             </div>
           </div>
 
-          {/* Highlighted Code Editor Box */}
-          <Highlight
-            theme={prismTheme}
-            code={cleanedCode}
-            language={targetLanguage}
-            prism={Prism}
-          >
-            {({ className, style, tokens, getLineProps, getTokenProps }) => (
-              <div
-                className={className}
-                style={{
-                  ...style,
-                  background: '#0a0d16',
-                  borderRadius: '10px',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  padding: '12px 14px',
-                  fontFamily: 'SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
-                  fontSize: '0.82rem',
-                  lineHeight: 1.5,
-                  overflowX: 'auto',
-                  marginBottom: '14px',
-                  boxShadow: 'inset 0 2px 8px rgba(0, 0, 0, 0.5)',
-                }}
-              >
-                {/* Editor Header */}
-                <div
+          {/* Inspector Mode Tabs */}
+          <div style={{ display: 'flex', gap: '6px', marginBottom: '10px' }}>
+            {[
+              { id: 'code', label: '💻 Code Inspector', icon: '🔍' },
+              { id: 'threads', label: '🔀 Step Race Condition', icon: '⚡' },
+              { id: 'diff', label: '✨ Senior Solution Diff', icon: '📝' },
+            ].map((tab) => {
+              const isSelected = activeInspectorTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => {
+                    arcadeAudio.playBlip();
+                    setActiveInspectorTab(tab.id as any);
+                  }}
                   style={{
-                    color: 'rgba(255, 255, 255, 0.45)',
-                    fontSize: '0.7rem',
-                    textTransform: 'uppercase',
-                    marginBottom: '8px',
-                    display: 'flex',
-                    justifyContent: 'space-between',
+                    padding: '5px 12px',
+                    borderRadius: '6px',
+                    background: isSelected ? 'rgba(245, 158, 11, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                    border: `1px solid ${isSelected ? '#f59e0b' : 'rgba(255, 255, 255, 0.1)'}`,
+                    color: isSelected ? '#f59e0b' : 'rgba(255, 255, 255, 0.7)',
+                    fontSize: '0.76rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    display: 'inline-flex',
                     alignItems: 'center',
-                    borderBottom: '1px solid rgba(255, 255, 255, 0.07)',
-                    paddingBottom: '6px',
+                    gap: '6px',
+                    transition: 'all 0.15s ease',
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: '#ef4444', display: 'inline-block' }} />
-                    <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: '#f59e0b', display: 'inline-block' }} />
-                    <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: '#10b981', display: 'inline-block' }} />
-                    <span style={{ marginLeft: '4px', fontWeight: 700, letterSpacing: '0.5px' }}>
-                      Source Editor ({targetLanguage.toUpperCase()}) — Click line to isolate bug:
-                    </span>
-                  </div>
-                  {clickedLineNumber && (
-                    <span
-                      style={{
-                        padding: '2px 8px',
-                        borderRadius: '4px',
-                        fontSize: '0.72rem',
-                        fontWeight: 800,
-                        background: clickedLineNumber === currentChallenge.buggyLineNumber ? 'rgba(52, 211, 153, 0.2)' : 'rgba(245, 158, 11, 0.2)',
-                        color: clickedLineNumber === currentChallenge.buggyLineNumber ? '#34d399' : '#fbbf24',
-                        border: `1px solid ${clickedLineNumber === currentChallenge.buggyLineNumber ? 'rgba(52, 211, 153, 0.4)' : 'rgba(245, 158, 11, 0.4)'}`,
-                      }}
-                    >
-                      Line #{clickedLineNumber} {clickedLineNumber === currentChallenge.buggyLineNumber ? '✓ Match (+50 pts)' : 'Marked'}
-                    </span>
-                  )}
-                </div>
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
+          </div>
 
-                {tokens.map((lineTokens, idx) => {
-                  const lineNum = idx + 1;
-                  const isBuggy = (gameState === 'revealed' || breakpointHintUsed) && lineNum === currentChallenge.buggyLineNumber;
-                  const isClicked = clickedLineNumber === lineNum;
-
-                  let bg = 'transparent';
-                  let borderLeft = '3px solid transparent';
-                  if (isBuggy) {
-                    bg = 'rgba(239, 68, 68, 0.22)';
-                    borderLeft = '3px solid #ef4444';
-                  } else if (isClicked) {
-                    bg = 'rgba(245, 158, 11, 0.15)';
-                    borderLeft = '3px solid #f59e0b';
-                  }
-
-                  const lineProps = getLineProps({ line: lineTokens, key: idx });
-
-                  return (
-                    <div
-                      {...lineProps}
-                      key={idx}
-                      onClick={() => handleLineClick(lineNum)}
-                      style={{
-                        ...lineProps.style,
-                        display: 'flex',
-                        alignItems: 'center',
-                        background: bg,
-                        borderLeft,
-                        borderRadius: '4px',
-                        padding: '1.5px 6px',
-                        cursor: gameState === 'playing' ? 'pointer' : 'default',
-                        transition: 'background 0.15s ease',
-                        minHeight: '22px',
-                      }}
-                    >
-                      <span
-                        style={{
-                          width: '34px',
-                          userSelect: 'none',
-                          color: isBuggy ? '#ef4444' : isClicked ? '#f59e0b' : 'rgba(255, 255, 255, 0.3)',
-                          fontWeight: isBuggy || isClicked ? 800 : 400,
-                          fontSize: '0.78rem',
-                          flexShrink: 0,
-                        }}
-                      >
-                        {lineNum}
-                      </span>
-                      <span style={{ whiteSpace: 'pre', flex: 1, fontFamily: 'inherit' }}>
-                        {lineTokens.map((token, key) => (
-                          <span {...getTokenProps({ token, key })} key={key} />
-                        ))}
+          {/* TAB 1: Code Editor Box */}
+          {activeInspectorTab === 'code' && (
+            <Highlight
+              theme={prismTheme}
+              code={cleanedCode}
+              language={targetLanguage}
+              prism={Prism}
+            >
+              {({ className, style, tokens, getLineProps, getTokenProps }) => (
+                <div
+                  className={className}
+                  style={{
+                    ...style,
+                    background: '#0a0d16',
+                    borderRadius: '10px',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    padding: '12px 14px',
+                    fontFamily: 'SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+                    fontSize: '0.82rem',
+                    lineHeight: 1.5,
+                    overflowX: 'auto',
+                    marginBottom: '14px',
+                    boxShadow: 'inset 0 2px 8px rgba(0, 0, 0, 0.5)',
+                  }}
+                >
+                  {/* Editor Header */}
+                  <div
+                    style={{
+                      color: 'rgba(255, 255, 255, 0.45)',
+                      fontSize: '0.7rem',
+                      textTransform: 'uppercase',
+                      marginBottom: '8px',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      borderBottom: '1px solid rgba(255, 255, 255, 0.07)',
+                      paddingBottom: '6px',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: '#ef4444', display: 'inline-block' }} />
+                      <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: '#f59e0b', display: 'inline-block' }} />
+                      <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: '#10b981', display: 'inline-block' }} />
+                      <span style={{ marginLeft: '4px', fontWeight: 700, letterSpacing: '0.5px' }}>
+                        Source Editor ({targetLanguage.toUpperCase()}) — Click line to isolate bug:
                       </span>
                     </div>
-                  );
-                })}
+                    {clickedLineNumber && (
+                      <span
+                        style={{
+                          padding: '2px 8px',
+                          borderRadius: '4px',
+                          fontSize: '0.72rem',
+                          fontWeight: 800,
+                          background: clickedLineNumber === currentChallenge.buggyLineNumber ? 'rgba(52, 211, 153, 0.2)' : 'rgba(245, 158, 11, 0.2)',
+                          color: clickedLineNumber === currentChallenge.buggyLineNumber ? '#34d399' : '#fbbf24',
+                          border: `1px solid ${clickedLineNumber === currentChallenge.buggyLineNumber ? 'rgba(52, 211, 153, 0.4)' : 'rgba(245, 158, 11, 0.4)'}`,
+                        }}
+                      >
+                        Line #{clickedLineNumber} {clickedLineNumber === currentChallenge.buggyLineNumber ? '✓ Match (+50 pts)' : 'Marked'}
+                      </span>
+                    )}
+                  </div>
+
+                  {tokens.map((lineTokens, idx) => {
+                    const lineNum = idx + 1;
+                    const isBuggy = (gameState === 'revealed' || breakpointHintUsed) && lineNum === currentChallenge.buggyLineNumber;
+                    const isClicked = clickedLineNumber === lineNum;
+
+                    let bg = 'transparent';
+                    let borderLeft = '3px solid transparent';
+                    if (isBuggy) {
+                      bg = 'rgba(239, 68, 68, 0.22)';
+                      borderLeft = '3px solid #ef4444';
+                    } else if (isClicked) {
+                      bg = 'rgba(245, 158, 11, 0.15)';
+                      borderLeft = '3px solid #f59e0b';
+                    }
+
+                    const lineProps = getLineProps({ line: lineTokens, key: idx });
+
+                    return (
+                      <div
+                        {...lineProps}
+                        key={idx}
+                        onClick={() => handleLineClick(lineNum)}
+                        style={{
+                          ...lineProps.style,
+                          display: 'flex',
+                          alignItems: 'center',
+                          background: bg,
+                          borderLeft,
+                          borderRadius: '4px',
+                          padding: '1.5px 6px',
+                          cursor: gameState === 'playing' ? 'pointer' : 'default',
+                          transition: 'background 0.15s ease',
+                          minHeight: '22px',
+                        }}
+                      >
+                        <span
+                          style={{
+                            width: '34px',
+                            userSelect: 'none',
+                            color: isBuggy ? '#ef4444' : isClicked ? '#f59e0b' : 'rgba(255, 255, 255, 0.3)',
+                            fontWeight: isBuggy || isClicked ? 800 : 400,
+                            fontSize: '0.78rem',
+                            flexShrink: 0,
+                          }}
+                        >
+                          {lineNum}
+                        </span>
+                        <span style={{ whiteSpace: 'pre', flex: 1, fontFamily: 'inherit' }}>
+                          {lineTokens.map((token, key) => (
+                            <span {...getTokenProps({ token, key })} key={key} />
+                          ))}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </Highlight>
+          )}
+
+          {/* TAB 2: Visual Thread Interleaving Stepper */}
+          {activeInspectorTab === 'threads' && (
+            <div
+              style={{
+                marginBottom: '14px',
+                padding: '16px',
+                borderRadius: '12px',
+                background: '#0a0d16',
+                border: '1px solid rgba(56, 189, 248, 0.3)',
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
+                <div style={{ fontSize: '0.86rem', fontWeight: 800, color: '#38bdf8', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span>🔀 Concurrency Stepper: Interleaved Thread Execution</span>
+                  <span style={{ fontSize: '0.7rem', padding: '2px 6px', borderRadius: '4px', background: 'rgba(56, 189, 248, 0.2)', color: '#38bdf8' }}>
+                    Step {threadStep + 1} of 5
+                  </span>
+                </div>
+                <div style={{ display: 'flex', gap: '6px' }}>
+                  <button
+                    type="button"
+                    disabled={threadStep === 0}
+                    onClick={() => {
+                      arcadeAudio.playBlip();
+                      setThreadStep((p) => Math.max(0, p - 1));
+                    }}
+                    style={{ padding: '4px 10px', borderRadius: '6px', background: 'rgba(255, 255, 255, 0.08)', border: 'none', color: '#fff', fontSize: '0.74rem', fontWeight: 750, cursor: threadStep === 0 ? 'not-allowed' : 'pointer' }}
+                  >
+                    ◀ Prev Step
+                  </button>
+                  <button
+                    type="button"
+                    disabled={threadStep === 4}
+                    onClick={() => {
+                      arcadeAudio.playLaser();
+                      setThreadStep((p) => Math.min(4, p + 1));
+                    }}
+                    style={{ padding: '4px 10px', borderRadius: '6px', background: 'rgba(56, 189, 248, 0.25)', border: '1px solid #38bdf8', color: '#38bdf8', fontSize: '0.74rem', fontWeight: 750, cursor: threadStep === 4 ? 'not-allowed' : 'pointer' }}
+                  >
+                    Next Step ▶
+                  </button>
+                </div>
               </div>
-            )}
-          </Highlight>
+
+              {/* Hardware Cores & Shared RAM Visualizer */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px', marginBottom: '12px' }}>
+                {/* Thread 1 Box */}
+                <div style={{ padding: '10px', borderRadius: '8px', background: threadStep === 1 || threadStep === 4 ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.03)', border: `1px solid ${threadStep === 1 || threadStep === 4 ? '#38bdf8' : 'rgba(255, 255, 255, 0.08)'}` }}>
+                  <div style={{ fontSize: '0.7rem', color: '#38bdf8', fontWeight: 800 }}>CPU Core 0 (Thread 1)</div>
+                  <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#fff', marginTop: '4px' }}>
+                    {threadStep === 0 ? 'STATUS: IDLE' : threadStep === 1 ? 'LOAD [val] ➔ R1 = 0' : threadStep === 2 || threadStep === 3 ? 'PREEMPTED (Waiting)' : threadStep === 4 ? 'RESUMED: STORE R1 (1) ➔ [val]' : 'COMPLETED'}
+                  </div>
+                  <div style={{ fontSize: '0.68rem', color: 'rgba(255, 255, 255, 0.5)', marginTop: '4px' }}>
+                    Local Register R1: {threadStep >= 1 ? '0' : 'null'} {threadStep === 4 ? '(Stale!)' : ''}
+                  </div>
+                </div>
+
+                {/* Shared RAM Box */}
+                <div style={{ padding: '10px', borderRadius: '8px', background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.3)' }}>
+                  <div style={{ fontSize: '0.7rem', color: '#f59e0b', fontWeight: 800 }}>Shared Heap Memory (RAM)</div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 900, color: threadStep === 4 || threadStep === 5 ? '#ef4444' : '#fbbf24', marginTop: '4px' }}>
+                    val = {threadStep <= 2 ? 0 : 1}
+                  </div>
+                  <div style={{ fontSize: '0.68rem', color: 'rgba(255, 255, 255, 0.5)', marginTop: '4px' }}>
+                    Expected: {threadStep >= 4 ? '2' : '0'}
+                  </div>
+                </div>
+
+                {/* Thread 2 Box */}
+                <div style={{ padding: '10px', borderRadius: '8px', background: threadStep === 2 || threadStep === 3 ? 'rgba(168, 85, 247, 0.2)' : 'rgba(255, 255, 255, 0.03)', border: `1px solid ${threadStep === 2 || threadStep === 3 ? '#a855f7' : 'rgba(255, 255, 255, 0.08)'}` }}>
+                  <div style={{ fontSize: '0.7rem', color: '#a855f7', fontWeight: 800 }}>CPU Core 1 (Thread 2)</div>
+                  <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#fff', marginTop: '4px' }}>
+                    {threadStep === 0 || threadStep === 1 ? 'STATUS: WAITING' : threadStep === 2 ? 'LOAD [val] ➔ R2 = 0' : threadStep === 3 ? 'STORE R2 (1) ➔ [val]' : 'COMPLETED'}
+                  </div>
+                  <div style={{ fontSize: '0.68rem', color: 'rgba(255, 255, 255, 0.5)', marginTop: '4px' }}>
+                    Local Register R2: {threadStep >= 2 ? (threadStep === 2 ? '0' : '1') : 'null'}
+                  </div>
+                </div>
+              </div>
+
+              {/* Step Explanatory Banner */}
+              <div style={{ padding: '8px 12px', borderRadius: '8px', background: threadStep === 4 ? 'rgba(239, 68, 68, 0.15)' : 'rgba(255, 255, 255, 0.04)', border: `1px solid ${threadStep === 4 ? '#ef4444' : 'rgba(255, 255, 255, 0.1)'}`, fontSize: '0.8rem', color: threadStep === 4 ? '#fca5a5' : '#ffffff', lineHeight: 1.4 }}>
+                {threadStep === 0 && '👉 Initial state: Two parallel threads are dispatched without memory barriers or synchronizers.'}
+                {threadStep === 1 && '👉 Step 1: Thread 1 reads shared memory value 0 into CPU register R1.'}
+                {threadStep === 2 && '🚨 Step 2 (Context Switch): OS interrupts Thread 1 before writeback! Thread 2 reads the same un-updated value 0.'}
+                {threadStep === 3 && '👉 Step 3: Thread 2 increments R2 to 1 and writes it back to Main RAM (val = 1).'}
+                {threadStep === 4 && '💥 Hazard Exploded: Thread 1 wakes up with stale R1=0, increments to 1, and overwrites Thread 2\'s write! Total increments: 2, but val is 1 (Lost Update).'}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 3: Side-by-Side / Unified Solution Diff */}
+          {activeInspectorTab === 'diff' && (
+            <div
+              style={{
+                marginBottom: '14px',
+                padding: '14px',
+                borderRadius: '10px',
+                background: '#07090e',
+                border: '1px solid rgba(52, 211, 153, 0.3)',
+              }}
+            >
+              <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#34d399', marginBottom: '8px', textTransform: 'uppercase' }}>
+                ✨ Verified Solution Diff (Line #{currentChallenge.buggyLineNumber}):
+              </div>
+              <div style={{ background: 'rgba(239, 68, 68, 0.12)', borderLeft: '3px solid #ef4444', padding: '6px 12px', borderRadius: '4px', marginBottom: '6px', fontFamily: 'monospace', fontSize: '0.8rem', color: '#fca5a5' }}>
+                - // Defective Line #{currentChallenge.buggyLineNumber}: Lacks thread-safety / atomicity
+              </div>
+              <div style={{ background: 'rgba(52, 211, 153, 0.12)', borderLeft: '3px solid #34d399', padding: '6px 12px', borderRadius: '4px', marginBottom: '10px', fontFamily: 'monospace', fontSize: '0.8rem', color: '#86efac' }}>
+                + {currentChallenge.fixSnippet.trim()}
+              </div>
+              <div style={{ fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.75)', lineHeight: 1.45 }}>
+                {currentChallenge.rootCause}
+              </div>
+            </div>
+          )}
 
           {/* Option Cards: 1 Option per Line */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '14px' }}>

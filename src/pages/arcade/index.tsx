@@ -1,15 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from '@theme/Layout';
 import BrowserOnly from '@docusaurus/BrowserOnly';
 import { useUserProgress } from '../../context/UserProgressContext';
 import OutageBossBattleGame from '../../components/gamification/games/OutageBossBattleGame';
 import ArchitecturePuzzleGame from '../../components/gamification/games/ArchitecturePuzzleGame';
 import SpotTheBugDuelGame from '../../components/gamification/games/SpotTheBugDuelGame';
-import FlashcardArenaGame from '../../components/gamification/games/FlashcardArenaGame';
+import SqlIndexOptimizerGame from '../../components/gamification/games/SqlIndexOptimizerGame';
+import { arcadeAudio } from '../../utils/arcadeAudio';
 
 export default function ArcadePage(): React.JSX.Element {
   const { gamification } = useUserProgress();
-  const [activeGame, setActiveGame] = useState<'boss' | 'puzzle' | 'bug' | 'flashcards'>('boss');
+  const [activeGame, setActiveGame] = useState<'boss' | 'puzzle' | 'bug' | 'sql_optimizer'>('boss');
+  const [isAudioMuted, setIsAudioMuted] = useState<boolean>(() => arcadeAudio.isMuted());
+  const [dailyStreak, setDailyStreak] = useState<number>(() => {
+    if (typeof window === 'undefined') return 3;
+    try {
+      const saved = localStorage.getItem('arcade_daily_streak');
+      return saved ? parseInt(saved, 10) : 3;
+    } catch {
+      return 3;
+    }
+  });
+
+  const toggleSound = () => {
+    const nextMute = arcadeAudio.toggleMute();
+    setIsAudioMuted(nextMute);
+    if (!nextMute) {
+      arcadeAudio.playCorrect();
+    }
+  };
+
+  const handleSelectGame = (gameId: 'boss' | 'puzzle' | 'bug' | 'sql_optimizer') => {
+    arcadeAudio.playFlip();
+    setActiveGame(gameId);
+  };
+
   const scores = gamification?.miniGameScores || {};
 
   return (
@@ -27,8 +52,32 @@ export default function ArcadePage(): React.JSX.Element {
         }}
       >
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-          {/* Clean Arcade Page Title Header */}
-          <div style={{ marginBottom: '28px', textAlign: 'center' }}>
+          {/* Header Controls & Title */}
+          <div style={{ marginBottom: '24px', textAlign: 'center', position: 'relative' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
+              <button
+                type="button"
+                onClick={toggleSound}
+                title={isAudioMuted ? 'Unmute 8-bit Arcade Sound' : 'Mute Sound'}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  background: isAudioMuted ? 'rgba(239, 68, 68, 0.15)' : 'rgba(56, 189, 248, 0.15)',
+                  border: `1px solid ${isAudioMuted ? 'rgba(239, 68, 68, 0.4)' : 'rgba(56, 189, 248, 0.4)'}`,
+                  color: isAudioMuted ? '#f87171' : '#38bdf8',
+                  padding: '6px 12px',
+                  borderRadius: '20px',
+                  fontSize: '0.78rem',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                <span>{isAudioMuted ? '🔇 Audio Muted' : '🔊 8-Bit Audio On'}</span>
+              </button>
+            </div>
+
             <h1
               style={{
                 margin: '0 0 8px 0',
@@ -55,6 +104,44 @@ export default function ArcadePage(): React.JSX.Element {
             <p style={{ margin: 0, fontSize: '0.95rem', color: 'rgba(255, 255, 255, 0.7)', maxWidth: '680px', marginInline: 'auto' }}>
               Sharpen your distributed systems instincts, debug concurrency race conditions, and battle production outages through interactive simulations.
             </p>
+
+            {/* Daily On-Call Banner */}
+            <div
+              style={{
+                marginTop: '18px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '12px',
+                padding: '8px 16px',
+                borderRadius: '12px',
+                background: 'linear-gradient(90deg, rgba(245, 158, 11, 0.15) 0%, rgba(236, 72, 153, 0.15) 100%)',
+                border: '1px solid rgba(245, 158, 11, 0.3)',
+                fontSize: '0.82rem',
+                color: '#fde68a',
+              }}
+            >
+              <span style={{ fontSize: '1rem' }}>🔥</span>
+              <span>
+                <strong>Daily On-Call Rotation:</strong> Streak <strong>{dailyStreak} Days</strong> • Today's Mission:{' '}
+                <em>"P0 Thundering Herd Mitigation"</em>
+              </span>
+              <button
+                type="button"
+                onClick={() => handleSelectGame('boss')}
+                style={{
+                  background: 'rgba(245, 158, 11, 0.25)',
+                  border: '1px solid #f59e0b',
+                  color: '#ffffff',
+                  fontWeight: 800,
+                  fontSize: '0.72rem',
+                  padding: '3px 8px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                }}
+              >
+                Respond ➔
+              </button>
+            </div>
           </div>
 
           {/* Game Selection Cards */}
@@ -93,20 +180,20 @@ export default function ArcadePage(): React.JSX.Element {
                   highScore: scores.spot_bug || 0,
                 },
                 {
-                  id: 'flashcards',
-                  title: 'Concept Flashcards',
-                  tag: 'Spaced Repetition',
-                  icon: '📇',
-                  desc: 'Master ACID isolation, Paxos vs Raft, CAP theorem, and JVM Metaspace in seconds.',
+                  id: 'sql_optimizer',
+                  title: 'SQL Index & Query Crusher',
+                  tag: 'Database Tuning',
+                  icon: '🗄️',
+                  desc: 'Analyze slow EXPLAIN plans, design B-Tree composite indices, and crush query cost by 99%.',
                   color: '#10b981',
-                  highScore: scores.flashcards || 0,
+                  highScore: scores.sql_optimizer || 0,
                 },
               ].map((game) => {
                 const isSelected = activeGame === game.id;
                 return (
                   <div
                     key={game.id}
-                    onClick={() => setActiveGame(game.id as any)}
+                    onClick={() => handleSelectGame(game.id as any)}
                     style={{
                       padding: '16px 18px',
                       borderRadius: '16px',
@@ -167,7 +254,7 @@ export default function ArcadePage(): React.JSX.Element {
                   {activeGame === 'boss' && <OutageBossBattleGame />}
                   {activeGame === 'puzzle' && <ArchitecturePuzzleGame />}
                   {activeGame === 'bug' && <SpotTheBugDuelGame />}
-                  {activeGame === 'flashcards' && <FlashcardArenaGame />}
+                  {activeGame === 'sql_optimizer' && <SqlIndexOptimizerGame />}
                 </>
               )}
             </BrowserOnly>
