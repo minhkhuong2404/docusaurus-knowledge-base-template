@@ -23,7 +23,10 @@ const config: Config = {
 	organizationName: 'minhkhuong2404',
 	projectName: 'docusaurus-knowledge-base-template',
 	onBrokenLinks: 'warn',
-	clientModules: ['./src/clientModules/gtagFix.ts'],
+	clientModules: [
+		'./src/clientModules/gtagFix.ts',
+		'./src/clientModules/scrollRestoration.ts',
+	],
 	future: {
 		v4: true,
 		faster: {
@@ -155,6 +158,8 @@ const config: Config = {
 				attributes: {
 					rel: 'stylesheet',
 					href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
+					media: 'print',
+					onload: "this.media='all'",
 				},
 			},
 		],

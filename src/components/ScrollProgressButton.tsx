@@ -67,6 +67,11 @@ export default function ScrollProgressButton() {
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    try {
+      sessionStorage.removeItem(`scroll_pos_${pagePath}`);
+    } catch {
+      // Ignore storage errors
+    }
   };
 
   const isAtEnd = scrollPercent >= 98;

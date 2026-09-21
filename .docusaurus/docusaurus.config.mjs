@@ -20,7 +20,8 @@ export default {
   "projectName": "docusaurus-knowledge-base-template",
   "onBrokenLinks": "warn",
   "clientModules": [
-    "./src/clientModules/gtagFix.ts"
+    "./src/clientModules/gtagFix.ts",
+    "./src/clientModules/scrollRestoration.ts"
   ],
   "future": {
     "v4": {
@@ -216,7 +217,9 @@ export default {
         "tagName": "link",
         "attributes": {
           "rel": "stylesheet",
-          "href": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          "href": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+          "media": "print",
+          "onload": "this.media='all'"
         }
       }
     ],
@@ -622,6 +625,13 @@ export default {
       "disableSwitch": true,
       "respectPrefersColorScheme": false
     },
+    "mermaid": {
+      "theme": {
+        "dark": "dark",
+        "light": "default"
+      },
+      "options": {}
+    },
     "blog": {
       "sidebar": {
         "groupByYear": true
@@ -630,13 +640,6 @@ export default {
     "tableOfContents": {
       "minHeadingLevel": 2,
       "maxHeadingLevel": 3
-    },
-    "mermaid": {
-      "theme": {
-        "dark": "dark",
-        "light": "default"
-      },
-      "options": {}
     }
   },
   "baseUrlIssueBanner": true,

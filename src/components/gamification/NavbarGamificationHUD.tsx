@@ -23,7 +23,8 @@ export default function NavbarGamificationHUD() {
     let unsub: (() => void) | null = null;
     const timer = setTimeout(() => {
       unsub = subscribeToOnlineUsers((users) => {
-        setOnlineCount(users.length || 1);
+        const nextCount = users.length || 1;
+        setOnlineCount((prev) => (prev === nextCount ? prev : nextCount));
       });
     }, 1500);
 

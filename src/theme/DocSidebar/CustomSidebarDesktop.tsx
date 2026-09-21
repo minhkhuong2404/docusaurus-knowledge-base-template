@@ -11,6 +11,13 @@ type SidebarItem = any;
 
 interface CustomSidebarProps extends DesktopProps {}
 
+function isSamePath(a?: string | null, b?: string | null): boolean {
+  if (!a || !b) return false;
+  const cleanA = a.split('?')[0].split('#')[0].replace(/\/+$/, '').toLowerCase();
+  const cleanB = b.split('?')[0].split('#')[0].replace(/\/+$/, '').toLowerCase();
+  return cleanA === cleanB;
+}
+
 export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidden }: CustomSidebarProps) {
   const [openCategories, setOpenCategories] = useState<Record<string, boolean>>({});
   const [isResizing, setIsResizing] = useState(false);
@@ -31,17 +38,30 @@ export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidd
         const itemKey = `${keyPrefix}-${item.label || item.href || i}`;
         if (item.type === 'doc' || item.type === 'link') {
           docCounter++;
-          if (item.href === path) {
+          if (isSamePath(item.href, path)) {
             foundIndex = docCounter;
             activeKeys.add(itemKey);
             anyActive = true;
           }
-        } else if (item.type === 'category' && Array.isArray(item.items)) {
-          const childActive = walk(item.items, itemKey);
-          if (childActive) {
-            activeKeys.add(itemKey);
-            if (item.label) activeKeys.add(item.label);
-            anyActive = true;
+        } else if (item.type === 'category') {
+          let categorySelfActive = false;
+          if (item.href) {
+            docCounter++;
+            if (isSamePath(item.href, path)) {
+              foundIndex = docCounter;
+              categorySelfActive = true;
+              activeKeys.add(itemKey);
+              if (item.label) activeKeys.add(item.label);
+              anyActive = true;
+            }
+          }
+          if (Array.isArray(item.items)) {
+            const childActive = walk(item.items, itemKey);
+            if (childActive || categorySelfActive) {
+              activeKeys.add(itemKey);
+              if (item.label) activeKeys.add(item.label);
+              anyActive = true;
+            }
           }
         }
       }
@@ -64,6 +84,27 @@ export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidd
       setTotalArticlesCount(totalDocs);
     }
   }, [totalDocs, setTotalArticlesCount]);
+
+  // Auto-expand active categories and keep active item visible when navigating or going back
+  useEffect(() => {
+    if (!sidebar || !path) return;
+    if (activeCategoryKeys.size > 0) {
+      const categoriesToOpen: Record<string, boolean> = {};
+      activeCategoryKeys.forEach((key) => {
+        categoriesToOpen[key] = true;
+      });
+      setOpenCategories((prev) => ({ ...prev, ...categoriesToOpen }));
+    }
+
+    const timer = setTimeout(() => {
+      const activeEl = document.querySelector('.custom-sidebar-menu .custom-menu-link.active');
+      if (activeEl) {
+        activeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }, 120);
+
+    return () => clearTimeout(timer);
+  }, [path, sidebar, activeCategoryKeys]);
 
   const handleLocateCurrentPage = () => {
     if (!sidebar || !path) return;
@@ -155,7 +196,7 @@ export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidd
     const cleanLabel = match ? match[2].trim() : labelText;
     const displayIcon = emoji || (cleanLabel ? cleanLabel.charAt(0) : '📄');
 
-    const isActive = item.href === path;
+    const isActive = isSamePath(item.href, path);
     const itemKey = `${keyPrefix}-${item.label || item.href || 'item'}`;
 
     if (item.type === 'category') {
