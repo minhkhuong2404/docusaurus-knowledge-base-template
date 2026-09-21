@@ -20,15 +20,6 @@ const config: Config = {
 		firebaseMessagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
 		firebaseAppId: process.env.FIREBASE_APP_ID,
 	},
-	stylesheets: [
-		{
-			href: 'https://cdn.jsdelivr.net/npm/katex@0.13.24/dist/katex.min.css',
-			type: 'text/css',
-			integrity: 'sha384-odtC+0UGzzFL/6PNoE8rX/SPcQDXBJ+uRepguP4QkPCm2LBxH3FA3y+fKSiJ+AmM',
-			crossorigin: 'anonymous',
-		},
-	],
-
 	organizationName: 'minhkhuong2404',
 	projectName: 'docusaurus-knowledge-base-template',
 	onBrokenLinks: 'warn',
@@ -106,6 +97,7 @@ const config: Config = {
 			{ name: 'robots', content: 'index, follow' },
 			{ name: 'theme-color', content: '#000000' },
 			{ name: 'apple-mobile-web-app-capable', content: 'yes' },
+			{ name: 'mobile-web-app-capable', content: 'yes' },
 			{ name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' },
 			{ name: 'format-detection', content: 'telephone=no' },
 			{ name: 'msapplication-TileColor', content: '#000000' },

@@ -1,6 +1,4 @@
-@import "@fortawesome/fontawesome-free/css/fontawesome.min.css";
-@import "@fortawesome/fontawesome-free/css/brands.min.css";
-@import "@fortawesome/fontawesome-free/css/solid.min.css";
+@import "katex/dist/katex.min.css";
 @import "./diagrams.css";
 
 /* Prevent KaTeX MathML double rendering */
@@ -254,40 +252,6 @@ div[class*="codeBlockTitle"] {
   text-decoration: none;
 }
 
-.footer .footer__link-item[href*="linkedin.com"]::before,
-.footer .footer__link-item[href*="github.com"]::before,
-.footer .footer__link-item[href*="facebook.com"]::before,
-.footer .footer__link-item[href*="leetcode.com"]::before {
-  color: var(--ifm-color-emphasis-200);
-  display: inline-block;
-  font-size: 1rem;
-  line-height: 1;
-  text-rendering: auto;
-}
-
-.footer .footer__link-item[href*="linkedin.com"]::before {
-  content: "\f08c";
-  font-family: "Font Awesome 7 Brands", "Font Awesome 6 Brands";
-  font-weight: 400;
-}
-
-.footer .footer__link-item[href*="github.com"]::before {
-  content: "\f09b";
-  font-family: "Font Awesome 7 Brands", "Font Awesome 6 Brands";
-  font-weight: 400;
-}
-
-.footer .footer__link-item[href*="facebook.com"]::before {
-  content: "\f09a";
-  font-family: "Font Awesome 7 Brands", "Font Awesome 6 Brands";
-  font-weight: 400;
-}
-
-.footer .footer__link-item[href*="leetcode.com"]::before {
-  content: "\f121";
-  font-family: "Font Awesome 7 Free", "Font Awesome 6 Free";
-  font-weight: 900;
-}
 
 /* ============================================
    Dynamic Premium Navbar Button
@@ -2478,6 +2442,7 @@ pre[class*="language-"]::-webkit-scrollbar {
   border-radius: 50%;
   pointer-events: none;
   z-index: 0;
+  contain: paint;
   will-change: transform;
   transform: translateZ(0);
 }

@@ -11,69 +11,68 @@ type SidebarItem = any;
 
 interface CustomSidebarProps extends DesktopProps {}
 
-function isCategoryActive(item: SidebarItem, activePath: string): boolean {
-  if (item.type === 'category') {
-    return item.items.some((subItem: SidebarItem) => isCategoryActive(subItem, activePath));
-  }
-  if (item.type === 'doc' || item.type === 'link') {
-    return item.href === activePath;
-  }
-  return false;
-}
-
-function getAllDocLinks(items: SidebarItem[]): SidebarItem[] {
-  let result: SidebarItem[] = [];
-  if (!items) return result;
-  items.forEach((item) => {
-    if (item.type === 'doc' || item.type === 'link') {
-      result.push(item);
-    } else if (item.type === 'category' && Array.isArray(item.items)) {
-      result = result.concat(getAllDocLinks(item.items));
-    }
-  });
-  return result;
-}
-
 export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidden }: CustomSidebarProps) {
   const [openCategories, setOpenCategories] = useState<Record<string, boolean>>({});
   const [isResizing, setIsResizing] = useState(false);
   const sidebarWidthRef = useRef(300);
 
   const { progress, setTotalArticlesCount, isPageRead } = useUserProgress();
-  const docLinks = useMemo(() => (sidebar ? getAllDocLinks(sidebar) : []), [sidebar]);
+
+  // Single-pass memoized traversal: computes active category keys, active index, and total doc count
+  const { activeCategoryKeys, totalDocs, activeIndex } = useMemo(() => {
+    const activeKeys = new Set<string>();
+    let docCounter = 0;
+    let foundIndex = 0;
+
+    function walk(items: SidebarItem[], keyPrefix: string): boolean {
+      let anyActive = false;
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        const itemKey = `${keyPrefix}-${item.label || item.href || i}`;
+        if (item.type === 'doc' || item.type === 'link') {
+          docCounter++;
+          if (item.href === path) {
+            foundIndex = docCounter;
+            activeKeys.add(itemKey);
+            anyActive = true;
+          }
+        } else if (item.type === 'category' && Array.isArray(item.items)) {
+          const childActive = walk(item.items, itemKey);
+          if (childActive) {
+            activeKeys.add(itemKey);
+            if (item.label) activeKeys.add(item.label);
+            anyActive = true;
+          }
+        }
+      }
+      return anyActive;
+    }
+
+    if (sidebar) {
+      walk(sidebar, 'top');
+    }
+
+    return {
+      activeCategoryKeys: activeKeys,
+      totalDocs: docCounter,
+      activeIndex: foundIndex,
+    };
+  }, [sidebar, path]);
 
   useEffect(() => {
-    if (docLinks.length > 0) {
-      setTotalArticlesCount(docLinks.length);
+    if (totalDocs > 0) {
+      setTotalArticlesCount(totalDocs);
     }
-  }, [docLinks.length, setTotalArticlesCount]);
-
-  const activeIndex = useMemo(() => {
-    if (!path || docLinks.length === 0) return 0;
-    const idx = docLinks.findIndex((item) => item.href === path);
-    return idx !== -1 ? idx + 1 : 0;
-  }, [docLinks, path]);
+  }, [totalDocs, setTotalArticlesCount]);
 
   const handleLocateCurrentPage = () => {
     if (!sidebar || !path) return;
 
-    // Expand all categories that contain the active path
+    // Expand all active categories in one atomic state update
     const categoriesToOpen: Record<string, boolean> = {};
-    function expandActive(items: SidebarItem[], keyPrefix: string = 'item') {
-      items.forEach((item, idx) => {
-        const itemKey = `${keyPrefix}-${item.label || item.href || idx}`;
-        if (item.type === 'category') {
-          if (isCategoryActive(item, path)) {
-            categoriesToOpen[item.label] = true;
-            categoriesToOpen[itemKey] = true;
-            if (Array.isArray(item.items)) {
-              expandActive(item.items, itemKey);
-            }
-          }
-        }
-      });
-    }
-    expandActive(sidebar);
+    activeCategoryKeys.forEach((key) => {
+      categoriesToOpen[key] = true;
+    });
     setOpenCategories((prev) => ({ ...prev, ...categoriesToOpen }));
 
     // Scroll active link into view & trigger pulse animation
@@ -111,7 +110,6 @@ export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidd
       if (!isResizing) return;
       if (rafId !== null) return;
       rafId = requestAnimationFrame(() => {
-        // Docusaurus sidebar has a 16px margin on the left
         const newWidth = Math.max(200, Math.min(480, e.clientX - 16));
         sidebarWidthRef.current = newWidth;
         document.documentElement.style.setProperty('--doc-sidebar-width', `${newWidth}px`);
@@ -149,32 +147,9 @@ export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidd
     document.body.classList.add('resizing-sidebar');
   };
 
-  // Auto-open active categories on load/path change
-  useEffect(() => {
-    const initialOpen: Record<string, boolean> = {};
-    function traverse(items: SidebarItem[], keyPrefix: string = 'item') {
-      items.forEach((item, idx) => {
-        const itemKey = `${keyPrefix}-${item.label || item.href || idx}`;
-        if (item.type === 'category') {
-          if (isCategoryActive(item, path)) {
-            initialOpen[item.label] = true;
-            initialOpen[itemKey] = true;
-          }
-          if (Array.isArray(item.items)) {
-            traverse(item.items, itemKey);
-          }
-        }
-      });
-    }
-    if (sidebar) {
-      traverse(sidebar);
-    }
-    setOpenCategories((prev) => ({ ...initialOpen, ...prev }));
-  }, [sidebar, path]);
-
   const renderSidebarItem = (item: SidebarItem, depth: number, keyPrefix: string) => {
     const labelText = (item.label || '').trim();
-    // Match leading emoji or icon character (avoid bare \p{Emoji} which matches standard digits 0-9)
+    // Match leading emoji or icon character
     const match = labelText.match(/^((?:\p{Extended_Pictographic}|\p{Emoji_Presentation}|[0-9#*]\uFE0F?\u20E3)(?:\uFE0F|\u20E3)?(?:\u200D(?:\p{Extended_Pictographic}|\p{Emoji_Presentation})(?:\uFE0F|\u20E3)?)*)\s*(.*)$/u);
     const emoji = match ? match[1] : '';
     const cleanLabel = match ? match[2].trim() : labelText;
@@ -184,18 +159,15 @@ export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidd
     const itemKey = `${keyPrefix}-${item.label || item.href || 'item'}`;
 
     if (item.type === 'category') {
-      const isOpen = openCategories[itemKey] ?? openCategories[item.label] ?? false;
-      const hasActiveChild = isCategoryActive(item, path);
+      const hasActiveChild = activeCategoryKeys.has(itemKey) || (item.label ? activeCategoryKeys.has(item.label) : false);
+      const isOpen = openCategories[itemKey] ?? (hasActiveChild || false);
 
       const toggleOpen = () => {
-        setOpenCategories((prev) => {
-          const nextState = !isOpen;
-          return {
-            ...prev,
-            [itemKey]: nextState,
-            [item.label]: nextState,
-          };
-        });
+        setOpenCategories((prev) => ({
+          ...prev,
+          [itemKey]: !isOpen,
+          ...(item.label ? { [item.label]: !isOpen } : {}),
+        }));
       };
 
       if (isHidden) {
@@ -370,16 +342,24 @@ export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidd
       {/* Social Footer */}
       <div className="custom-sidebar-footer">
         <a href="https://www.linkedin.com/in/luminhkhuong/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
-          <i className="fab fa-linkedin-in"></i>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+          </svg>
         </a>
         <a href="https://github.com/minhkhuong2404" target="_blank" rel="noreferrer" aria-label="GitHub">
-          <i className="fab fa-github"></i>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+            <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+          </svg>
         </a>
         <a href="https://www.facebook.com/luminhkhuong/" target="_blank" rel="noreferrer" aria-label="Facebook">
-          <i className="fab fa-facebook-f"></i>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+          </svg>
         </a>
         <a href="https://leetcode.com/u/luminhkhuong/" target="_blank" rel="noreferrer" aria-label="LeetCode">
-          <i className="fab fa-leetcode"></i>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .666-1.607L9.36 7.625l4.123-4.419a1.374 1.374 0 0 0-.999-3.206zM13.483 15.311h6.634a1.376 1.376 0 0 0 1.375-1.375 1.376 1.376 0 0 0-1.375-1.375h-6.634a1.376 1.376 0 0 0-1.375 1.375 1.376 1.376 0 0 0 1.375 1.375z"/>
+          </svg>
         </a>
       </div>
 

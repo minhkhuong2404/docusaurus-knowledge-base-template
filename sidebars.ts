@@ -673,6 +673,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/database/connection-pooling',
 								'technical-knowledge/database/advanced-sql',
 								'technical-knowledge/database/schema-migrations',
+								'technical-knowledge/database/production-database-antipatterns-hygiene',
 							],
 						},
 						{

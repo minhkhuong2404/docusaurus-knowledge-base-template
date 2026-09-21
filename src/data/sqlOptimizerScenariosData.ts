@@ -802,4 +802,66 @@ WHERE d.department_id IS NULL;`,
     ],
     keyTakeaway: 'Always prefer NOT EXISTS over NOT IN for subqueries. SQL three-valued logic causes NOT IN to degrade or yield incorrect empty results if the subquery contains a NULL value.',
   },
+  // ── Scenario 13: Production Anti-Pattern: The 900M-Row Write-Only AuditLog ──
+  {
+    id: 'audit_log_antipattern_partitioning',
+    title: 'The 900M-Row Write-Only AuditLog Meltdown',
+    difficulty: 'Senior',
+    category: 'anti_patterns',
+    categoryLabel: 'Partitioning & Schema Anti-Patterns',
+    tableName: 'AuditLog',
+    rowCount: '900,000,000 rows',
+    tableSizeDisk: '320 GB on disk',
+    slowQuery: `SELECT log_id, action, user_id, payload, created_at
+FROM AuditLog
+WHERE created_at >= '2026-03-14 00:00:00' 
+  AND created_at < '2026-03-15 00:00:00'
+ORDER BY created_at DESC;`,
+    initialCost: 12850000,
+    initialLatencyMs: 48000,
+    initialPlanSummary: 'Seq Scan on AuditLog (cost=0.00..12850000.00 rows=900000000) Filter: (created_at >= 2026-03-14 AND created_at < 2026-03-15) -> OOM Hazard!',
+    businessContext: 'Inspired by Pinal Dave: The compliance auditor demands logs for March 14th. 900M rows written over 7 years without an index on created_at. Query runs for 48s, blows out RAM buffer pool, and causes database crash!',
+    strategies: [
+      {
+        id: 'strat_audit_partitioning',
+        title: 'Declarative Range Partitioning by Month with Local Index',
+        sqlCommand: `CREATE TABLE audit_logs_partitioned (
+  log_id BIGSERIAL,
+  action VARCHAR(100) NOT NULL,
+  user_id BIGINT NOT NULL,
+  payload JSONB,
+  created_at TIMESTAMPTZ NOT NULL,
+  PRIMARY KEY (created_at, log_id)
+) PARTITION BY RANGE (created_at);
+
+CREATE INDEX idx_audit_partition_created ON audit_logs_2026_03(created_at DESC);`,
+        isOptimal: true,
+        resultingCost: 120.0,
+        resultingLatencyMs: 9.5,
+        executionPlanSummary: 'Partition Pruning: Scans ONLY audit_logs_2026_03 (Index Scan using idx_audit_partition_created) -> 98.3% I/O eliminated',
+        engineExplanation: 'Champion! Partition pruning eliminates 885 million rows from even being examined. The optimizer routes directly to the March 2026 sub-partition, reducing disk reads from 320 GB to just 4.2 MB in 9.5ms!',
+      },
+      {
+        id: 'strat_audit_single_btree',
+        title: 'Global B-Tree Index on created_at (CREATE INDEX CONCURRENTLY)',
+        sqlCommand: 'CREATE INDEX CONCURRENTLY idx_audit_created ON AuditLog(created_at DESC);',
+        isOptimal: false,
+        resultingCost: 4850,
+        resultingLatencyMs: 380,
+        executionPlanSummary: 'Index Scan on AuditLog (Avoids full table scan, but index itself is 42 GB on disk)',
+        engineExplanation: 'Partial fix. An index seek retrieves the 1-day range in 380ms, but maintaining a 42 GB B-tree on a 900M-row flat table increases write latency on EVERY live INSERT and makes future archival via DELETE catastrophically slow.',
+      },
+      {
+        id: 'strat_audit_parallel_workers',
+        title: 'Increase Parallel Query Workers (SET max_parallel_workers = 8)',
+        sqlCommand: 'SET max_parallel_workers_per_gather = 8; SELECT ... FROM AuditLog ...',
+        isOptimal: false,
+        resultingCost: 3200000,
+        resultingLatencyMs: 14500,
+        executionPlanSummary: 'Parallel Seq Scan on AuditLog with 8 workers (Still reads 320 GB off NVMe storage)',
+        engineExplanation: 'Band-aid: Dividing a 320 GB table scan across 8 CPU cores cuts runtime from 48s to 14.5s, but saturates disk bus and CPU at 100%, causing query queuing for the rest of the application.',
+      },
+    ],
+    keyTakeaway: 'For massive event logs, avoid flat unpartitioned tables. Declarative Range Partitioning enables partition pruning during queries and instant zero-cost archival via ALTER TABLE DETACH PARTITION instead of destructive DELETE sweeps.',
+  },
 ];

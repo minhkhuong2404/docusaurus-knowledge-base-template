@@ -74,11 +74,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '58b'),
+    component: ComponentCreator('/', '87b'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '161'),
+        component: ComponentCreator('/', '55a'),
         routes: [
           {
             path: '/tags',
@@ -318,6 +318,11 @@ export default [
           {
             path: '/tags/answers',
             component: ComponentCreator('/tags/answers', 'fd9'),
+            exact: true
+          },
+          {
+            path: '/tags/anti-patterns',
+            component: ComponentCreator('/tags/anti-patterns', '901'),
             exact: true
           },
           {
@@ -3438,6 +3443,11 @@ export default [
           {
             path: '/tags/hvcs',
             component: ComponentCreator('/tags/hvcs', '2b8'),
+            exact: true
+          },
+          {
+            path: '/tags/hygiene',
+            component: ComponentCreator('/tags/hygiene', '91e'),
             exact: true
           },
           {
@@ -6841,6 +6851,11 @@ export default [
             exact: true
           },
           {
+            path: '/tags/sql-server',
+            component: ComponentCreator('/tags/sql-server', '843'),
+            exact: true
+          },
+          {
             path: '/tags/sqs',
             component: ComponentCreator('/tags/sqs', 'b84'),
             exact: true
@@ -8082,7 +8097,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'b8a'),
+            component: ComponentCreator('/', '9a1'),
             routes: [
               {
                 path: '/aws',
@@ -9937,6 +9952,12 @@ export default [
               {
                 path: '/technical-knowledge/database/postgresql-heap-storage-architecture',
                 component: ComponentCreator('/technical-knowledge/database/postgresql-heap-storage-architecture', '387'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/database/production-database-antipatterns-hygiene',
+                component: ComponentCreator('/technical-knowledge/database/production-database-antipatterns-hygiene', '983'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

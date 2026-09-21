@@ -18,12 +18,19 @@ export default function NavbarGamificationHUD() {
   const rank = getRankForLevel(currentLevel);
   const streak = gamification?.streak?.currentStreak || 0;
 
-  // Real-time listener for total online count (no individual details exposed)
+  // Real-time listener for total online count (deferred to prioritize initial page load)
   useEffect(() => {
-    const unsub = subscribeToOnlineUsers((users) => {
-      setOnlineCount(users.length || 1);
-    });
-    return () => unsub();
+    let unsub: (() => void) | null = null;
+    const timer = setTimeout(() => {
+      unsub = subscribeToOnlineUsers((users) => {
+        setOnlineCount(users.length || 1);
+      });
+    }, 1500);
+
+    return () => {
+      clearTimeout(timer);
+      if (unsub) unsub();
+    };
   }, []);
 
   const handleOpen = (tab: 'quests' | 'trophies' | 'ranks' = 'quests') => {

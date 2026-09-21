@@ -66,8 +66,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Schema Migrations",
-    "permalink": "/technical-knowledge/database/schema-migrations"
+    "title": "Database Schema Anti-Patterns",
+    "permalink": "/technical-knowledge/database/production-database-antipatterns-hygiene"
   },
   "next": {
     "title": "PostgreSQL BRIN Index (Block Range Index): 99% Smaller Than B-Tree",

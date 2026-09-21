@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import Link from '@docusaurus/Link';
-import { useUserProgress } from '../../context/UserProgressContext';
+import { useUserProgress, setCachedUserProfile } from '../../context/UserProgressContext';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../config/firebase';
 import { triggerFireworks } from '../../utils/fireworks';
@@ -122,6 +122,9 @@ export default function CustomUserNavbarItem() {
 
   const handleLogout = async () => {
     try {
+      setCachedUserProfile(null);
+      localStorage.removeItem('premium_session_state');
+      sessionStorage.removeItem('premium_session_state');
       await signOut(auth);
       setIsOpen(false);
       window.location.reload();
@@ -157,7 +160,7 @@ export default function CustomUserNavbarItem() {
     }
   };
 
-  if (!currentUser) {
+  if (!isMounted || !currentUser) {
     return (
       <div className="custom-user-nav-wrapper" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
         <NavbarGamificationHUD />

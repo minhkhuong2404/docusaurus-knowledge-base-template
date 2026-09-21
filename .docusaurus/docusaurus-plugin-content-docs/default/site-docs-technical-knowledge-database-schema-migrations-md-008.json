@@ -76,7 +76,7 @@
     "permalink": "/technical-knowledge/database/advanced-sql"
   },
   "next": {
-    "title": "Indexing & Query Optimization",
-    "permalink": "/technical-knowledge/database/indexing-query-optimization"
+    "title": "Database Schema Anti-Patterns",
+    "permalink": "/technical-knowledge/database/production-database-antipatterns-hygiene"
   }
 }

@@ -1396,6 +1396,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/database/production-database-antipatterns-hygiene",
+              "path": "/technical-knowledge/database/production-database-antipatterns-hygiene",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/database/query-planner-optimizer",
               "path": "/technical-knowledge/database/query-planner-optimizer",
               "sidebar": "tutorialSidebar"
