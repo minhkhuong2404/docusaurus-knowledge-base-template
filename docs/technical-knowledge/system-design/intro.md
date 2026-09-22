@@ -15,6 +15,7 @@ tags: [system-design, overview, architecture, interview-prep]
 
 | Topic | Description |
 |---|---|
+| [🎯 45 Problem Breakdowns](/technical-knowledge/system-design/problem-breakdowns) | Master syllabus of 45 real-world FAANG interview problems with deep architectural designs |
 | [Architecture Fundamentals](/technical-knowledge/system-design/architecture-fundamentals) | CAP theorem, consistency models, trade-offs |
 | [Capacity Planning & Estimation](/technical-knowledge/system-design/capacity-planning) | Back-of-envelope math, traffic/storage estimation |
 | [Interview Framework](/technical-knowledge/system-design/interview-framework) | Structured approach to design interviews |

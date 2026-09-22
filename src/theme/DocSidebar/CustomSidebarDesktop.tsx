@@ -89,19 +89,25 @@ export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidd
   useEffect(() => {
     if (!sidebar || !path) return;
     if (activeCategoryKeys.size > 0) {
-      const categoriesToOpen: Record<string, boolean> = {};
-      activeCategoryKeys.forEach((key) => {
-        categoriesToOpen[key] = true;
+      setOpenCategories((prev) => {
+        let hasNew = false;
+        const next = { ...prev };
+        activeCategoryKeys.forEach((key) => {
+          if (!next[key]) {
+            next[key] = true;
+            hasNew = true;
+          }
+        });
+        return hasNew ? next : prev;
       });
-      setOpenCategories((prev) => ({ ...prev, ...categoriesToOpen }));
     }
 
     const timer = setTimeout(() => {
       const activeEl = document.querySelector('.custom-sidebar-menu .custom-menu-link.active');
       if (activeEl) {
-        activeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        activeEl.scrollIntoView({ behavior: 'auto', block: 'nearest' });
       }
-    }, 120);
+    }, 50);
 
     return () => clearTimeout(timer);
   }, [path, sidebar, activeCategoryKeys]);

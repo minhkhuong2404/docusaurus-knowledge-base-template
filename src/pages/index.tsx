@@ -369,38 +369,50 @@ const GLOBAL_STYLES = `
 ───────────────────────────────────────────────────────────────────────────── */
 function useRevealGrid(count: number, delay = 60) {
   const refs = useRef<(HTMLElement | null)[]>([]);
-  const [visible, setVisible] = useState<boolean[]>(Array(count).fill(false));
 
   useEffect(() => {
+    if (typeof window === "undefined" || !("IntersectionObserver" in window)) {
+      refs.current.forEach((el) => {
+        if (el) {
+          el.classList.remove("lp-card-hidden");
+          el.classList.add("lp-card-visible");
+        }
+      });
+      return;
+    }
+
     const obs = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            const idx = Number((entry.target as HTMLElement).dataset.idx);
-            // stagger by index position within the GRID, not absolute index
+            const el = entry.target as HTMLElement;
+            const idx = Number(el.dataset.idx || 0);
             const gridIdx = idx % count;
             setTimeout(() => {
-              setVisible((prev) => {
-                const next = [...prev];
-                next[idx] = true;
-                return next;
-              });
+              el.classList.remove("lp-card-hidden");
+              el.classList.add("lp-card-visible");
             }, gridIdx * delay);
-            obs.unobserve(entry.target);
+            obs.unobserve(el);
           }
         });
       },
       // Large rootMargin so cards already in the viewport fire on mount
-      { threshold: 0.01, rootMargin: "200px 0px 0px 0px" },
+      { threshold: 0.01, rootMargin: "180px 0px 0px 0px" },
     );
+
     refs.current.forEach((el) => el && obs.observe(el));
     return () => obs.disconnect();
   }, [count, delay]);
 
   const setRef = (i: number) => (el: HTMLElement | null) => {
     refs.current[i] = el;
-    if (el) el.dataset.idx = String(i);
+    if (el) {
+      el.dataset.idx = String(i);
+    }
   };
+
+  // Safe dummy proxy for backward compatibility with JSX
+  const visible = useRef(new Proxy([] as boolean[], { get: () => false })).current;
 
   return { visible, setRef };
 }

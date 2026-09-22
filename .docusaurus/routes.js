@@ -74,11 +74,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'b35'),
+    component: ComponentCreator('/', '53f'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '1eb'),
+        component: ComponentCreator('/', 'c6c'),
         routes: [
           {
             path: '/tags',
@@ -8107,7 +8107,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '284'),
+            component: ComponentCreator('/', '9e2'),
             routes: [
               {
                 path: '/aws',
@@ -16245,6 +16245,282 @@ export default [
               {
                 path: '/technical-knowledge/system-design/platform-delivery-reliability',
                 component: ComponentCreator('/technical-knowledge/system-design/platform-delivery-reliability', '31b'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/', '4d1'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/ad-click-aggregator',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/ad-click-aggregator', 'eab'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/amazon-shopping-cart',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/amazon-shopping-cart', '78f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/bitly',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/bitly', 'ad4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/camelcamelcamel',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/camelcamelcamel', '7e7'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/chatgpt',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/chatgpt', '9be'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/cookie-consent',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/cookie-consent', '931'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/distributed-cache',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/distributed-cache', 'd38'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/distributed-file-system',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/distributed-file-system', '253'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/distributed-rate-limiter',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/distributed-rate-limiter', 'de7'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/dropbox',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/dropbox', '9c0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/email-system',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/email-system', 'e35'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/fb-live-comments',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/fb-live-comments', '372'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/fb-news-feed',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/fb-news-feed', '891'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/fb-post-search',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/fb-post-search', 'da3'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/flash-sale',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/flash-sale', '655'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/google-calendar',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/google-calendar', '5e5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/google-docs',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/google-docs', '61d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/google-maps',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/google-maps', '47d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/google-news',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/google-news', 'a58'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/google-search',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/google-search', '6b2'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/gopuff',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/gopuff', 'd59'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/instagram',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/instagram', '60f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/issue-tracker',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/issue-tracker', '96e'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/job-scheduler',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/job-scheduler', '9bc'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/key-value-store',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/key-value-store', '5c5'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/leetcode',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/leetcode', '68d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/metrics-monitoring',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/metrics-monitoring', '5ea'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/netflix',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/netflix', '537'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/notification-system',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/notification-system', '043'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/online-auction',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/online-auction', '6e2'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/online-chess',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/online-chess', 'a61'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/pastebin',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/pastebin', 'dc4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/payment-system',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/payment-system', '821'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/robinhood',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/robinhood', 'fd9'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/search-autocomplete',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/search-autocomplete', '60f'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/spotify',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/spotify', 'bc2'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/strava',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/strava', 'f3d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/ticketmaster',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/ticketmaster', 'd1c'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/tinder',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/tinder', '9b0'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/top-k',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/top-k', '9b4'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/uber',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/uber', 'bac'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/web-crawler',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/web-crawler', '263'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/whatsapp',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/whatsapp', '65d'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/yelp',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/yelp', '9c2'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/system-design/problem-breakdowns/youtube',
+                component: ComponentCreator('/technical-knowledge/system-design/problem-breakdowns/youtube', '93a'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

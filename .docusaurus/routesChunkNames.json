@@ -90,13 +90,13 @@
     },
     "config": "config---arcade-5-e-9-6a3"
   },
-  "/-b35": {
+  "/-53f": {
     "__comp": "__comp---theme-docs-root-5-e-9-0b6",
     "__context": {
       "plugin": "plugin---aba-d70"
     }
   },
-  "/-1eb": {
+  "/-c6c": {
     "__comp": "__comp---theme-doc-version-roota-7-b-5de",
     "__props": "__props---22-d-307"
   },
@@ -6520,7 +6520,7 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-zsete-05-17c"
   },
-  "/-284": {
+  "/-9e2": {
     "__comp": "__comp---theme-doc-roota-94-67a"
   },
   "/aws-bf9": {
@@ -11962,6 +11962,190 @@
   "/technical-knowledge/system-design/platform-delivery-reliability-31b": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-system-design-platform-delivery-reliabilityfa-9-c7e"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/-4d1": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-b-5-a-a3b"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/ad-click-aggregator-eab": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-ad-click-aggregatoraf-2-8cf"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/amazon-shopping-cart-78f": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-amazon-shopping-cartebf-d8d"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/bitly-ad4": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-bitlyd-85-ca5"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/camelcamelcamel-7e7": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-camelcamelcamelea-7-f37"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/chatgpt-9be": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-chatgptde-9-3c3"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/cookie-consent-931": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-cookie-consentcce-473"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/distributed-cache-d38": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-distributed-cache-86-a-be3"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/distributed-file-system-253": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-distributed-file-systemf-34-16b"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/distributed-rate-limiter-de7": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-distributed-rate-limiter-115-a61"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/dropbox-9c0": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-dropboxb-61-08b"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/email-system-e35": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-email-system-750-e86"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/fb-live-comments-372": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-fb-live-comments-2-f-7-f68"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/fb-news-feed-891": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-fb-news-feed-997-894"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/fb-post-search-da3": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-fb-post-search-914-46d"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/flash-sale-655": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-flash-salece-7-074"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/google-calendar-5e5": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-google-calendared-1-9f4"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/google-docs-61d": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-google-docs-340-c92"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/google-maps-47d": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-google-maps-3-e-8-b28"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/google-news-a58": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-google-news-430-b48"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/google-search-6b2": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-google-searchedf-61b"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/gopuff-d59": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-gopuff-6-bb-7ec"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/instagram-60f": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-instagram-112-34b"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/issue-tracker-96e": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-issue-tracker-45-d-1d0"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/job-scheduler-9bc": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-job-schedulerc-4-e-957"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/key-value-store-5c5": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-key-value-store-85-f-9b6"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/leetcode-68d": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-leetcode-43-b-c0c"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/metrics-monitoring-5ea": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-metrics-monitoring-5-ef-df6"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/netflix-537": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-netflixd-57-83a"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/notification-system-043": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-notification-system-711-162"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/online-auction-6e2": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-online-auctiona-33-628"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/online-chess-a61": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-online-chessf-0-e-e4e"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/pastebin-dc4": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-pastebine-46-17e"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/payment-system-821": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-payment-system-663-e53"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/robinhood-fd9": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-robinhood-502-949"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/search-autocomplete-60f": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-search-autocomplete-82-d-7e3"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/spotify-bc2": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-spotifye-43-ac8"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/strava-f3d": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-strava-958-9e1"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/ticketmaster-d1c": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-ticketmasterb-68-c74"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/tinder-9b0": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-tinder-0-f-7-1eb"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/top-k-9b4": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-top-k-6-c-7-b3e"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/uber-bac": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-ubere-87-7ae"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/web-crawler-263": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-web-crawler-27-a-68b"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/whatsapp-65d": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-whatsapp-7-c-0-0fa"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/yelp-9c2": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-yelp-665-0ac"
+  },
+  "/technical-knowledge/system-design/problem-breakdowns/youtube-93a": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-system-design-problem-breakdowns-youtube-993-ae5"
   },
   "/technical-knowledge/system-design/proximity-search-geospatial-indexes-04d": {
     "__comp": "__comp---theme-doc-item-178-a40",

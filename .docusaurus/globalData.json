@@ -6655,6 +6655,236 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/system-design/problem-breakdowns/ad-click-aggregator",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/ad-click-aggregator",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/amazon-shopping-cart",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/amazon-shopping-cart",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/bitly",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/bitly",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/camelcamelcamel",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/camelcamelcamel",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/chatgpt",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/chatgpt",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/cookie-consent",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/cookie-consent",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/distributed-cache",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/distributed-cache",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/distributed-file-system",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/distributed-file-system",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/distributed-rate-limiter",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/distributed-rate-limiter",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/dropbox",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/dropbox",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/email-system",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/email-system",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/fb-live-comments",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/fb-live-comments",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/fb-news-feed",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/fb-news-feed",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/fb-post-search",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/fb-post-search",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/flash-sale",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/flash-sale",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/google-calendar",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/google-calendar",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/google-docs",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/google-docs",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/google-maps",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/google-maps",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/google-news",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/google-news",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/google-search",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/google-search",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/gopuff",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/gopuff",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/index",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/instagram",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/instagram",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/issue-tracker",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/issue-tracker",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/job-scheduler",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/job-scheduler",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/key-value-store",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/key-value-store",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/leetcode",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/leetcode",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/metrics-monitoring",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/metrics-monitoring",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/netflix",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/netflix",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/notification-system",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/notification-system",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/online-auction",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/online-auction",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/online-chess",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/online-chess",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/pastebin",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/pastebin",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/payment-system",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/payment-system",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/robinhood",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/robinhood",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/search-autocomplete",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/search-autocomplete",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/spotify",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/spotify",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/strava",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/strava",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/ticketmaster",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/ticketmaster",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/tinder",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/tinder",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/top-k",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/top-k",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/uber",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/uber",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/web-crawler",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/web-crawler",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/whatsapp",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/whatsapp",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/yelp",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/yelp",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/system-design/problem-breakdowns/youtube",
+              "path": "/technical-knowledge/system-design/problem-breakdowns/youtube",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/system-design/proximity-search-geospatial-indexes",
               "path": "/technical-knowledge/system-design/proximity-search-geospatial-indexes",
               "sidebar": "tutorialSidebar"

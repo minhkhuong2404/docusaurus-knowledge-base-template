@@ -15,6 +15,7 @@
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
   content-visibility: auto;
   contain-intrinsic-size: auto 500px;
+  contain: content;
 }
 
 [data-theme="light"] .interactive-diagram-container {

@@ -1,6 +1,14 @@
 import React, { useState } from 'react';
 
-type MigrationCompany = 'dropbox' | 'discord' | 'vitess' | 'whatsapp';
+type MigrationCompany =
+  | 'dropbox'
+  | 'discord'
+  | 'vitess'
+  | 'github'
+  | 'pinterest'
+  | 'instagram'
+  | 'figma'
+  | 'whatsapp';
 
 interface MigrationCase {
   id: MigrationCompany;
@@ -34,20 +42,56 @@ const MIGRATION_CASES: MigrationCase[] = [
   {
     id: 'vitess',
     title: 'YouTube + Vitess: Transparent MySQL Sharding',
-    company: 'YouTube / Google',
+    company: 'YouTube',
     scale: 'Billions of video views per day; millions of global concurrent transactions',
     strategy: 'YouTube scaled relational MySQL by building Vitess: an open-source clustering system for horizontal scaling. Vitess provides a lightweight proxy (vtgate) that parses standard SQL, translates queries into sharded partition targets based on VSchema, pools connections to eliminate MySQL connection explosion, and handles automatic resharding without application downtime.',
     tradeOff: 'Complex cross-shard distributed joins and multi-shard 2PC distributed transactions incur coordination latency, encouraging denormalization.',
     color: '#fbbf24',
   },
   {
+    id: 'github',
+    title: 'GitHub: Zero-Downtime MySQL 5.7 to 8.0 Fleet Upgrade',
+    company: 'GitHub',
+    scale: '100+ MySQL clusters, petabytes of code repos, PRs, and issues',
+    strategy: 'GitHub upgraded its entire fleet without a single second of maintenance window downtime using gh-ost and Orchestrator. Binlog stream tailing asynchronously copied table data into shadow tables, while Orchestrator automated primary-replica promotions using Raft consensus failover in <10s. Upgraded read replicas first, performed query planner shadow diffing, and executed automated master failovers.',
+    tradeOff: 'Query planner behavior in MySQL 8 (e.g. hash joins vs block nested loops) required weeks of shadow-read query auditing to avoid regression spikes.',
+    color: '#a78bfa',
+  },
+  {
+    id: 'pinterest',
+    title: 'Pinterest: 64-Bit Deterministic MySQL Sharding',
+    company: 'Pinterest',
+    scale: 'Tens of billions of pins/boards, 50K+ QPS on modest infrastructure',
+    strategy: 'When Cassandra was immature in 2012, Pinterest sharded bare MySQL instances using a custom 64-bit integer ID layout: 16 bits Shard ID (up to 65,536 logical shards), 10 bits Entity Type (Pin, Board, User), and 38 bits local auto-increment. Created 4,096 logical databases mapped across 8 physical servers, eliminating cross-shard joins by co-locating user data.',
+    tradeOff: 'Cross-shard secondary lookups (e.g. searching across all boards by tag) cannot be executed via SQL; requires external Elasticsearch clusters.',
+    color: '#f97316',
+  },
+  {
+    id: 'instagram',
+    title: 'Instagram: From Redis RAM to Cassandra & Rocksandra (C++)',
+    company: 'Instagram',
+    scale: '1+ Billion users, hundreds of millions of user feed timelines',
+    strategy: 'Holding user feed timelines in Redis RAM became financially unsustainable. Instagram migrated feeds to Cassandra on NVMe SSDs, slashing hosting costs by 75%. When Cassandra JVM GC stalls pushed P99 read latencies to 60ms, Meta built Rocksandra: replacing Cassandra Java-based storage engine with native C++ RocksDB via JNI, dropping P99 latencies back to 20ms.',
+    tradeOff: 'Bridging Java and C++ through JNI boundaries introduces minor marshalling overhead and complicates operational crash debugging (core dumps vs Java stack traces).',
+    color: '#f472b6',
+  },
+  {
+    id: 'figma',
+    title: 'Figma: Real-Time Multiplayer Sync (Server-Authoritative LWW)',
+    company: 'Figma',
+    scale: 'Hundreds of concurrent users editing massive 50K-node vector canvases',
+    strategy: 'Figma rejected peer-to-peer OT (intractable for 2D tree hierarchy reparenting) and pure CRDTs (too much metadata/tombstone memory bloat in WebAssembly). Instead, Figma built a server-authoritative single-threaded Rust room process that sequences mutations, applies property-level Last-Writer-Wins (LWW) commutative updates, and uses fractional indexing for layer ordering.',
+    tradeOff: 'Requires a dedicated stateful server process per active document, demanding sticky load balancing and rapid room process migration during server crashes.',
+    color: '#2dd4bf',
+  },
+  {
     id: 'whatsapp',
-    title: 'WhatsApp: 2+ Million Connections per Server with Erlang',
-    company: 'WhatsApp / Meta',
+    title: 'WhatsApp: 2M+ Concurrent Connections per Server with Erlang',
+    company: 'WhatsApp',
     scale: '2 Billion users, 100 Billion messages/day with ~50 engineers',
     strategy: 'WhatsApp utilized the Erlang BEAM virtual machine and FreeBSD kernel tuning to push past the C10K problem to the C2M problem (2 Million+ concurrent persistent TCP connections on a single physical commodity server). Erlang lightweight actor processes consume only a few hundred bytes each, communicating via asynchronous message passing without shared-memory thread contention.',
     tradeOff: 'Erlang is dynamically typed with specialized syntax; functional actor concurrency requires shifting engineering mindsets away from traditional OOP/relational patterns.',
-    color: '#a78bfa',
+    color: '#818cf8',
   },
 ];
 

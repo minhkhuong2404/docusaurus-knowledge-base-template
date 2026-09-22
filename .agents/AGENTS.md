@@ -47,6 +47,20 @@ The following files in `docs/technical-knowledge/interview-questions/grokking-ja
 28. `java-interview-answers-part-4.md` - Decorator pattern code structure, Liskov Substitution Principle violation/fix code, generational GC promotion flow, G1 GC vs ZGC, GC log times.
 29. `java-interview-answers-part-5.md` - Generics PECS wildcard logic (extends vs super), generic type erasure bytecode representation, database transaction isolation levels table, optimistic vs pessimistic SQL locks.
 
+## MANDATORY: Always Apply senior-architect-review Skill for Technical Knowledge
+
+**Whenever adding, creating, modifying, or auditing ANY technical documentation, guide, interview question, code snippet, or architecture article in this knowledge base, you MUST ALWAYS apply the `senior-architect-review` skill (`.agents/skills/senior-architect-review/SKILL.md`) and adhere strictly to the review rubric at:**
+[`.agents/skills/senior-architect-review/references/REVIEW_GUIDELINES.md`](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/.agents/skills/senior-architect-review/references/REVIEW_GUIDELINES.md)
+
+### Principal Engineering Review Standards
+1. **Under-the-Hood Mechanics**: Reject surface-level trivia or hand-waving explanations. Must explain physical engine truth: B+Tree page traversal, LSM compaction, JVM bytecode (`invokedynamic`), JMM memory barriers (`LoadLoad`, `StoreStore`, `StoreLoad`), and OS syscall boundaries (Ring 3 vs Ring 0).
+2. **Production Gotchas & Edge Cases**: Explicitly cover race conditions, memory leaks (`ThreadLocal` in thread pools, carrier thread pinning in Virtual Threads), split-brain scenarios, and connection pool sizing (HikariCP formula).
+3. **Distributed Systems Realism**: Apply CAP/PACELC trade-offs accurately. Require idempotency keys, transactional outbox patterns, and saga compensation flows for distributed mutations.
+4. **Code Precision**: Code blocks must be compilable, modern (Java 17/21 LTS), memory-safe, using proper `try-with-resources`, bounded thread pools, and no resource leaks.
+5. **Architectural Trade-Off Matrix**: Present honest pros, cons, and performance implications (latency vs throughput, consistency vs availability).
+6. **Visual Model Integration**: Accompany key architectures and protocol flows with interactive React SVG diagrams following `design-diagrams`.
+7. **Workspace Registration**: Always register new pages in `sidebars.ts` and link them in the parent topic category index.
+
 ## Build Verification Guidelines
 - Do not run `npm run build` automatically to verify changes unless explicitly requested by the user, as the build process is very slow and compiles the entire website.
 - Use `npx tsc --noEmit` to verify TypeScript type correctness for React diagram components quickly.
