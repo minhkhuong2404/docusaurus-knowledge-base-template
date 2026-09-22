@@ -358,6 +358,59 @@ button.login-nav-button:active,
   transform: translateY(0) scale(0.98) !important;
 }
 
+/* User Profile Avatar Navbar Button */
+button.login-nav-button.user-profile-avatar-button,
+.login-nav-button.user-profile-avatar-button {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  min-height: 34px !important;
+  max-width: 34px !important;
+  max-height: 34px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+  position: relative !important;
+  cursor: pointer !important;
+  flex-shrink: 0 !important;
+}
+
+.login-nav-button.user-profile-avatar-button:not(.super-admin):not(.admin):not(.premium) {
+  border: 1.5px solid #4ade80 !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.7), 0 0 10px rgba(74, 222, 128, 0.25) !important;
+}
+
+[data-theme="light"] .login-nav-button.user-profile-avatar-button:not(.super-admin):not(.admin):not(.premium) {
+  border-color: #22c55e !important;
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.25) !important;
+}
+
+.user-profile-avatar-button .user-nav-avatar-img {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
+.user-profile-avatar-button .user-nav-avatar-initial {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: 800 !important;
+  font-size: 0.88rem !important;
+  line-height: 1 !important;
+  text-transform: uppercase !important;
+  user-select: none !important;
+  color: #ffffff !important;
+}
+
 @keyframes fadeInDropdown {
   from {
     opacity: 1;
@@ -374,13 +427,14 @@ button.login-nav-button:active,
 .user-account-dropdown-menu,
 div.user-account-dropdown-menu {
   position: fixed !important;
-  width: 300px !important;
+  width: 270px !important;
+  max-width: calc(100vw - 16px) !important;
   opacity: 1 !important;
   background-color: #0d1117 !important;
   background: #0d1117 !important;
   border: 1px solid #30363d !important;
-  border-radius: 14px !important;
-  padding: 1.25rem !important;
+  border-radius: 12px !important;
+  padding: 12px 14px !important;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.98), 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
   z-index: 9999999 !important;
   backdrop-filter: none !important;
@@ -411,19 +465,88 @@ div.user-account-dropdown-menu {
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.25) !important;
 }
 
-.user-account-dropdown-menu .dropdown-stat-card {
-  background-color: #161b22 !important;
-  background: #161b22 !important;
-  opacity: 1 !important;
-  border: 1px solid #21262d !important;
-  color: #c9d1d9 !important;
+/* User Profile Dropdown Menu Items */
+.user-dropdown-compact-level:hover {
+  filter: brightness(1.15);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
 }
 
-[data-theme="light"] .user-account-dropdown-menu .dropdown-stat-card {
-  background-color: #f8fafc !important;
-  background: #f8fafc !important;
-  border-color: #e2e8f0 !important;
-  color: #1e293b !important;
+.user-dropdown-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  width: 100% !important;
+  padding: 8px 10px !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 6px !important;
+  color: #e2e8f0 !important;
+  font-size: 0.82rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  text-align: left !important;
+  text-decoration: none !important;
+  transition: background-color 0.15s ease, color 0.15s ease !important;
+}
+
+.user-dropdown-item:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+}
+
+.user-dropdown-item.highlight {
+  color: #fbbf24 !important;
+}
+
+.user-dropdown-item.highlight:hover {
+  background-color: rgba(245, 158, 11, 0.15) !important;
+  color: #fde68a !important;
+}
+
+.user-dropdown-item.danger {
+  color: #f87171 !important;
+}
+
+.user-dropdown-item.danger:hover {
+  background-color: rgba(239, 68, 68, 0.15) !important;
+  color: #ef4444 !important;
+}
+
+.user-dropdown-item-icon {
+  font-size: 0.95rem !important;
+  line-height: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 18px !important;
+  flex-shrink: 0 !important;
+}
+
+.user-dropdown-item-label {
+  flex: 1 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.user-dropdown-divider {
+  height: 1px !important;
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  margin: 6px 0 !important;
+  width: 100% !important;
+}
+
+[data-theme="light"] .user-dropdown-item {
+  color: #334155 !important;
+}
+
+[data-theme="light"] .user-dropdown-item:hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .user-dropdown-divider {
+  background-color: rgba(0, 0, 0, 0.08) !important;
 }
 
 /* Premium indicator on sidebar doc links */
@@ -3414,6 +3537,17 @@ textarea {
     height: 30px !important;
   }
 
+  button.login-nav-button.user-profile-avatar-button,
+  .login-nav-button.user-profile-avatar-button {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+    max-width: 32px !important;
+    max-height: 32px !important;
+    padding: 0 !important;
+  }
+
   .gamification-hud-pill {
     padding: 2px 6px !important;
     height: 30px !important;
@@ -3550,6 +3684,21 @@ textarea {
     font-size: 0.75rem !important;
     height: 32px !important;
   }
+
+  button.login-nav-button.user-profile-avatar-button,
+  .login-nav-button.user-profile-avatar-button {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+    max-width: 32px !important;
+    max-height: 32px !important;
+    padding: 0 !important;
+  }
+
+  .user-profile-avatar-button .user-nav-avatar-initial {
+    font-size: 0.82rem !important;
+  }
 }
 
 /* Mobile screens (576px and below) */
@@ -3625,6 +3774,21 @@ textarea {
     margin: 0 !important;
   }
 
+  button.login-nav-button.user-profile-avatar-button,
+  .login-nav-button.user-profile-avatar-button {
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+    min-height: 28px !important;
+    max-width: 28px !important;
+    max-height: 28px !important;
+    padding: 0 !important;
+  }
+
+  .user-profile-avatar-button .user-nav-avatar-initial {
+    font-size: 0.75rem !important;
+  }
+
   /* Code Block Adjustments on Small Screens */
   pre[class*="language-"],
   div[class*="codeBlockContainer"] pre {
@@ -3676,6 +3840,21 @@ textarea {
     padding: 2px 4px !important;
     font-size: 0.68rem !important;
     height: 26px !important;
+  }
+
+  button.login-nav-button.user-profile-avatar-button,
+  .login-nav-button.user-profile-avatar-button {
+    width: 26px !important;
+    height: 26px !important;
+    min-width: 26px !important;
+    min-height: 26px !important;
+    max-width: 26px !important;
+    max-height: 26px !important;
+    padding: 0 !important;
+  }
+
+  .user-profile-avatar-button .user-nav-avatar-initial {
+    font-size: 0.68rem !important;
   }
 
   .gamification-hud-pill {
