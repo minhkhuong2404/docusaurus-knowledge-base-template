@@ -18,8 +18,24 @@ export interface UserPresence {
 }
 
 const PRESENCE_COLLECTION = 'presence';
-const HEARTBEAT_INTERVAL_MS = 45 * 1000; // 45 seconds
-const ACTIVE_THRESHOLD_MS = 3 * 60 * 1000; // Considered online if active in the last 3 minutes
+const HEARTBEAT_INTERVAL_MS = 45 * 1000; // 45 seconds (standard desktop)
+const SLOW_HEARTBEAT_INTERVAL_MS = 180 * 1000; // 3 minutes (slow 2G/3G / Save-Data mobile)
+const ACTIVE_THRESHOLD_MS = 5 * 60 * 1000; // 5 minutes threshold for offline determination
+
+/**
+ * Detects whether the current device is on a slow, 2G/3G, or metered connection.
+ */
+export function isSlowOrMeteredConnection(): boolean {
+  if (typeof navigator === 'undefined') return false;
+  const conn = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection;
+  if (!conn) return false;
+  return (
+    conn.saveData === true ||
+    conn.effectiveType === 'slow-2g' ||
+    conn.effectiveType === '2g' ||
+    conn.effectiveType === '3g'
+  );
+}
 
 /**
  * Updates the user's heartbeat in Firestore presence collection.
@@ -146,12 +162,13 @@ export function startPresenceTracker(
   // Initial heartbeat
   updateUserHeartbeat(user, resolveExp(), window.location.pathname);
 
-  // Periodic heartbeat
+  // Periodic heartbeat with dynamic backoff for slow networks / Save-Data
+  const activeInterval = isSlowOrMeteredConnection() ? SLOW_HEARTBEAT_INTERVAL_MS : HEARTBEAT_INTERVAL_MS;
   const intervalId = setInterval(() => {
     if (document.visibilityState === 'visible') {
       updateUserHeartbeat(user, resolveExp(), window.location.pathname);
     }
-  }, HEARTBEAT_INTERVAL_MS);
+  }, activeInterval);
 
   // Tab visibility listener
   const handleVisibilityChange = () => {

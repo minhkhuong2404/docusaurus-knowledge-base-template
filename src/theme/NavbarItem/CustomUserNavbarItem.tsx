@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import Link from '@docusaurus/Link';
-import { useUserProgress, setCachedUserProfile } from '../../context/UserProgressContext';
+import { useUserProgress, setCachedUserProfile, getCachedUserProfile } from '../../context/UserProgressContext';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../config/firebase';
 import { triggerFireworks } from '../../utils/fireworks';
@@ -14,6 +14,10 @@ import { defaultGamificationState } from '../../services/userProgressService';
 
 const GamificationModal = React.lazy(() => import('../../components/gamification/GamificationModal'));
 const UserProfileModal = React.lazy(() => import('../../components/auth/UserProfileModal'));
+
+// Module-scoped variable to remember client mount state across Docusaurus page navigations.
+// Prevents flashing the fallback login button whenever clicking on a new page.
+let hasClientMounted = typeof window !== 'undefined';
 
 export default function CustomUserNavbarItem() {
   const {
@@ -42,7 +46,7 @@ export default function CustomUserNavbarItem() {
   const [keyError, setKeyError] = useState('');
   const [keyLoading, setKeyLoading] = useState(false);
 
-  const [isMounted, setIsMounted] = useState(false);
+  const [isMounted, setIsMounted] = useState(() => hasClientMounted);
   const [coords, setCoords] = useState<{ top: number; right: number }>({ top: 0, right: 0 });
 
   const [dsaIntensity, setDsaIntensity] = useState<'75' | '150' | '250'>(() => {
@@ -55,8 +59,9 @@ export default function CustomUserNavbarItem() {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
+    hasClientMounted = true;
+    if (!isMounted) setIsMounted(true);
+  }, [isMounted]);
 
   useEffect(() => {
     const handleIntensityChange = () => {
@@ -160,7 +165,10 @@ export default function CustomUserNavbarItem() {
     }
   };
 
-  if (!isMounted || !currentUser) {
+  const cachedUser = !currentUser && typeof window !== 'undefined' ? getCachedUserProfile() : null;
+  const effectiveUser = currentUser || (cachedUser as unknown as typeof currentUser);
+
+  if ((!isMounted && !hasClientMounted) || !effectiveUser) {
     return (
       <div className="custom-user-nav-wrapper" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
         <NavbarGamificationHUD />
@@ -180,7 +188,7 @@ export default function CustomUserNavbarItem() {
     );
   }
 
-  const name = currentUser.displayName || currentUser.email?.split('@')[0] || 'Learner';
+  const name = effectiveUser.displayName || effectiveUser.email?.split('@')[0] || 'Learner';
   const readCount = (progress.readPages || []).filter(isTrackableArticle).length;
   const totalArticles = totalArticlesCount > 0 && totalArticlesCount <= 2000 ? totalArticlesCount : TOTAL_TRACKABLE_ARTICLES_DEFAULT;
   const readPercent = Math.min(100, Math.round((readCount / totalArticles) * 100));
@@ -257,9 +265,9 @@ export default function CustomUserNavbarItem() {
         >
           {/* Header User Profile Info */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '1rem', paddingBottom: '0.85rem', borderBottom: '1px solid var(--ifm-color-emphasis-200)' }}>
-            {currentUser.photoURL ? (
+            {effectiveUser.photoURL ? (
               <img
-                src={currentUser.photoURL}
+                src={effectiveUser.photoURL}
                 alt={name}
                 style={{
                   width: '44px',
@@ -294,7 +302,7 @@ export default function CustomUserNavbarItem() {
                 {name}
               </div>
               <div style={{ fontSize: '0.75rem', color: 'var(--ifm-color-emphasis-600)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                {currentUser.email}
+                {effectiveUser.email}
               </div>
               <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', marginTop: '4px' }}>
                 {isSuperAdmin ? (
@@ -412,7 +420,7 @@ export default function CustomUserNavbarItem() {
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
-                <CosmicRankBadge level={currentLevel} rank={rank} size="sm" showLevelPill={false} />
+                <CosmicRankBadge level={currentLevel} rank={rank} size="sm" showLevelPill={false} hideOrbitRing={true} disableFloat={true} />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span style={{ fontSize: '0.88rem', fontWeight: 800, color: '#ffffff' }}>

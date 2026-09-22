@@ -109,6 +109,7 @@ export default function ScrollProgressButton() {
 
       {/* Floating Bottom-Right Scroll Progress Button */}
       <div
+        className="scroll-progress-wrapper"
         style={{
           position: 'fixed',
           bottom: '24px',
@@ -122,6 +123,7 @@ export default function ScrollProgressButton() {
       >
         <button
           type="button"
+          className="scroll-progress-btn"
           onClick={scrollToTop}
           title={isAtEnd ? '100% Read — Click to scroll to top' : `Page Scroll: ${scrollPercent}% — Click to scroll to top`}
           aria-label={`Scroll progress ${scrollPercent}%. Click to scroll to top`}
@@ -130,6 +132,7 @@ export default function ScrollProgressButton() {
             width: `${size}px`,
             height: `${size}px`,
             borderRadius: '50%',
+            touchAction: 'manipulation',
             background: 'rgba(15, 23, 42, 0.92)',
             backdropFilter: 'blur(10px)',
             WebkitBackdropFilter: 'blur(10px)',

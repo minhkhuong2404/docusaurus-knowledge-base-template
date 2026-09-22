@@ -162,7 +162,7 @@ export default function GamificationModal({ isOpen, onClose, initialTab = 'quest
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-              <CosmicRankBadge level={currentLevel} rank={rank} size="sm" showLevelPill={false} />
+              <CosmicRankBadge level={currentLevel} rank={rank} size="sm" showLevelPill={false} hideOrbitRing={true} disableFloat={true} />
 
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -804,7 +804,7 @@ export default function GamificationModal({ isOpen, onClose, initialTab = 'quest
                       }}
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                        <CosmicRankBadge level={r.minLevel} rank={r} size="sm" showLevelPill={false} />
+                        <CosmicRankBadge level={r.minLevel} rank={r} size="sm" showLevelPill={false} hideOrbitRing={true} disableFloat={true} />
                         <div>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                             <span style={{ fontWeight: 800, fontSize: '0.98rem', color: isCurrent ? r.color : '#ffffff' }}>

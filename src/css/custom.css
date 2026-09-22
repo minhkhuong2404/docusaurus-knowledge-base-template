@@ -282,7 +282,7 @@ button.login-nav-button,
   font-weight: 700 !important;
   letter-spacing: 0.02em !important;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.7) !important;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease !important;
   cursor: pointer !important;
   outline: none !important;
   text-decoration: none !important;
@@ -444,9 +444,19 @@ div.user-account-dropdown-menu {
 body {
   font-family:
     "Inter",
-    system-ui,
     -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Helvetica Neue",
+    system-ui,
     sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* ── Dark mode: deep page background ─────── */
@@ -655,8 +665,6 @@ body {
       #059669 35%,
       #0891b2 65%,
       #4f46e5 100%);
-  background-size: 200% 200%;
-  animation: h1-gradient-shift 6s ease infinite;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -783,6 +791,69 @@ body {
   font-weight: 500;
   font-size: 0.9rem;
   margin-top: 1rem;
+}
+
+/* ── Reading-First Typography & Readability ─────────────── */
+.markdown p,
+.theme-doc-markdown p {
+  font-size: 1rem;
+  line-height: 1.75;
+  margin-bottom: 1.25rem;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+[data-theme="dark"] .markdown p,
+[data-theme="dark"] .theme-doc-markdown p {
+  color: #e2e8f0;
+}
+
+[data-theme="light"] .markdown p,
+[data-theme="light"] .theme-doc-markdown p {
+  color: #1e293b;
+}
+
+/* Prevent layout blowout from long technical identifiers */
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4,
+.markdown h5,
+.markdown h6,
+.markdown li,
+.markdown blockquote {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.markdown li {
+  line-height: 1.7;
+  margin-bottom: 0.4rem;
+}
+
+.markdown blockquote {
+  border-left: 3px solid #38bdf8;
+  padding: 0.75rem 1.1rem;
+  margin: 1.25rem 0;
+  border-radius: 0 10px 10px 0;
+}
+
+[data-theme="dark"] .markdown blockquote {
+  background: rgba(56, 189, 248, 0.06);
+  color: #cbd5e1;
+}
+
+[data-theme="light"] .markdown blockquote {
+  background: rgba(56, 189, 248, 0.08);
+  color: #334155;
+}
+
+/* Off-screen markdown sections skipping for low-end mobile CPUs */
+.markdown > h2,
+.markdown > section,
+.markdown > div[class*="codeBlockContainer"] {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 300px;
 }
 
 /* ── Sidebar ──────────────────────────────── */
@@ -2299,6 +2370,20 @@ pre[class*="language-"]::-webkit-scrollbar {
   display: none !important;
 }
 
+/* Mobile & Tablet reading-first mode: disable space decorations completely */
+@media (max-width: 996px), (prefers-reduced-motion: reduce) {
+  .space-decorations,
+  .navbar-space-decorations,
+  .rocket-bg,
+  .header-rocket,
+  .universal-item,
+  .satellite,
+  .moon {
+    display: none !important;
+    animation: none !important;
+  }
+}
+
 /* ── Hovering Space Rockets & Satellites ────── */
 .rocket-bg {
   position: fixed;
@@ -3606,7 +3691,8 @@ textarea {
   max-width: 100% !important;
   overflow-x: auto !important;
   -webkit-overflow-scrolling: touch !important;
-  margin: 1rem 0 !important;
+  margin: 1.25rem 0 !important;
+  border-radius: 8px;
 }
 
 .breadcrumbs {
@@ -3616,14 +3702,95 @@ textarea {
   font-size: 0.85rem !important;
 }
 
-/* 5. Interactive Diagrams & Split-Pane Cards on Mobile */
+/* 5. Mobile Reading-First & Responsive Engine (<= 768px) */
 @media (max-width: 768px) {
+  /* Hide non-reading gamification HUD elements from mobile header */
+  .gamification-hud-container {
+    display: none !important;
+  }
+
+  /* Reading-optimized mobile headings */
+  .markdown h1 {
+    font-size: 1.68rem !important;
+    line-height: 1.25 !important;
+    margin-bottom: 0.85rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+
+  .markdown h2 {
+    font-size: 1.32rem !important;
+    margin-top: 1.85rem !important;
+    margin-bottom: 0.55rem !important;
+  }
+
+  .markdown h3 {
+    font-size: 1.12rem !important;
+    margin-top: 1.4rem !important;
+    margin-bottom: 0.4rem !important;
+  }
+
+  .markdown p,
+  .theme-doc-markdown p {
+    font-size: 0.98rem !important;
+    line-height: 1.72 !important;
+    margin-bottom: 1.15rem !important;
+  }
+
+  /* Doc Content Container Padding - comfortable margins */
+  .main-wrapper main,
+  .theme-doc-markdown,
+  .theme-doc-item-container {
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+  }
+
+  /* Code block adjustments for mobile reading */
+  pre[class*="language-"],
+  div[class*="codeBlockContainer"] pre {
+    padding: 0.85rem 1rem !important;
+    font-size: 0.82rem !important;
+    line-height: 1.6 !important;
+    border-radius: 10px !important;
+    max-width: 100% !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .markdown table {
+    font-size: 0.82rem !important;
+    margin: 0.85rem 0 !important;
+  }
+
+  .markdown table th,
+  .markdown table td {
+    padding: 6px 10px !important;
+  }
+
+  /* Mobile Touch Targets & Delay Elimination */
+  button,
+  a,
+  .menu__link,
+  .pagination-nav__link,
+  .tabs__item {
+    touch-action: manipulation !important;
+  }
+
+  /* Mobile sidebar drawer links comfortable touch target */
+  .menu__link {
+    min-height: 42px !important;
+    display: flex !important;
+    align-items: center !important;
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+  }
+
+  /* Interactive Diagrams on Mobile */
   .interactive-diagram-container {
     padding: 14px 10px !important;
     margin: 1.25rem 0 !important;
     border-radius: 10px !important;
     overflow-x: auto !important;
     max-width: 100% !important;
+    -webkit-overflow-scrolling: touch !important;
   }
 
   .interactive-diagram-container svg {
@@ -3632,9 +3799,17 @@ textarea {
   }
 
   /* Scroll Progress Button on Mobile (Avoid blocking footer/nav) */
+  .scroll-progress-wrapper {
+    bottom: 14px !important;
+    right: 14px !important;
+  }
+
   .scroll-progress-btn {
-    bottom: 16px !important;
-    right: 16px !important;
+    width: 42px !important;
+    height: 42px !important;
+  }
+
+  .scroll-progress-btn svg {
     width: 42px !important;
     height: 42px !important;
   }

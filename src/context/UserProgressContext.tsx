@@ -323,7 +323,11 @@ import { evaluateLeaderboardStandings } from '../services/leaderboardRewardServi
 export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(() => {
+    if (typeof window === 'undefined') return null;
+    const cached = getCachedUserProfile();
+    return cached ? (cached as unknown as User) : null;
+  });
   const [adminEmails, setAdminEmails] = useState<string[]>(() => getAdminEmails());
   const [toast, setToast] = useState<GamificationToast | null>(null);
 
@@ -361,15 +365,40 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
     return res;
   };
 
-  const [progress, setProgressState] = useState<UserProgressData>(defaultUserProgress);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [totalArticlesCount, setTotalArticlesCountState] = useState<number>(TOTAL_TRACKABLE_ARTICLES_DEFAULT);
+  const [progress, setProgressState] = useState<UserProgressData>(() => {
+    if (typeof window === 'undefined') return defaultUserProgress;
+    const cachedUser = getCachedUserProfile();
+    if (cachedUser) {
+      const cached = loadCachedProgress(cachedUser.uid);
+      if (cached) return cached;
+    } else {
+      const guestCache = loadCachedProgress('guest');
+      if (guestCache) return guestCache;
+    }
+    return defaultUserProgress;
+  });
+  const [isLoading, setIsLoading] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return true;
+    const cachedUser = getCachedUserProfile();
+    return !cachedUser && !loadCachedProgress('guest');
+  });
+  const [totalArticlesCount, setTotalArticlesCountState] = useState<number>(() => {
+    if (typeof window === 'undefined') return TOTAL_TRACKABLE_ARTICLES_DEFAULT;
+    try {
+      const savedCount = localStorage.getItem('total_articles_count');
+      const parsed = savedCount ? parseInt(savedCount, 10) : 0;
+      if (parsed > 0 && parsed <= 2000) return parsed;
+    } catch {
+      // Ignore
+    }
+    return TOTAL_TRACKABLE_ARTICLES_DEFAULT;
+  });
 
-  // Hydrate from localStorage immediately after client mount (preserves SSR hydration parity)
+  // Re-verify cached profile and sync background progress on mount
   useEffect(() => {
     const cachedUser = getCachedUserProfile();
     if (cachedUser) {
-      setCurrentUser(cachedUser as unknown as User);
+      setCurrentUser((prev) => prev || (cachedUser as unknown as User));
       const cached = loadCachedProgress(cachedUser.uid);
       if (cached) {
         setProgressState(cached);

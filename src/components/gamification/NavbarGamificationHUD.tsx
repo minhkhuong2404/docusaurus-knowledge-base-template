@@ -7,30 +7,46 @@ import CosmicRankBadge from './CosmicRankBadge';
 
 const GamificationModal = React.lazy(() => import('./GamificationModal'));
 
+// Singleton presence listener across all route navigations
+let globalOnlineCount = 1;
+const globalOnlineListeners = new Set<(count: number) => void>();
+let globalPresenceUnsub: (() => void) | null = null;
+let globalPresenceTimer: ReturnType<typeof setTimeout> | null = null;
+
+function ensureGlobalOnlinePresence() {
+  if (typeof window === 'undefined') return;
+  if (globalPresenceUnsub || globalPresenceTimer) return;
+
+  globalPresenceTimer = setTimeout(() => {
+    globalPresenceTimer = null;
+    globalPresenceUnsub = subscribeToOnlineUsers((users) => {
+      globalOnlineCount = users.length || 1;
+      globalOnlineListeners.forEach((callback) => callback(globalOnlineCount));
+    });
+  }, 1000);
+}
+
 export default function NavbarGamificationHUD() {
   const { gamification } = useUserProgress();
   const [showModal, setShowModal] = useState(false);
   const [modalTab, setModalTab] = useState<'quests' | 'trophies' | 'ranks'>('quests');
-  const [onlineCount, setOnlineCount] = useState<number>(1);
+  const [onlineCount, setOnlineCount] = useState<number>(() => globalOnlineCount);
 
   const exp = gamification?.exp || 0;
   const { currentLevel, expInLevel, neededInLevel } = getExpProgressInCurrentLevel(exp);
   const rank = getRankForLevel(currentLevel);
   const streak = gamification?.streak?.currentStreak || 0;
 
-  // Real-time listener for total online count (deferred to prioritize initial page load)
+  // Real-time listener for total online count (persistent across route transitions)
   useEffect(() => {
-    let unsub: (() => void) | null = null;
-    const timer = setTimeout(() => {
-      unsub = subscribeToOnlineUsers((users) => {
-        const nextCount = users.length || 1;
-        setOnlineCount((prev) => (prev === nextCount ? prev : nextCount));
-      });
-    }, 1500);
-
+    ensureGlobalOnlinePresence();
+    const handleUpdate = (nextCount: number) => setOnlineCount(nextCount);
+    globalOnlineListeners.add(handleUpdate);
+    if (globalOnlineCount !== onlineCount) {
+      setOnlineCount(globalOnlineCount);
+    }
     return () => {
-      clearTimeout(timer);
-      if (unsub) unsub();
+      globalOnlineListeners.delete(handleUpdate);
     };
   }, []);
 
@@ -69,7 +85,7 @@ export default function NavbarGamificationHUD() {
             fontWeight: 700,
             cursor: 'pointer',
             boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
-            transition: 'all 0.2s ease',
+            transition: 'background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease',
           }}
         >
           {streak > 0 && (

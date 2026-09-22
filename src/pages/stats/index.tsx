@@ -122,7 +122,7 @@ export default function StatsPage(): React.JSX.Element {
           >
             {/* Left User Profile & Rank */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
-              <CosmicRankBadge level={currentLevel} rank={rank} size="lg" showLevelPill={false} />
+              <CosmicRankBadge level={currentLevel} rank={rank} size="lg" showLevelPill={false} hideOrbitRing={true} disableFloat={true} />
 
               <div style={{ flex: 1, minWidth: '220px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
