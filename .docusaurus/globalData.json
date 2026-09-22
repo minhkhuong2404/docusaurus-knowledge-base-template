@@ -1371,6 +1371,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/database/mysql-indexing-beyond-equality",
+              "path": "/technical-knowledge/database/mysql-indexing-beyond-equality",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/database/nosql-distributed",
               "path": "/technical-knowledge/database/nosql-distributed",
               "sidebar": "tutorialSidebar"

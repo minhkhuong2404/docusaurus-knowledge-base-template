@@ -70,7 +70,7 @@
     "permalink": "/technical-knowledge/database/production-database-antipatterns-hygiene"
   },
   "next": {
-    "title": "PostgreSQL BRIN Index (Block Range Index): 99% Smaller Than B-Tree",
-    "permalink": "/technical-knowledge/database/postgresql-brin-index-guide"
+    "title": "MySQL Indexing Vượt Qua Dấu Bằng: ORDER BY, Range Scans, ICP & Deferred Joins",
+    "permalink": "/technical-knowledge/database/mysql-indexing-beyond-equality"
   }
 }

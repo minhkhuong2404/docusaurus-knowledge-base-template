@@ -25,7 +25,7 @@ A structured guide covering everything you need to know about databases — from
 | 2 | [Database Design & Normalization](./database-design) | ERD, 1NF–BCNF, schema patterns |
 | 3 | [Advanced SQL](./advanced-sql) | Window functions, CTEs, recursive queries |
 | 4 | [Schema Migrations](./schema-migrations) | Flyway, Liquibase, zero-downtime |
-| 5 | [Indexing & Query Optimization](./indexing-query-optimization) | B-Tree, covering indexes, EXPLAIN |
+| 5 | [Indexing & Query Optimization](./indexing-query-optimization) & [Beyond Equality Guide](./mysql-indexing-beyond-equality) | B-Tree, ESR rule, covering indexes, ICP, EXPLAIN |
 | 6 | [Query Planner & Optimizer](./query-planner-optimizer) | CBO, statistics, join algorithms |
 | 7 | [ACID Properties](./acid) & [Transactions](./transactions-concurrency) | ACID, isolation levels, MVCC, deadlocks |
 | 8 | [Storage Engines & Data Structures](./storage-engines-data-structures) | InnoDB, LSM trees, WAL, buffer pool |
@@ -66,5 +66,7 @@ Throughout this guide, Java and Spring Data / JPA notes are included where relev
 ### Compare Next
 - [Relational Fundamentals](./relational-fundamentals.md)
 - [Indexing & Query Optimization](./indexing-query-optimization.md)
+- [MySQL Indexing Beyond Equality](./mysql-indexing-beyond-equality.md)
+- [PostgreSQL BRIN Index Guide](./postgresql-brin-index-guide.md)
 - [Database ACID Properties](./acid.md)
 - [Transactions & Concurrency](./transactions-concurrency.md)

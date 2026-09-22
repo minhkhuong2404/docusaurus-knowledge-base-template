@@ -627,31 +627,15 @@ body {
 }
 
 /*
-  H1 — Animated multi-color gradient: purple → green → teal → blue
-  Uses the full neon palette from the design system with a slow shimmer.
+  H1 — Multi-color gradient: purple → green → teal → blue
+  Uses the full neon palette from the design system.
 */
-@keyframes h1-gradient-shift {
-  0% {
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
 [data-theme="dark"] .markdown h1 {
   background: linear-gradient(120deg,
       #a855f7 0%,
       #4ade80 35%,
       #2dd4bf 65%,
       #818cf8 100%);
-  background-size: 200% 200%;
-  animation: h1-gradient-shift 6s ease infinite;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -1339,22 +1323,10 @@ body.resizing-sidebar .theme-doc-sidebar-container {
    6. Subtle neon glow on the sidebar container border
    ============================================================ */
 
-/* ── Sidebar container — add a soft neon border glow in dark mode ── */
-@keyframes sidebar-border-pulse {
-
-  0%,
-  100% {
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(74, 222, 128, 0.10), 0 0 24px rgba(74, 222, 128, 0.04);
-  }
-
-  50% {
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(74, 222, 128, 0.22), 0 0 32px rgba(74, 222, 128, 0.10);
-  }
-}
-
+/* ── Sidebar container — soft neon border glow in dark mode ── */
 [data-theme="dark"] .theme-doc-sidebar-container {
   border: 1px solid rgba(74, 222, 128, 0.15) !important;
-  animation: sidebar-border-pulse 4s ease-in-out infinite;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(74, 222, 128, 0.12), 0 0 24px rgba(74, 222, 128, 0.05);
 }
 
 /* ── Idle menu items — brighter base text ── */
@@ -2069,21 +2041,7 @@ pre[class*="language-"]::-webkit-scrollbar {
   color: #2f8f4e;
 }
 
-/* ── Neon Borders & Animated Accents ───────────────── */
-
-@keyframes neonGradientShift {
-  0% {
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0% 50%;
-  }
-}
+/* ── Neon Borders ───────────────── */
 
 .card,
 .pagination-nav__link,
@@ -2101,8 +2059,8 @@ pre[class*="language-"]::-webkit-scrollbar {
   border-radius: inherit;
   padding: 1px;
   background: var(--neon-border-gradient);
-  background-size: 220% 220%;
-  animation: neonGradientShift 8s linear infinite;
+  opacity: 0.65;
+  transition: opacity 0.2s ease;
   pointer-events: none;
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
@@ -2112,6 +2070,11 @@ pre[class*="language-"]::-webkit-scrollbar {
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
   mask-composite: exclude;
+}
+
+.card:hover::before,
+.pagination-nav__link:hover::before {
+  opacity: 1;
 }
 
 .card,
@@ -2283,99 +2246,18 @@ pre[class*="language-"]::-webkit-scrollbar {
 }
 
 
-/* Mask out the middle content area of background stars and leaves to prevent reading distractions */
-.main-wrapper::before,
-.main-wrapper::after {
-  mask-image: linear-gradient(to right,
-      #000 0%,
-      #000 18%,
-      transparent 22%,
-      transparent 78%,
-      #000 82%,
-      #000 100%) !important;
-  -webkit-mask-image: linear-gradient(to right,
-      #000 0%,
-      #000 18%,
-      transparent 22%,
-      transparent 78%,
-      #000 82%,
-      #000 100%) !important;
-}
-
-/* ── Starry Background (Dark Mode Margins) ── */
+/* ── Background (Dark Mode) ── */
 
 [data-theme="dark"] .main-wrapper {
   position: relative;
   background-color: #090b14 !important;
 }
 
-/* Layer 1: Tiny twinkling stars */
-[data-theme="dark"] .main-wrapper::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1 !important;
-  background-image:
-    radial-gradient(1px 1px at 25px 45px, rgba(255, 255, 255, 0.9), transparent),
-    radial-gradient(1.5px 1.5px at 85px 125px, rgba(255, 255, 255, 0.7), transparent),
-    radial-gradient(1px 1px at 145px 35px, rgba(255, 255, 255, 0.8), transparent),
-    radial-gradient(2px 2px at 225px 195px, rgba(74, 222, 128, 0.4), transparent),
-    radial-gradient(1px 1px at 275px 75px, rgba(255, 255, 255, 0.6), transparent),
-    radial-gradient(1.5px 1.5px at 325px 245px, rgba(255, 255, 255, 0.75), transparent),
-    radial-gradient(1px 1px at 50px 280px, rgba(255, 255, 255, 0.8), transparent),
-    radial-gradient(1.5px 1.5px at 180px 170px, rgba(255, 255, 255, 0.65), transparent),
-    radial-gradient(1px 1px at 290px 310px, rgba(74, 222, 128, 0.35), transparent);
-  background-size: 350px 350px;
-  animation: starTwinkleOne 6s infinite alternate ease-in-out;
-}
-
-/* Layer 2: Medium slower twinkling stars */
-[data-theme="dark"] .main-wrapper::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1 !important;
-  background-image:
-    radial-gradient(1.5px 1.5px at 55px 155px, rgba(255, 255, 255, 0.7), transparent),
-    radial-gradient(2px 2px at 115px 55px, rgba(255, 255, 255, 0.5), transparent),
-    radial-gradient(1px 1px at 185px 225px, rgba(74, 222, 128, 0.3), transparent),
-    radial-gradient(1.5px 1.5px at 245px 115px, rgba(255, 255, 255, 0.8), transparent),
-    radial-gradient(2px 2px at 305px 285px, rgba(255, 255, 255, 0.6), transparent),
-    radial-gradient(1px 1px at 90px 380px, rgba(255, 255, 255, 0.75), transparent),
-    radial-gradient(1.5px 1.5px at 210px 60px, rgba(255, 255, 255, 0.7), transparent),
-    radial-gradient(1px 1px at 340px 190px, rgba(255, 255, 255, 0.8), transparent);
-  background-size: 400px 400px;
-  animation: starTwinkleTwo 9s infinite alternate ease-in-out;
-}
-
-@keyframes starTwinkleOne {
-  0% {
-    opacity: 0.15;
-  }
-
-  100% {
-    opacity: 0.75;
-  }
-}
-
-@keyframes starTwinkleTwo {
-  0% {
-    opacity: 0.65;
-  }
-
-  100% {
-    opacity: 0.15;
-  }
-}
-
-/* Solid reading container to block out stars in the reading area */
+/* Solid reading container */
 .docMainContainer {
   background-color: #090b14 !important;
   position: relative !important;
   z-index: 10 !important;
-  /* Raises reading area above background layers */
   box-shadow: -30px 0 60px rgba(9, 11, 20, 0.95), 30px 0 60px rgba(9, 11, 20, 0.95) !important;
 }
 
@@ -2384,30 +2266,11 @@ pre[class*="language-"]::-webkit-scrollbar {
   box-shadow: none !important;
 }
 
-/* Solid sticky navbar to block out stars at the top */
+/* Navbar */
 .navbar {
   background-color: #090b14 !important;
   z-index: 1000 !important;
   position: relative;
-  background-image:
-    radial-gradient(1px 1px at 80px 15px, rgba(255, 255, 255, 0.7), transparent),
-    radial-gradient(1.5px 1.5px at 220px 45px, rgba(255, 255, 255, 0.65), transparent),
-    radial-gradient(1px 1px at 450px 20px, rgba(74, 222, 128, 0.35), transparent),
-    radial-gradient(1px 1px at 680px 35px, rgba(255, 255, 255, 0.7), transparent),
-    radial-gradient(2px 2px at 890px 15px, rgba(255, 255, 255, 0.85), transparent),
-    radial-gradient(1px 1px at 1120px 40px, rgba(74, 222, 128, 0.3), transparent);
-  background-size: 1200px var(--ifm-navbar-height);
-  animation: navbarStars 12s infinite alternate ease-in-out;
-}
-
-@keyframes navbarStars {
-  0% {
-    opacity: 0.85;
-  }
-
-  100% {
-    opacity: 1;
-  }
 }
 
 [data-theme="light"] .navbar {
@@ -2434,293 +2297,6 @@ pre[class*="language-"]::-webkit-scrollbar {
 
 [data-theme="light"] .space-decorations {
   display: none !important;
-}
-
-/* ── Planets in the Solar System ───────────── */
-.planet {
-  position: fixed;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 0;
-  contain: paint;
-  will-change: transform;
-  transform: translateZ(0);
-}
-
-/* Mercury (left margin) */
-.planet.mercury {
-  top: 12vh;
-  left: 1.8vw;
-  width: 10px;
-  height: 10px;
-  background: radial-gradient(circle at 30% 30%, #9ca3af, #374151);
-  box-shadow: 0 0 6px rgba(156, 163, 175, 0.2), inset -1px -1px 2px rgba(0, 0, 0, 0.6);
-  animation: floatPlanet1 16s ease-in-out infinite alternate;
-}
-
-/* Venus (right margin) */
-.planet.venus {
-  top: 15vh;
-  right: 2.2vw;
-  width: 18px;
-  height: 18px;
-  background: radial-gradient(circle at 30% 30%, #fef08a, #ca8a04);
-  box-shadow: 0 0 10px rgba(254, 240, 138, 0.3), inset -2px -2px 4px rgba(0, 0, 0, 0.6);
-  animation: floatPlanet2 20s ease-in-out infinite alternate;
-}
-
-/* Earth (left margin) */
-.planet.earth {
-  top: 29vh;
-  left: 2.5vw;
-  width: 22px;
-  height: 22px;
-  background: radial-gradient(circle at 30% 30%, #60a5fa, #1d4ed8);
-  box-shadow: 0 0 12px rgba(96, 165, 250, 0.35), inset -2px -2px 4px rgba(0, 0, 0, 0.6);
-  animation: floatPlanet3 24s ease-in-out infinite alternate;
-}
-
-/* Mars (right margin) */
-.planet.mars {
-  top: 28vh;
-  right: 1.5vw;
-  width: 14px;
-  height: 14px;
-  background: radial-gradient(circle at 30% 30%, #f87171, #991b1b);
-  box-shadow: 0 0 10px rgba(248, 113, 113, 0.3), inset -2px -2px 4px rgba(0, 0, 0, 0.6);
-  animation: floatPlanet4 18s ease-in-out infinite alternate;
-}
-
-/* Jupiter (right margin) */
-.planet.jupiter {
-  top: 42vh;
-  right: 2.4vw;
-  width: 36px;
-  height: 36px;
-  background: radial-gradient(circle at 30% 30%, #fcd34d, #b45309);
-  background-image:
-    radial-gradient(circle at 30% 30%, transparent, rgba(0, 0, 0, 0.4)),
-    linear-gradient(to bottom, #d97706, #fcd34d 20%, #b45309 40%, #fcd34d 60%, #d97706 80%, #78350f);
-  box-shadow: 0 0 22px rgba(251, 211, 77, 0.2), inset -4px -4px 8px rgba(0, 0, 0, 0.7);
-  animation: floatPlanet5 28s ease-in-out infinite alternate;
-}
-
-/* Saturn (left margin) */
-.planet.saturn {
-  top: 50vh;
-  left: 1.2vw;
-  width: 26px;
-  height: 26px;
-  background: radial-gradient(circle at 30% 30%, #e2e8f0, #475569);
-  box-shadow: 0 0 15px rgba(226, 232, 240, 0.25), inset -3px -3px 6px rgba(0, 0, 0, 0.6);
-  animation: floatPlanet6 22s ease-in-out infinite alternate;
-}
-
-.planet.saturn::before {
-  content: "";
-  position: absolute;
-  top: 11px;
-  left: -8px;
-  width: 42px;
-  height: 4px;
-  background: rgba(226, 232, 240, 0.45);
-  border-radius: 50%;
-  transform: rotate(-15deg);
-  box-shadow: 0 0 5px rgba(226, 232, 240, 0.2);
-}
-
-/* Uranus (left margin) */
-.planet.uranus {
-  top: 68vh;
-  left: 2.6vw;
-  width: 20px;
-  height: 20px;
-  background: radial-gradient(circle at 30% 30%, #a5f3fc, #0891b2);
-  box-shadow: 0 0 12px rgba(165, 243, 252, 0.25), inset -2px -2px 4px rgba(0, 0, 0, 0.6);
-  animation: floatPlanet7 26s ease-in-out infinite alternate;
-}
-
-.planet.uranus::before {
-  content: "";
-  position: absolute;
-  top: -4px;
-  left: 9px;
-  width: 2px;
-  height: 28px;
-  background: rgba(165, 243, 252, 0.35);
-  border-radius: 50%;
-  transform: rotate(20deg);
-}
-
-/* Neptune (right margin) */
-.planet.neptune {
-  top: 76vh;
-  right: 1.8vw;
-  width: 19px;
-  height: 19px;
-  background: radial-gradient(circle at 30% 30%, #38bdf8, #1e3a8a);
-  box-shadow: 0 0 12px rgba(56, 189, 248, 0.25), inset -2px -2px 4px rgba(0, 0, 0, 0.6);
-  animation: floatPlanet8 30s ease-in-out infinite alternate;
-}
-
-@keyframes floatPlanet1 {
-  0% {
-    transform: translateY(0);
-  }
-
-  100% {
-    transform: translateY(3px);
-  }
-}
-
-@keyframes floatPlanet2 {
-  0% {
-    transform: translateY(0);
-  }
-
-  100% {
-    transform: translateY(-4px);
-  }
-}
-
-@keyframes floatPlanet3 {
-  0% {
-    transform: translateY(0) rotate(0deg);
-  }
-
-  100% {
-    transform: translateY(5px) rotate(5deg);
-  }
-}
-
-@keyframes floatPlanet4 {
-  0% {
-    transform: translateY(0);
-  }
-
-  100% {
-    transform: translateY(3px);
-  }
-}
-
-@keyframes floatPlanet5 {
-  0% {
-    transform: translateY(0);
-  }
-
-  100% {
-    transform: translateY(-7px);
-  }
-}
-
-@keyframes floatPlanet6 {
-  0% {
-    transform: translateY(0) rotate(0deg);
-  }
-
-  100% {
-    transform: translateY(6px) rotate(4deg);
-  }
-}
-
-@keyframes floatPlanet7 {
-  0% {
-    transform: translateY(0) rotate(0deg);
-  }
-
-  100% {
-    transform: translateY(-5px) rotate(-8deg);
-  }
-}
-
-@keyframes floatPlanet8 {
-  0% {
-    transform: translateY(0);
-  }
-
-  100% {
-    transform: translateY(4px);
-  }
-}
-
-/* ── Comets (Glowing Star Dust/Beacons) ──────── */
-.comet {
-  position: fixed;
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background: #ffffff;
-  box-shadow: 0 0 10px #ffffff, 0 0 20px rgba(74, 222, 128, 0.4);
-  opacity: 0;
-  pointer-events: none;
-  z-index: 1 !important;
-  animation: cometShowHide 16s infinite ease-in-out !important;
-}
-
-.comet::after {
-  content: "";
-  position: absolute;
-  top: 1px;
-  left: 1px;
-  width: 15px;
-  height: 15px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 50%;
-  box-shadow: 0 0 8px rgba(74, 222, 128, 0.2);
-}
-
-.comet-1 {
-  top: 14vh;
-  right: 18vw;
-  animation-duration: 16s !important;
-  animation-delay: 2s !important;
-}
-
-.comet-2 {
-  top: 38vh;
-  right: 28vw;
-  animation-duration: 20s !important;
-  animation-delay: 6s !important;
-}
-
-.comet-3 {
-  top: 12vh;
-  left: 16vw;
-  animation-duration: 18s !important;
-  animation-delay: 10s !important;
-}
-
-.comet-4 {
-  top: 45vh;
-  left: 24vw;
-  animation-duration: 22s !important;
-  animation-delay: 14s !important;
-}
-
-@keyframes cometShowHide {
-  0% {
-    transform: translate(0, 0) scale(0.6);
-    opacity: 0;
-  }
-
-  15% {
-    opacity: 0;
-  }
-
-  20% {
-    transform: translate(3px, -2px) scale(1.15);
-    opacity: 0.65;
-  }
-
-  25% {
-    transform: translate(5px, -4px) scale(0.6);
-    opacity: 0;
-  }
-
-  100% {
-    transform: translate(5px, -4px) scale(0.6);
-    opacity: 0;
-  }
 }
 
 /* ── Hovering Space Rockets & Satellites ────── */
@@ -2786,82 +2362,7 @@ pre[class*="language-"]::-webkit-scrollbar {
   display: block !important;
 }
 
-.navbar-space-decorations .comet {
-  position: absolute;
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background: #ffffff;
-  box-shadow: 0 0 8px #ffffff, 0 0 16px rgba(74, 222, 128, 0.3);
-  opacity: 0;
-  z-index: 1002 !important;
-  animation: cometShowHide 12s infinite ease-in-out !important;
-}
-
-.navbar-space-decorations .comet::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 12px;
-  height: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-}
-
-.header-comet-1 {
-  top: 10px;
-  right: 35%;
-  animation-duration: 12s !important;
-  animation-delay: 3s !important;
-}
-
-.header-comet-2 {
-  top: 25px;
-  left: 55%;
-  animation-duration: 15s !important;
-  animation-delay: 8s !important;
-}
-
-/* ── Extra Header Space Decorations ─────────── */
-.header-planet {
-  position: absolute;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 1002 !important;
-  opacity: 0.65;
-}
-
-.header-planet.earth-h {
-  left: 45%;
-  top: 22px;
-  width: 10px;
-  height: 10px;
-  background: radial-gradient(circle at 30% 30%, #60a5fa, #1d4ed8);
-  box-shadow: 0 0 6px rgba(96, 165, 250, 0.4);
-  animation: planetFloat 18s ease-in-out infinite alternate !important;
-}
-
-.header-planet.mars-h {
-  left: 65%;
-  top: 16px;
-  width: 8px;
-  height: 8px;
-  background: radial-gradient(circle at 30% 30%, #f87171, #991b1b);
-  box-shadow: 0 0 5px rgba(248, 113, 113, 0.4);
-  animation: planetFloat 15s ease-in-out infinite alternate !important;
-}
-
-.header-planet.venus-h {
-  left: 80%;
-  top: 26px;
-  width: 9px;
-  height: 9px;
-  background: radial-gradient(circle at 30% 30%, #fef08a, #ca8a04);
-  box-shadow: 0 0 6px rgba(254, 240, 138, 0.4);
-  animation: planetFloat 20s ease-in-out infinite alternate !important;
-}
-
+/* ── Hovering Space Rockets & Satellites ────── */
 .header-rocket {
   position: absolute;
   pointer-events: none;
@@ -2920,13 +2421,6 @@ pre[class*="language-"]::-webkit-scrollbar {
   }
 }
 
-/* ── Purple Glimmering Comets ────────────────── */
-.comet-2,
-.comet-4,
-.header-comet-2 {
-  box-shadow: 0 0 10px #ffffff, 0 0 20px rgba(168, 85, 247, 0.6) !important;
-}
-
 /* ── Dark Mode Moon Styling ──────────────────── */
 .moon {
   position: fixed;
@@ -2936,28 +2430,11 @@ pre[class*="language-"]::-webkit-scrollbar {
   opacity: 0.22;
   pointer-events: none;
   z-index: 0;
-  animation: floatPlanet6 22s ease-in-out infinite alternate !important;
 }
 
 .moon::before {
   content: "🌙";
 }
-
-.header-moon-h {
-  position: absolute;
-  left: 32%;
-  top: 14px;
-  font-size: 0.85rem;
-  opacity: 0.35;
-  pointer-events: none;
-  z-index: 1002 !important;
-  animation: planetFloat 18s ease-in-out infinite alternate !important;
-}
-
-.header-moon-h::before {
-  content: "🌙";
-}
-
 
 /* ── Dark Mode Universal Background Items ──── */
 .universal-item {
@@ -2984,22 +2461,6 @@ pre[class*="language-"]::-webkit-scrollbar {
 
 .nebula-2::before {
   content: "💫";
-}
-
-.shooting-star-1::before {
-  content: "☄️";
-}
-
-.shooting-star-2::before {
-  content: "☄️";
-}
-
-.constellation-1::before {
-  content: "⭐";
-}
-
-.constellation-2::before {
-  content: "🌟";
 }
 
 .galaxy-1 {
@@ -3034,38 +2495,6 @@ pre[class*="language-"]::-webkit-scrollbar {
   animation-delay: 8s !important;
 }
 
-.shooting-star-1 {
-  top: 25vh;
-  right: 3vw;
-  font-size: 0.85rem;
-  opacity: 0.2;
-  animation: shootingStar 18s infinite ease-in-out alternate !important;
-}
-
-.shooting-star-2 {
-  top: 75vh;
-  left: 2.5vw;
-  font-size: 0.8rem;
-  opacity: 0.18;
-  animation: shootingStar 22s infinite ease-in-out alternate-reverse !important;
-}
-
-.constellation-1 {
-  top: 45vh;
-  left: 1.2vw;
-  font-size: 0.9rem;
-  opacity: 0.2;
-  animation-delay: 4s !important;
-}
-
-.constellation-2 {
-  top: 82vh;
-  right: 2vw;
-  font-size: 0.85rem;
-  opacity: 0.18;
-  animation-delay: 10s !important;
-}
-
 @keyframes driftUniversal {
   0% {
     transform: translate(0, 0) rotate(0deg);
@@ -3080,70 +2509,8 @@ pre[class*="language-"]::-webkit-scrollbar {
   }
 }
 
-@keyframes shootingStar {
-  0% {
-    transform: translate(0, 0) rotate(0deg);
-    opacity: 0.2;
-  }
-
-  40% {
-    transform: translate(-5px, 3px) rotate(-8deg);
-    opacity: 0.35;
-  }
-
-  60% {
-    transform: translate(4px, -4px) rotate(5deg);
-    opacity: 0.1;
-  }
-
-  100% {
-    transform: translate(0, 0) rotate(0deg);
-    opacity: 0.2;
-  }
-}
 
 
-
-/* ── Dark Mode Header Universal ──────────────── */
-.header-universal {
-  position: absolute;
-  pointer-events: none;
-  z-index: 1002 !important;
-  font-size: 0.7rem;
-  opacity: 0.25;
-  animation: driftUniversal 20s infinite ease-in-out alternate !important;
-}
-
-.h-galaxy::before {
-  content: "🌌";
-}
-
-.h-nebula::before {
-  content: "✨";
-}
-
-.h-shooting::before {
-  content: "☄️";
-}
-
-.h-galaxy {
-  left: 40%;
-  top: 18px;
-  font-size: 0.8rem;
-  animation-delay: 0s !important;
-}
-
-.h-nebula {
-  left: 58%;
-  top: 22px;
-  animation-delay: 3s !important;
-}
-
-.h-shooting {
-  left: 75%;
-  top: 14px;
-  animation: shootingStar 16s infinite ease-in-out alternate !important;
-}
 
 
 
@@ -3342,8 +2709,9 @@ pre[class*="language-"]::-webkit-scrollbar {
   z-index: 0;
   pointer-events: none;
 
-  /* Animation runs directly on ::before so --search-orb actually updates */
+  /* Animation paused at rest so CPU/GPU does zero work */
   animation: search-travel 3s linear infinite;
+  animation-play-state: paused;
 
   /* Hidden at rest, fades in on hover/focus */
   opacity: 0;
@@ -3374,6 +2742,7 @@ pre[class*="language-"]::-webkit-scrollbar {
 
   /* Same animation, same speed → stays in sync with ::before */
   animation: search-travel 3s linear infinite;
+  animation-play-state: paused;
 
   opacity: 0;
   transition: opacity 0.35s ease;
@@ -3386,12 +2755,14 @@ pre[class*="language-"]::-webkit-scrollbar {
 .navbar__search:focus-within::before,
 .navbar__search:active::before {
   opacity: 1;
+  animation-play-state: running;
 }
 
 .navbar__search:hover::after,
 .navbar__search:focus-within::after,
 .navbar__search:active::after {
   opacity: 0.5;
+  animation-play-state: running;
 }
 
 /* Focus → faster travel */
@@ -3527,6 +2898,11 @@ pre[class*="language-"]::-webkit-scrollbar {
    ============================================================ */
 
 /* Root SVG container */
+[class*="mermaidSvg"] {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 350px;
+}
+
 [class*="mermaidSvg"] svg {
   background: transparent !important;
   font-family: var(--ifm-font-family-base) !important;
@@ -3652,6 +3028,15 @@ pre[class*="language-"]::-webkit-scrollbar {
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  [class*="mermaidSvg"] svg .path,
+  [class*="mermaidSvg"] svg .relation,
+  [class*="mermaidSvg"] svg [class*="messageLine"],
+  [class*="mermaidSvg"] svg .flow-reverse {
+    animation: none !important;
+  }
+}
+
 /* Light mode overrides */
 [data-theme="light"] [class*="mermaidSvg"] svg .cluster rect,
 [data-theme="light"] [class*="mermaidSvg"] svg [id^="subgraph"] rect {
@@ -3766,62 +3151,14 @@ table.dsa-dashboard-table tr:hover {
    Mobile — Remove all distracting background decorations
    ============================================================ */
 @media (max-width: 768px) {
-  /* Hide all solar system background planets */
-  .planet,
-  .planet.mercury,
-  .planet.venus,
-  .planet.earth,
-  .planet.mars,
-  .planet.jupiter,
-  .planet.saturn,
-  .planet.uranus,
-  .planet.neptune {
-    display: none !important;
-  }
-
-  /* Hide all floating comets */
-  .comet,
-  .comet-1,
-  .comet-2,
-  .comet-3,
-  .comet-4 {
-    display: none !important;
-  }
-
-  /* Hide moon decorations */
-  .moon {
-    display: none !important;
-  }
-
-  /* Hide universal background items (galaxies, nebulae, shooting stars, constellations) */
+  /* Hide background decorations on mobile */
+  .moon,
   .universal-item,
   .galaxy-1,
   .galaxy-2,
   .nebula-1,
   .nebula-2,
-  .shooting-star-1,
-  .shooting-star-2,
-  .constellation-1,
-  .constellation-2 {
-    display: none !important;
-  }
-
-  /* Hide header bar planet/moon/rocket/comet decorations */
-  .header-planet,
-  .header-planet.earth-h,
-  .header-planet.mars-h,
-  .header-planet.venus-h,
-  .header-moon-h,
-  .header-rocket,
-  .navbar-space-decorations .comet,
-  .header-comet-1,
-  .header-comet-2 {
-    display: none !important;
-  }
-
-  /* Hide the floating planet in the navbar logo area */
-  .navbar-planet-core,
-  .navbar-planet-ring {
+  .header-rocket {
     display: none !important;
   }
 }

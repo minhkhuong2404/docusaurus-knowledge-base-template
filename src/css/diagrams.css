@@ -13,6 +13,8 @@
   border: 1px solid rgba(74, 222, 128, 0.12);
   border-radius: 16px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+  content-visibility: auto;
+  contain-intrinsic-size: auto 500px;
 }
 
 [data-theme="light"] .interactive-diagram-container {
@@ -326,6 +328,17 @@
   stroke-width: 3px !important;
   stroke-dasharray: 8 4 !important;
   animation: interactivePathFlow 1.2s linear infinite !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .interactive-diagram-flowing-path,
+  .active-path-red,
+  .active-path-yellow,
+  .active-path-green,
+  .active-path-cyan,
+  .active-path-purple {
+    animation: none !important;
+  }
 }
 
 /* Math Formula Layouts */

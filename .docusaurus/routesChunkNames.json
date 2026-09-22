@@ -90,13 +90,13 @@
     },
     "config": "config---arcade-5-e-9-6a3"
   },
-  "/-87b": {
+  "/-b35": {
     "__comp": "__comp---theme-docs-root-5-e-9-0b6",
     "__context": {
       "plugin": "plugin---aba-d70"
     }
   },
-  "/-55a": {
+  "/-1eb": {
     "__comp": "__comp---theme-doc-version-roota-7-b-5de",
     "__props": "__props---22-d-307"
   },
@@ -1287,6 +1287,10 @@
   "/tags/composite-fb3": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-compositeb-7-c-e3d"
+  },
+  "/tags/composite-index-a91": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-composite-index-750-2d0"
   },
   "/tags/compound-assignment-24a": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -2811,6 +2815,10 @@
   "/tags/ibm-181": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-ibm-1-b-2-f26"
+  },
+  "/tags/icp-b0f": {
+    "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
+    "__props": "__props---tags-icpd-45-7e0"
   },
   "/tags/idempotency-cc3": {
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
@@ -6512,7 +6520,7 @@
     "__comp": "__comp---theme-doc-tag-doc-list-pagedf-2-9f0",
     "__props": "__props---tags-zsete-05-17c"
   },
-  "/-9a1": {
+  "/-284": {
     "__comp": "__comp---theme-doc-roota-94-67a"
   },
   "/aws-bf9": {
@@ -7738,6 +7746,10 @@
   "/technical-knowledge/database/isolation-levels-edc": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---technical-knowledge-database-isolation-levels-30-b-8ab"
+  },
+  "/technical-knowledge/database/mysql-indexing-beyond-equality-e70": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---technical-knowledge-database-mysql-indexing-beyond-equality-03-d-2aa"
   },
   "/technical-knowledge/database/nosql-distributed-5d6": {
     "__comp": "__comp---theme-doc-item-178-a40",

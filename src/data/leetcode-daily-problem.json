@@ -1,8 +1,8 @@
 {
-  "id": "3524",
-  "title": "Find X Value of Array I",
-  "url": "https://leetcode.com/problems/find-x-value-of-array-i/",
-  "difficulty": "medium",
-  "topic": "Array, Math, Dynamic Programming",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-09-21."
+  "id": "3525",
+  "title": "Find X Value of Array II",
+  "url": "https://leetcode.com/problems/find-x-value-of-array-ii/",
+  "difficulty": "hard",
+  "topic": "Array, Math, Segment Tree",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-09-22."
 }

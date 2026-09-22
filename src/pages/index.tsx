@@ -306,134 +306,7 @@ const GLOBAL_STYLES = `
     0%, 100% { transform: translate(0, 0) scale(1); }
     50% { transform: translate(-22px, 16px) scale(1.04); }
   }
-  .lp-cosmos-stars {
-    position: absolute;
-    inset: 0;
-    opacity: 0.55;
-    animation: lp-twinkle 8s ease-in-out infinite;
-  }
-  [data-theme="light"] .lp-cosmos-stars {
-    opacity: 0.22;
-  }
-  /* Layer 1 — tiny dense field (small tile, lots of repetition) */
-  .lp-cosmos-stars--1 {
-    background-image:
-      radial-gradient(1.2px 1.2px at 24px 36px, rgba(255,255,255,0.9), transparent),
-      radial-gradient(1px 1px at 148px 92px, rgba(255,255,255,0.65), transparent),
-      radial-gradient(1.5px 1.5px at 88px 172px, rgba(255,255,255,0.8), transparent),
-      radial-gradient(1px 1px at 204px 48px, rgba(255,255,255,0.55), transparent),
-      radial-gradient(1px 1px at 12px 200px, rgba(255,255,255,0.5), transparent),
-      radial-gradient(1.2px 1.2px at 188px 210px, rgba(255,255,255,0.7), transparent),
-      radial-gradient(0.9px 0.9px at 66px 130px, rgba(255,255,255,0.55), transparent),
-      radial-gradient(1.1px 1.1px at 174px 154px, rgba(200,230,255,0.6), transparent),
-      radial-gradient(0.8px 0.8px at 108px 52px, rgba(255,255,255,0.48), transparent),
-      radial-gradient(1.3px 1.3px at 50px 88px, rgba(255,255,255,0.72), transparent),
-      radial-gradient(0.9px 0.9px at 220px 122px, rgba(220,240,255,0.52), transparent),
-      radial-gradient(1px 1px at 130px 230px, rgba(255,255,255,0.6), transparent);
-    background-size: 236px 252px;
-  }
-  /* Layer 2 — medium field, slightly larger tile, offset animation */
-  .lp-cosmos-stars--2 {
-    background-image:
-      radial-gradient(1px 1px at 60px 24px, rgba(200,230,255,0.6), transparent),
-      radial-gradient(1.2px 1.2px at 120px 140px, rgba(255,255,255,0.65), transparent),
-      radial-gradient(1px 1px at 200px 88px, rgba(255,255,255,0.5), transparent),
-      radial-gradient(1.5px 1.5px at 40px 160px, rgba(255,255,255,0.75), transparent),
-      radial-gradient(1px 1px at 176px 188px, rgba(220,240,255,0.55), transparent),
-      radial-gradient(1.3px 1.3px at 250px 56px, rgba(255,255,255,0.62), transparent),
-      radial-gradient(0.9px 0.9px at 90px 210px, rgba(255,255,255,0.52), transparent),
-      radial-gradient(1.1px 1.1px at 310px 145px, rgba(200,220,255,0.58), transparent),
-      radial-gradient(1px 1px at 14px 80px, rgba(255,255,255,0.48), transparent),
-      radial-gradient(1.4px 1.4px at 280px 220px, rgba(255,255,255,0.68), transparent);
-    background-size: 344px 276px;
-    animation-duration: 11s;
-    animation-direction: alternate-reverse;
-    opacity: 0.42;
-  }
-  /* Layer 3 — sparse bright accent stars, slow independent pulse */
-  .lp-cosmos-stars--3 {
-    background-image:
-      radial-gradient(2px 2px at 72px 46px, rgba(255,255,255,0.9), transparent),
-      radial-gradient(2.2px 2.2px at 246px 178px, rgba(200,240,255,0.85), transparent),
-      radial-gradient(1.8px 1.8px at 402px 94px, rgba(255,255,255,0.8), transparent),
-      radial-gradient(2px 2px at 168px 298px, rgba(255,220,200,0.75), transparent),
-      radial-gradient(2.5px 2.5px at 524px 52px, rgba(255,255,255,0.88), transparent),
-      radial-gradient(1.8px 1.8px at 360px 240px, rgba(220,200,255,0.78), transparent),
-      radial-gradient(2px 2px at 106px 360px, rgba(255,255,255,0.72), transparent),
-      radial-gradient(2.2px 2.2px at 468px 318px, rgba(200,230,255,0.8), transparent),
-      radial-gradient(1.6px 1.6px at 30px 290px, rgba(255,255,200,0.7), transparent),
-      radial-gradient(2px 2px at 598px 160px, rgba(255,255,255,0.85), transparent),
-      radial-gradient(1.8px 1.8px at 490px 408px, rgba(255,220,180,0.7), transparent),
-      radial-gradient(2.2px 2.2px at 320px 440px, rgba(255,255,255,0.78), transparent);
-    background-size: 640px 480px;
-    animation-duration: 14s;
-    animation-delay: -3s;
-    opacity: 0.6;
-  }
-  [data-theme="light"] .lp-cosmos-stars--1,
-  [data-theme="light"] .lp-cosmos-stars--2,
-  [data-theme="light"] .lp-cosmos-stars--3 {
-    background-image:
-      radial-gradient(1.2px 1.2px at 24px 36px, rgba(30,60,100,0.5), transparent),
-      radial-gradient(1px 1px at 148px 92px, rgba(40,70,110,0.4), transparent),
-      radial-gradient(1.5px 1.5px at 88px 172px, rgba(35,65,105,0.45), transparent),
-      radial-gradient(1px 1px at 204px 48px, rgba(45,75,115,0.38), transparent),
-      radial-gradient(1px 1px at 12px 200px, rgba(35,60,95,0.35), transparent),
-      radial-gradient(1.2px 1.2px at 188px 210px, rgba(40,70,108,0.42), transparent),
-      radial-gradient(0.9px 0.9px at 66px 130px, rgba(30,55,90,0.38), transparent),
-      radial-gradient(1.1px 1.1px at 174px 154px, rgba(50,80,120,0.4), transparent);
-  }
-  @keyframes lp-twinkle {
-    0%, 100% { opacity: 0.35; }
-    50%       { opacity: 0.65; }
-  }
 
-  /* ── Shooting stars ── */
-  .lp-meteor {
-    position: absolute;
-    height: 1.5px;
-    border-radius: 999px;
-    background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.92) 55%, rgba(220,240,255,0.55) 100%);
-    opacity: 0;
-    transform-origin: right center;
-    animation: lp-meteorFly 6s ease-in infinite;
-    pointer-events: none;
-  }
-  [data-theme="light"] .lp-meteor {
-    background: linear-gradient(90deg, rgba(60,100,180,0), rgba(80,130,200,0.55) 60%, rgba(100,150,220,0.3) 100%);
-  }
-  @keyframes lp-meteorFly {
-    0%   { opacity: 0; transform: rotate(inherit) translateX(0); }
-    3%   { opacity: 1; }
-    18%  { opacity: 0; transform: rotate(inherit) translateX(-360px); }
-    100% { opacity: 0; transform: rotate(inherit) translateX(-360px); }
-  }
-  /* 25 individual meteors — varied position, angle, width, delay, duration */
-  .lp-meteor--1  { width:140px; top:  8%; right: 18%; transform:rotate(-22deg); animation-delay:  0.5s; animation-duration: 5.8s; }
-  .lp-meteor--2  { width: 90px; top: 14%; right: 55%; transform:rotate(-17deg); animation-delay:  2.1s; animation-duration: 7.2s; }
-  .lp-meteor--3  { width:120px; top:  4%; right: 70%; transform:rotate(-26deg); animation-delay:  3.8s; animation-duration: 6.4s; }
-  .lp-meteor--4  { width: 80px; top: 32%; right: 10%; transform:rotate(-14deg); animation-delay:  5.5s; animation-duration: 5.2s; }
-  .lp-meteor--5  { width:110px; top: 52%; right: 80%; transform:rotate(-20deg); animation-delay:  7.0s; animation-duration: 6.8s; }
-  .lp-meteor--6  { width:160px; top:  2%; right: 38%; transform:rotate(-30deg); animation-delay:  1.4s; animation-duration: 4.9s; }
-  .lp-meteor--7  { width: 70px; top: 22%; right: 62%; transform:rotate(-12deg); animation-delay:  9.2s; animation-duration: 8.1s; }
-  .lp-meteor--8  { width:130px; top: 42%; right: 28%; transform:rotate(-24deg); animation-delay: 11.0s; animation-duration: 5.6s; }
-  .lp-meteor--9  { width: 95px; top: 65%; right: 48%; transform:rotate(-19deg); animation-delay:  4.3s; animation-duration: 7.8s; }
-  .lp-meteor--10 { width:175px; top: 10%; right: 84%; transform:rotate(-33deg); animation-delay: 13.5s; animation-duration: 4.6s; }
-  .lp-meteor--11 { width: 85px; top: 75%; right:  5%; transform:rotate(-11deg); animation-delay:  6.7s; animation-duration: 9.0s; }
-  .lp-meteor--12 { width:105px; top: 18%; right: 42%; transform:rotate(-28deg); animation-delay: 15.0s; animation-duration: 6.1s; }
-  .lp-meteor--13 { width: 60px; top: 88%; right: 65%; transform:rotate(-16deg); animation-delay:  2.8s; animation-duration: 8.5s; }
-  .lp-meteor--14 { width:145px; top: 35%; right: 90%; transform:rotate(-22deg); animation-delay: 17.5s; animation-duration: 5.3s; }
-  .lp-meteor--15 { width:100px; top: 58%; right: 30%; transform:rotate(-18deg); animation-delay:  8.4s; animation-duration: 7.0s; }
-  .lp-meteor--16 { width:115px; top:  6%; right:  5%; transform:rotate(-35deg); animation-delay: 10.8s; animation-duration: 5.9s; }
-  .lp-meteor--17 { width: 75px; top: 48%; right: 72%; transform:rotate(-13deg); animation-delay: 19.0s; animation-duration: 8.8s; }
-  .lp-meteor--18 { width:155px; top: 25%; right: 15%; transform:rotate(-27deg); animation-delay:  0.9s; animation-duration: 4.4s; }
-  .lp-meteor--19 { width: 88px; top: 82%; right: 45%; transform:rotate(-21deg); animation-delay: 14.2s; animation-duration: 7.5s; }
-  .lp-meteor--20 { width:125px; top: 12%; right: 95%; transform:rotate(-31deg); animation-delay: 21.0s; animation-duration: 5.0s; }
-  .lp-meteor--21 { width: 65px; top: 70%; right: 20%; transform:rotate(-15deg); animation-delay: 16.4s; animation-duration: 9.2s; }
-  .lp-meteor--22 { width:135px; top: 45%; right: 58%; transform:rotate(-23deg); animation-delay:  3.2s; animation-duration: 6.6s; }
-  .lp-meteor--23 { width: 92px; top: 92%; right: 75%; transform:rotate(-10deg); animation-delay: 18.7s; animation-duration: 8.0s; }
-  .lp-meteor--24 { width:170px; top: 30%; right: 35%; transform:rotate(-29deg); animation-delay: 11.6s; animation-duration: 4.8s; }
-  .lp-meteor--25 { width: 80px; top: 60%; right: 88%; transform:rotate(-17deg); animation-delay: 22.5s; animation-duration: 7.4s; }
 
   /* ── Rockets ── */
   .lp-rocket {
@@ -471,174 +344,11 @@ const GLOBAL_STYLES = `
     z-index: 1;
   }
 
-  /* ── Decorative planets (roadmap sections) ── */
-  .lp-planet {
-    display: block;
-    border-radius: 50%;
-    flex-shrink: 0;
-    animation: lp-planetFloat 6s ease-in-out infinite;
-    box-shadow:
-      inset -10px -12px 22px rgba(0, 0, 0, 0.48),
-      inset 6px 8px 18px rgba(255, 255, 255, 0.12),
-      0 0 18px rgba(0, 0, 0, 0.25);
-  }
-  .lp-planet--sm {
-    width: 44px;
-    height: 44px;
-  }
-  .lp-planet--md {
-    width: 56px;
-    height: 56px;
-  }
-  .lp-planet--rocky {
-    background: radial-gradient(circle at 32% 26%, #f0d4b8 0%, #c49a6c 18%, #7a5230 52%, #2c1810 100%);
-    box-shadow:
-      inset -10px -12px 22px rgba(0, 0, 0, 0.5),
-      inset 6px 8px 16px rgba(255, 220, 180, 0.18),
-      0 0 14px rgba(196, 154, 108, 0.35);
-  }
-  .lp-planet--ice {
-    background: radial-gradient(circle at 30% 24%, #e8ffff 0%, #a5e8f0 22%, #4fb8c9 55%, #1a5c6e 100%);
-    box-shadow:
-      inset -10px -12px 22px rgba(0, 0, 0, 0.42),
-      inset 5px 10px 20px rgba(255, 255, 255, 0.35),
-      0 0 20px rgba(79, 184, 201, 0.4);
-  }
-  .lp-planet--gas {
-    background: radial-gradient(circle at 28% 22%, #c4b5fd 0%, #8b5cf6 28%, #5b21b6 58%, #1e1039 100%);
-    box-shadow:
-      inset -10px -14px 24px rgba(0, 0, 0, 0.55),
-      inset 8px 6px 18px rgba(200, 181, 254, 0.22),
-      0 0 22px rgba(139, 92, 246, 0.45);
-  }
-  .lp-planet--dsa {
-    background: radial-gradient(circle at 30% 26%, #fef3c7 0%, #fbbf24 25%, #d97706 55%, #78350f 100%);
-    box-shadow:
-      inset -10px -12px 22px rgba(0, 0, 0, 0.48),
-      inset 6px 8px 18px rgba(254, 243, 199, 0.35),
-      0 0 20px rgba(251, 191, 36, 0.4);
-  }
-  .lp-planet--aws {
-    background: radial-gradient(circle at 32% 24%, #dbeafe 0%, #60a5fa 30%, #1d4ed8 58%, #0f172a 100%);
-    box-shadow:
-      inset -10px -12px 22px rgba(0, 0, 0, 0.5),
-      inset 6px 8px 18px rgba(219, 234, 254, 0.28),
-      0 0 18px rgba(96, 165, 250, 0.45);
-  }
-  [data-theme="light"] .lp-planet--rocky {
-    box-shadow:
-      inset -8px -10px 18px rgba(0, 0, 0, 0.28),
-      inset 5px 6px 14px rgba(255, 220, 180, 0.25),
-      0 0 12px rgba(122, 82, 48, 0.2);
-  }
-  [data-theme="light"] .lp-planet--ice {
-    box-shadow:
-      inset -8px -10px 18px rgba(0, 0, 0, 0.22),
-      inset 5px 8px 16px rgba(255, 255, 255, 0.5),
-      0 0 14px rgba(79, 184, 201, 0.25);
-  }
-  [data-theme="light"] .lp-planet--gas {
-    box-shadow:
-      inset -8px -10px 18px rgba(0, 0, 0, 0.25),
-      inset 5px 6px 14px rgba(196, 181, 253, 0.35),
-      0 0 14px rgba(139, 92, 246, 0.22);
-  }
-  [data-theme="light"] .lp-planet--dsa {
-    box-shadow:
-      inset -8px -10px 18px rgba(0, 0, 0, 0.22),
-      inset 5px 6px 14px rgba(254, 243, 199, 0.45),
-      0 0 14px rgba(217, 119, 6, 0.22);
-  }
-  [data-theme="light"] .lp-planet--aws {
-    box-shadow:
-      inset -8px -10px 18px rgba(0, 0, 0, 0.22),
-      inset 5px 6px 14px rgba(219, 234, 254, 0.4),
-      0 0 14px rgba(29, 78, 216, 0.2);
-  }
-  @keyframes lp-planetFloat {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
-  }
-
   .lp-phase-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 0.75rem;
-  }
-
-  .lp-dsa-orbit {
-    position: relative;
-    width: 72px;
-    height: 72px;
-    flex-shrink: 0;
-  }
-  .lp-dsa-orbit-ring {
-    position: absolute;
-    inset: 2px;
-    border-radius: 50%;
-    border: 1px dashed rgba(74, 222, 128, 0.28);
-    animation: lp-orbitSpin 22s linear infinite;
-  }
-  [data-theme="light"] .lp-dsa-orbit-ring {
-    border-color: rgba(47, 143, 78, 0.22);
-  }
-  .lp-dsa-orbit .lp-planet {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 52px;
-    height: 52px;
-    margin-left: -26px;
-    margin-top: -26px;
-    animation: lp-planetFloat 5.5s ease-in-out infinite;
-  }
-  @keyframes lp-orbitSpin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
-
-  .lp-ringed-wrap {
-    position: relative;
-    width: 64px;
-    height: 64px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .lp-planet-ring {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 135%;
-    height: 38%;
-    margin-left: -67.5%;
-    margin-top: -19%;
-    border: 2px solid rgba(186, 200, 230, 0.42);
-    border-radius: 50%;
-    transform: rotate(-16deg);
-    pointer-events: none;
-    box-shadow: 0 0 12px rgba(96, 165, 250, 0.15);
-  }
-  [data-theme="light"] .lp-planet-ring {
-    border-color: rgba(100, 130, 180, 0.35);
-  }
-  .lp-ringed-wrap .lp-planet {
-    position: relative;
-    z-index: 1;
-  }
-
-  .lp-section-heading-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 1.25rem;
-    flex-wrap: wrap;
-    margin-bottom: 0.5rem;
-  }
-  .lp-section-heading-row .lp-section-heading-text {
-    flex: 1 1 260px;
-    min-width: 0;
   }
 
   /* ── Respect reduced motion ── */
@@ -650,18 +360,7 @@ const GLOBAL_STYLES = `
     .lp-card-hidden { opacity: 1; transform: none; }
     .lp-hcard:hover { transform: none !important; }
     .lp-cosmos-nebula,
-    .lp-cosmos-stars,
-    .lp-planet,
-    .lp-dsa-orbit-ring,
-    .lp-meteor,
     .lp-rocket { animation: none !important; }
-    .lp-meteor { display: none !important; }
-    .lp-cosmos-stars { opacity: 0.45 !important; }
-    .lp-cosmos-stars--2 { opacity: 0.35 !important; }
-    .lp-cosmos-stars--3 { opacity: 0.5 !important; }
-    [data-theme="light"] .lp-cosmos-stars,
-    [data-theme="light"] .lp-cosmos-stars--2,
-    [data-theme="light"] .lp-cosmos-stars--3 { opacity: 0.22 !important; }
   }
 `;
 
@@ -866,12 +565,6 @@ const LEARNING_PATHS = [
     href: "/technical-knowledge/git",
   },
 ];
-
-const INTERVIEW_PHASE_PLANETS = [
-  "lp-planet--rocky",
-  "lp-planet--ice",
-  "lp-planet--gas",
-] as const;
 
 const INTERVIEW_PHASES = [
   {
@@ -1340,13 +1033,6 @@ export default function Home(): React.ReactNode {
           <div className="lp-cosmos-base" />
           <div className="lp-cosmos-nebula lp-cosmos-nebula--a" />
           <div className="lp-cosmos-nebula lp-cosmos-nebula--b" />
-          <div className="lp-cosmos-stars lp-cosmos-stars--1" />
-          <div className="lp-cosmos-stars lp-cosmos-stars--2" />
-          <div className="lp-cosmos-stars lp-cosmos-stars--3" />
-          {/* Shooting stars */}
-          {Array.from({ length: 25 }, (_, i) => (
-            <div key={i} className={`lp-meteor lp-meteor--${i + 1}`} />
-          ))}
           {/* Rockets */}
           <svg
             className="lp-rocket lp-rocket--a"
@@ -1913,10 +1599,6 @@ export default function Home(): React.ReactNode {
                         >
                           {phase}
                         </p>
-                        <span
-                          className={`lp-planet lp-planet--sm ${INTERVIEW_PHASE_PLANETS[pi]}`}
-                          aria-hidden
-                        />
                       </div>
                     </div>
                     <div style={{ padding: "1rem 1.2rem" }}>
@@ -2334,16 +2016,8 @@ export default function Home(): React.ReactNode {
           <section
             style={{ maxWidth: 1100, margin: "0 auto", padding: "5rem 1.5rem" }}
           >
-            <div className="lp-section-heading-row">
-              <div className="lp-dsa-orbit" aria-hidden>
-                <div className="lp-dsa-orbit-ring" />
-                <span className="lp-planet lp-planet--dsa lp-planet--md" />
-              </div>
-              <div className="lp-section-heading-text">
-                <div className="lp-section-label">📊 DSA Training</div>
-                <h2 className="lp-section-title">20-Week DSA Coding Roadmap</h2>
-              </div>
-            </div>
+            <div className="lp-section-label">📊 DSA Training</div>
+            <h2 className="lp-section-title">20-Week DSA Coding Roadmap</h2>
             <p
               style={{
                 color: "var(--ifm-color-emphasis-700)",
@@ -2609,18 +2283,10 @@ export default function Home(): React.ReactNode {
           <section
             style={{ maxWidth: 1100, margin: "0 auto", padding: "5rem 1.5rem" }}
           >
-            <div className="lp-section-heading-row">
-              <div className="lp-ringed-wrap" aria-hidden>
-                <div className="lp-planet-ring" />
-                <span className="lp-planet lp-planet--aws lp-planet--md" />
-              </div>
-              <div className="lp-section-heading-text">
-                <div className="lp-section-label">☁️ Cloud Certs</div>
-                <h2 className="lp-section-title">
-                  Cloud Certifications — AWS DVA-C02
-                </h2>
-              </div>
-            </div>
+            <div className="lp-section-label">☁️ Cloud Certs</div>
+            <h2 className="lp-section-title">
+              Cloud Certifications — AWS DVA-C02
+            </h2>
             <p
               style={{
                 color: "var(--ifm-color-emphasis-700)",

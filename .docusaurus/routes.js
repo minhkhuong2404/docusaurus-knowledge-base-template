@@ -74,11 +74,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', '87b'),
+    component: ComponentCreator('/', 'b35'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '55a'),
+        component: ComponentCreator('/', '1eb'),
         routes: [
           {
             path: '/tags',
@@ -1563,6 +1563,11 @@ export default [
           {
             path: '/tags/composite',
             component: ComponentCreator('/tags/composite', 'fb3'),
+            exact: true
+          },
+          {
+            path: '/tags/composite-index',
+            component: ComponentCreator('/tags/composite-index', 'a91'),
             exact: true
           },
           {
@@ -3468,6 +3473,11 @@ export default [
           {
             path: '/tags/ibm',
             component: ComponentCreator('/tags/ibm', '181'),
+            exact: true
+          },
+          {
+            path: '/tags/icp',
+            component: ComponentCreator('/tags/icp', 'b0f'),
             exact: true
           },
           {
@@ -8097,7 +8107,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '9a1'),
+            component: ComponentCreator('/', '284'),
             routes: [
               {
                 path: '/aws',
@@ -9922,6 +9932,12 @@ export default [
               {
                 path: '/technical-knowledge/database/isolation-levels',
                 component: ComponentCreator('/technical-knowledge/database/isolation-levels', 'edc'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/database/mysql-indexing-beyond-equality',
+                component: ComponentCreator('/technical-knowledge/database/mysql-indexing-beyond-equality', 'e70'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

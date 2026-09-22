@@ -682,6 +682,7 @@ const sidebars: SidebarsConfig = {
 							collapsed: true,
 							items: [
 								'technical-knowledge/database/indexing-query-optimization',
+								'technical-knowledge/database/mysql-indexing-beyond-equality',
 								'technical-knowledge/database/postgresql-brin-index-guide',
 								'technical-knowledge/database/query-planner-optimizer',
 								'technical-knowledge/database/performance-monitoring',
