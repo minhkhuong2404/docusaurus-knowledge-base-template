@@ -123,7 +123,7 @@ The problems below are categorized by primary architectural challenge and ordere
 | 42 | [Issue Tracker (Jira / Linear)](./issue-tracker.md) | Enterprise / Workflows | Hard | Configurable workflow state machine, optimistic concurrency control, real-time WebSocket board sync, JQL parser |
 | 43 | [Shopping Cart (Amazon)](./amazon-shopping-cart.md) | E-Commerce / Storage | Hard | Always-writable Dynamo AP model ($W=1$), guest-to-user session merge, vector clocks Add-Wins, CRDT PN-Counter |
 | 44 | [Pastebin (Text Sharing)](./pastebin.md) | Distributed Storage | Medium | Base62 unique IDs, tiered storage (hot Redis vs cold S3), dual-tier TTL expiration, syntax highlight caching |
-| 45 | [Cookie Consent Platform (CMP)](./cookie-consent.md) | Infra / Privacy & Compliance | Hard | Edge CDN policy evaluation (<10ms via Cloudflare Workers), Geo-IP matching, IAB TCF v2.2 encoding, Merkle audit trail |
+| 45 | [Cookie Consent Platform (CMP)](./cookie-consent.md) | Infra / Privacy & Compliance | Hard | Edge CDN policy evaluation (&lt;10ms via Cloudflare Workers), Geo-IP matching, IAB TCF v2.2 encoding, Merkle audit trail |
 
 ---
 

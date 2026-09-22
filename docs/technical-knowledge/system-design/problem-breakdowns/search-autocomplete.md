@@ -2,7 +2,7 @@
 id: search-autocomplete
 title: "Design Search Autocomplete / Typeahead Suggestion"
 sidebar_label: "39. Search Autocomplete"
-description: "Staff-level architecture for low-latency (<20ms) typeahead suggestions using serialized prefix Tries, pre-computed frequency ranking, and asynchronous log aggregation pipelines."
+description: "Staff-level architecture for low-latency (sub-20ms) typeahead suggestions using serialized prefix Tries, pre-computed frequency ranking, and asynchronous log aggregation pipelines."
 ---
 
 import SystemDesignArchitectureDiagram from '@site/src/components/SystemDesignArchitectureDiagram';
