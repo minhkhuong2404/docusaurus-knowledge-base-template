@@ -14,6 +14,10 @@ A **distributed lock** ensures that only one process (across multiple nodes) can
 
 <RedisDistributedLockDiagram />
 
+:::tip[Deep Dive: Redis Lua Scripting, Cluster Monotonic Time & Pod Lock Handover]
+For an advanced guide on batch mutation races, safe lock release scripts, watchdog heartbeat renewals, using Redis `TIME` as a cluster-wide clock to defeat NTP drift, cooperative lock handover between pods, and network roundtrip math, see **[Redis Lua Scripting & Distributed Locks](./redis-lua-scripting-distributed-locks.md)**.
+:::
+
 ---
 
 #### 👶 Beginner Concept: The "Single Bathroom Key"

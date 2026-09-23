@@ -735,6 +735,10 @@ SELECT * FROM orders ORDER BY id LIMIT 20 OFFSET 100000;
 SELECT * FROM orders WHERE id > 100000 ORDER BY id LIMIT 20;
 ```
 
+:::tip[Deep Dive: Exporting 5 Million Rows Without Killing the Database]
+For a comprehensive guide on B+Tree leaf traversal costs in deep `LIMIT OFFSET`, keyset index requirements, Java JDBC JVM heap `OutOfMemoryError` vs Go streaming, and the infamous `net_write_timeout` socket buffer crash, read **[Exporting Large Datasets & Streaming Internals](./exporting-large-datasets-streaming-internals.md)**.
+:::
+
 ### 5. SELECT only needed columns
 ```sql
 -- ❌ Bad: fetches all columns, forcing heap reads
@@ -789,6 +793,10 @@ For large-scale analytical rollups scanning tens of millions of rows, hardware I
 
 ---
 
+
+:::tip[Deep Dive: Query Optimization After Indexing & UPSERT Traps]
+Even after creating the correct indexes, queries can still crawl due to Hash Join memory spills (`join_buffer_size`). Learn how to separate JOINs into application-level lookups without causing N+1 queries, use the `SELECT id` then write-by-ID deterministic lock pattern, and avoid the 4 traps of `ON DUPLICATE KEY UPDATE` at **[After Indexing is Correct: Hash Joins & 4 UPSERT Traps](./query-optimization-beyond-indexes-upsert-traps.md)**.
+:::
 
 ## Index Selectivity & Cardinality
 

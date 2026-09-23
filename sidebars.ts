@@ -85,6 +85,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/java/java-jvm',
 								'technical-knowledge/java/java-stack-vs-heap',
 								'technical-knowledge/java/java-virtual-threads',
+								'technical-knowledge/java/production-oom-debugging-guide',
 								'technical-knowledge/java/java-diagnostics-troubleshooting'
 							]
 						},
@@ -729,6 +730,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/database/connection-pooling',
 								'technical-knowledge/database/advanced-sql',
 								'technical-knowledge/database/schema-migrations',
+								'technical-knowledge/database/online-ddl-gh-ost-pt-osc-internals',
 								'technical-knowledge/database/production-database-antipatterns-hygiene',
 							],
 						},
@@ -739,6 +741,8 @@ const sidebars: SidebarsConfig = {
 							items: [
 								'technical-knowledge/database/indexing-query-optimization',
 								'technical-knowledge/database/mysql-indexing-beyond-equality',
+								'technical-knowledge/database/exporting-large-datasets-streaming-internals',
+								'technical-knowledge/database/query-optimization-beyond-indexes-upsert-traps',
 								'technical-knowledge/database/postgresql-brin-index-guide',
 								'technical-knowledge/database/query-planner-optimizer',
 								'technical-knowledge/database/performance-monitoring',
@@ -752,9 +756,14 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/database/acid',
 								'technical-knowledge/database/isolation-levels',
 								'technical-knowledge/database/transactions-concurrency',
+								'technical-knowledge/database/mysql-deadlocks-gap-locks-internals',
+								'technical-knowledge/database/optimistic-vs-pessimistic-lock-deep-dive',
+								'technical-knowledge/database/long-transactions-undo-mdl-meltdown',
 								'technical-knowledge/database/storage-engines-data-structures',
 								'technical-knowledge/database/postgresql-heap-storage-architecture',
+								'technical-knowledge/database/postgresql-update-locking-mechanics',
 								'technical-knowledge/database/postgresql-checkpoint-wal-tuning',
+								'technical-knowledge/database/postgresql-wal-replication-lag-playbook',
 							],
 						},
 						{
@@ -824,6 +833,7 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/redis/redis-clustering-replication',
 								'technical-knowledge/redis/redis-performance-patterns',
 								'technical-knowledge/redis/redis-distributed-lock',
+								'technical-knowledge/redis/redis-lua-scripting-distributed-locks',
 								'technical-knowledge/redis/redis-rate-limiting',
 								'technical-knowledge/redis/redis-session-management',
 							]

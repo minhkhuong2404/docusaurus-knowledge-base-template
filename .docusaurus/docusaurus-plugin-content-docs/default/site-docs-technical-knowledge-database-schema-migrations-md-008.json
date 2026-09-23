@@ -51,8 +51,8 @@
     }
   ],
   "version": "current",
-  "lastUpdatedBy": "Author",
-  "lastUpdatedAt": 1539502055000,
+  "lastUpdatedBy": "Lữ Minh Khương",
+  "lastUpdatedAt": 1786212813000,
   "sidebarPosition": 15,
   "frontMatter": {
     "id": "schema-migrations",
@@ -76,7 +76,7 @@
     "permalink": "/technical-knowledge/database/advanced-sql"
   },
   "next": {
-    "title": "Database Schema Anti-Patterns",
-    "permalink": "/technical-knowledge/database/production-database-antipatterns-hygiene"
+    "title": "Online DDL & Safe Index Creation",
+    "permalink": "/technical-knowledge/database/online-ddl-gh-ost-pt-osc-internals"
   }
 }

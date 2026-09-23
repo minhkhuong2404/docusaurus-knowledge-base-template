@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { useUserProgress, setCachedUserProfile, getCachedUserProfile } from '../../context/UserProgressContext';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../config/firebase';
+import { useLocation } from '@docusaurus/router';
 import { triggerFireworks } from '../../utils/fireworks';
 
 import NavbarGamificationHUD from '../../components/gamification/NavbarGamificationHUD';
@@ -36,6 +37,7 @@ export default function CustomUserNavbarItem() {
   const [showResetModal, setShowResetModal] = useState(false);
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [showGamificationModal, setShowGamificationModal] = useState(false);
+  const [gamificationTab, setGamificationTab] = useState<'quests' | 'trophies' | 'ranks'>('quests');
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [newAdminInput, setNewAdminInput] = useState('');
   const [adminMsg, setAdminMsg] = useState('');
@@ -47,9 +49,16 @@ export default function CustomUserNavbarItem() {
   const [coords, setCoords] = useState<{ top: number; right: number }>({ top: 0, right: 0 });
   const [avatarError, setAvatarError] = useState(false);
 
+  const location = useLocation();
+
   useEffect(() => {
     setAvatarError(false);
   }, [currentUser?.photoURL]);
+
+  // Automatically close dropdown whenever route/page changes
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location.pathname]);
 
   const buttonRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -59,19 +68,39 @@ export default function CustomUserNavbarItem() {
     if (!isMounted) setIsMounted(true);
   }, [isMounted]);
 
-  // Calculate coordinates whenever isOpen becomes true or on scroll/resize
+  const calcCoords = () => {
+    if (buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      return {
+        top: rect.bottom + 8,
+        right: Math.max(12, window.innerWidth - rect.right),
+      };
+    }
+    return null;
+  };
+
+  const handleToggleDropdown = () => {
+    if (!isOpen) {
+      const nextCoords = calcCoords();
+      if (nextCoords) {
+        setCoords(nextCoords);
+      }
+      setIsOpen(true);
+    } else {
+      setIsOpen(false);
+    }
+  };
+
+  // Keep coordinates updated on scroll/resize while open
   useEffect(() => {
     if (!isOpen) return;
 
     let rafId: number | null = null;
 
     function updateCoords() {
-      if (buttonRef.current) {
-        const rect = buttonRef.current.getBoundingClientRect();
-        setCoords({
-          top: rect.bottom + 8,
-          right: Math.max(12, window.innerWidth - rect.right),
-        });
+      const nextCoords = calcCoords();
+      if (nextCoords) {
+        setCoords(nextCoords);
       }
     }
 
@@ -196,7 +225,7 @@ export default function CustomUserNavbarItem() {
         ref={buttonRef}
         type="button"
         className={`login-nav-button user-profile-avatar-button ${roleClass}`}
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={handleToggleDropdown}
         aria-expanded={isOpen}
         aria-label={`User profile for ${name}`}
         title={name}
@@ -218,7 +247,7 @@ export default function CustomUserNavbarItem() {
         )}
       </button>
 
-      {isOpen && isMounted && ReactDOM.createPortal(
+      {isOpen && isMounted && coords.top > 0 && ReactDOM.createPortal(
         <div
           ref={dropdownRef}
           className={`user-account-dropdown-menu ${isSuperAdmin ? 'super-admin-border' : isAdmin ? 'admin-border' : isPremium ? 'premium-border' : ''}`}
@@ -360,9 +389,10 @@ export default function CustomUserNavbarItem() {
             className="user-dropdown-compact-level"
             onClick={() => {
               setIsOpen(false);
+              setGamificationTab('ranks');
               setShowGamificationModal(true);
             }}
-            title="Open Achievements & Codex"
+            title="Open Cosmic Ranks"
             style={{
               padding: '7px 9px',
               borderRadius: '8px',
@@ -409,6 +439,7 @@ export default function CustomUserNavbarItem() {
               className="user-dropdown-item"
               onClick={() => {
                 setIsOpen(false);
+                setGamificationTab('trophies');
                 setShowGamificationModal(true);
               }}
             >
@@ -870,7 +901,7 @@ export default function CustomUserNavbarItem() {
           <GamificationModal
             isOpen={showGamificationModal}
             onClose={() => setShowGamificationModal(false)}
-            initialTab="ranks"
+            initialTab={gamificationTab}
           />
         </React.Suspense>
       )}

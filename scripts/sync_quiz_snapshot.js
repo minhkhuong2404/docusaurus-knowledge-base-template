@@ -200,6 +200,10 @@ async function run() {
   }
 
   const outputPath = path.join(outputDir, 'quizzes.json');
+  if (totalQuestions === 0 && fs.existsSync(outputPath)) {
+    console.log(`⚠️ Network unavailable or 0 questions fetched. Preserving existing snapshot at ${outputPath}`);
+    return;
+  }
   fs.writeFileSync(outputPath, JSON.stringify(result), 'utf-8');
 
   const stats = fs.statSync(outputPath);

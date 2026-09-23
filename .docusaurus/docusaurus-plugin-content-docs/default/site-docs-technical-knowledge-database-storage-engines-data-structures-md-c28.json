@@ -51,8 +51,8 @@
     }
   ],
   "version": "current",
-  "lastUpdatedBy": "Author",
-  "lastUpdatedAt": 1539502055000,
+  "lastUpdatedBy": "Lữ Minh Khương",
+  "lastUpdatedAt": 1788440179000,
   "sidebarPosition": 5,
   "frontMatter": {
     "id": "storage-engines-data-structures",
@@ -72,8 +72,8 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Transactions & Concurrency Control",
-    "permalink": "/technical-knowledge/database/transactions-concurrency"
+    "title": "Long Transactions & The MDL Cascade",
+    "permalink": "/technical-knowledge/database/long-transactions-undo-mdl-meltdown"
   },
   "next": {
     "title": "PostgreSQL Heap Storage Architecture & Internals",

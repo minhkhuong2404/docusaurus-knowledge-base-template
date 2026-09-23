@@ -51,8 +51,8 @@
     }
   ],
   "version": "current",
-  "lastUpdatedBy": "Author",
-  "lastUpdatedAt": 1539502055000,
+  "lastUpdatedBy": "Lữ Minh Khương",
+  "lastUpdatedAt": 1788440179000,
   "sidebarPosition": 4,
   "frontMatter": {
     "id": "transactions-concurrency",
@@ -76,7 +76,7 @@
     "permalink": "/technical-knowledge/database/isolation-levels"
   },
   "next": {
-    "title": "Storage Engines & Data Structures",
-    "permalink": "/technical-knowledge/database/storage-engines-data-structures"
+    "title": "Deadlocks Touching 1 Row (Gap Locks)",
+    "permalink": "/technical-knowledge/database/mysql-deadlocks-gap-locks-internals"
   }
 }

@@ -13,25 +13,26 @@ import {
 import { isTrackableArticle, TOTAL_TRACKABLE_ARTICLES_DEFAULT } from '../../utils/trackablePages';
 import CosmicRankBadge from '../../components/gamification/CosmicRankBadge';
 import { PROBLEMS } from '../../components/DSADashboard';
+import GamificationModal from '../../components/gamification/GamificationModal';
 
 export default function StatsPage(): React.JSX.Element {
   const { progress, gamification, currentUser, totalArticlesCount } = useUserProgress();
-  const [selectedDomain, setSelectedDomain] = useState<string>('all');
-  const [showResetModal, setShowResetModal] = useState<boolean>(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalTab, setModalTab] = useState<'quests' | 'trophies' | 'ranks'>('quests');
 
   const name = currentUser?.displayName || currentUser?.email?.split('@')[0] || 'Learner';
   const email = currentUser?.email || 'Guest Explorer';
 
   // Gamification & Level
   const exp = gamification?.exp || 0;
-  const { currentLevel, nextLevelExp, currentLevelExp, expInLevel, neededInLevel, percent: levelPercent } =
+  const { currentLevel, expInLevel, neededInLevel, percent: levelPercent } =
     getExpProgressInCurrentLevel(exp);
   const rank = getRankForLevel(currentLevel);
 
   // Streak & Shields
   const streakDays = gamification?.streak?.currentStreak || 0;
   const longestStreak = gamification?.streak?.longestStreak || streakDays;
-  const shieldsRemaining = gamification?.streak?.shieldsRemaining ?? 1;
+  const shieldsRemaining = Math.max(0, Math.min(3, gamification?.streak?.shieldsRemaining ?? 3));
 
   // Trackable Articles
   const readPagesList = progress?.readPages || [];
@@ -64,27 +65,69 @@ export default function StatsPage(): React.JSX.Element {
   const trophyPercent = Math.round((unlockedCount / (ACHIEVEMENTS.length || 1)) * 100);
 
   // Domain Breakdown
-  const javaReadCount = readPagesList.filter((p) => p.includes('java')).length;
-  const springReadCount = readPagesList.filter((p) => p.includes('spring')).length;
-  const systemDesignReadCount = readPagesList.filter(
-    (p) => p.includes('system-design') || p.includes('architecture') || p.includes('kafka')
-  ).length;
-  const devOpsReadCount = readPagesList.filter(
-    (p) => p.includes('devops') || p.includes('kubernetes') || p.includes('docker')
-  ).length;
-  const databaseReadCount = readPagesList.filter(
-    (p) => p.includes('database') || p.includes('sql') || p.includes('postgresql')
-  ).length;
-  const securityReadCount = readPagesList.filter(
-    (p) => p.includes('security') || p.includes('jwt') || p.includes('auth')
-  ).length;
-  const dsaReadCount = readPagesList.filter((p) => p.includes('dsa') || p.includes('leetcode')).length;
+  const domains = [
+    {
+      title: 'Java Core',
+      icon: '☕',
+      count: readPagesList.filter((p) => p.includes('java')).length,
+      topics: 'JVM internals, Concurrency, Virtual Threads, Collections',
+      color: '#f59e0b',
+      pool: '5,120 Qs',
+    },
+    {
+      title: 'Spring Boot',
+      icon: '🍃',
+      count: readPagesList.filter((p) => p.includes('spring')).length,
+      topics: 'AOP, Data JPA, Security, Cloud, WebFlux',
+      color: '#4ade80',
+      pool: '5,120 Qs',
+    },
+    {
+      title: 'System Design',
+      icon: '🏗️',
+      count: readPagesList.filter((p) => p.includes('system-design') || p.includes('architecture') || p.includes('kafka')).length,
+      topics: 'Kafka, Distributed Sagas, 2PC, CQRS, High-Scale',
+      color: '#a855f7',
+      pool: '5,120 Qs',
+    },
+    {
+      title: 'DevOps & K8s',
+      icon: '☸️',
+      count: readPagesList.filter((p) => p.includes('devops') || p.includes('kubernetes') || p.includes('docker')).length,
+      topics: 'Docker, Pod Lifecycles, GitOps, Observability',
+      color: '#38bdf8',
+      pool: 'Containers',
+    },
+    {
+      title: 'Database & Storage',
+      icon: '🗄️',
+      count: readPagesList.filter((p) => p.includes('database') || p.includes('sql') || p.includes('postgresql')).length,
+      topics: 'ACID, WAL, MVCC, B-Trees, Cassandra, Redis',
+      color: '#f472b6',
+      pool: 'Storage Engine',
+    },
+    {
+      title: 'Core Security',
+      icon: '🔐',
+      count: readPagesList.filter((p) => p.includes('security') || p.includes('jwt') || p.includes('auth')).length,
+      topics: 'JWT Revocation, OAuth2, PKCE, Rate Limiting',
+      color: '#2dd4bf',
+      pool: 'AuthN/Z',
+    },
+  ];
+
+  const maxDomainCount = Math.max(1, ...domains.map((d) => d.count));
 
   const today = getTodayDateString();
   const dailyQuests = getQuestsForDate(today);
   const questState = gamification?.dailyQuests?.date === today ? gamification.dailyQuests : null;
   const completedQuestIds = new Set(questState?.completedQuestIds || []);
   const completedQuestsCount = dailyQuests.filter((q) => completedQuestIds.has(q.id)).length;
+
+  const openGamification = (tab: 'quests' | 'trophies' | 'ranks') => {
+    setModalTab(tab);
+    setModalOpen(true);
+  };
 
   return (
     <Layout
@@ -94,30 +137,37 @@ export default function StatsPage(): React.JSX.Element {
       <div
         style={{
           minHeight: '100vh',
-          backgroundColor: '#090d16',
+          backgroundColor: '#070a12',
           backgroundImage:
-            'radial-gradient(ellipse 80% 50% at 50% -20%, rgba(56, 189, 248, 0.15), transparent 70%), radial-gradient(ellipse 60% 40% at 80% 80%, rgba(168, 85, 247, 0.1), transparent 70%)',
+            'radial-gradient(ellipse 80% 50% at 50% -20%, rgba(56, 189, 248, 0.12), transparent 70%), radial-gradient(ellipse 60% 40% at 80% 80%, rgba(168, 85, 247, 0.08), transparent 70%)',
           color: '#f8fafc',
-          padding: '28px 16px 80px',
+          padding: '24px 16px 70px',
         }}
       >
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        <style>{`
+          .stats-hero-btn:hover { filter: brightness(1.15); transform: translateY(-1px); }
+          .stats-bento-card { transition: transform 0.2s ease, border-color 0.2s ease; }
+          .stats-bento-card:hover { transform: translateY(-2px); border-color: rgba(56, 189, 248, 0.4) !important; }
+          .domain-row:hover { background: rgba(255, 255, 255, 0.04) !important; }
+        `}</style>
+
+        <div style={{ maxWidth: '1140px', margin: '0 auto' }}>
           {/* ========================================================= */}
           {/* 🌟 1. HERO PROFILE & TELEMETRY HEADER                     */}
           {/* ========================================================= */}
           <div
             style={{
-              padding: '24px 20px',
-              borderRadius: '20px',
-              background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
-              boxShadow: '0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(56, 189, 248, 0.15)',
+              padding: '22px 24px',
+              borderRadius: '18px',
+              background: 'linear-gradient(135deg, rgba(22, 33, 56, 0.65) 0%, rgba(13, 20, 36, 0.85) 100%)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              boxShadow: '0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(56, 189, 248, 0.1)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
               flexWrap: 'wrap',
-              gap: '20px',
-              marginBottom: '28px',
+              gap: '18px',
+              marginBottom: '24px',
             }}
           >
             {/* Left User Profile & Rank */}
@@ -126,47 +176,49 @@ export default function StatsPage(): React.JSX.Element {
 
               <div style={{ flex: 1, minWidth: '220px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                  <h1 style={{ margin: 0, fontSize: '1.65rem', fontWeight: 900, color: '#ffffff' }}>{name}</h1>
+                  <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 900, color: '#ffffff', letterSpacing: '-0.02em' }}>
+                    {name}
+                  </h1>
                   <span
                     style={{
-                      padding: '3px 10px',
-                      borderRadius: '8px',
+                      padding: '2px 8px',
+                      borderRadius: '6px',
                       background: `${rank.color}22`,
                       color: rank.color,
                       border: `1px solid ${rank.color}66`,
                       fontWeight: 800,
-                      fontSize: '0.82rem',
+                      fontSize: '0.78rem',
                     }}
                   >
                     Level {currentLevel} • {rank.title}
                   </span>
                 </div>
-                <div style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.85rem', marginTop: '4px', wordBreak: 'break-word' }}>
-                  {email} • <span style={{ color: '#38bdf8' }}>Engineering Telemetry Active</span>
+                <div style={{ color: 'rgba(255, 255, 255, 0.55)', fontSize: '0.82rem', marginTop: '3px' }}>
+                  {email} • <span style={{ color: '#38bdf8', fontWeight: 600 }}>Active Telemetry</span>
                 </div>
 
                 {/* EXP Bar */}
-                <div style={{ marginTop: '12px', width: '100%', maxWidth: '400px' }}>
+                <div style={{ marginTop: '10px', width: '100%', maxWidth: '380px' }}>
                   <div
                     style={{
                       display: 'flex',
                       justifyContent: 'space-between',
-                      fontSize: '0.78rem',
+                      fontSize: '0.74rem',
                       color: 'rgba(255, 255, 255, 0.6)',
                       marginBottom: '4px',
                     }}
                   >
                     <span>EXP to Level {currentLevel + 1}</span>
-                    <span style={{ fontWeight: 800, color: '#ffffff' }}>
+                    <span style={{ fontWeight: 700, color: '#38bdf8' }}>
                       {expInLevel.toLocaleString()} / {neededInLevel.toLocaleString()} EXP ({levelPercent}%)
                     </span>
                   </div>
                   <div
                     style={{
                       width: '100%',
-                      height: '8px',
-                      borderRadius: '4px',
-                      background: 'rgba(255, 255, 255, 0.1)',
+                      height: '6px',
+                      borderRadius: '3px',
+                      background: 'rgba(255, 255, 255, 0.08)',
                       overflow: 'hidden',
                     }}
                   >
@@ -175,8 +227,8 @@ export default function StatsPage(): React.JSX.Element {
                         width: `${levelPercent}%`,
                         height: '100%',
                         background: `linear-gradient(90deg, ${rank.color}, #38bdf8)`,
-                        borderRadius: '4px',
-                        transition: 'width 0.5s ease',
+                        borderRadius: '3px',
+                        transition: 'width 0.4s ease',
                       }}
                     />
                   </div>
@@ -185,51 +237,69 @@ export default function StatsPage(): React.JSX.Element {
             </div>
 
             {/* Right Quick Actions */}
-            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', width: '100%', maxWidth: '380px' }}>
-              <Link
-                to="/intro"
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              <button
+                type="button"
+                onClick={() => openGamification('quests')}
+                className="stats-hero-btn"
                 style={{
-                  flex: 1,
-                  minWidth: '140px',
-                  padding: '9px 14px',
-                  borderRadius: '10px',
-                  background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.2) 0%, rgba(59, 130, 246, 0.2) 100%)',
+                  padding: '8px 14px',
+                  borderRadius: '9px',
+                  background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.18) 0%, rgba(59, 130, 246, 0.18) 100%)',
                   border: '1px solid #38bdf8',
                   color: '#ffffff',
                   fontWeight: 800,
-                  fontSize: '0.84rem',
-                  textDecoration: 'none',
+                  fontSize: '0.82rem',
+                  cursor: 'pointer',
                   display: 'inline-flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
                   gap: '6px',
-                  boxShadow: '0 4px 14px rgba(56, 189, 248, 0.2)',
-                  transition: 'all 0.2s ease',
+                  transition: 'all 0.15s ease',
                 }}
               >
-                <span>📚</span>
-                <span>Continue Reading</span>
-              </Link>
+                <span>🎯</span>
+                <span>Mission Control ({completedQuestsCount}/3)</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => openGamification('trophies')}
+                className="stats-hero-btn"
+                style={{
+                  padding: '8px 14px',
+                  borderRadius: '9px',
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  color: '#ffffff',
+                  fontWeight: 700,
+                  fontSize: '0.82rem',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                <span>🏆</span>
+                <span>Trophy Codex ({unlockedCount})</span>
+              </button>
 
               <Link
                 to="/arcade"
+                className="stats-hero-btn"
                 style={{
-                  flex: 1,
-                  minWidth: '140px',
-                  padding: '9px 14px',
-                  borderRadius: '10px',
-                  background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(236, 72, 153, 0.2) 100%)',
+                  padding: '8px 14px',
+                  borderRadius: '9px',
+                  background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.18) 0%, rgba(236, 72, 153, 0.18) 100%)',
                   border: '1px solid #a855f7',
-                  color: '#ffffff',
+                  color: '#c084fc',
                   fontWeight: 800,
-                  fontSize: '0.84rem',
+                  fontSize: '0.82rem',
                   textDecoration: 'none',
                   display: 'inline-flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
                   gap: '6px',
-                  boxShadow: '0 4px 14px rgba(168, 85, 247, 0.2)',
-                  transition: 'all 0.2s ease',
+                  transition: 'all 0.15s ease',
                 }}
               >
                 <span>🕹️</span>
@@ -239,285 +309,209 @@ export default function StatsPage(): React.JSX.Element {
           </div>
 
           {/* ========================================================= */}
-          {/* 📊 2. LIFETIME TELEMETRY METRIC CARDS (6 GRIDS)           */}
+          {/* 📊 2. CORE TELEMETRY METRIC CARDS (4 BENTO GRID)          */}
           {/* ========================================================= */}
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-              gap: '14px',
-              marginBottom: '32px',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+              gap: '12px',
+              marginBottom: '24px',
             }}
           >
             {/* 1. ARTICLES READ */}
             <div
+              className="stats-bento-card"
               style={{
-                padding: '20px 22px',
-                borderRadius: '18px',
-                background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.1) 0%, rgba(15, 23, 42, 0.8) 100%)',
-                border: '1px solid rgba(56, 189, 248, 0.3)',
-                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
+                padding: '16px 18px',
+                borderRadius: '14px',
+                background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.08) 0%, rgba(15, 23, 42, 0.6) 100%)',
+                border: '1px solid rgba(56, 189, 248, 0.25)',
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  📖 Trackable Articles
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  📖 Documentation
                 </span>
-                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#38bdf8', background: 'rgba(56, 189, 248, 0.18)', padding: '2px 10px', borderRadius: '12px' }}>
-                  {readPercent}% Completed
+                <span style={{ fontSize: '0.74rem', fontWeight: 800, color: '#38bdf8', background: 'rgba(56, 189, 248, 0.15)', padding: '1px 7px', borderRadius: '6px' }}>
+                  {readPercent}% Read
                 </span>
               </div>
-              <div style={{ fontSize: '1.85rem', fontWeight: 900, color: '#ffffff', marginBottom: '6px' }}>
-                {readCount} <span style={{ fontSize: '1rem', fontWeight: 600, color: 'rgba(255, 255, 255, 0.55)' }}>/ {totalArticles} Total Pages</span>
+              <div style={{ fontSize: '1.65rem', fontWeight: 900, color: '#ffffff', marginBottom: '4px' }}>
+                {readCount} <span style={{ fontSize: '0.88rem', fontWeight: 600, color: 'rgba(255, 255, 255, 0.5)' }}>/ {totalArticles} Articles</span>
               </div>
-              <div style={{ width: '100%', height: '8px', borderRadius: '4px', background: 'rgba(255, 255, 255, 0.08)', overflow: 'hidden', marginTop: '10px' }}>
-                <div style={{ width: `${readPercent}%`, height: '100%', background: 'linear-gradient(90deg, #38bdf8, #818cf8)', borderRadius: '4px', transition: 'width 0.5s ease' }} />
-              </div>
-              <div style={{ fontSize: '0.8rem', color: 'rgba(255, 255, 255, 0.55)', marginTop: '8px' }}>
-                Eligible technical guides, deep-dives & architecture books.
+              <div style={{ width: '100%', height: '5px', borderRadius: '3px', background: 'rgba(255, 255, 255, 0.08)', overflow: 'hidden', marginTop: '8px' }}>
+                <div style={{ width: `${readPercent}%`, height: '100%', background: 'linear-gradient(90deg, #38bdf8, #818cf8)', borderRadius: '3px', transition: 'width 0.4s ease' }} />
               </div>
             </div>
 
             {/* 2. GOOGLE SHEETS DAILY QUIZZES */}
             <div
+              className="stats-bento-card"
               style={{
-                padding: '20px 22px',
-                borderRadius: '18px',
-                background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(15, 23, 42, 0.8) 100%)',
-                border: '1px solid rgba(251, 191, 36, 0.3)',
-                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
+                padding: '16px 18px',
+                borderRadius: '14px',
+                background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.08) 0%, rgba(15, 23, 42, 0.6) 100%)',
+                border: '1px solid rgba(251, 191, 36, 0.25)',
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#fbbf24', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  🎯 Google Sheets Quizzes
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#fbbf24', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  🎯 Quizzes (Live Sync)
                 </span>
-                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#fbbf24', background: 'rgba(251, 191, 36, 0.18)', padding: '2px 10px', borderRadius: '12px' }}>
+                <span style={{ fontSize: '0.74rem', fontWeight: 800, color: '#fbbf24', background: 'rgba(251, 191, 36, 0.15)', padding: '1px 7px', borderRadius: '6px' }}>
                   {quizAccuracy}% Accuracy
                 </span>
               </div>
-              <div style={{ fontSize: '1.85rem', fontWeight: 900, color: '#ffffff', marginBottom: '6px' }}>
-                {quizTotalAnswered} <span style={{ fontSize: '1rem', fontWeight: 600, color: 'rgba(255, 255, 255, 0.55)' }}>({quizCorrect} Correct)</span>
+              <div style={{ fontSize: '1.65rem', fontWeight: 900, color: '#ffffff', marginBottom: '4px' }}>
+                {quizTotalAnswered} <span style={{ fontSize: '0.88rem', fontWeight: 600, color: 'rgba(255, 255, 255, 0.5)' }}>({quizCorrect} Correct)</span>
               </div>
-              <div style={{ width: '100%', height: '8px', borderRadius: '4px', background: 'rgba(255, 255, 255, 0.08)', overflow: 'hidden', marginTop: '10px' }}>
-                <div style={{ width: `${Math.max(4, Math.min(100, (quizTotalAnswered / totalQuizPool) * 100))}%`, height: '100%', background: 'linear-gradient(90deg, #fbbf24, #f59e0b)', borderRadius: '4px', transition: 'width 0.5s ease' }} />
-              </div>
-              <div style={{ fontSize: '0.8rem', color: 'rgba(255, 255, 255, 0.55)', marginTop: '8px' }}>
-                Synced with Google Sheets: 5,120 Qs per topic (15,360 total questions).
+              <div style={{ width: '100%', height: '5px', borderRadius: '3px', background: 'rgba(255, 255, 255, 0.08)', overflow: 'hidden', marginTop: '8px' }}>
+                <div style={{ width: `${Math.max(4, Math.min(100, (quizTotalAnswered / totalQuizPool) * 100))}%`, height: '100%', background: 'linear-gradient(90deg, #fbbf24, #f59e0b)', borderRadius: '3px', transition: 'width 0.4s ease' }} />
               </div>
             </div>
 
             {/* 3. DSA PROBLEM SOLVING */}
             <div
+              className="stats-bento-card"
               style={{
-                padding: '20px 22px',
-                borderRadius: '18px',
-                background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(15, 23, 42, 0.8) 100%)',
-                border: '1px solid rgba(168, 85, 247, 0.3)',
-                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
+                padding: '16px 18px',
+                borderRadius: '14px',
+                background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.08) 0%, rgba(15, 23, 42, 0.6) 100%)',
+                border: '1px solid rgba(168, 85, 247, 0.25)',
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#c084fc', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#c084fc', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                   🧩 DSA Problem Mastery
                 </span>
-                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#c084fc', background: 'rgba(168, 85, 247, 0.18)', padding: '2px 10px', borderRadius: '12px' }}>
-                  {dsaPercent}% Mastery
+                <span style={{ fontSize: '0.74rem', fontWeight: 800, color: '#c084fc', background: 'rgba(168, 85, 247, 0.15)', padding: '1px 7px', borderRadius: '6px' }}>
+                  {dsaSolvedCount} / {totalDsaCount}
                 </span>
               </div>
-              <div style={{ fontSize: '1.85rem', fontWeight: 900, color: '#ffffff', marginBottom: '6px' }}>
-                {dsaSolvedCount} <span style={{ fontSize: '1rem', fontWeight: 600, color: 'rgba(255, 255, 255, 0.55)' }}>/ {totalDsaCount} Solved</span>
+              <div style={{ display: 'flex', gap: '6px', marginTop: '6px' }}>
+                <span style={{ fontSize: '0.74rem', color: '#34d399', background: 'rgba(52, 211, 153, 0.12)', padding: '2px 7px', borderRadius: '5px', fontWeight: 700 }}>
+                  {easySolved} Easy
+                </span>
+                <span style={{ fontSize: '0.74rem', color: '#fbbf24', background: 'rgba(251, 191, 36, 0.12)', padding: '2px 7px', borderRadius: '5px', fontWeight: 700 }}>
+                  {mediumSolved} Med
+                </span>
+                <span style={{ fontSize: '0.74rem', color: '#f43f5e', background: 'rgba(244, 63, 94, 0.12)', padding: '2px 7px', borderRadius: '5px', fontWeight: 700 }}>
+                  {hardSolved} Hard
+                </span>
               </div>
-              <div style={{ width: '100%', height: '8px', borderRadius: '4px', background: 'rgba(255, 255, 255, 0.08)', overflow: 'hidden', marginTop: '10px' }}>
-                <div style={{ width: `${dsaPercent}%`, height: '100%', background: 'linear-gradient(90deg, #c084fc, #a855f7)', borderRadius: '4px', transition: 'width 0.5s ease' }} />
-              </div>
-              <div style={{ display: 'flex', gap: '8px', marginTop: '8px', fontSize: '0.75rem' }}>
-                <span style={{ color: '#34d399' }}>🟢 {easySolved} Easy</span>
-                <span style={{ color: '#fbbf24' }}>🟡 {mediumSolved} Medium</span>
-                <span style={{ color: '#f43f5e' }}>🔴 {hardSolved} Hard</span>
+              <div style={{ width: '100%', height: '5px', borderRadius: '3px', background: 'rgba(255, 255, 255, 0.08)', overflow: 'hidden', marginTop: '10px' }}>
+                <div style={{ width: `${dsaPercent}%`, height: '100%', background: 'linear-gradient(90deg, #c084fc, #a855f7)', borderRadius: '3px', transition: 'width 0.4s ease' }} />
               </div>
             </div>
 
             {/* 4. DAILY STREAK RECORD */}
             <div
+              className="stats-bento-card"
               style={{
-                padding: '20px 22px',
-                borderRadius: '18px',
-                background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.1) 0%, rgba(15, 23, 42, 0.8) 100%)',
-                border: '1px solid rgba(249, 115, 22, 0.3)',
-                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
+                padding: '16px 18px',
+                borderRadius: '14px',
+                background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.08) 0%, rgba(15, 23, 42, 0.6) 100%)',
+                border: '1px solid rgba(249, 115, 22, 0.25)',
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#fb923c', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  🔥 Daily Streak Matrix
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#fb923c', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  🔥 Streak Matrix
                 </span>
-                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#fb923c', background: 'rgba(249, 115, 22, 0.18)', padding: '2px 10px', borderRadius: '12px' }}>
-                  🛡️ {shieldsRemaining} / 3 Shields
-                </span>
-              </div>
-              <div style={{ fontSize: '1.85rem', fontWeight: 900, color: '#ffffff', marginBottom: '6px' }}>
-                {streakDays}d <span style={{ fontSize: '1rem', fontWeight: 600, color: 'rgba(255, 255, 255, 0.55)' }}>Current (Peak: {longestStreak}d)</span>
-              </div>
-              <div style={{ width: '100%', height: '8px', borderRadius: '4px', background: 'rgba(255, 255, 255, 0.08)', overflow: 'hidden', marginTop: '10px' }}>
-                <div style={{ width: `${Math.min(100, (streakDays / 100) * 100)}%`, height: '100%', background: 'linear-gradient(90deg, #f97316, #ef4444)', borderRadius: '4px', transition: 'width 0.5s ease' }} />
-              </div>
-              <div style={{ fontSize: '0.8rem', color: 'rgba(255, 255, 255, 0.55)', marginTop: '8px' }}>
-                Learn 3 continuous days to earn +1 extra shield. Shields automatically recover your streak if a day is missed!
-              </div>
-            </div>
-
-            {/* 5. TROPHIES CODEX */}
-            <div
-              style={{
-                padding: '20px 22px',
-                borderRadius: '18px',
-                background: 'linear-gradient(135deg, rgba(52, 211, 153, 0.1) 0%, rgba(15, 23, 42, 0.8) 100%)',
-                border: '1px solid rgba(52, 211, 153, 0.3)',
-                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
-              }}
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#34d399', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  🏆 Trophies Codex
-                </span>
-                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#34d399', background: 'rgba(52, 211, 153, 0.18)', padding: '2px 10px', borderRadius: '12px' }}>
-                  {trophyPercent}% Unlocked
+                <span style={{ fontSize: '0.74rem', fontWeight: 800, color: '#fb923c', background: 'rgba(249, 115, 22, 0.15)', padding: '1px 7px', borderRadius: '6px' }}>
+                  🛡️ {shieldsRemaining}/3 Shields
                 </span>
               </div>
-              <div style={{ fontSize: '1.85rem', fontWeight: 900, color: '#ffffff', marginBottom: '6px' }}>
-                {unlockedCount} <span style={{ fontSize: '1rem', fontWeight: 600, color: 'rgba(255, 255, 255, 0.55)' }}>/ {ACHIEVEMENTS.length} Badges</span>
+              <div style={{ fontSize: '1.65rem', fontWeight: 900, color: '#ffffff', marginBottom: '4px' }}>
+                {streakDays}d <span style={{ fontSize: '0.88rem', fontWeight: 600, color: 'rgba(255, 255, 255, 0.5)' }}>Current (Peak: {longestStreak}d)</span>
               </div>
-              <div style={{ width: '100%', height: '8px', borderRadius: '4px', background: 'rgba(255, 255, 255, 0.08)', overflow: 'hidden', marginTop: '10px' }}>
-                <div style={{ width: `${trophyPercent}%`, height: '100%', background: 'linear-gradient(90deg, #34d399, #10b981)', borderRadius: '4px', transition: 'width 0.5s ease' }} />
-              </div>
-              <div style={{ fontSize: '0.8rem', color: 'rgba(255, 255, 255, 0.55)', marginTop: '8px' }}>
-                Includes Legendary, Epic, and Celestial engineering achievements.
-              </div>
-            </div>
-
-            {/* 6. TOTAL EXP ENERGY */}
-            <div
-              style={{
-                padding: '20px 22px',
-                borderRadius: '18px',
-                background: 'linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(15, 23, 42, 0.8) 100%)',
-                border: '1px solid rgba(236, 72, 153, 0.3)',
-                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
-              }}
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#f472b6', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  ⚡ Total EXP Energy
-                </span>
-                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#f472b6', background: 'rgba(236, 72, 153, 0.18)', padding: '2px 10px', borderRadius: '12px' }}>
-                  Lv.{currentLevel}
-                </span>
-              </div>
-              <div style={{ fontSize: '1.85rem', fontWeight: 900, color: '#ffffff', marginBottom: '6px' }}>
-                {exp.toLocaleString()} <span style={{ fontSize: '1rem', fontWeight: 600, color: 'rgba(255, 255, 255, 0.55)' }}>EXP Accumulated</span>
-              </div>
-              <div style={{ width: '100%', height: '8px', borderRadius: '4px', background: 'rgba(255, 255, 255, 0.08)', overflow: 'hidden', marginTop: '10px' }}>
-                <div style={{ width: `${levelPercent}%`, height: '100%', background: 'linear-gradient(90deg, #f472b6, #db2777)', borderRadius: '4px', transition: 'width 0.5s ease' }} />
-              </div>
-              <div style={{ fontSize: '0.8rem', color: 'rgba(255, 255, 255, 0.55)', marginTop: '8px' }}>
-                Daily Quests today: {completedQuestsCount} / {dailyQuests.length} completed.
+              <div style={{ width: '100%', height: '5px', borderRadius: '3px', background: 'rgba(255, 255, 255, 0.08)', overflow: 'hidden', marginTop: '8px' }}>
+                <div style={{ width: `${Math.min(100, (streakDays / 100) * 100)}%`, height: '100%', background: 'linear-gradient(90deg, #f97316, #ef4444)', borderRadius: '3px', transition: 'width 0.4s ease' }} />
               </div>
             </div>
           </div>
 
           {/* ========================================================= */}
-          {/* 🧭 3. KNOWLEDGE DOMAIN MASTERY & SYNC BREAKDOWN            */}
+          {/* 🧭 3. KNOWLEDGE DOMAIN MASTERY (Modern Unified Matrix)    */}
           {/* ========================================================= */}
           <div
             style={{
-              padding: '28px',
-              borderRadius: '24px',
-              background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.85) 100%)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
+              padding: '22px 24px',
+              borderRadius: '18px',
+              background: 'linear-gradient(135deg, rgba(22, 33, 56, 0.5) 0%, rgba(13, 20, 36, 0.8) 100%)',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
               boxShadow: '0 15px 45px rgba(0, 0, 0, 0.5)',
-              marginBottom: '36px',
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', marginBottom: '18px' }}>
               <div>
-                <h2 style={{ margin: 0, fontSize: '1.35rem', fontWeight: 900, color: '#ffffff', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <h2 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 900, color: '#ffffff', display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <span>🧭</span>
                   <span>Knowledge Domain Mastery</span>
                 </h2>
-                <div style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.6)', marginTop: '2px' }}>
-                  Granular reading distribution and Google Sheets questions across core engineering domains.
+                <div style={{ fontSize: '0.8rem', color: 'rgba(255, 255, 255, 0.55)', marginTop: '2px' }}>
+                  Granular reading distribution across engineering core topics.
                 </div>
               </div>
-              <span style={{ fontSize: '0.78rem', color: '#34d399', fontWeight: 800, background: 'rgba(52, 211, 153, 0.15)', padding: '4px 12px', borderRadius: '8px', border: '1px solid rgba(52, 211, 153, 0.3)' }}>
+              <span style={{ fontSize: '0.74rem', color: '#34d399', fontWeight: 800, background: 'rgba(52, 211, 153, 0.12)', padding: '3px 10px', borderRadius: '6px', border: '1px solid rgba(52, 211, 153, 0.25)' }}>
                 ⚡ 5,120 Questions / Topic Synced
               </span>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '14px' }}>
-              {/* Java Core */}
-              <div style={{ padding: '16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(245, 158, 11, 0.25)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                  <span style={{ fontWeight: 800, color: '#f59e0b' }}>☕ Java Core</span>
-                  <span style={{ fontSize: '0.72rem', color: '#f59e0b', background: 'rgba(245, 158, 11, 0.15)', padding: '1px 6px', borderRadius: '6px' }}>5,120 Qs</span>
-                </div>
-                <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#ffffff' }}>{javaReadCount} Articles Read</div>
-                <div style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.5)', marginTop: '4px' }}>JVM, Concurrency, Collections & Streams</div>
-              </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '10px' }}>
+              {domains.map((dom) => {
+                const percentOfMax = Math.min(100, Math.round((dom.count / maxDomainCount) * 100));
+                return (
+                  <div
+                    key={dom.title}
+                    className="domain-row"
+                    style={{
+                      padding: '12px 14px',
+                      borderRadius: '10px',
+                      background: 'rgba(255, 255, 255, 0.02)',
+                      border: '1px solid rgba(255, 255, 255, 0.05)',
+                      transition: 'background 0.15s ease',
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span style={{ fontSize: '1.1rem' }}>{dom.icon}</span>
+                        <span style={{ fontWeight: 800, fontSize: '0.88rem', color: '#ffffff' }}>{dom.title}</span>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span style={{ fontSize: '0.82rem', fontWeight: 800, color: dom.color }}>
+                          {dom.count} read
+                        </span>
+                        <span style={{ fontSize: '0.68rem', color: 'rgba(255, 255, 255, 0.45)', background: 'rgba(255, 255, 255, 0.05)', padding: '1px 5px', borderRadius: '4px' }}>
+                          {dom.pool}
+                        </span>
+                      </div>
+                    </div>
 
-              {/* Spring Boot */}
-              <div style={{ padding: '16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(74, 222, 128, 0.25)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                  <span style={{ fontWeight: 800, color: '#4ade80' }}>🍃 Spring Boot</span>
-                  <span style={{ fontSize: '0.72rem', color: '#4ade80', background: 'rgba(74, 222, 128, 0.15)', padding: '1px 6px', borderRadius: '6px' }}>5,120 Qs</span>
-                </div>
-                <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#ffffff' }}>{springReadCount} Articles Read</div>
-                <div style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.5)', marginTop: '4px' }}>AOP, Data JPA, Security, Cloud & Starters</div>
-              </div>
+                    <div style={{ fontSize: '0.72rem', color: 'rgba(255, 255, 255, 0.5)', marginBottom: '8px' }}>
+                      {dom.topics}
+                    </div>
 
-              {/* System Design */}
-              <div style={{ padding: '16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(168, 85, 247, 0.25)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                  <span style={{ fontWeight: 800, color: '#a855f7' }}>🏗️ System Design</span>
-                  <span style={{ fontSize: '0.72rem', color: '#a855f7', background: 'rgba(168, 85, 247, 0.15)', padding: '1px 6px', borderRadius: '6px' }}>5,120 Qs</span>
-                </div>
-                <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#ffffff' }}>{systemDesignReadCount} Articles Read</div>
-                <div style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.5)', marginTop: '4px' }}>Kafka, Distributed Sagas, 2PC & High Scale</div>
-              </div>
-
-              {/* DevOps & Kubernetes */}
-              <div style={{ padding: '16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(56, 189, 248, 0.25)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                  <span style={{ fontWeight: 800, color: '#38bdf8' }}>☸️ DevOps & K8s</span>
-                  <span style={{ fontSize: '0.72rem', color: '#38bdf8', background: 'rgba(56, 189, 248, 0.15)', padding: '1px 6px', borderRadius: '6px' }}>Containers</span>
-                </div>
-                <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#ffffff' }}>{devOpsReadCount} Articles Read</div>
-                <div style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.5)', marginTop: '4px' }}>Docker, ArgoCD, Observability & Terraform</div>
-              </div>
-
-              {/* Database & Storage */}
-              <div style={{ padding: '16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(244, 114, 182, 0.25)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                  <span style={{ fontWeight: 800, color: '#f472b6' }}>🗄️ Database & Storage</span>
-                  <span style={{ fontSize: '0.72rem', color: '#f472b6', background: 'rgba(244, 114, 182, 0.15)', padding: '1px 6px', borderRadius: '6px' }}>PostgreSQL</span>
-                </div>
-                <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#ffffff' }}>{databaseReadCount} Articles Read</div>
-                <div style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.5)', marginTop: '4px' }}>ACID, WAL, MVCC, Heap Storage & Indexing</div>
-              </div>
-
-              {/* Security & Auth */}
-              <div style={{ padding: '16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(52, 211, 153, 0.25)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                  <span style={{ fontWeight: 800, color: '#34d399' }}>🔐 Core Security</span>
-                  <span style={{ fontSize: '0.72rem', color: '#34d399', background: 'rgba(52, 211, 153, 0.15)', padding: '1px 6px', borderRadius: '6px' }}>AuthN & Z</span>
-                </div>
-                <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#ffffff' }}>{securityReadCount} Articles Read</div>
-                <div style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.5)', marginTop: '4px' }}>JWT, Invalidation, OAuth2 & PKCE</div>
-              </div>
+                    <div style={{ width: '100%', height: '4px', borderRadius: '2px', background: 'rgba(255, 255, 255, 0.06)', overflow: 'hidden' }}>
+                      <div style={{ width: `${percentOfMax}%`, height: '100%', background: dom.color, borderRadius: '2px', transition: 'width 0.4s ease' }} />
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
       </div>
+
+      {/* Gamification Modal connected to quick action buttons */}
+      {modalOpen && (
+        <GamificationModal
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          initialTab={modalTab}
+        />
+      )}
     </Layout>
   );
 }

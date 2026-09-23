@@ -1,8 +1,8 @@
 {
-  "id": "3525",
-  "title": "Find X Value of Array II",
-  "url": "https://leetcode.com/problems/find-x-value-of-array-ii/",
-  "difficulty": "hard",
-  "topic": "Array, Math, Segment Tree",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-09-22."
+  "id": "1658",
+  "title": "Minimum Operations to Reduce X to Zero",
+  "url": "https://leetcode.com/problems/minimum-operations-to-reduce-x-to-zero/",
+  "difficulty": "medium",
+  "topic": "Array, Hash Table, Binary Search, Sliding Window, Prefix Sum",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-09-23."
 }

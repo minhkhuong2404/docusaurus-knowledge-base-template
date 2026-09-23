@@ -1356,6 +1356,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/database/exporting-large-datasets-streaming-internals",
+              "path": "/technical-knowledge/database/exporting-large-datasets-streaming-internals",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/database/full-text-search",
               "path": "/technical-knowledge/database/full-text-search",
               "sidebar": "tutorialSidebar"
@@ -1371,6 +1376,16 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/database/long-transactions-undo-mdl-meltdown",
+              "path": "/technical-knowledge/database/long-transactions-undo-mdl-meltdown",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/mysql-deadlocks-gap-locks-internals",
+              "path": "/technical-knowledge/database/mysql-deadlocks-gap-locks-internals",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/database/mysql-indexing-beyond-equality",
               "path": "/technical-knowledge/database/mysql-indexing-beyond-equality",
               "sidebar": "tutorialSidebar"
@@ -1378,6 +1393,16 @@
             {
               "id": "technical-knowledge/database/nosql-distributed",
               "path": "/technical-knowledge/database/nosql-distributed",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/online-ddl-gh-ost-pt-osc-internals",
+              "path": "/technical-knowledge/database/online-ddl-gh-ost-pt-osc-internals",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/optimistic-vs-pessimistic-lock-deep-dive",
+              "path": "/technical-knowledge/database/optimistic-vs-pessimistic-lock-deep-dive",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -1401,8 +1426,23 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/database/postgresql-update-locking-mechanics",
+              "path": "/technical-knowledge/database/postgresql-update-locking-mechanics",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/postgresql-wal-replication-lag-playbook",
+              "path": "/technical-knowledge/database/postgresql-wal-replication-lag-playbook",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/database/production-database-antipatterns-hygiene",
               "path": "/technical-knowledge/database/production-database-antipatterns-hygiene",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/database/query-optimization-beyond-indexes-upsert-traps",
+              "path": "/technical-knowledge/database/query-optimization-beyond-indexes-upsert-traps",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -5641,6 +5681,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "technical-knowledge/java/production-oom-debugging-guide",
+              "path": "/technical-knowledge/java/production-oom-debugging-guide",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "technical-knowledge/java/thread-pools-and-connection-pooling",
               "path": "/technical-knowledge/java/thread-pools-and-connection-pooling",
               "sidebar": "tutorialSidebar"
@@ -6097,6 +6142,11 @@
             {
               "id": "technical-knowledge/redis/redis-interview-questions",
               "path": "/technical-knowledge/redis/redis-interview-questions",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "technical-knowledge/redis/redis-lua-scripting-distributed-locks",
+              "path": "/technical-knowledge/redis/redis-lua-scripting-distributed-locks",
               "sidebar": "tutorialSidebar"
             },
             {
@@ -7157,6 +7207,15 @@
         }
       ],
       "breadcrumbs": true
+    }
+  },
+  "docusaurus-plugin-google-gtag": {
+    "default": {
+      "trackingID": [
+        "G-79SQQZQMCX"
+      ],
+      "anonymizeIP": true,
+      "id": "default"
     }
   }
 }

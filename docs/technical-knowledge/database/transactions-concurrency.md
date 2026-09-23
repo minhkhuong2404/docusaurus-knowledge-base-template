@@ -116,6 +116,10 @@ Gap locks cover: (-∞,10), (10,20), (20,30), (30,+∞)
 
 A query `WHERE id BETWEEN 15 AND 25` locks the gap, preventing inserts into that range.
 
+:::tip[Deep Dive: Why You Deadlock Touching Only 1 Row]
+For an exhaustive analysis of how Gap Locks and Next-Key Locks interact with 3 different access paths of a `WHERE` clause, and why `READ COMMITTED` does not eliminate foreign key or duplicate-check deadlocks, read **[MySQL Deadlocks & Gap Locks Internals](./mysql-deadlocks-gap-locks-internals.md)**.
+:::
+
 ---
 
 ## MVCC — Multi-Version Concurrency Control
@@ -143,6 +147,10 @@ T1 commits
 - Readers don't block writers
 - Writers don't block readers
 - Consistent snapshots for long-running queries
+
+:::info[Deep Dive: PostgreSQL In-Place xmax & 4 Row Lock Modes]
+For a deep dive into how PostgreSQL writes locks directly into the 23-byte tuple header (`xmax`) without a central lock table, the 4 row lock modes, `EvalPlanQual` (EPQ) re-evaluation, and why SSI serializable errors are by design, read **[PostgreSQL Row Locking Mechanics](./postgresql-update-locking-mechanics.md)**.
+:::
 
 ---
 
@@ -228,9 +236,17 @@ public class Order {
 | Failure mode | Blocks / deadlocks | Retry on conflict |
 | Use case | Financial, inventory | User profiles, reads |
 
+:::warning[Flash Sale Warning: Why 'Retry on Conflict' Collapses Ticketing]
+Under extreme contention (10,000 req/s on limited items), Optimistic Concurrency Control (OCC) triggers a **CAS Abort Storm**: 99.9% of transactions fail and retry, consuming 100% database CPU and exhausting HikariCP connection pools. For a full breakdown of the 5 lock lifecycles and queue/Redis Lua solutions, visit **[Optimistic vs Pessimistic Lock Deep Dive](./optimistic-vs-pessimistic-lock-deep-dive.md)**.
+:::
+
 ---
 
 ## High-Throughput Row Locking & Reservation Patterns
+
+:::caution[Production Hazard: Long Transactions & MDL Queue Meltdowns]
+Leaving transactions open while performing external API calls or large batch updates creates History List Length (HLL) bloat and can trigger catastrophic **Metadata Lock (MDL) cascades** where subsequent 1ms reads are blocked behind pending DDL. Read the full incident analysis at **[Long Transactions & MDL Lock Meltdown](./long-transactions-undo-mdl-meltdown.md)**.
+:::
 
 Under massive write concurrency (e.g. Black Friday flash sales with thousands of concurrent checkouts competing for the same SKU), standard single-row pessimistic locking (`UPDATE inventory SET qty = qty - 1 WHERE id = 1`) forms a severe bottleneck: **all concurrent transactions serialize on that single row's exclusive lock**, cascading into connection pool exhaustion and lock wait timeouts.
 

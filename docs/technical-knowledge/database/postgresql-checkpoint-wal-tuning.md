@@ -201,3 +201,9 @@ bgwriter_lru_multiplier = 2.0
 | **Độ trễ commit ứng dụng** | Ổn định phẳng | Nhảy vọt chu kỳ 5-10 phút | Tăng `checkpoint_timeout` từ $5\text{m} \to 15\text{m}$ |
 | **Kích thước WAL Buffers** | $16\text{MB}$ hoặc $-1$ | $< 8\text{MB}$ | Nâng `wal_buffers = 16MB` |
 | **Nén Full-Page Writes** | `wal_compression = on` | `off` | Bật `wal_compression = on` để tiết kiệm $40\%$ I/O đĩa |
+
+---
+
+:::danger[Operational Crisis: Orphan Replication Slots & 2 AM Disk-Full Playbook]
+When WAL files accumulate in `pg_wal/` due to orphan replication slots, silent `archive_command` failures, or no-op update amplification, the database will crash when disk hits 100%. Never run `rm pg_wal/*`! Follow the emergency triage runbook at **[PostgreSQL WAL, Replication & 2 AM Disk-Full Playbook](./postgresql-wal-replication-lag-playbook.md)**.
+:::

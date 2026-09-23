@@ -270,6 +270,10 @@ pt-online-schema-change \
 CREATE INDEX CONCURRENTLY idx_orders_region ON orders (region);
 ```
 
+:::tip[Deep Dive: Online DDL, Row Log Overflows & gh-ost vs pt-osc]
+For an in-depth analysis of why DDL runs smoothly on staging but drains production connection pools, the `ALGORITHM` and `LOCK` matrix, the `innodb_online_alter_log_max_size` buffer overflow trap, trigger-based `pt-osc` vs binlog-based `gh-ost`, and PostgreSQL's 2-pass `INVALID` index trap, read **[Online DDL & Safe Migrations](./online-ddl-gh-ost-pt-osc-internals.md)**.
+:::
+
 ---
 
 ## Batch Backfill Strategy
