@@ -71,6 +71,8 @@ import {
   resetAllQuizProgressInFirestore,
   saveGamificationToFirestore,
   QuizStateItem,
+  formatStudyTime,
+  saveTimeSpentDeltaToFirestore,
 } from '../services/userProgressService';
 import { isTrackableArticle, TOTAL_TRACKABLE_ARTICLES_DEFAULT } from '../utils/trackablePages';
 import {
@@ -137,6 +139,10 @@ interface UserProgressContextType {
   saveMiniGameScore: (gameId: string, score: number) => void;
   toast: GamificationToast | null;
   dismissToast: () => void;
+
+  // ⏱️ Active Online Presence
+  totalTimeOnlineSeconds: number;
+  formatTimeOnline: (seconds?: number) => string;
 }
 
 const UserProgressContext = createContext<UserProgressContextType>({
@@ -170,6 +176,9 @@ const UserProgressContext = createContext<UserProgressContextType>({
   saveMiniGameScore: () => {},
   toast: null,
   dismissToast: () => {},
+
+  totalTimeOnlineSeconds: 0,
+  formatTimeOnline: () => '0m',
 });
 
 const getStorageKey = (uid?: string | null) => `user_progress_cache_${uid || 'guest'}`;
@@ -314,6 +323,11 @@ function mergeQuizProgress(localData: UserProgressData, remoteData: UserProgress
       dailyQuests: remoteGame.dailyQuests?.date === getTodayDateString() ? remoteGame.dailyQuests : localGame.dailyQuests,
       miniGameScores: mergedMiniGameScores,
     },
+    totalTimeOnlineSeconds: Math.max(
+      localData.totalTimeOnlineSeconds || 0,
+      remoteData.totalTimeOnlineSeconds || 0
+    ),
+    timeTrackingSeeded: remoteData.timeTrackingSeeded || localData.timeTrackingSeeded || false,
   };
 }
 
@@ -876,7 +890,7 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
         }
 
         // Only ensure user doc exists ONCE per browser session to prevent redundant getDoc+setDoc cascades
-        const sessionKey = `user_doc_verified_${user.uid}`;
+        const sessionKey = `user_doc_verified_${user.uid}_${user.photoURL ? 'with_photo' : 'no_photo'}`;
         if (typeof window !== 'undefined' && !sessionStorage.getItem(sessionKey)) {
           sessionStorage.setItem(sessionKey, '1');
           ensureUserDocExists(user).catch((err) => {
@@ -924,6 +938,104 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
     const unsubPresence = startPresenceTracker(currentUser, () => expRef.current);
     return () => unsubPresence();
   }, [currentUser?.uid]);
+
+  // ── Active Online Dwell Time Tracking ────────────────────────────────────
+  const lastActiveTimestampRef = useRef<number>(Date.now());
+  const unsyncedFirestoreSecondsRef = useRef<number>(0);
+  const localBufferSecondsRef = useRef<number>(0);
+  const currentUserRef = useRef<User | null>(currentUser);
+  currentUserRef.current = currentUser;
+
+  // Flush any pending accumulated study seconds to Firestore
+  const flushStudyTimeDelta = useCallback(() => {
+    const delta = unsyncedFirestoreSecondsRef.current;
+    if (delta <= 0) return;
+    const uid = currentUserRef.current?.uid;
+    unsyncedFirestoreSecondsRef.current = 0;
+    if (uid) {
+      saveTimeSpentDeltaToFirestore(uid, delta).catch((err) => {
+        console.warn('Failed to sync study time to Firestore:', err);
+      });
+    }
+  }, []);
+
+  // Flush on tab hide, unload, or user switch
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const handleActivity = () => {
+      lastActiveTimestampRef.current = Date.now();
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        flushStudyTimeDelta();
+      }
+    };
+
+    const handleBeforeUnload = () => {
+      flushStudyTimeDelta();
+    };
+
+    const events = ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart'];
+    events.forEach((evt) => {
+      window.addEventListener(evt, handleActivity, { passive: true });
+    });
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      events.forEach((evt) => {
+        window.removeEventListener(evt, handleActivity);
+      });
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      flushStudyTimeDelta();
+    };
+  }, [flushStudyTimeDelta]);
+
+  // Main 1-second active ticker
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const IDLE_TIMEOUT_MS = 2.5 * 60 * 1000; // 2.5 minutes of inactivity pauses counting
+
+    const timer = setInterval(() => {
+      if (typeof document === 'undefined') return;
+
+      const isVisible = document.visibilityState === 'visible';
+      const hasFocus = typeof document.hasFocus === 'function' ? document.hasFocus() : true;
+      const isNotIdle = Date.now() - lastActiveTimestampRef.current < IDLE_TIMEOUT_MS;
+
+      // Only count active dwell time if tab is visible, focused, and user interacted recently
+      if (isVisible && hasFocus && isNotIdle) {
+        unsyncedFirestoreSecondsRef.current += 1;
+        localBufferSecondsRef.current += 1;
+
+        // Update local React state every 5 seconds to provide responsive UI without 1Hz re-rendering overhead
+        if (localBufferSecondsRef.current >= 5) {
+          const step = localBufferSecondsRef.current;
+          localBufferSecondsRef.current = 0;
+          setProgressState((prev) => {
+            const nextSec = (prev.totalTimeOnlineSeconds || 0) + step;
+            const next = { ...prev, totalTimeOnlineSeconds: nextSec };
+            saveCachedProgress(next);
+            return next;
+          });
+        }
+
+        // Flush accumulated seconds to Firestore every 30 seconds
+        if (unsyncedFirestoreSecondsRef.current >= 30) {
+          flushStudyTimeDelta();
+        }
+      }
+    }, 1000);
+
+    return () => {
+      clearInterval(timer);
+      flushStudyTimeDelta();
+    };
+  }, [flushStudyTimeDelta]);
 
   // Evaluate & Grant Concluded Weekly & Monthly Leaderboard Standings Rewards
   // Defer by 5 seconds so it NEVER delays initial page load or login
@@ -1195,6 +1307,10 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const gamification = progress.gamification || defaultGamificationState;
 
+  const formatTimeOnline = useCallback((seconds?: number) => {
+    return formatStudyTime(seconds !== undefined ? seconds : (progress.totalTimeOnlineSeconds || 0));
+  }, [progress.totalTimeOnlineSeconds]);
+
   const contextValue = useMemo(() => ({
     currentUser,
     progress,
@@ -1226,6 +1342,9 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
     saveMiniGameScore,
     toast,
     dismissToast,
+
+    totalTimeOnlineSeconds: progress.totalTimeOnlineSeconds || 0,
+    formatTimeOnline,
   }), [
     currentUser,
     progress,
@@ -1256,6 +1375,7 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
     saveMiniGameScore,
     toast,
     dismissToast,
+    formatTimeOnline,
   ]);
 
   return (

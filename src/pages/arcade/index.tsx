@@ -162,15 +162,6 @@ export default function ArcadePage(): React.JSX.Element {
                   highScore: scores.boss_battle || 0,
                 },
                 {
-                  id: 'puzzle',
-                  title: 'Architecture Pipe Puzzle',
-                  tag: 'System Design Arena',
-                  icon: '⚙️',
-                  desc: 'Design Bitly, Netflix, Uber, Twitter, and Stripe pipelines with HelloInterview deep breakdowns.',
-                  color: '#38bdf8',
-                  highScore: scores.architecture_puzzle || 0,
-                },
-                {
                   id: 'bug',
                   title: 'Spot The Bug Duel',
                   tag: '30s Code Race',
@@ -178,6 +169,15 @@ export default function ArcadePage(): React.JSX.Element {
                   desc: 'Click the exact buggy line in Java concurrency and memory leak snippets.',
                   color: '#f59e0b',
                   highScore: scores.spot_bug || 0,
+                },
+                {
+                  id: 'puzzle',
+                  title: 'Architecture Pipe Puzzle',
+                  tag: 'System Design Arena',
+                  icon: '⚙️',
+                  desc: 'Design Bitly, Netflix, Uber, Twitter, and Stripe pipelines with HelloInterview deep breakdowns.',
+                  color: '#38bdf8',
+                  highScore: scores.architecture_puzzle || 0,
                 },
                 {
                   id: 'sql_optimizer',
@@ -252,8 +252,8 @@ export default function ArcadePage(): React.JSX.Element {
               {() => (
                 <>
                   {activeGame === 'boss' && <OutageBossBattleGame />}
-                  {activeGame === 'puzzle' && <ArchitecturePuzzleGame />}
                   {activeGame === 'bug' && <SpotTheBugDuelGame />}
+                  {activeGame === 'puzzle' && <ArchitecturePuzzleGame />}
                   {activeGame === 'sql_optimizer' && <SqlIndexOptimizerGame />}
                 </>
               )}

@@ -557,7 +557,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
               marginBottom: '14px',
             }}
           >
-            {/* Arena & Difficulty */}
+            {/* Left: Setup & Category & Question Counter */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
               <button
                 type="button"
@@ -573,7 +573,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
                   cursor: 'pointer',
                 }}
               >
-                ⚙️ Arena Setup
+                ⚙️ Setup
               </button>
 
               <select
@@ -601,33 +601,18 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
                 ))}
               </select>
 
-              <div style={{ display: 'flex', gap: '4px' }}>
-                {DIFFICULTY_TABS.map((diff) => {
-                  const isSelected = selectedDifficulty === diff.id;
-                  return (
-                    <button
-                      key={diff.id}
-                      type="button"
-                      onClick={() => {
-                        setSelectedDifficulty(diff.id);
-                        resetRoundState();
-                      }}
-                      style={{
-                        padding: '4px 8px',
-                        borderRadius: '6px',
-                        background: isSelected ? `${diff.color}25` : 'rgba(255, 255, 255, 0.04)',
-                        border: `1px solid ${isSelected ? diff.color : 'rgba(255, 255, 255, 0.08)'}`,
-                        color: isSelected ? diff.color : 'rgba(255, 255, 255, 0.7)',
-                        fontSize: '0.74rem',
-                        fontWeight: 750,
-                        cursor: 'pointer',
-                      }}
-                    >
-                      {diff.label}
-                    </button>
-                  );
-                })}
-              </div>
+              <span
+                style={{
+                  fontSize: '0.74rem',
+                  padding: '4px 8px',
+                  borderRadius: '6px',
+                  background: 'rgba(56, 189, 248, 0.15)',
+                  color: '#38bdf8',
+                  fontWeight: 750,
+                }}
+              >
+                Bug {currentChallengeIndex + 1} / {filteredChallenges.length}
+              </span>
             </div>
 
             {/* Right: Lifelines & Timer & Score */}
@@ -659,17 +644,37 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
                     style={{
                       padding: '4px 8px',
                       borderRadius: '6px',
-                      border: '1px solid rgba(56, 189, 248, 0.3)',
-                      background: breakpointHintUsed ? 'transparent' : 'rgba(56, 189, 248, 0.1)',
-                      color: breakpointHintUsed ? 'rgba(255, 255, 255, 0.3)' : '#38bdf8',
+                      border: '1px solid rgba(251, 191, 36, 0.3)',
+                      background: breakpointHintUsed ? 'transparent' : 'rgba(251, 191, 36, 0.1)',
+                      color: breakpointHintUsed ? 'rgba(255, 255, 255, 0.3)' : '#fbbf24',
                       fontSize: '0.74rem',
                       fontWeight: 700,
                       cursor: breakpointHintUsed ? 'not-allowed' : 'pointer',
                     }}
-                    title="Highlight Line Hint"
+                    title="Highlight Suspect Line"
                   >
-                    ⚡ Hint
+                    💡 Hint
                   </button>
+                  {gameMode !== 'zen' && (
+                    <button
+                      type="button"
+                      disabled={timeWarpUsed}
+                      onClick={handleUseTimeWarp}
+                      style={{
+                        padding: '4px 8px',
+                        borderRadius: '6px',
+                        border: '1px solid rgba(52, 211, 153, 0.3)',
+                        background: timeWarpUsed ? 'transparent' : 'rgba(52, 211, 153, 0.1)',
+                        color: timeWarpUsed ? 'rgba(255, 255, 255, 0.3)' : '#34d399',
+                        fontSize: '0.74rem',
+                        fontWeight: 700,
+                        cursor: timeWarpUsed ? 'not-allowed' : 'pointer',
+                      }}
+                      title="Add 15 Seconds"
+                    >
+                      ⏳ +15s
+                    </button>
+                  )}
                   <button
                     type="button"
                     onClick={handleSkipChallenge}
@@ -683,30 +688,13 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
                       fontWeight: 700,
                       cursor: 'pointer',
                     }}
+                    title="Skip Question"
                   >
                     ⏭️ Skip
                   </button>
                 </>
               )}
 
-              {/* Timer */}
-              {activeModeConfig.timerSecs !== null && (
-                <div
-                  style={{
-                    padding: '3px 8px',
-                    borderRadius: '6px',
-                    background: timeLeft <= 5 ? 'rgba(239, 68, 68, 0.2)' : 'rgba(255, 255, 255, 0.05)',
-                    border: `1px solid ${timeLeft <= 5 ? '#ef4444' : 'rgba(255, 255, 255, 0.1)'}`,
-                    color: timeLeft <= 5 ? '#ef4444' : '#ffffff',
-                    fontWeight: 800,
-                    fontSize: '0.8rem',
-                  }}
-                >
-                  ⏱️ {timeLeft}s
-                </div>
-              )}
-
-              {/* Combo Streak */}
               {combo >= 2 && (
                 <div
                   style={{
@@ -716,27 +704,40 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
                     border: '1px solid #f59e0b',
                     color: '#fde68a',
                     fontWeight: 900,
-                    fontSize: '0.8rem',
-                    boxShadow: '0 0 10px rgba(245, 158, 11, 0.4)',
+                    fontSize: '0.78rem',
                   }}
                 >
-                  🔥 {combo}x Streak
+                  🔥 {combo}x
                 </div>
               )}
 
-              {/* Score */}
+              {gameMode !== 'zen' && (
+                <div
+                  style={{
+                    padding: '4px 10px',
+                    borderRadius: '6px',
+                    background: timeLeft <= 5 ? 'rgba(239, 68, 68, 0.25)' : 'rgba(255, 255, 255, 0.05)',
+                    border: `1px solid ${timeLeft <= 5 ? '#ef4444' : 'rgba(255, 255, 255, 0.1)'}`,
+                    color: timeLeft <= 5 ? '#f87171' : '#fbbf24',
+                    fontWeight: 800,
+                    fontSize: '0.78rem',
+                  }}
+                >
+                  ⏱️ {timeLeft}s
+                </div>
+              )}
+
               <div
                 style={{
-                  padding: '3px 8px',
+                  padding: '4px 10px',
                   borderRadius: '6px',
-                  background: 'rgba(245, 158, 11, 0.15)',
-                  border: '1px solid rgba(245, 158, 11, 0.3)',
-                  color: '#f59e0b',
+                  background: 'rgba(52, 211, 153, 0.15)',
+                  color: '#34d399',
                   fontWeight: 800,
-                  fontSize: '0.8rem',
+                  fontSize: '0.78rem',
                 }}
               >
-                🏆 {score}
+                🏆 {score} pts
               </div>
             </div>
           </div>

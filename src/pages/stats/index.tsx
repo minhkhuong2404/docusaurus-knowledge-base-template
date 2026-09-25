@@ -16,7 +16,7 @@ import { PROBLEMS } from '../../components/DSADashboard';
 import GamificationModal from '../../components/gamification/GamificationModal';
 
 export default function StatsPage(): React.JSX.Element {
-  const { progress, gamification, currentUser, totalArticlesCount } = useUserProgress();
+  const { progress, gamification, currentUser, totalArticlesCount, formatTimeOnline } = useUserProgress();
   const [modalOpen, setModalOpen] = useState(false);
   const [modalTab, setModalTab] = useState<'quests' | 'trophies' | 'ranks'>('quests');
 
@@ -194,7 +194,7 @@ export default function StatsPage(): React.JSX.Element {
                   </span>
                 </div>
                 <div style={{ color: 'rgba(255, 255, 255, 0.55)', fontSize: '0.82rem', marginTop: '3px' }}>
-                  {email} • <span style={{ color: '#38bdf8', fontWeight: 600 }}>Active Telemetry</span>
+                  {email} • <span style={{ color: '#38bdf8', fontWeight: 600 }}>Active Telemetry</span> • <span style={{ color: '#34d399', fontWeight: 600 }}>⏱️ {formatTimeOnline(progress?.totalTimeOnlineSeconds || 0)}</span>
                 </div>
 
                 {/* EXP Bar */}
@@ -314,7 +314,7 @@ export default function StatsPage(): React.JSX.Element {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
               gap: '12px',
               marginBottom: '24px',
             }}
@@ -428,6 +428,32 @@ export default function StatsPage(): React.JSX.Element {
               </div>
               <div style={{ width: '100%', height: '5px', borderRadius: '3px', background: 'rgba(255, 255, 255, 0.08)', overflow: 'hidden', marginTop: '8px' }}>
                 <div style={{ width: `${Math.min(100, (streakDays / 100) * 100)}%`, height: '100%', background: 'linear-gradient(90deg, #f97316, #ef4444)', borderRadius: '3px', transition: 'width 0.4s ease' }} />
+              </div>
+            </div>
+
+            {/* 5. ACTIVE STUDY TIME */}
+            <div
+              className="stats-bento-card"
+              style={{
+                padding: '16px 18px',
+                borderRadius: '14px',
+                background: 'linear-gradient(135deg, rgba(52, 211, 153, 0.08) 0%, rgba(15, 23, 42, 0.6) 100%)',
+                border: '1px solid rgba(52, 211, 153, 0.25)',
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#34d399', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  ⏱️ Active Study Time
+                </span>
+                <span style={{ fontSize: '0.74rem', fontWeight: 800, color: '#34d399', background: 'rgba(52, 211, 153, 0.15)', padding: '1px 7px', borderRadius: '6px' }}>
+                  Live Tracking
+                </span>
+              </div>
+              <div style={{ fontSize: '1.65rem', fontWeight: 900, color: '#ffffff', marginBottom: '4px' }}>
+                {formatTimeOnline(progress?.totalTimeOnlineSeconds || 0)}
+              </div>
+              <div style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.55)', marginTop: '8px', lineHeight: 1.4 }}>
+                Active reading, quizzes, algorithms & arcade
               </div>
             </div>
           </div>

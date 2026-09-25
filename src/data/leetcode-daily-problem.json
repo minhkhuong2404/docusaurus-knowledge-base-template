@@ -1,8 +1,8 @@
 {
-  "id": "1658",
-  "title": "Minimum Operations to Reduce X to Zero",
-  "url": "https://leetcode.com/problems/minimum-operations-to-reduce-x-to-zero/",
-  "difficulty": "medium",
-  "topic": "Array, Hash Table, Binary Search, Sliding Window, Prefix Sum",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-09-23."
+  "id": "3550",
+  "title": "Smallest Index With Digit Sum Equal to Index",
+  "url": "https://leetcode.com/problems/smallest-index-with-digit-sum-equal-to-index/",
+  "difficulty": "easy",
+  "topic": "Array, Math",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-09-24."
 }

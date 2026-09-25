@@ -4,6 +4,7 @@ import { useUserProgress, setCachedUserProfile, getCachedUserProfile } from '../
 import { signOut } from 'firebase/auth';
 import { auth } from '../../config/firebase';
 import { useLocation } from '@docusaurus/router';
+import Link from '@docusaurus/Link';
 import { triggerFireworks } from '../../utils/fireworks';
 
 import NavbarGamificationHUD from '../../components/gamification/NavbarGamificationHUD';
@@ -31,6 +32,7 @@ export default function CustomUserNavbarItem() {
     unlockPremium,
     revokePremium,
     resetQuizProgress,
+    formatTimeOnline,
   } = useUserProgress();
   const [isOpen, setIsOpen] = useState(false);
   const [showKeyModal, setShowKeyModal] = useState(false);
@@ -411,9 +413,25 @@ export default function CustomUserNavbarItem() {
                   {rank.title}
                 </span>
               </div>
-              <span style={{ fontSize: '0.7rem', color: 'rgba(255, 255, 255, 0.65)', fontWeight: 650, flexShrink: 0 }}>
-                {expPercent}%
-              </span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '7px', flexShrink: 0 }}>
+                <span
+                  title="Total Active Study Time"
+                  style={{
+                    fontSize: '0.68rem',
+                    color: '#34d399',
+                    fontWeight: 700,
+                    background: 'rgba(52, 211, 153, 0.12)',
+                    padding: '1px 5px',
+                    borderRadius: '4px',
+                    border: '1px solid rgba(52, 211, 153, 0.25)',
+                  }}
+                >
+                  ⏱️ {formatTimeOnline(progress?.totalTimeOnlineSeconds || 0)}
+                </span>
+                <span style={{ fontSize: '0.7rem', color: 'rgba(255, 255, 255, 0.65)', fontWeight: 650 }}>
+                  {expPercent}%
+                </span>
+              </div>
             </div>
             <div style={{ height: '3px', width: '100%', borderRadius: '2px', background: 'rgba(255, 255, 255, 0.1)', overflow: 'hidden' }}>
               <div style={{ height: '100%', width: `${expPercent}%`, borderRadius: '2px', background: rank.color, transition: 'width 0.4s ease' }} />
@@ -422,6 +440,16 @@ export default function CustomUserNavbarItem() {
 
           {/* Streamlined Menu Actions */}
           <div className="user-dropdown-menu-list" style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+            <Link
+              to="/stats"
+              className="user-dropdown-item"
+              onClick={() => setIsOpen(false)}
+              style={{ textDecoration: 'none', color: 'inherit' }}
+            >
+              <span className="user-dropdown-item-icon">📊</span>
+              <span className="user-dropdown-item-label">Learning Stats & Telemetry</span>
+            </Link>
+
             <button
               type="button"
               className="user-dropdown-item"

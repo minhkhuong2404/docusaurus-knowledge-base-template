@@ -15,6 +15,7 @@ export default function SqlIndexOptimizerGame(): React.JSX.Element {
   const [activePlanTab, setActivePlanTab] = useState<'explain' | 'btree'>('explain');
   const [isSimulating, setIsSimulating] = useState<boolean>(false);
   const [feedbackState, setFeedbackState] = useState<{ isOptimal: boolean; strategy: SqlTuningStrategy } | null>(null);
+  const [gameState, setGameState] = useState<'intro' | 'playing'>('intro');
 
   // Solved tracking in localStorage
   const [solvedIds, setSolvedIds] = useState<string[]>(() => {
@@ -26,6 +27,13 @@ export default function SqlIndexOptimizerGame(): React.JSX.Element {
       return [];
     }
   });
+
+  const handleNextScenario = () => {
+    arcadeAudio.playFlip();
+    const currentIndex = filteredScenarios.findIndex((s) => s.id === currentScenario.id);
+    const nextScenario = filteredScenarios[(currentIndex + 1) % filteredScenarios.length];
+    handleSelectScenario(nextScenario.id);
+  };
 
   const markScenarioSolved = (id: string) => {
     setSolvedIds((prev) => {
@@ -109,96 +117,294 @@ export default function SqlIndexOptimizerGame(): React.JSX.Element {
         color: '#f8fafc',
       }}
     >
-      {/* ── 1. Header Bar ── */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: '10px',
-          paddingBottom: '14px',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-          marginBottom: '16px',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-          <select
-            value={currentScenario.id}
-            onChange={(e) => handleSelectScenario(e.target.value)}
-            style={{
-              padding: '6px 12px',
-              borderRadius: '8px',
-              background: '#0f172a',
-              border: '1.5px solid rgba(16, 185, 129, 0.4)',
-              color: '#34d399',
-              fontSize: '0.82rem',
-              fontWeight: 800,
-              outline: 'none',
-              cursor: 'pointer',
-              maxWidth: '340px',
-            }}
-          >
-            {filteredScenarios.map((s, idx) => (
-              <option key={s.id} value={s.id}>
-                {solvedIds.includes(s.id) ? '✓ ' : ''}{idx + 1}. {s.title} ({s.difficulty})
-              </option>
-            ))}
-          </select>
-
-          {/* Difficulty Filter Pills */}
-          <div style={{ display: 'flex', gap: '4px' }}>
-            {(['all', 'Junior', 'Mid', 'Senior', 'Staff'] as const).map((diff) => {
-              const isSelected = selectedDifficulty === diff;
-              return (
-                <button
-                  key={diff}
-                  type="button"
-                  onClick={() => handleSelectDifficulty(diff)}
-                  style={{
-                    padding: '4px 8px',
-                    borderRadius: '6px',
-                    background: isSelected ? 'rgba(52, 211, 153, 0.2)' : 'rgba(255, 255, 255, 0.04)',
-                    border: `1px solid ${isSelected ? '#34d399' : 'rgba(255, 255, 255, 0.08)'}`,
-                    color: isSelected ? '#34d399' : 'rgba(255, 255, 255, 0.7)',
-                    fontSize: '0.74rem',
-                    fontWeight: 750,
-                    cursor: 'pointer',
-                  }}
-                >
-                  {diff === 'all' ? 'All' : diff}
-                </button>
-              );
-            })}
+      {/* ── 1. INTRO / START SCREEN ── */}
+      {gameState === 'intro' && (
+        <div style={{ textAlign: 'center', padding: '16px 10px' }}>
+          <div style={{ fontSize: '2.5rem', marginBottom: '8px' }}>🗄️</div>
+          <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#ffffff', marginBottom: '6px' }}>
+            SQL Index & Query Crusher
+          </div>
+          <div style={{ fontSize: '0.86rem', color: 'rgba(255, 255, 255, 0.7)', maxWidth: '620px', margin: '0 auto 20px auto', lineHeight: 1.5 }}>
+            Diagnose slow queries, inspect physical execution plans, and tune B-Tree indexes across 113 production database scenarios. Choose the optimal index strategy to eliminate table scans, filesorts, and disk spills.
           </div>
 
-          <span
+          {/* Quick Selectors Row */}
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '18px' }}>
+            {/* Difficulty Filter Pills */}
+            <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', justifyContent: 'center' }}>
+              {(['all', 'Junior', 'Mid', 'Senior', 'Staff'] as const).map((diff) => {
+                const isSelected = selectedDifficulty === diff;
+                return (
+                  <button
+                    key={diff}
+                    type="button"
+                    onClick={() => handleSelectDifficulty(diff)}
+                    style={{
+                      padding: '6px 14px',
+                      borderRadius: '6px',
+                      background: isSelected ? 'rgba(52, 211, 153, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                      border: `1px solid ${isSelected ? '#34d399' : 'rgba(255, 255, 255, 0.08)'}`,
+                      color: isSelected ? '#34d399' : 'rgba(255, 255, 255, 0.7)',
+                      fontSize: '0.78rem',
+                      fontWeight: 750,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {diff === 'all' ? '⭐ All' : diff === 'Junior' ? '🟢 Junior' : diff === 'Mid' ? '🟡 Mid' : diff === 'Senior' ? '🔴 Senior' : '👑 Staff'}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Scenario Select Dropdown */}
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+            <select
+              value={currentScenario.id}
+              onChange={(e) => handleSelectScenario(e.target.value)}
+              style={{
+                padding: '8px 16px',
+                borderRadius: '10px',
+                background: '#0f172a',
+                border: '1.5px solid rgba(16, 185, 129, 0.5)',
+                color: '#34d399',
+                fontSize: '0.9rem',
+                fontWeight: 800,
+                outline: 'none',
+                cursor: 'pointer',
+                maxWidth: '480px',
+                width: '100%',
+              }}
+            >
+              {filteredScenarios.map((s, idx) => (
+                <option key={s.id} value={s.id}>
+                  {solvedIds.includes(s.id) ? '✓ ' : ''}{idx + 1}. {s.title} ({s.difficulty})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Scenario Preview Box */}
+          <div
             style={{
-              fontSize: '0.74rem',
-              fontWeight: 800,
-              padding: '3px 8px',
-              borderRadius: '6px',
-              background: 'rgba(56, 189, 248, 0.15)',
-              color: '#38bdf8',
-              border: '1px solid rgba(56, 189, 248, 0.3)',
+              maxWidth: '700px',
+              margin: '0 auto 22px auto',
+              padding: '16px 20px',
+              borderRadius: '12px',
+              background: 'rgba(0, 0, 0, 0.4)',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              textAlign: 'left',
             }}
           >
-            {currentScenario.categoryLabel}
-          </span>
-        </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', flexWrap: 'wrap', gap: '8px' }}>
+              <div style={{ fontSize: '1rem', fontWeight: 800, color: '#ffffff' }}>
+                {currentScenario.title}
+              </div>
+              <div style={{ display: 'flex', gap: '6px' }}>
+                <span style={{ fontSize: '0.72rem', padding: '3px 8px', borderRadius: '5px', background: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.3)', fontWeight: 800 }}>
+                  {currentScenario.categoryLabel}
+                </span>
+                <span style={{ fontSize: '0.72rem', padding: '3px 8px', borderRadius: '5px', background: 'rgba(52, 211, 153, 0.15)', color: '#34d399', border: '1px solid rgba(52, 211, 153, 0.3)', fontWeight: 800 }}>
+                  {currentScenario.difficulty}
+                </span>
+              </div>
+            </div>
 
-        <div style={{ padding: '5px 12px', borderRadius: '6px', background: 'rgba(52, 211, 153, 0.15)', color: '#34d399', fontSize: '0.76rem', fontWeight: 800 }}>
-          🏆 {solvedIds.length} / {SQL_OPTIMIZER_SCENARIOS.length} Scenarios Optimized
+            <div style={{ fontSize: '0.76rem', color: '#94a3b8', marginBottom: '8px' }}>
+              🗄️ Table: {currentScenario.tableName} ({currentScenario.rowCount} • {currentScenario.tableSizeDisk})
+            </div>
+
+            <div style={{ fontSize: '0.84rem', color: 'rgba(255, 255, 255, 0.8)', lineHeight: 1.45, marginBottom: '12px' }}>
+              {currentScenario.businessContext}
+            </div>
+
+            {/* Slow Query Snippet Preview */}
+            <div style={{ marginBottom: '12px' }}>
+              <div style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: 'rgba(255, 255, 255, 0.5)', marginBottom: '4px' }}>
+                Slow SQL Query:
+              </div>
+              <Highlight theme={prismTheme} code={currentScenario.slowQuery.trim()} language="sql" prism={Prism}>
+                {({ className, style, tokens, getLineProps, getTokenProps }) => (
+                  <pre className={className} style={{ ...style, background: '#070a12', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.08)', padding: '10px 12px', fontSize: '0.78rem', margin: 0, overflowX: 'auto', maxHeight: '130px' }}>
+                    {tokens.map((line, i) => (
+                      <div {...getLineProps({ line, key: i })} key={i}>
+                        {line.map((token, key) => (
+                          <span {...getTokenProps({ token, key })} key={key} />
+                        ))}
+                      </div>
+                    ))}
+                  </pre>
+                )}
+              </Highlight>
+            </div>
+
+            {/* Baseline Metric Badges */}
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              <span style={{ fontSize: '0.74rem', padding: '3px 8px', borderRadius: '5px', background: 'rgba(239, 68, 68, 0.15)', color: '#f87171', border: '1px solid rgba(239, 68, 68, 0.3)', fontWeight: 750 }}>
+                ⏱️ Initial Latency: {currentScenario.initialLatencyMs} ms
+              </span>
+              <span style={{ fontSize: '0.74rem', padding: '3px 8px', borderRadius: '5px', background: 'rgba(251, 191, 36, 0.15)', color: '#fbbf24', border: '1px solid rgba(251, 191, 36, 0.3)', fontWeight: 750 }}>
+                📊 Optimizer Cost: {currentScenario.initialCost.toLocaleString()}
+              </span>
+            </div>
+          </div>
+
+          {/* Solved Progress Banner */}
+          <div style={{ marginBottom: '22px' }}>
+            <span style={{ fontSize: '0.82rem', padding: '4px 14px', borderRadius: '6px', background: 'rgba(52, 211, 153, 0.15)', color: '#34d399', border: '1px solid rgba(52, 211, 153, 0.3)', fontWeight: 800 }}>
+              🏆 {solvedIds.length} / {SQL_OPTIMIZER_SCENARIOS.length} Scenarios Optimized
+            </span>
+          </div>
+
+          {/* 🚀 START BUTTON */}
+          <button
+            type="button"
+            onClick={() => {
+              arcadeAudio.playLaser();
+              setGameState('playing');
+            }}
+            style={{
+              padding: '14px 44px',
+              borderRadius: '12px',
+              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+              border: 'none',
+              color: '#ffffff',
+              fontWeight: 900,
+              fontSize: '1.08rem',
+              cursor: 'pointer',
+              boxShadow: '0 0 25px rgba(16, 185, 129, 0.5)',
+              transition: 'all 0.15s ease',
+            }}
+          >
+            🚀 Start SQL Query Optimization
+          </button>
         </div>
-      </div>
+      )}
+
+      {/* ── 2. IN-GAME OPTIMIZATION ARENA ── */}
+      {gameState === 'playing' && (
+        <>
+          {/* ── 1. Header Bar ── */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '10px',
+              paddingBottom: '14px',
+              borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+              marginBottom: '16px',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+              <select
+                value={currentScenario.id}
+                onChange={(e) => handleSelectScenario(e.target.value)}
+                style={{
+                  padding: '6px 12px',
+                  borderRadius: '8px',
+                  background: '#0f172a',
+                  border: '1.5px solid rgba(16, 185, 129, 0.4)',
+                  color: '#34d399',
+                  fontSize: '0.82rem',
+                  fontWeight: 800,
+                  outline: 'none',
+                  cursor: 'pointer',
+                  maxWidth: '340px',
+                }}
+              >
+                {filteredScenarios.map((s, idx) => (
+                  <option key={s.id} value={s.id}>
+                    {solvedIds.includes(s.id) ? '✓ ' : ''}{idx + 1}. {s.title} ({s.difficulty})
+                  </option>
+                ))}
+              </select>
+
+              {/* Difficulty Filter Pills */}
+              <div style={{ display: 'flex', gap: '4px' }}>
+                {(['all', 'Junior', 'Mid', 'Senior', 'Staff'] as const).map((diff) => {
+                  const isSelected = selectedDifficulty === diff;
+                  return (
+                    <button
+                      key={diff}
+                      type="button"
+                      onClick={() => handleSelectDifficulty(diff)}
+                      style={{
+                        padding: '4px 8px',
+                        borderRadius: '6px',
+                        background: isSelected ? 'rgba(52, 211, 153, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                        border: `1px solid ${isSelected ? '#34d399' : 'rgba(255, 255, 255, 0.08)'}`,
+                        color: isSelected ? '#34d399' : 'rgba(255, 255, 255, 0.7)',
+                        fontSize: '0.74rem',
+                        fontWeight: 750,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      {diff === 'all' ? 'All' : diff}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <span
+                style={{
+                  fontSize: '0.74rem',
+                  fontWeight: 800,
+                  padding: '3px 8px',
+                  borderRadius: '6px',
+                  background: 'rgba(56, 189, 248, 0.15)',
+                  color: '#38bdf8',
+                  border: '1px solid rgba(56, 189, 248, 0.3)',
+                }}
+              >
+                {currentScenario.categoryLabel}
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <button
+                type="button"
+                onClick={() => {
+                  arcadeAudio.playBlip();
+                  setGameState('intro');
+                }}
+                style={{
+                  padding: '5px 10px',
+                  borderRadius: '6px',
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  color: 'rgba(255, 255, 255, 0.8)',
+                  fontSize: '0.75rem',
+                  fontWeight: 750,
+                  cursor: 'pointer',
+                }}
+              >
+                ⚙️ Setup
+              </button>
+              <div style={{ padding: '5px 12px', borderRadius: '6px', background: 'rgba(52, 211, 153, 0.15)', color: '#34d399', fontSize: '0.76rem', fontWeight: 800 }}>
+                🏆 {solvedIds.length} / {SQL_OPTIMIZER_SCENARIOS.length} Scenarios Optimized
+              </div>
+            </div>
+          </div>
 
       {/* ── 2. Table Footprint & Business Context ── */}
       <div style={{ marginBottom: '14px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '6px' }}>
-          <span style={{ fontSize: '1.1rem', fontWeight: 900, color: '#ffffff' }}>{currentScenario.title}</span>
-          <span style={{ fontSize: '0.72rem', padding: '2px 8px', borderRadius: '4px', background: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b', border: '1px solid rgba(245, 158, 11, 0.3)', fontWeight: 700 }}>
-            🗄️ Table: {currentScenario.tableName} ({currentScenario.rowCount} • {currentScenario.tableSizeDisk})
-          </span>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', flexWrap: 'wrap', marginBottom: '6px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+            <span style={{ fontSize: '1.1rem', fontWeight: 900, color: '#ffffff' }}>{currentScenario.title}</span>
+            <span style={{ fontSize: '0.72rem', padding: '2px 8px', borderRadius: '4px', background: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b', border: '1px solid rgba(245, 158, 11, 0.3)', fontWeight: 700 }}>
+              🗄️ Table: {currentScenario.tableName} ({currentScenario.rowCount} • {currentScenario.tableSizeDisk})
+            </span>
+          </div>
+          <div style={{ display: 'flex', gap: '6px' }}>
+            <span style={{ fontSize: '0.72rem', padding: '2px 8px', borderRadius: '4px', background: 'rgba(239, 68, 68, 0.15)', color: '#f87171', border: '1px solid rgba(239, 68, 68, 0.3)', fontWeight: 750 }}>
+              ⏱️ Unindexed: {currentScenario.initialLatencyMs}ms
+            </span>
+            <span style={{ fontSize: '0.72rem', padding: '2px 8px', borderRadius: '4px', background: 'rgba(251, 191, 36, 0.15)', color: '#fbbf24', border: '1px solid rgba(251, 191, 36, 0.3)', fontWeight: 750 }}>
+              Cost: {currentScenario.initialCost.toLocaleString()}
+            </span>
+          </div>
         </div>
         <div style={{ fontSize: '0.82rem', color: 'rgba(255, 255, 255, 0.75)', lineHeight: 1.45 }}>
           {currentScenario.businessContext}
@@ -244,8 +450,118 @@ export default function SqlIndexOptimizerGame(): React.JSX.Element {
         </Highlight>
       </div>
 
-      {/* ── 4. Visual Execution Plan / B-Tree Simulator Tabs ── */}
-      <div style={{ marginBottom: '18px' }}>
+      {/* ── 4. Select Indexing / Tuning Strategy (Placed directly under Query!) ── */}
+      <div style={{ marginBottom: '16px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+          <div style={{ fontSize: '0.72rem', fontWeight: 800, textTransform: 'uppercase', color: 'rgba(255, 255, 255, 0.6)' }}>
+            Choose Index or Query Strategy to Execute:
+          </div>
+          {feedbackState && (
+            <span style={{ fontSize: '0.76rem', fontWeight: 800, color: feedbackState.isOptimal ? '#34d399' : '#f87171' }}>
+              {feedbackState.isOptimal ? `📉 -${costReductionPercent}% Execution Improvement!` : '⚠️ Suboptimal Choice'}
+            </span>
+          )}
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '10px' }}>
+          {currentScenario.strategies.map((strat) => {
+            const isChosen = chosenStrategyId === strat.id;
+            const isHovered = hoveredStrategyId === strat.id && !isChosen;
+
+            return (
+              <div
+                key={strat.id}
+                onMouseEnter={() => setHoveredStrategyId(strat.id)}
+                onMouseLeave={() => setHoveredStrategyId(null)}
+                onClick={() => handleChooseStrategy(strat)}
+                style={{
+                  padding: '12px 14px',
+                  borderRadius: '10px',
+                  background: isChosen
+                    ? strat.isOptimal
+                      ? 'rgba(52, 211, 153, 0.18)'
+                      : 'rgba(239, 68, 68, 0.18)'
+                    : isHovered
+                    ? 'rgba(56, 189, 248, 0.12)'
+                    : 'rgba(255, 255, 255, 0.03)',
+                  border: isChosen
+                    ? strat.isOptimal
+                      ? '1.5px solid #34d399'
+                      : '1.5px solid #ef4444'
+                    : isHovered
+                    ? '1.5px solid #38bdf8'
+                    : '1px solid rgba(255, 255, 255, 0.1)',
+                  cursor: isSimulating ? 'wait' : 'pointer',
+                  transition: 'all 0.15s ease',
+                  boxShadow: isHovered ? '0 4px 14px rgba(56, 189, 248, 0.25)' : 'none',
+                  transform: isHovered ? 'translateY(-2px)' : 'none',
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                  <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#ffffff' }}>
+                    {strat.title}
+                  </div>
+                  {isChosen && (
+                    <span style={{ fontSize: '0.7rem', fontWeight: 800, color: strat.isOptimal ? '#34d399' : '#f87171' }}>
+                      {strat.isOptimal ? '✓ OPTIMAL' : '✕ INEFFICIENT'}
+                    </span>
+                  )}
+                </div>
+                <div style={{ fontFamily: 'monospace', fontSize: '0.74rem', color: isChosen ? '#ffffff' : '#38bdf8', background: 'rgba(0, 0, 0, 0.3)', padding: '5px 8px', borderRadius: '4px', marginBottom: '6px', overflowX: 'auto' }}>
+                  {strat.sqlCommand}
+                </div>
+                <div style={{ fontSize: '0.72rem', color: 'rgba(255, 255, 255, 0.5)' }}>
+                  {isChosen ? 'Executed against database engine' : 'Click to run EXPLAIN ANALYZE ➔'}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ── 5. Feedback Banner & Next Scenario ── */}
+      {feedbackState && (
+        <div
+          style={{
+            padding: '14px 16px',
+            borderRadius: '10px',
+            background: feedbackState.isOptimal ? 'rgba(52, 211, 153, 0.12)' : 'rgba(239, 68, 68, 0.12)',
+            border: `1.5px solid ${feedbackState.isOptimal ? '#34d399' : '#ef4444'}`,
+            marginBottom: '16px',
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px', flexWrap: 'wrap', gap: '8px' }}>
+            <div style={{ fontSize: '0.88rem', fontWeight: 800, color: feedbackState.isOptimal ? '#34d399' : '#fca5a5' }}>
+              {feedbackState.isOptimal ? '✅ Query Optimized Successfully!' : '❌ Inefficient Database Strategy!'}
+            </div>
+            {feedbackState.isOptimal && (
+              <button
+                type="button"
+                onClick={handleNextScenario}
+                style={{
+                  padding: '6px 16px',
+                  borderRadius: '6px',
+                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                  border: 'none',
+                  color: '#ffffff',
+                  fontWeight: 800,
+                  fontSize: '0.82rem',
+                  cursor: 'pointer',
+                  boxShadow: '0 2px 8px rgba(16, 185, 129, 0.4)',
+                }}
+              >
+                Next Scenario ➔
+              </button>
+            )}
+          </div>
+          <div style={{ fontSize: '0.82rem', color: 'rgba(255, 255, 255, 0.9)', lineHeight: 1.45 }}>
+            {feedbackState.strategy.engineExplanation}
+          </div>
+        </div>
+      )}
+
+      {/* ── 6. Visual Execution Plan / B-Tree Simulator Tabs ── */}
+      <div style={{ marginBottom: '16px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
           <div style={{ display: 'flex', gap: '6px' }}>
             <button
@@ -287,12 +603,6 @@ export default function SqlIndexOptimizerGame(): React.JSX.Element {
               🌳 B-Tree vs Disk Scan Simulator
             </button>
           </div>
-
-          {feedbackState && (
-            <span style={{ fontSize: '0.76rem', fontWeight: 800, color: feedbackState.isOptimal ? '#34d399' : '#f87171' }}>
-              {feedbackState.isOptimal ? `📉 -${costReductionPercent}% Cost Reduction!` : '⚠️ Cost Inefficient'}
-            </span>
-          )}
         </div>
 
         {/* TAB A: EXPLAIN Plan Tree */}
@@ -342,7 +652,7 @@ export default function SqlIndexOptimizerGame(): React.JSX.Element {
                 }}
               >
                 <div style={{ fontSize: '0.68rem', fontWeight: 800, color: !feedbackState ? 'rgba(255, 255, 255, 0.4)' : feedbackState.isOptimal ? '#34d399' : '#fbbf24', textTransform: 'uppercase', marginBottom: '4px' }}>
-                  Tuned Strategy Output {!feedbackState && '(Select Strategy Below)'}
+                  Tuned Strategy Output {!feedbackState && '(Select Strategy Above)'}
                 </div>
                 <div style={{ fontSize: '1.2rem', fontWeight: 900, color: !feedbackState ? 'rgba(255, 255, 255, 0.3)' : feedbackState.isOptimal ? '#34d399' : '#fbbf24' }}>
                   {feedbackState ? `${feedbackState.strategy.resultingCost.toLocaleString()} Cost` : '---'}
@@ -351,7 +661,7 @@ export default function SqlIndexOptimizerGame(): React.JSX.Element {
                   Execution Latency: <strong>{feedbackState ? `${feedbackState.strategy.resultingLatencyMs} ms` : '---'}</strong>
                 </div>
                 <div style={{ fontSize: '0.72rem', color: feedbackState?.isOptimal ? '#86efac' : '#fde68a', fontFamily: 'monospace', lineHeight: 1.4 }}>
-                  {feedbackState?.strategy.executionPlanSummary || 'Choose an index strategy to run EXPLAIN ANALYZE.'}
+                  {feedbackState?.strategy.executionPlanSummary || 'Select an index strategy above to view benchmark results.'}
                 </div>
               </div>
             </div>
@@ -416,81 +726,6 @@ export default function SqlIndexOptimizerGame(): React.JSX.Element {
         )}
       </div>
 
-      {/* ── 5. Indexing & Tuning Strategies Bank ── */}
-      <div style={{ marginBottom: '16px' }}>
-        <div style={{ fontSize: '0.72rem', fontWeight: 800, textTransform: 'uppercase', color: 'rgba(255, 255, 255, 0.5)', marginBottom: '8px' }}>
-          Select Indexing / Query Rewrite Strategy:
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '10px' }}>
-          {currentScenario.strategies.map((strat) => {
-            const isChosen = chosenStrategyId === strat.id;
-            const isHovered = hoveredStrategyId === strat.id && !isChosen;
-
-            return (
-              <div
-                key={strat.id}
-                onMouseEnter={() => setHoveredStrategyId(strat.id)}
-                onMouseLeave={() => setHoveredStrategyId(null)}
-                onClick={() => handleChooseStrategy(strat)}
-                style={{
-                  padding: '12px 14px',
-                  borderRadius: '10px',
-                  background: isChosen
-                    ? strat.isOptimal
-                      ? 'rgba(52, 211, 153, 0.18)'
-                      : 'rgba(239, 68, 68, 0.18)'
-                    : isHovered
-                    ? 'rgba(56, 189, 248, 0.12)'
-                    : 'rgba(255, 255, 255, 0.03)',
-                  border: isChosen
-                    ? strat.isOptimal
-                      ? '1.5px solid #34d399'
-                      : '1.5px solid #ef4444'
-                    : isHovered
-                    ? '1.5px solid #38bdf8'
-                    : '1px solid rgba(255, 255, 255, 0.1)',
-                  cursor: isSimulating ? 'wait' : 'pointer',
-                  transition: 'all 0.15s ease',
-                  boxShadow: isHovered ? '0 4px 14px rgba(56, 189, 248, 0.25)' : 'none',
-                  transform: isHovered ? 'translateY(-2px)' : 'none',
-                }}
-              >
-                <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#ffffff', marginBottom: '4px' }}>
-                  {strat.title}
-                </div>
-                <div style={{ fontFamily: 'monospace', fontSize: '0.74rem', color: isChosen ? '#ffffff' : '#38bdf8', background: 'rgba(0, 0, 0, 0.3)', padding: '4px 6px', borderRadius: '4px', marginBottom: '6px', overflowX: 'auto' }}>
-                  {strat.sqlCommand}
-                </div>
-                <div style={{ fontSize: '0.72rem', color: 'rgba(255, 255, 255, 0.5)' }}>
-                  Click to execute EXPLAIN ANALYZE ➔
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* ── 6. Engine Diagnostic Feedback ── */}
-      {feedbackState && (
-        <div
-          style={{
-            padding: '14px 16px',
-            borderRadius: '10px',
-            background: feedbackState.isOptimal ? 'rgba(52, 211, 153, 0.12)' : 'rgba(239, 68, 68, 0.12)',
-            border: `1.5px solid ${feedbackState.isOptimal ? '#34d399' : '#ef4444'}`,
-            marginBottom: '16px',
-          }}
-        >
-          <div style={{ fontSize: '0.86rem', fontWeight: 800, color: feedbackState.isOptimal ? '#34d399' : '#fca5a5', marginBottom: '4px' }}>
-            {feedbackState.isOptimal ? '✅ Query Optimized Successfully!' : '❌ Inefficient Database Strategy!'}
-          </div>
-          <div style={{ fontSize: '0.82rem', color: 'rgba(255, 255, 255, 0.9)', lineHeight: 1.45 }}>
-            {feedbackState.strategy.engineExplanation}
-          </div>
-        </div>
-      )}
-
       {/* ── 7. Architectural Takeaway ── */}
       <div
         style={{
@@ -505,6 +740,8 @@ export default function SqlIndexOptimizerGame(): React.JSX.Element {
       >
         <strong>🎓 Senior Database Takeaway:</strong> {currentScenario.keyTakeaway}
       </div>
-    </div>
-  );
+    </>
+  )}
+</div>
+);
 }

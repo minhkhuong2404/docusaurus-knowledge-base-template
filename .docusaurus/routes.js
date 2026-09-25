@@ -39,11 +39,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'f99'),
+    component: ComponentCreator('/', '1e2'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', '964'),
+        component: ComponentCreator('/', '931'),
         routes: [
           {
             path: '/tags',
@@ -8237,7 +8237,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', 'c6f'),
+            component: ComponentCreator('/', '142'),
             routes: [
               {
                 path: '/aws',
@@ -10049,7 +10049,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/exporting-large-datasets-streaming-internals',
-                component: ComponentCreator('/technical-knowledge/database/exporting-large-datasets-streaming-internals', 'ed8'),
+                component: ComponentCreator('/technical-knowledge/database/exporting-large-datasets-streaming-internals', '0a8'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -10061,7 +10061,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/indexing-query-optimization',
-                component: ComponentCreator('/technical-knowledge/database/indexing-query-optimization', '9d5'),
+                component: ComponentCreator('/technical-knowledge/database/indexing-query-optimization', '179'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -10073,13 +10073,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/long-transactions-undo-mdl-meltdown',
-                component: ComponentCreator('/technical-knowledge/database/long-transactions-undo-mdl-meltdown', 'c0e'),
+                component: ComponentCreator('/technical-knowledge/database/long-transactions-undo-mdl-meltdown', 'f62'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/database/mysql-deadlocks-gap-locks-internals',
-                component: ComponentCreator('/technical-knowledge/database/mysql-deadlocks-gap-locks-internals', 'ec5'),
+                component: ComponentCreator('/technical-knowledge/database/mysql-deadlocks-gap-locks-internals', 'cd2'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -10097,13 +10097,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/online-ddl-gh-ost-pt-osc-internals',
-                component: ComponentCreator('/technical-knowledge/database/online-ddl-gh-ost-pt-osc-internals', 'c0b'),
+                component: ComponentCreator('/technical-knowledge/database/online-ddl-gh-ost-pt-osc-internals', '6e4'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/database/optimistic-vs-pessimistic-lock-deep-dive',
-                component: ComponentCreator('/technical-knowledge/database/optimistic-vs-pessimistic-lock-deep-dive', 'f31'),
+                component: ComponentCreator('/technical-knowledge/database/optimistic-vs-pessimistic-lock-deep-dive', '15a'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -10121,7 +10121,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/postgresql-checkpoint-wal-tuning',
-                component: ComponentCreator('/technical-knowledge/database/postgresql-checkpoint-wal-tuning', '196'),
+                component: ComponentCreator('/technical-knowledge/database/postgresql-checkpoint-wal-tuning', '448'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -10133,13 +10133,13 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/postgresql-update-locking-mechanics',
-                component: ComponentCreator('/technical-knowledge/database/postgresql-update-locking-mechanics', 'a00'),
+                component: ComponentCreator('/technical-knowledge/database/postgresql-update-locking-mechanics', 'e3e'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
               {
                 path: '/technical-knowledge/database/postgresql-wal-replication-lag-playbook',
-                component: ComponentCreator('/technical-knowledge/database/postgresql-wal-replication-lag-playbook', 'b91'),
+                component: ComponentCreator('/technical-knowledge/database/postgresql-wal-replication-lag-playbook', '108'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -10151,7 +10151,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/query-optimization-beyond-indexes-upsert-traps',
-                component: ComponentCreator('/technical-knowledge/database/query-optimization-beyond-indexes-upsert-traps', '0be'),
+                component: ComponentCreator('/technical-knowledge/database/query-optimization-beyond-indexes-upsert-traps', '442'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -10175,7 +10175,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/schema-migrations',
-                component: ComponentCreator('/technical-knowledge/database/schema-migrations', 'aae'),
+                component: ComponentCreator('/technical-knowledge/database/schema-migrations', 'b9a'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -10193,7 +10193,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/database/transactions-concurrency',
-                component: ComponentCreator('/technical-knowledge/database/transactions-concurrency', '3fe'),
+                component: ComponentCreator('/technical-knowledge/database/transactions-concurrency', '1ce'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -15233,7 +15233,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/java/production-oom-debugging-guide',
-                component: ComponentCreator('/technical-knowledge/java/production-oom-debugging-guide', '981'),
+                component: ComponentCreator('/technical-knowledge/java/production-oom-debugging-guide', '6a8'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -15768,7 +15768,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/redis/redis-distributed-lock',
-                component: ComponentCreator('/technical-knowledge/redis/redis-distributed-lock', 'c14'),
+                component: ComponentCreator('/technical-knowledge/redis/redis-distributed-lock', '4fe'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
@@ -15786,7 +15786,7 @@ export default [
               },
               {
                 path: '/technical-knowledge/redis/redis-lua-scripting-distributed-locks',
-                component: ComponentCreator('/technical-knowledge/redis/redis-lua-scripting-distributed-locks', 'a60'),
+                component: ComponentCreator('/technical-knowledge/redis/redis-lua-scripting-distributed-locks', '76e'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

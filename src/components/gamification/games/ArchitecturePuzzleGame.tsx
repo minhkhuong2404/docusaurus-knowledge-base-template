@@ -27,6 +27,7 @@ export default function ArchitecturePuzzleGame() {
   const [feedbackMessage, setFeedbackMessage] = useState<string>('');
   const [activeSimulationMetrics, setActiveSimulationMetrics] = useState<ArchitectureMetrics | null>(null);
   const [showTakeaways, setShowTakeaways] = useState<boolean>(true);
+  const [gameState, setGameState] = useState<'intro' | 'playing'>('intro');
 
   // Hover states for nodes
   const [hoveredBankNodeId, setHoveredBankNodeId] = useState<string | null>(null);
@@ -41,6 +42,13 @@ export default function ArchitecturePuzzleGame() {
       return [];
     }
   });
+
+  const handleNextScenario = () => {
+    arcadeAudio.playFlip();
+    const currentIndex = filteredScenarios.findIndex((s) => s.id === activeScenario.id);
+    const nextScenario = filteredScenarios[(currentIndex + 1) % filteredScenarios.length];
+    handleSelectScenario(nextScenario.id);
+  };
 
   const markScenarioSolved = (scenarioId: string) => {
     setSolvedScenarios((prev) => {
@@ -263,113 +271,340 @@ export default function ArchitecturePuzzleGame() {
         }
       `}</style>
 
-      {/* ── 1. Header Bar with Filters ── */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: '10px',
-          paddingBottom: '14px',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-          marginBottom: '16px',
-        }}
-      >
-        {/* System Scenario Dropdown */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', flex: 1 }}>
-          <select
-            value={activeScenario.id}
-            onChange={(e) => handleSelectScenario(e.target.value)}
+      {/* ── 1. INTRO / START SCREEN ── */}
+      {gameState === 'intro' && (
+        <div style={{ textAlign: 'center', padding: '16px 10px' }}>
+          <div style={{ fontSize: '2.5rem', marginBottom: '8px' }}>⚙️</div>
+          <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#ffffff', marginBottom: '6px' }}>
+            Architecture Pipe Puzzle
+          </div>
+          <div style={{ fontSize: '0.86rem', color: 'rgba(255, 255, 255, 0.7)', maxWidth: '600px', margin: '0 auto 20px auto', lineHeight: 1.5 }}>
+            Design battle-tested distributed system topologies for Netflix, Uber, Stripe & Big Tech. Connect API Gateways, message queues, caches, and databases to pass 50,000 QPS load simulations.
+          </div>
+
+          {/* Quick Selectors Row */}
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '18px' }}>
+            {/* Category Pills */}
+            <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', justifyContent: 'center' }}>
+              {[
+                { id: 'all', label: 'All Arenas', icon: '🌐' },
+                { id: 'big_tech', label: 'Big Tech', icon: '🚀' },
+                { id: 'real_time', label: 'Real-Time', icon: '⚡' },
+                { id: 'fintech', label: 'FinTech', icon: '💳' },
+                { id: 'distributed', label: 'Distributed', icon: '🗄️' },
+              ].map((cat) => {
+                const isSelected = selectedCategory === cat.id;
+                return (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => {
+                      arcadeAudio.playBlip();
+                      setSelectedCategory(cat.id as any);
+                    }}
+                    style={{
+                      padding: '6px 12px',
+                      borderRadius: '6px',
+                      background: isSelected ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                      border: `1px solid ${isSelected ? '#38bdf8' : 'rgba(255, 255, 255, 0.08)'}`,
+                      color: isSelected ? '#38bdf8' : 'rgba(255, 255, 255, 0.7)',
+                      fontSize: '0.78rem',
+                      fontWeight: 750,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <span>{cat.icon}</span> <span>{cat.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Difficulty Pills */}
+            <div style={{ display: 'flex', gap: '4px' }}>
+              {['all', 'Medium', 'Hard', 'Staff+'].map((diff) => {
+                const isSelected = selectedDifficulty === diff;
+                return (
+                  <button
+                    key={diff}
+                    type="button"
+                    onClick={() => {
+                      arcadeAudio.playBlip();
+                      setSelectedDifficulty(diff as any);
+                    }}
+                    style={{
+                      padding: '6px 12px',
+                      borderRadius: '6px',
+                      background: isSelected ? 'rgba(168, 85, 247, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                      border: `1px solid ${isSelected ? '#a855f7' : 'rgba(255, 255, 255, 0.08)'}`,
+                      color: isSelected ? '#c084fc' : 'rgba(255, 255, 255, 0.7)',
+                      fontSize: '0.78rem',
+                      fontWeight: 750,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {diff === 'all' ? '⭐ All' : diff === 'Medium' ? '🟡 Medium' : diff === 'Hard' ? '🔴 Hard' : '👑 Staff+'}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Scenario Select Dropdown */}
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+            <select
+              value={activeScenario.id}
+              onChange={(e) => handleSelectScenario(e.target.value)}
+              style={{
+                padding: '8px 16px',
+                borderRadius: '10px',
+                background: '#0f172a',
+                border: '1.5px solid rgba(56, 189, 248, 0.5)',
+                color: '#38bdf8',
+                fontSize: '0.9rem',
+                fontWeight: 800,
+                outline: 'none',
+                cursor: 'pointer',
+                maxWidth: '460px',
+                width: '100%',
+              }}
+            >
+              {filteredScenarios.map((s, idx) => (
+                <option key={s.id} value={s.id}>
+                  {solvedScenarios.includes(s.id) ? '✓ ' : ''}{idx + 1}. {s.title} ({s.difficulty})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Selected Scenario Preview Box */}
+          <div
             style={{
-              padding: '6px 12px',
-              borderRadius: '8px',
-              background: '#0f172a',
-              border: '1.5px solid rgba(56, 189, 248, 0.4)',
-              color: '#38bdf8',
-              fontSize: '0.82rem',
-              fontWeight: 800,
-              outline: 'none',
-              cursor: 'pointer',
-              maxWidth: '320px',
+              maxWidth: '680px',
+              margin: '0 auto 22px auto',
+              padding: '16px 20px',
+              borderRadius: '12px',
+              background: 'rgba(0, 0, 0, 0.4)',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              textAlign: 'left',
             }}
           >
-            {filteredScenarios.map((s, idx) => (
-              <option key={s.id} value={s.id}>
-                {solvedScenarios.includes(s.id) ? '✓ ' : ''}{idx + 1}. {s.title} ({s.difficulty})
-              </option>
-            ))}
-          </select>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', flexWrap: 'wrap', gap: '8px' }}>
+              <div style={{ fontSize: '1rem', fontWeight: 800, color: '#ffffff' }}>
+                {activeScenario.title}
+              </div>
+              <div style={{ display: 'flex', gap: '6px' }}>
+                <span style={{ fontSize: '0.72rem', padding: '3px 8px', borderRadius: '5px', background: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.3)', fontWeight: 800 }}>
+                  {activeScenario.category.toUpperCase()}
+                </span>
+                <span style={{ fontSize: '0.72rem', padding: '3px 8px', borderRadius: '5px', background: 'rgba(168, 85, 247, 0.15)', color: '#c084fc', border: '1px solid rgba(168, 85, 247, 0.3)', fontWeight: 800 }}>
+                  {activeScenario.difficulty}
+                </span>
+              </div>
+            </div>
 
-          {/* Difficulty Pills */}
-          <div style={{ display: 'flex', gap: '4px' }}>
-            {['all', 'Medium', 'Hard', 'Staff+'].map((diff) => {
-              const isSelected = selectedDifficulty === diff;
-              return (
-                <button
-                  key={diff}
-                  type="button"
-                  onClick={() => {
-                    arcadeAudio.playBlip();
-                    setSelectedDifficulty(diff as any);
-                  }}
-                  style={{
-                    padding: '4px 8px',
-                    borderRadius: '6px',
-                    background: isSelected ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.04)',
-                    border: `1px solid ${isSelected ? '#38bdf8' : 'rgba(255, 255, 255, 0.08)'}`,
-                    color: isSelected ? '#38bdf8' : 'rgba(255, 255, 255, 0.7)',
-                    fontSize: '0.74rem',
-                    fontWeight: 750,
-                    cursor: 'pointer',
-                  }}
-                >
-                  {diff === 'all' ? 'All' : diff}
-                </button>
-              );
-            })}
+            <div style={{ fontSize: '0.84rem', color: 'rgba(255, 255, 255, 0.8)', lineHeight: 1.45, marginBottom: '12px' }}>
+              {activeScenario.businessRequirement}
+            </div>
+
+            {/* Target Specs Badges */}
+            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '12px' }}>
+              <div style={{ fontSize: '0.76rem', padding: '4px 10px', borderRadius: '6px', background: 'rgba(52, 211, 153, 0.1)', color: '#34d399', border: '1px solid rgba(52, 211, 153, 0.25)', fontWeight: 750 }}>
+                ⚡ Target QPS: {activeScenario.targetQps}
+              </div>
+              <div style={{ fontSize: '0.76rem', padding: '4px 10px', borderRadius: '6px', background: 'rgba(251, 191, 36, 0.1)', color: '#fbbf24', border: '1px solid rgba(251, 191, 36, 0.25)', fontWeight: 750 }}>
+                ⏱️ Target p99 Latency: {activeScenario.targetP99}
+              </div>
+            </div>
+
+            {/* Building Blocks Preview */}
+            <div>
+              <div style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: 'rgba(255, 255, 255, 0.5)', marginBottom: '6px' }}>
+                Available Building Blocks in Pool:
+              </div>
+              <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                {activeScenario.availableNodes.map((n) => (
+                  <span
+                    key={n.id}
+                    style={{
+                      fontSize: '0.72rem',
+                      padding: '3px 8px',
+                      borderRadius: '6px',
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      color: 'rgba(255, 255, 255, 0.75)',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                    }}
+                  >
+                    <span>{n.icon}</span> <span>{n.name}</span>
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
 
-        {/* Action Controls */}
-        <div style={{ display: 'flex', gap: '6px' }}>
+          {/* Solved Progress Banner */}
+          <div style={{ marginBottom: '22px' }}>
+            <span style={{ fontSize: '0.82rem', padding: '4px 14px', borderRadius: '6px', background: 'rgba(52, 211, 153, 0.15)', color: '#34d399', border: '1px solid rgba(52, 211, 153, 0.3)', fontWeight: 800 }}>
+              🏆 {solvedScenarios.length} / {SYSTEM_DESIGN_PUZZLES.length} Architecture Puzzles Solved
+            </span>
+          </div>
+
+          {/* 🚀 START BUTTON */}
           <button
             type="button"
-            onClick={handleGiveHint}
+            onClick={() => {
+              arcadeAudio.playLaser();
+              setGameState('playing');
+            }}
             style={{
-              padding: '5px 10px',
-              borderRadius: '6px',
-              background: 'rgba(251, 191, 36, 0.1)',
-              border: '1px solid rgba(251, 191, 36, 0.3)',
-              color: '#fbbf24',
-              fontSize: '0.75rem',
-              fontWeight: 750,
+              padding: '14px 44px',
+              borderRadius: '12px',
+              background: 'linear-gradient(135deg, #0284c7 0%, #38bdf8 100%)',
+              border: 'none',
+              color: '#ffffff',
+              fontWeight: 900,
+              fontSize: '1.08rem',
               cursor: 'pointer',
+              boxShadow: '0 0 25px rgba(56, 189, 248, 0.5)',
+              transition: 'all 0.15s ease',
             }}
           >
-            💡 Hint
+            🚀 Start Architecture Challenge
           </button>
-          <button
-            type="button"
-            onClick={handleClear}
-            style={{
-              padding: '5px 10px',
-              borderRadius: '6px',
-              background: 'rgba(239, 68, 68, 0.1)',
-              border: '1px solid rgba(239, 68, 68, 0.3)',
-              color: '#f87171',
-              fontSize: '0.75rem',
-              fontWeight: 750,
-              cursor: 'pointer',
-            }}
-          >
-            🗑️ Clear
-          </button>
-          <div style={{ padding: '5px 10px', borderRadius: '6px', background: 'rgba(52, 211, 153, 0.15)', color: '#34d399', fontSize: '0.75rem', fontWeight: 800 }}>
-            🏆 {solvedScenarios.length} / {SYSTEM_DESIGN_PUZZLES.length} Solved
-          </div>
         </div>
-      </div>
+      )}
+
+      {/* ── 2. IN-GAME PIPELINE BUILDER ── */}
+      {gameState === 'playing' && (
+        <>
+          {/* Header Bar with Filters */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '10px',
+              paddingBottom: '14px',
+              borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+              marginBottom: '16px',
+            }}
+          >
+            {/* System Scenario Dropdown */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', flex: 1 }}>
+              <select
+                value={activeScenario.id}
+                onChange={(e) => handleSelectScenario(e.target.value)}
+                style={{
+                  padding: '6px 12px',
+                  borderRadius: '8px',
+                  background: '#0f172a',
+                  border: '1.5px solid rgba(56, 189, 248, 0.4)',
+                  color: '#38bdf8',
+                  fontSize: '0.82rem',
+                  fontWeight: 800,
+                  outline: 'none',
+                  cursor: 'pointer',
+                  maxWidth: '320px',
+                }}
+              >
+                {filteredScenarios.map((s, idx) => (
+                  <option key={s.id} value={s.id}>
+                    {solvedScenarios.includes(s.id) ? '✓ ' : ''}{idx + 1}. {s.title} ({s.difficulty})
+                  </option>
+                ))}
+              </select>
+
+              {/* Difficulty Pills */}
+              <div style={{ display: 'flex', gap: '4px' }}>
+                {['all', 'Medium', 'Hard', 'Staff+'].map((diff) => {
+                  const isSelected = selectedDifficulty === diff;
+                  return (
+                    <button
+                      key={diff}
+                      type="button"
+                      onClick={() => {
+                        arcadeAudio.playBlip();
+                        setSelectedDifficulty(diff as any);
+                      }}
+                      style={{
+                        padding: '4px 8px',
+                        borderRadius: '6px',
+                        background: isSelected ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255, 255, 255, 0.04)',
+                        border: `1px solid ${isSelected ? '#38bdf8' : 'rgba(255, 255, 255, 0.08)'}`,
+                        color: isSelected ? '#38bdf8' : 'rgba(255, 255, 255, 0.7)',
+                        fontSize: '0.74rem',
+                        fontWeight: 750,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      {diff === 'all' ? 'All' : diff}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Action Controls */}
+            <div style={{ display: 'flex', gap: '6px' }}>
+              <button
+                type="button"
+                onClick={handleGiveHint}
+                style={{
+                  padding: '5px 10px',
+                  borderRadius: '6px',
+                  background: 'rgba(251, 191, 36, 0.1)',
+                  border: '1px solid rgba(251, 191, 36, 0.3)',
+                  color: '#fbbf24',
+                  fontSize: '0.75rem',
+                  fontWeight: 750,
+                  cursor: 'pointer',
+                }}
+              >
+                💡 Hint
+              </button>
+              <button
+                type="button"
+                onClick={handleClear}
+                style={{
+                  padding: '5px 10px',
+                  borderRadius: '6px',
+                  background: 'rgba(239, 68, 68, 0.1)',
+                  border: '1px solid rgba(239, 68, 68, 0.3)',
+                  color: '#f87171',
+                  fontSize: '0.75rem',
+                  fontWeight: 750,
+                  cursor: 'pointer',
+                }}
+              >
+                🗑️ Clear
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  arcadeAudio.playBlip();
+                  setGameState('intro');
+                }}
+                style={{
+                  padding: '5px 10px',
+                  borderRadius: '6px',
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  color: 'rgba(255, 255, 255, 0.8)',
+                  fontSize: '0.75rem',
+                  fontWeight: 750,
+                  cursor: 'pointer',
+                }}
+              >
+                ⚙️ Setup
+              </button>
+              <div style={{ padding: '5px 10px', borderRadius: '6px', background: 'rgba(52, 211, 153, 0.15)', color: '#34d399', fontSize: '0.75rem', fontWeight: 800 }}>
+                🏆 {solvedScenarios.length} / {SYSTEM_DESIGN_PUZZLES.length} Solved
+              </div>
+            </div>
+          </div>
 
       {/* ── 2. System Objective & NFR Target ── */}
       <div style={{ marginBottom: '16px' }}>
@@ -510,7 +745,148 @@ export default function ArchitecturePuzzleGame() {
         </div>
       </div>
 
-      {/* ── 4. Live System SLA Telemetry Dashboard (Shows when tested) ── */}
+      {/* ── 4. Available Components Bank (Click to Connect) ── */}
+      <div style={{ marginBottom: '16px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+          <div style={{ fontSize: '0.74rem', fontWeight: 800, textTransform: 'uppercase', color: 'rgba(255, 255, 255, 0.6)' }}>
+            Available Building Blocks (Click to Append):
+          </div>
+          <span style={{ fontSize: '0.72rem', color: 'rgba(255, 255, 255, 0.4)' }}>
+            {selectedSequence.length} of {activeScenario.availableNodes.length} used
+          </span>
+        </div>
+
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          {activeScenario.availableNodes.map((node) => {
+            const isAdded = selectedSequence.includes(node.id);
+            const isHovered = hoveredBankNodeId === node.id && !isAdded;
+            return (
+              <button
+                key={node.id}
+                type="button"
+                disabled={isAdded}
+                onMouseEnter={() => setHoveredBankNodeId(node.id)}
+                onMouseLeave={() => setHoveredBankNodeId(null)}
+                onClick={() => {
+                  setHoveredBankNodeId(null);
+                  handleAddNode(node.id);
+                }}
+                style={{
+                  padding: '7px 12px',
+                  borderRadius: '8px',
+                  background: isAdded ? 'rgba(255, 255, 255, 0.02)' : isHovered ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255, 255, 255, 0.05)',
+                  border: isAdded ? '1px dashed rgba(255, 255, 255, 0.08)' : isHovered ? '1.5px solid #38bdf8' : '1px solid rgba(255, 255, 255, 0.15)',
+                  color: isAdded ? 'rgba(255, 255, 255, 0.3)' : '#ffffff',
+                  boxShadow: isHovered ? '0 4px 14px rgba(56, 189, 248, 0.3)' : 'none',
+                  transform: isHovered ? 'translateY(-2px)' : 'none',
+                  fontSize: '0.8rem',
+                  fontWeight: 700,
+                  cursor: isAdded ? 'default' : 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                <span>{node.icon}</span>
+                <span>{node.name}</span>
+                <span style={{ fontSize: '0.68rem', color: isAdded ? 'rgba(52, 211, 153, 0.5)' : isHovered ? '#38bdf8' : 'rgba(255, 255, 255, 0.4)' }}>
+                  {isAdded ? '✓ Connected' : `(${node.role})`}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ── 5. Simulation Execution & Next Scenario ── */}
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '16px' }}>
+        <button
+          type="button"
+          disabled={simulationState === 'simulating' || selectedSequence.length === 0}
+          onClick={handleTestArchitecture}
+          style={{
+            flex: 1,
+            padding: '12px',
+            borderRadius: '10px',
+            background: simulationState === 'simulating'
+              ? 'rgba(56, 189, 248, 0.4)'
+              : selectedSequence.length === 0
+              ? 'rgba(255, 255, 255, 0.05)'
+              : 'linear-gradient(135deg, #38bdf8 0%, #3b82f6 100%)',
+            border: 'none',
+            color: selectedSequence.length === 0 ? 'rgba(255, 255, 255, 0.4)' : '#ffffff',
+            fontWeight: 900,
+            fontSize: '0.95rem',
+            cursor: simulationState === 'simulating' ? 'wait' : selectedSequence.length === 0 ? 'not-allowed' : 'pointer',
+            boxShadow: selectedSequence.length > 0 ? '0 4px 16px rgba(56, 189, 248, 0.35)' : 'none',
+            transition: 'all 0.2s ease',
+          }}
+        >
+          {simulationState === 'simulating'
+            ? '⏳ Running Traffic Simulation...'
+            : selectedSequence.length === 0
+            ? 'Assemble Components Above to Simulate'
+            : '🚀 Simulate Traffic & Load Test'}
+        </button>
+        {simulationState === 'success' && (
+          <button
+            type="button"
+            onClick={handleNextScenario}
+            style={{
+              padding: '12px 22px',
+              borderRadius: '10px',
+              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+              border: 'none',
+              color: '#ffffff',
+              fontWeight: 800,
+              fontSize: '0.95rem',
+              cursor: 'pointer',
+              boxShadow: '0 4px 16px rgba(16, 185, 129, 0.4)',
+              transition: 'all 0.2s ease',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            Next Puzzle ➔
+          </button>
+        )}
+      </div>
+
+      {/* ── 6. Feedback & Diagnostics ── */}
+      {feedbackMessage && (
+        <div
+          style={{
+            padding: '12px 16px',
+            borderRadius: '10px',
+            background:
+              simulationState === 'success'
+                ? 'rgba(52, 211, 153, 0.15)'
+                : simulationState === 'simulating'
+                ? 'rgba(56, 189, 248, 0.15)'
+                : 'rgba(239, 68, 68, 0.15)',
+            border: `1px solid ${
+              simulationState === 'success'
+                ? '#34d399'
+                : simulationState === 'simulating'
+                ? '#38bdf8'
+                : '#ef4444'
+            }`,
+            color:
+              simulationState === 'success'
+                ? '#34d399'
+                : simulationState === 'simulating'
+                ? '#38bdf8'
+                : '#fca5a5',
+            fontSize: '0.84rem',
+            lineHeight: 1.45,
+            marginBottom: '16px',
+          }}
+        >
+          {feedbackMessage}
+        </div>
+      )}
+
+      {/* ── 7. Live System SLA Telemetry Dashboard (Shows when tested) ── */}
       {activeSimulationMetrics && (
         <div
           style={{
@@ -570,88 +946,7 @@ export default function ArchitecturePuzzleGame() {
         </div>
       )}
 
-      {/* ── 5. Available Components Bank ── */}
-      <div style={{ marginBottom: '18px' }}>
-        <div style={{ fontSize: '0.72rem', fontWeight: 800, textTransform: 'uppercase', color: 'rgba(255, 255, 255, 0.5)', marginBottom: '6px' }}>
-          Available System Components (Click to Connect):
-        </div>
-
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-          {activeScenario.availableNodes.map((node) => {
-            const isAdded = selectedSequence.includes(node.id);
-            const isHovered = hoveredBankNodeId === node.id && !isAdded;
-            return (
-              <button
-                key={node.id}
-                type="button"
-                disabled={isAdded}
-                onMouseEnter={() => setHoveredBankNodeId(node.id)}
-                onMouseLeave={() => setHoveredBankNodeId(null)}
-                onClick={() => {
-                  setHoveredBankNodeId(null);
-                  handleAddNode(node.id);
-                }}
-                style={{
-                  padding: '8px 12px',
-                  borderRadius: '8px',
-                  background: isAdded ? 'rgba(255, 255, 255, 0.02)' : isHovered ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255, 255, 255, 0.05)',
-                  border: isAdded ? '1px dashed rgba(255, 255, 255, 0.08)' : isHovered ? '1.5px solid #38bdf8' : '1px solid rgba(255, 255, 255, 0.15)',
-                  color: isAdded ? 'rgba(255, 255, 255, 0.3)' : '#ffffff',
-                  boxShadow: isHovered ? '0 4px 14px rgba(56, 189, 248, 0.3)' : 'none',
-                  transform: isHovered ? 'translateY(-2px)' : 'none',
-                  fontSize: '0.8rem',
-                  fontWeight: 700,
-                  cursor: isAdded ? 'default' : 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  transition: 'all 0.15s ease',
-                }}
-              >
-                <span>{node.icon}</span>
-                <span>{node.name}</span>
-                <span style={{ fontSize: '0.68rem', color: isHovered ? '#38bdf8' : 'rgba(255, 255, 255, 0.4)' }}>({node.role})</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* ── 6. Feedback & Diagnostics ── */}
-      {feedbackMessage && (
-        <div
-          style={{
-            padding: '12px 16px',
-            borderRadius: '10px',
-            background:
-              simulationState === 'success'
-                ? 'rgba(52, 211, 153, 0.15)'
-                : simulationState === 'simulating'
-                ? 'rgba(56, 189, 248, 0.15)'
-                : 'rgba(239, 68, 68, 0.15)',
-            border: `1px solid ${
-              simulationState === 'success'
-                ? '#34d399'
-                : simulationState === 'simulating'
-                ? '#38bdf8'
-                : '#ef4444'
-            }`,
-            color:
-              simulationState === 'success'
-                ? '#34d399'
-                : simulationState === 'simulating'
-                ? '#38bdf8'
-                : '#fca5a5',
-            fontSize: '0.84rem',
-            lineHeight: 1.45,
-            marginBottom: '16px',
-          }}
-        >
-          {feedbackMessage}
-        </div>
-      )}
-
-      {/* ── 7. Architectural Takeaways Accordion (when solved or toggled) ── */}
+      {/* ── 8. Architectural Takeaways Accordion (when solved or toggled) ── */}
       {simulationState === 'success' && activeScenario.keyDesignTakeaways && (
         <div
           style={{
@@ -690,30 +985,8 @@ export default function ArchitecturePuzzleGame() {
           )}
         </div>
       )}
-
-      {/* Test Button */}
-      <button
-        type="button"
-        disabled={simulationState === 'simulating'}
-        onClick={handleTestArchitecture}
-        style={{
-          width: '100%',
-          padding: '12px',
-          borderRadius: '10px',
-          background: simulationState === 'simulating'
-            ? 'rgba(56, 189, 248, 0.4)'
-            : 'linear-gradient(135deg, #38bdf8 0%, #3b82f6 100%)',
-          border: 'none',
-          color: '#ffffff',
-          fontWeight: 900,
-          fontSize: '0.95rem',
-          cursor: simulationState === 'simulating' ? 'wait' : 'pointer',
-          boxShadow: '0 4px 16px rgba(56, 189, 248, 0.4)',
-          transition: 'all 0.2s ease',
-        }}
-      >
-        {simulationState === 'simulating' ? '⏳ Running Traffic Simulation...' : '🚀 Simulate Traffic & Load Test'}
-      </button>
-    </div>
-  );
+    </>
+  )}
+</div>
+);
 }

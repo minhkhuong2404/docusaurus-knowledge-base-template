@@ -92,6 +92,8 @@ export interface UserProgressData {
     starredProblems: string[];
   };
   gamification?: GamificationState;
+  totalTimeOnlineSeconds?: number;
+  timeTrackingSeeded?: boolean;
   updatedAt?: any;
 }
 
@@ -110,7 +112,77 @@ export const defaultUserProgress: UserProgressData = {
     starredProblems: [],
   },
   gamification: defaultGamificationState,
+  totalTimeOnlineSeconds: 0,
+  timeTrackingSeeded: false,
 };
+
+/**
+ * Calculates a fair, realistic historical study time baseline (in seconds)
+ * for users who already have levels, read articles, completed quizzes, and solved DSA problems.
+ */
+export function calculateEstimatedHistoricalSeconds(data: Partial<UserProgressData>): number {
+  const readCount = Array.isArray(data.readPages) ? data.readPages.length : 0;
+  const quizCount = data.quizStats?.totalQuestionsAnswered || 0;
+  const dsaCount = Array.isArray(data.dsaProgress?.solvedProblems) ? data.dsaProgress.solvedProblems.length : 0;
+  const activeDaysCount = Array.isArray(data.gamification?.streak?.activeDates)
+    ? data.gamification!.streak.activeDates.length
+    : 0;
+  const exp = data.gamification?.exp || 0;
+
+  // Concrete task baseline:
+  // - 5 minutes (300s) per technical doc read
+  // - 45s per quiz question answered
+  // - 15 minutes (900s) per DSA algorithm solved
+  // - 10 minutes (600s) per active study day on streak
+  const activitySeconds =
+    readCount * 300 + quizCount * 45 + dsaCount * 900 + activeDaysCount * 600;
+
+  // Cross-check against total EXP (~10 EXP per active study minute = 6s per EXP)
+  const expSeconds = Math.round(exp * 6);
+
+  // Return the higher realistic estimate so existing high-level users don't start at 0
+  return Math.max(activitySeconds, expSeconds, 0);
+}
+
+/**
+ * Formats seconds into clean, human-readable study time: e.g. "45m", "14h 28m".
+ */
+export function formatStudyTime(totalSeconds: number): string {
+  const sec = Math.max(0, Math.round(totalSeconds || 0));
+  if (sec < 60) return `${sec}s`;
+  const minutes = Math.floor(sec / 60);
+  if (minutes < 60) return `${minutes}m`;
+  const hours = Math.floor(minutes / 60);
+  const remainingMins = minutes % 60;
+  return remainingMins > 0 ? `${hours}h ${remainingMins}m` : `${hours}h`;
+}
+
+/**
+ * Save active online time delta to Firestore using atomic increment
+ */
+export async function saveTimeSpentDeltaToFirestore(uid: string, deltaSeconds: number): Promise<void> {
+  if (!uid || deltaSeconds <= 0) return;
+  const userDocRef = doc(db, 'users', uid);
+  try {
+    await updateDoc(userDocRef, {
+      totalTimeOnlineSeconds: increment(deltaSeconds),
+      updatedAt: serverTimestamp(),
+    });
+  } catch {
+    try {
+      await setDoc(
+        userDocRef,
+        {
+          totalTimeOnlineSeconds: increment(deltaSeconds),
+          updatedAt: serverTimestamp(),
+        },
+        { merge: true }
+      );
+    } catch {
+      // Non-fatal fallback
+    }
+  }
+}
 
 /**
  * Subscribe to real-time Cloud Firestore updates for a given user UID
@@ -131,6 +203,49 @@ export function subscribeToUserProgress(
           if (raw.email) localStorage.setItem(`verified_email_${raw.email.toLowerCase()}`, 'true');
           localStorage.setItem(`verified_uid_${uid}`, 'true');
         }
+        // Check if the user has ALREADY been seeded (either in Firestore doc or local client cache)
+        const isClientSeeded = typeof window !== 'undefined' && localStorage.getItem(`time_seeded_${uid}`) === 'true';
+        const isAlreadySeeded =
+          raw.timeTrackingSeeded === true ||
+          typeof raw.totalTimeOnlineSeconds === 'number' ||
+          isClientSeeded;
+
+        let totalTimeOnlineSeconds: number;
+
+        if (isAlreadySeeded) {
+          // STRICT RULE: Once seeded, NEVER re-calculate or re-estimate.
+          // Subsequent tracking strictly reflects real active dwell usage!
+          totalTimeOnlineSeconds = typeof raw.totalTimeOnlineSeconds === 'number'
+            ? raw.totalTimeOnlineSeconds
+            : 0;
+
+          // If doc has totalTimeOnlineSeconds but missing timeTrackingSeeded boolean, backfill flag once
+          if (raw.timeTrackingSeeded !== true && uid) {
+            updateDoc(userDocRef, { timeTrackingSeeded: true }).catch(() => {});
+          }
+          if (typeof window !== 'undefined') {
+            localStorage.setItem(`time_seeded_${uid}`, 'true');
+          }
+        } else {
+          // STRICT ONE-TIME RUN: For existing high-level users without any study time record,
+          // compute a realistic baseline ONCE, lock the flag, and write both to Firestore.
+          totalTimeOnlineSeconds = calculateEstimatedHistoricalSeconds(raw);
+
+          if (uid) {
+            const seedPayload = {
+              totalTimeOnlineSeconds,
+              timeTrackingSeeded: true,
+              updatedAt: serverTimestamp(),
+            };
+            updateDoc(userDocRef, seedPayload).catch(() => {
+              setDoc(userDocRef, seedPayload, { merge: true }).catch(() => {});
+            });
+          }
+          if (typeof window !== 'undefined') {
+            localStorage.setItem(`time_seeded_${uid}`, 'true');
+          }
+        }
+
         onUpdate({
           uid,
           email: raw.email || '',
@@ -176,12 +291,16 @@ export function subscribeToUserProgress(
             },
             miniGameScores: raw.gamification?.miniGameScores || {},
           },
+          totalTimeOnlineSeconds,
+          timeTrackingSeeded: true,
         });
       } else {
         // Initialize doc in Firestore for new user
         const initialDoc: UserProgressData = {
           ...defaultUserProgress,
           uid,
+          totalTimeOnlineSeconds: 0,
+          timeTrackingSeeded: true,
         };
         onUpdate(initialDoc);
         setDoc(userDocRef, {
@@ -191,6 +310,9 @@ export function subscribeToUserProgress(
         }, { merge: true }).catch((err) => {
           console.error('Error auto-creating new user doc in Firestore:', err);
         });
+        if (typeof window !== 'undefined') {
+          localStorage.setItem(`time_seeded_${uid}`, 'true');
+        }
       }
     },
     (error) => {

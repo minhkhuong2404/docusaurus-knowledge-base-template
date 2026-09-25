@@ -415,19 +415,19 @@ export default function OutageBossBattleGame() {
     >
       {/* ── 1. INTRO SCREEN ── */}
       {gameState === 'intro' && (
-        <div>
-          {/* Header */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <span style={{ fontSize: '1.8rem' }}>👾</span>
-              <div>
-                <div style={{ fontSize: '1.15rem', fontWeight: 900, color: '#ffffff' }}>Outage Boss Battle</div>
-                <div style={{ fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.65)' }}>Mitigate cascading outages and defend SLA uptime with live telemetry</div>
-              </div>
-            </div>
+        <div style={{ textAlign: 'center', padding: '10px 6px' }}>
+          <div style={{ fontSize: '2.4rem', marginBottom: '6px' }}>👾</div>
+          <div style={{ fontSize: '1.35rem', fontWeight: 900, color: '#ffffff', marginBottom: '4px' }}>
+            Outage Boss Battle
+          </div>
+          <div style={{ fontSize: '0.86rem', color: 'rgba(255, 255, 255, 0.7)', maxWidth: '580px', margin: '0 auto 18px auto', lineHeight: 1.45 }}>
+            Defend SLA uptime against cascading outages, memory leaks, and distributed failures. Triage root causes under pressure before your SLA breaches!
+          </div>
 
-            {/* Severity Pill Selector */}
-            <div style={{ display: 'flex', gap: '6px' }}>
+          {/* Quick Selectors Row */}
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '16px' }}>
+            {/* Severity Selector */}
+            <div style={{ display: 'flex', gap: '4px' }}>
               {(Object.keys(SEVERITY_CONFIGS) as SeverityLevel[]).map((sevKey) => {
                 const cfg = SEVERITY_CONFIGS[sevKey];
                 const isSelected = selectedSeverity === sevKey;
@@ -440,7 +440,7 @@ export default function OutageBossBattleGame() {
                       setSelectedSeverity(sevKey);
                     }}
                     style={{
-                      padding: '5px 10px',
+                      padding: '5px 12px',
                       borderRadius: '6px',
                       border: `1px solid ${isSelected ? cfg.color : 'rgba(255, 255, 255, 0.1)'}`,
                       background: isSelected ? `${cfg.color}25` : 'rgba(255, 255, 255, 0.03)',
@@ -455,39 +455,39 @@ export default function OutageBossBattleGame() {
                 );
               })}
             </div>
+
+            {/* Difficulty Selector */}
+            <div style={{ display: 'flex', gap: '4px' }}>
+              {BATTLE_DIFFICULTY_TABS.map((diff) => {
+                const isSelected = selectedDifficulty === diff.id;
+                return (
+                  <button
+                    key={diff.id}
+                    type="button"
+                    onClick={() => {
+                      arcadeAudio.playBlip();
+                      setSelectedDifficulty(diff.id);
+                    }}
+                    style={{
+                      padding: '5px 10px',
+                      borderRadius: '6px',
+                      border: `1px solid ${isSelected ? diff.color : 'rgba(255, 255, 255, 0.08)'}`,
+                      background: isSelected ? `${diff.color}25` : 'rgba(255, 255, 255, 0.03)',
+                      color: isSelected ? diff.color : 'rgba(255, 255, 255, 0.7)',
+                      fontSize: '0.76rem',
+                      fontWeight: 750,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <span>{diff.icon}</span> <span>{diff.label}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
-          {/* Difficulty Level Pills */}
-          <div style={{ display: 'flex', gap: '6px', marginBottom: '16px', flexWrap: 'wrap' }}>
-            {BATTLE_DIFFICULTY_TABS.map((diff) => {
-              const isSelected = selectedDifficulty === diff.id;
-              return (
-                <button
-                  key={diff.id}
-                  type="button"
-                  onClick={() => {
-                    arcadeAudio.playBlip();
-                    setSelectedDifficulty(diff.id);
-                  }}
-                  style={{
-                    padding: '5px 12px',
-                    borderRadius: '6px',
-                    border: `1px solid ${isSelected ? diff.color : 'rgba(255, 255, 255, 0.08)'}`,
-                    background: isSelected ? `${diff.color}25` : 'rgba(255, 255, 255, 0.03)',
-                    color: isSelected ? diff.color : 'rgba(255, 255, 255, 0.7)',
-                    fontSize: '0.76rem',
-                    fontWeight: 750,
-                    cursor: 'pointer',
-                  }}
-                >
-                  <span>{diff.icon}</span> <span>{diff.label}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Scenario Grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '10px', marginBottom: '20px' }}>
+          {/* Boss Cards Selection Grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '10px', marginBottom: '20px', textAlign: 'left' }}>
             {BOSS_THEMES.map((theme, idx) => {
               const isSelected = selectedThemeIdx === idx;
               return (
@@ -529,16 +529,15 @@ export default function OutageBossBattleGame() {
             disabled={isLoadingQuestions}
             onClick={startGame}
             style={{
-              width: '100%',
-              padding: '12px',
-              borderRadius: '10px',
+              padding: '14px 44px',
+              borderRadius: '12px',
               background: `linear-gradient(135deg, ${currentTheme.color} 0%, #1e1b4b 100%)`,
               border: `1.5px solid ${currentTheme.color}`,
               color: '#ffffff',
-              fontWeight: 800,
-              fontSize: '1rem',
+              fontWeight: 900,
+              fontSize: '1.05rem',
               cursor: isLoadingQuestions ? 'wait' : 'pointer',
-              boxShadow: `0 0 20px ${currentTheme.color}44`,
+              boxShadow: `0 0 25px ${currentTheme.color}44`,
             }}
           >
             {isLoadingQuestions ? '⏳ Syncing Incident Pool...' : `⚔️ Engage ${currentTheme.bossName} [${severityConfig.id}]`}
@@ -550,7 +549,7 @@ export default function OutageBossBattleGame() {
       {gameState === 'playing' && currentQ && (
         <div>
           {/* Top Status: Boss HP & SLA Uptime & Timer */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '12px', alignItems: 'center', marginBottom: '12px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '12px', alignItems: 'center', marginBottom: '14px' }}>
             {/* Boss HP */}
             <div style={{ padding: '8px 12px', borderRadius: '8px', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.74rem', fontWeight: 800, color: '#f87171', marginBottom: '4px' }}>
@@ -573,7 +572,7 @@ export default function OutageBossBattleGame() {
               </div>
             </div>
 
-            {/* Timer & Lifelines */}
+            {/* Timer & Lifelines & Exit */}
             <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
               <div
                 style={{
@@ -591,7 +590,7 @@ export default function OutageBossBattleGame() {
                 type="button"
                 disabled={shieldUsed || selectedOption !== null}
                 onClick={handleUseShield}
-                style={{ padding: '6px 10px', borderRadius: '6px', background: shieldActive ? 'rgba(56, 189, 248, 0.25)' : 'rgba(56, 189, 248, 0.08)', border: '1px solid #38bdf8', color: '#38bdf8', fontSize: '0.74rem', fontWeight: 700, cursor: shieldUsed || selectedOption !== null ? 'not-allowed' : 'pointer' }}
+                style={{ padding: '6px 8px', borderRadius: '6px', background: shieldActive ? 'rgba(56, 189, 248, 0.25)' : 'rgba(56, 189, 248, 0.08)', border: '1px solid #38bdf8', color: '#38bdf8', fontSize: '0.74rem', fontWeight: 700, cursor: shieldUsed || selectedOption !== null ? 'not-allowed' : 'pointer' }}
                 title="WAF Shield"
               >
                 🛡️
@@ -600,7 +599,7 @@ export default function OutageBossBattleGame() {
                 type="button"
                 disabled={traceUsed || selectedOption !== null}
                 onClick={handleUseTrace}
-                style={{ padding: '6px 10px', borderRadius: '6px', background: 'rgba(192, 132, 252, 0.08)', border: '1px solid #c084fc', color: '#c084fc', fontSize: '0.74rem', fontWeight: 700, cursor: traceUsed || selectedOption !== null ? 'not-allowed' : 'pointer' }}
+                style={{ padding: '6px 8px', borderRadius: '6px', background: 'rgba(192, 132, 252, 0.08)', border: '1px solid #c084fc', color: '#c084fc', fontSize: '0.74rem', fontWeight: 700, cursor: traceUsed || selectedOption !== null ? 'not-allowed' : 'pointer' }}
                 title="APM Filter 50/50"
               >
                 🔍
@@ -609,10 +608,21 @@ export default function OutageBossBattleGame() {
                 type="button"
                 disabled={failoverUsed || selectedOption !== null}
                 onClick={handleUseFailover}
-                style={{ padding: '6px 10px', borderRadius: '6px', background: 'rgba(52, 211, 153, 0.08)', border: '1px solid #34d399', color: '#34d399', fontSize: '0.74rem', fontWeight: 700, cursor: failoverUsed || selectedOption !== null ? 'not-allowed' : 'pointer' }}
+                style={{ padding: '6px 8px', borderRadius: '6px', background: 'rgba(52, 211, 153, 0.08)', border: '1px solid #34d399', color: '#34d399', fontSize: '0.74rem', fontWeight: 700, cursor: failoverUsed || selectedOption !== null ? 'not-allowed' : 'pointer' }}
                 title="Failover (+20s / +15% SLA)"
               >
                 ⚡
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  arcadeAudio.playBlip();
+                  setGameState('intro');
+                }}
+                style={{ padding: '6px 10px', borderRadius: '6px', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.15)', color: 'rgba(255, 255, 255, 0.8)', fontSize: '0.74rem', fontWeight: 750, cursor: 'pointer' }}
+                title="Exit to Setup"
+              >
+                ⚙️
               </button>
             </div>
           </div>
@@ -640,53 +650,6 @@ export default function OutageBossBattleGame() {
               </span>
             </div>
           )}
-
-          {/* ── Real-Time Grafana Telemetry Dashboard ── */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-              gap: '8px',
-              marginBottom: '14px',
-              padding: '10px 12px',
-              borderRadius: '10px',
-              background: 'rgba(15, 23, 42, 0.6)',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-            }}
-          >
-            {/* Sparkline 1: p99 Latency */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.68rem', color: 'rgba(255, 255, 255, 0.5)', fontWeight: 800 }}>
-                <span>p99 Latency</span>
-                <span style={{ color: latencyHistory[latencyHistory.length - 1] < 500 ? '#34d399' : '#f87171' }}>
-                  {latencyHistory[latencyHistory.length - 1]} ms
-                </span>
-              </div>
-              <Sparkline data={latencyHistory} color={latencyHistory[latencyHistory.length - 1] < 500 ? '#34d399' : '#f87171'} minVal={0} maxVal={10000} />
-            </div>
-
-            {/* Sparkline 2: 5xx Error Rate */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.68rem', color: 'rgba(255, 255, 255, 0.5)', fontWeight: 800 }}>
-                <span>5xx Error Rate</span>
-                <span style={{ color: errorRateHistory[errorRateHistory.length - 1] < 1 ? '#34d399' : '#f87171' }}>
-                  {errorRateHistory[errorRateHistory.length - 1]}%
-                </span>
-              </div>
-              <Sparkline data={errorRateHistory} color={errorRateHistory[errorRateHistory.length - 1] < 1 ? '#34d399' : '#f87171'} minVal={0} maxVal={50} />
-            </div>
-
-            {/* Sparkline 3: DB Connection Pool */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.68rem', color: 'rgba(255, 255, 255, 0.5)', fontWeight: 800 }}>
-                <span>DB Pool Usage</span>
-                <span style={{ color: dbPoolHistory[dbPoolHistory.length - 1] < 50 ? '#34d399' : '#fbbf24' }}>
-                  {dbPoolHistory[dbPoolHistory.length - 1]}%
-                </span>
-              </div>
-              <Sparkline data={dbPoolHistory} color={dbPoolHistory[dbPoolHistory.length - 1] < 50 ? '#34d399' : '#fbbf24'} minVal={0} maxVal={100} />
-            </div>
-          </div>
 
           {/* Question Prompt with Phase Badge */}
           <div style={{ marginBottom: '14px' }}>
