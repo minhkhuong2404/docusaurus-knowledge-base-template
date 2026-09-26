@@ -35,7 +35,7 @@ export default function ScrollProgressButton() {
   }, [pagePath]);
 
   useEffect(() => {
-    if (pagePath.startsWith('/arcade') || pagePath.startsWith('/stats') || pagePath === '/stats') {
+    if (pagePath.startsWith('/arcade') || pagePath.startsWith('/profile') || pagePath === '/profile' || pagePath.startsWith('/stats')) {
       return;
     }
 

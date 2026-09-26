@@ -70,6 +70,13 @@
     },
     "config": "config---arcade-5-e-9-6a3"
   },
+  "/profile/-fe0": {
+    "__comp": "__comp---site-src-pages-profile-index-tsxfe-1-25e",
+    "__context": {
+      "plugin": "plugin---arcade-a-74-d23"
+    },
+    "config": "config---arcade-5-e-9-6a3"
+  },
   "/search-822": {
     "__comp": "__comp---theme-search-page-1-a-4-d6f",
     "__context": {

@@ -58,6 +58,11 @@ export default [
     exact: true
   },
   {
+    path: '/profile/',
+    component: ComponentCreator('/profile/', 'fe0'),
+    exact: true
+  },
+  {
     path: '/search',
     component: ComponentCreator('/search', '822'),
     exact: true

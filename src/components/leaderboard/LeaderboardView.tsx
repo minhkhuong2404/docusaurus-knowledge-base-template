@@ -110,6 +110,26 @@ export default function LeaderboardView({ initialTimeframe = 'alltime' }: Leader
 
   return (
     <div style={{ maxWidth: '1080px', margin: '0 auto', padding: '1rem 0' }}>
+      <style>{`
+        .podium-card-link {
+          transition: transform 0.2s ease, filter 0.2s ease;
+          text-decoration: none !important;
+          color: inherit !important;
+          display: block;
+        }
+        .podium-card-link:hover {
+          transform: translateY(-4px) !important;
+          filter: brightness(1.08);
+        }
+        .leaderboard-user-link {
+          transition: opacity 0.15s ease;
+        }
+        .leaderboard-user-link:hover .leaderboard-username {
+          color: var(--ifm-color-primary) !important;
+          text-decoration: underline;
+        }
+      `}</style>
+
       {/* Header & Subtitle */}
       <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 16px', borderRadius: '30px', backgroundColor: 'rgba(56, 189, 248, 0.1)', color: '#38bdf8', fontSize: '0.85rem', fontWeight: 700, marginBottom: '0.75rem' }}>
@@ -200,7 +220,10 @@ export default function LeaderboardView({ initialTimeframe = 'alltime' }: Leader
         >
           {/* 2nd Place (Silver) */}
           {topThree[1] && (
-            <div
+            <Link
+              to={`/profile?uid=${topThree[1].uid}`}
+              className="podium-card-link"
+              title={`View ${topThree[1].displayName}'s Profile & Codex`}
               style={{
                 backgroundColor: 'var(--ifm-background-surface-color)',
                 border: '1.5px solid rgba(148, 163, 184, 0.4)',
@@ -244,12 +267,15 @@ export default function LeaderboardView({ initialTimeframe = 'alltime' }: Leader
                 {topThree[1].timeframeExp.toLocaleString()}{' '}
                 <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--ifm-color-emphasis-600)' }}>EXP</span>
               </div>
-            </div>
+            </Link>
           )}
 
           {/* 1st Place (Gold Champion) */}
           {topThree[0] && (
-            <div
+            <Link
+              to={`/profile?uid=${topThree[0].uid}`}
+              className="podium-card-link"
+              title={`View ${topThree[0].displayName}'s Profile & Codex`}
               style={{
                 backgroundColor: 'var(--ifm-background-surface-color)',
                 border: '2px solid rgba(251, 191, 36, 0.7)',
@@ -306,12 +332,15 @@ export default function LeaderboardView({ initialTimeframe = 'alltime' }: Leader
                 {topThree[0].timeframeExp.toLocaleString()}{' '}
                 <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--ifm-color-emphasis-600)' }}>EXP</span>
               </div>
-            </div>
+            </Link>
           )}
 
           {/* 3rd Place (Bronze) */}
           {topThree[2] && (
-            <div
+            <Link
+              to={`/profile?uid=${topThree[2].uid}`}
+              className="podium-card-link"
+              title={`View ${topThree[2].displayName}'s Profile & Codex`}
               style={{
                 backgroundColor: 'var(--ifm-background-surface-color)',
                 border: '1.5px solid rgba(217, 119, 6, 0.4)',
@@ -355,7 +384,7 @@ export default function LeaderboardView({ initialTimeframe = 'alltime' }: Leader
                 {topThree[2].timeframeExp.toLocaleString()}{' '}
                 <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--ifm-color-emphasis-600)' }}>EXP</span>
               </div>
-            </div>
+            </Link>
           )}
         </div>
       )}
@@ -417,7 +446,18 @@ export default function LeaderboardView({ initialTimeframe = 'alltime' }: Leader
             boxShadow: '0 4px 16px rgba(56, 189, 248, 0.15)',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <Link
+            to="/profile"
+            title="View your Engineering Profile & Codex"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '14px',
+              textDecoration: 'none',
+              color: 'inherit',
+              cursor: 'pointer',
+            }}
+          >
             <div style={{ position: 'relative', flexShrink: 0 }}>
               <UserAvatar
                 photoURL={currentUserEntry.photoURL || currentUser?.photoURL || undefined}
@@ -454,7 +494,7 @@ export default function LeaderboardView({ initialTimeframe = 'alltime' }: Leader
                 {currentUserEntry.rankBadge} Lv.{currentUserEntry.level} • {currentUserEntry.rankTitle}
               </div>
             </div>
-          </div>
+          </Link>
 
           <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '3px' }}>
             <div style={{ fontSize: '1.25rem', fontWeight: 900, color: 'var(--ifm-color-primary)' }}>
@@ -608,7 +648,19 @@ export default function LeaderboardView({ initialTimeframe = 'alltime' }: Leader
                     </div>
 
                     {/* Learner & Avatar */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0 }}>
+                    <Link
+                      to={`/profile?uid=${entry.uid}`}
+                      title={`View ${entry.displayName}'s Engineering Profile & Codex`}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '12px',
+                        minWidth: 0,
+                        textDecoration: 'none',
+                        color: 'inherit',
+                        cursor: 'pointer',
+                      }}
+                    >
                       <UserAvatar
                         photoURL={entry.photoURL || (isUser && currentUser?.photoURL ? currentUser.photoURL : undefined)}
                         name={entry.displayName}
@@ -648,11 +700,13 @@ export default function LeaderboardView({ initialTimeframe = 'alltime' }: Leader
                           🔥 {entry.streak}d streak • 📖 {entry.readPagesCount} articles read
                         </div>
                       </div>
-                    </div>
+                    </Link>
 
                     {/* Cosmic Rank */}
                     <div style={{ textAlign: 'center' }}>
-                      <span
+                      <Link
+                        to={isUser ? '/profile' : `/profile?uid=${entry.uid}`}
+                        title={`View ${entry.displayName}'s Engineering Profile & Codex`}
                         style={{
                           display: 'inline-block',
                           fontSize: '0.8rem',
@@ -661,10 +715,13 @@ export default function LeaderboardView({ initialTimeframe = 'alltime' }: Leader
                           borderRadius: '8px',
                           backgroundColor: 'var(--ifm-color-emphasis-100)',
                           color: 'var(--ifm-color-emphasis-800)',
+                          textDecoration: 'none',
+                          cursor: 'pointer',
+                          transition: 'transform 0.15s ease, background-color 0.15s ease',
                         }}
                       >
                         {entry.rankBadge} Lv.{entry.level}
-                      </span>
+                      </Link>
                     </div>
 
                     {/* Stats */}

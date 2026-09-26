@@ -304,11 +304,6 @@ export default {
           "position": "left"
         },
         {
-          "to": "/stats",
-          "label": "Stats",
-          "position": "left"
-        },
-        {
           "type": "custom-userNavbarItem",
           "position": "right"
         },

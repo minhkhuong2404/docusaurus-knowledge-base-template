@@ -9,11 +9,16 @@
   "scripts": {
     "start": "python scratch/fetch_leetcode_daily.py && docusaurus start",
     "sync-quizzes": "node scripts/sync_quiz_snapshot.js",
-    "build": "python scratch/fetch_leetcode_daily.py && node scripts/sync_quiz_snapshot.js && DOCUSAURUS_IGNORE_SSG_WARNINGS=true docusaurus build",
+    "test": "node --test tests/**/*.test.js",
+    "lint": "node scripts/checkstyle.js --quiet",
+    "lint:fix": "node scripts/checkstyle.js --fix",
+    "checkstyle": "node scripts/checkstyle.js",
+    "checkstyle:xml": "node scripts/checkstyle.js --xml",
+    "build": "yarn lint && yarn test && python scratch/fetch_leetcode_daily.py && node scripts/sync_quiz_snapshot.js && DOCUSAURUS_IGNORE_SSG_WARNINGS=true docusaurus build",
     "build:analyze": "docusaurus build --bundle-analyzer",
     "build:debug-search": "DEBUG=search-local:* docusaurus build",
     "serve": "docusaurus serve",
-    "deploy": "docusaurus deploy"
+    "deploy": "yarn lint && yarn test && docusaurus deploy"
   },
   "dependencies": {
     "@docusaurus/core": "^3.10.2",

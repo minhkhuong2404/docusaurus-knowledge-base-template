@@ -11,7 +11,7 @@ To update the LeetCode companywise questions in this repository based on the Des
 2. Run the automation script `scratch/update_leetcode_questions.py` inside the workspace `docusaurus-knowledge-base-template`.
    - Command: `python scratch/update_leetcode_questions.py`
    - This script automatically runs `git pull` in the cloned repository to fetch latest tags, parses the CSVs, and updates the markdown files in `docs/technical-knowledge/dsa/leetcode-companywise/`, preserving existing capitalization.
-3. Verify that the build completes successfully by running `npm run build` or `npm start`.
+3. Verify that the build completes successfully by running `yarn build` or `yarn start`.
 
 ## Java Interview Questions Update Progress
 The following files in `docs/technical-knowledge/interview-questions/java/` have been updated with senior-level explanations, design diagrams, under-the-hood details, and performance gotchas:
@@ -61,8 +61,16 @@ The following files in `docs/technical-knowledge/interview-questions/grokking-ja
 6. **Visual Model Integration**: Accompany key architectures and protocol flows with interactive React SVG diagrams following `design-diagrams`.
 7. **Workspace Registration**: Always register new pages in `sidebars.ts` and link them in the parent topic category index.
 
+## MANDATORY: Automated Testing & Code Style Policy (Always Add/Update Tests for Any Feature)
+- **Always Add/Update Tests**: Whenever adding, modifying, or refactoring ANY feature in this website (arcade games, gamification mechanics, HUD/leaderboard, quiz services, data schemas, interactive diagrams, or utility functions), you **MUST ALWAYS** add or update corresponding tests in `tests/`.
+- **Zero Undeclared Runtime Identifiers**: Ensure all modified/new components are audited for AST scope safety so undeclared variable bugs can never reach production.
+- **Checkstyle & Code Style Verification**: Run `yarn lint` (`node scripts/checkstyle.js --quiet`) to ensure 0 syntax errors, 0 undeclared variables, and clean code style across all JavaScript and TypeScript files. Use `yarn lint:fix` to auto-format.
+- **Fast Local Verification**: Always run `yarn test` and `yarn lint` to verify code correctness and style invariants quickly (~1s) before declaring completion.
+- **CI/CD Deployment Guard**: Both checkstyle and test suites are strictly enforced in GitHub Actions (`.github/workflows/deploy.yml`). Any error will immediately halt CI and block GitHub Pages deployment.
+
 ## Build Verification Guidelines
-- Do not run `npm run build` automatically to verify changes unless explicitly requested by the user, as the build process is very slow and compiles the entire website.
+- Do not run `yarn build` automatically to verify changes unless explicitly requested by the user, as the build process is very slow and compiles the entire website.
+- Always run `yarn test` to verify code correctness and test invariants quickly (~1s).
 - Use `npx tsc --noEmit` to verify TypeScript type correctness for React diagram components quickly.
 
 ## Diagram Styling & Animation Guidelines

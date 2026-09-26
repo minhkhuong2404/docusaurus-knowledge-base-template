@@ -5,7 +5,6 @@ import { getRankForLevel, getExpProgressInCurrentLevel } from '../../data/gamifi
 import { subscribeToOnlineUsers } from '../../services/presenceService';
 import CosmicRankBadge from './CosmicRankBadge';
 
-const GamificationModal = React.lazy(() => import('./GamificationModal'));
 
 // Singleton presence listener across all route navigations
 let globalOnlineCount = 1;
@@ -28,8 +27,6 @@ function ensureGlobalOnlinePresence() {
 
 export default function NavbarGamificationHUD() {
   const { gamification } = useUserProgress();
-  const [showModal, setShowModal] = useState(false);
-  const [modalTab, setModalTab] = useState<'quests' | 'trophies' | 'ranks'>('quests');
   const [onlineCount, setOnlineCount] = useState<number>(() => globalOnlineCount);
 
   const exp = gamification?.exp || 0;
@@ -50,10 +47,6 @@ export default function NavbarGamificationHUD() {
     };
   }, []);
 
-  const handleOpen = (tab: 'quests' | 'trophies' | 'ranks' = 'quests') => {
-    setModalTab(tab);
-    setShowModal(true);
-  };
 
   return (
     <>
@@ -66,11 +59,10 @@ export default function NavbarGamificationHUD() {
         }}
       >
         {/* Consolidated Gamification Level/Streak Pill */}
-        <button
-          type="button"
+        <Link
+          to="/profile"
           className="gamification-hud-pill"
-          onClick={() => handleOpen('quests')}
-          title={`Active Streak: ${streak}d • Level ${currentLevel} ${rank.title} (${expInLevel}/${neededInLevel} EXP). Click for Mission Control.`}
+          title={`Active Streak: ${streak}d • Level ${currentLevel} ${rank.title} (${expInLevel}/${neededInLevel} EXP). Click to view your Profile & Codex.`}
           style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -83,6 +75,7 @@ export default function NavbarGamificationHUD() {
             color: '#ffffff',
             fontSize: '12px',
             fontWeight: 700,
+            textDecoration: 'none',
             cursor: 'pointer',
             boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
             transition: 'background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease',
@@ -101,7 +94,7 @@ export default function NavbarGamificationHUD() {
             <CosmicRankBadge level={currentLevel} rank={rank} size="xs" showLevelPill={false} hideOrbitRing={true} disableFloat={true} />
             <span className="gamification-hud-num" style={{ color: rank.color, fontWeight: 800 }}>{currentLevel}</span>
           </div>
-        </button>
+        </Link>
 
         {/* Real-time Total Online Users Counter (Count Only) */}
         <div
@@ -157,16 +150,6 @@ export default function NavbarGamificationHUD() {
           🏆
         </Link>
       </div>
-
-      {showModal && (
-        <React.Suspense fallback={null}>
-          <GamificationModal
-            isOpen={showModal}
-            onClose={() => setShowModal(false)}
-            initialTab={modalTab}
-          />
-        </React.Suspense>
-      )}
     </>
   );
 }

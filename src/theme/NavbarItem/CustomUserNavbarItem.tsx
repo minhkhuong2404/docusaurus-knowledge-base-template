@@ -12,7 +12,6 @@ import CosmicRankBadge from '../../components/gamification/CosmicRankBadge';
 import { getRankForLevel, getExpProgressInCurrentLevel } from '../../data/gamificationData';
 import { defaultGamificationState } from '../../services/userProgressService';
 
-const GamificationModal = React.lazy(() => import('../../components/gamification/GamificationModal'));
 const UserProfileModal = React.lazy(() => import('../../components/auth/UserProfileModal'));
 
 // Module-scoped variable to remember client mount state across Docusaurus page navigations.
@@ -38,8 +37,6 @@ export default function CustomUserNavbarItem() {
   const [showKeyModal, setShowKeyModal] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
   const [showAdminModal, setShowAdminModal] = useState(false);
-  const [showGamificationModal, setShowGamificationModal] = useState(false);
-  const [gamificationTab, setGamificationTab] = useState<'quests' | 'trophies' | 'ranks'>('quests');
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [newAdminInput, setNewAdminInput] = useState('');
   const [adminMsg, setAdminMsg] = useState('');
@@ -268,8 +265,24 @@ export default function CustomUserNavbarItem() {
             WebkitBackdropFilter: 'none',
           }}
         >
-          {/* Header User Profile Info */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '0.75rem', paddingBottom: '0.75rem', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
+          {/* Header User Profile Info (Links to Profile) */}
+          <Link
+            to="/profile"
+            onClick={() => setIsOpen(false)}
+            title="View My Profile & Codex"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              marginBottom: '0.75rem',
+              paddingBottom: '0.75rem',
+              borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+              textDecoration: 'none',
+              color: 'inherit',
+              cursor: 'pointer',
+              transition: 'opacity 0.15s ease',
+            }}
+          >
             {effectiveUser.photoURL ? (
               <img
                 src={effectiveUser.photoURL}
@@ -384,18 +397,17 @@ export default function CustomUserNavbarItem() {
                 )}
               </div>
             </div>
-          </div>
+          </Link>
 
           {/* Streamlined Cosmic Level & EXP Progress */}
-          <div
+          <Link
+            to="/profile?tab=quests"
             className="user-dropdown-compact-level"
-            onClick={() => {
-              setIsOpen(false);
-              setGamificationTab('ranks');
-              setShowGamificationModal(true);
-            }}
-            title="Open Cosmic Ranks"
+            onClick={() => setIsOpen(false)}
+            title="Open Daily Quests & Cosmic Ranks"
             style={{
+              display: 'block',
+              textDecoration: 'none',
               padding: '7px 9px',
               borderRadius: '8px',
               background: `linear-gradient(135deg, ${rank.color}15 0%, rgba(255, 255, 255, 0.03) 100%)`,
@@ -436,18 +448,18 @@ export default function CustomUserNavbarItem() {
             <div style={{ height: '3px', width: '100%', borderRadius: '2px', background: 'rgba(255, 255, 255, 0.1)', overflow: 'hidden' }}>
               <div style={{ height: '100%', width: `${expPercent}%`, borderRadius: '2px', background: rank.color, transition: 'width 0.4s ease' }} />
             </div>
-          </div>
+          </Link>
 
           {/* Streamlined Menu Actions */}
           <div className="user-dropdown-menu-list" style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
             <Link
-              to="/stats"
+              to="/profile"
               className="user-dropdown-item"
               onClick={() => setIsOpen(false)}
               style={{ textDecoration: 'none', color: 'inherit' }}
             >
-              <span className="user-dropdown-item-icon">📊</span>
-              <span className="user-dropdown-item-label">Learning Stats & Telemetry</span>
+              <span className="user-dropdown-item-icon">👤</span>
+              <span className="user-dropdown-item-label">My Profile & Codex</span>
             </Link>
 
             <button
@@ -460,19 +472,6 @@ export default function CustomUserNavbarItem() {
             >
               <span className="user-dropdown-item-icon">⚙️</span>
               <span className="user-dropdown-item-label">Account & Security</span>
-            </button>
-
-            <button
-              type="button"
-              className="user-dropdown-item"
-              onClick={() => {
-                setIsOpen(false);
-                setGamificationTab('trophies');
-                setShowGamificationModal(true);
-              }}
-            >
-              <span className="user-dropdown-item-icon">🏆</span>
-              <span className="user-dropdown-item-label">Achievements & Codex</span>
             </button>
 
             {isAdmin && (
@@ -922,16 +921,6 @@ export default function CustomUserNavbarItem() {
           </div>
         </div>,
         document.body
-      )}
-
-      {showGamificationModal && (
-        <React.Suspense fallback={null}>
-          <GamificationModal
-            isOpen={showGamificationModal}
-            onClose={() => setShowGamificationModal(false)}
-            initialTab={gamificationTab}
-          />
-        </React.Suspense>
       )}
 
       {showProfileModal && currentUser && (
