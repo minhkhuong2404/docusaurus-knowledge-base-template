@@ -46,7 +46,8 @@ const sidebars: SidebarsConfig = {
 								'technical-knowledge/java/java-fundamentals',
 								'technical-knowledge/java/java-oop',
 								'technical-knowledge/java/java-collections',
-								'technical-knowledge/java/java-object-class'
+								'technical-knowledge/java/java-object-class',
+								'technical-knowledge/java/java-functional-interfaces-factory'
 							]
 						},
 						{

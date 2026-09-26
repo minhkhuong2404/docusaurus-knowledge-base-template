@@ -20,15 +20,16 @@ Dành riêng cho Intern, Fresher và Junior học Java thực chiến để ứn
 | 1 | [Java Fundamentals](./java-fundamentals) | Syntax, types, control flow, and core APIs |
 | 2 | [Object-Oriented Programming](./java-oop) | Classes, inheritance, polymorphism, encapsulation |
 | 3 | [Collections Framework](./java-collections) | Lists, sets, maps, iteration, complexity trade-offs |
-| 4 | [Concurrency & Utilities](./java-concurrency) | Concurrent utilities, thread pools, async patterns |
+| 4 | [Functional Interfaces & Factory Pattern](./java-functional-interfaces-factory) | Supplier, Consumer, Function, Predicate, invokedynamic, and modern functional factory registries |
+| 5 | [Concurrency & Utilities](./java-concurrency) | Concurrent utilities, thread pools, async patterns |
 |   | └─ [Threads & Processes](./java-threads) | Thread lifecycle, coordination, deadlocks, livelocks |
 |   | └─ [Locks & Synchronization](./java-locks) | Monitor locks, ReentrantLock, ReadWriteLock, StampedLock |
-| 5 | [Java Memory Model](./java-jmm-memory-model) | Happens-Before relationship, StampedLock, and ThreadLocal internals |
-| 6 | [JVM Internals](./java-jvm) | Class loading, memory areas, GC, JIT, tuning basics |
-| 7 | [Diagnostics & Troubleshooting](./java-diagnostics-troubleshooting) | Production troubleshooting, thread contention, and memory analysis |
-| 8 | [I/O and NIO](./java-io) | Streams, channels, buffers, file operations |
-| 9 | [Modern Java Features](./java-new-features) | Lambdas, streams, records, sealed types, recent updates |
-| 10 | [Interview Questions](./java-interview-questions) | Practical Q&A across core and advanced topics |
+| 6 | [Java Memory Model](./java-jmm-memory-model) | Happens-Before relationship, StampedLock, and ThreadLocal internals |
+| 7 | [JVM Internals](./java-jvm) | Class loading, memory areas, GC, JIT, tuning basics |
+| 8 | [Diagnostics & Troubleshooting](./java-diagnostics-troubleshooting) | Production troubleshooting, thread contention, and memory analysis |
+| 9 | [I/O and NIO](./java-io) | Streams, channels, buffers, file operations |
+| 10 | [Modern Java Features](./java-new-features) | Lambdas, streams, records, sealed types, recent updates |
+| 11 | [Interview Questions](./java-interview-questions) | Practical Q&A across core and advanced topics |
 
 :::tip[Backend Engineering Tip]
 Use this section as the foundation before diving into Spring, Kafka, and system design topics.
@@ -55,6 +56,7 @@ Use this section as the foundation before diving into Spring, Kafka, and system 
 
 ### Compare Next
 - [Java Fundamentals](./java-fundamentals.md)
+- [Java Functional Interfaces & Factory Pattern](./java-functional-interfaces-factory.md)
 - [Java Threads & Processes](./java-threads.md)
 - [Java Locks & Synchronization](./java-locks.md)
 - [Java Concurrency](./java-concurrency.md)

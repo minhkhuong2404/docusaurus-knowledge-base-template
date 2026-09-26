@@ -79,11 +79,11 @@ export default [
   },
   {
     path: '/',
-    component: ComponentCreator('/', 'bd0'),
+    component: ComponentCreator('/', 'f13'),
     routes: [
       {
         path: '/',
-        component: ComponentCreator('/', 'c12'),
+        component: ComponentCreator('/', '235'),
         routes: [
           {
             path: '/tags',
@@ -8277,7 +8277,7 @@ export default [
           },
           {
             path: '/',
-            component: ComponentCreator('/', '6f8'),
+            component: ComponentCreator('/', 'ae8'),
             routes: [
               {
                 path: '/aws',
@@ -15178,6 +15178,12 @@ export default [
               {
                 path: '/technical-knowledge/java/java-diagnostics-troubleshooting',
                 component: ComponentCreator('/technical-knowledge/java/java-diagnostics-troubleshooting', 'ddf'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/technical-knowledge/java/java-functional-interfaces-factory',
+                component: ComponentCreator('/technical-knowledge/java/java-functional-interfaces-factory', 'b4b'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },
