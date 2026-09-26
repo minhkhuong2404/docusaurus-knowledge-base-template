@@ -1,7 +1,7 @@
 const { describe, it } = require('node:test');
 const assert = require('node:assert');
 const fs = require('fs');
-const { transpileCode, getUndeclaredIdentifiers } = require('./helpers/transpileHelper');
+const { transpileCode, getUndeclaredIdentifiers, validateJsxEntities } = require('./helpers/transpileHelper');
 
 describe('Critical Interactive Architecture Diagrams Suite', () => {
   const criticalDiagrams = [
@@ -32,6 +32,15 @@ describe('Critical Interactive Architecture Diagrams Suite', () => {
         undeclared,
         [],
         `Diagram ${filename} has undeclared runtime identifiers: ${undeclared.join(', ')}`
+      );
+    });
+
+    it(`Diagram ${filename} should have valid JSX character escaping (no raw > or })`, () => {
+      const unescaped = validateJsxEntities(filePath);
+      assert.deepStrictEqual(
+        unescaped,
+        [],
+        `Diagram ${filename} contains raw unescaped JSX text which crashes SWC/Rspack: ${JSON.stringify(unescaped)}`
       );
     });
 

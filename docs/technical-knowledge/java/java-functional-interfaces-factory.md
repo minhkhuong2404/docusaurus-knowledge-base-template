@@ -436,21 +436,9 @@ PaymentGateway gw = gatewayCache.computeIfAbsent(code, k -> {
 
 ## 9. Architectural Decision Guide
 
-```
-Does the system require object instantiation based on dynamic types or conditions?
-│
-├── Are the products simple instances or constructor references with uniform arguments?
-│   └── YES ──> Use Functional Supplier/Function Registry: Map<Type, Supplier<Product>>
-│
-├── Does construction require multi-step state validation or complex telescoping arguments?
-│   └── YES ──> Use Builder Pattern combined with Functional Validation (Consumer<Builder>)
-│
-├── Do products belong to complex families requiring uniform GUI/platform components?
-│   └── YES ──> Use Traditional GoF Abstract Factory (when family cohesion dominates)
-│
-└── Is construction deferred, computationally expensive, or executed conditionally?
-    └── YES ──> Use MemoizedSupplier<T> (Lazy initialization with volatile DCL)
-```
+The interactive decision guide below maps object creation complexity, dynamic extension requirements, and thread-safety invariants to the optimal instantiation pattern in modern Java.
+
+<FunctionalInterfacesFactoryDiagram initialTab="decision" />
 
 ---
 

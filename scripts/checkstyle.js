@@ -215,6 +215,18 @@ for (const filePath of files) {
             message: 'Unexpected debugger statement in production code',
           });
         },
+        JSXText(nodePath) {
+          const raw = nodePath.node.extra?.raw || nodePath.node.raw || '';
+          if (/[>}]/.test(raw)) {
+            messages.push({
+              line: nodePath.node.loc.start.line,
+              column: nodePath.node.loc.start.column + 1,
+              severity: 'error',
+              rule: 'react/no-unescaped-entities',
+              message: `Unescaped entity in JSX text: "${raw.trim()}". Replace ">" with "&gt;" or "}" with "&#125;" to prevent SWC/Rspack compiler crashes.`,
+            });
+          }
+        },
       });
     } catch {
       // ignore traversal errors

@@ -87,9 +87,37 @@ function loadTsModule(filePath) {
   return m.exports;
 }
 
+/**
+ * Validates that JSX text nodes do not contain unescaped characters (> or })
+ * which pass through Babel but fail in strict JSX compilers like SWC / Rspack.
+ */
+function validateJsxEntities(filePath) {
+  const content = fs.readFileSync(filePath, 'utf8');
+  const ast = parser.parse(content, {
+    sourceType: 'module',
+    plugins: ['jsx', 'typescript'],
+  });
+
+  const unescaped = [];
+  traverse(ast, {
+    JSXText(p) {
+      const raw = p.node.extra?.raw || p.node.raw || '';
+      if (/[>}]/.test(raw)) {
+        unescaped.push({
+          line: p.node.loc.start.line,
+          text: raw.trim(),
+        });
+      }
+    },
+  });
+  return unescaped;
+}
+
 module.exports = {
   transpileCode,
   getUndeclaredIdentifiers,
+  validateJsxEntities,
   loadTsModule,
   STANDARD_GLOBALS,
 };
+

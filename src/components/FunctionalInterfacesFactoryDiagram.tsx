@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-type TabType = 'pipeline' | 'factory' | 'jvm_indy';
+export type TabType = 'pipeline' | 'factory' | 'jvm_indy' | 'decision';
 
 interface PipelineNode {
   id: string;
@@ -127,13 +127,145 @@ public class PaymentRegistry {
   },
 ];
 
-export default function FunctionalInterfacesFactoryDiagram(): React.JSX.Element {
-  const [activeTab, setActiveTab] = useState<TabType>('pipeline');
+interface DecisionNode {
+  id: string;
+  label: string;
+  pattern: string;
+  criterion: string;
+  color: string;
+  bestFor: string;
+  antiPatternWarning: string;
+  code: string;
+}
+
+const DECISION_NODES: DecisionNode[] = [
+  {
+    id: 'registry',
+    label: '1. Dynamic Type Registry',
+    pattern: 'Functional Supplier Registry (Map<K, Supplier<V>>)',
+    criterion: 'Products have uniform constructors or uniform context parameters, and new types must be registered dynamically without modifying existing factory code (Open-Closed Principle).',
+    color: '#34d399',
+    bestFor: 'Strategy patterns, payment gateways, serializer/deserializer dispatchers, export formatters.',
+    antiPatternWarning: 'Avoid if object construction requires complex multi-step parameter validation with telescoping optional fields.',
+    code: `// Dynamic registry with constructor method references
+public class SerializerRegistry {
+  private final Map<String, Supplier<Serializer>> registry = new ConcurrentHashMap<>();
+
+  public void register(String format, Supplier<Serializer> supplier) {
+    registry.put(format.toUpperCase(), supplier);
+  }
+
+  public Serializer create(String format) {
+    var supplier = registry.get(format.toUpperCase());
+    if (supplier == null) throw new IllegalArgumentException("Unknown format: " + format);
+    return supplier.get();
+  }
+}
+// Registration:
+registry.register("JSON", JsonSerializer::new);
+registry.register("PROTO", ProtoSerializer::new);`,
+  },
+  {
+    id: 'builder',
+    label: '2. Complex Multi-Step Construction',
+    pattern: 'Builder Pattern + Functional Validation',
+    criterion: 'Objects require multi-step parameter accumulation, cross-field validation invariants, or optional telescoping configurations before construction.',
+    color: '#38bdf8',
+    bestFor: 'Domain entities, HTTP request descriptors, database query specifications, immutable aggregates.',
+    antiPatternWarning: 'Avoid writing heavy builders for simple 1-2 field POJOs or records with invariant-free constructors.',
+    code: `// Functional Builder with consumer validation
+public record ConnectionConfig(String host, int port, Duration timeout) {
+  public static ConnectionConfig of(Consumer<Builder> spec) {
+    var builder = new Builder();
+    spec.accept(builder);
+    return builder.build();
+  }
+
+  public static class Builder {
+    private String host = "localhost";
+    private int port = 5432;
+    private Duration timeout = Duration.ofSeconds(5);
+
+    public Builder host(String host) { this.host = host; return this; }
+    public Builder port(int port) { this.port = port; return this; }
+    public Builder timeout(Duration timeout) { this.timeout = timeout; return this; }
+
+    public ConnectionConfig build() {
+      if (port <= 0 || port > 65535) throw new IllegalArgumentException("Invalid port: " + port);
+      return new ConnectionConfig(host, port, timeout);
+    }
+  }
+}
+// Client invocation:
+var cfg = ConnectionConfig.of(b -> b.host("db.prod.internal").port(5432));`,
+  },
+  {
+    id: 'abstract_factory',
+    label: '3. Product Family Cohesion',
+    pattern: 'GoF Abstract Factory',
+    criterion: 'Multiple interrelated product interfaces belong to cohesive suites or operating platforms (e.g. MacButton + MacScrollbar vs WinButton + WinScrollbar) and must never be mismatched.',
+    color: '#fbbf24',
+    bestFor: 'Cross-platform UI toolkits, multi-tenant branding themes, hardware abstraction layers.',
+    antiPatternWarning: 'Do NOT use when creating solitary unrelated products; leads to massive subclass explosion.',
+    code: `// Multi-product family cohesion
+public interface UiToolkitFactory {
+  Button createButton();
+  Scrollbar createScrollbar();
+}
+
+public class DarkThemeFactory implements UiToolkitFactory {
+  @Override public Button createButton() { return new DarkButton(); }
+  @Override public Scrollbar createScrollbar() { return new DarkScrollbar(); }
+}
+// Guarantees all created widgets share identical theme semantics`,
+  },
+  {
+    id: 'memoized_lazy',
+    label: '4. Deferred / Lazy Singleton',
+    pattern: 'MemoizedSupplier<T> (Volatile DCL)',
+    criterion: 'Construction is computationally expensive, requires remote network/disk I/O, or may not be needed at all, but must execute at most once across all threads.',
+    color: '#a78bfa',
+    bestFor: 'Heavy cryptographic key pairs, database connection pools, compiled schema validators, remote configuration holders.',
+    antiPatternWarning: 'Never omit the volatile modifier on the initialized flag in Double-Checked Locking; instruction reordering will expose partially constructed objects.',
+    code: `// Thread-safe Lazy Supplier Holder
+public final class Lazy<T> implements Supplier<T> {
+  private final Supplier<T> supplier;
+  private volatile boolean initialized = false;
+  private T instance;
+
+  public Lazy(Supplier<T> supplier) { this.supplier = Objects.requireNonNull(supplier); }
+
+  @Override
+  public T get() {
+    if (!initialized) {
+      synchronized (this) {
+        if (!initialized) {
+          instance = supplier.get();
+          initialized = true; // StoreStore barrier
+        }
+      }
+    }
+    return instance;
+  }
+}
+// Usage:
+Supplier<DatabasePool> pool = new Lazy<>(DatabasePool::initHeavyPool);`,
+  },
+];
+
+export default function FunctionalInterfacesFactoryDiagram({
+  initialTab = 'pipeline',
+}: {
+  initialTab?: TabType;
+}): React.JSX.Element {
+  const [activeTab, setActiveTab] = useState<TabType>(initialTab);
   const [selectedNode, setSelectedNode] = useState<string>('supplier');
   const [selectedFactoryMode, setSelectedFactoryMode] = useState<string>('functional');
+  const [selectedDecision, setSelectedDecision] = useState<string>('registry');
 
   const currPipeline = PIPELINE_NODES.find((n) => n.id === selectedNode) ?? PIPELINE_NODES[0];
   const currFactory = FACTORY_MODES.find((f) => f.id === selectedFactoryMode) ?? FACTORY_MODES[1];
+  const currDecision = DECISION_NODES.find((d) => d.id === selectedDecision) ?? DECISION_NODES[0];
 
   return (
     <div className="interactive-diagram-container" style={{ fontFamily: 'var(--ifm-font-family-base)' }}>
@@ -152,7 +284,7 @@ export default function FunctionalInterfacesFactoryDiagram(): React.JSX.Element 
           <polyline points="8 6 2 12 8 18" />
         </svg>
         <span style={{ color: 'var(--ifm-color-content)', fontWeight: 700 }}>
-          Java Functional Interfaces & Functional Factory Architecture
+          Java Functional Interfaces &amp; Functional Factory Architecture
         </span>
       </div>
 
@@ -163,6 +295,7 @@ export default function FunctionalInterfacesFactoryDiagram(): React.JSX.Element 
             { id: 'pipeline', label: '1. Functional Pipeline Flow', color: '#38bdf8' },
             { id: 'factory', label: '2. GoF Factory vs Supplier Registry', color: '#34d399' },
             { id: 'jvm_indy', label: '3. JVM invokedynamic & Allocation Truth', color: '#fbbf24' },
+            { id: 'decision', label: '4. Architectural Decision Guide', color: '#a78bfa' },
           ].map((t) => (
             <button
               key={t.id}
@@ -255,7 +388,7 @@ export default function FunctionalInterfacesFactoryDiagram(): React.JSX.Element 
                   className="interactive-diagram-flowing-path"
                   markerEnd="url(#arr-func-purple)"
                 />
-                <text x="365" y="172" textAnchor="middle" fill="#a78bfa" fontSize="9" fontFamily="monospace">map T -> R</text>
+                <text x="365" y="172" textAnchor="middle" fill="#a78bfa" fontSize="9" fontFamily="monospace">map T -&gt; R</text>
 
                 {/* 4. Consumer Sink Final */}
                 <line x1="170" y1="180" x2="85" y2="180" stroke="rgba(52,211,153,0.25)" strokeWidth="2" />
@@ -768,6 +901,238 @@ export default function FunctionalInterfacesFactoryDiagram(): React.JSX.Element 
                   <p style={{ fontSize: '11.5px', color: 'var(--ifm-color-content-secondary)', lineHeight: 1.45, margin: 0 }}>
                     If a lambda captures external variables (e.g. <code>o -&gt; o.price() + localTax</code>) or instance methods (<code>this::process</code>), a new object instance must be allocated on the heap on <strong>every execution</strong> to pass captured references into the constructor. In hot loops, this causes massive GC allocation stalls.
                   </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 4: ARCHITECTURAL DECISION GUIDE */}
+        {activeTab === 'decision' && (
+          <div>
+            {/* Quick Filter Selection Buttons */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '8px', marginBottom: '14px' }}>
+              {DECISION_NODES.map((d) => (
+                <button
+                  key={d.id}
+                  onClick={() => setSelectedDecision(d.id)}
+                  style={{
+                    padding: '8px 10px',
+                    borderRadius: '6px',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontWeight: 700,
+                    fontSize: '11.5px',
+                    textAlign: 'left',
+                    background: selectedDecision === d.id ? `${d.color}25` : 'rgba(255,255,255,0.04)',
+                    color: selectedDecision === d.id ? d.color : 'var(--ifm-color-content-secondary)',
+                    boxShadow: selectedDecision === d.id ? `0 0 0 1.5px ${d.color}80` : 'none',
+                    transition: 'all 0.2s ease',
+                  }}
+                >
+                  {d.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="func-split-grid" style={{ display: 'grid', gridTemplateColumns: '55% 45%', gap: '16px', alignItems: 'start' }}>
+              {/* SVG Decision Flowchart */}
+              <div className="interactive-diagram-svg-wrapper interactive-diagram-grid-bg" style={{ borderRadius: '10px', overflow: 'hidden' }}>
+                <svg viewBox="0 0 460 320" style={{ width: '100%', height: 'auto', display: 'block' }}>
+                  <defs>
+                    <marker id="arr-dec-green" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                      <path d="M0,0 L0,6 L8,3 z" fill="#34d399" />
+                    </marker>
+                    <marker id="arr-dec-cyan" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                      <path d="M0,0 L0,6 L8,3 z" fill="#38bdf8" />
+                    </marker>
+                    <marker id="arr-dec-amber" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                      <path d="M0,0 L0,6 L8,3 z" fill="#fbbf24" />
+                    </marker>
+                    <marker id="arr-dec-purple" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                      <path d="M0,0 L0,6 L8,3 z" fill="#a78bfa" />
+                    </marker>
+                  </defs>
+
+                  {/* Root Decision Box */}
+                  <rect x="130" y="15" width="200" height="48" rx="8" fill="rgba(56,189,248,0.15)" stroke="#38bdf8" strokeWidth="2" />
+                  <text x="230" y="34" textAnchor="middle" fill="#38bdf8" fontSize="11" fontWeight="700">Object Instantiation Need</text>
+                  <text x="230" y="50" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="9">Select creation architecture</text>
+
+                  {/* BRANCH 1: Supplier Registry */}
+                  <path d="M 180 63 L 60 115" stroke="rgba(52,211,153,0.3)" strokeWidth="2" />
+                  <path
+                    d="M 180 63 L 60 115"
+                    stroke="#34d399"
+                    strokeWidth={selectedDecision === 'registry' ? 3 : 1.5}
+                    strokeDasharray="5 3"
+                    className="interactive-diagram-flowing-path"
+                    markerEnd="url(#arr-dec-green)"
+                  />
+                  <g onClick={() => setSelectedDecision('registry')} style={{ cursor: 'pointer' }}>
+                    <rect
+                      x="10"
+                      y="118"
+                      width="100"
+                      height="65"
+                      rx="6"
+                      fill={selectedDecision === 'registry' ? 'rgba(52,211,153,0.3)' : 'rgba(52,211,153,0.1)'}
+                      stroke="#34d399"
+                      strokeWidth={selectedDecision === 'registry' ? 2 : 1}
+                    />
+                    <text x="60" y="137" textAnchor="middle" fill="#34d399" fontSize="10" fontWeight="700">Supplier</text>
+                    <text x="60" y="151" textAnchor="middle" fill="#34d399" fontSize="10" fontWeight="700">Registry</text>
+                    <text x="60" y="167" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="8">Dynamic OCP</text>
+                  </g>
+
+                  {/* BRANCH 2: Builder */}
+                  <path d="M 210 63 L 172 115" stroke="rgba(56,189,248,0.3)" strokeWidth="2" />
+                  <path
+                    d="M 210 63 L 172 115"
+                    stroke="#38bdf8"
+                    strokeWidth={selectedDecision === 'builder' ? 3 : 1.5}
+                    strokeDasharray="5 3"
+                    className="interactive-diagram-flowing-path"
+                    markerEnd="url(#arr-dec-cyan)"
+                  />
+                  <g onClick={() => setSelectedDecision('builder')} style={{ cursor: 'pointer' }}>
+                    <rect
+                      x="122"
+                      y="118"
+                      width="100"
+                      height="65"
+                      rx="6"
+                      fill={selectedDecision === 'builder' ? 'rgba(56,189,248,0.3)' : 'rgba(56,189,248,0.1)'}
+                      stroke="#38bdf8"
+                      strokeWidth={selectedDecision === 'builder' ? 2 : 1}
+                    />
+                    <text x="172" y="137" textAnchor="middle" fill="#38bdf8" fontSize="10" fontWeight="700">Builder +</text>
+                    <text x="172" y="151" textAnchor="middle" fill="#38bdf8" fontSize="10" fontWeight="700">Consumer</text>
+                    <text x="172" y="167" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="8">Multi-step args</text>
+                  </g>
+
+                  {/* BRANCH 3: Abstract Factory */}
+                  <path d="M 250 63 L 288 115" stroke="rgba(251,191,36,0.3)" strokeWidth="2" />
+                  <path
+                    d="M 250 63 L 288 115"
+                    stroke="#fbbf24"
+                    strokeWidth={selectedDecision === 'abstract_factory' ? 3 : 1.5}
+                    strokeDasharray="5 3"
+                    className="interactive-diagram-flowing-path"
+                    markerEnd="url(#arr-dec-amber)"
+                  />
+                  <g onClick={() => setSelectedDecision('abstract_factory')} style={{ cursor: 'pointer' }}>
+                    <rect
+                      x="238"
+                      y="118"
+                      width="100"
+                      height="65"
+                      rx="6"
+                      fill={selectedDecision === 'abstract_factory' ? 'rgba(251,191,36,0.3)' : 'rgba(251,191,36,0.1)'}
+                      stroke="#fbbf24"
+                      strokeWidth={selectedDecision === 'abstract_factory' ? 2 : 1}
+                    />
+                    <text x="288" y="137" textAnchor="middle" fill="#fbbf24" fontSize="10" fontWeight="700">Abstract</text>
+                    <text x="288" y="151" textAnchor="middle" fill="#fbbf24" fontSize="10" fontWeight="700">Factory</text>
+                    <text x="288" y="167" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="8">Product family</text>
+                  </g>
+
+                  {/* BRANCH 4: Lazy Memoizer */}
+                  <path d="M 280 63 L 400 115" stroke="rgba(167,139,250,0.3)" strokeWidth="2" />
+                  <path
+                    d="M 280 63 L 400 115"
+                    stroke="#a78bfa"
+                    strokeWidth={selectedDecision === 'memoized_lazy' ? 3 : 1.5}
+                    strokeDasharray="5 3"
+                    className="interactive-diagram-flowing-path"
+                    markerEnd="url(#arr-dec-purple)"
+                  />
+                  <g onClick={() => setSelectedDecision('memoized_lazy')} style={{ cursor: 'pointer' }}>
+                    <rect
+                      x="350"
+                      y="118"
+                      width="100"
+                      height="65"
+                      rx="6"
+                      fill={selectedDecision === 'memoized_lazy' ? 'rgba(167,139,250,0.3)' : 'rgba(167,139,250,0.1)'}
+                      stroke="#a78bfa"
+                      strokeWidth={selectedDecision === 'memoized_lazy' ? 2 : 1}
+                    />
+                    <text x="400" y="137" textAnchor="middle" fill="#a78bfa" fontSize="10" fontWeight="700">Memoized</text>
+                    <text x="400" y="151" textAnchor="middle" fill="#a78bfa" fontSize="10" fontWeight="700">Supplier</text>
+                    <text x="400" y="167" textAnchor="middle" fill="var(--ifm-color-content-secondary)" fontSize="8">Lazy DCL</text>
+                  </g>
+
+                  {/* Criterion Summary Box below */}
+                  <rect x="15" y="210" width="430" height="95" rx="8" fill="rgba(0,0,0,0.4)" stroke={currDecision.color} strokeWidth="1.5" />
+                  <text x="30" y="233" fill={currDecision.color} fontSize="11" fontWeight="700">
+                    Selected Pattern: {currDecision.pattern}
+                  </text>
+                  <text x="30" y="253" fill="var(--ifm-color-content)" fontSize="9.5">
+                    Criterion: {currDecision.criterion.length > 65 ? currDecision.criterion.substring(0, 65) + '...' : currDecision.criterion}
+                  </text>
+                  <text x="30" y="273" fill="var(--ifm-color-content-secondary)" fontSize="9">
+                    Best Applied In: {currDecision.bestFor}
+                  </text>
+                  <text x="30" y="291" fill="#f87171" fontSize="8.5">
+                    Caution: {currDecision.antiPatternWarning.length > 70 ? currDecision.antiPatternWarning.substring(0, 70) + '...' : currDecision.antiPatternWarning}
+                  </text>
+                </svg>
+              </div>
+
+              {/* Decision Deep-Dive Card */}
+              <div className="interactive-diagram-details-card" style={{ padding: '16px', borderRadius: '10px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                  <span style={{ fontWeight: 700, fontSize: '14px', color: currDecision.color }}>
+                    {currDecision.pattern}
+                  </span>
+                </div>
+
+                <div style={{ marginBottom: '10px' }}>
+                  <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--ifm-color-content)', marginBottom: '3px' }}>
+                    Decision Criterion:
+                  </div>
+                  <p style={{ fontSize: '11.5px', color: 'var(--ifm-color-content-secondary)', lineHeight: 1.45, margin: 0 }}>
+                    {currDecision.criterion}
+                  </p>
+                </div>
+
+                <div style={{ marginBottom: '10px' }}>
+                  <div style={{ fontSize: '11px', fontWeight: 700, color: '#34d399', marginBottom: '3px' }}>
+                    Production Target Workloads:
+                  </div>
+                  <p style={{ fontSize: '11.5px', color: 'var(--ifm-color-content-secondary)', lineHeight: 1.45, margin: 0 }}>
+                    {currDecision.bestFor}
+                  </p>
+                </div>
+
+                <div style={{ marginBottom: '12px' }}>
+                  <div style={{ fontSize: '11px', fontWeight: 700, color: '#f87171', marginBottom: '3px' }}>
+                    Anti-Pattern Guardrail:
+                  </div>
+                  <p style={{ fontSize: '11px', color: '#f87171', lineHeight: 1.4, margin: 0 }}>
+                    {currDecision.antiPatternWarning}
+                  </p>
+                </div>
+
+                <div>
+                  <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--ifm-color-content)', marginBottom: '4px' }}>
+                    Production Java Pattern:
+                  </div>
+                  <pre
+                    style={{
+                      fontSize: '10px',
+                      padding: '8px',
+                      borderRadius: '6px',
+                      background: '#040711',
+                      border: '1px solid rgba(255,255,255,0.08)',
+                      margin: 0,
+                      overflowX: 'auto',
+                      lineHeight: 1.35,
+                    }}
+                  >
+                    <code style={{ color: currDecision.color }}>{currDecision.code}</code>
+                  </pre>
                 </div>
               </div>
             </div>
