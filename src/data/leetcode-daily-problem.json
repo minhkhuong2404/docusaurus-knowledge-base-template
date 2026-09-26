@@ -1,8 +1,8 @@
 {
-  "id": "3550",
-  "title": "Smallest Index With Digit Sum Equal to Index",
-  "url": "https://leetcode.com/problems/smallest-index-with-digit-sum-equal-to-index/",
-  "difficulty": "easy",
-  "topic": "Array, Math",
-  "keyIdea": "Official LeetCode Daily Challenge for 2026-09-24."
+  "id": "1807",
+  "title": "Evaluate the Bracket Pairs of a String",
+  "url": "https://leetcode.com/problems/evaluate-the-bracket-pairs-of-a-string/",
+  "difficulty": "medium",
+  "topic": "Array, Hash Table, String",
+  "keyIdea": "Official LeetCode Daily Challenge for 2026-09-26."
 }

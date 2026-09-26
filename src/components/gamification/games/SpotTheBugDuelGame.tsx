@@ -256,6 +256,12 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
   // Filter challenges by category AND difficulty
   const filteredChallenges = useMemo(() => {
     let pool = selectedCategory === 'all' ? challenges : challenges.filter((c) => c.category === selectedCategory);
+    if (pool.length === 0) {
+      pool = selectedCategory === 'all' ? BUG_CHALLENGES : BUG_CHALLENGES.filter((c) => c.category === selectedCategory);
+    }
+    if (pool.length === 0) {
+      pool = BUG_CHALLENGES;
+    }
     if (selectedDifficulty === 'easy') {
       const match = pool.filter((c) => c.difficulty === 'Junior');
       if (match.length > 0) pool = match;
@@ -272,9 +278,10 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
   const currentIdx = categoryIndexMap[selectedCategory] ?? 0;
   const safeIdx = filteredChallenges.length > 0 ? currentIdx % filteredChallenges.length : 0;
   const currentChallenge = filteredChallenges[safeIdx] || BUG_CHALLENGES[0];
+  const currentChallengeIndex = safeIdx;
 
   const shuffledOptions = useMemo(() => {
-    if (!currentChallenge) return [];
+    if (!currentChallenge || !Array.isArray(currentChallenge.options)) return [];
     return shuffle(currentChallenge.options);
   }, [currentChallenge]);
 
@@ -353,10 +360,12 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
 
       setScore(newScore);
       setCombo(newCombo);
-      markBugSolved(currentChallenge.id);
+      if (currentChallenge?.id) {
+        markBugSolved(currentChallenge.id);
+      }
 
       const expGain = 25 + (newCombo > 2 ? 15 : 0);
-      addExp(expGain, `Spotted bug: ${currentChallenge.title}`);
+      addExp(expGain, `Spotted bug: ${currentChallenge?.title || 'Defect'}`);
       saveMiniGameScore('spot_bug', newScore);
 
       if (newCombo >= 3) {
@@ -372,7 +381,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
   const handleLineClick = (lineNum: number) => {
     if (gameState === 'revealed') return;
     setClickedLineNumber(lineNum);
-    if (lineNum === currentChallenge.buggyLineNumber) {
+    if (lineNum === currentChallenge?.buggyLineNumber) {
       arcadeAudio.playCorrect();
       setLineIdentifiedBonus(true);
     } else {
@@ -394,8 +403,17 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
     if (breakpointHintUsed || gameState === 'revealed') return;
     arcadeAudio.playLaser();
     setBreakpointHintUsed(true);
-    setClickedLineNumber(currentChallenge.buggyLineNumber);
-    setLineIdentifiedBonus(true);
+    if (currentChallenge?.buggyLineNumber) {
+      setClickedLineNumber(currentChallenge.buggyLineNumber);
+      setLineIdentifiedBonus(true);
+    }
+  };
+
+  const handleUseTimeWarp = () => {
+    if (timeWarpUsed || gameState === 'revealed') return;
+    arcadeAudio.playLaser();
+    setTimeWarpUsed(true);
+    setTimeLeft((prev) => prev + 15);
   };
 
   const cleanedCode = useMemo(() => {
@@ -746,7 +764,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
           <div style={{ marginBottom: '12px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', flexWrap: 'wrap', marginBottom: '4px' }}>
               <div style={{ fontSize: '0.98rem', fontWeight: 800, color: '#ffffff' }}>
-                {currentChallenge.title}
+                {currentChallenge?.title || 'Code Challenge'}
               </div>
               <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
                 {lineIdentifiedBonus && (
@@ -754,13 +772,13 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
                     🎯 Line Precision Match!
                   </span>
                 )}
-                <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '2px 6px', borderRadius: '4px', background: `${currentChallenge.difficultyColor}22`, color: currentChallenge.difficultyColor }}>
-                  {currentChallenge.difficulty}
+                <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '2px 6px', borderRadius: '4px', background: `${currentChallenge?.difficultyColor || '#f59e0b'}22`, color: currentChallenge?.difficultyColor || '#f59e0b' }}>
+                  {currentChallenge?.difficulty || 'Senior'}
                 </span>
               </div>
             </div>
             <div style={{ fontSize: '0.84rem', color: 'rgba(255, 255, 255, 0.75)', lineHeight: 1.4 }}>
-              {currentChallenge.scenario}
+              {currentChallenge?.scenario || ''}
             </div>
           </div>
 
@@ -855,19 +873,19 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
                           borderRadius: '4px',
                           fontSize: '0.72rem',
                           fontWeight: 800,
-                          background: clickedLineNumber === currentChallenge.buggyLineNumber ? 'rgba(52, 211, 153, 0.2)' : 'rgba(245, 158, 11, 0.2)',
-                          color: clickedLineNumber === currentChallenge.buggyLineNumber ? '#34d399' : '#fbbf24',
-                          border: `1px solid ${clickedLineNumber === currentChallenge.buggyLineNumber ? 'rgba(52, 211, 153, 0.4)' : 'rgba(245, 158, 11, 0.4)'}`,
+                          background: clickedLineNumber === currentChallenge?.buggyLineNumber ? 'rgba(52, 211, 153, 0.2)' : 'rgba(245, 158, 11, 0.2)',
+                          color: clickedLineNumber === currentChallenge?.buggyLineNumber ? '#34d399' : '#fbbf24',
+                          border: `1px solid ${clickedLineNumber === currentChallenge?.buggyLineNumber ? 'rgba(52, 211, 153, 0.4)' : 'rgba(245, 158, 11, 0.4)'}`,
                         }}
                       >
-                        Line #{clickedLineNumber} {clickedLineNumber === currentChallenge.buggyLineNumber ? '✓ Match (+50 pts)' : 'Marked'}
+                        Line #{clickedLineNumber} {clickedLineNumber === currentChallenge?.buggyLineNumber ? '✓ Match (+50 pts)' : 'Marked'}
                       </span>
                     )}
                   </div>
 
                   {tokens.map((lineTokens, idx) => {
                     const lineNum = idx + 1;
-                    const isBuggy = (gameState === 'revealed' || breakpointHintUsed) && lineNum === currentChallenge.buggyLineNumber;
+                    const isBuggy = (gameState === 'revealed' || breakpointHintUsed) && lineNum === currentChallenge?.buggyLineNumber;
                     const isClicked = clickedLineNumber === lineNum;
 
                     let bg = 'transparent';
@@ -1028,16 +1046,16 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
               }}
             >
               <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#34d399', marginBottom: '8px', textTransform: 'uppercase' }}>
-                ✨ Verified Solution Diff (Line #{currentChallenge.buggyLineNumber}):
+                ✨ Verified Solution Diff (Line #{currentChallenge?.buggyLineNumber || 1}):
               </div>
               <div style={{ background: 'rgba(239, 68, 68, 0.12)', borderLeft: '3px solid #ef4444', padding: '6px 12px', borderRadius: '4px', marginBottom: '6px', fontFamily: 'monospace', fontSize: '0.8rem', color: '#fca5a5' }}>
-                - // Defective Line #{currentChallenge.buggyLineNumber}: Lacks thread-safety / atomicity
+                - // Defective Line #{currentChallenge?.buggyLineNumber || 1}: Lacks thread-safety / atomicity
               </div>
               <div style={{ background: 'rgba(52, 211, 153, 0.12)', borderLeft: '3px solid #34d399', padding: '6px 12px', borderRadius: '4px', marginBottom: '10px', fontFamily: 'monospace', fontSize: '0.8rem', color: '#86efac' }}>
-                + {currentChallenge.fixSnippet.trim()}
+                + {currentChallenge?.fixSnippet?.trim() || '// Recommended patch'}
               </div>
               <div style={{ fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.75)', lineHeight: 1.45 }}>
-                {currentChallenge.rootCause}
+                {currentChallenge?.rootCause || ''}
               </div>
             </div>
           )}
@@ -1147,10 +1165,10 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
               }}
             >
               <div style={{ fontSize: '0.85rem', color: '#f59e0b', fontWeight: 800, marginBottom: '4px' }}>
-                ⚡ Root Cause: Line #{currentChallenge.buggyLineNumber}
+                ⚡ Root Cause: Line #{currentChallenge?.buggyLineNumber || 1}
               </div>
               <div style={{ fontSize: '0.8rem', color: 'rgba(255, 255, 255, 0.85)', lineHeight: 1.45, marginBottom: '12px' }}>
-                {currentChallenge.rootCause}
+                {currentChallenge?.rootCause || ''}
               </div>
 
               {currentChallenge.fixSnippet && (
