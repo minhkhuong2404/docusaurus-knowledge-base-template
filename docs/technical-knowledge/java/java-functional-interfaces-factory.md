@@ -432,17 +432,7 @@ PaymentGateway gw = gatewayCache.computeIfAbsent(code, k -> {
 // SOLUTION: Decouple calculation using CompletableFuture or explicit caching layers
 ```
 
----
-
-## 9. Architectural Decision Guide
-
-The interactive decision guide below maps object creation complexity, dynamic extension requirements, and thread-safety invariants to the optimal instantiation pattern in modern Java.
-
-<FunctionalInterfacesFactoryDiagram initialTab="decision" />
-
----
-
-## 10. Summary Checklist for Senior Engineers
+## 9. Summary Checklist for Senior Engineers
 
 - [ ] **Interface Semantics**: Use `Supplier` for zero-arg lazy generation, `Consumer` for terminal side effects, `Function` for pure mappings, and `Predicate` for boolean gates.
 - [ ] **Primitive Specializations**: Enforce `IntSupplier`, `LongConsumer`, `DoublePredicate` in high-throughput hot paths to eliminate autoboxing allocations.
