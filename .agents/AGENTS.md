@@ -61,6 +61,43 @@ The following files in `docs/technical-knowledge/interview-questions/grokking-ja
 6. **Visual Model Integration**: Accompany key architectures and protocol flows with interactive React SVG diagrams following `design-diagrams`.
 7. **Workspace Registration**: Always register new pages in `sidebars.ts` and link them in the parent topic category index.
 
+## MANDATORY: Light Theme Design System & UI Specifications (Always Follow)
+
+**Whenever designing, modifying, or auditing ANY component, page, arcade game, sidebar, navigation, or interactive diagram in this knowledge base, you MUST ALWAYS adhere strictly to the Light Theme Design System (`.agents/skills/light-theme-design/SKILL.md`) and the detailed reference rubric at:**
+[`.agents/skills/light-theme-design/references/LIGHT_THEME_GUIDELINES.md`](file:///Users/lukhuong/Desktop/docusaurus-knowledge-base-template/.agents/skills/light-theme-design/references/LIGHT_THEME_GUIDELINES.md)
+
+### Core Light Theme Invariants:
+1. **Palette Tokens**:
+   - **Page Background**: `#F2F4F7` (clean modern grey-white)
+   - **Card Mint Surfaces / Accents**: `#F7FDF9`
+   - **Sub-Cards / Neutral Chips / Unselected Badges ("Toasts")**: `#F2F2F2`
+   - **Defined Borders & Inactive Dividers**: `#98A2B3` (darker background grey) and `#D9D9D9` (whiter grey)
+   - **Primary Text**: `#0f172a` / `#1e293b` (NEVER pure white or pale pastels on light surfaces)
+   - **Secondary Text**: `#334155` / `#475569`
+2. **Zero White Text in Light Mode**:
+   - Hardcoded white text (`#ffffff`, `rgba(255, 255, 255, ...)`, `#f8fafc`) in content cards, Career Hub, arcade arenas, or navigation MUST be overridden in `[data-theme="light"]` to `#0f172a` / `#1e293b`.
+   - Title inline code blocks (e.g. `git commit`) must have dark monospace text and `#F2F2F2` background with `#D9D9D9` border, never disappearing into the white surface.
+   - Hover states must keep text dark (`#0f172a` / `#1e293b`) on light backgrounds, never inverting to white.
+3. **Glassmorphism & Natural Borders**:
+   - Active menu item: soft frosted glass `border: 1px solid rgba(0, 0, 0, 0.08)`, `background: rgba(255, 255, 255, 0.8)`, `backdrop-filter: blur(8px)`.
+   - Avatar hover border: subtle and thin (`rgba(0, 0, 0, 0.15)`), never bold.
+   - Career Hub `#` sections: must have light borders (`1px solid #D9D9D9` or `#98A2B3`).
+4. **Badges, Chips, Pills & "Toasts"**:
+   - Never faint or washed-out white pastels on white surfaces.
+   - **Neutral / Unsolved**: `#F2F2F2` bg, `#98A2B3` border, `#1e293b` / `#334155` text.
+   - **Easy / Solved / P3**: `#dcfce7` bg, `#86efac` border, `#166534` / `#15803d` dark green text.
+   - **Medium / Mid / P2**: `#fef3c7` bg, `#fcd34d` border, `#92400e` dark amber text.
+   - **Hard / Senior / P0**: `#fee2e2` bg, `#fca5a5` border, `#991b1b` dark crimson text.
+   - **Company / Info / Blue**: `#e0e7ff` / `#e0f2fe` bg, `#c7d2fe` / `#7dd3fc` border, `#3730a3` / `#0369a1` dark text.
+   - **Purple / Lesson Doc / All Levels**: `#f3e8ff` bg, `#d8b4fe` border, `#6b21a8` dark purple text.
+5. **Arcade Start Game Buttons (Radiant Lighter Gradients)**:
+   - Never end gradients with `#1e1b4b` or dark navy/black.
+   - Use luminous, radiant gradients:
+     - Violet/Purple: `linear-gradient(135deg, #9333ea 0%, #c084fc 100%)`
+     - Amber/Orange: `linear-gradient(135deg, #f59e0b 0%, #fb923c 100%)`
+     - Sky Blue/Cyan: `linear-gradient(135deg, #0ea5e9 0%, #38bdf8 100%)`
+     - Emerald/Mint: `linear-gradient(135deg, #10b981 0%, #34d399 100%)`
+
 ## MANDATORY: Automated Testing & Code Style Policy (Always Add/Update Tests for Any Feature)
 - **Always Add/Update Tests**: Whenever adding, modifying, or refactoring ANY feature in this website (arcade games, gamification mechanics, HUD/leaderboard, quiz services, data schemas, interactive diagrams, or utility functions), you **MUST ALWAYS** add or update corresponding tests in `tests/`.
 - **Zero Undeclared Runtime Identifiers**: Ensure all modified/new components are audited for AST scope safety so undeclared variable bugs can never reach production.
