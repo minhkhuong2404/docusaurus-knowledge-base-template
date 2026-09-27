@@ -74,6 +74,12 @@ export const defaultGamificationState: GamificationState = {
   miniGameScores: {},
 };
 
+export interface ThemePreference {
+  preset?: string;
+  colorMode?: 'light' | 'dark';
+  updatedAt?: any;
+}
+
 export interface UserProgressData {
   uid: string;
   email?: string;
@@ -92,6 +98,7 @@ export interface UserProgressData {
     starredProblems: string[];
   };
   gamification?: GamificationState;
+  themePreference?: ThemePreference;
   totalTimeOnlineSeconds?: number;
   timeTrackingSeeded?: boolean;
   updatedAt?: any;
@@ -112,6 +119,10 @@ export const defaultUserProgress: UserProgressData = {
     starredProblems: [],
   },
   gamification: defaultGamificationState,
+  themePreference: {
+    preset: 'emerald',
+    colorMode: 'dark',
+  },
   totalTimeOnlineSeconds: 0,
   timeTrackingSeeded: false,
 };
@@ -291,6 +302,7 @@ export function subscribeToUserProgress(
             },
             miniGameScores: raw.gamification?.miniGameScores || {},
           },
+          themePreference: raw.themePreference || { preset: 'emerald', colorMode: 'dark' },
           totalTimeOnlineSeconds,
           timeTrackingSeeded: true,
         });
@@ -556,3 +568,41 @@ export async function saveGamificationToFirestore(
     console.error('Failed to save gamification to Firestore:', err);
   }
 }
+
+/**
+ * Save user's selected theme preset and dark/light color mode to Cloud Firestore
+ */
+export async function saveThemePreferenceToFirestore(
+  uid: string,
+  preset: string,
+  colorMode: 'light' | 'dark'
+): Promise<void> {
+  if (!uid) return;
+  const userDocRef = doc(db, 'users', uid);
+  try {
+    await updateDoc(userDocRef, {
+      'themePreference.preset': preset,
+      'themePreference.colorMode': colorMode,
+      'themePreference.updatedAt': serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+  } catch (_err) {
+    try {
+      await setDoc(
+        userDocRef,
+        {
+          themePreference: {
+            preset,
+            colorMode,
+            updatedAt: serverTimestamp(),
+          },
+          updatedAt: serverTimestamp(),
+        },
+        { merge: true }
+      );
+    } catch (fallbackErr) {
+      console.error('Failed to save theme preference to Firestore:', fallbackErr);
+    }
+  }
+}
+

@@ -123,6 +123,15 @@ const config: Config = {
 			{
 				tagName: 'script',
 				innerHTML: `
+					try {
+						var preset = localStorage.getItem('kb_theme_preset') || 'emerald';
+						document.documentElement.setAttribute('data-theme-preset', preset);
+					} catch (e) {}
+				`,
+			},
+			{
+				tagName: 'script',
+				innerHTML: `
 					if (typeof window !== 'undefined' && !window.gtag) {
 						window.dataLayer = window.dataLayer || [];
 						window.gtag = function() { window.dataLayer.push(arguments); };
@@ -207,6 +216,10 @@ const config: Config = {
 					position: 'left',
 				},
 				{
+					type: 'custom-themePalettePicker',
+					position: 'right',
+				},
+				{
 					type: 'custom-userNavbarItem',
 					position: 'right',
 				},
@@ -225,8 +238,8 @@ const config: Config = {
 		},
 		colorMode: {
 			defaultMode: 'dark',
-			disableSwitch: true,
-			respectPrefersColorScheme: false,
+			disableSwitch: false,
+			respectPrefersColorScheme: true,
 		},
 	},
 }

@@ -296,12 +296,13 @@ export default function ProfilePage(): React.JSX.Element {
       description={`Engineering learning telemetry, achievement codex, daily missions, and cosmic rank hierarchy for ${effectiveName}.`}
     >
       <div
+        className="profile-page-container"
         style={{
           minHeight: '100vh',
-          backgroundColor: '#070a12',
+          backgroundColor: 'var(--profile-page-bg, #070a12)',
           backgroundImage:
-            'radial-gradient(ellipse 80% 50% at 50% -20%, rgba(56, 189, 248, 0.12), transparent 70%), radial-gradient(ellipse 60% 40% at 80% 80%, rgba(168, 85, 247, 0.08), transparent 70%)',
-          color: '#f8fafc',
+            'var(--profile-page-gradient, radial-gradient(ellipse 80% 50% at 50% -20%, rgba(56, 189, 248, 0.12), transparent 70%), radial-gradient(ellipse 60% 40% at 80% 80%, rgba(168, 85, 247, 0.08), transparent 70%))',
+          color: 'var(--ifm-color-content, #f8fafc)',
           padding: '24px 16px 70px',
         }}
       >
@@ -336,7 +337,7 @@ export default function ProfilePage(): React.JSX.Element {
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.86rem' }}>
                 <span>👁️</span>
                 <span style={{ fontWeight: 800, color: '#38bdf8' }}>Viewing Public Profile:</span>
-                <span style={{ fontWeight: 700, color: '#ffffff' }}>{effectiveName}</span>
+                <span style={{ fontWeight: 700, color: 'var(--ifm-color-content, #ffffff)' }}>{effectiveName}</span>
                 <span style={{ fontSize: '0.72rem', color: 'rgba(255, 255, 255, 0.5)', background: 'rgba(255, 255, 255, 0.08)', padding: '1px 6px', borderRadius: '4px' }}>
                   Read-Only Mode
                 </span>
@@ -371,7 +372,7 @@ export default function ProfilePage(): React.JSX.Element {
                     borderRadius: '8px',
                     background: 'rgba(255, 255, 255, 0.08)',
                     border: '1px solid rgba(255, 255, 255, 0.15)',
-                    color: '#ffffff',
+                    color: 'var(--ifm-color-content, #ffffff)',
                     textDecoration: 'none',
                     display: 'inline-flex',
                     alignItems: 'center',
@@ -398,7 +399,7 @@ export default function ProfilePage(): React.JSX.Element {
               }}
             >
               <div style={{ fontSize: '2rem', marginBottom: '8px', animation: 'spin 1s linear infinite' }}>⏳</div>
-              <div style={{ fontWeight: 800, fontSize: '1.1rem', color: '#ffffff' }}>Loading Architect Profile...</div>
+              <div style={{ fontWeight: 800, fontSize: '1.1rem', color: 'var(--ifm-color-content, #ffffff)' }}>Loading Architect Profile...</div>
               <div style={{ fontSize: '0.8rem', color: 'rgba(255, 255, 255, 0.55)', marginTop: '4px' }}>
                 Fetching public telemetry and achievement codex from Firestore
               </div>
@@ -443,7 +444,7 @@ export default function ProfilePage(): React.JSX.Element {
                     padding: '8px 16px',
                     borderRadius: '8px',
                     background: 'rgba(255, 255, 255, 0.08)',
-                    color: '#ffffff',
+                    color: 'var(--ifm-color-content, #ffffff)',
                     fontWeight: 700,
                     fontSize: '0.84rem',
                     textDecoration: 'none',
@@ -462,6 +463,7 @@ export default function ProfilePage(): React.JSX.Element {
           {!otherUserLoading && !otherUserError && (
             <>
               <div
+                className="profile-hero-card"
                 style={{
                   padding: '22px 24px',
                   borderRadius: '18px',
@@ -482,7 +484,7 @@ export default function ProfilePage(): React.JSX.Element {
 
                   <div style={{ flex: 1, minWidth: '220px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                      <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 900, color: '#ffffff', letterSpacing: '-0.02em' }}>
+                      <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 900, color: 'var(--ifm-color-content, #ffffff)', letterSpacing: '-0.02em' }}>
                         {effectiveName}
                       </h1>
                       <span
@@ -499,8 +501,8 @@ export default function ProfilePage(): React.JSX.Element {
                         Level {currentLevel} • {rank.title}
                       </span>
                     </div>
-                    <div style={{ color: 'rgba(255, 255, 255, 0.55)', fontSize: '0.82rem', marginTop: '3px' }}>
-                      {effectiveEmail} • <span style={{ color: '#38bdf8', fontWeight: 600 }}>Active Telemetry</span> • <span style={{ color: '#34d399', fontWeight: 600 }}>⏱️ {formatTimeOnline(effectiveTimeOnlineSeconds)}</span>
+                    <div style={{ color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.55))', fontSize: '0.82rem', marginTop: '3px' }}>
+                      {effectiveEmail} • <span style={{ color: 'var(--brand-green)', fontWeight: 600 }}>Active Telemetry</span> • <span style={{ color: 'var(--brand-green)', fontWeight: 600 }}>⏱️ {formatTimeOnline(effectiveTimeOnlineSeconds)}</span>
                     </div>
 
                     {/* EXP Bar */}
@@ -510,7 +512,7 @@ export default function ProfilePage(): React.JSX.Element {
                           display: 'flex',
                           justifyContent: 'space-between',
                           fontSize: '0.74rem',
-                          color: 'rgba(255, 255, 255, 0.6)',
+                          color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.6))',
                           marginBottom: '4px',
                         }}
                       >
@@ -524,7 +526,7 @@ export default function ProfilePage(): React.JSX.Element {
                           width: '100%',
                           height: '6px',
                           borderRadius: '3px',
-                          background: 'rgba(255, 255, 255, 0.08)',
+                          background: 'var(--sidebar-hover-bg, rgba(255, 255, 255, 0.08))',
                           overflow: 'hidden',
                         }}
                       >
@@ -552,7 +554,7 @@ export default function ProfilePage(): React.JSX.Element {
                       borderRadius: '9px',
                       background: 'rgba(255, 255, 255, 0.05)',
                       border: '1px solid rgba(255, 255, 255, 0.15)',
-                      color: '#ffffff',
+                      color: 'var(--ifm-color-content, #ffffff)',
                       fontWeight: 700,
                       fontSize: '0.82rem',
                       textDecoration: 'none',
@@ -620,6 +622,7 @@ export default function ProfilePage(): React.JSX.Element {
               {/* 🎛️ 2. PRIMARY NAVIGATION TABS (Segmented Control)         */}
               {/* ========================================================= */}
               <div
+                className="profile-nav-tabs"
                 style={{
                   display: 'flex',
                   background: 'rgba(22, 33, 56, 0.75)',
@@ -636,7 +639,7 @@ export default function ProfilePage(): React.JSX.Element {
                     id: 'telemetry',
                     label: '📊 Learning Telemetry',
                     count: `${readPercent}% Complete`,
-                    activeColor: '#38bdf8',
+                    activeColor: 'var(--brand-green)',
                   },
                   {
                     id: 'codex',
@@ -648,7 +651,7 @@ export default function ProfilePage(): React.JSX.Element {
                     id: 'quests',
                     label: '🎯 Daily Quests & Ranks',
                     count: `${completedQuestsCount}/3 Today`,
-                    activeColor: '#34d399',
+                    activeColor: 'var(--brand-teal, var(--brand-green))',
                   },
                 ].map((tab) => {
                   const isActive = activeTab === tab.id;
@@ -657,7 +660,7 @@ export default function ProfilePage(): React.JSX.Element {
                       key={tab.id}
                       type="button"
                       onClick={() => handleTabChange(tab.id as any)}
-                      className="nav-tab-btn"
+                      className={`nav-tab-btn${isActive ? ' active' : ''}`}
                       style={{
                         flex: 1,
                         padding: '10px 14px',
@@ -726,10 +729,10 @@ export default function ProfilePage(): React.JSX.Element {
                           {readPercent}% Read
                         </span>
                       </div>
-                      <div style={{ fontSize: '1.65rem', fontWeight: 900, color: '#ffffff', marginBottom: '4px' }}>
-                        {readCount} <span style={{ fontSize: '0.88rem', fontWeight: 600, color: 'rgba(255, 255, 255, 0.5)' }}>/ {totalArticles} Articles</span>
+                      <div style={{ fontSize: '1.65rem', fontWeight: 900, color: 'var(--ifm-color-content, #ffffff)', marginBottom: '4px' }}>
+                        {readCount} <span style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.5))' }}>/ {totalArticles} Articles</span>
                       </div>
-                      <div style={{ width: '100%', height: '5px', borderRadius: '3px', background: 'rgba(255, 255, 255, 0.08)', overflow: 'hidden', marginTop: '8px' }}>
+                      <div style={{ width: '100%', height: '5px', borderRadius: '3px', background: 'var(--sidebar-hover-bg, rgba(255, 255, 255, 0.08))', overflow: 'hidden', marginTop: '8px' }}>
                         <div style={{ width: `${readPercent}%`, height: '100%', background: 'linear-gradient(90deg, #38bdf8, #818cf8)', borderRadius: '3px', transition: 'width 0.4s ease' }} />
                       </div>
                     </div>
@@ -752,10 +755,10 @@ export default function ProfilePage(): React.JSX.Element {
                           {quizAccuracy}% Accuracy
                         </span>
                       </div>
-                      <div style={{ fontSize: '1.65rem', fontWeight: 900, color: '#ffffff', marginBottom: '4px' }}>
-                        {quizTotalAnswered} <span style={{ fontSize: '0.88rem', fontWeight: 600, color: 'rgba(255, 255, 255, 0.5)' }}>({quizCorrect} Correct)</span>
+                      <div style={{ fontSize: '1.65rem', fontWeight: 900, color: 'var(--ifm-color-content, #ffffff)', marginBottom: '4px' }}>
+                        {quizTotalAnswered} <span style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.5))' }}>({quizCorrect} Correct)</span>
                       </div>
-                      <div style={{ width: '100%', height: '5px', borderRadius: '3px', background: 'rgba(255, 255, 255, 0.08)', overflow: 'hidden', marginTop: '8px' }}>
+                      <div style={{ width: '100%', height: '5px', borderRadius: '3px', background: 'var(--sidebar-hover-bg, rgba(255, 255, 255, 0.08))', overflow: 'hidden', marginTop: '8px' }}>
                         <div style={{ width: `${Math.max(4, Math.min(100, (quizTotalAnswered / totalQuizPool) * 100))}%`, height: '100%', background: 'linear-gradient(90deg, #fbbf24, #f59e0b)', borderRadius: '3px', transition: 'width 0.4s ease' }} />
                       </div>
                     </div>
@@ -789,7 +792,7 @@ export default function ProfilePage(): React.JSX.Element {
                           {hardSolved} Hard
                         </span>
                       </div>
-                      <div style={{ width: '100%', height: '5px', borderRadius: '3px', background: 'rgba(255, 255, 255, 0.08)', overflow: 'hidden', marginTop: '10px' }}>
+                      <div style={{ width: '100%', height: '5px', borderRadius: '3px', background: 'var(--sidebar-hover-bg, rgba(255, 255, 255, 0.08))', overflow: 'hidden', marginTop: '10px' }}>
                         <div style={{ width: `${dsaPercent}%`, height: '100%', background: 'linear-gradient(90deg, #c084fc, #a855f7)', borderRadius: '3px', transition: 'width 0.4s ease' }} />
                       </div>
                     </div>
@@ -812,10 +815,10 @@ export default function ProfilePage(): React.JSX.Element {
                           🛡️ {shieldsRemaining}/3 Shields
                         </span>
                       </div>
-                      <div style={{ fontSize: '1.65rem', fontWeight: 900, color: '#ffffff', marginBottom: '4px' }}>
-                        {streakDays}d <span style={{ fontSize: '0.88rem', fontWeight: 600, color: 'rgba(255, 255, 255, 0.5)' }}>Current (Peak: {longestStreak}d)</span>
+                      <div style={{ fontSize: '1.65rem', fontWeight: 900, color: 'var(--ifm-color-content, #ffffff)', marginBottom: '4px' }}>
+                        {streakDays}d <span style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.5))' }}>Current (Peak: {longestStreak}d)</span>
                       </div>
-                      <div style={{ width: '100%', height: '5px', borderRadius: '3px', background: 'rgba(255, 255, 255, 0.08)', overflow: 'hidden', marginTop: '8px' }}>
+                      <div style={{ width: '100%', height: '5px', borderRadius: '3px', background: 'var(--sidebar-hover-bg, rgba(255, 255, 255, 0.08))', overflow: 'hidden', marginTop: '8px' }}>
                         <div style={{ width: `${Math.min(100, (streakDays / 100) * 100)}%`, height: '100%', background: 'linear-gradient(90deg, #f97316, #ef4444)', borderRadius: '3px', transition: 'width 0.4s ease' }} />
                       </div>
                     </div>
@@ -823,11 +826,12 @@ export default function ProfilePage(): React.JSX.Element {
 
                   {/* Active Study Time Bar */}
                   <div
+                    className="study-telemetry-banner"
                     style={{
                       padding: '14px 18px',
                       borderRadius: '12px',
-                      background: 'rgba(52, 211, 153, 0.06)',
-                      border: '1px solid rgba(52, 211, 153, 0.2)',
+                      background: 'var(--sidebar-active-bg)',
+                      border: '1px solid var(--sidebar-border)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
@@ -839,10 +843,10 @@ export default function ProfilePage(): React.JSX.Element {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                       <span style={{ fontSize: '1.4rem' }}>⏱️</span>
                       <div>
-                        <div style={{ fontWeight: 800, fontSize: '0.92rem', color: '#ffffff' }}>
-                          Active Study Telemetry: <span style={{ color: '#34d399' }}>{formatTimeOnline(effectiveTimeOnlineSeconds)}</span>
+                        <div style={{ fontWeight: 800, fontSize: '0.92rem', color: 'var(--ifm-color-content, #ffffff)' }}>
+                          Active Study Telemetry: <span style={{ color: 'var(--brand-green)' }}>{formatTimeOnline(effectiveTimeOnlineSeconds)}</span>
                         </div>
-                        <div style={{ fontSize: '0.76rem', color: 'rgba(255, 255, 255, 0.6)' }}>
+                        <div style={{ fontSize: '0.76rem', color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.6))' }}>
                           Continuously tracking focused learning across documentation reading, algorithm exercises, and quiz sessions.
                         </div>
                       </div>
@@ -886,6 +890,7 @@ export default function ProfilePage(): React.JSX.Element {
 
                   {/* 🧭 Knowledge Domain Mastery */}
                   <div
+                    className="profile-panel-card"
                     style={{
                       padding: '22px 24px',
                       borderRadius: '18px',
@@ -896,7 +901,7 @@ export default function ProfilePage(): React.JSX.Element {
                   >
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', marginBottom: '18px' }}>
                       <div>
-                        <h2 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 900, color: '#ffffff', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <h2 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 900, color: 'var(--ifm-color-content, #ffffff)', display: 'flex', alignItems: 'center', gap: '8px' }}>
                           <span>🧭</span>
                           <span>Knowledge Domain Mastery</span>
                         </h2>
@@ -904,7 +909,7 @@ export default function ProfilePage(): React.JSX.Element {
                           Granular reading distribution across engineering core topics.
                         </div>
                       </div>
-                      <span style={{ fontSize: '0.74rem', color: '#34d399', fontWeight: 800, background: 'rgba(52, 211, 153, 0.12)', padding: '3px 10px', borderRadius: '6px', border: '1px solid rgba(52, 211, 153, 0.25)' }}>
+                      <span style={{ fontSize: '0.74rem', color: 'var(--brand-green)', fontWeight: 800, background: 'var(--sidebar-active-bg)', padding: '3px 10px', borderRadius: '6px', border: '1px solid var(--sidebar-border)' }}>
                         ⚡ 5,120 Questions / Topic Synced
                       </span>
                     </div>
@@ -927,19 +932,19 @@ export default function ProfilePage(): React.JSX.Element {
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                                 <span style={{ fontSize: '1.1rem' }}>{dom.icon}</span>
-                                <span style={{ fontWeight: 800, fontSize: '0.88rem', color: '#ffffff' }}>{dom.title}</span>
+                                <span style={{ fontWeight: 800, fontSize: '0.88rem', color: 'var(--ifm-color-content, #ffffff)' }}>{dom.title}</span>
                               </div>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                                 <span style={{ fontSize: '0.82rem', fontWeight: 800, color: dom.color }}>
                                   {dom.count} read
                                 </span>
-                                <span style={{ fontSize: '0.68rem', color: 'rgba(255, 255, 255, 0.45)', background: 'rgba(255, 255, 255, 0.05)', padding: '1px 5px', borderRadius: '4px' }}>
+                                <span style={{ fontSize: '0.68rem', color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.45))', background: 'var(--sidebar-hover-bg, rgba(255, 255, 255, 0.05))', padding: '1px 5px', borderRadius: '4px' }}>
                                   {dom.pool}
                                 </span>
                               </div>
                             </div>
 
-                            <div style={{ fontSize: '0.72rem', color: 'rgba(255, 255, 255, 0.5)', marginBottom: '8px' }}>
+                            <div style={{ fontSize: '0.72rem', color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.5))', marginBottom: '8px' }}>
                               {dom.topics}
                             </div>
 
@@ -961,6 +966,7 @@ export default function ProfilePage(): React.JSX.Element {
                 <div>
                   {/* Codex Toolbar */}
                   <div
+                    className="profile-panel-card"
                     style={{
                       padding: '18px 20px',
                       borderRadius: '16px',
@@ -972,7 +978,7 @@ export default function ProfilePage(): React.JSX.Element {
                   >
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px', marginBottom: '14px' }}>
                       <div>
-                        <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 900, color: '#ffffff', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 900, color: 'var(--ifm-color-content, #ffffff)', display: 'flex', alignItems: 'center', gap: '8px' }}>
                           <span>🏆</span>
                           <span>The Engineering Achievement Codex</span>
                           <span style={{ fontSize: '0.8rem', color: '#fbbf24', background: 'rgba(251, 191, 36, 0.15)', padding: '2px 8px', borderRadius: '6px', fontWeight: 800 }}>
@@ -985,7 +991,7 @@ export default function ProfilePage(): React.JSX.Element {
                       </div>
 
                       {/* Status Filter Toggle */}
-                      <div style={{ display: 'flex', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '8px', padding: '2px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                      <div className="codex-status-toggle" style={{ display: 'flex', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '8px', padding: '2px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
                         {[
                           { id: 'all', label: `All (${ACHIEVEMENTS.length})` },
                           { id: 'unlocked', label: `Unlocked (${unlockedCount})` },
@@ -997,11 +1003,12 @@ export default function ProfilePage(): React.JSX.Element {
                               key={f.id}
                               type="button"
                               onClick={() => setCodexStatus(f.id as any)}
+                              className={`status-toggle-btn${isSel ? ' active' : ''}`}
                               style={{
                                 padding: '5px 12px',
                                 borderRadius: '6px',
                                 border: 'none',
-                                background: isSel ? '#38bdf8' : 'transparent',
+                                background: isSel ? 'var(--brand-green)' : 'transparent',
                                 color: isSel ? '#090d16' : 'rgba(255, 255, 255, 0.7)',
                                 fontSize: '0.76rem',
                                 fontWeight: 800,
@@ -1019,6 +1026,7 @@ export default function ProfilePage(): React.JSX.Element {
                     {/* Search Bar */}
                     <input
                       type="text"
+                      className="profile-search-input"
                       value={codexSearch}
                       onChange={(e) => setCodexSearch(e.target.value)}
                       placeholder="🔍 Search achievements (e.g. Kafka, Spring, Streak, 50, Legendary)..."
@@ -1028,7 +1036,7 @@ export default function ProfilePage(): React.JSX.Element {
                         borderRadius: '9px',
                         background: 'rgba(255, 255, 255, 0.04)',
                         border: '1px solid rgba(255, 255, 255, 0.12)',
-                        color: '#ffffff',
+                        color: 'var(--ifm-color-content, #ffffff)',
                         fontSize: '0.86rem',
                         outline: 'none',
                         marginBottom: '10px',
@@ -1054,14 +1062,14 @@ export default function ProfilePage(): React.JSX.Element {
                           <button
                             key={cat.id}
                             type="button"
-                            className="filter-chip-btn"
+                            className={`filter-chip-btn${isSel ? ' selected' : ''}`}
                             onClick={() => setCodexCategory(cat.id as any)}
                             style={{
                               padding: '4px 11px',
                               borderRadius: '7px',
-                              border: isSel ? '1px solid #38bdf8' : '1px solid rgba(255, 255, 255, 0.08)',
-                              background: isSel ? 'rgba(56, 189, 248, 0.18)' : 'rgba(255, 255, 255, 0.03)',
-                              color: isSel ? '#38bdf8' : 'rgba(255, 255, 255, 0.65)',
+                              border: isSel ? '1px solid var(--brand-green)' : '1px solid rgba(255, 255, 255, 0.08)',
+                              background: isSel ? 'var(--sidebar-active-bg)' : 'rgba(255, 255, 255, 0.03)',
+                              color: isSel ? 'var(--brand-green)' : 'rgba(255, 255, 255, 0.65)',
                               fontSize: '0.74rem',
                               fontWeight: 700,
                               cursor: 'pointer',
@@ -1150,7 +1158,7 @@ export default function ProfilePage(): React.JSX.Element {
 
                             <div style={{ flex: 1, minWidth: 0 }}>
                               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '4px' }}>
-                                <span style={{ fontWeight: 800, fontSize: '0.88rem', color: '#ffffff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                <span style={{ fontWeight: 800, fontSize: '0.88rem', color: 'var(--ifm-color-content, #ffffff)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                   {ach.title}
                                 </span>
                                 <span
@@ -1203,6 +1211,7 @@ export default function ProfilePage(): React.JSX.Element {
                 <div>
                   {/* Daily Missions Header */}
                   <div
+                    className="profile-panel-card"
                     style={{
                       padding: '18px 20px',
                       borderRadius: '16px',
@@ -1214,7 +1223,7 @@ export default function ProfilePage(): React.JSX.Element {
                   >
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px', marginBottom: '14px' }}>
                       <div>
-                        <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 900, color: '#ffffff', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 900, color: 'var(--ifm-color-content, #ffffff)', display: 'flex', alignItems: 'center', gap: '8px' }}>
                           <span>🎯</span>
                           <span>Daily Missions Control</span>
                           <span style={{ fontSize: '0.8rem', color: 'rgba(255, 255, 255, 0.5)', fontWeight: 500 }}>({today})</span>
@@ -1263,8 +1272,8 @@ export default function ProfilePage(): React.JSX.Element {
                             style={{
                               padding: '14px',
                               borderRadius: '12px',
-                              background: isDone ? 'rgba(52, 211, 153, 0.08)' : 'rgba(22, 33, 56, 0.45)',
-                              border: isDone ? '1px solid rgba(52, 211, 153, 0.4)' : '1px solid rgba(255, 255, 255, 0.08)',
+                              background: isDone ? 'var(--sidebar-active-bg)' : 'rgba(22, 33, 56, 0.45)',
+                              border: isDone ? '1px solid var(--sidebar-border)' : '1px solid rgba(255, 255, 255, 0.08)',
                               display: 'flex',
                               flexDirection: 'column',
                               justifyContent: 'space-between',
@@ -1281,16 +1290,16 @@ export default function ProfilePage(): React.JSX.Element {
                                     fontWeight: 800,
                                     padding: '2px 7px',
                                     borderRadius: '6px',
-                                    background: isDone ? 'rgba(52, 211, 153, 0.2)' : 'rgba(251, 191, 36, 0.15)',
-                                    color: isDone ? '#34d399' : '#fbbf24',
-                                    border: isDone ? '1px solid rgba(52, 211, 153, 0.4)' : '1px solid rgba(251, 191, 36, 0.4)',
+                                    background: isDone ? 'var(--sidebar-active-bg)' : 'rgba(251, 191, 36, 0.15)',
+                                    color: isDone ? 'var(--brand-green)' : '#fbbf24',
+                                    border: isDone ? '1px solid var(--sidebar-border)' : '1px solid rgba(251, 191, 36, 0.4)',
                                   }}
                                 >
                                   +{quest.expReward} EXP
                                 </span>
                               </div>
 
-                              <div style={{ fontWeight: 800, fontSize: '0.9rem', color: '#ffffff', marginBottom: '3px' }}>
+                              <div style={{ fontWeight: 800, fontSize: '0.9rem', color: 'var(--ifm-color-content, #ffffff)', marginBottom: '3px' }}>
                                 {quest.title}
                               </div>
                               <div style={{ fontSize: '0.76rem', color: 'rgba(255, 255, 255, 0.65)', lineHeight: 1.35, marginBottom: '10px' }}>
@@ -1301,7 +1310,7 @@ export default function ProfilePage(): React.JSX.Element {
                             <div>
                               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: 'rgba(255, 255, 255, 0.6)', marginBottom: '4px', fontWeight: 600 }}>
                                 <span>Progress</span>
-                                <span style={{ color: isDone ? '#34d399' : '#38bdf8', fontWeight: 700 }}>
+                                <span style={{ color: isDone ? 'var(--brand-green)' : '#38bdf8', fontWeight: 700 }}>
                                   {progressClamped} / {quest.target} {isDone ? '✓' : ''}
                                 </span>
                               </div>
@@ -1326,6 +1335,7 @@ export default function ProfilePage(): React.JSX.Element {
 
                     {/* Supernova Bounty Box */}
                     <div
+                      className="bounty-box"
                       style={{
                         padding: '14px 16px',
                         borderRadius: '12px',
@@ -1343,7 +1353,7 @@ export default function ProfilePage(): React.JSX.Element {
                       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                         <span style={{ fontSize: '1.6rem' }}>🎁</span>
                         <div>
-                          <div style={{ fontWeight: 800, fontSize: '0.92rem', color: '#ffffff' }}>
+                          <div style={{ fontWeight: 800, fontSize: '0.92rem', color: 'var(--ifm-color-content, #ffffff)' }}>
                             Supernova Bounty Box ({completedQuestsCount}/3 Completed)
                           </div>
                           <div style={{ fontSize: '0.76rem', color: 'rgba(255, 255, 255, 0.6)' }}>
@@ -1359,9 +1369,9 @@ export default function ProfilePage(): React.JSX.Element {
                           style={{
                             padding: '6px 14px',
                             borderRadius: '8px',
-                            background: allQuestsDone ? 'rgba(52, 211, 153, 0.15)' : 'rgba(255, 255, 255, 0.04)',
-                            border: allQuestsDone ? '1px solid #34d399' : '1px solid rgba(255, 255, 255, 0.1)',
-                            color: allQuestsDone ? '#34d399' : 'rgba(255, 255, 255, 0.4)',
+                            background: allQuestsDone ? 'var(--sidebar-active-bg)' : 'rgba(255, 255, 255, 0.04)',
+                            border: allQuestsDone ? '1px solid var(--brand-green)' : '1px solid rgba(255, 255, 255, 0.1)',
+                            color: allQuestsDone ? 'var(--brand-green)' : 'rgba(255, 255, 255, 0.4)',
                             fontWeight: 800,
                             fontSize: '0.8rem',
                           }}
@@ -1373,9 +1383,9 @@ export default function ProfilePage(): React.JSX.Element {
                           style={{
                             padding: '6px 14px',
                             borderRadius: '8px',
-                            background: 'rgba(52, 211, 153, 0.15)',
-                            border: '1px solid #34d399',
-                            color: '#34d399',
+                            background: 'var(--sidebar-active-bg)',
+                            border: '1px solid var(--brand-green)',
+                            color: 'var(--brand-green)',
                             fontWeight: 800,
                             fontSize: '0.8rem',
                           }}
@@ -1410,6 +1420,7 @@ export default function ProfilePage(): React.JSX.Element {
 
                   {/* Streak Milestones Showcase */}
                   <div
+                    className="profile-panel-card streak-milestones-card"
                     style={{
                       padding: '18px 20px',
                       borderRadius: '16px',
@@ -1420,7 +1431,7 @@ export default function ProfilePage(): React.JSX.Element {
                   >
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
                       <div>
-                        <div style={{ fontWeight: 800, fontSize: '1rem', color: '#ffffff', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <div style={{ fontWeight: 800, fontSize: '1rem', color: 'var(--ifm-color-content, #ffffff)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                           <span>🔥 Streak Mastery</span>
                           <span style={{ fontSize: '0.74rem', color: '#fb923c', background: 'rgba(249, 115, 22, 0.15)', padding: '2px 8px', borderRadius: '6px', fontWeight: 800 }}>
                             {streakDays} Days Consecutive
@@ -1468,7 +1479,7 @@ export default function ProfilePage(): React.JSX.Element {
                             <div style={{ fontSize: '0.68rem', color: highestMilestone.color, fontWeight: 800, textTransform: 'uppercase' }}>
                               Current Milestone ✓
                             </div>
-                            <div style={{ fontSize: '0.84rem', fontWeight: 800, color: '#ffffff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            <div style={{ fontSize: '0.84rem', fontWeight: 800, color: 'var(--ifm-color-content, #ffffff)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                               {highestMilestone.title} ({highestMilestone.days}d)
                             </div>
                             <div style={{ fontSize: '0.7rem', color: 'rgba(255, 255, 255, 0.55)' }}>
@@ -1495,7 +1506,7 @@ export default function ProfilePage(): React.JSX.Element {
                             <div style={{ fontSize: '0.68rem', color: 'rgba(255, 255, 255, 0.5)', fontWeight: 800, textTransform: 'uppercase' }}>
                               Next Target ({nextMilestone.days - streakDays}d left)
                             </div>
-                            <div style={{ fontSize: '0.84rem', fontWeight: 800, color: '#ffffff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            <div style={{ fontSize: '0.84rem', fontWeight: 800, color: 'var(--ifm-color-content, #ffffff)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                               {nextMilestone.title} ({nextMilestone.days}d)
                             </div>
                             <div style={{ fontSize: '0.7rem', color: nextMilestone.color }}>
@@ -1572,6 +1583,7 @@ export default function ProfilePage(): React.JSX.Element {
 
                   {/* Cosmic Engineering Hierarchy Roadmap */}
                   <div
+                    className="profile-panel-card"
                     style={{
                       padding: '22px 24px',
                       borderRadius: '18px',
@@ -1582,7 +1594,7 @@ export default function ProfilePage(): React.JSX.Element {
                   >
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', marginBottom: '16px' }}>
                       <div>
-                        <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 900, color: '#ffffff', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 900, color: 'var(--ifm-color-content, #ffffff)', display: 'flex', alignItems: 'center', gap: '8px' }}>
                           <span>✨</span>
                           <span>Cosmic Engineering Hierarchy</span>
                         </h2>
@@ -1600,6 +1612,7 @@ export default function ProfilePage(): React.JSX.Element {
                         return (
                           <div
                             key={r.title}
+                            className="rank-roadmap-row"
                             style={{
                               padding: '12px 14px',
                               borderRadius: '10px',
@@ -1609,7 +1622,7 @@ export default function ProfilePage(): React.JSX.Element {
                               border: isCurrent
                                 ? `1.5px solid ${r.color}`
                                 : isAchieved
-                                ? '1px solid rgba(52, 211, 153, 0.25)'
+                                ? '1px solid var(--sidebar-border)'
                                 : '1px solid rgba(255, 255, 255, 0.05)',
                               boxShadow: isCurrent ? `0 0 16px ${r.borderGlow}` : 'none',
                               display: 'flex',
@@ -1651,7 +1664,7 @@ export default function ProfilePage(): React.JSX.Element {
                                   Current Rank
                                 </span>
                               ) : isAchieved ? (
-                                <span style={{ color: '#34d399', fontWeight: 800, fontSize: '0.76rem' }}>✓ Mastered</span>
+                                <span style={{ color: 'var(--brand-green)', fontWeight: 800, fontSize: '0.76rem' }}>✓ Mastered</span>
                               ) : (
                                 <span style={{ color: 'rgba(255, 255, 255, 0.35)', fontSize: '0.74rem' }}>Locked 🔒</span>
                               )}

@@ -378,6 +378,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
 
   return (
     <div
+      className="arcade-game-arena spot-bug-game"
       style={{
         background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(9, 13, 22, 0.98) 100%)',
         borderRadius: '18px',
@@ -1047,6 +1048,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
                 <button
                   key={opt.id}
                   type="button"
+                  className={`arcade-answer-btn ${isHovered ? 'hovered' : ''} ${isChosen ? (opt.isCorrect ? 'correct' : 'wrong') : ''}`}
                   disabled={isEliminated || isRevealed}
                   onMouseEnter={() => setHoveredOptionId(opt.id)}
                   onMouseLeave={() => setHoveredOptionId(null)}
@@ -1075,6 +1077,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
                   }}
                 >
                   <span
+                    className="arcade-option-badge"
                     style={{
                       width: '24px',
                       height: '24px',
@@ -1097,7 +1100,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
                   >
                     {letterBadge}
                   </span>
-                  <span style={{ flex: 1 }}>{opt.text}</span>
+                  <span className="arcade-option-text" style={{ flex: 1 }}>{opt.text}</span>
                 </button>
               );
             })}

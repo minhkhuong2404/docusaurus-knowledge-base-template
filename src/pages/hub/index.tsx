@@ -564,7 +564,7 @@ function parseInlineMarkdown(text: string, accentColor: string = '#38bdf8'): (st
     if (token.startsWith('**') && token.endsWith('**')) {
       const boldText = token.slice(2, -2);
       parts.push(
-        <strong key={`b-${match.index}`} style={{ color: '#ffffff', fontWeight: 700 }}>
+        <strong key={`b-${match.index}`} style={{ color: 'var(--ifm-color-content, #ffffff)', fontWeight: 700 }}>
           {boldText}
         </strong>
       );
@@ -681,12 +681,12 @@ function FormattedDocContent({ text, accentColor }: { text: string; accentColor:
             }}>
               {num}
             </span>
-            <span style={{ fontSize: '15.5px', fontWeight: 800, color: '#ffffff' }}>
+            <span style={{ fontSize: '15.5px', fontWeight: 800, color: 'var(--ifm-color-content, #ffffff)' }}>
               {heading}
             </span>
           </div>
           {rest && rest.trim() && (
-            <div style={{ fontSize: '14.5px', color: 'rgba(255, 255, 255, 0.85)', lineHeight: 1.65, paddingLeft: '28px' }}>
+            <div style={{ fontSize: '14.5px', color: 'var(--ifm-color-content, rgba(255, 255, 255, 0.85))', lineHeight: 1.65, paddingLeft: '28px' }}>
               {parseInlineMarkdown(rest.trim().replace(/^:\s*/, ''), accentColor)}
             </div>
           )}
@@ -699,7 +699,7 @@ function FormattedDocContent({ text, accentColor }: { text: string; accentColor:
     if (trimmed.startsWith('⚠️') || trimmed.startsWith('❌') || trimmed.startsWith('👉') || trimmed.startsWith('✅')) {
       const isWarn = trimmed.startsWith('⚠️') || trimmed.startsWith('❌');
       elements.push(
-        <div key={`alert-${i}`} style={{
+        <div key={`alert-${i}`} className={`hub-callout-box ${isWarn ? 'warn' : 'success'}`} style={{
           margin: '12px 0',
           padding: '12px 16px',
           borderRadius: '8px',
@@ -726,7 +726,7 @@ function FormattedDocContent({ text, accentColor }: { text: string; accentColor:
           margin: '6px 0',
           paddingLeft: '14px',
           fontSize: '14.5px',
-          color: 'rgba(255, 255, 255, 0.88)',
+          color: 'var(--ifm-color-content, rgba(255, 255, 255, 0.88))',
           lineHeight: 1.65
         }}>
           <span style={{ color: accentColor, fontWeight: 900, fontSize: '14px', marginTop: '1px' }}>•</span>
@@ -741,7 +741,7 @@ function FormattedDocContent({ text, accentColor }: { text: string; accentColor:
       <p key={`p-${i}`} style={{
         margin: '8px 0',
         fontSize: '15px',
-        color: 'rgba(255, 255, 255, 0.88)',
+        color: 'var(--ifm-color-content, rgba(255, 255, 255, 0.88))',
         lineHeight: 1.75
       }}>
         {parseInlineMarkdown(trimmed, accentColor)}
@@ -865,12 +865,15 @@ export default function CareerHubPage(): React.JSX.Element {
       title="Java Career Hub — Cẩm Nang Thực Chiến Fresher / Junior Đi Làm"
       description="Trung tâm huấn luyện kỹ năng thực chiến Backend Java từ docs cho Intern, Fresher và Junior: Tư duy bộ nhớ Stack/Heap, Spring Boot, N+1 Query, Unit Test, Bí kíp viết CV và Phỏng vấn."
     >
-      <div style={{
-        minHeight: '100vh',
-        background: 'linear-gradient(180deg, #090d16 0%, #0d1117 100%)',
-        padding: '32px 16px 80px 16px',
-        color: '#ffffff'
-      }}>
+      <div
+        className="hub-page-container"
+        style={{
+          minHeight: '100vh',
+          background: 'var(--page-bg, #090d16)',
+          padding: '32px 16px 80px 16px',
+          color: 'var(--ifm-color-content, #ffffff)',
+        }}
+      >
         <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
 
           {/* ======================================================== */}
@@ -913,7 +916,7 @@ export default function CareerHubPage(): React.JSX.Element {
 
             <p style={{
               fontSize: '1.18rem',
-              color: 'rgba(255, 255, 255, 0.82)',
+              color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.82))',
               maxWidth: '860px',
               margin: '0 auto 24px auto',
               lineHeight: 1.7
@@ -946,7 +949,7 @@ export default function CareerHubPage(): React.JSX.Element {
                   minWidth: '180px'
                 }}>
                   <span style={{ color: chip.color, fontWeight: 800 }}>{chip.label}</span>
-                  <span style={{ color: 'rgba(255, 255, 255, 0.65)', fontSize: '12.5px', marginTop: '3px' }}>{chip.desc}</span>
+                  <span style={{ color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.65))', fontSize: '12.5px', marginTop: '3px' }}>{chip.desc}</span>
                 </div>
               ))}
             </div>
@@ -982,7 +985,7 @@ export default function CareerHubPage(): React.JSX.Element {
                     borderRadius: '10px',
                     background: isActive ? `${tab.color}22` : 'rgba(255, 255, 255, 0.03)',
                     border: `1px solid ${isActive ? tab.color : 'rgba(255, 255, 255, 0.1)'}`,
-                    color: isActive ? tab.color : 'rgba(255, 255, 255, 0.8)',
+                    color: isActive ? tab.color : 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.8))',
                     fontWeight: isActive ? 800 : 600,
                     fontSize: '15px',
                     cursor: 'pointer',
@@ -1021,6 +1024,7 @@ export default function CareerHubPage(): React.JSX.Element {
                     return (
                       <div
                         key={mod.id}
+                        className={`hub-module-card ${isSelected ? 'active' : ''}`}
                         onClick={() => {
                           setSelectedModuleId(mod.id);
                           setSelectedTopicId(mod.topics[0].id);
@@ -1052,21 +1056,24 @@ export default function CareerHubPage(): React.JSX.Element {
                         )}
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
                           <span style={{ fontSize: '24px' }}>{mod.icon}</span>
-                          <span style={{
-                            fontSize: '11px',
-                            fontWeight: 800,
-                            padding: '2px 8px',
-                            borderRadius: '12px',
-                            background: isSelected ? mod.accentColor : 'rgba(255, 255, 255, 0.07)',
-                            color: isSelected ? '#000000' : 'rgba(255, 255, 255, 0.65)'
-                          }}>
+                          <span
+                            className="hub-module-badge"
+                            style={{
+                              fontSize: '11px',
+                              fontWeight: 800,
+                              padding: '2px 8px',
+                              borderRadius: '12px',
+                              background: isSelected ? mod.accentColor : 'rgba(255, 255, 255, 0.07)',
+                              color: isSelected ? '#000000' : 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.65))'
+                            }}
+                          >
                             #{modNum} • {mod.topics.length} bài
                           </span>
                         </div>
                         <div style={{
                           fontSize: '15px',
                           fontWeight: 800,
-                          color: isSelected ? '#ffffff' : 'rgba(255, 255, 255, 0.85)',
+                          color: isSelected ? 'var(--ifm-color-content, #ffffff)' : 'var(--ifm-color-content, rgba(255, 255, 255, 0.85))',
                           lineHeight: 1.35,
                           marginBottom: '4px'
                         }}>
@@ -1074,7 +1081,7 @@ export default function CareerHubPage(): React.JSX.Element {
                         </div>
                         <div style={{
                           fontSize: '12px',
-                          color: isSelected ? mod.accentColor : 'rgba(255, 255, 255, 0.5)',
+                          color: isSelected ? mod.accentColor : 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.5))',
                           whiteSpace: 'nowrap',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis'
@@ -1111,7 +1118,7 @@ export default function CareerHubPage(): React.JSX.Element {
                     </span>
                     <div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span style={{ fontSize: '18px', fontWeight: 800, color: '#ffffff' }}>
+                        <span style={{ fontSize: '18px', fontWeight: 800, color: 'var(--ifm-color-content, #ffffff)' }}>
                           {activeModule.title}
                         </span>
                         <span style={{
@@ -1125,7 +1132,7 @@ export default function CareerHubPage(): React.JSX.Element {
                           MODULE #{String(currentModIndex + 1).padStart(2, '0')}
                         </span>
                       </div>
-                      <div style={{ fontSize: '13.5px', color: 'rgba(255, 255, 255, 0.7)', marginTop: '2px' }}>
+                      <div style={{ fontSize: '13.5px', color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.7))', marginTop: '2px' }}>
                         {activeModule.tagline}
                       </div>
                     </div>
@@ -1136,7 +1143,7 @@ export default function CareerHubPage(): React.JSX.Element {
                     alignItems: 'center',
                     gap: '12px',
                     fontSize: '13px',
-                    color: 'rgba(255, 255, 255, 0.7)'
+                    color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.7))'
                   }}>
                     <span>Đang xem bài: <strong style={{ color: activeModule.accentColor }}>{currentTopicIndex + 1}</strong> / {activeModule.topics.length}</span>
                     <div style={{
@@ -1184,7 +1191,7 @@ export default function CareerHubPage(): React.JSX.Element {
                       borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                       marginBottom: '10px'
                     }}>
-                      <span style={{ fontSize: '12px', fontWeight: 800, color: 'rgba(255, 255, 255, 0.6)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      <span style={{ fontSize: '12px', fontWeight: 800, color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.6))', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                         📑 Danh Sách Chuyên Đề
                       </span>
                       <span style={{ fontSize: '11px', color: activeModule.accentColor, fontWeight: 700 }}>
@@ -1219,7 +1226,7 @@ export default function CareerHubPage(): React.JSX.Element {
                               <span style={{
                                 fontSize: '11px',
                                 fontWeight: 800,
-                                color: isTopicSelected ? activeModule.accentColor : 'rgba(255, 255, 255, 0.45)'
+                                color: isTopicSelected ? activeModule.accentColor : 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.45))'
                               }}>
                                 #{topicNum}
                               </span>
@@ -1229,7 +1236,7 @@ export default function CareerHubPage(): React.JSX.Element {
                                 padding: '1px 6px',
                                 borderRadius: '4px',
                                 background: isTopicSelected ? `${activeModule.accentColor}30` : 'rgba(255, 255, 255, 0.05)',
-                                color: isTopicSelected ? activeModule.accentColor : 'rgba(255, 255, 255, 0.55)'
+                                color: isTopicSelected ? activeModule.accentColor : 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.55))'
                               }}>
                                 {t.badge}
                               </span>
@@ -1237,7 +1244,7 @@ export default function CareerHubPage(): React.JSX.Element {
                             <div style={{
                               fontSize: '13.5px',
                               fontWeight: isTopicSelected ? 800 : 600,
-                              color: isTopicSelected ? '#ffffff' : 'rgba(255, 255, 255, 0.8)',
+                              color: isTopicSelected ? 'var(--ifm-color-content, #ffffff)' : 'var(--ifm-color-content, rgba(255, 255, 255, 0.8))',
                               lineHeight: 1.35
                             }}>
                               {t.title}
@@ -1263,14 +1270,14 @@ export default function CareerHubPage(): React.JSX.Element {
                       alignItems: 'center',
                       gap: '8px',
                       fontSize: '12.5px',
-                      color: 'rgba(255, 255, 255, 0.5)',
+                      color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.5))',
                       marginBottom: '14px'
                     }}>
                       <span>Kho Tri Thức</span>
                       <span>/</span>
                       <span style={{ color: activeModule.accentColor }}>{activeModule.title}</span>
                       <span>/</span>
-                      <span style={{ color: '#ffffff' }}>Bài #{String(currentTopicIndex + 1).padStart(2, '0')}</span>
+                      <span style={{ color: 'var(--ifm-color-content, #ffffff)' }}>Bài #{String(currentTopicIndex + 1).padStart(2, '0')}</span>
                     </div>
 
                     {/* Topic Header Block */}
@@ -1291,7 +1298,7 @@ export default function CareerHubPage(): React.JSX.Element {
                           padding: '3px 10px',
                           borderRadius: '6px',
                           background: 'rgba(255, 255, 255, 0.06)',
-                          color: 'rgba(255, 255, 255, 0.75)'
+                          color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.75))'
                         }}>
                           ⏱️ 5 phút đọc chuyên sâu
                         </span>
@@ -1301,14 +1308,14 @@ export default function CareerHubPage(): React.JSX.Element {
                         margin: '8px 0 14px 0',
                         fontSize: '1.95rem',
                         fontWeight: 900,
-                        color: '#ffffff',
+                        color: 'var(--ifm-color-content, #ffffff)',
                         lineHeight: 1.3
                       }}>
                         {activeTopic.title}
                       </h1>
 
                       {/* TL;DR Executive Takeaway Box */}
-                      <div style={{
+                      <div className="hub-takeaway-box" style={{
                         padding: '14px 18px',
                         borderRadius: '10px',
                         background: 'linear-gradient(135deg, rgba(52, 211, 153, 0.08) 0%, rgba(56, 189, 248, 0.05) 100%)',
@@ -1409,7 +1416,7 @@ export default function CareerHubPage(): React.JSX.Element {
                       <div style={{
                         fontSize: '13px',
                         fontWeight: 800,
-                        color: 'rgba(255, 255, 255, 0.85)',
+                        color: 'var(--ifm-color-content, rgba(255, 255, 255, 0.85))',
                         textTransform: 'uppercase',
                         letterSpacing: '0.06em',
                         marginBottom: '14px',
@@ -1428,7 +1435,7 @@ export default function CareerHubPage(): React.JSX.Element {
                       }}>
                         {/* Bad Code Box */}
                         {activeTopic.badCode && (
-                          <div style={{
+                          <div className="hub-code-bad-box" style={{
                             background: 'rgba(248, 113, 113, 0.03)',
                             border: '1px solid rgba(248, 113, 113, 0.3)',
                             borderRadius: '12px',
@@ -1479,7 +1486,7 @@ export default function CareerHubPage(): React.JSX.Element {
                         )}
 
                         {/* Good Code Box */}
-                        <div style={{
+                        <div className="hub-code-good-box" style={{
                           background: 'rgba(52, 211, 153, 0.03)',
                           border: '1px solid rgba(52, 211, 153, 0.35)',
                           borderRadius: '12px',
@@ -1531,7 +1538,7 @@ export default function CareerHubPage(): React.JSX.Element {
                     </div>
 
                     {/* Section 4: Interview Gold Tip */}
-                    <div style={{
+                    <div className="hub-interview-gold-tip" style={{
                       marginBottom: '32px',
                       padding: '18px 22px',
                       borderRadius: '12px',
@@ -1551,7 +1558,7 @@ export default function CareerHubPage(): React.JSX.Element {
                         <span>🏆</span>
                         <span>BẪY PHỎNG VẤN & CÁCH TRẢ LỜI ĐIỂM 10:</span>
                       </div>
-                      <div style={{ fontSize: '14.5px', color: 'rgba(255, 255, 255, 0.92)', lineHeight: 1.75 }}>
+                      <div style={{ fontSize: '14.5px', color: 'var(--ifm-color-content, rgba(255, 255, 255, 0.92))', lineHeight: 1.75 }}>
                         {parseInlineMarkdown(activeTopic.interviewTip, '#fbbf24')}
                       </div>
                     </div>
@@ -1577,7 +1584,7 @@ export default function CareerHubPage(): React.JSX.Element {
                             borderRadius: '10px',
                             background: 'rgba(255, 255, 255, 0.04)',
                             border: '1px solid rgba(255, 255, 255, 0.12)',
-                            color: '#ffffff',
+                            color: 'var(--ifm-color-content, #ffffff)',
                             fontSize: '13.5px',
                             fontWeight: 700,
                             cursor: 'pointer',
@@ -1694,7 +1701,7 @@ export default function CareerHubPage(): React.JSX.Element {
                       borderRadius: '8px',
                       background: 'rgba(255, 255, 255, 0.05)',
                       border: '1px solid rgba(255, 255, 255, 0.15)',
-                      color: '#ffffff',
+                      color: 'var(--ifm-color-content, #ffffff)',
                       fontSize: '14px',
                       outline: 'none'
                     }}
@@ -1706,7 +1713,7 @@ export default function CareerHubPage(): React.JSX.Element {
               <div style={{
                 marginBottom: '18px',
                 fontSize: '14px',
-                color: 'rgba(255, 255, 255, 0.75)',
+                color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.75))',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
@@ -1733,6 +1740,7 @@ export default function CareerHubPage(): React.JSX.Element {
                   return (
                     <div
                       key={tip.id}
+                      className={`hub-tip-card ${isExpanded ? 'expanded' : ''}`}
                       style={{
                         background: 'rgba(15, 23, 42, 0.6)',
                         border: `1px solid ${isExpanded ? '#ec4899' : 'rgba(255, 255, 255, 0.08)'}`,
@@ -1766,7 +1774,7 @@ export default function CareerHubPage(): React.JSX.Element {
                             justifyContent: 'center',
                             fontSize: '13px',
                             fontWeight: 800,
-                            color: '#ffffff'
+                            color: 'var(--ifm-color-content, #ffffff)'
                           }}>
                             {tip.id}
                           </span>
@@ -1777,7 +1785,7 @@ export default function CareerHubPage(): React.JSX.Element {
                             padding: '3px 8px',
                             borderRadius: '4px',
                             background: 'rgba(255, 255, 255, 0.06)',
-                            color: 'rgba(255, 255, 255, 0.8)'
+                            color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.8))'
                           }}>
                             {tip.category}
                           </span>
@@ -1794,7 +1802,7 @@ export default function CareerHubPage(): React.JSX.Element {
                             {tip.priority}
                           </span>
 
-                          <span style={{ fontSize: '15px', fontWeight: 700, color: '#ffffff' }}>
+                          <span style={{ fontSize: '15px', fontWeight: 700, color: 'var(--ifm-color-content, #ffffff)' }}>
                             {tip.title}
                           </span>
                         </div>
@@ -1814,7 +1822,7 @@ export default function CareerHubPage(): React.JSX.Element {
                             background: 'rgba(236, 72, 153, 0.06)',
                             border: '1px solid rgba(236, 72, 153, 0.25)',
                             fontSize: '14.5px',
-                            color: 'rgba(255, 255, 255, 0.95)',
+                            color: 'var(--ifm-color-content, rgba(255, 255, 255, 0.95))',
                             lineHeight: 1.6,
                             marginBottom: '14px'
                           }}>
@@ -1824,7 +1832,7 @@ export default function CareerHubPage(): React.JSX.Element {
                           {/* Detail Explanation */}
                           <div style={{
                             fontSize: '15px',
-                            color: 'rgba(255, 255, 255, 0.88)',
+                            color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.88))',
                             lineHeight: 1.75,
                             marginBottom: (tip.codeBad || tip.codeGood) ? '16px' : '0'
                           }}>
@@ -1903,7 +1911,7 @@ export default function CareerHubPage(): React.JSX.Element {
                     }}>
                       🎯 Đang hiển thị {filteredInterviewQuestions.length} / {INTERVIEW_QUESTIONS.length} câu hỏi
                     </span>
-                    <span style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.65)' }}>
+                    <span style={{ fontSize: '13px', color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.65))' }}>
                       (Phân loại theo mức độ và chủ đề)
                     </span>
                   </div>
@@ -1920,7 +1928,7 @@ export default function CareerHubPage(): React.JSX.Element {
                         borderRadius: '8px',
                         background: 'rgba(255, 255, 255, 0.05)',
                         border: '1px solid rgba(255, 255, 255, 0.15)',
-                        color: '#ffffff',
+                        color: 'var(--ifm-color-content, #ffffff)',
                         fontSize: '14px',
                         outline: 'none'
                       }}
@@ -1930,7 +1938,7 @@ export default function CareerHubPage(): React.JSX.Element {
 
                 {/* Level Filters */}
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center', marginBottom: '14px' }}>
-                  <span style={{ fontSize: '12.5px', fontWeight: 800, textTransform: 'uppercase', color: 'rgba(255, 255, 255, 0.6)', marginRight: '4px' }}>
+                  <span style={{ fontSize: '12.5px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.6))', marginRight: '4px' }}>
                     Cấp Độ:
                   </span>
                   {[
@@ -1961,7 +1969,7 @@ export default function CareerHubPage(): React.JSX.Element {
 
                 {/* Category Filters */}
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
-                  <span style={{ fontSize: '12.5px', fontWeight: 800, textTransform: 'uppercase', color: 'rgba(255, 255, 255, 0.6)', marginRight: '4px' }}>
+                  <span style={{ fontSize: '12.5px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.6))', marginRight: '4px' }}>
                     Chủ Đề:
                   </span>
                   {[
@@ -2005,7 +2013,7 @@ export default function CareerHubPage(): React.JSX.Element {
                     background: 'rgba(15, 23, 42, 0.4)',
                     borderRadius: '10px',
                     border: '1px dashed rgba(255, 255, 255, 0.15)',
-                    color: 'rgba(255, 255, 255, 0.7)',
+                    color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.7))',
                     fontSize: '14.5px'
                   }}>
                     🔍 Không tìm thấy câu hỏi nào phù hợp với bộ lọc hiện tại. Thử chọn "Tất cả" hoặc nhập từ khóa khác!
@@ -2025,6 +2033,7 @@ export default function CareerHubPage(): React.JSX.Element {
                     return (
                       <div
                         key={q.id}
+                        className={`hub-question-card ${isExpanded ? 'expanded' : ''}`}
                         style={{
                           background: 'rgba(15, 23, 42, 0.65)',
                           border: `1px solid ${isExpanded ? '#34d399' : 'rgba(255, 255, 255, 0.08)'}`,
@@ -2070,7 +2079,7 @@ export default function CareerHubPage(): React.JSX.Element {
                               {q.category}
                             </span>
 
-                            <span style={{ fontSize: '15.5px', fontWeight: 700, color: '#ffffff', lineHeight: 1.45 }}>
+                            <span style={{ fontSize: '15.5px', fontWeight: 700, color: 'var(--ifm-color-content, #ffffff)', lineHeight: 1.45 }}>
                               {q.question}
                             </span>
                           </div>
@@ -2083,7 +2092,7 @@ export default function CareerHubPage(): React.JSX.Element {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            color: isExpanded ? '#34d399' : 'rgba(255, 255, 255, 0.6)',
+                            color: isExpanded ? '#34d399' : 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.6))',
                             fontSize: '18px',
                             fontWeight: 800,
                             flexShrink: 0
@@ -2098,7 +2107,7 @@ export default function CareerHubPage(): React.JSX.Element {
                               <div style={{ fontSize: '12.5px', fontWeight: 800, textTransform: 'uppercase', color: '#34d399', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                                 <span>🎯</span> Câu trả lời 30 giây (Elevator Pitch)
                               </div>
-                              <div style={{ fontSize: '15px', color: 'rgba(255, 255, 255, 0.92)', lineHeight: 1.7 }}>
+                              <div style={{ fontSize: '15px', color: 'var(--ifm-color-content, rgba(255, 255, 255, 0.92))', lineHeight: 1.7 }}>
                                 {q.shortAnswer}
                               </div>
                             </div>
@@ -2113,7 +2122,7 @@ export default function CareerHubPage(): React.JSX.Element {
                               <div style={{ fontSize: '12.5px', fontWeight: 800, textTransform: 'uppercase', color: '#38bdf8', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                                 <span>🧠</span> Dưới nắp ca-pô (Senior Deep Dive)
                               </div>
-                              <div style={{ fontSize: '14.5px', color: 'rgba(255, 255, 255, 0.88)', lineHeight: 1.7 }}>
+                              <div style={{ fontSize: '14.5px', color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.88))', lineHeight: 1.7 }}>
                                 {q.seniorDeepDive}
                               </div>
                             </div>
@@ -2158,7 +2167,7 @@ export default function CareerHubPage(): React.JSX.Element {
                     <h2 style={{ margin: 0, fontSize: '1.5rem', color: '#fbbf24', display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <span>⚔️</span> Trường Học vs Đi Làm: 8 Trận So Kèo Code Thực Chiến
                     </h2>
-                    <p style={{ margin: '6px 0 0 0', fontSize: '14px', color: 'rgba(255, 255, 255, 0.75)' }}>
+                    <p style={{ margin: '6px 0 0 0', fontSize: '14px', color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.75))' }}>
                       So sánh trực quan giữa thói quen viết code sinh viên/lý thuyết và tiêu chuẩn Production của doanh nghiệp.
                     </p>
                   </div>
@@ -2228,7 +2237,7 @@ export default function CareerHubPage(): React.JSX.Element {
                         }}>
                           {currentBattle.category}
                         </span>
-                        <span style={{ fontSize: '16px', fontWeight: 800, color: '#ffffff' }}>
+                        <span style={{ fontSize: '16px', fontWeight: 800, color: 'var(--ifm-color-content, #ffffff)' }}>
                           {currentBattle.title}
                         </span>
                       </div>
@@ -2249,7 +2258,7 @@ export default function CareerHubPage(): React.JSX.Element {
                     {/* Battle Side-by-Side Showcase */}
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '18px', marginBottom: '18px' }}>
                       {/* Left: Bad Code */}
-                      <div style={{
+                      <div className="hub-code-bad-box" style={{
                         background: 'rgba(248, 113, 113, 0.04)',
                         border: '1px solid rgba(248, 113, 113, 0.3)',
                         borderRadius: '10px',
@@ -2263,13 +2272,13 @@ export default function CareerHubPage(): React.JSX.Element {
                         <pre style={{ margin: 0, padding: '16px', fontSize: '13.5px', lineHeight: 1.6, background: 'transparent', color: '#fca5a5', overflowX: 'auto', flex: 1 }}>
                           <code>{currentBattle.badCode}</code>
                         </pre>
-                        <div style={{ padding: '12px 16px', background: 'rgba(0, 0, 0, 0.25)', borderTop: '1px solid rgba(248, 113, 113, 0.2)', fontSize: '13.5px', color: 'rgba(255, 255, 255, 0.82)', lineHeight: 1.6 }}>
+                        <div style={{ padding: '12px 16px', background: 'rgba(0, 0, 0, 0.25)', borderTop: '1px solid rgba(248, 113, 113, 0.2)', fontSize: '13.5px', color: 'var(--ifm-color-content, rgba(255, 255, 255, 0.82))', lineHeight: 1.6 }}>
                           <strong style={{ color: '#f87171' }}>Hậu quả: </strong>{currentBattle.badExplanation}
                         </div>
                       </div>
 
                       {/* Right: Good Code */}
-                      <div style={{
+                      <div className="hub-code-good-box" style={{
                         background: 'rgba(52, 211, 153, 0.04)',
                         border: '1px solid rgba(52, 211, 153, 0.3)',
                         borderRadius: '10px',
@@ -2283,7 +2292,7 @@ export default function CareerHubPage(): React.JSX.Element {
                         <pre style={{ margin: 0, padding: '16px', fontSize: '13.5px', lineHeight: 1.6, background: 'transparent', color: '#a7f3d0', overflowX: 'auto', flex: 1 }}>
                           <code>{currentBattle.goodCode}</code>
                         </pre>
-                        <div style={{ padding: '12px 16px', background: 'rgba(0, 0, 0, 0.25)', borderTop: '1px solid rgba(52, 211, 153, 0.2)', fontSize: '13.5px', color: 'rgba(255, 255, 255, 0.82)', lineHeight: 1.6 }}>
+                        <div style={{ padding: '12px 16px', background: 'rgba(0, 0, 0, 0.25)', borderTop: '1px solid rgba(52, 211, 153, 0.2)', fontSize: '13.5px', color: 'var(--ifm-color-content, rgba(255, 255, 255, 0.82))', lineHeight: 1.6 }}>
                           <strong style={{ color: '#34d399' }}>Lợi ích Production: </strong>{currentBattle.goodExplanation}
                         </div>
                       </div>
@@ -2309,7 +2318,7 @@ export default function CareerHubPage(): React.JSX.Element {
                 <h2 style={{ margin: '0 0 14px 0', fontSize: '1.6rem', color: '#a78bfa' }}>
                   📄 4 Tiêu Chuẩn Vàng Viết CV Cho Fresher / Junior
                 </h2>
-                <p style={{ margin: '0 0 22px 0', fontSize: '15px', color: 'rgba(255, 255, 255, 0.82)', lineHeight: 1.75 }}>
+                <p style={{ margin: '0 0 22px 0', fontSize: '15px', color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.82))', lineHeight: 1.75 }}>
                   Technical Recruiter và Tech Lead chỉ dành trung bình <strong>6 giây</strong> để lướt qua một chiếc CV. Dưới đây là cách biến CV của bạn thành thỏi nam châm hút lịch phỏng vấn:
                 </p>
 
@@ -2330,7 +2339,7 @@ export default function CareerHubPage(): React.JSX.Element {
                           <div style={{ fontSize: '13.5px', fontWeight: 700, color: '#34d399', marginBottom: '8px' }}>
                             ✅ NÊN LÀM
                           </div>
-                          <ul style={{ margin: 0, paddingLeft: '18px', fontSize: '14px', color: 'rgba(255, 255, 255, 0.88)', lineHeight: 1.7 }}>
+                          <ul style={{ margin: 0, paddingLeft: '18px', fontSize: '14px', color: 'var(--ifm-color-content, rgba(255, 255, 255, 0.88))', lineHeight: 1.7 }}>
                             {sec.doThis.map((d, i) => <li key={i}>{d}</li>)}
                           </ul>
                         </div>
@@ -2339,7 +2348,7 @@ export default function CareerHubPage(): React.JSX.Element {
                           <div style={{ fontSize: '13.5px', fontWeight: 700, color: '#f87171', marginBottom: '8px' }}>
                             ❌ TUYỆT ĐỐI TRÁNH
                           </div>
-                          <ul style={{ margin: 0, paddingLeft: '18px', fontSize: '14px', color: 'rgba(255, 255, 255, 0.88)', lineHeight: 1.7 }}>
+                          <ul style={{ margin: 0, paddingLeft: '18px', fontSize: '14px', color: 'var(--ifm-color-content, rgba(255, 255, 255, 0.88))', lineHeight: 1.7 }}>
                             {sec.dontDoThis.map((d, i) => <li key={i}>{d}</li>)}
                           </ul>
                         </div>
@@ -2377,7 +2386,7 @@ export default function CareerHubPage(): React.JSX.Element {
                 marginBottom: '22px'
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                  <div style={{ fontSize: '16.5px', fontWeight: 800, color: '#ffffff' }}>
+                  <div style={{ fontSize: '16.5px', fontWeight: 800, color: 'var(--ifm-color-content, #ffffff)' }}>
                     Tiến Độ Sẵn Sàng Vượt Qua 2 Tháng Thử Việc (Probation Survival Tracker)
                   </div>
                   <span style={{ fontSize: '20px', fontWeight: 900, color: progressPercent >= 70 ? '#34d399' : '#fbbf24' }}>
@@ -2401,6 +2410,7 @@ export default function CareerHubPage(): React.JSX.Element {
                   return (
                     <div
                       key={t.id}
+                      className={`hub-checklist-task-card ${isChecked ? 'checked' : ''}`}
                       onClick={() => toggleCheck(t.id)}
                       style={{
                         display: 'flex',
@@ -2434,11 +2444,11 @@ export default function CareerHubPage(): React.JSX.Element {
                           }}>
                             {t.phase}
                           </span>
-                          <span style={{ fontSize: '15px', fontWeight: 700, color: isChecked ? '#a7f3d0' : '#ffffff' }}>
+                          <span style={{ fontSize: '15px', fontWeight: 700, color: isChecked ? '#34d399' : 'var(--ifm-color-content, #ffffff)' }}>
                             {t.text}
                           </span>
                         </div>
-                        <div style={{ fontSize: '13.5px', color: 'rgba(255, 255, 255, 0.72)', lineHeight: 1.55 }}>
+                        <div style={{ fontSize: '13.5px', color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.72))', lineHeight: 1.55 }}>
                           {t.desc}
                         </div>
                       </div>
@@ -2452,7 +2462,7 @@ export default function CareerHubPage(): React.JSX.Element {
           {/* ======================================================== */}
           {/* FOOTER CALLOUT BANNER */}
           {/* ======================================================== */}
-          <div style={{
+          <div className="hub-footer-callout" style={{
             marginTop: '44px',
             background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.1) 0%, rgba(52, 211, 153, 0.1) 100%)',
             border: '1px solid rgba(56, 189, 248, 0.3)',
@@ -2460,10 +2470,10 @@ export default function CareerHubPage(): React.JSX.Element {
             padding: '28px',
             textAlign: 'center'
           }}>
-            <h3 style={{ margin: '0 0 10px 0', fontSize: '1.45rem', color: '#ffffff' }}>
+            <h3 style={{ margin: '0 0 10px 0', fontSize: '1.45rem', color: 'var(--ifm-color-content, #ffffff)' }}>
               Kiến thức vững vàng — Tự tin bước vào dự án thực tế
             </h3>
-            <p style={{ margin: '0 0 20px 0', fontSize: '1.1rem', color: 'rgba(255, 255, 255, 0.8)', maxWidth: '720px', marginInline: 'auto', lineHeight: 1.7 }}>
+            <p style={{ margin: '0 0 20px 0', fontSize: '1.1rem', color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.8))', maxWidth: '720px', marginInline: 'auto', lineHeight: 1.7 }}>
               Hãy đào sâu từng chủ đề, viết code mẫu và chạy thử nghiệm trên máy của bạn. Chúc bạn sớm nhận được Offer và vượt qua thử việc xuất sắc!
             </p>
             <div style={{ display: 'flex', justifyContent: 'center', gap: '14px', flexWrap: 'wrap' }}>
@@ -2483,10 +2493,11 @@ export default function CareerHubPage(): React.JSX.Element {
               </Link>
               <Link
                 to="/arcade"
+                className="hub-arcade-link-btn"
                 style={{
                   background: 'rgba(255, 255, 255, 0.05)',
                   border: '1px solid rgba(255, 255, 255, 0.2)',
-                  color: '#ffffff',
+                  color: 'var(--ifm-color-content, #ffffff)',
                   padding: '10px 24px',
                   borderRadius: '8px',
                   fontWeight: 600,

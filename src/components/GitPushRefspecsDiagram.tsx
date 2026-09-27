@@ -34,7 +34,7 @@ export default function GitPushRefspecsDiagram(): React.JSX.Element {
         </div>
 
         <div style={{ background: `${mode.color}0d`, border: `1px solid ${mode.color}30`, borderRadius: '10px', padding: '14px' }}>
-          <code style={{ fontSize: '13px', fontWeight: 700, color: mode.color, display: 'block', marginBottom: '6px' }}>{mode.label}</code>
+          <div style={{ fontFamily: 'var(--ifm-font-family-monospace, monospace)', fontSize: '13px', fontWeight: 700, color: mode.color, marginBottom: '6px' }}>{mode.label}</div>
           <p style={{ fontSize: '12px', color: 'var(--ifm-color-content-secondary)', margin: 0, lineHeight: 1.6 }}>{mode.desc}</p>
         </div>
       </div>

@@ -44,11 +44,12 @@ export default function ArcadePage(): React.JSX.Element {
       description="Learn distributed systems, Java concurrency, and system design by playing interactive educational games."
     >
       <div
+        className="arcade-page-container"
         style={{
           minHeight: '100vh',
-          background: 'linear-gradient(180deg, #090d16 0%, #0d1117 100%)',
+          background: 'var(--arcade-page-bg, linear-gradient(180deg, #090d16 0%, #0d1117 100%))',
           padding: '36px 20px 80px 20px',
-          color: '#ffffff',
+          color: 'var(--ifm-color-content, #ffffff)',
         }}
       >
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
@@ -101,12 +102,13 @@ export default function ArcadePage(): React.JSX.Element {
                 Galactic Engineering Arcade
               </span>
             </h1>
-            <p style={{ margin: 0, fontSize: '0.95rem', color: 'rgba(255, 255, 255, 0.7)', maxWidth: '680px', marginInline: 'auto' }}>
+            <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.7))', maxWidth: '680px', marginInline: 'auto' }}>
               Sharpen your distributed systems instincts, debug concurrency race conditions, and battle production outages through interactive simulations.
             </p>
 
             {/* Daily On-Call Banner */}
             <div
+              className="arcade-oncall-banner"
               style={{
                 marginTop: '18px',
                 display: 'inline-flex',
@@ -146,7 +148,7 @@ export default function ArcadePage(): React.JSX.Element {
 
           {/* Game Selection Cards */}
           <div style={{ marginBottom: '24px' }}>
-            <div style={{ fontSize: '0.82rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'rgba(255, 255, 255, 0.6)', marginBottom: '12px' }}>
+            <div style={{ fontSize: '0.82rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.6))', marginBottom: '12px' }}>
               Select Educational Arena:
             </div>
 
@@ -193,6 +195,7 @@ export default function ArcadePage(): React.JSX.Element {
                 return (
                   <div
                     key={game.id}
+                    className={`arcade-game-card${isSelected ? ' selected' : ''}`}
                     onClick={() => handleSelectGame(game.id as any)}
                     style={{
                       padding: '16px 18px',
@@ -227,16 +230,16 @@ export default function ArcadePage(): React.JSX.Element {
                         </span>
                       </div>
 
-                      <div style={{ fontSize: '1rem', fontWeight: 800, color: '#ffffff', marginBottom: '6px' }}>
+                      <div className="arcade-game-title" style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--ifm-color-content, #ffffff)', marginBottom: '6px' }}>
                         {game.title}
                       </div>
 
-                      <div style={{ fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.65)', lineHeight: 1.4 }}>
+                      <div className="arcade-game-desc" style={{ fontSize: '0.78rem', color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.65))', lineHeight: 1.4 }}>
                         {game.desc}
                       </div>
                     </div>
 
-                    <div style={{ marginTop: '14px', paddingTop: '10px', borderTop: '1px solid rgba(255, 255, 255, 0.06)', display: 'flex', justifyContent: 'space-between', fontSize: '0.74rem', color: 'rgba(255, 255, 255, 0.5)' }}>
+                    <div className="arcade-game-footer" style={{ marginTop: '14px', paddingTop: '10px', borderTop: '1px solid var(--sidebar-border, rgba(255, 255, 255, 0.06))', display: 'flex', justifyContent: 'space-between', fontSize: '0.74rem', color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.5))' }}>
                       <span>High Score:</span>
                       <span style={{ color: game.color, fontWeight: 700 }}>{game.highScore} pts</span>
                     </div>
@@ -247,7 +250,7 @@ export default function ArcadePage(): React.JSX.Element {
           </div>
 
           {/* Active Game Arena */}
-          <div>
+          <div className="arcade-active-arena">
             <BrowserOnly fallback={<div style={{ padding: '40px', textAlign: 'center', color: 'rgba(255, 255, 255, 0.6)' }}>Loading Educational Arena...</div>}>
               {() => (
                 <>

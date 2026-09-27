@@ -271,18 +271,7 @@ export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidd
             <span className="menu-icon" style={{ position: 'relative' }}>
               {displayIcon}
               {isRead && (
-                <span
-                  style={{
-                    position: 'absolute',
-                    top: '-2px',
-                    right: '-2px',
-                    width: '6px',
-                    height: '6px',
-                    borderRadius: '50%',
-                    backgroundColor: '#4ade80',
-                    boxShadow: '0 0 6px #4ade80',
-                  }}
-                />
+                <span className="menu-read-dot" />
               )}
             </span>
           </Link>
@@ -304,22 +293,6 @@ export default function CustomSidebarDesktop({ path, sidebar, onCollapse, isHidd
               className="menu-read-tick"
               title="Article Completed"
               aria-label="Completed"
-              style={{
-                marginLeft: 'auto',
-                fontSize: '0.7rem',
-                color: '#4ade80',
-                fontWeight: 800,
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '18px',
-                height: '18px',
-                borderRadius: '50%',
-                background: 'rgba(74, 222, 128, 0.15)',
-                border: '1px solid rgba(74, 222, 128, 0.35)',
-                flexShrink: 0,
-                boxShadow: '0 0 8px rgba(74, 222, 128, 0.2)',
-              }}
             >
               ✓
             </span>

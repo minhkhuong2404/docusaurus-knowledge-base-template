@@ -19,9 +19,13 @@
 }
 
 [data-theme="light"] .interactive-diagram-container {
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  background-color: #ffffff;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  --ifm-color-content: #f8fafc;
+  --ifm-color-content-secondary: #94a3b8;
+  --ifm-font-color-base: #e2e8f0;
+  background: #0b0f19 !important;
+  border: 1px solid var(--sidebar-border, rgba(74, 222, 128, 0.18)) !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.22) !important;
+  color: #f8fafc !important;
 }
 
 /* SVG Vector Canvas Box */
@@ -36,8 +40,9 @@
 }
 
 [data-theme="light"] .interactive-diagram-svg-wrapper {
-  background-color: #f8fafc;
-  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.05);
+  background-color: #0d0f1e !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5) !important;
 }
 
 /* SVG Element */
@@ -58,9 +63,9 @@
 
 [data-theme="light"] .interactive-diagram-grid-bg {
   background-image: radial-gradient(
-    rgba(0, 0, 0, 0.03) 1px,
+    rgba(255, 255, 255, 0.04) 1px,
     transparent 1px
-  );
+  ) !important;
 }
 
 /* Inspection Details Card */
@@ -75,9 +80,10 @@
 }
 
 [data-theme="light"] .interactive-diagram-details-card {
-  background: #f1f5f9;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  background: #0c0e17 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
+  color: #f8fafc !important;
 }
 
 .interactive-diagram-details-card p {
@@ -88,7 +94,7 @@
 }
 
 [data-theme="light"] .interactive-diagram-details-card p {
-  color: #334155;
+  color: #e2e8f0 !important;
 }
 
 .interactive-diagram-details-card ul {
@@ -104,7 +110,7 @@
 }
 
 [data-theme="light"] .interactive-diagram-details-card li {
-  color: #475569;
+  color: #cbd5e1 !important;
 }
 
 .interactive-diagram-details-card li strong {
@@ -112,7 +118,7 @@
 }
 
 [data-theme="light"] .interactive-diagram-details-card li strong {
-  color: #0f172a;
+  color: #ffffff !important;
 }
 
 /* Card Header */
@@ -126,7 +132,7 @@
 }
 
 [data-theme="light"] .interactive-diagram-card-header {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
 }
 
 .interactive-diagram-card-header h3 {
@@ -147,7 +153,7 @@
 }
 
 [data-theme="light"] .interactive-diagram-helper-text {
-  color: #64748b;
+  color: #94a3b8 !important;
 }
 
 /* Indicator Dot Class */
@@ -206,8 +212,6 @@
 .node-active-green {
   filter: drop-shadow(0 0 12px rgba(74, 222, 128, 0.45));
 }
-[data-theme="light"] .details-green h3 { color: #16a34a !important; }
-[data-theme="light"] .card-indicator-green { color: #16a34a; }
 
 /* Yellow */
 .details-yellow h3 { color: #fbbf24 !important; }
@@ -218,8 +222,6 @@
 .node-active-yellow {
   filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.45));
 }
-[data-theme="light"] .details-yellow h3 { color: #d97706 !important; }
-[data-theme="light"] .card-indicator-yellow { color: #d97706; }
 
 /* Red */
 .details-red h3 { color: #f87171 !important; }
@@ -230,8 +232,6 @@
 .node-active-red {
   filter: drop-shadow(0 0 12px rgba(248, 113, 113, 0.45));
 }
-[data-theme="light"] .details-red h3 { color: #dc2626 !important; }
-[data-theme="light"] .card-indicator-red { color: #dc2626; }
 
 /* Purple */
 .details-purple h3 { color: #a855f7 !important; }
@@ -242,8 +242,6 @@
 .node-active-purple {
   filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.45));
 }
-[data-theme="light"] .details-purple h3 { color: #9333ea !important; }
-[data-theme="light"] .card-indicator-purple { color: #9333ea; }
 
 /* Cyan */
 .details-cyan h3 { color: #2dd4bf !important; }
@@ -254,8 +252,6 @@
 .node-active-cyan {
   filter: drop-shadow(0 0 12px rgba(45, 212, 191, 0.45));
 }
-[data-theme="light"] .details-cyan h3 { color: #0d9488 !important; }
-[data-theme="light"] .card-indicator-cyan { color: #0d9488; }
 
 /* Blue */
 .details-blue h3 { color: #3b82f6 !important; }
@@ -266,8 +262,6 @@
 .node-active-blue {
   filter: drop-shadow(0 0 12px rgba(59, 130, 246, 0.45));
 }
-[data-theme="light"] .details-blue h3 { color: #2563eb !important; }
-[data-theme="light"] .card-indicator-blue { color: #2563eb; }
 
 /* Gray */
 .details-gray h3 { color: #94a3b8 !important; }
@@ -407,7 +401,12 @@
 }
 
 [data-theme="light"] .interactive-diagram-header {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="light"] .interactive-diagram-header span {
+  color: #f8fafc !important;
 }
 
 .interactive-diagram-header span {
@@ -416,6 +415,41 @@
 
 .interactive-diagram-header button {
   flex-shrink: 0;
+}
+
+/* Ensure code blocks inside interactive diagrams remain dark and unpolluted by markdown inline styles */
+.interactive-diagram-container code {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  -webkit-text-fill-color: initial !important;
+}
+
+.interactive-diagram-container :not(pre) > code {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: inherit !important;
+  padding: 0.15em 0.4em !important;
+  border-radius: 4px !important;
+}
+
+.interactive-diagram-container code[style*="display: block"],
+.interactive-diagram-container code[style*="display:block"] {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+/* Ensure inputs and search bars inside diagrams remain dark with white text */
+[data-theme="light"] .interactive-diagram-container input {
+  background-color: #161923 !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="light"] .interactive-diagram-container input::placeholder {
+  color: #64748b !important;
 }
 
 /* ==========================================================================

@@ -109,6 +109,7 @@ export default function SqlIndexOptimizerGame(): React.JSX.Element {
 
   return (
     <div
+      className="arcade-game-arena sql-optimizer-game"
       style={{
         background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(9, 13, 22, 0.98) 100%)',
         borderRadius: '18px',
@@ -471,6 +472,7 @@ export default function SqlIndexOptimizerGame(): React.JSX.Element {
             return (
               <div
                 key={strat.id}
+                className={`arcade-strategy-card ${isHovered ? 'hovered' : ''} ${isChosen ? (strat.isOptimal ? 'optimal' : 'suboptimal') : ''}`}
                 onMouseEnter={() => setHoveredStrategyId(strat.id)}
                 onMouseLeave={() => setHoveredStrategyId(null)}
                 onClick={() => handleChooseStrategy(strat)}
@@ -498,7 +500,7 @@ export default function SqlIndexOptimizerGame(): React.JSX.Element {
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                  <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#ffffff' }}>
+                  <div className="arcade-strategy-title" style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--ifm-color-content, #ffffff)' }}>
                     {strat.title}
                   </div>
                   {isChosen && (

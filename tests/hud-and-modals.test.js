@@ -37,6 +37,10 @@ describe('Gamification HUD, Modal & Leaderboard Safety Suite', () => {
       name: 'Custom User Navbar Item (CustomUserNavbarItem.tsx)',
       path: 'src/theme/NavbarItem/CustomUserNavbarItem.tsx',
     },
+    {
+      name: 'Leaderboard View Component (LeaderboardView.tsx)',
+      path: 'src/components/leaderboard/LeaderboardView.tsx',
+    },
   ];
 
   if (fs.existsSync('src/pages/leaderboard/index.tsx')) {

@@ -57,20 +57,15 @@ export default function ScrollProgressButton() {
       // 1. Direct DOM update for Top Reading Bar (0 React re-renders)
       if (topBarRef.current) {
         topBarRef.current.style.width = `${percent}%`;
-        if (percent >= 98) {
-          topBarRef.current.style.background = 'linear-gradient(90deg, #4ade80, #22c55e)';
-          topBarRef.current.style.boxShadow = '0 0 10px rgba(74, 222, 128, 0.8)';
-        } else {
-          topBarRef.current.style.background = 'linear-gradient(90deg, #38bdf8, #3b82f6, #a855f7)';
-          topBarRef.current.style.boxShadow = '0 0 10px rgba(56, 189, 248, 0.8)';
-        }
+        topBarRef.current.style.background = 'var(--gradient-brand)';
+        topBarRef.current.style.boxShadow = '0 0 10px var(--neon-glow-color, rgba(56, 189, 248, 0.8))';
       }
 
       // 2. Direct DOM update for Radial SVG Progress Ring (0 React re-renders)
       if (circleRef.current) {
         const offset = circumference - (percent / 100) * circumference;
         circleRef.current.style.strokeDashoffset = `${offset}`;
-        circleRef.current.setAttribute('stroke', percent >= 98 ? '#4ade80' : '#38bdf8');
+        circleRef.current.setAttribute('stroke', percent >= 98 ? 'var(--brand-green)' : 'var(--brand-teal)');
       }
 
       // 3. Direct DOM update for Percent Text (0 React re-renders)
@@ -155,8 +150,8 @@ export default function ScrollProgressButton() {
           left: 0,
           width: '0%',
           height: '3px',
-          background: 'linear-gradient(90deg, #38bdf8, #3b82f6, #a855f7)',
-          boxShadow: '0 0 10px rgba(56, 189, 248, 0.8)',
+          background: 'var(--gradient-brand)',
+          boxShadow: '0 0 10px var(--neon-glow-color, rgba(56, 189, 248, 0.8))',
           zIndex: 999999,
           transition: 'width 0.08s ease-out, background 0.3s ease',
           pointerEvents: 'none',
@@ -180,7 +175,7 @@ export default function ScrollProgressButton() {
         <button
           ref={buttonRef}
           type="button"
-          className="scroll-progress-btn"
+          className={`scroll-progress-btn${isAtEnd ? ' scroll-progress-at-end' : ''}`}
           onClick={scrollToTop}
           title="Click to scroll to top"
           aria-label="Scroll progress. Click to scroll to top"
@@ -190,15 +185,13 @@ export default function ScrollProgressButton() {
             height: `${size}px`,
             borderRadius: '50%',
             touchAction: 'manipulation',
-            background: 'rgba(15, 23, 42, 0.92)',
             backdropFilter: 'blur(10px)',
             WebkitBackdropFilter: 'blur(10px)',
             boxSizing: 'border-box',
             border: 'none',
-            color: isAtEnd ? '#4ade80' : '#ffffff',
             boxShadow: isAtEnd
-              ? '0 6px 20px rgba(74, 222, 128, 0.3), 0 0 0 1px rgba(74, 222, 128, 0.25)'
-              : '0 6px 20px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.12)',
+              ? '0 6px 20px var(--neon-glow-color, rgba(74, 222, 128, 0.3)), 0 0 0 1.5px var(--brand-green)'
+              : '0 6px 20px rgba(0, 0, 0, 0.35), 0 0 0 1px var(--sidebar-border)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -226,11 +219,12 @@ export default function ScrollProgressButton() {
             }}
           >
             <circle
+              className="scroll-ring-track"
               cx={center}
               cy={center}
               r={radius}
               fill="none"
-              stroke="rgba(255, 255, 255, 0.12)"
+              stroke="var(--scroll-ring-track, rgba(255, 255, 255, 0.12))"
               strokeWidth={strokeWidth}
             />
             <circle
@@ -239,7 +233,7 @@ export default function ScrollProgressButton() {
               cy={center}
               r={radius}
               fill="none"
-              stroke="#38bdf8"
+              stroke="var(--brand-teal)"
               strokeWidth={strokeWidth}
               strokeDasharray={circumference}
               strokeDashoffset={circumference}
@@ -265,12 +259,13 @@ export default function ScrollProgressButton() {
             }}
           >
             {isAtEnd ? (
-              <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#4ade80', lineHeight: 1 }}>100%</span>
+              <span className="scroll-progress-percent" style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--brand-green)', lineHeight: 1 }}>100%</span>
             ) : (
               <>
                 <span
                   ref={percentTextRef}
-                  style={{ fontSize: '0.72rem', fontWeight: 700, color: '#f8fafc', lineHeight: 1, letterSpacing: '-0.02em' }}
+                  className="scroll-progress-percent"
+                  style={{ fontSize: '0.72rem', fontWeight: 700, lineHeight: 1, letterSpacing: '-0.02em' }}
                 >
                   0%
                 </span>
@@ -283,7 +278,8 @@ export default function ScrollProgressButton() {
                   strokeWidth="3"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  style={{ opacity: 0.75, color: '#94a3b8' }}
+                  className="scroll-progress-chevron"
+                  style={{ opacity: 0.75 }}
                 >
                   <polyline points="18 15 12 9 6 15"></polyline>
                 </svg>

@@ -223,6 +223,10 @@ export default {
     "headTags": [
       {
         "tagName": "script",
+        "innerHTML": "\n\t\t\t\t\ttry {\n\t\t\t\t\t\tvar preset = localStorage.getItem('kb_theme_preset') || 'emerald';\n\t\t\t\t\t\tdocument.documentElement.setAttribute('data-theme-preset', preset);\n\t\t\t\t\t} catch (e) {}\n\t\t\t\t"
+      },
+      {
+        "tagName": "script",
         "innerHTML": "\n\t\t\t\t\tif (typeof window !== 'undefined' && !window.gtag) {\n\t\t\t\t\t\twindow.dataLayer = window.dataLayer || [];\n\t\t\t\t\t\twindow.gtag = function() { window.dataLayer.push(arguments); };\n\t\t\t\t\t}\n\t\t\t\t"
       },
       {
@@ -302,6 +306,10 @@ export default {
           "to": "/arcade",
           "label": "Arcade",
           "position": "left"
+        },
+        {
+          "type": "custom-themePalettePicker",
+          "position": "right"
         },
         {
           "type": "custom-userNavbarItem",
@@ -666,8 +674,8 @@ export default {
     },
     "colorMode": {
       "defaultMode": "dark",
-      "disableSwitch": true,
-      "respectPrefersColorScheme": false
+      "disableSwitch": false,
+      "respectPrefersColorScheme": true
     },
     "blog": {
       "sidebar": {

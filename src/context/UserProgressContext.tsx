@@ -73,6 +73,8 @@ import {
   QuizStateItem,
   formatStudyTime,
   saveTimeSpentDeltaToFirestore,
+  saveThemePreferenceToFirestore,
+  ThemePreference,
 } from '../services/userProgressService';
 import { isTrackableArticle, TOTAL_TRACKABLE_ARTICLES_DEFAULT } from '../utils/trackablePages';
 import {
@@ -128,6 +130,7 @@ interface UserProgressContextType {
   unlockPremium: (key: string) => Promise<boolean>;
   revokePremium: () => Promise<void>;
   resetQuizProgress: () => Promise<void>;
+  saveThemePreference: (preset: string, colorMode: 'light' | 'dark') => Promise<void>;
 
   // 🎮 Gamification APIs
   gamification: GamificationState;
@@ -166,6 +169,7 @@ const UserProgressContext = createContext<UserProgressContextType>({
   unlockPremium: async () => false,
   revokePremium: async () => {},
   resetQuizProgress: async () => {},
+  saveThemePreference: async () => {},
 
   gamification: defaultGamificationState,
   addExp: () => {},
@@ -328,6 +332,7 @@ function mergeQuizProgress(localData: UserProgressData, remoteData: UserProgress
       remoteData.totalTimeOnlineSeconds || 0
     ),
     timeTrackingSeeded: remoteData.timeTrackingSeeded || localData.timeTrackingSeeded || false,
+    themePreference: remoteData.themePreference || localData.themePreference,
   };
 }
 
@@ -1284,6 +1289,23 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [currentUser, setProgress]);
 
+  const saveThemePreference = useCallback(async (preset: string, colorMode: 'light' | 'dark'): Promise<void> => {
+    setProgress((prev) => ({
+      ...prev,
+      themePreference: {
+        preset,
+        colorMode,
+        updatedAt: new Date().toISOString(),
+      },
+    }));
+
+    if (currentUser?.uid) {
+      saveThemePreferenceToFirestore(currentUser.uid, preset, colorMode).catch((err) => {
+        console.error('Background Firestore saveThemePreference error:', err);
+      });
+    }
+  }, [currentUser, setProgress]);
+
   const saveDSA = useCallback(async (solved: string[], starred: string[]): Promise<void> => {
     const prevSolved = progress.dsaProgress?.solvedProblems || [];
     const newSolvedCount = Math.max(0, solved.length - prevSolved.length);
@@ -1332,6 +1354,7 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
     unlockPremium,
     revokePremium,
     resetQuizProgress,
+    saveThemePreference,
 
     gamification,
     addExp,
@@ -1366,6 +1389,7 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({
     unlockPremium,
     revokePremium,
     resetQuizProgress,
+    saveThemePreference,
     gamification,
     addExp,
     boostToGodLevel,

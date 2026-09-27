@@ -256,11 +256,8 @@ export default function CustomUserNavbarItem() {
             right: `${Math.max(8, coords.right)}px`,
             width: 'min(300px, calc(100vw - 16px))',
             maxWidth: 'calc(100vw - 16px)',
-            backgroundColor: '#0d1117',
-            background: '#0d1117',
             opacity: 1,
             zIndex: 9999999,
-            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.98), 0 0 0 1px rgba(255, 255, 255, 0.1)',
             backdropFilter: 'none',
             WebkitBackdropFilter: 'none',
           }}
@@ -268,37 +265,40 @@ export default function CustomUserNavbarItem() {
           {/* Header User Profile Info (Links to Profile) */}
           <Link
             to="/profile"
+            className="user-dropdown-header-profile"
             onClick={() => setIsOpen(false)}
-            title="View My Profile & Codex"
             style={{
               display: 'flex',
               alignItems: 'center',
               gap: '10px',
-              marginBottom: '0.75rem',
-              paddingBottom: '0.75rem',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+              padding: '6px 8px',
+              marginBottom: '0.65rem',
+              borderRadius: '10px',
+              borderBottom: '1px solid var(--ifm-color-emphasis-200, rgba(255, 255, 255, 0.08))',
               textDecoration: 'none',
               color: 'inherit',
               cursor: 'pointer',
-              transition: 'opacity 0.15s ease',
             }}
           >
             {effectiveUser.photoURL ? (
               <img
                 src={effectiveUser.photoURL}
                 alt={name}
+                className="user-dropdown-header-avatar"
                 style={{
                   width: '40px',
                   height: '40px',
                   borderRadius: '50%',
-                  border: isSuperAdmin ? '2px solid #ef4444' : isAdmin ? '2px solid #f59e0b' : isPremium ? '2px solid #38bdf8' : '2px solid #4ade80',
+                  border: isSuperAdmin ? '2px solid #ef4444' : isAdmin ? '2px solid #f59e0b' : isPremium ? '2px solid var(--brand-green, #38bdf8)' : '2px solid var(--brand-green, #4ade80)',
                   boxShadow: isSuperAdmin ? '0 0 12px rgba(239, 68, 68, 0.55)' : isAdmin ? '0 0 12px rgba(245, 158, 11, 0.55)' : isPremium ? '0 0 10px rgba(56, 189, 248, 0.35)' : 'none',
                   objectFit: 'cover',
                   flexShrink: 0,
+                  transition: 'transform 0.18s ease, box-shadow 0.18s ease',
                 }}
               />
             ) : (
               <div
+                className="user-dropdown-header-avatar"
                 style={{
                   width: '40px',
                   height: '40px',
@@ -312,16 +312,28 @@ export default function CustomUserNavbarItem() {
                   justifyContent: 'center',
                   boxShadow: isSuperAdmin ? '0 0 12px rgba(239, 68, 68, 0.55)' : isAdmin ? '0 0 12px rgba(245, 158, 11, 0.55)' : isPremium ? '0 0 10px rgba(56, 189, 248, 0.35)' : 'none',
                   flexShrink: 0,
+                  transition: 'transform 0.18s ease, box-shadow 0.18s ease',
                 }}
               >
                 {firstLetter}
               </div>
             )}
             <div style={{ overflow: 'hidden', flex: 1, minWidth: 0 }}>
-              <div style={{ fontWeight: 700, fontSize: '0.92rem', color: '#ffffff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <div
+                className="user-dropdown-header-name"
+                style={{
+                  fontWeight: 700,
+                  fontSize: '0.92rem',
+                  color: 'var(--ifm-font-color-base, var(--ifm-color-content, #ffffff))',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  transition: 'color 0.15s ease',
+                }}
+              >
                 {name}
               </div>
-              <div style={{ fontSize: '0.74rem', color: 'rgba(255, 255, 255, 0.6)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <div style={{ fontSize: '0.74rem', color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.6))', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {effectiveUser.email}
               </div>
               <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', marginTop: '4px' }}>
@@ -386,8 +398,8 @@ export default function CustomUserNavbarItem() {
                       display: 'inline-block',
                       fontSize: '0.68rem',
                       padding: '1px 7px',
-                      background: 'rgba(74, 222, 128, 0.15)',
-                      color: '#4ade80',
+                      background: 'var(--sidebar-active-bg, rgba(74, 222, 128, 0.15))',
+                      color: 'var(--brand-green, #4ade80)',
                       borderRadius: '8px',
                       fontWeight: 600,
                     }}
@@ -404,7 +416,6 @@ export default function CustomUserNavbarItem() {
             to="/profile?tab=quests"
             className="user-dropdown-compact-level"
             onClick={() => setIsOpen(false)}
-            title="Open Daily Quests & Cosmic Ranks"
             style={{
               display: 'block',
               textDecoration: 'none',
@@ -414,13 +425,12 @@ export default function CustomUserNavbarItem() {
               border: `1px solid ${rank.color}35`,
               cursor: 'pointer',
               marginBottom: '8px',
-              transition: 'all 0.2s ease',
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '5px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: 0, overflow: 'hidden' }}>
                 <CosmicRankBadge level={currentLevel} rank={rank} size="xs" showLevelPill={false} hideOrbitRing={true} disableFloat={true} />
-                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#ffffff' }}>Lv.{currentLevel}</span>
+                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--ifm-font-color-base, var(--ifm-color-content, #ffffff))' }}>Lv.{currentLevel}</span>
                 <span style={{ fontSize: '0.72rem', color: rank.color, fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {rank.title}
                 </span>
@@ -430,17 +440,17 @@ export default function CustomUserNavbarItem() {
                   title="Total Active Study Time"
                   style={{
                     fontSize: '0.68rem',
-                    color: '#34d399',
+                    color: 'var(--brand-green, #34d399)',
                     fontWeight: 700,
-                    background: 'rgba(52, 211, 153, 0.12)',
+                    background: 'var(--sidebar-active-bg, rgba(52, 211, 153, 0.12))',
                     padding: '1px 5px',
                     borderRadius: '4px',
-                    border: '1px solid rgba(52, 211, 153, 0.25)',
+                    border: '1px solid var(--sidebar-border, rgba(52, 211, 153, 0.25))',
                   }}
                 >
                   ⏱️ {formatTimeOnline(progress?.totalTimeOnlineSeconds || 0)}
                 </span>
-                <span style={{ fontSize: '0.7rem', color: 'rgba(255, 255, 255, 0.65)', fontWeight: 650 }}>
+                <span style={{ fontSize: '0.7rem', color: 'var(--ifm-color-content-secondary, rgba(255, 255, 255, 0.65))', fontWeight: 650 }}>
                   {expPercent}%
                 </span>
               </div>
@@ -540,22 +550,22 @@ export default function CustomUserNavbarItem() {
         >
           <div
             style={{
-              backgroundColor: '#0d1117',
+              backgroundColor: 'var(--ifm-background-surface-color, #0d1117)',
               border: '1.5px solid #f59e0b',
               borderRadius: '16px',
               padding: '2rem',
               maxWidth: '400px',
               width: '90%',
-              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.95), 0 0 30px rgba(245, 158, 11, 0.3)',
+              boxShadow: 'var(--modal-shadow, 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 30px rgba(245, 158, 11, 0.3))',
               textAlign: 'center',
             }}
             onClick={(e) => e.stopPropagation()}
           >
             <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>👑</div>
-            <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.4rem', color: '#ffffff' }}>
+            <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.4rem', color: 'var(--ifm-color-content, #ffffff)' }}>
               Activate Premium Access
             </h3>
-            <p style={{ fontSize: '0.875rem', color: '#94a3b8', marginBottom: '1.5rem' }}>
+            <p style={{ fontSize: '0.875rem', color: 'var(--ifm-color-content-secondary, #94a3b8)', marginBottom: '1.5rem' }}>
               Enter your Premium Key to activate senior architectural deep-dives and sync status to Cloud Firestore.
             </p>
 
@@ -569,9 +579,9 @@ export default function CustomUserNavbarItem() {
                   width: '100%',
                   padding: '0.75rem',
                   borderRadius: '8px',
-                  border: '1px solid #30363d',
-                  backgroundColor: '#161b22',
-                  color: '#ffffff',
+                  border: '1px solid var(--sidebar-border, #30363d)',
+                  backgroundColor: 'var(--ifm-background-color, #161b22)',
+                  color: 'var(--ifm-color-content, #ffffff)',
                   fontSize: '0.95rem',
                   marginBottom: '1rem',
                   outline: 'none',
@@ -593,8 +603,8 @@ export default function CustomUserNavbarItem() {
                     flex: 1,
                     padding: '0.7rem',
                     backgroundColor: 'transparent',
-                    color: '#94a3b8',
-                    border: '1px solid #30363d',
+                    color: 'var(--ifm-color-content-secondary, #94a3b8)',
+                    border: '1px solid var(--sidebar-border, #30363d)',
                     borderRadius: '8px',
                     fontWeight: 600,
                     cursor: 'pointer',
@@ -648,12 +658,12 @@ export default function CustomUserNavbarItem() {
             style={{
               width: '90%',
               maxWidth: '400px',
-              backgroundColor: '#0d1117',
+              backgroundColor: 'var(--ifm-background-surface-color, #0d1117)',
               border: '1px solid rgba(239, 68, 68, 0.4)',
               borderRadius: '12px',
               padding: '1.5rem',
-              boxShadow: '0 20px 50px rgba(0, 0, 0, 0.8), 0 0 20px rgba(239, 68, 68, 0.2)',
-              color: '#ffffff',
+              boxShadow: 'var(--modal-shadow, 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 20px rgba(239, 68, 68, 0.2))',
+              color: 'var(--ifm-color-content, #ffffff)',
               textAlign: 'center',
             }}
             onClick={(e) => e.stopPropagation()}
@@ -662,7 +672,7 @@ export default function CustomUserNavbarItem() {
             <h3 style={{ fontSize: '1.2rem', fontWeight: 700, margin: '0 0 0.5rem 0', color: '#ef4444' }}>
               Reset All Quiz Progress?
             </h3>
-            <p style={{ fontSize: '0.85rem', color: '#94a3b8', margin: '0 0 1.25rem 0', lineHeight: 1.5 }}>
+            <p style={{ fontSize: '0.85rem', color: 'var(--ifm-color-content-secondary, #94a3b8)', margin: '0 0 1.25rem 0', lineHeight: 1.5 }}>
               Are you sure you want to clear all your saved quiz answers and reset your Java, Spring Boot, and System Design quiz progress to 0? This action cannot be undone.
             </p>
 
@@ -674,8 +684,8 @@ export default function CustomUserNavbarItem() {
                   flex: 1,
                   padding: '0.65rem',
                   backgroundColor: 'transparent',
-                  color: '#94a3b8',
-                  border: '1px solid #30363d',
+                  color: 'var(--ifm-color-content-secondary, #94a3b8)',
+                  border: '1px solid var(--sidebar-border, #30363d)',
                   borderRadius: '8px',
                   fontWeight: 600,
                   fontSize: '0.85rem',
@@ -730,13 +740,13 @@ export default function CustomUserNavbarItem() {
         >
           <div
             style={{
-              backgroundColor: '#0d1117',
+              backgroundColor: 'var(--ifm-background-surface-color, #0d1117)',
               border: '1.5px solid #f59e0b',
               borderRadius: '16px',
               padding: '2rem',
               maxWidth: '480px',
               width: '90%',
-              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.95), 0 0 30px rgba(245, 158, 11, 0.3)',
+              boxShadow: 'var(--modal-shadow, 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 30px rgba(245, 158, 11, 0.3))',
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -744,10 +754,10 @@ export default function CustomUserNavbarItem() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span style={{ fontSize: '1.5rem' }}>{isSuperAdmin ? '👑' : '🛡️'}</span>
                 <div>
-                  <h3 style={{ margin: 0, fontSize: '1.25rem', color: '#ffffff' }}>
+                  <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--ifm-color-content, #ffffff)' }}>
                     {isSuperAdmin ? 'Super Admin Permissions' : 'Admin Directory'}
                   </h3>
-                  <span style={{ fontSize: '10.5px', color: '#34d399', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                  <span style={{ fontSize: '10.5px', color: 'var(--brand-green, #34d399)', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                     ⚡ Cloud Firestore Live Sync Active
                   </span>
                 </div>
@@ -757,7 +767,7 @@ export default function CustomUserNavbarItem() {
                 style={{
                   background: 'transparent',
                   border: 'none',
-                  color: '#94a3b8',
+                  color: 'var(--ifm-color-content-secondary, #94a3b8)',
                   fontSize: '1.2rem',
                   cursor: 'pointer',
                 }}
@@ -766,7 +776,7 @@ export default function CustomUserNavbarItem() {
               </button>
             </div>
 
-            <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginBottom: '1.25rem', lineHeight: 1.5 }}>
+            <p style={{ fontSize: '0.85rem', color: 'var(--ifm-color-content-secondary, #94a3b8)', marginBottom: '1.25rem', lineHeight: 1.5 }}>
               {isSuperAdmin
                 ? 'As Super Admin (khuonglu1999@gmail.com), you have exclusive authority to grant or revoke administrator privileges. Changes are synchronized live to Firebase Firestore.'
                 : 'You are logged in as an Administrator with permissions to trigger Google Sheet sync and inspect quiz configurations. Only Super Admin (khuonglu1999@gmail.com) can add or remove admins.'}
@@ -798,9 +808,9 @@ export default function CustomUserNavbarItem() {
                     flex: 1,
                     padding: '0.65rem 0.85rem',
                     borderRadius: '8px',
-                    border: '1px solid #30363d',
-                    backgroundColor: '#161b22',
-                    color: '#ffffff',
+                    border: '1px solid var(--sidebar-border, #30363d)',
+                    backgroundColor: 'var(--ifm-background-color, #161b22)',
+                    color: 'var(--ifm-color-content, #ffffff)',
                     fontSize: '0.9rem',
                     outline: 'none',
                   }}
@@ -845,7 +855,7 @@ export default function CustomUserNavbarItem() {
               <div
                 style={{
                   fontSize: '0.8rem',
-                  color: adminMsg.includes('Added') || adminMsg.includes('Removed') ? '#34d399' : '#ef4444',
+                  color: adminMsg.includes('Added') || adminMsg.includes('Removed') ? 'var(--brand-green, #34d399)' : '#ef4444',
                   marginBottom: '1rem',
                   fontWeight: 600,
                 }}
@@ -855,17 +865,17 @@ export default function CustomUserNavbarItem() {
             )}
 
             {/* Current Admins List */}
-            <div style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', color: '#94a3b8', marginBottom: '0.5rem' }}>
+            <div style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--ifm-color-content-secondary, #94a3b8)', marginBottom: '0.5rem' }}>
               Authorized Admin Emails ({adminEmails.length})
             </div>
             <div
               style={{
                 maxHeight: '180px',
                 overflowY: 'auto',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
+                border: '1px solid var(--sidebar-border, rgba(255, 255, 255, 0.08))',
                 borderRadius: '8px',
                 padding: '4px',
-                backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                backgroundColor: 'var(--ifm-background-color, rgba(0, 0, 0, 0.3))',
               }}
             >
               {adminEmails.map((email) => {
@@ -881,7 +891,7 @@ export default function CustomUserNavbarItem() {
                       padding: '8px 10px',
                       borderRadius: '6px',
                       fontSize: '0.85rem',
-                      color: isSuper ? '#fbbf24' : isCurrent ? '#38bdf8' : '#e2e8f0',
+                      color: isSuper ? '#fbbf24' : isCurrent ? '#38bdf8' : 'var(--ifm-color-content, #e2e8f0)',
                       background: isSuper ? 'rgba(245, 158, 11, 0.12)' : isCurrent ? 'rgba(56, 189, 248, 0.08)' : 'transparent',
                     }}
                   >

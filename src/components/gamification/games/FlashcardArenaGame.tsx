@@ -383,6 +383,7 @@ export default function FlashcardArenaGame(): React.JSX.Element {
 
   return (
     <div
+      className="arcade-game-arena flashcard-arena-game"
       style={{
         background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(9, 13, 22, 0.98) 100%)',
         borderRadius: '18px',

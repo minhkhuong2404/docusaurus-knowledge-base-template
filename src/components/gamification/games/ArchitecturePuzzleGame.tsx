@@ -244,6 +244,7 @@ export default function ArchitecturePuzzleGame() {
 
   return (
     <div
+      className="arcade-game-arena architecture-puzzle-game"
       style={{
         background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(9, 13, 22, 0.98) 100%)',
         borderRadius: '18px',
@@ -764,6 +765,7 @@ export default function ArchitecturePuzzleGame() {
               <button
                 key={node.id}
                 type="button"
+                className={`arcade-node-chip ${isHovered ? 'hovered' : ''} ${isAdded ? 'added' : ''}`}
                 disabled={isAdded}
                 onMouseEnter={() => setHoveredBankNodeId(node.id)}
                 onMouseLeave={() => setHoveredBankNodeId(null)}

@@ -404,6 +404,7 @@ export default function OutageBossBattleGame() {
 
   return (
     <div
+      className="arcade-game-arena outage-boss-game"
       style={{
         background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(9, 13, 22, 0.98) 100%)',
         borderRadius: '18px',
@@ -713,6 +714,7 @@ export default function OutageBossBattleGame() {
                 <button
                   key={idx}
                   type="button"
+                  className={`arcade-answer-btn ${isHovered ? 'hovered' : ''} ${isChosen ? (opt.correct ? 'correct' : 'wrong') : ''}`}
                   disabled={isEliminated || selectedOption !== null}
                   onMouseEnter={() => setHoveredOption(idx)}
                   onMouseLeave={() => setHoveredOption(null)}
@@ -741,6 +743,7 @@ export default function OutageBossBattleGame() {
                   }}
                 >
                   <span
+                    className="arcade-option-badge"
                     style={{
                       width: '24px',
                       height: '24px',
@@ -763,7 +766,7 @@ export default function OutageBossBattleGame() {
                   >
                     {letterBadge}
                   </span>
-                  <span style={{ flex: 1 }}>{opt.text}</span>
+                  <span className="arcade-option-text" style={{ flex: 1 }}>{opt.text}</span>
                 </button>
               );
             })}
