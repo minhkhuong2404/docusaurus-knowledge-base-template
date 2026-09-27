@@ -434,6 +434,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
                   <button
                     key={diff.id}
                     type="button"
+                    className={`arcade-pill-btn diff-btn diff-${diff.id}${isSelected ? ' selected' : ''}`}
                     onClick={() => setSelectedDifficulty(diff.id)}
                     style={{
                       padding: '6px 12px',
@@ -460,6 +461,7 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
                   <button
                     key={mode.id}
                     type="button"
+                    className={`arcade-pill-btn mode-btn mode-${mode.id}${isSelected ? ' selected' : ''}`}
                     onClick={() => setGameMode(mode.id)}
                     style={{
                       padding: '6px 10px',
@@ -489,18 +491,19 @@ export default function SpotTheBugDuelGame(): React.JSX.Element {
           {/* 🚀 START BUTTON */}
           <button
             type="button"
+            className="arcade-start-btn"
             disabled={isLoading}
             onClick={handleStartGame}
             style={{
               padding: '14px 44px',
               borderRadius: '12px',
-              background: 'linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)',
+              background: 'linear-gradient(135deg, #f59e0b 0%, #fb923c 100%)',
               border: 'none',
               color: '#ffffff',
               fontWeight: 900,
               fontSize: '1.1rem',
               cursor: isLoading ? 'wait' : 'pointer',
-              boxShadow: '0 0 25px rgba(245, 158, 11, 0.5)',
+              boxShadow: '0 4px 20px rgba(245, 158, 11, 0.4)',
               transition: 'all 0.15s ease',
             }}
           >

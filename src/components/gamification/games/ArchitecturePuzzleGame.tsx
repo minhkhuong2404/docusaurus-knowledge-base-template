@@ -455,6 +455,7 @@ export default function ArchitecturePuzzleGame() {
           {/* 🚀 START BUTTON */}
           <button
             type="button"
+            className="arcade-start-btn"
             onClick={() => {
               arcadeAudio.playLaser();
               setGameState('playing');
@@ -462,13 +463,13 @@ export default function ArchitecturePuzzleGame() {
             style={{
               padding: '14px 44px',
               borderRadius: '12px',
-              background: 'linear-gradient(135deg, #0284c7 0%, #38bdf8 100%)',
+              background: 'linear-gradient(135deg, #0ea5e9 0%, #38bdf8 100%)',
               border: 'none',
               color: '#ffffff',
               fontWeight: 900,
               fontSize: '1.08rem',
               cursor: 'pointer',
-              boxShadow: '0 0 25px rgba(56, 189, 248, 0.5)',
+              boxShadow: '0 4px 20px rgba(56, 189, 248, 0.4)',
               transition: 'all 0.15s ease',
             }}
           >
@@ -838,7 +839,7 @@ export default function ArchitecturePuzzleGame() {
             style={{
               padding: '12px 22px',
               borderRadius: '10px',
-              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+              background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
               border: 'none',
               color: '#ffffff',
               fontWeight: 800,

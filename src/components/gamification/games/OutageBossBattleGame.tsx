@@ -26,6 +26,7 @@ interface BossTheme {
   bossAvatar: string;
   badge: string;
   color: string;
+  gradientEnd: string;
   description: string;
 }
 
@@ -65,10 +66,10 @@ const SEVERITY_CONFIGS: Record<SeverityLevel, SeverityConfig> = {
 };
 
 const BOSS_THEMES: BossTheme[] = [
-  { id: 'system-design', title: 'Distributed Outage', bossName: 'Thundering Herd Behemoth', bossAvatar: '🦬', badge: 'System Design', color: '#a855f7', description: 'Cache avalanches & lock contention' },
-  { id: 'java', title: 'JVM Memory Crisis', bossName: 'Memory Leak Monster', bossAvatar: '👾', badge: 'Core Java', color: '#fbbf24', description: 'GC pauses & thread starvation' },
-  { id: 'spring-boot', title: 'Spring CrashLoop', bossName: 'Circular Dependency Demon', bossAvatar: '🍃', badge: 'Spring Boot', color: '#34d399', description: 'Connection pools & rollbacks' },
-  { id: 'all', title: 'Universal Blackout', bossName: 'Chaos Titan', bossAvatar: '👑', badge: 'All Topics', color: '#38bdf8', description: 'Cross-disciplinary gauntlet' },
+  { id: 'system-design', title: 'Distributed Outage', bossName: 'Thundering Herd Behemoth', bossAvatar: '🦬', badge: 'System Design', color: '#9333ea', gradientEnd: '#c084fc', description: 'Cache avalanches & lock contention' },
+  { id: 'java', title: 'JVM Memory Crisis', bossName: 'Memory Leak Monster', bossAvatar: '👾', badge: 'Core Java', color: '#d97706', gradientEnd: '#fbbf24', description: 'GC pauses & thread starvation' },
+  { id: 'spring-boot', title: 'Spring CrashLoop', bossName: 'Circular Dependency Demon', bossAvatar: '🍃', badge: 'Spring Boot', color: '#059669', gradientEnd: '#34d399', description: 'Connection pools & rollbacks' },
+  { id: 'all', title: 'Universal Blackout', bossName: 'Chaos Titan', bossAvatar: '👑', badge: 'All Topics', color: '#0284c7', gradientEnd: '#38bdf8', description: 'Cross-disciplinary gauntlet' },
 ];
 
 const EMERGENCY_FALLBACK_QUESTIONS: BattleQuestion[] = [
@@ -436,6 +437,7 @@ export default function OutageBossBattleGame() {
                   <button
                     key={sevKey}
                     type="button"
+                    className={`arcade-pill-btn sev-btn sev-${sevKey.toLowerCase()}${isSelected ? ' selected' : ''}`}
                     onClick={() => {
                       arcadeAudio.playBlip();
                       setSelectedSeverity(sevKey);
@@ -465,6 +467,7 @@ export default function OutageBossBattleGame() {
                   <button
                     key={diff.id}
                     type="button"
+                    className={`arcade-pill-btn diff-btn diff-${diff.id}${isSelected ? ' selected' : ''}`}
                     onClick={() => {
                       arcadeAudio.playBlip();
                       setSelectedDifficulty(diff.id);
@@ -494,6 +497,7 @@ export default function OutageBossBattleGame() {
               return (
                 <div
                   key={theme.id}
+                  className={`arcade-boss-card boss-${theme.id}${isSelected ? ' selected' : ''}`}
                   onClick={() => {
                     arcadeAudio.playBlip();
                     setSelectedThemeIdx(idx);
@@ -510,15 +514,15 @@ export default function OutageBossBattleGame() {
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
                     <span style={{ fontSize: '1.4rem' }}>{theme.bossAvatar}</span>
                     <div>
-                      <div style={{ fontWeight: 800, fontSize: '0.88rem', color: isSelected ? theme.color : '#ffffff' }}>
+                      <div className={`boss-name${isSelected ? ' selected' : ''}`} style={{ fontWeight: 800, fontSize: '0.88rem', color: isSelected ? theme.color : '#ffffff' }}>
                         {theme.bossName}
                       </div>
-                      <div style={{ fontSize: '0.72rem', color: 'rgba(255, 255, 255, 0.6)' }}>
+                      <div className="boss-badge" style={{ fontSize: '0.72rem', color: 'rgba(255, 255, 255, 0.6)' }}>
                         {theme.badge}
                       </div>
                     </div>
                   </div>
-                  <div style={{ fontSize: '0.74rem', color: 'rgba(255, 255, 255, 0.65)' }}>{theme.description}</div>
+                  <div className="boss-desc" style={{ fontSize: '0.74rem', color: 'rgba(255, 255, 255, 0.65)' }}>{theme.description}</div>
                 </div>
               );
             })}
@@ -527,18 +531,20 @@ export default function OutageBossBattleGame() {
           {/* Launch Button */}
           <button
             type="button"
+            className="arcade-start-btn"
             disabled={isLoadingQuestions}
             onClick={startGame}
             style={{
               padding: '14px 44px',
               borderRadius: '12px',
-              background: `linear-gradient(135deg, ${currentTheme.color} 0%, #1e1b4b 100%)`,
+              background: `linear-gradient(135deg, ${currentTheme.color} 0%, ${currentTheme.gradientEnd} 100%)`,
               border: `1.5px solid ${currentTheme.color}`,
               color: '#ffffff',
               fontWeight: 900,
               fontSize: '1.05rem',
               cursor: isLoadingQuestions ? 'wait' : 'pointer',
-              boxShadow: `0 0 25px ${currentTheme.color}44`,
+              boxShadow: `0 4px 20px ${currentTheme.color}44`,
+              transition: 'all 0.15s ease',
             }}
           >
             {isLoadingQuestions ? '⏳ Syncing Incident Pool...' : `⚔️ Engage ${currentTheme.bossName} [${severityConfig.id}]`}

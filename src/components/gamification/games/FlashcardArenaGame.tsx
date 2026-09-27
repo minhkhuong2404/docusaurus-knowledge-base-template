@@ -637,17 +637,19 @@ export default function FlashcardArenaGame(): React.JSX.Element {
               </div>
               <button
                 type="button"
+                className="arcade-start-btn"
                 onClick={startMatchGame}
                 style={{
                   padding: '12px 32px',
                   borderRadius: '10px',
-                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                  background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
                   border: 'none',
                   color: '#ffffff',
                   fontWeight: 900,
                   fontSize: '0.95rem',
                   cursor: 'pointer',
                   boxShadow: '0 4px 16px rgba(16, 185, 129, 0.4)',
+                  transition: 'all 0.15s ease',
                 }}
               >
                 🚀 Start 45s Match Grid
@@ -736,17 +738,19 @@ export default function FlashcardArenaGame(): React.JSX.Element {
               </div>
               <button
                 type="button"
+                className="arcade-start-btn"
                 onClick={startBlitzGame}
                 style={{
                   padding: '12px 32px',
                   borderRadius: '10px',
-                  background: 'linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)',
+                  background: 'linear-gradient(135deg, #f59e0b 0%, #fb923c 100%)',
                   border: 'none',
                   color: '#ffffff',
                   fontWeight: 900,
                   fontSize: '0.95rem',
                   cursor: 'pointer',
                   boxShadow: '0 4px 16px rgba(245, 158, 11, 0.4)',
+                  transition: 'all 0.15s ease',
                 }}
               >
                 🚀 Start 60s Blitz

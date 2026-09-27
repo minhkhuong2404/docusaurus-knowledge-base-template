@@ -129,6 +129,7 @@ export default function ArcadePage(): React.JSX.Element {
               </span>
               <button
                 type="button"
+                className="arcade-oncall-btn"
                 onClick={() => handleSelectGame('boss')}
                 style={{
                   background: 'rgba(245, 158, 11, 0.25)',
@@ -216,6 +217,7 @@ export default function ArcadePage(): React.JSX.Element {
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                         <span style={{ fontSize: '1.8rem' }}>{game.icon}</span>
                         <span
+                          className={`arcade-game-tag tag-${game.id}`}
                           style={{
                             fontSize: '0.72rem',
                             fontWeight: 700,

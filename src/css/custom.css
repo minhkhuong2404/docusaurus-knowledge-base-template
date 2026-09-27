@@ -6026,3 +6026,272 @@ input[type="checkbox"] {
 .mark-read-progress-fill.tracking {
   background: linear-gradient(90deg, #38bdf8, #3b82f6);
 }
+
+/* ============================================================
+   Enhanced Badges, Chips & Toast Contrast (Light Theme)
+   ============================================================ */
+
+/* ── DSA Dashboard Badges & Chips ── */
+[data-theme="light"] .dsa-status-btn.unsolved {
+  background: #F2F2F2 !important;
+  color: #1e293b !important;
+  border: 1px solid #98A2B3 !important;
+  box-shadow: none !important;
+}
+
+[data-theme="light"] .dsa-status-btn.unsolved:hover {
+  background: #e2e8f0 !important;
+  border-color: #64748b !important;
+}
+
+[data-theme="light"] .dsa-status-btn.solved {
+  background: #dcfce7 !important;
+  color: #15803d !important;
+  border: 1px solid #86efac !important;
+  box-shadow: 0 1px 3px rgba(22, 101, 52, 0.1) !important;
+}
+
+[data-theme="light"] .dsa-diff-badge.dsa-diff-easy {
+  background: #dcfce7 !important;
+  color: #166534 !important;
+  border: 1px solid #86efac !important;
+}
+
+[data-theme="light"] .dsa-diff-badge.dsa-diff-medium {
+  background: #fef3c7 !important;
+  color: #92400e !important;
+  border: 1px solid #fcd34d !important;
+}
+
+[data-theme="light"] .dsa-diff-badge.dsa-diff-hard {
+  background: #fee2e2 !important;
+  color: #991b1b !important;
+  border: 1px solid #fca5a5 !important;
+}
+
+[data-theme="light"] .dsa-company-badge {
+  background: #e0e7ff !important;
+  color: #3730a3 !important;
+  border: 1px solid #c7d2fe !important;
+}
+
+[data-theme="light"] .dsa-company-badge:hover {
+  background: #c7d2fe !important;
+  color: #1e1b4b !important;
+}
+
+[data-theme="light"] .dsa-lesson-doc-badge {
+  background: #f3e8ff !important;
+  color: #6b21a8 !important;
+  border: 1px solid #d8b4fe !important;
+}
+
+[data-theme="light"] .dsa-lesson-doc-badge:hover {
+  background: #e9d5ff !important;
+  color: #581c87 !important;
+}
+
+[data-theme="light"] .dsa-week-progress-pill {
+  background: #F2F2F2 !important;
+  color: #334155 !important;
+  border: 1px solid #98A2B3 !important;
+}
+
+[data-theme="light"] .dsa-week-progress-pill.completed {
+  background: #dcfce7 !important;
+  color: #15803d !important;
+  border: 1px solid #86efac !important;
+}
+
+[data-theme="light"] .dsa-stat-pill.easy {
+  background: #dcfce7 !important;
+  border: 1px solid #86efac !important;
+}
+
+[data-theme="light"] .dsa-stat-pill.easy span:first-child {
+  color: #166534 !important;
+}
+
+[data-theme="light"] .dsa-stat-pill.easy span:last-child {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .dsa-stat-pill.medium {
+  background: #fef3c7 !important;
+  border: 1px solid #fcd34d !important;
+}
+
+[data-theme="light"] .dsa-stat-pill.medium span:first-child {
+  color: #92400e !important;
+}
+
+[data-theme="light"] .dsa-stat-pill.medium span:last-child {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .dsa-stat-pill.hard {
+  background: #fee2e2 !important;
+  border: 1px solid #fca5a5 !important;
+}
+
+[data-theme="light"] .dsa-stat-pill.hard span:first-child {
+  color: #991b1b !important;
+}
+
+[data-theme="light"] .dsa-stat-pill.hard span:last-child {
+  color: #0f172a !important;
+}
+
+/* ── Arcade Arena Game Tags & Banner ── */
+[data-theme="light"] .arcade-game-tag.tag-boss {
+  background: #fee2e2 !important;
+  color: #991b1b !important;
+  border: 1px solid #fca5a5 !important;
+}
+
+[data-theme="light"] .arcade-game-tag.tag-bug {
+  background: #fef3c7 !important;
+  color: #92400e !important;
+  border: 1px solid #fcd34d !important;
+}
+
+[data-theme="light"] .arcade-game-tag.tag-puzzle {
+  background: #e0f2fe !important;
+  color: #0369a1 !important;
+  border: 1px solid #7dd3fc !important;
+}
+
+[data-theme="light"] .arcade-game-tag.tag-sql_optimizer {
+  background: #dcfce7 !important;
+  color: #166534 !important;
+  border: 1px solid #86efac !important;
+}
+
+[data-theme="light"] .arcade-oncall-banner {
+  background: #fffbeb !important;
+  border: 1px solid #fcd34d !important;
+  color: #92400e !important;
+}
+
+[data-theme="light"] .arcade-oncall-banner strong,
+[data-theme="light"] .arcade-oncall-banner em {
+  color: #78350f !important;
+}
+
+[data-theme="light"] .arcade-oncall-btn {
+  background: #d97706 !important;
+  color: #ffffff !important;
+  border-color: #b45309 !important;
+}
+
+[data-theme="light"] .arcade-oncall-btn:hover {
+  background: #b45309 !important;
+}
+
+/* ── Arcade Quick Selector Pills ── */
+[data-theme="light"] .arcade-pill-btn {
+  background: #F2F2F2 !important;
+  border: 1px solid #98A2B3 !important;
+  color: #1e293b !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .arcade-pill-btn:hover {
+  background: #e2e8f0 !important;
+  border-color: #64748b !important;
+}
+
+[data-theme="light"] .arcade-pill-btn.sev-p3.selected,
+[data-theme="light"] .arcade-pill-btn.diff-easy.selected {
+  background: #dcfce7 !important;
+  border: 1.5px solid #16a34a !important;
+  color: #166534 !important;
+  box-shadow: 0 1px 4px rgba(22, 101, 52, 0.15) !important;
+}
+
+[data-theme="light"] .arcade-pill-btn.sev-p2.selected,
+[data-theme="light"] .arcade-pill-btn.diff-medium.selected {
+  background: #fef3c7 !important;
+  border: 1.5px solid #d97706 !important;
+  color: #92400e !important;
+  box-shadow: 0 1px 4px rgba(180, 83, 9, 0.15) !important;
+}
+
+[data-theme="light"] .arcade-pill-btn.sev-p0.selected,
+[data-theme="light"] .arcade-pill-btn.diff-hard.selected {
+  background: #fee2e2 !important;
+  border: 1.5px solid #dc2626 !important;
+  color: #991b1b !important;
+  box-shadow: 0 1px 4px rgba(185, 28, 28, 0.15) !important;
+}
+
+[data-theme="light"] .arcade-pill-btn.diff-all.selected {
+  background: #f3e8ff !important;
+  border: 1.5px solid #9333ea !important;
+  color: #6b21a8 !important;
+  box-shadow: 0 1px 4px rgba(107, 33, 168, 0.15) !important;
+}
+
+[data-theme="light"] .arcade-pill-btn.mode-btn.selected {
+  background: #e0f2fe !important;
+  border: 1.5px solid #0284c7 !important;
+  color: #0369a1 !important;
+  box-shadow: 0 1px 4px rgba(2, 132, 199, 0.15) !important;
+}
+
+/* ── Arcade Boss Cards ── */
+[data-theme="light"] .arcade-boss-card:not(.selected) {
+  background: #F2F2F2 !important;
+  border: 1px solid #98A2B3 !important;
+}
+
+[data-theme="light"] .arcade-boss-card:not(.selected):hover {
+  background: #e2e8f0 !important;
+  border-color: #64748b !important;
+}
+
+[data-theme="light"] .arcade-boss-card:not(.selected) .boss-name {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .arcade-boss-card:not(.selected) .boss-badge {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .arcade-boss-card:not(.selected) .boss-desc {
+  color: #334155 !important;
+}
+
+[data-theme="light"] .arcade-boss-card.selected {
+  background: #f5f3ff !important;
+  border: 2px solid #7c3aed !important;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.15) !important;
+}
+
+[data-theme="light"] .arcade-boss-card.selected .boss-name {
+  color: #581c87 !important;
+}
+
+[data-theme="light"] .arcade-boss-card.selected .boss-badge {
+  color: #6b21a8 !important;
+}
+
+[data-theme="light"] .arcade-boss-card.selected .boss-desc {
+  color: #334155 !important;
+}
+
+/* ── Arcade Start Game Action Buttons ── */
+.arcade-start-btn {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.arcade-start-btn:hover:not(:disabled) {
+  transform: translateY(-2px) !important;
+  filter: brightness(1.08) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18) !important;
+}
+
+.arcade-start-btn:active:not(:disabled) {
+  transform: translateY(0) !important;
+}
